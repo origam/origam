@@ -1,0 +1,1336 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<AsapLocalization>
+  <Element Id="007f0619-bc85-44d7-a4e9-c3a88419bed6" Path="WorkQueue_Remove/WorkQueue_RemoveRootControl/GroupBoxWithChamfer1/Text">
+    <Value>Change State/Value</Value>
+  </Element>
+  <Element Id="023ee3ea-c462-4606-855f-265449062aaf" Path="ReportFormat_XML">
+    <StringValue>XML</StringValue>
+  </Element>
+  <Element Id="028515a4-9568-4cc4-8fa7-608f84c0157d" Path="ReportFormat_RTF">
+    <StringValue>RTF</StringValue>
+  </Element>
+  <Element Id="0289fda1-5f7e-4d50-93c9-bbf752c6145f" Path="ReportFormat_MSExcel">
+    <StringValue>MSExcel</StringValue>
+  </Element>
+  <Element Id="0298a5c9-da48-47ff-b5a2-eed21155b240" Path="BusinessUnit/BusinessUnitRootControl/PanelTitle">
+    <Value>Business Unit</Value>
+  </Element>
+  <Element Id="03314695-798f-4913-8f70-0dbe5a44c9fb" Path="DimensionEntityRelation/refSourceDimensionEntityId">
+    <Caption>Source Entity</Caption>
+  </Element>
+  <Element Id="044ea55d-eee7-4899-a082-7ab85bff20ca" Path="UsersAndRoles/UsersAndRolesRootControl/SplitPanel1/AsPanel1/PanelTitle">
+    <Value>Users</Value>
+  </Element>
+  <Element Id="049ffdd3-05f4-4e64-a97f-a4baefab1cb1" Path="AsapRole">
+    <Caption>User Role</Caption>
+  </Element>
+  <Element Id="04b7aeae-3727-4c3e-81c1-57bd07f8417f" Path="WorkQueueCommand/AutoProcessingConditionXPath">
+    <Caption>Autoprocessing Condition</Caption>
+  </Element>
+  <Element Id="058f3c2e-cb3a-4c3d-bbe6-e00b5c29a5a0" Path="OrganizationMapping">
+    <Caption>Organization Mapping</Caption>
+  </Element>
+  <Element Id="0593c75d-3112-4eda-b4fd-2bf9bf6c82f1" Path="Counter">
+    <Caption>Counter</Caption>
+  </Element>
+  <Element Id="0666a52d-0b52-490a-92f1-9d5dbcf48205" Path="IDimensionsReference/refDimension1Id">
+    <Caption>Dimension 1</Caption>
+  </Element>
+  <Element Id="075570a5-3d2e-444c-b8d2-639ed2cdae2f" Path="AsapTraceWorkflow/AsapDebugWorkflowRootControl/SplitPanel1/AsPanel1/PanelTitle">
+    <Value>Workflow</Value>
+  </Element>
+  <Element Id="08ec080c-c274-4c38-b11e-996444805418" Path="Counter">
+    <Documentation Category="USER_LONG_HELP">Using this form you can set counters. Counters are looked up by the code.</Documentation>
+  </Element>
+  <Element Id="08f09597-bbc1-45a9-938d-51f287e1d2a4" Path="ResourceGroupMember/refGroupResourceId">
+    <Caption>Group</Caption>
+  </Element>
+  <Element Id="0959501d-6f7b-4362-bc8c-196ef3b24021" Path="param_string/param_stringRootControl/AsTextBox1/Caption">
+    <Value>$caption</Value>
+  </Element>
+  <Element Id="0bc7b275-973c-4d6f-9bbc-8946ccfc72e3" Path="AsapRegularExpression/AsapRegularExpressionRootControl/AsPanel1/PanelTitle">
+    <Value>Regular Expressions</Value>
+  </Element>
+  <Element Id="0bcc1f88-dce5-4e37-94bc-9c9092e0c974" Path="AsapStateMachineEventType">
+    <Caption>State Machine Event Type</Caption>
+  </Element>
+  <Element Id="0da6c27f-3253-44e7-ae47-a22f42853bfc" Path="WorkQueue/WorkQueueRootControl/SplitPanel1/AsTabControl1/TabPage5/Text">
+    <Value>Notification - Senders</Value>
+  </Element>
+  <Element Id="0e644d3a-7543-4ce4-9b73-d44f240926c0" Path="WorkQueueNotification/refWorkQueueNotificationEventId">
+    <Caption>Event</Caption>
+  </Element>
+  <Element Id="0e6913f3-cdb4-49e9-8b2f-03ae9fd9b0aa" Path="AsapExceptionSeverity/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="0edc8f71-0a98-4c73-9e67-51eb85393d0c" Path="DimensionType/Name">
+    <Caption>Bane</Caption>
+  </Element>
+  <Element Id="0f00bccd-2c1e-464d-9e0d-8e145f617855" Path="AsapRoleAsapApplicationRole/refAsapRoleId">
+    <Caption>User Role</Caption>
+  </Element>
+  <Element Id="0f85ea5c-a327-4fad-917d-ec09a9a4f686" Path="AsapRoleAsapApplicationRole/refAsapApplicationRoleId">
+    <Caption>Application Role</Caption>
+  </Element>
+  <Element Id="0fb70f69-de86-429f-a0ba-efac1cdd8439" Path="WorkQueue/RemovalFieldName">
+    <Caption>Removal Field Name</Caption>
+  </Element>
+  <Element Id="0fd32fd1-741a-471a-b033-059f062d238e" Path="WorkQueue/refRemovalAsapStateMachineEventTypeId">
+    <Caption>Removal Event</Caption>
+  </Element>
+  <Element Id="109af2b1-9ba8-456b-9c41-bb26806413a4" Path="AsapSyncProviderConfig/refAsapSyncProviderId">
+    <Caption>Provider</Caption>
+  </Element>
+  <Element Id="12805c26-2849-416c-8d76-51fa6470fde7" Path="CounterDetail/CurrentPosition">
+    <Caption>Current Position</Caption>
+    <Documentation Category="USER_LONG_HELP">Current position of the counter. When requesting the next position from the counter this number will be increased by a value set in the Increment field.</Documentation>
+  </Element>
+  <Element Id="1355e0b1-7c4b-4865-9648-11e3e2c48435" Path="WorkQueue/WorkQueueRootControl/AsCheckBox2/Text">
+    <Value>Error Queue</Value>
+  </Element>
+  <Element Id="14f56de5-d2f2-4917-beb7-2df934c76b43" Path="AsapNotificationTemplate/Template">
+    <Caption>Template</Caption>
+  </Element>
+  <Element Id="15c44b5f-c719-440e-983f-44f177593f63" Path="BusinessPartner/UserName">
+    <Caption>User Name</Caption>
+    <Documentation Category="USER_LONG_HELP">Maps the internal user to the login user name.</Documentation>
+  </Element>
+  <Element Id="15e18ab8-a42b-46bf-ba7d-2d1233fb05ff" Path="WorkQueueCommand/WorkQueueCommandRootControl/AsCheckBox1/Text">
+    <Value>Autoprocess</Value>
+  </Element>
+  <Element Id="15ea6af0-68cc-4260-a0b4-7d912b7e87e4" Path="BusinessPartnerAsapRole/refAsapRoleId">
+    <Caption>User Role</Caption>
+    <Documentation Category="USER_LONG_HELP">By assigning role to the user you give them permission to use the applicastion.</Documentation>
+  </Element>
+  <Element Id="15fa3b58-de26-4f39-8884-8cdbe6ac9fa8" Path="IDimension/refDimensionTypeId">
+    <Caption>Type</Caption>
+  </Element>
+  <Element Id="16261e53-f437-45f5-86c3-af63d92b393e" Path="AsapCalendar/AsapCalendarRootControl/GroupBoxWithChamfer1/AsCheckBox3/Text">
+    <Value>Wednesday</Value>
+  </Element>
+  <Element Id="16483d96-dff2-4341-9464-3f09db80548c" Path="AsapCalendar/Name">
+    <Caption>Name</Caption>
+    <Documentation Category="USER_LONG_HELP">Calendar name</Documentation>
+  </Element>
+  <Element Id="16616459-ce03-4bdf-b6e6-da6e57944f9d" Path="WorkQueueNotificationContact/Value">
+    <Caption>Value</Caption>
+  </Element>
+  <Element Id="1670e7f2-d4d6-4d7c-8b05-b08c20a94ec9" Path="IDimension/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="16772f33-3345-47ce-bc27-7b52a9f0c3d7" Path="AsapCharacterTranslationDetail/Source">
+    <Caption>Replace</Caption>
+  </Element>
+  <Element Id="16b7ef84-5207-4d58-87a2-89fae8e1d6f9" Path="CounterDetail/ValidTo">
+    <Caption>Valid Until</Caption>
+    <Documentation Category="USER_LONG_HELP">Date until when the counter is valid. Only works if the counter is set to be evaluated by date.</Documentation>
+  </Element>
+  <Element Id="184eef6e-e74e-4e94-b6ea-d073781e8ba1" Path="AsapTooltipHelp/Priority">
+    <Caption>Priority</Caption>
+  </Element>
+  <Element Id="1883087e-d17b-43e0-81ae-4019a9ce3021" Path="WorkQueueEntry/refLockedByBusinessPartnerId">
+    <Caption>Locked By</Caption>
+  </Element>
+  <Element Id="1894480d-ec81-48c1-9234-e25bd74c3f04" Path="param_currency/param_currencyRootControl/AsTextBox1/Caption">
+    <Value>$caption</Value>
+  </Element>
+  <Element Id="18aaefda-e04f-4155-8c03-4062e60b5b3e" Path="WorkQueue/ExternalSourceLastTime">
+    <Caption>Last Message</Caption>
+  </Element>
+  <Element Id="18c9cc93-f771-47fc-ad4e-04931d6f4d79" Path="AsapFeatureList/AsapFeatureListRootControl/AsPanel1/PanelTitle">
+    <Value>Feature List</Value>
+  </Element>
+  <Element Id="197b0182-8bc8-4a1a-b46a-8cdada5776b3" Path="AsapNotification/Subject">
+    <Caption>Subject</Caption>
+  </Element>
+  <Element Id="1980a203-5137-4d86-aae4-39141fd97dd3" Path="AsapSyncConfig/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="19a3e72e-4733-4815-b42b-fd2a6a35d3ba" Path="WorkQueueNotificationContact/refWorkQueueNotificationContactTypeId">
+    <Caption>Type</Caption>
+  </Element>
+  <Element Id="1aefaf2e-f9d2-4018-b951-932166d8c062" Path="ReportFormat_Text">
+    <StringValue>TEXT</StringValue>
+  </Element>
+  <Element Id="1b771efd-8fbb-4480-9e2e-5f1f945aecd2" Path="WorkQueue/WorkQueueRootControl/SplitPanel1/AsPanel1/PanelTitle">
+    <Value>Work Queues</Value>
+  </Element>
+  <Element Id="1b7c8e4e-6e0e-4e05-8893-c60d755ff62f" Path="IAsapHierarchicalEntity/ParentId">
+    <Documentation Category="USER_LONG_HELP">Parent record link</Documentation>
+  </Element>
+  <Element Id="1b8911d8-5ede-4d96-b069-9ac2cd0b6515" Path="Mail/DateReceived">
+    <Caption>Received</Caption>
+  </Element>
+  <Element Id="1bf31ddb-79ab-4322-bcfa-12469124ceb9" Path="AsapTooltipHelpUsage/AsapTooltipHelpUsageRootControl/PanelTitle">
+    <Value>User Help Activity Log</Value>
+  </Element>
+  <Element Id="1c8fac49-d098-4780-b87d-06642f7c9949" Path="AsapCalendar/AsapCalendarRootControl/GroupBoxWithChamfer1/AsCheckBox7/Text">
+    <Value>Sunday</Value>
+  </Element>
+  <Element Id="1d8e4557-fa7c-4f1d-868d-9138ecf6bb97" Path="AsapDataAuditLog">
+    <Caption>Audit</Caption>
+  </Element>
+  <Element Id="1e681421-6cea-4d9a-955c-866eefc57101" Path="AsapRegularExpression/Expression">
+    <Caption>Expression</Caption>
+  </Element>
+  <Element Id="1f71f70d-a1b5-4424-8fec-6acbc345a6a6" Path="AsapRegularExpression/AsapRegularExpressionRootControl/PanelTitle">
+    <Value>Regular Expressions</Value>
+  </Element>
+  <Element Id="1fdb538d-525f-414c-93b1-29cadb29b1cb" Path="BusinessPartnerLookup/LookupText">
+    <Caption>Name</Caption>
+    <Documentation Category="USER_LONG_HELP">Lookup text</Documentation>
+  </Element>
+  <Element Id="1fe66a6d-213e-4de9-a1d8-5311299a9051" Path="WorkQueueNotificationContact/refAsapNotificationChannelTypeId">
+    <Caption>Channel</Caption>
+  </Element>
+  <Element Id="209e732c-6381-4c58-9c8c-60bcfca6277f" Path="DimensionTransformationMatrix/DimensionTransformationMatrixRootControl/PanelTitle">
+    <Value>Automatic Dimension Setup</Value>
+  </Element>
+  <Element Id="20d1a3fc-b840-4f8a-84c6-3761f2bac436" Path="DimensionEntity/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="21d86e1c-5a23-434b-9fe2-e187fd100624" Path="AsapRounding">
+    <Caption>Rounding</Caption>
+  </Element>
+  <Element Id="21ec1441-46b4-44db-8b3f-576f6fcbbb42" Path="ResourceAccessLevel">
+    <Caption>Resource Access Level</Caption>
+  </Element>
+  <Element Id="222e0b75-6fe1-4d79-8599-a2349fb6ae21" Path="WorkQueue/WorkQueueRootControl/SplitPanel1/AsTabControl1/TabPage4/Text">
+    <Value>Notifications</Value>
+  </Element>
+  <Element Id="22c153e5-243a-430c-b8ad-5f9ea1d6ed91" Path="WorkQueue/ReferenceCode">
+    <Caption>Code</Caption>
+  </Element>
+  <Element Id="23369d2a-2953-43b1-a833-fde183b4a32b" Path="AsapSyncConnectionParameter">
+    <Caption>Connection Parameters</Caption>
+  </Element>
+  <Element Id="2340af1e-d939-47ae-930b-e24b0cb3a756" Path="IAsapEntity/RecordCreated">
+    <Caption>Created</Caption>
+    <Documentation Category="USER_LONG_HELP">Date and time of record creation</Documentation>
+  </Element>
+  <Element Id="23451790-b12f-4aba-9d64-92dc068fd644" Path="AsapSyncConfig/refTargetAsapSyncConnectionId">
+    <Caption>Target COnnection</Caption>
+  </Element>
+  <Element Id="253ce61e-509c-4d08-864f-c0e03d3eed4b" Path="IAsapEntity/RecordCreatedBy">
+    <Caption>Created By</Caption>
+    <Documentation Category="USER_LONG_HELP">User who created the record</Documentation>
+  </Element>
+  <Element Id="25da68f5-2893-4e31-b0e4-53697477bb24" Path="CounterDetail/Length">
+    <Caption>Number Length</Caption>
+    <Documentation Category="USER_LONG_HELP">Number of digits. The resulting number will be padded by zeroes up to the number of digits set in this field.</Documentation>
+  </Element>
+  <Element Id="265490f1-e25f-4ddd-8ca3-6c8eb8a4766a" Path="AsapTooltipHelp/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="268a3d71-30a2-4677-b31c-8b2d9bfd259e" Path="WorkQueueNotification/refAsapNotificationTemplateId">
+    <Caption>Template</Caption>
+  </Element>
+  <Element Id="27116e80-eb77-4872-90d3-cefbfd130dad" Path="IDimensionsReference/refDimension2Id">
+    <Caption>Dimension 2</Caption>
+  </Element>
+  <Element Id="28074fbf-9700-45a1-8a76-67669dd00654" Path="AsapTooltipHelpSubcontext/IdString">
+    <Caption>ID String</Caption>
+  </Element>
+  <Element Id="293b3a37-f200-4f8e-9772-642700a01b0b" Path="AsapSyncRun/TimeEnd">
+    <Caption>Finish</Caption>
+  </Element>
+  <Element Id="2a6829d6-188f-426c-a3c1-cab2f4423f55" Path="WorkQueue/WorkQueueRootControl/SplitPanel1/AsTabControl1/TabPage5/SplitPanel2/AsPanel7/PanelTitle">
+    <Value>Senders</Value>
+  </Element>
+  <Element Id="2bf55777-2e78-482f-b803-c1248a5a7f21" Path="AsapSyncSystem/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="2c5fa65e-e977-4968-9940-9360e8641c42" Path="ResourceList/refGroupResourceId">
+    <Caption>Group</Caption>
+  </Element>
+  <Element Id="2c654405-07c1-40e6-8b7f-6f1b8f6a8455" Path="AsapNotificationChannelType/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="2c82b3bf-7113-46a9-a4d5-32ab2c968e71" Path="AsapSyncConfig">
+    <Caption>Synchronization Configuration</Caption>
+  </Element>
+  <Element Id="2d580fad-2269-4ad9-9749-116cfdac7d08" Path="AsapRegularExpression/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="2d599a57-83cc-4f1e-b3bc-a0dc3b50280e" Path="AsapCharacterTranslation/AsapCharacterTranslationRootControl/SplitPanel1/AsPanel2/PanelTitle">
+    <Value>Character Translation</Value>
+  </Element>
+  <Element Id="2d969eff-c922-46cd-8a6b-7b6dc27e735a" Path="AsapTraceWorkflow">
+    <Caption>Workflow Trace</Caption>
+  </Element>
+  <Element Id="2f083c15-8a11-4c51-9729-5bc079cda32a" Path="BinaryFile/Split">
+    <Caption>Split</Caption>
+  </Element>
+  <Element Id="2f155c2d-1b61-4eb0-82a7-13504b6cb064" Path="AsapNotificationTemplate/AsapNotificationTemplateRootControl/SplitPanel1/SplitPanel2/Label1/Text">
+    <Value>Notification Template (XSLT):</Value>
+  </Element>
+  <Element Id="2f176996-8de3-4502-ad14-4047747edf50" Path="DimensionEntityRelation">
+    <Caption>Dimension Entity Relations</Caption>
+  </Element>
+  <Element Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" Path="IAsapEntity/Id">
+    <Caption>Id</Caption>
+    <Documentation Category="USER_LONG_HELP">Record Id. Primary key of the record.</Documentation>
+  </Element>
+  <Element Id="306f4f8e-0821-430e-9f09-f768eb66b18d" Path="Organization/refBusinessPartnerId">
+    <Caption>Business Partner</Caption>
+  </Element>
+  <Element Id="3205d93f-38b4-4be8-9b3f-b45bb365b33e" Path="AsapTooltipHelp/AsapTooltipHelpRootControl/SplitPanel1/AsTabControl1/TabPage2/AsPanel3/PanelTitle">
+    <Value>User Help Activity Log</Value>
+  </Element>
+  <Element Id="3287d809-f83e-4d78-a6f6-321ceca5616b" Path="AsapParameters">
+    <Caption>System Parameter Values</Caption>
+  </Element>
+  <Element Id="338234bd-10e1-4816-9998-4b2479017ccb" Path="AsapTooltipHelpContext/AsapTooltipHelpContextRootControl/PanelTitle">
+    <Value>Contexts</Value>
+  </Element>
+  <Element Id="34341cdb-cad9-4150-bb2c-f778f58b2d0f" Path="Counter/ManageValidityByDate">
+    <Caption>Manage Validity By Date</Caption>
+    <Documentation Category="USER_LONG_HELP">If set, counters are evaluated by date. This way you can e.g. restart counter every year.</Documentation>
+  </Element>
+  <Element Id="34645263-0ce7-4923-82d7-43996137a76c" Path="AsapNotificationTemplate/AsapNotificationTemplateRootControl/SplitPanel1/AsPanel1/PanelTitle">
+    <Value>Notification Templates</Value>
+  </Element>
+  <Element Id="372fc9a1-d0a8-4a93-a63f-bdb79cb9c97b" Path="Counter/Číselné řadyRootControl/SplitPanel1/AsPanel1/PanelTitle">
+    <Value>Counter Settings</Value>
+  </Element>
+  <Element Id="37560615-b9bc-4b55-8004-6cb68877ef70" Path="IAsapGeneralEntityAttachment/refParentRecordEntityId">
+    <Documentation Category="USER_LONG_HELP">Parent Record Entity Id</Documentation>
+  </Element>
+  <Element Id="37ca6bdc-c2c2-45e5-8e55-8d0c1c927a1f" Path="WorkQueue/WorkQueueRootControl/SplitPanel1/AsTabControl1/TabPage6/Text">
+    <Value>Notification Recipients</Value>
+  </Element>
+  <Element Id="3895fa30-5b7e-4c44-a738-5a2df5587a1f" Path="WorkQueueExternalSourceType/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="38ba3553-cf16-461b-9729-63d0cbb1c9d1" Path="WorkQueue/CreationNewValue">
+    <Caption>Creation - New Value</Caption>
+  </Element>
+  <Element Id="392bea85-8130-4ab8-95e3-bc58d2b3a700" Path="AsapSyncRunLog/AsapSyncRunLogRootControl/AsCheckBox1/Text">
+    <Value>Successful</Value>
+  </Element>
+  <Element Id="39e779cb-af24-4720-92a5-12647c202431" Path="Organization/ReferenceCode">
+    <Caption>Code</Caption>
+  </Element>
+  <Element Id="3a15d9fd-e214-4440-bb3e-f92aa215c981" Path="AsapSyncRun/TimeStart">
+    <Caption>Start</Caption>
+  </Element>
+  <Element Id="3a346c6d-d6ab-4b80-a529-8fbedfa4c6a0" Path="AsapSyncConfig/AsapSyncConfigRootControl/PanelTitle">
+    <Value>Synchronization Configuration</Value>
+  </Element>
+  <Element Id="3a66617f-c725-45de-b9ca-906a15b61195" Path="AsapSyncConfig/refSourceAsapSyncProviderConfigId">
+    <Caption>Source</Caption>
+  </Element>
+  <Element Id="3a6a3418-5100-45b4-ad26-737b7f7587d0" Path="AsapTooltipHelp/Roles">
+    <Caption>Roles</Caption>
+  </Element>
+  <Element Id="3b49ef11-c055-472b-9f3f-67cd4a8dc106" Path="Resource/refBusinessUnitId">
+    <Caption>Business Unit</Caption>
+    <Documentation Category="USER_LONG_HELP">Business unit owning the resource.</Documentation>
+  </Element>
+  <Element Id="3c650dd4-ff68-4d5a-8b7c-f98677c93447" Path="WorkQueueCommand/WorkQueueCommandRootControl/AsCheckBox2/Text">
+    <Value>Default</Value>
+  </Element>
+  <Element Id="3cd0f5bd-c8cd-4af2-8a70-a09dd020229b" Path="DimensionEntity/IsTarget">
+    <Caption>Target Entity</Caption>
+  </Element>
+  <Element Id="3cf8d423-0e59-4930-b509-5f7d32f82bc2" Path="DimensionTransformationMatrix/refTargetDimensionEntityId">
+    <Caption>Entity</Caption>
+  </Element>
+  <Element Id="3d0dbd34-7b48-4b24-9164-479778f8424a" Path="AsapRounding/AsapRoundingRootControl/PanelTitle">
+    <Value>Rounding</Value>
+  </Element>
+  <Element Id="3e0534ec-95df-4854-85b4-f0c38c8cb167" Path="WorkQueue/WorkQueueRootControl/SplitPanel1/AsTabControl1/TabPage5/SplitPanel2/AsPanel6/PanelTitle">
+    <Value>Notification</Value>
+  </Element>
+  <Element Id="3e9c243e-29f8-4c1b-bd95-ebf995a9abe1" Path="Resource/refBusinessPartnerId">
+    <Caption>Contact</Caption>
+    <Documentation Category="USER_LONG_HELP">Owning business partner of the resource.</Documentation>
+  </Element>
+  <Element Id="401168a9-0914-4fb7-8374-e5bb09cc6382" Path="WorkQueueNotification/Description">
+    <Caption>Description</Caption>
+  </Element>
+  <Element Id="4028f72f-ca5b-4831-992b-be88216c5d70" Path="WorkQueue/WorkQueueRootControl/SplitPanel1/AsTabControl1/TabPage4/AsPanel5/PanelTitle">
+    <Value>Notifications</Value>
+  </Element>
+  <Element Id="403626e1-b8e6-4476-a478-0caa776d051f" Path="IDimensionsReference/refDimension4Id">
+    <Caption>Dimension 4</Caption>
+  </Element>
+  <Element Id="40962171-fd68-462b-ad11-0bd5b77beb32" Path="AsapTooltipHelpContext/AsapTooltipHelpContextRootControl/CollapsibleContainer1/CollapsiblePanel2/Text">
+    <Value>Subcontexts</Value>
+  </Element>
+  <Element Id="411e672f-bdd5-45d7-93e5-228fd9344e99" Path="Language/LanguageRootControl/AsPanel1/PanelTitle">
+    <Value>Language</Value>
+  </Element>
+  <Element Id="4146dfc0-0804-48b3-b484-b3d99519aa68" Path="AsapCalendar/AsapCalendarRootControl/GroupBoxWithChamfer1/AsCheckBox1/Text">
+    <Value>Monday</Value>
+  </Element>
+  <Element Id="41dd6b83-6d95-4c59-939e-3440170748eb" Path="AsapPanelFilter">
+    <Caption>User Filters</Caption>
+  </Element>
+  <Element Id="41e9601a-7323-4ed2-bf74-20fe2179321d" Path="AsapTooltipHelp/AsapTooltipHelpRootControl/PanelTitle">
+    <Value>Help</Value>
+  </Element>
+  <Element Id="4264cf78-6967-4c5c-a73b-8b5a06698f68" Path="CounterDetail/CounterFrom">
+    <Caption>From</Caption>
+    <Documentation Category="USER_LONG_HELP">Bottom limit of the counter. This is not the starting number.</Documentation>
+  </Element>
+  <Element Id="428f9ff7-ecd7-4458-b817-6b028dc93eaa" Path="AsapPanelColumnConfig">
+    <Caption>Grid User Configuration</Caption>
+  </Element>
+  <Element Id="43dc411d-b69a-4aca-9013-2db839c96faa" Path="WorkQueue_Create/WorkQueue_CreateRootControl/GroupBoxWithChamfer1/AsTextBox2/Caption">
+    <Value>New Value</Value>
+  </Element>
+  <Element Id="442f364a-bb1a-4664-a299-09a02f30a77a" Path="AsapSyncProviderConfig">
+    <Caption>Synchronization Provider Configuration</Caption>
+  </Element>
+  <Element Id="457a4391-e94f-424c-89d0-dc3804121ce6" Path="BusinessPartner">
+    <Caption>Business Partner</Caption>
+    <Documentation Category="USER_LONG_HELP">Selected business partner</Documentation>
+  </Element>
+  <Element Id="471c0869-46ce-4897-99dd-836ee0ce122d" Path="ReportFormat_HTML">
+    <StringValue>HTML</StringValue>
+  </Element>
+  <Element Id="479eb5d0-baa0-42d6-9242-d881edfc2942" Path="AsapFeatureList/ReferenceCode">
+    <Caption>Code</Caption>
+  </Element>
+  <Element Id="47a7d7e0-a4fb-4be0-838f-5d2ca7b6e29c" Path="WorkQueue/ExternalSourceConnection">
+    <Caption>Connection String</Caption>
+  </Element>
+  <Element Id="49336cf5-f3d6-4861-9fdb-08594ec3ca1a" Path="AsapTooltipHelpContextComponent/IdString">
+    <Caption>ID String</Caption>
+  </Element>
+  <Element Id="498b665a-97dd-4232-a269-02cd209210d9" Path="AsapFeatureList/AsapFeatureListRootControl/PanelTitle">
+    <Value>Feature List</Value>
+  </Element>
+  <Element Id="4a033396-b150-4d1c-8cc9-394b069ccae8" Path="WorkQueue/RemovalCondition">
+    <Caption>Condition (XPath)</Caption>
+  </Element>
+  <Element Id="4aeace26-87df-427e-835b-84fe8dbaa8af" Path="AsapNotificationTemplate/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="4badf745-4bf1-4257-a3fe-ec0c86c2588d" Path="IAsapGeneralEntityAttachment/refParentRecordId">
+    <Documentation Category="USER_LONG_HELP">Parent record ID</Documentation>
+  </Element>
+  <Element Id="4be6caac-a956-4cf2-8400-ed818fc7c12c" Path="WorkQueue/WorkQueueRootControl/PanelTitle">
+    <Value>Work Queues</Value>
+  </Element>
+  <Element Id="4bfd4aa8-2d12-4293-9360-542e23e904ce" Path="WorkQueueEntry/ErrorText">
+    <Caption>Error Message</Caption>
+  </Element>
+  <Element Id="4ce872b8-4c20-4351-a9fb-530126385947" Path="AsapSyncRunLog/DestinationId_guid">
+    <Caption>Target ID (guid)</Caption>
+  </Element>
+  <Element Id="4db7a2c6-4331-430a-8096-1cd36b680c00" Path="AsapCalendar/AsapCalendarRootControl/GroupBoxWithChamfer1/AsCheckBox5/Text">
+    <Value>Firday</Value>
+  </Element>
+  <Element Id="4e5ef294-fa28-43ea-9c69-92ac7d7cb557" Path="AsapSyncRun/CountFailures">
+    <Caption>Failures</Caption>
+  </Element>
+  <Element Id="4e7d12d5-3d3c-40be-b08e-0a889163ed2e" Path="ResourceAccessLevelResource/refResourceAccessLevelId">
+    <Caption>Resource Access Level</Caption>
+  </Element>
+  <Element Id="4f498270-303f-40d6-97ce-41838bfa5daf" Path="AsapDashboardView/MenuId">
+    <Caption>Dashboard</Caption>
+  </Element>
+  <Element Id="50053589-e3cd-4bf0-a2b9-123f1a821bca" Path="AsapCharacterTranslationDetail/Priority">
+    <Caption>Priority</Caption>
+  </Element>
+  <Element Id="5008fdde-0119-4bd3-8ee1-4d04e4382d0d" Path="BusinessUnit">
+    <Caption>Business Unit</Caption>
+  </Element>
+  <Element Id="505989d2-3222-467f-b3a1-5ba487eeeb60" Path="AsapApplicationRole/AsapApplicationRoleRootControl/AsCheckBox1/Text">
+    <Value>System</Value>
+  </Element>
+  <Element Id="5078f831-7962-477e-bf69-b3ff10c80f44" Path="Dimension4">
+    <Caption>Dimension 4</Caption>
+  </Element>
+  <Element Id="50803c7d-cf26-4c2f-bc46-1ecf8d50b877" Path="WorkQueue/ExternalSourceUserName">
+    <Caption>User Name</Caption>
+  </Element>
+  <Element Id="51287ff9-932d-4199-b9fc-479f4eb057fc" Path="AsapRoleAsapApplicationRole/IsFormReadOnly">
+    <Caption>Read Only (From))</Caption>
+  </Element>
+  <Element Id="51854e16-2ad2-4ad3-bab4-1f54ac8517e6" Path="Attachment/FileName">
+    <Caption>File Name</Caption>
+    <Documentation Category="USER_LONG_HELP">Attachment file name</Documentation>
+  </Element>
+  <Element Id="51b33fc9-2658-409a-8721-c175036701ee" Path="WorkQueue_Create/WorkQueue_CreateRootControl/GroupBoxWithChamfer1/Text">
+    <Value>State/Value Change</Value>
+  </Element>
+  <Element Id="51f4e924-f029-47b4-8188-38dc1d13250f" Path="WorkQueue/WorkQueueRootControl/AsCheckBox4/Text">
+    <Value>Display Number of Messages</Value>
+  </Element>
+  <Element Id="535f2898-d757-4612-96dd-4bfc52d2a386" Path="WorkQueue/ExternalSourceLastMessage">
+    <Caption>Last Message</Caption>
+  </Element>
+  <Element Id="5657e789-f068-4d54-9b30-c7c2d2bbefe9" Path="AsapTooltipHelpSubcontext/AsapTooltipHelpSubcontextRootControl/PanelTitle">
+    <Value>Subcontexts</Value>
+  </Element>
+  <Element Id="570024cc-ede3-41f9-b605-9113a055f47f" Path="Mail/Subject">
+    <Caption>Subject</Caption>
+  </Element>
+  <Element Id="571d1e02-a11d-4b10-b079-c9acedb93e70" Path="AsapSyncConnection/refAsapSyncSystemId">
+    <Caption>System</Caption>
+  </Element>
+  <Element Id="585acd81-4629-4792-b5ab-7c91e67a71a4" Path="AsapTooltipHelpGroup/AsapTooltipHelpGroupRootControl/AsPanel1/PanelTitle">
+    <Value>Name</Value>
+  </Element>
+  <Element Id="585c8876-543d-4125-bafb-e28b0124dee5" Path="AsapFeatureList/IsFeatureOn">
+    <Caption>Active</Caption>
+  </Element>
+  <Element Id="59c72439-b4d1-40b2-bb60-3570be19cd97" Path="AsapCalendar/AsapCalendarRootControl/GroupBoxWithChamfer1/AsCheckBox6/Text">
+    <Value>Saturday</Value>
+  </Element>
+  <Element Id="5a9d856d-5803-44f9-8854-093a722fd702" Path="WorkQueueCommand/Command">
+    <Caption>Command</Caption>
+  </Element>
+  <Element Id="5ad2fe73-bc65-409b-a16c-fef966f54b4d" Path="WorkQueueCommand/IsAutoProcessed">
+    <Caption>Auto Process</Caption>
+  </Element>
+  <Element Id="5b30db10-ac2a-4d0f-b7b2-448388fef1b1" Path="ResourceList/refMemberResourceId">
+    <Caption>Resource</Caption>
+  </Element>
+  <Element Id="5b4d92ad-6b78-4479-957b-463d73ab0f62" Path="Users/UsersRootControl/AsPanel1/PanelTitle">
+    <Value>Users</Value>
+  </Element>
+  <Element Id="5b590143-c85f-4c7d-a7f3-ae0a6d246f18" Path="Organization">
+    <Caption>Organization</Caption>
+  </Element>
+  <Element Id="5d4e1a27-b689-4202-b30c-1863b6ef632c" Path="AsapCalendarDetail">
+    <Caption>Calendar Detail</Caption>
+  </Element>
+  <Element Id="5e024ca3-37f9-41b9-8548-b03ed57e2baf" Path="AsapFeatureList">
+    <Caption>Feature List</Caption>
+  </Element>
+  <Element Id="5e7d8268-7dad-4817-8c52-a4f5600a90e2" Path="AsapRounding/refAsapRoundingTypeId">
+    <Caption>Type</Caption>
+  </Element>
+  <Element Id="5f01be2b-6135-4d0c-96f4-09f5d1fb8cd2" Path="Organization/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="5f5a5980-4059-4b78-8386-ad8f4685109b" Path="AsapCalendar/IsSundayWorkingDay">
+    <Caption>Sunday</Caption>
+    <Documentation Category="USER_LONG_HELP">Sunday is a work day.</Documentation>
+  </Element>
+  <Element Id="60af789a-67ac-4bad-95f0-23f9136dc93c" Path="AsapTooltipHelpContext/AsapTooltipHelpContextRootControl/CollapsibleContainer1/CollapsiblePanel3/AsPanel5/PanelTitle">
+    <Value>Components</Value>
+  </Element>
+  <Element Id="617cd747-0db4-470c-a43d-a6e953546a7b" Path="Resource/refResourceTypeId">
+    <Caption>Type</Caption>
+    <Documentation Category="USER_LONG_HELP">Resource type</Documentation>
+  </Element>
+  <Element Id="61829bb4-5587-4562-a981-892a7da69a6d" Path="AsapRole/Name">
+    <Caption>Name</Caption>
+    <Documentation Category="USER_LONG_HELP">Name of the authorization role. By this role the user will be authorized to access system functions (e.g. menu items).</Documentation>
+  </Element>
+  <Element Id="62b00c08-cf52-425a-848e-d24e64f9857a" Path="AsapCalendar/IsMondayWorkingDay">
+    <Caption>Monday</Caption>
+    <Documentation Category="USER_LONG_HELP">Monday is a working day.</Documentation>
+  </Element>
+  <Element Id="6425db73-f0bc-42d7-b211-a765e3d32558" Path="WorkQueue/WorkQueueRootControl/SplitPanel1/AsTabControl1/TabPage3/AsPanel2/PanelTitle">
+    <Value>Commands</Value>
+  </Element>
+  <Element Id="653f9e35-e2e9-4169-807d-bec7082e84b4" Path="AsapTooltipHelpGroup/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="6584d503-bce3-4cf1-9f34-6a07f6ef861d" Path="AsapSyncConnection/AsapSyncConnectionRootControl/PanelTitle">
+    <Value>Source Connection</Value>
+  </Element>
+  <Element Id="664bbf69-514a-4da6-b23f-081c7ef601d3" Path="WorkQueue_Remove/WorkQueue_RemoveRootControl/GroupBoxWithChamfer1/AsTextBox2/Caption">
+    <Value>Old Value</Value>
+  </Element>
+  <Element Id="683755ba-e41f-4fc6-a4fb-627b381aa210" Path="AsapRoleAsapApplicationRole/AsapRoleAsapApplicationRoleRootControl/AsCheckBox1/Text">
+    <Value>Read Only (Form)</Value>
+  </Element>
+  <Element Id="69606215-a699-439f-a499-769cba583df7" Path="AsapRoleAsapApplicationRole">
+    <Caption>Assigned Application Role</Caption>
+  </Element>
+  <Element Id="697e0804-f234-4881-9e3d-6d593cb67cfe" Path="AsapCharacterTranslation">
+    <Caption>Character Translation</Caption>
+  </Element>
+  <Element Id="69a3c347-33d8-4990-8cad-526fb697d05c" Path="AsapTooltipHelp/FormId">
+    <Caption>Form ID</Caption>
+  </Element>
+  <Element Id="6a148bad-09df-4266-b0aa-0ae2ff14441f" Path="Attachment/Note">
+    <Caption>Remarks</Caption>
+    <Documentation Category="USER_LONG_HELP">Attachment remarks</Documentation>
+  </Element>
+  <Element Id="6a92781b-ac57-4b24-a2a3-7ff772747431" Path="IAsapEntity2/RecordCreated">
+    <Caption>Created</Caption>
+    <Documentation Category="USER_LONG_HELP">Date/time when the record was created</Documentation>
+  </Element>
+  <Element Id="6aa38212-dc3c-469c-a190-e0e6910c355e" Path="AsapTooltipHelp/DestroyParameter">
+    <Caption>Destroy Parameter</Caption>
+  </Element>
+  <Element Id="6aa46453-d839-41f8-8690-f4669e9f18ac" Path="AsapTooltipHelpContextComponent/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="6c9ce2db-8161-48ba-b1e9-ae7ef5cbf0a7" Path="WorkQueueNotificationContactType/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="6cdf63e0-e6e0-419d-ad8c-9b104b5815c7" Path="ResourceAccessLevelResource/refResourceId">
+    <Caption>Assigned Resource</Caption>
+  </Element>
+  <Element Id="6d6b5e69-5833-4ca0-aedb-98baeb443e05" Path="AsapRoleAsapApplicationRole_ApplicationRoleForm/AsapRoleAsapApplicationRole_ApplicationRoleFormRootControl/AsCheckBox1/Text">
+    <Value>Read Only (Form)</Value>
+  </Element>
+  <Element Id="6d9c8b71-337e-4572-87ff-1dd7e1fa3c53" Path="BusinessPartner/FirstName">
+    <Caption>First Name</Caption>
+    <Documentation Category="USER_LONG_HELP"></Documentation>
+  </Element>
+  <Element Id="6e44c51d-8818-43d4-b162-b2a05dc7b30f" Path="AsapApplicationRole/IsSystemRole">
+    <Caption>System</Caption>
+  </Element>
+  <Element Id="6eb2f3f6-fecf-4929-a73d-001d914f5b5a" Path="AsapSyncConnection/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="6f097c8f-ff61-430d-a73d-6113f9420726" Path="AsapSyncRunLog">
+    <Caption>Synchronization Run Item</Caption>
+  </Element>
+  <Element Id="6f7b5084-a9d0-4b90-be9d-3edc665cbd7c" Path="AsapCharacterTranslation/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="71f94167-a1b0-4054-a003-faa9b3c84aef" Path="Attachment">
+    <Caption>Attachment</Caption>
+  </Element>
+  <Element Id="724cfd25-9c93-47a6-bdc1-5d6de4a3bb36" Path="BusinessPartner/ParentId">
+    <Caption>Parent Business Partner</Caption>
+    <Documentation Category="USER_LONG_HELP"></Documentation>
+  </Element>
+  <Element Id="725eab14-26ae-4ae3-a536-65746b1b3f37" Path="admin/addUser">
+    <Url>admin/addUser</Url>
+  </Element>
+  <Element Id="72d8002c-7ddb-451c-9bee-a0e5dafb407b" Path="AsapTraceWorkflowStep">
+    <Caption>Workflow Trace Step</Caption>
+  </Element>
+  <Element Id="7306f2fe-c2fb-4c7d-817f-9984e7c470ce" Path="WorkQueue/refWorkQueueExternalSourceTypeId">
+    <Caption>External Source</Caption>
+  </Element>
+  <Element Id="744ce5c1-c2bf-47ec-a394-c2a901919e1a" Path="BusinessPartner/FirstNameAndName">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="74658e86-c13d-4c65-887b-06c893a9efb4" Path="CounterDetail/Prefix">
+    <Documentation Category="USER_LONG_HELP">Prefix for the resulting number</Documentation>
+  </Element>
+  <Element Id="747870c8-279c-4e54-9522-21f3c71bd53d" Path="AsapTooltipHelp/refAsapTooltipHelpDestroyEventId">
+    <Caption>Destroy Event</Caption>
+  </Element>
+  <Element Id="74aca2d1-f4f4-4574-9707-2468b14f3457" Path="AsapRounding/AsapRoundingRootControl/AsPanel1/PanelTitle">
+    <Value>Rounding</Value>
+  </Element>
+  <Element Id="75a386ef-6dc2-48c8-970c-2a03e90fe6a6" Path="AsapSyncConnection/AsapSyncConnection_CompleteRootControl/SplitPanel1/AsPanel2/PanelTitle">
+    <Value>Parameters</Value>
+  </Element>
+  <Element Id="7623e70b-d02d-4856-b713-a7a8510e2f3a" Path="_wildcard">
+    <StringValue>%</StringValue>
+  </Element>
+  <Element Id="76efc330-faab-45f4-9760-9aa5a6e42078" Path="WorkQueueEntry">
+    <Caption>Work Queue Entry</Caption>
+  </Element>
+  <Element Id="78133169-56ad-40fd-ba78-3bacabb5ab90" Path="AsapDebugWorkflow/AsapDebugWorkflowRootControl/PanelTitle">
+    <Value>Workflow</Value>
+  </Element>
+  <Element Id="78f01ed7-b91c-4bca-97aa-fde0f3923014" Path="admin/userRoles">
+    <Url>admin/userRoles</Url>
+  </Element>
+  <Element Id="7a5f60a2-895a-49d7-b009-929b4a6a4c5a" Path="BusinessPartner/Name">
+    <Caption>Name</Caption>
+    <Documentation Category="USER_LONG_HELP"></Documentation>
+  </Element>
+  <Element Id="7a8c65eb-76a0-4d51-9e4d-5737596243e9" Path="AsapSyncRunLog/SourceId_int">
+    <Caption>Source ID (Number)</Caption>
+  </Element>
+  <Element Id="7a9325fc-d606-437b-9d27-eba652c7ee9d" Path="WorkQueue/WorkQueueRootControl/SplitPanel1/AsTabControl1/TabPage3/Text">
+    <Value>Commands</Value>
+  </Element>
+  <Element Id="7b00ddba-864f-45db-b989-b5fdd7a17926" Path="AsapCalendar/IsSaturdayWorkingDay">
+    <Caption>Saturday</Caption>
+    <Documentation Category="USER_LONG_HELP">Saturday is a working day</Documentation>
+  </Element>
+  <Element Id="7b0c77fa-8214-407b-9deb-e706b3e0999b" Path="WorkQueueNotificationContact/WorkQueueNotificationContactRootControl/PanelTitle">
+    <Value>Notification Contacts</Value>
+  </Element>
+  <Element Id="7b3d3035-7e43-454c-9ccd-4db8d215033b" Path="Mail/Sender">
+    <Caption>From</Caption>
+  </Element>
+  <Element Id="7cd3a0ed-a318-4b40-9727-84fc2ec3837c" Path="WorkQueue_Create/WorkQueue_CreateRootControl/GroupBoxWithChamfer1/AsTextBox1/Caption">
+    <Value>Old Value</Value>
+  </Element>
+  <Element Id="7cf51f77-1d61-47a4-97a4-60ae408ed276" Path="AsapTooltipHelpGroup/AsapTooltipHelpGroupRootControl/PanelTitle">
+    <Value>Name</Value>
+  </Element>
+  <Element Id="7d2d261b-e817-4469-81a2-1d97284631ab" Path="AsapCalendar/AsapCalendarRootControl/GroupBoxWithChamfer1/AsCheckBox4/Text">
+    <Value>Thursday</Value>
+  </Element>
+  <Element Id="7d3cf0c7-0712-456f-b59c-50a9f96fe769" Path="AsapCharacterTranslationDetail/AsapCharacterTranslationDetailRootControl/PanelTitle">
+    <Value>Translation</Value>
+  </Element>
+  <Element Id="7d7cd04c-0df4-4851-ba29-1760f55b5e86" Path="DimensionTransformationMatrix/refSource4DimensionEntityId">
+    <Caption>Dimension 4</Caption>
+  </Element>
+  <Element Id="7d99b77a-3fb4-4c57-9f8d-cfa692c775b2" Path="BusinessPartnerAsapRole/BusinessPartnerAsapRoleRootControl/PanelTitle">
+    <Value>User Roles</Value>
+  </Element>
+  <Element Id="7dd12d9d-696c-42e4-9644-af9d5b427ec0" Path="WorkQueue/refCreationAsapStateMachineEventTypeId">
+    <Caption>Create Event</Caption>
+  </Element>
+  <Element Id="7e5deb1c-43f8-4973-8545-71cc28457e79" Path="CounterDetail/Increment">
+    <Documentation Category="USER_LONG_HELP">Number by which counter numbers will be incremented.</Documentation>
+  </Element>
+  <Element Id="7e68a1d3-87bd-4892-8886-e3e8539ff78c" Path="Resource/Name">
+    <Caption>Name</Caption>
+    <Documentation Category="USER_LONG_HELP">Resource name</Documentation>
+  </Element>
+  <Element Id="7eb909ea-0aa0-42f5-8762-71bf528fb875" Path="AsapFeatureList/AsapFeatureListRootControl/AsCheckBox1/Text">
+    <Value>Active</Value>
+  </Element>
+  <Element Id="7fd39e2a-d818-4ef3-8352-d5ab76f138ae" Path="WorkQueueNotificationEvent/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="80780221-3891-4f9a-bb7a-699489c48105" Path="AsapCalendar/AsapCalendarRootControl/PanelTitle">
+    <Value>Calendar</Value>
+  </Element>
+  <Element Id="809be64b-0778-4bfa-9576-8df58ebccad1" Path="AsapSyncRun/CountSuccess">
+    <Caption>Successful Records</Caption>
+  </Element>
+  <Element Id="80ac6337-0fa7-48f1-b10d-0ea85ac22634" Path="AsapSyncProvider">
+    <Caption>Synchronization Provider</Caption>
+  </Element>
+  <Element Id="820c3c8a-ea9a-4637-baf4-c2e86ad2184c" Path="AsapCalendar/AsapCalendarRootControl/GroupBoxWithChamfer1/Text">
+    <Value>Working Days</Value>
+  </Element>
+  <Element Id="82feb831-bf8f-4bd0-8b70-065c601661e1" Path="AsapRoundingType/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="8359ac45-fda0-4316-85b8-51c9ef978a25" Path="DimensionTransformationMatrix/refSource2DimensionEntityId">
+    <Caption>Dimension 2</Caption>
+  </Element>
+  <Element Id="836f4f72-c290-45db-8bde-6ddc005dd190" Path="WorkQueue/CreationFieldName">
+    <Caption>Creation Field Name</Caption>
+  </Element>
+  <Element Id="8524cf92-8b95-4028-8953-9420bda4142d" Path="TextFile/Split">
+    <Caption>Split</Caption>
+  </Element>
+  <Element Id="8614673e-bb64-4ee9-8b9e-7c4c144e03c6" Path="DimensionTransformationMatrix/refSource3DimensionEntityId">
+    <Caption>Dimension 3</Caption>
+  </Element>
+  <Element Id="869a1807-a5b6-420e-94d8-855745733195" Path="Counter/CounterRootControl/AsCheckBox1/Text">
+    <Value>Maintain By Date</Value>
+  </Element>
+  <Element Id="871526c7-ac6b-45d9-9147-0b48ab924eb2" Path="IOrganization/refOrganizationId">
+    <Caption>Organization</Caption>
+  </Element>
+  <Element Id="87b7a6d5-55a2-4513-a546-3f2539b3a220" Path="AsapTooltipHelpContext/AsapTooltipHelpContextRootControl/CollapsibleContainer1/CollapsiblePanel3/Text">
+    <Value>Components</Value>
+  </Element>
+  <Element Id="8928dc62-e5e2-412b-b69c-a4dc6f3c1f51" Path="Dimension3">
+    <Caption>Dimension 3</Caption>
+  </Element>
+  <Element Id="8993432b-88f4-4563-bbf7-6775e20bcf2d" Path="AsapSyncConnectionParameter/AsapSyncConnectionParameterRootControl/PanelTitle">
+    <Value>Parameters</Value>
+  </Element>
+  <Element Id="8b0e1c91-d5b8-456f-ae16-0a9c9ddc08a3" Path="AsapTooltipHelpSubcontext/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="8b28a2d6-7645-49e0-b776-5af7b6d1d05b" Path="WorkQueueNotification/refWorkQueueId">
+    <Caption>Work Queue</Caption>
+  </Element>
+  <Element Id="8b99aed9-d03c-4012-b59d-c3a40bb3d9f3" Path="Language/TagIETF">
+    <Caption>IETF Tag</Caption>
+  </Element>
+  <Element Id="8cc90459-7283-4107-a03e-5036965eb0c1" Path="Mail/Recipient">
+    <Caption>To</Caption>
+  </Element>
+  <Element Id="8ce1f261-b74a-4484-8ac7-c3f0aae7611f" Path="WorkQueueCommand/SortOrder">
+    <Caption>Order</Caption>
+  </Element>
+  <Element Id="8d8b1e4f-8f16-4d66-8ebc-b71f5cd2f5ee" Path="AsapRoleAsapApplicationRole_ApplicationRoleForm/AsapRoleAsapApplicationRole_ApplicationRoleFormRootControl/PanelTitle">
+    <Value>Assigned User Roles</Value>
+  </Element>
+  <Element Id="8e212c01-6f4e-4561-856f-15e775c79e42" Path="WorkQueueCommand/IsDefault">
+    <Caption>Default</Caption>
+  </Element>
+  <Element Id="8e691b8a-0aae-43cb-94b8-2e5da9bdee89" Path="AsapTooltipHelpPosition/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="8f528a2e-82e1-40f2-98c3-b71108aa1913" Path="param_date/param_dateRootControl/AsDateBox1/Caption">
+    <Value>$caption</Value>
+  </Element>
+  <Element Id="8f72f36f-7bfd-4486-8244-1b7148f3bdc2" Path="AsapTooltipHelp/AsapTooltipHelpRootControl/SplitPanel1/AsPanel1/PanelTitle">
+    <Value>Help</Value>
+  </Element>
+  <Element Id="8f803708-79f4-485e-b1cd-431137b3eeb0" Path="Counter/Číselné řadyRootControl/SplitPanel1/AsPanel2/PanelTitle">
+    <Value>Counters</Value>
+  </Element>
+  <Element Id="8ffa25bb-ffda-4af5-9631-cac18d33c0dc" Path="WorkQueueCommandType">
+    <Caption>Work Queue Command Type</Caption>
+  </Element>
+  <Element Id="90dd5936-2e2a-455a-8bdf-1c1758bbf874" Path="WorkQueue/WorkQueueRootControl/AsCheckBox3/Text">
+    <Value>Lookup Field Values</Value>
+  </Element>
+  <Element Id="91344139-612d-4d03-9163-376f2ce096ca" Path="AsapTooltipHelpContextComponent/AsapTooltipHelpContextComponentRootControl/PanelTitle">
+    <Value>Components</Value>
+  </Element>
+  <Element Id="9139a809-5bef-4c9f-a9d6-5ce92aa8608b" Path="WorkQueue_Create/WorkQueue_CreateRootControl/GroupBoxWithChamfer2/Text">
+    <Value>External Source</Value>
+  </Element>
+  <Element Id="91a45e2f-64bb-44dc-ade0-9a7be929dc8b" Path="param_int/param_intRootControl/AsTextBox1/Caption">
+    <Value>$caption</Value>
+  </Element>
+  <Element Id="922a4d18-7725-4d38-b438-04052858fb62" Path="Users/Users RootControl/PanelTitle">
+    <Value>Users</Value>
+  </Element>
+  <Element Id="927dd50b-1a42-4cc9-b427-69245216ac8c" Path="CounterDetail">
+    <Caption>Counter Detail</Caption>
+  </Element>
+  <Element Id="9424c659-0c83-4aa9-b2a4-aeec9d9e8d40" Path="IAsapEntity/RecordUpdatedServer">
+    <Caption>Record Updated (server)</Caption>
+    <Documentation Category="USER_LONG_HELP"></Documentation>
+  </Element>
+  <Element Id="9472a1ba-e91f-4bee-b284-a1ef85545925" Path="AsapSyncRunLog/DestinationId_int">
+    <Caption>Target ID (Number)</Caption>
+  </Element>
+  <Element Id="94b59b81-a197-4aff-8555-5bb8575a85ac" Path="AsapSyncRun/AsapSyncRunRootControl/PanelTitle">
+    <Value>Executed Synchronizations</Value>
+  </Element>
+  <Element Id="96113e75-13a8-47c9-a170-663809367169" Path="WorkQueue/IsMessageCountDisplayed">
+    <Caption>Display Number of Messages</Caption>
+  </Element>
+  <Element Id="96291154-fe31-4f73-8386-a3464cb2f9bc" Path="ReportFormat_PDF">
+    <StringValue>PDF</StringValue>
+  </Element>
+  <Element Id="96992812-3672-45b7-a126-ec02efba640f" Path="AsapSyncConfig/refTargetAsapSyncProviderConfigId">
+    <Caption>Target</Caption>
+  </Element>
+  <Element Id="96fc3981-2505-42f7-bfa1-b70ab7e74003" Path="DimensionEntity">
+    <Caption>Dimension Entity</Caption>
+  </Element>
+  <Element Id="9783a8f8-a877-462a-8796-fd06fae6dbc4" Path="UsersAndRoles/UsersAndRolesRootControl/SplitPanel1/AsPanel2/PanelTitle">
+    <Value>User Roles</Value>
+  </Element>
+  <Element Id="9838c454-9986-4c6d-ac85-03e42b6ceae4" Path="AsapTooltipHelp/refAsapTooltipHelpSubcontextId">
+    <Caption>Subcontext</Caption>
+  </Element>
+  <Element Id="98a1d200-0fa2-4079-bdba-1908d0004705" Path="WorkQueue/RemovalNewValue">
+    <Caption>Removal New Value</Caption>
+  </Element>
+  <Element Id="992b5258-5f92-4268-9317-9a47d0996caf" Path="AsapFeatureList/Description">
+    <Caption>Description</Caption>
+  </Element>
+  <Element Id="994886a2-0850-4745-9e33-bec58cf6756e" Path="AsapSyncConnection">
+    <Caption>Synchronization Connection</Caption>
+  </Element>
+  <Element Id="9b691a79-8e00-4c25-9957-c59ab38c5410" Path="OrganizationMapping/refParentOrganizationId">
+    <Caption>Parent Organization</Caption>
+  </Element>
+  <Element Id="9b8ee646-93ce-4933-8e25-0996a36b5cc5" Path="WorkQueueCommand/Param1">
+    <Caption>Parameter 1</Caption>
+  </Element>
+  <Element Id="9bca7b53-71a2-418b-b616-d2e0bd884fba" Path="DimensionTransformationMatrix">
+    <Caption>Dimension Autoassignment Setup</Caption>
+  </Element>
+  <Element Id="9bf310e5-971d-407b-9bf1-454f1ded2133" Path="WorkQueueNotification_Header/WorkQueueNotification_HeaderRootControl/PanelTitle">
+    <Value>Notifications</Value>
+  </Element>
+  <Element Id="9c673323-d8ac-4498-9a05-edb73f8d903e" Path="Counter/Description">
+    <Caption>Description</Caption>
+    <Documentation Category="USER_LONG_HELP">Counter description</Documentation>
+  </Element>
+  <Element Id="9f6800a6-77d0-4371-87ed-179b59c8ce0e" Path="AsapTraceWorkflow/AsapDebugWorkflowRootControl/SplitPanel1/AsPanel2/PanelTitle">
+    <Value>Steps</Value>
+  </Element>
+  <Element Id="a00dbd76-a329-4811-9887-ef7a55646d11" Path="AsapTooltipHelpDestroyEvent/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="a033a279-550c-4aab-8653-0ae8d2f482df" Path="AsapCalendarDetail/AsapCalendarDetailRootControl/PanelTitle">
+    <Value>Holidays</Value>
+  </Element>
+  <Element Id="a154df52-7571-4135-a60c-5a72e7b9299d" Path="_asterisk">
+    <StringValue>*</StringValue>
+  </Element>
+  <Element Id="a272d6ef-8a1c-4de4-94b4-91e102778fe8" Path="WorkQueueCommand/Text">
+    <Caption>Text</Caption>
+  </Element>
+  <Element Id="a28362d9-82b8-4f1b-8b86-706fce7015f5" Path="param_bool/param_boolRootControl/AsCheckBox1/Text">
+    <Value>$caption</Value>
+  </Element>
+  <Element Id="a28ba1a9-0080-4657-8016-3517198f49a3" Path="AsapApplicationRole/AsapApplicationRoleRootControl/SplitPanel1/AsPanel2/PanelTitle">
+    <Value>Assigned User Roles</Value>
+  </Element>
+  <Element Id="a339d36f-29d4-4a77-96c6-77a332afffaa" Path="WorkQueue/CreationOldValue">
+    <Caption>Creation Old Value</Caption>
+  </Element>
+  <Element Id="a3b43ab4-232d-4704-9c43-c0dcbf2fc98e" Path="BusinessUnit/BusinessUnitRootControl/AsPanel1/PanelTitle">
+    <Value>Business Unit</Value>
+  </Element>
+  <Element Id="a46bfc23-8032-480c-bedc-9f49ae318a9a" Path="AsapRoundingType">
+    <Caption>Rounding Type</Caption>
+  </Element>
+  <Element Id="a5aced01-0a45-4e17-a9cf-3deaabcf6fc9" Path="AsapCalendar/IsWednesdayWorkingDay">
+    <Caption>Wednesday</Caption>
+    <Documentation Category="USER_LONG_HELP">Wednesday is a working day</Documentation>
+  </Element>
+  <Element Id="a5f46de1-81a7-4cc4-a5dc-3c95cb529fa0" Path="AsapTooltipHelp/refAsapTooltipHelpPositionId">
+    <Caption>Position</Caption>
+  </Element>
+  <Element Id="a6518f10-a9a2-4dfd-a30b-b50ffe15704e" Path="AsapApplicationRole/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="a69109ec-e1fb-4160-896f-1f0da6a276b3" Path="AsapTooltipHelp/AsapTooltipHelpRootControl/SplitPanel1/AsTabControl1/TabPage2/Text">
+    <Value>Usage</Value>
+  </Element>
+  <Element Id="a6b6c611-06c7-4ca2-ac57-e0f2c9427e4b" Path="AsapWorkflowMenuItemConfig">
+    <Caption>User Menu Settings</Caption>
+  </Element>
+  <Element Id="a7acf1bb-712d-48db-8ae0-e38b0c5cc8c6" Path="WorkQueue/WorkQueueRootControl/SplitPanel1/AsTabControl1/TabPage6/SplitPanel3/AsPanel9/PanelTitle">
+    <Value>Recipients</Value>
+  </Element>
+  <Element Id="a7d2a263-2d0c-4c6a-95ca-3c08455ea7b1" Path="IBusinessUnit/Name">
+    <Caption>Name</Caption>
+    <Documentation Category="USER_LONG_HELP">Business unit name</Documentation>
+  </Element>
+  <Element Id="a7fb3a8d-df27-43f5-a3a3-f00dcbd94fa4" Path="IBusinessUnit/refOrganizationId">
+    <Caption>Organization</Caption>
+  </Element>
+  <Element Id="a8191234-44dc-4b1c-aaf2-7aca29d62f98" Path="AsapTooltipHelpContext/AsapTooltipHelpContextRootControl/CollapsibleContainer1/CollapsiblePanel1/Text">
+    <Value>Contexts</Value>
+  </Element>
+  <Element Id="a93c1dee-3e35-4456-9877-a20526e1efd6" Path="WorkQueue/Roles">
+    <Caption>Roles</Caption>
+  </Element>
+  <Element Id="a9548073-a6e2-445a-942a-7f6b654a4232" Path="AsapTooltipHelpContext/AsapTooltipHelpContextRootControl/CollapsibleContainer1/CollapsiblePanel1/AsPanel1/PanelTitle">
+    <Value>Kontexty</Value>
+  </Element>
+  <Element Id="aa1c44be-2ac2-4d74-bb9d-044a6eb17de5" Path="AsapSyncConnectionParameter/Key">
+    <Caption>Key</Caption>
+  </Element>
+  <Element Id="aa5b13a3-926b-4582-a6fc-d2798bfb6724" Path="AsapSyncRunLog/IsSuccess">
+    <Caption>Success</Caption>
+  </Element>
+  <Element Id="aae88188-7f94-4b76-8280-fd8a784cf0d8" Path="AsapFavoritesTemplate">
+    <Caption>Favorites Template</Caption>
+  </Element>
+  <Element Id="abf1cc19-e246-4bd7-a42f-b1a3b80ab8fd" Path="AsapApplicationRole/AsapApplicationRoleRootControl/PanelTitle">
+    <Value>Application Role</Value>
+  </Element>
+  <Element Id="ac0f701e-b580-4ea4-b210-e985f517bada" Path="AsapCalendar/IsTuesdayWorkingDay">
+    <Caption>Tuesday</Caption>
+    <Documentation Category="USER_LONG_HELP">Tuesday is a working day</Documentation>
+  </Element>
+  <Element Id="ac7aa2de-c201-4c5d-9d0b-92ead820b0be" Path="DimensionTransformationMatrix/refSource1DimensionEntityId">
+    <Caption>Dimension 1</Caption>
+  </Element>
+  <Element Id="ad2aebfe-e684-4e2e-8843-775c468357d5" Path="BusinessPartnerAsapRole">
+    <Caption>Business Partner User Role Assignment</Caption>
+  </Element>
+  <Element Id="ad2d2efe-9cb0-4141-ac28-25b8ed68580b" Path="IAsapEntity2/RecordUpdatedBy">
+    <Caption>Updated By</Caption>
+    <Documentation Category="USER_LONG_HELP">User who updated the record last time.</Documentation>
+  </Element>
+  <Element Id="ad4ed75e-ef90-40b4-b4f1-00432eb6bf96" Path="AsapCharacterTranslation/AsapCharacterTranslationRootControl/PanelTitle">
+    <Value>Character Translation</Value>
+  </Element>
+  <Element Id="ade72bff-0c32-46a4-a880-edd54db08763" Path="AsapSyncProviderConfig/AsapSyncProviderConfigRootControl/PanelTitle">
+    <Value>Provider Configuration</Value>
+  </Element>
+  <Element Id="adef0790-d35a-4b45-a661-b8ffadc14707" Path="AsapSyncRun/AsapSyncRun_CompleteRootControl/SplitPanel1/AsPanel1/PanelTitle">
+    <Value>Executed Synchronizations</Value>
+  </Element>
+  <Element Id="ae6e9f2a-cca4-48a2-99d5-ba513b64feca" Path="DimensionTransformationMatrix/DimensionTransformationMatrixRootControl/AsPanel1/PanelTitle">
+    <Value>Dimension Autoassignment Setup</Value>
+  </Element>
+  <Element Id="af59fd91-736c-462c-9039-daece8811668" Path="Mail">
+    <Caption>E-mail</Caption>
+  </Element>
+  <Element Id="b01db675-a8d3-4604-aaa1-19652d30443b" Path="Resource/refOrganizationId">
+    <Caption>Organization</Caption>
+  </Element>
+  <Element Id="b162de30-e655-4f8f-bad3-4417823c6777" Path="AsapExceptionSeverity">
+    <Caption>Exception Severity</Caption>
+  </Element>
+  <Element Id="b19baf6b-56ac-4506-a076-769c663be977" Path="BusinessPartner/ReferenceCode">
+    <Caption>Shortcut</Caption>
+    <Documentation Category="USER_LONG_HELP">Business partner's name shortcut.</Documentation>
+  </Element>
+  <Element Id="b40c78c6-f40c-45c2-bc48-9735d81e9e40" Path="AsapCalendar/IsFridayWorkingDay">
+    <Caption>Friday</Caption>
+    <Documentation Category="USER_LONG_HELP">Friday is a working day</Documentation>
+  </Element>
+  <Element Id="b40f9da9-c8fa-490f-9c49-6db804c534f0" Path="WorkQueueCommand">
+    <Caption>Work Queue Command</Caption>
+  </Element>
+  <Element Id="b46a6906-a050-44de-9fbb-0f0ea4d47de0" Path="AsapTooltipHelp/refAsapTooltipHelpGroupId">
+    <Caption>Group</Caption>
+  </Element>
+  <Element Id="b47b2218-d89f-4eb1-ab61-3f458b29eed5" Path="AsapSyncProvider/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="b4c0ec14-7b66-4ae5-84ca-91b42d9778b4" Path="Counter/ReferenceCode">
+    <Caption>Code</Caption>
+    <Documentation Category="USER_LONG_HELP">Counter code that is typically hardcoded in the application or set in settings. By this code the counter is looked up.</Documentation>
+  </Element>
+  <Element Id="b57ed365-de99-4465-886d-07e80e0cdba9" Path="AsapRole/AsapRoleRootControl/SplitPanel1/AsPanel1/PanelTitle">
+    <Value>User Roles</Value>
+  </Element>
+  <Element Id="b88e574d-597b-4c95-83e2-e77765a1c4ac" Path="AsapNotificationTemplate/AsapNotificationTemplateRootControl/PanelTitle">
+    <Value>Notification Templates</Value>
+  </Element>
+  <Element Id="b8d208f2-c703-4e8a-9602-c70327f56173" Path="Resource">
+    <Caption>Resource</Caption>
+  </Element>
+  <Element Id="b9e92a85-2888-4077-bd61-d162ff06d4f7" Path="AsapTooltipHelpContext/IdString">
+    <Caption>ID String</Caption>
+  </Element>
+  <Element Id="ba2f7ea8-2b1f-4fe8-96e4-fcbc0faef1e6" Path="Counter/CounterRootControl/PanelTitle">
+    <Value>Counters</Value>
+  </Element>
+  <Element Id="bb4dc48b-7efb-4c08-94d7-29388dced38b" Path="AsapCharacterTranslationDetail/Target">
+    <Caption>To</Caption>
+  </Element>
+  <Element Id="bb7c1aed-f39b-4c53-9f9b-7f4892b6ab81" Path="AsapStateMachineEventType/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="bba33c37-d58e-4aa3-8d91-1007a8782b6f" Path="OrganizationMappingList/refParentOrganizationId">
+    <Caption>Parent Organization</Caption>
+  </Element>
+  <Element Id="bbdc7e44-355e-4b25-bb67-17769fb34b89" Path="AsapCalendar">
+    <Caption>Calendar</Caption>
+  </Element>
+  <Element Id="bbe0b957-fa8c-4c29-9edc-6748c5b459b4" Path="AsapDashboardView/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="bc755565-06df-4789-a836-ffd0d2987ed6" Path="AsapSyncConnection/AsapSyncConnection_CompleteRootControl/SplitPanel1/AsPanel1/PanelTitle">
+    <Value>Synchronization Source Connection</Value>
+  </Element>
+  <Element Id="bcd5fb55-e63c-4e9c-b468-bedd6bbdf2ef" Path="DimensionEntityRelation/refTargetDimensionEntityId">
+    <Caption>Target Entity</Caption>
+  </Element>
+  <Element Id="bfc2edfb-ada8-4b4f-bd9f-722fea74fc54" Path="AsapSyncRun">
+    <Caption>Synchronization Log</Caption>
+  </Element>
+  <Element Id="bfd1ea1b-ffbf-47f6-8f9b-08dab6553a18" Path="IAsapEntity/RecordUpdated">
+    <Caption>Updated</Caption>
+    <Documentation Category="USER_LONG_HELP">Date and time of the last record update.</Documentation>
+  </Element>
+  <Element Id="c019bbfc-551e-4dee-abe6-f777a13b77a9" Path="WorkQueueEntry/IsLocked">
+    <Caption>Locked</Caption>
+  </Element>
+  <Element Id="c0dab8c0-ad91-428f-a89b-67795a427729" Path="AsapApplicationRole">
+    <Caption>Application Role</Caption>
+  </Element>
+  <Element Id="c207f693-b603-4d2b-9a90-b399317a8b61" Path="DimensionType">
+    <Caption>Dimension Type</Caption>
+  </Element>
+  <Element Id="c2a52e0a-a714-4303-af89-d5a19f4c1ef7" Path="Language/NewComponent/NewPropertyValue">
+    <Value>Language</Value>
+  </Element>
+  <Element Id="c30c36b4-6de5-4b61-a8b6-529371dce463" Path="_Number_0">
+    <StringValue>0</StringValue>
+  </Element>
+  <Element Id="c31d18db-2c7b-4bb7-bec7-c86afbcc3362" Path="WorkQueueCommand/WorkQueueCommandRootControl/PanelTitle">
+    <Value>Commands</Value>
+  </Element>
+  <Element Id="c35c29ea-5527-4bae-9f9d-4abadbae4ec7" Path="AsapRoleAsapApplicationRole/AsapRoleAsapApplicationRoleRootControl/PanelTitle">
+    <Value>Assigned Application Roels</Value>
+  </Element>
+  <Element Id="c4543828-8e7d-4678-b096-a67ccba97f36" Path="Mail/MessageBody">
+    <Caption>Message</Caption>
+  </Element>
+  <Element Id="c4548086-037e-4089-99be-4b1fa03046b9" Path="IActive/IsActive">
+    <Caption>Active</Caption>
+  </Element>
+  <Element Id="c4b132a4-306a-44a5-b051-a44c31b61322" Path="Dimension2">
+    <Caption>Dimension 2</Caption>
+  </Element>
+  <Element Id="c4b9b125-95ad-43c8-bb84-1213567bc448" Path="param_long/param_longRootControl/AsTextBox1/Caption">
+    <Value>$caption</Value>
+  </Element>
+  <Element Id="c63e1429-1345-43e9-80d9-3ba83b3c9af8" Path="AsapTooltipHelp/refAsapTooltipHelpContextComponentId">
+    <Caption>Component</Caption>
+  </Element>
+  <Element Id="c7687964-2f74-45d8-91e5-36fafd5c7527" Path="AsapSyncRunLog/AsapSyncRunLogRootControl/PanelTitle">
+    <Value>Synchronized Records</Value>
+  </Element>
+  <Element Id="c931f9b2-6eca-4f63-b6f2-c6a6e21a0dc8" Path="WorkQueue/WorkQueueRootControl/AsCheckBox1/Text">
+    <Value>Active</Value>
+  </Element>
+  <Element Id="ca0165c9-7480-460a-bce7-ffd8d363542a" Path="WorkQueueNotification/WorkQueueNotificationRootControl/PanelTitle">
+    <Value>Notifications</Value>
+  </Element>
+  <Element Id="ca0edc02-90c7-442f-87f2-a3704af4270f" Path="WorkQueueCommand/Param2">
+    <Caption>Parameter 2</Caption>
+  </Element>
+  <Element Id="cb714bf5-ec51-4863-9a23-e837bfbf4964" Path="WorkQueue/WorkQueueRootControl/SplitPanel1/AsTabControl1/TabPage6/SplitPanel3/AsPanel8/PanelTitle">
+    <Value>Notifications</Value>
+  </Element>
+  <Element Id="cba31248-f8d9-4404-b0ce-aa7a26d0ab90" Path="AsapRounding/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="cbacddd8-9639-4017-8f86-985b661fffa9" Path="AsapSyncRunLog/ReferenceCode">
+    <Caption>Reference</Caption>
+  </Element>
+  <Element Id="cbcf7bb8-10d0-4576-98f5-1210b10bae5f" Path="IAsapEntity2/RecordCreatedBy">
+    <Caption>Created By</Caption>
+    <Documentation Category="USER_LONG_HELP">User who created the record</Documentation>
+  </Element>
+  <Element Id="ccc6fb93-2e10-416e-a910-954f47d6d989" Path="WorkQueue/WorkQueueClass">
+    <Caption>Class</Caption>
+  </Element>
+  <Element Id="ce92019f-d693-494d-84c4-3bf509deacfa" Path="ResourceAccessLevel/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="ceeb4009-11b5-4b2c-ac97-661eeb007c1d" Path="AsapTooltipHelpUsage/refBusinessPartnerId">
+    <Caption>User</Caption>
+  </Element>
+  <Element Id="cf35e430-d4ef-47ee-b6b5-ac165e64e71f" Path="WorkQueue/ExternalSourceState">
+    <Caption>State</Caption>
+  </Element>
+  <Element Id="cfcaca78-0e12-4cab-84ce-ec46b5fc2378" Path="AsapSyncConfig/AsapSyncConfigRootControl/AsPanel1/PanelTitle">
+    <Value>Synchronization Configuration</Value>
+  </Element>
+  <Element Id="d02491a0-296f-4ab0-b54c-9835e5824f95" Path="WorkQueueNotification_Header/WorkQueueNotification_HeaderRootControl/AsTextBox1/Caption">
+    <Value>Notifications</Value>
+  </Element>
+  <Element Id="d244a358-e643-4423-89fe-10638afd576f" Path="AsapCharacterTranslation/AsapCharacterTranslationRootControl/SplitPanel1/AsPanel1/PanelTitle">
+    <Value>Dictionary</Value>
+  </Element>
+  <Element Id="d245e9df-9a2f-4196-89de-b86faaaeb624" Path="IAsapEntity2/RecordUpdated">
+    <Caption>Updated</Caption>
+    <Documentation Category="USER_LONG_HELP">Date and time when the record was last updated</Documentation>
+  </Element>
+  <Element Id="d55c1be5-9ad3-4a24-9375-fe8709982a39" Path="AsapRole/AsapRoleRootControl/PanelTitle">
+    <Value>User Roles</Value>
+  </Element>
+  <Element Id="d7048a41-b52d-4007-b401-c538239c3b9b" Path="AsapSyncProvider/refAsapSyncSystemId">
+    <Caption>System</Caption>
+  </Element>
+  <Element Id="d70d26d1-6886-496e-a573-2217f470ce98" Path="AsapModelVersion">
+    <Caption>Model Version</Caption>
+  </Element>
+  <Element Id="d8e51b34-3594-43de-b9c8-db28327e596d" Path="AsapSyncProviderConfig/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="d9890948-0b9e-40d2-ac6b-b6c55db986a9" Path="ResourceType">
+    <Caption>Resource Type</Caption>
+  </Element>
+  <Element Id="d9d15929-ece4-4f02-b41d-9fbcbf146d46" Path="WorkQueueCommand/refErrorWorkQueueId">
+    <Caption>Error Queue</Caption>
+  </Element>
+  <Element Id="da60602b-60bb-444c-b12b-b9141dbd62e8" Path="AsapCalendarDetail/Name">
+    <Caption>Name</Caption>
+    <Documentation Category="USER_LONG_HELP">Holiday Name</Documentation>
+  </Element>
+  <Element Id="da9c4ff5-2e67-4744-935a-60a39b886828" Path="IAsapEntity/RecordCreatedServer">
+    <Caption>Record Created (Server)</Caption>
+    <Documentation Category="USER_LONG_HELP">Date and time when the record was created (server)</Documentation>
+  </Element>
+  <Element Id="db7ecd0b-ed27-47d3-9a8f-3dd7b6430673" Path="AsapCalendar/IsThursdayWorkingDay">
+    <Caption>Thursday</Caption>
+    <Documentation Category="USER_LONG_HELP">Thursday is a working day</Documentation>
+  </Element>
+  <Element Id="dba10202-3b65-4bb5-b9e4-14aac3953eae" Path="IDimensionsReference/refDimension3Id">
+    <Caption>Dimension 3</Caption>
+  </Element>
+  <Element Id="dc0855c9-c3e8-4c4c-b3a1-5afcfc929c09" Path="AsapCalendar/AsapCalendarRootControl/GroupBoxWithChamfer1/AsCheckBox2/Text">
+    <Value>Tuesday</Value>
+  </Element>
+  <Element Id="dd752943-48b8-493c-8b11-356949b66ba5" Path="AsapSyncConfig/refSourceAsapSyncConnectionId">
+    <Caption>Source Connection</Caption>
+  </Element>
+  <Element Id="dd802c64-12ae-4559-8c8e-b86802b8465b" Path="AsapRounding/Precision">
+    <Caption>Precision</Caption>
+  </Element>
+  <Element Id="de01feaf-6f60-4a6c-9003-b6f61198ef8a" Path="Attachment/Data">
+    <Documentation Category="USER_LONG_HELP">Data BLOB - contains the actual attachment</Documentation>
+  </Element>
+  <Element Id="de0d5266-6200-4775-87aa-e151815fb23c" Path="IAsapEntity2/Selected">
+    <Documentation Category="USER_LONG_HELP">Identifies a selected record</Documentation>
+  </Element>
+  <Element Id="de69a6d6-71fb-4a66-a02c-ee0bd1d431bb" Path="WorkQueue_Remove/WorkQueue_RemoveRootControl/GroupBoxWithChamfer1/AsTextBox3/Caption">
+    <Value>New Value</Value>
+  </Element>
+  <Element Id="df1b2345-18c5-4aec-a79d-e6f9204b5ac5" Path="ReportFormat_CSV">
+    <StringValue>CSV</StringValue>
+  </Element>
+  <Element Id="df21c253-c76e-47c0-b44d-125272b36420" Path="AsapCalendar/AsapCalendarRootControl/SplitPanel1/AsPanel1/PanelTitle">
+    <Value>Calendar</Value>
+  </Element>
+  <Element Id="df54519a-d49f-4317-931c-c48df86855af" Path="AsapRegularExpression">
+    <Caption>Regular Expressions</Caption>
+  </Element>
+  <Element Id="e048ce9f-6640-4e7a-be35-4363eaa72c58" Path="AsapSyncRunLog/ErrorText">
+    <Caption>Error Message</Caption>
+  </Element>
+  <Element Id="e057a63c-f7ca-4506-a7f8-063c659099d2" Path="WorkQueueCommandType/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="e1056782-9cc3-4eb8-adfb-cf5a1518ae7d" Path="AsapSyncRun/AsapSyncRun_CompleteRootControl/SplitPanel1/AsPanel2/PanelTitle">
+    <Value>Synchronized Records</Value>
+  </Element>
+  <Element Id="e255c766-26bc-4b14-9ed4-da3139f7b070" Path="AsapTooltipHelp/ObjectId">
+    <Caption>Object ID</Caption>
+  </Element>
+  <Element Id="e2d6ce5d-d7f9-434e-84a1-720011c4c861" Path="WorkQueue/WorkQueueRootControl/SplitPanel1/AsTabControl1/TabPage2/Text">
+    <Value>Removal</Value>
+  </Element>
+  <Element Id="e3d7cb76-4b61-49aa-941f-753d0e4a7a67" Path="WorkQueueCommand/refWorkQueueCommandTypeId">
+    <Caption>Type</Caption>
+  </Element>
+  <Element Id="e452bd7e-32e7-44f5-8398-38e246d1f298" Path="_auto_string">
+    <StringValue>&lt;auto&gt;</StringValue>
+  </Element>
+  <Element Id="e4c73d00-246e-42b7-8db2-55124971cb00" Path="WorkQueue/RemovalOldValue">
+    <Caption>Removal Old Value</Caption>
+  </Element>
+  <Element Id="e519512b-a629-491b-a697-1fc773a434fa" Path="WorkQueue_Remove/WorkQueue_RemoveRootControl/GroupBoxWithChamfer1/AsTextBox1/Caption">
+    <Value>Field Name</Value>
+  </Element>
+  <Element Id="e57dd1a2-d3b0-4dcf-b518-fa9a80830013" Path="AsapSyncConfig_Selection/AsapSyncConfig_SelectionRootControl/AsDropDown1/Caption">
+    <Value>Configuration</Value>
+  </Element>
+  <Element Id="e5825bf0-6d85-4293-ac73-ec6b400890f7" Path="AsapSyncProviderConfig/refOrganizationId">
+    <Caption>Organization</Caption>
+  </Element>
+  <Element Id="e67e65ed-c45b-4c8a-b704-67c86670bb46" Path="AsapCalendar/AsapCalendarRootControl/SplitPanel1/AsPanel2/PanelTitle">
+    <Value>Holidays</Value>
+  </Element>
+  <Element Id="e70431e9-236f-4d42-90da-7a4d94547f85" Path="ResourceType/Name">
+    <Documentation Category="USER_LONG_HELP">Resource type name</Documentation>
+  </Element>
+  <Element Id="e892c7de-5089-4bce-b8a3-94f784ec9679" Path="AsapSyncConnectionParameter/Value">
+    <Caption>Value</Caption>
+  </Element>
+  <Element Id="e8b05f7f-0987-4fab-9b8b-458f127c5515" Path="Language/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="e8b87f9a-9ab9-479b-bbf4-11908d299b14" Path="CounterDetail/ValidFrom">
+    <Caption>Valied From</Caption>
+    <Documentation Category="USER_LONG_HELP">Date from which the counter is valid. Only works when the counter is managed by date.</Documentation>
+  </Element>
+  <Element Id="e928a79e-959f-46d0-9f6e-fe8da98ad0b6" Path="AsapSyncConfig/refCounterReferenceCode">
+    <Caption>Counter</Caption>
+  </Element>
+  <Element Id="e92d84d6-8e2f-4dbe-969b-29f9118e6113" Path="IResourceAccessList/refResourceAccessLevelId">
+    <Caption>Access Level</Caption>
+  </Element>
+  <Element Id="e938d28a-9e48-4d8b-b0f8-db105fdaafe6" Path="WorkQueue/IsErrorQueue">
+    <Caption>Error Queue</Caption>
+  </Element>
+  <Element Id="e988ba46-8873-426a-a91d-610cb0d94ca9" Path="WorkQueue/ReverseLookupFieldValues">
+    <Caption>Lookup Field Values</Caption>
+  </Element>
+  <Element Id="ea40325d-37c9-4cfc-b2b7-222b7942fbf2" Path="AsapSyncRun/ReferenceCode">
+    <Caption>Code</Caption>
+  </Element>
+  <Element Id="ec110293-d14e-48c0-9764-f9aa09495b3f" Path="WorkQueue/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="ec9a306e-a051-415b-ba1c-27e401d98db3" Path="AsapTooltipHelp/refAsapTooltipHelpContextId">
+    <Caption>Context</Caption>
+  </Element>
+  <Element Id="ec9c37eb-1336-4a97-935c-d07fef58b09a" Path="OrganizationMapping/refOrganizationId">
+    <Caption>Assigned Organization</Caption>
+  </Element>
+  <Element Id="ed566d7a-565a-4215-863b-04b16e695762" Path="AsapSyncRun/refAsapSyncConfigId">
+    <Caption>Configuration</Caption>
+  </Element>
+  <Element Id="ed85694d-dd1e-47d5-9a59-912175d314fa" Path="AsapPanelFilterDetail">
+    <Caption>User Filter Detail</Caption>
+  </Element>
+  <Element Id="edccc045-3b55-45a2-861e-fa483f5793a0" Path="Dimension1">
+    <Caption>Dimension 1</Caption>
+  </Element>
+  <Element Id="ee9fee5b-2a88-4877-a65c-522f7737f4e9" Path="AsapCharacterTranslationDetail">
+    <Caption>Character Translation Detail</Caption>
+  </Element>
+  <Element Id="ef0e8e1a-1917-4027-a70a-2bca2c7bb245" Path="WorkQueue">
+    <Caption>Work Queue</Caption>
+  </Element>
+  <Element Id="ef401867-1f05-4bb4-aaa9-e3d50d183735" Path="AsapDashboardView/Roles">
+    <Caption>Roles</Caption>
+  </Element>
+  <Element Id="ef9039f3-ac96-44ae-ad83-6b22f0ef3d24" Path="AsapCalendarDetail/Date">
+    <Caption>Date</Caption>
+    <Documentation Category="USER_LONG_HELP">Holiday Date</Documentation>
+  </Element>
+  <Element Id="efab606c-5764-4929-93aa-c83991f09820" Path="param_lookup/param_lookupRootControl/AsDropDown1/Caption">
+    <Value>$caption</Value>
+  </Element>
+  <Element Id="efb83735-bedb-4eee-b9eb-f111dd46980e" Path="IAsapEntity/RecordUpdatedBy">
+    <Caption>Updated By</Caption>
+    <Documentation Category="USER_LONG_HELP">User who updated the record last time.</Documentation>
+  </Element>
+  <Element Id="efd3271b-883b-40fa-a07c-9acfa0c41089" Path="AsapTooltipHelp/AsapTooltipHelpRootControl/SplitPanel1/AsTabControl1/TabPage1/Text">
+    <Value>Text</Value>
+  </Element>
+  <Element Id="efdff1b5-916a-4036-977e-e34f59e72d41" Path="Language">
+    <Caption>Language</Caption>
+  </Element>
+  <Element Id="f1dd7f84-80fa-499e-8e96-88fdf00deaf9" Path="AsapApplicationRole/Description">
+    <Caption>Description</Caption>
+  </Element>
+  <Element Id="f229eb75-03ab-4b62-ab60-bc8e74860332" Path="AsapFavoritesUserConfig">
+    <Caption>User Favorites</Caption>
+  </Element>
+  <Element Id="f27e4c9f-5d1e-44f1-807c-78f513e86039" Path="AsapTooltipHelpContext/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="f2b1d7ef-41c6-459d-9044-cded33f2af6d" Path="WorkQueue_Create/WorkQueue_CreateRootControl/GroupBoxWithChamfer1/AsTextBox7/Caption">
+    <Value>Field Name</Value>
+  </Element>
+  <Element Id="f31175c9-6f12-441c-ae7e-cae2c070e7f7" Path="WorkQueue/CreationCondition">
+    <Caption>Condition (XPath)</Caption>
+  </Element>
+  <Element Id="f3a0ab80-b041-4099-b4eb-cadcf4039bed" Path="ReportFormat_MSWord">
+    <StringValue>MSWord</StringValue>
+  </Element>
+  <Element Id="f471ed17-3fb6-41bf-afcd-4df261fa2af1" Path="CounterDetail/CounterRootControl/PanelTitle">
+    <Value>Counter Details</Value>
+  </Element>
+  <Element Id="f5512713-98f4-4682-9cdd-03554007b39f" Path="AsapApplicationRole/AsapApplicationRoleRootControl/SplitPanel1/AsPanel1/PanelTitle">
+    <Value>Application Roels</Value>
+  </Element>
+  <Element Id="f6ae7af3-c023-4fa2-993f-b4b0da2dc311" Path="CounterDetail/CounterTo">
+    <Caption>To</Caption>
+    <Documentation Category="USER_LONG_HELP">Upper limit of the counter. After reaching this number the counter will raise errors when requesting new positions.</Documentation>
+  </Element>
+  <Element Id="f6e0d093-8e27-4c5e-ba92-323780890ea7" Path="AsapTooltipHelp/Text">
+    <Caption>Text</Caption>
+  </Element>
+  <Element Id="f7261cdc-b4b0-4995-8e71-9ac3982bf37c" Path="OrganizationMappingList/refOrganizationId">
+    <Caption>Assigned Organization</Caption>
+  </Element>
+  <Element Id="f726dd7f-e80b-44d2-8649-fcb5d45f6de6" Path="AsapRole/AsapRoleRootControl/SplitPanel1/AsPanel2/PanelTitle">
+    <Value>Assigned Application Roles</Value>
+  </Element>
+  <Element Id="f7726451-4d91-47f3-b2e7-4a8b980cf3a3" Path="WorkQueue/WorkQueueRootControl/SplitPanel1/AsTabControl1/TabPage1/Text">
+    <Value>Creation</Value>
+  </Element>
+  <Element Id="f7bd50fd-8d06-42d4-814f-0bf0dc55ebf4" Path="AsapFormPanelConfig">
+    <Caption>Form User Settings</Caption>
+  </Element>
+  <Element Id="f824d490-5b1a-4b22-afc2-c6f332f84e88" Path="AsapFeatureList/DisplayName">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="fc701bfb-6628-4dea-b6c8-cc31cf454351" Path="AsapTooltipHelpUsage/AsapTooltipHelpUsageRootControl/AsDateBox1/Caption">
+    <Value>Date</Value>
+  </Element>
+  <Element Id="fc7dcac9-f47b-41dd-8f22-fc4b3e0bea55" Path="AsapTooltipHelpContext/AsapTooltipHelpContextRootControl/CollapsibleContainer1/CollapsiblePanel2/AsPanel4/PanelTitle">
+    <Value>Subcontexts</Value>
+  </Element>
+  <Element Id="fd2febe5-5e15-4c06-980d-f66bd0840ad6" Path="AsapSyncRunLog/SourceId_guid">
+    <Caption>Source ID (guid)</Caption>
+  </Element>
+  <Element Id="fd53327e-07cd-4096-807a-08534a11339c" Path="Mail/DateSent">
+    <Caption>Sent</Caption>
+  </Element>
+  <Element Id="fd94ca3d-5c4e-43dc-97e6-8d1f731f9abf" Path="ResourceGroupMember/refMemberResourceId">
+    <Caption>Member</Caption>
+  </Element>
+  <Element Id="fe4b0866-624b-43b4-8975-5dcbd769e0d1" Path="AsapSyncSystem">
+    <Caption>Synchronization System</Caption>
+  </Element>
+  <Element Id="ffe314a2-0b7d-40a7-94ab-55a486fdf48c" Path="WorkQueue/ExternalSourcePassword">
+    <Caption>Password</Caption>
+  </Element>
+</AsapLocalization>
