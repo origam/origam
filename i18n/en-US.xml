@@ -1031,7 +1031,7 @@
     <Value>Commands</Value>
   </Element>
   <Element Id="c35c29ea-5527-4bae-9f9d-4abadbae4ec7" Path="AsapRoleAsapApplicationRole/AsapRoleAsapApplicationRoleRootControl/PanelTitle">
-    <Value>Assigned Application Roels</Value>
+    <Value>Assigned Application Roles</Value>
   </Element>
   <Element Id="c4543828-8e7d-4678-b096-a67ccba97f36" Path="Mail/MessageBody">
     <Caption>Message</Caption>
@@ -1288,7 +1288,7 @@
     <Value>Counter Details</Value>
   </Element>
   <Element Id="f5512713-98f4-4682-9cdd-03554007b39f" Path="AsapApplicationRole/AsapApplicationRoleRootControl/SplitPanel1/AsPanel1/PanelTitle">
-    <Value>Application Roels</Value>
+    <Value>Application Roles</Value>
   </Element>
   <Element Id="f6ae7af3-c023-4fa2-993f-b4b0da2dc311" Path="CounterDetail/CounterTo">
     <Caption>To</Caption>
@@ -1333,4 +1333,103 @@
   <Element Id="ffe314a2-0b7d-40a7-94ab-55a486fdf48c" Path="WorkQueue/ExternalSourcePassword">
     <Caption>Password</Caption>
   </Element>
+  <Element Id="146de701-18c1-476d-adc9-5d83b30987a4" Path="OrganzationUserAndRoles/OrganzationUserAndRolesRootControl/SplitPanel1/AsPanel2/PanelTitle">
+   <Value>User roles (in Organization)</Value>
+</Element>
+ <Element Id="67bc32ed-ff1f-4311-9804-9e04df93b155" Path="OrganizationBusinessPartner/FirstName">
+   <Caption>Company Name 2 (First Name)</Caption>
+   <Documentation Category="USER_LONG_HELP">
+     Company: Name line 2
+     Person: First Name
+   </Documentation>
+ </Element>
+ <Element Id="75b5d45c-b41f-41ca-8a72-0851221cea13" Path="OrganizationBusinessPartner/refUserBusinessPartnerId">
+   <Caption>User Name</Caption>
+ </Element>
+ <Element Id="9c9aebb0-c4a1-4784-8d9b-bcdd3b247fbd" Path="OrganzationUserAndRoles/OrganzationUserAndRolesRootControl/SplitPanel1/AsPanel1/PanelTitle">
+  <Value>Business Partners of an Organization</Value>
+ </Element> 
+ <Element Id="9fd302b4-78b8-4d9d-9dc7-02c6d03cccec" Path="OrganizationBusinessPartner">
+  <Caption>Business Partners of an Organization</Caption>
+ </Element>
+ <Element Id="cc348b7e-a9d6-401e-828f-24ac104ec2a0" Path="OrganizationBusinessPartner/NewComponent/PanelTitle">
+    <Value>Business Partner of an Organization</Value>
+  </Element>
+ <Element Id="8562cce2-0d9e-481f-b461-3cdcd363368f" Path="Organization/NewComponent/SplitPanel1/AsTabControl1/TabPage2/SplitPanel2/AsPanel3/PanelTitle">
+    <Value>Business Partners of an Organization</Value>
+  </Element>
+  <Element Id="bbe51393-bde5-4a98-96f8-a256a1912f46" Path="OrganizationBusinessPartner/NewComponent/PanelTitle">
+    <Value>Business Partners of an Organization</Value>
+  </Element>
+
+  <Element Id="aa6da60d-d095-4646-840b-5dd8dcbcbb3e" Path="OrganizationBusinessPartner/ReferenceCode">
+    <Caption>Short Name</Caption>
+   <Documentation Category="USER_LONG_HELP">Short code used for quick searching.</Documentation>
+ </Element> 
+   <Element Id="cb91cf09-d43a-4862-a57d-01e95139160e" Path="OrganizationBusinessPartner/Name">
+    <Caption>Company (Name)</Caption>
+    <Documentation Category="USER_LONG_HELP">
+      Company: Company Name
+      Person: Surname
+    </Documentation>
+  </Element>
+  <Element Id="6f625065-5cba-4cd2-9e68-d3d3cc5a8a47" Path="OrganizationAsapRole">
+    <Caption>User Role in Organization</Caption>
+  </Element>
+  <Element Id="c16a48c0-3a5c-4de4-9b5c-41b8fd612e55" Path="OrganizationAsapRoleAsapApplicationRole/refOrganizationAsapRoleId">
+    <Caption>User Role in Organization</Caption>
+  </Element>
+  <Element Id="6b09a1a3-bcb7-4269-9f95-ab16f3435667" Path="OrganizationBusinessPartnerAsapRole/refOrganizationAsapRoleId">
+    <Caption>User Role in Organization</Caption>
+  </Element>
+  <Element Id="8d098ccb-a887-40f8-8a2f-11078d6e5d73" Path="Organization/NewComponent/SplitPanel1/AsTabControl1/TabPage2/SplitPanel2/AsPanel4/PanelTitle">
+    <Value>User Roles (in Organization)</Value>
+  </Element>
+  <Element Id="903d01ac-b895-4bc2-9617-9dcff3b4887f" Path="OrganizationBusinessPartnerAsapRole/NewComponent/PanelTitle">
+    <Value>User Roles (in Organization)</Value>
+  </Element>
+  <Element Id="54122f5f-b9e5-453b-be2b-907fa676ed66" Path="OrganizationApplicationRoles/OrganizationApplicationRolesRootControl/SplitPanel1/AsPanel1/PanelTitle">
+    <Value>Application Role</Value>
+  </Element>
+  <Element Id="aa66babb-36bc-4a15-926b-1d711512c279" Path="OrganizationAsapApplicationRole">
+    <Caption>Application Role</Caption>
+  </Element>
+    <Element Id="3c7791f4-7954-4f02-8551-defca6b6c749" Path="OrganizationAsapRoleAsapApplicationRole">
+    <Caption>Assigned User Roles (in Organization)</Caption>
+  </Element>  
+  <Element Id="f55f7adb-2066-42f7-acda-a43a87945233" Path="OrganizationBusinessPartnerAsapRole">
+    <Caption>User Roles (in Organization)</Caption>
+  </Element>
+  <Element Id="7facbafd-048f-48d3-8a10-e286c9c4578b" Path="OrganizationAsapRoleAsapApplicationRole/NewComponent/PanelTitle">
+    <Value>Assigned User Roles (in Organization)</Value>
+  </Element>
+    <Element Id="2f0cf9ab-d6c2-4906-a732-0df09561daa8" Path="OrganizationApplicationRoles/OrganizationApplicationRolesRootControl/SplitPanel1/AsPanel2/PanelTitle">
+    <Value>Assigned User Roles (in Organization)</Value>
+  </Element>
+  <Element Id="becd0336-4b6b-4704-ae17-ddb289de2bd6" Path="OrganizationAsapRoleAsapApplicationRole/NewComponent/AsCheckBox1/Text">
+    <Value>Read Only (Form)</Value>
+  </Element>
+  <Element Id="4277aa25-60c0-4b19-b945-d9d58a9c7843" Path="OrganizationAsapRoleAsapApplicationRole/IsFormReadOnly">
+    <Caption>Read Only (Form)</Caption>
+  </Element>
+  <Element Id="1e0dac3c-de0e-4824-8721-d8782a354c50" Path="OrganizationAsapApplicationRole/NewComponent/AsCheckBox0/Text">
+    <Value>System</Value>
+  </Element>
+  <Element Id="42e29b0f-a558-487b-9e5c-4c00b1b3a658" Path="OrganizationAsapApplicationRole/IsSystemRole">
+    <Caption>System</Caption>
+  </Element>
+  <Element Id="4b9fb20a-e0dc-4c3d-8bf0-98c4b0403e93" Path="OrganizationAsapApplicationRole/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="ffd300d0-d230-483b-b753-f183357666aa" Path="OrganizationAsapRole/Name">
+    <Caption>Name</Caption>
+  </Element>
+  <Element Id="f40ae21d-5d80-4223-8316-da92915eb133" Path="OrganizationAsapApplicationRole/Description">
+    <Caption>Description</Caption>
+  </Element>
+  
+  
+
+
+
 </AsapLocalization>
