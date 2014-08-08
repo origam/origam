@@ -1379,6 +1379,9 @@
   <Element Id="c16a48c0-3a5c-4de4-9b5c-41b8fd612e55" Path="OrganizationAsapRoleAsapApplicationRole/refOrganizationAsapRoleId">
     <Caption>User Role in Organization</Caption>
   </Element>
+  <Element Id="e42d8f89-ee0e-4d77-b120-78339aa8842d" Path="OrganizationAsapRole/OrganizationAsapRoleAsapApplicationRoleRootControl/SplitPanel1/AsPanel1/PanelTitle">
+    <Value>User Role in Organization</Value>
+  </Element>
   <Element Id="6b09a1a3-bcb7-4269-9f95-ab16f3435667" Path="OrganizationBusinessPartnerAsapRole/refOrganizationAsapRoleId">
     <Caption>User Role in Organization</Caption>
   </Element>
@@ -1426,5 +1429,20 @@
   </Element>
   <Element Id="f40ae21d-5d80-4223-8316-da92915eb133" Path="OrganizationAsapApplicationRole/Description">
     <Caption>Description</Caption>
+  </Element>
+  <Element Id="dfdc609a-63de-4508-8412-57de5298517b" Path="OrganizationAsapRoleAsapApplicationRole_UserRolesForm/OrganizationAsapRoleAsapApplicationRole_UserRolesFormRootControl/PanelTitle">
+    <Value>Assigned Application Roles (in Organization)</Value>
+  </Element>
+  <Element Id="e98e83a2-17f5-48cf-ae56-3c3a6d481c22" Path="OrganizationAsapRole/OrganizationAsapRoleAsapApplicationRoleRootControl/SplitPanel1/AsPanel2/PanelTitle">
+    <Value>Assigned Application Roles (in Organization)</Value>
+  </Element>
+  <Element Id="c56e9dec-44e5-4d90-8d03-23fbbe212d05" Path="OrganizationAsapRoleAsapApplicationRole/refOrganizationAsapApplicationRoleId">
+    <Caption>Application Role (in Organization)</Caption>
+  </Element>
+  <Element Id="d919ed2a-4913-4c6e-83ea-8c39f9eb507b" Path="OrganizationAsapApplicationRole/NewComponent/PanelTitle">
+    <Value>Application Role (in Organization)</Value>
+  </Element>
+  <Element Id="c07ab326-94be-49f1-92b9-4f1a0cf84b90" Path="OrganizationAsapRoleAsapApplicationRole_UserRolesForm/OrganizationAsapRoleAsapApplicationRole_UserRolesFormRootControl/AsCheckBox1/Text">
+    <Value>Read Only (Form)</Value>
   </Element>
 </AsapLocalization>
