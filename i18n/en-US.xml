@@ -1445,4 +1445,13 @@
   <Element Id="c07ab326-94be-49f1-92b9-4f1a0cf84b90" Path="OrganizationAsapRoleAsapApplicationRole_UserRolesForm/OrganizationAsapRoleAsapApplicationRole_UserRolesFormRootControl/AsCheckBox1/Text">
     <Value>Read Only (Form)</Value>
   </Element>
+    <Element Id="2f004dbe-8a11-442c-b163-6fa5f6e69388" Path="BusinessPartner/UserRoles">
+	<Caption>Roles</Caption>
+  </Element>
+  <Element Id="24d46fc2-6afa-4eb6-b9b0-a32ff1c844fe" Path="BusinessPartner/UserPassword">
+	<Caption>Password</Caption>
+  </Element>
+  <Element Id="6c0f5dcd-1dd7-4ce6-885d-d00f6d522ee8" Path="NewUser/02_FillOutBusinessPartner">
+	<Documentation Category="USER_WFSTEP_DESCRIPTION">Please fill out user info</Documentation>
+  </Element>
 </AsapLocalization>
