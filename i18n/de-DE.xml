@@ -3,6 +3,9 @@
   <Element Id="007f0619-bc85-44d7-a4e9-c3a88419bed6" Path="WorkQueue_Remove/WorkQueue_RemoveRootControl/GroupBoxWithChamfer1/Text">
     <Value>Change State/Value</Value>
   </Element>
+  <Element Id="011afc41-139c-4b0a-9d1c-6686674b02fd" Path="BusinessPartner/MembershipUserCreate_Save">
+    <Caption>Erfassen</Caption>
+  </Element>
   <Element Id="023ee3ea-c462-4606-855f-265449062aaf" Path="ReportFormat_XML">
     <StringValue>XML</StringValue>
   </Element>
@@ -92,7 +95,7 @@
     <Caption>Template</Caption>
   </Element>
   <Element Id="15c44b5f-c719-440e-983f-44f177593f63" Path="BusinessPartner/UserName">
-    <Caption>User Name</Caption>
+    <Caption>Benutzername</Caption>
     <Documentation Category="USER_LONG_HELP">Maps the internal user to the login user name.</Documentation>
   </Element>
   <Element Id="15e18ab8-a42b-46bf-ba7d-2d1233fb05ff" Path="WorkQueueCommand/WorkQueueCommandRootControl/AsCheckBox1/Text">
@@ -188,6 +191,9 @@
   </Element>
   <Element Id="20d1a3fc-b840-4f8a-84c6-3761f2bac436" Path="DimensionEntity/Name">
     <Caption>Name</Caption>
+  </Element>
+  <Element Id="21ced315-8828-454d-a24f-d37993a62437" Path="BusinessPartner/ConfirmUserPassword">
+    <Caption>Passwort wiederholen</Caption>
   </Element>
   <Element Id="21d86e1c-5a23-434b-9fe2-e187fd100624" Path="AsapRounding">
     <Caption>Rounding</Caption>
@@ -451,7 +457,7 @@
     <Caption>Read Only (From))</Caption>
   </Element>
   <Element Id="51854e16-2ad2-4ad3-bab4-1f54ac8517e6" Path="Attachment/FileName">
-    <Caption>File Name</Caption>
+    <Caption>Dateiname</Caption>
     <Documentation Category="USER_LONG_HELP">Attachment file name</Documentation>
   </Element>
   <Element Id="51b33fc9-2658-409a-8721-c175036701ee" Path="WorkQueue_Create/WorkQueue_CreateRootControl/GroupBoxWithChamfer1/Text">
@@ -552,7 +558,7 @@
     <Caption>Form ID</Caption>
   </Element>
   <Element Id="6a148bad-09df-4266-b0aa-0ae2ff14441f" Path="Attachment/Note">
-    <Caption>Remarks</Caption>
+    <Caption>Bemerkungen</Caption>
     <Documentation Category="USER_LONG_HELP">Attachment remarks</Documentation>
   </Element>
   <Element Id="6a92781b-ac57-4b24-a2a3-7ff772747431" Path="IAsapEntity2/RecordCreated">
@@ -575,7 +581,7 @@
     <Value>Read Only (Form)</Value>
   </Element>
   <Element Id="6d9c8b71-337e-4572-87ff-1dd7e1fa3c53" Path="BusinessPartner/FirstName">
-    <Caption>First Name</Caption>
+    <Caption>Vorname</Caption>
     <Documentation Category="USER_LONG_HELP"></Documentation>
   </Element>
   <Element Id="6e44c51d-8818-43d4-b162-b2a05dc7b30f" Path="AsapApplicationRole/IsSystemRole">
@@ -634,7 +640,7 @@
     <Url>admin/userRoles</Url>
   </Element>
   <Element Id="7a5f60a2-895a-49d7-b009-929b4a6a4c5a" Path="BusinessPartner/Name">
-    <Caption>Name</Caption>
+    <Caption>Nachname</Caption>
     <Documentation Category="USER_LONG_HELP"></Documentation>
   </Element>
   <Element Id="7a8c65eb-76a0-4d51-9e4d-5737596243e9" Path="AsapSyncRunLog/SourceId_int">
@@ -713,6 +719,9 @@
   </Element>
   <Element Id="8614673e-bb64-4ee9-8b9e-7c4c144e03c6" Path="DimensionTransformationMatrix/refSource3DimensionEntityId">
     <Caption>Dimension 3</Caption>
+  </Element>
+  <Element Id="86381c0e-6c5c-479c-89f3-4a6cb6139c96" Path="UsernameAlreadyExists">
+    <String>Der Benutzer konnte nicht angelegt werden, da dieser schon existiert. Bitte verwenden Sie einen anderen Namen.</String>
   </Element>
   <Element Id="869a1807-a5b6-420e-94d8-855745733195" Path="Counter/CounterRootControl/AsCheckBox1/Text">
     <Value>Maintain By Date</Value>
@@ -949,7 +958,7 @@
     <Caption>Exception Severity</Caption>
   </Element>
   <Element Id="b19baf6b-56ac-4506-a076-769c663be977" Path="BusinessPartner/ReferenceCode">
-    <Caption>Shortcut</Caption>
+    <Caption>Benutzerid</Caption>
     <Documentation Category="USER_LONG_HELP">Business partner's name shortcut.</Documentation>
   </Element>
   <Element Id="b40c78c6-f40c-45c2-bc48-9735d81e9e40" Path="AsapCalendar/IsFridayWorkingDay">
@@ -1075,6 +1084,9 @@
   </Element>
   <Element Id="ccc6fb93-2e10-416e-a910-954f47d6d989" Path="WorkQueue/WorkQueueClass">
     <Caption>Class</Caption>
+  </Element>
+  <Element Id="cdae0116-4958-4244-8b4f-0d4d03e303bb" Path="DeleteMembershipUserConfirmationMessage">
+    <String>Möchten Sie wirklich den Benutzer löschen?</String>
   </Element>
   <Element Id="ce92019f-d693-494d-84c4-3bf509deacfa" Path="ResourceAccessLevel/Name">
     <Caption>Name</Caption>
@@ -1318,6 +1330,9 @@
   <Element Id="fc7dcac9-f47b-41dd-8f22-fc4b3e0bea55" Path="AsapTooltipHelpContext/AsapTooltipHelpContextRootControl/CollapsibleContainer1/CollapsiblePanel2/AsPanel4/PanelTitle">
     <Value>Subcontexts</Value>
   </Element>
+  <Element Id="fcbe84ec-9bee-46f1-9c13-bcf21f5f384b" Path="PasswordsDoesntMatch">
+    <String>Die Passwörter sind unterschiedlich.</String>
+  </Element>
   <Element Id="fd2febe5-5e15-4c06-980d-f66bd0840ad6" Path="AsapSyncRunLog/SourceId_guid">
     <Caption>Source ID (guid)</Caption>
   </Element>
@@ -1446,12 +1461,12 @@
     <Value>Read Only (Form)</Value>
   </Element>
     <Element Id="2f004dbe-8a11-442c-b163-6fa5f6e69388" Path="BusinessPartner/UserRoles">
-	<Caption>Roles</Caption>
+	<Caption>Rollen</Caption>
   </Element>
   <Element Id="24d46fc2-6afa-4eb6-b9b0-a32ff1c844fe" Path="BusinessPartner/UserPassword">
-	<Caption>Password</Caption>
+	<Caption>Passwort</Caption>
   </Element>
   <Element Id="6c0f5dcd-1dd7-4ce6-885d-d00f6d522ee8" Path="NewUser/02_FillOutBusinessPartner">
-	<Documentation Category="USER_WFSTEP_DESCRIPTION">Please fill out user info</Documentation>
+	<Documentation Category="USER_WFSTEP_DESCRIPTION">Benutzerdaten erfassen</Documentation>
   </Element>
 </AsapLocalization>

@@ -3,6 +3,9 @@
   <Element Id="007f0619-bc85-44d7-a4e9-c3a88419bed6" Path="WorkQueue_Remove/WorkQueue_RemoveRootControl/GroupBoxWithChamfer1/Text">
     <Value>Change State/Value</Value>
   </Element>
+  <Element Id="011afc41-139c-4b0a-9d1c-6686674b02fd" Path="BusinessPartner/MembershipUserCreate_Save">
+    <Caption>Create</Caption>
+  </Element>
   <Element Id="023ee3ea-c462-4606-855f-265449062aaf" Path="ReportFormat_XML">
     <StringValue>XML</StringValue>
   </Element>
@@ -189,6 +192,10 @@
   <Element Id="20d1a3fc-b840-4f8a-84c6-3761f2bac436" Path="DimensionEntity/Name">
     <Caption>Name</Caption>
   </Element>
+  <Element Id="21ced315-8828-454d-a24f-d37993a62437" Path="BusinessPartner/ConfirmUserPassword">
+    <Caption>Password (again)</Caption>
+  </Element>
+
   <Element Id="21d86e1c-5a23-434b-9fe2-e187fd100624" Path="AsapRounding">
     <Caption>Rounding</Caption>
   </Element>
