@@ -23,7 +23,7 @@
         <exec workingdir="../rn/model-root" program="${git-exec}" failonerror="false">
             <arg value="fetch"/>
         </exec>
-        <exec workingdir="../rn/model-root" program="${git-exec}" output="../rn/release-notes__Model-Root_${projectSuffix}_model-root_${configurationSuffix}_${buildNumber}_artifacts__model-root__${branchMarker}.txt">
+        <exec workingdir="../rn/model-root" program="${git-exec}" output="../rn/release-notes__Model_${projectSuffix}_root_${configurationSuffix}_${buildNumber}_artifacts__root__${branchMarker}.txt">
             <arg value="log"/>
             <arg value="^origin/${previousBranch}"/>
             <arg value="origin/${currentBranch}"/>
