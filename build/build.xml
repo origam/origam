@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="ORIGAM Root Modle" default="standard" basedir=".">
+  <description>Build file for SIMPLICOR Core</description>
+  <property name="dist" value="../dist"/>
+  <property name="git-exec" value="C:\Program Files (x86)\Git\bin\git"/>
+  <target name="standard">
+    <delete dir="${dist}" failonerror="false"/>
+    <mkdir dir="${dist}"/>
+    <copy todir="${dist}">
+      <fileset basedir="../.">
+        <include name="*.xml"/>
+        <include name="l10n/*.*"/>
+      </fileset>
+    </copy>
+  </target>
+  <target name="create-release-notes">
+        <delete dir="../rn" failonerror="false"/>
+        <mkdir dir="../rn"/>
+        <exec workingdir="../rn" program="${git-exec}" failonerror="false">
+            <arg value="clone"/>
+            <arg value="${git-repository}"/>
+        </exec>
+        <exec workingdir="../rn/asap-backend" program="${git-exec}" failonerror="false">
+            <arg value="fetch"/>
+        </exec>
+        <exec workingdir="../rn/asap-backend" program="${git-exec}" output="../rn/release-notes__Model${projectSuffix}_${projectName}_${configurationSuffix}_${buildNumber}_artifacts__model${branchMarker}.txt">
+            <arg value="log"/>
+            <arg value="^origin/${previousBranch}"/>
+            <arg value="origin/${currentBranch}"/>
+            <arg value="--oneline"/>
+            <arg value="--no-merges"/>
+            <arg value="--first-parent"/>
+            <arg value="--date=iso"/>
+            <arg value="--pretty=format:&quot;%H%x09%an%x09%ad%x09%s&quot;"/>
+        </exec>
+        <!--<copy todir="${repositoryRoot}/${buildOutputDir}">
+            <fileset basedir="../rn">
+                <include name="release-notes-model-${currentBranch}.txt"/>
+            </fileset>
+        </copy>-->
+    </target>
+</project>
