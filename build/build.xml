@@ -20,10 +20,10 @@
             <arg value="clone"/>
             <arg value="${git-repository}"/>
         </exec>
-        <exec workingdir="../rn/asap-backend" program="${git-exec}" failonerror="false">
+        <exec workingdir="../rn/model-root" program="${git-exec}" failonerror="false">
             <arg value="fetch"/>
         </exec>
-        <exec workingdir="../rn/asap-backend" program="${git-exec}" output="../rn/release-notes__Model_${projectSuffix}_model_${configurationSuffix}_${buildNumber}_artifacts__model__${branchMarker}.txt">
+        <exec workingdir="../rn/model-root" program="${git-exec}" output="../rn/release-notes__Model_${projectSuffix}_model_${configurationSuffix}_${buildNumber}_artifacts__model__${branchMarker}.txt">
             <arg value="log"/>
             <arg value="^origin/${previousBranch}"/>
             <arg value="origin/${currentBranch}"/>
@@ -33,10 +33,5 @@
             <arg value="--date=iso"/>
             <arg value="--pretty=format:&quot;%H%x09%an%x09%ad%x09%s&quot;"/>
         </exec>
-        <!--<copy todir="${repositoryRoot}/${buildOutputDir}">
-            <fileset basedir="../rn">
-                <include name="release-notes-model-${currentBranch}.txt"/>
-            </fileset>
-        </copy>-->
     </target>
 </project>
