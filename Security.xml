@@ -596,7 +596,8 @@ ALTER TABLE [OrigamUser] DROP CONSTRAINT [DF_OrigamUser_IsLockedOut]</M01>
     </SchemaItem>
     <SchemaItem Id="179f4561-7c84-4846-b0b6-8f5551004f8f" ItemType="DeploymentVersion" Name="2.6_user_mgmt_action_buttons" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.DeploymentVersion" IsAbstract="false" SS01="2.6" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="e3987378-a6b9-4378-a161-71a4dbf186f7" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" />
     <SchemaItem Id="f0abf970-7075-453a-bd56-1f2820ac1a9b" ItemType="DeploymentUpdateScriptActivity" Name="00010_Feature_NET_MEMBERSHIP_EXCLUSIVE_USE" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" IsAbstract="false" I01="10" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G05="bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="179f4561-7c84-4846-b0b6-8f5551004f8f">
-      <M01>INSERT INTO AsapFeatureList (Id, ReferenceCode, DisplayName, Description, IsFeatureOn, RecordCreated)
+      <M01>IF NOT EXISTS (SELECT * FROM AsapFeatureList WHERE ReferenceCode = 'NET_MEMBERSHIP_EXCLUSIVE_USE')
+INSERT INTO AsapFeatureList (Id, ReferenceCode, DisplayName, Description, IsFeatureOn, RecordCreated)
 VALUES (newid(), 'NET_MEMBERSHIP_EXCLUSIVE_USE', 'User Management Extensions',
 'When turned on new buttons will be available in the user management for adding/removing/unlocking users and changing password. Use this feature only when the configured membership provider supports these functions.',
 0, getdate())</M01>
@@ -728,6 +729,12 @@ ALTER TABLE [OrigamUser] ADD CONSTRAINT FK_OrigamUser_refBusinessPartnerId_Busin
 	[RecordCreated] DATETIME NULL,
 	[RecordUpdated] DATETIME NULL,
 	[Name] NVARCHAR(20) NOT NULL)</M01>
+    </SchemaItem>
+    <SchemaItem Id="56d85257-5b44-4369-9d2b-4aa8c26a2f30" ItemType="DeploymentUpdateScriptActivity" Name="00040_Feature_NET_MEMBERSHIP_EXCLUSIVE_USE_TurnedOnForInitialDbScript" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" IsAbstract="false" I01="40" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G05="bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="d6ebe670-4440-4999-9a96-3969ebfa103b">
+      <M01>INSERT INTO AsapFeatureList (Id, ReferenceCode, DisplayName, Description, IsFeatureOn, RecordCreated)
+VALUES (newid(), 'NET_MEMBERSHIP_EXCLUSIVE_USE', 'User Management Extensions',
+'When turned on new buttons will be available in the user management for adding/removing/unlocking users and changing password. Use this feature only when the configured membership provider supports these functions.',
+1, getdate())</M01>
     </SchemaItem>
     <SchemaItem Id="4b030ba5-70e5-4e7d-93c9-e4f9c3b64cba" ItemType="DeploymentUpdateScriptActivity" Name="00020_Database_Object_Mapping_BusinessPartnerAsapRole" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" IsAbstract="false" I01="20" G05="bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="d6ebe670-4440-4999-9a96-3969ebfa103b">
       <M01>CREATE TABLE [BusinessPartnerAsapRole] (
