@@ -2657,7 +2657,7 @@ ALTER TABLE BusinessPartnerAsapRole WITH NOCHECK ADD CONSTRAINT
     <SchemaItem Id="4192df97-546f-4857-822d-f44f580ce667" ItemType="PropertyValueItem" Name="IsVisualEditorSupported" TargetType="CZ.Advantages.Asap.Schema.GuiModel.PropertyValueItem" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G01="ba13e820-a44c-43e4-8927-f5026ab11a3a" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="f6cea2e9-5661-4176-a408-187429915f3b" />
     <SchemaItem Id="6da8cbb0-7a2e-44d0-ad11-f719e99e60a5" ItemType="PropertyValueItem" Name="SelectionMember" TargetType="CZ.Advantages.Asap.Schema.GuiModel.PropertyValueItem" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G01="f3a804f3-61c9-4215-8c42-2b9edd0c4ba1" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="f6cea2e9-5661-4176-a408-187429915f3b" />
     <SchemaItem Id="d55c1be5-9ad3-4a24-9375-fe8709982a39" ItemType="PropertyValueItem" Name="PanelTitle" TargetType="CZ.Advantages.Asap.Schema.GuiModel.PropertyValueItem" IsAbstract="false" LS01="User Roles" I01="0" B01="false" G01="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="f6cea2e9-5661-4176-a408-187429915f3b" />
-    <SchemaItem Id="31cca4fa-42e0-4f48-9248-58f5d49809b1" ItemType="Rule" Name="MembershipUserValidation_Create" TargetType="CZ.Advantages.Asap.Schema.RuleModel.XslRule" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="5b5597cc-a797-4561-b7d3-2b6e67fc2e21" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
+    <SchemaItem Id="31cca4fa-42e0-4f48-9248-58f5d49809b1" ItemType="Rule" Name="MembershipUserValidation_Create" TargetType="CZ.Advantages.Asap.Schema.RuleModel.EndRule" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="5b5597cc-a797-4561-b7d3-2b6e67fc2e21" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
       <M01>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
 	xmlns:AS="http://schema.advantages.cz/AsapFunctions"
@@ -2716,10 +2716,10 @@ ALTER TABLE BusinessPartnerAsapRole WITH NOCHECK ADD CONSTRAINT
 
 &lt;/xsl:stylesheet&gt;</M01>
     </SchemaItem>
-    <SchemaItem Id="673f84f7-6cb6-455a-9e3e-8b90200c3bef" ItemType="Rule" Name="BusinessPartner_hasNotUsername" TargetType="CZ.Advantages.Asap.Schema.RuleModel.XPathRule" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="5b5597cc-a797-4561-b7d3-2b6e67fc2e21" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
+    <SchemaItem Id="673f84f7-6cb6-455a-9e3e-8b90200c3bef" ItemType="Rule" Name="BusinessPartner_hasNotUsername" TargetType="CZ.Advantages.Asap.Schema.RuleModel.EntityRule" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="5b5597cc-a797-4561-b7d3-2b6e67fc2e21" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
       <M01>not(string(/row/UserName))</M01>
     </SchemaItem>
-    <SchemaItem Id="6fc55ed1-8605-422e-93b9-7eee08be9bfd" ItemType="Rule" Name="ValidateNewUser" TargetType="CZ.Advantages.Asap.Schema.RuleModel.XslRule" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="5b5597cc-a797-4561-b7d3-2b6e67fc2e21" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
+    <SchemaItem Id="6fc55ed1-8605-422e-93b9-7eee08be9bfd" ItemType="Rule" Name="ValidateNewUser" TargetType="CZ.Advantages.Asap.Schema.RuleModel.EndRule" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="5b5597cc-a797-4561-b7d3-2b6e67fc2e21" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
       <M01>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
 	xmlns:AS="http://schema.advantages.cz/AsapFunctions"
@@ -2770,13 +2770,13 @@ ALTER TABLE BusinessPartnerAsapRole WITH NOCHECK ADD CONSTRAINT
 
 &lt;/xsl:stylesheet&gt;</M01>
     </SchemaItem>
-    <SchemaItem Id="79661fdb-3ea3-4109-9176-8100edfa0283" ItemType="Rule" Name="BusinessPartner_hasUsername" TargetType="CZ.Advantages.Asap.Schema.RuleModel.XPathRule" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="5b5597cc-a797-4561-b7d3-2b6e67fc2e21" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
+    <SchemaItem Id="79661fdb-3ea3-4109-9176-8100edfa0283" ItemType="Rule" Name="BusinessPartner_hasUsername" TargetType="CZ.Advantages.Asap.Schema.RuleModel.EntityRule" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="5b5597cc-a797-4561-b7d3-2b6e67fc2e21" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
       <M01>string(/row/UserName)</M01>
     </SchemaItem>
-    <SchemaItem Id="df25192e-f532-419e-a226-f4e953f02499" ItemType="Rule" Name="SR_SimpleContextValue_IsFalse" TargetType="CZ.Advantages.Asap.Schema.RuleModel.XPathRule" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="8f68b20d-035d-416f-ad07-c97ed6bb5b86" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
+    <SchemaItem Id="df25192e-f532-419e-a226-f4e953f02499" ItemType="Rule" Name="SR_SimpleContextValue_IsFalse" TargetType="CZ.Advantages.Asap.Schema.RuleModel.StartRule" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="8f68b20d-035d-416f-ad07-c97ed6bb5b86" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
       <M01>/ROOT/value = 'false'</M01>
     </SchemaItem>
-    <SchemaItem Id="f1f4c218-d7a7-4252-885c-ef979a71f9c4" ItemType="Rule" Name="AsapApplicationRole_IsSystem" TargetType="CZ.Advantages.Asap.Schema.RuleModel.XPathRule" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="5b5597cc-a797-4561-b7d3-2b6e67fc2e21" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
+    <SchemaItem Id="f1f4c218-d7a7-4252-885c-ef979a71f9c4" ItemType="Rule" Name="AsapApplicationRole_IsSystem" TargetType="CZ.Advantages.Asap.Schema.RuleModel.EntityRule" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="5b5597cc-a797-4561-b7d3-2b6e67fc2e21" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
       <M01>/row/@IsSystemRole = 'true'</M01>
     </SchemaItem>
     <SchemaItem Id="888933c6-e4b4-40c0-ae6b-462721fe8a60" ItemType="Service" Name="IdentityService" TargetType="CZ.Advantages.Asap.Schema.WorkflowModel.Service" IsAbstract="false" LS01="Origam.Security.Identity.IdentityServiceAgent,Origam.Security.Identity" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" />
