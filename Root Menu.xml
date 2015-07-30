@@ -282,7 +282,7 @@
       </xs:keyref>
     </xs:element>
   </xs:schema>
-  <SchemaExtension Id="b9ab12fe-7f7d-43f7-bedc-93747647d6e4" Name="Root Menu" Version="1.1.0" Copyright="">
+  <SchemaExtension Id="b9ab12fe-7f7d-43f7-bedc-93747647d6e4" Name="Root Menu" Version="1.2.0" Copyright="">
     <Description />
     <SchemaItemGroup Id="d52fba73-6171-4a63-8dad-01c9408b3e9b" Name="Root Menu" RootItemType="DataLookup" refSchemaExtensionId="b9ab12fe-7f7d-43f7-bedc-93747647d6e4" />
     <SchemaItemGroup Id="a989e64a-3a9f-469a-9d81-1742fe73f367" Name="Root Menu" RootItemType="DataConstant" refSchemaExtensionId="b9ab12fe-7f7d-43f7-bedc-93747647d6e4" />
@@ -330,6 +330,13 @@
     </SchemaItem>
     <SchemaItem Id="26184145-16aa-48b8-b1d5-b176909218d1" ItemType="DeploymentUpdateScriptActivity" Name="00080_AddRole_FRM_Colors" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" IsAbstract="false" I01="80" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G05="bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" refSchemaExtensionId="b9ab12fe-7f7d-43f7-bedc-93747647d6e4" refParentItemId="17d67919-7bdc-44d7-abe0-2b9cd9d5f067">
       <M01>INSERT INTO AsapApplicationRole (Id, Name, Description, IsSystemRole, RecordCreated) VALUES (newid(), 'FRM_Colors', 'Menu &gt; Settings &gt; General &gt; System Colors', 1, getdate())</M01>
+    </SchemaItem>
+    <SchemaItem Id="460c7774-78b9-4e72-9779-c5294c8d64d0" ItemType="DeploymentVersion" Name="1.2.0" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.DeploymentVersion" IsAbstract="false" SS01="1.2.0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="aaee6cf9-234a-40d4-a576-d598e90fb9e0" refSchemaExtensionId="b9ab12fe-7f7d-43f7-bedc-93747647d6e4" />
+    <SchemaItem Id="83c01f3e-4757-4389-b24b-2ba5e96c2f35" ItemType="DeploymentUpdateScriptActivity" Name="00010_AssignExistingRoles_to_BuiltInSuperUser" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" IsAbstract="false" I01="10" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G05="bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" refSchemaExtensionId="b9ab12fe-7f7d-43f7-bedc-93747647d6e4" refParentItemId="460c7774-78b9-4e72-9779-c5294c8d64d0">
+      <M01>INSERT INTO AsapRoleAsapApplicationRole (Id, refAsapRoleId, refAsapApplicationRoleId, RecordCreated, IsFormReadOnly)
+SELECT newid(), 'e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2', Id, getdate(), 0 FROM
+ AsapApplicationRole WHERE Name NOT LIKE 'data%restrict%'
+ AND Name NOT LIKE 'data%only%' AND Name NOT LIKE 'data%deny%'</M01>
     </SchemaItem>
     <SchemaItem Id="5bf82414-d6dd-4f2f-b18b-2707f872f3db" ItemType="DeploymentVersion" Name="1.1.0" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.DeploymentVersion" IsAbstract="false" SS01="1.1.0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="aaee6cf9-234a-40d4-a576-d598e90fb9e0" refSchemaExtensionId="b9ab12fe-7f7d-43f7-bedc-93747647d6e4" />
     <SchemaItem Id="9fa474ec-08db-4516-bcca-a0a140d6b0b5" ItemType="DeploymentUpdateScriptActivity" Name="00010_AddRole_FRM_UserProfile" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" IsAbstract="false" I01="10" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G05="bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" refSchemaExtensionId="b9ab12fe-7f7d-43f7-bedc-93747647d6e4" refParentItemId="5bf82414-d6dd-4f2f-b18b-2707f872f3db">
