@@ -282,7 +282,7 @@
       </xs:keyref>
     </xs:element>
   </xs:schema>
-  <SchemaExtension Id="951f2cda-2867-4b99-8824-071fa8749ead" Name="Security" Version="3.5" Copyright="(c) 2005-2007 Advantage Solutions, s. r. o.">
+  <SchemaExtension Id="951f2cda-2867-4b99-8824-071fa8749ead" Name="Security" Version="3.6" Copyright="(c) 2005-2007 Advantage Solutions, s. r. o.">
     <Description />
     <SchemaItemGroup Id="1862b67d-8d47-4ec1-baba-0d5b5bff7ea8" Name="Security" RootItemType="PanelControlSet" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" />
     <SchemaItemGroup Id="8c04cf02-1bbc-4796-a0c8-21ae021efaf0" Name="Security" RootItemType="DataConstant" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" />
@@ -326,11 +326,13 @@
       <SchemaItemAncestor refAncestorId="47a20d1a-ae4b-482c-949f-a81bee8ea28d" Id="d6c87f86-2479-425e-a06e-bb5b268e4284" refSchemaItemId="c6eb1280-559b-44ab-97d5-e165423d77b4" />
     </SchemaItem>
     <SchemaItem Id="31dbbc02-c625-4d54-b67d-1de6ba08195c" ItemType="DataConstant" Name="Authorization_NewUser_DefaultBusinessUnitId" TargetType="CZ.Advantages.Asap.Schema.EntityModel.DataConstant" IsAbstract="false" LS01="" I01="0" I02="10" F01="0.0000000000" C01="0.0000" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G02="c45d0c18-9529-44b7-8140-25096c3241b8" refSchemaItemGroupId="8c04cf02-1bbc-4796-a0c8-21ae021efaf0" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" />
+    <SchemaItem Id="9d4f2dee-7ed5-4913-b0f1-3ba29b9d875a" ItemType="DataConstant" Name="AsapRole_BuiltInSuperUser" TargetType="CZ.Advantages.Asap.Schema.EntityModel.DataConstant" IsAbstract="false" LS01="" I01="0" I02="10" F01="0.0000000000" C01="0.0000" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G01="e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2" G02="ca758db5-2294-442b-b5f2-891eb6fea67e" refSchemaItemGroupId="8c04cf02-1bbc-4796-a0c8-21ae021efaf0" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" />
     <SchemaItem Id="9e8e17b7-95d1-4897-bc86-7e576d0bd29b" ItemType="DataConstant" Name="Authorization_NewUser_DefaultOrganizationId" TargetType="CZ.Advantages.Asap.Schema.EntityModel.DataConstant" IsAbstract="false" LS01="" I01="0" I02="10" F01="0.0000000000" C01="0.0000" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G02="a53c6d95-67be-4c8c-a7b0-75ad20dc79ee" refSchemaItemGroupId="8c04cf02-1bbc-4796-a0c8-21ae021efaf0" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" />
     <SchemaItem Id="049ffdd3-05f4-4e64-a97f-a4baefab1cb1" ItemType="DataEntity" Name="AsapRole" TargetType="CZ.Advantages.Asap.Schema.EntityModel.TableMappingItem" IsAbstract="false" SS01="User Role" SS03="AsapRole" I05="0" B01="false" B02="true" B05="true" refSchemaItemGroupId="ae125b88-18d3-4436-a942-48a446bb300c" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
       <SchemaItemAncestor refAncestorId="28c21d99-785a-4cc5-bce9-62dca7b852c6" Id="df2a0755-b481-45f6-8545-c1420a090092" refSchemaItemId="049ffdd3-05f4-4e64-a97f-a4baefab1cb1" />
     </SchemaItem>
     <SchemaItem Id="6ba55d4b-31be-4ba9-8564-7ed18b6936b4" ItemType="DataEntityColumn" Name="Alias" TargetType="CZ.Advantages.Asap.Schema.EntityModel.FieldMappingItem" IsAbstract="false" SS01="Alias" SS03="Alias" I01="9" I02="255" I03="1" I04="0" B01="true" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="049ffdd3-05f4-4e64-a97f-a4baefab1cb1" />
+    <SchemaItem Id="a6121654-0d31-47fb-8b30-b3adfe6234c3" ItemType="EntitySecurityRule" Name="5_Permit_Update_*" TargetType="CZ.Advantages.Asap.Schema.EntityModel.EntityFieldSecurityRule" IsAbstract="false" LS01="*" I01="0" I02="5" I03="0" B01="false" B02="true" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="6ba55d4b-31be-4ba9-8564-7ed18b6936b4" />
     <SchemaItem Id="61829bb4-5587-4562-a981-892a7da69a6d" ItemType="DataEntityColumn" Name="Name" TargetType="CZ.Advantages.Asap.Schema.EntityModel.FieldMappingItem" IsAbstract="false" SS01="Name" SS03="Name" I01="9" I02="255" I03="1" I04="0" L01="0" L02="1" B01="false" B02="false" B03="false" B04="false" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="049ffdd3-05f4-4e64-a97f-a4baefab1cb1">
       <Documentation Id="d496d402-1d83-4b97-9b44-56d1f84dd816" Category="USER_LONG_HELP" refSchemaItemId="61829bb4-5587-4562-a981-892a7da69a6d">
         <Data />
@@ -342,6 +344,8 @@
     <SchemaItem Id="f95e85b3-1790-48c1-88bc-ab89fd0c1839" ItemType="EntityRelationColumnPair" Name="AsapRoleAsapApplicationRoleKey1" TargetType="CZ.Advantages.Asap.Schema.EntityModel.EntityRelationColumnPairItem" IsAbstract="false" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G01="c54413b6-eb88-49c8-a7ff-3bb942c1984e" G02="0f00bccd-2c1e-464d-9e0d-8e145f617855" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="3ba3e085-c534-4ac4-9d9c-445a918f2677" />
     <SchemaItem Id="e9bd0bb4-22ae-4093-ab6f-ef5dc8796d99" ItemType="EntityRelation" Name="BusinessPartnerAsapRole" TargetType="CZ.Advantages.Asap.Schema.EntityModel.EntityRelationItem" IsAbstract="false" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G01="ad2aebfe-e684-4e2e-8843-775c468357d5" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="049ffdd3-05f4-4e64-a97f-a4baefab1cb1" />
     <SchemaItem Id="2ce85e96-5cd7-45fe-b141-905faffb97f7" ItemType="EntityRelationColumnPair" Name="BusinessPartnerAsapRoleKey1" TargetType="CZ.Advantages.Asap.Schema.EntityModel.EntityRelationColumnPairItem" IsAbstract="false" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G01="c54413b6-eb88-49c8-a7ff-3bb942c1984e" G02="15ea6af0-68cc-4260-a0b4-7d912b7e87e4" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="e9bd0bb4-22ae-4093-ab6f-ef5dc8796d99" />
+    <SchemaItem Id="a4863cb7-90ed-4116-afc6-b44ae9a9665b" ItemType="EntitySecurityRule" Name="10_Deny_UpdateDelete_AsapRole_IsBuilIntSuperUser_*" TargetType="CZ.Advantages.Asap.Schema.EntityModel.EntitySecurityRule" IsAbstract="false" LS01="*" I01="1" I02="10" I03="0" B01="false" B02="true" B03="true" B04="false" B05="false" B06="false" B07="false" G01="bfdc54a2-e9d7-4abb-9863-2bdf87e63a88" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="049ffdd3-05f4-4e64-a97f-a4baefab1cb1" />
+    <SchemaItem Id="a0208314-c2f0-4b07-9807-c1a158f6057c" ItemType="EntitySecurityRule" Name="999_Permit_CreateUpdateDelete_*" TargetType="CZ.Advantages.Asap.Schema.EntityModel.EntitySecurityRule" IsAbstract="false" LS01="*" I01="0" I02="999" I03="0" B01="true" B02="true" B03="true" B04="false" B05="false" B06="false" B07="false" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="049ffdd3-05f4-4e64-a97f-a4baefab1cb1" />
     <SchemaItem Id="69606215-a699-439f-a499-769cba583df7" ItemType="DataEntity" Name="AsapRoleAsapApplicationRole" TargetType="CZ.Advantages.Asap.Schema.EntityModel.TableMappingItem" IsAbstract="false" SS01="User Role's Access Rights" SS03="AsapRoleAsapApplicationRole" I05="0" B01="false" B02="false" B03="false" B04="false" B05="true" B06="false" B07="false" refSchemaItemGroupId="ae125b88-18d3-4436-a942-48a446bb300c" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
       <SchemaItemAncestor refAncestorId="28c21d99-785a-4cc5-bce9-62dca7b852c6" Id="03d169d5-473f-4e5d-a2bf-5ae2d3ffcc18" refSchemaItemId="69606215-a699-439f-a499-769cba583df7" />
     </SchemaItem>
@@ -696,6 +700,28 @@ ALTER TABLE [OrigamUser] DROP CONSTRAINT [DF_OrigamUser_EmailConfirmed]</M01>
       <M01>ALTER TABLE Resource ALTER COLUMN refBusinessUnitId UNIQUEIDENTIFIER NULL
 ALTER TABLE Resource ALTER COLUMN refOrganizationId UNIQUEIDENTIFIER NULL
 </M01>
+    </SchemaItem>
+    <SchemaItem Id="bdcff03e-b4f6-4b61-808e-6dd542ab8a27" ItemType="DeploymentVersion" Name="3.6_SuperUserBuiltinRole" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.DeploymentVersion" IsAbstract="false" SS01="3.6" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="e3987378-a6b9-4378-a161-71a4dbf186f7" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" />
+    <SchemaItem Id="6345fe88-2e45-498c-b03d-576c99bb5229" ItemType="DeploymentUpdateScriptActivity" Name="00020_Remove_Role_SYS_AsapClient_GlobalTransaction" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" IsAbstract="false" I01="20" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G05="bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="bdcff03e-b4f6-4b61-808e-6dd542ab8a27">
+      <M01>DELETE FROM AsapRoleAsapApplicationRole WHERE refAsapApplicationRoleId IN
+(SELECT Id FROM AsapApplicationRole WHERE Name = 'SYS_AsapClient_GlobalTransaction')
+DELETE FROM AsapApplicationRole WHERE Name = 'SYS_AsapClient_GlobalTransaction'</M01>
+    </SchemaItem>
+    <SchemaItem Id="2a92ab9c-a6b6-4656-9e29-8d8150e7969c" ItemType="DeploymentUpdateScriptActivity" Name="00010_SuperUserBuiltinRole" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" IsAbstract="false" I01="10" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G05="bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="bdcff03e-b4f6-4b61-808e-6dd542ab8a27">
+      <M01>INSERT INTO AsapRole (Id, Name, RecordCreated)
+VALUES ('e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2', 'Super User (Built-in)', getdate())</M01>
+    </SchemaItem>
+    <SchemaItem Id="296eda73-560b-4a7d-8c71-b3baab85d878" ItemType="DeploymentUpdateScriptActivity" Name="00030_Remove_Role_WEB_Admin_AddUser" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" IsAbstract="false" I01="30" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G05="bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="bdcff03e-b4f6-4b61-808e-6dd542ab8a27">
+      <M01>DELETE FROM AsapRoleAsapApplicationRole WHERE refAsapApplicationRoleId IN
+(SELECT Id FROM AsapApplicationRole WHERE Name = 'WEB_Admin_AddUser')
+DELETE FROM AsapApplicationRole WHERE Name = 'WEB_Admin_AddUser'
+</M01>
+    </SchemaItem>
+    <SchemaItem Id="3a5a5624-9cc8-4d84-9f7e-f60192a21878" ItemType="DeploymentUpdateScriptActivity" Name="00040_AddToBuiltInSuperUserRole" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" IsAbstract="false" I01="40" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G05="bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="bdcff03e-b4f6-4b61-808e-6dd542ab8a27">
+      <M01>INSERT INTO AsapRoleAsapApplicationRole (Id, refAsapRoleId, refAsapApplicationRoleId, RecordCreated, IsFormReadOnly)
+SELECT newid(), 'e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2', Id, getdate(), 0 FROM
+ AsapApplicationRole WHERE Name NOT LIKE 'data%restrict%'
+ AND Name NOT LIKE 'data%only%' AND Name NOT LIKE 'data%deny%'</M01>
     </SchemaItem>
     <SchemaItem Id="c1b920fd-cb45-41a0-a9cd-89a460563de3" ItemType="DeploymentVersion" Name="3.0_origam_user" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.DeploymentVersion" IsAbstract="false" SS01="3.0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="e3987378-a6b9-4378-a161-71a4dbf186f7" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" />
     <SchemaItem Id="fcffad2c-2224-4bf2-81f5-0db92256d7ca" ItemType="DeploymentUpdateScriptActivity" Name="00010_Database_Entity_OrigamUser" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" IsAbstract="false" I01="10" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G05="bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="c1b920fd-cb45-41a0-a9cd-89a460563de3">
@@ -2772,6 +2798,9 @@ ALTER TABLE BusinessPartnerAsapRole WITH NOCHECK ADD CONSTRAINT
     </SchemaItem>
     <SchemaItem Id="79661fdb-3ea3-4109-9176-8100edfa0283" ItemType="Rule" Name="BusinessPartner_hasUsername" TargetType="CZ.Advantages.Asap.Schema.RuleModel.EntityRule" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="5b5597cc-a797-4561-b7d3-2b6e67fc2e21" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
       <M01>string(/row/UserName)</M01>
+    </SchemaItem>
+    <SchemaItem Id="bfdc54a2-e9d7-4abb-9863-2bdf87e63a88" ItemType="Rule" Name="AsapRole_IsBuilIntSuperUser" TargetType="CZ.Advantages.Asap.Schema.RuleModel.EntityRule" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="5b5597cc-a797-4561-b7d3-2b6e67fc2e21" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
+      <M01>/row/@Id = AS:GetConstant('AsapRole_BuiltInSuperUser')</M01>
     </SchemaItem>
     <SchemaItem Id="df25192e-f532-419e-a226-f4e953f02499" ItemType="Rule" Name="SR_SimpleContextValue_IsFalse" TargetType="CZ.Advantages.Asap.Schema.RuleModel.StartRule" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="8f68b20d-035d-416f-ad07-c97ed6bb5b86" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
       <M01>/ROOT/value = 'false'</M01>
