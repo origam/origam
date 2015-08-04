@@ -2895,6 +2895,7 @@ ALTER TABLE BusinessPartnerAsapRole WITH NOCHECK ADD CONSTRAINT
 	xmlns:AS="http://schema.advantages.cz/AsapFunctions"
 	xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&gt;
 
+	&lt;xsl:param name="id" select="AS:GenerateId()"/&gt;
 	&lt;xsl:param name="email"/&gt;
 	&lt;xsl:param name="password"/&gt;
 	&lt;xsl:param name="name"/&gt;
@@ -2902,14 +2903,13 @@ ALTER TABLE BusinessPartnerAsapRole WITH NOCHECK ADD CONSTRAINT
 	&lt;xsl:param name="userName"/&gt;
 	&lt;xsl:param name="roleId"/&gt;
 
-	&lt;xsl:variable name="businessPartnerId" select="AS:GenerateId()" /&gt;
 	&lt;xsl:template match="ROOT"&gt;
 		&lt;ROOT&gt;			
 			&lt;BusinessPartner
 				UserEmail="{$email}"
 				UserPassword="{$password}"
 				ConfirmUserPassword="{$password}"&gt;
-				&lt;Id&gt;&lt;xsl:value-of select="$businessPartnerId"/&gt;&lt;/Id&gt;
+				&lt;Id&gt;&lt;xsl:value-of select="$id"/&gt;&lt;/Id&gt;
 				&lt;UserName&gt;&lt;xsl:value-of select="$userName"/&gt;&lt;/UserName&gt;
 				&lt;Name&gt;&lt;xsl:value-of select="$name"/&gt;&lt;/Name&gt;
 				&lt;FirstName&gt;&lt;xsl:value-of select="$firstName"/&gt;&lt;/FirstName&gt;
@@ -3026,6 +3026,7 @@ ALTER TABLE BusinessPartnerAsapRole WITH NOCHECK ADD CONSTRAINT
     <SchemaItem Id="2bd4dbcc-d01e-4c5d-bedb-a4150dcefd54" ItemType="Workflow" Name="Identity_CreateUser" TargetType="CZ.Advantages.Asap.Schema.WorkflowModel.Workflow" IsAbstract="false" I01="2" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="b3118592-7ae2-43bd-a448-d7d2cce7179b" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" />
     <SchemaItem Id="b6b11a0e-12e8-415a-9ef2-0e0e0674b92f" ItemType="ContextStore" Name="FirstName" TargetType="CZ.Advantages.Asap.Schema.WorkflowModel.ContextStore" IsAbstract="false" I01="9" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="2bd4dbcc-d01e-4c5d-bedb-a4150dcefd54" />
     <SchemaItem Id="60ae5e90-0b21-452f-baf9-11bedc7da91a" ItemType="ContextStore" Name="RoleId" TargetType="CZ.Advantages.Asap.Schema.WorkflowModel.ContextStore" IsAbstract="false" I01="10" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="2bd4dbcc-d01e-4c5d-bedb-a4150dcefd54" />
+    <SchemaItem Id="9e1530df-580c-4089-8d24-1269ce70b3d7" ItemType="ContextStore" Name="Id" TargetType="CZ.Advantages.Asap.Schema.WorkflowModel.ContextStore" IsAbstract="false" I01="10" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="2bd4dbcc-d01e-4c5d-bedb-a4150dcefd54" />
     <SchemaItem Id="d972154a-50ab-47a3-9ca0-4d8318052399" ItemType="ContextStore" Name="OutputFromMembership" TargetType="CZ.Advantages.Asap.Schema.WorkflowModel.ContextStore" IsAbstract="false" I01="9" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="2bd4dbcc-d01e-4c5d-bedb-a4150dcefd54" />
     <SchemaItem Id="64b866f6-6846-481d-acf8-8c664282c9ce" ItemType="ContextStore" Name="Email" TargetType="CZ.Advantages.Asap.Schema.WorkflowModel.ContextStore" IsAbstract="false" I01="9" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="2bd4dbcc-d01e-4c5d-bedb-a4150dcefd54" />
     <SchemaItem Id="9574304f-78a0-4a10-a27c-93e4940c7197" ItemType="ContextStore" Name="UserProfile_New" TargetType="CZ.Advantages.Asap.Schema.WorkflowModel.ContextStore" IsAbstract="false" I01="11" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G01="ee5cb6a9-8724-41ae-b599-f89913868f34" G03="4bcdf629-e2ac-4870-ac08-dff6ed5705bb" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="2bd4dbcc-d01e-4c5d-bedb-a4150dcefd54" />
@@ -3056,6 +3057,7 @@ ALTER TABLE BusinessPartnerAsapRole WITH NOCHECK ADD CONSTRAINT
     <SchemaItem Id="c402c125-bb25-43b1-bacc-9220a0d25f43" ItemType="WorkflowTaskDependency" Name="After_01_CreateBusinessPartner" TargetType="CZ.Advantages.Asap.Schema.WorkflowModel.WorkflowTaskDependency" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G01="b3ef57a6-d32a-4200-8424-c456854912f4" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="117fb77f-62eb-4b82-96e9-9dd10c3eb56b" />
     <SchemaItem Id="b3ef57a6-d32a-4200-8424-c456854912f4" ItemType="WorkflowTask" Name="01_CreateBusinessPartner" TargetType="CZ.Advantages.Asap.Schema.WorkflowModel.ServiceMethodCallTask" IsAbstract="false" SS01="" SS02="*" I01="1" I05="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G07="9574304f-78a0-4a10-a27c-93e4940c7197" G10="600930a5-102b-43e8-8af1-677c6d7e79f3" G11="a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="2bd4dbcc-d01e-4c5d-bedb-a4150dcefd54" />
     <SchemaItem Id="c2983b6b-c77f-42a6-8b3a-3b83728d60c7" ItemType="ServiceMethodCallParameter" Name="Parameters" TargetType="CZ.Advantages.Asap.Schema.WorkflowModel.ServiceMethodCallParameter" IsAbstract="false" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G01="ce3ebb59-6528-4157-b51a-500f84a635f0" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="b3ef57a6-d32a-4200-8424-c456854912f4" />
+    <SchemaItem Id="9b873e3c-8452-428c-a0d1-2239eb4ccc43" ItemType="WorkflowContextReference" Name="id" TargetType="CZ.Advantages.Asap.Schema.WorkflowModel.ContextReference" IsAbstract="false" LS01="/" I01="9" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G01="9e1530df-580c-4089-8d24-1269ce70b3d7" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="c2983b6b-c77f-42a6-8b3a-3b83728d60c7" />
     <SchemaItem Id="5649726d-b132-4e71-a8c3-2647e867dacf" ItemType="WorkflowContextReference" Name="name" TargetType="CZ.Advantages.Asap.Schema.WorkflowModel.ContextReference" IsAbstract="false" LS01="/" I01="9" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G01="b9123688-1cb1-42ee-90dc-e383253ebea5" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="c2983b6b-c77f-42a6-8b3a-3b83728d60c7" />
     <SchemaItem Id="7ca21f08-d5ff-4fa0-bd5a-33a4e2021cf6" ItemType="WorkflowContextReference" Name="password" TargetType="CZ.Advantages.Asap.Schema.WorkflowModel.ContextReference" IsAbstract="false" LS01="/" I01="9" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G01="23538c66-bdc7-4b16-9d68-c375d425b0d4" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="c2983b6b-c77f-42a6-8b3a-3b83728d60c7" />
     <SchemaItem Id="497c834e-b581-4295-8d93-694937419819" ItemType="WorkflowContextReference" Name="email" TargetType="CZ.Advantages.Asap.Schema.WorkflowModel.ContextReference" IsAbstract="false" LS01="/" I01="9" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G01="64b866f6-6846-481d-acf8-8c664282c9ce" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="c2983b6b-c77f-42a6-8b3a-3b83728d60c7" />
