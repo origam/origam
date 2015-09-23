@@ -71,6 +71,12 @@
   <Element Id="82b212a4-0322-4e15-af50-baf6bf65cd2d" Path="BusinessPartner/Identity_ChangePassword_Save">
     <Caption OriginalText="OK">OK</Caption>
   </Element>
+  <Element Id="36b724a0-ee28-465f-935f-bfbfdf527a47" Path="BusinessPartner/Identity_ForceConfirmEmail">
+    <Caption OriginalText="Confirm Email">Confirm Email</Caption>
+  </Element>
+  <Element Id="7494a972-168e-4af5-8825-5efa3e44a623" Path="confirmUserEmail.json">
+    <Url OriginalText="confirmUserEmail.json">confirmUserEmail.json</Url>
+  </Element>
   <Element Id="725eab14-26ae-4ae3-a536-65746b1b3f37" Path="admin/addUser">
     <Url OriginalText="admin/addUser">admin/addUser</Url>
   </Element>
