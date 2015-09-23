@@ -15,6 +15,9 @@
   <Element Id="1462e299-22ab-4a7f-b2e1-4866ad3a8950" Path="Menu/Settings/UserManagement/AsapApplicationRole">
     <DisplayName OriginalText="Application Roles">Anwendungsrechte</DisplayName>
   </Element>
+  <Element Id="359bc218-d8c3-49d8-bd1d-5bf293f7db63" Path="Menu/Settings/UserManagement/UserProfile_Screen">
+    <DisplayName OriginalText="My User Profile">My User Profile</DisplayName>
+  </Element>
   <Element Id="dd8954c2-ffd8-4e18-b67e-66e291bb407f" Path="Menu/Settings/UserManagement">
     <DisplayName OriginalText="Users &amp; Security">Benutzer &amp; Sicherheit</DisplayName>
   </Element>
