@@ -48,7 +48,7 @@
     <Caption OriginalText="Name">Název</Caption>
   </Element>
   <Element Id="21ced315-8828-454d-a24f-d37993a62437" Path="BusinessPartner/ConfirmUserPassword">
-    <Caption OriginalText="Password (Confirm)">Heslo (Potvrzení]</Caption>
+    <Caption OriginalText="Password (Confirm)">Heslo (Potvrzení)</Caption>
   </Element>
   <Element Id="0f85ea5c-a327-4fad-917d-ec09a9a4f686" Path="AsapRoleAsapApplicationRole/refAsapApplicationRoleId">
     <Caption OriginalText="Application Role">Aplikační role</Caption>
