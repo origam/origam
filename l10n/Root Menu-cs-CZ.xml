@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <AsapLocalization>
   <Element Id="fbbfcbd2-4032-4bc0-b4db-076ff0bbd448" Path="Menu/Settings/General">
     <DisplayName OriginalText="General">Obecné</DisplayName>
@@ -7,7 +7,7 @@
     <DisplayName OriginalText="System Colors">Systémové barvy</DisplayName>
   </Element>
   <Element Id="a47ba338-1ae6-4f87-9f5f-3a481b836384" Path="Menu/Settings/Maps">
-    <DisplayName OriginalText="Maps">Mapsy</DisplayName>
+    <DisplayName OriginalText="Maps">Mapy</DisplayName>
   </Element>
   <Element Id="112c5faf-2fa4-4e36-8ce1-3e4e285ce96e" Path="Menu/Settings/General/Counter">
     <DisplayName OriginalText="Serial Number Ranges">Číselné řady</DisplayName>
