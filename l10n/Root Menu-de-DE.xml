@@ -48,4 +48,7 @@
   <Element Id="846b615d-e76e-4500-96b1-fe25222e57a6" Path="Menu/Settings/Maps/AsapMap">
     <DisplayName OriginalText="Map Configuration">Kartenkonfiguration</DisplayName>
   </Element>
+  <Element Id="080cb3f6-ca4b-407d-a412-3559b822b857" Path="Menu/Settings/General/AsapNotificationTemplate">
+    <DisplayName OriginalText="Notification Templates">Notification Templates</DisplayName>
+  </Element>
 </AsapLocalization>
