@@ -4,11 +4,11 @@
     <xs:element name="ROOT" msdata:IsDataSet="true" msdata:Locale="" msdata:EnforceConstraints="False" msprop:ModelVersion="4.10.0.0" msprop:Id="0f9daa67-4fe0-4ffb-9d8a-70204dc1ed78">
       <xs:complexType>
         <xs:choice minOccurs="0" maxOccurs="unbounded">
-          <xs:element name="SchemaExtension" msdata:Locale="" msdata:DisplayExpression="'SchemaExtension'" msprop:EntityId="d0e64ed8-2784-41ef-af7d-fabd05f5fed8" msprop:IsAuditingEnabled="False" msprop:Id="be6e112c-c8b3-48c6-85e3-1416c3c521a9">
+          <xs:element name="SchemaExtension" msdata:Locale="" msdata:IsLoading="False" msdata:DisplayExpression="'SchemaExtension'" msprop:EntityId="d0e64ed8-2784-41ef-af7d-fabd05f5fed8" msprop:IsAuditingEnabled="False" msprop:Id="be6e112c-c8b3-48c6-85e3-1416c3c521a9">
             <xs:complexType>
               <xs:sequence>
                 <xs:element name="Description" msprop:OnCopyAction="Copy" msprop:FieldId="ba9014e3-8ef9-421f-aefe-4418b438954e" msprop:IsAuditingEnabled="True" msprop:AsapDataType="Memo" msprop:Id="08e29b5d-ce07-4215-a6de-575888d7cce1" type="xs:string" minOccurs="0" msdata:Ordinal="3" />
-                <xs:element name="SchemaItemGroup" msdata:Locale="" msdata:DisplayExpression="'SchemaItemGroup'" msprop:EntityId="fc5987dc-c5ca-4548-9d72-3fc78ac9545f" msprop:IsAuditingEnabled="False" msprop:Id="7b7987ca-e513-4b78-b985-3a30f35fa609" minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="SchemaItemGroup" msdata:Locale="" msdata:IsLoading="False" msdata:DisplayExpression="'SchemaItemGroup'" msprop:EntityId="fc5987dc-c5ca-4548-9d72-3fc78ac9545f" msprop:IsAuditingEnabled="False" msprop:Id="7b7987ca-e513-4b78-b985-3a30f35fa609" minOccurs="0" maxOccurs="unbounded">
                   <xs:complexType>
                     <xs:attribute name="Id" msdata:DataType="System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:OnCopyAction="Copy" msprop:FieldId="b71c3496-6050-4209-85f7-573d98275605" msprop:AllowNulls="False" msprop:AsapDataType="UniqueIdentifier" msprop:IsAuditingEnabled="True" msprop:Id="53df1e03-33a3-44da-a086-a7b52b26834d" type="xs:string" use="required" />
                     <xs:attribute name="Name" msprop:OnCopyAction="Copy" msprop:FieldId="81efce43-cc7c-41dc-a59d-853c1907f3c8" msprop:AllowNulls="False" msprop:AsapDataType="String" msprop:IsAuditingEnabled="True" msprop:Id="fd01595b-60be-480e-9636-3d441ffe4d87" use="required">
@@ -30,10 +30,10 @@
                     <xs:attribute name="refSchemaExtensionId" msdata:DataType="System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:OnCopyAction="Copy" msprop:FieldId="2777d776-b22d-4986-9193-e6c6c91337b6" msprop:AllowNulls="False" msprop:AsapDataType="UniqueIdentifier" msprop:IsAuditingEnabled="True" msprop:Id="da37649d-1dce-49fc-9094-979aad8e86c2" type="xs:string" use="required" />
                   </xs:complexType>
                 </xs:element>
-                <xs:element name="PackageReference" msdata:Locale="" msdata:DisplayExpression="'PackageReference'" msprop:EntityId="6af453f2-a9eb-41d7-83dd-7f08470c397b" msprop:IsAuditingEnabled="False" msprop:Id="a7e80ddf-e5b7-4cd5-af07-8c11101ed038" minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="PackageReference" msdata:Locale="" msdata:IsLoading="False" msdata:DisplayExpression="'PackageReference'" msprop:EntityId="6af453f2-a9eb-41d7-83dd-7f08470c397b" msprop:IsAuditingEnabled="False" msprop:Id="a7e80ddf-e5b7-4cd5-af07-8c11101ed038" minOccurs="0" maxOccurs="unbounded">
                   <xs:complexType>
                     <xs:sequence>
-                      <xs:element name="PackageReferenceElement" msdata:Locale="" msdata:DisplayExpression="'PackageReferenceElement'" msprop:EntityId="384a3a24-3c6a-4580-806b-711b10f13854" msprop:IsAuditingEnabled="False" msprop:Id="a41c0db8-d071-41f8-995a-d352e7791ee6" minOccurs="0" maxOccurs="unbounded">
+                      <xs:element name="PackageReferenceElement" msdata:Locale="" msdata:IsLoading="False" msdata:DisplayExpression="'PackageReferenceElement'" msprop:EntityId="384a3a24-3c6a-4580-806b-711b10f13854" msprop:IsAuditingEnabled="False" msprop:Id="a41c0db8-d071-41f8-995a-d352e7791ee6" minOccurs="0" maxOccurs="unbounded">
                         <xs:complexType>
                           <xs:attribute name="refPackageReferenceId" msdata:DataType="System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:OnCopyAction="Copy" msprop:FieldId="cb53013a-7f7c-426b-b03c-a903d3801c5e" msprop:AllowNulls="False" msprop:AsapDataType="UniqueIdentifier" msprop:IsAuditingEnabled="True" msprop:Id="001b208a-198b-4650-86d5-9edbbb2fec7f" type="xs:string" use="required" />
                           <xs:attribute name="Id" msdata:DataType="System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:OnCopyAction="Copy" msprop:FieldId="18e71a51-0c7b-4f2b-8db1-9ef893ec7c6d" msprop:AllowNulls="False" msprop:AsapDataType="UniqueIdentifier" msprop:IsAuditingEnabled="True" msprop:Id="53df1e03-33a3-44da-a086-a7b52b26834d" type="xs:string" use="required" />
@@ -48,7 +48,7 @@
                     <xs:attribute name="refReferencedPackageId" msdata:DataType="System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:OnCopyAction="Copy" msprop:FieldId="da3d5fdb-0b31-4d39-9eb8-2e199af6bea9" msprop:AllowNulls="False" msprop:AsapDataType="UniqueIdentifier" msprop:IsAuditingEnabled="True" msprop:Id="9b07e230-65fc-440d-8c63-ba5090b958e4" type="xs:string" use="required" />
                   </xs:complexType>
                 </xs:element>
-                <xs:element name="SchemaItem" msdata:Locale="" msdata:DisplayExpression="'SchemaItem'" msprop:EntityId="77fdc536-f95d-47fd-baad-cd1cf8a4627d" msprop:IsAuditingEnabled="False" msprop:Id="2fea8f01-fe4d-4414-abfe-dd463bc8d2bb" minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="SchemaItem" msdata:Locale="" msdata:IsLoading="False" msdata:DisplayExpression="'SchemaItem'" msprop:EntityId="77fdc536-f95d-47fd-baad-cd1cf8a4627d" msprop:IsAuditingEnabled="False" msprop:Id="2fea8f01-fe4d-4414-abfe-dd463bc8d2bb" minOccurs="0" maxOccurs="unbounded">
                   <xs:complexType>
                     <xs:sequence>
                       <xs:element name="M01" msprop:OnCopyAction="Copy" msprop:FieldId="1ee848fe-30c6-4e59-8298-c4f7413fd4d6" msprop:IsAuditingEnabled="True" msprop:AsapDataType="Memo" msprop:Id="13dc21ad-72b0-4b46-9819-56ae933d2786" type="xs:string" minOccurs="0" msdata:Ordinal="11" />
@@ -57,7 +57,7 @@
                       <xs:element name="M04" msprop:OnCopyAction="Copy" msprop:FieldId="3475ff1b-2241-4e06-a7d1-73e9171ad34f" msprop:IsAuditingEnabled="True" msprop:AsapDataType="Memo" msprop:Id="bfa82343-5f70-48b2-9cc1-6cecb561d8c2" type="xs:string" minOccurs="0" msdata:Ordinal="14" />
                       <xs:element name="M05" msprop:OnCopyAction="Copy" msprop:FieldId="6114c433-7c02-4d3b-b3e3-aef65df377b1" msprop:IsAuditingEnabled="True" msprop:AsapDataType="Memo" msprop:Id="e8c6f0c4-9823-49ba-9a3c-1dac4df71318" type="xs:string" minOccurs="0" msdata:Ordinal="15" />
                       <xs:element name="BLB01" msprop:OnCopyAction="Copy" msprop:FieldId="8f344f6b-7bc6-44a9-839c-f18936aa09b1" msprop:IsAuditingEnabled="True" msprop:AsapDataType="Blob" msprop:Id="296e38a1-dcd9-4ec4-a073-1a4d04b51707" type="xs:base64Binary" minOccurs="0" msdata:Ordinal="62" />
-                      <xs:element name="Documentation" msdata:Locale="" msdata:DisplayExpression="'Documentation'" msprop:EntityId="ff084c11-c0a3-4d9c-bd38-0344300e60f4" msprop:IsAuditingEnabled="False" msprop:Id="44e3d13d-ea2c-4ede-9576-9601ab90d082" minOccurs="0" maxOccurs="unbounded">
+                      <xs:element name="Documentation" msdata:Locale="" msdata:IsLoading="False" msdata:DisplayExpression="'Documentation'" msprop:EntityId="ff084c11-c0a3-4d9c-bd38-0344300e60f4" msprop:IsAuditingEnabled="False" msprop:Id="44e3d13d-ea2c-4ede-9576-9601ab90d082" minOccurs="0" maxOccurs="unbounded">
                         <xs:complexType>
                           <xs:sequence>
                             <xs:element name="Data" msprop:OnCopyAction="Copy" msprop:FieldId="0e83642a-8c8c-49d1-b5d5-56b5f8b36880" msprop:AllowNulls="False" msprop:AsapDataType="Memo" msprop:IsAuditingEnabled="True" msprop:Id="35098b11-ec3a-4f2d-b448-2db7601e974e" type="xs:string" msdata:Ordinal="2" />
@@ -73,7 +73,7 @@
                           <xs:attribute name="refSchemaItemId" msdata:DataType="System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:OnCopyAction="Copy" msprop:FieldId="89c0ae14-3587-46f4-b23b-17ba51c5debd" msprop:AllowNulls="False" msprop:AsapDataType="UniqueIdentifier" msprop:IsAuditingEnabled="True" msprop:Id="17d119e5-f71b-4c0f-8563-4834396a4c02" type="xs:string" use="required" />
                         </xs:complexType>
                       </xs:element>
-                      <xs:element name="SchemaItemAncestor" msdata:Locale="" msdata:DisplayExpression="'SchemaItemAncestor'" msprop:EntityId="54341dd2-f706-4eeb-b138-cb24e9f7b10c" msprop:IsAuditingEnabled="False" msprop:Id="33daf552-0c4f-4783-8520-eefb860c4756" minOccurs="0" maxOccurs="unbounded">
+                      <xs:element name="SchemaItemAncestor" msdata:Locale="" msdata:IsLoading="False" msdata:DisplayExpression="'SchemaItemAncestor'" msprop:EntityId="54341dd2-f706-4eeb-b138-cb24e9f7b10c" msprop:IsAuditingEnabled="False" msprop:Id="33daf552-0c4f-4783-8520-eefb860c4756" minOccurs="0" maxOccurs="unbounded">
                         <xs:complexType>
                           <xs:attribute name="refAncestorId" msdata:DataType="System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:OnCopyAction="Copy" msprop:FieldId="bbe04633-1b8f-4d4d-82f2-ad07e287450e" msprop:AllowNulls="False" msprop:AsapDataType="UniqueIdentifier" msprop:IsAuditingEnabled="True" msprop:Id="a1246849-7ad3-4b1f-b63d-2dcf93b3061d" type="xs:string" use="required" />
                           <xs:attribute name="Id" msdata:DataType="System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:OnCopyAction="Copy" msprop:FieldId="88c99b15-eb9a-4f2b-8e82-a2f0886c29b8" msprop:AllowNulls="False" msprop:AsapDataType="UniqueIdentifier" msprop:IsAuditingEnabled="True" msprop:Id="53df1e03-33a3-44da-a086-a7b52b26834d" type="xs:string" use="required" />
