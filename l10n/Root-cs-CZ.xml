@@ -1,5 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <AsapLocalization>
+  <Element Id="48abb054-bb38-4eb3-9f07-cbfa21e2abb2" Path="SendEmail/MailWorkQueueName">
+    <Documentation Category="USER_LONG_HELP" OriginalText="If not empty, send a mail by mail work queue of the given name. If empty, send by smtp directly.">If not empty, send a mail by mail work queue of the given name. If empty, send by smtp directly.</Documentation>
+  </Element>
+  <Element Id="1fc5d6ac-8e65-4c61-b5b9-d34ba16aca98" Path="SendNotification/attachmentRecordId">
+    <Documentation Category="USER_SHORT_HELP" OriginalText="Id of record where to take all attachments from.">Id of record where to take all attachments from.</Documentation>
+  </Element>
   <Element Id="023ee3ea-c462-4606-855f-265449062aaf" Path="ReportFormat_XML">
     <StringValue OriginalText="XML">XML</StringValue>
   </Element>
@@ -14,6 +20,9 @@
   </Element>
   <Element Id="028515a4-9568-4cc4-8fa7-608f84c0157d" Path="ReportFormat_RTF">
     <StringValue OriginalText="RTF">RTF</StringValue>
+  </Element>
+  <Element Id="adc7db0d-c9c6-4863-b56c-805f79a0a31e" Path="DefaultMailWorkQueueName">
+    <StringValue OriginalText="MAIL">MAIL</StringValue>
   </Element>
   <Element Id="471c0869-46ce-4897-99dd-836ee0ce122d" Path="ReportFormat_HTML">
     <StringValue OriginalText="HTML">HTML</StringValue>
@@ -35,6 +44,33 @@
   </Element>
   <Element Id="df1b2345-18c5-4aec-a79d-e6f9204b5ac5" Path="ReportFormat_CSV">
     <StringValue OriginalText="CSV">CSV</StringValue>
+  </Element>
+  <Element Id="cc1ce58e-df69-442d-99fd-fff244a7daab" Path="DefaultNotificationTemplate">
+    <StringValue OriginalText="&#xD;&#xA;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#xD;&#xA;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; version=&quot;1.0&quot;&#xD;&#xA;xmlns:AS=&quot;http://schema.advantages.cz/AsapFunctions&quot;&#xD;&#xA;xmlns:date=&quot;http://exslt.org/dates-and-times&quot; exclude-result-prefixes=&quot;AS date&quot;&gt;&#xD;&#xA;&#xD;&#xA;&lt;xsl:param name=&quot;RecipientRow&quot; /&gt;&#xD;&#xA;&#xD;&#xA;&lt;xsl:template match=&quot;ROOT&quot;&gt;&#xD;&#xA;    &lt;ROOT&gt;&#xD;&#xA;          &lt;AsapNotification&gt;&#xD;&#xA;                 &lt;xsl:attribute name=&quot;Subject&quot;&gt;&#xD;&#xA;                      &lt;xsl:value-of select=&quot;''&quot;/&gt;&#xD;&#xA;                 &lt;/xsl:attribute&gt;&#xD;&#xA;                 &lt;Body&gt;&#xD;&#xA;                 &lt;/Body&gt;&#xD;&#xA;          &lt;/AsapNotification&gt;&#xD;&#xA;     &lt;/ROOT&gt;&#xD;&#xA;&lt;/xsl:template&gt;&#xD;&#xA;&#xD;&#xA;&lt;/xsl:stylesheet&gt;&#xD;&#xA;">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+xmlns:AS="http://schema.advantages.cz/AsapFunctions"
+xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&gt;
+
+&lt;xsl:param name="RecipientRow" /&gt;
+
+&lt;xsl:template match="ROOT"&gt;
+    &lt;ROOT&gt;
+          &lt;AsapNotification&gt;
+                 &lt;xsl:attribute name="Subject"&gt;
+                      &lt;xsl:value-of select="''"/&gt;
+                 &lt;/xsl:attribute&gt;
+                 &lt;Body&gt;
+                 &lt;/Body&gt;
+          &lt;/AsapNotification&gt;
+     &lt;/ROOT&gt;
+&lt;/xsl:template&gt;
+
+&lt;/xsl:stylesheet&gt;
+</StringValue>
+  </Element>
+  <Element Id="cc5a2d10-33f9-45d9-87ec-062f531560bd" Path="WorkQueueNotificationEvent_l10n">
+    <Caption OriginalText="WorkQueueNotificationEvent Localization">WorkQueueNotificationEvent Localization</Caption>
   </Element>
   <Element Id="442f364a-bb1a-4664-a299-09a02f30a77a" Path="AsapSyncProviderConfig">
     <Caption OriginalText="Konfigurace poskytovatele synchronizace">Konfigurace poskytovatele synchronizace</Caption>
@@ -60,6 +96,9 @@
   <Element Id="0593c75d-3112-4eda-b4fd-2bf9bf6c82f1" Path="Counter">
     <Caption OriginalText="Serial Number Range">Číselná řada</Caption>
   </Element>
+  <Element Id="c651c4dd-1540-4d94-8f06-2d0716af87ea" Path="AsapNotificationChannelType_l10n">
+    <Caption OriginalText="Notification Channel Type Localization">Notification Channel Type Localization</Caption>
+  </Element>
   <Element Id="3287d809-f83e-4d78-a6f6-321ceca5616b" Path="AsapParameters">
     <Caption OriginalText="System Parameter Value">Hodnoty parametrů systému</Caption>
   </Element>
@@ -69,11 +108,17 @@
   <Element Id="b30fcb77-8208-43c9-88ea-3320db9c2287" Path="AsapMapLayerParameter">
     <Caption OriginalText="Map Layer Parameter">Map Layer Parameter</Caption>
   </Element>
+  <Element Id="e87c93e6-1cbd-466a-88bd-33b37ee5bacd" Path="WorkQueueExternalSourceType_l10n">
+    <Caption OriginalText="WorkQueueExternalSourceType Localization">WorkQueueExternalSourceType Localization</Caption>
+  </Element>
   <Element Id="41dd6b83-6d95-4c59-939e-3440170748eb" Path="AsapPanelFilter">
     <Caption OriginalText="User Defined Filter">Uživatelský filtr</Caption>
   </Element>
   <Element Id="0760e633-9e95-4f62-9443-360eaa624854" Path="AsapNotificationTemplate">
     <Caption OriginalText="Notification Template">Notification Template</Caption>
+  </Element>
+  <Element Id="26fae9c2-5331-4d82-a6d0-37e1389dbfdb" Path="AsapStateMachineEventType_l10n">
+    <Caption OriginalText="State Machine Event Type Localization">State Machine Event Type Localization</Caption>
   </Element>
   <Element Id="2f176996-8de3-4502-ad14-4047747edf50" Path="DimensionEntityRelation">
     <Caption OriginalText="Vazby mezi entitami pro dimenze">Vazby mezi entitami pro dimenze</Caption>
@@ -81,11 +126,17 @@
   <Element Id="b162de30-e655-4f8f-bad3-4417823c6777" Path="AsapExceptionSeverity">
     <Caption OriginalText="Error Severity Level">Důležitost chyby</Caption>
   </Element>
+  <Element Id="434d10d2-9eed-45b8-9d77-4be0ff80c7fe" Path="WorkQueueNotificationContactType_l10n">
+    <Caption OriginalText="WorkQueueNotificationContactType Localization">WorkQueueNotificationContactType Localization</Caption>
+  </Element>
   <Element Id="5008fdde-0119-4bd3-8ee1-4d04e4382d0d" Path="BusinessUnit">
     <Caption OriginalText="Business Unit">Oddělení</Caption>
   </Element>
   <Element Id="ee9fee5b-2a88-4877-a65c-522f7737f4e9" Path="AsapCharacterTranslationDetail">
     <Caption OriginalText="Character Translation Item">Položka překladu znaků</Caption>
+  </Element>
+  <Element Id="e287e3bf-5f74-4311-b091-56f5b97adc9c" Path="AsapNotificationTemplate_l10n">
+    <Caption OriginalText="Notification Template Localization">Lokalizace notifikační šablony</Caption>
   </Element>
   <Element Id="21ec1441-46b4-44db-8b3f-576f6fcbbb42" Path="ResourceAccessLevel">
     <Caption OriginalText="Úroveň přístupu zdroje">Úroveň přístupu zdroje</Caption>
@@ -217,6 +268,9 @@
   <Element Id="efdff1b5-916a-4036-977e-e34f59e72d41" Path="Language">
     <Caption OriginalText="Language">Jazyk</Caption>
   </Element>
+  <Element Id="e8bb1811-8fd2-4031-a204-f7081ed8e2d3" Path="WorkQueueCommandType_l10n">
+    <Caption OriginalText="Work Queue Command Type Localization">Lokalizace typu příkazu fronty zpráv</Caption>
+  </Element>
   <Element Id="edccc045-3b55-45a2-861e-fa483f5793a0" Path="Dimension1">
     <Caption OriginalText="Dimenze 1">Dimenze 1</Caption>
   </Element>
@@ -244,6 +298,9 @@
   <Element Id="ed566d7a-565a-4215-863b-04b16e695762" Path="AsapSyncRun/refAsapSyncConfigId">
     <Caption OriginalText="Konfigurace">Konfigurace</Caption>
   </Element>
+  <Element Id="13a2f9f8-c3e8-49fb-86e0-0515a72a10f2" Path="ILocalization/refLanguageId">
+    <Caption OriginalText="Language">Jazyk</Caption>
+  </Element>
   <Element Id="0fd32fd1-741a-471a-b033-059f062d238e" Path="WorkQueue/refRemovalAsapStateMachineEventTypeId">
     <Caption OriginalText="Removal Event">Událost zrušení</Caption>
   </Element>
@@ -256,6 +313,9 @@
   <Element Id="74658e86-c13d-4c65-887b-06c893a9efb4" Path="CounterDetail/Prefix">
     <Caption OriginalText="Prefix">Prefix</Caption>
     <Documentation Category="USER_LONG_HELP" OriginalText="Prefix for the resulting number">Prefix for the resulting number</Documentation>
+  </Element>
+  <Element Id="fa3cadf4-4c56-448e-b83e-0853249e3b87" Path="AsapStateMachineEventType_l10n/refAsapStateMachineEventTypeId">
+    <Caption OriginalText="State Machine Event Type">Stavový automat - typ události</Caption>
   </Element>
   <Element Id="fd53327e-07cd-4096-807a-08534a11339c" Path="Mail/DateSent">
     <Caption OriginalText="Sent">Odesláno</Caption>
@@ -282,7 +342,7 @@
   <Element Id="8b0e1c91-d5b8-456f-ae16-0a9c9ddc08a3" Path="AsapTooltipHelpSubcontext/Name">
     <Caption OriginalText="Name">Název</Caption>
   </Element>
-  <Element Id="6a148bad-09df-4266-b0aa-0ae2ff14441f" Path="Attachment/Note">
+  <Element Id="6a148bad-09df-4266-b0aa-0ae2ff14441f" Path="IAsapAttachmentFields/Note">
     <Caption OriginalText="Remarks">Poznámka</Caption>
     <Documentation Category="USER_LONG_HELP" OriginalText="Attachment's remark">Attachment's remark</Documentation>
   </Element>
@@ -333,6 +393,9 @@
   <Element Id="98a1d200-0fa2-4079-bdba-1908d0004705" Path="WorkQueue/RemovalNewValue">
     <Caption OriginalText="Removal New Value">Zrušení - nová hodnota</Caption>
   </Element>
+  <Element Id="bd40ede1-423c-4a03-89eb-192aea239706" Path="AsapStateMachineEventType_l10n/Name">
+    <Caption OriginalText="Name">Název</Caption>
+  </Element>
   <Element Id="b01db675-a8d3-4604-aaa1-19652d30443b" Path="Resource/refOrganizationId">
     <Caption OriginalText="Organizace">Organizace</Caption>
   </Element>
@@ -346,7 +409,7 @@
   <Element Id="50803c7d-cf26-4c2f-bc46-1ecf8d50b877" Path="WorkQueue/ExternalSourceUserName">
     <Caption OriginalText="User Name">Uživatelské jméno</Caption>
   </Element>
-  <Element Id="51854e16-2ad2-4ad3-bab4-1f54ac8517e6" Path="Attachment/FileName">
+  <Element Id="51854e16-2ad2-4ad3-bab4-1f54ac8517e6" Path="IAsapAttachmentFields/FileName">
     <Caption OriginalText="File Name">Název souboru</Caption>
     <Documentation Category="USER_LONG_HELP" OriginalText="Attachment's file name">Attachment's file name</Documentation>
   </Element>
@@ -355,6 +418,9 @@
   </Element>
   <Element Id="ea40325d-37c9-4cfc-b2b7-222b7942fbf2" Path="AsapSyncRun/ReferenceCode">
     <Caption OriginalText="Číslo">Číslo</Caption>
+  </Element>
+  <Element Id="d6dca1e4-4778-4245-8123-227f2ad22b63" Path="AsapNotificationTemplate_l10n/Template">
+    <Caption OriginalText="Template">Šablona</Caption>
   </Element>
   <Element Id="ad2d2efe-9cb0-4141-ac28-25b8ed68580b" Path="IAsapEntity2/RecordUpdatedBy">
     <Caption OriginalText="Updated By">Naposledy změnil</Caption>
@@ -393,6 +459,9 @@
   </Element>
   <Element Id="dd752943-48b8-493c-8b11-356949b66ba5" Path="AsapSyncConfig/refSourceAsapSyncConnectionId">
     <Caption OriginalText="Zdrojové připojení">Zdrojové připojení</Caption>
+  </Element>
+  <Element Id="d38cb426-6c5b-4e88-8844-365ccf04d10f" Path="WorkQueueExternalSourceType_l10n/Name">
+    <Caption OriginalText="Name">Název</Caption>
   </Element>
   <Element Id="20d1a3fc-b840-4f8a-84c6-3761f2bac436" Path="DimensionEntity/Name">
     <Caption OriginalText="Název">Název</Caption>
@@ -450,6 +519,9 @@
   <Element Id="4f498270-303f-40d6-97ce-41838bfa5daf" Path="AsapDashboardView/MenuId">
     <Caption OriginalText="Dashboard">Dashboard</Caption>
   </Element>
+  <Element Id="33134b67-a36d-44ec-a4c7-425ea23e11e6" Path="WorkQueueCommandType_l10n/Name">
+    <Caption OriginalText="Název">Název</Caption>
+  </Element>
   <Element Id="e048ce9f-6640-4e7a-be35-4363eaa72c58" Path="AsapSyncRunLog/ErrorText">
     <Caption OriginalText="Chybové hlášení">Chybové hlášení</Caption>
   </Element>
@@ -504,6 +576,9 @@
   <Element Id="4bfd4aa8-2d12-4293-9360-542e23e904ce" Path="WorkQueueEntry/ErrorText">
     <Caption OriginalText="Error Text">Chybová zpráva</Caption>
   </Element>
+  <Element Id="c494635a-19c4-4494-98fe-54446383e505" Path="WorkQueueCommand/Roles">
+    <Caption OriginalText="Roles">Role</Caption>
+  </Element>
   <Element Id="e4c73d00-246e-42b7-8db2-55124971cb00" Path="WorkQueue/RemovalOldValue">
     <Caption OriginalText="Removal Old Value">Zrušení - původní hodnota</Caption>
   </Element>
@@ -541,6 +616,9 @@
   <Element Id="da9c4ff5-2e67-4744-935a-60a39b886828" Path="IAsapEntity/RecordCreatedServer">
     <Caption OriginalText="Time Created (Server)">Záznam vytvořen (server)</Caption>
     <Documentation Category="USER_LONG_HELP" OriginalText="Datum a čas vytvoření záznamu (server)">Datum a čas vytvoření záznamu (server)</Documentation>
+  </Element>
+  <Element Id="978e1cdd-6106-4c71-bddf-60a48beb0948" Path="AsapNotificationChannelType_l10n/Name">
+    <Caption OriginalText="Název">Název</Caption>
   </Element>
   <Element Id="e988ba46-8873-426a-a91d-610cb0d94ca9" Path="WorkQueue/ReverseLookupFieldValues">
     <Caption OriginalText="Lookup Field Values">Překládat hodnoty polí</Caption>
@@ -599,6 +677,9 @@
   <Element Id="3a6a3418-5100-45b4-ad26-737b7f7587d0" Path="AsapTooltipHelp/Roles">
     <Caption OriginalText="Role">Role</Caption>
   </Element>
+  <Element Id="e8d33475-7259-4df5-9469-748f85ffe86a" Path="BusinessPartner/refLanguageId">
+    <Caption OriginalText="Language">Jazyk</Caption>
+  </Element>
   <Element Id="e3d7cb76-4b61-49aa-941f-753d0e4a7a67" Path="WorkQueueCommand/refWorkQueueCommandTypeId">
     <Caption OriginalText="Type">Druh</Caption>
   </Element>
@@ -614,6 +695,9 @@
   </Element>
   <Element Id="a339d36f-29d4-4a77-96c6-77a332afffaa" Path="WorkQueue/CreationOldValue">
     <Caption OriginalText="Creation Old Value">Vytvoření - původní hodnota</Caption>
+  </Element>
+  <Element Id="4460da07-9b00-4ad3-a926-78dfc9f23c78" Path="AsapNotificationContact/LanguageTagIETF">
+    <Caption OriginalText="Language IETF Tag">Jazyk dle IETF</Caption>
   </Element>
   <Element Id="f27e4c9f-5d1e-44f1-807c-78f513e86039" Path="AsapTooltipHelpContext/Name">
     <Caption OriginalText="Name">Název</Caption>
@@ -646,6 +730,9 @@
   <Element Id="2a543d1a-6d47-47f4-9922-86fc82171a47" Path="AsapMapLayer/ReferenceCode">
     <Caption OriginalText="Code">Kód</Caption>
   </Element>
+  <Element Id="4929761a-d6ea-47c9-9ea8-876615efa903" Path="WorkQueueCommand/IsAutoProcessedWithErrors">
+    <Caption OriginalText="Autoprocess With Errors">Automaticky zpracovat s chybami</Caption>
+  </Element>
   <Element Id="16b7ef84-5207-4d58-87a2-89fae8e1d6f9" Path="CounterDetail/ValidTo">
     <Caption OriginalText="Valid Until">Platí do</Caption>
     <Documentation Category="USER_LONG_HELP" OriginalText="Date until when the counter is valid. Only works if the counter is set to be evaluated by date.">Date until when the counter is valid. Only works if the counter is set to be evaluated by date.</Documentation>
@@ -671,6 +758,9 @@
   </Element>
   <Element Id="3a66617f-c725-45de-b9ca-906a15b61195" Path="AsapSyncConfig/refSourceAsapSyncProviderConfigId">
     <Caption OriginalText="Zdroj">Zdroj</Caption>
+  </Element>
+  <Element Id="f449b5db-409a-4f18-b52a-90f8701f81bb" Path="AsapParameters/ProfileId">
+    <Caption OriginalText="UserProfile">Uživatelský profil</Caption>
   </Element>
   <Element Id="570024cc-ede3-41f9-b605-9113a055f47f" Path="Mail/Subject">
     <Caption OriginalText="Subject">Předmět</Caption>
@@ -707,6 +797,9 @@
   </Element>
   <Element Id="e892c7de-5089-4bce-b8a3-94f784ec9679" Path="AsapSyncConnectionParameter/Value">
     <Caption OriginalText="Hodnota">Hodnota</Caption>
+  </Element>
+  <Element Id="72262b46-cfc1-4f19-9e07-9547451c4e94" Path="AsapNotificationTemplate_l10n/refAsapNotificationTemplateId">
+    <Caption OriginalText="Notification Template">Notification Template</Caption>
   </Element>
   <Element Id="ccc6fb93-2e10-416e-a910-954f47d6d989" Path="WorkQueue/WorkQueueClass">
     <Caption OriginalText="Class">Třída</Caption>
@@ -813,7 +906,7 @@
     <Caption OriginalText="Saturday">Sobota</Caption>
     <Documentation Category="USER_LONG_HELP" OriginalText="Označuje, zda je sobota pracovní den">Označuje, zda je sobota pracovní den</Documentation>
   </Element>
-  <Element Id="de01feaf-6f60-4a6c-9003-b6f61198ef8a" Path="Attachment/Data">
+  <Element Id="de01feaf-6f60-4a6c-9003-b6f61198ef8a" Path="IAsapAttachmentFields/Data">
     <Documentation Category="USER_LONG_HELP" OriginalText="Attachment storage">Attachment storage</Documentation>
   </Element>
   <Element Id="7979898b-cb43-4624-986d-b7ead27acd84" Path="AsapValidationRule/Rule">
@@ -867,8 +960,17 @@
   <Element Id="f824d490-5b1a-4b22-afc2-c6f332f84e88" Path="AsapFeatureList/DisplayName">
     <Caption OriginalText="Name">Název</Caption>
   </Element>
+  <Element Id="86076cec-7e19-4a78-aba5-c83cb15ee2d4" Path="AsapNotificationTemplate_l10n/Name">
+    <Caption OriginalText="Name">Název</Caption>
+  </Element>
+  <Element Id="a7f9d69b-7874-4ea8-886a-c8a318bdfcdd" Path="WorkQueueNotificationContactType_l10n/Name">
+    <Caption OriginalText="Name">Název</Caption>
+  </Element>
   <Element Id="571d1e02-a11d-4b10-b079-c9acedb93e70" Path="AsapSyncConnection/refAsapSyncSystemId">
     <Caption OriginalText="Systém">Systém</Caption>
+  </Element>
+  <Element Id="dbae115f-3c7e-448c-92d3-c9be957eb7b6" Path="AsapNotificationContact/Name">
+    <Caption OriginalText="Name">Název</Caption>
   </Element>
   <Element Id="f31175c9-6f12-441c-ae7e-cae2c070e7f7" Path="WorkQueue/CreationCondition">
     <Caption OriginalText="Condition (XPath)">Condition (XPath)</Caption>
@@ -916,6 +1018,13 @@
   <Element Id="d8e51b34-3594-43de-b9c8-db28327e596d" Path="AsapSyncProviderConfig/Name">
     <Caption OriginalText="Název">Název</Caption>
   </Element>
+  <Element Id="7111559e-375f-4d07-921e-db923324ec33" Path="WorkQueueNotificationEvent_l10n/Name">
+    <Caption OriginalText="Name">Name</Caption>
+  </Element>
+  <Element Id="6a012b44-655d-4e52-92dc-dd47663524ea" Path="AsapNotificationContact/ContactIdentification">
+    <Caption OriginalText="Email">Email</Caption>
+    <Documentation Category="USER_SHORT_HELP" OriginalText="Email addresss in case of e-mail, phone number of recipient in case of  SMS, etc.">Email addresss in case of e-mail, phone number of recipient in case of  SMS, etc.</Documentation>
+  </Element>
   <Element Id="6aa38212-dc3c-469c-a190-e0e6910c355e" Path="AsapTooltipHelp/DestroyParameter">
     <Caption OriginalText="Destroy Parameter">Parametr zrušení</Caption>
   </Element>
@@ -929,6 +1038,9 @@
   </Element>
   <Element Id="585c8876-543d-4125-bafb-e28b0124dee5" Path="AsapFeatureList/IsFeatureOn">
     <Caption OriginalText="On">Zapnuto</Caption>
+  </Element>
+  <Element Id="cb084a1e-6d73-4aec-bc9c-e35e3190943a" Path="WorkQueueCommandType_l10n/refWorkQueueCommandTypeId">
+    <Caption OriginalText="Work Queue Command Type">Typ příkazu fronty</Caption>
   </Element>
   <Element Id="ef401867-1f05-4bb4-aaa9-e3d50d183735" Path="AsapDashboardView/Roles">
     <Caption OriginalText="Role">Role</Caption>
@@ -944,9 +1056,16 @@
   <Element Id="401168a9-0914-4fb7-8374-e5bb09cc6382" Path="WorkQueueNotification/Description">
     <Caption OriginalText="Description">Popis</Caption>
   </Element>
+  <Element Id="13f93f8b-2bdd-4fb9-93d3-e95bfeb6fde5" Path="AsapNotificationChannelType_l10n/refAsapNotificationChannelTypeId">
+    <Caption OriginalText="Notification Channel Type">Notification Channel Type</Caption>
+  </Element>
   <Element Id="ac0f701e-b580-4ea4-b210-e985f517bada" Path="AsapCalendar/IsTuesdayWorkingDay">
     <Caption OriginalText="Tuesday">Úterý</Caption>
     <Documentation Category="USER_LONG_HELP" OriginalText="Označuje, zda je úterý pracovní den">Označuje, zda je úterý pracovní den</Documentation>
+  </Element>
+  <Element Id="6878eca9-5ff7-4f01-b756-eb16da693763" Path="WorkQueue/ApiAccessRoles">
+    <Caption OriginalText="API Access Roles">API Access Roles</Caption>
+    <Documentation Category="USER_SHORT_HELP" OriginalText="Users having at least one user role containing at least one of these application roles will be able to run commands through external HTTP API">Users having at least one user role containing at least one of these application roles will be able to run commands through external HTTP API</Documentation>
   </Element>
   <Element Id="3e9c243e-29f8-4c1b-bd95-ebf995a9abe1" Path="Resource/refBusinessPartnerId">
     <Caption OriginalText="Kontakt">Kontakt</Caption>
@@ -959,7 +1078,7 @@
     <Documentation Category="USER_LONG_HELP" OriginalText="Odkaz na nadřazený záznam">Odkaz na nadřazený záznam</Documentation>
   </Element>
   <Element Id="e5825bf0-6d85-4293-ac73-ec6b400890f7" Path="AsapSyncProviderConfig/refOrganizationId">
-    <Caption OriginalText="Organizace">Organizace</Caption>
+    <Caption OriginalText="Organization">Organizace</Caption>
   </Element>
   <Element Id="9c673323-d8ac-4498-9a05-edb73f8d903e" Path="Counter/Description">
     <Caption OriginalText="Description">Popis</Caption>
@@ -1007,7 +1126,7 @@
     <Caption OriginalText="Počítadlo">Počítadlo</Caption>
   </Element>
   <Element Id="48e29a88-1fe0-4f4c-ab3e-feb621940498" Path="AsapStyleColor/Description">
-    <Caption OriginalText="Description">Description</Caption>
+    <Caption OriginalText="Description">Popis</Caption>
   </Element>
   <Element Id="5ad2fe73-bc65-409b-a16c-fef966f54b4d" Path="WorkQueueCommand/IsAutoProcessed">
     <Caption OriginalText="Autoprocess">Automaticky zpracovat</Caption>
@@ -1017,6 +1136,15 @@
   </Element>
   <Element Id="cd009a2f-98d2-4f15-9c22-5adef626aa1f" Path="DataService/ExecuteProcedure/EntityOrder">
     <Documentation Category="USER_LONG_HELP" OriginalText="When a SP returns more than one result sets (e.g. more selects), than we have to map SP resultsets to target datastructure. So this parameter is a list of datastructure entity names in order that corresponds to a resultset from SP. List is separated by semicolons.">When a SP returns more than one result sets (e.g. more selects), than we have to map SP resultsets to target datastructure. So this parameter is a list of datastructure entity names in order that corresponds to a resultset from SP. List is separated by semicolons.</Documentation>
+  </Element>
+  <Element Id="24412814-427b-4c9e-a786-78429532bd64" Path="WorkQueueService/GenerateNotificationMessage/NotificationSource">
+    <Documentation Category="USER_SHORT_HELP" OriginalText="Input context for transformation (by NotificationTemplateId) - data taken either from WorkQueue Entry or fetched by refId.">Input context for transformation (by NotificationTemplateId) - data taken either from WorkQueue Entry or fetched by refId.</Documentation>
+  </Element>
+  <Element Id="ad4705d3-0068-4ff5-9b0c-cf283ed65efb" Path="WorkQueueService/GenerateNotificationMessage/NotificationTemplateId">
+    <Documentation Category="USER_SHORT_HELP" OriginalText="Id of message template (from table AsapNotificationTemplate)">Id of message template (from table AsapNotificationTemplate)</Documentation>
+  </Element>
+  <Element Id="19a4b465-adbd-4710-a8b3-e74e8d3e239d" Path="WorkQueueService/GenerateNotificationMessage/RecipientData">
+    <Documentation Category="USER_SHORT_HELP" OriginalText="Info about a recipient. An AsapNotificationContactData datastructure with one row is expected. ">Info about a recipient. An AsapNotificationContactData datastructure with one row is expected. </Documentation>
   </Element>
   <Element Id="ad4ed75e-ef90-40b4-b4f1-00432eb6bf96" Path="AsapCharacterTranslation/AsapCharacterTranslationRootControl/PanelTitle">
     <Value OriginalText="Character Translation">Překlad znaků</Value>
@@ -1054,13 +1182,16 @@
   <Element Id="c4b9b125-95ad-43c8-bb84-1213567bc448" Path="param_long/param_longRootControl/AsTextBox1/Caption">
     <Value OriginalText="$caption">$caption</Value>
   </Element>
+  <Element Id="5d7dfdad-00f1-405f-9333-121554309d88" Path="AsapNotificationTemplate_l10n/NewComponent/PanelTitle">
+    <Value OriginalText="Notification Template Localization">Lokalizace notifikační šablony</Value>
+  </Element>
   <Element Id="1bf31ddb-79ab-4322-bcfa-12469124ceb9" Path="AsapTooltipHelpUsage/AsapTooltipHelpUsageRootControl/PanelTitle">
     <Value OriginalText="Help Usage">Uživatelé kteří použili nápovědu</Value>
   </Element>
   <Element Id="df21c253-c76e-47c0-b44d-125272b36420" Path="AsapCalendar/AsapCalendarRootControl/SplitPanel1/AsPanel1/PanelTitle">
     <Value OriginalText="Calendar">Kalendář</Value>
   </Element>
-  <Element Id="2f155c2d-1b61-4eb0-82a7-13504b6cb064" Path="AsapNotificationTemplate/AsapNotificationTemplateRootControl/SplitPanel1/SplitPanel2/Label1/Text">
+  <Element Id="2f155c2d-1b61-4eb0-82a7-13504b6cb064" Path="AsapNotificationTemplate/AsapNotificationTemplateRootControl/AsTabControl1/TabPage1/SplitPanel1/SplitPanel2/Label1/Text">
     <Value OriginalText="Template (XSLT):">Šablona pro notifikaci (XSLT):</Value>
   </Element>
   <Element Id="9f6800a6-77d0-4371-87ed-179b59c8ce0e" Path="AsapTraceWorkflow/AsapDebugWorkflowRootControl/SplitPanel1/AsPanel2/PanelTitle">
@@ -1141,7 +1272,7 @@
   <Element Id="8f803708-79f4-485e-b1cd-431137b3eeb0" Path="Counter/Číselné řadyRootControl/SplitPanel1/AsPanel2/PanelTitle">
     <Value OriginalText="Sequential Number Ranges">Číselné řady</Value>
   </Element>
-  <Element Id="34645263-0ce7-4923-82d7-43996137a76c" Path="AsapNotificationTemplate/AsapNotificationTemplateRootControl/SplitPanel1/AsPanel1/PanelTitle">
+  <Element Id="34645263-0ce7-4923-82d7-43996137a76c" Path="AsapNotificationTemplate/AsapNotificationTemplateRootControl/AsTabControl1/TabPage1/SplitPanel1/AsPanel1/PanelTitle">
     <Value OriginalText="Notification Templates">Šablony pro notifikace</Value>
   </Element>
   <Element Id="9bf310e5-971d-407b-9bf1-454f1ded2133" Path="WorkQueueNotification_Header/WorkQueueNotification_HeaderRootControl/PanelTitle">
@@ -1152,6 +1283,9 @@
   </Element>
   <Element Id="3d0dbd34-7b48-4b24-9164-479778f8424a" Path="AsapRounding/AsapRoundingRootControl/PanelTitle">
     <Value OriginalText="Roundings">Zaokrouhlení</Value>
+  </Element>
+  <Element Id="54283713-dc8b-45bb-96ab-4a24076881e4" Path="AsapNotificationTemplate_l10n_template/AsapNotificationTemplate_l10n_templateRootControl/PanelTitle">
+    <Value OriginalText="Notification Template Localization">Lokalizace notifikační šablony</Value>
   </Element>
   <Element Id="f7726451-4d91-47f3-b2e7-4a8b980cf3a3" Path="WorkQueue/WorkQueueRootControl/SplitPanel1/AsTabControl1/TabPage1/Text">
     <Value OriginalText="Creation">Vytvoření</Value>
@@ -1164,6 +1298,9 @@
   </Element>
   <Element Id="7d3cf0c7-0712-456f-b59c-50a9f96fe769" Path="AsapCharacterTranslationDetail/AsapCharacterTranslationDetailRootControl/PanelTitle">
     <Value OriginalText="Translation">Překlad</Value>
+  </Element>
+  <Element Id="1236e822-baca-4504-9cc4-56aa538df7aa" Path="AsapNotificationTemplate/AsapNotificationTemplateRootControl/AsTabControl1/TabPage2/SplitPanel3/SplitPanel4/SplitPanel5/Label2/Text">
+    <Value OriginalText="Template (XSLT)">Šablona (XSLT)</Value>
   </Element>
   <Element Id="dc0855c9-c3e8-4c4c-b3a1-5afcfc929c09" Path="AsapCalendar/AsapCalendarRootControl/GroupBoxWithChamfer1/AsCheckBox2/Text">
     <Value OriginalText="Tuesday">Úterý</Value>
@@ -1183,8 +1320,14 @@
   <Element Id="209e732c-6381-4c58-9c8c-60bcfca6277f" Path="DimensionTransformationMatrix/DimensionTransformationMatrixRootControl/PanelTitle">
     <Value OriginalText="Nastavení automatického zadávání dimenzí">Nastavení automatického zadávání dimenzí</Value>
   </Element>
+  <Element Id="ec9811ed-47ae-44fc-97e6-62ee940680eb" Path="AsapNotificationTemplate_RO/AsapNotificationTemplate_RORootControl/PanelTitle">
+    <Value OriginalText="Notification Templates">Šablony pro notifikace</Value>
+  </Element>
   <Element Id="075570a5-3d2e-444c-b8d2-639ed2cdae2f" Path="AsapTraceWorkflow/AsapDebugWorkflowRootControl/SplitPanel1/AsPanel1/PanelTitle">
     <Value OriginalText="Workflow">Workflow</Value>
+  </Element>
+  <Element Id="58efa70a-d939-4d99-91e6-67065884ba57" Path="WorkQueueNotification/WorkQueueNotificationRootControl/AsCheckBox1/Text">
+    <Value OriginalText="SendAttachments">Odeslat přílohu</Value>
   </Element>
   <Element Id="8993432b-88f4-4563-bbf7-6775e20bcf2d" Path="AsapSyncConnectionParameter/AsapSyncConnectionParameterRootControl/PanelTitle">
     <Value OriginalText="Parametry">Parametry</Value>
@@ -1200,6 +1343,9 @@
   </Element>
   <Element Id="1f71f70d-a1b5-4424-8fec-6acbc345a6a6" Path="AsapRegularExpression/AsapRegularExpressionRootControl/PanelTitle">
     <Value OriginalText="Regular Expressions">Regulární výrazy</Value>
+  </Element>
+  <Element Id="54d264a4-1a3d-482d-a9f0-702efb657a37" Path="AsapNotificationTemplate/AsapNotificationTemplateRootControl/AsTabControl1/TabPage2/SplitPanel3/AsPanel3/PanelTitle">
+    <Value OriginalText="Notification Templates">Šablony pro notifikace</Value>
   </Element>
   <Element Id="a28362d9-82b8-4f1b-8b86-706fce7015f5" Path="param_bool/param_boolRootControl/AsCheckBox1/Text">
     <Value OriginalText="$caption">$caption</Value>
@@ -1297,6 +1443,9 @@
   <Element Id="4028f72f-ca5b-4831-992b-be88216c5d70" Path="WorkQueue/WorkQueueRootControl/SplitPanel1/AsTabControl1/TabPage4/AsPanel5/PanelTitle">
     <Value OriginalText="Notifications">Notifikace</Value>
   </Element>
+  <Element Id="04e37435-6d77-400b-94fd-bfab52cc21d4" Path="AsapNotificationTemplate/AsapNotificationTemplateRootControl/AsTabControl1/TabPage2/SplitPanel3/SplitPanel4/SplitPanel5/AsPanel5/PanelTitle">
+    <Value OriginalText="Notification Template Localization">Lokalizace notifikační šablony</Value>
+  </Element>
   <Element Id="a3b43ab4-232d-4704-9c43-c0dcbf2fc98e" Path="BusinessUnit/BusinessUnitRootControl/AsPanel1/PanelTitle">
     <Value OriginalText="Business Units">Oddělení</Value>
   </Element>
@@ -1332,6 +1481,12 @@
   </Element>
   <Element Id="e1056782-9cc3-4eb8-adfb-cf5a1518ae7d" Path="AsapSyncRun/AsapSyncRun_CompleteRootControl/SplitPanel1/AsPanel2/PanelTitle">
     <Value OriginalText="Synchronizované položky">Synchronizované položky</Value>
+  </Element>
+  <Element Id="21bc6fab-2f89-469c-b8f8-d194e97275af" Path="WorkQueueCommand/WorkQueueCommandRootControl/AsCheckBox3/Text">
+    <Value OriginalText="Autoprocess With Errors">Automaticky zpracovat s chybami</Value>
+  </Element>
+  <Element Id="bd52cff6-b7cf-4a1b-b93f-d361de0f1122" Path="AsapNotificationTemplate/AsapNotificationTemplateRootControl/AsTabControl1/TabPage2/Text">
+    <Value OriginalText="Localization">Lokalizace</Value>
   </Element>
   <Element Id="c2a52e0a-a714-4303-af89-d5a19f4c1ef7" Path="Language/NewComponent/PanelTitle">
     <Value OriginalText="Languages">Jazyk</Value>
@@ -1375,6 +1530,9 @@
   <Element Id="3e0534ec-95df-4854-85b4-f0c38c8cb167" Path="WorkQueue/WorkQueueRootControl/SplitPanel1/AsTabControl1/TabPage5/SplitPanel2/AsPanel6/PanelTitle">
     <Value OriginalText="Notifikace">Notifikace</Value>
   </Element>
+  <Element Id="79be08aa-950b-4cbf-bfc7-f1187710517c" Path="AsapNotificationTemplate/AsapNotificationTemplateRootControl/AsTabControl1/TabPage2/SplitPanel3/SplitPanel4/AsPanel4/PanelTitle">
+    <Value OriginalText="Notification Template Localization">Lokalizace notifikační šablony</Value>
+  </Element>
   <Element Id="6d62f524-6140-419a-a24e-f557d99665c5" Path="AsapValidationRule/AsapValidationRuleRootControl/SplitPanel1/AsPanel1/PanelTitle">
     <Value OriginalText="Validation Rules">Validation Rules</Value>
   </Element>
@@ -1393,19 +1551,28 @@
   <Element Id="ba2f7ea8-2b1f-4fe8-96e4-fcbc0faef1e6" Path="Counter/CounterRootControl/PanelTitle">
     <Value OriginalText="Serial Number Ranges">Číselné řady</Value>
   </Element>
+  <Element Id="638b6d36-19c6-449a-b7d6-fcdb9c906bf9" Path="AsapNotificationTemplate/AsapNotificationTemplateRootControl/AsTabControl1/TabPage1/Text">
+    <Value OriginalText="Base Language">Base Language</Value>
+  </Element>
   <Element Id="bc755565-06df-4789-a836-ffd0d2987ed6" Path="AsapSyncConnection/AsapSyncConnection_CompleteRootControl/SplitPanel1/AsPanel1/PanelTitle">
     <Value OriginalText="Připojení k synchronizačnímu zdroji">Připojení k synchronizačnímu zdroji</Value>
   </Element>
   <Element Id="ca0165c9-7480-460a-bce7-ffd8d363542a" Path="WorkQueueNotification/WorkQueueNotificationRootControl/PanelTitle">
     <Value OriginalText="Notifications">Notifikace</Value>
   </Element>
+  <Element Id="bd66bee0-7a1c-4b48-a53a-04fcef288f4c" Path="WorkQueueService/GenerateNotificationMessage">
+    <Documentation Category="USER_SHORT_HELP" OriginalText="Prepare a data to be sent as a notification. Return Xml containing in the first row of the first table non-empty fields named &quot;Body&quot; and &quot;Subject&quot;.">Prepare a data to be sent as a notification. Return Xml containing in the first row of the first table non-empty fields named "Body" and "Subject".</Documentation>
+  </Element>
   <Element Id="7ccf6b61-001a-4cb8-8ed8-51e80fcc57dd" Path="Mail/Send">
-    <Caption OriginalText="Send">Send</Caption>
+    <Caption OriginalText="Send">Odeslat</Caption>
   </Element>
   <Element Id="2f083c15-8a11-4c51-9729-5bc079cda32a" Path="BinaryFile/Split">
     <Caption OriginalText="Rozdělit">Rozdělit</Caption>
   </Element>
   <Element Id="8524cf92-8b95-4028-8953-9420bda4142d" Path="TextFile/Split">
     <Caption OriginalText="Rozdělit">Rozdělit</Caption>
+  </Element>
+  <Element Id="7275f952-6c46-4613-92e9-7adab9e7acc0" Path="RecipientEmailIsEmpty">
+    <String OriginalText="Error: Recipient email is not specified.">Chyba: Příjemce nemá vyplněn email.</String>
   </Element>
 </AsapLocalization>
