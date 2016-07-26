@@ -3,6 +3,9 @@
   <Element Id="48abb054-bb38-4eb3-9f07-cbfa21e2abb2" Path="SendEmail/MailWorkQueueName">
     <Documentation Category="USER_LONG_HELP" OriginalText="If not empty, send a mail by mail work queue of the given name. If empty, send by smtp directly.">If not empty, send a mail by mail work queue of the given name. If empty, send by smtp directly.</Documentation>
   </Element>
+  <Element Id="1fc5d6ac-8e65-4c61-b5b9-d34ba16aca98" Path="SendNotification/attachmentRecordId">
+    <Documentation Category="USER_SHORT_HELP" OriginalText="Id of record where to take all attachments from.">Id of record where to take all attachments from.</Documentation>
+  </Element>
   <Element Id="023ee3ea-c462-4606-855f-265449062aaf" Path="ReportFormat_XML">
     <StringValue OriginalText="XML">XML</StringValue>
   </Element>
@@ -339,7 +342,7 @@ xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&
   <Element Id="8b0e1c91-d5b8-456f-ae16-0a9c9ddc08a3" Path="AsapTooltipHelpSubcontext/Name">
     <Caption OriginalText="Name">Name</Caption>
   </Element>
-  <Element Id="6a148bad-09df-4266-b0aa-0ae2ff14441f" Path="Attachment/Note">
+  <Element Id="6a148bad-09df-4266-b0aa-0ae2ff14441f" Path="IAsapAttachmentFields/Note">
     <Caption OriginalText="Remarks">Bemerkungen</Caption>
     <Documentation Category="USER_LONG_HELP" OriginalText="Attachment's remark">Attachment's remark</Documentation>
   </Element>
@@ -406,7 +409,7 @@ xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&
   <Element Id="50803c7d-cf26-4c2f-bc46-1ecf8d50b877" Path="WorkQueue/ExternalSourceUserName">
     <Caption OriginalText="User Name">Benutzername</Caption>
   </Element>
-  <Element Id="51854e16-2ad2-4ad3-bab4-1f54ac8517e6" Path="Attachment/FileName">
+  <Element Id="51854e16-2ad2-4ad3-bab4-1f54ac8517e6" Path="IAsapAttachmentFields/FileName">
     <Caption OriginalText="File Name">Dateiname</Caption>
     <Documentation Category="USER_LONG_HELP" OriginalText="Attachment's file name">Attachment's file name</Documentation>
   </Element>
@@ -573,6 +576,9 @@ xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&
   <Element Id="4bfd4aa8-2d12-4293-9360-542e23e904ce" Path="WorkQueueEntry/ErrorText">
     <Caption OriginalText="Error Text">Error Message</Caption>
   </Element>
+  <Element Id="c494635a-19c4-4494-98fe-54446383e505" Path="WorkQueueCommand/Roles">
+    <Caption OriginalText="Roles">Roles</Caption>
+  </Element>
   <Element Id="e4c73d00-246e-42b7-8db2-55124971cb00" Path="WorkQueue/RemovalOldValue">
     <Caption OriginalText="Removal Old Value">Alten Wert entfernen</Caption>
   </Element>
@@ -671,6 +677,9 @@ xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&
   <Element Id="3a6a3418-5100-45b4-ad26-737b7f7587d0" Path="AsapTooltipHelp/Roles">
     <Caption OriginalText="Role">Roles</Caption>
   </Element>
+  <Element Id="e8d33475-7259-4df5-9469-748f85ffe86a" Path="BusinessPartner/refLanguageId">
+    <Caption OriginalText="Language">Language</Caption>
+  </Element>
   <Element Id="e3d7cb76-4b61-49aa-941f-753d0e4a7a67" Path="WorkQueueCommand/refWorkQueueCommandTypeId">
     <Caption OriginalText="Type">Typ</Caption>
   </Element>
@@ -721,6 +730,9 @@ xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&
   <Element Id="2a543d1a-6d47-47f4-9922-86fc82171a47" Path="AsapMapLayer/ReferenceCode">
     <Caption OriginalText="Code">Code</Caption>
   </Element>
+  <Element Id="4929761a-d6ea-47c9-9ea8-876615efa903" Path="WorkQueueCommand/IsAutoProcessedWithErrors">
+    <Caption OriginalText="Autoprocess With Errors">Autoprocess With Errors</Caption>
+  </Element>
   <Element Id="16b7ef84-5207-4d58-87a2-89fae8e1d6f9" Path="CounterDetail/ValidTo">
     <Caption OriginalText="Valid Until">Gültig bis</Caption>
     <Documentation Category="USER_LONG_HELP" OriginalText="Date until when the counter is valid. Only works if the counter is set to be evaluated by date.">Date until when the counter is valid. Only works if the counter is set to be evaluated by date.</Documentation>
@@ -746,6 +758,9 @@ xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&
   </Element>
   <Element Id="3a66617f-c725-45de-b9ca-906a15b61195" Path="AsapSyncConfig/refSourceAsapSyncProviderConfigId">
     <Caption OriginalText="Zdroj">Source</Caption>
+  </Element>
+  <Element Id="f449b5db-409a-4f18-b52a-90f8701f81bb" Path="AsapParameters/ProfileId">
+    <Caption OriginalText="UserProfile">UserProfile</Caption>
   </Element>
   <Element Id="570024cc-ede3-41f9-b605-9113a055f47f" Path="Mail/Subject">
     <Caption OriginalText="Subject">Betreff</Caption>
@@ -891,7 +906,7 @@ xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&
     <Caption OriginalText="Saturday">Samstag</Caption>
     <Documentation Category="USER_LONG_HELP" OriginalText="Označuje, zda je sobota pracovní den">Označuje, zda je sobota pracovní den</Documentation>
   </Element>
-  <Element Id="de01feaf-6f60-4a6c-9003-b6f61198ef8a" Path="Attachment/Data">
+  <Element Id="de01feaf-6f60-4a6c-9003-b6f61198ef8a" Path="IAsapAttachmentFields/Data">
     <Documentation Category="USER_LONG_HELP" OriginalText="Attachment storage">Attachment storage</Documentation>
   </Element>
   <Element Id="7979898b-cb43-4624-986d-b7ead27acd84" Path="AsapValidationRule/Rule">
@@ -1047,6 +1062,10 @@ xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&
   <Element Id="ac0f701e-b580-4ea4-b210-e985f517bada" Path="AsapCalendar/IsTuesdayWorkingDay">
     <Caption OriginalText="Tuesday">Dienstag</Caption>
     <Documentation Category="USER_LONG_HELP" OriginalText="Označuje, zda je úterý pracovní den">Označuje, zda je úterý pracovní den</Documentation>
+  </Element>
+  <Element Id="6878eca9-5ff7-4f01-b756-eb16da693763" Path="WorkQueue/ApiAccessRoles">
+    <Caption OriginalText="API Access Roles">API Access Roles</Caption>
+    <Documentation Category="USER_SHORT_HELP" OriginalText="Users having at least one user role containing at least one of these application roles will be able to run commands through external HTTP API">Users having at least one user role containing at least one of these application roles will be able to run commands through external HTTP API</Documentation>
   </Element>
   <Element Id="3e9c243e-29f8-4c1b-bd95-ebf995a9abe1" Path="Resource/refBusinessPartnerId">
     <Caption OriginalText="Kontakt">Contact</Caption>
@@ -1307,6 +1326,9 @@ xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&
   <Element Id="075570a5-3d2e-444c-b8d2-639ed2cdae2f" Path="AsapTraceWorkflow/AsapDebugWorkflowRootControl/SplitPanel1/AsPanel1/PanelTitle">
     <Value OriginalText="Workflow">Workflow</Value>
   </Element>
+  <Element Id="58efa70a-d939-4d99-91e6-67065884ba57" Path="WorkQueueNotification/WorkQueueNotificationRootControl/AsCheckBox1/Text">
+    <Value OriginalText="SendAttachments">SendAttachments</Value>
+  </Element>
   <Element Id="8993432b-88f4-4563-bbf7-6775e20bcf2d" Path="AsapSyncConnectionParameter/AsapSyncConnectionParameterRootControl/PanelTitle">
     <Value OriginalText="Parametry">Parameters</Value>
   </Element>
@@ -1460,6 +1482,9 @@ xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&
   <Element Id="e1056782-9cc3-4eb8-adfb-cf5a1518ae7d" Path="AsapSyncRun/AsapSyncRun_CompleteRootControl/SplitPanel1/AsPanel2/PanelTitle">
     <Value OriginalText="Synchronizované položky">Synchronized Records</Value>
   </Element>
+  <Element Id="21bc6fab-2f89-469c-b8f8-d194e97275af" Path="WorkQueueCommand/WorkQueueCommandRootControl/AsCheckBox3/Text">
+    <Value OriginalText="Autoprocess With Errors">Autoprocess With Errors</Value>
+  </Element>
   <Element Id="bd52cff6-b7cf-4a1b-b93f-d361de0f1122" Path="AsapNotificationTemplate/AsapNotificationTemplateRootControl/AsTabControl1/TabPage2/Text">
     <Value OriginalText="Localization">Lokalisierung</Value>
   </Element>
@@ -1546,5 +1571,8 @@ xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&
   </Element>
   <Element Id="8524cf92-8b95-4028-8953-9420bda4142d" Path="TextFile/Split">
     <Caption OriginalText="Rozdělit">Split</Caption>
+  </Element>
+  <Element Id="7275f952-6c46-4613-92e9-7adab9e7acc0" Path="RecipientEmailIsEmpty">
+    <String OriginalText="Error: Recipient email is not specified.">Error: Recipient email is not specified.</String>
   </Element>
 </AsapLocalization>
