@@ -339,13 +339,6 @@ VALUES ('43a2129a-f377-4854-9d4f-7fdfccea4cbb', 'FRM_NotificationTemplate', 'Men
 INSERT INTO AsapRoleAsapApplicationRole (Id, refAsapRoleId, refAsapApplicationRoleId, RecordCreated, IsFormReadOnly)
 VALUES (newid(), 'e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2', '43a2129a-f377-4854-9d4f-7fdfccea4cbb', getdate(), 0)</M01>
     </SchemaItem>
-    <SchemaItem Id="c5872326-dd1b-496b-ad85-ea0757e3186a" ItemType="DeploymentUpdateScriptActivity" Name="00010_AddRole_FRM_OrigamOnlineUser" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" IsAbstract="false" I01="10" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G05="bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" refSchemaExtensionId="b9ab12fe-7f7d-43f7-bedc-93747647d6e4" refParentItemId="30c66848-3ec9-4c3c-b657-bbd003c552e1">
-      <M01>INSERT INTO AsapApplicationRole (Id, Name, Description, IsSystemRole , RecordCreated)
-VALUES ('b5f18564-a7e3-45e6-ac95-e2b612cb6cf6', 'FRM_OrigamOnlineUser', ''Menu &gt; Settings &gt; Users &amp; Security &gt; Active Sessions', 1, getdate())
--- add to the built-in SuperUser role
-INSERT INTO AsapRoleAsapApplicationRole (Id, refAsapRoleId, refAsapApplicationRoleId, RecordCreated, IsFormReadOnly)
-VALUES (newid(), 'e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2', 'b5f18564-a7e3-45e6-ac95-e2b612cb6cf6', getdate(), 0)</M01>
-    </SchemaItem>
     <SchemaItem Id="460c7774-78b9-4e72-9779-c5294c8d64d0" ItemType="DeploymentVersion" Name="1.2.0" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.DeploymentVersion" IsAbstract="false" SS01="1.2.0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="aaee6cf9-234a-40d4-a576-d598e90fb9e0" refSchemaExtensionId="b9ab12fe-7f7d-43f7-bedc-93747647d6e4" />
     <SchemaItem Id="83c01f3e-4757-4389-b24b-2ba5e96c2f35" ItemType="DeploymentUpdateScriptActivity" Name="00010_AssignExistingRoles_to_BuiltInSuperUser" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" IsAbstract="false" I01="10" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G05="bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" refSchemaExtensionId="b9ab12fe-7f7d-43f7-bedc-93747647d6e4" refParentItemId="460c7774-78b9-4e72-9779-c5294c8d64d0">
       <M01>INSERT INTO AsapRoleAsapApplicationRole (Id, refAsapRoleId, refAsapApplicationRoleId, RecordCreated, IsFormReadOnly)
@@ -359,6 +352,13 @@ SELECT newid(), 'e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2', Id, getdate(), 0 FROM
 VALUES (newid(), 'FRM_UserProfile', 'Menu &gt; Settings &gt; Users &amp; Security &gt; My User Profile', 1, getdate())</M01>
     </SchemaItem>
     <SchemaItem Id="a4fde712-5dea-4e1c-aa0f-2714c1bd789e" ItemType="DeploymentVersion" Name="1.2.2" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.DeploymentVersion" IsAbstract="false" SS01="1.2.2" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="aaee6cf9-234a-40d4-a576-d598e90fb9e0" refSchemaExtensionId="b9ab12fe-7f7d-43f7-bedc-93747647d6e4" />
+    <SchemaItem Id="c5872326-dd1b-496b-ad85-ea0757e3186a" ItemType="DeploymentUpdateScriptActivity" Name="00010_AddRole_FRM_OrigamOnlineUser" TargetType="CZ.Advantages.Asap.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" IsAbstract="false" I01="10" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G05="bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" refSchemaExtensionId="b9ab12fe-7f7d-43f7-bedc-93747647d6e4" refParentItemId="a4fde712-5dea-4e1c-aa0f-2714c1bd789e">
+      <M01>INSERT INTO AsapApplicationRole (Id, Name, Description, IsSystemRole , RecordCreated)
+VALUES ('b5f18564-a7e3-45e6-ac95-e2b612cb6cf6', 'FRM_OrigamOnlineUser', 'Menu &gt; Settings &gt; Users &amp;amp; Security &gt; Active Sessions', 1, getdate())
+-- add to the built-in SuperUser role
+INSERT INTO AsapRoleAsapApplicationRole (Id, refAsapRoleId, refAsapApplicationRoleId, RecordCreated, IsFormReadOnly)
+VALUES (newid(), 'e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2', 'b5f18564-a7e3-45e6-ac95-e2b612cb6cf6', getdate(), 0)</M01>
+    </SchemaItem>
     <SchemaItem Id="147775f5-451d-4efd-8634-7f27a2cf50a6" ItemType="Menu" Name="Menu" TargetType="CZ.Advantages.Asap.Schema.MenuModel.Menu" IsAbstract="false" SS01="Menu" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaExtensionId="b9ab12fe-7f7d-43f7-bedc-93747647d6e4" />
     <SchemaItem Id="1cd3d010-c1cf-4f5c-b81f-7896029b4ce0" ItemType="MenuItem" Name="Settings" TargetType="CZ.Advantages.Asap.Schema.MenuModel.Submenu" IsAbstract="false" SS01="Settings" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaExtensionId="b9ab12fe-7f7d-43f7-bedc-93747647d6e4" refParentItemId="147775f5-451d-4efd-8634-7f27a2cf50a6" />
     <SchemaItem Id="fbbfcbd2-4032-4bc0-b4db-076ff0bbd448" ItemType="MenuItem" Name="General" TargetType="CZ.Advantages.Asap.Schema.MenuModel.Submenu" IsAbstract="false" SS01="General" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaExtensionId="b9ab12fe-7f7d-43f7-bedc-93747647d6e4" refParentItemId="1cd3d010-c1cf-4f5c-b81f-7896029b4ce0" />
