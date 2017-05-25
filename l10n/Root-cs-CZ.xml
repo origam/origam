@@ -6,68 +6,8 @@
   <Element Id="1fc5d6ac-8e65-4c61-b5b9-d34ba16aca98" Path="SendNotification/attachmentRecordId">
     <Documentation Category="USER_SHORT_HELP" OriginalText="Id of record where to take all attachments from.">Id of record where to take all attachments from.</Documentation>
   </Element>
-  <Element Id="023ee3ea-c462-4606-855f-265449062aaf" Path="ReportFormat_XML">
-    <StringValue OriginalText="XML">XML</StringValue>
-  </Element>
   <Element Id="e452bd7e-32e7-44f5-8398-38e246d1f298" Path="_auto_string">
     <StringValue OriginalText="&lt;automaticky&gt;">&lt;automaticky&gt;</StringValue>
-  </Element>
-  <Element Id="c30c36b4-6de5-4b61-a8b6-529371dce463" Path="_Number_0">
-    <StringValue OriginalText="0">0</StringValue>
-  </Element>
-  <Element Id="a154df52-7571-4135-a60c-5a72e7b9299d" Path="_asterisk">
-    <StringValue OriginalText="*">*</StringValue>
-  </Element>
-  <Element Id="028515a4-9568-4cc4-8fa7-608f84c0157d" Path="ReportFormat_RTF">
-    <StringValue OriginalText="RTF">RTF</StringValue>
-  </Element>
-  <Element Id="adc7db0d-c9c6-4863-b56c-805f79a0a31e" Path="DefaultMailWorkQueueName">
-    <StringValue OriginalText="MAIL">MAIL</StringValue>
-  </Element>
-  <Element Id="471c0869-46ce-4897-99dd-836ee0ce122d" Path="ReportFormat_HTML">
-    <StringValue OriginalText="HTML">HTML</StringValue>
-  </Element>
-  <Element Id="1aefaf2e-f9d2-4018-b951-932166d8c062" Path="ReportFormat_Text">
-    <StringValue OriginalText="TEXT">TEXT</StringValue>
-  </Element>
-  <Element Id="96291154-fe31-4f73-8386-a3464cb2f9bc" Path="ReportFormat_PDF">
-    <StringValue OriginalText="PDF">PDF</StringValue>
-  </Element>
-  <Element Id="7623e70b-d02d-4856-b713-a7a8510e2f3a" Path="_wildcard">
-    <StringValue OriginalText="%">%</StringValue>
-  </Element>
-  <Element Id="0289fda1-5f7e-4d50-93c9-bbf752c6145f" Path="ReportFormat_MSExcel">
-    <StringValue OriginalText="MSExcel">MSExcel</StringValue>
-  </Element>
-  <Element Id="f3a0ab80-b041-4099-b4eb-cadcf4039bed" Path="ReportFormat_MSWord">
-    <StringValue OriginalText="MSWord">MSWord</StringValue>
-  </Element>
-  <Element Id="df1b2345-18c5-4aec-a79d-e6f9204b5ac5" Path="ReportFormat_CSV">
-    <StringValue OriginalText="CSV">CSV</StringValue>
-  </Element>
-  <Element Id="cc1ce58e-df69-442d-99fd-fff244a7daab" Path="DefaultNotificationTemplate">
-    <StringValue OriginalText="&#xD;&#xA;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#xD;&#xA;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; version=&quot;1.0&quot;&#xD;&#xA;xmlns:AS=&quot;http://schema.advantages.cz/AsapFunctions&quot;&#xD;&#xA;xmlns:date=&quot;http://exslt.org/dates-and-times&quot; exclude-result-prefixes=&quot;AS date&quot;&gt;&#xD;&#xA;&#xD;&#xA;&lt;xsl:param name=&quot;RecipientRow&quot; /&gt;&#xD;&#xA;&#xD;&#xA;&lt;xsl:template match=&quot;ROOT&quot;&gt;&#xD;&#xA;    &lt;ROOT&gt;&#xD;&#xA;          &lt;AsapNotification&gt;&#xD;&#xA;                 &lt;xsl:attribute name=&quot;Subject&quot;&gt;&#xD;&#xA;                      &lt;xsl:value-of select=&quot;''&quot;/&gt;&#xD;&#xA;                 &lt;/xsl:attribute&gt;&#xD;&#xA;                 &lt;Body&gt;&#xD;&#xA;                 &lt;/Body&gt;&#xD;&#xA;          &lt;/AsapNotification&gt;&#xD;&#xA;     &lt;/ROOT&gt;&#xD;&#xA;&lt;/xsl:template&gt;&#xD;&#xA;&#xD;&#xA;&lt;/xsl:stylesheet&gt;&#xD;&#xA;">
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-xmlns:AS="http://schema.advantages.cz/AsapFunctions"
-xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&gt;
-
-&lt;xsl:param name="RecipientRow" /&gt;
-
-&lt;xsl:template match="ROOT"&gt;
-    &lt;ROOT&gt;
-          &lt;AsapNotification&gt;
-                 &lt;xsl:attribute name="Subject"&gt;
-                      &lt;xsl:value-of select="''"/&gt;
-                 &lt;/xsl:attribute&gt;
-                 &lt;Body&gt;
-                 &lt;/Body&gt;
-          &lt;/AsapNotification&gt;
-     &lt;/ROOT&gt;
-&lt;/xsl:template&gt;
-
-&lt;/xsl:stylesheet&gt;
-</StringValue>
   </Element>
   <Element Id="cc5a2d10-33f9-45d9-87ec-062f531560bd" Path="WorkQueueNotificationEvent_l10n">
     <Caption OriginalText="WorkQueueNotificationEvent Localization">WorkQueueNotificationEvent Localization</Caption>
@@ -164,6 +104,9 @@ xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&
   </Element>
   <Element Id="bfc2edfb-ada8-4b4f-bd9f-722fea74fc54" Path="AsapSyncRun">
     <Caption OriginalText="Historie synchronizací">Historie synchronizací</Caption>
+  </Element>
+  <Element Id="bb74981f-df5b-42ad-923d-77df9d649870" Path="OrigamOnlineUser">
+    <Caption OriginalText="Online User">Připojený uživatel</Caption>
   </Element>
   <Element Id="2d969eff-c922-46cd-8a6b-7b6dc27e735a" Path="AsapTraceWorkflow">
     <Caption OriginalText="Workflow Trace">Workflow Trace</Caption>
@@ -1130,6 +1073,48 @@ xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&
   </Element>
   <Element Id="5ad2fe73-bc65-409b-a16c-fef966f54b4d" Path="WorkQueueCommand/IsAutoProcessed">
     <Caption OriginalText="Autoprocess">Automaticky zpracovat</Caption>
+  </Element>
+  <Element Id="b803c9ab-6aba-41f9-80f4-0b68a9121046" Path="WQ_Mail/WorkQueueEntry/MessageBody">
+    <Caption OriginalText="Message Body">Zpráva</Caption>
+  </Element>
+  <Element Id="0ba5ab74-0d06-482c-8bad-200107a467ae" Path="WQ_BinaryFile/WorkQueueEntry/FileCreationTime">
+    <Caption OriginalText="File Creation Time">File Creation Time</Caption>
+  </Element>
+  <Element Id="2aed722a-7838-4897-ab64-452a0d6a34ce" Path="WQ_TextFile/WorkQueueEntry/FileLastAccessTime">
+    <Caption OriginalText="Last Accessed">Last Accessed</Caption>
+  </Element>
+  <Element Id="654ab7a5-1d99-4bec-99ce-4f6e77cfb4a8" Path="WQ_Mail/WorkQueueEntry/DateSent">
+    <Caption OriginalText="Date Sent">Odesláno</Caption>
+  </Element>
+  <Element Id="7f2e6639-b4eb-46d6-b891-54d9dce91a58" Path="WQ_BinaryFile/WorkQueueEntry/FileLastAccessTime">
+    <Caption OriginalText="Last Accessed">Last Accessed</Caption>
+  </Element>
+  <Element Id="bf7e853b-6993-482a-932a-5f9acd2b99b4" Path="WQ_Mail/WorkQueueEntry/Sender">
+    <Caption OriginalText="Sender">Odesílatel</Caption>
+  </Element>
+  <Element Id="b379806c-6d43-4fcf-b1b2-7a7255220e97" Path="WQ_Mail/WorkQueueEntry/DateReceived">
+    <Caption OriginalText="Date Received">Přijate</Caption>
+  </Element>
+  <Element Id="0b4c2b27-4118-4af2-90b5-7b10b000476a" Path="WQ_TextFile/WorkQueueEntry/FileName">
+    <Caption OriginalText="File Name">File Name</Caption>
+  </Element>
+  <Element Id="e861dd79-b945-42df-a9d1-7e02a2934bb3" Path="WQ_BinaryFile/WorkQueueEntry/FileName">
+    <Caption OriginalText="File Name">File Name</Caption>
+  </Element>
+  <Element Id="c44c078b-f42b-4ebb-9dad-8f83eb12ad5b" Path="WQ_Mail/WorkQueueEntry/Subject">
+    <Caption OriginalText="Subject">Předmět</Caption>
+  </Element>
+  <Element Id="5298b1fe-1e41-41ba-b1bc-a4fe115abbcb" Path="WQ_Mail/WorkQueueEntry/Recipient">
+    <Caption OriginalText="Recipient">Příjemce</Caption>
+  </Element>
+  <Element Id="8618648e-7f10-4f01-81b7-aec09ed72a8e" Path="WQ_BinaryFile/WorkQueueEntry/FileLastWriteTime">
+    <Caption OriginalText="Last Write Time">Last Write Time</Caption>
+  </Element>
+  <Element Id="e79616f5-7240-4c0a-8e8c-d2da8ffd3314" Path="WQ_TextFile/WorkQueueEntry/FileLastWriteTime">
+    <Caption OriginalText="Last Write Time">Last Write Time</Caption>
+  </Element>
+  <Element Id="040abf2a-aed6-4f8e-8a3c-da07e2c83513" Path="WQ_TextFile/WorkQueueEntry/FileCreationTime">
+    <Caption OriginalText="File Creation Time">File Creation Time</Caption>
   </Element>
   <Element Id="08ec080c-c274-4c38-b11e-996444805418" Path="Counter">
     <Documentation Category="USER_LONG_HELP" OriginalText="Pomocí tohoto formuláře je možné nastavovat číselné řady. Podle kódu aplikace vyhledává správnou číselnou řadu. ">Pomocí tohoto formuláře je možné nastavovat číselné řady. Podle kódu aplikace vyhledává správnou číselnou řadu. </Documentation>
