@@ -1557,4 +1557,7 @@
   <Element Id="7275f952-6c46-4613-92e9-7adab9e7acc0" Path="RecipientEmailIsEmpty">
     <String OriginalText="Error: Recipient email is not specified.">Error: Recipient email is not specified.</String>
   </Element>
+  <Element Id="9e8d3e42-d6ba-462f-bb90-385750a8412e" Path="OrigamOnlineUser/ClearSessionRequest">
+    <Caption OriginalText="Clear Session">Clear Session</Caption>
+  </Element>
 </AsapLocalization>
