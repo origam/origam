@@ -1072,7 +1072,7 @@
     <Caption OriginalText="Autoprocess">Auto Process</Caption>
   </Element>
   <Element Id="b803c9ab-6aba-41f9-80f4-0b68a9121046" Path="WQ_Mail/WorkQueueEntry/MessageBody">
-    <Caption OriginalText="Message Body">Message Body</Caption>
+    <Caption OriginalText="Message Body">Mailtext</Caption>
   </Element>
   <Element Id="0ba5ab74-0d06-482c-8bad-200107a467ae" Path="WQ_BinaryFile/WorkQueueEntry/FileCreationTime">
     <Caption OriginalText="File Creation Time">File Creation Time</Caption>
@@ -1081,16 +1081,16 @@
     <Caption OriginalText="Last Accessed">Last Accessed</Caption>
   </Element>
   <Element Id="654ab7a5-1d99-4bec-99ce-4f6e77cfb4a8" Path="WQ_Mail/WorkQueueEntry/DateSent">
-    <Caption OriginalText="Date Sent">Date Sent</Caption>
+    <Caption OriginalText="Date Sent">Sendedatum</Caption>
   </Element>
   <Element Id="7f2e6639-b4eb-46d6-b891-54d9dce91a58" Path="WQ_BinaryFile/WorkQueueEntry/FileLastAccessTime">
     <Caption OriginalText="Last Accessed">Last Accessed</Caption>
   </Element>
   <Element Id="bf7e853b-6993-482a-932a-5f9acd2b99b4" Path="WQ_Mail/WorkQueueEntry/Sender">
-    <Caption OriginalText="Sender">Sender</Caption>
+    <Caption OriginalText="Sender">Absender</Caption>
   </Element>
   <Element Id="b379806c-6d43-4fcf-b1b2-7a7255220e97" Path="WQ_Mail/WorkQueueEntry/DateReceived">
-    <Caption OriginalText="Date Received">Date Received</Caption>
+    <Caption OriginalText="Date Received">Empfangsdatum</Caption>
   </Element>
   <Element Id="0b4c2b27-4118-4af2-90b5-7b10b000476a" Path="WQ_TextFile/WorkQueueEntry/FileName">
     <Caption OriginalText="File Name">File Name</Caption>
@@ -1099,10 +1099,10 @@
     <Caption OriginalText="File Name">File Name</Caption>
   </Element>
   <Element Id="c44c078b-f42b-4ebb-9dad-8f83eb12ad5b" Path="WQ_Mail/WorkQueueEntry/Subject">
-    <Caption OriginalText="Subject">Subject</Caption>
+    <Caption OriginalText="Subject">Betreff</Caption>
   </Element>
   <Element Id="5298b1fe-1e41-41ba-b1bc-a4fe115abbcb" Path="WQ_Mail/WorkQueueEntry/Recipient">
-    <Caption OriginalText="Recipient">Recipient</Caption>
+    <Caption OriginalText="Recipient">Empfänger</Caption>
   </Element>
   <Element Id="8618648e-7f10-4f01-81b7-aec09ed72a8e" Path="WQ_BinaryFile/WorkQueueEntry/FileLastWriteTime">
     <Caption OriginalText="Last Write Time">Last Write Time</Caption>
