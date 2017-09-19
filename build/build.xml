@@ -20,10 +20,10 @@
             <arg value="clone"/>
             <arg value="${git-repository}"/>
         </exec>
-        <exec workingdir="../rn/model-root" program="${git-exec}" failonerror="false">
+        <exec workingdir="../rn/origam-model" program="${git-exec}" failonerror="false">
             <arg value="fetch"/>
         </exec>
-        <exec workingdir="../rn/model-root" program="${git-exec}" output="../rn/release-notes__Model_${projectSuffix}_root_${configurationSuffix}_${buildNumber}_artifacts__root__${branchMarker}.txt">
+        <exec workingdir="../rn/origam-model" program="${git-exec}" output="../rn/release-notes__Model_${projectSuffix}_root_${configurationSuffix}_${buildNumber}_artifacts__root__${branchMarker}.txt">
             <arg value="log"/>
             <arg value="^origin/${previousBranch}"/>
             <arg value="origin/${currentBranch}"/>
