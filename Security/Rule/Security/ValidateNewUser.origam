@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Rule
+    dataType="Boolean"
+    name="ValidateNewUser"
+    abstract="false"
+    xsl="-***-ExternalFile:ValidateNewUser.origam___xsl___6fc55ed1-8605-422e-93b9-7eee08be9bfd.xslt"
+    x:id="6fc55ed1-8605-422e-93b9-7eee08be9bfd"
+    x:type="Origam.Schema.RuleModel.EndRule" />
+</x:file>

@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="LookupBusinessPartner_UserName"
+    abstract="false"
+    x:id="45fb1ea0-f03f-44e7-a631-d94c447a3fd4"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="false"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="BusinessPartner"
+      abstract="false"
+      entity="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
+      x:id="c445f819-9add-4f09-82a7-7fcc37e054ec"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Id"
+        abstract="false"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        x:id="67dbcd90-d06e-4c03-a88c-1cb3ef25c75c"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="UserName"
+        abstract="false"
+        field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/UserName/15c44b5f-c719-440e-983f-44f177593f63"
+        x:id="184fdae3-7453-47c5-aa76-ea96686ab755"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetByUserName"
+      abstract="false"
+      x:id="12a7135e-78a3-4a01-9f75-200da6c0671a"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="BusinessPartner_GetUserProfile"
+        abstract="false"
+        entity="Security/DataStructure/Partner Management/Lookups/LookupBusinessPartner_UserName.origam#LookupBusinessPartner_UserName/BusinessPartner/c445f819-9add-4f09-82a7-7fcc37e054ec"
+        filter="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/GetUserProfile/03a13523-cf1c-4403-ad9e-3a5f73870072"
+        x:id="7a780769-a1ad-4691-a894-4d755a52b17e"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+    <DataStructureSortSet
+      name="Default"
+      abstract="false"
+      x:id="e4749fe0-930f-4c0b-9a81-ae2d4ca02076"
+      x:type="Origam.Schema.EntityModel.DataStructureSortSet" />
+  </DataStructure>
+</x:file>

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Function
+    dataType="Date"
+    type="Database"
+    name="AddDays"
+    abstract="false"
+    x:id="65954a87-6a6d-4a57-93aa-3fb669ee87ca"
+    x:type="Origam.Schema.EntityModel.Function">
+    <FunctionParameter
+      ordinalPosition="1"
+      name="Days"
+      abstract="false"
+      x:id="bb16ff10-d077-48f9-876b-475c062bd048"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+    <FunctionParameter
+      ordinalPosition="0"
+      name="Date"
+      abstract="false"
+      x:id="f8965ec4-a2ba-41b0-8a89-7c0f1e44fb9d"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+  </Function>
+</x:file>

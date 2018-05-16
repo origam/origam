@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Service
+    classPath="Origam.Workflow.ParameterServiceAgent,Origam.Workflow"
+    name="ParameterService"
+    abstract="false"
+    x:id="0bba010f-e1c3-4bda-9e2b-675574f27de5"
+    x:type="Origam.Schema.WorkflowModel.Service">
+    <ServiceMethod
+      returnValueDataType="Boolean"
+      name="SetCustomParameterValue"
+      abstract="false"
+      x:id="d0548352-3b98-45e7-b36f-8186c6cc1f6c"
+      x:type="Origam.Schema.WorkflowModel.ServiceMethod">
+      <Parameter
+        callElements="3"
+        allowContextReference="true"
+        allowDataConstantReference="true"
+        allowDataStructureReference="false"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        dataType="UniqueIdentifier"
+        dataLength="0"
+        allowNulls="true"
+        name="ProfileId"
+        abstract="false"
+        x:id="36522170-010d-4e50-849f-449cb055dffb"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+      <Parameter
+        callElements="3"
+        allowContextReference="true"
+        allowDataConstantReference="true"
+        allowDataStructureReference="false"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        dataType="String"
+        dataLength="0"
+        allowNulls="false"
+        name="ParameterName"
+        abstract="false"
+        x:id="0f4c8bfd-dbc7-4391-8f68-6b78fe789006"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+      <Parameter
+        callElements="3"
+        allowContextReference="true"
+        allowDataConstantReference="true"
+        allowDataStructureReference="false"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        dataType="Object"
+        dataLength="0"
+        allowNulls="true"
+        name="Value"
+        abstract="false"
+        x:id="3fc3df07-c13f-43e2-a8a9-c6640760006a"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+    </ServiceMethod>
+  </Service>
+</x:file>

@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DeploymentVersion
+    version="4.21"
+    name="4.21"
+    abstract="false"
+    deploymentDependenciesCsv=""
+    x:id="8b20fee2-26a9-47e4-a357-b3a65b4a3000"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    <DeploymentUpdateScriptActivity
+      activityOrder="10"
+      name="00010_Database_Field_OrigamParameters.ProfileId"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.21.origam___commandText___f4a2ce82-1e38-40b6-a9c9-00d283640b41.txt"
+      x:id="f4a2ce82-1e38-40b6-a9c9-00d283640b41"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="20"
+      name="00020_drop_primary_key"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.21.origam___commandText___062a3fa0-4ba5-4093-a004-9a8466e2f0d5.txt"
+      x:id="062a3fa0-4ba5-4093-a004-9a8466e2f0d5"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="5"
+      name="00005_Standardize_PK_Names"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.21.origam___commandText___d36bf6ab-f71e-4ab4-9834-b36744d3d56a.txt"
+      x:id="d36bf6ab-f71e-4ab4-9834-b36744d3d56a"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="30"
+      name="00030_create_new_key"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.21.origam___commandText___f67a806f-2723-4f54-8a99-d2fd86739647.txt"
+      x:id="f67a806f-2723-4f54-8a99-d2fd86739647"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

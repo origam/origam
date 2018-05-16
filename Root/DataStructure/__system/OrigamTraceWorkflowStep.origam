@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="OrigamTraceWorkflowStep"
+    abstract="false"
+    x:id="4985a6b2-8bae-4c21-9a09-0c2480c4efe2"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="true"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="OrigamTraceWorkflowStep"
+      abstract="false"
+      entity="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/72d8002c-7ddb-451c-9bee-a0e5dafb407b"
+      x:id="5980c809-df97-48ce-8f8e-b166f850c8d5"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+  </DataStructure>
+</x:file>

@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataEntity
+    mappedObjectName="OrigamMap"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    readOnly="false"
+    audit="All"
+    label="Map Configuration"
+    name="OrigamMap"
+    abstract="false"
+    describingField="Root/DataEntity/__system/OrigamMap.origam#OrigamMap/ReferenceCode/5f5a98a6-4695-40fe-8342-3180a287b935"
+    x:id="033c386d-5906-4535-ad71-8e51d3488207"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="8ad1be1f-6d1b-4f61-a6e7-b781946ddc0e"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      mappedColumnName="ReferenceCode"
+      excludeFromAuditing="false"
+      dataType="String"
+      dataLength="40"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Code"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="ReferenceCode"
+      abstract="false"
+      x:id="5f5a98a6-4695-40fe-8342-3180a287b935"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="InitialZoom"
+      excludeFromAuditing="false"
+      dataType="Integer"
+      dataLength="0"
+      allowNulls="true"
+      isPrimaryKey="false"
+      label="Initial Zoom"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="InitialZoom"
+      abstract="false"
+      x:id="33d815ea-18e2-422d-93e6-5e204acfe111"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="MapCenter"
+      excludeFromAuditing="false"
+      dataType="Geography"
+      dataLength="0"
+      allowNulls="true"
+      isPrimaryKey="false"
+      label="Map Center"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="MapCenter"
+      abstract="false"
+      x:id="fa3daab7-aece-484d-be4f-61ebae9d33ec"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="Description"
+      excludeFromAuditing="false"
+      dataType="String"
+      dataLength="200"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Description"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="Description"
+      abstract="false"
+      x:id="1a96b538-86b1-41c5-b29f-93291b2b4d36"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityIndex
+      unique="true"
+      generateDeploymentScript="false"
+      name="ix_Unique"
+      abstract="false"
+      x:id="3499d0db-938c-4461-8fbf-648ffa2678a5"
+      x:type="Origam.Schema.EntityModel.DataEntityIndex">
+      <DataEntityIndexField
+        sortOrder="Ascending"
+        ordinalPosition="0"
+        name="0_ReferenceCode"
+        abstract="false"
+        field="Root/DataEntity/__system/OrigamMap.origam#OrigamMap/ReferenceCode/5f5a98a6-4695-40fe-8342-3180a287b935"
+        x:id="63a9f243-00c2-4416-a756-33e4eff452e6"
+        x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
+    </DataEntityIndex>
+    <EntityFilter
+      name="GetByReferenceCode"
+      abstract="false"
+      x:id="df4d342c-da5e-4abb-9b96-43c74fc59cb5"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        forceDatabaseCalculation="false"
+        dataType="Boolean"
+        dataLength="0"
+        allowNulls="true"
+        isPrimaryKey="false"
+        label=""
+        excludeFromAllFields="false"
+        autoIncrement="false"
+        xmlMappingType="Attribute"
+        onCopyAction="Copy"
+        name="Equal"
+        abstract="false"
+        function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="190d9b1a-cbcd-4024-819c-91b9f4cc4210"
+        x:type="Origam.Schema.EntityModel.FunctionCall">
+        <FunctionCallParameter
+          name="Left"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
+          x:id="676797a2-0662-4165-a89b-1c6eff403266"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            name="ReferenceCode"
+            abstract="false"
+            field="Root/DataEntity/__system/OrigamMap.origam#OrigamMap/ReferenceCode/5f5a98a6-4695-40fe-8342-3180a287b935"
+            x:id="a943ecb4-53e8-44f8-b4ac-37822107fb12"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          name="Right"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+          x:id="b971ab64-2896-4d2e-92e2-96626af3aaef"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <ParameterReference
+            name="parReferenceCode"
+            abstract="false"
+            parameter="Root/DataEntity/__system/OrigamMap.origam#OrigamMap/parReferenceCode/f062c884-ba60-4345-8478-549ed05d3258"
+            x:id="154c8363-0615-4f5a-9682-83a11a0c1736"
+            x:type="Origam.Schema.ParameterReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <EntityRelation
+      parentChild="true"
+      selfJoin="false"
+      or="false"
+      name="OrigamMapOrigamMapLayer"
+      abstract="false"
+      relatedEntity="Root/DataEntity/__system/OrigamMapOrigamMapLayer.origam#OrigamMapOrigamMapLayer/6d1bd9cd-0f9f-46ae-a4eb-62f4c8824509"
+      x:id="5ed03d67-c5ab-44da-9f60-5e3220e2f342"
+      x:type="Origam.Schema.EntityModel.EntityRelationItem">
+      <EntityRelationColumnPair
+        name="OrigamMapOrigamMapLayerKey1"
+        abstract="false"
+        baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        relatedEntityField="Root/DataEntity/__system/OrigamMapOrigamMapLayer.origam#OrigamMapOrigamMapLayer/refOrigamMapId/30cc71a4-40bd-429d-824d-98ac2795967c"
+        x:id="81eb0344-3168-4be9-b981-6c806e3376da"
+        x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
+    </EntityRelation>
+    <Parameter
+      dataType="String"
+      dataLength="40"
+      allowNulls="true"
+      name="parReferenceCode"
+      abstract="false"
+      x:id="f062c884-ba60-4345-8478-549ed05d3258"
+      x:type="Origam.Schema.SchemaItemParameter" />
+  </DataEntity>
+</x:file>

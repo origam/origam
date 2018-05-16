@@ -1,0 +1,4 @@
+INSERT INTO BusinessPartner (Id, Name, UserName, RecordCreated)
+VALUES (newid(), 'ORIGAM Server', 'origam_server', getdate())
+INSERT INTO BusinessPartner (Id, Name, UserName, RecordCreated)
+VALUES (newid(), 'Anonymous User', 'guest', getdate())

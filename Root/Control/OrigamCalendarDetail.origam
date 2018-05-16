@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Control
+    toolboxVisibility="FormDesigner"
+    typeName="Origam.Schema.GuiModel.PanelControlSet"
+    namespace="Origam.Schema.GuiModel"
+    isComplex="true"
+    requestSaveAfterChangeAllowed="false"
+    name="OrigamCalendarDetail"
+    abstract="false"
+    screenSection="Root/PanelControlSet/__system/OrigamCalendarDetail.origam#OrigamCalendarDetail/82009473-a3a8-4e6c-ae3f-ca3b9ca23cbe"
+    x:id="68260a9b-e6cd-4c8a-b414-28a713658f04"
+    x:type="Origam.Schema.GuiModel.ControlItem">
+    <ancestor
+      ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="62103267-783b-44ea-ac4e-c3995f058e6a"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+  </Control>
+</x:file>

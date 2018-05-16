@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataEntity
+    mappedObjectName="OrigamMapOrigamMapLayer"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    readOnly="false"
+    audit="All"
+    label="Map Layers Assignment"
+    name="OrigamMapOrigamMapLayer"
+    abstract="false"
+    describingField="Root/DataEntity/__system/OrigamMapOrigamMapLayer.origam#OrigamMapOrigamMapLayer/refOrigamMapLayerId/ad4deea8-743f-4532-8f6b-9b68110af950"
+    x:id="6d1bd9cd-0f9f-46ae-a4eb-62f4c8824509"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="96bdd59c-34fc-4f62-ac35-5818ac2b122a"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      mappedColumnName="SortOrder"
+      excludeFromAuditing="false"
+      dataType="Integer"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Order"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="SortOrder"
+      abstract="false"
+      x:id="59dd44d9-7ef5-4675-94f6-75b276d1fcd0"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="DefaultEnabled"
+      excludeFromAuditing="false"
+      dataType="Boolean"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Default"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="DefaultEnabled"
+      abstract="false"
+      defaultValue="Root/DataConstant/_boolean/_true.origam#_true/9def84b6-ed28-48d6-bbf0-099b944355d5"
+      x:id="1c41cc87-29b7-478f-9908-7bf310f0bbf8"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="refOrigamMapId"
+      excludeFromAuditing="false"
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Map"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="refOrigamMapId"
+      abstract="false"
+      foreignKeyEntity="Root/DataEntity/__system/OrigamMap.origam#OrigamMap/033c386d-5906-4535-ad71-8e51d3488207"
+      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="30cc71a4-40bd-429d-824d-98ac2795967c"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="refOrigamMapLayerId"
+      excludeFromAuditing="false"
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Map Layer"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="refOrigamMapLayerId"
+      abstract="false"
+      defaultLookup="Root/DataLookup/__system/OrigamMapLayer.origam#OrigamMapLayer/d70e629d-6fd3-44d7-b40e-c15461a2961a"
+      foreignKeyEntity="Root/DataEntity/__system/OrigamMapLayer.origam#OrigamMapLayer/70ab17d0-8f89-41af-a348-85dfed1330e3"
+      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="ad4deea8-743f-4532-8f6b-9b68110af950"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityIndex
+      unique="true"
+      generateDeploymentScript="false"
+      name="ix_OrigamMap"
+      abstract="false"
+      x:id="db171366-4abe-43a4-8b75-7131e0e724ec"
+      x:type="Origam.Schema.EntityModel.DataEntityIndex">
+      <DataEntityIndexField
+        sortOrder="Ascending"
+        ordinalPosition="0"
+        name="0_refOrigamMapId"
+        abstract="false"
+        field="Root/DataEntity/__system/OrigamMapOrigamMapLayer.origam#OrigamMapOrigamMapLayer/refOrigamMapId/30cc71a4-40bd-429d-824d-98ac2795967c"
+        x:id="c39ff100-7b03-4ca4-8801-7d5aba8617b2"
+        x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
+      <DataEntityIndexField
+        sortOrder="Ascending"
+        ordinalPosition="1"
+        name="1_refOrigamMapLayerId"
+        abstract="false"
+        field="Root/DataEntity/__system/OrigamMapOrigamMapLayer.origam#OrigamMapOrigamMapLayer/refOrigamMapLayerId/ad4deea8-743f-4532-8f6b-9b68110af950"
+        x:id="b1299810-b72a-4299-b569-ffafb631f841"
+        x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
+    </DataEntityIndex>
+    <DataEntityIndex
+      unique="true"
+      generateDeploymentScript="false"
+      name="ix_SortOrder"
+      abstract="false"
+      x:id="91ff31fa-4a9b-49c8-a2cc-f3137de07a45"
+      x:type="Origam.Schema.EntityModel.DataEntityIndex">
+      <DataEntityIndexField
+        sortOrder="Ascending"
+        ordinalPosition="0"
+        name="0_refOrigamMapId"
+        abstract="false"
+        field="Root/DataEntity/__system/OrigamMapOrigamMapLayer.origam#OrigamMapOrigamMapLayer/refOrigamMapId/30cc71a4-40bd-429d-824d-98ac2795967c"
+        x:id="a34d8d8d-7538-4f26-b2a6-450cad0f4703"
+        x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
+      <DataEntityIndexField
+        sortOrder="Ascending"
+        ordinalPosition="1"
+        name="1_SortOrder"
+        abstract="false"
+        field="Root/DataEntity/__system/OrigamMapOrigamMapLayer.origam#OrigamMapOrigamMapLayer/SortOrder/59dd44d9-7ef5-4675-94f6-75b276d1fcd0"
+        x:id="24956dc1-4bcd-4d03-b46b-93839c930473"
+        x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
+    </DataEntityIndex>
+    <EntityRelation
+      parentChild="false"
+      selfJoin="false"
+      or="false"
+      name="OrigamMap"
+      abstract="false"
+      relatedEntity="Root/DataEntity/__system/OrigamMap.origam#OrigamMap/033c386d-5906-4535-ad71-8e51d3488207"
+      x:id="2e8cdd60-bafe-44eb-a926-169725214465"
+      x:type="Origam.Schema.EntityModel.EntityRelationItem">
+      <EntityRelationColumnPair
+        name="OrigamMapKey1"
+        abstract="false"
+        baseEntityField="Root/DataEntity/__system/OrigamMapOrigamMapLayer.origam#OrigamMapOrigamMapLayer/refOrigamMapId/30cc71a4-40bd-429d-824d-98ac2795967c"
+        relatedEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="968a6393-c0a2-4e97-8f80-27a85de7bda5"
+        x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
+    </EntityRelation>
+  </DataEntity>
+</x:file>

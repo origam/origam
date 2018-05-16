@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <String
+    string="Error: Recipient email is not specified."
+    name="RecipientEmailIsEmpty"
+    abstract="false"
+    x:id="7275f952-6c46-4613-92e9-7adab9e7acc0"
+    x:type="Origam.Schema.StringItem" />
+</x:file>

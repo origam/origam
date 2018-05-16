@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="Id"
+    listDisplayMember="Name"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="false"
+    serversideFilterParameter=""
+    searchByFirstColumnOnly="false"
+    valueValueMember="Id"
+    valueDisplayMember="Name"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="OrigamTooltipHelpSubcontext"
+    abstract="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpSubcontext.origam#LookupOrigamTooltipHelpSubcontext/537e6f6e-5503-4f0d-b1da-ae8d6bd33878"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpSubcontext.origam#LookupOrigamTooltipHelpSubcontext/537e6f6e-5503-4f0d-b1da-ae8d6bd33878"
+    listMethod="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpSubcontext.origam#LookupOrigamTooltipHelpSubcontext/GetByOrigamTooltipHelpContextId/7229232a-087b-4e58-a508-4e91b2565738"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpSubcontext.origam#LookupOrigamTooltipHelpSubcontext/GetId/45f81915-4aa5-443b-b9da-eb81da288ba5"
+    x:id="1b637bd8-2714-4e5b-a00a-c55575431ac2"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>

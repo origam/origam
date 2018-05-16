@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="Id"
+    listDisplayMember="Name"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="false"
+    serversideFilterParameter=""
+    searchByFirstColumnOnly="false"
+    valueValueMember="Id"
+    valueDisplayMember="Name"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="OrigamTooltipHelpPosition"
+    abstract="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpPosition.origam#LookupOrigamTooltipHelpPosition/d66cac96-22ef-420b-9d17-5185f55508fd"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpPosition.origam#LookupOrigamTooltipHelpPosition/d66cac96-22ef-420b-9d17-5185f55508fd"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpPosition.origam#LookupOrigamTooltipHelpPosition/GetId/46021810-d1fa-4439-9ddd-d8f194bcc303"
+    x:id="cbe83fc1-45c8-431f-a7ed-5677b9313515"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>

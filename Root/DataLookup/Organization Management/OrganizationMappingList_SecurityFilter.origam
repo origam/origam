@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="refOrganizationId"
+    listDisplayMember="refOrganizationId"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="false"
+    serversideFilterParameter=""
+    searchByFirstColumnOnly="false"
+    valueValueMember="refOrganizationId"
+    valueDisplayMember="refOrganizationId"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="OrganizationMappingList_SecurityFilter"
+    abstract="false"
+    listDataStructure="Root/DataStructure/Organization Management/LookupOrganizationMappingList_SecurityFilter.origam#LookupOrganizationMappingList_SecurityFilter/f6035698-02ff-437e-ab6a-6055f9ec04ec"
+    valueDataStructure="Root/DataStructure/Organization Management/LookupOrganizationMappingList_SecurityFilter.origam#LookupOrganizationMappingList_SecurityFilter/f6035698-02ff-437e-ab6a-6055f9ec04ec"
+    listMethod="Root/DataStructure/Organization Management/LookupOrganizationMappingList_SecurityFilter.origam#LookupOrganizationMappingList_SecurityFilter/GetFilter/be5c0cbd-a826-4650-b4f2-4a8dce9383e9"
+    valueMethod="Root/DataStructure/Organization Management/LookupOrganizationMappingList_SecurityFilter.origam#LookupOrganizationMappingList_SecurityFilter/GetFilter/be5c0cbd-a826-4650-b4f2-4a8dce9383e9"
+    x:id="a259ef42-fefa-4628-baaf-7bdafff7d834"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>

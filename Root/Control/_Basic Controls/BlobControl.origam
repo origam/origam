@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Control
+    toolboxVisibility="PanelDesigner"
+    typeName="Origam.Gui.Win.BlobControl"
+    namespace="Origam.Gui.Win"
+    isComplex="false"
+    requestSaveAfterChangeAllowed="true"
+    name="BlobControl"
+    abstract="false"
+    x:id="7dc84301-dc35-44b0-b766-390b4b6d3a9a"
+    x:type="Origam.Schema.GuiModel.ControlItem">
+    <ControlPropertyItem
+      propertyType="String"
+      bindOnly="false"
+      localizable="false"
+      name="RemarkMember"
+      abstract="false"
+      x:id="74c43504-beee-4943-844b-07f41453a5f5"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="String"
+      bindOnly="false"
+      localizable="true"
+      name="GridColumnCaption"
+      abstract="false"
+      x:id="0b90fcf9-f088-4f5d-a02e-0bf98c663b0f"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="UniqueIdentifier"
+      bindOnly="false"
+      localizable="false"
+      name="StyleId"
+      abstract="false"
+      x:id="7b5321fa-9854-4071-b640-11e9bac51187"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="String"
+      bindOnly="true"
+      localizable="false"
+      name="FileName"
+      abstract="false"
+      x:id="a02996d3-7766-4e1b-a5dc-125fa0fe165e"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Boolean"
+      bindOnly="false"
+      localizable="false"
+      name="HideOnForm"
+      abstract="false"
+      x:id="58ab5e69-2ed1-44bb-a7a0-2b8c051f1fec"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="String"
+      bindOnly="false"
+      localizable="false"
+      name="ThumbnailMember"
+      abstract="false"
+      x:id="92065f56-34b8-4075-a3eb-361efa4b7bc5"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Boolean"
+      bindOnly="false"
+      localizable="false"
+      name="ReadOnly"
+      abstract="false"
+      x:id="b4d508b4-ca6a-4174-a71c-3a7c24c975bc"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="UniqueIdentifier"
+      bindOnly="false"
+      localizable="false"
+      name="BlobLookupId"
+      abstract="false"
+      x:id="0f2ecc41-44b9-4959-bc7d-3a9a07a9b99d"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="String"
+      bindOnly="false"
+      localizable="false"
+      name="OriginalPathMember"
+      abstract="false"
+      x:id="36fd2a84-70ec-4585-b936-55659ce472a5"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Integer"
+      bindOnly="false"
+      localizable="false"
+      name="Height"
+      abstract="false"
+      x:id="1428b6fb-8731-4fbd-9dfe-56bf77197528"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Integer"
+      bindOnly="false"
+      localizable="false"
+      name="Left"
+      abstract="false"
+      x:id="8f64ef81-2387-48f1-a236-56dc8d1122af"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="String"
+      bindOnly="false"
+      localizable="false"
+      name="AuthorMember"
+      abstract="false"
+      x:id="444dd5a4-1e41-4821-afac-57941467adc0"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Integer"
+      bindOnly="false"
+      localizable="false"
+      name="CaptionLength"
+      abstract="false"
+      x:id="30800df0-1923-4198-a1f7-6366401def7f"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="String"
+      bindOnly="false"
+      localizable="false"
+      name="DateCreatedMember"
+      abstract="false"
+      x:id="89fb9640-c3fa-4fb0-a6a6-6a687f210e08"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Integer"
+      bindOnly="false"
+      localizable="false"
+      name="TabIndex"
+      abstract="false"
+      x:id="5b4bcc0c-460c-45fe-9a16-8a7f2fbde3c5"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="UniqueIdentifier"
+      bindOnly="false"
+      localizable="false"
+      name="DefaultCompressionConstantId"
+      abstract="false"
+      x:id="bf7fa9b2-2233-43c0-b59e-8d9c6723a69b"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="String"
+      bindOnly="false"
+      localizable="false"
+      name="CompressionStateMember"
+      abstract="false"
+      x:id="0ba1502a-68c9-433c-aca5-99bb38e57edb"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="UniqueIdentifier"
+      bindOnly="false"
+      localizable="false"
+      name="StorageTypeDefaultConstantId"
+      abstract="false"
+      x:id="53dd0142-42c1-437b-8541-a005e3d6371e"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="String"
+      bindOnly="false"
+      localizable="false"
+      name="BlobMember"
+      abstract="false"
+      x:id="43b39340-4393-4572-9ce4-b08c935a61bc"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Integer"
+      bindOnly="false"
+      localizable="false"
+      name="Top"
+      abstract="false"
+      x:id="b1f2c5cb-1db8-4a33-b75e-b0a426fcf52e"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="String"
+      bindOnly="false"
+      localizable="true"
+      name="Caption"
+      abstract="false"
+      x:id="837c02e0-7450-40c2-b9dc-b47cabe71c7a"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Integer"
+      bindOnly="false"
+      localizable="false"
+      name="Width"
+      abstract="false"
+      x:id="73523f9a-1245-4ff3-a791-bdae1073fe34"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="String"
+      bindOnly="false"
+      localizable="false"
+      name="DateLastModifiedMember"
+      abstract="false"
+      x:id="09d7e50b-c48c-4673-8614-d3502fa73cac"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Boolean"
+      bindOnly="false"
+      localizable="false"
+      name="DisplayStorageTypeSelection"
+      abstract="false"
+      x:id="0d493370-4dbd-466a-8663-d846be197de6"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Integer"
+      bindOnly="false"
+      localizable="false"
+      name="CaptionPosition"
+      abstract="false"
+      x:id="ad4ff415-a8fb-41c1-ae9a-daa820f1aa7c"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="String"
+      bindOnly="false"
+      localizable="false"
+      name="FileSizeMember"
+      abstract="false"
+      x:id="caaa1592-7173-42ec-9de3-de49f108de90"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="UniqueIdentifier"
+      bindOnly="false"
+      localizable="false"
+      name="ThumbnailWidthConstantId"
+      abstract="false"
+      x:id="8010b240-ceef-4f57-8676-f1487c860fa5"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="UniqueIdentifier"
+      bindOnly="false"
+      localizable="false"
+      name="ThumbnailHeightConstantId"
+      abstract="false"
+      x:id="a34fee43-2b66-4f5e-80da-faa69874c8a7"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+  </Control>
+</x:file>

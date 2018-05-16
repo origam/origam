@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataEntity
+    mappedObjectName="ResourceType"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    readOnly="false"
+    audit="None"
+    label="Druh zdroje"
+    name="ResourceType"
+    abstract="false"
+    x:id="d9890948-0b9e-40d2-ac6b-b6c55db986a9"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/822192ce-9c74-4c16-8dd6-2a627d803e3c"
+      x:id="3c1eb59a-ac30-4f98-b287-f40e49df60b7"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      mappedColumnName="Name"
+      excludeFromAuditing="false"
+      dataType="String"
+      dataLength="500"
+      allowNulls="true"
+      isPrimaryKey="false"
+      label=""
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Element"
+      onCopyAction="Copy"
+      name="Name"
+      abstract="false"
+      x:id="e70431e9-236f-4d42-90da-7a4d94547f85"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+  </DataEntity>
+</x:file>

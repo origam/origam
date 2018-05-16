@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataEntity
+    mappedObjectName="OrigamTraceWorkflow"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    readOnly="false"
+    audit="None"
+    label="Workflow Trace"
+    name="OrigamTraceWorkflow"
+    abstract="false"
+    x:id="2d969eff-c922-46cd-8a6b-7b6dc27e735a"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/822192ce-9c74-4c16-8dd6-2a627d803e3c"
+      x:id="e9f16cc0-2075-4379-80f1-e582628b3e61"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      mappedColumnName="WorkflowId"
+      excludeFromAuditing="false"
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label=""
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Element"
+      onCopyAction="Copy"
+      name="WorkflowId"
+      abstract="false"
+      x:id="fa591a27-a4e1-4461-a1df-3082aea1db45"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="WorkflowName"
+      excludeFromAuditing="false"
+      dataType="String"
+      dataLength="255"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label=""
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Element"
+      onCopyAction="Copy"
+      name="WorkflowName"
+      abstract="false"
+      x:id="b3758cdd-3eb5-4f9d-aa58-c3552469663e"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <EntityRelation
+      parentChild="true"
+      selfJoin="false"
+      or="false"
+      name="OrigamDebugWorkflowStep"
+      abstract="false"
+      relatedEntity="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/72d8002c-7ddb-451c-9bee-a0e5dafb407b"
+      x:id="affcb263-3154-4d98-86ea-83f37a97c8aa"
+      x:type="Origam.Schema.EntityModel.EntityRelationItem">
+      <EntityRelationColumnPair
+        name="OrigamDebugWorkflowStepKey1"
+        abstract="false"
+        baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        relatedEntityField="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/refOrigamTraceWorkflowId/29cd8e49-24a4-4132-969b-dfd2b5cc8a00"
+        x:id="9f2b9068-00b6-43a0-a144-5880349a51b9"
+        x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
+    </EntityRelation>
+  </DataEntity>
+</x:file>

@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="Id"
+    listDisplayMember="IsFeatureOn"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="false"
+    serversideFilterParameter=""
+    searchByFirstColumnOnly="false"
+    valueValueMember="Id"
+    valueDisplayMember="IsFeatureOn"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="OrigamFeatureList_IsFeatureOn"
+    abstract="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamFeatureList_IsFeatureOn.origam#LookupOrigamFeatureList_IsFeatureOn/97a76cd4-8376-4f04-b3e1-c76c36ab57a8"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamFeatureList_IsFeatureOn.origam#LookupOrigamFeatureList_IsFeatureOn/97a76cd4-8376-4f04-b3e1-c76c36ab57a8"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamFeatureList_IsFeatureOn.origam#LookupOrigamFeatureList_IsFeatureOn/GetId/88c58151-e4f2-4d15-ad7c-dc02a981800d"
+    x:id="c9c13f3c-064b-4405-8068-6104e54ccf36"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>

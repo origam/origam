@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="Id"
+    listDisplayMember="RecordUpdated"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="false"
+    serversideFilterParameter=""
+    searchByFirstColumnOnly="false"
+    valueValueMember="Id"
+    valueDisplayMember="RecordUpdated"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="OrigamUser_SecurityStamp"
+    abstract="false"
+    listDataStructure="Security/DataStructure/Security/LookupOrigamUser_SecurityStamp_ByBuseinssPartnerId.origam#LookupOrigamUser_SecurityStamp_ByBuseinssPartnerId/bb9facc3-8143-4858-8ba9-7d6b9e184ca2"
+    valueDataStructure="Security/DataStructure/Security/LookupOrigamUser_SecurityStamp_ByBuseinssPartnerId.origam#LookupOrigamUser_SecurityStamp_ByBuseinssPartnerId/bb9facc3-8143-4858-8ba9-7d6b9e184ca2"
+    valueMethod="Security/DataStructure/Security/LookupOrigamUser_SecurityStamp_ByBuseinssPartnerId.origam#LookupOrigamUser_SecurityStamp_ByBuseinssPartnerId/GetByBusinessPartnerId/d3ed46a3-92df-4d9a-bd4d-b52e88cb9880"
+    x:id="918a69c4-094c-456b-8ed7-af854b6b612f"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>

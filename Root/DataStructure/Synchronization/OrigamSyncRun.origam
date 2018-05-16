@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="OrigamSyncRun"
+    abstract="false"
+    x:id="f1c7e899-6ed2-4ae6-ba5c-811b99db5bf9"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="true"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="OrigamSyncRun"
+      abstract="false"
+      entity="Root/DataEntity/Synchronization/OrigamSyncRun.origam#OrigamSyncRun/bfc2edfb-ada8-4b4f-bd9f-722fea74fc54"
+      x:id="9f800e2a-64e3-40d5-920c-dc5077119a73"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+  </DataStructure>
+</x:file>

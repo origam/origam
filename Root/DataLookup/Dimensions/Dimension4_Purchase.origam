@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="Id"
+    listDisplayMember="Name"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="false"
+    serversideFilterParameter=""
+    searchByFirstColumnOnly="false"
+    valueValueMember="Id"
+    valueDisplayMember="Name"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="Dimension4_Purchase"
+    abstract="false"
+    listDataStructure="Root/DataStructure/Dimensions/Lookups/LookupDimension4.origam#LookupDimension4/83d38cdb-b42f-4627-9519-ef2f6f6509eb"
+    valueDataStructure="Root/DataStructure/Dimensions/Lookups/LookupDimension4.origam#LookupDimension4/83d38cdb-b42f-4627-9519-ef2f6f6509eb"
+    listMethod="Root/DataStructure/Dimensions/Lookups/LookupDimension4.origam#LookupDimension4/GetPurchase/a1fa91af-6dc0-4f0b-a93c-81162c887a15"
+    valueMethod="Root/DataStructure/Dimensions/Lookups/LookupDimension4.origam#LookupDimension4/GetId/295c15c9-365b-46e7-8130-9cf43f35152b"
+    x:id="4300ff70-cce6-473f-9983-f21302e7afe4"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>

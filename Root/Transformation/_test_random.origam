@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Transformation
+    engineType="XslTransform"
+    name="_test_random"
+    abstract="false"
+    text="-***-ExternalFile:_test_random.origam___text___d85a9cef-27da-4846-b8be-32a5b34d86da.xslt"
+    x:id="d85a9cef-27da-4846-b8be-32a5b34d86da"
+    x:type="Origam.Schema.EntityModel.XslTransformation" />
+</x:file>

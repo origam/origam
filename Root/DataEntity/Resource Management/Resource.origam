@@ -1,0 +1,563 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataEntity
+    mappedObjectName="Resource"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    readOnly="false"
+    audit="All"
+    label="Zdroj"
+    name="Resource"
+    abstract="false"
+    x:id="b8d208f2-c703-4e8a-9602-c70327f56173"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/822192ce-9c74-4c16-8dd6-2a627d803e3c"
+      x:id="814eb359-57d4-4742-837c-c8acd6985de2"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      mappedColumnName="refOrganizationId"
+      excludeFromAuditing="false"
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="true"
+      isPrimaryKey="false"
+      label="Organizace"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="refOrganizationId"
+      abstract="false"
+      defaultLookup="Root/DataLookup/Organization Management/Organization.origam#Organization/a53c6d95-67be-4c8c-a7b0-75ad20dc79ee"
+      foreignKeyEntity="Root/DataEntity/Organization Management/Organization.origam#Organization/5b590143-c85f-4c7d-a7f3-ae0a6d246f18"
+      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="b01db675-a8d3-4604-aaa1-19652d30443b"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="refBusinessUnitId"
+      excludeFromAuditing="false"
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="true"
+      isPrimaryKey="false"
+      label="Oddělení"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Element"
+      onCopyAction="Copy"
+      name="refBusinessUnitId"
+      abstract="false"
+      defaultLookup="Root/DataLookup/Organization Management/BusinessUnit.origam#BusinessUnit/3fa1e36e-05df-4177-89d3-04450f98534c"
+      foreignKeyEntity="Root/DataEntity/Organization Management/BusinessUnit.origam#BusinessUnit/5008fdde-0119-4bd3-8ee1-4d04e4382d0d"
+      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="3b49ef11-c055-472b-9f3f-67cd4a8dc106"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="refResourceTypeId"
+      excludeFromAuditing="false"
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="true"
+      isPrimaryKey="false"
+      label="Druh"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Element"
+      onCopyAction="Copy"
+      name="refResourceTypeId"
+      abstract="false"
+      defaultLookup="Root/DataLookup/Resource Management/LookupResourceType.origam#LookupResourceType/84ea8eb8-5bbd-49c7-bf1e-a9e89186cbc0"
+      foreignKeyEntity="Root/DataEntity/Resource Management/ResourceType.origam#ResourceType/d9890948-0b9e-40d2-ac6b-b6c55db986a9"
+      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+      x:id="617cd747-0db4-470c-a43d-a6e953546a7b"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="Name"
+      excludeFromAuditing="false"
+      dataType="String"
+      dataLength="255"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Název"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Element"
+      onCopyAction="Copy"
+      name="Name"
+      abstract="false"
+      x:id="7e68a1d3-87bd-4892-8886-e3e8539ff78c"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="refBusinessPartnerId"
+      excludeFromAuditing="false"
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Kontakt"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Element"
+      onCopyAction="Copy"
+      name="refBusinessPartnerId"
+      abstract="false"
+      defaultLookup="Root/DataLookup/__system/LookupBusinessPartner.origam#LookupBusinessPartner/08d82ef5-df38-48d6-a276-ee5b7f027bd6"
+      foreignKeyEntity="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
+      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+      x:id="3e9c243e-29f8-4c1b-bd95-ebf995a9abe1"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <EntityFilter
+      name="GetByCurrentUserId"
+      abstract="false"
+      x:id="ebcf9357-b21a-4eb4-a84e-00f9bebcc80f"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        forceDatabaseCalculation="false"
+        dataType="Boolean"
+        dataLength="0"
+        allowNulls="true"
+        isPrimaryKey="false"
+        label=""
+        excludeFromAllFields="false"
+        autoIncrement="false"
+        xmlMappingType="Element"
+        onCopyAction="Copy"
+        name="="
+        abstract="false"
+        function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="72da6e8f-bd12-4deb-8733-0fe2cd2da2fa"
+        x:type="Origam.Schema.EntityModel.FunctionCall">
+        <FunctionCallParameter
+          name="Right"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+          x:id="5ab28922-b0aa-4e9a-b1bc-4b78c8330331"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <ParameterReference
+            name="parCurrentUserId"
+            abstract="false"
+            parameter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/parCurrentUserId/e876ab29-a75c-41b4-a469-6d0c6e44d527"
+            x:id="cdb09b16-fa07-4861-bd83-b6521c1fc65b"
+            x:type="Origam.Schema.ParameterReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          name="Left"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
+          x:id="ff19a6ed-3126-4576-9818-80947fa3cad7"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            name="refBusinessPartnerId"
+            abstract="false"
+            field="Root/DataEntity/Resource Management/Resource.origam#Resource/refBusinessPartnerId/3e9c243e-29f8-4c1b-bd95-ebf995a9abe1"
+            x:id="e24e2ac5-2bed-46f4-8234-36711f524935"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <EntityFilter
+      name="GetHumanResources"
+      abstract="false"
+      x:id="c55ea726-77d8-49b6-b468-20d3e5c5c9e5"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        forceDatabaseCalculation="false"
+        dataType="Boolean"
+        dataLength="0"
+        allowNulls="true"
+        isPrimaryKey="false"
+        label=""
+        excludeFromAllFields="false"
+        autoIncrement="false"
+        xmlMappingType="Element"
+        onCopyAction="Copy"
+        name="="
+        abstract="false"
+        function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="8abb2d6a-f3df-4fa4-81c5-e8e0566ef376"
+        x:type="Origam.Schema.EntityModel.FunctionCall">
+        <FunctionCallParameter
+          name="Left"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
+          x:id="c27f2e42-308d-4067-9257-53b4dfa7952a"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            name="refResourceTypeId"
+            abstract="false"
+            field="Root/DataEntity/Resource Management/Resource.origam#Resource/refResourceTypeId/617cd747-0db4-470c-a43d-a6e953546a7b"
+            x:id="9cab0f27-12e6-44c3-b58f-c094f19ce90b"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          name="Right"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+          x:id="04030fea-82f5-4293-b6dc-5b9aa2733ec6"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <DataConstantReference
+            name="ResourceType_Human"
+            abstract="false"
+            constant="Root/DataConstant/Resource Management/ResourceType_Human.origam#ResourceType_Human/e77b0cfb-f982-44ab-9c3a-4dabac54b622"
+            x:id="c82a566e-1c40-4db3-af44-8930ab4a4a54"
+            x:type="Origam.Schema.EntityModel.DataConstantReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <EntityFilter
+      name="GetNotGroups"
+      abstract="false"
+      x:id="14940505-7147-47f9-b546-280e013f786d"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        forceDatabaseCalculation="false"
+        dataType="Boolean"
+        dataLength="0"
+        allowNulls="true"
+        isPrimaryKey="false"
+        label=""
+        excludeFromAllFields="false"
+        autoIncrement="false"
+        xmlMappingType="Element"
+        onCopyAction="Copy"
+        name="NotEqual"
+        abstract="false"
+        function="Root/Function/NotEqual.origam#NotEqual/4da95828-d10e-4224-8461-debfa6284dfd"
+        x:id="4f9ae814-0885-4e07-8104-3219e7b6b79b"
+        x:type="Origam.Schema.EntityModel.FunctionCall">
+        <FunctionCallParameter
+          name="Right"
+          abstract="false"
+          parameter="Root/Function/NotEqual.origam#NotEqual/Right/437f1b6e-3fee-44cf-9954-e0e4e816d80e"
+          x:id="6665f7f5-8a2e-40a5-be25-43b066897cc7"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <DataConstantReference
+            name="ResourceType_Group"
+            abstract="false"
+            constant="Root/DataConstant/Resource Management/ResourceType_Group.origam#ResourceType_Group/e484ba15-195e-4fe6-aff8-cb92413c5ce3"
+            x:id="83e8e4d8-0dc5-4a2e-9207-2aeadb214e68"
+            x:type="Origam.Schema.EntityModel.DataConstantReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          name="Left"
+          abstract="false"
+          parameter="Root/Function/NotEqual.origam#NotEqual/Left/a85bea50-ed47-4db4-937a-7bcdddee61fe"
+          x:id="87e2a538-ffd8-46d3-aeaf-f6fdc9364380"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            name="refResourceTypeId"
+            abstract="false"
+            field="Root/DataEntity/Resource Management/Resource.origam#Resource/refResourceTypeId/617cd747-0db4-470c-a43d-a6e953546a7b"
+            x:id="ce72733a-e5a1-4987-9277-7f565b0d9d88"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <EntityFilter
+      name="GetByBusinessUnitId"
+      abstract="false"
+      x:id="70ae269e-3a72-478a-9a97-28330dd62c7c"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        forceDatabaseCalculation="false"
+        dataType="Boolean"
+        dataLength="0"
+        allowNulls="true"
+        isPrimaryKey="false"
+        label=""
+        excludeFromAllFields="false"
+        autoIncrement="false"
+        xmlMappingType="Attribute"
+        onCopyAction="Copy"
+        name="="
+        abstract="false"
+        function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="0b49487c-73c4-4c60-88cf-7505f7bb3505"
+        x:type="Origam.Schema.EntityModel.FunctionCall">
+        <FunctionCallParameter
+          name="Left"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
+          x:id="ddf4acba-61db-4a06-968b-854de17255b8"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            name="refBusinessUnitId"
+            abstract="false"
+            field="Root/DataEntity/Resource Management/Resource.origam#Resource/refBusinessUnitId/3b49ef11-c055-472b-9f3f-67cd4a8dc106"
+            x:id="2eccf777-102d-46d9-95c5-7024dc352ead"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          name="Right"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+          x:id="fa452792-8e4d-4a48-83fd-9b5ef03b891e"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <ParameterReference
+            name="parBusinessUnitId"
+            abstract="false"
+            parameter="Root/DataEntity/Resource Management/Resource.origam#Resource/parBusinessUnitId/2feffe4c-165a-44f1-bd0b-ab0fc808a8d6"
+            x:id="42fa86d8-a11e-4e83-b764-a1ba18cd95c4"
+            x:type="Origam.Schema.ParameterReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <EntityFilter
+      name="GetGroups"
+      abstract="false"
+      x:id="8b3e51cf-247a-4926-a511-4921b904a211"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        forceDatabaseCalculation="false"
+        dataType="Boolean"
+        dataLength="0"
+        allowNulls="true"
+        isPrimaryKey="false"
+        label=""
+        excludeFromAllFields="false"
+        autoIncrement="false"
+        xmlMappingType="Element"
+        onCopyAction="Copy"
+        name="="
+        abstract="false"
+        function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="b231598b-12c7-4a85-9309-4a2dbe85f549"
+        x:type="Origam.Schema.EntityModel.FunctionCall">
+        <FunctionCallParameter
+          name="Right"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+          x:id="4770b36c-f8bf-4dd3-8681-45cfafbe29fa"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <DataConstantReference
+            name="ResourceType_Group"
+            abstract="false"
+            constant="Root/DataConstant/Resource Management/ResourceType_Group.origam#ResourceType_Group/e484ba15-195e-4fe6-aff8-cb92413c5ce3"
+            x:id="85398999-d1c5-48cf-a200-75564517a608"
+            x:type="Origam.Schema.EntityModel.DataConstantReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          name="Left"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
+          x:id="7777b8bc-8586-49f4-b5f6-801695a6659c"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            name="refResourceTypeId"
+            abstract="false"
+            field="Root/DataEntity/Resource Management/Resource.origam#Resource/refResourceTypeId/617cd747-0db4-470c-a43d-a6e953546a7b"
+            x:id="deaa4707-f623-4b59-8c64-a513527749fa"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <EntityFilter
+      name="GetByName"
+      abstract="false"
+      x:id="4d1ed85c-ed9d-45b3-9256-b1c3cb26e348"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        forceDatabaseCalculation="false"
+        dataType="Boolean"
+        dataLength="0"
+        allowNulls="true"
+        isPrimaryKey="false"
+        label=""
+        excludeFromAllFields="false"
+        autoIncrement="false"
+        xmlMappingType="Attribute"
+        onCopyAction="Copy"
+        name="="
+        abstract="false"
+        function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="6c2fe4fc-33cb-4193-bac4-274ac16099be"
+        x:type="Origam.Schema.EntityModel.FunctionCall">
+        <FunctionCallParameter
+          name="Right"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+          x:id="6062b1e7-8205-4aa9-8d3b-35562516b673"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <ParameterReference
+            name="parName"
+            abstract="false"
+            parameter="Root/DataEntity/Resource Management/Resource.origam#Resource/parName/a629fd74-7897-42a5-9d09-8328e49aac77"
+            x:id="fa30086a-ad2c-41c9-a573-7e4757d73e0f"
+            x:type="Origam.Schema.ParameterReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          name="Left"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
+          x:id="92ccb14c-acf9-43d5-bdfb-9a6b339b62db"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            name="Name"
+            abstract="false"
+            field="Root/DataEntity/Resource Management/Resource.origam#Resource/Name/7e68a1d3-87bd-4892-8886-e3e8539ff78c"
+            x:id="fa3b2ed6-bc8f-4078-bca4-84a0b466c8b3"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <EntityFilter
+      name="GetByBusinessPartnerId"
+      abstract="false"
+      x:id="aa5b728e-3ccf-4afa-b45e-ee9b7fc49b70"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        forceDatabaseCalculation="false"
+        dataType="Boolean"
+        dataLength="0"
+        allowNulls="true"
+        isPrimaryKey="false"
+        label=""
+        excludeFromAllFields="false"
+        autoIncrement="false"
+        xmlMappingType="Element"
+        onCopyAction="Copy"
+        name="="
+        abstract="false"
+        function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="4f538497-e4f8-4bab-b4b7-c614b93c298f"
+        x:type="Origam.Schema.EntityModel.FunctionCall">
+        <FunctionCallParameter
+          name="Right"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+          x:id="9efb3844-a8f0-4d17-826e-7981af4a38ef"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <ParameterReference
+            name="parBusinessPartnerId"
+            abstract="false"
+            parameter="Root/DataEntity/Resource Management/Resource.origam#Resource/parBusinessPartnerId/1c977577-7c67-4b39-a3bd-834d45257719"
+            x:id="9a5ad031-3141-4def-adb9-2f5126985128"
+            x:type="Origam.Schema.ParameterReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          name="Left"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
+          x:id="fa35c0fe-7536-48cd-80a4-83081c1513ce"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            name="refBusinessPartnerId"
+            abstract="false"
+            field="Root/DataEntity/Resource Management/Resource.origam#Resource/refBusinessPartnerId/3e9c243e-29f8-4c1b-bd95-ebf995a9abe1"
+            x:id="a21bfbd5-5cc8-44b8-8581-90cac380e267"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <EntityRelation
+      parentChild="false"
+      selfJoin="false"
+      or="false"
+      name="OrganizationMappingList"
+      abstract="false"
+      relatedEntity="Root/DataEntity/Organization Management/OrganizationMappingList.origam#OrganizationMappingList/3eb1f049-362f-41e9-80dd-2ee16baf5862"
+      x:id="e3e1bdcc-40b6-42d4-b2bd-85232249f79a"
+      x:type="Origam.Schema.EntityModel.EntityRelationItem">
+      <EntityRelationColumnPair
+        name="OrganizationMappingListKey1"
+        abstract="false"
+        baseEntityField="Root/DataEntity/Resource Management/Resource.origam#Resource/refOrganizationId/b01db675-a8d3-4604-aaa1-19652d30443b"
+        relatedEntityField="Root/DataEntity/Organization Management/OrganizationMappingList.origam#OrganizationMappingList/refOrganizationId/f7261cdc-b4b0-4995-8e71-9ac3982bf37c"
+        x:id="9c2609b1-e775-46fb-834b-be5a2f020677"
+        x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
+    </EntityRelation>
+    <EntityRelation
+      parentChild="false"
+      selfJoin="false"
+      or="false"
+      name="BusinessPartnerLookup"
+      abstract="false"
+      relatedEntity="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/5ff75cca-06c1-42d3-8553-0e5105820b51"
+      x:id="d26d9e2e-cc3f-41fa-a988-98709e78c2d1"
+      x:type="Origam.Schema.EntityModel.EntityRelationItem">
+      <EntityRelationColumnPair
+        name="BusinessPartnerLookupKey1"
+        abstract="false"
+        baseEntityField="Root/DataEntity/Resource Management/Resource.origam#Resource/refBusinessPartnerId/3e9c243e-29f8-4c1b-bd95-ebf995a9abe1"
+        relatedEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        x:id="77461a34-00e1-4354-8af2-fb3d11cca959"
+        x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
+    </EntityRelation>
+    <EntityRelation
+      parentChild="true"
+      selfJoin="false"
+      or="false"
+      name="ResourceAccessLevelResource"
+      abstract="false"
+      relatedEntity="Root/DataEntity/Resource Management/ResourceAccessLevelResource.origam#ResourceAccessLevelResource/d65a29d8-4fd4-4745-8304-371c410d6a3f"
+      x:id="4b51c0de-2136-416d-9bb2-e5bce23c7bec"
+      x:type="Origam.Schema.EntityModel.EntityRelationItem">
+      <EntityRelationColumnPair
+        name="ResourceAccessLevelResourceKey1"
+        abstract="false"
+        baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        relatedEntityField="Root/DataEntity/Resource Management/ResourceAccessLevelResource.origam#ResourceAccessLevelResource/refResourceId/6cdf63e0-e6e0-419d-ad8c-9b104b5815c7"
+        x:id="35c48a02-7542-4b9b-ad7a-f82ed00a0162"
+        x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
+    </EntityRelation>
+    <EntityRelation
+      parentChild="true"
+      selfJoin="false"
+      or="false"
+      name="ResourceGroupMember"
+      abstract="false"
+      relatedEntity="Root/DataEntity/Resource Management/ResourceGroupMember.origam#ResourceGroupMember/f924f620-294c-4e57-96a1-e5ff2942f19e"
+      x:id="b536a6ef-81ba-47fa-adff-f256fab8d46a"
+      x:type="Origam.Schema.EntityModel.EntityRelationItem">
+      <EntityRelationColumnPair
+        name="ResourceGroupMemberKey1"
+        abstract="false"
+        baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        relatedEntityField="Root/DataEntity/Resource Management/ResourceGroupMember.origam#ResourceGroupMember/refGroupResourceId/08f09597-bbc1-45a9-938d-51f287e1d2a4"
+        x:id="7d435de0-6c90-47b6-ba0a-f3a0baf7e42d"
+        x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
+    </EntityRelation>
+    <EntityRelation
+      parentChild="false"
+      selfJoin="false"
+      or="false"
+      name="BusinessPartner"
+      abstract="false"
+      relatedEntity="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
+      x:id="674ac1d2-8238-4362-9792-f2fd5fb09330"
+      x:type="Origam.Schema.EntityModel.EntityRelationItem">
+      <EntityRelationColumnPair
+        name="BusinessPartnerKey1"
+        abstract="false"
+        baseEntityField="Root/DataEntity/Resource Management/Resource.origam#Resource/refBusinessPartnerId/3e9c243e-29f8-4c1b-bd95-ebf995a9abe1"
+        relatedEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        x:id="660ad34e-16a3-4faa-88f6-490aca1c1040"
+        x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
+    </EntityRelation>
+    <Parameter
+      dataType="String"
+      dataLength="255"
+      allowNulls="true"
+      name="parName"
+      abstract="false"
+      x:id="a629fd74-7897-42a5-9d09-8328e49aac77"
+      x:type="Origam.Schema.SchemaItemParameter" />
+    <Parameter
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="true"
+      name="parBusinessPartnerId"
+      abstract="false"
+      x:id="1c977577-7c67-4b39-a3bd-834d45257719"
+      x:type="Origam.Schema.SchemaItemParameter" />
+    <Parameter
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="true"
+      name="parBusinessUnitId"
+      abstract="false"
+      x:id="2feffe4c-165a-44f1-bd0b-ab0fc808a8d6"
+      x:type="Origam.Schema.SchemaItemParameter" />
+  </DataEntity>
+</x:file>

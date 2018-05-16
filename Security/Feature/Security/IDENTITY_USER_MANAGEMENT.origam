@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Feature
+    name="IDENTITY_USER_MANAGEMENT"
+    abstract="false"
+    x:id="b1b66918-f3f5-4a02-915c-8c4fc4cedb59"
+    x:type="Origam.Schema.Feature" />
+</x:file>

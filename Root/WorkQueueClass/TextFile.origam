@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <WorkQueueClass
+    notificationFilterPkParameter=""
+    defaultPanelConfiguration=""
+    name="TextFile"
+    abstract="false"
+    workQueueStructure="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/0e157367-9ecd-42e1-8e68-da905adceb6b"
+    workQueueStructureUserListMethod="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/GetByQueueId/34b21893-bdac-4573-972a-1fea0c271eb5"
+    workQueueStructureSortSet="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/ByFileCreationTime/22f0001d-fbc6-46a9-a709-f832e2fccc03"
+    workQueueItemCountLookup="Root/DataLookup/Work Queue/WorkQueueCount_Total.origam#WorkQueueCount_Total/2a953c7d-0276-42c4-99b9-aa484808bbcb"
+    x:id="08bd5b92-bfea-4a61-8574-4baeab844284"
+    x:type="Origam.Schema.WorkflowModel.WorkQueueClass">
+    <WorkQueueClassEntityMapping
+      xPath="/ROOT/File/Name"
+      formatPattern=""
+      sortOrder="0"
+      name="FileName"
+      abstract="false"
+      x:id="4ad712d1-ce60-4556-9ff4-37a6280ef01f"
+      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
+    <WorkQueueClassEntityMapping
+      xPath="/ROOT/File/LastWriteTime"
+      formatPattern=""
+      sortOrder="3"
+      name="FileLastWriteTime"
+      abstract="false"
+      x:id="0e6aa9f2-e42d-416d-978d-7f87a997c26e"
+      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
+    <WorkQueueClassEntityMapping
+      xPath="/ROOT/File/Data"
+      formatPattern=""
+      sortOrder="0"
+      name="Data"
+      abstract="false"
+      x:id="996fe925-b16c-4eb5-9639-91e5d641df17"
+      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
+    <WorkQueueClassEntityMapping
+      xPath="/ROOT/File/LastAccessTime"
+      formatPattern=""
+      sortOrder="2"
+      name="FileLastAccessTime"
+      abstract="false"
+      x:id="d16c93be-b6e5-4c44-baff-956cee33c28d"
+      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
+    <WorkQueueClassEntityMapping
+      xPath="/ROOT/File/CreationTime"
+      formatPattern=""
+      sortOrder="1"
+      name="FileCreationTime"
+      abstract="false"
+      x:id="6b77079e-f140-43f8-88cf-e50b62864714"
+      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
+    <EntityUIAction
+      roles="*"
+      label="Rozdělit"
+      features=""
+      order="10"
+      actionType="Workflow"
+      mode="MultipleCheckboxes"
+      valueType="SavedValue"
+      placement="Toolbar"
+      refreshAfterReturn="None"
+      modalDialogWidth="0"
+      modalDialogHeight="0"
+      scannerInputParameter=""
+      scannerTerminator=""
+      default="false"
+      modal="false"
+      name="Split"
+      abstract="false"
+      workflow="Root/Workflow/Work Queues/SplitXmlFile.origam#SplitXmlFile/502221ba-e12f-4fe0-b1a2-b46db48fbf70"
+      x:id="8524cf92-8b95-4028-8953-9420bda4142d"
+      x:type="Origam.Schema.WorkflowModel.WorkQueueWorkflowCommand">
+      <WorkQueueWorkflowCommandParameterMapping
+        value="Parameter2"
+        name="TargetQueue"
+        abstract="false"
+        x:id="ad73e57f-b94c-4b93-9adc-56df66ae3310"
+        x:type="Origam.Schema.WorkflowModel.WorkQueueWorkflowCommandParameterMapping" />
+      <WorkQueueWorkflowCommandParameterMapping
+        value="QueueEntries"
+        name="WQ_TextFile_Source"
+        abstract="false"
+        x:id="8ad63a17-0008-4f35-8728-61f3947cc924"
+        x:type="Origam.Schema.WorkflowModel.WorkQueueWorkflowCommandParameterMapping" />
+      <WorkQueueWorkflowCommandParameterMapping
+        value="Parameter1"
+        name="SplitXPath"
+        abstract="false"
+        x:id="6f4acc36-7be0-4259-9921-ae8ff97aaba7"
+        x:type="Origam.Schema.WorkflowModel.WorkQueueWorkflowCommandParameterMapping" />
+    </EntityUIAction>
+  </WorkQueueClass>
+</x:file>

@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Graphics
+    name="Menu_Workflow.png"
+    abstract="false"
+    graphicsDataByte="-***-ExternalFile:Menu_Workflow.png.origam___graphicsDataByte___172a7f43-38cf-432e-a299-f3b6c09d94ff.png"
+    x:id="172a7f43-38cf-432e-a299-f3b6c09d94ff"
+    x:type="Origam.Schema.GuiModel.Graphics" />
+</x:file>

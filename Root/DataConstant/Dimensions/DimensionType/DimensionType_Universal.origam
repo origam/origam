@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataConstant
+    dataType="UniqueIdentifier"
+    value="3256c1bb-b383-402e-9687-4f6ce6c53950"
+    userDefinable="false"
+    name="DimensionType_Universal"
+    abstract="false"
+    lookup="Root/DataLookup/Dimensions/DimensionType.origam#DimensionType/ba96eab8-f4ea-41bf-a798-1f3b1eeeaf72"
+    x:id="3b7ec876-8e0a-4c74-9793-b57d93d7cbc8"
+    x:type="Origam.Schema.EntityModel.DataConstant" />
+</x:file>

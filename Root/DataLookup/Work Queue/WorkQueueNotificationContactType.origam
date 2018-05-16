@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="Id"
+    listDisplayMember="Name"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="false"
+    serversideFilterParameter=""
+    searchByFirstColumnOnly="false"
+    valueValueMember="Id"
+    valueDisplayMember="Name"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="WorkQueueNotificationContactType"
+    abstract="false"
+    listDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueNotificationContactType.origam#LookupWorkQueueNotificationContactType/79daad07-e247-49be-a352-be67aea98234"
+    valueDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueNotificationContactType.origam#LookupWorkQueueNotificationContactType/79daad07-e247-49be-a352-be67aea98234"
+    valueMethod="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueNotificationContactType.origam#LookupWorkQueueNotificationContactType/GetId/c1eb2341-c331-4eee-ac5a-d9521cea0657"
+    x:id="e5bb8269-558a-4528-a2b0-44e16b86a77d"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>

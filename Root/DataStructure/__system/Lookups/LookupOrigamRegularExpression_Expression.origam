@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="LookupOrigamRegularExpression_Expression"
+    abstract="false"
+    x:id="7a1f617b-644d-468e-87a4-03b20343cacb"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="false"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="OrigamRegularExpression"
+      abstract="false"
+      entity="Root/DataEntity/__system/OrigamRegularExpression.origam#OrigamRegularExpression/df54519a-d49f-4317-931c-c48df86855af"
+      x:id="df7e4beb-38b2-4b40-ac15-94a0b8e34b3b"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Expression"
+        abstract="false"
+        field="Root/DataEntity/__system/OrigamRegularExpression.origam#OrigamRegularExpression/Expression/1e681421-6cea-4d9a-955c-866eefc57101"
+        x:id="06f27db2-a8a2-42a3-9b39-89c7bdd49c8a"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Id"
+        abstract="false"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="05e77010-5265-4c07-a3b8-9533a989c8cb"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetId"
+      abstract="false"
+      x:id="e624887f-25aa-4702-be02-0b4d9c13b4e9"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="OrigamRegularExpression_GetId"
+        abstract="false"
+        entity="Root/DataStructure/__system/Lookups/LookupOrigamRegularExpression_Expression.origam#LookupOrigamRegularExpression_Expression/OrigamRegularExpression/df7e4beb-38b2-4b40-ac15-94a0b8e34b3b"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="0f90c7ee-e34a-43aa-b9d7-b14c2c6d630a"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

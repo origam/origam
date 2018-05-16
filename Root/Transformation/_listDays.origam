@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Transformation
+    engineType="XslTransform"
+    name="_listDays"
+    abstract="false"
+    text="-***-ExternalFile:_listDays.origam___text___f7fa737b-f895-4d80-b71c-8801172b078a.xslt"
+    x:id="f7fa737b-f895-4d80-b71c-8801172b078a"
+    x:type="Origam.Schema.EntityModel.XslTransformation" />
+</x:file>

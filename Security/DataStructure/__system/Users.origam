@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructureEntity
+    label=""
+    allFields="true"
+    ignoreImplicitFilters="false"
+    ignoreCondition="None"
+    concurrencyHandling="Standard"
+    relationType="Normal"
+    conditionEntityParameterName=""
+    useUpsert="false"
+    name="BusinessPartnerOrigamRole"
+    abstract="false"
+    entity="Security/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/BusinessPartnerOrigamRole/bd05e4af-804f-4307-99eb-6bbcee6bfa6a"
+    x:id="e84434bc-b646-48e9-bb22-e3ae6dfa1f5e"
+    x:parentId="79bede18-ff01-49cd-8703-94aa6bfe787c"
+    x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+</x:file>

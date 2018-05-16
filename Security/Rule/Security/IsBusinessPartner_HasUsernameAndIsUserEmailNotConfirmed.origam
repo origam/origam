@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Rule
+    xPath="string(/row/UserName) and not(AS:IsUserEmailConfirmed(string(/row/Id)))"
+    isPathRelative="false"
+    dataType="Boolean"
+    name="IsBusinessPartner_HasUsernameAndIsUserEmailNotConfirmed"
+    abstract="false"
+    x:id="35a109e3-3afc-4a33-81b6-931669fbce57"
+    x:type="Origam.Schema.RuleModel.EntityRule" />
+</x:file>

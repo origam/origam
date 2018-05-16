@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataEntity
+    mappedObjectName="DimensionEntityRelation"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    readOnly="false"
+    audit="None"
+    label="Vazby mezi entitami pro dimenze"
+    name="DimensionEntityRelation"
+    abstract="false"
+    x:id="2f176996-8de3-4502-ad14-4047747edf50"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="c991946f-496d-49bd-8bbf-59652e2dadaf"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      mappedColumnName="refSourceDimensionEntityId"
+      excludeFromAuditing="false"
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Zdrojová entita"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="refSourceDimensionEntityId"
+      abstract="false"
+      defaultLookup="Root/DataLookup/Dimensions/DimensionEntity.origam#DimensionEntity/8f6b1abf-b38d-4220-928c-384aa66603c8"
+      foreignKeyEntity="Root/DataEntity/Dimensions/DimensionEntity.origam#DimensionEntity/96fc3981-2505-42f7-bfa1-b70ab7e74003"
+      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="03314695-798f-4913-8f70-0dbe5a44c9fb"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="refTargetDimensionEntityId"
+      excludeFromAuditing="false"
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Cílová entita"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="refTargetDimensionEntityId"
+      abstract="false"
+      defaultLookup="Root/DataLookup/Dimensions/DimensionEntity.origam#DimensionEntity/8f6b1abf-b38d-4220-928c-384aa66603c8"
+      foreignKeyEntity="Root/DataEntity/Dimensions/DimensionEntity.origam#DimensionEntity/96fc3981-2505-42f7-bfa1-b70ab7e74003"
+      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="bcd5fb55-e63c-4e9c-b468-bedd6bbdf2ef"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <EntityFilter
+      name="GetByTargetDimensionEntityId"
+      abstract="false"
+      x:id="4ba34aa4-937a-4080-992c-0d4a22884a2e"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        forceDatabaseCalculation="false"
+        dataType="Boolean"
+        dataLength="0"
+        allowNulls="true"
+        isPrimaryKey="false"
+        label=""
+        excludeFromAllFields="false"
+        autoIncrement="false"
+        xmlMappingType="Element"
+        onCopyAction="Copy"
+        name="="
+        abstract="false"
+        function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="764c4b2b-6498-454a-84ac-9408bfc067e3"
+        x:type="Origam.Schema.EntityModel.FunctionCall">
+        <FunctionCallParameter
+          name="Left"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
+          x:id="bd49bfea-ddf9-4d64-abc9-1620c0d416b7"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            name="refTargetDimensionEntityId"
+            abstract="false"
+            field="Root/DataEntity/Dimensions/DimensionEntityRelation.origam#DimensionEntityRelation/refTargetDimensionEntityId/bcd5fb55-e63c-4e9c-b468-bedd6bbdf2ef"
+            x:id="f4d8eeb3-1edb-4af0-bbb8-b0396c8930c4"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          name="Right"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+          x:id="2c899d8d-9518-4aaa-bb5c-98d979aa1a4e"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <ParameterReference
+            name="parTargetDimensionEntityId"
+            abstract="false"
+            parameter="Root/DataEntity/Dimensions/DimensionEntityRelation.origam#DimensionEntityRelation/parTargetDimensionEntityId/42343f6c-4c91-4a27-b783-05678cdac243"
+            x:id="0eedf1d3-f994-4c74-8220-c20c319bb181"
+            x:type="Origam.Schema.ParameterReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <Parameter
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="false"
+      name="parTargetDimensionEntityId"
+      abstract="false"
+      x:id="42343f6c-4c91-4a27-b783-05678cdac243"
+      x:type="Origam.Schema.SchemaItemParameter" />
+  </DataEntity>
+</x:file>

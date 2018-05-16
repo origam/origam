@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Transformation
+    engineType="XslTransform"
+    name="_simpleEmail"
+    abstract="false"
+    text="-***-ExternalFile:_simpleEmail.origam___text___20b3b3ad-b62e-4a47-a27f-04ebe6b575f5.xslt"
+    x:id="20b3b3ad-b62e-4a47-a27f-04ebe6b575f5"
+    x:type="Origam.Schema.EntityModel.XslTransformation" />
+</x:file>

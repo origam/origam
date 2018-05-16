@@ -1,0 +1,2 @@
+ALTER TABLE AsapParameters 
+ADD CONSTRAINT PK_AsapParameters PRIMARY KEY NONCLUSTERED (Id, ProfileId);

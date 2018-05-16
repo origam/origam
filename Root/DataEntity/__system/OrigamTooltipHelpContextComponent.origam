@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataEntity
+    mappedObjectName="OrigamTooltipHelpContextComponent"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    readOnly="false"
+    audit="None"
+    label=""
+    name="OrigamTooltipHelpContextComponent"
+    abstract="false"
+    x:id="e1e01115-374a-49d4-81e2-af5339c0f166"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="45eca229-d0e3-4c1f-ac77-ad8b035752d4"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      mappedColumnName="IdString"
+      excludeFromAuditing="false"
+      dataType="String"
+      dataLength="500"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Identification Text"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="IdString"
+      abstract="false"
+      x:id="49336cf5-f3d6-4861-9fdb-08594ec3ca1a"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="refOrigamTooltipHelpSubcontextId"
+      excludeFromAuditing="false"
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label=""
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="refOrigamTooltipHelpSubcontextId"
+      abstract="false"
+      foreignKeyEntity="Root/DataEntity/__system/OrigamTooltipHelpSubcontext.origam#OrigamTooltipHelpSubcontext/8aff5d19-94bc-4e89-a73a-9c17da31b373"
+      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="a2bd7b59-f465-4b83-8cd7-1b054dd7d122"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="Name"
+      excludeFromAuditing="false"
+      dataType="String"
+      dataLength="200"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Name"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="Name"
+      abstract="false"
+      x:id="6aa46453-d839-41f8-8690-f4669e9f18ac"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityIndex
+      unique="false"
+      generateDeploymentScript="false"
+      name="ix_OrigamTooltipHelpSubcontext"
+      abstract="false"
+      x:id="ca5d7aff-2276-4c0e-905f-7ae882f197b8"
+      x:type="Origam.Schema.EntityModel.DataEntityIndex">
+      <DataEntityIndexField
+        sortOrder="Ascending"
+        ordinalPosition="0"
+        name="0_refOrigamTooltipHelpSubcontextId"
+        abstract="false"
+        field="Root/DataEntity/__system/OrigamTooltipHelpContextComponent.origam#OrigamTooltipHelpContextComponent/refOrigamTooltipHelpSubcontextId/a2bd7b59-f465-4b83-8cd7-1b054dd7d122"
+        x:id="011bf78c-9533-4390-8d67-16aefc223016"
+        x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
+    </DataEntityIndex>
+    <EntityFilter
+      name="GetByOrigamTooltipHelpSubcontextId"
+      abstract="false"
+      x:id="30808fad-30e2-4b64-b1bf-95c9cdfafb55"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        forceDatabaseCalculation="false"
+        dataType="Boolean"
+        dataLength="0"
+        allowNulls="true"
+        isPrimaryKey="false"
+        label=""
+        excludeFromAllFields="false"
+        autoIncrement="false"
+        xmlMappingType="Attribute"
+        onCopyAction="Copy"
+        name="="
+        abstract="false"
+        function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="fb7e1d40-3671-44f4-9a5a-e34271dae212"
+        x:type="Origam.Schema.EntityModel.FunctionCall">
+        <FunctionCallParameter
+          name="Left"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
+          x:id="906347b1-6046-430b-8148-af06afba803b"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            name="refOrigamTooltipHelpSubcontextId"
+            abstract="false"
+            field="Root/DataEntity/__system/OrigamTooltipHelpContextComponent.origam#OrigamTooltipHelpContextComponent/refOrigamTooltipHelpSubcontextId/a2bd7b59-f465-4b83-8cd7-1b054dd7d122"
+            x:id="9c864d37-4c3c-4258-8d07-87d001a36e84"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          name="Right"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+          x:id="4887a020-4d37-467f-8321-d34c95d2e111"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <ParameterReference
+            name="parOrigamTooltipHelpSubcontextId"
+            abstract="false"
+            parameter="Root/DataEntity/__system/OrigamTooltipHelpContextComponent.origam#OrigamTooltipHelpContextComponent/parOrigamTooltipHelpSubcontextId/aafbaaf6-3451-4b8b-a061-5e6a919101f9"
+            x:id="d5a3da5b-1aca-45da-9178-11ad7476f66e"
+            x:type="Origam.Schema.ParameterReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <Parameter
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="true"
+      name="parOrigamTooltipHelpSubcontextId"
+      abstract="false"
+      x:id="aafbaaf6-3451-4b8b-a061-5e6a919101f9"
+      x:type="Origam.Schema.SchemaItemParameter" />
+  </DataEntity>
+</x:file>

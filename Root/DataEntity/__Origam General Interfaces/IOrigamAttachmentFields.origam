@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataEntity
+    readOnly="false"
+    audit="None"
+    label=""
+    name="IOrigamAttachmentFields"
+    abstract="true"
+    x:id="bd39f6af-1ad1-488b-a16c-6fe919972260"
+    x:type="Origam.Schema.EntityModel.DetachedEntity">
+    <DataEntityColumn
+      mappedColumnName="Note"
+      excludeFromAuditing="false"
+      dataType="String"
+      dataLength="3900"
+      allowNulls="true"
+      isPrimaryKey="false"
+      label="Remarks"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Element"
+      onCopyAction="Copy"
+      name="Note"
+      abstract="true"
+      x:id="6a148bad-09df-4266-b0aa-0ae2ff14441f"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="FileName"
+      excludeFromAuditing="false"
+      dataType="String"
+      dataLength="3900"
+      allowNulls="true"
+      isPrimaryKey="false"
+      label="File Name"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Element"
+      onCopyAction="Copy"
+      name="FileName"
+      abstract="true"
+      x:id="51854e16-2ad2-4ad3-bab4-1f54ac8517e6"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="Data"
+      excludeFromAuditing="false"
+      dataType="Blob"
+      dataLength="0"
+      allowNulls="true"
+      isPrimaryKey="false"
+      label=""
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Element"
+      onCopyAction="Copy"
+      name="Data"
+      abstract="true"
+      x:id="de01feaf-6f60-4a6c-9003-b6f61198ef8a"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+  </DataEntity>
+</x:file>

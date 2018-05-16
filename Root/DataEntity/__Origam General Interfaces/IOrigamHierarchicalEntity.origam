@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataEntity
+    readOnly="false"
+    audit="None"
+    label=""
+    name="IOrigamHierarchicalEntity"
+    abstract="true"
+    x:id="09add769-9efb-4c69-9e35-9e9afe36ed10"
+    x:type="Origam.Schema.EntityModel.DetachedEntity">
+    <DataEntityColumn
+      mappedColumnName="ParentId"
+      excludeFromAuditing="false"
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="true"
+      isPrimaryKey="false"
+      label=""
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Element"
+      onCopyAction="Copy"
+      name="ParentId"
+      abstract="true"
+      x:id="1b7c8e4e-6e0e-4e05-8893-c60d755ff62f"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <EntityFilter
+      name="GetByParentId"
+      abstract="true"
+      x:id="357198a1-2f93-4211-bc82-b9d0887be77b"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        forceDatabaseCalculation="false"
+        dataType="Boolean"
+        dataLength="0"
+        allowNulls="true"
+        isPrimaryKey="false"
+        label=""
+        excludeFromAllFields="false"
+        autoIncrement="false"
+        xmlMappingType="Element"
+        onCopyAction="Copy"
+        name="="
+        abstract="true"
+        function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="0ca3df29-5551-4645-b964-2dbc046ac19a"
+        x:type="Origam.Schema.EntityModel.FunctionCall">
+        <FunctionCallParameter
+          name="Left"
+          abstract="true"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
+          x:id="4c86ee38-3420-494f-9a07-16013cd60bee"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            name="ParentId"
+            abstract="true"
+            field="Root/DataEntity/__Origam General Interfaces/IOrigamHierarchicalEntity.origam#IOrigamHierarchicalEntity/ParentId/1b7c8e4e-6e0e-4e05-8893-c60d755ff62f"
+            x:id="d80b152c-f339-4086-9880-6cd294cf21a9"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          name="Right"
+          abstract="true"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+          x:id="6ac255fb-b92f-4fdc-9fb5-930c6a72c74a"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <ParameterReference
+            name="parParentId"
+            abstract="true"
+            parameter="Root/DataEntity/__Origam General Interfaces/IOrigamHierarchicalEntity.origam#IOrigamHierarchicalEntity/parParentId/b0dfee11-e376-4045-9b62-f281e674aa5d"
+            x:id="5fcd8a05-b634-4b3e-9d8a-5240d2d69663"
+            x:type="Origam.Schema.ParameterReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <Parameter
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="true"
+      name="parParentId"
+      abstract="true"
+      x:id="b0dfee11-e376-4045-9b62-f281e674aa5d"
+      x:type="Origam.Schema.SchemaItemParameter" />
+  </DataEntity>
+</x:file>

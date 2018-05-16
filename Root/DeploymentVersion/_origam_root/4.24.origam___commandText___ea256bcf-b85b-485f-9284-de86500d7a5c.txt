@@ -1,0 +1,1 @@
+ALTER TABLE [AsapTooltipHelp] ADD [ImageLink] NVARCHAR(500) NULL

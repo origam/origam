@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataConstant
+    dataType="Date"
+    value="9999-12-31T23:59:59"
+    userDefinable="false"
+    name="_maxDate"
+    abstract="false"
+    x:id="cfae07d2-fc31-405f-acea-4b694d3f8774"
+    x:type="Origam.Schema.EntityModel.DataConstant" />
+</x:file>

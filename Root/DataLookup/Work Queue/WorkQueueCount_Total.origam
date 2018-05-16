@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="Count"
+    listDisplayMember="Count"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="false"
+    serversideFilterParameter=""
+    searchByFirstColumnOnly="false"
+    valueValueMember="Count"
+    valueDisplayMember="Count"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="WorkQueueCount_Total"
+    abstract="false"
+    listDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueCount_Total.origam#LookupWorkQueueCount_Total/dc584e78-c5d9-490f-bd12-9a7d59cb96a4"
+    valueDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueCount_Total.origam#LookupWorkQueueCount_Total/dc584e78-c5d9-490f-bd12-9a7d59cb96a4"
+    valueMethod="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueCount_Total.origam#LookupWorkQueueCount_Total/GetByrefWorkQueueId/f812a89b-2c80-4865-809c-b01ac35ab6f1"
+    x:id="2a953c7d-0276-42c4-99b9-aa484808bbcb"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>

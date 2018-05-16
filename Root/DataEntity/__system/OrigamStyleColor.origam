@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataEntity
+    mappedObjectName="OrigamStyleColor"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    readOnly="false"
+    audit="All"
+    label="System Color"
+    name="OrigamStyleColor"
+    abstract="false"
+    x:id="dc81710b-e0d2-4fbd-a219-a13681723ac0"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="7fe4ec69-d40b-4c1a-888a-549f405fda1e"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      mappedColumnName="Name"
+      excludeFromAuditing="false"
+      dataType="String"
+      dataLength="100"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Name"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="Name"
+      abstract="false"
+      x:id="21aa5f67-12d3-4cf0-877f-1e3db0431510"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="Color"
+      excludeFromAuditing="false"
+      dataType="Integer"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Color"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="Color"
+      abstract="false"
+      x:id="e78dabde-2065-4090-956d-d940cfa2254a"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="Description"
+      excludeFromAuditing="false"
+      dataType="Memo"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Description"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="Description"
+      abstract="false"
+      x:id="48e29a88-1fe0-4f4c-ab3e-feb621940498"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityIndex
+      unique="true"
+      generateDeploymentScript="false"
+      name="ix_Unique"
+      abstract="false"
+      x:id="65f93296-335c-4661-aad0-fd8363392d78"
+      x:type="Origam.Schema.EntityModel.DataEntityIndex">
+      <DataEntityIndexField
+        sortOrder="Ascending"
+        ordinalPosition="0"
+        name="0_Name"
+        abstract="false"
+        field="Root/DataEntity/__system/OrigamStyleColor.origam#OrigamStyleColor/Name/21aa5f67-12d3-4cf0-877f-1e3db0431510"
+        x:id="7f5bd24f-b02a-4870-b44d-75edc2888f54"
+        x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
+    </DataEntityIndex>
+  </DataEntity>
+</x:file>

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataEntity
+    mappedObjectName="Dimension2"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    readOnly="false"
+    audit="All"
+    label="Dimenze 2"
+    name="Dimension2"
+    abstract="false"
+    x:id="c4b132a4-306a-44a5-b051-a44c31b61322"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="524faaf3-506f-48ed-83a4-2c6bd1275aeb"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <ancestor
+      ancestor="Root/DataEntity/Dimensions/IDimension.origam#IDimension/8f904896-6095-49c3-b972-f5329b73b3da"
+      x:id="f19568ce-7e8a-4246-b133-a5073c3daa4c"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+  </DataEntity>
+</x:file>

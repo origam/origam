@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DeploymentVersion
+    version="2.6"
+    name="2.6_user_mgmt_action_buttons"
+    abstract="false"
+    deploymentDependenciesCsv=""
+    x:id="179f4561-7c84-4846-b0b6-8f5551004f8f"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    <DeploymentUpdateScriptActivity
+      activityOrder="10"
+      name="00010_Feature_NET_MEMBERSHIP_EXCLUSIVE_USE"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:2.6_user_mgmt_action_buttons.origam___commandText___f0abf970-7075-453a-bd56-1f2820ac1a9b.txt"
+      x:id="f0abf970-7075-453a-bd56-1f2820ac1a9b"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

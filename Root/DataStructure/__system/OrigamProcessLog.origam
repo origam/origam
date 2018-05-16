@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="OrigamProcessLog"
+    abstract="false"
+    x:id="9b8e3021-e9ac-447e-8107-703382c740b1"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="true"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="OrigamProcessLog"
+      abstract="false"
+      entity="Root/DataEntity/__system/OrigamProcessLog.origam#OrigamProcessLog/4153cb40-da2f-457b-a437-f40a21a59df0"
+      x:id="372db239-521f-469c-a85c-def8ab87dc58"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+  </DataStructure>
+</x:file>

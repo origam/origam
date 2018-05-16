@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DeploymentVersion
+    version="4.17"
+    name="4.17"
+    abstract="false"
+    deploymentDependenciesCsv=""
+    x:id="d9dfa9ba-ccf4-44d4-bfc2-7f3b53cfc45a"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    <DeploymentUpdateScriptActivity
+      activityOrder="10"
+      name="00010_WorkQueueCommandType"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.17.origam___commandText___5d393f86-0793-4281-883c-0de194843a9f.txt"
+      x:id="5d393f86-0793-4281-883c-0de194843a9f"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="20"
+      name="00020_Database_Field_WorkQueueCommand.IsAutoDeleted"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.17.origam___commandText___095da845-51b6-477c-b7d4-4579f0f1112b.txt"
+      x:id="095da845-51b6-477c-b7d4-4579f0f1112b"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="30"
+      name="00030_delete_work_queue_states_from_auditlog"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.17.origam___commandText___5a5f0a39-7b1c-4d65-bead-792bfb632afb.txt"
+      x:id="5a5f0a39-7b1c-4d65-bead-792bfb632afb"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

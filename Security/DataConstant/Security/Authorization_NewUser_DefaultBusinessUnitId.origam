@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataConstant
+    dataType="UniqueIdentifier"
+    value="00000000-0000-0000-0000-000000000000"
+    userDefinable="false"
+    name="Authorization_NewUser_DefaultBusinessUnitId"
+    abstract="false"
+    lookup="Root/DataLookup/Organization Management/BusinessUnit_WithOrganizations.origam#BusinessUnit_WithOrganizations/c45d0c18-9529-44b7-8140-25096c3241b8"
+    x:id="31dbbc02-c625-4d54-b67d-1de6ba08195c"
+    x:type="Origam.Schema.EntityModel.DataConstant" />
+</x:file>

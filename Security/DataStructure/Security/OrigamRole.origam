@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="OrigamRole"
+    abstract="false"
+    x:id="cebe27b3-cca5-4c82-9991-2536bc2e12e3"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="true"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="OrigamRole"
+      abstract="false"
+      entity="Security/DataEntity/Security/OrigamRole.origam#OrigamRole/049ffdd3-05f4-4e64-a97f-a4baefab1cb1"
+      x:id="f1e592d9-8d04-431d-9fce-aa2c56f27310"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+    <DataStructureSortSet
+      name="SortByName"
+      abstract="false"
+      x:id="d1055de4-f3f0-4898-8803-1b8fabc69956"
+      x:type="Origam.Schema.EntityModel.DataStructureSortSet">
+      <DataStructureSortSetItem
+        fieldName="Name"
+        sortOrder="0"
+        sortDirection="Ascending"
+        name="OrigamRole_0_Name"
+        abstract="false"
+        entity="Security/DataStructure/Security/OrigamRole.origam#OrigamRole/OrigamRole/f1e592d9-8d04-431d-9fce-aa2c56f27310"
+        x:id="2239ba8a-e8a9-42c5-8970-580e9f2107c9"
+        x:type="Origam.Schema.EntityModel.DataStructureSortSetItem" />
+    </DataStructureSortSet>
+  </DataStructure>
+</x:file>

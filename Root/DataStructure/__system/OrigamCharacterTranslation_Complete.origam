@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="OrigamCharacterTranslation_Complete"
+    abstract="false"
+    x:id="65b34faa-3d45-4bd2-8e7e-f488e7069a03"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="true"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="OrigamCharacterTranslation"
+      abstract="false"
+      entity="Root/DataEntity/__system/OrigamCharacterTranslation.origam#OrigamCharacterTranslation/697e0804-f234-4881-9e3d-6d593cb67cfe"
+      x:id="029a2a76-441a-4d50-a964-95ee7045d8ee"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      <DataStructureEntity
+        label=""
+        allFields="true"
+        ignoreImplicitFilters="false"
+        ignoreCondition="None"
+        concurrencyHandling="Standard"
+        relationType="Normal"
+        conditionEntityParameterName=""
+        useUpsert="false"
+        name="OrigamCharacterTranslationDetail"
+        abstract="false"
+        entity="Root/DataEntity/__system/OrigamCharacterTranslation.origam#OrigamCharacterTranslation/OrigamCharacterTranslationDetail/7d2c7738-af5a-4094-bfed-4ef4110ad047"
+        x:id="6d92ab94-eb55-450f-93c8-52059cd25806"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+    </DataStructureEntity>
+  </DataStructure>
+</x:file>

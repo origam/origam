@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="OrigamRole_Complete"
+    abstract="false"
+    x:id="17eb96a6-4fa7-4633-862e-bbc77986c9d0"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="true"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="OrigamRole"
+      abstract="false"
+      entity="Security/DataEntity/Security/OrigamRole.origam#OrigamRole/049ffdd3-05f4-4e64-a97f-a4baefab1cb1"
+      x:id="2b6ddc1c-0ffc-4ea7-bd5d-a9b5225e0d02"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      <DataStructureEntity
+        label=""
+        allFields="true"
+        ignoreImplicitFilters="false"
+        ignoreCondition="None"
+        concurrencyHandling="Standard"
+        relationType="Normal"
+        conditionEntityParameterName=""
+        useUpsert="false"
+        name="OrigamRoleOrigamApplicationRole"
+        abstract="false"
+        entity="Security/DataEntity/Security/OrigamRole.origam#OrigamRole/OrigamRoleOrigamApplicationRole/3ba3e085-c534-4ac4-9d9c-445a918f2677"
+        x:id="ac0cdc25-4814-4bd0-af25-e1bb63b05260"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+    </DataStructureEntity>
+  </DataStructure>
+</x:file>

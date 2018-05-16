@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="FileSystemInfo"
+    abstract="false"
+    x:id="2aaaed07-bd5e-41d3-858e-288eca4bbcfc"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="true"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="FileSystemInfo"
+      abstract="false"
+      entity="Root/DataEntity/__system/FileSystemInfo.origam#FileSystemInfo/e8a9ffc7-622c-419c-8a83-9767ac78a41f"
+      x:id="033e96e8-0342-4f70-b2db-c1217a856e9a"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+  </DataStructure>
+</x:file>

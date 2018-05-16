@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Control
+    toolboxVisibility="FormDesigner"
+    typeName="Origam.Schema.GuiModel.PanelControlSet"
+    namespace="Origam.Schema.GuiModel"
+    isComplex="true"
+    requestSaveAfterChangeAllowed="false"
+    name="BusinessPartnerOrigamRole"
+    abstract="false"
+    screenSection="Security/PanelControlSet/Security/BusinessPartnerOrigamRole.origam#BusinessPartnerOrigamRole/3ff09647-5a6f-45d1-b44f-b6b1e9ef1e4c"
+    x:id="963cfb5e-6ff6-4eaa-9673-37bcc028ab04"
+    x:type="Origam.Schema.GuiModel.ControlItem">
+    <ancestor
+      ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="23b00475-4588-4e96-ba5d-fe1a7409d0e5"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+  </Control>
+</x:file>

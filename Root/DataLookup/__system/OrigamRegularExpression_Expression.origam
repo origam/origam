@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="Id"
+    listDisplayMember="Expression"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="false"
+    serversideFilterParameter=""
+    searchByFirstColumnOnly="false"
+    valueValueMember="Id"
+    valueDisplayMember="Expression"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="OrigamRegularExpression_Expression"
+    abstract="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamRegularExpression_Expression.origam#LookupOrigamRegularExpression_Expression/7a1f617b-644d-468e-87a4-03b20343cacb"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamRegularExpression_Expression.origam#LookupOrigamRegularExpression_Expression/7a1f617b-644d-468e-87a4-03b20343cacb"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamRegularExpression_Expression.origam#LookupOrigamRegularExpression_Expression/GetId/e624887f-25aa-4702-be02-0b4d9c13b4e9"
+    x:id="2c00faae-d522-4b04-b42c-de97b5c12dfb"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>

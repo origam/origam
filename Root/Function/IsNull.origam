@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Function
+    dataType="String"
+    type="Standard"
+    name="IsNull"
+    abstract="false"
+    x:id="6f50fc55-b84d-4768-88d2-83627e77465d"
+    x:type="Origam.Schema.EntityModel.Function">
+    <FunctionParameter
+      ordinalPosition="0"
+      name="Expression"
+      abstract="false"
+      x:id="b756a885-9870-45d1-b991-1ec5ed6d9c5f"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+    <FunctionParameter
+      ordinalPosition="0"
+      name="ReplacementValue"
+      abstract="false"
+      x:id="40a3cb22-4c82-4023-8243-ef0ced48d90b"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+  </Function>
+</x:file>

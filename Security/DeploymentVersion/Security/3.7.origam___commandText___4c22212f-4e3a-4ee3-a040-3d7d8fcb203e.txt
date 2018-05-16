@@ -1,0 +1,1 @@
+ALTER TABLE [AsapApplicationRole] ADD [UserRemarks] NTEXT NULL

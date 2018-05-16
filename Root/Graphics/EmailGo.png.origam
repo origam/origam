@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Graphics
+    name="EmailGo.png"
+    abstract="false"
+    graphicsDataByte="-***-ExternalFile:EmailGo.png.origam___graphicsDataByte___20ae49e6-9170-4420-99d0-35bd2649b357.png"
+    x:id="20ae49e6-9170-4420-99d0-35bd2649b357"
+    x:type="Origam.Schema.GuiModel.Graphics" />
+</x:file>

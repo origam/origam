@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Control
+    toolboxVisibility="FormDesigner"
+    typeName="Origam.Schema.GuiModel.PanelControlSet"
+    namespace="Origam.Schema.GuiModel"
+    isComplex="true"
+    requestSaveAfterChangeAllowed="false"
+    name="CounterDetail"
+    abstract="false"
+    screenSection="Root/PanelControlSet/__system/CounterDetail.origam#CounterDetail/8270cccb-89c4-474c-8c4e-49ee80d408f4"
+    x:id="941d2305-c053-471d-84be-cdb1dc3324bf"
+    x:type="Origam.Schema.GuiModel.ControlItem">
+    <ancestor
+      ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="3c0a11e5-2599-4aba-b8c2-3a037eee59d2"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+  </Control>
+</x:file>

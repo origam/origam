@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Function
+    dataType="Boolean"
+    type="Standard"
+    name="In"
+    abstract="false"
+    x:id="ad39eb50-0e1c-4f91-bfbe-11e741b3f86d"
+    x:type="Origam.Schema.EntityModel.Function">
+    <FunctionParameter
+      ordinalPosition="0"
+      name="List"
+      abstract="false"
+      x:id="06ad3693-55ff-404c-a813-16b41cd5751b"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+    <FunctionParameter
+      ordinalPosition="0"
+      name="FilterExpression"
+      abstract="false"
+      x:id="32e47284-2c22-4aa8-b9d5-445012257b52"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+  </Function>
+</x:file>

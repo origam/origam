@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Graphics
+    name="Note.png"
+    abstract="false"
+    graphicsDataByte="-***-ExternalFile:Note.png.origam___graphicsDataByte___1ec7eea7-e11f-4e18-9c60-d4854b875c26.png"
+    x:id="1ec7eea7-e11f-4e18-9c60-d4854b875c26"
+    x:type="Origam.Schema.GuiModel.Graphics" />
+</x:file>

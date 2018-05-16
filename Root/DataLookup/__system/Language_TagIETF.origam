@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="Id"
+    listDisplayMember="TagIETF"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="false"
+    serversideFilterParameter=""
+    searchByFirstColumnOnly="false"
+    valueValueMember="Id"
+    valueDisplayMember="TagIETF"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="Language_TagIETF"
+    abstract="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupLanguage_TagIETF.origam#LookupLanguage_TagIETF/47f9b1ab-adca-46e3-878e-f7fcac761bf2"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupLanguage_TagIETF.origam#LookupLanguage_TagIETF/47f9b1ab-adca-46e3-878e-f7fcac761bf2"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupLanguage_TagIETF.origam#LookupLanguage_TagIETF/GetId/6f62e598-635a-494a-95db-af07d2529a89"
+    x:id="7823d8af-4968-48c3-a772-287475d429e1"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>
