@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <PanelControlSet
     name="param_lookup"
     abstract="false"
@@ -7,22 +7,16 @@
     x:id="44765574-a633-4549-9413-6d43b0fa102e"
     x:type="Origam.Schema.GuiModel.PanelControlSet">
     <ControlSetItem
-      roles=""
-      features=""
       isAlternative="false"
       requestSaveAfterChange="false"
-      level="0"
       name="param_lookupRootControl"
       abstract="false"
       widget="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
       x:id="15e54740-d40a-4117-95ad-778ca4c5dd64"
       x:type="Origam.Schema.GuiModel.ControlSetItem">
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsDropDown1"
         abstract="false"
         widget="Root/Control/_Basic Controls/AsCombo.origam#AsCombo/aebc5761-339d-4787-9289-704f7ed7ecbe"
@@ -79,7 +73,6 @@
           x:id="0f857e9c-d665-4eb2-a33f-7c11fb177c80"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="8afeb337-2647-4eaf-8a53-bcd7d08c5809"
           name="GridColumnCaption"
           abstract="false"
@@ -100,7 +93,6 @@
           x:id="b6f643ef-9942-4b96-aba9-b36a4c478db8"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="e8a88c70-c3f8-4e39-b041-3b829967fd51"
           name="LookupValue"
           abstract="false"
@@ -143,7 +135,6 @@
         x:id="ddff3438-6e5a-4d20-b518-0183aa8fffbb"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2"
         name="PanelTitle"
         abstract="false"
@@ -164,21 +155,18 @@
         x:id="29e9801a-a870-4b67-b481-50949bc45fcf"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="6441ece9-86a8-4394-a33a-4a4bdd4489e9"
         name="CalendarNameMember"
         abstract="false"
         x:id="db8efbe8-2296-4434-931b-515648f83fdc"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="30e6c918-04b4-4628-90c9-1ba607c9d998"
         name="CalendarDateFromMember"
         abstract="false"
         x:id="4e46244d-2a7a-46c3-8ade-5178e5dc45d3"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="8c12e0ab-e4bd-4675-8f12-c5930a07be14"
         name="DataMember"
         abstract="false"
@@ -199,7 +187,6 @@
         x:id="209771ed-e4b4-497d-ae2c-65a4febd7b91"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="87bb70a8-a0a7-4c4e-9f18-5724d74b3b98"
         name="CalendarDateDueMember"
         abstract="false"
@@ -213,14 +200,12 @@
         x:id="9c02f360-9e8d-4f2d-9c0d-82b51cf6478d"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="fa8c5b1c-42fa-4eeb-9c5f-a073625e5a22"
         name="CalendarResourceNameLookupField"
         abstract="false"
         x:id="105a4262-1022-4a08-9fcf-835ee1a107dd"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="0646ac0a-46ff-419f-a7b4-3892877ba9dc"
         name="CalendarDescriptionMember"
         abstract="false"
@@ -269,21 +254,18 @@
         x:id="a39ab3c1-6a51-4665-aa17-d521fcef279b"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="ff52e0c4-c2a8-4d47-ae9b-7cb5bcbb415a"
         name="CalendarIsFinishedMember"
         abstract="false"
         x:id="262208f2-247f-4b8d-8cc7-deb70e4b284d"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="8ae87ccd-e465-4fc9-be2c-fc7cadb3df0f"
         name="CalendarResourceIdMember"
         abstract="false"
         x:id="c6551ddc-02a9-4b57-b3b5-e95f4bca83ff"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="f8a067fe-7753-4393-9ab9-70ca3c0c0b11"
         name="CalendarDateToMember"
         abstract="false"

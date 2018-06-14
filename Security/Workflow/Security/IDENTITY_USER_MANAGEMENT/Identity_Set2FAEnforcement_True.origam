@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Workflow
     transactionBehavior="InheritExisting"
     traceLevel="None"
@@ -19,7 +19,6 @@
       outputMethod="Ignore"
       traceLevel="InheritFromParent"
       roles="*"
-      features=""
       name="01_Set2FAEnforcement_True"
       abstract="false"
       serviceMethod="Security/Service/IdentityService.origam#IdentityService/Set2FAEnforcement/5d99129c-2be0-48b3-aafd-da1b133c3538"

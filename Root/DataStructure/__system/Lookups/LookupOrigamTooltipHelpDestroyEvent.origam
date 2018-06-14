@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupOrigamTooltipHelpDestroyEvent"
     abstract="false"
     x:id="194a6db2-f8c6-45c2-b40d-4f76adbcdf05"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamTooltipHelpDestroyEvent"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="8071a147-bdaa-4e52-adc2-96e42b7aa27e"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Name"
@@ -36,12 +31,10 @@
         x:id="62c5bc97-2dbd-4b53-b096-8e1b4acbfc86"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -57,9 +50,7 @@
       x:id="7ec14287-940b-4f35-bfc5-c1d099b1c27c"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamTooltipHelpDestroyEvent_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpDestroyEvent.origam#LookupOrigamTooltipHelpDestroyEvent/OrigamTooltipHelpDestroyEvent/8071a147-bdaa-4e52-adc2-96e42b7aa27e"

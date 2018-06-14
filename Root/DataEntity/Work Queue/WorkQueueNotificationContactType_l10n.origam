@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="WorkQueueNotificationContactType_l10n"
     databaseObjectType="Table"
@@ -23,10 +23,8 @@
       mappedColumnName="refWorkQueueNotificationContactTypeId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -70,7 +68,6 @@
         x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refWorkQueueNotificationContactTypeId"
         abstract="false"
         field="Root/DataEntity/Work Queue/WorkQueueNotificationContactType_l10n.origam#WorkQueueNotificationContactType_l10n/refWorkQueueNotificationContactTypeId/7c543bdc-1742-4ea7-a4d6-bd558af1d4da"

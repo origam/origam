@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="AttachmentList"
     abstract="false"
     x:id="44a25061-750f-4b42-a6de-09f3363f8621"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="Attachment"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="2a88fb46-2fa2-4ec7-a4e5-f8720f5f31c2"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Note"
@@ -36,12 +31,10 @@
         x:id="fb7d99bb-7b63-4337-8b47-1b6ed5a42543"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="RecordUpdated"
@@ -50,12 +43,10 @@
         x:id="9e3eb73a-6cdc-4490-9e88-24a3cacd13fc"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="RecordCreated"
@@ -64,12 +55,10 @@
         x:id="de26fd89-7d90-4d24-93c0-2f9c94ec66b6"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="FileName"
@@ -78,12 +67,10 @@
         x:id="0332a8c5-a754-45c5-b951-3a7f30a9e65e"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -92,12 +79,10 @@
         x:id="05842386-4b60-4b81-b579-3dc660571488"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="RecordUpdatedServer"
@@ -106,12 +91,10 @@
         x:id="18059f02-4f7c-4581-8e4b-410e4d81eabb"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="RecordUpdatedBy"
@@ -120,12 +103,10 @@
         x:id="085d617d-c2ad-48e9-8f87-472a5890e3a3"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="refParentRecordEntityId"
@@ -134,12 +115,10 @@
         x:id="0091fffa-9b64-42dd-aafa-735f0f62ebca"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="RecordCreatedServer"
@@ -148,12 +127,10 @@
         x:id="d919a283-6537-4fcd-b524-785279195c13"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="RecordCreatedBy"
@@ -162,12 +139,10 @@
         x:id="824498a2-e312-4aef-bcfb-c02e816370e2"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="refParentRecordId"
@@ -183,9 +158,7 @@
       x:id="08a7d05e-c3e8-414e-a9a3-11bee9a26025"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="Attachment_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/AttachmentList.origam#AttachmentList/Attachment/2a88fb46-2fa2-4ec7-a4e5-f8720f5f31c2"
@@ -200,9 +173,7 @@
       x:id="0fda540f-e5de-4ab6-93d2-76b0abe6fd77"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="Attachment_GetByParentRecordId"
         abstract="false"
         entity="Root/DataStructure/__system/AttachmentList.origam#AttachmentList/Attachment/2a88fb46-2fa2-4ec7-a4e5-f8720f5f31c2"

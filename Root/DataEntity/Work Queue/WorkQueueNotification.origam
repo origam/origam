@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="WorkQueueNotification"
     databaseObjectType="Table"
     generateDeploymentScript="true"
     readOnly="false"
     audit="None"
-    label=""
     name="WorkQueueNotification"
     abstract="false"
     x:id="f0091abf-4f4d-47fd-a057-3b38c9f38f42"
@@ -23,10 +22,8 @@
       mappedColumnName="SendAttachments"
       excludeFromAuditing="false"
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -40,7 +37,6 @@
       mappedColumnName="refWorkQueueId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Work Queue"
@@ -58,7 +54,6 @@
       mappedColumnName="refOrigamNotificationTemplateId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Template"
@@ -77,7 +72,6 @@
       mappedColumnName="refWorkQueueNotificationEventId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Event"
@@ -117,7 +111,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refWorkQueueId"
         abstract="false"
         field="Root/DataEntity/Work Queue/WorkQueueNotification.origam#WorkQueueNotification/refWorkQueueId/8b28a2d6-7645-49e0-b776-5af7b6d1d05b"

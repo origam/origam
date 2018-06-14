@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     readOnly="false"
     audit="None"
-    label=""
     name="IOrigamGeneralEntityAttachment"
     abstract="true"
     x:id="d3171349-284d-458e-a22d-be875074b398"
@@ -12,10 +11,8 @@
       mappedColumnName="refParentRecordEntityId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Element"
@@ -28,10 +25,8 @@
       mappedColumnName="refParentRecordId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Element"
@@ -49,7 +44,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refParentRecordId"
         abstract="true"
         field="Root/DataEntity/__Origam General Interfaces/IOrigamGeneralEntityAttachment.origam#IOrigamGeneralEntityAttachment/refParentRecordId/4badf745-4bf1-4257-a3fe-ec0c86c2588d"
@@ -64,10 +58,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -107,7 +99,6 @@
     </EntityFilter>
     <Parameter
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       name="parRefParentRecordId"
       abstract="true"

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="OrigamApplicationRole"
     databaseObjectType="Table"
@@ -35,7 +35,6 @@
       mappedColumnName="IsSystemRole"
       excludeFromAuditing="false"
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="System"
@@ -67,7 +66,6 @@
       mappedColumnName="UserRemarks"
       excludeFromAuditing="false"
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="User Remarks"
@@ -100,7 +98,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_Name"
         abstract="false"
         field="Security/DataEntity/Security/OrigamApplicationRole.origam#OrigamApplicationRole/Name/a6518f10-a9a2-4dfd-a30b-b50ffe15704e"
@@ -115,10 +112,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -164,10 +159,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -248,7 +241,6 @@
       x:id="c9c12461-5d83-42bf-9f34-e042754523df"
       x:type="Origam.Schema.EntityModel.EntitySecurityRule" />
     <Parameter
-      callElements="0"
       allowContextReference="false"
       allowDataConstantReference="false"
       allowDataStructureReference="false"

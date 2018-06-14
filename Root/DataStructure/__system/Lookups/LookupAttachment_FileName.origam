@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupAttachment_FileName"
     abstract="false"
     x:id="1231691b-395f-4654-b1a9-23ac6404b04a"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="Attachment"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="95f758cd-3f37-4e35-85de-14618f2784c6"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="FileName"
@@ -36,12 +31,10 @@
         x:id="9dbcea27-fb62-43fe-9ea3-22276b497a80"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -57,9 +50,7 @@
       x:id="4fc33120-2a07-454b-b3f4-d68344c58983"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="Attachment_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/Lookups/LookupAttachment_FileName.origam#LookupAttachment_FileName/Attachment/95f758cd-3f37-4e35-85de-14618f2784c6"

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <PanelControlSet
     name="DimensionTransformationMatrix"
     abstract="false"
@@ -7,22 +7,16 @@
     x:id="46310125-b25e-403d-a962-a6ad2a18686b"
     x:type="Origam.Schema.GuiModel.PanelControlSet">
     <ControlSetItem
-      roles=""
-      features=""
       isAlternative="false"
       requestSaveAfterChange="false"
-      level="0"
       name="DimensionTransformationMatrixRootControl"
       abstract="false"
       widget="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
       x:id="e9347cbd-036e-45ee-aada-059c4786c0af"
       x:type="Origam.Schema.GuiModel.ControlSetItem">
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsDropDown2"
         abstract="false"
         widget="Root/Control/_Basic Controls/AsCombo.origam#AsCombo/aebc5761-339d-4787-9289-704f7ed7ecbe"
@@ -85,7 +79,6 @@
           x:id="d6cbda8f-fa9a-4072-9b90-6a27e49f5ef2"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="8afeb337-2647-4eaf-8a53-bcd7d08c5809"
           name="GridColumnCaption"
           abstract="false"
@@ -106,7 +99,6 @@
           x:id="e290d866-e0b2-4fbd-ad4f-a358acd73d99"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="e8a88c70-c3f8-4e39-b041-3b829967fd51"
           name="LookupValue"
           abstract="false"
@@ -134,7 +126,6 @@
           x:id="636e6c2d-3826-4527-b99c-ccac2dbae450"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="38431081-97d8-451d-a32e-e196e423d2a9"
           name="Caption"
           abstract="false"
@@ -142,11 +133,8 @@
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsDropDown4"
         abstract="false"
         widget="Root/Control/_Basic Controls/AsCombo.origam#AsCombo/aebc5761-339d-4787-9289-704f7ed7ecbe"
@@ -181,7 +169,6 @@
           x:id="8089103a-8991-469a-8a13-5440279905dc"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="8afeb337-2647-4eaf-8a53-bcd7d08c5809"
           name="GridColumnCaption"
           abstract="false"
@@ -237,14 +224,12 @@
           x:id="1bb44351-5f4c-4250-a8ba-b37112787f9b"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="e8a88c70-c3f8-4e39-b041-3b829967fd51"
           name="LookupValue"
           abstract="false"
           x:id="ffc8e8c5-d8a5-4efd-9325-dd478bf90935"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="38431081-97d8-451d-a32e-e196e423d2a9"
           name="Caption"
           abstract="false"
@@ -266,11 +251,8 @@
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsDropDown1"
         abstract="false"
         widget="Root/Control/_Basic Controls/AsCombo.origam#AsCombo/aebc5761-339d-4787-9289-704f7ed7ecbe"
@@ -292,7 +274,6 @@
           x:id="bc104a9b-c298-4a76-9e90-0422befd09e1"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="38431081-97d8-451d-a32e-e196e423d2a9"
           name="Caption"
           abstract="false"
@@ -313,7 +294,6 @@
           x:id="fb78eb25-3704-4e82-9e22-41d4dfe6034d"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="8afeb337-2647-4eaf-8a53-bcd7d08c5809"
           name="GridColumnCaption"
           abstract="false"
@@ -369,7 +349,6 @@
           x:id="f8735769-f1a9-47ab-9ba8-a745f572ece2"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="e8a88c70-c3f8-4e39-b041-3b829967fd51"
           name="LookupValue"
           abstract="false"
@@ -384,11 +363,8 @@
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsDropDown5"
         abstract="false"
         widget="Root/Control/_Basic Controls/AsCombo.origam#AsCombo/aebc5761-339d-4787-9289-704f7ed7ecbe"
@@ -409,7 +385,6 @@
           x:id="edcd1eb6-d46f-4487-a1e9-511dab4f0f80"
           x:type="Origam.Schema.GuiModel.PropertyBindingInfo" />
         <PropertyValueItem
-          value=""
           propertyId="e8a88c70-c3f8-4e39-b041-3b829967fd51"
           name="LookupValue"
           abstract="false"
@@ -479,7 +454,6 @@
           x:id="d771090e-526d-4db5-99f6-9614b4072eac"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="8afeb337-2647-4eaf-8a53-bcd7d08c5809"
           name="GridColumnCaption"
           abstract="false"
@@ -493,7 +467,6 @@
           x:id="62aebabe-e7f8-490c-b968-bd6ba0d76e34"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="38431081-97d8-451d-a32e-e196e423d2a9"
           name="Caption"
           abstract="false"
@@ -508,11 +481,8 @@
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsDropDown3"
         abstract="false"
         widget="Root/Control/_Basic Controls/AsCombo.origam#AsCombo/aebc5761-339d-4787-9289-704f7ed7ecbe"
@@ -554,7 +524,6 @@
           x:id="249b0a30-4015-40a2-8f81-246fd5f84f3a"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="e8a88c70-c3f8-4e39-b041-3b829967fd51"
           name="LookupValue"
           abstract="false"
@@ -575,7 +544,6 @@
           x:id="9f921396-2466-4a1c-af2f-6422fbea729e"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="8afeb337-2647-4eaf-8a53-bcd7d08c5809"
           name="GridColumnCaption"
           abstract="false"
@@ -617,7 +585,6 @@
           x:id="7f1940f3-a655-4e6e-acf7-e5b99528bc08"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="38431081-97d8-451d-a32e-e196e423d2a9"
           name="Caption"
           abstract="false"
@@ -688,7 +655,6 @@
         x:id="c6d3115d-37e8-4070-92cc-862524f8c7a7"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="8c12e0ab-e4bd-4675-8f12-c5930a07be14"
         name="DataMember"
         abstract="false"

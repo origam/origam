@@ -1,19 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
     listValueMember="Id"
     listDisplayMember="ReferenceCode"
     isTree="false"
-    treeParentMember=""
     suppressEmptyColumns="false"
     alwaysAllowReturnToForm="false"
     isFilteredServerside="false"
-    serversideFilterParameter=""
     searchByFirstColumnOnly="false"
     valueValueMember="Id"
     valueDisplayMember="ReferenceCode"
-    roleFilterMember=""
-    featureFilterMember=""
     name="BusinessPartner_ReferenceCode_ByResourceId"
     abstract="false"
     listDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ReferenceCode_ByResourceId.origam#LookupBusinessPartner_ReferenceCode_ByResourceId/23b71cb4-948b-4021-9567-4eecd1c0ab27"

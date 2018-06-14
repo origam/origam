@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamDashboardView_List"
     abstract="false"
     x:id="e6b7e890-032c-4837-b3e1-592f9d6f9d0f"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamDashboardView"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="1304509a-d172-43aa-9e5d-5436f5492049"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -36,12 +31,10 @@
         x:id="851bd3c3-4b56-4191-a015-6d2ef46fde4a"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Name"
@@ -50,12 +43,10 @@
         x:id="bfd557a3-31ab-4cfc-9678-c4d34832be99"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Roles"
@@ -71,9 +62,7 @@
       x:id="916f8028-9d89-49b2-bb66-97548bde8b7d"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamDashboardView_GetByMenuId"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamDashboardView_List.origam#OrigamDashboardView_List/OrigamDashboardView/1304509a-d172-43aa-9e5d-5436f5492049"

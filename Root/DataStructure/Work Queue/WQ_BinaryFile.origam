@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="WQ_BinaryFile"
     abstract="false"
     x:id="dd83b8a7-edfc-48e9-8290-2348a434ad1f"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="WorkQueueEntry"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="efaedc3c-b186-410b-9f40-aad24be5c3a5"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="refLockedByBusinessPartnerId"
@@ -36,12 +31,10 @@
         x:id="0737966c-79d2-4c93-849b-048fccd80b50"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="IsLocked"
@@ -55,7 +48,6 @@
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="FileCreationTime"
@@ -64,12 +56,10 @@
         x:id="0ba5ab74-0d06-482c-8bad-200107a467ae"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -78,12 +68,10 @@
         x:id="c5e4d3a0-4c9d-4872-8583-3afb37ce460c"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="refId"
@@ -97,7 +85,6 @@
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="FileLastAccessTime"
@@ -106,12 +93,10 @@
         x:id="7f2e6639-b4eb-46d6-b891-54d9dce91a58"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="RecordCreatedBy"
@@ -120,12 +105,10 @@
         x:id="ee048830-2e15-4983-a0e8-6c6be73b4945"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Data"
@@ -139,7 +122,6 @@
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="FileName"
@@ -148,12 +130,10 @@
         x:id="e861dd79-b945-42df-a9d1-7e02a2934bb3"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="RecordCreated"
@@ -162,12 +142,10 @@
         x:id="db9ed78d-bf6a-4e1d-9185-8a465a100202"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="RecordUpdatedBy"
@@ -181,7 +159,6 @@
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="FileLastWriteTime"
@@ -190,12 +167,10 @@
         x:id="8618648e-7f10-4f01-81b7-aec09ed72a8e"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="RecordUpdated"
@@ -204,12 +179,10 @@
         x:id="50bbc7f6-857c-4ac6-b9fc-b4beba76c2f9"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="refWorkQueueId"
@@ -218,12 +191,10 @@
         x:id="6bd2b1ca-54bf-4d34-a29f-d44aa00c6270"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="ErrorText"
@@ -239,9 +210,7 @@
       x:id="e0b9e13e-840f-4c69-8a69-0771eaf643c3"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefRel2Id"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/WorkQueueEntry/efaedc3c-b186-410b-9f40-aad24be5c3a5"
@@ -249,9 +218,7 @@
         x:id="824ed5ed-4b52-4192-a652-18ff67217a82"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/WorkQueueEntry/efaedc3c-b186-410b-9f40-aad24be5c3a5"
@@ -266,9 +233,7 @@
       x:id="45a83df4-42a5-4452-96ce-1b0ace7e5f66"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefRel7Id"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/WorkQueueEntry/efaedc3c-b186-410b-9f40-aad24be5c3a5"
@@ -276,9 +241,7 @@
         x:id="6a9b5d7e-09f9-430e-944b-0e7ce253d63c"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/WorkQueueEntry/efaedc3c-b186-410b-9f40-aad24be5c3a5"
@@ -293,9 +256,7 @@
       x:id="12817688-77e9-44e6-b44e-1eff14f37575"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/WorkQueueEntry/efaedc3c-b186-410b-9f40-aad24be5c3a5"
@@ -303,9 +264,7 @@
         x:id="6c60726c-2729-4295-9273-9499935191c9"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefRel4Id"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/WorkQueueEntry/efaedc3c-b186-410b-9f40-aad24be5c3a5"
@@ -320,9 +279,7 @@
       x:id="91bbd5a5-66c1-4492-93b7-67ee57bd3605"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/WorkQueueEntry/efaedc3c-b186-410b-9f40-aad24be5c3a5"
@@ -330,9 +287,7 @@
         x:id="9bf20d41-e240-4c98-b862-29c062433939"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefRel6Id"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/WorkQueueEntry/efaedc3c-b186-410b-9f40-aad24be5c3a5"
@@ -347,9 +302,7 @@
       x:id="2523b4cc-3713-48ab-8acd-9b63657d1cde"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/WorkQueueEntry/efaedc3c-b186-410b-9f40-aad24be5c3a5"
@@ -364,9 +317,7 @@
       x:id="6571c5f4-9d30-42f4-b235-c9d1f94f621d"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/WorkQueueEntry/efaedc3c-b186-410b-9f40-aad24be5c3a5"
@@ -381,9 +332,7 @@
       x:id="80b441af-203c-4139-bc37-caaf84d9e458"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/WorkQueueEntry/efaedc3c-b186-410b-9f40-aad24be5c3a5"
@@ -391,9 +340,7 @@
         x:id="0c9148af-dab1-4401-ba4d-5310581adb05"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByMasterd"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/WorkQueueEntry/efaedc3c-b186-410b-9f40-aad24be5c3a5"
@@ -408,9 +355,7 @@
       x:id="f2b79d21-c7fb-43ca-ab50-d28e759f7104"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefRel5Id"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/WorkQueueEntry/efaedc3c-b186-410b-9f40-aad24be5c3a5"
@@ -418,9 +363,7 @@
         x:id="ef960c70-83b8-4569-a45b-647c7649a4ee"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/WorkQueueEntry/efaedc3c-b186-410b-9f40-aad24be5c3a5"
@@ -435,9 +378,7 @@
       x:id="538bf0f5-af56-4ab0-b3fe-e366ab360203"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefRel1Id"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/WorkQueueEntry/efaedc3c-b186-410b-9f40-aad24be5c3a5"
@@ -445,9 +386,7 @@
         x:id="8ec24476-1541-443b-81e4-d70e2b7e3e34"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/WorkQueueEntry/efaedc3c-b186-410b-9f40-aad24be5c3a5"
@@ -462,9 +401,7 @@
       x:id="42a3a33a-84c3-4fcb-82ad-fa1fe43c0bba"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefRel3Id"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/WorkQueueEntry/efaedc3c-b186-410b-9f40-aad24be5c3a5"
@@ -472,9 +409,7 @@
         x:id="b730b86a-ff33-494e-b956-02cefe1dca9d"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/WorkQueueEntry/efaedc3c-b186-410b-9f40-aad24be5c3a5"
@@ -489,7 +424,6 @@
       x:type="Origam.Schema.EntityModel.DataStructureSortSet">
       <DataStructureSortSetItem
         fieldName="FileCreationTime"
-        sortOrder="0"
         sortDirection="Ascending"
         name="WorkQueueEntry_0_FileCreationTime"
         abstract="false"

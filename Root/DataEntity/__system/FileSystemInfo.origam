@@ -1,19 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     readOnly="false"
     audit="None"
-    label=""
     name="FileSystemInfo"
     abstract="false"
     x:id="e8a9ffc7-622c-419c-8a83-9767ac78a41f"
     x:type="Origam.Schema.EntityModel.DetachedEntity">
     <DataEntityColumn
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -25,10 +22,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -42,7 +37,6 @@
       dataLength="255"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -56,7 +50,6 @@
       dataLength="7"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -67,7 +60,6 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Full path of the directory of file."
@@ -81,10 +73,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -95,10 +85,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -109,10 +97,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -123,10 +109,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="true"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"

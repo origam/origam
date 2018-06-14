@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="OrigamMapLayer"
     databaseObjectType="Table"
@@ -52,7 +52,6 @@
       mappedColumnName="refOrigamMapLayerTypeId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Type"
@@ -76,7 +75,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_ReferenceCode"
         abstract="false"
         field="Root/DataEntity/__system/OrigamMapLayer.origam#OrigamMapLayer/ReferenceCode/2a543d1a-6d47-47f4-9922-86fc82171a47"
@@ -91,10 +89,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Attribute"
@@ -168,7 +164,6 @@
     </EntityRelation>
     <Parameter
       dataType="Array"
-      dataLength="0"
       allowNulls="true"
       name="parReferenceCodeList"
       abstract="false"

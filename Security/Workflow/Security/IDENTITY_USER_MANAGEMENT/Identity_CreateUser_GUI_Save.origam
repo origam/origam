@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Workflow
     transactionBehavior="InheritExisting"
     traceLevel="TraceArchitect"
@@ -28,7 +28,6 @@
     <WorkflowTask
       traceLevel="InheritFromParent"
       roles="*"
-      features=""
       name="01_Validate"
       abstract="false"
       validationRule="Security/Rule/Security/ValidateNewUser.origam#ValidateNewUser/6fc55ed1-8605-422e-93b9-7eee08be9bfd"
@@ -39,7 +38,6 @@
       transactionType="Atomic"
       traceLevel="InheritFromParent"
       roles="*"
-      features=""
       name="02_SaveUserAndCallMembership"
       abstract="false"
       x:id="948e9557-dd95-4fda-b273-e12889340bd3"
@@ -48,7 +46,6 @@
         outputMethod="AppendMergeExisting"
         traceLevel="InheritFromParent"
         roles="*"
-        features=""
         name="02_CreateUser_Membership"
         abstract="false"
         serviceMethod="Security/Service/IdentityService.origam#IdentityService/CreateUser/3721b774-d828-49e2-b80d-93dc7d189a75"
@@ -140,7 +137,6 @@
         outputMethod="AppendMergeExisting"
         traceLevel="InheritFromParent"
         roles="*"
-        features=""
         name="01_StoreNewUser"
         abstract="false"
         serviceMethod="Root/Service/DataService.origam#DataService/StoreData/3c1c855d-3c06-49e1-bfbf-cf234134d083"

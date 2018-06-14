@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="WorkQueueCommand"
     databaseObjectType="Table"
@@ -51,7 +51,6 @@
       mappedColumnName="IsDefault"
       excludeFromAuditing="false"
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Default"
@@ -85,10 +84,8 @@
       mappedColumnName="refWorkQueueId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -103,7 +100,6 @@
       mappedColumnName="AutoProcessingConditionXPath"
       excludeFromAuditing="false"
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Autoprocessing Condition"
@@ -119,7 +115,6 @@
       mappedColumnName="refWorkQueueCommandTypeId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Type"
@@ -138,7 +133,6 @@
       mappedColumnName="IsAutoProcessedWithErrors"
       excludeFromAuditing="false"
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Autoprocess With Errors"
@@ -171,7 +165,6 @@
       mappedColumnName="refErrorWorkQueueId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Error Queue"
@@ -206,7 +199,6 @@
       mappedColumnName="SortOrder"
       excludeFromAuditing="false"
       dataType="Integer"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Order"
@@ -223,7 +215,6 @@
       mappedColumnName="IsAutoProcessed"
       excludeFromAuditing="false"
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Autoprocess"
@@ -245,7 +236,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refWorkQueueId"
         abstract="false"
         field="Root/DataEntity/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/refWorkQueueId/c74dd80c-e74e-4c3c-a4a0-555b097c5859"
@@ -260,10 +250,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -303,7 +291,6 @@
     </EntityFilter>
     <Parameter
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       name="parWorkQueueId"
       abstract="false"

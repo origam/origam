@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="ActiveResource"
     abstract="false"
     x:id="d0d0d847-36dc-4987-95e5-43c4d8d0d78f"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="Resource"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="e987e310-93b2-4b57-aa8b-439829e62711"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="refBusinessUnitId"
@@ -36,12 +31,10 @@
         x:id="700b30a1-7a08-4c6a-8526-757b09099536"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="refBusinessPartnerId"
@@ -50,12 +43,10 @@
         x:id="473ada0b-4910-47f3-b5ed-7f9df32befc1"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -64,12 +55,10 @@
         x:id="c5ef7360-4c3e-4d95-a334-c88fdea3abb1"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="refOrganizationId"
@@ -85,9 +74,7 @@
       x:id="84848e4c-129c-4079-95a4-6319e21399af"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="Resource_GetHumanResources"
         abstract="false"
         entity="Root/DataStructure/Resource Management/System/ActiveResource.origam#ActiveResource/Resource/e987e310-93b2-4b57-aa8b-439829e62711"
@@ -95,9 +82,7 @@
         x:id="5b0c6665-7ad2-42db-9427-719836a305a1"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="GetByBusinessPartnerId"
         abstract="false"
         entity="Root/DataStructure/Resource Management/System/ActiveResource.origam#ActiveResource/Resource/e987e310-93b2-4b57-aa8b-439829e62711"

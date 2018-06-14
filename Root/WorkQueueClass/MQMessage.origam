@@ -1,8 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <WorkQueueClass
-    notificationFilterPkParameter=""
-    defaultPanelConfiguration=""
     name="MQMessage"
     abstract="false"
     workQueueStructure="Root/DataStructure/Work Queue/WQ_MQMessage.origam#WQ_MQMessage/df65d708-2ea9-4d4e-a2c5-8f32e3b2e85e"
@@ -13,7 +11,6 @@
     x:type="Origam.Schema.WorkflowModel.WorkQueueClass">
     <WorkQueueClassEntityMapping
       xPath="/ROOT/Message/ReceivedTime"
-      formatPattern=""
       sortOrder="1"
       name="ReceivedTime"
       abstract="false"
@@ -21,15 +18,12 @@
       x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
     <WorkQueueClassEntityMapping
       xPath="/ROOT/Message/MessageSequenceNumber"
-      formatPattern=""
-      sortOrder="0"
       name="MessageSequenceNumber"
       abstract="false"
       x:id="c32a9f94-833b-47d7-be6c-a6bb22688353"
       x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
     <WorkQueueClassEntityMapping
       xPath="/ROOT/Message/Message"
-      formatPattern=""
       sortOrder="2"
       name="Message"
       abstract="false"

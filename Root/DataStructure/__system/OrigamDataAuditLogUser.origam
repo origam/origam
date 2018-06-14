@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamDataAuditLogUser"
     abstract="false"
     x:id="1a90ab22-6bc8-416c-92ee-e053272f225c"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="BusinessPartner"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="c2f7f02c-e5c6-4218-909a-7810033bf750"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="LookupText"
@@ -43,9 +38,7 @@
       x:id="ef310516-e1e2-4a01-b0b2-b259ad14e1b5"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="BusinessPartner_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamDataAuditLogUser.origam#OrigamDataAuditLogUser/BusinessPartner/c2f7f02c-e5c6-4218-909a-7810033bf750"

@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamMapLayer_FormGenerator"
     abstract="false"
     x:id="29aa47ff-98f6-4dba-8e02-ab5ebad08162"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="Layer"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="ccf8026c-7ddc-42b7-aac8-d67c967f8520"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="id"
@@ -36,12 +31,10 @@
         x:id="45eb5874-b181-4815-a3aa-10f2a1370cf2"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Hidden"
         upsertType="Replace"
         name="OrigamMap_InitialZoom"
@@ -51,12 +44,10 @@
         x:id="ebfcc7dd-527b-43a4-bcb9-787a190f9a8a"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="title"
@@ -65,12 +56,10 @@
         x:id="c9bdca7f-a5fd-493e-b437-d1d78e41f554"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Hidden"
         upsertType="Replace"
         name="SortOrder"
@@ -80,12 +69,10 @@
         x:id="dffa83db-916b-4387-a551-d3846a0a6b9e"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="defaultEnabled"
@@ -95,12 +82,10 @@
         x:id="aa64a1a2-a4c2-4381-bba0-e47910597c10"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="true"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="type"
@@ -110,12 +95,10 @@
         x:id="f6ef4d2f-ce55-4b76-a7c7-e832996c99f0"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Hidden"
         upsertType="Replace"
         name="OrigamMap_MapCenter"
@@ -125,13 +108,11 @@
         x:id="d217d7cf-abf8-4412-9a92-ea9df14f2a52"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureEntity
-        label=""
         allFields="false"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="InnerJoin"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="OrigamMapOrigamMapLayer"
         abstract="false"
@@ -139,13 +120,11 @@
         x:id="ccb2444b-8901-461b-8c09-27e31066e19a"
         x:type="Origam.Schema.EntityModel.DataStructureEntity">
         <DataStructureEntity
-          label=""
           allFields="false"
           ignoreImplicitFilters="false"
           ignoreCondition="None"
           concurrencyHandling="Standard"
           relationType="InnerJoin"
-          conditionEntityParameterName=""
           useUpsert="false"
           name="OrigamMap"
           abstract="false"
@@ -154,13 +133,11 @@
           x:type="Origam.Schema.EntityModel.DataStructureEntity" />
       </DataStructureEntity>
       <DataStructureEntity
-        label=""
         allFields="false"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="Normal"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="Parameter"
         abstract="false"
@@ -168,12 +145,10 @@
         x:id="7a05fa10-e69d-473c-a7e0-56c5316d3d83"
         x:type="Origam.Schema.EntityModel.DataStructureEntity">
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Hidden"
           upsertType="Replace"
           name="id"
@@ -182,12 +157,10 @@
           x:id="7036ec3f-26cb-4317-aa62-165aef13038d"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Attribute"
           upsertType="Replace"
           name="value"
@@ -196,12 +169,10 @@
           x:id="fe5fac52-4884-4950-81f0-b5083c9854fa"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="name"
@@ -210,12 +181,10 @@
           x:id="2f395221-67d5-4250-ba89-c7756d7cd414"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Hidden"
           upsertType="Replace"
           name="refOrigamMapLayerId"
@@ -232,9 +201,7 @@
       x:id="d0556499-6859-4459-a239-04bd6359a862"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamMap_GetByReferenceCode"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamMapLayer_FormGenerator.origam#OrigamMapLayer_FormGenerator/Layer/OrigamMapOrigamMapLayer/OrigamMap/2c0eb425-4da3-4ed6-9bc6-983ecbc8d20f"
@@ -249,7 +216,6 @@
       x:type="Origam.Schema.EntityModel.DataStructureSortSet">
       <DataStructureSortSetItem
         fieldName="SortOrder"
-        sortOrder="0"
         sortDirection="Ascending"
         name="Layer_0_SortOrder"
         abstract="false"

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="OrigamNotificationChannelType_l10n"
     databaseObjectType="Table"
@@ -39,7 +39,6 @@
       mappedColumnName="refOrigamNotificationChannelTypeId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Notification Channel Type"
@@ -70,7 +69,6 @@
         x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refOrigamNotificationChannelTypeId"
         abstract="false"
         field="Root/DataEntity/__system/OrigamNotificationChannelType_l10n.origam#OrigamNotificationChannelType_l10n/refOrigamNotificationChannelTypeId/13f93f8b-2bdd-4fb9-93d3-e95bfeb6fde5"

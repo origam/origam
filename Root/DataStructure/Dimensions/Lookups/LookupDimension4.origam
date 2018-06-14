@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupDimension4"
     abstract="false"
     x:id="83d38cdb-b42f-4627-9519-ef2f6f6509eb"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="Dimension4"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="a0d800b8-5596-455e-a792-4c34120ed026"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Name"
@@ -36,12 +31,10 @@
         x:id="635207ae-a85e-4a1b-aed0-54e97be3e1c9"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -57,9 +50,7 @@
       x:id="d6a3f7be-18a1-4f03-873a-5f2772644a19"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="Dimension4_GetDimensionTypeId_Universal"
         abstract="false"
         entity="Root/DataStructure/Dimensions/Lookups/LookupDimension4.origam#LookupDimension4/Dimension4/a0d800b8-5596-455e-a792-4c34120ed026"
@@ -67,9 +58,7 @@
         x:id="7f1093c5-e6ef-4f7e-b8c4-2f8508efd618"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="Dimension4_GetActive"
         abstract="false"
         entity="Root/DataStructure/Dimensions/Lookups/LookupDimension4.origam#LookupDimension4/Dimension4/a0d800b8-5596-455e-a792-4c34120ed026"
@@ -84,9 +73,7 @@
       x:id="a1fa91af-6dc0-4f0b-a93c-81162c887a15"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="Dimension4_GetActive"
         abstract="false"
         entity="Root/DataStructure/Dimensions/Lookups/LookupDimension4.origam#LookupDimension4/Dimension4/a0d800b8-5596-455e-a792-4c34120ed026"
@@ -94,9 +81,7 @@
         x:id="97e7e469-4f1a-4ec6-a412-7ae52563b6d1"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="Dimension4_GetDimensionTypeId_Purchase"
         abstract="false"
         entity="Root/DataStructure/Dimensions/Lookups/LookupDimension4.origam#LookupDimension4/Dimension4/a0d800b8-5596-455e-a792-4c34120ed026"
@@ -111,9 +96,7 @@
       x:id="295c15c9-365b-46e7-8130-9cf43f35152b"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="Dimension4_GetId"
         abstract="false"
         entity="Root/DataStructure/Dimensions/Lookups/LookupDimension4.origam#LookupDimension4/Dimension4/a0d800b8-5596-455e-a792-4c34120ed026"
@@ -128,9 +111,7 @@
       x:id="411f2d80-78d4-4b2b-b44e-be7d99cbf63e"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="Dimension4_GetActive"
         abstract="false"
         entity="Root/DataStructure/Dimensions/Lookups/LookupDimension4.origam#LookupDimension4/Dimension4/a0d800b8-5596-455e-a792-4c34120ed026"
@@ -138,9 +119,7 @@
         x:id="6edd7091-88f2-40fc-8271-21b10fd3d21b"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="Dimension4_GetDimensionTypeId_Sales"
         abstract="false"
         entity="Root/DataStructure/Dimensions/Lookups/LookupDimension4.origam#LookupDimension4/Dimension4/a0d800b8-5596-455e-a792-4c34120ed026"

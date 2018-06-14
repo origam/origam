@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamWorkflowMenuItemConfig"
     abstract="false"
     x:id="a6445ce4-9d16-4125-9eed-1bcc2a08fd17"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="WorkflowMenuItemConfig"
       abstract="false"
@@ -28,9 +25,7 @@
       x:id="600f31f3-19ee-4a64-8d31-2eee388f8849"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamWorkflowConfig_GetConfig"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamWorkflowMenuItemConfig.origam#OrigamWorkflowMenuItemConfig/WorkflowMenuItemConfig/cca93bd5-e55e-4cb6-afa9-31a3f1e4a1c7"

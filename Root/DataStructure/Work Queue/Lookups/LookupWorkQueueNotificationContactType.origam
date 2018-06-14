@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="true"
-    dataSetClass=""
     name="LookupWorkQueueNotificationContactType"
     abstract="false"
     x:id="79daad07-e247-49be-a352-be67aea98234"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="WorkQueueNotificationContactType"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="7c2ff0ae-7773-4080-a133-709846c0ae51"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Name"
@@ -36,12 +31,10 @@
         x:id="1ae92c73-7f2a-4b3c-a02b-4bfc957644df"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -50,13 +43,11 @@
         x:id="b355538b-4bff-4eaf-80dc-7deb4ecff78f"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureEntity
-        label=""
         allFields="false"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="LeftJoin"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="WorkQueueNotificationContactType_l10n"
         abstract="false"
@@ -71,9 +62,7 @@
       x:id="c1eb2341-c331-4eee-ac5a-d9521cea0657"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueNotificationContactType_GetId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueNotificationContactType.origam#LookupWorkQueueNotificationContactType/WorkQueueNotificationContactType/7c2ff0ae-7773-4080-a133-709846c0ae51"

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Workflow
     transactionBehavior="InheritExisting"
     traceLevel="None"
@@ -109,7 +109,6 @@
       outputMethod="AppendMergeExisting"
       traceLevel="InheritFromParent"
       roles="*"
-      features=""
       name="00_LoadData_Attachment_structure"
       abstract="false"
       serviceMethod="Root/Service/DataService.origam#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62"
@@ -153,7 +152,6 @@
       outputMethod="AppendMergeExisting"
       traceLevel="InheritFromParent"
       roles="*"
-      features=""
       name="01_GenerateMail"
       abstract="false"
       serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6"
@@ -272,7 +270,6 @@
       outputMethod="Ignore"
       traceLevel="InheritFromParent"
       roles="*"
-      features=""
       name="02_Send"
       abstract="false"
       serviceMethod="Root/Service/MailService.origam#MailService/SendMail/b5b0f1e1-3a75-4815-b65a-aef501604df7"
@@ -321,7 +318,6 @@
       transactionType="None"
       traceLevel="InheritFromParent"
       roles="*"
-      features=""
       name="02_SendByQueue"
       abstract="false"
       startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsNotEmpty.origam#SR_SimpleContextValue_IsNotEmpty/9fcb4f49-e9d6-4d44-9e4f-11bfcc4743cd"
@@ -332,7 +328,6 @@
         outputMethod="AppendMergeExisting"
         traceLevel="InheritFromParent"
         roles="*"
-        features=""
         name="01_Attachment_structure_fromAttachmentDataAndName"
         abstract="false"
         serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6"
@@ -404,7 +399,6 @@
         outputMethod="Ignore"
         traceLevel="InheritFromParent"
         roles="*"
-        features=""
         name="02_Send_byQueue"
         abstract="false"
         serviceMethod="Root/Service/WorkQueueService.origam#WorkQueueService/Add/f58c3c70-8eb9-4cdc-b74e-a2a06efe7a02"

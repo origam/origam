@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="true"
-    dataSetClass=""
     name="LookupOrigamNotificationChannelType"
     abstract="false"
     x:id="2ed970ee-d0bf-4c0f-befc-95ffd0736f7b"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamNotificationChannelType"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="d89e346c-b0a1-4f7c-bc1b-0b1db274107f"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Name"
@@ -36,12 +31,10 @@
         x:id="060c4a17-77a8-4b86-bcf7-98a253044e1a"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -50,13 +43,11 @@
         x:id="c5a3bb9c-f857-4ddb-ab15-a01799c990ef"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureEntity
-        label=""
         allFields="false"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="LeftJoin"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="OrigamNotificationChannelType_l10n"
         abstract="false"
@@ -71,9 +62,7 @@
       x:id="537c102d-f423-4788-b8f1-93af279c654e"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamNotificationChannelType_GetId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/Lookups/LookupOrigamNotificationChannelType.origam#LookupOrigamNotificationChannelType/OrigamNotificationChannelType/d89e346c-b0a1-4f7c-bc1b-0b1db274107f"

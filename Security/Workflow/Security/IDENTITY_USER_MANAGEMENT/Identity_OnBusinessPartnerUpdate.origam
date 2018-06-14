@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Workflow
     transactionBehavior="InheritExisting"
     traceLevel="None"
@@ -44,7 +44,6 @@
       transactionType="None"
       traceLevel="InheritFromParent"
       roles="*"
-      features=""
       name="02_WhenUsernameNotEmpty"
       abstract="false"
       startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsNotEmpty.origam#SR_SimpleContextValue_IsNotEmpty/9fcb4f49-e9d6-4d44-9e4f-11bfcc4743cd"
@@ -55,7 +54,6 @@
         outputMethod="Ignore"
         traceLevel="InheritFromParent"
         roles="*"
-        features=""
         name="03_Call_MembershipService_UpdateEmail"
         abstract="false"
         serviceMethod="Security/Service/IdentityService.origam#IdentityService/UpdateUser/1c7a14b9-e49b-422c-9e66-86fd5db29c6d"

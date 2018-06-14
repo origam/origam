@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupOrigamValidationRule"
     abstract="false"
     x:id="16990d59-e7ef-436b-8a2f-d92415615a30"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamValidationRule"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="87701e7c-ebb5-4bd2-8c3a-9b1bf9628059"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -36,12 +31,10 @@
         x:id="cea10784-76e4-47e6-977c-1b9b106c13e0"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Name"
@@ -57,9 +50,7 @@
       x:id="3def9fd3-4d2c-48e8-806f-3e52cf80f33b"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamValidationRule_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/Lookups/LookupOrigamValidationRule.origam#LookupOrigamValidationRule/OrigamValidationRule/87701e7c-ebb5-4bd2-8c3a-9b1bf9628059"

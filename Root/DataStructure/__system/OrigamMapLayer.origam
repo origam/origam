@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamMapLayer"
     abstract="false"
     x:id="71ccfb5e-fde3-46e4-8934-15115274a37c"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamMapLayer"
       abstract="false"
@@ -22,13 +19,11 @@
       x:id="ec134543-02c7-4d8e-8dda-48c3d3c281d3"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureEntity
-        label=""
         allFields="true"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="Normal"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="OrigamMapLayerParameter"
         abstract="false"

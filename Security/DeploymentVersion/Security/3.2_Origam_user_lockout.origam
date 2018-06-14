@@ -1,10 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DeploymentVersion
     version="3.2"
     name="3.2_Origam_user_lockout"
     abstract="false"
-    deploymentDependenciesCsv=""
     x:id="115f418f-a000-4a0d-a38e-76c9fbb7c045"
     x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
     <DeploymentUpdateScriptActivity

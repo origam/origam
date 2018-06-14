@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <PanelControlSet
     name="WorkQueueCommand"
     abstract="false"
@@ -7,22 +7,16 @@
     x:id="0ff67cbc-3e63-4857-9c1e-040c79944cab"
     x:type="Origam.Schema.GuiModel.PanelControlSet">
     <ControlSetItem
-      roles=""
-      features=""
       isAlternative="false"
       requestSaveAfterChange="false"
-      level="0"
       name="WorkQueueCommandRootControl"
       abstract="false"
       widget="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
       x:id="287004c4-bfc0-4f07-a09f-424495b20ab8"
       x:type="Origam.Schema.GuiModel.ControlSetItem">
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsTextBox2"
         abstract="false"
         widget="Root/Control/_Basic Controls/AsTextBox.origam#AsTextBox/7d1ec946-017e-4a00-9d92-d4d6b9fabffc"
@@ -65,7 +59,6 @@
           x:id="51632005-0e16-4379-83df-252aad4e0b4b"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="340fed3d-87c0-4c4b-a474-d28ebe2a7a14"
           name="Caption"
           abstract="false"
@@ -121,7 +114,6 @@
           x:id="65841314-cab9-44aa-8a00-a94b873bafea"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="2feb3117-3bcd-4779-baa8-ef742e1eb108"
           name="GridColumnCaption"
           abstract="false"
@@ -156,7 +148,6 @@
           x:id="654846d3-1803-46c3-a58a-dabb31d5b633"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="e4c1751b-7b33-42d3-b945-11971cdf7c56"
           name="Text"
           abstract="false"
@@ -164,11 +155,8 @@
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsTextBox5"
         abstract="false"
         widget="Root/Control/_Basic Controls/AsTextBox.origam#AsTextBox/7d1ec946-017e-4a00-9d92-d4d6b9fabffc"
@@ -239,7 +227,6 @@
           x:id="e2c7ee0a-c802-433f-bd8e-506ab8688bc3"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="e4c1751b-7b33-42d3-b945-11971cdf7c56"
           name="Text"
           abstract="false"
@@ -288,7 +275,6 @@
           x:id="5e3f6636-8d78-470a-8afb-db0ba56767bd"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="2feb3117-3bcd-4779-baa8-ef742e1eb108"
           name="GridColumnCaption"
           abstract="false"
@@ -302,7 +288,6 @@
           x:id="adba4dca-70bb-4a9b-8a92-e5415dff3ee3"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="340fed3d-87c0-4c4b-a474-d28ebe2a7a14"
           name="Caption"
           abstract="false"
@@ -310,11 +295,8 @@
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsDropDown1"
         abstract="false"
         widget="Root/Control/_Basic Controls/AsCombo.origam#AsCombo/aebc5761-339d-4787-9289-704f7ed7ecbe"
@@ -392,14 +374,12 @@
           x:id="7d468791-f9ca-44be-a161-a80b3f9628a0"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="e8a88c70-c3f8-4e39-b041-3b829967fd51"
           name="LookupValue"
           abstract="false"
           x:id="27e6a131-6dd5-4ce8-bc8d-b60c0c878c06"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="38431081-97d8-451d-a32e-e196e423d2a9"
           name="Caption"
           abstract="false"
@@ -413,7 +393,6 @@
           x:id="02ec3047-4d63-44d3-81f3-da8cd490f427"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="8afeb337-2647-4eaf-8a53-bcd7d08c5809"
           name="GridColumnCaption"
           abstract="false"
@@ -442,11 +421,8 @@
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsDropDown2"
         abstract="false"
         widget="Root/Control/_Basic Controls/AsCombo.origam#AsCombo/aebc5761-339d-4787-9289-704f7ed7ecbe"
@@ -468,7 +444,6 @@
           x:id="158d925e-3c00-4989-8bb1-06200b5d2f70"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="e8a88c70-c3f8-4e39-b041-3b829967fd51"
           name="LookupValue"
           abstract="false"
@@ -517,7 +492,6 @@
           x:id="fcdef324-3515-4a5f-a710-3157318a9d19"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="8afeb337-2647-4eaf-8a53-bcd7d08c5809"
           name="GridColumnCaption"
           abstract="false"
@@ -566,7 +540,6 @@
           x:id="bd7d39fe-b0c1-48ee-9843-f07a5bd9f3b6"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="38431081-97d8-451d-a32e-e196e423d2a9"
           name="Caption"
           abstract="false"
@@ -574,8 +547,6 @@
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
         level="100"
@@ -671,11 +642,8 @@
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsTextBox3"
         abstract="false"
         widget="Root/Control/_Basic Controls/AsTextBox.origam#AsTextBox/7d1ec946-017e-4a00-9d92-d4d6b9fabffc"
@@ -718,7 +686,6 @@
           x:id="4387f336-a628-4ff2-8a37-36572c88f2de"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="2feb3117-3bcd-4779-baa8-ef742e1eb108"
           name="GridColumnCaption"
           abstract="false"
@@ -760,7 +727,6 @@
           x:id="8eff61f0-466e-48b7-a429-7bfdec221b98"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="340fed3d-87c0-4c4b-a474-d28ebe2a7a14"
           name="Caption"
           abstract="false"
@@ -788,7 +754,6 @@
           x:id="3c747bc8-8296-469c-ad8d-b1f5144da365"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="e4c1751b-7b33-42d3-b945-11971cdf7c56"
           name="Text"
           abstract="false"
@@ -817,8 +782,6 @@
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
         level="100"
@@ -885,7 +848,6 @@
           x:id="3ae86cd2-6db5-45bf-8a08-791e2b512a62"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="e4c1751b-7b33-42d3-b945-11971cdf7c56"
           name="Text"
           abstract="false"
@@ -948,14 +910,12 @@
           x:id="f7da332c-1b93-44e0-a71a-ea4e0c7a6b60"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="340fed3d-87c0-4c4b-a474-d28ebe2a7a14"
           name="Caption"
           abstract="false"
           x:id="07399cf2-9dc0-459a-94e9-f1a1f5aa5515"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="2feb3117-3bcd-4779-baa8-ef742e1eb108"
           name="GridColumnCaption"
           abstract="false"
@@ -963,11 +923,8 @@
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsTextBox6"
         abstract="false"
         widget="Root/Control/_Basic Controls/AsTextBox.origam#AsTextBox/7d1ec946-017e-4a00-9d92-d4d6b9fabffc"
@@ -982,7 +939,6 @@
           x:id="ddd804bd-7a9d-4982-9e09-5dcfccab2432"
           x:type="Origam.Schema.GuiModel.PropertyBindingInfo" />
         <PropertyValueItem
-          value=""
           propertyId="2feb3117-3bcd-4779-baa8-ef742e1eb108"
           name="GridColumnCaption"
           abstract="false"
@@ -1045,7 +1001,6 @@
           x:id="3c384d48-27af-4b7b-b59f-8bbf85edf4a5"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="e4c1751b-7b33-42d3-b945-11971cdf7c56"
           name="Text"
           abstract="false"
@@ -1087,7 +1042,6 @@
           x:id="a3d4b963-a1cb-4680-9fdb-c671e303044c"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="340fed3d-87c0-4c4b-a474-d28ebe2a7a14"
           name="Caption"
           abstract="false"
@@ -1109,11 +1063,8 @@
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsCheckBox2"
         abstract="false"
         widget="Root/Control/_Basic Controls/AsCheckBox.origam#AsCheckBox/48dc8d6a-21c1-4e12-96de-c3a5eb67434d"
@@ -1206,11 +1157,8 @@
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsCheckBox1"
         abstract="false"
         widget="Root/Control/_Basic Controls/AsCheckBox.origam#AsCheckBox/48dc8d6a-21c1-4e12-96de-c3a5eb67434d"
@@ -1303,11 +1251,8 @@
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsTextBox1"
         abstract="false"
         widget="Root/Control/_Basic Controls/AsTextBox.origam#AsTextBox/7d1ec946-017e-4a00-9d92-d4d6b9fabffc"
@@ -1336,7 +1281,6 @@
           x:id="ca0ad682-495e-4fc9-8c4a-18c9b9360fe1"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="e4c1751b-7b33-42d3-b945-11971cdf7c56"
           name="Text"
           abstract="false"
@@ -1350,7 +1294,6 @@
           x:id="bd2544df-57a4-4e57-94bf-4022653ef8fc"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="340fed3d-87c0-4c4b-a474-d28ebe2a7a14"
           name="Caption"
           abstract="false"
@@ -1399,7 +1342,6 @@
           x:id="2cdc3246-d29f-449c-b46f-8fbcf795dfa5"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="2feb3117-3bcd-4779-baa8-ef742e1eb108"
           name="GridColumnCaption"
           abstract="false"
@@ -1449,11 +1391,8 @@
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsTextBox4"
         abstract="false"
         widget="Root/Control/_Basic Controls/AsTextBox.origam#AsTextBox/7d1ec946-017e-4a00-9d92-d4d6b9fabffc"
@@ -1468,7 +1407,6 @@
           x:id="fbb0ba1c-cf13-4170-a5f2-bf2de8b05223"
           x:type="Origam.Schema.GuiModel.PropertyBindingInfo" />
         <PropertyValueItem
-          value=""
           propertyId="340fed3d-87c0-4c4b-a474-d28ebe2a7a14"
           name="Caption"
           abstract="false"
@@ -1496,7 +1434,6 @@
           x:id="f0ee1749-2958-4bda-9b85-416a50eace12"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="2feb3117-3bcd-4779-baa8-ef742e1eb108"
           name="GridColumnCaption"
           abstract="false"
@@ -1510,7 +1447,6 @@
           x:id="e219954e-e8bc-4e0c-be9e-4c48c9546d35"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="e4c1751b-7b33-42d3-b945-11971cdf7c56"
           name="Text"
           abstract="false"
@@ -1595,21 +1531,18 @@
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <PropertyValueItem
-        value=""
         propertyId="2e429e40-0776-4de8-b6d8-2a3b4e56548c"
         name="MapLocationMember"
         abstract="false"
         x:id="ff569b38-aeb6-4e4b-8bba-0013242adfad"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="5e622365-4906-444e-a802-443bee69c542"
         name="OrderMember"
         abstract="false"
         x:id="2f4e9529-1189-4fba-8fab-002de5b1eeaf"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="e5434a33-cb85-47d9-a56f-f81456706911"
         name="PipelineStateMember"
         abstract="false"
@@ -1623,7 +1556,6 @@
         x:id="de6445e7-8342-44e3-8597-12f4ea8cbc3e"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="b8048914-a6a8-4ec2-9063-ba40ea7643b0"
         name="PipelineDateMember"
         abstract="false"
@@ -1637,14 +1569,12 @@
         x:id="95b0cea1-9fc6-41ff-8681-195460734f5f"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="cc52b1dd-ac5c-41e9-b054-688e18c91a97"
         name="DraggingLabelMember"
         abstract="false"
         x:id="af90bd0d-88ba-49dc-9000-201fa4a61f02"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="6cc64b12-082f-48cd-be8f-6780211718fe"
         name="PipelineNameMember"
         abstract="false"
@@ -1672,14 +1602,12 @@
         x:id="c2b28458-26d3-401c-80cc-2c14d435a79f"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="30e6c918-04b4-4628-90c9-1ba607c9d998"
         name="CalendarDateFromMember"
         abstract="false"
         x:id="072257dc-95fe-46c2-98a1-2f73172d7a01"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="0646ac0a-46ff-419f-a7b4-3892877ba9dc"
         name="CalendarDescriptionMember"
         abstract="false"
@@ -1700,14 +1628,12 @@
         x:id="fb87ebe2-32ac-4b14-ac84-3ca37cc1b9ba"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="63642a1c-b4ad-4984-b487-befbd0a4b216"
         name="PipelinePriceMember"
         abstract="false"
         x:id="b4dcc49e-cd49-4651-a49e-3fa8ebf95311"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="87bb70a8-a0a7-4c4e-9f18-5724d74b3b98"
         name="CalendarDateDueMember"
         abstract="false"
@@ -1721,14 +1647,12 @@
         x:id="aa237afa-c856-472d-b65f-410e2410499b"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="c3f96d4c-f4c3-42ca-af5b-e46b4e7536e6"
         name="ImplicitFilter"
         abstract="false"
         x:id="f8d6b08c-cf70-4698-a4c8-465f89200634"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="9724950e-a16b-4844-9038-15f0242a09c8"
         name="MapCenter"
         abstract="false"
@@ -1749,14 +1673,12 @@
         x:id="79e8f44b-1b09-4c41-87f6-54f35d001bfe"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="9c6b43b4-df9a-455d-bbe3-70921e0790db"
         name="MapColorMember"
         abstract="false"
         x:id="b16ce34c-0ae6-4ff1-82db-57cfd2d403b0"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="76adc867-8e5c-4d20-869f-e47ecadedf47"
         name="DefaultConfiguration"
         abstract="false"
@@ -1791,14 +1713,12 @@
         x:id="9877a415-8559-4c23-957b-6c84335db29d"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="032cc7ad-fcdf-4abc-b848-3be01947a5b8"
         name="MapLayers"
         abstract="false"
         x:id="c0946172-96ed-4288-a3a4-6fb5cccfa60d"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="1ca1946f-3b37-4c49-8443-10c1503dc76c"
         name="MapTextLocationMember"
         abstract="false"
@@ -1812,21 +1732,18 @@
         x:id="9199182e-2375-451d-a965-7ab55bbfdaaf"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="02d9ba6b-e6ec-46f4-8073-6dc398c081e5"
         name="MapTextColorMember"
         abstract="false"
         x:id="c019ecb5-a6d8-4d58-99cf-7b8d1cb0e055"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="8ae87ccd-e465-4fc9-be2c-fc7cadb3df0f"
         name="CalendarResourceIdMember"
         abstract="false"
         x:id="d1f47238-9fe4-4d81-90c7-7bf7af63b15c"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="049c3765-137e-4f7c-a9f5-bef4d9561e61"
         name="MapAzimuthMember"
         abstract="false"
@@ -1861,7 +1778,6 @@
         x:id="f178a719-f7cb-4a65-ae26-86ecee5ae580"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="0688ff2b-b946-463f-9e87-069fa03387c9"
         name="MapTextRotationMember"
         abstract="false"
@@ -1875,7 +1791,6 @@
         x:id="5a9c63ae-ba1d-40ff-b0c2-8da61d1b039d"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="f3a804f3-61c9-4215-8c42-2b9edd0c4ba1"
         name="SelectionMember"
         abstract="false"
@@ -1889,7 +1804,6 @@
         x:id="d0f3f952-fa9a-4cb7-8a25-9aedb4d92ed5"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="f8a067fe-7753-4393-9ab9-70ca3c0c0b11"
         name="CalendarDateToMember"
         abstract="false"
@@ -1931,7 +1845,6 @@
         x:id="06105521-27fb-4cd6-9769-c06a285a3874"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="ff52e0c4-c2a8-4d47-ae9b-7cb5bcbb415a"
         name="CalendarIsFinishedMember"
         abstract="false"
@@ -1945,7 +1858,6 @@
         x:id="c0f9c57e-df46-48ff-93ab-c3961202af1e"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="cd590061-51dc-4cce-a423-d427357d5a03"
         name="MapTextMember"
         abstract="false"
@@ -1959,7 +1871,6 @@
         x:id="c31d18db-2c7b-4bb7-bec7-c86afbcc3362"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="76f51292-1b14-43e3-b044-89d6c1234d5c"
         name="MapIconMember"
         abstract="false"
@@ -1973,7 +1884,6 @@
         x:id="801d190e-a2f9-4dba-bd7f-ca039e0a3a02"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="6441ece9-86a8-4394-a33a-4a4bdd4489e9"
         name="CalendarNameMember"
         abstract="false"
@@ -2008,21 +1918,18 @@
         x:id="e01001fe-1c6c-47fd-b1a5-e5c06f2f4bc4"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="d3e6cd08-af2d-412f-927f-d4e972a0e380"
         name="CalendarCustomSortMember"
         abstract="false"
         x:id="1818e18a-0e94-4217-9315-f67070b343b7"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="fa8c5b1c-42fa-4eeb-9c5f-a073625e5a22"
         name="CalendarResourceNameLookupField"
         abstract="false"
         x:id="86bdb0c0-2e8a-4ff3-a8b9-f908363700ef"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="8c12e0ab-e4bd-4675-8f12-c5930a07be14"
         name="DataMember"
         abstract="false"

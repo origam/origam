@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     readOnly="false"
     audit="None"
-    label=""
     name="OrigamSpreadsheetWorkbook"
     abstract="false"
     x:id="851ca8d8-9133-4d91-8a03-0f2cfd402527"
@@ -14,10 +13,8 @@
       x:type="Origam.Schema.SchemaItemAncestor" />
     <DataEntityColumn
       dataType="Integer"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"

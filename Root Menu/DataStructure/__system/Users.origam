@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructureDefaultSet
     name="Users"
     abstract="false"
@@ -14,9 +14,7 @@
     x:parentId="01194cd6-6cff-41bb-9ed8-d3642c909598"
     x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
     <DataStructureFilterSetFilter
-      ignoreFilterParameterName=""
       passWhenParameterMatch="false"
-      roles=""
       name="BusinessPartner_GetId"
       abstract="false"
       entity="Root/DataStructure/__system/Users.origam#Users/BusinessPartner/79bede18-ff01-49cd-8703-94aa6bfe787c"
@@ -38,7 +36,6 @@
     x:type="Origam.Schema.EntityModel.DataStructureSortSet">
     <DataStructureSortSetItem
       fieldName="Name"
-      sortOrder="0"
       sortDirection="Ascending"
       name="BusinessPartner_0_Name"
       abstract="false"

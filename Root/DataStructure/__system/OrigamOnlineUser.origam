@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamOnlineUser"
     abstract="false"
     x:id="aa4c9df9-d6da-408e-a095-fd377ffcc319"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="LastWins"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamOnlineUser"
       abstract="false"
@@ -28,9 +25,7 @@
       x:id="242c3f6a-58c5-4ad9-8ba1-31f5243e9890"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamOnlineUser_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamOnlineUser.origam#OrigamOnlineUser/OrigamOnlineUser/2f52948d-75e8-4eaa-ba89-c4b95463a8a9"
@@ -45,9 +40,7 @@
       x:id="ece8b03a-f378-4026-b3b3-588cb58317b6"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamOnlineUser_GetByUserName"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamOnlineUser.origam#OrigamOnlineUser/OrigamOnlineUser/2f52948d-75e8-4eaa-ba89-c4b95463a8a9"

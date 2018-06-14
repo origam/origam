@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="OrigamMap"
     databaseObjectType="Table"
@@ -36,7 +36,6 @@
       mappedColumnName="InitialZoom"
       excludeFromAuditing="false"
       dataType="Integer"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Initial Zoom"
@@ -52,7 +51,6 @@
       mappedColumnName="MapCenter"
       excludeFromAuditing="false"
       dataType="Geography"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Map Center"
@@ -89,7 +87,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_ReferenceCode"
         abstract="false"
         field="Root/DataEntity/__system/OrigamMap.origam#OrigamMap/ReferenceCode/5f5a98a6-4695-40fe-8342-3180a287b935"
@@ -104,10 +101,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Attribute"

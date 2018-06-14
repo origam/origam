@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <PanelControlSet
     name="OrigamSyncConfig_Selection"
     abstract="false"
@@ -7,22 +7,16 @@
     x:id="6f2db482-fe92-442b-b812-eecfcd08dbb2"
     x:type="Origam.Schema.GuiModel.PanelControlSet">
     <ControlSetItem
-      roles=""
-      features=""
       isAlternative="false"
       requestSaveAfterChange="false"
-      level="0"
       name="OrigamSyncConfig_SelectionRootControl"
       abstract="false"
       widget="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
       x:id="5a1bac29-78f2-4fff-9587-449fe2587d38"
       x:type="Origam.Schema.GuiModel.ControlSetItem">
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsDropDown1"
         abstract="false"
         widget="Root/Control/_Basic Controls/AsCombo.origam#AsCombo/aebc5761-339d-4787-9289-704f7ed7ecbe"
@@ -71,7 +65,6 @@
           x:id="e6feb34e-e6d8-4e66-8337-1f98d6140c8e"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="8afeb337-2647-4eaf-8a53-bcd7d08c5809"
           name="GridColumnCaption"
           abstract="false"
@@ -127,7 +120,6 @@
           x:id="56a84afc-77fb-4629-9376-b38ce2279926"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="e8a88c70-c3f8-4e39-b041-3b829967fd51"
           name="LookupValue"
           abstract="false"
@@ -177,7 +169,6 @@
         x:id="d807e408-b2ee-42af-b09b-938c08268cc4"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="8c12e0ab-e4bd-4675-8f12-c5930a07be14"
         name="DataMember"
         abstract="false"
@@ -219,7 +210,6 @@
         x:id="5903f608-a06e-46c3-8a0c-ecbf11e39562"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value=""
         propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2"
         name="PanelTitle"
         abstract="false"

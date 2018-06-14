@@ -1,8 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <WorkQueueClass
-    notificationFilterPkParameter=""
-    defaultPanelConfiguration=""
     name="Mail"
     abstract="false"
     entity="Root/DataEntity/__system/Mail.origam#Mail/af59fd91-736c-462c-9039-daece8811668"
@@ -16,56 +14,42 @@
     x:type="Origam.Schema.WorkflowModel.WorkQueueClass">
     <WorkQueueClassEntityMapping
       xPath="/ROOT/Mail/@DateSent"
-      formatPattern=""
-      sortOrder="0"
       name="DateSent"
       abstract="false"
       x:id="df2ad81c-ecc7-46ee-b04b-21f903e4a802"
       x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
     <WorkQueueClassEntityMapping
       xPath="/ROOT/Mail/Recipient"
-      formatPattern=""
-      sortOrder="0"
       name="Recipient"
       abstract="false"
       x:id="d047906d-7ea8-4b33-a40d-67b23f13cb89"
       x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
     <WorkQueueClassEntityMapping
       xPath="/ROOT/Mail/@DateReceived"
-      formatPattern=""
-      sortOrder="0"
       name="DateReceived"
       abstract="false"
       x:id="57b41a67-29f3-4449-8af4-838320a6a29e"
       x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
     <WorkQueueClassEntityMapping
       xPath="/ROOT/Mail/@Subject"
-      formatPattern=""
-      sortOrder="0"
       name="Subject"
       abstract="false"
       x:id="5dd6e80f-4361-4326-8c61-9b7f40fbd3e6"
       x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
     <WorkQueueClassEntityMapping
       xPath="/ROOT/Mail/MessageBody"
-      formatPattern=""
-      sortOrder="0"
       name="MessageBody"
       abstract="false"
       x:id="c7742a16-b983-48d5-8f98-c88b2ea7c0b5"
       x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
     <WorkQueueClassEntityMapping
       xPath="/ROOT/Mail/Sender"
-      formatPattern=""
-      sortOrder="0"
       name="Sender"
       abstract="false"
       x:id="5eb83d54-e49d-4d70-863d-c8f6460477bc"
       x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
     <WorkQueueClassEntityMapping
       xPath="/ROOT/Mail/@Id"
-      formatPattern=""
-      sortOrder="0"
       name="refId"
       abstract="false"
       x:id="4d072d00-7ef4-431d-9bec-ffe92c2c6eef"
@@ -73,17 +57,12 @@
     <EntityUIAction
       roles="*"
       label="Send"
-      features=""
       order="10"
       actionType="Workflow"
       mode="ActiveRecord"
       valueType="SavedValue"
       placement="Toolbar"
       refreshAfterReturn="None"
-      modalDialogWidth="0"
-      modalDialogHeight="0"
-      scannerInputParameter=""
-      scannerTerminator=""
       default="false"
       modal="false"
       name="Send"

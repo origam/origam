@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupCounter"
     abstract="false"
     x:id="95732afe-9d93-41ca-a0d3-b550f186a5ee"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="Counter"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="715abadb-a5fb-4e6a-9215-77ffff566d9a"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Description"
@@ -36,12 +31,10 @@
         x:id="94a3137a-cc15-479c-9c0a-c4c43bad40c9"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="ReferenceCode"
@@ -50,12 +43,10 @@
         x:id="880c29b6-89b1-47f5-8a39-d53db48d2d46"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -71,9 +62,7 @@
       x:id="11720f6a-d8d9-4e0d-87ea-50f467565815"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="Counter_GetByReferenceCode"
         abstract="false"
         entity="Root/DataStructure/__system/Lookups/LookupCounter.origam#LookupCounter/Counter/715abadb-a5fb-4e6a-9215-77ffff566d9a"
@@ -88,9 +77,7 @@
       x:id="290b010e-d3fc-46c1-b18b-c03f318b3ebd"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="Counter_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/Lookups/LookupCounter.origam#LookupCounter/Counter/715abadb-a5fb-4e6a-9215-77ffff566d9a"

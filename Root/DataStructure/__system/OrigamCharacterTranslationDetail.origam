@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamCharacterTranslationDetail"
     abstract="false"
     x:id="9268abd0-a08e-4c97-b5f7-219eacf171c0"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamCharacterTranslationDetail"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="f37a758c-c06e-4e75-9b06-eef33ebc4ae0"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="refOrigamCharacterTranslationId"
@@ -36,12 +31,10 @@
         x:id="def33c72-fa49-4053-8087-218fd38b829a"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Priority"
@@ -50,12 +43,10 @@
         x:id="ad0e292f-4a28-49e9-85c8-b79de7c4744d"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Source"
@@ -64,12 +55,10 @@
         x:id="d4b0ed44-ca3e-4b5f-a121-db1f7b821312"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -78,12 +67,10 @@
         x:id="1f1080bb-05e5-4d6a-b185-e1c57d3f8a59"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Target"
@@ -99,9 +86,7 @@
       x:id="c2cd04cd-9a47-49d8-aa03-2e07044b3c7c"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamCharacterTranslationDetail_GetByOrigamCharacterTranslationId"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamCharacterTranslationDetail.origam#OrigamCharacterTranslationDetail/OrigamCharacterTranslationDetail/f37a758c-c06e-4e75-9b06-eef33ebc4ae0"
@@ -116,7 +101,6 @@
       x:type="Origam.Schema.EntityModel.DataStructureSortSet">
       <DataStructureSortSetItem
         fieldName="Priority"
-        sortOrder="0"
         sortDirection="Ascending"
         name="OrigamCharacterTranslationDetail_0_Priority"
         abstract="false"

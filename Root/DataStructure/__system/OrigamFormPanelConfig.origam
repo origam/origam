@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamFormPanelConfig"
     abstract="false"
     x:id="218890ad-cd12-43a9-9166-4a02028d6125"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamFormPanelConfig"
       abstract="false"
@@ -28,9 +25,7 @@
       x:id="59d68a5a-0f9c-405b-957b-1d698535310e"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamFormPanelConfig_GetPanel"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/OrigamFormPanelConfig/ce4e5ce2-cf20-45cf-8b22-484c8e9bec4b"
@@ -38,9 +33,7 @@
         x:id="e49fdb53-4aca-49f4-87ca-18fd967db122"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamFormPanelConfig_GetProfile"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/OrigamFormPanelConfig/ce4e5ce2-cf20-45cf-8b22-484c8e9bec4b"
@@ -55,9 +48,7 @@
       x:id="3d5bb832-50d7-44d8-a7c5-abdf88d5df74"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamFormPanelConfig_GetProfile"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/OrigamFormPanelConfig/ce4e5ce2-cf20-45cf-8b22-484c8e9bec4b"
@@ -65,9 +56,7 @@
         x:id="434fd1df-32eb-4c2d-869a-21d07dfc853f"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamFormPanelConfig_GetPanel"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/OrigamFormPanelConfig/ce4e5ce2-cf20-45cf-8b22-484c8e9bec4b"
@@ -75,9 +64,7 @@
         x:id="b7010d56-afcb-416d-838e-417dc9e49368"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamFormPanelConfig_GetWorkflow"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/OrigamFormPanelConfig/ce4e5ce2-cf20-45cf-8b22-484c8e9bec4b"

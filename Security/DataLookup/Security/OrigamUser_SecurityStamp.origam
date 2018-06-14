@@ -1,19 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
     listValueMember="Id"
     listDisplayMember="RecordUpdated"
     isTree="false"
-    treeParentMember=""
     suppressEmptyColumns="false"
     alwaysAllowReturnToForm="false"
     isFilteredServerside="false"
-    serversideFilterParameter=""
     searchByFirstColumnOnly="false"
     valueValueMember="Id"
     valueDisplayMember="RecordUpdated"
-    roleFilterMember=""
-    featureFilterMember=""
     name="OrigamUser_SecurityStamp"
     abstract="false"
     listDataStructure="Security/DataStructure/Security/LookupOrigamUser_SecurityStamp_ByBuseinssPartnerId.origam#LookupOrigamUser_SecurityStamp_ByBuseinssPartnerId/bb9facc3-8143-4858-8ba9-7d6b9e184ca2"

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <FormControlSet
     name="OrigamSyncConfig"
     abstract="false"
@@ -7,22 +7,16 @@
     x:id="acd27581-a0a7-40dd-93ae-0fa304f6207f"
     x:type="Origam.Schema.GuiModel.FormControlSet">
     <ControlSetItem
-      roles=""
-      features=""
       isAlternative="false"
       requestSaveAfterChange="false"
-      level="0"
       name="OrigamSyncConfigRootControl"
       abstract="false"
       widget="Root/Control/_Basic Controls/AsForm.origam#AsForm/ff32a695-c533-4262-87d6-e4cd4451e2c9"
       x:id="0bc73bed-2d57-480a-97fb-9f4b1c5fcc5c"
       x:type="Origam.Schema.GuiModel.ControlSetItem">
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsPanel1"
         abstract="false"
         widget="Root/Control/OrigamSyncConfig.origam#OrigamSyncConfig/0a329856-006a-4bf0-aa02-8e58216c7836"

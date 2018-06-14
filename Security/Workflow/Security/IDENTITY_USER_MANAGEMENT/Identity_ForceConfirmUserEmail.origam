@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Workflow
     transactionBehavior="InheritExisting"
     traceLevel="None"
@@ -19,7 +19,6 @@
       outputMethod="Ignore"
       traceLevel="InheritFromParent"
       roles="*"
-      features=""
       name="01_CallMembershipService_ForceConfirmEmail"
       abstract="false"
       serviceMethod="Security/Service/IdentityService.origam#IdentityService/ForceConfirmEmail/eafdc1fd-a7d2-4c43-a172-33727d718223"

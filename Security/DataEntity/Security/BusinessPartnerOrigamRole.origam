@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="BusinessPartnerOrigamRole"
     databaseObjectType="Table"
@@ -19,10 +19,8 @@
       mappedColumnName="refBusinessPartnerId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -37,7 +35,6 @@
       mappedColumnName="refOrigamRoleId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="User Role"
@@ -61,7 +58,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refBusinessPartnerId"
         abstract="false"
         field="Security/DataEntity/Security/BusinessPartnerOrigamRole.origam#BusinessPartnerOrigamRole/refBusinessPartnerId/bd07e079-7328-4959-97ed-2575e2db3f02"
@@ -85,7 +81,6 @@
         x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refBusinessPartnerId"
         abstract="false"
         field="Security/DataEntity/Security/BusinessPartnerOrigamRole.origam#BusinessPartnerOrigamRole/refBusinessPartnerId/bd07e079-7328-4959-97ed-2575e2db3f02"
@@ -100,10 +95,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -142,7 +135,6 @@
       </DataEntityColumn>
     </EntityFilter>
     <Parameter
-      callElements="0"
       allowContextReference="false"
       allowDataConstantReference="false"
       allowDataStructureReference="false"
@@ -151,7 +143,6 @@
       allowTransformationReference="false"
       allowWorkflowReference="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       name="parBusinessPartnerId"
       abstract="false"

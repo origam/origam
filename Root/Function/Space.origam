@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Function
     dataType="String"
     type="Standard"
@@ -8,7 +8,6 @@
     x:id="a168d638-1c68-40f4-a1e3-c1de481576d6"
     x:type="Origam.Schema.EntityModel.Function">
     <FunctionParameter
-      ordinalPosition="0"
       name="NumberOfSpaces"
       abstract="false"
       x:id="9718cbc7-6ab6-4b85-bc16-b41e0fe87d8d"

@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="WorkQueueNotificationEvent"
     databaseObjectType="Table"
     generateDeploymentScript="true"
     readOnly="false"
     audit="None"
-    label=""
     name="WorkQueueNotificationEvent"
     abstract="false"
     localizationRelation="Root/DataEntity/Work Queue/WorkQueueNotificationEvent.origam#WorkQueueNotificationEvent/WorkQueueNotificationEvent_l10n/33479fdb-803b-4f15-9df2-4c311c41d2a3"

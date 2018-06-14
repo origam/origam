@@ -1,19 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     readOnly="false"
     audit="None"
-    label=""
     name="OrigamSpreadsheetCell"
     abstract="false"
     x:id="c6559c7f-0381-4448-9e16-e137aa27b0c0"
     x:type="Origam.Schema.EntityModel.DetachedEntity">
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Element"
@@ -24,10 +21,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Integer"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -39,10 +34,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Integer"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Hidden"
@@ -53,10 +46,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Integer"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="true"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"

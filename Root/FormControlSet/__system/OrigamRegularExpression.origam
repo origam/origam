@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <FormControlSet
     name="OrigamRegularExpression"
     abstract="false"
@@ -7,29 +7,22 @@
     x:id="05348c6d-cac1-4365-9052-cbc8e44a31b9"
     x:type="Origam.Schema.GuiModel.FormControlSet">
     <ControlSetItem
-      roles=""
-      features=""
       isAlternative="false"
       requestSaveAfterChange="false"
-      level="0"
       name="OrigamRegularExpressionRootControl"
       abstract="false"
       widget="Root/Control/_Basic Controls/AsForm.origam#AsForm/ff32a695-c533-4262-87d6-e4cd4451e2c9"
       x:id="a479cad7-c506-4a06-b599-95f3d11b1e75"
       x:type="Origam.Schema.GuiModel.ControlSetItem">
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsPanel1"
         abstract="false"
         widget="Root/Control/OrigamRegularExpression.origam#OrigamRegularExpression/8b17434d-5baf-4ce8-8122-2107cd3f1525"
         x:id="b585e776-f2ed-40c1-892b-dcf053928a94"
         x:type="Origam.Schema.GuiModel.ControlSetItem">
         <PropertyValueItem
-          value=""
           propertyId="e5434a33-cb85-47d9-a56f-f81456706911"
           name="PipelineStateMember"
           abstract="false"
@@ -43,7 +36,6 @@
           x:id="62cfb461-4191-483b-a986-09dbdc1724a7"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="9c6b43b4-df9a-455d-bbe3-70921e0790db"
           name="MapColorMember"
           abstract="false"
@@ -71,7 +63,6 @@
           x:id="e490a593-6030-4689-acf7-1d893bdb5c77"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="30e6c918-04b4-4628-90c9-1ba607c9d998"
           name="CalendarDateFromMember"
           abstract="false"
@@ -99,7 +90,6 @@
           x:id="a30c1c2b-e01b-4f49-b40f-27af32169934"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="0646ac0a-46ff-419f-a7b4-3892877ba9dc"
           name="CalendarDescriptionMember"
           abstract="false"
@@ -120,7 +110,6 @@
           x:id="899e1f07-f225-4341-94c3-349f357faf6b"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="049c3765-137e-4f7c-a9f5-bef4d9561e61"
           name="MapAzimuthMember"
           abstract="false"
@@ -134,7 +123,6 @@
           x:id="b821ffb3-0a00-4b54-8334-37fdf4aed884"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="02d9ba6b-e6ec-46f4-8073-6dc398c081e5"
           name="MapTextColorMember"
           abstract="false"
@@ -148,28 +136,24 @@
           x:id="0f2fcf54-2d42-40fb-ad11-3977bf401682"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="c3f96d4c-f4c3-42ca-af5b-e46b4e7536e6"
           name="ImplicitFilter"
           abstract="false"
           x:id="95cfef5d-7455-4089-b92a-39bb3bfc8320"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="63642a1c-b4ad-4984-b487-befbd0a4b216"
           name="PipelinePriceMember"
           abstract="false"
           x:id="b1c40e27-09c0-4b82-9d8a-3a094ba899a2"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="f8a067fe-7753-4393-9ab9-70ca3c0c0b11"
           name="CalendarDateToMember"
           abstract="false"
           x:id="1b26e096-6ed6-44f2-9ff1-3df7b26e12f8"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="d3e6cd08-af2d-412f-927f-d4e972a0e380"
           name="CalendarCustomSortMember"
           abstract="false"
@@ -183,14 +167,12 @@
           x:id="4aea7d5b-17f1-40e2-8885-5276ef8a7202"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="fa8c5b1c-42fa-4eeb-9c5f-a073625e5a22"
           name="CalendarResourceNameLookupField"
           abstract="false"
           x:id="7261289a-7df8-4c37-b76a-5a3225248104"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="1ca1946f-3b37-4c49-8443-10c1503dc76c"
           name="MapTextLocationMember"
           abstract="false"
@@ -204,7 +186,6 @@
           x:id="51aea146-96c7-413c-aebf-5a5375d784c7"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="76f51292-1b14-43e3-b044-89d6c1234d5c"
           name="MapIconMember"
           abstract="false"
@@ -218,14 +199,12 @@
           x:id="fa010520-6ba8-4507-af6c-63a7d7add964"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="032cc7ad-fcdf-4abc-b848-3be01947a5b8"
           name="MapLayers"
           abstract="false"
           x:id="32f1a3fb-570b-4529-9ac4-651fb65baeee"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="cc52b1dd-ac5c-41e9-b054-688e18c91a97"
           name="DraggingLabelMember"
           abstract="false"
@@ -267,21 +246,18 @@
           x:id="843c4009-73f8-49ff-a098-7f20035acdb7"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="8ae87ccd-e465-4fc9-be2c-fc7cadb3df0f"
           name="CalendarResourceIdMember"
           abstract="false"
           x:id="5e6607b8-f1fe-4db1-b6d1-81e5faaeba85"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="ff52e0c4-c2a8-4d47-ae9b-7cb5bcbb415a"
           name="CalendarIsFinishedMember"
           abstract="false"
           x:id="0d3d2bd0-050b-4853-b382-86a126e94c62"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="cd590061-51dc-4cce-a423-d427357d5a03"
           name="MapTextMember"
           abstract="false"
@@ -323,7 +299,6 @@
           x:id="b4272244-db50-4619-85ea-9d1617db02eb"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="b8048914-a6a8-4ec2-9063-ba40ea7643b0"
           name="PipelineDateMember"
           abstract="false"
@@ -337,7 +312,6 @@
           x:id="7f470323-aff2-4b01-b80b-a07ecf309d44"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="5e622365-4906-444e-a802-443bee69c542"
           name="OrderMember"
           abstract="false"
@@ -351,7 +325,6 @@
           x:id="cb4f80e0-f00f-46a4-8edc-af14e830e7a9"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="87bb70a8-a0a7-4c4e-9f18-5724d74b3b98"
           name="CalendarDateDueMember"
           abstract="false"
@@ -365,21 +338,18 @@
           x:id="dc35b493-a7f2-4413-8e8b-ba4ae48f2112"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="6441ece9-86a8-4394-a33a-4a4bdd4489e9"
           name="CalendarNameMember"
           abstract="false"
           x:id="152cc4d1-66df-4a31-861b-c3ba1f1fe3dd"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="f3a804f3-61c9-4215-8c42-2b9edd0c4ba1"
           name="SelectionMember"
           abstract="false"
           x:id="d9b2cdbc-0efb-4011-af55-c4dd37ab2c1e"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="2e429e40-0776-4de8-b6d8-2a3b4e56548c"
           name="MapLocationMember"
           abstract="false"
@@ -407,7 +377,6 @@
           x:id="5178d411-95ff-4586-9b2d-d4302f5d3fa3"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="0688ff2b-b946-463f-9e87-069fa03387c9"
           name="MapTextRotationMember"
           abstract="false"
@@ -421,14 +390,12 @@
           x:id="233dada5-775f-48a9-870e-e6b5b41c8011"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="6cc64b12-082f-48cd-be8f-6780211718fe"
           name="PipelineNameMember"
           abstract="false"
           x:id="39e85547-97f5-40cb-a9c9-e72121e5ad4e"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="76adc867-8e5c-4d20-869f-e47ecadedf47"
           name="DefaultConfiguration"
           abstract="false"
@@ -449,7 +416,6 @@
           x:id="98680a0e-75ab-4b7e-bb86-f7f24f520615"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="9724950e-a16b-4844-9038-15f0242a09c8"
           name="MapCenter"
           abstract="false"

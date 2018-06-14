@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="CounterDetail"
     databaseObjectType="Table"
@@ -19,10 +19,8 @@
       mappedColumnName="refCounterId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -53,7 +51,6 @@
       mappedColumnName="ValidFrom"
       excludeFromAuditing="false"
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Valid From"
@@ -69,7 +66,6 @@
       mappedColumnName="CurrentPosition"
       excludeFromAuditing="false"
       dataType="Integer"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Current Position"
@@ -85,7 +81,6 @@
       mappedColumnName="Length"
       excludeFromAuditing="false"
       dataType="Integer"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Number Length"
@@ -101,7 +96,6 @@
       mappedColumnName="Increment"
       excludeFromAuditing="false"
       dataType="Integer"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Increment"
@@ -117,7 +111,6 @@
       mappedColumnName="ValidTo"
       excludeFromAuditing="false"
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Valid Until"
@@ -133,7 +126,6 @@
       mappedColumnName="CounterFrom"
       excludeFromAuditing="false"
       dataType="Integer"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="From"
@@ -149,7 +141,6 @@
       mappedColumnName="CounterTo"
       excludeFromAuditing="false"
       dataType="Integer"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="To"
@@ -170,7 +161,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refCounterId"
         abstract="false"
         field="Root/DataEntity/__system/CounterDetail.origam#CounterDetail/refCounterId/08e22bfe-69f5-4e24-878f-0188526ddc59"

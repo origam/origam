@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupAttachment_Count"
     abstract="false"
     x:id="3aef6112-9cad-4c2c-928c-26f6e248ed8b"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="Attachment"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="850a87c8-b5da-4580-9c8b-84e11c6bd9d0"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="Count"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Count"
@@ -43,9 +38,7 @@
       x:id="1aa22fbb-df48-4a11-b3df-a3f09cfcbce9"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="Attachment_GetByParentRecordId"
         abstract="false"
         entity="Root/DataStructure/__system/Lookups/LookupAttachment_Count.origam#LookupAttachment_Count/Attachment/850a87c8-b5da-4580-9c8b-84e11c6bd9d0"

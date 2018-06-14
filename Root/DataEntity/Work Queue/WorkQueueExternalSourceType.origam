@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="WorkQueueExternalSourceType"
     databaseObjectType="Table"
     generateDeploymentScript="true"
     readOnly="false"
     audit="None"
-    label=""
     name="WorkQueueExternalSourceType"
     abstract="false"
     localizationRelation="Root/DataEntity/Work Queue/WorkQueueExternalSourceType.origam#WorkQueueExternalSourceType/WorkQueueExternalSourceType_l10n/debc7873-cbba-4411-bb9d-f17c31c22825"

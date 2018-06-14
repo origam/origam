@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="OrigamRoleOrigamApplicationRole"
     databaseObjectType="Table"
@@ -19,7 +19,6 @@
       mappedColumnName="IsFormReadOnly"
       excludeFromAuditing="false"
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Read Only (Screen)"
@@ -36,7 +35,6 @@
       mappedColumnName="refOrigamRoleId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="User Role"
@@ -55,7 +53,6 @@
       mappedColumnName="refOrigamApplicationRoleId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Application Role"
@@ -79,7 +76,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refOrigamRoleId"
         abstract="false"
         field="Security/DataEntity/Security/OrigamRoleOrigamApplicationRole.origam#OrigamRoleOrigamApplicationRole/refOrigamRoleId/0f00bccd-2c1e-464d-9e0d-8e145f617855"
@@ -95,7 +91,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refOrigamRoleId"
         abstract="false"
         field="Security/DataEntity/Security/OrigamRoleOrigamApplicationRole.origam#OrigamRoleOrigamApplicationRole/refOrigamRoleId/0f00bccd-2c1e-464d-9e0d-8e145f617855"

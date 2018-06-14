@@ -1,10 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DeploymentVersion
     version="2.7"
     name="2.7_identity_user_management"
     abstract="false"
-    deploymentDependenciesCsv=""
     x:id="5f30fe33-948d-4323-af82-8b01e59511f3"
     x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
     <DeploymentUpdateScriptActivity

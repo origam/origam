@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="OrigamTooltipHelpUsage"
     databaseObjectType="Table"
     generateDeploymentScript="true"
     readOnly="false"
     audit="None"
-    label=""
     name="OrigamTooltipHelpUsage"
     abstract="false"
     x:id="8246797f-bfc1-4417-82d4-10f9e5e942c2"
@@ -19,7 +18,6 @@
       mappedColumnName="refBusinessPartnerId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="User"
@@ -38,10 +36,8 @@
       mappedColumnName="refOrigamTooltipHelpId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -61,7 +57,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refOrigamTooltipHelpId"
         abstract="false"
         field="Root/DataEntity/__system/OrigamTooltipHelpUsage.origam#OrigamTooltipHelpUsage/refOrigamTooltipHelpId/7312c135-0991-4e08-8197-fcbbdde4ba07"
@@ -76,10 +71,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Attribute"
@@ -119,7 +112,6 @@
     </EntityFilter>
     <Parameter
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       name="parBusinessPartnerId"
       abstract="false"

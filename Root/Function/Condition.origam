@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Function
     dataType="Xml"
     type="Standard"
@@ -8,19 +8,16 @@
     x:id="15510712-50f2-48b7-bdef-6c65172375a0"
     x:type="Origam.Schema.EntityModel.Function">
     <FunctionParameter
-      ordinalPosition="0"
       name="Else"
       abstract="false"
       x:id="d0ec6cce-c5c8-4a00-9cc4-8d9c35086dc9"
       x:type="Origam.Schema.EntityModel.FunctionParameter" />
     <FunctionParameter
-      ordinalPosition="0"
       name="If"
       abstract="false"
       x:id="40b0d923-262d-45ed-a13a-aea82c5f55e6"
       x:type="Origam.Schema.EntityModel.FunctionParameter" />
     <FunctionParameter
-      ordinalPosition="0"
       name="Then"
       abstract="false"
       x:id="fcaff177-5abe-4fb8-b4af-f67eeb5eb44d"

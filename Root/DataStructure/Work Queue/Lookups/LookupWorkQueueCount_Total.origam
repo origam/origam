@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupWorkQueueCount_Total"
     abstract="false"
     x:id="dc584e78-c5d9-490f-bd12-9a7d59cb96a4"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="WorkQueueEntry"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="e82c2522-6e9f-481f-abdb-dbe19a0d02e6"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="Count"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Count"
@@ -43,9 +38,7 @@
       x:id="f812a89b-2c80-4865-809c-b01ac35ab6f1"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueCount_Total.origam#LookupWorkQueueCount_Total/WorkQueueEntry/e82c2522-6e9f-481f-abdb-dbe19a0d02e6"

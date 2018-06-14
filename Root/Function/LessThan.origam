@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Function
     dataType="Boolean"
     type="Standard"
@@ -8,13 +8,11 @@
     x:id="d282e478-fcbb-4330-a26d-c4d9ba17403b"
     x:type="Origam.Schema.EntityModel.Function">
     <FunctionParameter
-      ordinalPosition="0"
       name="Right"
       abstract="false"
       x:id="06b7c48e-ce52-45a1-ae5b-423bad79c199"
       x:type="Origam.Schema.EntityModel.FunctionParameter" />
     <FunctionParameter
-      ordinalPosition="0"
       name="Left"
       abstract="false"
       x:id="a63f78ac-e508-4a8a-ba5d-fed0f483821d"

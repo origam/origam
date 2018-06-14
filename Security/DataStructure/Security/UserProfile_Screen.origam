@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="UserProfile_Screen"
     abstract="false"
     x:id="c6d40db8-4bb4-4913-b1ce-0473434adef6"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="BusinessPartner"
       abstract="false"
@@ -28,9 +25,7 @@
       x:id="6292a80f-6cc9-48a7-8c63-b08ec66937ca"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="BusinessPartner_GetCurrentUser"
         abstract="false"
         entity="Security/DataStructure/Security/UserProfile_Screen.origam#UserProfile_Screen/BusinessPartner/41a83604-88ed-4b2d-a74b-5253ae4e95e3"

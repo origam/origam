@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="ResourceAccessList"
     databaseObjectType="View"
     generateDeploymentScript="true"
     readOnly="false"
     audit="None"
-    label=""
     name="ResourceAccessList"
     abstract="false"
     x:id="86e47cb7-3d7b-4b01-8a2e-5217dcb89f09"
@@ -15,10 +14,8 @@
       mappedColumnName="refResourceAccessLevelId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -31,10 +28,8 @@
       mappedColumnName="refResourceId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -51,10 +46,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Attribute"
@@ -101,7 +94,6 @@
       x:type="Origam.Schema.EntityModel.EntitySecurityFilterReference" />
     <Parameter
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       name="parCurrentUserResourceId"
       abstract="false"

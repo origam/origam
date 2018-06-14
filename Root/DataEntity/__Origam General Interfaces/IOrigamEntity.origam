@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     readOnly="false"
     audit="None"
-    label=""
     name="IOrigamEntity"
     abstract="true"
     x:id="822192ce-9c74-4c16-8dd6-2a627d803e3c"
@@ -16,7 +15,6 @@
       mappedColumnName="RecordUpdated"
       excludeFromAuditing="true"
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Time Updated"
@@ -32,7 +30,6 @@
       mappedColumnName="RecordCreatedServer"
       excludeFromAuditing="true"
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Time Created (Server)"
@@ -48,7 +45,6 @@
       mappedColumnName="Id"
       excludeFromAuditing="true"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="true"
       label="Id"
@@ -64,7 +60,6 @@
       mappedColumnName="RecordUpdatedServer"
       excludeFromAuditing="true"
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Time Updated (Server)"
@@ -80,7 +75,6 @@
       mappedColumnName="RecordCreatedBy"
       excludeFromAuditing="true"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Created By"
@@ -96,7 +90,6 @@
       mappedColumnName="RecordCreated"
       excludeFromAuditing="true"
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Time Created"
@@ -112,7 +105,6 @@
       mappedColumnName="RecordUpdatedBy"
       excludeFromAuditing="true"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Updated By"
@@ -132,10 +124,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -181,10 +171,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -230,10 +218,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -311,7 +297,6 @@
       x:type="Origam.Schema.SchemaItemParameter" />
     <Parameter
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       name="parCurrentUserResourceId"
       abstract="true"
@@ -327,7 +312,6 @@
       x:type="Origam.Schema.SchemaItemParameter" />
     <Parameter
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       name="parId"
       abstract="true"
@@ -335,7 +319,6 @@
       x:type="Origam.Schema.SchemaItemParameter" />
     <Parameter
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       name="parCurrentUserBusinessUnitId"
       abstract="true"
@@ -343,7 +326,6 @@
       x:type="Origam.Schema.SchemaItemParameter" />
     <Parameter
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       name="parCurrentUserId"
       abstract="true"
@@ -359,7 +341,6 @@
       x:type="Origam.Schema.SchemaItemParameter" />
     <Parameter
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       name="parCurrentUserOrganizationId"
       abstract="true"

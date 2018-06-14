@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="WorkQueueCommand"
     abstract="false"
     x:id="1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="WorkQueueCommand"
       abstract="false"
@@ -28,9 +25,7 @@
       x:id="421aec03-1eec-43f9-b0bb-17cfc24510a0"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueCommand_GetByWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/WorkQueueCommand/b40967ba-d5db-4e88-9ab0-577c33a3357c"
@@ -45,9 +40,7 @@
       x:id="6eefc3cf-6b6e-4d40-81f7-5c37a81e8a01"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueCommand_GetId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/WorkQueueCommand/b40967ba-d5db-4e88-9ab0-577c33a3357c"

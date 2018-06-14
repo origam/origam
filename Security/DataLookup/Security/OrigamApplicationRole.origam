@@ -1,19 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
     listValueMember="Id"
     listDisplayMember="Name;Description"
     isTree="false"
-    treeParentMember=""
     suppressEmptyColumns="false"
     alwaysAllowReturnToForm="false"
     isFilteredServerside="false"
-    serversideFilterParameter=""
     searchByFirstColumnOnly="false"
     valueValueMember="Id"
     valueDisplayMember="Name"
-    roleFilterMember=""
-    featureFilterMember=""
     name="OrigamApplicationRole"
     abstract="false"
     listDataStructure="Security/DataStructure/Security/LookupOrigamApplicationRole.origam#LookupOrigamApplicationRole/cafef34a-6a0c-4f3a-8a7c-e4a07a624e72"

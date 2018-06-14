@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamTooltipHelp_GetNext"
     abstract="false"
     x:id="80529593-5e54-4d16-b7a8-be400aaaa41b"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamTooltipHelp"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="4e778810-8bbf-4147-b63b-6fe9f46acc07"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Roles"
@@ -36,12 +31,10 @@
         x:id="2baf94a5-c5a3-4ffa-923a-082c9576069e"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Priority"
@@ -50,12 +43,10 @@
         x:id="b0adf2cb-867f-445d-952a-280c2932d424"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -64,13 +55,11 @@
         x:id="ad510e86-7aa9-4975-8676-5df619376b17"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureEntity
-        label=""
         allFields="false"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="NotExists"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="OrigamTooltipHelpUsage"
         abstract="false"
@@ -85,9 +74,7 @@
       x:id="4b9c5b97-f81f-4859-b2ac-3067da68e47a"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamTooltipHelp_GetByFormId"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamTooltipHelp_GetNext.origam#OrigamTooltipHelp_GetNext/OrigamTooltipHelp/4e778810-8bbf-4147-b63b-6fe9f46acc07"
@@ -95,9 +82,7 @@
         x:id="75373114-d9a2-47bc-b6f2-3897696d79e9"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamTooltipHelpUsage_GetByBusinessPartnerId"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamTooltipHelp_GetNext.origam#OrigamTooltipHelp_GetNext/OrigamTooltipHelp/OrigamTooltipHelpUsage/104855a6-3b39-4437-a7f2-bfd85fe86ae9"
@@ -112,7 +97,6 @@
       x:type="Origam.Schema.EntityModel.DataStructureSortSet">
       <DataStructureSortSetItem
         fieldName="Priority"
-        sortOrder="0"
         sortDirection="Descending"
         name="OrigamTooltipHelp_0_Priority"
         abstract="false"

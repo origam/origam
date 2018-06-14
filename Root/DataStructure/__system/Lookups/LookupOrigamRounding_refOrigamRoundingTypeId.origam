@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupOrigamRounding_refOrigamRoundingTypeId"
     abstract="false"
     x:id="42011861-8b29-4ba8-9d5e-79830961fbef"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamRounding"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="fdbda7fa-9e09-492c-b8ff-d471f370a9c5"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -36,12 +31,10 @@
         x:id="9bfb6954-381a-4cc8-a506-43775367fb35"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="refOrigamRoundingTypeId"
@@ -57,9 +50,7 @@
       x:id="e13f8859-2661-43c7-854f-edadb604af50"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamRounding_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/Lookups/LookupOrigamRounding_refOrigamRoundingTypeId.origam#LookupOrigamRounding_refOrigamRoundingTypeId/OrigamRounding/fdbda7fa-9e09-492c-b8ff-d471f370a9c5"

@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupDimensionTransformationMatrix_Sources"
     abstract="false"
     x:id="d8f1d03b-6db3-481e-873b-830bc0ac26cb"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="DimensionTransformationMatrix"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="e8ef726c-7550-4fdb-9b9d-2f4f67c1ed05"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="refSource1DimensionEntityId"
@@ -36,12 +31,10 @@
         x:id="f60aa587-f3cf-4041-9ef0-6e33015c3516"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="refSource2DimensionEntityId"
@@ -50,12 +43,10 @@
         x:id="ef9d1b4d-f61a-47ff-bb11-836ee9233c57"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="refSource4DimensionEntityId"
@@ -64,12 +55,10 @@
         x:id="513025c0-0b8f-410f-8e14-b89b0839181c"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -78,12 +67,10 @@
         x:id="b22532c6-58d4-4616-a4a5-ea85c1011f2f"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="refSource3DimensionEntityId"
@@ -99,9 +86,7 @@
       x:id="149ad88e-74e7-475a-8cae-b58302f3b87f"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="DimensionTransformationMatrix_GetByTargetDimensionEntityId"
         abstract="false"
         entity="Root/DataStructure/Dimensions/Lookups/LookupDimensionTransformationMatrix_Sources.origam#LookupDimensionTransformationMatrix_Sources/DimensionTransformationMatrix/e8ef726c-7550-4fdb-9b9d-2f4f67c1ed05"

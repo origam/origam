@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupWorkQueueCommand_refWorkQueueId"
     abstract="false"
     x:id="7f3329a7-9ff5-4dbf-b64e-777b00d2f206"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="WorkQueueCommand"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="f089d9d6-76fb-43e2-ac55-a1e08dc4c2ed"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="refWorkQueueId"
@@ -36,12 +31,10 @@
         x:id="be99e0f3-451a-4b61-9596-0cbdc31ecfa5"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -57,9 +50,7 @@
       x:id="0ed67e85-02d3-4e94-ab25-9e2785613882"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueCommand_GetId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueCommand_refWorkQueueId.origam#LookupWorkQueueCommand_refWorkQueueId/WorkQueueCommand/f089d9d6-76fb-43e2-ac55-a1e08dc4c2ed"

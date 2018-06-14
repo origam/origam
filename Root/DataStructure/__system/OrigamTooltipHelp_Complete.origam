@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamTooltipHelp_Complete"
     abstract="false"
     x:id="c9822ca7-2c60-41ba-9d6b-94f4440d54ef"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamTooltipHelp"
       abstract="false"
@@ -22,13 +19,11 @@
       x:id="77933ad5-a395-4db0-aca2-d5821ec180fc"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureEntity
-        label=""
         allFields="true"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="Normal"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="OrigamTooltipHelpUsage"
         abstract="false"

@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Service
-    classPath=""
     name="WorkflowService"
     abstract="false"
     x:id="a6838699-113c-4126-803c-39f05b33a7c3"
@@ -22,7 +21,6 @@
         allowTransformationReference="false"
         allowWorkflowReference="true"
         dataType="UniqueIdentifier"
-        dataLength="0"
         allowNulls="false"
         name="Workflow"
         abstract="false"
@@ -38,7 +36,6 @@
         allowTransformationReference="false"
         allowWorkflowReference="false"
         dataType="Array"
-        dataLength="0"
         allowNulls="true"
         name="Parameters"
         abstract="false"

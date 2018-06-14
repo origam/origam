@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="WorkQueueEntry"
     abstract="false"
     x:id="9b711158-fa6e-4bad-81b2-434c88d780f1"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="WorkQueueEntry"
       abstract="false"
@@ -28,9 +25,7 @@
       x:id="765a2ca6-2799-4654-a984-04c0cb30c24b"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/WorkQueueEntry/061bb489-f9ea-44df-9baa-8b8fb2db5519"
@@ -45,9 +40,7 @@
       x:id="d7461a9d-f7e5-47a2-a167-37a6568c0edc"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/WorkQueueEntry/061bb489-f9ea-44df-9baa-8b8fb2db5519"
@@ -55,9 +48,7 @@
         x:id="4043ffeb-ed30-467a-bd1a-1e43688e6b3b"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefRel6Id"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/WorkQueueEntry/061bb489-f9ea-44df-9baa-8b8fb2db5519"
@@ -72,9 +63,7 @@
       x:id="f7254403-a73e-4f8c-baa4-748778a9b01b"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/WorkQueueEntry/061bb489-f9ea-44df-9baa-8b8fb2db5519"
@@ -82,9 +71,7 @@
         x:id="abf108b2-7e53-40dd-adc5-36a6eb026e01"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefRel4Id"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/WorkQueueEntry/061bb489-f9ea-44df-9baa-8b8fb2db5519"
@@ -99,9 +86,7 @@
       x:id="f7ec6562-c782-4732-aae8-9a7ad62a0ad3"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/WorkQueueEntry/061bb489-f9ea-44df-9baa-8b8fb2db5519"
@@ -109,9 +94,7 @@
         x:id="f9343d94-86ef-4ef4-80ae-734b0e395cc4"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/WorkQueueEntry/061bb489-f9ea-44df-9baa-8b8fb2db5519"
@@ -126,9 +109,7 @@
       x:id="2953acdb-2d82-4a10-abbb-9ada1e3e567d"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefRel7Id"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/WorkQueueEntry/061bb489-f9ea-44df-9baa-8b8fb2db5519"
@@ -136,9 +117,7 @@
         x:id="8daff5b7-47a9-4beb-977e-44b771be0fbb"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/WorkQueueEntry/061bb489-f9ea-44df-9baa-8b8fb2db5519"
@@ -153,9 +132,7 @@
       x:id="d5ace16e-4533-4707-9f14-9cd230ce3c2a"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefRel3Id"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/WorkQueueEntry/061bb489-f9ea-44df-9baa-8b8fb2db5519"
@@ -163,9 +140,7 @@
         x:id="c8a8be3b-c863-4577-8484-116ec6b9dd99"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/WorkQueueEntry/061bb489-f9ea-44df-9baa-8b8fb2db5519"
@@ -180,9 +155,7 @@
       x:id="c3ee7b03-e250-48bf-836d-d523aa02392c"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/WorkQueueEntry/061bb489-f9ea-44df-9baa-8b8fb2db5519"
@@ -190,9 +163,7 @@
         x:id="82856d01-ee79-48c5-be8b-146a2495fef4"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefRel1Id"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/WorkQueueEntry/061bb489-f9ea-44df-9baa-8b8fb2db5519"
@@ -207,9 +178,7 @@
       x:id="ede16dc2-a357-40ec-9af1-d948d7f453f2"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefRel5Id"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/WorkQueueEntry/061bb489-f9ea-44df-9baa-8b8fb2db5519"
@@ -217,9 +186,7 @@
         x:id="7703deec-487c-4a48-93a6-3b0f99eef229"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/WorkQueueEntry/061bb489-f9ea-44df-9baa-8b8fb2db5519"
@@ -234,9 +201,7 @@
       x:id="435e27f2-b291-4d64-9bd4-f58f1e94b6c7"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefWorkQueueId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/WorkQueueEntry/061bb489-f9ea-44df-9baa-8b8fb2db5519"
@@ -244,9 +209,7 @@
         x:id="b41a73ad-e589-43e6-8947-e22ce59287de"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueEntry_GetByrefRel2Id"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/WorkQueueEntry/061bb489-f9ea-44df-9baa-8b8fb2db5519"

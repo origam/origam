@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupOrigamParameters"
     abstract="false"
     x:id="bd424149-b499-49d2-9ae3-36a155ea3145"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamParameters"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="3b6c0d18-c3ac-4377-b7a8-baa5920bec24"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="IntValue"
@@ -36,12 +31,10 @@
         x:id="92ffb3ac-2965-4928-b038-1091a80405ff"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="FloatValue"
@@ -50,12 +43,10 @@
         x:id="9a5fe52c-0b48-4451-a854-24e73f93c836"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="StringValue"
@@ -64,12 +55,10 @@
         x:id="ac74e87c-30f3-4fe2-af2e-2fc56234cfdb"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="CurrencyValue"
@@ -78,12 +67,10 @@
         x:id="d2bfa734-31d9-47ef-ab08-3924e3b12ea7"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="GuidValue"
@@ -92,12 +79,10 @@
         x:id="abccbfd2-093a-4248-b81a-782ae1768118"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="BooleanValue"
@@ -106,12 +91,10 @@
         x:id="8f9ed4a7-9d37-4701-bf63-a97dbb7c2637"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -120,12 +103,10 @@
         x:id="cda0e80a-40d6-410c-a4a3-fd3e0fab143a"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="DateValue"
@@ -141,9 +122,7 @@
       x:id="000b8686-a08d-4f53-8d66-7dd4f1297492"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamParameters_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/Lookups/LookupOrigamParameters.origam#LookupOrigamParameters/OrigamParameters/3b6c0d18-c3ac-4377-b7a8-baa5920bec24"
@@ -151,9 +130,7 @@
         x:id="c7265b62-4f6a-4e53-9cc9-19e83e9bf574"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamParameters_GetNoProfile"
         abstract="false"
         entity="Root/DataStructure/__system/Lookups/LookupOrigamParameters.origam#LookupOrigamParameters/OrigamParameters/3b6c0d18-c3ac-4377-b7a8-baa5920bec24"

@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupResourceAccessLevel"
     abstract="false"
     x:id="ec219662-ccef-4394-a7d2-391368acae9c"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="ResourceAccessLevel"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="2650e98a-7aff-4829-bf0d-9190aa4de11f"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -36,12 +31,10 @@
         x:id="7f2bf44f-07b1-4a1e-ab85-150498d00c03"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Name"
@@ -50,13 +43,11 @@
         x:id="4ab3da32-0cbd-4bbb-b5b8-49c0ab8af64c"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureEntity
-        label=""
         allFields="false"
         ignoreImplicitFilters="false"
         ignoreCondition="IgnoreWhenNoFilters"
         concurrencyHandling="Standard"
         relationType="FilterParent"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="ResourceAccessList"
         abstract="false"
@@ -71,9 +62,7 @@
       x:id="347aae82-7d95-4797-90a7-3f376451ec7b"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="ResourceAccessLevel_GetId"
         abstract="false"
         entity="Root/DataStructure/Resource Management/Lookups/LookupResourceAccessLevel.origam#LookupResourceAccessLevel/ResourceAccessLevel/2650e98a-7aff-4829-bf0d-9190aa4de11f"

@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamFavoritesUserConfig"
     abstract="false"
     x:id="e564c554-ca83-47eb-980d-95b4faba8fb8"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamFavoritesUserConfig"
       abstract="false"
@@ -28,9 +25,7 @@
       x:id="e468076e-a641-4b7d-b9b4-7d80ff312b1c"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamFavoritesUserConfig_GetByBusinessPartnerId"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamFavoritesUserConfig.origam#OrigamFavoritesUserConfig/OrigamFavoritesUserConfig/4f81244c-7335-4bcd-8246-a027a86e3c6c"

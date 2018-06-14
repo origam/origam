@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="Mail"
     abstract="false"
     x:id="f4eaf9b5-e5a2-4d4b-afb5-174fe5e0b6ea"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="Mail"
       abstract="false"
@@ -22,13 +19,11 @@
       x:id="0bfef752-7ac6-42b4-8bed-70fe5a4e6e99"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureEntity
-        label=""
         allFields="true"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="Normal"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="MailAttachment"
         abstract="false"
@@ -43,9 +38,7 @@
       x:id="5da5b9f8-09c9-46f8-bb1c-e706ee30ef0c"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="Mail_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/Mail.origam#Mail/Mail/0bfef752-7ac6-42b4-8bed-70fe5a4e6e99"

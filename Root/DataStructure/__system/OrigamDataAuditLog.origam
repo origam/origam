@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamDataAuditLog"
     abstract="false"
     x:id="530eba45-40db-470d-8e53-8b98ace758ad"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="AuditRecord"
       abstract="false"
@@ -28,9 +25,7 @@
       x:id="e0602afa-e86d-4f03-bcb8-aee19f976961"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="AuditRecord_GetByParentRecordId"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/AuditRecord/e5eabac7-cf91-437c-b4d5-94f1d885fbde"

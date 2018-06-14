@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="true"
-    dataSetClass=""
     name="OrigamNotificationTemplate"
     abstract="false"
     x:id="92c3c8b4-68a3-482b-8a90-f7142c4b17ec"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamNotificationTemplate"
       abstract="false"
@@ -22,13 +19,11 @@
       x:id="e6f6f1cc-ba25-445c-a262-5aa5f9ebdee7"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureEntity
-        label=""
         allFields="false"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="LeftJoin"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="OrigamNotificationTemplate_l10n"
         abstract="false"
@@ -43,9 +38,7 @@
       x:id="3724bd2a-9466-4129-bdfa-ca8dc8621a72"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamNotificationTemplate_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamNotificationTemplate.origam#OrigamNotificationTemplate/OrigamNotificationTemplate/e6f6f1cc-ba25-445c-a262-5aa5f9ebdee7"

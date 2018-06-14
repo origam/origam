@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="ResourceGroupMember"
     databaseObjectType="Table"
     generateDeploymentScript="true"
     readOnly="false"
     audit="All"
-    label=""
     name="ResourceGroupMember"
     abstract="false"
     x:id="f924f620-294c-4e57-96a1-e5ff2942f19e"
@@ -19,7 +18,6 @@
       mappedColumnName="refGroupResourceId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Skupina"
@@ -37,7 +35,6 @@
       mappedColumnName="refMemberResourceId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Člen"
@@ -60,7 +57,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refResourceId"
         abstract="false"
         field="Root/DataEntity/Resource Management/ResourceGroupMember.origam#ResourceGroupMember/refMemberResourceId/fd94ca3d-5c4e-43dc-97e6-8d1f731f9abf"
@@ -76,7 +72,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refMemberResourceId"
         abstract="false"
         field="Root/DataEntity/Resource Management/ResourceGroupMember.origam#ResourceGroupMember/refMemberResourceId/fd94ca3d-5c4e-43dc-97e6-8d1f731f9abf"

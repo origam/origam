@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Service
-    classPath=""
     name="HttpService"
     abstract="false"
     x:id="3bcee140-d809-41ed-80c7-f2e8efde8ed9"
@@ -22,7 +21,6 @@
         allowTransformationReference="false"
         allowWorkflowReference="false"
         dataType="String"
-        dataLength="0"
         allowNulls="true"
         name="Method"
         abstract="false"
@@ -54,7 +52,6 @@
         allowTransformationReference="false"
         allowWorkflowReference="false"
         dataType="Memo"
-        dataLength="0"
         allowNulls="true"
         name="Content"
         abstract="false"
@@ -70,7 +67,6 @@
         allowTransformationReference="false"
         allowWorkflowReference="false"
         dataType="String"
-        dataLength="0"
         allowNulls="false"
         name="Url"
         abstract="false"
@@ -86,7 +82,6 @@
         allowTransformationReference="false"
         allowWorkflowReference="false"
         dataType="Array"
-        dataLength="0"
         allowNulls="true"
         name="Headers"
         abstract="false"

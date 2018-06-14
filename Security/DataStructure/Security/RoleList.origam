@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="RoleList"
     abstract="false"
     x:id="24ec7286-942e-4ed8-9934-d7619f6216d7"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamRoleOrigamApplicationRole"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="36d913d7-60fa-44cc-8919-c882e1409ea1"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="IsFormReadOnly"
@@ -36,12 +31,10 @@
         x:id="09e92a76-d804-4492-a623-75893e552f05"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="refOrigamRoleId"
@@ -50,12 +43,10 @@
         x:id="52e8e2d6-8036-4e0d-a4c6-9189f185cf3c"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="true"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="OrigamApplicationRole_Name"
@@ -64,12 +55,10 @@
         x:id="309a3fae-0bec-4021-84f1-c5a7f833ca66"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -78,13 +67,11 @@
         x:id="76239a4e-012b-447d-a19f-fd018a533be0"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureEntity
-        label=""
         allFields="false"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="FilterParent"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="OrigamRole"
         abstract="false"
@@ -92,13 +79,11 @@
         x:id="b70e7c46-f04a-404f-ab4b-3638f3a951d3"
         x:type="Origam.Schema.EntityModel.DataStructureEntity">
         <DataStructureEntity
-          label=""
           allFields="false"
           ignoreImplicitFilters="false"
           ignoreCondition="None"
           concurrencyHandling="Standard"
           relationType="FilterParent"
-          conditionEntityParameterName=""
           useUpsert="false"
           name="BusinessPartnerOrigamRole"
           abstract="false"
@@ -114,9 +99,7 @@
       x:id="603938fd-a9dd-4807-aca2-a161bc6fadc5"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="BusinessPartnerOrigamRole_GetByBusinessPartner"
         abstract="false"
         entity="Security/DataStructure/Security/RoleList.origam#RoleList/OrigamRoleOrigamApplicationRole/OrigamRole/BusinessPartnerOrigamRole/f1d85c08-4208-4243-8231-250f62c3feb5"

@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="true"
-    dataSetClass=""
     name="LookupWorkQueueNotificationEvent"
     abstract="false"
     x:id="255e42d6-2e60-47c1-bf28-d452eb5852a3"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="WorkQueueNotificationEvent"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="78bc3636-eeb8-4221-a1ee-98c6ad2175eb"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -36,12 +31,10 @@
         x:id="68089c99-ba58-41a0-8f07-88ed299c2500"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Name"
@@ -50,13 +43,11 @@
         x:id="1364e789-ad93-40df-a0aa-89605d5733c7"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureEntity
-        label=""
         allFields="false"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="LeftJoin"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="WorkQueueNotificationEvent_l10n"
         abstract="false"
@@ -71,9 +62,7 @@
       x:id="7dd4be08-ffdb-4269-a17f-973694ad2d64"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueueNotificationEvent_GetId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueNotificationEvent.origam#LookupWorkQueueNotificationEvent/WorkQueueNotificationEvent/78bc3636-eeb8-4221-a1ee-98c6ad2175eb"

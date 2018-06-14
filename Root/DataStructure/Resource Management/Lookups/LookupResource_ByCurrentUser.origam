@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupResource_ByCurrentUser"
     abstract="false"
     x:id="584a09b4-b8c8-4752-a82f-15ec2a815144"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="Resource"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="7b262662-7d86-4ad1-95d6-441e05f38278"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Name"
@@ -36,12 +31,10 @@
         x:id="72254ac5-660e-406e-93ce-b2a028a754d3"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -57,9 +50,7 @@
       x:id="9898f7bb-4778-4c39-bc0e-bd754d0f1352"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="Resource_GetByCurrentUserId"
         abstract="false"
         entity="Root/DataStructure/Resource Management/Lookups/LookupResource_ByCurrentUser.origam#LookupResource_ByCurrentUser/Resource/7b262662-7d86-4ad1-95d6-441e05f38278"
@@ -74,9 +65,7 @@
       x:id="c221a285-6881-48b8-afa5-d856a3c53474"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="Resource_GetId"
         abstract="false"
         entity="Root/DataStructure/Resource Management/Lookups/LookupResource_ByCurrentUser.origam#LookupResource_ByCurrentUser/Resource/7b262662-7d86-4ad1-95d6-441e05f38278"

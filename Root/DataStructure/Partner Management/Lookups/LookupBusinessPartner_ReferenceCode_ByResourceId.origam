@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupBusinessPartner_ReferenceCode_ByResourceId"
     abstract="false"
     x:id="23b71cb4-948b-4021-9567-4eecd1c0ab27"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="BusinessPartner"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="73fbe465-f446-40e2-bef7-7a59550f41d3"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -36,12 +31,10 @@
         x:id="045c55e1-77d4-4b09-b238-d01ebf3c2d03"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="ReferenceCode"
@@ -50,13 +43,11 @@
         x:id="65f2b440-7757-4c11-b4d3-f9d61e414854"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureEntity
-        label=""
         allFields="false"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="FilterParent"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="Resource"
         abstract="false"
@@ -71,9 +62,7 @@
       x:id="e355568a-bac9-47f7-a244-d943eeebcec2"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="Resource_GetId"
         abstract="false"
         entity="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ReferenceCode_ByResourceId.origam#LookupBusinessPartner_ReferenceCode_ByResourceId/BusinessPartner/Resource/b5ee9cf1-1689-4ad0-b12f-f0cd1379e284"

@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupOrigamSyncProviderConfig_refOrganizationId"
     abstract="false"
     x:id="f684f5c6-79ac-4539-8ee6-14261ffaa49f"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamSyncProviderConfig"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="d63e7a51-9641-43cd-9416-8aa1f9817cc2"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="refOrganizationId"
@@ -36,12 +31,10 @@
         x:id="5836b3d8-4184-4bdd-9ca6-325f1a0fd07f"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -57,9 +50,7 @@
       x:id="e18d2674-1209-4a81-ab3c-da3d303a7f05"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamSyncProviderConfig_GetId"
         abstract="false"
         entity="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncProviderConfig_refOrganizationId.origam#LookupOrigamSyncProviderConfig_refOrganizationId/OrigamSyncProviderConfig/d63e7a51-9641-43cd-9416-8aa1f9817cc2"

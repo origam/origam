@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamUser"
     abstract="false"
     x:id="43b67a51-68f3-4696-b08d-de46ae0223ce"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamUser"
       abstract="false"
@@ -28,9 +25,7 @@
       x:id="982f45a9-b610-4e2f-8d7f-2b1eebe93390"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamUser_GetByBusinessPartnerId"
         abstract="false"
         entity="Security/DataStructure/Security/OrigamUser.origam#OrigamUser/OrigamUser/3d9b3523-12c8-40ba-a429-580e8f20b23e"
@@ -45,9 +40,7 @@
       x:id="a60c9817-ae18-465c-a91f-d4b8a25f15a4"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamUser_GetByUserName"
         abstract="false"
         entity="Security/DataStructure/Security/OrigamUser.origam#OrigamUser/OrigamUser/3d9b3523-12c8-40ba-a429-580e8f20b23e"

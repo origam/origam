@@ -1,16 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     readOnly="false"
     audit="None"
-    label=""
     name="ISupportsPaging"
     abstract="true"
     x:id="e43666db-c897-46a0-9386-5b04385e40e0"
     x:type="Origam.Schema.EntityModel.DetachedEntity">
     <Parameter
       dataType="Integer"
-      dataLength="0"
       allowNulls="false"
       name="_pageNumber"
       abstract="true"
@@ -18,7 +16,6 @@
       x:type="Origam.Schema.SchemaItemParameter" />
     <Parameter
       dataType="Integer"
-      dataLength="0"
       allowNulls="false"
       name="_pageSize"
       abstract="true"

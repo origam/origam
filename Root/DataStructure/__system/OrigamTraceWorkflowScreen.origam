@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamTraceWorkflowScreen"
     abstract="false"
     x:id="43b7bdd6-9f59-42d9-9a3b-0188dd9b1917"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamTraceWorkflow"
       abstract="false"
@@ -22,13 +19,11 @@
       x:id="9f131c55-9424-44a9-bc8a-f63968692ac5"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureEntity
-        label=""
         allFields="false"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="Normal"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="OrigamTraceWorkflowStep"
         abstract="false"
@@ -36,12 +31,10 @@
         x:id="8a6b75d9-7603-4d67-9817-4cbd27025787"
         x:type="Origam.Schema.EntityModel.DataStructureEntity">
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="Data2"
@@ -50,12 +43,10 @@
           x:id="2ece1c69-f8ef-4075-b515-0a077e1741e7"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="RecordUpdated"
@@ -64,12 +55,10 @@
           x:id="5a7e1399-856a-44fe-bbee-1d3030dade09"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="Subcategory"
@@ -78,12 +67,10 @@
           x:id="843e7f9a-e209-4720-a379-1e723b95665f"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="Remark"
@@ -92,12 +79,10 @@
           x:id="dabf9a58-9f83-40c2-a2a5-2038cf2919ec"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="WorkflowStepPath"
@@ -106,12 +91,10 @@
           x:id="8a551c5a-e63d-4fa3-a657-3af4bc431150"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="RecordCreated"
@@ -120,12 +103,10 @@
           x:id="7f1ea591-783c-4037-8413-405aa4025be4"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="RecordCreatedBy"
@@ -134,12 +115,10 @@
           x:id="258dbcf4-bb2e-49ec-8581-542af0657fbd"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="Data1"
@@ -148,12 +127,10 @@
           x:id="e05aadc6-c2e8-4ab7-bd0e-652137b99334"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="Message"
@@ -162,12 +139,10 @@
           x:id="1f3e643a-05fa-46db-aeb0-72023f6b58cc"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="RecordCreatedServer"
@@ -176,12 +151,10 @@
           x:id="b898d44a-bdda-42b0-bd0b-8b147d29bd62"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="refOrigamTraceWorkflowId"
@@ -190,12 +163,10 @@
           x:id="c6146cb9-bb76-40ab-b0a1-8fd80f17e56a"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="RecordUpdatedServer"
@@ -204,12 +175,10 @@
           x:id="ed335344-19ae-45cf-b616-963708813613"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="WorkflowStepId"
@@ -218,12 +187,10 @@
           x:id="4e8c06bb-b2b2-4707-8e5f-986891c384af"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="RecordUpdatedBy"
@@ -232,12 +199,10 @@
           x:id="a1ccd801-8db9-41a0-9457-a63674fc15e5"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="Category"
@@ -246,12 +211,10 @@
           x:id="dbfcdc54-8ab5-487c-93ee-df9fe276ca7d"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="Id"
@@ -268,9 +231,7 @@
       x:id="77cdbb0c-430e-4552-a0c2-f494cfb0c782"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamTraceWorkflow_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamTraceWorkflowScreen.origam#OrigamTraceWorkflowScreen/OrigamTraceWorkflow/9f131c55-9424-44a9-bc8a-f63968692ac5"
@@ -285,7 +246,6 @@
       x:type="Origam.Schema.EntityModel.DataStructureSortSet">
       <DataStructureSortSetItem
         fieldName="RecordCreated"
-        sortOrder="0"
         sortDirection="Descending"
         name="OrigamTraceWorkflow_0_RecordCreated"
         abstract="false"
@@ -294,7 +254,6 @@
         x:type="Origam.Schema.EntityModel.DataStructureSortSetItem" />
       <DataStructureSortSetItem
         fieldName="RecordCreated"
-        sortOrder="0"
         sortDirection="Ascending"
         name="OrigamTraceWorkflowStep_RecordCreated"
         abstract="false"

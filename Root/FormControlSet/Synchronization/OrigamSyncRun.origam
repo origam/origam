@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <FormControlSet
     name="OrigamSyncRun"
     abstract="false"
@@ -7,33 +7,24 @@
     x:id="047bc01a-cada-49be-9b83-2e141bc3ea8b"
     x:type="Origam.Schema.GuiModel.FormControlSet">
     <ControlSetItem
-      roles=""
-      features=""
       isAlternative="false"
       requestSaveAfterChange="false"
-      level="0"
       name="OrigamSyncRun_CompleteRootControl"
       abstract="false"
       widget="Root/Control/_Basic Controls/AsForm.origam#AsForm/ff32a695-c533-4262-87d6-e4cd4451e2c9"
       x:id="74a7a43c-3a23-4d8d-92af-26381ba88074"
       x:type="Origam.Schema.GuiModel.ControlSetItem">
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="SplitPanel1"
         abstract="false"
         widget="Root/Control/_Basic Controls/SplitPanel.origam#SplitPanel/9a805f08-aa81-468e-a2a0-5bdb57b734e5"
         x:id="7bd975f1-0a85-44ae-b5dc-539622f9695a"
         x:type="Origam.Schema.GuiModel.ControlSetItem">
         <ControlSetItem
-          roles=""
-          features=""
           isAlternative="false"
           requestSaveAfterChange="false"
-          level="0"
           name="AsPanel1"
           abstract="false"
           widget="Root/Control/OrigamSyncRun.origam#OrigamSyncRun/5ce839a4-cb0b-454d-999e-0d1b0c166f8a"
@@ -125,11 +116,8 @@
             x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         </ControlSetItem>
         <ControlSetItem
-          roles=""
-          features=""
           isAlternative="false"
           requestSaveAfterChange="false"
-          level="0"
           name="AsPanel2"
           abstract="false"
           widget="Root/Control/OrigamSyncRunLog.origam#OrigamSyncRunLog/e84aabd8-6704-40a2-aee1-9d03bd0d3479"

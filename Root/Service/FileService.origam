@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Service
-    classPath=""
     name="FileService"
     abstract="false"
     x:id="05650374-c8b4-48fa-a0e9-f3902b252fe6"
@@ -22,7 +21,6 @@
         allowTransformationReference="false"
         allowWorkflowReference="false"
         dataType="Xml"
-        dataLength="0"
         allowNulls="true"
         name="Options"
         abstract="false"
@@ -38,7 +36,6 @@
         allowTransformationReference="false"
         allowWorkflowReference="false"
         dataType="String"
-        dataLength="0"
         allowNulls="false"
         name="FileName"
         abstract="false"
@@ -54,7 +51,6 @@
         allowTransformationReference="false"
         allowWorkflowReference="false"
         dataType="String"
-        dataLength="0"
         allowNulls="false"
         name="Entity"
         abstract="false"
@@ -70,7 +66,6 @@
         allowTransformationReference="false"
         allowWorkflowReference="false"
         dataType="String"
-        dataLength="0"
         allowNulls="true"
         name="Encoding"
         abstract="false"
@@ -86,7 +81,6 @@
         allowTransformationReference="false"
         allowWorkflowReference="false"
         dataType="Blob"
-        dataLength="0"
         allowNulls="true"
         name="File"
         abstract="false"

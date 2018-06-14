@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="BusinessPartner"
     databaseObjectType="Table"
@@ -55,7 +55,6 @@
       mappedColumnName="ParentId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Parent Business Partner"
@@ -74,7 +73,6 @@
       mappedColumnName="refLanguageId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Language"
@@ -176,10 +174,8 @@
         <DataEntityColumn
           forceDatabaseCalculation="false"
           dataType="Boolean"
-          dataLength="0"
           allowNulls="true"
           isPrimaryKey="false"
-          label=""
           excludeFromAllFields="false"
           autoIncrement="false"
           xmlMappingType="Attribute"
@@ -196,7 +192,6 @@
             x:id="db10949b-8fd2-40a6-8710-12cca5cbbbd6"
             x:type="Origam.Schema.EntityModel.FunctionCallParameter">
             <EntityFilterReference
-              roles=""
               name="FirstNameEmpty"
               abstract="true"
               filter="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/FirstNameEmpty/eb0f8294-b82b-4bc2-a6ab-87e6240ec40b"
@@ -225,10 +220,8 @@
             <DataEntityColumn
               forceDatabaseCalculation="false"
               dataType="Boolean"
-              dataLength="0"
               allowNulls="true"
               isPrimaryKey="false"
-              label=""
               excludeFromAllFields="false"
               autoIncrement="false"
               xmlMappingType="Attribute"
@@ -247,10 +240,8 @@
                 <DataEntityColumn
                   forceDatabaseCalculation="false"
                   dataType="Boolean"
-                  dataLength="0"
                   allowNulls="true"
                   isPrimaryKey="false"
-                  label=""
                   excludeFromAllFields="false"
                   autoIncrement="false"
                   xmlMappingType="Attribute"
@@ -301,7 +292,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_ReferenceCode"
         abstract="true"
         field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/ReferenceCode/b19baf6b-56ac-4506-a076-769c663be977"
@@ -317,7 +307,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_UserEmail"
         abstract="true"
         field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/UserEmail/9c3c1729-7779-4784-a5ba-a1144dc21426"
@@ -332,10 +321,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -381,10 +368,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -423,10 +408,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -472,10 +455,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Attribute"
@@ -494,10 +475,8 @@
           <DataEntityColumn
             forceDatabaseCalculation="false"
             dataType="Boolean"
-            dataLength="0"
             allowNulls="true"
             isPrimaryKey="false"
-            label=""
             excludeFromAllFields="false"
             autoIncrement="false"
             xmlMappingType="Attribute"
@@ -530,10 +509,8 @@
           <DataEntityColumn
             forceDatabaseCalculation="false"
             dataType="Boolean"
-            dataLength="0"
             allowNulls="true"
             isPrimaryKey="false"
-            label=""
             excludeFromAllFields="false"
             autoIncrement="false"
             xmlMappingType="Attribute"
@@ -581,10 +558,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -601,7 +576,6 @@
           x:id="299a834c-244c-4f05-91b6-5633abdf9819"
           x:type="Origam.Schema.EntityModel.FunctionCallParameter">
           <EntityFilterReference
-            roles=""
             name="GetUsers"
             abstract="true"
             filter="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/GetUsers/4244b1d3-aebd-463f-aeaf-66367c2deb87"
@@ -618,10 +592,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Attribute"
@@ -678,7 +650,6 @@
     </EntityRelation>
     <Parameter
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       name="parParentId"
       abstract="true"

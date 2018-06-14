@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="OrigamSyncRun"
     databaseObjectType="Table"
@@ -19,7 +19,6 @@
       mappedColumnName="refOrigamSyncConfigId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Konfigurace"
@@ -54,7 +53,6 @@
       mappedColumnName="TimeEnd"
       excludeFromAuditing="false"
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Konec"
@@ -69,7 +67,6 @@
     <DataEntityColumn
       aggregationType="Count"
       dataType="Integer"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Úspěšných záznamů"
@@ -86,7 +83,6 @@
     <DataEntityColumn
       aggregationType="Count"
       dataType="Integer"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Neúspěšných záznamů"
@@ -104,7 +100,6 @@
       mappedColumnName="TimeStart"
       excludeFromAuditing="false"
       dataType="Date"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Začátek"
@@ -125,7 +120,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refOrigamSyncConfigId"
         abstract="false"
         field="Root/DataEntity/Synchronization/OrigamSyncRun.origam#OrigamSyncRun/refOrigamSyncConfigId/ed566d7a-565a-4215-863b-04b16e695762"
@@ -140,10 +134,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -246,7 +238,6 @@
     </EntityRelation>
     <Parameter
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       name="parOrigamSyncConfigId"
       abstract="false"

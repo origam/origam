@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Function
     dataType="Date"
     type="Database"
@@ -14,7 +14,6 @@
       x:id="9aa8fcc0-42a5-42a3-8834-5467b3546054"
       x:type="Origam.Schema.EntityModel.FunctionParameter" />
     <FunctionParameter
-      ordinalPosition="0"
       name="Date"
       abstract="false"
       x:id="3c148fdc-f2fe-4a76-abfa-8b163685f1ec"

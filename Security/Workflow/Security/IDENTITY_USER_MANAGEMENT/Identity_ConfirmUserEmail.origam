@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Workflow
     transactionBehavior="InheritExisting"
     traceLevel="None"
@@ -35,7 +35,6 @@
       outputMethod="AppendMergeExisting"
       traceLevel="InheritFromParent"
       roles="*"
-      features=""
       name="01_CallMembershipService_ConfirmEmail"
       abstract="false"
       serviceMethod="Security/Service/IdentityService.origam#IdentityService/ConfirmEmail/20e59f17-d1aa-456a-b614-6a5851ced2c7"

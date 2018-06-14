@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamPanelFilter"
     abstract="false"
     x:id="210dc168-891d-4597-a6c0-cc19fee45b4b"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="PanelFilter"
       abstract="false"
@@ -22,13 +19,11 @@
       x:id="e6b5bcd2-075d-4428-b665-87020e76006a"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureEntity
-        label=""
         allFields="true"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="Normal"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="PanelFilterDetail"
         abstract="false"
@@ -43,9 +38,7 @@
       x:id="30a60305-a260-4dd3-a2f3-830e7ab1d1ec"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="PanelFilter_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamPanelFilter.origam#OrigamPanelFilter/PanelFilter/e6b5bcd2-075d-4428-b665-87020e76006a"
@@ -60,9 +53,7 @@
       x:id="847ed860-8f9a-4cc4-bc1c-ba18fb183d13"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="PanelFilter_GetFilters"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamPanelFilter.origam#OrigamPanelFilter/PanelFilter/e6b5bcd2-075d-4428-b665-87020e76006a"

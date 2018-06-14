@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <FormControlSet
     name="DimensionEntityRelation"
     abstract="false"
@@ -7,22 +7,16 @@
     x:id="5fcd37b5-881d-41df-90b0-5f4d80fd5f46"
     x:type="Origam.Schema.GuiModel.FormControlSet">
     <ControlSetItem
-      roles=""
-      features=""
       isAlternative="false"
       requestSaveAfterChange="false"
-      level="0"
       name="DimensionEntityRelationRootControl"
       abstract="false"
       widget="Root/Control/_Basic Controls/AsForm.origam#AsForm/ff32a695-c533-4262-87d6-e4cd4451e2c9"
       x:id="ae6bf3b7-c245-4fe0-96d9-b6f25b62fd48"
       x:type="Origam.Schema.GuiModel.ControlSetItem">
       <ControlSetItem
-        roles=""
-        features=""
         isAlternative="false"
         requestSaveAfterChange="false"
-        level="0"
         name="AsPanel1"
         abstract="false"
         widget="Root/Control/DimensionEntityRelation.origam#DimensionEntityRelation/3005a392-37c8-45c7-ae1b-029b0ac7a18b"
@@ -99,7 +93,6 @@
           x:id="1982219a-9e5d-41b1-8142-96eb7a115f63"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value=""
           propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2"
           name="PanelTitle"
           abstract="false"

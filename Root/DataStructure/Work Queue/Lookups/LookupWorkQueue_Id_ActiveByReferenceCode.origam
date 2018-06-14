@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupWorkQueue_Id_ActiveByReferenceCode"
     abstract="false"
     x:id="5349df52-1d99-49b1-8ede-8aee4219e91d"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="WorkQueue"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="aeca70d5-1796-404c-924a-2b7f470a525e"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -43,9 +38,7 @@
       x:id="404782f7-47ac-4df7-bb2f-459d3a4d243b"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueue_GetByReferenceCode"
         abstract="false"
         entity="Root/DataStructure/Work Queue/Lookups/LookupWorkQueue_Id_ActiveByReferenceCode.origam#LookupWorkQueue_Id_ActiveByReferenceCode/WorkQueue/aeca70d5-1796-404c-924a-2b7f470a525e"
@@ -53,9 +46,7 @@
         x:id="b4a208ce-bba3-4511-945f-2614d88c5cb8"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueue_GetActive"
         abstract="false"
         entity="Root/DataStructure/Work Queue/Lookups/LookupWorkQueue_Id_ActiveByReferenceCode.origam#LookupWorkQueue_Id_ActiveByReferenceCode/WorkQueue/aeca70d5-1796-404c-924a-2b7f470a525e"

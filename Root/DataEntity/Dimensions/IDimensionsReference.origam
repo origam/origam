@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     readOnly="false"
     audit="None"
-    label=""
     name="IDimensionsReference"
     abstract="true"
     x:id="dcd5d6c9-0e2e-4ba4-b4f4-b0b2792eaed0"
@@ -12,7 +11,6 @@
       mappedColumnName="refDimension4Id"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Dimenze 4"
@@ -31,7 +29,6 @@
       mappedColumnName="refDimension3Id"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Dimenze 3"
@@ -50,7 +47,6 @@
       mappedColumnName="refDimension1Id"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Dimenze 1"
@@ -69,7 +65,6 @@
       mappedColumnName="refDimension2Id"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Dimenze 2"
@@ -92,10 +87,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -134,10 +127,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -176,10 +167,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -225,10 +214,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -267,10 +254,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -316,10 +301,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -338,10 +321,8 @@
           <DataEntityColumn
             forceDatabaseCalculation="false"
             dataType="Boolean"
-            dataLength="0"
             allowNulls="true"
             isPrimaryKey="false"
-            label=""
             excludeFromAllFields="false"
             autoIncrement="false"
             xmlMappingType="Element"
@@ -381,10 +362,8 @@
           <DataEntityColumn
             forceDatabaseCalculation="false"
             dataType="Boolean"
-            dataLength="0"
             allowNulls="true"
             isPrimaryKey="false"
-            label=""
             excludeFromAllFields="false"
             autoIncrement="false"
             xmlMappingType="Element"
@@ -403,10 +382,8 @@
               <DataEntityColumn
                 forceDatabaseCalculation="false"
                 dataType="Boolean"
-                dataLength="0"
                 allowNulls="true"
                 isPrimaryKey="false"
-                label=""
                 excludeFromAllFields="false"
                 autoIncrement="false"
                 xmlMappingType="Element"
@@ -439,10 +416,8 @@
               <DataEntityColumn
                 forceDatabaseCalculation="false"
                 dataType="Boolean"
-                dataLength="0"
                 allowNulls="true"
                 isPrimaryKey="false"
-                label=""
                 excludeFromAllFields="false"
                 autoIncrement="false"
                 xmlMappingType="Element"
@@ -485,10 +460,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -534,10 +507,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -576,10 +547,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -598,10 +567,8 @@
           <DataEntityColumn
             forceDatabaseCalculation="false"
             dataType="Boolean"
-            dataLength="0"
             allowNulls="true"
             isPrimaryKey="false"
-            label=""
             excludeFromAllFields="false"
             autoIncrement="false"
             xmlMappingType="Element"
@@ -620,10 +587,8 @@
               <DataEntityColumn
                 forceDatabaseCalculation="false"
                 dataType="Boolean"
-                dataLength="0"
                 allowNulls="true"
                 isPrimaryKey="false"
-                label=""
                 excludeFromAllFields="false"
                 autoIncrement="false"
                 xmlMappingType="Element"
@@ -656,10 +621,8 @@
               <DataEntityColumn
                 forceDatabaseCalculation="false"
                 dataType="Boolean"
-                dataLength="0"
                 allowNulls="true"
                 isPrimaryKey="false"
-                label=""
                 excludeFromAllFields="false"
                 autoIncrement="false"
                 xmlMappingType="Element"
@@ -694,10 +657,8 @@
           <DataEntityColumn
             forceDatabaseCalculation="false"
             dataType="Boolean"
-            dataLength="0"
             allowNulls="true"
             isPrimaryKey="false"
-            label=""
             excludeFromAllFields="false"
             autoIncrement="false"
             xmlMappingType="Element"
@@ -745,10 +706,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -794,10 +753,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -836,10 +793,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -858,10 +813,8 @@
           <DataEntityColumn
             forceDatabaseCalculation="false"
             dataType="Boolean"
-            dataLength="0"
             allowNulls="true"
             isPrimaryKey="false"
-            label=""
             excludeFromAllFields="false"
             autoIncrement="false"
             xmlMappingType="Element"
@@ -880,10 +833,8 @@
               <DataEntityColumn
                 forceDatabaseCalculation="false"
                 dataType="Boolean"
-                dataLength="0"
                 allowNulls="true"
                 isPrimaryKey="false"
-                label=""
                 excludeFromAllFields="false"
                 autoIncrement="false"
                 xmlMappingType="Element"
@@ -916,10 +867,8 @@
               <DataEntityColumn
                 forceDatabaseCalculation="false"
                 dataType="Boolean"
-                dataLength="0"
                 allowNulls="true"
                 isPrimaryKey="false"
-                label=""
                 excludeFromAllFields="false"
                 autoIncrement="false"
                 xmlMappingType="Element"
@@ -954,10 +903,8 @@
           <DataEntityColumn
             forceDatabaseCalculation="false"
             dataType="Boolean"
-            dataLength="0"
             allowNulls="true"
             isPrimaryKey="false"
-            label=""
             excludeFromAllFields="false"
             autoIncrement="false"
             xmlMappingType="Element"
@@ -1005,10 +952,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -1047,10 +992,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -1089,10 +1032,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -1111,10 +1052,8 @@
           <DataEntityColumn
             forceDatabaseCalculation="false"
             dataType="Boolean"
-            dataLength="0"
             allowNulls="true"
             isPrimaryKey="false"
-            label=""
             excludeFromAllFields="false"
             autoIncrement="false"
             xmlMappingType="Element"
@@ -1133,10 +1072,8 @@
               <DataEntityColumn
                 forceDatabaseCalculation="false"
                 dataType="Boolean"
-                dataLength="0"
                 allowNulls="true"
                 isPrimaryKey="false"
-                label=""
                 excludeFromAllFields="false"
                 autoIncrement="false"
                 xmlMappingType="Element"
@@ -1169,10 +1106,8 @@
               <DataEntityColumn
                 forceDatabaseCalculation="false"
                 dataType="Boolean"
-                dataLength="0"
                 allowNulls="true"
                 isPrimaryKey="false"
-                label=""
                 excludeFromAllFields="false"
                 autoIncrement="false"
                 xmlMappingType="Element"
@@ -1207,10 +1142,8 @@
           <DataEntityColumn
             forceDatabaseCalculation="false"
             dataType="Boolean"
-            dataLength="0"
             allowNulls="true"
             isPrimaryKey="false"
-            label=""
             excludeFromAllFields="false"
             autoIncrement="false"
             xmlMappingType="Element"
@@ -1258,10 +1191,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -1294,7 +1225,6 @@
     </EntityFilter>
     <Parameter
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       name="parDimension4Id"
       abstract="true"
@@ -1302,7 +1232,6 @@
       x:type="Origam.Schema.SchemaItemParameter" />
     <Parameter
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       name="parDimension3Id"
       abstract="true"
@@ -1310,7 +1239,6 @@
       x:type="Origam.Schema.SchemaItemParameter" />
     <Parameter
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       name="parDimension2Id"
       abstract="true"
@@ -1318,7 +1246,6 @@
       x:type="Origam.Schema.SchemaItemParameter" />
     <Parameter
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       name="parDimension1Id"
       abstract="true"

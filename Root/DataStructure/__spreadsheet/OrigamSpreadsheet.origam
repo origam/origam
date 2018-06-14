@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
     dataSetClass="Origam.Workflow.FileService.OrigamSpreadsheet, Origam.Workflow.FileService"
@@ -8,13 +8,11 @@
     x:id="c131aa04-6310-455d-a7cd-4e19dd012241"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="Workbook"
       abstract="false"
@@ -22,13 +20,11 @@
       x:id="a8fd7ba5-98c7-44ad-8037-6247edf7bd44"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureEntity
-        label=""
         allFields="true"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="Normal"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="Sheet"
         abstract="false"
@@ -36,13 +32,11 @@
         x:id="a0c98567-c891-470c-860b-a8e425c75715"
         x:type="Origam.Schema.EntityModel.DataStructureEntity">
         <DataStructureEntity
-          label=""
           allFields="true"
           ignoreImplicitFilters="false"
           ignoreCondition="None"
           concurrencyHandling="Standard"
           relationType="Normal"
-          conditionEntityParameterName=""
           useUpsert="false"
           name="Row"
           abstract="false"
@@ -50,13 +44,11 @@
           x:id="19b737fd-7c7f-4239-8120-3b24cd4b6ca8"
           x:type="Origam.Schema.EntityModel.DataStructureEntity">
           <DataStructureEntity
-            label=""
             allFields="true"
             ignoreImplicitFilters="false"
             ignoreCondition="None"
             concurrencyHandling="Standard"
             relationType="Normal"
-            conditionEntityParameterName=""
             useUpsert="false"
             name="Cell"
             abstract="false"

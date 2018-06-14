@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupOrigamDashboardView_ConfigXml"
     abstract="false"
     x:id="eb83b3d7-871e-4c1c-a318-8b3bd77797dd"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamDashboardView"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="be5cfb4d-ee67-43e2-b1b8-a1f578de022b"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="ConfigXml"
@@ -36,12 +31,10 @@
         x:id="0d674e5b-f0d5-47a9-b362-55febe3d58b5"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -57,9 +50,7 @@
       x:id="4644f0a2-17d3-41e4-86d6-7d8aeb997791"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamDashboardView_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/Lookups/LookupOrigamDashboardView_ConfigXml.origam#LookupOrigamDashboardView_ConfigXml/OrigamDashboardView/be5cfb4d-ee67-43e2-b1b8-a1f578de022b"

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Workflow
     transactionBehavior="InheritExisting"
     traceLevel="None"
@@ -59,7 +59,6 @@
       transactionType="None"
       traceLevel="InheritFromParent"
       roles="*"
-      features=""
       name="Email"
       abstract="false"
       startConditionRule="Root/Rule/_common/SR_NotificationChannelType_Email.origam#SR_NotificationChannelType_Email/0f9d3c7b-7ca7-48b8-9a76-348a2ded5ff1"
@@ -70,7 +69,6 @@
         outputMethod="Ignore"
         traceLevel="InheritFromParent"
         roles="*"
-        features=""
         name="SendMail"
         abstract="false"
         workflow="Root/Workflow/SendEmail.origam#SendEmail/6e6d4e02-812a-4c95-afd1-eb2428802e2b"
@@ -128,7 +126,6 @@
       transactionType="None"
       traceLevel="InheritFromParent"
       roles="*"
-      features=""
       name="Email (queued)"
       abstract="false"
       startConditionRule="Root/Rule/_common/SR_NotificationChannelType_EmailQueued.origam#SR_NotificationChannelType_EmailQueued/fcc896b2-d960-43ba-a531-efc3f4f5a48a"
@@ -139,7 +136,6 @@
         outputMethod="Ignore"
         traceLevel="InheritFromParent"
         roles="*"
-        features=""
         name="SendMail"
         abstract="false"
         workflow="Root/Workflow/SendEmail.origam#SendEmail/6e6d4e02-812a-4c95-afd1-eb2428802e2b"

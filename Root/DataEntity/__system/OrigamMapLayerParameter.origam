@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="OrigamMapLayerParameter"
     databaseObjectType="Table"
@@ -19,7 +19,6 @@
       mappedColumnName="refOrigamMapLayerId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Map Configuration"
@@ -37,7 +36,6 @@
       mappedColumnName="Value"
       excludeFromAuditing="false"
       dataType="Memo"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Value"
@@ -82,7 +80,6 @@
         x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refOrigamMapLayerId"
         abstract="false"
         field="Root/DataEntity/__system/OrigamMapLayerParameter.origam#OrigamMapLayerParameter/refOrigamMapLayerId/752b9963-0c8b-404b-8191-10ad6a27a236"

@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Service
-    classPath=""
     name="EDIFACT2XMLService"
     abstract="false"
     x:id="83153fcf-7a4f-44ad-aa19-9f35a542c8ef"
@@ -22,7 +21,6 @@
         allowTransformationReference="false"
         allowWorkflowReference="false"
         dataType="Memo"
-        dataLength="0"
         allowNulls="false"
         name="Grammar"
         abstract="false"
@@ -38,7 +36,6 @@
         allowTransformationReference="false"
         allowWorkflowReference="false"
         dataType="String"
-        dataLength="0"
         allowNulls="false"
         name="OutputFolder"
         abstract="false"
@@ -54,7 +51,6 @@
         allowTransformationReference="false"
         allowWorkflowReference="false"
         dataType="Integer"
-        dataLength="0"
         allowNulls="true"
         name="Limit"
         abstract="false"
@@ -70,7 +66,6 @@
         allowTransformationReference="false"
         allowWorkflowReference="false"
         dataType="String"
-        dataLength="0"
         allowNulls="false"
         name="Filename"
         abstract="false"
@@ -93,7 +88,6 @@
         allowTransformationReference="false"
         allowWorkflowReference="false"
         dataType="Memo"
-        dataLength="0"
         allowNulls="false"
         name="Message"
         abstract="false"
@@ -109,7 +103,6 @@
         allowTransformationReference="false"
         allowWorkflowReference="false"
         dataType="Memo"
-        dataLength="0"
         allowNulls="false"
         name="Grammar"
         abstract="false"

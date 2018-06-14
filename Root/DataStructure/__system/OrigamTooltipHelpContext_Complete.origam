@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamTooltipHelpContext_Complete"
     abstract="false"
     x:id="9b905782-c91c-4af8-8277-f0c851310921"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamTooltipHelpContext"
       abstract="false"
@@ -22,13 +19,11 @@
       x:id="968883ec-37e0-4d2d-a0f2-9d61d055420a"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureEntity
-        label=""
         allFields="true"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="Normal"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="OrigamTooltipHelpSubcontext"
         abstract="false"
@@ -36,13 +31,11 @@
         x:id="f34cdd8e-23ea-40de-92c7-fbbed316409d"
         x:type="Origam.Schema.EntityModel.DataStructureEntity">
         <DataStructureEntity
-          label=""
           allFields="true"
           ignoreImplicitFilters="false"
           ignoreCondition="None"
           concurrencyHandling="Standard"
           relationType="Normal"
-          conditionEntityParameterName=""
           useUpsert="false"
           name="OrigamTooltipHelpContextComponent"
           abstract="false"

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="OrigamMapOrigamMapLayer"
     databaseObjectType="Table"
@@ -20,7 +20,6 @@
       mappedColumnName="SortOrder"
       excludeFromAuditing="false"
       dataType="Integer"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Order"
@@ -36,7 +35,6 @@
       mappedColumnName="DefaultEnabled"
       excludeFromAuditing="false"
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Default"
@@ -53,7 +51,6 @@
       mappedColumnName="refOrigamMapId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Map"
@@ -71,7 +68,6 @@
       mappedColumnName="refOrigamMapLayerId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Map Layer"
@@ -95,7 +91,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refOrigamMapId"
         abstract="false"
         field="Root/DataEntity/__system/OrigamMapOrigamMapLayer.origam#OrigamMapOrigamMapLayer/refOrigamMapId/30cc71a4-40bd-429d-824d-98ac2795967c"
@@ -119,7 +114,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refOrigamMapId"
         abstract="false"
         field="Root/DataEntity/__system/OrigamMapOrigamMapLayer.origam#OrigamMapOrigamMapLayer/refOrigamMapId/30cc71a4-40bd-429d-824d-98ac2795967c"

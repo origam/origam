@@ -1,19 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     readOnly="false"
     audit="None"
-    label=""
     name="OrigamNotificationContact"
     abstract="false"
     x:id="64c59894-459e-4e8f-9b64-62a42c921f5e"
     x:type="Origam.Schema.EntityModel.DetachedEntity">
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -38,7 +35,6 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Name"
@@ -52,7 +48,6 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="true"
       label="Email"
@@ -69,7 +64,6 @@
       dataLength="200"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"

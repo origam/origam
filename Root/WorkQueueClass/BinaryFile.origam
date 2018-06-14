@@ -1,8 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <WorkQueueClass
-    notificationFilterPkParameter=""
-    defaultPanelConfiguration=""
     name="BinaryFile"
     abstract="false"
     workQueueStructure="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/dd83b8a7-edfc-48e9-8290-2348a434ad1f"
@@ -13,7 +11,6 @@
     x:type="Origam.Schema.WorkflowModel.WorkQueueClass">
     <WorkQueueClassEntityMapping
       xPath="/ROOT/File/CreationTime"
-      formatPattern=""
       sortOrder="1"
       name="FileCreationTime"
       abstract="false"
@@ -21,7 +18,6 @@
       x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
     <WorkQueueClassEntityMapping
       xPath="/ROOT/File/LastWriteTime"
-      formatPattern=""
       sortOrder="3"
       name="FileLastWriteTime"
       abstract="false"
@@ -29,23 +25,18 @@
       x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
     <WorkQueueClassEntityMapping
       xPath="/ROOT/File/Data"
-      formatPattern=""
-      sortOrder="0"
       name="Data"
       abstract="false"
       x:id="92f70d74-143f-429e-bc70-bec7558bcb8f"
       x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
     <WorkQueueClassEntityMapping
       xPath="/ROOT/File/Name"
-      formatPattern=""
-      sortOrder="0"
       name="FileName"
       abstract="false"
       x:id="5c7fdca4-b0a8-4d1a-9d10-dc27e2bac1a1"
       x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
     <WorkQueueClassEntityMapping
       xPath="/ROOT/File/LastAccessTime"
-      formatPattern=""
       sortOrder="2"
       name="FileLastAccessTime"
       abstract="false"
@@ -54,17 +45,12 @@
     <EntityUIAction
       roles="*"
       label="Rozdělit"
-      features=""
       order="10"
       actionType="Workflow"
       mode="MultipleCheckboxes"
       valueType="SavedValue"
       placement="Toolbar"
       refreshAfterReturn="None"
-      modalDialogWidth="0"
-      modalDialogHeight="0"
-      scannerInputParameter=""
-      scannerTerminator=""
       default="false"
       modal="false"
       name="Split"

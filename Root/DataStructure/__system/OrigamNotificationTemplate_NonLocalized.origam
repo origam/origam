@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamNotificationTemplate_NonLocalized"
     abstract="false"
     x:id="2fcf9282-ca26-48f9-bc73-5acab18ea6d5"
@@ -22,13 +21,11 @@
         x:type="Origam.Schema.EntityModel.DataStructureDefaultSetDefault" />
     </DataStructureDefaultSet>
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamNotificationTemplate"
       abstract="false"
@@ -36,13 +33,11 @@
       x:id="54830886-dcc1-4df6-8f02-aec893004c90"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureEntity
-        label=""
         allFields="true"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="Normal"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="OrigamNotificationTemplate_l10n_all"
         abstract="false"
@@ -57,9 +52,7 @@
       x:id="a277dc31-f029-4039-9cd0-a8dae0314fb0"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamNotificationTemplate_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamNotificationTemplate_NonLocalized.origam#OrigamNotificationTemplate_NonLocalized/OrigamNotificationTemplate/54830886-dcc1-4df6-8f02-aec893004c90"

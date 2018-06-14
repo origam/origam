@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamCalendar"
     abstract="false"
     x:id="24b52598-7679-487b-a15c-e0ab3b37b21c"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamCalendar"
       abstract="false"
@@ -22,13 +19,11 @@
       x:id="53943234-56c9-41de-9766-758c6f2540e8"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureEntity
-        label=""
         allFields="true"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="Normal"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="OrigamCalendarDetail"
         abstract="false"
@@ -43,9 +38,7 @@
       x:id="8225b839-f336-4171-b05d-7b9aa5d39afc"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamCalendar_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamCalendar.origam#OrigamCalendar/OrigamCalendar/53943234-56c9-41de-9766-758c6f2540e8"
@@ -53,9 +46,7 @@
         x:id="9de3c4b8-3839-4842-87e8-06d9e2640c87"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamCalendarDetail_GetDateMoreOrEqual"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamCalendar.origam#OrigamCalendar/OrigamCalendar/OrigamCalendarDetail/e434347d-0a46-40c9-8322-65b22d261cac"

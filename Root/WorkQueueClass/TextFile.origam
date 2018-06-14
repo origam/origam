@@ -1,8 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <WorkQueueClass
-    notificationFilterPkParameter=""
-    defaultPanelConfiguration=""
     name="TextFile"
     abstract="false"
     workQueueStructure="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/0e157367-9ecd-42e1-8e68-da905adceb6b"
@@ -13,15 +11,12 @@
     x:type="Origam.Schema.WorkflowModel.WorkQueueClass">
     <WorkQueueClassEntityMapping
       xPath="/ROOT/File/Name"
-      formatPattern=""
-      sortOrder="0"
       name="FileName"
       abstract="false"
       x:id="4ad712d1-ce60-4556-9ff4-37a6280ef01f"
       x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
     <WorkQueueClassEntityMapping
       xPath="/ROOT/File/LastWriteTime"
-      formatPattern=""
       sortOrder="3"
       name="FileLastWriteTime"
       abstract="false"
@@ -29,15 +24,12 @@
       x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
     <WorkQueueClassEntityMapping
       xPath="/ROOT/File/Data"
-      formatPattern=""
-      sortOrder="0"
       name="Data"
       abstract="false"
       x:id="996fe925-b16c-4eb5-9639-91e5d641df17"
       x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
     <WorkQueueClassEntityMapping
       xPath="/ROOT/File/LastAccessTime"
-      formatPattern=""
       sortOrder="2"
       name="FileLastAccessTime"
       abstract="false"
@@ -45,7 +37,6 @@
       x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
     <WorkQueueClassEntityMapping
       xPath="/ROOT/File/CreationTime"
-      formatPattern=""
       sortOrder="1"
       name="FileCreationTime"
       abstract="false"
@@ -54,17 +45,12 @@
     <EntityUIAction
       roles="*"
       label="Rozdělit"
-      features=""
       order="10"
       actionType="Workflow"
       mode="MultipleCheckboxes"
       valueType="SavedValue"
       placement="Toolbar"
       refreshAfterReturn="None"
-      modalDialogWidth="0"
-      modalDialogHeight="0"
-      scannerInputParameter=""
-      scannerTerminator=""
       default="false"
       modal="false"
       name="Split"

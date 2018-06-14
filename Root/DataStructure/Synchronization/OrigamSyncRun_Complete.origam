@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamSyncRun_Complete"
     abstract="false"
     x:id="524434fc-2dfd-40e6-8b40-ec0cfc474693"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamSyncRun"
       abstract="false"
@@ -22,13 +19,11 @@
       x:id="034d87b3-1da8-455e-b495-115a3b51ca99"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureEntity
-        label=""
         allFields="true"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="Normal"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="OrigamSyncRunLog"
         abstract="false"
@@ -43,9 +38,7 @@
       x:id="db784f55-3009-4875-b26a-ed63ed538144"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamSyncRun_GetId"
         abstract="false"
         entity="Root/DataStructure/Synchronization/OrigamSyncRun_Complete.origam#OrigamSyncRun_Complete/OrigamSyncRun/034d87b3-1da8-455e-b495-115a3b51ca99"
@@ -60,7 +53,6 @@
       x:type="Origam.Schema.EntityModel.DataStructureSortSet">
       <DataStructureSortSetItem
         fieldName="TimeStart"
-        sortOrder="0"
         sortDirection="Descending"
         name="OrigamSyncRun_0_TimeStart"
         abstract="false"

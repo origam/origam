@@ -1,19 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
     listValueMember="refOrganizationId"
     listDisplayMember="refOrganizationId"
     isTree="false"
-    treeParentMember=""
     suppressEmptyColumns="false"
     alwaysAllowReturnToForm="false"
     isFilteredServerside="false"
-    serversideFilterParameter=""
     searchByFirstColumnOnly="false"
     valueValueMember="refOrganizationId"
     valueDisplayMember="refOrganizationId"
-    roleFilterMember=""
-    featureFilterMember=""
     name="OrganizationMappingList_SecurityFilter"
     abstract="false"
     listDataStructure="Root/DataStructure/Organization Management/LookupOrganizationMappingList_SecurityFilter.origam#LookupOrganizationMappingList_SecurityFilter/f6035698-02ff-437e-ab6a-6055f9ec04ec"

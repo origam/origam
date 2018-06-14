@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="DimensionTransformationMatrix"
     databaseObjectType="Table"
@@ -19,7 +19,6 @@
       mappedColumnName="refSource4DimensionEntityId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Dimenze 4"
@@ -38,7 +37,6 @@
       mappedColumnName="refSource2DimensionEntityId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Dimenze 2"
@@ -57,7 +55,6 @@
       mappedColumnName="refTargetDimensionEntityId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Entita"
@@ -76,7 +73,6 @@
       mappedColumnName="refSource3DimensionEntityId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Dimenze 3"
@@ -95,7 +91,6 @@
       mappedColumnName="refSource1DimensionEntityId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Dimenze 1"
@@ -119,7 +114,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refTargetDimensionEntityId"
         abstract="false"
         field="Root/DataEntity/Dimensions/DimensionTransformationMatrix.origam#DimensionTransformationMatrix/refTargetDimensionEntityId/3cf8d423-0e59-4930-b509-5f7d32f82bc2"
@@ -134,10 +128,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -177,7 +169,6 @@
     </EntityFilter>
     <Parameter
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       name="parTargetDimensionEntityId"
       abstract="false"

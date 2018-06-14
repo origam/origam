@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="OrigamCalendar"
     databaseObjectType="Table"
@@ -19,7 +19,6 @@
       mappedColumnName="IsThursdayWorkingDay"
       excludeFromAuditing="false"
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Thursday"
@@ -35,7 +34,6 @@
       mappedColumnName="IsWednesdayWorkingDay"
       excludeFromAuditing="false"
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Wednesday"
@@ -67,7 +65,6 @@
       mappedColumnName="IsFridayWorkingDay"
       excludeFromAuditing="false"
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Friday"
@@ -83,7 +80,6 @@
       mappedColumnName="IsSundayWorkingDay"
       excludeFromAuditing="false"
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Sunday"
@@ -99,7 +95,6 @@
       mappedColumnName="IsSaturdayWorkingDay"
       excludeFromAuditing="false"
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Saturday"
@@ -115,7 +110,6 @@
       mappedColumnName="IsMondayWorkingDay"
       excludeFromAuditing="false"
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Monday"
@@ -131,7 +125,6 @@
       mappedColumnName="IsTuesdayWorkingDay"
       excludeFromAuditing="false"
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Tuesday"

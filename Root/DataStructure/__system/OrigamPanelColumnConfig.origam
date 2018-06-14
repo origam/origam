@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamPanelColumnConfig"
     abstract="false"
     x:id="e3966697-e2d6-4538-b7e7-30973ae1af54"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="PanelColumnConfig"
       abstract="false"
@@ -28,9 +25,7 @@
       x:id="c621a8e7-a13a-414d-9db8-192698916ed7"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="PanelUserConfig_GetColumn"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamPanelColumnConfig.origam#OrigamPanelColumnConfig/PanelColumnConfig/68dd35f2-16de-438a-97c8-5be933ab9f64"
@@ -45,9 +40,7 @@
       x:id="97b0ab43-e17a-45ab-b2a6-49f0944d604c"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="PanelUserConfig_GetConfig"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamPanelColumnConfig.origam#OrigamPanelColumnConfig/PanelColumnConfig/68dd35f2-16de-438a-97c8-5be933ab9f64"

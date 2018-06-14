@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="WorkQueue_Complete"
     abstract="false"
     x:id="132fc504-ec51-4a2f-95d3-8c7c775b224c"
@@ -30,13 +29,11 @@
         x:type="Origam.Schema.EntityModel.DataStructureDefaultSetDefault" />
     </DataStructureDefaultSet>
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="WorkQueue"
       abstract="false"
@@ -44,13 +41,11 @@
       x:id="142da199-f5db-4690-a8c5-17e24b380733"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureEntity
-        label=""
         allFields="true"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="Normal"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="WorkQueueCommand"
         abstract="false"
@@ -58,13 +53,11 @@
         x:id="e21e1e36-34f4-4834-9c35-c739ad48839d"
         x:type="Origam.Schema.EntityModel.DataStructureEntity" />
       <DataStructureEntity
-        label=""
         allFields="true"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="Normal"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="WorkQueueNotification"
         abstract="false"
@@ -72,13 +65,11 @@
         x:id="4ae32981-ba9d-40fa-9b2a-d82332a36b63"
         x:type="Origam.Schema.EntityModel.DataStructureEntity">
         <DataStructureEntity
-          label=""
           allFields="true"
           ignoreImplicitFilters="false"
           ignoreCondition="None"
           concurrencyHandling="Standard"
           relationType="Normal"
-          conditionEntityParameterName=""
           useUpsert="false"
           name="WorkQueueNotificationContact_Recipients"
           abstract="false"
@@ -86,13 +77,11 @@
           x:id="2c4ee1e3-d3da-44d5-86a6-5827f772a7a4"
           x:type="Origam.Schema.EntityModel.DataStructureEntity" />
         <DataStructureEntity
-          label=""
           allFields="true"
           ignoreImplicitFilters="false"
           ignoreCondition="None"
           concurrencyHandling="Standard"
           relationType="Normal"
-          conditionEntityParameterName=""
           useUpsert="false"
           name="WorkQueueNotificationContact_Senders"
           abstract="false"
@@ -108,9 +97,7 @@
       x:id="6dd83a10-db48-42df-aca9-2fe0c5fe58d6"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="WorkQueue_GetId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/WorkQueue_Complete.origam#WorkQueue_Complete/WorkQueue/142da199-f5db-4690-a8c5-17e24b380733"
@@ -125,7 +112,6 @@
       x:type="Origam.Schema.EntityModel.DataStructureSortSet">
       <DataStructureSortSetItem
         fieldName="Name"
-        sortOrder="0"
         sortDirection="Ascending"
         name="WorkQueue_0_Name"
         abstract="false"
@@ -134,7 +120,6 @@
         x:type="Origam.Schema.EntityModel.DataStructureSortSetItem" />
       <DataStructureSortSetItem
         fieldName="SortOrder"
-        sortOrder="0"
         sortDirection="Ascending"
         name="WorkQueueCommand_0_SortOrder"
         abstract="false"

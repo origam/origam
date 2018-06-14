@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="AsapModelVersion"
     databaseObjectType="Table"
@@ -18,7 +18,6 @@
       dataLength="20"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Element"
@@ -31,10 +30,8 @@
       mappedColumnName="DateUpdated"
       excludeFromAuditing="false"
       dataType="Date"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Element"
@@ -47,10 +44,8 @@
       mappedColumnName="refSchemaExtensionId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="true"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Element"

@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="OrganizationMappingList"
     databaseObjectType="View"
     generateDeploymentScript="true"
     readOnly="false"
     audit="None"
-    label=""
     name="OrganizationMappingList"
     abstract="false"
     x:id="3eb1f049-362f-41e9-80dd-2ee16baf5862"
@@ -15,7 +14,6 @@
       mappedColumnName="refParentOrganizationId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Parent Organization"
@@ -34,7 +32,6 @@
       mappedColumnName="refOrganizationId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="true"
       label="Assigned Organization"
@@ -57,10 +54,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Attribute"
@@ -106,10 +101,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -156,7 +149,6 @@
       x:type="Origam.Schema.EntityModel.EntitySecurityFilterReference" />
     <Parameter
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       name="parOrganizationId"
       abstract="false"
@@ -164,7 +156,6 @@
       x:type="Origam.Schema.SchemaItemParameter" />
     <Parameter
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       name="parCurrentUserOrganizationId"
       abstract="false"

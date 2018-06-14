@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="BusinessPartnerLookup"
     databaseObjectType="View"
     generateDeploymentScript="true"
     readOnly="false"
     audit="None"
-    label=""
     name="BusinessPartnerLookup"
     abstract="false"
     x:id="5ff75cca-06c1-42d3-8553-0e5105820b51"
@@ -39,10 +38,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Attribute"
@@ -74,10 +71,8 @@
           <DataEntityColumn
             forceDatabaseCalculation="false"
             dataType="Boolean"
-            dataLength="0"
             allowNulls="true"
             isPrimaryKey="false"
-            label=""
             excludeFromAllFields="false"
             autoIncrement="false"
             xmlMappingType="Attribute"
@@ -124,10 +119,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Attribute"
@@ -159,10 +152,8 @@
           <DataEntityColumn
             forceDatabaseCalculation="false"
             dataType="Boolean"
-            dataLength="0"
             allowNulls="true"
             isPrimaryKey="false"
-            label=""
             excludeFromAllFields="false"
             autoIncrement="false"
             xmlMappingType="Attribute"
@@ -209,10 +200,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Attribute"
@@ -229,14 +218,12 @@
           x:id="1da57c6b-c39d-4cc2-939d-bd4512256586"
           x:type="Origam.Schema.EntityModel.FunctionCallParameter">
           <EntityFilterReference
-            roles=""
             name="GetLikeReferenceCode"
             abstract="false"
             filter="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/GetLikeReferenceCode/d3c75b27-f9c1-49dd-ad75-2e7624c99a9c"
             x:id="96e25791-8fb9-40b2-9abd-0da1023c6ba1"
             x:type="Origam.Schema.EntityModel.EntityFilterReference" />
           <EntityFilterReference
-            roles=""
             name="GetLikeLookupText"
             abstract="false"
             filter="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/GetLikeLookupText/433b3ef5-42f3-46ab-99c0-2aa05ed5be20"

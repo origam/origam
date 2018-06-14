@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="OrigamTooltipHelpContext"
     databaseObjectType="Table"
     generateDeploymentScript="true"
     readOnly="false"
     audit="None"
-    label=""
     name="OrigamTooltipHelpContext"
     abstract="false"
     x:id="f14e958d-51ba-4d01-b885-720fad41d316"

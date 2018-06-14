@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupOrigamUser_SecurityStamp_ByBuseinssPartnerId"
     abstract="false"
     x:id="bb9facc3-8143-4858-8ba9-7d6b9e184ca2"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamUser"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="fdf87964-6eae-4acd-87a4-28d80cb1228c"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -36,12 +31,10 @@
         x:id="aafe1fa3-c45f-496a-801e-8e2ee19c15e3"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="RecordUpdated"
@@ -57,9 +50,7 @@
       x:id="d3ed46a3-92df-4d9a-bd4d-b52e88cb9880"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamUser_GetByBusinessPartnerId"
         abstract="false"
         entity="Security/DataStructure/Security/LookupOrigamUser_SecurityStamp_ByBuseinssPartnerId.origam#LookupOrigamUser_SecurityStamp_ByBuseinssPartnerId/OrigamUser/fdf87964-6eae-4acd-87a4-28d80cb1228c"

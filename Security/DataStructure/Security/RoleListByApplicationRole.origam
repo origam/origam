@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="RoleListByApplicationRole"
     abstract="false"
     x:id="0f182ce7-5c13-497b-85b4-4f6366bd02ae"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamRole"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="33e502f5-32cf-4710-a1d7-00be565fe924"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Alias"
@@ -36,12 +31,10 @@
         x:id="3c176696-93d6-4658-884c-1043c7ef924e"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Name"
@@ -50,12 +43,10 @@
         x:id="452d5081-a952-41b1-a9d8-dbed47083277"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -64,13 +55,11 @@
         x:id="f0208ac8-cfe8-485f-b147-f1b083d61aa6"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureEntity
-        label=""
         allFields="false"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="FilterParent"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="OrigamRoleOrigamApplicationRole"
         abstract="false"
@@ -78,12 +67,10 @@
         x:id="fa0c48f1-de63-4ad5-ac4b-b7751043048b"
         x:type="Origam.Schema.EntityModel.DataStructureEntity">
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="refOrigamRoleId"
@@ -92,12 +79,10 @@
           x:id="5ba02149-2523-4c73-8be6-612af6278523"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureColumn
-          label=""
           useLookupValue="false"
           useCopiedValue="false"
           writeOnly="false"
           aggregation="None"
-          order="0"
           xmlMappingType="Default"
           upsertType="Replace"
           name="IsFormReadOnly"
@@ -106,13 +91,11 @@
           x:id="fe0de003-fe2c-4226-a99d-a7c135f5a19c"
           x:type="Origam.Schema.EntityModel.DataStructureColumn" />
         <DataStructureEntity
-          label=""
           allFields="false"
           ignoreImplicitFilters="false"
           ignoreCondition="None"
           concurrencyHandling="Standard"
           relationType="FilterParent"
-          conditionEntityParameterName=""
           useUpsert="false"
           name="OrigamApplicationRole"
           abstract="false"
@@ -128,9 +111,7 @@
       x:id="c70f949d-d970-48aa-9d4b-f8f109e4ea5f"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamApplicationRole_GetByName"
         abstract="false"
         entity="Security/DataStructure/Security/RoleListByApplicationRole.origam#RoleListByApplicationRole/OrigamRole/OrigamRoleOrigamApplicationRole/OrigamApplicationRole/ccf59a37-a05d-41e8-8414-6f68b9c498e6"

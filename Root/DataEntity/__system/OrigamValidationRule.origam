@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="OrigamValidationRule"
     databaseObjectType="Table"
@@ -36,7 +36,6 @@
       mappedColumnName="Rule"
       excludeFromAuditing="false"
       dataType="Memo"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Rule"
@@ -57,7 +56,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_Name"
         abstract="false"
         field="Root/DataEntity/__system/OrigamValidationRule.origam#OrigamValidationRule/Name/20f58ae6-7e58-404b-9eaf-6efbc9e23b1f"

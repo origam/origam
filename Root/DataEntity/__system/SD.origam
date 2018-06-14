@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     readOnly="false"
     audit="None"
-    label=""
     name="SD"
     abstract="false"
     x:id="a9770d71-2ee1-464a-8e17-1fae683edd34"
@@ -14,10 +13,8 @@
       x:type="Origam.Schema.SchemaItemAncestor" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -28,10 +25,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -42,10 +37,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -57,10 +50,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Currency"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -71,10 +62,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -85,10 +74,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -99,10 +86,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -113,10 +98,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -128,10 +111,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -142,10 +123,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -156,10 +135,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -170,10 +147,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -184,10 +159,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -198,10 +171,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -212,10 +183,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -226,10 +195,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -240,10 +207,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -254,10 +219,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -268,10 +231,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Integer"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -282,10 +243,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Currency"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -296,10 +255,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -310,10 +267,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -324,10 +279,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Integer"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -338,10 +291,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -352,10 +303,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -366,10 +315,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -380,10 +327,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -394,10 +339,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -408,10 +351,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -422,10 +363,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -436,10 +375,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Integer"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -450,10 +387,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -464,10 +399,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -479,10 +412,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -493,10 +424,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -507,10 +436,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -521,10 +448,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -535,10 +460,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Currency"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -549,10 +472,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -563,10 +484,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -577,10 +496,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -592,10 +509,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -606,10 +521,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -620,10 +533,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -634,10 +545,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Long"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -648,10 +557,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -662,10 +569,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -676,10 +581,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -690,10 +593,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -704,10 +605,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -719,10 +618,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -733,10 +630,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -747,10 +642,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -761,10 +654,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -775,10 +666,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -789,10 +678,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -803,10 +690,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Integer"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -817,10 +702,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Integer"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -831,10 +714,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -845,10 +726,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Currency"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -859,10 +738,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -873,10 +750,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -887,10 +762,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Integer"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -901,10 +774,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -915,10 +786,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -930,10 +799,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Currency"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -944,10 +811,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Currency"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -958,10 +823,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -973,10 +836,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -987,10 +848,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1001,10 +860,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1015,10 +872,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1030,10 +885,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1045,10 +898,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1059,10 +910,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1073,10 +922,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1087,10 +934,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Currency"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1101,10 +946,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Currency"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1115,10 +958,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1129,10 +970,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1143,10 +982,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1157,10 +994,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1171,10 +1006,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Currency"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1185,10 +1018,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1199,10 +1030,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1213,10 +1042,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1227,10 +1054,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1241,10 +1066,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1255,10 +1078,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1269,10 +1090,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1283,10 +1102,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Integer"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1297,10 +1114,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1311,10 +1126,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Integer"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1325,10 +1138,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Integer"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1339,10 +1150,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1354,10 +1163,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Integer"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1368,10 +1175,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1382,10 +1187,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1396,10 +1199,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Date"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1410,10 +1211,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -1424,10 +1223,8 @@
       x:type="Origam.Schema.EntityModel.DetachedField" />
     <DataEntityColumn
       dataType="Currency"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"

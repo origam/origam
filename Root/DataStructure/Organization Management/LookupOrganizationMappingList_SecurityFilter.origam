@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupOrganizationMappingList_SecurityFilter"
     abstract="false"
     x:id="f6035698-02ff-437e-ab6a-6055f9ec04ec"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrganizationMappingList"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="712f2103-0e16-4a4c-bc08-92cd836bee2a"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="refOrganizationId"
@@ -43,9 +38,7 @@
       x:id="be5c0cbd-a826-4650-b4f2-4a8dce9383e9"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrganizationMappingList_GetByOrganizationId"
         abstract="false"
         entity="Root/DataStructure/Organization Management/LookupOrganizationMappingList_SecurityFilter.origam#LookupOrganizationMappingList_SecurityFilter/OrganizationMappingList/712f2103-0e16-4a4c-bc08-92cd836bee2a"

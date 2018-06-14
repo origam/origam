@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="OrigamNotificationTemplate_l10n"
     databaseObjectType="Table"
@@ -23,7 +23,6 @@
       mappedColumnName="Template"
       excludeFromAuditing="false"
       dataType="Memo"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Template"
@@ -39,7 +38,6 @@
       mappedColumnName="refOrigamNotificationTemplateId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Notification Template"
@@ -78,7 +76,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refOrigamNotificationTemplateId"
         abstract="false"
         field="Root/DataEntity/__system/OrigamNotificationTemplate_l10n.origam#OrigamNotificationTemplate_l10n/refOrigamNotificationTemplateId/72262b46-cfc1-4f19-9e07-9547451c4e94"

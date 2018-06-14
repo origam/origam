@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="BusinessUnit"
     databaseObjectType="Table"
     generateDeploymentScript="false"
     readOnly="false"
     audit="None"
-    label=""
     name="BusinessUnit_All"
     abstract="false"
     x:id="9696fd62-97d6-4dbb-a0d6-a1d4c9986966"

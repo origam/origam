@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupOrigamFeatureList_IsFeatureOn"
     abstract="false"
     x:id="97a76cd4-8376-4f04-b3e1-c76c36ab57a8"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamFeatureList"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="86a7eb71-7cb9-45b8-b5e3-1a0f5df717ab"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="IsFeatureOn"
@@ -36,12 +31,10 @@
         x:id="c1cfe05a-476c-417e-9d26-88e384b04ea8"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -57,9 +50,7 @@
       x:id="88c58151-e4f2-4d15-ad7c-dc02a981800d"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamFeatureList_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/Lookups/LookupOrigamFeatureList_IsFeatureOn.origam#LookupOrigamFeatureList_IsFeatureOn/OrigamFeatureList/86a7eb71-7cb9-45b8-b5e3-1a0f5df717ab"

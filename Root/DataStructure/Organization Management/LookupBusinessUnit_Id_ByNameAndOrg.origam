@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupBusinessUnit_Id_ByNameAndOrg"
     abstract="false"
     x:id="6bb1b2ce-64f9-4151-85b7-0ece4da510cd"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="BusinessUnit"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="3f9d1a0e-0611-45f8-ae77-7c06b7b45f5c"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -43,9 +38,7 @@
       x:id="a3f0bccc-f4f8-4366-8c27-30a03b23ed76"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="BusinessUnit_GetByOrganizationId"
         abstract="false"
         entity="Root/DataStructure/Organization Management/LookupBusinessUnit_Id_ByNameAndOrg.origam#LookupBusinessUnit_Id_ByNameAndOrg/BusinessUnit/3f9d1a0e-0611-45f8-ae77-7c06b7b45f5c"
@@ -53,9 +46,7 @@
         x:id="597dc62b-2680-441a-9315-d0a608c13df7"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="BusinessUnit_GetByName"
         abstract="false"
         entity="Root/DataStructure/Organization Management/LookupBusinessUnit_Id_ByNameAndOrg.origam#LookupBusinessUnit_Id_ByNameAndOrg/BusinessUnit/3f9d1a0e-0611-45f8-ae77-7c06b7b45f5c"

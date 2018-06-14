@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="LookupBusinessUnit_All"
     abstract="false"
     x:id="4fa112aa-77f5-4ba4-9aa9-295fa7173c89"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="false"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="BusinessUnit_All"
       abstract="false"
@@ -22,12 +19,10 @@
       x:id="0e72a0b6-8d7c-44c4-8162-8da9f31b5bc0"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Name"
@@ -36,12 +31,10 @@
         x:id="619403a0-16bb-40ba-a36f-8060810764e4"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
-        label=""
         useLookupValue="false"
         useCopiedValue="false"
         writeOnly="false"
         aggregation="None"
-        order="0"
         xmlMappingType="Default"
         upsertType="Replace"
         name="Id"
@@ -57,9 +50,7 @@
       x:id="f6b2627e-6697-40a9-a935-580504b9bb27"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="BusinessUnit_All_GetByOrganizationId"
         abstract="false"
         entity="Root/DataStructure/Organization Management/LookupBusinessUnit_All.origam#LookupBusinessUnit_All/BusinessUnit_All/0e72a0b6-8d7c-44c4-8162-8da9f31b5bc0"
@@ -74,9 +65,7 @@
       x:id="859bf9c3-ea0d-49cc-80c9-bb9be02b8222"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="BusinessUnit_GetId"
         abstract="false"
         entity="Root/DataStructure/Organization Management/LookupBusinessUnit_All.origam#LookupBusinessUnit_All/BusinessUnit_All/0e72a0b6-8d7c-44c4-8162-8da9f31b5bc0"

@@ -1,20 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
     localized="false"
-    dataSetClass=""
     name="OrigamApplicationRole"
     abstract="false"
     x:id="33797eea-c45e-4c90-bd5b-8e39fdeaafc8"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      label=""
       allFields="true"
       ignoreImplicitFilters="false"
       ignoreCondition="None"
       concurrencyHandling="Standard"
       relationType="Normal"
-      conditionEntityParameterName=""
       useUpsert="false"
       name="OrigamApplicationRole"
       abstract="false"
@@ -22,13 +19,11 @@
       x:id="b800053a-7e1c-4b5b-abcf-3419f747f876"
       x:type="Origam.Schema.EntityModel.DataStructureEntity">
       <DataStructureEntity
-        label=""
         allFields="true"
         ignoreImplicitFilters="false"
         ignoreCondition="None"
         concurrencyHandling="Standard"
         relationType="Normal"
-        conditionEntityParameterName=""
         useUpsert="false"
         name="OrigamRoleOrigamApplicationRole"
         abstract="false"
@@ -43,9 +38,7 @@
       x:id="68c5a57b-d481-4a9b-9a42-dfac478950a5"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        ignoreFilterParameterName=""
         passWhenParameterMatch="false"
-        roles=""
         name="OrigamApplicationRole_GetUserDefined"
         abstract="false"
         entity="Security/DataStructure/Security/OrigamApplicationRole.origam#OrigamApplicationRole/OrigamApplicationRole/b800053a-7e1c-4b5b-abcf-3419f747f876"

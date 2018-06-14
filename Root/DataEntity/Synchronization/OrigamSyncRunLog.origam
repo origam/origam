@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="OrigamSyncRunLog"
     databaseObjectType="Table"
@@ -19,7 +19,6 @@
       mappedColumnName="ErrorText"
       excludeFromAuditing="false"
       dataType="Memo"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Chybové hlášení"
@@ -35,7 +34,6 @@
       mappedColumnName="DestinationId_guid"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Cílové ID (guid)"
@@ -51,7 +49,6 @@
       mappedColumnName="SourceId_int"
       excludeFromAuditing="false"
       dataType="Integer"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Zdrojové ID (číslo)"
@@ -83,7 +80,6 @@
       mappedColumnName="DestinationId_int"
       excludeFromAuditing="false"
       dataType="Integer"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Cílové ID (číslo)"
@@ -99,10 +95,8 @@
       mappedColumnName="refOrigamSyncRunId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Attribute"
@@ -115,7 +109,6 @@
       mappedColumnName="IsSuccess"
       excludeFromAuditing="false"
       dataType="Boolean"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Úspěšné"
@@ -132,7 +125,6 @@
       mappedColumnName="SourceId_guid"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="true"
       isPrimaryKey="false"
       label="Zdrojové ID (guid)"
@@ -153,7 +145,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refOrigamSyncRunId"
         abstract="false"
         field="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/refOrigamSyncRunId/6e354e73-1542-42c2-81a1-a2b291edcfbf"
@@ -169,7 +160,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_SourceId_guid"
         abstract="false"
         field="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/SourceId_guid/fd2febe5-5e15-4c06-980d-f66bd0840ad6"
@@ -184,10 +174,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
@@ -233,10 +221,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"

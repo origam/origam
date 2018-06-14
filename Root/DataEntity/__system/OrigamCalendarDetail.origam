@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
     mappedObjectName="OrigamCalendarDetail"
     databaseObjectType="Table"
@@ -19,7 +19,6 @@
       mappedColumnName="Date"
       excludeFromAuditing="false"
       dataType="Date"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
       label="Date"
@@ -35,10 +34,8 @@
       mappedColumnName="refOrigamCalendarId"
       excludeFromAuditing="false"
       dataType="UniqueIdentifier"
-      dataLength="0"
       allowNulls="false"
       isPrimaryKey="false"
-      label=""
       excludeFromAllFields="false"
       autoIncrement="false"
       xmlMappingType="Element"
@@ -74,7 +71,6 @@
       x:type="Origam.Schema.EntityModel.DataEntityIndex">
       <DataEntityIndexField
         sortOrder="Ascending"
-        ordinalPosition="0"
         name="0_refOrigamCalendarId"
         abstract="false"
         field="Root/DataEntity/__system/OrigamCalendarDetail.origam#OrigamCalendarDetail/refOrigamCalendarId/b8d81a6c-c745-4f1c-b8d7-af58a83fb613"
@@ -89,10 +85,8 @@
       <DataEntityColumn
         forceDatabaseCalculation="false"
         dataType="Boolean"
-        dataLength="0"
         allowNulls="true"
         isPrimaryKey="false"
-        label=""
         excludeFromAllFields="false"
         autoIncrement="false"
         xmlMappingType="Element"
