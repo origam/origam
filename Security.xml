@@ -695,7 +695,9 @@ SET ReferenceCode = 'IDENTITY_USER_MANAGEMENT',
 Description = 'When turned on new buttons will be available in the user management for adding/removing/unlocking users and changing password.' 
 WHERE ReferenceCode = 'NET_MEMBERSHIP_EXCLUSIVE_USE'</M01>
     </SchemaItem>
-    <SchemaItem Id="87641323-376a-4733-8584-5a69753b7378" ItemType="DeploymentVersion" Name="5.0" TargetType="Origam.Schema.DeploymentModel.DeploymentVersion" IsAbstract="false" SS01="5.0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="e3987378-a6b9-4378-a161-71a4dbf186f7" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" />
+    <SchemaItem Id="87641323-376a-4733-8584-5a69753b7378" ItemType="DeploymentVersion" Name="5.0" TargetType="Origam.Schema.DeploymentModel.DeploymentVersion" IsAbstract="false" SS01="5.0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="e3987378-a6b9-4378-a161-71a4dbf186f7" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
+      <M01>147FA70D-6519-4393-B5D0-87931F9FD609, 5.0</M01>
+    </SchemaItem>
     <SchemaItem Id="ad4d61c8-d78c-4e98-b2aa-2d5ef67db1ae" ItemType="DeploymentUpdateScriptActivity" Name="00020_RenameColumns" TargetType="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" IsAbstract="false" I01="20" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" G05="bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead" refParentItemId="87641323-376a-4733-8584-5a69753b7378">
       <M01>/*Store Names of table to loop in in a special table variable */
 declare @tables table(idx int identity(1,1), tableName NVARCHAR(100))
