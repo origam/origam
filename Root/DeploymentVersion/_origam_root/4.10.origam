@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DeploymentVersion
+    version="4.10"
+    name="4.10"
+    abstract="false"
+    deploymentDependenciesCsv=""
+    x:id="f1fd397c-68ec-48a7-9495-9cdfca44aea5"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    <DeploymentUpdateScriptActivity
+      activityOrder="20"
+      name="00020_WorkQueueExternalSourceType_WebRequest"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.10.origam___commandText___70301182-f967-4815-93ff-5ba1cb064e7c.txt"
+      x:id="70301182-f967-4815-93ff-5ba1cb064e7c"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="10"
+      name="00010_WorkQueueExternalSourceType_SequentialWorkflow"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.10.origam___commandText___a0fdd1e3-8da2-4e31-ba90-956691316ae7.txt"
+      x:id="a0fdd1e3-8da2-4e31-ba90-956691316ae7"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

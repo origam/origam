@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="OrigamTraceWorkflow"
+    abstract="false"
+    x:id="309843cc-39ec-4eca-8848-8c69c885790c"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="true"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="OrigamTraceWorkflow"
+      abstract="false"
+      entity="Root/DataEntity/__system/OrigamTraceWorkflow.origam#OrigamTraceWorkflow/2d969eff-c922-46cd-8a6b-7b6dc27e735a"
+      x:id="3b041438-2f59-4c01-976b-a2f9e89038fe"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+    <DataStructureSortSet
+      name="Default"
+      abstract="false"
+      x:id="d20be524-2178-42c0-943d-7d84ee6bb53b"
+      x:type="Origam.Schema.EntityModel.DataStructureSortSet">
+      <DataStructureSortSetItem
+        fieldName="RecordCreated"
+        sortOrder="0"
+        sortDirection="Descending"
+        name="OrigamTraceWorkflow_0_RecordCreated"
+        abstract="false"
+        entity="Root/DataStructure/__system/OrigamTraceWorkflow.origam#OrigamTraceWorkflow/OrigamTraceWorkflow/3b041438-2f59-4c01-976b-a2f9e89038fe"
+        x:id="f5735637-d6ee-434d-8772-10af7eb2e557"
+        x:type="Origam.Schema.EntityModel.DataStructureSortSetItem" />
+    </DataStructureSortSet>
+  </DataStructure>
+</x:file>

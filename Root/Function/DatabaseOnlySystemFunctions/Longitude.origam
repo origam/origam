@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Function
+    dataType="Float"
+    type="Database"
+    name="Longitude"
+    abstract="false"
+    x:id="577f7109-b555-4485-b778-12ae6524c309"
+    x:type="Origam.Schema.EntityModel.Function">
+    <FunctionParameter
+      ordinalPosition="0"
+      name="Point"
+      abstract="false"
+      x:id="6e0c3ec5-d6fb-4cdb-b5fb-757cec2ce551"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+  </Function>
+</x:file>

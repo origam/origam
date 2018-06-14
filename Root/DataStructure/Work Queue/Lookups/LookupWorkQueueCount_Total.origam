@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="LookupWorkQueueCount_Total"
+    abstract="false"
+    x:id="dc584e78-c5d9-490f-bd12-9a7d59cb96a4"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="false"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="WorkQueueEntry"
+      abstract="false"
+      entity="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/76efc330-faab-45f4-9760-9aa5a6e42078"
+      x:id="e82c2522-6e9f-481f-abdb-dbe19a0d02e6"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="Count"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Count"
+        abstract="false"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="cebf3bc5-c78c-431f-87a6-96cfe1f7d7f3"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetByrefWorkQueueId"
+      abstract="false"
+      x:id="f812a89b-2c80-4865-809c-b01ac35ab6f1"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="WorkQueueEntry_GetByrefWorkQueueId"
+        abstract="false"
+        entity="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueCount_Total.origam#LookupWorkQueueCount_Total/WorkQueueEntry/e82c2522-6e9f-481f-abdb-dbe19a0d02e6"
+        filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
+        x:id="ca8e1dd0-4abb-4f27-8f4f-064ccd74e9eb"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

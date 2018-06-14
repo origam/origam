@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="OrigamFormPanelConfig"
+    abstract="false"
+    x:id="218890ad-cd12-43a9-9166-4a02028d6125"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="true"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="OrigamFormPanelConfig"
+      abstract="false"
+      entity="Root/DataEntity/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/f7bd50fd-8d06-42d4-814f-0bf0dc55ebf4"
+      x:id="ce4e5ce2-cf20-45cf-8b22-484c8e9bec4b"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetByForm"
+      abstract="false"
+      x:id="59d68a5a-0f9c-405b-957b-1d698535310e"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="OrigamFormPanelConfig_GetPanel"
+        abstract="false"
+        entity="Root/DataStructure/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/OrigamFormPanelConfig/ce4e5ce2-cf20-45cf-8b22-484c8e9bec4b"
+        filter="Root/DataEntity/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/GetPanel/3d3fb84c-7307-40e4-a863-8f9447dc6ad7"
+        x:id="e49fdb53-4aca-49f4-87ca-18fd967db122"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="OrigamFormPanelConfig_GetProfile"
+        abstract="false"
+        entity="Root/DataStructure/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/OrigamFormPanelConfig/ce4e5ce2-cf20-45cf-8b22-484c8e9bec4b"
+        filter="Root/DataEntity/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/GetProfile/c68538bf-4be4-4456-9a1e-784d6057b45c"
+        x:id="57f54394-c0ff-4eef-aebd-7203ab2ab1b3"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetByWorkflow"
+      abstract="false"
+      x:id="3d5bb832-50d7-44d8-a7c5-abdf88d5df74"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="OrigamFormPanelConfig_GetProfile"
+        abstract="false"
+        entity="Root/DataStructure/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/OrigamFormPanelConfig/ce4e5ce2-cf20-45cf-8b22-484c8e9bec4b"
+        filter="Root/DataEntity/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/GetProfile/c68538bf-4be4-4456-9a1e-784d6057b45c"
+        x:id="434fd1df-32eb-4c2d-869a-21d07dfc853f"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="OrigamFormPanelConfig_GetPanel"
+        abstract="false"
+        entity="Root/DataStructure/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/OrigamFormPanelConfig/ce4e5ce2-cf20-45cf-8b22-484c8e9bec4b"
+        filter="Root/DataEntity/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/GetPanel/3d3fb84c-7307-40e4-a863-8f9447dc6ad7"
+        x:id="b7010d56-afcb-416d-838e-417dc9e49368"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="OrigamFormPanelConfig_GetWorkflow"
+        abstract="false"
+        entity="Root/DataStructure/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/OrigamFormPanelConfig/ce4e5ce2-cf20-45cf-8b22-484c8e9bec4b"
+        filter="Root/DataEntity/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/GetWorkflow/6f160c78-95d9-41e4-9e18-97ab396cfcb0"
+        x:id="06046419-0e06-4c15-aeb4-87338625abdd"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

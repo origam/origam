@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="OrigamDashboardView"
+    abstract="false"
+    x:id="4c519d8d-445c-4cf6-9d40-2e75d9c095be"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="true"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="OrigamDashboardView"
+      abstract="false"
+      entity="Root/DataEntity/__system/OrigamDashboardView.origam#OrigamDashboardView/f3c919ae-d3ea-4514-8fb0-a060944d54c5"
+      x:id="4b94076b-9737-42a3-b6ca-53c0dc364c59"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetId"
+      abstract="false"
+      x:id="6f44f576-258f-4998-95ca-ecaaff9e7265"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="OrigamDashboardView_GetId"
+        abstract="false"
+        entity="Root/DataStructure/__system/OrigamDashboardView.origam#OrigamDashboardView/OrigamDashboardView/4b94076b-9737-42a3-b6ca-53c0dc364c59"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="bc5eca9b-8b51-408b-ba59-b6aaddec785c"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Control
+    toolboxVisibility="FormDesigner"
+    typeName="Origam.Schema.GuiModel.PanelControlSet"
+    namespace="Origam.Schema.GuiModel"
+    isComplex="true"
+    requestSaveAfterChangeAllowed="false"
+    name="param_currency"
+    abstract="false"
+    screenSection="Root/PanelControlSet/__system/param_currency.origam#param_currency/d1a46b42-e4cf-478c-bc23-21f053b13864"
+    x:id="e37f7cf5-440d-4065-b972-3ac3b45b0ad8"
+    x:type="Origam.Schema.GuiModel.ControlItem">
+    <ancestor
+      ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="5c185180-ada3-487e-bd28-ae4ec9c959a8"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+  </Control>
+</x:file>

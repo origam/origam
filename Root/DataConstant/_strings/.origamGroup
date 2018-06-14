@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <group
+    rootItemType="DataConstant"
+    name="_strings"
+    x:id="8a067f5d-8357-4623-b951-e73a642062c4"
+    x:isFolder="true"
+    x:type="Origam.Schema.SchemaItemGroup" />
+</x:file>

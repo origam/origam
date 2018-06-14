@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="LookupOrigamCalendar"
+    abstract="false"
+    x:id="999a6b9d-107d-4d9b-b1ca-46fed64fbd63"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="false"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="OrigamCalendar"
+      abstract="false"
+      entity="Root/DataEntity/__system/OrigamCalendar.origam#OrigamCalendar/bbdc7e44-355e-4b25-bb67-17769fb34b89"
+      x:id="06b7af12-6ced-4bf8-9550-f95956d0d7f1"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Name"
+        abstract="false"
+        field="Root/DataEntity/__system/OrigamCalendar.origam#OrigamCalendar/Name/16483d96-dff2-4341-9464-3f09db80548c"
+        x:id="cc3b0417-9f16-4bbc-9832-13afb6590c22"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Id"
+        abstract="false"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        x:id="a52989f1-aca6-4dba-9b30-4a9f93bf3f2d"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetId"
+      abstract="false"
+      x:id="b9344173-7dd3-4051-8679-574722a891ea"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="OrigamCalendar_GetId"
+        abstract="false"
+        entity="Root/DataStructure/__system/Lookups/LookupOrigamCalendar.origam#LookupOrigamCalendar/OrigamCalendar/06b7af12-6ced-4bf8-9550-f95956d0d7f1"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
+        x:id="0a74b537-5173-46ac-bc0e-a253f42a2a78"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="LookupOrigamApplicationRole"
+    abstract="false"
+    x:id="cafef34a-6a0c-4f3a-8a7c-e4a07a624e72"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="false"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="OrigamApplicationRole"
+      abstract="false"
+      entity="Security/DataEntity/Security/OrigamApplicationRole.origam#OrigamApplicationRole/c0dab8c0-ad91-428f-a89b-67795a427729"
+      x:id="a00a343b-9677-4710-9372-2d49d58f763c"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Description"
+        abstract="false"
+        field="Security/DataEntity/Security/OrigamApplicationRole.origam#OrigamApplicationRole/Description/f1dd7f84-80fa-499e-8e96-88fdf00deaf9"
+        x:id="5d01382f-e3f0-4059-b337-046688ffb7e7"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Name"
+        abstract="false"
+        field="Security/DataEntity/Security/OrigamApplicationRole.origam#OrigamApplicationRole/Name/a6518f10-a9a2-4dfd-a30b-b50ffe15704e"
+        x:id="d740f0a2-6428-4a06-96cb-28383f8e9b9a"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Id"
+        abstract="false"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="43922eb3-1dbc-43fb-ba03-d5b9d4a7c11d"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetId"
+      abstract="false"
+      x:id="2e5e1db3-17fb-46b8-b501-a29b357824d4"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="OrigamApplicationRole_GetId"
+        abstract="false"
+        entity="Security/DataStructure/Security/LookupOrigamApplicationRole.origam#LookupOrigamApplicationRole/OrigamApplicationRole/a00a343b-9677-4710-9372-2d49d58f763c"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="a861c239-911f-4d5a-911f-9c93ac8e304e"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Page
+    resultXPath=""
+    omitJsonRootElement="false"
+    disableConstraintForInputValidation="false"
+    url="admin/userRoles"
+    roles="WEB_Admin_AddUser"
+    features=""
+    mimeType="text/xml"
+    allowPut="false"
+    allowDelete="false"
+    name="admin/userRoles"
+    abstract="false"
+    dataStructure="Security/DataStructure/Security/OrigamRole.origam#OrigamRole/cebe27b3-cca5-4c82-9991-2536bc2e12e3"
+    sortSet="Security/DataStructure/Security/OrigamRole.origam#OrigamRole/SortByName/d1055de4-f3f0-4898-8803-1b8fabc69956"
+    x:id="78f01ed7-b91c-4bca-97aa-fde0f3923014"
+    x:type="Origam.Schema.GuiModel.XsltDataPage" />
+</x:file>

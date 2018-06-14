@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="OrigamNotification"
+    abstract="false"
+    x:id="2f5e1853-e885-4177-ab6d-9da52123ae82"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="true"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="OrigamNotification"
+      abstract="false"
+      entity="Root/DataEntity/__system/OrigamNotification.origam#OrigamNotification/0785a3d4-0308-4432-b40f-adfbe6c7f71b"
+      x:id="5f29840a-01cb-458a-a010-ec752800df28"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+  </DataStructure>
+</x:file>

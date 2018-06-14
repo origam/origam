@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DeploymentVersion
+    version="4.15"
+    name="4.15"
+    abstract="false"
+    deploymentDependenciesCsv=""
+    x:id="7565dbcc-a394-4418-b431-a771de06461a"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    <DeploymentUpdateScriptActivity
+      activityOrder="10"
+      name="00010_OrigamNotificationChannelType_InsertValues"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.15.origam___commandText___2e74e60f-8b01-48a2-ae3e-59f88c3f55b2.txt"
+      x:id="2e74e60f-8b01-48a2-ae3e-59f88c3f55b2"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="20"
+      name="00020_OrigamNotificationChannelType_Transalations"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.15.origam___commandText___6c013e19-1232-42d7-9b8c-85f43e9ab261.txt"
+      x:id="6c013e19-1232-42d7-9b8c-85f43e9ab261"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

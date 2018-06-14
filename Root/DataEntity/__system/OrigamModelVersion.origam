@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataEntity
+    mappedObjectName="OrigamModelVersion"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    readOnly="false"
+    audit="None"
+    label="Installed Model Version"
+    name="OrigamModelVersion"
+    abstract="false"
+    x:id="d70d26d1-6886-496e-a573-2217f470ce98"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <DataEntityColumn
+      mappedColumnName="Version"
+      excludeFromAuditing="false"
+      dataType="String"
+      dataLength="20"
+      allowNulls="true"
+      isPrimaryKey="false"
+      label=""
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Element"
+      onCopyAction="Copy"
+      name="Version"
+      abstract="false"
+      x:id="49367d64-674b-442e-a7ac-234ca3b1ab8d"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="refSchemaExtensionId"
+      excludeFromAuditing="false"
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="true"
+      label=""
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Element"
+      onCopyAction="Copy"
+      name="refSchemaExtensionId"
+      abstract="false"
+      x:id="24173e18-37a9-4133-9006-5095b57b13d4"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="DateUpdated"
+      excludeFromAuditing="false"
+      dataType="Date"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label=""
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Element"
+      onCopyAction="Copy"
+      name="DateUpdated"
+      abstract="false"
+      x:id="6f3dd281-409d-45c8-aece-dca0217d02e6"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+  </DataEntity>
+</x:file>

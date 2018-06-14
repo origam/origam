@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DeploymentVersion
+    version="4.12"
+    name="4.12"
+    abstract="false"
+    deploymentDependenciesCsv=""
+    x:id="2578bce9-4fdb-4591-8ed6-4a21dc78bfac"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    <DeploymentUpdateScriptActivity
+      activityOrder="20"
+      name="00020_DROP_View_BusinessPartnerLookup"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.12.origam___commandText___01f92cea-3c5a-4abf-ae3a-154cd8d5655c.txt"
+      x:id="01f92cea-3c5a-4abf-ae3a-154cd8d5655c"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="10"
+      name="00010_Database_Field_BusinessPartner.UserEmail"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.12.origam___commandText___465e3250-5887-4721-a9ae-1d76b32e472f.txt"
+      x:id="465e3250-5887-4721-a9ae-1d76b32e472f"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="30"
+      name="00030_Recreate_View_BusinessPartnerLookup"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.12.origam___commandText___86c0f1c7-80c8-4cb2-a092-a638577f2aaf.txt"
+      x:id="86c0f1c7-80c8-4cb2-a092-a638577f2aaf"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="Id"
+    listDisplayMember="Name"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="false"
+    serversideFilterParameter=""
+    searchByFirstColumnOnly="false"
+    valueValueMember="Id"
+    valueDisplayMember="Name"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="Resource_ByCurrentUser"
+    abstract="false"
+    listDataStructure="Root/DataStructure/Resource Management/Lookups/LookupResource_ByCurrentUser.origam#LookupResource_ByCurrentUser/584a09b4-b8c8-4752-a82f-15ec2a815144"
+    valueDataStructure="Root/DataStructure/Resource Management/Lookups/LookupResource_ByCurrentUser.origam#LookupResource_ByCurrentUser/584a09b4-b8c8-4752-a82f-15ec2a815144"
+    listMethod="Root/DataStructure/Resource Management/Lookups/LookupResource_ByCurrentUser.origam#LookupResource_ByCurrentUser/GetByCurrentUserId/9898f7bb-4778-4c39-bc0e-bd754d0f1352"
+    valueMethod="Root/DataStructure/Resource Management/Lookups/LookupResource_ByCurrentUser.origam#LookupResource_ByCurrentUser/GetId/c221a285-6881-48b8-afa5-d856a3c53474"
+    x:id="3d70293a-7eb6-49ea-98b8-d1014ada283f"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>

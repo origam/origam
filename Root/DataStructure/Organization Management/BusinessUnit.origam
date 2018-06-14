@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="BusinessUnit"
+    abstract="false"
+    x:id="ab2cfd9e-f22a-4575-8003-bdf212ec1dd0"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="true"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="BusinessUnit"
+      abstract="false"
+      entity="Root/DataEntity/Organization Management/BusinessUnit.origam#BusinessUnit/5008fdde-0119-4bd3-8ee1-4d04e4382d0d"
+      x:id="095a2b05-1a8f-416f-9971-856274e7faf2"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+  </DataStructure>
+</x:file>

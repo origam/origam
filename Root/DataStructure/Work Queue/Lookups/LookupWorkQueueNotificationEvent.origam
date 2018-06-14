@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="true"
+    dataSetClass=""
+    name="LookupWorkQueueNotificationEvent"
+    abstract="false"
+    x:id="255e42d6-2e60-47c1-bf28-d452eb5852a3"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="false"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="WorkQueueNotificationEvent"
+      abstract="false"
+      entity="Root/DataEntity/Work Queue/WorkQueueNotificationEvent.origam#WorkQueueNotificationEvent/b4127512-a378-441e-a920-30571e5192ea"
+      x:id="78bc3636-eeb8-4221-a1ee-98c6ad2175eb"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Id"
+        abstract="false"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="68089c99-ba58-41a0-8f07-88ed299c2500"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Name"
+        abstract="false"
+        field="Root/DataEntity/Work Queue/WorkQueueNotificationEvent.origam#WorkQueueNotificationEvent/Name/7fd39e2a-d818-4ef3-8352-d5ab76f138ae"
+        x:id="1364e789-ad93-40df-a0aa-89605d5733c7"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+      <DataStructureEntity
+        label=""
+        allFields="false"
+        ignoreImplicitFilters="false"
+        ignoreCondition="None"
+        concurrencyHandling="Standard"
+        relationType="LeftJoin"
+        conditionEntityParameterName=""
+        useUpsert="false"
+        name="WorkQueueNotificationEvent_l10n"
+        abstract="false"
+        entity="Root/DataEntity/Work Queue/WorkQueueNotificationEvent.origam#WorkQueueNotificationEvent/WorkQueueNotificationEvent_l10n/33479fdb-803b-4f15-9df2-4c311c41d2a3"
+        x:id="3d4cd097-c7fb-4ea4-8940-4666e7598b48"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetId"
+      abstract="false"
+      x:id="7dd4be08-ffdb-4269-a17f-973694ad2d64"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="WorkQueueNotificationEvent_GetId"
+        abstract="false"
+        entity="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueNotificationEvent.origam#LookupWorkQueueNotificationEvent/WorkQueueNotificationEvent/78bc3636-eeb8-4221-a1ee-98c6ad2175eb"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="a3914b86-1944-4422-9732-884838f17da7"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

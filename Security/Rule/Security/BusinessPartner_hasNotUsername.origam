@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Rule
+    xPath="not(string(/row/UserName))"
+    isPathRelative="false"
+    dataType="Boolean"
+    name="BusinessPartner_hasNotUsername"
+    abstract="false"
+    x:id="673f84f7-6cb6-455a-9e3e-8b90200c3bef"
+    x:type="Origam.Schema.RuleModel.EntityRule" />
+</x:file>

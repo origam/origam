@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Graphics
+    name="Report.png"
+    abstract="false"
+    graphicsDataByte=""
+    x:id="b8465438-f9a5-4c4a-9c13-64b08ebff1a8"
+    x:type="Origam.Schema.GuiModel.Graphics" />
+</x:file>

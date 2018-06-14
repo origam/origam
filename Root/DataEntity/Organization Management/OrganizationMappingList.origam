@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataEntity
+    mappedObjectName="OrganizationMappingList"
+    databaseObjectType="View"
+    generateDeploymentScript="true"
+    readOnly="false"
+    audit="None"
+    label=""
+    name="OrganizationMappingList"
+    abstract="false"
+    x:id="3eb1f049-362f-41e9-80dd-2ee16baf5862"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <DataEntityColumn
+      mappedColumnName="refParentOrganizationId"
+      excludeFromAuditing="false"
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Parent Organization"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="refParentOrganizationId"
+      abstract="false"
+      defaultLookup="Root/DataLookup/Organization Management/Organization.origam#Organization/a53c6d95-67be-4c8c-a7b0-75ad20dc79ee"
+      foreignKeyEntity="Root/DataEntity/Organization Management/Organization.origam#Organization/5b590143-c85f-4c7d-a7f3-ae0a6d246f18"
+      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="bba33c37-d58e-4aa3-8d91-1007a8782b6f"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="refOrganizationId"
+      excludeFromAuditing="false"
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="true"
+      label="Assigned Organization"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="refOrganizationId"
+      abstract="false"
+      defaultLookup="Root/DataLookup/Organization Management/Organization.origam#Organization/a53c6d95-67be-4c8c-a7b0-75ad20dc79ee"
+      foreignKeyEntity="Root/DataEntity/Organization Management/Organization.origam#Organization/5b590143-c85f-4c7d-a7f3-ae0a6d246f18"
+      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="f7261cdc-b4b0-4995-8e71-9ac3982bf37c"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <EntityFilter
+      name="GetByOrganizationId"
+      abstract="false"
+      x:id="b8f03db3-2735-4e01-a377-261debe3019d"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        forceDatabaseCalculation="false"
+        dataType="Boolean"
+        dataLength="0"
+        allowNulls="true"
+        isPrimaryKey="false"
+        label=""
+        excludeFromAllFields="false"
+        autoIncrement="false"
+        xmlMappingType="Attribute"
+        onCopyAction="Copy"
+        name="="
+        abstract="false"
+        function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="a11299fc-f8f6-404a-a989-7daa4f8f7e66"
+        x:type="Origam.Schema.EntityModel.FunctionCall">
+        <FunctionCallParameter
+          name="Right"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+          x:id="147dac27-694c-4dab-94e4-3dde738b29ce"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <ParameterReference
+            name="parOrganizationId"
+            abstract="false"
+            parameter="Root/DataEntity/Organization Management/OrganizationMappingList.origam#OrganizationMappingList/parOrganizationId/89ef6f45-28b8-4b77-9000-214b49031e97"
+            x:id="dd491f35-52d1-44c1-95f9-c941521c5e6b"
+            x:type="Origam.Schema.ParameterReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          name="Left"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
+          x:id="0d8cef8e-8ede-4376-9df0-83f53eb01454"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            name="refOrganizationId"
+            abstract="false"
+            field="Root/DataEntity/Organization Management/OrganizationMappingList.origam#OrganizationMappingList/refOrganizationId/f7261cdc-b4b0-4995-8e71-9ac3982bf37c"
+            x:id="a6d0f805-cb43-4f19-8442-bc7f648c75b7"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <EntityFilter
+      name="GetByParentOrganizationId"
+      abstract="false"
+      x:id="c7fea06a-8dac-490c-b4f1-47bb0b33f743"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        forceDatabaseCalculation="false"
+        dataType="Boolean"
+        dataLength="0"
+        allowNulls="true"
+        isPrimaryKey="false"
+        label=""
+        excludeFromAllFields="false"
+        autoIncrement="false"
+        xmlMappingType="Element"
+        onCopyAction="Copy"
+        name="="
+        abstract="false"
+        function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="9229c19d-d62d-4d1d-811b-3fa10cad9302"
+        x:type="Origam.Schema.EntityModel.FunctionCall">
+        <FunctionCallParameter
+          name="Left"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
+          x:id="3e15396a-c185-4ee7-a245-4b1177ec41c1"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            name="refParentOrganizationId"
+            abstract="false"
+            field="Root/DataEntity/Organization Management/OrganizationMappingList.origam#OrganizationMappingList/refParentOrganizationId/bba33c37-d58e-4aa3-8d91-1007a8782b6f"
+            x:id="d60d0030-4434-49df-bd4d-e95916e928ed"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          name="Right"
+          abstract="false"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+          x:id="e8662662-a665-4b5a-9a52-cfb16fe7dd9b"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <ParameterReference
+            name="parCurrentUserOrganizationId"
+            abstract="false"
+            parameter="Root/DataEntity/Organization Management/OrganizationMappingList.origam#OrganizationMappingList/parCurrentUserOrganizationId/3a6dca00-b91f-4697-a1f5-d20f719d31e5"
+            x:id="2e2817e3-be42-4a2f-a726-9070fd292c1f"
+            x:type="Origam.Schema.ParameterReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <EntitySecurityFilterReference
+      roles="!DATA_Common_OrganizationManager"
+      name="GetByParentOrganizationId"
+      abstract="false"
+      filter="Root/DataEntity/Organization Management/OrganizationMappingList.origam#OrganizationMappingList/GetByParentOrganizationId/c7fea06a-8dac-490c-b4f1-47bb0b33f743"
+      x:id="4a9ab745-6d29-4895-ae9a-526fb2a08526"
+      x:type="Origam.Schema.EntityModel.EntitySecurityFilterReference" />
+    <Parameter
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="true"
+      name="parOrganizationId"
+      abstract="false"
+      x:id="89ef6f45-28b8-4b77-9000-214b49031e97"
+      x:type="Origam.Schema.SchemaItemParameter" />
+    <Parameter
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="true"
+      name="parCurrentUserOrganizationId"
+      abstract="false"
+      x:id="3a6dca00-b91f-4697-a1f5-d20f719d31e5"
+      x:type="Origam.Schema.SchemaItemParameter" />
+  </DataEntity>
+</x:file>

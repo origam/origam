@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Graphics
+    name="Map.png"
+    abstract="false"
+    graphicsDataByte="-***-ExternalFile:Map.png.origam___graphicsDataByte___448aa834-910c-4d08-be2d-7f214f7277a7.png"
+    x:id="448aa834-910c-4d08-be2d-7f214f7277a7"
+    x:type="Origam.Schema.GuiModel.Graphics" />
+</x:file>

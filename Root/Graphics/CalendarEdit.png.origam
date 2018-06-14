@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Graphics
+    name="CalendarEdit.png"
+    abstract="false"
+    graphicsDataByte="-***-ExternalFile:CalendarEdit.png.origam___graphicsDataByte___a89d18d9-c12f-4190-9a02-9d55e05bfe85.png"
+    x:id="a89d18d9-c12f-4190-9a02-9d55e05bfe85"
+    x:type="Origam.Schema.GuiModel.Graphics" />
+</x:file>

@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <WorkQueueClass
+    notificationFilterPkParameter=""
+    defaultPanelConfiguration=""
+    name="Mail"
+    abstract="false"
+    entity="Root/DataEntity/__system/Mail.origam#Mail/af59fd91-736c-462c-9039-daece8811668"
+    workQueueStructure="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/a919bc9e-69b5-4d8b-ae56-dca81195239b"
+    entityStructure="Root/DataStructure/__system/Mail.origam#Mail/f4eaf9b5-e5a2-4d4b-afb5-174fe5e0b6ea"
+    entityStructurePrimaryKeyMethod="Root/DataStructure/__system/Mail.origam#Mail/GetId/5da5b9f8-09c9-46f8-bb1c-e706ee30ef0c"
+    workQueueStructureUserListMethod="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/GetByQueueId/26b49b77-9977-4787-91b5-001a64d260e1"
+    workQueueStructureSortSet="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/Sort/b79d29c4-0d97-45d1-8c3f-a13c04e1e789"
+    workQueueItemCountLookup="Root/DataLookup/Work Queue/WorkQueueCount_Total.origam#WorkQueueCount_Total/2a953c7d-0276-42c4-99b9-aa484808bbcb"
+    x:id="cbc7be20-3695-4b15-a6f9-ce3939a05a56"
+    x:type="Origam.Schema.WorkflowModel.WorkQueueClass">
+    <WorkQueueClassEntityMapping
+      xPath="/ROOT/Mail/@DateSent"
+      formatPattern=""
+      sortOrder="0"
+      name="DateSent"
+      abstract="false"
+      x:id="df2ad81c-ecc7-46ee-b04b-21f903e4a802"
+      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
+    <WorkQueueClassEntityMapping
+      xPath="/ROOT/Mail/Recipient"
+      formatPattern=""
+      sortOrder="0"
+      name="Recipient"
+      abstract="false"
+      x:id="d047906d-7ea8-4b33-a40d-67b23f13cb89"
+      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
+    <WorkQueueClassEntityMapping
+      xPath="/ROOT/Mail/@DateReceived"
+      formatPattern=""
+      sortOrder="0"
+      name="DateReceived"
+      abstract="false"
+      x:id="57b41a67-29f3-4449-8af4-838320a6a29e"
+      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
+    <WorkQueueClassEntityMapping
+      xPath="/ROOT/Mail/@Subject"
+      formatPattern=""
+      sortOrder="0"
+      name="Subject"
+      abstract="false"
+      x:id="5dd6e80f-4361-4326-8c61-9b7f40fbd3e6"
+      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
+    <WorkQueueClassEntityMapping
+      xPath="/ROOT/Mail/MessageBody"
+      formatPattern=""
+      sortOrder="0"
+      name="MessageBody"
+      abstract="false"
+      x:id="c7742a16-b983-48d5-8f98-c88b2ea7c0b5"
+      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
+    <WorkQueueClassEntityMapping
+      xPath="/ROOT/Mail/Sender"
+      formatPattern=""
+      sortOrder="0"
+      name="Sender"
+      abstract="false"
+      x:id="5eb83d54-e49d-4d70-863d-c8f6460477bc"
+      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
+    <WorkQueueClassEntityMapping
+      xPath="/ROOT/Mail/@Id"
+      formatPattern=""
+      sortOrder="0"
+      name="refId"
+      abstract="false"
+      x:id="4d072d00-7ef4-431d-9bec-ffe92c2c6eef"
+      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
+    <EntityUIAction
+      roles="*"
+      label="Send"
+      features=""
+      order="10"
+      actionType="Workflow"
+      mode="ActiveRecord"
+      valueType="SavedValue"
+      placement="Toolbar"
+      refreshAfterReturn="None"
+      modalDialogWidth="0"
+      modalDialogHeight="0"
+      scannerInputParameter=""
+      scannerTerminator=""
+      default="false"
+      modal="false"
+      name="Send"
+      abstract="false"
+      workflow="Root/Workflow/Work Queues/SendEmailFromQueue.origam#SendEmailFromQueue/b882bf76-fea8-4b38-82bd-f41e851527fe"
+      x:id="7ccf6b61-001a-4cb8-8ed8-51e80fcc57dd"
+      x:type="Origam.Schema.WorkflowModel.WorkQueueWorkflowCommand">
+      <WorkQueueWorkflowCommandParameterMapping
+        value="QueueEntries"
+        name="WQ_Mail"
+        abstract="false"
+        x:id="c8d0635c-6643-4327-bb92-242d41766855"
+        x:type="Origam.Schema.WorkflowModel.WorkQueueWorkflowCommandParameterMapping" />
+    </EntityUIAction>
+  </WorkQueueClass>
+</x:file>

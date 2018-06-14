@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Control
+    toolboxVisibility="FormDesigner"
+    typeName="Origam.Gui.Win.AsTreeView"
+    namespace="Origam.Gui.Win"
+    isComplex="false"
+    requestSaveAfterChangeAllowed="false"
+    name="AsTree"
+    abstract="false"
+    x:id="2b24863a-0f20-440b-bc6e-bf8fb4665665"
+    x:type="Origam.Schema.GuiModel.ControlItem">
+    <ControlPropertyItem
+      propertyType="String"
+      bindOnly="false"
+      localizable="false"
+      name="ParentIDColumn"
+      abstract="false"
+      x:id="145cf6d0-61a5-4dbd-846e-024423bff37b"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="String"
+      bindOnly="false"
+      localizable="false"
+      name="DataMember"
+      abstract="false"
+      x:id="da588742-d374-4ffd-ba44-306abbc11e14"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Integer"
+      bindOnly="false"
+      localizable="false"
+      name="Top"
+      abstract="false"
+      x:id="f25a8be1-f9a7-4eec-b9f1-3d25cd15c747"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="String"
+      bindOnly="false"
+      localizable="false"
+      name="IDColumn"
+      abstract="false"
+      x:id="827952d8-5742-4167-bb71-574e05b65358"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Integer"
+      bindOnly="false"
+      localizable="false"
+      name="Height"
+      abstract="false"
+      x:id="67e3c765-253d-484b-8966-7d47ec206934"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Integer"
+      bindOnly="false"
+      localizable="false"
+      name="Left"
+      abstract="false"
+      x:id="f30dce6f-7a3c-429a-b256-abdaf25bfaca"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="UniqueIdentifier"
+      bindOnly="false"
+      localizable="false"
+      name="StyleId"
+      abstract="false"
+      x:id="bdc60ecb-7700-48af-acf1-add51bf0c05e"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="String"
+      bindOnly="false"
+      localizable="false"
+      name="NameColumn"
+      abstract="false"
+      x:id="e914897b-29e4-4609-81ce-bebc6300c674"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Integer"
+      bindOnly="false"
+      localizable="false"
+      name="TabIndex"
+      abstract="false"
+      x:id="b72fae12-6b92-4ed4-a0c3-cae71c521c9e"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Integer"
+      bindOnly="false"
+      localizable="false"
+      name="Width"
+      abstract="false"
+      x:id="ca2d9056-ef91-48f6-a79e-f9c523fcc84f"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+  </Control>
+</x:file>

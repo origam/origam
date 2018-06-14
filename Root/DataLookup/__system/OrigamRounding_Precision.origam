@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="Id"
+    listDisplayMember="Precision"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="false"
+    serversideFilterParameter=""
+    searchByFirstColumnOnly="false"
+    valueValueMember="Id"
+    valueDisplayMember="Precision"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="OrigamRounding_Precision"
+    abstract="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamRounding_Precision.origam#LookupOrigamRounding_Precision/13cf6231-980f-469d-8b03-33d6b077dee2"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamRounding_Precision.origam#LookupOrigamRounding_Precision/13cf6231-980f-469d-8b03-33d6b077dee2"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamRounding_Precision.origam#LookupOrigamRounding_Precision/GetId/5c2e7ccd-3003-4e18-ba2e-cb2c8d665dfa"
+    x:id="7d3d6933-648b-42cb-8947-0d2cb700152b"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>

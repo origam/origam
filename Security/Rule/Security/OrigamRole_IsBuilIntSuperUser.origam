@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Rule
+    xPath="/row/@Id = AS:GetConstant('OrigamRole_BuiltInSuperUser')"
+    isPathRelative="false"
+    dataType="Boolean"
+    name="OrigamRole_IsBuilIntSuperUser"
+    abstract="false"
+    x:id="bfdc54a2-e9d7-4abb-9863-2bdf87e63a88"
+    x:type="Origam.Schema.RuleModel.EntityRule" />
+</x:file>

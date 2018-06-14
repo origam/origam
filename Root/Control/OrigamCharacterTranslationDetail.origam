@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Control
+    toolboxVisibility="FormDesigner"
+    typeName="Origam.Schema.GuiModel.PanelControlSet"
+    namespace="Origam.Schema.GuiModel"
+    isComplex="true"
+    requestSaveAfterChangeAllowed="false"
+    name="OrigamCharacterTranslationDetail"
+    abstract="false"
+    screenSection="Root/PanelControlSet/__system/OrigamCharacterTranslationDetail.origam#OrigamCharacterTranslationDetail/5c08b73e-0365-4111-a805-d754ddc3b557"
+    x:id="7e2bd431-df2e-40cd-bd5f-a6b792ed9aa0"
+    x:type="Origam.Schema.GuiModel.ControlItem">
+    <ancestor
+      ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="8172dd84-1eb0-43f1-9b93-5a464a843580"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+  </Control>
+</x:file>

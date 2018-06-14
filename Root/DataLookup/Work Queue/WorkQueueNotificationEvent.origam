@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="Id"
+    listDisplayMember="Name"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="false"
+    serversideFilterParameter=""
+    searchByFirstColumnOnly="false"
+    valueValueMember="Id"
+    valueDisplayMember="Name"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="WorkQueueNotificationEvent"
+    abstract="false"
+    listDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueNotificationEvent.origam#LookupWorkQueueNotificationEvent/255e42d6-2e60-47c1-bf28-d452eb5852a3"
+    valueDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueNotificationEvent.origam#LookupWorkQueueNotificationEvent/255e42d6-2e60-47c1-bf28-d452eb5852a3"
+    valueMethod="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueNotificationEvent.origam#LookupWorkQueueNotificationEvent/GetId/7dd4be08-ffdb-4269-a17f-973694ad2d64"
+    x:id="883ce0c6-7eb7-4610-b625-302d47c7e092"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>

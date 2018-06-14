@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="LookupResource"
+    abstract="false"
+    x:id="ccd0efe5-fadf-4f50-9d0e-4d6eba39f83d"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="false"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="Resource"
+      abstract="false"
+      entity="Root/DataEntity/Resource Management/Resource.origam#Resource/b8d208f2-c703-4e8a-9602-c70327f56173"
+      x:id="344036ea-1e8d-463c-9a53-4a4890140dbb"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Id"
+        abstract="false"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        x:id="fb9c6791-645e-4976-8b0a-b71d822319bd"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Name"
+        abstract="false"
+        field="Root/DataEntity/Resource Management/Resource.origam#Resource/Name/7e68a1d3-87bd-4892-8886-e3e8539ff78c"
+        x:id="baadaff6-2312-4ce9-8a49-cca728c5dc48"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetGroups"
+      abstract="false"
+      x:id="c9a83cad-b7cf-425f-8c2b-74963e92c204"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="Resource_GetGroups"
+        abstract="false"
+        entity="Root/DataStructure/Resource Management/Lookups/LookupResource.origam#LookupResource/Resource/344036ea-1e8d-463c-9a53-4a4890140dbb"
+        filter="Root/DataEntity/Resource Management/Resource.origam#Resource/GetGroups/8b3e51cf-247a-4926-a511-4921b904a211"
+        x:id="d23b420f-bc88-4602-8d0f-4218fba1aea2"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetNotGroups"
+      abstract="false"
+      x:id="b6d17ff0-c1b7-4271-910d-a1643c23e1a7"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="Resource_GetNotGroups"
+        abstract="false"
+        entity="Root/DataStructure/Resource Management/Lookups/LookupResource.origam#LookupResource/Resource/344036ea-1e8d-463c-9a53-4a4890140dbb"
+        filter="Root/DataEntity/Resource Management/Resource.origam#Resource/GetNotGroups/14940505-7147-47f9-b546-280e013f786d"
+        x:id="5135ed62-a34e-4760-8926-cf630ad4dc06"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetId"
+      abstract="false"
+      x:id="0b604a51-e6e4-43ec-9d08-a3d63b452e81"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="Resource_GetId"
+        abstract="false"
+        entity="Root/DataStructure/Resource Management/Lookups/LookupResource.origam#LookupResource/Resource/344036ea-1e8d-463c-9a53-4a4890140dbb"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
+        x:id="472f8b8f-84f6-4750-b2ca-7603c6165793"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+    <DataStructureSortSet
+      name="Default"
+      abstract="false"
+      x:id="9134c60a-7c74-4b2c-836f-3d42200a0cd9"
+      x:type="Origam.Schema.EntityModel.DataStructureSortSet">
+      <DataStructureSortSetItem
+        fieldName="Name"
+        sortOrder="0"
+        sortDirection="Ascending"
+        name="Resource_Name"
+        abstract="false"
+        entity="Root/DataStructure/Resource Management/Lookups/LookupResource.origam#LookupResource/Resource/344036ea-1e8d-463c-9a53-4a4890140dbb"
+        x:id="eb1feb40-1725-4ea2-b579-74787805d7d7"
+        x:type="Origam.Schema.EntityModel.DataStructureSortSetItem" />
+    </DataStructureSortSet>
+  </DataStructure>
+</x:file>

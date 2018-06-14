@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Function
+    dataType="Date"
+    type="Database"
+    name="Minute"
+    abstract="false"
+    x:id="e93f48de-8fca-4c83-ac3a-101151a1b390"
+    x:type="Origam.Schema.EntityModel.Function">
+    <FunctionParameter
+      ordinalPosition="0"
+      name="Expression"
+      abstract="false"
+      x:id="8c01868d-87a5-42e2-b566-987b840174c7"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+  </Function>
+</x:file>

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DeploymentVersion
+    version="4.24"
+    name="4.24"
+    abstract="false"
+    deploymentDependenciesCsv=""
+    x:id="eb4fc351-c73d-4def-b0e4-94f747019736"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    <DeploymentUpdateScriptActivity
+      activityOrder="10"
+      name="00010_Database_Field_OrigamTooltipHelp.ImageLink"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.24.origam___commandText___ea256bcf-b85b-485f-9284-de86500d7a5c.txt"
+      x:id="ea256bcf-b85b-485f-9284-de86500d7a5c"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

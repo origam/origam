@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Function
+    dataType="Integer"
+    type="Database"
+    name="DaysToAnniversary"
+    abstract="false"
+    x:id="a8c70560-d3fc-4b08-a948-7b01d3833254"
+    x:type="Origam.Schema.EntityModel.Function">
+    <FunctionParameter
+      ordinalPosition="0"
+      name="Date"
+      abstract="false"
+      x:id="abcb8b44-6a4d-44fa-839b-fb4530f36523"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+  </Function>
+</x:file>

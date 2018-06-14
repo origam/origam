@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="LookupOrigamTooltipHelpSubcontext_IdString"
+    abstract="false"
+    x:id="15f2aaa6-6a04-4504-9b50-ff632da1d91e"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="false"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="OrigamTooltipHelpSubcontext"
+      abstract="false"
+      entity="Root/DataEntity/__system/OrigamTooltipHelpSubcontext.origam#OrigamTooltipHelpSubcontext/8aff5d19-94bc-4e89-a73a-9c17da31b373"
+      x:id="7cc19a7e-3b35-479b-94f1-7c6b0a59c3b3"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="IdString"
+        abstract="false"
+        field="Root/DataEntity/__system/OrigamTooltipHelpSubcontext.origam#OrigamTooltipHelpSubcontext/IdString/28074fbf-9700-45a1-8a76-67669dd00654"
+        x:id="27a91987-7d17-46ab-94f9-6b180c107473"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Id"
+        abstract="false"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="732be6f7-9490-4faa-a527-d8599f18db79"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetId"
+      abstract="false"
+      x:id="8d365f93-0764-4400-9550-44d44de932ab"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="OrigamTooltipHelpSubcontext_GetId"
+        abstract="false"
+        entity="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpSubcontext_IdString.origam#LookupOrigamTooltipHelpSubcontext_IdString/OrigamTooltipHelpSubcontext/7cc19a7e-3b35-479b-94f1-7c6b0a59c3b3"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="77098eac-f8f5-440f-b5b8-2ca6ae518c8b"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DeploymentVersion
+    version="4.3"
+    name="4.3"
+    abstract="false"
+    deploymentDependenciesCsv=""
+    x:id="1316314f-a7bc-4b83-8cd9-1681015a159b"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    <DeploymentUpdateScriptActivity
+      activityOrder="20"
+      name="00020_Database_Column_Mapping_OrigamStyleColor.Description"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.3.origam___commandText___1451702a-07dc-4082-91a9-1e8d57dbe3f2.txt"
+      x:id="1451702a-07dc-4082-91a9-1e8d57dbe3f2"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="10"
+      name="00010_Database_Object_Mapping_OrigamStyleColor"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.3.origam___commandText___56248e0b-1674-45d6-abdb-517cfabcd8ef.txt"
+      x:id="56248e0b-1674-45d6-abdb-517cfabcd8ef"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

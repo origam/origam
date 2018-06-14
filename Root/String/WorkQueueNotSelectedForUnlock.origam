@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <String
+    string="Please select a work queue to unlock."
+    name="WorkQueueNotSelectedForUnlock"
+    abstract="false"
+    x:id="79492afc-77fe-4237-b995-dca667de4bb1"
+    x:type="Origam.Schema.StringItem" />
+</x:file>

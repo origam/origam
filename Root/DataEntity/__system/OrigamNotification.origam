@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataEntity
+    readOnly="false"
+    audit="None"
+    label=""
+    name="OrigamNotification"
+    abstract="false"
+    x:id="0785a3d4-0308-4432-b40f-adfbe6c7f71b"
+    x:type="Origam.Schema.EntityModel.DetachedEntity">
+    <DataEntityColumn
+      dataType="Memo"
+      dataLength="0"
+      allowNulls="true"
+      isPrimaryKey="false"
+      label=""
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Element"
+      onCopyAction="Copy"
+      name="Body"
+      abstract="false"
+      x:id="5f687a85-41b7-4768-99fd-1dda6cfa3964"
+      x:type="Origam.Schema.EntityModel.DetachedField" />
+    <DataEntityColumn
+      dataType="String"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="160"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="Subject"
+      abstract="false"
+      x:id="197b0182-8bc8-4a1a-b46a-8cdada5776b3"
+      x:type="Origam.Schema.EntityModel.DetachedField" />
+    <DataEntityColumn
+      dataType="UniqueIdentifier"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="true"
+      label=""
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="Id"
+      abstract="false"
+      x:id="4262da41-ab68-4f23-9ade-97cea9603f10"
+      x:type="Origam.Schema.EntityModel.DetachedField" />
+  </DataEntity>
+</x:file>

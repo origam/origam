@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataConstant
+    dataType="UniqueIdentifier"
+    value="8d4117e0-590b-4495-9fd3-de46d9e768af"
+    userDefinable="false"
+    name="WorkQueueCommandType_Remove"
+    abstract="false"
+    lookup="Root/DataLookup/Work Queue/WorkQueueCommandType.origam#WorkQueueCommandType/122a4b55-9069-4f5a-a771-0e861af68791"
+    x:id="9eb7feee-bf17-404b-bacc-82044256f767"
+    x:type="Origam.Schema.EntityModel.DataConstant" />
+</x:file>

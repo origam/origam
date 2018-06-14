@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="LookupResource_Id_ByName"
+    abstract="false"
+    x:id="466c0c69-4490-4388-96f6-315e99fab1db"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="false"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="Resource"
+      abstract="false"
+      entity="Root/DataEntity/Resource Management/Resource.origam#Resource/b8d208f2-c703-4e8a-9602-c70327f56173"
+      x:id="9bade132-a80e-4008-b193-a4281dae5011"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Id"
+        abstract="false"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        x:id="75fd9d20-6242-48d3-988a-3ad84104a694"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetByName"
+      abstract="false"
+      x:id="77e0ddc6-37c3-46dc-bd48-cbf9961b43e9"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="Resource_GetByName"
+        abstract="false"
+        entity="Root/DataStructure/Resource Management/Lookups/LookupResource_Id_ByName.origam#LookupResource_Id_ByName/Resource/9bade132-a80e-4008-b193-a4281dae5011"
+        filter="Root/DataEntity/Resource Management/Resource.origam#Resource/GetByName/4d1ed85c-ed9d-45b3-9256-b1c3cb26e348"
+        x:id="88f5a6ea-1de1-42b2-afb7-1424a649ba6f"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

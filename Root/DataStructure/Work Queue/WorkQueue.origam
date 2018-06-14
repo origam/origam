@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="WorkQueue"
+    abstract="false"
+    x:id="7b44a488-ac98-4fe1-a427-55de0ff9e12e"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="true"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="WorkQueue"
+      abstract="false"
+      entity="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/ef0e8e1a-1917-4027-a70a-2bca2c7bb245"
+      x:id="d074c972-5288-438a-b126-1a5b580befbd"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      <DataStructureEntity
+        label=""
+        allFields="true"
+        ignoreImplicitFilters="false"
+        ignoreCondition="None"
+        concurrencyHandling="Standard"
+        relationType="Normal"
+        conditionEntityParameterName=""
+        useUpsert="false"
+        name="WorkQueueCommand"
+        abstract="false"
+        entity="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/WorkQueueCommand/b67bd0c3-0b61-4892-9673-201f3d38cff2"
+        x:id="0def9c06-c751-4be0-8572-17b5e4ac0dfa"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+      <DataStructureEntity
+        label=""
+        allFields="true"
+        ignoreImplicitFilters="false"
+        ignoreCondition="None"
+        concurrencyHandling="Standard"
+        relationType="Normal"
+        conditionEntityParameterName=""
+        useUpsert="false"
+        name="WorkQueueNotification"
+        abstract="false"
+        entity="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/WorkQueueNotification/b04b2dd9-0d2c-4ab8-940a-85e1d07afdcb"
+        x:id="c521075f-3627-40e2-a6df-73db65032f32"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity">
+        <DataStructureEntity
+          label=""
+          allFields="true"
+          ignoreImplicitFilters="false"
+          ignoreCondition="None"
+          concurrencyHandling="Standard"
+          relationType="Normal"
+          conditionEntityParameterName=""
+          useUpsert="false"
+          name="WorkQueueNotificationContact_Senders"
+          abstract="false"
+          entity="Root/DataEntity/Work Queue/WorkQueueNotification.origam#WorkQueueNotification/WorkQueueNotificationContact_Senders/fbad679b-8ea0-4fe4-a3ef-fbb99e998f97"
+          x:id="4c6c3bc6-419a-4aa4-9b35-2fadcb27add8"
+          x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+        <DataStructureEntity
+          label=""
+          allFields="true"
+          ignoreImplicitFilters="false"
+          ignoreCondition="None"
+          concurrencyHandling="Standard"
+          relationType="Normal"
+          conditionEntityParameterName=""
+          useUpsert="false"
+          name="WorkQueueNotificationContact_Recipients"
+          abstract="false"
+          entity="Root/DataEntity/Work Queue/WorkQueueNotification.origam#WorkQueueNotification/WorkQueueNotificationContact_Recipients/03ee9694-c69e-4e4b-819c-7ec1273d6b52"
+          x:id="ae0821f6-d0b6-4ca8-9350-c44f16777179"
+          x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+      </DataStructureEntity>
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetActiveQueuesByProcessor"
+      abstract="false"
+      x:id="b1f1abcd-c8bc-4680-8f21-06a68e8305f0"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="WorkQueueNotification_GetActive"
+        abstract="false"
+        entity="Root/DataStructure/Work Queue/WorkQueue.origam#WorkQueue/WorkQueue/WorkQueueNotification/c521075f-3627-40e2-a6df-73db65032f32"
+        filter="Root/DataEntity/__Origam General Interfaces/IActive.origam#IActive/GetActive/b5c2b495-619c-49cf-982e-c8e341a41255"
+        x:id="a387aa3a-d005-4656-82cb-49d49fe48d65"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="WorkQueue_GetActive"
+        abstract="false"
+        entity="Root/DataStructure/Work Queue/WorkQueue.origam#WorkQueue/WorkQueue/d074c972-5288-438a-b126-1a5b580befbd"
+        filter="Root/DataEntity/__Origam General Interfaces/IActive.origam#IActive/GetActive/b5c2b495-619c-49cf-982e-c8e341a41255"
+        x:id="67e16acd-9637-43b0-979b-9f35c6095d46"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="WorkQueue_GetByProcessor"
+        abstract="false"
+        entity="Root/DataStructure/Work Queue/WorkQueue.origam#WorkQueue/WorkQueue/d074c972-5288-438a-b126-1a5b580befbd"
+        filter="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/GetByProcessor/468b753a-1c8d-4eab-a6c0-ecf411771a59"
+        x:id="0bfd4ef2-13f3-4a32-86e3-d9870ecc717e"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetId"
+      abstract="false"
+      x:id="2543bbd3-3592-4b14-9d74-86d0e9c65d98"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="WorkQueueNotification_GetActive"
+        abstract="false"
+        entity="Root/DataStructure/Work Queue/WorkQueue.origam#WorkQueue/WorkQueue/WorkQueueNotification/c521075f-3627-40e2-a6df-73db65032f32"
+        filter="Root/DataEntity/__Origam General Interfaces/IActive.origam#IActive/GetActive/b5c2b495-619c-49cf-982e-c8e341a41255"
+        x:id="41ad1de8-9d46-4eb6-868f-20bcee04e35e"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="WorkQueue_GetId"
+        abstract="false"
+        entity="Root/DataStructure/Work Queue/WorkQueue.origam#WorkQueue/WorkQueue/d074c972-5288-438a-b126-1a5b580befbd"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="3d78462f-d833-4534-b4b3-f3c562a6229b"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+    <DataStructureSortSet
+      name="Sort"
+      abstract="false"
+      x:id="c1ec9d9e-09a2-47ad-b5e4-b57107c4dc34"
+      x:type="Origam.Schema.EntityModel.DataStructureSortSet">
+      <DataStructureSortSetItem
+        fieldName="SortOrder"
+        sortOrder="0"
+        sortDirection="Ascending"
+        name="WorkQueueCommand_0_SortOrder"
+        abstract="false"
+        entity="Root/DataStructure/Work Queue/WorkQueue.origam#WorkQueue/WorkQueue/WorkQueueCommand/0def9c06-c751-4be0-8572-17b5e4ac0dfa"
+        x:id="3f679b86-3112-4bc0-917e-276a3e6add03"
+        x:type="Origam.Schema.EntityModel.DataStructureSortSetItem" />
+    </DataStructureSortSet>
+  </DataStructure>
+</x:file>

@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataEntity
+    mappedObjectName="OrigamRegularExpression"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    readOnly="false"
+    audit="All"
+    label="Regular Expression"
+    name="OrigamRegularExpression"
+    abstract="false"
+    x:id="df54519a-d49f-4317-931c-c48df86855af"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="ebfa8ee8-2192-4476-b6a0-bec30d5bcc0f"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      mappedColumnName="Name"
+      excludeFromAuditing="false"
+      dataType="String"
+      dataLength="200"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Name"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="Name"
+      abstract="false"
+      x:id="2d580fad-2269-4ad9-9749-116cfdac7d08"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="Expression"
+      excludeFromAuditing="false"
+      dataType="Memo"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Expression"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Element"
+      onCopyAction="Copy"
+      name="Expression"
+      abstract="false"
+      x:id="1e681421-6cea-4d9a-955c-866eefc57101"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+  </DataEntity>
+</x:file>

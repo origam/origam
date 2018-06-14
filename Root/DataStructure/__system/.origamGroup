@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <group
+    rootItemType="DataStructure"
+    name="__system"
+    x:id="bae67546-48e6-4562-a443-974438b9a5e5"
+    x:isFolder="true"
+    x:type="Origam.Schema.SchemaItemGroup" />
+</x:file>

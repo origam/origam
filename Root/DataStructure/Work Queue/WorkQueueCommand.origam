@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="WorkQueueCommand"
+    abstract="false"
+    x:id="1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="true"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="WorkQueueCommand"
+      abstract="false"
+      entity="Root/DataEntity/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/b40f9da9-c8fa-490f-9c49-6db804c534f0"
+      x:id="b40967ba-d5db-4e88-9ab0-577c33a3357c"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetByWorkQueue"
+      abstract="false"
+      x:id="421aec03-1eec-43f9-b0bb-17cfc24510a0"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="WorkQueueCommand_GetByWorkQueueId"
+        abstract="false"
+        entity="Root/DataStructure/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/WorkQueueCommand/b40967ba-d5db-4e88-9ab0-577c33a3357c"
+        filter="Root/DataEntity/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/GetByWorkQueueId/cfe21dd3-fb31-4ace-9c3f-4eaa1c6b186e"
+        x:id="138e4417-56bb-4b5b-bba8-a6732fb48966"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetId"
+      abstract="false"
+      x:id="6eefc3cf-6b6e-4d40-81f7-5c37a81e8a01"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="WorkQueueCommand_GetId"
+        abstract="false"
+        entity="Root/DataStructure/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/WorkQueueCommand/b40967ba-d5db-4e88-9ab0-577c33a3357c"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="e9186097-0b71-499b-adf4-25f2196cafc6"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

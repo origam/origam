@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Control
+    toolboxVisibility="FormDesigner"
+    typeName="Origam.Schema.GuiModel.PanelControlSet"
+    namespace="Origam.Schema.GuiModel"
+    isComplex="true"
+    requestSaveAfterChangeAllowed="false"
+    name="param_bool"
+    abstract="false"
+    screenSection="Root/PanelControlSet/__system/param_bool.origam#param_bool/e023f0c2-2c0f-437d-aa72-69fe3e917b07"
+    x:id="417cf13f-f6fa-4574-8e56-248a8f8f2552"
+    x:type="Origam.Schema.GuiModel.ControlItem">
+    <ancestor
+      ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="ae01a5a3-341b-46f0-bc57-064c0da562f7"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+  </Control>
+</x:file>

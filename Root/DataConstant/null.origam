@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataConstant
+    dataType="String"
+    value=""
+    userDefinable="false"
+    name="null"
+    abstract="false"
+    x:id="ee8f11b7-19f6-465d-825c-8dd6e4f49dfc"
+    x:type="Origam.Schema.EntityModel.DataConstant" />
+</x:file>

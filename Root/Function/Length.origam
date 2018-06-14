@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Function
+    dataType="Integer"
+    type="Standard"
+    name="Length"
+    abstract="false"
+    x:id="729ccb90-5b6d-463f-9af9-b40f9c4d1643"
+    x:type="Origam.Schema.EntityModel.Function">
+    <FunctionParameter
+      ordinalPosition="0"
+      name="Text"
+      abstract="false"
+      x:id="124d3e03-ed6c-48e0-ac85-e5bba3082701"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+  </Function>
+</x:file>

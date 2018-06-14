@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DeploymentVersion
+    version="2.4"
+    name="2.4"
+    abstract="false"
+    deploymentDependenciesCsv=""
+    x:id="a7767dbf-7fd9-47e4-a18b-18396e4b60d2"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    <DeploymentUpdateScriptActivity
+      activityOrder="20"
+      name="00020_Role"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:2.4.origam___commandText___23cc089f-fdf9-4b9c-bb93-7edde6ecf0b8.txt"
+      x:id="23cc089f-fdf9-4b9c-bb93-7edde6ecf0b8"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="10"
+      name="00010_Nullable"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:2.4.origam___commandText___23ea3dd0-6184-441b-9864-92418ba3fe1c.txt"
+      x:id="23ea3dd0-6184-441b-9864-92418ba3fe1c"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

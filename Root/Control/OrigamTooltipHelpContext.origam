@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Control
+    toolboxVisibility="FormDesigner"
+    typeName="Origam.Schema.GuiModel.PanelControlSet"
+    namespace="Origam.Schema.GuiModel"
+    isComplex="true"
+    requestSaveAfterChangeAllowed="false"
+    name="OrigamTooltipHelpContext"
+    abstract="false"
+    screenSection="Root/PanelControlSet/__system/OrigamTooltipHelpContext.origam#OrigamTooltipHelpContext/0031fa10-0808-41d3-9f2a-6cd23f4e2775"
+    x:id="e6f68d20-b48f-4cc7-8f62-f869a9fb8283"
+    x:type="Origam.Schema.GuiModel.ControlItem">
+    <ancestor
+      ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="f0f2411d-792a-4fb4-b151-c0c511b66219"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+  </Control>
+</x:file>

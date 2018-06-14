@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Transformation
+    engineType="XslTransform"
+    name="AddUser_CreateBusinessPartner"
+    abstract="false"
+    text="-***-ExternalFile:AddUser_CreateBusinessPartner.origam___text___95c6b19b-71c8-4f83-9fa6-15a4b3147786.xslt"
+    x:id="95c6b19b-71c8-4f83-9fa6-15a4b3147786"
+    x:type="Origam.Schema.EntityModel.XslTransformation" />
+</x:file>

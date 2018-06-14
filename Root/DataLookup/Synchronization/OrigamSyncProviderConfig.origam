@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="Id"
+    listDisplayMember="Name"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="false"
+    serversideFilterParameter=""
+    searchByFirstColumnOnly="false"
+    valueValueMember="Id"
+    valueDisplayMember="Name"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="OrigamSyncProviderConfig"
+    abstract="false"
+    listDataStructure="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncProviderConfig.origam#LookupOrigamSyncProviderConfig/8488507a-1492-4016-b1e0-49392ffb7ee8"
+    valueDataStructure="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncProviderConfig.origam#LookupOrigamSyncProviderConfig/8488507a-1492-4016-b1e0-49392ffb7ee8"
+    valueMethod="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncProviderConfig.origam#LookupOrigamSyncProviderConfig/GetId/e9a00db5-33df-4149-8e3c-fcb0899bdda3"
+    x:id="d536cacd-8a11-49b4-ae4c-4029ac0a05f1"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>

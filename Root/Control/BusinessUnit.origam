@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Control
+    toolboxVisibility="FormDesigner"
+    typeName="Origam.Schema.GuiModel.PanelControlSet"
+    namespace="Origam.Schema.GuiModel"
+    isComplex="true"
+    requestSaveAfterChangeAllowed="false"
+    name="BusinessUnit"
+    abstract="false"
+    screenSection="Root/PanelControlSet/Organization Management/BusinessUnit.origam#BusinessUnit/0e89067b-3483-4bdb-80d6-80931af4eadb"
+    x:id="c340f748-306f-4018-b3be-fc225a9a681d"
+    x:type="Origam.Schema.GuiModel.ControlItem">
+    <ancestor
+      ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="45760380-3382-4f53-813f-b4b6788e9d56"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+  </Control>
+</x:file>

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Rule
+    xPath="string(/row/@ErrorText)"
+    isPathRelative="false"
+    dataType="Boolean"
+    name="SR_IsWorkQueueError"
+    abstract="false"
+    x:id="3b27ca78-9b8f-460c-a3d8-da8b43b817db"
+    x:type="Origam.Schema.RuleModel.EntityRule" />
+</x:file>

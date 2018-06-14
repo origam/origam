@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="true"
+    dataSetClass=""
+    name="OrigamNotificationTemplate"
+    abstract="false"
+    x:id="92c3c8b4-68a3-482b-8a90-f7142c4b17ec"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="true"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="OrigamNotificationTemplate"
+      abstract="false"
+      entity="Root/DataEntity/__system/OrigamNotificationTemplate.origam#OrigamNotificationTemplate/0760e633-9e95-4f62-9443-360eaa624854"
+      x:id="e6f6f1cc-ba25-445c-a262-5aa5f9ebdee7"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      <DataStructureEntity
+        label=""
+        allFields="false"
+        ignoreImplicitFilters="false"
+        ignoreCondition="None"
+        concurrencyHandling="Standard"
+        relationType="LeftJoin"
+        conditionEntityParameterName=""
+        useUpsert="false"
+        name="OrigamNotificationTemplate_l10n"
+        abstract="false"
+        entity="Root/DataEntity/__system/OrigamNotificationTemplate.origam#OrigamNotificationTemplate/OrigamNotificationTemplate_l10n/554b0bc6-d226-4424-8716-2211bc7aed92"
+        x:id="641a1b91-ff38-4a55-80ac-a506b304fe20"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetId"
+      abstract="false"
+      x:id="3724bd2a-9466-4129-bdfa-ca8dc8621a72"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="OrigamNotificationTemplate_GetId"
+        abstract="false"
+        entity="Root/DataStructure/__system/OrigamNotificationTemplate.origam#OrigamNotificationTemplate/OrigamNotificationTemplate/e6f6f1cc-ba25-445c-a262-5aa5f9ebdee7"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="5d708e20-af32-4ef8-8421-fd9b24518208"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

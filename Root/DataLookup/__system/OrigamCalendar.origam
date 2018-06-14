@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="Id"
+    listDisplayMember="Name"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="false"
+    serversideFilterParameter=""
+    searchByFirstColumnOnly="false"
+    valueValueMember="Id"
+    valueDisplayMember="Name"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="OrigamCalendar"
+    abstract="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCalendar.origam#LookupOrigamCalendar/999a6b9d-107d-4d9b-b1ca-46fed64fbd63"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCalendar.origam#LookupOrigamCalendar/999a6b9d-107d-4d9b-b1ca-46fed64fbd63"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamCalendar.origam#LookupOrigamCalendar/GetId/b9344173-7dd3-4051-8679-574722a891ea"
+    x:id="dfeedb3b-b7a8-46dd-a22d-ca5c302f13e6"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>

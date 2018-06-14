@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="LookupOrigamRounding_refOrigamRoundingTypeId"
+    abstract="false"
+    x:id="42011861-8b29-4ba8-9d5e-79830961fbef"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="false"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="OrigamRounding"
+      abstract="false"
+      entity="Root/DataEntity/__system/OrigamRounding.origam#OrigamRounding/21d86e1c-5a23-434b-9fe2-e187fd100624"
+      x:id="fdbda7fa-9e09-492c-b8ff-d471f370a9c5"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Id"
+        abstract="false"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="9bfb6954-381a-4cc8-a506-43775367fb35"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="refOrigamRoundingTypeId"
+        abstract="false"
+        field="Root/DataEntity/__system/OrigamRounding.origam#OrigamRounding/refOrigamRoundingTypeId/5e7d8268-7dad-4817-8c52-a4f5600a90e2"
+        x:id="d1242ec9-b6fd-4846-9b60-fbfa22fd3a7c"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetId"
+      abstract="false"
+      x:id="e13f8859-2661-43c7-854f-edadb604af50"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="OrigamRounding_GetId"
+        abstract="false"
+        entity="Root/DataStructure/__system/Lookups/LookupOrigamRounding_refOrigamRoundingTypeId.origam#LookupOrigamRounding_refOrigamRoundingTypeId/OrigamRounding/fdbda7fa-9e09-492c-b8ff-d471f370a9c5"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="72129ff6-b400-42ac-bc07-47db62f57a9f"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

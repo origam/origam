@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Function
+    dataType="Boolean"
+    type="Standard"
+    name="Like"
+    abstract="false"
+    x:id="519cd4e2-59fd-49cf-a820-9d5cb4f5078c"
+    x:type="Origam.Schema.EntityModel.Function">
+    <FunctionParameter
+      ordinalPosition="1"
+      name="Right"
+      abstract="false"
+      x:id="561a7476-b805-466d-a71d-0654eaff7b1f"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+    <FunctionParameter
+      ordinalPosition="0"
+      name="Left"
+      abstract="false"
+      x:id="f09324de-cc07-40f4-834e-2fe90599d1b7"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+  </Function>
+</x:file>

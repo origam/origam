@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Function
+    dataType="Float"
+    type="Standard"
+    name="Deduct"
+    abstract="false"
+    x:id="c3ae24f8-edab-47be-bd5b-7e5543271d17"
+    x:type="Origam.Schema.EntityModel.Function">
+    <FunctionParameter
+      ordinalPosition="0"
+      name="Left"
+      abstract="false"
+      x:id="7d5a88f3-9568-41cc-acaf-0f4f2cdd1d3f"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+    <FunctionParameter
+      ordinalPosition="0"
+      name="Right"
+      abstract="false"
+      x:id="f7aa4712-2f44-4e12-8660-f2f5915d0c51"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+  </Function>
+</x:file>

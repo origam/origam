@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="Id"
+    listDisplayMember="ReferenceCode;Text"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="true"
+    serversideFilterParameter="BusinessPartner_parSearchText"
+    searchByFirstColumnOnly="false"
+    valueValueMember="Id"
+    valueDisplayMember="ReferenceCode;Text"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="LookupBusinessPartner"
+    abstract="false"
+    listDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/f905e3d5-6255-46c3-96e9-4eab51df333a"
+    valueDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/f905e3d5-6255-46c3-96e9-4eab51df333a"
+    listMethod="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/DefaultBusinessPartner/df9202a0-18ad-4584-ba6b-9ef0be33e5de"
+    valueMethod="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/GetId/d8e44ef4-b151-46c9-bf2a-d4515f37821d"
+    valueSortSet="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/Default/959c425e-2b24-4974-b916-8cef2c0d6d71"
+    listSortSet="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/Default/959c425e-2b24-4974-b916-8cef2c0d6d71"
+    x:id="08d82ef5-df38-48d6-a276-ee5b7f027bd6"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>

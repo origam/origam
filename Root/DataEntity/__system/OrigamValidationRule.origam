@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataEntity
+    mappedObjectName="OrigamValidationRule"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    readOnly="false"
+    audit="All"
+    label="Validation Rule"
+    name="OrigamValidationRule"
+    abstract="false"
+    describingField="Root/DataEntity/__system/OrigamValidationRule.origam#OrigamValidationRule/Name/20f58ae6-7e58-404b-9eaf-6efbc9e23b1f"
+    x:id="aab6ca06-00db-4698-ad5b-a88e41968602"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="9804a102-afa8-415b-ac7e-6f77805bfb4d"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      mappedColumnName="Name"
+      excludeFromAuditing="false"
+      dataType="String"
+      dataLength="200"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Name"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Attribute"
+      onCopyAction="Copy"
+      name="Name"
+      abstract="false"
+      x:id="20f58ae6-7e58-404b-9eaf-6efbc9e23b1f"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityColumn
+      mappedColumnName="Rule"
+      excludeFromAuditing="false"
+      dataType="Memo"
+      dataLength="0"
+      allowNulls="false"
+      isPrimaryKey="false"
+      label="Rule"
+      excludeFromAllFields="false"
+      autoIncrement="false"
+      xmlMappingType="Element"
+      onCopyAction="Copy"
+      name="Rule"
+      abstract="false"
+      x:id="7979898b-cb43-4624-986d-b7ead27acd84"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+    <DataEntityIndex
+      unique="true"
+      generateDeploymentScript="false"
+      name="ix_Unique"
+      abstract="false"
+      x:id="e6f7286f-0521-4a04-b998-817ea393f537"
+      x:type="Origam.Schema.EntityModel.DataEntityIndex">
+      <DataEntityIndexField
+        sortOrder="Ascending"
+        ordinalPosition="0"
+        name="0_Name"
+        abstract="false"
+        field="Root/DataEntity/__system/OrigamValidationRule.origam#OrigamValidationRule/Name/20f58ae6-7e58-404b-9eaf-6efbc9e23b1f"
+        x:id="c57f1266-616f-44c2-b487-0ef1914932b1"
+        x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
+    </DataEntityIndex>
+  </DataEntity>
+</x:file>

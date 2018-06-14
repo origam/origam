@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Workflow
+    transactionBehavior="InheritExisting"
+    traceLevel="None"
+    name="Identity_ConfirmUserEmail"
+    abstract="false"
+    x:id="0019e8e5-31c9-4fa9-a22a-a4096aab8a59"
+    x:type="Origam.Schema.WorkflowModel.Workflow">
+    <ContextStore
+      dataType="String"
+      isReturnValue="false"
+      disableConstraints="false"
+      name="OutputFromIdentity"
+      abstract="false"
+      x:id="becd77dc-21b0-4d4d-9ced-764b95d34f0b"
+      x:type="Origam.Schema.WorkflowModel.ContextStore" />
+    <ContextStore
+      dataType="String"
+      isReturnValue="false"
+      disableConstraints="false"
+      name="Token"
+      abstract="false"
+      x:id="43dff6f4-bc0e-469e-b80d-7c632fe2b2dd"
+      x:type="Origam.Schema.WorkflowModel.ContextStore" />
+    <ContextStore
+      dataType="UniqueIdentifier"
+      isReturnValue="false"
+      disableConstraints="false"
+      name="UserId"
+      abstract="false"
+      x:id="02e7436c-f8a2-42c0-832a-83c8968f424e"
+      x:type="Origam.Schema.WorkflowModel.ContextStore" />
+    <WorkflowTask
+      outputMethod="AppendMergeExisting"
+      traceLevel="InheritFromParent"
+      roles="*"
+      features=""
+      name="01_CallMembershipService_ConfirmEmail"
+      abstract="false"
+      serviceMethod="Security/Service/IdentityService.origam#IdentityService/ConfirmEmail/20e59f17-d1aa-456a-b614-6a5851ced2c7"
+      service="Security/Service/IdentityService.origam#IdentityService/888933c6-e4b4-40c0-ae6b-462721fe8a60"
+      outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ConfirmUserEmail.origam#Identity_ConfirmUserEmail/OutputFromIdentity/becd77dc-21b0-4d4d-9ced-764b95d34f0b"
+      startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsNotEmpty.origam#SR_SimpleContextValue_IsNotEmpty/9fcb4f49-e9d6-4d44-9e4f-11bfcc4743cd"
+      startConditionRuleContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ConfirmUserEmail.origam#Identity_ConfirmUserEmail/UserId/02e7436c-f8a2-42c0-832a-83c8968f424e"
+      x:id="fbb20a8d-3ed2-4a16-b59e-53d7336e59d4"
+      x:type="Origam.Schema.WorkflowModel.ServiceMethodCallTask">
+      <ServiceMethodCallParameter
+        name="UserId"
+        abstract="false"
+        serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/ConfirmEmail/UserId/eefe44f5-6ca6-4ccf-8b92-d1989d3ecc39"
+        x:id="7bc86e2a-858f-400a-a485-33c8766449e6"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodCallParameter">
+        <WorkflowContextReference
+          xPath="/"
+          castToDataType="String"
+          name="UserId"
+          abstract="false"
+          contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ConfirmUserEmail.origam#Identity_ConfirmUserEmail/UserId/02e7436c-f8a2-42c0-832a-83c8968f424e"
+          x:id="9ac1c963-61a5-49ca-b36f-838760ec5faf"
+          x:type="Origam.Schema.WorkflowModel.ContextReference" />
+      </ServiceMethodCallParameter>
+      <ServiceMethodCallParameter
+        name="Token"
+        abstract="false"
+        serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/ConfirmEmail/Token/95d34e32-b67d-4758-8619-6589e42bdb91"
+        x:id="552819da-c68f-411b-8cf6-7bc17f144608"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodCallParameter">
+        <WorkflowContextReference
+          xPath="/"
+          castToDataType="String"
+          name="Token"
+          abstract="false"
+          contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ConfirmUserEmail.origam#Identity_ConfirmUserEmail/Token/43dff6f4-bc0e-469e-b80d-7c632fe2b2dd"
+          x:id="633200bc-0ffb-4dcc-8a99-de7e6e78f65f"
+          x:type="Origam.Schema.WorkflowModel.ContextReference" />
+      </ServiceMethodCallParameter>
+    </WorkflowTask>
+  </Workflow>
+</x:file>

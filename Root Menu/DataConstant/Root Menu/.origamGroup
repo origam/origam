@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <group
+    rootItemType="DataConstant"
+    name="Root Menu"
+    x:id="a989e64a-3a9f-469a-9d81-1742fe73f367"
+    x:isFolder="true"
+    x:type="Origam.Schema.SchemaItemGroup" />
+</x:file>

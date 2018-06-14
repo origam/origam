@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Rule
+    dataType="Boolean"
+    name="MembershipUserValidation_Create"
+    abstract="false"
+    xsl="-***-ExternalFile:MembershipUserValidation_Create.origam___xsl___31cca4fa-42e0-4f48-9248-58f5d49809b1.xslt"
+    x:id="31cca4fa-42e0-4f48-9248-58f5d49809b1"
+    x:type="Origam.Schema.RuleModel.EndRule" />
+</x:file>

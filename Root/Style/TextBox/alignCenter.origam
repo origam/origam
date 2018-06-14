@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Style
+    name="alignCenter"
+    abstract="false"
+    widget="Root/Control/_Basic Controls/AsTextBox.origam#AsTextBox/7d1ec946-017e-4a00-9d92-d4d6b9fabffc"
+    x:id="9b96d7d0-7da6-45ad-90cd-546b5f46a522"
+    x:type="Origam.Schema.GuiModel.UIStyle">
+    <StyleProperty
+      value="center"
+      name="textAlign: center"
+      abstract="false"
+      property="Root/Control/_Basic Controls/AsTextBox.origam#AsTextBox/textAlign/a3a78170-be3f-448e-a54a-08e209e4a562"
+      x:id="c240995b-9b02-4c6a-ba95-ca2b39c87815"
+      x:type="Origam.Schema.GuiModel.UIStyleProperty" />
+  </Style>
+</x:file>

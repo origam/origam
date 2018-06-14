@@ -1,0 +1,303 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <FormControlSet
+    name="OrigamSyncRun"
+    abstract="false"
+    dataStructure="Root/DataStructure/Synchronization/OrigamSyncRun_Complete.origam#OrigamSyncRun_Complete/524434fc-2dfd-40e6-8b40-ec0cfc474693"
+    x:id="047bc01a-cada-49be-9b83-2e141bc3ea8b"
+    x:type="Origam.Schema.GuiModel.FormControlSet">
+    <ControlSetItem
+      roles=""
+      features=""
+      isAlternative="false"
+      requestSaveAfterChange="false"
+      level="0"
+      name="OrigamSyncRun_CompleteRootControl"
+      abstract="false"
+      widget="Root/Control/_Basic Controls/AsForm.origam#AsForm/ff32a695-c533-4262-87d6-e4cd4451e2c9"
+      x:id="74a7a43c-3a23-4d8d-92af-26381ba88074"
+      x:type="Origam.Schema.GuiModel.ControlSetItem">
+      <ControlSetItem
+        roles=""
+        features=""
+        isAlternative="false"
+        requestSaveAfterChange="false"
+        level="0"
+        name="SplitPanel1"
+        abstract="false"
+        widget="Root/Control/_Basic Controls/SplitPanel.origam#SplitPanel/9a805f08-aa81-468e-a2a0-5bdb57b734e5"
+        x:id="7bd975f1-0a85-44ae-b5dc-539622f9695a"
+        x:type="Origam.Schema.GuiModel.ControlSetItem">
+        <ControlSetItem
+          roles=""
+          features=""
+          isAlternative="false"
+          requestSaveAfterChange="false"
+          level="0"
+          name="AsPanel1"
+          abstract="false"
+          widget="Root/Control/OrigamSyncRun.origam#OrigamSyncRun/5ce839a4-cb0b-454d-999e-0d1b0c166f8a"
+          x:id="15281746-6dd5-460b-8520-a1f4016a39cc"
+          x:type="Origam.Schema.GuiModel.ControlSetItem">
+          <PropertyValueItem
+            value="00000000-0000-0000-0000-000000000000"
+            propertyId="c9a65ec4-4a73-4351-b86a-deb76329b98f"
+            name="IconId"
+            abstract="false"
+            x:id="df69ab5c-d6f7-401b-aa54-575802fb86ef"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="0"
+            propertyId="3496cb84-734e-4100-b8fc-f54431d82770"
+            name="TabIndex"
+            abstract="false"
+            x:id="373731cc-b61c-4a22-bd9b-5a65b45d1157"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="10"
+            propertyId="0ab85221-d0b8-4df7-bfcc-ac196db06439"
+            name="Top"
+            abstract="false"
+            x:id="5a5832ce-a32e-4a93-8b26-6c6bea55cb48"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="true"
+            propertyId="84ee631d-39c1-4ecd-91f9-24e434507bc7"
+            name="GridVisible"
+            abstract="false"
+            x:id="d1b861fa-7382-4b4b-8631-7107a8556123"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="OrigamSyncRun"
+            propertyId="8c12e0ab-e4bd-4675-8f12-c5930a07be14"
+            name="DataMember"
+            abstract="false"
+            x:id="ce06c6e8-dbbc-4c9a-a0d6-8cef2b5b8ffb"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="10"
+            propertyId="2ed67118-feb2-4529-bf0b-524d38ab408c"
+            name="Left"
+            abstract="false"
+            x:id="b1db75ac-ae16-4fc0-b4c9-9b2bdb519b66"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="756"
+            propertyId="16c346fc-561e-404b-a76a-7198ab488710"
+            name="Width"
+            abstract="false"
+            x:id="e069db73-5c19-42b0-bc7f-a49c8e9f40e5"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="200"
+            propertyId="2e965f41-7fea-480b-a44a-095637d0af7d"
+            name="Height"
+            abstract="false"
+            x:id="a853e79c-4814-4847-9bde-ae2bac898c4f"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="Spuštěné synchronizace"
+            propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2"
+            name="PanelTitle"
+            abstract="false"
+            x:id="adef0790-d35a-4b45-a661-b8ffadc14707"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="false"
+            propertyId="298b927a-509d-4c65-930c-c871746fb7e2"
+            name="HideNavigationPanel"
+            abstract="false"
+            x:id="a775efab-48d3-4528-9a86-edd29f41c124"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="true"
+            propertyId="c9e691f4-520e-46a8-b1a1-941ae833bf88"
+            name="ShowDeleteButton"
+            abstract="false"
+            x:id="9b336143-6250-4377-9b58-f91517908b30"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="false"
+            propertyId="af590ff2-4668-40e3-8195-e1a1f735d433"
+            name="ShowNewButton"
+            abstract="false"
+            x:id="5e2b94df-9787-4d44-947f-ffb83ce6e11b"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        </ControlSetItem>
+        <ControlSetItem
+          roles=""
+          features=""
+          isAlternative="false"
+          requestSaveAfterChange="false"
+          level="0"
+          name="AsPanel2"
+          abstract="false"
+          widget="Root/Control/OrigamSyncRunLog.origam#OrigamSyncRunLog/e84aabd8-6704-40a2-aee1-9d03bd0d3479"
+          x:id="92d265c3-0968-4588-900a-a290ec555802"
+          x:type="Origam.Schema.GuiModel.ControlSetItem">
+          <PropertyValueItem
+            value="true"
+            propertyId="84ee631d-39c1-4ecd-91f9-24e434507bc7"
+            name="GridVisible"
+            abstract="false"
+            x:id="af782419-1446-4dc5-932b-10410ff41583"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="OrigamSyncRun.OrigamSyncRunLog"
+            propertyId="8c12e0ab-e4bd-4675-8f12-c5930a07be14"
+            name="DataMember"
+            abstract="false"
+            x:id="5067706d-30f9-4d69-970b-13547a3ed24e"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="218"
+            propertyId="0ab85221-d0b8-4df7-bfcc-ac196db06439"
+            name="Top"
+            abstract="false"
+            x:id="5f6c4c27-2776-4612-a573-1a2041185d0a"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="756"
+            propertyId="16c346fc-561e-404b-a76a-7198ab488710"
+            name="Width"
+            abstract="false"
+            x:id="f54c8202-db6e-4cde-bd45-31fea30430f9"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="false"
+            propertyId="af590ff2-4668-40e3-8195-e1a1f735d433"
+            name="ShowNewButton"
+            abstract="false"
+            x:id="9cc60508-7436-42d2-81d2-466c0407794e"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="1"
+            propertyId="3496cb84-734e-4100-b8fc-f54431d82770"
+            name="TabIndex"
+            abstract="false"
+            x:id="76be53f1-440c-43df-831f-8c86cdb82b99"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="340"
+            propertyId="2e965f41-7fea-480b-a44a-095637d0af7d"
+            name="Height"
+            abstract="false"
+            x:id="957cec21-4e28-4b0d-9110-a67c7046b273"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="10"
+            propertyId="2ed67118-feb2-4529-bf0b-524d38ab408c"
+            name="Left"
+            abstract="false"
+            x:id="386f9a1a-3e3d-4902-b0b1-c2ee26d37cdb"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="Synchronizované položky"
+            propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2"
+            name="PanelTitle"
+            abstract="false"
+            x:id="e1056782-9cc3-4eb8-adfb-cf5a1518ae7d"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="true"
+            propertyId="c9e691f4-520e-46a8-b1a1-941ae833bf88"
+            name="ShowDeleteButton"
+            abstract="false"
+            x:id="ebafa9b6-2ecd-4967-b09e-da4b787afbf6"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="00000000-0000-0000-0000-000000000000"
+            propertyId="c9a65ec4-4a73-4351-b86a-deb76329b98f"
+            name="IconId"
+            abstract="false"
+            x:id="8f13aa9d-01ba-401d-8370-e47d4d5c4ba2"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          <PropertyValueItem
+            value="false"
+            propertyId="298b927a-509d-4c65-930c-c871746fb7e2"
+            name="HideNavigationPanel"
+            abstract="false"
+            x:id="148ea871-a193-43d2-a022-f453c2ed9cf3"
+            x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        </ControlSetItem>
+        <PropertyValueItem
+          value="776"
+          propertyId="4dedbac1-070c-48b8-b468-17b008b5f4b1"
+          name="Width"
+          abstract="false"
+          x:id="4a3645b8-9285-4e50-ba57-0055ca11cddc"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          value="0"
+          propertyId="97ac8865-099a-488a-874c-f6a5a14a052d"
+          name="Orientation"
+          abstract="false"
+          x:id="92bc37db-dcce-4cbd-96a0-08d62546fe77"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          value="8"
+          propertyId="9168475b-8aad-4278-9e41-19f0cf0f60cd"
+          name="Left"
+          abstract="false"
+          x:id="5565ebd4-9bce-469d-b383-0c28a6359ca6"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          value="8"
+          propertyId="52d8fcdd-1ec5-4ed4-89c6-6f9c9bc71705"
+          name="Top"
+          abstract="false"
+          x:id="764e86c4-55b4-42f8-ac9a-7f9cf327fd3f"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          value="568"
+          propertyId="0c143f08-d922-40df-bfb0-f54727fe9fcb"
+          name="Height"
+          abstract="false"
+          x:id="a6c9282d-70a1-42c1-ab15-8615bee88ad1"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          value="0"
+          propertyId="0ae19511-c396-43a5-ac0c-62b6c3cb888c"
+          name="TabIndex"
+          abstract="false"
+          x:id="3e2d0608-8e81-400c-84ea-97b0a886b469"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          value="false"
+          propertyId="1c0449a9-cdbb-4bde-ac50-88d6f1183597"
+          name="FixedSize"
+          abstract="false"
+          x:id="cfb33a5b-1df8-4d56-bf70-9f08a7179d4b"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+      </ControlSetItem>
+      <PropertyValueItem
+        value="816"
+        propertyId="99f5687f-be11-49ec-a2eb-fba58d945b3e"
+        name="Width"
+        abstract="false"
+        x:id="6b381598-4a1c-443f-b3ff-3430d53a0b9c"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+      <PropertyValueItem
+        value="15"
+        propertyId="2d33a742-193c-42b2-8a21-c8c6ccedfd6c"
+        name="Top"
+        abstract="false"
+        x:id="786a4272-b5f4-4e14-8cfa-5b6d725f20b2"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+      <PropertyValueItem
+        value="15"
+        propertyId="fde5e452-b2a4-4f38-968a-29e20625b699"
+        name="Left"
+        abstract="false"
+        x:id="f9c5c45e-fdd6-40f8-ad3c-7af0dd311f3a"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+      <PropertyValueItem
+        value="624"
+        propertyId="3ec90be1-7cc2-481d-aed3-85505560eb70"
+        name="Height"
+        abstract="false"
+        x:id="1d7c9a4c-9742-406d-8d56-b44d8042e099"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+    </ControlSetItem>
+  </FormControlSet>
+</x:file>

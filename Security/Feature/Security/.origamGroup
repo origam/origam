@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <group
+    rootItemType="Feature"
+    name="Security"
+    x:id="d06628d2-62da-466c-80d7-3eb6a7e85c7a"
+    x:isFolder="true"
+    x:type="Origam.Schema.SchemaItemGroup" />
+</x:file>

@@ -1,0 +1,1 @@
+ALTER TABLE [WorkQueue] ADD [ApiAccessRoles] NVARCHAR(500) NULL

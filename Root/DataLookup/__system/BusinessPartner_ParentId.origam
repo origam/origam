@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="Id"
+    listDisplayMember="ParentId"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="false"
+    serversideFilterParameter=""
+    searchByFirstColumnOnly="false"
+    valueValueMember="Id"
+    valueDisplayMember="ParentId"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="BusinessPartner_ParentId"
+    abstract="false"
+    listDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ParentId.origam#LookupBusinessPartner_ParentId/c342d6a7-9bb8-47b2-b76e-ea464daa30f9"
+    valueDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ParentId.origam#LookupBusinessPartner_ParentId/c342d6a7-9bb8-47b2-b76e-ea464daa30f9"
+    valueMethod="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ParentId.origam#LookupBusinessPartner_ParentId/GetId/f655c3fb-eeb1-43a9-912f-71efdb31f97a"
+    x:id="7c1b488c-0791-4042-9058-9d42457dac0c"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>

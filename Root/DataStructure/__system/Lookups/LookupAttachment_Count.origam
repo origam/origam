@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="LookupAttachment_Count"
+    abstract="false"
+    x:id="3aef6112-9cad-4c2c-928c-26f6e248ed8b"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="false"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="Attachment"
+      abstract="false"
+      entity="Root/DataEntity/__system/Attachment.origam#Attachment/71f94167-a1b0-4054-a003-faa9b3c84aef"
+      x:id="850a87c8-b5da-4580-9c8b-84e11c6bd9d0"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="Count"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Count"
+        abstract="false"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordCreated/2340af1e-d939-47ae-930b-e24b0cb3a756"
+        x:id="3684cc20-6e55-436b-bb06-fd1dc803a543"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetByParentRecordId"
+      abstract="false"
+      x:id="1aa22fbb-df48-4a11-b3df-a3f09cfcbce9"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="Attachment_GetByParentRecordId"
+        abstract="false"
+        entity="Root/DataStructure/__system/Lookups/LookupAttachment_Count.origam#LookupAttachment_Count/Attachment/850a87c8-b5da-4580-9c8b-84e11c6bd9d0"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamGeneralEntityAttachment.origam#IOrigamGeneralEntityAttachment/GetByParentRecordId/f61532be-17e8-4f4f-8bf7-43189c296c55"
+        x:id="a0f93e4e-8ac4-4b37-be98-a6d1779b81c9"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

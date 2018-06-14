@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Service
+    classPath=""
+    name="MobilePhoneService"
+    abstract="false"
+    x:id="19d16bae-e13c-447f-9b74-4dd7c56609db"
+    x:type="Origam.Schema.WorkflowModel.Service">
+    <ServiceMethod
+      returnValueDataType="Xml"
+      name="DecodeShortMessagesFromBuffer"
+      abstract="false"
+      x:id="3d6afb0a-24fc-43a5-80fa-f17ca71036c9"
+      x:type="Origam.Schema.WorkflowModel.ServiceMethod">
+      <Parameter
+        callElements="1"
+        allowContextReference="true"
+        allowDataConstantReference="false"
+        allowDataStructureReference="false"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        dataType="Xml"
+        dataLength="0"
+        allowNulls="false"
+        name="Buffer"
+        abstract="false"
+        x:id="af2b20de-8f8a-414d-a58a-612c68a5ddc6"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+    </ServiceMethod>
+  </Service>
+</x:file>

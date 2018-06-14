@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataEntity
+    mappedObjectName="BusinessUnit"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    readOnly="false"
+    audit="All"
+    label="Business Unit"
+    name="BusinessUnit"
+    abstract="false"
+    x:id="5008fdde-0119-4bd3-8ee1-4d04e4382d0d"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/Organization Management/IBusinessUnit.origam#IBusinessUnit/c26cc2d3-c9b9-4550-90e1-bbb9d45afb8f"
+      x:id="22bce2b9-3c47-4bfd-b47f-63304da5ac9d"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="8930a582-6510-4ead-a514-883fd171207f"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <EntityRelation
+      parentChild="false"
+      selfJoin="false"
+      or="false"
+      name="Organization"
+      abstract="false"
+      relatedEntity="Root/DataEntity/Organization Management/Organization.origam#Organization/5b590143-c85f-4c7d-a7f3-ae0a6d246f18"
+      x:id="1e5ec40a-8bef-4eb7-b40f-12ea4a9dfaf5"
+      x:type="Origam.Schema.EntityModel.EntityRelationItem">
+      <EntityRelationColumnPair
+        name="OrganizationKey1"
+        abstract="false"
+        baseEntityField="Root/DataEntity/Organization Management/IBusinessUnit.origam#IBusinessUnit/refOrganizationId/a7fb3a8d-df27-43f5-a3a3-f00dcbd94fa4"
+        relatedEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="f7dc7e4b-7cf9-4989-a43f-0eb1b6dd8371"
+        x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
+    </EntityRelation>
+  </DataEntity>
+</x:file>

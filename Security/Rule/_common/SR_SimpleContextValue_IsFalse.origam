@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Rule
+    xPath="/ROOT/value = 'false'"
+    isPathRelative="false"
+    dataType="Boolean"
+    name="SR_SimpleContextValue_IsFalse"
+    abstract="false"
+    x:id="df25192e-f532-419e-a226-f4e953f02499"
+    x:type="Origam.Schema.RuleModel.StartRule" />
+</x:file>

@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DeploymentVersion
+    version="2.0"
+    name="2.0"
+    abstract="false"
+    deploymentDependenciesCsv=""
+    x:id="09362bfa-8370-4838-b4ef-4446be9b8646"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    <DeploymentUpdateScriptActivity
+      activityOrder="70"
+      name="00070_Index_OrigamApplicationRole.ix_Name"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:2.0.origam___commandText___59e9825d-639a-4b72-a824-074b37cf2a50.txt"
+      x:id="59e9825d-639a-4b72-a824-074b37cf2a50"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="60"
+      name="00060_AssignConvertedRoles"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:2.0.origam___commandText___83a1fba8-a918-4a57-9487-1f4fd7f9fc55.txt"
+      x:id="83a1fba8-a918-4a57-9487-1f4fd7f9fc55"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="10"
+      name="00010_Database_Column_Mapping_OrigamRole.Alias"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:2.0.origam___commandText___57e11d7a-15c5-4cb1-83c1-88d8a8cc1d89.txt"
+      x:id="57e11d7a-15c5-4cb1-83c1-88d8a8cc1d89"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="20"
+      name="00020_Database_Object_Mapping_OrigamRoleOrigamApplicationRole"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:2.0.origam___commandText___106377d1-7057-43db-9f72-921807a44ffe.txt"
+      x:id="106377d1-7057-43db-9f72-921807a44ffe"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="40"
+      name="00040_Database_Object_Mapping_OrigamRoleOrigamApplicationRole"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:2.0.origam___commandText___b00242a4-30d2-492e-8178-b5f0645965a0.txt"
+      x:id="b00242a4-30d2-492e-8178-b5f0645965a0"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="50"
+      name="00050_ConvertApplicationRoles"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:2.0.origam___commandText___86073085-9f8f-4118-91a5-b7d09d1fd276.txt"
+      x:id="86073085-9f8f-4118-91a5-b7d09d1fd276"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="80"
+      name="00080_Add_AppRole_SYS_OrigamClient_GlobalTransaction"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:2.0.origam___commandText___5f3a5dba-6adb-4ed5-a5cc-de540c03b583.txt"
+      x:id="5f3a5dba-6adb-4ed5-a5cc-de540c03b583"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="30"
+      name="00030_Database_Object_Mapping_OrigamApplicationRole"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:2.0.origam___commandText___9d3281c9-0cf6-4a5a-897b-e33bd4e9280d.txt"
+      x:id="9d3281c9-0cf6-4a5a-897b-e33bd4e9280d"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

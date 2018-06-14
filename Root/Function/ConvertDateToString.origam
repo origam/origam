@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Function
+    dataType="String"
+    type="Standard"
+    name="ConvertDateToString"
+    abstract="false"
+    x:id="2df6e445-62d4-4932-8421-68a1a82889e9"
+    x:type="Origam.Schema.EntityModel.Function">
+    <FunctionParameter
+      ordinalPosition="0"
+      name="Expression"
+      abstract="false"
+      x:id="59985373-3b92-4c04-a100-15e5c7fe17f3"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+  </Function>
+</x:file>

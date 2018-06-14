@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="Id"
+    listDisplayMember="FileName"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="false"
+    serversideFilterParameter=""
+    searchByFirstColumnOnly="false"
+    valueValueMember="Id"
+    valueDisplayMember="FileName"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="Attachment_FileName"
+    abstract="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupAttachment_FileName.origam#LookupAttachment_FileName/1231691b-395f-4654-b1a9-23ac6404b04a"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupAttachment_FileName.origam#LookupAttachment_FileName/1231691b-395f-4654-b1a9-23ac6404b04a"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupAttachment_FileName.origam#LookupAttachment_FileName/GetId/4fc33120-2a07-454b-b3f4-d68344c58983"
+    x:id="eeaffeb8-6f47-414b-8e72-835690aaab87"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>

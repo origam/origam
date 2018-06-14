@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DeploymentVersion
+    version="4.13"
+    name="4.13"
+    abstract="false"
+    deploymentDependenciesCsv=""
+    x:id="a585ae08-b3be-4d7b-a1bb-fdc3df14aa77"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    <DeploymentUpdateScriptActivity
+      activityOrder="20"
+      name="00020_Database_Entity_OrigamNotificationTemplate_l10n"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.13.origam___commandText___a6ee2db4-54b2-49a9-811f-c18ecd5db2a0.txt"
+      x:id="a6ee2db4-54b2-49a9-811f-c18ecd5db2a0"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      activityOrder="10"
+      name="00010_Database_Entity_OrigamNotificationTemplate_l10n"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.13.origam___commandText___c967d57a-975b-44ce-8046-e671505cf646.txt"
+      x:id="c967d57a-975b-44ce-8046-e671505cf646"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

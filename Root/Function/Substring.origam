@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Function
+    dataType="String"
+    type="Standard"
+    name="Substring"
+    abstract="false"
+    x:id="8b1a4c4f-4628-479c-8bd2-028e44af2e7c"
+    x:type="Origam.Schema.EntityModel.Function">
+    <FunctionParameter
+      ordinalPosition="0"
+      name="Length"
+      abstract="false"
+      x:id="27c752d2-02d1-4a6a-8d87-44bf9b86d1b6"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+    <FunctionParameter
+      ordinalPosition="0"
+      name="Expression"
+      abstract="false"
+      x:id="02433ead-52e6-4097-aec0-46db6631514e"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+    <FunctionParameter
+      ordinalPosition="0"
+      name="Start"
+      abstract="false"
+      x:id="3f9fb8d0-00b8-4010-9b9f-8868b98be7de"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+  </Function>
+</x:file>

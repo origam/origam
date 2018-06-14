@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Control
+    toolboxVisibility="Nowhere"
+    typeName="Origam.Gui.Win.CollapsiblePanel"
+    namespace="Origam.Gui.Win"
+    isComplex="false"
+    requestSaveAfterChangeAllowed="false"
+    name="CollapsiblePanel"
+    abstract="false"
+    x:id="c1881851-7e8f-49ab-b207-efc191a96f6b"
+    x:type="Origam.Schema.GuiModel.ControlItem">
+    <ControlPropertyItem
+      propertyType="Integer"
+      bindOnly="false"
+      localizable="false"
+      name="Height"
+      abstract="false"
+      x:id="8782a5ef-1427-44a3-aeb4-0c0eb364513d"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="UniqueIdentifier"
+      bindOnly="false"
+      localizable="false"
+      name="StyleId"
+      abstract="false"
+      x:id="c89dc98e-9d37-4420-b723-14ae01b291ba"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Integer"
+      bindOnly="false"
+      localizable="false"
+      name="Left"
+      abstract="false"
+      x:id="2339a615-7411-42b9-a5c7-2cebc1d65ec1"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Integer"
+      bindOnly="false"
+      localizable="false"
+      name="Top"
+      abstract="false"
+      x:id="0493bb41-4743-4d1d-ae55-53f2c7a3b800"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="String"
+      bindOnly="false"
+      localizable="true"
+      name="Text"
+      abstract="false"
+      x:id="08828fcf-cf50-4760-a821-67efec0fddbc"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Boolean"
+      bindOnly="false"
+      localizable="false"
+      name="IsOpen"
+      abstract="false"
+      x:id="97cb2bd1-6b0b-41db-b278-918e64eae0ea"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Integer"
+      bindOnly="false"
+      localizable="false"
+      name="IndentLevel"
+      abstract="false"
+      x:id="4f9f3f2e-7be5-4de1-92c3-9312977bab2e"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Integer"
+      bindOnly="false"
+      localizable="false"
+      name="Width"
+      abstract="false"
+      x:id="e077bfeb-23c9-4d16-909c-a10f83171283"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      propertyType="Boolean"
+      bindOnly="false"
+      localizable="false"
+      name="IsHeightFixed"
+      abstract="false"
+      x:id="e937b2fd-9d26-43a1-a630-b0856375cf06"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+  </Control>
+</x:file>

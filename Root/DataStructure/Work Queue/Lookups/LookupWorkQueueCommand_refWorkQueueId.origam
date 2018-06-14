@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="LookupWorkQueueCommand_refWorkQueueId"
+    abstract="false"
+    x:id="7f3329a7-9ff5-4dbf-b64e-777b00d2f206"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="false"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="WorkQueueCommand"
+      abstract="false"
+      entity="Root/DataEntity/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/b40f9da9-c8fa-490f-9c49-6db804c534f0"
+      x:id="f089d9d6-76fb-43e2-ac55-a1e08dc4c2ed"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="refWorkQueueId"
+        abstract="false"
+        field="Root/DataEntity/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/refWorkQueueId/c74dd80c-e74e-4c3c-a4a0-555b097c5859"
+        x:id="be99e0f3-451a-4b61-9596-0cbdc31ecfa5"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Id"
+        abstract="false"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="c83a81d5-a4b5-4afb-acf8-90695ac1e81e"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetId"
+      abstract="false"
+      x:id="0ed67e85-02d3-4e94-ab25-9e2785613882"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="WorkQueueCommand_GetId"
+        abstract="false"
+        entity="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueCommand_refWorkQueueId.origam#LookupWorkQueueCommand_refWorkQueueId/WorkQueueCommand/f089d9d6-76fb-43e2-ac55-a1e08dc4c2ed"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="86c14db5-1f3a-47c7-b40b-6f738e6debe4"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

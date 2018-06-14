@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="WorkQueueNotificationContact"
+    abstract="false"
+    x:id="3a61ef30-4105-4a45-88fb-8000abddd856"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="true"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="WorkQueueNotificationContact"
+      abstract="false"
+      entity="Root/DataEntity/Work Queue/WorkQueueNotificationContact.origam#WorkQueueNotificationContact/b4a448c2-fca5-4448-ad2d-f09ff0f191a5"
+      x:id="08b5503a-c5b9-4e0a-bc4c-49282ba05a64"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+  </DataStructure>
+</x:file>

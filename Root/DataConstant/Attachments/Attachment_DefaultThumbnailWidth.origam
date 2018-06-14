@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataConstant
+    dataType="Integer"
+    value="72"
+    userDefinable="false"
+    name="Attachment_DefaultThumbnailWidth"
+    abstract="false"
+    x:id="ec84d585-2147-4925-9205-f9eccc216eec"
+    x:type="Origam.Schema.EntityModel.DataConstant" />
+</x:file>

@@ -1,0 +1,1 @@
+ALTER TABLE [OrigamOnlineUser] ADD [ClearSessionRequestTimestamp] DATETIME NULL

@@ -1,0 +1,1 @@
+ALTER TABLE [OrigamUser] ADD [UserName] NVARCHAR(255) NULL

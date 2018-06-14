@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Graphics
+    name="FolderWrench.png"
+    abstract="false"
+    graphicsDataByte="-***-ExternalFile:FolderWrench.png.origam___graphicsDataByte___e3c00124-bdaa-481e-9a96-6b3c73063aea.png"
+    x:id="e3c00124-bdaa-481e-9a96-6b3c73063aea"
+    x:type="Origam.Schema.GuiModel.Graphics" />
+</x:file>

@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructureDefaultSet
+    name="Users"
+    abstract="false"
+    x:id="71ca6430-691f-4e7d-8f49-7432e575763e"
+    x:parentId="01194cd6-6cff-41bb-9ed8-d3642c909598"
+    x:type="Origam.Schema.EntityModel.DataStructureDefaultSet" />
+  <DataStructureFilterSet
+    dynamic="false"
+    name="GetId"
+    abstract="false"
+    x:id="19b2f124-1f60-4463-8e57-81c9f87be43b"
+    x:parentId="01194cd6-6cff-41bb-9ed8-d3642c909598"
+    x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+    <DataStructureFilterSetFilter
+      ignoreFilterParameterName=""
+      passWhenParameterMatch="false"
+      roles=""
+      name="BusinessPartner_GetId"
+      abstract="false"
+      entity="Root/DataStructure/__system/Users.origam#Users/BusinessPartner/79bede18-ff01-49cd-8703-94aa6bfe787c"
+      filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
+      x:id="003c3067-bc8e-47f0-b804-34fa5f4f944a"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+  </DataStructureFilterSet>
+  <DataStructureRuleSet
+    name="Users"
+    abstract="false"
+    x:id="31d9285b-a4f1-4c1f-88b7-0568da5ed9bf"
+    x:parentId="01194cd6-6cff-41bb-9ed8-d3642c909598"
+    x:type="Origam.Schema.EntityModel.DataStructureRuleSet" />
+  <DataStructureSortSet
+    name="ByName"
+    abstract="false"
+    x:id="2e795e58-9abd-43a7-bec4-efd4e65b158c"
+    x:parentId="01194cd6-6cff-41bb-9ed8-d3642c909598"
+    x:type="Origam.Schema.EntityModel.DataStructureSortSet">
+    <DataStructureSortSetItem
+      fieldName="Name"
+      sortOrder="0"
+      sortDirection="Ascending"
+      name="BusinessPartner_0_Name"
+      abstract="false"
+      entity="Root/DataStructure/__system/Users.origam#Users/BusinessPartner/79bede18-ff01-49cd-8703-94aa6bfe787c"
+      x:id="c43b051f-e89f-44f4-8093-89643fb01f41"
+      x:type="Origam.Schema.EntityModel.DataStructureSortSetItem" />
+    <DataStructureSortSetItem
+      fieldName="FirstName"
+      sortOrder="1"
+      sortDirection="Ascending"
+      name="BusinessPartner_1_FirstName"
+      abstract="false"
+      entity="Root/DataStructure/__system/Users.origam#Users/BusinessPartner/79bede18-ff01-49cd-8703-94aa6bfe787c"
+      x:id="e228db70-3da4-464b-a43b-c2d8fe6ecb33"
+      x:type="Origam.Schema.EntityModel.DataStructureSortSetItem" />
+  </DataStructureSortSet>
+</x:file>

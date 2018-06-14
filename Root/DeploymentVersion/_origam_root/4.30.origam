@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DeploymentVersion
+    version="4.30"
+    name="4.30"
+    abstract="false"
+    deploymentDependenciesCsv=""
+    x:id="af7516e2-063c-4909-b066-f3e57fc33a0c"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    <DeploymentUpdateScriptActivity
+      activityOrder="10"
+      name="00010_WorkQueueExternalSourceType_IataBspFile"
+      abstract="false"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      commandText="-***-ExternalFile:4.30.origam___commandText___369f17e7-896c-4519-baa4-9e83491ee45e.txt"
+      x:id="369f17e7-896c-4519-baa4-9e83491ee45e"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

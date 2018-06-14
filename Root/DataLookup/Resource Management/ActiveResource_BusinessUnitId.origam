@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataLookup
+    listValueMember="refBusinessUnitId"
+    listDisplayMember="refBusinessUnitId"
+    isTree="false"
+    treeParentMember=""
+    suppressEmptyColumns="false"
+    alwaysAllowReturnToForm="false"
+    isFilteredServerside="false"
+    serversideFilterParameter=""
+    searchByFirstColumnOnly="false"
+    valueValueMember="refBusinessUnitId"
+    valueDisplayMember="refBusinessUnitId"
+    roleFilterMember=""
+    featureFilterMember=""
+    name="ActiveResource_BusinessUnitId"
+    abstract="false"
+    listDataStructure="Root/DataStructure/Resource Management/System/ActiveResource.origam#ActiveResource/d0d0d847-36dc-4987-95e5-43c4d8d0d78f"
+    valueDataStructure="Root/DataStructure/Resource Management/System/ActiveResource.origam#ActiveResource/d0d0d847-36dc-4987-95e5-43c4d8d0d78f"
+    valueMethod="Root/DataStructure/Resource Management/System/ActiveResource.origam#ActiveResource/ActiveResource/84848e4c-129c-4079-95a4-6319e21399af"
+    x:id="8cc6eaf2-692c-4367-8bae-d63d261b0ddb"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+</x:file>

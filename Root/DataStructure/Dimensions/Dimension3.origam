@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="Dimension3"
+    abstract="false"
+    x:id="06e3a3c0-8b5f-4830-9acb-651ac970db08"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="true"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="Dimension3"
+      abstract="false"
+      entity="Root/DataEntity/Dimensions/Dimension3.origam#Dimension3/8928dc62-e5e2-412b-b69c-a4dc6f3c1f51"
+      x:id="0f12cc6e-54c2-4b77-adfb-caa1f69976f5"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+  </DataStructure>
+</x:file>

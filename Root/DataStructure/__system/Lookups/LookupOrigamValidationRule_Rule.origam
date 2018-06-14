@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataStructure
+    localized="false"
+    dataSetClass=""
+    name="LookupOrigamValidationRule_Rule"
+    abstract="false"
+    x:id="ad2545cb-945a-49fd-af7f-103bcc670977"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      label=""
+      allFields="false"
+      ignoreImplicitFilters="false"
+      ignoreCondition="None"
+      concurrencyHandling="Standard"
+      relationType="Normal"
+      conditionEntityParameterName=""
+      useUpsert="false"
+      name="OrigamValidationRule"
+      abstract="false"
+      entity="Root/DataEntity/__system/OrigamValidationRule.origam#OrigamValidationRule/aab6ca06-00db-4698-ad5b-a88e41968602"
+      x:id="bae308d6-05f6-47e6-9595-c9ff0db6f584"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Rule"
+        abstract="false"
+        field="Root/DataEntity/__system/OrigamValidationRule.origam#OrigamValidationRule/Rule/7979898b-cb43-4624-986d-b7ead27acd84"
+        x:id="06b231ce-9891-48ba-912b-7ac9d86261f2"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+      <DataStructureColumn
+        label=""
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        order="0"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="Id"
+        abstract="false"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="c42ebfb7-cc4f-483a-b0e8-d1a9cb9b57ef"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      dynamic="false"
+      name="GetId"
+      abstract="false"
+      x:id="0b246bc7-fcb3-46a3-ba9f-d5275f1a9f12"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        ignoreFilterParameterName=""
+        passWhenParameterMatch="false"
+        roles=""
+        name="OrigamValidationRule_GetId"
+        abstract="false"
+        entity="Root/DataStructure/__system/Lookups/LookupOrigamValidationRule_Rule.origam#LookupOrigamValidationRule_Rule/OrigamValidationRule/bae308d6-05f6-47e6-9595-c9ff0db6f584"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="4ffb06ec-de0e-4d53-82ef-38f3be66fbdf"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

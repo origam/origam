@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <Control
+    toolboxVisibility="FormDesigner"
+    typeName="Origam.Schema.GuiModel.PanelControlSet"
+    namespace="Origam.Schema.GuiModel"
+    isComplex="true"
+    requestSaveAfterChangeAllowed="false"
+    name="OrigamMap"
+    abstract="false"
+    screenSection="Root/PanelControlSet/__system/OrigamMap.origam#OrigamMap/25522d15-1e2e-4e4d-8da6-4773dac07cc4"
+    x:id="8bdb8254-49e9-43f4-bfb3-273aebcac07f"
+    x:type="Origam.Schema.GuiModel.ControlItem">
+    <ancestor
+      ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="45c54fdb-5306-4fae-a30e-2793e22bfe72"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+  </Control>
+</x:file>
