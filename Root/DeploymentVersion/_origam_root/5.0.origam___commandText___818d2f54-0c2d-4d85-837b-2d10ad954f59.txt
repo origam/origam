@@ -15,7 +15,7 @@ EXEC sp_rename 'AsapMap','OrigamMap';
 EXEC sp_rename 'AsapMapLayer','OrigamMapLayer';
 EXEC sp_rename 'AsapMapLayerParameter','OrigamMapLayerParameter';
 EXEC sp_rename 'AsapMapLayerType','OrigamMapLayerType';
---EXEC sp_rename 'AsapMapOrigamMapLayer','OrigamMapOrigamMapLayer';
+EXEC sp_rename 'AsapMapAsapMapLayer','OrigamMapOrigamMapLayer';
 EXEC sp_rename 'AsapModelVersion','OrigamModelVersion';
 EXEC sp_rename 'AsapNotificationChannelType','OrigamNotificationChannelType';
 EXEC sp_rename 'AsapNotificationChannelType_l10n','OrigamNotificationChannelType_l10n';
