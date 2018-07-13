@@ -178,6 +178,19 @@
         x:id="e79616f5-7240-4c0a-8e8c-d2da8ffd3314"
         x:type="Origam.Schema.EntityModel.DataStructureColumn" />
       <DataStructureColumn
+        label="Sequence Number"
+        useLookupValue="false"
+        useCopiedValue="false"
+        writeOnly="false"
+        aggregation="None"
+        xmlMappingType="Default"
+        upsertType="Replace"
+        name="SequenceNumber"
+        abstract="false"
+        field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/i1/f3cf47d4-9761-49bd-8316-c776a5b053d4"
+        x:id="6aa66958-be0f-4315-a9cb-d39a60b6f2e7"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+      <DataStructureColumn
         label="File Creation Time"
         useLookupValue="false"
         useCopiedValue="false"
@@ -418,7 +431,7 @@
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
     <DataStructureSortSet
-      name="ByFileCreationTime"
+      name="ByFileCreationTimeAndSequenceNumber"
       abstract="false"
       x:id="22f0001d-fbc6-46a9-a709-f832e2fccc03"
       x:type="Origam.Schema.EntityModel.DataStructureSortSet">
@@ -429,6 +442,15 @@
         abstract="false"
         entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
         x:id="ead27922-bf3d-42cc-ab67-470745e9b0a9"
+        x:type="Origam.Schema.EntityModel.DataStructureSortSetItem" />
+      <DataStructureSortSetItem
+        fieldName="SequenceNumber"
+        sortOrder="1"
+        sortDirection="Ascending"
+        name="WorkQueueEntry_1_SequenceNumber"
+        abstract="false"
+        entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
+        x:id="2b882515-7180-4f5c-b5ab-f2bca5331d6a"
         x:type="Origam.Schema.EntityModel.DataStructureSortSetItem" />
     </DataStructureSortSet>
   </DataStructure>

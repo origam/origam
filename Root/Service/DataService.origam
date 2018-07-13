@@ -204,6 +204,21 @@
         abstract="false"
         x:id="c229b1e0-cb1e-4c79-ad99-488775df3b19"
         x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+      <Parameter
+        callElements="3"
+        allowContextReference="true"
+        allowDataConstantReference="true"
+        allowDataStructureReference="false"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        dataType="Boolean"
+        allowNulls="true"
+        name="ForceBulkInsert"
+        abstract="false"
+        x:id="010bc65c-5867-41d6-a3f0-8daa9b2377cd"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
     </ServiceMethod>
   </Service>
 </x:file>

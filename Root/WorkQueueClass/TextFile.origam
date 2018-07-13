@@ -5,7 +5,7 @@
     abstract="false"
     workQueueStructure="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/0e157367-9ecd-42e1-8e68-da905adceb6b"
     workQueueStructureUserListMethod="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/GetByQueueId/34b21893-bdac-4573-972a-1fea0c271eb5"
-    workQueueStructureSortSet="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/ByFileCreationTime/22f0001d-fbc6-46a9-a709-f832e2fccc03"
+    workQueueStructureSortSet="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/ByFileCreationTimeAndSequenceNumber/22f0001d-fbc6-46a9-a709-f832e2fccc03"
     workQueueItemCountLookup="Root/DataLookup/Work Queue/WorkQueueCount_Total.origam#WorkQueueCount_Total/2a953c7d-0276-42c4-99b9-aa484808bbcb"
     x:id="08bd5b92-bfea-4a61-8574-4baeab844284"
     x:type="Origam.Schema.WorkflowModel.WorkQueueClass">
@@ -34,6 +34,13 @@
       name="FileLastAccessTime"
       abstract="false"
       x:id="d16c93be-b6e5-4c44-baff-956cee33c28d"
+      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
+    <WorkQueueClassEntityMapping
+      xPath="/ROOT/File/SequenceNumber"
+      sortOrder="4"
+      name="SequenceNumber"
+      abstract="false"
+      x:id="dbb55759-eb28-42d5-bce1-b288c67aa50d"
       x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
     <WorkQueueClassEntityMapping
       xPath="/ROOT/File/CreationTime"
