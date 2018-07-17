@@ -3,7 +3,7 @@
   <DataEntity
     mappedObjectName="AsapModelVersion"
     databaseObjectType="Table"
-    generateDeploymentScript="true"
+    generateDeploymentScript="false"
     readOnly="false"
     audit="None"
     label="Installed Model Version"
