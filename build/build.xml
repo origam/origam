@@ -2,7 +2,7 @@
 <project name="ORIGAM Root Modle" default="standard" basedir=".">
   <description>Build file for SIMPLICOR Core</description>
   <property name="dist" value="../dist"/>
-  <property name="git-exec" value="C:\Program Files (x86)\Git\bin\git"/>
+  <property name="git-exec" value="C:\Program Files\Git\bin\git"/>
   <target name="standard">
     <delete dir="${dist}" failonerror="false"/>
     <mkdir dir="${dist}"/>
@@ -16,10 +16,10 @@
   <target name="create-release-notes">
         <delete dir="../rn" failonerror="false"/>
         <mkdir dir="../rn"/>
-        <exec workingdir="d:/src/origam-model" program="${git-exec}" failonerror="false">
+        <exec workingdir="c:/TeamCity/src/origam-model" program="${git-exec}" failonerror="false">
             <arg value="fetch"/>
         </exec>
-        <exec workingdir="d:/src/origam-model" program="${git-exec}" output="../rn/release-notes__Model_${projectSuffix}_root_${configurationSuffix}_${buildNumber}_artifacts__root__${branchMarker}.txt">
+        <exec workingdir="c:/TeamCity/src/origam-model" program="${git-exec}" output="../rn/release-notes__Model_${projectSuffix}_root_${configurationSuffix}_${buildNumber}_artifacts__root__${branchMarker}.txt">
             <arg value="log"/>
             <arg value="^origin/${previousBranch}"/>
             <arg value="origin/${currentBranch}"/>
