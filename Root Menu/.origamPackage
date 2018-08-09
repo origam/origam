@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <package
-    version="1.2.2"
+    version="1.2.3"
     name="Root Menu"
     x:id="b9ab12fe-7f7d-43f7-bedc-93747647d6e4"
     x:isFolder="true"
