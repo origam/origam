@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-	xmlns:AS="http://schema.advantages.cz/OrigamFunctions"
+	xmlns:AS="http://schema.advantages.cz/AsapFunctions"
 	xmlns:origam="http://schema.advantages.cz/origam"
 	xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date origam">
 
 	<xsl:template match="origam:page">
 		<html>
 			<head>
-				<title><xsl:value-of select="@title"/></title>
+				<http://schema.advantages.cz/AsapFunctions><xsl:value-of select="@http://schema.advantages.cz/AsapFunctions"/></http://schema.advantages.cz/AsapFunctions>
 			</head>
 			<body>
 				<xsl:apply-templates/>
@@ -31,7 +31,7 @@
 
 	<xsl:template match="origam:gridColumn" mode="header">
 		<th>
-			<xsl:value-of select="@title"/>
+			<xsl:value-of select="@http://schema.advantages.cz/AsapFunctions"/>
 		</th>
 	</xsl:template>
 
@@ -67,7 +67,7 @@
 	<xsl:template match="origam:formField">
 		<tr>
 			<th align="left">
-				<xsl:value-of select="@title"/>
+				<xsl:value-of select="@http://schema.advantages.cz/AsapFunctions"/>
 			</th>
 			<td>
 				<xsl:call-template name="renderField"/>

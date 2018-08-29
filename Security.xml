@@ -3084,7 +3084,7 @@ ALTER TABLE BusinessPartnerAsapRole WITH NOCHECK ADD CONSTRAINT
     <SchemaItem Id="31cca4fa-42e0-4f48-9248-58f5d49809b1" ItemType="Rule" Name="MembershipUserValidation_Create" TargetType="Origam.Schema.RuleModel.EndRule" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="5b5597cc-a797-4561-b7d3-2b6e67fc2e21" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
       <M01>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-	xmlns:AS="http://schema.advantages.cz/OrigamFunctions"
+	xmlns:AS="http://schema.advantages.cz/AsapFunctions"
 	xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&gt;
 
 	&lt;xsl:include href="model://e1c65fcd-118d-4eb3-9c2f-aa27fec132ba"/&gt;
@@ -3155,7 +3155,7 @@ ALTER TABLE BusinessPartnerAsapRole WITH NOCHECK ADD CONSTRAINT
     <SchemaItem Id="6fc55ed1-8605-422e-93b9-7eee08be9bfd" ItemType="Rule" Name="ValidateNewUser" TargetType="Origam.Schema.RuleModel.EndRule" IsAbstract="false" I01="0" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="5b5597cc-a797-4561-b7d3-2b6e67fc2e21" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
       <M01>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-	xmlns:AS="http://schema.advantages.cz/OrigamFunctions"
+	xmlns:AS="http://schema.advantages.cz/AsapFunctions"
 	xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&gt;
 
 	&lt;xsl:include href="model://e1c65fcd-118d-4eb3-9c2f-aa27fec132ba"/&gt;
@@ -3291,7 +3291,7 @@ ALTER TABLE BusinessPartnerAsapRole WITH NOCHECK ADD CONSTRAINT
     <SchemaItem Id="199df411-9b36-4d40-b0db-83f43002005a" ItemType="Transformation" Name="UserProfile_New__DeleteUserName" TargetType="Origam.Schema.EntityModel.XslTransformation" IsAbstract="false" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="044b511d-7e70-4b96-a5ac-cb4491973a03" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
       <M01>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-	xmlns:AS="http://schema.advantages.cz/OrigamFunctions"
+	xmlns:AS="http://schema.advantages.cz/AsapFunctions"
 	xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&gt;
 
 	&lt;xsl:template match="ROOT"&gt;
@@ -3311,7 +3311,7 @@ ALTER TABLE BusinessPartnerAsapRole WITH NOCHECK ADD CONSTRAINT
     <SchemaItem Id="21934fda-a12e-4560-91b2-5410c8277c59" ItemType="Transformation" Name="NewUser_CreateBusinessPartner" TargetType="Origam.Schema.EntityModel.XslTransformation" IsAbstract="false" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="044b511d-7e70-4b96-a5ac-cb4491973a03" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
       <M01>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-	xmlns:AS="http://schema.advantages.cz/OrigamFunctions"
+	xmlns:AS="http://schema.advantages.cz/AsapFunctions"
 	xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&gt;
 
 	&lt;xsl:param name="id" select="AS:GenerateId()"/&gt;
@@ -3347,7 +3347,7 @@ ALTER TABLE BusinessPartnerAsapRole WITH NOCHECK ADD CONSTRAINT
     <SchemaItem Id="868bc2d5-073d-4060-bc75-dba807303525" ItemType="Transformation" Name="TwoScalarValues_AreEqual" TargetType="Origam.Schema.EntityModel.XslTransformation" IsAbstract="false" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="044b511d-7e70-4b96-a5ac-cb4491973a03" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
       <M01>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-	xmlns:AS="http://schema.advantages.cz/OrigamFunctions"
+	xmlns:AS="http://schema.advantages.cz/AsapFunctions"
 	xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&gt;
 
 	&lt;xsl:param name="First"/&gt;
@@ -3372,7 +3372,7 @@ ALTER TABLE BusinessPartnerAsapRole WITH NOCHECK ADD CONSTRAINT
     <SchemaItem Id="95c6b19b-71c8-4f83-9fa6-15a4b3147786" ItemType="Transformation" Name="AddUser_CreateBusinessPartner" TargetType="Origam.Schema.EntityModel.XslTransformation" IsAbstract="false" B01="false" B02="false" B03="false" B04="false" B05="false" B06="false" B07="false" refSchemaItemGroupId="044b511d-7e70-4b96-a5ac-cb4491973a03" refSchemaExtensionId="951f2cda-2867-4b99-8824-071fa8749ead">
       <M01>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-	xmlns:AS="http://schema.advantages.cz/OrigamFunctions"
+	xmlns:AS="http://schema.advantages.cz/AsapFunctions"
 	xmlns:date="http://exslt.org/dates-and-times" exclude-result-prefixes="AS date"&gt;
 
 	&lt;xsl:param name="UserRoleId"/&gt;
