@@ -58,11 +58,11 @@ export class GridView implements IGridView {
   }
 
   public handleGridScroll(event: any): void {
-    return
+    this.actions.handleScroll(event);
   }
 
   public handleGridKeyDown(event: any): void {
-    throw new Error("Method not implemented.");
+    this.actions.handleKeyDown(event);
   }
 
   public handleGridClick(event: any): void {

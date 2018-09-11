@@ -4,10 +4,13 @@ import { GridView } from "./Grid/GridView";
 import { GridState } from "./Grid/GridState";
 import { GridSelectors } from "./Grid/GridSelectors";
 import { GridActions } from "./Grid/GridActions";
+import { GridSetup } from "./adapters/GridSetup";
+
+const gridSetup = new GridSetup();
 
 const gridState = new GridState();
 const gridSelectors = new GridSelectors(gridState);
-const gridActions = new GridActions(gridState, gridSelectors);
+const gridActions = new GridActions(gridState, gridSelectors, gridSetup);
 
 const gridView = new GridView(gridSelectors, gridActions);
 
