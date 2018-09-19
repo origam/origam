@@ -1,8 +1,13 @@
 import { decorate } from "mobx";
-import { IGridState, IGridSelectors } from "./types";
+import { IGridState, IGridSelectors, IGridSetup, IGridTopology, ICellRenderer } from "./types";
+import { rangeQuery } from "../utils/arrays";
 
 export class GridSelectors implements IGridSelectors {
-  constructor(public state: IGridState) {}
+  constructor(
+    public state: IGridState,
+    public setup: IGridSetup,
+    public topology: IGridTopology
+  ) {}
 
   public get width(): number {
     return this.state.width;
@@ -21,75 +26,116 @@ export class GridSelectors implements IGridSelectors {
   }
 
   public getRowTop(rowIndex: number): number {
-    throw new Error("Method not implemented.");
+    return this.setup.getRowTop(rowIndex);
   }
 
   public getRowBottom(rowIndex: number): number {
-    throw new Error("Method not implemented.");
+    return this.setup.getRowBottom(rowIndex);
   }
 
   public getRowHeight(rowIndex: number): number {
-    throw new Error("Method not implemented.");
+    return this.setup.getRowHeight(rowIndex);
   }
 
   public getColumnLeft(columnIndex: number): number {
-    throw new Error("Method not implemented.");
+    return this.setup.getColumnLeft(columnIndex);
   }
 
   public getColumnRight(columIndex: number): number {
-    throw new Error("Method not implemented.");
+    return this.setup.getColumnRight(columIndex);
   }
 
   public getColumnWidth(columnIndex: number): number {
-    throw new Error("Method not implemented.");
+    return this.setup.getColumnWidth(columnIndex);
   }
 
-  public getColumnId(columnIndex: number): number {
-    throw new Error("Method not implemented.");
+  public getColumnId(columnIndex: number): string {
+    return this.topology.getColumnIdByIndex(columnIndex);
   }
 
-  public get contentWidth(): number {
-    throw new Error("Method not implemented.");
+  get contentWidth(): number {
+    const columnCount = this.setup.columnCount;
+    if (columnCount === 0) {
+      return 0;
+    }
+    return this.getColumnRight(columnCount - 1) - this.getColumnLeft(0);
   }
 
-  public get contentHeight(): number {
-    throw new Error("Method not implemented.");
+  get contentHeight(): number {
+    const rowCount = this.setup.rowCount;
+    if (rowCount === 0) {
+      return 0;
+    }
+    return this.getRowBottom(rowCount - 1) - this.getRowTop(0);
   }
 
-  public get visibleRowsFirstIndex(): number {
-    throw new Error("Method not implemented.");
+  get visibleRowsRange() {
+    return rangeQuery(
+      i => this.getRowBottom(i),
+      i => this.getRowTop(i),
+      this.setup.rowCount,
+      this.scrollTop,
+      this.scrollTop + this.innerHeight
+    );
   }
 
-  public get visibleRowsLastIndex(): number {
-    throw new Error("Method not implemented.");
+  get visibleRowsFirstIndex() {
+    return this.visibleRowsRange.fgte;
   }
 
-  public get visibleColumnsFirstIndex(): number {
-    throw new Error("Method not implemented.");
+  get visibleRowsLastIndex() {
+    return this.visibleRowsRange.llte;
   }
 
-  public get visibleColumnsLastIndex(): number {
-    throw new Error("Method not implemented.");
+  get visibleColumnsRange() {
+    return rangeQuery(
+      i => this.getColumnRight(i),
+      i => this.getColumnLeft(i),
+      this.setup.columnCount,
+      this.scrollLeft + this.fixedColumnsTotalWidth,
+      this.scrollLeft + this.innerWidth
+    );
+  }
+
+  get visibleColumnsFirstIndex() {
+    return this.visibleColumnsRange.fgte;
+  }
+
+  get visibleColumnsLastIndex() {
+    return this.visibleColumnsRange.llte;
   }
 
   public get fixedColumnCount(): number {
-    throw new Error("Method not implemented.");
+    return this.setup.fixedColumnCount;
   }
 
-  public get columnHeadersOffsetLeft(): number {
-    throw new Error("Method not implemented.");
+  public get columnHeadersOffsetLeft() {
+    return -this.state.scrollLeft;
   }
 
-  public get elmRoot(): React.Component {
-    throw new Error("Method not implemented.");
+  public get elmRoot(): HTMLDivElement | null {
+    return this.state.elmRoot;
   }
 
   public get columnCount(): number {
-    throw new Error("Method not implemented.");
+    return this.setup.columnCount;
   }
 
-  public get fixedColumnsTotalWidth(): number {
-    throw new Error("Method not implemented.");
+  get movingColumnsTotalWidth() {
+    let totWidth = 0;
+    const columnCount = this.columnCount;
+    for (let i = this.fixedColumnCount; i < columnCount; i++) {
+      totWidth = totWidth + this.getColumnRight(i) - this.getColumnLeft(i);
+    }
+    return totWidth;
+  }
+
+  get fixedColumnsTotalWidth() {
+    let totWidth = 0;
+    for (let i = 0; i < this.fixedColumnCount; i++) {
+      totWidth = totWidth + this.getColumnRight(i) - this.getColumnLeft(i);
+    }
+    return totWidth;
   }
 
   public fixedShiftedColumnDimensions(
@@ -97,35 +143,46 @@ export class GridSelectors implements IGridSelectors {
     width: number,
     columnIndex: number
   ): { left: number; width: number } {
-    throw new Error("Method not implemented.");
+    if (columnIndex < this.fixedColumnCount) {
+      return { left, width };
+    } else {
+      const leftOverflow = Math.max(
+        this.fixedColumnsTotalWidth - (left - this.scrollLeft),
+        0
+      );
+      return {
+        left: Math.max(left - this.scrollLeft, this.fixedColumnsTotalWidth),
+        width: Math.max(width - leftOverflow, 0)
+      };
+    }
   }
 
-  public get cellRenderer(): () => {} {
-    throw new Error("Method not implemented.");
+  public get cellRenderer(): ICellRenderer {
+    return this.state.cellRenderer;
   }
 
   public get scrollLeft(): number {
-    throw new Error("Method not implemented.");
+    return this.state.scrollLeft;
   }
 
   public get scrollTop(): number {
-    throw new Error("Method not implemented.");
+    return this.state.scrollTop;
   }
 
-  public get canvasContext(): CanvasRenderingContext2D {
-    throw new Error("Method not implemented.");
+  public get canvasContext(): CanvasRenderingContext2D | null {
+    return this.state.canvasContext;
   }
 
-  public get elmScroller(): number {
-    throw new Error("Method not implemented.");
+  public get elmScroller(): HTMLDivElement | null {
+    return this.state.elmScroller;
   }
 
   public get onOutsideClick(): ((event: any) => void) | undefined {
-    throw new Error("Method not implemented.");
+    return this.state.onOutsideClick;
   }
 
   public get onScroll(): ((event: any) => void) | undefined {
-    throw new Error("Method not implemented.");
+    return this.state.onScroll;
   }
 }
 

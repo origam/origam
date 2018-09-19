@@ -66,7 +66,7 @@ export class GridView implements IGridView {
   }
 
   public handleGridClick(event: any): void {
-    throw new Error("Method not implemented.");
+    this.actions.handleGridClick(event);
   }
 
   public handleResize(width: number, height: number) {
@@ -91,6 +91,7 @@ export class GridView implements IGridView {
   ): void {
     const { width, height } = props;
     this.handleResize(width, height);
+    this.actions.componentDidMount(props);
   }
 
   public componentDidUpdate(
@@ -100,10 +101,11 @@ export class GridView implements IGridView {
   ): void {
     const { width, height } = props;
     this.handleResize(width, height);
+    this.actions.componentDidUpdate(prevProps, props);
   }
 
   public componentWillUnmount(): void {
-    throw new Error("Method not implemented.");
+    this.actions.componentWillUnmount();
   }
 }
 

@@ -1,8 +1,13 @@
+export type ICellRenderer = (args: ICellRendererArgs) => void;
+
 export interface IGridProps {
   view: IGridView;
   width: number;
   height: number;
   overlayElements: React.Component | React.Component[] | null;
+  cellRenderer: ICellRenderer;
+  onScroll?: ((event: any) => void) | undefined;
+  onOutsideClick?: ((event: any) => void) | undefined;
 }
 
 export interface IGridView {
@@ -39,6 +44,26 @@ export interface IGridView {
   refCanvas(element: HTMLCanvasElement): void;
 }
 
+type IClickHandler = (
+  event: any,
+  cellRect: ICellRect,
+  cellInfo: ICellInfo
+) => void;
+type IClickHandlerSubscribe = (handler: IClickHandler) => void;
+
+interface ICellRendererArgs {
+  columnIndex: number;
+  rowIndex: number;
+  cellDimensions: {
+    width: number;
+    height: number;
+  };
+  ctx: CanvasRenderingContext2D;
+  events: {
+    onClick: IClickHandlerSubscribe;
+  };
+}
+
 export interface IGridSelectors {
   width: number;
   height: number;
@@ -52,20 +77,21 @@ export interface IGridSelectors {
   visibleColumnsLastIndex: number;
   fixedColumnCount: number;
   columnHeadersOffsetLeft: number;
-  elmRoot: React.Component;
+  elmRoot: HTMLDivElement | null;
   columnCount: number;
   fixedColumnsTotalWidth: number;
+  movingColumnsTotalWidth: number;
 
   fixedShiftedColumnDimensions(
     left: number,
     width: number,
     columnIndex: number
   ): { left: number; width: number };
-  cellRenderer: () => {};
+  cellRenderer(args: ICellRendererArgs): void;
   scrollLeft: number;
   scrollTop: number;
-  canvasContext: CanvasRenderingContext2D;
-  elmScroller: number;
+  canvasContext: CanvasRenderingContext2D | null;
+  elmScroller: HTMLDivElement | null;
 
   getRowTop(rowIndex: number): number;
   getRowBottom(rowIndex: number): number;
@@ -73,7 +99,7 @@ export interface IGridSelectors {
   getColumnLeft(columnIndex: number): number;
   getColumnRight(columIndex: number): number;
   getColumnWidth(columnIndex: number): number;
-  getColumnId(columnIndex: number): number;
+  getColumnId(columnIndex: number): string;
 
   onOutsideClick: ((event: any) => void) | undefined;
   onScroll: ((event: any) => void) | undefined;
@@ -82,20 +108,39 @@ export interface IGridSelectors {
 export interface IGridState {
   width: number;
   height: number;
+  scrollTop: number;
+  scrollLeft: number;
+  component: React.Component | null;
+  elmRoot: HTMLDivElement | null;
+  elmScroller: HTMLDivElement | null;
+  elmCanvas: HTMLCanvasElement | null;
+  canvasContext: CanvasRenderingContext2D | null;
 
-  setComponent(component: React.Component): void;
+  cellRenderer: ICellRenderer;
+  onOutsideClick: ((event: any) => void) | undefined;
+  onScroll: ((event: any) => void) | undefined;
+
   setSize(width: number, height: number): void;
   setScroll(scrollTop: number, scrollLeft: number): void;
+  setScrollTop(scrollTop: number): void;
+  setScrollLeft(scrollLeft: number): void;
   setRefRoot(element: HTMLDivElement): void;
   setRefScroller(element: HTMLDivElement): void;
   setRefCanvas(element: HTMLCanvasElement): void;
   setCanvasContext(context: CanvasRenderingContext2D | null): void;
+  setCellRenderer(cellRenderer: ICellRenderer): void;
+  setOnOutsideClick(handler: (((event: any) => void)) | undefined): void;
+  setOnScroll(handler: (((event: any) => void)) | undefined): void;
 }
 
 export interface IGridActions {
   handleResize(width: number, height: number): void;
   handleScroll(event: any): void;
   handleKeyDown(event: any): void;
+  handleGridClick(event: any): void;
+  componentDidMount(props: IGridProps): void;
+  componentDidUpdate(prevProps: IGridProps, props: IGridProps): void;
+  componentWillUnmount(): void;
   refRoot(element: HTMLDivElement): void;
   refScroller(element: HTMLDivElement): void;
   refCanvas(element: HTMLCanvasElement): void;
@@ -118,7 +163,7 @@ export interface IGridSetup {
   getColumnLeft(columnIndex: number): number;
   getColumnRight(columIndex: number): number;
   getColumnWidth(columnIndex: number): number;
-
+  onRowsRendered(rowIndexStart: number, rowIndexEnd: number): void;
 }
 
 export interface IGridTopology {
@@ -127,7 +172,35 @@ export interface IGridTopology {
   getLeftColumnId(columnId: string): string;
   getRightColumnId(columnId: string): string;
   getColumnIdByIndex(columnIndex: number): string;
-  getRowIdByIndex(rowIndex: number): string
+  getRowIdByIndex(rowIndex: number): string;
   getColumnIndexById(columnId: string): number;
   getRowIndexById(rowId: string): number;
 }
+
+export interface ICellRect {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  right: number;
+  bottom: number;
+}
+
+export interface ICellInfo {
+  columnIndex: number;
+  rowIndex: number;
+}
+
+export interface IClickSubscription {
+  cellRect: ICellRect;
+  cellRealRect: ICellRect;
+  cellInfo: ICellInfo;
+  handler(event: any, cellRect: ICellRect, cellInfo: ICellInfo): void;
+}
+
+export type T$1 = [number];
+export type T$2 = [number, number];
+export type T$3 = [number, number, number];
+export type T$4 = [number, number, number, number];
+export type T$5 = [number, number, number, number, number];
+export type T$6 = [number, number, number, number, number, number];

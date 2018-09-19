@@ -1,8 +1,9 @@
-import { IGridState } from "./types";
+import { IGridState, IGridProps, ICellRenderer } from "./types";
 import { decorate, observable, action } from "mobx";
 
 export class GridState implements IGridState {
-
+  
+  public cellRenderer: ICellRenderer;
   public width: number = 0;
   public height: number = 0;
   public scrollTop: number = 0;
@@ -12,6 +13,8 @@ export class GridState implements IGridState {
   public elmScroller: HTMLDivElement | null = null;
   public elmCanvas: HTMLCanvasElement | null = null;
   public canvasContext: CanvasRenderingContext2D | null = null;
+  public onOutsideClick: ((event: any) => void) | undefined;
+  public onScroll: ((event: any) => void) | undefined;
 
   public setSize(width: number, height: number): void {
     this.width = width;
@@ -20,6 +23,14 @@ export class GridState implements IGridState {
 
   public setScroll(scrollTop: number, scrollLeft: number): void {
     this.scrollTop = scrollTop;
+    this.scrollLeft = scrollLeft;
+  }
+
+  public setScrollTop(scrollTop: number): void {
+    this.scrollTop = scrollTop;
+  }
+
+  public setScrollLeft(scrollLeft: number): void {
     this.scrollLeft = scrollLeft;
   }
 
@@ -39,9 +50,18 @@ export class GridState implements IGridState {
     this.canvasContext = context;
   }
 
-  public setComponent(component: React.Component): void {
-    this.component = component;
+  public setCellRenderer(cellRenderer: ICellRenderer): void {
+    this.cellRenderer = cellRenderer;
   }
+
+  public setOnOutsideClick(handler: (event: any) => void): void {
+    this.onOutsideClick = handler;
+  }
+
+  public setOnScroll(handler: (event: any) => void): void {
+    this.onScroll = handler;
+  }
+  
 }
 
 decorate(GridState, {
@@ -52,12 +72,13 @@ decorate(GridState, {
   elmRoot: observable.ref,
   elmScroller: observable.ref,
   elmCanvas: observable.ref,
-  component: observable.ref,
 
   setSize: action.bound,
+  setScroll: action.bound,
+  setScrollTop: action.bound,
+  setScrollLeft: action.bound,
   setRefRoot: action.bound,
   setRefScroller: action.bound,
   setRefCanvas: action.bound,
-  setCanvasContext: action.bound,
-  setComponent: action.bound,
+  setCanvasContext: action.bound
 });
