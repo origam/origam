@@ -2,7 +2,6 @@ import { IGridState, IGridProps, ICellRenderer } from "./types";
 import { decorate, observable, action } from "mobx";
 
 export class GridState implements IGridState {
-  
   public cellRenderer: ICellRenderer;
   public width: number = 0;
   public height: number = 0;
@@ -15,6 +14,7 @@ export class GridState implements IGridState {
   public canvasContext: CanvasRenderingContext2D | null = null;
   public onOutsideClick: ((event: any) => void) | undefined;
   public onScroll: ((event: any) => void) | undefined;
+  public onKeyDown: ((event: any) => void) | undefined;
 
   public setSize(width: number, height: number): void {
     this.width = width;
@@ -61,7 +61,10 @@ export class GridState implements IGridState {
   public setOnScroll(handler: (event: any) => void): void {
     this.onScroll = handler;
   }
-  
+
+  public setOnKeyDown(handler: ((event: any) => void) | undefined): void {
+    this.onKeyDown = handler;
+  }
 }
 
 decorate(GridState, {

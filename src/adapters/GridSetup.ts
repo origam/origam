@@ -3,7 +3,7 @@ import { decorate, computed } from "mobx";
 
 export class GridSetup implements IGridSetup {
   public get columnCount(): number {
-    return 5;
+    return 50;
   }
 
   public get fixedColumnCount(): number {

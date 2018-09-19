@@ -7,11 +7,11 @@ export class GridView implements IGridView {
   constructor(public selectors: IGridSelectors, public actions: IGridActions) {}
 
   public get contentWidth(): number {
-    return 5000;
+    return this.selectors.contentWidth;
   }
 
   public get contentHeight(): number {
-    return 5000;
+    return this.selectors.contentHeight;
   }
 
   public get width(): number {

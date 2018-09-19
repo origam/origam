@@ -112,7 +112,7 @@ export class GridActions implements IGridActions {
   }
 
   public handleKeyDown(event: any): void {
-    throw new Error("Method not implemented.");
+    this.selectors.onKeyDown && this.selectors.onKeyDown(event);
   }
 
   public refRoot(element: HTMLDivElement): void {
@@ -132,7 +132,7 @@ export class GridActions implements IGridActions {
     }
   }
 
-  private handleWindowClick(event: any) {
+  public handleWindowClick(event: any) {
     if (
       !this.selectors.elmRoot ||
       !this.selectors.elmRoot.contains(event.target)
@@ -162,6 +162,7 @@ export class GridActions implements IGridActions {
     this.state.setCellRenderer(props.cellRenderer);
     this.state.setOnScroll(props.onScroll);
     this.state.setOnOutsideClick(props.onOutsideClick);
+    this.state.setOnKeyDown(props.onKeyDown);
   }
 
   public componentWillUnmount(): void {
@@ -365,6 +366,7 @@ decorate(GridActions, {
   componentWillUnmount: action.bound,
   componentDidUpdate: action.bound,
   handleResize: action.bound,
+  handleWindowClick: action.bound,
   refRoot: action.bound,
   refScroller: action.bound,
   refCanvas: action.bound,

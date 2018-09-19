@@ -184,6 +184,10 @@ export class GridSelectors implements IGridSelectors {
   public get onScroll(): ((event: any) => void) | undefined {
     return this.state.onScroll;
   }
+
+  public get onKeyDown(): ((event: any) => void) | undefined {
+    return this.state.onKeyDown;
+  }
 }
 
 decorate(GridSelectors, {});

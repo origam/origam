@@ -8,6 +8,7 @@ export interface IGridProps {
   cellRenderer: ICellRenderer;
   onScroll?: ((event: any) => void) | undefined;
   onOutsideClick?: ((event: any) => void) | undefined;
+  onKeyDown?: ((event: any) => void) | undefined;
 }
 
 export interface IGridView {
@@ -103,6 +104,7 @@ export interface IGridSelectors {
 
   onOutsideClick: ((event: any) => void) | undefined;
   onScroll: ((event: any) => void) | undefined;
+  onKeyDown: ((event: any) => void) | undefined;
 }
 
 export interface IGridState {
@@ -119,6 +121,7 @@ export interface IGridState {
   cellRenderer: ICellRenderer;
   onOutsideClick: ((event: any) => void) | undefined;
   onScroll: ((event: any) => void) | undefined;
+  onKeyDown: ((event: any) => void) | undefined;
 
   setSize(width: number, height: number): void;
   setScroll(scrollTop: number, scrollLeft: number): void;
@@ -131,6 +134,7 @@ export interface IGridState {
   setCellRenderer(cellRenderer: ICellRenderer): void;
   setOnOutsideClick(handler: (((event: any) => void)) | undefined): void;
   setOnScroll(handler: (((event: any) => void)) | undefined): void;
+  setOnKeyDown(handler: ((event: any) => void) | undefined): void;
 }
 
 export interface IGridActions {
