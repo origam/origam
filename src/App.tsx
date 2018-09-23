@@ -13,6 +13,7 @@ import { GridCursorView } from "./Grid/GridCursorView";
 import { GridInteractionSelectors } from "./Grid/GridInteractionSelectors";
 import { GridInteractionState } from "./Grid/GridInteractionState";
 import { GridInteractionActions } from "./Grid/GridInteractionActions";
+import { CellScrolling } from "./Grid/CellScrolling";
 
 const gridSetup = new GridSetup();
 const gridTopology = new GridTopology();
@@ -37,6 +38,8 @@ const gridCursorView = new GridCursorView(
   gridInteractionSelectors,
   gridSelectors
 );
+const cellScrolling = new CellScrolling(gridSelectors, gridActions, gridTopology, gridSetup, gridInteractionSelectors);
+cellScrolling.start();
 
 gridInteractionState.setSelected("3", "2");
 

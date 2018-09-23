@@ -18,6 +18,10 @@ export class GridSetup implements IGridSetup {
     return true;
   }
 
+  public isFixedColumn(columnIndex: number): boolean {
+    return columnIndex < this.fixedColumnCount;
+  }
+
   public getCellTop(cellIndex: number): number {
     return cellIndex * 20;
   }

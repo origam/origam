@@ -155,6 +155,21 @@ export interface IGridActions {
   refRoot(element: HTMLDivElement): void;
   refScroller(element: HTMLDivElement): void;
   refCanvas(element: HTMLCanvasElement): void;
+
+  performScrollTo({
+    scrollTop,
+    scrollLeft
+  }: {
+    scrollTop?: number;
+    scrollLeft?: number;
+  }): void;
+  performIncrementScroll({
+    scrollTop,
+    scrollLeft
+  }: {
+    scrollTop?: number;
+    scrollLeft?: number;
+  }): void;
 }
 
 export interface IGridSetup {
@@ -162,6 +177,7 @@ export interface IGridSetup {
   fixedColumnCount: number;
   rowCount: number;
   isScrollingEnabled: boolean;
+  isFixedColumn(columnIndex: number): boolean;
   getCellTop(cellIndex: number): number;
   getCellLeft(cellIndex: number): number;
   getCellBottom(cellIndex: number): number;
@@ -248,9 +264,7 @@ export interface IGridInteractionState {
   setSelectedRow(rowId: string | undefined): void;
 }
 
-export interface IGridInteractionActions {
-  
-}
+export interface IGridInteractionActions {}
 
 export type T$1 = [number];
 export type T$2 = [number, number];
