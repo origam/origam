@@ -6,7 +6,7 @@ import { GridSelectors } from "./Grid/GridSelectors";
 import { GridActions } from "./Grid/GridActions";
 import { GridSetup } from "./adapters/GridSetup";
 import { GridTopology } from "./adapters/GridTopology";
-import { gridCellRenderer } from "./Grid/GridCellRenderer";
+import { createGridCellRenderer } from "./Grid/GridCellRenderer";
 
 import { GridCursorComponent } from "./Grid/GridCursorComponent";
 import { GridCursorView } from "./Grid/GridCursorView";
@@ -38,7 +38,7 @@ const gridCursorView = new GridCursorView(
   gridSelectors
 );
 
-gridInteractionState.setSelected('3', '2')
+gridInteractionState.setSelected("3", "2");
 
 class App extends React.Component {
   public render() {
@@ -51,7 +51,15 @@ class App extends React.Component {
           overlayElements={
             <GridCursorComponent view={gridCursorView} cursorContent={null} />
           }
-          cellRenderer={gridCellRenderer}
+          cellRenderer={createGridCellRenderer({
+            onClick(event, cellRect, cellInfo) {
+              gridInteractionActions.handleGridCellClick(event, {
+                rowId: gridTopology.getRowIdByIndex(cellInfo.rowIndex),
+                columnId: gridTopology.getColumnIdByIndex(cellInfo.columnIndex)
+              });
+            }
+          })}
+          onKeyDown={gridInteractionActions.handleGridKeyDown}
         />
       </div>
     );

@@ -2,27 +2,27 @@ import { IGridTopology } from "../Grid/types";
 
 export class GridTopology implements IGridTopology {
   public getUpRowId(rowId: string): string {
-    throw new Error("Method not implemented.");
+    return `${parseInt(rowId, 10) - 1}`;
   }
 
   public getDownRowId(rowId: string): string {
-    throw new Error("Method not implemented.");
+    return `${parseInt(rowId, 10) + 1}`;
   }
 
   public getLeftColumnId(columnId: string): string {
-    throw new Error("Method not implemented.");
+    return `${parseInt(columnId, 10) - 1}`;
   }
 
   public getRightColumnId(columnId: string): string {
-    throw new Error("Method not implemented.");
+    return `${parseInt(columnId, 10) + 1}`;
   }
 
   public getColumnIdByIndex(columnIndex: number): string {
-    return columnIndex+'';
+    return columnIndex + "";
   }
 
   public getRowIdByIndex(rowIndex: number): string {
-    return rowIndex+'';
+    return rowIndex + "";
   }
 
   public getColumnIndexById(columnId: string): number {
@@ -32,6 +32,4 @@ export class GridTopology implements IGridTopology {
   public getRowIndexById(rowId: string): number {
     return parseInt(rowId, 10);
   }
-
-
 }
