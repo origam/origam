@@ -6,8 +6,13 @@ import { GridSelectors } from "./Grid/GridSelectors";
 import { GridActions } from "./Grid/GridActions";
 import { GridSetup } from "./adapters/GridSetup";
 import { GridTopology } from "./adapters/GridTopology";
-import { T$4, T$2, ICellRect, ICellInfo } from "./Grid/types";
-import { trcpr } from "./utils/canvas";
+import { gridCellRenderer } from "./Grid/GridCellRenderer";
+
+import { GridCursorComponent } from "./Grid/GridCursorComponent";
+import { GridCursorView } from "./Grid/GridCursorView";
+import { GridInteractionSelectors } from "./Grid/GridInteractionSelectors";
+import { GridInteractionState } from "./Grid/GridInteractionState";
+import { GridInteractionActions } from "./Grid/GridInteractionActions";
 
 const gridSetup = new GridSetup();
 const gridTopology = new GridTopology();
@@ -17,6 +22,24 @@ const gridActions = new GridActions(gridState, gridSelectors, gridSetup);
 
 const gridView = new GridView(gridSelectors, gridActions);
 
+const gridInteractionState = new GridInteractionState();
+const gridInteractionSelectors = new GridInteractionSelectors(
+  gridInteractionState,
+  gridTopology
+);
+const gridInteractionActions = new GridInteractionActions(
+  gridInteractionState,
+  gridInteractionSelectors
+);
+const gridCursorView = new GridCursorView(
+  gridTopology,
+  gridSetup,
+  gridInteractionSelectors,
+  gridSelectors
+);
+
+gridInteractionState.setSelected('3', '2')
+
 class App extends React.Component {
   public render() {
     return (
@@ -25,48 +48,10 @@ class App extends React.Component {
           view={gridView}
           width={800}
           height={500}
-          overlayElements={null}
-          cellRenderer={({
-            ctx,
-            columnIndex,
-            rowIndex,
-            cellDimensions,
-            events
-          }) => {
-            ctx.fillStyle = rowIndex % 2 === 0 ? "#ffffff" : "#efefef";
-            ctx.fillRect(
-              ...(trcpr(
-                0,
-                0,
-                cellDimensions.width,
-                cellDimensions.height
-              ) as T$4)
-            );
-            ctx.fillStyle = "black";
-            let text;
-            /*
-            if (columnIndex === 0) {
-              text = dataTable.records[rowIndex].name;
-            } else if (columnIndex === 1) {
-              text = moment(dataTable.records[rowIndex].birth_date).format(
-                "DD.MM.YYYY"
-              );
-            } else if (columnIndex === 2) {
-              text = dataTable.records[rowIndex].favorite_color;
-            } else if (columnIndex === 3) {
-              text = dataTable.records[rowIndex].id;
-            } else {
-              text = `Cell ${columnIndex};${rowIndex}`;
-            }*/
-            text = `Cell ${columnIndex};${rowIndex}`;
-            ctx.fillText(text, ...(trcpr(15, 15) as T$2));
-
-            events.onClick(
-              (event: any, cellRect: ICellRect, cellInfo: ICellInfo) => {
-                console.log(cellInfo.rowIndex, cellInfo.columnIndex);
-              }
-            );
-          }}
+          overlayElements={
+            <GridCursorComponent view={gridCursorView} cursorContent={null} />
+          }
+          cellRenderer={gridCellRenderer}
         />
       </div>
     );

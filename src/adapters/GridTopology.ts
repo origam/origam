@@ -18,19 +18,19 @@ export class GridTopology implements IGridTopology {
   }
 
   public getColumnIdByIndex(columnIndex: number): string {
-    throw new Error("Method not implemented.");
+    return columnIndex+'';
   }
 
   public getRowIdByIndex(rowIndex: number): string {
-    throw new Error("Method not implemented.");
+    return rowIndex+'';
   }
 
   public getColumnIndexById(columnId: string): number {
-    throw new Error("Method not implemented.");
+    return parseInt(columnId, 10);
   }
 
   public getRowIndexById(rowId: string): number {
-    throw new Error("Method not implemented.");
+    return parseInt(rowId, 10);
   }
 
 

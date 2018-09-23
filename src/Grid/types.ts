@@ -4,7 +4,7 @@ export interface IGridProps {
   view: IGridView;
   width: number;
   height: number;
-  overlayElements: React.Component | React.Component[] | null;
+  overlayElements: React.ReactNode | React.ReactNode[] | null;
   cellRenderer: ICellRenderer;
   onScroll?: ((event: any) => void) | undefined;
   onOutsideClick?: ((event: any) => void) | undefined;
@@ -36,6 +36,13 @@ export interface IGridView {
 
   contentWidth: number;
   contentHeight: number;
+  fixedColumnCount: number;
+  movingColumnsTotalWidth: number;
+  columnHeadersOffsetLeft: number;
+  columnCount: number;
+  getColumnId(columnIndex: number): string;
+  getColumnLeft(columnIndex: number): number;
+  getColumnRight(columIndex: number): number;
 
   handleGridScroll(event: any): void;
   handleGridKeyDown(event: any): void;
@@ -52,7 +59,7 @@ type IClickHandler = (
 ) => void;
 type IClickHandlerSubscribe = (handler: IClickHandler) => void;
 
-interface ICellRendererArgs {
+export interface ICellRendererArgs {
   columnIndex: number;
   rowIndex: number;
   cellDimensions: {
@@ -200,6 +207,49 @@ export interface IClickSubscription {
   cellRealRect: ICellRect;
   cellInfo: ICellInfo;
   handler(event: any, cellRect: ICellRect, cellInfo: ICellInfo): void;
+}
+
+export type IColumnHeaderRenderer = (columnIndex: number) => React.ReactNode;
+
+export interface IGridCursorView {
+  fixedRowCursorDisplayed: boolean;
+  fixedRowCursorStyle: { [key: string]: string | number | undefined };
+  fixedCellCursorDisplayed: boolean;
+  fixedCellCursorStyle: { [key: string]: string | number | undefined };
+  movingRowCursorDisplayed: boolean;
+  movingRowCursorStyle: { [key: string]: string | number | undefined };
+  movingCellCursorDisplayed: boolean;
+  movingCellCursorStyle: { [key: string]: string | number | undefined };
+}
+
+export interface IGridInteractionSelectors {
+  selectedRowId: string | undefined;
+  selectedColumnId: string | undefined;
+  editingRowId: string | undefined;
+  editingColumnId: string | undefined;
+  isCellSelected: boolean;
+  isCellEditing: boolean;
+
+  getLeftColumnId(columnId: string): string;
+  getRightColumnId(columnId: string): string;
+  getUpRowId(columnId: string): string;
+  getDownRowId(columnId: string): string;
+}
+
+export interface IGridInteractionState {
+  selectedRowId: string | undefined;
+  selectedColumnId: string | undefined;
+  editingRowId: string | undefined;
+  editingColumnId: string | undefined;
+
+  setEditing(rowId: string | undefined, columnId: string | undefined): void;
+  setSelected(rowId: string | undefined, columnId: string | undefined): void;
+  setSelectedColumn(columnId: string | undefined): void;
+  setSelectedRow(rowId: string | undefined): void;
+}
+
+export interface IGridInteractionActions {
+  
 }
 
 export type T$1 = [number];

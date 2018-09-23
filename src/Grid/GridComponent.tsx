@@ -1,6 +1,6 @@
 import * as React from "react";
 import { observer } from "mobx-react";
-import { IGridProps } from "./types";
+import { IGridProps, IGridView, IColumnHeaderRenderer } from "./types";
 
 export const GridComponent = observer(
   class GridComponentOriginal extends React.Component<IGridProps> {
@@ -38,7 +38,7 @@ export const GridComponent = observer(
         handleGridClick,
         refRoot,
         refScroller,
-        refCanvas,
+        refCanvas
       } = this.view;
 
       const { contentWidth, contentHeight } = this.view;
@@ -76,6 +76,97 @@ export const GridComponent = observer(
           <div className="grid-view-editor-portal" /*ref={refEditorPortal}*/ />
         </div>
       );
+    }
+  }
+);
+
+export const ColumnHeaders = observer(
+  class RawColumnHeaders extends React.Component<{
+    view: IGridView;
+    columnHeaderRenderer: IColumnHeaderRenderer;
+  }> {
+    public render() {
+      const { view, columnHeaderRenderer } = this.props;
+      return (
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <FixedHeaders
+            view={view}
+            columnHeaderRenderer={columnHeaderRenderer}
+          />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              width: view.movingColumnsTotalWidth,
+              position: "relative",
+              left: view.columnHeadersOffsetLeft
+            }}
+          >
+            <MovingHeaders
+              view={view}
+              columnHeaderRenderer={columnHeaderRenderer}
+            />
+          </div>
+        </div>
+      );
+    }
+  }
+);
+
+export const FixedHeaders = observer(
+  class RawFixedHeaders extends React.Component<{
+    view: IGridView;
+    columnHeaderRenderer: IColumnHeaderRenderer;
+  }> {
+    public render() {
+      const { view } = this.props;
+      const headers = [];
+      for (let i = 0; i < view.fixedColumnCount; i++) {
+        headers.push(
+          <div
+            key={view.getColumnId(i)}
+            style={{
+              minWidth: view.getColumnRight(i) - view.getColumnLeft(i),
+              maxWidth: view.getColumnRight(i) - view.getColumnLeft(i),
+              borderRight: "1px solid white",
+              zIndex: 1000,
+              boxSizing: "border-box",
+              backgroundColor: "#ffffff"
+            }}
+          >
+            {this.props.columnHeaderRenderer(i)}
+          </div>
+        );
+      }
+      return headers;
+    }
+  }
+);
+
+export const MovingHeaders = observer(
+  class RawMovingHeaders extends React.Component<{
+    view: IGridView;
+    columnHeaderRenderer: IColumnHeaderRenderer;
+  }> {
+    public render() {
+      const { view } = this.props;
+      const headers = [];
+      const columnCount = view.columnCount;
+      for (let i = view.fixedColumnCount; i < columnCount; i++) {
+        headers.push(
+          <div
+            key={view.getColumnId(i)}
+            style={{
+              minWidth: view.getColumnRight(i) - view.getColumnLeft(i),
+              maxWidth: view.getColumnRight(i) - view.getColumnLeft(i),
+              borderRight: "1px solid white"
+            }}
+          >
+            {this.props.columnHeaderRenderer(i)}
+          </div>
+        );
+      }
+      return headers;
     }
   }
 );

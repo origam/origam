@@ -4,6 +4,8 @@ import { IGridView, IGridProps, IGridSelectors, IGridActions } from "./types";
 import { CPR } from "../utils/canvas";
 
 export class GridView implements IGridView {
+
+
   constructor(public selectors: IGridSelectors, public actions: IGridActions) {}
 
   public get contentWidth(): number {
@@ -55,6 +57,34 @@ export class GridView implements IGridView {
 
   public get canvasHeightCSS() {
     return Math.ceil(this.innerHeight * CPR) / CPR || 0;
+  }
+
+  public get fixedColumnCount(): number {
+    throw new Error("Method not implemented.");
+  }
+
+  public get movingColumnsTotalWidth(): number {
+    throw new Error("Method not implemented.");
+  }
+
+  public get columnHeadersOffsetLeft(): number {
+    throw new Error("Method not implemented.");
+  }
+
+  public get columnCount(): number {
+    throw new Error("Method not implemented.");
+  }
+
+  public getColumnId(columnIndex: number): string {
+    throw new Error("Method not implemented.");
+  }
+
+  public getColumnLeft(columnIndex: number): number {
+    throw new Error("Method not implemented.");
+  }
+
+  public getColumnRight(columIndex: number): number {
+    throw new Error("Method not implemented.");
   }
 
   public handleGridScroll(event: any): void {

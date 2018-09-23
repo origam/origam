@@ -14,6 +14,8 @@
     "member-ordering": false,
     "jsx-no-lambda": false,
     "no-unused-expression": false,
-    "max-classes-per-file": false
+    "max-classes-per-file": false,
+    "no-debugger": false,
+    "no-empty-interface": false
   }
 }
