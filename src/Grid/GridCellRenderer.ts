@@ -44,7 +44,7 @@ export function createGridCellRenderer({
     ctx.fillText(text, ...(trcpr(15, 15) as T$2));
 
     events.onClick((event: any, cellRect: ICellRect, cellInfo: ICellInfo) => {
-      console.log(cellInfo.rowIndex, cellInfo.columnIndex);
+      // console.log(cellInfo.rowIndex, cellInfo.columnIndex);
       onClick(event, cellRect, cellInfo)
     });
   };

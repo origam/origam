@@ -1,26 +1,31 @@
-import { decorate } from "mobx";
+import { computed } from "mobx";
 import { IGridState, IGridSelectors, IGridSetup, IGridTopology, ICellRenderer } from "./types";
 import { rangeQuery } from "../utils/arrays";
 
 export class GridSelectors implements IGridSelectors {
+  
   constructor(
     public state: IGridState,
     public setup: IGridSetup,
     public topology: IGridTopology
   ) {}
 
+  @computed
   public get width(): number {
     return this.state.width;
   }
 
+  @computed
   public get height(): number {
     return this.state.height;
   }
 
+  @computed
   public get innerWidth(): number {
     return this.width - 16;
   }
 
+  @computed
   public get innerHeight(): number {
     return this.height - 16;
   }
@@ -53,6 +58,7 @@ export class GridSelectors implements IGridSelectors {
     return this.topology.getColumnIdByIndex(columnIndex);
   }
 
+  @computed
   get contentWidth(): number {
     const columnCount = this.setup.columnCount;
     if (columnCount === 0) {
@@ -61,6 +67,7 @@ export class GridSelectors implements IGridSelectors {
     return this.getColumnRight(columnCount - 1) - this.getColumnLeft(0);
   }
 
+  @computed
   get contentHeight(): number {
     const rowCount = this.setup.rowCount;
     if (rowCount === 0) {
@@ -69,6 +76,7 @@ export class GridSelectors implements IGridSelectors {
     return this.getRowBottom(rowCount - 1) - this.getRowTop(0);
   }
 
+  @computed
   get visibleRowsRange() {
     return rangeQuery(
       i => this.getRowBottom(i),
@@ -79,14 +87,17 @@ export class GridSelectors implements IGridSelectors {
     );
   }
 
+  @computed
   get visibleRowsFirstIndex() {
     return this.visibleRowsRange.fgte;
   }
 
+  @computed
   get visibleRowsLastIndex() {
     return this.visibleRowsRange.llte;
   }
 
+  @computed
   get visibleColumnsRange() {
     return rangeQuery(
       i => this.getColumnRight(i),
@@ -97,30 +108,37 @@ export class GridSelectors implements IGridSelectors {
     );
   }
 
+  @computed
   get visibleColumnsFirstIndex() {
     return this.visibleColumnsRange.fgte;
   }
 
+  @computed
   get visibleColumnsLastIndex() {
     return this.visibleColumnsRange.llte;
   }
 
+  @computed
   public get fixedColumnCount(): number {
     return this.setup.fixedColumnCount;
   }
 
+  @computed
   public get columnHeadersOffsetLeft() {
     return -this.state.scrollLeft;
   }
 
+  @computed
   public get elmRoot(): HTMLDivElement | null {
     return this.state.elmRoot;
   }
 
+  @computed
   public get columnCount(): number {
     return this.setup.columnCount;
   }
 
+  @computed
   get movingColumnsTotalWidth() {
     let totWidth = 0;
     const columnCount = this.columnCount;
@@ -130,6 +148,7 @@ export class GridSelectors implements IGridSelectors {
     return totWidth;
   }
 
+  @computed
   get fixedColumnsTotalWidth() {
     let totWidth = 0;
     for (let i = 0; i < this.fixedColumnCount; i++) {
@@ -161,24 +180,32 @@ export class GridSelectors implements IGridSelectors {
     return this.state.cellRenderer;
   }
 
+  @computed
   public get scrollLeft(): number {
     return this.state.scrollLeft;
   }
 
+  @computed
   public get scrollTop(): number {
     return this.state.scrollTop;
   }
 
+  @computed
   public get canvasContext(): CanvasRenderingContext2D | null {
     return this.state.canvasContext;
   }
 
+  @computed
   public get elmScroller(): HTMLDivElement | null {
     return this.state.elmScroller;
   }
 
   public get onOutsideClick(): ((event: any) => void) | undefined {
     return this.state.onOutsideClick;
+  }
+
+  public get onNoCellClick(): ((event: any) => void) | undefined {
+    return this.state.onNoCellClick;
   }
 
   public get onScroll(): ((event: any) => void) | undefined {
@@ -190,4 +217,3 @@ export class GridSelectors implements IGridSelectors {
   }
 }
 
-decorate(GridSelectors, {});

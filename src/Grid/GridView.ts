@@ -8,30 +8,37 @@ export class GridView implements IGridView {
 
   constructor(public selectors: IGridSelectors, public actions: IGridActions) {}
 
+  @computed
   public get contentWidth(): number {
     return this.selectors.contentWidth;
   }
-
+  
+  @computed
   public get contentHeight(): number {
     return this.selectors.contentHeight;
   }
 
+  @computed
   public get width(): number {
     return this.selectors.width;
   }
 
+  @computed
   public get height(): number {
     return this.selectors.height;
   }
 
+  @computed
   public get innerWidth(): number {
     return this.selectors.innerWidth;
   }
 
+  @computed
   public get innerHeight(): number {
     return this.selectors.innerHeight;
   }
 
+  @computed
   public get canvasProps() {
     return {
       width: this.canvasWidthPX,
@@ -43,78 +50,94 @@ export class GridView implements IGridView {
     };
   }
 
+  @computed
   public get canvasWidthPX() {
     return Math.ceil(this.innerWidth * CPR) || 0;
   }
 
+  @computed
   public get canvasHeightPX() {
     return Math.ceil(this.innerHeight * CPR) || 0;
   }
 
+  @computed
   public get canvasWidthCSS() {
     return Math.ceil(this.innerWidth * CPR) / CPR || 0;
   }
 
+  @computed
   public get canvasHeightCSS() {
     return Math.ceil(this.innerHeight * CPR) / CPR || 0;
   }
 
+  @computed
   public get fixedColumnCount(): number {
-    throw new Error("Method not implemented.");
+    return this.selectors.fixedColumnCount;
   }
 
+  @computed
   public get movingColumnsTotalWidth(): number {
-    throw new Error("Method not implemented.");
+    return this.selectors.fixedColumnsTotalWidth;
   }
 
+  @computed
   public get columnHeadersOffsetLeft(): number {
-    throw new Error("Method not implemented.");
+    return this.selectors.columnHeadersOffsetLeft;
   }
 
+  @computed
   public get columnCount(): number {
-    throw new Error("Method not implemented.");
+    return this.selectors.columnCount;
   }
 
   public getColumnId(columnIndex: number): string {
-    throw new Error("Method not implemented.");
+    return this.selectors.getColumnId(columnIndex);
   }
 
   public getColumnLeft(columnIndex: number): number {
-    throw new Error("Method not implemented.");
+    return this.selectors.getColumnLeft(columnIndex);
   }
 
-  public getColumnRight(columIndex: number): number {
-    throw new Error("Method not implemented.");
+  public getColumnRight(columnIndex: number): number {
+    return this.selectors.getColumnRight(columnIndex);
   }
 
+  @action.bound
   public handleGridScroll(event: any): void {
     this.actions.handleScroll(event);
   }
 
+  @action.bound
   public handleGridKeyDown(event: any): void {
     this.actions.handleKeyDown(event);
   }
 
+  @action.bound
   public handleGridClick(event: any): void {
     this.actions.handleGridClick(event);
   }
 
+  @action.bound
   public handleResize(width: number, height: number) {
     this.actions.handleResize(width, height);
   }
 
+  @action.bound
   public refRoot(element: HTMLDivElement): void {
     this.actions.refRoot(element);
   }
 
+  @action.bound
   public refScroller(element: HTMLDivElement): void {
     this.actions.refScroller(element);
   }
 
+  @action.bound
   public refCanvas(element: HTMLCanvasElement): void {
     this.actions.refCanvas(element);
   }
 
+  @action.bound
   public componentDidMount(
     props: IGridProps,
     component: React.Component<IGridProps>
@@ -124,6 +147,7 @@ export class GridView implements IGridView {
     this.actions.componentDidMount(props);
   }
 
+  @action.bound
   public componentDidUpdate(
     prevProps: IGridProps,
     props: IGridProps,
@@ -134,27 +158,9 @@ export class GridView implements IGridView {
     this.actions.componentDidUpdate(prevProps, props);
   }
 
+  @action.bound
   public componentWillUnmount(): void {
     this.actions.componentWillUnmount();
   }
 }
 
-decorate(GridView, {
-  canvasProps: computed,
-  contentHeight: computed,
-  contentWidth: computed,
-  width: computed,
-  height: computed,
-  innerWidth: computed,
-  innerHeight: computed,
-  componentDidMount: action.bound,
-  componentDidUpdate: action.bound,
-  componentWillUnmount: action.bound,
-  refCanvas: action.bound,
-  refScroller: action.bound,
-  refRoot: action.bound,
-  handleResize: action.bound,
-  handleGridClick: action.bound,
-  handleGridKeyDown: action.bound,
-  handleGridScroll: action.bound
-});

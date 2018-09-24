@@ -8,6 +8,7 @@ export interface IGridProps {
   cellRenderer: ICellRenderer;
   onScroll?: ((event: any) => void) | undefined;
   onOutsideClick?: ((event: any) => void) | undefined;
+  onNoCellClick?: ((event: any) => void) | undefined;
   onKeyDown?: ((event: any) => void) | undefined;
 }
 
@@ -110,6 +111,7 @@ export interface IGridSelectors {
   getColumnId(columnIndex: number): string;
 
   onOutsideClick: ((event: any) => void) | undefined;
+  onNoCellClick: ((event: any) => void) | undefined;
   onScroll: ((event: any) => void) | undefined;
   onKeyDown: ((event: any) => void) | undefined;
 }
@@ -127,6 +129,7 @@ export interface IGridState {
 
   cellRenderer: ICellRenderer;
   onOutsideClick: ((event: any) => void) | undefined;
+  onNoCellClick: ((event: any) => void) | undefined;
   onScroll: ((event: any) => void) | undefined;
   onKeyDown: ((event: any) => void) | undefined;
 
@@ -138,8 +141,9 @@ export interface IGridState {
   setRefScroller(element: HTMLDivElement): void;
   setRefCanvas(element: HTMLCanvasElement): void;
   setCanvasContext(context: CanvasRenderingContext2D | null): void;
-  setCellRenderer(cellRenderer: ICellRenderer): void;
+  setCellRenderer(cellRenderer: ICellRenderer): void;  
   setOnOutsideClick(handler: (((event: any) => void)) | undefined): void;
+  setOnNoCellClick(handler: (((event: any) => void)) | undefined): void;
   setOnScroll(handler: (((event: any) => void)) | undefined): void;
   setOnKeyDown(handler: ((event: any) => void) | undefined): void;
 }
@@ -225,7 +229,7 @@ export interface IClickSubscription {
   handler(event: any, cellRect: ICellRect, cellInfo: ICellInfo): void;
 }
 
-export type IColumnHeaderRenderer = (columnIndex: number) => React.ReactNode;
+export type IColumnHeaderRenderer = ({columnIndex}: {columnIndex: number}) => React.ReactNode;
 
 export interface IGridCursorView {
   fixedRowCursorDisplayed: boolean;
@@ -236,6 +240,12 @@ export interface IGridCursorView {
   movingRowCursorStyle: { [key: string]: string | number | undefined };
   movingCellCursorDisplayed: boolean;
   movingCellCursorStyle: { [key: string]: string | number | undefined };
+  selectedRowId: string | undefined;
+  selectedColumnId: string | undefined;
+  editingRowId: string | undefined;
+  editingColumnId: string | undefined;
+  isCellSelected: boolean;
+  isCellEditing: boolean;
 }
 
 export interface IGridInteractionSelectors {

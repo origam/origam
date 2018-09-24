@@ -1,4 +1,4 @@
-import { decorate, action, autorun, IReactionDisposer } from "mobx";
+import { decorate, action, autorun, IReactionDisposer, computed } from "mobx";
 import { trcpr } from "../utils/canvas";
 import {
   IGridState,
@@ -17,6 +17,7 @@ import { getElementPosition } from "../utils/elements";
 class AnimationFrameScheduler {
   private scheduled: boolean = false;
 
+  @action.bound
   public schedule(fn: () => void) {
     if (!this.scheduled) {
       this.scheduled = true;
@@ -27,10 +28,6 @@ class AnimationFrameScheduler {
     }
   }
 }
-
-decorate(AnimationFrameScheduler, {
-  schedule: action.bound
-});
 
 export class GridActions implements IGridActions {
   constructor(
@@ -43,17 +40,19 @@ export class GridActions implements IGridActions {
 
   private repaintScheduler: AnimationFrameScheduler;
   private rePainter: IReactionDisposer | undefined;
-
   private clickSubscriptions: IClickSubscription[] = [];
 
+  @computed
   get fixedColumnCount(): number {
     return this.selectors.fixedColumnCount;
   }
 
+  @action.bound
   public handleResize(width: number, height: number): void {
     this.state.setSize(width, height);
   }
 
+  @action.bound
   public handleScroll(event: any): void {
     if (!this.setup.isScrollingEnabled) {
       event.target.scrollTop = this.selectors.scrollTop;
@@ -80,6 +79,7 @@ export class GridActions implements IGridActions {
     }
   }
 
+  @action.bound
   public handleGridClick(event: any): void {
     const { clientX, clientY } = event;
     const { x: elmLeft, y: elmTop } = getElementPosition(
@@ -105,24 +105,25 @@ export class GridActions implements IGridActions {
         return;
       }
     }
-
-    // TODO...
-    // onNoCellClick && onNoCellClick(event);
-    // TODO...
+    this.selectors.onNoCellClick && this.selectors.onNoCellClick(event);
   }
 
+  @action.bound
   public handleKeyDown(event: any): void {
     this.selectors.onKeyDown && this.selectors.onKeyDown(event);
   }
 
+  @action.bound
   public refRoot(element: HTMLDivElement): void {
     this.state.setRefRoot(element);
   }
 
+  @action.bound
   public refScroller(element: HTMLDivElement): void {
     this.state.setRefScroller(element);
   }
 
+  @action.bound
   public refCanvas(element: HTMLCanvasElement): void {
     this.state.setRefCanvas(element);
     if (element) {
@@ -132,6 +133,7 @@ export class GridActions implements IGridActions {
     }
   }
 
+  @action.bound
   public handleWindowClick(event: any) {
     if (
       !this.selectors.elmRoot ||
@@ -141,6 +143,7 @@ export class GridActions implements IGridActions {
     }
   }
 
+  @action.bound
   public componentDidMount(props: IGridProps) {
     this.updateByComponentProps(props);
     window.addEventListener("click", this.handleWindowClick);
@@ -154,22 +157,27 @@ export class GridActions implements IGridActions {
     );
   }
 
+  @action.bound
   public componentDidUpdate(prevProps: IGridProps, nextProps: IGridProps) {
     this.updateByComponentProps(nextProps);
   }
 
+  @action.bound
   public updateByComponentProps(props: IGridProps): void {
     this.state.setCellRenderer(props.cellRenderer);
     this.state.setOnScroll(props.onScroll);
     this.state.setOnOutsideClick(props.onOutsideClick);
+    this.state.setOnNoCellClick(props.onNoCellClick);
     this.state.setOnKeyDown(props.onKeyDown);
   }
 
+  @action.bound
   public componentWillUnmount(): void {
     window.removeEventListener("click", this.handleWindowClick);
     this.rePainter && this.rePainter();
   }
 
+  @action.bound
   public performScrollTo({
     scrollTop,
     scrollLeft
@@ -187,6 +195,7 @@ export class GridActions implements IGridActions {
     }
   }
 
+  @action.bound
   public performIncrementScroll({
     scrollTop,
     scrollLeft
@@ -355,20 +364,8 @@ export class GridActions implements IGridActions {
       this.setup.onRowsRendered(visibleRowsFirstIndex, visibleRowsLastIndex);
   }
 
+  @action.bound
   public scheduleRepaint() {
     this.repaintScheduler.schedule(() => this.repaint());
   }
 }
-
-decorate(GridActions, {
-  performScrollTo: action.bound,
-  componentDidMount: action.bound,
-  componentWillUnmount: action.bound,
-  componentDidUpdate: action.bound,
-  handleResize: action.bound,
-  handleWindowClick: action.bound,
-  refRoot: action.bound,
-  refScroller: action.bound,
-  refCanvas: action.bound,
-  scheduleRepaint: action.bound
-});

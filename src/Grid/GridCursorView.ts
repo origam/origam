@@ -18,7 +18,7 @@ export class GridCursorView implements IGridCursorView {
   @computed
   get currentRowHeight() {
     const { selectedRowId } = this.gridInteractionSelectors;
-    if(!selectedRowId) {
+    if (!selectedRowId) {
       return 0;
     }
     const rowHeight = this.gridSetup.getRowHeight(
@@ -30,7 +30,7 @@ export class GridCursorView implements IGridCursorView {
   @computed
   get currentColumnWidth() {
     const { selectedColumnId } = this.gridInteractionSelectors;
-    if(!selectedColumnId) {
+    if (!selectedColumnId) {
       return 0;
     }
     const columnWidth = this.gridSetup.getColumnWidth(
@@ -42,7 +42,7 @@ export class GridCursorView implements IGridCursorView {
   @computed
   get currentRowTop() {
     const { selectedRowId } = this.gridInteractionSelectors;
-    if(!selectedRowId) {
+    if (!selectedRowId) {
       return 0;
     }
     const rowTop = this.gridSetup.getRowTop(
@@ -54,7 +54,7 @@ export class GridCursorView implements IGridCursorView {
   @computed
   get currentColumnLeft() {
     const { selectedColumnId } = this.gridInteractionSelectors;
-    if(!selectedColumnId) {
+    if (!selectedColumnId) {
       return 0;
     }
     const columnLeft = this.gridSetup.getColumnLeft(
@@ -66,7 +66,7 @@ export class GridCursorView implements IGridCursorView {
   @computed
   get isCurrentCellFixed() {
     const selectedColumnId = this.gridInteractionSelectors.selectedColumnId;
-    if(!selectedColumnId) {
+    if (!selectedColumnId) {
       return false;
     }
     const selectedColumnIndex = this.gridTopology.getColumnIndexById(
@@ -199,5 +199,35 @@ export class GridCursorView implements IGridCursorView {
       top: this.rowCursorClientTop,
       left: this.movingRowCursorClientLeft
     };
+  }
+
+  @computed
+  get selectedRowId(): string | undefined {
+    return this.gridInteractionSelectors.selectedRowId;
+  }
+
+  @computed
+  get selectedColumnId(): string | undefined {
+    return this.gridInteractionSelectors.selectedRowId;
+  }
+
+  @computed
+  get editingRowId(): string | undefined {
+    return this.gridInteractionSelectors.editingRowId;
+  }
+
+  @computed
+  get editingColumnId(): string | undefined {
+    return this.gridInteractionSelectors.editingColumnId;
+  }
+
+  @computed
+  get isCellSelected(): boolean {
+    return this.gridInteractionSelectors.isCellSelected;
+  }
+
+  @computed
+  get isCellEditing(): boolean {
+    return this.gridInteractionSelectors.isCellEditing;
   }
 }
