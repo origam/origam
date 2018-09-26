@@ -4,8 +4,6 @@ import { IGridView, IGridProps, IGridSelectors, IGridActions } from "./types";
 import { CPR } from "../utils/canvas";
 
 export class GridView implements IGridView {
-
-
   constructor(public selectors: IGridSelectors, public actions: IGridActions) {}
 
   @computed

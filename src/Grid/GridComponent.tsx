@@ -60,7 +60,13 @@ export class GridComponent extends React.Component<IGridProps> {
           <canvas {...canvasProps} ref={refCanvas} />
           <div
             className="grid-view-scroller"
-            style={{ width, height }}
+            style={{
+              width,
+              height,
+              overflow: !this.props.configuration.isScrollingEnabled
+                ? "hidden"
+                : undefined
+            }}
             onScroll={handleGridScroll}
             ref={refScroller}
           >
