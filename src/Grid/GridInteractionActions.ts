@@ -147,6 +147,11 @@ export class GridInteractionActions implements IGridInteractionActions {
   private handleGridKeyDown_ShiftTab(event: any) {
     this.selectOneLeft();
   }
+  
+  @action.bound
+  private handleGridKeyDown_F2(event: any) {
+    this.editSelectedCell();
+  }
 
   // ==============================================================
   // EXECUTIVE
@@ -154,6 +159,7 @@ export class GridInteractionActions implements IGridInteractionActions {
 
   @action.bound
   public edit(rowId: string | undefined, columnId: string | undefined) {
+    console.log('Edit', rowId, columnId)
     this.select(rowId, columnId);
     this.state.setEditing(rowId, columnId);
   }

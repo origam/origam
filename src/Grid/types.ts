@@ -2,6 +2,7 @@ export type ICellRenderer = (args: ICellRendererArgs) => void;
 
 export interface IGridProps {
   view: IGridView;
+  configuration: IGridConfiguration;
   width: number;
   height: number;
   overlayElements: React.ReactNode | React.ReactNode[] | null;
@@ -10,6 +11,10 @@ export interface IGridProps {
   onOutsideClick?: ((event: any) => void) | undefined;
   onNoCellClick?: ((event: any) => void) | undefined;
   onKeyDown?: ((event: any) => void) | undefined;
+}
+
+export interface IGridConfiguration {
+  isScrollingEnabled: boolean;
 }
 
 export interface IGridView {

@@ -19,6 +19,7 @@ import { AutoSizer } from "react-virtualized";
 
 import { StringGridEditor } from "./cells/string/GridEditor";
 import { GridEditorMounter } from "./cells/GridEditorMounter";
+import { GridConfiguration } from "./adapters/GridConfiguration";
 
 const gridSetup = new GridSetup();
 const gridTopology = new GridTopology();
@@ -50,6 +51,9 @@ const cellScrolling = new CellScrolling(
   gridSetup,
   gridInteractionSelectors
 );
+
+const gridConfiguration = new GridConfiguration(gridInteractionSelectors);
+
 cellScrolling.start();
 
 gridInteractionState.setSelected("3", "2");
@@ -89,6 +93,8 @@ class App extends React.Component {
             {({ width, height }) => (
               <GridComponent
                 view={gridView}
+                configuration={gridConfiguration}
+                ref={gridSetup.refComponent}
                 width={width}
                 height={height}
                 overlayElements={
@@ -96,7 +102,12 @@ class App extends React.Component {
                     view={gridCursorView}
                     cursorContent={
                       <GridEditorMounter cursorView={gridCursorView}>
-                        <StringGridEditor />
+                        <StringGridEditor
+                          value="ahoj"
+                          onKeyDown={
+                            gridInteractionActions.handleDumbEditorKeyDown
+                          }
+                        />
                       </GridEditorMounter>
                     }
                   />
@@ -114,6 +125,7 @@ class App extends React.Component {
                 onKeyDown={gridInteractionActions.handleGridKeyDown}
                 onOutsideClick={gridInteractionActions.handleGridOutsideClick}
                 onNoCellClick={gridInteractionActions.handleGridNoCellClick}
+                
               />
             )}
           </AutoSizer>

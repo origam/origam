@@ -21,6 +21,7 @@ export class GridEditorMounter extends React.Component<{
   }
 
   private getRenderer() {
+    console.log('get renderer')
     const { cursorView } = this.props;
     if (
       cursorView.editingColumnId !== this.oldEditingColumnId ||
