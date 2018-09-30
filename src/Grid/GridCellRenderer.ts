@@ -4,14 +4,17 @@ import {
   T$4,
   T$2,
   ICellRect,
-  ICellInfo
+  ICellInfo,
+  IGridSetup
 } from "./types";
 import { trcpr } from "../utils/canvas";
 
 export function createGridCellRenderer({
-  onClick
+  onClick,
+  gridSetup
 }: {
   onClick: (event: any, cellRect: ICellRect, cellInfo: ICellInfo) => void;
+  gridSetup: IGridSetup;
 }): ICellRenderer {
   return function gridCellRenderer({
     ctx,
@@ -40,12 +43,13 @@ export function createGridCellRenderer({
   } else {
     text = `Cell ${columnIndex};${rowIndex}`;
   }*/
-    text = `Cell ${columnIndex};${rowIndex}`;
+    text = gridSetup.getCellValue(rowIndex, columnIndex) || '';
+    // text = `Cell ${columnIndex};${rowIndex}`;
     ctx.fillText(text, ...(trcpr(15, 15) as T$2));
 
     events.onClick((event: any, cellRect: ICellRect, cellInfo: ICellInfo) => {
       // console.log(cellInfo.rowIndex, cellInfo.columnIndex);
-      onClick(event, cellRect, cellInfo)
+      onClick(event, cellRect, cellInfo);
     });
   };
 }

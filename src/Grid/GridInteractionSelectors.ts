@@ -1,11 +1,14 @@
 import { computed } from "mobx";
-import { IGridInteractionState, IGridTopology, IGridInteractionSelectors } from "./types";
+import {
+  IGridInteractionState,
+  IGridTopology,
+  IGridInteractionSelectors
+} from "./types";
 
 export class GridInteractionSelectors implements IGridInteractionSelectors {
-  constructor(
-    public state: IGridInteractionState,
-    public gridTopology: IGridTopology
-  ) {}
+  constructor(public state: IGridInteractionState) {}
+
+  public gridTopology: IGridTopology;
 
   // ==============================================================
   // DATA ROUTING

@@ -9,11 +9,11 @@ import {
 import { rangeQuery } from "../utils/arrays";
 
 export class GridSelectors implements IGridSelectors {
-  constructor(
-    public state: IGridState,
-    public setup: IGridSetup,
-    public topology: IGridTopology
-  ) {}
+  constructor(public state: IGridState) {}
+
+  public topology: IGridTopology;
+
+  public setup: IGridSetup;
 
   @computed
   public get width(): number {
@@ -33,6 +33,11 @@ export class GridSelectors implements IGridSelectors {
   @computed
   public get innerHeight(): number {
     return this.height - 16;
+  }
+
+  @computed
+  get isScrollingEnabled(): boolean {
+    return this.setup.isScrollingEnabled;
   }
 
   public getRowTop(rowIndex: number): number {

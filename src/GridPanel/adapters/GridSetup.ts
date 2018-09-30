@@ -1,11 +1,20 @@
-import { IGridSetup, IGridProps } from "../Grid/types";
-import { decorate, computed, action, observable } from "mobx";
+import { action, computed, observable } from "mobx";
+import {
+  IGridProps,
+  IGridSetup,
+  IGridInteractionSelectors
+} from "../../Grid/types";
+import { IDataTableSelectors, ICellValue } from "../../DataTable/types";
 
 export class GridSetup implements IGridSetup {
+  constructor(
+    public gridInteractionSelectors: IGridInteractionSelectors,
+    public dataTableSelectors: IDataTableSelectors
+  ) {}
 
   @computed
   public get columnCount(): number {
-    return 50;
+    return this.dataTableSelectors.fieldCount;
   }
 
   @computed
@@ -15,12 +24,12 @@ export class GridSetup implements IGridSetup {
 
   @computed
   public get rowCount(): number {
-    return 100;
+    return this.dataTableSelectors.recordCount;
   }
 
   @computed
   public get isScrollingEnabled(): boolean {
-    return true;
+    return !this.gridInteractionSelectors.isCellEditing;
   }
 
   public isFixedColumn(columnIndex: number): boolean {
@@ -43,8 +52,17 @@ export class GridSetup implements IGridSetup {
     return this.getCellLeft(cellIndex) + 100;
   }
 
-  public getCellValue(rowIndex: number, columnIndex: number): string {
-    return `${rowIndex};${columnIndex}`;
+  public getCellValue(
+    rowIndex: number,
+    columnIndex: number
+  ): ICellValue | undefined {
+    const record = this.dataTableSelectors.getRecordByRecordIndex(rowIndex);
+    const field = this.dataTableSelectors.getFieldByFieldIndex(columnIndex);
+    if (record && field) {
+      return this.dataTableSelectors.getValue(record, field);
+    } else {
+      return
+    }
   }
 
   public getColumnLabel(columnIndex: number): string {
@@ -79,4 +97,3 @@ export class GridSetup implements IGridSetup {
     return;
   }
 }
-

@@ -9,11 +9,12 @@ import {
 
 export class GridCursorView implements IGridCursorView {
   constructor(
-    public gridTopology: IGridTopology,
-    public gridSetup: IGridSetup,
     public gridInteractionSelectors: IGridInteractionSelectors,
     public gridViewSelectors: IGridSelectors
   ) {}
+
+  public gridTopology: IGridTopology;
+  public gridSetup: IGridSetup;
 
   @computed
   get currentRowHeight() {

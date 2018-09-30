@@ -1,5 +1,6 @@
 export type ICellValue = string;
 export type IFieldId = string;
+export type IRecordId = string;
 export type ITableId = string;
 
 export interface IDataTableState {
@@ -11,6 +12,7 @@ export interface IDataTableSelectors {
   tableId: ITableId;
   fullRecords: IDataTableRecord[];
   fullRecordCount: number;
+  recordCount: number;
   fieldCount: number;
   lastFullRecord: IDataTableRecord;
   firstFullRecord: IDataTableRecord;
@@ -18,6 +20,12 @@ export interface IDataTableSelectors {
   getFullRecordIndexById(afterId: string): number;
   getRecordById(recordId: string): IDataTableRecord | undefined;
   getFieldById(fieldId: string): IDataTableField | undefined | "ID";
+  getRecordByRecordIndex(recordIndex: number): IDataTableRecord | undefined;
+  getFieldByFieldIndex(fieldIndex: number): IDataTableField | undefined;
+  getValue(
+    record: IDataTableRecord | undefined,
+    field: IDataTableField | undefined
+  ): ICellValue | undefined;
   getResetValue(
     record: IDataTableRecord,
     field: IDataTableField | "ID"

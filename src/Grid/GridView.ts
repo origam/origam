@@ -3,7 +3,7 @@ import { decorate, computed, action } from "mobx";
 import { IGridView, IGridProps, IGridSelectors, IGridActions } from "./types";
 import { CPR } from "../utils/canvas";
 
-export class GridView implements IGridView {
+export class GridView implements IGridView {;
   constructor(public selectors: IGridSelectors, public actions: IGridActions) {}
 
   @computed
@@ -14,6 +14,11 @@ export class GridView implements IGridView {
   @computed
   public get contentHeight(): number {
     return this.selectors.contentHeight;
+  }
+
+  @computed
+  public get isScrollingEnabled(): boolean {
+    return this.selectors.isScrollingEnabled;
   }
 
   @computed

@@ -41,7 +41,7 @@ export class GridComponent extends React.Component<IGridProps> {
       refCanvas
     } = this.view;
 
-    const { contentWidth, contentHeight } = this.view;
+    const { contentWidth, contentHeight, isScrollingEnabled } = this.view;
 
     const { canvasProps } = this;
 
@@ -63,7 +63,7 @@ export class GridComponent extends React.Component<IGridProps> {
             style={{
               width,
               height,
-              overflow: !this.props.configuration.isScrollingEnabled
+              overflow: !isScrollingEnabled
                 ? "hidden"
                 : undefined
             }}

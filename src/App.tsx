@@ -1,80 +1,133 @@
 import * as React from "react";
-import { GridComponent, ColumnHeaders } from "./Grid/GridComponent";
-import { GridView } from "./Grid/GridView";
-import { GridState } from "./Grid/GridState";
-import { GridSelectors } from "./Grid/GridSelectors";
-import { GridActions } from "./Grid/GridActions";
-import { GridSetup } from "./adapters/GridSetup";
+import { AutoSizer } from "react-virtualized";
 import { GridTopology } from "./adapters/GridTopology";
-import { createGridCellRenderer } from "./Grid/GridCellRenderer";
-
-import { GridCursorComponent } from "./Grid/GridCursorComponent";
-import { GridCursorView } from "./Grid/GridCursorView";
-import { GridInteractionSelectors } from "./Grid/GridInteractionSelectors";
-import { GridInteractionState } from "./Grid/GridInteractionState";
-import { GridInteractionActions } from "./Grid/GridInteractionActions";
+import { GridEditorMounter } from "./cells/GridEditorMounter";
+import { StringGridEditor } from "./cells/string/GridEditor";
+import { LookupResolverProvider } from "./DataLoadingStrategy/LookupResolverProvider";
+import { DataTableSelectors } from "./DataTable/DataTableSelectors";
+import { DataTableState } from "./DataTable/DataTableState";
 import { CellScrolling } from "./Grid/CellScrolling";
 import { columnHeaderRenderer } from "./Grid/ColumnHeaderRenderer";
-import { AutoSizer } from "react-virtualized";
+import { GridActions } from "./Grid/GridActions";
+import { createGridCellRenderer } from "./Grid/GridCellRenderer";
+import { ColumnHeaders, GridComponent } from "./Grid/GridComponent";
+import { GridCursorComponent } from "./Grid/GridCursorComponent";
+import { GridCursorView } from "./Grid/GridCursorView";
+import { GridInteractionActions } from "./Grid/GridInteractionActions";
+import { GridInteractionSelectors } from "./Grid/GridInteractionSelectors";
+import { GridInteractionState } from "./Grid/GridInteractionState";
+import { GridSelectors } from "./Grid/GridSelectors";
+import { GridState } from "./Grid/GridState";
+import { GridView } from "./Grid/GridView";
+import { GridSetup } from "./GridPanel/adapters/GridSetup";
+import { EventObserver } from "./utils/events";
+import { DataLoadingStrategyActions } from "./DataLoadingStrategy/DataLoadingStrategyActions";
+import { DataLoadingStrategySelectors } from "./DataLoadingStrategy/DataLoadingStrategySelectors";
+import { DataLoadingStrategyState } from "./DataLoadingStrategy/DataLoadingStrategyState";
+import { DataTableActions } from "./DataTable/DataTableActions";
+import { DataLoader } from "./DataLoadingStrategy/DataLoader";
+import { GridOrderingSelectors } from "./GridOrdering/GridOrderingSelectors";
+import { GridOrderingState } from "./GridOrdering/GridOrderingState";
+import { GridOrderingActions } from "./GridOrdering/GridOrderingActions";
+import { GridOutlineState } from "./GridOutline/GridOutlineState";
+import { GridOutlineSelectors } from "./GridOutline/GridOutlineSelectors";
+import { GridOutlineActions } from "./GridOutline/GridOutlineActions";
 
-import { StringGridEditor } from "./cells/string/GridEditor";
-import { GridEditorMounter } from "./cells/GridEditorMounter";
-import { GridConfiguration } from "./adapters/GridConfiguration";
-import { DataTableState } from "./DataTable/DataTableState";
-import { DataTableSelectors } from "./DataTable/DataTableSelectors";
-import {
-  ILookupResolverProvider,
-  ILookupResolver,
-  ICellValue
-} from "./DataTable/types";
+const lookupResolverProvider = new LookupResolverProvider({
+  get dataLoader() {
+    return dataLoader;
+  }
+});
+
+const gridOrderingState = new GridOrderingState();
+const gridOrderingSelectors = new GridOrderingSelectors(gridOrderingState);
+const gridOrderingActions = new GridOrderingActions(
+  gridOrderingState,
+  gridOrderingSelectors
+);
+
+const gridOutlineState = new GridOutlineState();
+const gridOutlineSelectors = new GridOutlineSelectors(gridOutlineState);
+const gridOutlineActions = new GridOutlineActions(
+  gridOutlineState,
+  gridOutlineSelectors
+);
+
+const dataLoader = new DataLoader("person");
 
 const dataTableState = new DataTableState();
-const dataTableSelectors = new DataTableSelectors(dataTableState, {
-  get(): ILookupResolver {
-    return {
-      getLookedUpValue(value: ICellValue | undefined): string {
-        return "";
-      }
-    };
-  }
-}, "person");
+const dataTableSelectors = new DataTableSelectors(
+  dataTableState,
+  lookupResolverProvider,
+  "person"
+);
+const dataTableActions = new DataTableActions(
+  dataTableState,
+  dataTableSelectors
+);
 
-const gridSetup = new GridSetup();
-const gridTopology = new GridTopology();
+const onConfigureGridSetup = EventObserver();
+const onConfigureGridTopology = EventObserver();
 const gridState = new GridState();
-const gridSelectors = new GridSelectors(gridState, gridSetup, gridTopology);
-const gridActions = new GridActions(gridState, gridSelectors, gridSetup);
-
+const gridSelectors = new GridSelectors(gridState);
+onConfigureGridSetup(gs => (gridSelectors.setup = gs));
+onConfigureGridTopology(gt => (gridSelectors.topology = gt));
+const gridActions = new GridActions(gridState, gridSelectors);
+onConfigureGridSetup(gs => (gridActions.setup = gs));
 const gridView = new GridView(gridSelectors, gridActions);
 
 const gridInteractionState = new GridInteractionState();
 const gridInteractionSelectors = new GridInteractionSelectors(
-  gridInteractionState,
-  gridTopology
+  gridInteractionState
 );
+onConfigureGridTopology(gt => (gridInteractionSelectors.gridTopology = gt));
 const gridInteractionActions = new GridInteractionActions(
   gridInteractionState,
   gridInteractionSelectors
 );
 const gridCursorView = new GridCursorView(
-  gridTopology,
-  gridSetup,
   gridInteractionSelectors,
   gridSelectors
 );
+onConfigureGridSetup(gs => (gridCursorView.gridSetup = gs));
+onConfigureGridTopology(gt => (gridCursorView.gridTopology = gt));
 const cellScrolling = new CellScrolling(
   gridSelectors,
   gridActions,
-  gridTopology,
-  gridSetup,
   gridInteractionSelectors
 );
+onConfigureGridSetup(gs => (cellScrolling.gridSetup = gs));
+onConfigureGridTopology(gt => (cellScrolling.gridTopology = gt));
 
-const gridConfiguration = new GridConfiguration(gridInteractionSelectors);
+const dataLoadingStrategyState = new DataLoadingStrategyState();
+const dataLoadingStrategySelectors = new DataLoadingStrategySelectors(
+  dataLoadingStrategyState,
+  gridSelectors,
+  dataTableSelectors
+);
+const dataLoadingStrategyActions = new DataLoadingStrategyActions(
+  dataLoadingStrategyState,
+  dataLoadingStrategySelectors,
+  dataTableActions,
+  dataTableSelectors,
+  dataLoader,
+  gridOrderingSelectors,
+  gridOrderingActions,
+  gridOutlineSelectors,
+  gridInteractionActions,
+  gridSelectors,
+  gridActions
+);
+
+const gridSetup = new GridSetup(gridInteractionSelectors, dataTableSelectors);
+const gridTopology = new GridTopology();
+onConfigureGridSetup.trigger(gridSetup);
+onConfigureGridTopology.trigger(gridTopology);
 
 cellScrolling.start();
 
-gridInteractionState.setSelected("3", "2");
+dataLoadingStrategyActions.start();
+dataLoadingStrategyActions.requestLoadFresh();
 
 class App extends React.Component {
   public render() {
@@ -111,8 +164,8 @@ class App extends React.Component {
             {({ width, height }) => (
               <GridComponent
                 view={gridView}
-                configuration={gridConfiguration}
-                ref={gridSetup.refComponent}
+                gridSetup={gridSetup}
+                gridTopology={gridTopology}
                 width={width}
                 height={height}
                 overlayElements={
@@ -131,6 +184,7 @@ class App extends React.Component {
                   />
                 }
                 cellRenderer={createGridCellRenderer({
+                  gridSetup,
                   onClick(event, cellRect, cellInfo) {
                     gridInteractionActions.handleGridCellClick(event, {
                       rowId: gridTopology.getRowIdByIndex(cellInfo.rowIndex),

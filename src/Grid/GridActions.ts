@@ -33,10 +33,11 @@ export class GridActions implements IGridActions {
   constructor(
     public state: IGridState,
     public selectors: IGridSelectors,
-    public setup: IGridSetup
   ) {
     this.repaintScheduler = new AnimationFrameScheduler();
   }
+
+  public setup: IGridSetup;
 
   private repaintScheduler: AnimationFrameScheduler;
   private rePainter: IReactionDisposer | undefined;

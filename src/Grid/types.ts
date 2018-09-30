@@ -1,8 +1,11 @@
+import { ICellValue } from "../DataTable/types";
+
 export type ICellRenderer = (args: ICellRendererArgs) => void;
 
 export interface IGridProps {
   view: IGridView;
-  configuration: IGridConfiguration;
+  gridSetup: IGridSetup;
+  gridTopology: IGridTopology;
   width: number;
   height: number;
   overlayElements: React.ReactNode | React.ReactNode[] | null;
@@ -13,9 +16,6 @@ export interface IGridProps {
   onKeyDown?: ((event: any) => void) | undefined;
 }
 
-export interface IGridConfiguration {
-  isScrollingEnabled: boolean;
-}
 
 export interface IGridView {
   componentDidMount(
@@ -46,6 +46,7 @@ export interface IGridView {
   movingColumnsTotalWidth: number;
   columnHeadersOffsetLeft: number;
   columnCount: number;
+  isScrollingEnabled: boolean;
   getColumnId(columnIndex: number): string;
   getColumnLeft(columnIndex: number): number;
   getColumnRight(columIndex: number): number;
@@ -92,6 +93,7 @@ export interface IGridSelectors {
   rowCount: number;
   fixedColumnCount: number;
   columnHeadersOffsetLeft: number;
+  isScrollingEnabled: boolean;
   elmRoot: HTMLDivElement | null;
   columnCount: number;
   fixedColumnsTotalWidth: number;
@@ -192,7 +194,7 @@ export interface IGridSetup {
   getCellLeft(cellIndex: number): number;
   getCellBottom(cellIndex: number): number;
   getCellRight(cellIndex: number): number;
-  getCellValue(rowIndex: number, columnIndex: number): string;
+  getCellValue(rowIndex: number, columnIndex: number): ICellValue | undefined;
   getColumnLabel(columnIndex: number): string;
   getRowTop(rowIndex: number): number;
   getRowBottom(rowIndex: number): number;

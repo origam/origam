@@ -19,10 +19,11 @@ export class CellScrolling {
   constructor(
     public gridViewSelectors: IGridSelectors,
     public gridViewActions: IGridActions,
-    public gridTopology: IGridTopology,
-    public gridSetup: IGridSetup,
     public gridInteractionSelectors: IGridInteractionSelectors
   ) {}
+
+  public gridTopology: IGridTopology;
+  public gridSetup: IGridSetup;
 
   @computed
   private get isCellSelected() {
