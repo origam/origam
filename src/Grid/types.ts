@@ -89,6 +89,7 @@ export interface IGridSelectors {
   visibleRowsLastIndex: number;
   visibleColumnsFirstIndex: number;
   visibleColumnsLastIndex: number;
+  rowCount: number;
   fixedColumnCount: number;
   columnHeadersOffsetLeft: number;
   elmRoot: HTMLDivElement | null;
@@ -279,7 +280,9 @@ export interface IGridInteractionState {
   setSelectedRow(rowId: string | undefined): void;
 }
 
-export interface IGridInteractionActions {}
+export interface IGridInteractionActions {
+  select(rowId: string, columnId: string): void;
+}
 
 export type T$1 = [number];
 export type T$2 = [number, number];

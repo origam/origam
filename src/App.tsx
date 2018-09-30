@@ -20,6 +20,24 @@ import { AutoSizer } from "react-virtualized";
 import { StringGridEditor } from "./cells/string/GridEditor";
 import { GridEditorMounter } from "./cells/GridEditorMounter";
 import { GridConfiguration } from "./adapters/GridConfiguration";
+import { DataTableState } from "./DataTable/DataTableState";
+import { DataTableSelectors } from "./DataTable/DataTableSelectors";
+import {
+  ILookupResolverProvider,
+  ILookupResolver,
+  ICellValue
+} from "./DataTable/types";
+
+const dataTableState = new DataTableState();
+const dataTableSelectors = new DataTableSelectors(dataTableState, {
+  get(): ILookupResolver {
+    return {
+      getLookedUpValue(value: ICellValue | undefined): string {
+        return "";
+      }
+    };
+  }
+}, "person");
 
 const gridSetup = new GridSetup();
 const gridTopology = new GridTopology();
@@ -125,7 +143,6 @@ class App extends React.Component {
                 onKeyDown={gridInteractionActions.handleGridKeyDown}
                 onOutsideClick={gridInteractionActions.handleGridOutsideClick}
                 onNoCellClick={gridInteractionActions.handleGridNoCellClick}
-                
               />
             )}
           </AutoSizer>

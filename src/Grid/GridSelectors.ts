@@ -1,9 +1,14 @@
 import { computed } from "mobx";
-import { IGridState, IGridSelectors, IGridSetup, IGridTopology, ICellRenderer } from "./types";
+import {
+  IGridState,
+  IGridSelectors,
+  IGridSetup,
+  IGridTopology,
+  ICellRenderer
+} from "./types";
 import { rangeQuery } from "../utils/arrays";
 
 export class GridSelectors implements IGridSelectors {
-  
   constructor(
     public state: IGridState,
     public setup: IGridSetup,
@@ -65,6 +70,11 @@ export class GridSelectors implements IGridSelectors {
       return 0;
     }
     return this.getColumnRight(columnCount - 1) - this.getColumnLeft(0);
+  }
+
+  @computed
+  public get rowCount(): number {
+    return this.setup.rowCount;
   }
 
   @computed
@@ -216,4 +226,3 @@ export class GridSelectors implements IGridSelectors {
     return this.state.onKeyDown;
   }
 }
-
