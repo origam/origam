@@ -1,5 +1,11 @@
 import { observable, action } from "mobx";
-import { IDataTableState, IDataTableField, IDataTableRecord } from "./types";
+import {
+  IDataTableState,
+  IDataTableField,
+  IDataTableRecord,
+  IFieldId,
+  ITableId
+} from "./types";
 
 export class DataTableRecord implements IDataTableRecord {
   @observable.ref
@@ -44,13 +50,35 @@ export class DataTableField implements IDataTableField {
   @observable
   public dataIndex: number;
 
-  constructor(
-    public id: string,
-    label: string,
-    dataIndex: number,
-    public isLookedUp: boolean
-  ) {
-    Object.assign(this, { label, dataIndex });
+  public id: IFieldId;
+
+  public isLookedUp: boolean;
+
+  public lookupResultFieldId: IFieldId;
+
+  constructor({
+    id,
+    label,
+    dataIndex,
+    isLookedUp,
+    lookupResultFieldId,
+    lookupResultTableId
+  }: {
+    id: IFieldId;
+    label: string;
+    dataIndex: number;
+    isLookedUp: boolean;
+    lookupResultFieldId?: IFieldId;
+    lookupResultTableId?: ITableId;
+  }) {
+    Object.assign(this, {
+      id,
+      label,
+      dataIndex,
+      isLookedUp,
+      lookupResultFieldId,
+      lookupResultTableId
+    });
   }
 }
 

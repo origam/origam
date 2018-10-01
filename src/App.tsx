@@ -58,11 +58,38 @@ const dataLoader = new DataLoader("person");
 const dataTableState = new DataTableState();
 
 dataTableState.fields = [
-  new DataTableField("name", "Name", 0, false),
-  new DataTableField("birth_date", "Birth date", 1, false),
-  new DataTableField("likes_platypuses", "Likes platypuses?", 2, false),
-  new DataTableField("city_id", "Lives in", 3, true),
-  new DataTableField("favorite_color", "Favorite color", 4, false)
+  new DataTableField({
+    id: "name",
+    label: "Name",
+    dataIndex: 0,
+    isLookedUp: false
+  }),
+  new DataTableField({
+    id: "birth_date",
+    label: "Birth date",
+    dataIndex: 1,
+    isLookedUp: false
+  }),
+  new DataTableField({
+    id: "likes_platypuses",
+    label: "Likes platypuses?",
+    dataIndex: 2,
+    isLookedUp: false
+  }),
+  new DataTableField({
+    id: "city_id",
+    label: "Lives in",
+    dataIndex: 3,
+    isLookedUp: true,
+    lookupResultFieldId: "name",
+    lookupResultTableId: "city"
+  }),
+  new DataTableField({
+    id: "favorite_color",
+    label: "Favorite color",
+    dataIndex: 4,
+    isLookedUp: false
+  })
 ];
 
 const dataTableSelectors = new DataTableSelectors(

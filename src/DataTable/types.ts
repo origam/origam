@@ -57,6 +57,8 @@ export interface IDataTableField {
   label: string;
   dataIndex: number;
   isLookedUp: boolean;
+  lookupResultFieldId?: IFieldId;
+  lookupResultTableId?: ITableId;
 }
 
 export interface ILookupResolver {
