@@ -17,7 +17,7 @@ export class LookupResolverProvider implements ILookupResolverProvider {
 
   public get(tableId: ITableId, fieldId: IFieldId) {
     return this.cache.get(
-      [fieldId],
+      [tableId, fieldId],
       () => new LookupResolver(this.parentFactory.dataLoader, tableId, fieldId)
     );
   }

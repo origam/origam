@@ -104,9 +104,13 @@ export class DataTableSelectors implements IDataTableSelectors {
       value = this.getResetValue(record, field);
     }
     if (field.isLookedUp) {
-      value = this.lookupResolverProvider
+      /*value = this.lookupResolverProvider
         .get(this.tableId, field.id)
-        .getLookedUpValue(value);
+        .getLookedUpValue(value);*/
+
+      console.log(this.lookupResolverProvider
+        .get(this.tableId, field.id))
+      console.log((this.lookupResolverProvider as any).cache.instances.size)
     }
     return value;
   }

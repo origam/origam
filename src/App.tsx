@@ -5,7 +5,7 @@ import { GridEditorMounter } from "./cells/GridEditorMounter";
 import { StringGridEditor } from "./cells/string/GridEditor";
 import { LookupResolverProvider } from "./DataLoadingStrategy/LookupResolverProvider";
 import { DataTableSelectors } from "./DataTable/DataTableSelectors";
-import { DataTableState } from "./DataTable/DataTableState";
+import { DataTableState, DataTableField } from "./DataTable/DataTableState";
 import { CellScrolling } from "./Grid/CellScrolling";
 import { columnHeaderRenderer } from "./Grid/ColumnHeaderRenderer";
 import { GridActions } from "./Grid/GridActions";
@@ -56,6 +56,15 @@ const gridOutlineActions = new GridOutlineActions(
 const dataLoader = new DataLoader("person");
 
 const dataTableState = new DataTableState();
+
+dataTableState.fields = [
+  new DataTableField("name", "Name", 0, false),
+  new DataTableField("birth_date", "Birth date", 1, false),
+  new DataTableField("likes_platypuses", "Likes platypuses?", 2, false),
+  new DataTableField("city_id", "Lives in", 3, true),
+  new DataTableField("favorite_color", "Favorite color", 4, false)
+];
+
 const dataTableSelectors = new DataTableSelectors(
   dataTableState,
   lookupResolverProvider,

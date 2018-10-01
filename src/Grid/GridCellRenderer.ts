@@ -43,9 +43,9 @@ export function createGridCellRenderer({
   } else {
     text = `Cell ${columnIndex};${rowIndex}`;
   }*/
-    text = gridSetup.getCellValue(rowIndex, columnIndex) || '';
+    text = gridSetup.getCellValue(rowIndex, columnIndex);
     // text = `Cell ${columnIndex};${rowIndex}`;
-    ctx.fillText(text, ...(trcpr(15, 15) as T$2));
+    ctx.fillText(text!, ...(trcpr(15, 15) as T$2));
 
     events.onClick((event: any, cellRect: ICellRect, cellInfo: ICellInfo) => {
       // console.log(cellInfo.rowIndex, cellInfo.columnIndex);
