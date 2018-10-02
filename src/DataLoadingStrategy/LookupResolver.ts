@@ -37,7 +37,12 @@ export class LookupResolver {
           );
           for (const item of result.data.result) {
             self.idsAskedFor.delete(item.id);
+            ids.splice(ids.findIndex(o => o === item.id), 1);
             self.lookupCache.set(item.id, item[self.resultFieldId]);
+          }
+          for(const id of ids) {
+            self.idsAskedFor.delete(id);
+            self.lookupCache.set(id, undefined);
           }
         }
       }.bind(this)
