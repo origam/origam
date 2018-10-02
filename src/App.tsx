@@ -33,6 +33,8 @@ import { GridOutlineSelectors } from "./GridOutline/GridOutlineSelectors";
 import { GridOutlineActions } from "./GridOutline/GridOutlineActions";
 import { GridTopology } from "./GridPanel/adapters/GridTopology";
 import { Observer } from "mobx-react";
+import { GridToolbarView } from "./GridPanel/GridToolbarView";
+import { IFieldType } from "./DataTable/types";
 
 const lookupResolverProvider = new LookupResolverProvider({
   get dataLoader() {
@@ -62,24 +64,28 @@ dataTableState.fields = [
   new DataTableField({
     id: "name",
     label: "Name",
+    type: IFieldType.string,
     dataIndex: 0,
     isLookedUp: false
   }),
   new DataTableField({
     id: "birth_date",
     label: "Birth date",
+    type: IFieldType.date,
     dataIndex: 1,
     isLookedUp: false
   }),
   new DataTableField({
     id: "likes_platypuses",
     label: "Likes platypuses?",
+    type: IFieldType.boolean,
     dataIndex: 2,
     isLookedUp: false
   }),
   new DataTableField({
     id: "city_id",
     label: "Lives in",
+    type: IFieldType.string,
     dataIndex: 3,
     isLookedUp: true,
     lookupResultFieldId: "name",
@@ -88,6 +94,7 @@ dataTableState.fields = [
   new DataTableField({
     id: "favorite_color",
     label: "Favorite color",
+    type: IFieldType.color,
     dataIndex: 4,
     isLookedUp: false
   })
@@ -158,6 +165,15 @@ const dataLoadingStrategyActions = new DataLoadingStrategyActions(
   gridActions
 );
 
+const gridToolbarView = new GridToolbarView(
+  gridInteractionSelectors,
+  gridSelectors,
+  dataTableSelectors,
+  dataTableActions,
+  gridInteractionActions
+);
+onConfigureGridTopology(gt => (gridToolbarView.gridTopology = gt));
+
 const gridSetup = new GridSetup(gridInteractionSelectors, dataTableSelectors);
 const gridTopology = new GridTopology(dataTableSelectors);
 onConfigureGridSetup.trigger(gridSetup);
@@ -182,6 +198,17 @@ class App extends React.Component {
           overflow: "hidden"
         }}
       >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row"
+          }}
+        >
+          <button onClick={gridToolbarView.handleAddRecordClick}>Add</button>
+          <button onClick={gridToolbarView.handleRemoveRecordClick}>
+            Remove
+          </button>
+        </div>
         <div
           style={{
             display: "flex",

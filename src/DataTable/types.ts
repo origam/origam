@@ -17,7 +17,8 @@ export interface IDataTableSelectors {
   lastFullRecord: IDataTableRecord;
   firstFullRecord: IDataTableRecord;
 
-  getFullRecordIndexById(afterId: string): number;
+  newRecord(): IDataTableRecord;
+  getFullRecordIndexById(recordId: string): number;
   getRecordById(recordId: string): IDataTableRecord | undefined;
   getFieldById(fieldId: string): IDataTableField | undefined;
   getRecordByRecordIndex(recordIndex: number): IDataTableRecord | undefined;
@@ -50,7 +51,7 @@ export interface IDataTableActions {
     value: ICellValue
   ): void;
   deleteRecord(record: IDataTableRecord): void;
-  putNewRecord(record: IDataTableRecord): void;
+  putRecord(record: IDataTableRecord, where: {before?: IRecordId, after?: IRecordId}): void;
 }
 
 export interface IDataTableRecord {
@@ -67,9 +68,18 @@ export interface IDataTableRecord {
 
 export type IDataTableField = "ID" | IDataTableFieldStruct;
 
+export enum IFieldType {
+  string = 'string',
+  integer = 'integer',
+  date = 'date',
+  color = 'color',
+  boolean = 'boolean'
+}
+
 export interface IDataTableFieldStruct {
-  id: string;
+  id: IFieldId;
   label: string;
+  type: IFieldType;
   dataIndex: number;
   isLookedUp: boolean;
   lookupResultFieldId?: IFieldId;

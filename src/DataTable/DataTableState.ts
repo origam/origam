@@ -5,7 +5,8 @@ import {
   IDataTableRecord,
   IFieldId,
   ITableId,
-  IDataTableFieldStruct
+  IDataTableFieldStruct,
+  IFieldType
 } from "./types";
 
 export class DataTableRecord implements IDataTableRecord {
@@ -45,6 +46,10 @@ export class DataTableRecord implements IDataTableRecord {
 }
 
 export class DataTableField implements IDataTableFieldStruct {
+  public type: IFieldType;
+  
+  public lookupResultTableId?: string | undefined;
+
   @observable
   public label: string;
 
@@ -60,6 +65,7 @@ export class DataTableField implements IDataTableFieldStruct {
   constructor({
     id,
     label,
+    type,
     dataIndex,
     isLookedUp,
     lookupResultFieldId,
@@ -67,6 +73,7 @@ export class DataTableField implements IDataTableFieldStruct {
   }: {
     id: IFieldId;
     label: string;
+    type: IFieldType;
     dataIndex: number;
     isLookedUp: boolean;
     lookupResultFieldId?: IFieldId;
@@ -75,6 +82,7 @@ export class DataTableField implements IDataTableFieldStruct {
     Object.assign(this, {
       id,
       label,
+      type,
       dataIndex,
       isLookedUp,
       lookupResultFieldId,
@@ -88,5 +96,5 @@ export class DataTableState implements IDataTableState {
   public records: DataTableRecord[] = [];
 
   @observable
-  public fields: DataTableField[] = [];
+  public fields: IDataTableFieldStruct[] = [];
 }

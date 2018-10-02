@@ -5,11 +5,11 @@ import {
   IDataTableRecord,
   IDataTableField,
   IDataTableActions,
-  IDataTableFieldStruct
+  IDataTableFieldStruct,
+  IRecordId
 } from "./types";
 
 export class DataTableActions implements IDataTableActions {
-
   constructor(
     public state: IDataTableState,
     public selectors: IDataTableSelectors
@@ -47,15 +47,30 @@ export class DataTableActions implements IDataTableActions {
   }
 
   @action.bound
-  public setDirtyCellValue(record: IDataTableRecord, field: IDataTableField, value: string): void {
-    if(field === 'ID') {
+  public setDirtyCellValue(
+    record: IDataTableRecord,
+    field: IDataTableField,
+    value: string
+  ): void {
+    if (field === "ID") {
       return;
     }
     record.setDirtyValue(field.id, value);
   }
 
-  public putNewRecord(record: IDataTableRecord): void {
-    throw new Error("Method not implemented.");
+  public putRecord(
+    record: IDataTableRecord,
+    where: { before?: IRecordId; after?: IRecordId }
+  ): void {
+    if(where.before) {
+      const recordIndex = this.selectors.getFullRecordIndexById(where.before);
+      this.state.records.splice(recordIndex, 0, record);
+    } else if (where.after) {
+      const recordIndex = this.selectors.getFullRecordIndexById(where.after);
+      this.state.records.splice(recordIndex + 1, 0, record);
+    } else {
+      this.state.records.push(record);
+    }
   }
 
   @action.bound

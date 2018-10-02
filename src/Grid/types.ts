@@ -291,6 +291,7 @@ export interface IGridInteractionState {
 
 export interface IGridInteractionActions {
   select(rowId: string, columnId: string): void;
+  editSelectedCell(): void;
 }
 
 export type T$1 = [number];

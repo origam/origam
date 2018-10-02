@@ -239,6 +239,8 @@ export class GridInteractionActions implements IGridInteractionActions {
 
   @action.bound
   public editSelectedCell() {
+    debugger
     this.edit(this.selectors.selectedRowId, this.selectors.selectedColumnId);
   }
+
 }

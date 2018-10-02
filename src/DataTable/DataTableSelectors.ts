@@ -1,4 +1,6 @@
 import { computed } from "mobx";
+import * as uuid from "uuid";
+
 import {
   IDataTableState,
   ILookupResolverProvider,
@@ -6,11 +8,12 @@ import {
   IDataTableRecord,
   IDataTableField,
   IDataTableFieldStruct,
-  ICellValue
+  ICellValue,
+  IFieldType
 } from "./types";
+import { DataTableRecord } from "./DataTableState";
 
 export class DataTableSelectors implements IDataTableSelectors {
-
   constructor(
     public state: IDataTableState,
     public lookupResolverProvider: ILookupResolverProvider,
@@ -96,7 +99,10 @@ export class DataTableSelectors implements IDataTableSelectors {
     return record.values[field.dataIndex];
   }
 
-  public getOriginalValue(record: IDataTableRecord, field: IDataTableField): ICellValue | undefined {
+  public getOriginalValue(
+    record: IDataTableRecord,
+    field: IDataTableField
+  ): ICellValue | undefined {
     if (field === "ID") {
       return record.id;
     }
@@ -121,5 +127,29 @@ export class DataTableSelectors implements IDataTableSelectors {
         .getLookedUpValue(value);
     }
     return value;
+  }
+
+  public getDefaultValue(field: IDataTableFieldStruct) {
+    switch (field.type) {
+      case IFieldType.integer:
+        return 0;
+      case IFieldType.string:
+      case IFieldType.color:
+      case IFieldType.date:
+        return "";
+      case IFieldType.boolean:
+        return 0;
+      default: 
+        throw new Error("No field type given.")
+    }
+  }
+
+  public newRecord(): IDataTableRecord {
+    const record = new DataTableRecord(
+      uuid.v4(),
+      this.fields.map(o => this.getDefaultValue(o))
+    );
+    record.dirtyNew = true;
+    return record;
   }
 }
