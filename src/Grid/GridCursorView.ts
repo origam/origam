@@ -6,12 +6,14 @@ import {
   IGridSelectors,
   IGridCursorView
 } from "./types";
+import { IDataTableSelectors } from "../DataTable/types";
 
 export class GridCursorView implements IGridCursorView {
   
   constructor(
     public gridInteractionSelectors: IGridInteractionSelectors,
-    public gridViewSelectors: IGridSelectors
+    public gridViewSelectors: IGridSelectors,
+    public dataTableSelectors: IDataTableSelectors,
   ) {}
 
   public gridTopology: IGridTopology;
@@ -233,11 +235,11 @@ export class GridCursorView implements IGridCursorView {
     return this.gridInteractionSelectors.isCellEditing;
   }
 
-  @computed get editingCellValue(): string | undefined {
+  @computed get editingOriginalCellValue(): string | undefined {
     if(this.isCellEditing) {
-      const fieldIndex = this.gridTopology.getColumnIndexById(this.editingColumnId!);
-      const recordIndex = this.gridTopology.getRowIndexById(this.editingRowId!);
-      return this.gridSetup.getCellValue(recordIndex, fieldIndex);
+      const record = this.dataTableSelectors.getRecordById(this.gridInteractionSelectors.editingRowId!);
+      const field = this.dataTableSelectors.getFieldById(this.gridInteractionSelectors.editingColumnId!);
+      return this.dataTableSelectors.getResetValue(record!, field!);
     } else {
       return;
     } 

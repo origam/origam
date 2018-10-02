@@ -124,7 +124,8 @@ const gridInteractionActions = new GridInteractionActions(
 );
 const gridCursorView = new GridCursorView(
   gridInteractionSelectors,
-  gridSelectors
+  gridSelectors,
+  dataTableSelectors
 );
 onConfigureGridSetup(gs => (gridCursorView.gridSetup = gs));
 onConfigureGridTopology(gt => (gridCursorView.gridTopology = gt));
@@ -160,7 +161,6 @@ const gridSetup = new GridSetup(gridInteractionSelectors, dataTableSelectors);
 const gridTopology = new GridTopology(dataTableSelectors);
 onConfigureGridSetup.trigger(gridSetup);
 onConfigureGridTopology.trigger(gridTopology);
-
 
 // gridOrderingActions.setOrdering('name', 'asc');
 
@@ -217,7 +217,7 @@ class App extends React.Component {
                           <GridEditorMounter cursorView={gridCursorView}>
                             {gridCursorView.isCellEditing && (
                               <StringGridEditor
-                                value={gridCursorView.editingCellValue}
+                                value={gridCursorView.editingOriginalCellValue}
                                 onKeyDown={
                                   gridInteractionActions.handleDumbEditorKeyDown
                                 }

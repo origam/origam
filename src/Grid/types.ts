@@ -254,7 +254,7 @@ export interface IGridCursorView {
   editingColumnId: string | undefined;
   isCellSelected: boolean;
   isCellEditing: boolean;
-  editingCellValue: ICellValue | undefined;
+  editingOriginalCellValue: ICellValue | undefined;
 }
 
 export interface IGridInteractionSelectors {
