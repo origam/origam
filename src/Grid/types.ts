@@ -163,6 +163,7 @@ export interface IGridActions {
   componentDidMount(props: IGridProps): void;
   componentDidUpdate(prevProps: IGridProps, props: IGridProps): void;
   componentWillUnmount(): void;
+  focusRoot(): void;
   refRoot(element: HTMLDivElement): void;
   refScroller(element: HTMLDivElement): void;
   refCanvas(element: HTMLCanvasElement): void;

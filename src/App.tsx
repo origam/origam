@@ -112,6 +112,9 @@ const dataTableActions = new DataTableActions(
 
 const onConfigureGridSetup = EventObserver();
 const onConfigureGridTopology = EventObserver();
+const onStartGrid = EventObserver();
+const onStopGrid = EventObserver();
+
 const gridState = new GridState();
 const gridSelectors = new GridSelectors(gridState);
 onConfigureGridSetup(gs => (gridSelectors.setup = gs));
@@ -127,8 +130,11 @@ const gridInteractionSelectors = new GridInteractionSelectors(
 onConfigureGridTopology(gt => (gridInteractionSelectors.gridTopology = gt));
 const gridInteractionActions = new GridInteractionActions(
   gridInteractionState,
-  gridInteractionSelectors
+  gridInteractionSelectors,
+  gridActions
 );
+onStartGrid(() => gridInteractionActions.start());
+onStopGrid(() => gridInteractionActions.stop());
 const gridCursorView = new GridCursorView(
   gridInteractionSelectors,
   gridSelectors,
@@ -144,6 +150,8 @@ const cellScrolling = new CellScrolling(
 );
 onConfigureGridSetup(gs => (cellScrolling.gridSetup = gs));
 onConfigureGridTopology(gt => (cellScrolling.gridTopology = gt));
+onStartGrid(() => cellScrolling.start());
+onStopGrid(() => cellScrolling.stop());
 
 const dataLoadingStrategyState = new DataLoadingStrategyState();
 const dataLoadingStrategySelectors = new DataLoadingStrategySelectors(
@@ -164,6 +172,8 @@ const dataLoadingStrategyActions = new DataLoadingStrategyActions(
   gridSelectors,
   gridActions
 );
+onStartGrid(() => dataLoadingStrategyActions.start());
+onStopGrid(() => dataLoadingStrategyActions.stop());
 
 const gridToolbarView = new GridToolbarView(
   gridInteractionSelectors,
@@ -178,12 +188,14 @@ const gridSetup = new GridSetup(gridInteractionSelectors, dataTableSelectors);
 const gridTopology = new GridTopology(dataTableSelectors);
 onConfigureGridSetup.trigger(gridSetup);
 onConfigureGridTopology.trigger(gridTopology);
+onStartGrid.trigger();
 
 // gridOrderingActions.setOrdering('name', 'asc');
 
-cellScrolling.start();
 
-dataLoadingStrategyActions.start();
+
+
+
 dataLoadingStrategyActions.requestLoadFresh();
 
 class App extends React.Component {

@@ -30,10 +30,7 @@ class AnimationFrameScheduler {
 }
 
 export class GridActions implements IGridActions {
-  constructor(
-    public state: IGridState,
-    public selectors: IGridSelectors,
-  ) {
+  constructor(public state: IGridState, public selectors: IGridSelectors) {
     this.repaintScheduler = new AnimationFrameScheduler();
   }
 
@@ -368,5 +365,10 @@ export class GridActions implements IGridActions {
   @action.bound
   public scheduleRepaint() {
     this.repaintScheduler.schedule(() => this.repaint());
+  }
+
+  @action.bound
+  public focusRoot(): void {
+    this.state.elmRoot && this.state.elmRoot.focus();
   }
 }

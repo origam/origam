@@ -1,17 +1,20 @@
-import { action, reaction } from "mobx";
+import { action, reaction, IReactionDisposer } from "mobx";
 import { EventObserver } from "../utils/events";
 import { reactionRuntimeInfo } from "../utils/reaction";
 
 import {
   IGridInteractionActions,
   IGridInteractionState,
-  IGridInteractionSelectors
+  IGridInteractionSelectors,
+  IGridActions
 } from "./types";
+import { start } from "repl";
 
 export class GridInteractionActions implements IGridInteractionActions {
   constructor(
     public state: IGridInteractionState,
-    public selectors: IGridInteractionSelectors
+    public selectors: IGridInteractionSelectors,
+    public gridViewActions: IGridActions
   ) {}
 
   // ==============================================================
@@ -43,24 +46,28 @@ export class GridInteractionActions implements IGridInteractionActions {
   private handleDumbEditorKeyDown_Enter(event: any) {
     this.selectOneDown();
     this.editSelectedCell();
+    event.preventDefault();
   }
 
   @action.bound
   private handleDumbEditorKeyDown_ShiftEnter(event: any) {
     this.selectOneUp();
     this.editSelectedCell();
+    event.preventDefault();
   }
 
   @action.bound
   private handleDumbEditorKeyDown_Tab(event: any) {
     this.selectOneRight();
     this.editSelectedCell();
+    event.preventDefault();
   }
 
   @action.bound
   private handleDumbEditorKeyDown_ShiftTab(event: any) {
     this.selectOneLeft();
     this.editSelectedCell();
+    event.preventDefault();
   }
 
   @action.bound
@@ -147,7 +154,7 @@ export class GridInteractionActions implements IGridInteractionActions {
   private handleGridKeyDown_ShiftTab(event: any) {
     this.selectOneLeft();
   }
-  
+
   @action.bound
   private handleGridKeyDown_F2(event: any) {
     this.editSelectedCell();
@@ -157,9 +164,30 @@ export class GridInteractionActions implements IGridInteractionActions {
   // EXECUTIVE
   // ==============================================================
 
+  private reGridRootFocuser: IReactionDisposer;
+
+  @action.bound
+  public start() {
+    this.reGridRootFocuser = reaction(
+      () => this.selectors.isCellEditing,
+      () => {
+        if (!this.selectors.isCellEditing) {
+          setTimeout(() => {
+            this.gridViewActions.focusRoot();
+          }, 10);
+        }
+      }
+    );
+  }
+
+  @action.bound
+  public stop() {
+    this.reGridRootFocuser && this.reGridRootFocuser();
+  }
+
   @action.bound
   public edit(rowId: string | undefined, columnId: string | undefined) {
-    console.log('Edit', rowId, columnId)
+    console.log("Edit", rowId, columnId);
     this.select(rowId, columnId);
     this.state.setEditing(rowId, columnId);
   }
@@ -239,8 +267,6 @@ export class GridInteractionActions implements IGridInteractionActions {
 
   @action.bound
   public editSelectedCell() {
-    debugger
     this.edit(this.selectors.selectedRowId, this.selectors.selectedColumnId);
   }
-
 }
