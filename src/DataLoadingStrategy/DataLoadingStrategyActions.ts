@@ -171,6 +171,7 @@ export class DataLoadingStrategyActions {
   private *loadAfterLastRecordProc() {
     const lastRecord = this.dataTableSelectors.lastFullRecord;
     const addedFilters = [];
+    let addedOrdering = [];
     if (this.gridOrderingSelectors.ordering.length === 0) {
       addedFilters.push(["id", "gt", lastRecord.id]);
     }
@@ -193,12 +194,11 @@ export class DataLoadingStrategyActions {
         ]);
       }
     }
+    addedOrdering = this.gridOrderingSelectors.ordering.filter(o => o[0] !== 'id');
+    addedOrdering.push(['id', 'asc']);
     const apiResult = yield this.dataLoader.loadDataTable({
       limit: 5000,
-      orderBy: this.gridOrderingSelectors.ordering.map(o => [
-        o[0],
-        o[1]
-      ]) as Array<[string, string]>,
+      orderBy: addedOrdering as Array<[string, string]>,
       filter: addedFilters as Array<[string, string, string]> // TODO!!!
     });
     const records = apiResult.data.result.map((record: any) => {
@@ -235,6 +235,7 @@ export class DataLoadingStrategyActions {
   private *loadBeforeFirstRecordProc() {
     const lastRecord = this.dataTableSelectors.firstFullRecord;
     const addedFilters = [];
+    let addedOrdering = [];
     if (this.gridOrderingSelectors.ordering.length === 0) {
       addedFilters.push(["id", "lt", lastRecord.id]);
     }
@@ -257,9 +258,11 @@ export class DataLoadingStrategyActions {
         ]);
       }
     }
+    addedOrdering = this.gridOrderingSelectors.ordering.filter(o => o[0] !== 'id');
+    addedOrdering.push(['id', 'asc']);
     const apiResult = yield this.dataLoader.loadDataTable({
       limit: 5000,
-      orderBy: this.gridOrderingSelectors.ordering
+      orderBy: addedOrdering
         .map(o => [...o])
         .map(o => [o[0], { asc: "desc", desc: "asc" }[o[1]]]) as Array<
         [string, string]
@@ -306,9 +309,12 @@ export class DataLoadingStrategyActions {
   }
 
   private *loadFresh() {
+    const addedOrdering = this.gridOrderingSelectors.ordering
+    .filter(o => o[0] !== 'id');
+    addedOrdering.push(['id', 'asc']);
     const apiResult = yield this.dataLoader.loadDataTable({
       limit: 5000,
-      orderBy: this.gridOrderingSelectors.ordering.map(o => [...o]) as Array<
+      orderBy: addedOrdering as Array<
         [string, string]
       >
     });

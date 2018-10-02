@@ -7,6 +7,7 @@ import {
   ICellRenderer
 } from "./types";
 import { rangeQuery } from "../utils/arrays";
+import { IFieldId } from "../DataTable/types";
 
 export class GridSelectors implements IGridSelectors {
   constructor(public state: IGridState) {}
@@ -64,7 +65,7 @@ export class GridSelectors implements IGridSelectors {
     return this.setup.getColumnWidth(columnIndex);
   }
 
-  public getColumnId(columnIndex: number): string {
+  public getColumnId(columnIndex: number): IFieldId | undefined {
     return this.topology.getColumnIdByIndex(columnIndex);
   }
 

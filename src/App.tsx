@@ -1,6 +1,5 @@
 import * as React from "react";
 import { AutoSizer } from "react-virtualized";
-import { GridTopology } from "./adapters/GridTopology";
 import { GridEditorMounter } from "./cells/GridEditorMounter";
 import { StringGridEditor } from "./cells/string/GridEditor";
 import { LookupResolverProvider } from "./DataLoadingStrategy/LookupResolverProvider";
@@ -32,6 +31,8 @@ import { GridOrderingActions } from "./GridOrdering/GridOrderingActions";
 import { GridOutlineState } from "./GridOutline/GridOutlineState";
 import { GridOutlineSelectors } from "./GridOutline/GridOutlineSelectors";
 import { GridOutlineActions } from "./GridOutline/GridOutlineActions";
+import { GridTopology } from "./GridPanel/adapters/GridTopology";
+import { Observer } from "mobx-react";
 
 const lookupResolverProvider = new LookupResolverProvider({
   get dataLoader() {
@@ -156,9 +157,12 @@ const dataLoadingStrategyActions = new DataLoadingStrategyActions(
 );
 
 const gridSetup = new GridSetup(gridInteractionSelectors, dataTableSelectors);
-const gridTopology = new GridTopology();
+const gridTopology = new GridTopology(dataTableSelectors);
 onConfigureGridSetup.trigger(gridSetup);
 onConfigureGridTopology.trigger(gridTopology);
+
+
+// gridOrderingActions.setOrdering('name', 'asc');
 
 cellScrolling.start();
 
@@ -198,42 +202,52 @@ class App extends React.Component {
         >
           <AutoSizer>
             {({ width, height }) => (
-              <GridComponent
-                view={gridView}
-                gridSetup={gridSetup}
-                gridTopology={gridTopology}
-                width={width}
-                height={height}
-                overlayElements={
-                  <GridCursorComponent
-                    view={gridCursorView}
-                    cursorContent={
-                      <GridEditorMounter cursorView={gridCursorView}>
-                        <StringGridEditor
-                          value="ahoj"
-                          onKeyDown={
-                            gridInteractionActions.handleDumbEditorKeyDown
-                          }
-                        />
-                      </GridEditorMounter>
+              <Observer>
+                {() => (
+                  <GridComponent
+                    view={gridView}
+                    gridSetup={gridSetup}
+                    gridTopology={gridTopology}
+                    width={width}
+                    height={height}
+                    overlayElements={
+                      <GridCursorComponent
+                        view={gridCursorView}
+                        cursorContent={
+                          <GridEditorMounter cursorView={gridCursorView}>
+                            {gridCursorView.isCellEditing && (
+                              <StringGridEditor
+                                value={gridCursorView.editingCellValue}
+                                onKeyDown={
+                                  gridInteractionActions.handleDumbEditorKeyDown
+                                }
+                              />
+                            )}
+                          </GridEditorMounter>
+                        }
+                      />
                     }
+                    cellRenderer={createGridCellRenderer({
+                      gridSetup,
+                      onClick(event, cellRect, cellInfo) {
+                        gridInteractionActions.handleGridCellClick(event, {
+                          rowId: gridTopology.getRowIdByIndex(
+                            cellInfo.rowIndex
+                          )!,
+                          columnId: gridTopology.getColumnIdByIndex(
+                            cellInfo.columnIndex
+                          )!
+                        });
+                      }
+                    })}
+                    onKeyDown={gridInteractionActions.handleGridKeyDown}
+                    onOutsideClick={
+                      gridInteractionActions.handleGridOutsideClick
+                    }
+                    onNoCellClick={gridInteractionActions.handleGridNoCellClick}
                   />
-                }
-                cellRenderer={createGridCellRenderer({
-                  gridSetup,
-                  onClick(event, cellRect, cellInfo) {
-                    gridInteractionActions.handleGridCellClick(event, {
-                      rowId: gridTopology.getRowIdByIndex(cellInfo.rowIndex),
-                      columnId: gridTopology.getColumnIdByIndex(
-                        cellInfo.columnIndex
-                      )
-                    });
-                  }
-                })}
-                onKeyDown={gridInteractionActions.handleGridKeyDown}
-                onOutsideClick={gridInteractionActions.handleGridOutsideClick}
-                onNoCellClick={gridInteractionActions.handleGridNoCellClick}
-              />
+                )}
+              </Observer>
             )}
           </AutoSizer>
         </div>

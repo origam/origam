@@ -93,7 +93,7 @@ export class GridView implements IGridView {;
     return this.selectors.columnCount;
   }
 
-  public getColumnId(columnIndex: number): string {
+  public getColumnId(columnIndex: number): string | undefined {
     return this.selectors.getColumnId(columnIndex);
   }
 

@@ -1,4 +1,4 @@
-import { ICellValue } from "../DataTable/types";
+import { ICellValue, IFieldId, IRecordId } from "../DataTable/types";
 
 export type ICellRenderer = (args: ICellRendererArgs) => void;
 
@@ -47,7 +47,7 @@ export interface IGridView {
   columnHeadersOffsetLeft: number;
   columnCount: number;
   isScrollingEnabled: boolean;
-  getColumnId(columnIndex: number): string;
+  getColumnId(columnIndex: number): IFieldId | undefined;
   getColumnLeft(columnIndex: number): number;
   getColumnRight(columIndex: number): number;
 
@@ -116,7 +116,7 @@ export interface IGridSelectors {
   getColumnLeft(columnIndex: number): number;
   getColumnRight(columIndex: number): number;
   getColumnWidth(columnIndex: number): number;
-  getColumnId(columnIndex: number): string;
+  getColumnId(columnIndex: number): IFieldId | undefined;
 
   onOutsideClick: ((event: any) => void) | undefined;
   onNoCellClick: ((event: any) => void) | undefined;
@@ -206,14 +206,14 @@ export interface IGridSetup {
 }
 
 export interface IGridTopology {
-  getUpRowId(rowId: string): string;
-  getDownRowId(rowId: string): string;
-  getLeftColumnId(columnId: string): string;
-  getRightColumnId(columnId: string): string;
-  getColumnIdByIndex(columnIndex: number): string;
-  getRowIdByIndex(rowIndex: number): string;
-  getColumnIndexById(columnId: string): number;
-  getRowIndexById(rowId: string): number;
+  getUpRowId(rowId: IRecordId): IRecordId | undefined;
+  getDownRowId(rowId: IRecordId): IRecordId | undefined;
+  getLeftColumnId(columnId: IFieldId): IFieldId | undefined;
+  getRightColumnId(columnId: IFieldId): IFieldId | undefined;
+  getColumnIdByIndex(columnIndex: number): IFieldId | undefined;
+  getRowIdByIndex(rowIndex: number): IRecordId | undefined;
+  getColumnIndexById(columnId: IFieldId): number;
+  getRowIndexById(rowId: IRecordId): number;
 }
 
 export interface ICellRect {
@@ -254,20 +254,21 @@ export interface IGridCursorView {
   editingColumnId: string | undefined;
   isCellSelected: boolean;
   isCellEditing: boolean;
+  editingCellValue: ICellValue | undefined;
 }
 
 export interface IGridInteractionSelectors {
-  selectedRowId: string | undefined;
-  selectedColumnId: string | undefined;
-  editingRowId: string | undefined;
-  editingColumnId: string | undefined;
+  selectedRowId: IRecordId | undefined;
+  selectedColumnId: IFieldId | undefined;
+  editingRowId: IRecordId | undefined;
+  editingColumnId: IFieldId | undefined;
   isCellSelected: boolean;
   isCellEditing: boolean;
 
-  getLeftColumnId(columnId: string): string;
-  getRightColumnId(columnId: string): string;
-  getUpRowId(columnId: string): string;
-  getDownRowId(columnId: string): string;
+  getLeftColumnId(columnId: IFieldId): IFieldId | undefined;
+  getRightColumnId(columnId: IFieldId): IFieldId | undefined;
+  getUpRowId(columnId: IRecordId): IRecordId | undefined;
+  getDownRowId(columnId: IRecordId): IRecordId | undefined;
 }
 
 export interface IGridInteractionState {

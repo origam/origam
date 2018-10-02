@@ -8,6 +8,7 @@ import {
 } from "./types";
 
 export class GridCursorView implements IGridCursorView {
+  
   constructor(
     public gridInteractionSelectors: IGridInteractionSelectors,
     public gridViewSelectors: IGridSelectors
@@ -230,5 +231,15 @@ export class GridCursorView implements IGridCursorView {
   @computed
   get isCellEditing(): boolean {
     return this.gridInteractionSelectors.isCellEditing;
+  }
+
+  @computed get editingCellValue(): string | undefined {
+    if(this.isCellEditing) {
+      const fieldIndex = this.gridTopology.getColumnIndexById(this.editingColumnId!);
+      const recordIndex = this.gridTopology.getRowIndexById(this.editingRowId!);
+      return this.gridSetup.getCellValue(recordIndex, fieldIndex);
+    } else {
+      return;
+    } 
   }
 }

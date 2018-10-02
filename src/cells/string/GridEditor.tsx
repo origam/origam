@@ -1,15 +1,17 @@
 import * as React from "react";
 import { action, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
+import { ICellValue } from "../../DataTable/types";
 
 @observer
 export class StringGridEditor extends React.Component<{
-  value: string;
+  value: ICellValue | undefined;
   onKeyDown: ((event: any) => void) | undefined;
 }> {
+  
   public componentDidMount() {
     runInAction(() => {
-      this.dirtyValue = this.props.value;
+      this.dirtyValue = this.props.value !== undefined ? this.props.value : '';
       this.elmInput!.focus();
       setTimeout(() => {
         this.elmInput && this.elmInput.select();

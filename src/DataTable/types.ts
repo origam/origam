@@ -22,6 +22,8 @@ export interface IDataTableSelectors {
   getFieldById(fieldId: string): IDataTableField | undefined | "ID";
   getRecordByRecordIndex(recordIndex: number): IDataTableRecord | undefined;
   getFieldByFieldIndex(fieldIndex: number): IDataTableField | undefined;
+  getRecordIndexById(recordId: IRecordId): number;
+  getFieldIndexById(columnId: IFieldId): number;
   getValue(
     record: IDataTableRecord | undefined,
     field: IDataTableField | undefined
