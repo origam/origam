@@ -28,10 +28,14 @@ export interface IDataTableSelectors {
     record: IDataTableRecord | undefined,
     field: IDataTableField | undefined
   ): ICellValue | undefined;
+  getOriginalValue(
+    record: IDataTableRecord,
+    field: IDataTableField
+  ): ICellValue | undefined;
   getResetValue(
     record: IDataTableRecord,
     field: IDataTableField
-  ): ICellValue;
+  ): ICellValue | undefined;
 }
 
 export interface IDataTableActions {
@@ -40,7 +44,11 @@ export interface IDataTableActions {
   setRecords(records: IDataTableRecord[]): void;
   trimTail(cnt: number): void;
   trimHead(cnt: number): void;
-  setDirtyCellValue(record: IDataTableRecord, field: IDataTableField, value: ICellValue): void;
+  setDirtyCellValue(
+    record: IDataTableRecord,
+    field: IDataTableField,
+    value: ICellValue
+  ): void;
   deleteRecord(record: IDataTableRecord): void;
   putNewRecord(record: IDataTableRecord): void;
 }

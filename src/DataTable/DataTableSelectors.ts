@@ -4,10 +4,13 @@ import {
   ILookupResolverProvider,
   IDataTableSelectors,
   IDataTableRecord,
-  IDataTableField
+  IDataTableField,
+  IDataTableFieldStruct,
+  ICellValue
 } from "./types";
 
 export class DataTableSelectors implements IDataTableSelectors {
+
   constructor(
     public state: IDataTableState,
     public lookupResolverProvider: ILookupResolverProvider,
@@ -93,7 +96,7 @@ export class DataTableSelectors implements IDataTableSelectors {
     return record.values[field.dataIndex];
   }
 
-  public getValue(record: IDataTableRecord, field: IDataTableField) {
+  public getOriginalValue(record: IDataTableRecord, field: IDataTableField): ICellValue | undefined {
     if (field === "ID") {
       return record.id;
     }
@@ -103,6 +106,11 @@ export class DataTableSelectors implements IDataTableSelectors {
     } else {
       value = this.getResetValue(record, field);
     }
+    return value;
+  }
+
+  public getValue(record: IDataTableRecord, field: IDataTableFieldStruct) {
+    let value = this.getOriginalValue(record, field);
     if (
       field.isLookedUp &&
       field.lookupResultTableId &&

@@ -241,7 +241,7 @@ export class GridCursorView implements IGridCursorView {
     if(this.isCellEditing) {
       const record = this.dataTableSelectors.getRecordById(this.gridInteractionSelectors.editingRowId!);
       const field = this.dataTableSelectors.getFieldById(this.gridInteractionSelectors.editingColumnId!);
-      return this.dataTableSelectors.getResetValue(record!, field!);
+      return this.dataTableSelectors.getOriginalValue(record!, field!);
     } else {
       return;
     } 
