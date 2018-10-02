@@ -32,9 +32,10 @@ import { GridOutlineState } from "./GridOutline/GridOutlineState";
 import { GridOutlineSelectors } from "./GridOutline/GridOutlineSelectors";
 import { GridOutlineActions } from "./GridOutline/GridOutlineActions";
 import { GridTopology } from "./GridPanel/adapters/GridTopology";
-import { Observer } from "mobx-react";
+import { Observer, observer } from "mobx-react";
 import { GridToolbarView } from "./GridPanel/GridToolbarView";
 import { IFieldType } from "./DataTable/types";
+import { Splitter } from "./uiParts/Spitter/SplitterComponent";
 
 const lookupResolverProvider = new LookupResolverProvider({
   get dataLoader() {
@@ -192,109 +193,151 @@ onStartGrid.trigger();
 
 // gridOrderingActions.setOrdering('name', 'asc');
 
-
-
-
-
 dataLoadingStrategyActions.requestLoadFresh();
 
+@observer
+class GridPane extends React.Component {
+  public render() {
+    return (
+      <AutoSizer>
+        {({ width: paneWidth, height: paneHeight }) => (
+          <Observer>
+            {() => (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: paneWidth,
+                  height: paneHeight,
+                  overflow: "hidden"
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row"
+                  }}
+                >
+                  <button onClick={gridToolbarView.handleAddRecordClick}>
+                    Add
+                  </button>
+                  <button onClick={gridToolbarView.handleRemoveRecordClick}>
+                    Remove
+                  </button>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column"
+                  }}
+                >
+                  <ColumnHeaders
+                    view={gridView}
+                    columnHeaderRenderer={columnHeaderRenderer}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "100%",
+                    flex: "1 1"
+                  }}
+                >
+                  <AutoSizer>
+                    {({ width, height }) => (
+                      <Observer>
+                        {() => (
+                          <GridComponent
+                            view={gridView}
+                            gridSetup={gridSetup}
+                            gridTopology={gridTopology}
+                            width={width}
+                            height={height}
+                            overlayElements={
+                              <GridCursorComponent
+                                view={gridCursorView}
+                                cursorContent={
+                                  <GridEditorMounter
+                                    cursorView={gridCursorView}
+                                  >
+                                    {gridCursorView.isCellEditing && (
+                                      <StringGridEditor
+                                        editingRecordId={
+                                          gridCursorView.editingRowId!
+                                        }
+                                        editingFieldId={
+                                          gridCursorView.editingColumnId!
+                                        }
+                                        value={
+                                          gridCursorView.editingOriginalCellValue
+                                        }
+                                        onKeyDown={
+                                          gridInteractionActions.handleDumbEditorKeyDown
+                                        }
+                                        onDataCommit={
+                                          gridCursorView.handleDataCommit
+                                        }
+                                      />
+                                    )}
+                                  </GridEditorMounter>
+                                }
+                              />
+                            }
+                            cellRenderer={createGridCellRenderer({
+                              gridSetup,
+                              onClick(event, cellRect, cellInfo) {
+                                gridInteractionActions.handleGridCellClick(
+                                  event,
+                                  {
+                                    rowId: gridTopology.getRowIdByIndex(
+                                      cellInfo.rowIndex
+                                    )!,
+                                    columnId: gridTopology.getColumnIdByIndex(
+                                      cellInfo.columnIndex
+                                    )!
+                                  }
+                                );
+                              }
+                            })}
+                            onKeyDown={gridInteractionActions.handleGridKeyDown}
+                            onOutsideClick={
+                              gridInteractionActions.handleGridOutsideClick
+                            }
+                            onNoCellClick={
+                              gridInteractionActions.handleGridNoCellClick
+                            }
+                          />
+                        )}
+                      </Observer>
+                    )}
+                  </AutoSizer>
+                </div>
+              </div>
+            )}
+          </Observer>
+        )}
+      </AutoSizer>
+    );
+  }
+}
+
+@observer
 class App extends React.Component {
   public render() {
     return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          width: 800,
-          height: 700,
-          overflow: "hidden"
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row"
-          }}
-        >
-          <button onClick={gridToolbarView.handleAddRecordClick}>Add</button>
-          <button onClick={gridToolbarView.handleRemoveRecordClick}>
-            Remove
-          </button>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column"
-          }}
-        >
-          <ColumnHeaders
-            view={gridView}
-            columnHeaderRenderer={columnHeaderRenderer}
-          />
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            height: "100%",
-            flex: "1 1"
-          }}
-        >
-          <AutoSizer>
-            {({ width, height }) => (
-              <Observer>
-                {() => (
-                  <GridComponent
-                    view={gridView}
-                    gridSetup={gridSetup}
-                    gridTopology={gridTopology}
-                    width={width}
-                    height={height}
-                    overlayElements={
-                      <GridCursorComponent
-                        view={gridCursorView}
-                        cursorContent={
-                          <GridEditorMounter cursorView={gridCursorView}>
-                            {gridCursorView.isCellEditing && (
-                              <StringGridEditor
-                                editingRecordId={gridCursorView.editingRowId!}
-                                editingFieldId={gridCursorView.editingColumnId!}
-                                value={gridCursorView.editingOriginalCellValue}
-                                onKeyDown={
-                                  gridInteractionActions.handleDumbEditorKeyDown
-                                }
-                                onDataCommit={gridCursorView.handleDataCommit}
-                              />
-                            )}
-                          </GridEditorMounter>
-                        }
-                      />
-                    }
-                    cellRenderer={createGridCellRenderer({
-                      gridSetup,
-                      onClick(event, cellRect, cellInfo) {
-                        gridInteractionActions.handleGridCellClick(event, {
-                          rowId: gridTopology.getRowIdByIndex(
-                            cellInfo.rowIndex
-                          )!,
-                          columnId: gridTopology.getColumnIdByIndex(
-                            cellInfo.columnIndex
-                          )!
-                        });
-                      }
-                    })}
-                    onKeyDown={gridInteractionActions.handleGridKeyDown}
-                    onOutsideClick={
-                      gridInteractionActions.handleGridOutsideClick
-                    }
-                    onNoCellClick={gridInteractionActions.handleGridNoCellClick}
-                  />
-                )}
-              </Observer>
+      <AutoSizer>
+        {({ width, height }) => (
+          <Observer>
+            {() => (
+              <Splitter width={width} height={height} vertical={false}>
+                <GridPane />
+                <div>Hello</div>
+              </Splitter>
             )}
-          </AutoSizer>
-        </div>
-      </div>
+          </Observer>
+        )}
+      </AutoSizer>
     );
   }
 }
