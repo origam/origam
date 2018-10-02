@@ -125,7 +125,8 @@ const gridInteractionActions = new GridInteractionActions(
 const gridCursorView = new GridCursorView(
   gridInteractionSelectors,
   gridSelectors,
-  dataTableSelectors
+  dataTableSelectors,
+  dataTableActions
 );
 onConfigureGridSetup(gs => (gridCursorView.gridSetup = gs));
 onConfigureGridTopology(gt => (gridCursorView.gridTopology = gt));
@@ -217,10 +218,13 @@ class App extends React.Component {
                           <GridEditorMounter cursorView={gridCursorView}>
                             {gridCursorView.isCellEditing && (
                               <StringGridEditor
+                                editingRecordId={gridCursorView.editingRowId!}
+                                editingFieldId={gridCursorView.editingColumnId!}
                                 value={gridCursorView.editingOriginalCellValue}
                                 onKeyDown={
                                   gridInteractionActions.handleDumbEditorKeyDown
                                 }
+                                onDataCommit={gridCursorView.handleDataCommit}
                               />
                             )}
                           </GridEditorMounter>

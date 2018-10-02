@@ -63,7 +63,7 @@ export class DataTableSelectors implements IDataTableSelectors {
     return this.records[idx];
   }
 
-  public getFieldById(fieldId: string): IDataTableField | undefined | "ID" {
+  public getFieldById(fieldId: string): IDataTableField | undefined {
     if (fieldId === "id") {
       return "ID";
     }
@@ -83,20 +83,20 @@ export class DataTableSelectors implements IDataTableSelectors {
   }
 
   public getFieldIndexById(fieldId: string) {
-    return this.fields.findIndex(o => o.id === fieldId);
+    return this.fields.findIndex(o => (o as any).id === fieldId);
   }
 
-  public getResetValue(
-    record: IDataTableRecord,
-    field: IDataTableField | string
-  ) {
+  public getResetValue(record: IDataTableRecord, field: IDataTableField) {
     if (field === "ID") {
       return record.id;
     }
-    return record.values[(field as IDataTableField).dataIndex];
+    return record.values[field.dataIndex];
   }
 
   public getValue(record: IDataTableRecord, field: IDataTableField) {
+    if (field === "ID") {
+      return record.id;
+    }
     let value;
     if (record.dirtyValues && record.dirtyValues.has(field.id)) {
       value = record.dirtyValues.get(field.id);

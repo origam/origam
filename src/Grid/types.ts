@@ -16,7 +16,6 @@ export interface IGridProps {
   onKeyDown?: ((event: any) => void) | undefined;
 }
 
-
 export interface IGridView {
   componentDidMount(
     props: IGridProps,
@@ -149,7 +148,7 @@ export interface IGridState {
   setRefScroller(element: HTMLDivElement): void;
   setRefCanvas(element: HTMLCanvasElement): void;
   setCanvasContext(context: CanvasRenderingContext2D | null): void;
-  setCellRenderer(cellRenderer: ICellRenderer): void;  
+  setCellRenderer(cellRenderer: ICellRenderer): void;
   setOnOutsideClick(handler: (((event: any) => void)) | undefined): void;
   setOnNoCellClick(handler: (((event: any) => void)) | undefined): void;
   setOnScroll(handler: (((event: any) => void)) | undefined): void;
@@ -237,7 +236,9 @@ export interface IClickSubscription {
   handler(event: any, cellRect: ICellRect, cellInfo: ICellInfo): void;
 }
 
-export type IColumnHeaderRenderer = ({columnIndex}: {columnIndex: number}) => React.ReactNode;
+export type IColumnHeaderRenderer = (
+  { columnIndex }: { columnIndex: number }
+) => React.ReactNode;
 
 export interface IGridCursorView {
   fixedRowCursorDisplayed: boolean;
@@ -255,6 +256,11 @@ export interface IGridCursorView {
   isCellSelected: boolean;
   isCellEditing: boolean;
   editingOriginalCellValue: ICellValue | undefined;
+  handleDataCommit(
+    dirtyValue: ICellValue,
+    editingRecordId: IRecordId,
+    editingFieldId: IFieldId
+  ): void;
 }
 
 export interface IGridInteractionSelectors {

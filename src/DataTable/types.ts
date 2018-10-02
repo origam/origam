@@ -5,7 +5,7 @@ export type ITableId = string;
 
 export interface IDataTableState {
   records: IDataTableRecord[];
-  fields: IDataTableField[];
+  fields: IDataTableFieldStruct[];
 }
 
 export interface IDataTableSelectors {
@@ -19,9 +19,9 @@ export interface IDataTableSelectors {
 
   getFullRecordIndexById(afterId: string): number;
   getRecordById(recordId: string): IDataTableRecord | undefined;
-  getFieldById(fieldId: string): IDataTableField | undefined | "ID";
+  getFieldById(fieldId: string): IDataTableField | undefined;
   getRecordByRecordIndex(recordIndex: number): IDataTableRecord | undefined;
-  getFieldByFieldIndex(fieldIndex: number): IDataTableField | undefined;
+  getFieldByFieldIndex(fieldIndex: number): IDataTableFieldStruct | undefined;
   getRecordIndexById(recordId: IRecordId): number;
   getFieldIndexById(columnId: IFieldId): number;
   getValue(
@@ -30,7 +30,7 @@ export interface IDataTableSelectors {
   ): ICellValue | undefined;
   getResetValue(
     record: IDataTableRecord,
-    field: IDataTableField | "ID"
+    field: IDataTableField
   ): ICellValue;
 }
 
@@ -40,6 +40,9 @@ export interface IDataTableActions {
   setRecords(records: IDataTableRecord[]): void;
   trimTail(cnt: number): void;
   trimHead(cnt: number): void;
+  setDirtyCellValue(record: IDataTableRecord, field: IDataTableField, value: ICellValue): void;
+  deleteRecord(record: IDataTableRecord): void;
+  putNewRecord(record: IDataTableRecord): void;
 }
 
 export interface IDataTableRecord {
@@ -54,7 +57,9 @@ export interface IDataTableRecord {
   setDirtyNew(state: boolean): void;
 }
 
-export interface IDataTableField {
+export type IDataTableField = "ID" | IDataTableFieldStruct;
+
+export interface IDataTableFieldStruct {
   id: string;
   label: string;
   dataIndex: number;

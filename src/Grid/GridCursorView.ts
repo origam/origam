@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, action } from "mobx";
 import {
   IGridTopology,
   IGridSetup,
@@ -6,14 +6,16 @@ import {
   IGridSelectors,
   IGridCursorView
 } from "./types";
-import { IDataTableSelectors } from "../DataTable/types";
+import { IDataTableSelectors, IDataTableActions } from "../DataTable/types";
 
 export class GridCursorView implements IGridCursorView {
+
   
   constructor(
     public gridInteractionSelectors: IGridInteractionSelectors,
     public gridViewSelectors: IGridSelectors,
     public dataTableSelectors: IDataTableSelectors,
+    public dataTableActions: IDataTableActions
   ) {}
 
   public gridTopology: IGridTopology;
@@ -243,5 +245,13 @@ export class GridCursorView implements IGridCursorView {
     } else {
       return;
     } 
+  }
+
+  @action.bound
+  public handleDataCommit(dirtyValue: string, editingRecordId: string, editingFieldId: string): void {
+    console.log('Commit', dirtyValue, editingRecordId, editingFieldId);
+    const record = this.dataTableSelectors.getRecordById(editingRecordId);
+    const field = this.dataTableSelectors.getFieldById(editingFieldId);
+    this.dataTableActions.setDirtyCellValue(record!, field!, dirtyValue);
   }
 }

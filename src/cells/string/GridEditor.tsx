@@ -1,17 +1,23 @@
 import * as React from "react";
 import { action, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import { ICellValue } from "../../DataTable/types";
+import { ICellValue, IRecordId, IFieldId } from "../../DataTable/types";
 
 @observer
 export class StringGridEditor extends React.Component<{
   value: ICellValue | undefined;
-  onKeyDown: ((event: any) => void) | undefined;
+  editingRecordId: IRecordId;
+  editingFieldId: IFieldId;
+  onKeyDown?: (event: any) => void;
+  onDataCommit?: (
+    dirtyValue: ICellValue,
+    editingRecordId: IRecordId,
+    editingFieldId: IFieldId
+  ) => void;
 }> {
-  
   public componentDidMount() {
     runInAction(() => {
-      this.dirtyValue = this.props.value !== undefined ? this.props.value : '';
+      this.dirtyValue = this.props.value !== undefined ? this.props.value : "";
       this.elmInput!.focus();
       setTimeout(() => {
         this.elmInput && this.elmInput.select();
@@ -39,12 +45,18 @@ export class StringGridEditor extends React.Component<{
   public componentWillUnmount() {
     if (this.isDirty && !this.editingCanceled) {
       console.log("Commit data:", this.dirtyValue);
+      this.props.onDataCommit &&
+        this.props.onDataCommit(
+          this.dirtyValue,
+          this.props.editingRecordId,
+          this.props.editingFieldId
+        );
     }
   }
 
   @action.bound
   private handleKeyDown(event: any) {
-    if(event.key === 'Escape') {
+    if (event.key === "Escape") {
       this.editingCanceled = true;
     }
     this.props.onKeyDown && this.props.onKeyDown(event);

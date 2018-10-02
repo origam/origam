@@ -4,7 +4,8 @@ import {
   IDataTableField,
   IDataTableRecord,
   IFieldId,
-  ITableId
+  ITableId,
+  IDataTableFieldStruct
 } from "./types";
 
 export class DataTableRecord implements IDataTableRecord {
@@ -43,7 +44,7 @@ export class DataTableRecord implements IDataTableRecord {
   }
 }
 
-export class DataTableField implements IDataTableField {
+export class DataTableField implements IDataTableFieldStruct {
   @observable
   public label: string;
 

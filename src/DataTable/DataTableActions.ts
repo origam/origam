@@ -4,10 +4,12 @@ import {
   IDataTableSelectors,
   IDataTableRecord,
   IDataTableField,
-  IDataTableActions
+  IDataTableActions,
+  IDataTableFieldStruct
 } from "./types";
 
 export class DataTableActions implements IDataTableActions {
+
   constructor(
     public state: IDataTableState,
     public selectors: IDataTableSelectors
@@ -35,14 +37,25 @@ export class DataTableActions implements IDataTableActions {
   }
 
   @action.bound
-  public deleteRecord(recordId: string) {
-    const recordIndex = this.selectors.getFullRecordIndexById(recordId);
-    const record = this.selectors.fullRecords[recordIndex];
+  public deleteRecord(record: IDataTableRecord) {
+    const recordIndex = this.selectors.getFullRecordIndexById(record.id);
     if (record.dirtyNew) {
       this.state.records.splice(recordIndex, 1);
     } else {
       record.setDirtyDeleted(true);
     }
+  }
+
+  @action.bound
+  public setDirtyCellValue(record: IDataTableRecord, field: IDataTableField, value: string): void {
+    if(field === 'ID') {
+      return;
+    }
+    record.setDirtyValue(field.id, value);
+  }
+
+  public putNewRecord(record: IDataTableRecord): void {
+    throw new Error("Method not implemented.");
   }
 
   @action.bound
@@ -67,7 +80,7 @@ export class DataTableActions implements IDataTableActions {
   }
 
   @action.bound
-  public setFields(fields: IDataTableField[]) {
+  public setFields(fields: IDataTableFieldStruct[]) {
     this.state.fields = fields;
   }
 
