@@ -11,7 +11,9 @@ export interface IDataLoadingStategyState {
   setTailLoadingActive(state: boolean): void;
 }
 
-export interface IDataLoadingStrategyActions {}
+export interface IDataLoadingStrategyActions {
+  requestLoadFresh(): Promise<any>;
+}
 
 export interface IDataLoadingStrategySelectors {
   headLoadingNeeded: boolean;

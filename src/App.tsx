@@ -34,34 +34,13 @@ import { GridOutlineActions } from "./GridOutline/GridOutlineActions";
 import { GridTopology } from "./GridPanel/adapters/GridTopology";
 import { Observer, observer } from "mobx-react";
 import { GridToolbarView } from "./GridPanel/GridToolbarView";
-import { IFieldType } from "./DataTable/types";
-import { Splitter } from "./uiParts/Spitter/SplitterComponent";
+import { IFieldType, IDataTableFieldStruct } from "./DataTable/types";
+import { Splitter } from "./uiParts/Splitter/SplitterComponent";
+import { IGridTopology, IGridSetup } from "./Grid/types";
+import { action } from "mobx";
+import { IGridPanelBacking } from "./GridPanel/types";
 
-const lookupResolverProvider = new LookupResolverProvider({
-  get dataLoader() {
-    return dataLoader;
-  }
-});
-
-const gridOrderingState = new GridOrderingState();
-const gridOrderingSelectors = new GridOrderingSelectors(gridOrderingState);
-const gridOrderingActions = new GridOrderingActions(
-  gridOrderingState,
-  gridOrderingSelectors
-);
-
-const gridOutlineState = new GridOutlineState();
-const gridOutlineSelectors = new GridOutlineSelectors(gridOutlineState);
-const gridOutlineActions = new GridOutlineActions(
-  gridOutlineState,
-  gridOutlineSelectors
-);
-
-const dataLoader = new DataLoader("person");
-
-const dataTableState = new DataTableState();
-
-dataTableState.fields = [
+const personFields = [
   new DataTableField({
     id: "name",
     label: "Name",
@@ -101,103 +80,204 @@ dataTableState.fields = [
   })
 ];
 
-const dataTableSelectors = new DataTableSelectors(
-  dataTableState,
-  lookupResolverProvider,
-  "person"
-);
-const dataTableActions = new DataTableActions(
-  dataTableState,
-  dataTableSelectors
-);
+const cityFields = [
+  new DataTableField({
+    id: "name",
+    label: "Name",
+    type: IFieldType.string,
+    dataIndex: 0,
+    isLookedUp: false
+  }),
+  new DataTableField({
+    id: "inhabitants",
+    label: "Inhabitants",
+    type: IFieldType.integer,
+    dataIndex: 1,
+    isLookedUp: false
+  }),
+]
 
-const onConfigureGridSetup = EventObserver();
-const onConfigureGridTopology = EventObserver();
-const onStartGrid = EventObserver();
-const onStopGrid = EventObserver();
+class GridConfiguration {
+  public gridSetup: IGridSetup;
+  public gridTopology: IGridTopology;
 
-const gridState = new GridState();
-const gridSelectors = new GridSelectors(gridState);
-onConfigureGridSetup(gs => (gridSelectors.setup = gs));
-onConfigureGridTopology(gt => (gridSelectors.topology = gt));
-const gridActions = new GridActions(gridState, gridSelectors);
-onConfigureGridSetup(gs => (gridActions.setup = gs));
-const gridView = new GridView(gridSelectors, gridActions);
+  @action.bound
+  public set(gridSetup: IGridSetup, gridTopology: IGridTopology) {
+    this.gridSetup = gridSetup;
+    this.gridTopology = gridTopology;
+  }
+}
 
-const gridInteractionState = new GridInteractionState();
-const gridInteractionSelectors = new GridInteractionSelectors(
-  gridInteractionState
-);
-onConfigureGridTopology(gt => (gridInteractionSelectors.gridTopology = gt));
-const gridInteractionActions = new GridInteractionActions(
-  gridInteractionState,
-  gridInteractionSelectors,
-  gridActions
-);
-onStartGrid(() => gridInteractionActions.start());
-onStopGrid(() => gridInteractionActions.stop());
-const gridCursorView = new GridCursorView(
-  gridInteractionSelectors,
-  gridSelectors,
-  dataTableSelectors,
-  dataTableActions
-);
-onConfigureGridSetup(gs => (gridCursorView.gridSetup = gs));
-onConfigureGridTopology(gt => (gridCursorView.gridTopology = gt));
-const cellScrolling = new CellScrolling(
-  gridSelectors,
-  gridActions,
-  gridInteractionSelectors
-);
-onConfigureGridSetup(gs => (cellScrolling.gridSetup = gs));
-onConfigureGridTopology(gt => (cellScrolling.gridTopology = gt));
-onStartGrid(() => cellScrolling.start());
-onStopGrid(() => cellScrolling.stop());
+function createGridPaneBacking(
+  dataTableName: string,
+  dataTableFields: IDataTableFieldStruct[]
+) {
+  const configuration = new GridConfiguration();
 
-const dataLoadingStrategyState = new DataLoadingStrategyState();
-const dataLoadingStrategySelectors = new DataLoadingStrategySelectors(
-  dataLoadingStrategyState,
-  gridSelectors,
-  dataTableSelectors
-);
-const dataLoadingStrategyActions = new DataLoadingStrategyActions(
-  dataLoadingStrategyState,
-  dataLoadingStrategySelectors,
-  dataTableActions,
-  dataTableSelectors,
-  dataLoader,
-  gridOrderingSelectors,
-  gridOrderingActions,
-  gridOutlineSelectors,
-  gridInteractionActions,
-  gridSelectors,
-  gridActions
-);
-onStartGrid(() => dataLoadingStrategyActions.start());
-onStopGrid(() => dataLoadingStrategyActions.stop());
+  const lookupResolverProvider = new LookupResolverProvider({
+    get dataLoader() {
+      return dataLoader;
+    }
+  });
 
-const gridToolbarView = new GridToolbarView(
-  gridInteractionSelectors,
-  gridSelectors,
-  dataTableSelectors,
-  dataTableActions,
-  gridInteractionActions
-);
-onConfigureGridTopology(gt => (gridToolbarView.gridTopology = gt));
+  const gridOrderingState = new GridOrderingState();
+  const gridOrderingSelectors = new GridOrderingSelectors(gridOrderingState);
+  const gridOrderingActions = new GridOrderingActions(
+    gridOrderingState,
+    gridOrderingSelectors
+  );
 
-const gridSetup = new GridSetup(gridInteractionSelectors, dataTableSelectors);
-const gridTopology = new GridTopology(dataTableSelectors);
-onConfigureGridSetup.trigger(gridSetup);
-onConfigureGridTopology.trigger(gridTopology);
-onStartGrid.trigger();
+  const gridOutlineState = new GridOutlineState();
+  const gridOutlineSelectors = new GridOutlineSelectors(gridOutlineState);
+  const gridOutlineActions = new GridOutlineActions(
+    gridOutlineState,
+    gridOutlineSelectors
+  );
 
-// gridOrderingActions.setOrdering('name', 'asc');
+  const dataLoader = new DataLoader(dataTableName);
 
-dataLoadingStrategyActions.requestLoadFresh();
+  const dataTableState = new DataTableState();
+
+  dataTableState.fields = dataTableFields;
+
+  const dataTableSelectors = new DataTableSelectors(
+    dataTableState,
+    lookupResolverProvider,
+    dataTableName
+  );
+  const dataTableActions = new DataTableActions(
+    dataTableState,
+    dataTableSelectors
+  );
+
+  const onStartGrid = EventObserver();
+  const onStopGrid = EventObserver();
+
+  const gridState = new GridState();
+  const gridSelectors = new GridSelectors(
+    gridState,
+    configuration,
+    configuration
+  );
+  const gridActions = new GridActions(gridState, gridSelectors, configuration);
+
+  const gridView = new GridView(gridSelectors, gridActions);
+
+  const gridInteractionState = new GridInteractionState();
+  const gridInteractionSelectors = new GridInteractionSelectors(
+    gridInteractionState,
+    configuration
+  );
+  const gridInteractionActions = new GridInteractionActions(
+    gridInteractionState,
+    gridInteractionSelectors,
+    gridActions
+  );
+  onStartGrid(() => gridInteractionActions.start());
+  onStopGrid(() => gridInteractionActions.stop());
+
+  const gridCursorView = new GridCursorView(
+    gridInteractionSelectors,
+    gridSelectors,
+    dataTableSelectors,
+    dataTableActions,
+    configuration,
+    configuration
+  );
+
+  const cellScrolling = new CellScrolling(
+    gridSelectors,
+    gridActions,
+    gridInteractionSelectors,
+    configuration,
+    configuration
+  );
+  onStartGrid(() => cellScrolling.start());
+  onStopGrid(() => cellScrolling.stop());
+
+  const dataLoadingStrategyState = new DataLoadingStrategyState();
+  const dataLoadingStrategySelectors = new DataLoadingStrategySelectors(
+    dataLoadingStrategyState,
+    gridSelectors,
+    dataTableSelectors
+  );
+  const dataLoadingStrategyActions = new DataLoadingStrategyActions(
+    dataLoadingStrategyState,
+    dataLoadingStrategySelectors,
+    dataTableActions,
+    dataTableSelectors,
+    dataLoader,
+    gridOrderingSelectors,
+    gridOrderingActions,
+    gridOutlineSelectors,
+    gridInteractionActions,
+    gridSelectors,
+    gridActions
+  );
+  onStartGrid(() => dataLoadingStrategyActions.start());
+  onStopGrid(() => dataLoadingStrategyActions.stop());
+
+  const gridToolbarView = new GridToolbarView(
+    gridInteractionSelectors,
+    gridSelectors,
+    dataTableSelectors,
+    dataTableActions,
+    gridInteractionActions,
+    configuration
+  );
+
+  const gridSetup = new GridSetup(gridInteractionSelectors, dataTableSelectors);
+  const gridTopology = new GridTopology(dataTableSelectors);
+
+  configuration.set(gridSetup, gridTopology);
+  /*
+  onStartGrid.trigger();
+
+  // gridOrderingActions.setOrdering('name', 'asc');
+
+  dataLoadingStrategyActions.requestLoadFresh();*/
+  return {
+    gridToolbarView,
+    gridView,
+    gridSetup,
+    gridTopology,
+    gridCursorView,
+    gridInteractionActions,
+    onStartGrid,
+    onStopGrid,
+    dataLoadingStrategyActions
+  };
+}
 
 @observer
-class GridPane extends React.Component {
+class GridPane extends React.Component<{
+  initialDataTableName: string;
+  initialFields: IDataTableFieldStruct[];
+}> {
+  constructor(props: any) {
+    super(props);
+    this.gridPanelBacking = createGridPaneBacking(
+      this.props.initialDataTableName,
+      this.props.initialFields
+    );
+  }
+
+  private gridPanelBacking: IGridPanelBacking;
+
+  public componentDidMount() {
+    this.gridPanelBacking.onStartGrid.trigger();
+    this.gridPanelBacking.dataLoadingStrategyActions.requestLoadFresh();
+  }
+
   public render() {
+    const {
+      gridToolbarView,
+      gridView,
+      gridSetup,
+      gridTopology,
+      gridCursorView,
+      gridInteractionActions
+    } = this.gridPanelBacking;
     return (
       <AutoSizer>
         {({ width: paneWidth, height: paneHeight }) => (
@@ -331,8 +411,14 @@ class App extends React.Component {
           <Observer>
             {() => (
               <Splitter width={width} height={height} vertical={false}>
-                <GridPane />
-                <div>Hello</div>
+                <GridPane
+                  initialDataTableName="city"
+                  initialFields={cityFields}
+                />
+                <GridPane
+                  initialDataTableName="person"
+                  initialFields={personFields}
+                />
               </Splitter>
             )}
           </Observer>
@@ -343,3 +429,24 @@ class App extends React.Component {
 }
 
 export default App;
+/*
+class Splitter extends React.Component<{ width: number; height: number; vertical: boolean; }> {
+  public render() {
+    return (
+      <div
+        style={{
+          display: "flex",
+          width: this.props.width,
+          height: this.props.height,
+          flexDirection: "row"
+        }}
+      >
+        {React.Children.map(this.props.children, (child, index) => (
+          <div key={index} style={{flexGrow: 1}}>{child}</div>
+        ))}
+      </div>
+    );
+  }
+}
+
+*/

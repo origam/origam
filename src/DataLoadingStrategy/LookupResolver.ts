@@ -3,7 +3,11 @@ import * as _ from "lodash";
 import { IDataLoader } from "./types";
 
 export class LookupResolver {
-  constructor(public dataLoader: IDataLoader, public dataTableName: string, public resultFieldId: string) {}
+  constructor(
+    public dataLoader: IDataLoader,
+    public dataTableName: string,
+    public resultFieldId: string
+  ) {}
 
   @observable
   private lookupCache = new Map();
@@ -40,7 +44,7 @@ export class LookupResolver {
             ids.splice(ids.findIndex(o => o === item.id), 1);
             self.lookupCache.set(item.id, item[self.resultFieldId]);
           }
-          for(const id of ids) {
+          for (const id of ids) {
             self.idsAskedFor.delete(id);
             self.lookupCache.set(id, undefined);
           }

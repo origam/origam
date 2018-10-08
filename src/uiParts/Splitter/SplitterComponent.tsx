@@ -2,7 +2,6 @@ import { action, observable } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
 
-
 @observer
 class SplitterHandle extends React.Component<{
   onMouseDown: (event: any) => void;
@@ -83,13 +82,17 @@ class SplitterInternal extends React.Component<ISplitterInternalProps> {
   public handleMovementBaseYTop: number;
   public handleMovementBaseYBottom: number;
 
+  private divRefs: Map<number, HTMLDivElement> = new Map();
+
   public componentDidUpdate(prevProps: ISplitterInternalProps) {
+    /*
     const widthRatio = this.props.width / prevProps.width;
     const heightRatio = this.props.height / prevProps.height;
-    this.recalculateSizes(widthRatio, heightRatio);
+    this.recalculateSizes(widthRatio, heightRatio);*/
   }
 
-  @action.bound public recalculateSizes(widthRatio: number, heightRatio: number) {
+  @action.bound
+  public recalculateSizes(widthRatio: number, heightRatio: number) {
     /*if(isFinite(widthRatio)) {
       const newEntries = [];
       for(let [k, v] of this.sizesHoriz) {
@@ -103,9 +106,8 @@ class SplitterInternal extends React.Component<ISplitterInternalProps> {
         newEntries.push([k, v * heightRatio]);
       }
       this.sizesVert = new Map(newEntries);
-    }  */  
+    }  */
   }
-
 
   @action.bound
   public handleMouseMove(event: any) {
@@ -134,6 +136,27 @@ class SplitterInternal extends React.Component<ISplitterInternalProps> {
   @action.bound
   public handleHandleMouseDown(event: any, cellIndex: number) {
     event.preventDefault();
+
+    if (this.props.vertical) {
+      if (this.sizesVert.get(cellIndex) === undefined) {
+        React.Children.forEach(this.props.children, (child, index) => {
+          const height = parseFloat(
+            window.getComputedStyle(this.divRefs.get(index)!).height!
+          );
+          this.sizesVert.set(index, height);
+        });
+      }
+    } else {
+      if (this.sizesHoriz.get(cellIndex) === undefined) {
+        React.Children.forEach(this.props.children, (child, index) => {
+          const width = parseFloat(
+            window.getComputedStyle(this.divRefs.get(index)!).width!
+          );
+          this.sizesHoriz.set(index, width);
+        });
+      }
+    }
+
     this.draggingCellIndex = cellIndex;
     this.mouseMovementBaseX = event.clientX;
     this.mouseMovementBaseY = event.clientY;
@@ -172,10 +195,10 @@ class SplitterInternal extends React.Component<ISplitterInternalProps> {
     return this.sizesVert.get(i);
   }
 
-
-  
   @action.bound
   public refDiv(elm: HTMLDivElement, i: number) {
+    this.divRefs.set(i, elm);
+    return;
     if (elm && (!this.sizesHoriz.has(i) || !this.sizesVert.has(i))) {
       const width = parseFloat(window.getComputedStyle(elm).width!);
       const height = parseFloat(window.getComputedStyle(elm).height!);

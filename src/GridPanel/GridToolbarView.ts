@@ -14,11 +14,11 @@ export class GridToolbarView implements IGridToolbarView {
     public gridViewSelectors: IGridSelectors,
     public dataTableSelectors: IDataTableSelectors,
     public dataTableActions: IDataTableActions,
-    public gridInteractionActions: IGridInteractionActions
+    public gridInteractionActions: IGridInteractionActions,
+    public gridTopologyProvider: {gridTopology: IGridTopology }
   ) {}
 
-  @observable.ref
-  public gridTopology: IGridTopology;
+  public get gridTopology() { return this.gridTopologyProvider.gridTopology }
 
   @action.bound
   public handleAddRecordClick(event: any) {

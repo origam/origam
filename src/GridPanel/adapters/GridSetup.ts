@@ -19,7 +19,7 @@ export class GridSetup implements IGridSetup {
 
   @computed
   public get fixedColumnCount(): number {
-    return 3;
+    return 0;
   }
 
   @computed

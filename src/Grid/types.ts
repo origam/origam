@@ -2,6 +2,11 @@ import { ICellValue, IFieldId, IRecordId } from "../DataTable/types";
 
 export type ICellRenderer = (args: ICellRendererArgs) => void;
 
+export interface IGridConfiguration {
+  gridSetup: IGridSetup;
+  gridTopology: IGridTopology;
+}
+
 export interface IGridProps {
   view: IGridView;
   gridSetup: IGridSetup;
@@ -293,6 +298,14 @@ export interface IGridInteractionState {
 export interface IGridInteractionActions {
   select(rowId: string, columnId: string): void;
   editSelectedCell(): void;
+  handleDumbEditorKeyDown(event: any): void;
+  handleGridCellClick(
+    event: any,
+    cell: { rowId: string; columnId: string }
+  ): void;
+  handleGridNoCellClick(event: any): void;
+  handleGridOutsideClick(event: any): void;
+  handleGridKeyDown(event: any): void;
 }
 
 export type T$1 = [number];

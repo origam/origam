@@ -15,11 +15,18 @@ export class GridCursorView implements IGridCursorView {
     public gridInteractionSelectors: IGridInteractionSelectors,
     public gridViewSelectors: IGridSelectors,
     public dataTableSelectors: IDataTableSelectors,
-    public dataTableActions: IDataTableActions
+    public dataTableActions: IDataTableActions,
+    public gridSetupProvider: { gridSetup: IGridSetup },
+    public gridTopologyProvider: { gridTopology: IGridTopology },
   ) {}
 
-  public gridTopology: IGridTopology;
-  public gridSetup: IGridSetup;
+  public get gridTopology() {
+    return this.gridTopologyProvider.gridTopology;
+  }
+
+  public get gridSetup() {
+    return this.gridSetupProvider.gridSetup;
+  }
 
   @computed
   get currentRowHeight() {

@@ -10,11 +10,19 @@ import { rangeQuery } from "../utils/arrays";
 import { IFieldId } from "../DataTable/types";
 
 export class GridSelectors implements IGridSelectors {
-  constructor(public state: IGridState) {}
+  constructor(
+    public state: IGridState,
+    public gridSetupProvider: { gridSetup: IGridSetup },
+    public gridTopologyProvider: { gridTopology: IGridTopology }
+  ) {}
 
-  public topology: IGridTopology;
+  public get topology() {
+    return this.gridTopologyProvider.gridTopology;
+  }
 
-  public setup: IGridSetup;
+  public get setup() {
+    return this.gridSetupProvider.gridSetup;
+  }
 
   @computed
   public get width(): number {

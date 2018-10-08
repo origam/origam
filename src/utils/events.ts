@@ -1,6 +1,6 @@
-type ISubscriber = (...args: any[]) => void;
+export type ISubscriber = (...args: any[]) => void;
 
-interface IEventSubscriber {
+export interface IEventSubscriber {
   (fn: ISubscriber): () => {};
   trigger(...args: any[]): void;
 }

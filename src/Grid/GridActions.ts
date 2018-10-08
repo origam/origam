@@ -9,7 +9,8 @@ import {
   T$2,
   T$4,
   T$1,
-  IGridProps
+  IGridProps,
+  IGridConfiguration
 } from "./types";
 import { getElementPosition } from "../utils/elements";
 // import { getElementPosition } from "../utils/elements";
@@ -30,11 +31,17 @@ class AnimationFrameScheduler {
 }
 
 export class GridActions implements IGridActions {
-  constructor(public state: IGridState, public selectors: IGridSelectors) {
+  constructor(
+    public state: IGridState,
+    public selectors: IGridSelectors,
+    public configuration: IGridConfiguration
+  ) {
     this.repaintScheduler = new AnimationFrameScheduler();
   }
 
-  public setup: IGridSetup;
+  public get setup() {
+    return this.configuration.gridSetup;
+  }
 
   private repaintScheduler: AnimationFrameScheduler;
   private rePainter: IReactionDisposer | undefined;

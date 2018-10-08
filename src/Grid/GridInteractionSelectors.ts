@@ -7,9 +7,14 @@ import {
 import { IRecordId, IFieldId } from "../DataTable/types";
 
 export class GridInteractionSelectors implements IGridInteractionSelectors {
-  constructor(public state: IGridInteractionState) {}
+  constructor(
+    public state: IGridInteractionState,
+    public gridTopologyProvider: { gridTopology: IGridTopology }
+  ) {}
 
-  public gridTopology: IGridTopology;
+  public get gridTopology() {
+    return this.gridTopologyProvider.gridTopology;
+  }
 
   // ==============================================================
   // DATA ROUTING
@@ -19,8 +24,7 @@ export class GridInteractionSelectors implements IGridInteractionSelectors {
     return this.gridTopology.getUpRowId(rowId);
   }
 
-  public getDownRowId(rowId: IRecordId
-    ) {
+  public getDownRowId(rowId: IRecordId) {
     return this.gridTopology.getDownRowId(rowId);
   }
 
