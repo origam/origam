@@ -36,9 +36,14 @@ import { Observer, observer } from "mobx-react";
 import { GridToolbarView } from "./GridPanel/GridToolbarView";
 import { IFieldType, IDataTableFieldStruct } from "./DataTable/types";
 import { Splitter } from "./uiParts/Splitter/SplitterComponent";
-import { IGridTopology, IGridSetup } from "./Grid/types";
+import { IGridTopology, IGridSetup, IFormSetup } from "./Grid/types";
 import { action } from "mobx";
 import { IGridPanelBacking } from "./GridPanel/types";
+import {
+  FormComponent,
+  FormFieldPositioner,
+  FormFieldLabel
+} from "./Grid/FormComponent";
 
 const personFields = [
   new DataTableField({
@@ -94,8 +99,8 @@ const cityFields = [
     type: IFieldType.integer,
     dataIndex: 1,
     isLookedUp: false
-  }),
-]
+  })
+];
 
 class GridConfiguration {
   public gridSetup: IGridSetup;
@@ -248,6 +253,64 @@ function createGridPaneBacking(
     dataLoadingStrategyActions
   };
 }
+
+class FormSetup implements IFormSetup {
+  public dimensions = [
+    [200, 30, 100, 20],
+    [200, 60, 100, 20],
+    [200, 90, 100, 20],
+    [200, 120, 100, 20],
+    [200, 150, 100, 20],
+    [450, 30, 100, 20],
+    [450, 60, 100, 20],
+    [450, 90, 100, 20],
+    [450, 120, 100, 20],    
+  ];
+
+  public fieldCount: number = this.dimensions.length;
+  public isScrollingEnabled: boolean = true;
+
+  public getCellTop(fieldIndex: number): number {
+    return this.dimensions[fieldIndex][1];
+  }
+
+  public getCellBottom(fieldIndex: number): number {
+    return this.getCellTop(fieldIndex) + this.getCellHeight(fieldIndex);
+  }
+
+  public getCellLeft(fieldIndex: number): number {
+    return this.dimensions[fieldIndex][0];
+  }
+
+  public getCellRight(fieldIndex: number): number {
+    return this.getCellLeft(fieldIndex) + this.getCellWidth(fieldIndex);
+  }
+
+  public getCellHeight(fieldIndex: number): number {
+    return this.dimensions[fieldIndex][3];
+  }
+
+  public getCellWidth(fieldIndex: number): number {
+    return this.dimensions[fieldIndex][2];
+  }
+
+  public getCellValue(
+    recordIndex: number,
+    fieldIndex: number
+  ): string | undefined {
+    return `Value for ${fieldIndex}`;
+  }
+
+  public getFieldLabel(fieldIndex: number): string {
+    return `Field label ${fieldIndex}`;
+  }
+
+  public getLabelOffset(fieldIndex: number): number {
+    return 100;
+  }
+}
+
+const formSetup = new FormSetup();
 
 @observer
 class GridPane extends React.Component<{
@@ -415,10 +478,47 @@ class App extends React.Component {
                   initialDataTableName="city"
                   initialFields={cityFields}
                 />
-                <GridPane
+                {/*<GridPane
                   initialDataTableName="person"
                   initialFields={personFields}
-                />
+                />*/}
+                <AutoSizer>
+                  {({ width: paneWidth, height: paneHeight }) => (
+                    <Observer>
+                      {() => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: paneWidth,
+                            height: paneHeight,
+                            overflow: "hidden"
+                          }}
+                        >
+                          <FormComponent
+                            fieldCount={formSetup.fieldCount}
+                            cellRenderer={({ fieldIndex }) => (
+                              <>
+                                <FormFieldLabel
+                                  fieldIndex={fieldIndex}
+                                  formSetup={formSetup}
+                                />
+                                <FormFieldPositioner
+                                  fieldIndex={fieldIndex}
+                                  formSetup={formSetup}
+                                >
+                                  <input
+                                    style={{ width: "100%", height: "100%" }}
+                                  />
+                                </FormFieldPositioner>
+                              </>
+                            )}
+                          />
+                        </div>
+                      )}
+                    </Observer>
+                  )}
+                </AutoSizer>
               </Splitter>
             )}
           </Observer>

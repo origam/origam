@@ -221,6 +221,33 @@ export interface IGridTopology {
   getRowIndexById(rowId: IRecordId): number;
 }
 
+export interface IFormSetup {
+  fieldCount: number;
+  isScrollingEnabled: boolean;
+  getCellTop(fieldIndex: number): number;
+  getCellBottom(fieldIndex: number): number;
+  getCellLeft(fieldIndex: number): number;
+  getCellRight(fieldIndex: number): number;
+  getCellHeight(fieldIndex: number): number;
+  getCellWidth(fieldIndex: number): number;
+  getCellValue(recordIndex: number, fieldIndex: number): ICellValue | undefined;
+  getFieldLabel(fieldIndex: number): string;
+  getLabelOffset(fieldIndex: number): number;
+}
+
+export interface IFormTopology {
+  getPrevRecordId(recordId: IRecordId): IRecordId | undefined;
+  getNextRecordId(recordId: IRecordId): IRecordId | undefined;
+  getPrevFieldId(fieldId: IFieldId): IFieldId | undefined;
+  getNextFieldId(fieldId: IFieldId): IFieldId | undefined;
+  getFieldIdByIndex(fieldIndex: number): IFieldId | undefined;
+  getRecordIdByIndex(recordIndex: number): IRecordId | undefined;
+  getFieldIndexById(fieldId: IFieldId): number;
+  getRecordIndexById(recordId: IRecordId): number;
+}
+
+
+
 export interface ICellRect {
   left: number;
   top: number;
@@ -241,6 +268,13 @@ export interface IClickSubscription {
   cellInfo: ICellInfo;
   handler(event: any, cellRect: ICellRect, cellInfo: ICellInfo): void;
 }
+
+export interface IFormCellRendererProps {
+  fieldIndex: number;
+
+}
+
+export type IFormCellRenderer = (props: IFormCellRendererProps) => React.ReactNode;
 
 export type IColumnHeaderRenderer = (
   { columnIndex }: { columnIndex: number }

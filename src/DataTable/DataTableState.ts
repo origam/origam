@@ -46,6 +46,15 @@ export class DataTableRecord implements IDataTableRecord {
 }
 
 export class DataTableField implements IDataTableFieldStruct {
+  @observable
+  public formOrder: number;
+
+  @observable 
+  public gridVisible: boolean;
+  
+  @observable
+  public formVisible: boolean;
+  
   public type: IFieldType;
   
   public lookupResultTableId?: string | undefined;

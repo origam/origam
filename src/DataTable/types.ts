@@ -84,6 +84,9 @@ export interface IDataTableFieldStruct {
   isLookedUp: boolean;
   lookupResultFieldId?: IFieldId;
   lookupResultTableId?: ITableId;
+  formOrder: number;
+  gridVisible: boolean;
+  formVisible: boolean;
 }
 
 export interface ILookupResolver {

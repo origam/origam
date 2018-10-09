@@ -94,3 +94,18 @@ body {
   background-color: #888888;
 }
 
+.form-container {
+  position: relative;
+}
+
+.form-cell-positioner {
+  position: absolute;
+}
+
+.form-cell-label-positioner {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
