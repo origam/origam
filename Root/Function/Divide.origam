@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Function
     dataType="Float"
@@ -13,6 +13,7 @@
       x:id="59b32cc0-d0f7-49a8-a76b-c9177b2b8875"
       x:type="Origam.Schema.EntityModel.FunctionParameter" />
     <FunctionParameter
+      ordinalPosition="1"
       name="Right"
       abstract="false"
       x:id="fbe71ae8-6e68-4f79-a160-deeb9904a61b"

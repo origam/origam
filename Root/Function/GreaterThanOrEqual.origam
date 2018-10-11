@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Function
     dataType="Boolean"
@@ -13,6 +13,7 @@
       x:id="88ef0007-3fc8-4898-b39d-e31d4a20c1b7"
       x:type="Origam.Schema.EntityModel.FunctionParameter" />
     <FunctionParameter
+      ordinalPosition="1"
       name="Right"
       abstract="false"
       x:id="751618a5-8643-41d1-9512-f62e6444b1de"
