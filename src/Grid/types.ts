@@ -247,7 +247,7 @@ export interface IFormTopology {
 }
 
 export interface IFormView {
-  getOriginalFieldValue(fieldIndex: number): ICellValue | undefined;
+  getCellValue(fieldIndex: number): ICellValue | undefined;
   getFieldLabel(fieldIndex: number): string;
 }
 

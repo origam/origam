@@ -1,12 +1,13 @@
 import * as React from "react";
 import { Observer } from "mobx-react";
+import { IGridSetup } from "./types";
 
-export function columnHeaderRenderer({
-  columnIndex
+export function createColumnHeaderRenderer({
+  gridSetup
 }: {
-  columnIndex: number;
-}): React.ReactNode {
-  return (
+  gridSetup: IGridSetup;
+}): (({ columnIndex }: { columnIndex: number }) => React.ReactNode) {
+  return ({ columnIndex }: { columnIndex: number }) => (
     <Observer>
       {() => (
         <React.Fragment>
@@ -21,7 +22,7 @@ export function columnHeaderRenderer({
             }}
             onClick={event => 0}
           >
-            {columnIndex}
+            {gridSetup.getColumnLabel(columnIndex)}
           </div>
         </React.Fragment>
       )}

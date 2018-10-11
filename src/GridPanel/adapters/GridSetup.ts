@@ -66,7 +66,8 @@ export class GridSetup implements IGridSetup {
   }
 
   public getColumnLabel(columnIndex: number): string {
-    return `${columnIndex}`;
+    const field = this.dataTableSelectors.getFieldByFieldIndex(columnIndex);
+    return field ? field.label : `Field ${field}`;
   }
 
   public getRowTop(rowIndex: number): number {

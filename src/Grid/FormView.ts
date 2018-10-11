@@ -1,4 +1,9 @@
-import { IFormView, IGridInteractionSelectors } from "./types";
+import {
+  IFormView,
+  IGridInteractionSelectors,
+  IGridSetup,
+  IFormSetup
+} from "./types";
 import {
   IDataTableSelectors,
   IRecordId,
@@ -7,23 +12,21 @@ import {
 } from "../DataTable/types";
 
 export class FormView implements IFormView {
-
   constructor(
     public dataTableSelectors: IDataTableSelectors,
-    public gridInteractionSelectors: IGridInteractionSelectors
+    public gridInteractionSelectors: IGridInteractionSelectors,
+    public formSetup: IFormSetup
   ) {}
 
-  public getOriginalFieldValue(fieldIndex: number): ICellValue | undefined {
-    if(!this.gridInteractionSelectors.isCellSelected) {
+  public getCellValue(fieldIndex: number): ICellValue | undefined {
+    if (!this.gridInteractionSelectors.isCellSelected) {
       return;
     }
-    const record = this.dataTableSelectors.getRecordById(
+    const recordIndex = this.dataTableSelectors.getRecordIndexById(
       this.gridInteractionSelectors.selectedRowId!
     );
-    const field = this.dataTableSelectors.getFieldByFieldIndex(fieldIndex);
-    return this.dataTableSelectors.getOriginalValue(record!, field!);
+    return this.formSetup.getCellValue(recordIndex, fieldIndex);
   }
-
 
   public getFieldLabel(fieldIndex: number): string {
     const field = this.dataTableSelectors.getFieldByFieldIndex(fieldIndex);

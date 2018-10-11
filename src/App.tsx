@@ -6,7 +6,7 @@ import { LookupResolverProvider } from "./DataLoadingStrategy/LookupResolverProv
 import { DataTableSelectors } from "./DataTable/DataTableSelectors";
 import { DataTableState, DataTableField } from "./DataTable/DataTableState";
 import { CellScrolling } from "./Grid/CellScrolling";
-import { columnHeaderRenderer } from "./Grid/ColumnHeaderRenderer";
+import { createColumnHeaderRenderer } from "./Grid/ColumnHeaderRenderer";
 import { GridActions } from "./Grid/GridActions";
 import { createGridCellRenderer } from "./Grid/GridCellRenderer";
 import { ColumnHeaders, GridComponent } from "./Grid/GridComponent";
@@ -34,7 +34,7 @@ import { GridOutlineActions } from "./GridOutline/GridOutlineActions";
 import { GridTopology } from "./GridPanel/adapters/GridTopology";
 import { Observer, observer } from "mobx-react";
 import { GridToolbarView } from "./GridPanel/GridToolbarView";
-import { IFieldType, IDataTableFieldStruct } from "./DataTable/types";
+import { IFieldType, IDataTableFieldStruct, IDataTableSelectors } from "./DataTable/types";
 import { Splitter } from "./uiParts/Splitter/SplitterComponent";
 import {
   IGridTopology,
@@ -42,7 +42,7 @@ import {
   IFormSetup,
   IGridPaneView
 } from "./Grid/types";
-import { action } from "mobx";
+import { action, computed } from "mobx";
 import { IGridPanelBacking } from "./GridPanel/types";
 import {
   FormComponent,
@@ -248,8 +248,9 @@ function createGridPaneBacking(
 
   dataLoadingStrategyActions.requestLoadFresh();*/
 
-  const formView = new FormView(dataTableSelectors, gridInteractionSelectors);
-  const formSetup = new FormSetup();
+  const formSetup = new FormSetup(dataTableSelectors);
+  const formView = new FormView(dataTableSelectors, gridInteractionSelectors, formSetup);
+  
 
   return {
     gridToolbarView,
@@ -270,20 +271,27 @@ function createGridPaneBacking(
 }
 
 class FormSetup implements IFormSetup {
+  constructor(public dataTableSelectors: IDataTableSelectors) {}
+  
+  public get dimensions() {
+    return [
+      [200, 30, 100, 20],
+      [200, 60, 100, 20],
+      [200, 90, 100, 20],
+      [200, 120, 100, 20],
+      [200, 150, 100, 20],
+      [450, 30, 100, 20],
+      [450, 60, 100, 20],
+      [450, 90, 100, 20],
+      [450, 120, 100, 20]
+    ].slice(0, this.fieldCount);
+  }
 
-  public dimensions = [
-    [200, 30, 100, 20],
-    [200, 60, 100, 20]
-    /*[200, 90, 100, 20],
-    [200, 120, 100, 20],
-    [200, 150, 100, 20],
-    [450, 30, 100, 20],
-    [450, 60, 100, 20],
-    [450, 90, 100, 20],
-    [450, 120, 100, 20]*/
-  ];
+  @computed
+  public get fieldCount(): number {
+    return this.dataTableSelectors.fieldCount;
+  }
 
-  public fieldCount: number = this.dimensions.length;
   public isScrollingEnabled: boolean = true;
 
   public getCellTop(fieldIndex: number): number {
@@ -314,7 +322,13 @@ class FormSetup implements IFormSetup {
     recordIndex: number,
     fieldIndex: number
   ): string | undefined {
-    return `Value for ${fieldIndex}`;
+    const record = this.dataTableSelectors.getRecordByRecordIndex(recordIndex);
+    const field = this.dataTableSelectors.getFieldByFieldIndex(fieldIndex);
+    if (record && field) {
+      return this.dataTableSelectors.getValue(record, field);
+    } else {
+      return
+    }
   }
 
   public getFieldLabel(fieldIndex: number): string {
@@ -400,7 +414,9 @@ class GridPane extends React.Component<{
                   >
                     <ColumnHeaders
                       view={gridView}
-                      columnHeaderRenderer={columnHeaderRenderer}
+                      columnHeaderRenderer={createColumnHeaderRenderer({
+                        gridSetup
+                      })}
                     />
                   </div>
                 )}
@@ -526,7 +542,7 @@ class GridPane extends React.Component<{
                                               width: "100%",
                                               height: "100%"
                                             }}
-                                            value={formView.getOriginalFieldValue(
+                                            value={formView.getCellValue(
                                               fieldIndex
                                             )}
                                             readOnly={true}
@@ -566,10 +582,10 @@ class App extends React.Component {
                   initialDataTableName="city"
                   initialFields={cityFields}
                 />
-                {/*<GridPane
+                <GridPane
                   initialDataTableName="person"
                   initialFields={personFields}
-                />*/}
+                />
               </Splitter>
             )}
           </Observer>
