@@ -36,7 +36,12 @@ import { Observer, observer } from "mobx-react";
 import { GridToolbarView } from "./GridPanel/GridToolbarView";
 import { IFieldType, IDataTableFieldStruct } from "./DataTable/types";
 import { Splitter } from "./uiParts/Splitter/SplitterComponent";
-import { IGridTopology, IGridSetup, IFormSetup } from "./Grid/types";
+import {
+  IGridTopology,
+  IGridSetup,
+  IFormSetup,
+  IGridPaneView
+} from "./Grid/types";
 import { action } from "mobx";
 import { IGridPanelBacking } from "./GridPanel/types";
 import {
@@ -44,6 +49,7 @@ import {
   FormFieldPositioner,
   FormFieldLabel
 } from "./Grid/FormComponent";
+import { FormView } from "./Grid/FormView";
 
 const personFields = [
   new DataTableField({
@@ -241,6 +247,10 @@ function createGridPaneBacking(
   // gridOrderingActions.setOrdering('name', 'asc');
 
   dataLoadingStrategyActions.requestLoadFresh();*/
+
+  const formView = new FormView(dataTableSelectors, gridInteractionSelectors);
+  const formSetup = new FormSetup();
+
   return {
     gridToolbarView,
     gridView,
@@ -248,23 +258,29 @@ function createGridPaneBacking(
     gridTopology,
     gridCursorView,
     gridInteractionActions,
+    gridInteractionSelectors,
     onStartGrid,
     onStopGrid,
-    dataLoadingStrategyActions
+    dataLoadingStrategyActions,
+    dataTableSelectors,
+
+    formView,
+    formSetup
   };
 }
 
 class FormSetup implements IFormSetup {
+
   public dimensions = [
     [200, 30, 100, 20],
-    [200, 60, 100, 20],
-    [200, 90, 100, 20],
+    [200, 60, 100, 20]
+    /*[200, 90, 100, 20],
     [200, 120, 100, 20],
     [200, 150, 100, 20],
     [450, 30, 100, 20],
     [450, 60, 100, 20],
     [450, 90, 100, 20],
-    [450, 120, 100, 20],    
+    [450, 120, 100, 20]*/
   ];
 
   public fieldCount: number = this.dimensions.length;
@@ -310,8 +326,6 @@ class FormSetup implements IFormSetup {
   }
 }
 
-const formSetup = new FormSetup();
-
 @observer
 class GridPane extends React.Component<{
   initialDataTableName: string;
@@ -339,7 +353,10 @@ class GridPane extends React.Component<{
       gridSetup,
       gridTopology,
       gridCursorView,
-      gridInteractionActions
+      gridInteractionActions,
+      gridInteractionSelectors,
+      formView,
+      formSetup
     } = this.gridPanelBacking;
     return (
       <AutoSizer>
@@ -367,24 +384,35 @@ class GridPane extends React.Component<{
                   <button onClick={gridToolbarView.handleRemoveRecordClick}>
                     Remove
                   </button>
+                  <button onClick={gridToolbarView.handleSetGridViewClick}>
+                    Grid
+                  </button>
+                  <button onClick={gridToolbarView.handleSetFormViewClick}>
+                    Form
+                  </button>
                 </div>
+                {gridInteractionSelectors.activeView === IGridPaneView.Grid && (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column"
+                    }}
+                  >
+                    <ColumnHeaders
+                      view={gridView}
+                      columnHeaderRenderer={columnHeaderRenderer}
+                    />
+                  </div>
+                )}
                 <div
                   style={{
-                    display: "flex",
-                    flexDirection: "column"
-                  }}
-                >
-                  <ColumnHeaders
-                    view={gridView}
-                    columnHeaderRenderer={columnHeaderRenderer}
-                  />
-                </div>
-                <div
-                  style={{
-                    display: "flex",
                     flexDirection: "column",
                     height: "100%",
-                    flex: "1 1"
+                    flex: "1 1",
+                    display:
+                      gridInteractionSelectors.activeView === IGridPaneView.Grid
+                        ? "flex"
+                        : "none"
                   }}
                 >
                   <AutoSizer>
@@ -456,6 +484,66 @@ class GridPane extends React.Component<{
                     )}
                   </AutoSizer>
                 </div>
+                {gridInteractionSelectors.activeView === IGridPaneView.Form && (
+                  <div
+                    style={{
+                      flexDirection: "column",
+                      height: "100%",
+                      flex: "1 1",
+                      display: "flex"
+                    }}
+                  >
+                    <AutoSizer>
+                      {({ width, height }) => (
+                        <Observer>
+                          {() => (
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                width,
+                                height,
+                                overflow: "hidden"
+                              }}
+                            >
+                              <FormComponent
+                                fieldCount={formSetup.fieldCount}
+                                cellRenderer={({ fieldIndex }) => (
+                                  <Observer>
+                                    {() => (
+                                      <>
+                                        <FormFieldLabel
+                                          fieldIndex={fieldIndex}
+                                          formSetup={formSetup}
+                                          formView={formView}
+                                        />
+                                        <FormFieldPositioner
+                                          fieldIndex={fieldIndex}
+                                          formSetup={formSetup}
+                                        >
+                                          <input
+                                            style={{
+                                              width: "100%",
+                                              height: "100%"
+                                            }}
+                                            value={formView.getOriginalFieldValue(
+                                              fieldIndex
+                                            )}
+                                            readOnly={true}
+                                          />
+                                        </FormFieldPositioner>
+                                      </>
+                                    )}
+                                  </Observer>
+                                )}
+                              />
+                            </div>
+                          )}
+                        </Observer>
+                      )}
+                    </AutoSizer>
+                  </div>
+                )}
               </div>
             )}
           </Observer>
@@ -482,43 +570,6 @@ class App extends React.Component {
                   initialDataTableName="person"
                   initialFields={personFields}
                 />*/}
-                <AutoSizer>
-                  {({ width: paneWidth, height: paneHeight }) => (
-                    <Observer>
-                      {() => (
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            width: paneWidth,
-                            height: paneHeight,
-                            overflow: "hidden"
-                          }}
-                        >
-                          <FormComponent
-                            fieldCount={formSetup.fieldCount}
-                            cellRenderer={({ fieldIndex }) => (
-                              <>
-                                <FormFieldLabel
-                                  fieldIndex={fieldIndex}
-                                  formSetup={formSetup}
-                                />
-                                <FormFieldPositioner
-                                  fieldIndex={fieldIndex}
-                                  formSetup={formSetup}
-                                >
-                                  <input
-                                    style={{ width: "100%", height: "100%" }}
-                                  />
-                                </FormFieldPositioner>
-                              </>
-                            )}
-                          />
-                        </div>
-                      )}
-                    </Observer>
-                  )}
-                </AutoSizer>
               </Splitter>
             )}
           </Observer>

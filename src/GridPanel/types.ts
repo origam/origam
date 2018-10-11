@@ -3,14 +3,21 @@ import {
   IGridSetup,
   IGridTopology,
   IGridCursorView,
-  IGridInteractionActions
+  IGridInteractionActions,
+  IFormView,
+  IFormSetup,
+  IGridPaneView,
+  IGridInteractionSelectors
 } from "../Grid/types";
 import { IDataLoadingStrategyActions } from "../DataLoadingStrategy/types";
 import { IEventSubscriber } from "../utils/events";
 
 export interface IGridToolbarView {
+  activeView: IGridPaneView;
   handleAddRecordClick(event: any): void;
   handleRemoveRecordClick(event: any): void;
+  handleSetGridViewClick(event: any): void;
+  handleSetFormViewClick(event: any): void;
 }
 
 export interface IGridPanelBacking {
@@ -20,7 +27,11 @@ export interface IGridPanelBacking {
   gridTopology: IGridTopology;
   gridCursorView: IGridCursorView;
   gridInteractionActions: IGridInteractionActions;
+  gridInteractionSelectors: IGridInteractionSelectors;
   onStartGrid: IEventSubscriber;
   onStopGrid: IEventSubscriber;
   dataLoadingStrategyActions: IDataLoadingStrategyActions;
+
+  formView: IFormView;
+  formSetup: IFormSetup;
 }

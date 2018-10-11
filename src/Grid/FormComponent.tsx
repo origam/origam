@@ -1,7 +1,9 @@
 import * as React from "react";
 import { IDataTableFieldStruct } from "../DataTable/types";
-import { IFormCellRenderer, IFormSetup } from "./types";
+import { IFormCellRenderer, IFormSetup, IFormView } from "./types";
+import { observer } from "mobx-react";
 
+@observer
 export class FormComponent extends React.Component<{
   fieldCount: number;
   cellRenderer: IFormCellRenderer;
@@ -16,6 +18,7 @@ export class FormComponent extends React.Component<{
   }
 }
 
+@observer
 export class FormFieldPositioner extends React.Component<{
   formSetup: IFormSetup;
   fieldIndex: number;
@@ -38,12 +41,14 @@ export class FormFieldPositioner extends React.Component<{
   }
 }
 
+@observer
 export class FormFieldLabel extends React.Component<{
   formSetup: IFormSetup;
+  formView: IFormView;
   fieldIndex: number;
 }> {
   public render() {
-    const { formSetup, fieldIndex } = this.props;
+    const { formSetup, fieldIndex, formView } = this.props;
     return (
       <div
         className="form-cell-label-positioner"
@@ -54,7 +59,7 @@ export class FormFieldLabel extends React.Component<{
           height: formSetup.getCellHeight(fieldIndex)
         }}
       >
-        {formSetup.getFieldLabel(fieldIndex)}:
+        {formView.getFieldLabel(fieldIndex)}:
       </div>
     );
   }

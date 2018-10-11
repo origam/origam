@@ -1,10 +1,11 @@
-import { action, observable } from "mobx";
+import { action, observable, computed } from "mobx";
 import { IDataTableActions, IDataTableSelectors } from "../DataTable/types";
 import {
   IGridInteractionSelectors,
   IGridSelectors,
   IGridTopology,
-  IGridInteractionActions
+  IGridInteractionActions,
+  IGridPaneView
 } from "../Grid/types";
 import { IGridToolbarView } from "./types";
 
@@ -15,10 +16,17 @@ export class GridToolbarView implements IGridToolbarView {
     public dataTableSelectors: IDataTableSelectors,
     public dataTableActions: IDataTableActions,
     public gridInteractionActions: IGridInteractionActions,
-    public gridTopologyProvider: {gridTopology: IGridTopology }
+    public gridTopologyProvider: { gridTopology: IGridTopology }
   ) {}
 
-  public get gridTopology() { return this.gridTopologyProvider.gridTopology }
+  public get gridTopology() {
+    return this.gridTopologyProvider.gridTopology;
+  }
+
+  @computed
+  public get activeView() {
+    return this.gridInteractionSelectors.activeView;
+  }
 
   @action.bound
   public handleAddRecordClick(event: any) {
@@ -64,5 +72,15 @@ export class GridToolbarView implements IGridToolbarView {
         this.gridInteractionSelectors.selectedColumnId!
       );
     }
+  }
+
+  @action.bound
+  public handleSetGridViewClick(event: any): void {
+    this.gridInteractionActions.setActiveView(IGridPaneView.Grid);
+  }
+
+  @action.bound
+  public handleSetFormViewClick(event: any): void {
+    this.gridInteractionActions.setActiveView(IGridPaneView.Form);
   }
 }

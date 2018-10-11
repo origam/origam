@@ -1,7 +1,11 @@
 import { observable, action } from "mobx";
-import { IGridInteractionState } from "./types";
+import { IGridInteractionState, IGridPaneView } from "./types";
 
 export class GridInteractionState implements IGridInteractionState {
+
+  @observable
+  public activeView: IGridPaneView = IGridPaneView.Grid;
+
   @observable
   public selectedRowId: string | undefined;
 
@@ -13,6 +17,11 @@ export class GridInteractionState implements IGridInteractionState {
 
   @observable
   public editingColumnId: string | undefined;
+
+  @action.bound
+  public setActiveView(view: IGridPaneView): void {
+    this.activeView = view;
+  }
 
   @action.bound
   public setEditing(rowId: string | undefined, columnId: string | undefined) {

@@ -6,7 +6,8 @@ import {
   IGridInteractionActions,
   IGridInteractionState,
   IGridInteractionSelectors,
-  IGridActions
+  IGridActions,
+  IGridPaneView
 } from "./types";
 import { start } from "repl";
 
@@ -183,6 +184,11 @@ export class GridInteractionActions implements IGridInteractionActions {
   @action.bound
   public stop() {
     this.reGridRootFocuser && this.reGridRootFocuser();
+  }
+
+  @action.bound
+  public setActiveView(view: IGridPaneView): void {
+    this.state.setActiveView(view);
   }
 
   @action.bound

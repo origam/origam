@@ -2,7 +2,8 @@ import { computed } from "mobx";
 import {
   IGridInteractionState,
   IGridTopology,
-  IGridInteractionSelectors
+  IGridInteractionSelectors,
+  IGridPaneView
 } from "./types";
 import { IRecordId, IFieldId } from "../DataTable/types";
 
@@ -14,6 +15,11 @@ export class GridInteractionSelectors implements IGridInteractionSelectors {
 
   public get gridTopology() {
     return this.gridTopologyProvider.gridTopology;
+  }
+
+  @computed
+  public get activeView(): IGridPaneView {
+    return this.state.activeView;
   }
 
   // ==============================================================

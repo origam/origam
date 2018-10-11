@@ -246,7 +246,21 @@ export interface IFormTopology {
   getRecordIndexById(recordId: IRecordId): number;
 }
 
+export interface IFormView {
+  getOriginalFieldValue(fieldIndex: number): ICellValue | undefined;
+  getFieldLabel(fieldIndex: number): string;
+}
 
+export interface IFormCursorView {
+  isCellEditing: boolean;
+  editingFieldId: IFieldId | undefined;
+  editingOriginalCellValue: ICellValue | undefined;
+  handleDataCommit(
+    dirtyValue: ICellValue,
+    editingRecordId: IRecordId,
+    editingFieldId: IFieldId
+  ): void;
+}
 
 export interface ICellRect {
   left: number;
@@ -271,10 +285,11 @@ export interface IClickSubscription {
 
 export interface IFormCellRendererProps {
   fieldIndex: number;
-
 }
 
-export type IFormCellRenderer = (props: IFormCellRendererProps) => React.ReactNode;
+export type IFormCellRenderer = (
+  props: IFormCellRendererProps
+) => React.ReactNode;
 
 export type IColumnHeaderRenderer = (
   { columnIndex }: { columnIndex: number }
@@ -303,7 +318,13 @@ export interface IGridCursorView {
   ): void;
 }
 
+export enum IGridPaneView {
+  Grid = "Grid",
+  Form = "Form"
+}
+
 export interface IGridInteractionSelectors {
+  activeView: IGridPaneView;
   selectedRowId: IRecordId | undefined;
   selectedColumnId: IFieldId | undefined;
   editingRowId: IRecordId | undefined;
@@ -318,11 +339,13 @@ export interface IGridInteractionSelectors {
 }
 
 export interface IGridInteractionState {
+  activeView: IGridPaneView;
   selectedRowId: string | undefined;
   selectedColumnId: string | undefined;
   editingRowId: string | undefined;
   editingColumnId: string | undefined;
 
+  setActiveView(view: IGridPaneView): void;
   setEditing(rowId: string | undefined, columnId: string | undefined): void;
   setSelected(rowId: string | undefined, columnId: string | undefined): void;
   setSelectedColumn(columnId: string | undefined): void;
@@ -332,6 +355,7 @@ export interface IGridInteractionState {
 export interface IGridInteractionActions {
   select(rowId: string, columnId: string): void;
   editSelectedCell(): void;
+  setActiveView(view: IGridPaneView): void;
   handleDumbEditorKeyDown(event: any): void;
   handleGridCellClick(
     event: any,
