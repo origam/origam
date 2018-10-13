@@ -34,7 +34,11 @@ import { GridOutlineActions } from "./GridOutline/GridOutlineActions";
 import { GridTopology } from "./GridPanel/adapters/GridTopology";
 import { Observer, observer } from "mobx-react";
 import { GridToolbarView } from "./GridPanel/GridToolbarView";
-import { IFieldType, IDataTableFieldStruct, IDataTableSelectors } from "./DataTable/types";
+import {
+  IFieldType,
+  IDataTableFieldStruct,
+  IDataTableSelectors
+} from "./DataTable/types";
 import { Splitter } from "./uiParts/Splitter/SplitterComponent";
 import {
   IGridTopology,
@@ -182,7 +186,9 @@ function createGridPaneBacking(
   const gridInteractionActions = new GridInteractionActions(
     gridInteractionState,
     gridInteractionSelectors,
-    gridActions
+    gridActions,
+    gridSelectors,
+    configuration
   );
   onStartGrid(() => gridInteractionActions.start());
   onStopGrid(() => gridInteractionActions.stop());
@@ -249,8 +255,11 @@ function createGridPaneBacking(
   dataLoadingStrategyActions.requestLoadFresh();*/
 
   const formSetup = new FormSetup(dataTableSelectors);
-  const formView = new FormView(dataTableSelectors, gridInteractionSelectors, formSetup);
-  
+  const formView = new FormView(
+    dataTableSelectors,
+    gridInteractionSelectors,
+    formSetup
+  );
 
   return {
     gridToolbarView,
@@ -272,7 +281,7 @@ function createGridPaneBacking(
 
 class FormSetup implements IFormSetup {
   constructor(public dataTableSelectors: IDataTableSelectors) {}
-  
+
   public get dimensions() {
     return [
       [200, 30, 100, 20],
@@ -327,7 +336,7 @@ class FormSetup implements IFormSetup {
     if (record && field) {
       return this.dataTableSelectors.getValue(record, field);
     } else {
-      return
+      return;
     }
   }
 
@@ -357,7 +366,11 @@ class GridPane extends React.Component<{
 
   public componentDidMount() {
     this.gridPanelBacking.onStartGrid.trigger();
-    this.gridPanelBacking.dataLoadingStrategyActions.requestLoadFresh();
+    this.gridPanelBacking.dataLoadingStrategyActions
+      .requestLoadFresh()
+      .then(() => {
+        this.gridPanelBacking.gridInteractionActions.selectFirst();
+      });
   }
 
   public render() {
@@ -403,6 +416,12 @@ class GridPane extends React.Component<{
                   </button>
                   <button onClick={gridToolbarView.handleSetFormViewClick}>
                     Form
+                  </button>
+                  <button onClick={gridToolbarView.handlePrevRecordClick}>
+                    Prev
+                  </button>
+                  <button onClick={gridToolbarView.handleNextRecordClick}>
+                    Next
                   </button>
                 </div>
                 {gridInteractionSelectors.activeView === IGridPaneView.Grid && (

@@ -8,6 +8,7 @@ import {
   IGridPaneView
 } from "../Grid/types";
 import { IGridToolbarView } from "./types";
+import { reactionRuntimeInfo } from "../utils/reaction";
 
 export class GridToolbarView implements IGridToolbarView {
   constructor(
@@ -82,5 +83,15 @@ export class GridToolbarView implements IGridToolbarView {
   @action.bound
   public handleSetFormViewClick(event: any): void {
     this.gridInteractionActions.setActiveView(IGridPaneView.Form);
+  }
+
+  @action.bound public handlePrevRecordClick(event: any): void {
+    reactionRuntimeInfo.add("UI", "MOUSE");
+    this.gridInteractionActions.selectOneUp();
+  }
+
+  @action.bound public handleNextRecordClick(event: any): void {
+    reactionRuntimeInfo.add("UI", "MOUSE");
+    this.gridInteractionActions.selectOneDown();
   }
 }

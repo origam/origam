@@ -1,22 +1,29 @@
-import { action, reaction, IReactionDisposer } from "mobx";
+import { action, IReactionDisposer, reaction, computed } from "mobx";
 import { EventObserver } from "../utils/events";
 import { reactionRuntimeInfo } from "../utils/reaction";
-
 import {
-  IGridInteractionActions,
-  IGridInteractionState,
-  IGridInteractionSelectors,
   IGridActions,
-  IGridPaneView
+  IGridConfiguration,
+  IGridInteractionActions,
+  IGridInteractionSelectors,
+  IGridInteractionState,
+  IGridPaneView,
+  IGridSelectors
 } from "./types";
-import { start } from "repl";
 
 export class GridInteractionActions implements IGridInteractionActions {
   constructor(
     public state: IGridInteractionState,
     public selectors: IGridInteractionSelectors,
-    public gridViewActions: IGridActions
+    public gridViewActions: IGridActions,
+    public gridViewSelectors: IGridSelectors,
+    public configuration: IGridConfiguration
   ) {}
+
+  @computed
+  public get gridTopology() {
+    return this.configuration.gridTopology;
+  }
 
   // ==============================================================
   // EVENT OBSERVERS
@@ -204,6 +211,19 @@ export class GridInteractionActions implements IGridInteractionActions {
   }
 
   @action.bound
+  public selectFirst(): void {
+    const columnIndex = this.gridViewSelectors.visibleColumnsFirstIndex;
+    const rowIndex = this.gridViewSelectors.visibleRowsFirstIndex;
+    if (columnIndex === -1 || rowIndex === -1) {
+      return;
+    }
+    this.select(
+      this.gridTopology.getRowIdByIndex(rowIndex),
+      this.gridTopology.getColumnIdByIndex(columnIndex)
+    );
+  }
+
+  @action.bound
   public select(rowId: string | undefined, columnId: string | undefined) {
     this.state.setSelected(rowId, columnId);
   }
@@ -219,7 +239,9 @@ export class GridInteractionActions implements IGridInteractionActions {
       const newColumnId = this.selectors.getLeftColumnId(
         this.selectors.selectedColumnId!
       );
-      this.state.setSelectedColumn(newColumnId);
+      if (newColumnId) {
+        this.state.setSelectedColumn(newColumnId);
+      }
     }
   }
 
@@ -229,25 +251,31 @@ export class GridInteractionActions implements IGridInteractionActions {
       const newColumnId = this.selectors.getRightColumnId(
         this.selectors.selectedColumnId!
       );
-      this.state.setSelectedColumn(newColumnId);
+      if (newColumnId) {
+        this.state.setSelectedColumn(newColumnId);
+      }
     }
   }
 
   @action.bound
-  public selectOneUp() {
+  public selectOneUp(): void {
     if (this.selectors.isCellSelected) {
       const newRowId = this.selectors.getUpRowId(this.selectors.selectedRowId!);
-      this.state.setSelectedRow(newRowId);
+      if (newRowId) {
+        this.state.setSelectedRow(newRowId);
+      }
     }
   }
 
   @action.bound
-  public selectOneDown() {
+  public selectOneDown(): void {
     if (this.selectors.isCellSelected) {
       const newRowId = this.selectors.getDownRowId(
         this.selectors.selectedRowId!
       );
-      this.state.setSelectedRow(newRowId);
+      if (newRowId) {
+        this.state.setSelectedRow(newRowId);
+      }
     }
   }
 

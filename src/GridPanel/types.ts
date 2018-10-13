@@ -18,6 +18,8 @@ export interface IGridToolbarView {
   handleRemoveRecordClick(event: any): void;
   handleSetGridViewClick(event: any): void;
   handleSetFormViewClick(event: any): void;
+  handlePrevRecordClick(event: any): void
+  handleNextRecordClick(event: any): void
 }
 
 export interface IGridPanelBacking {

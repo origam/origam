@@ -354,6 +354,9 @@ export interface IGridInteractionState {
 
 export interface IGridInteractionActions {
   select(rowId: string, columnId: string): void;
+  selectFirst(): void;
+  selectOneUp(): void
+  selectOneDown(): void
   editSelectedCell(): void;
   setActiveView(view: IGridPaneView): void;
   handleDumbEditorKeyDown(event: any): void;
