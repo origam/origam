@@ -8,7 +8,8 @@ import {
   IGridInteractionSelectors,
   IGridInteractionState,
   IGridPaneView,
-  IGridSelectors
+  IGridSelectors,
+  IFormActions
 } from "./types";
 
 export class GridInteractionActions implements IGridInteractionActions {
@@ -17,6 +18,7 @@ export class GridInteractionActions implements IGridInteractionActions {
     public selectors: IGridInteractionSelectors,
     public gridViewActions: IGridActions,
     public gridViewSelectors: IGridSelectors,
+    public formViewActions: IFormActions,
     public configuration: IGridConfiguration
   ) {}
 
@@ -52,15 +54,23 @@ export class GridInteractionActions implements IGridInteractionActions {
 
   @action.bound
   private handleDumbEditorKeyDown_Enter(event: any) {
-    this.selectOneDown();
-    this.editSelectedCell();
+    if (this.selectors.activeView === IGridPaneView.Grid) {
+      this.selectOneDown();
+      this.editSelectedCell();
+    } else if(this.selectors.activeView === IGridPaneView.Form) {
+      this.unedit();
+    }
     event.preventDefault();
   }
 
   @action.bound
   private handleDumbEditorKeyDown_ShiftEnter(event: any) {
-    this.selectOneUp();
-    this.editSelectedCell();
+    if (this.selectors.activeView === IGridPaneView.Grid) {
+      this.selectOneUp();
+      this.editSelectedCell();
+    } else if(this.selectors.activeView === IGridPaneView.Form) {
+      this.unedit();
+    }
     event.preventDefault();
   }
 
@@ -188,7 +198,28 @@ export class GridInteractionActions implements IGridInteractionActions {
 
   @action.bound
   public handleFormKeyDown(event: any): void {
-    throw new Error("Method not implemented.");
+    switch (event.key) {
+      case "Tab":
+        if (event.shiftKey) {
+          this.selectOneLeft();
+        } else {
+          this.selectOneRight();
+        }
+        event.preventDefault();
+        break;
+      case "Enter":
+        if (event.shiftKey) {
+          this.selectOneLeft();
+        } else {
+          this.selectOneRight();
+        }
+        event.preventDefault();
+        break;
+      case "F2":
+        this.editSelectedCell();
+        event.preventDefault();
+        break;
+    }
   }
 
   // ==============================================================
@@ -204,7 +235,11 @@ export class GridInteractionActions implements IGridInteractionActions {
       () => {
         if (!this.selectors.isCellEditing) {
           setTimeout(() => {
-            this.gridViewActions.focusRoot();
+            if (this.selectors.activeView === IGridPaneView.Grid) {
+              this.gridViewActions.focusRoot();
+            } else if (this.selectors.activeView === IGridPaneView.Form) {
+              this.formViewActions.focusRoot();
+            }
           }, 10);
         }
       }

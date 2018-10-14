@@ -59,6 +59,8 @@ import {
 } from "./Grid/FormComponent";
 import { FormView } from "./Grid/FormView";
 import { FormTopology } from "./GridPanel/adapters/FormTopology";
+import { FormState } from "./Grid/FormState";
+import { FormActions } from "./Grid/FormActions";
 
 const personFields = [
   new DataTableField({
@@ -198,11 +200,16 @@ function createGridPaneBacking(
     configuration,
     configuration
   );
+
+  const formState = new FormState();
+  const formActions = new FormActions(formState);
+
   const gridInteractionActions = new GridInteractionActions(
     gridInteractionState,
     gridInteractionSelectors,
     gridActions,
     gridSelectors,
+    formActions,
     configuration
   );
   onStartGrid(() => gridInteractionActions.start());
@@ -261,13 +268,14 @@ function createGridPaneBacking(
   const gridSetup = new GridSetup(gridInteractionSelectors, dataTableSelectors);
   const gridTopology = new GridTopology(dataTableSelectors);
 
-  
   /*
   onStartGrid.trigger();
 
   // gridOrderingActions.setOrdering('name', 'asc');
 
   dataLoadingStrategyActions.requestLoadFresh();*/
+
+
 
   const formSetup = new FormSetup(dataTableSelectors);
   const formView = new FormView(
@@ -279,7 +287,7 @@ function createGridPaneBacking(
   const formTopology = new FormTopology(gridTopology);
 
   configuration.set(gridSetup, gridTopology, formSetup, formTopology);
-  
+
   return {
     gridToolbarView,
     gridView,
@@ -295,7 +303,8 @@ function createGridPaneBacking(
 
     formView,
     formSetup,
-    formTopology
+    formTopology,
+    formActions
   };
 }
 
@@ -404,7 +413,8 @@ class GridPane extends React.Component<{
       gridInteractionSelectors,
       formView,
       formSetup,
-      formTopology
+      formTopology,
+      formActions
     } = this.gridPanelBacking;
     return (
       <AutoSizer>
@@ -567,6 +577,10 @@ class GridPane extends React.Component<{
                             >
                               <FormComponent
                                 fieldCount={formSetup.fieldCount}
+                                onKeyDown={
+                                  gridInteractionActions.handleFormKeyDown
+                                }
+                                formActions={formActions}
                                 overlayElements={
                                   <FormCursorComponent
                                     formSetup={formSetup}

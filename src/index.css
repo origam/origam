@@ -5,6 +5,10 @@ body,
   overflow: hidden;
 }
 
+div:focus{
+  outline: none;
+}
+
 body {
   margin: 0;
   padding: 0;

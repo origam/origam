@@ -25,19 +25,20 @@ export class GridTopology implements IGridTopology {
 
   public getLeftColumnId(columnId: IFieldId) {
     const columnIndex = this.dataTableSelectors.getFieldIndexById(columnId);
-    if(columnIndex === undefined) {
+    const newColumnId = this.getColumnIdByIndex(columnIndex - 1);
+    if(newColumnId === undefined ) {
       return;
     }
-    const newColumnId = this.getColumnIdByIndex(columnIndex - 1);
     return newColumnId;
   }
 
   public getRightColumnId(columnId: IFieldId) {
     const columnIndex = this.dataTableSelectors.getFieldIndexById(columnId);
-    if(columnIndex === undefined) {
+    const newColumnId = this.getColumnIdByIndex(columnIndex + 1);
+    console.log(newColumnId)
+    if(newColumnId === undefined ) {
       return;
     }
-    const newColumnId = this.getColumnIdByIndex(columnIndex + 1);
     return newColumnId;
   }
 

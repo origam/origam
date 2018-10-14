@@ -8,7 +8,8 @@ import {
   IFormSetup,
   IGridPaneView,
   IGridInteractionSelectors,
-  IFormTopology
+  IFormTopology,
+  IFormActions
 } from "../Grid/types";
 import { IDataLoadingStrategyActions } from "../DataLoadingStrategy/types";
 import { IEventSubscriber } from "../utils/events";
@@ -38,4 +39,5 @@ export interface IGridPanelBacking {
   formView: IFormView;
   formSetup: IFormSetup;
   formTopology: IFormTopology;
+  formActions: IFormActions;
 }

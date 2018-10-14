@@ -77,6 +77,9 @@ export class DataTableSelectors implements IDataTableSelectors {
   }
 
   public getFieldByFieldIndex(idx: number) {
+    if (idx >= this.fields.length || idx < 0) {
+      return;
+    }
     return this.fields[idx];
   }
 
@@ -139,8 +142,8 @@ export class DataTableSelectors implements IDataTableSelectors {
         return "";
       case IFieldType.boolean:
         return 0;
-      default: 
-        throw new Error("No field type given.")
+      default:
+        throw new Error("No field type given.");
     }
   }
 

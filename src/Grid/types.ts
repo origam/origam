@@ -372,6 +372,20 @@ export interface IGridInteractionActions {
   handleFormKeyDown(event: any): void;
 }
 
+export interface IFormState {
+  elmRoot: HTMLDivElement | null;
+  setRefRoot(element: HTMLDivElement): void;
+}
+
+export interface IFormSelectors {
+  elmRoot: HTMLDivElement | null;
+}
+
+export interface IFormActions {
+  focusRoot(): void;
+  refRoot(element: HTMLDivElement): void;
+}
+
 export type T$1 = [number];
 export type T$2 = [number, number];
 export type T$3 = [number, number, number];

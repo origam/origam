@@ -4,7 +4,8 @@ import {
   IFormCellRenderer,
   IFormSetup,
   IFormView,
-  IFormTopology
+  IFormTopology,
+  IFormActions
 } from "./types";
 import { observer } from "mobx-react";
 
@@ -12,16 +13,28 @@ import { observer } from "mobx-react";
 export class FormComponent extends React.Component<{
   fieldCount: number;
   cellRenderer: IFormCellRenderer;
+  formActions: IFormActions;
   overlayElements: React.ReactNode | React.ReactNode[] | null;
+  onKeyDown?: (event: any) => void;
 }> {
   public render() {
-    const { fieldCount, cellRenderer, overlayElements } = this.props;
+    const {
+      fieldCount,
+      cellRenderer,
+      overlayElements,
+      formActions
+    } = this.props;
     const fields = [];
     for (let i = 0; i < fieldCount; i++) {
       fields.push(cellRenderer({ fieldIndex: i }));
     }
     return (
-      <div className="form-container">
+      <div
+        className="form-container"
+        onKeyDown={this.props.onKeyDown}
+        ref={formActions.refRoot}
+        tabIndex={-1}
+      >
         {fields}
         {overlayElements}
       </div>
