@@ -107,19 +107,23 @@ export class GridInteractionActions implements IGridInteractionActions {
 
   @action.bound
   public handleGridOutsideClick(event: any) {
-    this.unedit();
+    if (this.selectors.activeView === IGridPaneView.Grid) {
+      this.unedit();
+    }
     // this.unselect();
   }
 
   @action.bound
   public handleGridKeyDown(event: any) {
-    reactionRuntimeInfo.add("UI", "KEYBOARD");
-    const shift = event.shiftKey ? "Shift" : "";
-    const methodName = `handleGridKeyDown_${shift}${event.key}`;
-    const method = this[methodName];
-    if (method) {
-      method(event);
-      event.preventDefault();
+    if (this.selectors.activeView === IGridPaneView.Grid) {
+      reactionRuntimeInfo.add("UI", "KEYBOARD");
+      const shift = event.shiftKey ? "Shift" : "";
+      const methodName = `handleGridKeyDown_${shift}${event.key}`;
+      const method = this[methodName];
+      if (method) {
+        method(event);
+        event.preventDefault();
+      }
     }
   }
 
@@ -166,6 +170,25 @@ export class GridInteractionActions implements IGridInteractionActions {
   @action.bound
   private handleGridKeyDown_F2(event: any) {
     this.editSelectedCell();
+  }
+
+  @action.bound
+  public handleFormFieldClick(event: any, field: { fieldId: string }): void {
+    reactionRuntimeInfo.add("UI", "MOUSE");
+    console.log(field, this.selectors.selectedColumnId);
+    if (
+      (this.selectors.isCellSelected &&
+        field.fieldId === this.selectors.selectedColumnId) ||
+      this.selectors.isCellEditing
+    ) {
+      this.edit(this.selectors.selectedRowId, field.fieldId);
+    }
+    this.select(this.selectors.selectedRowId, field.fieldId);
+  }
+
+  @action.bound
+  public handleFormKeyDown(event: any): void {
+    throw new Error("Method not implemented.");
   }
 
   // ==============================================================

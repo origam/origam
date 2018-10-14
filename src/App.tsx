@@ -37,14 +37,18 @@ import { GridToolbarView } from "./GridPanel/GridToolbarView";
 import {
   IFieldType,
   IDataTableFieldStruct,
-  IDataTableSelectors
+  IDataTableSelectors,
+  ICellValue
 } from "./DataTable/types";
 import { Splitter } from "./uiParts/Splitter/SplitterComponent";
 import {
   IGridTopology,
   IGridSetup,
   IFormSetup,
-  IGridPaneView
+  IGridPaneView,
+  IFormTopology,
+  IGridInteractionSelectors,
+  IGridInteractionActions
 } from "./Grid/types";
 import { action, computed } from "mobx";
 import { IGridPanelBacking } from "./GridPanel/types";
@@ -54,6 +58,7 @@ import {
   FormFieldLabel
 } from "./Grid/FormComponent";
 import { FormView } from "./Grid/FormView";
+import { FormTopology } from "./GridPanel/adapters/FormTopology";
 
 const personFields = [
   new DataTableField({
@@ -115,11 +120,20 @@ const cityFields = [
 class GridConfiguration {
   public gridSetup: IGridSetup;
   public gridTopology: IGridTopology;
+  public formSetup: IFormSetup;
+  public formTopology: IFormTopology;
 
   @action.bound
-  public set(gridSetup: IGridSetup, gridTopology: IGridTopology) {
+  public set(
+    gridSetup: IGridSetup,
+    gridTopology: IGridTopology,
+    formSetup: IFormSetup,
+    formTopology: IFormTopology
+  ) {
     this.gridSetup = gridSetup;
     this.gridTopology = gridTopology;
+    this.formSetup = formSetup;
+    this.formTopology = formTopology;
   }
 }
 
@@ -181,6 +195,7 @@ function createGridPaneBacking(
   const gridInteractionState = new GridInteractionState();
   const gridInteractionSelectors = new GridInteractionSelectors(
     gridInteractionState,
+    configuration,
     configuration
   );
   const gridInteractionActions = new GridInteractionActions(
@@ -246,7 +261,7 @@ function createGridPaneBacking(
   const gridSetup = new GridSetup(gridInteractionSelectors, dataTableSelectors);
   const gridTopology = new GridTopology(dataTableSelectors);
 
-  configuration.set(gridSetup, gridTopology);
+  
   /*
   onStartGrid.trigger();
 
@@ -261,6 +276,10 @@ function createGridPaneBacking(
     formSetup
   );
 
+  const formTopology = new FormTopology(gridTopology);
+
+  configuration.set(gridSetup, gridTopology, formSetup, formTopology);
+  
   return {
     gridToolbarView,
     gridView,
@@ -275,7 +294,8 @@ function createGridPaneBacking(
     dataTableSelectors,
 
     formView,
-    formSetup
+    formSetup,
+    formTopology
   };
 }
 
@@ -383,7 +403,8 @@ class GridPane extends React.Component<{
       gridInteractionActions,
       gridInteractionSelectors,
       formView,
-      formSetup
+      formSetup,
+      formTopology
     } = this.gridPanelBacking;
     return (
       <AutoSizer>
@@ -464,29 +485,32 @@ class GridPane extends React.Component<{
                               <GridCursorComponent
                                 view={gridCursorView}
                                 cursorContent={
-                                  <GridEditorMounter
-                                    cursorView={gridCursorView}
-                                  >
-                                    {gridCursorView.isCellEditing && (
-                                      <StringGridEditor
-                                        editingRecordId={
-                                          gridCursorView.editingRowId!
-                                        }
-                                        editingFieldId={
-                                          gridCursorView.editingColumnId!
-                                        }
-                                        value={
-                                          gridCursorView.editingOriginalCellValue
-                                        }
-                                        onKeyDown={
-                                          gridInteractionActions.handleDumbEditorKeyDown
-                                        }
-                                        onDataCommit={
-                                          gridCursorView.handleDataCommit
-                                        }
-                                      />
-                                    )}
-                                  </GridEditorMounter>
+                                  gridInteractionSelectors.activeView ===
+                                    IGridPaneView.Grid && (
+                                    <GridEditorMounter
+                                      cursorView={gridCursorView}
+                                    >
+                                      {gridCursorView.isCellEditing && (
+                                        <StringGridEditor
+                                          editingRecordId={
+                                            gridCursorView.editingRowId!
+                                          }
+                                          editingFieldId={
+                                            gridCursorView.editingColumnId!
+                                          }
+                                          value={
+                                            gridCursorView.editingOriginalCellValue
+                                          }
+                                          onKeyDown={
+                                            gridInteractionActions.handleDumbEditorKeyDown
+                                          }
+                                          onDataCommit={
+                                            gridCursorView.handleDataCommit
+                                          }
+                                        />
+                                      )}
+                                    </GridEditorMounter>
+                                  )
                                 }
                               />
                             }
@@ -543,6 +567,45 @@ class GridPane extends React.Component<{
                             >
                               <FormComponent
                                 fieldCount={formSetup.fieldCount}
+                                overlayElements={
+                                  <FormCursorComponent
+                                    formSetup={formSetup}
+                                    formTopology={formTopology}
+                                    gridInteractionSelectors={
+                                      gridInteractionSelectors
+                                    }
+                                    gridInteractionActions={
+                                      gridInteractionActions
+                                    }
+                                  >
+                                    {gridInteractionSelectors.activeView ===
+                                      IGridPaneView.Form && (
+                                      <GridEditorMounter
+                                        cursorView={gridCursorView}
+                                      >
+                                        {gridCursorView.isCellEditing && (
+                                          <StringGridEditor
+                                            editingRecordId={
+                                              gridCursorView.editingRowId!
+                                            }
+                                            editingFieldId={
+                                              gridCursorView.editingColumnId!
+                                            }
+                                            value={
+                                              gridCursorView.editingOriginalCellValue
+                                            }
+                                            onKeyDown={
+                                              gridInteractionActions.handleDumbEditorKeyDown
+                                            }
+                                            onDataCommit={
+                                              gridCursorView.handleDataCommit
+                                            }
+                                          />
+                                        )}
+                                      </GridEditorMounter>
+                                    )}
+                                  </FormCursorComponent>
+                                }
                                 cellRenderer={({ fieldIndex }) => (
                                   <Observer>
                                     {() => (
@@ -555,16 +618,15 @@ class GridPane extends React.Component<{
                                         <FormFieldPositioner
                                           fieldIndex={fieldIndex}
                                           formSetup={formSetup}
+                                          formTopology={formTopology}
+                                          onClick={
+                                            gridInteractionActions.handleFormFieldClick
+                                          }
                                         >
-                                          <input
-                                            style={{
-                                              width: "100%",
-                                              height: "100%"
-                                            }}
+                                          <FormTextRenderer
                                             value={formView.getCellValue(
                                               fieldIndex
                                             )}
-                                            readOnly={true}
                                           />
                                         </FormFieldPositioner>
                                       </>
@@ -584,6 +646,61 @@ class GridPane extends React.Component<{
           </Observer>
         )}
       </AutoSizer>
+    );
+  }
+}
+
+@observer
+class FormTextRenderer extends React.Component<{
+  value: ICellValue | undefined;
+}> {
+  public render() {
+    return (
+      <input
+        style={{
+          width: "100%",
+          height: "100%"
+        }}
+        value={this.props.value}
+        readOnly={true}
+      />
+    );
+  }
+}
+
+@observer
+class FormCursorComponent extends React.Component<{
+  formTopology: IFormTopology;
+  formSetup: IFormSetup;
+  gridInteractionSelectors: IGridInteractionSelectors;
+  gridInteractionActions: IGridInteractionActions;
+}> {
+  public render() {
+    const {
+      formTopology,
+      gridInteractionSelectors,
+      formSetup,
+      gridInteractionActions
+    } = this.props;
+    if (!gridInteractionSelectors.isCellSelected) {
+      return null;
+    }
+    const fieldIndex = formTopology.getFieldIndexById(
+      gridInteractionSelectors.selectedColumnId!
+    );
+    return (
+      <FormFieldPositioner
+        fieldIndex={fieldIndex}
+        formSetup={formSetup}
+        formTopology={formTopology}
+        onClick={gridInteractionActions.handleFormFieldClick}
+      >
+        <div
+          style={{ width: "100%", height: "100%", border: "1px solid #4444ff" }}
+        >
+          {this.props.children}
+        </div>
+      </FormFieldPositioner>
     );
   }
 }

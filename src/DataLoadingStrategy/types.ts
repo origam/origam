@@ -1,3 +1,5 @@
+import { IDataTableRecord, IRecordId } from "src/DataTable/types";
+
 export interface ILookupResolverDR {
   dataLoader: IDataLoader;
   
@@ -31,4 +33,10 @@ export interface IDataLoader {
     filter?: Array<[string, string, string]>;
   }): Promise<any>;
   loadLookup(table: string, label: string, ids: string[]): Promise<any>;
+}
+
+export interface IDataSaver {
+  updateRecords(records: IDataTableRecord[]): Promise<IDataTableRecord[]>;
+  deleteRecords(recordIds: IRecordId[]): Promise<any>;
+  createRecords(records: IDataTableRecord[]): Promise<IDataTableRecord[]>;
 }

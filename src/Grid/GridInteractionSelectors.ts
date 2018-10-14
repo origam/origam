@@ -3,18 +3,24 @@ import {
   IGridInteractionState,
   IGridTopology,
   IGridInteractionSelectors,
-  IGridPaneView
+  IGridPaneView,
+  IFormTopology
 } from "./types";
 import { IRecordId, IFieldId } from "../DataTable/types";
 
 export class GridInteractionSelectors implements IGridInteractionSelectors {
   constructor(
     public state: IGridInteractionState,
-    public gridTopologyProvider: { gridTopology: IGridTopology }
+    public gridTopologyProvider: { gridTopology: IGridTopology },
+    public formTopologyProvider: { formTopology: IFormTopology }
   ) {}
 
   public get gridTopology() {
     return this.gridTopologyProvider.gridTopology;
+  }
+
+  public get formTopology() {
+    return this.formTopologyProvider.formTopology;
   }
 
   @computed
@@ -35,11 +41,21 @@ export class GridInteractionSelectors implements IGridInteractionSelectors {
   }
 
   public getLeftColumnId(columnId: IFieldId) {
-    return this.gridTopology.getLeftColumnId(columnId);
+    if (this.activeView === IGridPaneView.Grid) {
+      return this.gridTopology.getLeftColumnId(columnId);
+    } else if (this.activeView === IGridPaneView.Form) {
+      return this.formTopology.getPrevFieldId(columnId);
+    }
+    return;
   }
 
   public getRightColumnId(columnId: IFieldId) {
-    return this.gridTopology.getRightColumnId(columnId);
+    if (this.activeView === IGridPaneView.Grid) {
+      return this.gridTopology.getRightColumnId(columnId);
+    } else if (this.activeView === IGridPaneView.Form) {
+      return this.formTopology.getNextFieldId(columnId);
+    }
+    return;
   }
 
   // ==============================================================

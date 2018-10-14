@@ -362,11 +362,14 @@ export interface IGridInteractionActions {
   handleDumbEditorKeyDown(event: any): void;
   handleGridCellClick(
     event: any,
-    cell: { rowId: string; columnId: string }
+    cell: { rowId: IRecordId; columnId: IFieldId }
   ): void;
   handleGridNoCellClick(event: any): void;
   handleGridOutsideClick(event: any): void;
   handleGridKeyDown(event: any): void;
+
+  handleFormFieldClick(event: any, field: {fieldId: IFieldId}): void;
+  handleFormKeyDown(event: any): void;
 }
 
 export type T$1 = [number];
