@@ -6,15 +6,17 @@ import {
   IFieldId,
   ITableId,
   IDataTableFieldStruct,
-  IFieldType
+  IFieldType,
+  ICellValue
 } from "./types";
 
 export class DataTableRecord implements IDataTableRecord {
+
   @observable.ref
-  public values: any[] = [];
+  public values: ICellValue[] = [];
 
   @observable
-  public dirtyValues: Map<string, any> | undefined;
+  public dirtyValues: Map<string, ICellValue> | undefined;
 
   @observable
   public dirtyNew: boolean = false;
@@ -22,8 +24,20 @@ export class DataTableRecord implements IDataTableRecord {
   @observable
   public dirtyDeleted = false;
 
-  constructor(public id: string, values: any[]) {
+  constructor(public id: string, values: ICellValue[]) {
     this.values = values;
+  }
+
+  public get isDirtyChanged(): boolean {
+    return this.dirtyValues !== undefined && this.dirtyValues.size > 0
+  }
+
+  public get isDirtyDeleted(): boolean {
+    return this.dirtyDeleted;
+  }
+
+  public get isDirtyNew(): boolean {
+    return this.dirtyNew;
   }
 
   @action.bound

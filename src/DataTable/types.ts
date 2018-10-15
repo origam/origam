@@ -1,4 +1,6 @@
-export type ICellValue = string;
+import { IEventSubscriber } from "src/utils/events";
+
+export type ICellValue = string | boolean | number;
 export type IFieldId = string;
 export type IRecordId = string;
 export type ITableId = string;
@@ -14,6 +16,7 @@ export interface IDataTableSelectors {
   fullRecordCount: number;
   recordCount: number;
   fieldCount: number;
+  fields: IDataTableFieldStruct[];
   lastFullRecord: IDataTableRecord;
   firstFullRecord: IDataTableRecord;
 
@@ -52,6 +55,10 @@ export interface IDataTableActions {
   ): void;
   deleteRecord(record: IDataTableRecord): void;
   putRecord(record: IDataTableRecord, where: {before?: IRecordId, after?: IRecordId}): void;
+  replaceUpdatedRecord(updatedRecord: IDataTableRecord): void;
+  replaceCreatedRecord(createdRecord: IDataTableRecord): void;
+  deleteDeletedRecord(recordId: IRecordId): void;
+  onDataCommitted: IEventSubscriber;
 }
 
 export interface IDataTableRecord {
@@ -60,7 +67,9 @@ export interface IDataTableRecord {
   dirtyNew: boolean;
   dirtyDeleted: boolean;
   id: string;
-
+  isDirtyChanged: boolean;
+  isDirtyDeleted: boolean;
+  isDirtyNew: boolean;
   setDirtyDeleted(state: boolean): void;
   setDirtyValue(fieldId: string, value: ICellValue): void;
   setDirtyNew(state: boolean): void;

@@ -8,12 +8,15 @@ import {
   IDataTableFieldStruct,
   IRecordId
 } from "./types";
+import { EventObserver } from "src/utils/events";
 
 export class DataTableActions implements IDataTableActions {
   constructor(
     public state: IDataTableState,
     public selectors: IDataTableSelectors
   ) {}
+
+  public onDataCommitted = EventObserver();
 
   @action.bound
   public insertRecord({
@@ -28,9 +31,13 @@ export class DataTableActions implements IDataTableActions {
     if (afterId) {
       const pivotIndex = this.selectors.getFullRecordIndexById(afterId);
       this.state.records.splice(pivotIndex + 1, 0, record);
+      console.log("inserting");
+      this.onDataCommitted.trigger();
     } else if (beforeId) {
       const pivotIndex = this.selectors.getFullRecordIndexById(beforeId);
       this.state.records.splice(pivotIndex, 0, record);
+      console.log("inserting");
+      this.onDataCommitted.trigger();
     } else {
       throw new Error("Before or after...?");
     }
@@ -43,6 +50,8 @@ export class DataTableActions implements IDataTableActions {
       this.state.records.splice(recordIndex, 1);
     } else {
       record.setDirtyDeleted(true);
+      console.log("deleting");
+      this.onDataCommitted.trigger();
     }
   }
 
@@ -56,20 +65,47 @@ export class DataTableActions implements IDataTableActions {
       return;
     }
     record.setDirtyValue(field.id, value);
+    this.onDataCommitted.trigger();
   }
 
   public putRecord(
     record: IDataTableRecord,
     where: { before?: IRecordId; after?: IRecordId }
   ): void {
-    if(where.before) {
+    if (where.before) {
       const recordIndex = this.selectors.getFullRecordIndexById(where.before);
       this.state.records.splice(recordIndex, 0, record);
+      this.onDataCommitted.trigger();
     } else if (where.after) {
       const recordIndex = this.selectors.getFullRecordIndexById(where.after);
       this.state.records.splice(recordIndex + 1, 0, record);
+      this.onDataCommitted.trigger();
     } else {
       this.state.records.push(record);
+    }
+  }
+
+  @action.bound
+  public replaceUpdatedRecord(updatedRecord: IDataTableRecord): void {
+    const index = this.selectors.getFullRecordIndexById(updatedRecord.id);
+    if (index > -1) {
+      this.state.records.splice(index, 1, updatedRecord);
+    }
+  }
+
+  @action.bound
+  public replaceCreatedRecord(createdRecord: IDataTableRecord): void {
+    const index = this.selectors.getFullRecordIndexById(createdRecord.id);
+    if (index > -1) {
+      this.state.records.splice(index, 1, createdRecord);
+    }
+  }
+
+  @action.bound
+  public deleteDeletedRecord(recordId: string): void {
+    const index = this.selectors.getFullRecordIndexById(recordId);
+    if (index > -1) {
+      this.state.records.splice(index, 1);
     }
   }
 

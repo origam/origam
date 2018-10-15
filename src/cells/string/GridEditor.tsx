@@ -17,7 +17,7 @@ export class StringGridEditor extends React.Component<{
 }> {
   public componentDidMount() {
     runInAction(() => {
-      this.dirtyValue = this.props.value !== undefined ? this.props.value : "";
+      this.dirtyValue = (this.props.value !== undefined ? this.props.value : "") as string;
       this.elmInput!.focus();
       setTimeout(() => {
         this.elmInput && this.elmInput.select();

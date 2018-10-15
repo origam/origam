@@ -61,6 +61,8 @@ import { FormView } from "./Grid/FormView";
 import { FormTopology } from "./GridPanel/adapters/FormTopology";
 import { FormState } from "./Grid/FormState";
 import { FormActions } from "./Grid/FormActions";
+import { DataSavingStrategy } from "./DataLoadingStrategy/DataSavingStrategy";
+import { DataSaver } from "./DataLoadingStrategy/DataSaver";
 
 const personFields = [
   new DataTableField({
@@ -256,6 +258,17 @@ function createGridPaneBacking(
   onStartGrid(() => dataLoadingStrategyActions.start());
   onStopGrid(() => dataLoadingStrategyActions.stop());
 
+  const dataSaver = new DataSaver(
+    dataTableName,
+    dataTableActions,
+    dataTableSelectors
+  );
+  const dataSavingStrategy = new DataSavingStrategy(
+    dataTableSelectors,
+    dataTableActions,
+    dataSaver
+  );
+
   const gridToolbarView = new GridToolbarView(
     gridInteractionSelectors,
     gridSelectors,
@@ -274,8 +287,6 @@ function createGridPaneBacking(
   // gridOrderingActions.setOrdering('name', 'asc');
 
   dataLoadingStrategyActions.requestLoadFresh();*/
-
-
 
   const formSetup = new FormSetup(dataTableSelectors);
   const formView = new FormView(
@@ -359,7 +370,7 @@ class FormSetup implements IFormSetup {
   public getCellValue(
     recordIndex: number,
     fieldIndex: number
-  ): string | undefined {
+  ): ICellValue | undefined{
     const record = this.dataTableSelectors.getRecordByRecordIndex(recordIndex);
     const field = this.dataTableSelectors.getFieldByFieldIndex(fieldIndex);
     if (record && field) {
@@ -675,7 +686,7 @@ class FormTextRenderer extends React.Component<{
           width: "100%",
           height: "100%"
         }}
-        value={this.props.value}
+        value={''+this.props.value}
         readOnly={true}
       />
     );

@@ -6,7 +6,7 @@ import {
   IGridSelectors,
   IGridCursorView
 } from "./types";
-import { IDataTableSelectors, IDataTableActions } from "../DataTable/types";
+import { IDataTableSelectors, IDataTableActions, ICellValue } from "../DataTable/types";
 
 export class GridCursorView implements IGridCursorView {
 
@@ -244,7 +244,7 @@ export class GridCursorView implements IGridCursorView {
     return this.gridInteractionSelectors.isCellEditing;
   }
 
-  @computed get editingOriginalCellValue(): string | undefined {
+  @computed get editingOriginalCellValue(): ICellValue | undefined {
     if(this.isCellEditing) {
       const record = this.dataTableSelectors.getRecordById(this.gridInteractionSelectors.editingRowId!);
       const field = this.dataTableSelectors.getFieldById(this.gridInteractionSelectors.editingColumnId!);
