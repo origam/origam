@@ -1,0 +1,55 @@
+#region license
+/*
+Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+using Origam.Workbench;
+using Origam.Gui.Win;
+
+namespace Origam.Workflow.Gui.Win
+{
+	/// <summary>
+	/// Summary description for WorkflowHelper.
+	/// </summary>
+	public class WorkflowHelper
+	{
+		public static WorkflowForm CreateWorkflowForm(WorkflowHost host, Icon icon, string titleName, Guid workflowId)
+		{
+			// Initialize view for this workflow
+			WorkflowForm form = new WorkflowForm(host);
+
+			if(icon != null)
+			{
+				(form as Form).Icon = icon;
+			}
+
+			form.FormGenerator = new FormGenerator();
+			form.TitleName = titleName;
+			form.WorkflowId = workflowId;
+			WorkbenchSingleton.Workbench.ShowView(form);
+			Application.DoEvents();
+
+			return form;
+		}
+	}
+}

@@ -1,0 +1,71 @@
+﻿@using Origam.Server.Utils;
+@{
+    Layout = "~/_Layout.cshtml";
+    string userNameField = "UserName";
+    string passwordField = "Password";
+    string languageField = "lang";
+    string secondFactorUrl = "~/Login2";
+    string setupUrl = "~/Setup";
+    string returnUrlField = "returnUrl";
+    string action = Resources.SignIn;
+    string actionField = "Action";
+    string errorMessage = LoginHelper.Login(this, action, actionField, userNameField,
+        passwordField, languageField, secondFactorUrl, setupUrl, returnUrlField);
+}
+
+@helper LanguageSelector(System.Collections.Specialized.NameValueCollection languages, 
+        string languageField, string returnUrlField) {
+    if (languages.Count > 1) {
+        for (int i = 0; i < languages.Count; i++)
+        {
+            if (i != 0)
+            {
+                @:&nbsp;&#x7C;&nbsp;
+            }
+            if (Culture == languages.Keys.Get(i))
+            {
+                @languages.Get(i);
+            }
+            else
+            {
+                @:<a href="Login?@languageField=@languages.GetKey(i)&returnUrl=@Request[returnUrlField]">@languages.Get(i)</a>
+            }
+        }
+    }
+}
+
+<form method="post">
+    <!-- TODO - add styles -->
+    <div class="errorMessage">
+        @errorMessage
+    </div>
+    <!-- username text input -->
+    <label class="input">
+        <span>@Resources.UserNameForm</span>
+        @Html.TextBox(userNameField)
+    </label>
+    <br />
+    <!-- password text input -->
+    <label class="input">
+        <span>@Resources.PasswordForm</span>
+        @Html.Password(passwordField)
+    </label>
+    <input type="submit" value="@action" name="@actionField" class="login"/>
+    <script src="js/overlay.js" type="text/javascript"></script>
+    <script src="js/doubleclickprotection.js" type="text/javascript"></script>
+    @if (LoginHelper.IsPasswordRecoverySupported())
+    {
+        <div>
+            <a href="~/Recover">@Resources.ResetPassword_LinkFromLoginScreen</a>
+        </div>
+    }
+    @if (ConfigUtils.UserRegistrationAllowed())
+    {
+        <div>
+            <a href="~/Register">@Resources.Register</a>
+        </div>
+    }
+    <br/>
+    @LanguageSelector(ConfigUtils.GetCollection("languageSettings"), 
+        languageField, returnUrlField)
+</form>

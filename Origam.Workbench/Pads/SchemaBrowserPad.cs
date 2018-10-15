@@ -1,0 +1,125 @@
+#region license
+/*
+Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using System;
+using System.Windows.Forms;
+using Origam.Workbench.Services;
+using Origam.Schema;
+
+namespace Origam.Workbench
+{
+	public class SchemaBrowser : AbstractPadContent, IBrowserPad
+	{
+		public ExpressionBrowser EbrSchemaBrowser;
+		private readonly System.ComponentModel.Container components = null;
+		private readonly SchemaService schemaService = 
+			ServiceManager.Services.GetService<SchemaService>();
+
+        public ImageList ImageList => EbrSchemaBrowser.imgList;
+
+		public SchemaBrowser()
+		{
+			InitializeComponent();
+			schemaService.SchemaLoaded += _schemaService_SchemaLoaded;
+		}
+
+		protected override void Dispose( bool disposing )
+		{
+			if( disposing )
+			{
+				components?.Dispose();
+			}
+			base.Dispose( disposing );
+		}
+
+		#region Windows Form Designer generated code
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(SchemaBrowser));
+			this.EbrSchemaBrowser = new Origam.Workbench.ExpressionBrowser();
+			this.SuspendLayout();
+			// 
+			// ebrSchemaBrowser
+			// 
+			this.EbrSchemaBrowser.AllowEdit = true;
+			this.EbrSchemaBrowser.CheckSecurity = false;
+			this.EbrSchemaBrowser.DisableOtherExtensionNodes = true;
+			this.EbrSchemaBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.EbrSchemaBrowser.Location = new System.Drawing.Point(0, 0);
+			this.EbrSchemaBrowser.Name = "ebrSchemaBrowser";
+			this.EbrSchemaBrowser.NodeUnderMouse = null;
+			this.EbrSchemaBrowser.ShowFilter = false;
+			this.EbrSchemaBrowser.Size = new System.Drawing.Size(292, 271);
+			this.EbrSchemaBrowser.TabIndex = 1;
+			this.EbrSchemaBrowser.QueryFilterNode += new Origam.Workbench.FilterEventHandler(this.ebrSchemaBrowser_QueryFilterNode);
+			// 
+			// SchemaBrowser
+			// 
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.ClientSize = new System.Drawing.Size(292, 271);
+			this.Controls.Add(this.EbrSchemaBrowser);
+			this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
+				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
+				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
+				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+			this.HideOnClose = true;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.Name = "SchemaBrowser";
+			this.TabText = ResourceUtils.GetString("ModelBrowserTitle");
+			this.Text = ResourceUtils.GetString("ModelBrowserTitle");
+			this.ResumeLayout(false);
+
+		}
+		#endregion
+
+		private void _schemaService_SchemaLoaded(object sender, EventArgs e)
+		{
+            EbrSchemaBrowser.RemoveAllNodes();
+            EbrSchemaBrowser.AddRootNode(schemaService.ActiveExtension);
+		}
+
+		private void ebrSchemaBrowser_QueryFilterNode(object sender,
+			ExpressionBrowserEventArgs e)
+		{
+			if(e.QueriedObject is ISchemaItemProvider)
+			{
+				e.Filter = ! LicensePolicy.IsModelProviderVisible(
+					e.QueriedObject.GetType().Name);
+			}
+
+			if(e.QueriedObject is ISchemaItem)
+			{
+				e.Filter = ! LicensePolicy.ModelElementPolicy(
+					e.QueriedObject.GetType().Name, ModelElementPolicyCommand.Show);
+			}
+		}
+
+		public override void RedrawContent()
+		{
+			EbrSchemaBrowser.Redraw();
+		}
+	}
+}

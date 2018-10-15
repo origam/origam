@@ -1,0 +1,7 @@
+bin/
+obj/
+.idea/
+*.user
+*.suo
+_Resharper*/
+/Origam.DA.Service-net2Tests/FilePersistenceProviderTests/TestFiles/index.bin

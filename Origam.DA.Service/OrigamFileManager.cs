@@ -1,0 +1,173 @@
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Xml;
+using Origam.DA.ObjectPersistence;
+using Origam.DA.ObjectPersistence.Providers;
+using Origam.DA.Service;
+using Origam.Extensions;
+
+namespace Origam.DA.Service
+{
+    public class OrigamFileManager
+    {
+        private static readonly log4net.ILog log
+            = log4net.LogManager.GetLogger(
+                MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly FilePersistenceIndex index;
+        private readonly OrigamPathFactory origamPathFactory;
+        private readonly FileEventQueue fileEventQueue;
+        internal event EventHandler<HashChangedEventArgs> HashChanged;
+
+        public OrigamFileManager(FilePersistenceIndex index,
+            OrigamPathFactory origamPathFactory,  FileEventQueue fileEventQueue)
+        {
+            this.index = index;
+            this.origamPathFactory = origamPathFactory;
+            this.fileEventQueue = fileEventQueue;
+        }
+
+        public void WriteFileIfNotExist(string fullPath, string contents)
+        {
+            if (!File.Exists(fullPath))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+                using (StreamWriter sw = File.CreateText(fullPath))
+                {
+                    sw.Write(contents);
+                }
+            }
+        }
+        
+        public void RenameDirectory(DirectoryInfo dirToRename, string newName)
+        {
+            string newDirPath =
+                Path.Combine(dirToRename.Parent.FullName, newName);
+            if (dirToRename.FullName.ToLower() == newDirPath.ToLower()) return;
+            Directory.Move(dirToRename.FullName, newDirPath);
+            index.RenameDirectory(dirToRename, newDirPath);
+        }
+        
+        public void WriteToDisc(OrigamFile origamFile, XmlDocument xmlDocument)
+        {
+            XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
+            {
+                Indent = true,
+                NewLineOnAttributes = true
+            };
+            string xmlToWrite = xmlDocument.ToBeautifulString(xmlWriterSettings);
+            string newHash = xmlToWrite.GetBase64Hash();
+            fileEventQueue.Pause();
+            HashChanged(this, new HashChangedEventArgs(newHash));
+            index.AddOrReplaceHash(origamFile);
+            string parentDir = origamFile.Path.Directory.FullName;
+            Directory.CreateDirectory(parentDir);
+            File.WriteAllText(origamFile.Path.Absolute, xmlToWrite);
+            fileEventQueue.Continue();
+        }
+
+        public void MoveFile(OrigamFile origamFile)
+        {
+            origamFile.NewPath.Directory.Create();
+            string destination = origamFile.NewPath.Absolute;
+            string source = origamFile.Path.Absolute;
+
+            fileEventQueue.Pause();
+            int numFilesBefore = index.OrigamFiles.Count;
+            index.RemoveHash(origamFile);
+            index.Remove(origamFile);
+            origamFile.Path = origamFile.NewPath;
+            origamFile.NewPath = null;
+            index.AddOrReplace(origamFile);
+            index.AddOrReplaceHash(origamFile);
+            File.Move(source, destination); 
+            System.Diagnostics.Debug.Assert(numFilesBefore == index.OrigamFiles.Count);
+            fileEventQueue.Continue();
+        }
+            
+        public void RemoveDirectoryIfEmpty(DirectoryInfo oldFullDirectory)
+        {
+            bool isEmpty = !oldFullDirectory
+                .GetAllFilesInSubDirectories()
+                .Any();
+            if (isEmpty)
+            {
+                Directory.Delete(oldFullDirectory.FullName, true);
+            }
+        } 
+        
+        public OrigamPath MakeNewOrigamPath(IFilePersistent instance, bool resolveNamingConflicts)
+        {
+            string newRelativePath = instance.RelativeFilePath;
+            if (index.HasFile(newRelativePath))
+            {
+                if (!resolveNamingConflicts)
+                {
+                    throw new InvalidOperationException($"Cannot create path at: {newRelativePath} because another file is already there");
+                }
+                string newFileName =
+                    Path.GetFileNameWithoutExtension(newRelativePath) +
+                    "_" +
+                    Path.GetExtension(newRelativePath);
+                newRelativePath =
+                    Path.Combine(Path.GetDirectoryName(newRelativePath), newFileName);
+            }
+            return origamPathFactory.CreateFromRelative(newRelativePath);
+        }
+
+        public void DeleteFile(OrigamFile origamFile)
+        {
+            fileEventQueue.Pause();
+            index.RemoveHash(origamFile);
+            index.Remove(origamFile);
+            DeleteFile(origamFile.Path.Absolute);
+            fileEventQueue.Continue();
+        }
+        
+        
+        public void RemoveDirectoryWithContents(DirectoryInfo packageDir)
+        {
+            fileEventQueue.Pause();
+            packageDir.Delete(true);
+            fileEventQueue.Continue();
+        }
+
+        private void DeleteFile(String fileToDelete)
+        {
+            FileInfo fi = new FileInfo(fileToDelete);
+            if (!fi.Exists) return;
+            for (int i = 0; i < 10; i++)
+            {
+                try
+                {
+                    fi.Delete();
+                    break;
+                } 
+                catch (IOException)
+                {
+                    Thread.Sleep(100);
+                }
+            }
+            fi.Refresh();
+            for (int i = 0; i < 10; i++)
+            {
+                if (!fi.Exists) return;
+                Thread.Sleep(100);
+                fi.Refresh();
+            }
+            throw new Exception($"Cannot remove file {fileToDelete}");
+        }
+    }
+
+    internal class HashChangedEventArgs : EventArgs
+    {
+        public string Hash { get;}
+
+        public HashChangedEventArgs(string hash)
+        {
+            Hash = hash;
+        }
+    }
+}

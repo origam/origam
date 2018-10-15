@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="ResMimeType">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="Version">
+		<value>1.0.0.0</value>
+	</resheader>
+	<resheader name="Reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=1.0.3102.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="Writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.3102.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="RES_ExceptionLoadingConfiguration">
+		<value>Error loading Configuration Manager config parameters.</value>
+		<comment>Configuration Exception message text.</comment>
+	</data>
+	<data name="RES_ExceptionSavingConfigurationDocument">
+		<value>Xml document invalid format</value>
+		<comment>Configuration Exception message text.</comment>
+	</data>
+	<data name="RES_ExceptionAppMisConfigured">
+		<value>The storage provider for the section '{0}' can't be initialized, because during the initialization process an exception was thrown, please check the InnerException and correct the configuration file for the storage provider. </value>
+		<comment>Configuration Exception message text.</comment>
+	</data>
+	<data name="RES_ExceptionProviderInvalidAssembly">
+		<value>Cannot load the provider {0} assembly</value>
+		<comment>Configuration Exception message text.</comment>
+	</data>
+	<data name="RES_ExceptionDefaultProviderInit">
+		<value>Error initializing the default provider - XmlFileStorage</value>
+		<comment>Configuration Exception message text.</comment>
+	</data>
+	<data name="RES_ExceptionProviderInvalidType">
+		<value>Invalid provider type. Wrong class in provider type - {0}.</value>
+		<comment>Configuration Exception message text.</comment>
+	</data>
+	<data name="RES_ExceptionSectionInvalid">
+		<value>Invalid section name. The section does not exist - {0}. Check the /configuration/applicationConfigurationManagement/configSection node in the application config file (assemblyfilename.config). This node must be like &lt;configSection name="XmlConfig"&gt; &lt;configProvider assembly="Microsoft.ApplicationBlocks.ConfigurationManagement.XmlFileStorage" type="Microsoft.ApplicationBlocks.ConfigurationManagement.XmlFileStorage.XmlFileStorage" signed="false" encrypted="false" keyStore=""/&gt; &lt;/configSection&gt;</value>
+		<comment>Configuration Exception message text.</comment>
+	</data>
+	<data name="RES_ExceptionHandlerNotWritable">
+		<value>The given section handler does not support the IConfigurationSectionHandlerWriter interface - {0}.</value>
+	</data>
+	<data name="RES_ExceptionInvalidSectionHandler">
+		<value>The given section handler does not support the IConfigurationSectionHandler interface - {0}. </value>
+	</data>
+	<data name="RES_ExceptionXMLSectionNotFound">
+		<value>The XML document does not define the section '{0}'.</value>
+	</data>
+	<data name="RES_ExceptionStorageProviderException">
+		<value>Error using storage provider - {0}.</value>
+	</data>
+	<data name="RES_ExceptionSectionNotFound">
+		<value>Section '{0}' not defined on the configuration file. Check the /configuration/configSections/section node in the application config file (assemblyfilename.config). This node must be like &lt;section name="XmlConfig" type="WinApp.CustomSectionHandler,WinApp" /&gt;.</value>
+	</data>
+	<data name="RES_ExceptionCantCreateType">
+		<value>The type name '{0}' cannot be created. Check the /configuration/configSections/section node in the application config file (assemblyfilename.config). This node must be like &lt;section name="XmlConfig" type="WinApp.CustomSectionHandler,WinApp" /&gt;</value>
+	</data>
+	<data name="RES_ExceptionTypeNotSpecified">
+		<value>The type name was not specified on the section definition - {0}. The type name '{0}' cannot be created. Check the /configuration/configSections/section node in the application config file (assemblyfilename.config). This node must be like &lt;section name="XmlConfig" type="WinApp.CustomSectionHandler,WinApp" /&gt;</value>
+	</data>
+	<data name="RES_ExceptionSignatureCheckFailed">
+		<value>The signature check has failed for the section '{0}'.</value>
+	</data>
+	<data name="RES_ExceptionInvalidCacheElement">
+		<value>Internal error: The cache element is invalid.</value>
+	</data>
+	<data name="RES_ExceptionInvalidKeyValue">
+		<value>Internal error: The cache key value is null.</value>
+	</data>
+	<data name="RES_ExceptionInvalidExtendedFormatArguments">
+		<value>The extended format is invalid. Cache expiration time must be specified</value>
+	</data>
+	<data name="RES_ExceptionProviderInit">
+		<value>Creating Storage Provider and Cache for section '{0}' where storage type = '{1}' and assembly = '{2}' </value>
+		<comment>Configuration Exception message text.</comment>
+	</data>
+	<data name="RES_ExceptionDataProtectionProviderInit">
+		<value>Error initializing data protection provider - {0}. Provider - {1}</value>
+		<comment>Configuration Exception message text.</comment>
+	</data>
+	<data name="RES_ExceptionConfigurationManagerInvalidSectionName">
+		<value>The section name can´t be null or an empty string, please provide a valid section name.  </value>
+		<comment>Configuration Exception message text.</comment>
+	</data>
+	<data name="RES_ExceptionConfigurationManagerIncorrectSectionName">
+		<value>The section name specified was not defined on the configuration, please provide a valid section name, check the configuration file for the defined section names.</value>
+		<comment>Configuration Exception message text.</comment>
+	</data>
+	<data name="RES_ExceptionConfigurationManagerDefaultSectionIsNotHashtable">
+		<value>The provider defined in the default section (or the first section defined) does not return a Hashtable or any IDictionary implementation. Please change the section provider using 'System.Configuration.DictionarySectionHandler' or a provider returning an IDictionary implementation or a Hashtable.</value>
+		<comment>Configuration Exception message text.</comment>
+	</data>
+	<data name="RES_TrueInXmlConfigFile">
+		<value>true</value>
+		<comment>Configuration file true value, the case does not matters.</comment>
+	</data>
+	<data name="RES_XmlConfigSectionNodeName">
+		<value>configSection</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_XmlConfigSectionName">
+		<value>name</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_XmlConfigCacheNodeName">
+		<value>configCache</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_XmlConfigCacheEnabled">
+		<value>enabled</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_XmlConfigCacheRefresh">
+		<value>refresh</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_XmlConfigCacheRefreshOnChange">
+		<value>refreshOnChange</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_XmlConfigCacheSigned">
+		<value>signed</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_XmlConfigCacheEncrypted">
+		<value>encrypted</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_XmlConfigProviderName">
+		<value>configProvider</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_XmlConfigProviderAssembly">
+		<value>assembly</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_XmlConfigProviderType">
+		<value>type</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_XmlConfigDataProtectionProviderNodeName">
+		<value>protectionProvider</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_XmlConfigDataProtectionProviderAssembly">
+		<value>assembly</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_XmlConfigDataProtectionProviderType">
+		<value>type</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_XmlConfigXPathConfigSections">
+		<value>/configuration/configSections</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_XmlConfigXPathSection">
+		<value>section[@name='{0}']</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_XmlConfigNodeNameCmabSection">
+		<value>applicationConfigurationManagement</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_ExceptionDetailType">
+		<value>Type: '{0}' - Assembly: '{1}'</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_XmlConfigTypeAttribute">
+		<value>type</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_XmlConfigDefaultSectionAttribute">
+		<value>defaultSection</value>
+		<comment>Xml config file node name.</comment>
+	</data>
+	<data name="RES_ExceptionCantLoadAssembly">
+		<value>Could not load the Assembly specified where AssemblyName = {0} and TypeName = {1}.</value>
+	</data>
+	<data name="RES_ExceptionCantCreateInstanceUsingActivate">
+		<value>Could not Activate the Type specified where AssemblyName = {0} and TypeName = {1}.</value>
+	</data>
+	<data name="Res_XmlConfigEncryptionAlgorithmType">
+		<value>encryptionAlgorithmType</value>
+	</data>
+	<data name="Res_XmlConfigEncryptionAlgorithmKey">
+		<value>encryptionAlgorithmKey</value>
+	</data>
+	<data name="Res_ExceptionInvalidEncryptionKey">
+		<value>The encryption key isn´t configured or is invalid. Check the key attribute in the provider configuration</value>
+	</data>
+	<data name="Res_ExceptionCantEncrypt">
+		<value>Can´t encrypt the configuration</value>
+	</data>
+	<data name="Res_ExceptionCantDecrypt">
+		<value>Can´t decrypt the configuration</value>
+	</data>
+	<data name="Res_ExceptionInvalidTypeName">
+		<value>The type name specified is invalid, assembly name  must be specify (namespace.type,assembly) - {0}.The type name '{0}' cannot be created. Check the /configuration/configSections/section node in the application config file (assemblyfilename.config). This node must be like &lt;section name="XmlConfig" type="WinApp.CustomSectionHandler,WinApp" /&gt;.</value>
+	</data>
+	<data name="Res_UnableToAllocateBuffer">
+		<value>Unable to allocate plaintext buffer.</value>
+	</data>
+	<data name="Res_ExceptionMarshallingData">
+		<value>Exception marshalling data.</value>
+	</data>
+	<data name="Res_ExceptionAllocatingEntropyBuffer">
+		<value>Unable to allocate entropy data buffer.</value>
+	</data>
+	<data name="Res_ExceptionEntropyMarshallingData">
+		<value>Exception entropy marshalling data.</value>
+	</data>
+	<data name="Res_ExceptionEncryptionFailed">
+		<value>Encryption failed. </value>
+	</data>
+	<data name="Res_ExceptionUnableToAllecateCipherTextBuffer">
+		<value>Unable to allocate cipherText buffer.</value>
+	</data>
+	<data name="Res_ExceptionDecryptionFailed">
+		<value>Decryption failed.</value>
+	</data>
+	<data name="Res_ExceptionFormattingMessage">
+		<value>Failed to format message for error code '{0}'.</value>
+	</data>
+	<data name="Res_ExceptionEncryptionPermission">
+		<value>Argument must be of type EncryptionPermission.</value>
+	</data>
+	<data name="RES_TrueInXmlConfigFile">
+		<value>true</value>
+		<comment>Configuration file true value the case does not matters.</comment>
+	</data>
+	<data name="RES_ExceptionInvalidRegistrySubKey">
+		<value>Invalid RegistrySubKey attribute at the XML configuration: {0}</value>
+	</data>
+	<data name="RES_ExceptionCantGetSectionData">
+		<value>Cannot retrieve registry value for section '{0}'.</value>
+	</data>
+	<data name="RES_ExceptionSignatureCheckFailed">
+		<value>Signature check fails, the section was altered. </value>
+	</data>
+	<data name="RES_ExceptionCantWriteRegistry">
+		<value>Cannot write the section on the specified registry key {0}\{1}. Exception {2}</value>
+	</data>
+	<data name="RES_ExceptionCantUseNullKeys">
+		<value>The section name is null, o an empty string, please provide a valid section name.</value>
+	</data>
+	<data name="RES_ExceptionDisallowedRegistryKey">
+		<value>The Registry provider could not access the requested registry hive, {0}, because it is  not an allowable Hive.  Please check the configuration and confine registry access to Hives HKEY_LOCAL_MACHINE, HKEY_CURRENT_USER, and HKEY_USERS.</value>
+	</data>
+	<data name="RES_ExceptionInvalidConnectionString">
+		<value>Invalid connection string specified on the connectionString attribute (or the connection string placed on the regitry key pointed by the attribute connectionStringRegKeyPath) at the XML configuration file. '{0}'. Check the /configuration/configSection/configProvider node in the application config file (assemblyfilename.config). This node must be like &lt;configProvider assembly="Microsoft.ApplicationBlocks.ConfigurationManagement.SqlServerStorageReader" type="Microsoft.ApplicationBlocks.ConfigurationManagement.SqlStorage.SqlServerStorageReader" connectionString="Data Source=localhost;Initial Catalog=MyDB;User ID=sa;Password=" signed="false" encrypted="false" /&gt;</value>
+	</data>
+	<data name="RES_ExceptionCantOpenConnection">
+		<value>Failed to open the connection using the connection string: {0}.
+		Connection string can be mentioned in various formats like:
+		1. server=localhost;database=cmab;Integrated Security=SSPI
+		2. server=localhost;database=cmab;user id=sa;password=dublin
+		3. Data Source=localhost;Initial catalog=CMAB;user id=sa;password=dublin
+		The connection string can be added in the config file using the attribute 'connectionString' for the 'configProvder' element. The connection string can also be placed in the registry and the path to the registry can be specified using the 'connectionStringRegKeyPath' attribute for the 'configProvider' element.</value>
+	</data>
+	<data name="RES_ExceptionCantGetSectionData">
+		<value>Cannot get section value from database for the section  '{0}'.</value>
+	</data>
+	<data name="RES_ExceptionSignatureCheckFailed">
+		<value>The configuration signature check has failed.</value>
+	</data>
+	<data name="RES_ExceptionCantExecuteStoredProcedure">
+		<value>Cannot execute stored procedure '{0}' using parameters: '{1}', '{2}'.</value>
+	</data>
+	<data name="RES_ExceptionStoredProcedureUpdatedNoRecords">
+		<value>Stored procedure '{0}', executed with  parameters: '{1}', '{2}' updated {4} records.</value>
+	</data>
+	<data name="RES_ExceptionXMLSectionNotFound">
+		<value>Section '{0}' is not defined in the XML config file. This file must be like &lt;configuration&gt;&lt;configSections&gt;&lt;section name="applicationConfigurationManagement"  type="Microsoft.ApplicationBlocks.ConfigurationManagement.ConfigurationManagerSectionHandler,Microsoft.ApplicationBlocks.ConfigurationManagement, Version=1.0.0.0,Culture=neutral,PublicKeyToken=null" /&gt;&lt;section name="XmlConfig" type="WinApp.CustomSectionHandler,WinApp" /&gt;&lt;/configSections&gt;&lt;applicationConfigurationManagement&gt;&lt;configSection name="XmlConnfig"&gt;&lt;configProvider assembly="Microsoft.ApplicationBlocks.ConfigurationManagement.XmlFileStorage" type="Microsoft.ApplicationBlocks.ConfigurationManagement.XmlFileStorage.XmlFileStorage" signed="false" encrypted="false" keyStore="Machine"/&gt;&lt;/configSection&gt;&lt;/applicationConfigurationManagement&gt;&lt;/configuration&gt;</value>
+	</data>
+	<data name="RES_ExceptionXMLSectionNotFound">
+		<value>Section '{0}' is not defined in the XML document.</value>
+	</data>
+	<data name="Res_ExceptionInvalidRegKeyFormat">
+		<value>The '{1}' attribute on the configuration file contains an invalid registry key path. The path must begin with HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE, or HKEY_USERS, followed by the path to the key begining with \. For example: 'HKLM\SOFTWARE\Microsoft\.NETFramework'. The invalid registry path is '{0}'.</value>
+	</data>
+	<data name="Res_ExceptionInvalidRegKeyFormatCantFoundKey">
+		<value>The '{1}' attribute on the configuration file contains an invalid registry key path, because the key can't be found. The path must begin with HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE, or HKEY_USERS, followed by the path to the key begining with \. For example: 'HKLM\SOFTWARE\Microsoft\.NETFramework'. The invalid registry path is '{0}'.</value>
+	</data>
+	<data name="Res_ExceptionEmptyHashKey">
+		<value>The attribute 'hashKey' was not found on the configuration file, this attribute must define a base64 key used to hash the values when they are saved using the storage provider.</value>
+	</data>
+	<data name="Res_ExceptionEmptySymmetricKey">
+		<value>The attribute 'symmetricKey' was not found on the configuration file, this attribute must define a base64 key used to encrypt and decrypt the values when they are saved using the storage provider.</value>
+	</data>
+	<data name="Res_ExceptionEmptyInitializationVectorKey">
+		<value>The attribute 'initializationVector' was not found on the configuration file, this attribute must define a base64 key used to encrypt and decrypt the values when they are saved using the storage provider.</value>
+	</data>
+	<data name="Res_ExceptionDocumentNotValidated">
+		<value>The section for the CMAB configuration does not conforms to the XMLSchema provided, please check the document to fix the document. The validation error message is: {0}.</value>
+	</data>
+	<data name="RES_ExceptionProtectionProviderInvalidType">
+		<value>The protection provider can't be initialized, please provide a valid protection provider on the configuratoin file.</value>
+	</data>	
+	<data name="RES_ExceptionBadTypeArgumentInFactory">
+		<value>The type names must be specified using the full type name and the 5 parts of the assembly name: typeName, assemblyName, version, publicToken, culture.</value>
+	</data>
+	<data name="RES_ExceptionInvalidConfigurationInstance">
+		<value>The XmlHashtableSectionHandler can't be used to save (or read) any type of configuration information, the only object supported by this provider is Hashtable.</value>
+	</data>	
+	<data name="RES_ExceptionInvalidDataProtectionConfiguration">
+		<value>If the 'signed' or 'encrypted' attributes are set to 'true' on the configuration file the section must define a protection provider on the section '{0}' for example: 
+		&lt;protectionProvider assembly="Microsoft.ApplicationBlocks.ConfigurationManagement,Version=1.0.0.0,Culture=neutral,PublicKeyToken=null" type="Microsoft.ApplicationBlocks.ConfigurationManagement.DataProtection.DPAPIDataProtection" keyStore="Machine"/&gt;.</value>
+	</data>	
+	<data name="RES_ExceptionInvalidSignatureConfig">
+		<value>The data on the storage was signed when it was saved, but the signature is disabled for the config provider named '{0}', please enable the signature on the provider or remove the signature from the storage.</value>
+	</data>
+	<data name="RES_ExceptionRegistryValueLimit">
+		<value>The registry provider can't write strings larger than 500000 characters. The lare of the data received was {0}, note the OuterXml for the node specified is also included.</value>
+	</data>
+	<data name="RES_ExceptionConfigurationFileNotFound">
+	    <value>Can´t find the configuration file {0}. You must check the 'path' attribute in the section '{1}'</value>
+	</data>
+	<data name="RES_ExceptionSectionGroupsNotSupported">
+		<value>The section groups aren´t supported by the ConfigurationManager, please provide a valid section name.</value>
+		<comment>Configuration Exception message text.</comment>
+	</data>
+	<data name="RES_ExceptionInvalidEncryptedString">
+		<value>The encrypted data placed on the configuration storage is invalid, please provide a correct base64 encrypted data.</value>
+		<comment>Configuration Exception message text.</comment>
+	</data>
+	<data name="RES_ExceptionCantDeserializeHashtable">
+		<value>Can't deserialize the Hashtable.</value>
+		<comment>Configuration Exception message text.</comment>
+	</data>		
+	<data name="RES_ExceptionInvalidConfigurationDocument">
+		<value>The configuration document isn't a well formed xml document</value>
+	</data>
+	<data name="RES_ExceptionExtendedFormatIncorrectMinutePart">
+		<value>The minute part must be an integer between 0 and 59</value>
+	</data>
+	<data name="RES_ExceptionExtendedFormatIncorrectHourPart">
+		<value>The hour part must be an integer between 0 and 23</value>
+	</data>
+	<data name="RES_ExceptionExtendedFormatIncorrectDayPart">
+		<value>The day part must be an integer between 0 and 31</value>
+	</data>
+	<data name="RES_ExceptionExtendedFormatIncorrectMonthPart">
+		<value>The month part must be an integer between 0 and 12</value>
+	</data>
+	<data name="RES_ExceptionExtendedFormatIncorrectDayOfWeekPart">
+		<value>The day of week part must be an integer between 0 and 6</value>
+	</data>
+</root>

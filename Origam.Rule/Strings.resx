@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ErrorTransformationSupport" xml:space="preserve">
+    <value>DataStructure or XsdDataStructure are supported as transformation results.</value>
+  </data>
+  <data name="ErrorResultInvalid" xml:space="preserve">
+    <value>Transformation result invalid.</value>
+  </data>
+  <data name="ErrorNoSequence" xml:space="preserve">
+    <value>Number sequence not found.</value>
+  </data>
+  <data name="ErrorNoSequenceForDate" xml:space="preserve">
+    <value>Number sequence not found for the date {0}. Sequence: '{1}'.</value>
+  </data>
+  <data name="ErrorSequenceMax" xml:space="preserve">
+    <value>Number sequence '{0}' reached the maximum value. Cannot create a next number in this sequence.</value>
+  </data>
+  <data name="ErrorRuleFailureRecord" xml:space="preserve">
+    <value>Rule evaluation failed while changing a record in entity '{0}'. {1}</value>
+  </data>
+  <data name="ErrorRuleFailureColumn" xml:space="preserve">
+    <value>Rule evaluation failed while changing a field '{0}' in entity '{1}'.</value>
+  </data>
+  <data name="ErrorRuleFailureDelete" xml:space="preserve">
+    <value>Rule evaluation failed while deleting a record in entity '{0}'. {1}</value>
+  </data>
+  <data name="ErrorDeleteFailed" xml:space="preserve">
+    <value>Error occured while deleting a record in entity '{0}'. {1}</value>
+  </data>
+  <data name="ErrorRuleFailureCopy" xml:space="preserve">
+    <value>Error occured while copying a record in entity '{0}'. {1}</value>
+  </data>
+  <data name="ErrorNoXslReference" xml:space="preserve">
+    <value>The referenced type must be XslRule or XslTransformation. Cannot resolve.</value>
+  </data>
+  <data name="ErrorInitializeEngine" xml:space="preserve">
+    <value>Cannot initialize rule engine. Model not loaded.</value>
+  </data>
+  <data name="ErrorIncrementFailure" xml:space="preserve">
+    <value>Position not initialized. Cannot increment position.</value>
+  </data>
+  <data name="ErrorRemoveFailure" xml:space="preserve">
+    <value>Position not initialized. Cannot remove position.</value>
+  </data>
+  <data name="ErrorNoRecordInAddressBook" xml:space="preserve">
+    <value>Could not find a record for the current user in the address book.</value>
+  </data>
+  <data name="ErrorNoResource" xml:space="preserve">
+    <value>Resource not found. Please assign the current user as a resource.</value>
+  </data>
+  <data name="ErrorMoreResources" xml:space="preserve">
+    <value>Current user is assigned to more than 1 resource. Please change your settings so the user is assigned to only one human resource. Resource Id: {0}</value>
+  </data>
+  <data name="ErrorInvalidInventoryId" xml:space="preserve">
+    <value>GetInventoryName: Invalid inventory id</value>
+  </data>
+  <data name="ErrorInventoryNotFound" xml:space="preserve">
+    <value>GetInventoryName: Inventory not found</value>
+  </data>
+  <data name="ErrorInventoryIdInvalid" xml:space="preserve">
+    <value>InventoryEvidenceSerialNumbers: InventoryId is not in a valid format</value>
+  </data>
+  <data name="ErrorRoundAmountInvalid" xml:space="preserve">
+    <value>Round: Amount is not in a valid format</value>
+  </data>
+  <data name="ErrorCeilingAmountInvalid" xml:space="preserve">
+    <value>Ceiling: Amount is not in a valid format</value>
+  </data>
+  <data name="ErrorUnknownRoundingType" xml:space="preserve">
+    <value>Unknown rounding type.</value>
+  </data>
+  <data name="ErrorPeriodStartInvalid" xml:space="preserve">
+    <value>periodStartDate is not in a valid format</value>
+  </data>
+  <data name="ErrorPeriodEndInvalid" xml:space="preserve">
+    <value>periodEnd is not in a valid format</value>
+  </data>
+  <data name="ErrorEndingServiceInvalid" xml:space="preserve">
+    <value>endingService is not in a valid format</value>
+  </data>
+  <data name="ErrorServiceBillingStartInvalid" xml:space="preserve">
+    <value>serviceBillingStart is not in a valid format</value>
+  </data>
+  <data name="ErrorServiceBillingEndInvalid" xml:space="preserve">
+    <value>serviceBillingEnd is not in a valid format</value>
+  </data>
+  <data name="ErrorMonthlyPriceInvalid" xml:space="preserve">
+    <value>monthlyPrice is not in a valid format</value>
+  </data>
+  <data name="ErrorAddMonthsDateInvalid" xml:space="preserve">
+    <value>AddMonths: 'date' is not in a valid format</value>
+  </data>
+  <data name="ErrorAddMonthsMonthsInvalid" xml:space="preserve">
+    <value>AddMonths: 'months' is not an integer.</value>
+  </data>
+  <data name="ErrorDateInvalid" xml:space="preserve">
+    <value>Date is not in a valid format</value>
+  </data>
+  <data name="ErrorUnsupportedOperator" xml:space="preserve">
+    <value>Operator not supported.</value>
+  </data>
+  <data name="ErrorRuleFailed" xml:space="preserve">
+    <value>Rule evaluation failed. Rule: '{0}'</value>
+  </data>
+  <data name="ErrorRuleFailed1" xml:space="preserve">
+    <value>Rule evaluation failed. Rule: '{0}'</value>
+  </data>
+  <data name="ErrorOnlyXslRuleSupported" xml:space="preserve">
+    <value>Only XSL or XPath Rule is supported by EndRule evaluation.</value>
+  </data>
+  <data name="ErrorRuleTypeInvalid" xml:space="preserve">
+    <value>This item type cannot be evaluated by rule engine</value>
+  </data>
+  <data name="ErrorEvaluateContextFailed" xml:space="preserve">
+    <value>EvaluateContext failed. Message: {0}</value>
+  </data>
+  <data name="ErrorTypeNotProcessable" xml:space="preserve">
+    <value>Type not supported for rule processing.</value>
+  </data>
+  <data name="ErrorRuleSetNull" xml:space="preserve">
+    <value>RuleSet cannot be null.</value>
+  </data>
+  <data name="RowState" xml:space="preserve">
+    <value>RowState: </value>
+  </data>
+  <data name="ErrorRuleConditionEqual" xml:space="preserve">
+    <value>Rule condition must have the same value of IsPathRelative as the rule itself. Rule: {0}</value>
+  </data>
+  <data name="ErrorNotBool" xml:space="preserve">
+    <value>Condition rule did not returned bool value. Cannot evaluate condition. Rule '{0}'</value>
+  </data>
+  <data name="PadProcessingRules" xml:space="preserve">
+    <value>{0} Processing Rules. RuleSet: {1}, Entity: {2}, Row Key: {3}, Column: {4}</value>
+  </data>
+  <data name="PadAllowNulls" xml:space="preserve">
+    <value>Dependency field '{0}.{1}' has AllowNulls set to False and value is NULL. Rule ignored.</value>
+  </data>
+  <data name="PadEvaluatingCondition" xml:space="preserve">
+    <value>Evaluating condition</value>
+  </data>
+  <data name="PadConditionFalse" xml:space="preserve">
+    <value>Condition evaluated to false. Rule will be skipped.</value>
+  </data>
+  <data name="PadRuleResult0" xml:space="preserve">
+    <value>Rule Result: </value>
+  </data>
+  <data name="PadRuleResult1" xml:space="preserve">
+    <value>, Original </value>
+  </data>
+  <data name="PadRuleResult2" xml:space="preserve">
+    <value> value: </value>
+  </data>
+  <data name="PadRuleInvalidStructure" xml:space="preserve">
+    <value>Rule invalid. Rule structure does not contain entity '{0}'</value>
+  </data>
+  <data name="PadRuleInvalidNoData" xml:space="preserve">
+    <value>Rule invalid. Rule evaluation did not return the row data.</value>
+  </data>
+  <data name="PadTargetField" xml:space="preserve">
+    <value>TargetField not specified. Cannot evaluate rule, whose result is a simple value.</value>
+  </data>
+  <data name="PadXmlDocument" xml:space="preserve">
+    <value>XmlDocument not supported for rule processing. Only XmlDataDocument (DataSet) or simple data types. </value>
+  </data>
+  <data name="FixXslRuleWithDestinationDataStructure" xml:space="preserve">
+    <value>To fix it please choose some data structure in a `Destination Structure' property in the `{0}' xsl rule. </value>
+  </data>
+  <data name="PadRuleFinished" xml:space="preserve">
+    <value>{0} Rule evaluation finished. Data changed: {1}</value>
+  </data>
+  <data name="ErrorNoForegroundDynamicColorLookup" xml:space="preserve">
+    <value>Foreground lookup specified but no DynamicColorLookupField. Cannot get dynamic color</value>
+  </data>
+  <data name="ErrorNoBackgroundDynamicColorLookup" xml:space="preserve">
+    <value>Background lookup specified but no DynamicColorLookupField. Cannot get dynamic color</value>
+  </data>
+  <data name="ErrorUnsupportedFunction" xml:space="preserve">
+    <value>This system function is not supported by the rule engine</value>
+  </data>
+  <data name="ErrorEvaluateContextNull" xml:space="preserve">
+    <value>EvaluateRule: context cannot be null.</value>
+  </data>
+  <data name="ErrorConvertToBool" xml:space="preserve">
+    <value>Cannot convert rule result to Boolean</value>
+  </data>
+  <data name="ErrorConvertToType0" xml:space="preserve">
+    <value>Cannot convert rule result to the target data type.</value>
+  </data>
+  <data name="ErrorConvertToType1" xml:space="preserve">
+    <value>Data type: </value>
+  </data>
+  <data name="ErrorConvertToType2" xml:space="preserve">
+    <value>Value: '{0}'</value>
+  </data>
+  <data name="ErrorRuleFailed2" xml:space="preserve">
+    <value>Rule evaluation failed.</value>
+  </data>
+  <data name="ErrorNumberExpected" xml:space="preserve">
+    <value>incorrect argument type: number expected</value>
+  </data>
+  <data name="ErrorInvalidNumberArguments" xml:space="preserve">
+    <value>Invalid number of arguments.</value>
+  </data>
+  <data name="ErrorStringExpected" xml:space="preserve">
+    <value>Incorrect argument type: String expected</value>
+  </data>
+  <data name="ErrorNodeSetExpected" xml:space="preserve">
+    <value>incorrect argument type: NodeSet expected</value>
+  </data>
+  <data name="ErrorRecursion" xml:space="preserve">
+    <value>You tried to enter a value that would cause a self reference (infinite loop). Please, select a different value.</value>
+  </data>
+  <data name="XsltTransformTerminated" xml:space="preserve">
+    <value>Transform terminated:</value>
+  </data>
+  <data name="ErrorOutputRuleFailed" xml:space="preserve">
+    <value>Output rule was not met.</value>
+  </data>
+  <data name="DoYouWishContinue" xml:space="preserve">
+    <value>{0} Do you want to continue?</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="ErrorAbsAmountInvalid" xml:space="preserve">
+    <value>Abs: Amount is not in a valid format</value>
+  </data>
+</root>

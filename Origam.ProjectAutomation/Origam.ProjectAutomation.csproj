@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F2F5CD17-B2A5-4B5F-9868-628BB76A1959}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Origam.ProjectAutomation</RootNamespace>
+    <AssemblyName>Origam.ProjectAutomation</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr4.StringTemplate">
+      <HintPath>..\EnterpriseLibrary\Antlr4.StringTemplate.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Configuration, Version=1.0.0.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\EnterpriseLibrary\2.0\Microsoft.Practices.EnterpriseLibrary.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Security, Version=1.0.0.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\EnterpriseLibrary\2.0\Microsoft.Practices.EnterpriseLibrary.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Windows\System32\inetsrv\Microsoft.Web.Administration.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbstractBuilder.cs" />
+    <Compile Include="Builders\ConfigureAzureWebServerBuilder.cs" />
+    <Compile Include="Builders\FileModelImportBuilder.cs" />
+    <Compile Include="Builders\FileModelInitBuilder.cs" />
+    <Compile Include="Builders\DataDatabaseStructureBuilder.cs" />
+    <Compile Include="Builders\DataDatabaseBuilder.cs" />
+    <Compile Include="AbstractDatabaseBuilder.cs" />
+    <Compile Include="Builders\CopyServerFilesBuilder.cs" />
+    <Compile Include="Builders\ConfigureWebServerBuilder.cs" />
+    <Compile Include="Builders\ModifyConfigurationFilesBuilder.cs" />
+    <Compile Include="Builders\ApplyDatabasePermissionsBuilder.cs" />
+    <Compile Include="Builders\NewPackageBuilder.cs" />
+    <Compile Include="IProjectBuilder.cs" />
+    <Compile Include="Project.cs" />
+    <Compile Include="ProjectBuilder.cs" />
+    <Compile Include="Builders\SettingsFinalConnectionStringBuilder.cs" />
+    <Compile Include="TaskListViewItem.cs" />
+    <Compile Include="TaskState.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Builders\SettingsBuilder.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Origam.Common.Nonstd\Origam.Common.NetFX.csproj">
+      <Project>{84251d2b-43a4-4228-8d2a-8729722c25e4}</Project>
+      <Name>Origam.Common.NetFX</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
+      <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
+      <Name>Origam.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine-net2.csproj">
+      <Project>{233d40c6-ae59-4651-b7bd-dd09d5835e21}</Project>
+      <Name>Origam.OrigamEngine-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common-net2.csproj">
+      <Project>{b4e4dc00-766a-4ca3-83d8-0a5383462f53}</Project>
+      <Name>Origam.DA.Common-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service-net2.csproj">
+      <Project>{ff4722b4-01f8-4062-af39-f243a6bf336d}</Project>
+      <Name>Origam.DA.Service-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.ModelImport\Origam.ModelImport-net2.csproj">
+      <Project>{367d2f77-b10d-438b-bf33-b7825dcf0bf5}</Project>
+      <Name>Origam.ModelImport-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Services\Origam.Services-net2.csproj">
+      <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>
+      <Name>Origam.Services-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services-net2.csproj">
+      <Project>{eca06542-5635-455e-b513-07f60222ca7d}</Project>
+      <Name>Origam.Workbench.Services-net2</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

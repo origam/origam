@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="ResMimeType">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="Version">
+		<value>1.0.0.0</value>
+	</resheader>
+	<resheader name="Reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="Writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="ErrorTransformationSupport">
+		<value>DataStructure or XsdDataStructure are supported as transformation results.</value>
+	</data>
+	<data name="ErrorResultInvalid">
+		<value>Transformation result invalid.</value>
+	</data>
+	<data name="ErrorNoSequence">
+		<value>Nebyla nalezena číselná řada s tímto kódem.</value>
+	</data>
+	<data name="ErrorNoSequenceForDate">
+		<value>Pro datum {0} nebyla nalezena platná číselná řada. Kód číselné řady: '{1}'.</value>
+	</data>
+	<data name="ErrorSequenceMax">
+		<value>Číselná řada '{0}' dosáhla maximální hodnoty. Není možné vytvořit další číslo v této číselné řadě.</value>
+	</data>
+	<data name="ErrorRuleFailureRecord">
+		<value>Selhalo vykonání pravidla při změně záznamu v entitě '{0}'. {1}</value>
+	</data>
+	<data name="ErrorRuleFailureColumn">
+		<value>Selhalo vykonání pravidla při změně sloupce '{0}' v entitě '{1}'.</value>
+	</data>
+	<data name="ErrorRuleFailureDelete">
+		<value>Selhalo vykonání pravidla při vymazání záznamu v entitě '{0}'. {1}</value>
+	</data>
+	<data name="ErrorDeleteFailed">
+		<value>Nastala chyba při mazání záznamu v entitě '{0}'.{1}</value>
+	</data>
+	<data name="ErrorRuleFailureCopy">
+		<value>Selhalo vykonání pravidla při kopírování záznamu v entitě '{0}'. {1}</value>
+	</data>
+	<data name="ErrorNoXslReference">
+		<value>The referenced type must be XslRule or XslTransformation. Cannot resolve.</value>
+	</data>
+	<data name="ErrorInitializeEngine">
+		<value>Cannot initialize rule engine. Model not loaded.</value>
+	</data>
+	<data name="ErrorIncrementFailure">
+		<value>Position not initialized. Cannot increment position.</value>
+	</data>
+	<data name="ErrorRemoveFailure">
+		<value>Position not initialized. Cannot remove position.</value>
+	</data>
+	<data name="ErrorNoRecordInAddressBook">
+		<value>V adresáři nebyl nalezen záznam pro aktuálně přihlášeného uživatele.</value>
+	</data>
+	<data name="ErrorNoResource">
+		<value>Zdroj nebyl nalezen. Přiřaďte aktuálnímu uživateli zdroj v evidenci zdrojů.</value>
+	</data>
+	<data name="ErrorMoreResources">
+		<value>Aktuálnímu uživateli byl přiřazen více než 1 lidský zdroj. Změňte nastavení tak, aby uživatel měl přiřazen pouze jeden lidský zdroj. Id zdroje: {0}</value>
+	</data>
+	<data name="ErrorInvalidInventoryId">
+		<value>GetInventoryName: Invalid inventory id</value>
+	</data>
+	<data name="ErrorInventoryNotFound">
+		<value>GetInventoryName: Inventory not found</value>
+	</data>
+	<data name="ErrorInventoryIdInvalid">
+		<value>InventoryEvidenceSerialNumbers: InventoryId is not in a valid format</value>
+	</data>
+	<data name="ErrorRoundAmountInvalid">
+		<value>Round: Amount is not in a valid format</value>
+	</data>
+	<data name="ErrorCeilingAmountInvalid">
+		<value>Ceiling: Amount is not in a valid format</value>
+	</data>
+	<data name="ErrorUnknownRoundingType">
+		<value>Unknown rounding type.</value>
+	</data>
+	<data name="ErrorPeriodStartInvalid">
+		<value>periodStartDate is not in a valid format</value>
+	</data>
+	<data name="ErrorPeriodEndInvalid">
+		<value>periodEnd is not in a valid format</value>
+	</data>
+	<data name="ErrorEndingServiceInvalid">
+		<value>endingService is not in a valid format</value>
+	</data>
+	<data name="ErrorServiceBillingStartInvalid">
+		<value>serviceBillingStart is not in a valid format</value>
+	</data>
+	<data name="ErrorServiceBillingEndInvalid">
+		<value>serviceBillingEnd is not in a valid format</value>
+	</data>
+	<data name="ErrorMonthlyPriceInvalid">
+		<value>monthlyPrice is not in a valid format</value>
+	</data>
+	<data name="ErrorAddMonthsDateInvalid">
+		<value>AddMonths: 'date' is not in a valid format</value>
+	</data>
+	<data name="ErrorAddMonthsMonthsInvalid">
+		<value>AddMonths: 'months' is not an integer.</value>
+	</data>
+	<data name="ErrorDateInvalid">
+		<value>Date is not in a valid format</value>
+	</data>
+	<data name="ErrorUnsupportedOperator">
+		<value>Operator not supported.</value>
+	</data>
+	<data name="ErrorRuleFailed">
+		<value>Vykonání pravidla '{0}' se nezdařilo.</value>
+	</data>
+	<data name="ErrorRuleFailed1">
+		<value>Selhalo vykonání pravidla {0}</value>
+	</data>
+	<data name="ErrorOnlyXslRuleSupported">
+		<value>Only XSL or XPath Rule is supported by EndRule evaluation.</value>
+	</data>
+	<data name="ErrorRuleTypeInvalid">
+		<value>This item type cannot be evaluated by rule engine</value>
+	</data>
+	<data name="ErrorEvaluateContextFailed">
+		<value>EvaluateContext failed. Message: {0}</value>
+	</data>
+	<data name="ErrorTypeNotProcessable">
+		<value>Type not supported for rule processing.</value>
+	</data>
+	<data name="ErrorRuleSetNull">
+		<value>RuleSet cannot be null.</value>
+	</data>
+	<data name="RowState">
+		<value>RowState: </value>
+	</data>
+	<data name="ErrorRuleConditionEqual">
+		<value>Rule condition must have the same value of IsPathRelative as the rule itself. Rule: {0}</value>
+	</data>
+	<data name="ErrorNotBool">
+		<value>Condition rule did not returned bool value. Cannot evaluate condition. Rule '{0}'</value>
+	</data>
+	<data name="PadProcessingRules">
+		<value>{0} Processing Rules. RuleSet: {1}, Entity: {2}, Row Key: {3}, Column: {4}</value>
+	</data>
+	<data name="PadAllowNulls">
+		<value>Dependency field '{0}.{1}' has AllowNulls set to False and value is NULL. Rule ignored.</value>
+	</data>
+	<data name="PadEvaluatingCondition">
+		<value>Evaluating condition</value>
+	</data>
+	<data name="PadConditionFalse">
+		<value>Condition evaluated to false. Rule will be skipped.</value>
+	</data>
+	<data name="PadRuleResult0">
+		<value>Rule Result: </value>
+	</data>
+	<data name="PadRuleResult1">
+		<value>, Original </value>
+	</data>
+	<data name="PadRuleResult2">
+		<value> value: </value>
+	</data>
+	<data name="PadRuleInvalidStructure">
+		<value>Rule invalid. Rule structure does not contain entity '{0}'</value>
+	</data>
+	<data name="PadRuleInvalidNoData">
+		<value>Rule invalid. Rule evaluation did not return the row data.</value>
+	</data>
+	<data name="PadTargetField">
+		<value>TargetField not specified. Cannot evaluate rule, whose result is a simple value.</value>
+	</data>	
+	<data name="PadRuleFinished">
+		<value>{0} Rule evaluation finished. Data changed: {1}</value>
+	</data>
+	<data name="ErrorNoForegroundDynamicColorLookup">
+		<value>Foreground lookup specified but no DynamicColorLookupField. Cannot get dynamic color</value>
+	</data>
+	<data name="ErrorNoBackgroundDynamicColorLookup">
+		<value>Background lookup specified but no DynamicColorLookupField. Cannot get dynamic color</value>
+	</data>
+	<data name="ErrorUnsupportedFunction">
+		<value>This system function is not supported by the rule engine</value>
+	</data>
+	<data name="ErrorEvaluateContextNull">
+		<value>EvaluateRule: context cannot be null.</value>
+	</data>
+	<data name="ErrorConvertToBool">
+		<value>Cannot convert rule result to Boolean</value>
+	</data>
+	<data name="ErrorConvertToType0">
+		<value>Cannot convert rule result to the target data type.</value>
+	</data>
+	<data name="ErrorConvertToType1">
+		<value>Data type: </value>
+	</data>
+	<data name="ErrorConvertToType2">
+		<value>Value: '{0}'</value>
+	</data>
+	<data name="ErrorRuleFailed2">
+		<value>Selhalo vykonání pravidla.</value>
+	</data>
+	<data name="ErrorNumberExpected">
+		<value>incorrect argument type: number expected</value>
+	</data>
+	<data name="ErrorInvalidNumberArguments">
+		<value>Invalid number of arguments.</value>
+	</data>
+	<data name="ErrorStringExpected">
+		<value>Incorrect argument type: String expected</value>
+	</data>
+	<data name="ErrorNodeSetExpected">
+		<value>incorrect argument type: NodeSet expected</value>
+	</data>
+	<data name="XsltTransformTerminated">
+		<value>Transformace byla ukončena:</value>
+	</data>
+  <data name="ErrorOutputRuleFailed">
+    <value>Nebylo splněno výstupní pravidlo</value>
+  </data>
+  <data name="DoYouWishContinue">
+    <value>{0} Přejete si pokračovat dále?</value>
+  </data>
+  <data name="Warning">
+    <value>Upozornění</value>
+  </data>
+</root>

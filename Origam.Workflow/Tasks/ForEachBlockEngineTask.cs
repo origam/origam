@@ -1,0 +1,222 @@
+#region license
+/*
+Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using System;
+using System.Xml;
+using System.Xml.XPath;
+using System.Collections;
+using System.Data;
+using System.Diagnostics;
+using Origam.Rule;
+using Origam.Schema;
+using Origam.Schema.WorkflowModel;
+using Origam.Workbench.Services;
+
+namespace Origam.Workflow.Tasks
+{
+	/// <summary>
+	/// Summary description for ForEachBlockEngineTask.
+	/// </summary>
+	public class ForEachBlockEngineTask : BlockEngineTask
+	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		XPathNodeIterator _iter;
+		WorkflowEngine _call;
+
+		public ForEachBlockEngineTask() : base()
+		{
+		}
+
+		public override void Execute()
+		{
+			try
+			{
+				MeasuredExecution();
+			}
+			catch(Exception ex)
+			{
+				OnFinished(new WorkflowEngineTaskEventArgs(ex));
+			}
+		}
+		protected override void MeasuredExecution()
+		{
+			base.MeasuredExecution();
+			CleanUp();		
+		}
+
+		protected override void OnExecute()
+		{
+			if(log.IsInfoEnabled)
+			{
+				log.Info("ForEach Block started.");
+			}
+
+			this.Engine.Host.WorkflowFinished += Host_WorkflowFinished;
+			this.Engine.Host.WorkflowMessage += Host_WorkflowMessage;
+
+			ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
+
+			XmlDocument xmlDoc = this.Engine.RuleEngine.GetContext(block.SourceContextStore) as XmlDocument;
+
+			if(xmlDoc == null) throw new ArgumentOutOfRangeException("SourceContextStore", block.SourceContextStore, ResourceUtils.GetString("ErrorSourceContextNotXmlDocument"));
+
+			XPathNavigator navigator = xmlDoc.CreateNavigator();
+			OrigamXsltContext ctx =  new OrigamXsltContext(new NameTable(), this.Engine.RuleEngine);
+			XPathExpression expr = navigator.Compile(block.IteratorXPath);
+			expr.SetContext(ctx);
+
+			_iter = navigator.Select(expr);
+			ResumeIteration();
+		}
+
+		private void ResumeIteration()
+		{
+			ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
+			_call = this.Engine.GetSubEngine(block);
+			_call.IterationTotal = _iter.Count;
+
+			while (_iter.MoveNext())
+			{
+				if(_iter.CurrentPosition > _iter.Count) break;
+
+				// if workflow finished with an exception, we don't proceed
+				if(this.Engine == null) return;
+
+				if(log.IsInfoEnabled)
+				{
+					log.Info("Starting iteration no. " + _iter.CurrentPosition.ToString());
+				}
+
+				// Set workflow
+				_call.ParentContexts.Clear();
+				_call.IterationNumber = _iter.CurrentPosition;
+
+				// Fill input context stores
+				foreach(Key key in this.Engine.RuleEngine.ContextStoreKeys)
+				{
+					object context = this.Engine.RuleEngine.GetContext(key);
+					if(key.Equals(block.SourceContextStore.PrimaryKey))
+					{
+						XmlDocument document = XmlTools.GetXmlSlice(_iter); // ((IHasXmlNode)iter.Current).GetNode();
+						XmlDataDocument xmlDataDocument = context as XmlDataDocument;
+						XmlDocument xmlDocument = context as XmlDocument;
+						if(xmlDataDocument != null)
+						{
+							// we clone the dataset (no data, just the structure)
+							DataSet dataset = xmlDataDocument.DataSet.Clone();
+							// we load the iteration data into the dataset
+							dataset.ReadXml(new XmlNodeReader(document), XmlReadMode.IgnoreSchema);
+							// we add the context into the called engine
+							_call.ParentContexts.Add(key, new XmlDataDocument(dataset));
+						}
+						else if(xmlDocument != null)
+						{
+							_call.ParentContexts.Add(key, document);
+						}
+					}
+					else
+					{
+						// all other contexts
+						// pass context directly
+						_call.ParentContexts.Add(key, context);
+					}
+				}
+
+				IAsyncResult thread = this.Engine.Host.ExecuteWorkflow(_call);
+
+				thread.AsyncWaitHandle.WaitOne();
+			}
+		}
+
+		private void CleanUp()
+		{
+			// there is no other iteration, we finish
+			if (this.Engine != null
+			) // only if we have not finished already e.g. with an exception
+			{
+				UnsubscribeEvents();
+				OnFinished(new WorkflowEngineTaskEventArgs());
+			}
+		}
+
+		private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)
+		{
+			if(this.Engine == null) return;	// finished already
+
+			ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
+
+			if(e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
+			{
+				if(e.Exception != null)
+				{
+					UnsubscribeEvents();
+					OnFinished(new WorkflowEngineTaskEventArgs(e.Exception));
+					return;
+				}
+
+				if(!block.IgnoreSourceContextChanges)
+				{
+					// Merge data back after success
+					foreach(DictionaryEntry entry in _call.ParentContexts)
+					{
+						if(entry.Key.Equals(block.SourceContextStore.PrimaryKey))
+						{
+							bool fullMerge = (! entry.Key.Equals(block.SourceContextStore.PrimaryKey));
+							this.Engine.MergeContext(
+								(Key)entry.Key,
+								_call.RuleEngine.GetContext(entry.Key as Key), 
+								block, 
+								this.Engine.ContextStoreName((Key)entry.Key), 
+								(fullMerge ? ServiceOutputMethod.FullMerge : ServiceOutputMethod.AppendMergeExisting));
+							//					}
+						}
+					}
+				}
+
+				if(log.IsInfoEnabled)
+				{
+					log.Info("Finishing iteration no. " + _iter.CurrentPosition.ToString());
+				}
+			}
+		}
+
+		private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
+		{
+			if(e.Engine.WorkflowUniqueId.Equals(_call.WorkflowUniqueId))
+			{
+				if(e.Exception != null)
+				{
+					UnsubscribeEvents();
+					OnFinished(new WorkflowEngineTaskEventArgs(e.Exception));
+				}
+			}
+		}
+
+		private void UnsubscribeEvents()
+		{
+			if(this.Engine != null)
+			{
+				this.Engine.Host.WorkflowFinished -= new WorkflowHostEvent(Host_WorkflowFinished);
+				this.Engine.Host.WorkflowMessage -= new WorkflowHostMessageEvent(Host_WorkflowMessage);
+			}
+		}
+	}
+}

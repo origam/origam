@@ -1,0 +1,408 @@
+﻿@using log4net;
+@using System.Collections.Specialized;
+@using System.Configuration;
+
+@functions 
+{
+    string GetPreloaderBackgroundColor()
+    {
+        string result = ConfigurationManager.AppSettings.Get("preloaderBackColor");
+        if (result == "" || result == null)
+        {
+            result = "#382210";
+        }
+        return result;
+    }
+
+    string GetNoAccessUrl()
+    {
+        string result = ConfigurationManager.AppSettings.Get("noAccessUrl");
+        if (result == "" || result == null)
+        {
+            result = "NoAccess.cshtml";
+        }
+        return result;
+    }
+
+    string GetSuppressReportTabs()
+    {
+        string result = ConfigurationManager.AppSettings.Get("suppressReportTabs");
+        if (result == "" || result == null)
+        {
+            result = "false";
+        }
+        return result;
+    }
+
+    bool GetCacheSetting()
+    {
+        string screenCachingStr = ConfigurationManager.AppSettings.Get("noCache");
+        bool screenCaching;
+        bool parseSuccess = bool.TryParse(screenCachingStr, out screenCaching);
+        return parseSuccess ? screenCaching : true;
+    }
+
+    string GetSWFFile()
+    {
+        string currentPath = Request.Url.AbsoluteUri;
+        string root = currentPath.Remove(
+            currentPath.Length - Request.Url.Segments[
+            Request.Url.Segments.Length - 1].Length);
+        string swfFile = ((NameValueCollection)ConfigurationManager
+            .GetSection("appPortalSettings")).Get("swfFile");
+        string swfPath = string.Format("{0}{1}", root, swfFile);
+        string themeFile = ((NameValueCollection)ConfigurationManager
+            .GetSection("appPortalSettings")).Get("themeFile");
+        swfPath += "?culture=" + System.Threading.Thread.CurrentThread.CurrentUICulture.IetfLanguageTag.Replace("-", "_");
+        if (themeFile != null && themeFile != "")
+        {
+            swfPath += "&themeFile=" + themeFile + ".swf";
+        }
+        swfPath += "&suppressReportTabs=" + GetSuppressReportTabs();
+        swfPath += "&noCache=" + GetCacheSetting();
+        return swfPath;
+    }
+}
+
+@{
+    ILog log = LogManager.GetLogger("OrigamServer");
+    log.Debug("Processing Portal page...");
+    string menu = Origam.OrigamEngine.ModelXmlBuilders.MenuXmlBuilder.GetMenu();
+    if (menu.Length <= 35)
+    {
+        Response.Redirect(GetNoAccessUrl());
+    }
+    string pageTitle = System.Configuration.ConfigurationManager.AppSettings.Get("portalTitle");
+}
+<html>
+    <head>
+        <title>@pageTitle</title>
+        <link rel="icon" href="assets/favicon.png"/> 
+        <script src="js/AC_OETags.js" type="text/javascript"></script>
+        <script src="js/mousetrap.min.js" type="text/javascript"></script>
+        <script src="js/flex-iframe.js" type="text/javascript"></script>
+        <style type="text/css">
+            body {
+                margin: 0px;
+                overflow: hidden;
+            }
+        </style>
+        <script language="JavaScript" type="text/javascript">
+        var requiredMajorVersion = 10;
+        var requiredMinorVersion = 1;
+        var requiredRevision = 0;
+        </script>
+        <script language="JavaScript" type="text/javascript">
+        var useNativeContextMenu = true;
+        function switchUseNativeContextMenuFlag(value) {
+            useNativeContextMenu = value;
+        }
+        var RightClickHandler = {
+            init: function () {
+                this.FlashObjectID = "portal";
+                this.FlashContainerID = "portalWrapper";
+                this.Cache = this.FlashObjectID;
+                if (window.addEventListener) {
+                    window.addEventListener("mousedown", this.onGeckoMouse(),
+                            true);
+                    document.oncontextmenu = function () {
+                        document.getElementById("portal").rightClick();
+                    };
+                } else {
+                    document.getElementById(this.FlashContainerID).onmouseup
+                            = function () {
+                                document.getElementById(RightClickHandler.FlashContainerID)
+                                .releaseCapture();
+                            };
+                    document.oncontextmenu = function () {
+                        if ((window.event.srcElement.id
+                            == RightClickHandler.FlashObjectID)
+                            && !useNativeContextMenu) {
+                            return false;
+                        } else {
+                            RightClickHandler.Cache = "nan";
+                        }
+                    };
+                    document.getElementById(this.FlashContainerID).onmousedown
+                            = RightClickHandler.onIEMouse;
+                }
+            },
+            killEvents: function (eventObject) {
+                if (eventObject) {
+                    if (eventObject.stopPropagation) {
+                        eventObject.stopPropagation();
+                    }
+                    if (eventObject.preventDefault) {
+                        eventObject.preventDefault();
+                    }
+                    if (eventObject.preventCapture) {
+                        eventObject.preventCapture();
+                    }
+                    if (eventObject.preventBubble) {
+                        eventObject.preventBubble();
+                    }
+                }
+            },
+            onGeckoMouse: function (ev) {
+                return function (ev) {
+                    if ((ev.button != 0) && !useNativeContextMenu) {
+                        RightClickHandler.killEvents(ev);
+                        if ((ev.target.id == RightClickHandler.FlashObjectID)
+                && (RightClickHandler.Cache
+                == RightClickHandler.FlashObjectID)) {
+                            RightClickHandler.call();
+                        }
+                        RightClickHandler.Cache = ev.target.id;
+                    }
+                }
+            },
+            onIEMouse: function () {
+                if (document.getElementById(RightClickHandler.FlashObjectID
+                        + 'x')) {
+                    document.getElementById(RightClickHandler.FlashObjectID + 'x')
+                            .id = RightClickHandler.FlashObjectID;
+                }
+                if (event.button > 1) {
+                    if ((window.event.srcElement.id
+            == RightClickHandler.FlashObjectID)
+            && (RightClickHandler.Cache
+            == RightClickHandler.FlashObjectID)
+            && !useNativeContextMenu) {
+                        RightClickHandler.call();
+                        document.getElementById(RightClickHandler.FlashContainerID)
+                            .setCapture();
+                        if (window.event.srcElement.id) {
+                            RightClickHandler.Cache = window.event.srcElement.id;
+                        }
+                    }
+                }
+            },
+            call: function () {
+                document.getElementById(RightClickHandler.FlashObjectID)
+                        .rightClick();
+            }
+        }
+        var MacMouseWheelHandler = {
+            init: function() {
+                var isMac = navigator.appVersion.toLowerCase().indexOf("mac") != -1;
+                var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+                var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') != -1;
+                if ((isMac && isSafari) || isFirefox) {
+                    if (window.addEventListener)
+                    {
+                        window.addEventListener('DOMMouseScroll',
+                                MacMouseWheelHandler.wheel, false);
+                    }
+                    window.onmousewheel = document.onmousewheel
+                            = MacMouseWheelHandler.wheel;
+                }
+            },
+            handle: function( delta )
+            {
+                document["portal"].handleMouseWheel(delta);
+            },
+
+            wheel: function(event){
+                var delta = 0;
+                if (event.wheelDelta) {
+                    delta = event.wheelDelta/120;
+                    if (window.opera) delta = -delta;
+                } else if (event.detail) {
+                    delta = -event.detail;
+                }
+                if (delta) MacMouseWheelHandler.handle(delta);
+                if (event.preventDefault) event.preventDefault();
+                event.returnValue = false;
+            }
+        }
+        </script>
+        <script language="JavaScript" type="text/javascript">
+            var shortCutsInitialized = false;
+            var clipboardBuffer = null;
+
+            function initShortCuts() {
+                Mousetrap.bind('mod+s', function(e) {
+                    if (e.preventDefault) {
+                        e.preventDefault();
+                    } else {
+                        // internet explorer
+                        e.returnValue = false;
+                    }
+                    portal.saveDataInActiveForm();
+                });
+                Mousetrap.bind('mod+r', function(e) {
+                    if (e.preventDefault) {
+                        e.preventDefault();
+                    } else {
+                        // internet explorer
+                        e.returnValue = false;
+                    }
+                    portal.refreshDataInActiveForm();
+                });
+                Mousetrap.bind('mod+f', function(e) {
+                    if (e.preventDefault) {
+                        e.preventDefault();
+                    } else {
+                        // internet explorer
+                        e.returnValue = false;
+                    }
+                    portal.switchFilterInActivePanel();
+                });
+                Mousetrap.bind('mod+g', function(e) {
+                    if (e.preventDefault) {
+                        e.preventDefault();
+                    } else {
+                        // internet explorer
+                        e.returnValue = false;
+                    }
+                    portal.switchViewInActivePanel();
+                });
+                Mousetrap.bind('mod+i', function(e) {
+                    if (e.preventDefault) {
+                        e.preventDefault();
+                    } else {
+                        // internet explorer
+                        e.returnValue = false;
+                    }
+                    portal.addRowInActivePanel();
+                });
+                Mousetrap.bind(['mod+d', 'mod+k'], function(e) {
+                    if (e.preventDefault) {
+                        e.preventDefault();
+                    } else {
+                        // internet explorer
+                        e.returnValue = false;
+                    }
+                    portal.duplicateRowInActivePanel();
+                });
+                Mousetrap.bind('mod+del', function(e) {
+                    if (e.preventDefault) {
+                        e.preventDefault();
+                    } else {
+                        // internet explorer
+                        e.returnValue = false;
+                    }
+                    portal.deleteRowInActivePanel();
+                });
+                Mousetrap.bind('ctrl', function(e) {
+                    portal.focus();
+                    if (window.clipboardData) {
+                        portal.reviewFocus();
+                    }
+                }, 'keyup');
+                Mousetrap.bind('ctrl+c', function(e) {
+                    if (window.clipboardData && clipboardBuffer) {
+                        window.clipboardData.setData('Text', clipboardBuffer);
+                        clipboardBuffer = null;
+                    }
+                });
+                Mousetrap.bind('ctrl+v', function(e) {
+                    if (window.clipboardData) {
+                        portal.pasteText(window.clipboardData.getData('Text'));
+                    }
+                });
+                Mousetrap.bind('ctrl+x', function(e) {
+                    if (window.clipboardData && clipboardBuffer) {
+                        window.clipboardData.setData('Text', clipboardBuffer);
+                        clipboardBuffer = null;
+                        portal.cutText();
+                    }
+                });
+                Mousetrap.bind('ctrl+a', function(e) {
+                    if (e.preventDefault) {
+                        e.preventDefault();
+                    } else {
+                        // internet explorer
+                        e.returnValue = false;
+                    }
+                    portal.selectAll();
+                });
+                Mousetrap.bind('ctrl+alt+v', function(e) {
+                    if (window.clipboardData) {
+                        portal.pasteText('@@');
+                    }
+                    // fix to prevent chrome to enter @@ and clipboard content
+                    if (e.preventDefault) {
+                        e.preventDefault();
+                    }
+                }, 'keypress');
+                Mousetrap.bind('ctrl+alt+2', function(e) {
+                    if (window.clipboardData) {
+                        portal.pasteText('@@');
+                    }
+                }, 'keypress');
+                Mousetrap.bind('ctrl+alt+\\', function (e) {
+                    if (window.clipboardData) {
+                        portal.pasteText('\\');
+                    }
+                }, 'keypress');
+                Mousetrap.bind('ctrl+alt+w', function (e) {
+                    if (window.clipboardData) {
+                        portal.pasteText('|');
+                    }
+                }, 'keypress');
+                Mousetrap.bind('ctrl+alt+1', function (e) {
+                    if (window.clipboardData) {
+                        portal.pasteText('|');
+                    }
+                }, 'keypress');
+                Mousetrap.bind('ctrl+alt+3', function (e) {
+                    if (window.clipboardData) {
+                        portal.pasteText('#');
+                    }
+                }, 'keypress');
+                Mousetrap.bind('ctrl+alt+e', function (e) {
+                    if (window.clipboardData) {
+                        portal.pasteText('€');
+                    }
+                }, 'keypress');
+                shortCutsInitialized = true;
+            }
+
+            function ctrlDownHandler(selectedText) {
+                if (shortCutsInitialized) {
+                    this.focus();
+                    clipboardBuffer = decodeURIComponent(selectedText);
+                }
+            }
+
+            function setFocusToPortal() {
+                portal.focus();
+            }
+
+            function showReport(loc) {
+                document.getElementById('reportViewer').src = loc;
+            }
+        </script>
+        <script language="JavaScript" type="text/javascript">
+            function initUI() {
+                RightClickHandler.init();
+                MacMouseWheelHandler.init();
+                initShortCuts();
+            }
+        </script>
+    </head>
+    <body onload="initUI();">
+        <div id="portalWrapper">
+            <script language="JavaScript" type="text/javascript">
+        <!--
+            AC_FL_RunContent(
+                    "src", "@GetSWFFile()",
+                    "width", "100%",
+                    "height", "100%",
+                    "align", "middle",
+                    "id", "portal",
+                    "quality", "high",
+                    "bgcolor", "@GetPreloaderBackgroundColor()",
+                    "name", "portal",
+                    "wmode", "opaque",
+                    "allowScriptAccess", "sameDomain",
+                    "type", "application/x-shockwave-flash",
+                    "pluginspage", "http://www.adobe.com/go/getflashplayer"
+            );
+        // -->
+            </script>
+        </div>
+        <iframe id="reportViewer" name="reportViewer" width="0" height="0"/>
+    </body>
+</html>

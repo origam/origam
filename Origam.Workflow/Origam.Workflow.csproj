@@ -1,0 +1,601 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>7.10.6030</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DF2A8DAD-6C59-4653-B3BB-DA50B14E3DE9}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon />
+    <AssemblyKeyContainerName />
+    <AssemblyName>Origam.Workflow</AssemblyName>
+    <AssemblyOriginatorKeyFile />
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Origam.Workflow</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject />
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>15.0</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile />
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile />
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>ORIGAM_CLIENT</DefineConstants>
+    <DocumentationFile />
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Client|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>ORIGAM_CLIENT;DEBUG;TRACE</DefineConstants>
+    <DocumentationFile />
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect Express|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>TRACE;ARCHITECT_EXPRESS</DefineConstants>
+    <DocumentationFile />
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Architect Express|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>DEBUG;TRACE;ARCHITECT_EXPRESS</DefineConstants>
+    <DocumentationFile />
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Server|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>ORIGAM_CLIENT;ORIGAM_SERVER</DefineConstants>
+    <DocumentationFile />
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Server|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>ORIGAM_CLIENT;ORIGAM_SERVER;DEBUG;TRACE</DefineConstants>
+    <DocumentationFile />
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Origam.BI.CrystalReports\Origam.BI.CrystalReports.csproj">
+      <Name>Origam.BI.CrystalReports</Name>
+      <Project>{D8090B11-35D3-43D7-AC66-5D7AE2D476DA}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.BI\Origam.BI.csproj">
+      <Name>Origam.BI</Name>
+      <Project>{54BFF654-2A00-4A8A-86B0-06F124D769A1}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
+      <Name>Origam.Common</Name>
+      <Project>{84251D2B-43A4-4228-8D2A-8729722C25E4}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj">
+      <Name>Origam.DA.Common</Name>
+      <Project>{B4E4DC00-766A-4CA3-83D8-0A5383462F53}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service.csproj">
+      <Name>Origam.DA.Service</Name>
+      <Project>{FF4722B4-01F8-4062-AF39-F243A6BF336D}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Gui.Win\Origam.Gui.Win.csproj">
+      <Name>Origam.Gui.Win</Name>
+      <Project>{B57D7691-81BB-419C-AE82-26340CF77D10}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Mail\Origam.Mail.csproj">
+      <Name>Origam.Mail</Name>
+      <Project>{9D53BB7F-97DE-4592-B958-F57AE3F83FF3}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Rule\Origam.Rule.csproj">
+      <Name>Origam.Rule</Name>
+      <Project>{4F05DB44-2BBD-4B54-8D37-E8038D1EE1E7}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
+      <Name>Origam.Schema.EntityModel</Name>
+      <Project>{50186A07-6ED9-4751-B0E2-52FEBA2A4518}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel.csproj">
+      <Name>Origam.Schema.GuiModel</Name>
+      <Project>{ECFF4A9D-9196-4962-823C-A65D552FF6D8}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.LookupModel\Origam.Schema.LookupModel.csproj">
+      <Name>Origam.Schema.LookupModel</Name>
+      <Project>{2274C5EB-E849-4ABB-8631-D429AD2994FF}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.MenuModel\Origam.Schema.MenuModel.csproj">
+      <Name>Origam.Schema.MenuModel</Name>
+      <Project>{01C6A542-4D42-4AFA-9744-5E92E71A8251}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.RuleModel\Origam.Schema.RuleModel.csproj">
+      <Name>Origam.Schema.RuleModel</Name>
+      <Project>{B2FFC838-98F6-4D52-8BFF-99546B1B8A4D}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.WorkflowModel\Origam.Schema.WorkflowModel.csproj">
+      <Name>Origam.Schema.WorkflowModel</Name>
+      <Project>{5B6E4021-152C-4276-A1AE-E3B9BA223024}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
+      <Name>Origam.Schema</Name>
+      <Project>{AA7461F9-34D2-4F29-9D22-25FE053DDEF0}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
+      <Name>Origam.Services</Name>
+      <Project>{199DDE99-9EE7-4CCE-B71D-7FC1CC0896AA}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common.csproj">
+      <Name>Origam.UI.Common</Name>
+      <Project>{EF5DE64E-88B2-4B0A-BB7F-4A537B56F3D1}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.UI\Origam.UI.csproj">
+      <Name>Origam.UI</Name>
+      <Project>{79DD815D-6900-4074-8886-7E7D6946460B}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench.BaseComponents\Origam.Workbench.BaseComponents.csproj">
+      <Name>Origam.Workbench.BaseComponents</Name>
+      <Project>{35DFEDDC-C519-4228-B6AD-AD22BD4C4BB0}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj">
+      <Name>Origam.Workbench.Services</Name>
+      <Project>{ECA06542-5635-455E-B513-07F60222CA7D}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench\Origam.Workbench.csproj">
+      <Name>Origam.Workbench</Name>
+      <Project>{A992112A-47F0-4588-A62B-D7C1164DC9D7}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\NandoF\NandoF.csproj">
+      <Name>NandoF</Name>
+      <Project>{57965042-F737-4FC4-BF0E-93C700A0FDF2}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\WinFormsUI\WinFormsUI.csproj">
+      <Name>WinFormsUI</Name>
+      <Project>{D3C782BA-178E-4235-A3BA-8C11DEBB6BEE}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <Reference Include="HPSF">
+      <Name>HPSF</Name>
+      <HintPath>..\NPOI_1_1_Libs\HPSF.dll</HintPath>
+    </Reference>
+    <Reference Include="HSSF">
+      <Name>HSSF</Name>
+      <HintPath>..\NPOI_1_1_Libs\HSSF.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <Name>ICSharpCode.SharpZipLib</Name>
+      <HintPath>..\EnterpriseLibrary\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.MSCommLib">
+      <Name>Interop.MSCommLib</Name>
+      <HintPath>..\EnterpriseLibrary\Interop.MSCommLib.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <Name>log4net</Name>
+      <HintPath>..\EnterpriseLibrary\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Configuration">
+      <Name>Microsoft.Practices.EnterpriseLibrary.Configuration</Name>
+      <HintPath>..\EnterpriseLibrary\Microsoft.Practices.EnterpriseLibrary.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Security">
+      <Name>Microsoft.Practices.EnterpriseLibrary.Security</Name>
+      <HintPath>..\EnterpriseLibrary\Microsoft.Practices.EnterpriseLibrary.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI">
+      <Name>NPOI</Name>
+      <HintPath>..\NPOI_1_1_Libs\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="POIFS">
+      <Name>POIFS</Name>
+      <HintPath>..\NPOI_1_1_Libs\POIFS.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AsThreadPool.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DebugInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Engine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Gui.Win\ExecuteWorkflowButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Gui.Win\WorkflowHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Gui.Win\WorkflowWatchPad.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Interfaces\IWorkflowEngineTask.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MobilePhoneShortMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MobilePhoneShortMessages.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ResourceUtils.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SerialCommunicationBuffer.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SerialCommunicationBuffer.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Service Agents\AbstractServiceAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service Agents\DataServiceAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service Agents\Enums.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service Agents\ExcelAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service Agents\FileSystemServiceAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service Agents\HttpServiceAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service Agents\MailServiceAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service Agents\MobilePhoneServiceAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service Agents\OperatingSystemServiceAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service Agents\ReportServiceAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service Agents\SerialPortAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service Agents\SmsMessage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service Agents\TextReaderOptions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service Agents\TextReaderOptionsField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service Agents\TransformationAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service Agents\WorkflowServiceAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Service Agents\WorkQueueServiceAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="StateMachineQueueEntry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="StateMachineService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tasks\AbstractWorkflowEngineTask.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tasks\CheckRuleEngineTask.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tasks\ForEachBlockEngineTask.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tasks\LoopBlockEngineTask.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tasks\ServiceMethodCallEngineTask.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tasks\SetWorkflowPropertyEngineTask.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tasks\TransactionBlockEngineTask.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tasks\UIEngineTask.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tasks\UpdateContextEngineTask.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tasks\WaitEngineTask.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tasks\WorkflowCallEngineTask.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WorkflowCancelledByUserException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WorkflowEngineTaskEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WorkflowException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WorkflowForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WorkflowHost.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WorkflowHostEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WorkflowHostFormEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WorkflowHostMessageEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WorkflowStateData.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WorkflowStateData.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="WorkflowTaskFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WorkQueue\OrigamNotificationContactData.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OrigamNotificationContactData.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="WorkQueue\WorkQueueAdapterFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WorkQueue\WorkQueueAdapterResult.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WorkQueue\WorkQueueData.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WorkQueueData.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="WorkQueue\WorkQueueFileLoader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WorkQueue\WorkQueueItemLockedException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WorkQueue\WorkQueueLoaderAdapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WorkQueue\WorkQueueService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WorkQueue\WorkQueueWebLoader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WorkQueue\WorkQueueWorkflowLoader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Content Include="MobilePhoneShortMessages.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MobilePhoneShortMessages.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="SerialCommunicationBuffer.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>SerialCommunicationBuffer.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="WorkflowStateData.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>WorkflowStateData.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="WorkQueue\OrigamNotificationContactData.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>OrigamNotificationContactData.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="WorkQueue\WorkQueueData.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>WorkQueueData.Designer.cs</LastGenOutput>
+    </Content>
+    <EmbeddedResource Include="Gui.Win\WorkflowWatchPad.resx">
+      <DependentUpon>WorkflowWatchPad.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.cs-CZ.resx" />
+    <EmbeddedResource Include="Strings.de.resx" />
+    <EmbeddedResource Include="Strings.resx" />
+    <EmbeddedResource Include="WorkflowForm.resx">
+      <DependentUpon>WorkflowForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="MobilePhoneShortMessages.xsx">
+      <DependentUpon>MobilePhoneShortMessages.xsd</DependentUpon>
+    </None>
+    <None Include="SerialCommunicationBuffer.xsx">
+      <DependentUpon>SerialCommunicationBuffer.xsd</DependentUpon>
+    </None>
+    <None Include="WorkflowStateData.xsx">
+      <DependentUpon>WorkflowStateData.xsd</DependentUpon>
+    </None>
+    <None Include="WorkQueue\OrigamNotificationContactData.xsx">
+      <DependentUpon>OrigamNotificationContactData.xsd</DependentUpon>
+    </None>
+    <None Include="WorkQueue\WorkQueueData.xsx">
+      <DependentUpon>WorkQueueData.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent />
+    <PostBuildEvent />
+  </PropertyGroup>
+</Project>

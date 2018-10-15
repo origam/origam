@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="ResMimeType">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="Version">
+		<value>1.0.0.0</value>
+	</resheader>
+	<resheader name="Reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="Writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="SettingsInvalidFormat">
+		<value>OrigamSettings.config is not in a valid format.</value>
+	</data>
+	<data name="CantSaveConfig">
+		<value>Cannot save configuration. Configuration names must be unique.</value>
+	</data>
+	<data name="InvalidProperty">
+		<value>Invalid property or field name</value>
+	</data>
+	<data name="UnsuportedType">
+		<value>Unsupported member type.</value>
+	</data>
+	<data name="TransactionRegistered">
+		<value>Transaction is already registered.</value>
+	</data>
+	<data name="ErrorsDuringRollback">
+		<value>Errors occured while rolling back transaction.{0}</value>
+	</data>
+	<data name="ErrorsDuringPartialRollback">
+		<value>Errors occured while partially rolling back transaction.{0}</value>
+	</data>
+	<data name="ExceptionSavingTransaction">
+		<value>Exception occured while saving transaction.</value>
+	</data>
+	<data name="PartialRollbackNotSupported">
+		<value>Partial rollback of transaction is not supported by {0}</value>
+	</data>
+	<data name="SavingNotSupported">
+		<value>Saving of transaction is not supported by {0}</value>
+	</data>
+	<data name="UrlPartParameterNull">
+		<value>Url part is to be replaced by a parameter value but the value provided is NULL. Cannot construct URL.</value>
+	</data>
+  <data name="UserNotLoggedInException">
+    <value>Uživatel není přihlášen.</value>
+  </data>
+</root>

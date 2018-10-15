@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>f
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{957E220E-2B38-4A86-82A3-CBF36BD3FC5E}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ModelImport</RootNamespace>
+    <AssemblyName>ModelImport</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Origam.ModelImport.ModelImport</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="C1.Win.C1Input">
+      <HintPath>OrigamDll\C1.Win.C1Input.dll</HintPath>
+    </Reference>
+    <Reference Include="Origam">
+      <HintPath>OrigamDll\Origam.dll</HintPath>
+    </Reference>
+    <Reference Include="Origam.DA">
+      <HintPath>OrigamDll\Origam.DA.dll</HintPath>
+    </Reference>
+    <Reference Include="Origam.DA.Service">
+      <HintPath>OrigamDll\Origam.DA.Service.dll</HintPath>
+    </Reference>
+    <Reference Include="Origam.Gui.Win">
+      <HintPath>OrigamDll\Origam.Gui.Win.dll</HintPath>
+    </Reference>
+    <Reference Include="Origam.ReflectorCache">
+      <HintPath>OrigamDll\Origam.ReflectorCache.dll</HintPath>
+    </Reference>
+    <Reference Include="Origam.Schema">
+      <HintPath>OrigamDll\Origam.Schema.dll</HintPath>
+    </Reference>
+    <Reference Include="Origam.Schema.DeploymentModel">
+      <HintPath>OrigamDll\Origam.Schema.DeploymentModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Origam.Schema.EntityModel">
+      <HintPath>OrigamDll\Origam.Schema.EntityModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Origam.Schema.GuiModel">
+      <HintPath>OrigamDll\Origam.Schema.GuiModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Origam.Schema.LookupModel">
+      <HintPath>OrigamDll\Origam.Schema.LookupModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Origam.Schema.MenuModel">
+      <HintPath>OrigamDll\Origam.Schema.MenuModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Origam.Schema.RuleModel">
+      <HintPath>OrigamDll\Origam.Schema.RuleModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Origam.Schema.TestModel">
+      <HintPath>OrigamDll\Origam.Schema.TestModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Origam.Schema.WorkflowModel">
+      <HintPath>OrigamDll\Origam.Schema.WorkflowModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Origam.Security, Version=2.0.5378.24391, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>OrigamDll\Origam.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Origam.UI">
+      <HintPath>OrigamDll\Origam.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Origam.Workbench">
+      <HintPath>OrigamDll\Origam.Workbench.dll</HintPath>
+    </Reference>
+    <Reference Include="Origam.Workbench.Services">
+      <HintPath>OrigamDll\Origam.Workbench.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\EnterpriseLibrary\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Configuration, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>_libs\Microsoft.Practices.EnterpriseLibrary.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Security">
+      <HintPath>_libs\Microsoft.Practices.EnterpriseLibrary.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>OrigamDll\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ModelImport.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="OrigamSettings.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="securityconfiguration.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="model-files\AS Authorization.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="model-files\Origam Tenant Organization.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="model-files\OrigamRoot.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

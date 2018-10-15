@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Origam</AssemblyName>
+    <RootNamespace>Origam</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="MarkdownSharp.Portable" Version="1.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="CSharpFunctionalExtensions, Version=1.10.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\Origam.Workbench.Services\bin\Debug-net2\CSharpFunctionalExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.StaticFiles, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
+      <HintPath>..\EnterpriseLibrary\Microsoft.AspNetCore.StaticFiles.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

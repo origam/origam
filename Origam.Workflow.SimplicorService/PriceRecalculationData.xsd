@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema id="ROOT" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+	xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+	<xs:element name="PriceRecalculationData" msdata:IsDataSet="true" msdata:Locale="cs-CZ" msprop:Id="8d711c5b-1900-418d-b8e3-c91b942648f2">
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="InventoryOperation" msdata:Locale="cs-CZ" msdata:DisplayExpression="'Skladová/majetková operace'"
+					msprop:Id="f2c2da7b-6c70-4676-9c34-b1cb01bba0cd" msprop:EntityId="060974c8-bff9-4b7d-9b48-fc2630f2de8a"
+					msprop:IsAuditingEnabled="True">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Text" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Memo" msprop:Id="b6b36752-00ce-4b36-b1f1-329e23c33a9e"
+								msprop:FieldId="a85ae255-903d-4752-8a3c-8d290979bf9e" type="xs:string" minOccurs="0" msdata:Ordinal="5" />
+							<xs:element name="InventoryOperationDetail" msdata:Locale="cs-CZ" msdata:DisplayExpression="'Skladová/majetková operace - položka'"
+								msprop:Id="212a38cb-20c7-433a-beb2-cd5b32aa4ba2" msprop:EntityId="4971fcc8-9b2f-41f0-be5a-d2e894be4a91"
+								msprop:IsAuditingEnabled="True" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:appinfo>
+										<msdata:Relationship name="InventoryOperationDetail" msdata:parent="InventoryOperation" msdata:child="InventoryOperationDetail"
+											msdata:parentkey="Id" msdata:childkey="refInventoryOperationId" />
+									</xs:appinfo>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:attribute name="refNewInventoryItemId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="7493eaa5-dc41-4a2f-8a22-00127b953cf5"
+										msprop:FieldId="ab011460-2acd-499f-bf19-0c2ea48cfe80" type="xs:string" />
+									<xs:attribute name="PriceLocal" msdata:Caption="Cena/j. (d)" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Currency"
+										msprop:Id="f352c73a-c0cc-4c29-835f-06eba769ae09" msprop:FieldId="df6b3352-c02d-4f9d-8c73-47ae9182b84d"
+										type="xs:decimal" />
+									<xs:attribute name="refNewShelfInventoryLocationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Nový regál" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="f7f6d77a-f670-43f2-adf6-16ca0c6cf75b" msprop:DefaultLookupId="ceebc8a2-18d6-4f9d-b568-4c212f25dcb4"
+										msprop:FieldId="2bce380b-e1e6-4d88-8845-6b40772e1447" type="xs:string" />
+									<xs:attribute name="refNewShelfStoreyInventoryLocationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Nové patro regálu" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="547f95c8-ecad-4e20-8f6d-17c9229b63e7" msprop:DefaultLookupId="db38363f-2556-41ed-a660-bf273b0d48d8"
+										msprop:FieldId="b3a23897-d08b-4128-98d9-23021079c118" type="xs:string" />
+									<xs:attribute name="PriceAverageQuantity" msdata:Caption="Množství (váž. průměr)" msprop:AllowNulls="False"
+										msprop:OnCopyAction="Copy" msprop:OrigamDataType="Float" msprop:Id="5356a107-a950-4527-8828-1d014c409056"
+										msprop:FieldId="8b649ca7-b49d-418a-8542-a8055c2cba04" type="xs:decimal" msdata:DefaultValue="0"
+										use="required" />
+									<xs:attribute name="refContractDocumentDeliveryId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Plnění objednávky" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="185c69fb-438d-4210-aecd-22c8892b6d64" msprop:DefaultLookupId="dffcc570-111f-4417-9b32-3f984a91ae2f"
+										msprop:FieldId="4bac3376-8f8e-42f9-a8a9-5a37d4892ba1" type="xs:string" />
+									<xs:attribute name="refContractDocumentBillingDetailId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Položka objednávky" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="0729b9fa-8c27-4dd1-a419-2343f8df6851" msprop:DefaultLookupId="2c424a8f-411c-4adb-a9da-4e1808bbcb73"
+										msprop:FieldId="addd4a15-903c-44bc-ad50-d983ebc2dfc0" type="xs:string" />
+									<xs:attribute name="PriceForeign" msdata:Caption="Cena/j." msprop:OnCopyAction="Copy" msprop:OrigamDataType="Currency"
+										msprop:Id="c239690e-2753-42a7-b039-2534a2f10c22" msprop:FieldId="2278c841-8a90-45aa-9086-7092626faa4a"
+										type="xs:decimal" default="0" />
+									<xs:attribute name="refManufacturingWorkOrderId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Výrobní příkaz" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="f0f33b2e-a5eb-45d3-8f78-279b6c80e16f" msprop:DefaultLookupId="7576f319-b299-41ef-b1fb-4cd741dab153"
+										msprop:FieldId="4b91ad80-b516-4a9f-9611-9299a5914ad1" type="xs:string" />
+									<xs:attribute name="refProductId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Produkt" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="66992305-5ca2-4223-bde9-2f3337947bb1" msprop:DefaultLookupId="2ca0c125-060d-4c64-9f25-80d5469fb093"
+										msprop:FieldId="650919fc-d9e0-491c-8aed-f1fb26972689" type="xs:string" use="required" />
+									<xs:attribute name="refOldInventoryItemId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="05ee47d0-80bd-4d66-a1c2-367158379d96"
+										msprop:FieldId="bef1bc94-b582-47f3-9321-4102f48eb051" type="xs:string" />
+									<xs:attribute name="refOldFloorInventoryLocationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Původní patro" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="a6fcb305-08c7-4e3c-a01a-3746f6a0761d" msprop:DefaultLookupId="a050db0c-39ec-4d79-87c2-cb1edb2d4c63"
+										msprop:FieldId="c17632a5-74a5-4774-9a2c-f1e908d9e2c4" type="xs:string" />
+									<xs:attribute name="NewItemExpirationDate" msdata:Caption="Datum expirace" msprop:OnCopyAction="Copy"
+										msprop:OrigamDataType="Date" msprop:Id="2d2c44d4-ecf4-44c4-89c5-3a201da82d10" msprop:FieldId="4b43c887-4bd4-4cd1-a8d4-7bdcd6fa127d"
+										type="xs:dateTime" />
+									<xs:attribute name="refManufacturingReportId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Hlášení o výrobě" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="5bb0e3fa-7638-44db-bdf1-3aecc784b808" msprop:DefaultLookupId="1edc6064-aba9-40b1-a76e-503dbf90af92"
+										msprop:FieldId="c09447ab-2f03-4e0d-882a-761db843c05a" type="xs:string" />
+									<xs:attribute name="NewItemReferenceCode" msdata:Caption="Evidenční číslo" msprop:OnCopyAction="Copy"
+										msprop:OrigamDataType="String" msprop:Id="555c66d1-4d71-4817-8c3a-3f02b0ff84ce" msprop:FieldId="45b2662e-0340-487f-b3c2-a12e7fc1420c">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="40" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="Quantity" msdata:Caption="Množství" msprop:AllowNulls="False" msprop:OnCopyAction="Copy"
+										msprop:OrigamDataType="Float" msprop:Id="e331797a-a3d0-4991-84de-3f6fb0672118" msprop:FieldId="6f99e85d-b40e-4be3-a791-ac566ef44ed7"
+										type="xs:decimal" use="required" />
+									<xs:attribute name="refNewRowInventoryLocationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Nová ulička" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="507ede45-0325-46b4-b2df-49ec911a7330" msprop:DefaultLookupId="17388eb3-72f7-4234-8bdc-98db887b5a80"
+										msprop:FieldId="8f1248f7-9f55-479b-8484-ab7749efaa12" type="xs:string" />
+									<xs:attribute name="NewItemUniqueBarCode" msdata:Caption="Unikátní kód" msprop:OnCopyAction="Copy"
+										msprop:OrigamDataType="String" msprop:Id="a64a2228-3450-4b0c-9e39-4fdfb3c63747" msprop:FieldId="02d783b6-1e65-4c3b-9fe1-338749e16e9a">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="128" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="refOldShelfInventoryLocationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Původní regál" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="fa5ea1d6-a071-4e80-b298-5740a82cafe8" msprop:DefaultLookupId="ceebc8a2-18d6-4f9d-b568-4c212f25dcb4"
+										msprop:FieldId="fc2d869b-fbf8-4560-9e0a-a62441561ef1" type="xs:string" />
+									<xs:attribute name="refDocumentDeliveryId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Plnění faktury" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="002fca2e-40a7-44fc-85ff-57552c3b6c23" msprop:DefaultLookupId="dffcc570-111f-4417-9b32-3f984a91ae2f"
+										msprop:FieldId="fbe5868b-ad00-44af-9ea8-42ce131b4b0e" type="xs:string" />
+									<xs:attribute name="refOldRoomInventoryLocationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Původní místnost" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="3e8d5ee3-6d5c-4de2-8f7d-604d53995fdd" msprop:DefaultLookupId="3a570a34-da5b-4629-9814-e35416728b17"
+										msprop:FieldId="00145186-3348-4c3b-87c0-ac03e11edd97" type="xs:string" />
+									<xs:attribute name="refInventoryReservationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Rezervace" msprop:OnCopyAction="Initialize" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="c5fde543-12b7-4572-b54a-60da7f07e0ac" msprop:DefaultLookupId="fd4d6f25-3ec7-47ae-871c-7927dd7798ce"
+										msprop:FieldId="25733ddb-1c7e-42f0-9b07-cf6e78c0f8d2" type="xs:string" />
+									<xs:attribute name="PriceLocalCorrection" msdata:Caption="Celkem korekce" msprop:AllowNulls="False"
+										msprop:OnCopyAction="Copy" msprop:OrigamDataType="Currency" msprop:Id="c4ba3900-1483-4a78-b237-66b49e7b3ef0"
+										msprop:FieldId="7098c939-ba3a-43c1-95f7-67dd720ec6be" type="xs:decimal" msdata:DefaultValue="0"
+										use="required" />
+									<xs:attribute name="PriceLocalOtherCosts" msdata:Caption="Ostatní náklady (dom.měna)" msprop:AllowNulls="False"
+										msprop:OnCopyAction="Copy" msprop:OrigamDataType="Currency" msprop:Id="1635e74f-3f7d-4c20-8018-6b8aac9ffafc"
+										msprop:FieldId="da6caea4-b4cc-46f7-b186-a8a9ec157109" type="xs:decimal" msdata:DefaultValue="0"
+										use="required" />
+									<xs:attribute name="PriceLocalOtherCostsCorrection" msdata:Caption="Ostatní náklady" msprop:AllowNulls="False"
+										msprop:OnCopyAction="Copy" msprop:OrigamDataType="Currency" msprop:Id="643645ea-246b-47a0-a5e4-789c215b174a"
+										msprop:FieldId="bda5efd0-3982-4b90-8a00-d66a6baf5d96" type="xs:decimal" msdata:DefaultValue="0"
+										use="required" />
+									<xs:attribute name="refOldInventoryOperationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Původní operace" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="c516f99a-f78b-4b93-9c76-7b7932079290" msprop:FieldId="ea7c7f44-6f85-45e4-9ade-8dc386c7ce6d"
+										type="xs:string" />
+									<xs:attribute name="tmpInventoryItemId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="57befc68-d8c3-4a22-949d-7fd4940d88fb"
+										msprop:FieldId="d9b9eda8-29af-4044-9b91-f377b06a0a05" type="xs:string" />
+									<xs:attribute name="TareWeight" msdata:Caption="Tara (kg)" msprop:AllowNulls="False" msprop:OnCopyAction="Copy"
+										msprop:OrigamDataType="Float" msprop:Id="33d7cb85-ae5b-4c45-a2c4-84aabe468780" msprop:FieldId="2992f1f9-6d57-4db4-92de-59f097504496"
+										type="xs:decimal" msdata:DefaultValue="0" use="required" />
+									<xs:attribute name="refNewFloorInventoryLocationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Nové patro" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="82e0a72d-8a74-4cf8-8608-84ad6ed55b12" msprop:DefaultLookupId="a050db0c-39ec-4d79-87c2-cb1edb2d4c63"
+										msprop:FieldId="e4b6865d-2d14-49a4-ba41-2b9f00618e9b" type="xs:string" />
+									<xs:attribute name="PriceAverage" msdata:Caption="Vážený průměr" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Currency"
+										msprop:Id="dc2f5c53-c1f4-4884-8321-8b6629a8cca8" msprop:FieldId="e5e6d245-af66-4616-bbd5-5e4f594f5a09"
+										type="xs:decimal" />
+									<xs:attribute name="IsReservationPartial" msdata:Caption="Částečné vykrytí rezervace" msprop:AllowNulls="False"
+										msprop:OnCopyAction="Copy" msprop:OrigamDataType="Boolean" msprop:Id="59d0a704-ec74-40db-8b38-926314fc7a2a"
+										msprop:FieldId="2b9df8de-78a4-494c-aa5c-250cbd5f1a4d" type="xs:boolean" msdata:DefaultValue="false"
+										use="required" />
+									<xs:attribute name="NewItemSerialNumber" msdata:Caption="Výr. č./šarže" msprop:OnCopyAction="Copy"
+										msprop:OrigamDataType="String" msprop:Id="eeb23a19-09b5-42a1-8fce-9405ba3aed39" msprop:FieldId="d0fbabb8-d296-440d-958b-a1fb7210b473">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="40" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="refNewRoomInventoryLocationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Nová místnost" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="e4ff2390-65cc-4510-97aa-9633f8d85c58" msprop:DefaultLookupId="3a570a34-da5b-4629-9814-e35416728b17"
+										msprop:FieldId="944b2e21-24b5-45ac-b277-02d2898a5c07" type="xs:string" />
+									<xs:attribute name="refDeliveryId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Dodací list" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="ead12de8-717f-4f86-b201-a06cd2adc583" msprop:DefaultLookupId="a133ed53-143f-4697-a30f-6542a2fb8eb9"
+										msprop:FieldId="3e8b15fe-5019-41ad-9979-d275a68351c8" type="xs:string" />
+									<xs:attribute name="refOldResponsiblePersonBusinessPartnerId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Původní hmotná zodpovědnost" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="c15e1e51-78e2-43ad-a7d9-ab8f85ad9798" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6"
+										msprop:FieldId="ff7357df-f54f-40d8-9126-4652a274afc9" type="xs:string" />
+									<xs:attribute name="refDocumentId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Faktura" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="d0bcb785-828e-43ae-b944-b2919b7b42ff" msprop:DefaultLookupId="a39353e9-c7a0-4a9e-b6b6-38e352315d8e"
+										msprop:FieldId="5bf4d55e-9964-4ef1-832e-d6fe04284838" type="xs:string" />
+									<xs:attribute name="refContractDocumentId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Objednávka" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="800a8b00-bd02-4f4b-b606-b2a05d05a82b" msprop:DefaultLookupId="a39353e9-c7a0-4a9e-b6b6-38e352315d8e"
+										msprop:FieldId="b61e2e6c-e606-4a1b-9f44-1e158e835bff" type="xs:string" />
+									<xs:attribute name="refOldRowInventoryLocationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Původní ulička" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="37114a17-acbc-4fd8-8487-be35142ce6bc" msprop:DefaultLookupId="17388eb3-72f7-4234-8bdc-98db887b5a80"
+										msprop:FieldId="03018e4e-9f7c-401e-934f-8124c0df8c2d" type="xs:string" />
+									<xs:attribute name="refOldStoreyInventoryLocationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Původní patro regálu" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="37ab4a66-f809-442c-9ab8-c05e0202e7a6" msprop:DefaultLookupId="db38363f-2556-41ed-a660-bf273b0d48d8"
+										msprop:FieldId="614660fc-2746-4e25-b27d-48466ebc7ff5" type="xs:string" />
+									<xs:attribute name="refNewResponsiblePersonBusinessPartnerId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Nová hmotná zodpovědnost" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="2597c318-029d-4344-9e33-c0cdd8d2d36b" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6"
+										msprop:FieldId="1c925c05-f691-4670-b4fd-f77467319e10" type="xs:string" />
+									<xs:attribute name="refInventoryOperationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="07069a99-cc89-48b2-980a-cbced694cb45" msprop:FieldId="56acd38e-3f19-48d8-847a-0f93e5535c0e"
+										type="xs:string" use="required" />
+									<xs:attribute name="PriceLocalTotal" msdata:ReadOnly="true" msdata:Expression="((PriceLocal * Quantity) + PriceLocalOtherCosts)"
+										msdata:Caption="Celkem (d)" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Currency" msprop:Id="0abcd0b1-34de-4a26-b7a2-d4cd1a578ada"
+										msprop:FieldId="769b89f1-8a98-4d23-8bb5-4901bb695aa7" type="xs:decimal" />
+									<xs:attribute name="refUomId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="m/j" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="3d4b8156-ce67-48e2-a931-e438c8f57593"
+										msprop:DefaultLookupId="da134e3d-abd9-4d47-bfdf-0cf058699b1d" msprop:FieldId="8d9ab210-3c2a-4be5-aa24-48f4e675c8bb"
+										type="xs:string" />
+									<xs:attribute name="refPackageId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Balení" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="ac1cef5f-d7ab-4c09-866b-f038e7c3d5f6" msprop:DefaultLookupId="62d73bfa-af2e-4a3b-8cfb-89af1686e36b"
+										msprop:FieldId="92a4c9dd-6a70-4087-8ad7-53345d22c4a3" type="xs:string" />
+									<xs:attribute name="refResourceId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Obsluha" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="0fdc5a13-6856-45a1-a5e9-f117d9e0e2a8" msprop:DefaultLookupId="0c75ba7a-b402-4a92-b9d1-224ad60bca4d"
+										msprop:FieldId="2d6044dc-004c-4864-b866-4ddaf3af887a" type="xs:string" />
+									<xs:attribute name="refOldBuildingInventoryLocationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Původní budova" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="1816d62a-0b1e-45cd-815d-f3a4a05fcef9" msprop:DefaultLookupId="2f1a1d73-094b-42e5-a69a-3452d25bde64"
+										msprop:FieldId="fa7c1a8e-46e5-44ba-802a-4119b980bb56" type="xs:string" />
+									<xs:attribute name="refNewBuildingInventoryLocationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Nová budova" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="783fd5ff-74eb-414f-88fa-f91a8747ad94" msprop:DefaultLookupId="2f1a1d73-094b-42e5-a69a-3452d25bde64"
+										msprop:FieldId="1a4c3044-272d-4cb6-93ef-1dd49a5e4b2f" type="xs:string" />
+									<xs:attribute name="PriceForeignTotal" msdata:ReadOnly="true" msdata:Expression="(Quantity * PriceForeign)"
+										msdata:Caption="Cena" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Currency" msprop:Id="e193ae9a-1e4f-4023-a057-fd1e21fec1c9"
+										msprop:FieldId="df94cd05-6a40-46b1-9f45-d75f81c14b4d" type="xs:decimal" />
+									<xs:attribute name="refDocumentBillingDetailId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Položka faktury" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="f2656749-4141-4b58-a99b-ffad8df44f32" msprop:DefaultLookupId="2c424a8f-411c-4adb-a9da-4e1808bbcb73"
+										msprop:FieldId="939313d6-0f41-4b51-85cf-e3aeca63fc8d" type="xs:string" />
+									<xs:attribute name="refDimension4Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Dimenze 4" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="403626e1-b8e6-4476-a478-0caa776d051f" msprop:DefaultLookupId="67cf76b3-7160-4e8a-928a-287ae2ea62f7"
+										msprop:FieldId="24851c7d-a1bd-4afd-9bf7-f2e3e1609088" type="xs:string" />
+									<xs:attribute name="refDimension3Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Dimenze 3" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="dba10202-3b65-4bb5-b9e4-14aac3953eae" msprop:DefaultLookupId="fc8ac9a5-fa61-4332-a286-48af82cff41d"
+										msprop:FieldId="bde31e99-4e3a-44aa-a89e-7b984aecbe04" type="xs:string" />
+									<xs:attribute name="refDimension1Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Dimenze 1" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="0666a52d-0b52-490a-92f1-9d5dbcf48205" msprop:DefaultLookupId="be0adfff-6155-4e92-a7fe-bf1b0e320a15"
+										msprop:FieldId="c1047c35-b399-479b-a3ba-a255c4853731" type="xs:string" />
+									<xs:attribute name="refDimension2Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Dimenze 2" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="27116e80-eb77-4872-90d3-cefbfd130dad" msprop:DefaultLookupId="74bda75a-6d49-42d0-851f-809eef2ca531"
+										msprop:FieldId="0548e074-b5e6-4ca2-a27c-d96aa9260b1c" type="xs:string" />
+									<xs:attribute name="RecordCreatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Vytvořil" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="cbcf7bb8-10d0-4576-98f5-1210b10bae5f" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6"
+										msprop:FieldId="e9c67967-bf15-49b7-940e-7eb7f22137b5" type="xs:string" />
+									<xs:attribute name="RecordUpdatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msdata:Caption="Naposledy změnil" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="ad2d2efe-9cb0-4141-ac28-25b8ed68580b" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6"
+										msprop:FieldId="c7a4599c-2b28-4b9e-9603-19dd2bdc6295" type="xs:string" />
+									<xs:attribute name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+										msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+										msprop:Id="c54413b6-eb88-49c8-a7ff-3bb942c1984e" msprop:FieldId="1c130ad2-c9ac-44c5-8dd2-1a1fc97f76df"
+										type="xs:string" use="required" />
+									<xs:attribute name="RecordCreated" msdata:Caption="Datum vytvoření" msprop:OnCopyAction="Copy"
+										msprop:OrigamDataType="Date" msprop:Id="6a92781b-ac57-4b24-a2a3-7ff772747431" msprop:FieldId="e24abd12-1644-406f-8244-7dfe649e33ab"
+										type="xs:dateTime" />
+									<xs:attribute name="RecordUpdated" msdata:Caption="Datum posl. změny" msprop:OnCopyAction="Copy"
+										msprop:OrigamDataType="Date" msprop:Id="d245e9df-9a2f-4196-89de-b86faaaeb624" msprop:FieldId="cd23d907-1594-42e5-89b2-f9cb288535cc"
+										type="xs:dateTime" />
+									<xs:attribute name="Selected" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Boolean"
+										msprop:Id="de0d5266-6200-4775-87aa-e151815fb23c" msprop:FieldId="3f8e3fc9-4911-46fc-b035-62de979ee331"
+										type="xs:boolean" msdata:DefaultValue="false" use="required" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="ReferenceCode" msdata:Caption="Číslo dokladu" msprop:AllowNulls="False" msprop:OnCopyAction="Copy"
+							msprop:OrigamDataType="String" msprop:Id="da271d43-cd75-4d04-8b5e-0dda234053ef" msprop:FieldId="9e35db11-b15d-4633-acd7-bbe1afcfc186"
+							msdata:DefaultValue="&lt;automaticky&gt;" use="required">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="40" />
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="refOldWarehouseId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Původní sklad" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="1dce3613-ffc2-4a0f-87be-0fc182e52afa" msprop:DefaultLookupId="c3b2bee0-b487-47f2-a2bb-dad170c3a6c1"
+							msprop:FieldId="84cfd206-5368-4a21-9fec-043477e731c2" type="xs:string" />
+						<xs:attribute name="refCurrencyId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Měna" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="5cc588f5-31a7-4a70-81b5-113a382fe26a" msprop:DefaultLookupId="8318fbda-a5b3-415b-9992-613da595fec3"
+							msprop:FieldId="cffda194-2e07-44a9-911f-bdd431b0a71b" type="xs:string" 
+							use="required" />
+						<xs:attribute name="IsCancellation" msdata:Caption="Storno doklad" msprop:AllowNulls="False" msprop:OnCopyAction="Copy"
+							msprop:OrigamDataType="Boolean" msprop:Id="9602571a-5014-4301-8b16-2027f94017d8" msprop:FieldId="6170c13b-f2ff-4135-8c0b-b60e44e73cdc"
+							type="xs:boolean" msdata:DefaultValue="false" use="required" />
+						<xs:attribute name="CurrencyUnit" msdata:Caption="Měn. jednotka" msprop:AllowNulls="False" msprop:OnCopyAction="Copy"
+							msprop:OrigamDataType="Integer" msprop:Id="39da69f1-d5cb-4fcf-980c-2394e212b2e9" msprop:FieldId="a348eb3a-bb92-4bb6-9bde-77ed22f3f0a3"
+							type="xs:int" msdata:DefaultValue="1" use="required" />
+						<xs:attribute name="IsCancelled" msdata:Caption="Stornováno" msprop:AllowNulls="False" msprop:OnCopyAction="Copy"
+							msprop:OrigamDataType="Boolean" msprop:Id="1ddf0c69-f212-431e-a0b9-4e14dc4097b4" msprop:FieldId="75cb8bd8-db37-4584-8a19-6a186896a26f"
+							type="xs:boolean" msdata:DefaultValue="false" use="required" />
+						<xs:attribute name="PriceForeignTotal" msdata:Caption="Cena" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Currency"
+							msprop:Id="26b3e21f-99db-4948-991f-642255b37f33" msprop:FieldId="60aa1187-d980-4284-b42e-35f28aba1781"
+							type="xs:decimal" />
+						<xs:attribute name="refCancellationInventoryOperationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Stornovaná operace" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="d7ad7ac8-0021-44c9-91de-72abecd70d41" msprop:FieldId="45857406-fcac-43d5-95eb-5dd1e07ce5dd"
+							type="xs:string" />
+						<xs:attribute name="refInventoryOperationTypeId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Druh operace" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="266322ce-bcd5-422b-a7c3-733d5eac0fa5" msprop:DefaultLookupId="ed0a3827-5390-4f64-a64b-00e977418963"
+							msprop:FieldId="b36c37d0-6068-4f8c-b0ca-627609c3e8e6" type="xs:string" use="required" />
+						<xs:attribute name="refCancelledInventoryOperationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Stornovaná operace" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="40e0ba56-5b94-4369-8f64-76d4c4cda6d7" msprop:FieldId="2106e874-f795-475c-92bd-dbc6cf0520d8"
+							type="xs:string" />
+						<xs:attribute name="ExchangeRate" msdata:Caption="Kurz" msprop:AllowNulls="False" msprop:OnCopyAction="Copy"
+							msprop:OrigamDataType="Float" msprop:Id="f280a208-27c6-4589-b4c5-7b0077eed58b" msprop:FieldId="5814646e-d2ed-4c2b-b9ba-f57e2ad0d30b"
+							type="xs:decimal" msdata:DefaultValue="1" use="required" />
+						<xs:attribute name="refBusinessPartnerId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Obchodní partner" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="a55d72d2-3216-4067-be28-8a1c0237d1f2" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6"
+							msprop:FieldId="79d3ebc3-7e12-43a5-8f48-b6f7003b9df4" type="xs:string" />
+						<xs:attribute name="refNewWarehouseId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Nový sklad" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="b1a118e0-64fd-46ba-8951-8dc9310607cf" msprop:DefaultLookupId="c3b2bee0-b487-47f2-a2bb-dad170c3a6c1"
+							msprop:FieldId="2712b4ae-f1ef-45b0-92a8-ab8903866919" type="xs:string" />
+						<xs:attribute name="Date" msdata:Caption="Datum" msprop:AllowNulls="False" msprop:OnCopyAction="Copy"
+							msprop:OrigamDataType="Date" msprop:Id="4fcca6fb-b22f-4299-ac65-94099d1d7590" msprop:FieldId="5f1b0ad0-b386-4953-a5f4-db577c38dad5"
+							type="xs:dateTime" use="required" />
+						<xs:attribute name="RecordCreatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Vytvořil" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="cbcf7bb8-10d0-4576-98f5-1210b10bae5f" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6"
+							msprop:FieldId="1adfc893-0763-4242-9cfd-c2b75baf4df4" type="xs:string" />
+						<xs:attribute name="RecordUpdatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Naposledy změnil" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="ad2d2efe-9cb0-4141-ac28-25b8ed68580b" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6"
+							msprop:FieldId="73dee748-0c7f-452a-97c4-2310f9d2ebd5" type="xs:string" />
+						<xs:attribute name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="c54413b6-eb88-49c8-a7ff-3bb942c1984e" msprop:FieldId="7b7a8ac1-117d-45ee-95f8-95e18d7b1a56"
+							type="xs:string" use="required" />
+						<xs:attribute name="RecordCreated" msdata:Caption="Datum vytvoření" msprop:OnCopyAction="Copy"
+							msprop:OrigamDataType="Date" msprop:Id="6a92781b-ac57-4b24-a2a3-7ff772747431" msprop:FieldId="cb8f8acb-2093-4496-8cb0-9452f48ffff0"
+							type="xs:dateTime" />
+						<xs:attribute name="RecordUpdated" msdata:Caption="Datum posl. změny" msprop:OnCopyAction="Copy"
+							msprop:OrigamDataType="Date" msprop:Id="d245e9df-9a2f-4196-89de-b86faaaeb624" msprop:FieldId="747514c6-0c4b-4179-9dac-aae6935f6d24"
+							type="xs:dateTime" />
+						<xs:attribute name="Selected" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Boolean"
+							msprop:Id="de0d5266-6200-4775-87aa-e151815fb23c" msprop:FieldId="ccd46530-a995-4a9d-8fc5-d05583a7fb65"
+							type="xs:boolean" msdata:DefaultValue="false" use="required" />
+						<xs:attribute name="refDimension4Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Dimenze 4" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="403626e1-b8e6-4476-a478-0caa776d051f" msprop:DefaultLookupId="67cf76b3-7160-4e8a-928a-287ae2ea62f7"
+							msprop:FieldId="c8a742ac-6481-43e8-b374-e96f98a8aa42" type="xs:string" />
+						<xs:attribute name="refDimension3Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Dimenze 3" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="dba10202-3b65-4bb5-b9e4-14aac3953eae" msprop:DefaultLookupId="fc8ac9a5-fa61-4332-a286-48af82cff41d"
+							msprop:FieldId="84090676-a34c-4e84-bffd-5e83cae077c8" type="xs:string" />
+						<xs:attribute name="refDimension1Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Dimenze 1" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="0666a52d-0b52-490a-92f1-9d5dbcf48205" msprop:DefaultLookupId="be0adfff-6155-4e92-a7fe-bf1b0e320a15"
+							msprop:FieldId="f033d5a5-b8b4-4575-94d8-df37b6df0c52" type="xs:string" />
+						<xs:attribute name="refDimension2Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Dimenze 2" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="27116e80-eb77-4872-90d3-cefbfd130dad" msprop:DefaultLookupId="74bda75a-6d49-42d0-851f-809eef2ca531"
+							msprop:FieldId="5c450ea1-fa2a-4821-a616-2beb47d7bf50" type="xs:string" />
+						<xs:attribute name="SortOrder" msdata:ReadOnly="true" msdata:Expression="(IIF((refInventoryOperationTypeId = CONVERT('8a57bd4a-7f80-4dd2-83e0-6ca5e784970f', System.Guid)), 0, (IIF((refInventoryOperationTypeId = CONVERT('3262e47a-ac8a-4e99-9841-60d8b3300764', System.Guid)), 1, 100))))"
+							msprop:OnCopyAction="Copy" msprop:OrigamDataType="Integer" msprop:Id="20d5df3c-31d1-4b89-a0a5-b1137216c9ca"
+							msprop:FieldId="8ec3006c-9feb-4c0d-a72b-4f03a636218b" type="xs:int" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="InventoryBalance" msdata:Locale="cs-CZ" msdata:DisplayExpression="'Zůstatek skladové karty'"
+					msprop:Id="bfb61c83-bb46-4953-80e9-d1a9daf554d5" msprop:EntityId="a1c2c698-7447-4c81-b87c-64a4bd875e47"
+					msprop:IsAuditingEnabled="False">
+					<xs:complexType>
+						<xs:attribute name="PriceLocalAverage" msdata:Caption="Průměrná cena/j." msprop:AllowNulls="False"
+							msprop:OnCopyAction="Copy" msprop:OrigamDataType="Currency" msprop:Id="f430d537-0071-4b9f-b503-1ae165717020"
+							msprop:FieldId="0345e182-8a1e-4ca7-ae6e-557d3a65ecf6" type="xs:decimal" msdata:DefaultValue="0"
+							use="required" />
+						<xs:attribute name="QuantityBalance" msdata:Caption="Zůstatek" msprop:AllowNulls="False" msprop:OnCopyAction="Copy"
+							msprop:OrigamDataType="Float" msprop:Id="9b87da9c-452d-4382-87d2-44cb19f005e0" msprop:FieldId="80d2c970-d09e-4c89-8e57-48504cdd1598"
+							type="xs:decimal" use="required" />
+						<xs:attribute name="Date" msdata:Caption="Datum" msprop:AllowNulls="False" msprop:OnCopyAction="Copy"
+							msprop:OrigamDataType="Date" msprop:Id="30d4cd78-bdeb-4808-918e-49722830a0d4" msprop:FieldId="829a649f-2f2f-43fb-8c11-520755066935"
+							type="xs:dateTime" use="required" />
+						<xs:attribute name="QuantityIn" msdata:Caption="Přijato" msprop:AllowNulls="False" msprop:OnCopyAction="Copy"
+							msprop:OrigamDataType="Float" msprop:Id="b6433462-d556-4b6a-b113-4ea1204cbe28" msprop:FieldId="7feb9b49-fa9b-43d5-a465-cb7556b89193"
+							type="xs:decimal" use="required" />
+						<xs:attribute name="QuantityOpening" msdata:Caption="Počáteční stav" msprop:AllowNulls="False"
+							msprop:OnCopyAction="Copy" msprop:OrigamDataType="Float" msprop:Id="c512327d-b3f7-4442-ac4b-643fde2b9c0a"
+							msprop:FieldId="5d7e47be-557e-4e1b-8723-9873d9e96c83" type="xs:decimal" use="required" />
+						<xs:attribute name="refInventoryId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Skladová karta" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="50d14a51-6046-43f7-9a91-6d5346d46189" msprop:FieldId="6b268ccc-8ea2-492f-ad19-c3ad1ab12d97"
+							type="xs:string" use="required" />
+						<xs:attribute name="PriceLocalTotal" msdata:AllowNulls="False"
+							msdata:Caption="Hodnota (d)" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Currency" msprop:Id="7c73f450-e3bc-4cc7-8f18-6eb7d1b59beb"
+							msprop:FieldId="22d7cee5-08f4-4baa-9c0f-a757afa4b6b9" type="xs:decimal" />
+						<xs:attribute name="QuantityOut" msdata:Caption="Vydáno" msprop:AllowNulls="False" msprop:OnCopyAction="Copy"
+							msprop:OrigamDataType="Float" msprop:Id="0f344b0f-999a-46c4-960c-96685793363b" msprop:FieldId="1f2ea2d3-93fd-437f-8fb0-11fccf594392"
+							type="xs:decimal" use="required" />
+						<xs:attribute name="refDimension4Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Dimenze 4" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="403626e1-b8e6-4476-a478-0caa776d051f" msprop:DefaultLookupId="67cf76b3-7160-4e8a-928a-287ae2ea62f7"
+							msprop:FieldId="8d6f3456-f295-4032-ad2a-6046393dc1ac" type="xs:string" />
+						<xs:attribute name="refDimension3Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Dimenze 3" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="dba10202-3b65-4bb5-b9e4-14aac3953eae" msprop:DefaultLookupId="fc8ac9a5-fa61-4332-a286-48af82cff41d"
+							msprop:FieldId="923c0b5f-5f2f-4224-ac26-aaeb9be47eb2" type="xs:string" />
+						<xs:attribute name="refDimension1Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Dimenze 1" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="0666a52d-0b52-490a-92f1-9d5dbcf48205" msprop:DefaultLookupId="be0adfff-6155-4e92-a7fe-bf1b0e320a15"
+							msprop:FieldId="a10a4367-eb5b-4cb9-a286-91284cc71d1d" type="xs:string" />
+						<xs:attribute name="refDimension2Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Dimenze 2" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="27116e80-eb77-4872-90d3-cefbfd130dad" msprop:DefaultLookupId="74bda75a-6d49-42d0-851f-809eef2ca531"
+							msprop:FieldId="76ffdee1-18f7-4bae-88c0-66d0d122413b" type="xs:string" />
+						<xs:attribute name="RecordCreatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Vytvořil" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="cbcf7bb8-10d0-4576-98f5-1210b10bae5f" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6"
+							msprop:FieldId="88458b5d-67f6-4a12-9444-cd780814eac3" type="xs:string" />
+						<xs:attribute name="RecordUpdatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Naposledy změnil" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="ad2d2efe-9cb0-4141-ac28-25b8ed68580b" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6"
+							msprop:FieldId="0c1b1164-f436-4abb-bc84-921df746d778" type="xs:string" />
+						<xs:attribute name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="c54413b6-eb88-49c8-a7ff-3bb942c1984e" msprop:FieldId="9bd18ecc-503e-4e6e-883d-9b84720b1d77"
+							type="xs:string" use="required" />
+						<xs:attribute name="RecordCreated" msdata:Caption="Datum vytvoření" msprop:OnCopyAction="Copy"
+							msprop:OrigamDataType="Date" msprop:Id="6a92781b-ac57-4b24-a2a3-7ff772747431" msprop:FieldId="77fa9b54-beaf-45e8-97e9-924ef4f139e5"
+							type="xs:dateTime" />
+						<xs:attribute name="RecordUpdated" msdata:Caption="Datum posl. změny" msprop:OnCopyAction="Copy"
+							msprop:OrigamDataType="Date" msprop:Id="d245e9df-9a2f-4196-89de-b86faaaeb624" msprop:FieldId="6a747af7-8030-4b9f-ad43-45e10ee7f5c0"
+							type="xs:dateTime" />
+						<xs:attribute name="Selected" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Boolean"
+							msprop:Id="de0d5266-6200-4775-87aa-e151815fb23c" msprop:FieldId="b3dedc6c-b582-4e17-8266-38c421321e18"
+							type="xs:boolean" msdata:DefaultValue="false" use="required" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Warehouse" msdata:Locale="cs-CZ" msdata:DisplayExpression="'Sklad'" msprop:Id="a33eabda-4c6a-47cd-975e-f6f5e7cab2e3"
+					msprop:EntityId="6765421a-1517-4f59-8032-84c54402c8c5" msprop:IsAuditingEnabled="True">
+					<xs:complexType>
+						<xs:attribute name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="c54413b6-eb88-49c8-a7ff-3bb942c1984e" msprop:FieldId="ebd63397-9420-4dd0-9462-fe53c0d1ae5e"
+							type="xs:string" use="required" />
+						<xs:attribute name="refWarehousePricingMethodId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+							msdata:Caption="Metoda ocenění" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+							msprop:Id="d584488a-f112-45ad-8fbe-51823d4da685" msprop:DefaultLookupId="0425b18e-a622-4c06-88b6-fc29464c061d"
+							msprop:FieldId="f819c16a-43a4-4cd8-ab4e-9bf289b9c5ca" type="xs:string" use="required" />
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+		<xs:unique name="InventoryOperationDetail_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+			<xs:selector xpath=".//InventoryOperationDetail" />
+			<xs:field xpath="@Id" />
+		</xs:unique>
+		<xs:unique name="PK_Id" msdata:PrimaryKey="true">
+			<xs:selector xpath=".//InventoryOperation" />
+			<xs:field xpath="@Id" />
+		</xs:unique>
+		<xs:unique name="InventoryBalance_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+			<xs:selector xpath=".//InventoryBalance" />
+			<xs:field xpath="@Id" />
+		</xs:unique>
+		<xs:unique name="Warehouse_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+			<xs:selector xpath=".//Warehouse" />
+			<xs:field xpath="@Id" />
+		</xs:unique>
+		<xs:keyref name="FK_InventoryOperation" refer="PK_Id" msdata:ConstraintOnly="true">
+			<xs:selector xpath=".//InventoryOperationDetail" />
+			<xs:field xpath="@refInventoryOperationId" />
+		</xs:keyref>
+	</xs:element>
+</xs:schema> 

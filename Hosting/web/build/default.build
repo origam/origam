@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="SIMPLICOR Hosting" default="standard" basedir="..">
+  <description>Build file for SIMPLICOR Hosting</description>
+  <loadtasks assembly="c:/TeamCity/tools/nantcontrib-0.85/bin/NAnt.Contrib.Tasks.dll" />
+  <property name="dist" value="out\dist"/>
+  <property name="repositoryRoot" value="D:\SharedData\_install\ORIGAM\web\lastbuild"/>
+  <property name="msbuild-exec" value="c:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe"/>
+  <property name="git-exec" value="C:\Program Files\Git\bin\git"/>
+  <target name="standard" description="Standard build."
+          depends="cleanDirectories, prepareSource, buildLDAPMembershipProvider">
+	  <delete failonerror="true">
+		  <fileset basedir="${repositoryRoot}/${buildOutputDir}">
+			  <include name="**\*.*"/>
+		  </fileset>
+	  </delete>
+	  <copy todir="${repositoryRoot}/${buildOutputDir}">
+      <fileset basedir="${dist}">
+        <include name="**\*.*"/>
+      </fileset>
+    </copy>
+    <delete dir="${repositoryRoot}/resources/hosting" failonerror="false"/>
+  </target>
+  <target name="prepareSource">
+    <copy todir="${dist}">
+      <fileset basedir=".">
+        <include name="*.*" />
+        <exclude name="*.txt" />
+        <exclude name="web.config"/>
+        <exclude name="packages.config"/>
+        <exclude name="OrigamSettings.config"/>
+        <exclude name="problemReporting.config"/>
+        <exclude name="securityconfiguration.config"/>
+        <exclude name="geoLocation.config"/>
+        <exclude name="language.config"/>
+        <exclude name="fixtureRunner.aspx"/>
+        <include name="upgrade\**\*.*" />
+        <include name="css\**\*.*" />
+        <include name="assets\**\*.*" />
+        <include name="css\**\*.*" />
+        <include name="js\**\*.*" />
+        <include name="bin\**\*.*" />
+        <exclude name="bin\*.txt" />
+      </fileset>
+    </copy>
+    <copy file="./App_Code/Startup.cs" tofile="${dist}/App_Code/Startup.cs_"/>
+  </target>
+  <target name="cleanDirectories">
+    <delete dir="${dist}" if="${directory::exists(dist)}" />
+  </target>
+  <target name="buildLDAPMembershipProvider">
+    <exec workingdir=".." program="${msbuild-exec}">
+        <arg value="ORIGAMMembershipProvider/LDAPMembershipProvider.csproj"/>
+        <arg value="/p:Configuration=Release"/>
+    </exec>
+    <copy file="../ORIGAMMembershipProvider/bin/Release/LDAPMembershipProvider.dll" tofile="${dist}/bin/LDAPMembershipProvider.dll"/>
+  </target>
+  <target name="buildOrigamServerHandlers">
+    <loadfile file="../Origam.Server.Handlers/Properties/AssemblyInfo.cs" 
+              property="origamServerHandlersAssemblyInfo">
+      <filterchain>
+        <replacestring from="0.0.0.0" to="${buildNumber}"/>
+      </filterchain>
+    </loadfile>
+    <echo file="../Origam.Server.Handlers/Properties/AssemblyInfo.cs" 
+          message="${origamServerHandlersAssemblyInfo}"/>
+    <exec workingdir=".." program="${msbuild-exec}">
+        <arg value="Origam.Server.Handlers/Origam.Server.Handlers.csproj"/>
+        <arg value="/p:Configuration=Release"/>
+    </exec>
+  </target>
+  <target name="buildOrigamSecurityIdentity">
+    <loadfile file="../Origam.Security.Identity/Properties/AssemblyInfo.cs" 
+              property="origamSecurityIdentityAssemblyInfo">
+      <filterchain>
+        <replacestring from="0.0.0.0" to="${buildNumber}"/>
+      </filterchain>
+    </loadfile>
+    <echo file="../Origam.Security.Identity/Properties/AssemblyInfo.cs" 
+          message="${origamSecurityIdentityAssemblyInfo}"/>
+    <exec workingdir=".." program="${msbuild-exec}">
+        <arg value="Origam.Security.Identity/Origam.Security.Identity.csproj"/>
+        <arg value="/p:Configuration=Release"/>
+    </exec>
+  </target>
+  <target name="buildOrigamServerUtils">
+    <loadfile file="../Origam.Server.Utils/Properties/AssemblyInfo.cs" 
+              property="origamServerUtilsAssemblyInfo">
+      <filterchain>
+        <replacestring from="0.0.0.0" to="${buildNumber}"/>
+      </filterchain>
+    </loadfile>
+    <echo file="../Origam.Server.Utils/Properties/AssemblyInfo.cs" 
+          message="${origamServerUtilsAssemblyInfo}"/>
+    <exec workingdir=".." program="${msbuild-exec}">
+        <arg value="Origam.Server.Utils/Origam.Server.Utils.csproj"/>
+        <arg value="/p:Configuration=Release"/>
+    </exec>
+  </target>
+  <target name="create-release-notes">
+      <mkdir dir="../rn"/>
+      <exec workingdir="c:/TeamCity/src/origam-hosting" program="${git-exec}">
+          <arg value="fetch"/>
+      </exec>
+      <exec workingdir="c:/TeamCity/src/origam-hosting" program="${git-exec}" output="../rn/release-notes__ORIGAM-Web_${projectSuffix}_hosting_${configurationSuffix}_${buildNumber}_artifacts__hosting__${branchMarker}.txt">
+          <arg value="log"/>
+          <arg value="^origin/${previousBranch}"/>
+          <arg value="origin/${currentBranch}"/>
+          <arg value="--oneline"/>
+          <arg value="--no-merges"/>
+          <arg value="--first-parent"/>
+          <arg value="--date=iso"/>
+          <arg value="--pretty=format:&quot;%H%x09%an%x09%ad%x09%s&quot;"/>
+      </exec>
+      <move file="../rn/release-notes-backend-${currentBranch}.txt" tofile="../rn/release-notes__ORIGAM-Web_${projectSuffix}_hosting_${configurationSuffix}_${buildNumber}_artifacts__backend__${branchMarker}.txt" failonerror="false"/>
+      <move file="../rn/release-notes-server-${currentBranch}.txt" tofile="../rn/release-notes__ORIGAM-Web_${projectSuffix}_hosting_${configurationSuffix}_${buildNumber}_artifacts__service__${branchMarker}.txt" failonerror="false"/>
+      <move file="../rn/release-notes-client-${currentBranch}.txt" tofile="../rn/release-notes__ORIGAM-Web_${projectSuffix}_hosting_${configurationSuffix}_${buildNumber}_artifacts__client__${branchMarker}.txt" failonerror="false"/>
+  </target>
+  <target name="buildORIGAMLocaleResolver">
+    <loadfile file="../ORIGAMLocaleResolver/Properties/AssemblyInfo.cs" 
+              property="origamLocaleResolverAssemblyInfo">
+      <filterchain>
+        <replacestring from="0.0.0.0" to="${buildNumber}"/>
+      </filterchain>
+    </loadfile>
+    <echo file="../ORIGAMLocaleResolver/Properties/AssemblyInfo.cs" 
+          message="${origamLocaleResolverAssemblyInfo}"/>
+    <msbuild project="../ORIGAMLocaleResolver/ORIGAMLocaleResolver.csproj">
+      <property name="Configuration" value="Release"/>
+    </msbuild>
+  </target>
+</project>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="ResMimeType">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="Version">
+		<value>1.0.0.0</value>
+	</resheader>
+	<resheader name="Reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="Writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="CreateReportsParametersNull">
+		<value>CreateReport: Parameters cannot be null.</value>
+	</data>
+	<data name="FailedToLoadReport">
+		<value>Failed to load report definition from {0}File does not exist or is not accessible.</value>
+	</data>
+	<data name="CouldNotActivate">
+		<value>Could not activate Crystal Report Document.{0}Error: {1}</value>
+	</data>
+	<data name="OnlyXmlDocSupported">
+		<value>Only XmlDataDocument or empty data source is supported.</value>
+	</data>
+	<data name="FormatNotSupported">
+		<value>Export format not supported by CrystalReportService.</value>
+	</data>
+  <data name="ErrorInvalidReportSource">
+    <value>Invalid report data source.</value>
+  </data>
+  <data name="ErrorBindParam">
+    <value>Cannot bind report parameter to the column. Column does not exist in the source table.</value>
+  </data>
+  <data name="ErrorReportShow">
+    <value>Chyba při zobrazování tiskové sestavy '{0}'</value>
+  </data>
+  <data name="ErrorReportNoRecord0">
+    <value>Není aktivní žádný záznam. Není možné zobrazit sestavu.</value>
+  </data>
+  <data name="ErrorReportNoRecord1">
+    <value>Možné příčiny:</value>
+  </data>
+  <data name="ErrorReportNoRecord2">
+    <value>1. Ve formuláři nejsou zatím zadány žádné záznamy. Přidejte záznam.</value>
+  </data>
+  <data name="ErrorReportNoRecord3">
+    <value>2. Máte nastaven filtr tak, že mu neodpovídají žádné záznamy. Opravte nebo zrušte filtr.</value>
+  </data>
+  <data name="ErrorReportNoRecord4">
+    <value>3. Nemáte přístup k zobrazení nebo úpravě odpovídajících záznamů.</value>
+  </data>
+  <data name="ErrorReportPanelDefinition">
+    <value>ReportPanel nemá nastavenu definici reportu. Není možné zobrazit sestavu.</value>
+  </data>
+  <data name="ReportShowTitle">
+    <value>Zobrazení sestavy ve formuláři '{0}'</value>
+  </data>
+  <data name="ErrorReportRefresh">
+    <value>Chyba při obnovování dat tiskové sestavy '{0}'</value>
+  </data>
+  <data name="TooltipFirstPage">
+    <value>Přejít na první stránku (Home)</value>
+  </data>
+  <data name="TooltipPrevPage">
+    <value>Přejít na předchozí stránku (Page Up)</value>
+  </data>
+  <data name="TooltipNextPage">
+    <value>Přejít na další stránku (Page Down)</value>
+  </data>
+  <data name="TooltipLastPage">
+    <value>Přejít na poslední stránku (End)</value>
+  </data>
+  <data name="TooltipGroup">
+    <value>Zobrazí/schová panel seskupování reportu</value>
+  </data>
+  <data name="TooltipReportClose">
+    <value>Zavře podokno reportu</value>
+  </data>
+  <data name="TooltipExportFile">
+    <value>Exportuje report do souboru (Ctrl+E)</value>
+  </data>
+  <data name="TooltipReportPrint">
+    <value>Vytiskne report (Ctrl+P)</value>
+  </data>
+  <data name="TooltipZoom">
+    <value>Zvětší nebo zmenší zobrazení</value>
+  </data>
+  <data name="PageWidth">
+    <value>Šířka stránky</value>
+  </data>
+  <data name="WholePage">
+    <value>Celá stránka</value>
+  </data>
+  <data name="TooltipReportRefresh">
+    <value>Znovu načte data do reportu</value>
+  </data>
+  <data name="TextToSearch">
+    <value>Zadejte text k vyhledání</value>
+  </data>
+  <data name="TooltipReportFind">
+    <value>Hledat text v reportu</value>
+  </data>
+  <data name="ErrorReportUpdate">
+    <value>Chyba při aktualizaci reportu</value>
+  </data>
+</root>

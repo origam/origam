@@ -1,0 +1,92 @@
+﻿#region license
+/*
+Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using Origam.DA.ObjectPersistence;
+using System;
+using System.Xml;
+using System.Xml.Xsl;
+using System.IO;
+using System.Xml.XPath;
+
+namespace Origam.Rule
+{
+    class OldXsltEngine : MicrosoftXsltEngine
+    {
+        #region Constructors
+        public OldXsltEngine() : base ()
+		{
+		}
+
+        public OldXsltEngine(IPersistenceProvider persistence) : base (persistence)
+		{
+		}
+		#endregion
+
+        internal override object GetTransform(XmlDocument xslt)
+        {
+            XslTransform engine = new XslTransform();
+            engine.Load(new XmlNodeReader(xslt), new ModelXmlResolver(), this.GetType().Assembly.Evidence);
+            return engine;
+        }
+
+        internal override object GetTransform(string xsl)
+        {
+            XslTransform engine = new XslTransform();
+            StringReader xslReader = new StringReader(xsl);
+            XPathDocument xslDoc = new XPathDocument(xslReader);
+            engine.Load(xslDoc, new ModelXmlResolver(), this.GetType().Assembly.Evidence);
+            return engine;
+        }
+
+        public override void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, XmlDocument resultDoc)
+        {
+            XslTransform xslt = engine as XslTransform;
+            XmlReader reader = xslt.Transform(sourceXpathDoc, xslArg, (XmlResolver)null);
+            try
+            {
+                resultDoc.Load(reader);
+            }
+            catch (NullReferenceException ex)
+            {
+                // WORKAROUND: when loading data to a predefined DataSet (using XmlDataDocument)
+                // and the result of the transformation is nothing (completely empty, not even a root node),
+                // null reference exception is fired. We just ignore it.
+                if(reader.ReadState == ReadState.EndOfFile)
+                {
+                    return;
+                }
+                throw;
+            }
+        }
+
+        public override void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, XmlTextWriter xwr)
+        {
+            XslTransform xslt = engine as XslTransform;
+            xslt.Transform(sourceXpathDoc, xslArg, xwr, null);
+        }
+
+        public override void Transform(object engine, XsltArgumentList xslArg, IXPathNavigable input, Stream output)
+        {
+            XslTransform xslt = engine as XslTransform;
+            xslt.Transform(input, xslArg, output);
+        }
+    }
+}

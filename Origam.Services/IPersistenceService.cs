@@ -1,0 +1,54 @@
+#region license
+/*
+Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using System;
+using System.Collections;
+using System.Data;
+
+using Origam.DA.ObjectPersistence;
+using Origam.Schema;
+
+namespace Origam.Workbench.Services
+{
+	/// <summary>
+	/// Summary description for IPersistenceService.
+	/// </summary>
+	public interface IPersistenceService : IWorkbenchService, ICloneable
+	{
+		IPersistenceProvider SchemaProvider{get;}
+		IPersistenceProvider SchemaListProvider{get;}
+
+		void LoadSchema(ArrayList extensions, bool append, bool loadDocumentation, 
+			bool loadDeploymentScripts, string transactionId);
+		SchemaExtension LoadSchema(Guid schemaExtension, bool loadDocumentation, 
+			bool loadDeploymentScripts, string transactionId);
+		SchemaExtension LoadSchema(Guid schemaExtensionId, Guid extraExtensionId, 
+			bool loadDocumentation, bool loadDeploymentScripts, string transactionId);
+		void LoadSchemaList();
+		void UpdateRepository();
+		bool IsRepositoryVersionCompatible();
+		bool CanUpdateRepository();
+		void ExportPackage (Guid extensionId, string fileName);
+		void MergePackage (Guid extensionId, DataSet data, string transcationId);
+        void MergeSchema(DataSet schema, Key activePackage);
+        void InitializeRepository();
+	}
+}

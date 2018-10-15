@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema id="ROOT" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+	xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+	<xs:element name="DataAuditLog" msdata:IsDataSet="true" msdata:Locale="cs-CZ" msprop:Id="530eba45-40db-470d-8e53-8b98ace758ad">
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="AuditRecord" msdata:Locale="cs-CZ" msdata:DisplayExpression="'AuditRecord'"
+					msprop:Id="e5eabac7-cf91-437c-b4d5-94f1d885fbde" msprop:EntityId="1d8e4557-fa7c-4f1d-868d-9138ecf6bb97"
+					msprop:IsAuditingEnabled="False">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="OldValue" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Memo" msprop:Id="5e053cd2-7ee2-42b9-a8cb-3f45269053db"
+								type="xs:string" minOccurs="0" />
+							<xs:element name="refColumnId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+								msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+								msprop:Id="2610ed41-5927-4376-a36a-4ccc581e6a9b" type="xs:string" />
+							<xs:element name="NewValueId" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="6e3da925-c467-43bb-859a-50bece186161"
+								minOccurs="0">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="50" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="NewValue" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Memo" msprop:Id="31bed106-accf-49ff-9c8f-8724258d9ec3"
+								type="xs:string" minOccurs="0" />
+							<xs:element name="OldValueId" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="75cd57d6-22c4-4b3f-b943-9e6d4effad5f"
+								minOccurs="0">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="50" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="ActionType" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Integer"
+								msprop:Id="2455770c-cdd2-4ac3-820c-bfd067192d4c" type="xs:int" />
+							<xs:element name="refParentRecordEntityId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+								msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="37560615-b9bc-4b55-8004-6cb68877ef70"
+								type="xs:string" minOccurs="0" />
+							<xs:element name="refParentRecordId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+								msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+								msprop:Id="4badf745-4bf1-4257-a3fe-ec0c86c2588d" type="xs:string" />
+							<xs:element name="RecordUpdated" msdata:Caption="Záznam aktualizován" msprop:OnCopyAction="Copy"
+								msprop:OrigamDataType="Date" msprop:Id="bfd1ea1b-ffbf-47f6-8f9b-08dab6553a18" type="xs:dateTime"
+								minOccurs="0" />
+							<xs:element name="RecordCreatedServer" msdata:Caption="Záznam vytvořen (server)" msprop:OnCopyAction="Copy"
+								msprop:OrigamDataType="Date" msprop:Id="da9c4ff5-2e67-4744-935a-60a39b886828" type="xs:dateTime"
+								minOccurs="0" />
+							<xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+								msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+								msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" type="xs:string" />
+							<xs:element name="RecordUpdatedServer" msdata:Caption="Záznam aktualizován (server)" msprop:OnCopyAction="Copy"
+								msprop:OrigamDataType="Date" msprop:Id="9424c659-0c83-4aa9-b2a4-aeec9d9e8d40" type="xs:dateTime"
+								minOccurs="0" />
+							<xs:element name="RecordCreatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+								msdata:Caption="Záznam vytvořil" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+								msprop:Id="253ce61e-509c-4d08-864f-c0e03d3eed4b" type="xs:string" minOccurs="0" />
+							<xs:element name="RecordCreated" msdata:Caption="Záznam vytvořen" msprop:OnCopyAction="Copy"
+								msprop:OrigamDataType="Date" msprop:Id="2340af1e-d939-47ae-930b-e24b0cb3a756" type="xs:dateTime"
+								minOccurs="0" />
+							<xs:element name="RecordUpdatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+								msdata:Caption="Záznam aktualizoval" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier"
+								msprop:Id="efb83735-bedb-4eee-b9eb-f111dd46980e" type="xs:string" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+		<xs:unique name="PK_Id" msdata:PrimaryKey="true">
+			<xs:selector xpath=".//AuditRecord" />
+			<xs:field xpath="Id" />
+		</xs:unique>
+	</xs:element>
+</xs:schema>

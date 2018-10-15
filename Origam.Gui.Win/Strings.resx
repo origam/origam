@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Data.DeleteQuestionText" xml:space="preserve">
+    <value>Opravdu si přejete vymazat záznam?</value>
+  </data>
+  <data name="Data.DeleteQuestionTitle" xml:space="preserve">
+    <value>Vymazat záznam</value>
+  </data>
+  <data name="ErrorsInForm" xml:space="preserve">
+    <value>Data formuláře obsahují chyby. Zkontrolujte, prosím, data a znovu opakujte akci.{0}</value>
+  </data>
+  <data name="UnknownObject" xml:space="preserve">
+    <value>Unknown object. Cannot load form</value>
+  </data>
+  <data name="ErrorWhenSaving" xml:space="preserve">
+    <value>Chyba při ukládání dat formuláře '{0}'</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Přejete si uložit změny ve formuláři {0}?</value>
+  </data>
+  <data name="SaveTitle" xml:space="preserve">
+    <value>Uložení</value>
+  </data>
+  <data name="ErrorEndDisable" xml:space="preserve">
+    <value>Cannot call EndDisable without calling BeginDisable first.</value>
+  </data>
+  <data name="ErrorDataSourceIList" xml:space="preserve">
+    <value>Data source must be IList or IListSource</value>
+  </data>
+  <data name="TooltipGrid" xml:space="preserve">
+    <value>Přepne mezi zobrazením tabulky a formuláře (Ctrl+G)</value>
+  </data>
+  <data name="TooltipAttachment" xml:space="preserve">
+    <value>Zapne zobrazování příloh v panelu Přílohy (Ctrl+A)</value>
+  </data>
+  <data name="TooltipAudit" xml:space="preserve">
+    <value>Zobrazí historii změn aktuálního záznamu (Ctrl+H)</value>
+  </data>
+  <data name="TooltipExcel" xml:space="preserve">
+    <value>Zkopíruje data do Excelu (Ctrl+E)</value>
+  </data>
+  <data name="TooltipFilter" xml:space="preserve">
+    <value>Zapne/vypne filtr na aktuální seznam (Ctrl+F)</value>
+  </data>
+  <data name="MenuSetDefaultFilter" xml:space="preserve">
+    <value>&amp;Nastavit aktuální filtr jako standardní</value>
+  </data>
+  <data name="MenuUnsetDefaultFilter" xml:space="preserve">
+    <value>Z&amp;rušit standardní filtr</value>
+  </data>
+  <data name="MenuFilterAdd" xml:space="preserve">
+    <value>&amp;Uložit aktuální filtr</value>
+  </data>
+  <data name="MenuFilterDelete" xml:space="preserve">
+    <value>&amp;Smazat</value>
+  </data>
+  <data name="MenuFilterClear" xml:space="preserve">
+    <value>&amp;Zrušit filtr</value>
+  </data>
+  <data name="ErrorWhenConfirm" xml:space="preserve">
+    <value>Chyba při potvrzování řádky panelu '{0}'.</value>
+  </data>
+  <data name="ErrorSortDirection" xml:space="preserve">
+    <value>Cannot get sort direction. Column has not been sorted.</value>
+  </data>
+  <data name="ErrorAlreadySorted" xml:space="preserve">
+    <value>Column {0} is already sorted. Cannot add sort item.</value>
+  </data>
+  <data name="ErrorReverseSort" xml:space="preserve">
+    <value>Cannot reverse sort order. Column has not been sorted.</value>
+  </data>
+  <data name="ErrorWhenSavingConfig" xml:space="preserve">
+    <value>Nastala chyba při ukládání konfigurace panelu '{0}'</value>
+  </data>
+  <data name="SaveConfigTitle" xml:space="preserve">
+    <value>Ukládání konfigurace panelu</value>
+  </data>
+  <data name="TooltipSegmentCreated" xml:space="preserve">
+    <value>Vytvořeno: </value>
+  </data>
+  <data name="TooltipSegmentLastChange" xml:space="preserve">
+    <value>Poslední změna: </value>
+  </data>
+  <data name="TooltipSegmentId" xml:space="preserve">
+    <value>Id: </value>
+  </data>
+  <data name="ErrorWhenCopy" xml:space="preserve">
+    <value>Nastala chyba při kopírování řádky.</value>
+  </data>
+  <data name="ErrorWhenCopyTitle" xml:space="preserve">
+    <value>Chyba při kopírování řádky.</value>
+  </data>
+  <data name="ErrorWhenColorUpdate" xml:space="preserve">
+    <value>Row color update failed.</value>
+  </data>
+  <data name="TooltipSegmentAttachmentCount" xml:space="preserve">
+    <value>Počet příloh: </value>
+  </data>
+  <data name="ErrorWhenFilterDelete" xml:space="preserve">
+    <value>Chyba při mazání filtru v panelu '{0}'</value>
+  </data>
+  <data name="ErrorWhenFilterList" xml:space="preserve">
+    <value>Chyba při zobrazování seznamu uložených filtrů v panelu '{0}'</value>
+  </data>
+  <data name="NoAuthorization" xml:space="preserve">
+    <value>Nemáte oprávnění vkládat nové záznamy.</value>
+  </data>
+  <data name="AuthorizationTitle" xml:space="preserve">
+    <value>Oprávnění k {0}</value>
+  </data>
+  <data name="ErrorInPanel" xml:space="preserve">
+    <value>Chyba v panelu '{0}'</value>
+  </data>
+  <data name="ErrorLeavingPanel" xml:space="preserve">
+    <value>Chyba při opouštění panelu '{0}'.</value>
+  </data>
+  <data name="ErrorCompareAsPanel" xml:space="preserve">
+    <value>Can only compare AsPanel instances.</value>
+  </data>
+  <data name="ErrorCompareDataSortItem" xml:space="preserve">
+    <value>Cannot compare other types than DataSortItem.</value>
+  </data>
+  <data name="TooltipFirst" xml:space="preserve">
+    <value>Přejít na první záznam</value>
+  </data>
+  <data name="TooltipPrevious" xml:space="preserve">
+    <value>Přejít na předchozí záznam</value>
+  </data>
+  <data name="TooltipNext" xml:space="preserve">
+    <value>Přejít na další záznam</value>
+  </data>
+  <data name="TooltipLast" xml:space="preserve">
+    <value>Přejít na poslední záznam</value>
+  </data>
+  <data name="TooltipNew" xml:space="preserve">
+    <value>Přidat záznam (Insert)</value>
+  </data>
+  <data name="TooltipDelete" xml:space="preserve">
+    <value>Vymazat aktuální záznam (Ctrl+Delete)</value>
+  </data>
+  <data name="ErrorNewRow" xml:space="preserve">
+    <value>Chyba při vkládání nového řádku v panelu '{0}'</value>
+  </data>
+  <data name="UpdateValue" xml:space="preserve">
+    <value>{0} Přejete si hodnotu upravit?</value>
+  </data>
+  <data name="ErrorSaveTitle" xml:space="preserve">
+    <value>Chyba při ukládání řádky.</value>
+  </data>
+  <data name="ErrorGenerateForm" xml:space="preserve">
+    <value>Error occured while generating form. Entity not found: {0}</value>
+  </data>
+  <data name="NoHelpAvailable" xml:space="preserve">
+    <value>K tomuto tématu není k dispozici žádná nápověda.</value>
+  </data>
+  <data name="SelectionTitle" xml:space="preserve">
+    <value>Výběr</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Storno</value>
+  </data>
+  <data name="ErrorFormControlSetDefinition" xml:space="preserve">
+    <value>Provided FormControlSet doesn't contain definition for DataStructure</value>
+  </data>
+  <data name="LoadingData" xml:space="preserve">
+    <value>Načítají se data...</value>
+  </data>
+  <data name="LoadingForm" xml:space="preserve">
+    <value>Načítá se formulář...</value>
+  </data>
+  <data name="ErrorResultNotSupported" xml:space="preserve">
+    <value>Result produced by the template is not supported: {0}</value>
+  </data>
+  <data name="ErrorProcessTemplate" xml:space="preserve">
+    <value>Nastala chyba při zpracování šablony záznamu. Není možné přidat nový záznam.</value>
+  </data>
+  <data name="ErrorNoTemplate" xml:space="preserve">
+    <value>Template not specified. Cannot add record.</value>
+  </data>
+  <data name="ErrorVersionEmpty" xml:space="preserve">
+    <value>Version cannot be empty</value>
+  </data>
+  <data name="ErrorTableNotFound" xml:space="preserve">
+    <value>Table '{0}' not found in the data source.</value>
+  </data>
+  <data name="ErrorColumnNotFound" xml:space="preserve">
+    <value>Datastructure for this form does not contain column '{0}' in entity '{1}'</value>
+  </data>
+  <data name="ErrorDataMemberNull" xml:space="preserve">
+    <value>DataMember is null. Control: {0}</value>
+  </data>
+  <data name="ErrorParameterNull" xml:space="preserve">
+    <value>Parameter is null or inner parameters are null</value>
+  </data>
+  <data name="ErrorUnsupportedType" xml:space="preserve">
+    <value>Unsupported type: {0}</value>
+  </data>
+  <data name="ErrorPropertyNotFound" xml:space="preserve">
+    <value>Property '{0}' does not exist in the control '{1}'</value>
+  </data>
+  <data name="ExecuteRuleTitle" xml:space="preserve">
+    <value>Vykonání pravidla ve formuláři '{0}'</value>
+  </data>
+  <data name="DeleteRowTitle" xml:space="preserve">
+    <value>Mazání řádky ve formuláři '{0}'</value>
+  </data>
+  <data name="ErrorDelayedData" xml:space="preserve">
+    <value>For delayed data loading you have to specify Method for the main data.</value>
+  </data>
+  <data name="ErrorDetailData" xml:space="preserve">
+    <value>Failed reading detail data.</value>
+  </data>
+  <data name="ErrorFetchDataTitle" xml:space="preserve">
+    <value>Chyba při donačítání dat formuláře {0}</value>
+  </data>
+  <data name="ErrorImageData" xml:space="preserve">
+    <value>ImageData must be of type byte[]</value>
+  </data>
+  <data name="ErrorDropDownClose" xml:space="preserve">
+    <value>Nastala chyba při uzavírání drop-down seznamu.</value>
+  </data>
+  <data name="ErrorDropDownCloseTitle" xml:space="preserve">
+    <value>Chyba při uzavírání drop-down</value>
+  </data>
+  <data name="OK1" xml:space="preserve">
+    <value>&amp;OK</value>
+  </data>
+  <data name="Cancel1" xml:space="preserve">
+    <value>&amp;Storno</value>
+  </data>
+  <data name="FilterName" xml:space="preserve">
+    <value>Název filtru:</value>
+  </data>
+  <data name="GlobalFilter" xml:space="preserve">
+    <value>Globální (pro všechny uživatele)</value>
+  </data>
+  <data name="SaveFilter" xml:space="preserve">
+    <value>Uložení filtru</value>
+  </data>
+  <data name="EnterFilterName" xml:space="preserve">
+    <value>Zadejte název filtru</value>
+  </data>
+  <data name="MenuUpload" xml:space="preserve">
+    <value>&amp;Načíst...</value>
+  </data>
+  <data name="MenuDownload" xml:space="preserve">
+    <value>&amp;Uložit kopii...</value>
+  </data>
+  <data name="MenuPreview" xml:space="preserve">
+    <value>Ná&amp;hled</value>
+  </data>
+  <data name="ErrorHandleBlob" xml:space="preserve">
+    <value>Cannot handle blobs. No current row.</value>
+  </data>
+  <data name="ErrorSaveFile" xml:space="preserve">
+    <value>Chyba při ukládání souboru</value>
+  </data>
+  <data name="ErrorLoadFile" xml:space="preserve">
+    <value>Chyba při načítání souboru</value>
+  </data>
+  <data name="ErrorNotBlob" xml:space="preserve">
+    <value>Data source returned data that is not BLOB.</value>
+  </data>
+  <data name="ErrorRecordEmpty" xml:space="preserve">
+    <value>Záznam je prázdný, není možné uložit soubor.</value>
+  </data>
+  <data name="ErrorTmpName" xml:space="preserve">
+    <value>Nebylo možné získat název dočasného souboru</value>
+  </data>
+  <data name="ErrorShowPreviewTitle" xml:space="preserve">
+    <value>Chyba při zobrazování náhledu</value>
+  </data>
+  <data name="ErrorExecuteFile" xml:space="preserve">
+    <value>Soubor {0} nelze spustit</value>
+  </data>
+  <data name="MenuRefresh" xml:space="preserve">
+    <value>Ob&amp;novit</value>
+  </data>
+  <data name="MenuEdit" xml:space="preserve">
+    <value>&amp;Přejít na záznam...</value>
+  </data>
+  <data name="MenuEditList" xml:space="preserve">
+    <value>&amp;Otevřít agendu...</value>
+  </data>
+  <data name="MenuDelete" xml:space="preserve">
+    <value>&amp;Vymazat</value>
+  </data>
+  <data name="ErrorNoDataInList" xml:space="preserve">
+    <value>Data could not be loaded to the drop down list.</value>
+  </data>
+  <data name="ErrorDropDownNotBound" xml:space="preserve">
+    <value>This DropDown is not bound to any data field.</value>
+  </data>
+  <data name="ErrorRecordNeeded0" xml:space="preserve">
+    <value>Pro načtení seznamu je nutné, aby v tabulce, do které chcete vybírat hodnotu ze seznamu,</value>
+  </data>
+  <data name="ErrorRecordNeeded1" xml:space="preserve">
+    <value>byl aktivní záznam. Přidejte nový záznam nebo vyberte existující.</value>
+  </data>
+  <data name="ErrorOpenList" xml:space="preserve">
+    <value>Chyba při otevírání seznamu '{0}'</value>
+  </data>
+  <data name="ErrorDropDownNotSource" xml:space="preserve">
+    <value>Drop down control not set as a source control for the filter part. Cannot create filter part.</value>
+  </data>
+  <data name="ErrorNoParams" xml:space="preserve">
+    <value>Drop down expects parameters. Cannot create filter part.</value>
+  </data>
+  <data name="ErrorUnknownFilterOperator" xml:space="preserve">
+    <value>Unknown filter operator. Cannot construct dataset filter.</value>
+  </data>
+  <data name="ErrorUnknownFilterOperatorLabel" xml:space="preserve">
+    <value>Unknown filter operator. Cannot get operator label.</value>
+  </data>
+  <data name="ErrorNoGrid" xml:space="preserve">
+    <value>Grid expected.</value>
+  </data>
+  <data name="ColumnConfig" xml:space="preserve">
+    <value>Konfigurace sloupců</value>
+  </data>
+  <data name="ErrorNotColumnStyleHolder" xml:space="preserve">
+    <value>Object is not a DataGridColumnStyleHolder</value>
+  </data>
+  <data name="ErrorColorScheme" xml:space="preserve">
+    <value>Color Scheme Not Supported</value>
+  </data>
+  <data name="ErrorAddItemToTree" xml:space="preserve">
+    <value>Could not add item to the tree. NewIndex: {0}</value>
+  </data>
+  <data name="ErrorItemNotFound" xml:space="preserve">
+    <value>Item not found or wrong type.</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Chyba</value>
+  </data>
+  <data name="ErrorRecordNotFound" xml:space="preserve">
+    <value>Data row not found by the provided ID.</value>
+  </data>
+  <data name="ErrorUnknownRowChangeState" xml:space="preserve">
+    <value>Unknown row change state.</value>
+  </data>
+  <data name="WrongCustomFormatMeaasge" xml:space="preserve">
+    <value>The date {0} could not be formated with the specified custom fromat {1}. Please check that the format is correct.</value>
+  </data>
+</root>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ROOT" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+  <xs:element name="OrigamModelVersionData" msdata:IsDataSet="true" msdata:Locale="cs-CZ" msprop:Id="c14d5f5b-df9b-46fa-9f94-2535b9c758e9">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="OrigamModelVersion" msdata:Locale="cs-CZ" msdata:DisplayExpression="'OrigamModelVersion'" msprop:Id="d6178906-0461-484a-a6b2-d8aba64e6bc4" msprop:EntityId="d70d26d1-6886-496e-a573-2217f470ce98" msprop:IsAuditingEnabled="False">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="DateUpdated" msprop:AllowNulls="False" msprop:Id="6f3dd281-409d-45c8-aece-dca0217d02e6" type="xs:dateTime" />
+              <xs:element name="Version" msprop:Id="49367d64-674b-442e-a7ac-234ca3b1ab8d" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="20" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="refSchemaExtensionId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:Id="24173e18-37a9-4133-9006-5095b57b13d4" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="PK_refSchemaExtensionId" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//OrigamModelVersion" />
+      <xs:field xpath="refSchemaExtensionId" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

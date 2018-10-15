@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>7.10.6030</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EF5DE64E-88B2-4B0A-BB7F-4A537B56F3D1}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon />
+    <AssemblyKeyContainerName />
+    <AssemblyName>Origam.UI.Common</AssemblyName>
+    <AssemblyOriginatorKeyFile />
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Origam.UI.Common</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject />
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>15.0</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile />
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile />
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
+      <Name>Origam.Common</Name>
+      <Project>{84251D2B-43A4-4228-8D2A-8729722C25E4}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BrowserNodeCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IOrigamForm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IAttachmentConsumer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IBaseViewContent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IBrowserNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IDebugInfoProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILookupControl.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IOutputPad.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IPadContent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IPropertyPad.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ISecondaryViewContent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IViewContent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IWorkbench.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IWorkbenchLayout.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IWorkbenchWindow.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PadContentCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ViewContentCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ViewContentEventHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WorkbenchSingleton.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent />
+    <PostBuildEvent />
+  </PropertyGroup>
+</Project>

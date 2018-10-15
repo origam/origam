@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema id="ROOT" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+	xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+	<xs:element name="DocumentationComplete" msdata:IsDataSet="true" msdata:Locale="cs-CZ" msprop:Id="f4b65a69-d581-46a7-b911-98933ccff8df"
+		msprop:SchemaVersionId="d95985f6-8635-4413-8f84-858137a6cb18">
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="Documentation" msdata:Locale="cs-CZ" msdata:DisplayExpression="'Documentation'"
+					msprop:Id="8c85423d-81ae-4672-bd6c-6333ad893704" msprop:EntityId="ff084c11-c0a3-4d9c-bd38-0344300e60f4"
+					msprop:SchemaVersionId="d95985f6-8635-4413-8f84-858137a6cb18">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Data" msdata:DataType="System.Object, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+								type="xs:string" />
+							<xs:element name="Category">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="50" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="refSchemaItemId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+								type="xs:string" />
+							<xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+								type="xs:string" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+		<xs:unique name="PK_Id" msdata:PrimaryKey="true">
+			<xs:selector xpath=".//Documentation" />
+			<xs:field xpath="Id" />
+		</xs:unique>
+	</xs:element>
+</xs:schema>

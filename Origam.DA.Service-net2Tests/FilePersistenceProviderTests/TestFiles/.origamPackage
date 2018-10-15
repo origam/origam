@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <package
+    version="1.0.0"
+    name="test7"
+    x:id="3e37fa44-cdb7-4804-8176-8df118a918ae"
+    x:isFolder="true"
+    x:type="Origam.Schema.SchemaExtension" xmlns="http://schemas.origam.com/1.0.0/package">
+    <packageReference
+      referencedPackage="Root Menu/.origamPackage#b9ab12fe-7f7d-43f7-bedc-93747647d6e4"
+      x:id="456e5d57-3695-484d-9ad2-f764b09374ab"
+      x:type="Origam.Schema.PackageReference" />
+  </package>
+</x:file>  

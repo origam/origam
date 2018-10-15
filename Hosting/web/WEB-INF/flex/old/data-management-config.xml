@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service id="data-service"
+    class="Weborb.Data.DataServiceHandler"
+    messageTypes="flex.data.messages.DataMessage">
+
+    <adapters>
+	<adapter-definition id="dotnet-dao" class="Weborb.Data.DotNetAdapter" default="true"/>    
+    </adapters>
+
+    <default-channels>
+        <channel ref="my-amf"/>
+    </default-channels>
+
+<!--
+    <destination id="contact">
+
+        <adapter ref="dotnet-dao" />
+
+        <properties>
+            <source>Weborb.Examples.DataManagement.ContactAssembler</source>
+            <scope>application</scope>
+
+            <metadata>
+                <identity property="contactId"/>
+            </metadata>
+
+            <network>
+                <session-timeout>20</session-timeout>
+                <paging enabled="true" pageSize="2" />
+                <throttle-inbound policy="ERROR" max-frequency="500"/>
+                <throttle-outbound policy="REPLACE" max-frequency="500"/>
+            </network>
+
+            <server>
+                <fill-method>
+                    <name>loadContacts</name>
+                </fill-method>
+
+                <fill-method>
+                    <name>loadContacts</name>
+                    <params>System.String</params>
+                </fill-method>
+
+                <sync-method>
+                    <name>syncContacts</name>
+                </sync-method>
+            </server>
+        </properties>
+    </destination>    
+-->    
+</service>

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="ArrayOfRuleException" nillable="true" type="ArrayOfRuleException" />
+    <xs:complexType name="ArrayOfRuleException">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="RuleException" nillable="true" type="RuleException" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="RuleException">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="FieldName" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Message" type="xs:string" />
+            <xs:element minOccurs="1" maxOccurs="1" name="Severity" type="RuleExceptionSeverity" />
+            <xs:element name="EntityName" type="xs:string" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="RuleExceptionSeverity">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="High" />
+            <xs:enumeration value="Low" />
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

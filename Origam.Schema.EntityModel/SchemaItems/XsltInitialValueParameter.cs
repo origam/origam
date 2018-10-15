@@ -1,0 +1,89 @@
+﻿#region license
+/*
+Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using System;
+using System.ComponentModel;
+using Origam.DA.ObjectPersistence;
+
+namespace Origam.Schema.EntityModel
+{
+    /// <summary>
+    /// Summary description for DeaultValueParameter.
+    /// </summary>
+    [SchemaItemDescription("Xslt Initial Value Parameter", "Parameters", 15)]
+    [HelpTopic("Xslt+Initial+ValueParameter")]
+    public class XsltInitialValueParameter : SchemaItemParameter
+    {
+        public XsltInitialValueParameter() : base() { }
+
+        public XsltInitialValueParameter(Guid schemaExtensionId) : base(schemaExtensionId) { }
+
+        public XsltInitialValueParameter(Key primaryKey) : base(primaryKey) { }
+
+        public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+        {
+            dependencies.Add(this.Transformation);
+        }
+
+        #region Properties
+        [EntityColumn("I01")]
+        [TypeConverter(typeof(TransformOutputScalarOrigamDataTypeConverter))]
+        public override OrigamDataType DataType
+        {
+            get
+            {
+                return _dataType;
+            }
+            set
+            {
+                _dataType = value;
+            }
+        }
+
+        [EntityColumn("G05")]
+        public Guid transformationId;
+
+        [Category("Reference")]
+        [TypeConverter(typeof(TransformationConverter))]
+        [RefreshProperties(RefreshProperties.Repaint)]
+        [NotNullModelElementRule()]
+        [Description("XSLT transformation that computes a value for a parameter. The transformation can use other non-xslt parameters as an input (as <xsl:param>s). The transformation has always <ROOT/> XmlDocument as an input (data). The value for a parameter is taken from /ROOT/Value output of the transformation.")]
+        public XslTransformation Transformation
+        {
+            get
+            {
+                try
+                {
+                    return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.transformationId)) as XslTransformation;
+                }
+                catch
+                {
+                    throw new Exception(ResourceUtils.GetString("ERRTransformationNotFound", this.transformationId));
+                }
+            }
+            set
+            {
+                this.transformationId = (Guid)value.PrimaryKey["Id"];
+            }
+        }
+        #endregion
+    }
+}

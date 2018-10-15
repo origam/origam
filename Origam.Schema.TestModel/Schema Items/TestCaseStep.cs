@@ -1,0 +1,134 @@
+#region license
+/*
+Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using System;
+using System.ComponentModel;
+using Origam.DA.ObjectPersistence;
+
+namespace Origam.Schema.TestModel
+{
+	public enum TestCaseStepType
+	{
+		InitialCheck,
+		Step,
+		FinalCheck
+	}
+
+	/// <summary>
+	/// Summary description for TestCaseStep.
+	/// </summary>
+	[SchemaItemDescription("Step", "Steps", 24)]
+	public class TestCaseStep : AbstractSchemaItem
+	{
+		public const string ItemTypeConst = "TestCaseStep";
+
+		public TestCaseStep() : base() {}
+
+		public TestCaseStep(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public TestCaseStep(Key primaryKey) : base(primaryKey)	{}
+
+		#region Overriden AbstractSchemaItem Members
+		
+		[EntityColumn("ItemType")]
+		public override string ItemType
+		{
+			get
+			{
+				return ItemTypeConst;
+			}
+		}
+
+		public override string Icon
+		{
+			get
+			{
+				switch(this.StepType)
+				{
+					case TestCaseStepType.InitialCheck:
+						return "23";
+
+					case TestCaseStepType.Step:
+						return "24";
+				
+					case TestCaseStepType.FinalCheck:
+						return "25";
+				}
+
+				return "0";
+			}
+		}
+
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
+			dependencies.Add(this.ChecklistRule);
+
+			base.GetExtraDependencies (dependencies);
+		}
+
+		public override SchemaItemCollection ChildItems
+		{
+			get
+			{
+				return new SchemaItemCollection();
+			}
+		}
+		#endregion
+
+		#region Properties
+		private TestCaseStepType _stepType = TestCaseStepType.Step;
+		
+		[Category("Test Step")]
+		[EntityColumn("I01")] 
+		public TestCaseStepType StepType
+		{
+			get
+			{
+				return _stepType;
+			}
+			set
+			{
+				_stepType = value;
+			}
+		}
+
+		[EntityColumn("G01")]  
+		public Guid ChecklistRuleId;
+
+		[Category("Test Step")]
+		[TypeConverter(typeof(TestChecklistRuleConverter))]
+		public TestChecklistRule ChecklistRule
+		{
+			get
+			{
+				ModelElementKey key = new ModelElementKey();
+				key.Id = this.ChecklistRuleId;
+
+				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as TestChecklistRule;
+			}
+			set
+			{
+				this.ChecklistRuleId = (Guid)value.PrimaryKey["Id"];
+			}
+		}
+		#endregion
+	}
+}

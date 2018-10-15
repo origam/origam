@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2380E7B2-C993-4167-ABCA-22FF07A91B2A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Origam.BI.Excel</RootNamespace>
+    <AssemblyName>Origam.BI.Excel</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NPOI, Version=1.2.5.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\npoi-net2.0\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ExcelService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Origam.BI\Origam.BI-net2.csproj">
+      <Project>{54bff654-2a00-4a8a-86b0-06f124d769a1}</Project>
+      <Name>Origam.BI-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Common.Nonstd\Origam.Common.NetFX.csproj">
+      <Project>{84251d2b-43a4-4228-8d2a-8729722c25e4}</Project>
+      <Name>Origam.Common.NetFX</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
+      <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
+      <Name>Origam.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common-net2.csproj">
+      <Project>{b4e4dc00-766a-4ca3-83d8-0a5383462f53}</Project>
+      <Name>Origam.DA.Common-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Excel\Origam.Excel.csproj">
+      <Project>{eab7c8d5-a75d-4940-9dde-d6788fc9cd93}</Project>
+      <Name>Origam.Excel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Rule\Origam.Rule-net2.csproj">
+      <Project>{4f05db44-2bbd-4b54-8d37-e8038d1ee1e7}</Project>
+      <Name>Origam.Rule-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel-net2.csproj">
+      <Project>{50186a07-6ed9-4751-b0e2-52feba2a4518}</Project>
+      <Name>Origam.Schema.EntityModel-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel-net2.csproj">
+      <Project>{ecff4a9d-9196-4962-823c-a65d552ff6d8}</Project>
+      <Name>Origam.Schema.GuiModel-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema\Origam.Schema-net2.csproj">
+      <Project>{aa7461f9-34d2-4f29-9d22-25fe053ddef0}</Project>
+      <Name>Origam.Schema-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Services\Origam.Services-net2.csproj">
+      <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>
+      <Name>Origam.Services-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common-net2.csproj">
+      <Project>{ef5de64e-88b2-4b0a-bb7f-4a537b56f3d1}</Project>
+      <Name>Origam.UI.Common-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workflow.FileService\Origam.Workflow.FileService.csproj">
+      <Project>{27826cc4-81ad-4c2a-88ea-6102f119ffa6}</Project>
+      <Name>Origam.Workflow.FileService</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{76A9B204-B2FD-4393-9084-420CEC16E95F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Origam.Windows.Editor</RootNamespace>
+    <AssemblyName>Origam.Windows.Editor</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.1.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>packages\AvalonEdit.5.0.2\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MoreLinq, Version=2.10.21623.0, Culture=neutral, PublicKeyToken=384d532d7e88985d">
+      <HintPath>..\EnterpriseLibrary\MoreLinq.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.9.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481">
+      <HintPath>..\EnterpriseLibrary\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CodeCompletionBinding.cs" />
+    <Compile Include="DocumentUtilities.cs" />
+    <Compile Include="FindReplaceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FindReplaceForm.Designer.cs">
+      <DependentUpon>FindReplaceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GIT\DiffContext.cs" />
+    <Compile Include="GIT\DiffInfoMargin.cs" />
+    <Compile Include="GIT\DiffLineBackgroundRenderer.cs" />
+    <Compile Include="GIT\DiffLineViewModel.cs" />
+    <Compile Include="GIT\DiffSectionViewModel.cs" />
+    <Compile Include="GIT\GitDiferenceView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GIT\GitDiferenceView.Designer.cs">
+      <DependentUpon>GitDiferenceView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GIT\SingleColumnDiff.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GIT\SingleColumnDiff.Designer.cs">
+      <DependentUpon>SingleColumnDiff.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GIT\SingleColumnDiffWPF.xaml.cs">
+      <DependentUpon>SingleColumnDiffWPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SqlEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SqlEditor.Designer.cs">
+      <DependentUpon>SqlEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="XmlEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="XmlEditor.Designer.cs">
+      <DependentUpon>XmlEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ICompletionItem.cs" />
+    <Compile Include="ICompletionItemList.cs" />
+    <Compile Include="OrigamTextEditor.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QualifiedName.cs" />
+    <Compile Include="QualifiedNameCollection.cs" />
+    <Compile Include="SchemaDocumentation.cs" />
+    <Compile Include="XmlCodeCompletionBinding.cs" />
+    <Compile Include="XmlCompletionItem.cs" />
+    <Compile Include="XmlCompletionItemCollection.cs" />
+    <Compile Include="XmlElementPath.cs" />
+    <Compile Include="XmlElementPathsByNamespace.cs" />
+    <Compile Include="XmlFormattingStrategy.cs" />
+    <Compile Include="XmlNamespace.cs" />
+    <Compile Include="XmlNamespaceCollection.cs" />
+    <Compile Include="XmlParser.cs" />
+    <Compile Include="XmlSchemaCompletion.cs" />
+    <Compile Include="XmlSchemaCompletionCollection.cs" />
+    <EmbeddedResource Include="FindReplaceForm.resx">
+      <DependentUpon>FindReplaceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GIT\GitDiferenceView.resx">
+      <DependentUpon>GitDiferenceView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GIT\SingleColumnDiff.resx">
+      <DependentUpon>SingleColumnDiff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SqlEditor.resx">
+      <DependentUpon>SqlEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="XmlEditor.resx">
+      <DependentUpon>XmlEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="xslt.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SQL.xshd" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="GIT\SingleColumnDiffWPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Origam.Git\Origam.Git.csproj">
+      <Project>{17625f1f-b028-47db-8c76-05c8f8f4e158}</Project>
+      <Name>Origam.Git</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common-net2.csproj">
+      <Project>{ef5de64e-88b2-4b0a-bb7f-4a537b56f3d1}</Project>
+      <Name>Origam.UI.Common-net2</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

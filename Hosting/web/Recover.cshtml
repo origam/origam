@@ -1,0 +1,25 @@
+﻿@using Origam.Server.Utils;
+@{
+    Layout = "~/_Layout.cshtml";
+    string emailField = "Email";
+    string action = Resources.Submit;
+    string actionField = "Action";
+    string resultMessage = LoginHelper.RecoverPassword(this, action, actionField, emailField);
+}
+
+<form method="post">
+    <div class="errorMessage">
+        @resultMessage
+    </div>
+    <!-- email text input -->
+    <label class="input">
+        <span>@Resources.EmailForm</span>
+        @Html.TextBox(emailField)
+    </label>
+    <input type="submit" value="@action" name="@actionField" class="login" />
+    <script src="js/overlay.js" type="text/javascript"></script>
+    <br/>
+    <div>
+        <a href="~/Login">@Resources.BackToStart</a>
+    </div>
+</form>

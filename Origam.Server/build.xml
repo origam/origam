@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="SIMPLICOR Back End Service" default="standard" basedir=".">
+  <description>Build file for backend service</description>
+  <loadtasks assembly="c:/TeamCity/tools/nantcontrib-0.85/bin/NAnt.Contrib.Tasks.dll" />
+  <property name="repositoryRoot" value="D:\SharedData\_install\ORIGAM\web\lastbuild"/>
+  <property name="git-exec" value="C:\Program Files\Git\bin\git"/>
+  <property name="msbuild-exec" value="c:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe"/>
+  <target name="standard" description="Standard build" depends="build-number">
+    <exec workingdir=".." program="${msbuild-exec}">
+      <arg value="OrigamDataBackEnd.sln"/>
+      <arg value="/p:Configuration=Release"/>
+    </exec>
+    <delete dir="${repositoryRoot}/resources/ria-server" failonerror="false"/>
+    <copy file="./Properties/Resources.resx" tofile="${repositoryRoot}/resources/ria-server/Resources.resx"/>
+  </target>
+  <target name="build-number" description="Fills build number in AssemblyInfo files.">
+    <loadfile file="./Properties/AssemblyInfo.cs"
+              property="assemblyInfo">
+      <filterchain>
+        <replacestring from="0.0.0.0" to="${buildNumber}"/>
+      </filterchain>
+    </loadfile>
+    <echo file="./Properties/AssemblyInfo.cs"
+          message="${assemblyInfo}"/>
+  </target>
+  <target name="create-release-notes">
+    <mkdir dir="../rn"/>
+    <exec workingdir="c:/TeamCity/src/origam-server" program="${git-exec}">
+        <arg value="fetch"/>
+    </exec>
+    <exec workingdir="c:/TeamCity/src/origam-server" program="${git-exec}" output="../rn/release-notes-server-${currentBranch}.txt">
+        <arg value="log"/>
+        <arg value="^origin/${previousBranch}"/>
+        <arg value="origin/${currentBranch}"/>
+        <arg value="--oneline"/>
+        <arg value="--no-merges"/>
+        <arg value="--first-parent"/>
+        <arg value="--date=iso"/>
+        <arg value="--pretty=format:&quot;%H%x09%an%x09%ad%x09%s&quot;"/>
+    </exec>
+  </target>
+</project>

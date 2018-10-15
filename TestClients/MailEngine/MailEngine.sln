@@ -1,0 +1,139 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Mail", "..\..\Origam.Mail\Origam.Mail.csproj", "{9D53BB7F-97DE-4592-B958-F57AE3F83FF3}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigurationManagement.Interfaces", "..\..\Microsoft.ApplicationBlocks.ConfigurationManagement.Interfaces\ConfigurationManagement.Interfaces.csproj", "{13895567-C433-41F7-86D5-46FF442580E1}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigurationManagement", "..\..\Microsoft.ApplicationBlocks.ConfigurationManagement\ConfigurationManagement.csproj", "{85C6BE7E-BB3A-409C-BE50-C39173322024}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.ApplicationBlocks.ExceptionManagement.Interfaces", "..\..\Microsoft.ApplicationBlocks.ExceptionManagement.Interfaces\Microsoft.ApplicationBlocks.ExceptionManagement.Interfaces.csproj", "{5F25F8C2-DA02-46C6-A6CA-01E719EAD35D}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.ApplicationBlocks.ExceptionManagement", "..\..\Microsoft.ApplicationBlocks.ExceptionManagement\Microsoft.ApplicationBlocks.ExceptionManagement.csproj", "{386CBF50-F4A9-4F05-98CB-B387D2D8F357}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailTest", "MailTest\MailTest.csproj", "{88A76C94-BFCA-45C1-A8CE-E9A0BA438ADA}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.ApplicationBlocks.Data", "..\..\Microsoft.ApplicationBlocks.Data\Microsoft.ApplicationBlocks.Data.csproj", "{30933672-466E-4F67-A111-ABF267539146}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenSmtp", "..\..\OpenSmtp\OpenSmtp.csproj", "{02CDBDE0-C56F-4F3E-80CD-2DD84202F7D8}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.DA", "..\..\Origam.DA\Origam.DA.csproj", "{CAA6DD53-8E94-48A7-9CF1-BB1639EDEC45}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Query", "..\..\Origam.Query\Origam.Query.csproj", "{F6A9A660-5323-4FB0-B7E4-45837D871606}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 11
+		SccLocalPath0 = .
+		CanCheckoutShared = false
+		SolutionUniqueID = {2A036344-3D13-44A3-BD42-B40CE8293333}
+		SccProjectUniqueName1 = ..\\..\\Microsoft.ApplicationBlocks.ConfigurationManagement.Interfaces\\ConfigurationManagement.Interfaces.csproj
+		SccProjectName1 = \u0022$/ORIGAM/Microsoft.ApplicationBlocks.ConfigurationManagement.Interfaces\u0022,\u0020ZRCAAAAA
+		SccLocalPath1 = ..\\..\\Microsoft.ApplicationBlocks.ConfigurationManagement.Interfaces
+		CanCheckoutShared = false
+		SccProjectUniqueName2 = ..\\..\\Microsoft.ApplicationBlocks.ConfigurationManagement\\ConfigurationManagement.csproj
+		SccProjectName2 = \u0022$/ORIGAM/Microsoft.ApplicationBlocks.ConfigurationManagement\u0022,\u0020WRCAAAAA
+		SccLocalPath2 = ..\\..\\Microsoft.ApplicationBlocks.ConfigurationManagement
+		CanCheckoutShared = false
+		SccProjectUniqueName3 = ..\\..\\Microsoft.ApplicationBlocks.ExceptionManagement.Interfaces\\Microsoft.ApplicationBlocks.ExceptionManagement.Interfaces.csproj
+		SccProjectName3 = \u0022$/ORIGAM/Microsoft.ApplicationBlocks.ExceptionManagement.Interfaces\u0022,\u0020DQCAAAAA
+		SccLocalPath3 = ..\\..\\Microsoft.ApplicationBlocks.ExceptionManagement.Interfaces
+		CanCheckoutShared = false
+		SccProjectUniqueName4 = ..\\..\\Microsoft.ApplicationBlocks.ExceptionManagement\\Microsoft.ApplicationBlocks.ExceptionManagement.csproj
+		SccProjectName4 = \u0022$/ORIGAM/Microsoft.ApplicationBlocks.ExceptionManagement\u0022,\u0020APCAAAAA
+		SccLocalPath4 = ..\\..\\Microsoft.ApplicationBlocks.ExceptionManagement
+		CanCheckoutShared = false
+		SccProjectUniqueName5 = ..\\..\\Microsoft.ApplicationBlocks.Data\\Microsoft.ApplicationBlocks.Data.csproj
+		SccProjectName5 = \u0022$/ORIGAM/Microsoft.ApplicationBlocks.Data\u0022,\u0020DTCAAAAA
+		SccLocalPath5 = ..\\..\\Microsoft.ApplicationBlocks.Data
+		CanCheckoutShared = false
+		SccProjectUniqueName6 = ..\\..\\Origam.Mail\\Origam.Mail.csproj
+		SccProjectName6 = \u0022$/ORIGAM/Origam.Mail\u0022,\u0020NUCAAAAA
+		SccLocalPath6 = ..\\..\\Origam.Mail
+		CanCheckoutShared = false
+		SccProjectUniqueName7 = MailTest\\MailTest.csproj
+		SccProjectName7 = \u0022$/ORIGAM/TestClients/MailEngine/MailTest\u0022,\u0020SVCAAAAA
+		SccLocalPath7 = MailTest
+		CanCheckoutShared = false
+		SccProjectUniqueName8 = ..\\..\\OpenSmtp\\OpenSmtp.csproj
+		SccProjectName8 = \u0022$/ORIGAM/OpenSmtp\u0022,\u0020AXCAAAAA
+		SccLocalPath8 = ..\\..\\OpenSmtp
+		CanCheckoutShared = false
+		SccProjectUniqueName9 = ..\\..\\Origam.DA\\Origam.DA.csproj
+		SccProjectName9 = \u0022$/ORIGAM/Origam.DA\u0022,\u0020GLCAAAAA
+		SccLocalPath9 = ..\\..\\Origam.DA
+		CanCheckoutShared = false
+		SccProjectUniqueName10 = ..\\..\\Origam.Query\\Origam.Query.csproj
+		SccProjectName10 = \u0022$/ORIGAM/Origam.Query\u0022,\u0020CSBAAAAA
+		SccLocalPath10 = ..\\..\\Origam.Query
+		CanCheckoutShared = false
+	EndGlobalSection
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{9D53BB7F-97DE-4592-B958-F57AE3F83FF3}.Debug.ActiveCfg = Debug|.NET
+		{9D53BB7F-97DE-4592-B958-F57AE3F83FF3}.Debug.Build.0 = Debug|.NET
+		{9D53BB7F-97DE-4592-B958-F57AE3F83FF3}.Release.ActiveCfg = Release|.NET
+		{9D53BB7F-97DE-4592-B958-F57AE3F83FF3}.Release.Build.0 = Release|.NET
+		{13895567-C433-41F7-86D5-46FF442580E1}.Debug.ActiveCfg = Debug|.NET
+		{13895567-C433-41F7-86D5-46FF442580E1}.Debug.Build.0 = Debug|.NET
+		{13895567-C433-41F7-86D5-46FF442580E1}.Release.ActiveCfg = Release|.NET
+		{13895567-C433-41F7-86D5-46FF442580E1}.Release.Build.0 = Release|.NET
+		{85C6BE7E-BB3A-409C-BE50-C39173322024}.Debug.ActiveCfg = Debug|.NET
+		{85C6BE7E-BB3A-409C-BE50-C39173322024}.Debug.Build.0 = Debug|.NET
+		{85C6BE7E-BB3A-409C-BE50-C39173322024}.Release.ActiveCfg = Release|.NET
+		{85C6BE7E-BB3A-409C-BE50-C39173322024}.Release.Build.0 = Release|.NET
+		{5F25F8C2-DA02-46C6-A6CA-01E719EAD35D}.Debug.ActiveCfg = Debug|.NET
+		{5F25F8C2-DA02-46C6-A6CA-01E719EAD35D}.Debug.Build.0 = Debug|.NET
+		{5F25F8C2-DA02-46C6-A6CA-01E719EAD35D}.Release.ActiveCfg = Release|.NET
+		{5F25F8C2-DA02-46C6-A6CA-01E719EAD35D}.Release.Build.0 = Release|.NET
+		{386CBF50-F4A9-4F05-98CB-B387D2D8F357}.Debug.ActiveCfg = Debug|.NET
+		{386CBF50-F4A9-4F05-98CB-B387D2D8F357}.Debug.Build.0 = Debug|.NET
+		{386CBF50-F4A9-4F05-98CB-B387D2D8F357}.Release.ActiveCfg = Release|.NET
+		{386CBF50-F4A9-4F05-98CB-B387D2D8F357}.Release.Build.0 = Release|.NET
+		{88A76C94-BFCA-45C1-A8CE-E9A0BA438ADA}.Debug.ActiveCfg = Debug|.NET
+		{88A76C94-BFCA-45C1-A8CE-E9A0BA438ADA}.Debug.Build.0 = Debug|.NET
+		{88A76C94-BFCA-45C1-A8CE-E9A0BA438ADA}.Release.ActiveCfg = Release|.NET
+		{88A76C94-BFCA-45C1-A8CE-E9A0BA438ADA}.Release.Build.0 = Release|.NET
+		{30933672-466E-4F67-A111-ABF267539146}.Debug.ActiveCfg = Debug|.NET
+		{30933672-466E-4F67-A111-ABF267539146}.Debug.Build.0 = Debug|.NET
+		{30933672-466E-4F67-A111-ABF267539146}.Release.ActiveCfg = Release|.NET
+		{30933672-466E-4F67-A111-ABF267539146}.Release.Build.0 = Release|.NET
+		{02CDBDE0-C56F-4F3E-80CD-2DD84202F7D8}.Debug.ActiveCfg = Debug|.NET
+		{02CDBDE0-C56F-4F3E-80CD-2DD84202F7D8}.Debug.Build.0 = Debug|.NET
+		{02CDBDE0-C56F-4F3E-80CD-2DD84202F7D8}.Release.ActiveCfg = Release|.NET
+		{02CDBDE0-C56F-4F3E-80CD-2DD84202F7D8}.Release.Build.0 = Release|.NET
+		{CAA6DD53-8E94-48A7-9CF1-BB1639EDEC45}.Debug.ActiveCfg = Debug|.NET
+		{CAA6DD53-8E94-48A7-9CF1-BB1639EDEC45}.Debug.Build.0 = Debug|.NET
+		{CAA6DD53-8E94-48A7-9CF1-BB1639EDEC45}.Release.ActiveCfg = Release|.NET
+		{CAA6DD53-8E94-48A7-9CF1-BB1639EDEC45}.Release.Build.0 = Release|.NET
+		{F6A9A660-5323-4FB0-B7E4-45837D871606}.Debug.ActiveCfg = Debug|.NET
+		{F6A9A660-5323-4FB0-B7E4-45837D871606}.Debug.Build.0 = Debug|.NET
+		{F6A9A660-5323-4FB0-B7E4-45837D871606}.Release.ActiveCfg = Release|.NET
+		{F6A9A660-5323-4FB0-B7E4-45837D871606}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

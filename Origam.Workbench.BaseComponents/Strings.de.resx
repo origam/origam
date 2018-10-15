@@ -1,0 +1,372 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Attachments.DeleteQuestionText" xml:space="preserve">
+    <value>Wollen Sie den Anhang wirklich löschen?</value>
+  </data>
+  <data name="Attachments.DeleteQuestionTitle" xml:space="preserve">
+    <value>Anhang löschen</value>
+  </data>
+  <data name="ErrorISchemaItemOnly" xml:space="preserve">
+    <value>Nur ISchemaItem Objekte werden unterstützt.</value>
+  </data>
+  <data name="DoYouWantSave" xml:space="preserve">
+    <value>Wollen Sie {0} speichern?</value>
+  </data>
+  <data name="SaveTitle" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="SaveMetadataTitle" xml:space="preserve">
+    <value>Metadaten in Datei speichern.</value>
+  </data>
+  <data name="LoadSchemaTitle" xml:space="preserve">
+    <value>Zu ladende Schemadatei wählen.</value>
+  </data>
+  <data name="ErrorUserCanceled" xml:space="preserve">
+    <value>Aktion durch Benutzer abgebrochen.</value>
+  </data>
+  <data name="ErrorSetProperty" xml:space="preserve">
+    <value>Eigenschaft kann nicht gesetzt werden.</value>
+  </data>
+  <data name="ErrorWhenRefreshForm" xml:space="preserve">
+    <value>Beim Aktualisieren der Eingabedaten '{0}' ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="ErrorNotSchemaExtension" xml:space="preserve">
+    <value>Besitzer muss vom Typ SchemaExtension sein.</value>
+  </data>
+  <data name="ErrorEditObject" xml:space="preserve">
+    <value>Das Objekt kann nicht editiert werden.</value>
+  </data>
+  <data name="ErrorLoadEditorFailed" xml:space="preserve">
+    <value>Der Editor kann nicht geladen werden.</value>
+  </data>
+  <data name="ErrorDeleteItemNotActiveExtension" xml:space="preserve">
+    <value>Ein Schema-Item das nicht zur aktiven Extension gehört, kann nicht gelöscht werden.</value>
+  </data>
+  <data name="DoYouWishDelete" xml:space="preserve">
+    <value>Wollen Sie  '{0}' wirklich löschen?</value>
+  </data>
+  <data name="DeleteTitle" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="ButtonAddReference" xml:space="preserve">
+    <value>Referenz hinzufügen</value>
+  </data>
+  <data name="ButtonRemoveReference" xml:space="preserve">
+    <value>Referenz entfernen</value>
+  </data>
+  <data name="DescriptionLabel" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+  <data name="PackageReferencesLabel" xml:space="preserve">
+    <value>Paket-Referenzen</value>
+  </data>
+  <data name="VisibleReferedItemsLabel" xml:space="preserve">
+    <value>Sichtbare referenzierte Elemente</value>
+  </data>
+  <data name="ReferencesLabel" xml:space="preserve">
+    <value>Referenzen</value>
+  </data>
+  <data name="VersionInfoLabel" xml:space="preserve">
+    <value>Bestimme die Version aus den Deployment Modell Elementen</value>
+  </data>
+  <data name="ErrorEditPackagesOnly" xml:space="preserve">
+    <value>Der PackageEditor kann nur Pakete editieren.</value>
+  </data>
+  <data name="ErrorRemovePackageReference" xml:space="preserve">
+    <value>Die Paket-Referenz kann nicht entfernt werden. Paketelemente werden im aktuellen Paket verwendet.</value>
+  </data>
+  <data name="ErrorAddReference" xml:space="preserve">
+    <value>Die Referenz kann dem Paket nicht hinzugefügt werden, da ein zirkularer Bezug entstehen würde.</value>
+  </data>
+  <data name="ErrorElementReadOnly" xml:space="preserve">
+    <value>Das Modellelement ist nur zur Ansicht geöffnet. Die Eigenschaften können nicht geändert werden.</value>
+  </data>
+  <data name="FileNameTitle" xml:space="preserve">
+    <value>Dateiname</value>
+  </data>
+  <data name="Empty" xml:space="preserve">
+    <value>(leer)</value>
+  </data>
+  <data name="DateTitle" xml:space="preserve">
+    <value>Datum</value>
+  </data>
+  <data name="NoteTitle" xml:space="preserve">
+    <value>Bemerkung</value>
+  </data>
+  <data name="TooltipLoad" xml:space="preserve">
+    <value>Fügt den Anhang dem aktuellen Datensatz hinzu.</value>
+  </data>
+  <data name="TooltipSave" xml:space="preserve">
+    <value>Speichert den Anhang in einer Datei.</value>
+  </data>
+  <data name="TooltipShow" xml:space="preserve">
+    <value>Öffnet den Anhang im passenden Viewer zur Ansicht.</value>
+  </data>
+  <data name="TooltipRefresh" xml:space="preserve">
+    <value>Speichert die Änderungen in der Datenbank.</value>
+  </data>
+  <data name="TooltipDelete" xml:space="preserve">
+    <value>Entfernt den Anhang.</value>
+  </data>
+  <data name="AttachmentsTitle" xml:space="preserve">
+    <value>Anhänge</value>
+  </data>
+  <data name="NoAttachments" xml:space="preserve">
+    <value>Keine Anhänge vorhanden</value>
+  </data>
+  <data name="ErrorExecuteFile" xml:space="preserve">
+    <value>Die Datei {0} kann nicht ausgeführt werden.</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>Neu</value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>Gelöscht</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Wechseln</value>
+  </data>
+  <data name="Deduplication" xml:space="preserve">
+    <value>Entduplizieren</value>
+  </data>
+  <data name="TypeTitle" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="FieldTitle" xml:space="preserve">
+    <value>Feld</value>
+  </data>
+  <data name="OldValueTitle" xml:space="preserve">
+    <value>Originalwert</value>
+  </data>
+  <data name="NewValueTitle" xml:space="preserve">
+    <value>Neuer Wert</value>
+  </data>
+  <data name="UserTitle" xml:space="preserve">
+    <value>Benutzer</value>
+  </data>
+  <data name="CategoryTitle" xml:space="preserve">
+    <value>Kategorie</value>
+  </data>
+  <data name="DocumentationTitle" xml:space="preserve">
+    <value>Dokumentation</value>
+  </data>
+  <data name="ButtonAdd" xml:space="preserve">
+    <value>Hinzufügen</value>
+  </data>
+  <data name="ButtonRemove" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="PackageTitle" xml:space="preserve">
+    <value>Paket</value>
+  </data>
+  <data name="PackagesTitle" xml:space="preserve">
+    <value>Pakete</value>
+  </data>
+  <data name="PackageBrowserTitle" xml:space="preserve">
+    <value>Paket-Browser</value>
+  </data>
+  <data name="ErrorWhenLoadPackage" xml:space="preserve">
+    <value>Fehler beim Laden des Pakets '{0}'</value>
+  </data>
+  <data name="FoundInTitle" xml:space="preserve">
+    <value>Gefunden in</value>
+  </data>
+  <data name="FolderTitle" xml:space="preserve">
+    <value>Ordner</value>
+  </data>
+  <data name="FindResultsTitle" xml:space="preserve">
+    <value>Resultate finden</value>
+  </data>
+  <data name="TimeTitle" xml:space="preserve">
+    <value>Zeit</value>
+  </data>
+  <data name="DescriptionTitle" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+  <data name="RollBackPointTitle" xml:space="preserve">
+    <value>Rollback Punkt</value>
+  </data>
+  <data name="TransactionsTitle" xml:space="preserve">
+    <value>Transaktion</value>
+  </data>
+  <data name="GlobalTransactionsHistory" xml:space="preserve">
+    <value>Globalel Transaktionsgeschichte</value>
+  </data>
+  <data name="ErrorRollBackTransactionWorkflow" xml:space="preserve">
+    <value>Ein partieller Transaktions-Rollback ist nicht möglich, solange ein Assistent aktiv ist.</value>
+  </data>
+  <data name="PartialRollBackTitle" xml:space="preserve">
+    <value>Partieller Rollback</value>
+  </data>
+  <data name="DoYouWishCancelGlobalTransaction0" xml:space="preserve">
+    <value>Beim Abbrechen einer globalen Transaktion werden alle bis zum gewählten Zeitpunkt gemachten Änderungen verworfen.</value>
+  </data>
+  <data name="DoYouWishCancelGlobalTransaction1" xml:space="preserve">
+    <value>Wollen Sie wirklich alle Änderungen verwerfen?</value>
+  </data>
+  <data name="PartialGlobalRollBackTitle" xml:space="preserve">
+    <value>Partieller globaler Transaktions-Rollback</value>
+  </data>
+  <data name="PropertiesTitle" xml:space="preserve">
+    <value>Eigenschaften</value>
+  </data>
+  <data name="ModelBrowserTitle" xml:space="preserve">
+    <value>Modell Browser</value>
+  </data>
+  <data name="ErrorOpenModelPackage" xml:space="preserve">
+    <value>Das gewählte Modell Paket kann nicht geöffnet werden.</value>
+  </data>
+  <data name="ImportingModel" xml:space="preserve">
+    <value>Modell importieren...</value>
+  </data>
+  <data name="ErrorEditConfigurations" xml:space="preserve">
+    <value>Die Konfiguration kann nicht editiert werden, da das Eigenschaften-Panel nicht geöffnet werden kann.</value>
+  </data>
+  <data name="ModelConnectionTitle" xml:space="preserve">
+    <value>Modell-Verbindung</value>
+  </data>
+  <data name="DataConnectionTitle" xml:space="preserve">
+    <value>Daten-Verbindung</value>
+  </data>
+  <data name="ButtonDelete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="ButtonClone" xml:space="preserve">
+    <value>Klon</value>
+  </data>
+  <data name="CopyOf" xml:space="preserve">
+    <value>Kopie von {0}</value>
+  </data>
+  <data name="ErrorArchitectCommand" xml:space="preserve">
+    <value>ORIGAM Architect Befehlsfehler</value>
+  </data>
+  <data name="ErrorWhenReadChildNodes" xml:space="preserve">
+    <value>Beim Lesen der Kinderknoten von Knoten '{0}'.{1} ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="ErrorWhenAddRoot" xml:space="preserve">
+    <value>Beim Hinzufügen des Root Knoten '{0}'.{1} ist ein Fehler aufgetreten.</value>
+  </data>
+  <data name="OutputTitle" xml:space="preserve">
+    <value>Ausgabe</value>
+  </data>
+</root>

@@ -1,0 +1,85 @@
+#region license
+/*
+Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using System;
+using System.ComponentModel;
+
+using Origam.DA.ObjectPersistence; 
+
+namespace Origam.Schema.EntityModel
+{
+	/// <summary>
+	/// Summary description for DataStructureTransformationTemplate.
+	/// </summary>
+	[SchemaItemDescription("Transformation Template", 16)]
+    [HelpTopic("Template+Set+Template")]
+	public class DataStructureTransformationTemplate : DataStructureTemplate
+	{
+		public DataStructureTransformationTemplate() : base(){}
+		
+		public DataStructureTransformationTemplate(Guid schemaExtensionId) : base(schemaExtensionId) {}
+
+		public DataStructureTransformationTemplate(Key primaryKey) : base(primaryKey)	{}
+
+		#region Properties
+		[EntityColumn("G05")]  
+		public Guid TransformationId;
+
+		[Category("Reference")]
+		[TypeConverter(typeof(TransformationConverter))]
+		[RefreshProperties(RefreshProperties.Repaint)]
+        [XmlReference("transformation", "TransformationId")]
+		public ITransformation Transformation
+		{
+			get
+			{
+				ModelElementKey key = new ModelElementKey();
+				key.Id = this.TransformationId;
+
+				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as ITransformation;
+			}
+			set
+			{
+				this.TransformationId = (Guid)value.PrimaryKey["Id"];
+
+				this.Name = this.Transformation.Name;
+			}
+		}
+		#endregion
+
+		#region Overriden Members
+		public override string Icon
+		{
+			get
+			{
+				return "16";
+			}
+		}
+
+		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		{
+			if(this.Transformation != null) dependencies.Add(this.Transformation);
+
+			base.GetExtraDependencies (dependencies);
+		}
+		#endregion
+	}
+}

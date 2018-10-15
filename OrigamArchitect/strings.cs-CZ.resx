@@ -1,0 +1,504 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AutoUpdate_NewerVersionNotice" xml:space="preserve">
+    <value>A newer version {0} of Origam Architect is available. We strongly recommend you to install the latest version. The current version is: {1}</value>
+  </data>
+  <data name="DockPaneCaption_ToolTipAutoHide" xml:space="preserve">
+    <value>Auto Hide</value>
+  </data>
+  <data name="DockPaneCaption_ToolTipClose" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="DockPaneCaption_ToolTipOptions" xml:space="preserve">
+    <value>Window Position</value>
+  </data>
+  <data name="DockPaneStrip_ToolTipClose" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="DockPaneStrip_ToolTipOptions" xml:space="preserve">
+    <value>Active Files</value>
+  </data>
+  <data name="LicenseCheckFailed_Error" xml:space="preserve">
+    <value>License check failed</value>
+  </data>
+  <data name="LicenseCheck_Failure_Label" xml:space="preserve">
+    <value>License check failure</value>
+  </data>
+  <data name="LicenseExpired_Label" xml:space="preserve">
+    <value>License is expired</value>
+  </data>
+  <data name="LicenseExpired_Message" xml:space="preserve">
+    <value>Your license is expired and we haven't been able to prolong your license ({0}). The license is prolonged each time you start Origam Architect and at the same time you are connected to the internet.</value>
+  </data>
+  <data name="LicenseWillExpire_Label" xml:space="preserve">
+    <value>License expiration warning</value>
+  </data>
+  <data name="LicenseWillExpire_Message" xml:space="preserve">
+    <value>Your license will expire in {0} days ({1}). You see this message becouse we haven't been able to prolong your license ({2}). The license is prolonged each time you start Origam Architect and at the same time you are connected to the internet. So you can continue using the Architect offline but only for {0} days.</value>
+  </data>
+  <data name="LoginForm_ErrorGettingLicense_Label" xml:space="preserve">
+    <value>Error getting  from server</value>
+  </data>
+  <data name="LoginForm_ErrorGettingLicense_Message" xml:space="preserve">
+    <value>Can't get a license ({0}) from server. Please contact Origam.com.</value>
+  </data>
+  <data name="LoginForm_Error_Label" xml:space="preserve">
+    <value>Login error</value>
+  </data>
+  <data name="LoginForm_PasswordIsMandatory" xml:space="preserve">
+    <value>Password is a mandatory field. Please fill in a password.</value>
+  </data>
+  <data name="LoginForm_Unsuccessfull_Label" xml:space="preserve">
+    <value>Login failed</value>
+  </data>
+  <data name="LoginForm_UsernameIsMandatory" xml:space="preserve">
+    <value>Username is a mandatory field. Please fill in a username.</value>
+  </data>
+  <data name="LoginForm_Warning_Label" xml:space="preserve">
+    <value>Login warning</value>
+  </data>
+  <data name="RegisterAndLoginForm_TemporaryHttpError" xml:space="preserve">
+    <value>Temporary error ({0}). Please contact Origam.com by if it repeats.</value>
+  </data>
+  <data name="RegisterForm_CouldNotSendConfirmationMail_Message" xml:space="preserve">
+    <value>Registration has been successfull, but couldn't send confirmation email ({0}).</value>
+  </data>
+  <data name="RegisterForm_Error_Label" xml:space="preserve">
+    <value>Registration error</value>
+  </data>
+  <data name="RegisterForm_Success_Label" xml:space="preserve">
+    <value>Registration success</value>
+  </data>
+  <data name="RegisterForm_Success_Message" xml:space="preserve">
+    <value>You have successfully registered into Origam.com! We have just sent an e-mail with a confirmation link to your email address `{0}'. Please check your e-mail and confirm your email address by clicking on a confirmation link in the e-mail.</value>
+  </data>
+  <data name="RegisterForm_Warning_Label" xml:space="preserve">
+    <value>Registration warning</value>
+  </data>
+  <data name="RegisterLoginForm_UnexpectedErrorWithMessage_Message" xml:space="preserve">
+    <value>Unexpected error. Please contact Origam.com ({0})</value>
+  </data>
+  <data name="RegisterLoginForm_UnexpectedError_Message" xml:space="preserve">
+    <value>Unexpected error. Please contact Origam.com</value>
+  </data>
+  <data name="AppVersion_Label" xml:space="preserve">
+    <value>Version: {0}</value>
+  </data>
+  <data name="AppVersionModel_Label" xml:space="preserve">
+    <value>, Model: {0}</value>
+  </data>
+  <data name="SearchButtonText" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="ModelChangedSaveToRepQuestion" xml:space="preserve">
+    <value>Current model has been changed. Do you want to save it to the repository?</value>
+  </data>
+  <data name="ModelChanged_Title" xml:space="preserve">
+    <value>Model Changed</value>
+  </data>
+  <data name="ConfigurationNotFound_ExceptionMessage" xml:space="preserve">
+    <value>Configuration not found.</value>
+  </data>
+  <data name="UpgradeModelQuestion" xml:space="preserve">
+    <value>Model repository database schema is older version. Do you want to upgrade the model repository?</value>
+  </data>
+  <data name="UpgradeModelTitle" xml:space="preserve">
+    <value>Upgrade</value>
+  </data>
+  <data name="CannotLogin_Message" xml:space="preserve">
+    <value>Cannot login to the repository.</value>
+  </data>
+  <data name="CannotLogin_Title" xml:space="preserve">
+    <value>Repository Login</value>
+  </data>
+  <data name="CannotLogin_Message2" xml:space="preserve">
+    <value>Model repository database schema is not compatible. Cannot login to the repository.</value>
+  </data>
+  <data name="RepositoryInitializeQuestion" xml:space="preserve">
+    <value>Repository seems to be empty. Do you want to initialize repository?</value>
+  </data>
+  <data name="Initialize_Title" xml:space="preserve">
+    <value>Initialize</value>
+  </data>
+  <data name="RunInitDatabaseScriptsQuestion" xml:space="preserve">
+    <value>Data database is empty. Do you want to execute the initial database scripts?</value>
+  </data>
+  <data name="DatabaseEmptyTitle" xml:space="preserve">
+    <value>Database Empty</value>
+  </data>
+  <data name="RunDeploymentScriptsQuestion" xml:space="preserve">
+    <value>Model has been updated and update scripts are pending. Do you want to execute the deployment scripts?</value>
+  </data>
+  <data name="DeploymentSctiptsPending_Title" xml:space="preserve">
+    <value>Deployment Scripts Pending</value>
+  </data>
+  <data name="ModelVersionErrorMessage" xml:space="preserve">
+    <value>Model OrigamRoot musí být verze 5.00. Není možné spustit aplikaci.</value>
+  </data>
+  <data name="ModelVersionTitle" xml:space="preserve">
+    <value>Verze modelu</value>
+  </data>
+  <data name="ModelMissingMessage" xml:space="preserve">
+    <value>Model neobsahuje package OrigamRoot. Není možné spustit aplikaci.</value>
+  </data>
+  <data name="ResultCountMassage" xml:space="preserve">
+    <value>Found {0} result(s).</value>
+  </data>
+  <data name="SearchResultTitle" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="ExcepExport_Title" xml:space="preserve">
+    <value>Uložení Excel exportu</value>
+  </data>
+  <data name="UnknownDeploymentType" xml:space="preserve">
+    <value>Unknown deployment type selected.</value>
+  </data>
+  <data name="SelectDeploymentVersionMessage" xml:space="preserve">
+    <value>Select deployment version.</value>
+  </data>
+  <data name="SelectDeploymentTitle" xml:space="preserve">
+    <value>Deployment Script</value>
+  </data>
+  <data name="PutItemsToSearchResultQuestion" xml:space="preserve">
+    <value>Deployment script updated successfully. Do you want to put the generated items to the search results?</value>
+  </data>
+  <data name="ModelGeneratedMassage" xml:space="preserve">
+    <value>Model successfully generated.</value>
+  </data>
+  <data name="ModelGenerationTitle" xml:space="preserve">
+    <value>Model Generation</value>
+  </data>
+  <data name="ProcessesTabText" xml:space="preserve">
+    <value>Procesy</value>
+  </data>
+  <data name="ProcessList" xml:space="preserve">
+    <value>Seznam procesů</value>
+  </data>
+  <data name="GenericError_Title" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="RepositoryLoginFailedMessage" xml:space="preserve">
+    <value>Repository login failed. {0}</value>
+  </data>
+  <data name="RepositoryLoginFailedTitle" xml:space="preserve">
+    <value>Repository Login Failed</value>
+  </data>
+  <data name="LoadingModelErrorTitle" xml:space="preserve">
+    <value>Loading Model</value>
+  </data>
+  <data name="ModelDatabaseVersionMissmatch_Message" xml:space="preserve">
+    <value>Verze modelu neodpovídá verzi databáze. {0} Verze modelu: {1} Verze databáze: {2}</value>
+  </data>
+  <data name="ConnectionTitle" xml:space="preserve">
+    <value>Připojení</value>
+  </data>
+  <data name="ModelDatabaseVersionMissmatchNoAdmin_Message" xml:space="preserve">
+    <value>Verze modelu neodpovídá verzi databáze. Kontaktujte, prosím, svého administrátora. {0} Verze modelu: {1} Verze databáze: {2}</value>
+  </data>
+  <data name="ErrorWhileLoadingParameters_Message" xml:space="preserve">
+    <value>Error occured while loading parameters</value>
+  </data>
+  <data name="AddUserToUserList_Question" xml:space="preserve">
+    <value>Do you want to add the active user '{0}' to the user list?</value>
+  </data>
+  <data name="ExcelExportError_Message" xml:space="preserve">
+    <value>Chyba při exportování do Excelu</value>
+  </data>
+  <data name="FormLoadingError_Message" xml:space="preserve">
+    <value>Chyba při načítání formuláře</value>
+  </data>
+  <data name="WorkQueueCommand_Title" xml:space="preserve">
+    <value>Příkaz pracovní fronty</value>
+  </data>
+  <data name="ModelGenerationNotSupported_Message" xml:space="preserve">
+    <value>Model generation not supported for {0}</value>
+  </data>
+  <data name="SelectDeploymentType_Message" xml:space="preserve">
+    <value>Please select the deployment type.</value>
+  </data>
+  <data name="NewProjectWizard_Title" xml:space="preserve">
+    <value>New Project Wizard</value>
+  </data>
+  <data name="EnterProjectName_Message" xml:space="preserve">
+    <value>Please enter the project name.</value>
+  </data>
+  <data name="SourceFolderNotExists_Message" xml:space="preserve">
+    <value>Sources folder does not exist.</value>
+  </data>
+  <data name="WebAppFolderNotExists_Message" xml:space="preserve">
+    <value>Web application folder does not exist.</value>
+  </data>
+  <data name="TemplateFolderNotExists_Message" xml:space="preserve">
+    <value>Template folder does not exist.</value>
+  </data>
+  <data name="EnterSourceFolder_Message" xml:space="preserve">
+    <value>Please enter the sources folder.</value>
+  </data>
+  <data name="EnterWebAppFolder_Message" xml:space="preserve">
+    <value>Please enter the web application folder.</value>
+  </data>
+  <data name="EnterTemplateFolder_Message" xml:space="preserve">
+    <value>Please enter the template folder.</value>
+  </data>
+  <data name="EnterDbPassword_Message" xml:space="preserve">
+    <value>Please enter the database password.</value>
+  </data>
+  <data name="EnterDbUserName_Message" xml:space="preserve">
+    <value>Please enter the database user name.</value>
+  </data>
+  <data name="EnterDbServerName_Message" xml:space="preserve">
+    <value>Please enter the database server name.</value>
+  </data>
+  <data name="SelectWebRoot_Message" xml:space="preserve">
+    <value>Please select the web root.</value>
+  </data>
+  <data name="NameContainsInvalidChars_Message" xml:space="preserve">
+    <value>Name contains invalid characters. Use letters and numbers. Database name, URL and folders will be created using the name.</value>
+  </data>
+  <data name="NewProjectFailed_Message" xml:space="preserve">
+    <value>New Project Failed</value>
+  </data>
+  <data name="ExecuteDeploymentScripts_Question" xml:space="preserve">
+    <value>Deployment scripts have been created. Do you want to execute them?</value>
+  </data>
+  <data name="DeploymentScripts_Title" xml:space="preserve">
+    <value>Deployment Scripts</value>
+  </data>
+  <data name="ModelElementsUpdate_Message" xml:space="preserve">
+    <value>Generated model elements are now shown in the search results.</value>
+  </data>
+  <data name="Results_Title" xml:space="preserve">
+    <value>Results</value>
+  </data>
+  <data name="File_Menu" xml:space="preserve">
+    <value>Sou&amp;bor</value>
+  </data>
+  <data name="View_Menu" xml:space="preserve">
+    <value>&amp;Zobrazit</value>
+  </data>
+  <data name="Help_Menu" xml:space="preserve">
+    <value>&amp;Nápověda</value>
+  </data>
+  <data name="Window_Menu" xml:space="preserve">
+    <value>&amp;Okno</value>
+  </data>
+  <data name="Model_Menu" xml:space="preserve">
+    <value>&amp;Model</value>
+  </data>
+  <data name="Tools_Menu" xml:space="preserve">
+    <value>&amp;Tools</value>
+  </data>
+  <data name="Retry_MenuCommand" xml:space="preserve">
+    <value>&amp;Opakovat po dokončení</value>
+  </data>
+  <data name="Save_MenuCommand" xml:space="preserve">
+    <value>&amp;Uložit</value>
+  </data>
+  <data name="Refresh_MenuCommand" xml:space="preserve">
+    <value>&amp;Obnovit data</value>
+  </data>
+  <data name="FinishTask_MenuCommand" xml:space="preserve">
+    <value>&amp;Dokončit úkol</value>
+  </data>
+  <data name="Connect_MenuItem" xml:space="preserve">
+    <value>&amp;Připojit</value>
+  </data>
+  <data name="Disconnect_MenuItem" xml:space="preserve">
+    <value>Od&amp;pojit</value>
+  </data>
+  <data name="ConnectionConfig_MenuItem" xml:space="preserve">
+    <value>&amp;Konfigurace připojení...</value>
+  </data>
+  <data name="Refresh_MenuItem" xml:space="preserve">
+    <value>&amp;Aktualizovat...</value>
+  </data>
+  <data name="RunRefreshActions_MenuItem" xml:space="preserve">
+    <value>Sp&amp;ustit aktualizační akce</value>
+  </data>
+  <data name="Exit_MenuItem" xml:space="preserve">
+    <value>&amp;Konec</value>
+  </data>
+  <data name="Close_MenuItem" xml:space="preserve">
+    <value>&amp;Zavřít</value>
+  </data>
+  <data name="CloseAll_MenuItem" xml:space="preserve">
+    <value>Zavřít &amp;vše</value>
+  </data>
+  <data name="CloseAllButThis_MenuItem" xml:space="preserve">
+    <value>Zavřít vše &amp;mimo tohoto</value>
+  </data>
+  <data name="About_MenuItem" xml:space="preserve">
+    <value>&amp;O aplikaci...</value>
+  </data>
+  <data name="Properties_MenuItem" xml:space="preserve">
+    <value>Okno &amp;vlastností</value>
+  </data>
+  <data name="Output_MenuItem" xml:space="preserve">
+    <value>&amp;Výstup</value>
+  </data>
+  <data name="Menu_MenuItem" xml:space="preserve">
+    <value>&amp;Nabídka</value>
+  </data>
+  <data name="WorkQueue_MenuItem" xml:space="preserve">
+    <value>&amp;Fronta zpráv</value>
+  </data>
+  <data name="Attachements_MenuItem" xml:space="preserve">
+    <value>&amp;Přílohy</value>
+  </data>
+  <data name="AuditLog_MenuItem" xml:space="preserve">
+    <value>Záznam &amp;auditu</value>
+  </data>
+  <data name="InsufficientPrivileges_Message" xml:space="preserve">
+    <value>Nemáte autorizaci k provedení této operace</value>
+  </data>
+  <data name="Massages_XmlItem" xml:space="preserve">
+    <value>Zprávy</value>
+  </data>
+  <data name="Code_TableColumn" xml:space="preserve">
+    <value>Kód</value>
+  </data>
+  <data name="Name_TableColumn" xml:space="preserve">
+    <value>Název</value>
+  </data>
+  <data name="Count_TableColumn" xml:space="preserve">
+    <value>Počet</value>
+  </data>
+  <data name="Open_Button" xml:space="preserve">
+    <value>Otevřít</value>
+  </data>
+  <data name="Refresh_Button" xml:space="preserve">
+    <value>Obnovit</value>
+  </data>
+  <data name="Massages_TabText" xml:space="preserve">
+    <value>Zprávy</value>
+  </data>
+  <data name="WorkQueues_Title" xml:space="preserve">
+    <value>Fronty zpráv</value>
+  </data>
+  <data name="Messages_PanelTitle" xml:space="preserve">
+    <value>Zprávy</value>
+  </data>
+  <data name="ErrorWhenProcessingWorkQueueCommand_Message" xml:space="preserve">
+    <value>Chyba při zpracování povelu fronty zpráv</value>
+  </data>
+  <data name="Commands_PanelTitle" xml:space="preserve">
+    <value>Povely</value>
+  </data>
+</root>

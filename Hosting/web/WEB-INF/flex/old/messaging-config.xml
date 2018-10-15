@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service id="message-service"
+    class="Weborb.Messaging.V3.MessagingServiceHandler"
+    messageTypes="flex.messaging.messages.AsyncMessage">
+
+    <adapters />
+    
+    <destination  channels="weborb-rtmp" id="MyTransientTopic">
+        <properties>
+            <!-- Full type name of the selector object associated with the destination.
+                 If set, WebORB passes all outgoing messages to the selector. Message selector
+                 can either change the outgoing message object or cancel message delivery. 
+                 Selector class must implement the Weborb.Messaging.V3.IMessageSelector interface.
+                 For a complete example, see the following article:
+                 http://www.themidnightcoders.com/articles/msmqtoflexdatapush.shtm -->                 
+            <selector></selector>
+            
+        <msmq>
+            <!-- Enterprise Edition feature. Queue factory is a class that implements
+                 Weborb.Messaging.V3.IQueueFactory. The element must contain the name of the class.
+                 Factory must create an instance of the MSMQ queue to be associated with the destination.-->
+            <queueFactory></queueFactory>
+            
+            <!-- path of the queue. Default path points to a local private queue. The [destinationName] token 
+                 is replaced with the destination name. More info: http://tinyurl.com/ykkoad -->
+            <path>.\private$\WEBORB-[destinationName]</path>
+            
+            <!-- A value indicating how many messages from the previous "conversations" to deliver to 
+                 newly subscribed clients". A value of -1 delivers all past messages from the queue,
+                 a value of 0 delivers only new messages, any positive number will deliver the specified
+                 number of messages -->
+            <deliverPastMessages>-1</deliverPastMessages>
+            
+            <!-- Contains the name of the class providing an implementation of System.Messaging.IMessageFormatter.
+                 If specified the formatter will be used to serialize messages to/from queue. Default formatter
+                 is BinaryMessageFormatter -->
+            <messageFormatter></messageFormatter>
+            
+            <!-- The single base priority for all messages sent to the (public) queue. The default is zero (0) 
+                 More info: http://tinyurl.com/ygejmg -->
+            <BasePriority>0</BasePriority>
+            
+            <!-- A Guid that represents the queue category (Message Queuing type identifier), which allows 
+                 an application to categorize its queues. The default is Guid.empty. (00000000-0000-0000-0000-000000000000)
+                 More info: http://tinyurl.com/ydgv4n -->
+            <Category>00000000-0000-0000-0000-000000000000</Category>
+            
+            <!-- The label for the message queue. More info: http://tinyurl.com/ygp2nl -->          
+            <Label>WebORB MessageQueue for [destinationName]</Label>
+            
+            <!-- The maximum size, in kilobytes, of the queue. The Message Queuing default specifies that 
+                 no limit exists (4294967295 bytes). More info: http://tinyurl.com/ye2qkp -->
+            <MaximumQueueSize>4294967295</MaximumQueueSize>
+            
+            <!-- A value indicating whether received messages are copied to the journal queue.
+                 More info: http://tinyurl.com/yd96cf -->
+            <UseJournalQueue>false</UseJournalQueue>
+            
+            <!-- The maximum size, in kilobytes, of the journal queue. The Message Queuing default 
+                 specifies that no limit exists (4294967295 bytes). It is relevant only when UseJournalQueue is true.
+                 More info: http://tinyurl.com/ykmzgb  -->
+            <MaximumJournalSize>4294967295</MaximumJournalSize>         
+            </msmq>
+        </properties>
+        <channels>
+            <channel ref="weborb-rtmp"/>
+        </channels>        
+    </destination>    
+    
+    <destination channels="weborb-rtmp" id="CounterReadings">
+        <properties>
+        <msmq>
+            <path>.\private$\WEBORB-[destinationName]</path>
+            <deliverPastMessages>-1</deliverPastMessages>
+            <BasePriority>0</BasePriority>
+            <Category>00000000-0000-0000-0000-000000000000</Category>
+            <Label>WebORB MessageQueue for [destinationName]</Label>
+            <MaximumQueueSize>4294967295</MaximumQueueSize>
+            <UseJournalQueue>false</UseJournalQueue>
+            <MaximumJournalSize>4294967295</MaximumJournalSize>         
+            </msmq>
+        </properties>
+        <channels>
+            <channel ref="weborb-rtmp"/>
+        </channels>
+    </destination>    
+
+    <destination channels="weborb-rtmp" id="ExampleDestination">
+        <properties>
+        <msmq>
+            <path>.\private$\WEBORB-[destinationName]</path>
+            <deliverPastMessages>-1</deliverPastMessages>
+            <messageFormatter></messageFormatter>
+            <BasePriority>0</BasePriority>
+            <Category>00000000-0000-0000-0000-000000000000</Category>
+            <Label>WebORB MessageQueue for [destinationName]</Label>
+            <MaximumQueueSize>4294967295</MaximumQueueSize>
+            <UseJournalQueue>false</UseJournalQueue>
+            <MaximumJournalSize>4294967295</MaximumJournalSize>         
+            </msmq>
+        </properties>
+        <channels>
+            <channel ref="weborb-rtmp"/>
+        </channels>
+    </destination>    
+    
+    <destination  channels="weborb-rtmp" id="mqpush">
+        <properties>
+        <msmq>
+            <path>.\private$\WEBORB-[destinationName]</path>
+            <deliverPastMessages>-1</deliverPastMessages>
+            <BasePriority>0</BasePriority>
+            <Category>00000000-0000-0000-0000-000000000000</Category>
+            <Label>WebORB MessageQueue for [destinationName]</Label>
+            <MaximumQueueSize>4294967295</MaximumQueueSize>
+            <UseJournalQueue>false</UseJournalQueue>
+            <MaximumJournalSize>4294967295</MaximumJournalSize>         
+            </msmq>
+        </properties>
+        <channels>
+            <channel ref="weborb-rtmp"/>
+        </channels>
+    </destination>       
+    <destination  channels="weborb-rtmp" id="mqpush2">
+        <properties>
+        <msmq>
+            <path>.\private$\WEBORB-[destinationName]</path>
+            <deliverPastMessages>-1</deliverPastMessages>
+            <BasePriority>0</BasePriority>
+            <Category>00000000-0000-0000-0000-000000000000</Category>
+            <Label>WebORB MessageQueue for [destinationName]</Label>
+            <MaximumQueueSize>4294967295</MaximumQueueSize>
+            <UseJournalQueue>false</UseJournalQueue>
+            <MaximumJournalSize>4294967295</MaximumJournalSize>         
+            </msmq>
+        </properties>
+        <channels>
+            <channel ref="weborb-rtmp"/>
+        </channels>
+    </destination>       
+
+</service>

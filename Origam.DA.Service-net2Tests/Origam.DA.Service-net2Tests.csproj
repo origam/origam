@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\OrigamArchitect\packages\NUnit.3.10.1\build\NUnit.props" Condition="Exists('..\OrigamArchitect\packages\NUnit.3.10.1\build\NUnit.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{874DE143-FDF1-4DEE-BC67-1CCE34ACB760}</ProjectGuid>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Origam.DA.Service_net2Tests</RootNamespace>
+    <AssemblyName>Origam.DA.Service_net2Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CSharpFunctionalExtensions, Version=1.10.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\EnterpriseLibrary\CSharpFunctionalExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="MoreLinq, Version=2.10.21623.0, Culture=neutral, PublicKeyToken=384d532d7e88985d">
+      <HintPath>..\EnterpriseLibrary\MoreLinq.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\OrigamArchitect\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.10.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\OrigamArchitect\packages\NUnit.3.10.1\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="EqualityExtensions.cs" />
+    <Compile Include="FilePersistenceProviderTests\FilePersistenceProviderTests.cs" />
+    <Compile Include="FilePersistenceProviderTests\PersitHelper.cs" />
+    <Compile Include="FilePersistenceProviderTests\FilePersistenceProviderTestWithOrigamRuntime.cs" />
+    <Compile Include="FilePersistenceProviderTests\XmlLoaderTest.cs" />
+    <Compile Include="FlatFileSearchTests\FlatFileSearcherTests.cs" />
+    <Compile Include="SchemaItemComparator.cs" />
+    <Compile Include="SchemaItemsToCompare.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeTools.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Origam.Common.Nonstd\Origam.Common.NetFX.csproj">
+      <Project>{84251d2b-43a4-4228-8d2a-8729722c25e4}</Project>
+      <Name>Origam.Common.NetFX</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
+      <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
+      <Name>Origam.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine-net2.csproj">
+      <Project>{233D40C6-AE59-4651-B7BD-DD09D5835E21}</Project>
+      <Name>Origam.OrigamEngine-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common-net2.csproj">
+      <Project>{B4E4DC00-766A-4CA3-83D8-0A5383462F53}</Project>
+      <Name>Origam.DA.Common-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service-net2.csproj">
+      <Project>{FF4722B4-01F8-4062-AF39-F243A6BF336D}</Project>
+      <Name>Origam.DA.Service-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache-net2.csproj">
+      <Project>{ffc2dce2-b8b5-48a4-aa18-1e93f99e1d54}</Project>
+      <Name>Origam.ReflectorCache-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel-net2.csproj">
+      <Project>{F4F5927B-022F-4684-B9B1-3BC6519DF66E}</Project>
+      <Name>Origam.Schema.DeploymentModel-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel-net2.csproj">
+      <Project>{50186A07-6ED9-4751-B0E2-52FEBA2A4518}</Project>
+      <Name>Origam.Schema.EntityModel-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel-net2.csproj">
+      <Project>{ECFF4A9D-9196-4962-823C-A65D552FF6D8}</Project>
+      <Name>Origam.Schema.GuiModel-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.LookupModel\Origam.Schema.LookupModel-net2.csproj">
+      <Project>{2274C5EB-E849-4ABB-8631-D429AD2994FF}</Project>
+      <Name>Origam.Schema.LookupModel-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.MenuModel\Origam.Schema.MenuModel-net2.csproj">
+      <Project>{01C6A542-4D42-4AFA-9744-5E92E71A8251}</Project>
+      <Name>Origam.Schema.MenuModel-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.RuleModel\Origam.Schema.RuleModel-net2.csproj">
+      <Project>{B2FFC838-98F6-4D52-8BFF-99546B1B8A4D}</Project>
+      <Name>Origam.Schema.RuleModel-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.WorkflowModel\Origam.Schema.WorkflowModel-net2.csproj">
+      <Project>{5B6E4021-152C-4276-A1AE-E3B9BA223024}</Project>
+      <Name>Origam.Schema.WorkflowModel-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema\Origam.Schema-net2.csproj">
+      <Project>{AA7461F9-34D2-4F29-9D22-25FE053DDEF0}</Project>
+      <Name>Origam.Schema-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Security\Origam.Security-net2.csproj">
+      <Project>{93b972c4-d58d-4681-a8b8-95a34c7c2980}</Project>
+      <Name>Origam.Security-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Services\Origam.Services-net2.csproj">
+      <Project>{199DDE99-9EE7-4CCE-B71D-7FC1CC0896AA}</Project>
+      <Name>Origam.Services-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.TestCommon\Origam.TestCommon.csproj">
+      <Project>{c6bb0572-3720-4841-8dd6-6992644b7b5f}</Project>
+      <Name>Origam.TestCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common-net2.csproj">
+      <Project>{EF5DE64E-88B2-4B0A-BB7F-4A537B56F3D1}</Project>
+      <Name>Origam.UI.Common-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services-net2.csproj">
+      <Project>{ECA06542-5635-455E-B513-07F60222CA7D}</Project>
+      <Name>Origam.Workbench.Services-net2</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FilePersistenceProviderTests\TestFiles\.origamPackage">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FlatFileSearchTests\TestFiles\FaultyFile.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FlatFileSearchTests\TestFiles\Language.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="_OrigamSettings.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="securityconfiguration.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="FilePersistenceProviderTests\TestFiles\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\OrigamArchitect\packages\NUnit.3.10.1\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\OrigamArchitect\packages\NUnit.3.10.1\build\NUnit.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+</Project>

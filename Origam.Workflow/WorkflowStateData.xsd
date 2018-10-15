@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ROOT" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+  <xs:element name="WorkflowStateData" msdata:IsDataSet="true" msdata:Locale="cs-CZ" msprop:Id="fc6ab1cb-e6a0-43b1-ba9e-73b43b4ce787" msprop:SchemaVersionId="d95985f6-8635-4413-8f84-858137a6cb18">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="WorkflowState" msdata:Locale="cs-CZ" msdata:DisplayExpression="'WorkflowState'" msprop:Id="f585de77-7756-4b0c-b11d-1ca139935560" msprop:EntityId="5b0fe497-111d-4b2a-861e-934d864d44bc" msprop:SchemaVersionId="d95985f6-8635-4413-8f84-858137a6cb18">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" type="xs:string" />
+              <xs:element name="refWorkflowId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" type="xs:string" minOccurs="0" />
+              <xs:element name="refWorkflowSchemaVersionId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" type="xs:string" minOccurs="0" />
+              <xs:element name="StateDescription" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="200" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="StateType" type="xs:int" />
+              <xs:element name="WorkflowStateContext" msdata:Locale="cs-CZ" msdata:DisplayExpression="'WorkflowStateContext'" msprop:Id="87899ae8-a6f1-48f5-976a-0e8d3ae49249" msprop:EntityId="2a1693e2-5997-4ca4-a8d4-ddb2bd3b611e" msprop:SchemaVersionId="d95985f6-8635-4413-8f84-858137a6cb18" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <msdata:Relationship name="WorkflowStateContext" msdata:parent="WorkflowState" msdata:child="WorkflowStateContext" msdata:parentkey="Id" msdata:childkey="refParentWorkflowStateId" />
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" type="xs:string" />
+                    <xs:element name="refParentWorkflowStateId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" type="xs:string" />
+                    <xs:element name="ContextData" msdata:DataType="System.Object, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" type="xs:string" />
+                    <xs:element name="refContextStoreId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" type="xs:string" />
+                    <xs:element name="refContextStoreSchemaVersionId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="WorkflowStateStep" msdata:Locale="cs-CZ" msdata:DisplayExpression="'WorkflowStateStep'" msprop:Id="8326f7d7-2775-429e-ab3d-8434858f0c50" msprop:EntityId="ed1c0486-d2b6-4d19-ac96-d20c5b4a0744" msprop:SchemaVersionId="d95985f6-8635-4413-8f84-858137a6cb18" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <msdata:Relationship name="WorkflowStateStep" msdata:parent="WorkflowState" msdata:child="WorkflowStateStep" msdata:parentkey="Id" msdata:childkey="refParentWorkflowStateId" />
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" type="xs:string" />
+                    <xs:element name="refParentWorkflowStateId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" type="xs:string" />
+                    <xs:element name="refWorkflowStepId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" type="xs:string" />
+                    <xs:element name="refWorkflowStepSchemaVersionId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" type="xs:string" />
+                    <xs:element name="refSubWorkflowStateId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" type="xs:string" minOccurs="0" />
+                    <xs:element name="StepState" type="xs:int" />
+                    <xs:element name="UITaskData" msdata:DataType="System.Object, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" type="xs:string" minOccurs="0" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="WorkflowStateStep_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//WorkflowStateStep" />
+      <xs:field xpath="Id" />
+    </xs:unique>
+    <xs:unique name="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//WorkflowState" />
+      <xs:field xpath="Id" />
+    </xs:unique>
+    <xs:keyref name="WorkflowStateStep_FK_WorkflowState" refer="PK_Id" msdata:ConstraintName="FK_WorkflowState" msdata:ConstraintOnly="true" msdata:AcceptRejectRule="Cascade">
+      <xs:selector xpath=".//WorkflowStateStep" />
+      <xs:field xpath="refParentWorkflowStateId" />
+    </xs:keyref>
+    <xs:keyref name="FK_WorkflowState" refer="PK_Id" msdata:ConstraintOnly="true" msdata:AcceptRejectRule="Cascade">
+      <xs:selector xpath=".//WorkflowStateContext" />
+      <xs:field xpath="refParentWorkflowStateId" />
+    </xs:keyref>
+  </xs:element>
+</xs:schema>

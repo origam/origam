@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema id="ROOT" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+	xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+	<xs:element name="SerialCommunicationBuffer" msdata:IsDataSet="true" msdata:Locale="cs-CZ" msprop:Id="38e5555d-af33-4c75-9078-745db2601a9f"
+		msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff">
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="CommunicationEntry" msdata:Locale="cs-CZ" msdata:DisplayExpression="'SerialCommunicationBuffer'"
+					msprop:Id="50b699e7-24ca-48af-b307-80ca7ffea976" msprop:EntityId="ed354c83-d299-43ea-b3a6-37bdd3d83327"
+					msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff" msprop:IsAuditingEnabled="False">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="RecordCreatedServer" msdata:Caption="Záznam vytvořen (server)" msprop:Id="da9c4ff5-2e67-4744-935a-60a39b886828"
+								msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff" msprop:DefaultHideUI="True"
+								type="xs:dateTime" minOccurs="0" />
+							<xs:element name="Buffer" msdata:DataType="System.Object, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+								msprop:Id="ef2105e1-9291-410e-aa93-1c85eabaa1bd" msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff"
+								type="xs:string" minOccurs="0" />
+							<xs:element name="RecordUpdatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+								msdata:Caption="Záznam aktualizoval" msprop:Id="efb83735-bedb-4eee-b9eb-f111dd46980e" msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff"
+								msprop:DefaultHideUI="True" type="xs:string" minOccurs="0" />
+							<xs:element name="RecordCreated" msdata:Caption="Záznam vytvořen" msprop:Id="2340af1e-d939-47ae-930b-e24b0cb3a756"
+								msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff" msprop:DefaultHideUI="True"
+								type="xs:dateTime" minOccurs="0" />
+							<xs:element name="RecordUpdated" msdata:Caption="Záznam aktualizován" msprop:Id="bfd1ea1b-ffbf-47f6-8f9b-08dab6553a18"
+								msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff" msprop:DefaultHideUI="True"
+								type="xs:dateTime" minOccurs="0" />
+							<xs:element name="RecordCreatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+								msdata:Caption="Záznam vytvořil" msprop:Id="253ce61e-509c-4d08-864f-c0e03d3eed4b" msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff"
+								msprop:DefaultHideUI="True" type="xs:string" minOccurs="0" />
+							<xs:element name="RecordUpdatedServer" msdata:Caption="Záznam aktualizován (server)" msprop:Id="9424c659-0c83-4aa9-b2a4-aeec9d9e8d40"
+								msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff" msprop:DefaultHideUI="True"
+								type="xs:dateTime" minOccurs="0" />
+							<xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+								msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff"
+								msprop:DefaultHideUI="True" type="xs:string" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+		<xs:unique name="PK_Id" msdata:PrimaryKey="true">
+			<xs:selector xpath=".//CommunicationEntry" />
+			<xs:field xpath="Id" />
+		</xs:unique>
+	</xs:element>
+</xs:schema>

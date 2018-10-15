@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="ResMimeType">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="Version">
+		<value>1.0.0.0</value>
+	</resheader>
+	<resheader name="Reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="Writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="ErrorFormSchemaProviderUnknownType">
+		<value>This type is not supported by FormSchemaItemProvider</value>
+	</data>
+	<data name="ErrorGraphicsUnknownType">
+		<value>This type is not supported by Graphics</value>
+	</data>
+	<data name="ErrorEntityModelUnknownType">
+		<value>This type is not supported by EntityModel</value>
+	</data>
+	<data name="ErrorReportEntityUnknownType">
+		<value>This type is not supported by ReportEntity</value>
+	</data>
+	<data name="ErrorFormControlSetUnknownType">
+		<value>This type is not supported by FormControlSet</value>
+	</data>
+	<data name="ErrorLookupNotFound">
+		<value>Lookup referenced by '{0}' in {1} '{2}' was not found in the model.</value>
+	</data>
+	<data name="ErrorReportNotFound">
+		<value>Report referenced by '{0}' in {1} '{2}' was not found in the model.</value>
+	</data>
+	<data name="ErrorGraphicsNotFound">
+		<value>Graphics referenced by '{0}' in {1} '{2}' was not found in the model.</value>
+	</data>
+	<data name="ErrorWorkflowNotFound">
+		<value>Workflow referenced by '{0}' in {1} '{2}' was not found in the model.</value>
+	</data>
+	<data name="ErrorControlSetItemUnknownType">
+		<value>This type is not supported by ControlSetItem</value>
+	</data>
+	<data name="ErrorCompareEntityUIAction">
+		<value>Cannot compare this object with EntityUIAction</value>
+	</data>
+	<data name="ErrorReportUnknownType">
+		<value>This type is not supported by Report</value>
+	</data>
+	<data name="DashboardWidgetValueProperty">
+		<value>Value</value>
+	</data>
+	<data name="ErrorLookupNotSet">
+		<value>Lookup not set for {0}. Cannot generate user interface.</value>
+	</data>
+</root>

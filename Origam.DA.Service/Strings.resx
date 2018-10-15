@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DataStructureNotFound" xml:space="preserve">
+    <value>DataStructureEntity not found</value>
+  </data>
+  <data name="StructureNotInModel" xml:space="preserve">
+    <value>Data structure not found in the model ({0})</value>
+  </data>
+  <data name="TableMappingNotInModel" xml:space="preserve">
+    <value>Table Mapping not found in the model ({0})</value>
+  </data>
+  <data name="FieldMappingNotInModel" xml:space="preserve">
+    <value>Field Mapping not found in the model ({0})</value>
+  </data>
+  <data name="FilterSetNotFound" xml:space="preserve">
+    <value>FilterSet not found</value>
+  </data>
+  <data name="SortSetNotFound" xml:space="preserve">
+    <value>SortSet not found</value>
+  </data>
+  <data name="DefaultSetNotFound" xml:space="preserve">
+    <value>DefaultSet not found</value>
+  </data>
+  <data name="ErrorWhenSettingParam" xml:space="preserve">
+    <value>Error occured when setting parameter: {0} to value: {1}</value>
+  </data>
+  <data name="UnknownDataSource" xml:space="preserve">
+    <value>Unknown data source type.</value>
+  </data>
+  <data name="ErrorLoadingData" xml:space="preserve">
+    <value>Error loading data from table '{0}' into entity '{1}'{2}Message: {3}</value>
+  </data>
+  <data name="NoProviderForMS" xml:space="preserve">
+    <value>PersistenceProvider not set for MsSqlDataService</value>
+  </data>
+  <data name="DataSetMustBeProvided" xml:space="preserve">
+    <value>Dataset must be provided when loading data by DataStructureEntity</value>
+  </data>
+  <data name="ConcurrencyViolation" xml:space="preserve">
+    <value>Concurrency violation while updating table {0}</value>
+  </data>
+  <data name="DataChangedByOtherUser" xml:space="preserve">
+    <value>Data have been changed by another user.</value>
+  </data>
+  <data name="ChildErrors" xml:space="preserve">
+    <value>Child records contain errors.</value>
+  </data>
+  <data name="DataChangedByOtherUserException" xml:space="preserve">
+    <value>Record '{0}' in '{1}' cannot be saved because it has been changed by '{2}'.</value>
+  </data>
+  <data name="DataDeletedByOtherUserException" xml:space="preserve">
+    <value>Changes of a record '{0}' in '{1}' cannot be saved because the record has been deleted by another user.</value>
+  </data>
+  <data name="ErrorWhenScalar" xml:space="preserve">
+    <value>Exception was encountered while getting scalar value.  {0}</value>
+  </data>
+  <data name="NoTransactionsForMSExecutedProcedure" xml:space="preserve">
+    <value>Transactions are not supported by MsSqlDataService.ExecuteProcedure method.</value>
+  </data>
+  <data name="ErrorWhenProcedure" xml:space="preserve">
+    <value>Exception was encountered while running procedure. {0}</value>
+  </data>
+  <data name="UpdateFieldUpdate" xml:space="preserve">
+    <value>Update field can only update tables.</value>
+  </data>
+  <data name="ViewCantBeScripted" xml:space="preserve">
+    <value>View cannot be scripted to the database.</value>
+  </data>
+  <data name="NoDataRowAfterUpdate" xml:space="preserve">
+    <value>Data row does not exist after update. Row has been deleted by another user.</value>
+  </data>
+  <data name="FailedUpdateRow" xml:space="preserve">
+    <value>Failed updating row with data from the database. DataRowState: {0}</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="EntityNotInDataSet" xml:space="preserve">
+    <value>Entity with name '{0}' not found in the OrigamPersistenceProvider dataset.</value>
+  </data>
+  <data name="NoRowsForDerived" xml:space="preserve">
+    <value>Could not find rows for a derived entity {0}</value>
+  </data>
+  <data name="NoDataForPrimaryKey" xml:space="preserve">
+    <value>Model element not found by provided primary key {0}</value>
+  </data>
+  <data name="NoEntityNameForClass" xml:space="preserve">
+    <value>Class has no entity name definition</value>
+  </data>
+  <data name="NoRefreshForNotPersisted" xml:space="preserve">
+    <value>Cannot refresh object that has not been persisted!</value>
+  </data>
+  <data name="CouldNotLoadList" xml:space="preserve">
+    <value>Could not load list. Entity does not exist in the data source.</value>
+  </data>
+  <data name="ObjectWithSameKey" xml:space="preserve">
+    <value>Cannot persist the object, another object with the same key exists already.</value>
+  </data>
+  <data name="NoChangesInDataSet" xml:space="preserve">
+    <value>No changes in dataset</value>
+  </data>
+  <data name="ProviderNotInitialized" xml:space="preserve">
+    <value>Persistence provider not initialized. Dataset is empty.</value>
+  </data>
+  <data name="IntegrityError" xml:space="preserve">
+    <value>You deleted a record that is being used in another part of the application.</value>
+  </data>
+  <data name="DuplicityError" xml:space="preserve">
+    <value>You entered duplicate data.</value>
+  </data>
+  <data name="ExceptionWhenUpdate" xml:space="preserve">
+    <value>Exception was encountered while updating data. For more information see Details.</value>
+  </data>
+  <data name="OnlyMappedEntitiesToBeProcessed" xml:space="preserve">
+    <value>Only database mapped entities can be processed by the Data Service!</value>
+  </data>
+  <data name="DDLForFunctionsOnly" xml:space="preserve">
+    <value>DDL can be generated only for database functions</value>
+  </data>
+  <data name="CantDDLScript" xml:space="preserve">
+    <value>Cannot generate DDL script for object of type: {0}</value>
+  </data>
+  <data name="NoPrimaryKey" xml:space="preserve">
+    <value>Entity '{0}' has no primary key defined. Cannot load original values after update.</value>
+  </data>
+  <data name="ErrorLookupAggreg" xml:space="preserve">
+    <value>Data Structure Field cannot have UseLookupValue and Aggregation both turned on. Field: {0}</value>
+  </data>
+  <data name="NoValueFilterSetForLookup" xml:space="preserve">
+    <value>Lookup '{0}' has no ValueFilterSet</value>
+  </data>
+  <data name="ErrorAggregInAggreg" xml:space="preserve">
+    <value>Aggregated field is not supported inside an aggregated data structure column. Column: {0}</value>
+  </data>
+  <data name="ErrorSortOrder" xml:space="preserve">
+    <value>Invalid DataStructure. SortOrder no. {0} already exists in {1}</value>
+  </data>
+  <data name="TypeNotSupportedByMS" xml:space="preserve">
+    <value>Type {0} not supported by MsSqlCommandGenerator</value>
+  </data>
+  <data name="TypeNotImplementedByMS" xml:space="preserve">
+    <value>DataType {0} not implemented for DataConstantReference by MsSqlCommandGenerator</value>
+  </data>
+  <data name="UnknownSortDirection" xml:space="preserve">
+    <value>Unknown SortDirection</value>
+  </data>
+  <data name="ErrorNoParamIN" xml:space="preserve">
+    <value>There has to be at least 1 parameter in the IN clause.</value>
+  </data>
+  <data name="UnknownFunction" xml:space="preserve">
+    <value>Function not known</value>
+  </data>
+  <data name="UnsupportedOperator" xml:space="preserve">
+    <value>Operator not supported</value>
+  </data>
+  <data name="UnsupportedAggreg" xml:space="preserve">
+    <value>Aggregation type not supported</value>
+  </data>
+  <data name="UnsupportedType" xml:space="preserve">
+    <value>Unsupported Data Type</value>
+  </data>
+  <data name="UnknownXmlMapping" xml:space="preserve">
+    <value>Unknown XmlMappingType</value>
+  </data>
+  <data name="ErrorDatastructureNull" xml:space="preserve">
+    <value>DataStructure cannot be null in order to create DataSet</value>
+  </data>
+  <data name="ErrorNoInitialState" xml:space="preserve">
+    <value>Initial state not set for the state machine on column: {0}.{1}</value>
+  </data>
+  <data name="ErrorCreateRelation" xml:space="preserve">
+    <value>Could not create relation {0} -&gt; {1} for data structure {2}</value>
+  </data>
+  <data name="TypeNotImplementedByDSGen" xml:space="preserve">
+    <value>Item type {0} is not implemented by DatasetGenerator.RenderExpression</value>
+  </data>
+  <data name="TypeNotImplementedByDSGen1" xml:space="preserve">
+    <value>DataType {0} not implemented for DataConstantReference by DatasetGenerator</value>
+  </data>
+  <data name="ColumnNotInStructure" xml:space="preserve">
+    <value>Column '{0}' not found in the data structure.</value>
+  </data>
+  <data name="ErrorLeftParamEmpty" xml:space="preserve">
+    <value>Left parameter cannot be empty</value>
+  </data>
+  <data name="ErrorRightParamEmpty" xml:space="preserve">
+    <value>Right parameter cannot be empty</value>
+  </data>
+  <data name="ErrorArgumentEmpty" xml:space="preserve">
+    <value>Argument cannot be empty</value>
+  </data>
+  <data name="ErrorOneNOTArgument" xml:space="preserve">
+    <value>Only 1 argument can be present to NOT operator.</value>
+  </data>
+  <data name="ErrorTwoCONCATArguments" xml:space="preserve">
+    <value>There have to be at least 2 strings to concatenate.</value>
+  </data>
+  <data name="ErrorTwoArguments" xml:space="preserve">
+    <value>There have to be at least 2 arguments for {0}</value>
+  </data>
+  <data name="ErrorNumberOfSpaces" xml:space="preserve">
+    <value>NumberOfSpaces argument invalid or missing</value>
+  </data>
+  <data name="ErrorExpressionNotSet" xml:space="preserve">
+    <value>Expression not set for '{0}'</value>
+  </data>
+  <data name="ErrorLookupNotSet" xml:space="preserve">
+    <value>Lookup not set for '{0}'</value>
+  </data>
+  <data name="InvalidAdapterType" xml:space="preserve">
+    <value>Invalid data adapter type.</value>
+  </data>
+  <data name="LookupTypeUnsupportedException" xml:space="preserve">
+    <value>Only DataServiceDataLookup is supported for nested queries (looked-up fields in data structures).</value>
+  </data>
+  <data name="LookupListMethodTypeUnsupportedException" xml:space="preserve">
+    <value>Only DataStructureFilterSet method type is supported for nested queries (looked-up fields in data structures).</value>
+  </data>
+  <data name="ErrorCouldNotAddRow" xml:space="preserve">
+    <value>Could not add {0}{1}.</value>
+  </data>
+  <data name="ErrorCouldNotModifyRow" xml:space="preserve">
+    <value>Could not modify {0}{1}.</value>
+  </data>
+  <data name="ErrorCouldNotDeleteRow" xml:space="preserve">
+    <value>Could not delete {0}{1}.</value>
+  </data>
+  <data name="InvalidTypeRetrieved" xml:space="preserve">
+    <value>Requested instance of type {1} with id {0}, but type of {2} was found instead.</value>
+  </data>
+  <data name="DuplicityErrorDetailed" xml:space="preserve">
+    <value>{0} {1} already exists.</value>
+  </data>
+  <data name="ColumnNotFoundInParentEntity" xml:space="preserve">
+    <value>Column not found in entity {0}. To solve this problem, please add a data structure column referencing entity {1} and column {2} to the entity {0}.</value>
+  </data>
+  <data name="ErrorDataSetClassInvalid" xml:space="preserve">
+    <value>Invalid DataSetClass.</value>
+  </data>
+  <data name="ErrorSettingsNotFound" xml:space="preserve">
+    <value>OrigamSettings not found.</value>
+  </data>
+</root>

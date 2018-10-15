@@ -1,0 +1,31 @@
+CHANGES TO POPCLIENT - by Nando Florestan
+====================
+
+The changes I made to PopClient were more superficial than the changes to Parser2. I am sure there is much room for improvement (for instance, the code could be made more resistant to POP servers that communicate in heterodox ways), but it has always worked with all POP3 servers for me. One idea would be to create new events to let us see all communication.
+
+• The main change is that now PopClient works with Parser2 instead of the old parser.
+
+• Logging of errors has been removed; instead, use the Warning Event.
+
+• Instead of a number of variables, we use a MailPopAccount object to store hostname, port, login, password...
+
+• Authenticate() now tries to connect if not yet connected.
+
+• The PopClient class has been split. Now it inherits from HighLevelTcpClient which provides TCP services without any knowledge of the POP3 protocol.
+
+• Every class should tell a story instead of having its methods scattered randomly. Therefore, we should start with constructors, then Connect(), then Authenticate() and so on.
+
+• All custom exceptions should have at least 3 constructors, like this:
+
+	/// <summary>Thrown when the specified POP3 server cannot be found or
+	/// connected to.</summary>	
+	public class PopServerNotFoundException : ApplicationException
+	{
+		// Constructors
+		public PopServerNotFoundException()  {}
+		public PopServerNotFoundException(string msg) : base(msg)  {}
+		public PopServerNotFoundException(string msg, Exception inner) :
+			base(msg, inner)  {}
+	}
+
+• Spelling. "Condiction" does not exist.

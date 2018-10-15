@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="SIMPLICOR Site Manager" default="standard" basedir="..">
+  <description>Build file for SIMPLICOR Hosting Site Manager</description>
+  <loadtasks assembly="d:/BuildServer/nantcontrib-0.85/bin/NAnt.Contrib.Tasks.dll" />
+  <property name="dist" value="out\dist"/>
+  <property name="precompile" value="out\aspprecompile"/>
+  <property name="compiler" value="C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/aspnet_compiler.exe"/>
+  <property name="merger" value="d:/BuildServer/MSBuild/Microsoft/WebDeployment/v8.0/aspnet_merge.exe"/>
+  <target name="standard" description="Builds site manager web."
+          depends="cleanDirectories, prepareStandardSource, compileWeb"/>
+  <target name="prepareStandardSource">
+    <copy todir="${precompile}">
+      <fileset basedir=".">
+        <include name="*.*" />
+        <exclude name="*.config"/>
+        <include name="bin\**\*.*" />
+        <include name="App_Code\**\*.*" />
+      </fileset>
+    </copy>
+  </target>
+  <target name="cleanDirectories">
+    <delete dir="${dist}" if="${directory::exists(dist)}" />
+    <delete>
+      <fileset basedir="${precompile}">
+        <include name="**\*" />
+      </fileset>
+    </delete>
+  </target>
+  <target name="compileWeb">
+    <exec program="${compiler}" useruntimeengine="true">
+      <arg value="-p" />
+      <arg value="${precompile}" />
+      <arg value="-v" />
+      <arg value="/" />
+      <!--<arg value="-d"/>//-->
+      <arg value="${dist}" />
+    </exec>
+    <exec program="${merger}" >
+      <arg value="-o" />
+      <arg value="site-manager.dll" />
+      <arg value="-r" />
+      <arg value="${dist}" />
+    </exec>
+  </target>
+</project>

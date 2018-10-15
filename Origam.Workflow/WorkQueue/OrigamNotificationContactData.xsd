@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema id="ROOT" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+	xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+	<xs:element name="OrigamNotificationContactData" msdata:IsDataSet="true" msdata:Locale="cs-CZ"
+		msprop:Id="9647f6ba-f214-4974-b90e-b5a67fcfe9e0">
+		<xs:complexType>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="OrigamNotificationContact" msdata:Locale="cs-CZ" msdata:DisplayExpression="'OrigamNotificationContact'"
+					msprop:EntityId="64c59894-459e-4e8f-9b64-62a42c921f5e" msprop:IsAuditingEnabled="False"
+					msprop:Id="6545c529-4e77-4f6f-97b5-7156624e9199">
+					<xs:complexType>
+					
+            <xs:attribute name="ContactIdentification" msdata:Caption="Email" msprop:Id="6a012b44-655d-4e52-92dc-dd47663524ea" msprop:FieldId="397479a9-2b27-4c52-a4ba-63f07b2d3289" msprop:AllowNulls="False" msprop:OrigamDataType="Memo" msprop:OnCopyAction="Copy" type="xs:string" use="required" />
+            <xs:attribute name="Salutation" msprop:Id="463c4bc2-92b3-4422-9585-f3278d032bc0" msprop:FieldId="35f3edc9-3b8d-40ef-b3e3-48469941749f" msprop:OrigamDataType="String" msprop:OnCopyAction="Copy">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:maxLength value="200" />
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="Name" msprop:Id="dbae115f-3c7e-448c-92d3-c9be957eb7b6" msprop:FieldId="b34f90a4-93a8-4215-b3e8-de1e8d8e204b" msprop:OrigamDataType="Memo" msprop:OnCopyAction="Copy" type="xs:string" />
+            <xs:attribute name="refSalutationId" msdata:DataType="System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:Id="407333f3-5586-4d45-bf4c-7875d3ad1aa2" msprop:FieldId="50fafbf4-ac3c-40d3-8b22-af1f928c4673" msprop:OrigamDataType="UniqueIdentifier" msprop:OnCopyAction="Copy" type="xs:string" />
+            <xs:attribute name="LanguageTagIETF" msdata:Caption="Language IETF Tag" msprop:Id="4460da07-9b00-4ad3-a926-78dfc9f23c78" msprop:FieldId="129e7155-3983-4bad-95b9-d981f73daefe" msprop:OrigamDataType="String" msprop:OnCopyAction="Copy">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:maxLength value="20" />
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="PK_ContactIdentification" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//OrigamNotificationContact" />
+      <xs:field xpath="@ContactIdentification" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

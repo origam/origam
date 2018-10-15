@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema id="TestDocumentation" targetNamespace="http://tempuri.org/TestDocumentation.xsd"
+	elementFormDefault="qualified" attributeFormDefault="qualified" xmlns="http://tempuri.org/TestDocumentation.xsd"
+	xmlns:mstns="http://tempuri.org/TestDocumentation.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+	<xs:element name="TestDocumentation" msdata:IsDataSet="true">
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="TestScenario">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Name" type="xs:string" minOccurs="0" />
+							<xs:element name="Description" type="xs:string" minOccurs="0" />
+							<xs:element name="Id" type="xs:string" minOccurs="0" />
+							<xs:element name="TestCase">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Name" type="xs:string" minOccurs="0" />
+										<xs:element name="Description" type="xs:string" minOccurs="0" />
+										<xs:element name="refTestScenarioId" type="xs:string" minOccurs="0" />
+										<xs:element name="Id" type="xs:string" minOccurs="0" />
+										<xs:element name="TestCaseAlternative">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Id" type="xs:string" minOccurs="0" />
+													<xs:element name="Name" type="xs:string" minOccurs="0" />
+													<xs:element name="Description" type="xs:string" minOccurs="0" />
+													<xs:element name="refTestCaseId" type="xs:string" minOccurs="0" />
+													<xs:element name="TestCaseAlternativeStep">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Id" type="xs:string" minOccurs="0" />
+																<xs:element name="Name" type="xs:string" minOccurs="0" />
+																<xs:element name="ActionDescription" type="xs:string" minOccurs="0" />
+																<xs:element name="refTestCaseAlternativeId" type="xs:string" minOccurs="0" />
+																<xs:element name="ResultDescription" type="xs:string" minOccurs="0" />
+																<xs:element name="StepType" type="xs:int" minOccurs="0" />
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Role" type="xs:string" minOccurs="0" />
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+		<xs:key name="key1">
+			<xs:selector xpath=".//mstns:TestScenario" />
+			<xs:field xpath="mstns:Id" />
+		</xs:key>
+		<xs:key name="key2">
+			<xs:selector xpath=".//mstns:TestCase" />
+			<xs:field xpath="mstns:Id" />
+		</xs:key>
+		<xs:key name="key3">
+			<xs:selector xpath=".//mstns:TestCaseAlternative" />
+			<xs:field xpath="mstns:Id" />
+		</xs:key>
+	</xs:element>
+</xs:schema>

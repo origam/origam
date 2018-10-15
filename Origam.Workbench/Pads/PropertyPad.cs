@@ -1,0 +1,180 @@
+#region license
+/*
+Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using System;
+using System.Collections;
+using System.Windows.Forms;
+using System.ComponentModel;
+using System.ComponentModel.Design;
+
+using Origam.UI;
+using Origam.Schema;
+
+namespace Origam.Workbench.Pads
+{
+	/// <summary>
+	/// Summary description for PropertyPad.
+	/// </summary>
+	public class PropertyPad : AbstractPadContent, IPropertyPad
+	{
+		private System.Windows.Forms.ComboBox cboComponents;
+		private PropertyGrid.PropertyGridEx pgrid;
+		private bool _selectComponent = true;
+
+		private void InitializeComponent()
+		{
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(PropertyPad));
+			this.pgrid = new PropertyGrid.PropertyGridEx();
+			this.cboComponents = new System.Windows.Forms.ComboBox();
+			this.SuspendLayout();
+			// 
+			// pgrid
+			// 
+			this.pgrid.CommandsVisibleIfAvailable = true;
+			this.pgrid.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.pgrid.HelpBackColor = System.Drawing.Color.LightYellow;
+			this.pgrid.LargeButtons = false;
+			this.pgrid.LineColor = System.Drawing.SystemColors.ScrollBar;
+			this.pgrid.Location = new System.Drawing.Point(0, 21);
+			this.pgrid.Name = "pgrid";
+			this.pgrid.Size = new System.Drawing.Size(292, 252);
+			this.pgrid.TabIndex = 0;
+			this.pgrid.Text = "PropertyGrid";
+			this.pgrid.ViewBackColor = System.Drawing.SystemColors.Window;
+			this.pgrid.ViewForeColor = System.Drawing.SystemColors.WindowText;
+			this.pgrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.pgrid_PropertyValueChanged);
+			// 
+			// cboComponents
+			// 
+			this.cboComponents.Dock = System.Windows.Forms.DockStyle.Top;
+			this.cboComponents.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cboComponents.Location = new System.Drawing.Point(0, 0);
+			this.cboComponents.Name = "cboComponents";
+			this.cboComponents.Size = new System.Drawing.Size(292, 21);
+			this.cboComponents.Sorted = true;
+			this.cboComponents.TabIndex = 1;
+			this.cboComponents.SelectedIndexChanged += new System.EventHandler(this.cboComponents_SelectedIndexChanged);
+			// 
+			// PropertyPad
+			// 
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.ClientSize = new System.Drawing.Size(292, 273);
+			this.Controls.Add(this.pgrid);
+			this.Controls.Add(this.cboComponents);
+			this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
+				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
+				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
+				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
+			this.HideOnClose = true;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.Name = "PropertyPad";
+			this.TabText = "Properties";
+			this.Text = "Properties";
+			this.ResumeLayout(false);
+
+		}
+	
+		public PropertyPad()
+		{
+			InitializeComponent();
+
+			this.BackColor = OrigamColorScheme.FormBackgroundColor;
+			this.pgrid.LineColor = OrigamColorScheme.PropertyGridHeaderColor;
+			this.pgrid.HelpBackColor = OrigamColorScheme.MdiBackColor;;
+			this.pgrid.HelpForeColor = OrigamColorScheme.MdiForeColor;
+
+			this.pgrid.SelectedObjectsChanged += new EventHandler(pgrid_SelectedObjectsChanged);
+		}
+
+		#region IPropertyPad Members
+
+		public System.Windows.Forms.PropertyGrid PropertyGrid
+		{
+			get
+			{
+				return this.pgrid;
+			}
+		}
+
+		#endregion
+
+		private void pgrid_SelectedObjectsChanged(object sender, EventArgs e)
+		{
+			_selectComponent = false;
+			RefreshControlList();
+			_selectComponent = true;
+		}
+
+		private void cboComponents_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			if(! _selectComponent) return;
+
+			PropertyPadListItem item = cboComponents.SelectedItem as PropertyPadListItem;
+
+			if(item != null)
+			{
+				ISelectionService svc = item.Control.Site.GetService(typeof(ISelectionService)) as ISelectionService;
+				ArrayList list = new ArrayList();
+				list.Add(item.Control);
+
+				svc.SetSelectedComponents(list);
+			}
+		}
+
+		private void pgrid_PropertyValueChanged(object s, System.Windows.Forms.PropertyValueChangedEventArgs e)
+		{
+			RefreshControlList();
+		}
+
+		private void RefreshControlList()
+		{
+			cboComponents.Items.Clear();
+			Component selectedItem = null;
+			
+			if(pgrid.SelectedObjects.Length > 0)
+			{
+				selectedItem = pgrid.SelectedObjects[0] as Control;
+				PropertyPadListItem selectedCboItem = null;
+
+				if(selectedItem != null)
+				{
+					foreach(object component in selectedItem.Site.Container.Components)
+					{
+						Control control = component as Control;
+
+						if(control != null && control.Tag is ISchemaItem)
+						{
+							PropertyPadListItem item = new PropertyPadListItem(control);
+							cboComponents.Items.Add(item);
+
+							if(pgrid.SelectedObjects.Length == 1 && selectedItem == control)
+							{
+								selectedCboItem = item;
+							}
+						}
+					}
+
+					cboComponents.SelectedItem = selectedCboItem;
+				}
+			}
+		}
+	}
+}

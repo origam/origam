@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ROOT" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+  <xs:element name="WorkQueueMailData" msdata:IsDataSet="true" msdata:Locale="cs-CZ" msprop:Id="a919bc9e-69b5-4d8b-ae56-dca81195239b">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="WorkQueueEntry" msdata:Locale="cs-CZ" msdata:DisplayExpression="'Položka fronty zpráv'" msprop:Id="edf36d46-ea77-49ee-a500-90cbd66d9e32" msprop:EntityId="76efc330-faab-45f4-9760-9aa5a6e42078" msprop:IsAuditingEnabled="False">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Recipient" msdata:Caption="Příjemce" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Memo" msprop:Id="e6e6906e-10f9-4a93-a32c-895f015d3a4c" msprop:FieldId="5298b1fe-1e41-41ba-b1bc-a4fe115abbcb" type="xs:string" minOccurs="0" msdata:Ordinal="0" />
+              <xs:element name="MessageBody" msdata:Caption="Zpráva" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Memo" msprop:Id="bd384927-d6ca-43b6-bbab-cda60627cb88" msprop:FieldId="b803c9ab-6aba-41f9-80f4-0b68a9121046" type="xs:string" minOccurs="0" msdata:Ordinal="11" />
+            </xs:sequence>
+            <xs:attribute name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="c54413b6-eb88-49c8-a7ff-3bb942c1984e" msprop:FieldId="e8c258a9-65ef-429c-9013-addbd792caac" type="xs:string" use="required" />
+            <xs:attribute name="refId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="127907f1-e422-46bb-85d1-898b232d027d" msprop:FieldId="fa9b99fc-f0ea-446f-b5e6-9e8aff550bf3" type="xs:string" />
+            <xs:attribute name="ErrorText" msdata:Caption="Chybová zpráva" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Memo" msprop:Id="4bfd4aa8-2d12-4293-9360-542e23e904ce" msprop:FieldId="117aad8f-ceed-4fd0-a43d-9f139e9b60b6" type="xs:string" />
+            <xs:attribute name="RecordUpdated" msdata:Caption="Datum posl. změny" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Date" msprop:Id="d245e9df-9a2f-4196-89de-b86faaaeb624" msprop:FieldId="78a0a3c8-4e46-4fec-a726-f106f803f3fd" type="xs:dateTime" />
+            <xs:attribute name="refWorkQueueId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="f37a5473-98ef-4e6b-9c30-ccc12e99adcc" msprop:DefaultLookupId="86baa570-b689-440f-810f-fb289c072f2b" msprop:FieldId="9a5ad4d4-3c52-40f2-90e9-f51b3f8f429b" type="xs:string" use="required" />
+            <xs:attribute name="RecordCreatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Vytvořil" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="cbcf7bb8-10d0-4576-98f5-1210b10bae5f" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6" msprop:FieldId="f7eb1b9a-4fca-4617-90ea-cdfa270bbd15" type="xs:string" />
+            <xs:attribute name="refLockedByBusinessPartnerId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Uzamknul" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="1883087e-d17b-43e0-81ae-4019a9ce3021" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6" msprop:FieldId="5fa875ce-c081-4a79-8381-d136587b57a5" type="xs:string" />
+            <xs:attribute name="RecordUpdatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Naposledy změnil" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="ad2d2efe-9cb0-4141-ac28-25b8ed68580b" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6" msprop:FieldId="eabc869a-ff21-448b-b765-4e32b5b2bb1c" type="xs:string" />
+            <xs:attribute name="DateSent" msdata:Caption="Odesláno" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Date" msprop:Id="3fd57777-7700-4943-a19f-3437f9df299a" msprop:FieldId="654ab7a5-1d99-4bec-99ce-4f6e77cfb4a8" type="xs:dateTime" />
+            <xs:attribute name="IsLocked" msdata:Caption="Uzamčeno" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Boolean" msprop:Id="c019bbfc-551e-4dee-abe6-f777a13b77a9" msprop:FieldId="bd3aed0f-e58a-4555-be99-097864670539" type="xs:boolean" msdata:DefaultValue="false" use="required" />
+            <xs:attribute name="DateReceived" msdata:Caption="Přijato" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Date" msprop:Id="2aa64133-36c8-4d90-a696-1aa729d9fb78" msprop:FieldId="b379806c-6d43-4fcf-b1b2-7a7255220e97" type="xs:dateTime" />
+            <xs:attribute name="Subject" msdata:Caption="Předmět" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="a115749e-6c25-4395-967d-ba92da75171c" msprop:FieldId="c44c078b-f42b-4ebb-9dad-8f83eb12ad5b">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:maxLength value="200" />
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="Sender" msdata:Caption="Odesílatel" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="abbc4d5e-aa24-4633-923b-5ff5075d9e7d" msprop:FieldId="bf7e853b-6993-482a-932a-5f9acd2b99b4">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:maxLength value="200" />
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="RecordCreated" msdata:Caption="Datum vytvoření" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Date" msprop:Id="6a92781b-ac57-4b24-a2a3-7ff772747431" msprop:FieldId="273c8fac-588f-4cae-a517-614239f84bf4" type="xs:dateTime" />
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//WorkQueueEntry" />
+      <xs:field xpath="@Id" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

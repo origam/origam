@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <DataEntity mappedObjectName="OrigamApplicationRole" databaseObjectType="Table" generateDeploymentScript="true" readOnly="false" audit="None" label="Application Role" name="OrigamApplicationRole" abstract="false" x:id="c0dab8c0-ad91-428f-a89b-67795a427729" x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6" x:id="5faf8780-57d0-455a-b07b-66c53b0157f1" x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn mappedColumnName="Description" test="this item has no id" excludeFromAllFields="false" autoIncrement="false" xmlMappingType="Attribute" onCopyAction="Copy" name="Description" abstract="false" x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+  </DataEntity>
+</x:file>

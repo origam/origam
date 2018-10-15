@@ -1,0 +1,62 @@
+﻿@using Origam.Server.Utils;
+@{
+    Layout = "~/_Layout.cshtml";
+    string action = Resources.RegisterHeadline;
+    string actionField = "Action";
+    string nameField = "Name";
+    string firstNameField = "FirstName";
+    string emailField = "Email";
+    string userNameField = "UserName";
+    string passwordField = "Password";
+    string confirmPasswordField = "ConfirmPassword";
+    bool success = false;
+    string errorMessage = LoginHelper.RegisterNewUser(this, action, actionField,
+        nameField, firstNameField, emailField, userNameField, passwordField, confirmPasswordField, ref success);
+}
+
+<form method="post">
+    <!-- TODO - add styles -->
+    <div class="errorMessage">
+        @errorMessage
+    </div>
+    @if (! success && ConfigUtils.UserRegistrationAllowed())
+    {
+        <!-- username text input -->
+        <label class="input">
+            <span>@Resources.UserNameForm</span>
+            @Html.TextBox(userNameField, Request.Form[userNameField])
+        </label>
+        <br />
+        <!-- username text input -->
+        <label class="input">
+            <span>@Resources.FirstNameForm</span>
+            @Html.TextBox(firstNameField, Request.Form[firstNameField])
+        </label>
+        <br />
+        <label class="input">
+            <span>@Resources.SurnameForm</span>
+            @Html.TextBox(nameField, Request.Form[nameField])
+        </label>
+        <br />
+        <label class="input">
+            <span>@Resources.EmailForm</span>
+            @Html.TextBox(emailField, Request.Form[emailField])
+        </label>
+        <br />
+        <!-- password text input -->
+        <label class="input">
+            <span>@Resources.PasswordForm</span>
+            @Html.Password(passwordField, Request.Form[passwordField])
+        </label>
+        <label class="input">
+            <span>@Resources.ConfirmPasswordForm</span>
+            @Html.Password(confirmPasswordField, Request.Form[confirmPasswordField])
+        </label>
+        <input type="submit" value="@action" name="@actionField" class="login" />
+        <script src="js/overlay.js" type="text/javascript"></script>
+    }
+    <br />
+    <div>
+        <a href="~/Login">@Resources.BackToStart</a>
+    </div>
+</form>
