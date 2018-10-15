@@ -28,18 +28,9 @@ using System.Linq;
 
 namespace Origam
 {
-	/// <summary>
-	/// Summary description for ImageResizer.
-	/// </summary>
-	public class ImageResizer
+	public static class ImageResizer
 	{
-		private ImageResizer()
-		{
-			//
-			// TODO: Add constructor logic here
-			//
-		}
-		public static byte[] FixedSizeBytes(Image img, int width, int height)
+		private static byte[] FixedSizeBytes(Image img, int width, int height)
 		{
 			using (Image thumbnail = FixedSize(img, width, height))
 			{
@@ -57,7 +48,7 @@ namespace Origam
 			}
 		}
 
-		public static byte[] ResizeBytes(Image img, int width, int height
+		private static byte[] ResizeBytes(Image img, int width, int height
 			, bool keepAspectRatio
 			, System.Drawing.Imaging.ImageFormat outFormat)
 		{
@@ -170,7 +161,7 @@ namespace Origam
 			return bmPhoto;
 		}
 
-		public static Image Resize(Image imgPhoto, int Width, int Height, bool KeepAspectRatio)
+		private static Image Resize(Image imgPhoto, int Width, int Height, bool KeepAspectRatio)
 		{
 			// fix iphone rotation
 			if (imgPhoto.PropertyIdList.Contains(0x0112))
