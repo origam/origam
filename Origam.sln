@@ -61,13 +61,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Mail-net2", "Origam.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.ReflectorCache-net2", "Origam.ReflectorCache\Origam.ReflectorCache-net2.csproj", "{FFC2DCE2-B8B5-48A4-AA18-1E93F99E1D54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MIMEParser-net2", "OpenPOP_source\MIMEParser\MIMEParser-net2.csproj", "{CC4C4334-335D-4369-B0ED-F3C17CD57364}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MIMEParser-net2", "MIMEParser\MIMEParser-net2.csproj", "{CC4C4334-335D-4369-B0ED-F3C17CD57364}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.DeploymentModel-net2", "Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel-net2.csproj", "{F4F5927B-022F-4684-B9B1-3BC6519DF66E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.OrigamEngine-net2", "Origam.OrigamEngine\Origam.OrigamEngine-net2.csproj", "{233D40C6-AE59-4651-B7BD-DD09D5835E21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenPOP-net2", "OpenPOP_source\OpenPOP\OpenPOP-net2.csproj", "{75B3E0DF-61C3-4643-AB47-DBE1CFE3D303}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenPOP-net2", "OpenPOP\OpenPOP-net2.csproj", "{75B3E0DF-61C3-4643-AB47-DBE1CFE3D303}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NandoF-net2", "NandoF\NandoF-net2.csproj", "{57965042-F737-4FC4-BF0E-93C700A0FDF2}"
 EndProject
