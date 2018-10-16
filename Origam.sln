@@ -151,6 +151,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Server", "Origam.Server\Origam.Server.csproj", "{23D5F4C1-8BDC-4D8C-8AAE-F80B383C2407}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5E18CE83-B56F-44D3-A106-99CDAAB33C8B} = {5E18CE83-B56F-44D3-A106-99CDAAB33C8B}
+		{933A55D3-6641-41DA-BE15-E7AB2840188C} = {933A55D3-6641-41DA-BE15-E7AB2840188C}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Security.Identity", "Hosting\Origam.Security.Identity\Origam.Security.Identity.csproj", "{01708BD3-093A-42BF-BAF9-0A4CD1E69107}"
@@ -184,6 +185,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.workflow.mail", "Origam.workflow.mail\Origam.workflow.mail.csproj", "{5E18CE83-B56F-44D3-A106-99CDAAB33C8B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Koolwired.Imap", "Koolwired.IMAP\Koolwired.Imap.csproj", "{B383E80F-0B52-48F7-94E1-5F4C2AF74833}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workflow.NetMembershipService", "Origam.Workflow.NetMembershipService\Origam.Workflow.NetMembershipService.csproj", "{933A55D3-6641-41DA-BE15-E7AB2840188C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1995,6 +1998,28 @@ Global
 		{B383E80F-0B52-48F7-94E1-5F4C2AF74833}.Release Server|Any CPU.Build.0 = Release|Any CPU
 		{B383E80F-0B52-48F7-94E1-5F4C2AF74833}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B383E80F-0B52-48F7-94E1-5F4C2AF74833}.Release|Any CPU.Build.0 = Release|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.build|Any CPU.ActiveCfg = Release|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.build|Any CPU.Build.0 = Release|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.Debug Architect Express|Any CPU.ActiveCfg = Debug Architect Express|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.Debug Architect Express|Any CPU.Build.0 = Debug Architect Express|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.Debug Architect|Any CPU.ActiveCfg = Debug Architect Express|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.Debug Architect|Any CPU.Build.0 = Debug Architect Express|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.Debug Client|Any CPU.ActiveCfg = Debug Client|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.Debug Client|Any CPU.Build.0 = Debug Client|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.Debug Server|Any CPU.ActiveCfg = Debug Server|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.Debug Server|Any CPU.Build.0 = Debug Server|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.NDoc|Any CPU.ActiveCfg = Release|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.NDoc|Any CPU.Build.0 = Release|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.Release Architect Express|Any CPU.ActiveCfg = Release Architect Express|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.Release Architect Express|Any CPU.Build.0 = Release Architect Express|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.Release Architect|Any CPU.ActiveCfg = Release Architect Express|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.Release Client|Any CPU.ActiveCfg = Release Client|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.Release Server|Any CPU.ActiveCfg = Release Server|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.Release Server|Any CPU.Build.0 = Release Server|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{933A55D3-6641-41DA-BE15-E7AB2840188C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -2043,6 +2068,7 @@ Global
 		{4F685CE8-44F7-4F46-9E86-2EC2143F9A1F} = {ACC00126-CF22-4375-A15A-EF499ECEEB46}
 		{E4FF6E1C-53DB-403A-A19A-93C04141B113} = {ACC00126-CF22-4375-A15A-EF499ECEEB46}
 		{5E18CE83-B56F-44D3-A106-99CDAAB33C8B} = {0029C8FC-A94D-4C3D-8952-31A703FD54C8}
+		{933A55D3-6641-41DA-BE15-E7AB2840188C} = {0029C8FC-A94D-4C3D-8952-31A703FD54C8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CB8C0770-FBB8-4EAB-B71B-3967781A266B}
