@@ -7,7 +7,6 @@ using CSharpFunctionalExtensions;
 using Origam.DA.ObjectPersistence.Providers;
 using Origam.Extensions;
 using MoreLinq;
-using Origam.ErrorHandling;
 
 namespace Origam.DA.Service
 {
