@@ -196,9 +196,12 @@ namespace OrigamArchitect
 
             TypeDescriptor.AddAttributes(typeof(ISchemaItem),
                         new EditorAttribute(typeof(ModelUIEditor), typeof(System.Drawing.Design.UITypeEditor)));
-		}
+            TypeDescriptor.AddAttributes(typeof(SchemaItemAncestorCollection),
+                        new EditorAttribute(typeof(SchemaItemAncestorCollectionEditor),
+                            typeof(System.Drawing.Design.UITypeEditor)));
+    }
 
-		public void OpenForm(object owner,Hashtable parameters)
+    public void OpenForm(object owner,Hashtable parameters)
 		{
 			ExecuteSchemaItem cmd = new ExecuteSchemaItem();
 			cmd.Owner = owner;

@@ -1,4 +1,3 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2009
@@ -176,6 +175,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflow", "Workflow", "{0029C8FC-A94D-4C3D-8952-31A703FD54C8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gui", "Gui", "{B842C91A-E5F8-4377-BAE3-BAED36417630}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.MdExporter", "Origam.MdExporter\Origam.MdExporter.csproj", "{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1917,6 +1918,30 @@ Global
 		{E4FF6E1C-53DB-403A-A19A-93C04141B113}.Release Server|Any CPU.Build.0 = Debug|Any CPU
 		{E4FF6E1C-53DB-403A-A19A-93C04141B113}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4FF6E1C-53DB-403A-A19A-93C04141B113}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.build|Any CPU.ActiveCfg = Debug|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.build|Any CPU.Build.0 = Debug|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Debug Architect Express|Any CPU.ActiveCfg = Debug|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Debug Architect Express|Any CPU.Build.0 = Debug|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Debug Architect|Any CPU.ActiveCfg = Debug|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Debug Architect|Any CPU.Build.0 = Debug|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Debug Client|Any CPU.ActiveCfg = Debug|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Debug Client|Any CPU.Build.0 = Debug|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Debug Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Debug Server|Any CPU.Build.0 = Debug|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.NDoc|Any CPU.ActiveCfg = Debug|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.NDoc|Any CPU.Build.0 = Debug|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Release Architect Express|Any CPU.ActiveCfg = Release|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Release Architect Express|Any CPU.Build.0 = Release|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Release Architect|Any CPU.ActiveCfg = Release|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Release Architect|Any CPU.Build.0 = Release|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Release Client|Any CPU.ActiveCfg = Release|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Release Client|Any CPU.Build.0 = Release|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Release Server|Any CPU.ActiveCfg = Release|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Release Server|Any CPU.Build.0 = Release|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
