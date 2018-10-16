@@ -11,7 +11,7 @@
   <loadtasks assembly="c:/TeamCity/tools/nantcontrib-0.92/bin/NAnt.Contrib.Tasks.dll" />
   <target name="dlls" description="Dlls only build." depends="clean,build-number">
     <exec workingdir=".." program="${msbuild-exec}">
-      <arg value="OrigamArchitect/OrigamArchitect-net2.sln"/>
+      <arg value="Origam.sln"/>
       <arg value="/p:Configuration=Release Server"/>
       <arg value="/p:OutputPath=${dist}"/>
 	  <arg value="/t:Restore;Build"/>
@@ -45,7 +45,7 @@
   </target>
   <target name="architect" description="Architect Build" depends="clean-architect,build-number">
     <exec workingdir=".." program="${msbuild-exec}">
-        <arg value="OrigamArchitect/OrigamArchitect-net2.sln"/>
+        <arg value="Origam.sln"/>
         <arg value="/p:Configuration=Release Architect"/>
         <arg value="/p:OutputPath=${architect-dist}"/>
 		<arg value="/t:Restore;Build"/>
@@ -58,7 +58,7 @@
   </target>
   <target name="client" description="Client Build" depends="clean-client,build-number">
     <exec workingdir=".." program="${msbuild-exec}">
-        <arg value="OrigamArchitect/OrigamArchitect-net2.sln"/>
+        <arg value="Origam.sln"/>
         <arg value="/p:Configuration=Release Client"/>
         <arg value="/p:OutputPath=${client-dist}"/>
 		<arg value="/t:Restore;Build"/>
