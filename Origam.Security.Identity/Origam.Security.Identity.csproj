@@ -31,24 +31,33 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
-      <HintPath>..\..\EnterpriseLibrary\log4net.dll</HintPath>
+    <Reference Include="log4net">
+      <HintPath>lib\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <HintPath>..\..\EnterpriseLibrary\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>lib\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <HintPath>..\..\EnterpriseLibrary\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>lib\Microsoft.AspNet.Identity.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <HintPath>..\..\EnterpriseLibrary\Microsoft.Owin.Security.dll</HintPath>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>lib\Microsoft.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Configuration, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\EnterpriseLibrary\Microsoft.Practices.EnterpriseLibrary.Configuration.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>lib\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Security, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\EnterpriseLibrary\Microsoft.Practices.EnterpriseLibrary.Security.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>lib\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Common">
+      <HintPath>lib\Microsoft.Practices.EnterpriseLibrary.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Configuration">
+      <HintPath>lib\Microsoft.Practices.EnterpriseLibrary.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Security">
+      <HintPath>lib\Microsoft.Practices.EnterpriseLibrary.Security.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

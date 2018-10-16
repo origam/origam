@@ -55,29 +55,30 @@
     <Folder Include="lib\" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="CSharpFunctionalExtensions, Version=1.10.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\EnterpriseLibrary\CSharpFunctionalExtensions.dll</HintPath>
+    <Reference Include="CSharpFunctionalExtensions">
+      <HintPath>lib\CSharpFunctionalExtensions.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
-      <HintPath>..\..\EnterpriseLibrary\log4net.dll</HintPath>
+    <Reference Include="log4net">
+      <HintPath>lib\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <HintPath>..\..\EnterpriseLibrary\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>lib\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <HintPath>..\..\EnterpriseLibrary\Microsoft.Owin.dll</HintPath>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>lib\Microsoft.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <HintPath>..\..\EnterpriseLibrary\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>lib\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-      <HintPath>..\..\EnterpriseLibrary\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <HintPath>..\..\EnterpriseLibrary\System.Web.WebPages.dll</HintPath>
+      <HintPath>lib\System.Web.WebPages.dll</HintPath>
     </Reference>
     <Reference Include="System.XML" />
   </ItemGroup>
