@@ -722,10 +722,9 @@ namespace Origam.Schema
 		private SchemaItemAncestorCollection _myAncestors = new SchemaItemAncestorCollection();
 
 		[Category("(Schema Item)")]
-		[Editor(typeof(SchemaItemAncestorCollectionEditor), typeof(System.Drawing.Design.UITypeEditor)), 
-		TypeConverter(typeof(SchemaItemAncestorConverter))]
 		[Description("Inherited model elements. E.g. inherited entities from which you want to share fields, filters, etc. In order to inherit a model element, the inherited model element has to be set to Inheritable=true.")]
-		public SchemaItemAncestorCollection Ancestors
+        [TypeConverter(typeof(SchemaItemAncestorConverter))]
+        public SchemaItemAncestorCollection Ancestors
 		{
 			get
 			{
