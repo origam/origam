@@ -157,15 +157,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Server", "Origam.Ser
 		{01708BD3-093A-42BF-BAF9-0A4CD1E69107} = {01708BD3-093A-42BF-BAF9-0A4CD1E69107}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Security.Identity", "Hosting\Origam.Security.Identity\Origam.Security.Identity.csproj", "{01708BD3-093A-42BF-BAF9-0A4CD1E69107}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Security.Identity", "Origam.Security.Identity\Origam.Security.Identity.csproj", "{01708BD3-093A-42BF-BAF9-0A4CD1E69107}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Server.Handlers", "Hosting\Origam.Server.Handlers\Origam.Server.Handlers.csproj", "{A61B1685-63AB-440C-A8C8-6839A6D33412}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Server.Handlers", "Origam.Server.Handlers\Origam.Server.Handlers.csproj", "{A61B1685-63AB-440C-A8C8-6839A6D33412}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Server.Utils", "Hosting\Origam.Server.Utils\Origam.Server.Utils.csproj", "{CADB51D2-FF76-4A8E-8472-0CA5C27090BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Server.Utils", "Origam.Server.Utils\Origam.Server.Utils.csproj", "{CADB51D2-FF76-4A8E-8472-0CA5C27090BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ORIGAMLocaleResolver", "Hosting\ORIGAMLocaleResolver\ORIGAMLocaleResolver.csproj", "{4F685CE8-44F7-4F46-9E86-2EC2143F9A1F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ORIGAMLocaleResolver", "ORIGAMLocaleResolver\ORIGAMLocaleResolver.csproj", "{4F685CE8-44F7-4F46-9E86-2EC2143F9A1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LDAPMembershipProvider", "Hosting\ORIGAMMembershipProvider\LDAPMembershipProvider.csproj", "{E4FF6E1C-53DB-403A-A19A-93C04141B113}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LDAPMembershipProvider", "ORIGAMMembershipProvider\LDAPMembershipProvider.csproj", "{E4FF6E1C-53DB-403A-A19A-93C04141B113}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hosting", "Hosting", "{ACC00126-CF22-4375-A15A-EF499ECEEB46}"
 EndProject

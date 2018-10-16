@@ -97,47 +97,47 @@
     <Content Include="BrockAllen.IdentityReboot\license.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Origam.Common.Nonstd\Origam.Common.NetFX.csproj">
+    <ProjectReference Include="..\Origam.Common.Nonstd\Origam.Common.NetFX.csproj">
       <Project>{84251d2b-43a4-4228-8d2a-8729722c25e4}</Project>
       <Name>Origam.Common.NetFX</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Origam.Common\Origam.Common.csproj">
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
       <Name>Origam.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Origam.DA.Common\Origam.DA.Common-net2.csproj">
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common-net2.csproj">
       <Project>{b4e4dc00-766a-4ca3-83d8-0a5383462f53}</Project>
       <Name>Origam.DA.Common-net2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Origam.DA.Service\Origam.DA.Service-net2.csproj">
+    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service-net2.csproj">
       <Project>{ff4722b4-01f8-4062-af39-f243a6bf336d}</Project>
       <Name>Origam.DA.Service-net2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Origam.Rule\Origam.Rule-net2.csproj">
+    <ProjectReference Include="..\Origam.Rule\Origam.Rule-net2.csproj">
       <Project>{4f05db44-2bbd-4b54-8d37-e8038d1ee1e7}</Project>
       <Name>Origam.Rule-net2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Origam.Schema.EntityModel\Origam.Schema.EntityModel-net2.csproj">
+    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel-net2.csproj">
       <Project>{50186a07-6ed9-4751-b0e2-52feba2a4518}</Project>
       <Name>Origam.Schema.EntityModel-net2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Origam.Schema\Origam.Schema-net2.csproj">
+    <ProjectReference Include="..\Origam.Schema\Origam.Schema-net2.csproj">
       <Project>{aa7461f9-34d2-4f29-9d22-25fe053ddef0}</Project>
       <Name>Origam.Schema-net2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Origam.Services\Origam.Services-net2.csproj">
+    <ProjectReference Include="..\Origam.Services\Origam.Services-net2.csproj">
       <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>
       <Name>Origam.Services-net2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Origam.UI.Common\Origam.UI.Common-net2.csproj">
+    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common-net2.csproj">
       <Project>{ef5de64e-88b2-4b0a-bb7f-4a537b56f3d1}</Project>
       <Name>Origam.UI.Common-net2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Origam.Workbench.Services\Origam.Workbench.Services-net2.csproj">
+    <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services-net2.csproj">
       <Project>{eca06542-5635-455e-b513-07f60222ca7d}</Project>
       <Name>Origam.Workbench.Services-net2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Origam.Workflow\Origam.Workflow-net2.csproj">
+    <ProjectReference Include="..\Origam.Workflow\Origam.Workflow-net2.csproj">
       <Project>{df2a8dad-6c59-4653-b3bb-da50b14e3de9}</Project>
       <Name>Origam.Workflow-net2</Name>
     </ProjectReference>

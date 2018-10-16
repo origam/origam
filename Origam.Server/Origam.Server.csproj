@@ -251,7 +251,7 @@
     <Folder Include="Json\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Hosting\ORIGAMLocaleResolver\ORIGAMLocaleResolver.csproj">
+    <ProjectReference Include="..\ORIGAMLocaleResolver\ORIGAMLocaleResolver.csproj">
       <Project>{4f685ce8-44f7-4f46-9e86-2ec2143f9a1f}</Project>
       <Name>ORIGAMLocaleResolver</Name>
     </ProjectReference>
