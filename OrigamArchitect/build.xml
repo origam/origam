@@ -2,16 +2,16 @@
 <project name="SIMPLICOR Core" default="standard" basedir=".">
   <description>Build file for ORIGAM backend</description>
   <property name="nant.settings.currentframework" value="net-2.0" />
-  <property name="dist" value="../dist"/>
-  <property name="architect-dist" value="../architect_dist"/>
-  <property name="client-dist" value="../client_dist"/>
+  <property name="dist" value="../../dist"/>
+  <property name="architect-dist" value="../../architect_dist"/>
+  <property name="client-dist" value="../../client_dist"/>
   <property name="repositoryRoot" value="D:\SharedData\_install\ORIGAM\web\lastbuild"/>
   <property name="git-exec" value="c:\Program Files\Git\bin\git"/>
   <property name="msbuild-exec" value="c:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe"/>
   <loadtasks assembly="c:/TeamCity/tools/nantcontrib-0.92/bin/NAnt.Contrib.Tasks.dll" />
-  <target name="dlls" description="Dlls only build." depends="clean,build-number">
+  <target name="server" description="Server build." depends="clean,build-number">
     <exec workingdir=".." program="${msbuild-exec}">
-      <arg value="OrigamArchitect/OrigamArchitect-net2.sln"/>
+      <arg value="Origam.sln"/>
       <arg value="/p:Configuration=Release Server"/>
       <arg value="/p:OutputPath=${dist}"/>
 	  <arg value="/t:Restore;Build"/>
@@ -45,7 +45,7 @@
   </target>
   <target name="architect" description="Architect Build" depends="clean-architect,build-number">
     <exec workingdir=".." program="${msbuild-exec}">
-        <arg value="OrigamArchitect/OrigamArchitect-net2.sln"/>
+        <arg value="Origam.sln"/>
         <arg value="/p:Configuration=Release Architect"/>
         <arg value="/p:OutputPath=${architect-dist}"/>
 		<arg value="/t:Restore;Build"/>
@@ -58,7 +58,7 @@
   </target>
   <target name="client" description="Client Build" depends="clean-client,build-number">
     <exec workingdir=".." program="${msbuild-exec}">
-        <arg value="OrigamArchitect/OrigamArchitect-net2.sln"/>
+        <arg value="Origam.sln"/>
         <arg value="/p:Configuration=Release Client"/>
         <arg value="/p:OutputPath=${client-dist}"/>
 		<arg value="/t:Restore;Build"/>
@@ -100,7 +100,7 @@
         <arg value="--pretty=format:&quot;%H%x09%an%x09%ad%x09%s&quot;"/>
     </exec>
   </target>
-  <target name="create-release-notes-dlls">
+  <target name="create-release-notes-server">
     <delete dir="../rn" failonerror="false"/>
     <mkdir dir="../rn"/>
     <exec workingdir="c:/TeamCity/src/origam-backend" program="${git-exec}" failonerror="false">
