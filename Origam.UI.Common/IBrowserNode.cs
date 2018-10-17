@@ -40,13 +40,13 @@ namespace Origam.UI
 		
 		IBrowserNode2 ParentNode {get; set;}
 
-		Bitmap NodeImage {get;}
+		byte[] NodeImage {get;}
 
 		bool Hide{get; set;}
 
 		string NodeId{get;}
 
-        FontStyle FontStyle { get; }
+        string FontStyle { get; }
 	}
 
 	public interface IBrowserNode : IComparable

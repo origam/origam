@@ -69,7 +69,7 @@ namespace Origam.Schema
 			}
 		}
 
-		public System.Drawing.Bitmap NodeImage
+		public byte[] NodeImage
 		{
 			get
 			{
@@ -103,11 +103,11 @@ namespace Origam.Schema
 			}
 		}
 
-        public virtual System.Drawing.FontStyle FontStyle
+        public virtual string FontStyle
         {
             get
             {
-                return System.Drawing.FontStyle.Regular;
+                return "Regular";
             }
         }
         #endregion
