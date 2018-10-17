@@ -71,10 +71,19 @@ namespace Origam.Workbench.Services
             return new DocumentationCompleteXmlDocument(nodes).ToDataSet();
         }
 
-        public override void SaveDocumentation(DocumentationComplete documentationData)
+        public override void SaveDocumentation(DocumentationComplete documentationData,
+            Guid schemaItemId)
         {
-            if (IsEmpty(documentationData)) return;
-            
+            if (IsEmpty(documentationData) )
+            {
+                fileEventQueue.Pause();
+                DocXmlDocument docXmlDocument = GetDocumentFor(schemaItemId);
+                docXmlDocument.RemoveOutDatedNodes(new List<XmlNode>(), schemaItemId);
+                docXmlDocument.Save();
+                fileEventQueue.Continue();
+                return;
+            }
+
             var dataSetXmlDocument = 
                 new DocumentationCompleteXmlDocument(documentationData);
             
@@ -85,12 +94,19 @@ namespace Origam.Workbench.Services
                 DocXmlDocument docXmlDocument = GetDocumentFor(documentedItemId);
                 List<XmlNode> docNodes = 
                     dataSetXmlDocument.GetNodesWith(documentedItemId);
+                docXmlDocument.RemoveOutDatedNodes(docNodes, schemaItemId);
                 docXmlDocument.AddOrReplace(docNodes);
                 docXmlDocument.Save();
                 UpdateFileHash(docXmlDocument.FilePath);
             }
             fileEventQueue.Continue();
         }
+
+        public override void SaveDocumentation(DocumentationComplete documentationData)
+        {
+            SaveDocumentation( documentationData, Guid.Empty);
+        }
+
 
         private void UpdateFileHash(string docFilePath)
         {
@@ -261,6 +277,14 @@ namespace Origam.Workbench.Services
         { 
             Save(FilePath);
         }
+        
+        public void RemoveOutDatedNodes(List<XmlNode> newNodes, Guid refItemId)
+        {
+            HashSet<Guid> newNodeIds = newNodes.Select(GetId).ToHashSet();
+            GetNodesFor(refItemId)
+                .Where(node => !newNodeIds.Contains(GetId(node)))
+                .ForEach(node => FirstChild.RemoveChild(node));
+        }
 
         public void AddOrReplace(List<XmlNode> newNodes)
         {
@@ -350,6 +374,9 @@ namespace Origam.Workbench.Services
         private XmlNode FindIdNode(XmlNode documentationNode) => 
             FindChildByName(documentationNode, IdNodeName);
 
+        private Guid GetId (XmlNode node) => 
+            new Guid(FindIdNode(node).InnerText);
+        
         private XmlNode FindRefItemIdNode(XmlNode documentationNode) => 
             FindChildByName(documentationNode, RefItemIdNodeName);
 

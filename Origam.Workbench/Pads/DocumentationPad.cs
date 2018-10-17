@@ -282,7 +282,7 @@ namespace Origam.Workbench.Pads
 
 		private void Save()
 		{
-			_documentationService.SaveDocumentation(documentationComplete);
+			_documentationService.SaveDocumentation(documentationComplete, _schemaItemId);
 		}
 
 		public void ClearDocumentation()

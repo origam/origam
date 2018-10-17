@@ -42,6 +42,8 @@ namespace Origam.Workbench.Services
 
 		public abstract DocumentationComplete LoadDocumentation(Guid schemaItemId);
 
+		public abstract void SaveDocumentation(DocumentationComplete documentationData, Guid schemaItemId);
+
 		public abstract void SaveDocumentation(DocumentationComplete documentationData);
 
 		public void CloneDocumentation(List<ISchemaItem> clonedSchemaItems)
