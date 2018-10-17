@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Drawing;
 using System.Collections;
 
 using Origam.UI;
@@ -86,7 +85,7 @@ namespace Origam.Schema
 			}
 		}
 
-		public Bitmap NodeImage
+		public byte[] NodeImage
 		{
 			get
 			{
@@ -198,11 +197,11 @@ namespace Origam.Schema
 			}
 		}
 
-        public virtual System.Drawing.FontStyle FontStyle
+        public virtual string FontStyle
         {
             get
             {
-                return System.Drawing.FontStyle.Regular;
+                return "Regular";
             }
         }
         #endregion

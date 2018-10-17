@@ -23,11 +23,14 @@ using System;
 using System.Collections;
 using System.Drawing;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using Origam.Schema.RuleModel;
 using System.Xml.Serialization;
+using Origam.Extensions;
+
 //using Origam.Schema.RuleModel;
 
 namespace Origam.Schema.GuiModel
@@ -242,18 +245,22 @@ namespace Origam.Schema.GuiModel
         [XmlAttribute("modal")]
 		public bool IsModalDialog { get; set; } = false;
 
-		public override Bitmap NodeImage
+		public override byte[] NodeImage
 		{
 			get
 			{
-				if(this.ButtonIcon == null)
+				if(ButtonIcon == null)
 				{
 					var defaultImage = ResourceUtils.GetImage("defaultActionImage");
-					return new Bitmap(defaultImage);
+					using (var ms = new MemoryStream())
+					{
+						defaultImage.Save(ms,defaultImage.RawFormat);
+						return  ms.ToArray();
+					}
 				}
-					return this.ButtonIcon.GraphicsData;
-				}
+				return ButtonIcon.GraphicsData.ToByteArray();
 			}
+		}
 
         [EntityColumn("G06")]
         public Guid ConfirmationMessageId;

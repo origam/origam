@@ -509,7 +509,9 @@ namespace Origam.Workbench.Commands
 				}
 				else
 				{
-					(editor as Form).Icon = System.Drawing.Icon.FromHandle((item as AbstractSchemaItem).NodeImage.GetHicon());
+					(editor as Form).Icon = System.Drawing.Icon.FromHandle((item as AbstractSchemaItem)
+						.NodeImage.ToBitmap()
+						.GetHicon());
 				}
 			}
 			else if(item is SchemaExtension)

@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
+using Origam.Extensions;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Gui.UI
@@ -32,7 +33,7 @@ namespace Origam.Gui.UI
             ,EntityUIAction action)
         {
             actionButton.Text = action.Caption;
-            actionButton.Image = action.NodeImage;
+            actionButton.Image = action.NodeImage.ToBitmap();
         }
 
         public static void PaintText(this ToolStripItem actionButton,

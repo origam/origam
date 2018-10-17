@@ -509,13 +509,13 @@ namespace Origam.Schema.EntityModel
 			base.GetExtraDependencies (dependencies);
 		}
 
-        public override System.Drawing.FontStyle FontStyle
+        public override string FontStyle
         {
             get
             {
                 if (! AllowNulls)
                 {
-                    return System.Drawing.FontStyle.Bold;
+                    return"Bold";
                 }
                 return base.FontStyle;
             }

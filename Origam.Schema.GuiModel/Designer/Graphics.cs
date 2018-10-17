@@ -26,6 +26,7 @@ using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.Extensions;
 using static Origam.DA.ObjectPersistence.ExternalFileExtension;
 
 namespace Origam.Schema.GuiModel
@@ -148,13 +149,8 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		public override Bitmap NodeImage
-		{
-			get
-			{
-				return this.GraphicsData;
-			}
-		}
+		public override byte[] NodeImage => GraphicsData.ToByteArray();
+
 		#endregion
 	}
 }

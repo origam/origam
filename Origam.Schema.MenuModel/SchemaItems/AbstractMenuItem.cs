@@ -24,6 +24,7 @@ using System.Drawing;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
+using Origam.Extensions;
 
 namespace Origam.Schema.MenuModel
 {
@@ -111,7 +112,7 @@ namespace Origam.Schema.MenuModel
 			}
 		}
 		
-		public override Bitmap NodeImage
+		public override byte[] NodeImage
 		{
 			get
 			{
@@ -121,7 +122,7 @@ namespace Origam.Schema.MenuModel
 				}
 				else
 				{
-					return this.MenuIcon.GraphicsData;
+					return MenuIcon.GraphicsData.ToByteArray();
 				}
 			}
 		}

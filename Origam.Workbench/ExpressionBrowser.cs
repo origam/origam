@@ -471,13 +471,13 @@ namespace Origam.Workbench
 
         private Font GetFont(IBrowserNode2 bnode)
         {
-            if (bnode.FontStyle == FontStyle.Bold)
+            if (bnode.FontStyle.ToFont() == FontStyle.Bold)
             {
                 return _boldFont;
             }
             else
             {
-                return new Font(tvwExpressionBrowser.Font, bnode.FontStyle);
+                return new Font(tvwExpressionBrowser.Font, bnode.FontStyle.ToFont());
             }
         }
 
@@ -537,7 +537,7 @@ namespace Origam.Workbench
 
 			if(bnode is IBrowserNode2 && (bnode as IBrowserNode2).NodeImage != null)
 			{
-				Image nodeImage = (bnode as IBrowserNode2).NodeImage;
+				Image nodeImage = (bnode as IBrowserNode2).NodeImage.ToBitmap();
 
 				if(_customImages.Contains(bnode))
 				{
