@@ -280,7 +280,7 @@ namespace Origam.Server.Doc
             string description = DocTools.LongHelp(documentation, (Guid)field.PrimaryKey["Id"]);
             writer.WriteStartElement("p");
             writer.WriteString(description);
-            if (description != "" && !description.EndsWith("."))
+            if (! string.IsNullOrEmpty(description) && !description.EndsWith("."))
             {
                 writer.WriteString(".");
             }

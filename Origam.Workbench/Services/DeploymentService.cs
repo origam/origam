@@ -95,7 +95,7 @@ namespace Origam.Workbench.Services
 			}
 		}
 
-		public bool CanUpdateExtension(SchemaExtension extension)
+		public bool CanUpdate(SchemaExtension extension)
 		{
 			TryLoadVersions();
 			return CurrentDeployedVersion(extension) < extension.Version;
@@ -270,7 +270,7 @@ namespace Origam.Workbench.Services
 			AddMissingDeploymentDependencies(packages);
 
 			IEnumerable<DeploymentVersion> unsortedDeployments = packages
-				.Where(CanUpdateExtension)
+				.Where(CanUpdate)
 				.SelectMany(GetDeploymentVersions)
 				.ToList();
 

@@ -636,7 +636,7 @@ namespace Origam.Workbench.Commands
 						IDeploymentService deployment = ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
 						foreach(SchemaExtension extension in _schema.LoadedPackages)
 						{
-							if(deployment.CanUpdateExtension(extension))
+							if(deployment.CanUpdate(extension))
 							{
 								return true;
 							}

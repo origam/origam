@@ -169,11 +169,5 @@ namespace Origam
 			}
 			return result;
 		}
-
-        public static string ProcessMarkdown(string text)
-        {
-            MarkdownSharp.Markdown md = new MarkdownSharp.Markdown();
-            return md.Transform(text);
-        }
 	}
 }
