@@ -203,7 +203,7 @@ namespace OrigamEngineWebAPI
             set.EnforceConstraints = false;
             set.ReadXml(new XmlNodeReader(xml));
             DataSet set2 = new DatasetGenerator(true).CreateDataSet(structure);
-            object obj2 = (SecurityManager.GetProfileProvider().GetProfile(Thread.CurrentPrincipal.Identity) as UserProfile).Id;
+            object obj2 = SecurityManager.CurrentUserProfile().Id;
 
             MergeParams mergeParams = new MergeParams
             {
