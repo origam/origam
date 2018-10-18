@@ -2219,7 +2219,8 @@ namespace Origam.Rule
 
         public static string ProcessMarkdown(string text)
         {
-            return XmlTools.ProcessMarkdown(text);
+            MarkdownSharp.Markdown md = new MarkdownSharp.Markdown();
+            return md.Transform(text);
         }
 
         public static XPathNodeIterator Diff(string oldText, string newText)
