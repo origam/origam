@@ -99,7 +99,7 @@ namespace Origam.Workflow
 
 					foreach(SchemaExtension package in packages)
 					{
-						_deployment.CanUpdateExtension(package);
+						_deployment.CanUpdate(package);
 						AddInfo(package.Name, package.VersionString + "/" + _deployment.CurrentDeployedVersion(package), result);
 					}
 				}

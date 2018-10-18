@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -12,8 +13,20 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OrigamEngineWebAPI</RootNamespace>
     <AssemblyName>OrigamEngineWebAPI</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UseIISExpress>false</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,6 +37,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <FilesToIncludeForPublish>AllFilesInProjectFolder</FilesToIncludeForPublish>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -32,38 +46,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Origam">
-      <HintPath>dlls\Origam.dll</HintPath>
-    </Reference>
-    <Reference Include="Origam.OrigamEngine">
-      <HintPath>dlls\Origam.OrigamEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="Origam.DA">
-      <HintPath>dlls\Origam.DA.dll</HintPath>
-    </Reference>
-    <Reference Include="Origam.DA.Service">
-      <HintPath>dlls\Origam.DA.Service.dll</HintPath>
-    </Reference>
-    <Reference Include="Origam.Schema">
-      <HintPath>dlls\Origam.Schema.dll</HintPath>
-    </Reference>
-    <Reference Include="Origam.Schema.EntityModel">
-      <HintPath>dlls\Origam.Schema.EntityModel.dll</HintPath>
-    </Reference>
-    <Reference Include="Origam.Security">
-      <HintPath>dlls\Origam.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="Origam.Services">
-      <HintPath>dlls\Origam.Services.dll</HintPath>
-    </Reference>
-    <Reference Include="Origam.UI.Common">
-      <HintPath>dlls\Origam.UI.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="Origam.Workbench.Services">
-      <HintPath>dlls\Origam.Workbench.Services.dll</HintPath>
-    </Reference>
     <Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\EnterpriseLibrary\log4net.dll</HintPath>
@@ -76,9 +61,15 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DataService.asmx" />
@@ -111,8 +102,59 @@
       <DependentUpon>Global.asax.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Origam.Common.Nonstd\Origam.Common.NetFX.csproj">
+      <Project>{84251d2b-43a4-4228-8d2a-8729722c25e4}</Project>
+      <Name>Origam.Common.NetFX</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
+      <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
+      <Name>Origam.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common-net2.csproj">
+      <Project>{b4e4dc00-766a-4ca3-83d8-0a5383462f53}</Project>
+      <Name>Origam.DA.Common-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service-net2.csproj">
+      <Project>{ff4722b4-01f8-4062-af39-f243a6bf336d}</Project>
+      <Name>Origam.DA.Service-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine-net2.csproj">
+      <Project>{233d40c6-ae59-4651-b7bd-dd09d5835e21}</Project>
+      <Name>Origam.OrigamEngine-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel-net2.csproj">
+      <Project>{50186a07-6ed9-4751-b0e2-52feba2a4518}</Project>
+      <Name>Origam.Schema.EntityModel-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
+      <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
+      <Name>Origam.Schema</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Security\Origam.Security-net2.csproj">
+      <Project>{93b972c4-d58d-4681-a8b8-95a34c7c2980}</Project>
+      <Name>Origam.Security-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Services\Origam.Services-net2.csproj">
+      <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>
+      <Name>Origam.Services-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common-net2.csproj">
+      <Project>{ef5de64e-88b2-4b0a-bb7f-4a537b56f3d1}</Project>
+      <Name>Origam.UI.Common-net2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services-net2.csproj">
+      <Project>{eca06542-5635-455e-b513-07f60222ca7d}</Project>
+      <Name>Origam.Workbench.Services-net2</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">

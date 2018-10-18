@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common-net2.csproj" />
+    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common-net2.csproj" />
+  </ItemGroup>
+
+</Project>
