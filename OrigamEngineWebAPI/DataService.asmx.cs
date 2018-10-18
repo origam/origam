@@ -204,7 +204,16 @@ namespace OrigamEngineWebAPI
             set.ReadXml(new XmlNodeReader(xml));
             DataSet set2 = new DatasetGenerator(true).CreateDataSet(structure);
             object obj2 = (SecurityManager.GetProfileProvider().GetProfile(Thread.CurrentPrincipal.Identity) as UserProfile).Id;
-            DatasetTools.Merge(set2, set, false, true, false, true, obj2);
+
+            MergeParams mergeParams = new MergeParams
+            {
+                PreserveChanges = true,
+                PreserveNewRowState = true,
+                SourceIsFragment = false,
+                ProfileId = obj2,
+                TrueDelete = false
+            };
+            DatasetTools.MergeDataSet(set2, set, null, mergeParams);
 
             if (log.IsDebugEnabled)
             {
