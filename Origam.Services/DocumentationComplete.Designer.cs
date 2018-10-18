@@ -389,7 +389,7 @@ namespace Origam.Workbench.Services {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public DocumentationRow AddDocumentationRow(object Data, string Category, System.Guid refSchemaItemId, System.Guid Id) {
+            public DocumentationRow AddDocumentationRow(string Data, string Category, System.Guid refSchemaItemId, System.Guid Id) {
                 DocumentationRow rowDocumentationRow = ((DocumentationRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Data,
@@ -434,7 +434,7 @@ namespace Origam.Workbench.Services {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             private void InitClass() {
-                this.columnData = new global::System.Data.DataColumn("Data", typeof(object), null, global::System.Data.MappingType.Element);
+                this.columnData = new global::System.Data.DataColumn("Data", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnData);
                 this.columnCategory = new global::System.Data.DataColumn("Category", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnCategory);
@@ -593,9 +593,9 @@ namespace Origam.Workbench.Services {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public object Data {
+            public string Data {
                 get {
-                    return ((object)(this[this.tableDocumentation.DataColumn]));
+                    return ((string)(this[this.tableDocumentation.DataColumn]));
                 }
                 set {
                     this[this.tableDocumentation.DataColumn] = value;
