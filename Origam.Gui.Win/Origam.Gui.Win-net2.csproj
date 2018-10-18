@@ -255,10 +255,9 @@
       <Project>{5b6e4021-152c-4276-a1ae-e3b9ba223024}</Project>
       <Name>Origam.Schema.WorkflowModel-net2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Schema\Origam.Schema-net2.csproj">
-      <Name>Origam.Schema-net2</Name>
-      <Project>{AA7461F9-34D2-4F29-9D22-25FE053DDEF0}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
+      <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
+      <Name>Origam.Schema</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Services\Origam.Services-net2.csproj">
       <Name>Origam.Services-net2</Name>

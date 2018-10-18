@@ -119,9 +119,9 @@
       <Project>{5B6E4021-152C-4276-A1AE-E3B9BA223024}</Project>
       <Name>Origam.Schema.WorkflowModel-net2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Schema\Origam.Schema-net2.csproj">
-      <Project>{AA7461F9-34D2-4F29-9D22-25FE053DDEF0}</Project>
-      <Name>Origam.Schema-net2</Name>
+    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
+      <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
+      <Name>Origam.Schema</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Security\Origam.Security-net2.csproj">
       <Project>{93b972c4-d58d-4681-a8b8-95a34c7c2980}</Project>
@@ -165,9 +165,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="FilePersistenceProviderTests\TestFiles\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
