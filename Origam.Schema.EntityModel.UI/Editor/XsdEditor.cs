@@ -23,6 +23,7 @@ using System;
 using System.Windows.Forms;
 
 using Origam.UI;
+using Origam.Windows.Editor;
 using Origam.Workbench.Editors;
 
 namespace Origam.Schema.EntityModel
@@ -35,7 +36,7 @@ namespace Origam.Schema.EntityModel
 		private System.Windows.Forms.TextBox txtName;
 		private System.Windows.Forms.Label lblXsdName;
 		private System.Windows.Forms.Label lblText;
-		private Netron.Neon.TextEditor.TextEditorControl txtText;
+		private Origam.Windows.Editor.XmlEditor txtText;
         private Panel panel1;
         private bool _isEditing = false;
 
@@ -57,15 +58,11 @@ namespace Origam.Schema.EntityModel
 
 		private void InitializeComponent()
 		{
-            Netron.Neon.TextEditor.Document.DefaultFormattingStrategy defaultFormattingStrategy1 = new Netron.Neon.TextEditor.Document.DefaultFormattingStrategy();
-            Netron.Neon.TextEditor.Document.DefaultHighlightingStrategy defaultHighlightingStrategy1 = new Netron.Neon.TextEditor.Document.DefaultHighlightingStrategy();
-            Netron.Neon.TextEditor.Document.GapTextBufferStrategy gapTextBufferStrategy1 = new Netron.Neon.TextEditor.Document.GapTextBufferStrategy();
-            Netron.Neon.TextEditor.Document.DefaultTextEditorProperties defaultTextEditorProperties1 = new Netron.Neon.TextEditor.Document.DefaultTextEditorProperties();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(XsdEditor));
             this.txtName = new System.Windows.Forms.TextBox();
             this.lblXsdName = new System.Windows.Forms.Label();
             this.lblText = new System.Windows.Forms.Label();
-            this.txtText = new Netron.Neon.TextEditor.TextEditorControl();
+            this.txtText = new XmlEditor();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -101,47 +98,10 @@ namespace Origam.Schema.EntityModel
             this.txtText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            defaultHighlightingStrategy1.Extensions = new string[0];
-            defaultTextEditorProperties1.AllowCaretBeyondEOL = false;
-            defaultTextEditorProperties1.AutoInsertCurlyBracket = true;
-            defaultTextEditorProperties1.BracketMatchingStyle = Netron.Neon.TextEditor.Document.BracketMatchingStyle.After;
-            defaultTextEditorProperties1.ConvertTabsToSpaces = false;
-            defaultTextEditorProperties1.CreateBackupCopy = false;
-            defaultTextEditorProperties1.DocumentSelectionMode = Netron.Neon.TextEditor.Document.DocumentSelectionMode.Normal;
-            defaultTextEditorProperties1.EnableFolding = true;
-            defaultTextEditorProperties1.Encoding = ((System.Text.Encoding)(resources.GetObject("defaultTextEditorProperties1.Encoding")));
-            defaultTextEditorProperties1.Font = new System.Drawing.Font("Courier New", 10F);
-            defaultTextEditorProperties1.HideMouseCursor = false;
-            defaultTextEditorProperties1.IndentStyle = Netron.Neon.TextEditor.Document.IndentStyle.Smart;
-            defaultTextEditorProperties1.IsIconBarVisible = true;
-            defaultTextEditorProperties1.LineTerminator = "\r\n";
-            defaultTextEditorProperties1.LineViewerStyle = Netron.Neon.TextEditor.Document.LineViewerStyle.FullRow;
-            defaultTextEditorProperties1.MouseWheelScrollDown = true;
-            defaultTextEditorProperties1.MouseWheelTextZoom = true;
-            defaultTextEditorProperties1.ShowEOLMarker = true;
-            defaultTextEditorProperties1.ShowHorizontalRuler = false;
-            defaultTextEditorProperties1.ShowInvalidLines = true;
-            defaultTextEditorProperties1.ShowLineNumbers = true;
-            defaultTextEditorProperties1.ShowMatchingBracket = true;
-            defaultTextEditorProperties1.ShowSpaces = true;
-            defaultTextEditorProperties1.ShowTabs = true;
-            defaultTextEditorProperties1.ShowVerticalRuler = true;
-            defaultTextEditorProperties1.TabIndent = 4;
-            defaultTextEditorProperties1.UseAntiAliasedFont = false;
-            defaultTextEditorProperties1.VerticalRulerRow = 80;
-            this.txtText.Encoding = ((System.Text.Encoding)(resources.GetObject("txtText.Encoding")));
-            this.txtText.LineViewerStyle = Netron.Neon.TextEditor.Document.LineViewerStyle.FullRow;
             this.txtText.Location = new System.Drawing.Point(0, 53);
             this.txtText.Name = "txtText";
-            this.txtText.Root = null;
-            this.txtText.ShowEOLMarkers = true;
-            this.txtText.ShowSpaces = true;
-            this.txtText.ShowTabs = true;
-            this.txtText.ShowVRuler = true;
             this.txtText.Size = new System.Drawing.Size(722, 449);
-            this.txtText.Tab = null;
             this.txtText.TabIndex = 5;
-            this.txtText.TextEditorProperties = defaultTextEditorProperties1;
             // 
             // panel1
             // 
@@ -168,7 +128,6 @@ namespace Origam.Schema.EntityModel
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-
 		}
 
 
@@ -200,8 +159,6 @@ namespace Origam.Schema.EntityModel
 				txtText.Enabled = false;
 				txtName.Enabled = false;
 			}
-
-			txtText.SetHighlighting("XML");
 		
 			if(ModelContent is XsdDataStructure)
 			{

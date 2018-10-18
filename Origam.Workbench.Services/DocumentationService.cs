@@ -125,6 +125,12 @@ private static int counter = 0;
 			return documentationData;
 		}
 
+		public override void SaveDocumentation(DocumentationComplete documentationData,
+			Guid schemaItemId)
+		{
+			SaveDocumentation(documentationData);
+		}
+
 		public override DocumentationComplete GetAllDocumentation()
 		{
 			DataStructureQuery query = new DataStructureQuery(new Guid(DOCUMENTATION_COMPLETE), Guid.Empty);

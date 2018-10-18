@@ -35,6 +35,7 @@ namespace Origam.Workbench.Services
 	{
 		string GetDocumentation(Guid schemaItemId, DocumentationType docType);
 		DocumentationComplete LoadDocumentation(Guid schemaItemId);
+		void SaveDocumentation(DocumentationComplete documentationData, Guid schemaItemId);
 		void SaveDocumentation(DocumentationComplete documentationData);
 		void CloneDocumentation(List<ISchemaItem> clonedSchemaItems);
 		DocumentationComplete GetAllDocumentation();

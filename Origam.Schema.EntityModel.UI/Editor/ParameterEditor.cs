@@ -74,60 +74,56 @@ namespace Origam.Schema.EntityModel
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ParameterEditor));
-			this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
-			this.lblHelp = new System.Windows.Forms.Label();
-			this.lblName = new System.Windows.Forms.Label();
-			this.SuspendLayout();
-			// 
-			// propertyGrid1
-			// 
-			this.propertyGrid1.CommandsVisibleIfAvailable = true;
-			this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.propertyGrid1.HelpVisible = false;
-			this.propertyGrid1.LargeButtons = false;
-			this.propertyGrid1.LineColor = System.Drawing.SystemColors.ScrollBar;
-			this.propertyGrid1.Location = new System.Drawing.Point(0, 88);
-			this.propertyGrid1.Name = "propertyGrid1";
-			this.propertyGrid1.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-			this.propertyGrid1.Size = new System.Drawing.Size(292, 178);
-			this.propertyGrid1.TabIndex = 0;
-			this.propertyGrid1.Text = "propertyGrid1";
-			this.propertyGrid1.ToolbarVisible = false;
-			this.propertyGrid1.ViewBackColor = System.Drawing.SystemColors.Window;
-			this.propertyGrid1.ViewForeColor = System.Drawing.SystemColors.WindowText;
-			this.propertyGrid1.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGrid1_PropertyValueChanged);
-			// 
-			// lblHelp
-			// 
-			this.lblHelp.Dock = System.Windows.Forms.DockStyle.Top;
-			this.lblHelp.Location = new System.Drawing.Point(0, 24);
-			this.lblHelp.Name = "lblHelp";
-			this.lblHelp.Size = new System.Drawing.Size(292, 64);
-			this.lblHelp.TabIndex = 1;
-			this.lblHelp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// lblName
-			// 
-			this.lblName.Dock = System.Windows.Forms.DockStyle.Top;
-			this.lblName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((System.Byte)(238)));
-			this.lblName.Location = new System.Drawing.Point(0, 0);
-			this.lblName.Name = "lblName";
-			this.lblName.Size = new System.Drawing.Size(292, 24);
-			this.lblName.TabIndex = 2;
-			this.lblName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// ParameterEditor
-			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(292, 266);
-			this.Controls.Add(this.propertyGrid1);
-			this.Controls.Add(this.lblHelp);
-			this.Controls.Add(this.lblName);
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Name = "ParameterEditor";
-			this.Closing += new System.ComponentModel.CancelEventHandler(this.ParameterEditor_Closing);
-			this.ResumeLayout(false);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ParameterEditor));
+            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.lblHelp = new System.Windows.Forms.Label();
+            this.lblName = new System.Windows.Forms.Label();
+            this.SuspendLayout();
+            // 
+            // propertyGrid1
+            // 
+            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid1.HelpVisible = false;
+            this.propertyGrid1.LineColor = System.Drawing.SystemColors.ScrollBar;
+            this.propertyGrid1.Location = new System.Drawing.Point(0, 102);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.PropertySort = System.Windows.Forms.PropertySort.NoSort;
+            this.propertyGrid1.Size = new System.Drawing.Size(292, 164);
+            this.propertyGrid1.TabIndex = 0;
+            this.propertyGrid1.ToolbarVisible = false;
+            this.propertyGrid1.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGrid1_PropertyValueChanged);
+            // 
+            // lblHelp
+            // 
+            this.lblHelp.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblHelp.Location = new System.Drawing.Point(0, 28);
+            this.lblHelp.Name = "lblHelp";
+            this.lblHelp.Size = new System.Drawing.Size(292, 74);
+            this.lblHelp.TabIndex = 1;
+            this.lblHelp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblName
+            // 
+            this.lblName.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.lblName.Location = new System.Drawing.Point(0, 0);
+            this.lblName.Name = "lblName";
+            this.lblName.Size = new System.Drawing.Size(292, 28);
+            this.lblName.TabIndex = 2;
+            this.lblName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // ParameterEditor
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
+            this.ClientSize = new System.Drawing.Size(292, 266);
+            this.Controls.Add(this.propertyGrid1);
+            this.Controls.Add(this.lblHelp);
+            this.Controls.Add(this.lblName);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "ParameterEditor";
+            this.Closing += new System.ComponentModel.CancelEventHandler(this.ParameterEditor_Closing);
+            this.ResumeLayout(false);
 
 		}
 		#endregion
