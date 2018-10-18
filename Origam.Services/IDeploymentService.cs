@@ -32,7 +32,7 @@ namespace Origam.Workbench.Services
 		void Deploy();
 		void ExecuteActivity(Key key);
 		//bool CanUpdate(string oldVersion, string newVersion);
-		bool CanUpdateExtension(SchemaExtension extension);
+		bool CanUpdate(SchemaExtension extension);
         bool IsEmptyDatabase();
 		PackageVersion CurrentDeployedVersion(SchemaExtension extension);
 		void CreateNewModelVersion(SchemaItemGroup group, string name, string version);
