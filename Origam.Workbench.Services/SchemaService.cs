@@ -173,6 +173,22 @@ namespace Origam.Workbench.Services
 			return true;
 		}
 
+		public bool CanDeleteItem(object item)
+		{
+			if(item is AbstractSchemaItem || item is SchemaItemGroup)
+			{
+				return IsItemFromExtension(item);
+			}
+			if(item is SchemaExtension)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 		public bool CanEditItem(object item)
 		{
 			if(item is AbstractSchemaItem)

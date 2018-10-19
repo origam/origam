@@ -544,7 +544,7 @@ namespace Origam.Workbench.Commands
 			{
 				if(_schema.IsSchemaLoaded && _schema.ActiveNode != null)
 				{
-					if(! (_schema.CanEditItem(_schema.ActiveNode)))
+					if(! (_schema.CanDeleteItem(_schema.ActiveNode)))
 					{
 						return false;
 					}
