@@ -2164,7 +2164,7 @@ namespace OrigamArchitect
                 ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
 
 #if ORIGAM_CLIENT
-			deployment.CanUpdateExtension(_schema.ActiveExtension);
+			deployment.CanUpdate(_schema.ActiveExtension);
 			string modelVersion = _schema.ActiveExtension.Version;
 			string dbVersion = deployment.CurrentDeployedVersion(_schema.ActiveExtension);
 
