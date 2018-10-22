@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Security.Principal;
 using System.Text;
+using System.Threading;
 using System.Xml;
 using Origam.DA.Service;
 using Origam.Gui.Win;
@@ -10,6 +12,7 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
+using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 
 namespace Origam.MdExporter
@@ -43,10 +46,10 @@ namespace Origam.MdExporter
             string bindingMember = "";
             string panelTitle = "";
             int tabIndex = 0;
-            string dataMember = "";
+            string dataMember = null;
             //ControlSetItem control = (ControlSetItem)ff.ChildItems[0];
            
-            var fstructura = formItem.DataStructure.ChildItems.ToList();
+            //var fstructura = formItem.DataStructure.ChildItems.ToList();
             foreach (PropertyValueItem property in control.ChildItemsByType(PropertyValueItem.ItemTypeConst))
                 {
                     if (property.ControlPropertyItem.Name == "TabIndex")

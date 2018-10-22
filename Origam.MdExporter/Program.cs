@@ -2,9 +2,12 @@
 using Origam.DA.Service;
 using Origam.Schema;
 using Origam.Schema.MenuModel;
+using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 using System;
 using System.Collections.Generic;
+using System.Security.Principal;
+using System.Threading;
 
 namespace Origam.MdExporter
 {
@@ -21,12 +24,33 @@ namespace Origam.MdExporter
                 ElementNameFactory.Create(typeof(SchemaExtension)),
                 ElementNameFactory.Create(typeof(SchemaItemGroup))
             };
+            //ServiceManager smanager = ServiceManager.Services;
+
+            ServiceManager sManager = ServiceManager.Services;
+            SchemaService service = new SchemaService();
+            IParameterService parameterService = new NullParameterService();
+                
+            sManager.AddService(service);
+            sManager.AddService(parameterService);
+
             var settings =new OrigamSettings();
             ConfigurationManager.SetActiveConfiguration(settings);
+            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("origam_server"), null);
+
+            
+            StateMachineSchemaItemProvider StateMachineSchema = new StateMachineSchemaItemProvider();
+            
+
             var persistenceService = new FilePersistenceService(DefaultFolders,
-                schemapath);
-           FilePersistenceProvider persprovider = (FilePersistenceProvider)persistenceService.SchemaProvider;
-           var documentation =  new FileStorageDocumentationService(
+               schemapath);
+            sManager.AddService(persistenceService);
+
+            service.AddProvider(StateMachineSchema);
+
+            FilePersistenceProvider persprovider = (FilePersistenceProvider)persistenceService.SchemaProvider;
+            
+
+            var documentation =  new FileStorageDocumentationService(
                 persprovider,
                 persistenceService.FileEventQueue);
 
