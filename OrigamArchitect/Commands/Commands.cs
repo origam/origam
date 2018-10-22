@@ -1026,23 +1026,21 @@ namespace OrigamArchitect.Commands
 	public class UpdateModelAndTargetEnvironment : AbstractMenuCommand
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-		SchemaService _schemaService = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-		IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-		IStatusBarService _status = ServiceManager.Services.GetService(typeof(IStatusBarService)) as IStatusBarService;
+		SchemaService schemaService = ServiceManager.Services.GetService<SchemaService>() ;
+		IStatusBarService status = ServiceManager.Services.GetService<IStatusBarService>();
 
 		public override bool IsEnabled
 		{
-			get
-			{
-				return _schemaService.IsSchemaLoaded;
-			}
-			set
-			{
-				throw new ArgumentException("Cannot set this property", "IsEnabled");
-			}
-		}
+		    get
+		    {
+		        bool modelPersistedToFileSystem =
+		            ServiceManager.Services.GetService<IPersistenceService>() is FilePersistenceService;
+                return schemaService.IsSchemaLoaded && !modelPersistedToFileSystem;
+		    }
+		    set => throw new ArgumentException("Cannot set this property", "IsEnabled");
+	    }
 
-		public override void Run()
+	    public override void Run()
 		{
 			try
 			{
@@ -1056,7 +1054,7 @@ namespace OrigamArchitect.Commands
 				}
 				Origam.Workbench.Commands.ImportSchemaFromFileIntoExtension cmd1 = 
                     new Origam.Workbench.Commands.ImportSchemaFromFileIntoExtension();
-				cmd1.Owner = _schemaService.ActiveExtension;
+				cmd1.Owner = schemaService.ActiveExtension;
 				cmd1.Run();
 
 				Origam.Workbench.Commands.PersistSchema cmd2 = 
@@ -1090,7 +1088,7 @@ namespace OrigamArchitect.Commands
 					log.Error(fail, ex);
 				}
 
-				_status.SetStatusText(fail);
+				status.SetStatusText(fail);
 				throw;
 			}
 
@@ -1100,14 +1098,13 @@ namespace OrigamArchitect.Commands
 			{
 				log.Info(success);
 			}
-			_status.SetStatusText(success);
+			status.SetStatusText(success);
 		}
 
 		public override void Dispose()
 		{
-			_schemaService = null;
-			_persistence = null;
-			_status = null;
+			schemaService = null;
+			status = null;
 		}
 
 	}

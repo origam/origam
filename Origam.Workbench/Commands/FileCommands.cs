@@ -188,29 +188,23 @@ namespace Origam.Workbench.Commands
 	/// </summary>
 	public class ExportSchemaToFile : AbstractMenuCommand
 	{
-		SchemaService _schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+		private SchemaService _schema =
+		    ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
 
-		public override bool IsEnabled
-		{
-			get
-			{
-				return _schema.IsSchemaLoaded;
-			}
-			set
-			{
-				base.IsEnabled = value;
-			}
-		}
+        public override bool IsEnabled
+        {
+            get
+            {
+                bool modelPersistedToFileSystem =
+                    ServiceManager.Services.GetService<IPersistenceService>() is FilePersistenceService;
+                return _schema.IsSchemaLoaded && !modelPersistedToFileSystem;
+            }
+            set => base.IsEnabled = value;
+	    }
 
-		public override void Run()
+	    public override void Run()
 		{
 			if(_schema.IsSchemaChanged) throw new Exception("Model not saved. Save the model before exporting.");
-
-			IPersistenceService mainPersistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-            if (!(mainPersistence.SchemaProvider is IDatabasePersistenceProvider))
-            {
-                throw new Exception("The configured model persistence provider does not support this command.");
-            }
 
 			using(System.Windows.Forms.SaveFileDialog dialog = new SaveFileDialog())
 			{
@@ -224,7 +218,8 @@ namespace Origam.Workbench.Commands
 				{
 					SchemaExtension extension = _schema.ActiveExtension;
 				
-					IPersistenceService persistence = mainPersistence.Clone() as IPersistenceService;
+					IPersistenceService persistence = ServiceManager.Services.GetService<IPersistenceService>()
+					    .Clone() as IPersistenceService;
 					persistence.InitializeService();
 					persistence.LoadSchemaList();
 
@@ -247,23 +242,22 @@ namespace Origam.Workbench.Commands
 	/// </summary>
 	public class ExportPackageToFile : AbstractMenuCommand
 	{
-		SchemaService _schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+		SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
 
-		public override bool IsEnabled
-		{
-			get
-			{
-				return _schema.IsSchemaLoaded;
-			}
-			set
-			{
-				base.IsEnabled = value;
-			}
-		}
+        public override bool IsEnabled
+        {
+            get
+            {
+                bool modelPersistedToFileSystem =
+                    ServiceManager.Services.GetService<IPersistenceService>() is FilePersistenceService;
+                return schema.IsSchemaLoaded && !modelPersistedToFileSystem;
+            }
+            set => base.IsEnabled = value;
+	    }
 
-		public override void Run()
+	    public override void Run()
 		{
-			if(_schema.IsSchemaChanged) throw new Exception("Model not saved. Save the model before exporting.");
+			if(schema.IsSchemaChanged) throw new Exception("Model not saved. Save the model before exporting.");
 
 			IPersistenceService mainPersistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 
@@ -277,7 +271,7 @@ namespace Origam.Workbench.Commands
 			
 				if(dialog.ShowDialog() == DialogResult.OK)
 				{
-					SchemaExtension extension = _schema.ActiveExtension;
+					SchemaExtension extension = schema.ActiveExtension;
 				
 					IPersistenceService persistence = mainPersistence;
 					persistence.ExportPackage((Guid)extension.PrimaryKey["Id"], dialog.FileName);
@@ -287,7 +281,7 @@ namespace Origam.Workbench.Commands
 
 		public override void Dispose()
 		{
-			_schema = null;
+			schema = null;
 		}
 
 	}
@@ -304,13 +298,14 @@ namespace Origam.Workbench.Commands
 			get
 			{
 				Pads.ExtensionPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(Pads.ExtensionPad)) as Pads.ExtensionPad;
+			    IPersistenceService persistenceService =
+			        ServiceManager.Services.GetService<IPersistenceService>();
 
-				return _schema.IsSchemaLoaded && pad.SelectedExtension != null;
+                return _schema.IsSchemaLoaded && 
+				       pad.SelectedExtension != null && 
+                       !(persistenceService is FilePersistenceService);
 			}
-			set
-			{
-				base.IsEnabled = value;
-			}
+			set => base.IsEnabled = value;
 		}
 
 		public override void Run()
@@ -330,21 +325,20 @@ namespace Origam.Workbench.Commands
 
 	}
 
-	public class ImportPackagesFromRepository : AbstractMenuCommand
+    public class ImportPackagesFromRepository : AbstractMenuCommand
 	{
-		public override bool IsEnabled
-		{
-			get
-			{
-				return WorkbenchSingleton.Workbench.IsConnected;
-			}
-			set
-			{
-				base.IsEnabled = value;
-			}
-		}
+        public override bool IsEnabled
+        {
+            get
+            {
+                bool modelPersistedToFileSystem =
+                    ServiceManager.Services.GetService<IPersistenceService>() is FilePersistenceService;
+                return WorkbenchSingleton.Workbench.IsConnected && !(modelPersistedToFileSystem);
+            }
+            set => base.IsEnabled = value;
+	    }
 
-		public override void Run()
+	    public override void Run()
 		{
             SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
             if (schema.UnloadSchema())
@@ -365,20 +359,21 @@ namespace Origam.Workbench.Commands
 	/// </summary>
 	public class ImportPackageFromFile : AbstractMenuCommand
 	{
-		SchemaService _schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+		SchemaService schema =
+		    ServiceManager.Services.GetService<SchemaService>();
 
-		public override bool IsEnabled
+        public override bool IsEnabled
 		{
 			get
 			{
 				Pads.ExtensionPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(Pads.ExtensionPad)) as Pads.ExtensionPad;
-
-				return _schema.IsSchemaLoaded && pad.SelectedExtension != null;
+			    bool modelPersistedToFileSystem =
+			        ServiceManager.Services.GetService<IPersistenceService>() is FilePersistenceService;
+                return schema.IsSchemaLoaded &&
+                       pad.SelectedExtension != null &&
+                       !(modelPersistedToFileSystem);
 			}
-			set
-			{
-				base.IsEnabled = value;
-			}
+			set => base.IsEnabled = value;
 		}
 
 		public override void Run()
@@ -393,7 +388,7 @@ namespace Origam.Workbench.Commands
 
 		public override void Dispose()
 		{
-			_schema = null;
+			schema = null;
 		}
 
 	}

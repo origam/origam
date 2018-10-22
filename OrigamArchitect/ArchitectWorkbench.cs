@@ -750,7 +750,7 @@ namespace OrigamArchitect
 			CreateMenuItem(strings.ExportSinglePackage_MenuItem, new ExportPackageToFile(), null, Keys.None, _fileMenu);
 			CreateMenuItem(strings.ImportSinglePackage_Menuitem, new ImportPackageFromFile(), null, Keys.None, _fileMenu);
 			CreateMenuItem(strings.RunUpdateScripts_MenuItem, new DeployVersion(), null, Keys.None, _fileMenu);
-			CreateMenuItem(strings.UpdateModel_MenuItem, new Commands.UpdateModelAndTargetEnvironment(), null, Keys.None, _fileMenu);
+			CreateMenuItem(strings.UpdateModel_MenuItem, new UpdateModelAndTargetEnvironment(), null, Keys.None, _fileMenu);
 			
 			_fileMenu.SubItems.Add(CreateSeparator());
 			
@@ -2164,7 +2164,7 @@ namespace OrigamArchitect
                 ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
 
 #if ORIGAM_CLIENT
-			deployment.CanUpdate(_schema.ActiveExtension);
+			deployment.CanUpdateExtension(_schema.ActiveExtension);
 			string modelVersion = _schema.ActiveExtension.Version;
 			string dbVersion = deployment.CurrentDeployedVersion(_schema.ActiveExtension);
 
