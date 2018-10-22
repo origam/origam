@@ -165,7 +165,7 @@ namespace OrigamArchitect
             _project.DatabaseServerName = txtServerName.Text;
             _project.DatabaseUserName = txtDatabaseUserName.Text;
             _project.DatabasePassword = txtDatabasePassword.Text;
-            _project.DataDatabaseName = txtName.Text + "_data";
+            _project.DataDatabaseName = txtName.Text;
             _project.ModelDatabaseName = txtName.Text + "_model";
             _project.DatabaseIntegratedAuthentication = chkIntegratedAuthentication.Checked;
             _project.WebRootName = cboWebRoot.Text;
