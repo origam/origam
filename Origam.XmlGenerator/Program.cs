@@ -10,7 +10,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading;
 
-namespace Origam.MdExporter
+namespace Origam.XmlGenrator
 {
     class Program
     {
