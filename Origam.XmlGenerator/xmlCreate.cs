@@ -12,7 +12,7 @@ using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 using Origam.Workbench.Services;
 
-namespace Origam.MdExporter
+namespace Origam.XmlGenrator
 {
     class XmlCreate
     {
@@ -21,8 +21,6 @@ namespace Origam.MdExporter
         IDocumentationService documentation;
         MenuSchemaItemProvider menuprovider = new MenuSchemaItemProvider();
         private FilePersistenceProvider persprovider;
-        private string mezerka = " ";
-        private  int pocetmezer = 0;
         public XmlCreate(string xmlpath,string filename, FileStorageDocumentationService documentation1,FilePersistenceProvider persprovider)
         {
             this.Xmlpath = xmlpath;
@@ -192,32 +190,23 @@ namespace Origam.MdExporter
 
         internal void WriteStartElement(string v)
         {
-            pocetmezer = pocetmezer + 3;
             Xmlwriter.WriteStartElement(v);
-            Console.WriteLine(mezerka.PadLeft(pocetmezer) + "WriteStartElement" +v);
         }
 
         internal void WriteStartElement(string v,string title)
         {
-            pocetmezer = pocetmezer + 3;
             Xmlwriter.WriteStartElement(v);
             Xmlwriter.WriteAttributeString("DisplayName", title);
-            Console.WriteLine(mezerka.PadLeft(pocetmezer) + "WriteStartAttrElement" + v);
         }
 
         public void WriteElement(string caption,string description)
         {
-            pocetmezer= pocetmezer+3;
-            //Xmlwriter.WriteStartElement(caption);
             Xmlwriter.WriteElementString(caption, description);
-            Console.WriteLine(mezerka.PadLeft(pocetmezer) + "  WriteElement");
         }
 
         public void WriteEndElement()
         {
-            pocetmezer = pocetmezer - 3;
             Xmlwriter.WriteEndElement();
-            Console.WriteLine(mezerka.PadLeft(pocetmezer) + "WriteEndElement");
         }
 
         public void CloseXml()
