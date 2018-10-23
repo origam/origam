@@ -2,63 +2,63 @@
 using Origam.DA.Service;
 using Origam.Schema;
 using Origam.Schema.MenuModel;
+using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 using System;
 using System.Collections.Generic;
+using System.Security.Principal;
+using System.Threading;
 
 namespace Origam.MdExporter
 {
     class Program
     {
-        private static string schemapath = "D:\\OrigamProjects\\test";
-        //private static string schemapath = "D:\\gitave\\be-model";
-        
+        //private static string schemapath = "D:\\OrigamProjects\\test";
+        private static string schemapath = "D:\\OrigamProjects\\be-model";
         private static string xmlpath = "D:\\prace";
-       
-       
         static void Main(string[] args)
         {
-            loadArgs(args);
-            
-            MenuSchemaItemProvider menuprovider = new MenuSchemaItemProvider();
-           
+            LoadArgs(args);
             var DefaultFolders = new List<ElementName>
             {
                 ElementNameFactory.Create(typeof(SchemaExtension)),
                 ElementNameFactory.Create(typeof(SchemaItemGroup))
             };
+            //ServiceManager smanager = ServiceManager.Services;
+
+            ServiceManager sManager = ServiceManager.Services;
+            SchemaService service = new SchemaService();
+            IParameterService parameterService = new NullParameterService();
+                
+            sManager.AddService(service);
+            sManager.AddService(parameterService);
+
             var settings =new OrigamSettings();
             ConfigurationManager.SetActiveConfiguration(settings);
+            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("origam_server"), null);
 
             
-            var persistenceService = new FilePersistenceService(DefaultFolders,
-                schemapath);
-           FilePersistenceProvider persprovider = (FilePersistenceProvider)persistenceService.SchemaProvider;
-           // IDocumentationService documentation = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
+            StateMachineSchemaItemProvider StateMachineSchema = new StateMachineSchemaItemProvider();
+            
 
-           var documentation =  new FileStorageDocumentationService(
+            var persistenceService = new FilePersistenceService(DefaultFolders,
+               schemapath);
+            sManager.AddService(persistenceService);
+
+            service.AddProvider(StateMachineSchema);
+
+            FilePersistenceProvider persprovider = (FilePersistenceProvider)persistenceService.SchemaProvider;
+            
+
+            var documentation =  new FileStorageDocumentationService(
                 persprovider,
                 persistenceService.FileEventQueue);
 
-            menuprovider.PersistenceProvider = persprovider;
-            var menulist = menuprovider.ChildItems.ToList();
-            XmlCreate xmlfile = new XmlCreate(xmlpath, "testovacifile", documentation);
-            xmlfile.WriteElement("Root");
-            foreach (AbstractSchemaItem menuitem in menulist[0].ChildItems)
-            {
-                xmlfile.CreateXml(menuitem);
-                System.Console.WriteLine(menuitem.Name);
-
-            }
-           // xmlfile.WriteEndElement();
-            xmlfile.CloseXml();
-
-            Console.ReadKey();
-
-            //System.Console.WriteLine(consolestring);
+            XmlCreate xmlfile = new XmlCreate(xmlpath, "testovacifile.xml", documentation, persprovider);
+            xmlfile.Run();
         }
 
-        private static void loadArgs(string[] args)
+        private static void LoadArgs(string[] args)
         {
             if (args.Length == 2)
             {
