@@ -189,22 +189,24 @@ namespace Origam.UI
 	
 	public class AsButtonCommand : BigToolStripButton, IStatusUpdate, IDisposable
 	{
-		public AsButtonCommand(string label)
+	    private string description = string.Empty;
+
+        public AsButtonCommand(string label)
 		{
 			this.Description = label;
 		}
 		
 		public ICommand Command { get; set; }
 
-		string description   = string.Empty;
 
+		
 		private string Description 
 		{
 			get => description;
 			set 
 			{
 				description = value;
-				this.ToolTipText = value;
+				this.ToolTipText = value.Replace("&","");
 			}
 		}
 
