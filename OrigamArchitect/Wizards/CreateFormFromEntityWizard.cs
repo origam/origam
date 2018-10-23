@@ -55,10 +55,10 @@ namespace OrigamArchitect
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
+		    lstFields.CheckOnClick = true;
+		    //
+		    // TODO: Add any constructor code after InitializeComponent call
+		    //
 		}
 
 		/// <summary>
