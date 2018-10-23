@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache-net2.csproj" />
     <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services-net2.csproj" />
   </ItemGroup>
