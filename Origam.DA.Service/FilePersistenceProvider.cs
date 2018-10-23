@@ -38,7 +38,7 @@ namespace Origam.DA.Service
 {
     public interface IFilePersistenceProvider: IPersistenceProvider
     {
-        DirectoryInfo GetParentPackageDirectory(Guid persistedItemId);
+        DirectoryInfo GetParentPackageDirectory(Guid itemId);
         bool Has(Guid id);
         DirectoryInfo TopDirectory { get; }
     }
@@ -378,13 +378,16 @@ namespace Origam.DA.Service
             return index.ReloadFiles(trackerLoaderFactory, tryUpdate);
         }
 
-        public DirectoryInfo GetParentPackageDirectory(Guid persistedItemId)
+        public DirectoryInfo GetParentPackageDirectory(Guid itemId)
         {
-            var itemToDocument = (AbstractSchemaItem)RetrieveInstance(
+            var item = (AbstractSchemaItem)RetrieveInstance(
                     type: null, 
-                    primaryKey: new Key {{"Id", persistedItemId}});
-            Guid packageId = itemToDocument.SchemaExtensionId;
-            return index.GetLoadedPackageDirectories()[packageId];
+                    primaryKey: new Key {{"Id", itemId}});
+            Guid packageId = item.SchemaExtensionId;
+            index
+                .GetLoadedPackageDirectories()
+                .TryGetValue(packageId, out var directory);
+            return directory ?? throw new Exception("package: "+ packageId+" not found among currently loaded packages");
         }
 
         public bool Has(Guid id)
