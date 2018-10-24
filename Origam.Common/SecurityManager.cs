@@ -27,7 +27,7 @@ namespace Origam
 	/// <summary>
 	/// Summary description for SecurityManager.
 	/// </summary>
-	public static class SecurityManager
+	public static class SecurityManager2
 	{
 		public const string ROLE_SUFFIX_DIVIDER = "|";
 		public const string READ_ONLY_ROLE_SUFFIX = "isReadOnly()";
