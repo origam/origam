@@ -181,7 +181,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflow", "Workflow", "{00
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gui", "Gui", "{B842C91A-E5F8-4377-BAE3-BAED36417630}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.XmlGenerator", "Origam.XmlGenerator\Origam.XmlGenerator.csproj", "{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.DocGenerator", "Origam.DocGenerator\Origam.DocGenerator.csproj", "{A791B6AD-394D-44A1-84BE-B1DBC6C8A720}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.workflow.mail", "Origam.workflow.mail\Origam.workflow.mail.csproj", "{5E18CE83-B56F-44D3-A106-99CDAAB33C8B}"
 EndProject

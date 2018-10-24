@@ -1,16 +1,14 @@
 ﻿using Origam.DA;
 using Origam.DA.Service;
 using Origam.Schema;
-using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Principal;
 using System.Threading;
 
-namespace Origam.XmlGenrator
+namespace Origam.DocGenrator
 {
     class Program
     {
@@ -40,13 +38,11 @@ namespace Origam.XmlGenrator
                schemapath);
             sManager.AddService(persistenceService);
             service.AddProvider(StateMachineSchema);
-
-            
             FilePersistenceProvider persprovider = (FilePersistenceProvider)persistenceService.SchemaProvider;
-            var independentPackage = persprovider
-                 .RetrieveList<SchemaExtension>()
-                 .FirstOrDefault(package => package.IncludedPackages.Count == 0)
-                 ?? throw new Exception("cannot find..");
+            //var independentPackage = persprovider
+            //     .RetrieveList<SchemaExtension>()
+            //     .FirstOrDefault(package => package.IncludedPackages.Count == 0)
+            //     ?? throw new Exception("cannot find..");
             //independentPackage.Id
             persistenceService.LoadSchema(new Guid("0fe05b88-11e4-4f28-81bc-7762afa76dc8"), false, false, "");
             var documentation =  new FileStorageDocumentationService(
