@@ -64,7 +64,7 @@ namespace Origam.DA.Service_net2Tests
         }
 
         [Test]
-        public void ShouldMoveItemInFileWhenParentChangedToSomethingOutsiudeOfTheFile()
+        public void ShouldMoveItemInFileWhenParentChangedToSomethingOutSideOfTheFile()
         {
             ClearTestDir();
             var persistor = new PersitHelper(TestFilesDir.FullName);
