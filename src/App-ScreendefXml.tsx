@@ -19,7 +19,6 @@ function parseScreenDef(o: any) {
       case undefined:
         break;
       case "Window":
-        console.log(`${node.name} (Type=${node.attributes.Type})`);
         newChild = {
           type: node.name,
           props: {
@@ -30,28 +29,70 @@ function parseScreenDef(o: any) {
         };
         uiStructOpened.children.push(newChild);
         break;
-      case "UIRoot":
-      case "UIElement":
-        console.log(`${node.name} (Type=${node.attributes.Type})`);
+      case "FormRoot":
+        newPathFlags.add("FormRoot");
         newChild = {
-          type: node.attributes.Type,
+          type: "FormRoot",
+          props: {},
+          children: []
+        };
+        uiStructOpened.children.push(newChild);
+        break;
+      case "FormElement": {
+        newPathFlags.add("FormElement");
+        const location = {
+          x: parseInt(node.attributes.X, 10),
+          y: parseInt(node.attributes.Y, 10),
+          w: parseInt(node.attributes.Width, 10),
+          h: parseInt(node.attributes.Height, 10)
+        };
+        newChild = {
+          type: "Panel",
           props: {
-            name: node.attributes.Name,
-            id: node.attributes.Id
+            name: node.attributes.Title,
+            ...location
           },
           children: []
         };
         uiStructOpened.children.push(newChild);
         break;
-      case "Property":
+      }
+      case "string":
+        if (pathFlags.has("FormRoot")) {
+          newChild = {
+            type: "Property",
+            props: {
+              id: node.elements[0] && node.elements[0].text
+            },
+            children: []
+          };
+          uiStructOpened.children.push(newChild);
+        }
+        break;
+      case "UIRoot":
+      case "UIElement": {
+        const location = {
+          x: parseInt(node.attributes.X, 10),
+          y: parseInt(node.attributes.Y, 10),
+          w: parseInt(node.attributes.Width, 10),
+          h: parseInt(node.attributes.Height, 10)
+        };
+        newChild = {
+          type: node.attributes.Type,
+          props: {
+            name: node.attributes.Name,
+            id: node.attributes.Id,
+            ...location
+          },
+          children: []
+        };
+        uiStructOpened.children.push(newChild);
+        break;
+      }
+      case "Property": {
         if (pathFlags.has(DropDownColumns)) {
           break;
         }
-        console.log(
-          `${node.name} (Entity=${node.attributes.Entity},Name=${
-            node.attributes.Name
-          })`
-        );
         const location = {
           x: parseInt(node.attributes.X, 10),
           y: parseInt(node.attributes.Y, 10),
@@ -72,6 +113,7 @@ function parseScreenDef(o: any) {
         };
         uiStructOpened.children.push(newChild);
         break;
+      }
       case "DropDownColumns":
         newPathFlags = new Set(newPathFlags.keys());
         newPathFlags.add(DropDownColumns);
@@ -112,9 +154,56 @@ function parseScreenDef(o: any) {
     }
   }
 
+  function moveProperties(node: any): any {
+    if (node.type === "Grid") {
+      const formRoot = node.children.find((ch: any) => ch.type === "FormRoot");
+      const properties = node.children.find(
+        (ch: any) => ch.type === "Properties"
+      );
+      const propertiesMap = new Map(
+        properties.children.map((prop: any) => [prop.props.id, prop])
+      );
+      const formRootChildren = [...formRoot.children];
+      for (
+        let formRootChildIndex = 0;
+        formRootChildIndex < formRootChildren.length;
+        formRootChildIndex++
+      ) {
+        const formRootChild = formRootChildren[formRootChildIndex];
+        if (formRootChild.type === "Property") {
+          formRoot.children[formRootChildIndex] = propertiesMap.get(
+            formRootChild.props.id
+          );
+        } else if (formRootChild.type === "Panel") {
+          const panelChildren = [...formRootChild.children];
+          for (
+            let panelChildIndex = 0;
+            panelChildIndex < formRootChild.children.length;
+            panelChildIndex++
+          ) {
+            const panelChild = formRootChild.children[panelChildIndex];
+            if (panelChild.type === "Property") {
+              formRootChild.children[panelChildIndex] = propertiesMap.get(
+                panelChild.props.id
+              );
+            }
+          }
+        }
+      }
+      node.children = node.children.filter(
+        (ch: any) => ch.type !== "Properties"
+      );
+      return node;
+    }
+    for (const child of node.children) {
+      moveProperties(child);
+    }
+    return node;
+  }
+
   // console.log(o)
   processNode(o, uiStruct, new Set());
-  console.log(JSON.stringify(uiStruct, null, 2));
+  moveProperties(uiStruct);
   // console.log(unhandled);
   return {
     uiStruct
@@ -134,17 +223,14 @@ class OUIUnknown extends React.Component<any> {
   }
 }
 
-class OUIProperties extends React.Component<any> {
+class OUIFormRoot extends React.Component<any> {
   public render() {
-    return (
-      <div className="oui-properties-container">{this.props.children}</div>
-    );
+    return <div className="oui-form-root">{this.props.children}</div>;
   }
 }
 
 class OUIProperty extends React.Component<any> {
   public render() {
-    console.log(this.props.x);
     if (!Number.isInteger(this.props.x) || !Number.isInteger(this.props.y)) {
       return null;
     }
@@ -153,6 +239,13 @@ class OUIProperty extends React.Component<any> {
       captionLocation = {
         left: this.props.x - this.props.captionLength,
         top: this.props.y,
+        width: this.props.captionLength,
+        minHeight: 20 // this.props.h,
+      };
+    } else if (this.props.captionPosition === "Top") {
+      captionLocation = {
+        left: this.props.x,
+        top: this.props.y - 20,
         width: this.props.captionLength,
         minHeight: 20 // this.props.h,
       };
@@ -185,9 +278,11 @@ class OUIProperty extends React.Component<any> {
           {/*this.props.name*/}
           {this.props.entity}
         </div>
-        <div className="oui-property-caption" style={{ ...captionLocation }}>
-          {this.props.name}
-        </div>
+        {this.props.captionPosition !== "None" && (
+          <div className="oui-property-caption" style={{ ...captionLocation }}>
+            {this.props.name}
+          </div>
+        )}
       </>
     );
   }
@@ -217,9 +312,48 @@ class OUIHSplit extends React.Component<any> {
   }
 }
 
+class OUIPanel extends React.Component<any> {
+  public render() {
+    return (
+      <>
+        <div
+          className="oui-panel"
+          style={{
+            top: this.props.y,
+            left: this.props.x,
+            width: this.props.w,
+            height: this.props.h
+          }}
+        >
+          {this.props.children}
+        </div>
+        <div
+          className="oui-panel-label"
+          style={{
+            top: this.props.y + 5,
+            left: this.props.x + 5
+          }}
+        >
+          {this.props.name}
+        </div>
+      </>
+    );
+  }
+}
+
 class OUIVBox extends React.Component<any> {
   public render() {
-    return <div className="oui-vbox">{this.props.children}</div>;
+    return (
+      <div
+        className="oui-vbox"
+        style={{
+          maxWidth: this.props.w,
+          maxHeight: this.props.h
+        }}
+      >
+        {this.props.children}
+      </div>
+    );
   }
 }
 
@@ -231,7 +365,17 @@ class OUIWindow extends React.Component<any> {
 
 class OUIGrid extends React.Component<any> {
   public render() {
-    return <div className="oui-grid">{this.props.children}</div>;
+    return (
+      <div
+        className="oui-grid"
+        style={{
+          maxWidth: this.props.w,
+          maxHeight: this.props.h
+        }}
+      >
+        {this.props.children}
+      </div>
+    );
   }
 }
 
@@ -307,9 +451,23 @@ class OUILabel extends React.Component<any> {
   }
 }
 
+class OUITreePanel extends React.Component<any> {
+  public render() {
+    return (
+      <div>
+        <img
+          style={{ width: 250}}
+          src="https://thegraphicsfairy.com/wp-content/uploads/blogger/-GXi8yHjt0fc/T-zV1MX-VfI/AAAAAAAASgI/uChxO5KV9yE/s1600/tree-Vintage-GraphicsFairy6.jpg"
+        />
+      </div>
+    );
+  }
+}
+
 const elementTypes = {
-  Properties: OUIProperties,
+  FormRoot: OUIFormRoot,
   Property: OUIProperty,
+  Panel: OUIPanel,
   VSplit: OUIVSplit,
   HSplit: OUIHSplit,
   Window: OUIWindow,
@@ -318,7 +476,8 @@ const elementTypes = {
   Box: OUIBox,
   VBox: OUIVBox,
   TabHandle: OUITabHandle,
-  Label: OUILabel
+  Label: OUILabel,
+  TreePanel: OUITreePanel
 };
 
 function createUITree(uiStruct: any): any {
@@ -369,7 +528,7 @@ class App extends React.Component {
   public screenDef: any;
 
   public async componentDidMount() {
-    const xml = (await axios.get("/screen02.xml")).data;
+    const xml = (await axios.get("/screen03.xml")).data;
     this.xmlObj = xmlJs.xml2js(xml, { compact: false });
 
     const xo = this.xmlObj;
@@ -384,7 +543,14 @@ class App extends React.Component {
         {/**/}
 
         {this.screenDef && createUITree(this.screenDef.uiStruct.children[0])}
-        <pre>{JSON.stringify(this.xmlObj, null, 2)}</pre>
+        {/*<pre>{JSON.stringify(this.xmlObj, null, 2)}</pre>*/}
+        {/*<pre>
+          {JSON.stringify(
+            this.screenDef && this.screenDef.uiStruct.children[0],
+            null,
+            2
+          )}
+        </pre>*/}
       </>
     );
   }
