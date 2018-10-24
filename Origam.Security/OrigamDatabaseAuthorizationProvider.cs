@@ -23,17 +23,15 @@ using System;
 using System.Collections;
 using System.Data;
 using System.Security.Principal;
-
 using Origam.DA;
 using Origam.Workbench.Services;
-using Microsoft.Practices.EnterpriseLibrary.Configuration;
 
 namespace Origam.Security
 {
 	/// <summary>
 	/// Summary description for OrigamDatabaseAuthorizationProvider.
 	/// </summary>
-	public class OrigamDatabaseAuthorizationProvider : ConfigurationProvider, IOrigamAuthorizationProvider
+	public class OrigamDatabaseAuthorizationProvider : IOrigamAuthorizationProvider
 	{
 		private class Credential
 		{
@@ -48,10 +46,6 @@ namespace Origam.Security
 		}
 
 		public OrigamDatabaseAuthorizationProvider()
-		{
-		}
-
-		public override void Initialize(ConfigurationView configurationView)
 		{
 		}
 

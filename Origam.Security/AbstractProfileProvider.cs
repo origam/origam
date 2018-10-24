@@ -25,12 +25,11 @@ using System.Security.Principal;
 using Origam.DA;
 using Origam.Services;
 using Origam.Workbench.Services;
-using Microsoft.Practices.EnterpriseLibrary.Configuration;
 
 namespace Origam.Security
 {
 	public abstract class AbstractProfileProvider 
-						: ConfigurationProvider, IOrigamProfileProvider
+						: IOrigamProfileProvider
 	{
 		protected ISchemaService _schemaService 
 			= ServiceManager.Services.GetService(typeof(ISchemaService)) 
@@ -38,10 +37,6 @@ namespace Origam.Security
 		protected static readonly log4net.ILog log 
 			= log4net.LogManager.GetLogger(
 			System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-		public override void Initialize(ConfigurationView configurationView)
-		{
-		}
 
 		#region IProfileProvider Members
 		public object GetProfile(Guid profileId)

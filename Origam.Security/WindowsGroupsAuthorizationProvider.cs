@@ -24,14 +24,14 @@ using System.Data;
 using System.Collections;
 using Origam.DA;
 using Origam.Workbench.Services;
-using Microsoft.Practices.EnterpriseLibrary.Configuration;
+//using Microsoft.Practices.EnterpriseLibrary.Configuration;
 
 namespace Origam.Security
 {
 	/// <summary>
 	/// Summary description for WindowsGroupsAuthorizationProvider.
 	/// </summary>
-	public class WindowsGroupsAuthorizationProvider : ConfigurationProvider, IOrigamAuthorizationProvider
+	public class WindowsGroupsAuthorizationProvider : IOrigamAuthorizationProvider
 	{
 		private class Credential
 		{
@@ -46,10 +46,6 @@ namespace Origam.Security
 		}
 
 		public WindowsGroupsAuthorizationProvider()
-		{
-		}
-
-		public override void Initialize(ConfigurationView configurationView)
 		{
 		}
 

@@ -173,7 +173,7 @@ namespace Origam.Workbench.ServicesTests
             this.testDir = testDir;
         }
         
-        public DirectoryInfo GetParentPackageDirectory(Guid persistedItemId) =>
+        public DirectoryInfo GetParentPackageDirectory(Guid itemId) =>
             testDir;
 
         public bool Has(Guid id) => throw new NotImplementedException();

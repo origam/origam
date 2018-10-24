@@ -20,16 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using Microsoft.Practices.EnterpriseLibrary.Security;
+using System.Security.Principal;
 
 namespace Origam
 {
-	/// <summary>
-	/// Summary description for IOrigamProfileProvider.
-	/// </summary>
-	public interface IOrigamProfileProvider : IProfileProvider
-	{
-		object GetProfile(Guid profileId);
+
+	public interface IOrigamProfileProvider { 
+	    object GetProfile(IIdentity identity);
+        object GetProfile(Guid profileId);
 		object GetProfile(string userName);
         void AddUser(string name, string userName);
 	}

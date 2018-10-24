@@ -12,4 +12,16 @@
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="ConfigurationManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Interfaces\IOrigamAuthorizationProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Interfaces\IOrigamProfileProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>

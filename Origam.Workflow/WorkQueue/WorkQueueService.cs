@@ -33,7 +33,6 @@ using Origam.Schema.EntityModel;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Schema.WorkflowModel.WorkQueue;
-using Origam.Workbench;
 using Origam.Workbench.Services;
 using core = Origam.Workbench.Services.CoreServices;
 using System.ComponentModel;
@@ -41,10 +40,8 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Origam.Services;
 using System.Transactions;
-using Microsoft.Practices.EnterpriseLibrary.Security;
 using Timer = System.Timers.Timer;
 
 namespace Origam.Workflow.WorkQueue

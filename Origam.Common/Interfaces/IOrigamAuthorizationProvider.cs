@@ -21,37 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Security.Principal;
 
-using Microsoft.Practices.EnterpriseLibrary.Security;
-using Microsoft.Practices.EnterpriseLibrary.Configuration;
-
-namespace Origam.Security
+namespace Origam
 {
-	/// <summary>
-	/// Summary description for OrigamRolesProvider.
-	/// </summary>
-	public class OrigamRolesProvider :  ConfigurationProvider, IRolesProvider
+	public interface IOrigamAuthorizationProvider
 	{
-		public OrigamRolesProvider()
-		{
-			//
-			// TODO: Add constructor logic here
-			//
-		}
-
-		public override void Initialize(ConfigurationView configurationView)
-		{
-		}
-
- 
-		#region IRolesProvider Members
-
-		public IPrincipal GetRoles(IIdentity identity)
-		{
-			
-			// TODO:  Add OrigamRolesProvider.GetRoles implementation
-			return null;
-		}
-
-		#endregion
+	    bool Authorize(IPrincipal principal, string context);
 	}
 }

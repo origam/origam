@@ -26,14 +26,14 @@ using System.Security.Principal;
 
 using Origam.DA;
 using Origam.Workbench.Services;
-using Microsoft.Practices.EnterpriseLibrary.Configuration;
+//using Microsoft.Practices.EnterpriseLibrary.Configuration;
 
 namespace Origam.Security
 {
 	/// <summary>
 	/// Summary description for OrigamDatabaseTenantAuthorizationProvider.
 	/// </summary>
-	public class OrigamDatabaseTenantAuthorizationProvider : ConfigurationProvider, IOrigamAuthorizationProvider
+	public class OrigamDatabaseTenantAuthorizationProvider : IOrigamAuthorizationProvider
 	{
 		private class Credential
 		{
@@ -48,10 +48,6 @@ namespace Origam.Security
 		}
 
 		public OrigamDatabaseTenantAuthorizationProvider()
-		{
-		}
-
-		public override void Initialize(ConfigurationView configurationView)
 		{
 		}
 
