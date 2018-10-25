@@ -90,20 +90,27 @@ namespace Origam
 
 	}
 
-	
-
 	public class OrigamSettingsReader
 	{
-	    private static string PathToOrigamSettings =>
+	    private static string DefaultPathToOrigamSettings =>
 	        Path.Combine(AssemblyTools.GetAssemblyLocation(), "OrigamSettings.config");
 
-        public OrigamSettingsCollection GetAll()
+	    private readonly string pathToOrigamSettings;
+
+	    public OrigamSettingsReader(string pathToOrigamSettings = null)
+	    {
+
+	        this.pathToOrigamSettings = pathToOrigamSettings 
+	                                    ?? DefaultPathToOrigamSettings;
+	    }
+
+	    public OrigamSettingsCollection GetAll()
 		{
 			XmlReader reader=null;
 			try
 			{
 				XmlNode arrayOfOrigamSettingsNode =
-					GetSettingsNodesOrThrow(PathToOrigamSettings);
+					GetSettingsNodesOrThrow(pathToOrigamSettings);
 				if (arrayOfOrigamSettingsNode.ChildNodes.Count == 0)
 				{
 					return new OrigamSettingsCollection();
@@ -189,7 +196,7 @@ namespace Origam
 				ser.Serialize(writer, configuration.ToList<OrigamSettings>().ToArray());
 			}
 			arrayOfOrigamSettingsNode.InnerXml = xmlDocument.InnerXml;
-			document.Save(PathToOrigamSettings);
+			document.Save(pathToOrigamSettings);
 		}
     }
 
