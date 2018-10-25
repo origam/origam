@@ -15,4 +15,10 @@
     <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services-net2.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="CommandLine">
+      <HintPath>..\EnterpriseLibrary\CommandLine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

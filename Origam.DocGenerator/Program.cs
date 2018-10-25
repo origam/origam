@@ -1,4 +1,6 @@
-﻿using Origam.DA;
+﻿using CommandLine;
+using CommandLine.Text;
+using Origam.DA;
 using Origam.DA.Service;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
@@ -8,16 +10,46 @@ using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading;
 
-namespace Origam.DocGenrator
+namespace Origam.DocGenerator
 {
-    class Program
+   class Program
     {
-        //private static string schemapath = "D:\\OrigamProjects\\test";
-        private static string schemapath = "D:\\OrigamProjects\\be-model";
-        private static string xmlpath = "D:\\prace";
+       public class Options
+        {
+            [Option('s', "schema", Required = true, HelpText = "Input Origam project directory.")]
+            public string Schema { get; set; }
+
+            [Option('g', "guiddoc", Required = true, HelpText = "guidid of project in Origam.")]
+            public string GuidDoc { get; set; }
+
+            [Option('x', "xslt", Required = false, HelpText = "Xslt template")]
+            public string Xslt { get; set; }
+
+            [Option('o', "output", Required = true, HelpText = "Output directory")]
+            public string Dataout { get; set; }
+
+            [Option('e', "extension", Required = true, HelpText = "Type of files.")]
+            public string Extension { get; set; }
+
+            [ParserState]
+            public IParserState LastParserState { get; set; }
+
+            [HelpOption]
+            public string GetUsage()
+            {
+                return HelpText.AutoBuild(this,
+                  (HelpText current) => HelpText.DefaultParsingErrorsHandler(this, current));
+            }
+        }
+
         static void Main(string[] args)
         {
-            LoadArgs(args);
+            var options = new Options();
+            if (!Parser.Default.ParseArguments(args, options))
+                {
+                    return;
+                }
+
             var DefaultFolders = new List<ElementName>
             {
                 ElementNameFactory.Create(typeof(SchemaExtension)),
@@ -27,39 +59,27 @@ namespace Origam.DocGenrator
             SchemaService service = new SchemaService();
             IParameterService parameterService = new NullParameterService();
                 
-                sManager.AddService(service);
-                sManager.AddService(parameterService);
+            sManager.AddService(service);
+            sManager.AddService(parameterService);
 
             var settings =new OrigamSettings();
             ConfigurationManager.SetActiveConfiguration(settings);
             Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("origam_server"), null);
             StateMachineSchemaItemProvider StateMachineSchema = new StateMachineSchemaItemProvider();
             var persistenceService = new FilePersistenceService(DefaultFolders,
-               schemapath);
+               options.Schema);
+
             sManager.AddService(persistenceService);
             service.AddProvider(StateMachineSchema);
+
             FilePersistenceProvider persprovider = (FilePersistenceProvider)persistenceService.SchemaProvider;
-            //var independentPackage = persprovider
-            //     .RetrieveList<SchemaExtension>()
-            //     .FirstOrDefault(package => package.IncludedPackages.Count == 0)
-            //     ?? throw new Exception("cannot find..");
-            //independentPackage.Id
-            persistenceService.LoadSchema(new Guid("0fe05b88-11e4-4f28-81bc-7762afa76dc8"), false, false, "");
+            //"0fe05b88-11e4-4f28-81bc-7762afa76dc8"
+            persistenceService.LoadSchema(new Guid(options.GuidDoc), false, false, "");
             var documentation =  new FileStorageDocumentationService(
                 persprovider,
                 persistenceService.FileEventQueue);
 
-            XmlCreate xmlfile = new XmlCreate(xmlpath, "testovacifile.xml", documentation, persprovider);
-            xmlfile.Run();
-        }
-
-        private static void LoadArgs(string[] args)
-        {
-            if (args.Length == 2)
-            {
-                schemapath = args[0];
-                xmlpath = args[1];
-            }
+            new DocCreate(options.Dataout, options.Xslt, options.Extension, documentation, persprovider).Run();
         }
     }
 }
