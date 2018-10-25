@@ -156,7 +156,10 @@ namespace Origam.Server.Doc
 
                 if (!table.Columns.Contains(bindingMember)) throw new Exception("Field '" + bindingMember + "' not found in a data structure for the form '" + control.RootItem.Path + "'");
 
-                if (caption == "") caption = table.Columns[bindingMember].Caption;
+                if (string.IsNullOrEmpty(caption))
+                {
+                    caption = table.Columns[bindingMember].Caption;
+                }
                 Guid id = (Guid)table.Columns[bindingMember].ExtendedProperties["Id"];
 
                 DocTools.WriteDivStart(writer, "screenField");
