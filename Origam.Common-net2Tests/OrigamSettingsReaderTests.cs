@@ -12,8 +12,9 @@ namespace Origam.Common_net2Tests.Properties
         [Test]
         public void ShouldReadAllSettings()
         {
+            string pathToOrigamSettings = Path.Combine(TestFilesDir.FullName, "OrigamSettings.config");
             OrigamSettingsCollection settings = 
-                new OrigamSettingsReader().GetAll(Path.Combine(TestFilesDir.FullName, "OrigamSettings.config"));
+                new OrigamSettingsReader(pathToOrigamSettings).GetAll();
             
             Assert.That(settings, Has.Count.EqualTo(2));
             var firstSettings = settings[0];
@@ -44,23 +45,23 @@ namespace Origam.Common_net2Tests.Properties
         [Test]
         public void ShouldWriteSettings()
         {
-            OrigamSettingsReader origamSettingsReader = new OrigamSettingsReader();
+            
             string pathToReadFrom = Path.Combine(TestFilesDir.FullName,"OrigamSettings.config");
             string pathToWriteTo = Path.Combine(TestFilesDir.FullName,"OrigamSettingsWriteTest.config");
+
             OrigamSettingsCollection settings =
-                origamSettingsReader.GetAll(
-                    pathToReadFrom);
-            
-            origamSettingsReader.Write(pathToWriteTo,settings);
+                new OrigamSettingsReader(pathToReadFrom).GetAll();
+
+            new OrigamSettingsReader(pathToWriteTo).Write(settings);
         }
         
         [Test] public void ShouldFailWhenReadingInputFileWithWrongStructure()
         {
             Assert.Throws<OrigamSettingsException>(() =>
             {
+                string pathToOrigamSettings = Path.Combine(TestFilesDir.FullName,"OrigamSettingsWithErrors.config");
                 OrigamSettingsCollection settings =
-                    new OrigamSettingsReader().GetAll(
-                        Path.Combine(TestFilesDir.FullName,"OrigamSettingsWithErrors.config"));
+                    new OrigamSettingsReader(pathToOrigamSettings).GetAll();
             });
         }
         
