@@ -126,7 +126,7 @@ namespace Origam.Windows.Editor
             }
             set
             {
-                editor.Document.Text = value;
+                editor.Document.Text = value ?? "";
                 editor.Document.UndoStack.ClearAll();
             }
         }

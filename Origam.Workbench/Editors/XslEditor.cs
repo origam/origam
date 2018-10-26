@@ -805,7 +805,7 @@ namespace Origam.Workbench.Editors
 
 				_isEditing = true;
 				txtName.Text = _xslRule.Name;
-				txtText.Text = _xslRule.Xsl;
+				txtText.Text = _xslRule.Xsl ?? "";
 				txtId.Text = _xslRule.Id.ToString();
                 txtPackage.Text = _xslRule.Package;
                 cboXsltEngineType.Enabled = false;
