@@ -70,8 +70,9 @@
     <Reference Include="Microsoft.Practices.EnterpriseLibrary.Security, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\EnterpriseLibrary\Microsoft.Practices.EnterpriseLibrary.Security.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\EnterpriseLibrary\Newtonsoft.Json.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="NPOI, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1">
       <HintPath>..\EnterpriseLibrary\NPOI.dll</HintPath>
