@@ -7,6 +7,7 @@
 <xsl:output method="text" />
 <xsl:template match="/">
 <xsl:for-each select="/Menu/Menuitem">
+  <!--<xsl:result-document method="xml" href="file_{@DisplayName}-output.xml"> -->
 ___
 ## <xsl:value-of select="@DisplayName"/>
 
@@ -15,15 +16,12 @@ ___
 	</xsl:if>
 #### <xsl:for-each select="Section">
 
-<xsl:value-of select="@DisplayName"/>
-<xsl:if test="description != ''" >
-	- *<xsl:value-of select="description"/>*
-</xsl:if>
-|||
-|-------|--------|
-<xsl:for-each select="Field">| <xsl:value-of select="@DisplayName"/> | <xsl:if test="description != ''" ><xsl:value-of select="description"/> </xsl:if> |
+  |<xsl:value-of select="@DisplayName"/>|<xsl:if test="description != ''" ><xsl:value-of select="description"/></xsl:if>|
+  |-------|--------|
+  <xsl:for-each select="Field">| <xsl:value-of select="@DisplayName"/> | <xsl:if test="description != ''" ><xsl:value-of select="description"/> </xsl:if> |
 </xsl:for-each>
 </xsl:for-each>
+  <!--    </xsl:result-document> -->
 </xsl:for-each>
 
   </xsl:template> 

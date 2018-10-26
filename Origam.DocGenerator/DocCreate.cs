@@ -7,12 +7,12 @@ using System.Text;
 using System.Xml;
 using System.Xml.Xsl;
 using Mvp.Xml.Common.Xsl;
+using Mvp.Xml.Exslt;
 using Origam.DA.Service;
 using Origam.Gui.Win;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
-using Origam.Workbench.Editors;
 using Origam.Workbench.Services;
 
 namespace Origam.DocGenerator
@@ -20,7 +20,7 @@ namespace Origam.DocGenerator
     class DocCreate
     {
         private string Dataout { get; set; }
-        private XmlTextWriter Xmlwriter { get; set; }
+        private MultiXmlTextWriter Xmlwriter { get; set; }
         private IDocumentationService documentation;
         private MenuSchemaItemProvider menuprovider = new MenuSchemaItemProvider();
         private readonly FilePersistenceProvider persprovider;
@@ -42,7 +42,7 @@ namespace Origam.DocGenerator
 
         private void CreateWriter()
         {
-            Xmlwriter = new XmlTextWriter(mstream, Encoding.UTF8)
+            Xmlwriter = new MultiXmlTextWriter(mstream, Encoding.UTF8)
             {
                 Formatting = Formatting.Indented
             };
@@ -120,7 +120,11 @@ namespace Origam.DocGenerator
                 }
                 else
                 {
-                    section = "newPanel";
+                    section = "Panel";
+                }
+                if (string.IsNullOrEmpty(section))
+                {
+                    section = "Panel";
                 }
                 WriteStartElement("Section", section);
                 WriteElement("description", doc);
@@ -154,7 +158,7 @@ namespace Origam.DocGenerator
                 try
                 { 
                     processor.Load(Xlst);
-                } catch (XsltException e)
+                } catch (XsltException)
                 {
                     //asi potreba nekam neco zapsat !?
                     return false;
