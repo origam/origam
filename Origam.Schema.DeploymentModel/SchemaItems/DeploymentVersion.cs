@@ -163,13 +163,15 @@ namespace Origam.Schema.DeploymentModel
 			}
 		}
 
-		public IEnumerable<AbstractUpdateScriptActivity> UpdateScriptActivities =>
+        [Browsable(false)]
+        public IEnumerable<AbstractUpdateScriptActivity> UpdateScriptActivities =>
 			ChildItems
 				.ToEnumerable()
-				.OrderBy(activity => activity.Name)
+				.OrderBy(activity => ((AbstractUpdateScriptActivity)activity).ActivityOrder)
 				.Cast<AbstractUpdateScriptActivity>();
 
-		public PackageVersion Version { get; private set; }
+        [Browsable(false)]
+        public PackageVersion Version { get; private set; }
 		
 		[EntityColumn("M01")] 
 		[XmlAttribute("deploymentDependenciesCsv")]
@@ -177,7 +179,8 @@ namespace Origam.Schema.DeploymentModel
 
 		private List<DeploymentDependency> deploymentDependencies;
 
-		public List<DeploymentDependency> DeploymentDependencies
+        [Browsable(false)]
+        public List<DeploymentDependency> DeploymentDependencies
 		{
 			get
 			{
@@ -198,7 +201,8 @@ namespace Origam.Schema.DeploymentModel
 			}
 		}
 
-		public bool HasDependencies => DeploymentDependencies.Count != 0;
+        [Browsable(false)]
+        public bool HasDependencies => DeploymentDependencies.Count != 0;
 		#endregion
 
 		#region ISchemaItemFactory Members
