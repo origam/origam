@@ -62,7 +62,7 @@ namespace Origam.Common_net2Tests.Properties
                 OrigamSettingsCollection settings =
                     new OrigamSettingsReader(pathToOrigamSettings).GetAll();
             });
-            Assert.That(exception.Message, Is.EqualTo("Cannot read OrigamSettings.config... Cannot read OrigamSettings.config... Could not find path \"OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings\" in OrigamSettings.config"));
+            Assert.That(exception.Message, Is.EqualTo("Cannot read OrigamSettings.config... Cannot read OrigamSettings.config... Could not find path \"OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings\""));
         }
 
         [Test]
@@ -110,22 +110,8 @@ namespace Origam.Common_net2Tests.Properties
                 var origamSettingsReader = new OrigamSettingsReader(pathToOrigamSettings);
                 var profileProvider = origamSettingsReader.GetProfileProvider();
             });
-            Assert.That(exception.Message, Is.EqualTo("Cannot read OrigamSettings.config... Could not find path \"OrigamSettings/security\" in OrigamSettings.config"));
+            Assert.That(exception.Message, Is.EqualTo("Cannot read OrigamSettings.config... Could not find path \"OrigamSettings/security\""));
         }
-
-
-
-        //        [Test] public void ShouldFailWhenReadingInvalidInputFile()
-        //        {
-        //            var ex = Assert.Throws<OrigamSettingsException>(() =>
-        //            {
-        //                OrigamSettingsCollection settings =
-        //                    new OrigamSettingsReader().GetAll(
-        //                        Path.Combine(TestFilesDir.FullName,"OrigamSettingsWithErrors.config"));
-        //            });
-        //            Assert.That(ex.Message, Is.EqualTo("The 'XXModelSourceControlLocation' start tag on line 8 position 10 does not match the end tag of 'ModelSourceControlLocation'. Line 8, position 55."));
-        //
-        //        }
 
         protected override TestContext TestContext =>
             TestContext.CurrentContext;

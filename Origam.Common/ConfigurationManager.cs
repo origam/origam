@@ -21,21 +21,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Xml;
-using System.Xml.Serialization;
-using Origam.Extensions;
 
 namespace Origam
 {
-	/// <summary>
-	/// Summary description for ConfigurationManager.
-	/// </summary>
 	public class ConfigurationManager
 	{
-		//todo: review whether object is necessary, through the whole code only OrigamSettings is used and unnecessary casts are performed
 		private static OrigamSettings _activeConfiguration;
 		
 		public static void SetActiveConfiguration(OrigamSettings configuration)
@@ -51,26 +42,22 @@ namespace Origam
 		public static OrigamSettingsCollection GetAllConfigurations()
 		{
 			var settingsCollection = 
-				new OrigamSettingsReader().GetAllSettings();
+				new OrigamSettingsReader().GetAll();
 
 			if(settingsCollection.Count == 1)
 			{
-				settingsCollection[0].BaseFolder = AssemblyTools.GetAssemblyLocation();
+				settingsCollection[0].BaseFolder =
+				    Path.GetDirectoryName(AssemblyTools.GetAssemblyLocation());
 				WriteConfiguration("OrigamSettings", settingsCollection);
 			}
 			return settingsCollection;
-			
-//			else
-//			{
-//				throw new Exception(ResourceUtils.GetString("SettingsInvalidFormat"));
-//			}
 		}
 
 		public static void WriteConfiguration(string name, OrigamSettingsCollection configuration)
 		{
 			// do some sanity check
 			SortedList list = new SortedList();
-			foreach(OrigamSettings setting in (configuration as OrigamSettingsCollection))
+			foreach(OrigamSettings setting in configuration)
 			{
 				if(!list.Contains(setting.Name))
 				{
@@ -82,160 +69,14 @@ namespace Origam
 				}
 			}
 
-			new OrigamSettingsReader().Write(configuration);
-
-			//Microsoft.Practices.EnterpriseLibrary.Configuration.ConfigurationManager.WriteConfiguration(name, configuration);
+            new OrigamSettingsReader().Write(configuration);
 		}
-
-
 	}
 
-	public class OrigamSettingsReader
-	{
-	    private static string DefaultPathToOrigamSettings
-	    {
-	        get
-	        {
-	            string directoryPath = Path.GetDirectoryName(AssemblyTools.GetAssemblyLocation());
-	            return Path.Combine(directoryPath, "OrigamSettings.config");
-	        }
-	    }
-
-	    private readonly string pathToOrigamSettings;
-
-	    public OrigamSettingsReader(string pathToOrigamSettings = null)
-	    {
-
-	        this.pathToOrigamSettings = pathToOrigamSettings 
-	                                    ?? DefaultPathToOrigamSettings;
-	    }
-
-	    public OrigamSettingsCollection GetAllSettings()
-		{
-			XmlReader reader=null;
-			try
-			{
-				XmlNode arrayOfOrigamSettingsNode =
-					GetSettingsNode();
-				if (arrayOfOrigamSettingsNode.ChildNodes.Count == 0)
-				{
-					return new OrigamSettingsCollection();
-				}
-
-				reader = new XmlNodeReader(arrayOfOrigamSettingsNode);
-				XmlSerializer deserializer =
-					new XmlSerializer(typeof(OrigamSettings[]));
-				OrigamSettings[] movies =
-					(OrigamSettings[]) deserializer.Deserialize(reader);
-
-				return new OrigamSettingsCollection(movies);
-			}
-			catch (Exception ex)
-			{
-				throw new OrigamSettingsException(ex.Message, ex);
-			}
-			finally
-			{
-				reader?.Dispose();
-			}
-		}
-
-	    public IOrigamAuthorizationProvider GetAuthorizationProvider()
-	    {
-	        return InstantiateObjectFromSecurityNode<IOrigamAuthorizationProvider>("authorizationProvider");
-        }
-
-	    public IOrigamProfileProvider GetProfileProvider()
-	    {
-	        return InstantiateObjectFromSecurityNode<IOrigamProfileProvider>("profileProvider");
-	    }
-
-	    private T InstantiateObjectFromSecurityNode<T>(string nodeName)
-	    {
-	        XmlNode securityNode = GetNodeByPath("OrigamSettings/security");
-	        XmlNode authorizationNode = securityNode.SelectSingleNode(nodeName);
-	        string type = authorizationNode?.Attributes?["type"]?.Value;
-
-	        if (type == null)
-	        {
-	            throw new OrigamSettingsException("Cannot read \"type\" attribute from \""+ nodeName + "\" node");
-	        }
-
-	        string[] splitType = type.Split(",");
-	        if (splitType.Length != 2)
-	        {
-                throw  new OrigamSettingsException("Cannot parse Assembly and Class name from \"type\" attribute in \"" + nodeName + "\" node");
-            }
-
-	        string assembly = splitType[0].Trim();
-	        string classname = splitType[1].Trim();
-	        return (T)Reflector.InvokeObject(assembly, classname);
-        }
-
-        private XmlNode GetSettingsNode()
-		{
-		    return GetNodeByPath("OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings");
-		}
-
-	    private XmlNode GetNodeByPath(string pathToNode)
-	    {
-	        XmlDocument document = new XmlDocument();
-	        document.Load(pathToOrigamSettings);
-
-	        var arrayOfOrigamSettingsNode = document.SelectSingleNode(
-	            pathToNode);
-	        if (arrayOfOrigamSettingsNode == null)
-	        {
-	            throw new OrigamSettingsException("Could not find path \""+ pathToNode + "\"");
-	        }
-
-	        return arrayOfOrigamSettingsNode;
-	    }
-
-        public static XmlDocument CreateEmptyDocument()
-		{
-			XmlDocument doc = new XmlDocument();
-			XmlDeclaration xmlDeclaration = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
-			doc.AppendChild(xmlDeclaration);
-            
-			XmlElement orSettings = doc.CreateElement("OrigamSettings");
-			XmlElement serialization = doc.CreateElement("xmlSerializerSection");
-			XmlAttribute typeAttr = doc.CreateAttribute("type");
-			typeAttr.Value = "Origam.OrigamSettingsCollection, Origam, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
-			serialization.Attributes.Append(typeAttr);
-			XmlElement settingsArray = doc.CreateElement("ArrayOfOrigamSettings");
-			settingsArray.SetAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-			settingsArray.SetAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
-			orSettings.AppendChild(serialization);
-			serialization.AppendChild(settingsArray);
-            
-			XmlElement security = doc.CreateElement("Security");
-			orSettings.AppendChild(security);
-			doc.AppendChild(orSettings);
-			return doc;
-		}
-	
-		public void Write(OrigamSettingsCollection configuration)
-		{
-			XmlDocument document = CreateEmptyDocument();
-			XmlNode arrayOfOrigamSettingsNode = 
-				document.SelectSingleNode("OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings");
-			var xmlDocument = new XmlDocument();
-			var nav = xmlDocument.CreateNavigator();
-			using (var writer = nav.AppendChild())
-			{
-				var ser = new XmlSerializer(typeof(OrigamSettings[]));
-				ser.Serialize(writer, configuration.ToList<OrigamSettings>().ToArray());
-			}
-			arrayOfOrigamSettingsNode.InnerXml = xmlDocument.InnerXml;
-			document.Save(pathToOrigamSettings);
-		}
-    }
-
-	public class OrigamSettingsException: Exception
+    public class OrigamSettingsException: Exception
 	{
 		private static string MakeMessage(string message) =>
-			"Cannot read OrigamSettings.config... " + message;
+			Strings.OrigamSettingsExceptionPrefix + message;
 		
 		public OrigamSettingsException(string message, Exception innerException) 
 			: base(MakeMessage(message), innerException)

@@ -24,9 +24,6 @@ using System.Security.Principal;
 
 namespace Origam
 {
-	/// <summary>
-	/// Summary description for SecurityManager.
-	/// </summary>
 	public static class SecurityManager
 	{
 		public const string ROLE_SUFFIX_DIVIDER = "|";
@@ -46,16 +43,10 @@ namespace Origam
 
 			return _authorizationProvider;
 		}
-
-		
+        
 		public static IOrigamProfileProvider GetProfileProvider()
 		{
-			if(_profileProvider == null)
-			{
-				_profileProvider = settingsReader.GetProfileProvider();
-			}
-
-			return _profileProvider;
+		    return _profileProvider ?? (_profileProvider = settingsReader.GetProfileProvider());
 		}
 
 		public static void Reset()
