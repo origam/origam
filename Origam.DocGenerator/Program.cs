@@ -79,7 +79,11 @@ namespace Origam.DocGenerator
                 persprovider,
                 persistenceService.FileEventQueue);
 
-            new DocCreate(options.Dataout, options.Xslt, options.Extension, documentation, persprovider).Run();
+            if (!new DocCreate(options.Dataout, options.Xslt, options.Extension, documentation, persprovider).Run())
+            {
+                System.Console.WriteLine("Neco je spatne");
+                Console.ReadKey();
+            };
         }
     }
 }
