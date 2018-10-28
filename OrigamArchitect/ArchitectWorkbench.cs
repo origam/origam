@@ -1736,7 +1736,7 @@ namespace OrigamArchitect
 		private bool LoadConfiguration(string configurationName)
 		{
 			OrigamSettingsCollection configurations =
-				ConfigurationManager.GetAllConfigurations("OrigamSettings");
+				ConfigurationManager.GetAllConfigurations();
 
             if (configurationName != null)
             {

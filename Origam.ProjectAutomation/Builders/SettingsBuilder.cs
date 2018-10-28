@@ -79,7 +79,7 @@ namespace Origam.ProjectAutomation
         }
 
         public static OrigamSettingsCollection GetSettings() => 
-            ConfigurationManager.GetAllConfigurations("OrigamSettings");
+            ConfigurationManager.GetAllConfigurations();
 
         public static void SaveSettings(OrigamSettingsCollection settings)
         {

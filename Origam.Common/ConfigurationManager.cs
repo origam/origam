@@ -33,7 +33,7 @@ namespace Origam
 	/// <summary>
 	/// Summary description for ConfigurationManager.
 	/// </summary>
-	public class ConfigurationManager2
+	public class ConfigurationManager
 	{
 		//todo: review whether object is necessary, through the whole code only OrigamSettings is used and unnecessary casts are performed
 		private static OrigamSettings _activeConfiguration;
@@ -51,7 +51,7 @@ namespace Origam
 		public static OrigamSettingsCollection GetAllConfigurations()
 		{
 			var settingsCollection = 
-				new OrigamSettingsReader().GetAll();
+				new OrigamSettingsReader().GetAllSettings();
 
 			if(settingsCollection.Count == 1)
 			{
@@ -92,8 +92,14 @@ namespace Origam
 
 	public class OrigamSettingsReader
 	{
-	    private static string DefaultPathToOrigamSettings =>
-	        Path.Combine(AssemblyTools.GetAssemblyLocation(), "OrigamSettings.config");
+	    private static string DefaultPathToOrigamSettings
+	    {
+	        get
+	        {
+	            string directoryPath = Path.GetDirectoryName(AssemblyTools.GetAssemblyLocation());
+	            return Path.Combine(directoryPath, "OrigamSettings.config");
+	        }
+	    }
 
 	    private readonly string pathToOrigamSettings;
 
@@ -104,7 +110,7 @@ namespace Origam
 	                                    ?? DefaultPathToOrigamSettings;
 	    }
 
-	    public OrigamSettingsCollection GetAll()
+	    public OrigamSettingsCollection GetAllSettings()
 		{
 			XmlReader reader=null;
 			try
@@ -180,7 +186,7 @@ namespace Origam
 	            pathToNode);
 	        if (arrayOfOrigamSettingsNode == null)
 	        {
-	            throw new OrigamSettingsException("Could not find path \""+ pathToNode + "\" in OrigamSettings.config");
+	            throw new OrigamSettingsException("Could not find path \""+ pathToNode + "\"");
 	        }
 
 	        return arrayOfOrigamSettingsNode;

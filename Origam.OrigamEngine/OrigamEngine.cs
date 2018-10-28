@@ -203,7 +203,7 @@ namespace Origam.OrigamEngine
 		private static void SetActiveConfiguration(string configName="")
 		{
 			OrigamSettingsCollection configurations =
-				ConfigurationManager.GetAllConfigurations("OrigamSettings");
+				ConfigurationManager.GetAllConfigurations();
 			
 			OrigamSettings origamSettings = GetSettings(configName, configurations);
 			ConfigurationManager.SetActiveConfiguration(origamSettings);

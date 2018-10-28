@@ -98,7 +98,7 @@ namespace Origam.Workbench.Commands
 		{
 			OrigamSettingsEditor editor = new OrigamSettingsEditor();
 
-			editor.LoadObject(ConfigurationManager.GetAllConfigurations("OrigamSettings"));
+			editor.LoadObject(ConfigurationManager.GetAllConfigurations());
 			WorkbenchSingleton.Workbench.ShowView(editor);
 		}		
 	}
