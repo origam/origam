@@ -110,7 +110,7 @@ namespace Origam
 			try
 			{
 				XmlNode arrayOfOrigamSettingsNode =
-					GetSettingsNodesOrThrow(pathToOrigamSettings);
+					GetSettingsNode();
 				if (arrayOfOrigamSettingsNode.ChildNodes.Count == 0)
 				{
 					return new OrigamSettingsCollection();
@@ -136,31 +136,57 @@ namespace Origam
 
 	    public IOrigamAuthorizationProvider GetAuthorizationProvider()
 	    {
-            throw new NotImplementedException();
-	    }
+	        return InstantiateObjectFromSecurityNode<IOrigamAuthorizationProvider>("authorizationProvider");
+        }
 
 	    public IOrigamProfileProvider GetProfileProvider()
 	    {
-	        throw new NotImplementedException();
+	        return InstantiateObjectFromSecurityNode<IOrigamProfileProvider>("profileProvider");
+	    }
+
+	    private T InstantiateObjectFromSecurityNode<T>(string nodeName)
+	    {
+	        XmlNode securityNode = GetNodeByPath("OrigamSettings/security");
+	        XmlNode authorizationNode = securityNode.SelectSingleNode(nodeName);
+	        string type = authorizationNode?.Attributes?["type"]?.Value;
+
+	        if (type == null)
+	        {
+	            throw new OrigamSettingsException("Cannot read \"type\" attribute from \""+ nodeName + "\" node");
+	        }
+
+	        string[] splitType = type.Split(",");
+	        if (splitType.Length != 2)
+	        {
+                throw  new OrigamSettingsException("Cannot parse Assembly and Class name from \"type\" attribute in \"" + nodeName + "\" node");
+            }
+
+	        string assembly = splitType[0].Trim();
+	        string classname = splitType[1].Trim();
+	        return (T)Reflector.InvokeObject(assembly, classname);
         }
 
-
-	    private XmlNode GetSettingsNodesOrThrow(string pathToOrigamSettings)
+        private XmlNode GetSettingsNode()
 		{
-			XmlDocument document = new XmlDocument();
-			document.Load(pathToOrigamSettings);
-
-			var arrayOfOrigamSettingsNode = document.SelectSingleNode(
-				"OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings");
-			if (arrayOfOrigamSettingsNode == null)
-			{
-				throw new OrigamSettingsException("Could not find path \"OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings\" in OrigamSettings.config");
-			}
-
-			return arrayOfOrigamSettingsNode;
+		    return GetNodeByPath("OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings");
 		}
 
-		public static XmlDocument CreateEmptyDocument()
+	    private XmlNode GetNodeByPath(string pathToNode)
+	    {
+	        XmlDocument document = new XmlDocument();
+	        document.Load(pathToOrigamSettings);
+
+	        var arrayOfOrigamSettingsNode = document.SelectSingleNode(
+	            pathToNode);
+	        if (arrayOfOrigamSettingsNode == null)
+	        {
+	            throw new OrigamSettingsException("Could not find path \""+ pathToNode + "\" in OrigamSettings.config");
+	        }
+
+	        return arrayOfOrigamSettingsNode;
+	    }
+
+        public static XmlDocument CreateEmptyDocument()
 		{
 			XmlDocument doc = new XmlDocument();
 			XmlDeclaration xmlDeclaration = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
