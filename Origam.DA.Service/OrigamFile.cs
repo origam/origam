@@ -121,9 +121,9 @@ namespace Origam.DA.Service
         public IFilePersistent LoadObject(Guid id, IPersistenceProvider provider, bool useCache) => 
             origamXmlManager.LoadObject(id, provider, useCache);
 
-        public void RemoveInstance(IFilePersistent instance)
+        public void RemoveInstance(Guid id)
         {
-            origamXmlManager.RemoveInstance(instance, DeferredSaveDocument);
+            origamXmlManager.RemoveInstance(id, DeferredSaveDocument);
         }
 
         public virtual void WriteInstance(IFilePersistent instance,

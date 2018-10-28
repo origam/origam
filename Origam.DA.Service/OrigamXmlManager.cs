@@ -155,12 +155,12 @@ namespace Origam.DA.Service
             }
         }
 
-        public void RemoveInstance(IFilePersistent instance, XmlDocument doc)
+        public void RemoveInstance(Guid id , XmlDocument doc)
         {
             XmlNode nodeToDelete = doc
                 .GetAllNodes()
                 .Where(node => XmlUtils.ReadId(node).HasValue)
-                .FirstOrDefault(node => XmlUtils.ReadId(node).Value == instance.Id);
+                .FirstOrDefault(node => XmlUtils.ReadId(node).Value == id);
 
             nodeToDelete?.Attributes
                 .Cast<XmlAttribute>()
@@ -169,7 +169,7 @@ namespace Origam.DA.Service
                 .ForEach(attrText => externalFileManger.RemoveExternalFile(attrText));
 
             nodeToDelete?.ParentNode.RemoveChild(nodeToDelete);
-            ContainedObjects.Remove(instance.Id);
+            ContainedObjects.Remove(id);
         }
 
         public void WriteInstance(IFilePersistent instance,
