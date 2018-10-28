@@ -24,6 +24,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Origam.Gui.UI;
 
@@ -206,11 +207,22 @@ namespace Origam.UI
 			set 
 			{
 				description = value;
-				this.ToolTipText = value.Replace("&","");
+                this.ToolTipText = RemoveSingleAmpersands(value).Replace("&&","&");
 			}
 		}
+        /// <summary>
+        /// Removes isolated ampersands, double ampersands are not removed.
+        /// Ampersands separated by only one character will also not be removed (for example "ab&d&ef" => "abd&ef") 
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+	    private string RemoveSingleAmpersands(string str)
+	    {
+	        return Regex.Replace(str, @"(^|[^&])(&)($|[^&])", "$1$3");
+        }
 
-		public bool IsEnabled
+
+	    public bool IsEnabled
 		{
 			get
 			{

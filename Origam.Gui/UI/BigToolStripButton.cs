@@ -40,11 +40,7 @@ namespace Origam.Gui.UI
         public override string Text
         {
             get => base.Text;
-            set
-            {
-                string cleanedText = value.Replace("&", "");
-                SetTextWithCorrectWidth(cleanedText);
-            }
+            set => SetTextWithCorrectWidth(value);
         }
 
         private void SetTextWithCorrectWidth(string value)
