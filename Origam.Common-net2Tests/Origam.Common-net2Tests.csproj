@@ -67,9 +67,17 @@
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
       <Name>Origam.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache-net2.csproj">
+      <Project>{ffc2dce2-b8b5-48a4-aa18-1e93f99e1d54}</Project>
+      <Name>Origam.ReflectorCache-net2</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
       <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
       <Name>Origam.Schema</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Security\Origam.Security-net2.csproj">
+      <Project>{93b972c4-d58d-4681-a8b8-95a34c7c2980}</Project>
+      <Name>Origam.Security-net2</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.TestCommon\Origam.TestCommon.csproj">
       <Project>{c6bb0572-3720-4841-8dd6-6992644b7b5f}</Project>
@@ -78,12 +86,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="TestFiles\OrigamSettingsProviderMissing.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\OrigamSettingsProviderTypeMissing.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\OrigamSettingsSecuritryNodeMissing.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="TestFiles\OrigamSettings.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\OrigamSettingsWithErrors.config">
+    <Content Include="TestFiles\OrigamSettingsWithArrayOfOrigamSettingsMissing.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

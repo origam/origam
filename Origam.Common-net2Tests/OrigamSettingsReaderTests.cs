@@ -45,7 +45,6 @@ namespace Origam.Common_net2Tests.Properties
         [Test]
         public void ShouldWriteSettings()
         {
-            
             string pathToReadFrom = Path.Combine(TestFilesDir.FullName,"OrigamSettings.config");
             string pathToWriteTo = Path.Combine(TestFilesDir.FullName,"OrigamSettingsWriteTest.config");
 
@@ -55,28 +54,78 @@ namespace Origam.Common_net2Tests.Properties
             new OrigamSettingsReader(pathToWriteTo).Write(settings);
         }
         
-        [Test] public void ShouldFailWhenReadingInputFileWithWrongStructure()
+        [Test] public void ShouldFailWhenArrayOfOrigamSettingsIsMissing()
         {
-            Assert.Throws<OrigamSettingsException>(() =>
+            var exception = Assert.Throws<OrigamSettingsException>(() =>
             {
-                string pathToOrigamSettings = Path.Combine(TestFilesDir.FullName,"OrigamSettingsWithErrors.config");
+                string pathToOrigamSettings = Path.Combine(TestFilesDir.FullName, "OrigamSettingsWithArrayOfOrigamSettingsMissing.config");
                 OrigamSettingsCollection settings =
                     new OrigamSettingsReader(pathToOrigamSettings).GetAll();
             });
+            Assert.That(exception.Message, Is.EqualTo("Cannot read OrigamSettings.config... Cannot read OrigamSettings.config... Could not find path \"OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings\" in OrigamSettings.config"));
         }
-        
 
-//        [Test] public void ShouldFailWhenReadingInvalidInputFile()
-//        {
-//            var ex = Assert.Throws<OrigamSettingsException>(() =>
-//            {
-//                OrigamSettingsCollection settings =
-//                    new OrigamSettingsReader().GetAll(
-//                        Path.Combine(TestFilesDir.FullName,"OrigamSettingsWithErrors.config"));
-//            });
-//            Assert.That(ex.Message, Is.EqualTo("The 'XXModelSourceControlLocation' start tag on line 8 position 10 does not match the end tag of 'ModelSourceControlLocation'. Line 8, position 55."));
-//
-//        }
+        [Test]
+        public void ShouldReadSecuritySettings()
+        {
+            string pathToOrigamSettings = Path.Combine(TestFilesDir.FullName, "OrigamSettings.config");
+            var origamSettingsReader = new OrigamSettingsReader(pathToOrigamSettings);
+            var profileProvider = origamSettingsReader.GetProfileProvider();    
+            var authorizationProvider = origamSettingsReader.GetAuthorizationProvider();
+
+            Assert.That(profileProvider, Is.Not.Null);
+            Assert.That(authorizationProvider, Is.Not.Null);
+        }
+
+        [Test]
+        public void ShouldFailWhenSecuritySettingsProviderIsMissing()
+        {
+            var exception = Assert.Throws<OrigamSettingsException>(() =>
+            {
+                string pathToOrigamSettings = Path.Combine(TestFilesDir.FullName, "OrigamSettingsProviderMissing.config");
+                var origamSettingsReader = new OrigamSettingsReader(pathToOrigamSettings);
+                var profileProvider = origamSettingsReader.GetProfileProvider();
+            });
+            Assert.That(exception.Message, Is.EqualTo("Cannot read OrigamSettings.config... Cannot read \"type\" attribute from \"profileProvider\" node"));
+        }
+
+        [Test]
+        public void ShouldFailWhenSecurityTypeIsMissing()
+        {
+            var exception = Assert.Throws<OrigamSettingsException>(() =>
+            {
+                string pathToOrigamSettings = Path.Combine(TestFilesDir.FullName, "OrigamSettingsProviderTypeMissing.config");
+                var origamSettingsReader = new OrigamSettingsReader(pathToOrigamSettings);
+                var profileProvider = origamSettingsReader.GetProfileProvider();
+            });
+            Assert.That(exception.Message, Is.EqualTo("Cannot read OrigamSettings.config... Cannot read \"type\" attribute from \"profileProvider\" node"));
+        }
+
+        [Test]
+        public void ShouldFailWhenSecurityNodeIsMissing()
+        {
+            var exception = Assert.Throws<OrigamSettingsException>(() =>
+            {
+                string pathToOrigamSettings = Path.Combine(TestFilesDir.FullName, "OrigamSettingsSecuritryNodeMissing.config");
+                var origamSettingsReader = new OrigamSettingsReader(pathToOrigamSettings);
+                var profileProvider = origamSettingsReader.GetProfileProvider();
+            });
+            Assert.That(exception.Message, Is.EqualTo("Cannot read OrigamSettings.config... Could not find path \"OrigamSettings/security\" in OrigamSettings.config"));
+        }
+
+
+
+        //        [Test] public void ShouldFailWhenReadingInvalidInputFile()
+        //        {
+        //            var ex = Assert.Throws<OrigamSettingsException>(() =>
+        //            {
+        //                OrigamSettingsCollection settings =
+        //                    new OrigamSettingsReader().GetAll(
+        //                        Path.Combine(TestFilesDir.FullName,"OrigamSettingsWithErrors.config"));
+        //            });
+        //            Assert.That(ex.Message, Is.EqualTo("The 'XXModelSourceControlLocation' start tag on line 8 position 10 does not match the end tag of 'ModelSourceControlLocation'. Line 8, position 55."));
+        //
+        //        }
 
         protected override TestContext TestContext =>
             TestContext.CurrentContext;
