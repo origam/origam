@@ -2,10 +2,16 @@
 
 namespace Origam.DA.ObjectPersistence
 {
-    public class PropertyContainer<T>
+
+    public interface IPropertyContainer
+    {
+        object GetValue();
+    }
+
+    public class PropertyContainer<T>: IPropertyContainer
     {
         private T value;
-        private bool wasSetTuNull;
+        private bool wasSetToNull;
         private readonly Func<Guid> idGetter;
         private readonly string containerName;
         private readonly Func<IPersistenceProvider> persistenceProviderGetter;
@@ -19,9 +25,14 @@ namespace Origam.DA.ObjectPersistence
             containingObjectType = containingObject.GetType();
         }
 
+        public object GetValue()
+        {
+            return Get();
+        }
+
         public T Get()
         {
-            if (value == null && !wasSetTuNull)
+            if (value == null && !wasSetToNull)
             {
                 value = (T) persistenceProviderGetter()
                     .RetrieveValue(idGetter(), containingObjectType, containerName);
@@ -33,7 +44,7 @@ namespace Origam.DA.ObjectPersistence
         {
             if (value == null)
             {
-                wasSetTuNull = true;
+                wasSetToNull = true;
             }
             this.value = value;
         }

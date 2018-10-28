@@ -56,6 +56,9 @@ namespace Origam.DA.Service
                     relativePath: instance.RelativeFilePath,
                     isGroup: instance.IsFolder);
             }
+
+            RemoveFromOldFile(instance, origamFile);
+
             var updatedObjectInfo = UpdateObjectInfo(elementName, instance, origamFile);
 
             if (instance.IsFileRootElement)
@@ -71,6 +74,22 @@ namespace Origam.DA.Service
                 EndTransaction();
             }
             instance.IsPersisted = true;
+        }
+
+        private void RemoveFromOldFile(IFilePersistent instance, OrigamFile origamFile)
+        {
+            bool migthBeMovingBetweeFiles = !instance.IsDeleted && !instance.IsFileRootElement;
+            if (migthBeMovingBetweeFiles)
+            {
+                OrigamFile oldOrigamFile = index.GetById(instance.Id)?.OrigamFile;
+                bool movingBetweenFiles = oldOrigamFile?.Path.Relative != origamFile.Path.Relative;
+                if (movingBetweenFiles)
+                {
+                    oldOrigamFile.DeferredSaveDocument = GetDocumentToWriteTo(oldOrigamFile);
+                    oldOrigamFile.RemoveInstance(instance.Id);
+                    transactionStore[oldOrigamFile.Path.Relative] = oldOrigamFile;
+                }
+            }
         }
 
         private void UpdateIndex(IFilePersistent instance,
@@ -150,7 +169,7 @@ namespace Origam.DA.Service
             origamFile.DeferredSaveDocument = GetDocumentToWriteTo(origamFile);
             if (instance.IsDeleted)
             {
-                origamFile.RemoveInstance(instance);
+                origamFile.RemoveInstance(instance.Id);
             }
             else
             {
@@ -268,6 +287,6 @@ namespace Origam.DA.Service
             {
                 DatabasePersistenceProvider.CheckInstanceRules(instance);
             }
-        }   
+        }  
     }
 }

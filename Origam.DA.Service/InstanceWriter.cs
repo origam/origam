@@ -209,25 +209,21 @@ namespace Origam.DA.Service
                         $"Could not find field {attribute.ContainerName} in Class {instance.GetType()}");
                 }
 
-                object container =
+                object containerObj =
                     ((FieldInfo) containerMemberInfo).GetValue(instance);
-                FieldInfo valueFieldInfo = container.GetType().GetField(
-                    "value", BindingFlags.NonPublic |
-                             BindingFlags.Instance);
 
-                if (valueFieldInfo == null)
+                if (!(containerObj is IPropertyContainer))
                 {
                     throw new Exception(
                         $"Could not find field \"value\" in field {attribute.ContainerName} of class {instance.GetType()}. Make sure that the field {attribute.ContainerName} exists and is of type {typeof(PropertyContainer<>)}");
                 }
-
-                object value = valueFieldInfo.GetValue(container);
+                IPropertyContainer container = (IPropertyContainer) containerObj;
 
                 string externalFileLink =
                     externalFileManger.AddAndReturnLink(
                         fieldName: attribute.ContainerName,
                         objectId: (Guid) instance.PrimaryKey["Id"],
-                        data: value,
+                        data: container.GetValue(),
                         fileExtension: attribute.Extension);
 
                 node.SetAttribute(attribute.ContainerName,

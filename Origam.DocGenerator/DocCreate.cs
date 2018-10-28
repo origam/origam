@@ -5,7 +5,9 @@ using System.Data;
 using System.IO;
 using System.Text;
 using System.Xml;
+using System.Xml.Xsl;
 using Mvp.Xml.Common.Xsl;
+using Mvp.Xml.Exslt;
 using Origam.DA.Service;
 using Origam.Gui.Win;
 using Origam.Schema;
@@ -18,7 +20,7 @@ namespace Origam.DocGenerator
     class DocCreate
     {
         private string Dataout { get; set; }
-        private XmlTextWriter Xmlwriter { get; set; }
+        private MultiXmlTextWriter Xmlwriter { get; set; }
         private IDocumentationService documentation;
         private MenuSchemaItemProvider menuprovider = new MenuSchemaItemProvider();
         private readonly FilePersistenceProvider persprovider;
@@ -40,7 +42,7 @@ namespace Origam.DocGenerator
 
         private void CreateWriter()
         {
-            Xmlwriter = new XmlTextWriter(mstream, Encoding.UTF8)
+            Xmlwriter = new MultiXmlTextWriter(mstream, Encoding.UTF8)
             {
                 Formatting = Formatting.Indented
             };
@@ -118,7 +120,11 @@ namespace Origam.DocGenerator
                 }
                 else
                 {
-                    section = "newPanel";
+                    section = "Panel";
+                }
+                if (string.IsNullOrEmpty(section))
+                {
+                    section = "Panel";
                 }
                 WriteStartElement("Section", section);
                 WriteElement("description", doc);
@@ -144,31 +150,47 @@ namespace Origam.DocGenerator
             }
         }
 
-        public void Run()
+        public Boolean Run()
         {
+            if(!string.IsNullOrEmpty(Xlst))
+            {
+                MvpXslTransform processor = new MvpXslTransform(false);
+                try
+                { 
+                    processor.Load(Xlst);
+                } catch (XsltException)
+                {
+                    //asi potreba nekam neco zapsat !?
+                    return false;
+                }
+            }
             List<AbstractSchemaItem> menulist = menuprovider.ChildItems.ToList();
             menulist.Sort();
             WriteStartElement("Menu");
             CreateXml(menulist[0]);
             WriteEndElement();
             CloseXml();
-            SaveSchemaXml();
+            //SaveSchemaXml();
+            SaveXlts();
+            return true;
         }
 
-        public void SaveSchemaXml()
+        private void SaveSchemaXml()
         {
+            //for test only
             FileStream file = new FileStream(Dataout + "\\schemaXml." + Extension,  FileMode.Create, FileAccess.Write);
             mstream.WriteTo(file);
             file.Close();
             mstream.Close();
         }
 
-        public void SaveXlts()
+        private void SaveXlts()
         {
-            MvpXslTransform processor = new MvpXslTransform(false);
+            MvpXslTransform processor = new MvpXslTransform(true);
             processor.Load(Xlst);
             processor.MultiOutput = true;
-            processor.Transform(new XmlInput(mstream), null, new XmlOutput(Dataout));
+            mstream.Seek(0,SeekOrigin.Begin);
+            processor.Transform(new XmlInput(mstream), null, new XmlOutput(Dataout + "\\schemaMD." + Extension));
         }
 
         private void CreateXml(AbstractSchemaItem menuSublist)
