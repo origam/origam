@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Xml.Serialization;
 using CSharpFunctionalExtensions;
-using Origam.DA.Service;
 using Origam.Extensions;
 using MoreLinq;
 using ProtoBuf;
@@ -41,9 +36,11 @@ namespace Origam.DA.Service
 
         internal void CleanUp()
         {
+            LogTreeIndexState("Cleaning up");
             elementNameIndex.CleanUp();
             treeIndex.CleanUp();
             folderIndex.CleanUp();
+            LogTreeIndexState("Clean up finished");
         }
 
         public void ClearCache()
@@ -56,11 +53,13 @@ namespace Origam.DA.Service
 
         public void Clear()
         {
+            LogTreeIndexState("Clearing ItemTracker");
             fileHashIndex.Clear();
             objectLocationIndex.Clear();
             elementNameIndex.Clear();
             treeIndex.Clear();
             folderIndex.Clear();
+            LogTreeIndexState("ItemTracker cleared");
         }
 
         public void AddOrReplaceHash(OrigamFile origamFile)
@@ -79,6 +78,8 @@ namespace Origam.DA.Service
 
         public void AddOrReplace(PersistedObjectInfo objectInfo)
         {
+            LogTreeIndexState("Adding: " + objectInfo.Id + "objectInfo.ParentId: "+ objectInfo.ParentId);
+
             objectLocationIndex[objectInfo.Id] = objectInfo;
             treeIndex.AddOrReplace(objectInfo.ParentId, objectInfo);
             elementNameIndex.AddOrReplace(objectInfo.ElementName, objectInfo);
@@ -90,14 +91,26 @@ namespace Origam.DA.Service
                     folderIndex.AddOrReplace(pathAndId, objectInfo);
                 }
             }
+
+            LogTreeIndexState("Added: " + objectInfo.Id);
         }
         
-        public void Remove(PersistedObjectInfo objectInfo)    
+        public void Remove(PersistedObjectInfo objectInfo)
         {
+            LogTreeIndexState("Removing: "+ objectInfo.Id);
+
             objectLocationIndex.Remove(objectInfo.Id);
             treeIndex.Remove(objectInfo.Id);
             elementNameIndex.Remove(objectInfo.Id);
             folderIndex.Remove(objectInfo.Id);
+
+            LogTreeIndexState("Removed: " + objectInfo.Id);
+        }
+
+        private void LogTreeIndexState(string message)
+        {
+            if (!log.IsDebugEnabled) return;
+            log.Debug(message + ", treeIndex.Count: "+ treeIndex.Count);
         }
 
         public bool ContainsFile(FileInfo file) => 
@@ -134,6 +147,8 @@ namespace Origam.DA.Service
 
         public void KeepOnly(IEnumerable<FileInfo> filesToKeep)
         {
+            LogTreeIndexState("KeepOnly method running");
+
             HashSet<string> relativePathsToKeep = filesToKeep   
                 .Select(fileInfo=> pathFactory.Create(fileInfo).Relative)
                 .ToHashSet();
@@ -146,6 +161,8 @@ namespace Origam.DA.Service
             elementNameIndex.KeepOnlyItemsOnPaths(relativePathsToKeep);
             treeIndex.KeepOnlyItemsOnPaths(relativePathsToKeep);
             folderIndex.KeepOnlyItemsOnPaths(relativePathsToKeep);
+
+            LogTreeIndexState("KeepOnly method finished");
         }
 
         public bool HasFile(string relativePath)
@@ -174,6 +191,8 @@ namespace Origam.DA.Service
 
         public void Remove(OrigamFile origamFile)
         {
+            LogTreeIndexState("Removing file: "+origamFile.Path.Relative);
+
             bool removeFilter(PersistedObjectInfo objInfo) => 
                 objInfo.OrigamFile == origamFile;
             
@@ -181,6 +200,8 @@ namespace Origam.DA.Service
             elementNameIndex.RemoveWhere(removeFilter);
             treeIndex.RemoveWhere(removeFilter);
             folderIndex.RemoveWhere(removeFilter);
+
+            LogTreeIndexState("Removed file: " + origamFile.Path.Relative);
         }
         
         public Dictionary<string, int> GetStats()
