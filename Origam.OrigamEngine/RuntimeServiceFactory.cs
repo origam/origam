@@ -49,7 +49,7 @@ namespace Origam.OrigamEngine
         
         private static IPersistenceBuilder GetPersistenceBuilder()
         {
-            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
             string[] classpath = settings.ModelProvider.Split(',');
             return Reflector.InvokeObject(classpath[0], classpath[1]) as IPersistenceBuilder;
         }

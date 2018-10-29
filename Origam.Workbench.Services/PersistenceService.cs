@@ -388,7 +388,7 @@ namespace Origam.Workbench.Services
 
 		public void LoadSchemaList()
 		{
-			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 			DataStructureQuery q = new DataStructureQuery(new Guid(SchemaSelectionDataStructureId));
 			q.LoadByIdentity = false;
 			_schemaListProvider.DataStructureQuery = q;
@@ -843,7 +843,7 @@ namespace Origam.Workbench.Services
 
         private void Connect()
 		{
-			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 
 			if(settings == null) throw new NullReferenceException(ResourceUtils.GetString("ErrorSettingsNotFound"));
 

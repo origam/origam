@@ -1644,7 +1644,7 @@ namespace Origam.Gui.Win
 		{
 			if(cntrlSet.Roles != "" && cntrlSet.Roles != null)
 			{
-				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 
 				if(settings.ActivateReadOnlyRoles)
 				{

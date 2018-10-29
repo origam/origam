@@ -38,7 +38,7 @@ namespace Origam.Workbench.Services.CoreServices
             IPersistenceService persistence = ServiceManager.Services.GetService(
                 typeof(IPersistenceService)) as IPersistenceService;
             OrigamSettings settings
-                = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+                = ConfigurationManager.GetActiveConfiguration() ;
             if(settings == null)
             {
                 throw new NullReferenceException(

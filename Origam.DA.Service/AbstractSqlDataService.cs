@@ -264,7 +264,7 @@ namespace Origam.DA.Service
 		public override DataSet LoadDataSet(DataStructureQuery query,
             IPrincipal principal, DataSet dataset, string transactionId)
 		{
-			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 			int timeout = settings.DataServiceSelectTimeout;
 
 			UserProfile currentProfile = null;
@@ -987,7 +987,7 @@ namespace Origam.DA.Service
 
 		public override DataSet ExecuteProcedure(string name, string entityOrder, DataStructureQuery query, string transactionId)
 		{
-			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 
 			DataStructure ds = GetDataStructure(query);
 			DataSet result = null;
@@ -1418,7 +1418,7 @@ namespace Origam.DA.Service
 		{
 			try
 			{
-			    OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+			    OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 
 			    string result;
 
@@ -1516,7 +1516,7 @@ namespace Origam.DA.Service
         {
             DataSet dataSet = null;
             OrigamSettings settings 
-                = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+                = ConfigurationManager.GetActiveConfiguration() ;
             int timeout = settings.DataServiceSelectTimeout;
             UserProfile currentProfile = null;
             if(query.LoadByIdentity)

@@ -312,7 +312,7 @@ namespace Origam.Workbench.Services
 					{
 						_valueCache.Add(lookupId, new Hashtable());
 
-						OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+						OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 					
 						// fill cache with all values
 						if(settings.UseProgressiveCaching)
@@ -944,7 +944,7 @@ namespace Origam.Workbench.Services
 		private void lookupControl_LookupListRefreshRequested(object sender, EventArgs e)
 		{
 			ILookupControl control = sender as ILookupControl;
-			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 			if( ! settings.UseProgressiveCaching)
 			{
 				// clear cache

@@ -50,7 +50,7 @@ namespace Origam.BI.CrystalReports
 		{
 			try
 			{
-				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 				if(data != null)
 				{
 					data.WriteXml(
@@ -103,7 +103,7 @@ namespace Origam.BI.CrystalReports
             }
 			try
 			{
-				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 				path = System.IO.Path.Combine(settings.ReportsFolder(), fileName);
 				result.Load(path, CrystalDecisions.Shared.OpenReportMethod.OpenReportByTempCopy);
 			}
@@ -117,7 +117,7 @@ namespace Origam.BI.CrystalReports
 			{
 				if(data == null)
 				{
-					OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+					OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 					Hashtable cn = OrigamSettings.ParseConnectionString(settings.ReportConnectionString);
 					SetLogonInfo(result, cn);
 					foreach(ReportDocument subreport in result.Subreports)

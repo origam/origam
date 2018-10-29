@@ -55,7 +55,7 @@ namespace Origam.Workbench.Services
             if (basePath == null)
             {
                 OrigamSettings settings =
-                        ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+                        ConfigurationManager.GetActiveConfiguration() ;
                 basePath = settings.ModelSourceControlLocation; 
             }
             var topDirectory = new DirectoryInfo(basePath);

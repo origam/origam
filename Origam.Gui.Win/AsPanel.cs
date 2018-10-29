@@ -1914,7 +1914,7 @@ namespace Origam.Gui.Win
 
 		private void ExportGrid()
 		{
-			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 
 			if(settings.LegacyExcelExport)
 			{
@@ -2268,7 +2268,7 @@ namespace Origam.Gui.Win
 			if(!row.Table.Columns.Contains(Const.ValuelistIdField)) return;
 			if(!(row[Const.ValuelistIdField] is Guid)) return;
 			
-			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 
 			btnAttachment.ToolTipText = ResourceUtils.GetString("TooltipAttachment");
 			btnAttachment.ImageIndex = 1;

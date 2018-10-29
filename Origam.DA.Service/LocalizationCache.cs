@@ -56,7 +56,7 @@ namespace Origam.DA.ObjectPersistence
 		private void LoadFromLocalizationFolder()
 		{
 			OrigamSettings settings =
-				ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+				ConfigurationManager.GetActiveConfiguration() ;
 
 			if (settings.LocalizationFolder == String.Empty)
 			{

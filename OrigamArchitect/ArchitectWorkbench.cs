@@ -1599,7 +1599,7 @@ namespace OrigamArchitect
 				IsConnected = true;
 
 #if ORIGAM_CLIENT
-				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 
 				try
 				{
@@ -2271,7 +2271,7 @@ namespace OrigamArchitect
             Title = strings.OrigamArchitect_Title;
 #endif
 			OrigamSettings settings 
-                = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+                = ConfigurationManager.GetActiveConfiguration() ;
             if(settings == null)
             {
                 return;
@@ -2439,7 +2439,7 @@ namespace OrigamArchitect
             {
                 ExcelFormat excelFormat = ExcelTools.StringToExcelFormat(
                     (ConfigurationManager.GetActiveConfiguration()
-                    as OrigamSettings).GUIExcelExportFormat);
+                    ).GUIExcelExportFormat);
                 SaveFileDialog sfd = GetExportToExcelSaveDialog(excelFormat);
                 if(sfd.ShowDialog(this) == DialogResult.Cancel)
                 {

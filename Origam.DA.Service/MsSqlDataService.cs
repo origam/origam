@@ -226,7 +226,7 @@ namespace Origam.DA.Service
 					result += "WorkstationId: " + cn.WorkstationId + Environment.NewLine;
 					result += "Packet Size: " + cn.PacketSize.ToString() + Environment.NewLine;
 
-					OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+					OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 				
 					result += "Select Timeout: " + settings.DataServiceSelectTimeout + Environment.NewLine;
 					result += "Execute Procedure Timeout: " + settings.DataServiceExecuteProcedureTimeout + Environment.NewLine;

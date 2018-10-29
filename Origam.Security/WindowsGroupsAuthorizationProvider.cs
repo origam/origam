@@ -66,7 +66,7 @@ namespace Origam.Security
 
 		public bool Authorize(System.Security.Principal.IPrincipal principal, string context)
 		{
-			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 			
 			//			System.Windows.Forms.MessageBox.Show("Authorizing identity: '" + principal.Identity.Name + "'");
 

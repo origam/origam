@@ -359,7 +359,7 @@ namespace OrigamArchitect
 		private void DisplayResults()
 		{
 			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 			Origam.DA.Service.MsSqlDataService da = 
                 new Origam.DA.Service.MsSqlDataService(settings.DataConnectionString,
                 settings.DataBulkInsertThreshold, settings.DataUpdateBatchSize);

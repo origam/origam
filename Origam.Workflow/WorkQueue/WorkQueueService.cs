@@ -1274,7 +1274,7 @@ namespace Origam.Workflow.WorkQueue
 
         {
             OrigamSettings settings 
-                = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+                = ConfigurationManager.GetActiveConfiguration() ;
             WorkQueueData queues = new WorkQueueData();
             
             Guid filterMethodGuid = activeOnly
@@ -1908,7 +1908,7 @@ namespace Origam.Workflow.WorkQueue
 
         private void schemaService_SchemaLoaded(object sender, EventArgs e)
         {
-            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
             if(settings.LoadExternalWorkQueues)
             {
                 if(log.IsInfoEnabled) log.Info("LoadExternalWorkQueues Enabled. Interval: " + settings.ExternalWorkQueueCheckPeriod.ToString());

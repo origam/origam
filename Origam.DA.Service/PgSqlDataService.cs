@@ -102,7 +102,7 @@ namespace Origam.DA.Service
 					result += "SSL: " + cn.SSL.ToString() + Environment.NewLine;
 					result += "Sync Notification: " + cn.SyncNotification.ToString() + Environment.NewLine;
 
-					OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+					OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 				
 					result += "Select Timeout: " + settings.DataServiceSelectTimeout + Environment.NewLine;
 					result += "Execute Procedure Timeout: " + settings.DataServiceExecuteProcedureTimeout + Environment.NewLine;

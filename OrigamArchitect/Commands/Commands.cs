@@ -1130,7 +1130,7 @@ namespace OrigamArchitect.Commands
 
 		public override void Run()
 		{
-			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 			string[] languages = settings.TranslationBuilderLanguages.Split(",".ToCharArray());
 			SchemaService ss = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
 			string packageName = ss.ActiveExtension.Name;
@@ -1295,7 +1295,7 @@ namespace OrigamArchitect.Commands
 
         public override void Run()
         {
-            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
             string target = settings.ServerUrl;
             if (string.IsNullOrEmpty(target))
             {

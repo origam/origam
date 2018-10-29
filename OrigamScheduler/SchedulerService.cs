@@ -150,7 +150,7 @@ namespace OrigamScheduler
 
 		private void InitSchedules()
 		{
-			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
             if (log.IsInfoEnabled)
             {
                 log.InfoFormat("Scheduler filter: {0}", settings.SchedulerFilter);
