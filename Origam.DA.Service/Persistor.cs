@@ -83,7 +83,7 @@ namespace Origam.DA.Service
             {
                 OrigamFile oldOrigamFile = index.GetById(instance.Id)?.OrigamFile;
                 bool movingBetweenFiles = oldOrigamFile?.Path.Relative != origamFile.Path.Relative;
-                if (movingBetweenFiles)
+                if (oldOrigamFile != null && movingBetweenFiles)
                 {
                     oldOrigamFile.DeferredSaveDocument = GetDocumentToWriteTo(oldOrigamFile);
                     oldOrigamFile.RemoveInstance(instance.Id);

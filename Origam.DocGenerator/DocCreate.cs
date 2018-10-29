@@ -5,6 +5,7 @@ using System.Data;
 using System.IO;
 using System.Text;
 using System.Xml;
+using System.Xml.XPath;
 using System.Xml.Xsl;
 using Mvp.Xml.Common.Xsl;
 using Mvp.Xml.Exslt;
@@ -186,11 +187,19 @@ namespace Origam.DocGenerator
 
         private void SaveXlts()
         {
-            MvpXslTransform processor = new MvpXslTransform(true);
-            processor.Load(Xlst);
-            processor.MultiOutput = true;
-            mstream.Seek(0,SeekOrigin.Begin);
-            processor.Transform(new XmlInput(mstream), null, new XmlOutput(Dataout + "\\schemaMD." + Extension));
+            mstream.Seek(0, SeekOrigin.Begin);
+            XPathDocument doc = new XPathDocument(mstream);
+            XslTransform xslt = new XslTransform();
+            xslt.Load(Xlst);
+            MultiXmlTextWriter multiWriter =
+                new MultiXmlTextWriter(Dataout + "\\schemaMD." + Extension, Encoding.UTF8);
+            multiWriter.Formatting = Formatting.Indented;
+            xslt.Transform(doc, null, multiWriter);
+            //MvpXslTransform processor = new MvpXslTransform(true);
+            //processor.Load(Xlst);
+            //processor.MultiOutput = true;
+            //mstream.Seek(0,SeekOrigin.Begin);
+            //processor.Transform(new XmlInput(mstream), null, new XmlOutput(Dataout + "\\schemaMD." + Extension));
         }
 
         private void CreateXml(AbstractSchemaItem menuSublist)
