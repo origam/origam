@@ -76,7 +76,9 @@ namespace Origam
 			bool activateReadOnlyRoles,
 			string schedulerFilter,
             string serverLogUrl,
-			bool traceEnabled)
+			bool traceEnabled,
+			string authorizationProvider,
+			string profileProvider)
 		{
 			
 			this.Name = name;
@@ -106,6 +108,8 @@ namespace Origam
 			this.SchedulerFilter = schedulerFilter;
             this.ServerLogUrl = serverLogUrl;
 			this.TraceEnabled = traceEnabled;
+		    this.AuthorizationProvider = authorizationProvider;
+		    this.ProfileProvider = profileProvider;
 		}
 
 		public override string ToString()
@@ -208,7 +212,13 @@ namespace Origam
 		[Category("Model Connection"), DefaultValue(100)]
         public int ModelBulkInsertThreshold { get; set; } = 100;
 
-		[Category("Data Connection"), DefaultValue(2000)]
+	    [Category("Model Connection")]
+	    public string AuthorizationProvider { get; set; } = "Origam.Security.OrigamDatabaseAuthorizationProvider, Origam.Security";
+
+	    [Category("Model Connection")]
+	    public string ProfileProvider { get; set; } = "Origam.Security.OrigamProfileProvider, Origam.Security";
+
+        [Category("Data Connection"), DefaultValue(2000)]
 		public int DataServiceExecuteProcedureTimeout { get; set; } = 2000;
 
 		[Category("Data Connection"), DefaultValue(false)]
@@ -309,7 +319,9 @@ namespace Origam
 				this.ActivateReadOnlyRoles,
 				this.SchedulerFilter,
                 this.ServerLogUrl,
-				this.TraceEnabled
+				this.TraceEnabled,
+                this.AuthorizationProvider,
+                this.ProfileProvider
 				);
 		}
 

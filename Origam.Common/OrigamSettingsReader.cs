@@ -56,41 +56,6 @@ namespace Origam
             }
         }
 
-        public IOrigamAuthorizationProvider GetAuthorizationProvider()
-        {
-            return InstantiateObjectFromSecurityNode<IOrigamAuthorizationProvider>("authorizationProvider");
-        }
-
-        public IOrigamProfileProvider GetProfileProvider()
-        {
-            return InstantiateObjectFromSecurityNode<IOrigamProfileProvider>("profileProvider");
-        }
-
-        private T InstantiateObjectFromSecurityNode<T>(string nodeName)
-        {
-            XmlNode securityNode = GetNodeByPath("OrigamSettings/security");
-            XmlNode authorizationNode = securityNode.SelectSingleNode(nodeName);
-            string type = authorizationNode?.Attributes?["type"]?.Value;
-
-            if (type == null)
-            {
-                throw new OrigamSettingsException(
-                    string.Format(Strings.CannotReadType, nodeName));
-            }
-
-            string[] splitType = type.Split(",");
-            if (splitType.Length != 2)
-            {
-                throw  new OrigamSettingsException(
-                    string.Format(Strings.CannotParseAssemblyAndClass,
-                        nodeName));
-            }
-
-            string assembly = splitType[0].Trim();
-            string classname = splitType[1].Trim();
-            return (T)Reflector.InvokeObject(assembly, classname);
-        }
-
         private XmlNode GetSettingsNode()
         {
             return GetNodeByPath("OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings");

@@ -32,22 +32,38 @@ namespace Origam
 
 		private static IOrigamProfileProvider _profileProvider = null;
 		private static IOrigamAuthorizationProvider _authorizationProvider = null;
-	    private static readonly OrigamSettingsReader settingsReader = new OrigamSettingsReader();
 
         public static IOrigamAuthorizationProvider GetAuthorizationProvider()
 		{
 			if(_authorizationProvider == null)
 			{
-				_authorizationProvider = settingsReader.GetAuthorizationProvider();
+			    string[] providerSplit = ConfigurationManager
+			        .GetActiveConfiguration()
+			        .AuthorizationProvider
+			        .Split(',');
+			    string assembly = providerSplit[0].Trim();
+			    string className = providerSplit[1].Trim();
+                _authorizationProvider = 
+                    (IOrigamAuthorizationProvider)Reflector.InvokeObject(assembly, className);
 			}
-
 			return _authorizationProvider;
 		}
         
 		public static IOrigamProfileProvider GetProfileProvider()
 		{
-		    return _profileProvider ?? (_profileProvider = settingsReader.GetProfileProvider());
-		}
+		    if (_profileProvider == null)
+		    {
+		        string[] providerSplit = ConfigurationManager
+		            .GetActiveConfiguration()
+		            .ProfileProvider
+		            .Split(',');
+		        string assembly = providerSplit[0].Trim();
+		        string className = providerSplit[1].Trim();
+		        _profileProvider =
+		            (IOrigamProfileProvider)Reflector.InvokeObject(assembly, className);
+		    }
+		    return _profileProvider;
+        }
 
 		public static void Reset()
 		{
