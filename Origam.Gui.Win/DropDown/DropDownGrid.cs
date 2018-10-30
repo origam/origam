@@ -226,7 +226,9 @@ namespace Origam.Gui.Win
 
 			Rectangle screen = Screen.FromControl(this.DropDownControl).WorkingArea;
 
-			Point location = this.DropDownControl.ScreenLocation;
+		    Point location = new System.Drawing.Point(
+		        this.DropDownControl.ScreenLocation.X,
+		        this.DropDownControl.ScreenLocation.Y);
 			int screenTotalWidth = screen.X + screen.Width;
 			int screenTotalHeight = screen.Y + screen.Height;
 

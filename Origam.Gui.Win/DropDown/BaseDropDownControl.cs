@@ -451,11 +451,12 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public Point ScreenLocation
+		public ScreenLocation ScreenLocation
 		{
 			get
 			{
-				return this.PointToScreen(new Point(txtEdit.Left, btnDropDown.Bottom));
+			    Point point = this.PointToScreen(new Point(txtEdit.Left, btnDropDown.Bottom));
+			    return new ScreenLocation(point.X, point.Y);
 			}
 		}
 
@@ -495,7 +496,7 @@ namespace Origam.Gui.Win
 
 				Rectangle screen = Screen.FromControl(this).WorkingArea;
 
-				Point location = this.ScreenLocation;
+				Point location = new System.Drawing.Point (this.ScreenLocation.X, this.ScreenLocation.Y);
 				int screenTotalWidth = screen.X + screen.Width;
 				int screenTotalHeight = screen.Y + screen.Height;
 

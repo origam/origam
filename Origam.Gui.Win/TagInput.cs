@@ -402,12 +402,12 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public Point ScreenLocation
+		public ScreenLocation ScreenLocation
 		{
 			get
 			{
 				// TODO:  Add TagInput.ScreenLocation getter implementation
-				return new Point ();
+				return new ScreenLocation(0, 0);
 			}
 		}
 

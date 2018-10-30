@@ -333,6 +333,10 @@
       <Project>{93B972C4-D58D-4681-A8B8-95A34C7C2980}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.Services.NetFx\Origam.Services.NetFx.csproj">
+      <Project>{442db093-b99e-4a53-ae94-e611a26d901f}</Project>
+      <Name>Origam.Services.NetFx</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Services\Origam.Services-net2.csproj">
       <Name>Origam.Services-net2</Name>
       <Project>{199DDE99-9EE7-4CCE-B71D-7FC1CC0896AA}</Project>
@@ -342,6 +346,10 @@
       <Name>Origam.Sharepoint-net2</Name>
       <Project>{F792069F-6F28-41F2-9E87-1EB236F409D2}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.UI.Common.NetFx\Origam.UI.Common.NetFx.csproj">
+      <Project>{b2b8b03e-cfd0-454f-94f0-10b817db3441}</Project>
+      <Name>Origam.UI.Common.NetFx</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common-net2.csproj">
       <Name>Origam.UI.Common-net2</Name>

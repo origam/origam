@@ -54,7 +54,7 @@ namespace Origam.UI
 		void CreateMappingItemsCollection();
         string SearchText { get; }
 
-		Point ScreenLocation{get;}
+	    ScreenLocation ScreenLocation {get;}
 
 		// events
 		event EventHandler lookupValueChanged;
@@ -64,4 +64,16 @@ namespace Origam.UI
 		event EventHandler LookupShowSourceListRequested;
 		event EventHandler LookupEditSourceRecordRequested;
 	}
+
+    public class ScreenLocation
+    {
+        public int X { get; }
+        public int Y { get; }
+
+        public ScreenLocation(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+    }
 }
