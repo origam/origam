@@ -64,12 +64,6 @@
     <Reference Include="MarkdownSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\EnterpriseLibrary\MarkdownSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Configuration, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\EnterpriseLibrary\Microsoft.Practices.EnterpriseLibrary.Configuration.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Security, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\EnterpriseLibrary\Microsoft.Practices.EnterpriseLibrary.Security.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\EnterpriseLibrary\Newtonsoft.Json.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>

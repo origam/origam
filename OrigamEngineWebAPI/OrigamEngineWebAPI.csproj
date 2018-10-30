@@ -53,12 +53,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\EnterpriseLibrary\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Configuration">
-      <HintPath>dlls\Microsoft.Practices.EnterpriseLibrary.Configuration.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Security">
-      <HintPath>dlls\Microsoft.Practices.EnterpriseLibrary.Security.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
