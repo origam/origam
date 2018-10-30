@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine-net2.csproj" />
+    <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache-net2.csproj" />
   </ItemGroup>
 
 </Project>

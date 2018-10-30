@@ -8,6 +8,10 @@ namespace Origam.Extensions
 {
     public static class TypeExtensions
     {
+        private static readonly log4net.ILog log
+            = log4net.LogManager.GetLogger(
+                MethodBase.GetCurrentMethod().DeclaringType);
+
         public static IEnumerable<Type> GetAllPublicSubTypes(this Type baseType)
         {
             return AppDomain.CurrentDomain.GetAssemblies()
@@ -34,9 +38,14 @@ namespace Origam.Extensions
             try
             {
                 return assembly.GetExportedTypes();
-            } 
+            }
             catch (FileNotFoundException)
             {
+                return new List<Type>();
+            }
+            catch (TypeLoadException ex)
+            {
+                log.Warn("Could not load assembly: "+assembly.Location+", reason: "+ex.Message);
                 return new List<Type>();
             }
         }
