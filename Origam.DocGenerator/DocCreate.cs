@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
@@ -22,21 +23,21 @@ namespace Origam.DocGenerator
     {
         private string Dataout { get; set; }
         private MultiXmlTextWriter Xmlwriter { get; set; }
+        private readonly string HRefPattern = "<exsl:document\\s+href=\"([^\"]+)[^>]+>(.*?)</exsl:document>";
+
         private IDocumentationService documentation;
         private MenuSchemaItemProvider menuprovider = new MenuSchemaItemProvider();
         private readonly FilePersistenceProvider persprovider;
         private readonly string Xlst;
         private readonly MemoryStream mstream ;
-        private readonly string Extension;
 
-        public DocCreate(string dataout,string xlst, string extension, FileStorageDocumentationService documentation1,FilePersistenceProvider persprovider)
+        public DocCreate(string dataout,string xlst,  FileStorageDocumentationService documentation1,FilePersistenceProvider persprovider)
         {
             Xlst = xlst;
             this.Dataout = dataout;
             documentation = documentation1;
             menuprovider.PersistenceProvider = persprovider;
             this.persprovider = persprovider;
-            Extension = extension;
             mstream = new MemoryStream();
             CreateWriter();
         }
@@ -179,7 +180,7 @@ namespace Origam.DocGenerator
         private void SaveSchemaXml()
         {
             //for test only
-            FileStream file = new FileStream(Dataout + "\\schemaXml." + Extension,  FileMode.Create, FileAccess.Write);
+            FileStream file = new FileStream(Dataout + "\\schemaXml.xml",  FileMode.Create, FileAccess.Write);
             mstream.WriteTo(file);
             file.Close();
             mstream.Close();
@@ -187,19 +188,29 @@ namespace Origam.DocGenerator
 
         private void SaveXlts()
         {
+            TextWriter text = new StringWriter();
             mstream.Seek(0, SeekOrigin.Begin);
             XPathDocument doc = new XPathDocument(mstream);
             XslTransform xslt = new XslTransform();
             xslt.Load(Xlst);
-            MultiXmlTextWriter multiWriter =
-                new MultiXmlTextWriter(Dataout + "\\schemaMD." + Extension, Encoding.UTF8);
-            multiWriter.Formatting = Formatting.Indented;
+            XmlTextWriter multiWriter = new XmlTextWriter(text);
             xslt.Transform(doc, null, multiWriter);
-            //MvpXslTransform processor = new MvpXslTransform(true);
-            //processor.Load(Xlst);
-            //processor.MultiOutput = true;
-            //mstream.Seek(0,SeekOrigin.Begin);
-            //processor.Transform(new XmlInput(mstream), null, new XmlOutput(Dataout + "\\schemaMD." + Extension));
+            Match m;
+            try
+            {
+                m = Regex.Match(text.ToString(), HRefPattern,
+                                RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline,
+                                TimeSpan.FromSeconds(1));
+                while (m.Success)
+                {
+                    File.AppendAllText(Dataout + m.Groups[1], m.Groups[2].ToString(), Encoding.UTF8);
+                    m = m.NextMatch();
+                }
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                Console.WriteLine("The matching operation timed out.");
+            }
         }
 
         private void CreateXml(AbstractSchemaItem menuSublist)

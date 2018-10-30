@@ -28,9 +28,6 @@ namespace Origam.DocGenerator
             [Option('o', "output", Required = true, HelpText = "Output directory")]
             public string Dataout { get; set; }
 
-            [Option('e', "extension", Required = true, HelpText = "Type of files.")]
-            public string Extension { get; set; }
-
             [ParserState]
             public IParserState LastParserState { get; set; }
 
@@ -79,7 +76,7 @@ namespace Origam.DocGenerator
                 persprovider,
                 persistenceService.FileEventQueue);
 
-            if (!new DocCreate(options.Dataout, options.Xslt, options.Extension, documentation, persprovider).Run())
+            if (!new DocCreate(options.Dataout, options.Xslt,  documentation, persprovider).Run())
             {
                 System.Console.WriteLine("Neco je spatne");
                 Console.ReadKey();
