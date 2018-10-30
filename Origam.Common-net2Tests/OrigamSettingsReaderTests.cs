@@ -53,7 +53,19 @@ namespace Origam.Common_net2Tests.Properties
             OrigamSettingsCollection settings =
                 new OrigamSettingsReader(pathToReadFrom).GetAll();
 
+            OrigamSettings clone = (OrigamSettings)settings[0].Clone();
+            clone.Name = "New Settings";
+
+            settings.Add(clone);
             new OrigamSettingsReader(pathToWriteTo).Write(settings);
+
+            Assert.IsTrue(File.Exists(pathToWriteTo));
+
+            OrigamSettingsCollection settingsRedFromTestFile =
+                new OrigamSettingsReader(pathToWriteTo).GetAll();
+
+            Assert.That(settingsRedFromTestFile, Has.Count.EqualTo(3));
+
         }
         
         [Test] public void ShouldFailWhenArrayOfOrigamSettingsIsMissing()
