@@ -22,6 +22,7 @@ namespace Origam.ServerCore.Controllers
         [HttpGet("[action]")]
         public string GetMenu()
         {
+            Reflector.ClassCache = new NullReflectorCache();
             var DefaultFolders = new List<ElementName>
             {
                 ElementNameFactory.Create(typeof(SchemaExtension)),

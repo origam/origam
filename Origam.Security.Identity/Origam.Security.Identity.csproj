@@ -125,6 +125,10 @@
       <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
       <Name>Origam.Schema</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.Services.NetFx\Origam.Services.NetFx.csproj">
+      <Project>{442DB093-B99E-4A53-AE94-E611A26D901F}</Project>
+      <Name>Origam.Services.NetFx</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Services\Origam.Services-net2.csproj">
       <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>
       <Name>Origam.Services-net2</Name>
