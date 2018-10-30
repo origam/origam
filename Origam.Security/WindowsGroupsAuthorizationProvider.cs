@@ -24,7 +24,6 @@ using System.Data;
 using System.Collections;
 using Origam.DA;
 using Origam.Workbench.Services;
-//using Microsoft.Practices.EnterpriseLibrary.Configuration;
 
 namespace Origam.Security
 {
