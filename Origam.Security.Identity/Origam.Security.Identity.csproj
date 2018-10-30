@@ -32,26 +32,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
-      <HintPath>lib\log4net.dll</HintPath>
+      <HintPath>..\EnterpriseLibrary\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core">
-      <HintPath>lib\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <HintPath>..\EnterpriseLibrary\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Owin">
-      <HintPath>lib\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+      <HintPath>..\EnterpriseLibrary\Microsoft.AspNet.Identity.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin">
-      <HintPath>lib\Microsoft.Owin.dll</HintPath>
+      <HintPath>..\EnterpriseLibrary\Microsoft.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Host.SystemWeb">
-      <HintPath>lib\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+      <HintPath>..\EnterpriseLibrary\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security">
-      <HintPath>lib\Microsoft.Owin.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Common">
-      <HintPath>lib\Microsoft.Practices.EnterpriseLibrary.Common.dll</HintPath>
+      <HintPath>..\EnterpriseLibrary\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

@@ -21,7 +21,7 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject />
     <FileUpgradeFlags>40</FileUpgradeFlags>
-    <UpgradeBackupLocation>C:\Users\jindr\Documents\Source\Repos\Origam2\origam-source\OrigamEngineWebAPI_1\Backup\</UpgradeBackupLocation>
+    <UpgradeBackupLocation>C:\Users\jindr\Documents\Source\Repos\Origam2\origam-source\OrigamEngineWebAPI_1\Backup1\</UpgradeBackupLocation>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <UseIISExpress>false</UseIISExpress>
