@@ -44,6 +44,7 @@ namespace Origam.ServerCore.Controllers
             sManager.AddService(persistenceService);
             schemaService.AddProvider(StateMachineSchema);
             schemaService.AddProvider(new MenuSchemaItemProvider());
+            ServiceManager.Services.AddService(new ServiceAgentFactory());
             return MenuXmlBuilder.GetMenu();
         }
     }

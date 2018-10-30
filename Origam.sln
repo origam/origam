@@ -207,6 +207,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{4E45BA
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Architect", "Architect", "{BC8B57AC-75CA-4EB9-9E0F-11D33B5B071F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Services.NetFx", "Origam.Services.NetFx\Origam.Services.NetFx.csproj", "{442DB093-B99E-4A53-AE94-E611A26D901F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.UI.Common.NetFx", "Origam.UI.Common.NetFx\Origam.UI.Common.NetFx.csproj", "{B2B8B03E-CFD0-454F-94F0-10B817DB3441}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		build|Any CPU = build|Any CPU
@@ -2134,6 +2138,54 @@ Global
 		{8E10C08C-D833-4DAF-91B7-AB52F9CCEC7E}.Release Server|Any CPU.Build.0 = Release Server|Any CPU
 		{8E10C08C-D833-4DAF-91B7-AB52F9CCEC7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E10C08C-D833-4DAF-91B7-AB52F9CCEC7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.build|Any CPU.ActiveCfg = Release|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.build|Any CPU.Build.0 = Release|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Debug Architect Express|Any CPU.ActiveCfg = Debug|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Debug Architect Express|Any CPU.Build.0 = Debug|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Debug Architect|Any CPU.ActiveCfg = Debug|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Debug Architect|Any CPU.Build.0 = Debug|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Debug Client|Any CPU.ActiveCfg = Debug|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Debug Client|Any CPU.Build.0 = Debug|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Debug Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Debug Server|Any CPU.Build.0 = Debug|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.NDoc|Any CPU.ActiveCfg = Release|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.NDoc|Any CPU.Build.0 = Release|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Release Architect Express|Any CPU.ActiveCfg = Release|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Release Architect Express|Any CPU.Build.0 = Release|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Release Architect|Any CPU.ActiveCfg = Release|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Release Architect|Any CPU.Build.0 = Release|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Release Client|Any CPU.ActiveCfg = Release|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Release Client|Any CPU.Build.0 = Release|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Release Server|Any CPU.ActiveCfg = Release|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Release Server|Any CPU.Build.0 = Release|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{442DB093-B99E-4A53-AE94-E611A26D901F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.build|Any CPU.ActiveCfg = Release|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.build|Any CPU.Build.0 = Release|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Debug Architect Express|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Debug Architect Express|Any CPU.Build.0 = Debug|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Debug Architect|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Debug Architect|Any CPU.Build.0 = Debug|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Debug Client|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Debug Client|Any CPU.Build.0 = Debug|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Debug Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Debug Server|Any CPU.Build.0 = Debug|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.NDoc|Any CPU.ActiveCfg = Release|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.NDoc|Any CPU.Build.0 = Release|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Release Architect Express|Any CPU.ActiveCfg = Release|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Release Architect Express|Any CPU.Build.0 = Release|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Release Architect|Any CPU.ActiveCfg = Release|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Release Architect|Any CPU.Build.0 = Release|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Release Client|Any CPU.ActiveCfg = Release|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Release Client|Any CPU.Build.0 = Release|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Release Server|Any CPU.ActiveCfg = Release|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Release Server|Any CPU.Build.0 = Release|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2B8B03E-CFD0-454F-94F0-10B817DB3441}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
