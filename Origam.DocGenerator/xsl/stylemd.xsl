@@ -3,11 +3,10 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:exsl= "http://exslt.org/common"
     version="1.0">
-<xsl:output method="text" />
+<xsl:output method="xml" />
 <xsl:template match="/">
 <xsl:for-each select="/Menu/Menuitem">
-  <exsl:document href="doc_{@DisplayName}.md">
-___
+<exsl:document href="doc_{@DisplayName}.md" method="text" >
 ## <xsl:value-of select="@DisplayName"/>
 
 <xsl:if test="description != ''" >
