@@ -1477,6 +1477,7 @@ namespace OrigamArchitect
 			
 			ViewContentCollection
 				.Cast<IViewContent>()
+			    .Where(cont => cont.LoadedObject !=null)
 				.Where(cont => 
 					((ISchemaItem)cont.LoadedObject).NodeId == loadedObject.NodeId)
 				.Where(content => refContent.GetType() == content.GetType())
