@@ -22,11 +22,14 @@ namespace Origam.DocGenerator
             [Option('g', "guiddoc", Required = true, HelpText = "guidid of project in Origam.")]
             public string GuidDoc { get; set; }
 
-            [Option('x', "xslt", Required = false, HelpText = "Xslt template")]
+            [Option('x', "xslt", Required = true, HelpText = "Xslt template")]
             public string Xslt { get; set; }
 
             [Option('o', "output", Required = true, HelpText = "Output directory")]
             public string Dataout { get; set; }
+
+            [Option('r', "rootfilename", Required = true, HelpText = "Root File")]
+            public string RootFile { get; set; }
 
             [ParserState]
             public IParserState LastParserState { get; set; }
@@ -76,7 +79,7 @@ namespace Origam.DocGenerator
                 persprovider,
                 persistenceService.FileEventQueue);
 
-            if (!new DocCreate(options.Dataout, options.Xslt,  documentation, persprovider).Run())
+            if (!new DocCreate(options.Dataout, options.Xslt,options.RootFile,  documentation, persprovider).Run())
             {
                 System.Console.WriteLine("Neco je spatne");
                 Console.ReadKey();

@@ -21,27 +21,43 @@ namespace Origam.DocGenerator
 {
     class DocCreate
     {
-        private string Dataout { get; set; }
+        private string Path { get; set; }
         private MultiXmlTextWriter Xmlwriter { get; set; }
-        private readonly string HRefPattern = "<exsl:document\\s+href=\"([^\"]+)[^>]+>(.*?)</exsl:document>";
-
+        
         private IDocumentationService documentation;
         private MenuSchemaItemProvider menuprovider = new MenuSchemaItemProvider();
         private readonly FilePersistenceProvider persprovider;
-        private readonly string Xlst;
+        private readonly string XsltPath;
         private readonly MemoryStream mstream ;
+        private readonly string RootFile ;
 
-        public DocCreate(string dataout,string xlst,  FileStorageDocumentationService documentation1,FilePersistenceProvider persprovider)
+        public DocCreate(string path,string xslt, string rootfile, FileStorageDocumentationService documentation1,FilePersistenceProvider persprovider)
         {
-            Xlst = xlst;
-            this.Dataout = dataout;
-            documentation = documentation1;
-            menuprovider.PersistenceProvider = persprovider;
+            if(string.IsNullOrEmpty(path))
+            {
+                 throw new Exception("Path for Export is not set!");
+            }
+            if (string.IsNullOrEmpty(xslt))
+            {
+                throw new Exception("Xlst template is not set!");
+            }
+
+            if (string.IsNullOrEmpty(rootfile))
+            {
+                throw new Exception("RootFileName is not set!");
+            }
+
+            RootFile = rootfile;
+            XsltPath = xslt;
+            this.Path = string.Join("", path.Split(System.IO.Path.GetInvalidPathChars())); ;
+            documentation = documentation1 ?? throw new Exception("Documentation  is not set!");
+            menuprovider.PersistenceProvider = persprovider ?? throw new Exception("PersistenceProvider is not set!"); 
             this.persprovider = persprovider;
             mstream = new MemoryStream();
             CreateWriter();
         }
 
+       
         private void CreateWriter()
         {
             Xmlwriter = new MultiXmlTextWriter(mstream, Encoding.UTF8)
@@ -154,12 +170,12 @@ namespace Origam.DocGenerator
 
         public Boolean Run()
         {
-            if(!string.IsNullOrEmpty(Xlst))
+            if(!string.IsNullOrEmpty(XsltPath))
             {
                 MvpXslTransform processor = new MvpXslTransform(false);
                 try
                 { 
-                    processor.Load(Xlst);
+                    processor.Load(XsltPath);
                 } catch (XsltException)
                 {
                     //asi potreba nekam neco zapsat !?
@@ -180,7 +196,7 @@ namespace Origam.DocGenerator
         private void SaveSchemaXml()
         {
             //for test only
-            FileStream file = new FileStream(Dataout + "\\schemaXml.xml",  FileMode.Create, FileAccess.Write);
+            FileStream file = new FileStream(Path + "schemaXml.xml",  FileMode.Create, FileAccess.Write);
             mstream.WriteTo(file);
             file.Close();
             mstream.Close();
@@ -191,26 +207,15 @@ namespace Origam.DocGenerator
             TextWriter text = new StringWriter();
             mstream.Seek(0, SeekOrigin.Begin);
             XPathDocument doc = new XPathDocument(mstream);
-            XslTransform xslt = new XslTransform();
-            xslt.Load(Xlst);
-            XmlTextWriter multiWriter = new XmlTextWriter(text);
-            xslt.Transform(doc, null, multiWriter);
-            Match m;
-            try
-            {
-                m = Regex.Match(text.ToString(), HRefPattern,
-                                RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline,
-                                TimeSpan.FromSeconds(1));
-                while (m.Success)
-                {
-                    File.AppendAllText(Dataout + m.Groups[1], m.Groups[2].ToString(), Encoding.UTF8);
-                    m = m.NextMatch();
-                }
-            }
-            catch (RegexMatchTimeoutException)
-            {
-                Console.WriteLine("The matching operation timed out.");
-            }
+            XslCompiledTransform xslttransform = new XslCompiledTransform();
+            xslttransform.Load(XsltPath);
+            MultiXmlTextWriter multiWriter = new MultiXmlTextWriter(Path + RootFile ,Encoding.UTF8);
+            xslttransform.Transform(doc, null, multiWriter);
+        }
+
+        private string RemoveIllegalCharactersFromPath(string fileName)
+        {
+            return string.Join("", fileName.Split(System.IO.Path.GetInvalidFileNameChars()));
         }
 
         private void CreateXml(AbstractSchemaItem menuSublist)
@@ -231,20 +236,27 @@ namespace Origam.DocGenerator
             }
         }
 
-        private void WriteStartElement(string v)
+        private void WriteStartElement(string element)
         {
-            Xmlwriter.WriteStartElement(v);
+            element = StripNonValidXMLCharacters(element);
+            Xmlwriter.WriteStartElement(element);
         }
 
-        private void WriteStartElement(string v,string title)
+        private void WriteStartElement(string element,string title)
         {
-            Xmlwriter.WriteStartElement(v);
+            element = StripNonValidXMLCharacters(element);
+            title = StripNonValidXMLCharacters(title);
+
+            Xmlwriter.WriteStartElement(element);
             Xmlwriter.WriteAttributeString("DisplayName", title);
         }
 
         private void WriteElement(string caption,string description)
         {
-            if(!string.IsNullOrEmpty(description))
+            caption = StripNonValidXMLCharacters(caption);
+            description = StripNonValidXMLCharacters(description);
+
+            if (!string.IsNullOrEmpty(description))
             { 
                 Xmlwriter.WriteElementString(caption, description);
             }
@@ -259,6 +271,13 @@ namespace Origam.DocGenerator
         {
             Xmlwriter.WriteEndDocument();
             Xmlwriter.Flush();
+        }
+        public string StripNonValidXMLCharacters(string textIn)
+        {
+            XmlDocument doc = new XmlDocument();
+            XmlNode node = doc.CreateElement("root");
+            node.InnerText = textIn;
+            return node.InnerXml;
         }
     }
 }
