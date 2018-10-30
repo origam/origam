@@ -46,8 +46,7 @@ namespace Origam
 
 			if(settingsCollection.Count == 1)
 			{
-				settingsCollection[0].BaseFolder =
-				    Path.GetDirectoryName(AssemblyTools.GetAssemblyLocation());
+				settingsCollection[0].BaseFolder = AppDomain.CurrentDomain.BaseDirectory;
 				WriteConfiguration("OrigamSettings", settingsCollection);
 			}
 			return settingsCollection;

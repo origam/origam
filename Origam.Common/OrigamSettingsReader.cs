@@ -8,14 +8,8 @@ namespace Origam
 {
     public class OrigamSettingsReader
     {
-        private static string DefaultPathToOrigamSettings
-        {
-            get
-            {
-                string directoryPath = Path.GetDirectoryName(AssemblyTools.GetAssemblyLocation());
-                return Path.Combine(directoryPath, "OrigamSettings.config");
-            }
-        }
+        private static string DefaultPathToOrigamSettings => 
+            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OrigamSettings.config");
 
         private readonly string pathToOrigamSettings;
 
