@@ -1,4 +1,4 @@
-@import 'origam';
+@import "origam";
 
 body {
   font: $base-font;
@@ -10,7 +10,7 @@ body {
   margin: 2px;
 }
 
-.oui-form-root{
+.oui-form-root {
   /* border: 1px solid black;*/
   /*width: 100%;*/
   /*height: 100%;*/
@@ -78,7 +78,7 @@ body {
 }
 
 .oui-vsplit-panel {
-  flex-grow: 1; 
+  flex-grow: 1;
   overflow: auto;
   display: flex;
   flex-direction: column;
@@ -91,7 +91,7 @@ body {
 }
 
 .oui-hsplit-panel {
-  flex-grow: 1; 
+  flex-grow: 1;
   overflow: auto;
   display: flex;
   flex-direction: column;
@@ -112,9 +112,65 @@ body {
 }
 
 .oui-grid-toolbar {
-  height: 20px;
+  height: $toolbar-height;
   background-color: $toolbar-bgcolor;
   color: $toolbar-color;
+  display: flex;
+  flex-direction: row;
+  .oui-toolbar-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .toolbar-caption {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+  .oui-toolbar-btn {
+    padding: 0px 3px 0px 3px;
+    margin: 0px;
+    height: $toolbar-height;
+    min-width: $toolbar-height;
+    background-color: $toolbar-btn-bgcolor;
+    color: $toolbar-btn-color;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: $toolbar-height;
+    .fa-step-forward,
+    .fa-step-backward,
+    .fa-table,
+    .fa-list-alt,
+    .fa-map-o,
+    .fa-plus-circle,
+    .fa-minus-circle,
+    .fa-copy {
+      font-size: $toolbar-height - 6px;
+    }
+    .fa-cog {
+      padding-right: 3px;
+    }
+    &:hover {
+      background-color: $toolbar-btn-hover-bgcolor;
+      color: $toolbar-btn-hover-color;
+    }
+    .icon {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .toolbar-section {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    margin: 0px 15px 0px 15px;
+    &.pusher {
+      flex-grow: 1;
+    }
+  }
 }
 
 .oui-tab {

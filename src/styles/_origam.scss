@@ -3,8 +3,13 @@ $base-font: 12px "Arial", sans-serif;
 $skeleton-bgcolor: #4C4C4C;
 $skeleton-color: white;
 
+$toolbar-height: 20px;
 $toolbar-bgcolor: #8998C5;
 $toolbar-color: white;
+$toolbar-btn-bgcolor: $toolbar-bgcolor;
+$toolbar-btn-color: $toolbar-color;
+$toolbar-btn-hover-bgcolor: #435BA3;
+$toolbar-btn-hover-color: #D6D6D6;
 
 $panel-bgcolor: #E5E5E5;
 $panel-color: black;
@@ -23,3 +28,5 @@ $main-tab-handle-bgcolor: #666666;
 $main-tab-handle-color: #8B8B8B;
 $main-tab-handle-active-bgcolor: #E5E5E5;
 $main-tab-handle-active-color: black;
+
+
