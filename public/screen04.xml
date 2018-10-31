@@ -1,0 +1,822 @@
+<Window xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Title="Produkty" MenuId="41d1111a-9043-4e28-ae5b-1709943edb5e" ShowInfoPanel="false" AutoRefreshInterval="0" CacheOnClient="true" autoSaveOnListRecordChange="false" RequestSaveAfterUpdate="false">
+  <DataSources>
+    <DataSource Entity="ProductTax" Identifier="Id" LookupCacheKey="ProductTax">
+      <Field Name="refTaxProfileId" Index="0" />
+      <Field Name="refTaxId" Index="1" />
+      <Field Name="refProductId" Index="2" />
+      <Field Name="RecordCreatedBy" Index="3" />
+      <Field Name="RecordUpdatedBy" Index="4" />
+      <Field Name="Id" Index="5" />
+      <Field Name="RecordCreated" Index="6" />
+      <Field Name="RecordUpdated" Index="7" />
+      <Field Name="Selected" Index="8" />
+      <Field Name="__Errors" Index="9" />
+    </DataSource>
+    <DataSource Entity="ProductServiceDefinition" Identifier="Id" LookupCacheKey="ProductServiceDefinition">
+      <Field Name="refDependentOnServiceDefinitionId" Index="0" />
+      <Field Name="refProductId" Index="1" />
+      <Field Name="refServiceDefinitionId" Index="2" />
+      <Field Name="RecordCreatedBy" Index="3" />
+      <Field Name="RecordUpdatedBy" Index="4" />
+      <Field Name="Id" Index="5" />
+      <Field Name="RecordCreated" Index="6" />
+      <Field Name="RecordUpdated" Index="7" />
+      <Field Name="Selected" Index="8" />
+      <Field Name="__Errors" Index="9" />
+    </DataSource>
+    <DataSource Entity="Product" Identifier="Id" LookupCacheKey="Product">
+      <Field Name="WeightLowerLimit" Index="0" />
+      <Field Name="refTaxId" Index="1" />
+      <Field Name="Description" Index="2" />
+      <Field Name="BestBeforeDays" Index="3" />
+      <Field Name="Name" Index="4" />
+      <Field Name="Specification" Index="5" />
+      <Field Name="WeightTolerancePositive" Index="6" />
+      <Field Name="ReferenceCode" Index="7" />
+      <Field Name="Quantity" Index="8" />
+      <Field Name="refProductCategoryId" Index="9" />
+      <Field Name="refProductIntrastatClassificationId" Index="10" />
+      <Field Name="HasOwnSpecification" Index="11" />
+      <Field Name="refHACCPId" Index="12" />
+      <Field Name="refInventoryControlTypeId" Index="13" />
+      <Field Name="BarCode" Index="14" />
+      <Field Name="MarginPercentage" Index="15" />
+      <Field Name="MinQuantity" Index="16" />
+      <Field Name="PriceLocal" Index="17" />
+      <Field Name="ExpirationDays" Index="18" />
+      <Field Name="IsActive" Index="19" />
+      <Field Name="refDimension4Id" Index="20" />
+      <Field Name="refDimension3Id" Index="21" />
+      <Field Name="refDimension1Id" Index="22" />
+      <Field Name="refDimension2Id" Index="23" />
+      <Field Name="RecordCreatedBy" Index="24" />
+      <Field Name="RecordUpdatedBy" Index="25" />
+      <Field Name="Id" Index="26" />
+      <Field Name="RecordCreated" Index="27" />
+      <Field Name="RecordUpdated" Index="28" />
+      <Field Name="IsDeliveryDetailPregenerated" Index="29" />
+      <Field Name="Selected" Index="30" />
+      <Field Name="PictureThumbnail" Index="31" />
+      <Field Name="refRevenuesBudgetLineCategoryId" Index="32" />
+      <Field Name="PiecesPerUnit" Index="33" />
+      <Field Name="IsZeroSalesOrderQuantityAllowed" Index="34" />
+      <Field Name="refProducerBusinessPartnerId" Index="35" />
+      <Field Name="MaxQuantity" Index="36" />
+      <Field Name="refManufacturingProcessId" Index="37" />
+      <Field Name="PictureName" Index="38" />
+      <Field Name="TareWeight" Index="39" />
+      <Field Name="refProductAcquisitionTypeId" Index="40" />
+      <Field Name="refProductLimitGroupId" Index="41" />
+      <Field Name="refResourcesProjectConditionsRuleCategoryId" Index="42" />
+      <Field Name="IsWarehouseQuantityFilled" Index="43" />
+      <Field Name="DeliveryDays" Index="44" />
+      <Field Name="refUomId" Index="45" />
+      <Field Name="Weight" Index="46" />
+      <Field Name="AlternativeQuantityRate" Index="47" />
+      <Field Name="Priority" Index="48" />
+      <Field Name="refProductDistributionCategoryId" Index="49" />
+      <Field Name="refCostsBudgetLineCategoryId" Index="50" />
+      <Field Name="refAlternativeUomId" Index="51" />
+      <Field Name="refCostsProjectConditionsRuleCategoryId" Index="52" />
+      <Field Name="WeightUpperLimit" Index="53" />
+      <Field Name="refRevenuesProjectConditionsRuleCategoryId" Index="54" />
+      <Field Name="IsContainer" Index="55" />
+      <Field Name="MinWeight" Index="56" />
+      <Field Name="CustomerReferenceCode" Index="57" />
+      <Field Name="refManufacturingWarehouseId" Index="58" />
+      <Field Name="WeightToleranceNegative" Index="59" />
+      <Field Name="NameByVendor" Index="60" />
+      <Field Name="StockSourceSpecification" Index="61" />
+      <Field Name="Picture" Index="62" />
+      <Field Name="__Errors" Index="63" />
+    </DataSource>
+    <DataSource Entity="ProductSalesBusinessPartner" Identifier="Id" LookupCacheKey="ProductSalesBusinessPartner">
+      <Field Name="Remark" Index="0" />
+      <Field Name="refBusinessPartnerId" Index="1" />
+      <Field Name="refProductId" Index="2" />
+      <Field Name="RecordCreatedBy" Index="3" />
+      <Field Name="RecordUpdatedBy" Index="4" />
+      <Field Name="Id" Index="5" />
+      <Field Name="RecordCreated" Index="6" />
+      <Field Name="RecordUpdated" Index="7" />
+      <Field Name="Selected" Index="8" />
+      <Field Name="__Errors" Index="9" />
+    </DataSource>
+    <DataSource Entity="ProductBundle" Identifier="Id" LookupCacheKey="ProductBundle">
+      <Field Name="Weight" Index="0" />
+      <Field Name="refUomId" Index="1" />
+      <Field Name="SumWeight" Index="2" />
+      <Field Name="Quantity" Index="3" />
+      <Field Name="refProductBundleId" Index="4" />
+      <Field Name="refProductId" Index="5" />
+      <Field Name="RecordCreatedBy" Index="6" />
+      <Field Name="RecordUpdatedBy" Index="7" />
+      <Field Name="Id" Index="8" />
+      <Field Name="RecordCreated" Index="9" />
+      <Field Name="RecordUpdated" Index="10" />
+      <Field Name="Selected" Index="11" />
+      <Field Name="__Errors" Index="12" />
+    </DataSource>
+    <DataSource Entity="Inventory" Identifier="Id" LookupCacheKey="Inventory">
+      <Field Name="TotalAssetAcquisitionValueLocal" Index="0" />
+      <Field Name="RecordCreated" Index="1" />
+      <Field Name="Id" Index="2" />
+      <Field Name="RecordUpdatedBy" Index="3" />
+      <Field Name="RecordCreatedBy" Index="4" />
+      <Field Name="RetirementDate" Index="5" />
+      <Field Name="TotalQuantity" Index="6" />
+      <Field Name="refInventoryTypeId" Index="7" />
+      <Field Name="ReferenceCode" Index="8" />
+      <Field Name="TotalReserved" Index="9" />
+      <Field Name="refWarehouseId" Index="10" />
+      <Field Name="RecordUpdated" Index="11" />
+      <Field Name="Name" Index="12" />
+      <Field Name="refInventoryAssetAcquisitionTypeId" Index="13" />
+      <Field Name="MaxQuantity" Index="14" />
+      <Field Name="refInventoryAssetStateId" Index="15" />
+      <Field Name="Product_ReferenceCode" Index="16" />
+      <Field Name="refInventoryAssetTypeId" Index="17" />
+      <Field Name="Product_refProducerBusinessPartnerId" Index="18" />
+      <Field Name="MinQuantity" Index="19" />
+      <Field Name="Product_IsContainer" Index="20" />
+      <Field Name="Product_IsActive" Index="21" />
+      <Field Name="refProductId" Index="22" />
+      <Field Name="ActivationDate" Index="23" />
+      <Field Name="Selected" Index="24" />
+      <Field Name="__Errors" Index="25" />
+    </DataSource>
+    <DataSource Entity="ProductStockSource" Identifier="Id" LookupCacheKey="ProductStockSource">
+      <Field Name="refStockSourceProductId" Index="0" />
+      <Field Name="HACCP_Description" Index="1" />
+      <Field Name="HACCP_Name" Index="2" />
+      <Field Name="Priority" Index="3" />
+      <Field Name="refProductId" Index="4" />
+      <Field Name="RecordCreatedBy" Index="5" />
+      <Field Name="RecordUpdatedBy" Index="6" />
+      <Field Name="Id" Index="7" />
+      <Field Name="RecordCreated" Index="8" />
+      <Field Name="RecordUpdated" Index="9" />
+      <Field Name="Selected" Index="10" />
+      <Field Name="__Errors" Index="11" />
+    </DataSource>
+    <DataSource Entity="ProductAttribute" Identifier="Id" LookupCacheKey="ProductAttribute">
+      <Field Name="NumberValue" Index="0" />
+      <Field Name="refProductId" Index="1" />
+      <Field Name="refDimensionId" Index="2" />
+      <Field Name="refUomEnumerationId" Index="3" />
+      <Field Name="RecordCreatedBy" Index="4" />
+      <Field Name="RecordUpdatedBy" Index="5" />
+      <Field Name="Id" Index="6" />
+      <Field Name="RecordCreated" Index="7" />
+      <Field Name="RecordUpdated" Index="8" />
+      <Field Name="Selected" Index="9" />
+      <Field Name="__Errors" Index="10" />
+    </DataSource>
+    <DataSource Entity="ProductStockSource_StockProduct" Identifier="Id" LookupCacheKey="ProductStockSource">
+      <Field Name="refStockSourceProductId" Index="0" />
+      <Field Name="HACCP_Description" Index="1" />
+      <Field Name="HACCP_Name" Index="2" />
+      <Field Name="Priority" Index="3" />
+      <Field Name="refProductId" Index="4" />
+      <Field Name="RecordCreatedBy" Index="5" />
+      <Field Name="RecordUpdatedBy" Index="6" />
+      <Field Name="Id" Index="7" />
+      <Field Name="RecordCreated" Index="8" />
+      <Field Name="RecordUpdated" Index="9" />
+      <Field Name="Selected" Index="10" />
+      <Field Name="__Errors" Index="11" />
+    </DataSource>
+    <DataSource Entity="ProductCategory" Identifier="Id" LookupCacheKey="ProductCategory">
+      <Field Name="Name" Index="0" />
+      <Field Name="refParentProductCategoryId" Index="1" />
+      <Field Name="RecordCreatedBy" Index="2" />
+      <Field Name="RecordUpdatedBy" Index="3" />
+      <Field Name="Id" Index="4" />
+      <Field Name="RecordCreated" Index="5" />
+      <Field Name="RecordUpdated" Index="6" />
+      <Field Name="Selected" Index="7" />
+      <Field Name="__Errors" Index="8" />
+    </DataSource>
+  </DataSources>
+  <ComponentBindings>
+    <Binding ParentId="d7da0011-63f5-4bc6-a612-38a14eb9e64f" ParentProperty="Id" ParentEntity="ProductCategory" ChildId="25cf72e0-142c-4f79-be3a-08df63792bcc" ChildProperty="refProductCategoryId" ChildEntity="Product" ChildPropertyType="Field" />
+    <Binding ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentProperty="Id" ParentEntity="Product" ChildId="b9b4607c-371c-4a41-b782-893aad7e12ec" ChildProperty="refProductId" ChildEntity="ProductAttribute" ChildPropertyType="Field" />
+    <Binding ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentProperty="Id" ParentEntity="Product" ChildId="8a374474-0fbd-40af-ae81-ca82e9d9f7f8" ChildProperty="refProductId" ChildEntity="ProductTax" ChildPropertyType="Field" />
+    <Binding ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentProperty="Id" ParentEntity="Product" ChildId="6a552d86-017f-498b-bb7d-15a7ca4e0893" ChildProperty="Id" ChildEntity="Product" ChildPropertyType="Field" />
+    <Binding ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentProperty="Id" ParentEntity="Product" ChildId="7ba6a93b-8efd-4374-88aa-3c35f8fd3835" ChildProperty="Id" ChildEntity="Product" ChildPropertyType="Field" />
+    <Binding ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentProperty="Id" ParentEntity="Product" ChildId="9ae7cd77-c0ff-48c1-b360-17ffd00e2ab3" ChildProperty="Id" ChildEntity="Product" ChildPropertyType="Field" />
+    <Binding ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentProperty="Id" ParentEntity="Product" ChildId="90603b3d-8502-4792-bc7b-980d6800b56d" ChildProperty="Id" ChildEntity="Product" ChildPropertyType="Field" />
+    <Binding ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentProperty="Id" ParentEntity="Product" ChildId="29fab54b-a9b5-46a6-a6d4-7c3f4cd5132c" ChildProperty="refProductId" ChildEntity="ProductStockSource" ChildPropertyType="Field" />
+    <Binding ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentProperty="Id" ParentEntity="Product" ChildId="0fa7df34-ea2d-45f6-87ab-d2d136dd5131" ChildProperty="refStockSourceProductId" ChildEntity="ProductStockSource_StockProduct" ChildPropertyType="Field" />
+    <Binding ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentProperty="Id" ParentEntity="Product" ChildId="6acae642-0e44-41fc-b8cf-9a84e5d71d0c" ChildProperty="refProductId" ChildEntity="Inventory" ChildPropertyType="Field" />
+    <Binding ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentProperty="Id" ParentEntity="Product" ChildId="c3d9921d-260d-4589-b77f-ef849b03c307" ChildProperty="refProductId" ChildEntity="ProductSalesBusinessPartner" ChildPropertyType="Field" />
+    <Binding ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentProperty="Id" ParentEntity="Product" ChildId="c4d25edc-8661-463a-b592-d2e3e85b7ad9" ChildProperty="refProductId" ChildEntity="ProductServiceDefinition" ChildPropertyType="Field" />
+    <Binding ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentProperty="Id" ParentEntity="Product" ChildId="e3c7893c-7cbc-4670-93bc-00cc4527ed3f" ChildProperty="refProductBundleId" ChildEntity="ProductBundle" ChildPropertyType="Field" />
+  </ComponentBindings>
+  <UIRoot Id="SplitPanel2_0" ModelInstanceId="0c7aee6c-a721-403a-abce-fccb9df8b526" xsi:type="UIElement" Type="HSplit" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+    <Configuration />
+    <UIChildren>
+      <UIElement Id="SplitPanel3_1" ModelInstanceId="bc3d485b-b4d8-45f9-aafc-734d8b1f9790" xsi:type="UIElement" Type="VBox" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+        <Configuration />
+        <UIChildren>
+          <UIElement Id="AsTreeView1_2" ModelInstanceId="d7da0011-63f5-4bc6-a612-38a14eb9e64f" xsi:type="UIElement" Type="TreePanel" Entity="ProductCategory" IdProperty="Id" ParentIdProperty="refParentProductCategoryId" NameProperty="Name" DataMember="ProductCategory" IsRootGrid="true" IsRootEntity="true" IsPreloaded="true">
+            <Configuration />
+          </UIElement>
+        </UIChildren>
+      </UIElement>
+      <UIElement Id="SplitPanel1_3" ModelInstanceId="b90029c3-ea23-4294-b2d1-97732400b2c0" xsi:type="UIElement" Type="VSplit" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+        <Configuration />
+        <UIChildren>
+          <UIElement Id="AsPanel1_4" ModelInstanceId="25cf72e0-142c-4f79-be3a-08df63792bcc" Name="Produkt" xsi:type="Grid" Type="Grid" ModelId="29bb5940-5b84-4a49-b56f-c53e81f1e2fd" DefaultPanelView="1" IsHeadless="false" DisableActionButtons="false" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="Product" DataMember="ProductCategory.Product" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="d7da0011-63f5-4bc6-a612-38a14eb9e64f" ParentEntityName="ProductCategory">
+            <Properties>
+              <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+              <Property Id="ReferenceCode" ModelInstanceId="5fc3ccff-7e6e-4b3f-90d6-07e40340611f" Name="Kód" ReadOnly="false" X="144" Y="27" Width="120" Height="19" CaptionLength="130" CaptionPosition="Left" Entity="String" Column="Text" Dock="None" Multiline="false" IsPassword="false" IsRichText="false" MaxLength="40" />
+              <Property Id="BarCode" ModelInstanceId="11453344-407a-47e4-9984-cc2aa4742d23" Name="Čárový kód (EAN)" ReadOnly="false" X="396" Y="27" Width="135" Height="19" CaptionLength="120" CaptionPosition="Left" Entity="String" Column="Text" Dock="None" Multiline="false" IsPassword="false" IsRichText="false" MaxLength="128" />
+              <Property Id="CustomerReferenceCode" ModelInstanceId="d337c934-19da-407b-a7e4-601f0d461aca" Name="Odběratelský kód" ReadOnly="false" X="144" Y="45" Width="120" Height="19" CaptionLength="130" CaptionPosition="Left" Entity="String" Column="Text" Dock="None" Multiline="false" IsPassword="false" IsRichText="false" MaxLength="40" />
+              <Property Id="RecordUpdated" ModelInstanceId="8bd7c846-ec58-4bf7-8624-7098e311dd84" Name="Naposledy změněno" ReadOnly="true" X="396" Y="45" Width="135" Height="18" CaptionLength="120" CaptionPosition="Left" Entity="Date" Column="Date" FormatterPattern="M/D/YYYY">
+                <ToolTip>Datum poslední aktualizace záznamu</ToolTip>
+              </Property>
+              <Property Id="Name" ModelInstanceId="13200939-e842-4c20-91af-49b900e5a530" Name="Název" ReadOnly="false" X="144" Y="63" Width="387" Height="18" CaptionLength="130" CaptionPosition="Left" Style="fontWeight:bold;" Entity="String" Column="Text" Dock="None" Multiline="false" IsPassword="false" IsRichText="false" MaxLength="200" />
+              <Property Id="refProductCategoryId" ModelInstanceId="7fb05d48-6d31-4008-ac58-23fe543e55a9" Name="Kategorie" ReadOnly="false" X="144" Y="81" Width="387" Height="18" CaptionLength="130" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="bc514d8e-f00d-4e68-a16b-e923249fbbd5" Identifier="Id" IdentifierIndex="0" EntityName="bc514d8e_f00d_4e68_a16b_e923249fbbd5" IsTree="true" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedTree" ParentIdProperty="refParentProductCategoryId" NameProperty="Name" ParentIdPropertyIndex="1" NamePropertyIndex="2" Cached="true">
+                <DropDownParameters />
+              </Property>
+              <Property Id="refProducerBusinessPartnerId" ModelInstanceId="c94e3fd4-1b46-42db-bb94-c9aacdf1010b" Name="Výrobce" ReadOnly="false" X="144" Y="99" Width="387" Height="18" CaptionLength="130" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6" Identifier="Id" IdentifierIndex="2" EntityName="08d82ef5_df38_48d6_a276_ee5b7f027bd6" IsTree="false" AllowReturnToForm="false" SearchByFirstColumnOnly="false" AutoSort="false" DropDownType="LazilyLoadedGrid" HasTooltip="true" Cached="true">
+                <DropDownColumns>
+                  <Property Id="ReferenceCode" Name="Shortcut" Entity="String" Column="Text" Index="3" />
+                  <Property Id="Text" Name="Name" Entity="String" Column="Text" Index="1" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+              <Property Id="NameByVendor" ModelInstanceId="04a039b8-10ec-4778-8d82-10187260b2ee" Name="Dodavatelský název" ReadOnly="false" X="144" Y="117" Width="387" Height="18" CaptionLength="130" CaptionPosition="Left" Entity="String" Column="Text" Dock="None" Multiline="false" IsPassword="false" IsRichText="false" MaxLength="200" />
+              <Property Id="refProductDistributionCategoryId" ModelInstanceId="23472eb9-610e-44aa-ab6d-f519b353d073" Name="Distribuční kategorie" ReadOnly="false" X="144" Y="135" Width="387" Height="18" CaptionLength="130" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="71fd254c-1a57-45b4-91d8-99b4619cf761" Identifier="Id" IdentifierIndex="1" EntityName="71fd254c_1a57_45b4_91d8_99b4619cf761" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                <DropDownColumns>
+                  <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="0" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+              <Property Id="refProductIntrastatClassificationId" ModelInstanceId="bc6f86f0-8ce5-491e-8a9b-9f7d0d32c3f6" Name="Nomenklatura Intrastat" ReadOnly="false" X="144" Y="153" Width="387" Height="18" CaptionLength="130" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="121ac05c-f706-4d4b-ab1e-269365050e15" Identifier="Id" IdentifierIndex="1" EntityName="121ac05c_f706_4d4b_ab1e_269365050e15" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                <DropDownColumns>
+                  <Property Id="ReferenceCode" Name="Kód" Entity="String" Column="Text" Index="0" />
+                  <Property Id="Description" Name="Popis" Entity="String" Column="Text" Index="2" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+              <Property Id="refProductLimitGroupId" ModelInstanceId="fdb767df-880b-40a0-8e8b-689ce4eb9f6a" Name="Skupina pro limity" ReadOnly="false" X="144" Y="171" Width="387" Height="18" CaptionLength="130" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="d49ebc11-66a5-4667-9b20-11987380fd08" Identifier="Id" IdentifierIndex="0" EntityName="d49ebc11_66a5_4667_9b20_11987380fd08" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                <DropDownColumns>
+                  <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="1" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+              <Property Id="refManufacturingProcessId" ModelInstanceId="9d6c2426-2180-459d-bc50-02ac00694fb3" Name="Výchozi TPV" ReadOnly="false" X="144" Y="189" Width="387" Height="18" CaptionLength="130" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="7293d649-8b81-4a28-a2b9-32a60cf68442" Identifier="Id" IdentifierIndex="0" EntityName="7293d649_8b81_4a28_a2b9_32a60cf68442" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                <DropDownColumns>
+                  <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="1" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+              <Property Id="refManufacturingWarehouseId" ModelInstanceId="583c1db7-c525-4c7d-a87d-461cb992d141" Name="Cílový výrobní sklad" ReadOnly="false" X="144" Y="207" Width="387" Height="18" CaptionLength="130" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="c3b2bee0-b487-47f2-a2bb-dad170c3a6c1" Identifier="Id" IdentifierIndex="0" EntityName="c3b2bee0_b487_47f2_a2bb_dad170c3a6c1" IsTree="false" AllowReturnToForm="false" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                <DropDownColumns>
+                  <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="1" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+              <Property Id="refHACCPId" ModelInstanceId="a5406705-7868-4bf8-a563-e65c4cf7a8aa" Name="HACCP" ReadOnly="false" X="144" Y="225" Width="117" Height="18" CaptionLength="130" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="c8b7aa92-0d0f-449d-909d-1b4885af8f74" Identifier="Id" IdentifierIndex="0" EntityName="c8b7aa92_0d0f_449d_909d_1b4885af8f74" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                <DropDownColumns>
+                  <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="1" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+              <Property Id="DeliveryDays" ModelInstanceId="af7c76ad-7023-42a6-8a0e-36583ad7b265" Name="Dodání (dní)" ReadOnly="false" X="144" Y="243" Width="120" Height="18" CaptionLength="130" CaptionPosition="Left" Entity="Integer" Column="Number" CustomNumericFormat="" />
+              <Property Id="ExpirationDays" ModelInstanceId="f8fe4ad4-9697-4156-976a-3f41aca74463" Name="Expirace (dny)" ReadOnly="false" X="144" Y="261" Width="120" Height="18" CaptionLength="130" CaptionPosition="Left" Entity="Integer" Column="Number" CustomNumericFormat="" />
+              <Property Id="BestBeforeDays" ModelInstanceId="50cc7a08-d7aa-45ab-99dd-8ed82d21c9ad" Name="Spotřebovat (dnů)" ReadOnly="false" X="144" Y="279" Width="120" Height="18" CaptionLength="130" CaptionPosition="Left" Entity="Integer" Column="Number" CustomNumericFormat="" />
+              <Property Id="refInventoryControlTypeId" ModelInstanceId="fac75334-2d2c-42fe-85fd-9f1d39f324e6" Name="Způsob evidence" ReadOnly="false" X="396" Y="225" Width="135" Height="18" CaptionLength="120" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="e0ca84d8-8a15-480d-bdd2-28bb0034cf29" Identifier="Id" IdentifierIndex="1" EntityName="e0ca84d8_8a15_480d_bdd2_28bb0034cf29" IsTree="false" AllowReturnToForm="false" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                <DropDownColumns>
+                  <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="0" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+              <Property Id="refProductAcquisitionTypeId" ModelInstanceId="4bb60c5e-05ba-40f0-92ca-00b30d516c43" Name="Způsob pořízení" ReadOnly="false" X="396" Y="243" Width="135" Height="18" CaptionLength="120" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="2999e4ad-b48f-4cf6-b87b-8c26e7c1bff3" Identifier="Id" IdentifierIndex="0" EntityName="2999e4ad_b48f_4cf6_b87b_8c26e7c1bff3" IsTree="false" AllowReturnToForm="false" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                <DropDownColumns>
+                  <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="1" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+              <Property Id="Priority" ModelInstanceId="f437d667-0272-4719-9800-b67d70f8a399" Name="Priorita" ReadOnly="false" X="396" Y="261" Width="135" Height="18" CaptionLength="120" CaptionPosition="Left" Entity="Integer" Column="Number" CustomNumericFormat="" />
+              <Property Id="refTaxId" ModelInstanceId="a13d1332-774b-4061-bdca-2ca6eef29f28" Name="DPH" ReadOnly="false" X="396" Y="279" Width="135" Height="18" CaptionLength="120" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="821e871d-16af-44ce-b9de-6c4792547d88" Identifier="Id" IdentifierIndex="1" EntityName="821e871d_16af_44ce_b9de_6c4792547d88" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                <DropDownColumns>
+                  <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="0" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+              <Property Id="PriceLocal" ModelInstanceId="3c5dc224-aa7a-457f-a162-b62cbaf5c532" Name="Kalkulační cena/j." ReadOnly="false" X="396" Y="297" Width="135" Height="18" CaptionLength="120" CaptionPosition="Left" Entity="Currency" Column="Number" CustomNumericFormat="" />
+              <Property Id="IsZeroSalesOrderQuantityAllowed" ModelInstanceId="e79c04b9-bd42-40aa-83f2-f1d85c53046f" Name="Povolit nulové množství na prodejní objednávce" ReadOnly="false" X="279" Y="315" Width="261" Height="24" CaptionLength="100" CaptionPosition="Right" Entity="Boolean" Column="CheckBox" />
+              <Property Id="IsActive" ModelInstanceId="bece4c3f-6a22-4c15-90c2-920978b910fc" Name="Aktivní" ReadOnly="false" X="18" Y="297" Width="104" Height="24" CaptionLength="100" CaptionPosition="Right" Entity="Boolean" Column="CheckBox" />
+              <Property Id="IsDeliveryDetailPregenerated" ModelInstanceId="4ad8bac0-5a20-431f-894a-19cd7e82df37" Name="Předgenerovat položky dodacího listu" ReadOnly="false" X="18" Y="315" Width="234" Height="24" CaptionLength="100" CaptionPosition="Right" Entity="Boolean" Column="CheckBox" />
+              <Property Id="IsContainer" ModelInstanceId="23be70fe-47be-4fec-bc4d-af053df04415" Name="Přepravní obal" ReadOnly="false" X="18" Y="333" Width="104" Height="24" CaptionLength="100" CaptionPosition="Right" Entity="Boolean" Column="CheckBox" />
+              <Property Id="IsWarehouseQuantityFilled" ModelInstanceId="0debba4d-76a0-4dd3-b4df-fce84da4154c" Name="Vyplňovat množství ve skladových operací" ReadOnly="false" X="279" Y="333" Width="252" Height="24" CaptionLength="100" CaptionPosition="Right" Entity="Boolean" Column="CheckBox" />
+              <Property Id="refUomId" ModelInstanceId="0c3ab0ee-3a88-4212-85b6-f392ebe61857" Name="Měrná jednotka" ReadOnly="false" X="144" Y="27" Width="120" Height="19" CaptionLength="130" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="be03e96c-b7bc-4d85-b901-2299daec906b" Identifier="Id" IdentifierIndex="2" EntityName="be03e96c_b7bc_4d85_b901_2299daec906b" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                <DropDownColumns>
+                  <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="0" />
+                  <Property Id="Code" Name="Kód" Entity="String" Column="Text" Index="1" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+              <Property Id="PiecesPerUnit" ModelInstanceId="87fb2403-4c1e-4940-97a2-52f54d96c829" Name="Ks/m.j." ReadOnly="false" X="144" Y="45" Width="120" Height="19" CaptionLength="130" CaptionPosition="Left" Entity="Float" Column="Number" CustomNumericFormat="" />
+              <Property Id="Quantity" ModelInstanceId="a41a2bb2-b5b1-4c82-b97a-99abf2da08e8" Name="Množství" ReadOnly="false" X="144" Y="63" Width="120" Height="19" CaptionLength="130" CaptionPosition="Left" Entity="Float" Column="Number" CustomNumericFormat="" />
+              <Property Id="MinQuantity" ModelInstanceId="68f67fe2-4b75-4ccd-9761-7711c29a1bcb" Name="Min. množství" ReadOnly="false" X="144" Y="81" Width="120" Height="19" CaptionLength="130" CaptionPosition="Left" Entity="Float" Column="Number" CustomNumericFormat="" />
+              <Property Id="MaxQuantity" ModelInstanceId="5bb410e1-171f-4abe-aa28-5c476684f2e2" Name="Max. množství" ReadOnly="false" X="144" Y="99" Width="120" Height="19" CaptionLength="130" CaptionPosition="Left" Entity="Float" Column="Number" CustomNumericFormat="" />
+              <Property Id="refAlternativeUomId" ModelInstanceId="8a270100-b583-4d77-ab6a-23489ec5fb16" Name="Alternativní m/j" ReadOnly="false" X="144" Y="117" Width="120" Height="19" CaptionLength="130" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="be03e96c-b7bc-4d85-b901-2299daec906b" Identifier="Id" IdentifierIndex="2" EntityName="be03e96c_b7bc_4d85_b901_2299daec906b" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                <DropDownColumns>
+                  <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="0" />
+                  <Property Id="Code" Name="Kód" Entity="String" Column="Text" Index="1" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+              <Property Id="AlternativeQuantityRate" ModelInstanceId="27de126e-4b70-46be-acc2-d2c8cec07c56" Name="Poměr alt. m/j k m/j" ReadOnly="false" X="144" Y="135" Width="120" Height="19" CaptionLength="130" CaptionPosition="Left" Entity="Float" Column="Number" CustomNumericFormat="" />
+              <Property Id="Weight" ModelInstanceId="6c734b36-35dc-4f7a-afb5-170d1ef7f743" Name="Hmotnost kg/ks" ReadOnly="false" X="162" Y="27" Width="99" Height="19" CaptionLength="150" CaptionPosition="Left" Entity="Float" Column="Number" CustomNumericFormat="" />
+              <Property Id="MinWeight" ModelInstanceId="c8580889-bd44-4311-861a-90deca40324a" Name="Min. hmotnost" ReadOnly="false" X="162" Y="45" Width="99" Height="19" CaptionLength="150" CaptionPosition="Left" Entity="Float" Column="Number" CustomNumericFormat="" />
+              <Property Id="WeightToleranceNegative" ModelInstanceId="b184da5f-225a-452c-a282-5ca3523f972f" Name="Hmotnost. tolerance neg. %" ReadOnly="false" X="162" Y="63" Width="99" Height="19" CaptionLength="150" CaptionPosition="Left" Entity="Float" Column="Number" CustomNumericFormat="" />
+              <Property Id="WeightLowerLimit" ModelInstanceId="09d728b6-dc7e-4361-985e-4263e4d46a81" Name="Spodní hmotnost. limit" ReadOnly="true" X="162" Y="81" Width="99" Height="19" CaptionLength="150" CaptionPosition="Left" Entity="Float" Column="Number" CustomNumericFormat="" />
+              <Property Id="WeightTolerancePositive" ModelInstanceId="2fc65d75-e414-4877-9d1c-b480866a8ade" Name="Hmotnost. tolerance poz. %" ReadOnly="false" X="162" Y="99" Width="99" Height="19" CaptionLength="150" CaptionPosition="Left" Entity="Float" Column="Number" CustomNumericFormat="" />
+              <Property Id="WeightUpperLimit" ModelInstanceId="b5bdcc01-13db-4424-a65f-9fe5ec6fc65f" Name="Horní hmotnost. limit" ReadOnly="true" X="162" Y="117" Width="99" Height="19" CaptionLength="150" CaptionPosition="Left" Entity="Float" Column="Number" CustomNumericFormat="" />
+              <Property Id="TareWeight" ModelInstanceId="146e65db-00d6-425c-82be-db572a887b0c" Name="Tara (kg)" ReadOnly="false" X="162" Y="135" Width="99" Height="18" CaptionLength="150" CaptionPosition="Left" Entity="Float" Column="Number" CustomNumericFormat="" />
+              <Property Id="refCostsBudgetLineCategoryId" ModelInstanceId="05518b96-0bac-48d4-abc9-4229572bfe90" Name="Rozpočtová kategorie - náklady" ReadOnly="false" X="198" Y="27" Width="333" Height="19" CaptionLength="184" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="6bf8a273-c9ff-4e0b-b1e6-dd0c462b3e57" Identifier="Id" IdentifierIndex="0" EntityName="6bf8a273_c9ff_4e0b_b1e6_dd0c462b3e57" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                <DropDownColumns>
+                  <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="1" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+              <Property Id="refCostsProjectConditionsRuleCategoryId" ModelInstanceId="8b82420f-bd07-4c6d-bda5-7ab669414635" Name="Pravidla - Náklady" ReadOnly="false" X="198" Y="45" Width="333" Height="19" CaptionLength="184" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="06877e28-e48b-42e5-b6d0-a7e5a5d29c7a" Identifier="Id" IdentifierIndex="0" EntityName="06877e28_e48b_42e5_b6d0_a7e5a5d29c7a" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                <DropDownColumns>
+                  <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="1" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+              <Property Id="refRevenuesBudgetLineCategoryId" ModelInstanceId="00d23d7a-5cf8-4385-a92d-30aeba5625ff" Name="Rozpočtová kategorie - výnosy" ReadOnly="false" X="198" Y="63" Width="333" Height="19" CaptionLength="184" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="6bf8a273-c9ff-4e0b-b1e6-dd0c462b3e57" Identifier="Id" IdentifierIndex="0" EntityName="6bf8a273_c9ff_4e0b_b1e6_dd0c462b3e57" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                <DropDownColumns>
+                  <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="1" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+              <Property Id="refRevenuesProjectConditionsRuleCategoryId" ModelInstanceId="364644bc-db9b-4384-8bdc-d10fe4aeefc3" Name="Pravidla - Výnosy" ReadOnly="false" X="198" Y="81" Width="333" Height="19" CaptionLength="184" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="06877e28-e48b-42e5-b6d0-a7e5a5d29c7a" Identifier="Id" IdentifierIndex="0" EntityName="06877e28_e48b_42e5_b6d0_a7e5a5d29c7a" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                <DropDownColumns>
+                  <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="1" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+              <Property Id="refResourcesProjectConditionsRuleCategoryId" ModelInstanceId="d1a21646-7a1f-4ce1-ae89-3d4c91a26b30" Name="Pravidla - Zdroje/mat." ReadOnly="false" X="198" Y="99" Width="333" Height="19" CaptionLength="184" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="06877e28-e48b-42e5-b6d0-a7e5a5d29c7a" Identifier="Id" IdentifierIndex="0" EntityName="06877e28_e48b_42e5_b6d0_a7e5a5d29c7a" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                <DropDownColumns>
+                  <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="1" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+            </Properties>
+            <Actions>
+              <Action Type="OpenForm" Id="295b070e-4e3c-4814-ac94-12480f8d2a54" GroupId="" Caption="Smazat obrázek" IconUrl="" Mode="ActiveRecord" IsDefault="false" Placement="Toolbar">
+                <Parameters>
+                  <Parameter Name="Product_parId" FieldName="Id" />
+                </Parameters>
+              </Action>
+            </Actions>
+            <FormRoot Type="Canvas">
+              <Children>
+                <FormElement Type="FormSection" Title="Základní data" X="8" Y="7" Width="550" Height="360">
+                  <PropertyNames>
+                    <string>ReferenceCode</string>
+                    <string>BarCode</string>
+                    <string>CustomerReferenceCode</string>
+                    <string>RecordUpdated</string>
+                    <string>Name</string>
+                    <string>refProductCategoryId</string>
+                    <string>refProducerBusinessPartnerId</string>
+                    <string>NameByVendor</string>
+                    <string>refProductDistributionCategoryId</string>
+                    <string>refProductIntrastatClassificationId</string>
+                    <string>refProductLimitGroupId</string>
+                    <string>refManufacturingProcessId</string>
+                    <string>refManufacturingWarehouseId</string>
+                    <string>refHACCPId</string>
+                    <string>DeliveryDays</string>
+                    <string>ExpirationDays</string>
+                    <string>BestBeforeDays</string>
+                    <string>refInventoryControlTypeId</string>
+                    <string>refProductAcquisitionTypeId</string>
+                    <string>Priority</string>
+                    <string>refTaxId</string>
+                    <string>PriceLocal</string>
+                    <string>IsZeroSalesOrderQuantityAllowed</string>
+                    <string>IsActive</string>
+                    <string>IsDeliveryDetailPregenerated</string>
+                    <string>IsContainer</string>
+                    <string>IsWarehouseQuantityFilled</string>
+                  </PropertyNames>
+                </FormElement>
+                <FormElement Type="FormSection" Title="Prodejní jednotky" X="567" Y="7" Width="280" Height="171">
+                  <PropertyNames>
+                    <string>refUomId</string>
+                    <string>PiecesPerUnit</string>
+                    <string>Quantity</string>
+                    <string>MinQuantity</string>
+                    <string>MaxQuantity</string>
+                    <string>refAlternativeUomId</string>
+                    <string>AlternativeQuantityRate</string>
+                  </PropertyNames>
+                </FormElement>
+                <FormElement Type="FormSection" Title="Vážení" X="568" Y="193" Width="279" Height="171">
+                  <PropertyNames>
+                    <string>Weight</string>
+                    <string>MinWeight</string>
+                    <string>WeightToleranceNegative</string>
+                    <string>WeightLowerLimit</string>
+                    <string>WeightTolerancePositive</string>
+                    <string>WeightUpperLimit</string>
+                    <string>TareWeight</string>
+                  </PropertyNames>
+                </FormElement>
+                <FormElement Type="FormSection" Title="Rozpočty" X="10" Y="370" Width="549" Height="126">
+                  <PropertyNames>
+                    <string>refCostsBudgetLineCategoryId</string>
+                    <string>refCostsProjectConditionsRuleCategoryId</string>
+                    <string>refRevenuesBudgetLineCategoryId</string>
+                    <string>refRevenuesProjectConditionsRuleCategoryId</string>
+                    <string>refResourcesProjectConditionsRuleCategoryId</string>
+                  </PropertyNames>
+                </FormElement>
+              </Children>
+            </FormRoot>
+            <FilterExpressions />
+          </UIElement>
+          <UIElement Id="AsTabControl1_5" ModelInstanceId="9f7613e8-6f8e-44c4-8bce-9353ae758b6f" xsi:type="UIElement" Type="Tab" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+            <Configuration />
+            <UIChildren>
+              <UIElement Id="TabPage01_6" ModelInstanceId="9b51d2e5-0731-4bd2-9c18-d390b799bd5d" xsi:type="UIElement" Type="Box" Name="Atributy" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration />
+                <UIChildren>
+                  <UIElement Id="AsPanel2_7" ModelInstanceId="b9b4607c-371c-4a41-b782-893aad7e12ec" Name="Atributy" xsi:type="Grid" Type="Grid" ModelId="92d5e744-7891-4e80-9915-c3f0cb218c82" DefaultPanelView="1" IsHeadless="false" DisableActionButtons="true" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="ProductAttribute" DataMember="ProductCategory.Product.ProductAttribute" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentEntityName="Product">
+                    <Properties>
+                      <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+                      <Property Id="refDimensionId" ModelInstanceId="7b41cc97-3bea-4412-8450-755023dcac55" Name="Dimenze" ReadOnly="false" X="104" Y="12" Width="352" Height="20" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="2849fd1f-f88b-4665-8629-ab6f14d34a1f" Identifier="Id" IdentifierIndex="1" EntityName="2849fd1f_f88b_4665_8629_ab6f14d34a1f" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                        <DropDownColumns>
+                          <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="0" />
+                        </DropDownColumns>
+                        <DropDownParameters />
+                      </Property>
+                      <Property Id="refUomEnumerationId" ModelInstanceId="47705bb1-63de-4c3f-b60c-ef4fa5b3bbd0" Name="Hodnota (výčet)" ReadOnly="false" X="104" Y="36" Width="352" Height="20" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="8601d594-f206-4b1a-9975-e204c1506ac6" Identifier="Id" IdentifierIndex="0" EntityName="8601d594_f206_4b1a_9975_e204c1506ac6" IsTree="false" AllowReturnToForm="false" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="false">
+                        <DropDownColumns>
+                          <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="1" />
+                          <Property Id="Description" Name="Popis" Entity="String" Column="Text" Index="2" />
+                        </DropDownColumns>
+                        <DropDownParameters>
+                          <ComboBoxParameterMapping ParameterName="Dimension_parId" FieldName="refDimensionId" />
+                        </DropDownParameters>
+                      </Property>
+                      <Property Id="NumberValue" ModelInstanceId="73ace356-6123-45ce-aa4b-c5f1b50f5402" Name="Hodnota (číslo)" ReadOnly="false" X="104" Y="60" Width="100" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="Float" Column="Number" CustomNumericFormat="" />
+                    </Properties>
+                    <Actions />
+                    <FormRoot Type="Canvas">
+                      <PropertyNames>
+                        <string>refDimensionId</string>
+                        <string>refUomEnumerationId</string>
+                        <string>NumberValue</string>
+                      </PropertyNames>
+                    </FormRoot>
+                    <FilterExpressions />
+                  </UIElement>
+                </UIChildren>
+              </UIElement>
+              <UIElement Id="TabPage03_8" ModelInstanceId="a1656dbd-0f81-4d50-a69a-c94c98185ffa" xsi:type="UIElement" Type="Box" Name="Daně" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration />
+                <UIChildren>
+                  <UIElement Id="AsPanel6_9" ModelInstanceId="8a374474-0fbd-40af-ae81-ca82e9d9f7f8" Name="Daně" xsi:type="Grid" Type="Grid" ModelId="b447aed3-a2a9-418f-a566-d0183444ddbe" DefaultPanelView="1" IsHeadless="false" DisableActionButtons="false" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="ProductTax" DataMember="ProductCategory.Product.ProductTax" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentEntityName="Product">
+                    <Properties>
+                      <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+                      <Property Id="refTaxProfileId" ModelInstanceId="71f80bcd-219f-4c31-a664-6e2e8e498984" Name="Daňový profil" ReadOnly="false" X="104" Y="12" Width="240" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="832582bc-10b5-4a4a-80de-5f117df81423" Identifier="Id" IdentifierIndex="0" EntityName="832582bc_10b5_4a4a_80de_5f117df81423" IsTree="false" AllowReturnToForm="false" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                        <DropDownColumns>
+                          <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="1" />
+                        </DropDownColumns>
+                        <DropDownParameters />
+                      </Property>
+                      <Property Id="refTaxId" ModelInstanceId="78f6f863-baf1-412e-ad4b-6b2c3318ceec" Name="Daň" ReadOnly="false" X="104" Y="36" Width="240" Height="20" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="821e871d-16af-44ce-b9de-6c4792547d88" Identifier="Id" IdentifierIndex="1" EntityName="821e871d_16af_44ce_b9de_6c4792547d88" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                        <DropDownColumns>
+                          <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="0" />
+                        </DropDownColumns>
+                        <DropDownParameters />
+                      </Property>
+                    </Properties>
+                    <Actions />
+                    <FormRoot Type="Canvas">
+                      <PropertyNames>
+                        <string>refTaxProfileId</string>
+                        <string>refTaxId</string>
+                      </PropertyNames>
+                    </FormRoot>
+                    <Configuration />
+                    <FilterExpressions />
+                  </UIElement>
+                </UIChildren>
+              </UIElement>
+              <UIElement Id="TabPage06_10" ModelInstanceId="46631fc7-6d1c-464b-9a49-3b0e3dc39b78" xsi:type="UIElement" Type="Box" Name="Popis" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration />
+                <UIChildren>
+                  <UIElement Id="AsPanel4_11" ModelInstanceId="6a552d86-017f-498b-bb7d-15a7ca4e0893" Name="Texty" xsi:type="Grid" Type="Grid" ModelId="a084b856-3750-4b5e-a8eb-45db254d4fe6" DefaultPanelView="0" IsHeadless="true" DisableActionButtons="true" ShowAddButton="false" ShowDeleteButton="false" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="Product" DataMember="ProductCategory.Product" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentEntityName="Product">
+                    <Properties>
+                      <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+                      <Property Id="Description" ModelInstanceId="f925e975-76d5-496d-b81c-be297a1ffa69" Name="Popis" ReadOnly="false" X="0" Y="0" Width="600" Height="208" CaptionLength="200" CaptionPosition="None" Entity="String" Column="Text" Dock="Fill" Multiline="true" IsPassword="false" IsRichText="false" MaxLength="-1" />
+                    </Properties>
+                    <Actions />
+                    <FormRoot Type="Canvas">
+                      <PropertyNames>
+                        <string>Description</string>
+                      </PropertyNames>
+                    </FormRoot>
+                    <Configuration />
+                    <FilterExpressions />
+                  </UIElement>
+                </UIChildren>
+              </UIElement>
+              <UIElement Id="TabPage07_12" ModelInstanceId="9ce82a5c-4edb-45db-ab83-c47df2d5b000" xsi:type="UIElement" Type="Box" Name="Složení" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration />
+                <UIChildren>
+                  <UIElement Id="SplitPanel4_13" ModelInstanceId="df96a6a0-2d11-4a15-b6f2-790750fa69d4" xsi:type="UIElement" Type="VBox" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                    <Configuration />
+                    <UIChildren>
+                      <UIElement Id="AsPanel15_14" ModelInstanceId="7ba6a93b-8efd-4374-88aa-3c35f8fd3835" Height="26" Name="" xsi:type="Grid" Type="Grid" ModelId="bd2cd4ef-6ff5-4ace-863b-4f02841c1597" DefaultPanelView="0" IsHeadless="true" DisableActionButtons="true" ShowAddButton="false" ShowDeleteButton="false" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="Product" DataMember="ProductCategory.Product" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentEntityName="Product">
+                        <Properties>
+                          <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+                          <Property Id="HasOwnSpecification" ModelInstanceId="77452b56-37d3-4720-a151-3c662c0370a7" Name="Jiné složení" ReadOnly="false" X="9" Y="9" Width="104" Height="24" CaptionLength="100" CaptionPosition="Right" Entity="Boolean" Column="CheckBox" />
+                        </Properties>
+                        <Actions />
+                        <FormRoot Type="Canvas">
+                          <PropertyNames>
+                            <string>HasOwnSpecification</string>
+                          </PropertyNames>
+                        </FormRoot>
+                        <Configuration />
+                        <FilterExpressions />
+                      </UIElement>
+                      <UIElement Id="AsPanel16_15" ModelInstanceId="9ae7cd77-c0ff-48c1-b360-17ffd00e2ab3" Name="Texty" xsi:type="Grid" Type="Grid" ModelId="2b56957d-e54b-47ec-91b8-8a56f642a1a2" DefaultPanelView="0" IsHeadless="true" DisableActionButtons="true" ShowAddButton="false" ShowDeleteButton="false" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="Product" DataMember="ProductCategory.Product" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentEntityName="Product">
+                        <Properties>
+                          <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+                          <Property Id="Specification" ModelInstanceId="14b4b41a-0930-4422-ac60-53cff4658fa5" Name="Specifikace (složení)" ReadOnly="false" X="0" Y="0" Width="600" Height="208" CaptionLength="200" CaptionPosition="None" Entity="String" Column="Text" Dock="Fill" Multiline="true" IsPassword="false" IsRichText="false" MaxLength="-1" />
+                          <Property Id="StockSourceSpecification" ModelInstanceId="0aea27bd-95b2-41a4-a5ae-1c04476ad12c" Name="Specifikace z prvního zdroje vykrytí" ReadOnly="true" X="0" Y="0" Width="600" Height="208" CaptionLength="200" CaptionPosition="Left" Entity="String" Column="Text" Dock="Fill" Multiline="true" IsPassword="false" IsRichText="false" MaxLength="-1" />
+                        </Properties>
+                        <Actions />
+                        <FormRoot Type="Canvas">
+                          <PropertyNames>
+                            <string>Specification</string>
+                            <string>StockSourceSpecification</string>
+                          </PropertyNames>
+                        </FormRoot>
+                        <Configuration />
+                        <FilterExpressions />
+                      </UIElement>
+                    </UIChildren>
+                  </UIElement>
+                </UIChildren>
+              </UIElement>
+              <UIElement Id="TabPage08_16" ModelInstanceId="df8f050f-a5a8-42bd-b76d-0162eb42533b" xsi:type="UIElement" Type="Box" Name="Ostatní nastavení" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration />
+                <UIChildren>
+                  <UIElement Id="AsPanel7_17" ModelInstanceId="90603b3d-8502-4792-bc7b-980d6800b56d" Name="" xsi:type="Grid" Type="Grid" ModelId="bf61c4e3-3987-4e4d-8a1d-5f013b5370a2" DefaultPanelView="0" IsHeadless="true" DisableActionButtons="true" ShowAddButton="false" ShowDeleteButton="false" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="Product" DataMember="ProductCategory.Product" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentEntityName="Product">
+                    <Properties>
+                      <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+                      <Property Id="PictureName" ModelInstanceId="45b60fe5-c531-4852-aeee-270c3ac3f90c" Name="Obrázek" ReadOnly="false" X="112" Y="8" Width="344" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="Blob">
+                        <Parameters>
+                          <Parameter Name="HideOnForm" Value="false" />
+                          <Parameter Name="StyleId" Value="00000000-0000-0000-0000-000000000000" />
+                          <Parameter Name="DefaultCompressionConstantId" Value="00000000-0000-0000-0000-000000000000" />
+                          <Parameter Name="BlobMember" Value="Picture" />
+                          <Parameter Name="ThumbnailHeightConstantId" Value="168a6e08-f990-4014-905c-dbf4b14266c0" />
+                          <Parameter Name="FileSizeMember" Value="" />
+                          <Parameter Name="BlobLookupId" Value="10b5cd91-efcd-42fd-b314-2b555dfae2df" />
+                          <Parameter Name="GridColumnCaption" Value="" />
+                          <Parameter Name="AuthorMember" Value="" />
+                          <Parameter Name="StorageTypeDefaultConstantId" Value="00000000-0000-0000-0000-000000000000" />
+                          <Parameter Name="ThumbnailMember" Value="PictureThumbnail" />
+                          <Parameter Name="DateCreatedMember" Value="" />
+                          <Parameter Name="RemarkMember" Value="" />
+                          <Parameter Name="DisplayStorageTypeSelection" Value="false" />
+                          <Parameter Name="ThumbnailWidthConstantId" Value="ec84d585-2147-4925-9205-f9eccc216eec" />
+                          <Parameter Name="DateLastModifiedMember" Value="" />
+                          <Parameter Name="OriginalPathMember" Value="" />
+                          <Parameter Name="FileName" Value="" />
+                          <Parameter Name="CompressionStateMember" Value="" />
+                        </Parameters>
+                      </Property>
+                      <Property Id="PictureThumbnail" ModelInstanceId="5991803b-9673-4154-b6ef-1ab82f7aeab1" Name="Náhled obrázku" ReadOnly="false" X="16" Y="32" Width="72" Height="72" CaptionLength="100" CaptionPosition="Left" Entity="Image" Column="Image" SourceType="Blob" />
+                    </Properties>
+                    <Actions />
+                    <FormRoot Type="Canvas">
+                      <PropertyNames>
+                        <string>PictureName</string>
+                        <string>PictureThumbnail</string>
+                      </PropertyNames>
+                    </FormRoot>
+                    <Configuration />
+                    <FilterExpressions />
+                  </UIElement>
+                </UIChildren>
+              </UIElement>
+              <UIElement Id="TabPage09_18" ModelInstanceId="5053d592-7419-4d3a-94c3-f6a693dd6bcb" xsi:type="UIElement" Type="Box" Name="Zdroje vykrytí" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration />
+                <UIChildren>
+                  <UIElement Id="AsPanel8_19" ModelInstanceId="29fab54b-a9b5-46a6-a6d4-7c3f4cd5132c" Name="Zdroje vykrytí" xsi:type="Grid" Type="Grid" ModelId="48715615-4347-4e44-8834-7b5ec57b0778" DefaultPanelView="1" IsHeadless="false" DisableActionButtons="false" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="ProductStockSource" DataMember="ProductCategory.Product.ProductStockSource" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentEntityName="Product">
+                    <Properties>
+                      <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+                      <Property Id="Priority" ModelInstanceId="3cdada16-0133-4339-be1d-012c56f77818" Name="Priorita" ReadOnly="false" X="108" Y="16" Width="100" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="Integer" Column="Number" CustomNumericFormat="" />
+                      <Property Id="refStockSourceProductId" ModelInstanceId="db236f00-630f-484f-96a5-71dec0c60e19" Name="Skladový produkt" ReadOnly="false" X="108" Y="43" Width="392" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="199a5356-3b83-40be-8970-643fc1ed03d9" Identifier="Id" IdentifierIndex="5" EntityName="199a5356_3b83_40be_8970_643fc1ed03d9" IsTree="false" AllowReturnToForm="false" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                        <DropDownColumns>
+                          <Property Id="ReferenceCode" Name="Kód" Entity="String" Column="Text" Index="6" />
+                          <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="3" />
+                          <Property Id="ProductCategory_Name" Name="Kategorie" Entity="String" Column="Text" Index="2" />
+                          <Property Id="Quantity" Name="Množství" Entity="Float" Column="Number" Index="7" />
+                          <Property Id="Weight" Name="Hmotnost kg/ks" Entity="Float" Column="Number" Index="4" />
+                          <Property Id="Uom_Code" Name="MJ" Entity="String" Column="Text" Index="1" />
+                        </DropDownColumns>
+                        <DropDownParameters />
+                      </Property>
+                      <Property Id="HACCP_Name" ModelInstanceId="c180ef28-678d-473b-974e-2716d75981a7" Name="HACCP Název" ReadOnly="true" X="108" Y="70" Width="387" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="Text" Dock="None" Multiline="false" IsPassword="false" IsRichText="false" MaxLength="200" />
+                      <Property Id="HACCP_Description" ModelInstanceId="885c38d9-ccdd-42dc-b20c-2bd1305ec4e5" Name="HACCP" ReadOnly="true" X="108" Y="97" Width="387" Height="108" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="Text" Dock="None" Multiline="true" IsPassword="false" IsRichText="false" MaxLength="-1" />
+                    </Properties>
+                    <Actions />
+                    <FormRoot Type="Canvas">
+                      <PropertyNames>
+                        <string>Priority</string>
+                        <string>refStockSourceProductId</string>
+                        <string>HACCP_Name</string>
+                        <string>HACCP_Description</string>
+                      </PropertyNames>
+                    </FormRoot>
+                    <Configuration />
+                    <FilterExpressions />
+                  </UIElement>
+                </UIChildren>
+              </UIElement>
+              <UIElement Id="TabPage10_20" ModelInstanceId="058d7c3b-00f1-4d93-a886-c12d41a4026b" xsi:type="UIElement" Type="Box" Name="Vykrývá" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration />
+                <UIChildren>
+                  <UIElement Id="AsPanel11_21" ModelInstanceId="0fa7df34-ea2d-45f6-87ab-d2d136dd5131" Name="Vykrývané produkty" xsi:type="Grid" Type="Grid" ModelId="a842673c-6bb4-4940-bed5-0d4c5945e09c" DefaultPanelView="1" IsHeadless="false" DisableActionButtons="false" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="ProductStockSource_StockProduct" DataMember="ProductCategory.Product.ProductStockSource_StockProduct" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentEntityName="Product">
+                    <Properties>
+                      <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+                      <Property Id="Priority" ModelInstanceId="4ceaa64b-87b9-47b1-bc16-499b3b4b1cd3" Name="Priorita" ReadOnly="false" X="136" Y="12" Width="100" Height="19" CaptionLength="130" CaptionPosition="Left" Entity="Integer" Column="Number" CustomNumericFormat="" />
+                      <Property Id="refProductId" ModelInstanceId="81322884-418d-4293-b3d2-04c2c1e98a76" Name="Marketingový produkt" ReadOnly="false" X="136" Y="36" Width="392" Height="19" CaptionLength="130" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="335ed17d-74d8-43f7-b1d5-55326535b76b" Identifier="Id" IdentifierIndex="5" EntityName="335ed17d_74d8_43f7_b1d5_55326535b76b" IsTree="false" AllowReturnToForm="false" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                        <DropDownColumns>
+                          <Property Id="ReferenceCode" Name="Kód" Entity="String" Column="Text" Index="6" />
+                          <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="3" />
+                          <Property Id="ProductCategory_Name" Name="Kategorie" Entity="String" Column="Text" Index="2" />
+                          <Property Id="Quantity" Name="Množství" Entity="Float" Column="Number" Index="7" />
+                          <Property Id="Weight" Name="Hmotnost kg/ks" Entity="Float" Column="Number" Index="4" />
+                          <Property Id="Uom_Code" Name="MJ" Entity="String" Column="Text" Index="1" />
+                        </DropDownColumns>
+                        <DropDownParameters />
+                      </Property>
+                    </Properties>
+                    <Actions />
+                    <FormRoot Type="Canvas">
+                      <PropertyNames>
+                        <string>Priority</string>
+                        <string>refProductId</string>
+                      </PropertyNames>
+                    </FormRoot>
+                    <Configuration />
+                    <FilterExpressions />
+                  </UIElement>
+                </UIChildren>
+              </UIElement>
+              <UIElement Id="TabPage11_22" ModelInstanceId="67692ac5-7bdb-4d71-aa09-0090835aacb9" xsi:type="UIElement" Type="Box" Name="Sklady" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration />
+                <UIChildren>
+                  <UIElement Id="AsPanel9_23" ModelInstanceId="6acae642-0e44-41fc-b8cf-9a84e5d71d0c" Name="Skladová karta" xsi:type="Grid" Type="Grid" ModelId="24d29997-f0b5-4b2e-b522-424ea13594a7" DefaultPanelView="1" IsHeadless="false" DisableActionButtons="false" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="Inventory" DataMember="ProductCategory.Product.Inventory" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentEntityName="Product">
+                    <Properties>
+                      <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+                      <Property Id="ReferenceCode" ModelInstanceId="08550eb5-fca1-458e-be31-3b75a12ce13d" Name="Kód" ReadOnly="true" X="112" Y="12" Width="152" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="Text" Dock="None" Multiline="false" IsPassword="false" IsRichText="false" MaxLength="20" />
+                      <Property Id="Name" ModelInstanceId="1b56f9b5-a7dc-4220-ba87-b82d2db0d565" Name="Název" ReadOnly="false" X="112" Y="36" Width="464" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="Text" Dock="None" Multiline="false" IsPassword="false" IsRichText="false" MaxLength="200" />
+                      <Property Id="refWarehouseId" ModelInstanceId="c0132b9d-fa2a-4506-b05a-74fc19a2e585" Name="Sklad" ReadOnly="false" X="112" Y="60" Width="464" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="c3b2bee0-b487-47f2-a2bb-dad170c3a6c1" Identifier="Id" IdentifierIndex="0" EntityName="c3b2bee0_b487_47f2_a2bb_dad170c3a6c1" IsTree="false" AllowReturnToForm="false" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                        <DropDownColumns>
+                          <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="1" />
+                        </DropDownColumns>
+                        <DropDownParameters />
+                      </Property>
+                      <Property Id="ActivationDate" ModelInstanceId="8cdaeab5-7c0a-4629-b4ec-7cb3e7db917f" Name="Datum pořízení" ReadOnly="false" X="112" Y="84" Width="152" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="Date" Column="Date" FormatterPattern="M/D/YYYY" />
+                      <Property Id="TotalQuantity" ModelInstanceId="f18c7175-3bc5-4d87-ad58-ceecaa3fac11" Name="K dispozici" ReadOnly="true" X="112" Y="108" Width="152" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="Float" Column="Number" CustomNumericFormat="" />
+                    </Properties>
+                    <Actions />
+                    <FormRoot Type="Canvas">
+                      <PropertyNames>
+                        <string>ReferenceCode</string>
+                        <string>Name</string>
+                        <string>refWarehouseId</string>
+                        <string>ActivationDate</string>
+                        <string>TotalQuantity</string>
+                      </PropertyNames>
+                    </FormRoot>
+                    <Configuration />
+                    <FilterExpressions />
+                  </UIElement>
+                </UIChildren>
+              </UIElement>
+              <UIElement Id="TabPage12_24" ModelInstanceId="faab9cc8-782c-482b-9704-a20dc160102e" xsi:type="UIElement" Type="Box" Name="Odběratelé" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration />
+                <UIChildren>
+                  <UIElement Id="AsPanel14_25" ModelInstanceId="c3d9921d-260d-4589-b77f-ef849b03c307" Name="Odběratelé" xsi:type="Grid" Type="Grid" ModelId="2b896972-22c9-4545-8d57-afe8d62bc499" DefaultPanelView="1" IsHeadless="false" DisableActionButtons="false" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="ProductSalesBusinessPartner" DataMember="ProductCategory.Product.ProductSalesBusinessPartner" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentEntityName="Product">
+                    <Properties>
+                      <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+                      <Property Id="refBusinessPartnerId" ModelInstanceId="e4c2c09b-0677-4970-ae6e-009928ec83d4" Name="Odběratel" ReadOnly="false" X="108" Y="16" Width="400" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="e7bb24ce-20fa-4b33-9952-ec5f1bccf154" Identifier="Id" IdentifierIndex="2" EntityName="e7bb24ce_20fa_4b33_9952_ec5f1bccf154" IsTree="false" AllowReturnToForm="false" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="false">
+                        <DropDownColumns>
+                          <Property Id="ReferenceCode" Name="Shortcut" Entity="String" Column="Text" Index="3" />
+                          <Property Id="Text" Name="Name" Entity="String" Column="Text" Index="1" />
+                        </DropDownColumns>
+                        <DropDownParameters>
+                          <ComboBoxParameterMapping ParameterName="PriceListProduct_parProductId" FieldName="refProductId" />
+                        </DropDownParameters>
+                      </Property>
+                      <Property Id="Remark" ModelInstanceId="e50e70ad-0aa4-403d-8bfb-cec2329f518e" Name="Poznámka" ReadOnly="false" X="108" Y="43" Width="400" Height="198" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="Text" Dock="None" Multiline="true" IsPassword="false" IsRichText="false" MaxLength="-1" />
+                    </Properties>
+                    <Actions />
+                    <FormRoot Type="Canvas">
+                      <PropertyNames>
+                        <string>refBusinessPartnerId</string>
+                        <string>Remark</string>
+                      </PropertyNames>
+                    </FormRoot>
+                    <Configuration />
+                    <FilterExpressions />
+                  </UIElement>
+                </UIChildren>
+              </UIElement>
+              <UIElement Id="TabPage13_26" ModelInstanceId="72584a7b-a3a3-4822-a7db-d53049e507a6" xsi:type="UIElement" Type="Box" Name="Služby" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration />
+                <UIChildren>
+                  <UIElement Id="AsPanel15_27" ModelInstanceId="c4d25edc-8661-463a-b592-d2e3e85b7ad9" Name="Navázané služby" xsi:type="Grid" Type="Grid" ModelId="a846dc2a-47b2-4db0-a3a0-34ca51ed29b5" DefaultPanelView="1" IsHeadless="false" DisableActionButtons="false" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="ProductServiceDefinition" DataMember="ProductCategory.Product.ProductServiceDefinition" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentEntityName="Product">
+                    <Properties>
+                      <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+                      <Property Id="refServiceDefinitionId" ModelInstanceId="df77c04e-08d3-4a8d-a75e-190139a9e702" Name="Služba" ReadOnly="false" X="108" Y="16" Width="400" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="3dfb9f4a-59da-47f3-9392-382b10c6cbe8" Identifier="Id" IdentifierIndex="1" EntityName="3dfb9f4a_59da_47f3_9392_382b10c6cbe8" IsTree="false" AllowReturnToForm="false" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                        <DropDownColumns>
+                          <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="0" />
+                        </DropDownColumns>
+                        <DropDownParameters />
+                      </Property>
+                      <Property Id="refDependentOnServiceDefinitionId" ModelInstanceId="880f6f86-ea2e-46e0-bd45-83deeaa30e65" Name="Zřídit po" ReadOnly="false" X="108" Y="43" Width="400" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="3dfb9f4a-59da-47f3-9392-382b10c6cbe8" Identifier="Id" IdentifierIndex="1" EntityName="3dfb9f4a_59da_47f3_9392_382b10c6cbe8" IsTree="false" AllowReturnToForm="false" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                        <ToolTip>Pokud je vybrána služba, proběhne zřízení služby až po úspěšném zřízení vybrané služby.</ToolTip>
+                        <DropDownColumns>
+                          <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="0" />
+                        </DropDownColumns>
+                        <DropDownParameters />
+                      </Property>
+                    </Properties>
+                    <Actions />
+                    <FormRoot Type="Canvas">
+                      <PropertyNames>
+                        <string>refServiceDefinitionId</string>
+                        <string>refDependentOnServiceDefinitionId</string>
+                      </PropertyNames>
+                    </FormRoot>
+                    <Configuration />
+                    <FilterExpressions />
+                  </UIElement>
+                </UIChildren>
+              </UIElement>
+              <UIElement Id="TabPage14_28" ModelInstanceId="dae745d4-47ab-4d72-a856-af97bef1e130" xsi:type="UIElement" Type="Box" Name="Položky balíčku" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration />
+                <UIChildren>
+                  <UIElement Id="AsPanel17_29" ModelInstanceId="e3c7893c-7cbc-4670-93bc-00cc4527ed3f" Name="Obsah balíčku" xsi:type="Grid" Type="Grid" ModelId="26707e87-fd7b-47c7-ae04-7ac68a2e0ce2" DefaultPanelView="1" IsHeadless="false" DisableActionButtons="false" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="ProductBundle" DataMember="ProductCategory.Product.ProductBundle" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="25cf72e0-142c-4f79-be3a-08df63792bcc" ParentEntityName="Product">
+                    <Properties>
+                      <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+                      <Property Id="refProductId" ModelInstanceId="ef9d93d2-c579-4f82-86c4-6f2071194a29" Name="Produkt" ReadOnly="false" X="108" Y="10" Width="400" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="03fc79f2-dbce-4ddf-9743-879bc2324399" Identifier="Id" IdentifierIndex="5" EntityName="03fc79f2_dbce_4ddf_9743_879bc2324399" IsTree="false" AllowReturnToForm="false" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                        <DropDownColumns>
+                          <Property Id="ReferenceCode" Name="Kód" Entity="String" Column="Text" Index="6" />
+                          <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="3" />
+                          <Property Id="ProductCategory_Name" Name="Kategorie" Entity="String" Column="Text" Index="2" />
+                          <Property Id="Weight" Name="Hmotnost kg/ks" Entity="Float" Column="Number" Index="4" />
+                          <Property Id="Uom_Code" Name="MJ" Entity="String" Column="Text" Index="1" />
+                        </DropDownColumns>
+                        <DropDownParameters />
+                      </Property>
+                      <Property Id="Quantity" ModelInstanceId="80a9b006-94f0-4240-ab20-3ec5efbe9483" Name="Množství" ReadOnly="false" X="108" Y="35" Width="97" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="Integer" Column="Number" CustomNumericFormat="" />
+                      <Property Id="refUomId" ModelInstanceId="74028503-751d-4461-a1bc-8cd6335f2a25" Name="Měrná jednotka" ReadOnly="false" X="108" Y="60" Width="97" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="be03e96c-b7bc-4d85-b901-2299daec906b" Identifier="Id" IdentifierIndex="2" EntityName="be03e96c_b7bc_4d85_b901_2299daec906b" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                        <DropDownColumns>
+                          <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="0" />
+                          <Property Id="Code" Name="Kód" Entity="String" Column="Text" Index="1" />
+                        </DropDownColumns>
+                        <DropDownParameters />
+                      </Property>
+                    </Properties>
+                    <Actions />
+                    <FormRoot Type="Canvas">
+                      <PropertyNames>
+                        <string>refProductId</string>
+                        <string>Quantity</string>
+                        <string>refUomId</string>
+                      </PropertyNames>
+                    </FormRoot>
+                    <Configuration />
+                    <FilterExpressions />
+                  </UIElement>
+                </UIChildren>
+              </UIElement>
+            </UIChildren>
+          </UIElement>
+        </UIChildren>
+      </UIElement>
+    </UIChildren>
+  </UIRoot>
+</Window>

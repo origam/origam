@@ -1,0 +1,152 @@
+
+.oui-unknown {
+  border: 1px solid black;
+  padding: 2px;
+  margin: 2px;
+}
+
+.oui-form-root{
+  /* border: 1px solid black;*/
+  /*width: 100%;*/
+  /*height: 100%;*/
+  /*min-height: 500px;*/
+  flex-grow: 1;
+  /*padding: 2px;
+  margin: 2px;*/
+  overflow: auto;
+  background-color: #dddddd;
+  position: relative;
+}
+
+.oui-panel {
+  position: absolute;
+  border: 1px solid #222222;
+  background-color: #aaaaaa;
+  box-sizing: border-box;
+}
+
+.oui-panel-label {
+  position: absolute;
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+.oui-properties-inner {
+  position: relative;
+  padding-right: 50px;
+}
+
+.oui-property {
+  position: absolute;
+  overflow: hidden;
+  background-color: white;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+.oui-property-default {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #8b8b8b;
+  white-space: nowrap;
+  padding-left: 2px;
+}
+
+.oui-property-caption {
+  position: absolute;
+  white-space: nowrap;
+  background-color: transparent;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  /* margin-left: 2px;
+  margin-right: 2px; */
+  padding-left: 2px;
+  padding-right: 2px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.oui-vsplit-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.oui-vsplit-panel {
+  flex-grow: 1; 
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.oui-hsplit-container {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+}
+
+.oui-hsplit-panel {
+  flex-grow: 1; 
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.oui-window {
+  display: flex;
+  height: 100%;
+  flex-grow: 1;
+}
+
+.oui-grid {
+  height: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid red;
+}
+
+.oui-grid-toolbar {
+  height: 20px;
+  background-color: #8998C5;
+}
+
+.oui-tab {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.oui-tab-handles {
+  height: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.oui-tab-handle {
+  min-width: 100px;
+  background-color: #999999;
+  margin-right: 2px;
+  padding: 0 5px 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.oui-tab-panels {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+}
+
+.oui-box {
+  flex-grow: 1;
+  display: flex;
+}
+
+.oui-vbox {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
