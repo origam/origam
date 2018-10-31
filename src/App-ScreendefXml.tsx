@@ -3,7 +3,8 @@ import { observable, action } from "mobx";
 import { observer, Provider, inject } from "mobx-react";
 import * as React from "react";
 import * as xmlJs from "xml-js";
-import "./App.css";
+import "./App.scss";
+import "./styles/screenComponents.scss";
 import { isArray } from "util";
 
 function parseScreenDef(o: any) {
@@ -86,6 +87,9 @@ function parseScreenDef(o: any) {
           },
           children: []
         };
+        if (node.attributes.Type === "Grid") {
+          newChild.props.isHeadless = node.attributes.IsHeadless === "true";
+        }
         uiStructOpened.children.push(newChild);
         break;
       }
@@ -373,7 +377,13 @@ class OUIGrid extends React.Component<any> {
           maxHeight: this.props.h
         }}
       >
-        <div className="oui-grid-toolbar">tb</div>
+        <div
+          className={
+            "oui-grid-toolbar" + (this.props.isHeadless ? " hidden" : "")
+          }
+        >
+          tb
+        </div>
         {this.props.children}
       </div>
     );
@@ -417,7 +427,10 @@ class OUITabHandle extends React.Component<any> {
     return (
       <div
         onClick={event => this.props.onHandleClick(event, this.props.id)}
-        className="oui-tab-handle"
+        className={
+          "oui-tab-handle" +
+          (this.props.id === this.props.activeTabId ? " active" : "")
+        }
       >
         {this.props.name}
       </div>
@@ -457,7 +470,7 @@ class OUITreePanel extends React.Component<any> {
     return (
       <div>
         <img
-          style={{ width: 250}}
+          style={{ width: 250 }}
           src="https://thegraphicsfairy.com/wp-content/uploads/blogger/-GXi8yHjt0fc/T-zV1MX-VfI/AAAAAAAASgI/uChxO5KV9yE/s1600/tree-Vintage-GraphicsFairy6.jpg"
         />
       </div>
@@ -529,7 +542,7 @@ class App extends React.Component {
   public screenDef: any;
 
   public async componentDidMount() {
-    const xml = (await axios.get("/screen01.xml")).data;
+    const xml = (await axios.get("/screen02.xml")).data;
     this.xmlObj = xmlJs.xml2js(xml, { compact: false });
 
     const xo = this.xmlObj;

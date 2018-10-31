@@ -1,3 +1,8 @@
+@import 'origam';
+
+body {
+  font: $base-font;
+}
 
 .oui-unknown {
   border: 1px solid black;
@@ -56,7 +61,6 @@
   position: absolute;
   white-space: nowrap;
   background-color: transparent;
-  font-size: 11px;
   display: flex;
   align-items: center;
   /* margin-left: 2px;
@@ -104,12 +108,13 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  border: 1px solid red;
+  //border: 1px solid red;
 }
 
 .oui-grid-toolbar {
   height: 20px;
-  background-color: #8998C5;
+  background-color: $toolbar-bgcolor;
+  color: $toolbar-color;
 }
 
 .oui-tab {
@@ -125,8 +130,18 @@
 }
 
 .oui-tab-handle {
+  background-color: $tab-handle-bgcolor;
+  color: $tab-handle-color;
+  &.active {
+    background-color: $tab-handle-active-bgcolor;
+    color: $tab-handle-active-color;
+  }
+  &:hover {
+    background-color: $tab-handle-hover-bgcolor;
+    color: $tab-handle-hover-color;
+  }
+  cursor: pointer;
   min-width: 100px;
-  background-color: #999999;
   margin-right: 2px;
   padding: 0 5px 0 5px;
   display: flex;
@@ -149,4 +164,8 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+}
+
+.hidden {
+  display: none;
 }
