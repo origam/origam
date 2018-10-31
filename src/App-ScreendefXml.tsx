@@ -89,6 +89,12 @@ function parseScreenDef(o: any) {
         };
         if (node.attributes.Type === "Grid") {
           newChild.props.isHeadless = node.attributes.IsHeadless === "true";
+          newChild.props.isAddButton = node.attributes.ShowAddButton === "true";
+          newChild.props.isCopyButton =
+            node.attributes.ShowAddButton === "true";
+          newChild.props.isDeleteButton =
+            node.attributes.ShowDeleteButton === "true";
+          newChild.props.name = node.attributes.Name;
         }
         uiStructOpened.children.push(newChild);
         break;
@@ -294,25 +300,39 @@ class OUIProperty extends React.Component<any> {
 
 class OUIVSplit extends React.Component<any> {
   public render() {
-    return (
-      <div className="oui-vsplit-container">
-        {React.Children.map(this.props.children, child => (
-          <div className="oui-vsplit-panel">{child}</div>
-        ))}
-      </div>
-    );
+    let children = React.Children.map(this.props.children, child => (
+      <div className="oui-vsplit-panel">{child}</div>
+    ));
+    children = React.Children.map(children, (child, idx) => (
+      <>
+        {child}
+        {idx < children.length - 1 && (
+          <div className="oui-vsplit-handle">
+            <div className="knob" />
+          </div>
+        )}
+      </>
+    ));
+    return <div className="oui-vsplit-container">{children}</div>;
   }
 }
 
 class OUIHSplit extends React.Component<any> {
   public render() {
-    return (
-      <div className="oui-hsplit-container">
-        {React.Children.map(this.props.children, child => (
-          <div className="oui-hsplit-panel">{child}</div>
-        ))}
-      </div>
-    );
+    let children = React.Children.map(this.props.children, child => (
+      <div className="oui-hsplit-panel">{child}</div>
+    ));
+    children = React.Children.map(children, (child, idx) => (
+      <>
+        {child}
+        {idx < children.length - 1 && (
+          <div className="oui-hsplit-handle">
+            <div className="knob" />
+          </div>
+        )}
+      </>
+    ));
+    return <div className="oui-hsplit-container">{children}</div>;
   }
 }
 
@@ -367,6 +387,80 @@ class OUIWindow extends React.Component<any> {
   }
 }
 
+class OUIGridToolbar extends React.Component<any> {
+  public render() {
+    return (
+      <div
+        className={"oui-grid-toolbar" + (this.props.isHidden ? " hidden" : "")}
+      >
+        <div className="toolbar-section">
+          <span className="toolbar-caption">{this.props.name}</span>
+        </div>
+        <div className="toolbar-section">
+          {this.props.isAddButton && (
+            <button className="oui-toolbar-btn">
+              <i className="fa fa-plus-circle icon" aria-hidden="true" />
+            </button>
+          )}
+          {this.props.isDeleteButton && (
+            <button className="oui-toolbar-btn">
+              <i className="fa fa-minus-circle icon" aria-hidden="true" />
+            </button>
+          )}
+          {this.props.isCopyButton && (
+            <button className="oui-toolbar-btn">
+              <i className="fa fa-copy icon" aria-hidden="true" />
+            </button>
+          )}
+        </div>
+        <div className="toolbar-section pusher" />
+        <div className="toolbar-section">
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-step-backward icon" aria-hidden="true" />
+          </button>
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-caret-left icon" aria-hidden="true" />
+          </button>
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-caret-right icon" aria-hidden="true" />
+          </button>
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-step-forward icon" aria-hidden="true" />
+          </button>
+        </div>
+        <div className="toolbar-section">
+          <span className="oui-toolbar-text">1/6</span>
+        </div>
+        <div className="toolbar-section">
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-table icon" aria-hidden="true" />
+          </button>
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-list-alt icon" aria-hidden="true" />
+          </button>
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-map-o icon" aria-hidden="true" />
+          </button>
+        </div>
+        <div className="toolbar-section">
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-filter icon" aria-hidden="true" />
+          </button>
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-caret-down icon" aria-hidden="true" />
+          </button>
+        </div>
+        <div className="toolbar-section">
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-cog icon" aria-hidden="true" />
+            <i className="fa fa-caret-down icon" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+    );
+  }
+}
+
 class OUIGrid extends React.Component<any> {
   public render() {
     return (
@@ -377,69 +471,7 @@ class OUIGrid extends React.Component<any> {
           maxHeight: this.props.h
         }}
       >
-        <div
-          className={
-            "oui-grid-toolbar" + (this.props.isHeadless ? " hidden" : "")
-          }
-        > 
-          <div className="toolbar-section">
-            <span className="toolbar-caption">Mietobjekte</span>
-          </div>
-          <div className="toolbar-section">
-            <button className="oui-toolbar-btn">
-              <i className="fa fa-plus-circle icon" aria-hidden="true" />
-            </button>
-            <button className="oui-toolbar-btn">
-              <i className="fa fa-minus-circle icon" aria-hidden="true" />
-            </button>
-            <button className="oui-toolbar-btn">
-              <i className="fa fa-copy icon" aria-hidden="true" />
-            </button>
-          </div>
-          <div className="toolbar-section pusher" />
-          <div className="toolbar-section">
-            <button className="oui-toolbar-btn">
-              <i className="fa fa-step-backward icon" aria-hidden="true" />
-            </button>
-            <button className="oui-toolbar-btn">
-              <i className="fa fa-caret-left icon" aria-hidden="true" />
-            </button>
-            <button className="oui-toolbar-btn">
-              <i className="fa fa-caret-right icon" aria-hidden="true" />
-            </button>
-            <button className="oui-toolbar-btn">
-              <i className="fa fa-step-forward icon" aria-hidden="true" />
-            </button>
-          </div>
-          <div className="toolbar-section">
-            <span className="oui-toolbar-text">1/6</span>
-          </div>
-          <div className="toolbar-section">
-            <button className="oui-toolbar-btn">
-              <i className="fa fa-table icon" aria-hidden="true" />
-            </button>
-            <button className="oui-toolbar-btn">
-              <i className="fa fa-list-alt icon" aria-hidden="true" />
-            </button>
-            <button className="oui-toolbar-btn">
-              <i className="fa fa-map-o icon" aria-hidden="true" />
-            </button>
-          </div>
-          <div className="toolbar-section">
-            <button className="oui-toolbar-btn">
-              <i className="fa fa-filter icon" aria-hidden="true" />
-            </button>
-            <button className="oui-toolbar-btn">
-              <i className="fa fa-caret-down icon" aria-hidden="true" />
-            </button>
-          </div>
-          <div className="toolbar-section">
-            <button className="oui-toolbar-btn">
-              <i className="fa fa-cog icon" aria-hidden="true" />
-              <i className="fa fa-caret-down icon" aria-hidden="true" />
-            </button>
-          </div>
-        </div>
+        <OUIGridToolbar isHidden={this.props.isHeadless} />
         {this.props.children}
       </div>
     );
@@ -598,7 +630,7 @@ class App extends React.Component {
   public screenDef: any;
 
   public async componentDidMount() {
-    const xml = (await axios.get("/screen02.xml")).data;
+    const xml = (await axios.get("/screen03.xml")).data;
     this.xmlObj = xmlJs.xml2js(xml, { compact: false });
 
     const xo = this.xmlObj;

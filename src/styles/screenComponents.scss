@@ -19,14 +19,16 @@ body {
   /*padding: 2px;
   margin: 2px;*/
   overflow: auto;
-  background-color: #dddddd;
+  background-color: $panel-bgcolor;
+  color: $panel-color;
   position: relative;
 }
 
 .oui-panel {
   position: absolute;
-  border: 1px solid #222222;
-  background-color: #aaaaaa;
+//  border: 1px solid #222222;
+  background-color: $subpanel-bgcolor;
+  color: $subpanel-color;
   box-sizing: border-box;
 }
 
@@ -84,6 +86,26 @@ body {
   flex-direction: column;
 }
 
+.oui-vsplit-handle {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: row-resize;
+  height: 7px;
+  background-color: $split-handle-bgcolor;
+  color: $split-handle-color;
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
+  box-sizing: border-box;
+  .knob {
+    width: 20px;
+    height: 3px;
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+  }
+}
+
 .oui-hsplit-container {
   display: flex;
   flex-direction: row;
@@ -97,10 +119,31 @@ body {
   flex-direction: column;
 }
 
+.oui-hsplit-handle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: col-resize;
+  width: 7px;
+  background-color: $split-handle-bgcolor;
+  color: $split-handle-color;
+  border-left: 1px solid white;
+  border-right: 1px solid white;
+  box-sizing: border-box;
+  .knob {
+    height: 20px;
+    width: 3px;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+  }
+}
+
 .oui-window {
   display: flex;
   height: 100%;
   flex-grow: 1;
+  overflow: auto;
 }
 
 .oui-grid {
@@ -147,7 +190,9 @@ body {
     .fa-map-o,
     .fa-plus-circle,
     .fa-minus-circle,
-    .fa-copy {
+    .fa-copy, 
+    .fa-filter,
+    .fa-cog {
       font-size: $toolbar-height - 6px;
     }
     .fa-cog {
@@ -183,6 +228,7 @@ body {
   height: 20px;
   display: flex;
   flex-direction: row;
+  background-color: $panel-bgcolor;
 }
 
 .oui-tab-handle {
@@ -199,7 +245,8 @@ body {
   cursor: pointer;
   min-width: 100px;
   margin-right: 2px;
-  padding: 0 5px 0 5px;
+  padding: 0 10px 0 10px;
+  white-space: nowrap;
   display: flex;
   align-items: center;
   justify-content: center;
