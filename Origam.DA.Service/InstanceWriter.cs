@@ -45,7 +45,6 @@ namespace Origam.DA.Service
                 !parentNodeId.HasValue && instance.FileParentId != Guid.Empty;
             if (parentNodeIdInXmlDiffersFromParentIdInInstance)
             {
-                
                 MoveElementToNewLocation(existingElement, instance, elementName);
             }
             return existingElement;

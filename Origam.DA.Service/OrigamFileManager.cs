@@ -57,7 +57,10 @@ namespace Origam.DA.Service
                 Indent = true,
                 NewLineOnAttributes = true
             };
-            string xmlToWrite = xmlDocument.ToBeautifulString(xmlWriterSettings);
+            
+            string xmlToWrite = OrigamDocumentSorter
+                .CopyAndSort(xmlDocument)
+                .ToBeautifulString(xmlWriterSettings);
             string newHash = xmlToWrite.GetBase64Hash();
             fileEventQueue.Pause();
             HashChanged(this, new HashChangedEventArgs(newHash));
