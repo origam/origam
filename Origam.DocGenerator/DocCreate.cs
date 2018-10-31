@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
@@ -238,24 +237,17 @@ namespace Origam.DocGenerator
 
         private void WriteStartElement(string element)
         {
-            element = StripNonValidXMLCharacters(element);
             Xmlwriter.WriteStartElement(element);
         }
 
         private void WriteStartElement(string element,string title)
         {
-            element = StripNonValidXMLCharacters(element);
-            title = StripNonValidXMLCharacters(title);
-
             Xmlwriter.WriteStartElement(element);
             Xmlwriter.WriteAttributeString("DisplayName", title);
         }
 
         private void WriteElement(string caption,string description)
         {
-            caption = StripNonValidXMLCharacters(caption);
-            description = StripNonValidXMLCharacters(description);
-
             if (!string.IsNullOrEmpty(description))
             { 
                 Xmlwriter.WriteElementString(caption, description);
@@ -271,13 +263,6 @@ namespace Origam.DocGenerator
         {
             Xmlwriter.WriteEndDocument();
             Xmlwriter.Flush();
-        }
-        public string StripNonValidXMLCharacters(string textIn)
-        {
-            XmlDocument doc = new XmlDocument();
-            XmlNode node = doc.CreateElement("root");
-            node.InnerText = textIn;
-            return node.InnerXml;
         }
     }
 }
