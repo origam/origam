@@ -6,6 +6,10 @@ import './index.css';
 import { configure } from 'mobx';
 import { reactionRuntimeInfo } from './utils/reaction';
 
+import {main} from './screenInterpreter/interpreter';
+
+ main();
+
 configure({
   computedRequiresReaction: true,
   reactionScheduler(fn) {
@@ -14,9 +18,9 @@ configure({
   }
 });
 
-
+/*
 ReactDOM.render(
   <App />,
   document.getElementById('root') as HTMLElement
 );
-
+*/
