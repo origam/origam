@@ -73,7 +73,7 @@ namespace Origam.Workflow
                         port = Convert.ToInt32(this.Parameters["Port"]);
                     }
 
-					_result = MailServiceFactory.GetMailService().SendMail(this.Parameters["Data"] as XmlDocument, server, port);
+					_result = MailServiceFactory.GetMailService().SendMail(this.Parameters["Data"] as IDataDocument, server, port);
 					
 					break;
 

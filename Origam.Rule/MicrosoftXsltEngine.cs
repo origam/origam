@@ -48,7 +48,7 @@ namespace Origam.Rule
 		}
 		#endregion
 
-        internal override XmlDocument Transform(XmlDocument data, object xsltEngine, Hashtable parameters, 
+        internal override IDataDocument Transform(IDataDocument data, object xsltEngine, Hashtable parameters, 
             RuleEngine ruleEngine, IDataStructure outputStructure, bool validateOnly)
         {
             if (ruleEngine == null) throw new InvalidOperationException("RuleEngine is not set");
@@ -75,19 +75,19 @@ namespace Origam.Rule
             // data come from a dataset.
             // It does not do anything with a non-dataset xml source.
 
-			XmlDataDocument xmlDataDocument = data as XmlDataDocument;
-            if (data.DocumentElement == null && xmlDataDocument != null)
+			IDataDocument dataDocument = data as IDataDocument;
+            if (data.Xml.DocumentElement == null && dataDocument != null)
             {
-				bool oldEnforceConstraints = xmlDataDocument.DataSet.EnforceConstraints;
-                xmlDataDocument.DataSet.EnforceConstraints = false;
-                XmlNode doc = data.CreateNode(XmlNodeType.Element,
-                    xmlDataDocument.DataSet.DataSetName,
+				bool oldEnforceConstraints = dataDocument.DataSet.EnforceConstraints;
+                dataDocument.DataSet.EnforceConstraints = false;
+                XmlNode doc = data.Xml.CreateNode(XmlNodeType.Element,
+                    dataDocument.DataSet.DataSetName,
                     "");
-                data.AppendChild(doc);
-				xmlDataDocument.DataSet.EnforceConstraints = oldEnforceConstraints;
+                data.Xml.AppendChild(doc);
+				dataDocument.DataSet.EnforceConstraints = oldEnforceConstraints;
             }
 
-            XmlDocument resultDoc;
+            IDataDocument resultDoc;
 
             // Generate empty dataset of output structure
             if (outputStructure is DataStructure)
@@ -98,11 +98,11 @@ namespace Origam.Rule
                 // constraints will be checked after merging into original context
                 result.EnforceConstraints = false;
 
-                resultDoc = new XmlDataDocument(result);
+                resultDoc = DataDocumentFactory.New(result);
             }
             else if (outputStructure == null | outputStructure is XsdDataStructure)
             {
-                resultDoc = new XmlDocument();
+                resultDoc = DataDocumentFactory.New();
             }
             else throw new InvalidOperationException(ResourceUtils.GetString("ErrorTransformationSupport"));
 
@@ -184,7 +184,7 @@ namespace Origam.Rule
                     StringWriter swr = new StringWriter(b);
                     XmlTextWriter xwr = new XmlTextWriter(swr);
                     xwr.Formatting = Formatting.Indented;
-                    data.WriteTo(xwr);
+                    data.Xml.WriteTo(xwr);
                     xwr.Close();
                     swr.Close();
 
@@ -192,19 +192,19 @@ namespace Origam.Rule
 
                 }
 
-                XPathDocument sourceXpathDoc = new XPathDocument(new XmlNodeReader(data));
+                XPathDocument sourceXpathDoc = new XPathDocument(new XmlNodeReader(data.Xml));
 
                 try
                 {
-                    if (this.Trace && resultDoc is XmlDataDocument) 
+                    if (this.Trace && resultDoc is IDataDocument) 
                     {
-                        XmlDocument traceDocument = new XmlDocument();
+                        IDataDocument traceDocument = DataDocumentFactory.New();
                         // first transform to a temporary xml document so we see the clean transformation output
                         Transform(xsltEngine, xslArg, sourceXpathDoc, traceDocument);
                         // trace
                         TraceResult(traceDocument);
                         // after writing the trace we will load the results into the final dataset
-                        resultDoc.Load(new XmlNodeReader(traceDocument));
+                        resultDoc.Load(new XmlNodeReader(traceDocument.Xml));
                     }
                     else
                     {
@@ -423,13 +423,13 @@ namespace Origam.Rule
             }
         }
 
-        private void TraceResult(XmlDocument traceDocument)
+        private void TraceResult(IDataDocument traceDocument)
         {
             StringBuilder b = new StringBuilder();
             StringWriter swr = new StringWriter(b);
             XmlTextWriter xwr = new XmlTextWriter(swr);
             xwr.Formatting = Formatting.Indented;
-            traceDocument.WriteTo(xwr);
+            traceDocument.Xml.WriteTo(xwr);
             xwr.Close();
             swr.Close();
 
@@ -438,7 +438,7 @@ namespace Origam.Rule
         }
 
         public abstract void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, XmlTextWriter xwr);
-        public abstract void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, XmlDocument resultDoc);
+        public abstract void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, IDataDocument resultDoc);
         public abstract void Transform(object engine, XsltArgumentList xslArg, IXPathNavigable input, Stream output);
     }
 }

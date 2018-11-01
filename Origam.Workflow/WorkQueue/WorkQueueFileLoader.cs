@@ -180,7 +180,7 @@ namespace Origam.Workflow.WorkQueue
                 row["Data"] = dt.DataSet.GetXml();
                 aggregatedDt.Rows.Add(row);
                 _aggregationExecuted = true;
-                return new WorkQueueAdapterResult(new XmlDataDocument(aggregatedDt.DataSet));
+                return new WorkQueueAdapterResult(DataDocumentFactory.New(aggregatedDt.DataSet));
             }
             else
             {
@@ -193,7 +193,7 @@ namespace Origam.Workflow.WorkQueue
             bool result = RetrieveNextFile(dt);
             if (result)
             {
-                return new WorkQueueAdapterResult(new XmlDataDocument(dt.DataSet));
+                return new WorkQueueAdapterResult(DataDocumentFactory.New(dt.DataSet));
             }
             else
             {

@@ -40,7 +40,7 @@ namespace Origam.DA
 	public interface IStateMachineService
 	{
 		object[] AllowedStateValues(Guid entityId, Guid fieldId, object currentStateValue, DataRow dataRow, string transactionId);
-		object[] AllowedStateValues(Guid entityId, Guid fieldId, object currentStateValue, XmlDocument dataRow, string transactionId);
+		object[] AllowedStateValues(Guid entityId, Guid fieldId, object currentStateValue, IDataDocument dataRow, string transactionId);
 		bool IsStateAllowed(Guid entityId, Guid fieldId, object currentStateValue, object newStateValue, DataRow dataRow, string transactionId);
 		void OnDataChanging(DataTable changedTable, string transactionId);
 		void OnDataChanged(DataSet data, ArrayList changedTables, string transactionId);

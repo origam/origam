@@ -111,7 +111,7 @@ namespace Origam.Server
                         switch (pm.Value)
                         {
                             case WorkQueueCommandParameterMappingType.QueueEntries:
-                                val = new XmlDataDocument(selectedRows.DataSet);
+                                val = DataDocumentFactory.New(selectedRows.DataSet);
                                 break;
                             case WorkQueueCommandParameterMappingType.Parameter1:
                                 val = cmdRow.IsNull("Param1") ? null : cmdRow["Param1"];

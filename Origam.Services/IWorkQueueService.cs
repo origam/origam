@@ -37,26 +37,26 @@ namespace Origam.Workbench.Services
 		ISchemaItem WQClass(Guid queueId);
 		DataSet LoadWorkQueueData(string workQueueClass, object queueId);
 		Guid WorkQueueAdd(string workQueueClass, string workQueueName, Guid workQueueId, 
-            string condition, XmlDocument data, WorkQueueAttachment[] attachments,
+            string condition, IDataDocument data, WorkQueueAttachment[] attachments,
             string transactionId);
 		Guid WorkQueueAdd(string workQueueClass, string workQueueName, Guid workQueueId, 
-            string condition, XmlDocument data, string transactionId);
-		Guid WorkQueueAdd(string workQueueName, XmlDocument data, string transactionId);
-        Guid WorkQueueAdd(string workQueueName, XmlDocument data, WorkQueueAttachment[] attachments, string transactionId);
+            string condition, IDataDocument data, string transactionId);
+		Guid WorkQueueAdd(string workQueueName, IDataDocument data, string transactionId);
+        Guid WorkQueueAdd(string workQueueName, IDataDocument data, WorkQueueAttachment[] attachments, string transactionId);
         DataRow GetNextItem(string workQueueName, string transactionId, bool processErrors);
         void WorkQueueRemove(string workQueueClass, string workQueueName, Guid workQueueId, 
             string condition, object rowKey, string transactionId);
         void WorkQueueRemove(Guid workQueueId, object rowKey, string transactionId);
-        XmlDataDocument WorkQueueGetMessage(Guid workQueueMessageId, string transactionId);
+        IDataDocument WorkQueueGetMessage(Guid workQueueMessageId, string transactionId);
 		void WorkQueueUpdate(string workQueueClass, int relationNo, Guid workQueueId,
             object rowKey, string transactionId);
 		void HandleAction(Guid queueId, string queueClass, DataTable selectedRows,
             Guid commandType, string command, string param1, string param2, 
             object errorQueueId);
 		void HandleAction(Guid queueEntryId, Guid commandId, bool calledFromApi, string transactionId); 
-        XmlDataDocument GenerateNotificationMessage(
+        IDataDocument GenerateNotificationMessage(
                 Guid notificationTemplateId
-                , XmlDocument notificationSource
+                , IDataDocument notificationSource
                 , DataRow recipient
                 , DataRow workQueueRow
                 , string transactionId

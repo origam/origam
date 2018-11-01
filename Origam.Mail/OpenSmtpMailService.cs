@@ -144,7 +144,7 @@ namespace Origam.Mail
 			return retVal;
 		}
 
-		public override int SendMail1(XmlDocument mailDocument, string server, int port)
+		public override int SendMail1(IDataDocument mailDocument, string server, int port)
 		{
             if (server == null)
             {
@@ -162,7 +162,7 @@ namespace Origam.Mail
 			s.Port = port;
 
 			//get root (Mails) element
-			XmlElement root = mailDocument.DocumentElement;
+			XmlElement root = mailDocument.Xml.DocumentElement;
 
 			//configure xsd namespace
 			XmlNamespaceManager nsmgr = new XmlNamespaceManager(((XPathNavigator)root.CreateNavigator()).NameTable);

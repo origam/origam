@@ -212,21 +212,9 @@ namespace Origam.Workflow
 				return true;
 			}
 		}
+        internal IDataDocument NextData { get; set; }
 
-		private XmlDataDocument _nextData;
-		internal XmlDataDocument NextData
-		{
-			get
-			{
-				return _nextData;
-			}
-			set
-			{
-				_nextData = value;
-			}
-		}
-
-		private FormControlSet _nextForm;
+        private FormControlSet _nextForm;
 		internal FormControlSet NextForm
 		{
 			get
@@ -473,7 +461,7 @@ namespace Origam.Workflow
 			{
 				this.Host = null;
 				_endRule = null;
-				_nextData = null;
+				NextData = null;
 				_nextForm = null;
 				_workflowEngine = null;
 			}

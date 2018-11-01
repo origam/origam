@@ -75,7 +75,7 @@ namespace Origam.workflow.mail
 
 			AbstractMailService.RetrieveMail(mailData, _popClient, 1, true);
 
-			WorkQueueAdapterResult result = new WorkQueueAdapterResult(new XmlDataDocument(mailData));
+			WorkQueueAdapterResult result = new WorkQueueAdapterResult(DataDocumentFactory.New(mailData));
 
             result.Attachments = new WorkQueueAttachment[mailData.MailAttachment.Rows.Count];
 			result.State = mailData.Mail[0].MessageId;

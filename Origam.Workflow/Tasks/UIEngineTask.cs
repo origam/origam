@@ -67,24 +67,24 @@ namespace Origam.Workflow.Tasks
 			// Cloning the dataset is neccessary, because the form will eventually add new columns
 			// into the dataset (because of GUID columns sorting). This is not possible if the DataSet
 			// is mapped to an XmlDataDocument (which it is always in the workflow).
-			XmlDataDocument originalData = this.Engine.RuleEngine.GetContext(task.OutputContextStore) as XmlDataDocument;
+			IDataDocument originalData = this.Engine.RuleEngine.GetContext(task.OutputContextStore) as IDataDocument;
 
 			if(originalData == null)
 			{
 				throw new Exception(ResourceUtils.GetString("ErrorContextEmpty"));
 			}
 
-			XmlDataDocument data = originalData;
+			IDataDocument data = originalData;
 
 #if ORIGAM_SERVER
 			if(task.OutputMethod != ServiceOutputMethod.FullMerge)
 			{
-				data = this.Engine.CloneContext(originalData, false) as XmlDataDocument;
+				data = this.Engine.CloneContext(originalData, false) as IDataDocument;
 			}
 #else
 			DataSet cloned = this.Engine.CloneContext(originalData, true) as DataSet;
 			DatasetTools.AddSortColumns(cloned);
-			data = new XmlDataDocument(cloned);
+			data = DataDocumentFactory.New(cloned);
 #endif
 
 			IEndRule validationRule = null;

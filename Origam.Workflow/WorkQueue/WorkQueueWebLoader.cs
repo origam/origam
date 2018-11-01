@@ -98,7 +98,7 @@ namespace Origam.Workflow.WorkQueue
 			DataSet ds = WorkQueueFileLoader.GetFileFromStream(responseStream, mode, response.ResponseUri.AbsoluteUri,
                 response.ResponseUri.AbsoluteUri, HttpTools.EncodingFromResponse(response).WebName);
 
-			return new WorkQueueAdapterResult(new XmlDataDocument(ds));
+			return new WorkQueueAdapterResult(DataDocumentFactory.New(ds));
 		}
 
 	}

@@ -465,7 +465,7 @@ namespace Origam.Gui.Win
                             mergeParams.TrueDelete
                                 = MergeType == ServiceOutputMethod.FullMerge;
                             DatasetTools.MergeDataSet(current.Row.Table.DataSet,
-                                (_engine.RuleEngine.GetContext(_mergeBackStore) as XmlDataDocument).DataSet,
+                                (_engine.RuleEngine.GetContext(_mergeBackStore) as IDataDocument).DataSet,
                                 null, mergeParams);
                         }
                         finally
@@ -540,11 +540,11 @@ namespace Origam.Gui.Win
 
                 if(mapping.ColumnName == "/")
                 {
-                    result.Add(mapping.Name, new XmlDataDocument(current.Row.Table.DataSet.Copy()));
+                    result.Add(mapping.Name, DataDocumentFactory.New(current.Row.Table.DataSet.Copy()));
                 }
                 else if(mapping.ColumnName == ".")
                 {
-                    result.Add(mapping.Name, new XmlDataDocument(GetDataSlice(context, current.Row)));
+                    result.Add(mapping.Name, DataDocumentFactory.New(GetDataSlice(context, current.Row)));
                 }
                 else if(mapping.ColumnName != null && mapping.ColumnName != "")
                 {

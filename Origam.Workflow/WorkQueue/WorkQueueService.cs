@@ -194,7 +194,7 @@ namespace Origam.Workflow.WorkQueue
                 wqc.WorkQueueStructureSortSetId, transactionId, parameters);
         }
 
-        public Guid WorkQueueAdd(string workQueueName, XmlDocument data, string transactionId)
+        public Guid WorkQueueAdd(string workQueueName, IDataDocument data, string transactionId)
         {
             Guid workQueueId = GetQueueId(workQueueName);
             string workQueueClass = WQClassName(workQueueId);
@@ -203,7 +203,7 @@ namespace Origam.Workflow.WorkQueue
             return WorkQueueAdd(workQueueClass, workQueueName, workQueueId, condition, data, null, transactionId);
         }
 
-        public Guid WorkQueueAdd(string workQueueName, XmlDocument data, WorkQueueAttachment[] attachments, string transactionId)
+        public Guid WorkQueueAdd(string workQueueName, IDataDocument data, WorkQueueAttachment[] attachments, string transactionId)
         {
             Guid workQueueId = GetQueueId(workQueueName);
             string workQueueClass = WQClassName(workQueueId);
@@ -212,12 +212,12 @@ namespace Origam.Workflow.WorkQueue
             return WorkQueueAdd(workQueueClass, workQueueName, workQueueId, condition, data, attachments, transactionId);
         }
 
-        public Guid WorkQueueAdd(string workQueueClass, string workQueueName, Guid workQueueId, string condition, XmlDocument data, string transactionId)
+        public Guid WorkQueueAdd(string workQueueClass, string workQueueName, Guid workQueueId, string condition, IDataDocument data, string transactionId)
         {
             return WorkQueueAdd(workQueueClass, workQueueName, workQueueId, condition, data, null, transactionId);
         }
 
-        public Guid WorkQueueAdd(string workQueueClass, string workQueueName, Guid workQueueId, string condition, XmlDocument data, WorkQueueAttachment[] attachments, string transactionId)
+        public Guid WorkQueueAdd(string workQueueClass, string workQueueName, Guid workQueueId, string condition, IDataDocument data, WorkQueueAttachment[] attachments, string transactionId)
         {
             if (log.IsDebugEnabled)
             {
@@ -275,11 +275,11 @@ namespace Origam.Workflow.WorkQueue
             return Guid.Empty;
         }
 
-        public XmlDataDocument WorkQueueGetMessage(Guid workQueueMessageId, string transactionId)
+        public IDataDocument WorkQueueGetMessage(Guid workQueueMessageId, string transactionId)
         {
             WorkQueueClass wqc = WQClass(WQClassNameFromMessage(workQueueMessageId)) as WorkQueueClass;
             DataSet ds = FetchSingleQueueEntry(wqc, workQueueMessageId, transactionId);
-            return new XmlDataDocument(ds);
+            return DataDocumentFactory.New(ds);
         }
 
         private void ProcessNotifications(WorkQueueClass wqc, Guid workQueueId, Guid eventTypeId, DataSet queueItem, string transactionId)
@@ -303,14 +303,14 @@ namespace Origam.Workflow.WorkQueue
                 }
 
                 // notification source
-                XmlDocument notificationSource;
+                IDataDocument notificationSource;
                 if (wqc.NotificationStructure == null)
                 {
                     if (log.IsDebugEnabled)
                     {
                         log.Debug("Notification source is work queue item.");
                     }
-                    notificationSource = new XmlDataDocument(queueItem);
+                    notificationSource = DataDocumentFactory.New(queueItem);
                 }
                 else
                 {
@@ -318,10 +318,19 @@ namespace Origam.Workflow.WorkQueue
                     {
                         log.Debug("Notification source is " + wqc.NotificationStructure.Path);
                     }
-                    notificationSource = new XmlDataDocument(core.DataService.LoadData(wqc.NotificationStructureId, wqc.NotificationLoadMethodId, Guid.Empty, Guid.Empty, transactionId, wqc.NotificationFilterPkParameter, queueItem.Tables[0].Rows[0]["refId"]));
+
+                    DataSet dataSet = core.DataService.LoadData(
+                        dataStructureId: wqc.NotificationStructureId, 
+                        methodId: wqc.NotificationLoadMethodId,
+                        defaultSetId: Guid.Empty,
+                        sortSetId: Guid.Empty, 
+                        transactionId: transactionId, 
+                        paramName1: wqc.NotificationFilterPkParameter, 
+                        paramValue1: queueItem.Tables[0].Rows[0]["refId"]);
+                    notificationSource = DataDocumentFactory.New(dataSet);
                     if (log.IsDebugEnabled)
                     {
-                        log.Debug("Notification source result: " + notificationSource.OuterXml);
+                        log.Debug("Notification source result: " + notificationSource.Xml.OuterXml);
                     }
                 }
                 DataRow workQueueRow = ExtractWorkQueueRowIfNotNotificationDatastructureIsSet(wqc, queueItem);
@@ -396,7 +405,7 @@ namespace Origam.Workflow.WorkQueue
                     foreach (OrigamNotificationContactData.OrigamNotificationContactRow recipient in recipients.OrigamNotificationContact.Rows)
                     {
                         // generate data for mail
-                        XmlDataDocument notificationData = GenerateNotificationMessage(
+                        IDataDocument notificationData = GenerateNotificationMessage(
                                 notification.refOrigamNotificationTemplateId,
                                 notificationSource,
                                 recipient,
@@ -477,9 +486,9 @@ namespace Origam.Workflow.WorkQueue
         /// <param name="recipientRow">Recipient info</param>
         /// <param name="transactionId">current db transaction</param>
         /// <returns>Xml containing in the first row of the first table non-empty fields named "Body" and "Subject"</returns>
-        public XmlDataDocument GenerateNotificationMessage(
+        public IDataDocument GenerateNotificationMessage(
                 Guid notificationTemplateId
-                , XmlDocument notificationSource
+                , IDataDocument notificationSource
                 , DataRow recipientRow
                 , DataRow workQueueRow
                 , string transactionId
@@ -524,7 +533,7 @@ namespace Origam.Workflow.WorkQueue
                 {
                     parameters["WorkQueueRow"] = DatasetTools.GetRowXml(workQueueRow, DataRowVersion.Default);
                 }
-                XmlDataDocument notificationData = (XmlDataDocument)transform.Transform(notificationSource, template, parameters, new RuleEngine(null, transactionId), resultStructure, false);
+                IDataDocument notificationData = (IDataDocument)transform.Transform(notificationSource, template, parameters, new RuleEngine(null, transactionId), resultStructure, false);
 
                 // return result
                 return notificationData;
@@ -532,7 +541,7 @@ namespace Origam.Workflow.WorkQueue
         }
 
         private OrigamNotificationContactData GetNotificationContacts(Guid workQueueNotificationContactTypeId,
-            Guid origamNotificationChannelTypeId, string value, XmlDocument context,
+            Guid origamNotificationChannelTypeId, string value, IDataDocument context,
             DataRow workQueueRow, string transactionId)
         {
             OrigamNotificationContactData result = new OrigamNotificationContactData();
@@ -556,7 +565,7 @@ namespace Origam.Workflow.WorkQueue
                     pms.Add(new QueryParameter("WorkQueueRow",  DatasetTools.GetRowXml(workQueueRow, DataRowVersion.Default)));
                 }
 
-                XmlDataDocument wfResult = core.WorkflowService.ExecuteWorkflow(new Guid("1e621daf-c70d-4cc1-9a52-73427c499006"), pms, transactionId) as XmlDataDocument;
+                IDataDocument wfResult = core.WorkflowService.ExecuteWorkflow(new Guid("1e621daf-c70d-4cc1-9a52-73427c499006"), pms, transactionId) as IDataDocument;
 
                 if (wfResult != null)
                 {
@@ -567,7 +576,7 @@ namespace Origam.Workflow.WorkQueue
             return result;
         }
 
-        private void WorkQueueRowFill(WorkQueueClass wqc, RuleEngine ruleEngine, DataRow row, XmlDocument data)
+        private void WorkQueueRowFill(WorkQueueClass wqc, RuleEngine ruleEngine, DataRow row, IDataDocument data)
         {
             foreach (WorkQueueClassEntityMapping em in wqc.EntityMappings)
             {
@@ -755,7 +764,7 @@ namespace Origam.Workflow.WorkQueue
                 // record could have been deleted in the meantime, we test
                 if (originalRecord.Tables[0].Rows.Count > 0)
                 {
-                    XmlDocument data = DatasetTools.GetRowXml(originalRecord.Tables[0].Rows[0], DataRowVersion.Default);
+                    IDataDocument data = DataDocumentFactory.New(DatasetTools.GetRowXml(originalRecord.Tables[0].Rows[0], DataRowVersion.Default));
 
                     // update entry from record
                     WorkQueueRowFill(wqc, ruleEngine, entry, data);
@@ -1200,7 +1209,7 @@ namespace Origam.Workflow.WorkQueue
                 switch (pm.Value)
                 {
                     case WorkQueueCommandParameterMappingType.QueueEntries:
-                        val = new XmlDataDocument(selectedRows.DataSet);
+                        val = DataDocumentFactory.New(selectedRows.DataSet);
                         break;
                     case WorkQueueCommandParameterMappingType.Parameter1:
                         val = param1;
@@ -1619,8 +1628,8 @@ namespace Origam.Workflow.WorkQueue
             {
                 // we have to do it from the copied dataset, because later the XmlDataDocument would be re-created, which
                 // is not supported by the .net
-                XmlDataDocument oneRowXml = new XmlDataDocument(queueRow.Table.DataSet.Copy());
-                XPathNavigator nav = oneRowXml.CreateNavigator();
+                IDataDocument oneRowXml = DataDocumentFactory.New(queueRow.Table.DataSet.Copy());
+                XPathNavigator nav = oneRowXml.Xml.CreateNavigator();
                 nav.MoveToFirstChild();	// /ROOT/
                 nav.MoveToFirstChild();	// WorkQueueEntry/
 

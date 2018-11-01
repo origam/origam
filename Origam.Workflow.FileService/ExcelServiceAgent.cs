@@ -42,7 +42,7 @@ namespace Origam.Workflow.FileService
         {
         }
 
-        private XmlDataDocument ReadSheet(
+        private IDataDocument ReadSheet(
             ExcelFormat excelFormat, string fileName, string sheetName,
             string entity, XmlDocument optionsXml, byte[] file)
         {
@@ -137,7 +137,7 @@ namespace Origam.Workflow.FileService
                     }
                 }
             }
-            return new XmlDataDocument(data);
+            return DataDocumentFactory.New(data);
         }
 
         private DataColumn LookupColumnByCaption(DataTable table, string caption)
@@ -152,7 +152,7 @@ namespace Origam.Workflow.FileService
 
         private void UpdateSheet(
             ExcelFormat excelFormat, string fileName, string sheetName,
-            string entity, XmlDataDocument data, XmlDocument optionsXml)
+            string entity, IDataDocument data, XmlDocument optionsXml)
         {
             TextReaderOptions options = TextReaderOptions.Deserialize(optionsXml);
             IWorkbook wb;
@@ -245,7 +245,7 @@ namespace Origam.Workflow.FileService
                     if(!(this.Parameters["Entity"] is string | this.Parameters["Entity"] == null))
                         throw new InvalidCastException(ResourceUtils.GetString("ErrorViewNameNotString"));
 
-                    if(!(this.Parameters["Data"] is XmlDataDocument))
+                    if(!(this.Parameters["Data"] is IDataDocument))
                         throw new InvalidCastException(ResourceUtils.GetString("ErrorDataNotXml"));
 
                     this.UpdateSheet(
@@ -256,7 +256,7 @@ namespace Origam.Workflow.FileService
                         this.Parameters["FileName"] as String,
                         this.Parameters["SheetName"] as String,
                         this.Parameters["Entity"] as String,
-                        this.Parameters["Data"] as XmlDataDocument,
+                        this.Parameters["Data"] as IDataDocument,
                         this.Parameters["Options"] as XmlDocument);
 
                     _result = null;

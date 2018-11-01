@@ -131,7 +131,7 @@ namespace Origam.Workflow
 			}
 		}
 
-		internal void OnWorkflowForm(Tasks.UIEngineTask task, XmlDataDocument data, string description, 
+		internal void OnWorkflowForm(Tasks.UIEngineTask task, IDataDocument data, string description, 
 			string notification, FormControlSet form, DataStructureRuleSet ruleSet, IEndRule endRule, 
 			bool isFinalForm, bool allowSave, bool isAutoNext, AbstractDataStructure structure,
 			DataStructureMethod refreshMethod, DataStructureSortSet refreshSort, bool isRefreshSuppressedBeforeFirstSave,
@@ -169,7 +169,7 @@ namespace Origam.Workflow
             PrepareAndStartThread(thread, task);
         }
 
-        public void FinishWorkflowForm(Guid taskId, XmlDataDocument data)
+        public void FinishWorkflowForm(Guid taskId, IDataDocument data)
 		{
 			Tasks.UIEngineTask task = (Tasks.UIEngineTask)_runningForms[taskId];
 

@@ -45,7 +45,7 @@ namespace Origam.Workflow.SimplicorService
 		}
 
 		#region Private Methods
-		private XmlDocument RecalculateWeightedAverage(PriceRecalculationData data)
+		private IDataDocument RecalculateWeightedAverage(PriceRecalculationData data)
 		{
 			Hashtable inventory = new Hashtable();
 
@@ -288,7 +288,7 @@ namespace Origam.Workflow.SimplicorService
 				inventory[inventoryId] = new object[] {lastQuantity, lastPrice, totalPrice};
 			}
 
-			return new XmlDataDocument(data);
+			return DataDocumentFactory.New(data);
 		}
 
 		/// <summary>
@@ -386,11 +386,11 @@ namespace Origam.Workflow.SimplicorService
 			{
 				case "RecalculatePrices":
 					// Check input parameters
-					if(! (this.Parameters["InventoryOperations"] is XmlDataDocument))
+					if(! (this.Parameters["InventoryOperations"] is IDataDocument))
 						throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDataDocument"));
 					
 					PriceRecalculationData sourceData = new PriceRecalculationData();
-					sourceData.Merge((this.Parameters["InventoryOperations"] as XmlDataDocument).DataSet);
+					sourceData.Merge((this.Parameters["InventoryOperations"] as IDataDocument).DataSet);
 
 					_result = this.RecalculateWeightedAverage(sourceData);
 

@@ -35,7 +35,7 @@ namespace Origam.Workflow.LcsHeliosService
             }
         }
 
-        private XmlDocument Browse(string serverName, string dbProfile, string userName, string password,
+        private IDataDocument Browse(string serverName, string dbProfile, string userName, string password,
             int folderId, int templateNumber, string skipArguments)
         {
             ServiceGateConnector connector = ServiceGateConnector.Create(serverName);
@@ -57,8 +57,8 @@ namespace Origam.Workflow.LcsHeliosService
                 BrowseResponse response = request.Process(connector);
                 if (response.Data == null || response.Data.MainTable.Rows.Count == 0)
                 {
-                    XmlDocument emptyXml = new XmlDocument();
-                    emptyXml.LoadXml("<ROOT/>");
+                    IDataDocument emptyXml = DataDocumentFactory.New();
+                    emptyXml.Xml.LoadXml("<ROOT/>");
                     return emptyXml;
                 }
                 else
@@ -67,7 +67,7 @@ namespace Origam.Workflow.LcsHeliosService
                     ds.DataSetName = "ROOT";
                     DataTable table = response.Data.MainTable;
                     ds.Tables.Add(table);
-                    return new XmlDataDocument(ds);
+                    return DataDocumentFactory.New(ds);
                 }
             } 
        }

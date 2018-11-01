@@ -35,14 +35,14 @@ namespace Origam.Rule
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		private bool _inRowChanging = false;
 		private DataStructureRuleSet _ruleSet = null;
-		private XmlDataDocument _currentRuleDocument = null;
+		private IDataDocument _currentRuleDocument = null;
 		private RuleEngine _ruleEngine = null;
 
 		public DatasetRuleHandler()
 		{
 		}
 
-		public void RegisterDatasetEvents(XmlDataDocument xmlData, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
+		public void RegisterDatasetEvents(IDataDocument xmlData, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
 		{
 			_ruleSet = ruleSet;
 			_currentRuleDocument = xmlData;
@@ -54,7 +54,7 @@ namespace Origam.Rule
 			}
 		}
 
-		public void UnregisterDatasetEvents(XmlDataDocument xmlData)
+		public void UnregisterDatasetEvents(IDataDocument xmlData)
 		{
 			_ruleSet = null;
 			_currentRuleDocument = null;
@@ -78,7 +78,7 @@ namespace Origam.Rule
 			table.ColumnChanged -= new DataColumnChangeEventHandler(table_ColumnChanged);
 		}
 
-		public void OnRowChanged(DataRowChangeEventArgs e, XmlDataDocument data, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
+		public void OnRowChanged(DataRowChangeEventArgs e, IDataDocument data, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
 		{
 			if(_inRowChanging) return;
 
@@ -140,7 +140,7 @@ namespace Origam.Rule
 		}
 
 
-		public void OnColumnChanged(DataColumnChangeEventArgs e, XmlDataDocument data, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
+		public void OnColumnChanged(DataColumnChangeEventArgs e, IDataDocument data, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
 		{
             OrigamDataRow row = e.Row as OrigamDataRow;
 #if ! ORIGAM_SERVER
@@ -199,7 +199,7 @@ namespace Origam.Rule
 		}
 
 
-		public void OnRowDeleted(DataRow[] parentRows, DataRow deletedRow, XmlDataDocument data, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
+		public void OnRowDeleted(DataRow[] parentRows, DataRow deletedRow, IDataDocument data, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
 		{
 			try
 			{
@@ -233,7 +233,7 @@ namespace Origam.Rule
 		}
 
 		
-		public void OnRowCopied(DataRow row, XmlDataDocument data, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
+		public void OnRowCopied(DataRow row, IDataDocument data, DataStructureRuleSet ruleSet, RuleEngine ruleEngine)
 		{
 			if(log.IsDebugEnabled)
 			{

@@ -232,7 +232,7 @@ namespace Origam.Mail
 
 
 
-        public static XmlDataDocument GetMails(string mailServer, int port, string userName, string password, string transactionId, int maxCount)
+        public static IDataDocument GetMails(string mailServer, int port, string userName, string password, string transactionId, int maxCount)
         {
             PopClient popClient = null;
             MailData mailData = new MailData();
@@ -258,7 +258,7 @@ namespace Origam.Mail
                 }
             }
 
-            return new XmlDataDocument(mailData);
+            return DataDocumentFactory.New(mailData);
         }
 
         public static void RetrieveMail(MailData mailData, PopClient popClient, int messageNumber, bool delete)
@@ -383,24 +383,24 @@ namespace Origam.Mail
             }
         }
 
-        public int SendMail(XmlDocument mailDocument, string server, int port)
+        public int SendMail(IDataDocument mailDocument, string server, int port)
         {
-            if (mailDocument is XmlDataDocument)
-            {
-                MailData mailData = new MailData();
-                mailData.Merge((mailDocument as XmlDataDocument).DataSet);
-
-                return SendMail2(mailData, server, port);
-            }
-            else
-            {
+//            if (mailDocument is IDataDocument)
+//            {
+//                MailData mailData = new MailData();
+//                mailData.Merge((mailDocument as IDataDocument).DataSet);
+//
+//                return SendMail2(mailData, server, port);
+//            }
+//            else
+//            {
                 return SendMail1(mailDocument, server, port);
-            }
+//            }
         }
 
         public abstract int SendMail2(MailData mailData, string server, int port);
 
-        public abstract int SendMail1(XmlDocument mailDocument, string server, int port);
+        public abstract int SendMail1(IDataDocument mailDocument, string server, int port);
 
         public static string GetValue(XmlNode mailRoot, XmlNamespaceManager nsmgr, string where)
         {

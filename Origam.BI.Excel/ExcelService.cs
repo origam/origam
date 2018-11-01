@@ -52,7 +52,7 @@ namespace Origam.BI.Excel
         {
         }
 
-        public object GetReport(Guid reportId, XmlDocument data, string format,
+        public object GetReport(Guid reportId, IDataDocument data, string format,
             Hashtable parameters, string dbTransaction)
         {
             if(format != DataReportExportFormatType.MSExcel.ToString())
@@ -204,9 +204,9 @@ namespace Origam.BI.Excel
         }
 
         private static OrigamSpreadsheet GetSpreadsheetData(AbstractDataReport report,
-            XmlDocument data, Hashtable parameters, string dbTransaction)
+            IDataDocument data, Hashtable parameters, string dbTransaction)
         {
-            XmlDataDocument xmlDataDoc =
+            IDataDocument xmlDataDoc =
                 ReportHelper.LoadOrUseReportData(report, data, parameters, dbTransaction);
             // optional xslt transformation
             OrigamSpreadsheet spreadsheetData = null;
@@ -221,9 +221,8 @@ namespace Origam.BI.Excel
                 IXsltEngine transformer = AsTransform.GetXsltEngine(
                     persistence.SchemaProvider, report.TransformationId);
                 RuleEngine ruleEngine = new RuleEngine(null, null);
-                XmlDataDocument resultDoc = transformer.Transform(xmlDataDoc,
-                    report.TransformationId, parameters, ruleEngine, outputDs, false)
-                    as XmlDataDocument;
+                IDataDocument resultDoc = transformer.Transform(xmlDataDoc,
+                    report.TransformationId, parameters, ruleEngine, outputDs, false);
                 spreadsheetData = resultDoc.DataSet as OrigamSpreadsheet;
             }
             else
@@ -237,7 +236,7 @@ namespace Origam.BI.Excel
             return spreadsheetData;
         }
 
-        public void PrintReport(Guid reportId, XmlDocument data,
+        public void PrintReport(Guid reportId, IDataDocument data,
             string printerName, int copies, Hashtable parameters)
         {
             throw new NotSupportedException();

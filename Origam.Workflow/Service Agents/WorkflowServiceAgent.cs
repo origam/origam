@@ -81,7 +81,7 @@ namespace Origam.Workflow
 				object contextValue = entry.Value;
 				if(contextValue is DataSet)
 				{
-					contextValue = new XmlDataDocument(contextValue as DataSet);
+					contextValue = DataDocumentFactory.New(contextValue as DataSet);
 				}
 					
 				engine.InputContexts.Add(context.PrimaryKey, contextValue);

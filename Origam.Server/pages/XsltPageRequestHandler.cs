@@ -73,21 +73,21 @@ namespace Origam.Server.Pages
 				// reenable constraints for context parameter
 				foreach (KeyValuePair<string, object> p in parameters)
 				{
-					if (p.Value as XmlDataDocument != null)
+					if (p.Value as IDataDocument != null)
 					{
-						(p.Value as XmlDataDocument).DataSet.EnforceConstraints = true;
+						(p.Value as IDataDocument).DataSet.EnforceConstraints = true;
 					} 
 				}
 			}
-			
-            XmlDocument xmlData;
+
+            IDataDocument xmlData;
             DataSet data = null;
 
             if (xsltPage.DataStructure == null)
             {
                 // no data source
-                xmlData = new XmlDocument();
-                xmlData.LoadXml("<ROOT/>");
+                xmlData = DataDocumentFactory.New();
+                xmlData.Xml.LoadXml("<ROOT/>");
             }
             else
             {
@@ -99,18 +99,18 @@ namespace Origam.Server.Pages
                     return;
                 }
 
-                xmlData = new XmlDataDocument(data);
+                xmlData = DataDocumentFactory.New(data);
 
                 if (request.HttpMethod == "PUT")
                 {
-                    HandlePUT(parameters, xsltPage, (XmlDataDocument)xmlData, transformParams, ruleEngine);
+                    HandlePUT(parameters, xsltPage, xmlData, transformParams, ruleEngine);
                     return;
                 }
             }
 
             bool xpath = xsltPage.ResultXPath != null && xsltPage.ResultXPath != String.Empty;
 
-            XmlDocument result = null;
+            IDataDocument result = null;
             bool isProcessed = false;
 
             if (xsltPage.Transformation == null && !xpath && page.MimeType == MIME_JSON)
@@ -132,12 +132,12 @@ namespace Origam.Server.Pages
 					transformParams, preprocessorParams, ruleEngine,
 					xsltPage.TransformationOutputStructure, false);
 
-				XmlDataDocument resultXmlDataDocument = result as XmlDataDocument;
+                IDataDocument resultDataDocument = result as IDataDocument;
 				// pure dataset > json serialization
-				if (resultXmlDataDocument != null && !xpath && page.MimeType == MIME_JSON)
+				if (resultDataDocument != null && !xpath && page.MimeType == MIME_JSON)
 				{
 					JsonUtils.SerializeToJson(response.Output,
-						resultXmlDataDocument.DataSet, false);
+						resultDataDocument.DataSet, false);
 					isProcessed = true;
 				}
 			}
@@ -148,7 +148,7 @@ namespace Origam.Server.Pages
                 // it is mainly used for extracting pure text out of the result xml
                 // so json | html serialization would have to be produced by the
                 // xslt or stored directly in the resulting data
-                XPathNavigator nav = result.CreateNavigator();
+                XPathNavigator nav = result.Xml.CreateNavigator();
                 nav.Select(xsltPage.ResultXPath);
 
                 if (page.MimeType == MIME_OCTET_STREAM)
@@ -175,16 +175,16 @@ namespace Origam.Server.Pages
                     {
                         response.Write("<!DOCTYPE html>");
                     }
-                    result.Save(response.Output);
+                    result.Xml.Save(response.Output);
                 }
             }
 
             if (Analytics.IsAnalyticsEnabled && xsltPage.LogTransformation != null)
             {
                 Type type = this.GetType();
-                XmlDocument log = transformer.Transform(xmlData, xsltPage.LogTransformationId, transformParams, ruleEngine, null, false);
+                IDataDocument log = transformer.Transform(xmlData, xsltPage.LogTransformationId, transformParams, ruleEngine, null, false);
 
-                XPathNavigator nav = log.CreateNavigator();
+                XPathNavigator nav = log.Xml.CreateNavigator();
                 XPathNodeIterator iter = nav.Select("/ROOT/LogContext");
                 while (iter.MoveNext())
                 {
@@ -209,7 +209,7 @@ namespace Origam.Server.Pages
             }
         }
 
-        private static void HandlePUT(Dictionary<string, object> parameters, XsltDataPage xsltPage, XmlDataDocument data, Hashtable transformParams, RuleEngine ruleEngine)
+        private static void HandlePUT(Dictionary<string, object> parameters, XsltDataPage xsltPage, IDataDocument data, Hashtable transformParams, RuleEngine ruleEngine)
         {
             Validate(data, transformParams, ruleEngine, xsltPage.SaveValidationBeforeMerge);
             
@@ -227,7 +227,7 @@ namespace Origam.Server.Pages
                 throw new Exception(Properties.Resources.ErrorPseudoparameterBodyNotDefined);
             }
             UserProfile profile = SecurityManager.CurrentUserProfile();
-            DataSet original = (parameters[bodyKey] as XmlDataDocument).DataSet;
+            DataSet original = (parameters[bodyKey] as IDataDocument).DataSet;
             MergeParams mergeParams = new MergeParams(profile.Id);
             mergeParams.TrueDelete = true;
             DatasetTools.MergeDataSet(data.DataSet, original, null, mergeParams);
@@ -240,8 +240,8 @@ namespace Origam.Server.Pages
 
         private static void HandleDELETE(XsltDataPage xsltPage, DataSet data, Hashtable transformParams, RuleEngine ruleEngine)
         {
-            XmlDocument xmldoc = new XmlDocument();
-            xmldoc.LoadXml(data.GetXml());
+            IDataDocument xmldoc = DataDocumentFactory.New();
+            xmldoc.Xml.LoadXml(data.GetXml());
             Validate(xmldoc, transformParams, ruleEngine, xsltPage.SaveValidationBeforeMerge);
 
             foreach (DataTable table in data.Tables)

@@ -120,11 +120,11 @@ namespace Origam.Workflow
 			{
 				case "DecodeShortMessagesFromBuffer":
 					// Check input parameters
-					if(! (this.Parameters["Buffer"] is XmlDataDocument))
+					if(! (this.Parameters["Buffer"] is IDataDocument))
 						throw new InvalidCastException(ResourceUtils.GetString("ErrorBufferNotXmlDataDocument"));
 					
 					SerialCommunicationBuffer buffer = new SerialCommunicationBuffer();
-					buffer.Merge((this.Parameters["Buffer"] as XmlDataDocument).DataSet);
+					buffer.Merge((this.Parameters["Buffer"] as IDataDocument).DataSet);
 
 					_result = this.DecodeShortMessagesFromBuffer(buffer);
 

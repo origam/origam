@@ -40,10 +40,10 @@ namespace Origam.Rule
 		}
 		#endregion
 
-        internal override object GetTransform(XmlDocument xslt)
+        internal override object GetTransform(IDataDocument xslt)
         {
             XslTransform engine = new XslTransform();
-            engine.Load(new XmlNodeReader(xslt), new ModelXmlResolver(), this.GetType().Assembly.Evidence);
+            engine.Load(new XmlNodeReader(xslt.Xml), new ModelXmlResolver(), this.GetType().Assembly.Evidence);
             return engine;
         }
 
@@ -56,13 +56,13 @@ namespace Origam.Rule
             return engine;
         }
 
-        public override void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, XmlDocument resultDoc)
+        public override void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, IDataDocument resultDoc)
         {
             XslTransform xslt = engine as XslTransform;
             XmlReader reader = xslt.Transform(sourceXpathDoc, xslArg, (XmlResolver)null);
             try
             {
-                resultDoc.Load(reader);
+                resultDoc.Xml.Load(reader);
             }
             catch (NullReferenceException ex)
             {

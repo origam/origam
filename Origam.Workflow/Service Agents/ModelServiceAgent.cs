@@ -41,15 +41,15 @@ namespace Origam.Workflow
 		}
 
         #region Private Methods
-        private object GenerateSimpleModel(XmlDataDocument xmlDataDocument)
+        private object GenerateSimpleModel(IDataDocument dataDocument)
         {
             ISchemaService schemaService = ServiceManager.Services.GetService(
                 typeof(ISchemaService)) as ISchemaService;
             schemaService.StorageSchemaExtensionId = new Guid(GENERATED_PACKAGE_ID);
-            SimpleModelData model = xmlDataDocument.DataSet as SimpleModelData;
+            SimpleModelData model = dataDocument.DataSet as SimpleModelData;
             if (model == null)
             {
-                throw new ArgumentOutOfRangeException("Data", xmlDataDocument, "Unknown data");
+                throw new ArgumentOutOfRangeException("Data", dataDocument, "Unknown data");
             }
             SchemaItemGroup entityGroup = null;
             foreach (var entity in model.OrigamEntity)
@@ -108,10 +108,10 @@ namespace Origam.Workflow
 			{
 				case "GenerateSimpleModel":
 					// Check input parameters
-					if(! (this.Parameters["Data"] is XmlDataDocument))
+					if(! (this.Parameters["Data"] is IDataDocument))
 						throw new InvalidCastException(ResourceUtils.GetString("ErrorWorkflowNotGuid"));
 					
-					_result = this.GenerateSimpleModel((XmlDataDocument)this.Parameters["Data"]);
+					_result = this.GenerateSimpleModel((IDataDocument)this.Parameters["Data"]);
 					break;
 
 				default:
