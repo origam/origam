@@ -25,35 +25,20 @@ namespace Origam.ServerCore.Controllers
         public MetaDataController( ILogger<MetaDataController> log)
         {
             this.log = log;
+
+            var persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
+            if (persistenceService == null)
+            {
+                Reflector.ClassCache = new NullReflectorCache();
+                CoreRuntimeServiceFactory serviceFactory = new CoreRuntimeServiceFactory();
+                OrigamEngine.OrigamEngine.ConnectRuntime(customServiceFactory: serviceFactory);
+            }
         }
 
         [HttpGet("[action]")]
         public string GetMenu()
         {
-            log.LogDebug("Get menu runs");
-            Reflector.ClassCache = new NullReflectorCache();
-            var DefaultFolders = new List<ElementName>
-            {
-                ElementNameFactory.Create(typeof(SchemaExtension)),
-                ElementNameFactory.Create(typeof(SchemaItemGroup))
-            };
-            ServiceManager sManager = ServiceManager.Services;
-            SchemaService schemaService = new SchemaService();
-            IParameterService parameterService = new NullParameterService();
-
-            sManager.AddService(schemaService);
-            sManager.AddService(parameterService);
-
-            var settings = new OrigamSettings();
-            ConfigurationManager.SetActiveConfiguration(settings);
-            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("origam_server"), null);
-            StateMachineSchemaItemProvider StateMachineSchema = new StateMachineSchemaItemProvider();
-            var persistenceService = new FilePersistenceService(DefaultFolders);
-
-            sManager.AddService(persistenceService);
-            schemaService.AddProvider(StateMachineSchema);
-            schemaService.AddProvider(new MenuSchemaItemProvider());
-            ServiceManager.Services.AddService(new ServiceAgentFactory());
+            log.LogDebug("Get menu runs");       
             return MenuXmlBuilder.GetMenu();
         }
     }
