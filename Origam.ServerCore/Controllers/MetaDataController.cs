@@ -5,6 +5,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Origam.DA;
 using Origam.OrigamEngine.ModelXmlBuilders;
@@ -19,9 +20,17 @@ namespace Origam.ServerCore.Controllers
    // [ApiController]
     public class MetaDataController: ControllerBase
     {
+        private readonly ILogger<MetaDataController> log;
+
+        public MetaDataController( ILogger<MetaDataController> log)
+        {
+            this.log = log;
+        }
+
         [HttpGet("[action]")]
         public string GetMenu()
         {
+            log.LogDebug("Get menu runs");
             Reflector.ClassCache = new NullReflectorCache();
             var DefaultFolders = new List<ElementName>
             {
