@@ -1413,7 +1413,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 							case "CaptionLength":		captionLength = property.IntValue;										break;
 							case "CaptionPosition":		captionPosition = ((CaptionPosition)property.IntValue).ToString();		break;
 							case "SourceType":			sourceType = ((ImageBoxSourceType)property.IntValue).ToString();		break;
-							case "Dock":				dock = ((System.Windows.Forms.DockStyle)property.IntValue).ToString();	break;
+							case "Dock":				dock = ToWinFormsDockStyle(property.IntValue);	                        break;
 							case "Multiline":			multiline = property.BoolValue;											break;
 							case "IsPassword":			isPassword = property.BoolValue;										break;
 							case "GridColumnWidth":		gridColumnWidth = property.IntValue.ToString();							break;
@@ -1622,8 +1622,26 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				parentElement.RemoveChild(formExclusiveControlsElement);
 			}
 		}
+        /// <summary>
+        /// https://docs.microsoft.com/cs-cz/dotnet/api/system.windows.forms.dockstyle?view=netframework-4.7.2
+        /// </summary>
+        /// <param name="intVal"></param>
+        /// <returns></returns>
+	    private static string ToWinFormsDockStyle(int intVal)
+	    {
+	        switch (intVal)
+	        {
+                case 2: return "Bottom";
+	            case 5: return "Fill";
+	            case 3: return "Left";
+	            case 0: return "None";
+	            case 4: return "Right";
+	            case 1: return "Top";
+                default: throw new Exception("Cannot convert value " +intVal+ " to System.Windows.Forms string");
+            }
+	    }
 
-		internal static string AddDataSource(Hashtable dataSources, DataTable table, string controlId, bool isIndependent)
+	    internal static string AddDataSource(Hashtable dataSources, DataTable table, string controlId, bool isIndependent)
 		{
 			string entityName = table.TableName;
 			if(isIndependent)
