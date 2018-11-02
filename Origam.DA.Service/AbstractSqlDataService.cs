@@ -164,15 +164,21 @@ namespace Origam.DA.Service
 			this.DataService.HandleException(ex, standardMessage, null);
 		}
 	}
-	#endregion
+    #endregion
 
-	public abstract class AbstractSqlDataService : AbstractDataService
+    // version of log4net for NetStandard 1.3 does not have the method
+    // LogManager.GetLogger(string)... have to use the overload with Type as parameter 
+    public class ConcurrencyExceptionLogger
+    {
+    }
+
+    public abstract class AbstractSqlDataService : AbstractDataService
 	{				
 		private readonly Profiler profiler = new Profiler(); 
 		
 		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         // Special logger for concurrency exception detail logging
-        private static readonly ILog concurrencyLog = LogManager.GetLogger("ConcurrencyExceptionLogger");
+        private static readonly ILog concurrencyLog = LogManager.GetLogger(typeof(ConcurrencyExceptionLogger));
 		private DbDataAdapterFactory _adapterFactory;
 		private string _connectionString = "";
         private const int DATA_VISUALIZATION_MAX_LENGTH = 100;
@@ -2473,11 +2479,16 @@ namespace Origam.DA.Service
 
 		#endregion
 	}
-	
-	internal class Profiler
+    // version of log4net for NetStandard 1.3 does not have the method
+    // LogManager.GetLogger(string)... have to use the overload with Type as parameter 
+    public class WorkflowProfiling
+    {
+    }
+
+    internal class Profiler
 		{
 			private static readonly ILog workflowProfilingLog = 
-				LogManager.GetLogger("WorkflowProfiling");
+				LogManager.GetLogger(typeof(Profiler));
 			
 			private readonly Dictionary<DataStructureEntity,List<double>> durations_ms = 
 				new Dictionary<DataStructureEntity, List<double>>();
@@ -2522,7 +2533,8 @@ namespace Origam.DA.Service
 			private static void ExecuteAndTakeLoggingAction(DataStructureEntity entity,
 				Action<DataStructureEntity,Stopwatch> loggingAction, Action actionToExecute)	
 			{
-				if (workflowProfilingLog.IsDebugEnabled)
+
+			   if (workflowProfilingLog.IsDebugEnabled)
 				{
 					string taskId = (string) ThreadContext.Properties["currentTaskId"];
 					if (taskId != null)
