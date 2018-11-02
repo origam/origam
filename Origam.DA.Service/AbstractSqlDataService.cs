@@ -389,7 +389,7 @@ namespace Origam.DA.Service
 					try
 					{
 						log.Error(DebugClass.ListRowErrors(dataset), ex);
-						using(System.IO.StreamWriter w = System.IO.File.CreateText(System.Windows.Forms.Application.StartupPath + @"\debug\" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-") + DateTime.Now.Ticks.ToString() + "___" + "MsSqlDataService_error.txt"))
+						using(System.IO.StreamWriter w = System.IO.File.CreateText(AppDomain.CurrentDomain.BaseDirectory + @"\debug\" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-") + DateTime.Now.Ticks.ToString() + "___" + "MsSqlDataService_error.txt"))
 						{
 							w.WriteLine(DebugClass.ListRowErrors(dataset));
 							w.Close();

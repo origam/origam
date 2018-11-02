@@ -883,7 +883,7 @@ namespace Origam.DA.ObjectPersistence.Providers
 			{
 				if(chng ==null)
 				{
-					System.Windows.Forms.MessageBox.Show(res.ResourceUtils.GetString("NoChangesInDataSet"));
+					throw new Exception(res.ResourceUtils.GetString("NoChangesInDataSet"));
 				}
 				else
 				{
