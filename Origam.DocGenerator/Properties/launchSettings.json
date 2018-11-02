@@ -2,7 +2,7 @@
   "profiles": {
     "Origam.DocGenerator": {
       "commandName": "Project",
-      "commandLineArgs": " -s D:\\OrigamProjects\\be-model  -g 0fe05b88-11e4-4f28-81bc-7762afa76dc8 -o D:\\prace\\export\\ -x ..\\..\\..\\xsl\\stylemd.xsl -r index.md"
+      "commandLineArgs": " -s D:\\OrigamProjects\\be-model  -p 0fe05b88-11e4-4f28-81bc-7762afa76dc8 -o D:\\prace\\export\\ -x ..\\..\\..\\xsl\\stylemd.xsl -r index.xml  -m D:\\prace\\export\\"
     }
   }
 }
