@@ -19,6 +19,7 @@ namespace Origam
 
         public DataDocumentCore(XmlDocument xmlDocument)
         {
+            dataSet = new DataSet();
             using (XmlReader xmlReader = new XmlNodeReader(xmlDocument))
             {
                 dataSet.ReadXml(xmlReader);

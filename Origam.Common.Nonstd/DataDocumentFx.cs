@@ -8,21 +8,21 @@ using System.Xml;
 
 namespace Origam
 {
-    public class DataDocument : IDataDocument
+    public class DataDocumentFx : IDataDocument
     {
         private readonly XmlDataDocument xmlDataDocument;
 
-        public DataDocument()
+        public DataDocumentFx()
         {
             xmlDataDocument = new XmlDataDocument();
         }
 
-        public DataDocument(DataSet dataSet)
+        public DataDocumentFx(DataSet dataSet)
         {
             xmlDataDocument = new XmlDataDocument(dataSet);
         }
 
-        public DataDocument(XmlDocument xmlDoc)
+        public DataDocumentFx(XmlDocument xmlDoc)
         {
             xmlDataDocument = new XmlDataDocument();
             foreach (XmlNode childNode in xmlDoc.ChildNodes)
@@ -42,7 +42,7 @@ namespace Origam
 
         public IDataDocument Clone()
         {
-            return new DataDocument(xmlDataDocument);
+            return new DataDocumentFx(xmlDataDocument);
         }
     }
 }
