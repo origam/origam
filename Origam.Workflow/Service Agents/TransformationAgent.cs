@@ -72,7 +72,7 @@ namespace Origam.Workflow
 					}
 
 					// Check input parameters
-					if(! (this.Parameters["Data"] is XmlDocument))
+					if(! (this.Parameters["Data"] is IDataDocument))
 						throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDocument"));
 
 					if(! (this.Parameters["XslScript"] is Guid))

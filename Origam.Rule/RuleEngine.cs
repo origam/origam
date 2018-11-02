@@ -4012,10 +4012,10 @@ namespace Origam.Rule
 			}
 
 		    IDataDocument doc;
-		    IDataDocument xmlDocument = data as IDataDocument;
+		    XmlDocument xmlDocument = data as XmlDocument;
 			if(xmlDocument != null)
 			{
-				doc = xmlDocument;
+				doc = DataDocumentFactory.New(xmlDocument);
 			}
 			else
 			{
@@ -4136,9 +4136,9 @@ namespace Origam.Rule
 		#endregion
 
 		#region Rule Evaluators
-		private object EvaluateRule(XPathRule rule, XmlDocument context, XPathNodeIterator contextPosition)
+		private object EvaluateRule(XPathRule rule, IDataDocument context, XPathNodeIterator contextPosition)
 		{
-			if(context == null)
+			if(context == null && context.Xml == null)
 			{
 				throw new NullReferenceException(ResourceUtils.GetString("ErrorEvaluateContextNull"));
 			}
@@ -4150,10 +4150,10 @@ namespace Origam.Rule
 				{
 					log.Debug("Current Position: " + contextPosition.Current.Name);
 				}
-				log.Debug("  Input data: " + context.OuterXml);
+				log.Debug("  Input data: " + context.Xml.OuterXml);
 			}
 
-			XPathNavigator nav = context.CreateNavigator();
+			XPathNavigator nav = context.Xml.CreateNavigator();
 
 			return EvaluateXPath(rule.XPath, rule.IsPathRelative, rule.DataType, nav, contextPosition);
 		}
