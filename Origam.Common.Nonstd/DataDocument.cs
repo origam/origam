@@ -45,20 +45,4 @@ namespace Origam
             return new DataDocument(xmlDataDocument);
         }
     }
-
-    public class DataDocumentFactory
-    {
-        public static IDataDocument New()
-        {
-            return new DataDocument();
-        }
-        public static IDataDocument New(XmlDocument xmlDoc)
-        {
-            return new DataDocument(xmlDoc);
-        }
-        public static IDataDocument New(DataSet dataSet)
-        {
-            return new DataDocument(dataSet);
-        }
-    }
 }
