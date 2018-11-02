@@ -27,6 +27,8 @@ using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Security.Principal;
 using System.Threading;
 
@@ -53,6 +55,9 @@ namespace Origam.DocGenerator
 
             [Option('m', "xmlfilename", Required = false, HelpText = "Xml File for export source tree.")]
             public string XmlFile { get; set; }
+
+            [Option('l', "language", Required = false, HelpText = "Localization.")]
+            public string Language { get; set; }
 
             [ParserState]
             public IParserState LastParserState { get; set; }
@@ -89,12 +94,18 @@ namespace Origam.DocGenerator
             sManager.AddService(service);
             sManager.AddService(parameterService);
 
-            var settings = new OrigamSettings();
+            var settings = new OrigamSettings
+            {
+                LocalizationFolder = Path.Combine(options.Schema, "l10n")
+            };
+
             ConfigurationManager.SetActiveConfiguration(settings);
             Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("origam_server"), null);
             StateMachineSchemaItemProvider StateMachineSchema = new StateMachineSchemaItemProvider();
             var persistenceService = new FilePersistenceService(DefaultFolders,
                options.Schema);
+
+             Thread.CurrentThread.CurrentUICulture = new CultureInfo(options.Language);
 
             sManager.AddService(persistenceService);
             service.AddProvider(StateMachineSchema);
