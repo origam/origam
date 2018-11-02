@@ -143,7 +143,7 @@ namespace Origam.DocGenerator
                     caption = table.Columns[bindingMember].Caption;
                 }
                 Guid id = (Guid)table.Columns[bindingMember].ExtendedProperties["Id"];
-                WriteStartElement("Field", caption);
+                WriteStartElement("Field", caption, control.ControlItem.Id.ToString(), control.ControlItem.GetType().Name);
                 string docc = documentation.GetDocumentation(id, DocumentationType.USER_LONG_HELP);
                 WriteElement("description", docc);
             }
@@ -165,7 +165,7 @@ namespace Origam.DocGenerator
                 {
                     section = "Panel";
                 }
-                WriteStartElement("Section", section);
+                WriteStartElement("Section", section, control.ControlItem.Id.ToString(), control.ControlItem.GetType().Name);
                 WriteElement("description", doc);
                 sortedControls = control.ControlItem.PanelControlSet.ChildItems[0].ChildItemsByType(ControlSetItem.ItemTypeConst);
             }
@@ -240,7 +240,7 @@ namespace Origam.DocGenerator
         {
             foreach (AbstractSchemaItem menuitem in menuSublist.ChildItems)
             {
-                WriteStartElement("Menuitem", menuitem.NodeText);
+                WriteStartElement("Menuitem", menuitem.NodeText,menuitem.Id.ToString(),menuitem.GetType().Name);
                 string doc = documentation.GetDocumentation(menuitem.Id, DocumentationType.USER_LONG_HELP);
                 WriteElement("documentation", doc);
                 if (menuitem is FormReferenceMenuItem formItem)
@@ -249,8 +249,8 @@ namespace Origam.DocGenerator
                     DataSet dataset = new DatasetGenerator(false).CreateDataSet(form.DataStructure);
                     MakeXml(form.ChildItems[0] as ControlSetItem, form, dataset,null);
                 }
-                WriteEndElement();
                 CreateXml(menuitem);
+                WriteEndElement();
             }
         }
 
@@ -259,10 +259,12 @@ namespace Origam.DocGenerator
             Xmlwriter.WriteStartElement(element);
         }
 
-        private void WriteStartElement(string element,string title)
+        private void WriteStartElement(string element,string displayName, string id , string typeitem)
         {
             Xmlwriter.WriteStartElement(element);
-            Xmlwriter.WriteAttributeString("DisplayName", title);
+            Xmlwriter.WriteAttributeString("DisplayName", displayName);
+            Xmlwriter.WriteAttributeString("Id", id);
+            Xmlwriter.WriteAttributeString("Type", typeitem);
         }
 
         private void WriteElement(string caption,string description)
