@@ -28,6 +28,7 @@ using Origam.Schema.GuiModel;
 using Origam.Schema.RuleModel;
 using Origam.Schema.EntityModel;
 using System.Xml.Serialization;
+using System.Collections.Generic;
 
 namespace Origam.Schema.MenuModel
 {
@@ -213,7 +214,7 @@ namespace Origam.Schema.MenuModel
 			return item;
 		}
 
-		public override string[] NewTypeNames
+		public override IList<string> NewTypeNames
 		{
 			get
 			{

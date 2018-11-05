@@ -24,6 +24,7 @@ using System.Collections;
 
 using Origam.Schema;
 using Origam.DA.ObjectPersistence;
+using System.Collections.Generic;
 
 namespace Origam.Workbench.Services
 {
@@ -58,6 +59,6 @@ namespace Origam.Workbench.Services
 		void Run();
 		void RunAsync();
 
-		string[] ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter);
+		IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter);
 	}
 }

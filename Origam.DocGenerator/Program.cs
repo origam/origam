@@ -72,8 +72,7 @@ namespace Origam.DocGenerator
 
         static void Main(string[] args)
         {
-            Console.WriteLine("ORIGAM.DocGenerator Copyright (C) 2018  Advantage Solutions, s. r. o This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'." +
-                "This is free software, and you are welcome to redistribute it under certain conditions");
+            Console.WriteLine(string.Format(Strings.ShortGNU, System.Reflection.Assembly.GetEntryAssembly().GetName().Name));
 
             Options options = new Options();
 

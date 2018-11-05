@@ -25,6 +25,7 @@ using System.Xml;
 using System.Collections;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
+using System.Collections.Generic;
 
 namespace Origam.Workflow
 {
@@ -143,9 +144,9 @@ namespace Origam.Workflow
 			}
 		}
 
-		public override string[] ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
+		public override IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
 		{
-			ArrayList result = new ArrayList();
+			var result = new List<string>();
 			IWorkflow wf = item as IWorkflow;
 			ServiceMethodCallTask task = item as ServiceMethodCallTask;
 			if(task != null)
@@ -160,7 +161,7 @@ namespace Origam.Workflow
 				}
 			}
 
-			return (string[])result.ToArray(typeof(string));
+			return result;
 		}
 
 		private IWorkflow ResolveServiceMethodCallTask(ServiceMethodCallTask task)

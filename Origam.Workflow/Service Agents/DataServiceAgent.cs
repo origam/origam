@@ -36,6 +36,7 @@ using Origam.Schema.WorkflowModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 using System.Security.Principal;
+using System.Collections.Generic;
 
 namespace Origam.Workflow
 {
@@ -623,9 +624,9 @@ namespace Origam.Workflow
 			}
 		}
 
-		public override string[] ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
+		public override IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
 		{
-			Hashtable result = new Hashtable();
+			var result = new List<string>();
 			ServiceMethodCallTask call = item as ServiceMethodCallTask;
 			XsltDataPage dataPage = item as XsltDataPage;
 			FileDownloadPage downloadPage = item as FileDownloadPage;
@@ -689,7 +690,7 @@ namespace Origam.Workflow
 							{
 								if(!result.Contains(newParameter))
 								{
-									result.Add(newParameter, null);
+									result.Add(newParameter);
 								}
 
 							}
@@ -697,17 +698,16 @@ namespace Origam.Workflow
 					}
 				}
 			}
-			ArrayList resultArray = new ArrayList();
-			resultArray.AddRange(result.Keys);
-			resultArray.Sort();
+
+            result.Sort();
 			if(prefix != null)
 			{
-				for(int i = 0; i < resultArray.Count; i++)
+				for(int i = 0; i < result.Count; i++)
 				{
-					resultArray[i] = prefix + resultArray[i];
+					result[i] = prefix + result[i];
 				}
 			}
-			return (string[])resultArray.ToArray(typeof(string));
+			return result;
 		}
 
 		#endregion

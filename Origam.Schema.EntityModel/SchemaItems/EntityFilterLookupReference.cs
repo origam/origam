@@ -24,6 +24,7 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using Origam.Workbench.Services;
 using System.Xml.Serialization;
+using System.Collections.Generic;
 
 namespace Origam.Schema.EntityModel
 {
@@ -90,7 +91,7 @@ namespace Origam.Schema.EntityModel
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override string[] NewTypeNames
+		public override IList<string> NewTypeNames
 		{
 			get
 			{

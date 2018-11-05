@@ -37,8 +37,7 @@ namespace Origam.ServerCore.Controllers
 
         [HttpGet("[action]")]
         public string GetMenu()
-        {
-            log.LogDebug("Get menu runs");       
+        {    
             return MenuXmlBuilder.GetMenu();
         }
     }

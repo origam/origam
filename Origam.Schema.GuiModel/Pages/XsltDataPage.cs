@@ -26,7 +26,7 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 using Origam.Schema.RuleModel;
-
+using System.Collections.Generic;
 
 namespace Origam.Schema.GuiModel
 {
@@ -58,7 +58,7 @@ namespace Origam.Schema.GuiModel
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override string[] NewTypeNames
+		public override IList<string> NewTypeNames
 		{
 			get
 			{

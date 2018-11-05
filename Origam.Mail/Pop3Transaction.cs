@@ -20,8 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-//using OpenPOP.POP3;
-using NandoF.Mail.PopClient;
+using MailKit.Net.Pop3;
+
 
 namespace Origam.Mail
 {
@@ -30,47 +30,40 @@ namespace Origam.Mail
 	/// </summary>
 	public class Pop3Transaction : OrigamTransaction
 	{
-		PopClient _popClient = null;
+        public Pop3Transaction(Pop3Client client)
+        {
+            PopClient = client;
+        }
 
-		public Pop3Transaction(PopClient client)
-		{
-			_popClient = client;
-		}
+        public override void Commit()
+        {
+            CheckStatus();
+            PopClient.Disconnect(true);
+            PopClient.Dispose();
+        }
 
-		public override void Commit()
-		{
-			CheckStatus();
+        public override void Rollback()
+        {
+            CheckStatus();
 
-			_popClient.Disconnect();
-		}
+            PopClient.Reset();
+            PopClient.Disconnect(true);
+            PopClient.Dispose();
+        }
 
-		public override void Rollback()
-		{
-			CheckStatus();
+        public Pop3Client PopClient { get; } = null;
 
-			_popClient.RSET();
-			_popClient.Disconnect();
-		}
+        private void CheckStatus()
+        {
+            if (PopClient == null)
+            {
+                throw new InvalidOperationException(ResourceUtils.GetString("ErrorTransactionNotStarted"));
+            }
 
-		public PopClient PopClient
-		{
-			get
-			{
-				return _popClient;
-			}
-		}
-
-		private void CheckStatus()
-		{
-			if(_popClient == null)
-			{
-				throw new InvalidOperationException(ResourceUtils.GetString("ErrorTransactionNotStarted"));
-			}
-
-			if(! _popClient.IsConnected)
-			{
-				throw new InvalidOperationException(ResourceUtils.GetString("ErrorNotConnected"));
-			}
-		}
-	}
+            if (!PopClient.IsConnected)
+            {
+                throw new InvalidOperationException(ResourceUtils.GetString("ErrorNotConnected"));
+            }
+        }
+    }
 }

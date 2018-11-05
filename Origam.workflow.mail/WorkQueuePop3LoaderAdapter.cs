@@ -1,16 +1,16 @@
 using System;
 using System.Xml;
+using MailKit.Net.Pop3;
 using Origam.Mail;
 using Origam.Workbench.Services;
 using Origam.Workflow.WorkQueue;
-using NandoF.Mail.PopClient;
 
 namespace Origam.workflow.mail
 {
 	public class WorkQueuePop3LoaderAdapter : WorkQueueLoaderAdapter
 	{
 		string _transactionId;
-		PopClient _popClient;
+	    Pop3Client _popClient;
 
 		public override void Connect(IWorkQueueService service, Guid queueId, string workQueueClass, string connection, string userName, string password, string transactionId)
 		{
@@ -52,13 +52,14 @@ namespace Origam.workflow.mail
 			if(port == 0) throw new Exception(
                 ResourceUtils.GetString("ErrorNoString"));
 
-			_popClient = AbstractMailService.GetPopClient(server, port, userName, password, transactionId);
-
-			if(ssl)
-			{
-				_popClient.IsUsingSsl = true;
-			}
-		}
+		    _popClient = AbstractMailService.GetPopClient(
+		        mailServer: server,
+		        port: port,
+		        userName: userName,
+		        password: password,
+		        transactionId: transactionId,
+		        useSsl: ssl);
+        }
 
 		public override void Disconnect()
 		{
@@ -70,12 +71,12 @@ namespace Origam.workflow.mail
 			MailData mailData = new MailData();
 			mailData.DataSetName = "ROOT";
 
-			int messageCount = _popClient.GetMessageCount();
-			if(messageCount == 0) return null;
+		    int messageCount = _popClient.GetMessageUids().Count;
+		    if (messageCount == 0) return null;
 
-			AbstractMailService.RetrieveMail(mailData, _popClient, 1, true);
+		    AbstractMailService.RetrieveMailNext(mailData, _popClient, true);
 
-			WorkQueueAdapterResult result = new WorkQueueAdapterResult(DataDocumentFactory.New(mailData));
+            WorkQueueAdapterResult result = new WorkQueueAdapterResult(DataDocumentFactory.New(mailData));
 
             result.Attachments = new WorkQueueAttachment[mailData.MailAttachment.Rows.Count];
 			result.State = mailData.Mail[0].MessageId;
@@ -88,9 +89,6 @@ namespace Origam.workflow.mail
 
 				result.Attachments[i] = att;
 			}
-
-            // remove the attachments from the original xml file
-            // mailData.MailAttachment.Clear();
 
 			return result;
 		}

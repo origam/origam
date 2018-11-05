@@ -22,7 +22,7 @@ namespace Origam {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Strings {
+    public class Strings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -101,6 +101,13 @@ namespace Origam {
             get
             {
                 return ResourceManager.GetString("PathNotFound", resourceCulture);
+            }
+        }
+        public static string ShortGNU
+        {
+            get
+            {
+                return ResourceManager.GetString("ShortGnu", resourceCulture);
             }
         }
     }

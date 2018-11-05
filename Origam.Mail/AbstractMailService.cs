@@ -20,10 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.IO;
+using System.Linq;
 using System.Xml;
-//using OpenPOP.POP3;
-using NandoF.Mail.PopClient;
 using System.Text.RegularExpressions;
+using CSharpFunctionalExtensions;
+using MailKit.Net.Pop3;
+using MailKit.Security;
+using MimeKit;
 
 
 namespace Origam.Mail
@@ -230,18 +234,22 @@ namespace Origam.Mail
             return result;
         }
 
-
-
         public static IDataDocument GetMails(string mailServer, int port, string userName, string password, string transactionId, int maxCount)
         {
-            PopClient popClient = null;
+            Pop3Client popClient = new Pop3Client();
             MailData mailData = new MailData();
 
             try
             {
-                popClient = GetPopClient(mailServer, port, userName, password, transactionId);
+                popClient = GetPopClient(
+                    mailServer: mailServer,
+                    port: port,
+                    userName: userName,
+                    password: password,
+                    transactionId: transactionId,
+                    useSsl: true);
 
-                int count = popClient.GetMessageCount();
+                int count = popClient.Count;
 
                 if (maxCount > 0 && maxCount < count) count = maxCount;
 
@@ -254,62 +262,69 @@ namespace Origam.Mail
             {
                 if (transactionId == null && popClient != null)
                 {
-                    popClient.Disconnect();
+                    popClient.Disconnect(true);
                 }
             }
 
             return DataDocumentFactory.New(mailData);
         }
 
-        public static void RetrieveMail(MailData mailData, PopClient popClient, int messageNumber, bool delete)
+        public static void RetrieveMailNext(MailData mailData, Pop3Client popClient, bool delete)
         {
-            //OpenPOP.MIMEParser.Message msg = popClient.GetMessageHeader(i);
-            //OpenPOP.MIMEParser.Message msg = popClient.FetchMessage(messageNumber);
-            NandoF.Mail.Parser2.Message msg = new NandoF.Mail.Parser2.Message(popClient.FetchMessage(messageNumber), true);
+            int? mayBeIndex = getNextMessageIndex(popClient);
+            if (mayBeIndex.HasValue)
+            {
+                RetrieveMail(mailData, popClient, mayBeIndex.Value, delete);
+            }
+        }
 
-            if (msg == null) return;
+        public static void RetrieveMail(MailData mailData, Pop3Client popClient, int messageNumber, bool delete)
+        {
+            if (popClient.Count == 0) return;
+            MimeMessage message = popClient.GetMessage(messageNumber);
 
             MailData.MailRow mailrow = mailData.Mail.NewMailRow();
             mailrow.Id = Guid.NewGuid();
-            //mailrow.Sender = msg.FromEmail;
-            mailrow.Sender = msg.Headers.From.Name + "<" + msg.Headers.From.Email + ">";
+            MailboxAddress from = message.From.Mailboxes.First();
+            mailrow.Sender = from.Name + "<" + from.Address + ">";
             mailrow.Recipient = "";
 
-            foreach (string s in msg.Headers.To) // msg.TO)
-            {
-                if (mailrow.Recipient.Length > 0) mailrow.Recipient += "; ";
+            mailrow.Recipient = message.To
+                .Select(x => x.ToString())
+                .Aggregate((x, y) => x + "; " + y);
 
-                mailrow.Recipient += s;
+            mailrow.Subject = message.Subject;
+            mailrow.DateSent = message.Date.DateTime;
+            mailrow.DateReceived = DateTime.Now;
+            mailrow.MessageId = message.MessageId;
+            mailrow.MessageBody = GetMessageBody(message);
+            mailData.Mail.AddMailRow(mailrow);
+
+            foreach (MimeEntity attachment in message.Attachments)
+            {
+                MailData.MailAttachmentRow attrow = mailData.MailAttachment.NewMailAttachmentRow();
+                attrow.Id = Guid.NewGuid();
+                attrow.MailRow = mailrow;
+                attrow.Data = GetAttachmentData(attachment);
+                attrow.FileName = attachment.ContentDisposition.FileName;
+
+                mailData.MailAttachment.AddMailAttachmentRow(attrow);
             }
 
-            mailrow.Subject = msg.Headers.Subject; //msg.Subject;
-
-            try
+            if (delete)
             {
-                mailrow.DateSent = Convert.ToDateTime(msg.Headers.Date); // msg.Date);
+                popClient.DeleteMessage(messageNumber);
             }
-            catch
-            {
-                mailrow.DateSent = DateTime.MinValue;
-            }
+        }
 
-            try
-            {
-                mailrow.DateReceived = DateTime.Now; // msg.Received);
-            }
-            catch
-            {
-                mailrow.DateReceived = DateTime.Now;
-            }
-
-            mailrow.MessageId = msg.Headers.MessageID;
-
+        private static string GetMessageBody(MimeMessage message)
+        {
             string body = null;
-            if (msg.BodyText == null)
+            if (message.TextBody == null)
             {
-                if (msg.BodyHtml != null)
+                if (message.HtmlBody != null)
                 {
-                    string bodyDecoded = msg.BodyHtml.ContentDecoded;
+                    string bodyDecoded = message.HtmlBody;
                     if (bodyDecoded.IndexOf("<") >= 0)
                     {
                         body = HtmlToText(bodyDecoded);
@@ -322,153 +337,112 @@ namespace Origam.Mail
             }
             else
             {
-                body = msg.BodyText.ContentDecoded;
+                body = message.TextBody;
             }
 
-            if (body != null)
-            {
-                mailrow.MessageBody = body;
-            }
-
-            //			string body = msg.MessageBody[0].ToString();
-            //			if(msg.HTML & body.ToUpper().IndexOf("<") >= 0)
-            //			{
-            //				System.Web.Mail.MailMessage mm = new System.Web.Mail.MailMessage();
-            //				mm.BodyFormat = System.Web.Mail.MailFormat.Html;
-            //				mm.Body = body;
-            //							
-            //
-            //				mailrow.MessageBody = HtmlToText(body);
-            //			}
-            //			else
-            //			{
-            //				mailrow.MessageBody = body;
-            //			}
-
-            mailData.Mail.AddMailRow(mailrow);
-
-            foreach (NandoF.Mail.Parser2.MimePart mp in msg.Leaves)
-            {
-                NandoF.Mail.Parser2.MimePartBinary att = mp as NandoF.Mail.Parser2.MimePartBinary;
-                if (att != null)
-                {
-                    MailData.MailAttachmentRow attrow = mailData.MailAttachment.NewMailAttachmentRow();
-                    attrow.Id = Guid.NewGuid();
-                    attrow.MailRow = mailrow;
-                    attrow.Data = att.ContentDecoded;
-                    attrow.FileName = att.FileName;
-
-                    mailData.MailAttachment.AddMailAttachmentRow(attrow);
-                }
-            }
-
-            //			foreach(OpenPOP.MIMEParser.Attachment att in msg.Attachments)
-            //			{
-            //				if(att.DecodedAsBytes() != null)
-            //				{
-            //					MailData.MailAttachmentRow attrow = mailData.MailAttachment.NewMailAttachmentRow();
-            //					attrow.Id = Guid.NewGuid();
-            //					attrow.MailRow = mailrow;
-            //					attrow.Data = att.DecodedAsBytes();
-            //					attrow.FileName = att.ContentFileName;
-            //					attrow.Note = att.ContentDescription;
-            //
-            //					mailData.MailAttachment.AddMailAttachmentRow(attrow);
-            //				}
-            //			}
-            //
-            if (delete)
-            {
-                popClient.DeleteMessage(messageNumber);
-            }
+            return body;
         }
 
-        public int SendMail(IDataDocument mailDocument, string server, int port)
+        private static int? getNextMessageIndex(Pop3Client popClient)
         {
-//            if (mailDocument is IDataDocument)
-//            {
-//                MailData mailData = new MailData();
-//                mailData.Merge((mailDocument as IDataDocument).DataSet);
-//
-//                return SendMail2(mailData, server, port);
-//            }
-//            else
-//            {
-                return SendMail1(mailDocument, server, port);
-//            }
+            for (int i = 0; i < popClient.Count; i++)
+            {
+                var message = GetMessageByIndex(popClient, i);
+                if (message != null) return i;
+            }
+            return null;
         }
 
-        public abstract int SendMail2(MailData mailData, string server, int port);
+        private static MimeMessage GetMessageByIndex(Pop3Client popClient, int index)
+        {
+            try
+            {
+                return popClient.GetMessage(index);
+            }
+            catch (Pop3CommandException ex)
+            {
+                return null; // message with this number was already deleted
+            }
+        }
 
-        public abstract int SendMail1(IDataDocument mailDocument, string server, int port);
+        private static byte[] GetAttachmentData(MimeEntity attachment)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                if (attachment is MessagePart)
+                {
+                    var part = (MessagePart)attachment;
+                    part.Message.WriteTo(stream);
+                }
+                else
+                {
+                    var part = (MimePart)attachment;
+                    part.Content.DecodeTo(stream);
+                }
+                return stream.ToArray();
+            }
+        }
+
+        public abstract int SendMail(IDataDocument mailDocument, string server, int port);
 
         public static string GetValue(XmlNode mailRoot, XmlNamespaceManager nsmgr, string where)
         {
             return mailRoot.SelectSingleNode(where, nsmgr).InnerXml;
         }
 
-        public static PopClient GetPopClient(string mailServer, int port, string userName, string password, string transactionId)
+        private static Maybe<Pop3Client> TryFindInActiveClient(string connString, string transactionId)
         {
-            PopClient popClient;
+            if (transactionId == null) return null;
+            Pop3Transaction pop3Transaction =
+                ResourceMonitor.GetTransaction(transactionId, connString) as
+                Pop3Transaction;
+            return Maybe<Pop3Client>.From(pop3Transaction?.PopClient);
+        }
 
-            if (transactionId == null)
-            {
-                //				popClient = new PopClient(mailServer, port, userName, password, OpenPOP.POP3.AuthenticationMethod.USERPASS);
-                popClient = new PopClient(new NandoF.Data.MailPopAccount(mailServer, port, userName, password));
-            }
-            else
-            {
-                string connString = "Server=" + mailServer + "; Port=" + port.ToString() + "; UserName=" + userName + "; Password=" + password;
+        public static Pop3Client GetPopClient(string mailServer, int port, string userName, string password, string transactionId, bool useSsl)
+        {
+            string connString = "Server=" + mailServer + "; Port=" + port + "; UserName=" + userName + "; Password=" + password;
 
-                Pop3Transaction pop3transaction = ResourceMonitor.GetTransaction(transactionId, connString) as Pop3Transaction;
-                if (pop3transaction == null)
-                {
-                    //					popClient = new POPClient(mailServer, port, userName, password, OpenPOP.POP3.AuthenticationMethod.USERPASS);
-                    popClient = new PopClient(new NandoF.Data.MailPopAccount(mailServer, port, userName, password));
+            Maybe<Pop3Client> maybeClient =
+                TryFindInActiveClient(connString, transactionId);
+            if (maybeClient.HasValue) return maybeClient.Value;
 
-                    try
-                    {
-                        popClient.Connect();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception(ResourceUtils.GetString("ErrorConnectToServer", ex.Message));
-                    }
+            Pop3Client popClient = new Pop3Client();
+            // accept all SSL certificates (in case the server supports STARTTLS)!
+            popClient.ServerCertificateValidationCallback = (s, c, h, e) => true;
 
-                    try
-                    {
-                        popClient.Authenticate(NandoF.Mail.PopClient.AuthenticationMethods.USERPASS);
-                    }
-                    catch (InvalidPasswordException ex)
-                    {
-                        throw new Exception(ResourceUtils.GetString("ErrorInvalidUsername"), ex);
-                    }
-                    catch (InvalidLoginException ex)
-                    {
-                        throw new Exception(ResourceUtils.GetString("ErrorInvalidUsername"), ex);
-                    }
-                    catch (InvalidLoginOrPasswordException ex)
-                    {
-                        throw new Exception(ResourceUtils.GetString("ErrorInvalidUsername"), ex);
-                    }
-                    catch (PopServerLockException ex)
-                    {
-                        throw new Exception(ResourceUtils.GetString("ErrorPOP3Locked"), ex);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw;
-                    }
-
-                    ResourceMonitor.RegisterTransaction(transactionId, connString, new Pop3Transaction(popClient));
-                }
-                else
-                {
-                    popClient = pop3transaction.PopClient;
-                }
-            }
+            TryConnect(mailServer, port, userName, password, popClient, useSsl);
+            ResourceMonitor.RegisterTransaction(transactionId, connString, new Pop3Transaction(popClient));
 
             return popClient;
+        }
+
+        private static void TryConnect(string mailServer, int port, string userName,
+            string password, Pop3Client popClient, bool useSsl)
+        {
+            try
+            {
+                popClient.Connect(mailServer, port, useSsl);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    ResourceUtils.GetString("ErrorConnectToServer", ex.Message));
+            }
+
+            try
+            {
+                popClient.Authenticate(userName, password);
+            }
+            catch (AuthenticationException ex)
+            {
+                throw new Exception(ResourceUtils.GetString("ErrorInvalidUsername"),
+                    ex);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
