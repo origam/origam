@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win
 {
@@ -131,13 +132,15 @@ namespace Origam.Gui.Win
 		#region Private Methods
 		private void SubscribeEvents()
 		{
-			this.FormGenerator.LookupManager.AddLookupControl(this.FilterDropDown, this.FormGenerator.Form, false);
+		    ServiceManager.Services.GetService<IControlsLookUpService>()
+		        .AddLookupControl(this.FilterDropDown, this.FormGenerator.Form, false);
 			this.FilterDropDown.lookupValueChanged += new EventHandler(FilterDropDown_lookupValueChanged);
 		}
 
 		private void UnsubscribeEvents()
 		{
-			this.FormGenerator.LookupManager.RemoveLookupControl(this.FilterDropDown);
+		    ServiceManager.Services.GetService<IControlsLookUpService>()
+		        .RemoveLookupControl(this.FilterDropDown);
 			this.FilterDropDown.lookupValueChanged -= new EventHandler(FilterDropDown_lookupValueChanged);
 		}
 		#endregion

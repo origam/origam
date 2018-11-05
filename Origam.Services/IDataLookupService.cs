@@ -21,23 +21,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Windows.Forms;
 using System.Data;
 using Origam.Services;
 using Origam.UI;
 
 namespace Origam.Workbench.Services
 {
-	/// <summary>
-	/// Summary description for IDataLookupService.
-	/// </summary>
 	public interface IDataLookupService : IWorkbenchService
 	{
-		event System.EventHandler LookupShowSourceListRequested;
-
-		void AddLookupControl(ILookupControl lookupControl, Form form, bool showEditCommand);
-		void RemoveLookupControl(ILookupControl lookupControl);
-		void RemoveLookupControlsByForm(Form form);
 		object GetDisplayText(Guid lookupId, object lookupValue, string transactionId);
 		object GetDisplayText(Guid lookupId, object lookupValue, 
             bool useCache, bool returnMessageIfNull, string transactionId);

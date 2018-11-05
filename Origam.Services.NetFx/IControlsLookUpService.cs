@@ -19,13 +19,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Windows.Forms;
+using Origam.UI;
 
 namespace Origam.Workbench.Services
 {
-	public interface IStatusBarService : IWorkbenchService
-	{
-		StatusBar StatusBar{get; set;}
-		void SetStatusText(string text);
-	}
+    public interface IControlsLookUpService: IWorkbenchService
+    {
+        event EventHandler LookupShowSourceListRequested;
+
+        void AddLookupControl(ILookupControl lookupControl, Form form, bool showEditCommand);
+        void RemoveLookupControl(ILookupControl lookupControl);
+        void RemoveLookupControlsByForm(Form form);
+    }
 }

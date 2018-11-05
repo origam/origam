@@ -1785,11 +1785,11 @@ namespace OrigamArchitect
 
 		private void UnloadConnectedServices()
 		{
-			IDataLookupService dataLookupService =
-				ServiceManager.Services.GetService<IDataLookupService>();
-			if (dataLookupService != null)
+		    IControlsLookUpService controlsLookupService =
+				ServiceManager.Services.GetService<IControlsLookUpService>();
+			if (controlsLookupService != null)
 			{
-				dataLookupService.LookupShowSourceListRequested -=
+				controlsLookupService.LookupShowSourceListRequested -=
 					dataLookupService_LookupShowSourceListRequested;
 			}
 			OrigamEngine.UnloadConnectedServices();
@@ -2016,9 +2016,12 @@ namespace OrigamArchitect
 			ServiceManager.Services.AddService(new TracingService());
 			
 			DataLookupService dataLookupService = new DataLookupService();
-			ServiceManager.Services.AddService(dataLookupService);
-			dataLookupService.LookupShowSourceListRequested += dataLookupService_LookupShowSourceListRequested;
-			dataLookupService.LookupEditSourceRecordRequested += dataLookupService_LookupEditSourceRecordRequested;
+		    ControlsLookUpService controlsLookUpService = new ControlsLookUpService(dataLookupService);
+		    ServiceManager.Services.AddService(controlsLookUpService);
+
+            ServiceManager.Services.AddService(dataLookupService);
+		    controlsLookUpService.LookupShowSourceListRequested += dataLookupService_LookupShowSourceListRequested;
+		    controlsLookUpService.LookupEditSourceRecordRequested += dataLookupService_LookupEditSourceRecordRequested;
 			ServiceManager.Services.AddService(new DeploymentService());
 			ServiceManager.Services.AddService(new ParameterService());
 			ServiceManager.Services.AddService(new Origam.Workflow.WorkQueue.WorkQueueService());

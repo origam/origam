@@ -80,14 +80,17 @@ namespace Origam.Gui.Win
         private IEndRule _selectionDialogEndRule;
 		private Hashtable _loadedPieces = new Hashtable();
 		private DatasetRuleHandler _ruleHandler = new DatasetRuleHandler();
+        private readonly IControlsLookUpService _controlsLookupService;
 
-		#region Constructors
-		public FormGenerator()
+        #region Constructors
+        public FormGenerator()
 		{
-			_lookupManager = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-			_documentationService = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
-			IBusinessServicesService services = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-			_dataServiceAgent = services.GetAgent("DataService", null, null);
+			_lookupManager = ServiceManager.Services.GetService<IDataLookupService>();
+            _controlsLookupService  = ServiceManager.Services.GetService<IControlsLookUpService>();
+            _documentationService = ServiceManager.Services.GetService<IDocumentationService>() ;
+			_dataServiceAgent = ServiceManager.Services
+			    .GetService<IBusinessServicesService>()
+			    .GetAgent("DataService", null, null);
         }
 		#endregion
 
@@ -247,15 +250,7 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public IDataLookupService LookupManager
-		{
-			get
-			{
-				return _lookupManager;
-			}
-		}
-
-		Hashtable _selectionParameters = new Hashtable();
+	    Hashtable _selectionParameters = new Hashtable();
 		public Hashtable SelectionParameters
 		{
 			get
@@ -1363,7 +1358,7 @@ namespace Origam.Gui.Win
 
 				_toolTip = InitializeTooltip();
                 _toolTip.Popup += _toolTip_Popup;
-                this.LookupManager.RemoveLookupControlsByForm(this.Form);
+			    _controlsLookupService.RemoveLookupControlsByForm(this.Form);
 			}
 
 			foreach(Control child in controls)
@@ -1749,7 +1744,7 @@ namespace Origam.Gui.Win
 				// if Form == null, then this was called from the designer - we will not register lookup controls for that
 				if ((addingControl is ILookupControl) && (Form != null))
 				{
-					_lookupManager.AddLookupControl(
+				    _controlsLookupService.AddLookupControl(
                         addingControl as ILookupControl, Form, true);
 				}
 				if (addingControl is IAsDataConsumer)
@@ -2418,7 +2413,7 @@ namespace Origam.Gui.Win
 
 		private bool _disposing = false;
 
-		public void Dispose()
+	    public void Dispose()
 		{
 			_disposing = true;
 			if(_selectionDialogToolbar != null)
