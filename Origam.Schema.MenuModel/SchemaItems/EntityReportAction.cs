@@ -26,6 +26,7 @@ using Origam.Workbench.Services;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.GuiModel;
 using System.Xml.Serialization;
+using System.Collections.Generic;
 
 namespace Origam.Schema.MenuModel
 {
@@ -68,7 +69,7 @@ namespace Origam.Schema.MenuModel
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override string[] NewTypeNames
+		public override IList<string> NewTypeNames
 		{
 			get
 			{

@@ -21,7 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-
+using System.Collections.Generic;
 using Origam.UI;
 
 namespace Origam.Schema
@@ -257,7 +257,7 @@ namespace Origam.Schema
 			}
 		}
 
-		public virtual string[] NewTypeNames
+		public virtual IList<string> NewTypeNames
 		{
 			get
 			{
@@ -268,7 +268,7 @@ namespace Origam.Schema
 				}
 				else
 				{
-					return new string[] {};
+					return new List<string>();
 				}
 			}
 		}

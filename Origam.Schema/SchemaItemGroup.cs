@@ -388,7 +388,7 @@ namespace Origam.Schema
 		}
 
 		[Browsable(false)]
-		public virtual string[] NewTypeNames
+		public virtual IList<string> NewTypeNames
 		{
 			get
 			{

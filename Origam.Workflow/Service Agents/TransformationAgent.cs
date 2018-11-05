@@ -33,6 +33,7 @@ using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services.CoreServices;
 using log4net;
 using Origam.Workbench.Services;
+using System.Collections.Generic;
 
 namespace Origam.Workflow
 {
@@ -265,9 +266,9 @@ namespace Origam.Workflow
             }
         }
 
-		public override string[] ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
+		public override IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
 		{
-			ArrayList result = new ArrayList();
+			IList<string> result = new List<string>();
 			XslTransformation transformation = null;
 			ServiceMethodCallTask task = item as ServiceMethodCallTask;
 			if(task != null)
@@ -280,7 +281,7 @@ namespace Origam.Workflow
 				result = XmlTools.ResolveTransformationParameters (transformationText);
 			}
 
-			return (string[])result.ToArray(typeof(string));
+			return result;
 		}
 
 		private XslTransformation ResolveServiceMethodCallTask(ServiceMethodCallTask task)
