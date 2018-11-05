@@ -510,7 +510,7 @@ namespace Origam.Workbench.Commands
 				else
 				{
 					(editor as Form).Icon = System.Drawing.Icon.FromHandle((item as AbstractSchemaItem)
-						.NodeImage.ToBitMap()
+						.NodeImage.ToBitmap()
 						.GetHicon());
 				}
 			}

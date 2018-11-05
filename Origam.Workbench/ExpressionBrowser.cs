@@ -537,7 +537,7 @@ namespace Origam.Workbench
 
 			if(bnode is IBrowserNode2 && (bnode as IBrowserNode2).NodeImage != null)
 			{
-				Image nodeImage = (bnode as IBrowserNode2).NodeImage.ToBitMap();
+				Image nodeImage = (bnode as IBrowserNode2).NodeImage.ToBitmap();
 
 				if(_customImages.Contains(bnode))
 				{
