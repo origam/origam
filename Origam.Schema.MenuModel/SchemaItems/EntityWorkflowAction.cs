@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -64,7 +65,7 @@ namespace Origam.Schema.MenuModel
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override string[] NewTypeNames
+		public override IList<string> NewTypeNames
 		{
 			get
 			{

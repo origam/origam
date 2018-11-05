@@ -28,6 +28,7 @@ using Origam.Schema.EntityModel;
 using Origam.Rule;
 using Origam.DA.Service;
 using System.Data;
+using System.Collections.Generic;
 
 namespace Origam.Workflow
 {
@@ -264,9 +265,9 @@ namespace Origam.Workflow
 			OnFinished(new ServiceFinishedEventArgs(exception));
 		}
 
-		public virtual string[] ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
+		public virtual IList<string> ExpectedParameterNames(AbstractSchemaItem item, string method, string parameter)
 		{
-			return new string[] {};
+			return new List<string>();
 		}
 		#endregion
 

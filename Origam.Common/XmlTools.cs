@@ -23,8 +23,8 @@ using System;
 using System.Xml;
 using System.Xml.XPath;
 using System.Collections;
-using System.IO;
-using System.Net;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Origam
 {
@@ -157,17 +157,28 @@ namespace Origam
 			return result;
 		}
 
-		public static ArrayList ResolveTransformationParameters (string transformationText)
+        public static IList<string> ResolveTransformationParameters(string transformationText)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(transformationText);
+            return ResolveTransformationParameters(doc);
+        }
+
+        public static IList<string> ResolveTransformationParameters (XmlDocument doc)
 		{
-			ArrayList result = new ArrayList ();
-			XmlDocument doc = new XmlDocument ();
-			doc.LoadXml (transformationText);
-			XmlNamespaceManager nsmgr = new XmlNamespaceManager (doc.NameTable);
-			nsmgr.AddNamespace ("xsl", XslNameSpace);
-			foreach (XmlElement element in doc.SelectNodes ("/xsl:stylesheet/xsl:param", nsmgr)) {
-				result.Add (element.GetAttribute ("name"));
-			}
-			return result;
+            return ResolveTransformationParameterElements(doc)
+                .Select(node => node.GetAttribute("name"))
+                .ToList();
 		}
-	}
+
+        public static IList<XmlElement> ResolveTransformationParameterElements(XmlDocument doc)
+        {
+            XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
+            nsmgr.AddNamespace("xsl", XslNameSpace);
+            return doc.SelectNodes("/xsl:stylesheet/xsl:param", nsmgr)
+                .Cast<XmlElement>()
+                .ToList();
+        }
+
+    }
 }

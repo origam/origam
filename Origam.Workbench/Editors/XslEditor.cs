@@ -959,7 +959,7 @@ namespace Origam.Workbench.Editors
 
 				// resolve transformation input parameters and try to put an empty xml document to each just
 				// in case it expects a node set as a parameter
-				ArrayList xsltParams = XmlTools.ResolveTransformationParameters(xslt);
+				var xsltParams = XmlTools.ResolveTransformationParameters(xslt);
 //				Hashtable htParams = new Hashtable(xsltParams.Count);
 //				XmlDocument dummyValue = new XmlDocument();
 //				foreach (string xsltParam in xsltParams) {
@@ -1006,14 +1006,14 @@ namespace Origam.Workbench.Editors
 			}
 		}
 
-		private Hashtable GetParameterValues(ArrayList paramNames)
+		private Hashtable GetParameterValues(IList<string> paramNames)
 		{
 			var parHashtable = new Hashtable();
 			foreach (var paramName in paramNames)
 			{			
 				ParameterData correspondingData = parameterList.Items
 				   .Cast<ParameterData>()
-				   .FirstOrDefault(parData => parData.Name == (string) paramName) 
+				   .FirstOrDefault(parData => parData.Name == paramName) 
 				   ?? throw new ArgumentException( $"Parameter named {paramName} was not found among Input Parameters.");
 				
 				parHashtable.Add(paramName,correspondingData.Value);
@@ -1245,25 +1245,10 @@ namespace Origam.Workbench.Editors
 			
 			UpdateNameSpaceDictionary(xsltDoc);
 
-			List<XmlNode> newParamNodes = GetNewParamNodes(xsltDoc);
+            var newParamNodes = XmlTools.ResolveTransformationParameterElements(xsltDoc);
 
 			RemoveParametersIfNotIn(newParamNodes);
 			AddNewParametersIfNotAlredyInList(newParamNodes);
-		}
-
-		private List<XmlNode> GetNewParamNodes(XmlDocument xsltDoc)
-		{
-			string xlsPrefix = aliasToNameSpaceDict[XmlTools.XslNameSpace];
-			string parameterTag = $"{xlsPrefix}:param";
-
-			List<XmlNode> newParamNodes = xsltDoc
-				.GetElementsByTagName(parameterTag)
-				.Cast<XmlNode>()
-				.Where(node => node.Attributes != null)
-				.Where(node => node.Attributes["name"] != null)
-				.DistinctBy(node => node.Attributes["name"].Value)
-				.ToList();
-			return newParamNodes;
 		}
 
 		private void UpdateNameSpaceDictionary(XmlDocument xsltDoc)
@@ -1276,7 +1261,7 @@ namespace Origam.Workbench.Editors
 				.Invert();
 		}
 
-		private void RemoveParametersIfNotIn(List<XmlNode> newParamNodes)
+		private void RemoveParametersIfNotIn(IList<XmlElement> newParamNodes)
 		{
 			List<string> newParNames = newParamNodes
 				.Select(node => node.Attributes["name"].Value)
@@ -1289,7 +1274,7 @@ namespace Origam.Workbench.Editors
 				.ForEach(item => parameterList.RemoveAndKeepSomeSelected(item));
 		}
 
-		private void AddNewParametersIfNotAlredyInList(List<XmlNode> paramNodes)
+		private void AddNewParametersIfNotAlredyInList(IList<XmlElement> paramNodes)
 		{
 			List<string> oldParNames = parameterList.Items
 				.Cast<ParameterData>()

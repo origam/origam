@@ -214,7 +214,7 @@ namespace Origam.DocGenerator
 
         private void SaveSchemaXml()
         {
-            FileStream file = new FileStream(Path.Combine(DirectoryPath, RootFile),  FileMode.Create, FileAccess.Write);
+            FileStream file = new FileStream(Path.Combine(DirectoryPath, xmlsourcefile),  FileMode.Create, FileAccess.Write);
             mstream.WriteTo(file);
             file.Close();
             mstream.Close();

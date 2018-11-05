@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace Origam.Schema
 {
@@ -51,7 +52,7 @@ namespace Origam.Schema
 		/// Gets optional list of names for new item types. This list will be used to generate a submenu
 		/// for New > [Type] > [Name1] [Name2] ...
 		/// </summary>
-		string[] NewTypeNames {get;}
+		IList<string> NewTypeNames {get;}
 
 		/// <summary>
 		/// Lists types for which the NewTypeNames can be used since not all NewItemTypes might
