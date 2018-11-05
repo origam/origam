@@ -187,7 +187,7 @@ namespace OrigamArchitect.Commands
 				}
 				else
 				{
-					(frm as Form).Icon = System.Drawing.Icon.FromHandle(item.NodeImage.ToBitmap().GetHicon());
+					(frm as Form).Icon = System.Drawing.Icon.FromHandle(item.NodeImage.ToBitMap().GetHicon());
 				}
 				frm.TitleName = titleName;
 				WorkbenchSingleton.Workbench.ShowView(frm);
@@ -360,7 +360,7 @@ namespace OrigamArchitect.Commands
             }
             else
             {
-                icon = System.Drawing.Icon.FromHandle(item.NodeImage.ToBitmap().GetHicon());
+                icon = System.Drawing.Icon.FromHandle(item.NodeImage.ToBitMap().GetHicon());
             }
             WorkflowHost host = WorkflowHost.DefaultHost;
             // Initialize view for this workflow

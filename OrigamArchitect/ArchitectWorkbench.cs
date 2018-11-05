@@ -798,7 +798,7 @@ namespace OrigamArchitect
 				CreateMenuItem(strings.Output_MenuItem, new ViewOutputPad(), Images.Output, Keys.None, _viewMenu);
 			}
 
-			CreateMenuItem(strings.Menu_MenuItem, new Commands.ViewProcessBrowserPad(), _workflowPad.Icon.ToBitmap(), Keys.F2, _viewMenu);
+			CreateMenuItem(strings.Menu_MenuItem, new Commands.ViewProcessBrowserPad(), _workflowPad.Icon.ToBitMap(), Keys.F2, _viewMenu);
 			CreateMenuItem(strings.WorkQueue_MenuItem, new Commands.ViewWorkQueuePad(), null, Keys.None, _viewMenu);
 #else
             CreateMenuItem(strings.Properties_MenuItem, new ViewPropertyPad(), Images.PropertyPad, Keys.F4, _viewMenu);

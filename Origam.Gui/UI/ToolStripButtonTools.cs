@@ -33,7 +33,7 @@ namespace Origam.Gui.UI
             ,EntityUIAction action)
         {
             actionButton.Text = action.Caption;
-            actionButton.Image = action.NodeImage.ToBitmap();
+            actionButton.Image = action.NodeImage.ToBitMap();
         }
 
         public static void PaintText(this ToolStripItem actionButton,
