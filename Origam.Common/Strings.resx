@@ -1,75 +1,153 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
-	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-		<xsd:element name="root" msdata:IsDataSet="true">
-			<xsd:complexType>
-				<xsd:choice maxOccurs="unbounded">
-					<xsd:element name="data">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" />
-							<xsd:attribute name="type" type="xsd:string" />
-							<xsd:attribute name="mimetype" type="xsd:string" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="resheader">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" />
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:choice>
-			</xsd:complexType>
-		</xsd:element>
-	</xsd:schema>
-	<resheader name="ResMimeType">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="Version">
-		<value>1.0.0.0</value>
-	</resheader>
-	<resheader name="Reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="Writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<data name="CantSaveConfig">
-		<value>Cannot save configuration. Configuration names must be unique.</value>
-	</data>
-	<data name="InvalidProperty">
-		<value>Invalid property or field name</value>
-	</data>
-	<data name="UnsuportedType">
-		<value>Unsupported member type.</value>
-	</data>
-	<data name="TransactionRegistered">
-		<value>Transaction is already registered.</value>
-	</data>
-	<data name="ErrorsDuringRollback">
-		<value>Errors occured while rolling back transaction.{0}</value>
-	</data>
-	<data name="ErrorsDuringPartialRollback">
-		<value>Errors occured while partially rolling back transaction.{0}</value>
-	</data>
-	<data name="ExceptionSavingTransaction">
-		<value>Exception occured while saving transaction.</value>
-	</data>
-	<data name="PartialRollbackNotSupported">
-		<value>Partial rollback of transaction is not supported by {0}</value>
-	</data>
-	<data name="SavingNotSupported">
-		<value>Saving of transaction is not supported by {0}</value>
-	</data>
-	<data name="UrlPartParameterNull">
-		<value>Url part is to be replaced by a parameter value but the value provided is NULL. Cannot construct URL.</value>
-	</data>
-  <data name="UserNotLoggedInException">
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CantSaveConfig" xml:space="preserve">
+    <value>Cannot save configuration. Configuration names must be unique.</value>
+  </data>
+  <data name="InvalidProperty" xml:space="preserve">
+    <value>Invalid property or field name</value>
+  </data>
+  <data name="UnsuportedType" xml:space="preserve">
+    <value>Unsupported member type.</value>
+  </data>
+  <data name="TransactionRegistered" xml:space="preserve">
+    <value>Transaction is already registered.</value>
+  </data>
+  <data name="ErrorsDuringRollback" xml:space="preserve">
+    <value>Errors occured while rolling back transaction.{0}</value>
+  </data>
+  <data name="ErrorsDuringPartialRollback" xml:space="preserve">
+    <value>Errors occured while partially rolling back transaction.{0}</value>
+  </data>
+  <data name="ExceptionSavingTransaction" xml:space="preserve">
+    <value>Exception occured while saving transaction.</value>
+  </data>
+  <data name="PartialRollbackNotSupported" xml:space="preserve">
+    <value>Partial rollback of transaction is not supported by {0}</value>
+  </data>
+  <data name="SavingNotSupported" xml:space="preserve">
+    <value>Saving of transaction is not supported by {0}</value>
+  </data>
+  <data name="UrlPartParameterNull" xml:space="preserve">
+    <value>Url part is to be replaced by a parameter value but the value provided is NULL. Cannot construct URL.</value>
+  </data>
+  <data name="UserNotLoggedInException" xml:space="preserve">
     <value>User not logged in.</value>
   </data>
   <data name="CannotReadType" xml:space="preserve">
@@ -83,5 +161,8 @@
   </data>
   <data name="OrigamSettingsExceptionPrefix" xml:space="preserve">
     <value>Cannot read OrigamSettings.config... </value>
+  </data>
+  <data name="ShortGnu" xml:space="preserve">
+    <value>{0} Copyright (C) 2018  Advantage Solutions, s. r. o This program comes with ABSOLUTELY NO WARRANTY.This is free software, and you are welcome to redistribute it under certain conditions.</value>
   </data>
 </root>
