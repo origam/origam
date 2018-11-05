@@ -1,22 +1,24 @@
 using System;
 using System.Xml;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
 using System.Text;
-using Koolwired.Imap;
-
+using MailKit;
+using MailKit.Net.Imap;
 using Origam.Mail;
 using Origam.Workflow.WorkQueue;
 using Origam.Workbench.Services;
 using Microsoft.Win32;
+using MimeKit;
 
 namespace Origam.workflow.mail
 {
     class WorkQueueImapLoaderAdapter : WorkQueueLoaderAdapter
     {
-        private ImapConnect _imapConnection;
-        private ImapCommand _command;
-        private ImapAuthenticate _authenticate;
-        private ImapMailbox _imapBox;
+        private ImapClient client;
+        private IMailFolder inbox;
         private string _dropbox = "DROPBOX";
         private int _totalMessages = 0;
         private int _lastMessage = 1;
@@ -66,38 +68,29 @@ namespace Origam.workflow.mail
                 }
             }
 
-            _imapConnection = new ImapConnect(url, port, ssl);
-            _command = new ImapCommand(_imapConnection);
-            _authenticate = new ImapAuthenticate(_imapConnection, userName, password);
-            _imapConnection.Open();
-            _authenticate.Login();
-            _imapBox = _command.Select(mailbox);
-            _totalMessages = _imapBox.Exist;
+            client = new ImapClient();
+  
+                            // accept all SSL certificates!
+            client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+            client.Connect(url, port, ssl);
+            client.Authenticate(userName, password);
+            client.Inbox.GetSubfolders();
+            inbox = client.Inbox;
+            inbox.Open(FolderAccess.ReadWrite);
+            _totalMessages = inbox.Count;
         }
 
         public override void Disconnect()
         {
-            if (_imapConnection.State == ConnectionState.Open)
-            {
-                _authenticate.Logout();
-                _imapConnection.Close();
-            }
+            client.Disconnect(true);
         }
 
         public override WorkQueueAdapterResult GetItem(string lastState)
         {
+            if (_totalMessages == 0) return null;
             if (_totalMessages < _lastMessage)
             {
-                int[] uids = new int[_totalMessages];
-                for (int i = 0; i < _totalMessages; i++)
-                {
-                    uids[i] = _command.FetchUID(i + 1);
-                }
-                for (int i = 0; i < uids.Length; i++)
-                {
-                    _command.SetFlag(uids[i], @"\Deleted", true);
-                }
-                _command.Expunge();
+                DeleteAllMessages();
                 return null;
             }
 
@@ -112,109 +105,25 @@ namespace Origam.workflow.mail
             WorkQueueAdapterResult result = new WorkQueueAdapterResult(new XmlDataDocument(mailData));
             string finalFolder = _dropbox;
 
+            MimeMessage lastMessage = inbox.GetMessage(inbox.Count - 1);
+
             try
             {
-                ImapMailbox imapBox = _command.Fetch(_lastMessage, _lastMessage);
-                if (imapBox.Messages.Count == 0)
-                {
-                    return null;
-                }
+                mailrow.Sender = lastMessage.From.First().ToString();
+                mailrow.Recipient = lastMessage.To
+                    .Select(x => x.ToString())
+                    .Aggregate((x, y) => x + ";" + y);
 
-                ImapMailboxMessage msg = imapBox.Messages[0];
-                _command.FetchBodyStructure(msg);
+                mailrow.Subject = GetSubject(lastMessage, mailData);
+                mailrow.DateSent = lastMessage.Date.DateTime;
+                mailrow.DateReceived = lastMessage.Date.DateTime;
+                mailrow.MessageBody = GetMessageBody(lastMessage);
 
-                mailrow.Sender = msg.From.Address;
+                byte[] htmlAttachment = GetHtmlAttachment(lastMessage);
 
-                foreach (ImapAddress addr in msg.To)
-                {
-                    if (mailrow.Recipient.Length > 0) mailrow.Recipient += "; ";
+                result.State = lastMessage.References.LastOrDefault();
 
-                    mailrow.Recipient += addr.Address;
-                }
-
-                if (msg.Subject.Length > mailData.Mail.SubjectColumn.MaxLength)
-                {
-                    mailrow.Subject = String.Format("{0} ...",
-                        msg.Subject.Substring(0,
-                        mailData.Mail.SubjectColumn.MaxLength - 4));
-                }
-                else
-                {
-                    mailrow.Subject = msg.Subject;
-                }
-                
-                if (msg.Sent == new DateTime())
-                {
-                    // no date set
-                    mailrow.DateSent = msg.Received;
-                }
-                else
-                {
-                    mailrow.DateSent = msg.Sent;
-                }
-                mailrow.DateReceived = msg.Received;
-
-                for (int i = 0; i < msg.BodyParts.Count; i++)
-                {
-                    ImapMessageBodyPart bodyPart = msg.BodyParts[i];
-                    _command.FetchBodyPart(msg, i);
-                }
-
-                byte[] htmlAttachment = null;
-
-                if (msg.HasText)
-                {
-                    mailrow.MessageBody = msg.BodyParts[msg.Text].Data;
-                }
-
-                if (msg.HasHTML)
-                {
-                    string html = msg.BodyParts[msg.HTML].Data;
-
-                    if (!msg.HasText)    // only if we do not have a text yet
-                    {
-                        mailrow.MessageBody = AbstractMailService.HtmlToText(html);
-                    }
-
-                    if (_attachHtml)
-                    {
-                        System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
-                        htmlAttachment = encoding.GetBytes(html);
-                    }
-                }
-
-                result.State = msg.Reference;
-
-                // set attachments
-                List<WorkQueueAttachment> attachments = new List<WorkQueueAttachment>();
-
-                int nonameCount = 1;
-
-                for (int i = 0; i < msg.BodyParts.Count; i++)
-                {
-                    ImapMessageBodyPart bodyPart = msg.BodyParts[i];
-                    if (bodyPart.Attachment)
-                    {
-                        string fileName = bodyPart.FileName;
-
-                        if (fileName == null)
-                        {
-                            fileName = "noname" + nonameCount++;
-
-                            string extension = GetDefaultExtension(bodyPart.ContentType.MediaType);
-
-                            if (extension != "") fileName += extension;
-                        }
-
-                        AppendAttachment(attachments, fileName, bodyPart.DataBinary);
-                    }
-                }
-
-                if (htmlAttachment != null)
-                {
-                    AppendAttachment(attachments, "original.html", htmlAttachment);
-                }
-
+                List<WorkQueueAttachment> attachments = GetAttachments(lastMessage, htmlAttachment);
                 result.Attachments = new WorkQueueAttachment[attachments.Count];
                 attachments.CopyTo(result.Attachments);
             }
@@ -224,12 +133,155 @@ namespace Origam.workflow.mail
                 finalFolder = _badmail;
             }
 
-            _command.SetSeen(_lastMessage, true);
-            _command.Copy(finalFolder, _lastMessage, _lastMessage);
+            UniqueId lastMessageId = inbox
+                .Fetch(0, -1, MessageSummaryItems.UniqueId)
+                .Last()
+                .UniqueId;
+
+            FlagAsSeen(lastMessageId);
+
+            IMailFolder finalMailFolder =
+                FindFolder(finalFolder)
+                ?? throw new Exception("Could not find folder called \""+ finalFolder+"\"");
+            inbox.MoveTo(lastMessageId, finalMailFolder);
 
             _lastMessage++;
 
             return result;
+        }
+
+        private static string GetMessageBody(MimeMessage lastMessage)
+        {
+            if (!string.IsNullOrEmpty(lastMessage.TextBody))
+            {
+                return lastMessage.TextBody;
+            }
+
+            if (!string.IsNullOrEmpty(lastMessage.HtmlBody))
+            {
+                string html = lastMessage.HtmlBody;
+
+                if (string.IsNullOrEmpty(lastMessage.TextBody)) // only if we do not have a text yet
+                {
+                    return AbstractMailService.HtmlToText(html);
+                }
+            }
+
+            return null;
+        }
+
+        private byte[] GetHtmlAttachment(MimeMessage lastMessage)
+        {
+            if (!string.IsNullOrEmpty(lastMessage.HtmlBody) && _attachHtml)
+            {
+                return new UTF8Encoding().GetBytes(lastMessage.HtmlBody);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private void FlagAsSeen(UniqueId messageid)
+        {
+            inbox.AddFlags(new List<UniqueId> { messageid }, MessageFlags.Seen, true);
+        }
+
+        private static string GetSubject(MimeMessage lastMessage, MailData mailData)
+        {
+            if (lastMessage.Subject.Length > mailData.Mail.SubjectColumn.MaxLength)
+            {
+                return String.Format("{0} ...",
+                    lastMessage.Subject.Substring(0,
+                        mailData.Mail.SubjectColumn.MaxLength - 4));
+            }
+            else
+            {
+                return lastMessage.Subject;
+            }
+        }
+
+        private List<WorkQueueAttachment> GetAttachments(MimeMessage lastMessage, byte[] htmlAttachment)
+        {
+            List<WorkQueueAttachment> attachments = new List<WorkQueueAttachment>();
+
+            int nonameCount = 1;
+            foreach (MimeEntity attachment in lastMessage.Attachments)
+            {
+                string fileName = attachment.ContentDisposition.FileName;
+                if (fileName == null)
+                {
+                    fileName = "noname" + nonameCount++;
+
+                    string extension = GetDefaultExtension(attachment.ContentType.MediaType);
+
+                    if (extension != "") fileName += extension;
+                }
+
+                AppendAttachment(attachments, fileName, GetAttachmentData(attachment));
+            }
+
+            if (htmlAttachment != null)
+            {
+                AppendAttachment(attachments, "original.html", htmlAttachment);
+            }
+
+            return attachments;
+        }
+
+        private void DeleteAllMessages()
+        {
+            var allMsgSummaries = inbox.Fetch(0, -1, MessageSummaryItems.UniqueId)
+                .Select(x => x.UniqueId)
+                .ToList();
+            if (allMsgSummaries.Count > 0)
+            {
+                inbox.AddFlags(allMsgSummaries, MessageFlags.Deleted, true);
+            }
+        }
+
+        IMailFolder FindFolder(string name)
+        {
+            var toplevel = client.GetFolder(client.PersonalNamespaces[0]);
+            return FindSubFolder(toplevel, name);
+        }
+
+        IMailFolder FindSubFolder(IMailFolder toplevel, string name)
+        {
+            var subfolders = toplevel.GetSubfolders().ToList();
+
+            foreach (var subfolder in subfolders)
+            {
+                if (subfolder.Name == name)
+                    return subfolder;
+            }
+
+            foreach (var subfolder in subfolders)
+            {
+                var folder = FindSubFolder(subfolder, name);
+
+                if (folder != null)
+                    return folder;
+            }
+            return null;
+        }
+
+        private byte[] GetAttachmentData(MimeEntity attachment)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                if (attachment is MessagePart)
+                {
+                    var part = (MessagePart)attachment;
+                    part.Message.WriteTo(stream);
+                }
+                else
+                {
+                    var part = (MimePart)attachment;
+                    part.Content.DecodeTo(stream);
+                }
+                return stream.ToArray();
+            }
         }
 
         private static void AppendAttachment(List<WorkQueueAttachment> attachments, string fileName, byte[] data)
