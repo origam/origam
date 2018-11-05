@@ -67,8 +67,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.OrigamEngine-net2", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenPOP-net2", "OpenPOP\OpenPOP-net2.csproj", "{75B3E0DF-61C3-4643-AB47-DBE1CFE3D303}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NandoF-net2", "NandoF\NandoF-net2.csproj", "{57965042-F737-4FC4-BF0E-93C700A0FDF2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workflow.SimplicorService-net2", "Origam.Workflow.SimplicorService\Origam.Workflow.SimplicorService-net2.csproj", "{EE92B4DE-5635-4B60-80B0-532C438B280F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.ModelImport-net2", "Origam.ModelImport\Origam.ModelImport-net2.csproj", "{367D2F77-B10D-438B-BF33-B7825DCF0BF5}"
@@ -965,30 +963,6 @@ Global
 		{75B3E0DF-61C3-4643-AB47-DBE1CFE3D303}.Release Server|Any CPU.Build.0 = Release Server|Any CPU
 		{75B3E0DF-61C3-4643-AB47-DBE1CFE3D303}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75B3E0DF-61C3-4643-AB47-DBE1CFE3D303}.Release|Any CPU.Build.0 = Release|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.build|Any CPU.ActiveCfg = Release Server|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.build|Any CPU.Build.0 = Release Server|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Debug Architect Express|Any CPU.ActiveCfg = Debug|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Debug Architect Express|Any CPU.Build.0 = Debug|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Debug Architect|Any CPU.ActiveCfg = Debug|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Debug Architect|Any CPU.Build.0 = Debug|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Debug Client|Any CPU.ActiveCfg = Debug|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Debug Client|Any CPU.Build.0 = Debug|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Debug Server|Any CPU.ActiveCfg = Debug Server|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Debug Server|Any CPU.Build.0 = Debug Server|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.NDoc|Any CPU.ActiveCfg = Release|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.NDoc|Any CPU.Build.0 = Release|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Release Architect Express|Any CPU.ActiveCfg = Release|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Release Architect Express|Any CPU.Build.0 = Release|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Release Architect|Any CPU.ActiveCfg = Release|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Release Architect|Any CPU.Build.0 = Release|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Release Client|Any CPU.ActiveCfg = Release|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Release Client|Any CPU.Build.0 = Release|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Release Server|Any CPU.ActiveCfg = Release Server|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Release Server|Any CPU.Build.0 = Release Server|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{57965042-F737-4FC4-BF0E-93C700A0FDF2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EE92B4DE-5635-4B60-80B0-532C438B280F}.build|Any CPU.ActiveCfg = Release Server|Any CPU
 		{EE92B4DE-5635-4B60-80B0-532C438B280F}.build|Any CPU.Build.0 = Release Server|Any CPU
 		{EE92B4DE-5635-4B60-80B0-532C438B280F}.Debug Architect Express|Any CPU.ActiveCfg = Debug Architect Express|Any CPU
