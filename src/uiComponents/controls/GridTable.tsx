@@ -1,0 +1,443 @@
+import { action, computed } from 'mobx';
+import { Observer, observer } from 'mobx-react';
+import * as React from 'react';
+import { AutoSizer } from 'react-virtualized';
+import { GridEditorMounter } from 'src/cells/GridEditorMounter';
+import { StringGridEditor } from 'src/cells/string/GridEditor';
+import { DataLoader } from 'src/DataLoadingStrategy/DataLoader';
+import { DataLoadingStrategyActions } from 'src/DataLoadingStrategy/DataLoadingStrategyActions';
+import { DataLoadingStrategySelectors } from 'src/DataLoadingStrategy/DataLoadingStrategySelectors';
+import { DataLoadingStrategyState } from 'src/DataLoadingStrategy/DataLoadingStrategyState';
+import { DataSaver } from 'src/DataLoadingStrategy/DataSaver';
+import { DataSavingStrategy } from 'src/DataLoadingStrategy/DataSavingStrategy';
+import { LookupResolverProvider } from 'src/DataLoadingStrategy/LookupResolverProvider';
+import { DataTableActions } from 'src/DataTable/DataTableActions';
+import { DataTableSelectors } from 'src/DataTable/DataTableSelectors';
+import { DataTableField, DataTableState } from 'src/DataTable/DataTableState';
+import { ICellValue, IDataTableFieldStruct, IDataTableSelectors, IFieldType } from 'src/DataTable/types';
+import { CellScrolling } from 'src/Grid/CellScrolling';
+import { createColumnHeaderRenderer } from 'src/Grid/ColumnHeaderRenderer';
+import { FormActions } from 'src/Grid/FormActions';
+import { FormState } from 'src/Grid/FormState';
+import { FormView } from 'src/Grid/FormView';
+import { GridActions } from 'src/Grid/GridActions';
+import { createGridCellRenderer } from 'src/Grid/GridCellRenderer';
+import { ColumnHeaders, GridComponent } from 'src/Grid/GridComponent';
+import { GridCursorComponent } from 'src/Grid/GridCursorComponent';
+import { GridCursorView } from 'src/Grid/GridCursorView';
+import { GridInteractionActions } from 'src/Grid/GridInteractionActions';
+import { GridInteractionSelectors } from 'src/Grid/GridInteractionSelectors';
+import { GridInteractionState } from 'src/Grid/GridInteractionState';
+import { GridSelectors } from 'src/Grid/GridSelectors';
+import { GridState } from 'src/Grid/GridState';
+import { GridView } from 'src/Grid/GridView';
+import { IFormSetup, IFormTopology, IGridPaneView, IGridSetup, IGridTopology } from 'src/Grid/types';
+import { GridOrderingActions } from 'src/GridOrdering/GridOrderingActions';
+import { GridOrderingSelectors } from 'src/GridOrdering/GridOrderingSelectors';
+import { GridOrderingState } from 'src/GridOrdering/GridOrderingState';
+import { GridOutlineActions } from 'src/GridOutline/GridOutlineActions';
+import { GridOutlineSelectors } from 'src/GridOutline/GridOutlineSelectors';
+import { GridOutlineState } from 'src/GridOutline/GridOutlineState';
+import { FormTopology } from 'src/GridPanel/adapters/FormTopology';
+import { GridSetup } from 'src/GridPanel/adapters/GridSetup';
+import { GridTopology } from 'src/GridPanel/adapters/GridTopology';
+import { GridToolbarView } from 'src/GridPanel/GridToolbarView';
+import { IGridPanelBacking } from 'src/GridPanel/types';
+import { EventObserver } from 'src/utils/events';
+
+
+class GridConfiguration {
+  public gridSetup: IGridSetup;
+  public gridTopology: IGridTopology;
+  public formSetup: IFormSetup;
+  public formTopology: IFormTopology;
+
+  @action.bound
+  public set(
+    gridSetup: IGridSetup,
+    gridTopology: IGridTopology,
+    formSetup: IFormSetup,
+    formTopology: IFormTopology
+  ) {
+    this.gridSetup = gridSetup;
+    this.gridTopology = gridTopology;
+    this.formSetup = formSetup;
+    this.formTopology = formTopology;
+  }
+}
+
+class FormSetup implements IFormSetup {
+  constructor(public dataTableSelectors: IDataTableSelectors) {}
+
+  public get dimensions() {
+    return [
+      [200, 30, 100, 20],
+      [200, 60, 100, 20],
+      [200, 90, 100, 20],
+      [200, 120, 100, 20],
+      [200, 150, 100, 20],
+      [450, 30, 100, 20],
+      [450, 60, 100, 20],
+      [450, 90, 100, 20],
+      [450, 120, 100, 20]
+    ].slice(0, this.fieldCount);
+  }
+
+  @computed
+  public get fieldCount(): number {
+    return this.dataTableSelectors.fieldCount;
+  }
+
+  public isScrollingEnabled: boolean = true;
+
+  public getCellTop(fieldIndex: number): number {
+    return this.dimensions[fieldIndex][1];
+  }
+
+  public getCellBottom(fieldIndex: number): number {
+    return this.getCellTop(fieldIndex) + this.getCellHeight(fieldIndex);
+  }
+
+  public getCellLeft(fieldIndex: number): number {
+    return this.dimensions[fieldIndex][0];
+  }
+
+  public getCellRight(fieldIndex: number): number {
+    return this.getCellLeft(fieldIndex) + this.getCellWidth(fieldIndex);
+  }
+
+  public getCellHeight(fieldIndex: number): number {
+    return this.dimensions[fieldIndex][3];
+  }
+
+  public getCellWidth(fieldIndex: number): number {
+    return this.dimensions[fieldIndex][2];
+  }
+
+  public getCellValue(
+    recordIndex: number,
+    fieldIndex: number
+  ): ICellValue | undefined {
+    const record = this.dataTableSelectors.getRecordByRecordIndex(recordIndex);
+    const field = this.dataTableSelectors.getFieldByFieldIndex(fieldIndex);
+    if (record && field) {
+      return this.dataTableSelectors.getValue(record, field);
+    } else {
+      return;
+    }
+  }
+
+  public getFieldLabel(fieldIndex: number): string {
+    return `Field label ${fieldIndex}`;
+  }
+
+  public getLabelOffset(fieldIndex: number): number {
+    return 100;
+  }
+}
+
+function createGridPaneBacking(
+  dataTableName: string,
+  dataTableFields: IDataTableFieldStruct[]
+) {
+  const configuration = new GridConfiguration();
+
+  const lookupResolverProvider = new LookupResolverProvider({
+    get dataLoader() {
+      return dataLoader;
+    }
+  });
+
+  const gridOrderingState = new GridOrderingState();
+  const gridOrderingSelectors = new GridOrderingSelectors(gridOrderingState);
+  const gridOrderingActions = new GridOrderingActions(
+    gridOrderingState,
+    gridOrderingSelectors
+  );
+
+  const gridOutlineState = new GridOutlineState();
+  const gridOutlineSelectors = new GridOutlineSelectors(gridOutlineState);
+  const gridOutlineActions = new GridOutlineActions(
+    gridOutlineState,
+    gridOutlineSelectors
+  );
+
+  const dataLoader = new DataLoader(dataTableName);
+
+  const dataTableState = new DataTableState();
+
+  dataTableState.fields = dataTableFields;
+
+  const dataTableSelectors = new DataTableSelectors(
+    dataTableState,
+    lookupResolverProvider,
+    dataTableName
+  );
+  const dataTableActions = new DataTableActions(
+    dataTableState,
+    dataTableSelectors
+  );
+
+  const onStartGrid = EventObserver();
+  const onStopGrid = EventObserver();
+
+  const gridState = new GridState();
+  const gridSelectors = new GridSelectors(
+    gridState,
+    configuration,
+    configuration
+  );
+  const gridActions = new GridActions(gridState, gridSelectors, configuration);
+
+  const gridView = new GridView(gridSelectors, gridActions);
+
+  const gridInteractionState = new GridInteractionState();
+  const gridInteractionSelectors = new GridInteractionSelectors(
+    gridInteractionState,
+    configuration,
+    configuration
+  );
+
+  const formState = new FormState();
+  const formActions = new FormActions(formState);
+
+  const gridInteractionActions = new GridInteractionActions(
+    gridInteractionState,
+    gridInteractionSelectors,
+    gridActions,
+    gridSelectors,
+    formActions,
+    configuration
+  );
+  onStartGrid(() => gridInteractionActions.start());
+  onStopGrid(() => gridInteractionActions.stop());
+
+  const gridCursorView = new GridCursorView(
+    gridInteractionSelectors,
+    gridSelectors,
+    dataTableSelectors,
+    dataTableActions,
+    configuration,
+    configuration
+  );
+
+  const cellScrolling = new CellScrolling(
+    gridSelectors,
+    gridActions,
+    gridInteractionSelectors,
+    configuration,
+    configuration
+  );
+  onStartGrid(() => cellScrolling.start());
+  onStopGrid(() => cellScrolling.stop());
+
+  const dataLoadingStrategyState = new DataLoadingStrategyState();
+  const dataLoadingStrategySelectors = new DataLoadingStrategySelectors(
+    dataLoadingStrategyState,
+    gridSelectors,
+    dataTableSelectors
+  );
+  const dataLoadingStrategyActions = new DataLoadingStrategyActions(
+    dataLoadingStrategyState,
+    dataLoadingStrategySelectors,
+    dataTableActions,
+    dataTableSelectors,
+    dataLoader,
+    gridOrderingSelectors,
+    gridOrderingActions,
+    gridOutlineSelectors,
+    gridInteractionActions,
+    gridSelectors,
+    gridActions
+  );
+  onStartGrid(() => dataLoadingStrategyActions.start());
+  onStopGrid(() => dataLoadingStrategyActions.stop());
+
+  const dataSaver = new DataSaver(
+    dataTableName,
+    dataTableActions,
+    dataTableSelectors
+  );
+  const dataSavingStrategy = new DataSavingStrategy(
+    dataTableSelectors,
+    dataTableActions,
+    dataSaver
+  );
+
+  const gridToolbarView = new GridToolbarView(
+    gridInteractionSelectors,
+    gridSelectors,
+    dataTableSelectors,
+    dataTableActions,
+    gridInteractionActions,
+    configuration
+  );
+
+  const gridSetup = new GridSetup(gridInteractionSelectors, dataTableSelectors);
+  const gridTopology = new GridTopology(dataTableSelectors);
+
+  /*
+  onStartGrid.trigger();
+
+  // gridOrderingActions.setOrdering('name', 'asc');
+
+  dataLoadingStrategyActions.requestLoadFresh();*/
+
+  const formSetup = new FormSetup(dataTableSelectors);
+  const formView = new FormView(
+    dataTableSelectors,
+    gridInteractionSelectors,
+    formSetup
+  );
+
+  const formTopology = new FormTopology(gridTopology);
+
+  configuration.set(gridSetup, gridTopology, formSetup, formTopology);
+
+  return {
+    gridToolbarView,
+    gridView,
+    gridSetup,
+    gridTopology,
+    gridCursorView,
+    gridInteractionActions,
+    gridInteractionSelectors,
+    onStartGrid,
+    onStopGrid,
+    dataLoadingStrategyActions,
+    dataTableSelectors,
+
+    formView,
+    formSetup,
+    formTopology,
+    formActions
+  };
+}
+
+@observer
+export class GridTable extends React.Component<any> {
+  constructor(props: any) {
+    super(props);
+    this.gridPanelBacking = createGridPaneBacking(
+      this.props.initialDataTableName,
+      this.props.initialFields
+    );
+  }
+
+  private gridPanelBacking: IGridPanelBacking;
+
+  public componentDidMount() {
+    this.gridPanelBacking.onStartGrid.trigger();
+    this.gridPanelBacking.dataLoadingStrategyActions
+      .requestLoadFresh()
+      .then(() => {
+        this.gridPanelBacking.gridInteractionActions.selectFirst();
+      });
+  }
+
+  public render() {
+    const {
+      gridToolbarView,
+      gridView,
+      gridSetup,
+      gridTopology,
+      gridCursorView,
+      gridInteractionActions,
+      gridInteractionSelectors,
+      formView,
+      formSetup,
+      formTopology,
+      formActions
+    } = this.gridPanelBacking;
+    return (
+      <>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column"
+          }}
+        >
+          <ColumnHeaders
+            view={gridView}
+            columnHeaderRenderer={createColumnHeaderRenderer({
+              gridSetup
+            })}
+          />
+        </div>
+
+        <div
+          style={{
+            flexDirection: "column",
+            height: "100%",
+            flex: "1 1",
+            display:
+              gridInteractionSelectors.activeView === IGridPaneView.Grid
+                ? "flex"
+                : "none"
+          }}
+        >
+          <AutoSizer>
+            {({ width, height }) => (
+              <Observer>
+                {() => (
+                  <GridComponent
+                    view={gridView}
+                    gridSetup={gridSetup}
+                    gridTopology={gridTopology}
+                    width={width}
+                    height={height}
+                    overlayElements={
+                      <GridCursorComponent
+                        view={gridCursorView}
+                        cursorContent={
+                          gridInteractionSelectors.activeView ===
+                            IGridPaneView.Grid && (
+                            <GridEditorMounter cursorView={gridCursorView}>
+                              {gridCursorView.isCellEditing && (
+                                <StringGridEditor
+                                  editingRecordId={gridCursorView.editingRowId!}
+                                  editingFieldId={
+                                    gridCursorView.editingColumnId!
+                                  }
+                                  value={
+                                    gridCursorView.editingOriginalCellValue
+                                  }
+                                  onKeyDown={
+                                    gridInteractionActions.handleDumbEditorKeyDown
+                                  }
+                                  onDataCommit={gridCursorView.handleDataCommit}
+                                />
+                              )}
+                            </GridEditorMounter>
+                          )
+                        }
+                      />
+                    }
+                    cellRenderer={createGridCellRenderer({
+                      gridSetup,
+                      onClick(event, cellRect, cellInfo) {
+                        gridInteractionActions.handleGridCellClick(event, {
+                          rowId: gridTopology.getRowIdByIndex(
+                            cellInfo.rowIndex
+                          )!,
+                          columnId: gridTopology.getColumnIdByIndex(
+                            cellInfo.columnIndex
+                          )!
+                        });
+                      }
+                    })}
+                    onKeyDown={gridInteractionActions.handleGridKeyDown}
+                    onOutsideClick={
+                      gridInteractionActions.handleGridOutsideClick
+                    }
+                    onNoCellClick={gridInteractionActions.handleGridNoCellClick}
+                  />
+                )}
+              </Observer>
+            )}
+          </AutoSizer>
+        </div>
+      </>
+    );
+  }
+}

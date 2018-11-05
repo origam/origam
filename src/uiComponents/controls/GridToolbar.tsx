@@ -1,0 +1,77 @@
+import * as React from 'react';
+import { observer } from 'mobx-react';
+
+@observer
+export class GridToolbar extends React.Component<any> {
+  public render() {
+    return (
+      <div
+        className={"oui-grid-toolbar" + (this.props.isHidden ? " hidden" : "")}
+      >
+        <div className="toolbar-section">
+          <span className="toolbar-caption">{this.props.name}</span>
+        </div>
+        <div className="toolbar-section">
+          {this.props.isAddButton && (
+            <button className="oui-toolbar-btn">
+              <i className="fa fa-plus-circle icon" aria-hidden="true" />
+            </button>
+          )}
+          {this.props.isDeleteButton && (
+            <button className="oui-toolbar-btn">
+              <i className="fa fa-minus-circle icon" aria-hidden="true" />
+            </button>
+          )}
+          {this.props.isCopyButton && (
+            <button className="oui-toolbar-btn">
+              <i className="fa fa-copy icon" aria-hidden="true" />
+            </button>
+          )}
+        </div>
+        <div className="toolbar-section pusher" />
+        <div className="toolbar-section">
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-step-backward icon" aria-hidden="true" />
+          </button>
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-caret-left icon" aria-hidden="true" />
+          </button>
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-caret-right icon" aria-hidden="true" />
+          </button>
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-step-forward icon" aria-hidden="true" />
+          </button>
+        </div>
+        <div className="toolbar-section">
+          <span className="oui-toolbar-text">1/6</span>
+        </div>
+        <div className="toolbar-section">
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-table icon" aria-hidden="true" />
+          </button>
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-list-alt icon" aria-hidden="true" />
+          </button>
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-map-o icon" aria-hidden="true" />
+          </button>
+        </div>
+        <div className="toolbar-section">
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-filter icon" aria-hidden="true" />
+          </button>
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-caret-down icon" aria-hidden="true" />
+          </button>
+        </div>
+        <div className="toolbar-section">
+          <button className="oui-toolbar-btn">
+            <i className="fa fa-cog icon" aria-hidden="true" />
+            <i className="fa fa-caret-down icon" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+    );
+  }
+}

@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as xmlJs from "xml-js";
+import { buildReactTree } from "./uiBuilder";
 
 function getLocation(node: any): any {
   return {
@@ -76,55 +77,56 @@ function ruleWindow(node: any, context: any, rules: any[]) {
 }
 
 function ruleProperty(node: any, context: any, rules: any[]) {
-  if(node.name === "Property") {
+  if (node.name === "Property") {
     context.collectProperties.push({
       id: node.attributes.Id,
       name: node.attributes.Name,
       entity: node.attributes.Entity,
-      column: node.attributes.Column,
-    })
+      column: node.attributes.Column
+    });
     return node;
   }
   return undefined;
 }
 
 function ruleProperties(node: any, context: any, rules: any[]) {
-  if(node.name === "Properties") {
+  if (node.name === "Properties") {
     node.elements.forEach((element: any) => {
       processNode(element, context, [ruleProperty]);
-    })
+    });
     return node;
   }
   return undefined;
 }
 
 function ruleStringPropertyName(node: any, context: any, rules: any[]) {
-  if(node.name === "string") {
-    const propertyTarget = context.collectFormChildren || context.uiNode.children;
+  if (node.name === "string") {
+    const propertyTarget =
+      context.collectFormChildren || context.uiNode.children;
     context.executeLater.push(() => {
-      const foundProperty = context.collectProperties.find((property:any) => {
+      const foundProperty = context.collectProperties.find((property: any) => {
         return property.id === (node.elements[0] && node.elements[0].text);
-      })
-      if(foundProperty) {
+      });
+      if (foundProperty) {
         propertyTarget.push({
-          type: 'FormField',
+          type: "FormField",
           props: {
             property: foundProperty
           },
           children: []
         });
       }
-    })
+    });
     return node;
   }
-  return undefined
+  return undefined;
 }
 
 function rulePropertyNames(node: any, context: any, rules: any[]) {
-  if(node.name === "PropertyNames") {
+  if (node.name === "PropertyNames") {
     node.elements.forEach((element: any) => [
       processNode(element, context, [ruleStringPropertyName])
-    ])
+    ]);
     return node;
   }
   return undefined;
@@ -174,23 +176,42 @@ function ruleUIElement(node: any, context: any, rules: any[]) {
   return undefined;
 }
 
+function text2bool(t: string) {
+  if (t === "true") {
+    return true;
+  }
+  if (t === "false") {
+    return false;
+  }
+  throw new Error(`Unknown boolean variable ${t}`);
+}
+
 function ruleGrid(node: any, context: any, rules: any[]) {
   if (node.attributes.Type === "Grid") {
+    console.log(node.attributes)
+    const settings = {
+      isHeadless: text2bool(node.attributes.IsHeadless),
+      isActionButtonsDisabled: text2bool(node.attributes.DisableActionButtons),
+      isShowAddButton: text2bool(node.attributes.ShowAddButton),
+      isShowDeleteButtom: text2bool(node.attributes.ShowDeleteButton),
+      initialView: ["grid","form","map"][parseInt(node.attributes.DefaultPanelView, 10)],
+    };
     const uiNode = {
       type: node.attributes.Type,
       props: {
-        name: node.attributes.Name,
         id: node.attributes.Id,
-        form: {
+        name: node.attributes.Name,
+        ...settings,
+        form: [{
           type: "Form",
           props: {},
           children: []
-        },
-        table: {
+        }],
+        table: [{
           type: "Table",
           props: {},
           children: []
-        },
+        }],
         properties: [],
         ...getLocation(node)
       },
@@ -215,7 +236,7 @@ function ruleGrid(node: any, context: any, rules: any[]) {
 }
 
 function ruleVSplit(node: any, context: any, rules: any[]) {
-  if(node.attributes.Type ==="VSplit") {
+  if (node.attributes.Type === "VSplit") {
     const uiNode = {
       type: node.attributes.Type,
       props: {
@@ -224,7 +245,7 @@ function ruleVSplit(node: any, context: any, rules: any[]) {
         ...getLocation(node)
       },
       children: []
-    }
+    };
     context.uiNode.children.push(uiNode);
 
     const newContext = { ...context, uiNode };
@@ -232,13 +253,13 @@ function ruleVSplit(node: any, context: any, rules: any[]) {
       processNode(element, newContext, BASIC_RULES);
     });
 
-    return node;    
+    return node;
   }
   return undefined;
 }
 
 function ruleHSplit(node: any, context: any, rules: any[]) {
-  if(node.attributes.Type ==="HSplit") {
+  if (node.attributes.Type === "HSplit") {
     const uiNode = {
       type: node.attributes.Type,
       props: {
@@ -247,7 +268,7 @@ function ruleHSplit(node: any, context: any, rules: any[]) {
         ...getLocation(node)
       },
       children: []
-    }
+    };
     context.uiNode.children.push(uiNode);
 
     const newContext = { ...context, uiNode };
@@ -255,7 +276,7 @@ function ruleHSplit(node: any, context: any, rules: any[]) {
       processNode(element, newContext, BASIC_RULES);
     });
 
-    return node;    
+    return node;
   }
   return undefined;
 }
@@ -417,10 +438,11 @@ function processNode(node: any, context: any, rules: any[]) {
 function parseScreenDef(o: any) {
   const context = {
     uiNode: null,
-    executeLater: [],
+    executeLater: []
   };
   processNode(o, context, [ruleRoot, ruleUnknownWarn]);
   context.executeLater.forEach((run: any) => run());
+  context.executeLater = [];
   return context;
 }
 
@@ -428,5 +450,8 @@ export async function main() {
   const xml = (await axios.get("/screen03.xml")).data;
   const xmlObj = xmlJs.xml2js(xml, { compact: false });
   const interpretedResult = parseScreenDef(xmlObj);
+  const reactTree = buildReactTree(interpretedResult.uiNode);
   console.log(interpretedResult);
+  console.log(reactTree);
+  return reactTree;
 }

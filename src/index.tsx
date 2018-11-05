@@ -3,12 +3,15 @@ import * as ReactDOM from 'react-dom';
 // import App from './App';
 import App from './App-ScreendefXml';
 import './index.css';
+import "./App.scss";
+import "./styles/screenComponents.scss";
+
 import { configure } from 'mobx';
 import { reactionRuntimeInfo } from './utils/reaction';
 
 import {main} from './screenInterpreter/interpreter';
 
- main();
+ 
 
 configure({
   computedRequiresReaction: true,
@@ -24,3 +27,10 @@ ReactDOM.render(
   document.getElementById('root') as HTMLElement
 );
 */
+
+main().then(reactTree => {
+  ReactDOM.render(
+    reactTree,
+    document.getElementById('root') as HTMLElement
+  );
+})
