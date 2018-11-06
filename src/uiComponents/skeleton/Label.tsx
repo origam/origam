@@ -2,11 +2,11 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 
 @observer
-export class VBox extends React.Component<any> {
+export class Label extends React.Component<any> {
   public render() {
     return (
       <div
-        className="oui-vbox"
+        className="oui-label"
         style={{
           maxWidth: this.props.w,
           minWidth: this.props.w,
@@ -14,7 +14,7 @@ export class VBox extends React.Component<any> {
           minHeight: this.props.h
         }}
       >
-        {this.props.children}
+        {this.props.name}
       </div>
     );
   }

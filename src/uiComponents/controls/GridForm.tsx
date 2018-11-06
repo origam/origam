@@ -1,9 +1,22 @@
 import * as React from "react";
-import { observer } from "mobx-react";
+import { observer, inject } from "mobx-react";
+import { IGridPaneView } from "src/Grid/types";
 
+@inject("gridPaneBacking")
 @observer
 export class GridForm extends React.Component<any> {
   public render() {
-    return <div className="oui-form-root">{this.props.children}</div>;
+    const { gridPaneBacking } = this.props;
+    const isActiveView =
+      gridPaneBacking.gridInteractionSelectors.activeView ===
+      IGridPaneView.Form;
+    return (
+      <div
+        className="oui-form-root"
+        style={{ display: !isActiveView ? "none" : undefined }}
+      >
+        {this.props.children}
+      </div>
+    );
   }
 }

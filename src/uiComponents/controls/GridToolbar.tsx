@@ -1,9 +1,15 @@
-import * as React from 'react';
-import { observer } from 'mobx-react';
+import * as React from "react";
+import { observer, inject } from "mobx-react";
+import { IGridInteractionActions, IGridPaneView } from "src/Grid/types";
 
+@inject("gridPaneBacking")
 @observer
 export class GridToolbar extends React.Component<any> {
   public render() {
+    const { gridPaneBacking } = this.props;
+    const {
+      setActiveView
+    } = gridPaneBacking.gridInteractionActions as IGridInteractionActions;
     return (
       <div
         className={"oui-grid-toolbar" + (this.props.isHidden ? " hidden" : "")}
@@ -47,13 +53,22 @@ export class GridToolbar extends React.Component<any> {
           <span className="oui-toolbar-text">1/6</span>
         </div>
         <div className="toolbar-section">
-          <button className="oui-toolbar-btn">
+          <button
+            className="oui-toolbar-btn"
+            onClick={() => setActiveView(IGridPaneView.Grid)}
+          >
             <i className="fa fa-table icon" aria-hidden="true" />
           </button>
-          <button className="oui-toolbar-btn">
+          <button
+            className="oui-toolbar-btn"
+            onClick={() => setActiveView(IGridPaneView.Form)}
+          >
             <i className="fa fa-list-alt icon" aria-hidden="true" />
           </button>
-          <button className="oui-toolbar-btn">
+          <button
+            className="oui-toolbar-btn"
+            onClick={() => setActiveView(IGridPaneView.Map)}
+          >
             <i className="fa fa-map-o icon" aria-hidden="true" />
           </button>
         </div>

@@ -24,9 +24,14 @@ body {
   position: relative;
 }
 
+.oui-label {
+  background-color: $panel-bgcolor;
+  color: $panel-color;
+}
+
 .oui-panel {
   position: absolute;
-//  border: 1px solid #222222;
+  border: 1px solid #222222;
   background-color: $subpanel-bgcolor;
   color: $subpanel-color;
   box-sizing: border-box;
@@ -48,6 +53,7 @@ body {
   overflow: hidden;
   background-color: white;
   box-sizing: border-box;
+  border: 1px solid #8b8b8b;
   z-index: 1000;
 }
 
@@ -267,6 +273,11 @@ body {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+}
+
+.oui-mapview {
+  flex: 1 1;
+  display: flex;
 }
 
 .hidden {

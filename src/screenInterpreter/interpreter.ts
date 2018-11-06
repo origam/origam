@@ -1,6 +1,7 @@
 import axios from "axios";
 import * as xmlJs from "xml-js";
 import { buildReactTree } from "./uiBuilder";
+import { IGridPaneView } from "src/Grid/types";
 
 function getLocation(node: any): any {
   return {
@@ -33,6 +34,7 @@ const UI_ELEMENT_RULES = [
   ruleBox,
   ruleVSplit,
   ruleHSplit,
+  ruleLabel,
   ruleGrid,
   ruleFormSection,
   ruleUnknownWarn
@@ -82,7 +84,13 @@ function ruleProperty(node: any, context: any, rules: any[]) {
       id: node.attributes.Id,
       name: node.attributes.Name,
       entity: node.attributes.Entity,
-      column: node.attributes.Column
+      column: node.attributes.Column,
+      x: parseInt(node.attributes.X, 10),
+      y: parseInt(node.attributes.Y, 10),
+      w: parseInt(node.attributes.Width, 10),
+      h: parseInt(node.attributes.Height, 10),
+      captionLength: parseInt(node.attributes.CaptionLength, 10),
+      captionPosition: node.attributes.CaptionPosition
     });
     return node;
   }
@@ -188,30 +196,43 @@ function text2bool(t: string) {
 
 function ruleGrid(node: any, context: any, rules: any[]) {
   if (node.attributes.Type === "Grid") {
-    console.log(node.attributes)
+    console.log(node.attributes);
     const settings = {
       isHeadless: text2bool(node.attributes.IsHeadless),
       isActionButtonsDisabled: text2bool(node.attributes.DisableActionButtons),
       isShowAddButton: text2bool(node.attributes.ShowAddButton),
       isShowDeleteButtom: text2bool(node.attributes.ShowDeleteButton),
-      initialView: ["grid","form","map"][parseInt(node.attributes.DefaultPanelView, 10)],
+      initialView: [
+        IGridPaneView.Form,
+        IGridPaneView.Grid,
+        null,
+        null,
+        null,
+        IGridPaneView.Map
+      ][parseInt(node.attributes.DefaultPanelView, 10)]
     };
+    const collectFormChildren: React.ReactNode[] = [];
+    const collectTableChildren: React.ReactNode[] = [];
     const uiNode = {
       type: node.attributes.Type,
       props: {
         id: node.attributes.Id,
         name: node.attributes.Name,
         ...settings,
-        form: [{
-          type: "Form",
-          props: {},
-          children: []
-        }],
-        table: [{
-          type: "Table",
-          props: {},
-          children: []
-        }],
+        form: [
+          {
+            type: "Form",
+            props: {},
+            children: collectFormChildren
+          }
+        ],
+        table: [
+          {
+            type: "Table",
+            props: {},
+            children: collectTableChildren
+          }
+        ],
         properties: [],
         ...getLocation(node)
       },
@@ -221,8 +242,8 @@ function ruleGrid(node: any, context: any, rules: any[]) {
 
     const newContext = {
       ...context,
-      collectFormChildren: uiNode.props.form.children,
-      collectTableChildren: uiNode.props.table.children,
+      collectFormChildren,
+      collectTableChildren,
       collectProperties: uiNode.props.properties,
       uiNode
     };
@@ -304,12 +325,35 @@ function ruleVBox(node: any, context: any, rules: any[]) {
   return undefined;
 }
 
+function ruleLabel(node: any, context: any, rules: any[]) {
+  if (node.attributes.Type === "Label") {
+    const uiNode = {
+      type: node.attributes.Type,
+      props: {
+        name: node.attributes.Name,
+        id: node.attributes.Id,
+        ...getLocation(node)
+      },
+      children: []
+    };
+    context.uiNode.children.push(uiNode);
+
+    const newContext = { ...context, uiNode };
+    node.elements.forEach((element: any) => {
+      processNode(element, newContext, BASIC_RULES);
+    });
+
+    return node;
+  }
+  return undefined;
+}
+
 function ruleFormSection(node: any, context: any, rules: any[]) {
   if (node.attributes.Type === "FormSection") {
     const uiNode = {
       type: node.attributes.Type,
       props: {
-        name: node.attributes.Name,
+        name: node.attributes.Title,
         id: node.attributes.Id,
         ...getLocation(node)
       },
@@ -447,7 +491,7 @@ function parseScreenDef(o: any) {
 }
 
 export async function main() {
-  const xml = (await axios.get("/screen03.xml")).data;
+  const xml = (await axios.get("/screen02.xml")).data;
   const xmlObj = xmlJs.xml2js(xml, { compact: false });
   const interpretedResult = parseScreenDef(xmlObj);
   const reactTree = buildReactTree(interpretedResult.uiNode);

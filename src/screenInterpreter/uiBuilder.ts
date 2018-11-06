@@ -12,6 +12,7 @@ import { VSplit } from "../uiComponents/skeleton/VSplit";
 import { Window } from "../uiComponents/skeleton/Window";
 import { GridTable } from "src/uiComponents/controls/GridTable";
 import { GridForm } from "src/uiComponents/controls/GridForm";
+import { Label } from "src/uiComponents/skeleton/Label";
 
 const elementMap = {
   Box,
@@ -24,6 +25,7 @@ const elementMap = {
   VBox,
   VSplit,
   Window,
+  Label,
   Table: GridTable,
   Form: GridForm
 };

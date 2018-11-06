@@ -320,7 +320,8 @@ export interface IGridCursorView {
 
 export enum IGridPaneView {
   Grid = "Grid",
-  Form = "Form"
+  Form = "Form",
+  Map = "Map"
 }
 
 export interface IGridInteractionSelectors {
