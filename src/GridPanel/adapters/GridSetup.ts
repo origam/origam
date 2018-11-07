@@ -37,19 +37,19 @@ export class GridSetup implements IGridSetup {
   }
 
   public getCellTop(cellIndex: number): number {
-    return cellIndex * 20;
+    return cellIndex * this.getRowHeight(cellIndex);
   }
 
   public getCellLeft(cellIndex: number): number {
-    return cellIndex * 200;
+    return cellIndex * this.getColumnWidth(cellIndex);
   }
 
   public getCellBottom(cellIndex: number): number {
-    return this.getCellTop(cellIndex) + 20;
+    return this.getCellTop(cellIndex) + this.getRowHeight(cellIndex);
   }
 
   public getCellRight(cellIndex: number): number {
-    return this.getCellLeft(cellIndex) + 200;
+    return this.getCellLeft(cellIndex) + this.getColumnWidth(cellIndex);
   }
 
   public getCellValue(
@@ -91,7 +91,7 @@ export class GridSetup implements IGridSetup {
   }
 
   public getColumnWidth(columnIndex: number): number {
-    return 100;
+    return 200;
   }
 
   public onRowsRendered(rowIndexStart: number, rowIndexEnd: number): void {
