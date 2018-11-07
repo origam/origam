@@ -223,8 +223,10 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				string entityName = (string)entry.Key;
 				string identifier = table.PrimaryKey[0].ColumnName;
 				string lookupCacheKey = DatabaseTableName(table);
+			    string dataStructureEntityId = table.ExtendedProperties["Id"].ToString();
 
-				XmlElement dataSourceElement = AddDataSourceElement(dataSourcesElement, entityName,  identifier, lookupCacheKey);
+				XmlElement dataSourceElement =
+				    AddDataSourceElement(dataSourcesElement, entityName,  identifier, lookupCacheKey, dataStructureEntityId);
 
 				foreach(DataColumn c in table.Columns)
 				{
@@ -249,13 +251,18 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			}
 		}
 
-		public static XmlElement AddDataSourceElement(XmlElement dataSourcesElement, string entity, string identifier, string lookupCacheKey)
+		public static XmlElement AddDataSourceElement(XmlElement dataSourcesElement, string entity, 
+		    string identifier, string lookupCacheKey, string dataStructureEntityId)
 		{
 			XmlElement dataSourceElement = dataSourcesElement.OwnerDocument.CreateElement("DataSource");
 			dataSourcesElement.AppendChild(dataSourceElement);
 
 			dataSourceElement.SetAttribute("Entity", entity);
-			dataSourceElement.SetAttribute("Identifier", identifier);
+		    if (!string.IsNullOrEmpty(dataStructureEntityId))
+		    {
+		        dataSourceElement.SetAttribute("DataStructureEntityId", dataStructureEntityId);
+            }
+            dataSourceElement.SetAttribute("Identifier", identifier);
 			if(lookupCacheKey != null)
 			{
 				dataSourceElement.SetAttribute("LookupCacheKey", lookupCacheKey);
