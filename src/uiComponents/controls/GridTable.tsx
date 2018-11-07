@@ -22,6 +22,8 @@ export class GridTable extends React.Component<any> {
       gridCursorView,
       gridInteractionActions,
       gridInteractionSelectors,
+      gridOrderingSelectors,
+      gridOrderingActions,
       formView,
       formSetup,
       formTopology,
@@ -47,7 +49,10 @@ export class GridTable extends React.Component<any> {
           <ColumnHeaders
             view={gridView}
             columnHeaderRenderer={createColumnHeaderRenderer({
-              gridSetup
+              gridSetup,
+              gridOrderingActions,
+              gridOrderingSelectors,
+              gridTopology
             })}
           />
         </div>

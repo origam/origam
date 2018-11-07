@@ -20,7 +20,7 @@ export class GridOrderingSelectors implements IGridOrderingSelectors {
   }
 
   public getColumnOrdering(columnId: string) {
-    return (this.orderingsByColumnId.get(columnId) || {direction: undefined}).direction;
+    return (this.orderingsByColumnId.get(columnId) || {order: undefined, direction: undefined});
   }
 
   public cycleDirection(direction: string | undefined) {

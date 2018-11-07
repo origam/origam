@@ -144,7 +144,7 @@ class GridConfiguration {
 function createGridPaneBacking(
   dataTableName: string,
   dataTableFields: IDataTableFieldStruct[]
-) {
+) : IGridPanelBacking {
   const configuration = new GridConfiguration();
 
   const lookupResolverProvider = new LookupResolverProvider({
@@ -311,6 +311,8 @@ function createGridPaneBacking(
     onStopGrid,
     dataLoadingStrategyActions,
     dataTableSelectors,
+    gridOrderingActions,
+    gridOrderingSelectors,
 
     formView,
     formSetup,
@@ -425,7 +427,9 @@ class GridPane extends React.Component<{
       formView,
       formSetup,
       formTopology,
-      formActions
+      formActions,
+      gridOrderingActions,
+      gridOrderingSelectors
     } = this.gridPanelBacking;
     return (
       <AutoSizer>
@@ -476,7 +480,10 @@ class GridPane extends React.Component<{
                     <ColumnHeaders
                       view={gridView}
                       columnHeaderRenderer={createColumnHeaderRenderer({
-                        gridSetup
+                        gridSetup,
+                        gridOrderingActions,
+                        gridOrderingSelectors,
+                        gridTopology
                       })}
                     />
                   </div>

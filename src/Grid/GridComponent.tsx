@@ -2,6 +2,17 @@ import * as React from "react";
 import { observer } from "mobx-react";
 import { IGridProps, IGridView, IColumnHeaderRenderer } from "./types";
 
+function alter<T>(arr1: T[], alterItemFn: (idx: number) => T): T[] {
+  const result: T[] = [];
+  for (let i = 0; i < arr1.length; i++) {
+    result.push(arr1[i]);
+    if (i < arr1.length - 1) {
+      result.push(alterItemFn(i));
+    }
+  }
+  return result;
+}
+
 @observer
 export class GridComponent extends React.Component<IGridProps> {
   public componentDidMount() {
@@ -63,9 +74,7 @@ export class GridComponent extends React.Component<IGridProps> {
             style={{
               width,
               height,
-              overflow: !isScrollingEnabled
-                ? "hidden"
-                : undefined
+              overflow: !isScrollingEnabled ? "hidden" : undefined
             }}
             onScroll={handleGridScroll}
             ref={refScroller}
@@ -82,6 +91,13 @@ export class GridComponent extends React.Component<IGridProps> {
         <div className="grid-view-editor-portal" /*ref={refEditorPortal}*/ />
       </div>
     );
+  }
+}
+
+@observer
+export class ColumnWidthHandle extends React.Component {
+  public render() {
+    return <div className="column-header-width-handle" />
   }
 }
 
@@ -129,17 +145,16 @@ export class FixedHeaders extends React.Component<{
           style={{
             minWidth: view.getColumnRight(i) - view.getColumnLeft(i),
             maxWidth: view.getColumnRight(i) - view.getColumnLeft(i),
-            borderRight: "1px solid white",
             zIndex: 1000,
-            boxSizing: "border-box",
-            backgroundColor: "#ffffff"
+            boxSizing: "border-box"
           }}
+          className="table-column-header-container"
         >
           {this.props.columnHeaderRenderer({ columnIndex: i })}
         </div>
       );
     }
-    return headers;
+    return alter(headers, (idx: number) => <ColumnWidthHandle key={idx} />);
   }
 }
 
@@ -158,14 +173,14 @@ export class MovingHeaders extends React.Component<{
           key={view.getColumnId(i)}
           style={{
             minWidth: view.getColumnRight(i) - view.getColumnLeft(i),
-            maxWidth: view.getColumnRight(i) - view.getColumnLeft(i),
-            borderRight: "1px solid white"
+            maxWidth: view.getColumnRight(i) - view.getColumnLeft(i)
           }}
+          className="table-column-header-container"
         >
           {this.props.columnHeaderRenderer({ columnIndex: i })}
         </div>
       );
     }
-    return headers;
+    return alter(headers, (idx: number) => <ColumnWidthHandle key={idx} />);
   }
 }

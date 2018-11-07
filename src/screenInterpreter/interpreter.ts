@@ -491,7 +491,7 @@ function parseScreenDef(o: any) {
 }
 
 export async function main() {
-  const xml = (await axios.get("/screen02.xml")).data;
+  const xml = (await axios.get("/screen03.xml")).data;
   const xmlObj = xmlJs.xml2js(xml, { compact: false });
   const interpretedResult = parseScreenDef(xmlObj);
   const reactTree = buildReactTree(interpretedResult.uiNode);

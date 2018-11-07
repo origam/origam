@@ -41,7 +41,7 @@ export class GridSetup implements IGridSetup {
   }
 
   public getCellLeft(cellIndex: number): number {
-    return cellIndex * 100;
+    return cellIndex * 200;
   }
 
   public getCellBottom(cellIndex: number): number {
@@ -49,7 +49,7 @@ export class GridSetup implements IGridSetup {
   }
 
   public getCellRight(cellIndex: number): number {
-    return this.getCellLeft(cellIndex) + 100;
+    return this.getCellLeft(cellIndex) + 200;
   }
 
   public getCellValue(

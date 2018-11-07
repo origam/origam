@@ -316,6 +316,8 @@ function createGridPaneBacking(
     onStopGrid,
     dataLoadingStrategyActions,
     dataTableSelectors,
+    gridOrderingActions,
+    gridOrderingSelectors,
 
     formView,
     formSetup,

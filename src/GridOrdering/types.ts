@@ -1,6 +1,8 @@
+import { IFieldId } from "src/DataTable/types";
+
 export interface IGridOrderingSelectors {
   ordering: Array<[string, string]>;
-  getColumnOrdering(columnId: string): string | undefined;
+  getColumnOrdering(columnId: string): {order: number | undefined, direction: string | undefined};
   cycleDirection(oldOrdering: string | undefined): string | undefined;
 }
 

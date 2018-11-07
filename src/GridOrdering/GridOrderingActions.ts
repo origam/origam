@@ -10,7 +10,7 @@ export class GridOrderingActions implements IGridOrderingActions {
   @action.bound
   public cycleOrderByExclusive(columnId: string) {
     const oldOrdering = this.selectors.getColumnOrdering(columnId);
-    const newOrdering = this.selectors.cycleDirection(oldOrdering);
+    const newOrdering = this.selectors.cycleDirection(oldOrdering.direction);
     this.state.clearOrdering();
     this.state.setOrdering(columnId, newOrdering);
   }
@@ -18,7 +18,7 @@ export class GridOrderingActions implements IGridOrderingActions {
   @action.bound
   public cycleOrderByPreserving(columnId: string) {
     const oldOrdering = this.selectors.getColumnOrdering(columnId);
-    const newOrdering = this.selectors.cycleDirection(oldOrdering);
+    const newOrdering = this.selectors.cycleDirection(oldOrdering.direction);
     this.state.setOrdering(columnId, newOrdering);
   }
 

@@ -13,6 +13,8 @@ import {
 } from "../Grid/types";
 import { IDataLoadingStrategyActions } from "../DataLoadingStrategy/types";
 import { IEventSubscriber } from "../utils/events";
+import { IGridOrderingSelectors, IGridOrderingActions } from "src/GridOrdering/types";
+import { IDataTableSelectors } from "src/DataTable/types";
 
 export interface IGridToolbarView {
   activeView: IGridPaneView;
@@ -35,6 +37,9 @@ export interface IGridPanelBacking {
   onStartGrid: IEventSubscriber;
   onStopGrid: IEventSubscriber;
   dataLoadingStrategyActions: IDataLoadingStrategyActions;
+  gridOrderingSelectors: IGridOrderingSelectors;
+  gridOrderingActions: IGridOrderingActions;
+  dataTableSelectors: IDataTableSelectors;
 
   formView: IFormView;
   formSetup: IFormSetup;
