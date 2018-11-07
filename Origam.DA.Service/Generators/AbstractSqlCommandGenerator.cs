@@ -2278,7 +2278,13 @@ namespace Origam.DA.Service
 			}
 
 			IAssociation assoc = dsEntity.Entity as IAssociation;
-			StringBuilder relationBuilder = new StringBuilder();
+
+		    if (assoc == null)
+		    {
+		        throw new Exception("No entity associated with DataStructure: "+ dsEntity.Name);
+		    }
+
+		    StringBuilder relationBuilder = new StringBuilder();
             PrettyIndent(relationBuilder);
             switch (beginType)
 			{
