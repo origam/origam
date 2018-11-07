@@ -4003,15 +4003,17 @@ namespace Origam.Rule
 
         public IDataDocument GetXmlDocumentFromData(object inputData)
 		{
+            IDataDocument doc = inputData as IDataDocument;
+            if (doc != null)
+            {
+                return doc;
+            }
 			object data = inputData;
-
 			IContextStore contextStore = data as IContextStore;
 			if (contextStore != null) {
 				// Get the rule's context store
 				data = GetContext(contextStore);
 			}
-
-		    IDataDocument doc;
 		    XmlDocument xmlDocument = data as XmlDocument;
 			if(xmlDocument != null)
 			{
