@@ -1,6 +1,6 @@
 import { IEventSubscriber } from "src/utils/events";
 
-export type ICellValue = string | boolean | number;
+export type ICellValue = string | boolean | number | undefined;
 export type IFieldId = string;
 export type IRecordId = string;
 export type ITableId = string;

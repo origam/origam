@@ -10,7 +10,6 @@ export class Tab extends React.Component<any> {
   @action.bound
   public handleHandleClick(event: any, tabId: string) {
     this.activeTabId = tabId;
-    console.log("Handle click", this.activeTabId);
   }
 
   public render() {

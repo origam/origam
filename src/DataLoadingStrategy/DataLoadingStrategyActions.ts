@@ -9,7 +9,8 @@ import {
 import {
   IDataTableActions,
   IDataTableSelectors,
-  ICellValue
+  ICellValue,
+  IFieldId
 } from "../DataTable/types";
 import {
   IGridOrderingSelectors,
@@ -29,6 +30,39 @@ function noCancelException<T>(promise: Promise<void | T>): Promise<void | T> {
       throw e;
     }
   });
+}
+
+
+function constructPaginationFilter(
+  direction: "after" | "before",
+  cursorValues: ICellValue[],
+  ordering: Array<[IFieldId, string]>
+): any {
+  const orderingMap = {};
+  const columnIds: IFieldId[] = [];
+  for (const orderingItem of ordering) {
+    orderingMap[orderingItem[0]] = orderingItem[1];
+    columnIds.push(orderingItem[0]);
+  }
+
+  const pagSlug: any= ["$OR"];
+  for (let compOrd = 0; compOrd < columnIds.length; compOrd++) {
+    const ordTerm: any = ["$AND"];
+    for (let termNum = 0; termNum <= compOrd; termNum++) {
+      ordTerm.push([
+        columnIds[termNum],
+        termNum < compOrd
+          ? "eq"
+          : direction === "after" && orderingMap[columnIds[termNum]] === "asc"
+          ? "gt"
+          : "lt",
+        cursorValues[termNum]
+      ]);
+    }
+    pagSlug.push(ordTerm);
+  }
+
+  return pagSlug;
 }
 
 export class DataLoadingStrategyActions {
@@ -171,31 +205,21 @@ export class DataLoadingStrategyActions {
   private *loadAfterLastRecordProc() {
     const lastRecord = this.dataTableSelectors.lastFullRecord;
     const addedFilters = [];
-    let addedOrdering = [];
-    if (this.gridOrderingSelectors.ordering.length === 0) {
-      addedFilters.push(["id", "gt", lastRecord.id]);
-    }
-    for (const ordering of this.gridOrderingSelectors.ordering) {
-      const field = this.dataTableSelectors.getFieldById(ordering[0]);
-      if (!field) {
-        continue;
-      }
-      if (ordering[1] === "asc") {
-        addedFilters.push([
-          ordering[0],
-          "gt",
-          this.dataTableSelectors.getResetValue(lastRecord, field)
-        ]);
-      } else if (ordering[1] === "desc") {
-        addedFilters.push([
-          ordering[0],
-          "lt",
-          this.dataTableSelectors.getResetValue(lastRecord, field)
-        ]);
-      }
-    }
-    addedOrdering = this.gridOrderingSelectors.ordering.filter(o => o[0] !== 'id');
-    addedOrdering.push(['id', 'asc']);
+    const addedOrdering = this.gridOrderingSelectors.ordering.filter(
+      o => o[0] !== "id"
+    );
+    addedOrdering.push(["id", "asc"]);
+    const cursorValues = addedOrdering.map(ord => {
+      const field = this.dataTableSelectors.getFieldById(ord[0]);
+      const value = this.dataTableSelectors.getResetValue(lastRecord, field!)
+      return value;
+    })
+    addedFilters.push(...constructPaginationFilter(
+      "after",
+      cursorValues,
+      addedOrdering
+    ))
+
     const apiResult = yield this.dataLoader.loadDataTable({
       limit: 5000,
       orderBy: addedOrdering as Array<[string, string]>,
@@ -236,30 +260,21 @@ export class DataLoadingStrategyActions {
     const lastRecord = this.dataTableSelectors.firstFullRecord;
     const addedFilters = [];
     let addedOrdering = [];
-    if (this.gridOrderingSelectors.ordering.length === 0) {
-      addedFilters.push(["id", "lt", lastRecord.id]);
-    }
-    for (const ordering of this.gridOrderingSelectors.ordering) {
-      const field = this.dataTableSelectors.getFieldById(ordering[0]);
-      if (!field) {
-        return;
-      }
-      if (ordering[1] === "asc") {
-        addedFilters.push([
-          ordering[0],
-          "lt",
-          this.dataTableSelectors.getResetValue(lastRecord, field)
-        ]);
-      } else if (ordering[1] === "desc") {
-        addedFilters.push([
-          ordering[0],
-          "gt",
-          this.dataTableSelectors.getResetValue(lastRecord, field)
-        ]);
-      }
-    }
-    addedOrdering = this.gridOrderingSelectors.ordering.filter(o => o[0] !== 'id');
-    addedOrdering.push(['id', 'asc']);
+    addedOrdering = this.gridOrderingSelectors.ordering.filter(
+      o => o[0] !== "id"
+    );
+    addedOrdering.push(["id", "asc"]);
+    const cursorValues = addedOrdering.map(ord => {
+      const field = this.dataTableSelectors.getFieldById(ord[0]);
+      const value = this.dataTableSelectors.getResetValue(lastRecord, field!)
+      return value;
+    })
+    addedFilters.push(...constructPaginationFilter(
+      "before",
+      cursorValues,
+      addedOrdering
+    ))
+
     const apiResult = yield this.dataLoader.loadDataTable({
       limit: 5000,
       orderBy: addedOrdering
@@ -309,14 +324,13 @@ export class DataLoadingStrategyActions {
   }
 
   private *loadFresh() {
-    const addedOrdering = this.gridOrderingSelectors.ordering
-    .filter(o => o[0] !== 'id');
-    addedOrdering.push(['id', 'asc']);
+    const addedOrdering = this.gridOrderingSelectors.ordering.filter(
+      o => o[0] !== "id"
+    );
+    addedOrdering.push(["id", "asc"]);
     const apiResult = yield this.dataLoader.loadDataTable({
       limit: 5000,
-      orderBy: addedOrdering as Array<
-        [string, string]
-      >
+      orderBy: addedOrdering as Array<[string, string]>
     });
     const records = apiResult.data.result.map((record: any) => {
       const newRecord = new DataTableRecord(
