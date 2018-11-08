@@ -23,6 +23,7 @@ using CommandLine.Text;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.Schema;
+using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 using System;
@@ -56,7 +57,7 @@ namespace Origam.DocGenerator
             [Option('m', "xmlfilename", Required = false, HelpText = "Xml File for export source tree.")]
             public string XmlFile { get; set; }
 
-            [Option('l', "language", Required = false, HelpText = "Localization.")]
+            [Option('l', "language", Required = true, HelpText = "Localization(ie. cs-CZ).")]
             public string Language { get; set; }
 
             [ParserState]
@@ -110,12 +111,19 @@ namespace Origam.DocGenerator
             service.AddProvider(StateMachineSchema);
 
             FilePersistenceProvider persprovider = (FilePersistenceProvider)persistenceService.SchemaProvider;
+            MenuSchemaItemProvider menuprovider = new MenuSchemaItemProvider
+            {
+                PersistenceProvider = persprovider
+            };
+
             persistenceService.LoadSchema(new Guid(options.GuidPackage), false, false, "");
             var documentation = new FileStorageDocumentationService(
                 persprovider,
                 persistenceService.FileEventQueue);
 
-            new DocCreate(options.Dataout, options.Xslt, options.RootFile, documentation, persprovider, options.XmlFile).Run();
+            
+
+            new DocCreate(options.Dataout, options.Xslt, options.RootFile, documentation, menuprovider, persistenceService, options.XmlFile).Run();
         }
     }
 }
