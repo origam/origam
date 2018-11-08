@@ -134,7 +134,8 @@ namespace Origam.Workflow.Tasks
 			if (changed && ruleSet != null)
 			{
 				this.Engine.RuleEngine.ProcessRules(
-					this.Engine.RuleEngine.GetContext(outputCtxtKey),
+					this.Engine.RuleEngine.GetContext(outputCtxtKey) 
+						as IDataDocument,
 					ruleSet,
 					null);
 				if (this.Step.Trace)

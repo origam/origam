@@ -74,17 +74,14 @@ namespace Origam.Rule
             // with a name of dataset.datasetname (that's how root element looks like when
             // data come from a dataset.
             // It does not do anything with a non-dataset xml source.
-
-			IDataDocument dataDocument = data as IDataDocument;
-            if (data.Xml.DocumentElement == null && dataDocument != null)
+            if (data.Xml.DocumentElement == null)
             {
-				bool oldEnforceConstraints = dataDocument.DataSet.EnforceConstraints;
-                dataDocument.DataSet.EnforceConstraints = false;
+				bool oldEnforceConstraints = data.DataSet.EnforceConstraints;
+                data.DataSet.EnforceConstraints = false;
                 XmlNode doc = data.Xml.CreateNode(XmlNodeType.Element,
-                    dataDocument.DataSet.DataSetName,
-                    "");
+                    data.DataSet.DataSetName, "");
                 data.Xml.AppendChild(doc);
-				dataDocument.DataSet.EnforceConstraints = oldEnforceConstraints;
+				data.DataSet.EnforceConstraints = oldEnforceConstraints;
             }
 
             IDataDocument resultDoc;

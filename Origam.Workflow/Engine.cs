@@ -1309,7 +1309,8 @@ namespace Origam.Workflow
 				action: () =>
 				{
 					_ruleEngine.ProcessRules(
-						data: this.RuleEngine.GetContext(resultContextKey),
+						data: this.RuleEngine.GetContext(resultContextKey) 
+							as IDataDocument,
 						ruleSet: ruleSet,
 						contextRow: null);
 				},
