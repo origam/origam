@@ -1715,165 +1715,19 @@ namespace Origam.DA.Service
                     replaceParameterTexts, dynamicParameters, selectParameterReferences));
                 return false;
             }
+            i = 0;
             foreach (DataStructureColumn column in entity.Columns)
             {
-                bool processColumn = false;
-                FunctionCall functionCall = column.Field as FunctionCall;
-                AggregatedColumn aggregatedColumn = column.Field as AggregatedColumn;
-                // parent column references will be calculated by the dataset
-                // generator
-                if (column.IsWriteOnly)
+                var expression = RenderDataStructureColumn(ds, entity,
+                        scalarColumn, replaceParameterTexts, dynamicParameters,
+                        sortSet, selectParameterReferences, isInRecursion,
+                        forceDatabaseCalculation, group, order, ref groupByNeeded, scalarColumnNames, column);
+                if (expression != null)
                 {
-                    processColumn = false;
-                }
-                else if (column.IsFromParentEntity())
-                {
-                    processColumn = false;
-                }
-                else if (scalarColumnNames.Contains(column.Name))
-                {
-                    processColumn = true;
-                }
-                else if (scalarColumn == null &&
-                    (
-                    column.Field is FieldMappingItem
-                    ||
-                    column.Field is LookupField
-                    ||
-                    (
-                    functionCall != null
-                    && functionCall.Function.FunctionType == OrigamFunctionType.Database
-                    )
-                    ||
-                    (
-                    functionCall != null && functionCall.ForceDatabaseCalculation
-                    )
-                    ||
-                    (
-                    functionCall != null && forceDatabaseCalculation
-                    )
-                    ||
-                    (
-                    functionCall != null && column.Entity != null
-                    )
-                    ||
-                    (
-                    functionCall != null && column.Aggregation != AggregationType.None
-                    )
-                    )
-                    )
-                {
-                    processColumn = true;
-                }
-                else if (scalarColumn == null && aggregatedColumn != null)
-                {
-                    bool found = false;
-                    foreach (DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.ItemTypeConst))
-                    {
-                        // if we have an aggregation column and
-                        // and the aggregation sub-entity with source field
-                        // exist in our DS, then we don't render sql for the
-                        // column, but just rely on dataset aggregation computation
-                        if (childEntity.Entity.PrimaryKey.Equals(aggregatedColumn.Relation.PrimaryKey))
-                        {
-                            // search for aggregation source column in related entity 
-                            if (childEntity.ExistsEntityFieldAsColumn(aggregatedColumn.Field))
-                            {
-                                found = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!found) processColumn = true;
-                }
-
-                string resultExpression = "";
-                string groupExpression = "";
-
-                if (processColumn || column.IsColumnSorted(sortSet))
-                {
-                    if (column.UseLookupValue)
-                    {
-                        resultExpression = RenderLookupColumnExpression(ds, entity, column,
-                            replaceParameterTexts, dynamicParameters, selectParameterReferences);
-                        // if we would group by lookuped column, we use original column in group-by clause
-                        groupExpression = RenderExpression(column.Field as AbstractSchemaItem,
-                            column.Entity == null ? entity : column.Entity, replaceParameterTexts,
-                            dynamicParameters, selectParameterReferences); ;
-                    }
-                    else
-                    {
-                        resultExpression = RenderExpression(column.Field as AbstractSchemaItem, column.Entity == null ? entity : column.Entity, replaceParameterTexts, dynamicParameters, selectParameterReferences);
-                        groupExpression = resultExpression;
-
-                        if (column.Aggregation != AggregationType.None)
-                        {
-                            if (column.Field is AggregatedColumn)
-                            {
-                                throw new NotSupportedException(ResourceUtils.GetString("ErrorAggregInAggreg", column.Path));
-                            }
-                            resultExpression = FixAggregationDataType(column.DataType, resultExpression);
-                            resultExpression = FixSumAggregation(column.Aggregation, GetAggregationString(column.Aggregation) + "(" + resultExpression + ")");
-                            groupByNeeded = true;
-                        }
-                    }
-                    if (column.DataType == OrigamDataType.Geography)
-                    {
-                        if (!isInRecursion)
-                        {
-                            // convert to text, becouse .net didn't have geolocation data type
-                            resultExpression = ConvertGeoToTextClause(resultExpression);
-                        }
-                    }
-
-                    if (processColumn)
-                    {
-                        if (i > 0) sqlExpression.Append(",");
-                        PrettyIndent(sqlExpression);
-                        i++;
-                        sqlExpression.AppendFormat("{0} AS {1}",
-                            resultExpression,
-                            NameLeftBracket + column.Name + NameRightBracket
-                            );
-                        // anything not having aggregation will eventually go to GROUP BY
-                        if (column.Aggregation == AggregationType.None)
-                        {
-                            group.Add(groupExpression);
-                        }
-                    }
-
-                    //					if(column.Name == scalarColumn)
-                    //					{
-                    //						break;
-                    //					}
-                }
-
-                // does not matter if processColumn=true, because we want to sort anytime sorting is specified,
-                // e.g. if this is a scalar query and sorting is by another than the scalar column
-                if (column.IsColumnSorted(sortSet))
-                {
-                    System.Diagnostics.Debug.Assert(resultExpression != String.Empty, "No expression generated for sorting.", "Column: " + column.Path);
-                    SortOrder sortOrder;
-                    string sortExpression = resultExpression;
-                    // if the column is a lookup column, we will sort by the looked-up
-                    // value, not by the source value, this will bring the same logic
-                    // as in the UI - when user sorts, it will always sort by a looked-up
-                    // values
-                    if (column.FinalLookup != null && !column.UseLookupValue)
-                    {
-                        sortExpression = RenderLookupColumnExpression(ds, entity, column,
-                            replaceParameterTexts, dynamicParameters, selectParameterReferences);
-                    }
-                    sortOrder.Expression = sortExpression;
-                    sortOrder.SortDirection = column.SortDirection(sortSet);
-
-                    if (order.Contains(column.SortOrder(sortSet)))
-                    {
-                        throw new InvalidOperationException(ResourceUtils.GetString("ErrorSortOrder", column.SortOrder(sortSet).ToString(), column.Path));
-                    }
-
-                    order.Add(column.SortOrder(sortSet), sortOrder);
+                    if (i > 0) sqlExpression.Append(",");
+                    PrettyIndent(sqlExpression);
+                    i++;
+                    sqlExpression.Append(expression);
                 }
             }
 
@@ -1910,6 +1764,173 @@ namespace Origam.DA.Service
                 }
             }
             return groupByNeeded;
+        }
+
+        public string RenderDataStructureColumn(DataStructure ds, 
+            DataStructureEntity entity, 
+            string scalarColumn, Hashtable replaceParameterTexts, 
+            Hashtable dynamicParameters, DataStructureSortSet sortSet, 
+            Hashtable selectParameterReferences, bool isInRecursion,
+            bool forceDatabaseCalculation, ArrayList group, SortedList order, 
+            ref bool groupByNeeded, ArrayList scalarColumnNames, DataStructureColumn column)
+        {
+            string result = null;
+            bool processColumn = false;
+            FunctionCall functionCall = column.Field as FunctionCall;
+            AggregatedColumn aggregatedColumn = column.Field as AggregatedColumn;
+            // parent column references will be calculated by the dataset
+            // generator
+            if (column.IsWriteOnly)
+            {
+                processColumn = false;
+            }
+            else if (column.IsFromParentEntity())
+            {
+                processColumn = false;
+            }
+            else if (scalarColumnNames.Contains(column.Name))
+            {
+                processColumn = true;
+            }
+            else if (scalarColumn == null &&
+                (
+                column.Field is FieldMappingItem
+                ||
+                column.Field is LookupField
+                ||
+                (
+                functionCall != null
+                && functionCall.Function.FunctionType == OrigamFunctionType.Database
+                )
+                ||
+                (
+                functionCall != null && functionCall.ForceDatabaseCalculation
+                )
+                ||
+                (
+                functionCall != null && forceDatabaseCalculation
+                )
+                ||
+                (
+                functionCall != null && column.Entity != null
+                )
+                ||
+                (
+                functionCall != null && column.Aggregation != AggregationType.None
+                )
+                )
+                )
+            {
+                processColumn = true;
+            }
+            else if (scalarColumn == null && aggregatedColumn != null)
+            {
+                bool found = false;
+                foreach (DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.ItemTypeConst))
+                {
+                    // if we have an aggregation column and
+                    // and the aggregation sub-entity with source field
+                    // exist in our DS, then we don't render sql for the
+                    // column, but just rely on dataset aggregation computation
+                    if (childEntity.Entity.PrimaryKey.Equals(aggregatedColumn.Relation.PrimaryKey))
+                    {
+                        // search for aggregation source column in related entity 
+                        if (childEntity.ExistsEntityFieldAsColumn(aggregatedColumn.Field))
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!found) processColumn = true;
+            }
+
+            string resultExpression = "";
+            string groupExpression = "";
+
+            if (processColumn || column.IsColumnSorted(sortSet))
+            {
+                if (column.UseLookupValue)
+                {
+                    resultExpression = RenderLookupColumnExpression(ds, entity, column,
+                        replaceParameterTexts, dynamicParameters, selectParameterReferences);
+                    // if we would group by lookuped column, we use original column in group-by clause
+                    groupExpression = RenderExpression(column.Field as AbstractSchemaItem,
+                        column.Entity == null ? entity : column.Entity, replaceParameterTexts,
+                        dynamicParameters, selectParameterReferences); ;
+                }
+                else
+                {
+                    resultExpression = RenderExpression(column.Field as AbstractSchemaItem, column.Entity == null ? entity : column.Entity, replaceParameterTexts, dynamicParameters, selectParameterReferences);
+                    groupExpression = resultExpression;
+
+                    if (column.Aggregation != AggregationType.None)
+                    {
+                        if (column.Field is AggregatedColumn)
+                        {
+                            throw new NotSupportedException(ResourceUtils.GetString("ErrorAggregInAggreg", column.Path));
+                        }
+                        resultExpression = FixAggregationDataType(column.DataType, resultExpression);
+                        resultExpression = FixSumAggregation(column.Aggregation, GetAggregationString(column.Aggregation) + "(" + resultExpression + ")");
+                        groupByNeeded = true;
+                    }
+                }
+                if (column.DataType == OrigamDataType.Geography)
+                {
+                    if (!isInRecursion)
+                    {
+                        // convert to text, becouse .net didn't have geolocation data type
+                        resultExpression = ConvertGeoToTextClause(resultExpression);
+                    }
+                }
+
+                if (processColumn)
+                {
+                    result = string.Format("{0} AS {1}",
+                        resultExpression,
+                        NameLeftBracket + column.Name + NameRightBracket
+                        );
+                    // anything not having aggregation will eventually go to GROUP BY
+                    if (column.Aggregation == AggregationType.None)
+                    {
+                        group.Add(groupExpression);
+                    }
+                }
+
+                //					if(column.Name == scalarColumn)
+                //					{
+                //						break;
+                //					}
+            }
+
+            // does not matter if processColumn=true, because we want to sort anytime sorting is specified,
+            // e.g. if this is a scalar query and sorting is by another than the scalar column
+            if (column.IsColumnSorted(sortSet))
+            {
+                System.Diagnostics.Debug.Assert(resultExpression != String.Empty, "No expression generated for sorting.", "Column: " + column.Path);
+                SortOrder sortOrder;
+                string sortExpression = resultExpression;
+                // if the column is a lookup column, we will sort by the looked-up
+                // value, not by the source value, this will bring the same logic
+                // as in the UI - when user sorts, it will always sort by a looked-up
+                // values
+                if (column.FinalLookup != null && !column.UseLookupValue)
+                {
+                    sortExpression = RenderLookupColumnExpression(ds, entity, column,
+                        replaceParameterTexts, dynamicParameters, selectParameterReferences);
+                }
+                sortOrder.Expression = sortExpression;
+                sortOrder.SortDirection = column.SortDirection(sortSet);
+
+                if (order.Contains(column.SortOrder(sortSet)))
+                {
+                    throw new InvalidOperationException(ResourceUtils.GetString("ErrorSortOrder", column.SortOrder(sortSet).ToString(), column.Path));
+                }
+
+                order.Add(column.SortOrder(sortSet), sortOrder);
+            }
+            return result;
         }
 
         private void PrettyLine(StringBuilder sqlExpression)
@@ -3369,6 +3390,7 @@ namespace Origam.DA.Service
             }
             int i = 0;
             StringBuilder logicalBuilder = new StringBuilder();
+            logicalBuilder.Append("(");
             foreach (string arg in arguments)
             {
                 if (arg != string.Empty)
@@ -3381,7 +3403,8 @@ namespace Origam.DA.Service
                 }
                 i++;
             }
-            return "(" + logicalBuilder.ToString() + ")";
+            logicalBuilder.Append(")");
+            return logicalBuilder.ToString();
         }
 
         public virtual string FunctionNot(string argument)
