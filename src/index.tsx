@@ -11,7 +11,7 @@ import { reactionRuntimeInfo } from './utils/reaction';
 
 import {main} from './screenInterpreter/interpreter';
 
- 
+import "./menuInterpreter/interpreter";
 
 configure({
   computedRequiresReaction: true,
