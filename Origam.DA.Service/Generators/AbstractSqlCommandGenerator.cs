@@ -37,6 +37,7 @@ namespace Origam.DA.Service
     {
         private readonly ParameterReference PageNumberParameterReference = new ParameterReference();
         private readonly ParameterReference PageSizeParameterReference = new ParameterReference();
+        private readonly FilterRenderer filterRenderer = new FilterRenderer();
         private string _pageNumberParameterName;
         private string _pageSizeParameterName;
         private bool _userDefinedParameters = false;
@@ -356,6 +357,8 @@ namespace Origam.DA.Service
                     selectParameters.Paging,
                     false,
                     forceDatabaseCalculation));
+
+
 
             BuildSelectParameters(adapter.SelectCommand, selectParameterReferences);
             BuildFilterParameters(adapter.SelectCommand, dataStructure,
@@ -994,20 +997,11 @@ namespace Origam.DA.Service
                 forceDatabaseCalculation);
         }
 
-        
-
-          private string SelectSql(DataStructure ds, DataStructureEntity entity, DataStructureFilterSet filter,
+        private string SelectSql(DataStructure ds, DataStructureEntity entity, DataStructureFilterSet filter,
               DataStructureSortSet sortSet, string scalarColumn, Hashtable replaceParameterTexts,
               Hashtable dynamicParameters, Hashtable selectParameterReferences, bool restrictScalarToTop1,
               bool paging, bool isInRecursion, bool forceDatabaseCalculation)
         {
-//        private string SelectSql(SelectParameters selectParameters, Hashtable replaceParameterTexts,
-//            Hashtable selectParameterReferences, bool restrictScalarToTop1,
-//            bool isInRecursion, bool forceDatabaseCalculation)
-//        {
-//
-
-
             if (!(entity.EntityDefinition is TableMappingItem))
             {
                 throw new Exception("Only database mapped entities can be processed by the Data Service!");
@@ -2415,7 +2409,7 @@ namespace Origam.DA.Service
                     parentEntity, replaceParameterTexts, dynamicParameters, paremeterReferences);
             string relatedField = RenderExpression(key.RelatedEntityField as AbstractSchemaItem,
                     relatedEntity, replaceParameterTexts, dynamicParameters, paremeterReferences);
-            sqlExpression.Append(FunctionEqual(parentField, relatedField));
+            sqlExpression.Append(filterRenderer.Equal(parentField, relatedField));
         }
 
         private void RenderUpdateDeleteWherePart(StringBuilder sqlExpression, DataStructureEntity entity)
@@ -3278,13 +3272,13 @@ namespace Origam.DA.Service
                         replaceParameterTexts, dynamicParameters, parameterReferences);
                     string rightValue = GetItemByFunctionParameter(item, "Right", entity,
                         replaceParameterTexts, dynamicParameters, parameterReferences);
-                    result = FunctionBinaryOperator(leftValue, rightValue, item.Function.Name);
+                    result = filterRenderer.BinaryOperator(leftValue, rightValue, item.Function.Name);
                     break;
 
                 case "Not":
                     string argument = GetItemByFunctionParameter(item, "Argument", entity,
                         replaceParameterTexts, dynamicParameters, parameterReferences);
-                    result = FunctionNot(argument);
+                    result = filterRenderer.Not(argument);
                     break;
 
                 case "Concat":
@@ -3300,7 +3294,7 @@ namespace Origam.DA.Service
                     var arguments = GetItemListByFunctionParameter(item, "Arguments",
                          entity, replaceParameterTexts, dynamicParameters, 
                          parameterReferences);
-                    result = FunctionLogicalAndOr(item.Function.Name, arguments);
+                    result = filterRenderer.LogicalAndOr(item.Function.Name, arguments);
                     break;
 
                 case "Space":
@@ -3407,36 +3401,7 @@ namespace Origam.DA.Service
             return result;
         }
 
-        public virtual string FunctionLogicalAndOr(string functionName, IList<string> arguments)
-        {
-            if (arguments.Count < 2)
-            {
-                throw new ArgumentOutOfRangeException("At least 2 arguments must be present fpr AND/OR.");
-            }
-            int i = 0;
-            StringBuilder logicalBuilder = new StringBuilder();
-            logicalBuilder.Append("(");
-            foreach (string arg in arguments)
-            {
-                if (arg != string.Empty)
-                {
-                    if (i > 0)
-                    {
-                        logicalBuilder.Append(" " + GetOperator(functionName) + " ");
-                    }
-                    logicalBuilder.Append(arg);
-                }
-                i++;
-            }
-            logicalBuilder.Append(")");
-            return logicalBuilder.ToString();
-        }
-
-        public virtual string FunctionNot(string argument)
-        {
-            CheckArgumentEmpty("argument", argument);
-            return string.Format("NOT({0})", argument);
-        }
+      
 
         private string GetItemByFunctionParameter(
             FunctionCall item, string parameterName, DataStructureEntity entity,
@@ -3492,57 +3457,6 @@ namespace Origam.DA.Service
             return param;
         }
 
-        public virtual string FunctionBinaryOperator(string leftValue, 
-            string rightValue, string operatorName)
-        {
-            switch (operatorName)
-            {
-                case "Equal":
-                    return FunctionEqual(leftValue, rightValue);
-                case "NotEqual":
-                    return FunctionNotEqual(leftValue, rightValue);
-                default:
-                    CheckArgumentEmpty("leftValue", leftValue);
-                    CheckArgumentEmpty("rightValue", rightValue);
-                    return string.Format("({0} {1} {2})",
-                        leftValue, GetOperator(operatorName), rightValue);
-            }
-        }
-
-        public virtual string FunctionEqual(string leftValue, string rightValue)
-        {
-            CheckArgumentEmpty("leftValue", leftValue);
-            if (rightValue == null)
-            {
-                return string.Format("{0} IS NULL", leftValue);
-            }
-            else
-            {
-                return string.Format("{0} = {1}", leftValue, rightValue);
-            }
-        }
-
-        private static void CheckArgumentEmpty(string name, string argument)
-        {
-            if (argument == null)
-            {
-                throw new ArgumentOutOfRangeException("name", name, "Argument cannot be empty.");
-            }
-        }
-
-        public virtual string FunctionNotEqual(string leftValue, string rightValue)
-        {
-            CheckArgumentEmpty("leftValue", leftValue);
-            if (rightValue == null)
-            {
-                return string.Format("{0} IS NOT NULL", leftValue);
-            }
-            else
-            {
-                return string.Format("{0} <> {1}", leftValue, rightValue);
-            }
-        }
-
         private string RenderConcat(ArrayList concatSchemaItems, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
 		{
 			List<KeyValuePair<ISchemaItem, DataStructureEntity>> concatSchemaItemList =
@@ -3583,41 +3497,7 @@ namespace Origam.DA.Service
 		#endregion
 
 		#region Operators
-		private string GetOperator(string functionName)
-		{
-			switch(functionName)
-			{
-				case "NotEqual":
-					return "<>";
-				case "Equal":
-					return "=";
-				case "Like":
-					return "LIKE";
-				case "Add":
-					return "+";
-				case "Deduct":
-					return "-";
-				case "Multiply":
-					return "*";
-				case "Divide":
-					return "/";
-				case "LessThan":
-					return "<";
-				case "LessThanOrEqual":
-					return "<=";
-				case "GreaterThan":
-					return ">";
-				case "GreaterThanOrEqual":
-					return ">=";
-				case "LogicalOr":
-					return "OR";
-				case "LogicalAnd":
-					return "AND";
-				default:
-					throw new ArgumentOutOfRangeException("functionName", functionName, ResourceUtils.GetString("UnsupportedOperator"));
-			}
-		}
-
+		
 		private string GetAggregationString(AggregationType type)
 		{
 			switch(type)
