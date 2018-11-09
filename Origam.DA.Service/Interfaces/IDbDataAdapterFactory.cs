@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using Origam.Schema.EntityModel;
@@ -35,9 +36,7 @@ namespace Origam.DA.Service
 		bool UserDefinedParameters{get; set;}
 		bool ResolveAllFilters{get; set;}
         bool PrettyFormat { get; set; }
-		DbDataAdapter CreateDataAdapter(DataStructure ds, DataStructureEntity entity, 
-            DataStructureFilterSet filter, DataStructureSortSet sortSet, 
-            Hashtable parameters, bool paging, string columnName,
+		DbDataAdapter CreateDataAdapter(SelectParameters adParameters,
             bool forceDatabaseCalculationa);
 		DbDataAdapter CreateDataAdapter(string procedureName, ArrayList entitiesOrdered, 
             IDbConnection connection, IDbTransaction transaction);

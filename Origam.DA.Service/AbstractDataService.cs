@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Security.Principal;
@@ -130,9 +131,7 @@ namespace Origam.DA.Service
 		{
 		}
 
-        internal DbDataAdapter GetAdapter(DataStructure ds, DataStructureEntity entity,
-            DataStructureFilterSet filter, DataStructureSortSet sortSet, UserProfile userProfile,
-            Hashtable parameters, bool paging, string columnName)
+        internal DbDataAdapter GetAdapter(SelectParameters selectParameters, UserProfile userProfile)
         {
             string identityId = "";
 
@@ -141,16 +140,14 @@ namespace Origam.DA.Service
                 identityId = userProfile.Id.ToString();
             }
 
-            // do not cache queries with a dynamic filter
-            if (filter != null && filter.IsDynamic)
+            bool hasDynamicFilter = (selectParameters.Filter != null && selectParameters.Filter.IsDynamic);
+            if (hasDynamicFilter || selectParameters.CustomFilters != null || selectParameters.CustomOrdering != null)
             {
-                return GetAdapterNonCached(ds, entity, filter, sortSet, parameters, paging,
-                    columnName);
+                return GetAdapterNonCached(selectParameters);
             }
             else
             {
-                return GetAdapterCached(ds, entity, filter, sortSet, parameters, identityId,
-                    paging, columnName);
+                return GetAdapterCached(selectParameters, identityId);
             }
         }
 
@@ -196,12 +193,9 @@ namespace Origam.DA.Service
             return adapter;
         }
 
-		private DbDataAdapter GetAdapterNonCached(DataStructure ds, DataStructureEntity entity, 
-            DataStructureFilterSet filter, DataStructureSortSet sortSet, Hashtable parameters, 
-            bool paging, string columnName)
-		{
-			return DbDataAdapterFactory.CreateDataAdapter(ds, entity, filter, sortSet, parameters,
-                paging, columnName, false);
+		private DbDataAdapter GetAdapterNonCached(SelectParameters adParameters)
+        {
+			return DbDataAdapterFactory.CreateDataAdapter(adParameters,  false);
 		}
 
 		private Hashtable GetCache()
@@ -214,26 +208,24 @@ namespace Origam.DA.Service
             return (Hashtable)OrigamUserContext.Context["DataAdapterCache"];
 		}
 		
-		private DbDataAdapter GetAdapterCached(DataStructure ds, DataStructureEntity entity,
-            DataStructureFilterSet filter, DataStructureSortSet sortSet, Hashtable parameters, 
-            object identityId, bool paging, string columnName)
+		private DbDataAdapter GetAdapterCached(SelectParameters adParameters, string identityId)
 		{
-			string id = entity.PrimaryKey["Id"].ToString();
-			if(filter != null)
+			string id = adParameters.Entity.PrimaryKey["Id"].ToString();
+			if(adParameters.Filter != null)
 			{
-				id += filter.PrimaryKey["Id"].ToString();
+				id += adParameters.Filter.PrimaryKey["Id"].ToString();
 			}
-			if(sortSet != null)
+			if(adParameters.SortSet != null)
 			{
-				id += sortSet.PrimaryKey["Id"].ToString();
+				id += adParameters.SortSet.PrimaryKey["Id"].ToString();
 			}
-			if(paging)
+			if(adParameters.Paging)
 			{
 				id += "_paging";
 			}
-            if (columnName != null)
+            if (adParameters.ColumnName != null)
             {
-                id += "_" + columnName;
+                id += "_" + adParameters.ColumnName;
             }
 			Hashtable adapterCache = GetCache();
 			// Caching adapters
@@ -249,8 +241,7 @@ namespace Origam.DA.Service
 				else
 				{
 					// adapter is not in the cache, yet
-					adapter = GetAdapterNonCached(ds, entity, filter, sortSet, parameters, 
-                        paging, columnName);
+					adapter = GetAdapterNonCached(adParameters);
 					// so we add it there
 					if(! adapterCache.ContainsKey(id))
 					{

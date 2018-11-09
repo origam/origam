@@ -174,20 +174,18 @@ namespace Origam.DA.Service
             return cmd;
         }
 
-        public DbDataAdapter CreateDataAdapter(DataStructure ds, DataStructureEntity entity,
-            DataStructureFilterSet filter, DataStructureSortSet sortSet, Hashtable parameters,
-            bool paging, string columnName, bool forceDatabaseCalculation)
+        public DbDataAdapter CreateDataAdapter(SelectParameters adParameters, bool forceDatabaseCalculation)
         {
-            if (!(entity.EntityDefinition is TableMappingItem))
+            if (!(adParameters.Entity.EntityDefinition is TableMappingItem))
             {
                 throw new Exception(ResourceUtils.GetString("OnlyMappedEntitiesToBeProcessed"));
             }
 
             DbDataAdapter adapter = this.GetAdapter();
-            BuildCommands(adapter, ds, entity, filter, sortSet, parameters, paging, columnName,
+            BuildCommands(adapter, adParameters,
                 forceDatabaseCalculation);
             adapter.TableMappings.Clear();
-            adapter.TableMappings.Add(CreateMapping(entity));
+            adapter.TableMappings.Add(CreateMapping(adParameters.Entity));
 
             return adapter;
         }
@@ -339,30 +337,39 @@ namespace Origam.DA.Service
             return cmd;
         }
 
-        public void BuildCommands(DbDataAdapter adapter, DataStructure ds, DataStructureEntity entity,
-            DataStructureFilterSet filter, DataStructureSortSet sortSet, Hashtable parameters,
-            bool paging, string columnName, bool forceDatabaseCalculation)
+        public void BuildCommands(IDbDataAdapter adapter, SelectParameters selectParameters,
+            bool forceDatabaseCalculation)
         {
             Hashtable selectParameterReferences = new Hashtable();
-
-            ((IDbDataAdapter)adapter).SelectCommand =
+            DataStructure dataStructure = selectParameters.DataStructure;
+            DataStructureEntity entity = selectParameters.Entity;
+            adapter.SelectCommand =
                 this.GetCommand(this.SelectSql(
-                    ds, entity, filter, sortSet, columnName, null, parameters,
-                    selectParameterReferences, false, paging, false, forceDatabaseCalculation));
-            ArrayList entities = ds.Entities;
+                    dataStructure,
+                    entity,
+                    selectParameters.Filter, 
+                    selectParameters.SortSet, 
+                    selectParameters.ColumnName,
+                    null, selectParameters.Parameters,
+                    selectParameterReferences, 
+                    false, 
+                    selectParameters.Paging,
+                    false,
+                    forceDatabaseCalculation));
 
-            BuildSelectParameters(((IDbDataAdapter)adapter).SelectCommand, selectParameterReferences);
-            BuildFilterParameters(((IDbDataAdapter)adapter).SelectCommand, ds, filter, null, parameters);
+            BuildSelectParameters(adapter.SelectCommand, selectParameterReferences);
+            BuildFilterParameters(adapter.SelectCommand, dataStructure,
+                selectParameters.Filter, null, selectParameters.Parameters);
 
-            if (!ds.Name.StartsWith("Lookup") || entity.AllFields)
+            if (!dataStructure.Name.StartsWith("Lookup") || entity.AllFields)
             {
-                ((IDbDataAdapter)adapter).UpdateCommand = this.GetCommand(this.UpdateSql(ds, entity));
-                ((IDbDataAdapter)adapter).InsertCommand = this.GetCommand(this.InsertSql(ds, entity));
-                ((IDbDataAdapter)adapter).DeleteCommand = this.GetCommand(this.DeleteSql(ds, entity));
+                adapter.UpdateCommand = GetCommand(UpdateSql(dataStructure, entity));
+                adapter.InsertCommand = GetCommand(InsertSql(dataStructure, entity));
+                adapter.DeleteCommand = GetCommand(DeleteSql(dataStructure, entity));
 
-                BuildUpdateParameters(((IDbDataAdapter)adapter).UpdateCommand, entity);
-                BuildInsertParameters(((IDbDataAdapter)adapter).InsertCommand, entity);
-                BuildDeleteParameters(((IDbDataAdapter)adapter).DeleteCommand, entity);
+                BuildUpdateParameters(adapter.UpdateCommand, entity);
+                BuildInsertParameters(adapter.InsertCommand, entity);
+                BuildDeleteParameters(adapter.DeleteCommand, entity);
             }
         }
 
@@ -895,8 +902,17 @@ namespace Origam.DA.Service
             DataStructureFilterSet filter, DataStructureSortSet sort, bool paging,
             string columnName)
         {
-            DbDataAdapter adapter = this.CreateDataAdapter(ds, entity, filter, sort,
-                new Hashtable(), paging, columnName, false);
+            var adapterParameters = new SelectParameters
+            {
+                DataStructure = ds,
+                Entity = entity,
+                Filter = filter,
+                SortSet = sort,
+                Parameters = new Hashtable(),
+                Paging = paging,
+                ColumnName = columnName,
+            };
+            DbDataAdapter adapter = this.CreateDataAdapter(adapterParameters, false);
             return ((IDbDataAdapter)adapter).SelectCommand;
         }
 
@@ -978,11 +994,20 @@ namespace Origam.DA.Service
                 forceDatabaseCalculation);
         }
 
-        private string SelectSql(DataStructure ds, DataStructureEntity entity, DataStructureFilterSet filter,
-            DataStructureSortSet sortSet, string scalarColumn, Hashtable replaceParameterTexts,
-            Hashtable dynamicParameters, Hashtable selectParameterReferences, bool restrictScalarToTop1,
-            bool paging, bool isInRecursion, bool forceDatabaseCalculation)
+        
+
+          private string SelectSql(DataStructure ds, DataStructureEntity entity, DataStructureFilterSet filter,
+              DataStructureSortSet sortSet, string scalarColumn, Hashtable replaceParameterTexts,
+              Hashtable dynamicParameters, Hashtable selectParameterReferences, bool restrictScalarToTop1,
+              bool paging, bool isInRecursion, bool forceDatabaseCalculation)
         {
+//        private string SelectSql(SelectParameters selectParameters, Hashtable replaceParameterTexts,
+//            Hashtable selectParameterReferences, bool restrictScalarToTop1,
+//            bool isInRecursion, bool forceDatabaseCalculation)
+//        {
+//
+
+
             if (!(entity.EntityDefinition is TableMappingItem))
             {
                 throw new Exception("Only database mapped entities can be processed by the Data Service!");

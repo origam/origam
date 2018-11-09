@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Origam.DA
@@ -58,14 +59,25 @@ namespace Origam.DA
 			this.SortSetId = sortSetId;
 		}
 
-		public System.Guid DataSourceId;
+	    public DataStructureQuery(Guid dataStructureId, string entityName, string customFilters, List<List<string>> customOrdering)
+	    {
+	        DataSourceId = dataStructureId;
+	        Entity = entityName;
+	        CustomFilters = customFilters;
+	        CustomOrdering = customOrdering;
+	    }
+
+        public System.Guid DataSourceId;
 		public System.Guid MethodId;
 		public Guid DefaultSetId;
 		public Guid SortSetId;
 		public QueryParameterCollection Parameters = new QueryParameterCollection();
 		public IsolationLevel IsolationLevel = IsolationLevel.ReadCommitted;
-		
-		public bool Paging
+
+	    public List<List<string>> CustomOrdering { get; }
+	    public string CustomFilters { get;  }
+
+        public bool Paging
 		{
 			get
 			{
@@ -179,7 +191,7 @@ namespace Origam.DA
         }
 
         private string _entity;
-        public string Entity
+	    public string Entity
         {
             get
             {
