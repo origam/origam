@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <TargetFramework>net461</TargetFramework>
+    <OutputType>exe</OutputType>
+    <TargetFrameworks>netcoreapp2.1;net461</TargetFrameworks>
     <StartupObject></StartupObject>
     <ApplicationIcon />
     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
