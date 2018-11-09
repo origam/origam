@@ -945,8 +945,8 @@ namespace Origam.Workbench.Editors
                     "DataTransformationService", 
                     new RuleEngine(new Hashtable(), null), null);
 
-				XmlDocument doc = new XmlDocument();
-				doc.LoadXml(sourceXml);
+				var doc = DataDocumentFactory.New(new XmlDocument());
+				doc.Xml.LoadXml(sourceXml);
 
 				transformer.MethodName = "TransformText";
 				transformer.Parameters.Add("XslScript", xslt);
@@ -960,35 +960,21 @@ namespace Origam.Workbench.Editors
 				// resolve transformation input parameters and try to put an empty xml document to each just
 				// in case it expects a node set as a parameter
 				var xsltParams = XmlTools.ResolveTransformationParameters(xslt);
-//				Hashtable htParams = new Hashtable(xsltParams.Count);
-//				XmlDocument dummyValue = new XmlDocument();
-//				foreach (string xsltParam in xsltParams) {
-//					htParams.Add(xsltParam, dummyValue); 
-//				}
 				RefreshParameterList();
 				LoadDisplayedParameterData();
 				Hashtable parameterValues = GetParameterValues(xsltParams);
 				transformer.Parameters.Add("Parameters", parameterValues);
-			
 				transformer.Run();
-
 			    IDataDocument result = transformer.Result as IDataDocument;
-
 				if(result == null) return DataDocumentFactory.New();
 
 				// rule handling
 				DataStructureRuleSet ruleSet = cboRuleSet.SelectedItem as DataStructureRuleSet;
-			    IDataDocument dataDoc = result as IDataDocument;
-
-				if(dataDoc != null)
+				if(result.DataSet.HasErrors == false && ruleSet != null)
 				{
-					if(dataDoc.DataSet.HasErrors == false && ruleSet != null)
-					{
-						RuleEngine re = new RuleEngine(null, null);
-						re.ProcessRules(dataDoc, ruleSet, null);
-					}
+					RuleEngine re = new RuleEngine(null, null);
+					re.ProcessRules(result, ruleSet, null);
 				}
-
 				return result;
 			}
 			catch(Exception ex)

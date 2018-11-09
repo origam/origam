@@ -2636,16 +2636,11 @@ namespace Origam.Rule
 		private DataStructureRuleSet _ruleSet = null;
 		private IDataDocument _currentRuleDocument = null;
 
-		public void ProcessRules(object data, DataStructureRuleSet ruleSet, DataRow contextRow)
+		public void ProcessRules(IDataDocument data, DataStructureRuleSet ruleSet, DataRow contextRow)
 		{
-			IDataDocument xmlData;
-			DataSet dataset;
-			
-			if(data is IDataDocument)
+			if(data != null && data.DataSet != null)
 			{
-				dataset = (data as IDataDocument).DataSet;
-				xmlData = data as IDataDocument;
-				_currentRuleDocument = xmlData;
+				_currentRuleDocument = data;
 			}
 			else
 			{
@@ -2654,35 +2649,28 @@ namespace Origam.Rule
 
 			_ruleSet = ruleSet;
 
-			IOutputPad outputPad = null;
-			
-			if(WorkbenchSingleton.Workbench != null)
-			{
-				outputPad = WorkbenchSingleton.Workbench.GetPad(typeof(IOutputPad)) as IOutputPad;
-			}
-
 			/********************************************************************
 			 * Column bound rules
 			 ********************************************************************/
 			if(contextRow == null)	// whole dataset
 			{
 				Hashtable cols = new Hashtable();
-				CompleteChildColumnReferences(dataset, cols);
+				CompleteChildColumnReferences(data.DataSet, cols);
 				
-				EnqueueAllRows(dataset, xmlData, ruleSet, cols);
+				EnqueueAllRows(data, ruleSet, cols);
 			}
 			else					// current row
 			{
 				Hashtable cols = new Hashtable();
 				CompleteChildColumnReferences(contextRow.Table, cols);
 				
-				EnqueueAllRows(contextRow, xmlData, ruleSet, cols);
+				EnqueueAllRows(contextRow, data, ruleSet, cols);
 			}
 
 			/********************************************************************
 			 * Row bound rules
 			 ********************************************************************/
-			ArrayList sortedTables = GetSortedTables(dataset);
+			ArrayList sortedTables = GetSortedTables(data.DataSet);
 
 			try
 			{
@@ -2865,15 +2853,15 @@ namespace Origam.Rule
 			EnqueueParentRows(currentRow, data, ruleSet, columns, null);
 		}
 
-		private void EnqueueAllRows(DataSet data, IDataDocument xmlData, DataStructureRuleSet ruleSet, Hashtable columns)
+		private void EnqueueAllRows(IDataDocument data, DataStructureRuleSet ruleSet, Hashtable columns)
 		{
-			ArrayList tables = GetSortedTables(data);
+			ArrayList tables = GetSortedTables(data.DataSet);
 
 			for(int i=tables.Count-1; i >= 0; i--)
 			{
 				foreach(DataRow row in ((DataTable)tables[i]).Rows)
 				{
-					EnqueueEntry(row, xmlData, ruleSet, columns);
+					EnqueueEntry(row, data, ruleSet, columns);
 				}
 			}
 		}
@@ -4003,15 +3991,17 @@ namespace Origam.Rule
 
         public IDataDocument GetXmlDocumentFromData(object inputData)
 		{
+            IDataDocument doc = inputData as IDataDocument;
+            if (doc != null)
+            {
+                return doc;
+            }
 			object data = inputData;
-
 			IContextStore contextStore = data as IContextStore;
 			if (contextStore != null) {
 				// Get the rule's context store
 				data = GetContext(contextStore);
 			}
-
-		    IDataDocument doc;
 		    XmlDocument xmlDocument = data as XmlDocument;
 			if(xmlDocument != null)
 			{

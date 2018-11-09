@@ -1168,7 +1168,7 @@ namespace Origam.Workflow
 					changed = true;
 
 				    IDataDocument xmlDataDoc = this.RuleEngine.GetContext(resultContextKey) as IDataDocument;
-				    XmlDocument resultXml = xmlDataDoc.Xml;
+				    XmlDocument resultXml = xmlDataDoc?.Xml;
 
 					bool previousEnforceConstraints = false;
 
@@ -1309,7 +1309,8 @@ namespace Origam.Workflow
 				action: () =>
 				{
 					_ruleEngine.ProcessRules(
-						data: this.RuleEngine.GetContext(resultContextKey),
+						data: this.RuleEngine.GetContext(resultContextKey) 
+							as IDataDocument,
 						ruleSet: ruleSet,
 						contextRow: null);
 				},
