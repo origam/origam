@@ -60,6 +60,7 @@
     <Compile Include="FilePersistenceProviderTests\PersitHelper.cs" />
     <Compile Include="FilePersistenceProviderTests\FilePersistenceProviderTestWithOrigamRuntime.cs" />
     <Compile Include="FilePersistenceProviderTests\XmlLoaderTest.cs" />
+    <Compile Include="FilterParserTests.cs" />
     <Compile Include="FlatFileSearchTests\FlatFileSearcherTests.cs" />
     <Compile Include="SchemaItemComparator.cs" />
     <Compile Include="SchemaItemsToCompare.cs" />
