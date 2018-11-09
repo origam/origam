@@ -40,5 +40,11 @@ namespace Origam.ServerCore.Controllers
         {    
             return MenuXmlBuilder.GetMenu();
         }
+
+        [HttpGet("[action]")]
+        public string GetScreeSection(Guid id)
+        {
+            return FormXmlBuilder.GetXml(id).OuterXml;
+        }
     }
 }

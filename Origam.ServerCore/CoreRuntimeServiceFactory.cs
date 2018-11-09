@@ -18,7 +18,7 @@ namespace Origam.ServerCore
             //ServiceManager.Services.AddService(new Origam.Workflow.StateMachineService());
             ServiceManager.Services.AddService(new SchemaService());
             ServiceManager.Services.AddService(new ServiceAgentFactory());
-//            ServiceManager.Services.AddService(CreateDocumentationService());
+            ServiceManager.Services.AddService(CreateDocumentationService());
 //            ServiceManager.Services.AddService(new TracingService());
             ServiceManager.Services.AddService(new DataLookupService());
             ServiceManager.Services.AddService(new ParameterService());
@@ -30,16 +30,7 @@ namespace Origam.ServerCore
 
         public IPersistenceService CreatePersistenceService()
         {
-            var defaultFolders = new List<ElementName>
-            {
-                ElementNameFactory.Create(typeof(SchemaExtension)),
-                ElementNameFactory.Create(typeof(SchemaItemGroup))
-            };
-
-            var persistenceService = new FilePersistenceService(defaultFolders);
-            
-            ServiceManager.Services.AddService(persistenceService);
-            return persistenceService;
+            return GetPersistenceBuilder().GetPersistenceService();
         }
 
         public IDocumentationService CreateDocumentationService()
