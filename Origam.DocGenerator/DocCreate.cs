@@ -64,7 +64,7 @@ namespace Origam.DocGenerator
             xmlsourcefile = xmlfile;
             RootFile = rootfile;
             XsltPath = xslt;
-            ps = persprovider;
+            ps = persprovider ?? throw new Exception("Persprovider  is not set!"); 
             DirectoryPath = string.Join("", path.Split(Path.GetInvalidPathChars())); ;
             this.documentation = documentation ?? throw new Exception("Documentation  is not set!");
             this.menuprovider = menuprovider ?? throw new Exception("MenuSchemaItemProvider is not set!");
@@ -156,8 +156,10 @@ namespace Origam.DocGenerator
                 }
                 AbstractDataEntity entity = GetEntity(ps, dataMember, dataset);
                 WriteStartElement("Section", section, control.ControlItem.Id.ToString(), control.ControlItem.GetType().Name);
-                WriteElement("entity", entity.PrimaryKey["Id"].ToString());
+                WriteStartElement("entity");
+                WriteElement("entityid", entity.PrimaryKey["Id"].ToString());
                 WriteElement("entityname", entity.NodeText);
+                WriteEndElement();
                 WriteElement("description",
                     documentation.GetDocumentation(control.ControlItem.PanelControlSet.Id, DocumentationType.USER_LONG_HELP));
                 sortedControls = control.ControlItem.PanelControlSet.ChildItems[0].ChildItemsByType(ControlSetItem.ItemTypeConst);
@@ -193,11 +195,9 @@ namespace Origam.DocGenerator
             MakeXmlSections(form);
             WriteEndElement();
             CloseXml();
-            mstream.Seek(0, SeekOrigin.Begin);
-            XPathDocument doc = new XPathDocument(mstream);
-            MvpXslTransform xslttransform = new MvpXslTransform();
-            xslttransform.Load(new XmlTextReader(new StringReader(xsltdoc)));
-            xslttransform.Transform(new XmlInput(doc), null, new XmlOutput(XmlwriterSource));
+            MvpXslTransform xsltTransform = new MvpXslTransform();
+            xsltTransform.Load(new XmlTextReader(new StringReader(xsltdoc)));
+            SaveXslt(xsltTransform, new XmlOutput(XmlwriterSource));
         }
         public void Run()
         {
@@ -218,7 +218,13 @@ namespace Origam.DocGenerator
             }
             else
             {
-                SaveXslt();
+                MvpXslTransform xslttransform = new MvpXslTransform();
+                xslttransform.Load(XsltPath);
+                MultiXmlTextWriter multiWriter = new MultiXmlTextWriter(Path.Combine(DirectoryPath, RootFile), new UTF8Encoding(false))
+                {
+                    Formatting = Formatting.Indented
+                };
+                SaveXslt(xslttransform,new XmlOutput(multiWriter));
             }
         }
         private void SaveSchemaXml()
@@ -228,17 +234,11 @@ namespace Origam.DocGenerator
             file.Close();
             mstream.Close();
         }
-        private void SaveXslt()
+        private void SaveXslt( MvpXslTransform xslTransform, XmlOutput xmlOutput)
         {
             mstream.Seek(0, SeekOrigin.Begin);
             XPathDocument doc = new XPathDocument(mstream);
-            MvpXslTransform xslttransform = new MvpXslTransform();
-            xslttransform.Load(XsltPath);
-            MultiXmlTextWriter multiWriter = new MultiXmlTextWriter(Path.Combine(DirectoryPath, RootFile), new UTF8Encoding(false))
-            {
-                Formatting = Formatting.Indented
-            };
-            xslttransform.Transform(new XmlInput(doc), null, new XmlOutput(multiWriter));
+            xslTransform.Transform(new XmlInput(doc), null, xmlOutput);
         }
         private void CreateXml(AbstractSchemaItem menuSublist)
         {
@@ -264,13 +264,9 @@ namespace Origam.DocGenerator
         {
             Xmlwriter.WriteStartElement(element);
         }
-        private void WriteString(string element)
-        {
-            Xmlwriter.WriteString(element);
-        }
         private void WriteStartElement(string element, string displayName, string id, string typeitem)
         {
-            Xmlwriter.WriteStartElement(element);
+            WriteStartElement(element);
             Xmlwriter.WriteAttributeString("DisplayName", displayName);
             Xmlwriter.WriteAttributeString("Id", id);
             Xmlwriter.WriteAttributeString("Type", typeitem);
@@ -281,14 +277,6 @@ namespace Origam.DocGenerator
             {
                 Xmlwriter.WriteElementString(caption, description);
             }
-        }
-        private void WriteAttributeString(string v, string imgSrc)
-        {
-            Xmlwriter.WriteAttributeString(v, imgSrc);
-        }
-        private void WriteElementString(string sECTION_HEADING, string v)
-        {
-            Xmlwriter.WriteElementString(sECTION_HEADING, v);
         }
         private void WriteEndElement()
         {

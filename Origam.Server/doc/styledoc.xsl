@@ -13,11 +13,11 @@
     Section <xsl:value-of select="@DisplayName"/>
     </html:h2>
   
-  <xsl:if test="entity != ''" >
+  <xsl:if test="entity/entityid != ''" >
     <html:p>
       Entity
-      <html:a href="doc.aspx?section=content&amp;filterType=elementId&amp;filterValue={entity}&amp;objectType=entity">
-       <html:img src="assets/doc/model0.png" /><xsl:value-of select="entityname"/>
+      <html:a href="doc.aspx?section=content&amp;filterType=elementId&amp;filterValue={entity/entityid}&amp;objectType=entity">
+       <html:img src="assets/doc/model0.png" /><xsl:value-of select="entity/entityname"/>
         </html:a>
     </html:p>
   </xsl:if>

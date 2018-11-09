@@ -5,7 +5,7 @@
     <TargetFrameworks>netcoreapp2.1;net461</TargetFrameworks>
     <StartupObject></StartupObject>
     <ApplicationIcon />
-    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
