@@ -3,16 +3,13 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:html="http://www.w3.org/1999/xhtml"
     exclude-result-prefixes="html xsl"
-    version="1.1">
-
+    version="1.0">
  <xsl:output omit-xml-declaration="yes" indent="yes"/>
-
 <xsl:template match="/">
 <xsl:for-each select="/Menu/Section">
    <html:h2>
     Section <xsl:value-of select="@DisplayName"/>
     </html:h2>
-  
   <xsl:if test="entity/entityid != ''" >
     <html:p>
       Entity
@@ -33,5 +30,4 @@
  </xsl:for-each>
 </xsl:for-each>
 </xsl:template> 
-
 </xsl:stylesheet>
