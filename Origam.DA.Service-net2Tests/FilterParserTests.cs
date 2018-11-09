@@ -11,14 +11,30 @@ namespace Origam.DA.Service_net2Tests
     [TestFixture]
     class FilterParserTests
     {
-        [Test]
-        public void ShouldParseFilter()
+        [TestCase(
+            "[\"name\",\"gt\",\"John Doe\"]",
+            "(name > 'JohnDoe')")]
+        [TestCase(
+            "[\"$AND\", [\"$OR\",[\"city_name\",\"like\",\"%Wash%\"],[\"name\",\"like\",\"%Smith%\"]], [\"age\",\"gte\",18],[\"id\",\"in\",[\"f2\",\"f3\",\"f4\"]]",
+            "(((city_name LIKE '%Wash%')) OR ((name LIKE '%Smith%'))) AND ((age >= 18)) AND (id IN ('f2', 'f3', 'f4'))")]
+
+        public void ShouldParseFilter(string filter, string expectedSqlWhere )
         {
-            var strFilter = "[\"$AND\", [\"$OR\",[\"city_name\",\"like\",\"%Wash%\"],[\"name\",\"like\",\"%Smith%\"]], [\"age\",\"gte\",18],[\"id\",\"in\",[\"f2\",\"f3\",\"f4\"]]";
-            var sqlWhere = new FilterParser().Parse(strFilter);
+            var sqlWhere = new FilterParser().Parse(filter);
             Assert.That(sqlWhere, Is.Not.Null);
             Assert.That(sqlWhere, Is.Not.Empty);
-            Assert.That(sqlWhere, Is.EqualTo("(((city_name LIKE %Wash%)) OR ((name LIKE %Smith%))) AND ((age >= 18)) AND (IN (f2,f3,f4))"));
+            Assert.That(sqlWhere, Is.EqualTo(expectedSqlWhere));
+        }
+
+        [TestCase("")]
+        [TestCase(null)]
+        [TestCase("bla")]
+        [TestCase("\"name\",\"gt\",\"John Doe\"]")] // "[" is missing
+        [TestCase("[\"name\",\"gt\",\"John Doe\"")] // "]" is missing
+        [TestCase("[\"name\"\"gt\",\"John Doe\"")] // "," is missing
+        public void ShouldThrowArgumentException(string filter)
+        {
+            Assert.Throws<ArgumentException>(() => new FilterParser().Parse(filter));
         }
     }
 }

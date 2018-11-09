@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Origam.DA.Service.Generators
@@ -67,6 +68,21 @@ namespace Origam.DA.Service.Generators
                 throw new ArgumentException("Filter input must start with \"[\", found: \"" + inpValue[0] + "\"");
             }
 
+            if (inpValue.Last() != ']')
+            {
+                throw new ArgumentException("Filter input must end with \"]\", found: \"" + inpValue.Last() + "\"");
+            }
+
+            if (inpValue.Last() != ']')
+            {
+                throw new ArgumentException("Filter input must end with \"]\", found: \"" + inpValue.Last() + "\"");
+            }
+
+            if (inpValue.Count(x => x == ']') != inpValue.Count(x => x == ']'))
+            {
+                throw new ArgumentException("Filter input must contain the same number of \"[\" and \"]\", input is: \"" + inpValue + "\"");
+            }
+
             return inpValue;
         }
     }
@@ -118,6 +134,7 @@ namespace Origam.DA.Service.Generators
         {
             if (Children.Count == 0)
             {
+                if (SplitValue.Length != 3) throw new ArgumentException("could not parse: "+Value+" to a filter node");
                 string operatorName = OperatorToRendererName(Operator);
                 return renderer.BinaryOperator(LeftOperand, RightOperand, operatorName);
             }
