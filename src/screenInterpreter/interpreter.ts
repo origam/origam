@@ -1,5 +1,4 @@
-import axios from "axios";
-import * as xmlJs from "xml-js";
+
 import { buildReactTree } from "./uiBuilder";
 import { IGridPaneView } from "src/Grid/types";
 
@@ -196,7 +195,7 @@ function text2bool(t: string) {
 
 function ruleGrid(node: any, context: any, rules: any[]) {
   if (node.attributes.Type === "Grid") {
-    console.log(node.attributes);
+    // console.log(node.attributes);
     const settings = {
       isHeadless: text2bool(node.attributes.IsHeadless),
       isActionButtonsDisabled: text2bool(node.attributes.DisableActionButtons),
@@ -461,7 +460,7 @@ function ruleConfiguration(node: any, context: any, rules: any[]) {
 }
 
 function ruleUnknownWarn(node: any, context: any) {
-  console.log(node, context);
+  // console.log(node, context);
   console.warn(
     `Unknown node ${node.name} ${node.attributes &&
       node.attributes.Id} ${node.attributes && node.attributes.Type}`
@@ -469,7 +468,7 @@ function ruleUnknownWarn(node: any, context: any) {
   return node;
 }
 
-function processNode(node: any, context: any, rules: any[]) {
+export function processNode(node: any, context: any, rules: any[]) {
   for (const rule of rules) {
     const ruleResult = rule(node, context, rules);
     if (ruleResult !== undefined) {
@@ -479,7 +478,7 @@ function processNode(node: any, context: any, rules: any[]) {
   throw new Error("No rulle triggered.");
 }
 
-function parseScreenDef(o: any) {
+export function parseScreenDef(o: any) {
   const context = {
     uiNode: null,
     executeLater: []
@@ -491,11 +490,5 @@ function parseScreenDef(o: any) {
 }
 
 export async function main() {
-  const xml = (await axios.get("/screen03.xml")).data;
-  const xmlObj = xmlJs.xml2js(xml, { compact: false });
-  const interpretedResult = parseScreenDef(xmlObj);
-  const reactTree = buildReactTree(interpretedResult.uiNode);
-  console.log(interpretedResult);
-  console.log(reactTree);
-  return reactTree;
+  return;
 }

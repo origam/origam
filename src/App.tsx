@@ -1,44 +1,26 @@
 import * as React from "react";
 import { observer } from "mobx-react";
 import { MainMenu } from "./MainMenu/MainMenuComponent";
-
-
-
-export interface IMainTabHandleProps {
-  label: string;
-  active: boolean;
-  onClick?: (event: any) => void;
-  onCloseClick?: (event: any) => void;
-}
-
-const MainTabHandle = ({
-  label,
-  active,
-  onClick,
-  onCloseClick
-}: IMainTabHandleProps) => {
-  const handleCloseClick = (event: any) => {
-    event.stopPropagation();
-    onCloseClick && onCloseClick(event);
-  };
-  const handleClick = (event: any) => {
-    onClick && onClick(event);
-  };
-  return (
-    <div
-      className={"oui-main-tab-handle" + (active ? " active" : "")}
-      onClick={handleClick}
-    >
-      {label}
-      <button className="handle-btn" onClick={handleCloseClick}>
-        <i className="fa fa-close" />
-      </button>
-    </div>
-  );
-};
+import { MainViewEngine } from "./MainTabs/MainViewEngine";
+import { runInAction } from "mobx";
+import { MainTabs } from "./MainTabs/MainTabs";
 
 @observer
 export default class App extends React.Component {
+  constructor(props: any) {
+    super(props);
+
+    this.mainViewEngine = new MainViewEngine();
+  }
+
+  public componentDidMount() {
+    runInAction(() => {
+      this.mainViewEngine.start();
+    });
+  }
+
+  public mainViewEngine: MainViewEngine;
+
   public render() {
     return (
       <div className="oui-app">
@@ -93,17 +75,10 @@ export default class App extends React.Component {
         </div>
         <div className="oui-body-bar">
           <div className="oui-side-bar">
-            <MainMenu />
+            <MainMenu mainViewEngine={this.mainViewEngine} />
           </div>
           <div className="oui-data-bar">
-            <div className="oui-main-tabs">
-              <div className="oui-main-tab-handles">
-                <MainTabHandle label="This is tab 1 handle" active={false} />
-                <MainTabHandle label="This is tab 2 handle" active={true} />
-                <MainTabHandle label="This is tab 3 handle" active={false} />
-              </div>
-              <div className="oui-main-tab-contents">&nbsp;</div>
-            </div>
+            <MainTabs mainViewEngine={this.mainViewEngine} />
           </div>
         </div>
       </div>

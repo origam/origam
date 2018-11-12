@@ -148,7 +148,7 @@ function createGridPaneBacking(
   dataTableFields: IDataTableFieldStruct[],
   defaultView: IGridPaneView
 ) {
-  console.log(defaultView)
+  // console.log(defaultView)
   const configuration = new GridConfiguration();
 
   const lookupResolverProvider = new LookupResolverProvider({

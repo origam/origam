@@ -4,7 +4,6 @@ import { observer } from "mobx-react";
 @observer
 export class FormField extends React.Component<any> {
   public render() {
-    console.log(this.props)
     const {property} = this.props;
     const {x, y, w, h, captionPosition, captionLength, entity, name} = property;
 

@@ -147,7 +147,6 @@ body {
 
 .oui-window {
   display: flex;
-  height: 100%;
   flex-grow: 1;
   overflow: auto;
 }
@@ -466,7 +465,7 @@ body {
 }
 
 .oui-side-bar {
-  width: 300px;
+  min-width: 300px;
 }
 
 .oui-main-menu {
@@ -480,6 +479,9 @@ body {
 
 .main-menu-item.section {
   display: flex;
+  &.collapsed {
+    display: none;
+  }
   flex-direction: column;
   .main-menu-item.item {
     padding-left: 10px;
@@ -511,9 +513,7 @@ body {
   }
 }
 
-.collapsed .main-menu-item.section {
-  display: none;
-}
+
 
 .main-menu-item.item {
   position: relative;

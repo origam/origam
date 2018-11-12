@@ -1,8 +1,10 @@
 import * as React from "react";
 import axios from "axios";
 import * as xmlJs from "xml-js";
-import { observable, action, autorun } from "mobx";
+import { observable, action, autorun, computed } from "mobx";
 import { observer, inject, Provider } from "mobx-react";
+import { MainViewEngine } from "src/MainTabs/MainViewEngine";
+import { MainMenuEngine } from "./MainMenuEngine";
 
 function processNode(node: any, context: any) {
   switch (node.name) {
@@ -85,18 +87,31 @@ function buildMenu(menuDef: any) {
 
 const Menu = (props: any) => (
   <div className="oui-main-menu">
-    <CndMenuSection id={"0"} isExpanded={true}>
-      {props.children}
-    </CndMenuSection>
+    <div className={"main-menu-item section"}>{props.children}</div>
   </div>
 );
 
-const Submenu = (props: any) => (
-  <>
-    <CndMenuFolderItem id={props.id} label={props.label} icon={props.icon} />
-    <CndMenuSection id={props.id}>{props.children}</CndMenuSection>
-  </>
-);
+@inject("mainMenuEngine")
+@observer
+class Submenu extends React.Component<any> {
+  public render() {
+    const isExpanded = this.props.mainMenuEngine!.isSectionExpanded(
+      this.props.id
+    );
+    return (
+      <>
+        <CndMenuFolderItem {...this.props as any} />
+        <div
+          className={
+            "main-menu-item section" + (!isExpanded ? " collapsed" : "")
+          }
+        >
+          {this.props.children}
+        </div>
+      </>
+    );
+  }
+}
 
 const MenuItemWorkflow = (props: any) => <CndMenuItem {...props} />;
 
@@ -123,93 +138,28 @@ export function interpretMenu(xmlObj: any) {
   return reactMenu;
 }
 
-class MainMenuEngine {
-  @observable public expandedSections = new Map();
-
-  @action.bound
-  public expandSection(id: string) {
-    this.expandedSections.set(id, true);
-  }
-
-  @action.bound
-  public collapseSection(id: string) {
-    this.expandedSections.delete(id);
-  }
-
-  public isSectionExpanded(id: string): boolean {
-    return this.expandedSections.has(id);
-  }
-
-  @action.bound
-  public handleSectionClick(event: any, id: string) {
-    if (this.isSectionExpanded(id)) {
-      this.collapseSection(id);
-    } else {
-      this.expandSection(id);
-    }
-    console.log(Array.from(this.expandedSections));
-  }
-}
-
 interface IMainMenuProps {
   children?: React.ReactNode;
+  mainViewEngine: MainViewEngine;
 }
 
 @observer
-export class MainMenu extends React.Component {
+export class MainMenu extends React.Component<IMainMenuProps> {
   constructor(props: IMainMenuProps) {
     super(props);
     this.mainMenuEngine = new MainMenuEngine();
   }
 
-  @observable.ref public reactMenu: React.ReactNode = null;
-
-  public async componentDidMount() {
-    const xml = (await axios.get("/menu01.xml")).data;
-    const xmlObj = xmlJs.xml2js(xml, { compact: false });
-    const reactMenu = interpretMenu(xmlObj);
-    this.reactMenu = reactMenu;
-  }
-
   public mainMenuEngine: MainMenuEngine;
 
   public render() {
+    const { reactMenu } = this.props.mainViewEngine;
     return (
-      <Provider mainMenuEngine={this.mainMenuEngine}>
-        {this.reactMenu || <div />}
-        {/*<div className="oui-main-menu">
-          <CndMenuSection id="0">
-            <CndMenuFolderItem id="0" label="Folder 1" icon="menu_folder.png" />
-            <CndMenuSection id="1">
-              <CndMenuFolderItem
-                id="1"
-                label="Folder 11"
-                icon="menu_folder.png"
-              />
-              <CndMenuSection id="2">
-                <CndMenuItem id="7" label="Form 111" icon="menu_form.png" />
-                <CndMenuItem
-                  id="8"
-                  label="Workflow 112"
-                  icon="menu_workflow.png"
-                />
-              </CndMenuSection>
-            </CndMenuSection>
-          </CndMenuSection>
-          <CndMenuSection id="3">
-            <CndMenuFolderItem id="3" label="Folder 2" icon="menu_folder.png" />
-          </CndMenuSection>
-          <CndMenuSection id="4">
-            <CndMenuFolderItem id="4" label="Folder 3" icon="menu_folder.png" />
-            <CndMenuSection id="11">
-              <CndMenuFolderItem
-                id="11"
-                label="Folder 2"
-                icon="menu_folder.png"
-              />
-            </CndMenuSection>
-          </CndMenuSection>
-      </div>*/}
+      <Provider
+        mainMenuEngine={this.mainMenuEngine}
+        mainViewEngine={this.props.mainViewEngine}
+      >
+        {reactMenu || <></>}
       </Provider>
     );
   }
@@ -226,6 +176,7 @@ export interface ICndMenuItemProps {
   icon: string;
   id: string;
   mainMenuEngine?: MainMenuEngine;
+  mainViewEngine?: MainViewEngine;
 }
 
 export interface IMenuItemProps extends ICndMenuItemProps {
@@ -272,14 +223,31 @@ export const MenuItem = ({
   );
 };
 
+@inject("mainViewEngine")
 @observer
 export class CndMenuItem extends React.Component<ICndMenuItemProps> {
+  @action.bound
+  public handleClick(event: any) {
+    console.log("click");
+    this.props.mainViewEngine!.handleMenuFormItemClick(event, this.props.id, this.props.label);
+  }
+
+  @computed
+  public get isActive() {
+    return (
+      this.props.mainViewEngine &&
+      this.props.mainViewEngine.activeView &&
+      this.props.id === this.props.mainViewEngine.activeView.id
+    );
+  }
+
   public render() {
     return (
       <MenuItem
         {...this.props}
         status={IMenuItemStatus.NONE}
-        isActive={false}
+        isActive={this.isActive}
+        onClick={this.handleClick}
       />
     );
   }
@@ -301,42 +269,6 @@ export class CndMenuFolderItem extends React.Component<ICndMenuItemProps> {
         onClick={(event: any) =>
           this.props.mainMenuEngine!.handleSectionClick(event, this.props.id)
         }
-      />
-    );
-  }
-}
-
-interface ICndMenuSectionProps {
-  children?: React.ReactNode;
-  id: string;
-  mainMenuEngine?: MainMenuEngine;
-  isExpanded?: boolean;
-}
-
-interface IMenuSectionProps extends ICndMenuSectionProps {
-  isExpanded?: boolean;
-}
-
-const MenuSection = ({ isExpanded, children }: IMenuSectionProps) => {
-  return (
-    <div
-      className={"main-menu-item section" + (!isExpanded ? " collapsed" : "")}
-    >
-      {children}
-    </div>
-  );
-};
-
-@inject("mainMenuEngine")
-@observer
-export class CndMenuSection extends React.Component<ICndMenuSectionProps> {
-  public render() {
-    const mainMenuEngine = this.props.mainMenuEngine!;
-    const isExpanded = mainMenuEngine.isSectionExpanded(this.props.id);
-    return (
-      <MenuSection
-        {...this.props}
-        isExpanded={this.props.isExpanded || isExpanded}
       />
     );
   }

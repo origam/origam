@@ -40,7 +40,7 @@ export class GridEditorMounter extends React.Component<{
   }
 
   public render() {
-    console.log(this.props.cursorView.isCellEditing)
+    // console.log(this.props.cursorView.isCellEditing)
     if (this.props.cursorView.isCellEditing) {
       return React.createElement(this.getRenderer(), {}, this.props.children);
     } else {
