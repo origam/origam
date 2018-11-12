@@ -7,3 +7,4 @@ obj/
 _Resharper*/
 /Origam.DA.Service-net2Tests/FilePersistenceProviderTests/TestFiles/index.bin
 /Origam.ServerCore/logs
+/packages
