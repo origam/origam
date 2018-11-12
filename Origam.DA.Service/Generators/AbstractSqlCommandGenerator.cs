@@ -277,7 +277,7 @@ namespace Origam.DA.Service
             }
             else
             {
-                dtm.SourceTable = "Table" + tableOrder.ToString();
+                dtm.SourceTable = "Table" + tableOrder;
             }
 
             dtm.DataSetTable = entity.Name;
@@ -828,7 +828,7 @@ namespace Origam.DA.Service
             }
             else
             {
-                return entity.RootEntity.PrimaryKey["Id"].ToString() + filter.PrimaryKey["Id"].ToString();
+                return entity.RootEntity.PrimaryKey["Id"] + filter.PrimaryKey["Id"].ToString();
             }
         }
 
@@ -961,7 +961,7 @@ namespace Origam.DA.Service
 
             if (param.DbType == DbType.String)
             {
-                result += "(" + param.Size.ToString() + ")";
+                result += "(" + param.Size + ")";
             }
 
             return result;
@@ -1052,7 +1052,7 @@ namespace Origam.DA.Service
                 }
                 else
                 {
-                    sqlExpression.AppendFormat(", ROW_NUMBER() OVER (ORDER BY {0}) AS {1}", orderByBuilder.ToString(), RowNumColumnName);
+                    sqlExpression.AppendFormat(", ROW_NUMBER() OVER (ORDER BY {0}) AS {1}", orderByBuilder, RowNumColumnName);
                 }
             }
 
@@ -1151,7 +1151,7 @@ namespace Origam.DA.Service
                         whereExists = true;
                     }
 
-                    sqlExpression.Append(joinedFilterBuilder.ToString());
+                    sqlExpression.Append(joinedFilterBuilder);
                 }
             }
 
@@ -1173,7 +1173,7 @@ namespace Origam.DA.Service
                     whereExists = true;
                 }
 
-                sqlExpression.Append(whereBuilder.ToString());
+                sqlExpression.Append(whereBuilder);
             }
 
             if (!string.IsNullOrEmpty(customWhereClause))
@@ -1195,7 +1195,7 @@ namespace Origam.DA.Service
             if (groupByBuilder.Length > 0)
             {
                 PrettyLine(sqlExpression);
-                sqlExpression.AppendFormat("GROUP BY {0}", groupByBuilder.ToString());
+                sqlExpression.AppendFormat("GROUP BY {0}", groupByBuilder);
             }
 
             // ORDER BY
@@ -1209,7 +1209,7 @@ namespace Origam.DA.Service
                 if ((!paging || paging && PagingCanIncludeOrderBy) && orderByBuilder.Length > 0)
                 {
                     PrettyLine(sqlExpression);
-                    sqlExpression.AppendFormat("ORDER BY {0}", orderByBuilder.ToString());
+                    sqlExpression.AppendFormat("ORDER BY {0}", orderByBuilder);
                 }
             }
 
@@ -1376,11 +1376,11 @@ namespace Origam.DA.Service
 
             sqlExpression.AppendFormat("MERGE INTO {0} USING (SELECT {1}) AS src ON {2} WHEN MATCHED THEN UPDATE SET {3} WHEN NOT MATCHED THEN INSERT ({4}) VALUES ({5});",
                 tableName,
-                keysBuilder.ToString(),
-                searchPredicatesBuilder.ToString(),
-                updateBuilder.ToString(),
-                insertColumnsBuilder.ToString(),
-                insertValuesBuilder.ToString()
+                keysBuilder,
+                searchPredicatesBuilder,
+                updateBuilder,
+                insertColumnsBuilder,
+                insertValuesBuilder
                 );
 
             return sqlExpression.ToString();
@@ -1418,7 +1418,7 @@ namespace Origam.DA.Service
             }
             PrettyLine(sqlExpression);
             sqlExpression.Append(") VALUES (");
-            sqlExpression.Append(sqlExpression2.ToString());
+            sqlExpression.Append(sqlExpression2);
             sqlExpression.Append(")");
             // If there is any auto increment column, we include a SELECT statement after INSERT
             if (existAutoIncrement)
@@ -2233,7 +2233,7 @@ namespace Origam.DA.Service
             if (whereBuilder.Length > 0)
             {
                 sqlExpression.Append(" AND ");
-                sqlExpression.Append(whereBuilder.ToString());
+                sqlExpression.Append(whereBuilder);
             }
 
             sqlExpression.Append(")");
@@ -2394,7 +2394,7 @@ namespace Origam.DA.Service
                 {
                     PrettyIndent(relationBuilder);
                     relationBuilder.AppendFormat(" AND {0}",
-                        whereBuilder.ToString());
+                        whereBuilder);
                 }
 
                 // if this is our main entity, we check it's columns to reference parent entities
@@ -2417,13 +2417,13 @@ namespace Origam.DA.Service
 
             if (beginType == JoinBeginType.Join)
             {
-                sqlExpression.Append(relationBuilder.ToString());
-                sqlExpression.Append(recursionBuilder.ToString());
+                sqlExpression.Append(relationBuilder);
+                sqlExpression.Append(recursionBuilder);
             }
             else
             {
-                sqlExpression.Append(recursionBuilder.ToString());
-                sqlExpression.Append(relationBuilder.ToString());
+                sqlExpression.Append(recursionBuilder);
+                sqlExpression.Append(relationBuilder);
             }
         }
 
@@ -2719,7 +2719,7 @@ namespace Origam.DA.Service
             DataStructureEntity aggregationVirtualEntity = new DataStructureEntity();
             aggregationVirtualEntity.PersistenceProvider = topLevelEntity.PersistenceProvider;
             aggregationVirtualEntity.ParentItem = topLevelEntity.RootItem;
-            aggregationVirtualEntity.Name = "aggregation" + level.ToString();
+            aggregationVirtualEntity.Name = "aggregation" + level;
 
             if (agg2 != null)
             {
@@ -2732,7 +2732,7 @@ namespace Origam.DA.Service
                 DataStructureEntity aggregationVirtualEntity2 = new DataStructureEntity();
                 aggregationVirtualEntity2.PersistenceProvider = topLevelEntity.PersistenceProvider;
                 aggregationVirtualEntity2.ParentItem = topLevelEntity.RootItem;
-                aggregationVirtualEntity2.Name = "aggregation" + (level + 1).ToString();
+                aggregationVirtualEntity2.Name = "aggregation" + (level + 1);
 
                 joins.AppendFormat(" INNER JOIN {0} AS {1} ON ",
                     RenderExpression(agg2.Relation.AssociatedEntity as ISchemaItem, null, replaceParameterTexts, dynamicParameters, parameterReferences),
@@ -2784,7 +2784,7 @@ namespace Origam.DA.Service
                 result.AppendFormat("(SELECT {0} FROM {1} AS " + NameLeftBracket + "aggregation1" + NameRightBracket + " {2} WHERE ",
                     aggregationPart,
                     RenderExpression(topLevelItem.Relation.AssociatedEntity as ISchemaItem, null, replaceParameterTexts, dynamicParameters, parameterReferences),
-                    joins.ToString()
+                    joins
                     );
 
                 int i = 0;
@@ -3019,7 +3019,7 @@ namespace Origam.DA.Service
                     }
 
                 case OrigamDataType.UniqueIdentifier:
-                    return "'" + value.ToString() + "'";
+                    return "'" + value + "'";
 
                 case OrigamDataType.Xml:
                 case OrigamDataType.Memo:
@@ -3364,7 +3364,7 @@ namespace Origam.DA.Service
 
                 case "ConvertDateToString":
                     result = "CONVERT("
-                        + "NVARCHAR(" + item.DataLength.ToString() + "), "
+                        + "NVARCHAR(" + item.DataLength + "), "
                         + RenderExpression(item.GetChildByName("Expression").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                         + ", 104)";
                     break;
@@ -3573,7 +3573,7 @@ namespace Origam.DA.Service
 			{
 				case OrigamDataType.String:
 					return DdlDataType(columnType, dbDataType) 
-                        + "(" + dataLenght.ToString() + ")";
+                        + "(" + dataLenght + ")";
 
 				case OrigamDataType.Xml:
 					return DdlDataType(columnType, dbDataType) + "(2000)";
