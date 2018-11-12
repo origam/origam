@@ -1,25 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using ArgumentException = System.ArgumentException;
 
 namespace Origam.DA.Service.Generators
 {
-    public class FilterParser
+    public class CustomCommandParser
     {
         private Node root = null;
         private Node currentNode = null;
+
         /// <summary>
-        /// 
+        /// returns ORDER BY clause without the "ORDER BY" keyword
+        /// </summary>
+        /// <param name="ordering"> [[columnName, "asc"|"desc"],...] </param>
+        /// <returns></returns>
+        public string ToSqlOrderBy(List<Tuple<string,string>> ordering)
+        {
+            if (ordering == null) throw new ArgumentException(nameof(ordering)+ " cannot be null");
+            return string.Join(", ",
+                ordering
+                    .Select(x => new ColumnOrdering(x.Item1, x.Item2))
+                    .Select(x => x.ToString())
+                );
+        }
+
+        /// <summary>
+        /// returns WHERE clause without the "WHERE" keyword
         /// </summary>
         /// <param name="strFilter">input example: "[\"$AND\", [\"$OR\",[\"city_name\",\"like\",\"%Wash%\"],[\"name\",\"like\",\"%Smith%\"]], [\"age\",\"gte\",18],[\"id\",\"in\",[\"f2\",\"f3\",\"f4\"]]";
         /// </param>
-        public string Parse(string strFilter)
+        public string ToSqlWhere(string strFilter)
         {
-            var inpValue = CheckInput(strFilter);
+            if (strFilter?.Trim() == "") return "";
+            var inpValue = GetCheckedInput(strFilter);
+            ParseToNodeTree(inpValue);
+            return root.SqlRepresentation();
+        }
 
+        private void ParseToNodeTree(string inpValue)
+        {
+            root = null;
+            currentNode = null;
             foreach (char c in inpValue)
             {
                 if (c == '[')
@@ -39,8 +62,6 @@ namespace Origam.DA.Service.Generators
                     currentNode.Value += c;
                 }
             }
-
-            return root.SqlRepresentation();
         }
 
         private void AddNode()
@@ -55,11 +76,11 @@ namespace Origam.DA.Service.Generators
             }
         }
 
-        private static string CheckInput(string strFilter)
+        private static string GetCheckedInput(string strFilter)
         {
-            if (string.IsNullOrEmpty(strFilter))
+            if (strFilter == null)
             {
-                throw new ArgumentException(nameof(strFilter) + " cannot be empty");
+                throw new ArgumentException(nameof(strFilter) + " cannot be null");
             }
 
             string inpValue = strFilter.Trim();
@@ -87,7 +108,40 @@ namespace Origam.DA.Service.Generators
         }
     }
 
+    class ColumnOrdering
+    {
+        public string Column { get; }
+        public string OrderingSql { get; }
 
+        public ColumnOrdering(string column, string orderingName)
+        {
+            if (string.IsNullOrWhiteSpace(column))
+            {
+                throw new ArgumentException(nameof(column) + " cannot be empty");
+            }
+            if (string.IsNullOrWhiteSpace(orderingName))
+            {
+                throw new ArgumentException(nameof(orderingName) + " cannot be empty");
+            }
+            Column = column;
+            OrderingSql = OrderingToSQLName(orderingName);
+        }
+
+        private string OrderingToSQLName(string orderingName)
+        {
+            switch (orderingName)
+            {
+                case "asc": return "ASC";
+                case "desc": return "DESC";
+                default: throw new NotImplementedException(orderingName);
+            }
+        }
+
+        public override string ToString()
+        {
+            return Column + " " + OrderingSql;
+        }
+    }
 
     class Node
     {
