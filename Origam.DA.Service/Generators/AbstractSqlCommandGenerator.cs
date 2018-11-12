@@ -278,7 +278,7 @@ namespace Origam.DA.Service
         {
             Hashtable selectParameterReferences = new Hashtable();
 
-            ((IDbDataAdapter)adapter).SelectCommand = GetCommand(
+            adapter.SelectCommand = GetCommand(
                 SelectRowSql(entity, selectParameterReferences, columnName,
                 forceDatabaseCalculation));
 
@@ -750,44 +750,6 @@ namespace Origam.DA.Service
             }
 
             return ddl.ToString();
-        }
-
-        private string GetFromPartId(DataStructureEntity entity, DataStructureFilterSet filter)
-        {
-            if (filter == null)
-            {
-                return entity.RootEntity.PrimaryKey["Id"].ToString();
-            }
-            else
-            {
-                return entity.RootEntity.PrimaryKey["Id"] + filter.PrimaryKey["Id"].ToString();
-            }
-        }
-
-        private void RetrieveGroupByColumns(FunctionCall function, ArrayList groupByColumns)
-        {
-            foreach (FunctionCallParameter parameter in function.ChildItemsByType(FunctionCallParameter.ItemTypeConst))
-            {
-                foreach (ISchemaItem item in parameter.ChildItems)
-                {
-                    if (item is EntityColumnReference)
-                    {
-                        if ((item as EntityColumnReference).Column is FunctionCall)
-                        {
-                            RetrieveGroupByColumns((item as EntityColumnReference).Column as FunctionCall, groupByColumns);
-                        }
-                        else if ((item as EntityColumnReference).Column is FieldMappingItem)
-                        {
-                            groupByColumns.Add((item as EntityColumnReference).Column);
-                        }
-                    }
-
-                    if (item is FunctionCall)
-                    {
-                        RetrieveGroupByColumns(item as FunctionCall, groupByColumns);
-                    }
-                }
-            }
         }
 
         public string SelectParameterDeclarationsSql(DataStructureFilterSet filter, bool paging,
@@ -2155,15 +2117,6 @@ namespace Origam.DA.Service
             }
 
             sqlExpression.Append(")");
-        }
-
-        private bool CanSkipRelation(DataStructureEntity relation, DataStructureEntity stopAtEntity)
-        {
-            if (relation.RelationType != RelationType.Normal && relation.RelationType != RelationType.LeftJoin) return false;
-
-            if (stopAtEntity.PrimaryKey.Equals(relation.PrimaryKey)) return false;
-
-            return true;
         }
 
         private bool CanSkipSelectRelation(DataStructureEntity relation, DataStructureEntity stopAtEntity)
