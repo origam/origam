@@ -30,6 +30,7 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.LookupModel;
 using System.Collections.Generic;
+using System.Linq;
 using Origam.DA.Service.Generators;
 
 namespace Origam.DA.Service
@@ -3390,17 +3391,14 @@ namespace Origam.DA.Service
                     else
                     {
                         // list of parameters
-                        int i = 0;
-                        StringBuilder listBuilder = new StringBuilder();
-                        foreach (ISchemaItem listExpression in listExpressions)
-                        {
-                            if (i > 0) listBuilder.Append(", ");
-                            ParameterReference paramReference = listExpression as ParameterReference;
-                            listBuilder.Append(RenderExpression(listExpression, entity, replaceParameterTexts, dynamicParameters, parameterReferences));
-                            i++;
-                        }
-
-                        result = RenderExpression(leftArg.ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences) + " IN (" + listBuilder.ToString() + ")";
+                        string leftOperand = RenderExpression(leftArg.ChildItems[0], entity,
+                            replaceParameterTexts, dynamicParameters, parameterReferences);
+                        IEnumerable<string> options = listExpressions
+                            .Cast<ISchemaItem>()
+                            .Select(listExpression =>
+                                RenderExpression(listExpression, entity, replaceParameterTexts,
+                                    dynamicParameters, parameterReferences));
+                        result = filterRenderer.In(leftOperand, options);
                     }
                     break;
 

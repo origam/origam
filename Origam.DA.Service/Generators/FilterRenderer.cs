@@ -1,11 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using CSharpFunctionalExtensions;
 
 namespace Origam.DA.Service
 {
     class FilterRenderer
     {
+        public string In(string leftOperand, IEnumerable<string> options)
+        {
+            return leftOperand+" IN (" + string.Join(", ",options) + ")";
+        }
+
         public string LogicalAndOr(string functionName, IList<string> arguments)
         {
             if (arguments.Count < 2)

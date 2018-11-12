@@ -171,10 +171,11 @@ namespace Origam.DA.Service.Generators
         private string GetSqlOfOperatorNode()
         {
             string logicalOperator = GetLogicalOperator();
-            return Children
-                .Select(node => node.SqlRepresentation())
-                .Select(operand => "("+ operand + ")")
-                .Aggregate((x, y) => x + " " + logicalOperator + " " + y);
+            List<string> operands = Children
+                .Select(node => node.SqlRepresentation()).ToList();
+//                .Select(operand => "("+ operand + ")")
+//                .Aggregate((x, y) => x + " " + logicalOperator + " " + y);
+            return renderer.LogicalAndOr(logicalOperator, operands);
         }
 
         private string GetLogicalOperator()
@@ -195,11 +196,10 @@ namespace Origam.DA.Service.Generators
 
             if (Children.Count == 1 && Operator == "in")
             {
-                string options = Children.First()
+                IEnumerable<string> options = Children.First()
                     .SplitValue
-                    .Select(val => val.Replace("\"","'"))
-                    .Aggregate((x,y) => x+", "+y);
-                return LeftOperand + " IN (" + options + ")";
+                    .Select(val => val.Replace("\"", "'"));
+                return renderer.In(LeftOperand, options);
             }
 
             throw new Exception("Cannot parse filter node: " + Value);
