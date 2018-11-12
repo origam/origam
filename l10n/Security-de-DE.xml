@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<AsapLocalization>
+<OrigamLocalization>
   <Element Id="c0dab8c0-ad91-428f-a89b-67795a427729" Path="AsapApplicationRole">
     <Caption OriginalText="Application Role">Anwendungsrechte</Caption>
   </Element>
@@ -152,4 +152,4 @@
   <Element Id="6c0f5dcd-1dd7-4ce6-885d-d00f6d522ee8" Path="Identity_CreateUser_GUI/02_FillOutBusinessPartner">
     <Documentation Category="USER_WFSTEP_DESCRIPTION" OriginalText="Enter User Information">Geben Sie Benutzer-Informationen</Documentation>
   </Element>
-</AsapLocalization>
+</OrigamLocalization>

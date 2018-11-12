@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<AsapLocalization>
+<OrigamLocalization>
   <Element Id="48abb054-bb38-4eb3-9f07-cbfa21e2abb2" Path="SendEmail/MailWorkQueueName">
     <Documentation Category="USER_LONG_HELP" OriginalText="If not empty, send a mail by mail work queue of the given name. If empty, send by smtp directly.">If not empty, send a mail by mail work queue of the given name. If empty, send by smtp directly.</Documentation>
   </Element>
@@ -1563,4 +1563,4 @@
   <Element Id="9e8d3e42-d6ba-462f-bb90-385750a8412e" Path="OrigamOnlineUser/ClearSessionRequest">
     <Caption OriginalText="Clear Session">Clear Session</Caption>
   </Element>
-</AsapLocalization>
+</OrigamLocalization>

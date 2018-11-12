@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<AsapLocalization>
+<OrigamLocalization>
   <Element Id="fbbfcbd2-4032-4bc0-b4db-076ff0bbd448" Path="Menu/Settings/General">
     <DisplayName OriginalText="General">Obecné</DisplayName>
   </Element>
@@ -51,4 +51,4 @@
   <Element Id="080cb3f6-ca4b-407d-a412-3559b822b857" Path="Menu/Settings/General/AsapNotificationTemplate">
     <DisplayName OriginalText="Notification Templates">Šablony notifikací</DisplayName>
   </Element>
-</AsapLocalization>
+</OrigamLocalization>
