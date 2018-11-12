@@ -42,21 +42,21 @@ namespace Origam.DA
 
 		public DataStructureQuery(Guid dataStructureId)
 		{
-			this.DataSourceId = dataStructureId;
+			DataSourceId = dataStructureId;
 		}
 
 		public DataStructureQuery(Guid dataStructureId, Guid methodId)
 		{
-			this.DataSourceId = dataStructureId;
-			this.MethodId = methodId;
+			DataSourceId = dataStructureId;
+			MethodId = methodId;
 		}
 
 		public DataStructureQuery(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId)
 		{
-			this.DataSourceId = dataStructureId;
-			this.MethodId = methodId;
-			this.DefaultSetId = defaultSetId;
-			this.SortSetId = sortSetId;
+			DataSourceId = dataStructureId;
+			MethodId = methodId;
+			DefaultSetId = defaultSetId;
+			SortSetId = sortSetId;
 		}
 
 	    public DataStructureQuery(Guid dataStructureId, string entityName, string customFilters, 
@@ -68,8 +68,8 @@ namespace Origam.DA
 	        CustomOrdering = customOrdering;
 	    }
 
-        public System.Guid DataSourceId;
-		public System.Guid MethodId;
+        public Guid DataSourceId;
+		public Guid MethodId;
 		public Guid DefaultSetId;
 		public Guid SortSetId;
 		public QueryParameterCollection Parameters = new QueryParameterCollection();
@@ -100,108 +100,20 @@ namespace Origam.DA
 			}
 		}
 
-		private QueryDataSourceType _dataSourceType = QueryDataSourceType.DataStructure;
-		public QueryDataSourceType DataSourceType
-		{
-			get
-			{
-				return _dataSourceType;
-			}
-			set
-			{
-				_dataSourceType = value;
-			}
-		}
+	    public QueryDataSourceType DataSourceType { get; set; } = QueryDataSourceType.DataStructure;
 
-		private bool _loadActualValuesAfterUpdate = false;
-		public bool LoadActualValuesAfterUpdate
-		{
-			get
-			{
-				return _loadActualValuesAfterUpdate;
-			}
-			set
-			{
-				_loadActualValuesAfterUpdate = value;
-			}
-		}
+	    public bool LoadActualValuesAfterUpdate { get; set; } = false;
 
-		private bool _loadByIdentity = true;
-		public bool LoadByIdentity
-		{
-			get
-			{
-				return _loadByIdentity;
-			}
-			set
-			{
-				_loadByIdentity = value;
-			}
-		}
+	    public bool LoadByIdentity { get; set; } = true;
 
-		private bool _fireStateMachineEvents = true;
-		public bool FireStateMachineEvents
-		{
-			get
-			{
-				return _fireStateMachineEvents;
-			}
-			set
-			{
-				_fireStateMachineEvents = value;
-			}
-		}
+	    public bool FireStateMachineEvents { get; set; } = true;
 
-        private bool _synchronizeAttachmentsOnDelete = true;
-        public bool SynchronizeAttachmentsOnDelete
-        {
-            get
-            {
-                return _synchronizeAttachmentsOnDelete;
-            }
-            set
-            {
-                _synchronizeAttachmentsOnDelete = value;
-            }
-        }
-        
-        private bool _enforceConstraints = true;
-		public bool EnforceConstraints
-		{
-			get
-			{
-				return _enforceConstraints;
-			}
-			set
-			{
-				_enforceConstraints = value;
-			}
-		}
+	    public bool SynchronizeAttachmentsOnDelete { get; set; } = true;
 
-        private string _columnName;
-        public string ColumnName
-        {
-            get
-            {
-                return _columnName;
-            }
-            set
-            {
-                _columnName = value;
-            }
-        }
+	    public bool EnforceConstraints { get; set; } = true;
 
-        private string _entity;
-	    public string Entity
-        {
-            get
-            {
-                return _entity;
-            }
-            set
-            {
-                _entity = value;
-            }
-        }
-    }
+	    public string ColumnName { get; set; }
+
+	    public string Entity { get; set; }
+	}
 }
