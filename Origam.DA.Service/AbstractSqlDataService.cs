@@ -1563,13 +1563,7 @@ namespace Origam.DA.Service
             DataStructureSortSet sortSet = GetSortSet(query.SortSetId);
             DataStructureEntity entity = GetEntity(query, dataStructure);
             dataSet = GetDataset(dataStructure, query.DefaultSetId);
-            IDictionary<DataColumn, string> expressions 
-                = DatasetTools.RemoveExpressions(dataSet, true);
-            if(dataSet.Tables.Count > 1)
-            {
-                throw new Exception(
-                    "Executing DataReader is allowed only on data sturctures with a single entity.");
-            }
+            DatasetTools.RemoveExpressions(dataSet, true);
 
 			IDbConnection connection = null;
             IDbTransaction transaction = null;
