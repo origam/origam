@@ -23,6 +23,7 @@ using CommandLine.Text;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.Schema;
+using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 using System;
@@ -56,7 +57,7 @@ namespace Origam.DocGenerator
             [Option('m', "xmlfilename", Required = false, HelpText = "Xml File for export source tree.")]
             public string XmlFile { get; set; }
 
-            [Option('l', "language", Required = false, HelpText = "Localization.")]
+            [Option('l', "language", Required = true, HelpText = "Localization(ie. cs-CZ).")]
             public string Language { get; set; }
 
             [ParserState]
@@ -69,18 +70,14 @@ namespace Origam.DocGenerator
                   (HelpText current) => HelpText.DefaultParsingErrorsHandler(this, current));
             }
         }
-
         static void Main(string[] args)
         {
             Console.WriteLine(string.Format(Strings.ShortGNU, System.Reflection.Assembly.GetEntryAssembly().GetName().Name));
-
             Options options = new Options();
-
             if (!Parser.Default.ParseArguments(args, options))
             {
                 return;
             }
-
             var DefaultFolders = new List<ElementName>
             {
                 ElementNameFactory.Create(typeof(SchemaExtension)),
@@ -89,7 +86,6 @@ namespace Origam.DocGenerator
             ServiceManager sManager = ServiceManager.Services;
             SchemaService service = new SchemaService();
             IParameterService parameterService = new NullParameterService();
-
             sManager.AddService(service);
             sManager.AddService(parameterService);
 
@@ -97,25 +93,24 @@ namespace Origam.DocGenerator
             {
                 LocalizationFolder = Path.Combine(options.Schema, "l10n")
             };
-
             ConfigurationManager.SetActiveConfiguration(settings);
             Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("origam_server"), null);
             StateMachineSchemaItemProvider StateMachineSchema = new StateMachineSchemaItemProvider();
             var persistenceService = new FilePersistenceService(DefaultFolders,
                options.Schema);
-
-             Thread.CurrentThread.CurrentUICulture = new CultureInfo(options.Language);
-
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo(options.Language);
             sManager.AddService(persistenceService);
             service.AddProvider(StateMachineSchema);
-
             FilePersistenceProvider persprovider = (FilePersistenceProvider)persistenceService.SchemaProvider;
+            MenuSchemaItemProvider menuprovider = new MenuSchemaItemProvider
+            {
+                PersistenceProvider = persprovider
+            };
             persistenceService.LoadSchema(new Guid(options.GuidPackage), false, false, "");
             var documentation = new FileStorageDocumentationService(
                 persprovider,
                 persistenceService.FileEventQueue);
-
-            new DocCreate(options.Dataout, options.Xslt, options.RootFile, documentation, persprovider, options.XmlFile).Run();
+            new DocCreate(options.Dataout, options.Xslt, options.RootFile, documentation, menuprovider, persistenceService, options.XmlFile).Run();
         }
     }
 }
