@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Origam.Schema.EntityModel;
@@ -13,7 +14,8 @@ namespace Origam.DA.Service
         public Hashtable Parameters { get; set; }
         public bool Paging { get; set; }
         public string ColumnName { get; set; }
-        public string CustomFilters { get; set; }
-        public List<List<string>> CustomOrdering { get; set; }
+        public string CustomFilters { get; set; } = "";
+        public List<Tuple<string, string>> CustomOrdering { get; set; } =
+            new List<Tuple<string, string>>();
     }
 }

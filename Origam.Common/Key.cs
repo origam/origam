@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Collections;
 
 namespace Origam
@@ -32,7 +33,12 @@ namespace Origam
 		{
 		}
 
-		public override string ToString()
+	    public Key(Guid dataStructureEntityId)
+	    {
+	        this["Id"] = dataStructureEntityId;
+	    }
+
+        public override string ToString()
 		{
 			string keyString = "";
 
