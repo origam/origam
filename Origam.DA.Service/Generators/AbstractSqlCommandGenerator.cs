@@ -30,6 +30,7 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.LookupModel;
 using System.Collections.Generic;
+using Origam.DA.Service.Generators;
 
 namespace Origam.DA.Service
 {
@@ -341,6 +342,10 @@ namespace Origam.DA.Service
         public void BuildCommands(IDbDataAdapter adapter, SelectParameters selectParameters,
             bool forceDatabaseCalculation)
         {
+            CustomCommandParser commandParser = new CustomCommandParser();
+            string customWhereClause = commandParser.ToSqlWhere(selectParameters.CustomFilters);
+            string customOrderByClause = commandParser.ToSqlOrderBy(selectParameters.CustomOrdering);
+
             Hashtable selectParameterReferences = new Hashtable();
             DataStructure dataStructure = selectParameters.DataStructure;
             DataStructureEntity entity = selectParameters.Entity;
@@ -356,9 +361,9 @@ namespace Origam.DA.Service
                     false, 
                     selectParameters.Paging,
                     false,
-                    forceDatabaseCalculation));
-
-
+                    forceDatabaseCalculation,
+                    customWhereClause,
+                    customOrderByClause));
 
             BuildSelectParameters(adapter.SelectCommand, selectParameterReferences);
             BuildFilterParameters(adapter.SelectCommand, dataStructure,
@@ -1000,7 +1005,8 @@ namespace Origam.DA.Service
         private string SelectSql(DataStructure ds, DataStructureEntity entity, DataStructureFilterSet filter,
               DataStructureSortSet sortSet, string scalarColumn, Hashtable replaceParameterTexts,
               Hashtable dynamicParameters, Hashtable selectParameterReferences, bool restrictScalarToTop1,
-              bool paging, bool isInRecursion, bool forceDatabaseCalculation)
+              bool paging, bool isInRecursion, bool forceDatabaseCalculation,
+              string customWhereClause =null, string customOrderByClause = null)
         {
             if (!(entity.EntityDefinition is TableMappingItem))
             {
@@ -1148,9 +1154,7 @@ namespace Origam.DA.Service
                 }
             }
 
-            //			else
-            //			{
-            //				// Where filter - only on root entity, all other filters are on relations
+            // Where filter - only on root entity, all other filters are on relations
             StringBuilder whereBuilder = new StringBuilder();
             RenderSelectWherePart(whereBuilder, entity, filter, replaceParameterTexts, dynamicParameters, selectParameterReferences);
 
@@ -1165,11 +1169,26 @@ namespace Origam.DA.Service
                 {
                     PrettyLine(sqlExpression);
                     sqlExpression.Append("WHERE ");
+                    whereExists = true;
                 }
 
                 sqlExpression.Append(whereBuilder.ToString());
             }
-            //			}
+
+            if (!string.IsNullOrEmpty(customWhereClause))
+            {
+                if (whereExists)
+                {
+                    PrettyIndent(sqlExpression);
+                    sqlExpression.Append("AND ");
+                }
+                else
+                {
+                    PrettyLine(sqlExpression);
+                    sqlExpression.Append("WHERE ");
+                }
+                sqlExpression.Append(customWhereClause);
+            }
 
             // GROUP BY
             if (groupByBuilder.Length > 0)
@@ -1179,10 +1198,18 @@ namespace Origam.DA.Service
             }
 
             // ORDER BY
-            if ((!paging || paging && PagingCanIncludeOrderBy) && orderByBuilder.Length > 0)
+            if (!string.IsNullOrWhiteSpace(customOrderByClause))
             {
                 PrettyLine(sqlExpression);
-                sqlExpression.AppendFormat("ORDER BY {0}", orderByBuilder.ToString());
+                sqlExpression.AppendFormat("ORDER BY {0}", customOrderByClause);
+            }
+            else
+            {
+                if ((!paging || paging && PagingCanIncludeOrderBy) && orderByBuilder.Length > 0)
+                {
+                    PrettyLine(sqlExpression);
+                    sqlExpression.AppendFormat("ORDER BY {0}", orderByBuilder.ToString());
+                }
             }
 
             string finalString = sqlExpression.ToString();
