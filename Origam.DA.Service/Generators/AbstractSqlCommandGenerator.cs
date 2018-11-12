@@ -364,7 +364,8 @@ namespace Origam.DA.Service
                     false,
                     forceDatabaseCalculation,
                     customWhereClause,
-                    customOrderByClause));
+                    customOrderByClause,
+                    selectParameters.RowLimit));
 
             BuildSelectParameters(adapter.SelectCommand, selectParameterReferences);
             BuildFilterParameters(adapter.SelectCommand, dataStructure,
@@ -1007,7 +1008,7 @@ namespace Origam.DA.Service
               DataStructureSortSet sortSet, string scalarColumn, Hashtable replaceParameterTexts,
               Hashtable dynamicParameters, Hashtable selectParameterReferences, bool restrictScalarToTop1,
               bool paging, bool isInRecursion, bool forceDatabaseCalculation,
-              string customWhereClause =null, string customOrderByClause = null)
+              string customWhereClause =null, string customOrderByClause = null, int? rowLimit = null)
         {
             if (!(entity.EntityDefinition is TableMappingItem))
             {
@@ -1028,17 +1029,16 @@ namespace Origam.DA.Service
                 selectParameterReferences.Add(_pageSizeParameterName, PageSizeParameterReference);
             }
 
-            StringBuilder sqlExpression;
+            StringBuilder sqlExpression = new StringBuilder();
             StringBuilder orderByBuilder = new StringBuilder();
             StringBuilder groupByBuilder = new StringBuilder();
 
-            sqlExpression = new StringBuilder();
             // when processing lookup columns we process semicolon delimited list of columns
             // to be returned as a single concatted field
             // Example: FirstName;Name -> concat(FirstName, ', ', Name)
             bool concatScalarColumns = restrictScalarToTop1;
             // Select
-            bool isAggregate = RenderSelectColumns(ds, sqlExpression, orderByBuilder,
+            RenderSelectColumns(ds, sqlExpression, orderByBuilder,
                 groupByBuilder, entity, scalarColumn, replaceParameterTexts, dynamicParameters,
                 sortSet, selectParameterReferences, isInRecursion, concatScalarColumns,
                 forceDatabaseCalculation);
@@ -1219,6 +1219,10 @@ namespace Origam.DA.Service
             if (scalarColumn != null && restrictScalarToTop1)
             {
                 finalString = SelectClause(finalString, 1);
+            }
+            else if (rowLimit.HasValue)
+            {
+                finalString = SelectClause(finalString, rowLimit.Value);
             }
             else
             {

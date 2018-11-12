@@ -44,7 +44,8 @@ namespace Origam.ServerCore.Controllers
                 dataStructureId,
                 entity.Name,
                 entityData.Filter,
-                entityData.OrderingAsTuples);
+                entityData.OrderingAsTuples,
+                entityData.RowLimit);
             query.ColumnName = string.Join(";", entityData.ColumnNames);
 
             IDataService dataService = DataService.GetDataService();

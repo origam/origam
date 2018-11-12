@@ -60,14 +60,16 @@ namespace Origam.DA
 		}
 
 	    public DataStructureQuery(Guid dataStructureId, string entityName, string customFilters, 
-	        List<Tuple<string, string>> customOrdering)
+	        List<Tuple<string, string>> customOrdering, int rowLimit)
 	    {
 	        DataSourceId = dataStructureId;
 	        Entity = entityName;
 	        CustomFilters = customFilters;
 	        CustomOrdering = customOrdering;
+	        RowLimit = rowLimit;
 	    }
 
+	    public int RowLimit { get; }
         public Guid DataSourceId;
 		public Guid MethodId;
 		public Guid DefaultSetId;

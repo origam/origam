@@ -1591,7 +1591,8 @@ namespace Origam.DA.Service
                 Paging = query.Paging,
                 ColumnName = query.ColumnName,
                 CustomFilters = query.CustomFilters,
-                CustomOrdering = query.CustomOrdering
+                CustomOrdering = query.CustomOrdering,
+                RowLimit = query.RowLimit
             };
             DbDataAdapter adapter = GetAdapter(
                 adapterParameters, currentProfile);
