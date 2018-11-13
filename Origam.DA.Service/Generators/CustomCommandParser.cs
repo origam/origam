@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using ArgumentException = System.ArgumentException;
 
@@ -10,6 +9,13 @@ namespace Origam.DA.Service.Generators
     {
         private Node root = null;
         private Node currentNode = null;
+        private readonly ColumnOrderingRenderer columnOrderingRenderer;
+
+        public CustomCommandParser(string nameLeftBracket, string nameRightBracket)
+        {
+            columnOrderingRenderer 
+                = new ColumnOrderingRenderer(nameLeftBracket, nameRightBracket);
+        }
 
         /// <summary>
         /// returns ORDER BY clause without the "ORDER BY" keyword
@@ -18,12 +24,7 @@ namespace Origam.DA.Service.Generators
         /// <returns></returns>
         public string ToSqlOrderBy(List<Tuple<string,string>> ordering)
         {
-            if (ordering == null) throw new ArgumentException(nameof(ordering)+ " cannot be null");
-            return string.Join(", ",
-                ordering
-                    .Select(x => new ColumnOrdering(x.Item1, x.Item2))
-                    .Select(x => x.ToString())
-                );
+            return columnOrderingRenderer.ToSqlOrderBy(ordering);
         }
 
         /// <summary>
@@ -39,11 +40,11 @@ namespace Origam.DA.Service.Generators
             return root.SqlRepresentation();
         }
 
-        private void ParseToNodeTree(string inpValue)
+        private void ParseToNodeTree(string filter)
         {
             root = null;
             currentNode = null;
-            foreach (char c in inpValue)
+            foreach (char c in filter)
             {
                 if (c == '[')
                 {
@@ -108,12 +109,27 @@ namespace Origam.DA.Service.Generators
         }
     }
 
-    class ColumnOrdering
+    class ColumnOrderingRenderer
     {
-        public string Column { get; }
-        public string OrderingSql { get; }
+        private readonly string nameLeftBracket;
+        private readonly string nameRightBracket;
 
-        public ColumnOrdering(string column, string orderingName)
+        public ColumnOrderingRenderer(string nameLeftBracket, string nameRightBracket)
+        {
+            this.nameLeftBracket = nameLeftBracket;
+            this.nameRightBracket = nameRightBracket;
+        }
+
+        internal string ToSqlOrderBy(List<Tuple<string, string>> ordering)
+        {
+            if (ordering == null) throw new ArgumentException(nameof(ordering) + " cannot be null");
+            return string.Join(", ",
+                ordering
+                    .Select(x => ToSql(x.Item1, x.Item2))
+            );
+        }
+
+        private string ToSql(string column, string orderingName)
         {
             if (string.IsNullOrWhiteSpace(column))
             {
@@ -123,8 +139,9 @@ namespace Origam.DA.Service.Generators
             {
                 throw new ArgumentException(nameof(orderingName) + " cannot be empty");
             }
-            Column = column;
-            OrderingSql = OrderingToSQLName(orderingName);
+
+            string orderingSql = OrderingToSQLName(orderingName);
+            return $"{nameLeftBracket} {column} {nameRightBracket} {orderingSql}";
         }
 
         private string OrderingToSQLName(string orderingName)
@@ -135,11 +152,6 @@ namespace Origam.DA.Service.Generators
                 case "desc": return "DESC";
                 default: throw new NotImplementedException(orderingName);
             }
-        }
-
-        public override string ToString()
-        {
-            return Column + " " + OrderingSql;
         }
     }
 
@@ -173,8 +185,6 @@ namespace Origam.DA.Service.Generators
             string logicalOperator = GetLogicalOperator();
             List<string> operands = Children
                 .Select(node => node.SqlRepresentation()).ToList();
-//                .Select(operand => "("+ operand + ")")
-//                .Aggregate((x, y) => x + " " + logicalOperator + " " + y);
             return renderer.LogicalAndOr(logicalOperator, operands);
         }
 

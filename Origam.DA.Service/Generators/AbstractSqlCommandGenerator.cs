@@ -304,7 +304,8 @@ namespace Origam.DA.Service
         public void BuildCommands(IDbDataAdapter adapter, SelectParameters selectParameters,
             bool forceDatabaseCalculation)
         {
-            CustomCommandParser commandParser = new CustomCommandParser();
+            CustomCommandParser commandParser = 
+                new CustomCommandParser(NameLeftBracket, NameRightBracket);
             string customWhereClause = commandParser.ToSqlWhere(selectParameters.CustomFilters);
             string customOrderByClause = commandParser.ToSqlOrderBy(selectParameters.CustomOrdering);
 
