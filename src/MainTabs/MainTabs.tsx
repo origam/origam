@@ -22,6 +22,7 @@ export class MainTabs extends React.Component<IMainTabsProps> {
                 id={view.view.id}
                 subid={view.view.subid}
                 label={view.view.label}
+                order={view.order}
                 mainViewEngine={mainViewEngine}
               />
             );
@@ -34,6 +35,8 @@ export class MainTabs extends React.Component<IMainTabsProps> {
                 key={`${view.view.id}@${view.view.subid}`}
                 id={view.view.id}
                 subid={view.view.subid}
+                label={view.view.label}
+                order={view.order}                
                 mainViewEngine={mainViewEngine}
                 view={view}
               />
@@ -59,7 +62,8 @@ export class MainView extends React.Component<any> {
 
   public render() {
     return React.cloneElement(this.props.view.view.reactTree || <></>, {
-      active: this.isActive
+      active: this.isActive,
+      ...this.props
     });
   }
 }
@@ -97,6 +101,7 @@ export class MainTabHandleCnd extends React.Component<any> {
 
 export interface IMainTabHandleProps {
   label: string;
+  order: number;
   active: boolean;
   onClick?: (event: any) => void;
   onCloseClick?: (event: any) => void;
@@ -104,6 +109,7 @@ export interface IMainTabHandleProps {
 
 const MainTabHandle = ({
   label,
+  order,
   active,
   onClick,
   onCloseClick
@@ -120,7 +126,7 @@ const MainTabHandle = ({
       className={"oui-main-tab-handle" + (active ? " active" : "")}
       onClick={handleClick}
     >
-      {label}
+      {label} {order > 0 && `[${order}]`}
       <button className="handle-btn" onClick={handleCloseClick}>
         <i className="fa fa-close" />
       </button>

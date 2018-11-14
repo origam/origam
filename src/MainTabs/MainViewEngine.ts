@@ -74,7 +74,7 @@ export class MainViewEngine {
     const viewMap = {};
     const result = [];
     for (const view of this.openedViewsState) {
-      if (!viewMap[view.id]) {
+      if (viewMap[view.id] === undefined) {
         viewMap[view.id] = 0;
       } else {
         viewMap[view.id]++;

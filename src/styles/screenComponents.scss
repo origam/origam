@@ -147,8 +147,60 @@ body {
 
 .oui-window {
   display: flex;
+  flex-direction: column;
   flex-grow: 1;
   overflow: auto;
+  background-color: $panel-bgcolor;
+  &.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.oui-window-header {
+  min-height: 48px;
+  max-height: 48px;
+  font-size: 1.5em;
+  display: flex;
+  flex-direction: row;
+  padding: 0px 20px 0px 20px;
+  background-color: $panel-bgcolor;
+  .title,
+  .buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .buttons {
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+      padding: 3px;
+      &.active {
+        background-color: $toolbar-btn-hover-bgcolor;
+        color: $toolbar-btn-hover-color;
+      }
+      &:hover {
+        background-color: $toolbar-btn-bgcolor;
+        color: $toolbar-btn-color;
+      }
+    }
+  }
+  .title {
+    .fa {
+      margin-right: 10px;
+      font-size: 0.9em;
+    }
+  }
+}
+
+.oui-window-content {
+  flex-grow: 1;
+  display: flex;
 }
 
 .oui-grid {
@@ -434,7 +486,6 @@ body {
           transform: scale(1, 1.4);
         }
       }
-
     }
     .action-item:hover {
       background-color: $tab-handle-hover-bgcolor;
@@ -513,8 +564,6 @@ body {
   }
 }
 
-
-
 .main-menu-item.item {
   position: relative;
   height: 22px;
@@ -535,7 +584,7 @@ body {
 }
 
 .main-menu-item.item.active {
-  background-color: #8998C5;
+  background-color: #8998c5;
   color: white;
 }
 
