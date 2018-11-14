@@ -319,8 +319,9 @@ namespace Origam.Schema
 				CheckLicense();
 			}
 
-			// PERSIST THE ELEMENT
-			base.Persist();
+            AbstractSchemaItem _rootItem = GetRootItem(this);
+            // PERSIST THE ELEMENT
+            base.Persist();
 
 			// TAKE CARE ABOUT CHILD ITEMS
 			ArrayList deletedItems = new ArrayList();
@@ -345,12 +346,13 @@ namespace Origam.Schema
 						if(item.IsDeleted) deletedItems.Add(item);
 					}
 				}
-
-				foreach(AbstractSchemaItem item in deletedItems)
+                                
+                foreach (AbstractSchemaItem item in deletedItems)
 				{
 					ChildItems.Remove(item);
 				}
-			}
+                RefreshIamAncestor(_rootItem);
+            }
 
 			// We persist any new ancestors
 			foreach(SchemaItemAncestor ancestor in Ancestors)
@@ -371,7 +373,19 @@ namespace Origam.Schema
 			}
 		}
 
-		public void ClearCache()
+        private void RefreshIamAncestor(AbstractSchemaItem AbstractSchemaItem)
+        {
+            ArrayList ItemAcestor = AbstractSchemaItem.GetUsage(true);
+            if (ItemAcestor.Count > 0)
+            {
+                foreach (AbstractSchemaItem ittem in ItemAcestor)
+                {
+                    ittem.Refresh();
+                }
+            }
+        }
+
+        public void ClearCache()
 		{
 			lock(Lock)
 			{
