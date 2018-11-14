@@ -97,7 +97,7 @@ export class GridComponent extends React.Component<IGridProps> {
 @observer
 export class ColumnWidthHandle extends React.Component {
   public render() {
-    return <div className="column-header-width-handle" />
+    return <div className="column-header-width-handle" />;
   }
 }
 
@@ -109,7 +109,9 @@ export class ColumnHeaders extends React.Component<{
   public render() {
     const { view, columnHeaderRenderer } = this.props;
     return (
-      <div style={{ display: "flex", flexDirection: "row" }}>
+      <div
+        style={{ display: "flex", flexDirection: "row", overflow: "hidden" }}
+      >
         <FixedHeaders view={view} columnHeaderRenderer={columnHeaderRenderer} />
         <div
           style={{

@@ -602,7 +602,7 @@ body {
   }
 }
 
-.oui-main-tab-handle:hover {
+.oui-main-tab-handle:not(.active):hover {
   background-color: $tab-handle-hover-bgcolor;
 }
 
