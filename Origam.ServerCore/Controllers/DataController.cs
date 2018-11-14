@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.DA;
@@ -13,21 +14,10 @@ using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore.Controllers
 {
-    public class Test
-    {
-        public int Id { get; set; }
-    }
-
     public class DataController : AbstractController
     {
         public DataController(ILogger<MetaDataController> log) : base(log)
         {
-        }
-
-        [HttpPost("[action]")]
-        public IEnumerable<object[]> Test([FromBody] Test test)
-        {
-            return null;
         }
 
         [HttpPost("[action]")]
