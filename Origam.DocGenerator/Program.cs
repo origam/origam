@@ -94,7 +94,7 @@ namespace Origam.DocGenerator
                 LocalizationFolder = Path.Combine(options.Schema, "l10n")
             };
             ConfigurationManager.SetActiveConfiguration(settings);
-            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("origam_server"), null);
+            SecurityManager.SetServerIdentity();
             StateMachineSchemaItemProvider StateMachineSchema = new StateMachineSchemaItemProvider();
             var persistenceService = new FilePersistenceService(DefaultFolders,
                options.Schema);

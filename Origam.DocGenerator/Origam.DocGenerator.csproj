@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>exe</OutputType>
     <TargetFrameworks>netcoreapp2.1;net461</TargetFrameworks>
-    <StartupObject></StartupObject>
+    <StartupObject>Origam.DocGenerator.Program</StartupObject>
     <ApplicationIcon />
     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
   </PropertyGroup>
