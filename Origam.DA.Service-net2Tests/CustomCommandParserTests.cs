@@ -20,7 +20,7 @@ namespace Origam.DA.Service_net2Tests
         [TestCase("", "")]
         public void ShouldParseFilter(string filter, string expectedSqlWhere )
         {
-            var sqlWhere = new CustomCommandParser().ToSqlWhere(filter);
+            var sqlWhere = new CustomCommandParser("","").ToSqlWhere(filter);
             Assert.That(sqlWhere, Is.EqualTo(expectedSqlWhere));
         }
 
@@ -31,7 +31,7 @@ namespace Origam.DA.Service_net2Tests
         [TestCase("[\"name\"\"gt\",\"John Doe\"")] // "," is missing
         public void ShouldThrowArgumentExceptionWhenParsingFilter(string filter)
         {
-            Assert.Throws<ArgumentException>(() => new CustomCommandParser().ToSqlWhere(filter));
+            Assert.Throws<ArgumentException>(() => new CustomCommandParser("","").ToSqlWhere(filter));
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace Origam.DA.Service_net2Tests
                 new Tuple<string, string>("col1", "desc"),
                 new Tuple<string, string>("col2", "asc")
             };
-            string orderBy = new CustomCommandParser().ToSqlOrderBy(ordering);
+            string orderBy = new CustomCommandParser("","").ToSqlOrderBy(ordering);
             Assert.That(orderBy, Is.EqualTo("col1 DESC, col2 ASC"));
         }
 
@@ -56,7 +56,7 @@ namespace Origam.DA.Service_net2Tests
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                new CustomCommandParser().ToSqlOrderBy(ToListOfTuples(orderingStr));
+                new CustomCommandParser("","").ToSqlOrderBy(ToListOfTuples(orderingStr));
             });
         }
 
