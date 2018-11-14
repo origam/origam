@@ -145,6 +145,11 @@ body {
   }
 }
 
+.oui-tree-panel {
+  flex-grow: 1;
+  max-width: 300px;
+}
+
 .oui-window {
   display: flex;
   flex-direction: column;

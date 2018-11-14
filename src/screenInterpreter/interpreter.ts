@@ -36,6 +36,7 @@ const UI_ELEMENT_RULES = [
   ruleLabel,
   ruleGrid,
   ruleFormSection,
+  ruleTreePanel,
   ruleUnknownWarn
 ];
 
@@ -183,6 +184,31 @@ function ruleUIElement(node: any, context: any, rules: any[]) {
   return undefined;
 }
 
+function ruleTreePanel(node: any, context: any, rules: any[]) {
+  if (node.attributes.Type === "TreePanel") {
+    const uiNode = {
+      type: node.attributes.Type,
+      props: {
+        id: node.attributes.Id,
+        name: node.attributes.Name,
+        ...getLocation(node)
+      },
+      children: []
+    };
+    context.uiNode.children.push(uiNode);
+
+    const newContext = {
+      ...context,
+      uiNode
+    };
+    node.elements.forEach((element: any) => {
+      processNode(element, newContext, BASIC_RULES);
+    });
+    return node;
+  }
+  return undefined;
+}
+
 function text2bool(t: string) {
   if (t === "true") {
     return true;
@@ -192,6 +218,8 @@ function text2bool(t: string) {
   }
   throw new Error(`Unknown boolean variable ${t}`);
 }
+
+
 
 function ruleGrid(node: any, context: any, rules: any[]) {
   if (node.attributes.Type === "Grid") {

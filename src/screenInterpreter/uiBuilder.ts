@@ -13,6 +13,7 @@ import { Window } from "../uiComponents/skeleton/Window";
 import { GridTable } from "src/uiComponents/controls/GridTable";
 import { GridForm } from "src/uiComponents/controls/GridForm";
 import { Label } from "src/uiComponents/skeleton/Label";
+import { TreePanel } from "src/uiComponents/controls/TreePanel";
 
 const elementMap = {
   Box,
@@ -26,6 +27,7 @@ const elementMap = {
   VSplit,
   Window,
   Label,
+  TreePanel,
   Table: GridTable,
   Form: GridForm
 };
