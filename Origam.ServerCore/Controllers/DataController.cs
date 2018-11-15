@@ -114,5 +114,36 @@ namespace Origam.ServerCore.Controllers
             dataSet.Tables[entity.Name].Rows.Add(row);
             DataService.StoreData(dataStructureId, dataSet, false, null);
         }
+
+        [HttpPost("[action]")]
+        public void DeleteEntityData([FromBody] EntityDeleteData entityData)
+        {
+            var entity = (DataStructureEntity)ServiceManager.Services
+                .GetService<IPersistenceService>()
+                .SchemaProvider
+                .RetrieveInstance(typeof(DataStructureEntity), new Key(entityData.DataStructureEntityId));
+
+            Guid dataStructureId = Guid.Parse(entity.ParentNode.NodeId);
+
+            DataStructureQuery query = new DataStructureQuery
+            {
+                DataSourceType = QueryDataSourceType.DataStructureEntity,
+                DataSourceId = entityData.DataStructureEntityId,
+                Entity = entity.Name,
+                //ColumnName = string.Join(";", entityData.ColumnNames),
+                EnforceConstraints = false
+            };
+            query.Parameters.Add(new QueryParameter("Id", entityData.RowIdToDelete));
+
+            IDataService dataService = DataService.GetDataService();
+            DataSet dataSet = dataService.GetEmptyDataSet(
+                dataStructureId, CultureInfo.InvariantCulture);
+            dataService.LoadDataSet(query, SecurityManager.CurrentPrincipal,
+                dataSet, null);
+
+            dataSet.Tables[entity.Name].Rows[0].Delete();
+            DataService.StoreData(dataStructureId, dataSet, false, null);
+        }
+
     }
 }

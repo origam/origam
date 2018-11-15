@@ -24,7 +24,7 @@ namespace Origam.ServerCore
             ServiceManager.Services.AddService(new ParameterService());
 //            ServiceManager.Services.AddService(new DeploymentService());
 //            ServiceManager.Services.AddService(new WorkQueueService());
-//            ServiceManager.Services.AddService(new AttachmentService());
+            ServiceManager.Services.AddService(new AttachmentService());
            // ServiceManager.Services.AddService(new RuleEngineService());
         }
 
