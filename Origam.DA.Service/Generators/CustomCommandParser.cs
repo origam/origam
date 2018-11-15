@@ -141,7 +141,7 @@ namespace Origam.DA.Service.Generators
             }
 
             string orderingSql = OrderingToSQLName(orderingName);
-            return $"{nameLeftBracket} {column} {nameRightBracket} {orderingSql}";
+            return $"{nameLeftBracket}{column}{nameRightBracket} {orderingSql}";
         }
 
         private string OrderingToSQLName(string orderingName)
