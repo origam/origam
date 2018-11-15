@@ -20,6 +20,8 @@ namespace Origam.ServerCore.Controllers
 {
     public class DataController : AbstractController
     {
+        private IDataService dataService => DataService.GetDataService();
+
         public DataController(ILogger<MetaDataController> log) : base(log)
         {
         }
@@ -27,22 +29,15 @@ namespace Origam.ServerCore.Controllers
         [HttpPost("[action]")]
         public IEnumerable<object[]> GetEntityData([FromBody] EntityGetData entityData)
         {
-            var entity = (DataStructureEntity)ServiceManager.Services
-                .GetService<IPersistenceService>()
-                .SchemaProvider
-                .RetrieveInstance(typeof(DataStructureEntity), new Key(entityData.DataStructureEntityId));
-
-            var dataStructureId = Guid.Parse(entity.ParentNode.NodeId);
-
+            DataStructureEntity entity = FindEntity(entityData.DataStructureEntityId);
             DataStructureQuery query = new DataStructureQuery(
-                dataStructureId,
+                entity.RootEntity.ParentItemId,
                 entity.Name,
                 entityData.Filter,
                 entityData.OrderingAsTuples,
                 entityData.RowLimit);
             query.ColumnName = string.Join(";", entityData.ColumnNames);
 
-            IDataService dataService = DataService.GetDataService();
             using (IDataReader reader = dataService.ExecuteDataReader(
                 query, SecurityManager.CurrentPrincipal, null))
             {
@@ -58,50 +53,37 @@ namespace Origam.ServerCore.Controllers
         [HttpPost("[action]")]
         public void UpdateEntityData([FromBody] EntityUpdateData entityData)
         {
-            var entity = (DataStructureEntity) ServiceManager.Services
-                .GetService<IPersistenceService>()
-                .SchemaProvider
-                .RetrieveInstance(typeof(DataStructureEntity), new Key(entityData.DataStructureEntityId));
-
-            Guid dataStructureId = Guid.Parse(entity.ParentNode.NodeId);
-
+            DataStructureEntity entity = FindEntity(entityData.DataStructureEntityId);
             DataStructureQuery query = new DataStructureQuery
             {
                 DataSourceType = QueryDataSourceType.DataStructureEntity,
                 DataSourceId = entityData.DataStructureEntityId,
                 Entity = entity.Name,
-                //ColumnName = string.Join(";", entityData.ColumnNames),
                 EnforceConstraints = false
             };
             query.Parameters.Add(new QueryParameter( "Id" , entityData.RowId));
 
-            IDataService dataService = DataService.GetDataService();
             DataSet dataSet = dataService.GetEmptyDataSet(
-                dataStructureId, CultureInfo.InvariantCulture);
+                entity.RootEntity.ParentItemId, CultureInfo.InvariantCulture);
             dataService.LoadDataSet(query, SecurityManager.CurrentPrincipal,
                 dataSet, null);
 
+            var row = dataSet.Tables[entity.Name].Rows[0];
             foreach (var colNameValuePair in entityData.NewValues)
             {
-                dataSet.Tables[entity.Name].Rows[0][colNameValuePair.Key] = colNameValuePair.Value;
+                row[colNameValuePair.Key] = colNameValuePair.Value;
+                //row.AcceptChanges();
             }
 
-            DataService.StoreData(dataStructureId, dataSet,false,null);
+            DataService.StoreData(entity.RootEntity.ParentItemId, dataSet,false,null);
         }
 
         [HttpPost("[action]")]
         public void InsertEntityData([FromBody] EntityInsertData entityData)
         {
-            var entity = (DataStructureEntity)ServiceManager.Services
-                .GetService<IPersistenceService>()
-                .SchemaProvider
-                .RetrieveInstance(typeof(DataStructureEntity), new Key(entityData.DataStructureEntityId));
-
-            Guid dataStructureId = Guid.Parse(entity.ParentNode.NodeId);
-
-            IDataService dataService = DataService.GetDataService();
+            DataStructureEntity entity = FindEntity(entityData.DataStructureEntityId);
             DataSet dataSet = dataService.GetEmptyDataSet(
-                dataStructureId, CultureInfo.InvariantCulture);
+                entity.RootEntity.ParentItemId, CultureInfo.InvariantCulture);
 
             DataRow row = dataSet.Tables[entity.Name].NewRow();
             row["Id"] = Guid.NewGuid();
@@ -112,38 +94,39 @@ namespace Origam.ServerCore.Controllers
                 row[colNameValuePair.Key] = colNameValuePair.Value;
             }
             dataSet.Tables[entity.Name].Rows.Add(row);
-            DataService.StoreData(dataStructureId, dataSet, false, null);
+            DataService.StoreData(entity.RootEntity.ParentItemId, dataSet, false, null);
         }
 
         [HttpPost("[action]")]
         public void DeleteEntityData([FromBody] EntityDeleteData entityData)
         {
-            var entity = (DataStructureEntity)ServiceManager.Services
-                .GetService<IPersistenceService>()
-                .SchemaProvider
-                .RetrieveInstance(typeof(DataStructureEntity), new Key(entityData.DataStructureEntityId));
-
-            Guid dataStructureId = Guid.Parse(entity.ParentNode.NodeId);
-
+            DataStructureEntity entity = FindEntity(entityData.DataStructureEntityId);
             DataStructureQuery query = new DataStructureQuery
             {
                 DataSourceType = QueryDataSourceType.DataStructureEntity,
                 DataSourceId = entityData.DataStructureEntityId,
                 Entity = entity.Name,
-                //ColumnName = string.Join(";", entityData.ColumnNames),
+                ColumnName = "Id",
                 EnforceConstraints = false
             };
             query.Parameters.Add(new QueryParameter("Id", entityData.RowIdToDelete));
 
-            IDataService dataService = DataService.GetDataService();
             DataSet dataSet = dataService.GetEmptyDataSet(
-                dataStructureId, CultureInfo.InvariantCulture);
+                entity.RootEntity.ParentItemId, CultureInfo.InvariantCulture);
             dataService.LoadDataSet(query, SecurityManager.CurrentPrincipal,
                 dataSet, null);
 
             dataSet.Tables[entity.Name].Rows[0].Delete();
-            DataService.StoreData(dataStructureId, dataSet, false, null);
+            DataService.StoreData(entity.RootEntity.ParentItemId, dataSet, false, null);
         }
 
+        private static DataStructureEntity FindEntity(Guid id)
+        {
+            var entity = (DataStructureEntity)ServiceManager.Services
+                .GetService<IPersistenceService>()
+                .SchemaProvider
+                .RetrieveInstance(typeof(DataStructureEntity), new Key(id));
+            return entity;
+        }
     }
 }
