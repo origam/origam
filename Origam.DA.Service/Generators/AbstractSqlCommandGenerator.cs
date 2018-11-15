@@ -1355,7 +1355,6 @@ namespace Origam.DA.Service
                 if (column.Field is FieldMappingItem && column.UseLookupValue == false && column.UseCopiedValue == false)
                 {
                     if (column.Field.IsPrimaryKey) primaryKeys.Add(column);
-
                     i++;
                 }
             }

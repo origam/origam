@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Origam.ServerCore.Models
 {
-    public class EntityData
+    public class EntityGetData
     {
         public Guid DataStructureEntityId { get; set; }
         public string Filter { get; set; }
