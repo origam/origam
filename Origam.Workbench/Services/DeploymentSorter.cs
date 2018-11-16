@@ -105,6 +105,13 @@ namespace Origam.Workbench.Services
 
         private IEnumerable<DeploymentDependency> GetAllDependencies(IDeploymentVersion deployment)
         {
+            bool alreadyDependsOnPreviousVersion =
+                deployment.DeploymentDependencies
+                    .Any(x => x.PackageId == deployment.SchemaExtensionId);
+            if (alreadyDependsOnPreviousVersion)
+            {
+                return deployment.DeploymentDependencies;
+            }
             var dependencies = deployment.DeploymentDependencies.ToList();
             var mayBePreviousVersionDependency = GetDependencyOnPreviousVersion(deployment);
             if (mayBePreviousVersionDependency.HasValue)
