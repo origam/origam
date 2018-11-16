@@ -2,15 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Origam.DA;
-using Origam.DA.ObjectPersistence;
-using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.ServerCore.Models;
 using Origam.Workbench.Services;
@@ -26,8 +20,8 @@ namespace Origam.ServerCore.Controllers
         {
         }
 
-        [HttpPost("[action]")]
-        public IEnumerable<object[]> GetEntityData([FromBody] EntityGetData entityData)
+        [HttpGet("[action]")]
+        public IEnumerable<object> Entities([FromBody] EntityGetData entityData)
         {
             DataStructureEntity entity = FindEntity(entityData.DataStructureEntityId);
             DataStructureQuery query = new DataStructureQuery(
@@ -50,10 +44,11 @@ namespace Origam.ServerCore.Controllers
             }
         }
 
-        [HttpPost("[action]")]
-        public void UpdateEntityData([FromBody] EntityUpdateData entityData)
+        [HttpPut("[action]")]
+        public IActionResult Entities([FromBody] EntityUpdateData entityData)
         {
             DataStructureEntity entity = FindEntity(entityData.DataStructureEntityId);
+            if (entity == null) return BadRequest();
             DataStructureQuery query = new DataStructureQuery
             {
                 DataSourceType = QueryDataSourceType.DataStructureEntity,
@@ -62,7 +57,6 @@ namespace Origam.ServerCore.Controllers
                 EnforceConstraints = false
             };
             query.Parameters.Add(new QueryParameter( "Id" , entityData.RowId));
-
             DataSet dataSet = dataService.GetEmptyDataSet(
                 entity.RootEntity.ParentItemId, CultureInfo.InvariantCulture);
             dataService.LoadDataSet(query, SecurityManager.CurrentPrincipal,
@@ -74,14 +68,14 @@ namespace Origam.ServerCore.Controllers
                 row[colNameValuePair.Key] = colNameValuePair.Value;
                 //row.AcceptChanges();
             }
-
-            DataService.StoreData(entity.RootEntity.ParentItemId, dataSet,false,null);
+            return SubmitChange(entity, dataSet);
         }
 
         [HttpPost("[action]")]
-        public void InsertEntityData([FromBody] EntityInsertData entityData)
+        public IActionResult Entities([FromBody] EntityInsertData entityData)
         {
             DataStructureEntity entity = FindEntity(entityData.DataStructureEntityId);
+            if (entity == null) return BadRequest();
             DataSet dataSet = dataService.GetEmptyDataSet(
                 entity.RootEntity.ParentItemId, CultureInfo.InvariantCulture);
 
@@ -94,13 +88,14 @@ namespace Origam.ServerCore.Controllers
                 row[colNameValuePair.Key] = colNameValuePair.Value;
             }
             dataSet.Tables[entity.Name].Rows.Add(row);
-            DataService.StoreData(entity.RootEntity.ParentItemId, dataSet, false, null);
+            return SubmitChange(entity, dataSet);
         }
 
-        [HttpPost("[action]")]
-        public void DeleteEntityData([FromBody] EntityDeleteData entityData)
+        [HttpDelete("[action]")]
+        public IActionResult Entities([FromBody] EntityDeleteData entityData)
         {
             DataStructureEntity entity = FindEntity(entityData.DataStructureEntityId);
+            if (entity == null) return BadRequest();
             DataStructureQuery query = new DataStructureQuery
             {
                 DataSourceType = QueryDataSourceType.DataStructureEntity,
@@ -115,9 +110,10 @@ namespace Origam.ServerCore.Controllers
                 entity.RootEntity.ParentItemId, CultureInfo.InvariantCulture);
             dataService.LoadDataSet(query, SecurityManager.CurrentPrincipal,
                 dataSet, null);
+            if (dataSet.Tables[entity.Name].Rows.Count == 0) return NotFound();
 
             dataSet.Tables[entity.Name].Rows[0].Delete();
-            DataService.StoreData(entity.RootEntity.ParentItemId, dataSet, false, null);
+            return SubmitChange(entity, dataSet);
         }
 
         private static DataStructureEntity FindEntity(Guid id)
@@ -127,6 +123,23 @@ namespace Origam.ServerCore.Controllers
                 .SchemaProvider
                 .RetrieveInstance(typeof(DataStructureEntity), new Key(id));
             return entity;
+        }
+
+        private IActionResult SubmitChange(DataStructureEntity entity, DataSet dataSet)
+        {
+            try
+            {
+                DataService.StoreData(entity.RootEntity.ParentItemId, dataSet, false, null);
+            }
+            catch (DBConcurrencyException ex)
+            {
+                if (string.IsNullOrEmpty(ex.Message) && ex.InnerException != null)
+                {
+                    return Conflict(ex.InnerException.Message);
+                }
+                return Conflict(ex.Message);
+            }
+            return Ok();
         }
     }
 }

@@ -13,13 +13,13 @@ namespace Origam.ServerCore.Controllers
         }
 
         [HttpGet("[action]")]
-        public string GetMenu()
+        public ActionResult<string> GetMenu()
         {    
             return MenuXmlBuilder.GetMenu();
         }
 
         [HttpGet("[action]")]
-        public string GetScreeSection(Guid id)
+        public ActionResult<string> GetScreeSection(Guid id)
         {
             return FormXmlBuilder.GetXml(id).OuterXml;
         }
