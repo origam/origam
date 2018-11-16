@@ -38,10 +38,7 @@ namespace Origam.WorkbenchTests
             
             var deployment3 = new MockDeploymentVersion(
                 new PackageVersion("1.1"),
-                new List<DeploymentDependency>
-                {
-                    new DeploymentDependency(package2Id, new PackageVersion("1.0"))
-                },
+                new List<DeploymentDependency>{},
                 package2Id);
             
             var deployment4 = new MockDeploymentVersion(
@@ -79,10 +76,7 @@ namespace Origam.WorkbenchTests
             
             var deployment3 = new MockDeploymentVersion(
                 new PackageVersion("1.1"),
-                new List<DeploymentDependency>
-                {
-                    new DeploymentDependency(package2Id, new PackageVersion("1.0"))
-                },
+                new List<DeploymentDependency>{},
                 package2Id);
             
             var deployment4 = new MockDeploymentVersion(
@@ -90,7 +84,6 @@ namespace Origam.WorkbenchTests
                 new List<DeploymentDependency>
                 {
                     new DeploymentDependency(package2Id, new PackageVersion("1.1")),
-                    new DeploymentDependency(package1Id, new PackageVersion("1.0"))
                 },
                 package1Id);
 
@@ -129,10 +122,7 @@ namespace Origam.WorkbenchTests
             
             var deployment4 = new MockDeploymentVersion(
                 new PackageVersion("1.1"),
-                new List<DeploymentDependency>
-                {
-                    new DeploymentDependency(package1Id, new PackageVersion("1.0"))
-                },
+                new List<DeploymentDependency> {},
                 package1Id);
 
             CheckTheOrderIsCorrect(deployment1, deployment2, deployment3, deployment4);
@@ -176,7 +166,6 @@ namespace Origam.WorkbenchTests
                 {
                     new DeploymentDependency(package3Id, new PackageVersion("1.0")),
                     new DeploymentDependency(package2Id, new PackageVersion("1.0")),
-                    new DeploymentDependency(package1Id, new PackageVersion("1.0"))
                 },
                 package1Id);
 
@@ -203,10 +192,7 @@ namespace Origam.WorkbenchTests
             
             var deployment2 = new MockDeploymentVersion(
                 new PackageVersion("1.1"),
-                new List<DeploymentDependency>
-                {
-                    new DeploymentDependency(package1Id, new PackageVersion("1.0"))
-                },
+                new List<DeploymentDependency> { },
                 package1Id);
             
             var deployment3 = new MockDeploymentVersion(
@@ -222,7 +208,6 @@ namespace Origam.WorkbenchTests
                 new List<DeploymentDependency>
                 {
                     new DeploymentDependency(package1Id, new PackageVersion("1.1")),
-                    new DeploymentDependency(package2Id, new PackageVersion("1.0")),
                 },
                 package2Id);
             
@@ -231,7 +216,6 @@ namespace Origam.WorkbenchTests
                 new PackageVersion("1.2"),
                 new List<DeploymentDependency>
                 {
-                    new DeploymentDependency(package1Id, new PackageVersion("1.1")),
                     new DeploymentDependency(package2Id, new PackageVersion("1.1")),
                 },
                 package1Id);
@@ -249,7 +233,6 @@ namespace Origam.WorkbenchTests
                 new List<DeploymentDependency>
                 {
                     new DeploymentDependency(package1Id, new PackageVersion("1.2")),
-                    new DeploymentDependency(package2Id, new PackageVersion("1.1")),
                 },
                 package2Id);
             
@@ -288,10 +271,10 @@ namespace Origam.WorkbenchTests
         {
             var unsortedDeployments = new List<IDeploymentVersion>
             {
-                deployment4,
-                deployment1,
                 deployment3,
-                deployment2
+                deployment1,
+                deployment4,
+                deployment2,
             };
 
             var deploymentSorter = new DeploymentSorter();
