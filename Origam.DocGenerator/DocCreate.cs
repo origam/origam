@@ -53,14 +53,6 @@ namespace Origam.DocGenerator
             {
                 throw new Exception("Path for Export is not set!");
             }
-            if (string.IsNullOrEmpty(xslt))
-            {
-                throw new Exception("Xslt template is not set!");
-            }
-            if (string.IsNullOrEmpty(rootfile))
-            {
-                throw new Exception("RootFileName is not set!");
-            }
             xmlsourcefile = xmlfile;
             RootFile = rootfile;
             XsltPath = xslt;
@@ -216,7 +208,7 @@ namespace Origam.DocGenerator
             {
                 SaveSchemaXml();
             }
-            else
+            if (!string.IsNullOrEmpty(XsltPath) && !string.IsNullOrEmpty(RootFile))
             {
                 MvpXslTransform xslttransform = new MvpXslTransform();
                 xslttransform.Load(XsltPath);

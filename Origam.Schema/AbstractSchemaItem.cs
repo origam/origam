@@ -319,7 +319,7 @@ namespace Origam.Schema
 				CheckLicense();
 			}
 
-            AbstractSchemaItem _rootItem = GetRootItem(this);
+            AbstractSchemaItem _rootItemForRefresh = GetRootItem(this);
             // PERSIST THE ELEMENT
             base.Persist();
 
@@ -351,7 +351,7 @@ namespace Origam.Schema
 				{
 					ChildItems.Remove(item);
 				}
-                RefreshIamAncestor(_rootItem);
+                RefreshIamAncestor(_rootItemForRefresh);
             }
 
 			// We persist any new ancestors
@@ -373,14 +373,19 @@ namespace Origam.Schema
 			}
 		}
 
-        private void RefreshIamAncestor(AbstractSchemaItem AbstractSchemaItem)
+        private void RefreshIamAncestor(AbstractSchemaItem AbschemaItem)
         {
-            ArrayList ItemAcestor = AbstractSchemaItem.GetUsage(true);
-            if (ItemAcestor.Count > 0)
+            if(AbschemaItem.Inheritable)
             {
-                foreach (AbstractSchemaItem ittem in ItemAcestor)
-                {
-                    ittem.Refresh();
+                foreach( var abstractSchemaIttem in AbschemaItem.RootProvider.ChildItems)
+                { 
+                    foreach (var itemAncestor in abstractSchemaIttem.Ancestors)
+                    {
+                        if (itemAncestor.AncestorId==AbschemaItem.Id)
+                        {
+                            abstractSchemaIttem.ClearCache();
+                        }
+                    }
                 }
             }
         }
