@@ -25,6 +25,7 @@ using System.Xml;
 using Origam.Schema;
 using Origam.Workbench.Services;
 using Origam.Schema.MenuModel;
+using Origam.DocGenerator;
 
 namespace Origam.Server.Doc
 {
@@ -112,12 +113,11 @@ namespace Origam.Server.Doc
             FormReferenceMenuItem formItem = menuItem as FormReferenceMenuItem;
             WorkflowReferenceMenuItem wfItem = menuItem as WorkflowReferenceMenuItem;
             ReportReferenceMenuItem reportItem = menuItem as ReportReferenceMenuItem;
-
             if (formItem != null)
             {
                 DocScreen doc = new DocScreen(writer);
                 DocScreen.WriteDataSource(writer, formItem.Screen);
-                doc.WriteScreen(writer, documentation, ps, formItem.Screen);
+                new DocCreate(writer, documentation, ps).Screen(formItem.Screen,doc.getAssemblyXslt());
             }
             else if (wfItem != null)
             {

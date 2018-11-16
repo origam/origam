@@ -1539,9 +1539,9 @@ namespace OrigamArchitect
 
 			Application.DoEvents();
 
-			foreach(DockContent content in this.dockPanel.Documents)
+            foreach (DockContent content in this.dockPanel.Documents.ToList())
 			{
-				content.Close();
+                content.Close();
 			}
 
 			if(this.dockPanel.DocumentsCount > 0)

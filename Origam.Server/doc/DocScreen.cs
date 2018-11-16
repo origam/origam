@@ -25,11 +25,9 @@ using System.Xml;
 using Origam.Schema;
 using Origam.Workbench.Services;
 using Origam.Schema.GuiModel;
-using System.Data;
-using Origam.DA.Service;
-using System.Collections;
-using Origam.Gui.Win;
-using Origam.Schema.EntityModel;
+using System.Reflection;
+using System.IO;
+using Origam.DocGenerator;
 
 namespace Origam.Server.Doc
 {
@@ -78,7 +76,7 @@ namespace Origam.Server.Doc
             // Data Source
             WriteDataSource(writer, form);
             // Screen sections
-            WriteScreen(writer, documentation, ps, form);
+            new DocCreate(writer, documentation, ps).Screen(form, getAssemblyXslt());
             // end body
             writer.WriteEndElement();
             #endregion
@@ -92,124 +90,12 @@ namespace Origam.Server.Doc
             DocTools.WriteElementLink(writer, form.DataStructure, new DocDataStructure(null).FilterName);
             writer.WriteEndElement();
         }
-
-        public void WriteScreen(XmlWriter writer, IDocumentationService documentation, IPersistenceService ps, FormControlSet form)
+        public string getAssemblyXslt()
         {
-            DataSet dataset = new DatasetGenerator(false).CreateDataSet(form.DataStructure);
-            try
-            {
-                LoadControlDescription(writer, documentation, ps, form.ChildItems[0] as ControlSetItem, null, dataset);
-            }
-            catch (Exception ex)
-            {
-                DocTools.WriteError(writer, ex);
-            }
-        }
-
-        private void LoadControlDescription(XmlWriter writer, IDocumentationService documentation, IPersistenceService ps,
-            ControlSetItem control, string dataMember, DataSet dataset)
-        {
-            string caption = "";
-            string gridCaption = "";
-            string bindingMember = "";
-            string panelTitle = "";
-            int tabIndex = 0;
-
-            foreach (PropertyValueItem property in control.ChildItemsByType(PropertyValueItem.ItemTypeConst))
-            {
-                if (property.ControlPropertyItem.Name == "TabIndex")
-                {
-                    tabIndex = property.IntValue;
-                }
-
-                if (property.ControlPropertyItem.Name == "Caption")
-                {
-                    caption = property.Value;
-                }
-
-                if (property.ControlPropertyItem.Name == "GridColumnCaption")
-                {
-                    gridCaption = property.Value;
-                }
-
-                if (property.ControlPropertyItem.Name == "PanelTitle")
-                {
-                    panelTitle = property.Value;
-                }
-
-                if (control.ControlItem.IsComplexType && property.ControlPropertyItem.Name == "DataMember")
-                {
-                    dataMember = property.Value;
-                }
-            }
-
-            caption = (gridCaption == "" | gridCaption == null) ? caption : gridCaption;
-
-            foreach (PropertyBindingInfo bindItem in control.ChildItemsByType(PropertyBindingInfo.ItemTypeConst))
-            {
-                bindingMember = bindItem.Value;
-            }
-
-            if (bindingMember != "")
-            {
-                DataTable table = dataset.Tables[FormGenerator.FindTableByDataMember(dataset, dataMember)];
-
-                if (!table.Columns.Contains(bindingMember)) throw new Exception("Field '" + bindingMember + "' not found in a data structure for the form '" + control.RootItem.Path + "'");
-
-                if (string.IsNullOrEmpty(caption))
-                {
-                    caption = table.Columns[bindingMember].Caption;
-                }
-                Guid id = (Guid)table.Columns[bindingMember].ExtendedProperties["Id"];
-
-                DocTools.WriteDivStart(writer, "screenField");
-                    DocTools.WriteDivStart(writer, "title");
-                        writer.WriteString(caption);
-                    writer.WriteEndElement();
-                    string doc = documentation.GetDocumentation(id, DocumentationType.USER_LONG_HELP);
-                        DocTools.WriteDivStart(writer, "description");
-                        writer.WriteString(doc);
-                        writer.WriteEndElement();
-                writer.WriteEndElement();
-            }
-
-            ArrayList sortedControls;
-
-            if (control.ControlItem.IsComplexType)
-            {
-                if (panelTitle != "")
-                {
-                    writer.WriteElementString(DocTools.SECTION_HEADING, "Section " + panelTitle);
-                }
-
-                AbstractDataEntity entity = GetEntity(ps, dataMember, dataset);
-                writer.WriteStartElement("p");
-                writer.WriteString("Entity ");
-                DocTools.WriteElementLink(writer, entity, new DocEntity(null).FilterName);
-                writer.WriteEndElement();
-
-                sortedControls = control.ControlItem.PanelControlSet.ChildItems[0].ChildItemsByType(ControlSetItem.ItemTypeConst);
-
-            }
-            else
-            {
-                sortedControls = control.ChildItemsByType(ControlSetItem.ItemTypeConst);
-            }
-
-            sortedControls.Sort(new ControlSetItemComparer());
-
-            foreach (ControlSetItem subControl in sortedControls)
-            {
-                LoadControlDescription(writer, documentation, ps, subControl, dataMember, dataset);
-            }
-        }
-
-        private static AbstractDataEntity GetEntity(IPersistenceService ps, string dataMember, DataSet dataset)
-        {
-            DataTable table = dataset.Tables[FormGenerator.FindTableByDataMember(dataset, dataMember)];
-            Guid entityId = (Guid)table.ExtendedProperties["EntityId"];
-            AbstractDataEntity entity = ps.SchemaProvider.RetrieveInstance(typeof(AbstractDataEntity), new ModelElementKey(entityId)) as AbstractDataEntity;
-            return entity;
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            Stream stream = assembly.GetManifestResourceStream("Origam.Server.doc.styledoc.xsl");
+            StreamReader reader = new StreamReader(stream);
+            return reader.ReadToEnd();
         }
     }
 }

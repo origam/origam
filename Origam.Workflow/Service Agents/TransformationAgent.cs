@@ -149,8 +149,8 @@ namespace Origam.Workflow
                     log.DebugFormat("Opening output file {0}...", 
                         Parameters["OutputFile"]);
                 }
-                output = File.Open(Parameters["OutputFile"] as string, 
-                    FileMode.Create);
+                output = File.Open(Parameters["OutputFile"] as string,
+                    FileMode.Create, FileAccess.Write, FileShare.None);
                 if(log.IsDebugEnabled)
                 {
                     log.Debug("Aquiring DataReader...");

@@ -200,6 +200,10 @@ namespace Origam.DA.Service
 
         public override string DefaultDdlDataType(OrigamDataType columnType)
         {
+            if (columnType is OrigamDataType.Geography)
+            {
+                return "geography";
+            }
             return ConvertDataType(columnType, null).ToString();
         }
 

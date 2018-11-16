@@ -23,64 +23,45 @@ using CommandLine.Text;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.Schema;
+using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Security.Principal;
 using System.Threading;
 
 namespace Origam.DocGenerator
 {
     class Program
     {
-        public class Options
-        {
-            [Option('s', "schema", Required = true, HelpText = "Input Origam project directory.")]
-            public string Schema { get; set; }
-
-            [Option('p', "packageid", Required = true, HelpText = "guidid of package.")]
-            public string GuidPackage { get; set; }
-
-            [Option('x', "xslt", Required = true, HelpText = "Xslt template")]
-            public string Xslt { get; set; }
-
-            [Option('o', "output", Required = true, HelpText = "Output directory")]
-            public string Dataout { get; set; }
-
-            [Option('r', "rootfilename", Required = true, HelpText = "Root File")]
-            public string RootFile { get; set; }
-
-            [Option('m', "xmlfilename", Required = false, HelpText = "Xml File for export source tree.")]
-            public string XmlFile { get; set; }
-
-            [Option('l', "language", Required = false, HelpText = "Localization.")]
-            public string Language { get; set; }
-
-            [ParserState]
-            public IParserState LastParserState { get; set; }
-
-            [HelpOption]
-            public string GetUsage()
-            {
-                return HelpText.AutoBuild(this,
-                  (HelpText current) => HelpText.DefaultParsingErrorsHandler(this, current));
-            }
-        }
-
         static void Main(string[] args)
         {
-            Console.WriteLine(string.Format(Strings.ShortGNU, System.Reflection.Assembly.GetEntryAssembly().GetName().Name));
-
             Options options = new Options();
-
-            if (!Parser.Default.ParseArguments(args, options))
+            ConfigOption config = new ConfigOption();
+            if (!Parser.Default.ParseArgumentsStrict(args, options, (verb, subOptions) =>
+            {
+                verb = (verb ?? "").ToLowerInvariant();
+                if (verb == Options.XmlCommandName)
+                {
+                    if (subOptions is XmlSubOptions XmlSubOptions)
+                    {
+                        config.SetOption(XmlSubOptions);
+                    }
+                }
+                else if (verb == Options.XsltCommandName)
+                {
+                    if (subOptions is XsltSubOptions XsltSubOptions)
+                    {
+                        config.SetOption(XsltSubOptions);
+                    }
+                }
+            }))
             {
                 return;
             }
-
+            Console.WriteLine(string.Format(Strings.ShortGNU, System.Reflection.Assembly.GetEntryAssembly().GetName().Name));
             var DefaultFolders = new List<ElementName>
             {
                 ElementNameFactory.Create(typeof(SchemaExtension)),
@@ -89,33 +70,32 @@ namespace Origam.DocGenerator
             ServiceManager sManager = ServiceManager.Services;
             SchemaService service = new SchemaService();
             IParameterService parameterService = new NullParameterService();
-
             sManager.AddService(service);
             sManager.AddService(parameterService);
 
             var settings = new OrigamSettings
             {
-                LocalizationFolder = Path.Combine(options.Schema, "l10n")
+                LocalizationFolder = Path.Combine(config.Schema , "l10n")
             };
-
             ConfigurationManager.SetActiveConfiguration(settings);
-            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("origam_server"), null);
+            SecurityManager.SetServerIdentity();
             StateMachineSchemaItemProvider StateMachineSchema = new StateMachineSchemaItemProvider();
             var persistenceService = new FilePersistenceService(DefaultFolders,
-               options.Schema);
-
-             Thread.CurrentThread.CurrentUICulture = new CultureInfo(options.Language);
-
+               config.Schema);
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo(config.Language);
             sManager.AddService(persistenceService);
             service.AddProvider(StateMachineSchema);
-
             FilePersistenceProvider persprovider = (FilePersistenceProvider)persistenceService.SchemaProvider;
-            persistenceService.LoadSchema(new Guid(options.GuidPackage), false, false, "");
+            MenuSchemaItemProvider menuprovider = new MenuSchemaItemProvider
+            {
+                PersistenceProvider = persprovider
+            };
+            persistenceService.LoadSchema(new Guid(config.GuidPackage), false, false, "");
             var documentation = new FileStorageDocumentationService(
                 persprovider,
                 persistenceService.FileEventQueue);
-
-            new DocCreate(options.Dataout, options.Xslt, options.RootFile, documentation, persprovider, options.XmlFile).Run();
+            new DocCreate(config.Dataout, config.Xslt, config.RootFile, documentation,
+                menuprovider, persistenceService, config.XmlFile).Run();
         }
     }
 }
