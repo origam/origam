@@ -33,7 +33,7 @@ namespace Origam.Workbench.Services
                 if (remainingDeployments.Count > 0 &&
                     remainingDeployments.Count(x=>!HasActiveDependencies(x)) == 0)
                 {
-                    throw new Exception("Infinite loop! Could not find any deployments without active dependencies.");
+                    HandleInfiniteLoopError();
                 }
             }
 
@@ -42,6 +42,24 @@ namespace Origam.Workbench.Services
                 throw new Exception("Number of input and output deployments doesn't match");
             }
             return sortedDeployments;
+        }
+
+        private void HandleInfiniteLoopError()
+        {
+            foreach (var deploymentVersion in remainingDeployments)
+            {
+                var dependsOnItSelf = deploymentVersion.DeploymentDependencies
+                    .Any(dependency =>
+                        dependency.PackageId == deploymentVersion.SchemaExtensionId &&
+                        dependency.PackageVersion == deploymentVersion.Version);
+                if (dependsOnItSelf)
+                {
+                    throw new Exception("Deployment version: " + deploymentVersion.Version + " of package: " +
+                                        deploymentVersion.Package + " depends on it self! Remove the dependency to continue.");
+                }
+            }
+
+            throw new Exception("Infinite loop! Could not find any deployments without active dependencies.");
         }
 
         private void ProcessDependent(IDeploymentVersion deployment)
