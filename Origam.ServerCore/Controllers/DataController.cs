@@ -101,7 +101,6 @@ namespace Origam.ServerCore.Controllers
                 DataSourceType = QueryDataSourceType.DataStructureEntity,
                 DataSourceId = entityData.DataStructureEntityId,
                 Entity = entity.Name,
-                ColumnName = "Id",
                 EnforceConstraints = false
             };
             query.Parameters.Add(new QueryParameter("Id", entityData.RowIdToDelete));
