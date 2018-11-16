@@ -62,12 +62,9 @@ namespace Origam.ServerCore.Controllers
             dataService.LoadDataSet(query, SecurityManager.CurrentPrincipal,
                 dataSet, null);
 
-            var row = dataSet.Tables[entity.Name].Rows[0];
-            foreach (var colNameValuePair in entityData.NewValues)
-            {
-                row[colNameValuePair.Key] = colNameValuePair.Value;
-                //row.AcceptChanges();
-            }
+            DataTable table = dataSet.Tables[entity.Name];
+            var row = table.Rows[0];
+            FillRow(row, entityData.NewValues, table);
             return SubmitChange(entity, dataSet);
         }
 
@@ -79,15 +76,13 @@ namespace Origam.ServerCore.Controllers
             DataSet dataSet = dataService.GetEmptyDataSet(
                 entity.RootEntity.ParentItemId, CultureInfo.InvariantCulture);
 
-            DataRow row = dataSet.Tables[entity.Name].NewRow();
+            DataTable table = dataSet.Tables[entity.Name];
+            DataRow row = table.NewRow();
             row["Id"] = Guid.NewGuid();
             row["RecordCreated"] = DateTime.Now;
             row["RecordCreatedBy"] = SecurityManager.CurrentUserProfile().Id;
-            foreach (var colNameValuePair in entityData.NewValues)
-            {
-                row[colNameValuePair.Key] = colNameValuePair.Value;
-            }
-            dataSet.Tables[entity.Name].Rows.Add(row);
+            FillRow(row, entityData.NewValues, table);
+            table.Rows.Add(row);
             return SubmitChange(entity, dataSet);
         }
 
@@ -113,6 +108,16 @@ namespace Origam.ServerCore.Controllers
 
             dataSet.Tables[entity.Name].Rows[0].Delete();
             return SubmitChange(entity, dataSet);
+        }
+
+        private static void FillRow(DataRow row, Dictionary<string, string> newValues, DataTable table)
+        {
+            foreach (var colNameValuePair in newValues)
+            {
+                Type dataType = table.Columns[colNameValuePair.Key].DataType;
+                row[colNameValuePair.Key] =
+                    DatasetTools.ConvertValue(colNameValuePair.Value, dataType);
+            }
         }
 
         private static DataStructureEntity FindEntity(Guid id)
