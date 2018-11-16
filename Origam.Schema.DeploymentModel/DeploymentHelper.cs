@@ -45,7 +45,6 @@ namespace Origam.Schema.DeploymentModel
 			
 			deployment.Name = name;
 			deployment.VersionString = version;
-			deployment.DontDependOnCurrentVersion(activePackage, version);
 			deployment.Persist();
 			
 			return deployment;
