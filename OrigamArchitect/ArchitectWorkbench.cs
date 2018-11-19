@@ -59,6 +59,7 @@ using NPOI.HSSF.UserModel;
 using NPOI.HPSF;
 using NPOI.SS.UserModel;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using Origam.DA.ObjectPersistence;
 using OrigamArchitect.Commands;
@@ -1327,8 +1328,10 @@ namespace OrigamArchitect
                 }
                 if (InvokeRequired)
                 {
-                    Invoke(new Action(() 
-                        => UpdateUIAfterReload(filePersistenceProvider, args)));
+                    Task.Run(() => {
+                        Invoke(new Action(()
+                            => UpdateUIAfterReload(filePersistenceProvider, args)));
+                    });
                 }
                 else
                 {
