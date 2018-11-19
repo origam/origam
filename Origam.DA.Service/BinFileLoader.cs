@@ -125,12 +125,12 @@ namespace Origam.DA.Service
                 Serializer.Serialize(file, serializationData);
             }
 
-            // SaveItemTrackerToTxtForDebugging(itemTracker);
+           // SaveItemTrackerToTxtForDebugging(itemTracker);
         }
         
         private void SaveItemTrackerToTxtForDebugging(ItemTracker itemTracker)
         {
-            FileInfo txtFileInfo = indexFile.MakeNew("itemTracker");
+            FileInfo txtFileInfo = indexFile.MakeNew("debug");
             File.WriteAllText(txtFileInfo.FullName, itemTracker.Print());
         }
         
