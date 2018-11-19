@@ -55,12 +55,13 @@ export class GridComponent extends React.Component<IGridProps> {
     const { contentWidth, contentHeight, isScrollingEnabled } = this.view;
 
     const { canvasProps } = this;
-
+    // console.log(width, height)
     return (
       <div
         className="grid-view-container"
         style={{ width, height }}
         onKeyDown={handleGridKeyDown}
+        // style={{display: this.props.isHidden ? "none" : undefined}}
       >
         <div
           className="grid-view-root"

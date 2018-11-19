@@ -3,7 +3,7 @@ import {
   IGridInteractionState,
   IGridTopology,
   IGridInteractionSelectors,
-  IGridPaneView,
+  GridViewType,
   IFormTopology
 } from "./types";
 import { IRecordId, IFieldId } from "../DataTable/types";
@@ -24,7 +24,7 @@ export class GridInteractionSelectors implements IGridInteractionSelectors {
   }
 
   @computed
-  public get activeView(): IGridPaneView {
+  public get activeView(): GridViewType {
     return this.state.activeView;
   }
 
@@ -41,18 +41,18 @@ export class GridInteractionSelectors implements IGridInteractionSelectors {
   }
 
   public getLeftColumnId(columnId: IFieldId) {
-    if (this.activeView === IGridPaneView.Grid) {
+    if (this.activeView === GridViewType.Grid) {
       return this.gridTopology.getLeftColumnId(columnId);
-    } else if (this.activeView === IGridPaneView.Form) {
+    } else if (this.activeView === GridViewType.Form) {
       return this.formTopology.getPrevFieldId(columnId);
     }
     return;
   }
 
   public getRightColumnId(columnId: IFieldId) {
-    if (this.activeView === IGridPaneView.Grid) {
+    if (this.activeView === GridViewType.Grid) {
       return this.gridTopology.getRightColumnId(columnId);
-    } else if (this.activeView === IGridPaneView.Form) {
+    } else if (this.activeView === GridViewType.Form) {
       return this.formTopology.getNextFieldId(columnId);
     }
     return;

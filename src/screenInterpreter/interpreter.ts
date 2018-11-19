@@ -1,6 +1,6 @@
 
 import { buildReactTree } from "./uiBuilder";
-import { IGridPaneView } from "src/Grid/types";
+import { GridViewType } from "src/Grid/types";
 
 function getLocation(node: any): any {
   return {
@@ -230,12 +230,12 @@ function ruleGrid(node: any, context: any, rules: any[]) {
       isShowAddButton: text2bool(node.attributes.ShowAddButton),
       isShowDeleteButtom: text2bool(node.attributes.ShowDeleteButton),
       initialView: [
-        IGridPaneView.Form,
-        IGridPaneView.Grid,
+        GridViewType.Form,
+        GridViewType.Grid,
         null,
         null,
         null,
-        IGridPaneView.Map
+        GridViewType.Map
       ][parseInt(node.attributes.DefaultPanelView, 10)]
     };
     const collectFormChildren: React.ReactNode[] = [];

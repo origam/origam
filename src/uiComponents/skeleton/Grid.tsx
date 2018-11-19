@@ -34,7 +34,7 @@ import {
   IFormTopology,
   IGridSetup,
   IGridTopology,
-  IGridPaneView
+  GridViewType
 } from "src/Grid/types";
 import { GridOrderingActions } from "src/GridOrdering/GridOrderingActions";
 import { GridOrderingSelectors } from "src/GridOrdering/GridOrderingSelectors";
@@ -146,7 +146,7 @@ class FormSetup implements IFormSetup {
 function createGridPaneBacking(
   dataTableName: string,
   dataTableFields: IDataTableFieldStruct[],
-  defaultView: IGridPaneView
+  defaultView: GridViewType
 ) {
   // console.log(defaultView)
   const configuration = new GridConfiguration();
@@ -418,13 +418,13 @@ export class Grid extends React.Component<any> {
             minHeight: this.props.h
           }}
         >
-          <GridToolbar
+          {/*<GridToolbar
             name={this.props.name}
             isHidden={this.props.isHeadless}
             isAddButton={this.props.isShowAddButton}
             isDeleteButton={this.props.isShowDeleteButton}
             isCopyButton={this.props.isShowAddButton}
-          />
+          />*/}
           {this.props.table}
           {this.props.form}
           <GridMap />

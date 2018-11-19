@@ -13,6 +13,7 @@ export interface IGridProps {
   gridTopology: IGridTopology;
   width: number;
   height: number;
+  isHidden?: boolean;
   overlayElements: React.ReactNode | React.ReactNode[] | null;
   cellRenderer: ICellRenderer;
   onScroll?: ((event: any) => void) | undefined;
@@ -318,14 +319,14 @@ export interface IGridCursorView {
   ): void;
 }
 
-export enum IGridPaneView {
+export enum GridViewType {
   Grid = "Grid",
   Form = "Form",
   Map = "Map"
 }
 
 export interface IGridInteractionSelectors {
-  activeView: IGridPaneView;
+  activeView: GridViewType;
   selectedRowId: IRecordId | undefined;
   selectedColumnId: IFieldId | undefined;
   editingRowId: IRecordId | undefined;
@@ -340,13 +341,13 @@ export interface IGridInteractionSelectors {
 }
 
 export interface IGridInteractionState {
-  activeView: IGridPaneView;
+  activeView: GridViewType;
   selectedRowId: string | undefined;
   selectedColumnId: string | undefined;
   editingRowId: string | undefined;
   editingColumnId: string | undefined;
 
-  setActiveView(view: IGridPaneView): void;
+  setActiveView(view: GridViewType): void;
   setEditing(rowId: string | undefined, columnId: string | undefined): void;
   setSelected(rowId: string | undefined, columnId: string | undefined): void;
   setSelectedColumn(columnId: string | undefined): void;
@@ -359,7 +360,7 @@ export interface IGridInteractionActions {
   selectOneUp(): void
   selectOneDown(): void
   editSelectedCell(): void;
-  setActiveView(view: IGridPaneView): void;
+  setActiveView(view: GridViewType): void;
   handleDumbEditorKeyDown(event: any): void;
   handleGridCellClick(
     event: any,

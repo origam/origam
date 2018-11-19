@@ -6,7 +6,7 @@ import {
   IGridInteractionActions,
   IFormView,
   IFormSetup,
-  IGridPaneView,
+  GridViewType,
   IGridInteractionSelectors,
   IFormTopology,
   IFormActions
@@ -17,7 +17,7 @@ import { IGridOrderingSelectors, IGridOrderingActions } from "src/GridOrdering/t
 import { IDataTableSelectors } from "src/DataTable/types";
 
 export interface IGridToolbarView {
-  activeView: IGridPaneView;
+  activeView: GridViewType;
   handleAddRecordClick(event: any): void;
   handleRemoveRecordClick(event: any): void;
   handleSetGridViewClick(event: any): void;

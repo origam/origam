@@ -45,7 +45,7 @@ import {
   IGridTopology,
   IGridSetup,
   IFormSetup,
-  IGridPaneView,
+  GridViewType,
   IFormTopology,
   IGridInteractionSelectors,
   IGridInteractionActions
@@ -470,7 +470,7 @@ class GridPane extends React.Component<{
                     Next
                   </button>
                 </div>
-                {gridInteractionSelectors.activeView === IGridPaneView.Grid && (
+                {gridInteractionSelectors.activeView === GridViewType.Grid && (
                   <div
                     style={{
                       display: "flex",
@@ -494,7 +494,7 @@ class GridPane extends React.Component<{
                     height: "100%",
                     flex: "1 1",
                     display:
-                      gridInteractionSelectors.activeView === IGridPaneView.Grid
+                      gridInteractionSelectors.activeView === GridViewType.Grid
                         ? "flex"
                         : "none"
                   }}
@@ -514,7 +514,7 @@ class GridPane extends React.Component<{
                                 view={gridCursorView}
                                 cursorContent={
                                   gridInteractionSelectors.activeView ===
-                                    IGridPaneView.Grid && (
+                                    GridViewType.Grid && (
                                     <GridEditorMounter
                                       cursorView={gridCursorView}
                                     >
@@ -571,7 +571,7 @@ class GridPane extends React.Component<{
                     )}
                   </AutoSizer>
                 </div>
-                {gridInteractionSelectors.activeView === IGridPaneView.Form && (
+                {gridInteractionSelectors.activeView === GridViewType.Form && (
                   <div
                     style={{
                       flexDirection: "column",
@@ -611,7 +611,7 @@ class GridPane extends React.Component<{
                                     }
                                   >
                                     {gridInteractionSelectors.activeView ===
-                                      IGridPaneView.Form && (
+                                      GridViewType.Form && (
                                       <GridEditorMounter
                                         cursorView={gridCursorView}
                                       >

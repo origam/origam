@@ -5,7 +5,7 @@ import {
   IGridSelectors,
   IGridTopology,
   IGridInteractionActions,
-  IGridPaneView
+  GridViewType
 } from "../Grid/types";
 import { IGridToolbarView } from "./types";
 import { reactionRuntimeInfo } from "../utils/reaction";
@@ -77,12 +77,12 @@ export class GridToolbarView implements IGridToolbarView {
 
   @action.bound
   public handleSetGridViewClick(event: any): void {
-    this.gridInteractionActions.setActiveView(IGridPaneView.Grid);
+    this.gridInteractionActions.setActiveView(GridViewType.Grid);
   }
 
   @action.bound
   public handleSetFormViewClick(event: any): void {
-    this.gridInteractionActions.setActiveView(IGridPaneView.Form);
+    this.gridInteractionActions.setActiveView(GridViewType.Form);
   }
 
   @action.bound public handlePrevRecordClick(event: any): void {

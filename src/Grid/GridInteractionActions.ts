@@ -7,7 +7,7 @@ import {
   IGridInteractionActions,
   IGridInteractionSelectors,
   IGridInteractionState,
-  IGridPaneView,
+  GridViewType,
   IGridSelectors,
   IFormActions
 } from "./types";
@@ -54,10 +54,10 @@ export class GridInteractionActions implements IGridInteractionActions {
 
   @action.bound
   private handleDumbEditorKeyDown_Enter(event: any) {
-    if (this.selectors.activeView === IGridPaneView.Grid) {
+    if (this.selectors.activeView === GridViewType.Grid) {
       this.selectOneDown();
       this.editSelectedCell();
-    } else if(this.selectors.activeView === IGridPaneView.Form) {
+    } else if(this.selectors.activeView === GridViewType.Form) {
       this.unedit();
     }
     event.preventDefault();
@@ -65,10 +65,10 @@ export class GridInteractionActions implements IGridInteractionActions {
 
   @action.bound
   private handleDumbEditorKeyDown_ShiftEnter(event: any) {
-    if (this.selectors.activeView === IGridPaneView.Grid) {
+    if (this.selectors.activeView === GridViewType.Grid) {
       this.selectOneUp();
       this.editSelectedCell();
-    } else if(this.selectors.activeView === IGridPaneView.Form) {
+    } else if(this.selectors.activeView === GridViewType.Form) {
       this.unedit();
     }
     event.preventDefault();
@@ -117,7 +117,7 @@ export class GridInteractionActions implements IGridInteractionActions {
 
   @action.bound
   public handleGridOutsideClick(event: any) {
-    if (this.selectors.activeView === IGridPaneView.Grid) {
+    if (this.selectors.activeView === GridViewType.Grid) {
       this.unedit();
     }
     // this.unselect();
@@ -125,7 +125,7 @@ export class GridInteractionActions implements IGridInteractionActions {
 
   @action.bound
   public handleGridKeyDown(event: any) {
-    if (this.selectors.activeView === IGridPaneView.Grid) {
+    if (this.selectors.activeView === GridViewType.Grid) {
       reactionRuntimeInfo.add("UI", "KEYBOARD");
       const shift = event.shiftKey ? "Shift" : "";
       const methodName = `handleGridKeyDown_${shift}${event.key}`;
@@ -235,9 +235,9 @@ export class GridInteractionActions implements IGridInteractionActions {
       () => {
         if (!this.selectors.isCellEditing) {
           setTimeout(() => {
-            if (this.selectors.activeView === IGridPaneView.Grid) {
+            if (this.selectors.activeView === GridViewType.Grid) {
               this.gridViewActions.focusRoot();
-            } else if (this.selectors.activeView === IGridPaneView.Form) {
+            } else if (this.selectors.activeView === GridViewType.Form) {
               this.formViewActions.focusRoot();
             }
           }, 10);
@@ -252,7 +252,7 @@ export class GridInteractionActions implements IGridInteractionActions {
   }
 
   @action.bound
-  public setActiveView(view: IGridPaneView): void {
+  public setActiveView(view: GridViewType): void {
     this.state.setActiveView(view);
   }
 

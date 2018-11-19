@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IGridPaneView } from "src/Grid/types";
+import { GridViewType } from "src/Grid/types";
 import { observer, inject, Observer } from "mobx-react";
 import { observable, when, computed, action } from "mobx";
 import { AutoSizer } from "react-virtualized";
@@ -18,7 +18,7 @@ export class GridMap extends React.Component<any> {
   public get isActiveView() {
     const { gridPaneBacking } = this.props;
     const { gridInteractionSelectors } = gridPaneBacking;
-    return gridInteractionSelectors.activeView === IGridPaneView.Map;
+    return gridInteractionSelectors.activeView === GridViewType.Map;
   }
 
   @action.bound

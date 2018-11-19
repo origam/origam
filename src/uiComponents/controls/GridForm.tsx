@@ -1,6 +1,6 @@
 import * as React from "react";
 import { observer, inject } from "mobx-react";
-import { IGridPaneView } from "src/Grid/types";
+import { GridViewType } from "src/Grid/types";
 
 @inject("gridPaneBacking")
 @observer
@@ -9,7 +9,7 @@ export class GridForm extends React.Component<any> {
     const { gridPaneBacking } = this.props;
     const isActiveView =
       gridPaneBacking.gridInteractionSelectors.activeView ===
-      IGridPaneView.Form;
+      GridViewType.Form;
     return (
       <div
         className="oui-form-root"

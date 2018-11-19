@@ -44,7 +44,7 @@ class SplitterCell extends React.Component<{
             this.props.isLast ||
             (this.props.width === undefined && !this.props.vertical) ||
             (this.props.height === undefined && this.props.vertical)
-              ? "1 1"
+              ? "1 1 0"
               : undefined
         }}
         className={

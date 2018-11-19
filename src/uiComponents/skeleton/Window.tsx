@@ -23,7 +23,7 @@ export class Window extends React.Component<any> {
             <i className="fa fa-file-text" />
             {label} {order > 0 && `[${order}]`}
           </div>
-          <div style={{ flexGrow: 1 }} />
+          <div style={{ flex: "1 1 0" }} />
           <div className="buttons">
             <button
               onClick={this.handleFullscreenClick}

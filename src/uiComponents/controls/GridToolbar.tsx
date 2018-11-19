@@ -1,6 +1,6 @@
 import * as React from "react";
 import { observer, inject } from "mobx-react";
-import { IGridInteractionActions, IGridPaneView } from "src/Grid/types";
+import { IGridInteractionActions, GridViewType } from "src/Grid/types";
 
 @inject("gridPaneBacking")
 @observer
@@ -55,19 +55,19 @@ export class GridToolbar extends React.Component<any> {
         <div className="toolbar-section">
           <button
             className="oui-toolbar-btn"
-            onClick={() => setActiveView(IGridPaneView.Grid)}
+            onClick={() => setActiveView(GridViewType.Grid)}
           >
             <i className="fa fa-table icon" aria-hidden="true" />
           </button>
           <button
             className="oui-toolbar-btn"
-            onClick={() => setActiveView(IGridPaneView.Form)}
+            onClick={() => setActiveView(GridViewType.Form)}
           >
             <i className="fa fa-list-alt icon" aria-hidden="true" />
           </button>
           <button
             className="oui-toolbar-btn"
-            onClick={() => setActiveView(IGridPaneView.Map)}
+            onClick={() => setActiveView(GridViewType.Map)}
           >
             <i className="fa fa-map-o icon" aria-hidden="true" />
           </button>

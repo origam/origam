@@ -15,7 +15,7 @@ body {
   /*width: 100%;*/
   /*height: 100%;*/
   /*min-height: 500px;*/
-  flex-grow: 1;
+  flex: 1 1 0;
   /*padding: 2px;
   margin: 2px;*/
   overflow: auto;
@@ -82,11 +82,11 @@ body {
 .oui-vsplit-container {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  flex: 1 1 0;
 }
 
 .oui-vsplit-panel {
-  flex-grow: 1;
+  flex: 1 1 0;
   overflow: auto;
   display: flex;
   flex-direction: column;
@@ -115,11 +115,11 @@ body {
 .oui-hsplit-container {
   display: flex;
   flex-direction: row;
-  flex-grow: 1;
+  flex: 1 1 0;
 }
 
 .oui-hsplit-panel {
-  flex-grow: 1;
+  flex: 1 1 0;
   overflow: auto;
   display: flex;
   flex-direction: column;
@@ -146,14 +146,14 @@ body {
 }
 
 .oui-tree-panel {
-  flex-grow: 1;
+  flex: 1 1 0;
   max-width: 300px;
 }
 
 .oui-window {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  flex: 1 1 0;
   overflow: auto;
   background-color: $panel-bgcolor;
   &.fullscreen {
@@ -204,24 +204,25 @@ body {
 }
 
 .oui-window-content {
-  flex-grow: 1;
+  flex: 1 1 0;
   display: flex;
 }
 
 .oui-grid {
-  height: 100%;
-  flex-grow: 1;
+  flex: 1 1 0;
   display: flex;
   flex-direction: column;
   //border: 1px solid red;
 }
 
 .oui-grid-toolbar {
-  height: $toolbar-height;
+  min-height: $toolbar-height;
+  max-height: $toolbar-height;
   background-color: $toolbar-bgcolor;
   color: $toolbar-color;
   display: flex;
   flex-direction: row;
+  align-items: center;
   .oui-toolbar-text {
     display: flex;
     align-items: center;
@@ -275,7 +276,7 @@ body {
     height: 100%;
     margin: 0px 15px 0px 15px;
     &.pusher {
-      flex-grow: 1;
+      flex: 1 1 0;
     }
   }
 }
@@ -290,6 +291,7 @@ body {
   height: 20px;
   display: flex;
   flex-direction: row;
+  //flex-wrap: wrap;
   background-color: $panel-bgcolor;
 }
 
@@ -317,22 +319,22 @@ body {
 .oui-tab-panels {
   display: flex;
   flex-direction: row;
-  flex-grow: 1;
+  flex: 1 1 0;
 }
 
 .oui-box {
-  flex-grow: 1;
+  flex: 1 1 0;
   display: flex;
 }
 
 .oui-vbox {
-  flex-grow: 1;
+  flex: 1 1 0;
   display: flex;
   flex-direction: column;
 }
 
 .oui-mapview {
-  flex: 1 1;
+  flex: 1 1 0;
   display: flex;
 }
 
@@ -418,7 +420,7 @@ body {
     display: flex;
     flex-direction: column;
     .logo-box {
-      flex-grow: 1;
+      flex: 1 1 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -515,7 +517,7 @@ body {
 }
 
 .oui-body-bar {
-  flex-grow: 1;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: row;
 }
@@ -601,7 +603,7 @@ body {
 .oui-main-tabs {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  flex: 1 1 0;
 }
 
 .oui-main-tab-handles {
@@ -662,7 +664,7 @@ body {
 
 .oui-main-tab-contents {
   display: flex;
-  flex-grow: 1;
+  flex: 1 1 0;
   background-color: $panel-bgcolor;
   color: $panel-color;
 }
@@ -670,5 +672,23 @@ body {
 .oui-data-bar {
   display: flex;
   flex-direction: row;
-  flex-grow: 1;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+canvas {
+  display: block;
+}
+
+.grid-view-container {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex: 1 1 0;
+}
+
+.oui-data-bar,
+.oui-main-tabs,
+.oui-main-tab-contents {
+  overflow: hidden;
 }
