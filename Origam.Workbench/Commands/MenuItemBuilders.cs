@@ -67,7 +67,9 @@ namespace Origam.Workbench.Commands
             WorkbenchSchemaService sch = ServiceManager.Services.GetService(
                 typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
             object activeNode = owner ?? sch.ActiveNode;
-            ISchemaItemFactory factory = activeNode as ISchemaItemFactory;
+            if (activeNode == null) return new ToolStripMenuItem[0];
+
+            ISchemaItemFactory factory = (ISchemaItemFactory)activeNode;
             NonpersistentSchemaItemNode nonpersistentNode = activeNode as NonpersistentSchemaItemNode;
             AbstractSchemaItem activeItem = activeNode as AbstractSchemaItem;
             if (nonpersistentNode != null)
