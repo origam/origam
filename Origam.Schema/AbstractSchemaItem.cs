@@ -1737,7 +1737,7 @@ namespace Origam.Schema
 		#endregion
 
 		#region ICloneable Members
-		public object Clone()
+		public virtual object Clone()
 		{
 			return this.Clone(false);
 		}
