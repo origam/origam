@@ -45,7 +45,7 @@ namespace Origam.Workbench.Services
         public IPersistenceProvider SchemaProvider => schemaProvider;
         public IPersistenceProvider SchemaListProvider { get; }
         
-        public event EventHandler<ChangedFileEventArgs> ReloadNeeded;
+        public event EventHandler<FileSystemChangeEventArgs> ReloadNeeded;
             
         public FilePersistenceService(IList<ElementName> defaultFolders,
             string basePath = null, bool watchFileChanges = true)    
