@@ -102,16 +102,28 @@ namespace Origam.Extensions
         public static bool IsOnPathOf(this DirectoryInfo thisDirInfo,
             DirectoryInfo other)
         {
-            string[] otherDirnames =
-                other.FullName.Split(Path.DirectorySeparatorChar);
+            return IsOnPathOf(thisDirInfo.FullName, other.FullName);
+        }
 
-            string[] thisDirNames = thisDirInfo.FullName
+        public static bool IsOnPathOf(this DirectoryInfo thisDirInfo,
+            string otherPath)
+        {
+            return IsOnPathOf(thisDirInfo.FullName, otherPath);
+        }
+
+        private static bool IsOnPathOf(string path,
+            string otherPath)
+        {
+            string[] otherDirNames =
+                otherPath.Split(Path.DirectorySeparatorChar);
+
+            string[] thisDirNames = path
                 .Split(Path.DirectorySeparatorChar);
 
-            if (thisDirNames.Length > otherDirnames.Length) return false;
-            
+            if (thisDirNames.Length > otherDirNames.Length) return false;
+
             return !thisDirNames
-                .Where((dir, i) => dir != otherDirnames[i])
+                .Where((dir, i) => dir != otherDirNames[i])
                 .Any();
         }
 

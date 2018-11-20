@@ -11,7 +11,7 @@ namespace Origam.Server.Utils
             if(ServiceManager.Services.GetService<IPersistenceService>() 
                 is FilePersistenceService filePersistenceService)
             {
-                void OnReloadNeeded(object e, ChangedFileEventArgs args)
+                void OnReloadNeeded(object e, FileSystemChangeEventArgs args)
                 {
                     IPersistenceProvider persistenceProvider =
                         filePersistenceService.SchemaProvider;

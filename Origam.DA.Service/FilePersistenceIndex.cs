@@ -270,6 +270,12 @@ namespace Origam.DA.Service
                 readWriteLock?.Dispose();
             }
         }
+
+        public IEnumerable<FileInfo> GetByDirectory(DirectoryInfo dir)
+        {
+            return readWriteLock.RunReader(() =>
+                itemTracker.GetByDirectory(dir));
+        }
     }
 
     internal class PackageIgnoringPersistenceIndex: FilePersistenceIndex

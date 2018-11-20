@@ -59,6 +59,7 @@ using NPOI.HSSF.UserModel;
 using NPOI.HPSF;
 using NPOI.SS.UserModel;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using Origam.DA.ObjectPersistence;
 using OrigamArchitect.Commands;
@@ -1300,7 +1301,7 @@ namespace OrigamArchitect
 			}
 		}
 
-		void OnFilePersistServiceReloadRequested(object sender, ChangedFileEventArgs args)
+		void OnFilePersistServiceReloadRequested(object sender, FileSystemChangeEventArgs args)
 		{
 			FilePersistenceService filePersistenceService =
 				(FilePersistenceService) sender;
@@ -1309,15 +1310,7 @@ namespace OrigamArchitect
             bool reloadConfirmed = true;
             if (ShouldRaiseWarning(filePersistenceProvider, args.File))
             {
-                if (InvokeRequired)
-                {
-                    Invoke(new Action(() 
-                        => reloadConfirmed = ConfirmReload(args)));
-                } else
-                {
-                    reloadConfirmed = ConfirmReload(args);
-                }
-
+                reloadConfirmed = this.RunWithInvoke(() => ConfirmReload(args));
             }
             if (reloadConfirmed)
             {
@@ -1325,20 +1318,11 @@ namespace OrigamArchitect
                 {
                     return;
                 }
-                if (InvokeRequired)
-                {
-                    Invoke(new Action(() 
-                        => UpdateUIAfterReload(filePersistenceProvider, args)));
-                }
-                else
-                {
-                    UpdateUIAfterReload(filePersistenceProvider, args);
-                }
-
+                this.RunWithInvokeAsync(() => UpdateUIAfterReload(filePersistenceProvider, args));
             }
 		}
 
-        private bool ConfirmReload(ChangedFileEventArgs args)
+	    private bool ConfirmReload(FileSystemChangeEventArgs args)
         {
             // try/catch block for unhandled exceptions 
             // main try/catch block doesn't show error message 
@@ -1359,7 +1343,7 @@ namespace OrigamArchitect
 
         private void UpdateUIAfterReload(
 	        FilePersistenceProvider filePersistenceProvider, 
-            ChangedFileEventArgs args)
+            FileSystemChangeEventArgs args)
         {
             // try/catch block for unhandled exceptions 
             // main try/catch block doesn't show error message 
@@ -1402,8 +1386,8 @@ namespace OrigamArchitect
 			switch (error.Type)	
 			{
 				case ErrType.XmlGeneralError:
-					MessageBox.Show(this, error.Message);
-					return false;
+				    this.RunWithInvoke(() => MessageBox.Show(this, error.Message));
+                    return false;
 				case ErrType.XmlVersionIsOlderThanCurrent:
 					return TryHandleOldVersionFound(filePersistService, error.Message);
 				default:

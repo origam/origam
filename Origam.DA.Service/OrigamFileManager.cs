@@ -46,8 +46,10 @@ namespace Origam.DA.Service
             string newDirPath =
                 Path.Combine(dirToRename.Parent.FullName, newName);
             if (dirToRename.FullName.ToLower() == newDirPath.ToLower()) return;
+            fileEventQueue.Pause();
             Directory.Move(dirToRename.FullName, newDirPath);
             index.RenameDirectory(dirToRename, newDirPath);
+            fileEventQueue.Continue();
         }
         
         public void WriteToDisc(OrigamFile origamFile, XmlDocument xmlDocument)
