@@ -214,6 +214,7 @@ namespace Origam.DA.Service
         }
         public override void RemoveFromCache(IPersistent instance)
         {
+            index.GetById(instance.Id).OrigamFile.ClearCache();
         }
 
         public override List<T> RetrieveList<T>(IDictionary<string, object> filter=null)
