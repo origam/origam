@@ -204,6 +204,15 @@ namespace Origam.DA.Service
             {
                 return "geography";
             }
+            if (columnType is OrigamDataType.Memo)
+            {
+                return "nvarchar(max)";
+            }
+            if (columnType is OrigamDataType.Blob)
+            {
+                return "varbinary(max)";
+            }
+
             return ConvertDataType(columnType, null).ToString();
         }
 
@@ -280,13 +289,13 @@ namespace Origam.DA.Service
 				case OrigamDataType.Long:
 					return SqlDbType.BigInt;
 				case OrigamDataType.Xml:
-				case OrigamDataType.Memo:
-					return SqlDbType.NText;
-				case OrigamDataType.Array:
+                case OrigamDataType.Memo:
+                    return SqlDbType.NText;
+                case OrigamDataType.Array:
 					return SqlDbType.Structured;
-				case OrigamDataType.Geography:
-					return SqlDbType.Text;
-				case OrigamDataType.Integer: 
+                case OrigamDataType.Geography:
+                    return SqlDbType.Text;
+                case OrigamDataType.Integer: 
 					return SqlDbType.Int;
 				case OrigamDataType.Float:
 					return SqlDbType.Decimal;

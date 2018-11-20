@@ -1245,7 +1245,11 @@ namespace Origam.Schema
 
         private string RemoveIllegalCharactersFromPath(string text)
         {
-            return _regex.Replace(text, "");
+            if (!string.IsNullOrEmpty(text))
+            {
+                return _regex.Replace(text, "");
+            }
+            return text;
         }
 
         [Browsable(false)]
