@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using MoreLinq;
 using Origam.Extensions;
 using ProtoBuf;
 
@@ -94,6 +95,9 @@ namespace Origam.DA.Service
             Dictionary<string, int> newStats = itemTracker.GetStats();
             Dictionary<string, int> loadedStats = serializationData.ItemTrackerStats;
 
+            CheckTrackerStatsAreEqual(newStats, loadedStats);
+        }
+        private void CheckTrackerStatsAreEqual(Dictionary<string, int> newStats, Dictionary<string, int> loadedStats) {
             foreach (string statName in newStats.Keys)
             {
                 if (newStats[statName] != loadedStats[statName])
@@ -116,7 +120,7 @@ namespace Origam.DA.Service
         }
 
         public void Persist(ItemTracker itemTracker)
-        {      
+        {
             itemTracker.CleanUp();
             var serializationData = new TrackerSerializationData(
                 itemTracker.OrigamFiles, itemTracker.GetStats());
@@ -124,10 +128,21 @@ namespace Origam.DA.Service
             {
                 Serializer.Serialize(file, serializationData);
             }
-
-            // SaveItemTrackerToTxtForDebugging(itemTracker);
+            CheckDataConsistency(itemTracker);
         }
-        
+
+        private void CheckDataConsistency(ItemTracker originalTracker)
+        {
+            ItemTracker newTracker = new ItemTracker(null);
+            originalTracker.OrigamFiles
+                   .ForEach(x =>
+                   {
+                       newTracker.AddOrReplace(x);
+                       newTracker.AddOrReplaceHash(x);
+                   });
+            CheckTrackerStatsAreEqual(originalTracker.GetStats(), newTracker.GetStats());
+        }
+
         private void SaveItemTrackerToTxtForDebugging(ItemTracker itemTracker)
         {
             FileInfo txtFileInfo = indexFile.MakeNew("itemTracker");

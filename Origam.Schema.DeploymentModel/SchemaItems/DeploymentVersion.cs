@@ -279,32 +279,6 @@ namespace Origam.Schema.DeploymentModel
                 return base.CompareTo(obj);
             }
         }
-		
-		public void DontDependOnCurrentVersion(SchemaExtension package, string version)
-		{
-			PackageVersion currentVersion = new PackageVersion(version);
-
-			DeploymentDependency dependencyOnActivePackage = DeploymentDependencies
-				.First(x =>x.PackageId == package.Id);
-			if (dependencyOnActivePackage.PackageVersion == currentVersion)
-			{	
-				deploymentDependencies
-					.Remove(dependencyOnActivePackage);
-				
-				Maybe<PackageVersion> mayBePreviousVersion = ServiceManager
-					.Services
-					.GetService<IDeploymentService>()
-					.GetPreviousVersion(currentVersion, package);
-				
-				if (mayBePreviousVersion.HasValue)
-				{
-					deploymentDependencies
-					 .Add(new DeploymentDependency(package.Id,mayBePreviousVersion.Value));
-				}
-				DeploymentDependenciesCsv =
-					DeploymentDependency.ToCsv(deploymentDependencies);
-			}
-		}
 	}
 
 	public class DeploymentDependency

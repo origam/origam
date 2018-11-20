@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Origam.Services;
 using Origam.Workbench.Services;
 
@@ -123,11 +124,14 @@ namespace Origam.Schema.DeploymentModel
 		{
 			if(type == typeof(DeploymentVersion))
 			{
-				List<SchemaExtension> packages = ServiceManager
-					.Services
-					.GetService<IPersistenceService>()
-					.SchemaProvider
-					.RetrieveList<SchemaExtension>(null);
+			    List<SchemaExtension> packages = ServiceManager
+			        .Services
+			        .GetService<IPersistenceService>()
+			        .SchemaProvider
+			        .RetrieveList<SchemaExtension>(null)
+			        .Where(package => package.Id != schemaExtensionId)
+			        .ToList();
+                    
 
 				DeploymentVersion item = new DeploymentVersion(schemaExtensionId, packages);
 				item.RootProvider = this;

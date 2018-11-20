@@ -16,8 +16,8 @@ namespace Origam.DA.Service
     {
         private readonly IPersistenceProvider persistenceProvider;
         private readonly FilePersistenceIndex index;
-        private readonly IDictionary<string, OrigamFile> transactionStore =
-            new Dictionary<string, OrigamFile>();
+        private readonly TransactionStore transactionStore =
+            new TransactionStore();
         private readonly OrigamFileFactory origamFileFactory;
         private readonly OrigamFileManager origamFileManager;
         private bool inTransaction;
@@ -68,7 +68,7 @@ namespace Origam.DA.Service
 
             WriteToXmlDocument(origamFile, instance, elementName);
             UpdateIndex(instance, updatedObjectInfo);
-            transactionStore[origamFile.Path.Relative] = updatedObjectInfo.OrigamFile;
+            transactionStore.AddOrReplace(origamFile);
             if (!inTransaction)
             {
                 EndTransaction();
@@ -78,8 +78,8 @@ namespace Origam.DA.Service
 
         private void RemoveFromOldFile(IFilePersistent instance, OrigamFile origamFile)
         {
-            bool migthBeMovingBetweeFiles = !instance.IsDeleted && !instance.IsFileRootElement;
-            if (migthBeMovingBetweeFiles)
+            bool mightBeMovingBetweenFiles = !instance.IsDeleted && !instance.IsFileRootElement;
+            if (mightBeMovingBetweenFiles)
             {
                 OrigamFile oldOrigamFile = index.GetById(instance.Id)?.OrigamFile;
                 bool movingBetweenFiles = oldOrigamFile?.Path.Relative != origamFile.Path.Relative;
@@ -87,7 +87,7 @@ namespace Origam.DA.Service
                 {
                     oldOrigamFile.DeferredSaveDocument = GetDocumentToWriteTo(oldOrigamFile);
                     oldOrigamFile.RemoveInstance(instance.Id);
-                    transactionStore[oldOrigamFile.Path.Relative] = oldOrigamFile;
+                    transactionStore.AddOrReplace(oldOrigamFile);
                 }
             }
         }
@@ -112,7 +112,7 @@ namespace Origam.DA.Service
 
         public void EndTransaction()
         {       
-            foreach (OrigamFile origamFile in transactionStore.Values)
+            foreach (OrigamFile origamFile in transactionStore.Files)
             {
                 origamFile.FinalizeSave();
                 origamFile.DeferredSaveDocument = null;
@@ -124,11 +124,11 @@ namespace Origam.DA.Service
         
         public PersistedObjectInfo GetObjInfoFromTransactionStore(Guid id)
         {
-            foreach (var item in transactionStore)
+            foreach (var origamFile in transactionStore.Files)
             {
-                if (item.Value.ContainedObjects.ContainsKey(id))
+                if (origamFile.ContainedObjects.ContainsKey(id))
                 {
-                    return  item.Value.ContainedObjects[id];
+                    return origamFile.ContainedObjects[id];
                 }
             }
             return null;
@@ -237,10 +237,10 @@ namespace Origam.DA.Service
         {
             PersistedObjectInfo objInfo;
             OrigamFile origamFile;
-            if (inTransaction && transactionStore.ContainsKey(instance.RelativeFilePath))
+            if (inTransaction && transactionStore.Contains(instance.RelativeFilePath))
             {
                 Guid id = instance.Id;
-                origamFile = transactionStore[instance.RelativeFilePath];
+                origamFile = transactionStore.Get(instance.RelativeFilePath);
                 origamFile.ContainedObjects.TryGetValue(id, out objInfo);
                 return (origamFile, objInfo);
             }  
@@ -261,9 +261,9 @@ namespace Origam.DA.Service
 
         private XmlDocument GetDocumentToWriteTo(OrigamFile origamFile)
         {
-            if (inTransaction && transactionStore.ContainsKey(origamFile.Path.Relative))
+            if (inTransaction && transactionStore.Contains(origamFile.Path.Relative))
             {
-                return  transactionStore[origamFile.Path.Relative]
+                return  transactionStore.Get(origamFile.Path.Relative)
                     .DeferredSaveDocument;
             } 
             if (origamFile.Path.Exists)
@@ -288,5 +288,26 @@ namespace Origam.DA.Service
                 DatabasePersistenceProvider.CheckInstanceRules(instance);
             }
         }  
+    }
+
+    internal class TransactionStore
+    {
+        private readonly IDictionary<string, OrigamFile> pathFileDict =
+            new Dictionary<string, OrigamFile>();
+        public IEnumerable<OrigamFile> Files => pathFileDict.Values;
+
+        public void AddOrReplace(OrigamFile file)
+        {
+            if (file.DeferredSaveDocument == null)
+            {
+                throw new ArgumentException();
+            }
+            pathFileDict[file.Path.Relative] = file;
+        }
+        public OrigamFile Get(string relativePath) => pathFileDict[relativePath];
+
+        public bool Contains(string relativePath) => pathFileDict.ContainsKey(relativePath);
+
+        public void Clear() => pathFileDict.Clear();
     }
 }

@@ -15,12 +15,13 @@ namespace Origam.WorkbenchTests
         private readonly Guid package3Id = new Guid("30000000-BFCC-45DB-940E-DE685AE821EF");
 
         [Test]
-        public void ShouldOrderTwoUnrelatedPackagesByDepecndencies()
+        public void ShouldOrderTwoUnrelatedPackagesByDependencies()
         {
             //  P1    p2
             //  1.0<--
             //   |    1.0
             //   |    1.1
+            //   |    1.2
             //  1.1
 
             var deployment1 = new MockDeploymentVersion(
@@ -38,25 +39,41 @@ namespace Origam.WorkbenchTests
             
             var deployment3 = new MockDeploymentVersion(
                 new PackageVersion("1.1"),
-                new List<DeploymentDependency>
-                {
-                    new DeploymentDependency(package2Id, new PackageVersion("1.0"))
-                },
+                new List<DeploymentDependency>{},
                 package2Id);
-            
+
             var deployment4 = new MockDeploymentVersion(
+                new PackageVersion("1.2"),
+                new List<DeploymentDependency> { },
+                package2Id);
+
+            var deployment5 = new MockDeploymentVersion(
                 new PackageVersion("1.1"),
-                new List<DeploymentDependency>
-                {
-                    new DeploymentDependency(package1Id, new PackageVersion("1.0")),
-                },
+                new List<DeploymentDependency>{},
                 package1Id);
 
-            CheckTheOrderIsCorrect(deployment1, deployment2, deployment3, deployment4);
+            var unsortedDeployments = new List<IDeploymentVersion>
+            {
+                deployment5,
+                deployment3,
+                deployment1,
+                deployment4,
+                deployment2,
+            };
+
+            var deploymentSorter = new DeploymentSorter();
+            List<IDeploymentVersion> sortedDeployments =
+                deploymentSorter.SortToRespectDependencies(unsortedDeployments);
+
+            Assert.That(sortedDeployments[0], Is.EqualTo(deployment1));
+            Assert.That(sortedDeployments[1], Is.EqualTo(deployment2));
+            Assert.That(sortedDeployments[2], Is.EqualTo(deployment3));
+            Assert.That(sortedDeployments[3], Is.EqualTo(deployment4));
+            Assert.That(sortedDeployments[4], Is.EqualTo(deployment5));
         }
         
         [Test]
-        public void ShouldOrderTwoRelatedPackagesByDepecndencies()
+        public void ShouldOrderTwoRelatedPackagesByDependencies()
         {
             //  P1    p2
             //  1.0<--
@@ -79,10 +96,7 @@ namespace Origam.WorkbenchTests
             
             var deployment3 = new MockDeploymentVersion(
                 new PackageVersion("1.1"),
-                new List<DeploymentDependency>
-                {
-                    new DeploymentDependency(package2Id, new PackageVersion("1.0"))
-                },
+                new List<DeploymentDependency>{},
                 package2Id);
             
             var deployment4 = new MockDeploymentVersion(
@@ -90,7 +104,6 @@ namespace Origam.WorkbenchTests
                 new List<DeploymentDependency>
                 {
                     new DeploymentDependency(package2Id, new PackageVersion("1.1")),
-                    new DeploymentDependency(package1Id, new PackageVersion("1.0"))
                 },
                 package1Id);
 
@@ -98,7 +111,7 @@ namespace Origam.WorkbenchTests
         }
          
         [Test]
-        public void ShouldOrderThreeUnrelatedPackagesByDepecndencies()
+        public void ShouldOrderThreeUnrelatedPackagesByDependencies()
         {
             //  P1    p2   p3
             //  1.0<--
@@ -129,10 +142,7 @@ namespace Origam.WorkbenchTests
             
             var deployment4 = new MockDeploymentVersion(
                 new PackageVersion("1.1"),
-                new List<DeploymentDependency>
-                {
-                    new DeploymentDependency(package1Id, new PackageVersion("1.0"))
-                },
+                new List<DeploymentDependency> {},
                 package1Id);
 
             CheckTheOrderIsCorrect(deployment1, deployment2, deployment3, deployment4);
@@ -140,7 +150,7 @@ namespace Origam.WorkbenchTests
 
      
         [Test]
-        public void ShouldOrderThreeRelatedPackagesByDepecndencies()
+        public void ShouldOrderThreeRelatedPackagesByDependencies()
         {
             //  P1    p2   p3
             //  1.0<--   <--
@@ -176,7 +186,6 @@ namespace Origam.WorkbenchTests
                 {
                     new DeploymentDependency(package3Id, new PackageVersion("1.0")),
                     new DeploymentDependency(package2Id, new PackageVersion("1.0")),
-                    new DeploymentDependency(package1Id, new PackageVersion("1.0"))
                 },
                 package1Id);
 
@@ -184,14 +193,14 @@ namespace Origam.WorkbenchTests
         }
         
         [Test]
-        public void ShouldOrderTwoRelatedAnsOneUnrelatedPackageByDependencies()
+        public void ShouldOrderTwoRelatedAndOneUnrelatedPackageByDependencies()
         {
             //   P1    p2   p3
             //  1.0
-            //  1.1
+            //  1.1<--   
             //        1.0
-            //        1.1<--
-            //  1.2
+            //     -->1.1<--
+            //  1.2<--------
             //             1.0
             // P1 and P2 depend on each other, P3 depends on p2 1.1 only 
             
@@ -203,10 +212,7 @@ namespace Origam.WorkbenchTests
             
             var deployment2 = new MockDeploymentVersion(
                 new PackageVersion("1.1"),
-                new List<DeploymentDependency>
-                {
-                    new DeploymentDependency(package1Id, new PackageVersion("1.0"))
-                },
+                new List<DeploymentDependency> { },
                 package1Id);
             
             var deployment3 = new MockDeploymentVersion(
@@ -222,7 +228,6 @@ namespace Origam.WorkbenchTests
                 new List<DeploymentDependency>
                 {
                     new DeploymentDependency(package1Id, new PackageVersion("1.1")),
-                    new DeploymentDependency(package2Id, new PackageVersion("1.0")),
                 },
                 package2Id);
             
@@ -231,7 +236,6 @@ namespace Origam.WorkbenchTests
                 new PackageVersion("1.2"),
                 new List<DeploymentDependency>
                 {
-                    new DeploymentDependency(package1Id, new PackageVersion("1.1")),
                     new DeploymentDependency(package2Id, new PackageVersion("1.1")),
                 },
                 package1Id);
@@ -245,13 +249,12 @@ namespace Origam.WorkbenchTests
                 package3Id);
                         
             var deployment7 = new MockDeploymentVersion(
-                new PackageVersion("1.2"),
+                new PackageVersion("1.0"),
                 new List<DeploymentDependency>
                 {
                     new DeploymentDependency(package1Id, new PackageVersion("1.2")),
-                    new DeploymentDependency(package2Id, new PackageVersion("1.1")),
                 },
-                package2Id);
+                package3Id);
             
             
             var unsortedDeployments = new List<IDeploymentVersion>
@@ -288,10 +291,10 @@ namespace Origam.WorkbenchTests
         {
             var unsortedDeployments = new List<IDeploymentVersion>
             {
-                deployment4,
-                deployment1,
                 deployment3,
-                deployment2
+                deployment1,
+                deployment4,
+                deployment2,
             };
 
             var deploymentSorter = new DeploymentSorter();

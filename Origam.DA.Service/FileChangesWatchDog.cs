@@ -9,14 +9,14 @@ namespace Origam.DA.Service
 {
     public interface IFileChangesWatchDog
     {
-        event EventHandler<ChangedFileEventArgs> FileChanged;
+        event EventHandler<FileSystemChangeEventArgs> FileChanged;
         void Start();
         void Stop();
     }
 
     public class NullWatchDog : IFileChangesWatchDog
     {
-        public event EventHandler<ChangedFileEventArgs> FileChanged;
+        public event EventHandler<FileSystemChangeEventArgs> FileChanged;
         public void Start()
         {
         }
@@ -50,7 +50,7 @@ namespace Origam.DA.Service
             this.directoryNamesToIgnore = directoryNamesToIgnore;
         }
 
-        public event EventHandler<ChangedFileEventArgs> FileChanged;
+        public event EventHandler<FileSystemChangeEventArgs> FileChanged;
         
         public void Start()
         {
@@ -72,7 +72,9 @@ namespace Origam.DA.Service
             if (ShouldBeIgnored(e.FullPath)) return;
             
             FileChanged?.Invoke(
-                null, new ChangedFileEventArgs(e.FullPath, null, e.ChangeType));
+                null, new FileSystemChangeEventArgs(e.FullPath, null, e.ChangeType));
+
+
         }
 
         private bool ShouldBeIgnored(string fullPath) =>
@@ -108,7 +110,7 @@ namespace Origam.DA.Service
             
             FileChanged?.Invoke(
                 null, 
-                new ChangedFileEventArgs(
+                new FileSystemChangeEventArgs(
                     e.OldFullPath, e.FullPath, e.ChangeType));
         }
 
@@ -121,17 +123,25 @@ namespace Origam.DA.Service
             watcher.Renamed -= OnRenamed;
         }
     }
-    public class ChangedFileEventArgs : EventArgs
+    public class FileSystemChangeEventArgs : EventArgs
     {
+        private readonly string path;
+
+        public bool IsDirectoryChange =>
+            ChangeType == WatcherChangeTypes.Changed &&
+            Directory.Exists(path);
+        public DirectoryInfo Folder { get;}
         public FileInfo File { get; }
         public string OldFilename { get; }
         public WatcherChangeTypes ChangeType { get; }
         public DateTime Timestamp { get; }
-        internal ChangedFileEventArgs(
-            string filename, string oldFilename, 
+        internal FileSystemChangeEventArgs(
+            string path, string oldFilename, 
             WatcherChangeTypes changeType)
         {
-            File = new FileInfo(filename);
+            this.path = path;
+            Folder = new DirectoryInfo(path);
+            File = new FileInfo(path);
             OldFilename = oldFilename;
             ChangeType = changeType;
             Timestamp = DateTime.Now;

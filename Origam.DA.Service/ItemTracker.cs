@@ -239,6 +239,15 @@ namespace Origam.DA.Service
         {
             return fileHashIndex.GetHash(file.FullName);
         }
+
+        public IEnumerable<FileInfo> GetByDirectory(DirectoryInfo dir)
+        {
+            return OrigamFiles
+                //.Where(origamFile => new FileInfo(origamFile.Path.Absolute).IsOnPathOf(dir))
+                .Where(origamFile => dir.IsOnPathOf(origamFile.Path.Absolute))
+                .SelectMany(origamFile => 
+                    origamFile.ExternalFiles.Concat(new FileInfo(origamFile.Path.Absolute)));
+        }
     }
     
     internal class FileHashIndex

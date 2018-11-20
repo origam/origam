@@ -1245,7 +1245,11 @@ namespace Origam.Schema
 
         private string RemoveIllegalCharactersFromPath(string text)
         {
-            return _regex.Replace(text, "");
+            if (!string.IsNullOrEmpty(text))
+            {
+                return _regex.Replace(text, "");
+            }
+            return text;
         }
 
         [Browsable(false)]
@@ -1733,7 +1737,7 @@ namespace Origam.Schema
 		#endregion
 
 		#region ICloneable Members
-		public object Clone()
+		public virtual object Clone()
 		{
 			return this.Clone(false);
 		}
