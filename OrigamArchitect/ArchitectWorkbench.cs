@@ -1314,11 +1314,15 @@ namespace OrigamArchitect
             }
             if (reloadConfirmed)
             {
-                if(!TryLoadModelFiles(filePersistenceService))
+                Maybe<XmlLoadError> mayBeError = TryLoadModelFiles(filePersistenceService);
+                if (mayBeError.HasValue)
                 {
-                    return;
+                    this.RunWithInvoke(Disconnect);
                 }
-                this.RunWithInvokeAsync(() => UpdateUIAfterReload(filePersistenceProvider, args));
+                else
+                {
+                    this.RunWithInvokeAsync(() => UpdateUIAfterReload(filePersistenceProvider, args));
+                }
             }
 		}
 
@@ -1376,20 +1380,22 @@ namespace OrigamArchitect
 		        .Any(objInfo => objInfo.OrigamFile.Path.EqualsTo(file));
         }
 
-		private bool TryLoadModelFiles(FilePersistenceService filePersistService)
+		private Maybe<XmlLoadError> TryLoadModelFiles(FilePersistenceService filePersistService)
 		{
 			Maybe<XmlLoadError> maybeError =
 				filePersistService.Reload(tryUpdate: false);
 
-			if (maybeError.HasNoValue) return true;
+			if (maybeError.HasNoValue) return null;
 			XmlLoadError error = maybeError.Value;
 			switch (error.Type)	
 			{
 				case ErrType.XmlGeneralError:
 				    this.RunWithInvoke(() => MessageBox.Show(this, error.Message));
-                    return false;
+                    return maybeError;
 				case ErrType.XmlVersionIsOlderThanCurrent:
-					return TryHandleOldVersionFound(filePersistService, error.Message);
+					return TryHandleOldVersionFound(filePersistService, error.Message) 
+					    ? null 
+					    : maybeError;
 				default:
 					throw new NotImplementedException();
 			}
