@@ -58,7 +58,14 @@ namespace Origam.Schema.EntityModel
                 containingObject: this);
         }
 
-        #region Overriden AbstractSchemaItem members
+	    public override object Clone()
+	    {
+	        var clone = (XslTransformation)base.Clone();
+	        clone.TextStore = TextStore;
+	        return clone;
+	    }
+
+	    #region Overriden AbstractSchemaItem members
         public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
 			XsltDependencyHelper.GetDependencies(this, dependencies, this.TextStore);
