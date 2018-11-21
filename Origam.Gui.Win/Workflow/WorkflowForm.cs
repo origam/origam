@@ -274,7 +274,7 @@ namespace Origam.Workflow
 			this.DockPadding.All = 5;
 
 			this.StatusText = ResourceUtils.GetString("ProcessFinished");
-			AppendProcessLog(Environment.NewLine + "----------------------------------" + Environment.NewLine + "Proces dokonèen.");
+			AppendProcessLog(Environment.NewLine + "----------------------------------" + Environment.NewLine + ResourceUtils.GetString("ProcessFinished"));
 
 			this.CanFinishTask = false;
 			this.CloseButton = true;
