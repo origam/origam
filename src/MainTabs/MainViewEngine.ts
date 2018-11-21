@@ -22,14 +22,20 @@ class OpenedView implements IOpenedView {
   @action.bound
   public start() {
     axios
-      .get(
+      /*.get(
         {
           "b2a2194c-c2a5-4236-837a-08c1b720fc96": "/screen01.xml",
           "f96ad0ca-7be8-4f11-a397-358d02abd0b2": "/screen02.xml",
           "8713c618-b4fb-4749-ab28-0811b85481b0": "/screen03.xml",
           "3272db8a-172f-48ee-9e50-ef65219089c2": "/screen04.xml"
         }[this.id]
-      )
+      )*/
+      .get(`/api/MetaData/GetScreeSection`, {
+        headers: { Authorization: `Bearer ${TOKEN}` },
+        params: {
+          id: this.id
+        }
+      })
       .then(
         action((response: any) => {
           const { data } = response;
@@ -51,6 +57,9 @@ class OpenedView implements IOpenedView {
 
 let subidGen = 1;
 
+const TOKEN =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiUFRMRTU0MFxccGF2ZWwiLCJuYmYiOiIxNTQyODMwNTc3IiwiZXhwIjoiMTU0MjkxNjk3NyJ9.YVxGKmYrvZdTkenY26uaT6toMRl8b30dJmNpH1xjgbE";
+
 export class MainViewEngine {
   @observable public activeView: IOpenedView | undefined = undefined;
   @observable public openedViewsState: IOpenedView[] = [];
@@ -59,14 +68,18 @@ export class MainViewEngine {
 
   @action.bound
   public start() {
-    axios.get("/menu01.xml").then(
-      action((response: any) => {
-        const { data } = response;
-        const xmlObj = xmlJs.xml2js(data, { compact: false });
-        const reactMenu = interpretMenu(xmlObj);
-        this.reactMenu = reactMenu;
+    axios
+      .get("/api/MetaData/GetMenu", {
+        headers: { Authorization: `Bearer ${TOKEN}` }
       })
-    );
+      .then(
+        action((response: any) => {
+          const { data } = response;
+          const xmlObj = xmlJs.xml2js(data, { compact: false });
+          const reactMenu = interpretMenu(xmlObj);
+          this.reactMenu = reactMenu;
+        })
+      );
   }
 
   @computed

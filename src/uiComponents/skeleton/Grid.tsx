@@ -418,13 +418,13 @@ export class Grid extends React.Component<any> {
             minHeight: this.props.h
           }}
         >
-          {/*<GridToolbar
+          <GridToolbar
             name={this.props.name}
             isHidden={this.props.isHeadless}
             isAddButton={this.props.isShowAddButton}
             isDeleteButton={this.props.isShowDeleteButton}
             isCopyButton={this.props.isShowAddButton}
-          />*/}
+          />
           {this.props.table}
           {this.props.form}
           <GridMap />
