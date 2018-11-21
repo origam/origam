@@ -59,7 +59,7 @@ export class GridComponent extends React.Component<IGridProps> {
     return (
       <div
         className="grid-view-container"
-        style={{ width, height }}
+        style={{ flex: '1 1 auto' }}
         onKeyDown={handleGridKeyDown}
         // style={{display: this.props.isHidden ? "none" : undefined}}
       >

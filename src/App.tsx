@@ -4,6 +4,7 @@ import { MainMenu } from "./MainMenu/MainMenuComponent";
 import { MainViewEngine } from "./MainTabs/MainViewEngine";
 import { runInAction } from "mobx";
 import { MainTabs } from "./MainTabs/MainTabs";
+import { Splitter, SplitPanel } from "./uiComponents/Splitter";
 
 @observer
 export default class App extends React.Component {
@@ -74,12 +75,20 @@ export default class App extends React.Component {
           </div>
         </div>
         <div className="oui-body-bar">
-          <div className="oui-side-bar">
+          <Splitter isVertical={false}>
+            <SplitPanel splitterId={1} initialSize={100}>
+              <MainMenu mainViewEngine={this.mainViewEngine} />
+            </SplitPanel>
+            <SplitPanel splitterId={2}>
+              <MainTabs mainViewEngine={this.mainViewEngine} />
+            </SplitPanel>
+          </Splitter>
+          {/*<div className="oui-side-bar">
             <MainMenu mainViewEngine={this.mainViewEngine} />
           </div>
           <div className="oui-data-bar">
             <MainTabs mainViewEngine={this.mainViewEngine} />
-          </div>
+    </div>*/}
         </div>
       </div>
     );

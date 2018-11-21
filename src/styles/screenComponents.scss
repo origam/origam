@@ -145,6 +145,46 @@ body {
   }
 }
 
+
+.vsplit {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  margin: 3px;
+  //@extend %block-debug;
+}
+
+.vsplitdiv {
+  min-height: 3px;
+  max-height: 3px;
+  background-color: green;
+  cursor: row-resize;
+}
+
+.hsplit {
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 auto;
+  margin: 3px;
+  //@extend %block-debug;
+}
+
+.hsplitdiv {
+  min-width: 3px;
+  max-width: 3px;
+  background-color: green;
+  cursor: col-resize;
+}
+
+.split-panel {
+  display: flex;
+  margin: 3px;
+  border: 1px dotted white;
+  &.last {
+    flex: 1 1 auto;
+  }
+}
+
 .oui-tree-panel {
   flex: 1 1 0;
   max-width: 300px;
@@ -206,6 +246,7 @@ body {
 .oui-window-content {
   flex: 1 1 0;
   display: flex;
+  overflow: auto;
 }
 
 .oui-grid {
@@ -527,12 +568,13 @@ body {
 }
 
 .oui-main-menu {
+  flex: 1 1 auto;
   display: block;
   height: 100%;
   overflow: auto;
   background-color: $panel-bgcolor;
   color: $panel-color;
-  border-right: 10px solid $skeleton-bgcolor;
+  //border-right: 10px solid $skeleton-bgcolor;
 }
 
 .main-menu-item.section {
@@ -684,7 +726,27 @@ canvas {
   position: relative;
   overflow: hidden;
   display: flex;
-  flex: 1 1 0;
+  flex: 1 1 auto;
+}
+
+.grid-view-root {
+  flex: 1 1 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.grid-view-canvas {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.grid-view-scroller {
+  overflow: scroll;
+  color: black;
+  position: absolute;
+  top: 0px;
+  left: 0px;
 }
 
 .oui-data-bar,

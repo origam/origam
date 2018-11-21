@@ -22,25 +22,7 @@ body {
 
 
 
-.grid-view-root {
-  flex: 1 1 auto;
-  position: relative;
-  overflow: hidden;
-}
 
-.grid-view-canvas {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-}
-
-.grid-view-scroller {
-  overflow: scroll;
-  color: black;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-}
 
 .grid-view-editor-portal {
   position: absolute;
