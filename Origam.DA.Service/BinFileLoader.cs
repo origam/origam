@@ -94,29 +94,34 @@ namespace Origam.DA.Service
         {
             Dictionary<string, int> newStats = itemTracker.GetStats();
             Dictionary<string, int> loadedStats = serializationData.ItemTrackerStats;
-
-            CheckTrackerStatsAreEqual(newStats, loadedStats);
+            if (!AreTrackerStatsAreEqual(newStats, loadedStats))
+            {
+                HandleTrackerStatsAreNotEqual(newStats, loadedStats);
+            }
         }
-        private void CheckTrackerStatsAreEqual(Dictionary<string, int> newStats, Dictionary<string, int> loadedStats) {
+
+        private bool AreTrackerStatsAreEqual(Dictionary<string, int> newStats, Dictionary<string, int> loadedStats)
+        {
             foreach (string statName in newStats.Keys)
             {
                 if (newStats[statName] != loadedStats[statName])
                 {
-                    log.Error(
-                        $"Error when loading index file:{indexFile}, data is inconsistent." +
-                        " ItemTracker stats now: " + newStats.Print(inLine: true) +
-                        "ItemTracker stats in file: " +
-                        loadedStats.Print(inLine: true));
-
-                    throw new Exception(
-                        "Error when loading index file, data is inconsistent.");
-                    // This doesn't mean the serialized data is corrupted. Try running this in Persist method :
-                    // var origFiles = itemTracker.OrigamFiles;
-                    // itemTracker.Clear();
-                    // itemTracker.ForEach(origFiles.AddOrReplace);
-                    // and compare the stats to see if the problem is really in the serialization.
+                    return false;
                 }
             }
+            return true;
+        }
+
+
+        private void HandleTrackerStatsAreNotEqual(Dictionary<string, int> newStats, Dictionary<string, int> loadedStats) {
+            log.Error(
+                $"Error when loading index file:{indexFile}, data is inconsistent." +
+                " ItemTracker stats now: " + newStats.Print(inLine: true) +
+                "ItemTracker stats in file: " +
+                loadedStats.Print(inLine: true));
+
+            throw new Exception(
+                "Error when loading index file, data is inconsistent.");
         }
 
         public void Persist(ItemTracker itemTracker)
@@ -133,20 +138,26 @@ namespace Origam.DA.Service
 
         private void CheckDataConsistency(ItemTracker originalTracker)
         {
-            ItemTracker newTracker = new ItemTracker(null);
+            ItemTracker testTracker = new ItemTracker(null);
             originalTracker.OrigamFiles
                    .ForEach(x =>
                    {
-                       newTracker.AddOrReplace(x);
-                       newTracker.AddOrReplaceHash(x);
+                       testTracker.AddOrReplace(x);
+                       testTracker.AddOrReplaceHash(x);
                    });
-            CheckTrackerStatsAreEqual(originalTracker.GetStats(), newTracker.GetStats());
+            if (!AreTrackerStatsAreEqual(testTracker.GetStats(), originalTracker.GetStats()))
+            {
+                SaveItemTrackersForDebugging(originalTracker, testTracker);
+                HandleTrackerStatsAreNotEqual(testTracker.GetStats(), originalTracker.GetStats());
+            }
         }
 
-        private void SaveItemTrackerToTxtForDebugging(ItemTracker itemTracker)
+        private void SaveItemTrackersForDebugging(ItemTracker originalTracker, ItemTracker testTracker)
         {
-            FileInfo txtFileInfo = indexFile.MakeNew("itemTracker");
-            File.WriteAllText(txtFileInfo.FullName, itemTracker.Print());
+            string toFile = "originalTracker: +\n" + originalTracker.Print() + 
+                            "\n\ntestTracker: \n" + testTracker.Print();
+            FileInfo txtFileInfo = indexFile.MakeNew("debug");
+            File.WriteAllText(txtFileInfo.FullName, toFile);
         }
         
         private void SaveIndexToTxtForDebugging(
