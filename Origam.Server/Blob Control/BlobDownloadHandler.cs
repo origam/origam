@@ -129,7 +129,7 @@ namespace Origam.Server
                         resultStream = ms;
                     }
 
-                    string fileName = (string)br.Row[br.Property].ToString();
+                    string fileName = (string)br.Row[br.Property];
 
                     // return
                     HttpResponse response = context.Response;
