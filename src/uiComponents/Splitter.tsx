@@ -109,7 +109,7 @@ interface ISplitPanelProps {
 export class SplitPanel extends React.Component<ISplitPanelProps> {
   constructor(props: ISplitPanelProps) {
     super(props);
-    if (props.initialSize) {
+    if (props.initialSize && !props.isLast) {
       props.splitterModel!.sizes.set(props.splitterId, props.initialSize);
     }
   }
@@ -183,6 +183,8 @@ class SplitHandle extends React.Component<ISplitHandleProps> {
       (isVertical ? event.screenY : event.screenX) +
       this.startMousePosition;
 
+    
+
     if (newSizePrev < 40 || newSizeNext < 40) {
       return;
     }
@@ -196,6 +198,7 @@ class SplitHandle extends React.Component<ISplitHandleProps> {
     for (const size of sizes.values()) {
       sizeSum = sizeSum + size;
     }
+    console.log( oldSizeNext, newSizeNext, isVertical);
 
     if (sizeSum > containerSize - 40 && oldSizePrev) {
       sizes.set(prevPanelId, oldSizePrev);
