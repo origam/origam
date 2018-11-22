@@ -31,6 +31,7 @@ export interface IDataLoader {
     limit?: number;
     orderBy?: Array<[string, string]>;
     filter?: Array<[string, string, string]>;
+    columns?: string[];
   }): Promise<any>;
   loadLookup(table: string, label: string, ids: string[]): Promise<any>;
 }

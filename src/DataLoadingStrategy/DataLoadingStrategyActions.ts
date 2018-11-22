@@ -327,10 +327,12 @@ export class DataLoadingStrategyActions {
     const addedOrdering = this.gridOrderingSelectors.ordering.filter(
       o => o[0] !== "id"
     );
-    addedOrdering.push(["id", "asc"]);
+    addedOrdering.push(["Id", "asc"]);
+    const columns = this.dataTableSelectors.fields.map(field => field.id);
     const apiResult = yield this.dataLoader.loadDataTable({
       limit: 5000,
-      orderBy: addedOrdering as Array<[string, string]>
+      orderBy: addedOrdering as Array<[string, string]>,
+      columns
     });
     const records = apiResult.data.result.map((record: any) => {
       const newRecord = new DataTableRecord(

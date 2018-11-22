@@ -326,6 +326,18 @@ function createGridPaneBacking(
   };
 }
 
+function fieldsFromProperties(properties: any[]) {
+  return properties.filter((property: any) => property.id !== "Id").map((property:any, idx: number) => {
+    return new DataTableField({
+      id: property.id,
+      label: property.name,
+      type: IFieldType.string,
+      dataIndex: idx,
+      isLookedUp: false
+    })
+  })
+}
+
 const personFields = [
   new DataTableField({
     id: "name",
@@ -387,9 +399,10 @@ const cityFields = [
 export class Grid extends React.Component<any> {
   constructor(props: any) {
     super(props);
+    const fields = fieldsFromProperties(props.properties);
     this.gridPaneBacking = createGridPaneBacking(
-      "person",
-      personFields,
+      this.props.dataSource.dataStructureEntityId,
+      fields,
       this.props.initialView
     );
   }

@@ -60,7 +60,7 @@ export function createColumnHeaderRenderer({
                 {!ordering.direction && <i className={"fa fa-sort"} />}
               </button>
             </div>
-            {columnIndex === 4 && (
+            {columnIndex === 4 && false && (
               <div
                 style={{}}
                 className="table-column-header"

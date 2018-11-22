@@ -225,6 +225,7 @@ function ruleGrid(node: any, context: any, rules: any[]) {
   if (node.attributes.Type === "Grid") {
     // console.log(node.attributes);
     const settings = {
+      entity: node.attributes.Entity,
       isHeadless: text2bool(node.attributes.IsHeadless),
       isActionButtonsDisabled: text2bool(node.attributes.DisableActionButtons),
       isShowAddButton: text2bool(node.attributes.ShowAddButton),
@@ -277,6 +278,25 @@ function ruleGrid(node: any, context: any, rules: any[]) {
     node.elements.forEach((element: any) => {
       processNode(element, newContext, BASIC_RULES);
     });
+
+    newContext.executeLater.push(() => {
+      const dataSource = context.dataSources.find((ds: any) => {
+        return ds.entity === settings.entity;
+      });
+      if(dataSource) {
+        uiNode.props.dataSource = dataSource;
+        for(const property of newContext.collectProperties) {
+          const field = dataSource.fields.find((f: any) => f.id === property.id)
+          if(field) {
+            property.recvDataIndex = field.recvDataIndex;
+          } else {
+            // TODO: No field found?
+          }
+        }
+      } else {
+        // TODO: No data source found?
+      }
+    })
 
     return node;
   }
@@ -465,11 +485,35 @@ function ruleTab(node: any, context: any, rules: any[]) {
 
 function ruleDataSources(node: any, context: any, rules: any[]) {
   if (node.name === "DataSources") {
-    console.warn(`No processing for ${node.name} so far.`);
+    const dataSources = [];
+    for(const element1 of node.elements) {
+      if(element1.name === "DataSource") {
+        const fields = [];
+        for(const element2 of element1.elements) {
+          if(element2.name === "Field") {
+            fields.push({
+              id: element2.attributes.Name,
+              recvDataIndex: parseInt(element2.attributes.Index, 10),
+            });
+          }
+        }
+        dataSources.push({
+          entity: element1.attributes.Entity,
+          dataStructureEntityId: element1.attributes.DataStructureEntityId,
+          primaryKey: element1.attributes.Identifier,
+          lookupCacheKey: element1.attributes.LookupCacheKey,
+          fields
+        })
+      }
+      context.dataSources = dataSources;
+      console.log(dataSources)
+    }
     return node;
   }
   return undefined;
 }
+
+
 
 function ruleComponentBindings(node: any, context: any, rules: any[]) {
   if (node.name === "ComponentBindings") {
