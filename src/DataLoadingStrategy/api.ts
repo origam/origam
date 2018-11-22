@@ -8,8 +8,8 @@ export function getToken() {
 }
 
 function login() {
-  const USER = "PTLE540pavel";
-  const PASS = "PTLE540pavel";
+  const USER = "PTLE540\\pavel";
+  const PASS = "PTLE540\\pavel";
   const params = new URLSearchParams();
   params.append("username", USER);
   params.append("password", PASS);
@@ -25,7 +25,7 @@ function login() {
     .then(response => {
       sessionStorage.setItem("origamAccessToken", response.data);
       return (globalAuthToken = response.data);
-    });
+    })
 }
 
 export class APIFake implements IAPI {
