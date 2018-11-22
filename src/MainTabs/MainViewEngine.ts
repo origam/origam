@@ -6,6 +6,8 @@ import * as xmlJs from "xml-js";
 import { parseScreenDef } from "src/screenInterpreter/interpreter";
 import { buildReactTree } from "src/screenInterpreter/uiBuilder";
 import { interpretMenu } from "src/MainMenu/MainMenuComponent";
+import { IAPI } from "../DataLoadingStrategy/types";
+import { getToken } from "../DataLoadingStrategy/api";
 
 interface IOpenedView {
   id: string;
@@ -15,38 +17,26 @@ interface IOpenedView {
 }
 
 class OpenedView implements IOpenedView {
-  constructor(public id: string, public subid: string, public label: string) {}
+  constructor(
+    public id: string,
+    public subid: string,
+    public label: string,
+    public api: IAPI
+  ) {}
 
   @observable.ref public reactTree: React.ReactNode = null;
 
   @action.bound
   public start() {
-    axios
-      /*.get(
-        {
-          "b2a2194c-c2a5-4236-837a-08c1b720fc96": "/screen01.xml",
-          "f96ad0ca-7be8-4f11-a397-358d02abd0b2": "/screen02.xml",
-          "8713c618-b4fb-4749-ab28-0811b85481b0": "/screen03.xml",
-          "3272db8a-172f-48ee-9e50-ef65219089c2": "/screen04.xml"
-        }[this.id]
-      )*/
-      .get(`/api/MetaData/GetScreeSection`, {
-        headers: { Authorization: `Bearer ${TOKEN}` },
-        params: {
-          id: this.id
-        }
+    this.api.loadScreen({ id: this.id, token: getToken() }).then(
+      action((response: any) => {
+        const { data } = response;
+        const xmlObj = xmlJs.xml2js(data, { compact: false });
+        const interpretedResult = parseScreenDef(xmlObj);
+        const reactTree = buildReactTree(interpretedResult.uiNode);
+        this.reactTree = reactTree;
       })
-      .then(
-        action((response: any) => {
-          const { data } = response;
-          const xmlObj = xmlJs.xml2js(data, { compact: false });
-          const interpretedResult = parseScreenDef(xmlObj);
-          const reactTree = buildReactTree(interpretedResult.uiNode);
-          // console.log(interpretedResult);
-          // console.log(reactTree);
-          this.reactTree = reactTree;
-        })
-      );
+    );
   }
 
   @action.bound
@@ -57,10 +47,9 @@ class OpenedView implements IOpenedView {
 
 let subidGen = 1;
 
-const TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiUFRMRTU0MFxccGF2ZWwiLCJuYmYiOiIxNTQyODMwNTc3IiwiZXhwIjoiMTU0MjkxNjk3NyJ9.YVxGKmYrvZdTkenY26uaT6toMRl8b30dJmNpH1xjgbE";
-
 export class MainViewEngine {
+  constructor(public api: IAPI) {}
+
   @observable public activeView: IOpenedView | undefined = undefined;
   @observable public openedViewsState: IOpenedView[] = [];
 
@@ -68,18 +57,14 @@ export class MainViewEngine {
 
   @action.bound
   public start() {
-    axios
-      .get("/api/MetaData/GetMenu", {
-        headers: { Authorization: `Bearer ${TOKEN}` }
+    this.api.loadMenu({ token: getToken() }).then(
+      action((response: any) => {
+        const { data } = response;
+        const xmlObj = xmlJs.xml2js(data, { compact: false });
+        const reactMenu = interpretMenu(xmlObj);
+        this.reactMenu = reactMenu;
       })
-      .then(
-        action((response: any) => {
-          const { data } = response;
-          const xmlObj = xmlJs.xml2js(data, { compact: false });
-          const reactMenu = interpretMenu(xmlObj);
-          this.reactMenu = reactMenu;
-        })
-      );
+    );
   }
 
   @computed
@@ -146,7 +131,7 @@ export class MainViewEngine {
 
   @action.bound
   public openView(id: string, label: string) {
-    const view = new OpenedView(id, `${subidGen++}`, label);
+    const view = new OpenedView(id, `${subidGen++}`, label, this.api);
     view.start();
     this.openedViewsState.push(view);
     this.activateView(view.id, view.subid);

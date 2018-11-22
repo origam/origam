@@ -5,13 +5,14 @@ import { MainViewEngine } from "./MainTabs/MainViewEngine";
 import { runInAction } from "mobx";
 import { MainTabs } from "./MainTabs/MainTabs";
 import { Splitter, SplitPanel } from "./uiComponents/Splitter";
+import { api } from "./DataLoadingStrategy/api";
 
 @observer
 export default class App extends React.Component {
   constructor(props: any) {
     super(props);
 
-    this.mainViewEngine = new MainViewEngine();
+    this.mainViewEngine = new MainViewEngine(api);
   }
 
   public componentDidMount() {

@@ -1,12 +1,11 @@
 import { action, flow } from "mobx";
 import axios from "axios";
 import { CancellablePromise } from "mobx/lib/api/flow";
-
-const TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiUFRMRTU0MFxccGF2ZWwiLCJuYmYiOiIxNTQyODMwNTc3IiwiZXhwIjoiMTU0MjkxNjk3NyJ9.YVxGKmYrvZdTkenY26uaT6toMRl8b30dJmNpH1xjgbE";
+import { IAPI } from "./types";
+import {getToken} from './api';
 
 export class DataLoader {
-  constructor(public tableName: string) {}
+  constructor(public tableName: string, public api: IAPI) {}
 
   private loadingPromise: CancellablePromise<any> | undefined;
   private loadWaitingPromise: CancellablePromise<any> | undefined;
@@ -60,17 +59,14 @@ export class DataLoader {
     filter?: Array<[string, string, string]>;
     orderBy?: Array<[string, string]>;
   }) {
-    axios.post(
-      `/api/Data/EntitiesGet`,
-      {
-        dataStructureEntityId: this.tableName,
-        filter: filter || "",
-        ordering: orderBy || "",
-        rowLimit: `${limit}`,
-        columnNames: columns
-      },
-      { headers: { Authorization: `Bearer ${TOKEN}` } }
-    );
+    this.api.loadDataTable({
+      tableId: this.tableName,
+      columns,
+      token: getToken(),
+      limit,
+      filter,
+      orderBy
+    });
     return Promise.reject(new Error());
     /*return axios.get(`http://127.0.0.1:8080/api/${this.tableName}`, {
       params: {

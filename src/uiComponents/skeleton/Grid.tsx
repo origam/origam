@@ -52,6 +52,7 @@ import { GridToolbar } from "../controls/GridToolbar";
 import { IGridPanelBacking } from "src/GridPanel/types";
 import { GridForm } from "../controls/GridForm";
 import { GridMap } from "../controls/GridMap";
+import { api } from "src/DataLoadingStrategy/api";
 
 class GridConfiguration {
   public gridSetup: IGridSetup;
@@ -171,7 +172,7 @@ function createGridPaneBacking(
     gridOutlineSelectors
   );
 
-  const dataLoader = new DataLoader(dataTableName);
+  const dataLoader = new DataLoader(dataTableName, api);
 
   const dataTableState = new DataTableState();
 

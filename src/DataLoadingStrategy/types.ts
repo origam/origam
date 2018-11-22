@@ -2,7 +2,6 @@ import { IDataTableRecord, IRecordId } from "src/DataTable/types";
 
 export interface ILookupResolverDR {
   dataLoader: IDataLoader;
-  
 }
 
 export interface IDataLoadingStategyState {
@@ -40,4 +39,24 @@ export interface IDataSaver {
   updateRecords(records: IDataTableRecord[]): Promise<IDataTableRecord[]>;
   deleteRecords(recordIds: IRecordId[]): Promise<any>;
   createRecords(records: IDataTableRecord[]): Promise<IDataTableRecord[]>;
+}
+
+export interface IAPI {
+  loadDataTable({
+    tableId,
+    columns,
+    limit,
+    filter,
+    orderBy,
+    token
+  }: {
+    tableId: string;
+    token: string;
+    columns?: string[] | undefined;
+    limit?: number | undefined;
+    filter?: Array<[string, string, string]> | undefined;
+    orderBy?: Array<[string, string]> | undefined;
+  }): Promise<any>;
+  loadMenu({ token }: { token: string }): Promise<any>;
+  loadScreen({ id, token }: { id: string; token: string }): Promise<any>;
 }
