@@ -97,7 +97,7 @@ export class APIOrigam implements IAPI {
         `/api/Data/EntitiesGet`,
         {
           dataStructureEntityId: tableId,
-          filter: filter || "",
+          filter: filter ? JSON.stringify(filter) : "",
           ordering: orderBy || "",
           rowLimit: `${limit}`,
           columnNames: columns

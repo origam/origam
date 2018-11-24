@@ -23,6 +23,7 @@ import {
   IGridActions
 } from "../Grid/types";
 import { CancellablePromise } from "mobx/lib/api/flow";
+import { IDataTableFieldStruct } from '../DataTable/types';
 
 function noCancelException<T>(promise: Promise<void | T>): Promise<void | T> {
   return promise.catch(e => {
@@ -206,9 +207,9 @@ export class DataLoadingStrategyActions {
     const lastRecord = this.dataTableSelectors.lastFullRecord;
     const addedFilters = [];
     const addedOrdering = this.gridOrderingSelectors.ordering.filter(
-      o => o[0] !== "id"
+      o => o[0] !== "Id"
     );
-    addedOrdering.push(["id", "asc"]);
+    addedOrdering.push(["Id", "asc"]);
     const cursorValues = addedOrdering.map(ord => {
       const field = this.dataTableSelectors.getFieldById(ord[0]);
       const value = this.dataTableSelectors.getResetValue(lastRecord, field!)
@@ -219,27 +220,25 @@ export class DataLoadingStrategyActions {
       cursorValues,
       addedOrdering
     ))
-
+    const fields = [...this.dataTableSelectors.fields];
+    fields.sort((a, b) => a.recvDataIndex - b.recvDataIndex);
+    const columns = this.dataTableSelectors.fields.map(field => field.id);
+    const idFieldIndex = fields.findIndex(field => field.isPrimaryKey);
     const apiResult = yield this.dataLoader.loadDataTable({
       limit: 5000,
       orderBy: addedOrdering as Array<[string, string]>,
-      filter: addedFilters as Array<[string, string, string]> // TODO!!!
+      filter: addedFilters as Array<[string, string, string]>, // TODO!!!
+      columns
     });
-    const records = apiResult.data.result.map((record: any) => {
+    const records = apiResult.data.map((record: any) => {
       const newRecord = new DataTableRecord(
-        record.id,
+        record[idFieldIndex],
         Array(this.dataTableSelectors.fieldCount)
       );
 
-      for (const kvPair of (Object as any)
-        .entries(record)
-        .filter((o: [string, string, string]) => o[0] !== "id")) {
-        // TODO: typecast?
-        const field = this.dataTableSelectors.getFieldById(kvPair[0]);
-        if (!field || field === "ID") {
-          continue;
-        }
-        newRecord.values[field.dataIndex] = kvPair[1];
+      for (let fieldIdx = 0; fieldIdx < record.length; fieldIdx++) {
+        const field = fields[fieldIdx];
+        newRecord.values[field.dataIndex] = record[fieldIdx];
       }
 
       return newRecord;
@@ -325,29 +324,27 @@ export class DataLoadingStrategyActions {
 
   private *loadFresh() {
     const addedOrdering = this.gridOrderingSelectors.ordering.filter(
-      o => o[0] !== "id"
+      o => o[0] !== "Id"
     );
     addedOrdering.push(["Id", "asc"]);
+    const fields = [...this.dataTableSelectors.fields];
+    fields.sort((a, b) => a.recvDataIndex - b.recvDataIndex);
     const columns = this.dataTableSelectors.fields.map(field => field.id);
+    const idFieldIndex = fields.findIndex(field => field.isPrimaryKey);
     const apiResult = yield this.dataLoader.loadDataTable({
       limit: 5000,
       orderBy: addedOrdering as Array<[string, string]>,
       columns
     });
-    const records = apiResult.data.result.map((record: any) => {
+    const records = apiResult.data.map((record: any) => {
       const newRecord = new DataTableRecord(
-        record.id,
+        record[idFieldIndex],
         Array(this.dataTableSelectors.fieldCount)
       );
 
-      for (const kvPair of (Object as any)
-        .entries(record)
-        .filter((o: [string, ICellValue]) => o[0] !== "id")) {
-        const field = this.dataTableSelectors.getFieldById(kvPair[0]);
-        if (!field || field === "ID") {
-          continue;
-        }
-        newRecord.values[field.dataIndex] = kvPair[1];
+      for (let fieldIdx = 0; fieldIdx < record.length; fieldIdx++) {
+        const field = fields[fieldIdx];
+        newRecord.values[field.dataIndex] = record[fieldIdx];
       }
 
       return newRecord;

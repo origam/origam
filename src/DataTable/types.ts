@@ -90,7 +90,9 @@ export interface IDataTableFieldStruct {
   label: string;
   type: IFieldType;
   dataIndex: number;
+  recvDataIndex: number;
   isLookedUp: boolean;
+  isPrimaryKey: boolean;
   lookupResultFieldId?: IFieldId;
   lookupResultTableId?: ITableId;
   formOrder: number;

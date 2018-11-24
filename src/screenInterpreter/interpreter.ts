@@ -289,10 +289,13 @@ function ruleGrid(node: any, context: any, rules: any[]) {
           const field = dataSource.fields.find((f: any) => f.id === property.id)
           if(field) {
             property.recvDataIndex = field.recvDataIndex;
+            property.isPrimaryKey = dataSource.primaryKey === field.id;
           } else {
             // TODO: No field found?
           }
+          console.log(property);
         }
+        
       } else {
         // TODO: No data source found?
       }

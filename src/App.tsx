@@ -77,7 +77,7 @@ export default class App extends React.Component {
         </div>
         <div className="oui-body-bar">
           <Splitter isVertical={false}>
-            <SplitPanel splitterId={1} initialSize={100}>
+            <SplitPanel splitterId={1} initialSize={300}>
               <MainMenu mainViewEngine={this.mainViewEngine} />
             </SplitPanel>
             <SplitPanel splitterId={2}>

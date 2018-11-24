@@ -328,12 +328,14 @@ function createGridPaneBacking(
 }
 
 function fieldsFromProperties(properties: any[]) {
-  return properties.filter((property: any) => property.id !== "Id").map((property:any, idx: number) => {
+  return properties.map((property:any, idx: number) => {
     return new DataTableField({
       id: property.id,
       label: property.name,
       type: IFieldType.string,
       dataIndex: idx,
+      recvDataIndex: property.recvDataIndex,
+      isPrimaryKey: property.isPrimaryKey,
       isLookedUp: false
     })
   })
@@ -345,6 +347,8 @@ const personFields = [
     label: "Name",
     type: IFieldType.string,
     dataIndex: 0,
+    recvDataIndex: 0,
+    isPrimaryKey: false,
     isLookedUp: false
   }),
   new DataTableField({
@@ -352,6 +356,8 @@ const personFields = [
     label: "Birth date",
     type: IFieldType.date,
     dataIndex: 1,
+    recvDataIndex: 0,
+    isPrimaryKey: false,
     isLookedUp: false
   }),
   new DataTableField({
@@ -359,6 +365,8 @@ const personFields = [
     label: "Likes platypuses?",
     type: IFieldType.boolean,
     dataIndex: 2,
+    recvDataIndex: 0,
+    isPrimaryKey: false,
     isLookedUp: false
   }),
   new DataTableField({
@@ -366,6 +374,8 @@ const personFields = [
     label: "Lives in",
     type: IFieldType.string,
     dataIndex: 3,
+    recvDataIndex: 0,
+    isPrimaryKey: false,
     isLookedUp: true,
     lookupResultFieldId: "name",
     lookupResultTableId: "city"
@@ -375,6 +385,8 @@ const personFields = [
     label: "Favorite color",
     type: IFieldType.color,
     dataIndex: 4,
+    recvDataIndex: 0,
+    isPrimaryKey: false,
     isLookedUp: false
   })
 ];
@@ -385,6 +397,8 @@ const cityFields = [
     label: "Name",
     type: IFieldType.string,
     dataIndex: 0,
+    recvDataIndex: 0,
+    isPrimaryKey: false,
     isLookedUp: false
   }),
   new DataTableField({
@@ -392,6 +406,8 @@ const cityFields = [
     label: "Inhabitants",
     type: IFieldType.integer,
     dataIndex: 1,
+    recvDataIndex: 0,
+    isPrimaryKey: false,
     isLookedUp: false
   })
 ];

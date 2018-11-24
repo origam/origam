@@ -2,7 +2,32 @@ import { action, flow } from "mobx";
 import axios from "axios";
 import { CancellablePromise } from "mobx/lib/api/flow";
 import { IAPI } from "./types";
-import {getToken} from './api';
+import { getToken } from "./api";
+
+function tidyUpFilter(filter: any) {
+  if(!filter) {
+    return
+  }
+  for (let i = 0; i < filter.length; i++) {
+    const term = filter[i];
+    if (Array.isArray(term)) {
+      filter[i] = tidyUpFilter(term);
+    }
+  }
+
+  if (!Array.isArray(filter[0])) {
+    // It is a conj/disj term
+    if (filter.length === 2) {
+      // Delete and/or
+      filter = filter.slice(1);
+    }
+  }
+  if (filter.length === 1 && Array.isArray(filter[0])) {
+    filter = filter[0];
+  }
+
+  return filter;
+}
 
 export class DataLoader {
   constructor(public tableName: string, public api: IAPI) {}
@@ -40,34 +65,15 @@ export class DataLoader {
     filter?: Array<[string, string, string]>;
     orderBy?: Array<[string, string]>;
   }) {
-    return (flow(this.loadDataTableProc.bind(this)) as any)({
-      columns,
-      limit,
-      filter,
-      orderBy
-    });
-  }
-
-  private *loadDataTableProc({
-    columns,
-    limit,
-    filter,
-    orderBy
-  }: {
-    columns?: string[];
-    limit?: number;
-    filter?: Array<[string, string, string]>;
-    orderBy?: Array<[string, string]>;
-  }) {
-    this.api.loadDataTable({
+    return this.api.loadDataTable({
       tableId: this.tableName,
       columns,
       token: getToken(),
       limit,
-      filter,
+      filter: tidyUpFilter(filter),
       orderBy
     });
-    return Promise.reject(new Error());
+
     /*return axios.get(`http://127.0.0.1:8080/api/${this.tableName}`, {
       params: {
         limit,

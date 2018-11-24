@@ -60,6 +60,7 @@ export class DataTableRecord implements IDataTableRecord {
 }
 
 export class DataTableField implements IDataTableFieldStruct {
+  
   @observable
   public formOrder: number;
 
@@ -79,8 +80,11 @@ export class DataTableField implements IDataTableFieldStruct {
   @observable
   public dataIndex: number;
 
+  public recvDataIndex: number;
+
   public id: IFieldId;
 
+  public isPrimaryKey: boolean;
   public isLookedUp: boolean;
 
   public lookupResultFieldId: IFieldId;
@@ -90,6 +94,8 @@ export class DataTableField implements IDataTableFieldStruct {
     label,
     type,
     dataIndex,
+    recvDataIndex,
+    isPrimaryKey,
     isLookedUp,
     lookupResultFieldId,
     lookupResultTableId
@@ -98,6 +104,8 @@ export class DataTableField implements IDataTableFieldStruct {
     label: string;
     type: IFieldType;
     dataIndex: number;
+    recvDataIndex: number;
+    isPrimaryKey: boolean;
     isLookedUp: boolean;
     lookupResultFieldId?: IFieldId;
     lookupResultTableId?: ITableId;
@@ -107,6 +115,8 @@ export class DataTableField implements IDataTableFieldStruct {
       label,
       type,
       dataIndex,
+      recvDataIndex,
+      isPrimaryKey,
       isLookedUp,
       lookupResultFieldId,
       lookupResultTableId
