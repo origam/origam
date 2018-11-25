@@ -90,6 +90,8 @@ export class DataTableActions implements IDataTableActions {
     const index = this.selectors.getFullRecordIndexById(updatedRecord.id);
     if (index > -1) {
       this.state.records.splice(index, 1, updatedRecord);
+    } else {
+      this.state.records.push(updatedRecord)
     }
   }
 
