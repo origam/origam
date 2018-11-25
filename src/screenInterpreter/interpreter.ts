@@ -229,7 +229,7 @@ function ruleGrid(node: any, context: any, rules: any[]) {
       isHeadless: text2bool(node.attributes.IsHeadless),
       isActionButtonsDisabled: text2bool(node.attributes.DisableActionButtons),
       isShowAddButton: text2bool(node.attributes.ShowAddButton),
-      isShowDeleteButtom: text2bool(node.attributes.ShowDeleteButton),
+      isShowDeleteButton: text2bool(node.attributes.ShowDeleteButton),
       initialView: [
         GridViewType.Form,
         GridViewType.Grid,

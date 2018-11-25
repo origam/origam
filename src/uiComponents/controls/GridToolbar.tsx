@@ -1,6 +1,7 @@
 import * as React from "react";
 import { observer, inject } from "mobx-react";
 import { IGridInteractionActions, GridViewType } from "src/Grid/types";
+import { IGridToolbarView } from '../../GridPanel/types';
 
 @inject("gridPaneBacking")
 @observer
@@ -10,6 +11,7 @@ export class GridToolbar extends React.Component<any> {
     const {
       setActiveView
     } = gridPaneBacking.gridInteractionActions as IGridInteractionActions;
+    const gridToolbarView = gridPaneBacking.gridToolbarView as IGridToolbarView;
     return (
       <div
         className={"oui-grid-toolbar" + (this.props.isHidden ? " hidden" : "")}
@@ -24,7 +26,7 @@ export class GridToolbar extends React.Component<any> {
             </button>
           )}
           {this.props.isDeleteButton && (
-            <button className="oui-toolbar-btn">
+            <button className="oui-toolbar-btn" onClick={gridToolbarView.handleRemoveRecordClick}>
               <i className="fa fa-minus-circle icon" aria-hidden="true" />
             </button>
           )}

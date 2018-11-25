@@ -8,13 +8,13 @@ import {
 import axios from "axios";
 import { DataTableRecord } from "src/DataTable/DataTableState";
 import { getToken } from "./api";
-import { IDataLoader, IDataSaver } from './types';
+import { IDataLoader, IDataSaver } from "./types";
 
 export class DataSaver implements IDataSaver {
   constructor(
     public tableName: string,
     public dataTableActions: IDataTableActions,
-    public dataTableSelectors: IDataTableSelectors,
+    public dataTableSelectors: IDataTableSelectors
   ) {
     return;
   }
@@ -37,36 +37,33 @@ export class DataSaver implements IDataSaver {
   }
 
   @action.bound
-  public deleteRecords(recordIds: IRecordId[]): Promise<any> {
-    return Promise.all(
-      recordIds.map(recordId => {
-        return axios
-          .delete(`http://127.0.0.1:8080/api/${this.tableName}/${recordId}`)
-          .then(result => {
-            this.dataTableActions.deleteDeletedRecord(recordId);
-          });
-      })
+  public deleteRecord(recordId: IRecordId): Promise<any> {
+    return axios.post(
+      `/api/Data/EntityDelete`,
+      {
+        dataStructureEntityId: this.tableName,
+        rowIdToDelete: recordId
+      },
+      {
+        headers: { Authorization: `Bearer ${getToken()}` }
+      }
     );
   }
 
   @action.bound
-  public createRecords(records: IDataTableRecord[]): Promise<any> {
-    return Promise.all(
-      records.map(record => {
-        return axios
-          .put(`/api/Data/Entities`, {
-            dataStructureEntityId: this.tableName,
-            rowId: record.id,
-            newValues: {
-              ...this.serializeRecord(record)
-            }
-          })
-          .then(result => {
-            const createdRecord = this.deserializeRecord(result.data.record);
-            // TODO: What if server returns nothing?
-            this.dataTableActions.replaceCreatedRecord(createdRecord);
-          });
-      })
+  public createRecord(record: IDataTableRecord): Promise<any> {
+    return axios.put(
+      `/api/Data/Entities`,
+      {
+        dataStructureEntityId: this.tableName,
+        rowId: record.id,
+        newValues: {
+          ...this.serializeRecord(record)
+        }
+      },
+      {
+        headers: { Authorization: `Bearer ${getToken()}` }
+      }
     );
   }
 

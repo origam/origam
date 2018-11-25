@@ -37,9 +37,9 @@ export interface IDataLoader {
 }
 
 export interface IDataSaver {
-  updateRecord(records: IDataTableRecord): Promise<any>;
-  deleteRecords(recordIds: IRecordId[]): Promise<any>;
-  createRecords(records: IDataTableRecord[]): Promise<IDataTableRecord[]>;
+  updateRecord(record: IDataTableRecord): Promise<any>;
+  deleteRecord(recordId: IRecordId): Promise<any>;
+  createRecord(record: IDataTableRecord): Promise<any>;
 }
 
 export interface IAPI {

@@ -31,11 +31,14 @@ export class DataSavingStrategy {
     console.log("CREATE", toCreate);
     console.log("MODIFY", toModify);
     if (toDelete.length > 0) {
-      await this.dataSaver.deleteRecords(toDelete.map(record => record.id));
+      for(const record of toDelete) {
+        await this.dataSaver.deleteRecord(record.id);
+        this.dataTableActions.deleteDeletedRecord(record.id);
+      }
     }
-    if (toCreate.length > 0) {
+    /* if (toCreate.length > 0) {
       await this.dataSaver.createRecords(toCreate);
-    }
+    }*/ 
     if (toModify.length > 0) {
       for(const record of toModify) {
         await this.dataSaver.updateRecord(record);
