@@ -6,13 +6,14 @@ import {
   GridViewType,
   IFormTopology
 } from "./types";
-import { IRecordId, IFieldId } from "../DataTable/types";
+import { IRecordId, IFieldId, IDataTableSelectors } from "../DataTable/types";
 
 export class GridInteractionSelectors implements IGridInteractionSelectors {
   constructor(
     public state: IGridInteractionState,
     public gridTopologyProvider: { gridTopology: IGridTopology },
-    public formTopologyProvider: { formTopology: IFormTopology }
+    public formTopologyProvider: { formTopology: IFormTopology },
+    public dataTableSelectors: IDataTableSelectors
   ) {}
 
   public get gridTopology() {
@@ -90,14 +91,20 @@ export class GridInteractionSelectors implements IGridInteractionSelectors {
   @computed
   public get isCellSelected() {
     return (
-      this.selectedRowId !== undefined && this.selectedColumnId !== undefined
+      this.selectedRowId !== undefined &&
+      this.selectedColumnId !== undefined &&
+      this.dataTableSelectors.recordExistsById(this.selectedRowId) &&
+      this.dataTableSelectors.fieldExistsById(this.selectedColumnId)
     );
   }
 
   @computed
   public get isCellEditing() {
     return (
-      this.editingRowId !== undefined && this.editingColumnId !== undefined
+      this.editingRowId !== undefined &&
+      this.editingColumnId !== undefined &&
+      this.dataTableSelectors.recordExistsById(this.editingRowId) &&
+      this.dataTableSelectors.fieldExistsById(this.editingColumnId)
     );
   }
 }

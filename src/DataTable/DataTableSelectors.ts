@@ -15,6 +15,7 @@ import { DataTableRecord } from "./DataTableState";
 import { IRecordId } from "./types";
 
 export class DataTableSelectors implements IDataTableSelectors {
+
   constructor(
     public state: IDataTableState,
     public lookupResolverProvider: ILookupResolverProvider,
@@ -59,6 +60,14 @@ export class DataTableSelectors implements IDataTableSelectors {
   @computed
   get lastFullRecord() {
     return this.fullRecords.slice(-1)[0];
+  }
+
+  public recordExistsById(recordId: string): boolean {
+    return this.getRecordById(recordId) !== undefined;
+  }
+
+  public fieldExistsById(fieldId: string): boolean {
+    return this.getFieldById(fieldId) !== undefined;
   }
 
   public getRecordById(recordId: string): IDataTableRecord | undefined {

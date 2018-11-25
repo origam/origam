@@ -205,7 +205,8 @@ function createGridPaneBacking(
   const gridInteractionSelectors = new GridInteractionSelectors(
     gridInteractionState,
     configuration,
-    configuration
+    configuration,
+    dataTableSelectors
   );
 
   const formState = new FormState();

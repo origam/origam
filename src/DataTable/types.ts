@@ -21,6 +21,8 @@ export interface IDataTableSelectors {
   firstFullRecord: IDataTableRecord;
 
   newRecord(): IDataTableRecord;
+  recordExistsById(recordId: IRecordId): boolean;
+  fieldExistsById(fieldId: IFieldId): boolean;
   getFullRecordIndexById(recordId: string): number;
   getRecordById(recordId: string): IDataTableRecord | undefined;
   getFieldById(fieldId: string): IDataTableField | undefined;
