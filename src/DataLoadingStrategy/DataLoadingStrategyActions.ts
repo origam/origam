@@ -256,16 +256,16 @@ export class DataLoadingStrategyActions {
   }
 
   private *loadBeforeFirstRecordProc() {
-    const lastRecord = this.dataTableSelectors.firstFullRecord;
+    const firstRecord = this.dataTableSelectors.firstFullRecord;
     const addedFilters = [];
     let addedOrdering = [];
     addedOrdering = this.gridOrderingSelectors.ordering.filter(
-      o => o[0] !== "id"
+      o => o[0] !== "Id"
     );
-    addedOrdering.push(["id", "asc"]);
+    addedOrdering.push(["Id", "asc"]);
     const cursorValues = addedOrdering.map(ord => {
       const field = this.dataTableSelectors.getFieldById(ord[0]);
-      const value = this.dataTableSelectors.getResetValue(lastRecord, field!)
+      const value = this.dataTableSelectors.getResetValue(firstRecord, field!)
       return value;
     })
     addedFilters.push(...constructPaginationFilter(
@@ -274,29 +274,25 @@ export class DataLoadingStrategyActions {
       addedOrdering
     ))
 
+    const fields = [...this.dataTableSelectors.fields];
+    fields.sort((a, b) => a.recvDataIndex - b.recvDataIndex);
+    const columns = this.dataTableSelectors.fields.map(field => field.id);
+    const idFieldIndex = fields.findIndex(field => field.isPrimaryKey);
     const apiResult = yield this.dataLoader.loadDataTable({
       limit: 5000,
-      orderBy: addedOrdering
-        .map(o => [...o])
-        .map(o => [o[0], { asc: "desc", desc: "asc" }[o[1]]]) as Array<
-        [string, string]
-      >,
-      filter: addedFilters as Array<[string, string, string]>
+      orderBy: addedOrdering as Array<[string, string]>,
+      filter: addedFilters as Array<[string, string, string]>, // TODO!!!
+      columns
     });
-    const records = apiResult.data.result.map((record: any) => {
+    const records = apiResult.data.map((record: any) => {
       const newRecord = new DataTableRecord(
-        record.id,
+        record[idFieldIndex],
         Array(this.dataTableSelectors.fieldCount)
       );
 
-      for (const kvPair of (Object as any)
-        .entries(record)
-        .filter((o: [string, ICellValue]) => o[0] !== "id")) {
-        const field = this.dataTableSelectors.getFieldById(kvPair[0]);
-        if (!field || field === "ID") {
-          continue;
-        }
-        newRecord.values[field.dataIndex] = kvPair[1];
+      for (let fieldIdx = 0; fieldIdx < record.length; fieldIdx++) {
+        const field = fields[fieldIdx];
+        newRecord.values[field.dataIndex] = record[fieldIdx];
       }
 
       return newRecord;
