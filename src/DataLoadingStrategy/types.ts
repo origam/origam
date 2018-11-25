@@ -14,6 +14,7 @@ export interface IDataLoadingStategyState {
 
 export interface IDataLoadingStrategyActions {
   requestLoadFresh(): Promise<any>;
+  reloadRow(id: IRecordId): Promise<any>;
 }
 
 export interface IDataLoadingStrategySelectors {
@@ -29,14 +30,14 @@ export interface IDataLoader {
   loadDataTable(args: {
     limit?: number;
     orderBy?: Array<[string, string]>;
-    filter?: Array<[string, string, string]>;
+    filter?: any;
     columns?: string[];
   }): Promise<any>;
   loadLookup(table: string, label: string, ids: string[]): Promise<any>;
 }
 
 export interface IDataSaver {
-  updateRecords(records: IDataTableRecord[]): Promise<IDataTableRecord[]>;
+  updateRecord(records: IDataTableRecord): Promise<any>;
   deleteRecords(recordIds: IRecordId[]): Promise<any>;
   createRecords(records: IDataTableRecord[]): Promise<IDataTableRecord[]>;
 }

@@ -272,7 +272,8 @@ function createGridPaneBacking(
   const dataSavingStrategy = new DataSavingStrategy(
     dataTableSelectors,
     dataTableActions,
-    dataSaver
+    dataSaver,
+    dataLoadingStrategyActions
   );
 
   const gridToolbarView = new GridToolbarView(

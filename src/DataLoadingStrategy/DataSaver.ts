@@ -7,60 +7,67 @@ import {
 } from "src/DataTable/types";
 import axios from "axios";
 import { DataTableRecord } from "src/DataTable/DataTableState";
+import { getToken } from "./api";
+import { IDataLoader, IDataSaver } from './types';
 
-
-
-export class DataSaver {
+export class DataSaver implements IDataSaver {
   constructor(
     public tableName: string,
     public dataTableActions: IDataTableActions,
-    public dataTableSelectors: IDataTableSelectors
+    public dataTableSelectors: IDataTableSelectors,
   ) {
     return;
   }
 
   @action.bound
-  public updateRecords(
-    records: IDataTableRecord[]
-  ): Promise<IDataTableRecord[]> {
+  public updateRecord(record: IDataTableRecord): Promise<any> {
+    return axios.put(
+      `/api/Data/Entities`,
+      {
+        dataStructureEntityId: this.tableName,
+        rowId: record.id,
+        newValues: {
+          ...this.serializeRecord(record)
+        }
+      },
+      {
+        headers: { Authorization: `Bearer ${getToken()}` }
+      }
+    );
+  }
+
+  @action.bound
+  public deleteRecords(recordIds: IRecordId[]): Promise<any> {
     return Promise.all(
-      records.map(record => {
+      recordIds.map(recordId => {
         return axios
-          .put(`http://127.0.0.1:8080/api/${this.tableName}/${record.id}`, {
-            ...this.serializeRecord(record)
-          })
+          .delete(`http://127.0.0.1:8080/api/${this.tableName}/${recordId}`)
           .then(result => {
-            const updatedRecord = this.deserializeRecord(result.data.record);
-            // TODO: What if server returns nothing?
-            this.dataTableActions.replaceUpdatedRecord(updatedRecord);
-            return updatedRecord;
+            this.dataTableActions.deleteDeletedRecord(recordId);
           });
       })
     );
   }
 
   @action.bound
-  public deleteRecords(recordIds: IRecordId[]): Promise<any> {
-    return Promise.all(recordIds.map(recordId => {
-      return axios.delete(`http://127.0.0.1:8080/api/${this.tableName}/${recordId}`)
-      .then(result => {
-        this.dataTableActions.deleteDeletedRecord(recordId);
-      })
-    }))
-  }
-
-  @action.bound
   public createRecords(records: IDataTableRecord[]): Promise<any> {
-    return Promise.all(records.map(record => {
-      return axios.post(`http://127.0.0.1:8080/api/${this.tableName}`, {
-        ...this.serializeRecord(record)
+    return Promise.all(
+      records.map(record => {
+        return axios
+          .put(`/api/Data/Entities`, {
+            dataStructureEntityId: this.tableName,
+            rowId: record.id,
+            newValues: {
+              ...this.serializeRecord(record)
+            }
+          })
+          .then(result => {
+            const createdRecord = this.deserializeRecord(result.data.record);
+            // TODO: What if server returns nothing?
+            this.dataTableActions.replaceCreatedRecord(createdRecord);
+          });
       })
-      .then(result => {
-        const createdRecord = this.deserializeRecord(result.data.record);
-        // TODO: What if server returns nothing?
-        this.dataTableActions.replaceCreatedRecord(createdRecord);
-      })
-    }))
+    );
   }
 
   public serializeRecord(record: IDataTableRecord): any {
@@ -71,8 +78,6 @@ export class DataSaver {
         field
       );
     }
-    const ID = "id";
-    result[ID] = record.id;
     return result;
   }
 

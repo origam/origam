@@ -4,7 +4,8 @@ import { reactionRuntimeInfo } from "../utils/reaction";
 import {
   IDataLoadingStategyState,
   IDataLoadingStrategySelectors,
-  IDataLoader
+  IDataLoader,
+  IDataLoadingStrategyActions
 } from "./types";
 import {
   IDataTableActions,
@@ -23,7 +24,7 @@ import {
   IGridActions
 } from "../Grid/types";
 import { CancellablePromise } from "mobx/lib/api/flow";
-import { IDataTableFieldStruct } from '../DataTable/types';
+import { IDataTableFieldStruct, IRecordId } from '../DataTable/types';
 
 function noCancelException<T>(promise: Promise<void | T>): Promise<void | T> {
   return promise.catch(e => {
@@ -66,7 +67,7 @@ function constructPaginationFilter(
   return pagSlug;
 }
 
-export class DataLoadingStrategyActions {
+export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
   constructor(
     public state: IDataLoadingStategyState,
     public selectors: IDataLoadingStrategySelectors,
@@ -346,6 +347,36 @@ export class DataLoadingStrategyActions {
       return newRecord;
     });
     this.dataTableActions.setRecords(records);
+  }
+
+  @action.bound public async reloadRow(id: IRecordId) {
+    const fields = [...this.dataTableSelectors.fields]
+    fields.sort((a, b) => a.recvDataIndex - b.recvDataIndex);
+    const columns = this.dataTableSelectors.fields.map(field => field.id);
+    const idFieldIndex = fields.findIndex(field => field.isPrimaryKey);
+    const apiResult = await this.dataLoader.loadDataTable({
+      limit: 1,
+      orderBy: [],
+      columns,
+      filter: ["Id", "eq", id]
+    });
+    const records = apiResult.data.map((record: any) => {
+      const newRecord = new DataTableRecord(
+        record[idFieldIndex],
+        Array(this.dataTableSelectors.fieldCount)
+      );
+
+      for (let fieldIdx = 0; fieldIdx < record.length; fieldIdx++) {
+        const field = fields[fieldIdx];
+        newRecord.values[field.dataIndex] = record[fieldIdx];
+      }
+
+      return newRecord;
+    });
+
+    if(records.length === 1) {
+      this.dataTableActions.replaceUpdatedRecord(records[0]);
+    }
   }
 
   @action.bound
