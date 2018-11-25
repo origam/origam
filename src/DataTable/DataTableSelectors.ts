@@ -12,6 +12,7 @@ import {
   IFieldType
 } from "./types";
 import { DataTableRecord } from "./DataTableState";
+import { IRecordId } from "./types";
 
 export class DataTableSelectors implements IDataTableSelectors {
   constructor(
@@ -132,7 +133,10 @@ export class DataTableSelectors implements IDataTableSelectors {
     return value;
   }
 
-  public getDefaultValue(field: IDataTableFieldStruct) {
+  public getDefaultValue(field: IDataTableFieldStruct, id: IRecordId) {
+    if (field.isPrimaryKey) {
+      return id;
+    }
     switch (field.type) {
       case IFieldType.integer:
         return 0;
@@ -148,9 +152,10 @@ export class DataTableSelectors implements IDataTableSelectors {
   }
 
   public newRecord(): IDataTableRecord {
+    const id = uuid.v4();
     const record = new DataTableRecord(
-      uuid.v4(),
-      this.fields.map(o => this.getDefaultValue(o))
+      id,
+      this.fields.map(o => this.getDefaultValue(o, id))
     );
     record.dirtyNew = true;
     return record;

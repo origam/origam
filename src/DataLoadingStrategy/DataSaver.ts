@@ -52,11 +52,10 @@ export class DataSaver implements IDataSaver {
 
   @action.bound
   public createRecord(record: IDataTableRecord): Promise<any> {
-    return axios.put(
+    return axios.post(
       `/api/Data/Entities`,
       {
         dataStructureEntityId: this.tableName,
-        rowId: record.id,
         newValues: {
           ...this.serializeRecord(record)
         }

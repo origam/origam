@@ -21,7 +21,7 @@ export class GridToolbar extends React.Component<any> {
         </div>
         <div className="toolbar-section">
           {this.props.isAddButton && (
-            <button className="oui-toolbar-btn">
+            <button className="oui-toolbar-btn" onClick={gridToolbarView.handleAddRecordClick}>
               <i className="fa fa-plus-circle icon" aria-hidden="true" />
             </button>
           )}
