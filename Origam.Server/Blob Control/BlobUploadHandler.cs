@@ -120,7 +120,7 @@ namespace Origam.Server
 
                             int fileLen = file.ContentLength;
 
-                           //  br.Row[br.Property] = Path.GetFileName(file.FileName);
+                            br.Row[br.Property] = Path.GetFileName(file.FileName);
                            
                             //if (CheckMember(br.BlobMember, true))
                             //{
