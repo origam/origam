@@ -14,7 +14,6 @@ import {
 import { IFieldId } from "src/DataTable/types";
 
 export class GridInteractionActions implements IGridInteractionActions {
-
   constructor(
     public state: IGridInteractionState,
     public selectors: IGridInteractionSelectors,
@@ -59,7 +58,7 @@ export class GridInteractionActions implements IGridInteractionActions {
     if (this.selectors.activeView === GridViewType.Grid) {
       this.selectOneDown();
       this.editSelectedCell();
-    } else if(this.selectors.activeView === GridViewType.Form) {
+    } else if (this.selectors.activeView === GridViewType.Form) {
       this.unedit();
     }
     event.preventDefault();
@@ -70,7 +69,7 @@ export class GridInteractionActions implements IGridInteractionActions {
     if (this.selectors.activeView === GridViewType.Grid) {
       this.selectOneUp();
       this.editSelectedCell();
-    } else if(this.selectors.activeView === GridViewType.Form) {
+    } else if (this.selectors.activeView === GridViewType.Form) {
       this.unedit();
     }
     event.preventDefault();
@@ -123,6 +122,13 @@ export class GridInteractionActions implements IGridInteractionActions {
       this.unedit();
     }
     // this.unselect();
+  }
+
+  @action.bound
+  public handleFormOutsideClick(event: any): void {
+    if (this.selectors.activeView === GridViewType.Form) {
+      this.unedit();
+    }
   }
 
   @action.bound
@@ -368,5 +374,4 @@ export class GridInteractionActions implements IGridInteractionActions {
   public setColumnWidth(id: IFieldId, w: number): void {
     this.state.columnWidths.set(id, w);
   }
-
 }

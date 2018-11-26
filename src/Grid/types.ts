@@ -371,6 +371,7 @@ export interface IGridInteractionActions {
   ): void;
   handleGridNoCellClick(event: any): void;
   handleGridOutsideClick(event: any): void;
+  handleFormOutsideClick(event: any): void;
   handleGridKeyDown(event: any): void;
 
   handleFormFieldClick(event: any, field: {fieldId: IFieldId}): void;
