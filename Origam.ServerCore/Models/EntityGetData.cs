@@ -7,6 +7,7 @@ namespace Origam.ServerCore.Models
 {
     public class EntityGetData
     {
+        public Guid MenuId { get; set; }
         public Guid DataStructureEntityId { get; set; }
         public string Filter { get; set; }
         public List<List<string>> Ordering { get; set; }

@@ -59,28 +59,18 @@ namespace Origam.DA
 			SortSetId = sortSetId;
 		}
 
-	    public DataStructureQuery(Guid dataStructureId, string entityName, string customFilters, 
-	        List<Tuple<string, string>> customOrdering, int rowLimit)
-	    {
-	        DataSourceId = dataStructureId;
-	        Entity = entityName;
-	        CustomFilters = customFilters;
-	        CustomOrdering = customOrdering;
-	        RowLimit = rowLimit;
-	    }
-
-	    public int RowLimit { get; }
-        public Guid DataSourceId;
+	    public int RowLimit { get; set; }
+	    public Guid DataSourceId;
 		public Guid MethodId;
 		public Guid DefaultSetId;
 		public Guid SortSetId;
 		public QueryParameterCollection Parameters = new QueryParameterCollection();
 		public IsolationLevel IsolationLevel = IsolationLevel.ReadCommitted;
 
-	    public List<Tuple<string, string>> CustomOrdering { get; }
-	    public string CustomFilters { get;  }
+	    public List<Tuple<string, string>> CustomOrdering { get; set; }
+	    public string CustomFilters { get; set; }
 
-        public bool Paging
+	    public bool Paging
 		{
 			get
 			{

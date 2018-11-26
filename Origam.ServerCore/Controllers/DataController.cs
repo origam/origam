@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.DA;
 using Origam.Schema.EntityModel;
+using Origam.Schema.MenuModel;
 using Origam.ServerCore.Models;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
@@ -23,14 +24,18 @@ namespace Origam.ServerCore.Controllers
         [HttpPost("[action]")]
         public IEnumerable<object> EntitiesGet([FromBody] EntityGetData entityData)
         {
+            var menuItem = FindItem<FormReferenceMenuItem>(entityData.MenuId);
             DataStructureEntity entity = FindEntity(entityData.DataStructureEntityId);
-            DataStructureQuery query = new DataStructureQuery(
-                entity.RootEntity.ParentItemId,
-                entity.Name,
-                entityData.Filter,
-                entityData.OrderingAsTuples,
-                entityData.RowLimit);
-            query.ColumnName = string.Join(";", entityData.ColumnNames);
+            DataStructureQuery query = new DataStructureQuery
+            {
+                DataSourceId = entity.RootEntity.ParentItemId,
+                Entity = entity.Name,
+                CustomFilters = entityData.Filter,
+                CustomOrdering = entityData.OrderingAsTuples,
+                RowLimit = entityData.RowLimit,
+                ColumnName = string.Join(";", entityData.ColumnNames),
+                MethodId = menuItem.MethodId
+            };
 
             using (IDataReader reader = dataService.ExecuteDataReader(
                 query, SecurityManager.CurrentPrincipal, null))
@@ -121,13 +126,17 @@ namespace Origam.ServerCore.Controllers
             }
         }
 
-        private static DataStructureEntity FindEntity(Guid id)
+        private static T FindItem<T>(Guid id)
         {
-            var entity = (DataStructureEntity)ServiceManager.Services
+            return (T)ServiceManager.Services
                 .GetService<IPersistenceService>()
                 .SchemaProvider
-                .RetrieveInstance(typeof(DataStructureEntity), new Key(id));
-            return entity;
+                .RetrieveInstance(typeof(T), new Key(id));
+        }
+
+        private static DataStructureEntity FindEntity(Guid id)
+        {
+            return FindItem<DataStructureEntity>(id);
         }
 
         private IActionResult SubmitChange(DataStructureEntity entity, DataSet dataSet)
