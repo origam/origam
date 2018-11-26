@@ -20,8 +20,8 @@ namespace Origam.ServerCore.Controllers
         {
         }
 
-        [HttpGet("[action]")]
-        public IEnumerable<object> Entities([FromBody] EntityGetData entityData)
+        [HttpPost("[action]")]
+        public IEnumerable<object> EntitiesGet([FromBody] EntityGetData entityData)
         {
             DataStructureEntity entity = FindEntity(entityData.DataStructureEntityId);
             DataStructureQuery query = new DataStructureQuery(
@@ -68,6 +68,7 @@ namespace Origam.ServerCore.Controllers
             return SubmitChange(entity, dataSet);
         }
 
+
         [HttpPost("[action]")]
         public IActionResult Entities([FromBody] EntityInsertData entityData)
         {
@@ -86,8 +87,8 @@ namespace Origam.ServerCore.Controllers
             return SubmitChange(entity, dataSet);
         }
 
-        [HttpDelete("[action]")]
-        public IActionResult Entities([FromBody] EntityDeleteData entityData)
+        [HttpPost("[action]")]
+        public IActionResult EntityDelete([FromBody] EntityDeleteData entityData)
         {
             DataStructureEntity entity = FindEntity(entityData.DataStructureEntityId);
             if (entity == null) return BadRequest();

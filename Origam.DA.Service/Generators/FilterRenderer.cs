@@ -112,8 +112,10 @@ namespace Origam.DA.Service
                     return ">";
                 case "GreaterThanOrEqual":
                     return ">=";
+                case "OR":
                 case "LogicalOr":
                     return "OR";
+                case "AND":
                 case "LogicalAnd":
                     return "AND";
                 default:
