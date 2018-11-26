@@ -200,11 +200,17 @@ namespace Origam.DA.Service
 
         public override string DefaultDdlDataType(OrigamDataType columnType)
         {
-            if (columnType is OrigamDataType.Geography)
+            switch (columnType)
             {
-                return "geography";
+                case OrigamDataType.Geography:
+                    return "geography";
+                case OrigamDataType.Memo:
+                    return "nvarchar(max)";
+                case OrigamDataType.Blob:
+                    return "varbinary(max)";
+                default:
+                    return ConvertDataType(columnType, null).ToString();
             }
-            return ConvertDataType(columnType, null).ToString();
         }
 
         public override OrigamDataType ToOrigamDataType(string ddlType)
@@ -280,13 +286,13 @@ namespace Origam.DA.Service
 				case OrigamDataType.Long:
 					return SqlDbType.BigInt;
 				case OrigamDataType.Xml:
-				case OrigamDataType.Memo:
-					return SqlDbType.NText;
-				case OrigamDataType.Array:
+                case OrigamDataType.Memo:
+                    return SqlDbType.NText;
+                case OrigamDataType.Array:
 					return SqlDbType.Structured;
-				case OrigamDataType.Geography:
-					return SqlDbType.Text;
-				case OrigamDataType.Integer: 
+                case OrigamDataType.Geography:
+                    return SqlDbType.Text;
+                case OrigamDataType.Integer: 
 					return SqlDbType.Int;
 				case OrigamDataType.Float:
 					return SqlDbType.Decimal;

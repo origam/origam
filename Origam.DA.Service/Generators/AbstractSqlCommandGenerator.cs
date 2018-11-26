@@ -1659,7 +1659,7 @@ namespace Origam.DA.Service
             foreach (DataStructureColumn column in entity.Columns)
             {
                 var expression = RenderDataStructureColumn(ds, entity,
-                        scalarColumn, replaceParameterTexts, dynamicParameters,
+                        replaceParameterTexts, dynamicParameters,
                         sortSet, selectParameterReferences, isInRecursion,
                         forceDatabaseCalculation, group, order, ref groupByNeeded, scalarColumnNames, column);
                 if (expression != null)
@@ -1708,7 +1708,7 @@ namespace Origam.DA.Service
 
         public string RenderDataStructureColumn(DataStructure ds, 
             DataStructureEntity entity, 
-            string scalarColumn, Hashtable replaceParameterTexts, 
+            Hashtable replaceParameterTexts, 
             Hashtable dynamicParameters, DataStructureSortSet sortSet, 
             Hashtable selectParameterReferences, bool isInRecursion,
             bool forceDatabaseCalculation, ArrayList group, SortedList order, 
@@ -1728,42 +1728,17 @@ namespace Origam.DA.Service
             {
                 processColumn = false;
             }
-            else if (scalarColumnNames.Contains(column.Name))
+            else if (scalarColumnNames.Contains(column.Name) && 
+                     ShouldBeProcessed(forceDatabaseCalculation, column, functionCall))
             {
                 processColumn = true;
             }
-            else if (scalarColumn == null &&
-                (
-                column.Field is FieldMappingItem
-                ||
-                column.Field is LookupField
-                ||
-                (
-                functionCall != null
-                && functionCall.Function.FunctionType == OrigamFunctionType.Database
-                )
-                ||
-                (
-                functionCall != null && functionCall.ForceDatabaseCalculation
-                )
-                ||
-                (
-                functionCall != null && forceDatabaseCalculation
-                )
-                ||
-                (
-                functionCall != null && column.Entity != null
-                )
-                ||
-                (
-                functionCall != null && column.Aggregation != AggregationType.None
-                )
-                )
-                )
+            else if (scalarColumnNames.Count == 0 &&
+                     ShouldBeProcessed(forceDatabaseCalculation, column, functionCall))
             {
                 processColumn = true;
             }
-            else if (scalarColumn == null && aggregatedColumn != null)
+            else if (scalarColumnNames.Count == 0 && aggregatedColumn != null)
             {
                 bool found = false;
                 foreach (DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.ItemTypeConst))
@@ -1866,6 +1841,37 @@ namespace Origam.DA.Service
                 order.Add(column.SortOrder(sortSet), sortOrder);
             }
             return result;
+        }
+
+        private static bool ShouldBeProcessed(bool forceDatabaseCalculation, DataStructureColumn column, FunctionCall functionCall)
+        {
+            return 
+                   (
+                       column.Field is FieldMappingItem
+                       ||
+                       column.Field is LookupField
+                       ||
+                       (
+                           functionCall != null
+                           && functionCall.Function.FunctionType == OrigamFunctionType.Database
+                       )
+                       ||
+                       (
+                           functionCall != null && functionCall.ForceDatabaseCalculation
+                       )
+                       ||
+                       (
+                           functionCall != null && forceDatabaseCalculation
+                       )
+                       ||
+                       (
+                           functionCall != null && column.Entity != null
+                       )
+                       ||
+                       (
+                           functionCall != null && column.Aggregation != AggregationType.None
+                       )
+                   );
         }
 
         private void PrettyLine(StringBuilder sqlExpression)

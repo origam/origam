@@ -1364,7 +1364,7 @@ namespace Origam.Workflow
 					DocumentationType.USER_WFSTEP_DESCRIPTION
 					);
 
-				if(doc == "")
+				if(string.IsNullOrEmpty(doc))
 				{
 					doc = task.Name;
 				}

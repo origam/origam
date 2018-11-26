@@ -1434,7 +1434,7 @@ namespace Origam.Server
             }
             else
             {
-                row[property] = newValue;
+                row[property] =  newValue;
             }
         }
 

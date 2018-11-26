@@ -1,26 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using CSharpFunctionalExtensions;
 using Origam.DA.ObjectPersistence.Providers;
 using Origam.Extensions;
 using Origam.Workbench.Services;
 using System.Threading;
+using log4net;
 using Origam.Services;
 
 namespace Origam.DA.Service
 {
     public class FileEventQueue
     {
+        private static readonly ILog log
+            = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly FilePersistenceIndex index;
         private IFileChangesWatchDog watchDog;
-        private readonly Queue<ChangedFileEventArgs> fileChangeQueue 
-            = new Queue<ChangedFileEventArgs>();
-        private ChangedFileEventArgs lastChange = null;
+        private readonly Queue<FileSystemChangeEventArgs> fileChangeQueue 
+            = new Queue<FileSystemChangeEventArgs>();
+        private FileSystemChangeEventArgs lastChange = null;
         private bool processEvents = true;
         private readonly object lockObj = new object();
         private System.Timers.Timer timer = new System.Timers.Timer();
-        public event EventHandler<ChangedFileEventArgs> ReloadNeeded;
+
+        public event EventHandler<FileSystemChangeEventArgs> ReloadNeeded;
 
         public FileEventQueue(FilePersistenceIndex index, IFileChangesWatchDog watchDog)
         {
@@ -96,14 +102,46 @@ namespace Origam.DA.Service
         {
             while (fileChangeQueue.Count > 0)
             {
-                ChangedFileEventArgs eventArgs = fileChangeQueue.Dequeue();
-                if (NeedsUpdate(eventArgs.File))
+                FileSystemChangeEventArgs eventArgs = fileChangeQueue.Dequeue();
+                if (ShouldBeUpdated(eventArgs.File) || IsDirectoryChangeAndNeedsUpdate(eventArgs))
                 {
                     ReloadNeeded?.Invoke(this, eventArgs);
                     fileChangeQueue.Clear();
                 }
             }
             lastChange = null;
+        }
+
+        private bool IsDirectoryChangeAndNeedsUpdate(FileSystemChangeEventArgs eventArgs)
+        {
+            if(!eventArgs.IsDirectoryChange) return false;
+            if (FilesInIndexNeedUpdate(eventArgs)) return true;
+            if (ExistingFilesNeedUpdate(eventArgs)) return true;
+            return false;
+        }
+
+        private bool ExistingFilesNeedUpdate(FileSystemChangeEventArgs eventArgs)
+        {
+            return eventArgs.Folder
+                .GetAllFilesInSubDirectories()
+                .Any(ShouldBeUpdated);
+        }
+
+        private bool FilesInIndexNeedUpdate(FileSystemChangeEventArgs eventArgs)
+        {
+           return index
+                .GetByDirectory(eventArgs.Folder)
+                .Any(ShouldBeUpdated);
+        }
+
+        private bool ShouldBeUpdated(FileInfo file)
+        {
+            bool needsUpdate = NeedsUpdate(file);
+            if (needsUpdate && log.IsInfoEnabled)
+            {
+                log.Info("Reload caused by: " + file.FullName );
+            }
+            return needsUpdate;
         }
 
         private bool NeedsUpdate(FileInfo file)
@@ -119,9 +157,11 @@ namespace Origam.DA.Service
                     return true;
                 }
             }
+
             if (!file.Exists && maybeHash.HasValue) return true;
             return false;
         }
+
         private Maybe<string> FindPersistenceFileHash(FileInfo file)
         {
             if (OrigamFile.IsOrigamFile(file))
@@ -131,11 +171,10 @@ namespace Origam.DA.Service
             Maybe<ExternalFile> mayBeExtFile = index.GetExternalFile(file);
             if (mayBeExtFile.HasValue) return mayBeExtFile.Value?.FileHash;
 
-            var documentationService = 
+            IFileStorageDocumentationService documentationService =
                 (IFileStorageDocumentationService)ServiceManager.Services
                     .GetService<IDocumentationService>();
             return documentationService.GetDocumentationFileHash(file);
         }
-        
     }
 }

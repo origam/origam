@@ -67,6 +67,9 @@ namespace Origam.DA.Service
         private bool IsInAGroup => ParentFolderIds.CointainsNoEmptyIds;
         public XmlDocument DeferredSaveDocument{ get; set; }
         public OrigamPath NewPath { get; set; }
+        public IEnumerable<FileInfo> ExternalFiles => externalFileManger
+            .Files
+            .Select(filePath => new FileInfo(filePath));
         public OrigamPath Path
         {
             get => path;

@@ -381,7 +381,7 @@ namespace Origam.Schema
 			get
 			{
 				if(this.ParentItem == null)
-					return this.RootProvider.NewItemTypes;
+					return RootProvider?.NewItemTypes ?? new Type[0];
 				else
 					return (this.ParentItem as ISchemaItemFactory).NewItemTypes;
 			}

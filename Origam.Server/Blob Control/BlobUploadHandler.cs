@@ -35,6 +35,7 @@ using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using log4net;
 using System.Security.Principal;
+using System.Text;
 
 namespace Origam.Server
 {
@@ -120,7 +121,7 @@ namespace Origam.Server
                             int fileLen = file.ContentLength;
 
                             br.Row[br.Property] = Path.GetFileName(file.FileName);
-
+                           
                             //if (CheckMember(br.BlobMember, true))
                             //{
                             //    br.Row[br.BlobMember] = input;

@@ -15,6 +15,7 @@ namespace Origam.Workflow
 	public class WorkflowForm : AsForm
 	{
 		private Guid _taskId;
+	    private static readonly string messageSeparator = "------------------------------------------------";
 
 		public WorkflowForm(WorkflowHost host)
 		{
@@ -36,7 +37,7 @@ namespace Origam.Workflow
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.CloseButton = false;
 			this.Name = "WorkflowForm";
-			this.Closing += new System.ComponentModel.CancelEventHandler(this.WorkflowForm_Closing);
+			this.Closing += this.WorkflowForm_Closing;
 
 		}
 		#endregion
@@ -44,26 +45,23 @@ namespace Origam.Workflow
 		private WorkflowHost _host;
 		public WorkflowHost Host
 		{
-			get
-			{
-				return _host;
-			}
-			set
+			get => _host;
+		    set
 			{
 				if(_host != null)
 				{
-					this.Host.FormRequested -= new WorkflowHostFormEvent(Host_FormRequested);
-					this.Host.WorkflowFinished -= new WorkflowHostEvent(Host_WorkflowFinished);
-					this.Host.WorkflowMessage -= new WorkflowHostMessageEvent(Host_WorkflowMessage);
+					this.Host.FormRequested -= Host_FormRequested;
+					this.Host.WorkflowFinished -= Host_WorkflowFinished;
+					this.Host.WorkflowMessage -= Host_WorkflowMessage;
 				}
 
 				_host = value;
 
 				if(_host != null)
 				{
-					this.Host.FormRequested += new WorkflowHostFormEvent(Host_FormRequested);
-					this.Host.WorkflowFinished += new WorkflowHostEvent(Host_WorkflowFinished);
-					this.Host.WorkflowMessage += new WorkflowHostMessageEvent(Host_WorkflowMessage);
+					this.Host.FormRequested += Host_FormRequested;
+					this.Host.WorkflowFinished += Host_WorkflowFinished;
+					this.Host.WorkflowMessage += Host_WorkflowMessage;
 				}
 			}
 		}
@@ -71,58 +69,21 @@ namespace Origam.Workflow
 		private bool _canFinishTask;
 		public bool CanFinishTask
 		{
-			get
-			{
-				return _canFinishTask;
-			}
-			set
+			get => _canFinishTask;
+		    set
 			{
 				_canFinishTask = value;
-				Origam.Workbench.WorkbenchSingleton.Workbench.UpdateToolbar();
+				Workbench.WorkbenchSingleton.Workbench.UpdateToolbar();
 			}
 		}
 
-		private WorkflowEngine _workflowEngine = null;
-		public WorkflowEngine WorkflowEngine
-		{
-			get
-			{
-				return _workflowEngine;
-			}
-			set
-			{
-				// We set the new workflow engine (sub-engine)
-				_workflowEngine = value;
-			}
-		}
+	    public WorkflowEngine WorkflowEngine { get; set; } = null;
 
-		private bool _taskFinished = false;
-		internal bool TaskFinished
-		{
-			get
-			{
-				return _taskFinished;
-			}
-			set
-			{
-				_taskFinished = value;
-			}
-		}
+	    internal bool TaskFinished { get; set; } = false;
 
-		private IEndRule _endRule;
-		internal IEndRule EndRule
-		{
-			get
-			{
-				return _endRule;
-			}
-			set
-			{
-				_endRule = value;
-			}
-		}
+	    internal IEndRule EndRule { get; set; }
 
-		private void AbortTask()
+	    private void AbortTask()
 		{
 			this.FormGenerator.UnloadForm(true);
 			this.Host.AbortWorkflowForm(_taskId);
@@ -140,13 +101,13 @@ namespace Origam.Workflow
 			catch(Exception ex)
 			{
 				// in case of exception we don't exit the form
-				Origam.UI.AsMessageBox.ShowError(this, ex.Message, ResourceUtils.GetString("ErrorWhenFormCheck", this.TitleName), ex);
+				UI.AsMessageBox.ShowError(this, ex.Message, ResourceUtils.GetString("ErrorWhenFormCheck", this.TitleName), ex);
 				return;
 			}
 
 			if(this.NextData.DataSet.HasErrors)
 			{
-				Origam.UI.AsMessageBox.ShowError(this, ResourceUtils.GetString("ErrorsInForm1") 
+				UI.AsMessageBox.ShowError(this, ResourceUtils.GetString("ErrorsInForm1") 
 					+ Environment.NewLine 
 					+ Environment.NewLine 
 					+ DatasetTools.GetDatasetErrors(this.NextData.DataSet), ResourceUtils.GetString("ErrorWhenFormCheck", this.TitleName),
@@ -159,9 +120,6 @@ namespace Origam.Workflow
 			{
 				if(this.EndRule != null)
 				{
-					//DataSet tempData = this.NextData.Copy();
-
-					//this.WorkflowEngine.EvaluateEndRule(this.EndRule, new XmlDataDocument(tempData));
 					this.WorkflowEngine.EvaluateEndRule(this.EndRule, this.NextData);
 				}
 			}
@@ -175,7 +133,7 @@ namespace Origam.Workflow
 			}
 			catch(Exception ex)
 			{
-				Origam.UI.AsMessageBox.ShowError(this, ex.Message, ResourceUtils.GetString("ErrorWhenFormCheck", this.TitleName), ex);
+				UI.AsMessageBox.ShowError(this, ex.Message, ResourceUtils.GetString("ErrorWhenFormCheck", this.TitleName), ex);
 				return;
 			}
 
@@ -196,64 +154,23 @@ namespace Origam.Workflow
 		/// </summary>
 		public override bool IsDirty
 		{
-			get
-			{
-				return false;
-			}
-			set
+			get => false;
+            set
 			{
 			}
 		}
 
-		public override bool IsViewOnly
-		{
-			get
-			{
-				return true;
-			}
-		}
-        internal IDataDocument NextData { get; set; }
+		public override bool IsViewOnly => true;
 
-        private FormControlSet _nextForm;
-		internal FormControlSet NextForm
-		{
-			get
-			{
-				return _nextForm;
-			}
-			set
-			{
-				_nextForm = value;
-			}
-		}
+	    internal IDataDocument NextData { get; set; }
 
-		private string _nextDescription;
-		internal string NextDescription
-		{
-			get
-			{
-				return _nextDescription;
-			}
-			set
-			{
-				_nextDescription = value;
-			}
-		}
+        internal FormControlSet NextForm { get; set; }
 
-		private bool _canAbort;
-		internal bool CanAbort
-		{
-			get
-			{
-				return _canAbort;
-			}
-			set
-			{
-				_canAbort = value;
-			}
-		}
+	    internal string NextDescription { get; set; }
 
-		bool _finishScreen = false;
+	    internal bool CanAbort { get; set; }
+
+	    bool _finishScreen = false;
 
 		internal void ShowFinishScreen()
 		{
@@ -262,7 +179,8 @@ namespace Origam.Workflow
 			this.DockPadding.All = 5;
 
 			this.StatusText = ResourceUtils.GetString("ProcessFinished");
-			AppendProcessLog(Environment.NewLine + "----------------------------------" + Environment.NewLine + "Proces dokonèen.");
+			AppendProcessLog(Environment.NewLine + messageSeparator + 
+			                 Environment.NewLine + ResourceUtils.GetString("ProcessFinished"));
 
 			this.CanFinishTask = false;
 			this.CloseButton = true;
@@ -290,7 +208,7 @@ namespace Origam.Workflow
 			btnClose.Text = ResourceUtils.GetString("ButtonClose");
 			btnClose.Image = Origam.Workbench.Images.Delete;
 			btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			btnClose.Click += new EventHandler(btnClose_Click);
+			btnClose.Click += btnClose_Click;
 			buttonPanel.Controls.Add(btnClose);
 
 			Button btnRepeat = null;
@@ -305,9 +223,9 @@ namespace Origam.Workflow
 				btnRepeat.Width = 130;
 				btnRepeat.FlatStyle = FlatStyle.Flat;
 				btnRepeat.Text = ResourceUtils.GetString("ButtonRepeat");
-				btnRepeat.Image = Origam.Workbench.Images.RecurringWorkflow;
+				btnRepeat.Image = Workbench.Images.RecurringWorkflow;
 				btnRepeat.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-				btnRepeat.Click += new EventHandler(btnRepeat_Click);
+				btnRepeat.Click += btnRepeat_Click;
 				buttonPanel.Controls.Add(btnRepeat);
 			}
 
@@ -318,7 +236,7 @@ namespace Origam.Workflow
 			logBox.Width = 500;
 			logBox.Height = 500;
 			logBox.Text = ResourceUtils.GetString("ProcessSteps");
-			logBox.Text += Environment.NewLine + "------------------------------------------------";
+			logBox.Text += Environment.NewLine + messageSeparator;
 			logBox.Text += Environment.NewLine + _processLog;
 			logBox.ScrollBars = ScrollBars.Both;
 			logBox.Multiline = true;
@@ -351,31 +269,24 @@ namespace Origam.Workflow
 
 		internal void ShowWorkflowUI()
 		{
-			//CurtainForm curtain = new CurtainForm();
 			try
 			{
-				//curtain.Show(this);
 				this.StatusText = ResourceUtils.GetString("FormLoading");
 				Cursor.Current = Cursors.WaitCursor;
-				//this.SuspendLayout();
 				this.TaskFinished = false;
 				this.FormGenerator.LoadFormWithData(this, this.NextData.DataSet, this.NextData, this.NextForm);
 				this.EndCurrentEdit();
 				this.SelectNextControl(this, true, true, true, true);
 				this.StatusText = this.NextDescription;
-				//AppendProcessLog(this.NextDescription);
 				if(this.NameLabel != null)
 				{
 					this.NameLabel.Text = this.TitleName + ": " + this.NextDescription;
 				}
 				this.CanFinishTask = true;
-				this.CloseButton = true; //this.CanAbort;
-				//curtain.Fade();
+				this.CloseButton = true;
 			}
 			finally
 			{
-				//this.ResumeLayout(true);
-				//this.OnResize(EventArgs.Empty);
 				Cursor.Current = Cursors.Default;
 			}
 		}
@@ -385,7 +296,7 @@ namespace Origam.Workflow
         {
             if (this.InvokeRequired)
             {
-                ShowMessageDelegate showMessage = new ShowMessageDelegate(ShowMessage);
+                ShowMessageDelegate showMessage = ShowMessage;
                 this.Invoke(showMessage, new object[] { message, ex });
             }
             else
@@ -396,10 +307,12 @@ namespace Origam.Workflow
                 }
                 else
                 {
-                    Origam.UI.AsMessageBox.ShowError(this, message, ResourceUtils.GetString("WorkflowReportTitle", this.TitleName), ex);
+                    UI.AsMessageBox.ShowError(this, message, ResourceUtils.GetString("WorkflowReportTitle", this.TitleName), ex);
                 }
 
-                AppendProcessLog(Environment.NewLine + "----------------------------------" + Environment.NewLine + message + Environment.NewLine + "----------------------------------");
+                AppendProcessLog(Environment.NewLine + messageSeparator +
+                                 Environment.NewLine + message + 
+                                 Environment.NewLine + messageSeparator);
             }
         }
 
@@ -419,28 +332,15 @@ namespace Origam.Workflow
 		private void WorkflowForm_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			if(_finishScreen) return;
-
-//			if(this.CanAbort)
-//			{
-				AbortTask();
-				e.Cancel = true;
-//			}
-//			else
-//			{
-//				e.Cancel = true;
-//
-//				MessageBox.Show("Není možno zavøít okno, protože bìží proces. Nejdøíve proces dokonèete.");
-//			}
+			AbortTask();
+			e.Cancel = true;
 		}
 
 		#region Events
 		public event EventHandler StatusChanged;
 		void OnStatusChanged(EventArgs e)
 		{
-			if (StatusChanged != null) 
-			{
-				StatusChanged(this, e);
-			}
+		    StatusChanged?.Invoke(this, e);
 		}
 		#endregion
 
@@ -452,7 +352,7 @@ namespace Origam.Workflow
 				_processLog += Environment.NewLine;
 			}
 
-			_processLog += DateTime.Now.ToString() + ": " + text;
+			_processLog += DateTime.Now + ": " + text;
 		}
 
 		protected override void Dispose(bool disposing)
@@ -460,10 +360,10 @@ namespace Origam.Workflow
 			if(disposing)
 			{
 				this.Host = null;
-				_endRule = null;
+				EndRule = null;
 				NextData = null;
-				_nextForm = null;
-				_workflowEngine = null;
+				NextForm = null;
+				WorkflowEngine = null;
 			}
 
 			base.Dispose (disposing);
@@ -477,7 +377,7 @@ namespace Origam.Workflow
 		private void btnRepeat_Click(object sender, EventArgs e)
 		{
 			Button btn = sender as Button;
-			btn.Click -= new EventHandler(btnClose_Click);
+			btn.Click -= btnClose_Click;
 			this.Controls.Remove(btn);
 
 			this.Controls.Clear();

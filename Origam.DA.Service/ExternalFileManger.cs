@@ -28,7 +28,10 @@ namespace Origam.DA.Service
             this.origamFile = origamFile;
             this.fileEventQueue = fileEventQueue;
         }
-        
+
+        public IEnumerable<string> Files => pathFileDict.Values
+            .Select(extFile => extFile.ExtFilePath.Absolute);
+
         public string AddAndReturnLink(string fieldName, Guid objectId,
             object data, ExternalFileExtension fileExtension)
         {

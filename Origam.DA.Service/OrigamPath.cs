@@ -99,6 +99,11 @@ namespace Origam.DA.Service
                 absolutePath:Absolute.Replace(dirToRename.FullName, newDirPath),
                 basePath: BasePath);
         }
+
+        public override string ToString()
+        {
+            return Absolute;
+        }
     }
 
     public class ExternalFilePath: OrigamPath

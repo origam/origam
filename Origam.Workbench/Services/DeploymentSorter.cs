@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CSharpFunctionalExtensions;
 using MoreLinq;
 using Origam.Schema;
 using Origam.Schema.DeploymentModel;
@@ -15,12 +16,13 @@ namespace Origam.Workbench.Services
 
         private List<IDeploymentVersion> remainingDeployments;
         private IDeploymentVersion current;
+        private List<IDeploymentVersion> allDeployments;
 
         public List<IDeploymentVersion> SortToRespectDependencies(
             IEnumerable<IDeploymentVersion> deplVersionsToSort)
         {
-            remainingDeployments =
-                new List<IDeploymentVersion>(deplVersionsToSort);
+            allDeployments = deplVersionsToSort.ToList();
+            remainingDeployments = allDeployments.ToList();
             int inputSize = remainingDeployments.Count;
 
             while (remainingDeployments.Count > 0)
@@ -83,11 +85,11 @@ namespace Origam.Workbench.Services
         private List<IDeploymentVersion> GetDependentDeployments(IDeploymentVersion deployment)
         {
             return remainingDeployments
-                .Where(remainingDepl => IsAmongDependencies(remainingDepl.DeploymentDependencies, deployment))
+                .Where(remainingDepl => IsAmongDependencies(GetAllDependencies(remainingDepl), deployment))
                 .ToList();
         }
 
-        private bool IsAmongDependencies(List<DeploymentDependency> dependencies, IDeploymentVersion deployment)
+        private bool IsAmongDependencies(IEnumerable<DeploymentDependency> dependencies, IDeploymentVersion deployment)
         {
             return dependencies.Any(
                 dependency =>
@@ -97,8 +99,37 @@ namespace Origam.Workbench.Services
 
         private bool HasActiveDependencies(IDeploymentVersion deployment)
         {
-            return deployment.DeploymentDependencies
-                       .Any(IsInRemainingDeployments);
+            return GetAllDependencies(deployment)
+                .Any(IsInRemainingDeployments);
+        }
+
+        private IEnumerable<DeploymentDependency> GetAllDependencies(IDeploymentVersion deployment)
+        {
+            bool alreadyDependsOnPreviousVersion =
+                deployment.DeploymentDependencies
+                    .Any(x => x.PackageId == deployment.SchemaExtensionId);
+            if (alreadyDependsOnPreviousVersion)
+            {
+                return deployment.DeploymentDependencies;
+            }
+            var dependencies = deployment.DeploymentDependencies.ToList();
+            var mayBePreviousVersionDependency = GetDependencyOnPreviousVersion(deployment);
+            if (mayBePreviousVersionDependency.HasValue)
+            {
+                dependencies.Add(mayBePreviousVersionDependency.Value);
+            }
+            return dependencies;
+        }
+
+        private Maybe<DeploymentDependency> GetDependencyOnPreviousVersion(IDeploymentVersion deployment)
+        {
+           return allDeployments
+                .Where(x => x.SchemaExtensionId == deployment.SchemaExtensionId)
+                .Where(x => x.Version < deployment.Version)
+                .OrderByDescending(x => x.Version)
+                .Take(1)
+                .Select(x => new DeploymentDependency(deployment.SchemaExtensionId, x.Version))
+                .FirstOrDefault();
         }
 
         private bool IsInRemainingDeployments(DeploymentDependency dependency)
