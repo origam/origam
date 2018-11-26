@@ -18,6 +18,9 @@ export class GridInteractionState implements IGridInteractionState {
   @observable
   public editingColumnId: string | undefined;
 
+  @observable
+  public columnWidths = new Map();
+
   @action.bound
   public setActiveView(view: GridViewType): void {
     this.activeView = view;

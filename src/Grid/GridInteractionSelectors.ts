@@ -9,6 +9,7 @@ import {
 import { IRecordId, IFieldId, IDataTableSelectors } from "../DataTable/types";
 
 export class GridInteractionSelectors implements IGridInteractionSelectors {
+
   constructor(
     public state: IGridInteractionState,
     public gridTopologyProvider: { gridTopology: IGridTopology },
@@ -106,5 +107,9 @@ export class GridInteractionSelectors implements IGridInteractionSelectors {
       this.dataTableSelectors.recordExistsById(this.editingRowId) &&
       this.dataTableSelectors.fieldExistsById(this.editingColumnId)
     );
+  }
+
+  public getColumnWidth(columnId: string): number {
+    return this.state.columnWidths.get(columnId) || 100;
   }
 }

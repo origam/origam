@@ -336,8 +336,9 @@ export interface IGridInteractionSelectors {
 
   getLeftColumnId(columnId: IFieldId): IFieldId | undefined;
   getRightColumnId(columnId: IFieldId): IFieldId | undefined;
-  getUpRowId(columnId: IRecordId): IRecordId | undefined;
-  getDownRowId(columnId: IRecordId): IRecordId | undefined;
+  getUpRowId(rowId: IRecordId): IRecordId | undefined;
+  getDownRowId(rowId: IRecordId): IRecordId | undefined;
+  getColumnWidth(columnId: IFieldId): number;
 }
 
 export interface IGridInteractionState {
@@ -346,6 +347,7 @@ export interface IGridInteractionState {
   selectedColumnId: string | undefined;
   editingRowId: string | undefined;
   editingColumnId: string | undefined;
+  columnWidths: Map<IFieldId, number>;
 
   setActiveView(view: GridViewType): void;
   setEditing(rowId: string | undefined, columnId: string | undefined): void;
@@ -361,6 +363,7 @@ export interface IGridInteractionActions {
   selectOneDown(): void
   editSelectedCell(): void;
   setActiveView(view: GridViewType): void;
+  setColumnWidth(id: IFieldId, w: number): void;
   handleDumbEditorKeyDown(event: any): void;
   handleGridCellClick(
     event: any,

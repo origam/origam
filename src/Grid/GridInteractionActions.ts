@@ -11,8 +11,10 @@ import {
   IGridSelectors,
   IFormActions
 } from "./types";
+import { IFieldId } from "src/DataTable/types";
 
 export class GridInteractionActions implements IGridInteractionActions {
+
   constructor(
     public state: IGridInteractionState,
     public selectors: IGridInteractionSelectors,
@@ -361,4 +363,10 @@ export class GridInteractionActions implements IGridInteractionActions {
   public editSelectedCell() {
     this.edit(this.selectors.selectedRowId, this.selectors.selectedColumnId);
   }
+
+  @action.bound
+  public setColumnWidth(id: IFieldId, w: number): void {
+    this.state.columnWidths.set(id, w);
+  }
+
 }

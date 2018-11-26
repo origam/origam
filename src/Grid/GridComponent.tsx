@@ -1,6 +1,8 @@
 import * as React from "react";
-import { observer } from "mobx-react";
+import { observer, inject } from "mobx-react";
 import { IGridProps, IGridView, IColumnHeaderRenderer } from "./types";
+import { IGridPanelBacking } from "../GridPanel/types";
+import { action, observable } from "mobx";
 
 function alter<T>(arr1: T[], alterItemFn: (idx: number) => T): T[] {
   const result: T[] = [];
@@ -59,7 +61,7 @@ export class GridComponent extends React.Component<IGridProps> {
     return (
       <div
         className="grid-view-container"
-        style={{ flex: '1 1 auto' }}
+        style={{ flex: "1 1 auto" }}
         onKeyDown={handleGridKeyDown}
         // style={{display: this.props.isHidden ? "none" : undefined}}
       >
@@ -95,10 +97,67 @@ export class GridComponent extends React.Component<IGridProps> {
   }
 }
 
+@inject("gridPaneBacking")
 @observer
-export class ColumnWidthHandle extends React.Component {
+export class ColumnWidthHandle extends React.Component<any> {
+  @observable private isMoving = false;
+  private startMousePosition: number;
+  private startLeftColumnWidth: number;
+  private startRightColumnWidth: number;
+
+  @action.bound
+  private handleMouseDown(event: any) {
+    const { gridInteractionSelectors } = this.props
+      .gridPaneBacking as IGridPanelBacking;
+    this.isMoving = true;
+    console.log("MD");
+    this.startMousePosition = event.screenX;
+    this.startLeftColumnWidth = gridInteractionSelectors.getColumnWidth(
+      this.props.leftColumnId
+    );
+    this.startRightColumnWidth = gridInteractionSelectors.getColumnWidth(
+      this.props.rightColumnId
+    );
+    window.addEventListener("mousemove", this.handleWindowMouseMove);
+    window.addEventListener("mouseup", this.handleWindowMouseUp);
+  }
+
+  @action.bound
+  private handleWindowMouseUp(event: any) {
+    this.isMoving = false;
+    window.removeEventListener("mousemove", this.handleWindowMouseMove);
+    window.removeEventListener("mouseup", this.handleWindowMouseUp);
+  }
+
+  @action.bound
+  private handleWindowMouseMove(event: any) {
+    if (this.isMoving) {
+      const { gridInteractionActions } = this.props
+        .gridPaneBacking as IGridPanelBacking;
+      if (this.props.leftColumnId) {
+        gridInteractionActions.setColumnWidth(
+          this.props.leftColumnId,
+          this.startLeftColumnWidth + event.screenX - this.startMousePosition
+        );
+      }
+      if (this.props.rightColumnId) {
+        gridInteractionActions.setColumnWidth(
+          this.props.rightColumnId,
+          this.startRightColumnWidth - event.screenX + this.startMousePosition
+        );
+      }
+    }
+  }
+
   public render() {
-    return <div className="column-header-width-handle" />;
+    const { gridInteractionActions } = this.props
+      .gridPaneBacking as IGridPanelBacking;
+    return (
+      <div
+        className="column-header-width-handle"
+        onMouseDown={this.handleMouseDown}
+      />
+    );
   }
 }
 
@@ -156,8 +215,15 @@ export class FixedHeaders extends React.Component<{
           {this.props.columnHeaderRenderer({ columnIndex: i })}
         </div>
       );
+      headers.push(
+        <ColumnWidthHandle
+          leftColumnId={view.getColumnId(i)}
+          rightColumnId={view.getColumnId(i + 1)}
+          key={i}
+        />
+      );
     }
-    return alter(headers, (idx: number) => <ColumnWidthHandle key={idx} />);
+    return headers;
   }
 }
 
@@ -183,7 +249,14 @@ export class MovingHeaders extends React.Component<{
           {this.props.columnHeaderRenderer({ columnIndex: i })}
         </div>
       );
+      headers.push(
+        <ColumnWidthHandle
+          leftColumnId={view.getColumnId(i)}
+          rightColumnId={view.getColumnId(i + 1)}
+          key={i}
+        />
+      );
     }
-    return alter(headers, (idx: number) => <ColumnWidthHandle key={idx} />);
+    return headers;
   }
 }

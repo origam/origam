@@ -41,7 +41,11 @@ export class GridSetup implements IGridSetup {
   }
 
   public getCellLeft(cellIndex: number): number {
-    return cellIndex * this.getColumnWidth(cellIndex);
+    if(cellIndex === 0) {
+      return 0;
+    } else {
+      return this.getCellRight(cellIndex - 1);
+    }
   }
 
   public getCellBottom(cellIndex: number): number {
@@ -91,7 +95,13 @@ export class GridSetup implements IGridSetup {
   }
 
   public getColumnWidth(columnIndex: number): number {
-    return 200;
+    const field = this.dataTableSelectors.getFieldByFieldIndex(columnIndex);
+    if(field) {
+      const width = this.gridInteractionSelectors.getColumnWidth(field.id);
+      return width;
+    } else {
+      return 100;
+    }
   }
 
   public onRowsRendered(rowIndexStart: number, rowIndexEnd: number): void {
