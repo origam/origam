@@ -41,10 +41,10 @@ export class GridToolbar extends React.Component<any> {
           <button className="oui-toolbar-btn">
             <i className="fa fa-step-backward icon" aria-hidden="true" />
           </button>
-          <button className="oui-toolbar-btn">
+          <button className="oui-toolbar-btn" onClick={gridToolbarView.handlePrevRecordClick}>
             <i className="fa fa-caret-left icon" aria-hidden="true" />
           </button>
-          <button className="oui-toolbar-btn">
+          <button className="oui-toolbar-btn" onClick={gridToolbarView.handleNextRecordClick}>
             <i className="fa fa-caret-right icon" aria-hidden="true" />
           </button>
           <button className="oui-toolbar-btn">
