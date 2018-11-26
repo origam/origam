@@ -24,6 +24,7 @@ using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.ObjectPersistence.Attributes;
 
 namespace Origam.Schema.EntityModel
 {
@@ -447,7 +448,8 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		[EntityColumn("ItemType")]
+        [RelationTypeParentModelElementRule()]
+        [EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
