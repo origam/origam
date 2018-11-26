@@ -78,7 +78,15 @@ namespace Origam.DA.Service
                 loadedLocalizedObjects = null;
             }
         }
-        
+
+        public void RemoveFromCache(IPersistent instance)
+        {
+            lock (Lock)
+            {
+                loadedLocalizedObjects?.Remove(instance.Id);
+            }
+        }
+
         private IFilePersistent GetCachedObject(Guid id, IPersistenceProvider provider)
         {
             lock (Lock)

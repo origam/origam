@@ -223,6 +223,11 @@ namespace Origam.DA.Service
             string fullPath = System.IO.Path.Combine(directory.FullName, RefFileName);
             origamFileManager.WriteFileIfNotExist(fullPath, contents);
         }
+
+        public void RemoveFromCache(IPersistent instance)
+        {
+            origamXmlManager.RemoveFromCache(instance);
+        }
     }
 
     class OrigamGroupFile : OrigamFile

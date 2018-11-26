@@ -62,5 +62,10 @@ namespace Origam.DA.Service
                 objectDict[locale][id] = value;
             }
         }
+
+        public void Remove(Guid id)
+        {
+            objectDict[locale].Remove(id);
+        }
     }
 }
