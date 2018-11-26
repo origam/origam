@@ -1434,17 +1434,7 @@ namespace Origam.Server
             }
             else
             {
-                if (row.Table.Columns[property].DataType == typeof(byte[]))
-                {
-                    if(newValue is byte[])
-                    {
-                        row[property] = (byte[])(newValue);
-                    }
-                }
-                else
-                { 
-                     row[property] =  newValue;
-                }
+                row[property] =  newValue;
             }
         }
 

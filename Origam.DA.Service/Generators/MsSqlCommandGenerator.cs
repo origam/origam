@@ -200,20 +200,17 @@ namespace Origam.DA.Service
 
         public override string DefaultDdlDataType(OrigamDataType columnType)
         {
-            if (columnType is OrigamDataType.Geography)
+            switch (columnType)
             {
-                return "geography";
+                case OrigamDataType.Geography:
+                    return "geography";
+                case OrigamDataType.Memo:
+                    return "nvarchar(max)";
+                case OrigamDataType.Blob:
+                    return "varbinary(max)";
+                default:
+                    return ConvertDataType(columnType, null).ToString();
             }
-            if (columnType is OrigamDataType.Memo)
-            {
-                return "nvarchar(max)";
-            }
-            if (columnType is OrigamDataType.Blob)
-            {
-                return "varbinary(max)";
-            }
-
-            return ConvertDataType(columnType, null).ToString();
         }
 
         public override OrigamDataType ToOrigamDataType(string ddlType)

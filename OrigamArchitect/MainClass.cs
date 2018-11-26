@@ -90,13 +90,15 @@ namespace OrigamArchitect
 		private static void HandleUnhandledException(object o)
 		{
 			Exception ex = o as Exception;
-			if(ex == null)
+            if (ex == null)
 			{
-				AsMessageBox.ShowError(null, o.ToString(), strings.GenericError_Title, null);
+			    log.Fatal(o);
+                AsMessageBox.ShowError(null, o.ToString(), strings.GenericError_Title, null);
 			}
 			else
 			{
-				if(ex.StackTrace.IndexOf("System.Windows.Forms.ParkingWindow") > 0)
+			    log.Fatal("HandleUnhandledException", ex);
+                if (ex.StackTrace.IndexOf("System.Windows.Forms.ParkingWindow") > 0)
 				{
 					System.Diagnostics.Debug.WriteLine(ex);
 				}

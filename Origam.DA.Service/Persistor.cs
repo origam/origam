@@ -253,8 +253,7 @@ namespace Origam.DA.Service
                 return (origamFile, objInfo);
             }
             objInfo = index.GetById(instance.Id);
-            if (objInfo == null) return (null, null);
-            origamFile = objInfo.OrigamFile 
+            origamFile = objInfo?.OrigamFile 
                          ?? index.GetByRelativePath(instance.RelativeFilePath);
             return (origamFile, objInfo);
         }
