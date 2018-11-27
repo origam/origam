@@ -108,6 +108,7 @@ namespace Origam.DA.Service
         public override void EndTransaction()
         {       
             persistor.EndTransaction();
+            base.EndTransaction();
         }
 
         private IFilePersistent RetrieveInstance(PersistedObjectInfo persistedObjInfo,
