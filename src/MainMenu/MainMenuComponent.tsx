@@ -228,7 +228,6 @@ export const MenuItem = ({
 export class CndMenuItem extends React.Component<ICndMenuItemProps> {
   @action.bound
   public handleClick(event: any) {
-    console.log("click");
     this.props.mainViewEngine!.handleMenuFormItemClick(event, this.props.id, this.props.label);
   }
 

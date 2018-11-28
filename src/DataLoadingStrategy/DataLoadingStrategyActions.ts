@@ -24,7 +24,7 @@ import {
   IGridActions
 } from "../Grid/types";
 import { CancellablePromise } from "mobx/lib/api/flow";
-import { IDataTableFieldStruct, IRecordId } from '../DataTable/types';
+import { IDataTableFieldStruct, IRecordId } from "../DataTable/types";
 
 function noCancelException<T>(promise: Promise<void | T>): Promise<void | T> {
   return promise.catch(e => {
@@ -33,7 +33,6 @@ function noCancelException<T>(promise: Promise<void | T>): Promise<void | T> {
     }
   });
 }
-
 
 function constructPaginationFilter(
   direction: "after" | "before",
@@ -47,7 +46,7 @@ function constructPaginationFilter(
     columnIds.push(orderingItem[0]);
   }
 
-  const pagSlug: any= ["$OR"];
+  const pagSlug: any = ["$OR"];
   for (let compOrd = 0; compOrd < columnIds.length; compOrd++) {
     const ordTerm: any = ["$AND"];
     for (let termNum = 0; termNum <= compOrd; termNum++) {
@@ -68,6 +67,7 @@ function constructPaginationFilter(
 }
 
 export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
+
   constructor(
     public state: IDataLoadingStategyState,
     public selectors: IDataLoadingStrategySelectors,
@@ -152,6 +152,10 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
     );
   }
 
+  public setLoadingActive(state: boolean): void {
+    this.state.setLoadingActive(state);
+  }
+
   @action.bound
   public requestLoadIncrement() {
     return noCancelException(flow(this.loadIncrementProc.bind(this))());
@@ -205,49 +209,54 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
   }
 
   private *loadAfterLastRecordProc() {
-    const lastRecord = this.dataTableSelectors.lastFullRecord;
-    const addedFilters = [];
-    const addedOrdering = this.gridOrderingSelectors.ordering.filter(
-      o => o[0] !== "Id"
-    );
-    addedOrdering.push(["Id", "asc"]);
-    const cursorValues = addedOrdering.map(ord => {
-      const field = this.dataTableSelectors.getFieldById(ord[0]);
-      const value = this.dataTableSelectors.getResetValue(lastRecord, field!)
-      return value;
-    })
-    addedFilters.push(...constructPaginationFilter(
-      "after",
-      cursorValues,
-      addedOrdering
-    ))
-    const fields = [...this.dataTableSelectors.fields];
-    fields.sort((a, b) => a.recvDataIndex - b.recvDataIndex);
-    const columns = this.dataTableSelectors.fields.map(field => field.id);
-    const idFieldIndex = fields.findIndex(field => field.isPrimaryKey);
-    const apiResult = yield this.dataLoader.loadDataTable({
-      limit: 5000,
-      orderBy: addedOrdering as Array<[string, string]>,
-      filter: addedFilters as Array<[string, string, string]>, // TODO!!!
-      columns
-    });
-    const records = apiResult.data.map((record: any) => {
-      const newRecord = new DataTableRecord(
-        record[idFieldIndex],
-        Array(this.dataTableSelectors.fieldCount)
+    try {
+      this.state.setLoading(true);
+      const lastRecord = this.dataTableSelectors.lastFullRecord;
+      const addedFilters = [];
+      const addedOrdering = this.gridOrderingSelectors.ordering.filter(
+        o => o[0] !== "Id"
       );
+      addedOrdering.push(["Id", "asc"]);
+      const cursorValues = addedOrdering.map(ord => {
+        const field = this.dataTableSelectors.getFieldById(ord[0]);
+        const value = this.dataTableSelectors.getResetValue(lastRecord, field!);
+        return value;
+      });
+      addedFilters.push(
+        ...constructPaginationFilter("after", cursorValues, addedOrdering)
+      );
+      const fields = [...this.dataTableSelectors.fields];
+      fields.sort((a, b) => a.recvDataIndex - b.recvDataIndex);
+      const columns = this.dataTableSelectors.fields.map(field => field.id);
+      const idFieldIndex = fields.findIndex(field => field.isPrimaryKey);
 
-      for (let fieldIdx = 0; fieldIdx < record.length; fieldIdx++) {
-        const field = fields[fieldIdx];
-        newRecord.values[field.dataIndex] = record[fieldIdx];
-      }
+      const apiResult = yield this.dataLoader.loadDataTable({
+        limit: 5000,
+        orderBy: addedOrdering as Array<[string, string]>,
+        filter: addedFilters as Array<[string, string, string]>, // TODO!!!
+        columns
+      });
 
-      return newRecord;
-    });
-    this.dataTableActions.appendRecords(records);
-    return {
-      records
-    };
+      const records = apiResult.data.map((record: any) => {
+        const newRecord = new DataTableRecord(
+          record[idFieldIndex],
+          Array(this.dataTableSelectors.fieldCount)
+        );
+
+        for (let fieldIdx = 0; fieldIdx < record.length; fieldIdx++) {
+          const field = fields[fieldIdx];
+          newRecord.values[field.dataIndex] = record[fieldIdx];
+        }
+
+        return newRecord;
+      });
+      this.dataTableActions.appendRecords(records);
+      return {
+        records
+      };
+    } finally {
+      this.state.setLoading(false);
+    }
   }
 
   public loadBeforeFirstRecord() {
@@ -257,52 +266,58 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
   }
 
   private *loadBeforeFirstRecordProc() {
-    const firstRecord = this.dataTableSelectors.firstFullRecord;
-    const addedFilters = [];
-    let addedOrdering = [];
-    addedOrdering = this.gridOrderingSelectors.ordering.filter(
-      o => o[0] !== "Id"
-    );
-    addedOrdering.push(["Id", "asc"]);
-    const cursorValues = addedOrdering.map(ord => {
-      const field = this.dataTableSelectors.getFieldById(ord[0]);
-      const value = this.dataTableSelectors.getResetValue(firstRecord, field!)
-      return value;
-    })
-    addedFilters.push(...constructPaginationFilter(
-      "before",
-      cursorValues,
-      addedOrdering
-    ))
-
-    const fields = [...this.dataTableSelectors.fields];
-    fields.sort((a, b) => a.recvDataIndex - b.recvDataIndex);
-    const columns = this.dataTableSelectors.fields.map(field => field.id);
-    const idFieldIndex = fields.findIndex(field => field.isPrimaryKey);
-    const apiResult = yield this.dataLoader.loadDataTable({
-      limit: 5000,
-      orderBy: addedOrdering as Array<[string, string]>,
-      filter: addedFilters as Array<[string, string, string]>, // TODO!!!
-      columns
-    });
-    const records = apiResult.data.map((record: any) => {
-      const newRecord = new DataTableRecord(
-        record[idFieldIndex],
-        Array(this.dataTableSelectors.fieldCount)
+    try {
+      this.state.setLoading(true);
+      const firstRecord = this.dataTableSelectors.firstFullRecord;
+      const addedFilters = [];
+      let addedOrdering = [];
+      addedOrdering = this.gridOrderingSelectors.ordering.filter(
+        o => o[0] !== "Id"
+      );
+      addedOrdering.push(["Id", "asc"]);
+      const cursorValues = addedOrdering.map(ord => {
+        const field = this.dataTableSelectors.getFieldById(ord[0]);
+        const value = this.dataTableSelectors.getResetValue(
+          firstRecord,
+          field!
+        );
+        return value;
+      });
+      addedFilters.push(
+        ...constructPaginationFilter("before", cursorValues, addedOrdering)
       );
 
-      for (let fieldIdx = 0; fieldIdx < record.length; fieldIdx++) {
-        const field = fields[fieldIdx];
-        newRecord.values[field.dataIndex] = record[fieldIdx];
-      }
+      const fields = [...this.dataTableSelectors.fields];
+      fields.sort((a, b) => a.recvDataIndex - b.recvDataIndex);
+      const columns = this.dataTableSelectors.fields.map(field => field.id);
+      const idFieldIndex = fields.findIndex(field => field.isPrimaryKey);
+      const apiResult = yield this.dataLoader.loadDataTable({
+        limit: 5000,
+        orderBy: addedOrdering as Array<[string, string]>,
+        filter: addedFilters as Array<[string, string, string]>, // TODO!!!
+        columns
+      });
+      const records = apiResult.data.map((record: any) => {
+        const newRecord = new DataTableRecord(
+          record[idFieldIndex],
+          Array(this.dataTableSelectors.fieldCount)
+        );
 
-      return newRecord;
-    });
-    records.reverse();
-    this.dataTableActions.prependRecords(records);
-    return {
-      records
-    };
+        for (let fieldIdx = 0; fieldIdx < record.length; fieldIdx++) {
+          const field = fields[fieldIdx];
+          newRecord.values[field.dataIndex] = record[fieldIdx];
+        }
+
+        return newRecord;
+      });
+      records.reverse();
+      this.dataTableActions.prependRecords(records);
+      return {
+        records
+      };
+    } finally {
+      this.state.setLoading(false);
+    }
   }
 
   @action.bound
@@ -320,62 +335,73 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
   }
 
   private *loadFresh() {
-    const addedOrdering = this.gridOrderingSelectors.ordering.filter(
-      o => o[0] !== "Id"
-    );
-    addedOrdering.push(["Id", "asc"]);
-    const fields = [...this.dataTableSelectors.fields];
-    fields.sort((a, b) => a.recvDataIndex - b.recvDataIndex);
-    const columns = this.dataTableSelectors.fields.map(field => field.id);
-    const idFieldIndex = fields.findIndex(field => field.isPrimaryKey);
-    const apiResult = yield this.dataLoader.loadDataTable({
-      limit: 5000,
-      orderBy: addedOrdering as Array<[string, string]>,
-      columns
-    });
-    const records = apiResult.data.map((record: any) => {
-      const newRecord = new DataTableRecord(
-        record[idFieldIndex],
-        Array(this.dataTableSelectors.fieldCount)
+    try {
+      this.state.setLoading(true);
+      const addedOrdering = this.gridOrderingSelectors.ordering.filter(
+        o => o[0] !== "Id"
       );
+      addedOrdering.push(["Id", "asc"]);
+      const fields = [...this.dataTableSelectors.fields];
+      fields.sort((a, b) => a.recvDataIndex - b.recvDataIndex);
+      const columns = this.dataTableSelectors.fields.map(field => field.id);
+      const idFieldIndex = fields.findIndex(field => field.isPrimaryKey);
+      const apiResult = yield this.dataLoader.loadDataTable({
+        limit: 5000,
+        orderBy: addedOrdering as Array<[string, string]>,
+        columns
+      });
+      const records = apiResult.data.map((record: any) => {
+        const newRecord = new DataTableRecord(
+          record[idFieldIndex],
+          Array(this.dataTableSelectors.fieldCount)
+        );
 
-      for (let fieldIdx = 0; fieldIdx < record.length; fieldIdx++) {
-        const field = fields[fieldIdx];
-        newRecord.values[field.dataIndex] = record[fieldIdx];
-      }
+        for (let fieldIdx = 0; fieldIdx < record.length; fieldIdx++) {
+          const field = fields[fieldIdx];
+          newRecord.values[field.dataIndex] = record[fieldIdx];
+        }
 
-      return newRecord;
-    });
-    this.dataTableActions.setRecords(records);
+        return newRecord;
+      });
+      this.dataTableActions.setRecords(records);
+    } finally {
+      this.state.setLoading(false);
+    }
   }
 
-  @action.bound public async reloadRow(id: IRecordId) {
-    const fields = [...this.dataTableSelectors.fields]
-    fields.sort((a, b) => a.recvDataIndex - b.recvDataIndex);
-    const columns = this.dataTableSelectors.fields.map(field => field.id);
-    const idFieldIndex = fields.findIndex(field => field.isPrimaryKey);
-    const apiResult = await this.dataLoader.loadDataTable({
-      limit: 1,
-      orderBy: [],
-      columns,
-      filter: ["Id", "eq", id]
-    });
-    const records = apiResult.data.map((record: any) => {
-      const newRecord = new DataTableRecord(
-        record[idFieldIndex],
-        Array(this.dataTableSelectors.fieldCount)
-      );
+  @action.bound
+  public async reloadRow(id: IRecordId) {
+    try {
+      this.state.setLoading(true);
+      const fields = [...this.dataTableSelectors.fields];
+      fields.sort((a, b) => a.recvDataIndex - b.recvDataIndex);
+      const columns = this.dataTableSelectors.fields.map(field => field.id);
+      const idFieldIndex = fields.findIndex(field => field.isPrimaryKey);
+      const apiResult = await this.dataLoader.loadDataTable({
+        limit: 1,
+        orderBy: [],
+        columns,
+        filter: ["Id", "eq", id]
+      });
+      const records = apiResult.data.map((record: any) => {
+        const newRecord = new DataTableRecord(
+          record[idFieldIndex],
+          Array(this.dataTableSelectors.fieldCount)
+        );
 
-      for (let fieldIdx = 0; fieldIdx < record.length; fieldIdx++) {
-        const field = fields[fieldIdx];
-        newRecord.values[field.dataIndex] = record[fieldIdx];
+        for (let fieldIdx = 0; fieldIdx < record.length; fieldIdx++) {
+          const field = fields[fieldIdx];
+          newRecord.values[field.dataIndex] = record[fieldIdx];
+        }
+
+        return newRecord;
+      });
+
+      if (records.length === 1) {
+        this.dataTableActions.replaceUpdatedRecord(records[0]);
       }
-
-      return newRecord;
-    });
-
-    if(records.length === 1) {
-      this.dataTableActions.replaceUpdatedRecord(records[0]);
+    } finally {
+      this.state.setLoading(false);
     }
   }
 

@@ -9,7 +9,7 @@ import { interpretMenu } from "src/MainMenu/MainMenuComponent";
 import { IAPI } from "../DataLoadingStrategy/types";
 import { getToken } from "../DataLoadingStrategy/api";
 
-interface IOpenedView {
+export interface IOpenedView {
   id: string;
   subid: string;
   label: string;

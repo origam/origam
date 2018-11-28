@@ -11,7 +11,7 @@ import {
   IFormTopology,
   IFormActions
 } from "../Grid/types";
-import { IDataLoadingStrategyActions } from "../DataLoadingStrategy/types";
+import { IDataLoadingStrategyActions, IDataLoadingStrategySelectors } from "../DataLoadingStrategy/types";
 import { IEventSubscriber } from "../utils/events";
 import { IGridOrderingSelectors, IGridOrderingActions } from "src/GridOrdering/types";
 import { IDataTableSelectors } from "src/DataTable/types";
@@ -37,6 +37,7 @@ export interface IGridPanelBacking {
   onStartGrid: IEventSubscriber;
   onStopGrid: IEventSubscriber;
   dataLoadingStrategyActions: IDataLoadingStrategyActions;
+  dataLoadingStrategySelectors: IDataLoadingStrategySelectors;
   gridOrderingSelectors: IGridOrderingSelectors;
   gridOrderingActions: IGridOrderingActions;
   dataTableSelectors: IDataTableSelectors;

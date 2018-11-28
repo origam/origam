@@ -5,8 +5,8 @@ import { IAPI } from "./types";
 import { getToken } from "./api";
 
 function tidyUpFilter(filter: any) {
-  if(!filter) {
-    return
+  if (!filter) {
+    return;
   }
   for (let i = 0; i < filter.length; i++) {
     const term = filter[i];
@@ -30,7 +30,11 @@ function tidyUpFilter(filter: any) {
 }
 
 export class DataLoader {
-  constructor(public tableName: string, public api: IAPI) {}
+  constructor(
+    public tableName: string,
+    public api: IAPI,
+    public menuItemId: string
+  ) {}
 
   private loadingPromise: CancellablePromise<any> | undefined;
   private loadWaitingPromise: CancellablePromise<any> | undefined;
@@ -71,7 +75,8 @@ export class DataLoader {
       token: getToken(),
       limit,
       filter: tidyUpFilter(filter),
-      orderBy
+      orderBy,
+      menuId: this.menuItemId
     });
 
     /*return axios.get(`http://127.0.0.1:8080/api/${this.tableName}`, {

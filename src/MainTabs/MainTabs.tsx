@@ -1,5 +1,5 @@
 import * as React from "react";
-import { observer, inject } from "mobx-react";
+import { observer, inject, Provider } from "mobx-react";
 import { MainViewEngine } from "./MainViewEngine";
 import { computed } from "mobx";
 
@@ -36,7 +36,7 @@ export class MainTabs extends React.Component<IMainTabsProps> {
                 id={view.view.id}
                 subid={view.view.subid}
                 label={view.view.label}
-                order={view.order}                
+                order={view.order}
                 mainViewEngine={mainViewEngine}
                 view={view}
               />
@@ -61,10 +61,14 @@ export class MainView extends React.Component<any> {
   }
 
   public render() {
-    return React.cloneElement(this.props.view.view.reactTree || <></>, {
-      active: this.isActive,
-      ...this.props
-    });
+    return (
+      <Provider mainView={this.props.view.view}>
+        {React.cloneElement(this.props.view.view.reactTree || <></>, {
+          active: this.isActive,
+          ...this.props
+        })}
+      </Provider>
+    );
   }
 }
 

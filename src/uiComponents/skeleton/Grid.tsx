@@ -1,5 +1,5 @@
-import { action, computed } from "mobx";
-import { observer, Provider } from "mobx-react";
+import { action, computed, autorun } from "mobx";
+import { observer, Provider, inject } from "mobx-react";
 import * as React from "react";
 import { DataLoader } from "src/DataLoadingStrategy/DataLoader";
 import { DataLoadingStrategyActions } from "src/DataLoadingStrategy/DataLoadingStrategyActions";
@@ -53,6 +53,8 @@ import { IGridPanelBacking } from "src/GridPanel/types";
 import { GridForm } from "../controls/GridForm";
 import { GridMap } from "../controls/GridMap";
 import { api } from "src/DataLoadingStrategy/api";
+import { MainView } from '../../MainTabs/MainTabs';
+import { IOpenedView } from "src/MainTabs/MainViewEngine";
 
 class GridConfiguration {
   public gridSetup: IGridSetup;
@@ -147,7 +149,8 @@ class FormSetup implements IFormSetup {
 function createGridPaneBacking(
   dataTableName: string,
   dataTableFields: IDataTableFieldStruct[],
-  defaultView: GridViewType
+  defaultView: GridViewType,
+  menuItemId: string,
 ) {
   // console.log(defaultView)
   const configuration = new GridConfiguration();
@@ -172,7 +175,7 @@ function createGridPaneBacking(
     gridOutlineSelectors
   );
 
-  const dataLoader = new DataLoader(dataTableName, api);
+  const dataLoader = new DataLoader(dataTableName, api, menuItemId);
 
   const dataTableState = new DataTableState();
 
@@ -318,6 +321,7 @@ function createGridPaneBacking(
     onStartGrid,
     onStopGrid,
     dataLoadingStrategyActions,
+    dataLoadingStrategySelectors,
     dataTableSelectors,
     gridOrderingActions,
     gridOrderingSelectors,
@@ -330,7 +334,7 @@ function createGridPaneBacking(
 }
 
 function fieldsFromProperties(properties: any[]) {
-  return properties.map((property:any, idx: number) => {
+  return properties.map((property: any, idx: number) => {
     return new DataTableField({
       id: property.id,
       label: property.name,
@@ -339,8 +343,8 @@ function fieldsFromProperties(properties: any[]) {
       recvDataIndex: property.recvDataIndex,
       isPrimaryKey: property.isPrimaryKey,
       isLookedUp: false
-    })
-  })
+    });
+  });
 }
 
 const personFields = [
@@ -414,15 +418,19 @@ const cityFields = [
   })
 ];
 
+@inject("mainView")
 @observer
 export class Grid extends React.Component<any> {
   constructor(props: any) {
     super(props);
+    const {mainView} = props as {mainView: IOpenedView};
+    console.log(mainView)
     const fields = fieldsFromProperties(props.properties);
     this.gridPaneBacking = createGridPaneBacking(
       this.props.dataSource.dataStructureEntityId,
       fields,
-      this.props.initialView
+      this.props.initialView,
+      mainView.id
     );
   }
 
@@ -435,10 +443,19 @@ export class Grid extends React.Component<any> {
       .then(() => {
         this.gridPaneBacking.gridInteractionActions.selectFirst();
       });
+    autorun(() => {
+      console.log(
+        "SelID:",
+        this.gridPaneBacking.gridInteractionSelectors.selectedRowId
+      );
+    });
+    autorun(() => {
+      console.log(this.gridPaneBacking.dataLoadingStrategySelectors.isLoading);
+    })
   }
 
   public render() {
-    const {gridPaneBacking} = this;
+    const { gridPaneBacking } = this;
     return (
       <Provider gridPaneBacking={this.gridPaneBacking}>
         <div

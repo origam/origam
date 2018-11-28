@@ -6,6 +6,7 @@ import { IDataTableSelectors } from "../DataTable/types";
 const LOADING_THRESHOLD = 1000;
 
 export class DataLoadingStrategySelectors implements IDataLoadingStrategySelectors {
+  
   constructor(
     public state: IDataLoadingStategyState,
     public gridViewSelectors: IGridSelectors,
@@ -20,6 +21,14 @@ export class DataLoadingStrategySelectors implements IDataLoadingStrategySelecto
   @computed
   get tailLoadingActive() {
     return this.state.tailLoadingActive;
+  }
+
+  @computed get loadingActive() {
+    return this.state.loadingActive;
+  }
+
+  @computed get isLoading() {
+    return this.state.isLoading;
   }
 
   @computed

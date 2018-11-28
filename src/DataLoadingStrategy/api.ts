@@ -83,7 +83,8 @@ export class APIOrigam implements IAPI {
     limit,
     filter,
     orderBy,
-    token
+    token,
+    menuId
   }: {
     tableId: string;
     token: string;
@@ -91,6 +92,7 @@ export class APIOrigam implements IAPI {
     limit?: number | undefined;
     filter?: Array<[string, string, string]> | undefined;
     orderBy?: Array<[string, string]> | undefined;
+    menuId: string;
   }): Promise<any> {
     return login().then(fToken =>
       axios.post(
@@ -100,7 +102,8 @@ export class APIOrigam implements IAPI {
           filter: filter ? JSON.stringify(filter) : "",
           ordering: orderBy || "",
           rowLimit: `${limit}`,
-          columnNames: columns
+          columnNames: columns,
+          menuId
         },
         { headers: { Authorization: `Bearer ${fToken}` } }
       )
