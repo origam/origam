@@ -8,6 +8,7 @@ using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 using Origam.Workflow;
+using Origam.Workflow.WorkQueue;
 
 namespace Origam.ServerCore
 {
@@ -24,7 +25,7 @@ namespace Origam.ServerCore
             ServiceManager.Services.AddService(new DataLookupService());
             ServiceManager.Services.AddService(new ParameterService());
 //            ServiceManager.Services.AddService(new DeploymentService());
-//            ServiceManager.Services.AddService(new WorkQueueService());
+            ServiceManager.Services.AddService(new WorkQueueService());
             ServiceManager.Services.AddService(new AttachmentService());
            // ServiceManager.Services.AddService(new RuleEngineService());
         }
