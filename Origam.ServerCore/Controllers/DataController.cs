@@ -45,23 +45,12 @@ namespace Origam.ServerCore.Controllers
         public IActionResult GetLookupListEx(LookupListData lookupData)
         {
             DataStructureEntity entity = FindEntity(lookupData.DataStructureEntityId);
-            if (entity == null) return BadRequest();
-            DataStructureQuery query = new DataStructureQuery
-            {
-                DataSourceType = QueryDataSourceType.DataStructureEntity,
-                DataSourceId = lookupData.DataStructureEntityId,
-                Entity = entity.Name,
-                EnforceConstraints = false
-            };
-            query.Parameters.Add(new QueryParameter("Id", lookupData.Id));
+            if (entity == null) return BadRequest("Entity not found.");
 
-            DataSet dataSet = dataService.GetEmptyDataSet(
-                entity.RootEntity.ParentItemId, CultureInfo.InvariantCulture);
-            dataService.LoadDataSet(query, SecurityManager.CurrentPrincipal,
-                dataSet, null);
+            var row = GetRow(entity, lookupData.DataStructureEntityId, lookupData.Id);
+            if (row == null) return NotFound();
 
-            DataRow row = dataSet.Tables[entity.Name].Rows[0];
-           // Hashtable p = DictionaryToHashtable(request.Parameters);
+            // Hashtable p = DictionaryToHashtable(request.Parameters);
             LookupListRequest internalRequest = new LookupListRequest();
             internalRequest.LookupId =lookupData.LookupId;
             internalRequest.FieldName = lookupData.Property;
@@ -103,23 +92,12 @@ namespace Origam.ServerCore.Controllers
         {
             DataStructureEntity entity = FindEntity(entityData.DataStructureEntityId);
             if (entity == null) return BadRequest();
-            DataStructureQuery query = new DataStructureQuery
-            {
-                DataSourceType = QueryDataSourceType.DataStructureEntity,
-                DataSourceId = entityData.DataStructureEntityId,
-                Entity = entity.Name,
-                EnforceConstraints = false
-            };
-            query.Parameters.Add(new QueryParameter( "Id" , entityData.RowId));
-            DataSet dataSet = dataService.GetEmptyDataSet(
-                entity.RootEntity.ParentItemId, CultureInfo.InvariantCulture);
-            dataService.LoadDataSet(query, SecurityManager.CurrentPrincipal,
-                dataSet, null);
 
-            DataTable table = dataSet.Tables[entity.Name];
-            var row = table.Rows[0];
-            FillRow(row, entityData.NewValues, table);
-            return SubmitChange(entity, dataSet);
+            var row = GetRow(entity, entityData.DataStructureEntityId, entityData.RowId);
+            if (row == null) return NotFound();
+
+            FillRow(row, entityData.NewValues, row.Table);
+            return SubmitChange(entity, row.Table.DataSet);
         }
 
 
@@ -146,23 +124,31 @@ namespace Origam.ServerCore.Controllers
         {
             DataStructureEntity entity = FindEntity(entityData.DataStructureEntityId);
             if (entity == null) return BadRequest();
+
+            DataRow row = GetRow(entity, entityData.DataStructureEntityId, entityData.RowIdToDelete);
+            if (row == null) return NotFound();
+
+            row.Delete();
+            return SubmitChange(entity, row.Table.DataSet);
+        }
+
+        private DataRow GetRow( DataStructureEntity entity, Guid dataStructureEntityId, Guid rowId)
+        {
             DataStructureQuery query = new DataStructureQuery
             {
                 DataSourceType = QueryDataSourceType.DataStructureEntity,
-                DataSourceId = entityData.DataStructureEntityId,
+                DataSourceId = dataStructureEntityId,
                 Entity = entity.Name,
                 EnforceConstraints = false
             };
-            query.Parameters.Add(new QueryParameter("Id", entityData.RowIdToDelete));
+            query.Parameters.Add(new QueryParameter("Id", rowId));
 
             DataSet dataSet = dataService.GetEmptyDataSet(
                 entity.RootEntity.ParentItemId, CultureInfo.InvariantCulture);
             dataService.LoadDataSet(query, SecurityManager.CurrentPrincipal,
                 dataSet, null);
-            if (dataSet.Tables[entity.Name].Rows.Count == 0) return NotFound();
-
-            dataSet.Tables[entity.Name].Rows[0].Delete();
-            return SubmitChange(entity, dataSet);
+            if (dataSet.Tables[entity.Name].Rows.Count == 0) return null;
+            return dataSet.Tables[entity.Name].Rows[0];
         }
 
         private IEnumerable<object> ReadEntityData(EntityGetData entityData, DataStructureQuery query)
