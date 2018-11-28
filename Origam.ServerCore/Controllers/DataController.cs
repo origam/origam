@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -22,7 +22,7 @@ namespace Origam.ServerCore.Controllers
         }
 
         [HttpPost("[action]")]
-        public IEnumerable<object> EntitiesGet([FromBody] EntityGetData entityData)
+        public IActionResult EntitiesGet([FromBody] EntityGetData entityData)
         {
             var menuItem = FindItem<FormReferenceMenuItem>(entityData.MenuId);
             DataStructureEntity entity = FindEntity(entityData.DataStructureEntityId);
@@ -37,16 +37,7 @@ namespace Origam.ServerCore.Controllers
                 MethodId = menuItem.MethodId
             };
 
-            using (IDataReader reader = dataService.ExecuteDataReader(
-                query, SecurityManager.CurrentPrincipal, null))
-            {
-                while (reader.Read())
-                {
-                    object[] values = new object[entityData.ColumnNames.Count];
-                    reader.GetValues(values);
-                    yield return values;
-                }
-            }
+            return Ok(ReadEntityData(entityData, query));
         }
 
         [HttpPut("[action]")]
@@ -114,6 +105,20 @@ namespace Origam.ServerCore.Controllers
 
             dataSet.Tables[entity.Name].Rows[0].Delete();
             return SubmitChange(entity, dataSet);
+        }
+
+        private IEnumerable<object> ReadEntityData(EntityGetData entityData, DataStructureQuery query)
+        {
+            using (IDataReader reader = dataService.ExecuteDataReader(
+                query, SecurityManager.CurrentPrincipal, null))
+            {
+                while (reader.Read())
+                {
+                    object[] values = new object[entityData.ColumnNames.Count];
+                    reader.GetValues(values);
+                    yield return values;
+                }
+            }
         }
 
         private static void FillRow(DataRow row, Dictionary<string, string> newValues, DataTable table)
