@@ -156,9 +156,9 @@ namespace Origam.Workbench.Services
 
 		override protected void SchemaProvider_InstancePersisted(object sender, EventArgs e)
 		{
-            if (this.SchemaBrowser != null)
+            if (this.SchemaBrowser != null && sender is IBrowserNode browserNode)
             {
-                this.SchemaBrowser.EbrSchemaBrowser.RefreshItem(sender as IBrowserNode);
+                this.SchemaBrowser.EbrSchemaBrowser.RefreshItem(browserNode);
             }
 			base.SchemaProvider_InstancePersisted(sender, e);
 		}
