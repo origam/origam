@@ -23,19 +23,18 @@ namespace Origam.ServerCore.Controllers
         {
         }
 
-        [HttpGet("[action]")]
-        public Dictionary<Guid, string> GetLookupLabels([FromQuery] Guid lookupId,
-            [FromQuery] Guid[] ids)
+        [HttpPost("[action]")]
+        public Dictionary<Guid, string> GetLookupLabels([FromBody] LookupLabelsData lookupData)
         {
             IDataLookupService lookupService =
                 ServiceManager.Services.GetService<IDataLookupService>();
 
-            return ids.ToDictionary(
+            return lookupData.LabelIds.ToDictionary(
                 id => id,
                 id =>
                 {
                     object lookupResult =
-                        lookupService.GetDisplayText(lookupId, id, false, true, null);
+                        lookupService.GetDisplayText(lookupData.LookupId, id, false, true, null);
                     return lookupResult is decimal
                         ? ((decimal) lookupResult).ToString("0.#")
                         : lookupResult.ToString();
