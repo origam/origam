@@ -12,10 +12,11 @@ namespace Origam
         {
             if (internalFactory == null)
             {
-                Type type = Type.GetType("Origam.DataDocumentFxFactory,Origam.NetFX");
-                internalFactory = type != null
-                    ? (IDataDocumentFactory)Activator.CreateInstance(type)
-                    : new DataDocumentCoreFactory();
+//                Type type = Type.GetType("Origam.DataDocumentFxFactory,Origam.NetFX");
+//                internalFactory = type != null
+//                    ? (IDataDocumentFactory)Activator.CreateInstance(type)
+//                    : new DataDocumentCoreFactory();
+                internalFactory= new DataDocumentCoreFactory();
             }
 
             return internalFactory;

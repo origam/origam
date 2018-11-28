@@ -7,6 +7,7 @@ using Origam.Schema;
 using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
+using Origam.Workflow;
 
 namespace Origam.ServerCore
 {
@@ -15,7 +16,7 @@ namespace Origam.ServerCore
         public void InitializeServices()
         {
             ServiceManager.Services.AddService(CreatePersistenceService());
-            //ServiceManager.Services.AddService(new Origam.Workflow.StateMachineService());
+            ServiceManager.Services.AddService(new StateMachineService());
             ServiceManager.Services.AddService(new SchemaService());
             ServiceManager.Services.AddService(new ServiceAgentFactory());
             ServiceManager.Services.AddService(CreateDocumentationService());
