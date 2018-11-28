@@ -12,7 +12,6 @@
   <target name="server" description="Server build." depends="clean,build-number">
     <exec workingdir=".." program="${msbuild-exec}">
       <arg value="Origam.sln"/>
-	  <arg value="/p:TargetFramework=net461"/>
       <arg value="/p:Configuration=Release Server"/>
       <arg value="/p:OutputPath=${dist}"/>
 	  <arg value="/t:Restore;Build"/>
