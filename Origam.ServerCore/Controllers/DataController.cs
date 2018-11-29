@@ -120,7 +120,7 @@ namespace Origam.ServerCore.Controllers
             public DataStructureEntity Entity { get; set; }
         }
 
-        private static DataTable GetLookup(LookupListData lookupData, RowData rowData)
+        private static IEnumerable<object[]> GetLookup(LookupListData lookupData, RowData rowData)
         {
             // Hashtable p = DictionaryToHashtable(request.Parameters);
             LookupListRequest internalRequest = new LookupListRequest();
@@ -135,7 +135,15 @@ namespace Origam.ServerCore.Controllers
             DataTable dataTable = ServiceManager.Services
                 .GetService<IDataLookupService>()
                 .GetList(internalRequest);
-            return dataTable;
+
+            return dataTable.Rows
+                .Cast<DataRow>()
+                .Select(row => GetColumnValues(row, lookupData.ColumnNames));
+        }
+
+        private static object[] GetColumnValues(DataRow row, string[] columnNames)
+        {
+            return columnNames.Select(colName => row[colName]).ToArray();
         }
 
         private static RowData FillRow(EntityInsertData entityData, RowData rowData)

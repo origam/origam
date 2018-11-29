@@ -11,6 +11,8 @@ namespace Origam.ServerCore.Models
         [Required]
         public Guid DataStructureEntityId { get; set; }
         [Required]
+        public string[] ColumnNames { get; set; }
+        [Required]
         public string Property { get; set; }
         [Required]
         public Guid Id { get; set; }
