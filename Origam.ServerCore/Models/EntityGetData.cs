@@ -13,6 +13,7 @@ namespace Origam.ServerCore.Models
         public List<List<string>> Ordering { get; set; }
         public int RowLimit { get; set; }
         public List<string> ColumnNames { get; set; }
+        public Guid RowId { get; set; }
 
         public List<Tuple<string, string>> OrderingAsTuples =>
             Ordering
