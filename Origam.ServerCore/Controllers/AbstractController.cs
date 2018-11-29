@@ -10,6 +10,7 @@ using Origam.Workbench.Services;
 namespace Origam.ServerCore.Controllers
 {
     [Authorize]
+    [ApiController]
     [Route("api/[controller]")]
     public abstract class AbstractController: ControllerBase
     {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,7 +20,7 @@ namespace Origam.ServerCore.Controllers
         }
 
         [HttpGet("[action]")]
-        public ActionResult<string> GetScreeSection(Guid id)
+        public ActionResult<string> GetScreeSection([FromQuery] [Required] Guid id)
         {
             return FormXmlBuilder.GetXml(id).OuterXml;
         }

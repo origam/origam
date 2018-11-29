@@ -187,7 +187,7 @@ namespace Origam.ServerCore.Controllers
                         .OnSuccess(CustomParameterService.GetFirstNonCustomParameter)
                         .OnSuccess(parameterName =>
                         {
-                            query.Parameters.Add(new QueryParameter(parameterName, entityQueryData.RowId));
+                            query.Parameters.Add(new QueryParameter(parameterName, entityQueryData.MasterRowId));
                             query.MethodId = entityData.MenuItem.ListMethodId;
                             return Result.Ok<DataStructureQuery, IActionResult>(query);
                         });
