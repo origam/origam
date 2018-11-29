@@ -155,13 +155,7 @@ namespace Origam.Server
         private void SetDelayedLoadingParameter(DataStructureMethod method)
         {
             // set the parameter for delayed data loading - there should be just 1
-            foreach (string parameterName in method.ParameterReferences.Keys)
-            {
-                if (CustomParameterService.MatchParameter(parameterName) == null)
-                {
-                    this.DelayedLoadingParameterName = parameterName;
-                }
-            }
+            DelayedLoadingParameterName = CustomParameterService.GetFirstNonCustomParameter(method);
         }
 
         private DataSet InitializeFullStructure()
