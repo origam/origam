@@ -70,9 +70,16 @@ namespace Origam.ServerCore.Controllers
         public IActionResult EntitiesGet([FromBody] EntityGetData entityData)
         {
             var menuItem = FindItem<FormReferenceMenuItem>(entityData.MenuId);
+            if (menuItem == null) return BadRequest("Menu not found.");
             bool authorize = SecurityManager.GetAuthorizationProvider().Authorize(User, menuItem.Roles);
             if (!authorize) return Forbid();
             DataStructureEntity entity = FindEntity(entityData.DataStructureEntityId);
+            if (entity == null) return BadRequest("Entity not found.");
+            bool entityBelongsToMenu = menuItem.Screen.DataStructure.Id == entity.RootEntity.ParentItemId;
+            if (!entityBelongsToMenu) return BadRequest("The requested Entity does not belong to the menu.");
+            bool isLazyLoaded = menuItem.ListDataStructure != null;
+            if (isLazyLoaded) return BadRequest("Lazy loaded menus are not supported.");
+
             DataStructureQuery query = new DataStructureQuery
             {
                 DataSourceId = entity.RootEntity.ParentItemId,
