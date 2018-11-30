@@ -43,21 +43,19 @@ namespace Origam.Schema.LookupModel.Wizards
 		private System.Windows.Forms.Label lblName;
 		private System.Windows.Forms.Button btnOK;
 		private System.Windows.Forms.Button btnCancel;
-		private System.Windows.Forms.Label lblCaption;
         private BindingList<InitialValue> _initialValues = new BindingList<InitialValue>();
         private DataGridViewTextBoxColumn colCode;
-       // private DataGridViewTextBoxColumn colName;
-        private CheckedListBox checkedRMisc;
         private GroupBox groupBoxKey;
         private GroupBox groupBox2;
         private Label label3;
         private Label label2;
         private TextBox txtKeyName;
         private Label label1;
-        private ComboBox RelatedEntityFiled;
+        private ComboBox RelatedEntityField;
         private ComboBox BaseEntityField;
         private ComboBox tableRelation;
         private Label label4;
+        private CheckBox checkParentChild;
 
         /// <summary>
         /// Required designer variable.
@@ -98,14 +96,12 @@ namespace Origam.Schema.LookupModel.Wizards
 		{
             this.txtName = new System.Windows.Forms.TextBox();
             this.lblName = new System.Windows.Forms.Label();
-            this.lblCaption = new System.Windows.Forms.Label();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.colCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.checkedRMisc = new System.Windows.Forms.CheckedListBox();
             this.groupBoxKey = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.RelatedEntityFiled = new System.Windows.Forms.ComboBox();
+            this.RelatedEntityField = new System.Windows.Forms.ComboBox();
             this.BaseEntityField = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -113,6 +109,7 @@ namespace Origam.Schema.LookupModel.Wizards
             this.label1 = new System.Windows.Forms.Label();
             this.tableRelation = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.checkParentChild = new System.Windows.Forms.CheckBox();
             this.groupBoxKey.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -132,33 +129,25 @@ namespace Origam.Schema.LookupModel.Wizards
             this.lblName.Name = "lblName";
             this.lblName.Size = new System.Drawing.Size(116, 20);
             this.lblName.TabIndex = 0;
-            this.lblName.Text = "Relation Name";
-            // 
-            // lblCaption
-            // 
-            this.lblCaption.Location = new System.Drawing.Point(8, 63);
-            this.lblCaption.Name = "lblCaption";
-            this.lblCaption.Size = new System.Drawing.Size(116, 20);
-            this.lblCaption.TabIndex = 2;
-            this.lblCaption.Text = "Misc";
+            this.lblName.Text = "Relation \"Name\"";
             // 
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnOK.Location = new System.Drawing.Point(234, 361);
+            this.btnOK.Location = new System.Drawing.Point(234, 326);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(96, 24);
             this.btnOK.TabIndex = 16;
             this.btnOK.Text = "&OK";
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            this.btnOK.Click += new System.EventHandler(this.BtnOK_Click);
             // 
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnCancel.Location = new System.Drawing.Point(336, 361);
+            this.btnCancel.Location = new System.Drawing.Point(336, 326);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(96, 24);
             this.btnCancel.TabIndex = 17;
@@ -171,18 +160,6 @@ namespace Origam.Schema.LookupModel.Wizards
             this.colCode.HeaderText = "Code";
             this.colCode.Name = "colCode";
             // 
-            // checkedRMisc
-            // 
-            this.checkedRMisc.FormattingEnabled = true;
-            this.checkedRMisc.Items.AddRange(new object[] {
-            "isOR",
-            "IsParentChild",
-            "IsSelfJoin"});
-            this.checkedRMisc.Location = new System.Drawing.Point(140, 53);
-            this.checkedRMisc.Name = "checkedRMisc";
-            this.checkedRMisc.Size = new System.Drawing.Size(101, 49);
-            this.checkedRMisc.TabIndex = 20;
-            // 
             // groupBoxKey
             // 
             this.groupBoxKey.AutoSize = true;
@@ -191,7 +168,7 @@ namespace Origam.Schema.LookupModel.Wizards
             this.groupBoxKey.Controls.Add(this.txtKeyName);
             this.groupBoxKey.Controls.Add(this.label1);
             this.groupBoxKey.Enabled = false;
-            this.groupBoxKey.Location = new System.Drawing.Point(11, 165);
+            this.groupBoxKey.Location = new System.Drawing.Point(11, 119);
             this.groupBoxKey.Name = "groupBoxKey";
             this.groupBoxKey.Size = new System.Drawing.Size(426, 176);
             this.groupBoxKey.TabIndex = 21;
@@ -200,7 +177,7 @@ namespace Origam.Schema.LookupModel.Wizards
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.RelatedEntityFiled);
+            this.groupBox2.Controls.Add(this.RelatedEntityField);
             this.groupBox2.Controls.Add(this.BaseEntityField);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.label2);
@@ -211,14 +188,15 @@ namespace Origam.Schema.LookupModel.Wizards
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Misc";
             // 
-            // RelatedEntityFiled
+            // RelatedEntityField
             // 
-            this.RelatedEntityFiled.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.RelatedEntityFiled.Location = new System.Drawing.Point(107, 43);
-            this.RelatedEntityFiled.Name = "RelatedEntityFiled";
-            this.RelatedEntityFiled.Size = new System.Drawing.Size(292, 21);
-            this.RelatedEntityFiled.Sorted = true;
-            this.RelatedEntityFiled.TabIndex = 5;
+            this.RelatedEntityField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.RelatedEntityField.Location = new System.Drawing.Point(107, 43);
+            this.RelatedEntityField.Name = "RelatedEntityField";
+            this.RelatedEntityField.Size = new System.Drawing.Size(292, 21);
+            this.RelatedEntityField.Sorted = true;
+            this.RelatedEntityField.TabIndex = 5;
+            this.RelatedEntityField.SelectedIndexChanged += new System.EventHandler(this.RelatedEntityField_SelectedIndexChanged);
             // 
             // BaseEntityField
             // 
@@ -228,6 +206,7 @@ namespace Origam.Schema.LookupModel.Wizards
             this.BaseEntityField.Size = new System.Drawing.Size(292, 21);
             this.BaseEntityField.Sorted = true;
             this.BaseEntityField.TabIndex = 4;
+            this.BaseEntityField.SelectedIndexChanged += new System.EventHandler(this.BaseEntityField_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -262,12 +241,12 @@ namespace Origam.Schema.LookupModel.Wizards
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(97, 20);
             this.label1.TabIndex = 22;
-            this.label1.Text = "Name";
+            this.label1.Text = "\"Name\"";
             // 
             // tableRelation
             // 
             this.tableRelation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.tableRelation.Location = new System.Drawing.Point(139, 123);
+            this.tableRelation.Location = new System.Drawing.Point(139, 77);
             this.tableRelation.Name = "tableRelation";
             this.tableRelation.Size = new System.Drawing.Size(298, 21);
             this.tableRelation.Sorted = true;
@@ -277,27 +256,37 @@ namespace Origam.Schema.LookupModel.Wizards
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 123);
+            this.label4.Location = new System.Drawing.Point(12, 77);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(34, 13);
             this.label4.TabIndex = 22;
             this.label4.Text = "Table";
+            // 
+            // checkParentChild
+            // 
+            this.checkParentChild.AutoSize = true;
+            this.checkParentChild.Location = new System.Drawing.Point(139, 42);
+            this.checkParentChild.Name = "checkParentChild";
+            this.checkParentChild.Size = new System.Drawing.Size(87, 17);
+            this.checkParentChild.TabIndex = 23;
+            this.checkParentChild.Text = "isParentChild";
+            this.checkParentChild.UseVisualStyleBackColor = true;
+            this.checkParentChild.CheckedChanged += new System.EventHandler(this.IsParentChild_CheckedChanged);
             // 
             // CreateFieldWithLookupRelationshipEntityWizard
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(447, 397);
+            this.ClientSize = new System.Drawing.Size(447, 362);
             this.ControlBox = false;
+            this.Controls.Add(this.checkParentChild);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.tableRelation);
             this.Controls.Add(this.groupBoxKey);
-            this.Controls.Add(this.checkedRMisc);
             this.Controls.Add(this.txtName);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
-            this.Controls.Add(this.lblCaption);
             this.Controls.Add(this.lblName);
             this.Name = "CreateFieldWithLookupRelationshipEntityWizard";
             this.ShowInTaskbar = false;
@@ -312,14 +301,22 @@ namespace Origam.Schema.LookupModel.Wizards
 
 		}
 
-        
+        private void IsParentChild_CheckedChanged(object sender, EventArgs e)
+        {
+            ParentChildCheckbox = this.checkParentChild.Checked;
+        }
+
+
         #endregion
 
         #region Event Handlers
-        private void btnOK_Click(object sender, System.EventArgs e)
+        private void BtnOK_Click(object sender, System.EventArgs e)
 		{
 			if(LookupName == "" 
-				|| (txtKeyName.Visible && NameKeyFieldName == ""))
+                || RelatedEntity == null
+                || BaseEntityFieldSelect == null 
+                || RelatedEntityFieldSelect == null
+                || txtKeyName.Text == "")
 			{
 				MessageBox.Show(ResourceUtils.GetString("EnterAllInfo"), 
                     ResourceUtils.GetString("LookupWiz"), MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
@@ -344,18 +341,6 @@ namespace Origam.Schema.LookupModel.Wizards
 			}
 		}
 
-        public string NameKeyFieldName
-        {
-            get
-            {
-                return txtKeyName.Text;
-            }
-            set
-            {
-                txtKeyName.Text = value;
-            }
-        }
-
         private IDataEntity _entity;
         public IDataEntity Entity
         {
@@ -370,66 +355,58 @@ namespace Origam.Schema.LookupModel.Wizards
             }
         }
 
-        private AbstractSchemaItem _abstractSchemaItem = null;
-        public AbstractSchemaItem abstSchemaItem
+        private AbstractSchemaItem _relatedEntity = null;
+        public AbstractSchemaItem RelatedEntity
         {
             get
             {
-                return _abstractSchemaItem;
+                return _relatedEntity;
             }
             set
             {
-                _abstractSchemaItem = value;
+                _relatedEntity = value;
             }
         }
 
-        private IDataEntityColumn _idColumn = null;
-        public IDataEntityColumn IdColumn
+        private AbstractSchemaItem _baseEntityField = null;
+        public AbstractSchemaItem BaseEntityFieldSelect
         {
             get
             {
-                return _idColumn;
+                return _baseEntityField;
+            }
+            set
+            {
+                _baseEntityField = value;
             }
         }
 
-        public List<KeyValuePair<string,bool>> CheckedListmisc
+        private AbstractSchemaItem _relatedEntityField = null;
+        public AbstractSchemaItem RelatedEntityFieldSelect
         {
             get
             {
-                var list = new List<KeyValuePair<string, bool>>();
-                
-                for (var i = 0; i <= (checkedRMisc.Items.Count - 1); i++)
-                {
-                   list.Add(new KeyValuePair<string, bool>(checkedRMisc.Items[i].ToString(), checkedRMisc.GetItemChecked(i)));
-                }
-                return list;
+                return _relatedEntityField;
+            }
+            set
+            {
+                _relatedEntityField = value;
             }
         }
 
-       
-
-        public IList<InitialValue> InitialValues
+        private Boolean _isparentChild = false;
+        public Boolean ParentChildCheckbox
         {
             get
             {
-                return _initialValues;
+                return _isparentChild;
             }
-        }
-
-        public InitialValue DefaultInitialValue
-        {
-            get
+            set
             {
-                foreach (var item in InitialValues)
-                {
-                    if (item.IsDefault)
-                    {
-                        return item;
-                    }
-                }
-                return null;
+                _isparentChild = value;
             }
         }
+        
 		#endregion
 
 		#region Private Methods
@@ -448,38 +425,39 @@ namespace Origam.Schema.LookupModel.Wizards
         private void SetUpFormKey()
         {
             BaseEntityField.Items.Clear();
-            RelatedEntityFiled.Items.Clear();
-            IDataEntityColumn nameColumn = null;
-
+            RelatedEntityField.Items.Clear();
             if (this.Entity == null) return;
-            
-            txtKeyName.Text = abstSchemaItem.NodeText + " TransactionKey";
-            foreach (AbstractSchemaItem filter in abstSchemaItem.ChildItemsByType("DataEntityColumn"))
+            txtKeyName.Text = RelatedEntity.NodeText + " TransactionKey";
+            foreach (AbstractSchemaItem filter in RelatedEntity.ChildItemsByType("DataEntityColumn"))
             {
-                RelatedEntityFiled.Items.Add(filter);
+                RelatedEntityField.Items.Add(filter);
             }
             foreach (IDataEntityColumn column in this.Entity.EntityColumns)
             {
-                if (column.Name == "Name") nameColumn = column;
-                if (column.IsPrimaryKey && !column.ExcludeFromAllFields) _idColumn = column;
-
                 BaseEntityField.Items.Add(column);
             }
-            RelatedEntityFiled.SelectedItem = nameColumn;
-            if (_idColumn == null) throw new Exception("Entity has no primary key defined. Cannot create lookup.");
-
         }
 
         #endregion
 
         private void TableRelation_SelectedIndexChanged(object sender, EventArgs e)
         {
-            abstSchemaItem = (AbstractSchemaItem)tableRelation.SelectedItem;
+            RelatedEntity = (AbstractSchemaItem)tableRelation.SelectedItem;
             if (this.tableRelation.Name != "")
             {
                 this.groupBoxKey.Enabled = true;
                 SetUpFormKey();
             }
+        }
+
+        private void BaseEntityField_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            BaseEntityFieldSelect = (AbstractSchemaItem)BaseEntityField.SelectedItem;
+        }
+
+        private void RelatedEntityField_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RelatedEntityFieldSelect = (AbstractSchemaItem)RelatedEntityField.SelectedItem;
         }
     }
 }
