@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.DA;
 using Origam.DA.Service;
+using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.MenuModel;
 using Origam.ServerCore.Models;
@@ -19,36 +20,45 @@ namespace Origam.ServerCore.Controllers
 {
     public class DataController : AbstractController
     {
+        protected internal IDataLookupService LookupService;
         private IDataService dataService => DataService.GetDataService();
 
         public DataController(ILogger<MetaDataController> log) : base(log)
         {
+            LookupService = ServiceManager.Services.GetService<IDataLookupService>();
         }
 
         [HttpPost("[action]")]
-        public Dictionary<Guid, string> GetLookupLabels([FromBody] LookupLabelsData lookupData)
+        public IActionResult GetLookupLabels([FromBody] LookupLabelsData lookupData)
         {
-            IDataLookupService lookupService =
-                ServiceManager.Services.GetService<IDataLookupService>();
+            var menuResult = FindItem<FormReferenceMenuItem>(lookupData.MenuId)
+                .OnSuccess(Authorize)
+                .OnSuccess(menuItem => CheckLookupIsAllowedInMenu(menuItem, lookupData.LookupId));
+            if (menuResult.IsFailure) return menuResult.Error;
 
-            return lookupData.LabelIds.ToDictionary(
+            Dictionary<Guid, string> labelDictionary = lookupData.LabelIds.ToDictionary(
                 id => id,
                 id =>
                 {
-                    object lookupResult =
-                        lookupService.GetDisplayText(lookupData.LookupId, id, false, true, null);
+                    object lookupResult = LookupService
+                        .GetDisplayText(lookupData.LookupId, id, false, true, null);
                     return lookupResult is decimal
                         ? ((decimal) lookupResult).ToString("0.#")
                         : lookupResult.ToString();
                 });
+            return Ok(labelDictionary);
         }
 
         [HttpPost("[action]")]
         public IActionResult GetLookupListEx([FromBody] LookupListData lookupData)
         {
-            return FindEntity(lookupData.DataStructureEntityId)
-                .OnSuccess(entity => GetRow(entity, lookupData.DataStructureEntityId, lookupData.Id))
-                .OnSuccess(rowData => GetLookup(lookupData, rowData))
+            return FindItem<FormReferenceMenuItem>(lookupData.MenuId)
+                .OnSuccess(Authorize)
+                .OnSuccess(menuItem => CheckLookupIsAllowedInMenu(menuItem, lookupData.LookupId))
+                .OnSuccess(menuItem => GetEntityData(lookupData.DataStructureEntityId, menuItem))
+                .OnSuccess(CheckEntityBelongsToMenu)
+                .OnSuccess(entityData => GetRow(entityData.Entity, lookupData.DataStructureEntityId, lookupData.Id))
+                .OnSuccess(rowData => GetLookupRows(lookupData, rowData))
                 .OnSuccess(ToActionResult)
                 .OnBoth(UnwrapReturnValue);
         }
@@ -58,48 +68,63 @@ namespace Origam.ServerCore.Controllers
         {
             return FindItem<FormReferenceMenuItem>(entityQueryData.MenuId)
                 .OnSuccess(Authorize)
-                .OnSuccess(menuItem =>
-                {
-                    return FindEntity(entityQueryData.DataStructureEntityId)
-                        .OnSuccess(entity => new EntityData {MenuItem = menuItem, Entity = entity});
-                })
-                .OnSuccess(CheckBelongsToMenu)
+                .OnSuccess(menuItem => GetEntityData(entityQueryData.DataStructureEntityId, menuItem))
+                .OnSuccess(CheckEntityBelongsToMenu)
                 .OnSuccess(entityData => CreateEntitiesGetQuery(entityQueryData, entityData))
                 .OnSuccess(query => ReadEntityData(entityQueryData, query))
                 .OnSuccess(ToActionResult)
                 .OnBoth(UnwrapReturnValue);
         }
 
-        [HttpPut("[action]")]
-        public IActionResult Entities([FromBody] EntityUpdateData entityData)
+        private Result<EntityData, IActionResult> GetEntityData(Guid dataStructureEntityId, FormReferenceMenuItem menuItem)
         {
-            return FindEntity(entityData.DataStructureEntityId)
-                .OnSuccess(entity => GetRow(entity, entityData.DataStructureEntityId, entityData.RowId))
-                .OnSuccess(rowData => FillRow(rowData, entityData.NewValues))
+            return FindEntity(dataStructureEntityId)
+                .OnSuccess(entity => new EntityData {MenuItem = menuItem, Entity = entity});
+        }
+
+        [HttpPut("[action]")]
+        public IActionResult Entities([FromBody] EntityUpdateData entityUpdateData)
+        {
+            return FindItem<FormReferenceMenuItem>(entityUpdateData.MenuId)
+                .OnSuccess(Authorize)
+                .OnSuccess(menuItem => GetEntityData(entityUpdateData.DataStructureEntityId, menuItem))
+                .OnSuccess(CheckEntityBelongsToMenu)
+                .OnSuccess(entityData => 
+                    GetRow(
+                        entityData.Entity, 
+                        entityUpdateData.DataStructureEntityId,
+                        entityUpdateData.RowId))
+                .OnSuccess(rowData => FillRow(rowData, entityUpdateData.NewValues))
                 .OnSuccess(SubmitChange)
                 .OnBoth(UnwrapReturnValue);
         }
 
 
         [HttpPost("[action]")]
-        public IActionResult Entities([FromBody] EntityInsertData entityData)
+        public IActionResult Entities([FromBody] EntityInsertData entityInsertData)
         {
-            return FindEntity(entityData.DataStructureEntityId)
-                .OnSuccess(MakeEmptyRow)
-                .OnSuccess(rowData => FillRow(entityData, rowData))
+            return FindItem<FormReferenceMenuItem>(entityInsertData.MenuId)
+                .OnSuccess(Authorize)
+                .OnSuccess(menuItem => GetEntityData(entityInsertData.DataStructureEntityId, menuItem))
+                .OnSuccess(CheckEntityBelongsToMenu)
+                .OnSuccess(entityData => MakeEmptyRow(entityData.Entity))
+                .OnSuccess(rowData => FillRow(entityInsertData, rowData))
                 .OnSuccess(SubmitChange)
                 .OnBoth(UnwrapReturnValue);
         }
 
         [HttpDelete("[action]")]
-        public IActionResult Entities([FromBody] EntityDeleteData entityData)
+        public IActionResult Entities([FromBody] EntityDeleteData entityDeleteData)
         {
             return
-                FindEntity(entityData.DataStructureEntityId)
-                    .OnSuccess(entity => GetRow(
-                        entity,
-                        entityData.DataStructureEntityId,
-                        entityData.RowIdToDelete))
+                FindItem<FormReferenceMenuItem>(entityDeleteData.MenuId)
+                    .OnSuccess(Authorize)
+                    .OnSuccess(menuItem => GetEntityData(entityDeleteData.DataStructureEntityId, menuItem))
+                    .OnSuccess(CheckEntityBelongsToMenu)
+                    .OnSuccess(entityData => GetRow(
+                        entityData.Entity,
+                        entityDeleteData.DataStructureEntityId,
+                        entityDeleteData.RowIdToDelete))
                     .OnSuccess(rowData =>
                     {
                         rowData.Row.Delete();
@@ -120,7 +145,7 @@ namespace Origam.ServerCore.Controllers
             public DataStructureEntity Entity { get; set; }
         }
 
-        private static IEnumerable<object[]> GetLookup(LookupListData lookupData, RowData rowData)
+        private IEnumerable<object[]> GetLookupRows(LookupListData lookupData, RowData rowData)
         {
             // Hashtable p = DictionaryToHashtable(request.Parameters);
             LookupListRequest internalRequest = new LookupListRequest();
@@ -132,9 +157,7 @@ namespace Origam.ServerCore.Controllers
             internalRequest.SearchText = lookupData.SearchText;
             internalRequest.PageSize = lookupData.PageSize;
             internalRequest.PageNumber = lookupData.PageNumber;
-            DataTable dataTable = ServiceManager.Services
-                .GetService<IDataLookupService>()
-                .GetList(internalRequest);
+            DataTable dataTable = LookupService.GetList(internalRequest);
 
             return dataTable.Rows
                 .Cast<DataRow>()
@@ -301,7 +324,14 @@ namespace Origam.ServerCore.Controllers
             return result.Error;
         }
 
-        private Result<EntityData, IActionResult> CheckBelongsToMenu(
+        private Result<FormReferenceMenuItem, IActionResult> CheckLookupIsAllowedInMenu(FormReferenceMenuItem menuItem, Guid lookupId)
+        {
+            return MenuLookupIndex.IsAllowed(menuItem.Id, lookupId)
+                ? Result.Ok<FormReferenceMenuItem, IActionResult>(menuItem)
+                : Result.Fail<FormReferenceMenuItem, IActionResult>(BadRequest("Lookup is not referenced in any entity in the Menu item"));
+        }
+
+        private Result<EntityData, IActionResult> CheckEntityBelongsToMenu(
             EntityData entityData)
         {
             return entityData.MenuItem.Screen.DataStructure.Id == entityData.Entity.RootEntity.ParentItemId

@@ -15,5 +15,7 @@ namespace Origam.ServerCore.Models
         [Required]
         public Dictionary<string,string> NewValues { get; set; }
         public IEnumerable<string> ColumnNames => NewValues.Keys;
+        [Required]
+        public Guid MenuId { get; set; }
     }
 }

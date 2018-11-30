@@ -12,5 +12,7 @@ namespace Origam.ServerCore.Models
         public Guid DataStructureEntityId { get; set; }
         [Required]
         public Guid RowIdToDelete { get; set; }
+        [Required]
+        public Guid MenuId { get; set; }
     }
 }

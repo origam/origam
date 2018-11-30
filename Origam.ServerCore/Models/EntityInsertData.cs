@@ -12,5 +12,7 @@ namespace Origam.ServerCore.Models
         public Guid DataStructureEntityId { get; set; }
         [Required]
         public Dictionary<string, string> NewValues { get; set; }
+        [Required]
+        public Guid MenuId { get; set; }
     }
 }

@@ -19,13 +19,18 @@ namespace Origam.ServerCore.Controllers
         public AbstractController(ILogger<MetaDataController> log)
         {
             this.log = log;
+        }
 
-            var persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
-            if (persistenceService == null)
+        public MenuLookupIndex MenuLookupIndex {
+            get
             {
-                Reflector.ClassCache = new NullReflectorCache();
-                CoreRuntimeServiceFactory serviceFactory = new CoreRuntimeServiceFactory();
-                OrigamEngine.OrigamEngine.ConnectRuntime(customServiceFactory: serviceFactory);
+                string allowedLookups = "AllowedLookups";
+                if (!OrigamUserContext.Context.ContainsKey(allowedLookups))
+                {
+                    OrigamUserContext.Context.Add(allowedLookups, new MenuLookupIndex());
+                }
+                var lookupIndex = (MenuLookupIndex)OrigamUserContext.Context[allowedLookups];
+                return lookupIndex;
             }
         }
     }

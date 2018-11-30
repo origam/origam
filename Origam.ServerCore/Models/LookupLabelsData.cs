@@ -12,5 +12,7 @@ namespace Origam.ServerCore.Models
         public Guid LookupId { get; set; }
         [Required]
         public Guid[] LabelIds { get; set; }
+        [Required]
+        public Guid MenuId { get; set; }
     }
 }

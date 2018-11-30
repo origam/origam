@@ -22,7 +22,9 @@ namespace Origam.ServerCore.Controllers
         [HttpGet("[action]")]
         public ActionResult<string> GetScreeSection([FromQuery] [Required] Guid id)
         {
-            return FormXmlBuilder.GetXml(id).OuterXml;
+            XmlOutput xmlOutput = FormXmlBuilder.GetXml(id);
+            MenuLookupIndex.AddIfNotPresent(id, xmlOutput.ContainedLookups);
+            return xmlOutput.Document.OuterXml;
         }
     }
 }

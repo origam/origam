@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Origam.Workbench.Services;
 
 namespace Origam.ServerCore
 {
@@ -72,6 +73,19 @@ namespace Origam.ServerCore
                 return next();
             });
             app.UseMvc();
+
+            ConnectRuntime();
+        }
+
+        private static void ConnectRuntime()
+        {
+            var persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
+            if (persistenceService == null)
+            {
+                Reflector.ClassCache = new NullReflectorCache();
+                CoreRuntimeServiceFactory serviceFactory = new CoreRuntimeServiceFactory();
+                OrigamEngine.OrigamEngine.ConnectRuntime(customServiceFactory: serviceFactory);
+            }
         }
     }
 }

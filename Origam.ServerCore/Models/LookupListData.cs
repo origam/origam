@@ -28,5 +28,7 @@ namespace Origam.ServerCore.Models
         [Required]
         [Range(0, 10_000)]
         public int PageNumber { get; set; } = -1;
+        [Required]
+        public Guid MenuId { get; set; }
     }
 }
