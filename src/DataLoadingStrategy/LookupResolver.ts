@@ -5,8 +5,7 @@ import { IDataLoader } from "./types";
 export class LookupResolver {
   constructor(
     public dataLoader: IDataLoader,
-    public dataTableName: string,
-    public resultFieldId: string
+    public lookupId: string
   ) {}
 
   @observable
@@ -35,14 +34,14 @@ export class LookupResolver {
         while (self.idsAskedFor.size > 0) {
           const ids = Array.from(self.idsAskedFor.values());
           const result = yield self.dataLoader.loadLookup(
-            self.dataTableName,
-            self.resultFieldId,
+            self.lookupId,
             ids
           );
-          for (const item of result.data.result) {
-            self.idsAskedFor.delete(item.id);
-            ids.splice(ids.findIndex(o => o === item.id), 1);
-            self.lookupCache.set(item.id, item[self.resultFieldId]);
+          for (const resId of Object.keys(result.data)) {
+            const resVal = result.data[resId];
+            self.idsAskedFor.delete(resId);
+            ids.splice(ids.findIndex(o => o === resId), 1);
+            self.lookupCache.set(resId, resVal);
           }
           for (const id of ids) {
             self.idsAskedFor.delete(id);

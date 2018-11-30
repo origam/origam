@@ -90,7 +90,9 @@ function ruleProperty(node: any, context: any, rules: any[]) {
       w: parseInt(node.attributes.Width, 10),
       h: parseInt(node.attributes.Height, 10),
       captionLength: parseInt(node.attributes.CaptionLength, 10),
-      captionPosition: node.attributes.CaptionPosition
+      captionPosition: node.attributes.CaptionPosition,
+      lookupId: node.attributes.LookupId,
+      lookupIdentifier: node.attributes.Identifier,
     });
     return node;
   }

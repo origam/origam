@@ -132,11 +132,11 @@ export class DataTableSelectors implements IDataTableSelectors {
     let value = this.getOriginalValue(record, field);
     if (
       field.isLookedUp &&
-      field.lookupResultTableId &&
-      field.lookupResultFieldId
+      field.lookupId &&
+      field.lookupIdentifier
     ) {
       value = this.lookupResolverProvider
-        .get(field.lookupResultTableId, field.lookupResultFieldId)
+        .get(field.lookupId)
         .getLookedUpValue(value);
     }
     return value;

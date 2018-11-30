@@ -95,8 +95,8 @@ export interface IDataTableFieldStruct {
   recvDataIndex: number;
   isLookedUp: boolean;
   isPrimaryKey: boolean;
-  lookupResultFieldId?: IFieldId;
-  lookupResultTableId?: ITableId;
+  lookupId: string;
+  lookupIdentifier: string;
   formOrder: number;
   gridVisible: boolean;
   formVisible: boolean;
@@ -107,5 +107,5 @@ export interface ILookupResolver {
 }
 
 export interface ILookupResolverProvider {
-  get(tableId: ITableId, fieldId: IFieldId): ILookupResolver;
+  get(lookupId: string): ILookupResolver;
 }

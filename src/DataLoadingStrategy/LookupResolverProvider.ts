@@ -12,13 +12,13 @@ export class LookupResolverProvider implements ILookupResolverProvider {
   constructor(public parentFactory: ILookupResolverDR) {}
 
   private cache = new InstanceCache<string, ILookupResolver>(
-    ([tableId, fieldId]) => `${tableId}@${fieldId}`
+    ([lookupId]) => `${lookupId}`
   );
 
-  public get(tableId: ITableId, fieldId: IFieldId) {
+  public get(lookupId: string) {
     return this.cache.get(
-      [tableId, fieldId],
-      () => new LookupResolver(this.parentFactory.dataLoader, tableId, fieldId)
+      [lookupId],
+      () => new LookupResolver(this.parentFactory.dataLoader, lookupId)
     );
   }
 }

@@ -72,7 +72,6 @@ export class DataTableField implements IDataTableFieldStruct {
   
   public type: IFieldType;
   
-  public lookupResultTableId?: string | undefined;
 
   @observable
   public label: string;
@@ -87,7 +86,8 @@ export class DataTableField implements IDataTableFieldStruct {
   public isPrimaryKey: boolean;
   public isLookedUp: boolean;
 
-  public lookupResultFieldId: IFieldId;
+  public lookupId: string;
+  public lookupIdentifier: string;
 
   constructor({
     id,
@@ -97,8 +97,8 @@ export class DataTableField implements IDataTableFieldStruct {
     recvDataIndex,
     isPrimaryKey,
     isLookedUp,
-    lookupResultFieldId,
-    lookupResultTableId
+    lookupId,
+    lookupIdentifier
   }: {
     id: IFieldId;
     label: string;
@@ -107,8 +107,8 @@ export class DataTableField implements IDataTableFieldStruct {
     recvDataIndex: number;
     isPrimaryKey: boolean;
     isLookedUp: boolean;
-    lookupResultFieldId?: IFieldId;
-    lookupResultTableId?: ITableId;
+    lookupId?: string;
+    lookupIdentifier?: string;
   }) {
     Object.assign(this, {
       id,
@@ -118,8 +118,8 @@ export class DataTableField implements IDataTableFieldStruct {
       recvDataIndex,
       isPrimaryKey,
       isLookedUp,
-      lookupResultFieldId,
-      lookupResultTableId
+      lookupId,
+      lookupIdentifier
     });
   }
 }

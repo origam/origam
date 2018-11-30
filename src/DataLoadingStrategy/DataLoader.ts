@@ -89,13 +89,18 @@ export class DataLoader {
     });*/
   }
 
-  public loadLookup(table: string, label: string, ids: string[]) {
-    return axios.get(`http://127.0.0.1:8080/api/${table}`, {
+  public async loadLookup(lookupId: string, labelIds: string[]) {
+    /*return axios.get(`http://127.0.0.1:8080/api/${table}`, {
       params: {
         cols: JSON.stringify(["id", label]),
         filter: JSON.stringify([["id", "in", ids]])
       }
-    });
+    });*/
+    return await axios.post(
+      `/api/Data/GetLookupLabels`,
+      { lookupId, labelIds },
+      { headers: { Authorization: `Bearer ${getToken()}` } }
+    );
   }
 
   @action.bound

@@ -342,7 +342,9 @@ function fieldsFromProperties(properties: any[]) {
       dataIndex: idx,
       recvDataIndex: property.recvDataIndex,
       isPrimaryKey: property.isPrimaryKey,
-      isLookedUp: false
+      isLookedUp: Boolean(property.lookupId),
+      lookupId: property.lookupId,
+      lookupIdentifier: property.lookupIdentifier
     });
   });
 }
@@ -383,8 +385,8 @@ const personFields = [
     recvDataIndex: 0,
     isPrimaryKey: false,
     isLookedUp: true,
-    lookupResultFieldId: "name",
-    lookupResultTableId: "city"
+    lookupId: "name",
+    // lookupResultTableId: "city"
   }),
   new DataTableField({
     id: "favorite_color",
@@ -426,6 +428,7 @@ export class Grid extends React.Component<any> {
     const {mainView} = props as {mainView: IOpenedView};
     console.log(mainView)
     const fields = fieldsFromProperties(props.properties);
+    console.log(fields)
     this.gridPaneBacking = createGridPaneBacking(
       this.props.dataSource.dataStructureEntityId,
       fields,

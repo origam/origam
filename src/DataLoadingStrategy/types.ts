@@ -40,7 +40,7 @@ export interface IDataLoader {
     filter?: any;
     columns?: string[];
   }): Promise<any>;
-  loadLookup(table: string, label: string, ids: string[]): Promise<any>;
+  loadLookup(lookupId: string, labelIds: string[]): Promise<any>;
 }
 
 export interface IDataSaver {
