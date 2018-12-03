@@ -140,12 +140,12 @@ export class ColumnWidthHandle extends React.Component<any> {
           this.startLeftColumnWidth + event.screenX - this.startMousePosition
         );
       }
-      if (this.props.rightColumnId) {
+      /*if (this.props.rightColumnId) {
         gridInteractionActions.setColumnWidth(
           this.props.rightColumnId,
           this.startRightColumnWidth - event.screenX + this.startMousePosition
         );
-      }
+      }*/
     }
   }
 
@@ -170,7 +170,7 @@ export class ColumnHeaders extends React.Component<{
     const { view, columnHeaderRenderer } = this.props;
     return (
       <div
-        style={{ display: "flex", flexDirection: "row", overflow: "hidden" }}
+        style={{ display: "flex", flexDirection: "row", overflow: "hidden", userSelect: "none" }}
       >
         <FixedHeaders view={view} columnHeaderRenderer={columnHeaderRenderer} />
         <div

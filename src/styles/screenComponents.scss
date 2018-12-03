@@ -398,6 +398,9 @@ body {
   // border-left: 1px solid #8b8b8b;
   box-sizing: border-box;
   position: relative;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
   .ordering-marker {
     float: right;
     position: absolute;
