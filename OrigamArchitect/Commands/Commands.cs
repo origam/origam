@@ -1358,7 +1358,8 @@ namespace OrigamArchitect.Commands
 		
 		protected void PersistAllData()
 		{
-			PersistFolders<SchemaExtension>();
+		    newPersistenceService.SchemaProvider.BeginTransaction();
+            PersistFolders<SchemaExtension>();
 			PersistFolders<SchemaItemGroup>();
 			PersistFolders<PackageReference>();
 
@@ -1369,7 +1370,8 @@ namespace OrigamArchitect.Commands
 				PersistAllProviderItems(type);
 				typeNumber++;
 			}
-		}
+		    newPersistenceService.SchemaProvider.EndTransaction();
+        }
 
 		private void PersistFolders<T>()
 		{
@@ -1393,9 +1395,7 @@ namespace OrigamArchitect.Commands
 			}
 			foreach (AbstractSchemaItem item in allItems)
 			{
-				newPersistenceService.SchemaProvider.BeginTransaction();
 				Persist(item);
-				newPersistenceService.SchemaProvider.EndTransaction();
 			}
 		}
 
@@ -1633,7 +1633,6 @@ namespace OrigamArchitect.Commands
 		    
 		    PersistAllData();
 
-		    ((FilePersistenceService)newPersistenceService).PersistIndex();
 		    IDocumentationService docService =
 			    filePersistenceBuilder.GetDocumentationService();
 		    ConvertDocumentation(docService);
