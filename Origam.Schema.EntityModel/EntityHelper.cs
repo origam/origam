@@ -460,8 +460,10 @@ namespace Origam.Schema.EntityModel
 			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
 			// create child entity (based on IOrigamEntity2)
 			TableMappingItem newEntity = EntityHelper.CreateTable(String.Format("{0}_l10n", parentEntity.Name), parentEntity.Group, false);
-		    newEntity.Caption = String.Format("{0} Localization", ((parentEntity.Caption.Length == 0) ? parentEntity.Name : parentEntity.Caption) );
-		    newEntity.Persist();
+		    string entityCaption = string.IsNullOrEmpty(parentEntity.Caption)
+		        ? parentEntity.Name
+		        : parentEntity.Caption;
+		    newEntity.Caption = String.Format("{0} Localization", entityCaption);
             if (generatedElements != null) generatedElements.Add(newEntity);
 			// create unique composite index on foreign key to parent entity and reference to language
 			DataEntityIndex index = newEntity.NewItem(typeof(DataEntityIndex), schema.ActiveSchemaExtensionId, null) as DataEntityIndex;
