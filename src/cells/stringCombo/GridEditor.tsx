@@ -12,6 +12,7 @@ import Measure from "react-measure";
 import { AutoSizer, MultiGrid, GridCellProps } from "react-virtualized";
 import { IGridPanelBacking } from "../../GridPanel/types";
 import * as _ from "lodash";
+import Highlighter from "react-highlight-words";
 
 interface ILookupDropdownProps {
   gridPaneBacking?: IGridPanelBacking;
@@ -91,7 +92,10 @@ export class LookupDropdown extends React.Component<ILookupDropdownProps> {
                 this.handleCellClick(event, rowIndex - 1, columnIndex);
               }}
             >
-              {this.options[rowIndex - 1][columnIndex]}
+              <Highlighter
+                searchWords={[this.props.searchText]}
+                textToHighlight={this.options[rowIndex - 1][columnIndex]}
+              />
             </div>
           )}
         </Observer>
