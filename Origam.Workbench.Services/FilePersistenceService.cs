@@ -140,11 +140,6 @@ namespace Origam.Workbench.Services
                 directoryNamesToIgnore: new List<string>{".git"});
         }
 
-        public void PersistIndex()
-        {
-            schemaProvider.PersistIndex();
-        }
-
         public Maybe<XmlLoadError> Reload(bool tryUpdate) => 
             schemaProvider.ReloadFiles(tryUpdate);
 

@@ -527,8 +527,6 @@ namespace Origam.Workbench.Commands
 			{
 				WorkbenchSingleton.Workbench.ActiveDocument.SaveObject();
 				WorkbenchSingleton.Workbench.ActiveDocument.IsDirty = false;
-                (ServiceManager.Services.GetService<IPersistenceService>() 
-                    as FilePersistenceService)?.PersistIndex();
 			}
 			catch(Exception ex)
 			{
