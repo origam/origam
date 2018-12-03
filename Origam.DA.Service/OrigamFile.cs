@@ -63,9 +63,17 @@ namespace Origam.DA.Service
 
         private readonly OrigamFileManager origamFileManager;
         private readonly ExternalFileManger externalFileManger;
+        private readonly OrigamXmlManager origamXmlManager;
         private OrigamPath path;
+ 
         private bool IsInAGroup => ParentFolderIds.CointainsNoEmptyIds;
-        public XmlDocument DeferredSaveDocument{ get; set; }
+
+        public XmlDocument DeferredSaveDocument
+        {
+            get => origamXmlManager.OpenDocument;
+            set => origamXmlManager.OpenDocument = value;
+        }
+
         public OrigamPath NewPath { get; set; }
         public IEnumerable<FileInfo> ExternalFiles => externalFileManger
             .Files
@@ -88,7 +96,7 @@ namespace Origam.DA.Service
         private bool IsEmpty => ContainedObjects.Count == 0;
         public virtual bool MultipleFilesCanBeInSingleFolder => true;
 
-        private readonly OrigamXmlManager origamXmlManager;
+        
         public override string ToString() => Path.Absolute;
 
         public OrigamFile(OrigamPath path, IDictionary<ElementName,Guid> parentFolderIds,
@@ -126,13 +134,13 @@ namespace Origam.DA.Service
 
         public void RemoveInstance(Guid id)
         {
-            origamXmlManager.RemoveInstance(id, DeferredSaveDocument);
+            origamXmlManager.RemoveInstance(id);
         }
 
         public virtual void WriteInstance(IFilePersistent instance,
             ElementName elementName)
         {
-            origamXmlManager.WriteInstance(instance, elementName, DeferredSaveDocument);
+            origamXmlManager.WriteInstance(instance, elementName);
         }
 
         public object GetFromExternalFile(Guid instanceId, string fieldName) => 
@@ -173,8 +181,7 @@ namespace Origam.DA.Service
 
         private void MoveToNewPath()
         {
-            IEnumerable<ExternalFilePath> externalPaths = 
-                origamXmlManager.GetExternalFilePaths(DeferredSaveDocument);
+            IEnumerable<ExternalFilePath> externalPaths = origamXmlManager.GetExternalFilePaths();
             externalFileManger.MoveFiles(externalPaths,this);
             DirectoryInfo oldDirectory = Path.Directory;
             origamXmlManager.UpdateExternalLinks(this);

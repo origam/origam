@@ -15,7 +15,7 @@ namespace Origam.DA.Service
     {
         private readonly ExternalFileManger externalFileManger;
         private readonly OrigamPathFactory origamPathFactory;
-
+        public XmlDocument OpenDocument { get; set; }
         private readonly object Lock = new object();
         
         private static readonly log4net.ILog log
@@ -29,7 +29,6 @@ namespace Origam.DA.Service
         public IDictionary<Guid, PersistedObjectInfo> ContainedObjects{ get;} 
             = new Dictionary<Guid, PersistedObjectInfo>();
         public ParentFolders ParentFolderIds { get; }
-
         public static XmlDocument NewDocument()
         {
             XmlDocument newDocument = new XmlDocument();       
@@ -127,15 +126,15 @@ namespace Origam.DA.Service
         private void ReLoadAllObjectsFromDisk(IPersistenceProvider provider)
         {
             loadedLocalizedObjects = new LocalizedObjectCache();
-            FileInfo fi = new FileInfo(Path.Absolute);
             ParentIdTracker parentIdTracker = new ParentIdTracker();
 
-            using (XmlTextReader xmlReader = new XmlTextReader(fi.OpenRead()))
+            using (XmlReader xmlReader = GetDocumentReader())
             {
                 var instanceCreator = 
                     new InstanceCreator(xmlReader, ParentFolderIds, externalFileManger);
                 while (xmlReader.Read())
                 {
+                    if (xmlReader.NodeType == XmlNodeType.EndElement) continue;
                     Guid? retrievedId = XmlUtils.ReadId(xmlReader);
                     if (!retrievedId.HasValue) continue;
                 
@@ -145,6 +144,17 @@ namespace Origam.DA.Service
                     loadedLocalizedObjects.Add(loadedObj.Id,loadedObj);
                 }
             }   
+        }
+
+        private XmlReader GetDocumentReader()
+        {
+            if (OpenDocument == null)
+            {
+                FileInfo fi = new FileInfo(Path.Absolute);
+                return new XmlTextReader(fi.OpenRead());
+            }
+
+            return new XmlNodeReader(OpenDocument);
         }
 
         private class ParentIdTracker
@@ -163,9 +173,9 @@ namespace Origam.DA.Service
             }
         }
 
-        public void RemoveInstance(Guid id , XmlDocument doc)
+        public void RemoveInstance(Guid id )
         {
-            XmlNode nodeToDelete = doc
+            XmlNode nodeToDelete = OpenDocument
                 .GetAllNodes()
                 .Where(node => XmlUtils.ReadId(node).HasValue)
                 .FirstOrDefault(node => XmlUtils.ReadId(node).Value == id);
@@ -181,14 +191,14 @@ namespace Origam.DA.Service
         }
 
         public void WriteInstance(IFilePersistent instance,
-            ElementName elementName, XmlDocument existingDocument)
+            ElementName elementName)
         {
             if (log.IsDebugEnabled)
             {
                 log.DebugFormat("Retrieving file {0}", Path);
             }
 
-            new InstanceWriter(externalFileManger, existingDocument)
+            new InstanceWriter(externalFileManger, OpenDocument)
                 .Write(instance,elementName);
             AddToLoadedObjects(instance);
         }
@@ -206,9 +216,9 @@ namespace Origam.DA.Service
             }
         }
 
-        public IEnumerable<ExternalFilePath> GetExternalFilePaths(XmlDocument doc)
+        public IEnumerable<ExternalFilePath> GetExternalFilePaths()
         {
-            return  doc.GetAllNodes()
+            return OpenDocument.GetAllNodes()
                 .Where(node => node?.Attributes != null)
                 .SelectMany(node => node.Attributes.Cast<XmlAttribute>())
                 .Select(xmlAttribute => xmlAttribute.Value)
