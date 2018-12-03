@@ -35,6 +35,11 @@ namespace Origam.DA.ObjectPersistence
             }
         }
 
+        public virtual void EndTransactionDontSave()
+        {
+            
+        }
+
         public abstract object RetrieveValue(Guid instanceId, Type parentType, string fieldName);
         public virtual void RestrictToLoadedPackage(bool b)
         {
@@ -73,6 +78,5 @@ namespace Origam.DA.ObjectPersistence
         public abstract object RetrieveInstance(Type type, Key primaryKey, bool useCache);
 
         public abstract object RetrieveInstance(Type type, Key primaryKey, bool useCache, bool throwNotFoundException);
-
     }
 }

@@ -83,8 +83,9 @@ namespace Origam.DA.ObjectPersistence
 
         void BeginTransaction();
         void EndTransaction();
-		
-		object RetrieveValue(Guid instanceId, Type parentType, string fieldName);
+	    void EndTransactionDontSave();
+
+        object RetrieveValue(Guid instanceId, Type parentType, string fieldName);
 		void RestrictToLoadedPackage(bool b);
 		
 		ILocalizationCache LocalizationCache { get; }

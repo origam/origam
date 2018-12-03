@@ -111,6 +111,13 @@ namespace Origam.DA.Service
             base.EndTransaction();
         }
 
+        public override void EndTransactionDontSave()
+        {
+            persistor.EndTransactionDontSave();
+            ReloadFiles(tryUpdate: false);
+            PersistIndex();
+        }
+
         private IFilePersistent RetrieveInstance(PersistedObjectInfo persistedObjInfo,
             bool useCache=true)
         {
