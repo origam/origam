@@ -7,7 +7,8 @@ import {
   ITableId,
   IDataTableFieldStruct,
   IFieldType,
-  ICellValue
+  ICellValue,
+  IDropdownColumn
 } from "./types";
 
 export class DataTableRecord implements IDataTableRecord {
@@ -88,6 +89,7 @@ export class DataTableField implements IDataTableFieldStruct {
 
   public lookupId: string;
   public lookupIdentifier: string;
+  public dropdownColumns: IDropdownColumn[] = [];
 
   constructor({
     id,
@@ -98,7 +100,8 @@ export class DataTableField implements IDataTableFieldStruct {
     isPrimaryKey,
     isLookedUp,
     lookupId,
-    lookupIdentifier
+    lookupIdentifier,
+    dropdownColumns
   }: {
     id: IFieldId;
     label: string;
@@ -109,6 +112,7 @@ export class DataTableField implements IDataTableFieldStruct {
     isLookedUp: boolean;
     lookupId?: string;
     lookupIdentifier?: string;
+    dropdownColumns?: IDropdownColumn[];
   }) {
     Object.assign(this, {
       id,
@@ -119,7 +123,8 @@ export class DataTableField implements IDataTableFieldStruct {
       isPrimaryKey,
       isLookedUp,
       lookupId,
-      lookupIdentifier
+      lookupIdentifier,
+      dropdownColumns
     });
   }
 }

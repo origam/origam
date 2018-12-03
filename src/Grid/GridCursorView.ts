@@ -6,18 +6,22 @@ import {
   IGridSelectors,
   IGridCursorView
 } from "./types";
-import { IDataTableSelectors, IDataTableActions, ICellValue } from "../DataTable/types";
+import {
+  IDataTableSelectors,
+  IDataTableActions,
+  ICellValue,
+  IDataTableRecord,
+  IDataTableFieldStruct
+} from "../DataTable/types";
 
 export class GridCursorView implements IGridCursorView {
-
-  
   constructor(
     public gridInteractionSelectors: IGridInteractionSelectors,
     public gridViewSelectors: IGridSelectors,
     public dataTableSelectors: IDataTableSelectors,
     public dataTableActions: IDataTableActions,
     public gridSetupProvider: { gridSetup: IGridSetup },
-    public gridTopologyProvider: { gridTopology: IGridTopology },
+    public gridTopologyProvider: { gridTopology: IGridTopology }
   ) {}
 
   public get gridTopology() {
@@ -204,6 +208,14 @@ export class GridCursorView implements IGridCursorView {
     };
   }
 
+  @computed public get cursorPosition() {
+    if(this.isCurrentCellFixed) {
+      return this.fixedCellCursorStyle;
+    } else {
+      return this.movingCellCursorStyle;
+    }
+  }
+
   @computed
   get movingRowCursorStyle() {
     return {
@@ -235,6 +247,24 @@ export class GridCursorView implements IGridCursorView {
   }
 
   @computed
+  public get editingRecord(): IDataTableRecord | undefined {
+    if (!this.editingRowId) {
+      return undefined;
+    }
+    return this.dataTableSelectors.getRecordById(this.editingRowId);
+  }
+
+  @computed
+  public get editingField(): IDataTableFieldStruct | undefined {
+    if (!this.editingColumnId) {
+      return undefined;
+    }
+    return this.dataTableSelectors.getFieldById(
+      this.editingColumnId
+    ) as IDataTableFieldStruct;
+  }
+
+  @computed
   get isCellSelected(): boolean {
     return this.gridInteractionSelectors.isCellSelected;
   }
@@ -244,20 +274,29 @@ export class GridCursorView implements IGridCursorView {
     return this.gridInteractionSelectors.isCellEditing;
   }
 
-  @computed get editingOriginalCellValue(): ICellValue | undefined {
-    console.log(Array.from(this.dataTableSelectors.fullRecords))
-    if(this.isCellEditing) {
-      const record = this.dataTableSelectors.getRecordById(this.gridInteractionSelectors.editingRowId!);
-      const field = this.dataTableSelectors.getFieldById(this.gridInteractionSelectors.editingColumnId!);
+  @computed
+  get editingOriginalCellValue(): ICellValue | undefined {
+    console.log(Array.from(this.dataTableSelectors.fullRecords));
+    if (this.isCellEditing) {
+      const record = this.dataTableSelectors.getRecordById(
+        this.gridInteractionSelectors.editingRowId!
+      );
+      const field = this.dataTableSelectors.getFieldById(
+        this.gridInteractionSelectors.editingColumnId!
+      );
       return this.dataTableSelectors.getOriginalValue(record!, field!);
     } else {
       return;
-    } 
+    }
   }
 
   @action.bound
-  public handleDataCommit(dirtyValue: string, editingRecordId: string, editingFieldId: string): void {
-    console.log('Commit', dirtyValue, editingRecordId, editingFieldId);
+  public handleDataCommit(
+    dirtyValue: string,
+    editingRecordId: string,
+    editingFieldId: string
+  ): void {
+    console.log("Commit", dirtyValue, editingRecordId, editingFieldId);
     const record = this.dataTableSelectors.getRecordById(editingRecordId);
     const field = this.dataTableSelectors.getFieldById(editingFieldId);
     this.dataTableActions.setDirtyCellValue(record!, field!, dirtyValue);

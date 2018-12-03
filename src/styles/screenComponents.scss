@@ -754,3 +754,33 @@ canvas {
 .oui-main-tab-contents {
   overflow: hidden;
 }
+
+.lookup-dropdown-header-cell {
+  overflow: hidden;
+  white-space: nowrap;
+  padding-left: 15px;
+  border-right: 1px solid white;
+  font-weight: bold;
+  background-color: #e5e5e5;
+  display: flex;
+  align-items: center;
+}
+
+.lookup-dropdown-body-cell {
+  overflow: hidden;
+  white-space: nowrap;
+  padding-left: 15px;
+  border-right: 1px solid white;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  &.oddrow {
+    background-color: #efefef;
+  }
+  &.evenrow {
+    background-color: #ffffff;
+  }
+  &.hover {
+    background-color: #b0b0b0 !important;
+  }
+}

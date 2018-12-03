@@ -147,7 +147,7 @@ class FormSetup implements IFormSetup {
 }
 
 function createGridPaneBacking(
-  dataTableName: string,
+  dataStructureEntityId: string,
   dataTableFields: IDataTableFieldStruct[],
   defaultView: GridViewType,
   menuItemId: string,
@@ -175,7 +175,7 @@ function createGridPaneBacking(
     gridOutlineSelectors
   );
 
-  const dataLoader = new DataLoader(dataTableName, api, menuItemId);
+  const dataLoader = new DataLoader(dataStructureEntityId, api, menuItemId);
 
   const dataTableState = new DataTableState();
 
@@ -184,7 +184,7 @@ function createGridPaneBacking(
   const dataTableSelectors = new DataTableSelectors(
     dataTableState,
     lookupResolverProvider,
-    dataTableName
+    dataStructureEntityId
   );
   const dataTableActions = new DataTableActions(
     dataTableState,
@@ -269,7 +269,7 @@ function createGridPaneBacking(
   onStopGrid(() => dataLoadingStrategyActions.stop());
 
   const dataSaver = new DataSaver(
-    dataTableName,
+    dataStructureEntityId,
     dataTableActions,
     dataTableSelectors
   );
@@ -325,6 +325,8 @@ function createGridPaneBacking(
     dataTableSelectors,
     gridOrderingActions,
     gridOrderingSelectors,
+    dataLoader,
+    dataStructureEntityId,
 
     formView,
     formSetup,
@@ -344,7 +346,8 @@ function fieldsFromProperties(properties: any[]) {
       isPrimaryKey: property.isPrimaryKey,
       isLookedUp: Boolean(property.lookupId),
       lookupId: property.lookupId,
-      lookupIdentifier: property.lookupIdentifier
+      lookupIdentifier: property.lookupIdentifier,
+      dropdownColumns: property.dropdownColumns
     });
   });
 }
@@ -460,7 +463,7 @@ export class Grid extends React.Component<any> {
   public render() {
     const { gridPaneBacking } = this;
     return (
-      <Provider gridPaneBacking={this.gridPaneBacking}>
+      <Provider gridPaneBacking={this.gridPaneBacking} >
         <div
           className="oui-grid"
           style={{

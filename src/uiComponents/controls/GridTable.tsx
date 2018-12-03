@@ -13,6 +13,20 @@ import { createGridCellRenderer } from "src/Grid/GridCellRenderer";
 import Measure from "react-measure";
 import { action, observable } from "mobx";
 import * as _ from "lodash";
+import { IDataTableRecord } from "src/DataTable/types";
+import { IDataTableFieldStruct } from "../../DataTable/types";
+import { ComboGridEditor } from "../../cells/stringCombo/GridEditor";
+
+function getEditorClass(
+  record: IDataTableRecord,
+  field: IDataTableFieldStruct
+): React.ComponentClass<any> {
+  if (field.isLookedUp) {
+    return ComboGridEditor;
+  } else {
+    return StringGridEditor;
+  }
+}
 
 @inject("gridPaneBacking")
 @observer
@@ -98,21 +112,26 @@ export class GridTable extends React.Component<any> {
                           gridInteractionSelectors.activeView ===
                             GridViewType.Grid && (
                             <GridEditorMounter cursorView={gridCursorView}>
-                              {gridCursorView.isCellEditing && (
-                                <StringGridEditor
-                                  editingRecordId={gridCursorView.editingRowId!}
-                                  editingFieldId={
-                                    gridCursorView.editingColumnId!
+                              {gridCursorView.isCellEditing &&
+                                React.createElement(
+                                  getEditorClass(
+                                    gridCursorView.editingRecord,
+                                    gridCursorView.editingField
+                                  ),
+                                  {
+                                    editingRecordId: gridCursorView.editingRowId!,
+                                    editingFieldId: gridCursorView.editingColumnId!,
+                                    editingRecord: gridCursorView.editingRecord,
+                                    editingField: gridCursorView.editingField,
+                                    value:
+                                      gridCursorView.editingOriginalCellValue,
+                                    onKeyDown:
+                                      gridInteractionActions.handleDumbEditorKeyDown,
+                                    onDataCommit:
+                                      gridCursorView.handleDataCommit,
+                                      cursorPosition: gridCursorView.cursorPosition
                                   }
-                                  value={
-                                    gridCursorView.editingOriginalCellValue
-                                  }
-                                  onKeyDown={
-                                    gridInteractionActions.handleDumbEditorKeyDown
-                                  }
-                                  onDataCommit={gridCursorView.handleDataCommit}
-                                />
-                              )}
+                                )}
                             </GridEditorMounter>
                           )
                         }

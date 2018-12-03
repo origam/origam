@@ -1,4 +1,11 @@
-import { ICellValue, IFieldId, IRecordId } from "../DataTable/types";
+import {
+  ICellValue,
+  IFieldId,
+  IRecordId,
+  IDataTableRecord,
+  IDataTableField,
+  IDataTableFieldStruct
+} from "../DataTable/types";
 
 export type ICellRenderer = (args: ICellRendererArgs) => void;
 
@@ -301,6 +308,7 @@ export interface IGridCursorView {
   fixedRowCursorStyle: { [key: string]: string | number | undefined };
   fixedCellCursorDisplayed: boolean;
   fixedCellCursorStyle: { [key: string]: string | number | undefined };
+  cursorPosition: { top: number; left: number; height: number; width: number };
   movingRowCursorDisplayed: boolean;
   movingRowCursorStyle: { [key: string]: string | number | undefined };
   movingCellCursorDisplayed: boolean;
@@ -309,6 +317,8 @@ export interface IGridCursorView {
   selectedColumnId: string | undefined;
   editingRowId: string | undefined;
   editingColumnId: string | undefined;
+  editingRecord: IDataTableRecord | undefined;
+  editingField: IDataTableFieldStruct | undefined;
   isCellSelected: boolean;
   isCellEditing: boolean;
   editingOriginalCellValue: ICellValue | undefined;
@@ -359,8 +369,8 @@ export interface IGridInteractionState {
 export interface IGridInteractionActions {
   select(rowId: string, columnId: string): void;
   selectFirst(): void;
-  selectOneUp(): void
-  selectOneDown(): void
+  selectOneUp(): void;
+  selectOneDown(): void;
   editSelectedCell(): void;
   setActiveView(view: GridViewType): void;
   setColumnWidth(id: IFieldId, w: number): void;
@@ -374,7 +384,7 @@ export interface IGridInteractionActions {
   handleFormOutsideClick(event: any): void;
   handleGridKeyDown(event: any): void;
 
-  handleFormFieldClick(event: any, field: {fieldId: IFieldId}): void;
+  handleFormFieldClick(event: any, field: { fieldId: IFieldId }): void;
   handleFormKeyDown(event: any): void;
 }
 

@@ -19,6 +19,7 @@ export interface IDataTableSelectors {
   fields: IDataTableFieldStruct[];
   lastFullRecord: IDataTableRecord;
   firstFullRecord: IDataTableRecord;
+  lookupResolverProvider: ILookupResolverProvider;
 
   newRecord(): IDataTableRecord;
   recordExistsById(recordId: IRecordId): boolean;
@@ -97,9 +98,17 @@ export interface IDataTableFieldStruct {
   isPrimaryKey: boolean;
   lookupId: string;
   lookupIdentifier: string;
+  dropdownColumns: IDropdownColumn[];
   formOrder: number;
   gridVisible: boolean;
   formVisible: boolean;
+}
+
+export interface IDropdownColumn {
+  id: string;
+  name: string;
+  entity: string;
+  column: string;
 }
 
 export interface ILookupResolver {

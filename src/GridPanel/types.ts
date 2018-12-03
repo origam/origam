@@ -11,7 +11,7 @@ import {
   IFormTopology,
   IFormActions
 } from "../Grid/types";
-import { IDataLoadingStrategyActions, IDataLoadingStrategySelectors } from "../DataLoadingStrategy/types";
+import { IDataLoadingStrategyActions, IDataLoadingStrategySelectors, IDataLoader } from "../DataLoadingStrategy/types";
 import { IEventSubscriber } from "../utils/events";
 import { IGridOrderingSelectors, IGridOrderingActions } from "src/GridOrdering/types";
 import { IDataTableSelectors } from "src/DataTable/types";
@@ -41,6 +41,9 @@ export interface IGridPanelBacking {
   gridOrderingSelectors: IGridOrderingSelectors;
   gridOrderingActions: IGridOrderingActions;
   dataTableSelectors: IDataTableSelectors;
+  dataLoader: IDataLoader;
+
+  dataStructureEntityId: string,
 
   formView: IFormView;
   formSetup: IFormSetup;

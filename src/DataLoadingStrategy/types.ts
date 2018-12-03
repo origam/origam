@@ -41,6 +41,16 @@ export interface IDataLoader {
     columns?: string[];
   }): Promise<any>;
   loadLookup(lookupId: string, labelIds: string[]): Promise<any>;
+  loadLokupOptions(
+    dataStructureEntityId: string,
+    property: string,
+    rowId: string,
+    lookupId: string,
+    searchText: string,
+    pageSize: number,
+    pageNumber: number,
+    columnNames: string[]
+  ): Promise<any>;
 }
 
 export interface IDataSaver {

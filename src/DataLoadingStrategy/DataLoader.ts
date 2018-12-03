@@ -1,7 +1,7 @@
 import { action, flow } from "mobx";
 import axios from "axios";
 import { CancellablePromise } from "mobx/lib/api/flow";
-import { IAPI } from "./types";
+import { IAPI, IDataLoader } from "./types";
 import { getToken } from "./api";
 
 function tidyUpFilter(filter: any) {
@@ -29,7 +29,7 @@ function tidyUpFilter(filter: any) {
   return filter;
 }
 
-export class DataLoader {
+export class DataLoader implements IDataLoader {
   constructor(
     public tableName: string,
     public api: IAPI,
@@ -99,6 +99,33 @@ export class DataLoader {
     return await axios.post(
       `/api/Data/GetLookupLabels`,
       { lookupId, labelIds },
+      { headers: { Authorization: `Bearer ${getToken()}` } }
+    );
+  }
+
+  public async loadLokupOptions(
+    dataStructureEntityId: string,
+    property: string,
+    rowId: string,
+    lookupId: string,
+    searchText: string,
+    pageSize: number,
+    pageNumber: number,
+    columnNames: string[]
+  ): Promise<any> {
+    return await axios.post(
+      `/api/Data/GetLookupListEx`,
+      {
+        dataStructureEntityId,
+        property,
+        id: rowId,
+        lookupId,
+        showUniqueValues: "false",
+        searchText,
+        pageSize,
+        pageNumber,
+        columnNames
+      },
       { headers: { Authorization: `Bearer ${getToken()}` } }
     );
   }

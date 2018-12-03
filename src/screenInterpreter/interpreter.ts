@@ -18,6 +18,7 @@ const BASIC_RULES = [
   ruleChildren,
   ruleFormElement,
   ruleProperties,
+  ruleDropdownColumns,
   ruleUIElement,
   ruleFormRoot,
   ruleDataSources,
@@ -80,6 +81,7 @@ function ruleWindow(node: any, context: any, rules: any[]) {
 
 function ruleProperty(node: any, context: any, rules: any[]) {
   if (node.name === "Property") {
+    const collectDropdownColumns: any[] = [];
     context.collectProperties.push({
       id: node.attributes.Id,
       name: node.attributes.Name,
@@ -93,7 +95,38 @@ function ruleProperty(node: any, context: any, rules: any[]) {
       captionPosition: node.attributes.CaptionPosition,
       lookupId: node.attributes.LookupId,
       lookupIdentifier: node.attributes.Identifier,
+      dropdownColumns: collectDropdownColumns,
     });
+    const newContext = {
+      ...context,
+      collectDropdownColumns
+    };
+    node.elements && node.elements.forEach((element: any) => {
+      processNode(element, newContext, BASIC_RULES);
+    });
+    return node;
+  }
+  return undefined;
+}
+
+function ruleDropdownColumns(node: any, context: any, rules: any[]) {
+  if(node.name === "DropDownColumns") {
+    node.elements.forEach((element: any) => {
+      processNode(element, context, [ruleDropdownColumn]);
+    })
+    return node;
+  }
+  return undefined;
+}
+
+function ruleDropdownColumn(node: any, context: any, rules: any[]) {
+  if(node.name === "Property") {
+    context.collectDropdownColumns.push({
+      id: node.attributes.Id,
+      name: node.attributes.Name,
+      entity: node.attributes.Entity,
+      column: node.attributes.Column
+    })
     return node;
   }
   return undefined;
