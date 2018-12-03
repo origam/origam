@@ -470,8 +470,9 @@ namespace Origam.Schema.EntityModel
 			index.Name = "ix_unq_" + parentEntity.Name;
 			index.IsUnique = true;
 			index.Persist();
-			// Create relation from the parent entity
-			EntityRelationItem parentRelation = EntityHelper.CreateRelation(parentEntity, newEntity, true, true);
+		    newEntity.Persist();
+            // Create relation from the parent entity
+            EntityRelationItem parentRelation = EntityHelper.CreateRelation(parentEntity, newEntity, true, true);
 			parentEntity.LocalizationRelation = parentRelation;
             if (generatedElements != null) generatedElements.Add(parentRelation);
             EntityRelationItem parentRelationAll = EntityHelper.CreateRelation(parentEntity, newEntity, true, false);
