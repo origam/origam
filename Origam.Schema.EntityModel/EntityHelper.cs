@@ -210,47 +210,17 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-        public static string DefaultAncestorName
-        {
-            get
-            {
-                return "IOrigamEntity2";
-            }
-        }
+        public static string DefaultAncestorName => "IOrigamEntity2";
 
-		public static Guid LanguageEntityId
-		{
-			get
-			{
-				return new Guid("efdff1b5-916a-4036-977e-e34f59e72d41");
-			}
-		}
+	    public static Guid LanguageEntityId => new Guid("efdff1b5-916a-4036-977e-e34f59e72d41");
 
-		public static Guid GetByLanguageIdFilterId
-		{
-			get
-			{
-				return new Guid("afb5b84b-f4a3-4e3a-a382-c110624f71c9");
-			}
-		}
+	    public static Guid GetByLanguageIdFilterId => new Guid("afb5b84b-f4a3-4e3a-a382-c110624f71c9");
 
-		public static Guid refLanguageIdColymId
-		{
-			get
-			{
-				return new Guid("13a2f9f8-c3e8-49fb-86e0-0515a72a10f2");
-			}
-		}		
+	    public static Guid refLanguageIdColymId => new Guid("13a2f9f8-c3e8-49fb-86e0-0515a72a10f2");
 
-		public static Guid ILocalizationEntityId
-		{
-			get
-			{
-				return new Guid("b822344b-e1a6-4de0-ae41-ea49e9f981ac");
-			}
-		}
+	    public static Guid ILocalizationEntityId => new Guid("b822344b-e1a6-4de0-ae41-ea49e9f981ac");
 
-		public static IDataEntityColumn DefaultPrimaryKey
+	    public static IDataEntityColumn DefaultPrimaryKey
 		{
 			get
 			{
@@ -490,8 +460,8 @@ namespace Origam.Schema.EntityModel
 			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
 			// create child entity (based on IOrigamEntity2)
 			TableMappingItem newEntity = EntityHelper.CreateTable(String.Format("{0}_l10n", parentEntity.Name), parentEntity.Group, false);
-			newEntity.Caption = String.Format("{0} Localization", ((parentEntity.Caption.Length == 0) ? parentEntity.Name : parentEntity.Caption) );
-			newEntity.Persist();
+		    newEntity.Caption = String.Format("{0} Localization", ((parentEntity.Caption.Length == 0) ? parentEntity.Name : parentEntity.Caption) );
+		    newEntity.Persist();
             if (generatedElements != null) generatedElements.Add(newEntity);
 			// create unique composite index on foreign key to parent entity and reference to language
 			DataEntityIndex index = newEntity.NewItem(typeof(DataEntityIndex), schema.ActiveSchemaExtensionId, null) as DataEntityIndex;
