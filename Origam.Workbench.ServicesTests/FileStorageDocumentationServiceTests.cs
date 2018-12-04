@@ -270,6 +270,11 @@ namespace Origam.Workbench.ServicesTests
             throw new NotImplementedException();
         }
 
+        public void EndTransactionDontSave()
+        {
+            throw new NotImplementedException();
+        }
+
         public object RetrieveValue(Guid instanceId, Type parentType, string fieldName)
         {
             throw new NotImplementedException();
