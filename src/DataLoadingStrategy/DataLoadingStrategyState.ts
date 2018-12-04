@@ -1,5 +1,5 @@
 import {observable, action} from 'mobx';
-import { IDataLoadingStategyState } from './types';
+import { IDataLoadingStategyState, ILoadingGate } from './types';
 
 
 export class DataLoadingStrategyState implements IDataLoadingStategyState {
@@ -8,6 +8,9 @@ export class DataLoadingStrategyState implements IDataLoadingStategyState {
   @observable public tailLoadingActive = false;
   @observable public loadingActive = true;
   @observable public isLoading = false;
+  
+  public idGen = 1;
+  public loadingGates = new Map();
 
   @action.bound public setHeadLoadingActive(state: boolean) {
     this.headLoadingActive = state;
@@ -23,5 +26,13 @@ export class DataLoadingStrategyState implements IDataLoadingStategyState {
 
   @action.bound public setLoading(state: boolean) {
     this.isLoading = state;
+  }
+
+  @action.bound public addLoadingGate(gate: ILoadingGate) {
+    const myId = this.idGen++;
+    this.loadingGates.set(myId, gate);
+    return () => {
+      this.loadingGates.delete(myId);
+    }
   }
 }

@@ -1,11 +1,12 @@
-import { action, flow, reaction, IReactionDisposer } from "mobx";
+import { action, flow, reaction, IReactionDisposer, when } from "mobx";
 import { DataTableRecord } from "../DataTable/DataTableState";
 import { reactionRuntimeInfo } from "../utils/reaction";
 import {
   IDataLoadingStategyState,
   IDataLoadingStrategySelectors,
   IDataLoader,
-  IDataLoadingStrategyActions
+  IDataLoadingStrategyActions,
+  ILoadingGate
 } from "./types";
 import {
   IDataTableActions,
@@ -67,7 +68,6 @@ function constructPaginationFilter(
 }
 
 export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
-
   constructor(
     public state: IDataLoadingStategyState,
     public selectors: IDataLoadingStrategySelectors,
@@ -134,11 +134,6 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
         ];
       },
       () => {
-        /*console.log(
-          this.selectors.headLoadingNeeded,
-          this.selectors.tailLoadingNeeded,
-          this.selectors.incrementLoadingNeeded
-        );*/
         if (!this.selectors.headLoadingNeeded) {
           this.state.setHeadLoadingActive(true);
         }
@@ -152,6 +147,10 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
     );
   }
 
+  public addLoadingGate(gate: ILoadingGate): () => void {
+    return this.state.addLoadingGate(gate);
+  }
+
   public setLoadingActive(state: boolean): void {
     this.state.setLoadingActive(state);
   }
@@ -161,7 +160,19 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
     return noCancelException(flow(this.loadIncrementProc.bind(this))());
   }
 
+  private isLoadIncrementWaitingOnGate = false;
+
   private *loadIncrementProc() {
+    if (this.isLoadIncrementWaitingOnGate) {
+      return;
+    }
+    try {
+      this.isLoadIncrementWaitingOnGate = true;
+      yield when(() => this.selectors.loadingGatesOpen);
+    } finally {
+      this.isLoadIncrementWaitingOnGate = false;
+    }
+
     if (!this.selectors.incrementLoadingNeeded) {
       return;
     }
@@ -327,7 +338,18 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
     );
   }
 
+  private isLoadFreshWaitingOnGate = false;
+
   private *loadFreshProc() {
+    if (this.isLoadFreshWaitingOnGate) {
+      return;
+    }
+    try {
+      this.isLoadFreshWaitingOnGate = true;
+      yield when(() => this.selectors.loadingGatesOpen);
+    } finally {
+      this.isLoadFreshWaitingOnGate = false;
+    }    
     this.cancelLoading();
     yield* this.loadFresh();
     this.state.setHeadLoadingActive(false);

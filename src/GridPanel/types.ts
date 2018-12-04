@@ -43,7 +43,8 @@ export interface IGridPanelBacking {
   dataTableSelectors: IDataTableSelectors;
   dataLoader: IDataLoader;
 
-  dataStructureEntityId: string,
+  dataStructureEntityId: string;
+  modelInstanceId: string;
 
   formView: IFormView;
   formSetup: IFormSetup;

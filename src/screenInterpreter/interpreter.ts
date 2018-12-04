@@ -1,4 +1,3 @@
-
 import { buildReactTree } from "./uiBuilder";
 import { GridViewType } from "src/Grid/types";
 
@@ -64,7 +63,7 @@ function ruleWindow(node: any, context: any, rules: any[]) {
       type: node.name,
       props: {
         name: node.attributes.Title,
-        id: node.attributes.Id
+        id: node.attributes.Id,
       },
       children: []
     };
@@ -95,38 +94,39 @@ function ruleProperty(node: any, context: any, rules: any[]) {
       captionPosition: node.attributes.CaptionPosition,
       lookupId: node.attributes.LookupId,
       lookupIdentifier: node.attributes.Identifier,
-      dropdownColumns: collectDropdownColumns,
+      dropdownColumns: collectDropdownColumns
     });
     const newContext = {
       ...context,
       collectDropdownColumns
     };
-    node.elements && node.elements.forEach((element: any) => {
-      processNode(element, newContext, BASIC_RULES);
-    });
+    node.elements &&
+      node.elements.forEach((element: any) => {
+        processNode(element, newContext, BASIC_RULES);
+      });
     return node;
   }
   return undefined;
 }
 
 function ruleDropdownColumns(node: any, context: any, rules: any[]) {
-  if(node.name === "DropDownColumns") {
+  if (node.name === "DropDownColumns") {
     node.elements.forEach((element: any) => {
       processNode(element, context, [ruleDropdownColumn]);
-    })
+    });
     return node;
   }
   return undefined;
 }
 
 function ruleDropdownColumn(node: any, context: any, rules: any[]) {
-  if(node.name === "Property") {
+  if (node.name === "Property") {
     context.collectDropdownColumns.push({
       id: node.attributes.Id,
       name: node.attributes.Name,
       entity: node.attributes.Entity,
       column: node.attributes.Column
-    })
+    });
     return node;
   }
   return undefined;
@@ -254,8 +254,6 @@ function text2bool(t: string) {
   throw new Error(`Unknown boolean variable ${t}`);
 }
 
-
-
 function ruleGrid(node: any, context: any, rules: any[]) {
   if (node.attributes.Type === "Grid") {
     const settings = {
@@ -280,6 +278,7 @@ function ruleGrid(node: any, context: any, rules: any[]) {
       props: {
         id: node.attributes.Id,
         name: node.attributes.Name,
+        modelInstanceId: node.attributes.ModelInstanceId,
         ...settings,
         form: [
           {
@@ -317,22 +316,23 @@ function ruleGrid(node: any, context: any, rules: any[]) {
       const dataSource = context.dataSources.find((ds: any) => {
         return ds.entity === settings.entity;
       });
-      if(dataSource) {
+      if (dataSource) {
         uiNode.props.dataSource = dataSource;
-        for(const property of newContext.collectProperties) {
-          const field = dataSource.fields.find((f: any) => f.id === property.id)
-          if(field) {
+        for (const property of newContext.collectProperties) {
+          const field = dataSource.fields.find(
+            (f: any) => f.id === property.id
+          );
+          if (field) {
             property.recvDataIndex = field.recvDataIndex;
             property.isPrimaryKey = dataSource.primaryKey === field.id;
           } else {
             // TODO: No field found?
           }
         }
-        
       } else {
         // TODO: No data source found?
       }
-    })
+    });
 
     return node;
   }
@@ -522,14 +522,14 @@ function ruleTab(node: any, context: any, rules: any[]) {
 function ruleDataSources(node: any, context: any, rules: any[]) {
   if (node.name === "DataSources") {
     const dataSources = [];
-    for(const element1 of node.elements) {
-      if(element1.name === "DataSource") {
+    for (const element1 of node.elements) {
+      if (element1.name === "DataSource") {
         const fields = [];
-        for(const element2 of element1.elements) {
-          if(element2.name === "Field") {
+        for (const element2 of element1.elements) {
+          if (element2.name === "Field") {
             fields.push({
               id: element2.attributes.Name,
-              recvDataIndex: parseInt(element2.attributes.Index, 10),
+              recvDataIndex: parseInt(element2.attributes.Index, 10)
             });
           }
         }
@@ -539,7 +539,7 @@ function ruleDataSources(node: any, context: any, rules: any[]) {
           primaryKey: element1.attributes.Identifier,
           lookupCacheKey: element1.attributes.LookupCacheKey,
           fields
-        })
+        });
       }
       context.dataSources = dataSources;
     }
@@ -548,11 +548,28 @@ function ruleDataSources(node: any, context: any, rules: any[]) {
   return undefined;
 }
 
-
-
 function ruleComponentBindings(node: any, context: any, rules: any[]) {
   if (node.name === "ComponentBindings") {
-    console.warn(`No processing for ${node.name} so far.`);
+    node.elements &&
+      node.elements.forEach((element: any) => {
+        processNode(element, context, [ruleComponentBinding]);
+      });
+    return node;
+  }
+  return undefined;
+}
+
+function ruleComponentBinding(node: any, context: any, rules: any[]) {
+  if (node.name === "Binding") {
+    context.collectComponentBindings.push({
+      parentId: node.attributes.ParentId,
+      parentProperty: node.attributes.ParentProperty,
+      parentEntity: node.attributes.ParentEntity,
+      childId: node.attributes.ChildId,
+      childProperty: node.attributes.ChildProperty,
+      childEntity: node.attributes.ChildEntity,
+      childPropertyType: node.attributes.ChildPropertyType
+    });
     return node;
   }
   return undefined;
@@ -587,7 +604,8 @@ export function processNode(node: any, context: any, rules: any[]) {
 export function parseScreenDef(o: any) {
   const context = {
     uiNode: null,
-    executeLater: []
+    executeLater: [],
+    collectComponentBindings: [],
   };
   processNode(o, context, [ruleRoot, ruleUnknownWarn]);
   context.executeLater.forEach((run: any) => run());

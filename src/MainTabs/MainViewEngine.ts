@@ -8,12 +8,16 @@ import { buildReactTree } from "src/screenInterpreter/uiBuilder";
 import { interpretMenu } from "src/MainMenu/MainMenuComponent";
 import { IAPI } from "../DataLoadingStrategy/types";
 import { getToken } from "../DataLoadingStrategy/api";
+import { ComponentBindingsModel } from "src/componentBindings/ComponentBindingsModel";
 
 export interface IOpenedView {
   id: string;
   subid: string;
   label: string;
   reactTree: React.ReactNode;
+  start(): void;
+  stop(): void;
+  componentBindingsModel: ComponentBindingsModel;
 }
 
 class OpenedView implements IOpenedView {
@@ -26,6 +30,8 @@ class OpenedView implements IOpenedView {
 
   @observable.ref public reactTree: React.ReactNode = null;
 
+  public componentBindingsModel: ComponentBindingsModel;
+
   @action.bound
   public start() {
     this.api.loadScreen({ id: this.id, token: getToken() }).then(
@@ -35,6 +41,7 @@ class OpenedView implements IOpenedView {
         const interpretedResult = parseScreenDef(xmlObj);
         const reactTree = buildReactTree(interpretedResult.uiNode);
         this.reactTree = reactTree;
+        this.componentBindingsModel = new ComponentBindingsModel(interpretedResult.collectComponentBindings);
       })
     );
   }
@@ -90,6 +97,7 @@ export class MainViewEngine {
 
     if (index > -1) {
       const oldView = this.openedViewsState[index];
+      oldView.stop();
       if (
         !(
           this.activeView &&

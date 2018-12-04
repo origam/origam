@@ -9,17 +9,20 @@ export interface IDataLoadingStategyState {
   tailLoadingActive: boolean;
   loadingActive: boolean;
   isLoading: boolean;
+  loadingGates: Map<number, ILoadingGate>;
 
   setHeadLoadingActive(state: boolean): void;
   setTailLoadingActive(state: boolean): void;
   setLoadingActive(state: boolean): void;
   setLoading(state: boolean): void;
+  addLoadingGate(gate: ILoadingGate): () => void;
 }
 
 export interface IDataLoadingStrategyActions {
   requestLoadFresh(): Promise<any>;
   reloadRow(id: IRecordId): Promise<any>;
   setLoadingActive(state: boolean): void;
+  addLoadingGate(gate: ILoadingGate): () => void;
 }
 
 export interface IDataLoadingStrategySelectors {
@@ -31,6 +34,8 @@ export interface IDataLoadingStrategySelectors {
   headLoadingActive: boolean;
   tailLoadingActive: boolean;
   recordsNeedTrimming: boolean;
+  loadingGates: ILoadingGate[];
+  loadingGatesOpen: boolean;
 }
 
 export interface IDataLoader {
@@ -79,4 +84,8 @@ export interface IAPI {
   }): Promise<any>;
   loadMenu({ token }: { token: string }): Promise<any>;
   loadScreen({ id, token }: { id: string; token: string }): Promise<any>;
+}
+
+export interface ILoadingGate {
+  isLoadingAllowed: boolean;
 }

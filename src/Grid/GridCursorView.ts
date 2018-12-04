@@ -15,6 +15,7 @@ import {
 } from "../DataTable/types";
 
 export class GridCursorView implements IGridCursorView {
+
   constructor(
     public gridInteractionSelectors: IGridInteractionSelectors,
     public gridViewSelectors: IGridSelectors,
@@ -261,6 +262,22 @@ export class GridCursorView implements IGridCursorView {
     }
     return this.dataTableSelectors.getFieldById(
       this.editingColumnId
+    ) as IDataTableFieldStruct;
+  }
+
+  @computed public get selectedRecord(): IDataTableRecord | undefined {
+    if (!this.selectedRowId) {
+      return undefined;
+    }
+    return this.dataTableSelectors.getRecordById(this.selectedRowId);
+  }
+
+  @computed public get selectedField(): IDataTableFieldStruct | undefined {
+    if (!this.selectedColumnId) {
+      return undefined;
+    }
+    return this.dataTableSelectors.getFieldById(
+      this.selectedColumnId
     ) as IDataTableFieldStruct;
   }
 

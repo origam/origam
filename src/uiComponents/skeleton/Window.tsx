@@ -1,7 +1,10 @@
 import * as React from "react";
-import { observer } from "mobx-react";
+import { observer, inject } from "mobx-react";
 import { observable, action } from "mobx";
+import { IOpenedView } from '../../MainTabs/MainViewEngine';
+import { ComponentBindingsModel } from '../../componentBindings/ComponentBindingsModel';
 
+@inject("mainView")
 @observer
 export class Window extends React.Component<any> {
   @observable public isFullscreen = false;
@@ -9,6 +12,16 @@ export class Window extends React.Component<any> {
   @action.bound
   public handleFullscreenClick(event: any) {
     this.isFullscreen = !this.isFullscreen;
+  }
+
+  public componentDidMount() {
+    const {mainView} = this.props as {mainView: IOpenedView};
+    mainView.componentBindingsModel.start();
+  }
+
+  public componentWillUnmount() {
+    const {mainView} = this.props as {mainView: IOpenedView};
+    mainView.componentBindingsModel.stop();
   }
 
   public render() {

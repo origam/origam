@@ -53,7 +53,7 @@ import { IGridPanelBacking } from "src/GridPanel/types";
 import { GridForm } from "../controls/GridForm";
 import { GridMap } from "../controls/GridMap";
 import { api } from "src/DataLoadingStrategy/api";
-import { MainView } from '../../MainTabs/MainTabs';
+import { MainView } from "../../MainTabs/MainTabs";
 import { IOpenedView } from "src/MainTabs/MainViewEngine";
 
 class GridConfiguration {
@@ -151,6 +151,7 @@ function createGridPaneBacking(
   dataTableFields: IDataTableFieldStruct[],
   defaultView: GridViewType,
   menuItemId: string,
+  modelInstanceId: string,
 ) {
   // console.log(defaultView)
   const configuration = new GridConfiguration();
@@ -327,6 +328,7 @@ function createGridPaneBacking(
     gridOrderingSelectors,
     dataLoader,
     dataStructureEntityId,
+    modelInstanceId,
 
     formView,
     formSetup,
@@ -388,7 +390,7 @@ const personFields = [
     recvDataIndex: 0,
     isPrimaryKey: false,
     isLookedUp: true,
-    lookupId: "name",
+    lookupId: "name"
     // lookupResultTableId: "city"
   }),
   new DataTableField({
@@ -428,13 +430,17 @@ const cityFields = [
 export class Grid extends React.Component<any> {
   constructor(props: any) {
     super(props);
-    const {mainView} = props as {mainView: IOpenedView};
+    const { mainView } = props as { mainView: IOpenedView };
     const fields = fieldsFromProperties(props.properties);
     this.gridPaneBacking = createGridPaneBacking(
-      this.props.dataSource.dataStructureEntityId,
+      props.dataSource.dataStructureEntityId,
       fields,
-      this.props.initialView,
-      mainView.id
+      props.initialView,
+      mainView.id,
+      props.modelInstanceId
+    );
+    mainView.componentBindingsModel.registerGridPaneBacking(
+      this.gridPaneBacking
     );
   }
 
@@ -455,13 +461,13 @@ export class Grid extends React.Component<any> {
     });
     autorun(() => {
       // console.log(this.gridPaneBacking.dataLoadingStrategySelectors.isLoading);
-    })
+    });
   }
 
   public render() {
     const { gridPaneBacking } = this;
     return (
-      <Provider gridPaneBacking={this.gridPaneBacking} >
+      <Provider gridPaneBacking={this.gridPaneBacking}>
         <div
           className="oui-grid"
           style={{

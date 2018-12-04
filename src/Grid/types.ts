@@ -1,3 +1,4 @@
+import { ILoadingGate } from '../DataLoadingStrategy/types';
 import {
   ICellValue,
   IFieldId,
@@ -110,6 +111,7 @@ export interface IGridSelectors {
   columnCount: number;
   fixedColumnsTotalWidth: number;
   movingColumnsTotalWidth: number;
+  
 
   fixedShiftedColumnDimensions(
     left: number,
@@ -319,6 +321,8 @@ export interface IGridCursorView {
   editingColumnId: string | undefined;
   editingRecord: IDataTableRecord | undefined;
   editingField: IDataTableFieldStruct | undefined;
+  selectedRecord: IDataTableRecord | undefined;
+  selectedField: IDataTableFieldStruct | undefined;
   isCellSelected: boolean;
   isCellEditing: boolean;
   editingOriginalCellValue: ICellValue | undefined;

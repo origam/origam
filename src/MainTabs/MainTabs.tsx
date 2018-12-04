@@ -2,6 +2,7 @@ import * as React from "react";
 import { observer, inject, Provider } from "mobx-react";
 import { MainViewEngine } from "./MainViewEngine";
 import { computed } from "mobx";
+import { ComponentBindingsModel } from "src/componentBindings/ComponentBindingsModel";
 
 interface IMainTabsProps {
   mainViewEngine: MainViewEngine;
@@ -50,6 +51,8 @@ export class MainTabs extends React.Component<IMainTabsProps> {
 
 @observer
 export class MainView extends React.Component<any> {
+
+
   @computed
   public get isActive() {
     return (
@@ -62,7 +65,9 @@ export class MainView extends React.Component<any> {
 
   public render() {
     return (
-      <Provider mainView={this.props.view.view}>
+      <Provider
+        mainView={this.props.view.view}
+      >
         {React.cloneElement(this.props.view.view.reactTree || <></>, {
           active: this.isActive,
           ...this.props
