@@ -25,11 +25,16 @@ namespace Origam.DA.ObjectPersistence.Attributes
                 return new NullReferenceException(ResourceUtils.GetString("CantBeNull", memberName));
             }
             var dataStructure = (DataStructureEntity)instance;
-            ArrayList schemaItems = dataStructure.Entity.ChildItemsByType(EntityRelationColumnPairItem.ItemTypeConst);
-            if (schemaItems.Count==0)
+            var relation = dataStructure.Entity.ChildItemsByType(EntityRelationItem.ItemTypeConst);
+            foreach(EntityRelationItem rel in relation)
             {
-                return new DataException("Relationship has no key");
+                ArrayList schemaItems = rel.ChildItemsByType(EntityRelationColumnPairItem.ItemTypeConst);
+                if (schemaItems.Count == 0)
+                {
+                    return new DataException("Relationship has no key");
+                }
             }
+            
             return null;
         }
     }
