@@ -19,5 +19,10 @@ namespace Origam.ServerCore
             if (!menuToAllowedLookups.ContainsKey(menuItemId)) return false;
             return menuToAllowedLookups[menuItemId].Contains(lookupId);
         }
+
+        public bool HasDataFor(Guid menuItemId)
+        {
+            return menuToAllowedLookups.ContainsKey(menuItemId);
+        }
     }
 }

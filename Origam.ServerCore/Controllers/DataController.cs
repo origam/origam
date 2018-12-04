@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.DA;
 using Origam.DA.Service;
+using Origam.OrigamEngine.ModelXmlBuilders;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.MenuModel;
@@ -326,6 +327,11 @@ namespace Origam.ServerCore.Controllers
 
         private Result<FormReferenceMenuItem, IActionResult> CheckLookupIsAllowedInMenu(FormReferenceMenuItem menuItem, Guid lookupId)
         {
+            if (!MenuLookupIndex.HasDataFor(menuItem.Id)){
+                XmlOutput xmlOutput = FormXmlBuilder.GetXml(menuItem.Id);
+                MenuLookupIndex.AddIfNotPresent(menuItem.Id, xmlOutput.ContainedLookups);
+            }
+
             return MenuLookupIndex.IsAllowed(menuItem.Id, lookupId)
                 ? Result.Ok<FormReferenceMenuItem, IActionResult>(menuItem)
                 : Result.Fail<FormReferenceMenuItem, IActionResult>(BadRequest("Lookup is not referenced in any entity in the Menu item"));
