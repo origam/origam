@@ -305,7 +305,8 @@ export class ComboGridEditor extends React.Component<{
                   border: "none",
                   padding: "0px 0px 0px 0px",
                   margin: 0,
-                  position: "relative"
+                  position: "relative",
+                  zIndex: 1500
                 }}
               >
                 <input

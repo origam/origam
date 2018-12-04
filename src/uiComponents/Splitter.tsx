@@ -118,16 +118,10 @@ export class SplitPanel extends React.Component<ISplitPanelProps> {
     const { isVertical, sizes } = this.props.splitterModel!;
     return (
       <div
-        className={"split-panel" + (this.props.isLast ? " last" : "")}
+        className={"split-panel"}
         style={{
-          height:
-            isVertical && !this.props.isLast
-              ? sizes.get(this.props.splitterId)
-              : undefined,
-          width:
-            !isVertical && !this.props.isLast
-              ? sizes.get(this.props.splitterId)
-              : undefined
+          height: isVertical ? sizes.get(this.props.splitterId) : undefined,
+          width: !isVertical ? sizes.get(this.props.splitterId) : undefined
         }}
       >
         {this.props.children}
@@ -183,8 +177,6 @@ class SplitHandle extends React.Component<ISplitHandleProps> {
       (isVertical ? event.screenY : event.screenX) +
       this.startMousePosition;
 
-    
-
     if (newSizePrev < 40 || newSizeNext < 40) {
       return;
     }
@@ -198,7 +190,7 @@ class SplitHandle extends React.Component<ISplitHandleProps> {
     for (const size of sizes.values()) {
       sizeSum = sizeSum + size;
     }
-    console.log( oldSizeNext, newSizeNext, isVertical);
+    console.log(oldSizeNext, newSizeNext, isVertical);
 
     if (sizeSum > containerSize - 40 && oldSizePrev) {
       sizes.set(prevPanelId, oldSizePrev);

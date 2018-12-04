@@ -4,7 +4,10 @@ import { MainMenu } from "./MainMenu/MainMenuComponent";
 import { MainViewEngine } from "./MainTabs/MainViewEngine";
 import { runInAction } from "mobx";
 import { MainTabs } from "./MainTabs/MainTabs";
-import { Splitter, SplitPanel } from "./uiComponents/Splitter";
+// import { Splitter, SplitPanel } from "./uiComponents/Splitter";
+import {Splitter, SplitterPanel} from './uiComponents/Splitter02';
+
+
 import { api } from "./DataLoadingStrategy/api";
 
 @observer
@@ -76,13 +79,13 @@ export default class App extends React.Component {
           </div>
         </div>
         <div className="oui-body-bar">
-          <Splitter isVertical={false}>
-            <SplitPanel splitterId={1} initialSize={300}>
+          <Splitter handleSize={10} horizontal={true} name="MainSplitter">
+            <SplitterPanel id={"1"}>
               <MainMenu mainViewEngine={this.mainViewEngine} />
-            </SplitPanel>
-            <SplitPanel splitterId={2}>
+            </SplitterPanel>
+            <SplitterPanel id={"2"}>
               <MainTabs mainViewEngine={this.mainViewEngine} />
-            </SplitPanel>
+            </SplitterPanel>
           </Splitter>
           {/*<div className="oui-side-bar">
             <MainMenu mainViewEngine={this.mainViewEngine} />
