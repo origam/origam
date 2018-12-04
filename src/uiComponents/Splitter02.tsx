@@ -4,6 +4,7 @@ import { AutoSizer } from "react-virtualized";
 import Measure from "react-measure";
 import { Observer, observer, Provider, inject } from "mobx-react";
 import { observable, action, reaction } from "mobx";
+import * as _ from 'lodash';
 
 class SplitterModel {
   @observable
@@ -29,13 +30,30 @@ class SplitterModel {
 }
 
 @observer
-export class Splitter extends React.Component<{ horizontal?: boolean; name: string, handleSize: number }> {
+export class Splitter extends React.Component<{
+  horizontal?: boolean;
+  name: string;
+  handleSize: number;
+}> {
   private isFirstResize = true;
 
   private model = new SplitterModel();
 
+  private handleResize = _.debounce(this.handleResizeImm, 100);
+
   @action.bound
-  private handleResize(contentRect: any) {
+  private handleResizeImm(contentRect: any) {
+    if(contentRect.client) {
+      console.log(this.props.name, contentRect.client.width, contentRect.client.height)
+    }
+    if (
+      !contentRect.client ||
+      (this.props.horizontal && contentRect.client.width === 0) ||
+      (!this.props.horizontal && contentRect.client.height === 0)
+    ) {
+      console.log('Resize ignore')
+      return;
+    }
     this.model.contentRect = contentRect;
     if (this.isFirstResize) {
       this.prevSize = this.props.horizontal
@@ -54,19 +72,21 @@ export class Splitter extends React.Component<{ horizontal?: boolean; name: stri
           this.model.sizes.set(
             key,
             this.props.horizontal
-              ? (contentRect.client.width - (this.model.sizes.size - 1) * this.props.handleSize) /
+              ? (contentRect.client.width -
+                  (this.model.sizes.size - 1) * this.props.handleSize) /
                   this.model.sizes.size
-              : (contentRect.client.height - (this.model.sizes.size - 1) * this.props.handleSize) /
+              : (contentRect.client.height -
+                  (this.model.sizes.size - 1) * this.props.handleSize) /
                   this.model.sizes.size
           );
         }
       }
     }
-    console.log(
+    /*console.log(
       this.props.name,
       contentRect,
       Array.from(this.model.sizes.entries())
-    );
+    );*/
     this.isFirstResize = false;
   }
 

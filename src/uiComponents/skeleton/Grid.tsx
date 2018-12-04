@@ -429,9 +429,7 @@ export class Grid extends React.Component<any> {
   constructor(props: any) {
     super(props);
     const {mainView} = props as {mainView: IOpenedView};
-    console.log(mainView)
     const fields = fieldsFromProperties(props.properties);
-    console.log(fields)
     this.gridPaneBacking = createGridPaneBacking(
       this.props.dataSource.dataStructureEntityId,
       fields,
@@ -450,13 +448,13 @@ export class Grid extends React.Component<any> {
         this.gridPaneBacking.gridInteractionActions.selectFirst();
       });
     autorun(() => {
-      console.log(
+      /*console.log(
         "SelID:",
         this.gridPaneBacking.gridInteractionSelectors.selectedRowId
-      );
+      );*/
     });
     autorun(() => {
-      console.log(this.gridPaneBacking.dataLoadingStrategySelectors.isLoading);
+      // console.log(this.gridPaneBacking.dataLoadingStrategySelectors.isLoading);
     })
   }
 

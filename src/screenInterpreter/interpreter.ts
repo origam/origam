@@ -258,7 +258,6 @@ function text2bool(t: string) {
 
 function ruleGrid(node: any, context: any, rules: any[]) {
   if (node.attributes.Type === "Grid") {
-    // console.log(node.attributes);
     const settings = {
       entity: node.attributes.Entity,
       isHeadless: text2bool(node.attributes.IsHeadless),
@@ -328,7 +327,6 @@ function ruleGrid(node: any, context: any, rules: any[]) {
           } else {
             // TODO: No field found?
           }
-          console.log(property);
         }
         
       } else {
@@ -544,7 +542,6 @@ function ruleDataSources(node: any, context: any, rules: any[]) {
         })
       }
       context.dataSources = dataSources;
-      console.log(dataSources)
     }
     return node;
   }
@@ -570,7 +567,6 @@ function ruleConfiguration(node: any, context: any, rules: any[]) {
 }
 
 function ruleUnknownWarn(node: any, context: any) {
-  // console.log(node, context);
   console.warn(
     `Unknown node ${node.name} ${node.attributes &&
       node.attributes.Id} ${node.attributes && node.attributes.Type}`
