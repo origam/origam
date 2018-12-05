@@ -11,6 +11,7 @@ using Origam.DA.Service;
 using Origam.OrigamEngine.ModelXmlBuilders;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.Schema.LookupModel;
 using Origam.Schema.MenuModel;
 using Origam.ServerCore.Models;
 using Origam.Services;
@@ -146,7 +147,7 @@ namespace Origam.ServerCore.Controllers
             public DataStructureEntity Entity { get; set; }
         }
 
-        private IEnumerable<object[]> GetLookupRows(LookupListData lookupData, RowData rowData)
+        private Result<IEnumerable<object[]>,IActionResult> GetLookupRows(LookupListData lookupData, RowData rowData)
         {
             // Hashtable p = DictionaryToHashtable(request.Parameters);
             LookupListRequest internalRequest = new LookupListRequest();
@@ -155,14 +156,49 @@ namespace Origam.ServerCore.Controllers
             //internalRequest.ParameterMappings = p;
             internalRequest.CurrentRow = rowData.Row;
             internalRequest.ShowUniqueValues = lookupData.ShowUniqueValues;
-            internalRequest.SearchText = lookupData.SearchText;
+            internalRequest.SearchText = "%" + lookupData.SearchText + "%";
             internalRequest.PageSize = lookupData.PageSize;
             internalRequest.PageNumber = lookupData.PageNumber;
             DataTable dataTable = LookupService.GetList(internalRequest);
 
-            return dataTable.Rows
-                .Cast<DataRow>()
-                .Select(row => GetColumnValues(row, lookupData.ColumnNames));
+            return AreColumnNamesValid(lookupData, dataTable)
+                ? Result.Ok<IEnumerable<object[]>, IActionResult>(GetRowData(lookupData, dataTable))
+                : Result.Fail<IEnumerable<object[]>, IActionResult>( BadRequest("Some of the supplied column names are not in the table."));
+        }
+
+        private static bool AreColumnNamesValid(LookupListData lookupData, DataTable dataTable)
+        {
+            var actualColumnNames = dataTable.Columns
+                .Cast<DataColumn>()
+                .Select(x => x.ColumnName)
+                .ToArray();
+            return lookupData.ColumnNames
+                .All(colName => actualColumnNames.Contains(colName));
+        }
+
+        private IEnumerable<object[]> GetRowData(LookupListData lookupData, DataTable dataTable)
+        {
+            var lookup = FindItem<DataServiceDataLookup>(lookupData.LookupId).Value;
+            if (lookup.IsFilteredServerside || string.IsNullOrEmpty(lookupData.SearchText))
+            {
+                return dataTable.Rows
+                    .Cast<DataRow>()
+                    .Select(row => GetColumnValues(row, lookupData.ColumnNames));
+            }
+            else
+            {
+                return dataTable.Rows
+                    .Cast<DataRow>()
+                    .Where(row => Filter(row, lookupData.ColumnNames, lookupData.SearchText))
+                    .Select(row => GetColumnValues(row, lookupData.ColumnNames));
+            }
+        }
+
+        private static bool Filter(DataRow row, string[] columnNames, string likeParameter)
+        {
+            return columnNames
+                .Select(colName => row[colName])
+                .Any(colValue => colValue.ToString().Contains(likeParameter));
         }
 
         private static object[] GetColumnValues(DataRow row, string[] columnNames)
