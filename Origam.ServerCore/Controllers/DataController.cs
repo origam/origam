@@ -198,7 +198,8 @@ namespace Origam.ServerCore.Controllers
         {
             return columnNames
                 .Select(colName => row[colName])
-                .Any(colValue => colValue.ToString().Contains(likeParameter));
+                .Any(colValue => 
+                    colValue.ToString().Contains(likeParameter,StringComparison.InvariantCultureIgnoreCase));
         }
 
         private static object[] GetColumnValues(DataRow row, string[] columnNames)
