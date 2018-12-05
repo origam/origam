@@ -8,11 +8,11 @@ namespace Origam.ServerCore.Models
 {
     public class EntityInsertData
     {
-        [Required]
+        [RequireNonDefault]
         public Guid DataStructureEntityId { get; set; }
         [Required]
         public Dictionary<string, string> NewValues { get; set; }
-        [Required]
+        [RequireNonDefault]
         public Guid MenuId { get; set; }
     }
 }

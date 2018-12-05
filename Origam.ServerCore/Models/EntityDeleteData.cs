@@ -8,11 +8,11 @@ namespace Origam.ServerCore.Models
 {
     public class EntityDeleteData
     {
-        [Required]
+        [RequireNonDefault]
         public Guid DataStructureEntityId { get; set; }
-        [Required]
+        [RequireNonDefault]
         public Guid RowIdToDelete { get; set; }
-        [Required]
+        [RequireNonDefault]
         public Guid MenuId { get; set; }
     }
 }

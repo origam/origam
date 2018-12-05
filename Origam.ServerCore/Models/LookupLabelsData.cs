@@ -8,11 +8,11 @@ namespace Origam.ServerCore.Models
 {
     public class LookupLabelsData
     {
-        [Required]
+        [RequireNonDefault]
         public Guid LookupId { get; set; }
         [Required]
         public Guid[] LabelIds { get; set; }
-        [Required]
+        [RequireNonDefault]
         public Guid MenuId { get; set; }
     }
 }

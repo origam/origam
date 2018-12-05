@@ -8,27 +8,24 @@ namespace Origam.ServerCore.Models
 {
     public class LookupListData 
     {
-        [Required]
+        [RequireNonDefault]
         public Guid DataStructureEntityId { get; set; }
         [Required]
         public string[] ColumnNames { get; set; }
         [Required]
         public string Property { get; set; }
-        [Required]
+        [RequireNonDefault]
         public Guid Id { get; set; }
-        [Required]
+        [RequireNonDefault]
         public Guid LookupId { get; set; }
         //public IDictionary<string, object> Parameters { get; set; }
-        [Required]
         public bool ShowUniqueValues { get; set; }
         public string SearchText { get; set; }
-        [Required]
-        [Range(0, 10_000)]
+        [Range(-1, 10_000)]
         public int PageSize { get; set; } = -1;
-        [Required]
-        [Range(0, 10_000)]
+        [Range(1, 10_000)]
         public int PageNumber { get; set; } = -1;
-        [Required]
+        [RequireNonDefault]
         public Guid MenuId { get; set; }
     }
 }

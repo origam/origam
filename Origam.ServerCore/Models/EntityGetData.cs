@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Origam.Extensions;
 
 namespace Origam.ServerCore.Models
 {
     public class EntityGetData
     {
-        [Required]
+        [RequireNonDefault]
         public Guid MenuId { get; set; }
-        [Required]
+        [RequireNonDefault]
         public Guid DataStructureEntityId { get; set; }
         public string Filter { get; set; }
         public List<List<string>> Ordering { get; set; }
