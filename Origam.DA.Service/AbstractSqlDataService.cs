@@ -361,7 +361,7 @@ namespace Origam.DA.Service
 
 			foreach(DataStructureEntity entity in entities)
 			{
-				if (LoadWillReturnZeroResults(dataset, entity)) continue;
+				if (LoadWillReturnZeroResults(dataset, entity, query.DataSourceType)) continue;
 				// Skip self joins, they are just relations, not really entities
 				if(entity.Columns.Count > 0 & !(entity.Entity is IAssociation && (entity.Entity as IAssociation).IsSelfJoin))
 				{
@@ -418,15 +418,15 @@ namespace Origam.DA.Service
 		}
 		
 		private bool LoadWillReturnZeroResults(DataSet dataset,
-			DataStructureEntity entity)
+			DataStructureEntity entity, QueryDataSourceType dataSourceType)
 		{
 			DataStructureEntity rootEntity = entity.RootEntity;
-			
+		    if (dataSourceType == QueryDataSourceType.DataStructureEntity) return false;
 			if (rootEntity == entity) return false;
 			if (entity.RelationType != RelationType.Normal) return false;
 			if (!(rootEntity.Entity is TableMappingItem mappingItem)) return false;
-			
-			string rootEntityTableName = mappingItem.MappedObjectName;
+
+            string rootEntityTableName = mappingItem.MappedObjectName;
 			DataTable rootTable = dataset.Tables
 				.Cast<DataTable>()
 				.FirstOrDefault(table => table.TableName == rootEntityTableName);
