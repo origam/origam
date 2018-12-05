@@ -106,6 +106,12 @@ namespace Origam.DA
 
 	    public string ColumnName { get; set; }
 
+	    public string[] ColumnNames
+	    {
+	        get => ColumnName.Split(';');
+	        set => ColumnName = string.Join(";", value);
+	    }
+
 	    public string Entity { get; set; }
 	}
 }

@@ -73,7 +73,7 @@ namespace Origam.ServerCore.Controllers
                 .OnSuccess(menuItem => GetEntityData(entityQueryData.DataStructureEntityId, menuItem))
                 .OnSuccess(CheckEntityBelongsToMenu)
                 .OnSuccess(entityData => CreateEntitiesGetQuery(entityQueryData, entityData))
-                .OnSuccess(query => ReadEntityData(entityQueryData, query))
+                .OnSuccess(ReadEntityData)
                 .OnSuccess(ToActionResult)
                 .OnBoth(UnwrapReturnValue);
         }
@@ -237,7 +237,7 @@ namespace Origam.ServerCore.Controllers
                 CustomFilters = entityQueryData.Filter,
                 CustomOrdering = entityQueryData.OrderingAsTuples,
                 RowLimit = entityQueryData.RowLimit,
-                ColumnName = string.Join(";", entityQueryData.ColumnNames),
+                ColumnNames = entityQueryData.ColumnNames
             };
 
             if (entityData.MenuItem.ListDataStructure == null)
@@ -289,14 +289,14 @@ namespace Origam.ServerCore.Controllers
                 new RowData{Row =dataSetTable.Rows[0], Entity = entity});
         }
 
-        private IEnumerable<object> ReadEntityData(EntityGetData entityData, DataStructureQuery query)
+        private IEnumerable<object> ReadEntityData(DataStructureQuery query)
         {
             using (IDataReader reader = dataService.ExecuteDataReader(
                 query, SecurityManager.CurrentPrincipal, null))
             {
                 while (reader.Read())
                 {
-                    object[] values = new object[entityData.ColumnNames.Count];
+                    object[] values = new object[query.ColumnNames.Length];
                     reader.GetValues(values);
                     yield return values;
                 }

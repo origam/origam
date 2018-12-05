@@ -18,7 +18,7 @@ namespace Origam.ServerCore.Models
         [Required]
         public int RowLimit { get; set; }
         [Required]
-        public List<string> ColumnNames { get; set; }
+        public string[] ColumnNames { get; set; }
 
         public Guid MasterRowId { get; set; }
 
