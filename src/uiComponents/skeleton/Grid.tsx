@@ -55,6 +55,7 @@ import { GridMap } from "../controls/GridMap";
 import { api } from "src/DataLoadingStrategy/api";
 import { MainView } from "../../MainTabs/MainTabs";
 import { IOpenedView } from "src/MainTabs/MainViewEngine";
+import { ILoadingGate } from '../../DataLoadingStrategy/types';
 
 class GridConfiguration {
   public gridSetup: IGridSetup;
@@ -230,6 +231,7 @@ function createGridPaneBacking(
 
   const gridCursorView = new GridCursorView(
     gridInteractionSelectors,
+    gridInteractionActions,
     gridSelectors,
     dataTableSelectors,
     dataTableActions,
@@ -264,7 +266,8 @@ function createGridPaneBacking(
     gridOutlineSelectors,
     gridInteractionActions,
     gridSelectors,
-    gridActions
+    gridActions,
+    gridCursorView
   );
   onStartGrid(() => dataLoadingStrategyActions.start());
   onStopGrid(() => dataLoadingStrategyActions.stop());
@@ -272,7 +275,8 @@ function createGridPaneBacking(
   const dataSaver = new DataSaver(
     dataStructureEntityId,
     dataTableActions,
-    dataTableSelectors
+    dataTableSelectors,
+    menuItemId
   );
   const dataSavingStrategy = new DataSavingStrategy(
     dataTableSelectors,
@@ -323,6 +327,7 @@ function createGridPaneBacking(
     onStopGrid,
     dataLoadingStrategyActions,
     dataLoadingStrategySelectors,
+    dataTableActions,
     dataTableSelectors,
     gridOrderingActions,
     gridOrderingSelectors,
@@ -430,7 +435,7 @@ const cityFields = [
 export class Grid extends React.Component<any> {
   constructor(props: any) {
     super(props);
-    const { mainView } = props as { mainView: IOpenedView };
+    const { mainView } = props as { mainView: IOpenedView & ILoadingGate };
     const fields = fieldsFromProperties(props.properties);
     this.gridPaneBacking = createGridPaneBacking(
       props.dataSource.dataStructureEntityId,
@@ -442,6 +447,7 @@ export class Grid extends React.Component<any> {
     mainView.componentBindingsModel.registerGridPaneBacking(
       this.gridPaneBacking
     );
+    this.gridPaneBacking.dataLoadingStrategyActions.addLoadingGate(mainView);
   }
 
   private gridPaneBacking: IGridPanelBacking;

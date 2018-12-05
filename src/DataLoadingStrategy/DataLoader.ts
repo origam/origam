@@ -3,6 +3,7 @@ import axios from "axios";
 import { CancellablePromise } from "mobx/lib/api/flow";
 import { IAPI, IDataLoader } from "./types";
 import { getToken } from "./api";
+import { ISubscriber, IEventSubscriber } from '../utils/events';
 
 function tidyUpFilter(filter: any) {
   if (!filter) {
@@ -68,7 +69,7 @@ export class DataLoader implements IDataLoader {
     limit?: number;
     filter?: Array<[string, string, string]>;
     orderBy?: Array<[string, string]>;
-  }) {
+  }, canceller?: IEventSubscriber) {
     return this.api.loadDataTable({
       tableId: this.tableName,
       columns,
@@ -77,7 +78,7 @@ export class DataLoader implements IDataLoader {
       filter: tidyUpFilter(filter),
       orderBy,
       menuId: this.menuItemId
-    });
+    }, canceller);
 
     /*return axios.get(`http://127.0.0.1:8080/api/${this.tableName}`, {
       params: {
@@ -98,7 +99,7 @@ export class DataLoader implements IDataLoader {
     });*/
     return await axios.post(
       `/api/Data/GetLookupLabels`,
-      { lookupId, labelIds },
+      { lookupId, labelIds, menuId: this.menuItemId },
       { headers: { Authorization: `Bearer ${getToken()}` } }
     );
   }
@@ -111,7 +112,7 @@ export class DataLoader implements IDataLoader {
     searchText: string,
     pageSize: number,
     pageNumber: number,
-    columnNames: string[]
+    columnNames: string[],
   ): Promise<any> {
     return await axios.post(
       `/api/Data/GetLookupListEx`,
@@ -124,7 +125,8 @@ export class DataLoader implements IDataLoader {
         searchText,
         pageSize,
         pageNumber,
-        columnNames
+        columnNames,
+        menuId: this.menuItemId
       },
       { headers: { Authorization: `Bearer ${getToken()}` } }
     );

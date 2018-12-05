@@ -1,6 +1,8 @@
-import { action, computed, autorun } from "mobx";
+import { action, computed, autorun, trace } from "mobx";
 import { IGridPanelBacking } from "../GridPanel/types";
 import { ILoadingGate } from "src/DataLoadingStrategy/types";
+import { IGridFilter } from "../DataLoadingStrategy/types";
+import { DataLoadingStrategyActions } from "../DataLoadingStrategy/DataLoadingStrategyActions";
 
 export class BindingFilter {
   @computed
@@ -9,41 +11,42 @@ export class BindingFilter {
   }
 }
 
-export class DependentGrid implements ILoadingGate {
-  
-  constructor(
-    public gridPaneBacking: IGridPanelBacking,
-    
-  ) {}
+export class DependentGrid implements ILoadingGate, IGridFilter {
+  constructor(public gridPaneBacking: IGridPanelBacking) {}
 
   public parent: DependentGrid | undefined;
   public myParentPropertyId: string | undefined;
   public myChildPropertyId: string | undefined;
   public controllingPropertyValueOld: string | undefined;
 
-  @computed get myGridLoading(): boolean {
-    return this.gridPaneBacking.dataLoadingStrategySelectors.isLoading;
-  }
-
-  @computed get someParentLoading(): boolean {
-    return Boolean(this.parent && this.parent.meOrSomeParentLoading);
-  }
-
-  @computed get meOrSomeParentLoading(): boolean {
-    return this.myGridLoading || this.someParentLoading;
-  }
-
-  @computed get myPropertyValueUseful(): boolean {
-    return !this.meOrSomeParentLoading && Boolean(this.myPropertyValue);
-  }
-
-  @computed public get isLoadingAllowed(): boolean {
-    return this.myPropertyValueUseful;
+  @computed
+  get myGridLoading(): boolean {
+    return this.gridPaneBacking.dataLoadingStrategyActions.isLoading;
   }
 
   @computed
-  get myPropertyValue(): string | undefined {
-    if(!this.myParentPropertyId) {
+  get someParentLoading(): boolean {
+    return Boolean(this.parent && this.parent.meOrSomeParentLoading);
+  }
+
+  @computed
+  get meOrSomeParentLoading(): boolean {
+    return this.myGridLoading || this.someParentLoading;
+  }
+
+  @computed
+  public get isLoadingAllowed(): boolean {
+    // console.log('Computing loading state')
+    return (
+      Boolean(!this.parent) ||
+      (!this.parent!.meOrSomeParentLoading &&
+        Boolean(this.myChildPropertyValue))
+    );
+  }
+
+  @computed
+  get myParentPropertyValue(): string | undefined {
+    if (!this.myParentPropertyId) {
       return;
     }
     const { selectedRecord } = this.gridPaneBacking.gridCursorView;
@@ -62,25 +65,51 @@ export class DependentGrid implements ILoadingGate {
   }
 
   @computed
-  get parentPropertyValue() {
-    return this.parent && this.parent.myPropertyValue;
+  public get myChildPropertyValue(): string | undefined {
+    return this.parent && this.parent.myParentPropertyValue;
   }
 
   @computed
-  get controllingPropertyValueChanged() {
-    return this.parentPropertyValue !== this.controllingPropertyValueOld;
+  get gridFilter(): any {
+    if (this.myChildPropertyValue) {
+      return [this.myChildPropertyId, "eq", this.myChildPropertyValue];
+    } else {
+      return [];
+    }
   }
 
   public start() {
+    autorun(
+      () => {
+        // if (this.controllingPropertyValueChanged && this.parentPropertyValueUseful) {
+        // console.log(this.parentPropertyValue);
+        // this.gridPaneBacking.dataLoadingStrategyActions.requestLoadFresh();
+        // }
+        // this.controllingPropertyValueOld = this.parentPropertyValue;
+      },
+      { name: `BoundLoad@${this.gridPaneBacking.modelInstanceId}` }
+    );
+    console.log('Start for', this.gridPaneBacking.dataStructureEntityId)
     autorun(() => {
-      if (this.controllingPropertyValueChanged) {
-        console.log(this.parentPropertyValue);
+      /*console.log(
+        "******",
+        this.gridPaneBacking.dataStructureEntityId,
+        !this.meOrSomeParentLoading,
+        this.myChildPropertyValue
+      );*/
+      if (
+        this.parent &&
+        !this.meOrSomeParentLoading &&
+        !this.myChildPropertyValue
+      ) {
+        this.gridPaneBacking.dataTableActions.clearAll();
       }
-      this.controllingPropertyValueOld = this.parentPropertyValue;
+      // console.log(`${this.gridPaneBacking.modelInstanceId}`, this.myChildPropertyValue)
+      // console.log(this.gridPaneBacking.modelInstanceId, this.myGridLoading);
     });
     autorun(() => {
-      console.log(this.myGridLoading);
-    })
+      console.log('###', this.gridPaneBacking.dataLoadingStrategyActions.inLoading);
+    });
   }
 }
 
@@ -103,8 +132,8 @@ export class ComponentBindingsModel {
 
   @action.bound
   public start() {
-    console.log(Array.from(this.gridBacking.entries()));
-    console.log("CB START");
+    // console.log(Array.from(this.gridBacking.entries()));
+    // console.log("CB START");
 
     const interrestingIds = new Set();
     for (const binding of this.componentBindings) {
@@ -117,7 +146,8 @@ export class ComponentBindingsModel {
       const dependentGrid = new DependentGrid(gpb!);
       this.dependentGrids.set(modelId, dependentGrid);
       this.disposers.push(
-        gpb!.dataLoadingStrategyActions.addLoadingGate(dependentGrid)
+        gpb!.dataLoadingStrategyActions.addLoadingGate(dependentGrid),
+        gpb!.dataLoadingStrategyActions.addBondFilter(dependentGrid)
       );
     }
 
@@ -132,11 +162,10 @@ export class ComponentBindingsModel {
     for (const modelId of interrestingIds.values()) {
       this.dependentGrids.get(modelId)!.start();
     }
-
   }
 
   @action.bound
   public stop() {
-    console.log("CB STOP");
+    // console.log("CB STOP");
   }
 }

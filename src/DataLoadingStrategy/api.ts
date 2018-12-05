@@ -1,5 +1,6 @@
 import { IAPI } from "./types";
 import axios from "axios";
+import { IEventSubscriber } from "src/utils/events";
 
 let globalAuthToken = sessionStorage.getItem("origamAccessToken") || "";
 
@@ -25,33 +26,58 @@ function login() {
     .then(response => {
       sessionStorage.setItem("origamAccessToken", response.data);
       return (globalAuthToken = response.data);
-    })
+    });
 }
 
 export class APIFake implements IAPI {
-  public loadDataTable({
-    tableId,
-    columns,
-    limit,
-    filter,
-    orderBy,
-    token
-  }: {
-    tableId: string;
-    token: string;
-    columns?: string[] | undefined;
-    limit?: number | undefined;
-    filter?: Array<[string, string, string]> | undefined;
-    orderBy?: Array<[string, string]> | undefined;
-  }): Promise<any> {
-    return axios.get(`http://127.0.0.1:8080/api/${tableId}`, {
-      params: {
-        limit,
-        cols: JSON.stringify(columns),
-        filter: JSON.stringify(filter),
-        odb: orderBy && orderBy.length > 0 ? JSON.stringify(orderBy) : undefined
+  public async loadDataTable(
+    {
+      tableId,
+      columns,
+      limit,
+      filter,
+      orderBy,
+      token
+    }: {
+      tableId: string;
+      token: string;
+      columns?: string[] | undefined;
+      limit?: number | undefined;
+      filter?: Array<[string, string, string]> | undefined;
+      orderBy?: Array<[string, string]> | undefined;
+    },
+    canceller?: IEventSubscriber
+  ): Promise<any> {
+    const source = axios.CancelToken.source();
+
+    let unsubscribe: (() => void) | undefined;
+    try {
+      if (canceller) {
+        unsubscribe = canceller(() => {
+          source.cancel();
+          unsubscribe!();
+        });
       }
-    });
+
+      return await axios.get(`http://127.0.0.1:8080/api/${tableId}`, {
+        params: {
+          limit,
+          cols: JSON.stringify(columns),
+          filter: JSON.stringify(filter),
+          odb:
+            orderBy && orderBy.length > 0 ? JSON.stringify(orderBy) : undefined
+        },
+        cancelToken: source.token
+      });
+    } catch (e) {
+      if (axios.isCancel(e)) {
+        throw new Error("CANCEL");
+      } else {
+        throw e;
+      }
+    } finally {
+      unsubscribe && unsubscribe!();
+    }
   }
 
   public loadMenu({ token }: { token: string }): Promise<any> {

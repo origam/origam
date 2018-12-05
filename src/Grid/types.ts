@@ -331,6 +331,7 @@ export interface IGridCursorView {
     editingRecordId: IRecordId,
     editingFieldId: IFieldId
   ): void;
+  fixGridSelection(): void;
 }
 
 export enum GridViewType {

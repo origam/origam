@@ -1,4 +1,5 @@
 import { IDataTableRecord, IRecordId } from "src/DataTable/types";
+import { IEventSubscriber, ISubscriber } from '../utils/events';
 
 export interface ILookupResolverDR {
   dataLoader: IDataLoader;
@@ -8,14 +9,14 @@ export interface IDataLoadingStategyState {
   headLoadingActive: boolean;
   tailLoadingActive: boolean;
   loadingActive: boolean;
-  isLoading: boolean;
   loadingGates: Map<number, ILoadingGate>;
+  bondFilters: Map<number, IGridFilter>;
 
   setHeadLoadingActive(state: boolean): void;
   setTailLoadingActive(state: boolean): void;
   setLoadingActive(state: boolean): void;
-  setLoading(state: boolean): void;
   addLoadingGate(gate: ILoadingGate): () => void;
+  addBondFilter(filter: IGridFilter): () => void;
 }
 
 export interface IDataLoadingStrategyActions {
@@ -23,18 +24,21 @@ export interface IDataLoadingStrategyActions {
   reloadRow(id: IRecordId): Promise<any>;
   setLoadingActive(state: boolean): void;
   addLoadingGate(gate: ILoadingGate): () => void;
+  addBondFilter(filter: IGridFilter): () => void;
+  isLoading: boolean;
+  inLoading: number;
 }
 
 export interface IDataLoadingStrategySelectors {
   headLoadingNeeded: boolean;
   tailLoadingNeeded: boolean;
   loadingActive: boolean;
-  isLoading: boolean;
   incrementLoadingNeeded: boolean;
   headLoadingActive: boolean;
   tailLoadingActive: boolean;
   recordsNeedTrimming: boolean;
   loadingGates: ILoadingGate[];
+  bondFilters: IGridFilter[];
   loadingGatesOpen: boolean;
 }
 
@@ -44,7 +48,7 @@ export interface IDataLoader {
     orderBy?: Array<[string, string]>;
     filter?: any;
     columns?: string[];
-  }): Promise<any>;
+  }, canceller?: ISubscriber): Promise<any>;
   loadLookup(lookupId: string, labelIds: string[]): Promise<any>;
   loadLokupOptions(
     dataStructureEntityId: string,
@@ -59,9 +63,9 @@ export interface IDataLoader {
 }
 
 export interface IDataSaver {
-  updateRecord(record: IDataTableRecord): Promise<any>;
-  deleteRecord(recordId: IRecordId): Promise<any>;
-  createRecord(record: IDataTableRecord): Promise<any>;
+  updateRecord(record: IDataTableRecord,canceller?: IEventSubscriber): Promise<any>;
+  deleteRecord(recordId: IRecordId,canceller?: IEventSubscriber): Promise<any>;
+  createRecord(record: IDataTableRecord,canceller?: IEventSubscriber): Promise<any>;
 }
 
 export interface IAPI {
@@ -81,11 +85,15 @@ export interface IAPI {
     filter?: Array<[string, string, string]> | undefined;
     orderBy?: Array<[string, string]> | undefined;
     menuId: string;
-  }): Promise<any>;
+  }, canceller?: IEventSubscriber): Promise<any>;
   loadMenu({ token }: { token: string }): Promise<any>;
   loadScreen({ id, token }: { id: string; token: string }): Promise<any>;
 }
 
 export interface ILoadingGate {
   isLoadingAllowed: boolean;
+}
+
+export interface IGridFilter {
+  gridFilter: any;
 }

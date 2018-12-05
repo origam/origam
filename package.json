@@ -52,6 +52,7 @@
     "tslint-react": "^3.2.0",
     "uglifyjs-webpack-plugin": "^1.1.8",
     "url-loader": "0.6.2",
+    "url-search-params-polyfill": "^5.0.0",
     "uuid": "^3.3.2",
     "webpack": "3.8.1",
     "webpack-dev-server": "2.9.4",

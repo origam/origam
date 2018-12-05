@@ -1,7 +1,7 @@
 import * as React from "react";
 import { observer, inject } from "mobx-react";
 import { IGridInteractionActions, GridViewType } from "src/Grid/types";
-import { IGridToolbarView } from '../../GridPanel/types';
+import { IGridToolbarView, IGridPanelBacking } from "../../GridPanel/types";
 
 @inject("gridPaneBacking")
 @observer
@@ -11,22 +11,34 @@ export class GridToolbar extends React.Component<any> {
     const {
       setActiveView
     } = gridPaneBacking.gridInteractionActions as IGridInteractionActions;
+    const { dataLoadingStrategyActions } = gridPaneBacking as IGridPanelBacking;
     const gridToolbarView = gridPaneBacking.gridToolbarView as IGridToolbarView;
     return (
       <div
         className={"oui-grid-toolbar" + (this.props.isHidden ? " hidden" : "")}
       >
         <div className="toolbar-section">
-          <span className="toolbar-caption">{this.props.name}</span>
+          <span className="toolbar-caption">
+            {dataLoadingStrategyActions.isLoading && (
+              <i className="fa fa-cog fa-spin" style={{ marginRight: 5 }} />
+            )}{" "}
+            {this.props.name}
+          </span>
         </div>
         <div className="toolbar-section">
           {this.props.isAddButton && (
-            <button className="oui-toolbar-btn" onClick={gridToolbarView.handleAddRecordClick}>
+            <button
+              className="oui-toolbar-btn"
+              onClick={gridToolbarView.handleAddRecordClick}
+            >
               <i className="fa fa-plus-circle icon" aria-hidden="true" />
             </button>
           )}
           {this.props.isDeleteButton && (
-            <button className="oui-toolbar-btn" onClick={gridToolbarView.handleRemoveRecordClick}>
+            <button
+              className="oui-toolbar-btn"
+              onClick={gridToolbarView.handleRemoveRecordClick}
+            >
               <i className="fa fa-minus-circle icon" aria-hidden="true" />
             </button>
           )}
@@ -41,10 +53,16 @@ export class GridToolbar extends React.Component<any> {
           <button className="oui-toolbar-btn">
             <i className="fa fa-step-backward icon" aria-hidden="true" />
           </button>
-          <button className="oui-toolbar-btn" onClick={gridToolbarView.handlePrevRecordClick}>
+          <button
+            className="oui-toolbar-btn"
+            onClick={gridToolbarView.handlePrevRecordClick}
+          >
             <i className="fa fa-caret-left icon" aria-hidden="true" />
           </button>
-          <button className="oui-toolbar-btn" onClick={gridToolbarView.handleNextRecordClick}>
+          <button
+            className="oui-toolbar-btn"
+            onClick={gridToolbarView.handleNextRecordClick}
+          >
             <i className="fa fa-caret-right icon" aria-hidden="true" />
           </button>
           <button className="oui-toolbar-btn">

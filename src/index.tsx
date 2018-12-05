@@ -1,3 +1,4 @@
+import 'url-search-params-polyfill';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import App from './App';
@@ -16,6 +17,7 @@ import "./menuInterpreter/interpreter";
 configure({
   computedRequiresReaction: true,
   reactionScheduler(fn) {
+    console.log('RR')
     fn();
     reactionRuntimeInfo.clear();
   }

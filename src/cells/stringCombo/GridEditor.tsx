@@ -69,6 +69,7 @@ export class LookupDropdown extends React.Component<ILookupDropdownProps> {
         </div>
       );
     } else {
+      console.log(rowIndex - 1, columnIndex, this.options[rowIndex - 1][columnIndex])
       return (
         <Observer>
           {() => (
@@ -94,7 +95,7 @@ export class LookupDropdown extends React.Component<ILookupDropdownProps> {
             >
               <Highlighter
                 searchWords={[this.props.searchText]}
-                textToHighlight={this.options[rowIndex - 1][columnIndex]}
+                textToHighlight={`${this.options[rowIndex - 1][columnIndex]}`}
               />
             </div>
           )}

@@ -1,4 +1,13 @@
-import { action, flow, reaction, IReactionDisposer, when } from "mobx";
+import {
+  action,
+  flow,
+  reaction,
+  IReactionDisposer,
+  when,
+  observable,
+  computed,
+  comparer
+} from "mobx";
 import { DataTableRecord } from "../DataTable/DataTableState";
 import { reactionRuntimeInfo } from "../utils/reaction";
 import {
@@ -6,7 +15,8 @@ import {
   IDataLoadingStrategySelectors,
   IDataLoader,
   IDataLoadingStrategyActions,
-  ILoadingGate
+  ILoadingGate,
+  IGridFilter
 } from "./types";
 import {
   IDataTableActions,
@@ -26,6 +36,8 @@ import {
 } from "../Grid/types";
 import { CancellablePromise } from "mobx/lib/api/flow";
 import { IDataTableFieldStruct, IRecordId } from "../DataTable/types";
+import { EventObserver } from "../utils/events";
+import { IGridCursorView } from "../Grid/types";
 
 function noCancelException<T>(promise: Promise<void | T>): Promise<void | T> {
   return promise.catch(e => {
@@ -79,20 +91,34 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
     public gridOutlineSelectors: IGridOutlineSelectors,
     public gridInteractionActions: IGridInteractionActions,
     public gridViewSelectors: IGridSelectors,
-    public gridViewActions: IGridActions
+    public gridViewActions: IGridActions,
+    public gridCursorView: IGridCursorView
   ) {}
+
+  private onCancelLoading = EventObserver();
+  private onCancelLoadWaiting = EventObserver();
 
   private loadingPromise: CancellablePromise<any> | undefined;
   private loadWaitingPromise: CancellablePromise<any> | undefined;
   private reOrdering: IReactionDisposer | undefined;
   private reOutline: IReactionDisposer | undefined;
   private reIncremental: IReactionDisposer | undefined;
+  private reFilter: IReactionDisposer | undefined;
+
+  @observable
+  public inLoading = 0;
+
+  @computed
+  public get isLoading() {
+    return this.inLoading > 0;
+  }
 
   @action.bound
   public stop() {
     this.reOrdering && this.reOrdering();
     this.reOutline && this.reOutline();
     this.reIncremental && this.reIncremental();
+    this.reFilter && this.reFilter();
   }
 
   @action.bound
@@ -108,6 +134,26 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
           return;
         }
         this.requestLoadFresh();
+      }
+    );
+
+    this.reFilter = reaction(
+      () => {
+        return [
+          this.selectors.bondFilters
+            .map(filter => filter.gridFilter)
+            .map(filter => filter)
+        ];
+      },
+      () => {
+        // console.log("Reload due to filter change");
+        if (reactionRuntimeInfo.info.has("LOAD_FRESH_AROUND")) {
+          return;
+        }
+        this.requestLoadFresh();
+      },
+      {
+        equals: comparer.structural
       }
     );
 
@@ -147,28 +193,35 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
     );
   }
 
+  @action.bound
   public addLoadingGate(gate: ILoadingGate): () => void {
     return this.state.addLoadingGate(gate);
   }
 
+  @action.bound
+  public addBondFilter(filter: IGridFilter): () => void {
+    return this.state.addBondFilter(filter);
+  }
+
+  @action.bound
   public setLoadingActive(state: boolean): void {
     this.state.setLoadingActive(state);
   }
 
-  @action.bound
-  public requestLoadIncrement() {
-    return noCancelException(flow(this.loadIncrementProc.bind(this))());
-  }
-
   private isLoadIncrementWaitingOnGate = false;
+  private isLoadIncrementWaitingForLoading = false;
 
-  private *loadIncrementProc() {
+  private requestLoadIncrement = flow(function*(
+    this: DataLoadingStrategyActions
+  ) {
     if (this.isLoadIncrementWaitingOnGate) {
       return;
     }
     try {
       this.isLoadIncrementWaitingOnGate = true;
-      yield when(() => this.selectors.loadingGatesOpen);
+      yield when(() => {
+        return this.selectors.loadingGatesOpen;
+      });
     } finally {
       this.isLoadIncrementWaitingOnGate = false;
     }
@@ -176,52 +229,67 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
     if (!this.selectors.incrementLoadingNeeded) {
       return;
     }
-    this.cancelLoadWaiting();
-    yield this.waitForLoadingFinished();
+
+    if (this.isLoadIncrementWaitingForLoading) {
+      return;
+    }
+    try {
+      this.isLoadIncrementWaitingForLoading = true;
+      const waitingPromise = when(() => !this.isLoading);
+      yield waitingPromise;
+    } finally {
+      this.isLoadIncrementWaitingForLoading = false;
+    }
     if (!this.selectors.incrementLoadingNeeded) {
       return;
     }
-    if (this.selectors.headLoadingActive && this.selectors.headLoadingNeeded) {
-      const gridHeightBeforeLoad = this.gridViewSelectors.contentHeight;
-      const resultInfo = yield this.loadBeforeFirstRecord();
-      const gridHeightAfterLoad = this.gridViewSelectors.contentHeight;
-      this.gridViewActions.performIncrementScroll({
-        scrollTop: gridHeightAfterLoad - gridHeightBeforeLoad
-      });
-      if (resultInfo.records.length < 5000) {
-        this.state.setHeadLoadingActive(false);
-      }
-      if (this.selectors.recordsNeedTrimming) {
-        this.trimTail();
-      }
-    } else if (
-      this.selectors.tailLoadingActive &&
-      this.selectors.tailLoadingNeeded
-    ) {
-      const resultInfo = yield this.loadAfterLastRecord();
-      if (resultInfo.records.length < 5000) {
-        this.state.setTailLoadingActive(false);
-      }
-      if (this.selectors.recordsNeedTrimming) {
+    try {
+      this.inLoading++;
+      if (
+        this.selectors.headLoadingActive &&
+        this.selectors.headLoadingNeeded
+      ) {
         const gridHeightBeforeLoad = this.gridViewSelectors.contentHeight;
-        this.trimHead();
+        const resultInfo = yield this.loadBeforeFirstRecord();
         const gridHeightAfterLoad = this.gridViewSelectors.contentHeight;
         this.gridViewActions.performIncrementScroll({
           scrollTop: gridHeightAfterLoad - gridHeightBeforeLoad
         });
+        if (resultInfo.records.length < 5000) {
+          this.state.setHeadLoadingActive(false);
+        }
+        if (this.selectors.recordsNeedTrimming) {
+          this.trimTail();
+        }
+      } else if (
+        this.selectors.tailLoadingActive &&
+        this.selectors.tailLoadingNeeded
+      ) {
+        const resultInfo = yield this.loadAfterLastRecord();
+        if (resultInfo.records.length < 5000) {
+          this.state.setTailLoadingActive(false);
+        }
+        if (this.selectors.recordsNeedTrimming) {
+          const gridHeightBeforeLoad = this.gridViewSelectors.contentHeight;
+          this.trimHead();
+          const gridHeightAfterLoad = this.gridViewSelectors.contentHeight;
+          this.gridViewActions.performIncrementScroll({
+            scrollTop: gridHeightAfterLoad - gridHeightBeforeLoad
+          });
+        }
       }
+    } catch (e) {
+      if (e.message !== "CANCEL") {
+        throw e;
+      }
+    } finally {
+      this.inLoading--;
     }
-  }
+  });
 
-  public loadAfterLastRecord() {
-    return (this.loadingPromise = flow(
-      this.loadAfterLastRecordProc.bind(this)
-    )());
-  }
-
-  private *loadAfterLastRecordProc() {
+  private async loadAfterLastRecord() {
     try {
-      this.state.setLoading(true);
+      this.inLoading++;
       const lastRecord = this.dataTableSelectors.lastFullRecord;
       const addedFilters = [];
       const addedOrdering = this.gridOrderingSelectors.ordering.filter(
@@ -241,12 +309,15 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
       const columns = this.dataTableSelectors.fields.map(field => field.id);
       const idFieldIndex = fields.findIndex(field => field.isPrimaryKey);
 
-      const apiResult = yield this.dataLoader.loadDataTable({
-        limit: 5000,
-        orderBy: addedOrdering as Array<[string, string]>,
-        filter: addedFilters as Array<[string, string, string]>, // TODO!!!
-        columns
-      });
+      const apiResult = await this.dataLoader.loadDataTable(
+        {
+          limit: 5000,
+          orderBy: addedOrdering as Array<[string, string]>,
+          filter: addedFilters as Array<[string, string, string]>, // TODO!!!
+          columns
+        },
+        this.onCancelLoading
+      );
 
       const records = apiResult.data.map((record: any) => {
         const newRecord = new DataTableRecord(
@@ -266,19 +337,13 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
         records
       };
     } finally {
-      this.state.setLoading(false);
+      this.inLoading--;
     }
   }
 
-  public loadBeforeFirstRecord() {
-    return (this.loadingPromise = flow(
-      this.loadBeforeFirstRecordProc.bind(this)
-    )());
-  }
-
-  private *loadBeforeFirstRecordProc() {
+  private async loadBeforeFirstRecord() {
     try {
-      this.state.setLoading(true);
+      this.inLoading++;
       const firstRecord = this.dataTableSelectors.firstFullRecord;
       const addedFilters = [];
       let addedOrdering = [];
@@ -302,12 +367,15 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
       fields.sort((a, b) => a.recvDataIndex - b.recvDataIndex);
       const columns = this.dataTableSelectors.fields.map(field => field.id);
       const idFieldIndex = fields.findIndex(field => field.isPrimaryKey);
-      const apiResult = yield this.dataLoader.loadDataTable({
-        limit: 5000,
-        orderBy: addedOrdering as Array<[string, string]>,
-        filter: addedFilters as Array<[string, string, string]>, // TODO!!!
-        columns
-      });
+      const apiResult = await this.dataLoader.loadDataTable(
+        {
+          limit: 5000,
+          orderBy: addedOrdering as Array<[string, string]>,
+          filter: addedFilters as Array<[string, string, string]>, // TODO!!!
+          columns
+        },
+        this.onCancelLoading
+      );
       const records = apiResult.data.map((record: any) => {
         const newRecord = new DataTableRecord(
           record[idFieldIndex],
@@ -327,38 +395,50 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
         records
       };
     } finally {
-      this.state.setLoading(false);
+      this.inLoading--;
     }
-  }
-
-  @action.bound
-  public requestLoadFresh() {
-    return noCancelException(
-      (this.loadingPromise = flow(this.loadFreshProc.bind(this))())
-    );
   }
 
   private isLoadFreshWaitingOnGate = false;
 
-  private *loadFreshProc() {
-    if (this.isLoadFreshWaitingOnGate) {
-      return;
-    }
-    try {
-      this.isLoadFreshWaitingOnGate = true;
-      yield when(() => this.selectors.loadingGatesOpen);
-    } finally {
-      this.isLoadFreshWaitingOnGate = false;
-    }    
-    this.cancelLoading();
-    yield* this.loadFresh();
-    this.state.setHeadLoadingActive(false);
-    this.state.setTailLoadingActive(true);
-  }
+  public requestLoadFresh = flow(
+    function*(this: DataLoadingStrategyActions) {
+      if (this.isLoadFreshWaitingOnGate) {
+        return;
+      }
+      try {
+        this.isLoadFreshWaitingOnGate = true;
+        yield when(() => {
+          return this.selectors.loadingGatesOpen;
+        });
+        // TODO: add waiting cancellation here?
+      } finally {
+        this.isLoadFreshWaitingOnGate = false;
+      }
+      console.log("#*#*#*#*#*#*#");
+      try {
+        this.inLoading++;
+        this.cancelLoading();
+        this.state.setHeadLoadingActive(false);
+        this.state.setTailLoadingActive(false);
+        yield this.loadFresh();
+        if (this.dataTableSelectors.recordCount >= 5000) {
+          this.state.setTailLoadingActive(true);
+        }
+      } catch (e) {
+        if (e.message !== "CANCEL") {
+          throw e;
+        }
+      } finally {
+        this.gridCursorView.fixGridSelection();
+        this.inLoading--;
+      }
+    }.bind(this)
+  );
 
-  private *loadFresh() {
+  private loadFresh = flow(function*(this: DataLoadingStrategyActions) {
     try {
-      this.state.setLoading(true);
+      this.inLoading++;
       const addedOrdering = this.gridOrderingSelectors.ordering.filter(
         o => o[0] !== "Id"
       );
@@ -367,11 +447,20 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
       fields.sort((a, b) => a.recvDataIndex - b.recvDataIndex);
       const columns = this.dataTableSelectors.fields.map(field => field.id);
       const idFieldIndex = fields.findIndex(field => field.isPrimaryKey);
-      const apiResult = yield this.dataLoader.loadDataTable({
-        limit: 5000,
-        orderBy: addedOrdering as Array<[string, string]>,
-        columns
-      });
+      const filters = this.selectors.bondFilters
+        .map(filt => filt.gridFilter)
+        .filter(filt => filt.length > 0);
+      console.log("A");
+      const apiResult = yield this.dataLoader.loadDataTable(
+        {
+          limit: 5000,
+          orderBy: addedOrdering as Array<[string, string]>,
+          columns,
+          filter: filters.length > 0 ? ["$AND", ...filters] : undefined
+        },
+        this.onCancelLoading
+      );
+      console.log("B");
       const records = apiResult.data.map((record: any) => {
         const newRecord = new DataTableRecord(
           record[idFieldIndex],
@@ -387,24 +476,27 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
       });
       this.dataTableActions.setRecords(records);
     } finally {
-      this.state.setLoading(false);
+      this.inLoading--;
     }
-  }
+  });
 
   @action.bound
   public async reloadRow(id: IRecordId) {
     try {
-      this.state.setLoading(true);
+      this.inLoading++;
       const fields = [...this.dataTableSelectors.fields];
       fields.sort((a, b) => a.recvDataIndex - b.recvDataIndex);
       const columns = this.dataTableSelectors.fields.map(field => field.id);
       const idFieldIndex = fields.findIndex(field => field.isPrimaryKey);
-      const apiResult = await this.dataLoader.loadDataTable({
-        limit: 1,
-        orderBy: [],
-        columns,
-        filter: ["Id", "eq", id]
-      });
+      const apiResult = await this.dataLoader.loadDataTable(
+        {
+          limit: 1,
+          orderBy: [],
+          columns,
+          filter: ["Id", "eq", id]
+        },
+        this.onCancelLoading
+      );
       const records = apiResult.data.map((record: any) => {
         const newRecord = new DataTableRecord(
           record[idFieldIndex],
@@ -422,8 +514,12 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
       if (records.length === 1) {
         this.dataTableActions.replaceUpdatedRecord(records[0]);
       }
+    } catch (e) {
+      if (e.message !== "CANCEL") {
+        throw e;
+      }
     } finally {
-      this.state.setLoading(false);
+      this.inLoading--;
     }
   }
 
@@ -443,7 +539,7 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
     reactionRuntimeInfo.add("DATA_LOADED", "LOAD_FRESH_AROUND");
     this.gridOrderingActions.setOrdering("name", "asc");
     if (loaded.targettedRecordId) {
-      console.log("Selecting", loaded.targettedRecordId);
+      // console.log("Selecting", loaded.targettedRecordId);
       this.gridInteractionActions.select(loaded.targettedRecordId, "name");
     }
   }
@@ -511,33 +607,12 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
 
   @action.bound
   public cancelLoading() {
-    if (this.loadingPromise) {
-      this.loadingPromise.cancel();
-      this.loadingPromise = undefined;
-    }
-    this.cancelLoadWaiting();
+    this.onCancelLoading.trigger();
+    this.onCancelLoadWaiting.trigger();
   }
 
   @action.bound
   public cancelLoadWaiting() {
-    if (this.loadWaitingPromise) {
-      this.loadWaitingPromise.cancel();
-      this.loadWaitingPromise = undefined;
-    }
-  }
-
-  @action.bound
-  public waitForLoadingFinished() {
-    const self = this;
-    this.loadWaitingPromise = flow(function* waitForLoadingFinished() {
-      try {
-        // Stop propagating cancellation to loadingPromise.
-        // Promise.all issues non-cancellable promise object.
-        yield Promise.all([self.loadingPromise]);
-      } finally {
-        self.loadWaitingPromise = undefined;
-      }
-    })();
-    return this.loadWaitingPromise;
+    this.onCancelLoadWaiting.trigger();
   }
 }

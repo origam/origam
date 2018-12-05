@@ -146,4 +146,8 @@ export class DataTableActions implements IDataTableActions {
   public trimTail(deleteCount: number) {
     this.state.records.splice(-deleteCount, deleteCount);
   }
+
+  @action.bound public clearAll() {
+    this.state.records.length = 0;
+  }
 }

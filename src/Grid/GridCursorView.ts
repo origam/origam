@@ -1,4 +1,5 @@
 import { computed, action } from "mobx";
+import { IGridInteractionActions } from './types';
 import {
   IGridTopology,
   IGridSetup,
@@ -18,6 +19,7 @@ export class GridCursorView implements IGridCursorView {
 
   constructor(
     public gridInteractionSelectors: IGridInteractionSelectors,
+    public gridInteractionActions: IGridInteractionActions,
     public gridViewSelectors: IGridSelectors,
     public dataTableSelectors: IDataTableSelectors,
     public dataTableActions: IDataTableActions,
@@ -317,5 +319,11 @@ export class GridCursorView implements IGridCursorView {
     const record = this.dataTableSelectors.getRecordById(editingRecordId);
     const field = this.dataTableSelectors.getFieldById(editingFieldId);
     this.dataTableActions.setDirtyCellValue(record!, field!, dirtyValue);
+  }
+
+  @action.bound public fixGridSelection() {
+    if(!this.selectedField) {
+      this.gridInteractionActions.selectFirst();
+    }
   }
 }

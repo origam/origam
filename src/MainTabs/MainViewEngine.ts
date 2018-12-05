@@ -6,7 +6,7 @@ import * as xmlJs from "xml-js";
 import { parseScreenDef } from "src/screenInterpreter/interpreter";
 import { buildReactTree } from "src/screenInterpreter/uiBuilder";
 import { interpretMenu } from "src/MainMenu/MainMenuComponent";
-import { IAPI } from "../DataLoadingStrategy/types";
+import { IAPI, ILoadingGate } from '../DataLoadingStrategy/types';
 import { getToken } from "../DataLoadingStrategy/api";
 import { ComponentBindingsModel } from "src/componentBindings/ComponentBindingsModel";
 
@@ -18,9 +18,12 @@ export interface IOpenedView {
   start(): void;
   stop(): void;
   componentBindingsModel: ComponentBindingsModel;
+  unlockLoading(): void;
 }
 
-class OpenedView implements IOpenedView {
+class OpenedView implements IOpenedView, ILoadingGate {
+  @observable public isLoadingAllowed: boolean = false;
+
   constructor(
     public id: string,
     public subid: string,
@@ -44,6 +47,10 @@ class OpenedView implements IOpenedView {
         this.componentBindingsModel = new ComponentBindingsModel(interpretedResult.collectComponentBindings);
       })
     );
+  }
+
+  @action.bound public unlockLoading() {
+    this.isLoadingAllowed = true;
   }
 
   @action.bound

@@ -61,6 +61,7 @@ export interface IDataTableActions {
   replaceUpdatedRecord(updatedRecord: IDataTableRecord): void;
   replaceCreatedRecord(createdRecord: IDataTableRecord): void;
   deleteDeletedRecord(recordId: IRecordId): void;
+  clearAll(): void;
   onDataCommitted: IEventSubscriber;
 }
 

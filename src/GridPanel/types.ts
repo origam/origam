@@ -14,7 +14,7 @@ import {
 import { IDataLoadingStrategyActions, IDataLoadingStrategySelectors, IDataLoader } from "../DataLoadingStrategy/types";
 import { IEventSubscriber } from "../utils/events";
 import { IGridOrderingSelectors, IGridOrderingActions } from "src/GridOrdering/types";
-import { IDataTableSelectors } from "src/DataTable/types";
+import { IDataTableSelectors, IDataTableActions } from "src/DataTable/types";
 
 export interface IGridToolbarView {
   activeView: GridViewType;
@@ -41,6 +41,7 @@ export interface IGridPanelBacking {
   gridOrderingSelectors: IGridOrderingSelectors;
   gridOrderingActions: IGridOrderingActions;
   dataTableSelectors: IDataTableSelectors;
+  dataTableActions: IDataTableActions;
   dataLoader: IDataLoader;
 
   dataStructureEntityId: string;

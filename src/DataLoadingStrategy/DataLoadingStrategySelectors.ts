@@ -6,11 +6,13 @@ import {
 } from "./types";
 import { IGridSelectors } from "../Grid/types";
 import { IDataTableSelectors } from "../DataTable/types";
+import { IGridFilter } from './types';
 
 const LOADING_THRESHOLD = 1000;
 
 export class DataLoadingStrategySelectors
   implements IDataLoadingStrategySelectors {
+  
   constructor(
     public state: IDataLoadingStategyState,
     public gridViewSelectors: IGridSelectors,
@@ -37,9 +39,16 @@ export class DataLoadingStrategySelectors
     return Array.from(this.state.loadingGates.values());
   }
 
+  @computed 
+  public get bondFilters(): IGridFilter[] {
+    return Array.from(this.state.bondFilters.values());
+  }
+
   @computed
   public get loadingGatesOpen(): boolean {
+    // console.log('*/')
     for (const gate of this.loadingGates) {
+      // console.log(gate)
       if (!gate.isLoadingAllowed) {
         return false;
       }
@@ -47,10 +56,6 @@ export class DataLoadingStrategySelectors
     return true;
   }
 
-  @computed
-  get isLoading() {
-    return this.state.isLoading;
-  }
 
   @computed
   get distanceToStart() {

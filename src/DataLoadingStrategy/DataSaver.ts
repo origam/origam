@@ -14,7 +14,8 @@ export class DataSaver implements IDataSaver {
   constructor(
     public tableName: string,
     public dataTableActions: IDataTableActions,
-    public dataTableSelectors: IDataTableSelectors
+    public dataTableSelectors: IDataTableSelectors,
+    public menuItemId: string
   ) {
     return;
   }
@@ -28,7 +29,8 @@ export class DataSaver implements IDataSaver {
         rowId: record.id,
         newValues: {
           ...this.serializeRecord(record)
-        }
+        },
+        menuId: this.menuItemId
       },
       {
         headers: { Authorization: `Bearer ${getToken()}` }
@@ -42,7 +44,8 @@ export class DataSaver implements IDataSaver {
       `/api/Data/EntityDelete`,
       {
         dataStructureEntityId: this.tableName,
-        rowIdToDelete: recordId
+        rowIdToDelete: recordId,
+        menuId: this.menuItemId
       },
       {
         headers: { Authorization: `Bearer ${getToken()}` }
@@ -58,7 +61,8 @@ export class DataSaver implements IDataSaver {
         dataStructureEntityId: this.tableName,
         newValues: {
           ...this.serializeRecord(record)
-        }
+        },
+        menuId: this.menuItemId
       },
       {
         headers: { Authorization: `Bearer ${getToken()}` }

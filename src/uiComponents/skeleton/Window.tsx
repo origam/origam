@@ -9,6 +9,8 @@ import { ComponentBindingsModel } from '../../componentBindings/ComponentBinding
 export class Window extends React.Component<any> {
   @observable public isFullscreen = false;
 
+
+
   @action.bound
   public handleFullscreenClick(event: any) {
     this.isFullscreen = !this.isFullscreen;
@@ -17,6 +19,7 @@ export class Window extends React.Component<any> {
   public componentDidMount() {
     const {mainView} = this.props as {mainView: IOpenedView};
     mainView.componentBindingsModel.start();
+    mainView.unlockLoading();
   }
 
   public componentWillUnmount() {
