@@ -1567,7 +1567,8 @@ namespace Origam.DA.Service
 
 			IDbConnection connection = null;
             IDbTransaction transaction = null;
-            if(transactionId != null)
+            CommandBehavior commandBehavior = CommandBehavior.Default;
+            if (transactionId != null)
             {
                 transaction = GetTransaction(
                     transactionId, query.IsolationLevel);
@@ -1575,7 +1576,8 @@ namespace Origam.DA.Service
             if(transaction == null)
 			{
 				connection = GetConnection(_connectionString);
-			}
+			    commandBehavior = CommandBehavior.CloseConnection;
+            }
 			else
 			{
 				connection = transaction.Connection;
@@ -1599,11 +1601,11 @@ namespace Origam.DA.Service
             ((IDbDataAdapter)adapter).SelectCommand.Connection = connection;
             ((IDbDataAdapter)adapter).SelectCommand.Transaction = transaction;
             ((IDbDataAdapter)adapter).SelectCommand.CommandTimeout = timeout;
-            if(connection.State == ConnectionState.Closed)
+            if (connection.State == ConnectionState.Closed)
             {
                 connection.Open();
             }
-            return adapter.SelectCommand.ExecuteReader();
+            return adapter.SelectCommand.ExecuteReader(commandBehavior);
         }
 
 	    private static DataStructureEntity GetEntity(DataStructureQuery query, DataStructure dataStructure)
