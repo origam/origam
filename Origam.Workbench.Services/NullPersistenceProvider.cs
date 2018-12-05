@@ -21,6 +21,11 @@ namespace Origam.Workbench.Services
         {
         }
 
+        public void OnTransactionEnded(object sender)
+        {
+            throw new NotImplementedException();
+        }
+
         public ICompiledModel CompiledModel { get; set; }
         public object RetrieveInstance(Type type, Key primaryKey)
         {
@@ -93,6 +98,11 @@ namespace Origam.Workbench.Services
 
         public void EndTransaction()
         {
+        }
+
+        public void EndTransactionDontSave()
+        {
+            throw new NotImplementedException();
         }
 
         public object RetrieveValue(Guid instanceId, Type parentType, string fieldName)

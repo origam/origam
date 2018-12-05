@@ -67,7 +67,7 @@ namespace OrigamArchitect.Commands
 					{
 						FormControlSet form = formMenu.Screen;
 						string formPath = Path.Combine(path, formMenu.Name + "_" + formMenu.Id.ToString() + ".xml");
-						Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(form, formMenu.DisplayName, formMenu.ListDataStructure == null, formMenu.Id, form.DataStructure, formMenu.ReadOnlyAccess, formMenu.SelectionChangeEntity).Save(formPath);
+						Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(form, formMenu.DisplayName, formMenu.ListDataStructure == null, formMenu.Id, form.DataStructure, formMenu.ReadOnlyAccess, formMenu.SelectionChangeEntity).Document.Save(formPath);
 					}
 				}
 			}

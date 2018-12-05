@@ -65,12 +65,12 @@ namespace Origam.Schema.Wizards
 			if(Owner is FormControlSet)
 			{
 				FormControlSet item = Owner as FormControlSet;
-				doc = Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(item, item.Name, true, Guid.Empty, item.DataStructure, false, "");
+				doc = Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(item, item.Name, true, Guid.Empty, item.DataStructure, false, "").Document;
 			}
 			else if(Owner is MenuModel.FormReferenceMenuItem)
 			{
 				MenuModel.FormReferenceMenuItem formMenu = Owner as MenuModel.FormReferenceMenuItem;
-				doc = Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(formMenu.Screen, formMenu.DisplayName, formMenu.ListDataStructure == null, formMenu.Id, formMenu.Screen.DataStructure, formMenu.ReadOnlyAccess, formMenu.SelectionChangeEntity);
+				doc = Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(formMenu.Screen, formMenu.DisplayName, formMenu.ListDataStructure == null, formMenu.Id, formMenu.Screen.DataStructure, formMenu.ReadOnlyAccess, formMenu.SelectionChangeEntity).Document;
 			}
 			else if(Owner is MenuModel.Menu)
 			{
