@@ -69,7 +69,6 @@ export class LookupDropdown extends React.Component<ILookupDropdownProps> {
         </div>
       );
     } else {
-      console.log(rowIndex - 1, columnIndex, this.options[rowIndex - 1][columnIndex])
       return (
         <Observer>
           {() => (
@@ -227,7 +226,7 @@ export class ComboGridEditor extends React.Component<{
     this.setSearchText(this.dirtyEditedValue);
   }
 
-  private setSearchText = _.throttle(this.setSearchTextImm, 1000);
+  private setSearchText = _.debounce(this.setSearchTextImm, 500, {leading: false});
 
   @action.bound
   private setSearchTextImm(searchText: string) {

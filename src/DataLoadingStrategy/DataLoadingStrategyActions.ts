@@ -351,6 +351,9 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
         o => o[0] !== "Id"
       );
       addedOrdering.push(["Id", "asc"]);
+      addedOrdering = addedOrdering.map(ordering => {
+        return [ordering[0], ordering[1] === "asc" ? "desc" : "asc"];
+      });
       const cursorValues = addedOrdering.map(ord => {
         const field = this.dataTableSelectors.getFieldById(ord[0]);
         const value = this.dataTableSelectors.getResetValue(
@@ -360,7 +363,7 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
         return value;
       });
       addedFilters.push(
-        ...constructPaginationFilter("before", cursorValues, addedOrdering)
+        ...constructPaginationFilter("before", cursorValues, addedOrdering as Array<[string, string]>)
       );
 
       const fields = [...this.dataTableSelectors.fields];
@@ -415,7 +418,6 @@ export class DataLoadingStrategyActions implements IDataLoadingStrategyActions {
       } finally {
         this.isLoadFreshWaitingOnGate = false;
       }
-      console.log("#*#*#*#*#*#*#");
       try {
         this.inLoading++;
         this.cancelLoading();

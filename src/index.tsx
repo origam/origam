@@ -17,7 +17,6 @@ import "./menuInterpreter/interpreter";
 configure({
   computedRequiresReaction: true,
   reactionScheduler(fn) {
-    console.log('RR')
     fn();
     reactionRuntimeInfo.clear();
   }
