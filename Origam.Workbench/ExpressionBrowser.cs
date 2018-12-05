@@ -1082,6 +1082,10 @@ namespace Origam.Workbench
 
 		public void RefreshItem(IBrowserNode node)
 		{
+            if(node is null)
+            {
+                return;
+            }
             if (! IsHandleCreated)
             {
                 return;

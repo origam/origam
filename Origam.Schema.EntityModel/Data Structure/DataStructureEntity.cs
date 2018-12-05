@@ -24,6 +24,7 @@ using System.Collections;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.ObjectPersistence.Attributes;
 
 namespace Origam.Schema.EntityModel
 {
@@ -63,7 +64,7 @@ namespace Origam.Schema.EntityModel
 		/// </summary>
 		[TypeConverter(typeof(DataStructureEntityConverter))]
 		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRule()]
+        [RelationTypeModelEntityRuleAttribute()]
         [XmlReference("entity", "EntityId")]
         public AbstractSchemaItem Entity
 		{
@@ -226,6 +227,7 @@ namespace Origam.Schema.EntityModel
 
 		private RelationType _relationType = RelationType.Normal;
 		[EntityColumn("I01")]
+        [RelationTypeModelElementRule()]
         [XmlAttribute("relationType")]
         public RelationType RelationType
 		{

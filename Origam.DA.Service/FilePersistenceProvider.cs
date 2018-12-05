@@ -108,6 +108,14 @@ namespace Origam.DA.Service
         public override void EndTransaction()
         {       
             persistor.EndTransaction();
+            base.EndTransaction();
+        }
+
+        public override void EndTransactionDontSave()
+        {
+            persistor.EndTransactionDontSave();
+            ReloadFiles(tryUpdate: false);
+            PersistIndex();
         }
 
         private IFilePersistent RetrieveInstance(PersistedObjectInfo persistedObjInfo,
@@ -122,6 +130,7 @@ namespace Origam.DA.Service
                 // but we could not find it...
                 throw new Exception("PersistedObjectInfo was found but no instance was returned.");
             }
+            retrievedInstance.UseObjectCache = useCache;
             return retrievedInstance;
         }
 
@@ -214,7 +223,7 @@ namespace Origam.DA.Service
         }
         public override void RemoveFromCache(IPersistent instance)
         {
-            index.GetById(instance.Id).OrigamFile.ClearCache();
+            index.GetById(instance.Id)?.OrigamFile.RemoveFromCache(instance);
         }
 
         public override List<T> RetrieveList<T>(IDictionary<string, object> filter=null)

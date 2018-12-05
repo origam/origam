@@ -46,7 +46,7 @@ namespace Origam.DA.Service
             {
                 return;
             }
-            
+
             RenameRelatedItems(instance, persistedObjectInfo?.OrigamFile);
  
             if (origamFile == null)
@@ -107,11 +107,13 @@ namespace Origam.DA.Service
         
         public void BeginTransaction()
         {
+            if (inTransaction) throw new Exception("Already in transaction! Cannot start a new one.");
             inTransaction = true;
         }
 
         public void EndTransaction()
-        {       
+        {
+            if (!inTransaction) throw new Exception("Not in transaction! No transaction  to end.");
             foreach (OrigamFile origamFile in transactionStore.Files)
             {
                 origamFile.FinalizeSave();
@@ -121,7 +123,17 @@ namespace Origam.DA.Service
             index.Persist(trackerLoaderFactory);
             inTransaction = false;
         }
-        
+
+        public void EndTransactionDontSave()
+        {
+            foreach (OrigamFile origamFile in transactionStore.Files)
+            {
+                origamFile.DeferredSaveDocument = null;
+            }
+            transactionStore.Clear();
+            inTransaction = false;
+        }
+
         public PersistedObjectInfo GetObjInfoFromTransactionStore(Guid id)
         {
             foreach (var origamFile in transactionStore.Files)
@@ -286,7 +298,7 @@ namespace Origam.DA.Service
             {
                 DatabasePersistenceProvider.CheckInstanceRules(instance);
             }
-        }  
+        }
     }
 
     internal class TransactionStore

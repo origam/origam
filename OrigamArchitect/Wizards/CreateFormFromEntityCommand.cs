@@ -112,8 +112,6 @@ namespace OrigamArchitect
 					ServiceCommandUpdateScriptActivity activity = DeploymentHelper.CreateSystemRole(wiz.Role);
                     GeneratedModelElements.Add(activity);
 				}
-                (ServiceManager.Services.GetService<IPersistenceService>() 
-                    as FilePersistenceService)?.PersistIndex();
 			}
 		}
 	}

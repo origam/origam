@@ -112,6 +112,7 @@ namespace Origam.Schema.EntityModel
 		[Category("Entity Column"), DefaultValue(0)]
 		[EntityColumn("I02")]
 		[Description("Length of this field. Used only for String data type. It is used for specifying a length of a database field (in case when the field is database mapped) and a maximum length in the user interface (in case of TextBox).")]
+        [PositiveValueModelElementRuleAttribute()]
         [XmlAttribute("dataLength")]
         public int DataLength
 		{

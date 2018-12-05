@@ -24,6 +24,7 @@ using System.ComponentModel;
 using System.Collections;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.Workbench.Services;
 
 namespace Origam.Schema.EntityModel
 {
@@ -184,9 +185,15 @@ namespace Origam.Schema.EntityModel
 				this.DeleteChildItems = false;
 				this.PersistChildItems = false;
 				this.IsDeleted = true;
-				this.Persist();
 
-				converted.Persist();
+			    var persistenceProvider = ServiceManager.Services
+			        .GetService<IPersistenceService>()
+			        .SchemaProvider;
+
+			    persistenceProvider.BeginTransaction();
+			    this.Persist();
+			    converted.Persist();
+                persistenceProvider.EndTransaction();
 
 				return converted;
 			}

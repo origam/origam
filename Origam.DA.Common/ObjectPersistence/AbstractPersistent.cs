@@ -98,7 +98,7 @@ namespace Origam.DA.ObjectPersistence
 		    if (IsDeleted)
 		    {
 		        OnDeleted(EventArgs.Empty);
-		        PersistenceProvider.OnInstancePersisted(this);
+		        PersistenceProvider.OnTransactionEnded(this);
             }
 
 			if(isNew) OnChanged(EventArgs.Empty);

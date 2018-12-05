@@ -369,7 +369,7 @@ namespace Origam.Schema
 
 			if(ThrowEventOnPersist)
 			{
-				PersistenceProvider.OnInstancePersisted(this);
+				PersistenceProvider.OnTransactionEnded(this);
 			}
 		}
 

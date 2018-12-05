@@ -7,17 +7,11 @@ namespace Origam.DA.ObjectPersistence
 {
     public abstract class AbstractPersistenceProvider : IPersistenceProvider
     {
+        private readonly Queue<object> transactionEndEventQueue = new Queue<object>();
         public virtual ICompiledModel CompiledModel
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
         }
 
         public event EventHandler InstancePersisted;
@@ -33,6 +27,15 @@ namespace Origam.DA.ObjectPersistence
         public abstract void Dispose();
 
         public virtual void EndTransaction()
+        {
+            while (transactionEndEventQueue.Count > 0)
+            {
+                object sender = transactionEndEventQueue.Dequeue();
+                InstancePersisted?.Invoke(sender, EventArgs.Empty);
+            }
+        }
+
+        public virtual void EndTransactionDontSave()
         {
             
         }
@@ -61,9 +64,9 @@ namespace Origam.DA.ObjectPersistence
 
         public abstract List<T> RetrieveListByGroup<T>(Key primaryKey);
 
-        public void OnInstancePersisted(object sender)
+        public void OnTransactionEnded(object sender)
         {
-            InstancePersisted?.Invoke(sender, EventArgs.Empty);
+            transactionEndEventQueue.Enqueue(sender);
         }
 
         public abstract void Persist(IPersistent obj);
@@ -75,6 +78,5 @@ namespace Origam.DA.ObjectPersistence
         public abstract object RetrieveInstance(Type type, Key primaryKey, bool useCache);
 
         public abstract object RetrieveInstance(Type type, Key primaryKey, bool useCache, bool throwNotFoundException);
-
     }
 }

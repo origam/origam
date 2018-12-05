@@ -189,7 +189,7 @@ namespace Origam.Workbench.ServicesTests
         }
 
         public event EventHandler InstancePersisted;
-        public void OnInstancePersisted(object sender)
+        public void OnTransactionEnded(object sender)
         {
             throw new NotImplementedException();
         }
@@ -266,6 +266,11 @@ namespace Origam.Workbench.ServicesTests
         }
 
         public void EndTransaction()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void EndTransactionDontSave()
         {
             throw new NotImplementedException();
         }

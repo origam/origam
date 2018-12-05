@@ -31,6 +31,7 @@ using Origam.Workbench.Services;
 using Origam.Workbench.Pads;
 using Origam.Schema.DeploymentModel;
 using System.Collections.Generic;
+using Origam.DA.ObjectPersistence;
 using Origam.Gui.UI;
 using Origam.Schema.LookupModel.Wizards;
 using Origam.Schema.EntityModel.Wizards;
@@ -73,7 +74,8 @@ namespace OrigamArchitect.Commands
 			CreateMenuItem(list, "Create Lookup Field (incl. entity)...", new CreateFieldWithLookupEntityCommand(), null);
 			CreateMenuItem(list, "Create Screen...", new CreateFormFromEntityCommand(), null);
 			CreateMenuItem(list, "Create Screen Section...", new CreatePanelFromEntityCommand(), null);
-			CreateMenuItem(list, "Create Menu Item...", new CreateCompleteUICommand(), null);
+            CreateMenuItem(list, "Create Relationship with key...", new CreateFieldWithLookupRelationshipEntityCommand(), null);
+            CreateMenuItem(list, "Create Menu Item...", new CreateCompleteUICommand(), null);
 			CreateMenuItem(list, "Create Screen", new CreateFormFromPanelCommand(), null);
 			CreateMenuItem(list, "Create Menu Item...", new CreateMenuFromFormCommand(), null);
 			CreateMenuItem(list, "Create Menu Item...", new CreateMenuFromDataConstantCommand(), null);
@@ -109,8 +111,11 @@ namespace OrigamArchitect.Commands
 
 		private void MenuItemClick(object sender, EventArgs e)
 		{
-			try
+		    IPersistenceProvider persistenceProvider = 
+		        ServiceManager.Services.GetService<IPersistenceService>().SchemaProvider;
+		    try
 			{
+			    persistenceProvider.BeginTransaction();
                 AsMenuCommand cmd = sender as AsMenuCommand;
 				cmd.Command.Run();
 				// display newly created elements in the search results
@@ -144,10 +149,12 @@ namespace OrigamArchitect.Commands
                         deploymentService.ExecuteActivity(activity.PrimaryKey);
                     }
                 }
+			    persistenceProvider.EndTransaction();
             }
 			catch(Exception ex)
 			{
-				AsMessageBox.ShowError(WorkbenchSingleton.Workbench as Form, ex.Message, strings.GenericError_Title, ex);
+			    persistenceProvider.EndTransactionDontSave();
+                AsMessageBox.ShowError(WorkbenchSingleton.Workbench as Form, ex.Message, strings.GenericError_Title, ex);
 			}
 		}
 

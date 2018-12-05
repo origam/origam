@@ -55,7 +55,8 @@ namespace Origam.DA.Service
 
         private void AddOrRefreshHash(ExternalFilePath filePath)
         {
-            string hash = new FileInfo(filePath.Absolute).GetFileBase64Hash();
+            FileInfo fileInfo = new FileInfo(filePath.Absolute);
+            string hash = fileInfo.Exists ? fileInfo.GetFileBase64Hash() : "";
             ExternalFile externalFile = new ExternalFile(filePath,hash);  
             pathFileDict.AddOrReplace(filePath.Absolute, externalFile);
         }
