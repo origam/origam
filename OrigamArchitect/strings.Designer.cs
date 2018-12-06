@@ -1663,6 +1663,15 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show in Explorer.
+        /// </summary>
+        internal static string SourceXml_MenuItem {
+            get {
+                return ResourceManager.GetString("SourceXml_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SQL Console.
         /// </summary>
         internal static string SqlConsole_MenuItem {
