@@ -849,7 +849,10 @@ namespace OrigamArchitect
 	
 			CreateMenuItem(strings.FindDependencies_MenuItem, new ShowDependencies(), Images.Search, Keys.None, _schemaMenu);
 			CreateMenuItem(strings.FindReferences_MenuItem, new ShowUsage(), Images.Search, Keys.None, _schemaMenu);
-		}
+            _schemaMenu.SubItems.Add(CreateSeparator());
+            CreateMenuItem(strings.SourceXml_MenuItem, new ShowExplorerXml(), Images.Search, Keys.None, _schemaMenu);
+            CreateMenuItem(strings.XmlConsole, new ShowConsoleXml(), Images.Search, Keys.None, _schemaMenu);
+        }
 
 		private void CreateToolsMenu()
 		{

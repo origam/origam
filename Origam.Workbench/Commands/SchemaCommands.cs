@@ -31,6 +31,12 @@ using Origam.Workbench.Services;
 using Origam.Schema;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
+using System.IO;
+using System.Diagnostics;
+using Origam.Workbench.Editors;
+using System.Text;
+using Origam.DA.Service;
+using System.Xml;
 
 namespace Origam.Workbench.Commands
 {
@@ -709,4 +715,93 @@ namespace Origam.Workbench.Commands
 		}
 
 	}
+
+    /// <summary>
+    /// Show file in directory in explorer.
+    /// </summary>
+    public class ShowExplorerXml : AbstractMenuCommand
+    {
+        WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+
+        public override bool IsEnabled
+        {
+            get
+            {
+                return _schema.ActiveSchemaItem != null;
+            }
+            set
+            {
+                throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            }
+        }
+
+        public override void Run()
+        {
+            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+            string filePath = Path.Combine(settings.ModelSourceControlLocation,
+                _schema.ActiveSchemaItem.RootItem.RelativeFilePath);
+            if (File.Exists(filePath))
+            {
+                Process.Start("explorer.exe", "/select," + filePath);
+            }
+        }
+
+        public override void Dispose()
+        {
+            _schema = null;
+
+            base.Dispose();
+        }
+
+    }
+
+    /// <summary>
+    /// Show file in directory in explorer.
+    /// </summary>
+    public class ShowConsoleXml : AbstractMenuCommand
+    {
+        WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+
+        public override bool IsEnabled
+        {
+            get
+            {
+                return _schema.ActiveSchemaItem != null;
+            }
+            set
+            {
+                throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            }
+        }
+
+        public override void Run()
+        {
+            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+            string filePath = Path.Combine(settings.ModelSourceControlLocation,
+                _schema.ActiveSchemaItem.RootItem.RelativeFilePath);
+            if (File.Exists(filePath))
+            {
+                XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
+                {
+                    Indent = true,
+                    NewLineOnAttributes = true
+                };
+                XmlDocument xml = new XmlDocument();
+                xml.Load(filePath);
+                XmlViewer viewer = new XmlViewer
+                {
+                    Content = xml.ToBeautifulString(xmlWriterSettings)
+                };
+                WorkbenchSingleton.Workbench.ShowView(viewer);
+            }
+        }
+
+        public override void Dispose()
+        {
+            _schema = null;
+
+            base.Dispose();
+        }
+
+    }
 }
