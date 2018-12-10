@@ -7,7 +7,7 @@
 	<xsl:template match="origam:page">
 		<html>
 			<head>
-				<http://schema.advantages.cz/AsapFunctions><xsl:value-of select="@http://schema.advantages.cz/AsapFunctions"/></http://schema.advantages.cz/AsapFunctions>
+				<title><xsl:value-of select="@title"/></title>
 			</head>
 			<body>
 				<xsl:apply-templates/>
@@ -31,7 +31,7 @@
 
 	<xsl:template match="origam:gridColumn" mode="header">
 		<th>
-			<xsl:value-of select="@http://schema.advantages.cz/AsapFunctions"/>
+			<xsl:value-of select="@title"/>
 		</th>
 	</xsl:template>
 
@@ -67,7 +67,7 @@
 	<xsl:template match="origam:formField">
 		<tr>
 			<th align="left">
-				<xsl:value-of select="@http://schema.advantages.cz/AsapFunctions"/>
+				<xsl:value-of select="@title"/>
 			</th>
 			<td>
 				<xsl:call-template name="renderField"/>
