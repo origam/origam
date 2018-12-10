@@ -36,6 +36,7 @@ using System.Diagnostics;
 using Origam.Workbench.Editors;
 using System.Text;
 using Origam.DA.Service;
+using System.Xml;
 
 namespace Origam.Workbench.Commands
 {
@@ -780,18 +781,17 @@ namespace Origam.Workbench.Commands
                 _schema.ActiveSchemaItem.RootItem.RelativeFilePath);
             if (File.Exists(filePath))
             {
-                StringBuilder xmltext = new StringBuilder();
-                using (StreamReader sr = File.OpenText(filePath))
+                XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
                 {
-                    string s = "";
-                    while ((s = sr.ReadLine()) != null)
-                    {
-                        xmltext.Append(s);
-                        xmltext.Append("\r\n");
-                    }
-                }
-                XmlViewer viewer = new XmlViewer();
-                viewer.Content = xmltext.ToString();
+                    Indent = true,
+                    NewLineOnAttributes = true
+                };
+                XmlDocument xml = new XmlDocument();
+                xml.Load(filePath);
+                XmlViewer viewer = new XmlViewer
+                {
+                    Content = xml.ToBeautifulString(xmlWriterSettings)
+                };
                 WorkbenchSingleton.Workbench.ShowView(viewer);
             }
         }

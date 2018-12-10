@@ -31,41 +31,17 @@ namespace Origam.Workbench
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(XmlViewer));
-            this.toolStrip1 = new Origam.Gui.UI.LabeledToolStrip();
-            this.btnExecuteSql = new Origam.Gui.UI.BigToolStripButton();
             this.editor = new Origam.Windows.Editor.XmlEditor();
-            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // toolStrip1
-            // 
-            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnExecuteSql});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.MinimumSize = new System.Drawing.Size(0, 95);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(431, 95);
-            this.toolStrip1.TabIndex = 1;
-            this.toolStrip1.Text = "XML Console";
-            // 
-            // btnExecuteSql
-            // 
-            this.btnExecuteSql.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.btnExecuteSql.Margin = new System.Windows.Forms.Padding(5, 5, 5, 20);
-            this.btnExecuteSql.Name = "btnExecuteSql";
-            this.btnExecuteSql.Size = new System.Drawing.Size(23, 70);
-            this.btnExecuteSql.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnExecuteSql.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             // 
             // editor
             // 
             this.editor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.editor.IsReadOnly = false;
-            this.editor.Location = new System.Drawing.Point(0, 95);
+            this.editor.Location = new System.Drawing.Point(0, 0);
             this.editor.Name = "editor";
             this.editor.ResultSchema = null;
-            this.editor.Size = new System.Drawing.Size(431, 257);
+            this.editor.Size = new System.Drawing.Size(431, 352);
             this.editor.TabIndex = 0;
             // 
             // XmlViewer
@@ -74,22 +50,16 @@ namespace Origam.Workbench
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(431, 352);
             this.Controls.Add(this.editor);
-            this.Controls.Add(this.toolStrip1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "XmlViewer";
             this.Text = "Xml Console";
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
         private Origam.Windows.Editor.XmlEditor editor;
-        private LabeledToolStrip toolStrip1;
-        private BigToolStripButton btnExecuteSql;
     }
 }
