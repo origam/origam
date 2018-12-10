@@ -504,4 +504,7 @@
   <data name="SourceXml_MenuItem" xml:space="preserve">
     <value>Otevři v Exploreru</value>
   </data>
+  <data name="XmlConsole" xml:space="preserve">
+    <value>Xml Entity </value>
+  </data>
 </root>

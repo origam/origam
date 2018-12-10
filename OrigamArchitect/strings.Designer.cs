@@ -1850,5 +1850,14 @@ namespace OrigamArchitect {
                 return ResourceManager.GetString("WorkQueues_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Xml Entity.
+        /// </summary>
+        internal static string XmlConsole {
+            get {
+                return ResourceManager.GetString("XmlConsole", resourceCulture);
+            }
+        }
     }
 }
