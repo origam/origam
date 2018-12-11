@@ -71,7 +71,7 @@ namespace Origam.DA.Service
             transactionStore.AddOrReplace(origamFile);
             if (!inTransaction)
             {
-                EndTransaction();
+                ProcessTransactionStore();
             }
             instance.IsPersisted = true;
         }
@@ -114,14 +114,20 @@ namespace Origam.DA.Service
         public void EndTransaction()
         {
             if (!inTransaction) throw new Exception("Not in transaction! No transaction  to end.");
+            ProcessTransactionStore();
+            inTransaction = false;
+        }
+
+        private void ProcessTransactionStore()
+        {
             foreach (OrigamFile origamFile in transactionStore.Files)
             {
                 origamFile.FinalizeSave();
                 origamFile.DeferredSaveDocument = null;
             }
+
             transactionStore.Clear();
             index.Persist(trackerLoaderFactory);
-            inTransaction = false;
         }
 
         public void EndTransactionDontSave()
