@@ -11,7 +11,7 @@ export class GridToolbar extends React.Component<any> {
     const {
       setActiveView
     } = gridPaneBacking.gridInteractionActions as IGridInteractionActions;
-    const { dataLoadingStrategyActions } = gridPaneBacking as IGridPanelBacking;
+    const { dataLoadingStrategyActions, dataTableSelectors } = gridPaneBacking as IGridPanelBacking;
     const gridToolbarView = gridPaneBacking.gridToolbarView as IGridToolbarView;
     return (
       <div
@@ -70,7 +70,7 @@ export class GridToolbar extends React.Component<any> {
           </button>
         </div>
         <div className="toolbar-section">
-          <span className="oui-toolbar-text">1/6</span>
+          <span className="oui-toolbar-text">{dataTableSelectors.recordCount}</span>
         </div>
         <div className="toolbar-section">
           <button

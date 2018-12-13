@@ -4,7 +4,6 @@ import * as ReactDOM from 'react-dom';
 import App from './App';
 // import App from './App-ScreendefXml';
 import './index.css';
-import "./App.scss";
 import "./styles/screenComponents.scss";
 
 import { configure } from 'mobx';
@@ -16,6 +15,7 @@ import "./menuInterpreter/interpreter";
 
 configure({
   computedRequiresReaction: true,
+  enforceActions: true,
   reactionScheduler(fn) {
     fn();
     reactionRuntimeInfo.clear();
