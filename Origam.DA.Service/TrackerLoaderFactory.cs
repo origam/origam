@@ -12,9 +12,12 @@ namespace Origam.DA.Service
         private OrigamXmlLoader xmlLoader;
         private BinFileLoader binLoader;
         
-        public TrackerLoaderFactory(DirectoryInfo topDirectory,
+        public TrackerLoaderFactory(
+            DirectoryInfo topDirectory,
             ObjectFileDataFactory objectFileDataFactory,
-            OrigamFileFactory origamFileFactory,XmlFileDataFactory xmlFileDataFactory,  FileInfo pathToIndexFile)
+            OrigamFileFactory origamFileFactory,
+            XmlFileDataFactory xmlFileDataFactory,
+            FileInfo pathToIndexFile)
         {
             this.topDirectory = topDirectory;
             this.objectFileDataFactory = objectFileDataFactory;
@@ -28,7 +31,7 @@ namespace Origam.DA.Service
             get
             {
                 return xmlLoader ?? (xmlLoader = new OrigamXmlLoader(
-                           objectFileDataFactory,topDirectory, xmlFileDataFactory));
+                           objectFileDataFactory, topDirectory, xmlFileDataFactory));
             }
         }
 
