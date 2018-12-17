@@ -52,12 +52,12 @@ namespace Origam.DA.Service
             }
         }
 
-        public FilePersistenceIndex( OrigamPathFactory pathFactory) 
+        public FilePersistenceIndex(OrigamPathFactory pathFactory) 
             : this(new ItemTracker(pathFactory), new HashSet<Guid>())
         {
         }
 
-        protected FilePersistenceIndex( ItemTracker itemTracker, HashSet<Guid> loadedPackages)
+        protected FilePersistenceIndex(ItemTracker itemTracker, HashSet<Guid> loadedPackages)
         {
             LoadedPackages = loadedPackages;
             this.itemTracker = itemTracker;
