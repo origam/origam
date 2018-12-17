@@ -260,11 +260,11 @@ namespace Origam.DA.Service
         public ICollection<OrigamFile> Files => pathDict.Values;
         public int Count => hashFileDict.Count;
        
-        public void AddOrReplace(OrigamFile newOrFile)
+        public void AddOrReplace(OrigamFile newOrigamFile)
         {
-            if (newOrFile.FileHash == null) return;
-            pathDict[newOrFile.Path.Relative] = newOrFile;
-            hashFileDict[newOrFile.Path.Absolute.ToLower()] =  newOrFile.FileHash;
+            if (newOrigamFile.FileHash == null) return;
+            pathDict[newOrigamFile.Path.Relative] = newOrigamFile;
+            hashFileDict[newOrigamFile.Path.Absolute.ToLower()] =  newOrigamFile.FileHash;
             System.Diagnostics.Debug.Assert(pathDict.Count == hashFileDict.Count);
         }
 
