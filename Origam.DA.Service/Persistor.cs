@@ -228,8 +228,8 @@ namespace Origam.DA.Service
             catch (Exception e)
             {
                 throw new Exception(
-                    "There was an error during renaming. Some directories and groups were not renamed and model" +
-                    "is in inconsistent state as a result of that. Please rename the already processed" +
+                    "There was an error during renaming. Some directories and groups were not renamed and model " +
+                    "is in inconsistent state as a result of that. Please rename the already processed " +
                     "directories and groups back as a rollback of this operation is not implemented yet." +
                     "Original error: " + e.Message, e);
             }
