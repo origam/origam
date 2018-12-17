@@ -1749,8 +1749,8 @@ namespace Origam.Schema
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorCloneNotPersisted"));
 			}
 
-			AbstractSchemaItem newItem = this.PersistenceProvider.RetrieveInstance(this.GetType(), this.PrimaryKey, false) as AbstractSchemaItem;
-
+			AbstractSchemaItem diskItem = this.PersistenceProvider.RetrieveInstance(this.GetType(), this.PrimaryKey, false) as AbstractSchemaItem;
+            AbstractSchemaItem newItem = (AbstractSchemaItem)diskItem.MemberwiseClone();
 			// we preserve current primary key, so references can be updated later
 			newItem.OldPrimaryKey = new ModelElementKey((Guid)this.PrimaryKey["Id"]);
 
