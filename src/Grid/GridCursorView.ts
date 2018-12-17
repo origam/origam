@@ -41,7 +41,7 @@ export class GridCursorView implements IGridCursorView {
     if (!selectedRowId) {
       return 0;
     }
-    const rowHeight = this.gridSetup.getRowHeight(
+    const rowHeight = this.gridSetup.getCellHeight(
       this.gridTopology.getRowIndexById(selectedRowId)
     );
     return rowHeight;
@@ -53,7 +53,7 @@ export class GridCursorView implements IGridCursorView {
     if (!selectedColumnId) {
       return 0;
     }
-    const columnWidth = this.gridSetup.getColumnWidth(
+    const columnWidth = this.gridSetup.getCellWidth(
       this.gridTopology.getColumnIndexById(selectedColumnId)
     );
     return columnWidth;
@@ -65,7 +65,7 @@ export class GridCursorView implements IGridCursorView {
     if (!selectedRowId) {
       return 0;
     }
-    const rowTop = this.gridSetup.getRowTop(
+    const rowTop = this.gridSetup.getCellTop(
       this.gridTopology.getRowIndexById(selectedRowId)
     );
     return rowTop;
@@ -77,7 +77,7 @@ export class GridCursorView implements IGridCursorView {
     if (!selectedColumnId) {
       return 0;
     }
-    const columnLeft = this.gridSetup.getColumnLeft(
+    const columnLeft = this.gridSetup.getCellLeft(
       this.gridTopology.getColumnIndexById(selectedColumnId)
     );
     return columnLeft;

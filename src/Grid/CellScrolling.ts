@@ -44,23 +44,23 @@ export class CellScrolling {
   }
 
   private getColumnLeft(columnId: string) {
-    return this.gridSetup.getColumnLeft(
+    return this.gridSetup.getCellLeft(
       this.gridTopology.getColumnIndexById(columnId)
     );
   }
 
   private getColumnRight(columnId: string) {
-    return this.gridSetup.getColumnRight(
+    return this.gridSetup.getCellRight(
       this.gridTopology.getColumnIndexById(columnId)
     );
   }
 
   private getRowTop(rowId: string) {
-    return this.gridSetup.getRowTop(this.gridTopology.getRowIndexById(rowId));
+    return this.gridSetup.getCellTop(this.gridTopology.getRowIndexById(rowId));
   }
 
   private getRowBottom(rowId: string) {
-    return this.gridSetup.getRowBottom(
+    return this.gridSetup.getCellBottom(
       this.gridTopology.getRowIndexById(rowId)
     );
   }

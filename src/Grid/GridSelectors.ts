@@ -50,27 +50,27 @@ export class GridSelectors implements IGridSelectors {
   }
 
   public getRowTop(rowIndex: number): number {
-    return this.setup.getRowTop(rowIndex);
+    return this.setup.getCellTop(rowIndex);
   }
 
   public getRowBottom(rowIndex: number): number {
-    return this.setup.getRowBottom(rowIndex);
+    return this.setup.getCellBottom(rowIndex);
   }
 
   public getRowHeight(rowIndex: number): number {
-    return this.setup.getRowHeight(rowIndex);
+    return this.setup.getCellHeight(rowIndex);
   }
 
   public getColumnLeft(columnIndex: number): number {
-    return this.setup.getColumnLeft(columnIndex);
+    return this.setup.getCellLeft(columnIndex);
   }
 
   public getColumnRight(columIndex: number): number {
-    return this.setup.getColumnRight(columIndex);
+    return this.setup.getCellRight(columIndex);
   }
 
   public getColumnWidth(columnIndex: number): number {
-    return this.setup.getColumnWidth(columnIndex);
+    return this.setup.getCellWidth(columnIndex);
   }
 
   public getColumnId(columnIndex: number): IFieldId | undefined {

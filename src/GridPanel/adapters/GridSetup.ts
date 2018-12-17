@@ -37,7 +37,7 @@ export class GridSetup implements IGridSetup {
   }
 
   public getCellTop(cellIndex: number): number {
-    return cellIndex * this.getRowHeight(cellIndex);
+    return cellIndex * this.getCellHeight(cellIndex);
   }
 
   public getCellLeft(cellIndex: number): number {
@@ -49,11 +49,25 @@ export class GridSetup implements IGridSetup {
   }
 
   public getCellBottom(cellIndex: number): number {
-    return this.getCellTop(cellIndex) + this.getRowHeight(cellIndex);
+    return this.getCellTop(cellIndex) + this.getCellHeight(cellIndex);
   }
 
   public getCellRight(cellIndex: number): number {
-    return this.getCellLeft(cellIndex) + this.getColumnWidth(cellIndex);
+    return this.getCellLeft(cellIndex) + this.getCellWidth(cellIndex);
+  }
+
+  public getCellWidth(columnIndex: number): number {
+    const field = this.dataTableSelectors.getFieldByFieldIndex(columnIndex);
+    if(field) {
+      const width = this.gridInteractionSelectors.getColumnWidth(field.id);
+      return width;
+    } else {
+      return 100;
+    }
+  }
+
+  public getCellHeight(rowIndex: number) {
+    return 20;
   }
 
   public getCellValue(
@@ -74,35 +88,7 @@ export class GridSetup implements IGridSetup {
     return field ? field.label : `Field ${field}`;
   }
 
-  public getRowTop(rowIndex: number): number {
-    return this.getCellTop(rowIndex);
-  }
 
-  public getRowBottom(rowIndex: number): number {
-    return this.getCellBottom(rowIndex);
-  }
-
-  public getRowHeight(rowIndex: number): number {
-    return 20;
-  }
-
-  public getColumnLeft(columnIndex: number): number {
-    return this.getCellLeft(columnIndex);
-  }
-
-  public getColumnRight(columIndex: number): number {
-    return this.getCellRight(columIndex);
-  }
-
-  public getColumnWidth(columnIndex: number): number {
-    const field = this.dataTableSelectors.getFieldByFieldIndex(columnIndex);
-    if(field) {
-      const width = this.gridInteractionSelectors.getColumnWidth(field.id);
-      return width;
-    } else {
-      return 100;
-    }
-  }
 
   public onRowsRendered(rowIndexStart: number, rowIndexEnd: number): void {
     return;

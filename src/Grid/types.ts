@@ -209,14 +209,10 @@ export interface IGridSetup {
   getCellLeft(cellIndex: number): number;
   getCellBottom(cellIndex: number): number;
   getCellRight(cellIndex: number): number;
+  getCellWidth(cellIndex: number): number;
+  getCellHeight(cellIndex: number): number;
   getCellValue(rowIndex: number, columnIndex: number): ICellValue | undefined;
   getColumnLabel(columnIndex: number): string;
-  getRowTop(rowIndex: number): number;
-  getRowBottom(rowIndex: number): number;
-  getRowHeight(rowIndex: number): number;
-  getColumnLeft(columnIndex: number): number;
-  getColumnRight(columIndex: number): number;
-  getColumnWidth(columnIndex: number): number;
   onRowsRendered(rowIndexStart: number, rowIndexEnd: number): void;
 }
 
