@@ -79,9 +79,9 @@ namespace Origam.Schema.GuiModel
             {
                 dependencies.Add(this.Rule);
             }
-            if (this.Form != null)
+            if (this.Screen != null)
             {
-                dependencies.Add(this.Form);
+                dependencies.Add(this.Screen);
             }
             if (this.Panel != null)
             {
@@ -116,15 +116,15 @@ namespace Origam.Schema.GuiModel
 		public string Roles { get; set; } = "";
 
 		[EntityColumn("G01")]  
-		public Guid FormId;
+		public Guid ScreenId;
 
 		[Category("Condition")]
 		[TypeConverter(typeof(FormControlSetConverter))]
-        [XmlReference("screen", "FormId")]
-		public FormControlSet Form
+        [XmlReference("screen", "ScreenId")]
+		public FormControlSet Screen
 		{
-			get => (FormControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.FormId));
-			set => this.FormId = value?.Id ?? Guid.Empty;
+			get => (FormControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ScreenId));
+			set => this.ScreenId = value?.Id ?? Guid.Empty;
 		}
 
 		[EntityColumn("G15")]  
