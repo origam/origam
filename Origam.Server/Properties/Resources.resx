@@ -315,4 +315,7 @@
   <data name="SearchError" xml:space="preserve">
     <value>Search Error</value>
   </data>
+  <data name="DataSetNull" xml:space="preserve">
+    <value>Workflow doesn't have a return value context store.</value>
+  </data>
 </root>

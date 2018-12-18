@@ -106,6 +106,15 @@ namespace Origam.Server.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Workflow doesn&apos;t have a return value context store..
+        /// </summary>
+        internal static string DataSetNull {
+            get {
+                return ResourceManager.GetString("DataSetNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Record has not been changed yet..
         /// </summary>
         internal static string DefaultTooltipNoChange {
