@@ -132,7 +132,7 @@ namespace Origam.Schema.GuiModel
 
 		[Category("Condition")]
 		[TypeConverter(typeof(PanelControlSetConverter))]
-        [XmlReference("screenSection", "PanelId")]
+        [XmlReference("screenSection", "ScreenSectionId")]
         public PanelControlSet ScreenSection
 		{
 			get => (PanelControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ScreenSectionId));
