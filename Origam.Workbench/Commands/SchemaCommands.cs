@@ -586,12 +586,21 @@ namespace Origam.Workbench.Commands
 						break;
 					}
 				}
-                ServiceManager.Services.GetService<IPersistenceService>()
-                    .SchemaProvider.BeginTransaction();
+                IPersistenceProvider persistenceProvider = ServiceManager.Services
+                    .GetService<IPersistenceService>().SchemaProvider;
+                persistenceProvider.BeginTransaction();
 				// then delete from the model
-				_schema.ActiveNode.Delete();
-                ServiceManager.Services.GetService<IPersistenceService>()
-                    .SchemaProvider.EndTransaction();
+                try
+                {
+                    _schema.ActiveNode.Delete();
+                }
+                catch(Exception ex)
+                {
+                    // it might fail because of references
+                    persistenceProvider.EndTransactionDontSave();
+                    throw;
+                }
+                persistenceProvider.EndTransaction();
             }
 		}
 
