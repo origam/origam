@@ -93,27 +93,20 @@ namespace Origam.Server.Pages
             {
                 data = core.DataService.LoadData(xsltPage.DataStructureId, xsltPage.DataStructureMethodId, Guid.Empty, xsltPage.DataStructureSortSetId, null, qparams);
 
-                if (data == null)
+                if (request.HttpMethod == "DELETE")
                 {
-                   response.Write(Server.Properties.Resources.DataSetNull);
-                   return;
+                    HandleDELETE(xsltPage, data, transformParams, ruleEngine);
+                    return;
                 }
-                else
+
+                xmlData = new XmlDataDocument(data);
+
+                if (request.HttpMethod == "PUT")
                 {
-                    if (request.HttpMethod == "DELETE")
-                    {
-                        HandleDELETE(xsltPage, data, transformParams, ruleEngine);
-                        return;
-                    }
-
-                    xmlData = new XmlDataDocument(data);
-
-                    if (request.HttpMethod == "PUT")
-                    {
-                        HandlePUT(parameters, xsltPage, (XmlDataDocument)xmlData, transformParams, ruleEngine);
-                        return;
-                    }
+                    HandlePUT(parameters, xsltPage, (XmlDataDocument)xmlData, transformParams, ruleEngine);
+                    return;
                 }
+                
             }
 
             bool xpath = xsltPage.ResultXPath != null && xsltPage.ResultXPath != String.Empty;
