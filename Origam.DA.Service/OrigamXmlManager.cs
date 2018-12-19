@@ -13,7 +13,7 @@ namespace Origam.DA.Service
 {
     internal class OrigamXmlManager
     {
-        private readonly ExternalFileManger externalFileManger;
+        private readonly ExternalFileManager externalFileManger;
         private readonly OrigamPathFactory origamPathFactory;
         public XmlDocument OpenDocument { get; set; }
         private readonly object Lock = new object();
@@ -42,7 +42,7 @@ namespace Origam.DA.Service
         }
 
         public OrigamXmlManager(OrigamPath path, ParentFolders parentFolderIds,
-            ExternalFileManger externalFileManger, OrigamPathFactory origamPathFactory)
+            ExternalFileManager externalFileManger, OrigamPathFactory origamPathFactory)
         {
             Path = path;
             ParentFolderIds = parentFolderIds;

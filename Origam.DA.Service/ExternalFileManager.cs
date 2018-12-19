@@ -11,7 +11,7 @@ using Origam.Extensions;
 
 namespace Origam.DA.Service
 {
-    internal class ExternalFileManger
+    internal class ExternalFileManager
     {
         private readonly OrigamFile origamFile;
         private readonly OrigamPathFactory pathFactory;
@@ -21,7 +21,7 @@ namespace Origam.DA.Service
         private readonly Queue<IDeferredTask> deferredTasks = 
             new Queue<IDeferredTask>();
 
-        public ExternalFileManger(OrigamFile origamFile, OrigamPathFactory pathFactory,
+        public ExternalFileManager(OrigamFile origamFile, OrigamPathFactory pathFactory,
                     FileEventQueue fileEventQueue)
         {
             this.pathFactory = pathFactory;

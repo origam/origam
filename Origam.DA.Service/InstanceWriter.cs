@@ -12,11 +12,11 @@ namespace Origam.DA.Service
 {
     internal class InstanceWriter
     {
-        private readonly ExternalFileManger externalFileManger;
+        private readonly ExternalFileManager externalFileManger;
         private readonly XmlDocument xmlDocument;
 
 
-        public InstanceWriter(ExternalFileManger externalFileManger, XmlDocument xmlDocument)
+        public InstanceWriter(ExternalFileManager externalFileManger, XmlDocument xmlDocument)
         {
             this.externalFileManger = externalFileManger;
             this.xmlDocument = xmlDocument;

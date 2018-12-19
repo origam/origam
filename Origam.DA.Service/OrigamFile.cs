@@ -62,7 +62,7 @@ namespace Origam.DA.Service
                 $"http://schemas.origam.com/{VersionProvider.CurrentModelMeta}/model-elementgroup");
 
         private readonly OrigamFileManager origamFileManager;
-        private readonly ExternalFileManger externalFileManger;
+        private readonly ExternalFileManager externalFileManger;
         private readonly OrigamXmlManager origamXmlManager;
         private OrigamPath path;
  
@@ -108,7 +108,7 @@ namespace Origam.DA.Service
             origamFileManager.HashChanged +=
                 (sender, args) => FileHash = args.Hash;
             this.path = path;
-            externalFileManger = new ExternalFileManger(this, origamPathFactory, fileEventQueue);
+            externalFileManger = new ExternalFileManager(this, origamPathFactory, fileEventQueue);
             if (isAFullyWrittenFile)
             {
                 InitFileHash();

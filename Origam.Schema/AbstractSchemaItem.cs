@@ -1752,8 +1752,8 @@ namespace Origam.Schema
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorCloneNotPersisted"));
 			}
 
-			AbstractSchemaItem newItem = this.PersistenceProvider.RetrieveInstance(this.GetType(), this.PrimaryKey, false) as AbstractSchemaItem;
-            //AbstractSchemaItem newItem = (AbstractSchemaItem)diskItem.MemberwiseClone();
+			AbstractSchemaItem diskItem = this.PersistenceProvider.RetrieveInstance(this.GetType(), this.PrimaryKey, false) as AbstractSchemaItem;
+            AbstractSchemaItem newItem = (AbstractSchemaItem)diskItem.MemberwiseClone();
 			// we preserve current primary key, so references can be updated later
 			newItem.OldPrimaryKey = new ModelElementKey((Guid)this.PrimaryKey["Id"]);
 
@@ -1762,10 +1762,10 @@ namespace Origam.Schema
 				// and we create a new unique primary key
 				newItem.PrimaryKey = new ModelElementKey(Guid.NewGuid());
 			}
-		    
-            // in case that for any reason child items were populated already 
-            // in the item's construction, we clear them
-            newItem.ChildItems.DeleteItemsOnClear = false;
+
+			// in case that for any reason child items were populated already 
+			// in the item's construction, we clear them
+			newItem.ChildItems.DeleteItemsOnClear = false;
 			newItem.ChildItems.Clear();
 			newItem.ChildItems.DeleteItemsOnClear = true;
 			
