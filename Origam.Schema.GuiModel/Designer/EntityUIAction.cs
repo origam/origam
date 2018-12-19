@@ -83,9 +83,9 @@ namespace Origam.Schema.GuiModel
             {
                 dependencies.Add(this.Screen);
             }
-            if (this.Panel != null)
+            if (this.ScreenSection != null)
             {
-                dependencies.Add(this.Panel);
+                dependencies.Add(this.ScreenSection);
             }
             if (this.ButtonIcon != null)
             {
@@ -128,15 +128,15 @@ namespace Origam.Schema.GuiModel
 		}
 
 		[EntityColumn("G15")]  
-		public Guid PanelId;
+		public Guid ScreenSectionId;
 
 		[Category("Condition")]
 		[TypeConverter(typeof(PanelControlSetConverter))]
         [XmlReference("screenSection", "PanelId")]
-        public PanelControlSet Panel
+        public PanelControlSet ScreenSection
 		{
-			get => (PanelControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.PanelId));
-			set => this.PanelId = value?.Id ?? Guid.Empty;
+			get => (PanelControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ScreenSectionId));
+			set => this.ScreenSectionId = value?.Id ?? Guid.Empty;
 		}
 
 		[EntityColumn("SS01")]
