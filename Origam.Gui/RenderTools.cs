@@ -47,7 +47,7 @@ namespace Origam.Gui
 			{
 				return ShouldRender(action.Features, action.Roles) 
 					&& (action.ScreenId.Equals(Guid.Empty) || action.ScreenId.Equals(formId))
-					&& (action.PanelId.Equals(Guid.Empty) || action.PanelId.Equals(panelId));
+					&& (action.ScreenSectionId.Equals(Guid.Empty) || action.ScreenSectionId.Equals(panelId));
 			}
 		}
 
