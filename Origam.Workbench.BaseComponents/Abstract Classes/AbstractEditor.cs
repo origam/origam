@@ -26,6 +26,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using Origam.Extensions;
+using Origam.Gui;
 using Origam.Gui.UI;
 using Origam.Schema;
 using Origam.Workbench.Services;
@@ -587,11 +588,9 @@ namespace Origam.Workbench.Editors
 			var dropDownToolStripItems = items
 				.Skip(3)
 				.ToArray();
-			var dropDownButton = new ToolStripDropDownButton(
-				"",
-				null,
-				dropDownToolStripItems);
-			ToolStrip toolStrip = new LabeledToolStrip();
+		    var dropDownButton = new BigArrowToolStripDropDownButton();
+		    dropDownButton.DropDownItems.AddRange(dropDownToolStripItems);
+            ToolStrip toolStrip = new LabeledToolStrip();
 			toolStrip.Text = toolStripName;
 			toolStrip.Items.AddRange(toolStripButtons);
 			if (dropDownButton.HasDropDownItems)
