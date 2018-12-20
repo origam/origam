@@ -31,7 +31,7 @@ namespace Origam.Workbench
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SqlViewer));
-            this.toolStrip1 = new Origam.Gui.UI.LabeledToolStrip();
+            this.toolStrip1 = new Origam.Gui.UI.LabeledToolStrip(this);
             this.btnExecuteSql = new Origam.Gui.UI.BigToolStripButton();
             this.editor = new Origam.Windows.Editor.SqlEditor();
             this.toolStrip1.SuspendLayout();

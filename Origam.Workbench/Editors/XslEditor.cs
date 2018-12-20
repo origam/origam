@@ -100,7 +100,7 @@ namespace Origam.Workbench.Editors
 		public event EventHandler ToolStripsLoaded;
 		public event EventHandler AllToolStripsRemoved;
 		
-		public IEnumerable<ToolStrip> ToolStrips => new List<ToolStrip>{toolStrip}; 
+		public List<ToolStrip> GetToolStrips(int maxWidth) => new List<ToolStrip>{toolStrip}; 
 		
 		public XslEditor()
 		{
@@ -132,7 +132,7 @@ namespace Origam.Workbench.Editors
 
 		private void InitToolStrip()
 		{
-			toolStrip = new LabeledToolStrip();
+			toolStrip = new LabeledToolStrip(this);
 			toolStrip.Text = "Xsl Transformation";
 
 			var transformToolStripButton = new BigToolStripButton();

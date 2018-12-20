@@ -27,7 +27,7 @@ namespace Origam.Gui.UI
 {
     public interface IToolStripContainer
     {
-        IEnumerable<ToolStrip> ToolStrips { get;}
+        List<ToolStrip> GetToolStrips(int maxWidth=-1);
         event EventHandler ToolStripsLoaded;
         event EventHandler AllToolStripsRemoved;
     }

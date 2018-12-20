@@ -61,12 +61,9 @@ namespace Origam.Workbench
             }
         }
 
-        public IEnumerable<ToolStrip> ToolStrips
+        public List<ToolStrip> GetToolStrips(int maxWidth = -1)
         {
-            get
-            {
-                return new List<ToolStrip> { toolStrip1 };
-            }
+            return new List<ToolStrip> { toolStrip1 };
         }
     }
 }
