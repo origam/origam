@@ -50,8 +50,9 @@ namespace Origam.Workbench.Editors
         ToolStripMenuItem _saveCmd = new ToolStripMenuItem("Save", Images.Save);
 		private ISubmenuBuilder _actionsBuilder = null;
         private ISubmenuBuilder _newElementsBuilder = null;
-		private List<ToolStrip> toolStrips = null;
-		private bool showMenusInAppToolStrip = false;
+
+	    private List<ToolStrip> toolStrips;
+	    private bool showMenusInAppToolStrip = false;
 
         public override object Content { get; set; }
 
@@ -211,10 +212,9 @@ namespace Origam.Workbench.Editors
 
 		private void LoadSettings()
 		{
-			string menuOptStr =
-				System.Configuration.ConfigurationManager
-					.AppSettings["ShowEditorMenusInAppToolStrip"];
-			bool.TryParse(menuOptStr, out showMenusInAppToolStrip);
+		    showMenusInAppToolStrip = ConfigurationManager
+		        .GetActiveConfiguration()
+		        .ShowEditorMenusInAppToolStrip;
 		}
 
 		public override string TitleName
