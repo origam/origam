@@ -9,8 +9,8 @@ namespace Origam.DA.ObjectPersistence
     }
     /// <summary>
     /// This class holds the information whether or not the property it represents was set to
-    /// null by the user. And combines it with lazy loading
-    /// If it was set to null by the user the Get method will return null, if not and the
+    /// null by the user and combines it with lazy loading.
+    /// If it was set to null by the user the Get method will return null, if not the
     /// actual value is retrieved.
     /// </summary>
     /// <typeparam name="T"></typeparam>
