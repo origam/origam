@@ -132,11 +132,11 @@ namespace Origam.DA.Service
     
     class InstanceCreator: AbstractInstanceCreator
     {
-        private readonly ExternalFileManger externalFileManger;
+        private readonly ExternalFileManager externalFileManger;
         private readonly XmlReader reader;
 
         public InstanceCreator( XmlReader reader, ParentFolders parentFolderIds,
-            ExternalFileManger externalFileManger) : base(parentFolderIds)
+            ExternalFileManager externalFileManger) : base(parentFolderIds)
         {
             this.externalFileManger = externalFileManger;
             this.reader = reader;

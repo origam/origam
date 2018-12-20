@@ -75,7 +75,7 @@ namespace Origam.DA.Service
             TopDirectory = topDirectory;
             this.index = index;
             this.fileEventQueue = fileEventQueue;
-            persistor= new Persistor(
+            persistor = new Persistor(
                 this,index,origamFileFactory,origamFileManager, trackerLoaderFactory);
             fileEventQueue.Start();
         }
