@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Collections;
 
 namespace Origam
@@ -28,11 +29,21 @@ namespace Origam
 	/// </summary>
 	public class Key : Hashtable
 	{
-		public Key()
+
+        public Key()
 		{
 		}
 
-		public override string ToString()
+        public Key(string id): this(new Guid(id))
+        {
+        }
+
+	    public Key(Guid id)
+	    {
+	        this["Id"] = id;
+	    }
+
+        public override string ToString()
 		{
 			string keyString = "";
 
