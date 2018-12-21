@@ -302,14 +302,9 @@ namespace Origam.DA.Service
             }
             if (!instance.IsDeleted)
             {
-                try
-                {
-                    DatabasePersistenceProvider.CheckInstanceRules(instance);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Instance "+instance.Id +" cannot be persisted!\n"+ex.Message, ex);
-                }
+                RuleTools.DoOnFirstViolation(
+                    objectToCheck: instance,
+                    action: ex => throw new Exception("Instance " + instance.Id + " cannot be persisted!\n" + ex.Message, ex));
             }
         }
     }
