@@ -365,8 +365,6 @@ export class GridActions implements IGridActions {
       ctx.stroke();
       ctx.restore();
     }
-    this.setup.onRowsRendered &&
-      this.setup.onRowsRendered(visibleRowsFirstIndex, visibleRowsLastIndex);
   }
 
   @action.bound

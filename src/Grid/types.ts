@@ -213,7 +213,6 @@ export interface IGridSetup {
   getCellHeight(cellIndex: number): number;
   getCellValue(rowIndex: number, columnIndex: number): ICellValue | undefined;
   getColumnLabel(columnIndex: number): string;
-  onRowsRendered(rowIndexStart: number, rowIndexEnd: number): void;
 }
 
 export interface IGridTopology {
