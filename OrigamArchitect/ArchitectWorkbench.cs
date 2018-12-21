@@ -1351,8 +1351,8 @@ namespace OrigamArchitect
             // and leaves application in unstable state
             try
             {
-                DialogResult dialogResult = LongMessageBox.ShowMsgBox(this,
-                    $"Model file changes detected!{Environment.NewLine}{Environment.NewLine}{args}.{Environment.NewLine}{Environment.NewLine}Do you want to reload the model?", "Changes in Mode Directory Detected");
+                DialogResult dialogResult = LongMessageBox.ShowMsgBoxYesNo(this,
+                    $"Model file changes detected!{Environment.NewLine}{Environment.NewLine}{args}.{Environment.NewLine}{Environment.NewLine}Do you want to reload the model?", "Changes in Model Directory Detected");
                 return dialogResult == DialogResult.Yes;
             }
             catch(Exception ex)
@@ -1543,9 +1543,9 @@ namespace OrigamArchitect
             if (!LoadConfiguration(configurationName))
 			{
 				return;
-			}
+			}         
 
-			Application.DoEvents();
+            Application.DoEvents();
 
             foreach (DockContent content in this.dockPanel.Documents.ToList())
 			{
@@ -1589,7 +1589,9 @@ namespace OrigamArchitect
 				var currentPersistenceService =
 					ServiceManager.Services.GetService<IPersistenceService>();
 
-				if (currentPersistenceService is FilePersistenceService
+			    CheckModelRulesAsync(currentPersistenceService);
+
+                if (currentPersistenceService is FilePersistenceService
 					filePersistService)
 				{
 					TryLoadModelFiles(filePersistService);
@@ -1642,7 +1644,41 @@ namespace OrigamArchitect
 			cmd.Run();
 		}
 
-		protected override void WndProc(ref Message m)
+	    private void CheckModelRulesAsync(IPersistenceService currentPersistenceService)
+	    {
+	        if (!(currentPersistenceService is FilePersistenceService)) return;
+
+            new Task(() =>
+	        {
+	            List<string> errorFragments = 
+	                new FilePersistenceBuilder()
+	                .CreateNoBinFilePersistenceService()
+	                .SchemaProvider
+	                .RetrieveList<IFilePersistent>()
+	                .Select(retrievedObj =>
+	                {
+	                    var errorMessages = RuleTools.GetExceptions(retrievedObj)
+	                        .Select(exception => " - "+exception.Message)
+	                        .ToList();
+                        if (errorMessages.Count == 0) return null;
+	                    return "Object with Id: \"" + retrievedObj.Id +
+	                           "\" in file: \"" +retrievedObj.RelativeFilePath +
+	                           "\"\n" + string.Join("\n", errorMessages);
+	                })
+	                .Where(x => x != null)
+	                .ToList();
+
+	            if (errorFragments.Count != 0)
+	            {
+	                string errorMessage = "Rule violations were found in the loaded project:\n\n" +
+	                                      string.Join("\n\n", errorFragments) +
+	                                      "\n\nYou should fix these issues before continuing with your work.";
+	                this.RunWithInvoke(() => LongMessageBox.ShowMsgBoxOk(this, errorMessage, "Rules violated!"));
+	            }
+	        }).Start();
+	    }
+
+	    protected override void WndProc(ref Message m)
 		{
 			if(m.Msg == 16)
 			{

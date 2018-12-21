@@ -23,17 +23,36 @@ namespace Origam.OrigamEngine
 
         public IPersistenceService GetPersistenceService(bool watchFileChanges)
         {
+            persistenceService = CreateNewPersistenceService(watchFileChanges);
+            return persistenceService;
+        }
+
+        public FilePersistenceService CreateNewPersistenceService(bool watchFileChanges)
+        {
             List<ElementName> defaultFolders = new List<ElementName>
             {
                 ElementNameFactory.Create(typeof(SchemaExtension)),
                 ElementNameFactory.Create(typeof(SchemaItemGroup))
             };
 
-            persistenceService = new FilePersistenceService(
+            return new FilePersistenceService(
                 defaultFolders: defaultFolders,
                 watchFileChanges: watchFileChanges);
-            
-            return persistenceService;
         }
+
+        public FilePersistenceService CreateNoBinFilePersistenceService()
+        {
+            List<ElementName> defaultFolders = new List<ElementName>
+            {
+                ElementNameFactory.Create(typeof(SchemaExtension)),
+                ElementNameFactory.Create(typeof(SchemaItemGroup))
+            };
+
+            return new FilePersistenceService(
+                defaultFolders: defaultFolders,
+                watchFileChanges: false,
+                useBinFile: false);
+        }
+
     }
 }

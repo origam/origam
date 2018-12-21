@@ -10,20 +10,22 @@ namespace Origam.DA.Service
         private readonly FileInfo pathToIndexFile;
         private readonly XmlFileDataFactory xmlFileDataFactory;
         private OrigamXmlLoader xmlLoader;
-        private BinFileLoader binLoader;
-        
+        private IBinFileLoader binLoader;
+        private readonly bool useBinFile;
+
         public TrackerLoaderFactory(
             DirectoryInfo topDirectory,
             ObjectFileDataFactory objectFileDataFactory,
             OrigamFileFactory origamFileFactory,
             XmlFileDataFactory xmlFileDataFactory,
-            FileInfo pathToIndexFile)
+            FileInfo pathToIndexFile, bool useBinFile)
         {
             this.topDirectory = topDirectory;
             this.objectFileDataFactory = objectFileDataFactory;
             this.origamFileFactory = origamFileFactory;
             this.pathToIndexFile = pathToIndexFile;
             this.xmlFileDataFactory = xmlFileDataFactory;
+            this.useBinFile= useBinFile;
         }
 
         
@@ -35,12 +37,18 @@ namespace Origam.DA.Service
             }
         }
 
-        internal BinFileLoader BinLoader {
+        internal IBinFileLoader BinLoader {
             get
             {
-                return binLoader ?? (binLoader = new BinFileLoader(
-                           origamFileFactory, topDirectory, pathToIndexFile));
+                return binLoader ?? (binLoader = MakeBinLoader());
             }
+        }
+
+        private IBinFileLoader MakeBinLoader()
+        {
+            return useBinFile
+                ? (IBinFileLoader) new BinFileLoader(origamFileFactory, topDirectory, pathToIndexFile)
+                : new NullBinFileLoader();
         }
     }
 }
