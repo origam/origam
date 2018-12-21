@@ -1,6 +1,6 @@
 import { observable, action } from "mobx";
 
-export class MainMenuEngine {
+export class MainMenu {
 
   @observable public expandedSections = new Map();
 

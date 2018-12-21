@@ -6,62 +6,15 @@ import * as xmlJs from "xml-js";
 import { parseScreenDef } from "src/screenInterpreter/interpreter";
 import { buildReactTree } from "src/screenInterpreter/uiBuilder";
 import { interpretMenu } from "src/MainMenu/MainMenuComponent";
-import { IAPI, ILoadingGate } from '../DataLoadingStrategy/types';
+import { IAPI, ILoadingGate } from "../DataLoadingStrategy/types";
 import { getToken } from "../DataLoadingStrategy/api";
 import { ComponentBindingsModel } from "src/componentBindings/ComponentBindingsModel";
-
-export interface IOpenedView {
-  id: string;
-  subid: string;
-  label: string;
-  reactTree: React.ReactNode;
-  start(): void;
-  stop(): void;
-  componentBindingsModel: ComponentBindingsModel;
-  unlockLoading(): void;
-}
-
-class OpenedView implements IOpenedView, ILoadingGate {
-  @observable public isLoadingAllowed: boolean = false;
-
-  constructor(
-    public id: string,
-    public subid: string,
-    public label: string,
-    public api: IAPI
-  ) {}
-
-  @observable.ref public reactTree: React.ReactNode = null;
-
-  public componentBindingsModel: ComponentBindingsModel;
-
-  @action.bound
-  public start() {
-    this.api.loadScreen({ id: this.id, token: getToken() }).then(
-      action((response: any) => {
-        const { data } = response;
-        const xmlObj = xmlJs.xml2js(data, { compact: false });
-        const interpretedResult = parseScreenDef(xmlObj);
-        const reactTree = buildReactTree(interpretedResult.uiNode);
-        this.reactTree = reactTree;
-        this.componentBindingsModel = new ComponentBindingsModel(interpretedResult.collectComponentBindings);
-      })
-    );
-  }
-
-  @action.bound public unlockLoading() {
-    this.isLoadingAllowed = true;
-  }
-
-  @action.bound
-  public stop() {
-    return;
-  }
-}
+import { IOpenedView,  IMainViews } from "./types";
+import { OpenedView } from "./OpenedView";
 
 let subidGen = 1;
 
-export class MainViewEngine {
+export class MainViews implements IMainViews {
   constructor(public api: IAPI) {}
 
   @observable public activeView: IOpenedView | undefined = undefined;

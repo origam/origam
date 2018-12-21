@@ -3,8 +3,9 @@ import axios from "axios";
 import * as xmlJs from "xml-js";
 import { observable, action, autorun, computed } from "mobx";
 import { observer, inject, Provider } from "mobx-react";
-import { MainViewEngine } from "src/MainTabs/MainViewEngine";
-import { MainMenuEngine } from "./MainMenuEngine";
+import { MainMenu } from "./MainMenu";
+import { IMainViews } from "src/Application/types";
+import { IMainMenu } from "./types";
 
 function processNode(node: any, context: any) {
   switch (node.name) {
@@ -139,29 +140,19 @@ export function interpretMenu(xmlObj: any) {
 }
 
 interface IMainMenuProps {
-  children?: React.ReactNode;
-  mainViewEngine: MainViewEngine;
+  mainViews?: IMainViews;
 }
 
+@inject("mainViews")
 @observer
-export class MainMenu extends React.Component<IMainMenuProps> {
+export class MainMenuComponent extends React.Component<IMainMenuProps> {
   constructor(props: IMainMenuProps) {
     super(props);
-    this.mainMenuEngine = new MainMenuEngine();
   }
 
-  public mainMenuEngine: MainMenuEngine;
-
   public render() {
-    const { reactMenu } = this.props.mainViewEngine;
-    return (
-      <Provider
-        mainMenuEngine={this.mainMenuEngine}
-        mainViewEngine={this.props.mainViewEngine}
-      >
-        {reactMenu || <></>}
-      </Provider>
-    );
+    const { reactMenu } = this.props.mainViews!;
+    return reactMenu || null;
   }
 }
 
@@ -175,8 +166,8 @@ export interface ICndMenuItemProps {
   label: string;
   icon: string;
   id: string;
-  mainMenuEngine?: MainMenuEngine;
-  mainViewEngine?: MainViewEngine;
+  mainMenu?: IMainMenu;
+  mainViews?: IMainViews;
 }
 
 export interface IMenuItemProps extends ICndMenuItemProps {
@@ -223,20 +214,24 @@ export const MenuItem = ({
   );
 };
 
-@inject("mainViewEngine")
+@inject("mainViews")
 @observer
 export class CndMenuItem extends React.Component<ICndMenuItemProps> {
   @action.bound
   public handleClick(event: any) {
-    this.props.mainViewEngine!.handleMenuFormItemClick(event, this.props.id, this.props.label);
+    this.props.mainViews!.handleMenuFormItemClick(
+      event,
+      this.props.id,
+      this.props.label
+    );
   }
 
   @computed
   public get isActive() {
     return (
-      this.props.mainViewEngine &&
-      this.props.mainViewEngine.activeView &&
-      this.props.id === this.props.mainViewEngine.activeView.id
+      this.props.mainViews! &&
+      this.props.mainViews!.activeView &&
+      this.props.id === this.props.mainViews!.activeView!.id
     );
   }
 
@@ -252,7 +247,7 @@ export class CndMenuItem extends React.Component<ICndMenuItemProps> {
   }
 }
 
-@inject("mainMenuEngine")
+@inject("mainMenu")
 @observer
 export class CndMenuFolderItem extends React.Component<ICndMenuItemProps> {
   public render() {
@@ -260,13 +255,13 @@ export class CndMenuFolderItem extends React.Component<ICndMenuItemProps> {
       <MenuItem
         {...this.props}
         status={
-          this.props.mainMenuEngine!.isSectionExpanded(this.props.id)
+          this.props.mainMenu!.isSectionExpanded(this.props.id)
             ? IMenuItemStatus.OPENED
             : IMenuItemStatus.CLOSED
         }
         isActive={false}
         onClick={(event: any) =>
-          this.props.mainMenuEngine!.handleSectionClick(event, this.props.id)
+          this.props.mainMenu!.handleSectionClick(event, this.props.id)
         }
       />
     );

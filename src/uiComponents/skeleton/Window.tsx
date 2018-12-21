@@ -1,15 +1,13 @@
 import * as React from "react";
 import { observer, inject } from "mobx-react";
 import { observable, action } from "mobx";
-import { IOpenedView } from '../../MainTabs/MainViewEngine';
-import { ComponentBindingsModel } from '../../componentBindings/ComponentBindingsModel';
+
+import { IOpenedView } from "src/Application/types";
 
 @inject("mainView")
 @observer
 export class Window extends React.Component<any> {
   @observable public isFullscreen = false;
-
-
 
   @action.bound
   public handleFullscreenClick(event: any) {

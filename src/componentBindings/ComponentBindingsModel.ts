@@ -3,6 +3,7 @@ import { IGridPanelBacking } from "../GridPanel/types";
 import { ILoadingGate } from "src/DataLoadingStrategy/types";
 import { IGridFilter } from "../DataLoadingStrategy/types";
 import { DataLoadingStrategyActions } from "../DataLoadingStrategy/DataLoadingStrategyActions";
+import { IComponentBindingsModel } from "./types";
 
 export class BindingFilter {
   @computed
@@ -113,7 +114,7 @@ export class DependentGrid implements ILoadingGate, IGridFilter {
   }
 }
 
-export class ComponentBindingsModel {
+export class ComponentBindingsModel implements IComponentBindingsModel {
   constructor(componentBindings: any) {
     console.log(componentBindings);
     this.componentBindings = componentBindings;

@@ -53,9 +53,9 @@ import { IGridPanelBacking } from "src/GridPanel/types";
 import { GridForm } from "../controls/GridForm";
 import { GridMap } from "../controls/GridMap";
 import { api } from "src/DataLoadingStrategy/api";
-import { MainView } from "../../MainTabs/MainTabs";
-import { IOpenedView } from "src/MainTabs/MainViewEngine";
+import { MainViewComponent } from "../../MainTabs/MainTabsComponent";
 import { ILoadingGate } from '../../DataLoadingStrategy/types';
+import { IOpenedView } from "src/Application/types";
 
 class GridConfiguration {
   public gridSetup: IGridSetup;

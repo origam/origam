@@ -1,22 +1,22 @@
-import * as React from "react";
-import { observer, inject, Provider } from "mobx-react";
-import { MainViewEngine } from "./MainViewEngine";
 import { computed } from "mobx";
-import { ComponentBindingsModel } from "src/componentBindings/ComponentBindingsModel";
+import { observer, Provider, inject } from "mobx-react";
+import * as React from "react";
+import { IMainViews, IOpenedView } from "../Application/types";
 
 interface IMainTabsProps {
-  mainViewEngine: MainViewEngine;
+  mainViews?: IMainViews;
 }
 
+@inject("mainViews")
 @observer
-export class MainTabs extends React.Component<IMainTabsProps> {
+export class MainTabsComponent extends React.Component<IMainTabsProps> {
   public render() {
-    const { mainViewEngine } = this.props;
+    const mainViews = this.props.mainViews!;
 
     return (
       <div className="oui-main-tabs">
         <div className="oui-main-tab-handles">
-          {mainViewEngine.openedViews.map(view => {
+          {mainViews.openedViews.map(view => {
             return (
               <MainTabHandleCnd
                 key={`${view.view.id}@${view.view.subid}`}
@@ -24,22 +24,20 @@ export class MainTabs extends React.Component<IMainTabsProps> {
                 subid={view.view.subid}
                 label={view.view.label}
                 order={view.order}
-                mainViewEngine={mainViewEngine}
               />
             );
           })}
         </div>
         <div className="oui-main-tab-contents">
-          {mainViewEngine.openedViews.map(view => {
+          {mainViews.openedViews.map(view => {
             return (
-              <MainView
+              <MainViewComponent
                 key={`${view.view.id}@${view.view.subid}`}
                 id={view.view.id}
                 subid={view.view.subid}
                 label={view.view.label}
                 order={view.order}
-                mainViewEngine={mainViewEngine}
-                view={view}
+                view={view.view}
               />
             );
           })}
@@ -49,26 +47,34 @@ export class MainTabs extends React.Component<IMainTabsProps> {
   }
 }
 
+interface IMainViewComponentProps {
+  mainViews?: IMainViews;
+  view?: IOpenedView;
+  id: string;
+  subid: string;
+  label: string;
+  order: number;
+}
+
+@inject("mainViews")
 @observer
-export class MainView extends React.Component<any> {
-
-
+export class MainViewComponent extends React.Component<
+  IMainViewComponentProps
+> {
   @computed
   public get isActive() {
     return (
-      this.props.mainViewEngine &&
-      this.props.mainViewEngine.activeView &&
-      this.props.id === this.props.mainViewEngine.activeView.id &&
-      this.props.subid === this.props.mainViewEngine.activeView.subid
+      this.props.mainViews &&
+      this.props.mainViews.activeView &&
+      this.props.id === this.props.mainViews.activeView.id &&
+      this.props.subid === this.props.mainViews.activeView.subid
     );
   }
 
   public render() {
     return (
-      <Provider
-        mainView={this.props.view.view}
-      >
-        {React.cloneElement(this.props.view.view.reactTree || <></>, {
+      <Provider mainView={this.props.view}>
+        {React.cloneElement((this.props.view!.reactTree as any) || <></>, {
           active: this.isActive,
           ...this.props
         })}
