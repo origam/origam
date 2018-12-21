@@ -55,7 +55,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Images.resx</DependentUpon>
     </Compile>
-    <Compile Include="UI\BigArrowToolStripDropDownButton.cs">
+    <Compile Include="ToolStrip\BigArrowToolStripDropDownButton.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="IEntityUIActionRunnerClient.cs" />
@@ -80,33 +80,33 @@
     </Compile>
     <Compile Include="UIActionTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\ToolStripButtonTools.cs" />
-    <Compile Include="UI\BigToolStripButton.cs">
+    <Compile Include="EnhancedTextBox\ToolStripButtonTools.cs" />
+    <Compile Include="ToolStrip\BigToolStripButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UI\IToolStripContainer.cs" />
-    <Compile Include="UI\LabeledToolStrip.cs">
+    <Compile Include="ToolStrip\IToolStripContainer.cs" />
+    <Compile Include="ToolStrip\LabeledToolStrip.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UI\ToolStripActionButton.cs">
+    <Compile Include="ToolStrip\ToolStripActionButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UI\ToolStripActionDropDownButton.cs">
+    <Compile Include="ToolStrip\ToolStripActionDropDownButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UI\DatetimeFormatter.cs" />
-    <Compile Include="UI\EnhancedTextBox.cs">
+    <Compile Include="EnhancedTextBox\DatetimeFormatter.cs" />
+    <Compile Include="EnhancedTextBox\EnhancedTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UI\ErrorReporter.cs" />
-    <Compile Include="UI\Formatter.cs" />
-    <Compile Include="UI\IErrorReporter.cs" />
-    <Compile Include="UI\IFormatter.cs" />
-    <Compile Include="UI\NumberParser.cs" />
-    <Compile Include="UI\RealNumberFormatter.cs" />
-    <Compile Include="UI\StringExtensions.cs" />
-    <Compile Include="UI\StringFormatter.cs" />
-    <Compile Include="UI\WholeNumberFormattrer.cs" />
+    <Compile Include="EnhancedTextBox\ErrorReporter.cs" />
+    <Compile Include="EnhancedTextBox\Formatter.cs" />
+    <Compile Include="EnhancedTextBox\IErrorReporter.cs" />
+    <Compile Include="EnhancedTextBox\IFormatter.cs" />
+    <Compile Include="EnhancedTextBox\NumberParser.cs" />
+    <Compile Include="EnhancedTextBox\RealNumberFormatter.cs" />
+    <Compile Include="EnhancedTextBox\StringExtensions.cs" />
+    <Compile Include="EnhancedTextBox\StringFormatter.cs" />
+    <Compile Include="EnhancedTextBox\WholeNumberFormattrer.cs" />
     <Compile Include="WorkflowCallbackHandler.cs" />
   </ItemGroup>
   <ItemGroup>
