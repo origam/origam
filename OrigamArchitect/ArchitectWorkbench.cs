@@ -121,9 +121,9 @@ namespace OrigamArchitect
 
 		private static ICellStyle _dateCellStyle;
 		private string _configFilePath;
+	    private FormWindowState lastWindowState;
 
-
-		public const string ORIGAM_COM_BASEURL = "https://origam.com/";
+        public const string ORIGAM_COM_BASEURL = "https://origam.com/";
 		public const string ORIGAM_COM_API_BASEURL = "https://origam.com/web/";
 		public const bool IgnoreHTTPSErrors = false;
 		
@@ -1148,7 +1148,22 @@ namespace OrigamArchitect
 
 		#endregion
 
-		protected virtual void OnViewOpened(ViewContentEventArgs e)
+	    protected override void OnResizeEnd(EventArgs e)
+	    {
+	        UpdateToolStrips();
+	    }
+
+        protected override void OnResize(EventArgs e)
+	    {
+	        base.OnResize(e);
+            if (WindowState != lastWindowState)
+	        {
+	            lastWindowState = WindowState;
+	            UpdateToolStrips();
+            }
+	    }
+
+	    protected virtual void OnViewOpened(ViewContentEventArgs e)
 		{
 			e.Content.DirtyChanged += Content_DirtyChanged;
 			UpdateToolbar();
