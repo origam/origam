@@ -1,7 +1,6 @@
 import { IComponentBindingsModel } from "src/componentBindings/types";
 
 export interface IMainViews {  
-  reactMenu: React.ReactNode;
   handleMenuFormItemClick(event: any, id: string, label: string): void;
   activeView: IOpenedView | undefined;
   openedViews: Array<{ order: number; view: IOpenedView }>;

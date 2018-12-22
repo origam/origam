@@ -7,86 +7,9 @@ import { MainMenu } from "./MainMenu";
 import { IMainViews } from "src/Application/types";
 import { IMainMenu } from "./types";
 
-function processNode(node: any, context: any) {
-  switch (node.name) {
-    case "Menu": {
-      const newNode = {
-        type: "Menu",
-        props: {
-          label: node.attributes.label,
-          icon: node.attributes.icon
-        },
-        children: []
-      };
-      context.uiNode.children.push(newNode);
-      for (const element of node.elements) {
-        processNode(element, { ...context, uiNode: newNode });
-      }
-      return;
-    }
-    case "Command": {
-      switch (node.attributes.type) {
-        case "FormReferenceMenuItem": {
-          const newNode = {
-            type: "MenuItemForm",
-            props: {
-              id: node.attributes.id,
-              label: node.attributes.label,
-              icon: node.attributes.icon
-            },
-            children: []
-          };
-          context.uiNode.children.push(newNode);
-          return;
-        }
-        case "WorkflowReferenceMenuItem": {
-          const newNode = {
-            type: "MenuItemWorkflow",
-            props: {
-              id: node.attributes.id,
-              label: node.attributes.label,
-              icon: node.attributes.icon
-            },
-            children: []
-          };
-          context.uiNode.children.push(newNode);
-          return;
-        }
-      }
-      return;
-    }
-    case "Submenu": {
-      const newNode = {
-        type: "Submenu",
-        props: {
-          id: node.attributes.id,
-          label: node.attributes.label,
-          icon: node.attributes.icon
-        },
-        children: []
-      };
-      context.uiNode.children.push(newNode);
-      for (const element of node.elements) {
-        processNode(element, { ...context, uiNode: newNode });
-      }
-      return;
-    }
-  }
-  console.log(node);
-  throw new Error("Unknown menu structure.");
-}
 
-function buildMenu(menuDef: any) {
-  const context = {
-    uiNode: {
-      children: []
-    }
-  };
-  processNode(menuDef.elements[0], context);
-  return context.uiNode.children[0];
-}
 
-const Menu = (props: any) => (
+export const Menu = (props: any) => (
   <div className="oui-main-menu">
     <div className={"main-menu-item section"}>{props.children}</div>
   </div>
@@ -94,7 +17,7 @@ const Menu = (props: any) => (
 
 @inject("mainMenuEngine")
 @observer
-class Submenu extends React.Component<any> {
+export class Submenu extends React.Component<any> {
   public render() {
     const isExpanded = this.props.mainMenuEngine!.isSectionExpanded(
       this.props.id
@@ -114,36 +37,18 @@ class Submenu extends React.Component<any> {
   }
 }
 
-const MenuItemWorkflow = (props: any) => <CndMenuItem {...props} />;
+export const MenuItemWorkflow = (props: any) => <CndMenuItem {...props} />;
 
-const MenuItemForm = (props: any) => <CndMenuItem {...props} />;
+export const MenuItemForm = (props: any) => <CndMenuItem {...props} />;
 
-const REACT_TYPES = {
-  Menu,
-  Submenu,
-  MenuItemWorkflow,
-  MenuItemForm
-};
 
-function buildReactTree(node: any) {
-  return React.createElement(
-    REACT_TYPES[node.type],
-    node.props,
-    ...node.children.map((child: any) => buildReactTree(child))
-  );
-}
 
-export function interpretMenu(xmlObj: any) {
-  const menu = buildMenu(xmlObj);
-  const reactMenu = buildReactTree(menu);
-  return reactMenu;
-}
 
 interface IMainMenuProps {
-  mainViews?: IMainViews;
+  mainMenu?: IMainMenu;
 }
 
-@inject("mainViews")
+@inject("mainMenu")
 @observer
 export class MainMenuComponent extends React.Component<IMainMenuProps> {
   constructor(props: IMainMenuProps) {
@@ -151,7 +56,7 @@ export class MainMenuComponent extends React.Component<IMainMenuProps> {
   }
 
   public render() {
-    const { reactMenu } = this.props.mainViews!;
+    const { reactMenu } = this.props.mainMenu!;
     return reactMenu || null;
   }
 }

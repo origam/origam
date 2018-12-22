@@ -1,10 +1,9 @@
-import { Splitter, SplitterPanel } from './Splitter02';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import * as React from 'react';
 import { MainMenuComponent } from 'src/MainMenu/MainMenuComponent';
 import { MainTabsComponent } from 'src/MainTabs/MainTabsComponent';
+import { Splitter, SplitterPanel } from './Splitter02';
 
-@inject("mainViews")
 @observer
 export class TopLevelLayout extends React.Component {
   public render() {
@@ -68,12 +67,6 @@ export class TopLevelLayout extends React.Component {
               <MainTabsComponent />
             </SplitterPanel>
           </Splitter>
-          {/*<div className="oui-side-bar">
-            <MainMenu mainViewEngine={this.mainViewEngine} />
-          </div>
-          <div className="oui-data-bar">
-            <MainTabs mainViewEngine={this.mainViewEngine} />
-    </div>*/}
         </div>
       </div>
     );

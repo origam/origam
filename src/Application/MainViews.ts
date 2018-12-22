@@ -1,16 +1,7 @@
-import { observable, computed, action } from "mobx";
-import { start } from "repl";
-import * as React from "react";
-import axios from "axios";
-import * as xmlJs from "xml-js";
-import { parseScreenDef } from "src/screenInterpreter/interpreter";
-import { buildReactTree } from "src/screenInterpreter/uiBuilder";
-import { interpretMenu } from "src/MainMenu/MainMenuComponent";
-import { IAPI, ILoadingGate } from "../DataLoadingStrategy/types";
-import { getToken } from "../DataLoadingStrategy/api";
-import { ComponentBindingsModel } from "src/componentBindings/ComponentBindingsModel";
-import { IOpenedView,  IMainViews } from "./types";
+import { action, computed, observable } from "mobx";
+import { IAPI } from "../DataLoadingStrategy/types";
 import { OpenedView } from "./OpenedView";
+import { IMainViews, IOpenedView } from "./types";
 
 let subidGen = 1;
 
@@ -20,18 +11,11 @@ export class MainViews implements IMainViews {
   @observable public activeView: IOpenedView | undefined = undefined;
   @observable public openedViewsState: IOpenedView[] = [];
 
-  @observable.ref public reactMenu: React.ReactNode = null;
+
 
   @action.bound
   public start() {
-    this.api.loadMenu({ token: getToken() }).then(
-      action((response: any) => {
-        const { data } = response;
-        const xmlObj = xmlJs.xml2js(data, { compact: false });
-        const reactMenu = interpretMenu(xmlObj);
-        this.reactMenu = reactMenu;
-      })
-    );
+    return
   }
 
   @computed
@@ -108,7 +92,6 @@ export class MainViews implements IMainViews {
 
   @action.bound
   public handleMenuFormItemClick(event: any, id: string, label: string) {
-    console.log("click", label);
     if (event.ctrlKey) {
       this.openView(id, label);
     } else {

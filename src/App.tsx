@@ -16,14 +16,14 @@ function buildApplication() {
 export default class App extends React.Component {
   constructor(props: any) {
     super(props);
-
     this.mainViews = new MainViews(api);
-    this.mainMenu = new MainMenu();
+    this.mainMenu = new MainMenu(api);
   }
 
   public componentDidMount() {
     runInAction(() => {
       this.mainViews.start();
+      this.mainMenu.start();
     });
   }
 
