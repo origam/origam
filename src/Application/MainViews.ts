@@ -1,17 +1,39 @@
 import { action, computed, observable } from "mobx";
 import { IAPI } from "../DataLoadingStrategy/types";
 import { OpenedView } from "./OpenedView";
-import { IMainViews, IOpenedView } from "./types";
+import { IMainViews, IOpenedView, IOpenedViewCollection } from "./types";
 
 let subidGen = 1;
 
-export class MainViews implements IMainViews {
+export class MainViews implements IMainViews, IOpenedViewCollection {
+
+
   constructor(public api: IAPI) {}
 
   @observable public activeView: IOpenedView | undefined = undefined;
   @observable public openedViewsState: IOpenedView[] = [];
 
+  public isActiveView(view: IOpenedView): boolean {
+    return Boolean(
+      this.activeView &&
+      view.id === this.activeView.id &&
+      view.subid === this.activeView.subid
+    );
+  }
 
+  public getViewOrder(forView: IOpenedView): number {
+    let order = 0;
+    for (const view of this.openedViewsState) {
+      if(view.id === forView.id) {
+        if(view.subid === forView.subid) {
+          return order;
+        } else {
+          order++;
+        }
+      }
+    }
+    return 0; // TODO: View not found...?
+  }
 
   @action.bound
   public start() {
@@ -19,18 +41,8 @@ export class MainViews implements IMainViews {
   }
 
   @computed
-  public get openedViews(): Array<{ order: number; view: IOpenedView }> {
-    const viewMap = {};
-    const result = [];
-    for (const view of this.openedViewsState) {
-      if (viewMap[view.id] === undefined) {
-        viewMap[view.id] = 0;
-      } else {
-        viewMap[view.id]++;
-      }
-      result.push({ order: viewMap[view.id] as number, view });
-    }
-    return result;
+  public get openedViews(): IOpenedView[] {
+    return this.openedViewsState;
   }
 
   @action.bound
@@ -84,6 +96,7 @@ export class MainViews implements IMainViews {
   @action.bound
   public openView(id: string, label: string) {
     const view = new OpenedView(id, `${subidGen++}`, label, this.api);
+    view.livesIn = this;
     view.start();
     this.openedViewsState.push(view);
     this.activateView(view.id, view.subid);

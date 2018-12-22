@@ -8,9 +8,6 @@ import { MainMenu } from "./MainMenu/MainMenu";
 import { IMainViews } from "./Application/types";
 import { IMainMenu } from "./MainMenu/types";
 
-function buildApplication() {
-  return
-}
 
 @observer
 export default class App extends React.Component {

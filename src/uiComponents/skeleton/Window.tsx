@@ -4,9 +4,15 @@ import { observable, action } from "mobx";
 
 import { IOpenedView } from "src/Application/types";
 
+interface IWindowProps {
+  mainView?: IOpenedView;
+  id: string;
+  name: string;
+}
+
 @inject("mainView")
 @observer
-export class Window extends React.Component<any> {
+export class Window extends React.Component<IWindowProps> {
   @observable public isFullscreen = false;
 
   @action.bound
@@ -15,27 +21,28 @@ export class Window extends React.Component<any> {
   }
 
   public componentDidMount() {
-    const {mainView} = this.props as {mainView: IOpenedView};
-    mainView.componentBindingsModel.start();
-    mainView.unlockLoading();
+    const mainView = this.props.mainView!;
+    /* mainView.componentBindingsModel.start();
+    mainView.unlockLoading(); */
   }
 
   public componentWillUnmount() {
-    const {mainView} = this.props as {mainView: IOpenedView};
-    mainView.componentBindingsModel.stop();
+    /* const mainView = this.props.mainView!;
+    mainView.componentBindingsModel.stop(); */
   }
 
   public render() {
-    const {label, order} = this.props;
+    const {name} = this.props;
+    const {order, isActive} = this.props.mainView!;
     return (
       <div
         className={"oui-window" + (this.isFullscreen ? " fullscreen" : "")}
-        style={{ display: !this.props.active ? "none" : undefined }}
+        style={{ display: !isActive ? "none" : undefined }}
       >
         <div className="oui-window-header">
           <div className="title">
             <i className="fa fa-file-text" />
-            {label} {order > 0 && `[${order}]`}
+            {name} {order > 0 && `[${order}]`}
           </div>
           <div style={{ flex: "1 1 0" }} />
           <div className="buttons">
