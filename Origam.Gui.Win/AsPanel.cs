@@ -638,6 +638,7 @@ namespace Origam.Gui.Win
 			}
 		}
 
+        [Description("This setting is only applied on the action buttons placed on the toolbar.")]
 		public bool DisableActionButtons { get; set; }
 
 		[Category("(ORIGAM)")]

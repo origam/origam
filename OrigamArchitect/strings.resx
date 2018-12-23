@@ -711,4 +711,10 @@
   <data name="ToolsToolStripText" xml:space="preserve">
     <value>Tools</value>
   </data>
+  <data name="SourceXml_MenuItem" xml:space="preserve">
+    <value>Show in Explorer</value>
+  </data>
+  <data name="XmlConsole" xml:space="preserve">
+    <value>Show Xml Entity</value>
+  </data>
 </root>

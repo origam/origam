@@ -52,8 +52,10 @@ namespace Origam.Gui.Win
 		public event EventHandler ToolStripsLoaded;
 		public event EventHandler AllToolStripsRemoved;
 
-		public IEnumerable<ToolStrip> ToolStrips 
-			=> Panels.Select(x => x.ToolStrip);
+	    public List<ToolStrip> GetToolStrips(int maxWidth = -1)
+	    {
+	        return Panels.Select(x => x.ToolStrip).ToList();
+	    }
 
 		/// <summary>
 		/// Recursively goes through all child records and finds all the record Id's

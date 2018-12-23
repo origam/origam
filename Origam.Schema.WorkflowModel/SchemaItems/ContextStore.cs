@@ -23,6 +23,7 @@ using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
+using Origam.DA.ObjectPersistence.Attributes;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.WorkflowModel
@@ -106,6 +107,7 @@ namespace Origam.Schema.WorkflowModel
 		[DefaultValue(false)]
 		[EntityColumn("B01")]  
 		[XmlAttribute ("isReturnValue")]
+        [ContexStoreOutputRuleAttribute()]
 		public bool IsReturnValue { get; set; } = false;
 
 		[DefaultValue(false)]

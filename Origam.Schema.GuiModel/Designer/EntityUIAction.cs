@@ -79,13 +79,13 @@ namespace Origam.Schema.GuiModel
             {
                 dependencies.Add(this.Rule);
             }
-            if (this.Form != null)
+            if (this.Screen != null)
             {
-                dependencies.Add(this.Form);
+                dependencies.Add(this.Screen);
             }
-            if (this.Panel != null)
+            if (this.ScreenSection != null)
             {
-                dependencies.Add(this.Panel);
+                dependencies.Add(this.ScreenSection);
             }
             if (this.ButtonIcon != null)
             {
@@ -116,27 +116,27 @@ namespace Origam.Schema.GuiModel
 		public string Roles { get; set; } = "";
 
 		[EntityColumn("G01")]  
-		public Guid FormId;
+		public Guid ScreenId;
 
 		[Category("Condition")]
 		[TypeConverter(typeof(FormControlSetConverter))]
-        [XmlReference("screen", "FormId")]
-		public FormControlSet Form
+        [XmlReference("screen", "ScreenId")]
+		public FormControlSet Screen
 		{
-			get => (FormControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.FormId));
-			set => this.FormId = value?.Id ?? Guid.Empty;
+			get => (FormControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ScreenId));
+			set => this.ScreenId = value?.Id ?? Guid.Empty;
 		}
 
 		[EntityColumn("G15")]  
-		public Guid PanelId;
+		public Guid ScreenSectionId;
 
 		[Category("Condition")]
 		[TypeConverter(typeof(PanelControlSetConverter))]
-        [XmlReference("screenSection", "PanelId")]
-        public PanelControlSet Panel
+        [XmlReference("screenSection", "ScreenSectionId")]
+        public PanelControlSet ScreenSection
 		{
-			get => (PanelControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.PanelId));
-			set => this.PanelId = value?.Id ?? Guid.Empty;
+			get => (PanelControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ScreenSectionId));
+			set => this.ScreenSectionId = value?.Id ?? Guid.Empty;
 		}
 
 		[EntityColumn("SS01")]

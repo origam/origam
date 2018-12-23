@@ -9,7 +9,13 @@ using ProtoBuf;
 
 namespace Origam.DA.Service
 {
-    internal class BinFileLoader
+    internal interface IBinFileLoader
+    {
+        void LoadInto(ItemTracker itemTracker);
+        void Persist(ItemTracker itemTracker);
+    }
+
+    internal class BinFileLoader : IBinFileLoader
     {
         private static readonly log4net.ILog log
             = log4net.LogManager.GetLogger(
@@ -165,6 +171,17 @@ namespace Origam.DA.Service
         {
             FileInfo txtFileInfo = indexFile.MakeNew("debug");
             File.WriteAllText(txtFileInfo.FullName, serializationData.ToString());
+        }
+    }
+
+    class NullBinFileLoader : IBinFileLoader
+    {
+        public void LoadInto(ItemTracker itemTracker)
+        {   
+        }
+
+        public void Persist(ItemTracker itemTracker)
+        {
         }
     }
 }

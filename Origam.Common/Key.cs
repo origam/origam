@@ -29,13 +29,18 @@ namespace Origam
 	/// </summary>
 	public class Key : Hashtable
 	{
-		public Key()
+
+        public Key()
 		{
 		}
 
-	    public Key(Guid dataStructureEntityId)
+        public Key(string id): this(new Guid(id))
+        {
+        }
+
+	    public Key(Guid id)
 	    {
-	        this["Id"] = dataStructureEntityId;
+	        this["Id"] = id;
 	    }
 
         public override string ToString()

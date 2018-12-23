@@ -7,12 +7,18 @@ namespace Origam.DA.ObjectPersistence
     {
         object GetValue();
     }
-
+    /// <summary>
+    /// This class holds the information whether or not the property it represents was set to
+    /// null by the user and combines it with lazy loading.
+    /// If it was set to null by the user the Get method will return null, if not the
+    /// actual value is retrieved.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class PropertyContainer<T>: IPropertyContainer
     {
         private T value;
         private bool wasSetToNull;
-        private readonly Func<Guid> idGetter;
+        private readonly Guid id;
         private readonly string containerName;
         private readonly Func<IPersistenceProvider> persistenceProviderGetter;
         private readonly Type containingObjectType;
@@ -20,8 +26,8 @@ namespace Origam.DA.ObjectPersistence
         public PropertyContainer(string containerName, IFilePersistent containingObject)
         {
             this.containerName = containerName;
-            this.idGetter = () => (Guid)containingObject.PrimaryKey["Id"];
-            this.persistenceProviderGetter = ()=> containingObject.PersistenceProvider;
+            id = (Guid)containingObject.PrimaryKey["Id"];
+            persistenceProviderGetter = ()=> containingObject.PersistenceProvider;
             containingObjectType = containingObject.GetType();
         }
 
@@ -35,7 +41,7 @@ namespace Origam.DA.ObjectPersistence
             if (value == null && !wasSetToNull)
             {
                 value = (T) persistenceProviderGetter()
-                    .RetrieveValue(idGetter(), containingObjectType, containerName);
+                    .RetrieveValue(id, containingObjectType, containerName);
             }
             return value;
         }

@@ -121,9 +121,9 @@ namespace OrigamArchitect
 
 		private static ICellStyle _dateCellStyle;
 		private string _configFilePath;
+	    private FormWindowState lastWindowState;
 
-
-		public const string ORIGAM_COM_BASEURL = "https://origam.com/";
+        public const string ORIGAM_COM_BASEURL = "https://origam.com/";
 		public const string ORIGAM_COM_API_BASEURL = "https://origam.com/web/";
 		public const bool IgnoreHTTPSErrors = false;
 		
@@ -236,7 +236,7 @@ namespace OrigamArchitect
 		{
 			var toolStripContainer = (IToolStripContainer) sender;
 			if (!loadedForms.ContainsKey(toolStripContainer)) return;
-			RemoveToolStrips(loadedForms[toolStripContainer]);
+			RemoveToolStrips(toolStripContainer);
 			loadedForms.Remove(toolStripContainer);
 		}
 
@@ -244,39 +244,40 @@ namespace OrigamArchitect
 		{
 			if (closingForm is IToolStripContainer toolStripContainer)
 			{
-				RemoveToolStrips(toolStripContainer.ToolStrips);
+				RemoveToolStrips(toolStripContainer);
 				loadedForms.Remove(toolStripContainer);
 			}
 		}
 
 		private void UpdateToolStrips()
 		{
-			if (ActiveMdiChild is IToolStripContainer toolStripContainer)
+		    loadedForms.Keys.ForEach(RemoveToolStrips);
+            if (ActiveMdiChild is IToolStripContainer toolStripContainer)
 			{
 				toolStripContainer.AllToolStripsRemoved += 
 					OnAllToolStripsRemovedFromALoadedForm;
-				loadedForms[toolStripContainer] = toolStripContainer.ToolStrips.ToList();
-				toolStripContainer.ToolStrips
-					.Where(ts => ts != null)
+			    
+			    int widthOfDisplayedToolStrips = toolStripPanel.Controls
+			        .Cast<Control>()
+			        .Select(x => x.Width)
+			        .Sum();
+			    int availableWidth = toolStripPanel.Width - widthOfDisplayedToolStrips;
+                loadedForms[toolStripContainer] = toolStripContainer.GetToolStrips(availableWidth);
+			    loadedForms[toolStripContainer]
+                    .Where(ts => ts != null)
 					.ForEach(ts => toolStripFlowLayoutPanel.Controls.Add(ts));
+			}
 
-				loadedForms.Keys
-					.Where(form => form != toolStripContainer)
-					.ForEach(form => RemoveToolStrips(form.ToolStrips));
-			}
-			else
-			{
-				loadedForms.Keys
-					.ForEach(form => RemoveToolStrips(form.ToolStrips));
-			}
 		}
 
-		private void RemoveToolStrips(IEnumerable<ToolStrip> toolStrips)
+		private void RemoveToolStrips(IToolStripContainer toolStripOwner)
 		{
-			foreach (var toolStrip in toolStrips)
-			{
-				toolStripFlowLayoutPanel.Controls.Remove(toolStrip);				
-			}
+		    toolStripFlowLayoutPanel.Controls
+		        .OfType<LabeledToolStrip>()
+		        .Where(toolStrip => toolStrip.Owner == toolStripOwner)
+		        .ToList()
+		        .ForEach(toolStrip => 
+		            toolStripFlowLayoutPanel.Controls.Remove(toolStrip));
 		}
 
 		#region Windows Form Designer generated code
@@ -307,15 +308,15 @@ namespace OrigamArchitect
             this.sbpText = new System.Windows.Forms.StatusBarPanel();
             this.sbpMemory = new System.Windows.Forms.StatusBarPanel();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
-            this.ducumentToolStrip = new Origam.Gui.UI.LabeledToolStrip();
-			this.toolsToolStrip = new Origam.Gui.UI.LabeledToolStrip();
+            this.ducumentToolStrip = new Origam.Gui.UI.LabeledToolStrip(null);
+            this.toolsToolStrip = new Origam.Gui.UI.LabeledToolStrip(null);
             this.toolStripFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.toolStripPanel = new System.Windows.Forms.Panel();
-            this.LicenseBackgroudExtender = new System.ComponentModel.BackgroundWorker();
-            this.AutoUpdateBackgroudFinder = new System.ComponentModel.BackgroundWorker();
             this.rightToolsTripLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.searchComboBox = new System.Windows.Forms.ComboBox();
+            this.LicenseBackgroudExtender = new System.ComponentModel.BackgroundWorker();
+            this.AutoUpdateBackgroudFinder = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.sbpText)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sbpMemory)).BeginInit();
             this.toolStripFlowLayoutPanel.SuspendLayout();
@@ -414,37 +415,37 @@ namespace OrigamArchitect
             this.menuStrip.TabIndex = 1;
             this.menuStrip.Text = "menuStrip1";
             // 
-            // leftToolStrip
+            // ducumentToolStrip
             // 
             this.ducumentToolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.ducumentToolStrip.Location = new System.Drawing.Point(0, 0);
             this.ducumentToolStrip.MinimumSize = new System.Drawing.Size(0, 95);
-            this.ducumentToolStrip.Name = "documentToolStrip";
+            this.ducumentToolStrip.Name = "ducumentToolStrip";
             this.ducumentToolStrip.Size = new System.Drawing.Size(111, 95);
             this.ducumentToolStrip.TabIndex = 0;
             this.ducumentToolStrip.Text = strings.DocumentToolStripText;
-			// 
-			// leftToolStrip
-			// 
-			this.toolsToolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
-			this.toolsToolStrip.Location = new System.Drawing.Point(0, 0);
-			this.toolsToolStrip.MinimumSize = new System.Drawing.Size(0, 95);
-			this.toolsToolStrip.Name = "toolsToolStrip";
-			this.toolsToolStrip.Size = new System.Drawing.Size(111, 95);
-			this.toolsToolStrip.TabIndex = 0;
-			this.toolsToolStrip.Text = strings.ToolsToolStripText;
+            // 
+            // toolsToolStrip
+            // 
+            this.toolsToolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.toolsToolStrip.Location = new System.Drawing.Point(0, 0);
+            this.toolsToolStrip.MinimumSize = new System.Drawing.Size(0, 95);
+            this.toolsToolStrip.Name = "toolsToolStrip";
+            this.toolsToolStrip.Size = new System.Drawing.Size(111, 95);
+            this.toolsToolStrip.TabIndex = 0;
+            this.toolsToolStrip.Text = strings.ToolsToolStripText;
             // 
             // toolStripFlowLayoutPanel
             // 
             this.toolStripFlowLayoutPanel.AutoSize = true;
             this.toolStripFlowLayoutPanel.Controls.Add(this.ducumentToolStrip);
-		    this.toolStripFlowLayoutPanel.Controls.Add(this.toolsToolStrip);
+            this.toolStripFlowLayoutPanel.Controls.Add(this.toolsToolStrip);
             this.toolStripFlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.toolStripFlowLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.toolStripFlowLayoutPanel.MaximumSize = new System.Drawing.Size(10000, 95);
             this.toolStripFlowLayoutPanel.MinimumSize = new System.Drawing.Size(100, 95);
             this.toolStripFlowLayoutPanel.Name = "toolStripFlowLayoutPanel";
-            this.toolStripFlowLayoutPanel.Size = new System.Drawing.Size(111, 95);
+            this.toolStripFlowLayoutPanel.Size = new System.Drawing.Size(222, 95);
             this.toolStripFlowLayoutPanel.TabIndex = 0;
             this.toolStripFlowLayoutPanel.WrapContents = false;
             // 
@@ -472,15 +473,7 @@ namespace OrigamArchitect
             this.toolStripPanel.Size = new System.Drawing.Size(864, 95);
             this.toolStripPanel.TabIndex = 9;
             // 
-            // LicenseBackgroudExtender
-            // 
-            this.LicenseBackgroudExtender.DoWork += new System.ComponentModel.DoWorkEventHandler(this.LicenseBackgroudExtender_DoWork);
-            // 
-            // AutoUpdateBackgroudFinder
-            // 
-            this.AutoUpdateBackgroudFinder.DoWork += new System.ComponentModel.DoWorkEventHandler(this.AutoUpdateBackgroundFinder_DoWork);
-            // 
-            // tableLayoutPanel1
+            // rightToolsTripLayoutPanel
             // 
             this.rightToolsTripLayoutPanel.ColumnCount = 1;
             this.rightToolsTripLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -505,9 +498,16 @@ namespace OrigamArchitect
             this.searchComboBox.Name = "searchComboBox";
             this.searchComboBox.Size = new System.Drawing.Size(194, 24);
             this.searchComboBox.TabIndex = 2;
-			this.searchComboBox.TabStop = false;
-			this.searchComboBox.KeyDown += searchBox_KeyDown;
-			this.searchComboBox.Text = strings.SearchButtonText;
+            this.searchComboBox.TabStop = false;
+            this.searchComboBox.Text = "Search";
+            // 
+            // LicenseBackgroudExtender
+            // 
+            this.LicenseBackgroudExtender.DoWork += new System.ComponentModel.DoWorkEventHandler(this.LicenseBackgroudExtender_DoWork);
+            // 
+            // AutoUpdateBackgroudFinder
+            // 
+            this.AutoUpdateBackgroudFinder.DoWork += new System.ComponentModel.DoWorkEventHandler(this.AutoUpdateBackgroundFinder_DoWork);
             // 
             // frmMain
             // 
@@ -849,7 +849,10 @@ namespace OrigamArchitect
 	
 			CreateMenuItem(strings.FindDependencies_MenuItem, new ShowDependencies(), Images.Search, Keys.None, _schemaMenu);
 			CreateMenuItem(strings.FindReferences_MenuItem, new ShowUsage(), Images.Search, Keys.None, _schemaMenu);
-		}
+            _schemaMenu.SubItems.Add(CreateSeparator());
+            CreateMenuItem(strings.SourceXml_MenuItem, new ShowExplorerXml(), Images.Search, Keys.None, _schemaMenu);
+            CreateMenuItem(strings.XmlConsole, new ShowConsoleXml(), Images.Search, Keys.None, _schemaMenu);
+        }
 
 		private void CreateToolsMenu()
 		{
@@ -1145,7 +1148,22 @@ namespace OrigamArchitect
 
 		#endregion
 
-		protected virtual void OnViewOpened(ViewContentEventArgs e)
+	    protected override void OnResizeEnd(EventArgs e)
+	    {
+	        UpdateToolStrips();
+	    }
+
+        protected override void OnResize(EventArgs e)
+	    {
+	        base.OnResize(e);
+            if (WindowState != lastWindowState)
+	        {
+	            lastWindowState = WindowState;
+	            UpdateToolStrips();
+            }
+	    }
+
+	    protected virtual void OnViewOpened(ViewContentEventArgs e)
 		{
 			e.Content.DirtyChanged += Content_DirtyChanged;
 			UpdateToolbar();
@@ -1333,8 +1351,8 @@ namespace OrigamArchitect
             // and leaves application in unstable state
             try
             {
-                DialogResult dialogResult = LongMessageBox.ShowMsgBox(this,
-                    $"Model file changes detected!{Environment.NewLine}{Environment.NewLine}{args}.{Environment.NewLine}{Environment.NewLine}Do you want to reload the model?", "Changes in Mode Directory Detected");
+                DialogResult dialogResult = LongMessageBox.ShowMsgBoxYesNo(this,
+                    $"Model file changes detected!{Environment.NewLine}{Environment.NewLine}{args}.{Environment.NewLine}{Environment.NewLine}Do you want to reload the model?", "Changes in Model Directory Detected");
                 return dialogResult == DialogResult.Yes;
             }
             catch(Exception ex)
@@ -1525,9 +1543,9 @@ namespace OrigamArchitect
             if (!LoadConfiguration(configurationName))
 			{
 				return;
-			}
+			}         
 
-			Application.DoEvents();
+            Application.DoEvents();
 
             foreach (DockContent content in this.dockPanel.Documents.ToList())
 			{
@@ -1571,7 +1589,9 @@ namespace OrigamArchitect
 				var currentPersistenceService =
 					ServiceManager.Services.GetService<IPersistenceService>();
 
-				if (currentPersistenceService is FilePersistenceService
+			    CheckModelRulesAsync(currentPersistenceService);
+
+                if (currentPersistenceService is FilePersistenceService
 					filePersistService)
 				{
 					TryLoadModelFiles(filePersistService);
@@ -1624,7 +1644,41 @@ namespace OrigamArchitect
 			cmd.Run();
 		}
 
-		protected override void WndProc(ref Message m)
+	    private void CheckModelRulesAsync(IPersistenceService currentPersistenceService)
+	    {
+	        if (!(currentPersistenceService is FilePersistenceService)) return;
+
+            new Task(() =>
+	        {
+	            List<string> errorFragments = 
+	                new FilePersistenceBuilder()
+	                .CreateNoBinFilePersistenceService()
+	                .SchemaProvider
+	                .RetrieveList<IFilePersistent>()
+	                .Select(retrievedObj =>
+	                {
+	                    var errorMessages = RuleTools.GetExceptions(retrievedObj)
+	                        .Select(exception => " - "+exception.Message)
+	                        .ToList();
+                        if (errorMessages.Count == 0) return null;
+	                    return "Object with Id: \"" + retrievedObj.Id +
+	                           "\" in file: \"" +retrievedObj.RelativeFilePath +
+	                           "\"\n" + string.Join("\n", errorMessages);
+	                })
+	                .Where(x => x != null)
+	                .ToList();
+
+	            if (errorFragments.Count != 0)
+	            {
+	                string errorMessage = "Rule violations were found in the loaded project:\n\n" +
+	                                      string.Join("\n\n", errorFragments) +
+	                                      "\n\nYou should fix these issues before continuing with your work.";
+	                this.RunWithInvoke(() => LongMessageBox.ShowMsgBoxOk(this, errorMessage, "Rules violated!"));
+	            }
+	        }).Start();
+	    }
+
+	    protected override void WndProc(ref Message m)
 		{
 			if(m.Msg == 16)
 			{

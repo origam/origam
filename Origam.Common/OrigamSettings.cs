@@ -230,6 +230,9 @@ namespace Origam
 		[Category("User Interface"), DefaultValue(false)]
 		public bool DisableAttachments { get; set; } = false;
 
+	    [Category("User Interface"), DefaultValue(true)]
+	    public bool ShowEditorMenusInAppToolStrip { get; set; } = true;
+
 		[Category("User Interface"), DefaultValue(0)]
 		public int MaxOpenTabs { get; set; } = 0;
 

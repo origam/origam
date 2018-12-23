@@ -19,23 +19,25 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
- using System.Drawing;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Origam.Gui.UI
 {
-    public class LabeledToolStrip: ToolStrip
+    public class LabeledToolStrip : ToolStrip
     {
         private const int BottomTextMarin = 3;
         private readonly SolidBrush foreColorBrush;
-        
-        public LabeledToolStrip()
+        public IToolStripContainer Owner { get; }
+
+        public LabeledToolStrip(IToolStripContainer owner)
         {
             ImageScalingSize = ToolStripButtonTools.IMAGE_SIZE;
             MinimumSize = new Size(0, ToolStripButtonTools.BUTTON_SIZE.Height);
             foreColorBrush = new SolidBrush(ForeColor);
             Renderer = new SideBorderOnlyStripRenderer();
             Visible = false;
+            Owner = owner;
         }
 
         protected override void OnItemAdded(ToolStripItemEventArgs e)
@@ -58,8 +60,8 @@ namespace Origam.Gui.UI
             base.OnPaint(e);
 
             int textX = (Size.Width - Text.Width(Font)) / 2;
-            int textY = Size.Height - Text.Height(Font) -  BottomTextMarin;
-            
+            int textY = Size.Height - Text.Height(Font) - BottomTextMarin;
+
             var LabelFont = new Font(Font.Name, 8, FontStyle.Bold);
             e.Graphics.DrawString(Text, LabelFont, foreColorBrush, textX, textY);
         }

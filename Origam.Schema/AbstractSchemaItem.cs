@@ -312,20 +312,19 @@ namespace Origam.Schema
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorInheritable"));
 			}
 			if(IsPersistable == false) return;
-
 			// check license policy for new items
 			if(!IsPersisted)
 			{
 				CheckLicense();
 			}
-
             AbstractSchemaItem _rootItemForRefresh = GetRootItem(this);
-            // PERSIST THE ELEMENT
-            base.Persist();
-
+            if(!IsDeleted)
+            {
+                // PERSIST THE ELEMENT
+                base.Persist();
+            }
 			// TAKE CARE ABOUT CHILD ITEMS
 			ArrayList deletedItems = new ArrayList();
-
 			if(PersistChildItems)
 			{
 				// We persist all child items
@@ -353,20 +352,24 @@ namespace Origam.Schema
 				}
                 RefreshIamAncestor(_rootItemForRefresh);
             }
-
+            if(IsDeleted)
+            {
+                // PERSIST THE ELEMENT
+                base.Persist();
+            }
 			// We persist any new ancestors
 			foreach(SchemaItemAncestor ancestor in Ancestors)
 			{
 				ancestor.Persist();
 			}
 			_ancestorsPopulated = false;
-
-			if(ClearCacheOnPersist) ClearCache();
-
+            if(ClearCacheOnPersist)
+            {
+                ClearCache();
+            }
 			// after persisting invalidate all parents from the persistence cache
 			// so they do not cache the old version of this child
 			InvalidateParentPersistenceCache();
-
 			if(ThrowEventOnPersist)
 			{
 				PersistenceProvider.OnTransactionEnded(this);
@@ -1749,8 +1752,8 @@ namespace Origam.Schema
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorCloneNotPersisted"));
 			}
 
-			AbstractSchemaItem newItem = this.PersistenceProvider.RetrieveInstance(this.GetType(), this.PrimaryKey, false) as AbstractSchemaItem;
-
+			AbstractSchemaItem diskItem = this.PersistenceProvider.RetrieveInstance(this.GetType(), this.PrimaryKey, false) as AbstractSchemaItem;
+            AbstractSchemaItem newItem = (AbstractSchemaItem)diskItem.MemberwiseClone();
 			// we preserve current primary key, so references can be updated later
 			newItem.OldPrimaryKey = new ModelElementKey((Guid)this.PrimaryKey["Id"]);
 

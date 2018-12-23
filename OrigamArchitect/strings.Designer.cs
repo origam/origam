@@ -1663,6 +1663,15 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show in Explorer.
+        /// </summary>
+        internal static string SourceXml_MenuItem {
+            get {
+                return ResourceManager.GetString("SourceXml_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SQL Console.
         /// </summary>
         internal static string SqlConsole_MenuItem {
@@ -1839,6 +1848,15 @@ namespace OrigamArchitect {
         internal static string WorkQueues_Title {
             get {
                 return ResourceManager.GetString("WorkQueues_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Xml Entity.
+        /// </summary>
+        internal static string XmlConsole {
+            get {
+                return ResourceManager.GetString("XmlConsole", resourceCulture);
             }
         }
     }

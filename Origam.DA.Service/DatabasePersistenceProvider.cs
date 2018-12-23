@@ -606,7 +606,9 @@ namespace Origam.DA.ObjectPersistence.Providers
 
 			if(! instance.IsDeleted)
 			{
-				CheckInstanceRules(instance);
+			    RuleTools.DoOnFirstViolation(
+			        objectToCheck: instance, 
+			        action: ex => throw ex);
 			}
 
 			Type type = instance.GetType();

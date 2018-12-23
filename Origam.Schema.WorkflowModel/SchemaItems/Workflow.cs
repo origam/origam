@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Text;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.RuleModel;
@@ -226,7 +227,30 @@ namespace Origam.Schema.WorkflowModel
 			{
 				throw new InvalidOperationException("Cannot set Features to Workflow");
 			}
-		}		
-		#endregion
-	}
+		}
+        [Category("Contex Store")]
+        [DisplayName("isTrue")]
+        public string ContexStoreCalc
+        {
+            get
+            {
+                ArrayList arrayContex = this.ChildItemsByType(ContextStore.ItemTypeConst);
+                StringBuilder outp = new StringBuilder();
+                foreach (ContextStore contextStore in arrayContex)
+                {
+                    if (contextStore.IsReturnValue)
+                    {
+                        outp.Append(contextStore.Name);
+                        outp.Append(";");
+                    }
+                }
+                if ("".Equals(outp.ToString()))
+                {
+                    return "!!!No Context Store with output!!!";
+                }
+                return outp.ToString();
+            }
+        }
+        #endregion
+    }
 }

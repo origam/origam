@@ -48,7 +48,7 @@ namespace Origam.Workbench.Services
         public event EventHandler<FileSystemChangeEventArgs> ReloadNeeded;
             
         public FilePersistenceService(IList<ElementName> defaultFolders,
-            string basePath = null, bool watchFileChanges = true)    
+            string basePath = null, bool watchFileChanges = true, bool useBinFile = true)    
         {
             this.defaultFolders = defaultFolders;
             
@@ -86,7 +86,8 @@ namespace Origam.Workbench.Services
                                             objectFileDataFactory, 
                                             origamFileFactory,
                                             xmlFileDataFactory,
-                                            pathToIndexBin);
+                                            pathToIndexBin,
+                                            useBinFile);
             index.InitItemTracker(trackerLoaderFactory);
             
             schemaProvider = new FilePersistenceProvider(

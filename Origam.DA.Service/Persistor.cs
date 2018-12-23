@@ -71,7 +71,7 @@ namespace Origam.DA.Service
             transactionStore.AddOrReplace(origamFile);
             if (!inTransaction)
             {
-                EndTransaction();
+                ProcessTransactionStore();
             }
             instance.IsPersisted = true;
         }
@@ -114,14 +114,20 @@ namespace Origam.DA.Service
         public void EndTransaction()
         {
             if (!inTransaction) throw new Exception("Not in transaction! No transaction  to end.");
+            ProcessTransactionStore();
+            inTransaction = false;
+        }
+
+        private void ProcessTransactionStore()
+        {
             foreach (OrigamFile origamFile in transactionStore.Files)
             {
                 origamFile.FinalizeSave();
                 origamFile.DeferredSaveDocument = null;
             }
+
             transactionStore.Clear();
             index.Persist(trackerLoaderFactory);
-            inTransaction = false;
         }
 
         public void EndTransactionDontSave()
@@ -222,8 +228,8 @@ namespace Origam.DA.Service
             catch (Exception e)
             {
                 throw new Exception(
-                    "There was an error during renaming. Some directories and groups were not renamed and model" +
-                    "is in inconsistent state as a result of that. Please rename the already processed" +
+                    "There was an error during renaming. Some directories and groups were not renamed and model " +
+                    "is in inconsistent state as a result of that. Please rename the already processed " +
                     "directories and groups back as a rollback of this operation is not implemented yet." +
                     "Original error: " + e.Message, e);
             }
@@ -296,7 +302,9 @@ namespace Origam.DA.Service
             }
             if (!instance.IsDeleted)
             {
-                DatabasePersistenceProvider.CheckInstanceRules(instance);
+                RuleTools.DoOnFirstViolation(
+                    objectToCheck: instance,
+                    action: ex => throw new Exception("Instance " + instance.Id + " cannot be persisted!\n" + ex.Message, ex));
             }
         }
     }

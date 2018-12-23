@@ -26,6 +26,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using Origam.Extensions;
+using Origam.Gui;
 using Origam.Gui.UI;
 using Origam.Schema;
 using Origam.Workbench.Services;
@@ -50,8 +51,8 @@ namespace Origam.Workbench.Editors
         ToolStripMenuItem _saveCmd = new ToolStripMenuItem("Save", Images.Save);
 		private ISubmenuBuilder _actionsBuilder = null;
         private ISubmenuBuilder _newElementsBuilder = null;
-		private List<ToolStrip> toolStrips = null;
-		private bool showMenusInAppToolStrip = false;
+
+	    private bool showMenusInAppToolStrip = false;
 
         public override object Content { get; set; }
 
@@ -211,10 +212,9 @@ namespace Origam.Workbench.Editors
 
 		private void LoadSettings()
 		{
-			string menuOptStr =
-				System.Configuration.ConfigurationManager
-					.AppSettings["ShowEditorMenusInAppToolStrip"];
-			bool.TryParse(menuOptStr, out showMenusInAppToolStrip);
+		    showMenusInAppToolStrip = ConfigurationManager
+		        .GetActiveConfiguration()
+		        .ShowEditorMenusInAppToolStrip;
 		}
 
 		public override string TitleName
@@ -555,53 +555,70 @@ namespace Origam.Workbench.Editors
 			}
 		}
 
-	    public IEnumerable<ToolStrip> ToolStrips {
-	        get
+	    public List<ToolStrip> GetToolStrips(int maxWidth =-1) {
+		    if (!showMenusInAppToolStrip) return new List<ToolStrip>();
+			var actions = ActionsBuilder.BuildSubmenu(Content);
+			var actionToolStrip = MakeLabeledToolStrip(actions, "Actions", maxWidth/2);
+            var newItems = NewElementsBuilder.BuildSubmenu(Content);
+			var newToolStrip = MakeLabeledToolStrip(newItems, "New", maxWidth/2);
+			return new List<ToolStrip> {actionToolStrip, newToolStrip};			        
+	    }
+
+	    private ToolStrip MakeLabeledToolStrip(ToolStripMenuItem[] items,
+	        string toolStripName, int maxWidth)
+	    {
+	        BigToolStripButton[] toolStripButtons = items
+	            .Select(x =>
+	            {
+	                BigToolStripButton button = new BigToolStripButton();
+	                button.Text = x.Text;
+	                button.Image = x.Image ?? ImageRes.UnknownIcon;
+	                button.Click += (sender, args) => x.PerformClick();
+	                return button;
+	            }).ToArray();
+
+
+	        LabeledToolStrip toolStrip = new LabeledToolStrip(this);
+	        toolStrip.Text = toolStripName;
+
+            toolStrip.Items.AddRange(toolStripButtons);
+
+	        HideItemsToFitToMaxWidth(toolStrip, items, maxWidth);
+
+	        return toolStrip;
+	    }
+
+	    private static void HideItemsToFitToMaxWidth(ToolStrip toolStrip,
+	        ToolStripMenuItem[] items, int maxWidth)
+	    {
+	        var itemsToHide = new List<ToolStripItem>();
+	        var dropDownButton = new BigArrowToolStripDropDownButton();
+	        for (int i = 0; i < 200; i++)
 	        {
-		        if (!showMenusInAppToolStrip) return new List<ToolStrip>();
-		        if (toolStrips == null)
-		        {
-					var actions = ActionsBuilder.BuildSubmenu(Content);
-					var actionToolStrip = MakeLabeledToolStrip(actions, "Actions");
-					var newItems = NewElementsBuilder.BuildSubmenu(Content);
-					var newToolStrip = MakeLabeledToolStrip(newItems, "New");
-					toolStrips = new List<ToolStrip> {actionToolStrip, newToolStrip};			        
-		        }
-		        return toolStrips;
+	            if (itemsToHide.Count == items.Length - 1) break;
+	            int totalToolTipWidth = itemsToHide.Count == 0
+	                ? toolStrip.PreferredSize.Width
+	                : toolStrip.PreferredSize.Width + dropDownButton.Width;
+
+                if (totalToolTipWidth < maxWidth) break;
+	            int indexToMove = toolStrip.Items.Count - 1;
+	            var lastItem = toolStrip.Items[indexToMove];
+	            toolStrip.Items.Remove(lastItem);
+	            itemsToHide.Add(items[indexToMove]);
+            }
+
+	        toolStrip.Width = 10000;
+
+            itemsToHide.Reverse();
+	        dropDownButton.DropDownItems.AddRange(itemsToHide.ToArray());
+
+	        if (dropDownButton.HasDropDownItems)
+	        {
+	            toolStrip.Items.Add(dropDownButton);
 	        }
 	    }
 
-		private ToolStrip MakeLabeledToolStrip(ToolStripMenuItem[] items,
-			string toolStripName)
-		{
-			var toolStripButtons = items
-				.Take(3)
-				.Select(x =>
-				{
-					BigToolStripButton button = new BigToolStripButton();
-					button.Text = x.Text;
-					button.Image = x.Image ?? ImageRes.UnknownIcon;
-					button.Click += (sender, args) => x.PerformClick();
-					return button;
-				}).ToArray();
-			var dropDownToolStripItems = items
-				.Skip(3)
-				.ToArray();
-			var dropDownButton = new ToolStripDropDownButton(
-				"",
-				null,
-				dropDownToolStripItems);
-			ToolStrip toolStrip = new LabeledToolStrip();
-			toolStrip.Text = toolStripName;
-			toolStrip.Items.AddRange(toolStripButtons);
-			if (dropDownButton.HasDropDownItems)
-			{
-				toolStrip.Items.Add(dropDownButton);
-			}
-			return toolStrip;
-		}
-
-		public event EventHandler ToolStripsLoaded;
+	    public event EventHandler ToolStripsLoaded;
 	    public event EventHandler AllToolStripsRemoved;
 	}
 }

@@ -106,6 +106,7 @@ namespace Origam.Server.Pages
                     HandlePUT(parameters, xsltPage, xmlData, transformParams, ruleEngine);
                     return;
                 }
+                
             }
 
             bool xpath = xsltPage.ResultXPath != null && xsltPage.ResultXPath != String.Empty;

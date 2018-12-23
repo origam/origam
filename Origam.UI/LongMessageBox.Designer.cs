@@ -35,19 +35,21 @@
             // 
             // messageTextBox
             // 
-            this.messageTextBox.Location = new System.Drawing.Point(12, 12);
+            this.messageTextBox.Location = new System.Drawing.Point(9, 10);
+            this.messageTextBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.messageTextBox.Name = "messageTextBox";
             this.messageTextBox.ReadOnly = true;
-            this.messageTextBox.Size = new System.Drawing.Size(601, 222);
+            this.messageTextBox.Size = new System.Drawing.Size(698, 252);
             this.messageTextBox.TabIndex = 0;
             this.messageTextBox.Text = "";
             // 
             // noButton
             // 
             this.noButton.DialogResult = System.Windows.Forms.DialogResult.No;
-            this.noButton.Location = new System.Drawing.Point(538, 249);
+            this.noButton.Location = new System.Drawing.Point(651, 270);
+            this.noButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.noButton.Name = "noButton";
-            this.noButton.Size = new System.Drawing.Size(75, 23);
+            this.noButton.Size = new System.Drawing.Size(56, 19);
             this.noButton.TabIndex = 1;
             this.noButton.Text = "No";
             this.noButton.UseVisualStyleBackColor = true;
@@ -55,22 +57,24 @@
             // yesButton
             // 
             this.yesButton.DialogResult = System.Windows.Forms.DialogResult.Yes;
-            this.yesButton.Location = new System.Drawing.Point(447, 249);
+            this.yesButton.Location = new System.Drawing.Point(582, 270);
+            this.yesButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.yesButton.Name = "yesButton";
-            this.yesButton.Size = new System.Drawing.Size(75, 23);
+            this.yesButton.Size = new System.Drawing.Size(56, 19);
             this.yesButton.TabIndex = 2;
             this.yesButton.Text = "Yes";
             this.yesButton.UseVisualStyleBackColor = true;
             // 
             // LongMessageBox
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(625, 284);
+            this.ClientSize = new System.Drawing.Size(718, 296);
             this.Controls.Add(this.yesButton);
             this.Controls.Add(this.noButton);
             this.Controls.Add(this.messageTextBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "LongMessageBox";
             this.Text = "LongMessageBox";
             this.ResumeLayout(false);

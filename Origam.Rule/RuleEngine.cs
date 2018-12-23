@@ -1667,15 +1667,21 @@ namespace Origam.Rule
 
 		public string FormatDate(string date, string format)
 		{
+            if(String.IsNullOrWhiteSpace(date))
+            {
+                return "";
+            }
 			DateTime d = XmlConvert.ToDateTime(date);
-
 			return d.ToString(format);
 		}
 
 		public string FormatNumber(string number, string format)
 		{
+            if(String.IsNullOrWhiteSpace(number))
+            {
+                return "";
+            }
 			decimal d = XmlConvert.ToDecimal(number);
-
 			return d.ToString(format);
 		}
 		
