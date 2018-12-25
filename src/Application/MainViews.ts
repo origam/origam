@@ -1,19 +1,19 @@
 import { action, computed, observable } from "mobx";
 import { IAPI } from "../DataLoadingStrategy/types";
-import { OpenedView } from "./OpenedView";
-import { IMainViews, IOpenedView, IOpenedViewCollection } from "./types";
+import { MainView } from "./MainView";
+import { IMainViews, IMainView, IMainViewsCollection } from "./types";
 
 let subidGen = 1;
 
-export class MainViews implements IMainViews, IOpenedViewCollection {
+export class MainViews implements IMainViews, IMainViewsCollection {
 
 
   constructor(public api: IAPI) {}
 
-  @observable public activeView: IOpenedView | undefined = undefined;
-  @observable public openedViewsState: IOpenedView[] = [];
+  @observable public activeView: IMainView | undefined = undefined;
+  @observable public openedViewsState: IMainView[] = [];
 
-  public isActiveView(view: IOpenedView): boolean {
+  public isActiveView(view: IMainView): boolean {
     return Boolean(
       this.activeView &&
       view.id === this.activeView.id &&
@@ -21,7 +21,7 @@ export class MainViews implements IMainViews, IOpenedViewCollection {
     );
   }
 
-  public getViewOrder(forView: IOpenedView): number {
+  public getViewOrder(forView: IMainView): number {
     let order = 0;
     for (const view of this.openedViewsState) {
       if(view.id === forView.id) {
@@ -41,7 +41,7 @@ export class MainViews implements IMainViews, IOpenedViewCollection {
   }
 
   @computed
-  public get openedViews(): IOpenedView[] {
+  public get openedViews(): IMainView[] {
     return this.openedViewsState;
   }
 
@@ -95,7 +95,7 @@ export class MainViews implements IMainViews, IOpenedViewCollection {
 
   @action.bound
   public openView(id: string, label: string) {
-    const view = new OpenedView(id, `${subidGen++}`, label, this.api);
+    const view = new MainView(id, `${subidGen++}`, label, this.api);
     view.livesIn = this;
     view.start();
     this.openedViewsState.push(view);

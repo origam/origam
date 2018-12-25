@@ -2,8 +2,8 @@ import { IComponentBindingsModel } from "src/componentBindings/types";
 
 export interface IMainViews {  
   
-  activeView: IOpenedView | undefined;
-  openedViews: IOpenedView[];
+  activeView: IMainView | undefined;
+  openedViews: IMainView[];
   start(): void;
 
   // TODO: Move direct event handlers to some dedicated View class?
@@ -12,7 +12,7 @@ export interface IMainViews {
   activateView(id: string, subid: string): void;
 }
 
-export interface IOpenedView {
+export interface IMainView {
   id: string;
   subid: string;
   label: string;
@@ -26,9 +26,9 @@ export interface IOpenedView {
   unlockLoading(): void;
 }
 
-export interface IOpenedViewCollection {
-  isActiveView(view: IOpenedView): boolean;
-  getViewOrder(view: IOpenedView): number;
+export interface IMainViewsCollection {
+  isActiveView(view: IMainView): boolean;
+  getViewOrder(view: IMainView): number;
 }
 
 export interface IApplication {

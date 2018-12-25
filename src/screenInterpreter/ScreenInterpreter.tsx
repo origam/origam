@@ -3,7 +3,7 @@ import * as React from "react";
 import { Box } from "../uiComponents/skeleton/Box";
 import { FormField } from "../uiComponents/skeleton/FormField";
 import { FormSection } from "../uiComponents/skeleton/FormSection";
-import { Grid } from "../uiComponents/skeleton/Grid";
+import { DataView } from "../uiComponents/skeleton/DataView";
 import { HSplit } from "../uiComponents/skeleton/HSplit";
 import { Tab } from "../uiComponents/skeleton/Tab";
 import { TabHandle } from "../uiComponents/skeleton/TabHandle";
@@ -14,10 +14,97 @@ import { GridTable } from "src/uiComponents/controls/GridTable";
 import { GridForm } from "src/uiComponents/controls/GridForm";
 import { Label } from "src/uiComponents/skeleton/Label";
 import { TreePanel } from "src/uiComponents/controls/TreePanel";
+import { IDropDownColumn, IProperty } from './types';
+import {
+  IXmlNode,
 
-export function reactProcessNode(node: any, path: any[]) {
+  ICollectPropertiesContext,
+
+  ICollectDropDownColumnsContext
+} from "./types";
+
+export function collectProperties(
+  node: IXmlNode,
+  path: IXmlNode[],
+  originalContext: ICollectPropertiesContext
+): any {
   const nextNode = () =>
-    node.elements.map((element: any) =>
+    (node.elements || []).map((element: any) =>
+      collectProperties(element, [...path, element], context)
+    );
+
+  let context = originalContext;
+  const attr = node.attributes;
+
+  switch (node.name) {
+    case "Property": {
+      if (
+        path.slice(-2)[0].name === "Properties"
+      ) {
+        const dropDownColumns: IDropDownColumn[] = [];
+        collectDropDownColumns(node, [...path, node], {dropDownColumns});
+        context.properties.push({
+          id: attr.Id,
+          modelInstanceId: attr.ModelInstanceId,
+          name: attr.Name,
+          readOnly: { true: true, false: false }[attr.ReadOnly],
+          entity: attr.Entity,
+          column: attr.Column,
+          x: parseInt(attr.X, 10),
+          y: parseInt(attr.Y, 10),
+          w: parseInt(attr.Width, 10),
+          h: parseInt(attr.Height, 10),
+          captionLength: parseInt(attr.CaptionLength, 10),
+          captionPosition: attr.CaptionPosition,
+          dropDownColumns
+        });
+      }
+      return nextNode();
+    }
+    default:
+      return nextNode();
+  }
+}
+
+export function collectDropDownColumns(
+  node: IXmlNode,
+  path: IXmlNode[],
+  originalContext: ICollectDropDownColumnsContext
+): any {
+  const nextNode = () =>
+    (node.elements || []).map((element: any) =>
+      collectDropDownColumns(element, [...path, element], context)
+    );
+
+  let context = originalContext;
+  const attr = node.attributes;
+
+  switch (node.name) {
+    case "Property": {
+      if (
+        path.slice(-2)[0].name === "DropDownColumns"
+      ) {
+        context.dropDownColumns.push({
+          id: attr.Id,
+          name: attr.Name,
+          entity: attr.Entity,
+          column: attr.Column,
+          index: parseInt(attr.Index, 10)
+        });
+      }
+      return nextNode();
+    }
+    default:
+      return nextNode();
+  }
+}
+
+export function reactProcessNode(
+  node: any,
+  path: any[],
+) {
+  const nextNode = () =>
+    (node.elements || []).map((element: any) =>
       reactProcessNode(element, [...path, element])
     );
 
@@ -28,31 +115,47 @@ export function reactProcessNode(node: any, path: any[]) {
     return <>{nextNode()}</>;
   }
   switch (node.name) {
-    case "FormRoot":
-      break;
     case "Window":
       return (
         <Window id={attr.Id} name={attr.Title}>
           {nextNode()}
         </Window>
       );
-    case "Property":
-      break;
-    case "Properties":
-      break;
-    case "FormField":
-      break;
-    case "PropertyNames":
-      break;
-    case "DataSources":
-      break;
-    case "ComponentBindings":
-      break;
+    case "UIElement":
     case "UIRoot":
-      break;
+      switch (attr.Type) {
+        case "Grid":
+          console.log(node)
+          const properties: IProperty[] = [];
+          collectProperties(node, [...path, node], {properties});
+          console.log(properties)
+          return null;
+          /*return (
+            <DataView id={attr.Id} modelInstanceId={attr.ModelInstanceId}>
+              {nextNode()}
+            </DataView>
+          );*/
+        case "VSplit":
+          return (
+            <VSplit id={attr.Id} modelInstanceId={attr.ModelInstanceId}>
+              {nextNode()}
+            </VSplit>
+          );
+        case "HSplit":
+          return (
+            <HSplit id={attr.Id} modelInstanceId={attr.ModelInstanceId}>
+              {nextNode()}
+            </HSplit>
+          );
+        case "VBox":
+          return (
+            <VBox id={attr.Id} modelInstanceId={attr.ModelInstanceId}>
+              {nextNode()}
+            </VBox>
+          );
+      }
     default:
-      console.log(node);
-      throw new Error("Unknown screen node.");
+      return nextNode();
   }
   return null;
 }

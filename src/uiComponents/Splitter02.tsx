@@ -43,15 +43,11 @@ export class Splitter extends React.Component<{
 
   @action.bound
   private handleResizeImm(contentRect: any) {
-    if(contentRect.client) {
-      console.log(this.props.name, contentRect.client.width, contentRect.client.height)
-    }
     if (
       !contentRect.client ||
       (this.props.horizontal && contentRect.client.width === 0) ||
       (!this.props.horizontal && contentRect.client.height === 0)
     ) {
-      console.log('Resize ignore')
       return;
     }
     this.model.contentRect = contentRect;

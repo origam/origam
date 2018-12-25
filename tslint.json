@@ -16,6 +16,7 @@
     "no-unused-expression": false,
     "max-classes-per-file": false,
     "no-debugger": false,
-    "no-empty-interface": false
+    "no-empty-interface": false,
+    "prefer-const": false
   }
 }

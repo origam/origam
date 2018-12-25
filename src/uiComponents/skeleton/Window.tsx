@@ -2,10 +2,10 @@ import * as React from "react";
 import { observer, inject } from "mobx-react";
 import { observable, action } from "mobx";
 
-import { IOpenedView } from "src/Application/types";
+import { IMainView } from "src/Application/types";
 
 interface IWindowProps {
-  mainView?: IOpenedView;
+  mainView?: IMainView;
   id: string;
   name: string;
 }

@@ -53,9 +53,12 @@ import { IGridPanelBacking } from "src/GridPanel/types";
 import { GridForm } from "../controls/GridForm";
 import { GridMap } from "../controls/GridMap";
 import { api } from "src/DataLoadingStrategy/api";
-import { MainViewComponent } from "../../MainTabs/MainTabsComponent";
+
 import { ILoadingGate } from '../../DataLoadingStrategy/types';
-import { IOpenedView } from "src/Application/types";
+
+import { IProperty } from "src/screenInterpreter/types";
+import { IDataViewProps } from "./types";
+import { IMainView } from "src/Application/types";
 
 class GridConfiguration {
   public gridSetup: IGridSetup;
@@ -359,83 +362,16 @@ function fieldsFromProperties(properties: any[]) {
   });
 }
 
-const personFields = [
-  new DataTableField({
-    id: "name",
-    label: "Name",
-    type: IFieldType.string,
-    dataIndex: 0,
-    recvDataIndex: 0,
-    isPrimaryKey: false,
-    isLookedUp: false
-  }),
-  new DataTableField({
-    id: "birth_date",
-    label: "Birth date",
-    type: IFieldType.date,
-    dataIndex: 1,
-    recvDataIndex: 0,
-    isPrimaryKey: false,
-    isLookedUp: false
-  }),
-  new DataTableField({
-    id: "likes_platypuses",
-    label: "Likes platypuses?",
-    type: IFieldType.boolean,
-    dataIndex: 2,
-    recvDataIndex: 0,
-    isPrimaryKey: false,
-    isLookedUp: false
-  }),
-  new DataTableField({
-    id: "city_id",
-    label: "Lives in",
-    type: IFieldType.string,
-    dataIndex: 3,
-    recvDataIndex: 0,
-    isPrimaryKey: false,
-    isLookedUp: true,
-    lookupId: "name"
-    // lookupResultTableId: "city"
-  }),
-  new DataTableField({
-    id: "favorite_color",
-    label: "Favorite color",
-    type: IFieldType.color,
-    dataIndex: 4,
-    recvDataIndex: 0,
-    isPrimaryKey: false,
-    isLookedUp: false
-  })
-];
 
-const cityFields = [
-  new DataTableField({
-    id: "name",
-    label: "Name",
-    type: IFieldType.string,
-    dataIndex: 0,
-    recvDataIndex: 0,
-    isPrimaryKey: false,
-    isLookedUp: false
-  }),
-  new DataTableField({
-    id: "inhabitants",
-    label: "Inhabitants",
-    type: IFieldType.integer,
-    dataIndex: 1,
-    recvDataIndex: 0,
-    isPrimaryKey: false,
-    isLookedUp: false
-  })
-];
+
+
 
 @inject("mainView")
 @observer
-export class Grid extends React.Component<any> {
+export class DataView extends React.Component<IDataViewProps> {
   constructor(props: any) {
     super(props);
-    const { mainView } = props as { mainView: IOpenedView & ILoadingGate };
+    /*const { mainView } = props as { mainView: IMainView & ILoadingGate };
     const fields = fieldsFromProperties(props.properties);
     this.gridPaneBacking = createGridPaneBacking(
       props.dataSource.dataStructureEntityId,
@@ -447,33 +383,26 @@ export class Grid extends React.Component<any> {
     mainView.componentBindingsModel.registerGridPaneBacking(
       this.gridPaneBacking
     );
-    this.gridPaneBacking.dataLoadingStrategyActions.addLoadingGate(mainView);
+    this.gridPaneBacking.dataLoadingStrategyActions.addLoadingGate(mainView);*/
   }
 
   private gridPaneBacking: IGridPanelBacking;
 
   public componentDidMount() {
-    this.gridPaneBacking.onStartGrid.trigger();
+    /*this.gridPaneBacking.onStartGrid.trigger();
     this.gridPaneBacking.dataLoadingStrategyActions
       .requestLoadFresh()
       .then(() => {
         this.gridPaneBacking.gridInteractionActions.selectFirst();
-      });
-    autorun(() => {
-      /*console.log(
-        "SelID:",
-        this.gridPaneBacking.gridInteractionSelectors.selectedRowId
-      );*/
-    });
-    autorun(() => {
-      // console.log(this.gridPaneBacking.dataLoadingStrategySelectors.isLoading);
-    });
+      });*/
   }
 
   public render() {
-    const { gridPaneBacking } = this;
+    /*const { gridPaneBacking } = this;*/
     return (
-      <Provider gridPaneBacking={this.gridPaneBacking}>
+      <Provider /*gridPaneBacking={this.gridPaneBacking}*/>
+        <></>
+       {/*
         <div
           className="oui-grid"
           style={{
@@ -494,8 +423,8 @@ export class Grid extends React.Component<any> {
           {this.props.form}
           <GridMap />
           {/*<GridForm isActiveView={gridPaneBacking.gridInteractionSelectors.activeView === IGridPaneView.Form} reactTree={this.props.form} />*/}
-          {/*this.props.children*/}
-        </div>
+          {/*this.props.children
+        </div>*/}
       </Provider>
     );
   }

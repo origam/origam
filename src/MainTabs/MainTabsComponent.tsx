@@ -1,7 +1,7 @@
 import { computed } from "mobx";
 import { observer, Provider, inject } from "mobx-react";
 import * as React from "react";
-import { IMainViews, IOpenedView } from "../Application/types";
+import { IMainViews, IMainView } from "../Application/types";
 
 
 interface IMainTabsProps {
@@ -51,7 +51,7 @@ export class MainTabsComponent extends React.Component<IMainTabsProps> {
 
 interface IMainViewComponentProps {
   mainViews?: IMainViews;
-  view?: IOpenedView;
+  view?: IMainView;
   id: string;
   subid: string;
   label: string;
@@ -63,7 +63,6 @@ export class MainViewComponent extends React.Component<
   IMainViewComponentProps
 > {
   public render() {
-    console.log('R', this.props.view!.reactTree)
     return (
       <Provider mainView={this.props.view}>
         {this.props.view!.reactTree || <></>}
@@ -73,7 +72,7 @@ export class MainViewComponent extends React.Component<
 }
 
 interface IMainTabHandleCnd {
-  view: IOpenedView;
+  view: IMainView;
   mainViews?: IMainViews;
   id: string;
   subid: string;

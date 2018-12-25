@@ -1,12 +1,15 @@
 import { observable, action, computed } from "mobx";
-import { IOpenedView, IOpenedViewCollection } from "./types";
+import { IMainView, IMainViewsCollection } from "./types";
 import { ILoadingGate, IAPI } from "src/DataLoadingStrategy/types";
 import { IComponentBindingsModel } from "src/componentBindings/types";
 import { getToken } from "src/DataLoadingStrategy/api";
 import * as xmlJs from "xml-js";
 import { reactProcessNode } from "src/screenInterpreter/ScreenInterpreter";
+import { collectProperties } from '../screenInterpreter/ScreenInterpreter';
+import { IXmlNode } from "src/screenInterpreter/types";
 
-export class OpenedView implements IOpenedView, ILoadingGate {
+
+export class MainView implements IMainView, ILoadingGate {
   @observable public isLoadingAllowed: boolean = false;
 
   constructor(
@@ -19,7 +22,7 @@ export class OpenedView implements IOpenedView, ILoadingGate {
   @observable.ref public reactTree: React.ReactNode = null;
 
   public componentBindingsModel: IComponentBindingsModel;
-  public livesIn: IOpenedViewCollection;
+  public livesIn: IMainViewsCollection;
 
   @computed
   public get isActive(): boolean {
@@ -36,6 +39,7 @@ export class OpenedView implements IOpenedView, ILoadingGate {
       action((response: any) => {
         const { data } = response;
         const xmlObj = xmlJs.xml2js(data, { compact: false });
+
         const reactTree = reactProcessNode(xmlObj, []);
         this.reactTree = reactTree;
         /* this.componentBindingsModel = new ComponentBindingsModel(
