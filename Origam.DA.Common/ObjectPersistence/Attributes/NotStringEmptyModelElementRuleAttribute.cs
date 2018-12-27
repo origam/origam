@@ -42,8 +42,8 @@ namespace Origam.DA.ObjectPersistence
 		{
 			if(memberName == String.Empty | memberName == null) CheckRule(instance);
 
-			string value = (string)Reflector.GetValue(instance.GetType(), instance, memberName);
-			if(value == null | value == String.Empty)
+			object value = Reflector.GetValue(instance.GetType(), instance, memberName);
+			if(value == null | (value as string) == string.Empty)
 			{
 				return new NullReferenceException(ResourceUtils.GetString("CantBeEmpty", memberName));
 			}
