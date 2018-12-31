@@ -61,9 +61,9 @@
       <Project>{874de143-fdf1-4dee-bc67-1cce34acb760}</Project>
       <Name>Origam.DA.Service-net2Tests</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service-net2.csproj">
+    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service.csproj">
       <Project>{ff4722b4-01f8-4062-af39-f243a6bf336d}</Project>
-      <Name>Origam.DA.Service-net2</Name>
+      <Name>Origam.DA.Service</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Services\Origam.Services-net2.csproj">
       <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>

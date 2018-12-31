@@ -84,9 +84,9 @@
       <Project>{B4E4DC00-766A-4CA3-83D8-0A5383462F53}</Project>
       <Name>Origam.DA.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service-net2.csproj">
+    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service.csproj">
       <Project>{FF4722B4-01F8-4062-AF39-F243A6BF336D}</Project>
-      <Name>Origam.DA.Service-net2</Name>
+      <Name>Origam.DA.Service</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache-net2.csproj">
       <Project>{ffc2dce2-b8b5-48a4-aa18-1e93f99e1d54}</Project>

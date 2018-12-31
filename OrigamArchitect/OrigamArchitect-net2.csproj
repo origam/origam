@@ -241,8 +241,8 @@
       <Project>{B4E4DC00-766A-4CA3-83D8-0A5383462F53}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service-net2.csproj">
-      <Name>Origam.DA.Service-net2</Name>
+    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service.csproj">
+      <Name>Origam.DA.Service</Name>
       <Project>{FF4722B4-01F8-4062-AF39-F243A6BF336D}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
