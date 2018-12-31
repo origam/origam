@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.OrigamEngine.ModelXmlBuilders;
-using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.LookupModel;
 using Origam.Schema.MenuModel;
