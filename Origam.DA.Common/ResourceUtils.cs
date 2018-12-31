@@ -26,7 +26,7 @@ namespace Origam.DA
 {
 	public class ResourceUtils
 	{
-		private static readonly string BASENAME = "Origam.DA.Strings";
+		private static readonly string BASENAME = "Origam.DA.Common.Strings";
 
 		private static ResourceManager _rm = null;
 		

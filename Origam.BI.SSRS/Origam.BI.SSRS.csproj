@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -76,9 +76,9 @@
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
       <Name>Origam.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common-net2.csproj">
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj">
       <Project>{b4e4dc00-766a-4ca3-83d8-0a5383462f53}</Project>
-      <Name>Origam.DA.Common-net2</Name>
+      <Name>Origam.DA.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel-net2.csproj">
       <Project>{ecff4a9d-9196-4962-823c-a65d552ff6d8}</Project>

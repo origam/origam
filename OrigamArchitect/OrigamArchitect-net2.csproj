@@ -236,8 +236,8 @@
       <Project>{84251D2B-43A4-4228-8D2A-8729722C25E4}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common-net2.csproj">
-      <Name>Origam.DA.Common-net2</Name>
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj">
+      <Name>Origam.DA.Common</Name>
       <Project>{B4E4DC00-766A-4CA3-83D8-0A5383462F53}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>

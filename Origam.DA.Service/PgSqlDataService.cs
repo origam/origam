@@ -96,11 +96,11 @@ namespace Origam.DA.Service
 
 					result += "Server: " + cn.Host + Environment.NewLine;
 					result += "Port: " + cn.Port.ToString() + Environment.NewLine;
-					result += "Backend Protocol Version: " + cn.BackendProtocolVersion.ToString() + Environment.NewLine;
+					//result += "Backend Protocol Version: " + cn.BackendProtocolVersion.ToString() + Environment.NewLine;
 					result += "Database: " + cn.Database + Environment.NewLine;
 					result += "Server Version: " + cn.ServerVersion + Environment.NewLine;
-					result += "SSL: " + cn.SSL.ToString() + Environment.NewLine;
-					result += "Sync Notification: " + cn.SyncNotification.ToString() + Environment.NewLine;
+					//result += "SSL: " + cn.SSL.ToString() + Environment.NewLine;
+					//result += "Sync Notification: " + cn.SyncNotification.ToString() + Environment.NewLine;
 
 					OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 				
