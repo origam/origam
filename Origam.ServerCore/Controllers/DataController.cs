@@ -61,7 +61,7 @@ namespace Origam.ServerCore.Controllers
                 .OnSuccess(entityData => GetRow(entityData.Entity, lookupData.DataStructureEntityId, lookupData.Id))
                 .OnSuccess(rowData => GetLookupRows(lookupData, rowData))
                 .OnSuccess(ToActionResult)
-                .OnBoth(UnwrapReturnValue);
+                .OnBoth<IActionResult,IActionResult>(UnwrapReturnValue);
         }
 
         [HttpPost("[action]")]
@@ -74,7 +74,7 @@ namespace Origam.ServerCore.Controllers
                 .OnSuccess(entityData => CreateEntitiesGetQuery(entityQueryData, entityData))
                 .OnSuccess(ReadEntityData)
                 .OnSuccess(ToActionResult)
-                .OnBoth(UnwrapReturnValue);
+                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
 
         private Result<EntityData, IActionResult> GetEntityData(Guid dataStructureEntityId, FormReferenceMenuItem menuItem)
@@ -97,7 +97,7 @@ namespace Origam.ServerCore.Controllers
                         entityUpdateData.RowId))
                 .OnSuccess(rowData => FillRow(rowData, entityUpdateData.NewValues))
                 .OnSuccess(SubmitChange)
-                .OnBoth(UnwrapReturnValue);
+                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
 
 
@@ -111,7 +111,7 @@ namespace Origam.ServerCore.Controllers
                 .OnSuccess(entityData => MakeEmptyRow(entityData.Entity))
                 .OnSuccess(rowData => FillRow(entityInsertData, rowData))
                 .OnSuccess(SubmitChange)
-                .OnBoth(UnwrapReturnValue);
+                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
 
         [HttpDelete("[action]")]
@@ -131,7 +131,7 @@ namespace Origam.ServerCore.Controllers
                         rowData.Row.Delete();
                         return SubmitChange(rowData);
                     })
-                    .OnBoth(UnwrapReturnValue);
+                    .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
 
         class EntityData
