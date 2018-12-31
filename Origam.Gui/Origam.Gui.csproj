@@ -118,9 +118,9 @@
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
       <Name>Origam.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common-net2.csproj">
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj">
       <Project>{b4e4dc00-766a-4ca3-83d8-0a5383462f53}</Project>
-      <Name>Origam.DA.Common-net2</Name>
+      <Name>Origam.DA.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service-net2.csproj">
       <Project>{ff4722b4-01f8-4062-af39-f243a6bf336d}</Project>
