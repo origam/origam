@@ -1703,7 +1703,7 @@ namespace Origam.Schema.EntityModel
 
 	public class DataConstantLookupReaderConverter : System.ComponentModel.TypeConverter
 	{
-		IDataLookupService _lookupManager = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
+	    IRowValueLookupService _lookupManager = ServiceManager.Services.GetService<IRowValueLookupService>();
 		SortedList _currentList;
 		IDataLookup _currentLookup;
 
