@@ -14,14 +14,23 @@ import { GridTable } from "src/uiComponents/controls/GridTable";
 import { GridForm } from "src/uiComponents/controls/GridForm";
 import { Label } from "src/uiComponents/skeleton/Label";
 import { TreePanel } from "src/uiComponents/controls/TreePanel";
-import { IDropDownColumn, IProperty } from './types';
+import { IDropDownColumn, IProperty } from "./types";
 import {
   IXmlNode,
-
   ICollectPropertiesContext,
-
   ICollectDropDownColumnsContext
 } from "./types";
+
+function parseAttrRect(attr: {
+  [key: string]: string;
+}): { w: number; h: number; x: number; y: number } {
+  return {
+    x: parseInt(attr.X, 10),
+    y: parseInt(attr.Y, 10),
+    w: parseInt(attr.Width, 10),
+    h: parseInt(attr.Height, 10)
+  };
+}
 
 export function collectProperties(
   node: IXmlNode,
@@ -38,11 +47,9 @@ export function collectProperties(
 
   switch (node.name) {
     case "Property": {
-      if (
-        path.slice(-2)[0].name === "Properties"
-      ) {
+      if (path.slice(-2)[0].name === "Properties") {
         const dropDownColumns: IDropDownColumn[] = [];
-        collectDropDownColumns(node, [...path, node], {dropDownColumns});
+        collectDropDownColumns(node, [...path, node], { dropDownColumns });
         context.properties.push({
           id: attr.Id,
           modelInstanceId: attr.ModelInstanceId,
@@ -50,10 +57,7 @@ export function collectProperties(
           readOnly: { true: true, false: false }[attr.ReadOnly],
           entity: attr.Entity,
           column: attr.Column,
-          x: parseInt(attr.X, 10),
-          y: parseInt(attr.Y, 10),
-          w: parseInt(attr.Width, 10),
-          h: parseInt(attr.Height, 10),
+          ...parseAttrRect(attr),
           captionLength: parseInt(attr.CaptionLength, 10),
           captionPosition: attr.CaptionPosition,
           dropDownColumns
@@ -81,9 +85,7 @@ export function collectDropDownColumns(
 
   switch (node.name) {
     case "Property": {
-      if (
-        path.slice(-2)[0].name === "DropDownColumns"
-      ) {
+      if (path.slice(-2)[0].name === "DropDownColumns") {
         context.dropDownColumns.push({
           id: attr.Id,
           name: attr.Name,
@@ -99,13 +101,63 @@ export function collectDropDownColumns(
   }
 }
 
-export function reactProcessNode(
-  node: any,
-  path: any[],
-) {
+function buildForm(
+  node: IXmlNode,
+  path: IXmlNode[],
+  context: { properties: IProperty[] }
+): React.ReactNode {
   const nextNode = () =>
     (node.elements || []).map((element: any) =>
-      reactProcessNode(element, [...path, element])
+      buildForm(element, [...path, element], context)
+    );
+
+  const attr = node.attributes;
+
+  switch (node.name) {
+    case "FormElement":
+      switch (attr.Type) {
+        case "FormSection":
+          return (
+            <FormSection {...parseAttrRect(attr)} title={attr.Title}>
+              {nextNode()}
+            </FormSection>
+          );
+        default:
+          return nextNode();
+      }
+    case "string":
+      if (path.slice(-2)[0].name === "PropertyNames") {
+        const property = context.properties.find(
+          p => p.id === node.elements[0].text
+        );
+        if (property) {
+          switch (property.column) {
+            case "Text":
+              return <FormField property={property} />
+            case "Currency":
+              return <FormField property={property} />
+            case "Date":
+              return <FormField property={property} />
+            case "CheckBox":
+              return <FormField property={property} />
+            case "ComboBox":
+              return <FormField property={property} />
+            default:
+              return null;
+          }
+        }
+      } else {
+        return nextNode();
+      }
+    default:
+      return nextNode();
+  }
+}
+
+export function buildUI(node: IXmlNode, path: IXmlNode[]): React.ReactNode {
+  const nextNode = () =>
+    (node.elements || []).map((element: any) =>
+      buildUI(element, [...path, element])
     );
 
   const attr = node.attributes;
@@ -125,16 +177,17 @@ export function reactProcessNode(
     case "UIRoot":
       switch (attr.Type) {
         case "Grid":
-          console.log(node)
+          console.log(node);
           const properties: IProperty[] = [];
-          collectProperties(node, [...path, node], {properties});
-          console.log(properties)
-          return null;
-          /*return (
-            <DataView id={attr.Id} modelInstanceId={attr.ModelInstanceId}>
-              {nextNode()}
+          collectProperties(node, [...path, node], { properties });
+          console.log(properties);
+          return (
+            <DataView properties={properties}>
+              <GridForm>
+                {buildForm(node, [...path, node], { properties })}
+              </GridForm>
             </DataView>
-          );*/
+          );
         case "VSplit":
           return (
             <VSplit id={attr.Id} modelInstanceId={attr.ModelInstanceId}>
@@ -149,10 +202,16 @@ export function reactProcessNode(
           );
         case "VBox":
           return (
-            <VBox id={attr.Id} modelInstanceId={attr.ModelInstanceId}>
+            <VBox
+              id={attr.Id}
+              modelInstanceId={attr.ModelInstanceId}
+              {...parseAttrRect(attr)}
+            >
               {nextNode()}
             </VBox>
           );
+        default:
+          return nextNode();
       }
     default:
       return nextNode();

@@ -1,8 +1,16 @@
 import * as React from "react";
 import { observer } from "mobx-react";
 
+interface IFormSectionProps {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  title: string;
+}
+
 @observer
-export class FormSection extends React.Component<any> {
+export class FormSection extends React.Component<IFormSectionProps> {
   public render() {
     return (
       <>
@@ -24,7 +32,7 @@ export class FormSection extends React.Component<any> {
             left: this.props.x + 5
           }}
         >
-          {this.props.name}
+          {this.props.title}
         </div>
       </>
     );

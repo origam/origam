@@ -6,9 +6,9 @@ import {
   IDataTableSelectors
 } from "src/DataTable/types";
 import axios from "axios";
-import { DataTableRecord } from "src/DataTable/DataTableState";
 import { getToken } from "./api";
 import { IDataLoader, IDataSaver } from "./types";
+import { DataTableRecord } from "src/DataTable/DataTableRecord";
 
 export class DataSaver implements IDataSaver {
   constructor(

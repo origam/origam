@@ -5,13 +5,19 @@ import { GridViewType } from "src/Grid/types";
 import { GridEditorMounter } from "src/cells/GridEditorMounter";
 import { StringGridEditor } from "src/cells/string/GridEditor";
 import { action, computed } from "mobx";
+import { IProperty } from '../../screenInterpreter/types';
 
-@inject("gridPaneBacking")
+interface IFormFieldProps {
+  // gridPaneBacking: IGridPanelBacking;
+  property: IProperty;
+}
+
+
 @observer
-export class FormField extends React.Component<any> {
+export class FormField extends React.Component<IFormFieldProps> {
   private elmRoot: HTMLDivElement | null;
 
-  public componentDidMount() {
+  /*public componentDidMount() {
     window.addEventListener("click", this.handleWindowClick);
   }
 
@@ -20,7 +26,7 @@ export class FormField extends React.Component<any> {
   }
 
   @action.bound private handleWindowClick(event: any) {
-    const gridPaneBacking = this.props.gridPaneBacking as IGridPanelBacking;
+    const gridPaneBacking = this.props.gridPaneBacking;
     const {
       gridInteractionSelectors,
       gridCursorView,
@@ -35,7 +41,7 @@ export class FormField extends React.Component<any> {
 
   @action.bound
   private handleFieldClick(event: any) {
-    const gridPaneBacking = this.props.gridPaneBacking as IGridPanelBacking;
+    const gridPaneBacking = this.props.gridPaneBacking;
     const {
       gridInteractionSelectors,
       gridCursorView,
@@ -69,21 +75,21 @@ export class FormField extends React.Component<any> {
       id === gridCursorView.editingColumnId &&
       gridInteractionSelectors.activeView === GridViewType.Form
     );
-  }
+  }*/
 
   @action.bound private refRoot(elm: HTMLDivElement) {
     this.elmRoot = elm;
   }
 
   public render() {
-    const gridPaneBacking = this.props.gridPaneBacking as IGridPanelBacking;
+    /* const gridPaneBacking = this.props.gridPaneBacking as IGridPanelBacking;
     const {
       gridInteractionSelectors,
       gridCursorView,
       gridInteractionActions,
       gridSetup,
       gridTopology
-    } = gridPaneBacking;
+    } = gridPaneBacking;*/
     const { property } = this.props;
     const {
       x,
@@ -96,18 +102,18 @@ export class FormField extends React.Component<any> {
       name,
       id
     } = property;
-    const fieldIndex = gridTopology.getColumnIndexById(id);
+    /*const fieldIndex = gridTopology.getColumnIndexById(id);
     const rowIndex = gridTopology.getRowIndexById(
       gridCursorView.selectedRowId!
-    );
+    );*/
 
-    if (!Number.isInteger(x) || !Number.isInteger(y)) {
+    if (!Number.isInteger(x!) || !Number.isInteger(y!)) {
       return null;
     }
     let captionLocation;
     if (captionPosition === "Left") {
       captionLocation = {
-        left: x - captionLength,
+        left: x! - captionLength,
         top: y,
         width: captionLength,
         minHeight: 20 // this.props.h,
@@ -115,13 +121,13 @@ export class FormField extends React.Component<any> {
     } else if (captionPosition === "Top") {
       captionLocation = {
         left: x,
-        top: y - 20,
+        top: y! - 20,
         width: captionLength,
         minHeight: 20 // this.props.h,
       };
     } else {
       captionLocation = {
-        left: x + (entity === "Boolean" ? h : w), // + this.props.captionLength,
+        left: x! + (entity === "Boolean" ? h! : w!), // + this.props.captionLength,
         top: y,
         width: captionLength,
         minHeight: 20 // this.props.h,
@@ -137,16 +143,16 @@ export class FormField extends React.Component<any> {
             width: entity === "Boolean" ? h : w,
             height: h
           }}
-          onClick={this.handleFieldClick}
+          // onClick={this.handleFieldClick}
           ref={this.refRoot}
         >
           {/*`Type: ${this.props.type} Name: ${this.props.name}, Id: ${
             this.props.id
           }`*/}
           {/*this.props.children*/}
-          {/*this.props.name*/}
+          {this.props.property.name}
           {/*entity*/}
-          {this.isThisEditing && (
+          {/*this.isThisEditing && (
             <GridEditorMounter cursorView={gridCursorView}>
               {this.isThisEditing && (
                 <StringGridEditor
@@ -159,7 +165,7 @@ export class FormField extends React.Component<any> {
               )}
             </GridEditorMounter>
           )}
-          {!this.isThisEditing && gridSetup.getCellValue(rowIndex, fieldIndex)}
+              {!this.isThisEditing && gridSetup.getCellValue(rowIndex, fieldIndex)}*/}
         </div>
         {captionPosition !== "None" && (
           <div className="oui-property-caption" style={{ ...captionLocation }}>

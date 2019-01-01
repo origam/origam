@@ -8,7 +8,6 @@ import {
   computed,
   comparer
 } from "mobx";
-import { DataTableRecord } from "../DataTable/DataTableState";
 import { reactionRuntimeInfo } from "../utils/reaction";
 import {
   IDataLoadingStategyState,
@@ -38,6 +37,7 @@ import { CancellablePromise } from "mobx/lib/api/flow";
 import { IDataTableFieldStruct, IRecordId } from "../DataTable/types";
 import { EventObserver } from "../utils/events";
 import { IGridCursorView } from "../Grid/types";
+import { DataTableRecord } from "src/DataTable/DataTableRecord";
 
 function noCancelException<T>(promise: Promise<void | T>): Promise<void | T> {
   return promise.catch(e => {

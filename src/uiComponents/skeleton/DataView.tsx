@@ -8,9 +8,7 @@ import { DataLoadingStrategyState } from "src/DataLoadingStrategy/DataLoadingStr
 import { DataSaver } from "src/DataLoadingStrategy/DataSaver";
 import { DataSavingStrategy } from "src/DataLoadingStrategy/DataSavingStrategy";
 import { LookupResolverProvider } from "src/DataLoadingStrategy/LookupResolverProvider";
-import { DataTableActions } from "src/DataTable/DataTableActions";
-import { DataTableSelectors } from "src/DataTable/DataTableSelectors";
-import { DataTableField, DataTableState } from "src/DataTable/DataTableState";
+
 import {
   ICellValue,
   IDataTableFieldStruct,
@@ -54,11 +52,13 @@ import { GridForm } from "../controls/GridForm";
 import { GridMap } from "../controls/GridMap";
 import { api } from "src/DataLoadingStrategy/api";
 
-import { ILoadingGate } from '../../DataLoadingStrategy/types';
+import { ILoadingGate } from "../../DataLoadingStrategy/types";
 
 import { IProperty } from "src/screenInterpreter/types";
 import { IDataViewProps } from "./types";
 import { IMainView } from "src/Application/types";
+import { DataTable } from "src/DataTable/DataTable";
+import { DataTableField } from "src/DataTable/DataTableField";
 
 class GridConfiguration {
   public gridSetup: IGridSetup;
@@ -155,7 +155,7 @@ function createGridPaneBacking(
   dataTableFields: IDataTableFieldStruct[],
   defaultView: GridViewType,
   menuItemId: string,
-  modelInstanceId: string,
+  modelInstanceId: string
 ) {
   // console.log(defaultView)
   const configuration = new GridConfiguration();
@@ -182,19 +182,13 @@ function createGridPaneBacking(
 
   const dataLoader = new DataLoader(dataStructureEntityId, api, menuItemId);
 
-  const dataTableState = new DataTableState();
-
-  dataTableState.fields = dataTableFields;
-
-  const dataTableSelectors = new DataTableSelectors(
-    dataTableState,
+  const dataTable = new DataTable(
     lookupResolverProvider,
     dataStructureEntityId
   );
-  const dataTableActions = new DataTableActions(
-    dataTableState,
-    dataTableSelectors
-  );
+
+  dataTable.setFields(dataTableFields);
+
 
   const onStartGrid = EventObserver();
   const onStopGrid = EventObserver();
@@ -214,7 +208,7 @@ function createGridPaneBacking(
     gridInteractionState,
     configuration,
     configuration,
-    dataTableSelectors
+    dataTable
   );
 
   const formState = new FormState();
@@ -236,8 +230,8 @@ function createGridPaneBacking(
     gridInteractionSelectors,
     gridInteractionActions,
     gridSelectors,
-    dataTableSelectors,
-    dataTableActions,
+    dataTable,
+    dataTable,
     configuration,
     configuration
   );
@@ -256,13 +250,13 @@ function createGridPaneBacking(
   const dataLoadingStrategySelectors = new DataLoadingStrategySelectors(
     dataLoadingStrategyState,
     gridSelectors,
-    dataTableSelectors
+    dataTable
   );
   const dataLoadingStrategyActions = new DataLoadingStrategyActions(
     dataLoadingStrategyState,
     dataLoadingStrategySelectors,
-    dataTableActions,
-    dataTableSelectors,
+    dataTable,
+    dataTable,
     dataLoader,
     gridOrderingSelectors,
     gridOrderingActions,
@@ -277,13 +271,13 @@ function createGridPaneBacking(
 
   const dataSaver = new DataSaver(
     dataStructureEntityId,
-    dataTableActions,
-    dataTableSelectors,
+    dataTable,
+    dataTable,
     menuItemId
   );
   const dataSavingStrategy = new DataSavingStrategy(
-    dataTableSelectors,
-    dataTableActions,
+    dataTable,
+    dataTable,
     dataSaver,
     dataLoadingStrategyActions
   );
@@ -291,14 +285,14 @@ function createGridPaneBacking(
   const gridToolbarView = new GridToolbarView(
     gridInteractionSelectors,
     gridSelectors,
-    dataTableSelectors,
-    dataTableActions,
+    dataTable,
+    dataTable,
     gridInteractionActions,
     configuration
   );
 
-  const gridSetup = new GridSetup(gridInteractionSelectors, dataTableSelectors);
-  const gridTopology = new GridTopology(dataTableSelectors);
+  const gridSetup = new GridSetup(gridInteractionSelectors, dataTable);
+  const gridTopology = new GridTopology(dataTable);
 
   /*
   onStartGrid.trigger();
@@ -307,9 +301,9 @@ function createGridPaneBacking(
 
   dataLoadingStrategyActions.requestLoadFresh();*/
 
-  const formSetup = new FormSetup(dataTableSelectors);
+  const formSetup = new FormSetup(dataTable);
   const formView = new FormView(
-    dataTableSelectors,
+    dataTable,
     gridInteractionSelectors,
     formSetup
   );
@@ -330,8 +324,7 @@ function createGridPaneBacking(
     onStopGrid,
     dataLoadingStrategyActions,
     dataLoadingStrategySelectors,
-    dataTableActions,
-    dataTableSelectors,
+    dataTable,
     gridOrderingActions,
     gridOrderingSelectors,
     dataLoader,
@@ -361,10 +354,6 @@ function fieldsFromProperties(properties: any[]) {
     });
   });
 }
-
-
-
-
 
 @inject("mainView")
 @observer
@@ -401,8 +390,8 @@ export class DataView extends React.Component<IDataViewProps> {
     /*const { gridPaneBacking } = this;*/
     return (
       <Provider /*gridPaneBacking={this.gridPaneBacking}*/>
-        <></>
-       {/*
+        {this.props.children}
+        {/*
         <div
           className="oui-grid"
           style={{
@@ -423,7 +412,7 @@ export class DataView extends React.Component<IDataViewProps> {
           {this.props.form}
           <GridMap />
           {/*<GridForm isActiveView={gridPaneBacking.gridInteractionSelectors.activeView === IGridPaneView.Form} reactTree={this.props.form} />*/}
-          {/*this.props.children
+        {/*this.props.children
         </div>*/}
       </Provider>
     );

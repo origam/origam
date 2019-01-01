@@ -4,10 +4,9 @@ import { ILoadingGate, IAPI } from "src/DataLoadingStrategy/types";
 import { IComponentBindingsModel } from "src/componentBindings/types";
 import { getToken } from "src/DataLoadingStrategy/api";
 import * as xmlJs from "xml-js";
-import { reactProcessNode } from "src/screenInterpreter/ScreenInterpreter";
-import { collectProperties } from '../screenInterpreter/ScreenInterpreter';
+import { buildUI } from "src/screenInterpreter/ScreenInterpreter";
+import { collectProperties } from "../screenInterpreter/ScreenInterpreter";
 import { IXmlNode } from "src/screenInterpreter/types";
-
 
 export class MainView implements IMainView, ILoadingGate {
   @observable public isLoadingAllowed: boolean = false;
@@ -40,7 +39,7 @@ export class MainView implements IMainView, ILoadingGate {
         const { data } = response;
         const xmlObj = xmlJs.xml2js(data, { compact: false });
 
-        const reactTree = reactProcessNode(xmlObj, []);
+        const reactTree = buildUI(xmlObj as IXmlNode, []);
         this.reactTree = reactTree;
         /* this.componentBindingsModel = new ComponentBindingsModel(
           interpretedResult.collectComponentBindings

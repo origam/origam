@@ -30,6 +30,7 @@ export interface IXmlNode {
   name: string;
   elements: IXmlNode[];
   attributes: { [key: string]: string };
+  text: string;
 }
 
 // Maps [UIElement ID, Property ID] -> Property
