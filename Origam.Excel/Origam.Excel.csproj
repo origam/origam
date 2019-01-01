@@ -70,9 +70,9 @@
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
       <Name>Origam.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Workflow\Origam.Workflow-net2.csproj">
+    <ProjectReference Include="..\Origam.Workflow\Origam.Workflow.csproj">
       <Project>{df2a8dad-6c59-4653-b3bb-da50b14e3de9}</Project>
-      <Name>Origam.Workflow-net2</Name>
+      <Name>Origam.Workflow</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

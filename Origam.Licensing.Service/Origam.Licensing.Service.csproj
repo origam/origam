@@ -45,17 +45,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Origam.Rule\Origam.Rule-net2.csproj">
+    <ProjectReference Include="..\Origam.Rule\Origam.Rule.csproj">
       <Project>{4f05db44-2bbd-4b54-8d37-e8038d1ee1e7}</Project>
-      <Name>Origam.Rule-net2</Name>
+      <Name>Origam.Rule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Services\Origam.Services-net2.csproj">
+    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
       <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>
-      <Name>Origam.Services-net2</Name>
+      <Name>Origam.Services</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Workflow\Origam.Workflow-net2.csproj">
+    <ProjectReference Include="..\Origam.Workflow\Origam.Workflow.csproj">
       <Project>{df2a8dad-6c59-4653-b3bb-da50b14e3de9}</Project>
-      <Name>Origam.Workflow-net2</Name>
+      <Name>Origam.Workflow</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Licensing\Origam.Licensing.csproj">
       <Project>{4b1412b7-3287-4e64-a0fa-ab0aefa8b4e7}</Project>

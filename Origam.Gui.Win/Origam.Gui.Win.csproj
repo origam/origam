@@ -1,0 +1,803 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>7.10.6030</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B57D7691-81BB-419C-AE82-26340CF77D10}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon />
+    <AssemblyKeyContainerName />
+    <AssemblyName>Origam.Gui.Win</AssemblyName>
+    <AssemblyOriginatorKeyFile />
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Origam.Gui.Win</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject />
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <OldToolsVersion>0.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DefineConstants>DEBUG;TRACE;NET_20</DefineConstants>
+    <OutputPath>bin\Debug-net2\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DocumentationFile />
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DefineConstants>NET_20</DefineConstants>
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DocumentationFile />
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
+    <DefineConstants>NET_20;ORIGAM_CLIENT</DefineConstants>
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DocumentationFile />
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Client|AnyCPU' ">
+    <DefineConstants>DEBUG;TRACE;NET_20;ORIGAM_CLIENT</DefineConstants>
+    <OutputPath>bin\Debug-net2\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DocumentationFile />
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect Express|AnyCPU' ">
+    <DefineConstants>NET_20;ARCHITECT_EXPRESS</DefineConstants>
+    <OutputPath>bin\Release-net2\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DocumentationFile />
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Architect Express|AnyCPU' ">
+    <DefineConstants>DEBUG;TRACE;NET_20;ARCHITECT_EXPRESS</DefineConstants>
+    <OutputPath>bin\Debug-net2\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DocumentationFile />
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Server|AnyCPU' ">
+    <DefineConstants>NET_20;ORIGAM_CLIENT;ORIGAM_SERVER</DefineConstants>
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DocumentationFile />
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Server|AnyCPU' ">
+    <DefineConstants>DEBUG;TRACE;NET_20;ORIGAM_CLIENT;ORIGAM_SERVER</DefineConstants>
+    <OutputPath>bin\Debug-net2\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DocumentationFile />
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Origam.Common.Nonstd\Origam.Common.NetFX.csproj">
+      <Project>{84251d2b-43a4-4228-8d2a-8729722c25e4}</Project>
+      <Name>Origam.Common.NetFX</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
+      <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
+      <Name>Origam.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj">
+      <Name>Origam.DA.Common</Name>
+      <Project>{B4E4DC00-766A-4CA3-83D8-0A5383462F53}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service.csproj">
+      <Name>Origam.DA.Service</Name>
+      <Project>{FF4722B4-01F8-4062-AF39-F243A6BF336D}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Rule\Origam.Rule.csproj">
+      <Name>Origam.Rule</Name>
+      <Project>{4F05DB44-2BBD-4B54-8D37-E8038D1EE1E7}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
+      <Name>Origam.Schema.EntityModel</Name>
+      <Project>{50186A07-6ED9-4751-B0E2-52FEBA2A4518}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel.csproj">
+      <Name>Origam.Schema.GuiModel</Name>
+      <Project>{ECFF4A9D-9196-4962-823C-A65D552FF6D8}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.LookupModel\Origam.Schema.LookupModel.csproj">
+      <Name>Origam.Schema.LookupModel</Name>
+      <Project>{2274C5EB-E849-4ABB-8631-D429AD2994FF}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.MenuModel\Origam.Schema.MenuModel.csproj">
+      <Name>Origam.Schema.MenuModel</Name>
+      <Project>{01C6A542-4D42-4AFA-9744-5E92E71A8251}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.RuleModel\Origam.Schema.RuleModel.csproj">
+      <Name>Origam.Schema.RuleModel</Name>
+      <Project>{B2FFC838-98F6-4D52-8BFF-99546B1B8A4D}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.WorkflowModel\Origam.Schema.WorkflowModel.csproj">
+      <Project>{5b6e4021-152c-4276-a1ae-e3b9ba223024}</Project>
+      <Name>Origam.Schema.WorkflowModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
+      <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
+      <Name>Origam.Schema</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Services.NetFx\Origam.Services.NetFx.csproj">
+      <Project>{442DB093-B99E-4A53-AE94-E611A26D901F}</Project>
+      <Name>Origam.Services.NetFx</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
+      <Name>Origam.Services</Name>
+      <Project>{199DDE99-9EE7-4CCE-B71D-7FC1CC0896AA}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.UI.Common.NetFx\Origam.UI.Common.NetFx.csproj">
+      <Project>{b2b8b03e-cfd0-454f-94f0-10b817db3441}</Project>
+      <Name>Origam.UI.Common.NetFx</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common.csproj">
+      <Name>Origam.UI.Common</Name>
+      <Project>{EF5DE64E-88B2-4B0A-BB7F-4A537B56F3D1}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.UI\Origam.UI.csproj">
+      <Name>Origam.UI</Name>
+      <Project>{79DD815D-6900-4074-8886-7E7D6946460B}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench.BaseComponents\Origam.Workbench.BaseComponents.csproj">
+      <Name>Origam.Workbench.BaseComponents</Name>
+      <Project>{35DFEDDC-C519-4228-B6AD-AD22BD4C4BB0}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj">
+      <Name>Origam.Workbench.Services</Name>
+      <Project>{ECA06542-5635-455E-B513-07F60222CA7D}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench\Origam.Workbench.csproj">
+      <Name>Origam.Workbench</Name>
+      <Project>{A992112A-47F0-4588-A62B-D7C1164DC9D7}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workflow\Origam.Workflow.csproj">
+      <Project>{df2a8dad-6c59-4653-b3bb-da50b14e3de9}</Project>
+      <Name>Origam.Workflow</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Gui\Origam.Gui.csproj">
+      <Project>{fb138bf6-af03-4f04-bffe-ef28d95efeb8}</Project>
+      <Name>Origam.Gui</Name>
+    </ProjectReference>
+    <Reference Include="Microsoft.Office.Interop.Excel">
+      <Name>Microsoft.Office.Interop.Excel</Name>
+      <HintPath>..\EnterpriseLibrary\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Design">
+      <Name>System.Design</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Drawing.Design">
+      <Name>System.Drawing.Design</Name>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap">
+      <Name>System.Runtime.Serialization.Formatters.Soap</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\EnterpriseLibrary\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActionButtonManager.cs" />
+    <Compile Include="OrigamPanelColumnConfig.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OrigamPanelColumnConfig.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="OrigamPanelColumnConfigDA.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OrigamPanelConfigDA.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OrigamPanelFilter.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OrigamPanelFilter.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="OrigamPanelFilterDA.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AsCheckBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="AsDateBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AsGradientLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="AsListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="AsMonthCalendar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="AsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AsPanelCalendarViewEnum.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AsPanelTitle.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="AsRadioButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AsTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="BaseCaptionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BasePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BlobControl\BlobControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BlobControl\BlobStorageType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Checklist.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CollapsiblePanel\CollapsibleContainer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CollapsiblePanel\CollapsibleContainerDesigner.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CollapsiblePanel\CollapsiblePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CollapsibleSplitter.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ColorPicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ColumnParameterMappingCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ComponentBinding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ComponentBindingCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataBindingTools.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataSortItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DbNavigator.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DesktopEntityUIActionRunner.cs" />
+    <Compile Include="DropDown\AsDropDown.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DropDown\BaseDropDownControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DropDown\CalendarDropDown.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DropDown\DropDownGrid.cs">
+      <SubType>Form</SubType>
+      <CustomToolNamespace>Origam.Gui.Win</CustomToolNamespace>
+    </Compile>
+    <Compile Include="DropDown\DropDownTree.cs">
+      <SubType>Form</SubType>
+      <CustomToolNamespace>Origam.Gui.Win</CustomToolNamespace>
+    </Compile>
+    <Compile Include="DropDown\IDropDownPart.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DropDown\ILookupDropDownPart.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Grid\IAsGridEditor.cs" />
+    <Compile Include="DesktopEntityUIActionRunnerClient.cs" />
+    <Compile Include="Workflow\ExecuteWorkflowButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Filter\BoolFilterPart.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Filter\DateFilterPart.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Filter\DropDownFilterPart.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Filter\DummyFilterPart.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Filter\FilterMenuItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Filter\FilterOperator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Filter\FilterOperatorMenuItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Filter\FilterPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Filter\FilterPart.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Filter\NumberFilterPart.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Filter\StringFilterPart.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Filter\TextFilterPart.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FormGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GDI32.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GridLayoutPanel\GridLayoutPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GridLayoutPanel\GridLayoutPanelDesigner.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GridLayoutPanel\GridLayoutPanelItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Grid\AsCheckStyleColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Grid\AsDataGrid.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Grid\AsTextStyleColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Grid\DataGridBlobColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Grid\DataGridBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Grid\DataGridColumnConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Grid\DataGridColumnStyleHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Grid\DataGridColumnStyleHolder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Grid\DataGridColumnStylePadding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Grid\DataGridDropdownColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Grid\DataGridFilterFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Grid\DataGridImageColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Grid\DataViewColumn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Grid\IGridBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Groupbox\BaseContainer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Groupbox\ColorScheme.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Groupbox\ElongatedButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Groupbox\GroupBoxWithChamfer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Groupbox\RoundedRectangularGroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Groupbox\RoundedRectangularGroupBoxWithToolbar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="IAsCaptionControl.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IAsControl.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IAsDataServiceConsumer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ImageBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ImageBoxSourceType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="LoadingCircle.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MultiColumnAdapterFieldWrapper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="NotificationList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PopupWindowHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Resources\ResourceHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ResourceUtils.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SplitPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="StoredFilterProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TabControl\AsTabControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TagInput.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ToolStripActionButton.cs" />
+    <Compile Include="Tree\AsTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tree\AsTreeView2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Workflow\WorkflowForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Workflow\WorkflowHelper.cs" />
+    <Compile Include="Workflow\WorkflowWatchPad.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Content Include="OrigamPanelColumnConfig.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>OrigamPanelColumnConfig.Designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="OrigamPanelFilter.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>OrigamPanelFilter.Designer.cs</LastGenOutput>
+    </Content>
+    <EmbeddedResource Include="AsCheckBox.bmp">
+    </EmbeddedResource>
+    <EmbeddedResource Include="AsCheckBox.resx">
+      <DependentUpon>AsCheckBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AsDateBox.bmp">
+    </EmbeddedResource>
+    <EmbeddedResource Include="AsDateBox.resx">
+      <DependentUpon>AsDateBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AsDropDown.bmp">
+    </EmbeddedResource>
+    <EmbeddedResource Include="AsForm.resx">
+      <DependentUpon>AsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AsMonthCalendar.resx">
+      <DependentUpon>AsMonthCalendar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AsPanel.bmp">
+    </EmbeddedResource>
+    <EmbeddedResource Include="AsPanel.resx">
+      <DependentUpon>AsPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AsPanelTitle.resx">
+      <DependentUpon>AsPanelTitle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AsTextBox.bmp">
+    </EmbeddedResource>
+    <EmbeddedResource Include="AsTextBox.resx">
+      <DependentUpon>AsTextBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BaseCaptionControl.resx">
+      <DependentUpon>BaseCaptionControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BasePanel.resx">
+      <DependentUpon>BasePanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BlobControl\BlobControl.resx">
+      <DependentUpon>BlobControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Checklist.resx">
+      <DependentUpon>Checklist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ColorPicker.resx">
+      <DependentUpon>ColorPicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DbNavigator.resx">
+      <DependentUpon>DbNavigator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DropDown\AsDropDown.resx">
+      <DependentUpon>AsDropDown.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DropDown\BaseDropDownControl.resx">
+      <DependentUpon>BaseDropDownControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DropDown\CalendarDropDown.resx">
+      <DependentUpon>CalendarDropDown.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DropDown\DropDownGrid.resx">
+      <DependentUpon>DropDownGrid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DropDown\DropDownTree.resx">
+      <DependentUpon>DropDownTree.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Filter\FilterMenuItem.resx">
+      <DependentUpon>FilterMenuItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Filter\FilterPanel.resx">
+      <DependentUpon>FilterPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Grid\AsTextStyleColumn.resx">
+      <DependentUpon>AsTextStyleColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Grid\DataGridColumnConfig.resx">
+      <DependentUpon>DataGridColumnConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Grid\DataGridDropdownColumn.resx">
+      <DependentUpon>DataGridDropdownColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GroupBoxWithChamfer.bmp">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Groupbox\BaseContainer.resx">
+      <DependentUpon>BaseContainer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Groupbox\ElongatedButton.resx">
+      <DependentUpon>ElongatedButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Groupbox\GroupBoxWithChamfer.resx">
+      <DependentUpon>GroupBoxWithChamfer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Groupbox\RoundedRectangularGroupBox.resx">
+      <DependentUpon>RoundedRectangularGroupBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Groupbox\RoundedRectangularGroupBoxWithToolbar.resx">
+      <DependentUpon>RoundedRectangularGroupBoxWithToolbar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NotificationList.resx">
+      <DependentUpon>NotificationList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SplitPanel.resx">
+      <DependentUpon>SplitPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StoredFilterProperties.resx">
+      <DependentUpon>StoredFilterProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.cs-CZ.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.de.resx">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TagInput.resx">
+      <DependentUpon>TagInput.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tree\AsTreeView2.resx">
+      <DependentUpon>AsTreeView2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Workflow\WorkflowForm.resx">
+      <DependentUpon>WorkflowForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Workflow\WorkflowWatchPad.resx">
+      <DependentUpon>WorkflowWatchPad.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="xp.style.glyphs.png">
+    </EmbeddedResource>
+    <None Include="OrigamPanelColumnConfig.xsc">
+      <DependentUpon>OrigamPanelColumnConfig.xsd</DependentUpon>
+    </None>
+    <None Include="OrigamPanelColumnConfig.xsx">
+      <DependentUpon>OrigamPanelColumnConfig.xsd</DependentUpon>
+    </None>
+    <None Include="OrigamPanelFilter.xsc">
+      <DependentUpon>OrigamPanelFilter.xsd</DependentUpon>
+    </None>
+    <None Include="OrigamPanelFilter.xsx">
+      <DependentUpon>OrigamPanelFilter.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets">
+  </Import>
+  <PropertyGroup>
+    <PreBuildEvent />
+    <PostBuildEvent />
+  </PropertyGroup>
+</Project>

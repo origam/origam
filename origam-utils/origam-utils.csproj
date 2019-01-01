@@ -70,37 +70,37 @@
       <Project>{b4e4dc00-766a-4ca3-83d8-0a5383462f53}</Project>
       <Name>Origam.DA.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service-net2.csproj">
+    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service.csproj">
       <Project>{ff4722b4-01f8-4062-af39-f243a6bf336d}</Project>
-      <Name>Origam.DA.Service-net2</Name>
+      <Name>Origam.DA.Service</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine-net2.csproj">
+    <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj">
       <Project>{233D40C6-AE59-4651-B7BD-DD09D5835E21}</Project>
-      <Name>Origam.OrigamEngine-net2</Name>
+      <Name>Origam.OrigamEngine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.ModelImport\Origam.ModelImport-net2.csproj">
+    <ProjectReference Include="..\Origam.ModelImport\Origam.ModelImport.csproj">
       <Project>{367D2F77-B10D-438B-BF33-B7825DCF0BF5}</Project>
-      <Name>Origam.ModelImport-net2</Name>
+      <Name>Origam.ModelImport</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache-net2.csproj">
+    <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache.csproj">
       <Project>{ffc2dce2-b8b5-48a4-aa18-1e93f99e1d54}</Project>
-      <Name>Origam.ReflectorCache-net2</Name>
+      <Name>Origam.ReflectorCache</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
       <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
       <Name>Origam.Schema</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Security\Origam.Security-net2.csproj">
+    <ProjectReference Include="..\Origam.Security\Origam.Security.csproj">
       <Project>{93b972c4-d58d-4681-a8b8-95a34c7c2980}</Project>
-      <Name>Origam.Security-net2</Name>
+      <Name>Origam.Security</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Services\Origam.Services-net2.csproj">
+    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
       <Project>{199DDE99-9EE7-4CCE-B71D-7FC1CC0896AA}</Project>
-      <Name>Origam.Services-net2</Name>
+      <Name>Origam.Services</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Workflow\Origam.Workflow-net2.csproj">
+    <ProjectReference Include="..\Origam.Workflow\Origam.Workflow.csproj">
       <Project>{DF2A8DAD-6C59-4653-B3BB-DA50B14E3DE9}</Project>
-      <Name>Origam.Workflow-net2</Name>
+      <Name>Origam.Workflow</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
