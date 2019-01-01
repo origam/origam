@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -20,10 +20,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
     <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj" />
-    <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine-net2.csproj" />
-    <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache-net2.csproj" />
-    <ProjectReference Include="..\Origam.Security\Origam.Security-net2.csproj" />
-    <ProjectReference Include="..\Origam.Workbench\Origam.Workbench-net2.csproj" />
+    <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj" />
+    <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache.csproj" />
+    <ProjectReference Include="..\Origam.Security\Origam.Security.csproj" />
+    <ProjectReference Include="..\Origam.Workbench\Origam.Workbench.csproj" />
   </ItemGroup>
 
   <ItemGroup>

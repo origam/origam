@@ -39,7 +39,7 @@ namespace Origam.Workbench.Services
 	/// Summary description for DeploymentService.
 	/// </summary>
 	public class DeploymentService : IDeploymentService
-	{
+    {
 		#region Local variables
 		string _transactionId = null;
 		SchemaService _schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
