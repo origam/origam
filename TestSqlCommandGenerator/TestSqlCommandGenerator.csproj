@@ -78,25 +78,25 @@
       <Project>{50186a07-6ed9-4751-b0e2-52feba2a4518}</Project>
       <Name>Origam.Schema.EntityModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Schema.WorkflowModel\Origam.Schema.WorkflowModel-net2.csproj">
+    <ProjectReference Include="..\Origam.Schema.WorkflowModel\Origam.Schema.WorkflowModel.csproj">
       <Project>{5b6e4021-152c-4276-a1ae-e3b9ba223024}</Project>
-      <Name>Origam.Schema.WorkflowModel-net2</Name>
+      <Name>Origam.Schema.WorkflowModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
       <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
       <Name>Origam.Schema</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Services\Origam.Services-net2.csproj">
+    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
       <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>
-      <Name>Origam.Services-net2</Name>
+      <Name>Origam.Services</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common-net2.csproj">
+    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common.csproj">
       <Project>{ef5de64e-88b2-4b0a-bb7f-4a537b56f3d1}</Project>
-      <Name>Origam.UI.Common-net2</Name>
+      <Name>Origam.UI.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services-net2.csproj">
+    <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj">
       <Project>{eca06542-5635-455e-b513-07f60222ca7d}</Project>
-      <Name>Origam.Workbench.Services-net2</Name>
+      <Name>Origam.Workbench.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

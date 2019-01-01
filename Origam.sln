@@ -2,86 +2,122 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workbench.Services-net2", "Origam.Workbench.Services\Origam.Workbench.Services-net2.csproj", "{ECA06542-5635-455E-B513-07F60222CA7D}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workbench.Services", "Origam.Workbench.Services\Origam.Workbench.Services.csproj", "{ECA06542-5635-455E-B513-07F60222CA7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workbench.Diagram-net2", "Origam.Workbench.Diagram\Origam.Workbench.Diagram-net2.csproj", "{8C587DCB-0E49-4DCA-9AD5-EACC69C980C3}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workbench.Diagram", "Origam.Workbench.Diagram\Origam.Workbench.Diagram.csproj", "{8C587DCB-0E49-4DCA-9AD5-EACC69C980C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Security-net2", "Origam.Security\Origam.Security-net2.csproj", "{93B972C4-D58D-4681-A8B8-95A34C7C2980}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Security", "Origam.Security\Origam.Security.csproj", "{93B972C4-D58D-4681-A8B8-95A34C7C2980}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.MenuModel-net2", "Origam.Schema.MenuModel\Origam.Schema.MenuModel-net2.csproj", "{01C6A542-4D42-4AFA-9744-5E92E71A8251}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.MenuModel", "Origam.Schema.MenuModel\Origam.Schema.MenuModel.csproj", "{01C6A542-4D42-4AFA-9744-5E92E71A8251}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Sharepoint-net2", "Origam.Sharepoint\Origam.Sharepoint-net2.csproj", "{F792069F-6F28-41F2-9E87-1EB236F409D2}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Sharepoint", "Origam.Sharepoint\Origam.Sharepoint.csproj", "{F792069F-6F28-41F2-9E87-1EB236F409D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.BI.CrystalReports-net2", "Origam.BI.CrystalReports\Origam.BI.CrystalReports-net2.csproj", "{D8090B11-35D3-43D7-AC66-5D7AE2D476DA}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.BI.CrystalReports", "Origam.BI.CrystalReports\Origam.BI.CrystalReports.csproj", "{D8090B11-35D3-43D7-AC66-5D7AE2D476DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.BI-net2", "Origam.BI\Origam.BI-net2.csproj", "{54BFF654-2A00-4A8A-86B0-06F124D769A1}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.BI", "Origam.BI\Origam.BI.csproj", "{54BFF654-2A00-4A8A-86B0-06F124D769A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrigamScheduler-net2", "OrigamScheduler\OrigamScheduler-net2.csproj", "{A7A0C4ED-4AD4-4AD7-929B-0EE1779E5CB1}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrigamScheduler", "OrigamScheduler\OrigamScheduler.csproj", "{A7A0C4ED-4AD4-4AD7-929B-0EE1779E5CB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.TestModel-net2", "Origam.Schema.TestModel\Origam.Schema.TestModel-net2.csproj", "{4133A401-C886-48FC-B088-999C4591366F}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.TestModel", "Origam.Schema.TestModel\Origam.Schema.TestModel.csproj", "{4133A401-C886-48FC-B088-999C4591366F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScheduleTimer-net2", "ScheduleTimer\ScheduleTimer-net2.csproj", "{A1087FDB-40E7-461C-8402-AF74AEFC3E51}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScheduleTimer", "ScheduleTimer\ScheduleTimer.csproj", "{A1087FDB-40E7-461C-8402-AF74AEFC3E51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.LookupModel-net2", "Origam.Schema.LookupModel\Origam.Schema.LookupModel-net2.csproj", "{2274C5EB-E849-4ABB-8631-D429AD2994FF}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.LookupModel", "Origam.Schema.LookupModel\Origam.Schema.LookupModel.csproj", "{2274C5EB-E849-4ABB-8631-D429AD2994FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Gui.Win-net2", "Origam.Gui.Win\Origam.Gui.Win-net2.csproj", "{B57D7691-81BB-419C-AE82-26340CF77D10}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Gui.Win", "Origam.Gui.Win\Origam.Gui.Win.csproj", "{B57D7691-81BB-419C-AE82-26340CF77D10}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.DA.Common", "Origam.DA.Common\Origam.DA.Common.csproj", "{B4E4DC00-766A-4CA3-83D8-0A5383462F53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.UI-net2", "Origam.UI\Origam.UI-net2.csproj", "{79DD815D-6900-4074-8886-7E7D6946460B}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.UI", "Origam.UI\Origam.UI.csproj", "{79DD815D-6900-4074-8886-7E7D6946460B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.GuiModel-net2", "Origam.Schema.GuiModel\Origam.Schema.GuiModel-net2.csproj", "{ECFF4A9D-9196-4962-823C-A65D552FF6D8}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.GuiModel", "Origam.Schema.GuiModel\Origam.Schema.GuiModel.csproj", "{ECFF4A9D-9196-4962-823C-A65D552FF6D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Gui.Designer-net2", "Origam.Gui.Designer\Origam.Gui.Designer-net2.csproj", "{CCD88F0F-0718-44D8-9048-9CD683C3CD22}"
+roject("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Gui.Designer-net2", "Origam.Gui.Designer\Origam.Gui.Designer-net2.csproj", "{CCD88F0F-0718-44D8-9048-9CD683C3CD22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Gui.Designer", "Origam.Gui.Designer\Origam.Gui.Designer.csproj", "{CCD88F0F-0718-44D8-9048-9CD683C3CD22}"
 EndProject
+roject("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.EntityModel-net2", "Origam.Schema.EntityModel\Origam.Schema.EntityModel-net2.csproj", "{50186A07-6ED9-4751-B0E2-52FEBA2A4518}"
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.EntityModel", "Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj", "{50186A07-6ED9-4751-B0E2-52FEBA2A4518}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrigamArchitect-net2", "OrigamArchitect\OrigamArchitect-net2.csproj", "{A4E0A953-DAE4-4920-BC2B-062B5A0DF40F}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrigamArchitect", "OrigamArchitect\OrigamArchitect.csproj", "{A4E0A953-DAE4-4920-BC2B-062B5A0DF40F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{DD8ADCE0-1A65-412B-A09B-0D139D1CD7AB} = {DD8ADCE0-1A65-412B-A09B-0D139D1CD7AB}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.WorkflowModel-net2", "Origam.Schema.WorkflowModel\Origam.Schema.WorkflowModel-net2.csproj", "{5B6E4021-152C-4276-A1AE-E3B9BA223024}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.WorkflowModel", "Origam.Schema.WorkflowModel\Origam.Schema.WorkflowModel.csproj", "{5B6E4021-152C-4276-A1AE-E3B9BA223024}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workflow-net2", "Origam.Workflow\Origam.Workflow-net2.csproj", "{DF2A8DAD-6C59-4653-B3BB-DA50B14E3DE9}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workflow", "Origam.Workflow\Origam.Workflow.csproj", "{DF2A8DAD-6C59-4653-B3BB-DA50B14E3DE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Rule-net2", "Origam.Rule\Origam.Rule-net2.csproj", "{4F05DB44-2BBD-4B54-8D37-E8038D1EE1E7}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Rule", "Origam.Rule\Origam.Rule.csproj", "{4F05DB44-2BBD-4B54-8D37-E8038D1EE1E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.RuleModel-net2", "Origam.Schema.RuleModel\Origam.Schema.RuleModel-net2.csproj", "{B2FFC838-98F6-4D52-8BFF-99546B1B8A4D}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.RuleModel", "Origam.Schema.RuleModel\Origam.Schema.RuleModel.csproj", "{B2FFC838-98F6-4D52-8BFF-99546B1B8A4D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.DA.Service", "Origam.DA.Service\Origam.DA.Service.csproj", "{FF4722B4-01F8-4062-AF39-F243A6BF336D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.DA.Service-net2", "Origam.DA.Service\Origam.DA.Service.csproj", "{FF4722B4-01F8-4062-AF39-F243A6BF336D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workbench-net2", "Origam.Workbench\Origam.Workbench-net2.csproj", "{A992112A-47F0-4588-A62B-D7C1164DC9D7}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workbench", "Origam.Workbench\Origam.Workbench.csproj", "{A992112A-47F0-4588-A62B-D7C1164DC9D7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Common.NetFX", "Origam.Common.Nonstd\Origam.Common.NetFX.csproj", "{84251D2B-43A4-4228-8D2A-8729722C25E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Mail-net2", "Origam.Mail\Origam.Mail-net2.csproj", "{9D53BB7F-97DE-4592-B958-F57AE3F83FF3}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Mail", "Origam.Mail\Origam.Mail.csproj", "{9D53BB7F-97DE-4592-B958-F57AE3F83FF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.ReflectorCache-net2", "Origam.ReflectorCache\Origam.ReflectorCache-net2.csproj", "{FFC2DCE2-B8B5-48A4-AA18-1E93F99E1D54}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.ReflectorCache", "Origam.ReflectorCache\Origam.ReflectorCache.csproj", "{FFC2DCE2-B8B5-48A4-AA18-1E93F99E1D54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MIMEParser-net2", "MIMEParser\MIMEParser-net2.csproj", "{CC4C4334-335D-4369-B0ED-F3C17CD57364}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MIMEParser", "MIMEParser\MIMEParser.csproj", "{CC4C4334-335D-4369-B0ED-F3C17CD57364}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.DeploymentModel-net2", "Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel-net2.csproj", "{F4F5927B-022F-4684-B9B1-3BC6519DF66E}"
+roject("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.DeploymentModel-net2", "Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel-net2.csproj", "{F4F5927B-022F-4684-B9B1-3BC6519DF66E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.DeploymentModel", "Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel.csproj", "{F4F5927B-022F-4684-B9B1-3BC6519DF66E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.OrigamEngine-net2", "Origam.OrigamEngine\Origam.OrigamEngine-net2.csproj", "{233D40C6-AE59-4651-B7BD-DD09D5835E21}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.OrigamEngine", "Origam.OrigamEngine\Origam.OrigamEngine.csproj", "{233D40C6-AE59-4651-B7BD-DD09D5835E21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenPOP-net2", "OpenPOP\OpenPOP-net2.csproj", "{75B3E0DF-61C3-4643-AB47-DBE1CFE3D303}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenPOP", "OpenPOP\OpenPOP.csproj", "{75B3E0DF-61C3-4643-AB47-DBE1CFE3D303}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workflow.SimplicorService-net2", "Origam.Workflow.SimplicorService\Origam.Workflow.SimplicorService-net2.csproj", "{EE92B4DE-5635-4B60-80B0-532C438B280F}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workflow.SimplicorService", "Origam.Workflow.SimplicorService\Origam.Workflow.SimplicorService.csproj", "{EE92B4DE-5635-4B60-80B0-532C438B280F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.ModelImport-net2", "Origam.ModelImport\Origam.ModelImport-net2.csproj", "{367D2F77-B10D-438B-BF33-B7825DCF0BF5}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.ModelImport", "Origam.ModelImport\Origam.ModelImport.csproj", "{367D2F77-B10D-438B-BF33-B7825DCF0BF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Services-net2", "Origam.Services\Origam.Services-net2.csproj", "{199DDE99-9EE7-4CCE-B71D-7FC1CC0896AA}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Services", "Origam.Services\Origam.Services.csproj", "{199DDE99-9EE7-4CCE-B71D-7FC1CC0896AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.UI.Common-net2", "Origam.UI.Common\Origam.UI.Common-net2.csproj", "{EF5DE64E-88B2-4B0A-BB7F-4A537B56F3D1}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.UI.Common", "Origam.UI.Common\Origam.UI.Common.csproj", "{EF5DE64E-88B2-4B0A-BB7F-4A537B56F3D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.EntityModel.UI-net2", "Origam.Schema.EntityModel.UI\Origam.Schema.EntityModel.UI-net2.csproj", "{01AADFB6-2A85-4BFA-8998-392CA17E3E48}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.EntityModel.UI", "Origam.Schema.EntityModel.UI\Origam.Schema.EntityModel.UI.csproj", "{01AADFB6-2A85-4BFA-8998-392CA17E3E48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.WorkflowModel.UI-net2", "Origam.Schema.WorkflowModel.UI\Origam.Schema.WorkflowModel.UI-net2.csproj", "{D561DB91-154B-43CE-88C1-F97E47539C73}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.WorkflowModel.UI", "Origam.Schema.WorkflowModel.UI\Origam.Schema.WorkflowModel.UI.csproj", "{D561DB91-154B-43CE-88C1-F97E47539C73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.LookupModel.UI-net2", "Origam.Schema.LookupModel.UI\Origam.Schema.LookupModel.UI-net2.csproj", "{A167CB98-7655-4F6E-8B13-5633195DD12A}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.LookupModel.UI", "Origam.Schema.LookupModel.UI\Origam.Schema.LookupModel.UI.csproj", "{A167CB98-7655-4F6E-8B13-5633195DD12A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workbench.BaseComponents-net2", "Origam.Workbench.BaseComponents\Origam.Workbench.BaseComponents-net2.csproj", "{35DFEDDC-C519-4228-B6AD-AD22BD4C4BB0}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workbench.BaseComponents", "Origam.Workbench.BaseComponents\Origam.Workbench.BaseComponents.csproj", "{35DFEDDC-C519-4228-B6AD-AD22BD4C4BB0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C4C84F2C-1006-4323-BA1C-98C5639EC39B}"
 	ProjectSection(SolutionItems) = preProject
@@ -93,7 +129,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSqlCommandGenerator", "TestSqlCommandGenerator\TestSqlCommandGenerator.csproj", "{E4E093E2-F0BF-4F54-87AD-BD200A7DB19B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.BI.PrintIt-net2", "Origam.BI.PrintIt\Origam.BI.PrintIt-net2.csproj", "{65CCC71C-287F-47C2-9B37-F1ECEFADC327}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.BI.PrintIt", "Origam.BI.PrintIt\Origam.BI.PrintIt.csproj", "{65CCC71C-287F-47C2-9B37-F1ECEFADC327}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.ProjectAutomation", "Origam.ProjectAutomation\Origam.ProjectAutomation.csproj", "{F2F5CD17-B2A5-4B5F-9868-628BB76A1959}"
 EndProject
@@ -122,9 +159,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "origam-utils", "origam-util
 		{FFC2DCE2-B8B5-48A4-AA18-1E93F99E1D54} = {FFC2DCE2-B8B5-48A4-AA18-1E93F99E1D54}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Common-net2Tests", "Origam.Common-net2Tests\Origam.Common-net2Tests.csproj", "{D66DE820-264D-4CFA-8778-A8B9B6F5BBFB}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.CommonTests", "Origam.Common-net2Tests\Origam.CommonTests.csproj", "{D66DE820-264D-4CFA-8778-A8B9B6F5BBFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.DA.Service-net2Tests", "Origam.DA.Service-net2Tests\Origam.DA.Service-net2Tests.csproj", "{874DE143-FDF1-4DEE-BC67-1CCE34ACB760}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.DA.ServiceTests", "Origam.DA.Service-net2Tests\Origam.DA.ServiceTests.csproj", "{874DE143-FDF1-4DEE-BC67-1CCE34ACB760}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workbench.ServicesTests", "Origam.Workbench.ServicesTests\Origam.Workbench.ServicesTests.csproj", "{5A854BE5-23BC-4F43-B997-B965FD7B1BA0}"
 EndProject
@@ -747,6 +786,7 @@ Global
 		{B2FFC838-98F6-4D52-8BFF-99546B1B8A4D}.Release Server|Any CPU.Build.0 = Release Server|Any CPU
 		{B2FFC838-98F6-4D52-8BFF-99546B1B8A4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2FFC838-98F6-4D52-8BFF-99546B1B8A4D}.Release|Any CPU.Build.0 = Release|Any CPU
+
 		{FF4722B4-01F8-4062-AF39-F243A6BF336D}.build|Any CPU.ActiveCfg = Release|Any CPU
 		{FF4722B4-01F8-4062-AF39-F243A6BF336D}.build|Any CPU.Build.0 = Release|Any CPU
 		{FF4722B4-01F8-4062-AF39-F243A6BF336D}.Debug Architect Express|Any CPU.ActiveCfg = Debug|Any CPU

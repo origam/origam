@@ -49,17 +49,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel-net2.csproj">
+    <ProjectReference Include="..\Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel.csproj">
       <Project>{f4f5927b-022f-4684-b9b1-3bc6519df66e}</Project>
-      <Name>Origam.Schema.DeploymentModel-net2</Name>
+      <Name>Origam.Schema.DeploymentModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
       <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
       <Name>Origam.Schema</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Workbench\Origam.Workbench-net2.csproj">
+    <ProjectReference Include="..\Origam.Workbench\Origam.Workbench.csproj">
       <Project>{a992112a-47f0-4588-a62b-d7c1164dc9d7}</Project>
-      <Name>Origam.Workbench-net2</Name>
+      <Name>Origam.Workbench</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

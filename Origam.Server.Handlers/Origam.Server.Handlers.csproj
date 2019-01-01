@@ -90,13 +90,13 @@
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
       <Name>Origam.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Rule\Origam.Rule-net2.csproj">
+    <ProjectReference Include="..\Origam.Rule\Origam.Rule.csproj">
       <Project>{4f05db44-2bbd-4b54-8d37-e8038d1ee1e7}</Project>
-      <Name>Origam.Rule-net2</Name>
+      <Name>Origam.Rule</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Services\Origam.Services-net2.csproj">
+    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
       <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>
-      <Name>Origam.Services-net2</Name>
+      <Name>Origam.Services</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Security.Identity\Origam.Security.Identity.csproj">
       <Project>{01708bd3-093a-42bf-baf9-0a4cd1e69107}</Project>

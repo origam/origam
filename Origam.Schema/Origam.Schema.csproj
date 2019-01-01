@@ -10,7 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
     <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj" />
-    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common-net2.csproj" />
+    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common.csproj" />
   </ItemGroup>
 
 </Project>

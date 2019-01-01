@@ -181,9 +181,9 @@
       <Project>{17625f1f-b028-47db-8c76-05c8f8f4e158}</Project>
       <Name>Origam.Git</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common-net2.csproj">
+    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common.csproj">
       <Project>{ef5de64e-88b2-4b0a-bb7f-4a537b56f3d1}</Project>
-      <Name>Origam.UI.Common-net2</Name>
+      <Name>Origam.UI.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

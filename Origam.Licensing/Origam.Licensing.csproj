@@ -75,9 +75,9 @@
     <Compile Include="Validation\ValidationChainBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Origam.Rule\Origam.Rule-net2.csproj">
+    <ProjectReference Include="..\Origam.Rule\Origam.Rule.csproj">
       <Project>{4f05db44-2bbd-4b54-8d37-e8038d1ee1e7}</Project>
-      <Name>Origam.Rule-net2</Name>
+      <Name>Origam.Rule</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
