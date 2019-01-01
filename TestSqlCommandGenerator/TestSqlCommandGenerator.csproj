@@ -74,9 +74,9 @@
       <Project>{ff4722b4-01f8-4062-af39-f243a6bf336d}</Project>
       <Name>Origam.DA.Service</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel-net2.csproj">
+    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
       <Project>{50186a07-6ed9-4751-b0e2-52feba2a4518}</Project>
-      <Name>Origam.Schema.EntityModel-net2</Name>
+      <Name>Origam.Schema.EntityModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.WorkflowModel\Origam.Schema.WorkflowModel-net2.csproj">
       <Project>{5b6e4021-152c-4276-a1ae-e3b9ba223024}</Project>

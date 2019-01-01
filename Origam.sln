@@ -34,7 +34,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.GuiModel-net2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Gui.Designer-net2", "Origam.Gui.Designer\Origam.Gui.Designer-net2.csproj", "{CCD88F0F-0718-44D8-9048-9CD683C3CD22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.EntityModel-net2", "Origam.Schema.EntityModel\Origam.Schema.EntityModel-net2.csproj", "{50186A07-6ED9-4751-B0E2-52FEBA2A4518}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.EntityModel", "Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj", "{50186A07-6ED9-4751-B0E2-52FEBA2A4518}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrigamArchitect-net2", "OrigamArchitect\OrigamArchitect-net2.csproj", "{A4E0A953-DAE4-4920-BC2B-062B5A0DF40F}"
 	ProjectSection(ProjectDependencies) = postProject

@@ -98,9 +98,9 @@
       <Project>{F4F5927B-022F-4684-B9B1-3BC6519DF66E}</Project>
       <Name>Origam.Schema.DeploymentModel-net2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel-net2.csproj">
+    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
       <Project>{50186A07-6ED9-4751-B0E2-52FEBA2A4518}</Project>
-      <Name>Origam.Schema.EntityModel-net2</Name>
+      <Name>Origam.Schema.EntityModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel-net2.csproj">
       <Project>{ECFF4A9D-9196-4962-823C-A65D552FF6D8}</Project>

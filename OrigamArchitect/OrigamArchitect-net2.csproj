@@ -281,8 +281,8 @@
       <Project>{01AADFB6-2A85-4BFA-8998-392CA17E3E48}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel-net2.csproj">
-      <Name>Origam.Schema.EntityModel-net2</Name>
+    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
+      <Name>Origam.Schema.EntityModel</Name>
       <Project>{50186A07-6ED9-4751-B0E2-52FEBA2A4518}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>

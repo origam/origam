@@ -73,9 +73,9 @@
       <Project>{ffc2dce2-b8b5-48a4-aa18-1e93f99e1d54}</Project>
       <Name>Origam.ReflectorCache-net2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel-net2.csproj">
+    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
       <Project>{50186a07-6ed9-4751-b0e2-52feba2a4518}</Project>
-      <Name>Origam.Schema.EntityModel-net2</Name>
+      <Name>Origam.Schema.EntityModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
       <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>

@@ -391,9 +391,9 @@
       <Project>{4f05db44-2bbd-4b54-8d37-e8038d1ee1e7}</Project>
       <Name>Origam.Rule-net2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel-net2.csproj">
+    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
       <Project>{50186a07-6ed9-4751-b0e2-52feba2a4518}</Project>
-      <Name>Origam.Schema.EntityModel-net2</Name>
+      <Name>Origam.Schema.EntityModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel-net2.csproj">
       <Project>{ecff4a9d-9196-4962-823c-a65d552ff6d8}</Project>
