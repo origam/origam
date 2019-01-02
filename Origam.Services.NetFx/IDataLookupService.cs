@@ -28,8 +28,11 @@ using Origam.UI;
 
 namespace Origam.Workbench.Services
 {
-    public interface IDataLookupService : IWorkbenchService, IRowValueLookupService
-    {
+	/// <summary>
+	/// Summary description for IDataLookupService.
+	/// </summary>
+	public interface IDataLookupService : IWorkbenchService
+	{
 		event System.EventHandler LookupShowSourceListRequested;
 
 		void AddLookupControl(ILookupControl lookupControl, Form form, bool showEditCommand);
@@ -42,6 +45,7 @@ namespace Origam.Workbench.Services
             bool useCache, bool returnMessageIfNull, string transactionId);
         object CreateRecord(Guid lookupId, Hashtable values, string transactionId);
 		DataTable GetList(LookupListRequest request);
+		DataView GetList(Guid lookupId, string transactionId);
 		DataView GetList(Guid lookupId, Hashtable parameters, string transactionId);
 		object LinkTarget(ILookupControl lookupControl, object value);
 		Hashtable LinkParameters(object linkTarget, object value);
@@ -49,5 +53,7 @@ namespace Origam.Workbench.Services
 		bool HasMenuBindingWithSelection(Guid lookupId);
 		DataTable GetAllValues(Guid lookupId, Hashtable keys);
 		Hashtable GetAllValuesDistinct(Guid lookupId, Hashtable keys);
-    }
+		
+		string ValueFromRow(DataRow row, string[] columns);
+	}
 }
