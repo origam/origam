@@ -50,7 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel.csproj">
-      <Project>{f4f5927b-022f-4684-b9b1-3bc6519df66e}</Project>
+      <Project>{A802634D-DCF0-4F27-992D-E3FADCAA3FB4}</Project>
       <Name>Origam.Schema.DeploymentModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">

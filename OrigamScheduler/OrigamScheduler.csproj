@@ -205,11 +205,6 @@
       <Project>{4F05DB44-2BBD-4B54-8D37-E8038D1EE1E7}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
-      <Name>Origam.Schema.EntityModel</Name>
-      <Project>{50186A07-6ED9-4751-B0E2-52FEBA2A4518}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.WorkflowModel\Origam.Schema.WorkflowModel.csproj">
       <Name>Origam.Schema.WorkflowModel</Name>
       <Project>{5B6E4021-152C-4276-A1AE-E3B9BA223024}</Project>

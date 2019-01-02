@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Origam.Schema;
-using Origam.Schema.DeploymentModel;
-using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.LookupModel;
 using Origam.Schema.MenuModel;

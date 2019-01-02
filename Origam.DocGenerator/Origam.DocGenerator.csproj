@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>exe</OutputType>
@@ -18,7 +18,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj" />
+    <ProjectReference Include="..\Origam.Gui.Win\Origam.Gui.Win.csproj" />
     <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache.csproj" />
+    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj" />
+    <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel.csproj" />
+    <ProjectReference Include="..\Origam.Schema.MenuModel\Origam.Schema.MenuModel.csproj" />
+    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj" />
+    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />
     <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj" />
   </ItemGroup>
 

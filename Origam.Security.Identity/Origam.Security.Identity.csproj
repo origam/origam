@@ -118,7 +118,7 @@
       <Name>Origam.Rule</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
-      <Project>{50186a07-6ed9-4751-b0e2-52feba2a4518}</Project>
+      <Project>{FDF55D1B-BB0D-4191-AE53-98DE5A4465B5}</Project>
       <Name>Origam.Schema.EntityModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">

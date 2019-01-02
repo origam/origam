@@ -94,12 +94,8 @@
       <Project>{ffc2dce2-b8b5-48a4-aa18-1e93f99e1d54}</Project>
       <Name>Origam.ReflectorCache</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel.csproj">
-      <Project>{F4F5927B-022F-4684-B9B1-3BC6519DF66E}</Project>
-      <Name>Origam.Schema.DeploymentModel</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
-      <Project>{50186A07-6ED9-4751-B0E2-52FEBA2A4518}</Project>
+      <Project>{FDF55D1B-BB0D-4191-AE53-98DE5A4465B5}</Project>
       <Name>Origam.Schema.EntityModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel.csproj">

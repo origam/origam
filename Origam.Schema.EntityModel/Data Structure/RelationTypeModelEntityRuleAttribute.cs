@@ -19,22 +19,19 @@ namespace Origam.DA.ObjectPersistence.Attributes
         public override Exception CheckRule(object instance, string memberName)
         {
             if (memberName == String.Empty | memberName == null) CheckRule(instance);
-            object value = Reflector.GetValue(instance.GetType(), instance, memberName);
-            if (value == null || (value as string) == string.Empty)
-            {
-                return new NullReferenceException(ResourceUtils.GetString("CantBeNull", memberName));
-            }
             var dataStructure = (DataStructureEntity)instance;
-            var relation = dataStructure.Entity.ChildItemsByType(EntityRelationItem.ItemTypeConst);
-            foreach(EntityRelationItem rel in relation)
+            if (dataStructure.Entity != null)
             {
-                ArrayList schemaItems = rel.ChildItemsByType(EntityRelationColumnPairItem.ItemTypeConst);
-                if (schemaItems.Count == 0)
+                var relation = dataStructure.Entity.ChildItemsByType(EntityRelationItem.ItemTypeConst);
+                foreach (EntityRelationItem rel in relation)
                 {
-                    return new DataException("Relationship has no key");
+                    ArrayList schemaItems = rel.ChildItemsByType(EntityRelationColumnPairItem.ItemTypeConst);
+                    if (schemaItems.Count == 0)
+                    {
+                        return new DataException("Relationship has no key");
+                    }
                 }
             }
-            
             return null;
         }
     }

@@ -246,11 +246,6 @@
       <Project>{FF4722B4-01F8-4062-AF39-F243A6BF336D}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Gui.Designer\Origam.Gui.Designer.csproj">
-      <Name>Origam.Gui.Designer</Name>
-      <Project>{CCD88F0F-0718-44D8-9048-9CD683C3CD22}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
     <ProjectReference Include="..\Origam.Gui.Win\Origam.Gui.Win.csproj">
       <Name>Origam.Gui.Win</Name>
       <Project>{B57D7691-81BB-419C-AE82-26340CF77D10}</Project>
@@ -272,9 +267,8 @@
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel.csproj">
+      <Project>{A802634D-DCF0-4F27-992D-E3FADCAA3FB4}</Project>
       <Name>Origam.Schema.DeploymentModel</Name>
-      <Project>{F4F5927B-022F-4684-B9B1-3BC6519DF66E}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.EntityModel.UI\Origam.Schema.EntityModel.UI.csproj">
       <Name>Origam.Schema.EntityModel.UI</Name>
@@ -282,9 +276,8 @@
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
+      <Project>{FDF55D1B-BB0D-4191-AE53-98DE5A4465B5}</Project>
       <Name>Origam.Schema.EntityModel</Name>
-      <Project>{50186A07-6ED9-4751-B0E2-52FEBA2A4518}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel.csproj">
       <Name>Origam.Schema.GuiModel</Name>
