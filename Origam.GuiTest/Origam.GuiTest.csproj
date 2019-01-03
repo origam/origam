@@ -52,6 +52,10 @@
       <Project>{fb138bf6-af03-4f04-bffe-ef28d95efeb8}</Project>
       <Name>Origam.Gui</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench.BaseComponents\Origam.Workbench.BaseComponents.csproj">
+      <Project>{35DFEDDC-C519-4228-B6AD-AD22BD4C4BB0}</Project>
+      <Name>Origam.Workbench.BaseComponents</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

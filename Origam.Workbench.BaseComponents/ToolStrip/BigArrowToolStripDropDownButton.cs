@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Origam.Workbench.BaseComponents;
 using System.Windows.Forms;
 
 namespace Origam.Gui
@@ -14,7 +9,7 @@ namespace Origam.Gui
         {
             ShowDropDownArrow = false;
             ImageScaling = ToolStripItemImageScaling.None;
-            Image = Images.Arrow;
+            Image = ImageRes.Arrow;
         }
     }
 }
