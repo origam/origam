@@ -412,21 +412,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\EnterpriseLibrary\AeroWizard.dll</HintPath>
     </Reference>
-    <Reference Include="CSharpFunctionalExtensions, Version=1.10.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\EnterpriseLibrary\CSharpFunctionalExtensions.dll</HintPath>
-    </Reference>
     <Reference Include="LibGit2Sharp, Version=0.25.0.0, Culture=neutral, PublicKeyToken=7cbde695407f0333">
       <HintPath>..\EnterpriseLibrary\LibGit2Sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
-      <HintPath>..\EnterpriseLibrary\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="MoreLinq, Version=3.1.0.0, Culture=neutral, PublicKeyToken=384d532d7e88985d">
-      <HintPath>..\EnterpriseLibrary\MoreLinq.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\EnterpriseLibrary\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NPOI, Version=1.2.1.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
