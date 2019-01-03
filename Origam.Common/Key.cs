@@ -21,96 +21,102 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Diagnostics;
 
 namespace Origam
 {
-	/// <summary>
-	/// This class represents a collection of column names/values that make a unique key of an entity.
-	/// </summary>
-	public class Key : Hashtable
-	{
+    /// <summary>
+    /// This class represents a collection of column names/values that make a unique key of an entity.
+    /// </summary>
+    public class Key : Hashtable
+    {
 
         public Key()
-		{
-		}
-
-        public Key(string id): this(new Guid(id))
         {
         }
 
-	    public Key(Guid id)
-	    {
-	        this["Id"] = id;
-	    }
+        public Key(string id) : this(new Guid(id))
+        {
+        }
+
+        public Key(Guid id)
+        {
+            this["Id"] = id;
+        }
 
         public override string ToString()
-		{
-			string keyString = "";
+        {
+            string keyString = "";
 
-			foreach(DictionaryEntry entry in this)
-			{
-				keyString = keyString + entry.Value.ToString();
-			}
+            foreach (DictionaryEntry entry in this)
+            {
+                keyString = keyString + entry.Value.ToString();
+            }
 
-			return keyString;
-		}
+            return keyString;
+        }
 
-		public object[] ValueArray
-		{
-			get
-			{
-				object[] ret = new object[this.Values.Count];
+        public object[] ValueArray
+        {
+            get
+            {
+                object[] ret = new object[this.Values.Count];
 
-				this.Values.CopyTo(ret, 0);
+                this.Values.CopyTo(ret, 0);
 
-				return ret;
-			}
-		}
+                return ret;
+            }
+        }
 
-		public object[] KeyArray
-		{
-			get
-			{
-				object[] ret = new object[this.Values.Count];
+        public object[] KeyArray
+        {
+            get
+            {
+                object[] ret = new object[this.Values.Count];
 
-				this.Keys.CopyTo(ret, 0);
+                this.Keys.CopyTo(ret, 0);
 
-				return ret;
-			}
-		}
+                return ret;
+            }
+        }
 
-		public override bool Equals(object obj)
-		{
-			if(obj is Key)
-			{
-				Key refKey = obj as Key;
 
-				if(this.Count != refKey.Count) return false;
+         public override bool Equals(object obj)
+         {
+        	if (ReferenceEquals(null, obj)) return false;
+        	if (ReferenceEquals(this, obj)) return true;
+        	if (obj.GetType() != GetType()) return false;
 
-				foreach(object key in this.Keys)
-				{
-					//if(this[key].ToString() != refKey[key].ToString())
-					if(!(this[key].Equals(refKey[key])))
-						return false;
-				}
-			}
-			else
-				return false;
+        	var refKey = obj as Key;
 
-			return true;
-		}
+            if (refKey.Count == 1 && Count == 1 && refKey.Contains("Id") && Contains("Id"))
+        	{
+        	    return refKey["Id"].Equals(this["Id"]);
+        	}
 
-		public override int GetHashCode()
-		{
-			int hashCode = 0;
+            if (Count != refKey.Count) return false;
 
-			foreach(object key in this.Keys)
-			{
-				hashCode = hashCode ^ key.GetHashCode();
-			}
+        	foreach (object key in this.Keys)
+        	{
+        	    if (!(this[key].Equals(refKey[key])))
+        	        return false;
+        	}
 
-			return hashCode;
-		}
+        	return true;
+        }
 
-	}
+
+        public override int GetHashCode()
+        {
+            if (Count == 1 && Contains("Id")) return this["Id"].GetHashCode();
+            int hashCode = 0;
+
+            foreach (object key in this.Keys)
+            {
+                hashCode = hashCode ^ key.GetHashCode();
+            }
+
+            return hashCode;
+        }
+    }
 }
