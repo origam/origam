@@ -200,7 +200,9 @@ namespace OrigamArchitect
             TypeDescriptor.AddAttributes(typeof(SchemaItemAncestorCollection),
                         new EditorAttribute(typeof(SchemaItemAncestorCollectionEditor),
                             typeof(System.Drawing.Design.UITypeEditor)));
-    }
+		    TypeDescriptor.AddAttributes(typeof(Bitmap),
+		        new EditorAttribute(typeof(System.Drawing.Design.BitmapEditor), typeof(System.Drawing.Design.UITypeEditor)));
+        }
 
     public void OpenForm(object owner,Hashtable parameters)
 		{

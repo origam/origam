@@ -162,7 +162,7 @@ namespace Origam.Gui.Win
             }
             else
             {
-                this.Image = this.Icon.GraphicsData.ToBitmap();
+                this.Image = this.Icon.GraphicsData;
             }
         }
 

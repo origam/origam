@@ -258,7 +258,7 @@ namespace Origam.Schema.GuiModel
 						return  ms.ToArray();
 					}
 				}
-				return ButtonIcon.GraphicsData;
+				return ButtonIcon.GraphicsData.ToByteArray();
 			}
 		}
 

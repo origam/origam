@@ -2047,7 +2047,7 @@ namespace Origam.Gui.Win
 		
 		private void SetPanelTitleIcon()
 		{
-			pnlDataControl.PanelIcon = _iconId != Guid.Empty ? this.TitleIcon.GraphicsData.ToBitmap() : null;
+			pnlDataControl.PanelIcon = _iconId != Guid.Empty ? this.TitleIcon.GraphicsData : null;
 		}
 
 		private void CopyData()
