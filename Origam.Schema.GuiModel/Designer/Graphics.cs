@@ -99,7 +99,7 @@ namespace Origam.Schema.GuiModel
 
 		[Category("Graphics")]
 		[Editor(typeof(System.Drawing.Design.BitmapEditor), typeof(System.Drawing.Design.UITypeEditor))]
-		public Bitmap GraphicsData
+		public byte[] GraphicsData
 		{
 			get
 			{
@@ -110,7 +110,7 @@ namespace Origam.Schema.GuiModel
 				{
 					b.MakeTransparent(Color.Magenta);
 				}
-				return b;
+				return b.ToByteArray();
 			}
 			set
 			{
@@ -120,16 +120,17 @@ namespace Origam.Schema.GuiModel
 					return;
 				}
 
-				System.IO.MemoryStream stream = new System.IO.MemoryStream();
+			    Bitmap bitmap = value.ToBitmap();
+			    System.IO.MemoryStream stream = new System.IO.MemoryStream();
 
-				if (value.RawFormat == ImageFormat.Bmp)
+				if (bitmap.RawFormat == ImageFormat.Bmp)
 				{
-					SetTransparentColor(value);
-					value.Save(stream, ImageFormat.Bmp);
+					SetTransparentColor(bitmap);
+				    bitmap.Save(stream, ImageFormat.Bmp);
 				} 
 				else
 				{
-					value.Save(stream, ImageFormat.Png);
+				    bitmap.Save(stream, ImageFormat.Png);
 				}
 				GraphicsDataByte = stream.ToArray();
 			}
@@ -149,7 +150,7 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		public override byte[] NodeImage => GraphicsData.ToByteArray();
+		public override byte[] NodeImage => GraphicsData;
 
 		#endregion
 	}

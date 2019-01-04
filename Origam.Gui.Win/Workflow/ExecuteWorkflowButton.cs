@@ -39,6 +39,7 @@ using Origam.Rule;
 using System.Collections.Generic;
 using Origam.Workflow;
 using Origam;
+using Origam.Extensions;
 
 namespace Origam.Gui.Win
 {
@@ -161,7 +162,7 @@ namespace Origam.Gui.Win
             }
             else
             {
-                this.Image = this.Icon.GraphicsData;
+                this.Image = this.Icon.GraphicsData.ToBitmap();
             }
         }
 

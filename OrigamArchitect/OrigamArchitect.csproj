@@ -494,6 +494,7 @@
     <Compile Include="SchemaCompareEditor.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="SchemaItemAncestorCollectionEditor.cs" />
     <Compile Include="SplashScreen.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -122,7 +122,7 @@ namespace Origam.Schema.MenuModel
 				}
 				else
 				{
-					return MenuIcon.GraphicsData.ToByteArray();
+					return MenuIcon.GraphicsData;
 				}
 			}
 		}

@@ -42,6 +42,7 @@ using Origam.Workbench.Pads;
 using Origam.Rule;
 using System.Collections.Generic;
 using System.Linq;
+using Origam.Extensions;
 using Origam.Schema.GuiModel.Designer;
 using Origam.Gui;
 using Origam.Schema.MenuModel;
@@ -2046,7 +2047,7 @@ namespace Origam.Gui.Win
 		
 		private void SetPanelTitleIcon()
 		{
-			pnlDataControl.PanelIcon = _iconId != Guid.Empty ? this.TitleIcon.GraphicsData : null;
+			pnlDataControl.PanelIcon = _iconId != Guid.Empty ? this.TitleIcon.GraphicsData.ToBitmap() : null;
 		}
 
 		private void CopyData()
