@@ -7,6 +7,9 @@
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <AssemblyName></AssemblyName>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+      <DefineConstants>TRACE;RELEASE;NETSTANDARD;NETSTANDARD2_0;NET_20;ORIGAM_CLIENT;ORIGAM_SERVER</DefineConstants>
+    </PropertyGroup>
     <ItemGroup>
       <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
       <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj" />
