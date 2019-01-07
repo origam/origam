@@ -2078,8 +2078,7 @@ namespace OrigamArchitect
 		private void InitializeDefaultServices()
 		{
 			// Status bar service
-			_statusBarService = new StatusBarService();
-			_statusBarService.StatusBar = this.statusBar;
+			_statusBarService = new StatusBarService(statusBar);
 			ServiceManager.Services.AddService(_statusBarService);
 
 			// Schema service

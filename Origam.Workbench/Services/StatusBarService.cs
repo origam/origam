@@ -29,7 +29,7 @@ namespace Origam.Workbench.Services
 	/// </summary>
 	public class StatusBarService : IStatusBarService
 	{
-		public StatusBarService()
+		public StatusBarService(StatusBar statusBar)
 		{
 		}
 
@@ -65,18 +65,8 @@ namespace Origam.Workbench.Services
 		#endregion
 
 		#region Properties
-		private StatusBar _statusBar;
-		public StatusBar StatusBar
-		{
-			get
-			{
-				return _statusBar;
-			}
-			set
-			{
-				_statusBar = value;
-			}
-		}
+		private StatusBar statusBar;
+
 		#endregion
 
 		#region Public Functions
@@ -85,16 +75,15 @@ namespace Origam.Workbench.Services
 		{
 			if(CanSetStatus())
 			{
-                if (this.StatusBar.InvokeRequired)
+                if (this.statusBar.InvokeRequired)
                 {
                     SetStatusTextDelegate setText = new SetStatusTextDelegate(SetStatusText);
-                    this.StatusBar.Invoke(setText, new object[] { text }); 
+                    this.statusBar.Invoke(setText, new object[] { text }); 
                 }
                 else
                 {
-                    this.StatusBar.Panels[0].Text = text;
+                    this.statusBar.Panels[0].Text = text;
                 }
-				//Application.DoEvents();
 			}
 		}
 
@@ -102,7 +91,7 @@ namespace Origam.Workbench.Services
 		{
 			if(CanSetStatus())
 			{
-				this.StatusBar.Panels[1].Text = bytes.ToString("N");
+				this.statusBar.Panels[1].Text = bytes.ToString("N");
 				// Application.DoEvents();
 			}
 		}
@@ -110,7 +99,7 @@ namespace Origam.Workbench.Services
 
 		private bool CanSetStatus()
 		{
-			return ! (this.StatusBar == null || this.StatusBar.IsDisposed);
+			return ! (this.statusBar == null || this.statusBar.IsDisposed);
 		}
 	}
 }
