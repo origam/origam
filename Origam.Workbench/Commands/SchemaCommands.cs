@@ -37,6 +37,7 @@ using Origam.Workbench.Editors;
 using System.Text;
 using Origam.DA.Service;
 using System.Xml;
+using Origam.Schema.GuiModel;
 
 namespace Origam.Workbench.Commands
 {
@@ -481,7 +482,11 @@ namespace Origam.Workbench.Commands
 				if(editor == null)
 					throw new Exception(ResourceUtils.GetString("ErrorLoadEditorFailed"));
 			}
-			else
+            else if (item is EntityUIAction)
+            {
+               editor = new UiActionEditor();
+            }
+            else
 			{
 				editor = new Origam.Workbench.Editors.PropertyGridEditor();
 			}
