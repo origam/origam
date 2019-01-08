@@ -848,13 +848,13 @@ namespace Origam.DA.Service
 				{
 					if(item is EntityColumnReference)
 					{
-						if((item as EntityColumnReference).Column is FunctionCall)
+						if((item as EntityColumnReference).Field is FunctionCall)
 						{
-							RetrieveGroupByColumns((item as EntityColumnReference).Column as FunctionCall, groupByColumns);
+							RetrieveGroupByColumns((item as EntityColumnReference).Field as FunctionCall, groupByColumns);
 						}
-						else if((item as EntityColumnReference).Column is FieldMappingItem)
+						else if((item as EntityColumnReference).Field is FieldMappingItem)
 						{
-							groupByColumns.Add((item as EntityColumnReference).Column);
+							groupByColumns.Add((item as EntityColumnReference).Field);
 						}
 					}
 
@@ -2924,12 +2924,12 @@ namespace Origam.DA.Service
 
 		private string RenderExpression(EntityColumnReference item, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
 		{
-			if(item.Column == null)
+			if(item.Field == null)
 			{
 				throw new Exception("Column not specified for " + item.Path);
 			}
 
-			return RenderExpression(item.Column, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
+			return RenderExpression(item.Field, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
 		}
 
 		private string RenderExpression(EntityFilterReference item, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)

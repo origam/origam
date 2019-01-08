@@ -409,7 +409,7 @@ namespace Origam.Schema.EntityModel
                 call.GetChildByName(leftName).NewItem(
                     typeof(EntityColumnReference), 
                     schema.ActiveSchemaExtensionId, null) as EntityColumnReference;
-			reference1.Column = field;
+			reference1.Field = field;
 			reference1.Persist();
             // parameter
 			if(createParameter)

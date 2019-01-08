@@ -1276,7 +1276,7 @@ namespace Origam.DA.Service
 
 		private string RenderExpression(EntityColumnReference item, DataStructureEntity entity)
 		{
-			return RenderColumn(item.Column, entity);
+			return RenderColumn(item.Field, entity);
 		}
 
 		private string RenderExpression(FunctionCall item, DataStructureEntity entity)
