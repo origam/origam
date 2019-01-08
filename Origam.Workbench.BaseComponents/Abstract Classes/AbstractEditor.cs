@@ -602,9 +602,12 @@ namespace Origam.Workbench.Editors
 
                 if (totalToolTipWidth < maxWidth) break;
 	            int indexToMove = toolStrip.Items.Count - 1;
-	            var lastItem = toolStrip.Items[indexToMove];
-	            toolStrip.Items.Remove(lastItem);
-	            itemsToHide.Add(items[indexToMove]);
+                if (indexToMove > -1)
+                {
+                    var lastItem = toolStrip.Items[indexToMove];
+                    toolStrip.Items.Remove(lastItem);
+                    itemsToHide.Add(items[indexToMove]);
+                }
             }
 
 	        toolStrip.Width = 10000;
