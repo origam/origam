@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <String
-    string="Do you really want to remove the username account?"
-    name="DeleteMembershipUserConfirmationMessage"
     abstract="false"
     x:id="cdae0116-4958-4244-8b4f-0d4d03e303bb"
+    name="DeleteMembershipUserConfirmationMessage"
+    string="Do you really want to remove the username account?"
     x:type="Origam.Schema.StringItem" />
 </x:file>

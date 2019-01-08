@@ -1,4 +1,4 @@
-CREATE TABLE [OrigamUser] (
+﻿CREATE TABLE [OrigamUser] (
 	[refBusinessPartnerId] UNIQUEIDENTIFIER NOT NULL,
 	[Password] NVARCHAR(1000) NULL,
 	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,

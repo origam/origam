@@ -1,4 +1,4 @@
-CREATE TABLE Tmp_AsapRole
+﻿CREATE TABLE Tmp_AsapRole
 	(
 	RecordCreatedBy uniqueidentifier NULL,
 	RecordUpdatedBy uniqueidentifier NULL,

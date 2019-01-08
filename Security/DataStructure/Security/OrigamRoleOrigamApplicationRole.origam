@@ -1,22 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="false"
-    name="OrigamRoleOrigamApplicationRole"
     abstract="false"
     x:id="87b6f6ab-c16d-47eb-8291-14ec54714d01"
+    localized="false"
+    name="OrigamRoleOrigamApplicationRole"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="true"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="OrigamRoleOrigamApplicationRole"
       abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
       entity="Security/DataEntity/Security/OrigamRoleOrigamApplicationRole.origam#OrigamRoleOrigamApplicationRole/69606215-a699-439f-a499-769cba583df7"
       x:id="d8a5621f-eea2-41f1-8166-7161a9576d34"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamRoleOrigamApplicationRole"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
   </DataStructure>
 </x:file>

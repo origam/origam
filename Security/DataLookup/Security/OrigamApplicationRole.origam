@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="Name;Description"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="Name"
-    name="OrigamApplicationRole"
     abstract="false"
-    listDataStructure="Security/DataStructure/Security/LookupOrigamApplicationRole.origam#LookupOrigamApplicationRole/cafef34a-6a0c-4f3a-8a7c-e4a07a624e72"
-    valueDataStructure="Security/DataStructure/Security/LookupOrigamApplicationRole.origam#LookupOrigamApplicationRole/cafef34a-6a0c-4f3a-8a7c-e4a07a624e72"
-    valueMethod="Security/DataStructure/Security/LookupOrigamApplicationRole.origam#LookupOrigamApplicationRole/GetId/2e5e1db3-17fb-46b8-b501-a29b357824d4"
+    alwaysAllowReturnToForm="false"
     x:id="1d3b2c32-c166-4705-bacd-70a38e5557ca"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Security/DataStructure/Security/LookupOrigamApplicationRole.origam#LookupOrigamApplicationRole/cafef34a-6a0c-4f3a-8a7c-e4a07a624e72"
+    listDisplayMember="Name;Description"
+    listValueMember="Id"
+    name="OrigamApplicationRole"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Security/DataStructure/Security/LookupOrigamApplicationRole.origam#LookupOrigamApplicationRole/cafef34a-6a0c-4f3a-8a7c-e4a07a624e72"
+    valueDisplayMember="Name"
+    valueMethod="Security/DataStructure/Security/LookupOrigamApplicationRole.origam#LookupOrigamApplicationRole/GetId/2e5e1db3-17fb-46b8-b501-a29b357824d4"
+    valueValueMember="Id" />
 </x:file>

@@ -1,22 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="false"
-    name="BusinessPartnerOrigamRole"
     abstract="false"
     x:id="4bba1ee9-1817-4166-9880-b245313811d3"
+    localized="false"
+    name="BusinessPartnerOrigamRole"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="true"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="BusinessPartnerOrigamRole"
       abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
       entity="Security/DataEntity/Security/BusinessPartnerOrigamRole.origam#BusinessPartnerOrigamRole/ad2aebfe-e684-4e2e-8843-775c468357d5"
       x:id="84ffa647-5043-490a-8620-832fedd013d0"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="BusinessPartnerOrigamRole"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
   </DataStructure>
 </x:file>

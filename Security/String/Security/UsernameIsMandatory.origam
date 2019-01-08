@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <String
-    string="Username is a mandatory field. Please fill in a username."
-    name="UsernameIsMandatory"
     abstract="false"
     x:id="3221421c-eebe-4280-8f98-1966fe693d07"
+    name="UsernameIsMandatory"
+    string="Username is a mandatory field. Please fill in a username."
     x:type="Origam.Schema.StringItem" />
 </x:file>

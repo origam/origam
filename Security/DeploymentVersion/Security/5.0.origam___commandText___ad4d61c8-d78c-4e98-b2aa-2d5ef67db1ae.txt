@@ -1,4 +1,4 @@
-/*Store Names of table to loop in in a special table variable */
+﻿/*Store Names of table to loop in in a special table variable */
 declare @tables table(idx int identity(1,1), tableName NVARCHAR(100))
 
 insert into @tables (tableName)

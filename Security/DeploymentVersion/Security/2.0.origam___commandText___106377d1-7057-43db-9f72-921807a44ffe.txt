@@ -1,4 +1,4 @@
-CREATE TABLE [AsapRoleAsapApplicationRole] (
+﻿CREATE TABLE [AsapRoleAsapApplicationRole] (
 	[refAsapRoleId] UNIQUEIDENTIFIER NOT NULL,
 	[refAsapApplicationRoleId] UNIQUEIDENTIFIER NOT NULL,
 	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,

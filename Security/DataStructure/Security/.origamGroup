@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <group
-    rootItemType="DataStructure"
-    name="Security"
     x:id="0530c725-6a2f-4cb9-a7fa-afea062e499c"
     x:isFolder="true"
+    name="Security"
+    rootItemType="DataStructure"
     x:type="Origam.Schema.SchemaItemGroup" />
 </x:file>

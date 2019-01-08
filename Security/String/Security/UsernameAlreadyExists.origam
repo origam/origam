@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <String
-    string="Username already exists in the system, please fill in a different one."
-    name="UsernameAlreadyExists"
     abstract="false"
     x:id="86381c0e-6c5c-479c-89f3-4a6cb6139c96"
+    name="UsernameAlreadyExists"
+    string="Username already exists in the system, please fill in a different one."
     x:type="Origam.Schema.StringItem" />
 </x:file>

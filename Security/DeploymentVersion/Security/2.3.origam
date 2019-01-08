@@ -1,18 +1,18 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DeploymentVersion
-    version="2.3"
-    name="2.3"
     abstract="false"
     x:id="368ebbaf-f931-4bcd-b778-a097481bfd72"
-    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    name="2.3"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="2.3">
     <DeploymentUpdateScriptActivity
-      activityOrder="10"
-      name="00010_Database_Column_Mapping_OrigamApplicationRole.Description"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="10"
       commandText="-***-ExternalFile:2.3.origam___commandText___4b9fa2f7-1356-4dcc-bcad-1cb4e0ac315b.txt"
       x:id="4b9fa2f7-1356-4dcc-bcad-1cb4e0ac315b"
+      name="00010_Database_Column_Mapping_OrigamApplicationRole.Description"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>
 </x:file>

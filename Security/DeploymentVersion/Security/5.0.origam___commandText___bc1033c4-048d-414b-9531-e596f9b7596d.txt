@@ -1,4 +1,4 @@
-CREATE PROCEDURE RenameColumns
+﻿CREATE PROCEDURE RenameColumns
 @tableName NVARCHAR(100), @find NVARCHAR(100), @replace NVARCHAR(100)
 
 AS

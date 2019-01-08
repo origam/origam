@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Rule
-    xPath="string(/row/UserName) and AS:IsUserLockedOut(string(/row/Id))"
-    isPathRelative="false"
-    dataType="Boolean"
-    name="IsBusinessPartner_HasUsernameAndIsUserLockedOut"
     abstract="false"
+    dataType="Boolean"
     x:id="61f2c354-9d74-41bf-a1bf-ac19c3d29521"
-    x:type="Origam.Schema.RuleModel.EntityRule" />
+    isPathRelative="false"
+    name="IsBusinessPartner_HasUsernameAndIsUserLockedOut"
+    x:type="Origam.Schema.RuleModel.EntityRule"
+    xPath="string(/row/UserName) and AS:IsUserLockedOut(string(/row/Id))" />
 </x:file>

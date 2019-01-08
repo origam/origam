@@ -1,1 +1,1 @@
-INSERT INTO AsapApplicationRole (Id, Name, IsSystemRole, RecordCreated) VALUES (newid(), 'SYS_AsapClient_GlobalTransaction', 1, getdate())
+﻿INSERT INTO AsapApplicationRole (Id, Name, IsSystemRole, RecordCreated) VALUES (newid(), 'SYS_AsapClient_GlobalTransaction', 1, getdate())

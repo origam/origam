@@ -1,16 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Control
-    toolboxVisibility="FormDesigner"
-    typeName="Origam.Schema.GuiModel.PanelControlSet"
-    namespace="Origam.Schema.GuiModel"
-    isComplex="true"
-    requestSaveAfterChangeAllowed="false"
-    name="BusinessPartner_NewUser"
     abstract="false"
-    screenSection="Security/PanelControlSet/Security/BusinessPartner_NewUser.origam#BusinessPartner_NewUser/b101af3f-61a7-4340-92a8-f6b3bf047ac9"
     x:id="82202dcc-05f4-485e-aed9-6799b94441d4"
-    x:type="Origam.Schema.GuiModel.ControlItem">
+    isComplex="true"
+    name="BusinessPartner_NewUser"
+    namespace="Origam.Schema.GuiModel"
+    requestSaveAfterChangeAllowed="false"
+    screenSection="Security/PanelControlSet/Security/BusinessPartner_NewUser.origam#BusinessPartner_NewUser/b101af3f-61a7-4340-92a8-f6b3bf047ac9"
+    toolboxVisibility="FormDesigner"
+    x:type="Origam.Schema.GuiModel.ControlItem"
+    typeName="Origam.Schema.GuiModel.PanelControlSet">
     <ancestor
       ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
       x:id="378ff50e-8e4a-46fa-a57c-b29794617220"

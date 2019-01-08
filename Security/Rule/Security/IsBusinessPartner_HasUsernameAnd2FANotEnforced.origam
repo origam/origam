@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Rule
-    xPath="string(/row/UserName) and not(AS:Is2FAEnforced(string(/row/Id)))"
-    isPathRelative="false"
-    dataType="Boolean"
-    name="IsBusinessPartner_HasUsernameAnd2FANotEnforced"
     abstract="false"
+    dataType="Boolean"
     x:id="3add35c4-0e70-4bbc-9d94-7866d3aa521d"
-    x:type="Origam.Schema.RuleModel.EntityRule" />
+    isPathRelative="false"
+    name="IsBusinessPartner_HasUsernameAnd2FANotEnforced"
+    x:type="Origam.Schema.RuleModel.EntityRule"
+    xPath="string(/row/UserName) and not(AS:Is2FAEnforced(string(/row/Id)))" />
 </x:file>

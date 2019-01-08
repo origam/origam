@@ -1,34 +1,34 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DeploymentVersion
-    version="3.6"
-    name="3.6_SuperUserBuiltinRole"
     abstract="false"
     x:id="bdcff03e-b4f6-4b61-808e-6dd542ab8a27"
-    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    name="3.6_SuperUserBuiltinRole"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="3.6">
     <DeploymentUpdateScriptActivity
-      activityOrder="20"
-      name="00020_Remove_Role_SYS_OrigamClient_GlobalTransaction"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="20"
       commandText="-***-ExternalFile:3.6_SuperUserBuiltinRole.origam___commandText___6345fe88-2e45-498c-b03d-576c99bb5229.txt"
       x:id="6345fe88-2e45-498c-b03d-576c99bb5229"
+      name="00020_Remove_Role_SYS_OrigamClient_GlobalTransaction"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
-      activityOrder="10"
-      name="00010_SuperUserBuiltinRole"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="10"
       commandText="-***-ExternalFile:3.6_SuperUserBuiltinRole.origam___commandText___2a92ab9c-a6b6-4656-9e29-8d8150e7969c.txt"
       x:id="2a92ab9c-a6b6-4656-9e29-8d8150e7969c"
+      name="00010_SuperUserBuiltinRole"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
-      activityOrder="30"
-      name="00030_Remove_Role_WEB_Admin_AddUser"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="30"
       commandText="-***-ExternalFile:3.6_SuperUserBuiltinRole.origam___commandText___296eda73-560b-4a7d-8c71-b3baab85d878.txt"
       x:id="296eda73-560b-4a7d-8c71-b3baab85d878"
+      name="00030_Remove_Role_WEB_Admin_AddUser"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>
 </x:file>

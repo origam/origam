@@ -1,4 +1,4 @@
-CREATE TABLE [AsapApplicationRole] (
+﻿CREATE TABLE [AsapApplicationRole] (
 	[IsSystemRole] BIT NOT NULL,
 	[Name] NVARCHAR(255) NOT NULL,
 	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,

@@ -1,1 +1,1 @@
-CREATE UNIQUE INDEX [ix_Unique] ON [BusinessPartnerAsapRole] ([refBusinessPartnerId] ASC, [refAsapRoleId] ASC)
+﻿CREATE UNIQUE INDEX [ix_Unique] ON [BusinessPartnerAsapRole] ([refBusinessPartnerId] ASC, [refAsapRoleId] ASC)

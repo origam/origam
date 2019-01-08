@@ -1,16 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Control
-    toolboxVisibility="FormDesigner"
-    typeName="Origam.Schema.GuiModel.PanelControlSet"
-    namespace="Origam.Schema.GuiModel"
-    isComplex="true"
-    requestSaveAfterChangeAllowed="false"
-    name="UserPermissionsOverview"
     abstract="false"
-    screenSection="Security/PanelControlSet/Security/UserPermissionsOverview.origam#UserPermissionsOverview/0a79a788-9b4f-429b-accf-6c149dfd3668"
     x:id="e7cdd8da-5158-461a-a000-65ae0f43d135"
-    x:type="Origam.Schema.GuiModel.ControlItem">
+    isComplex="true"
+    name="UserPermissionsOverview"
+    namespace="Origam.Schema.GuiModel"
+    requestSaveAfterChangeAllowed="false"
+    screenSection="Security/PanelControlSet/Security/UserPermissionsOverview.origam#UserPermissionsOverview/0a79a788-9b4f-429b-accf-6c149dfd3668"
+    toolboxVisibility="FormDesigner"
+    x:type="Origam.Schema.GuiModel.ControlItem"
+    typeName="Origam.Schema.GuiModel.PanelControlSet">
     <ancestor
       ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
       x:id="338dabea-8790-4b16-8327-d809f4554094"

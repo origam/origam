@@ -1,1 +1,1 @@
-ALTER TABLE [OrigamUser] ADD [LastLoginDate] DATETIME NULL
+﻿ALTER TABLE [OrigamUser] ADD [LastLoginDate] DATETIME NULL

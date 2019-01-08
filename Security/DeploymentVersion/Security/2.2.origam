@@ -1,34 +1,34 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DeploymentVersion
-    version="2.2"
-    name="2.2"
     abstract="false"
     x:id="5a80aa0b-355f-4ded-b7d5-6c56fc3f5d3d"
-    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    name="2.2"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="2.2">
     <DeploymentUpdateScriptActivity
-      activityOrder="10"
-      name="00010_DataEntityConstraint_FK_OrigamRoleOrigamApplicationRole_refOrigamRoleId_OrigamRole"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="10"
       commandText="-***-ExternalFile:2.2.origam___commandText___9c37093d-8323-4855-ad35-669c3b77da6b.txt"
       x:id="9c37093d-8323-4855-ad35-669c3b77da6b"
+      name="00010_DataEntityConstraint_FK_OrigamRoleOrigamApplicationRole_refOrigamRoleId_OrigamRole"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
-      activityOrder="5"
-      name="00005_Delete_Dead_Records_BusinessPartnerOrigamRole"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="5"
       commandText="-***-ExternalFile:2.2.origam___commandText___f33552b5-d7ad-444c-aba1-e4c613d41689.txt"
       x:id="f33552b5-d7ad-444c-aba1-e4c613d41689"
+      name="00005_Delete_Dead_Records_BusinessPartnerOrigamRole"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
-      activityOrder="20"
-      name="00020_DataEntityConstraint_FK_BusinessPartnerOrigamRole_refBusinessPartnerId_BusinessPartner"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="20"
       commandText="-***-ExternalFile:2.2.origam___commandText___5b52ce01-68c0-4666-93d6-ebd11c8bb3c1.txt"
       x:id="5b52ce01-68c0-4666-93d6-ebd11c8bb3c1"
+      name="00020_DataEntityConstraint_FK_BusinessPartnerOrigamRole_refBusinessPartnerId_BusinessPartner"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>
 </x:file>

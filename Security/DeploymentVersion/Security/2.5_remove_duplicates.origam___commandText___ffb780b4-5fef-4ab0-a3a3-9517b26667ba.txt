@@ -1,4 +1,4 @@
-DELETE BusinessPartnerAsapRole
+﻿DELETE BusinessPartnerAsapRole
 FROM BusinessPartnerAsapRole
 LEFT OUTER JOIN (
    SELECT CONVERT(uniqueidentifier, MIN(CONVERT(char(36), Id))) as Id, refBusinessPartnerId, refAsapRoleId

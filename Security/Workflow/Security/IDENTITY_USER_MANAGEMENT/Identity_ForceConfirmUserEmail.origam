@@ -1,47 +1,47 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Workflow
-    transactionBehavior="InheritExisting"
-    traceLevel="None"
-    name="Identity_ForceConfirmUserEmail"
     abstract="false"
     x:id="b3d7c4f4-e6d2-45f4-8e1e-cca6743d570f"
+    name="Identity_ForceConfirmUserEmail"
+    traceLevel="None"
+    transactionBehavior="InheritExisting"
     x:type="Origam.Schema.WorkflowModel.Workflow">
     <ContextStore
-      dataType="UniqueIdentifier"
-      isReturnValue="false"
-      disableConstraints="false"
-      name="UserId"
       abstract="false"
+      dataType="UniqueIdentifier"
+      disableConstraints="false"
       x:id="b0cc0921-206e-40af-ac87-1d1facdfe227"
+      isReturnValue="false"
+      name="UserId"
       x:type="Origam.Schema.WorkflowModel.ContextStore" />
     <WorkflowTask
-      outputMethod="Ignore"
-      traceLevel="InheritFromParent"
-      roles="*"
-      name="01_CallMembershipService_ForceConfirmEmail"
       abstract="false"
-      serviceMethod="Security/Service/IdentityService.origam#IdentityService/ForceConfirmEmail/eafdc1fd-a7d2-4c43-a172-33727d718223"
-      service="Security/Service/IdentityService.origam#IdentityService/888933c6-e4b4-40c0-ae6b-462721fe8a60"
+      x:id="7b294699-7889-4775-a109-f83f600c5495"
+      name="01_CallMembershipService_ForceConfirmEmail"
       outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ForceConfirmUserEmail.origam#Identity_ForceConfirmUserEmail/UserId/b0cc0921-206e-40af-ac87-1d1facdfe227"
+      outputMethod="Ignore"
+      roles="*"
+      service="Security/Service/IdentityService.origam#IdentityService/888933c6-e4b4-40c0-ae6b-462721fe8a60"
+      serviceMethod="Security/Service/IdentityService.origam#IdentityService/ForceConfirmEmail/eafdc1fd-a7d2-4c43-a172-33727d718223"
       startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsNotEmpty.origam#SR_SimpleContextValue_IsNotEmpty/9fcb4f49-e9d6-4d44-9e4f-11bfcc4743cd"
       startConditionRuleContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ForceConfirmUserEmail.origam#Identity_ForceConfirmUserEmail/UserId/b0cc0921-206e-40af-ac87-1d1facdfe227"
-      x:id="7b294699-7889-4775-a109-f83f600c5495"
+      traceLevel="InheritFromParent"
       x:type="Origam.Schema.WorkflowModel.ServiceMethodCallTask">
       <ServiceMethodCallParameter
-        name="UserId"
         abstract="false"
-        serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/ForceConfirmEmail/UserId/1500dcac-9d37-4b2d-8434-8bd017611b7d"
         x:id="c47f3011-0c1d-42df-8271-493748771bee"
+        name="UserId"
+        serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/ForceConfirmEmail/UserId/1500dcac-9d37-4b2d-8434-8bd017611b7d"
         x:type="Origam.Schema.WorkflowModel.ServiceMethodCallParameter">
         <WorkflowContextReference
-          xPath="/"
-          castToDataType="String"
-          name="UserId"
           abstract="false"
+          castToDataType="String"
           contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ForceConfirmUserEmail.origam#Identity_ForceConfirmUserEmail/UserId/b0cc0921-206e-40af-ac87-1d1facdfe227"
           x:id="90e5150b-9aa6-47e4-9b61-f6948ef93e75"
-          x:type="Origam.Schema.WorkflowModel.ContextReference" />
+          name="UserId"
+          x:type="Origam.Schema.WorkflowModel.ContextReference"
+          xPath="/" />
       </ServiceMethodCallParameter>
     </WorkflowTask>
   </Workflow>

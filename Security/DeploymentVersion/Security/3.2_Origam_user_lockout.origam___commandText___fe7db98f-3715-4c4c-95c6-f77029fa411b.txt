@@ -1,1 +1,1 @@
-CREATE UNIQUE INDEX [UserName] ON [OrigamUser] ([UserName] ASC)
+﻿CREATE UNIQUE INDEX [UserName] ON [OrigamUser] ([UserName] ASC)

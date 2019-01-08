@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Rule
-    xPath="/row/@IsSystemRole = 'true'"
-    isPathRelative="false"
-    dataType="Boolean"
-    name="OrigamApplicationRole_IsSystem"
     abstract="false"
+    dataType="Boolean"
     x:id="f1f4c218-d7a7-4252-885c-ef979a71f9c4"
-    x:type="Origam.Schema.RuleModel.EntityRule" />
+    isPathRelative="false"
+    name="OrigamApplicationRole_IsSystem"
+    x:type="Origam.Schema.RuleModel.EntityRule"
+    xPath="/row/@IsSystemRole = 'true'" />
 </x:file>

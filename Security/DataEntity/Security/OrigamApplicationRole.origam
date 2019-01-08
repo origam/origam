@@ -1,259 +1,259 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
-    mappedObjectName="OrigamApplicationRole"
+    abstract="false"
+    audit="None"
     databaseObjectType="Table"
     generateDeploymentScript="true"
-    readOnly="false"
-    audit="None"
-    label="Application Role"
-    name="OrigamApplicationRole"
-    abstract="false"
     x:id="c0dab8c0-ad91-428f-a89b-67795a427729"
+    label="Application Role"
+    mappedObjectName="OrigamApplicationRole"
+    name="OrigamApplicationRole"
+    readOnly="false"
     x:type="Origam.Schema.EntityModel.TableMappingItem">
     <ancestor
       ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
       x:id="5faf8780-57d0-455a-b07b-66c53b0157f1"
       x:type="Origam.Schema.SchemaItemAncestor" />
     <DataEntityColumn
-      mappedColumnName="Description"
-      excludeFromAuditing="false"
-      dataType="String"
-      dataLength="200"
+      abstract="false"
       allowNulls="true"
+      autoIncrement="false"
+      dataLength="200"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="f1dd7f84-80fa-499e-8e96-88fdf00deaf9"
       isPrimaryKey="false"
       label="Description"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
+      mappedColumnName="Description"
       name="Description"
-      abstract="false"
-      x:id="f1dd7f84-80fa-499e-8e96-88fdf00deaf9"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
     <DataEntityColumn
-      mappedColumnName="IsSystemRole"
-      excludeFromAuditing="false"
-      dataType="Boolean"
+      abstract="false"
       allowNulls="false"
+      autoIncrement="false"
+      dataType="Boolean"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="6e44c51d-8818-43d4-b162-b2a05dc7b30f"
       isPrimaryKey="false"
       label="System"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
+      mappedColumnName="IsSystemRole"
       name="IsSystemRole"
-      abstract="false"
-      x:id="6e44c51d-8818-43d4-b162-b2a05dc7b30f"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
     <DataEntityColumn
-      mappedColumnName="Name"
-      excludeFromAuditing="false"
-      dataType="String"
-      dataLength="255"
+      abstract="false"
       allowNulls="false"
+      autoIncrement="false"
+      dataLength="255"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="a6518f10-a9a2-4dfd-a30b-b50ffe15704e"
       isPrimaryKey="false"
       label="Name"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
+      mappedColumnName="Name"
       name="Name"
-      abstract="false"
-      x:id="a6518f10-a9a2-4dfd-a30b-b50ffe15704e"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
     <DataEntityColumn
-      mappedColumnName="UserRemarks"
-      excludeFromAuditing="false"
-      dataType="Memo"
+      abstract="false"
       allowNulls="true"
+      autoIncrement="false"
+      dataType="Memo"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="5b184566-8d56-4abf-91a3-ec9806fb4d95"
       isPrimaryKey="false"
       label="User Remarks"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
+      mappedColumnName="UserRemarks"
       name="UserRemarks"
-      abstract="false"
-      x:id="5b184566-8d56-4abf-91a3-ec9806fb4d95"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem">
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute">
       <EntitySecurityRule
-        readCredential="true"
-        updateCredential="true"
-        roles="*"
-        type="Permit"
-        level="50"
-        valueType="SavedValue"
-        name="50_Permit_ReadUpdate_*"
         abstract="false"
         x:id="b61ac737-5d62-4cb9-a6d0-462cbc7e8268"
-        x:type="Origam.Schema.EntityModel.EntityFieldSecurityRule" />
+        level="50"
+        name="50_Permit_ReadUpdate_*"
+        readCredential="true"
+        roles="*"
+        type="Permit"
+        x:type="Origam.Schema.EntityModel.EntityFieldSecurityRule"
+        updateCredential="true"
+        valueType="SavedValue" />
     </DataEntityColumn>
     <DataEntityIndex
-      unique="false"
-      generateDeploymentScript="false"
-      name="ix_Name"
       abstract="false"
+      generateDeploymentScript="false"
       x:id="7c9d48e1-61ea-4b4a-86cc-8db422249f07"
-      x:type="Origam.Schema.EntityModel.DataEntityIndex">
+      name="ix_Name"
+      x:type="Origam.Schema.EntityModel.DataEntityIndex"
+      unique="false">
       <DataEntityIndexField
-        sortOrder="Ascending"
-        name="0_Name"
         abstract="false"
         field="Security/DataEntity/Security/OrigamApplicationRole.origam#OrigamApplicationRole/Name/a6518f10-a9a2-4dfd-a30b-b50ffe15704e"
         x:id="aeefbeeb-82a3-4aed-a7ac-230edec0c207"
+        name="0_Name"
+        sortOrder="Ascending"
         x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
     </DataEntityIndex>
     <EntityFilter
-      name="GetByName"
       abstract="false"
       x:id="a3f26eae-c5ae-4274-ae48-2db5849104c6"
+      name="GetByName"
       x:type="Origam.Schema.EntityModel.EntityFilter">
       <DataEntityColumn
-        forceDatabaseCalculation="false"
-        dataType="Boolean"
-        allowNulls="true"
-        isPrimaryKey="false"
-        excludeFromAllFields="false"
-        autoIncrement="false"
-        xmlMappingType="Element"
-        onCopyAction="Copy"
-        name="="
         abstract="false"
+        allowNulls="true"
+        autoIncrement="false"
+        dataType="Boolean"
+        excludeFromAllFields="false"
+        forceDatabaseCalculation="false"
         function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
         x:id="5c22f21f-ee7b-4090-b903-51e124a10509"
-        x:type="Origam.Schema.EntityModel.FunctionCall">
+        isPrimaryKey="false"
+        name="="
+        onCopyAction="Copy"
+        x:type="Origam.Schema.EntityModel.FunctionCall"
+        xmlMappingType="Element">
         <FunctionCallParameter
-          name="Left"
           abstract="false"
-          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
           x:id="3f9ade70-b332-4857-986b-1f6d99a85346"
+          name="Left"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
           x:type="Origam.Schema.EntityModel.FunctionCallParameter">
           <EntityColumnReference
-            name="Name"
             abstract="false"
             field="Security/DataEntity/Security/OrigamApplicationRole.origam#OrigamApplicationRole/Name/a6518f10-a9a2-4dfd-a30b-b50ffe15704e"
             x:id="2c322c4b-6efd-4f38-a099-dbb95af2c077"
+            name="Name"
             x:type="Origam.Schema.EntityModel.EntityColumnReference" />
         </FunctionCallParameter>
         <FunctionCallParameter
-          name="Right"
           abstract="false"
-          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
           x:id="a96bea6e-64a9-4cd3-9990-e103c1142e58"
+          name="Right"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
           x:type="Origam.Schema.EntityModel.FunctionCallParameter">
           <ParameterReference
-            name="parName"
             abstract="false"
-            parameter="Security/DataEntity/Security/OrigamApplicationRole.origam#OrigamApplicationRole/parName/be3ed691-9238-4e01-b1da-8c5a2d76dc76"
             x:id="89c42937-98cd-4195-b6fc-506bdbe5a271"
+            name="parName"
+            parameter="Security/DataEntity/Security/OrigamApplicationRole.origam#OrigamApplicationRole/parName/be3ed691-9238-4e01-b1da-8c5a2d76dc76"
             x:type="Origam.Schema.ParameterReference" />
         </FunctionCallParameter>
       </DataEntityColumn>
     </EntityFilter>
     <EntityFilter
-      name="GetUserDefined"
       abstract="false"
       x:id="e11bff8b-5588-46eb-86ff-a2460a5aaeb7"
+      name="GetUserDefined"
       x:type="Origam.Schema.EntityModel.EntityFilter">
       <DataEntityColumn
-        forceDatabaseCalculation="false"
-        dataType="Boolean"
-        allowNulls="true"
-        isPrimaryKey="false"
-        excludeFromAllFields="false"
-        autoIncrement="false"
-        xmlMappingType="Element"
-        onCopyAction="Copy"
-        name="="
         abstract="false"
+        allowNulls="true"
+        autoIncrement="false"
+        dataType="Boolean"
+        excludeFromAllFields="false"
+        forceDatabaseCalculation="false"
         function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
         x:id="bb0bc66a-b1e7-4d46-909d-5045a76cc958"
-        x:type="Origam.Schema.EntityModel.FunctionCall">
+        isPrimaryKey="false"
+        name="="
+        onCopyAction="Copy"
+        x:type="Origam.Schema.EntityModel.FunctionCall"
+        xmlMappingType="Element">
         <FunctionCallParameter
-          name="Right"
           abstract="false"
-          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
           x:id="bf32527b-1b3f-4738-98df-2d99a092d8d3"
+          name="Right"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
           x:type="Origam.Schema.EntityModel.FunctionCallParameter">
           <DataConstantReference
-            name="false"
             abstract="false"
             constant="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
             x:id="08dc9fae-c341-43f0-8517-65192edf752c"
+            name="false"
             x:type="Origam.Schema.EntityModel.DataConstantReference" />
         </FunctionCallParameter>
         <FunctionCallParameter
-          name="Left"
           abstract="false"
-          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
           x:id="b6eecbcc-8203-48c3-a6db-588408f19087"
+          name="Left"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
           x:type="Origam.Schema.EntityModel.FunctionCallParameter">
           <EntityColumnReference
-            name="IsSystemRole"
             abstract="false"
             field="Security/DataEntity/Security/OrigamApplicationRole.origam#OrigamApplicationRole/IsSystemRole/6e44c51d-8818-43d4-b162-b2a05dc7b30f"
             x:id="3d78dd18-a436-4af3-a08d-f4b462610988"
+            name="IsSystemRole"
             x:type="Origam.Schema.EntityModel.EntityColumnReference" />
         </FunctionCallParameter>
       </DataEntityColumn>
     </EntityFilter>
     <EntityRelation
-      parentChild="true"
-      selfJoin="false"
-      or="false"
-      name="OrigamRoleOrigamApplicationRole"
       abstract="false"
-      relatedEntity="Security/DataEntity/Security/OrigamRoleOrigamApplicationRole.origam#OrigamRoleOrigamApplicationRole/69606215-a699-439f-a499-769cba583df7"
       x:id="e1ce8af3-f91e-4e1f-b7b1-e415e899a087"
+      name="OrigamRoleOrigamApplicationRole"
+      or="false"
+      parentChild="true"
+      relatedEntity="Security/DataEntity/Security/OrigamRoleOrigamApplicationRole.origam#OrigamRoleOrigamApplicationRole/69606215-a699-439f-a499-769cba583df7"
+      selfJoin="false"
       x:type="Origam.Schema.EntityModel.EntityRelationItem">
       <EntityRelationColumnPair
-        name="OrigamRoleOrigamApplicationRoleKey1"
         abstract="false"
         baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-        relatedEntityField="Security/DataEntity/Security/OrigamRoleOrigamApplicationRole.origam#OrigamRoleOrigamApplicationRole/refOrigamApplicationRoleId/0f85ea5c-a327-4fad-917d-ec09a9a4f686"
         x:id="ed189835-99e5-42c0-8287-c006c1699eba"
+        name="OrigamRoleOrigamApplicationRoleKey1"
+        relatedEntityField="Security/DataEntity/Security/OrigamRoleOrigamApplicationRole.origam#OrigamRoleOrigamApplicationRole/refOrigamApplicationRoleId/0f85ea5c-a327-4fad-917d-ec09a9a4f686"
         x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
     </EntityRelation>
     <EntitySecurityRule
-      createCredential="false"
-      updateCredential="true"
-      deleteCredential="true"
-      roles="*"
-      type="Deny"
-      level="100"
-      valueType="SavedValue"
-      name="100_Deny_UpdateDelete_OrigamApplicationRole_IsSystem_*"
       abstract="false"
-      rule="Security/Rule/Security/OrigamApplicationRole_IsSystem.origam#OrigamApplicationRole_IsSystem/f1f4c218-d7a7-4252-885c-ef979a71f9c4"
-      x:id="d2ec2dc8-7f2e-4295-918e-750a494e6624"
-      x:type="Origam.Schema.EntityModel.EntitySecurityRule" />
-    <EntitySecurityRule
-      createCredential="true"
-      updateCredential="true"
+      createCredential="false"
       deleteCredential="true"
+      x:id="d2ec2dc8-7f2e-4295-918e-750a494e6624"
+      level="100"
+      name="100_Deny_UpdateDelete_OrigamApplicationRole_IsSystem_*"
+      roles="*"
+      rule="Security/Rule/Security/OrigamApplicationRole_IsSystem.origam#OrigamApplicationRole_IsSystem/f1f4c218-d7a7-4252-885c-ef979a71f9c4"
+      type="Deny"
+      x:type="Origam.Schema.EntityModel.EntitySecurityRule"
+      updateCredential="true"
+      valueType="SavedValue" />
+    <EntitySecurityRule
+      abstract="false"
+      createCredential="true"
+      deleteCredential="true"
+      x:id="c9c12461-5d83-42bf-9f34-e042754523df"
+      level="999"
+      name="999_Permit_CreateUpdateDelete_*"
       roles="*"
       type="Permit"
-      level="999"
-      valueType="SavedValue"
-      name="999_Permit_CreateUpdateDelete_*"
-      abstract="false"
-      x:id="c9c12461-5d83-42bf-9f34-e042754523df"
-      x:type="Origam.Schema.EntityModel.EntitySecurityRule" />
+      x:type="Origam.Schema.EntityModel.EntitySecurityRule"
+      updateCredential="true"
+      valueType="SavedValue" />
     <Parameter
+      abstract="false"
       allowContextReference="false"
       allowDataConstantReference="false"
       allowDataStructureReference="false"
+      allowNulls="false"
       allowReportReference="false"
       allowSystemFunctionCall="false"
       allowTransformationReference="false"
       allowWorkflowReference="false"
-      dataType="String"
       dataLength="255"
-      allowNulls="false"
-      name="parName"
-      abstract="false"
+      dataType="String"
       x:id="be3ed691-9238-4e01-b1da-8c5a2d76dc76"
+      name="parName"
       x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
   </DataEntity>
 </x:file>

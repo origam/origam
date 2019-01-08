@@ -1,61 +1,61 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="false"
-    name="LookupOrigamRole"
     abstract="false"
     x:id="8bd58036-62b7-47c6-9ce0-47b8f752b7d3"
+    localized="false"
+    name="LookupOrigamRole"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="false"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="OrigamRole"
       abstract="false"
+      allFields="false"
+      concurrencyHandling="Standard"
       entity="Security/DataEntity/Security/OrigamRole.origam#OrigamRole/049ffdd3-05f4-4e64-a97f-a4baefab1cb1"
       x:id="8a570352-33c4-45e8-bd93-eb4d0af5a966"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamRole"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
       <DataStructureColumn
-        useLookupValue="false"
-        useCopiedValue="false"
-        writeOnly="false"
-        aggregation="None"
-        xmlMappingType="Default"
-        upsertType="Replace"
-        name="Name"
         abstract="false"
+        aggregation="None"
         field="Security/DataEntity/Security/OrigamRole.origam#OrigamRole/Name/61829bb4-5587-4562-a981-892a7da69a6d"
         x:id="7280ce72-0ea1-4871-950c-992ca049489e"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-      <DataStructureColumn
-        useLookupValue="false"
-        useCopiedValue="false"
-        writeOnly="false"
-        aggregation="None"
-        xmlMappingType="Default"
+        name="Name"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
         upsertType="Replace"
-        name="Id"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
         abstract="false"
+        aggregation="None"
         field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
         x:id="6ff4c092-0281-4728-b280-de92c66748c8"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+        name="Id"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
     </DataStructureEntity>
     <DataStructureFilterSet
-      dynamic="false"
-      name="GetId"
       abstract="false"
+      dynamic="false"
       x:id="03e65634-b0a3-4b57-a034-fd11a8fcf065"
+      name="GetId"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        passWhenParameterMatch="false"
-        name="OrigamRole_GetId"
         abstract="false"
         entity="Security/DataStructure/Security/LookupOrigamRole.origam#LookupOrigamRole/OrigamRole/8a570352-33c4-45e8-bd93-eb4d0af5a966"
         filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
         x:id="6ed96099-cd68-4b5f-8ec3-f0862e6d2b88"
+        name="OrigamRole_GetId"
+        passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
   </DataStructure>

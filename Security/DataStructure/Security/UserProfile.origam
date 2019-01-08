@@ -1,66 +1,66 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="false"
-    name="UserProfile"
     abstract="false"
     x:id="f4c92dce-d634-4179-adb4-98876b870cc7"
+    localized="false"
+    name="UserProfile"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="true"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="BusinessPartner"
       abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
       x:id="cc61170c-8e81-44bc-bebc-25c7c672ebdb"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="BusinessPartner"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
     <DataStructureFilterSet
-      dynamic="false"
-      name="GetById"
       abstract="false"
+      dynamic="false"
       x:id="4e46424b-349f-4314-bc75-424206cd35b0"
+      name="GetById"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        passWhenParameterMatch="false"
-        name="BusinessPartner_GetId"
         abstract="false"
         entity="Security/DataStructure/Security/UserProfile.origam#UserProfile/BusinessPartner/cc61170c-8e81-44bc-bebc-25c7c672ebdb"
         filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
         x:id="1683ad85-b6b8-478a-86d9-634e8233f8d4"
+        name="BusinessPartner_GetId"
+        passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
     <DataStructureFilterSet
-      dynamic="false"
-      name="GetByUserEmail"
       abstract="false"
+      dynamic="false"
       x:id="46fd2484-4506-45a2-8a96-7855ea116210"
+      name="GetByUserEmail"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        passWhenParameterMatch="false"
-        name="BusinessPartner_GetByUserEmail"
         abstract="false"
         entity="Security/DataStructure/Security/UserProfile.origam#UserProfile/BusinessPartner/cc61170c-8e81-44bc-bebc-25c7c672ebdb"
         filter="Security/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/GetByUserEmail/27969716-fa79-4aa9-ba8c-3fcd50ed383e"
         x:id="83d81920-c811-4acd-9232-e659d67b0306"
+        name="BusinessPartner_GetByUserEmail"
+        passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
     <DataStructureFilterSet
-      dynamic="false"
-      name="GetByUserName"
       abstract="false"
+      dynamic="false"
       x:id="545396e7-d88e-4315-a112-f8feda7229bf"
+      name="GetByUserName"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        passWhenParameterMatch="false"
-        name="BusinessPartner_GetUserProfile"
         abstract="false"
         entity="Security/DataStructure/Security/UserProfile.origam#UserProfile/BusinessPartner/cc61170c-8e81-44bc-bebc-25c7c672ebdb"
         filter="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/GetUserProfile/03a13523-cf1c-4403-ad9e-3a5f73870072"
         x:id="0dacb860-1c46-4104-915c-b7af7b375172"
+        name="BusinessPartner_GetUserProfile"
+        passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
   </DataStructure>

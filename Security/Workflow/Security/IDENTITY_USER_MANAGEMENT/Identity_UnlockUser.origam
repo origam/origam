@@ -1,47 +1,47 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Workflow
-    transactionBehavior="InheritExisting"
-    traceLevel="None"
-    name="Identity_UnlockUser"
     abstract="false"
     x:id="dfe07009-c933-44c7-8df8-b5c204e0d856"
+    name="Identity_UnlockUser"
+    traceLevel="None"
+    transactionBehavior="InheritExisting"
     x:type="Origam.Schema.WorkflowModel.Workflow">
     <ContextStore
-      dataType="String"
-      isReturnValue="false"
-      disableConstraints="false"
-      name="UserName"
       abstract="false"
+      dataType="String"
+      disableConstraints="false"
       x:id="964c6899-e0bc-48a5-8d9e-10be95641b5f"
+      isReturnValue="false"
+      name="UserName"
       x:type="Origam.Schema.WorkflowModel.ContextStore" />
     <WorkflowTask
-      outputMethod="Ignore"
-      traceLevel="InheritFromParent"
-      roles="*"
-      name="01_CallMembershipService_UnlockUser"
       abstract="false"
-      serviceMethod="Security/Service/IdentityService.origam#IdentityService/UnlockUser/58b4c9ff-c280-43ce-ba33-25210260be36"
-      service="Security/Service/IdentityService.origam#IdentityService/888933c6-e4b4-40c0-ae6b-462721fe8a60"
+      x:id="704c7821-e10f-4900-aad1-36a31a1b9ca7"
+      name="01_CallMembershipService_UnlockUser"
       outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_UnlockUser.origam#Identity_UnlockUser/UserName/964c6899-e0bc-48a5-8d9e-10be95641b5f"
+      outputMethod="Ignore"
+      roles="*"
+      service="Security/Service/IdentityService.origam#IdentityService/888933c6-e4b4-40c0-ae6b-462721fe8a60"
+      serviceMethod="Security/Service/IdentityService.origam#IdentityService/UnlockUser/58b4c9ff-c280-43ce-ba33-25210260be36"
       startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsNotEmpty.origam#SR_SimpleContextValue_IsNotEmpty/9fcb4f49-e9d6-4d44-9e4f-11bfcc4743cd"
       startConditionRuleContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_UnlockUser.origam#Identity_UnlockUser/UserName/964c6899-e0bc-48a5-8d9e-10be95641b5f"
-      x:id="704c7821-e10f-4900-aad1-36a31a1b9ca7"
+      traceLevel="InheritFromParent"
       x:type="Origam.Schema.WorkflowModel.ServiceMethodCallTask">
       <ServiceMethodCallParameter
-        name="Username"
         abstract="false"
-        serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/UnlockUser/Username/3fe0ba4d-e79e-41c6-8e63-a356ef94fa96"
         x:id="6c9ef4a5-2000-4240-8711-00876bd52deb"
+        name="Username"
+        serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/UnlockUser/Username/3fe0ba4d-e79e-41c6-8e63-a356ef94fa96"
         x:type="Origam.Schema.WorkflowModel.ServiceMethodCallParameter">
         <WorkflowContextReference
-          xPath="/"
-          castToDataType="String"
-          name="UserName"
           abstract="false"
+          castToDataType="String"
           contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_UnlockUser.origam#Identity_UnlockUser/UserName/964c6899-e0bc-48a5-8d9e-10be95641b5f"
           x:id="55558416-b28e-417d-8fd6-126e73208b74"
-          x:type="Origam.Schema.WorkflowModel.ContextReference" />
+          name="UserName"
+          x:type="Origam.Schema.WorkflowModel.ContextReference"
+          xPath="/" />
       </ServiceMethodCallParameter>
     </WorkflowTask>
   </Workflow>

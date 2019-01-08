@@ -1,2 +1,2 @@
-insert into AsapApplicationRole (Id, Name, IsSystemRole, RecordCreated)
+﻿insert into AsapApplicationRole (Id, Name, IsSystemRole, RecordCreated)
 (select newid(), Name, 1, getdate() from AsapRole)
