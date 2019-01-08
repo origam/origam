@@ -52,7 +52,7 @@ namespace Origam.Workbench.Editors
 		private ISubmenuBuilder _actionsBuilder = null;
         private ISubmenuBuilder _newElementsBuilder = null;
 
-	    private bool showMenusInAppToolStrip = false;
+	    protected bool showMenusInAppToolStrip = false;
 
         public override object Content { get; set; }
 
@@ -555,7 +555,7 @@ namespace Origam.Workbench.Editors
 			}
 		}
 
-	    public List<ToolStrip> GetToolStrips(int maxWidth =-1) {
+	    public virtual List<ToolStrip> GetToolStrips(int maxWidth =-1) {
 		    if (!showMenusInAppToolStrip) return new List<ToolStrip>();
 			var actions = ActionsBuilder.BuildSubmenu(Content);
 			var actionToolStrip = MakeLabeledToolStrip(actions, "Actions", maxWidth/2);
@@ -564,7 +564,7 @@ namespace Origam.Workbench.Editors
 			return new List<ToolStrip> {actionToolStrip, newToolStrip};			        
 	    }
 
-	    private ToolStrip MakeLabeledToolStrip(ToolStripMenuItem[] items,
+	    protected ToolStrip MakeLabeledToolStrip(ToolStripMenuItem[] items,
 	        string toolStripName, int maxWidth)
 	    {
 	        BigToolStripButton[] toolStripButtons = items

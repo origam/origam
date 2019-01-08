@@ -228,29 +228,6 @@ namespace Origam.Schema.WorkflowModel
 				throw new InvalidOperationException("Cannot set Features to Workflow");
 			}
 		}
-        [Category("Contex Store")]
-        [DisplayName("isTrue")]
-        public string ContexStoreCalc
-        {
-            get
-            {
-                ArrayList arrayContex = this.ChildItemsByType(ContextStore.ItemTypeConst);
-                StringBuilder outp = new StringBuilder();
-                foreach (ContextStore contextStore in arrayContex)
-                {
-                    if (contextStore.IsReturnValue)
-                    {
-                        outp.Append(contextStore.Name);
-                        outp.Append(";");
-                    }
-                }
-                if ("".Equals(outp.ToString()))
-                {
-                    return "!!!No Context Store with output!!!";
-                }
-                return outp.ToString();
-            }
-        }
         #endregion
     }
 }
