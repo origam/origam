@@ -501,6 +501,7 @@ namespace OrigamArchitect
             this.searchComboBox.Size = new System.Drawing.Size(194, 24);
             this.searchComboBox.TabIndex = 2;
             this.searchComboBox.TabStop = false;
+		    this.searchComboBox.KeyDown += searchBox_KeyDown;
             this.searchComboBox.Text = "Search";
             // 
             // LicenseBackgroudExtender
