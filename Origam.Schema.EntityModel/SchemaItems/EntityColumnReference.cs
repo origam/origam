@@ -32,7 +32,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Field Reference", 1)]
     [HelpTopic("Field+Reference")]
 	[XmlModelRoot(ItemTypeConst)]
-	[DefaultProperty("Column")]
+	[DefaultProperty("Field")]
     public class EntityColumnReference : AbstractSchemaItem
 	{
 		public const string ItemTypeConst = "EntityColumnReference";
@@ -60,7 +60,7 @@ namespace Origam.Schema.EntityModel
 			{
 				try
 				{
-					return this.Column.Icon;
+					return this.Field.Icon;
 				}
 				catch
 				{
@@ -71,13 +71,13 @@ namespace Origam.Schema.EntityModel
 
 		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
 		{
-			if(this.Column != null)
-				base.GetParameterReferences(this.Column as AbstractSchemaItem, list);
+			if(this.Field != null)
+				base.GetParameterReferences(this.Field as AbstractSchemaItem, list);
 		}
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
-			dependencies.Add(this.Column);
+			dependencies.Add(this.Field);
 
 			base.GetExtraDependencies (dependencies);
 		}
@@ -88,9 +88,9 @@ namespace Origam.Schema.EntityModel
 			{
 				if(item.OldPrimaryKey != null)
 				{
-					if(item.OldPrimaryKey.Equals(this.Column.PrimaryKey))
+					if(item.OldPrimaryKey.Equals(this.Field.PrimaryKey))
 					{
-						this.Column = item as IDataEntityColumn;
+						this.Field = item as IDataEntityColumn;
 						break;
 					}
 				}
@@ -110,29 +110,29 @@ namespace Origam.Schema.EntityModel
 
 		#region Properties
 		[EntityColumn("G01")]  
-		public Guid ColumnId;
+		public Guid FieldId;
 
 		[Category("Reference")]
 		[TypeConverter(typeof(EntityColumnReferenceConverter))]
 		[RefreshProperties(RefreshProperties.Repaint)]
 		[NotNullModelElementRule()]
-        [XmlReference("field", "ColumnId")]
-		public IDataEntityColumn Column
+        [XmlReference("field", "FieldId")]
+		public IDataEntityColumn Field
 		{
 			get
 			{
 				ModelElementKey key = new ModelElementKey();
-				key.Id = this.ColumnId;
+				key.Id = this.FieldId;
 
 				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as IDataEntityColumn;
 			}
 			set
 			{
-				this.ColumnId = (Guid)value.PrimaryKey["Id"];
+				this.FieldId = (Guid)value.PrimaryKey["Id"];
 
 				if(this.Name == null)
 				{
-					this.Name = this.Column.Name;
+					this.Name = this.Field.Name;
 				}
 			}
 		}

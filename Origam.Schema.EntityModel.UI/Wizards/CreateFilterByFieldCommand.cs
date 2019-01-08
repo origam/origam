@@ -128,7 +128,7 @@ namespace Origam.Schema.EntityModel.Wizards
 			call.Persist();
             // function parameters
             EntityColumnReference reference1 = call.GetChildByName("Expression").NewItem(typeof(EntityColumnReference), _schema.ActiveSchemaExtensionId, null) as EntityColumnReference;
-			reference1.Column = field;
+			reference1.Field = field;
 			reference1.Persist();
 			ParameterReference reference2 = call.GetChildByName("Left").NewItem(typeof(ParameterReference), _schema.ActiveSchemaExtensionId, null) as ParameterReference;
 			reference2.Parameter = param1;
