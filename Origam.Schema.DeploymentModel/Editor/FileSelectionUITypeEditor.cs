@@ -24,9 +24,8 @@ using System.IO;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Drawing.Design;
-
+using ICSharpCode.SharpZipLib.Checksum;
 using ICSharpCode.SharpZipLib.Zip;
-using ICSharpCode.SharpZipLib.Checksums;
 
 namespace Origam.Schema.DeploymentModel
 {
