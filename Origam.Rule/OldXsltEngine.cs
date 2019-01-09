@@ -26,6 +26,7 @@ using System.Xml.Xsl;
 using System.IO;
 using System.Xml.XPath;
 
+#if !NETSTANDARD
 namespace Origam.Rule
 {
     class OldXsltEngine : MicrosoftXsltEngine
@@ -35,7 +36,7 @@ namespace Origam.Rule
 		{
 		}
 
-        public OldXsltEngine(IPersistenceProvider persistence) : base (persistence)
+        public OldXsltEngine(IPersistenceProvider persistence=null) : base (persistence)
 		{
 		}
 		#endregion
@@ -90,3 +91,5 @@ namespace Origam.Rule
         }
     }
 }
+
+#endif

@@ -3029,14 +3029,9 @@ namespace Origam.Rule
 			bool result = false;
 			bool resultRules = false;
 
-			IOutputPad outputPad = null;
-			
-			if(WorkbenchSingleton.Workbench != null)
-			{
-				outputPad = WorkbenchSingleton.Workbench.GetPad(typeof(IOutputPad)) as IOutputPad;
-			}
+			var outputPad = GetOutputPad();
 
-			if(ruleSet != null)
+		    if(ruleSet != null)
 			{
 				ArrayList rules;
 
@@ -3129,7 +3124,19 @@ namespace Origam.Rule
 			return result || resultRules;
 		}
 
-		private bool ProcessRulesLookupFields(DataRow row, string columnName)
+	    private static IOutputPad GetOutputPad()
+	    {
+	        IOutputPad outputPad = null;
+#if !NETSTANDARD
+	        if (WorkbenchSingleton.Workbench != null)
+	        {
+	            outputPad = WorkbenchSingleton.Workbench.GetPad(typeof(IOutputPad)) as IOutputPad;
+	        }
+#endif
+	        return outputPad;
+	    }
+
+	    private bool ProcessRulesLookupFields(DataRow row, string columnName)
 		{
 			bool changed = false;
 			DataTable t = row.Table;
@@ -3315,8 +3322,8 @@ namespace Origam.Rule
 					throw;
 				}
 
-				#region Processing Result
-				#region TRACE
+#region Processing Result
+#region TRACE
 				if(log.IsDebugEnabled)
 				{
 					if(rule.TargetField != null)
@@ -3353,7 +3360,7 @@ namespace Origam.Rule
 						log.Debug("   " + ResourceUtils.GetString("PadRuleResult0") + result.ToString());
 					}
 				}
-				#endregion
+#endregion
 
 				if(result is IDataDocument)
 				{
@@ -3398,7 +3405,7 @@ namespace Origam.Rule
 							}
 						}
 
-						#region TRACE
+#region TRACE
 						if(log.IsDebugEnabled)
 						{
 							foreach(DataColumn col in changedColumns)
@@ -3431,7 +3438,7 @@ namespace Origam.Rule
 									+ (oldLookupValue == null ? "" : " (" + oldLookupValue + ")"));
 							}
 						}
-						#endregion
+#endregion
 
 						// copy the values into the source row
 						PauseRuleProcessing();
@@ -3484,7 +3491,7 @@ namespace Origam.Rule
 						}
 					}
 				}
-				#endregion
+#endregion
 
 			nextRule:
 				;
@@ -3497,9 +3504,9 @@ namespace Origam.Rule
 
 			return changed;
 		}
-		#endregion
+#endregion
 
-		#region Conditional Formatting Functions
+#region Conditional Formatting Functions
 		public EntityFormatting Formatting(XmlDocument data, Guid entityId, Guid fieldId, XPathNodeIterator contextPosition)
 		{
 			EntityFormatting formatting = new EntityFormatting(NullColor, NullColor);
@@ -3616,9 +3623,9 @@ namespace Origam.Rule
 
 			return null;
 		}
-		#endregion
+#endregion
 
-		#region Row Level Security Functions
+#region Row Level Security Functions
 		public bool RowLevelSecurityState(DataRow row, string field, CredentialType type)
 		{
 			if(! DatasetTools.HasRowValidParent(row)) return true;
@@ -3717,13 +3724,13 @@ namespace Origam.Rule
                             // go through each column and lookup any looked-up column values
                             foreach (DataColumn childCol in childRow.Table.Columns)
                             {
-#if ! ORIGAM_SERVER
+#if !ORIGAM_SERVER
                                 if (childRow.RowState != DataRowState.Unchanged
                                     && childRow.RowState != DataRowState.Detached)
                                 {
 #endif
                                     this.ProcessRulesLookupFields(childRow, childCol.ColumnName);
-#if ! ORIGAM_SERVER
+#if !ORIGAM_SERVER
                                 }
 #endif
                             }
@@ -3936,10 +3943,10 @@ namespace Origam.Rule
 
 			return true;
 		}
-		#endregion
-		#endregion
+#endregion
+#endregion
 
-		#region Private Functions
+#region Private Functions
 		private string FormatXmlString(object value)
 		{
 			if(value is DateTime)
@@ -4099,9 +4106,9 @@ namespace Origam.Rule
 
 			return _dataServiceAgent.Result as DataSet;
 		}
-		#endregion
+#endregion
 
-		#region Evaluators
+#region Evaluators
 
 		private object Evaluate(SystemFunctionCall functionCall)
 		{
@@ -4129,9 +4136,9 @@ namespace Origam.Rule
 			return ((XslTransformation)reference.Transformation).Id;
 		}
 
-		#endregion
+#endregion
 
-		#region Rule Evaluators
+#region Rule Evaluators
 		private object EvaluateRule(XPathRule rule, IDataDocument context, XPathNodeIterator contextPosition)
 		{
 			if(context == null && context.Xml == null)
@@ -4341,7 +4348,7 @@ namespace Origam.Rule
 				throw new Exception(ResourceUtils.GetString("ErrorRuleFailed2"), ex);
 			}
 		}
-		#endregion
+#endregion
 
 		private void table_RowChanged(object sender, DataRowChangeEventArgs e)
 		{
@@ -4354,7 +4361,7 @@ namespace Origam.Rule
 		}
 	}
 
-	#region XPath Functions
+#region XPath Functions
 
 	class NullFunction : IXsltContextFunction 
 	{
@@ -5666,9 +5673,9 @@ namespace Origam.Rule
         }
     }
 
-    #endregion
+#endregion
 
-    #region XPath Helper Classes
+#region XPath Helper Classes
     public class RuleFunctionContext : XsltContext
 	{
 		private ExsltContext _exslt;
@@ -6097,5 +6104,5 @@ namespace Origam.Rule
 		private bool valid;
 	}
 
-	#endregion
+#endregion
 }
