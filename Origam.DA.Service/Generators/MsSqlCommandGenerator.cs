@@ -191,9 +191,7 @@ namespace Origam.DA.Service
 			newp.SourceVersion = param.SourceVersion;
 			newp.SqlDbType = ((SqlParameter)param).SqlDbType;
 			newp.Offset = ((SqlParameter)param).Offset;
-#if NET_20
 			newp.TypeName = ((SqlParameter)param).TypeName;
-#endif
 			return newp;
 		}
         #endregion

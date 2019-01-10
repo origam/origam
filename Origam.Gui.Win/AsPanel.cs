@@ -1532,11 +1532,7 @@ namespace Origam.Gui.Win
         {
             if (currentManager != null && currentManager.GetType().Name == "RelatedCurrencyManager")
             {
-#if NET_20
                 string propertyName = "parentManager";
-#else
-                string propertyName = "ParentManager";
-#endif
                 return Reflector.GetValue(currentManager.GetType(), currentManager, propertyName) as CurrencyManager;
             }
             else
