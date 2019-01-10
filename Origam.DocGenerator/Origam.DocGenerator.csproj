@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
@@ -76,9 +76,8 @@
     <Reference Include="CommandLine">
       <HintPath>..\EnterpriseLibrary\CommandLine.dll</HintPath>
     </Reference>
-    <Reference Include="Origam.Schema, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\OrigamEngineWebAPI\Bin\Origam.Schema.dll</HintPath>
-    </Reference>
   </ItemGroup>
+
+
 
 </Project>
