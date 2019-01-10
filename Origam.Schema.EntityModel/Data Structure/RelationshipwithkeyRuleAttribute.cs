@@ -5,9 +5,9 @@ using System.Data;
 
 namespace Origam.DA.ObjectPersistence.Attributes
 {
-    public class RelationTypeModelEntityRuleAttribute : AbstractModelElementRuleAttribute
+    public class RelationshipWithKeyRuleAttribute : AbstractModelElementRuleAttribute
     {
-        public RelationTypeModelEntityRuleAttribute()
+        public RelationshipWithKeyRuleAttribute()
         {
         }
 

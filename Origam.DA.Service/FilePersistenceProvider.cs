@@ -130,7 +130,6 @@ namespace Origam.DA.Service
                 // but we could not find it...
                 throw new Exception("PersistedObjectInfo was found but no instance was returned.");
             }
-            retrievedInstance.UseObjectCache = useCache;
             return retrievedInstance;
         }
 
