@@ -3,33 +3,27 @@ import { observer, inject } from "mobx-react";
 import { IGridInteractionActions, GridViewType } from "src/Grid/types";
 import { IGridToolbarView, IGridPanelBacking } from "../../GridPanel/types";
 
-@inject("gridPaneBacking")
+
 @observer
 export class GridToolbar extends React.Component<any> {
   public render() {
-    const { gridPaneBacking } = this.props;
-    const {
-      setActiveView
-    } = gridPaneBacking.gridInteractionActions as IGridInteractionActions;
-    const { dataLoadingStrategyActions, dataTableSelectors } = gridPaneBacking as IGridPanelBacking;
-    const gridToolbarView = gridPaneBacking.gridToolbarView as IGridToolbarView;
     return (
       <div
         className={"oui-grid-toolbar" + (this.props.isHidden ? " hidden" : "")}
       >
         <div className="toolbar-section">
-          <span className="toolbar-caption">
+          {/*<span className="toolbar-caption">
             {dataLoadingStrategyActions.isLoading && (
               <i className="fa fa-cog fa-spin" style={{ marginRight: 5 }} />
             )}{" "}
             {this.props.name}
-          </span>
+            </span>*/}
         </div>
         <div className="toolbar-section">
           {this.props.isAddButton && (
             <button
               className="oui-toolbar-btn"
-              onClick={gridToolbarView.handleAddRecordClick}
+
             >
               <i className="fa fa-plus-circle icon" aria-hidden="true" />
             </button>
@@ -37,7 +31,7 @@ export class GridToolbar extends React.Component<any> {
           {this.props.isDeleteButton && (
             <button
               className="oui-toolbar-btn"
-              onClick={gridToolbarView.handleRemoveRecordClick}
+
             >
               <i className="fa fa-minus-circle icon" aria-hidden="true" />
             </button>
@@ -55,13 +49,13 @@ export class GridToolbar extends React.Component<any> {
           </button>
           <button
             className="oui-toolbar-btn"
-            onClick={gridToolbarView.handlePrevRecordClick}
+
           >
             <i className="fa fa-caret-left icon" aria-hidden="true" />
           </button>
           <button
             className="oui-toolbar-btn"
-            onClick={gridToolbarView.handleNextRecordClick}
+
           >
             <i className="fa fa-caret-right icon" aria-hidden="true" />
           </button>
@@ -70,24 +64,21 @@ export class GridToolbar extends React.Component<any> {
           </button>
         </div>
         <div className="toolbar-section">
-          <span className="oui-toolbar-text">{dataTableSelectors.recordCount}</span>
+          <span className="oui-toolbar-text">0</span>
         </div>
         <div className="toolbar-section">
           <button
             className="oui-toolbar-btn"
-            onClick={() => setActiveView(GridViewType.Grid)}
           >
             <i className="fa fa-table icon" aria-hidden="true" />
           </button>
           <button
             className="oui-toolbar-btn"
-            onClick={() => setActiveView(GridViewType.Form)}
           >
             <i className="fa fa-list-alt icon" aria-hidden="true" />
           </button>
           <button
             className="oui-toolbar-btn"
-            onClick={() => setActiveView(GridViewType.Map)}
           >
             <i className="fa fa-map-o icon" aria-hidden="true" />
           </button>

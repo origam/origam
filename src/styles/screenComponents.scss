@@ -796,3 +796,53 @@ canvas {
     background-color: #b0b0b0 !important;
   }
 }
+
+
+
+
+
+
+.grid-table-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.grid-table-canvas {
+  border-left: 1px solid rgb(194, 194, 194);
+  box-sizing: border-box;
+}
+
+.grid-table-scroller {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.grid-table-scroller.horiz-scrollbar {
+  overflow-x: scroll;
+}
+
+.grid-table-scroller.vert-scrollbar {
+  overflow-y: scroll;
+}
+
+.grid-column-headers {
+  display: flex;
+  flex-direction: row;
+}
+
+.grid-column-header {
+  border-right: 1px solid grey;
+}
+
+.column-header-label {
+  display: flex;
+  justify-content: center;
+}
+
+.data-view-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}

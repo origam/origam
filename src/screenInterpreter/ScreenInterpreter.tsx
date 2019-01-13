@@ -10,7 +10,7 @@ import { TabHandle } from "../uiComponents/skeleton/TabHandle";
 import { VBox } from "../uiComponents/skeleton/VBox";
 import { VSplit } from "../uiComponents/skeleton/VSplit";
 import { Window } from "../uiComponents/skeleton/Window";
-import { GridTable } from "src/uiComponents/controls/GridTable";
+
 import { GridForm } from "src/uiComponents/controls/GridForm";
 import { Label } from "src/uiComponents/skeleton/Label";
 import { TreePanel } from "src/uiComponents/controls/TreePanel";
@@ -20,6 +20,12 @@ import {
   ICollectPropertiesContext,
   ICollectDropDownColumnsContext
 } from "./types";
+import GridTable from "src/uiComponents/controls/GridTable2/Table";
+import { IGridDimensions } from "src/uiComponents/controls/GridTable2/types";
+import bind from "bind-decorator";
+import { CPR } from "src/utils/canvas";
+import { computed } from "mobx";
+import { IRenderHeader } from "../uiComponents/controls/GridTable2/types";
 
 function parseAttrRect(attr: {
   [key: string]: string;
@@ -133,15 +139,15 @@ function buildForm(
         if (property) {
           switch (property.column) {
             case "Text":
-              return <FormField property={property} />
+              return <FormField property={property} />;
             case "Currency":
-              return <FormField property={property} />
+              return <FormField property={property} />;
             case "Date":
-              return <FormField property={property} />
+              return <FormField property={property} />;
             case "CheckBox":
-              return <FormField property={property} />
+              return <FormField property={property} />;
             case "ComboBox":
-              return <FormField property={property} />
+              return <FormField property={property} />;
             default:
               return null;
           }
@@ -152,6 +158,116 @@ function buildForm(
     default:
       return nextNode();
   }
+}
+
+class GridDimensionsMoving implements IGridDimensions {
+  @computed public get rowCount(): number {
+    return 10000;
+  }
+
+  @computed public get columnCount(): number {
+    return 100;
+  }
+
+  @bind
+  public getColumnLeft(columnIndex: number): number {
+    return columnIndex * 50;
+  }
+
+  @bind
+  public getColumnWidth(columnIndex: number): number {
+    return 50;
+  }
+
+  @bind
+  public getColumnRight(columnIndex: number): number {
+    return this.getColumnLeft(columnIndex) + this.getColumnWidth(columnIndex);
+  }
+
+  @bind
+  public getRowTop(rowIndex: number): number {
+    return rowIndex * 20;
+  }
+
+  @bind
+  public getRowHeight(rowIndex: number): number {
+    return 20;
+  }
+
+  @bind
+  public getRowBottom(rowIndex: number): number {
+    return this.getRowTop(rowIndex) + this.getRowHeight(rowIndex);
+  }
+}
+
+const gridDimensionsMoving = new GridDimensionsMoving();
+
+class GridDimensionsFixed implements IGridDimensions {
+  @computed public get rowCount(): number {
+    return 10000;
+  }
+
+  @computed public get columnCount(): number {
+    return 3;
+  }
+
+  @bind
+  public getColumnLeft(columnIndex: number): number {
+    return columnIndex * 50;
+  }
+
+  @bind
+  public getColumnWidth(columnIndex: number): number {
+    return 50;
+  }
+
+  @bind
+  public getColumnRight(columnIndex: number): number {
+    return this.getColumnLeft(columnIndex) + this.getColumnWidth(columnIndex);
+  }
+
+  @bind
+  public getRowTop(rowIndex: number): number {
+    return rowIndex * 20;
+  }
+
+  @bind
+  public getRowHeight(rowIndex: number): number {
+    return 20;
+  }
+
+  @bind
+  public getRowBottom(rowIndex: number): number {
+    return this.getRowTop(rowIndex) + this.getRowHeight(rowIndex);
+  }
+}
+
+const gridDimensionsFixed = new GridDimensionsFixed();
+
+function renderCell(
+  rowIndex: number,
+  columnIndex: number,
+  topOffset: number,
+  leftOffset: number,
+  columnLeft: number,
+  columnWidth: number,
+  columnRight: number,
+  rowTop: number,
+  rowHeight: number,
+  rowBottom: number,
+  ctx: CanvasRenderingContext2D
+): void {
+  ctx.font = `${12 * CPR}px sans-serif`;
+  ctx.fillStyle = rowIndex % 2 === 0 ? "#ffffff" : "#efefef";
+  ctx.fillRect(0, 0, columnWidth * CPR, rowHeight * CPR);
+  ctx.fillStyle = "black";
+
+  const text = `${columnIndex}/${rowIndex}`;
+  ctx.fillText("" + text!, 15 * CPR, 15 * CPR);
+}
+
+function renderHeader(columnIndex: number): React.ReactNode {
+  return <div className="column-header-label">{columnIndex}</div>;
 }
 
 export function buildUI(node: IXmlNode, path: IXmlNode[]): React.ReactNode {
@@ -183,9 +299,17 @@ export function buildUI(node: IXmlNode, path: IXmlNode[]): React.ReactNode {
           console.log(properties);
           return (
             <DataView properties={properties}>
-              <GridForm>
+              {/*<GridForm>
                 {buildForm(node, [...path, node], { properties })}
-              </GridForm>
+              </GridForm>*/}
+              <GridTable
+                gridDimensionsFixed={gridDimensionsFixed}
+                gridDimensionsMoving={gridDimensionsMoving}
+                renderCellFixed={renderCell}
+                renderCellMoving={renderCell}
+                renderHeaderFixed={renderHeader}
+                renderHeaderMoving={renderHeader}
+              />
             </DataView>
           );
         case "VSplit":

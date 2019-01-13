@@ -189,7 +189,6 @@ function createGridPaneBacking(
 
   dataTable.setFields(dataTableFields);
 
-
   const onStartGrid = EventObserver();
   const onStopGrid = EventObserver();
 
@@ -302,11 +301,7 @@ function createGridPaneBacking(
   dataLoadingStrategyActions.requestLoadFresh();*/
 
   const formSetup = new FormSetup(dataTable);
-  const formView = new FormView(
-    dataTable,
-    gridInteractionSelectors,
-    formSetup
-  );
+  const formView = new FormView(dataTable, gridInteractionSelectors, formSetup);
 
   const formTopology = new FormTopology(gridTopology);
 
@@ -390,8 +385,10 @@ export class DataView extends React.Component<IDataViewProps> {
     /*const { gridPaneBacking } = this;*/
     return (
       <Provider /*gridPaneBacking={this.gridPaneBacking}*/>
-        {this.props.children}
-        {/*
+        <div className="data-view-container">
+          <GridToolbar />
+          {this.props.children}
+          {/*
         <div
           className="oui-grid"
           style={{
@@ -412,8 +409,9 @@ export class DataView extends React.Component<IDataViewProps> {
           {this.props.form}
           <GridMap />
           {/*<GridForm isActiveView={gridPaneBacking.gridInteractionSelectors.activeView === IGridPaneView.Form} reactTree={this.props.form} />*/}
-        {/*this.props.children
+          {/*this.props.children
         </div>*/}
+        </div>
       </Provider>
     );
   }
