@@ -39,6 +39,22 @@ export default class GridCanvas extends React.Component<IGridCanvasProps> {
     return this.props.fixedHoriz ? 0 : this.props.scrollOffsetSource.scrollLeft;
   }
 
+  @computed public get rectTop() {
+    return this.scrollTop;
+  }
+
+  @computed public get rectLeft() {
+    return this.scrollLeft;
+  }
+
+  @computed public get rectBottom() {
+    return this.scrollTop + this.props.height;
+  }
+
+  @computed public get rectRight() {
+    return this.scrollLeft + this.props.width;
+  }
+
   @computed public get contentHeight(): number {
     return (
       this.props.gridDimensions.getRowBottom(

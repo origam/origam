@@ -71,6 +71,28 @@ export default class GridLayout extends React.Component<IGridTableLayoutProps> {
                             top: 0,
                             left: 0,
                             width: "100%",
+                            height: "100%",
+                            display: "flex",
+                            flexDirection: "row"
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: this.props.fixedColumnsTotalWidth
+                            }}
+                          >
+                            {this.props.fixedColumnsCursor}
+                          </div>
+                          <div style={{ flexGrow: 1 }}>
+                            {this.props.movingColumnsCursor}
+                          </div>
+                        </div>                        
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            width: "100%",
                             height: "100%"
                           }}
                         >

@@ -160,7 +160,7 @@ function buildForm(
   }
 }
 
-class GridDimensionsMoving implements IGridDimensions {
+class GridDimensions implements IGridDimensions {
   @computed public get rowCount(): number {
     return 10000;
   }
@@ -169,46 +169,12 @@ class GridDimensionsMoving implements IGridDimensions {
     return 100;
   }
 
-  @bind
-  public getColumnLeft(columnIndex: number): number {
-    return columnIndex * 50;
+  @computed public get contentWidth(): number {
+    return this.getColumnRight(this.columnCount - 1) - this.getColumnLeft(0);
   }
 
-  @bind
-  public getColumnWidth(columnIndex: number): number {
-    return 50;
-  }
-
-  @bind
-  public getColumnRight(columnIndex: number): number {
-    return this.getColumnLeft(columnIndex) + this.getColumnWidth(columnIndex);
-  }
-
-  @bind
-  public getRowTop(rowIndex: number): number {
-    return rowIndex * 20;
-  }
-
-  @bind
-  public getRowHeight(rowIndex: number): number {
-    return 20;
-  }
-
-  @bind
-  public getRowBottom(rowIndex: number): number {
-    return this.getRowTop(rowIndex) + this.getRowHeight(rowIndex);
-  }
-}
-
-const gridDimensionsMoving = new GridDimensionsMoving();
-
-class GridDimensionsFixed implements IGridDimensions {
-  @computed public get rowCount(): number {
-    return 10000;
-  }
-
-  @computed public get columnCount(): number {
-    return 3;
+  @computed public get contentHeight(): number {
+    return this.getRowBottom(this.rowCount - 1) - this.getRowTop(0);
   }
 
   @bind
@@ -242,7 +208,9 @@ class GridDimensionsFixed implements IGridDimensions {
   }
 }
 
-const gridDimensionsFixed = new GridDimensionsFixed();
+const gridDimensions = new GridDimensions();
+
+
 
 function renderCell(
   rowIndex: number,
@@ -303,8 +271,9 @@ export function buildUI(node: IXmlNode, path: IXmlNode[]): React.ReactNode {
                 {buildForm(node, [...path, node], { properties })}
               </GridForm>*/}
               <GridTable
-                gridDimensionsFixed={gridDimensionsFixed}
-                gridDimensionsMoving={gridDimensionsMoving}
+                gridDimensions={gridDimensions}
+                gridCursorPos={{selectedColumn: 99, selectedRow: 15}}
+                fixedColumnSettings={{fixedColumnCount: 5}}
                 renderCellFixed={renderCell}
                 renderCellMoving={renderCell}
                 renderHeaderFixed={renderHeader}

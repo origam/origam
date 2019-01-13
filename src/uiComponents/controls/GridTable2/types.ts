@@ -16,10 +16,16 @@ export type IRenderHeader = (
   columnIndex: number
 ) => React.ReactNode;
 
-export interface IGridTableProps {
-  gridDimensionsFixed: IGridDimensions;
-  gridDimensionsMoving: IGridDimensions;
-  
+export interface IGridCursorPos {
+  selectedRow: number;
+  selectedColumn: number;
+}
+
+export interface IGridTableProps {  
+  gridCursorPos: IGridCursorPos;
+  gridDimensions: IGridDimensions;
+  fixedColumnSettings: IFixedColumnSettings;
+
   renderHeaderFixed: IRenderHeader;
   renderHeaderMoving: IRenderHeader;
 
@@ -78,6 +84,8 @@ export type IScrollOffset = IScrollOffsetSource & IScrollOffsetTarget;
 export interface IGridDimensions {
   rowCount: number;
   columnCount: number;
+  contentWidth: number;
+  contentHeight: number;
   getColumnLeft(columnIndex: number): number;
   getColumnWidth(columnIndex: number): number;
   getColumnRight(columnIndex: number): number;
@@ -111,5 +119,16 @@ export interface IGridTableLayoutProps {
   movingColumnsHeaders: React.ReactNode;
   fixedColumnsCanvas: React.ReactNode;
   movingColumnsCanvas: React.ReactNode;
+  fixedColumnsCursor: React.ReactNode;
+  movingColumnsCursor: React.ReactNode;
   scroller: React.ReactNode;
+}
+
+export interface IGridCursorProps {
+  gridDimensions: IGridDimensions;
+  gridCursorPos: IGridCursorPos;
+}
+
+export interface IFixedColumnSettings {
+  fixedColumnCount: number;
 }
