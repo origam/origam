@@ -4,7 +4,7 @@ using MoreLinq;
 
 namespace Origam.DA.Service
 {
-    static class OrigamDocumentSorter
+    public static class OrigamDocumentSorter
     {
         public static XmlDocument CopyAndSort(XmlDocument doc)
         {
@@ -37,7 +37,7 @@ namespace Origam.DA.Service
         {
             childNode?.Attributes
                 ?.Cast<XmlAttribute>()
-                .OrderBy(attr => attr.Name)
+                .OrderBy(attr => attr.Name) //attr.LocalName
                 .ForEach(attr =>
                     childCopy.SetAttribute(
                         localName: attr.LocalName,
