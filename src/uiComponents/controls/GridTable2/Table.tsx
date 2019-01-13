@@ -1,5 +1,5 @@
 import * as React from "react";
-import { observable, action } from "mobx";
+import { observable, action, when, IReactionDisposer } from "mobx";
 import { AutoSizer } from "react-virtualized";
 import GridLayout from "./Layout";
 import {
@@ -88,21 +88,27 @@ export default class GridTable extends React.Component<IGridTableProps> {
     this.scrollLeft = scrollLeft;
   }
 
+  private scrollToRowShortestWhenDisposer: IReactionDisposer | undefined;
   @action.bound public scrollToRowShortest(rowIndex: number) {
-    if (!this.elmGridCanvasMoving || !this.elmGridScroller) {
-      return;
-    }
-    const top = this.props.gridDimensions.getRowTop(rowIndex);
-    const bottom = this.props.gridDimensions.getRowBottom(rowIndex);
-    if (top < this.elmGridCanvasMoving.rectTop) {
-      this.elmGridScroller.scrollTop =
-        this.scrollTop - (this.elmGridCanvasMoving.rectTop - top);
-    } else if (bottom > this.elmGridCanvasMoving.rectBottom) {
-      this.elmGridScroller.scrollTop =
-        this.scrollTop +
-        (bottom - this.elmGridCanvasMoving.rectBottom) +
-        this.elmGridScroller.horizontalScrollbarSize;
-    }
+    this.scrollToRowShortestWhenDisposer &&
+      this.scrollToRowShortestWhenDisposer();
+    this.scrollToRowShortestWhenDisposer = when(
+      () => Boolean(this.elmGridCanvasMoving && this.elmGridScroller),
+      () => {
+        this.scrollToRowShortestWhenDisposer = undefined;
+        const top = this.props.gridDimensions.getRowTop(rowIndex);
+        const bottom = this.props.gridDimensions.getRowBottom(rowIndex);
+        if (top < this.elmGridCanvasMoving!.rectTop) {
+          this.elmGridScroller!.scrollTop =
+            this.scrollTop - (this.elmGridCanvasMoving!.rectTop - top);
+        } else if (bottom > this.elmGridCanvasMoving!.rectBottom) {
+          this.elmGridScroller!.scrollTop =
+            this.scrollTop +
+            (bottom - this.elmGridCanvasMoving!.rectBottom) +
+            this.elmGridScroller!.horizontalScrollbarSize;
+        }
+      }
+    );
   }
 
   public componentDidMount() {
@@ -116,23 +122,29 @@ export default class GridTable extends React.Component<IGridTableProps> {
     }, 10000);
   }
 
+  private scrollToColumnShortestWhenDisposer: IReactionDisposer | undefined;
   @action.bound public scrollToColumnShortest(columnIndex: number) {
-    if (!this.elmGridCanvasMoving || !this.elmGridScroller) {
-      return;
-    }
-    if (columnIndex >= this.props.fixedColumnSettings.fixedColumnCount) {
-      const left = this.gridDimensionsMoving.getColumnLeft(columnIndex);
-      const right = this.gridDimensionsMoving.getColumnRight(columnIndex);
-      if (left < this.elmGridCanvasMoving.rectLeft) {
-        this.elmGridScroller.scrollLeft =
-          this.scrollLeft - (this.elmGridCanvasMoving.rectLeft - left);
-      } else if (right > this.elmGridCanvasMoving.rectRight) {
-        this.elmGridScroller.scrollLeft =
-          this.scrollLeft +
-          (right - this.elmGridCanvasMoving.rectRight) +
-          this.elmGridScroller.verticalScrollbarSize;
+    this.scrollToColumnShortestWhenDisposer &&
+      this.scrollToColumnShortestWhenDisposer();
+    this.scrollToColumnShortestWhenDisposer = when(
+      () => Boolean(this.elmGridCanvasMoving && this.elmGridScroller),
+      () => {
+        this.scrollToColumnShortestWhenDisposer = undefined;
+        if (columnIndex >= this.props.fixedColumnSettings.fixedColumnCount) {
+          const left = this.gridDimensionsMoving.getColumnLeft(columnIndex);
+          const right = this.gridDimensionsMoving.getColumnRight(columnIndex);
+          if (left < this.elmGridCanvasMoving!.rectLeft) {
+            this.elmGridScroller!.scrollLeft =
+              this.scrollLeft - (this.elmGridCanvasMoving!.rectLeft - left);
+          } else if (right > this.elmGridCanvasMoving!.rectRight) {
+            this.elmGridScroller!.scrollLeft =
+              this.scrollLeft +
+              (right - this.elmGridCanvasMoving!.rectRight) +
+              this.elmGridScroller!.verticalScrollbarSize;
+          }
+        }
       }
-    }
+    );
   }
 
   @action.bound private refGridCanvasMoving(elm: GridCanvas) {
