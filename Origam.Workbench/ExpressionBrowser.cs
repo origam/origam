@@ -30,6 +30,7 @@ using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
 using Origam.UI;
+using Origam.Workbench.Commands;
 using Origam.Workbench.Services;
 
 namespace Origam.Workbench
@@ -1012,7 +1013,22 @@ namespace Origam.Workbench
 			}
 
 			TreeNode foundNode = null;
-			if(tvwExpressionBrowser.Nodes.Count == 1)
+            if (tvwExpressionBrowser.Nodes.Count == 0)
+            {
+                //check if model is open.
+                SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+                foreach (SchemaExtension sch in schema.AllPackages)
+                {
+                    if (string.Compare(sch.Name, item.Package, comparisonType: StringComparison.OrdinalIgnoreCase) == 0)
+                    {
+                        schema.LoadSchema((Guid)sch.PrimaryKey["Id"], false, false);
+                        this.ReloadTreeAndRestoreExpansionState();
+                        ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
+                        cmd.Run();
+                    }
+                }
+            }
+            if (tvwExpressionBrowser.Nodes.Count == 1)
 			{
 				if(! tvwExpressionBrowser.Nodes[0].IsExpanded)
 				{

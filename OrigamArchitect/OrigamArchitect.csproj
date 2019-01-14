@@ -375,6 +375,12 @@
     <Compile Include="RegisterForm.Designer.cs">
       <DependentUpon>RegisterForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="RuleWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RuleWindow.Designer.cs">
+      <DependentUpon>RuleWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="SchemaCompareEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -437,6 +443,9 @@
     <EmbeddedResource Include="RegisterForm.resx">
       <DependentUpon>RegisterForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="RuleWindow.resx">
+      <DependentUpon>RuleWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SchemaCompareEditor.resx">
       <DependentUpon>SchemaCompareEditor.cs</DependentUpon>
     </EmbeddedResource>
@@ -450,6 +459,7 @@
     <EmbeddedResource Include="strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>strings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SystemInformation.resx">
       <DependentUpon>SystemInformation.cs</DependentUpon>
@@ -472,6 +482,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Origam\Workbench\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

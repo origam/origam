@@ -16,24 +16,9 @@ namespace Origam.UI
             return messageBox.ShowDialog(parent);
         }
 
-        public static DialogResult ShowMsgBoxOk(Form parent, string message, string title)
-        {
-            var messageBox = new LongMessageBox(true)
-            {
-                Text = title,
-                Visible = false
-            };
-            messageBox.messageTextBox.Text = message;
-            return messageBox.ShowDialog(parent);
-        }
         public LongMessageBox(bool showOkButton)
         {
             InitializeComponent();
-            if (showOkButton)
-            {
-                noButton.Text = "Ok";
-                yesButton.Hide();
-            }
         }
     }
 }

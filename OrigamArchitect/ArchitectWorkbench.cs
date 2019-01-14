@@ -116,6 +116,7 @@ namespace OrigamArchitect
 		LogPad _logPad;
         ServerLogPad _serverLogPad;
         ExtensionPad _extensionPad;
+        FindRulesPad _findRulesPad;
 
 		Hashtable _shortcuts = new Hashtable();
 
@@ -1590,8 +1591,6 @@ namespace OrigamArchitect
 				var currentPersistenceService =
 					ServiceManager.Services.GetService<IPersistenceService>();
 
-			    CheckModelRulesAsync(currentPersistenceService);
-
                 if (currentPersistenceService is FilePersistenceService
 					filePersistService)
 				{
@@ -1607,8 +1606,8 @@ namespace OrigamArchitect
 				InitializeConnectedPads();
 
 				CreateMainMenuConnect();
-
-				IsConnected = true;
+                CheckModelRulesAsync(currentPersistenceService);
+                IsConnected = true;
 
 #if ORIGAM_CLIENT
 				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
@@ -1643,41 +1642,54 @@ namespace OrigamArchitect
 #endif
 			this.LoadWorkspace();
 			cmd.Run();
-		}
+        }
 
-	    private void CheckModelRulesAsync(IPersistenceService currentPersistenceService)
-	    {
-	        if (!(currentPersistenceService is FilePersistenceService)) return;
+        private  void CheckModelRulesAsync(IPersistenceService currentPersistenceService)
+        {
+            if (!(currentPersistenceService is FilePersistenceService)) return ;
 
-            new Task(() =>
-	        {
-	            List<string> errorFragments = 
-	                new FilePersistenceBuilder()
-	                .CreateNoBinFilePersistenceService()
-	                .SchemaProvider
-	                .RetrieveList<IFilePersistent>()
-	                .Select(retrievedObj =>
-	                {
-	                    var errorMessages = RuleTools.GetExceptions(retrievedObj)
-	                        .Select(exception => " - "+exception.Message)
-	                        .ToList();
-                        if (errorMessages.Count == 0) return null;
-	                    return "Object with Id: \"" + retrievedObj.Id +
-	                           "\" in file: \"" +retrievedObj.RelativeFilePath +
-	                           "\"\n" + string.Join("\n", errorMessages);
-	                })
-	                .Where(x => x != null)
-	                .ToList();
+             new Task(() =>
+            {
+                List<Dictionary<IFilePersistent, string>> errorFragments =
+                     new FilePersistenceBuilder()
+                     .CreateNoBinFilePersistenceService()
+                     .SchemaProvider
+                     .RetrieveList<IFilePersistent>()
+                     .Select(retrievedObj =>
+                     {
+                         Dictionary<IFilePersistent, string> errors =
+                         new Dictionary<IFilePersistent, string>();
+                         var errorMessages = RuleTools.GetExceptions(retrievedObj)
+                             .Select(exception => " - " + exception.Message)
+                             .ToList();
+                         if (errorMessages.Count == 0) return null;
+                         errors.Add(retrievedObj, string.Join("\n", errorMessages));
+                         return errors;
+                     })
+                     .Where(x => x != null)
+                     .ToList();
 
-	            if (errorFragments.Count != 0)
-	            {
-	                string errorMessage = "Rule violations were found in the loaded project:\n\n" +
-	                                      string.Join("\n\n", errorFragments) +
-	                                      "\n\nYou should fix these issues before continuing with your work.";
-	                this.RunWithInvoke(() => LongMessageBox.ShowMsgBoxOk(this, errorMessage, "Rules violated!"));
-	            }
-	        }).Start();
-	    }
+                if (errorFragments.Count != 0)
+                {
+                    List<AbstractSchemaItem> listKeys = new List<AbstractSchemaItem>();
+                    string errorMessage = "Rule violations were found in the loaded project:\n\n";
+                    foreach (Dictionary<IFilePersistent, string> dict in errorFragments)
+                    {
+                        var key = dict.First().Key;
+                        var value = dict.First().Value;
+                        listKeys.Add((AbstractSchemaItem)key);
+                        errorMessage += string.Join("\n\n", "Object with Id: \"" + key.Id +
+                               "\" in file: \"" + key.RelativeFilePath +
+                               "\"\n" + string.Join("\n", value) + "\n\n");
+                    }
+                    Origam.Workbench.Pads.FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(Origam.Workbench.Pads.FindRulesPad)) as Origam.Workbench.Pads.FindRulesPad;
+                    errorMessage += "\n\nYou should fix these issues before continuing with your work.";
+                    this.RunWithInvoke(() =>
+                        RuleWindow.ShowData(this, errorMessage, "Rules violated!", resultsPad,listKeys)
+                        );
+                }
+            }).Start();
+        }
 
 	    protected override void WndProc(ref Message m)
 		{
@@ -2005,6 +2017,8 @@ namespace OrigamArchitect
 	
 			this.PadContentCollection.Remove(_findSchemaItemResultsPad);
 			_findSchemaItemResultsPad = null;
+            this.PadContentCollection.Remove(_findRulesPad);
+            _findRulesPad = null;
 #endif
 #if ! ARCHITECT_EXPRESS
 			this.PadContentCollection.Remove(_auditLogPad);
@@ -2042,6 +2056,8 @@ namespace OrigamArchitect
             AddPad(_findSchemaItemResultsPad);
             _serverLogPad = new ServerLogPad();
             AddPad(_serverLogPad);
+            _findRulesPad = new FindRulesPad();
+            AddPad(_findRulesPad);
 #endif
 		}
 
