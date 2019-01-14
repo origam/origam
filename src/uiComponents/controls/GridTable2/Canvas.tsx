@@ -13,6 +13,7 @@ import * as React from "react";
 import { IGridCanvasProps } from "./types";
 import { CPR } from "src/utils/canvas";
 import { rangeQuery } from "src/utils/arrays";
+import { EventObserver } from '../../../utils/events';
 
 /*
   Canvas element, which just draws table-like data shifted by scroll offset 
@@ -28,6 +29,8 @@ export default class GridCanvas extends React.Component<IGridCanvasProps> {
   // but we do not want to call the painting effect directly, because it would
   // bypss animationFrame scheduling so we just change a value of this field.
   @observable private repaintTrigger = 0;
+
+  private onCellClick = EventObserver();
 
   private reactionDisposers: IReactionDisposer[] = [];
 
@@ -160,6 +163,8 @@ export default class GridCanvas extends React.Component<IGridCanvasProps> {
     if (!ctx) {
       return;
     }
+    this.props.onBeforeRender && this.props.onBeforeRender();
+    this.onCellClick = EventObserver();
     this.repaintTrigger;
     const { width, height } = this.props;
     const {
@@ -185,7 +190,9 @@ export default class GridCanvas extends React.Component<IGridCanvasProps> {
         this.renderCell(columnIndex, rowIndex, ctx);
       }
     }
+    this.props.onAfterRender && this.props.onAfterRender();
   }
+
 
   private renderCell(
     columnIndex: number,
@@ -219,7 +226,8 @@ export default class GridCanvas extends React.Component<IGridCanvasProps> {
       rowTop,
       rowHeight,
       rowBottom,
-      ctx
+      ctx,
+      this.onCellClick
     );
 
     ctx.restore();
@@ -254,6 +262,11 @@ export default class GridCanvas extends React.Component<IGridCanvasProps> {
 
   public componentWillUnmount() {
     this.reactionDisposers.forEach(d => d());
+    this.onCellClick = EventObserver();
+  }
+
+  @action.bound public triggerCellClick(event: any, x: number, y: number) {
+    this.onCellClick.trigger(event, x, y);
   }
 
   public render() {

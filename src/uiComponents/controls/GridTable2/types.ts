@@ -1,4 +1,5 @@
 import { Rect } from "react-measure";
+import { IEventSubscriber } from "src/utils/events";
 
 export type IRenderCell = (
   rowIndex: number,
@@ -11,7 +12,8 @@ export type IRenderCell = (
   rowTop: number,
   rowHeight: number,
   rowBottom: number,
-  ctx: CanvasRenderingContext2D
+  ctx: CanvasRenderingContext2D,
+  onCellClick: IEventSubscriber
 ) => void;
 
 export type IRenderHeader = (columnIndex: number) => React.ReactNode;
@@ -35,7 +37,10 @@ export interface IGridTableProps {
   renderHeader: IRenderHeader;
   renderCell: IRenderCell;
 
+  onClick?: (event: any, x: number, y: number) => void;
   onKeyDown?: (event: any) => void;
+  onBeforeRender?(): void;
+  onAfterRender?(): void;
 }
 
 export interface IGridCanvasProps {
@@ -57,19 +62,7 @@ export interface IGridCanvasProps {
   // Ctx state is saved before the renderer is called and its state restored
   // just after it ends its business.
   // Renderer is called exactly once for each visible cell.
-  renderCell(
-    rowIndex: number,
-    columnIndex: number,
-    topOffset: number,
-    leftOffset: number,
-    columnLeft: number,
-    columnWidth: number,
-    columnRight: number,
-    rowTop: number,
-    rowHeight: number,
-    rowBottom: number,
-    ctx: CanvasRenderingContext2D
-  ): void;
+  renderCell: IRenderCell;
 
   onBeforeRender?(): void;
   onAfterRender?(): void;
@@ -134,6 +127,7 @@ export interface IGridTableLayoutProps {
 export interface IGridCursorProps {
   gridDimensions: IGridDimensions;
   gridCursorPos: IGridCursorPos;
+  cellContent: React.ReactNode;
 }
 
 export interface IFixedColumnSettings {

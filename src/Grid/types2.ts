@@ -45,7 +45,7 @@ export interface IDataCursorState {
 }
 
 export interface IGridTableEvents {
-  handleCellClick(event: any, recordId: string, fieldId: string): void;
+  handleCellClick(event: any, rowIndex: number, columnIndex: number): void;
   handleNoCellClick(event: any): void;
   handleOutsideClick(event: any): void;
   handleGridKeyDown(event: any): void;

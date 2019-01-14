@@ -75,6 +75,7 @@ export default class GridTable extends React.Component<IGridTableProps> {
   private gridCursorPosMoving: IGridCursorPos;
 
   private elmGridCanvasMoving: GridCanvas | null;
+  private elmGridCanvasFixed: GridCanvas | null;
   private elmGridScroller: Scroller | null;
 
   @observable public scrollTop: number = 0;
@@ -138,22 +139,36 @@ export default class GridTable extends React.Component<IGridTableProps> {
 
   @action.bound private handleScrollerClick(
     event: any,
-    contentLeft: number,
-    contentTop: number
+    scrollerX: number,
+    scrollerY: number
   ) {
-    if (contentLeft <= this.gridDimensionsFixed.contentWidth) {
+    if (scrollerX <= this.gridDimensionsFixed.contentWidth) {
       // Clicked to the fixed area...
-      console.log(contentLeft, contentTop + this.scrollTop);
+      console.log(scrollerX, scrollerY + this.scrollTop);
+      this.elmGridCanvasFixed!.triggerCellClick(
+        event,
+        scrollerX,
+        scrollerY + this.scrollTop
+      );
     } else {
       console.log(
-        contentLeft - this.gridDimensionsFixed.contentWidth + this.scrollLeft,
-        contentTop + this.scrollTop
+        scrollerX - this.gridDimensionsFixed.contentWidth + this.scrollLeft,
+        scrollerY + this.scrollTop
+      );
+      this.elmGridCanvasMoving!.triggerCellClick(
+        event,
+        scrollerX - this.gridDimensionsFixed.contentWidth + this.scrollLeft,
+        scrollerY + this.scrollTop
       );
     }
   }
 
   @action.bound private refGridCanvasMoving(elm: GridCanvas) {
     this.elmGridCanvasMoving = elm;
+  }
+
+  @action.bound private refGridCanvasFixed(elm: GridCanvas) {
+    this.elmGridCanvasFixed = elm;
   }
 
   @action.bound private refGridScroller(elm: Scroller) {
@@ -210,6 +225,7 @@ export default class GridTable extends React.Component<IGridTableProps> {
                         <Observer>
                           {() => (
                             <GridCanvas
+                              ref={this.refGridCanvasFixed}
                               renderCell={this.props.renderCell}
                               width={width}
                               height={height}
@@ -248,10 +264,14 @@ export default class GridTable extends React.Component<IGridTableProps> {
                       fixedVert={false}
                       scrollOffsetSource={this}
                     >
-                      {this.props.renderGridCursor(
-                        fixGDim,
-                        this.gridCursorPosFixed
-                      )}
+                      <Observer>
+                        {() =>
+                          this.props.renderGridCursor(
+                            fixGDim,
+                            this.gridCursorPosFixed
+                          )
+                        }
+                      </Observer>
                     </Scrollee>
                   }
                   movingColumnsCursor={
@@ -262,10 +282,14 @@ export default class GridTable extends React.Component<IGridTableProps> {
                       fixedVert={false}
                       scrollOffsetSource={this}
                     >
-                      {this.props.renderGridCursor(
-                        movGDim,
-                        this.gridCursorPosMoving
-                      )}
+                      <Observer>
+                        {() => 
+                          this.props.renderGridCursor(
+                            movGDim,
+                            this.gridCursorPosMoving
+                          )
+                        }
+                      </Observer>
                     </Scrollee>
                   }
                   scroller={

@@ -1,23 +1,35 @@
 import { action } from "mobx";
 import * as KEY from "../utils/keys";
-import { IDataCursorState, IGridTableEvents } from "./types2";
+import {
+  IDataCursorState,
+  IGridTableEvents,
+  IDataTableSelectors
+} from "./types2";
 import { EventObserver } from "src/utils/events";
 
 export class GridTableEvents implements IGridTableEvents {
-  constructor(private dataCursorState: IDataCursorState) {}
+  constructor(
+    private dataCursorState: IDataCursorState,
+    private dataTableSelectors: IDataTableSelectors
+  ) {}
 
   public onCursorMovementFinished = EventObserver();
 
   @action.bound
-  public handleCellClick(event: any, recordId: string, fieldId: string) {
+  public handleCellClick(event: any, rowIndex: number, columnIndex: number) {
     event.stopPropagation();
+    const recordId = this.dataTableSelectors.recordIdByIndex(rowIndex);
+    const fieldId = this.dataTableSelectors.fieldIdByIndex(columnIndex);
+    if(!recordId || !fieldId) {
+      return
+    }
     if (
       this.dataCursorState.isCellSelected(recordId, fieldId) ||
       this.dataCursorState.isEditing
     ) {
-      // this.dataCursorState.finishEditing();
+      this.dataCursorState.finishEditing();
       this.dataCursorState.selectCell(recordId, fieldId);
-      // this.dataCursorState.editSelected();
+      this.dataCursorState.editSelected();
     }
     this.dataCursorState.selectCell(recordId, fieldId);
     this.onCursorMovementFinished.trigger();
@@ -26,13 +38,13 @@ export class GridTableEvents implements IGridTableEvents {
   @action.bound
   public handleNoCellClick(event: any) {
     event.stopPropagation();
-    // this.dataCursorState.finishEditing();
+    this.dataCursorState.finishEditing();
   }
 
   @action.bound
   public handleOutsideClick(event: any) {
     event.stopPropagation();
-    // this.dataCursorState.finishEditing();
+    this.dataCursorState.finishEditing();
   }
 
   @action.bound
@@ -42,18 +54,22 @@ export class GridTableEvents implements IGridTableEvents {
       case KEY.ArrowUp:
         event.preventDefault();
         this.dataCursorState.selectPrevRow();
+        this.onCursorMovementFinished.trigger();
         break;
       case KEY.ArrowDown:
         event.preventDefault();
         this.dataCursorState.selectNextRow();
+        this.onCursorMovementFinished.trigger();
         break;
       case KEY.ArrowLeft:
         event.preventDefault();
         this.dataCursorState.selectPrevColumn();
+        this.onCursorMovementFinished.trigger();
         break;
       case KEY.ArrowRight:
         event.preventDefault();
         this.dataCursorState.selectNextColumn();
+        this.onCursorMovementFinished.trigger();
         break;
       case KEY.Enter:
         event.preventDefault();
@@ -62,6 +78,7 @@ export class GridTableEvents implements IGridTableEvents {
         } else {
           this.dataCursorState.selectNextRow();
         }
+        this.onCursorMovementFinished.trigger();
         break;
       case KEY.Tab:
         event.preventDefault();
@@ -70,13 +87,14 @@ export class GridTableEvents implements IGridTableEvents {
         } else {
           this.dataCursorState.selectNextRow();
         }
+        this.onCursorMovementFinished.trigger();
         break;
       case KEY.F2:
         event.preventDefault();
         this.dataCursorState.editSelected();
+        this.onCursorMovementFinished.trigger();
         break;
     }
-    this.onCursorMovementFinished.trigger();
   }
 
   @action.bound
@@ -108,7 +126,5 @@ export class GridTableEvents implements IGridTableEvents {
         this.dataCursorState.cancelEditing();
         break;
     }
-    this.onCursorMovementFinished.trigger();
   }
-
 }

@@ -9,8 +9,10 @@ import { IGridCursorPos } from "./types";
 import { IDataCursorState, IGridTableEvents } from "../../../Grid/types2";
 import { CPR } from "src/utils/canvas";
 import { IDataTableSelectors } from "src/Grid/types2";
-import { inject } from "mobx-react";
+import { inject, Observer } from "mobx-react";
 import { GridTableEvents } from "src/Grid/GridTableEvents";
+import DataCursorState from "../../../Grid/DataCursorState";
+import { EventObserver, IEventSubscriber } from "src/utils/events";
 
 class GridDimensions implements IGridDimensions {
   @computed public get rowCount(): number {
@@ -85,7 +87,7 @@ class GridCursorPos implements IGridCursorPos {
   }
 }
 
-function renderCell(
+const renderCell = (gridTableEvents: IGridTableEvents) => (
   rowIndex: number,
   columnIndex: number,
   topOffset: number,
@@ -96,8 +98,9 @@ function renderCell(
   rowTop: number,
   rowHeight: number,
   rowBottom: number,
-  ctx: CanvasRenderingContext2D
-): void {
+  ctx: CanvasRenderingContext2D,
+  onCellClick: IEventSubscriber
+) => {
   ctx.font = `${12 * CPR}px sans-serif`;
   ctx.fillStyle = rowIndex % 2 === 0 ? "#ffffff" : "#efefef";
   ctx.fillRect(0, 0, columnWidth * CPR, rowHeight * CPR);
@@ -105,7 +108,14 @@ function renderCell(
 
   const text = `${columnIndex}/${rowIndex}`;
   ctx.fillText("" + text!, 15 * CPR, 15 * CPR);
-}
+
+  onCellClick((event: any, x: number, y: number) => {
+    // console.log(x, y)
+    if (x >= columnLeft && x <= columnRight && y >= rowTop && y <= rowBottom) {
+      gridTableEvents.handleCellClick(event, rowIndex, columnIndex);
+    }
+  });
+};
 
 function renderHeader(columnIndex: number): React.ReactNode {
   return <div className="column-header-label">{columnIndex}</div>;
@@ -120,15 +130,17 @@ interface ITableCndProps {
 export default class TableCnd extends React.Component<ITableCndProps> {
   constructor(props: any) {
     super(props);
-    this.gridCursorPos = new GridCursorPos(
-      this.props.dataTableSelectors!,
-      this.props.dataCursorState!
-    );
-    this.gridTableEvents = new GridTableEvents(this.props.dataCursorState!);
   }
 
-  private gridCursorPos: IGridCursorPos;
-  private gridTableEvents: IGridTableEvents;
+  private gridCursorPos: IGridCursorPos = new GridCursorPos(
+    this.props.dataTableSelectors!,
+    this.props.dataCursorState!
+  );
+  private gridTableEvents: IGridTableEvents = new GridTableEvents(
+    this.props.dataCursorState!,
+    this.props.dataTableSelectors!
+  );
+  private renderCell = renderCell(this.gridTableEvents);
 
   private refGridTable_disposeHandler: () => void;
   @action.bound
@@ -153,10 +165,22 @@ export default class TableCnd extends React.Component<ITableCndProps> {
         gridDimensions={gridDimensions}
         fixedColumnSettings={{ fixedColumnCount: 2 }}
         renderGridCursor={(gDim, gCursorPos) => (
-          <GridCursor gridDimensions={gDim} gridCursorPos={gCursorPos} />
+          <Observer>
+            {() => (
+              <GridCursor
+                gridDimensions={gDim}
+                gridCursorPos={gCursorPos}
+                cellContent={
+                  <Observer>
+                    {() => this.props.dataCursorState!.isEditing && "EDITING"}
+                  </Observer>
+                }
+              />
+            )}
+          </Observer>
         )}
         renderHeader={renderHeader}
-        renderCell={renderCell}
+        renderCell={this.renderCell}
         onKeyDown={this.gridTableEvents.handleGridKeyDown}
       />
     );

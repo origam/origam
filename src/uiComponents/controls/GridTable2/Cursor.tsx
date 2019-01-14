@@ -15,12 +15,13 @@ export default class GridCursor extends React.Component<IGridCursorProps> {
     const height = gDim.getRowHeight(gcp.selectedRowIndex);
     const left = gDim.getColumnLeft(gcp.selectedColumnIndex);
     const top = gDim.getRowTop(gcp.selectedRowIndex);
+
     return (
       <>
         <div
           style={{
             position: "absolute",
-            width: left,
+            width: Math.max(0, left),
             height,
             left: 0,
             top,
@@ -36,7 +37,7 @@ export default class GridCursor extends React.Component<IGridCursorProps> {
             top,
             backgroundColor: "#00000055"
           }}
-        />
+        >{this.props.cellContent}</div>
         <div
           style={{
             position: "absolute",
