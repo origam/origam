@@ -26,10 +26,10 @@ using Origam.UI;
 
 namespace Origam.Schema.LookupModel.Wizards
 {
-	/// <summary>
-	/// Summary description for CreateLookupFromEntityCommand.
-	/// </summary>
-	public class CreateFieldWithLookupRelationshipEntityCommand : AbstractMenuCommand
+    /// <summary>
+    /// Summary description for CreateFieldWithLookupRelationshipEntityCommand.
+    /// </summary>
+    public class CreateFieldWithRelationshipEntityCommand : AbstractMenuCommand
 	{
 		public override bool IsEnabled
 		{
@@ -52,7 +52,7 @@ namespace Origam.Schema.LookupModel.Wizards
             {
                 baseEntity = baseField.ParentItem as IDataEntity;
             }
-            CreateFieldWithLookupRelationshipEntityWizard wiz = new CreateFieldWithLookupRelationshipEntityWizard
+            CreateFieldWithRelationshipEntityWizard wiz = new CreateFieldWithRelationshipEntityWizard
             {
                 Entity = baseEntity
             };

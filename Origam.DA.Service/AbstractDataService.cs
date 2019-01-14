@@ -522,7 +522,6 @@ namespace Origam.DA.Service
 										break;
 
 									default:
-#if NET_20
                                         ICollection ar = param.Value as ICollection;
 											if(ar != null)
 											{
@@ -543,9 +542,6 @@ namespace Origam.DA.Service
 										{
 											value = param.Value;
 										}
-#else
-										value = param.Value;
-#endif
 										break;
 								}
 

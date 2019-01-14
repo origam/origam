@@ -234,22 +234,6 @@ namespace Origam.Workflow
 				AddInfo("Authorization Provider", authorizationProvider.GetType().ToString(), result);
 			}
 
-#if ! NET_20
-			if(SecurityManager.CurrentPrincipal.Identity is WindowsIdentity)
-			{
-				AddLine("Current user has the following Windows groups assigned:", result);
-
-				foreach(string role in GetWindowsIdentityRoles(SecurityManager.CurrentPrincipal.Identity as WindowsIdentity))
-				{
-					AddLine(role, result);
-				}
-			}
-			else
-			{
-				AddLine("Current identity is not Windows identity. Cannot list roles.", result);
-			}
-#endif
-
 			// resource info (from rule engine)
 			AddHeader("Resource Management Information", result);
 			try
@@ -264,9 +248,8 @@ namespace Origam.Workflow
 				AddLine(ex.Message, result);
 			}
 #endif
-			
-			// service info (connection strings, remote time, errors...)
-			AddLine("", result);
+            // service info (connection strings, remote time, errors...)
+            AddLine("", result);
 			AddSection("Service Information", result);
 
 			ServiceSchemaItemProvider services = schema.GetProvider(typeof(ServiceSchemaItemProvider)) as ServiceSchemaItemProvider;
@@ -280,7 +263,7 @@ namespace Origam.Workflow
 
 				IBusinessServicesService serviceProvider = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
 
-				foreach(Service service in services.ChildItems)
+                foreach (Service service in services.ChildItems)
 				{
 					AddHeader(service.Name, result);
 

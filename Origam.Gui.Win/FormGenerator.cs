@@ -1772,7 +1772,8 @@ namespace Origam.Gui.Win
 
 		private void CreatePanelToolStrip(AsPanel panel, ArrayList actions)
 		{
-			var toolStrip = new LabeledToolStrip(AsyncForm);
+			AsForm parentForm = AsyncForm ?? Form;
+			var toolStrip = new LabeledToolStrip(parentForm);
 			toolStrip.Text = panel.PanelTitle;
 
 			_toolStripContainer.Controls.Add(toolStrip);

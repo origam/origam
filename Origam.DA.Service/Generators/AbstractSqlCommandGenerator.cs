@@ -2827,12 +2827,12 @@ namespace Origam.DA.Service
 
         private string RenderExpression(EntityColumnReference item, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
         {
-            if (item.Column == null)
+            if (item.Field == null)
             {
                 throw new Exception("Column not specified for " + item.Path);
             }
 
-            return RenderExpression(item.Column, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
+            return RenderExpression(item.Field, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
         }
 
         private string RenderExpression(EntityFilterReference item, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)

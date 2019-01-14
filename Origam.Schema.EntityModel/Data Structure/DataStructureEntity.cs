@@ -64,8 +64,8 @@ namespace Origam.Schema.EntityModel
 		/// </summary>
 		[TypeConverter(typeof(DataStructureEntityConverter))]
 		[RefreshProperties(RefreshProperties.Repaint)]
-        [StringNotEmptyModelElementRule()]
-        [RelationTypeModelEntityRuleAttribute()]
+        [NotNullModelElementRuleAttribute()]
+        [RelationshipWithKeyRuleAttribute()]
         [XmlReference("entity", "EntityId")]
         public AbstractSchemaItem Entity
 		{

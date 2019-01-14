@@ -27,10 +27,10 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.LookupModel.Wizards
 {
-	/// <summary>
-	/// Summary description for CreateLookupFromEntityWizard.
-	/// </summary>
-	public class CreateFieldWithLookupRelationshipEntityWizard : System.Windows.Forms.Form
+    /// <summary>
+    /// Summary description for CreateFieldWithRelationshipEntityWizard.
+    /// </summary>
+    public class CreateFieldWithRelationshipEntityWizard : System.Windows.Forms.Form
 	{
         public class InitialValue
         {
@@ -62,7 +62,7 @@ namespace Origam.Schema.LookupModel.Wizards
         /// </summary>
         private System.ComponentModel.Container components = null;
 
-		public CreateFieldWithLookupRelationshipEntityWizard()
+		public CreateFieldWithRelationshipEntityWizard()
 		{
 			//
 			// Required for Windows Form Designer support
@@ -273,7 +273,7 @@ namespace Origam.Schema.LookupModel.Wizards
             this.checkParentChild.UseVisualStyleBackColor = true;
             this.checkParentChild.CheckedChanged += new System.EventHandler(this.IsParentChild_CheckedChanged);
             // 
-            // CreateFieldWithLookupRelationshipEntityWizard
+            // CreateFieldWithRelationshipEntityWizard
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -288,10 +288,10 @@ namespace Origam.Schema.LookupModel.Wizards
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.lblName);
-            this.Name = "CreateFieldWithLookupRelationshipEntityWizard";
+            this.Name = "CreateFieldWithRelationshipEntityWizard";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Create Lookup Relation Wizard";
+            this.Text = "Create Relationship Wizard";
             this.groupBoxKey.ResumeLayout(false);
             this.groupBoxKey.PerformLayout();
             this.groupBox2.ResumeLayout(false);

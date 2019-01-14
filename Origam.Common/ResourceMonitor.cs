@@ -41,12 +41,7 @@ namespace Origam
 				log.Debug("Registering transaction id " + transactionId);
 			}
 
-#if NET_20
-            OrderedDictionary
-#else
-			Hashtable 
-#endif
-                transactions = Transactions(transactionId); 
+            OrderedDictionary transactions = Transactions(transactionId); 
 
 			if(transactions.Contains(resourceManagerId))
 			{
@@ -70,12 +65,7 @@ namespace Origam
 
 		public static OrigamTransaction GetTransaction(string transactionId, string resourceManagerId)
 		{
-#if NET_20
-            OrderedDictionary
-#else
-			Hashtable 
-#endif
-                transactions = Transactions(transactionId); 
+            OrderedDictionary  transactions = Transactions(transactionId); 
 
 			if(transactions.Contains(resourceManagerId))
 			{
@@ -96,23 +86,13 @@ namespace Origam
 
 			try
 			{
-#if NET_20
-                OrderedDictionary
-#else
-			    Hashtable 
-#endif
-                     transactions = Transactions(transactionId); 
+                OrderedDictionary  transactions = Transactions(transactionId); 
 
-#if NET_20
                 // commit in reverse order (first transactions last)
                 for (int i = transactions.Count - 1; i >= 0; i--)
                 {
                     OrigamTransaction tran = transactions[i] as OrigamTransaction;
-#else
-				foreach(DictionaryEntry entry in transactions)
-                {
-                    OrigamTransaction tran = entry.Value as OrigamTransaction;
-#endif
+
                     try
 					{
 						tran.Commit();
@@ -142,12 +122,7 @@ namespace Origam
 				log.Debug("Rolling back transaction id " + transactionId);
 			}
 
-#if NET_20
-            OrderedDictionary
-#else
-			Hashtable 
-#endif
-                transactions = Transactions(transactionId); 
+            OrderedDictionary transactions = Transactions(transactionId); 
 
 			string errorMessage = "";
 			try
@@ -189,12 +164,7 @@ namespace Origam
 				log.Debug("Rolling back transaction id " + transactionId + " to save point " + savePointName);
 			}
 
-#if NET_20
-            OrderedDictionary
-#else
-			Hashtable 
-#endif
-                transactions = Transactions(transactionId); 
+            OrderedDictionary  transactions = Transactions(transactionId); 
 			string errorMessage = "";
 
 			try
@@ -240,12 +210,7 @@ namespace Origam
 				log.Debug("Saving transaction id " + transactionId + ", save point " + savePointName);
 			}
 
-#if NET_20
-            OrderedDictionary
-#else
-			Hashtable 
-#endif
-                transactions = Transactions(transactionId);
+            OrderedDictionary  transactions = Transactions(transactionId);
 			SavePoints(transactionId).Add(savePointName);
 
 			foreach(OrigamTransaction transaction in transactions.Values)
@@ -262,27 +227,16 @@ namespace Origam
 		}
 
 		#region Private Methods
-#if NET_20
         private static OrderedDictionary Transactions(string transactionId)
-#else
-		private static Hashtable Transactions(string transactionId)
-#endif
+
 		{
 			if(_transactionStore.Contains(transactionId))
 			{
-#if NET_20
                 return _transactionStore[transactionId] as OrderedDictionary;
-#else
-				return _transactionStore[transactionId] as Hashtable;
-#endif
 			}
 			else
 			{
-#if NET_20
                 OrderedDictionary result = new OrderedDictionary();
-#else
-				Hashtable result = new Hashtable();
-#endif
                 _transactionStore[transactionId] = result;
 				return result;
 			}

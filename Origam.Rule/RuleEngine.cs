@@ -1291,13 +1291,7 @@ namespace Origam.Rule
 
 		public static string EncodeDataForUri(string input)
 		{
-#if !NET_20
-
-			return Uri.EscapeDataString(input);
-#else	
 			return MyUri.EscapeDataString(input);
-		
-#endif
 		}
 
 		public static string DecodeDataFromUri(string input)
@@ -2401,10 +2395,7 @@ namespace Origam.Rule
 		public bool Merge(DataSet inout_dsTarget, DataSet in_dsSource, bool in_bTrueDelete, bool in_bPreserveChanges, bool in_bSourceIsFragment, bool preserveNewRowState)
 		{
 			bool result;
-
-#if NET_20
 			DatasetTools.BeginLoadData(inout_dsTarget);
-#endif
 			try
 			{
                 MergeParams mergeParams = new MergeParams();
@@ -2417,9 +2408,7 @@ namespace Origam.Rule
 			}
 			finally
 			{
-#if NET_20
 				DatasetTools.EndLoadData(inout_dsTarget);
-#endif
 			}
 
 			return result;
@@ -2427,9 +2416,7 @@ namespace Origam.Rule
 	
 		public bool Merge(DataTable inout_dtTarget, DataTable in_dtSource, bool in_bTrueDelete, bool in_bPreserveChanges, bool in_bSourceIsFragment, bool preserveNewRowState)
 		{
-#if NET_20
 			inout_dtTarget.BeginLoadData();
-#endif
 			bool result;
 
 			try
@@ -2444,9 +2431,7 @@ namespace Origam.Rule
 			}
 			finally
 			{
-#if NET_20
 				inout_dtTarget.EndLoadData();
-#endif
 			}
 
 			return result;

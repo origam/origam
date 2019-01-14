@@ -33,6 +33,7 @@ using Origam.Schema.DeploymentModel;
 using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 using Origam.Gui.UI;
+using Origam.UI;
 using Origam.Schema.LookupModel.Wizards;
 using Origam.Schema.EntityModel.Wizards;
 using Origam.Schema.EntityModel.UI.Wizards;
@@ -74,7 +75,7 @@ namespace OrigamArchitect.Commands
 			CreateMenuItem(list, "Create Lookup Field (incl. entity)...", new CreateFieldWithLookupEntityCommand(), null);
 			CreateMenuItem(list, "Create Screen...", new CreateFormFromEntityCommand(), null);
 			CreateMenuItem(list, "Create Screen Section...", new CreatePanelFromEntityCommand(), null);
-            CreateMenuItem(list, "Create Relationship with key...", new CreateFieldWithLookupRelationshipEntityCommand(), null);
+            CreateMenuItem(list, "Create Relationship with key...", new CreateFieldWithRelationshipEntityCommand(), null);
             CreateMenuItem(list, "Create Menu Item...", new CreateCompleteUICommand(), null);
 			CreateMenuItem(list, "Create Screen", new CreateFormFromPanelCommand(), null);
 			CreateMenuItem(list, "Create Menu Item...", new CreateMenuFromFormCommand(), null);

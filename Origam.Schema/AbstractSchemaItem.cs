@@ -903,11 +903,9 @@ namespace Origam.Schema
 
 						foreach(SchemaItemAncestor anc in this.AllAncestors)
 						{
-							try
-							{
-								_childItems.AddRange(this.GetChildItems(anc.Ancestor));
-							}
-							catch{}
+							
+							_childItems.AddRange(this.GetChildItems(anc.Ancestor));
+							
 						}
 
 #if ORIGAM_CLIENT

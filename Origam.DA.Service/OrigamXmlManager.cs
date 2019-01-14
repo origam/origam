@@ -53,7 +53,7 @@ namespace Origam.DA.Service
         public IFilePersistent LoadObject(Guid id, IPersistenceProvider provider,
             bool useCache)
         {
-            IFilePersistent cachedObject = GetCachedObject(id, provider);
+            IFilePersistent cachedObject = GetCachedObject(id, provider, useCache);
             if (useCache)
             {
                 return cachedObject;
@@ -86,17 +86,17 @@ namespace Origam.DA.Service
             }
         }
 
-        private IFilePersistent GetCachedObject(Guid id, IPersistenceProvider provider)
+        private IFilePersistent GetCachedObject(Guid id, IPersistenceProvider provider, bool useCache)
         {
             lock (Lock)
             {
                 if (loadedLocalizedObjects == null)
                 {
-                    ReLoadAllObjectsFromDisk(provider);
+                    ReLoadAllObjectsFromDisk(provider, useCache);
                 }
                 if (!loadedLocalizedObjects.Contains(id))
                 {
-                    AddObjectsFromDisk(provider);
+                    AddObjectsFromDisk(provider, useCache);
                 }
 
                 Maybe<IFilePersistent> mayBeObject = loadedLocalizedObjects.Get(id);
@@ -109,13 +109,13 @@ namespace Origam.DA.Service
             }
         }
 
-        private void AddObjectsFromDisk(IPersistenceProvider provider)
+        private void AddObjectsFromDisk(IPersistenceProvider provider, bool useCache)
         {
             lock (Lock)
             {
                 var previouslyLoaded =
                     new LocalizedObjectCache(loadedLocalizedObjects);
-                ReLoadAllObjectsFromDisk(provider);
+                ReLoadAllObjectsFromDisk(provider,useCache);
                 previouslyLoaded.LocalizedPairs
                     .Where(keyVal => !loadedLocalizedObjects.Contains(keyVal.Key))
                     .ForEach(keyVal =>
@@ -123,11 +123,10 @@ namespace Origam.DA.Service
             }
         }
 
-        private void ReLoadAllObjectsFromDisk(IPersistenceProvider provider)
+        private void ReLoadAllObjectsFromDisk(IPersistenceProvider provider, bool useCache)
         {
             loadedLocalizedObjects = new LocalizedObjectCache();
             ParentIdTracker parentIdTracker = new ParentIdTracker();
-
             using (XmlReader xmlReader = GetDocumentReader())
             {
                 var instanceCreator = 
@@ -137,13 +136,13 @@ namespace Origam.DA.Service
                     if (xmlReader.NodeType == XmlNodeType.EndElement) continue;
                     Guid? retrievedId = XmlUtils.ReadId(xmlReader);
                     if (!retrievedId.HasValue) continue;
-                
                     parentIdTracker.SetParent(retrievedId.Value, xmlReader.Depth + 1);
                     IFilePersistent loadedObj = instanceCreator.RetrieveInstance( 
                         retrievedId.Value, provider, parentIdTracker.Get(xmlReader.Depth));
-                    loadedLocalizedObjects.Add(loadedObj.Id,loadedObj);
+                    loadedObj.UseObjectCache=useCache;
+                    loadedLocalizedObjects.Add(loadedObj.Id, loadedObj);
                 }
-            }   
+            }  
         }
 
         private XmlReader GetDocumentReader()
