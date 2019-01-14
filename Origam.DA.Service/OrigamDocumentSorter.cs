@@ -37,7 +37,7 @@ namespace Origam.DA.Service
         {
             childNode?.Attributes
                 ?.Cast<XmlAttribute>()
-                .OrderBy(attr => attr.Name) //attr.LocalName
+                .OrderBy(attr => attr.LocalName) 
                 .ForEach(attr =>
                     childCopy.SetAttribute(
                         localName: attr.LocalName,
