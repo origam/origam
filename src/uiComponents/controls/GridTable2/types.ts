@@ -1,3 +1,5 @@
+import { Rect } from "react-measure";
+
 export type IRenderCell = (
   rowIndex: number,
   columnIndex: number,
@@ -12,25 +14,28 @@ export type IRenderCell = (
   ctx: CanvasRenderingContext2D
 ) => void;
 
-export type IRenderHeader = (
-  columnIndex: number
+export type IRenderHeader = (columnIndex: number) => React.ReactNode;
+
+export type IRenderCursor = (
+  gridDImensions: IGridDimensions,
+  gridCursorPos: IGridCursorPos
 ) => React.ReactNode;
 
 export interface IGridCursorPos {
-  selectedRow: number;
-  selectedColumn: number;
+  selectedRowIndex: number | undefined;
+  selectedColumnIndex: number | undefined;
 }
 
-export interface IGridTableProps {  
+export interface IGridTableProps {
   gridCursorPos: IGridCursorPos;
+  renderGridCursor: IRenderCursor;
+
   gridDimensions: IGridDimensions;
   fixedColumnSettings: IFixedColumnSettings;
+  renderHeader: IRenderHeader;
+  renderCell: IRenderCell;
 
-  renderHeaderFixed: IRenderHeader;
-  renderHeaderMoving: IRenderHeader;
-
-  renderCellFixed: IRenderCell;
-  renderCellMoving: IRenderCell;
+  onKeyDown?: (event: any) => void;
 }
 
 export interface IGridCanvasProps {
@@ -108,6 +113,8 @@ export interface IScrollerProps {
   contentWidth: number;
   contentHeight: number;
   scrollOffsetTarget: IScrollOffsetTarget;
+  onClick?: (event: any, contentLeft: number, contentTop: number) => void;
+  onKeyDown?: (event: any) => void;
 }
 
 export interface IGridTableLayoutProps {

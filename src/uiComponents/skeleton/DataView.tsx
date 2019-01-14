@@ -12,10 +12,8 @@ import { LookupResolverProvider } from "src/DataLoadingStrategy/LookupResolverPr
 import {
   ICellValue,
   IDataTableFieldStruct,
-  IDataTableSelectors,
   IFieldType
 } from "src/DataTable/types";
-import { CellScrolling } from "src/Grid/CellScrolling";
 import { FormActions } from "src/Grid/FormActions";
 import { FormState } from "src/Grid/FormState";
 import { FormView } from "src/Grid/FormView";
@@ -60,7 +58,17 @@ import { IMainView } from "src/Application/types";
 import { DataTable } from "src/DataTable/DataTable";
 import { DataTableField } from "src/DataTable/DataTableField";
 
-class GridConfiguration {
+import {
+  IDataTableSelectors,
+  IRecord,
+  IField,
+  IGridTableEvents
+} from "src/Grid/types2";
+import { IDataCursorState } from "../../Grid/types2";
+import DataCursorState from "src/Grid/DataCursorState";
+import { GridTableEvents } from "../../Grid/GridTableEvents";
+
+/*class GridConfiguration {
   public gridSetup: IGridSetup;
   public gridTopology: IGridTopology;
   public formSetup: IFormSetup;
@@ -78,8 +86,9 @@ class GridConfiguration {
     this.formSetup = formSetup;
     this.formTopology = formTopology;
   }
-}
+}*/
 
+/*
 class FormSetup implements IFormSetup {
   constructor(public dataTableSelectors: IDataTableSelectors) {}
 
@@ -148,7 +157,7 @@ class FormSetup implements IFormSetup {
   public getLabelOffset(fieldIndex: number): number {
     return 100;
   }
-}
+
 
 function createGridPaneBacking(
   dataStructureEntityId: string,
@@ -300,14 +309,15 @@ function createGridPaneBacking(
 
   dataLoadingStrategyActions.requestLoadFresh();*/
 
+/*
   const formSetup = new FormSetup(dataTable);
   const formView = new FormView(dataTable, gridInteractionSelectors, formSetup);
 
   const formTopology = new FormTopology(gridTopology);
 
   configuration.set(gridSetup, gridTopology, formSetup, formTopology);
-
-  return {
+*/
+/*return {
     gridToolbarView,
     gridView,
     gridSetup,
@@ -331,8 +341,8 @@ function createGridPaneBacking(
     formTopology,
     formActions
   };
-}
-
+}*/
+/*
 function fieldsFromProperties(properties: any[]) {
   return properties.map((property: any, idx: number) => {
     return new DataTableField({
@@ -348,6 +358,56 @@ function fieldsFromProperties(properties: any[]) {
       dropdownColumns: property.dropdownColumns
     });
   });
+}
+*/
+
+class DataTableSelectors implements IDataTableSelectors {
+  public recordById(id: string): IRecord | undefined {
+    throw new Error("Method not implemented.");
+  }
+
+  public fieldById(id: string): IField | undefined {
+    throw new Error("Method not implemented.");
+  }
+
+  public recordByIndex(idx: number): IRecord | undefined {
+    throw new Error("Method not implemented.");
+  }
+
+  public fieldByIndex(idx: number): IField | undefined {
+    throw new Error("Method not implemented.");
+  }
+
+  public recordIndexById(id: string): number | undefined {
+    return parseInt(id, 10);
+  }
+
+  public fieldIndexById(id: string): number | undefined {
+    return parseInt(id, 10);
+  }
+
+  public recordIdByIndex(idx: number): string | undefined {
+    return `${idx}`;
+  }
+
+  public fieldIdByIndex(idx: number): string | undefined {
+    return `${idx}`;
+  }
+
+  public recordIdAfterId(id: string): string | undefined {
+    return `${parseInt(id, 10) + 1}`;
+  }
+  public fieldIdAfterId(id: string): string | undefined {
+    return `${parseInt(id, 10) + 1}`;
+  }
+
+  public recordIdBeforeId(id: string): string | undefined {
+    return `${parseInt(id, 10) - 1}`;
+  }
+
+  public fieldIdBeforeId(id: string): string | undefined {
+    return `${parseInt(id, 10) - 1}`;
+  }
 }
 
 @inject("mainView")
@@ -368,7 +428,15 @@ export class DataView extends React.Component<IDataViewProps> {
       this.gridPaneBacking
     );
     this.gridPaneBacking.dataLoadingStrategyActions.addLoadingGate(mainView);*/
+
+    this.dataTableSelectors = new DataTableSelectors();
+    this.dataCursorState = new DataCursorState(this.dataTableSelectors);
+    
+    this.dataCursorState.selectCell("5", "9")
   }
+
+  private dataTableSelectors: IDataTableSelectors;
+  private dataCursorState: IDataCursorState;
 
   private gridPaneBacking: IGridPanelBacking;
 
@@ -384,7 +452,12 @@ export class DataView extends React.Component<IDataViewProps> {
   public render() {
     /*const { gridPaneBacking } = this;*/
     return (
-      <Provider /*gridPaneBacking={this.gridPaneBacking}*/>
+      <Provider
+        /*gridPaneBacking={this.gridPaneBacking}*/
+
+        dataTableSelectors={this.dataTableSelectors}
+        dataCursorState={this.dataCursorState}
+      >
         <div className="data-view-container">
           <GridToolbar />
           {this.props.children}

@@ -17,6 +17,7 @@
     "max-classes-per-file": false,
     "no-debugger": false,
     "no-empty-interface": false,
-    "prefer-const": false
+    "prefer-const": false,
+    "variable-name": false
   }
 }

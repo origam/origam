@@ -6,11 +6,15 @@ import { observer } from "mobx-react";
 export default class GridCursor extends React.Component<IGridCursorProps> {
   public render() {
     const gcp = this.props.gridCursorPos;
+    if(gcp.selectedColumnIndex === undefined || gcp.selectedRowIndex === undefined) {
+      return null;
+    }
+
     const gDim = this.props.gridDimensions;
-    const width = gDim.getColumnWidth(gcp.selectedColumn);
-    const height = gDim.getRowHeight(gcp.selectedRow);
-    const left = gDim.getColumnLeft(gcp.selectedColumn);
-    const top = gDim.getRowTop(gcp.selectedRow);
+    const width = gDim.getColumnWidth(gcp.selectedColumnIndex);
+    const height = gDim.getRowHeight(gcp.selectedRowIndex);
+    const left = gDim.getColumnLeft(gcp.selectedColumnIndex);
+    const top = gDim.getRowTop(gcp.selectedRowIndex);
     return (
       <>
         <div

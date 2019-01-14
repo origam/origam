@@ -2,7 +2,7 @@ import { observer, Observer, inject } from "mobx-react";
 import * as React from "react";
 import { IGridPanelBacking } from "src/GridPanel/types";
 import { ColumnHeaders, GridComponent } from "src/Grid/GridComponent";
-import { createColumnHeaderRenderer } from "src/Grid/ColumnHeaderRenderer";
+
 import { GridViewType } from "src/Grid/types";
 import { AutoSizer } from "react-virtualized";
 import { GridCursorComponent } from "src/Grid/GridCursorComponent";
@@ -73,7 +73,7 @@ export class GridTable extends React.Component<any> {
             flexDirection: "column"
           }}
         >
-          <ColumnHeaders
+          {/*<ColumnHeaders
             view={gridView}
             columnHeaderRenderer={createColumnHeaderRenderer({
               gridSetup,
@@ -81,7 +81,7 @@ export class GridTable extends React.Component<any> {
               gridOrderingSelectors,
               gridTopology
             })}
-          />
+          />*/}
         </div>
         <Measure client={true}>
           {({ measureRef, contentRect }) => (

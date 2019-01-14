@@ -42,9 +42,23 @@ export default class Scroller extends React.Component<IScrollerProps> {
       : 0;
   }
 
+  public focus() {
+    this.elmScrollerDiv && this.elmScrollerDiv.focus();
+  }
+
   @action.bound
   private refScrollerDiv(elm: HTMLDivElement) {
     this.elmScrollerDiv = elm;
+  }
+
+  @action.bound private handleClick(event: any) {
+    const scrollerRect = this.elmScrollerDiv!.getBoundingClientRect();
+    this.props.onClick &&
+      this.props.onClick(
+        event,
+        event.clientX - scrollerRect.left,
+        event.clientY - scrollerRect.top
+      );
   }
 
   public render() {
@@ -55,8 +69,11 @@ export default class Scroller extends React.Component<IScrollerProps> {
           (1 ? " horiz-scrollbar" : "") +
           (1 ? " vert-scrollbar" : "")
         }
+        tabIndex={-1}
         style={{ width: this.props.width, height: this.props.height }}
         onScroll={this.handleScroll}
+        onClick={this.handleClick}
+        onKeyDown={this.props.onKeyDown}
         ref={this.refScrollerDiv}
       >
         <div

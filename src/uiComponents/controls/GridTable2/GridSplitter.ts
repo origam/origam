@@ -69,11 +69,11 @@ export class GridCursorPos implements IGridCursorPos {
     private isFixedPart: boolean
   ) {}
 
-  @computed public get selectedRow(): number {
-    return this.gridCursorPos.selectedRow;
+  @computed public get selectedRowIndex(): number | undefined {
+    return this.gridCursorPos.selectedRowIndex;
   }
 
-  @computed public get selectedColumn(): number {
-    return this.gridCursorPos.selectedColumn;
+  @computed public get selectedColumnIndex(): number | undefined {
+    return this.gridCursorPos.selectedColumnIndex;
   }
 }
