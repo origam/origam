@@ -1013,7 +1013,7 @@ namespace Origam.Workbench
 			}
 
 			TreeNode foundNode = null;
-            if (tvwExpressionBrowser.Nodes.Count == 0)
+            if (tvwExpressionBrowser.Nodes.Count == 0 || tvwExpressionBrowser.Nodes[0].Text != item.Package)
             {
                 //check if model is open.
                 SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
