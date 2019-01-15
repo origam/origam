@@ -28,62 +28,60 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.okButton = new System.Windows.Forms.Button();
-            this.showResultButton = new System.Windows.Forms.Button();
-            this.text = new System.Windows.Forms.RichTextBox();
+            this.okNo = new System.Windows.Forms.Button();
+            this.showOk = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // okButton
+            // okNo
             // 
-            this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.Location = new System.Drawing.Point(569, 237);
-            this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(75, 23);
-            this.okButton.TabIndex = 1;
-            this.okButton.Text = "OK";
-            this.okButton.UseVisualStyleBackColor = true;
-            this.okButton.Click += new System.EventHandler(this.okButton_Click);
+            this.okNo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.okNo.Location = new System.Drawing.Point(144, 62);
+            this.okNo.Name = "okNo";
+            this.okNo.Size = new System.Drawing.Size(75, 23);
+            this.okNo.TabIndex = 1;
+            this.okNo.Text = "No";
+            this.okNo.UseVisualStyleBackColor = true;
+            this.okNo.Click += new System.EventHandler(this.No_Click);
             // 
-            // showResultButton
+            // showOk
             // 
-            this.showResultButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.showResultButton.Location = new System.Drawing.Point(13, 237);
-            this.showResultButton.Name = "showResultButton";
-            this.showResultButton.Size = new System.Drawing.Size(75, 23);
-            this.showResultButton.TabIndex = 2;
-            this.showResultButton.Text = "toResult";
-            this.showResultButton.UseVisualStyleBackColor = true;
-            this.showResultButton.Click += new System.EventHandler(this.showResultButton_Click);
+            this.showOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.showOk.Location = new System.Drawing.Point(38, 62);
+            this.showOk.Name = "showOk";
+            this.showOk.Size = new System.Drawing.Size(75, 23);
+            this.showOk.TabIndex = 2;
+            this.showOk.Text = "Ok";
+            this.showOk.UseVisualStyleBackColor = true;
+            this.showOk.Click += new System.EventHandler(this.okButton_Click);
             // 
-            // text
+            // label1
             // 
-            this.text.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.text.Location = new System.Drawing.Point(13, 13);
-            this.text.Name = "text";
-            this.text.ReadOnly = true;
-            this.text.Size = new System.Drawing.Size(630, 211);
-            this.text.TabIndex = 0;
-            this.text.Text = "";
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(35, 20);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "label1";
             // 
             // RuleWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(655, 272);
-            this.Controls.Add(this.showResultButton);
-            this.Controls.Add(this.okButton);
-            this.Controls.Add(this.text);
+            this.ClientSize = new System.Drawing.Size(276, 97);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.showOk);
+            this.Controls.Add(this.okNo);
             this.Name = "RuleWindow";
-            this.Text = "RuleWindow";
+            this.Text = "RuleViolated";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.Button okButton;
-        private System.Windows.Forms.Button showResultButton;
-        private System.Windows.Forms.RichTextBox text;
+        private System.Windows.Forms.Button okNo;
+        private System.Windows.Forms.Button showOk;
+        private System.Windows.Forms.Label label1;
     }
 }

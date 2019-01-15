@@ -1015,7 +1015,15 @@ namespace Origam.Workbench
 			TreeNode foundNode = null;
             if (tvwExpressionBrowser.Nodes.Count == 0 || tvwExpressionBrowser.Nodes[0].Text != item.Package)
             {
-                //check if model is open.
+                if(tvwExpressionBrowser.Nodes.Count==1 && tvwExpressionBrowser.Nodes[0].Text != item.Package)
+                {
+                    DialogResult dialogResult = MessageBox.Show("Do you want change package?", "Questions", MessageBoxButtons.YesNo);
+                    if (dialogResult == DialogResult.No)
+                    {
+                        return;
+                    }
+                }
+                //open package
                 SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
                 foreach (SchemaExtension sch in schema.AllPackages)
                 {

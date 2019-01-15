@@ -1660,7 +1660,7 @@ namespace OrigamArchitect
                          Dictionary<IFilePersistent, string> errors =
                          new Dictionary<IFilePersistent, string>();
                          var errorMessages = RuleTools.GetExceptions(retrievedObj)
-                             .Select(exception => " - " + exception.Message)
+                             .Select(exception => exception.Message)
                              .ToList();
                          if (errorMessages.Count == 0) return null;
                          errors.Add(retrievedObj, string.Join("\n", errorMessages));
@@ -1671,23 +1671,12 @@ namespace OrigamArchitect
 
                 if (errorFragments.Count != 0)
                 {
-                    List<AbstractSchemaItem> listKeys = new List<AbstractSchemaItem>();
-                    string errorMessage = "Rule violations were found in the loaded project:\n\n";
-                    foreach (Dictionary<IFilePersistent, string> dict in errorFragments)
-                    {
-                        var key = dict.First().Key;
-                        var value = dict.First().Value;
-                        listKeys.Add((AbstractSchemaItem)key);
-                        errorMessage += string.Join("\n\n", "Object with Id: \"" + key.Id +
-                               "\" in file: \"" + key.RelativeFilePath +
-                               "\"\n" + string.Join("\n", value) + "\n\n");
-                    }
                     Origam.Workbench.Pads.FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(Origam.Workbench.Pads.FindRulesPad)) as Origam.Workbench.Pads.FindRulesPad;
-                    errorMessage += "\n\nYou should fix these issues before continuing with your work.";
-                    this.RunWithInvoke(() =>
-                        RuleWindow.ShowData(this, errorMessage, "Rules violated!", resultsPad,listKeys)
-                        );
+                    DialogResult dialogResult = this.RunWithInvoke(() =>
+                          RuleWindow.ShowData(this, "Do you want show Rule violations ?", "Rules violated!", resultsPad, errorFragments)
+                       );
                 }
+                    
             }).Start();
         }
 

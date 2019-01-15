@@ -120,30 +120,26 @@
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAB
-        AAAAAAAAAACAAACAAAAAgIAAgAAAAIAAgACAgAAAwMDAAMDcwADwyqYABAQEAAgICAAMDAwAERERABYW
-        FgAcHBwAIiIiACkpKQBVVVUATU1NAEJCQgA5OTkAgHz/AFBQ/wCTANYA/+zMAMbW7wDW5+cAkKmtAAAA
-        MwAAAGYAAACZAAAAzAAAMwAAADMzAAAzZgAAM5kAADPMAAAz/wAAZgAAAGYzAABmZgAAZpkAAGbMAABm
-        /wAAmQAAAJkzAACZZgAAmZkAAJnMAACZ/wAAzAAAAMwzAADMZgAAzJkAAMzMAADM/wAA/2YAAP+ZAAD/
-        zAAzAAAAMwAzADMAZgAzAJkAMwDMADMA/wAzMwAAMzMzADMzZgAzM5kAMzPMADMz/wAzZgAAM2YzADNm
-        ZgAzZpkAM2bMADNm/wAzmQAAM5kzADOZZgAzmZkAM5nMADOZ/wAzzAAAM8wzADPMZgAzzJkAM8zMADPM
-        /wAz/zMAM/9mADP/mQAz/8wAM///AGYAAABmADMAZgBmAGYAmQBmAMwAZgD/AGYzAABmMzMAZjNmAGYz
-        mQBmM8wAZjP/AGZmAABmZjMAZmZmAGZmmQBmZswAZpkAAGaZMwBmmWYAZpmZAGaZzABmmf8AZswAAGbM
-        MwBmzJkAZszMAGbM/wBm/wAAZv8zAGb/mQBm/8wAzAD/AP8AzACZmQAAmTOZAJkAmQCZAMwAmQAAAJkz
-        MwCZAGYAmTPMAJkA/wCZZgAAmWYzAJkzZgCZZpkAmWbMAJkz/wCZmTMAmZlmAJmZmQCZmcwAmZn/AJnM
-        AACZzDMAZsxmAJnMmQCZzMwAmcz/AJn/AACZ/zMAmcxmAJn/mQCZ/8wAmf//AMwAAACZADMAzABmAMwA
-        mQDMAMwAmTMAAMwzMwDMM2YAzDOZAMwzzADMM/8AzGYAAMxmMwCZZmYAzGaZAMxmzACZZv8AzJkAAMyZ
-        MwDMmWYAzJmZAMyZzADMmf8AzMwAAMzMMwDMzGYAzMyZAMzMzADMzP8AzP8AAMz/MwCZ/2YAzP+ZAMz/
-        zADM//8AzAAzAP8AZgD/AJkAzDMAAP8zMwD/M2YA/zOZAP8zzAD/M/8A/2YAAP9mMwDMZmYA/2aZAP9m
-        zADMZv8A/5kAAP+ZMwD/mWYA/5mZAP+ZzAD/mf8A/8wAAP/MMwD/zGYA/8yZAP/MzAD/zP8A//8zAMz/
-        ZgD//5kA///MAGZm/wBm/2YAZv//AP9mZgD/Zv8A//9mACEApQBfX18Ad3d3AIaGhgCWlpYAy8vLALKy
-        sgDX19cA3d3dAOPj4wDq6uoA8fHxAPj4+ADw+/8ApKCgAICAgAAAAP8AAP8AAAD//wD/AAAA/wD/AP//
-        AAD///8ACgoKCgoKCgoKCgoKCgoKCuvqEgoKCuvqEgoKCgoKCgrrbRLsCuzrbRIKCgoKCgoK6wcSFQoV
-        6wcSCgoKCgoKCuvyEhUKFevyEgoKCgoqCgrrExIV6xXrExJmZhIqWSoKCuvvFQoV7xTvCQdSWXpZKgoK
-        6xL/6xIH9BtZmnqaMQoKCusS/+sS///0G1maMQoKCgoKtf////P/9PQbWRIKCgoKCrv///SmGf/09Adm
-        CgoKCgq7//SttKb0///zZgoKCgoK1bS03Nu0pq3OzosKCgoKCtXVtLTc27Smrc6tCgoKCgoKCgoKtNyt
-        CgoKCgoKCgoKCgoKCgq0CgoKCgoKCv//AAAcfwAACH8AAAh/AAAAewAAAAEAAIAAAADAAQAAwAMAAOAD
-        AADgAwAA4AMAAOADAADgAwAA/j8AAP9/AAA=
+        AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAMMOAADDDgAAAAAAAAAA
+        AAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP//
+        /wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP//
+        /wD///8A////AP///wD///8AAAAAAAAAAAD29vYg9vb2n/b29u/29vb/9vb2//b29u/29vaf9vb2IAAA
+        AAAAAAAA////AP///wD///8A////AAAAAAD29vYw9vb273uF7v8PIub/ABTl/wAU5f8PIub/e4Xu//b2
+        9u/29vYwAAAAAP///wD///8A////AP///wD29vYg9vb27y4+6P8AFOX/ABTl/wAU5f8AFOX/ABTl/wAU
+        5f8uPuj/9vb27/b29iD///8A////AP///wD///8A9vb2n3uF7v8AFOX/n6f1/5+n9f8AFOX/ABTl/5+n
+        9f+fp/X/ABTl/3uF7v/29vaf////AP///wD///8A////APb29u8PIub/ABTl/8/T+v//////n6f1/5+n
+        9f//////z9P6/wAU5f8PIub/9vb27////wD///8A////AP///wDn6PX/ABTl/wAU5f8QI+f/z9P6////
+        ////////z9P6/xAj5/8AFOX/ABTl//b29v////8A////AP///wD///8A5+j1/wAU5f8AFOX/ABTl/5+n
+        9f///////////5+n9f8AFOX/ABTl/wAU5f/29vb/////AP///wD///8A////APb29u8PIub/ABTl/5+n
+        9f//////n6f1/5+n9f//////n6f1/wAU5f8PIub/9vb27////wD///8A////AP///wD29vafe4Xu/wAU
+        5f+fp/X/n6f1/wAU5f8AFOX/n6f1/5+n9f8AFOX/e4Xu//b29p////8A////AP///wD///8A9vb2IPb2
+        9u8uPuj/ABTl/wAU5f8AFOX/ABTl/wAU5f8AFOX/Lj7o//b29u/29vYg////AP///wD///8A////AAAA
+        AAD29vYw5uf173uF7v8PIub/ABTl/wAU5f8PIub/e4Xu//b29u/29vYwAAAAAP///wD///8A////AP//
+        /wAAAAAAAAAAAPb29iD29vaf9vb27/b29v/29vb/9vb27/b29p/29vYgAAAAAAAAAAD///8A////AP//
+        /wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP//
+        /wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP//
+        /wD///8A//8AAP//AADwDwAA4AcAAMADAADAAwAAwAMAAMADAADAAwAAwAMAAMADAADAAwAA4AcAAPAP
+        AAD//wAA//8AAA==
 </value>
   </data>
 </root>

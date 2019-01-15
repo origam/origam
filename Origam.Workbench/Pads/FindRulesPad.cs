@@ -21,8 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
-
+using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Workbench.Commands;
 
@@ -41,6 +43,7 @@ namespace Origam.Workbench.Pads
 
 		private SchemaBrowser _schemaBrowser;
         private ColumnHeader colPackage;
+        private ColumnHeader colMessage;
         ArrayList _results = new ArrayList();
 
 		public FindRulesPad()
@@ -101,6 +104,7 @@ namespace Origam.Workbench.Pads
             this.colItemType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colFolderPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colPackage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colMessage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // lvwResults
@@ -111,13 +115,14 @@ namespace Origam.Workbench.Pads
             this.colRootType,
             this.colItemType,
             this.colFolderPath,
-            this.colPackage});
+            this.colPackage,
+            this.colMessage});
             this.lvwResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvwResults.FullRowSelect = true;
             this.lvwResults.Location = new System.Drawing.Point(0, 0);
             this.lvwResults.MultiSelect = false;
             this.lvwResults.Name = "lvwResults";
-            this.lvwResults.Size = new System.Drawing.Size(816, 245);
+            this.lvwResults.Size = new System.Drawing.Size(957, 214);
             this.lvwResults.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvwResults.TabIndex = 0;
             this.lvwResults.UseCompatibleStateImageBehavior = false;
@@ -150,10 +155,15 @@ namespace Origam.Workbench.Pads
             this.colPackage.Text = "Package";
             this.colPackage.Width = 117;
             // 
+            // colMessage
+            // 
+            this.colMessage.Text = "Message";
+            this.colMessage.Width = 163;
+            // 
             // FindRulesPad
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(816, 245);
+            this.ClientSize = new System.Drawing.Size(957, 214);
             this.Controls.Add(this.lvwResults);
             this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
             | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
@@ -200,7 +210,27 @@ namespace Origam.Workbench.Pads
 			_schemaBrowser.RedrawContent();
 		}
 
-		public ArrayList Results
+        public void DisplayResults(List<Dictionary<IFilePersistent, string>> results)
+        {
+            lvwResults.BeginUpdate();
+            ResetResults();
+
+
+            if (results.Capacity > 0)
+            {
+                foreach (Dictionary<IFilePersistent, string> dict in results)
+                {
+                    AddResult((AbstractSchemaItem)(dict.First().Key), (dict.First().Value));
+                }
+                ViewFindSchemaItemResultsPad cmd = new ViewFindSchemaItemResultsPad();
+                cmd.Run();
+            }
+
+            lvwResults.EndUpdate();
+            _schemaBrowser.RedrawContent();
+        }
+
+        public ArrayList Results
 		{
 			get
 			{
@@ -208,7 +238,12 @@ namespace Origam.Workbench.Pads
 			}
 		}
 
-		private void AddResult(AbstractSchemaItem item)
+        private void AddResult(AbstractSchemaItem item)
+        {
+            AddResult(item, null);
+        }
+
+        private void AddResult(AbstractSchemaItem item,string text)
 		{
 			if(item == null) return;
 
@@ -223,7 +258,7 @@ namespace Origam.Workbench.Pads
 			if(name == null) name = item.ItemType;
 			if(rootName == null) rootName = item.RootItem.ItemType;
 
-			ListViewItem newItem = new ListViewItem(new string[] {item.Path, rootName, name, item.RootItem.Group == null ? "" : item.RootItem.Group.Path,item.Package});
+			ListViewItem newItem = new ListViewItem(new string[] {item.Path, rootName, name, item.RootItem.Group == null ? "" : item.RootItem.Group.Path,item.Package,string.IsNullOrEmpty(text)?"":text});
 			newItem.Tag = item;
 			newItem.ImageIndex = Convert.ToInt32(item.RootItem.Icon);
 
