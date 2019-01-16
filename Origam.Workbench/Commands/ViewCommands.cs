@@ -250,7 +250,7 @@ namespace Origam.Workbench.Commands
     }
     
     /// <summary>
-	/// Shows the Schema Output pad
+	/// Shows the Schema Result pad
 	/// </summary>
 	public class ViewFindSchemaItemResultsPad : AbstractMenuCommand
 	{
@@ -273,4 +273,29 @@ namespace Origam.Workbench.Commands
 			if(pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
 		}		
 	}
+
+    /// <summary>
+	/// Shows the Schema Result pad
+	/// </summary>
+	public class ViewFindRuleResultsPad : AbstractMenuCommand
+    {
+        public override bool IsEnabled
+        {
+            get
+            {
+                return true;
+            }
+            set
+            {
+                base.IsEnabled = value;
+            }
+        }
+
+        public override void Run()
+        {
+            FindRulesPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
+
+            if (pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
+        }
+    }
 }

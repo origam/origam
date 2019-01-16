@@ -174,7 +174,7 @@ namespace Origam.Workbench.Pads
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FindRulesPad";
             this.TabText = "Rules Violated";
-            this.Text = "Rules Violated";
+            this.Text = "Rules Violation";
             this.ResumeLayout(false);
 
 		}
@@ -202,7 +202,7 @@ namespace Origam.Workbench.Pads
 				{
 					AddResult(item);
 				}
-				ViewFindSchemaItemResultsPad cmd = new ViewFindSchemaItemResultsPad();
+                ViewFindRuleResultsPad cmd = new ViewFindRuleResultsPad();
 				cmd.Run();
 			}
 
@@ -222,7 +222,7 @@ namespace Origam.Workbench.Pads
                 {
                     AddResult((AbstractSchemaItem)(dict.First().Key), (dict.First().Value));
                 }
-                ViewFindSchemaItemResultsPad cmd = new ViewFindSchemaItemResultsPad();
+                ViewFindRuleResultsPad cmd = new ViewFindRuleResultsPad();
                 cmd.Run();
             }
 

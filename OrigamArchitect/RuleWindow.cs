@@ -37,8 +37,8 @@ namespace OrigamArchitect
         {
             this.Close();
             resultsPad.DisplayResults(listKeys);
-            resultsPad.Show();
-            resultsPad.TopMost = true;
+            //resultsPad.Show();
+           // resultsPad.TopMost = true;
         }
     }
 }

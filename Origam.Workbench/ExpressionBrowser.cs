@@ -1017,7 +1017,7 @@ namespace Origam.Workbench
             {
                 if(tvwExpressionBrowser.Nodes.Count==1 && tvwExpressionBrowser.Nodes[0].Text != item.Package)
                 {
-                    DialogResult dialogResult = MessageBox.Show("Do you want change package?", "Questions", MessageBoxButtons.YesNo);
+                    DialogResult dialogResult = MessageBox.Show("Do you want to change the Package?", "Package change", MessageBoxButtons.YesNo);
                     if (dialogResult == DialogResult.No)
                     {
                         return;

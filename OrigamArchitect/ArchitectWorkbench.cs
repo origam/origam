@@ -109,14 +109,15 @@ namespace OrigamArchitect
 #endif
 		DocumentationPad _documentationPad;
 		FindSchemaItemResultsPad _findSchemaItemResultsPad;
+        FindRulesPad _findRulesPad;
 #endif
-		PropertyPad _propertyPad;
+        PropertyPad _propertyPad;
 		WorkflowPlayerPad _workflowPad;
 		OutputPad _outputPad;
 		LogPad _logPad;
         ServerLogPad _serverLogPad;
         ExtensionPad _extensionPad;
-        FindRulesPad _findRulesPad;
+       
 
 		Hashtable _shortcuts = new Hashtable();
 
@@ -1673,7 +1674,7 @@ namespace OrigamArchitect
                 {
                     Origam.Workbench.Pads.FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(Origam.Workbench.Pads.FindRulesPad)) as Origam.Workbench.Pads.FindRulesPad;
                     DialogResult dialogResult = this.RunWithInvoke(() =>
-                          RuleWindow.ShowData(this, "Do you want show Rule violations ?", "Rules violated!", resultsPad, errorFragments)
+                          RuleWindow.ShowData(this, "Do you want to show the Rules Violation?", "Rules Violation", resultsPad, errorFragments)
                        );
                 }
                     
