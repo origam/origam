@@ -174,20 +174,20 @@ namespace Origam.Workbench.Pads
 
 		public void DisplayResults(AbstractSchemaItem[] results)
 		{
-			lvwResults.BeginUpdate();
 			ResetResults();
-
 			if(results.Length > 0)
 			{
-				foreach(AbstractSchemaItem item in results)
-				{
-					AddResult(item);
-				}
-				ViewFindSchemaItemResultsPad cmd = new ViewFindSchemaItemResultsPad();
+                ListViewItem[] resultListItems = new ListViewItem[results.LongLength];
+                for (int i = 0; i < results.LongLength; i++)
+                {
+                    var item = results[i];
+                    resultListItems[i] = GetResult(item);
+                    _results.Add(item);
+                }
+                lvwResults.Items.AddRange(resultListItems);
+                ViewFindSchemaItemResultsPad cmd = new ViewFindSchemaItemResultsPad();
 				cmd.Run();
 			}
-
-			lvwResults.EndUpdate();
 			_schemaBrowser.RedrawContent();
 		}
 
@@ -199,13 +199,13 @@ namespace Origam.Workbench.Pads
 			}
 		}
 
-		private void AddResult(AbstractSchemaItem item)
+		private ListViewItem GetResult(AbstractSchemaItem item)
 		{
-			if(item == null) return;
+			if(item == null) return null;
 
 			if(! LicensePolicy.ModelElementPolicy(item.GetType().Name, ModelElementPolicyCommand.Show))
 			{
-				return;
+				return null;
 			}
 
 			string name = SchemaItemName(item.GetType());
@@ -218,8 +218,7 @@ namespace Origam.Workbench.Pads
 			newItem.Tag = item;
 			newItem.ImageIndex = Convert.ToInt32(item.RootItem.Icon);
 
-			_results.Add(item);
-			lvwResults.Items.Add(newItem);
+			return newItem;
 		}
 		#endregion
 
