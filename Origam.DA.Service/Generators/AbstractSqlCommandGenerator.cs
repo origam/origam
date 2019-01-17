@@ -693,7 +693,7 @@ namespace Origam.DA.Service
 				string constraintName = "DF_" + (field.ParentItem as TableMappingItem).MappedObjectName + "_" + field.MappedColumnName;
 				ddl.AppendFormat(" CONSTRAINT {0} DEFAULT {1}",
 					NameLeftBracket + constraintName + NameRightBracket,
-					this.RenderConstant(field.DefaultValue));
+					this.RenderConstant(field.DefaultValue, false));
 
 				ddl.Append(Environment.NewLine);
 				ddl.AppendFormat("ALTER TABLE {0} DROP CONSTRAINT {1}",
@@ -2949,14 +2949,14 @@ namespace Origam.DA.Service
 			}
 		}
 
-		private string RenderConstant(DataConstant constant)
+		private string RenderConstant(DataConstant constant, bool userDefinedParameters)
 		{
 			if(constant.Name == "null") return "NULL";
 
 			IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 
 			object value;
-			if(UserDefinedParameters && parameterService != null)
+			if(userDefinedParameters && parameterService != null)
 			{
 				value = parameterService.GetParameterValue(constant.Id);
 			}
@@ -3002,7 +3002,7 @@ namespace Origam.DA.Service
 
 		private string RenderExpression(DataConstantReference item)
 		{
-			return RenderConstant(item.DataConstant);
+			return RenderConstant(item.DataConstant, UserDefinedParameters);
 		}
 
 		private string RenderString(string text)
