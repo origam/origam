@@ -1607,8 +1607,11 @@ namespace OrigamArchitect
 				InitializeConnectedPads();
 
 				CreateMainMenuConnect();
-                CheckModelRulesAsync(currentPersistenceService);
                 IsConnected = true;
+
+#if !ORIGAM_CLIENT
+                CheckModelRulesAsync(currentPersistenceService);
+#endif
 
 #if ORIGAM_CLIENT
 				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;

@@ -25,6 +25,7 @@ using System.Windows.Forms;
 
 using Origam.Schema;
 using Origam.Workbench.Commands;
+using Origam.Workbench.Services;
 
 namespace Origam.Workbench.Pads
 {
@@ -228,7 +229,9 @@ namespace Origam.Workbench.Pads
 			{
 				try
 				{
-					_schemaBrowser.EbrSchemaBrowser.SelectItem(lvwResults.SelectedItems[0].Tag as AbstractSchemaItem);
+                    AbstractSchemaItem schemaItem = lvwResults.SelectedItems[0].Tag as AbstractSchemaItem;
+                    CheckOpenPackage(schemaItem);
+                    _schemaBrowser.EbrSchemaBrowser.SelectItem(schemaItem as AbstractSchemaItem);
 					ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
 					cmd.Run();
 				}
@@ -239,7 +242,34 @@ namespace Origam.Workbench.Pads
 			}
 		}
 
-		private void lvwResults_DoubleClick(object sender, System.EventArgs e)
+        private void CheckOpenPackage(AbstractSchemaItem item)
+        {
+            TreeNode treenode = _schemaBrowser.EbrSchemaBrowser.GetFirstNode();
+            if (treenode != null && treenode.Text != item.Package)
+            {
+                DialogResult dialogResult = MessageBox.Show("Do you want to change the Package from " + treenode.Text + " to " + item.Package + "?", "Package change", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+                    if (treenode == null)
+                    {
+                        schema.UnloadSchema();
+                    }
+                    foreach (SchemaExtension sch in schema.AllPackages)
+                    {
+                        if (string.Compare(sch.Name, item.Package, comparisonType: StringComparison.OrdinalIgnoreCase) == 0)
+                        {
+                            schema.LoadSchema((Guid)sch.PrimaryKey["Id"], false, false);
+                            _schemaBrowser.EbrSchemaBrowser.ReloadTreeAndRestoreExpansionState();
+                            ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
+                            cmd.Run();
+                        }
+                    }
+                }
+            }
+        }
+
+        private void lvwResults_DoubleClick(object sender, System.EventArgs e)
 		{
 			ActivateItem();
 		}

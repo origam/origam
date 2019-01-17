@@ -85,6 +85,10 @@ namespace Origam.Workbench
 			rootNode.Text = rootNodeTag.Name;
 		}
 
+        public TreeNode GetFirstNode()
+        {
+            return tvwExpressionBrowser.Nodes.Count>0? tvwExpressionBrowser.Nodes[0]:null;
+        }
 		public void ReloadTreeAndRestoreExpansionState()
 		{
 			if (_schemaService.ActiveExtension == null) return;
@@ -1013,29 +1017,7 @@ namespace Origam.Workbench
 			}
 
 			TreeNode foundNode = null;
-            if (tvwExpressionBrowser.Nodes.Count == 0 || tvwExpressionBrowser.Nodes[0].Text != item.Package)
-            {
-                if(tvwExpressionBrowser.Nodes.Count==1 && tvwExpressionBrowser.Nodes[0].Text != item.Package)
-                {
-                    DialogResult dialogResult = MessageBox.Show("Do you want to change the Package?", "Package change", MessageBoxButtons.YesNo);
-                    if (dialogResult == DialogResult.No)
-                    {
-                        return;
-                    }
-                }
-                //open package
-                SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-                foreach (SchemaExtension sch in schema.AllPackages)
-                {
-                    if (string.Compare(sch.Name, item.Package, comparisonType: StringComparison.OrdinalIgnoreCase) == 0)
-                    {
-                        schema.LoadSchema((Guid)sch.PrimaryKey["Id"], false, false);
-                        this.ReloadTreeAndRestoreExpansionState();
-                        ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
-                        cmd.Run();
-                    }
-                }
-            }
+          
             if (tvwExpressionBrowser.Nodes.Count == 1)
 			{
 				if(! tvwExpressionBrowser.Nodes[0].IsExpanded)
