@@ -8,12 +8,13 @@ using Origam.DA.ObjectPersistence.Providers;
 using Origam.Extensions;
 using Origam.Workbench.Services;
 using System.Threading;
+using System.Timers;
 using log4net;
 using Origam.Services;
 
 namespace Origam.DA.Service
 {
-    public class FileEventQueue
+    public class FileEventQueue: IDisposable
     {
         private static readonly ILog log
             = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -41,7 +42,12 @@ namespace Origam.DA.Service
                 }
             };
             timer.Interval = 1000;
-            timer.Elapsed += (sender, e) => TimerElapsedHandler();
+            timer.Elapsed += OnTimerOnElapsed;
+        }
+
+        private void OnTimerOnElapsed(object sender, ElapsedEventArgs e)
+        {
+            TimerElapsedHandler();
         }
 
         public void Start()
@@ -175,6 +181,13 @@ namespace Origam.DA.Service
                 (IFileStorageDocumentationService)ServiceManager.Services
                     .GetService<IDocumentationService>();
             return documentationService.GetDocumentationFileHash(file);
+        }
+
+        public void Dispose()
+        {
+            timer.Elapsed -= OnTimerOnElapsed;
+            index?.Dispose();
+            timer?.Dispose();
         }
     }
 }

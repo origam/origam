@@ -1651,31 +1651,34 @@ namespace OrigamArchitect
 
             new Task(() =>
 	        {
-	            List<string> errorFragments = 
-	                new FilePersistenceBuilder()
-	                .CreateNoBinFilePersistenceService()
-	                .SchemaProvider
-	                .RetrieveList<IFilePersistent>()
-	                .Select(retrievedObj =>
-	                {
-	                    var errorMessages = RuleTools.GetExceptions(retrievedObj)
-	                        .Select(exception => " - "+exception.Message)
-	                        .ToList();
-                        if (errorMessages.Count == 0) return null;
-	                    return "Object with Id: \"" + retrievedObj.Id +
-	                           "\" in file: \"" +retrievedObj.RelativeFilePath +
-	                           "\"\n" + string.Join("\n", errorMessages);
-	                })
-	                .Where(x => x != null)
-	                .ToList();
-
-	            if (errorFragments.Count != 0)
+	            using (FilePersistenceService independentPersistenceService = new FilePersistenceBuilder()
+	                .CreateNoBinFilePersistenceService())
 	            {
-	                string errorMessage = "Rule violations were found in the loaded project:\n\n" +
-	                                      string.Join("\n\n", errorFragments) +
-	                                      "\n\nYou should fix these issues before continuing with your work.";
-	                this.RunWithInvoke(() => LongMessageBox.ShowMsgBoxOk(this, errorMessage, "Rules violated!"));
-	            }
+	                List<string> errorFragments =
+	                    independentPersistenceService
+	                        .SchemaProvider
+	                        .RetrieveList<IFilePersistent>()
+	                        .Select(retrievedObj =>
+	                        {
+	                            var errorMessages = RuleTools.GetExceptions(retrievedObj)
+	                                .Select(exception => " - " + exception.Message)
+	                                .ToList();
+	                            if (errorMessages.Count == 0) return null;
+	                            return "Object with Id: \"" + retrievedObj.Id +
+	                                   "\" in file: \"" + retrievedObj.RelativeFilePath +
+	                                   "\"\n" + string.Join("\n", errorMessages);
+	                        })
+	                        .Where(x => x != null)
+	                        .ToList();
+
+	                if (errorFragments.Count != 0)
+	                {
+	                    string errorMessage = "Rule violations were found in the loaded project:\n\n" +
+	                                          string.Join("\n\n", errorFragments) +
+	                                          "\n\nYou should fix these issues before continuing with your work.";
+	                    this.RunWithInvoke(() => LongMessageBox.ShowMsgBoxOk(this, errorMessage, "Rules violated!"));
+	                }
+                }
 	        }).Start();
 	    }
 

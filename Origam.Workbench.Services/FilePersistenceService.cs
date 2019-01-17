@@ -36,7 +36,7 @@ using Origam.OrigamEngine;
 
 namespace Origam.Workbench.Services
 {
-    public class FilePersistenceService : IPersistenceService
+    public class FilePersistenceService : IPersistenceService, IDisposable
     {
         private readonly FilePersistenceProvider schemaProvider;
         private readonly IList<ElementName> defaultFolders;
@@ -227,6 +227,13 @@ namespace Origam.Workbench.Services
 
         public void InitializeRepository()
         {
+        }
+
+        public void Dispose()
+        {
+            schemaProvider?.Dispose();
+            FileEventQueue?.Dispose();
+            SchemaListProvider?.Dispose();
         }
     }
 }
