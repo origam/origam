@@ -56,7 +56,7 @@ namespace Origam.DA.ObjectPersistence
 
         public abstract List<T> RetrieveListByPackage<T>(Guid packageId);
 
-        public abstract List<T> FullTextSearch<T>(string text);
+        public abstract T[] FullTextSearch<T>(string text);
 
         public abstract List<T> RetrieveListByParent<T>(Key primaryKey,
             string parentTableName,
