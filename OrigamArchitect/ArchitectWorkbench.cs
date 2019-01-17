@@ -59,6 +59,7 @@ using NPOI.HSSF.UserModel;
 using NPOI.HPSF;
 using NPOI.SS.UserModel;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using Origam.DA.ObjectPersistence;
@@ -82,7 +83,8 @@ namespace OrigamArchitect
             = log4net.LogManager.GetLogger(
 			MethodBase.GetCurrentMethod().DeclaringType);
 
-		private readonly Dictionary<IToolStripContainer,List<ToolStrip>> loadedForms 
+        private CancellationTokenSource ruleCheckCancellationTokenSource = new CancellationTokenSource();
+        private readonly Dictionary<IToolStripContainer,List<ToolStrip>> loadedForms 
 			= new Dictionary<IToolStripContainer,List<ToolStrip>>();
 		
 		AsMenu _fileMenu = null;
@@ -1647,39 +1649,66 @@ namespace OrigamArchitect
 
 	    private void CheckModelRulesAsync(IPersistenceService currentPersistenceService)
 	    {
-	        if (!(currentPersistenceService is FilePersistenceService)) return;
-
-            new Task(() =>
-	        {
-	            using (FilePersistenceService independentPersistenceService = new FilePersistenceBuilder()
-	                .CreateNoBinFilePersistenceService())
+	       if (!(currentPersistenceService is FilePersistenceService)) return;
+	       var cancellationToken = ruleCheckCancellationTokenSource.Token;
+	       Task.Factory.StartNew(
+	           () =>  CheckModelRules(cancellationToken),
+	           cancellationToken
+            ).ContinueWith( previousTask =>
 	            {
-	                List<string> errorFragments =
-	                    independentPersistenceService
-	                        .SchemaProvider
-	                        .RetrieveList<IFilePersistent>()
-	                        .Select(retrievedObj =>
-	                        {
-	                            var errorMessages = RuleTools.GetExceptions(retrievedObj)
-	                                .Select(exception => " - " + exception.Message)
-	                                .ToList();
-	                            if (errorMessages.Count == 0) return null;
-	                            return "Object with Id: \"" + retrievedObj.Id +
-	                                   "\" in file: \"" + retrievedObj.RelativeFilePath +
-	                                   "\"\n" + string.Join("\n", errorMessages);
-	                        })
-	                        .Where(x => x != null)
-	                        .ToList();
-
-	                if (errorFragments.Count != 0)
+	                try
 	                {
-	                    string errorMessage = "Rule violations were found in the loaded project:\n\n" +
-	                                          string.Join("\n\n", errorFragments) +
-	                                          "\n\nYou should fix these issues before continuing with your work.";
-	                    this.RunWithInvoke(() => LongMessageBox.ShowMsgBoxOk(this, errorMessage, "Rules violated!"));
+	                    previousTask.Wait();
 	                }
-                }
-	        }).Start();
+	                catch (AggregateException ae)
+	                {
+	                    if (!(ae.InnerException is OperationCanceledException))
+	                    {
+                            log.Error(ae.InnerException);
+	                        this.RunWithInvoke(() => AsMessageBox.ShowError(
+	                            null, ae.InnerException.Message, strings.GenericError_Title, ae.InnerException));
+                        }
+	                }
+	            },
+	            TaskScheduler.FromCurrentSynchronizationContext()
+            );
+        }
+
+	    private void CheckModelRules(CancellationToken cancellationToken)
+	    {
+	        using (FilePersistenceService independentPersistenceService = new FilePersistenceBuilder()
+	            .CreateNoBinFilePersistenceService())
+	        {
+	            List<string> errorFragments =
+	                independentPersistenceService
+	                    .SchemaProvider
+	                    .RetrieveList<IFilePersistent>()
+	                    .Select(retrievedObj =>
+	                    {
+	                        if (cancellationToken.IsCancellationRequested)
+	                        {
+	                            cancellationToken.ThrowIfCancellationRequested();
+	                        }
+
+	                        var errorMessages = RuleTools.GetExceptions(retrievedObj)
+	                            .Select(exception => " - " + exception.Message)
+	                            .ToList();
+	                        if (errorMessages.Count == 0) return null;
+	                        return "Object with Id: \"" + retrievedObj.Id +
+	                               "\" in file: \"" + retrievedObj.RelativeFilePath +
+	                               "\"\n" + string.Join("\n", errorMessages);
+	                    })
+	                    .Where(x => x != null)
+	                    .ToList();
+
+	            if (errorFragments.Count != 0)
+	            {
+	                string errorMessage = "Rule violations were found in the loaded project:\n\n" +
+	                                      string.Join("\n\n", errorFragments) +
+	                                      "\n\nYou should fix these issues before continuing with your work.";
+	                this.RunWithInvoke(() => LongMessageBox.ShowMsgBoxOk(this, errorMessage, "Rules violated!"));
+	            }
+	        }
 	    }
 
 	    protected override void WndProc(ref Message m)
@@ -1768,7 +1797,9 @@ namespace OrigamArchitect
 
             UpdateTitle();
 
-			return true;
+            ruleCheckCancellationTokenSource.Cancel();
+            ruleCheckCancellationTokenSource = new CancellationTokenSource();
+            return true;
 		}
 
 		private void SaveWorkspace()
