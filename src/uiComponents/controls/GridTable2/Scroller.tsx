@@ -61,13 +61,28 @@ export default class Scroller extends React.Component<IScrollerProps> {
       );
   }
 
+  @action.bound private handleWindowClick(event: any) {
+    if (this.elmScrollerDiv && !this.elmScrollerDiv.contains(event.target)) {
+      this.props.onOutsideClick && this.props.onOutsideClick(event);
+    }
+  }
+
+  public componentDidMount() {
+    window.addEventListener("click", this.handleWindowClick);
+  }
+
+  public componentWillUnmount() {
+    window.removeEventListener("click", this.handleWindowClick);
+  }
+
   public render() {
     return (
       <div
         className={
           "grid-table-scroller" +
           (1 ? " horiz-scrollbar" : "") +
-          (1 ? " vert-scrollbar" : "")
+          (1 ? " vert-scrollbar" : "") + 
+          (!this.props.isVisible ? " hidden" : "")
         }
         tabIndex={-1}
         style={{ width: this.props.width, height: this.props.height }}

@@ -90,6 +90,7 @@ export default class GridLayout extends React.Component<IGridTableLayoutProps> {
             >
               {this.props.scroller}
             </div>
+            {this.props.editor}
           </div>
         </div>
       </div>

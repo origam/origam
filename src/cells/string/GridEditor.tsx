@@ -1,14 +1,18 @@
 import * as React from "react";
 import { action, observable, runInAction } from "mobx";
-import { observer } from "mobx-react";
+import { observer, inject } from "mobx-react";
 import { ICellValue, IRecordId, IFieldId } from "../../DataTable/types";
+import { IDataCursorState } from "src/Grid/types2";
+import { Escape } from "../../utils/keys";
 
+@inject("dataCursorState")
 @observer
 export class StringGridEditor extends React.Component<{
   value: ICellValue | undefined;
   editingRecordId: IRecordId;
   editingFieldId: IFieldId;
-  onKeyDown?: (event: any) => void;
+  dataCursorState?: IDataCursorState;
+  onDefaultKeyDown?: (event: any) => void;
   onDataCommit?: (
     dirtyValue: ICellValue,
     editingRecordId: IRecordId,
@@ -17,7 +21,9 @@ export class StringGridEditor extends React.Component<{
 }> {
   public componentDidMount() {
     runInAction(() => {
-      this.dirtyValue = (this.props.value !== undefined ? this.props.value : "") as string;
+      this.dirtyValue = (this.props.value !== undefined
+        ? this.props.value
+        : "") as string;
       this.elmInput!.focus();
       setTimeout(() => {
         this.elmInput && this.elmInput.select();
@@ -26,10 +32,10 @@ export class StringGridEditor extends React.Component<{
   }
 
   private elmInput: HTMLInputElement | null;
+
   @observable
   private dirtyValue: string = "";
   private isDirty: boolean = false;
-  private editingCanceled: boolean = false;
 
   @action.bound
   private refInput(elm: HTMLInputElement) {
@@ -42,30 +48,33 @@ export class StringGridEditor extends React.Component<{
     this.isDirty = true;
   }
 
-  public componentWillUnmount() {
-    if (this.isDirty && !this.editingCanceled) {
+  @action.bound
+  public requestDataCommit(recordId: string, fieldId: string) {
+    if (this.isDirty) {
       console.log("Commit data:", this.dirtyValue);
       this.props.onDataCommit &&
-        this.props.onDataCommit(
-          this.dirtyValue,
-          this.props.editingRecordId,
-          this.props.editingFieldId
-        );
+        this.props.onDataCommit(this.dirtyValue, recordId, fieldId);
     }
   }
 
   @action.bound
   private handleKeyDown(event: any) {
-    if (event.key === "Escape") {
-      this.editingCanceled = true;
+    event.stopPropagation();
+    switch (event.key) {
+      default:
+        this.props.onDefaultKeyDown && this.props.onDefaultKeyDown(event);
     }
-    this.props.onKeyDown && this.props.onKeyDown(event);
+  }
+
+  @action.bound private handleClick(event: any) {
+    event.stopPropagation();
   }
 
   public render() {
     return (
       <input
         onKeyDown={this.handleKeyDown}
+        onClick={this.handleClick}
         ref={this.refInput}
         style={{
           width: "100%",

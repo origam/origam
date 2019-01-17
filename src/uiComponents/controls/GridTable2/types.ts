@@ -20,7 +20,8 @@ export type IRenderHeader = (columnIndex: number) => React.ReactNode;
 
 export type IRenderCursor = (
   gridDImensions: IGridDimensions,
-  gridCursorPos: IGridCursorPos
+  gridCursorPos: IGridCursorPos,
+  shouldRenderCellCursor: boolean
 ) => React.ReactNode;
 
 export interface IGridCursorPos {
@@ -36,8 +37,10 @@ export interface IGridTableProps {
   fixedColumnSettings: IFixedColumnSettings;
   renderHeader: IRenderHeader;
   renderCell: IRenderCell;
+  editor: React.ReactNode;
+  showScroller: boolean;
 
-  onClick?: (event: any, x: number, y: number) => void;
+  onOutsideClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
   onBeforeRender?(): void;
   onAfterRender?(): void;
@@ -103,10 +106,12 @@ export interface IScrolleeProps {
 export interface IScrollerProps {
   width: number | string;
   height: number | string;
+  isVisible: boolean;
   contentWidth: number;
   contentHeight: number;
   scrollOffsetTarget: IScrollOffsetTarget;
   onClick?: (event: any, contentLeft: number, contentTop: number) => void;
+  onOutsideClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
 }
 
@@ -122,12 +127,15 @@ export interface IGridTableLayoutProps {
   fixedColumnsCursor: React.ReactNode;
   movingColumnsCursor: React.ReactNode;
   scroller: React.ReactNode;
+  editor: React.ReactNode;
 }
 
 export interface IGridCursorProps {
+  pollCellRect: boolean;
+  showCellCursor: boolean;
   gridDimensions: IGridDimensions;
   gridCursorPos: IGridCursorPos;
-  cellContent: React.ReactNode;
+  renderCellContent: (cursorRect: Rect) => React.ReactNode;
 }
 
 export interface IFixedColumnSettings {

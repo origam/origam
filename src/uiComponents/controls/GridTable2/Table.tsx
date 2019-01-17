@@ -1,5 +1,5 @@
 import * as React from "react";
-import { observable, action, when, IReactionDisposer } from "mobx";
+import { observable, action, when, IReactionDisposer, computed } from "mobx";
 import { AutoSizer } from "react-virtualized";
 import GridLayout from "./Layout";
 import {
@@ -15,6 +15,7 @@ import { observer, Observer } from "mobx-react";
 import GridCursor from "./Cursor";
 import { GridDimensions, GridCursorPos } from "./GridSplitter";
 import { IFixedColumnSettings } from "./types";
+import bind from "bind-decorator";
 
 const Headers = observer(
   ({
@@ -80,6 +81,14 @@ export default class GridTable extends React.Component<IGridTableProps> {
 
   @observable public scrollTop: number = 0;
   @observable public scrollLeft: number = 0;
+
+  @computed private get isFixedCursor(): boolean {
+    return !!(
+      this.props.gridCursorPos.selectedColumnIndex !== undefined &&
+      this.props.gridCursorPos.selectedColumnIndex <
+        this.props.fixedColumnSettings.fixedColumnCount
+    );
+  }
 
   @action.bound public setScrollOffset(
     scrollTop: number,
@@ -175,6 +184,11 @@ export default class GridTable extends React.Component<IGridTableProps> {
     this.elmGridScroller = elm;
   }
 
+  @bind
+  public focusGridScroller() {
+    this.elmGridScroller && this.elmGridScroller.focus();
+  }
+
   public render() {
     const fixGDim = this.gridDimensionsFixed;
     const movGDim = this.gridDimensionsMoving;
@@ -268,7 +282,8 @@ export default class GridTable extends React.Component<IGridTableProps> {
                         {() =>
                           this.props.renderGridCursor(
                             fixGDim,
-                            this.gridCursorPosFixed
+                            this.gridCursorPosFixed,
+                            this.isFixedCursor
                           )
                         }
                       </Observer>
@@ -283,10 +298,11 @@ export default class GridTable extends React.Component<IGridTableProps> {
                       scrollOffsetSource={this}
                     >
                       <Observer>
-                        {() => 
+                        {() =>
                           this.props.renderGridCursor(
                             movGDim,
-                            this.gridCursorPosMoving
+                            this.gridCursorPosMoving,
+                            !this.isFixedCursor
                           )
                         }
                       </Observer>
@@ -294,6 +310,7 @@ export default class GridTable extends React.Component<IGridTableProps> {
                   }
                   scroller={
                     <Scroller
+                      isVisible={this.props.showScroller}
                       ref={this.refGridScroller}
                       width={"100%"}
                       height={"100%"}
@@ -301,9 +318,11 @@ export default class GridTable extends React.Component<IGridTableProps> {
                       contentHeight={movGDim.contentHeight}
                       scrollOffsetTarget={this}
                       onClick={this.handleScrollerClick}
+                      onOutsideClick={this.props.onOutsideClick}
                       onKeyDown={this.props.onKeyDown}
                     />
                   }
+                  editor={this.props.editor}
                 />
               )}
             </Observer>

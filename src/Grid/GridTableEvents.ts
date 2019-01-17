@@ -83,9 +83,9 @@ export class GridTableEvents implements IGridTableEvents {
       case KEY.Tab:
         event.preventDefault();
         if (event.shiftKey) {
-          this.dataCursorState.selectPrevRow();
+          this.dataCursorState.selectPrevColumn();
         } else {
-          this.dataCursorState.selectNextRow();
+          this.dataCursorState.selectNextColumn();
         }
         this.onCursorMovementFinished.trigger();
         break;

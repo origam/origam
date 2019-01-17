@@ -42,6 +42,8 @@ export interface IDataCursorState {
   finishEditing(): void;
   cancelEditing(): void;
   isCellSelected(recordId: string, fieldId: string): boolean;
+  refCurrentEditor(elm: IGridEditor | null): void;
+  onEditingEnded: IEventSubscriber;
 }
 
 export interface IGridTableEvents {
@@ -51,4 +53,8 @@ export interface IGridTableEvents {
   handleGridKeyDown(event: any): void;
   handleDefaultEditorKeyDown(event: any): void;
   onCursorMovementFinished: IEventSubscriber;
+}
+
+export interface IGridEditor {
+  requestDataCommit(recordId: string, fieldId: string): void;
 }
