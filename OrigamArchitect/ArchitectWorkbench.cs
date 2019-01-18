@@ -1679,7 +1679,7 @@ namespace OrigamArchitect
 	        using (FilePersistenceService independentPersistenceService = new FilePersistenceBuilder()
 	            .CreateNoBinFilePersistenceService())
 	        {
-	            List<string> errorFragments =
+	            var errorFragments =
 	                independentPersistenceService
 	                    .SchemaProvider
 	                    .RetrieveList<IFilePersistent>()
@@ -1694,21 +1694,35 @@ namespace OrigamArchitect
 	                            .Select(exception => " - " + exception.Message)
 	                            .ToList();
 	                        if (errorMessages.Count == 0) return null;
-	                        return "Object with Id: \"" + retrievedObj.Id +
-	                               "\" in file: \"" + retrievedObj.RelativeFilePath +
-	                               "\"\n" + string.Join("\n", errorMessages);
+
+	                        return new Dictionary<IFilePersistent, string>
+	                        {
+	                            { retrievedObj, string.Join("\n", errorMessages) }
+	                        };
+
+//                            return "Object with Id: \"" + retrievedObj.Id +
+//	                               "\" in file: \"" + retrievedObj.RelativeFilePath +
+//	                               "\"\n" + string.Join("\n", errorMessages);
+
 	                    })
 	                    .Where(x => x != null)
 	                    .ToList();
-
 	            if (errorFragments.Count != 0)
 	            {
-	                string errorMessage = "Rule violations were found in the loaded project:\n\n" +
-	                                      string.Join("\n\n", errorFragments) +
-	                                      "\n\nYou should fix these issues before continuing with your work.";
-	                this.RunWithInvoke(() => LongMessageBox.ShowMsgBoxOk(this, errorMessage, "Rules violated!"));
+	                FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
+	                this.RunWithInvoke(() =>
+	                    RuleWindow.ShowData(this, "Do you want to show the Rules Violation?", "Rules Violation", resultsPad, errorFragments)
+	                );
 	            }
-	        }
+
+                //	            if (errorFragments.Count != 0)
+                //	            {
+                //	                string errorMessage = "Rule violations were found in the loaded project:\n\n" +
+                //	                                      string.Join("\n\n", errorFragments) +
+                //	                                      "\n\nYou should fix these issues before continuing with your work.";
+                //	                this.RunWithInvoke(() => LongMessageBox.ShowMsgBoxOk(this, errorMessage, "Rules violated!"));
+                //	            }
+            }
 	    }
 
 	    protected override void WndProc(ref Message m)

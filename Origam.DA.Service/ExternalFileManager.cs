@@ -68,8 +68,12 @@ namespace Origam.DA.Service
                 .FirstOrDefault(path => path.OwnerOjectId == instanceId &&
                                         path.FieldName == fieldName);
             if (filePath == null) return null;
-            ExternalFileWriter writer = ExternalFileWriter.GetNew(filePath);
-            return writer.Read();
+            // first try to see if the value is not waiting in deferred queue
+            // otherwise read it from the external file
+            return deferredTasks
+                .OfType<DeferredWritingTask>()
+                .FirstOrDefault(x => filePath.Equals(x.ExtFilePath))?.Data 
+                ?? ExternalFileWriter.GetNew(filePath).Read();
         }
 
         public void AddFileLink(string externalLinkWithPrefix)
@@ -164,24 +168,24 @@ namespace Origam.DA.Service
 
     class DeferredWritingTask: IDeferredTask
     {
-        private readonly ExternalFilePath extFilePath;
-        private readonly object data;
+        public ExternalFilePath ExtFilePath { get; }
+        public object Data { get; }
         private readonly Action<ExternalFilePath> addOrRefreshHash;
 
         public DeferredWritingTask(ExternalFilePath extFilePath, object data,
             Action<ExternalFilePath> addOrRefreshHash)
         {
-            this.extFilePath = extFilePath;
-            this.data = data;
+            this.ExtFilePath = extFilePath;
+            this.Data = data;
             this.addOrRefreshHash = addOrRefreshHash;
         }
 
         public void Run()
         {
             ExternalFileWriter
-                .GetNew(extFilePath)
-                .Write(data);
-            addOrRefreshHash(extFilePath);
+                .GetNew(ExtFilePath)
+                .Write(Data);
+            addOrRefreshHash(ExtFilePath);
         }
     }
 

@@ -20,16 +20,12 @@ namespace Origam.DA.ObjectPersistence.Attributes
         {
             if (memberName == String.Empty | memberName == null) CheckRule(instance);
             var dataStructure = (DataStructureEntity)instance;
-            if (dataStructure.Entity != null)
+            if (dataStructure.Entity != null && dataStructure.Entity is IAssociation)
             {
-                var relation = dataStructure.Entity.ChildItemsByType(EntityRelationItem.ItemTypeConst);
-                foreach (EntityRelationItem rel in relation)
+                ArrayList schemaItems = dataStructure.Entity.ChildItemsByType(EntityRelationColumnPairItem.ItemTypeConst);
+                if (schemaItems.Count == 0)
                 {
-                    ArrayList schemaItems = rel.ChildItemsByType(EntityRelationColumnPairItem.ItemTypeConst);
-                    if (schemaItems.Count == 0)
-                    {
-                        return new DataException("Relationship has no key");
-                    }
+                    return new DataException("Relationship has no key");
                 }
             }
             return null;

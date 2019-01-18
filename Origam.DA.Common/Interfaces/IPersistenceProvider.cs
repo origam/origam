@@ -67,7 +67,7 @@ namespace Origam.DA.ObjectPersistence
         List<T> RetrieveList<T>(IDictionary<string, object> filter=null);
 		List<T> RetrieveListByType<T>( string itemType);
 		List<T> RetrieveListByPackage<T>(Guid packageId);
-		List<T> FullTextSearch<T>( string text);
+		T[] FullTextSearch<T>( string text);
 		List<T> RetrieveListByParent<T>( Key primaryKey, string parentTableName, string childTableName, bool useCache);
 		List<T> RetrieveListByGroup<T>( Key primaryKey);
 

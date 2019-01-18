@@ -22,14 +22,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Windows.Forms;
-
 using Origam.Schema;
 using Origam.Workbench.Commands;
 
 namespace Origam.Workbench.Pads
 {
-	public class FindSchemaItemResultsPad : AbstractPadContent
-	{
+	public class FindSchemaItemResultsPad : AbstractPadContent 
+    {
 		private System.Windows.Forms.ListView lvwResults;
 		private System.Windows.Forms.ColumnHeader colItemType;
 		private System.Windows.Forms.ColumnHeader colRootType;
@@ -173,20 +172,20 @@ namespace Origam.Workbench.Pads
 
 		public void DisplayResults(AbstractSchemaItem[] results)
 		{
-			lvwResults.BeginUpdate();
 			ResetResults();
-
 			if(results.Length > 0)
 			{
-				foreach(AbstractSchemaItem item in results)
-				{
-					AddResult(item);
-				}
-				ViewFindSchemaItemResultsPad cmd = new ViewFindSchemaItemResultsPad();
+                ListViewItem[] resultListItems = new ListViewItem[results.LongLength];
+                for (int i = 0; i < results.LongLength; i++)
+                {
+                    var item = results[i];
+                    resultListItems[i] = GetResult(item);
+                    _results.Add(item);
+                }
+                lvwResults.Items.AddRange(resultListItems);
+                ViewFindSchemaItemResultsPad cmd = new ViewFindSchemaItemResultsPad();
 				cmd.Run();
 			}
-
-			lvwResults.EndUpdate();
 			_schemaBrowser.RedrawContent();
 		}
 
@@ -198,13 +197,13 @@ namespace Origam.Workbench.Pads
 			}
 		}
 
-		private void AddResult(AbstractSchemaItem item)
+		private ListViewItem GetResult(AbstractSchemaItem item)
 		{
-			if(item == null) return;
+			if(item == null) return null;
 
 			if(! LicensePolicy.ModelElementPolicy(item.GetType().Name, ModelElementPolicyCommand.Show))
 			{
-				return;
+				return null;
 			}
 
 			string name = SchemaItemName(item.GetType());
@@ -217,8 +216,7 @@ namespace Origam.Workbench.Pads
 			newItem.Tag = item;
 			newItem.ImageIndex = Convert.ToInt32(item.RootItem.Icon);
 
-			_results.Add(item);
-			lvwResults.Items.Add(newItem);
+			return newItem;
 		}
 		#endregion
 
@@ -228,7 +226,9 @@ namespace Origam.Workbench.Pads
 			{
 				try
 				{
-					_schemaBrowser.EbrSchemaBrowser.SelectItem(lvwResults.SelectedItems[0].Tag as AbstractSchemaItem);
+                    AbstractSchemaItem schemaItem = lvwResults.SelectedItems[0].Tag as AbstractSchemaItem;
+                    ParentPackage.OpenParentPackage(schemaItem);
+                    _schemaBrowser.EbrSchemaBrowser.SelectItem(schemaItem);
 					ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
 					cmd.Run();
 				}
@@ -239,7 +239,7 @@ namespace Origam.Workbench.Pads
 			}
 		}
 
-		private void lvwResults_DoubleClick(object sender, System.EventArgs e)
+        private void lvwResults_DoubleClick(object sender, System.EventArgs e)
 		{
 			ActivateItem();
 		}
