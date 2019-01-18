@@ -27,7 +27,7 @@ using Origam.Workbench.Commands;
 
 namespace Origam.Workbench.Pads
 {
-	public class FindSchemaItemResultsPad : AbstractPadContent 
+	public class FindSchemaItemResultsPad : AbstractResultPad
     {
 		private System.Windows.Forms.ListView lvwResults;
 		private System.Windows.Forms.ColumnHeader colItemType;
@@ -227,7 +227,7 @@ namespace Origam.Workbench.Pads
 				try
 				{
                     AbstractSchemaItem schemaItem = lvwResults.SelectedItems[0].Tag as AbstractSchemaItem;
-                    ParentPackage.OpenParentPackage(schemaItem);
+                    OpenParentPackage(schemaItem);
                     _schemaBrowser.EbrSchemaBrowser.SelectItem(schemaItem);
 					ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
 					cmd.Run();
