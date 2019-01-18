@@ -1724,41 +1724,18 @@ namespace Origam.Gui.Win
 				{
 					cntrl.Controls.Add(addingControl);
 				}
-				AsPanel panel = addingControl as AsPanel;
-				if ((panel != null) && (panel.HideNavigationPanel == false))
-				{
-					AttachmentHandle(panel);
-                    string table = FindTableByDataMember(_mainFormData, panel.DataMember);
-					if (_mainDataStructureSortSet != null)
-					{
-						foreach (DataStructureSortSetItem item 
-                            in _mainDataStructureSortSet.ChildItems)
-						{
-							if (item.Entity.Name == table)
-							{
-								panel.CurrentSort.Add(
-                                    item.FieldName, 
-                                    new DataSortItem(item.FieldName, 
-                                        item.SortDirection, item.SortOrder));
-							}
-						}
-					}
-                    ArrayList validActions = new ArrayList();
-                    Guid entityId = new Guid(_mainFormData.Tables[table]
-                        .ExtendedProperties["EntityId"].ToString());
-                    UIActionTools.GetValidActions(
-	                    formId: (Guid)_formKey["Id"],
-	                    panelId: childItem.ControlItem.PanelControlSet.Id,
-                        disableActionButtons: false, 
-                        entityId: entityId,
-	                    validActions: validActions);
-                    panel.Actions = validActions;
-                    if (validActions.Count > 0)
-                    {
-                        CreatePanelToolStrip(panel, validActions);
-                    }
-				}
-				// if Form == null, then this was called from the designer - we will not register lookup controls for that
+
+			    if (addingControl is AsPanel panel)
+			    {
+			        string table = FindTableByDataMember(_mainFormData, panel.DataMember);
+			        if (panel.HideNavigationPanel == false)
+			        {
+			            ShowNavigationPanel(panel, table);
+			        }
+			        ShowToolStrip(panel, table, childItem);
+			    }
+
+			    // if Form == null, then this was called from the designer - we will not register lookup controls for that
 				if ((addingControl is ILookupControl) && (Form != null))
 				{
 					_lookupManager.AddLookupControl(
@@ -1776,7 +1753,45 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private IEnumerable<EntityUIAction> GetChildActions(EntityDropdownAction dropDownAction)
+	    private void ShowToolStrip(AsPanel panel, string table, ControlSetItem childItem)
+	    {
+	        ArrayList validActions = new ArrayList();
+	        Guid entityId = new Guid(_mainFormData.Tables[table]
+	            .ExtendedProperties["EntityId"].ToString());
+	        UIActionTools.GetValidActions(
+	            formId: (Guid) _formKey["Id"],
+	            panelId: childItem.ControlItem.PanelControlSet.Id,
+	            disableActionButtons: false,
+	            entityId: entityId,
+	            validActions: validActions);
+	        panel.Actions = validActions;
+	        if (validActions.Count > 0)
+	        {
+	            CreatePanelToolStrip(panel, validActions);
+	        }
+	    }
+
+	    private void ShowNavigationPanel(AsPanel panel, string table)
+	    {
+	        AttachmentHandle(panel);
+
+	        if (_mainDataStructureSortSet != null)
+	        {
+	            foreach (DataStructureSortSetItem item
+	                in _mainDataStructureSortSet.ChildItems)
+	            {
+	                if (item.Entity.Name == table)
+	                {
+	                    panel.CurrentSort.Add(
+	                        item.FieldName,
+	                        new DataSortItem(item.FieldName,
+	                            item.SortDirection, item.SortOrder));
+	                }
+	            }
+	        }
+	    }
+
+	    private IEnumerable<EntityUIAction> GetChildActions(EntityDropdownAction dropDownAction)
 		{
 			foreach (var item in dropDownAction.ChildItems)
 			{
