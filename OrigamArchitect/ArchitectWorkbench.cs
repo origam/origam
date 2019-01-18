@@ -59,6 +59,7 @@ using NPOI.HSSF.UserModel;
 using NPOI.HPSF;
 using NPOI.SS.UserModel;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using Origam.DA.ObjectPersistence;
@@ -82,7 +83,8 @@ namespace OrigamArchitect
             = log4net.LogManager.GetLogger(
 			MethodBase.GetCurrentMethod().DeclaringType);
 
-		private readonly Dictionary<IToolStripContainer,List<ToolStrip>> loadedForms 
+        private CancellationTokenSource ruleCheckCancellationTokenSource = new CancellationTokenSource();
+        private readonly Dictionary<IToolStripContainer,List<ToolStrip>> loadedForms 
 			= new Dictionary<IToolStripContainer,List<ToolStrip>>();
 		
 		AsMenu _fileMenu = null;
@@ -109,15 +111,13 @@ namespace OrigamArchitect
 #endif
 		DocumentationPad _documentationPad;
 		FindSchemaItemResultsPad _findSchemaItemResultsPad;
-        FindRulesPad _findRulesPad;
 #endif
-        PropertyPad _propertyPad;
+		PropertyPad _propertyPad;
 		WorkflowPlayerPad _workflowPad;
 		OutputPad _outputPad;
 		LogPad _logPad;
         ServerLogPad _serverLogPad;
         ExtensionPad _extensionPad;
-       
 
 		Hashtable _shortcuts = new Hashtable();
 
@@ -1592,6 +1592,8 @@ namespace OrigamArchitect
 				var currentPersistenceService =
 					ServiceManager.Services.GetService<IPersistenceService>();
 
+			    CheckModelRulesAsync(currentPersistenceService);
+
                 if (currentPersistenceService is FilePersistenceService
 					filePersistService)
 				{
@@ -1607,11 +1609,8 @@ namespace OrigamArchitect
 				InitializeConnectedPads();
 
 				CreateMainMenuConnect();
-                IsConnected = true;
 
-#if !ORIGAM_CLIENT
-                CheckModelRulesAsync(currentPersistenceService);
-#endif
+				IsConnected = true;
 
 #if ORIGAM_CLIENT
 				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
@@ -1646,43 +1645,67 @@ namespace OrigamArchitect
 #endif
 			this.LoadWorkspace();
 			cmd.Run();
-        }
+		}
 
-        private  void CheckModelRulesAsync(IPersistenceService currentPersistenceService)
-        {
-            if (!(currentPersistenceService is FilePersistenceService)) return ;
+	    private void CheckModelRulesAsync(IPersistenceService currentPersistenceService)
+	    {
+	       if (!(currentPersistenceService is FilePersistenceService)) return;
+	       var cancellationToken = ruleCheckCancellationTokenSource.Token;
+	        Task.Factory.StartNew(
+	            () => CheckModelRules(cancellationToken),
+	            cancellationToken 
+            ).ContinueWith( previousTask =>
+	            {
+	                try
+	                {
+	                    previousTask.Wait();
+	                }
+	                catch (AggregateException ae)
+	                {
+	                    if (!(ae.InnerException is OperationCanceledException))
+	                    {
+                            log.Error(ae.InnerException);
+	                        this.RunWithInvoke(() => AsMessageBox.ShowError(
+	                            null, ae.InnerException.Message, strings.GenericError_Title, ae.InnerException));
+                        }
+	                }
+	            },
+	            TaskScheduler.FromCurrentSynchronizationContext()
+            );
+	    }
 
-             new Task(() =>
-            {
-                List<Dictionary<IFilePersistent, string>> errorFragments =
-                     new FilePersistenceBuilder()
-                     .CreateNoBinFilePersistenceService()
-                     .SchemaProvider
-                     .RetrieveList<IFilePersistent>()
-                     .Select(retrievedObj =>
-                     {
-                         Dictionary<IFilePersistent, string> errors =
-                         new Dictionary<IFilePersistent, string>();
-                         var errorMessages = RuleTools.GetExceptions(retrievedObj)
-                             .Select(exception => exception.Message)
-                             .ToList();
-                         if (errorMessages.Count == 0) return null;
-                         errors.Add(retrievedObj, string.Join("\n", errorMessages));
-                         return errors;
-                     })
-                     .Where(x => x != null)
-                     .ToList();
+	    private void CheckModelRules(CancellationToken cancellationToken)
+	    {
+	        using (FilePersistenceService independentPersistenceService = new FilePersistenceBuilder()
+	            .CreateNoBinFilePersistenceService())
+	        {
+	            var errorFragments = independentPersistenceService
+	                .SchemaProvider
+	                .RetrieveList<IFilePersistent>()
+	                .Select(retrievedObj =>
+	                {
+	                    cancellationToken.ThrowIfCancellationRequested();
+	                    var errorMessages = RuleTools.GetExceptions(retrievedObj)
+	                        .Select(exception => " - " + exception.Message)
+	                        .ToList();
+	                    if (errorMessages.Count == 0) return null;
 
-                if (errorFragments.Count != 0)
-                {
-                    Origam.Workbench.Pads.FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(Origam.Workbench.Pads.FindRulesPad)) as Origam.Workbench.Pads.FindRulesPad;
-                    DialogResult dialogResult = this.RunWithInvoke(() =>
-                          RuleWindow.ShowData(this, "Do you want to show the Rules Violation?", "Rules Violation", resultsPad, errorFragments)
-                       );
-                }
-                    
-            }).Start();
-        }
+	                    return new Dictionary<IFilePersistent, string>
+	                    {
+	                        { retrievedObj, string.Join("\n", errorMessages) }
+	                    };
+	                })
+	                .Where(x => x != null)
+	                .ToList();
+	            if (errorFragments.Count != 0)
+	            {
+	                FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
+	                this.RunWithInvoke(() =>
+	                    RuleWindow.ShowData(this, "Do you want to show the Rules Violation?", "Rules Violation", resultsPad, errorFragments)
+	                );
+	            }
+            }
+	    }
 
 	    protected override void WndProc(ref Message m)
 		{
@@ -1770,7 +1793,9 @@ namespace OrigamArchitect
 
             UpdateTitle();
 
-			return true;
+            ruleCheckCancellationTokenSource.Cancel();
+            ruleCheckCancellationTokenSource = new CancellationTokenSource();
+            return true;
 		}
 
 		private void SaveWorkspace()
@@ -2010,8 +2035,6 @@ namespace OrigamArchitect
 	
 			this.PadContentCollection.Remove(_findSchemaItemResultsPad);
 			_findSchemaItemResultsPad = null;
-            this.PadContentCollection.Remove(_findRulesPad);
-            _findRulesPad = null;
 #endif
 #if ! ARCHITECT_EXPRESS
 			this.PadContentCollection.Remove(_auditLogPad);
@@ -2049,8 +2072,6 @@ namespace OrigamArchitect
             AddPad(_findSchemaItemResultsPad);
             _serverLogPad = new ServerLogPad();
             AddPad(_serverLogPad);
-            _findRulesPad = new FindRulesPad();
-            AddPad(_findRulesPad);
 #endif
 		}
 
