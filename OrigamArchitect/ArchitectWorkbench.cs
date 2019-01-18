@@ -2507,14 +2507,14 @@ namespace OrigamArchitect
                     if (text.Equals(String.Empty)) return;
                     _findSchemaItemResultsPad.ResetResults();
                     IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-                    List<AbstractSchemaItem> results = persistence.SchemaProvider.FullTextSearch<AbstractSchemaItem>(text);
+                    AbstractSchemaItem[] results = persistence.SchemaProvider.FullTextSearch<AbstractSchemaItem>(text);
 
-                    if (results.Count > 0)
+                    if (results.LongLength > 0)
                     {
-                        _findSchemaItemResultsPad.DisplayResults(results.ToArray());
+                        _findSchemaItemResultsPad.DisplayResults(results);
                     }
 
-					MessageBox.Show(this, string.Format(strings.ResultCountMassage, results.Count) , strings.SearchResultTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+					MessageBox.Show(this, string.Format(strings.ResultCountMassage, results.LongLength) , strings.SearchResultTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 e.Handled = true;
