@@ -35,7 +35,7 @@ using Origam.Schema;
 
 namespace Origam.DA.Service
 {
-    public class OrigamFile
+    public class OrigamFile:IDisposable
     {
         internal const string IdAttribute = "id";
         internal const string IsFolderAttribute = "isFolder";
@@ -105,8 +105,7 @@ namespace Origam.DA.Service
             bool isAFullyWrittenFile = false )
         {
             this.origamFileManager = origamFileManager;
-            origamFileManager.HashChanged +=
-                (sender, args) => FileHash = args.Hash;
+            origamFileManager.HashChanged += OnHashChanged;
             this.path = path;
             externalFileManger = new ExternalFileManager(this, origamPathFactory, fileEventQueue);
             if (isAFullyWrittenFile)
@@ -119,7 +118,12 @@ namespace Origam.DA.Service
                 externalFileManger,
                 origamPathFactory);
         }
-        
+
+        private void OnHashChanged(object sender, HashChangedEventArgs args)
+        {
+            FileHash = args.Hash;
+        }
+
         public OrigamFile(OrigamPath path, IDictionary<ElementName, Guid> parentFolderIds,
             OrigamFileManager origamFileManager, OrigamPathFactory origamPathFactory,
             FileEventQueue fileEventQueue, string fileHash):
@@ -234,6 +238,11 @@ namespace Origam.DA.Service
         public void RemoveFromCache(IPersistent instance)
         {
             origamXmlManager.RemoveFromCache(instance);
+        }
+
+        public void Dispose()
+        {
+            origamFileManager.HashChanged -= OnHashChanged;
         }
     }
 
