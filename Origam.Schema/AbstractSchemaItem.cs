@@ -333,8 +333,8 @@ namespace Origam.Schema
 					if(item.DerivedFrom == null && IsPersistable)
 					{
 						// make sure that all child items are marked abstract if this one is
-						if(IsAbstract) item.IsAbstract = true;
-
+						if (IsAbstract) item.IsAbstract = true;
+					    if (IsDeleted) item.IsDeleted = true;
 						ChildItems.RemoveDeletedItems = false;
 						item.ClearCacheOnPersist = this.ClearCacheOnPersist;
 						item.ThrowEventOnPersist = false;
