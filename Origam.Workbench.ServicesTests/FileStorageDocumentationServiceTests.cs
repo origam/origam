@@ -220,7 +220,7 @@ namespace Origam.Workbench.ServicesTests
             throw new NotImplementedException();
         }
 
-        public List<T> FullTextSearch<T>(string text)
+        public T[] FullTextSearch<T>(string text)
         {
             throw new NotImplementedException();
         }

@@ -56,6 +56,7 @@ namespace Origam.DA.Service
         private readonly TrackerLoaderFactory trackerLoaderFactory;
         private readonly OrigamFileManager origamFileManager;
 
+        public override bool InTransaction => persistor.InTransaction;
         public override ILocalizationCache LocalizationCache => localizationCache;
 
         public HashSet<Guid> LoadedPackages {
@@ -282,6 +283,7 @@ namespace Origam.DA.Service
         public override void Persist(IPersistent obj)
         {
             persistor.Persist(obj);
+            base.Persist(obj);
         }
 
         public override void FlushCache()

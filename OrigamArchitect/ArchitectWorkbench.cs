@@ -111,8 +111,9 @@ namespace OrigamArchitect
 #endif
 		DocumentationPad _documentationPad;
 		FindSchemaItemResultsPad _findSchemaItemResultsPad;
+        FindRulesPad _findRulesPad;
 #endif
-		PropertyPad _propertyPad;
+        PropertyPad _propertyPad;
 		WorkflowPlayerPad _workflowPad;
 		OutputPad _outputPad;
 		LogPad _logPad;
@@ -1592,8 +1593,6 @@ namespace OrigamArchitect
 				var currentPersistenceService =
 					ServiceManager.Services.GetService<IPersistenceService>();
 
-			    CheckModelRulesAsync(currentPersistenceService);
-
                 if (currentPersistenceService is FilePersistenceService
 					filePersistService)
 				{
@@ -1609,8 +1608,10 @@ namespace OrigamArchitect
 				InitializeConnectedPads();
 
 				CreateMainMenuConnect();
-
 				IsConnected = true;
+#if !ORIGAM_CLIENT
+                CheckModelRulesAsync(currentPersistenceService);
+#endif
 
 #if ORIGAM_CLIENT
 				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
@@ -1676,17 +1677,18 @@ namespace OrigamArchitect
 
 	    private void CheckModelRules(CancellationToken cancellationToken)
 	    {
-	        using (FilePersistenceService independentPersistenceService = new FilePersistenceBuilder()
+            
+            using (FilePersistenceService independentPersistenceService = new FilePersistenceBuilder()
 	            .CreateNoBinFilePersistenceService())
 	        {
-	            var errorFragments = independentPersistenceService
+	            List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
 	                .SchemaProvider
 	                .RetrieveList<IFilePersistent>()
 	                .Select(retrievedObj =>
 	                {
 	                    cancellationToken.ThrowIfCancellationRequested();
 	                    var errorMessages = RuleTools.GetExceptions(retrievedObj)
-	                        .Select(exception => " - " + exception.Message)
+	                        .Select(exception => exception.Message)
 	                        .ToList();
 	                    if (errorMessages.Count == 0) return null;
 
@@ -1701,7 +1703,14 @@ namespace OrigamArchitect
 	            {
 	                FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
 	                this.RunWithInvoke(() =>
-	                    RuleWindow.ShowData(this, "Do you want to show the Rules Violation?", "Rules Violation", resultsPad, errorFragments)
+                    {
+                        // RuleWindow.ShowData(this, "Do you want to show the Rules Violation?", "Rules Violation", resultsPad, errorFragments)
+                        DialogResult dialogResult = MessageBox.Show("Do you want to show the Rules Violation?", "Rules Violation", MessageBoxButtons.YesNo);
+                        if(dialogResult== DialogResult.Yes)
+                        {
+                            resultsPad.DisplayResults(errorFragments);
+                        }
+                    }
 	                );
 	            }
             }
@@ -2035,9 +2044,11 @@ namespace OrigamArchitect
 	
 			this.PadContentCollection.Remove(_findSchemaItemResultsPad);
 			_findSchemaItemResultsPad = null;
+            this.PadContentCollection.Remove(_findRulesPad);
+            _findRulesPad = null;
 #endif
-#if ! ARCHITECT_EXPRESS
-			this.PadContentCollection.Remove(_auditLogPad);
+#if !ARCHITECT_EXPRESS
+            this.PadContentCollection.Remove(_auditLogPad);
 			_auditLogPad = null;
 
 			this.PadContentCollection.Remove(_attachmentPad);
@@ -2072,8 +2083,10 @@ namespace OrigamArchitect
             AddPad(_findSchemaItemResultsPad);
             _serverLogPad = new ServerLogPad();
             AddPad(_serverLogPad);
+            _findRulesPad = new FindRulesPad();
+            AddPad(_findRulesPad);
 #endif
-		}
+        }
 
         private void AddPad(IPadContent pad)
         {

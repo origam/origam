@@ -25,14 +25,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using Origam.DA.ObjectPersistence;
+using Origam.DA.Service;
 using Origam.Schema;
 using Origam.Workbench.Commands;
+using Origam.Workbench.Services;
 
 
 namespace Origam.Workbench.Pads
 {
     
-    public class FindRulesPad : AbstractPadContent
+    public class FindRulesPad : AbstractResultPad
     {
 		private System.Windows.Forms.ListView lvwResults;
 		private System.Windows.Forms.ColumnHeader colItemType;
@@ -260,7 +262,8 @@ namespace Origam.Workbench.Pads
 			if(name == null) name = item.ItemType;
 			if(rootName == null) rootName = item.RootItem.ItemType;
 
-			ListViewItem newItem = new ListViewItem(new string[] {item.Path, rootName, name, item.RootItem.Group == null ? "" : item.RootItem.Group.Path,item.Package,string.IsNullOrEmpty(text)?"":text});
+			ListViewItem newItem = new ListViewItem(new string[] {item.Path, rootName, name, item.RootItem.Group == null ? "" : item.RootItem.Group.Path,
+                item.Package,string.IsNullOrEmpty(text)?"":text});
 			newItem.Tag = item;
 			newItem.ImageIndex = Convert.ToInt32(item.RootItem.Icon);
 
@@ -275,9 +278,13 @@ namespace Origam.Workbench.Pads
 			{
 				try
 				{
-                    if (ParentPackage.OpenParentPackage(lvwResults.SelectedItems[0].Tag as AbstractSchemaItem))
+                    AbstractSchemaItem item = lvwResults.SelectedItems[0].Tag as AbstractSchemaItem;
+                    if (OpenParentPackage(item))
                     {
-                        _schemaBrowser.EbrSchemaBrowser.SelectItem(lvwResults.SelectedItems[0].Tag as AbstractSchemaItem);
+                        IPersistenceService persistenceService = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+                        FilePersistenceProvider persprovider = (FilePersistenceProvider)persistenceService.SchemaProvider;
+                        AbstractSchemaItem refreshitem = persprovider.RetrieveInstance(item.GetType(), item.PrimaryKey, true) as AbstractSchemaItem;
+                        _schemaBrowser.EbrSchemaBrowser.SelectItem(refreshitem);
                         ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
                         cmd.Run();
                     }

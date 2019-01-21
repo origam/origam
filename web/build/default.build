@@ -98,12 +98,12 @@
   </target>
   <target name="create-release-notes">
       <mkdir dir="../rn"/>
-      <exec workingdir="c:/TeamCity/src/origam-hosting" program="${git-exec}">
+      <exec workingdir="c:/TeamCity/src/origam-source" program="${git-exec}">
           <arg value="fetch"/>
       </exec>
-      <exec workingdir="c:/TeamCity/src/origam-hosting" program="${git-exec}" output="../rn/release-notes__ORIGAM-Web_${projectSuffix}_hosting_${configurationSuffix}_${buildNumber}_artifacts__hosting__${branchMarker}.txt">
+      <exec workingdir="c:/TeamCity/src/origam-source" program="${git-exec}" output="../rn/release-notes__ORIGAM-Web_${projectSuffix}_hosting_${configurationSuffix}_${buildNumber}_artifacts__hosting__${branchMarker}.txt">
           <arg value="log"/>
-          <arg value="^origin/${previousBranch}"/>
+          <!--<arg value="^origin/${previousBranch}"/>-->
           <arg value="origin/${currentBranch}"/>
           <arg value="--oneline"/>
           <arg value="--no-merges"/>
