@@ -375,12 +375,6 @@
     <Compile Include="RegisterForm.Designer.cs">
       <DependentUpon>RegisterForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="RuleWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RuleWindow.Designer.cs">
-      <DependentUpon>RuleWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="SchemaCompareEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -442,9 +436,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RegisterForm.resx">
       <DependentUpon>RegisterForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RuleWindow.resx">
-      <DependentUpon>RuleWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SchemaCompareEditor.resx">
       <DependentUpon>SchemaCompareEditor.cs</DependentUpon>
