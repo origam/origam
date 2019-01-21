@@ -575,7 +575,7 @@ namespace OrigamArchitect
 			activity.Service = dataService;
 			activity.CommandText = command;
 			activity.Persist();
-			return activity;
+            return activity;
 		}
 		#endregion
 
@@ -637,7 +637,6 @@ namespace OrigamArchitect
                     schemaItem.Persist();
 
                     RemoveFromList(result);
-                    _schema.SchemaBrowser.EbrSchemaBrowser.RefreshItem(schemaItem);
                 }
 			}
 			MessageBox.Show(this, strings.ModelGeneratedMassage, strings.ModelGenerationTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);

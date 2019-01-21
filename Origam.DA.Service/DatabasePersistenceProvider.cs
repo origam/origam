@@ -45,7 +45,10 @@ namespace Origam.DA.ObjectPersistence.Providers
         DataSet _dataSet;
         Hashtable _objectCache = new Hashtable();
 
-	    public DatabasePersistenceProvider()
+        private bool inTransaction;
+        public override bool InTransaction => inTransaction;
+
+        public DatabasePersistenceProvider()
         {
             LocalizationCache = new LocalizationCache();
         }
@@ -60,8 +63,26 @@ namespace Origam.DA.ObjectPersistence.Providers
             _dataSet = data;
         }
 
+        public override void BeginTransaction()
+        {
+            base.BeginTransaction();
+            inTransaction = true;
+        }
+
+        public override void EndTransactionDontSave()
+        {
+            base.EndTransactionDontSave();
+            inTransaction = false;
+        }
+
+        public override void EndTransaction()
+        {
+            base.EndTransaction();
+            inTransaction = false;
+        }
+
         #region Private Methods
-        private EntityNameAttribute Entity(Type type)
+            private EntityNameAttribute Entity(Type type)
         {
             object[] attributes = type.GetCustomAttributes(typeof(EntityNameAttribute), true);
 
@@ -861,7 +882,8 @@ namespace Origam.DA.ObjectPersistence.Providers
 				instance.IsPersisted = true;
 			}
 
-			// OnInstancePersisted(instance);
+            // OnInstancePersisted(instance);
+		    base.Persist(instance);
 		}
 
         public string DebugInfo()
