@@ -1704,7 +1704,6 @@ namespace OrigamArchitect
 	                FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
 	                this.RunWithInvoke(() =>
                     {
-                        // RuleWindow.ShowData(this, "Do you want to show the Rules Violation?", "Rules Violation", resultsPad, errorFragments)
                         DialogResult dialogResult = MessageBox.Show("Do you want to show the Rules Violation?", "Rules Violation", MessageBoxButtons.YesNo);
                         if(dialogResult== DialogResult.Yes)
                         {

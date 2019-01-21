@@ -264,10 +264,10 @@ namespace Origam.Workbench.Pads
 
 			ListViewItem newItem = new ListViewItem(new string[] {item.Path, rootName, name, item.RootItem.Group == null ? "" : item.RootItem.Group.Path,
                 item.Package,string.IsNullOrEmpty(text)?"":text});
-			newItem.Tag = item;
+			newItem.Tag = new RuleResult(item);
 			newItem.ImageIndex = Convert.ToInt32(item.RootItem.Icon);
 
-			_results.Add(item);
+			//_results.Add(item);
 			lvwResults.Items.Add(newItem);
 		}
 		#endregion
@@ -278,8 +278,8 @@ namespace Origam.Workbench.Pads
 			{
 				try
 				{
-                    AbstractSchemaItem item = lvwResults.SelectedItems[0].Tag as AbstractSchemaItem;
-                    if (OpenParentPackage(item))
+                    RuleResult item = lvwResults.SelectedItems[0].Tag as RuleResult;
+                    if (OpenParentPackage(item.SchemaExtensionId))
                     {
                         IPersistenceService persistenceService = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
                         FilePersistenceProvider persprovider = (FilePersistenceProvider)persistenceService.SchemaProvider;

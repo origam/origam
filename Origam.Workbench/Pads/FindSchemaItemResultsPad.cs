@@ -227,7 +227,7 @@ namespace Origam.Workbench.Pads
 				try
 				{
                     AbstractSchemaItem schemaItem = lvwResults.SelectedItems[0].Tag as AbstractSchemaItem;
-                    OpenParentPackage(schemaItem);
+                    OpenParentPackage(schemaItem.SchemaExtensionId);
                     _schemaBrowser.EbrSchemaBrowser.SelectItem(schemaItem);
 					ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
 					cmd.Run();
