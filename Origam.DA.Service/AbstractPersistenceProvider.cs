@@ -73,8 +73,6 @@ namespace Origam.DA.ObjectPersistence
             }
         }
 
-//        public abstract void Persist(IPersistent obj);
-
         public virtual void Persist(IPersistent obj)
         {
             if (!InTransaction)
