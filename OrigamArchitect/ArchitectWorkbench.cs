@@ -1589,16 +1589,6 @@ namespace OrigamArchitect
 
 					return;
 				}
-				
-				var currentPersistenceService =
-					ServiceManager.Services.GetService<IPersistenceService>();
-
-                if (currentPersistenceService is FilePersistenceService
-					filePersistService)
-				{
-					TryLoadModelFiles(filePersistService);
-				}
-				
 				_schema.SchemaBrowser = _schemaBrowserPad;
 
 				// Init services
@@ -1610,7 +1600,7 @@ namespace OrigamArchitect
 				CreateMainMenuConnect();
 				IsConnected = true;
 #if !ORIGAM_CLIENT
-                CheckModelRulesAsync(currentPersistenceService);
+                CheckModelRulesAsync();
 #endif
 
 #if ORIGAM_CLIENT
@@ -1648,9 +1638,12 @@ namespace OrigamArchitect
 			cmd.Run();
 		}
 
-	    private void CheckModelRulesAsync(IPersistenceService currentPersistenceService)
+	    private void CheckModelRulesAsync()
 	    {
-	       if (!(currentPersistenceService is FilePersistenceService)) return;
+	       var currentPersistenceService =
+	            ServiceManager.Services.GetService<IPersistenceService>();
+           if (!(currentPersistenceService is FilePersistenceService)) return;
+
 	       var cancellationToken = ruleCheckCancellationTokenSource.Token;
 	        Task.Factory.StartNew(
 	            () => CheckModelRules(cancellationToken),
