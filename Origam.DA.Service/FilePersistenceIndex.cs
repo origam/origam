@@ -26,6 +26,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using CSharpFunctionalExtensions;
+using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
 using Origam.Extensions;
@@ -37,7 +38,7 @@ namespace Origam.DA.Service
         private static readonly log4net.ILog log
             = log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly ItemTracker itemTracker;
+        private ItemTracker itemTracker;
         private bool itemTrackerWasJustLoadedFromBin;
         private readonly ReaderWriterLockSlim readWriteLock =
             new ReaderWriterLockSlim();
@@ -259,16 +260,10 @@ namespace Origam.DA.Service
 
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                readWriteLock?.Dispose();
-            }
+            readWriteLock?.Dispose();
+            itemTracker?.OrigamFiles.ForEach(x => x.Dispose());
+            itemTracker?.Clear();
+            itemTracker = null;
         }
 
         public IEnumerable<FileInfo> GetByDirectory(DirectoryInfo dir)

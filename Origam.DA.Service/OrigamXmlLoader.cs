@@ -489,7 +489,7 @@ namespace Origam.DA.Service
                         var groupFileData = objectFileDataFactory.NewGroupFileData(xmlData);
                         groupFileDict.Add(groupFileData.Folder,groupFileData);
                         break;
-                    case OrigamFile.RefFileName:
+                    case OrigamFile.ReferenceFileName:
                         var referenceFileData = new ReferenceFileData(xmlData);
                         referenceFileDict.Add(
                             referenceFileData.Folder,

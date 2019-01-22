@@ -89,7 +89,7 @@ namespace Origam.DA.Service_net2Tests
         [Test]
         public void ReadReferenceFile()
         {
-            string fileName = Path.Combine(TestFilesDir.FullName,OrigamFile.RefFileName);
+            string fileName = Path.Combine(TestFilesDir.FullName,OrigamFile.ReferenceFileName);
             var referenceFileData = new ReferenceFileData(
                 XmlFileDataFactory.Create(new FileInfo(fileName)).Value);
             var locationAttributes = referenceFileData.ParentFolderIds;

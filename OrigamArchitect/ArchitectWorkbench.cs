@@ -1589,16 +1589,6 @@ namespace OrigamArchitect
 
 					return;
 				}
-				
-				var currentPersistenceService =
-					ServiceManager.Services.GetService<IPersistenceService>();
-
-                if (currentPersistenceService is FilePersistenceService
-					filePersistService)
-				{
-					TryLoadModelFiles(filePersistService);
-				}
-				
 				_schema.SchemaBrowser = _schemaBrowserPad;
 
 				// Init services
@@ -1610,7 +1600,7 @@ namespace OrigamArchitect
 				CreateMainMenuConnect();
 				IsConnected = true;
 #if !ORIGAM_CLIENT
-                CheckModelRulesAsync(currentPersistenceService);
+                CheckModelRulesAsync();
 #endif
 
 #if ORIGAM_CLIENT
@@ -1648,9 +1638,12 @@ namespace OrigamArchitect
 			cmd.Run();
 		}
 
-	    private void CheckModelRulesAsync(IPersistenceService currentPersistenceService)
+	    private void CheckModelRulesAsync()
 	    {
-	       if (!(currentPersistenceService is FilePersistenceService)) return;
+	       var currentPersistenceService =
+	            ServiceManager.Services.GetService<IPersistenceService>();
+           if (!(currentPersistenceService is FilePersistenceService)) return;
+
 	       var cancellationToken = ruleCheckCancellationTokenSource.Token;
 	        Task.Factory.StartNew(
 	            () => CheckModelRules(cancellationToken),
@@ -1701,18 +1694,17 @@ namespace OrigamArchitect
 	                .ToList();
 	            if (errorFragments.Count != 0)
 	            {
-	                FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
-	                this.RunWithInvoke(() =>
-                    {
-                        // RuleWindow.ShowData(this, "Do you want to show the Rules Violation?", "Rules Violation", resultsPad, errorFragments)
-                        DialogResult dialogResult = MessageBox.Show("Do you want to show the Rules Violation?", "Rules Violation", MessageBoxButtons.YesNo);
-                        if(dialogResult== DialogResult.Yes)
-                        {
-                            resultsPad.DisplayResults(errorFragments);
-                        }
-                    }
-	                );
-	            }
+                    FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
+                    this.RunWithInvoke(() =>
+                       {
+                           DialogResult dialogResult = MessageBox.Show("Do you want to show the Rules Violation?", "Rules Violation", MessageBoxButtons.YesNo);
+                           if (dialogResult == DialogResult.Yes)
+                           {
+                               resultsPad.DisplayResults(errorFragments);
+                           }
+                       }
+                    );
+                }
             }
 	    }
 
@@ -1876,7 +1868,16 @@ namespace OrigamArchitect
 				dataLookupService.LookupShowSourceListRequested -=
 					dataLookupService_LookupShowSourceListRequested;
 			}
-			OrigamEngine.UnloadConnectedServices();
+
+		    var persistenceService =
+		        ServiceManager.Services.GetService<IPersistenceService>();
+		    if (persistenceService is FilePersistenceService filePersistService)
+		    {
+		        filePersistService.ReloadNeeded -= OnFilePersistServiceReloadRequested;
+		    }
+
+		    FilePersistenceBuilder.Clear();
+            OrigamEngine.UnloadConnectedServices();
         }
 
 		/// <summary>

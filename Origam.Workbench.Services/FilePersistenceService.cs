@@ -98,11 +98,13 @@ namespace Origam.Workbench.Services
                 trackerLoaderFactory: trackerLoaderFactory,
                 origamFileManager: origamFileManager);
             
-            FileEventQueue.ReloadNeeded += (sender, args) =>
-            {
-                ReloadNeeded?.Invoke(this, args);
-            };
+            FileEventQueue.ReloadNeeded += OnReloadNeeded;
             SchemaListProvider = schemaProvider;
+        }
+
+        private void OnReloadNeeded(object sender, FileSystemChangeEventArgs args)
+        {
+            ReloadNeeded?.Invoke(this, args);
         }
 
         private List<MetaVersionFixer> InitializeVersionFixers()
@@ -211,7 +213,7 @@ namespace Origam.Workbench.Services
         public void UnloadService()
         {
             schemaProvider.PersistIndex();
-            schemaProvider.Dispose();
+            Dispose();
         }
 
         public object Clone()
@@ -232,6 +234,7 @@ namespace Origam.Workbench.Services
         public void Dispose()
         {
             schemaProvider?.Dispose();
+            FileEventQueue.ReloadNeeded -= OnReloadNeeded;
             FileEventQueue?.Dispose();
             SchemaListProvider?.Dispose();
         }

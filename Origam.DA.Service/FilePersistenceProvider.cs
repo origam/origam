@@ -318,7 +318,8 @@ namespace Origam.DA.Service
         {
             fileEventQueue.Stop();
             localizationCache.Dispose();
-            index.Dispose();
+            index?.Dispose();
+            origamFileManager.Dispose();
         }
 
         public override T[] FullTextSearch<T>(string text)

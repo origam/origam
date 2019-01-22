@@ -11,7 +11,7 @@ using Origam.Extensions;
 
 namespace Origam.DA.Service
 {
-    public class OrigamFileManager
+    public class OrigamFileManager: IDisposable
     {
         private static readonly log4net.ILog log
             = log4net.LogManager.GetLogger(
@@ -65,7 +65,7 @@ namespace Origam.DA.Service
                 .ToBeautifulString(xmlWriterSettings);
             string newHash = xmlToWrite.GetBase64Hash();
             fileEventQueue.Pause();
-            HashChanged(this, new HashChangedEventArgs(newHash));
+            HashChanged?.Invoke(this, new HashChangedEventArgs(newHash));
             index.AddOrReplaceHash(origamFile);
             string parentDir = origamFile.Path.Directory.FullName;
             Directory.CreateDirectory(parentDir);
@@ -163,6 +163,13 @@ namespace Origam.DA.Service
                 fi.Refresh();
             }
             throw new Exception($"Cannot remove file {fileToDelete}");
+        }
+
+        public void Dispose()
+        {
+            index?.Dispose();
+            fileEventQueue?.Dispose();
+            HashChanged = null;
         }
     }
 
