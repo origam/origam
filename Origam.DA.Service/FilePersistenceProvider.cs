@@ -56,6 +56,7 @@ namespace Origam.DA.Service
         private readonly TrackerLoaderFactory trackerLoaderFactory;
         private readonly OrigamFileManager origamFileManager;
 
+        public override bool InTransaction => persistor.InTransaction;
         public override ILocalizationCache LocalizationCache => localizationCache;
 
         public HashSet<Guid> LoadedPackages {
@@ -282,6 +283,7 @@ namespace Origam.DA.Service
         public override void Persist(IPersistent obj)
         {
             persistor.Persist(obj);
+            base.Persist(obj);
         }
 
         public override void FlushCache()
@@ -316,10 +318,11 @@ namespace Origam.DA.Service
         {
             fileEventQueue.Stop();
             localizationCache.Dispose();
-            index.Dispose();
+            index?.Dispose();
+            origamFileManager.Dispose();
         }
 
-        public override List<T> FullTextSearch<T>(string text)
+        public override T[] FullTextSearch<T>(string text)
         {
             bool lookingForAGuid =
                 Guid.TryParse(text, out Guid guidToLookFor);
@@ -329,25 +332,24 @@ namespace Origam.DA.Service
                 : FindStringInPersistedFiles<T>(text);
         }
 
-        private List<T> FindStringInPersistedFiles<T>(string text)
+        private T[] FindStringInPersistedFiles<T>(string text)
         {
             return new FlatFileSearcher(text)
                 .SearchIn(index.GetLoadedPackageDirectories().Values)
                 .Select(itemId => index.GetById(itemId))
                 .Select(objInfo => RetrieveInstance(objInfo))
-                .ToList<T>();
+                .OfType<T>()
+                .ToArray();
         }
 
-        private List<T> FindSingleItemById<T>(Guid guidToLookFor)
+        private T[] FindSingleItemById<T>(Guid guidToLookFor)
         {
-            List<T> results = new List<T>();
             PersistedObjectInfo objInfo = index.GetById(guidToLookFor);
             if (objInfo != null)
             {
-                T foundItem = (T)RetrieveInstance(objInfo);
-                results.Add(foundItem);
+                return new T[] { (T)RetrieveInstance(objInfo) };
             }
-            return results;
+            return new T[0];
         }
 
         public override List<T> RetrieveListByPackage<T>(Guid packageId)

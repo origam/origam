@@ -23,6 +23,7 @@ using System;
 using System.Text;
 using System.Drawing;
 using System.Collections;
+using System.Linq;
 using System.Windows.Forms;
 
 using Origam;
@@ -30,9 +31,12 @@ using Origam.Workbench.Pads;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 using Origam.DA;
+using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.DeploymentModel;
+using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
+using Origam.Services;
 using Origam.UI;
 
 namespace OrigamArchitect
@@ -571,7 +575,7 @@ namespace OrigamArchitect
 			activity.Service = dataService;
 			activity.CommandText = command;
 			activity.Persist();
-			return activity;
+            return activity;
 		}
 		#endregion
 
@@ -625,10 +629,15 @@ namespace OrigamArchitect
 			{
 				if(result.ResultType == DbCompareResultType.MissingInSchema)
 				{
-					result.SchemaItem.RootProvider.ChildItems.Add(result.SchemaItem as AbstractSchemaItem);
-					result.SchemaItem.Persist();
-					RemoveFromList(result);
-				}
+				    var schemaItem = result.SchemaItem as AbstractSchemaItem;
+				    schemaItem.Group = _schema
+				        .GetProvider<EntityModelSchemaItemProvider>()
+				        .GetGroup(_schema.ActiveExtension.Name);
+				    schemaItem.RootProvider.ChildItems.Add(schemaItem);
+                    schemaItem.Persist();
+
+                    RemoveFromList(result);
+                }
 			}
 			MessageBox.Show(this, strings.ModelGeneratedMassage, strings.ModelGenerationTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}

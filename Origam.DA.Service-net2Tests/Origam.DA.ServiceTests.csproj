@@ -16,9 +16,8 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
-  
   <PropertyGroup>
-      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup>
@@ -50,7 +49,7 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>true</Optimize>
@@ -62,7 +61,6 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-
 
   <ItemGroup>
     <Reference Include="CSharpFunctionalExtensions, Version=1.10.0.0, Culture=neutral, PublicKeyToken=null">
@@ -85,7 +83,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Debug.cs" />
+	<Compile Include="Debug.cs" />
+    <Compile Include="OrigamDocumentSorter\OrigamDocumentSorterTests.cs" />
     <Compile Include="EqualityExtensions.cs" />
     <Compile Include="FilePersistenceProviderTests\FilePersistenceProviderTests.cs" />
     <Compile Include="FilePersistenceProviderTests\PersitHelper.cs" />
@@ -174,6 +173,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="OrigamDocumentSorter\TestFiles\Unsorted.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

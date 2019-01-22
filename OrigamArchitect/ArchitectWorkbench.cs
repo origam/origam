@@ -59,6 +59,7 @@ using NPOI.HSSF.UserModel;
 using NPOI.HPSF;
 using NPOI.SS.UserModel;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using Origam.DA.ObjectPersistence;
@@ -82,7 +83,8 @@ namespace OrigamArchitect
             = log4net.LogManager.GetLogger(
 			MethodBase.GetCurrentMethod().DeclaringType);
 
-		private readonly Dictionary<IToolStripContainer,List<ToolStrip>> loadedForms 
+        private CancellationTokenSource ruleCheckCancellationTokenSource = new CancellationTokenSource();
+        private readonly Dictionary<IToolStripContainer,List<ToolStrip>> loadedForms 
 			= new Dictionary<IToolStripContainer,List<ToolStrip>>();
 		
 		AsMenu _fileMenu = null;
@@ -109,8 +111,9 @@ namespace OrigamArchitect
 #endif
 		DocumentationPad _documentationPad;
 		FindSchemaItemResultsPad _findSchemaItemResultsPad;
+        FindRulesPad _findRulesPad;
 #endif
-		PropertyPad _propertyPad;
+        PropertyPad _propertyPad;
 		WorkflowPlayerPad _workflowPad;
 		OutputPad _outputPad;
 		LogPad _logPad;
@@ -1588,18 +1591,6 @@ namespace OrigamArchitect
 
 					return;
 				}
-				
-				var currentPersistenceService =
-					ServiceManager.Services.GetService<IPersistenceService>();
-
-			    CheckModelRulesAsync(currentPersistenceService);
-
-                if (currentPersistenceService is FilePersistenceService
-					filePersistService)
-				{
-					TryLoadModelFiles(filePersistService);
-				}
-				
 				_schema.SchemaBrowser = _schemaBrowserPad;
 
 				// Init services
@@ -1609,8 +1600,10 @@ namespace OrigamArchitect
 				InitializeConnectedPads();
 
 				CreateMainMenuConnect();
-
 				IsConnected = true;
+#if !ORIGAM_CLIENT
+                CheckModelRulesAsync();
+#endif
 
 #if ORIGAM_CLIENT
 				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
@@ -1647,38 +1640,74 @@ namespace OrigamArchitect
 			cmd.Run();
 		}
 
-	    private void CheckModelRulesAsync(IPersistenceService currentPersistenceService)
+	    private void CheckModelRulesAsync()
 	    {
-	        if (!(currentPersistenceService is FilePersistenceService)) return;
+	       var currentPersistenceService =
+	            ServiceManager.Services.GetService<IPersistenceService>();
+           if (!(currentPersistenceService is FilePersistenceService)) return;
 
-            new Task(() =>
+	       var cancellationToken = ruleCheckCancellationTokenSource.Token;
+	        Task.Factory.StartNew(
+	            () => CheckModelRules(cancellationToken),
+	            cancellationToken 
+            ).ContinueWith( previousTask =>
+	            {
+	                try
+	                {
+	                    previousTask.Wait();
+	                }
+	                catch (AggregateException ae)
+	                {
+	                    if (!(ae.InnerException is OperationCanceledException))
+	                    {
+                            log.Error(ae.InnerException);
+	                        this.RunWithInvoke(() => AsMessageBox.ShowError(
+	                            null, ae.InnerException.Message, strings.GenericError_Title, ae.InnerException));
+                        }
+	                }
+	            },
+	            TaskScheduler.FromCurrentSynchronizationContext()
+            );
+	    }
+
+	    private void CheckModelRules(CancellationToken cancellationToken)
+	    {
+            
+            using (FilePersistenceService independentPersistenceService = new FilePersistenceBuilder()
+	            .CreateNoBinFilePersistenceService())
 	        {
-	            List<string> errorFragments = 
-	                new FilePersistenceBuilder()
-	                .CreateNoBinFilePersistenceService()
+	            List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
 	                .SchemaProvider
 	                .RetrieveList<IFilePersistent>()
 	                .Select(retrievedObj =>
 	                {
+	                    cancellationToken.ThrowIfCancellationRequested();
 	                    var errorMessages = RuleTools.GetExceptions(retrievedObj)
-	                        .Select(exception => " - "+exception.Message)
+	                        .Select(exception => exception.Message)
 	                        .ToList();
-                        if (errorMessages.Count == 0) return null;
-	                    return "Object with Id: \"" + retrievedObj.Id +
-	                           "\" in file: \"" +retrievedObj.RelativeFilePath +
-	                           "\"\n" + string.Join("\n", errorMessages);
+	                    if (errorMessages.Count == 0) return null;
+
+	                    return new Dictionary<IFilePersistent, string>
+	                    {
+	                        { retrievedObj, string.Join("\n", errorMessages) }
+	                    };
 	                })
 	                .Where(x => x != null)
 	                .ToList();
-
 	            if (errorFragments.Count != 0)
 	            {
-	                string errorMessage = "Rule violations were found in the loaded project:\n\n" +
-	                                      string.Join("\n\n", errorFragments) +
-	                                      "\n\nYou should fix these issues before continuing with your work.";
-	                this.RunWithInvoke(() => LongMessageBox.ShowMsgBoxOk(this, errorMessage, "Rules violated!"));
-	            }
-	        }).Start();
+                    FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
+                    this.RunWithInvoke(() =>
+                       {
+                           DialogResult dialogResult = MessageBox.Show("Do you want to show the Rules Violation?", "Rules Violation", MessageBoxButtons.YesNo);
+                           if (dialogResult == DialogResult.Yes)
+                           {
+                               resultsPad.DisplayResults(errorFragments);
+                           }
+                       }
+                    );
+                }
+            }
 	    }
 
 	    protected override void WndProc(ref Message m)
@@ -1767,7 +1796,9 @@ namespace OrigamArchitect
 
             UpdateTitle();
 
-			return true;
+            ruleCheckCancellationTokenSource.Cancel();
+            ruleCheckCancellationTokenSource = new CancellationTokenSource();
+            return true;
 		}
 
 		private void SaveWorkspace()
@@ -1839,7 +1870,16 @@ namespace OrigamArchitect
 				controlsLookupService.LookupShowSourceListRequested -=
 					dataLookupService_LookupShowSourceListRequested;
 			}
-			OrigamEngine.UnloadConnectedServices();
+
+		    var persistenceService =
+		        ServiceManager.Services.GetService<IPersistenceService>();
+		    if (persistenceService is FilePersistenceService filePersistService)
+		    {
+		        filePersistService.ReloadNeeded -= OnFilePersistServiceReloadRequested;
+		    }
+
+		    FilePersistenceBuilder.Clear();
+            OrigamEngine.UnloadConnectedServices();
         }
 
 		/// <summary>
@@ -2007,9 +2047,11 @@ namespace OrigamArchitect
 	
 			this.PadContentCollection.Remove(_findSchemaItemResultsPad);
 			_findSchemaItemResultsPad = null;
+            this.PadContentCollection.Remove(_findRulesPad);
+            _findRulesPad = null;
 #endif
-#if ! ARCHITECT_EXPRESS
-			this.PadContentCollection.Remove(_auditLogPad);
+#if !ARCHITECT_EXPRESS
+            this.PadContentCollection.Remove(_auditLogPad);
 			_auditLogPad = null;
 
 			this.PadContentCollection.Remove(_attachmentPad);
@@ -2044,8 +2086,10 @@ namespace OrigamArchitect
             AddPad(_findSchemaItemResultsPad);
             _serverLogPad = new ServerLogPad();
             AddPad(_serverLogPad);
+            _findRulesPad = new FindRulesPad();
+            AddPad(_findRulesPad);
 #endif
-		}
+        }
 
         private void AddPad(IPadContent pad)
         {
@@ -2463,14 +2507,14 @@ namespace OrigamArchitect
                     if (text.Equals(String.Empty)) return;
                     _findSchemaItemResultsPad.ResetResults();
                     IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-                    List<AbstractSchemaItem> results = persistence.SchemaProvider.FullTextSearch<AbstractSchemaItem>(text);
+                    AbstractSchemaItem[] results = persistence.SchemaProvider.FullTextSearch<AbstractSchemaItem>(text);
 
-                    if (results.Count > 0)
+                    if (results.LongLength > 0)
                     {
-                        _findSchemaItemResultsPad.DisplayResults(results.ToArray());
+                        _findSchemaItemResultsPad.DisplayResults(results);
                     }
 
-					MessageBox.Show(this, string.Format(strings.ResultCountMassage, results.Count) , strings.SearchResultTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+					MessageBox.Show(this, string.Format(strings.ResultCountMassage, results.LongLength) , strings.SearchResultTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 e.Handled = true;

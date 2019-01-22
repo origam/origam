@@ -7,6 +7,7 @@ namespace Origam.DA.ObjectPersistence
 {
     public abstract class AbstractPersistenceProvider : IPersistenceProvider
     {
+
         private readonly Queue<object> transactionEndEventQueue = new Queue<object>();
         public virtual ICompiledModel CompiledModel
         {
@@ -56,7 +57,7 @@ namespace Origam.DA.ObjectPersistence
 
         public abstract List<T> RetrieveListByPackage<T>(Guid packageId);
 
-        public abstract List<T> FullTextSearch<T>(string text);
+        public abstract T[] FullTextSearch<T>(string text);
 
         public abstract List<T> RetrieveListByParent<T>(Key primaryKey,
             string parentTableName,
@@ -66,10 +67,21 @@ namespace Origam.DA.ObjectPersistence
 
         public void OnTransactionEnded(object sender)
         {
-            transactionEndEventQueue.Enqueue(sender);
+            if (InTransaction)
+            {
+                transactionEndEventQueue.Enqueue(sender);
+            }
         }
 
-        public abstract void Persist(IPersistent obj);
+        public virtual void Persist(IPersistent obj)
+        {
+            if (!InTransaction)
+            { 
+                InstancePersisted?.Invoke(obj, EventArgs.Empty);
+            }
+        }
+
+        public abstract bool InTransaction { get; }
 
         public abstract void RefreshInstance(IPersistent persistentObject);
 

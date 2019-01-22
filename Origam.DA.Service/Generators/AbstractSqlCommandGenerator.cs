@@ -642,12 +642,12 @@ namespace Origam.DA.Service
                 RenderExpression(field.ParentItem as TableMappingItem),
                 ColumnDefinitionDdl(field));
 
-            if (!field.AllowNulls && field.DefaultValue != null)
-            {
-                string constraintName = "DF_" + (field.ParentItem as TableMappingItem).MappedObjectName + "_" + field.MappedColumnName;
-                ddl.AppendFormat(" CONSTRAINT {0} DEFAULT {1}",
-                    NameLeftBracket + constraintName + NameRightBracket,
-                    RenderConstant(field.DefaultValue));
+			if(! field.AllowNulls && field.DefaultValue != null)
+			{
+				string constraintName = "DF_" + (field.ParentItem as TableMappingItem).MappedObjectName + "_" + field.MappedColumnName;
+				ddl.AppendFormat(" CONSTRAINT {0} DEFAULT {1}",
+					NameLeftBracket + constraintName + NameRightBracket,
+					this.RenderConstant(field.DefaultValue, false));
 
                 ddl.Append(Environment.NewLine);
                 ddl.AppendFormat("ALTER TABLE {0} DROP CONSTRAINT {1}",
@@ -2852,14 +2852,14 @@ namespace Origam.DA.Service
             }
         }
 
-        private string RenderConstant(DataConstant constant)
+        private string RenderConstant(DataConstant constant, bool userDefinedParameters)
         {
             if (constant.Name == "null") return "NULL";
 
             IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 
             object value;
-            if (UserDefinedParameters && parameterService != null)
+            if (userDefinedParameters && parameterService != null)
             {
                 value = parameterService.GetParameterValue(constant.Id);
             }
@@ -2878,20 +2878,20 @@ namespace Origam.DA.Service
                 case OrigamDataType.Boolean:
                     if ((bool)constant.Value)
                     {
-                        return True;
+                        return this.True;
                     }
                     else
                     {
-                        return False;
+                        return this.False;
                     }
 
                 case OrigamDataType.UniqueIdentifier:
-                    return "'" + value + "'";
+                    return "'" + value.ToString() + "'";
 
                 case OrigamDataType.Xml:
                 case OrigamDataType.Memo:
                 case OrigamDataType.String:
-                    return RenderString(value.ToString());
+                    return this.RenderString(value.ToString());
 
                 case OrigamDataType.Date:
                     if (value == null) return "null";
@@ -2905,8 +2905,13 @@ namespace Origam.DA.Service
 
         private string RenderExpression(DataConstantReference item)
         {
-            return RenderConstant(item.DataConstant);
+            return RenderConstant(item.DataConstant, UserDefinedParameters);
         }
+
+//        private string RenderExpression(DataConstantReference item)
+//        {
+//            return RenderConstant(item.DataConstant);
+//        }
 
         private string RenderString(string text)
         {

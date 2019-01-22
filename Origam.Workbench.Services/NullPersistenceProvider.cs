@@ -65,9 +65,9 @@ namespace Origam.Workbench.Services
             return new System.Collections.Generic.List<T>();
         }
 
-        public List<T> FullTextSearch<T>(string text)
+        public T[] FullTextSearch<T>(string text)
         {
-            return new System.Collections.Generic.List<T>();
+            return new T[0];
         }
 
         public List<T> RetrieveListByParent<T>(Key primaryKey, string parentTableName, string childTableName, bool useCache)

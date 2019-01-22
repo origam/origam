@@ -54,5 +54,9 @@ namespace Origam.OrigamEngine
                 useBinFile: false);
         }
 
+        public static void Clear()
+        {
+            persistenceService = null;
+        }
     }
 }

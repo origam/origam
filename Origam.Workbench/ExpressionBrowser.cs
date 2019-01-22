@@ -30,6 +30,7 @@ using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
 using Origam.UI;
+using Origam.Workbench.Commands;
 using Origam.Workbench.Services;
 
 namespace Origam.Workbench
@@ -84,6 +85,10 @@ namespace Origam.Workbench
 			rootNode.Text = rootNodeTag.Name;
 		}
 
+        public TreeNode GetFirstNode()
+        {
+            return tvwExpressionBrowser.Nodes.Count>0? tvwExpressionBrowser.Nodes[0]:null;
+        }
 		public void ReloadTreeAndRestoreExpansionState()
 		{
 			if (_schemaService.ActiveExtension == null) return;
@@ -1012,7 +1017,8 @@ namespace Origam.Workbench
 			}
 
 			TreeNode foundNode = null;
-			if(tvwExpressionBrowser.Nodes.Count == 1)
+          
+            if (tvwExpressionBrowser.Nodes.Count == 1)
 			{
 				if(! tvwExpressionBrowser.Nodes[0].IsExpanded)
 				{
