@@ -42,7 +42,7 @@ namespace Origam.DA.Service
         internal const string ParentIdAttribute = "parentId";
         internal const string TypeAttribute = "type";
         public const string PackageFileName = PersistenceFiles.PackageFileName; 
-        public const string RefFileName = PersistenceFiles.ReferenceFileName; 
+        public const string ReferenceFileName = PersistenceFiles.ReferenceFileName; 
         public const string GroupFileName = PersistenceFiles.GroupFileName; 
         private static readonly string OrigamExtension = PersistenceFiles.Extension;
         public static readonly ElementName ModelPersistenceUri =
@@ -156,7 +156,7 @@ namespace Origam.DA.Service
             return
                 string.Equals(fileInfo.Extension, OrigamExtension, ignoreCase )||
                 string.Equals(fileInfo.Name, PackageFileName, ignoreCase) ||
-                string.Equals(fileInfo.Name, RefFileName, ignoreCase) ||
+                string.Equals(fileInfo.Name, ReferenceFileName, ignoreCase) ||
                 string.Equals(fileInfo.Name, GroupFileName, ignoreCase) ;
         }
 
@@ -208,7 +208,7 @@ namespace Origam.DA.Service
                 .GetFiles()
                 .Any(file =>
                     file.Name == GroupFileName ||
-                    file.Name == RefFileName);
+                    file.Name == ReferenceFileName);
             if (referenceFileIsMissing)
             {
                 WriteGroupReferenceFile(
@@ -231,7 +231,7 @@ namespace Origam.DA.Service
             contentsList.Add("</x:file>");
             string  contents = string.Join("\n", contentsList);
 
-            string fullPath = System.IO.Path.Combine(directory.FullName, RefFileName);
+            string fullPath = System.IO.Path.Combine(directory.FullName, ReferenceFileName);
             origamFileManager.WriteFileIfNotExist(fullPath, contents);
         }
 
