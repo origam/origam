@@ -13,6 +13,13 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
+//Settings for dotnet core log4net
+#if NETCORE2_1
+[assembly: log4net.Config.XmlConfigurator(ConfigFile = "App.config", Watch = true)]
+#else
+[assembly: log4net.Config.XmlConfigurator(ConfigFile = "App.config.net", Watch = true)]
+#endif
+
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
 // COM, set the ComVisible attribute to true on that type.

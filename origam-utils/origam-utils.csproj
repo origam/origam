@@ -1,139 +1,26 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3896810A-D91A-48AB-B6D8-DB2306F0B62D}</ProjectGuid>
+    <DefineConstants Condition="'$(TargetFramework)'=='netcoreapp2.1'">NETCORE2_1</DefineConstants>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Origam.Utils</RootNamespace>
-    <AssemblyName>origam-utils</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-  </PropertyGroup>
-  
-  <PropertyGroup>
-      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
-    <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
-    <OutputPath>bin\Release\</OutputPath>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>true</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Client|AnyCPU' ">
-    <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Server|AnyCPU' ">
-    <DefineConstants>ORIGAM_CLIENT;ORIGAM_SERVER;$(DefineConstants)</DefineConstants>
-    <OutputPath>bin\Release\</OutputPath>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>true</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Server|AnyCPU' ">
-    <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;ORIGAM_SERVER;$(DefineConstants)</DefineConstants>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
-    <OutputPath>bin\Release\</OutputPath>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>true</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Architect|AnyCPU' ">
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <DebugType>full</DebugType>
+    <TargetFrameworks>netcoreapp2.1;net461</TargetFrameworks>
+    <RootNamespace>origam_utils</RootNamespace>
   </PropertyGroup>
 
+<PropertyGroup>
+   <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+</PropertyGroup> 
+
   <ItemGroup>
-    <Reference Include="CommandLine, Version=1.9.72.0, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <ProjectReference Include="..\Origam.ModelImport\Origam.ModelImport.csproj" />
+    <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj" />
+    <ProjectReference Include="..\Origam.Workflow\Origam.Workflow.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="CommandLine">
       <HintPath>..\EnterpriseLibrary\CommandLine.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\EnterpriseLibrary\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueueProcessor.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Origam.Common.Nonstd\Origam.Common.NetFX.csproj">
-      <Project>{84251d2b-43a4-4228-8d2a-8729722c25e4}</Project>
-      <Name>Origam.Common.NetFX</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
-      <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
-      <Name>Origam.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj">
-      <Project>{b4e4dc00-766a-4ca3-83d8-0a5383462f53}</Project>
-      <Name>Origam.DA.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service.csproj">
-      <Project>{ff4722b4-01f8-4062-af39-f243a6bf336d}</Project>
-      <Name>Origam.DA.Service</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj">
-      <Project>{233D40C6-AE59-4651-B7BD-DD09D5835E21}</Project>
-      <Name>Origam.OrigamEngine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.ModelImport\Origam.ModelImport.csproj">
-      <Project>{367D2F77-B10D-438B-BF33-B7825DCF0BF5}</Project>
-      <Name>Origam.ModelImport</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache.csproj">
-      <Project>{ffc2dce2-b8b5-48a4-aa18-1e93f99e1d54}</Project>
-      <Name>Origam.ReflectorCache</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
-      <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
-      <Name>Origam.Schema</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Security\Origam.Security.csproj">
-      <Project>{93b972c4-d58d-4681-a8b8-95a34c7c2980}</Project>
-      <Name>Origam.Security</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
-      <Project>{199DDE99-9EE7-4CCE-B71D-7FC1CC0896AA}</Project>
-      <Name>Origam.Services</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Workflow\Origam.Workflow.csproj">
-      <Project>{DF2A8DAD-6C59-4653-B3BB-DA50B14E3DE9}</Project>
-      <Name>Origam.Workflow</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="_OrigamSettings.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="_securityconfiguration.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>
