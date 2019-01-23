@@ -20,9 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
-using Origam.OrigamEngine;
 using Origam.Schema;
 using Origam.Workbench.Services;
+using OrigamArchitect.Commands;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -52,7 +52,7 @@ namespace Origam.Utils
                pathProject,false,false);
 
             List<Dictionary<IFilePersistent, string>> errorFragments
-                    = OrigamArchitect.Commands.ModelRules.GetErrors(persistenceService, ruleCheckCancellationTokenSource.Token);
+                    = ModelRules.GetErrors(persistenceService, ruleCheckCancellationTokenSource.Token);
             if (errorFragments.Count != 0)
             {
                 StringBuilder sb = new StringBuilder("Rule violations were found  in");
