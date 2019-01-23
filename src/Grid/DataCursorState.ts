@@ -33,8 +33,8 @@ export default class DataCursorState implements IDataCursorState {
       );
       this.isEditing = false;
       this.onEditingEnded.trigger();
+      console.log('Editing finished.')
     }
-    console.log('Editing finished.')
   }
 
   @action.bound

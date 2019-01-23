@@ -1,9 +1,9 @@
 import * as React from "react";
 import { observer, inject } from "mobx-react";
-import { IGridInteractionActions, GridViewType } from "src/Grid/types";
-import { IGridToolbarView, IGridPanelBacking } from "../../GridPanel/types";
+import { IDataViewType } from '../skeleton/types';
 
 
+@inject("dataViewState")
 @observer
 export class GridToolbar extends React.Component<any> {
   public render() {
@@ -31,7 +31,6 @@ export class GridToolbar extends React.Component<any> {
           {this.props.isDeleteButton && (
             <button
               className="oui-toolbar-btn"
-
             >
               <i className="fa fa-minus-circle icon" aria-hidden="true" />
             </button>
@@ -49,13 +48,11 @@ export class GridToolbar extends React.Component<any> {
           </button>
           <button
             className="oui-toolbar-btn"
-
           >
             <i className="fa fa-caret-left icon" aria-hidden="true" />
           </button>
           <button
             className="oui-toolbar-btn"
-
           >
             <i className="fa fa-caret-right icon" aria-hidden="true" />
           </button>
@@ -69,11 +66,13 @@ export class GridToolbar extends React.Component<any> {
         <div className="toolbar-section">
           <button
             className="oui-toolbar-btn"
+            onClick={() => this.props.dataViewState.setActiveView(IDataViewType.Table)}
           >
             <i className="fa fa-table icon" aria-hidden="true" />
           </button>
           <button
             className="oui-toolbar-btn"
+            onClick={() => this.props.dataViewState.setActiveView(IDataViewType.Form)}
           >
             <i className="fa fa-list-alt icon" aria-hidden="true" />
           </button>

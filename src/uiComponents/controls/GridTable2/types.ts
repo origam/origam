@@ -141,3 +141,7 @@ export interface IGridCursorProps {
 export interface IFixedColumnSettings {
   fixedColumnCount: number;
 }
+
+export interface ITableView {
+  isActiveView: boolean;
+}

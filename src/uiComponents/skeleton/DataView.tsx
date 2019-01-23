@@ -1,62 +1,11 @@
-import { action, computed, autorun } from "mobx";
+import { action, computed, autorun, observable } from "mobx";
 import { observer, Provider, inject } from "mobx-react";
 import * as React from "react";
-import { DataLoader } from "src/DataLoadingStrategy/DataLoader";
-import { DataLoadingStrategyActions } from "src/DataLoadingStrategy/DataLoadingStrategyActions";
-import { DataLoadingStrategySelectors } from "src/DataLoadingStrategy/DataLoadingStrategySelectors";
-import { DataLoadingStrategyState } from "src/DataLoadingStrategy/DataLoadingStrategyState";
-import { DataSaver } from "src/DataLoadingStrategy/DataSaver";
-import { DataSavingStrategy } from "src/DataLoadingStrategy/DataSavingStrategy";
-import { LookupResolverProvider } from "src/DataLoadingStrategy/LookupResolverProvider";
 
-import {
-  ICellValue,
-  IDataTableFieldStruct,
-  IFieldType
-} from "src/DataTable/types";
-import { FormActions } from "src/Grid/FormActions";
-import { FormState } from "src/Grid/FormState";
-import { FormView } from "src/Grid/FormView";
-import { GridActions } from "src/Grid/GridActions";
-import { GridCursorView } from "src/Grid/GridCursorView";
-import { GridInteractionActions } from "src/Grid/GridInteractionActions";
-import { GridInteractionSelectors } from "src/Grid/GridInteractionSelectors";
-import { GridInteractionState } from "src/Grid/GridInteractionState";
-import { GridSelectors } from "src/Grid/GridSelectors";
-import { GridState } from "src/Grid/GridState";
-import { GridView } from "src/Grid/GridView";
-import {
-  IFormSetup,
-  IFormTopology,
-  IGridSetup,
-  IGridTopology,
-  GridViewType
-} from "src/Grid/types";
-import { GridOrderingActions } from "src/GridOrdering/GridOrderingActions";
-import { GridOrderingSelectors } from "src/GridOrdering/GridOrderingSelectors";
-import { GridOrderingState } from "src/GridOrdering/GridOrderingState";
-import { GridOutlineActions } from "src/GridOutline/GridOutlineActions";
-import { GridOutlineSelectors } from "src/GridOutline/GridOutlineSelectors";
-import { GridOutlineState } from "src/GridOutline/GridOutlineState";
-import { FormTopology } from "src/GridPanel/adapters/FormTopology";
-import { GridSetup } from "src/GridPanel/adapters/GridSetup";
-import { GridTopology } from "src/GridPanel/adapters/GridTopology";
-import { GridToolbarView } from "src/GridPanel/GridToolbarView";
-import { EventObserver } from "src/utils/events";
-import { GridTable } from "../controls/GridTable";
 import { GridToolbar } from "../controls/GridToolbar";
-import { IGridPanelBacking } from "src/GridPanel/types";
-import { GridForm } from "../controls/GridForm";
-import { GridMap } from "../controls/GridMap";
-import { api } from "src/DataLoadingStrategy/api";
 
-import { ILoadingGate } from "../../DataLoadingStrategy/types";
+import { IDataViewProps, IDataViewType, IDataViewState } from "./types";
 
-import { IProperty } from "src/screenInterpreter/types";
-import { IDataViewProps } from "./types";
-import { IMainView } from "src/Application/types";
-import { DataTable } from "src/DataTable/DataTable";
-import { DataTableField } from "src/DataTable/DataTableField";
 
 import {
   IDataTableSelectors,
@@ -66,7 +15,7 @@ import {
 } from "src/Grid/types2";
 import { IDataCursorState } from "../../Grid/types2";
 import DataCursorState from "src/Grid/DataCursorState";
-import { GridTableEvents } from "../../Grid/GridTableEvents";
+
 
 /*class GridConfiguration {
   public gridSetup: IGridSetup;
@@ -412,7 +361,8 @@ class DataTableSelectors implements IDataTableSelectors {
 
 @inject("mainView")
 @observer
-export class DataView extends React.Component<IDataViewProps> {
+export class DataView extends React.Component<IDataViewProps>
+  implements IDataViewState {
   constructor(props: any) {
     super(props);
     /*const { mainView } = props as { mainView: IMainView & ILoadingGate };
@@ -431,14 +381,20 @@ export class DataView extends React.Component<IDataViewProps> {
 
     this.dataTableSelectors = new DataTableSelectors();
     this.dataCursorState = new DataCursorState(this.dataTableSelectors);
-    
-    this.dataCursorState.selectCell("5", "9")
+
+    this.setActiveView(this.props.initialView);
+    this.dataCursorState.selectCell("5", "9");
   }
 
   private dataTableSelectors: IDataTableSelectors;
   private dataCursorState: IDataCursorState;
 
-  private gridPaneBacking: IGridPanelBacking;
+  @observable public activeView: IDataViewType;
+
+  @action.bound public setActiveView(view: IDataViewType) {
+    console.log(view);
+    this.activeView = view;
+  }
 
   public componentDidMount() {
     /*this.gridPaneBacking.onStartGrid.trigger();
@@ -450,40 +406,15 @@ export class DataView extends React.Component<IDataViewProps> {
   }
 
   public render() {
-    /*const { gridPaneBacking } = this;*/
     return (
       <Provider
-        /*gridPaneBacking={this.gridPaneBacking}*/
-
         dataTableSelectors={this.dataTableSelectors}
         dataCursorState={this.dataCursorState}
+        dataViewState={this}
       >
         <div className="data-view-container">
           <GridToolbar />
           {this.props.children}
-          {/*
-        <div
-          className="oui-grid"
-          style={{
-            minWidth: this.props.w,
-            maxWidth: this.props.w,
-            maxHeight: this.props.h,
-            minHeight: this.props.h
-          }}
-        >
-          <GridToolbar
-            name={this.props.name}
-            isHidden={this.props.isHeadless}
-            isAddButton={this.props.isShowAddButton}
-            isDeleteButton={this.props.isShowDeleteButton}
-            isCopyButton={this.props.isShowAddButton}
-          />
-          {this.props.table}
-          {this.props.form}
-          <GridMap />
-          {/*<GridForm isActiveView={gridPaneBacking.gridInteractionSelectors.activeView === IGridPaneView.Form} reactTree={this.props.form} />*/}
-          {/*this.props.children
-        </div>*/}
         </div>
       </Provider>
     );

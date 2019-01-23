@@ -1,5 +1,5 @@
 import { IEventSubscriber } from "../utils/events";
-export type ICellValue = string | number | undefined;
+export type ICellValue = string | number | boolean | undefined;
 
 export enum ICellState {
   Loading,

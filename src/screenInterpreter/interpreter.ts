@@ -1,5 +1,6 @@
 
 import { GridViewType } from "src/Grid/types";
+import { text2bool } from "src/utils/values";
 
 function getLocation(node: any): any {
   return {
@@ -244,15 +245,7 @@ function ruleTreePanel(node: any, context: any, rules: any[]) {
   return undefined;
 }
 
-function text2bool(t: string) {
-  if (t === "true") {
-    return true;
-  }
-  if (t === "false") {
-    return false;
-  }
-  throw new Error(`Unknown boolean variable ${t}`);
-}
+
 
 function ruleGrid(node: any, context: any, rules: any[]) {
   if (node.attributes.Type === "Grid") {

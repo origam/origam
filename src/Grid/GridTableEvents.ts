@@ -6,17 +6,22 @@ import {
   IDataTableSelectors
 } from "./types2";
 import { EventObserver } from "src/utils/events";
+import { ITableView } from "src/uiComponents/controls/GridTable2/types";
 
 export class GridTableEvents implements IGridTableEvents {
   constructor(
     private dataCursorState: IDataCursorState,
-    private dataTableSelectors: IDataTableSelectors
+    private dataTableSelectors: IDataTableSelectors,
+    private tableView: ITableView
   ) {}
 
   public onCursorMovementFinished = EventObserver();
 
   @action.bound
   public handleCellClick(event: any, rowIndex: number, columnIndex: number) {
+    if(!this.tableView.isActiveView) {
+      return
+    }
     event.stopPropagation();
     const recordId = this.dataTableSelectors.recordIdByIndex(rowIndex);
     const fieldId = this.dataTableSelectors.fieldIdByIndex(columnIndex);
@@ -37,18 +42,27 @@ export class GridTableEvents implements IGridTableEvents {
 
   @action.bound
   public handleNoCellClick(event: any) {
+    if(!this.tableView.isActiveView) {
+      return
+    }
     event.stopPropagation();
     this.dataCursorState.finishEditing();
   }
 
   @action.bound
   public handleOutsideClick(event: any) {
+    if(!this.tableView.isActiveView) {
+      return
+    }
     event.stopPropagation();
     this.dataCursorState.finishEditing();
   }
 
   @action.bound
   public handleGridKeyDown(event: any) {
+    if(!this.tableView.isActiveView) {
+      return
+    }
     event.stopPropagation();
     switch (event.key) {
       case KEY.ArrowUp:
@@ -99,6 +113,9 @@ export class GridTableEvents implements IGridTableEvents {
 
   @action.bound
   public handleDefaultEditorKeyDown(event: any) {
+    if(!this.tableView.isActiveView) {
+      return
+    }
     event.stopPropagation();
     switch (event.key) {
       case KEY.Enter:

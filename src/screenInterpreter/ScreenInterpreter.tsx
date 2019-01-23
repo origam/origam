@@ -27,7 +27,8 @@ import { CPR } from "src/utils/canvas";
 import { computed } from "mobx";
 import { IRenderHeader } from "../uiComponents/controls/GridTable2/types";
 import TableCnd from "src/uiComponents/controls/GridTable2/TableCnd";
-
+import { text2bool } from "src/utils/values";
+import { IDataViewOrder } from "../uiComponents/skeleton/types";
 
 function parseAttrRect(attr: {
   [key: string]: string;
@@ -139,6 +140,8 @@ function buildForm(
           p => p.id === node.elements[0].text
         );
         if (property) {
+          return <FormField property={property} />;
+          /*
           switch (property.column) {
             case "Text":
               return <FormField property={property} />;
@@ -152,7 +155,7 @@ function buildForm(
               return <FormField property={property} />;
             default:
               return null;
-          }
+          }*/
         }
       } else {
         return nextNode();
@@ -161,10 +164,6 @@ function buildForm(
       return nextNode();
   }
 }
-
-
-
-
 
 export function buildUI(node: IXmlNode, path: IXmlNode[]): React.ReactNode {
   const nextNode = () =>
@@ -188,19 +187,28 @@ export function buildUI(node: IXmlNode, path: IXmlNode[]): React.ReactNode {
     case "UIElement":
     case "UIRoot":
       switch (attr.Type) {
-        case "Grid":
-          console.log(node);
+        case "Grid": {
           const properties: IProperty[] = [];
           collectProperties(node, [...path, node], { properties });
-          console.log(properties);
           return (
-            <DataView properties={properties}>
-              {/*<GridForm>
+            <DataView
+              entity={node.attributes.Entity}
+              isHeadless={text2bool(node.attributes.IsHeadless)}
+              isActionButtonsDisabled={text2bool(
+                node.attributes.DisableActionButtons
+              )}
+              isShowAddButton={text2bool(node.attributes.ShowAddButton)}
+              isShowDeleteButton={text2bool(node.attributes.ShowDeleteButton)}
+              initialView={IDataViewOrder[node.attributes.DefaultPanelView]}
+              properties={properties}
+            >
+              <GridForm>
                 {buildForm(node, [...path, node], { properties })}
-              </GridForm>*/}
+              </GridForm>
               <TableCnd />
             </DataView>
           );
+        }
         case "VSplit":
           return (
             <VSplit id={attr.Id} modelInstanceId={attr.ModelInstanceId}>

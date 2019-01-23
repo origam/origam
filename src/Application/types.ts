@@ -1,4 +1,4 @@
-import { IComponentBindingsModel } from "src/componentBindings/types";
+// import { IComponentBindingsModel } from "src/componentBindings/types";
 
 export interface IMainViews {  
   
@@ -17,7 +17,7 @@ export interface IMainView {
   subid: string;
   label: string;
   reactTree: React.ReactNode;
-  componentBindingsModel: IComponentBindingsModel;
+  // componentBindingsModel: IComponentBindingsModel;
   isActive: boolean;
   order: number;
   

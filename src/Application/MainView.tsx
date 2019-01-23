@@ -1,7 +1,7 @@
 import { observable, action, computed } from "mobx";
 import { IMainView, IMainViewsCollection } from "./types";
 import { ILoadingGate, IAPI } from "src/DataLoadingStrategy/types";
-import { IComponentBindingsModel } from "src/componentBindings/types";
+// import { IComponentBindingsModel } from "src/componentBindings/types";
 import { getToken } from "src/DataLoadingStrategy/api";
 import * as xmlJs from "xml-js";
 import { buildUI } from "src/screenInterpreter/ScreenInterpreter";
@@ -20,7 +20,7 @@ export class MainView implements IMainView, ILoadingGate {
 
   @observable.ref public reactTree: React.ReactNode = null;
 
-  public componentBindingsModel: IComponentBindingsModel;
+  // public componentBindingsModel: IComponentBindingsModel;
   public livesIn: IMainViewsCollection;
 
   @computed

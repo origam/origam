@@ -1,7 +1,9 @@
 import * as React from "react";
 import { observer, inject } from "mobx-react";
 import { GridViewType } from "src/Grid/types";
+import { IDataViewType } from '../skeleton/types';
 
+@inject("dataViewState")
 @observer
 export class GridForm extends React.Component<any> {
   public render() {
@@ -10,7 +12,9 @@ export class GridForm extends React.Component<any> {
       gridPaneBacking.gridInteractionSelectors.activeView ===
       GridViewType.Form;*/
 
-    const isActiveView = true;
+    // TODO: Types for this component
+
+    const isActiveView = this.props.dataViewState.activeView === IDataViewType.Form;
     return (
       <div
         className="oui-form-root"

@@ -4,22 +4,10 @@ import { observer, inject } from "mobx-react";
 import { ICellValue, IRecordId, IFieldId } from "../../DataTable/types";
 import { IDataCursorState } from "src/Grid/types2";
 import { Escape } from "../../utils/keys";
+import { IFormEditorProps } from "../types";
 
-@inject("dataCursorState")
 @observer
-export class StringGridEditor extends React.Component<{
-  value: ICellValue | undefined;
-  editingRecordId: IRecordId;
-  editingFieldId: IFieldId;
-  dataCursorState?: IDataCursorState;
-  onDefaultKeyDown?: (event: any) => void;
-  onDefaultClick?: (event: any) => void;
-  onDataCommit?: (
-    dirtyValue: ICellValue,
-    editingRecordId: IRecordId,
-    editingFieldId: IFieldId
-  ) => void;
-}> {
+export class StringFormEditor extends React.Component<IFormEditorProps> {
   public componentDidMount() {
     runInAction(() => {
       this.dirtyValue = (this.props.value !== undefined
@@ -30,9 +18,24 @@ export class StringGridEditor extends React.Component<{
         this.elmInput && this.elmInput.select();
       }, 10);
     });
+    window.addEventListener("click", this.handleWindowClick);
+  }
+
+  public componentWillUnmount() {
+    window.removeEventListener("click", this.handleWindowClick);
+  }
+
+  @action.bound private handleWindowClick(event: any) {
+    if (this.refRoot.current && !this.refRoot.current.contains(event.target)) {
+      this.requestDataCommit(
+        this.props.editingRecordId!,
+        this.props.editingFieldId!
+      );
+    }
   }
 
   private elmInput: HTMLInputElement | null;
+  private refRoot = React.createRef<HTMLDivElement>();
 
   @observable
   private dirtyValue: string = "";
@@ -55,6 +58,7 @@ export class StringGridEditor extends React.Component<{
       console.log("Commit data:", this.dirtyValue);
       this.props.onDataCommit &&
         this.props.onDataCommit(this.dirtyValue, recordId, fieldId);
+      this.isDirty = false; // TODO: ???
     }
   }
 
@@ -74,20 +78,31 @@ export class StringGridEditor extends React.Component<{
 
   public render() {
     return (
-      <input
-        onKeyDown={this.handleKeyDown}
-        onClick={this.handleClick}
-        ref={this.refInput}
+      <div
+        ref={this.refRoot}
         style={{
           width: "100%",
           height: "100%",
           border: "none",
-          padding: "0px 0px 0px 15px",
+          padding: 0,
           margin: 0
         }}
-        value={this.dirtyValue}
-        onChange={this.handleChange}
-      />
+      >
+        <input
+          onKeyDown={this.handleKeyDown}
+          onClick={this.handleClick}
+          ref={this.refInput}
+          style={{
+            width: "100%",
+            height: "100%",
+            border: "none",
+            padding: "0px 0px 0px 15px",
+            margin: 0
+          }}
+          value={this.dirtyValue}
+          onChange={this.handleChange}
+        />
+      </div>
     );
   }
 }

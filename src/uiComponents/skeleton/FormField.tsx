@@ -1,18 +1,18 @@
 import * as React from "react";
 import { observer, inject } from "mobx-react";
-import { IGridPanelBacking } from "../../GridPanel/types";
-import { GridViewType } from "src/Grid/types";
-import { GridEditorMounter } from "src/cells/GridEditorMounter";
-import { StringGridEditor } from "src/cells/string/GridEditor";
 import { action, computed } from "mobx";
-import { IProperty } from '../../screenInterpreter/types';
+import { IProperty } from "../../screenInterpreter/types";
+import { StringFormEditor } from "../../cells/string/FormEditor";
+
+import { IDataCursorState } from "src/Grid/types2";
+import { BooleanFormEditor } from "src/cells/boolean/FormEditor";
 
 interface IFormFieldProps {
-  // gridPaneBacking: IGridPanelBacking;
   property: IProperty;
+  dataCursorState?: IDataCursorState;
 }
 
-
+@inject("dataCursorState")
 @observer
 export class FormField extends React.Component<IFormFieldProps> {
   private elmRoot: HTMLDivElement | null;
@@ -81,6 +81,26 @@ export class FormField extends React.Component<IFormFieldProps> {
     this.elmRoot = elm;
   }
 
+  private getEditor(): React.ReactNode {
+    const { property } = this.props;
+    const stdProps = {
+      value: "def",
+      editingRecordId: this.props.dataCursorState!.selectedRecordId,
+      editingFieldId: this.props.property.id
+    };
+    switch (property.column) {
+      case "Text":
+        return <StringFormEditor {...stdProps} />;
+      case "CheckBox":
+        return <BooleanFormEditor {...stdProps} />;
+      case "Currency":
+      case "Date":
+      case "ComboBox":
+      default:
+        return null;
+    }
+  }
+
   public render() {
     /* const gridPaneBacking = this.props.gridPaneBacking as IGridPanelBacking;
     const {
@@ -133,6 +153,7 @@ export class FormField extends React.Component<IFormFieldProps> {
         minHeight: 20 // this.props.h,
       };
     }
+
     return (
       <>
         <div
@@ -146,26 +167,7 @@ export class FormField extends React.Component<IFormFieldProps> {
           // onClick={this.handleFieldClick}
           ref={this.refRoot}
         >
-          {/*`Type: ${this.props.type} Name: ${this.props.name}, Id: ${
-            this.props.id
-          }`*/}
-          {/*this.props.children*/}
-          {this.props.property.name}
-          {/*entity*/}
-          {/*this.isThisEditing && (
-            <GridEditorMounter cursorView={gridCursorView}>
-              {this.isThisEditing && (
-                <StringGridEditor
-                  editingRecordId={gridCursorView.editingRowId!}
-                  editingFieldId={gridCursorView.editingColumnId!}
-                  value={gridCursorView.editingOriginalCellValue}
-                  onKeyDown={gridInteractionActions.handleDumbEditorKeyDown}
-                  onDataCommit={gridCursorView.handleDataCommit}
-                />
-              )}
-            </GridEditorMounter>
-          )}
-              {!this.isThisEditing && gridSetup.getCellValue(rowIndex, fieldIndex)}*/}
+          {this.getEditor()}
         </div>
         {captionPosition !== "None" && (
           <div className="oui-property-caption" style={{ ...captionLocation }}>

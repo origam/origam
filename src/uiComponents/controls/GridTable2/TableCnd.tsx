@@ -4,7 +4,7 @@ import { computed, action, observable } from "mobx";
 import { IGridDimensions } from "src/uiComponents/controls/GridTable2/types";
 import { bind } from "bind-decorator";
 import GridCursor from "./Cursor";
-import { IGridCursorPos } from "./types";
+import { IGridCursorPos, ITableView } from "./types";
 
 import { IDataCursorState, IGridTableEvents } from "../../../Grid/types2";
 import { CPR } from "src/utils/canvas";
@@ -15,6 +15,7 @@ import DataCursorState from "../../../Grid/DataCursorState";
 import { EventObserver, IEventSubscriber } from "src/utils/events";
 import { Rect } from "react-measure";
 import { StringGridEditor } from "src/cells/string/GridEditor";
+import { IDataViewState, IDataViewType } from "../../skeleton/types";
 
 class GridDimensions implements IGridDimensions {
   @computed public get rowCount(): number {
@@ -126,11 +127,13 @@ function renderHeader(columnIndex: number): React.ReactNode {
 interface ITableCndProps {
   dataTableSelectors?: IDataTableSelectors;
   dataCursorState?: IDataCursorState;
+  dataViewState?: IDataViewState;
 }
 
-@inject("dataTableSelectors", "dataCursorState")
+@inject("dataTableSelectors", "dataCursorState", "dataViewState")
 @observer
-export default class TableCnd extends React.Component<ITableCndProps> {
+export default class TableCnd extends React.Component<ITableCndProps>
+  implements ITableView {
   constructor(props: any) {
     super(props);
   }
@@ -141,7 +144,8 @@ export default class TableCnd extends React.Component<ITableCndProps> {
   );
   private gridTableEvents: IGridTableEvents = new GridTableEvents(
     this.props.dataCursorState!,
-    this.props.dataTableSelectors!
+    this.props.dataTableSelectors!,
+    this
   );
   private renderCell = renderCell(this.gridTableEvents);
 
@@ -181,55 +185,45 @@ export default class TableCnd extends React.Component<ITableCndProps> {
       : {}) as any;
   }
 
+  @computed public get isActiveView() {
+    return this.props.dataViewState!.activeView === IDataViewType.Table;
+  }
+
   public render() {
     return (
-      <GridTable
-        ref={this.refGridTable}
-        gridCursorPos={this.gridCursorPos}
-        gridDimensions={gridDimensions}
-        fixedColumnSettings={{ fixedColumnCount: 2 }}
-        showScroller={true}
-        renderGridCursor={(gDim, gCursorPos, shouldRenderCellCursor) => {
-          return (
-            <GridCursor
-              ref={shouldRenderCellCursor ? this.refGridCursor : undefined}
-              gridDimensions={gDim}
-              gridCursorPos={gCursorPos}
-              showCellCursor={shouldRenderCellCursor}
-              pollCellRect={this.props.dataCursorState!.isEditing}
-              renderCellContent={(cursorRect: Rect) => null}
-            />
-          );
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: !this.isActiveView ? "none" : undefined
         }}
-        editor={
-          this.props.dataCursorState!.isEditing && (
-            <div style={this.editorContainerStyle}>
-              <StringGridEditor
-                key={`${this.props.dataCursorState!.selectedRecordId!}@${this
-                  .props.dataCursorState!.selectedFieldId!}`}
-                ref={this.props.dataCursorState!.refCurrentEditor}
-                value="abc"
-                editingRecordId={this.props.dataCursorState!.selectedRecordId!}
-                editingFieldId={this.props.dataCursorState!.selectedFieldId!}
-                onDefaultKeyDown={
-                  this.gridTableEvents!.handleDefaultEditorKeyDown
-                }
+      >
+        <GridTable
+          ref={this.refGridTable}
+          gridCursorPos={this.gridCursorPos}
+          gridDimensions={gridDimensions}
+          fixedColumnSettings={{ fixedColumnCount: 2 }}
+          showScroller={true}
+          renderGridCursor={(gDim, gCursorPos, shouldRenderCellCursor) => {
+            return (
+              <GridCursor
+                ref={shouldRenderCellCursor ? this.refGridCursor : undefined}
+                gridDimensions={gDim}
+                gridCursorPos={gCursorPos}
+                showCellCursor={shouldRenderCellCursor}
+                pollCellRect={this.props.dataCursorState!.isEditing}
+                renderCellContent={(cursorRect: Rect) => null}
               />
-            </div>
-          )
-        }
-        renderHeader={renderHeader}
-        renderCell={this.renderCell}
-        onKeyDown={this.gridTableEvents.handleGridKeyDown}
-        onOutsideClick={this.gridTableEvents.handleOutsideClick}
-      />
+            );
+          }}
+          editor={null}
+          renderHeader={renderHeader}
+          renderCell={this.renderCell}
+          onKeyDown={this.gridTableEvents.handleGridKeyDown}
+          onOutsideClick={this.gridTableEvents.handleOutsideClick}
+        />
+      </div>
     );
   }
 }
 
-@observer
-class DeadSimpleEditor extends React.Component {
-  public render() {
-    return null;
-  }
-}
