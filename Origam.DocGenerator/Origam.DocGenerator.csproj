@@ -25,7 +25,6 @@
     <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel.csproj" />
     <ProjectReference Include="..\Origam.Schema.MenuModel\Origam.Schema.MenuModel.csproj" />
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj" />
-    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj" />
     <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />
     <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj" />
   </ItemGroup>
