@@ -449,8 +449,13 @@ namespace Origam.Workbench
                 return;
 			}
 			_refreshPaused = true;
-			bn.NodeText = e.Label;
-			_refreshPaused = false;
+		    IPersistenceProvider persistenceProvider =
+		        ServiceManager.Services.GetService<IPersistenceService>().SchemaProvider;
+
+		    persistenceProvider.BeginTransaction();
+            bn.NodeText = e.Label;
+		    persistenceProvider.EndTransaction();
+            _refreshPaused = false;
 		}
 
 		private void tvwExpressionBrowser_BeforeLabelEdit(object sender, System.Windows.Forms.NodeLabelEditEventArgs e)
