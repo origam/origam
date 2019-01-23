@@ -19,32 +19,30 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+//using ConfigurationManager = Origam.ConfigurationManager;
+
 using CommandLine;
 using CommandLine.Text;
-using Origam;
-using Origam.OrigamEngine;
-using Origam.ModelImport;
-using Origam.Workbench.Services;
-using System;
-using System.Collections;
-using System.Configuration;
-using System.IO;
-using System.Runtime.InteropServices;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.Schema;
-using ConfigurationManager = Origam.ConfigurationManager;
+using Origam.Workbench.Services;
+using System;
+using System.Collections;
+using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Origam.Utils
 {
     class Program
     {
-        private static log4net.ILog log;
+        
         private static QueueProcessor queueProcessor;
 
         private delegate bool EventHandler(CtrlType sig);
         private static EventHandler cancelHandler;
-        
+        private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         [DllImport("Kernel32")]
         private static extern bool SetConsoleCtrlHandler(EventHandler handler,
             bool add);
@@ -161,8 +159,10 @@ namespace Origam.Utils
 
         static int Main(string[] args)
         {
-            log4net.Config.XmlConfigurator.Configure();
-            log = log4net.LogManager.GetLogger("origam-utils");
+#if NETCORE2_1
+            log.Info("------------ Start on NetCore -------------");
+            log.Info("------------ End on NetCore -------------");
+#else
             string invokedVerb = "";
             object invokedVerbInstance = null;
             var options = new Options();
@@ -209,6 +209,8 @@ namespace Origam.Utils
                     return 1;
                 }
             }
+#endif
+            return 0;
         }
 
         private static int ProcesQueue(ProcessQueueOptions options)
@@ -227,6 +229,7 @@ namespace Origam.Utils
         private static void RunQueueProcessor(ProcessQueueOptions options){
            try
            {
+                log.Info(options);
                 queueProcessor = new QueueProcessor(
                     options.QueueRefCode,
                     options.Parallelism,
@@ -234,7 +237,7 @@ namespace Origam.Utils
                 );
                 queueProcessor.Run();
            }
-           catch (ConfigurationErrorsException ex)
+           catch (Exception ex)
            {
                 log.Error(ex.Message);
            }
@@ -261,7 +264,6 @@ namespace Origam.Utils
             }
             return 0;
         }
-
         private static int RunUpdateScripts()
         {
             if(log.IsInfoEnabled)
