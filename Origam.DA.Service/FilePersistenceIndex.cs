@@ -261,7 +261,6 @@ namespace Origam.DA.Service
         public void Dispose()
         {
             readWriteLock?.Dispose();
-            itemTracker?.OrigamFiles.ForEach(x => x.Dispose());
             itemTracker?.Clear();
             itemTracker = null;
         }
