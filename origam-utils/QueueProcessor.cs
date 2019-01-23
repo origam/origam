@@ -39,7 +39,7 @@ namespace Origam.Utils
         public QueueProcessor(string queueRefCode, int parallelism, int forceWait_ms)
         {
             OrigamEngine.OrigamEngine.ConnectRuntime();
-            
+
             var workQueueService = ServiceManager.Services
                 .GetService(typeof(WorkQueueService)) as WorkQueueService;
 

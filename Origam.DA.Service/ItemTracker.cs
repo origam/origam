@@ -53,6 +53,7 @@ namespace Origam.DA.Service
 
         public void Clear()
         {
+            OrigamFiles.ForEach(x => x.Dispose());
             LogTreeIndexState("Clearing ItemTracker");
             fileHashIndex.Clear();
             objectLocationIndex.Clear();
