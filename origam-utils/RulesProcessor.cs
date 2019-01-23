@@ -51,27 +51,28 @@ namespace Origam.Utils
             var persistenceService = new FilePersistenceService(DefaultFolders,
                pathProject,false,false);
 
-            List<Dictionary<IFilePersistent, string>> errorFragments
-                    = ModelRules.GetErrors(persistenceService, ruleCheckCancellationTokenSource.Token);
-            if (errorFragments.Count != 0)
-            {
-                StringBuilder sb = new StringBuilder("Rule violations were found  in");
-                sb.Append(pathProject);
-                sb.Append("\n");
-                foreach (Dictionary<IFilePersistent, string> dict in errorFragments)
-                {
-                    var retrievedObj = dict.First().Key;
-                    sb.Append("Object with Id: \"" + retrievedObj.Id +
-                               "\" in file: \"" + retrievedObj.RelativeFilePath +
-                               "\"\n" + string.Join("\n", dict.First().Value));
-                }
-                System.Console.Write(sb.ToString());
-                return 1;
-            }
-            else
-            {
+            //List<Dictionary<IFilePersistent, string>> errorFragments
+            //        = ModelRules.GetErrors(persistenceService, ruleCheckCancellationTokenSource.Token);
+            //if (errorFragments.Count != 0)
+            //{
+            //    StringBuilder sb = new StringBuilder("Rule violations were found  in");
+            //    sb.Append(pathProject);
+            //    sb.Append("\n");
+            //    foreach (Dictionary<IFilePersistent, string> dict in errorFragments)
+            //    {
+            //        var retrievedObj = dict.First().Key;
+            //        sb.Append("Object with Id: \"" + retrievedObj.Id +
+            //                   "\" in file: \"" + retrievedObj.RelativeFilePath +
+            //                   "\"\n" + string.Join("\n", dict.First().Value));
+            //    }
+            //    System.Console.Write(sb.ToString());
+            //    return 1;
+            //}
+            //else
+            //{
                 return 0;
-            }
+            //}
+
         }
     }
 }
