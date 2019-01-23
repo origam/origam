@@ -8,3 +8,4 @@ _Resharper*/
 /Origam.DA.Service-net2Tests/FilePersistenceProviderTests/TestFiles/index.bin
 /packages
 /Origam.ServerCore/logs
+*.pubxml
