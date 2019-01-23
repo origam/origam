@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="2.2.6" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.3.0" />
   </ItemGroup>
@@ -26,6 +27,7 @@
     <ProjectReference Include="..\Origam.Schema.MenuModel\Origam.Schema.MenuModel.csproj" />
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj" />
     <ProjectReference Include="..\Origam.Security\Origam.Security.csproj" />
+    <ProjectReference Include="..\Origam.Server\Origam.Server.csproj" />
     <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />
     <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj" />
     <ProjectReference Include="..\Origam.Workbench\Origam.Workbench.csproj" />

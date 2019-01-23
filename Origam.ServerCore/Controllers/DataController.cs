@@ -24,7 +24,7 @@ namespace Origam.ServerCore.Controllers
         protected internal IDataLookupService LookupService;
         private IDataService dataService => DataService.GetDataService();
 
-        public DataController(ILogger<MetaDataController> log) : base(log)
+        public DataController(ILogger<AbstractController> log) : base(log)
         {
             LookupService = ServiceManager.Services.GetService<IDataLookupService>();
         }
