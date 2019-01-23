@@ -120,7 +120,10 @@
       <Project>{DF2A8DAD-6C59-4653-B3BB-DA50B14E3DE9}</Project>
       <Name>Origam.Workflow</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OrigamArchitect\OrigamArchitect.csproj" />
+    <ProjectReference Include="..\OrigamArchitect\OrigamArchitect.csproj" >
+	<Project>{A4E0A953-DAE4-4920-BC2B-062B5A0DF40F}</Project>
+	<Name>OrigamArchitect</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="_OrigamSettings.config">
