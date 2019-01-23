@@ -12,8 +12,16 @@
 </PropertyGroup> 
 
   <ItemGroup>
+    <ProjectReference Include="..\Origam.Common.Nonstd\Origam.Common.NetFX.csproj" />
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj" />
+    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service.csproj" />
     <ProjectReference Include="..\Origam.ModelImport\Origam.ModelImport.csproj" />
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj" />
+    <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache.csproj" />
+    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj" />
+    <ProjectReference Include="..\Origam.Security\Origam.Security.csproj" />
+    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />
     <ProjectReference Include="..\Origam.Workflow\Origam.Workflow.csproj" />
   </ItemGroup>
 

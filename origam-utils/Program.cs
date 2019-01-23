@@ -160,7 +160,8 @@ namespace Origam.Utils
         static int Main(string[] args)
         {
 #if NETCORE2_1
-
+            log.Info("------------ Start on NetCore -------------");
+            log.Info("------------ End on NetCore -------------");
 #else
             string invokedVerb = "";
             object invokedVerbInstance = null;
