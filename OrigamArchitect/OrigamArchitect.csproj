@@ -30,9 +30,8 @@
   <PropertyGroup>
     <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
-  
   <PropertyGroup>
-      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
@@ -60,7 +59,7 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>true</Optimize>
@@ -72,7 +71,6 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
@@ -85,6 +83,10 @@
     <ProjectReference Include="..\Origam.Git\Origam.Git.csproj">
       <Project>{17625f1f-b028-47db-8c76-05c8f8f4e158}</Project>
       <Name>Origam.Git</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Gui.Designer\Origam.Gui.Designer.csproj">
+      <Project>{76038b9a-f924-4f7f-b4cc-4b9a0a6a55e3}</Project>
+      <Name>Origam.Gui.Designer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj">
       <Name>Origam.OrigamEngine</Name>
