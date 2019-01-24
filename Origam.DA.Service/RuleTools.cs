@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Origam.DA;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Origam.DA
+namespace Origam.DA.Service
 {
     public static class RuleTools
     {

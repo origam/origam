@@ -104,6 +104,7 @@
       <Project>{ffc2dce2-b8b5-48a4-aa18-1e93f99e1d54}</Project>
       <Name>Origam.ReflectorCache</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.Rule\Origam.Rule.csproj" />
       <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
       <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
       <Name>Origam.Schema</Name>
@@ -120,7 +121,6 @@
       <Project>{DF2A8DAD-6C59-4653-B3BB-DA50B14E3DE9}</Project>
       <Name>Origam.Workflow</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OrigamArchitect\OrigamArchitect.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="_OrigamSettings.config">

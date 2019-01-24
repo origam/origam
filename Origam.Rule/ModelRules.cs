@@ -20,12 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
+using Origam.DA.Service;
 using Origam.Workbench.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace OrigamArchitect.Commands
+namespace Origam.Rule
 {
     public class ModelRules
     {

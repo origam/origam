@@ -30,6 +30,7 @@ using res = Origam.DA.Service;
 using System.Collections.Generic;
 using System.Text;
 using Origam.Extensions;
+using Origam.DA.Service;
 
 namespace Origam.DA.ObjectPersistence.Providers
 {

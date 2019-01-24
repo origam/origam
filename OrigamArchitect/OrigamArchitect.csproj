@@ -332,7 +332,6 @@
     <Compile Include="Commands\GenerateXamlCommand.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Commands\ModelRules.cs" />
     <Compile Include="Commands\SchemaActionMenuBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
