@@ -56,6 +56,7 @@ namespace Origam.Workflow.FileService
                 if (!trof.IsIgnored)
                 {
                     col = dt.Columns[trof.Name];
+                    dataType = col.DataType;
                     if (col == null)
                     {
                         throw new ArgumentOutOfRangeException("columnName", trof.Name,
@@ -66,12 +67,11 @@ namespace Origam.Workflow.FileService
                         // Convert standard types to nullable types for the engine.
                         // The later conversion to DataTable actually converts them
                         // back to value types internally.
-                        if (dataType.IsValueType)
+                        if (col.DataType.IsValueType)
                         {
-                            dataType = typeof(Nullable<>).MakeGenericType(dataType);
+                            dataType = typeof(Nullable<>).MakeGenericType(col.DataType);
                         }
                     }
-                    dataType = col.DataType;
                 }
                 cb.AddField(trof.Name, dataType);
                 if (dataType == typeof(DateTime))
