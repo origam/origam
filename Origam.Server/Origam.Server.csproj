@@ -26,13 +26,11 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
-  
   <PropertyGroup>
-      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
-  
   <PropertyGroup>
-      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
@@ -60,7 +58,7 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>true</Optimize>
@@ -72,8 +70,6 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-
-
   <ItemGroup>
     <Reference Include="AWSSDK, Version=1.3.17.0, Culture=neutral, PublicKeyToken=cd2d24cd2bace800">
       <HintPath>..\EnterpriseLibrary\AWSSDK.dll</HintPath>
@@ -203,27 +199,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdaptivePropertyProvider.cs" />
-    <Compile Include="Analytics.cs" />
     <Compile Include="architect\ArchitectService.cs" />
     <Compile Include="architect\ModelBrowserElement.cs" />
-    <Compile Include="Ascii85.cs" />
     <Compile Include="AspMembershipLoginCommand.cs" />
-    <Compile Include="Attachments\Attachment.cs" />
     <Compile Include="Attachments\AttachmentDownloadHandler.cs" />
-    <Compile Include="Attachments\AttachmentRequest.cs" />
-    <Compile Include="Attachments\AttachmentUtils.cs" />
     <Compile Include="Attachments\AttachmentUploadHandler.cs" />
     <Compile Include="Attachments\AttachmentS3Handler.cs" />
     <Compile Include="Attachments\AttachmentSQLDbHandler.cs" />
-    <Compile Include="Attachments\AttachmentUploadRequest.cs" />
     <Compile Include="Attachments\IAttachmentHandler.cs" />
     <Compile Include="Attachments\S3Settings.cs" />
-    <Compile Include="Blob Control\BlobUploadRequest.cs" />
     <Compile Include="Blob Control\BlobUploadHandler.cs" />
     <Compile Include="Blob Control\BlobDownloadHandler.cs" />
-    <Compile Include="Blob Control\BlobDownloadRequest.cs" />
     <Compile Include="Attachments\MD5PassThroughStream.cs" />
-    <Compile Include="DataTools.cs" />
     <Compile Include="doc\AbstractDoc.cs" />
     <Compile Include="doc\DocWorkQueueClass.cs" />
     <Compile Include="doc\DocTransformation.cs" />
@@ -240,34 +227,17 @@
     <Compile Include="doc\DocDataStructure.cs" />
     <Compile Include="doc\DocEntity.cs" />
     <Compile Include="doc\DocTools.cs" />
-    <Compile Include="EntityExportPolymorphRules.cs" />
     <Compile Include="EntityWorkflowActionScriptCallComparer.cs" />
     <Compile Include="HttpTools.cs" />
     <Compile Include="IDynamicSessionStoreProvider.cs" />
     <Compile Include="JsonUIService.cs" />
     <Compile Include="logging\AndFilter.cs" />
     <Compile Include="doc\DocHandler.cs" />
-    <Compile Include="LookupListExRequest.cs" />
     <Compile Include="OrigamDesignerDynamicMenuProvider.cs" />
     <Compile Include="pages\ReportPageRequestHandler.cs" />
-    <Compile Include="PortalStyle.cs" />
     <Compile Include="ReportManager.cs" />
-    <Compile Include="RequestTools.cs" />
-    <Compile Include="SecurityTools.cs" />
-    <Compile Include="ServerEntityUIActionRunner.cs" />
-    <Compile Include="ServerEntityUIActionRunnerClient.cs" />
-    <Compile Include="Session Stores\OrigamDesignerSessionStore.cs" />
-    <Compile Include="SessionExpiredException.cs" />
-    <Compile Include="SessionManager.cs" />
-    <Compile Include="ToolTipTools.cs" />
     <Compile Include="TreeNode.cs" />
     <Compile Include="TreeService.cs" />
-    <Compile Include="DashboardToolboxItem.cs" />
-    <Compile Include="DashboardToolboxItemParameter.cs" />
-    <Compile Include="DashboardToolboxItemType.cs" />
-    <Compile Include="DeletedRowInfo.cs" />
-    <Compile Include="FormNotification.cs" />
-    <Compile Include="HelpTooltip.cs" />
     <Compile Include="InternalHandlers.cs" />
     <Compile Include="pages\AbstractPageRequestHandler.cs" />
     <Compile Include="pages\AbstractWorkflowPageActionHandler.cs" />
@@ -293,41 +263,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="search\SearchRequest.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="search\SearchResultHandler.cs" />
-    <Compile Include="Session Stores\SaveableSessionStore.cs" />
     <Compile Include="EntityExportDownloadHandler.cs" />
-    <Compile Include="EntityExportField.cs" />
-    <Compile Include="EntityExportInfo.cs" />
-    <Compile Include="PanelActionResult.cs" />
-    <Compile Include="Session Stores\ParameterSessionStore.cs" />
-    <Compile Include="ErrorList.cs" />
     <Compile Include="FlashGuid.cs" />
-    <Compile Include="Session Stores\FormSessionStore.cs" />
-    <Compile Include="LoginFailedException.cs" />
-    <Compile Include="LookupLabelResult.cs" />
-    <Compile Include="ChangeInfo.cs" />
-    <Compile Include="PortalResult.cs" />
-    <Compile Include="PortalResultSession.cs" />
-    <Compile Include="PortalSessionStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IUIService.cs" />
-    <Compile Include="ReportRequest.cs" />
     <Compile Include="ReportViewerHandler.cs" />
-    <Compile Include="Session Stores\SelectionDialogSessionStore.cs" />
-    <Compile Include="Session Stores\SessionStore.cs" />
-    <Compile Include="UIGridSortConfiguration.cs" />
-    <Compile Include="UIManager.cs" />
-    <Compile Include="UIRequest.cs" />
-    <Compile Include="UIRequestType.cs" />
-    <Compile Include="UIResult.cs" />
     <Compile Include="UIService.cs" />
     <Compile Include="WorkflowCallbackHandler.cs" />
-    <Compile Include="Session Stores\WorkflowSessionStore.cs" />
-    <Compile Include="WorkQueueInfo.cs" />
-    <Compile Include="Session Stores\WorkQueueSessionStore.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -372,6 +315,10 @@
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
       <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
       <Name>Origam.Schema</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.ServerCommon\Origam.ServerCommon.csproj">
+      <Project>{988c44a3-3f3f-4f61-812d-719b3d8d449b}</Project>
+      <Name>Origam.ServerCommon</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Services.NetFx\Origam.Services.NetFx.csproj">
       <Project>{442DB093-B99E-4A53-AE94-E611A26D901F}</Project>

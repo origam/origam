@@ -528,7 +528,7 @@ namespace Origam.Gui.Win
 							{
                                 try
                                 {
-                                    humanColumnName = (this.DataSource as DataSet).Tables[FormGenerator.FindTableByDataMember(this.DataSource as DataSet, this.DataMember)].Columns[columnName].Caption;
+                                    humanColumnName = (this.DataSource as DataSet).Tables[FormTools.FindTableByDataMember(this.DataSource as DataSet, this.DataMember)].Columns[columnName].Caption;
                                 }
                                 catch (Exception)
                                 {

@@ -350,11 +350,11 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public Origam.Gui.Win.CaptionPosition CaptionPosition
+		public CaptionPosition CaptionPosition
 		{
 			get
 			{
-				return Origam.Gui.Win.CaptionPosition.Right;
+				return CaptionPosition.Right;
 			}
 			set
 			{

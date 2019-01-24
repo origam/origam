@@ -51,12 +51,13 @@ using FluorineFx.Json;
 using Origam.Gui;
 using Origam.Server.Properties;
 using Origam.Server.Search;
+using Origam.ServerCommon;
 using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server
 {
     [RemotingService]
-    public class UIService
+    public class UIService: IBasicUIService
     {
         #region Private Members
 
@@ -72,8 +73,22 @@ namespace Origam.Server
         {
             IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
             parameterService.SetFeatureStatus("FLASH", true);
-            
-            sessionManager = new SessionManager();
+
+            var portalSessions = (Dictionary<Guid, PortalSessionStore>)FluorineFx.Context.FluorineContext.Current.ApplicationState["portals"];
+            if (portalSessions == null)
+            {
+                portalSessions = new Dictionary<Guid, PortalSessionStore>();
+                FluorineFx.Context.FluorineContext.Current.ApplicationState["portals"] = portalSessions;
+            }
+
+            var formSessions = (Dictionary<Guid, SessionStore>)FluorineFx.Context.FluorineContext.Current.ApplicationState["forms"];
+            if (formSessions == null)
+            {
+                formSessions = new Dictionary<Guid, SessionStore>();
+                FluorineFx.Context.FluorineContext.Current.ApplicationState["forms"] = formSessions;
+            }
+
+            sessionManager = new SessionManager(portalSessions, formSessions);
             uiManager = new UIManager(INITIAL_PAGE_NUMBER_OF_RECORDS,sessionManager);
             reportManager = new ReportManager(sessionManager);
         }
@@ -248,7 +263,7 @@ namespace Origam.Server
                 registerSession: true, 
                 addChildSession: false,
                 parentSession: null,
-                uiService: this);
+                basicUiService: this);
         }
 
         [JsonRpcMethod]
@@ -306,8 +321,8 @@ namespace Origam.Server
             var actionRunner = new ServerEntityUIActionRunner( 
                 actionRunnerClient: actionRunnerClient,
                 uiManager: uiManager,  
-                sessionManager: sessionManager, 
-                uiService: this,
+                sessionManager: sessionManager,
+                basicUiService: this,
                 reportManager: reportManager);
 
             return actionRunner.ExecuteAction( sessionFormIdentifier, 

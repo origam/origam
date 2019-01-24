@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.Server;
+using Origam.ServerCommon;
 
 namespace Origam.ServerCore.Controllers
 {
@@ -18,23 +19,21 @@ namespace Origam.ServerCore.Controllers
         [HttpPost("[action]")]
         public IActionResult New()
         {
-            UIService uiService = new UIService();
+            var portalSessions = new Dictionary<Guid, PortalSessionStore>();
+            var formSessions = new Dictionary<Guid, SessionStore>();
+            var sessionManager = new SessionManager(portalSessions, formSessions);
+            var uiManager = new UIManager(50, sessionManager);
+            var uiService = new BasicUiService();
+
             Guid newSessionId = Guid.NewGuid();
             UIRequest uiRequest = new UIRequest{FormSessionId = newSessionId.ToString()};
-            uiService.InitUI(uiRequest);
+            UIResult uiResult = uiManager.InitUI(
+                request: uiRequest,
+                registerSession: true,
+                addChildSession: false,
+                parentSession: null,
+                basicUiService: uiService);
             return Ok(newSessionId);
-        }
-
-        // PUT: api/Sessions/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

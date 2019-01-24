@@ -24,14 +24,14 @@ using System.Web;
 
 namespace Origam.Server
 {
-    public class AdaptivePropertyProvider<T>
+    public class AdaptivePropertyProvider
     {
         private readonly string _propertyName;
-        private readonly T _propertyValue;
+        private readonly object _propertyValue;
 
         #region Constructor(s)
 
-        protected internal AdaptivePropertyProvider(string propertyName, T propertyValue)
+        protected internal AdaptivePropertyProvider(string propertyName, object propertyValue)
         {
             if (string.IsNullOrEmpty(propertyName))
             {

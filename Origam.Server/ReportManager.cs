@@ -11,7 +11,7 @@ using Origam.Workbench.Services;
 namespace Origam.Server
 {
     
-    internal class ReportManager
+    internal class ReportManager: IReportManager
     {
         private readonly SessionManager sessionManager;
 
@@ -20,7 +20,7 @@ namespace Origam.Server
             this.sessionManager = sessionManager;
         }
 
-        internal string GetReport(string sessionFormIdentifier, string entity, 
+        public string GetReport(string sessionFormIdentifier, string entity, 
             object id, string reportId, Hashtable parameterMappings)
         {
             string key = Guid.NewGuid().ToString();
@@ -36,7 +36,7 @@ namespace Origam.Server
             return "ReportViewer.aspx?id=" + key;
         }
 
-        internal string GetReportStandalone(string reportId, Hashtable parameters,
+        public string GetReportStandalone(string reportId, Hashtable parameters,
             DataReportExportFormatType dataReportExportFormatType)
         {
             string key = Guid.NewGuid().ToString();
@@ -46,7 +46,7 @@ namespace Origam.Server
             return "ReportViewer.aspx?id=" + key;
         }
 
-        internal string GetReportFromMenu(string menuId)
+        public string GetReportFromMenu(string menuId)
         {
             string key = Guid.NewGuid().ToString();
 

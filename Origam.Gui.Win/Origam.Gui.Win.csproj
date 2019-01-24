@@ -26,13 +26,11 @@
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
   </PropertyGroup>
-  
   <PropertyGroup>
-      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
-  
   <PropertyGroup>
-      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
@@ -60,7 +58,7 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>true</Optimize>
@@ -72,8 +70,6 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-
-
   <ItemGroup>
     <ProjectReference Include="..\Origam.Common.Nonstd\Origam.Common.NetFX.csproj">
       <Project>{84251d2b-43a4-4228-8d2a-8729722c25e4}</Project>
@@ -214,25 +210,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionButtonManager.cs" />
-    <Compile Include="OrigamPanelColumnConfig.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>OrigamPanelColumnConfig.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="OrigamPanelColumnConfigDA.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="OrigamPanelConfigDA.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="OrigamPanelFilter.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>OrigamPanelFilter.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="OrigamPanelFilterDA.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="AsCheckBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -343,6 +320,7 @@
     </Compile>
     <Compile Include="Grid\IAsGridEditor.cs" />
     <Compile Include="DesktopEntityUIActionRunnerClient.cs" />
+    <Compile Include="TemplateTools.cs" />
     <Compile Include="Workflow\ExecuteWorkflowButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -360,9 +338,6 @@
     </Compile>
     <Compile Include="Filter\FilterMenuItem.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Filter\FilterOperator.cs">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Filter\FilterOperatorMenuItem.cs">
       <SubType>Component</SubType>
@@ -469,9 +444,6 @@
     <Compile Include="ImageBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ImageBoxSourceType.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="LoadingCircle.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -516,14 +488,6 @@
     <Compile Include="Workflow\WorkflowWatchPad.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Content Include="OrigamPanelColumnConfig.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>OrigamPanelColumnConfig.Designer.cs</LastGenOutput>
-    </Content>
-    <Content Include="OrigamPanelFilter.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>OrigamPanelFilter.Designer.cs</LastGenOutput>
-    </Content>
     <EmbeddedResource Include="AsCheckBox.bmp">
     </EmbeddedResource>
     <EmbeddedResource Include="AsCheckBox.resx">
@@ -651,18 +615,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="xp.style.glyphs.png">
     </EmbeddedResource>
-    <None Include="OrigamPanelColumnConfig.xsc">
-      <DependentUpon>OrigamPanelColumnConfig.xsd</DependentUpon>
-    </None>
-    <None Include="OrigamPanelColumnConfig.xsx">
-      <DependentUpon>OrigamPanelColumnConfig.xsd</DependentUpon>
-    </None>
-    <None Include="OrigamPanelFilter.xsc">
-      <DependentUpon>OrigamPanelFilter.xsd</DependentUpon>
-    </None>
-    <None Include="OrigamPanelFilter.xsx">
-      <DependentUpon>OrigamPanelFilter.xsd</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

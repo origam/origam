@@ -28,13 +28,7 @@ using Origam.Schema;
 
 namespace Origam.Gui.Win
 {
-	public enum SplitPanelOrientation
-	{
-		Horizontal,
-		Vertical
-	}
-
-	/// <summary>
+    /// <summary>
 	/// Summary description for SplitPanel.
 	/// </summary>
 	public class SplitPanel : System.Windows.Forms.Panel, IOrigamMetadataConsumer, ISupportInitialize

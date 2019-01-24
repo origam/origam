@@ -29,6 +29,7 @@ using Origam.Gui.Win;
 using Origam.Workbench.Services;
 using Origam.Schema.GuiModel;
 using Origam.DA;
+using Origam.Gui;
 using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.OrigamEngine.ModelXmlBuilders

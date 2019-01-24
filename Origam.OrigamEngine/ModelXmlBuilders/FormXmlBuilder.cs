@@ -26,7 +26,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Origam.DA;
 using Origam.DA.Service;
-using Origam.Gui.Win;
 using Origam.Workbench.Services;
 using core = Origam.Workbench.Services.CoreServices;
 
@@ -63,7 +62,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			FormReferenceMenuItem menuItem = persistence.SchemaProvider.RetrieveInstance(
                 typeof(FormReferenceMenuItem), new ModelElementKey(menuId)) as FormReferenceMenuItem;
 
-			bool readOnly = FormGenerator.IsFormMenuReadOnly(menuItem);
+			bool readOnly = FormTools.IsFormMenuReadOnly(menuItem);
 			return GetXml(menuItem.Screen, menuItem.DisplayName, 
                 menuItem.ListDataStructure == null, menuItem.Id, 
                 menuItem.Screen.DataStructure, readOnly, menuItem.SelectionChangeEntity);
@@ -114,7 +113,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			control.ControlItem = panel.PanelControl;
 
 			foreach(PropertyValueItem panelProperty in
-                FormGenerator.GetItemFromControlSet(panel).ChildItemsByType(
+			    FormTools.GetItemFromControlSet(panel).ChildItemsByType(
                     PropertyValueItem.ItemTypeConst))
 			{
 				PropertyValueItem copy = panelProperty.Clone() as PropertyValueItem;
@@ -814,7 +813,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 		    XmlOutput xmlOutput = new XmlOutput {Document = doc};
 
-		    RenderUIElement(xmlOutput, uiRootElement, FormGenerator.GetItemFromControlSet(item),
+		    RenderUIElement(xmlOutput, uiRootElement, FormTools.GetItemFromControlSet(item),
 				dataset, dataSources, ref controlCounter, isPreloaded, item.Id, workflowId, 
 				forceReadOnly, confirmSelectionChangeEntity);
 			RenderDataSources(windowElement, dataSources);
@@ -1081,7 +1080,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				return false;
 			}
 
-			forceReadOnly = FormGenerator.GetReadOnlyStatus (control, forceReadOnly);
+			forceReadOnly = FormTools.GetReadOnlyStatus (control, forceReadOnly);
 
 			UIElementRenderData renderData = UIElementRenderData.GetRenderData (control, forceReadOnly);
             if (renderData.Style != null)
@@ -1092,7 +1091,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             DataTable table;
 			
 			if (renderData.IndependentDataSourceId == Guid.Empty) {
-				table = dataset.Tables [FormGenerator.FindTableByDataMember (dataset, renderData.DataMember)];
+				table = dataset.Tables [FormTools.FindTableByDataMember (dataset, renderData.DataMember)];
 			} else {
 				IPersistenceService ps = ServiceManager.Services.GetService (typeof(IPersistenceService)) as IPersistenceService;
 				DataStructure ds = (DataStructure)ps.SchemaProvider.RetrieveInstance (typeof(DataStructure), 
@@ -1186,7 +1185,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                         ? (Guid)table.ExtendedProperties["EntityId"] : Guid.Empty, 
                     validActions);
                 AsPanelBuilder.Build(parentNode, renderData,
-                    FormGenerator.GetItemFromControlSet(control.ControlItem.PanelControlSet).Id.ToString(),
+                    FormTools.GetItemFromControlSet(control.ControlItem.PanelControlSet).Id.ToString(),
                     control.Id.ToString(), table, dataSources,
                     table.PrimaryKey[0].ColumnName, hasMultipleSelection, formId,
                     renderData.IndependentDataSourceId != Guid.Empty);
@@ -1197,7 +1196,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                     new Hashtable());
                 // render controls (both directly placed edit controls and containers)
                 RenderPanel(control, xmlOutput, table, formRootElement, propertiesElement,
-                    FormGenerator.GetItemFromControlSet(control.ControlItem.PanelControlSet), true, true, forceReadOnly);
+                    FormTools.GetItemFromControlSet(control.ControlItem.PanelControlSet), true, true, forceReadOnly);
             }
 
             // add config
@@ -1379,7 +1378,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                     bool readOnly = forceReadOnly;
                     if (!forceReadOnly)
                     {
-                        FormGenerator.GetReadOnlyStatus(csi, false);
+                        FormTools.GetReadOnlyStatus(csi, false);
                     }
 					string text = "";
 					bool showUniqueValues = false;

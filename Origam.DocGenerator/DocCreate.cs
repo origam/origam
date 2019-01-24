@@ -29,6 +29,7 @@ using System.Xml.XPath;
 using Mvp.Xml.Common.Xsl;
 using Mvp.Xml.Exslt;
 using Origam.DA.Service;
+using Origam.Gui;
 using Origam.Gui.Win;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
@@ -116,7 +117,7 @@ namespace Origam.DocGenerator
             }
             if (bindingMember != "")
             {
-                DataTable table = dataset.Tables[FormGenerator.FindTableByDataMember(dataset, dataMember)];
+                DataTable table = dataset.Tables[FormTools.FindTableByDataMember(dataset, dataMember)];
                 if (!table.Columns.Contains(bindingMember))
                 {
                     throw new Exception("Field '" + bindingMember +
@@ -176,7 +177,7 @@ namespace Origam.DocGenerator
         }
         private AbstractDataEntity GetEntity(IPersistenceService ps, string dataMember, DataSet dataset)
         {
-            DataTable table = dataset.Tables[FormGenerator.FindTableByDataMember(dataset, dataMember)];
+            DataTable table = dataset.Tables[FormTools.FindTableByDataMember(dataset, dataMember)];
             Guid entityId = (Guid)table.ExtendedProperties["EntityId"];
             AbstractDataEntity entity = ps.SchemaProvider.RetrieveInstance(typeof(AbstractDataEntity), new ModelElementKey(entityId)) as AbstractDataEntity;
             return entity;

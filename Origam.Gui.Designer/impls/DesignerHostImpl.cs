@@ -173,7 +173,7 @@ namespace Origam.Gui.Designer
 			IComponent newComponent=null;
 			if(this.IsComplexControl)
 			{
-                newComponent = Generator.LoadControl(FormGenerator.GetItemFromControlSet(this.PanelSet)) as IComponent;
+                newComponent = Generator.LoadControl(FormTools.GetItemFromControlSet(this.PanelSet)) as IComponent;
 			}
 			else 
 			{

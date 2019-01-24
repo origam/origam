@@ -24,6 +24,7 @@ using System.Data;
 using System.Windows.Forms;
 
 using Origam;
+using Origam.Gui;
 using Origam.UI;
 using Origam.Gui.Win;
 using Origam.Workbench.Services;
