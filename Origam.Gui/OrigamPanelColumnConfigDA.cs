@@ -25,7 +25,7 @@ using System.Data;
 using Origam.DA;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui
 {
 	/// <summary>
 	/// Summary description for OrigamPanelColumnConfigDA.

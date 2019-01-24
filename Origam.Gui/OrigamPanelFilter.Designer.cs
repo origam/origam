@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace Origam.Gui.Win {
+namespace Origam.Gui {
     
     
     /// <summary>

@@ -25,7 +25,7 @@ using System.Data;
 using Origam.DA;
 using Origam.Workbench.Services;
 
-namespace Origam.Gui.Win
+namespace Origam.Gui
 {
 	public enum OrigamPanelViewMode
 	{
