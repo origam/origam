@@ -33,7 +33,7 @@ namespace Origam.BI.PrintIt
 {
 	public class PrintItService : IReportService
 	{		
-		public object GetReport(Guid reportId, XmlDocument data, string format, Hashtable parameters, string dbTransaction)
+		public object GetReport(Guid reportId, IDataDocument data, string format, Hashtable parameters, string dbTransaction)
 		{
 			
 			if (format != DataReportExportFormatType.PDF.ToString())
@@ -45,13 +45,13 @@ namespace Origam.BI.PrintIt
             ReportHelper.PopulateDefaultValues(report, parameters);
             ReportHelper.ComputeXsltValueParameters(report, parameters);
 
-            XmlDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(report, data, parameters, dbTransaction);
+            IDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(report, data, parameters, dbTransaction);
 
 			using (LanguageSwitcher langSwitcher = new LanguageSwitcher(ReportHelper.ResolveLanguage(xmlDataDoc, report)))
-			{	
+			{
 
-				// optional xslt transformation
-				XmlDocument result = null;
+                // optional xslt transformation
+			    IDataDocument result = null;
 
 				if (report.Transformation != null)
 				{
@@ -117,7 +117,7 @@ namespace Origam.BI.PrintIt
 			}
 		}
 		
-		public void PrintReport(Guid reportId, XmlDocument data, string printerName, int copies, Hashtable parameters)
+		public void PrintReport(Guid reportId, IDataDocument data, string printerName, int copies, Hashtable parameters)
 		{
 			throw new NotSupportedException();
 		}

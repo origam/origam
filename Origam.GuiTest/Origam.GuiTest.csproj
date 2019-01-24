@@ -17,6 +17,10 @@
   <PropertyGroup>
       <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
+  
+  <PropertyGroup>
+      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
     <OutputPath>bin\Release\</OutputPath>
@@ -56,6 +60,7 @@
     <DebugType>full</DebugType>
   </PropertyGroup>
 
+
   <ItemGroup>
     <Reference Include="nunit.framework, Version=3.9.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb">
       <HintPath>..\EnterpriseLibrary\nunit.framework.dll</HintPath>
@@ -75,6 +80,10 @@
     <ProjectReference Include="..\Origam.Gui\Origam.Gui.csproj">
       <Project>{fb138bf6-af03-4f04-bffe-ef28d95efeb8}</Project>
       <Name>Origam.Gui</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench.BaseComponents\Origam.Workbench.BaseComponents.csproj">
+      <Project>{35DFEDDC-C519-4228-B6AD-AD22BD4C4BB0}</Project>
+      <Name>Origam.Workbench.BaseComponents</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

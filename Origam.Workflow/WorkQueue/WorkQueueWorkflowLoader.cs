@@ -46,7 +46,7 @@ namespace Origam.Workflow.WorkQueue
 		IWorkflow _workflow;
 		bool _executed = false;
 		string _resultState;
-		XmlDataDocument _attachmentSource;
+	    IDataDocument _attachmentSource;
 		WorkQueueClass _wqc;
 		XPathNodeIterator _resultIterator;
 
@@ -118,7 +118,7 @@ namespace Origam.Workflow.WorkQueue
 			if (_resultIterator.MoveNext())
 			{
 				if(_resultIterator.CurrentPosition > _resultIterator.Count) return null;
-				XmlDocument document = XmlTools.GetXmlSlice(_resultIterator);
+			    IDataDocument document = DataDocumentFactory.New(XmlTools.GetXmlSlice(_resultIterator));
 				WorkQueueAdapterResult result = new WorkQueueAdapterResult(document);
 				result.State = _resultState;
 				result.Attachments = new WorkQueueAttachment[attachmentTable.Rows.Count];
@@ -126,7 +126,7 @@ namespace Origam.Workflow.WorkQueue
 				if(log.IsDebugEnabled)
 				{
 					log.Debug("Workflow loader returned " + attachmentTable.Rows.Count.ToString() + " attachments.");
-					log.Debug(document.OuterXml);
+					log.Debug(document.Xml.OuterXml);
 				}
 				for(int i=0; i<attachmentTable.Rows.Count; i++)
 				{
@@ -170,7 +170,7 @@ namespace Origam.Workflow.WorkQueue
 			}
 			XmlDocument resultData = workflowEngine.ReturnValue as XmlDocument;
 			_resultState = (string)workflowEngine.RuleEngine.GetContext(new ModelElementKey(new Guid("f405cef2-2fad-4d58-a71c-10df3831e966")));
-			_attachmentSource = (XmlDataDocument)workflowEngine.RuleEngine.GetContext((new ModelElementKey(new Guid("b0caa6ec-8a54-4524-8387-8504e34d206c"))));
+			_attachmentSource = (IDataDocument)workflowEngine.RuleEngine.GetContext((new ModelElementKey(new Guid("b0caa6ec-8a54-4524-8387-8504e34d206c"))));
 			if(log.IsDebugEnabled)
 			{
 				log.Debug("Workflow loader result:");

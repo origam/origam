@@ -34,7 +34,7 @@ namespace Origam.ReflectorCache
 
 		public object InvokeObject(string classname, string assembly)
 		{
-#if !ORIGAM_SERVER
+#if !ORIGAM_SERVER && !NETSTANDARD
 			switch(assembly)
 			{
 				case "Origam.Gui.Win":
@@ -71,7 +71,7 @@ namespace Origam.ReflectorCache
 			}
 #endif
 
-			return null;
+            return null;
 		}
 
 

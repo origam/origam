@@ -33,6 +33,7 @@ using Origam.Schema.DeploymentModel;
 using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 using Origam.Gui.UI;
+using Origam.UI;
 using Origam.Schema.LookupModel.Wizards;
 using Origam.Schema.EntityModel.Wizards;
 using Origam.Schema.EntityModel.UI.Wizards;

@@ -234,7 +234,7 @@ namespace Origam.Mail
             return result;
         }
 
-        public static XmlDataDocument GetMails(string mailServer, int port, string userName, string password, string transactionId, int maxCount)
+        public static IDataDocument GetMails(string mailServer, int port, string userName, string password, string transactionId, int maxCount)
         {
             Pop3Client popClient = new Pop3Client();
             MailData mailData = new MailData();
@@ -266,7 +266,7 @@ namespace Origam.Mail
                 }
             }
 
-            return new XmlDataDocument(mailData);
+            return DataDocumentFactory.New(mailData);
         }
 
         public static void RetrieveMailNext(MailData mailData, Pop3Client popClient, bool delete)
@@ -383,24 +383,7 @@ namespace Origam.Mail
             }
         }
 
-        public int SendMail(XmlDocument mailDocument, string server, int port)
-        {
-            if (mailDocument is XmlDataDocument)
-            {
-                MailData mailData = new MailData();
-                mailData.Merge((mailDocument as XmlDataDocument).DataSet);
-
-                return SendMail2(mailData, server, port);
-            }
-            else
-            {
-                return SendMail1(mailDocument, server, port);
-            }
-        }
-
-        public abstract int SendMail2(MailData mailData, string server, int port);
-
-        public abstract int SendMail1(XmlDocument mailDocument, string server, int port);
+        public abstract int SendMail(IDataDocument mailDocument, string server, int port);
 
         public static string GetValue(XmlNode mailRoot, XmlNamespaceManager nsmgr, string where)
         {

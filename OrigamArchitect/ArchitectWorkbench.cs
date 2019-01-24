@@ -203,7 +203,9 @@ namespace OrigamArchitect
             TypeDescriptor.AddAttributes(typeof(SchemaItemAncestorCollection),
                         new EditorAttribute(typeof(SchemaItemAncestorCollectionEditor),
                             typeof(System.Drawing.Design.UITypeEditor)));
-    }
+		    TypeDescriptor.AddAttributes(typeof(Bitmap),
+		        new EditorAttribute(typeof(System.Drawing.Design.BitmapEditor), typeof(System.Drawing.Design.UITypeEditor)));
+        }
 
     public void OpenForm(object owner,Hashtable parameters)
 		{
@@ -1638,7 +1640,7 @@ namespace OrigamArchitect
 			cmd.Run();
 		}
 
-	    private void CheckModelRulesAsync()
+	    public void CheckModelRulesAsync()
 	    {
 	       var currentPersistenceService =
 	            ServiceManager.Services.GetService<IPersistenceService>();
@@ -1670,28 +1672,10 @@ namespace OrigamArchitect
 
 	    private void CheckModelRules(CancellationToken cancellationToken)
 	    {
-            
             using (FilePersistenceService independentPersistenceService = new FilePersistenceBuilder()
 	            .CreateNoBinFilePersistenceService())
 	        {
-	            List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
-	                .SchemaProvider
-	                .RetrieveList<IFilePersistent>()
-	                .Select(retrievedObj =>
-	                {
-	                    cancellationToken.ThrowIfCancellationRequested();
-	                    var errorMessages = RuleTools.GetExceptions(retrievedObj)
-	                        .Select(exception => exception.Message)
-	                        .ToList();
-	                    if (errorMessages.Count == 0) return null;
-
-	                    return new Dictionary<IFilePersistent, string>
-	                    {
-	                        { retrievedObj, string.Join("\n", errorMessages) }
-	                    };
-	                })
-	                .Where(x => x != null)
-	                .ToList();
+                List<Dictionary<IFilePersistent, string>> errorFragments = ModelRules.GetErrors(independentPersistenceService, cancellationToken); 
 	            if (errorFragments.Count != 0)
 	            {
                     FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
@@ -1861,11 +1845,11 @@ namespace OrigamArchitect
 
 		private void UnloadConnectedServices()
 		{
-			IDataLookupService dataLookupService =
-				ServiceManager.Services.GetService<IDataLookupService>();
-			if (dataLookupService != null)
+		    IControlsLookUpService controlsLookupService =
+				ServiceManager.Services.GetService<IControlsLookUpService>();
+			if (controlsLookupService != null)
 			{
-				dataLookupService.LookupShowSourceListRequested -=
+				controlsLookupService.LookupShowSourceListRequested -=
 					dataLookupService_LookupShowSourceListRequested;
 			}
 
@@ -2105,9 +2089,12 @@ namespace OrigamArchitect
 			ServiceManager.Services.AddService(new TracingService());
 			
 			DataLookupService dataLookupService = new DataLookupService();
-			ServiceManager.Services.AddService(dataLookupService);
-			dataLookupService.LookupShowSourceListRequested += dataLookupService_LookupShowSourceListRequested;
-			dataLookupService.LookupEditSourceRecordRequested += dataLookupService_LookupEditSourceRecordRequested;
+		    ControlsLookUpService controlsLookUpService = new ControlsLookUpService(dataLookupService);
+		    ServiceManager.Services.AddService(controlsLookUpService);
+
+            ServiceManager.Services.AddService(dataLookupService);
+		    controlsLookUpService.LookupShowSourceListRequested += dataLookupService_LookupShowSourceListRequested;
+		    controlsLookUpService.LookupEditSourceRecordRequested += dataLookupService_LookupEditSourceRecordRequested;
 			ServiceManager.Services.AddService(new DeploymentService());
 			ServiceManager.Services.AddService(new ParameterService());
 			ServiceManager.Services.AddService(new Origam.Workflow.WorkQueue.WorkQueueService());
@@ -2118,8 +2105,7 @@ namespace OrigamArchitect
 		private void InitializeDefaultServices()
 		{
 			// Status bar service
-			_statusBarService = new StatusBarService();
-			_statusBarService.StatusBar = this.statusBar;
+			_statusBarService = new StatusBarService(statusBar);
 			ServiceManager.Services.AddService(_statusBarService);
 
 			// Schema service

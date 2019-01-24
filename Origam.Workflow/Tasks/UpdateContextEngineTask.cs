@@ -63,17 +63,17 @@ namespace Origam.Workflow.Tasks
 			}
 
 			// 1. get a value from XPath and XPathContextStore
-			XmlDocument xPathXMLDoc = this.Engine.RuleEngine.GetXmlDocumentFromData(updateTask.XPathContextStore);
+			IDataDocument xPathXMLDoc = this.Engine.RuleEngine.GetXmlDocumentFromData(updateTask.XPathContextStore);
 			string val = (string) this.Engine.RuleEngine.EvaluateContext(updateTask.ValueXPath, xPathXMLDoc, OrigamDataType.String, null);
 			
 			DataStructureRuleSet ruleSet = null;
 			if (updateTask.OutputContextStore.Structure != null)
 			{
 				object res = this.Engine.RuleEngine.GetXmlDocumentFromData(updateTask.OutputContextStore);
-				if (res is XmlDataDocument) 
+				if (res is IDataDocument) 
 				{
 					// update dataset
-					DataSet outputDS = ((XmlDataDocument) res).DataSet;
+					DataSet outputDS = ((IDataDocument) res).DataSet;
 					// find the target table in the dataset
 					DataTable table = outputDS.Tables[updateTask.Entity.Name];
 
@@ -134,7 +134,8 @@ namespace Origam.Workflow.Tasks
 			if (changed && ruleSet != null)
 			{
 				this.Engine.RuleEngine.ProcessRules(
-					this.Engine.RuleEngine.GetContext(outputCtxtKey),
+					this.Engine.RuleEngine.GetContext(outputCtxtKey) 
+						as IDataDocument,
 					ruleSet,
 					null);
 				if (this.Step.Trace)

@@ -187,7 +187,7 @@ namespace Origam.Server
                 }
             }
 
-            formXml = Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(fcs, this.Data, this.TitleName, true, new Guid(this.Request.ObjectId), false, "");
+            formXml = Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(fcs, this.Data, this.TitleName, true, new Guid(this.Request.ObjectId), false, "").Document;
 
             XmlNode node = formXml.SelectSingleNode("//*[@*='$caption']");
             foreach (XmlAttribute att in node.Attributes)

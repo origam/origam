@@ -36,8 +36,9 @@ namespace Origam.Gui.Win
 			_dropDown.TabStop = false;
 			_ruleEngine = ruleEngine;
 
-			IDataLookupService lookupManager = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-			lookupManager.AddLookupControl(_dropDown, dropDown.FindForm(), true);
+		    ServiceManager.Services
+		        .GetService<IControlsLookUpService>()
+		        .AddLookupControl(_dropDown, dropDown.FindForm(), true);
 
 			this.TextBox.VisibleChanged += new EventHandler(TextBox_VisibleChanged);
 		}
@@ -310,9 +311,9 @@ namespace Origam.Gui.Win
 		{
 			if(disposing)
 			{
-				IDataLookupService lookupManager = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-
-				lookupManager.RemoveLookupControl(_dropDown);
+			    ServiceManager.Services
+			        .GetService<IControlsLookUpService>()
+			        .RemoveLookupControl(_dropDown);
 
 				_ruleEngine = null;
 

@@ -60,7 +60,7 @@ namespace Origam.Workflow.WorkQueue
             dataTable.Rows.Add(row);
             position++;
             return new WorkQueueAdapterResult(
-                new XmlDataDocument(dataTable.DataSet));
+                DataDocumentFactory.New(dataTable.DataSet));
         }
 
         private string GetFileContent(string filename)

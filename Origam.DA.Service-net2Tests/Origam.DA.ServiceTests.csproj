@@ -19,6 +19,10 @@
   <PropertyGroup>
     <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
+  
+  <PropertyGroup>
+      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
     <OutputPath>bin\Release\</OutputPath>
@@ -57,11 +61,12 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
+
   <ItemGroup>
     <Reference Include="CSharpFunctionalExtensions, Version=1.10.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\EnterpriseLibrary\CSharpFunctionalExtensions.dll</HintPath>
     </Reference>
-    <Reference Include="MoreLinq, Version=2.10.21623.0, Culture=neutral, PublicKeyToken=384d532d7e88985d">
+    <Reference Include="MoreLinq, Version=3.1.0.0, Culture=neutral, PublicKeyToken=384d532d7e88985d">
       <HintPath>..\EnterpriseLibrary\MoreLinq.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -74,15 +79,18 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="Debug.cs" />
     <Compile Include="OrigamDocumentSorter\OrigamDocumentSorterTests.cs" />
     <Compile Include="EqualityExtensions.cs" />
     <Compile Include="FilePersistenceProviderTests\FilePersistenceProviderTests.cs" />
     <Compile Include="FilePersistenceProviderTests\PersitHelper.cs" />
     <Compile Include="FilePersistenceProviderTests\FilePersistenceProviderTestWithOrigamRuntime.cs" />
     <Compile Include="FilePersistenceProviderTests\XmlLoaderTest.cs" />
+    <Compile Include="CustomCommandParserTests.cs" />
     <Compile Include="FlatFileSearchTests\FlatFileSearcherTests.cs" />
     <Compile Include="SchemaItemComparator.cs" />
     <Compile Include="SchemaItemsToCompare.cs" />
@@ -114,12 +122,8 @@
       <Project>{ffc2dce2-b8b5-48a4-aa18-1e93f99e1d54}</Project>
       <Name>Origam.ReflectorCache</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel.csproj">
-      <Project>{F4F5927B-022F-4684-B9B1-3BC6519DF66E}</Project>
-      <Name>Origam.Schema.DeploymentModel</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
-      <Project>{50186A07-6ED9-4751-B0E2-52FEBA2A4518}</Project>
+      <Project>{FDF55D1B-BB0D-4191-AE53-98DE5A4465B5}</Project>
       <Name>Origam.Schema.EntityModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel.csproj">

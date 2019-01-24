@@ -387,15 +387,15 @@ namespace OrigamArchitect.Commands
 			try
 			{
                 UserProfile profile = SecurityManager.CurrentUserProfile();
-				XmlDataDocument dataDoc;
+				IDataDocument dataDoc;
 
 				if(transformationBeforeSelection == null)
 				{
-					dataDoc = new XmlDataDocument(FormGenerator.GetSelectionDialogData(selectionDialogPanel.DataSourceId, Guid.Empty, false, profile.Id));
+					dataDoc = DataDocumentFactory.New(FormGenerator.GetSelectionDialogData(selectionDialogPanel.DataSourceId, Guid.Empty, false, profile.Id));
 				}
 				else
 				{
-					dataDoc = new XmlDataDocument(FormGenerator.GetSelectionDialogData(selectionDialogPanel.DataSourceId, (Guid)transformationBeforeSelection.PrimaryKey["Id"], false, profile.Id));
+					dataDoc = DataDocumentFactory.New(FormGenerator.GetSelectionDialogData(selectionDialogPanel.DataSourceId, (Guid)transformationBeforeSelection.PrimaryKey["Id"], false, profile.Id));
 				}
 
 				sdGenerator = new FormGenerator();

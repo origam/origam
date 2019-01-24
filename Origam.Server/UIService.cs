@@ -470,7 +470,7 @@ namespace Origam.Server
 
                 if (hasRows)
                 {
-                    XmlDocument xmlDoc = new XmlDataDocument(clone);
+                    IDataDocument xmlDoc = DataDocumentFactory.New(clone);
                     return ss.RuleEngine.EvaluateEndRule(ss.ConfirmationRule, xmlDoc);
                 }
                 return new RuleExceptionDataCollection();
@@ -1114,10 +1114,10 @@ namespace Origam.Server
             DataServiceDataLookup lookup = ps.SchemaProvider.RetrieveInstance(typeof(DataStructure), new ModelElementKey(new Guid(lookupId))) as DataServiceDataLookup;
 
             ArrayList tooltips = lookup.Tooltips;
-            return GetTooltip(id, tooltips);
+            return GetTooltip(id, tooltips).Xml;
         }
 
-        private static XmlDocument GetTooltip(object id, ArrayList tooltips)
+        private static IDataDocument GetTooltip(object id, ArrayList tooltips)
         {
             tooltips.Sort();
 
@@ -1147,7 +1147,7 @@ namespace Origam.Server
             IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
             IXsltEngine transformer = AsTransform.GetXsltEngine(
                 XsltEngineType.XslTransform, persistence.SchemaProvider);
-            XmlDocument result = transformer.Transform(new XmlDataDocument(data), tooltip.TooltipTransformationId, new Hashtable(), new RuleEngine(null, null), null, false);
+            IDataDocument result = transformer.Transform(DataDocumentFactory.New(data), tooltip.TooltipTransformationId, new Hashtable(), new RuleEngine(null, null), null, false);
 
             return result;
         }
@@ -1235,7 +1235,7 @@ namespace Origam.Server
             {
                 ArrayList tooltips = logoNotificationBox.ChildItemsByType(DataServiceDataTooltip.ItemTypeConst);
 
-                doc = GetTooltip(null, tooltips);
+                doc = GetTooltip(null, tooltips).Xml;
             }
 
             if (doc == null)

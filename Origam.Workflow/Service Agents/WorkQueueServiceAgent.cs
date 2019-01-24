@@ -85,7 +85,7 @@ namespace Origam.Workflow
             DataRow row = wqs.GetNextItem(queueName, TransactionId, false);
             if (row != null)
             {
-                _result = new XmlDataDocument(row.Table.DataSet);
+                _result = DataDocumentFactory.New(row.Table.DataSet);
             }
         }
 
@@ -100,14 +100,14 @@ namespace Origam.Workflow
             WorkQueue.OrigamNotificationContactData recipientDataDS = null;
             if (this.Parameters.Contains("RecipientData"))
             {
-                if (!(this.Parameters["RecipientData"] is XmlDataDocument))
+                if (!(this.Parameters["RecipientData"] is IDataDocument))
                     throw new InvalidCastException(ResourceUtils.GetString("ErrorRecipientDataNotXmlDataDocument"));
                 recipientDataDS = new WorkQueue.OrigamNotificationContactData();
-                DatasetTools.MergeDataSetVerbose(recipientDataDS, (this.Parameters["RecipientData"] as XmlDataDocument).DataSet);
+                DatasetTools.MergeDataSetVerbose(recipientDataDS, (this.Parameters["RecipientData"] as IDataDocument).DataSet);
             }
             _result = wqs.GenerateNotificationMessage(
                 (Guid)this.Parameters["NotificationTemplateId"]
-                , this.Parameters["NotificationSource"] as XmlDocument
+                , this.Parameters["NotificationSource"] as IDataDocument
                 , (recipientDataDS == null) ? null : recipientDataDS.OrigamNotificationContact[0],
                 null,
                 this.TransactionId);
@@ -145,11 +145,11 @@ namespace Origam.Workflow
             if (this.Parameters.ContainsKey("Attachments"))
             {
                 DataSet attachmentsDS = null;
-                if (!(this.Parameters["Attachments"] is XmlDataDocument))
+                if (!(this.Parameters["Attachments"] is IDataDocument))
                 {
                     throw new InvalidCastException(ResourceUtils.GetString("ErrorParamNotXmlDataDocument", "Attachments"));
                 }
-                attachmentsDS = (this.Parameters["Attachments"] as XmlDataDocument).DataSet;
+                attachmentsDS = (this.Parameters["Attachments"] as IDataDocument).DataSet;
                 attachments = new WorkQueueAttachment[attachmentsDS.Tables["Attachment"].Rows.Count];
                 int i = 0;
                 foreach (DataRow row in attachmentsDS.Tables["Attachment"].Rows)
@@ -162,7 +162,7 @@ namespace Origam.Workflow
                 }
             }
 
-            wqs.WorkQueueAdd(this.Parameters["QueueName"] as String, this.Parameters["Data"] as XmlDocument, attachments, this.TransactionId);
+            wqs.WorkQueueAdd(this.Parameters["QueueName"] as String, this.Parameters["Data"] as IDataDocument, attachments, this.TransactionId);
             _result = null;
         }
     }

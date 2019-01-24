@@ -75,9 +75,17 @@ namespace Origam.DA.Service
 				switch(Query.DataSourceType)
 				{
 					case QueryDataSourceType.DataStructure:
-						adapter = DataService.GetAdapter(Ds, Entity, Filter, SortSet,
-                            CurrentProfile, Query.Parameters.ToHashtable(), Query.Paging,
-                            Query.ColumnName);
+					    var selectParameters = new SelectParameters
+					    {
+					        DataStructure = Ds,
+					        Entity = Entity,
+					        Filter = Filter,
+					        SortSet = SortSet,
+					        Parameters = Query.Parameters.ToHashtable(),
+					        Paging = Query.Paging,
+					        ColumnName = Query.ColumnName,
+					    };
+                        adapter = DataService.GetAdapter(selectParameters, CurrentProfile);
 						break;
 					case QueryDataSourceType.DataStructureEntity:
 						adapter = DataService.GetSelectRowAdapter(Entity, Query.ColumnName);
@@ -164,15 +172,21 @@ namespace Origam.DA.Service
 			this.DataService.HandleException(ex, standardMessage, null);
 		}
 	}
-	#endregion
+    #endregion
 
-	public abstract class AbstractSqlDataService : AbstractDataService
+    // version of log4net for NetStandard 1.3 does not have the method
+    // LogManager.GetLogger(string)... have to use the overload with Type as parameter 
+    public class ConcurrencyExceptionLogger
+    {
+    }
+
+    public abstract class AbstractSqlDataService : AbstractDataService
 	{				
 		private readonly Profiler profiler = new Profiler(); 
 		
 		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         // Special logger for concurrency exception detail logging
-        private static readonly ILog concurrencyLog = LogManager.GetLogger("ConcurrencyExceptionLogger");
+        private static readonly ILog concurrencyLog = LogManager.GetLogger(typeof(ConcurrencyExceptionLogger));
 		private DbDataAdapterFactory _adapterFactory;
 		private string _connectionString = "";
         private const int DATA_VISUALIZATION_MAX_LENGTH = 100;
@@ -347,7 +361,7 @@ namespace Origam.DA.Service
 
 			foreach(DataStructureEntity entity in entities)
 			{
-				if (LoadWillReturnZeroResults(dataset, entity)) continue;
+				if (LoadWillReturnZeroResults(dataset, entity, query.DataSourceType)) continue;
 				// Skip self joins, they are just relations, not really entities
 				if(entity.Columns.Count > 0 & !(entity.Entity is IAssociation && (entity.Entity as IAssociation).IsSelfJoin))
 				{
@@ -389,7 +403,7 @@ namespace Origam.DA.Service
 					try
 					{
 						log.Error(DebugClass.ListRowErrors(dataset), ex);
-						using(System.IO.StreamWriter w = System.IO.File.CreateText(System.Windows.Forms.Application.StartupPath + @"\debug\" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-") + DateTime.Now.Ticks.ToString() + "___" + "MsSqlDataService_error.txt"))
+						using(System.IO.StreamWriter w = System.IO.File.CreateText(AppDomain.CurrentDomain.BaseDirectory + @"\debug\" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-") + DateTime.Now.Ticks.ToString() + "___" + "MsSqlDataService_error.txt"))
 						{
 							w.WriteLine(DebugClass.ListRowErrors(dataset));
 							w.Close();
@@ -404,15 +418,15 @@ namespace Origam.DA.Service
 		}
 		
 		private bool LoadWillReturnZeroResults(DataSet dataset,
-			DataStructureEntity entity)
+			DataStructureEntity entity, QueryDataSourceType dataSourceType)
 		{
 			DataStructureEntity rootEntity = entity.RootEntity;
-			
+		    if (dataSourceType == QueryDataSourceType.DataStructureEntity) return false;
 			if (rootEntity == entity) return false;
 			if (entity.RelationType != RelationType.Normal) return false;
 			if (!(rootEntity.Entity is TableMappingItem mappingItem)) return false;
-			
-			string rootEntityTableName = mappingItem.MappedObjectName;
+
+            string rootEntityTableName = mappingItem.MappedObjectName;
 			DataTable rootTable = dataset.Tables
 				.Cast<DataTable>()
 				.FirstOrDefault(table => table.TableName == rootEntityTableName);
@@ -775,8 +789,16 @@ namespace Origam.DA.Service
                 DataStructureFilterSet filter = GetFilterSet(query.MethodId);
                 DataStructureSortSet sortSet = GetSortSet(query.SortSetId);
                 // CONFIGURE DATA ADAPTER
-                DbDataAdapter adapter = this.GetAdapter(ds, entity, filter, sortSet,
-                    profile, query.Parameters.ToHashtable(), false, null) as DbDataAdapter;
+                var adapterParameters = new SelectParameters
+                {
+                    DataStructure = ds,
+                    Entity = entity,
+                    Filter = filter,
+                    SortSet = sortSet,
+                    Parameters = query.Parameters.ToHashtable(),
+                    Paging = false
+                };
+                DbDataAdapter adapter = this.GetAdapter(adapterParameters, profile);
                 SetConnection(adapter, connection);
                 SetTransaction(adapter, transaction);
                 if (UpdateBatchSize != 0)
@@ -1401,9 +1423,15 @@ namespace Origam.DA.Service
 
 				DataStructure logDataStructure = this.GetDataStructure(
                     new Guid("530eba45-40db-470d-8e53-8b98ace758ad"));
-				DbDataAdapter logAdapter = this.GetAdapter(logDataStructure, 
-                    (DataStructureEntity)logDataStructure.Entities[0], null, null, 
-                    profile, new Hashtable(), false, null);
+
+			    var adapterParameters = new SelectParameters
+			    {
+			        DataStructure = logDataStructure,
+			        Entity = (DataStructureEntity)logDataStructure.Entities[0],
+			        Parameters = new Hashtable(),
+			        Paging = false,
+			    };
+                DbDataAdapter logAdapter = this.GetAdapter(adapterParameters, profile);
 				SetConnection(logAdapter, connection);
 				SetTransaction(logAdapter, transaction);
 
@@ -1529,57 +1557,18 @@ namespace Origam.DA.Service
                 throw new NullReferenceException(
                     ResourceUtils.GetString("NoProviderForMS"));
             }
-            ArrayList entities;
-            DataStructure dataStructure = null;
-            DataStructureFilterSet filterSet = null;
-            DataStructureSortSet sortSet = null;
-            switch(query.DataSourceType)
-            {
-                case QueryDataSourceType.DataStructure:
-                    dataStructure = GetDataStructure(query);
-                    filterSet = GetFilterSet(query.MethodId);
-                    sortSet = GetSortSet(query.SortSetId);
-                    if(string.IsNullOrEmpty(query.Entity))
-                    {
-                        entities = dataStructure.Entities;
-                    }
-                    else
-                    {
-                        entities = new ArrayList();
-                        foreach(DataStructureEntity e in dataStructure.Entities)
-                        {
-                            if(e.Name == query.Entity)
-                            {
-                                entities.Add(e);
-                                break;
-                            }
-                        }
-                        if(entities.Count == 0)
-                        {
-                            throw new ArgumentOutOfRangeException(
-                                string.Format(
-                                    "Entity {0} not found in data structure {1}.",
-                                    query.Entity, dataStructure.Path));
-                        }
-                    }
-                    dataSet = GetDataset(dataStructure, query.DefaultSetId);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException("DataSourceType", 
-                        query.DataSourceType, ResourceUtils.GetString(
-                            "UnknownDataSource"));
-            }
-            IDictionary<DataColumn, string> expressions 
-                = DatasetTools.RemoveExpressions(dataSet, true);
-            if(dataSet.Tables.Count > 1)
-            {
-                throw new Exception(
-                    "Executing DataReader is allowed only on data sturctures with a single entity.");
-            }
-            DataStructureEntity entity = entities[0] as DataStructureEntity;
+
+            DataStructure dataStructure = GetDataStructure(query);
+            DataStructureFilterSet filterSet = GetFilterSet(query.MethodId);
+            DataStructureSortSet sortSet = GetSortSet(query.SortSetId);
+            DataStructureEntity entity = GetEntity(query, dataStructure);
+            dataSet = GetDataset(dataStructure, query.DefaultSetId);
+            DatasetTools.RemoveExpressions(dataSet, true);
+
 			IDbConnection connection = null;
             IDbTransaction transaction = null;
-            if(transactionId != null)
+            CommandBehavior commandBehavior = CommandBehavior.Default;
+            if (transactionId != null)
             {
                 transaction = GetTransaction(
                     transactionId, query.IsolationLevel);
@@ -1587,24 +1576,82 @@ namespace Origam.DA.Service
             if(transaction == null)
 			{
 				connection = GetConnection(_connectionString);
-			}
+			    commandBehavior = CommandBehavior.CloseConnection;
+            }
 			else
 			{
 				connection = transaction.Connection;
 			}
+
+            var adapterParameters = new SelectParameters
+            {
+                DataStructure = dataStructure,
+                Entity = entity,
+                Filter=filterSet,
+                SortSet = sortSet,
+                Parameters = query.Parameters.ToHashtable(),
+                Paging = query.Paging,
+                ColumnName = query.ColumnName,
+                CustomFilters = query.CustomFilters,
+                CustomOrdering = query.CustomOrdering,
+                RowLimit = query.RowLimit
+            };
             DbDataAdapter adapter = GetAdapter(
-                dataStructure, entity, filterSet, sortSet, currentProfile, 
-                query.Parameters.ToHashtable(), query.Paging, query.ColumnName);
+                adapterParameters, currentProfile);
             ((IDbDataAdapter)adapter).SelectCommand.Connection = connection;
             ((IDbDataAdapter)adapter).SelectCommand.Transaction = transaction;
             ((IDbDataAdapter)adapter).SelectCommand.CommandTimeout = timeout;
-            if(connection.State == ConnectionState.Closed)
+            if (connection.State == ConnectionState.Closed)
             {
                 connection.Open();
             }
-            return adapter.SelectCommand.ExecuteReader();
+            return adapter.SelectCommand.ExecuteReader(commandBehavior);
         }
-        #endregion
+
+	    private static DataStructureEntity GetEntity(DataStructureQuery query, DataStructure dataStructure)
+	    {
+	        DataStructureEntity entity;
+	        switch (query.DataSourceType)
+	        {
+	            case QueryDataSourceType.DataStructure:
+	                ArrayList entities;
+	                if (string.IsNullOrEmpty(query.Entity))
+	                {
+	                    entities = dataStructure.Entities;
+	                }
+	                else
+	                {
+	                    entities = new ArrayList();
+	                    foreach (DataStructureEntity e in dataStructure.Entities)
+	                    {
+	                        if (e.Name == query.Entity)
+	                        {
+	                            entities.Add(e);
+	                            break;
+	                        }
+	                    }
+
+	                    if (entities.Count == 0)
+	                    {
+	                        throw new ArgumentOutOfRangeException(
+	                            string.Format(
+	                                "Entity {0} not found in data structure {1}.",
+	                                query.Entity, dataStructure.Path));
+	                    }
+	                }
+
+	                entity = entities[0] as DataStructureEntity;
+	                break;
+	            default:
+	                throw new ArgumentOutOfRangeException("DataSourceType",
+	                    query.DataSourceType, ResourceUtils.GetString(
+	                        "UnknownDataSource"));
+	        }
+
+	        return entity;
+	    }
+
+	    #endregion
 
         #region Is Schema Item in Database
         public override bool IsSchemaItemInDatabase(ISchemaItem schemaItem)
@@ -2473,11 +2520,16 @@ namespace Origam.DA.Service
 
 		#endregion
 	}
-	
-	internal class Profiler
+    // version of log4net for NetStandard 1.3 does not have the method
+    // LogManager.GetLogger(string)... have to use the overload with Type as parameter 
+    public class WorkflowProfiling
+    {
+    }
+
+    internal class Profiler
 		{
 			private static readonly ILog workflowProfilingLog = 
-				LogManager.GetLogger("WorkflowProfiling");
+				LogManager.GetLogger(typeof(Profiler));
 			
 			private readonly Dictionary<DataStructureEntity,List<double>> durations_ms = 
 				new Dictionary<DataStructureEntity, List<double>>();
@@ -2522,7 +2574,8 @@ namespace Origam.DA.Service
 			private static void ExecuteAndTakeLoggingAction(DataStructureEntity entity,
 				Action<DataStructureEntity,Stopwatch> loggingAction, Action actionToExecute)	
 			{
-				if (workflowProfilingLog.IsDebugEnabled)
+
+			   if (workflowProfilingLog.IsDebugEnabled)
 				{
 					string taskId = (string) ThreadContext.Properties["currentTaskId"];
 					if (taskId != null)
@@ -2590,5 +2643,4 @@ namespace Origam.DA.Service
 				workflowProfilingLog.Debug(message);
 			}
 		}
-
 }

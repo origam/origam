@@ -82,7 +82,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				CheckBoxBuilder.Build(componentElement, caption);
 			}
 
-			XmlElement newDataSourceElement = FormXmlBuilder.AddDataSourceElement(dataSourcesElement, modelInstanceId, "Id", null);
+			XmlElement newDataSourceElement = FormXmlBuilder.AddDataSourceElement(dataSourcesElement, modelInstanceId, "Id", null, null);
 			newDataSourceElement.AppendChild(FormXmlBuilder.CreateDataSourceField(doc, "Id", 0));
 			newDataSourceElement.AppendChild(FormXmlBuilder.CreateDataSourceField(doc, "Value", 1));
 		}

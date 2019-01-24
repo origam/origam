@@ -63,9 +63,9 @@ namespace Origam.Server.Pages
 				// reenable constraints for context parameter
 				foreach (KeyValuePair<string, object> p in parameters)
 				{
-					if (p.Value as XmlDataDocument != null)
+					if (p.Value as IDataDocument != null)
 					{
-						(p.Value as XmlDataDocument).DataSet.EnforceConstraints = true;
+						(p.Value as IDataDocument).DataSet.EnforceConstraints = true;
 					}
 				}
 			}

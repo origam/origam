@@ -116,16 +116,16 @@ namespace Origam.Workflow.Tasks
 					if(key.Equals(block.SourceContextStore.PrimaryKey))
 					{
 						XmlDocument document = XmlTools.GetXmlSlice(_iter); // ((IHasXmlNode)iter.Current).GetNode();
-						XmlDataDocument xmlDataDocument = context as XmlDataDocument;
+						IDataDocument dataDocument = context as IDataDocument;
 						XmlDocument xmlDocument = context as XmlDocument;
-						if(xmlDataDocument != null)
+						if(dataDocument != null)
 						{
 							// we clone the dataset (no data, just the structure)
-							DataSet dataset = xmlDataDocument.DataSet.Clone();
+							DataSet dataset = dataDocument.DataSet.Clone();
 							// we load the iteration data into the dataset
 							dataset.ReadXml(new XmlNodeReader(document), XmlReadMode.IgnoreSchema);
 							// we add the context into the called engine
-							_call.ParentContexts.Add(key, new XmlDataDocument(dataset));
+							_call.ParentContexts.Add(key, DataDocumentFactory.New(dataset));
 						}
 						else if(xmlDocument != null)
 						{

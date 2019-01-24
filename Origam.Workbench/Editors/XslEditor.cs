@@ -899,9 +899,9 @@ namespace Origam.Workbench.Editors
 
 		private void btnTransform_Click(object sender, EventArgs e)
 		{
-			XmlDocument result = this.Transform(txtText.Text, txtSource.Text, false);
+		    IDataDocument result = this.Transform(txtText.Text, txtSource.Text, false);
 
-			string resultText = GetFormattedXml(result);
+			string resultText = GetFormattedXml(result.Xml);
 					
 			txtResult.Text = resultText;
 					
@@ -911,23 +911,23 @@ namespace Origam.Workbench.Editors
 
 			try
 			{
-				if(result is XmlDataDocument)
+				if(result is IDataDocument)
 				{
-					grdResult.DataSource = (result as XmlDataDocument).DataSet;
+					grdResult.DataSource = (result as IDataDocument).DataSet;
 				}
-				else
-				{
-					DataSet data = new DataSet();
-					data.ReadXml(new XmlNodeReader(result));
-					grdResult.DataSource = data;
-				}
+//				else
+//				{
+//					DataSet data = new DataSet();
+//					data.ReadXml(new XmlNodeReader(result.Xml));
+//					grdResult.DataSource = data;
+//				}
 			}
 			catch{}
 
 			tabControl.SelectedTab = tabResult;
 		}
 
-		private XmlDocument Transform(string xslt, string sourceXml, bool validateOnly)
+		private IDataDocument Transform(string xslt, string sourceXml, bool validateOnly)
 		{
             Workbench.Commands.ViewOutputPad outputPad =
                 new Workbench.Commands.ViewOutputPad();
@@ -945,8 +945,8 @@ namespace Origam.Workbench.Editors
                     "DataTransformationService", 
                     new RuleEngine(new Hashtable(), null), null);
 
-				XmlDocument doc = new XmlDocument();
-				doc.LoadXml(sourceXml);
+				var doc = DataDocumentFactory.New(new XmlDocument());
+				doc.Xml.LoadXml(sourceXml);
 
 				transformer.MethodName = "TransformText";
 				transformer.Parameters.Add("XslScript", xslt);
@@ -960,35 +960,21 @@ namespace Origam.Workbench.Editors
 				// resolve transformation input parameters and try to put an empty xml document to each just
 				// in case it expects a node set as a parameter
 				var xsltParams = XmlTools.ResolveTransformationParameters(xslt);
-//				Hashtable htParams = new Hashtable(xsltParams.Count);
-//				XmlDocument dummyValue = new XmlDocument();
-//				foreach (string xsltParam in xsltParams) {
-//					htParams.Add(xsltParam, dummyValue); 
-//				}
 				RefreshParameterList();
 				LoadDisplayedParameterData();
 				Hashtable parameterValues = GetParameterValues(xsltParams);
 				transformer.Parameters.Add("Parameters", parameterValues);
-			
 				transformer.Run();
-
-				XmlDocument result = transformer.Result as XmlDocument;
-
-				if(result == null) return new XmlDocument();
+			    IDataDocument result = transformer.Result as IDataDocument;
+				if(result == null) return DataDocumentFactory.New();
 
 				// rule handling
 				DataStructureRuleSet ruleSet = cboRuleSet.SelectedItem as DataStructureRuleSet;
-				XmlDataDocument dataDoc = result as XmlDataDocument;
-
-				if(dataDoc != null)
+				if(result.DataSet.HasErrors == false && ruleSet != null)
 				{
-					if(dataDoc.DataSet.HasErrors == false && ruleSet != null)
-					{
-						RuleEngine re = new RuleEngine(null, null);
-						re.ProcessRules(dataDoc, ruleSet, null);
-					}
+					RuleEngine re = new RuleEngine(null, null);
+					re.ProcessRules(result, ruleSet, null);
 				}
-
 				return result;
 			}
 			catch(Exception ex)

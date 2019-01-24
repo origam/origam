@@ -38,113 +38,7 @@ namespace Origam.Mail
 		{
 		}		
 
-		public override int SendMail2(MailData mailData, string server, int port)
-		{
-            // for opensmtp client the server name is mandatory.
-            if (server == null)
-            {
-                throw new ArgumentException(ResourceUtils.GetString("ErrorSmtpServerMissing"));
-            }
-
-			//return Value positive number (include 0zero) indicates OK result, negative -1 means error
-			int retVal=0;
-            
-			//local variables
-			OpenSmtp.Mail.Smtp s = new Smtp();
-
-			//configure smtp server parameters
-			s.Host = server;
-			s.Port = port;
-
-			//send one mail per Mail section
-			foreach (MailData.MailRow mailrow in mailData.Mail.Rows)
-			{
-				OpenSmtp.Mail.MailMessage m = new MailMessage();
-
-				//put mail header info
-				m.Subject = mailrow.Subject;
-				m.Charset = "utf-8";
-				string fromName = "";
-				string fromAddress = "";
-				OpenPOP.MIMEParser.Utility.ParseEmailAddress(mailrow.Sender, ref fromName, ref fromAddress);
-				m.From = new EmailAddress(fromAddress, fromName);
-				m.AddCustomHeader("X-OrigamEmailIdentifier", mailrow.Id.ToString());
-
-				string[] to = mailrow.Recipient.Split(";".ToCharArray());
-
-				foreach(string recipient in to)
-				{
-					string toName = "";
-					string toAddress = "";
-					OpenPOP.MIMEParser.Utility.ParseEmailAddress(recipient, ref toName, ref toAddress);
-
-					if(recipient != null & recipient != String.Empty) m.To.Add(new EmailAddress(toAddress, toName));
-				}
-				
-				string[] cc = null; 
-				if(!mailrow.IsCCNull())
-				{
-					cc = mailrow.CC.Split(";".ToCharArray());
-
-					foreach(string recipient in cc)
-					{
-						string ccName = "";
-						string ccAddress = "";
-						OpenPOP.MIMEParser.Utility.ParseEmailAddress(recipient, ref ccName, ref ccAddress);
-
-						if(recipient != null & recipient != String.Empty) m.CC.Add(new EmailAddress(ccAddress, ccName));
-					}
-				}
-
-				string[] bcc = null;
-				if(!mailrow.IsBCCNull())
-				{
-					bcc = mailrow.BCC.Split(";".ToCharArray());
-
-					foreach(string recipient in bcc)
-					{
-						string bccName = "";
-						string bccAddress = "";
-						OpenPOP.MIMEParser.Utility.ParseEmailAddress(recipient, ref bccName, ref bccAddress);
-
-						if(recipient != null & recipient != String.Empty) m.BCC.Add(new EmailAddress(bccAddress, bccName));
-					}
-				}
-
-				//put html body inside
-				if(mailrow.MessageBody.StartsWith("<"))
-				{
-					m.HtmlBody = mailrow.MessageBody;
-					m.Body = HtmlToText(mailrow.MessageBody);
-				}
-				else
-				{
-					m.Body = mailrow.MessageBody;
-				}
-				
-	
-				foreach(MailData.MailAttachmentRow attachment in mailrow.GetMailAttachmentRows())
-				{
-					System.IO.MemoryStream stream = new System.IO.MemoryStream(attachment.Data, false);
-					
-					OpenSmtp.Mail.Attachment att = new Attachment(stream, attachment.FileName);
-
-					m.AddAttachment(att);
-				}
-
-				s.SendMail(m);
-				retVal++;
-
-				/// po uspesnem odeslani mailu posleme zpet domluveny fragment s klicem,
-				/// podle ktereho bude proveden update logu se statusem a casem odeslaneho mailu
-				/// .
-				/// Temito vysledky bude naplnen dataset, na nej dan data adapter a bude
-				/// proveden update.
-			}
-			return retVal;
-		}
-
-		public override int SendMail1(XmlDocument mailDocument, string server, int port)
+		public override int SendMail(IDataDocument mailDocument, string server, int port)
 		{
             if (server == null)
             {
@@ -162,7 +56,7 @@ namespace Origam.Mail
 			s.Port = port;
 
 			//get root (Mails) element
-			XmlElement root = mailDocument.DocumentElement;
+			XmlElement root = mailDocument.Xml.DocumentElement;
 
 			//configure xsd namespace
 			XmlNamespaceManager nsmgr = new XmlNamespaceManager(((XPathNavigator)root.CreateNavigator()).NameTable);

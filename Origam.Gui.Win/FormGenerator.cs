@@ -80,14 +80,17 @@ namespace Origam.Gui.Win
         private IEndRule _selectionDialogEndRule;
 		private Hashtable _loadedPieces = new Hashtable();
 		private DatasetRuleHandler _ruleHandler = new DatasetRuleHandler();
+        private readonly IControlsLookUpService _controlsLookupService;
 
-		#region Constructors
-		public FormGenerator()
+        #region Constructors
+        public FormGenerator()
 		{
-			_lookupManager = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-			_documentationService = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
-			IBusinessServicesService services = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-			_dataServiceAgent = services.GetAgent("DataService", null, null);
+			_lookupManager = ServiceManager.Services.GetService<IDataLookupService>();
+            _controlsLookupService  = ServiceManager.Services.GetService<IControlsLookUpService>();
+            _documentationService = ServiceManager.Services.GetService<IDocumentationService>() ;
+			_dataServiceAgent = ServiceManager.Services
+			    .GetService<IBusinessServicesService>()
+			    .GetAgent("DataService", null, null);
         }
 		#endregion
 
@@ -112,21 +115,9 @@ namespace Origam.Gui.Win
 				_mainFormData = value;
 			}
 		}
+        public IDataDocument XmlData { get; set; } = null;
 
-		XmlDataDocument _mainFormXmlData = null;
-		public XmlDataDocument XmlData
-		{
-			get
-			{
-				return _mainFormXmlData;
-			}
-			set
-			{
-				_mainFormXmlData = value;
-			}
-		}
-
-		public Hashtable ControlBindings
+        public Hashtable ControlBindings
 		{
 			get
 			{
@@ -259,15 +250,7 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public IDataLookupService LookupManager
-		{
-			get
-			{
-				return _lookupManager;
-			}
-		}
-
-		Hashtable _selectionParameters = new Hashtable();
+	    Hashtable _selectionParameters = new Hashtable();
 		public Hashtable SelectionParameters
 		{
 			get
@@ -671,7 +654,7 @@ namespace Origam.Gui.Win
             {
                 _dataServiceAgent.Run();
                 _loadedPieces.Clear();
-                if (_mainFormXmlData == null)
+                if (XmlData == null)
                 {
                     _mainFormData.Clear();
                 }
@@ -722,7 +705,7 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public Control LoadFormWithData(AsForm form, DataSet formData, XmlDataDocument xmlData, FormControlSet formControlSet)
+		public Control LoadFormWithData(AsForm form, DataSet formData, IDataDocument xmlData, FormControlSet formControlSet)
 		{
 			this.Form = form;
 
@@ -769,9 +752,9 @@ namespace Origam.Gui.Win
 			if(transformationBeforeId != Guid.Empty)
 			{
 				// we have to clone the dataset, because we need to return DataSet without XmlDataDocument bound to it
-				XmlDataDocument dataDoc = new XmlDataDocument(DatasetTools.CloneDataSet(sdData));
+				IDataDocument dataDoc = DataDocumentFactory.New(DatasetTools.CloneDataSet(sdData));
 
-				XmlDocument inputDoc = new XmlDataDocument(new DataSet("ROOT"));
+				IDataDocument inputDoc = DataDocumentFactory.New(new DataSet("ROOT"));
 
 				IServiceAgent transformer = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataTransformationService", new RuleEngine(new System.Collections.Hashtable(), null), null);
 				transformer.MethodName = "Transform";
@@ -799,7 +782,7 @@ namespace Origam.Gui.Win
 			return sdData;
 		}
 
-		public static DataRow GetSelectionDialogResultRow(Guid entityId, Guid transformationAfterId, XmlDataDocument dataDoc, object profileId)
+		public static DataRow GetSelectionDialogResultRow(Guid entityId, Guid transformationAfterId, IDataDocument dataDoc, object profileId)
 		{
 			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 			IDataEntity entity = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
@@ -821,7 +804,7 @@ namespace Origam.Gui.Win
 					DatasetGenerator gen = new DatasetGenerator(true);
 					DataSet resultData = gen.CreateDataSet(entity);
                     resultData.EnforceConstraints = false;
-					XmlDataDocument resultDoc = new XmlDataDocument(resultData);
+					IDataDocument resultDoc = DataDocumentFactory.New(resultData);
 					resultDoc.Load(new XmlNodeReader(transformationResult));
 					DatasetTools.MergeDataSet(
                         dataDoc.DataSet, resultDoc.DataSet, null, 
@@ -832,7 +815,7 @@ namespace Origam.Gui.Win
 			return dataDoc.DataSet.Tables[0].Rows[0];
 		}
 
-		public Control LoadSelectionDialog(XmlDataDocument xmlData, PanelControlSet panelDefinition, IEndRule endRule)
+		public Control LoadSelectionDialog(IDataDocument xmlData, PanelControlSet panelDefinition, IEndRule endRule)
 		{
 			AsForm sd = new AsForm(this);
 			sd.KeyPreview = true;
@@ -846,7 +829,7 @@ namespace Origam.Gui.Win
 			this.Form = sd;
 			ControlSetItem rootItem = GetItemFromControlSet(panelDefinition);
 			_mainFormData = xmlData.DataSet;
-			_mainFormXmlData = xmlData;
+			XmlData = xmlData;
             _selectionDialogEndRule = endRule;
 			string dataMember = _mainFormData.Tables[0].TableName;
 			AsPanel panel = this.LoadControl(rootItem, dataMember, _bindings, _dataConsumers, null, true, false) as AsPanel;
@@ -906,7 +889,7 @@ namespace Origam.Gui.Win
             return sd;
 		}
 
-		public Control LoadFormWithData(DataSet formData, XmlDataDocument xmlData, FormControlSet formControlSet, Guid methodId, Guid sortSetId, Guid defaultSetId, Guid listDataStructureId, Guid listMethodId, string listDataMember)
+		public Control LoadFormWithData(DataSet formData, IDataDocument xmlData, FormControlSet formControlSet, Guid methodId, Guid sortSetId, Guid defaultSetId, Guid listDataStructureId, Guid listMethodId, string listDataMember)
 		{
 			if(this.Form != null)
 			{
@@ -929,7 +912,7 @@ namespace Origam.Gui.Win
 					throw new NullReferenceException(ResourceUtils.GetString("ErrorFormControlSetDefinition"));
                 }
 				_mainFormData = formData;
-				_mainFormXmlData = xmlData;
+				XmlData = xmlData;
 				_formKey = formControlSet.PrimaryKey;
 				_mainDataStructureId = formControlSet.DataStructure.Id;
 				_mainDataStructureMethodId = methodId;
@@ -1123,7 +1106,7 @@ namespace Origam.Gui.Win
 				HideProgress();
 			}
 
-			Control result = LoadFormWithData(_mainFormData, _mainFormXmlData, formControlSet, methodId, sortSetId, defaultSetId, listDataStructureId, listMethodId, listDataMember);
+			Control result = LoadFormWithData(_mainFormData, XmlData, formControlSet, methodId, sortSetId, defaultSetId, listDataStructureId, listMethodId, listDataMember);
 
 			return result;
 		}
@@ -1193,25 +1176,25 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public DataSet NewRecord(XmlDocument dataSource)
+		public DataSet NewRecord(IDataDocument dataSource)
 		{
 			if(DefaultTemplate == null) return null;
 
 			return NewRecord(DefaultTemplate, dataSource, _mainDataStructureId);
 		}
 
-		public static DataSet NewRecord(DataStructureTemplate template, XmlDocument dataSource, Guid dataStructureId)
+		public static DataSet NewRecord(DataStructureTemplate template, IDataDocument dataSource, Guid dataStructureId)
 		{
 			XslTransformation xslt = (template as DataStructureTransformationTemplate).Transformation as XslTransformation;
 			IDataStructure outputStructure = xslt.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(dataStructureId)) as IDataStructure;
 
 			IXsltEngine transform = AsTransform.GetXsltEngine(
                 xslt.XsltEngineType, template.PersistenceProvider);
-			XmlDocument result = transform.Transform(dataSource, xslt.TextStore, null, new RuleEngine(null, null), outputStructure, false);
+			IDataDocument result = transform.Transform(dataSource, xslt.TextStore, null, new RuleEngine(null, null), outputStructure, false);
 
-			if(result is XmlDataDocument)
+			if(result is IDataDocument)
 			{
-				return (result as XmlDataDocument).DataSet;
+				return (result as IDataDocument).DataSet;
 			}
 
 			throw new Exception(ResourceUtils.GetString("ErrorResultNotSupported", result.GetType().ToString()));
@@ -1227,11 +1210,11 @@ namespace Origam.Gui.Win
 		public static object[] AddTemplateRecord(DataRow parentRow, DataStructureTemplate template, string dataMember, Guid dataStructureId, DataSet formData)
 		{
 			object[] templatePosition = null;
-			System.Xml.XmlDocument doc;
+			IDataDocument doc;
 
 			if(parentRow == null)
 			{
-				doc = new System.Xml.XmlDataDocument(new DataSet("ROOT"));
+				doc = DataDocumentFactory.New(new DataSet("ROOT"));
 			}
 			else
 			{
@@ -1242,7 +1225,7 @@ namespace Origam.Gui.Win
 				
 				try
 				{
-					doc = new System.Xml.XmlDataDocument(slice);
+					doc = DataDocumentFactory.New(slice);
 				}
 				catch
 				{
@@ -1262,7 +1245,7 @@ namespace Origam.Gui.Win
 			return templatePosition;
 		}
 
-		private static object[] AddTemplateRecord(string dataMember, DataStructureTemplate template, XmlDocument dataSource, Guid dataStructureId, DataSet formData)
+		private static object[] AddTemplateRecord(string dataMember, DataStructureTemplate template, IDataDocument dataSource, Guid dataStructureId, DataSet formData)
 		{
 			if(template == null) throw new NullReferenceException(ResourceUtils.GetString("ErrorNoTemplate"));
 			if(dataMember != template.Entity.Name)
@@ -1375,7 +1358,7 @@ namespace Origam.Gui.Win
 
 				_toolTip = InitializeTooltip();
                 _toolTip.Popup += _toolTip_Popup;
-                this.LookupManager.RemoveLookupControlsByForm(this.Form);
+			    _controlsLookupService.RemoveLookupControlsByForm(this.Form);
 			}
 
 			foreach(Control child in controls)
@@ -1738,7 +1721,7 @@ namespace Origam.Gui.Win
 			    // if Form == null, then this was called from the designer - we will not register lookup controls for that
 				if ((addingControl is ILookupControl) && (Form != null))
 				{
-					_lookupManager.AddLookupControl(
+				    _controlsLookupService.AddLookupControl(
                         addingControl as ILookupControl, Form, true);
 				}
 				if (addingControl is IAsDataConsumer)
@@ -2206,7 +2189,7 @@ namespace Origam.Gui.Win
 				if(! selfJoinExists)
 				{
 					// no XML for self joins (incompatible with XmlDataDocument)
-					_mainFormXmlData = DatasetToXml(result);
+					XmlData = DatasetToXml(result);
 				}
 				else
 				{
@@ -2229,14 +2212,14 @@ namespace Origam.Gui.Win
 
 			DataSet data = new DatasetGenerator(true).CreateDataSet(ds, defaultSet);
 			_mainFormData = data;
-			_mainFormXmlData = DatasetToXml(data);
+			XmlData = DatasetToXml(data);
 		}
 
-		public static XmlDataDocument DatasetToXml(DataSet data)
+		public static IDataDocument DatasetToXml(DataSet data)
 		{
 			DatasetTools.AddSortColumns(data);
 
-			return new XmlDataDocument(data);
+			return DataDocumentFactory.New(data);
 		}
 
 		private void AddQueryParameters(DataStructureQuery query)
@@ -2356,7 +2339,7 @@ namespace Origam.Gui.Win
 			page.SelectNextControl(page, true, true, true, true);
 		}
 
-		internal void table_rowCopied(DataRow row, XmlDataDocument document)
+		internal void table_rowCopied(DataRow row, IDataDocument document)
 		{
 			try
 			{
@@ -2377,7 +2360,7 @@ namespace Origam.Gui.Win
 			this.Form.IsDirty = true;
             try
 			{
-				_ruleHandler.OnRowChanged(e, _mainFormXmlData, this.RuleSet, _formRuleEngine);
+				_ruleHandler.OnRowChanged(e, XmlData, this.RuleSet, _formRuleEngine);
 			}
 			catch(Exception ex)
 			{
@@ -2401,7 +2384,7 @@ namespace Origam.Gui.Win
 
 			try
 			{
-				_ruleHandler.OnRowDeleted(parentRows, deletedRow, _mainFormXmlData, this.RuleSet, _formRuleEngine);
+				_ruleHandler.OnRowDeleted(parentRows, deletedRow, XmlData, this.RuleSet, _formRuleEngine);
 			}
 			catch(Exception ex)
 			{
@@ -2431,7 +2414,7 @@ namespace Origam.Gui.Win
 			{
                 System.Diagnostics.Debug.WriteLine(e.ProposedValue, "passing " + e.Column.Table.TableName + "." + e.Column.ColumnName);
                 _ruleHandler.OnColumnChanged(
-                    e, _mainFormXmlData, this.RuleSet, _formRuleEngine);
+                    e, XmlData, this.RuleSet, _formRuleEngine);
 			}
 			catch (Exception ex)
 			{
@@ -2446,7 +2429,7 @@ namespace Origam.Gui.Win
 
 		private bool _disposing = false;
 
-		public void Dispose()
+	    public void Dispose()
 		{
 			_disposing = true;
 			if(_selectionDialogToolbar != null)
@@ -2485,9 +2468,9 @@ namespace Origam.Gui.Win
 				this.Form.BindingContext = null;
 				this.Form = null;
 			}
-			if(_mainFormXmlData != null)
+			if(XmlData != null)
 			{
-				_mainFormXmlData = null;
+				XmlData = null;
 			}
 			if(_mainFormData != null)
 			{
@@ -2517,7 +2500,7 @@ namespace Origam.Gui.Win
             if (_selectionDialogEndRule != null)
             {
                 RuleEngine ruleEngine = new RuleEngine();
-                RuleExceptionDataCollection ruleExceptions = ruleEngine.EvaluateEndRule(_selectionDialogEndRule, _mainFormXmlData);
+                RuleExceptionDataCollection ruleExceptions = ruleEngine.EvaluateEndRule(_selectionDialogEndRule, XmlData);
                 if (ruleExceptions != null && ruleExceptions.Count > 0)
                 {
                     RuleException ex = new RuleException(ruleExceptions);

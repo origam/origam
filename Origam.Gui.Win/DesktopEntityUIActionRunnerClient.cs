@@ -174,7 +174,7 @@ namespace Origam.Gui.Win
         {
             // is rule handler right way, is conversion to xml data correct?
             DatasetRuleHandler ruleHandler = new DatasetRuleHandler();
-            XmlDataDocument xmlData = new XmlDataDocument(targetData);
+            IDataDocument xmlData = DataDocumentFactory.New(targetData);
             foreach(var entry in changeList)
             {
                 string tableName = entry.Key;

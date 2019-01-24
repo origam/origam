@@ -102,7 +102,7 @@ namespace Origam.workflow.mail
             mailrow.Recipient = "";
             mailrow.Sender = "";
             mailData.Mail.AddMailRow(mailrow);
-            WorkQueueAdapterResult result = new WorkQueueAdapterResult(new XmlDataDocument(mailData));
+            WorkQueueAdapterResult result = new WorkQueueAdapterResult(DataDocumentFactory.New(mailData));
             string finalFolder = _dropbox;
 
             MimeMessage lastMessage = inbox.GetMessage(inbox.Count - 1);

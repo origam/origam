@@ -1,51 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Threading;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Origam.DA;
+using Microsoft.Extensions.Logging;
 using Origam.OrigamEngine.ModelXmlBuilders;
-using Origam.Schema;
-using Origam.Schema.MenuModel;
-using Origam.Schema.WorkflowModel;
-using Origam.Workbench.Services;
 
 namespace Origam.ServerCore.Controllers
 {
-    [Route("api/[controller]")]
-   // [ApiController]
-    public class MetaDataController: ControllerBase
+    public class MetaDataController: AbstractController
     {
-        [HttpGet("[action]")]
-        public string GetMenu()
+        public MetaDataController(ILogger<MetaDataController> log) : base(log)
         {
-            Reflector.ClassCache = new NullReflectorCache();
-            var DefaultFolders = new List<ElementName>
-            {
-                ElementNameFactory.Create(typeof(SchemaExtension)),
-                ElementNameFactory.Create(typeof(SchemaItemGroup))
-            };
-            ServiceManager sManager = ServiceManager.Services;
-            SchemaService schemaService = new SchemaService();
-            IParameterService parameterService = new NullParameterService();
+        }
 
-            sManager.AddService(schemaService);
-            sManager.AddService(parameterService);
-
-            var settings = new OrigamSettings();
-            ConfigurationManager.SetActiveConfiguration(settings);
-            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("origam_server"), null);
-            StateMachineSchemaItemProvider StateMachineSchema = new StateMachineSchemaItemProvider();
-            var persistenceService = new FilePersistenceService(DefaultFolders);
-
-            sManager.AddService(persistenceService);
-            schemaService.AddProvider(StateMachineSchema);
-            schemaService.AddProvider(new MenuSchemaItemProvider());
-            ServiceManager.Services.AddService(new ServiceAgentFactory());
+        [HttpGet("[action]")]
+        public ActionResult<string> GetMenu()
+        {    
             return MenuXmlBuilder.GetMenu();
+        }
+
+        [HttpGet("[action]")]
+        public ActionResult<string> GetScreeSection([FromQuery] [Required] Guid id)
+        {
+            XmlOutput xmlOutput = FormXmlBuilder.GetXml(id);
+            MenuLookupIndex.AddIfNotPresent(id, xmlOutput.ContainedLookups);
+            return xmlOutput.Document.OuterXml;
         }
     }
 }

@@ -285,7 +285,7 @@ namespace Origam.Workflow.WorkQueue
             row["SequenceNumber"] = segmentsCounter++;
             dataTable.Rows.Add(row);
             return new WorkQueueAdapterResult(
-                new XmlDataDocument(dataTable.DataSet));
+                DataDocumentFactory.New(dataTable.DataSet));
         }
 
         private string ReadFileSegment(string firstLine)

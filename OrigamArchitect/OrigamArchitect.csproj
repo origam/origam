@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <ProjectType>Local</ProjectType>
     <ProductVersion>7.10.6030</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -26,9 +27,11 @@
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
   </PropertyGroup>
-  
   <PropertyGroup>
-      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
@@ -56,7 +59,7 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>true</Optimize>
@@ -68,7 +71,6 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
@@ -81,6 +83,10 @@
     <ProjectReference Include="..\Origam.Git\Origam.Git.csproj">
       <Project>{17625f1f-b028-47db-8c76-05c8f8f4e158}</Project>
       <Name>Origam.Git</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Gui.Designer\Origam.Gui.Designer.csproj">
+      <Project>{76038b9a-f924-4f7f-b4cc-4b9a0a6a55e3}</Project>
+      <Name>Origam.Gui.Designer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj">
       <Name>Origam.OrigamEngine</Name>
@@ -112,11 +118,6 @@
       <Project>{FF4722B4-01F8-4062-AF39-F243A6BF336D}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Gui.Designer\Origam.Gui.Designer.csproj">
-      <Name>Origam.Gui.Designer</Name>
-      <Project>{CCD88F0F-0718-44D8-9048-9CD683C3CD22}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
     <ProjectReference Include="..\Origam.Gui.Win\Origam.Gui.Win.csproj">
       <Name>Origam.Gui.Win</Name>
       <Project>{B57D7691-81BB-419C-AE82-26340CF77D10}</Project>
@@ -138,9 +139,8 @@
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel.csproj">
+      <Project>{A802634D-DCF0-4F27-992D-E3FADCAA3FB4}</Project>
       <Name>Origam.Schema.DeploymentModel</Name>
-      <Project>{F4F5927B-022F-4684-B9B1-3BC6519DF66E}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.EntityModel.UI\Origam.Schema.EntityModel.UI.csproj">
       <Name>Origam.Schema.EntityModel.UI</Name>
@@ -148,9 +148,8 @@
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
+      <Project>{FDF55D1B-BB0D-4191-AE53-98DE5A4465B5}</Project>
       <Name>Origam.Schema.EntityModel</Name>
-      <Project>{50186A07-6ED9-4751-B0E2-52FEBA2A4518}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel.csproj">
       <Name>Origam.Schema.GuiModel</Name>
@@ -218,9 +217,8 @@
       <Name>Origam.UI.Common.NetFx</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common.csproj">
+      <Project>{ef5de64e-88b2-4b0a-bb7f-4a537b56f3d1}</Project>
       <Name>Origam.UI.Common</Name>
-      <Project>{EF5DE64E-88B2-4B0A-BB7F-4A537B56F3D1}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
     <ProjectReference Include="..\Origam.UI\Origam.UI.csproj">
       <Name>Origam.UI</Name>
@@ -284,21 +282,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\EnterpriseLibrary\AeroWizard.dll</HintPath>
     </Reference>
-    <Reference Include="CSharpFunctionalExtensions, Version=1.10.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\EnterpriseLibrary\CSharpFunctionalExtensions.dll</HintPath>
-    </Reference>
     <Reference Include="LibGit2Sharp, Version=0.25.0.0, Culture=neutral, PublicKeyToken=7cbde695407f0333">
       <HintPath>..\EnterpriseLibrary\LibGit2Sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
-      <HintPath>..\EnterpriseLibrary\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="MoreLinq, Version=2.10.21623.0, Culture=neutral, PublicKeyToken=384d532d7e88985d">
-      <HintPath>..\EnterpriseLibrary\MoreLinq.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\EnterpriseLibrary\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NPOI, Version=1.2.1.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
@@ -317,6 +302,7 @@
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
     </Reference>
+    <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
@@ -353,6 +339,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Commands\WindowCommands.cs" />
+    <Compile Include="ControlsLookUpService.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -378,6 +365,7 @@
     <Compile Include="SchemaCompareEditor.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="SchemaItemAncestorCollectionEditor.cs" />
     <Compile Include="SplashScreen.cs">
       <SubType>Form</SubType>
     </Compile>

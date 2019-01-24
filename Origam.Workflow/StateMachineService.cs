@@ -84,10 +84,11 @@ namespace Origam.Workflow
 
         public object[] AllowedStateValues(Guid entityId, Guid fieldId, object currentStateValue, DataRow dataRow, string transactionId)
         {
-            return AllowedStateValues(entityId, fieldId, currentStateValue, DatasetTools.GetRowXml(dataRow, DataRowVersion.Default), transactionId);
+            IDataDocument dataDocument = DataDocumentFactory.New( DatasetTools.GetRowXml(dataRow, DataRowVersion.Default));
+            return AllowedStateValues(entityId, fieldId, currentStateValue, dataDocument, transactionId);
         }
 
-        public object[] AllowedStateValues(Guid entityId, Guid fieldId, object currentStateValue, XmlDocument data, string transactionId)
+        public object[] AllowedStateValues(Guid entityId, Guid fieldId, object currentStateValue, IDataDocument data, string transactionId)
         {
             StateMachine sm = GetMachine(entityId, fieldId, false);
             if (sm == null)
@@ -113,22 +114,22 @@ namespace Origam.Workflow
                 {
                     // state has existed already, so we list all possible dynamic states
 
-                    XmlDocument dynData = data.Clone() as XmlDocument;
+                    IDataDocument dynData = data.Clone() as IDataDocument;
                     if (sm.Field.XmlMappingType == EntityColumnXmlMapping.Attribute)
                     {
-                        ((XmlElement)dynData.FirstChild).SetAttribute(sm.Field.Name, XmlTools.ConvertToString(currentStateValue));
+                        ((XmlElement)dynData.Xml.FirstChild).SetAttribute(sm.Field.Name, XmlTools.ConvertToString(currentStateValue));
                     }
                     else
                     {
-                        if (dynData.FirstChild.SelectSingleNode(sm.Field.Name) != null)
+                        if (dynData.Xml.FirstChild.SelectSingleNode(sm.Field.Name) != null)
                         {
-                            dynData.FirstChild.SelectSingleNode(sm.Field.Name).Value = XmlTools.ConvertToString(currentStateValue);
+                            dynData.Xml.FirstChild.SelectSingleNode(sm.Field.Name).Value = XmlTools.ConvertToString(currentStateValue);
                         }
                         else
                         {
-                            XmlElement el = dynData.CreateElement(sm.Field.Name);
+                            XmlElement el = dynData.Xml.CreateElement(sm.Field.Name);
                             el.Value = XmlTools.ConvertToString(currentStateValue);
-                            dynData.FirstChild.AppendChild(el);
+                            dynData.Xml.FirstChild.AppendChild(el);
                         }
                     }
 
@@ -179,10 +180,11 @@ namespace Origam.Workflow
 
         public bool IsStateAllowed(Guid entityId, Guid fieldId, object currentStateValue, object newStateValue, DataRow dataRow, string transactionId)
         {
-            return IsStateAllowed(entityId, fieldId, currentStateValue, newStateValue, DatasetTools.GetRowXml(dataRow, DataRowVersion.Default), transactionId);
+            IDataDocument data = DataDocumentFactory.New(DatasetTools.GetRowXml(dataRow, DataRowVersion.Default));
+            return IsStateAllowed(entityId, fieldId, currentStateValue, newStateValue, data, transactionId);
         }
 
-        public bool IsStateAllowed(Guid entityId, Guid fieldId, object currentStateValue, object newStateValue, XmlDocument data, string transactionId)
+        public bool IsStateAllowed(Guid entityId, Guid fieldId, object currentStateValue, object newStateValue, IDataDocument data, string transactionId)
         {
             foreach (object allowedValue in this.AllowedStateValues(entityId, fieldId, currentStateValue, data, transactionId))
             {
@@ -311,7 +313,7 @@ namespace Origam.Workflow
         {
             if (row.RowState != DataRowState.Deleted)
             {
-                XmlDocument data = DatasetTools.GetRowXml(row, DataRowVersion.Default);
+                IDataDocument data = DataDocumentFactory.New( DatasetTools.GetRowXml(row, DataRowVersion.Default));
 
                 // state entry or state transition
                 foreach (DataColumn column in stateColumns)
@@ -354,7 +356,7 @@ namespace Origam.Workflow
             }
         }
 
-        private bool ExecutePostEvents(StateMachine sm, object currentStateValue, object newStateValue, DataRow dataRow, XmlDocument data, string transactionId)
+        private bool ExecutePostEvents(StateMachine sm, object currentStateValue, object newStateValue, DataRow dataRow, IDataDocument data, string transactionId)
         {
             object rowKey = null;
             object[] keys = DatasetTools.PrimaryKey(dataRow);
@@ -435,7 +437,7 @@ namespace Origam.Workflow
         }
 
 
-        private void ExecutePostWorkQueue(StateMachine sm, StateMachineServiceStatelessEventType eventType, object newStateValue, DataRow dataRow, XmlDocument data, string transactionId)
+        private void ExecutePostWorkQueue(StateMachine sm, StateMachineServiceStatelessEventType eventType, object newStateValue, DataRow dataRow, IDataDocument data, string transactionId)
         {
             object rowKey = null;
             object[] keys = DatasetTools.PrimaryKey(dataRow);
@@ -524,7 +526,7 @@ namespace Origam.Workflow
             DataRow dataRow, string transactionId)
         {
             StateMachine sm = GetMachine(entityId, fieldId, true);
-            XmlDocument data = DatasetTools.GetRowXml(dataRow, DataRowVersion.Default);
+            IDataDocument data = DataDocumentFactory.New(DatasetTools.GetRowXml(dataRow, DataRowVersion.Default));
 
             object rowKey = null;
             object[] keys = DatasetTools.PrimaryKey(dataRow);
@@ -560,7 +562,7 @@ namespace Origam.Workflow
             return false;
         }
 
-        private void ExecutePreWorkQueue(Guid entityId, object currentStateValue, object newStateValue, DataRow dataRow, string transactionId, StateMachine sm, XmlDocument data, object rowKey)
+        private void ExecutePreWorkQueue(Guid entityId, object currentStateValue, object newStateValue, DataRow dataRow, string transactionId, StateMachine sm, IDataDocument data, object rowKey)
         {
             IParameterService ps = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 
@@ -755,7 +757,7 @@ namespace Origam.Workflow
                             // write to queue
                             WQService.WorkQueueAdd(wq.WorkQueueClass, wq.Name, wq.Id, wq.IsCreationConditionNull()
                                 ? null
-                                : wq.CreationCondition, data, transactionId);
+                                : wq.CreationCondition, DataDocumentFactory.New(data), transactionId);
                         }
                     }
                 }
@@ -940,7 +942,7 @@ namespace Origam.Workflow
             return result.ToString();
         }
 
-        private bool IsOperationAllowed(StateMachineOperation operation, XmlDocument data, string transactionId)
+        private bool IsOperationAllowed(StateMachineOperation operation, IDataDocument data, string transactionId)
         {
             // check features
             IParameterService param = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;

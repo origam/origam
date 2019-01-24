@@ -59,7 +59,6 @@ namespace Origam.Server
         private string _dataListEntity;
         private Guid _dataListDataStructureEntityId;
         private IList<string> _dataListLoadedColumns = new List<string>();
-        private XmlDataDocument _xmlData;
         private DateTime _cacheExpiration;
         private UIRequest _request;
         private IList<SessionStore> _childSessions = new List<SessionStore>();
@@ -231,10 +230,7 @@ namespace Origam.Server
             set { _request = value; }
         }
 
-        public XmlDataDocument XmlData
-        {
-            get { return _xmlData; }
-        }
+        public IDataDocument XmlData { get; private set; }
 
         public DataStructureRuleSet RuleSet
         {
@@ -406,7 +402,7 @@ namespace Origam.Server
             lock (_lock)
             {
                 UnregisterEvents();
-                _xmlData = null;
+                XmlData = null;
                 _data = null;
                 RegisterEvents();
             }
@@ -458,17 +454,17 @@ namespace Origam.Server
                     // no XML for self joins (incompatible with XmlDataDocument)
                     if (!selfJoinExists)
                     {
-                        _xmlData = new XmlDataDocument(_data);
+                        XmlData = DataDocumentFactory.New(_data);
                     }
                 }
-                else if (dataSource is XmlDataDocument)
+                else if (dataSource is IDataDocument)
                 {
-                    _xmlData = dataSource as XmlDataDocument;
-                    _data = _xmlData.DataSet;
+                    XmlData = dataSource as IDataDocument;
+                    _data = XmlData.DataSet;
                 }
                 else if (dataSource == null)
                 {
-                    _xmlData = null;
+                    XmlData = null;
                     _data = null;
                 }
                 else
@@ -581,11 +577,11 @@ namespace Origam.Server
         {
             _registerEventsCounter--;
 
-            if (_xmlData != null)
+            if (XmlData != null)
             {
                 if (_registerEventsCounter == 0)
                 {
-                    _ruleHandler.RegisterDatasetEvents(_xmlData, _ruleSet, _ruleEngine);
+                    _ruleHandler.RegisterDatasetEvents(XmlData, _ruleSet, _ruleEngine);
                 }
             }
         }
@@ -594,9 +590,9 @@ namespace Origam.Server
         {
             _registerEventsCounter++;
 
-            if (_xmlData != null)
+            if (XmlData != null)
             {
-                _ruleHandler.UnregisterDatasetEvents(_xmlData);
+                _ruleHandler.UnregisterDatasetEvents(XmlData);
             }
         }
 

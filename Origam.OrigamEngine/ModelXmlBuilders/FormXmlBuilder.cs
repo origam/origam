@@ -23,7 +23,7 @@ using System;
 using System.Xml;
 using System.Data;
 using System.Collections;
-
+using System.Collections.Generic;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.Gui.Win;
@@ -40,7 +40,13 @@ using Origam.Gui;
 
 namespace Origam.OrigamEngine.ModelXmlBuilders
 {
-	/// <summary>
+    public class XmlOutput
+    {
+        public XmlDocument Document { get; set; }
+        public HashSet<Guid> ContainedLookups { get; set; } = new HashSet<Guid>();
+    }
+
+    /// <summary>
 	/// Summary description for FormXmlBuilder.
 	/// </summary>
 	public class FormXmlBuilder
@@ -49,7 +55,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
         private const int GENERIC_FIELD_HEIGHT = 20;
         private const int GENERIC_FIELD_VERTICAL_SPACE = 2;
 
-        public static XmlDocument GetXml(Guid menuId)
+        public static XmlOutput GetXml(Guid menuId)
 		{
 			IPersistenceService persistence = ServiceManager.Services.GetService(
                 typeof(IPersistenceService)) as IPersistenceService;
@@ -81,7 +87,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                     typeof(DataStructure), new ModelElementKey(structureId)) as DataStructure;
 
 				return GetXml(item, name, isPreloaded, menuId, structure, forceReadOnly,
-                    confirmSelectionChangeEntity);
+                    confirmSelectionChangeEntity).Document;
 			}
 		}
 
@@ -131,7 +137,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                 control.ControlItem.GetChildByName("DataMember") as ControlPropertyItem;
 
 			DatasetGenerator gen = new DatasetGenerator(true);
-			return GetXml(form, gen.CreateDataSet(panel.DataEntity), name, true, menuId, false, "");
+			return GetXml(form, gen.CreateDataSet(panel.DataEntity), name, true, menuId, false, "").Document;
 		}
 
 		internal static XmlDocument GetWindowBaseXml(
@@ -197,7 +203,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			return doc;
 		}
 
-		public static XmlDocument GetXml(FormControlSet item, string name, bool isPreloaded, Guid menuId, DataStructure structure, bool forceReadOnly, string confirmSelectionChangeEntity)
+		public static XmlOutput GetXml(FormControlSet item, string name, bool isPreloaded, Guid menuId, DataStructure structure, bool forceReadOnly, string confirmSelectionChangeEntity)
 		{
 			DatasetGenerator gen = new DatasetGenerator(true);
 			return GetXml(item, gen.CreateDataSet(structure), name, isPreloaded, menuId, forceReadOnly, confirmSelectionChangeEntity);
@@ -223,8 +229,10 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				string entityName = (string)entry.Key;
 				string identifier = table.PrimaryKey[0].ColumnName;
 				string lookupCacheKey = DatabaseTableName(table);
+			    string dataStructureEntityId = table.ExtendedProperties["Id"].ToString();
 
-				XmlElement dataSourceElement = AddDataSourceElement(dataSourcesElement, entityName,  identifier, lookupCacheKey);
+				XmlElement dataSourceElement =
+				    AddDataSourceElement(dataSourcesElement, entityName,  identifier, lookupCacheKey, dataStructureEntityId);
 
 				foreach(DataColumn c in table.Columns)
 				{
@@ -249,13 +257,18 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			}
 		}
 
-		public static XmlElement AddDataSourceElement(XmlElement dataSourcesElement, string entity, string identifier, string lookupCacheKey)
+		public static XmlElement AddDataSourceElement(XmlElement dataSourcesElement, string entity, 
+		    string identifier, string lookupCacheKey, string dataStructureEntityId)
 		{
 			XmlElement dataSourceElement = dataSourcesElement.OwnerDocument.CreateElement("DataSource");
 			dataSourcesElement.AppendChild(dataSourceElement);
 
 			dataSourceElement.SetAttribute("Entity", entity);
-			dataSourceElement.SetAttribute("Identifier", identifier);
+		    if (!string.IsNullOrEmpty(dataStructureEntityId))
+		    {
+		        dataSourceElement.SetAttribute("DataStructureEntityId", dataStructureEntityId);
+            }
+            dataSourceElement.SetAttribute("Identifier", identifier);
 			if(lookupCacheKey != null)
 			{
 				dataSourceElement.SetAttribute("LookupCacheKey", lookupCacheKey);
@@ -772,7 +785,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			return doc;
 		}
 
-		public static XmlDocument GetXml(FormControlSet item, DataSet dataset, string name, bool isPreloaded, Guid menuId, bool forceReadOnly, string confirmSelectionChangeEntity)
+		public static XmlOutput GetXml(FormControlSet item, DataSet dataset, string name, bool isPreloaded, Guid menuId, bool forceReadOnly, string confirmSelectionChangeEntity)
 		{
 			int controlCounter = 0;
 			IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
@@ -798,7 +811,10 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			{
 				windowElement.SetAttribute("SuppressSave", "true");
 			}
-			RenderUIElement(doc, uiRootElement, FormGenerator.GetItemFromControlSet(item),
+
+		    XmlOutput xmlOutput = new XmlOutput {Document = doc};
+
+		    RenderUIElement(xmlOutput, uiRootElement, FormGenerator.GetItemFromControlSet(item),
 				dataset, dataSources, ref controlCounter, isPreloaded, item.Id, workflowId, 
 				forceReadOnly, confirmSelectionChangeEntity);
 			RenderDataSources(windowElement, dataSources);
@@ -952,7 +968,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				}
 			}
 
-			return doc;
+			return xmlOutput;
 		}
 
 		private static XmlElement FindComponentByInstanceId(XmlDocument doc, string instanceId)
@@ -1048,7 +1064,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			return null;
 		}
 
-		private static bool RenderUIElement(XmlDocument doc, XmlElement parentNode, AbstractSchemaItem item, 
+		private static bool RenderUIElement(XmlOutput xmlOutput, XmlElement parentNode, AbstractSchemaItem item, 
 			DataSet dataset, Hashtable dataSources, ref int controlCounter, bool isPreloaded, Guid formId, Guid menuWorkflowId,
 			bool forceReadOnly, string confirmSelectionChangeEntity)
 		{
@@ -1180,24 +1196,24 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                 RenderActions(parameterService, validActions, actionsElement,
                     new Hashtable());
                 // render controls (both directly placed edit controls and containers)
-                RenderPanel(control, doc, table, formRootElement, propertiesElement,
+                RenderPanel(control, xmlOutput, table, formRootElement, propertiesElement,
                     FormGenerator.GetItemFromControlSet(control.ControlItem.PanelControlSet), true, true, forceReadOnly);
             }
 
             // add config
-            SetUserConfig (doc, parentNode, renderData.DefaultConfiguration, control.Id, menuWorkflowId);
+            SetUserConfig (xmlOutput.Document, parentNode, renderData.DefaultConfiguration, control.Id, menuWorkflowId);
 
 			ArrayList sortedChildren = new ArrayList (item.ChildItemsByType (ControlSetItem.ItemTypeConst));
 
 			if (sortedChildren.Count > 0) {
 				sortedChildren.Sort (new ControlSetItemComparer ());
 
-				XmlElement children = doc.CreateElement ("UIChildren");
+				XmlElement children = xmlOutput.Document.CreateElement ("UIChildren");
 				parentNode.AppendChild (children);
 				foreach (AbstractSchemaItem child in sortedChildren) {
-					XmlElement el = doc.CreateElement ("UIElement");
+					XmlElement el = xmlOutput.Document.CreateElement ("UIElement");
 					children.AppendChild (el);
-					if (!RenderUIElement (doc, el, child, dataset, dataSources, ref controlCounter, isPreloaded, formId, menuWorkflowId, forceReadOnly, confirmSelectionChangeEntity)) {
+					if (!RenderUIElement (xmlOutput, el, child, dataset, dataSources, ref controlCounter, isPreloaded, formId, menuWorkflowId, forceReadOnly, confirmSelectionChangeEntity)) {
 						children.RemoveChild (el);
 					}
 				}
@@ -1336,15 +1352,15 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			}
 		}
 
-		private static void RenderPanel(ControlSetItem panel, XmlDocument doc, DataTable table, XmlElement parentElement, XmlElement propertiesElement, AbstractSchemaItem item, bool processContainers, bool processEditControls, bool forceReadOnly)
+		private static void RenderPanel(ControlSetItem panel, XmlOutput xmlOutput, DataTable table, XmlElement parentElement, XmlElement propertiesElement, AbstractSchemaItem item, bool processContainers, bool processEditControls, bool forceReadOnly)
 		{
-			XmlElement childrenElement = doc.CreateElement("Children");
+			XmlElement childrenElement = xmlOutput.Document.CreateElement("Children");
 			parentElement.AppendChild(childrenElement);
 
-			XmlElement propertyNamesElement = doc.CreateElement("PropertyNames");
+			XmlElement propertyNamesElement = xmlOutput.Document.CreateElement("PropertyNames");
 			parentElement.AppendChild(propertyNamesElement);
 
-			XmlElement formExclusiveControlsElement = doc.CreateElement("FormExclusiveControls");
+			XmlElement formExclusiveControlsElement = xmlOutput.Document.CreateElement("FormExclusiveControls");
 			parentElement.AppendChild(formExclusiveControlsElement);
 
 			// other properties
@@ -1413,7 +1429,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 							case "CaptionLength":		captionLength = property.IntValue;										break;
 							case "CaptionPosition":		captionPosition = ((CaptionPosition)property.IntValue).ToString();		break;
 							case "SourceType":			sourceType = ((ImageBoxSourceType)property.IntValue).ToString();		break;
-							case "Dock":				dock = ((System.Windows.Forms.DockStyle)property.IntValue).ToString();	break;
+							case "Dock":				dock = ToWinFormsDockStyle(property.IntValue);	                        break;
 							case "Multiline":			multiline = property.BoolValue;											break;
 							case "IsPassword":			isPassword = property.BoolValue;										break;
 							case "GridColumnWidth":		gridColumnWidth = property.IntValue.ToString();							break;
@@ -1483,7 +1499,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					}
 					else if(bindingMember == "" && processContainers)	// visual element
 					{
-						XmlElement formElement = doc.CreateElement("FormElement");
+						XmlElement formElement = xmlOutput.Document.CreateElement("FormElement");
 						childrenElement.AppendChild(formElement);
 
 						formElement.SetAttribute("Type", "FormSection");
@@ -1494,7 +1510,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						formElement.SetAttribute("Width", XmlConvert.ToString(width));
 						formElement.SetAttribute("Height", XmlConvert.ToString(height));
 
-						RenderPanel(panel, doc, table, formElement, propertiesElement, csi, true, true, readOnly);
+						RenderPanel(panel, xmlOutput, table, formElement, propertiesElement, csi, true, true, readOnly);
 					}
 					else if(bindingMember != "" & processEditControls) // property (entry field)
 					{
@@ -1549,12 +1565,12 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 								}
 
 								// set parameters
-								XmlElement comboParametersElement = doc.CreateElement("DropDownParameters");
+								XmlElement comboParametersElement = xmlOutput.Document.CreateElement("DropDownParameters");
 								propertyElement.AppendChild(comboParametersElement);
 
 								foreach(ColumnParameterMapping mapping in csi.ChildItemsByType(ColumnParameterMapping.ItemTypeConst))
 								{
-									XmlElement comboParamElement = doc.CreateElement("ComboBoxParameterMapping");
+									XmlElement comboParamElement = xmlOutput.Document.CreateElement("ComboBoxParameterMapping");
 									comboParametersElement.AppendChild(comboParamElement);
 
 									comboParamElement.SetAttribute("ParameterName", mapping.Name);
@@ -1564,7 +1580,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 								break;
 							case "MultiColumnAdapterFieldWrapper" :
 								MultiColumnAdapterFieldWrapperBuilder.Build(propertyElement, csi, controlMember);
-								RenderPanel(panel, doc, table, propertyElement, propertyElement, csi, false, true, readOnly);
+								RenderPanel(panel, xmlOutput, table, propertyElement, propertyElement, csi, false, true, readOnly);
 								XmlNode propertyNames = propertyElement.SelectSingleNode("PropertyNames");
 								if (propertyNames == null)
 								{
@@ -1604,6 +1620,11 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                                 "RequestSaveAfterChange", "true");
                         }
 					}
+
+				    if (lookupId != Guid.Empty)
+				    {
+				        xmlOutput.ContainedLookups.Add(lookupId);
+                    }
 				}
 			}
 
@@ -1622,8 +1643,26 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				parentElement.RemoveChild(formExclusiveControlsElement);
 			}
 		}
+        /// <summary>
+        /// https://docs.microsoft.com/cs-cz/dotnet/api/system.windows.forms.dockstyle?view=netframework-4.7.2
+        /// </summary>
+        /// <param name="intVal"></param>
+        /// <returns></returns>
+	    private static string ToWinFormsDockStyle(int intVal)
+	    {
+	        switch (intVal)
+	        {
+                case 2: return "Bottom";
+	            case 5: return "Fill";
+	            case 3: return "Left";
+	            case 0: return "None";
+	            case 4: return "Right";
+	            case 1: return "Top";
+                default: throw new Exception("Cannot convert value " +intVal+ " to System.Windows.Forms string");
+            }
+	    }
 
-		internal static string AddDataSource(Hashtable dataSources, DataTable table, string controlId, bool isIndependent)
+	    internal static string AddDataSource(Hashtable dataSources, DataTable table, string controlId, bool isIndependent)
 		{
 			string entityName = table.TableName;
 			if(isIndependent)

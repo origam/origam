@@ -156,7 +156,7 @@ namespace Origam.Gui
                     {
                         DataSet sourceData 
                             = (engine.RuleEngine.GetContext(resultContextKey) 
-                            as XmlDataDocument).DataSet;
+                            as IDataDocument).DataSet;
                         actionRunnerClient.ProcessWorkflowResults(
                             profile: processData.Profile,
                             processData: processData,

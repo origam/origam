@@ -20,13 +20,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
+using System.Linq;
+using Origam.Schema.EntityModel;
 
 namespace Origam.DA.Service
 {
 	/// <summary>
 	/// Summary description for CustomParameterService.
 	/// </summary>
-	public class CustomParameterService
+	public static class CustomParameterService
 	{
 		private static ArrayList _customParameters = new ArrayList();
 		private static bool _isInitialized = false;
@@ -57,7 +59,15 @@ namespace Origam.DA.Service
 			return null;
 		}
 
-		private static void Initialize()
+	    public static string GetFirstNonCustomParameter(DataStructureMethod method)
+	    {
+	        return method.ParameterReferences.Keys
+	            .Cast<string>()
+	            .FirstOrDefault(parameterName => MatchParameter(parameterName) == null);
+	    }
+
+
+        private static void Initialize()
 		{
 			_customParameters.Add(new CustomParameters.CurrentDateCustomParameter());
 			_customParameters.Add(new CustomParameters.CurrentDateLastMinuteCustomParameter());

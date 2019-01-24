@@ -24,27 +24,27 @@ namespace Origam.BI.CrystalReports
 
 		#region IReportService Members
 
-		public void PrintReport(Guid reportId, XmlDocument data, string printerName, int copies, Hashtable parameters)
+		public void PrintReport(Guid reportId, IDataDocument data, string printerName, int copies, Hashtable parameters)
 		{
 			CrystalReport report = ReportHelper.GetReportElement(reportId) as CrystalReport;
 
-			if(! (data is XmlDataDocument | data == null))
-			{
-				throw new ArgumentOutOfRangeException("data", data, ResourceUtils.GetString("OnlyXmlDocSupported"));
-			}
+            //			if(! (data is IDataDocument | data == null))
+            //			{
+            //				throw new ArgumentOutOfRangeException("data", data, ResourceUtils.GetString("OnlyXmlDocSupported"));
+            //			}
 
-			DataSet dataset = null;
-			if(data is XmlDataDocument)
-			{
-				dataset = (data as XmlDataDocument).DataSet;
-			}
+            //			DataSet dataset = null;
+            //			if(data is XmlDataDocument)
+            //			{
+            //				dataset = (data as XmlDataDocument).DataSet;
+            //			}
+		    DataSet dataset = data.DataSet;
 
+            //			ReportDocument.EnableEventLog(CrystalDecisions.Shared.EventLogLevel.LogEngineErrors);
+            //			System.Diagnostics.Debug.WriteLine(ReportDocument.GetConcurrentUsage(), "Crystal Reports Concurrent Usage");
 
-			//			ReportDocument.EnableEventLog(CrystalDecisions.Shared.EventLogLevel.LogEngineErrors);
-			//			System.Diagnostics.Debug.WriteLine(ReportDocument.GetConcurrentUsage(), "Crystal Reports Concurrent Usage");
-
-			using (LanguageSwitcher langSwitcher = new LanguageSwitcher(
-				ReportHelper.ResolveLanguage(data as XmlDataDocument, report)))
+            using (LanguageSwitcher langSwitcher = new LanguageSwitcher(
+				ReportHelper.ResolveLanguage(data, report)))
 			{
 				using (ReportDocument reportDoc = _helper.CreateReport(report.Id, dataset, parameters))
 				{
@@ -70,11 +70,11 @@ namespace Origam.BI.CrystalReports
 			}
 		}
 
-		public object GetReport(Guid reportId, XmlDocument data, string format, Hashtable parameters, string dbTransaction)
+		public object GetReport(Guid reportId, IDataDocument data, string format, Hashtable parameters, string dbTransaction)
 		{
 			AbstractDataReport report = ReportHelper.GetReportElement(reportId);
 
-			XmlDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(report, data, parameters, dbTransaction);
+			IDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(report, data, parameters, dbTransaction);
 			DataSet dataset = xmlDataDoc.DataSet;
 
 			using (LanguageSwitcher langSwitcher = new LanguageSwitcher(ReportHelper.ResolveLanguage(xmlDataDoc, report)))

@@ -31,26 +31,31 @@ namespace Origam.Rule
 	/// </summary>
 	public class AsTransform
 	{
-        public static IXsltEngine GetXsltEngine(XsltEngineType xsltEngineType)
-        {
-            switch(xsltEngineType)
-            {
-                case XsltEngineType.XslTransform:
-                    return new OldXsltEngine();
-                case XsltEngineType.XslCompiledTransform:
-                    return new CompiledXsltEngine();
-                default:
-                    throw new Exception("Unknown XsltEngine type.");
-            }
-        }
+//        public static IXsltEngine GetXsltEngine(XsltEngineType xsltEngineType)
+//        {
+//            switch(xsltEngineType)
+//            {
+//                case XsltEngineType.XslTransform:
+//                   
+//                    return new OldXsltEngine();
+//                case XsltEngineType.XslCompiledTransform:
+//                    return new CompiledXsltEngine();
+//                default:
+//                    throw new Exception("Unknown XsltEngine type.");
+//            }
+//        }
 
         public static IXsltEngine GetXsltEngine(
-            XsltEngineType xsltEngineType, IPersistenceProvider persistence)
+            XsltEngineType xsltEngineType, IPersistenceProvider persistence=null)
         {
             switch(xsltEngineType)
             {
                 case XsltEngineType.XslTransform:
+#if NETSTANDARD
+                    throw new Exception(xsltEngineType+" is not supported in netstandard implementation of "+ typeof(AsTransform).Name);
+#else
                     return new OldXsltEngine(persistence);
+#endif 
                 case XsltEngineType.XslCompiledTransform:
                     return new CompiledXsltEngine(persistence);
                 default:

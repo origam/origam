@@ -30,6 +30,7 @@ using res = Origam.DA.Service;
 using System.Collections.Generic;
 using System.Text;
 using Origam.Extensions;
+using Origam.DA.Service;
 
 namespace Origam.DA.ObjectPersistence.Providers
 {
@@ -907,7 +908,7 @@ namespace Origam.DA.ObjectPersistence.Providers
 			{
 				if(chng ==null)
 				{
-					System.Windows.Forms.MessageBox.Show(res.ResourceUtils.GetString("NoChangesInDataSet"));
+					throw new Exception(res.ResourceUtils.GetString("NoChangesInDataSet"));
 				}
 				else
 				{

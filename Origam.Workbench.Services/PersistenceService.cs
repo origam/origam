@@ -147,8 +147,7 @@ namespace Origam.Workbench.Services
 		public SchemaExtension LoadSchema(Guid schemaExtensionId, Guid extraExtensionId, 
 			bool loadDocumentation, bool loadDeploymentScripts, string transactionId)
 		{
-			IStatusBarService statusBar = ServiceManager.Services.GetService(
-				typeof(IStatusBarService)) as IStatusBarService;
+			IStatusBarService statusBar = ServiceManager.Services.GetService<IStatusBarService>();
 			SchemaExtension extension1;
 			SchemaExtension extension2 = null;
 			try

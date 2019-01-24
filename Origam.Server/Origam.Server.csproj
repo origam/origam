@@ -30,6 +30,10 @@
   <PropertyGroup>
       <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
+  
+  <PropertyGroup>
+      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
     <OutputPath>bin\Release\</OutputPath>
@@ -68,6 +72,7 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
+
 
   <ItemGroup>
     <Reference Include="AWSSDK, Version=1.3.17.0, Culture=neutral, PublicKeyToken=cd2d24cd2bace800">
@@ -360,6 +365,10 @@
       <Project>{a791b6ad-394d-44a1-84be-b1dbc6c8a720}</Project>
       <Name>Origam.DocGenerator</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
+      <Project>{FDF55D1B-BB0D-4191-AE53-98DE5A4465B5}</Project>
+      <Name>Origam.Schema.EntityModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
       <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
       <Name>Origam.Schema</Name>
@@ -411,10 +420,6 @@
     <ProjectReference Include="..\Origam.Rule\Origam.Rule.csproj">
       <Project>{4f05db44-2bbd-4b54-8d37-e8038d1ee1e7}</Project>
       <Name>Origam.Rule</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
-      <Project>{50186a07-6ed9-4751-b0e2-52feba2a4518}</Project>
-      <Name>Origam.Schema.EntityModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel.csproj">
       <Project>{ecff4a9d-9196-4962-823c-a65d552ff6d8}</Project>

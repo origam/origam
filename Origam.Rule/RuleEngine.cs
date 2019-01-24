@@ -1942,9 +1942,9 @@ namespace Origam.Rule
 
 		public XPathNodeIterator NextStates(string entityId, string fieldId, string currentStateValue, XPathNodeIterator row)
 		{
-			XmlDocument doc = new XmlDocument();
-			XmlElement el = doc.CreateElement("row");
-			doc.AppendChild(el);
+		    IDataDocument doc = DataDocumentFactory.New();
+			XmlElement el = doc.Xml.CreateElement("row");
+			doc.Xml.AppendChild(el);
 			
 			// child atributes
 			XPathNodeIterator attributes = row.Clone();
@@ -1963,7 +1963,7 @@ namespace Origam.Rule
 				{
 					if(row.Current.NodeType == XPathNodeType.Element)
 					{
-						XmlElement childElement = doc.CreateElement(row.Current.Name);
+						XmlElement childElement = doc.Xml.CreateElement(row.Current.Name);
 						childElement.InnerText = row.Current.Value;
 						el.AppendChild(childElement);
 					}
@@ -2252,7 +2252,7 @@ namespace Origam.Rule
 		{
 			try
 			{
-				XmlDocument xmlData = GetXmlDocumentFromData(data);
+			    IDataDocument xmlData = GetXmlDocumentFromData(data);
 
 				if(rule is XPathRule) return EvaluateRule(rule as XPathRule, xmlData, contextPosition);
 				if(rule is XslRule) return EvaluateRule(rule as XslRule, xmlData);
@@ -2289,8 +2289,8 @@ namespace Origam.Rule
 
 		public RuleExceptionDataCollection EvaluateEndRule(IEndRule rule, object data, Hashtable parameters)
 		{
-			XmlDocument context = GetXmlDocumentFromData(data);
-			XmlDocument result = null;
+		    IDataDocument context = GetXmlDocumentFromData(data);
+		    IDataDocument result = null;
 
 			try
 			{
@@ -2309,7 +2309,7 @@ namespace Origam.Rule
 					throw new Exception(ResourceUtils.GetString("ErrorOnlyXslRuleSupported"));
 				}
 
-				XmlNodeReader reader = new XmlNodeReader(result);
+				XmlNodeReader reader = new XmlNodeReader(result.Xml);
 
 				RuleExceptionDataCollection exceptions = (RuleExceptionDataCollection)_ruleExceptionSerializer.Deserialize(reader);
 
@@ -2607,7 +2607,7 @@ namespace Origam.Rule
 						}
 
 						// we add the context into the called engine
-						result = new XmlDataDocument(dataset);
+						result = DataDocumentFactory.New(dataset);
 					}
 					else
 					{
@@ -2625,18 +2625,13 @@ namespace Origam.Rule
 		}
 
 		private DataStructureRuleSet _ruleSet = null;
-		private XmlDataDocument _currentRuleDocument = null;
+		private IDataDocument _currentRuleDocument = null;
 
-		public void ProcessRules(object data, DataStructureRuleSet ruleSet, DataRow contextRow)
+		public void ProcessRules(IDataDocument data, DataStructureRuleSet ruleSet, DataRow contextRow)
 		{
-			XmlDataDocument xmlData;
-			DataSet dataset;
-			
-			if(data is XmlDataDocument)
+			if(data != null && data.DataSet != null)
 			{
-				dataset = (data as XmlDataDocument).DataSet;
-				xmlData = data as XmlDataDocument;
-				_currentRuleDocument = xmlData;
+				_currentRuleDocument = data;
 			}
 			else
 			{
@@ -2645,35 +2640,28 @@ namespace Origam.Rule
 
 			_ruleSet = ruleSet;
 
-			IOutputPad outputPad = null;
-			
-			if(WorkbenchSingleton.Workbench != null)
-			{
-				outputPad = WorkbenchSingleton.Workbench.GetPad(typeof(IOutputPad)) as IOutputPad;
-			}
-
 			/********************************************************************
 			 * Column bound rules
 			 ********************************************************************/
 			if(contextRow == null)	// whole dataset
 			{
 				Hashtable cols = new Hashtable();
-				CompleteChildColumnReferences(dataset, cols);
+				CompleteChildColumnReferences(data.DataSet, cols);
 				
-				EnqueueAllRows(dataset, xmlData, ruleSet, cols);
+				EnqueueAllRows(data, ruleSet, cols);
 			}
 			else					// current row
 			{
 				Hashtable cols = new Hashtable();
 				CompleteChildColumnReferences(contextRow.Table, cols);
 				
-				EnqueueAllRows(contextRow, xmlData, ruleSet, cols);
+				EnqueueAllRows(contextRow, data, ruleSet, cols);
 			}
 
 			/********************************************************************
 			 * Row bound rules
 			 ********************************************************************/
-			ArrayList sortedTables = GetSortedTables(dataset);
+			ArrayList sortedTables = GetSortedTables(data.DataSet);
 
 			try
 			{
@@ -2768,17 +2756,17 @@ namespace Origam.Rule
 		/// <param name="rowChanged"></param>
 		/// <param name="columnChanged"></param>
 		/// <param name="ruleSet"></param>
-		public void ProcessRules(DataRow rowChanged, XmlDataDocument data, DataColumn columnChanged, DataStructureRuleSet ruleSet)
+		public void ProcessRules(DataRow rowChanged, IDataDocument data, DataColumn columnChanged, DataStructureRuleSet ruleSet)
 		{
 			ProcessRulesInternal(rowChanged, data, columnChanged, ruleSet, null, false);
 		}
 
-		internal void ProcessRules(DataRow rowChanged, XmlDataDocument data, ICollection columnsChanged, DataStructureRuleSet ruleSet)
+		internal void ProcessRules(DataRow rowChanged, IDataDocument data, ICollection columnsChanged, DataStructureRuleSet ruleSet)
 		{
 			ProcessRulesInternal(rowChanged, data, null, ruleSet, columnsChanged, false);
 		}
 
-		private bool ProcessRulesFromQueue(DataRow rowChanged, XmlDataDocument data, DataStructureRuleSet ruleSet, ICollection columnsChanged)
+		private bool ProcessRulesFromQueue(DataRow rowChanged, IDataDocument data, DataStructureRuleSet ruleSet, ICollection columnsChanged)
 		{
 			return ProcessRulesInternal(rowChanged, data, null, ruleSet, columnsChanged, true);
 		}
@@ -2819,7 +2807,7 @@ namespace Origam.Rule
 			}
 		}
 
-		private void EnqueueEntry(DataRow rowChanged, XmlDataDocument data, DataStructureRuleSet ruleSet, Hashtable columns)
+		private void EnqueueEntry(DataRow rowChanged, IDataDocument data, DataStructureRuleSet ruleSet, Hashtable columns)
 		{
 			if(rowChanged.RowState == DataRowState.Deleted) return;
 
@@ -2836,7 +2824,7 @@ namespace Origam.Rule
 				}
 			}
 
-			object[] queueEntry = new object[4] {rowChanged, ruleSet, columns, data};
+			object[] queueEntry = new object[4] {rowChanged, ruleSet, columns, data.Xml};
 			_ruleQueue.Enqueue(queueEntry);
 		}
 
@@ -2845,7 +2833,7 @@ namespace Origam.Rule
 			return col.Table.TableName + "_" + col.ExtendedProperties["Id"].ToString();
 		}
 
-		private void EnqueueAllRows(DataRow currentRow, XmlDataDocument data, DataStructureRuleSet ruleSet, Hashtable columns)
+		private void EnqueueAllRows(DataRow currentRow, IDataDocument data, DataStructureRuleSet ruleSet, Hashtable columns)
 		{
 			if(! IsEntryInQueue(currentRow, ruleSet))
 			{
@@ -2856,20 +2844,20 @@ namespace Origam.Rule
 			EnqueueParentRows(currentRow, data, ruleSet, columns, null);
 		}
 
-		private void EnqueueAllRows(DataSet data, XmlDataDocument xmlData, DataStructureRuleSet ruleSet, Hashtable columns)
+		private void EnqueueAllRows(IDataDocument data, DataStructureRuleSet ruleSet, Hashtable columns)
 		{
-			ArrayList tables = GetSortedTables(data);
+			ArrayList tables = GetSortedTables(data.DataSet);
 
 			for(int i=tables.Count-1; i >= 0; i--)
 			{
 				foreach(DataRow row in ((DataTable)tables[i]).Rows)
 				{
-					EnqueueEntry(row, xmlData, ruleSet, columns);
+					EnqueueEntry(row, data, ruleSet, columns);
 				}
 			}
 		}
 
-		private void EnqueueChildRows(DataRow parentRow, XmlDataDocument data, DataStructureRuleSet ruleSet, Hashtable columns)
+		private void EnqueueChildRows(DataRow parentRow, IDataDocument data, DataStructureRuleSet ruleSet, Hashtable columns)
 		{
             if (parentRow.RowState != DataRowState.Detached && parentRow.RowState != DataRowState.Deleted)
             {
@@ -2888,7 +2876,7 @@ namespace Origam.Rule
             }
 		}
 
-		private void EnqueueParentRows(DataRow childRow, XmlDataDocument data, DataStructureRuleSet ruleSet, Hashtable columns, DataRow[] parentRows)
+		private void EnqueueParentRows(DataRow childRow, IDataDocument data, DataStructureRuleSet ruleSet, Hashtable columns, DataRow[] parentRows)
 		{
 			ArrayList rows = new ArrayList();
 			if(parentRows == null)
@@ -2917,7 +2905,7 @@ namespace Origam.Rule
 			}
 		}
 
-		public void ProcessRules(DataRow rowChanged, XmlDataDocument data, DataStructureRuleSet ruleSet)
+		public void ProcessRules(DataRow rowChanged, IDataDocument data, DataStructureRuleSet ruleSet)
 		{
 			ProcessRules(rowChanged, data, ruleSet, null);
 		}
@@ -2927,7 +2915,7 @@ namespace Origam.Rule
 		/// </summary>
 		/// <param name="rowChanged"></param>
 		/// <param name="ruleSet"></param>
-		public void ProcessRules(DataRow rowChanged, XmlDataDocument data, DataStructureRuleSet ruleSet, DataRow[] parentRows)
+		public void ProcessRules(DataRow rowChanged, IDataDocument data, DataStructureRuleSet ruleSet, DataRow[] parentRows)
 		{
 			bool wasQueued = false;
 
@@ -2983,7 +2971,7 @@ namespace Origam.Rule
 					DataRow row = queueEntry[0] as DataRow;
 					DataStructureRuleSet rs = queueEntry[1] as DataStructureRuleSet;
 					Hashtable changedColumns = queueEntry[2] as Hashtable;
-					XmlDataDocument data = queueEntry[3] as XmlDataDocument;
+					IDataDocument data = queueEntry[3] as IDataDocument;
 
 					row.BeginEdit();
 
@@ -3016,7 +3004,7 @@ namespace Origam.Rule
 			}
 		}
 		
-		private bool ProcessRulesInternal(DataRow rowChanged, XmlDataDocument data, DataColumn columnChanged, DataStructureRuleSet ruleSet, ICollection columnsChanged, bool isFromRuleQueue)
+		private bool ProcessRulesInternal(DataRow rowChanged, IDataDocument data, DataColumn columnChanged, DataStructureRuleSet ruleSet, ICollection columnsChanged, bool isFromRuleQueue)
 		{
 			if(_ruleProcessingPaused) return false;
 			if(columnChanged == null && columnsChanged.Count == 0) return false;
@@ -3026,14 +3014,9 @@ namespace Origam.Rule
 			bool result = false;
 			bool resultRules = false;
 
-			IOutputPad outputPad = null;
-			
-			if(WorkbenchSingleton.Workbench != null)
-			{
-				outputPad = WorkbenchSingleton.Workbench.GetPad(typeof(IOutputPad)) as IOutputPad;
-			}
+			var outputPad = GetOutputPad();
 
-			if(ruleSet != null)
+		    if(ruleSet != null)
 			{
 				ArrayList rules;
 
@@ -3126,7 +3109,19 @@ namespace Origam.Rule
 			return result || resultRules;
 		}
 
-		private bool ProcessRulesLookupFields(DataRow row, string columnName)
+	    private static IOutputPad GetOutputPad()
+	    {
+	        IOutputPad outputPad = null;
+#if !NETSTANDARD
+	        if (WorkbenchSingleton.Workbench != null)
+	        {
+	            outputPad = WorkbenchSingleton.Workbench.GetPad(typeof(IOutputPad)) as IOutputPad;
+	        }
+#endif
+	        return outputPad;
+	    }
+
+	    private bool ProcessRulesLookupFields(DataRow row, string columnName)
 		{
 			bool changed = false;
 			DataTable t = row.Table;
@@ -3175,11 +3170,11 @@ namespace Origam.Rule
 					}
 				}
 			}
-
+            
 			return changed;
 		}
 
-		private bool ProcessRulesInternalFinish(ArrayList rules, XmlDataDocument data, DataRow rowChanged, IOutputPad outputPad, DataStructureRuleSet ruleSet)
+		private bool ProcessRulesInternalFinish(ArrayList rules, IDataDocument data, DataRow rowChanged, IOutputPad outputPad, DataStructureRuleSet ruleSet)
 		{
 			bool changed = false;
 
@@ -3214,7 +3209,7 @@ namespace Origam.Rule
 				DataSet dataSlice = DatasetTools.CloneDataSet(rowChanged.Table.DataSet, false);
 
 				DatasetTools.GetDataSlice(dataSlice, new List<DataRow>{rowChanged});
-				XmlDataDocument xmlSlice = new XmlDataDocument(dataSlice);
+			    IDataDocument xmlSlice = DataDocumentFactory.New(dataSlice);
 
 				if(rule.ValueRule.IsPathRelative)
 				{
@@ -3257,7 +3252,7 @@ namespace Origam.Rule
 					path = "/" + data.DataSet.DataSetName + "/" + path;
 				
 					// move to the same position in the xml slice
-					XPathNavigator nav = xmlSlice.CreateNavigator();
+					XPathNavigator nav = xmlSlice.Xml.CreateNavigator();
 					iterator = nav.Select(path);
 					iterator.MoveNext();
 				}
@@ -3312,8 +3307,8 @@ namespace Origam.Rule
 					throw;
 				}
 
-				#region Processing Result
-				#region TRACE
+#region Processing Result
+#region TRACE
 				if(log.IsDebugEnabled)
 				{
 					if(rule.TargetField != null)
@@ -3350,12 +3345,12 @@ namespace Origam.Rule
 						log.Debug("   " + ResourceUtils.GetString("PadRuleResult0") + result.ToString());
 					}
 				}
-				#endregion
+#endregion
 
-				if(result is XmlDataDocument)
+				if(result is IDataDocument)
 				{
 					// RESULT IS DATASET
-					DataTable resultTable = (result as XmlDataDocument).DataSet.Tables[rowChanged.Table.TableName];
+					DataTable resultTable = (result as IDataDocument).DataSet.Tables[rowChanged.Table.TableName];
 
 					if(resultTable == null)
 					{
@@ -3395,7 +3390,7 @@ namespace Origam.Rule
 							}
 						}
 
-						#region TRACE
+#region TRACE
 						if(log.IsDebugEnabled)
 						{
 							foreach(DataColumn col in changedColumns)
@@ -3428,7 +3423,7 @@ namespace Origam.Rule
 									+ (oldLookupValue == null ? "" : " (" + oldLookupValue + ")"));
 							}
 						}
-						#endregion
+#endregion
 
 						// copy the values into the source row
 						PauseRuleProcessing();
@@ -3481,7 +3476,7 @@ namespace Origam.Rule
 						}
 					}
 				}
-				#endregion
+#endregion
 
 			nextRule:
 				;
@@ -3494,9 +3489,9 @@ namespace Origam.Rule
 
 			return changed;
 		}
-		#endregion
+#endregion
 
-		#region Conditional Formatting Functions
+#region Conditional Formatting Functions
 		public EntityFormatting Formatting(XmlDocument data, Guid entityId, Guid fieldId, XPathNodeIterator contextPosition)
 		{
 			EntityFormatting formatting = new EntityFormatting(NullColor, NullColor);
@@ -3613,9 +3608,9 @@ namespace Origam.Rule
 
 			return null;
 		}
-		#endregion
+#endregion
 
-		#region Row Level Security Functions
+#region Row Level Security Functions
 		public bool RowLevelSecurityState(DataRow row, string field, CredentialType type)
 		{
 			if(! DatasetTools.HasRowValidParent(row)) return true;
@@ -3714,13 +3709,13 @@ namespace Origam.Rule
                             // go through each column and lookup any looked-up column values
                             foreach (DataColumn childCol in childRow.Table.Columns)
                             {
-#if ! ORIGAM_SERVER
+#if !ORIGAM_SERVER
                                 if (childRow.RowState != DataRowState.Unchanged
                                     && childRow.RowState != DataRowState.Detached)
                                 {
 #endif
                                     this.ProcessRulesLookupFields(childRow, childCol.ColumnName);
-#if ! ORIGAM_SERVER
+#if !ORIGAM_SERVER
                                 }
 #endif
                             }
@@ -3933,10 +3928,10 @@ namespace Origam.Rule
 
 			return true;
 		}
-		#endregion
-		#endregion
+#endregion
+#endregion
 
-		#region Private Functions
+#region Private Functions
 		private string FormatXmlString(object value)
 		{
 			if(value is DateTime)
@@ -3992,21 +3987,23 @@ namespace Origam.Rule
 			}
 		}
 
-		public XmlDocument GetXmlDocumentFromData(object inputData)
+        public IDataDocument GetXmlDocumentFromData(object inputData)
 		{
+            IDataDocument doc = inputData as IDataDocument;
+            if (doc != null)
+            {
+                return doc;
+            }
 			object data = inputData;
-
 			IContextStore contextStore = data as IContextStore;
 			if (contextStore != null) {
 				// Get the rule's context store
 				data = GetContext(contextStore);
 			}
-
-			XmlDocument xml;
-			XmlDocument xmlDocument = data as XmlDocument;
+		    XmlDocument xmlDocument = data as XmlDocument;
 			if(xmlDocument != null)
 			{
-				xml = xmlDocument;
+				doc = DataDocumentFactory.New(xmlDocument);
 			}
 			else
 			{
@@ -4036,31 +4033,31 @@ namespace Origam.Rule
 				}
 				else if(data == null)
 				{
-					xml = new XmlDocument();
-					xml.LoadXml("<ROOT/>");
-					return xml;
+					doc = DataDocumentFactory.New();
+					doc.Xml.LoadXml("<ROOT/>");
+					return doc;
 				}
 				else if (data is ArrayList)
 				{
-					xml = new XmlDocument();
-					XmlElement root = (XmlElement)xml.AppendChild(xml.CreateElement("ROOT"));
+					doc = DataDocumentFactory.New();
+					XmlElement root = (XmlElement)doc.Xml.AppendChild(doc.Xml.CreateElement("ROOT"));
 					foreach (object item in data as ArrayList)
 					{
-						root.AppendChild(xml.CreateElement("value")).InnerText = item.ToString();
+						root.AppendChild(doc.Xml.CreateElement("value")).InnerText = item.ToString();
 					}
-					return xml;
+					return doc;
 				}
 				else
 				{
 					data = data.ToString();
 				}
 
-				xml = new XmlDocument();
-				xml.LoadXml("<ROOT><value /></ROOT>");
-                xml.FirstChild.FirstChild.InnerText = (string)data;
+				doc = DataDocumentFactory.New();
+				doc.Xml.LoadXml("<ROOT><value /></ROOT>");
+                doc.Xml.FirstChild.FirstChild.InnerText = (string)data;
 			}
 
-			return xml;
+			return doc;
 		}
 
 		private static string FormatXmlDateTime(DateTime date)
@@ -4094,9 +4091,9 @@ namespace Origam.Rule
 
 			return _dataServiceAgent.Result as DataSet;
 		}
-		#endregion
+#endregion
 
-		#region Evaluators
+#region Evaluators
 
 		private object Evaluate(SystemFunctionCall functionCall)
 		{
@@ -4124,12 +4121,12 @@ namespace Origam.Rule
 			return ((XslTransformation)reference.Transformation).Id;
 		}
 
-		#endregion
+#endregion
 
-		#region Rule Evaluators
-		private object EvaluateRule(XPathRule rule, XmlDocument context, XPathNodeIterator contextPosition)
+#region Rule Evaluators
+		private object EvaluateRule(XPathRule rule, IDataDocument context, XPathNodeIterator contextPosition)
 		{
-			if(context == null)
+			if(context == null && context.Xml == null)
 			{
 				throw new NullReferenceException(ResourceUtils.GetString("ErrorEvaluateContextNull"));
 			}
@@ -4141,10 +4138,10 @@ namespace Origam.Rule
 				{
 					log.Debug("Current Position: " + contextPosition.Current.Name);
 				}
-				log.Debug("  Input data: " + context.OuterXml);
+				log.Debug("  Input data: " + context.Xml.OuterXml);
 			}
 
-			XPathNavigator nav = context.CreateNavigator();
+			XPathNavigator nav = context.Xml.CreateNavigator();
 
 			return EvaluateXPath(rule.XPath, rule.IsPathRelative, rule.DataType, nav, contextPosition);
 		}
@@ -4319,11 +4316,11 @@ namespace Origam.Rule
 		}
 
 
-		private object EvaluateRule(XslRule rule, XmlDocument context)
+		private object EvaluateRule(XslRule rule, IDataDocument context)
 		{
 			try
 			{
-				XmlDocument result = _transformer.Transform(context, rule.Id, null, this, rule.Structure, false);
+			    IDataDocument result = _transformer.Transform(context, rule.Id, null, this, rule.Structure, false);
 
 				return result;
 			}
@@ -4336,7 +4333,7 @@ namespace Origam.Rule
 				throw new Exception(ResourceUtils.GetString("ErrorRuleFailed2"), ex);
 			}
 		}
-		#endregion
+#endregion
 
 		private void table_RowChanged(object sender, DataRowChangeEventArgs e)
 		{
@@ -4349,7 +4346,7 @@ namespace Origam.Rule
 		}
 	}
 
-	#region XPath Functions
+#region XPath Functions
 
 	class NullFunction : IXsltContextFunction 
 	{
@@ -5661,9 +5658,9 @@ namespace Origam.Rule
         }
     }
 
-    #endregion
+#endregion
 
-    #region XPath Helper Classes
+#region XPath Helper Classes
     public class RuleFunctionContext : XsltContext
 	{
 		private ExsltContext _exslt;
@@ -6092,5 +6089,5 @@ namespace Origam.Rule
 		private bool valid;
 	}
 
-	#endregion
+#endregion
 }

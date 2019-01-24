@@ -42,6 +42,7 @@ using Origam.Workbench.Pads;
 using Origam.Rule;
 using System.Collections.Generic;
 using System.Linq;
+using Origam.Extensions;
 using Origam.Schema.GuiModel.Designer;
 using Origam.Gui;
 using Origam.Schema.MenuModel;

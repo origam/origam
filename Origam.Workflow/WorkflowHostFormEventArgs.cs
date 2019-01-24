@@ -35,7 +35,7 @@ namespace Origam.Workflow
 	/// </summary>
 	public class WorkflowHostFormEventArgs : WorkflowHostEventArgs
 	{
-		private XmlDataDocument _data;
+		private IDataDocument _data;
 		private string _description;
 		private string _notification;
 		private FormControlSet _form;
@@ -54,7 +54,7 @@ namespace Origam.Workflow
 		private IEndRule _saveConfirmationRule;
         private bool _refreshPortalAfterSave;
 
-		public WorkflowHostFormEventArgs(Guid taskId, WorkflowEngine engine, XmlDataDocument data, 
+		public WorkflowHostFormEventArgs(Guid taskId, WorkflowEngine engine, IDataDocument data, 
 			string description, string notification, FormControlSet form, DataStructureRuleSet ruleSet, 
 			IEndRule endRule, AbstractDataStructure structure, DataStructureMethod refreshMethod,
 			DataStructureSortSet refreshSort, AbstractDataStructure saveStructure, bool isFinalForm, bool allowSave,
@@ -82,7 +82,7 @@ namespace Origam.Workflow
             _refreshPortalAfterSave = refreshPortalAfterSave;
 		}
 
-		public XmlDataDocument Data
+		public IDataDocument Data
 		{
 			get
 			{

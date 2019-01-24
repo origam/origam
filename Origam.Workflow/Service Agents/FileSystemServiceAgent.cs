@@ -153,7 +153,7 @@ namespace Origam.Workflow
 			return Encoding.GetEncoding(encoding);
 		}
 
-        private XmlDataDocument GetFileSystemInfo(
+        private IDataDocument GetFileSystemInfo(
             string path, string mask, bool recursive)
         {
             if (this.OutputStructure.PrimaryKey["Id"].ToString()
@@ -169,7 +169,7 @@ namespace Origam.Workflow
             DataTable table = dataSet.Tables["FileSystemInfo"];
             ProcessFileSystemInfoForFolder(
                 new DirectoryInfo(path), mask, recursive, table, Guid.Empty);
-            return new XmlDataDocument(dataSet);
+            return DataDocumentFactory.New(dataSet);
         }
 
         private void ProcessFileSystemInfoForFolder(

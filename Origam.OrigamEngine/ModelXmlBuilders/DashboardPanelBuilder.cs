@@ -47,7 +47,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			string dataSourceName = originalDataSourceElement.GetAttribute("Entity");
 			string dataSourceIdentifier = originalDataSourceElement.GetAttribute("Identifier");
 
-			XmlElement newDataSourceElement = FormXmlBuilder.AddDataSourceElement(dataSourcesElement, dataSourceName, dataSourceIdentifier, null);
+			XmlElement newDataSourceElement = FormXmlBuilder.AddDataSourceElement(dataSourcesElement, dataSourceName, dataSourceIdentifier, null, null);
 
 			newDataSourceElement.InnerXml = originalDataSourceElement.InnerXml;
 		}

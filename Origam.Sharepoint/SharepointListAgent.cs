@@ -48,7 +48,7 @@ namespace Origam.Sharepoint
 			_lists.Credentials = credentials; //System.Net.CredentialCache.DefaultCredentials;
 		}
 
-		public XmlDataDocument GetListItems(string listName, string viewName)
+		public IDataDocument GetListItems(string listName, string viewName)
 		{
 			XmlNode viewFieldsNode = GetListFieldSchema(listName, _lists);
 
@@ -78,10 +78,10 @@ namespace Origam.Sharepoint
 				data.Merge(tempData, false, MissingSchemaAction.Ignore);
 			}
 
-			return new XmlDataDocument(data);
+			return DataDocumentFactory.New(data);
 		}
 
-		public void UpdateListItems(string listName, string viewName, XmlDataDocument data)
+		public void UpdateListItems(string listName, string viewName, IDataDocument data)
 		{
 			if(! data.DataSet.HasChanges()) return;
 
@@ -270,12 +270,12 @@ namespace Origam.Sharepoint
 					if(! (this.Parameters["ViewName"] is string | this.Parameters["ViewName"] == null ))
 						throw new InvalidCastException(ResourceUtils.GetString("ErrorViewNameNotString"));
 
-					if(! (this.Parameters["Data"] is XmlDataDocument))
+					if(! (this.Parameters["Data"] is IDataDocument))
 						throw new InvalidCastException(ResourceUtils.GetString("ErrorDataNotXml"));
 
 					this.UpdateListItems(this.Parameters["ListName"] as String,
 						this.Parameters["ViewName"] as String,
-						this.Parameters["Data"] as XmlDataDocument);
+						this.Parameters["Data"] as IDataDocument);
 
 					_result = null;
 

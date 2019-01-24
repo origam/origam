@@ -24,7 +24,6 @@ using System.Text;
 using System.Data;
 using System.Collections;
 using System.Security.Principal;
-using System.Windows.Forms;
 using Origam.DA;
 using Origam.Services;
 using Origam.UI;
@@ -51,8 +50,6 @@ namespace Origam.Workbench.Services
 	/// </summary>
 	public class DataLookupService : IDataLookupService
 	{
-		public event System.EventHandler LookupShowSourceListRequested;
-		public event System.EventHandler LookupEditSourceRecordRequested;
 
 		public const string SCHEMA_LOOKUP_ID = "3396e71f-6ee9-4c1d-8fad-739822c8df96";
 
@@ -63,7 +60,6 @@ namespace Origam.Workbench.Services
 			ValueCacheList
 		}
 
-		private Hashtable _controls = new Hashtable();
 		private Hashtable _valueCache = new Hashtable();
 
 		public DataLookupService()
@@ -85,59 +81,6 @@ namespace Origam.Workbench.Services
 //		}
 		#endregion
 		
-		#region Public Methods
-		/// <summary>
-		/// Adds control under lookup management
-		/// </summary>
-		/// <param name="lookupControl"></param>
-		public void AddLookupControl(ILookupControl lookupControl, Form form, bool showEditCommand)
-		{
-			System.Diagnostics.Debug.Assert(form != null, ResourceUtils.GetString("ErrorFormLookupControlFail"));
-
-			_controls.Add(lookupControl, form);
-
-			AbstractDataLookup lookup = GetLookup(lookupControl.LookupId);
-
-			if(lookup == null) throw new NullReferenceException("Lookup not specified in control: " + (lookupControl as Control).Name);
-
-			// set the EditMenu visibility, if user can or cannot run the Edit command
-			lookupControl.LookupShowEditButton = (showEditCommand & HasEditListMenuBinding(lookup));
-			lookupControl.LookupCanEditSourceRecord = HasEditRecordMenuBinding(lookup);
-
-			lookupControl.LookupListDisplayMember = lookup.ListDisplayMember;
-			lookupControl.LookupListValueMember = lookup.ListValueMember;
-			lookupControl.LookupListTreeParentMember = lookup.TreeParentMember;
-			lookupControl.SuppressEmptyColumns = lookup.SuppressEmptyColumns;
-
-			lookupControl.LookupDisplayTextRequested += new EventHandler(lookupControl_LookupDisplayTextRequested);
-			lookupControl.LookupShowSourceListRequested += new EventHandler(lookupControl_LookupShowSourceListRequested);
-			lookupControl.LookupEditSourceRecordRequested += new EventHandler(lookupControl_LookupEditSourceRecordRequested);
-			lookupControl.LookupListRefreshRequested += new EventHandler(lookupControl_LookupListRefreshRequested);
-		}
-
-		public void RemoveLookupControl(ILookupControl lookupControl)
-		{
-			lookupControl.LookupDisplayTextRequested -= new EventHandler(lookupControl_LookupDisplayTextRequested);
-			lookupControl.LookupShowSourceListRequested -= new EventHandler(lookupControl_LookupShowSourceListRequested);
-			lookupControl.LookupListRefreshRequested -= new EventHandler(lookupControl_LookupListRefreshRequested);
-			lookupControl.LookupEditSourceRecordRequested -= new EventHandler(lookupControl_LookupEditSourceRecordRequested);
-
-			_controls.Remove(lookupControl);
-		}
-
-		public void RemoveLookupControlsByForm(Form form)
-		{
-			ArrayList controls = new ArrayList(_controls.Keys);
-
-			foreach(Control control in controls)
-			{
-				if(_controls[control].Equals(form))
-				{
-					this.RemoveLookupControl(control as ILookupControl);
-				}
-			}
-		}
-
 		public DataView GetList(Guid lookupId, string transactionId)
 		{
 			return GetList(lookupId, new Hashtable(), transactionId);
@@ -537,23 +480,6 @@ namespace Origam.Workbench.Services
 			return result;
 		}
 
-		protected virtual void OnLookupShowSourceListRequested(AbstractMenuItem menuItem, EventArgs e)
-		{
-			if (this.LookupShowSourceListRequested != null)
-			{
-				this.LookupShowSourceListRequested(menuItem, e);
-			}
-		}
-
-		protected virtual void OnLookupEditSourceRecordRequested(AbstractMenuItem menuItem, ParameterizedEventArgs e)
-		{
-			if (this.LookupEditSourceRecordRequested != null)
-			{
-				this.LookupEditSourceRecordRequested(menuItem, e);
-			}
-		}
-		#endregion
-
 		#region Private Methods
 		private IServiceAgent GetAgent()
 		{
@@ -565,7 +491,7 @@ namespace Origam.Workbench.Services
 		/// </summary>
 		/// <param name="lookupId"></param>
 		/// <returns></returns>
-		private AbstractDataLookup GetLookup(Guid lookupId)
+		public AbstractDataLookup GetLookup(Guid lookupId)
 		{
 			ModelElementKey key = new ModelElementKey(lookupId);
 			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
@@ -671,7 +597,7 @@ namespace Origam.Workbench.Services
             }
 		}
 
-		private DataLookupMenuBinding GetMenuBindingElement(AbstractDataLookup lookup, object value)
+	    public DataLookupMenuBinding GetMenuBindingElement(AbstractDataLookup lookup, object value)
 		{
 			IOrigamAuthorizationProvider authorizationProvider = SecurityManager.GetAuthorizationProvider();
 			IPrincipal principal = SecurityManager.CurrentPrincipal;
@@ -733,7 +659,7 @@ namespace Origam.Workbench.Services
 			return null;
 		}
 
-		private bool AuthorizeMenuBinding(IOrigamAuthorizationProvider authorizationProvider, IPrincipal principal, DataLookupMenuBinding binding)
+	    public bool AuthorizeMenuBinding(IOrigamAuthorizationProvider authorizationProvider, IPrincipal principal, DataLookupMenuBinding binding)
 		{
 			IParameterService param = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 
@@ -752,47 +678,7 @@ namespace Origam.Workbench.Services
 			control.LookupDisplayText = GetDisplayText(control.LookupId, control.LookupValue, null).ToString();
 		}
 
-		private void lookupControl_LookupShowSourceListRequested(object sender, EventArgs e)
-		{
-			ILookupControl control = sender as ILookupControl;
-			DataServiceDataLookup lookup = GetLookup(control.LookupId) as DataServiceDataLookup;
 
-			DataLookupMenuBinding binding = GetMenuBindingElement(lookup, null);
-
-			if(binding != null)
-			{
-				OnLookupShowSourceListRequested(binding.MenuItem, EventArgs.Empty);
-			}
-		}
-
-		private void lookupControl_LookupEditSourceRecordRequested(object sender, EventArgs e)
-		{
-			ILookupControl control = sender as ILookupControl;
-			DataServiceDataLookup lookup = GetLookup(control.LookupId) as DataServiceDataLookup;
-			DataLookupMenuBinding binding = GetMenuBindingElement(lookup, control.LookupValue);
-
-			if(binding != null)
-			{
-				ParameterizedEventArgs args = new ParameterizedEventArgs();
-				foreach(DictionaryEntry entry in this.LinkParameters(binding.MenuItem, control.LookupValue))
-				{
-					args.Parameters.Add(entry.Key, entry.Value);
-				}
-
-				if(binding.MenuItem is FormReferenceMenuItem)
-				{
-					FormReferenceMenuItem formRef = binding.MenuItem as FormReferenceMenuItem;
-
-					if(control is Control)
-					{
-						IOrigamForm form = (control as Control).FindForm() as IOrigamForm;
-
-						args.SourceForm = form;
-					}
-				}
-				OnLookupEditSourceRecordRequested(binding.MenuItem, args);
-			}
-		}
 
 		public DataTable GetList(LookupListRequest request)
 		{
@@ -979,7 +865,6 @@ namespace Origam.Workbench.Services
 
 		public void UnloadService()
 		{
-			_controls.Clear();
 			_valueCache.Clear();
 		}
 
@@ -1033,5 +918,12 @@ namespace Origam.Workbench.Services
 
         #endregion
 
-    }
+	    public void RemoveFromCache(Guid id)
+	    {
+	        if (_valueCache.Contains(id))
+	        {
+	            _valueCache.Remove(id);
+            }
+	    }
+	}
 }

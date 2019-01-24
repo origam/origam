@@ -73,7 +73,7 @@ namespace Origam.Workflow
 
 
 
-		private XmlDataDocument LoadData(Guid dataStructureId, Hashtable parameters, Guid methodId, Guid sortSetId)
+		private IDataDocument LoadData(Guid dataStructureId, Hashtable parameters, Guid methodId, Guid sortSetId)
 		{
 			// (_dataService as MsSqlDataService).PersistenceProvider = this.PersistenceProvider;
 
@@ -87,7 +87,7 @@ namespace Origam.Workflow
 					query.Parameters.Add(new QueryParameter(entry.Key as string, entry.Value));
 				}
 			}
-			return new XmlDataDocument(LoadData(query, null));
+			return DataDocumentFactory.New(LoadData(query, null));
 		}
 
 		private DataSet LoadData(DataStructureQuery query)
@@ -136,14 +136,14 @@ namespace Origam.Workflow
 					dataStructureWorkflowMethod.LoadWorkflowId,
 					query.Parameters,
 					this.TransactionId);
-				if (res is XmlDataDocument)
+				if (res is IDataDocument)
 				{
 
 					DataSet res2 = new DataSet();
 					// make deep copy of dataset in order remove connection between dataset and XmlDataDocument
 					// TODO - either return DataSet from WF,
 					// or change everything UP to XSLT page handler to XmlDataDocument
-					res2 = ((XmlDataDocument) res).DataSet.Copy();
+					res2 = ((IDataDocument) res).DataSet.Copy();
 					return res2;
 				}
 				try
@@ -204,7 +204,7 @@ namespace Origam.Workflow
 			}
 		}
 
-		private XmlDataDocument ExecuteProcedure(string name, Hashtable parameters, string entityOrder)
+		private IDataDocument ExecuteProcedure(string name, Hashtable parameters, string entityOrder)
 		{
 			DataStructureQuery query = new DataStructureQuery();
 			if(this.OutputStructure != null)
@@ -227,13 +227,13 @@ namespace Origam.Workflow
 			}
 			else
 			{
-				return new XmlDataDocument(result);
+				return DataDocumentFactory.New(result);
 			}
 		}
 
-		private XmlDataDocument SaveData(
+		private IDataDocument SaveData(
             Guid dataStructureId, Guid methodId, Guid sortSetId, 
-            XmlDataDocument data, bool forceBulkInsert)
+            IDataDocument data, bool forceBulkInsert)
 		{
 			DataSet dataset = data.DataSet;
 
@@ -521,7 +521,7 @@ namespace Origam.Workflow
 					}
 					else	// StoreData
 					{
-						if(!(Parameters["Data"] is XmlDataDocument))
+						if(!(Parameters["Data"] is IDataDocument))
 							throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDataDocument"));
                         if(Parameters.Contains("ForceBulkInsert"))
                         {
@@ -529,7 +529,7 @@ namespace Origam.Workflow
                         }
 						_result = SaveData(
                             dsId, methodId, sortId, 
-                            Parameters["Data"] as XmlDataDocument, 
+                            Parameters["Data"] as IDataDocument, 
                             forceBulkInsert);
 
 					}

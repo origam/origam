@@ -313,7 +313,8 @@ namespace OrigamArchitect
 								binding = new Binding(dd.DefaultBindableProperty, data, panel.DataMember + "." + col.Name);
 								//this.FormGenerator.SetTooltip(dd, "", dd.Caption);
 								this.FormGenerator.ControlBindings.Add(dd, binding);
-								this.FormGenerator.LookupManager.AddLookupControl(dd, this, true);
+							    ServiceManager.Services.GetService<IControlsLookUpService>()
+							        .AddLookupControl(dd, this, true);
 							}
 							break;
 

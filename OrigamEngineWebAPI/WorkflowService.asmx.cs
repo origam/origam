@@ -11,6 +11,7 @@ using core = Origam.Workbench.Services.CoreServices;
 using System.Xml;
 using System.Text;
 using System.IO;
+using Origam;
 
 namespace OrigamEngineWebAPI
 {
@@ -57,7 +58,7 @@ namespace OrigamEngineWebAPI
 
         private static object ConvertData(object result)
         {
-            XmlDataDocument document = result as XmlDataDocument;
+            IDataDocument document = result as IDataDocument;
             if (document != null)
             {
                 StringBuilder sb = new StringBuilder();

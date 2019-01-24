@@ -411,7 +411,7 @@ namespace Origam.Server.Pages
             }
 
             System.IO.StreamReader reader = new System.IO.StreamReader(context.Request.InputStream, context.Request.ContentEncoding);
-            XmlDocument doc = new XmlDocument();
+            IDataDocument doc = DataDocumentFactory.New();
             DataSet data = null;
             WorkflowPage wfPage = page as WorkflowPage;
             XsltDataPage dataPage = page as XsltDataPage;
@@ -449,7 +449,7 @@ namespace Origam.Server.Pages
                     switch (requestMimeType)
                     {
                         case "text/xml":
-                            doc.Load(reader);
+                            doc.Xml.Load(reader);
                             break;
 
                         case "application/json":
@@ -476,7 +476,7 @@ namespace Origam.Server.Pages
                             }
                             if (data == null)
                             {
-                                doc = xd;
+                                doc = DataDocumentFactory.New(xd);
                             }
                             else
                             {                                
@@ -511,18 +511,18 @@ namespace Origam.Server.Pages
             if (log.IsDebugEnabled)
             {
                 log.Debug("Result XML:");
-                log.Debug(doc.OuterXml);
+                log.Debug(doc.Xml.OuterXml);
             }
         }
 
-        private static void GetEmptyData(ref XmlDocument doc,
+        private static void GetEmptyData(ref IDataDocument doc,
                 ref DataSet data, DataStructure ds,
                 Dictionary<string, object> mappedParameters)
         {
             GetEmptyData(ref doc, ref data, ds, mappedParameters, null);
         }
 
-        private static void GetEmptyData(ref XmlDocument doc,
+        private static void GetEmptyData(ref IDataDocument doc,
                 ref DataSet data, DataStructure ds,
                 Dictionary<string, object> mappedParameters,
                 DataStructureDefaultSet defaultSet)
@@ -531,7 +531,7 @@ namespace Origam.Server.Pages
             data = dsg.CreateDataSet(ds, defaultSet);
             DatasetGenerator.ApplyDynamicDefaults(data, mappedParameters);
             
-            doc = new XmlDataDocument(data);
+            doc = DataDocumentFactory.New(data);
 
             if (log.IsDebugEnabled)
             {

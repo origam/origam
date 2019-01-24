@@ -155,13 +155,7 @@ namespace Origam.Server
         private void SetDelayedLoadingParameter(DataStructureMethod method)
         {
             // set the parameter for delayed data loading - there should be just 1
-            foreach (string parameterName in method.ParameterReferences.Keys)
-            {
-                if (CustomParameterService.MatchParameter(parameterName) == null)
-                {
-                    this.DelayedLoadingParameterName = parameterName;
-                }
-            }
+            DelayedLoadingParameterName = CustomParameterService.GetFirstNonCustomParameter(method);
         }
 
         private DataSet InitializeFullStructure()
@@ -541,7 +535,7 @@ namespace Origam.Server
                 _preparedFormXml = null;
                 return result;
             }
-            XmlDocument formXml = Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(new Guid(this.Request.ObjectId));
+            XmlDocument formXml = OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(new Guid(this.Request.ObjectId)).Document;
             XmlNodeList list = formXml.SelectNodes("/Window");
             XmlElement windowElement = list[0] as XmlElement;
             if (windowElement.GetAttribute("SuppressSave") == "true")

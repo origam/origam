@@ -1504,7 +1504,7 @@ namespace Origam.DA
 					{
 						copy.RejectChanges();
 					}
-					result.Add(parameterName, new XmlDataDocument(copy));
+					result.Add(parameterName, DataDocumentFactory.New(copy));
 					columnName = null;
 				}
                 else
@@ -1520,7 +1520,7 @@ namespace Origam.DA
                     {
                         DataSet slice = fullData.Clone();
                         GetDataSlice(slice, rows);
-                        result.Add(parameterName, new XmlDataDocument(slice));
+                        result.Add(parameterName, DataDocumentFactory.New(slice));
                         columnName = null;
                     }
                     else if (columnName != null && columnName != "" && columnName.Substring(0, 1) == "/")

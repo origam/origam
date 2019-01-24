@@ -134,12 +134,12 @@ namespace Origam.Rule
 		#endregion
 
 		#region Public Methods
-		public XmlDocument Transform(XmlDocument data, Guid transformationId, Hashtable parameters, RuleEngine ruleEngine, IDataStructure outputStructure, bool validateOnly)
+		public IDataDocument Transform(IDataDocument data, Guid transformationId, Hashtable parameters, RuleEngine ruleEngine, IDataStructure outputStructure, bool validateOnly)
 		{
 			return this.Transform(data, transformationId, Guid.Empty, parameters, new Hashtable(), ruleEngine, outputStructure, validateOnly);
 		}
 
-		public XmlDocument Transform(XmlDocument data, Guid transformationId, Guid retransformationId, Hashtable parameters, Hashtable retransformationParameters, RuleEngine ruleEngine, IDataStructure outputStructure, bool validateOnly)
+		public IDataDocument Transform(IDataDocument data, Guid transformationId, Guid retransformationId, Hashtable parameters, Hashtable retransformationParameters, RuleEngine ruleEngine, IDataStructure outputStructure, bool validateOnly)
 		{
 			object xsltEngine;
 
@@ -228,25 +228,25 @@ namespace Origam.Rule
             }
             else
             {
-                XmlDocument oldXslt = new XmlDocument();
-                oldXslt.LoadXml(xsl);
-                XmlDocument newXslt = Transform(oldXslt, retransformTemplateId, retransformationParameters, ruleEngine, null, false);
+                IDataDocument oldXslt = DataDocumentFactory.New();
+                oldXslt.Xml.LoadXml(xsl);
+                IDataDocument newXslt = Transform(oldXslt, retransformTemplateId, retransformationParameters, ruleEngine, null, false);
                 return GetTransform(newXslt);
             }
 
         }
 
-        internal abstract object GetTransform(XmlDocument xslt);
+        internal abstract object GetTransform(IDataDocument xslt);
         internal abstract object GetTransform(string xsl);
 
-        public XmlDocument Transform(XmlDocument data, string xsl, Hashtable parameters, RuleEngine ruleEngine, IDataStructure outputStructure, bool validateOnly)
+        public IDataDocument Transform(IDataDocument data, string xsl, Hashtable parameters, RuleEngine ruleEngine, IDataStructure outputStructure, bool validateOnly)
 		{
 			object xsltEngine = GetTransform(xsl, Guid.Empty, null, ruleEngine);
 
             return Transform(data, xsltEngine, parameters, ruleEngine, outputStructure, validateOnly);
 		}
 
-		internal abstract XmlDocument Transform(XmlDocument data, object xsltEngine, Hashtable parameters, RuleEngine ruleEngine, IDataStructure outputStructure, bool validateOnly);
+		internal abstract IDataDocument Transform(IDataDocument data, object xsltEngine, Hashtable parameters, RuleEngine ruleEngine, IDataStructure outputStructure, bool validateOnly);
         internal abstract void Transform(IXPathNavigable input, object xstlEngine, Hashtable parameters, RuleEngine ruleEngine, Stream output);
 
         public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)

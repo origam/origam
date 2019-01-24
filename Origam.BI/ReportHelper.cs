@@ -87,8 +87,8 @@ namespace Origam.BI
 
                 IXsltEngine transformer = AsTransform.GetXsltEngine(persistence.SchemaProvider, xslValueParam.transformationId);
 
-                XmlDocument xmlData = new XmlDocument();
-                xmlData.LoadXml("<ROOT/>");
+                IDataDocument xmlData = DataDocumentFactory.New();
+                xmlData.Xml.LoadXml("<ROOT/>");
 
                 if (traceTaskInfo != null)
                 {
@@ -98,13 +98,13 @@ namespace Origam.BI
                     transformer.SetTraceTaskInfo(traceTaskInfo);
                 }
 
-                XmlDocument result = transformer.Transform(xmlData,
+                IDataDocument result = transformer.Transform(xmlData,
                     xslValueParam.transformationId,
                     Guid.Empty, transformParams, null, ruleEngine, null, false);
 
                 // xslValueParam.DataType
 
-                XmlNode resultNode = result.SelectSingleNode("/ROOT/value");
+                XmlNode resultNode = result.Xml.SelectSingleNode("/ROOT/value");
                 // add a newlu created computed parameter
                 if (resultNode == null)
                 {
@@ -193,7 +193,7 @@ namespace Origam.BI
 			return report;
 		}
 
-		public static string ResolveLanguage(XmlDocument doc, AbstractDataReport reportElement)
+		public static string ResolveLanguage(IDataDocument doc, AbstractDataReport reportElement)
 		{
 			if (string.IsNullOrEmpty(reportElement.LocaleXPath)) return null;
 			RuleEngine ruleEngine = new RuleEngine(null, null);
@@ -204,8 +204,8 @@ namespace Origam.BI
 			return cultureString;
 		}
 
-		public static XmlDataDocument LoadOrUseReportData(AbstractDataReport r,
-            XmlDocument data, Hashtable parameters, string dbTransaction)
+		public static IDataDocument LoadOrUseReportData(AbstractDataReport r,
+		    IDataDocument data, Hashtable parameters, string dbTransaction)
 		{
 			if (data == null && r.DataStructure != null)
 			{
@@ -217,19 +217,20 @@ namespace Origam.BI
                         qp.Add(new QueryParameter((string)entry.Key, entry.Value));
                     }
                 }
-				return new XmlDataDocument(
+				return DataDocumentFactory.New(
                     core.DataService.LoadData(r.DataStructureId,
                     r.DataStructureMethodId, Guid.Empty, 
                     r.DataStructureSortSetId, dbTransaction, qp));
 			}
-			else if (data is XmlDataDocument)
-			{
-				return data as XmlDataDocument;
-			}
-			else
-			{
-				throw new ArgumentOutOfRangeException("data", data, ResourceUtils.GetString("OnlyXmlDocSupported"));
-			}			
+//			else if (data is XmlDataDocument)
+//			{
+//				return data as XmlDataDocument;
+//			}
+//			else
+//			{
+//				throw new ArgumentOutOfRangeException("data", data, ResourceUtils.GetString("OnlyXmlDocSupported"));
+//			}		
+		    return data;
 		}
 	}	
 }

@@ -43,14 +43,14 @@ namespace Origam.Workflow.Tasks
 		{
 			SetWorkflowPropertyTask setProperty = this.Step as SetWorkflowPropertyTask;
 
-			XmlDocument data = this.Engine.RuleEngine.GetXmlDocumentFromData(setProperty.ContextStore);
+		    IDataDocument data = this.Engine.RuleEngine.GetXmlDocumentFromData(setProperty.ContextStore);
 
 			if(setProperty.Transformation != null)
 			{
 				IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 				IXsltEngine transform = AsTransform.GetXsltEngine(
                     persistence.SchemaProvider, setProperty.TransformationId);
-				data = (XmlDocument)transform.Transform(data, setProperty.TransformationId, new Hashtable(), this.Engine.RuleEngine, null, false);
+				data = transform.Transform(data, setProperty.TransformationId, new Hashtable(), this.Engine.RuleEngine, null, false);
 			}
 
 			string propertyValue = (string)this.Engine.RuleEngine.EvaluateContext(setProperty.XPath, data, OrigamDataType.String, null);

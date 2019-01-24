@@ -105,7 +105,7 @@ namespace Origam.Schema.WorkflowModel
 		[Browsable(false)]
 		public ArrayList ParameterMappings => this.ChildItemsByType(StateMachineDynamicLookupParameterMapping.ItemTypeConst);
 
-		public object[] DynamicOperations(XmlDocument data)
+		public object[] DynamicOperations(IDataDocument data)
 		{
 			DataView view = GetDynamicList(this.DynamicOperationsLookupId, data);
 
@@ -118,7 +118,7 @@ namespace Origam.Schema.WorkflowModel
 			return result;
 		}
 
-		public object[] InitialStateValues(XmlDocument data)
+		public object[] InitialStateValues(IDataDocument data)
 		{
 			ArrayList list = new ArrayList();
 
@@ -150,7 +150,7 @@ namespace Origam.Schema.WorkflowModel
 			return (object[])list.ToArray();
 		}
 
-		private DataView GetDynamicList(Guid lookupId, XmlDocument data)
+		private DataView GetDynamicList(Guid lookupId, IDataDocument data)
 		{
 			DataView view;
 
@@ -171,7 +171,7 @@ namespace Origam.Schema.WorkflowModel
 					foreach(StateMachineDynamicLookupParameterMapping pm in this.ParameterMappings)
 					{
 						string xpath = "/row/" + (pm.Field.XmlMappingType == EntityColumnXmlMapping.Attribute ? "@" : "") + pm.Field.Name;
-						XPathNavigator nav = data.CreateNavigator();
+						XPathNavigator nav = data.Xml.CreateNavigator();
 						object val = nav.Evaluate(xpath);
 						if(val is XPathNodeIterator)
 						{

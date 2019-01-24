@@ -4,7 +4,6 @@ using MailKit.Net.Pop3;
 using Origam.Mail;
 using Origam.Workbench.Services;
 using Origam.Workflow.WorkQueue;
-using NandoF.Mail.PopClient;
 
 namespace Origam.workflow.mail
 {
@@ -77,7 +76,7 @@ namespace Origam.workflow.mail
 
 		    AbstractMailService.RetrieveMailNext(mailData, _popClient, true);
 
-            WorkQueueAdapterResult result = new WorkQueueAdapterResult(new XmlDataDocument(mailData));
+            WorkQueueAdapterResult result = new WorkQueueAdapterResult(DataDocumentFactory.New(mailData));
 
             result.Attachments = new WorkQueueAttachment[mailData.MailAttachment.Rows.Count];
 			result.State = mailData.Mail[0].MessageId;

@@ -162,9 +162,9 @@ namespace Origam.Workflow
 
 		public override bool IsViewOnly => true;
 
-	    internal XmlDataDocument NextData { get; set; }
+	    internal IDataDocument NextData { get; set; }
 
-	    internal FormControlSet NextForm { get; set; }
+        internal FormControlSet NextForm { get; set; }
 
 	    internal string NextDescription { get; set; }
 
