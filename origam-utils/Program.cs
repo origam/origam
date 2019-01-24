@@ -36,7 +36,7 @@ namespace Origam.Utils
 {
     class Program
     {
-        
+
         private static QueueProcessor queueProcessor;
 
         private delegate bool EventHandler(CtrlType sig);
@@ -47,17 +47,18 @@ namespace Origam.Utils
         private static extern bool SetConsoleCtrlHandler(EventHandler handler,
             bool add);
 
-        private enum CtrlType {
+        private enum CtrlType
+        {
             CTRL_C_EVENT = 0,
             CTRL_BREAK_EVENT = 1,
             CTRL_CLOSE_EVENT = 2,
             CTRL_LOGOFF_EVENT = 5,
             CTRL_SHUTDOWN_EVENT = 6
         }
-        
+
         class ImportModelOptions
         {
-            [Option('s', "scripts", 
+            [Option('s', "scripts",
                 HelpText = "After model is imported, update scripts are processed.")]
             public bool Scripts { get; set; }
             [Option('r', "restart", HelpText = "After model is import, server restart is invoked.")]
@@ -66,7 +67,7 @@ namespace Origam.Utils
 
         class CreateHashIndexOptions
         {
-            [Option('i', "input", Required = true, 
+            [Option('i', "input", Required = true,
                 HelpText = "Folder for which the index will be created.")]
             public string Input { get; set; }
             [Option('m', "mask", Required = true,
@@ -98,19 +99,20 @@ namespace Origam.Utils
             public bool ExistingButDifferent { get; set; }
         }
 
-        private class ProcessQueueOptions {
+        private class ProcessQueueOptions
+        {
             [Option('c', "queueCode", Required = true,
                 HelpText = "Reference code of the queue to process.")]
             public string QueueRefCode { get; set; }
-            
+
             [Option('p', "parallelism", Required = true,
                 HelpText = "MaxDegreeOfParallelism.")]
             public int Parallelism { get; set; }
-            
-            [Option('w', "forceWait_ms", Required = false, DefaultValue =0,
+
+            [Option('w', "forceWait_ms", Required = false, DefaultValue = 0,
                 HelpText = "Delay between processing of queue items in miliseconds.")]
             public int ForceWait_ms { get; set; }
-    
+
             [Option('v', "verbose", DefaultValue = true,
                 HelpText = "Prints all messages to standard output.")]
             public bool Verbose { get; set; }
@@ -118,13 +120,25 @@ namespace Origam.Utils
             [ParserState]
             public IParserState LastParserState { get; set; }
         }
-        
+
+        public class ProcessCheckRules
+        {
+            [Option('p', "path", Required = true,
+               HelpText = "Path to project")]
+            public string PathProject { get; set; }
+           
+        }
+
         class Options
         {
-            [VerbOption("process-queue", 
+            [VerbOption("procces-checkrules",
+                HelpText = "Check rules in All project.")]
+            public ProcessCheckRules ProcessCheckRules { get; set; }
+#if !NETCORE2_1
+            [VerbOption("process-queue",
                 HelpText = "Process a queue.")]
             public ProcessQueueOptions ProcessQueue { get; set; }
-            [VerbOption("import-model", 
+            [VerbOption("import-model",
                 HelpText = "Imports model from repository to database.")]
             public ImportModelOptions ImportModelVerb { get; set; }
             [VerbOption("run-scripts",
@@ -132,12 +146,13 @@ namespace Origam.Utils
             public RunUpdateScriptsOptions RunUpdateScriptsVerb { get; set; }
             [VerbOption("restart-server", HelpText = "Invokes server restart.")]
             public RestarServerOptions RestartServerVerb { get; set; }
-            [VerbOption("create-hash-index", 
+            [VerbOption("create-hash-index",
                 HelpText = "Creates hash index file on the contents of the given folder.")]
             public CreateHashIndexOptions CreateHashIndexVerb { get; set; }
             [VerbOption("compare-schema",
                 HelpText = "Compares schema with database. If no comparison switches are defined, no comparison is done. More than one switch can be enabled.")]
             public CompareSchemaOptions CompareSchemaVerb { get; set; }
+#endif
             [ParserState]
             public IParserState LastParserState { get; set; }
             [HelpVerbOption]
@@ -146,9 +161,10 @@ namespace Origam.Utils
                 return HelpText.AutoBuild(this, verb);
             }
         }
-        
 
-        private static bool CancelHandler(CtrlType sig) {
+
+        private static bool CancelHandler(CtrlType sig)
+        {
             log.Info("Exiting system due to external CTRL-C," +
                      " or process kill, or shutdown, please wait...");
             queueProcessor.Cancel();
@@ -159,10 +175,6 @@ namespace Origam.Utils
 
         static int Main(string[] args)
         {
-#if NETCORE2_1
-            log.Info("------------ Start on NetCore -------------");
-            log.Info("------------ End on NetCore -------------");
-#else
             string invokedVerb = "";
             object invokedVerbInstance = null;
             var options = new Options();
@@ -177,6 +189,12 @@ namespace Origam.Utils
             }
             switch(invokedVerb)
             {
+                case "procces-checkrules":
+                {
+                        return ProcesRule(
+                            (ProcessCheckRules)invokedVerbInstance);
+                }
+#if !NETCORE2_1
                 case "process-queue":
                 {
                     return ProcesQueue(
@@ -204,13 +222,22 @@ namespace Origam.Utils
                     return CompareSchema(
                         (CompareSchemaOptions)invokedVerbInstance);
                 }
+#endif
                 default:
                 {
                     return 1;
                 }
             }
-#endif
-            return 0;
+        }
+
+        private static int ProcesRule(ProcessCheckRules invokedVerbInstance)
+        {
+            if (!string.IsNullOrEmpty(invokedVerbInstance.PathProject))
+            {
+                RulesProcessor rulesProcessor = new RulesProcessor(invokedVerbInstance.PathProject);
+                return rulesProcessor.Run();
+            }
+            return 1;
         }
 
         private static int ProcesQueue(ProcessQueueOptions options)
@@ -226,9 +253,10 @@ namespace Origam.Utils
             log.Info("Exiting...");
             return 0;
         }
-        private static void RunQueueProcessor(ProcessQueueOptions options){
-           try
-           {
+        private static void RunQueueProcessor(ProcessQueueOptions options)
+        {
+            try
+            {
                 log.Info(options);
                 queueProcessor = new QueueProcessor(
                     options.QueueRefCode,
@@ -236,29 +264,29 @@ namespace Origam.Utils
                     options.ForceWait_ms
                 );
                 queueProcessor.Run();
-           }
-           catch (Exception ex)
-           {
+            }
+            catch (Exception ex)
+            {
                 log.Error(ex.Message);
-           }
+            }
         }
         private static int ImportModel(ImportModelOptions importModelOptions)
         {
             OrigamEngine.OrigamEngine.ConnectRuntime(runRestartTimer: false);
-            if(log.IsInfoEnabled)
+            if (log.IsInfoEnabled)
             {
                 log.Info("Importing model...");
             }
             ModelImport.ModelImport modelImport = new ModelImport.ModelImport();
-            if(!modelImport.Import())
+            if (!modelImport.Import())
             {
                 return 1;
             }
-            if(importModelOptions.Scripts)
+            if (importModelOptions.Scripts)
             {
                 RunUpdateScripts();
             }
-            if(importModelOptions.Restart)
+            if (importModelOptions.Restart)
             {
                 RestartServerInternal();
             }
@@ -266,7 +294,7 @@ namespace Origam.Utils
         }
         private static int RunUpdateScripts()
         {
-            if(log.IsInfoEnabled)
+            if (log.IsInfoEnabled)
             {
                 log.Info("Running update scripts...");
             }
@@ -274,7 +302,7 @@ namespace Origam.Utils
                 runRestartTimer: false, loadDeploymentScripts: true);
             IDeploymentService deployment = ServiceManager.Services.GetService(
                 typeof(IDeploymentService)) as IDeploymentService;
-			deployment.Deploy();
+            deployment.Deploy();
             return 0;
         }
 
@@ -287,7 +315,7 @@ namespace Origam.Utils
 
         private static void RestartServerInternal()
         {
-            if(log.IsInfoEnabled)
+            if (log.IsInfoEnabled)
             {
                 log.Info("Invoking server restart...");
             }
@@ -296,18 +324,18 @@ namespace Origam.Utils
 
         private static int CreateHashIndex(CreateHashIndexOptions options)
         {
-            if(log.IsInfoEnabled)
+            if (log.IsInfoEnabled)
             {
                 log.InfoFormat(
                     "Creating hash index file {1} on folder {0} with pattern {2}.",
                     options.Input, options.Output, options.Mask);
             }
-			string[] fileNames = Directory.GetFiles(options.Input, options.Mask);
-            HashIndexFile hashIndexFile 
+            string[] fileNames = Directory.GetFiles(options.Input, options.Mask);
+            HashIndexFile hashIndexFile
                 = new HashIndexFile(options.Output);
-            foreach(string filename in fileNames)
+            foreach (string filename in fileNames)
             {
-                if(log.IsInfoEnabled)
+                if (log.IsInfoEnabled)
                 {
                     log.InfoFormat("Hashing {0}...", filename);
                 }
@@ -315,7 +343,7 @@ namespace Origam.Utils
                    hashIndexFile.CreateIndexFileEntry(
                        filename));
             }
-            if(log.IsInfoEnabled)
+            if (log.IsInfoEnabled)
             {
                 log.Info("Hash index file finished.");
             }
@@ -325,38 +353,38 @@ namespace Origam.Utils
 
         private static int CompareSchema(CompareSchemaOptions options)
         {
-            if(!options.MissingInDB && !options.MissingInSchema 
+            if (!options.MissingInDB && !options.MissingInSchema
             && !options.ExistingButDifferent)
             {
-                if(log.IsInfoEnabled)
+                if (log.IsInfoEnabled)
                 {
                     log.Info("No comparison switches enabled...");
                 }
                 return 0;
             }
             OrigamEngine.OrigamEngine.ConnectRuntime(runRestartTimer: false);
-            if(log.IsInfoEnabled)
+            if (log.IsInfoEnabled)
             {
                 log.Info($@"Comparing schema with database: missing in database({
                     options.MissingInDB}), missing in schema({
                     options.MissingInSchema}), existing but different({
                     options.ExistingButDifferent})...");
             }
-			IPersistenceService persistenceService 
+            IPersistenceService persistenceService
                 = ServiceManager.Services.GetService(
                     typeof(IPersistenceService)) as IPersistenceService;
-			OrigamSettings settings 
+            OrigamSettings settings
                 = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
-			MsSqlDataService dataService = new MsSqlDataService(
+            MsSqlDataService dataService = new MsSqlDataService(
                 settings.DataConnectionString,
-                settings.DataBulkInsertThreshold, 
+                settings.DataBulkInsertThreshold,
                 settings.DataUpdateBatchSize);
-			dataService.PersistenceProvider = persistenceService.SchemaProvider;
-			ArrayList results = dataService.CompareSchema(
+            dataService.PersistenceProvider = persistenceService.SchemaProvider;
+            ArrayList results = dataService.CompareSchema(
                 persistenceService.SchemaProvider);
-            if(results.Count == 0)
+            if (results.Count == 0)
             {
-                if(log.IsInfoEnabled)
+                if (log.IsInfoEnabled)
                 {
                     log.Info("No differences found.");
                 }
@@ -374,55 +402,55 @@ namespace Origam.Utils
             ArrayList existingButDifferent = new ArrayList();
             ArrayList missingInDatabase = new ArrayList();
             ArrayList missingInSchema = new ArrayList();
-            foreach(SchemaDbCompareResult result in results)
+            foreach (SchemaDbCompareResult result in results)
             {
-                switch(result.ResultType)
+                switch (result.ResultType)
                 {
                     case DbCompareResultType.ExistingButDifferent:
-                    {
-                        existingButDifferent.Add(result);
-                        break;
-                    }
+                        {
+                            existingButDifferent.Add(result);
+                            break;
+                        }
                     case DbCompareResultType.MissingInDatabase:
-                    {
-                        missingInDatabase.Add(result);
-                        break;
-                    }
+                        {
+                            missingInDatabase.Add(result);
+                            break;
+                        }
                     case DbCompareResultType.MissingInSchema:
-                    {
-                        missingInSchema.Add(result);
-                        break;
-                    }
+                        {
+                            missingInSchema.Add(result);
+                            break;
+                        }
                 }
             }
             int displayedResultsCount = 0;
-            if(options.MissingInDB)
+            if (options.MissingInDB)
             {
                 DisplayComparisonResultGroup(
                     missingInDatabase, "Missing in Database:");
                 displayedResultsCount += missingInDatabase.Count;
             }
-            if(options.MissingInSchema)
+            if (options.MissingInSchema)
             {
                 DisplayComparisonResultGroup(
                     missingInSchema, "Missing in Schema:");
                 displayedResultsCount += missingInSchema.Count;
             }
-            if(options.ExistingButDifferent)
+            if (options.ExistingButDifferent)
             {
                 DisplayComparisonResultGroup(
                     existingButDifferent, "Existing But Different:");
                 displayedResultsCount += existingButDifferent.Count;
             }
-            if(displayedResultsCount == 0)
+            if (displayedResultsCount == 0)
             {
-                if(log.IsInfoEnabled)
+                if (log.IsInfoEnabled)
                 {
                     log.Info("No differences found.");
                 }
                 return 0;
             }
-            else 
+            else
             {
                 return 1;
             }
@@ -431,10 +459,10 @@ namespace Origam.Utils
         private static void DisplayComparisonResultGroup(
             ArrayList results, string header)
         {
-            if((results.Count > 0) && log.IsInfoEnabled)
+            if ((results.Count > 0) && log.IsInfoEnabled)
             {
                 log.Info(header);
-                foreach(SchemaDbCompareResult result in results)
+                foreach (SchemaDbCompareResult result in results)
                 {
                     log.Info($@"{AbstractSchemaItem.SchemaItemDescription(result.SchemaItemType)} {
                         result.ItemName} {result.Remark}");

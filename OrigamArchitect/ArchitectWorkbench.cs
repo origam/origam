@@ -1640,7 +1640,7 @@ namespace OrigamArchitect
 			cmd.Run();
 		}
 
-	    private void CheckModelRulesAsync()
+	    public void CheckModelRulesAsync()
 	    {
 	       var currentPersistenceService =
 	            ServiceManager.Services.GetService<IPersistenceService>();
@@ -1672,28 +1672,10 @@ namespace OrigamArchitect
 
 	    private void CheckModelRules(CancellationToken cancellationToken)
 	    {
-            
             using (FilePersistenceService independentPersistenceService = new FilePersistenceBuilder()
 	            .CreateNoBinFilePersistenceService())
 	        {
-	            List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
-	                .SchemaProvider
-	                .RetrieveList<IFilePersistent>()
-	                .Select(retrievedObj =>
-	                {
-	                    cancellationToken.ThrowIfCancellationRequested();
-	                    var errorMessages = RuleTools.GetExceptions(retrievedObj)
-	                        .Select(exception => exception.Message)
-	                        .ToList();
-	                    if (errorMessages.Count == 0) return null;
-
-	                    return new Dictionary<IFilePersistent, string>
-	                    {
-	                        { retrievedObj, string.Join("\n", errorMessages) }
-	                    };
-	                })
-	                .Where(x => x != null)
-	                .ToList();
+                List<Dictionary<IFilePersistent, string>> errorFragments = ModelRules.GetErrors(independentPersistenceService, cancellationToken); 
 	            if (errorFragments.Count != 0)
 	            {
                     FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
