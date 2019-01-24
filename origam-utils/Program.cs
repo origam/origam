@@ -126,18 +126,12 @@ namespace Origam.Utils
             [Option('p', "path", Required = true,
                HelpText = "Path to project")]
             public string PathProject { get; set; }
-            [ParserState]
-            public IParserState LastParserState { get; set; }
-            [HelpVerbOption]
-            public string GetUsage(string verb)
-            {
-                return HelpText.AutoBuild(this, verb);
-            }
+           
         }
 
         class Options
         {
-            [VerbOption("checkrules",
+            [VerbOption("procces-checkrules",
                 HelpText = "Check rules in All project.")]
             public ProcessCheckRules ProcessCheckRules { get; set; }
 #if !NETCORE2_1
@@ -241,8 +235,7 @@ namespace Origam.Utils
             if (!string.IsNullOrEmpty(invokedVerbInstance.PathProject))
             {
                 RulesProcessor rulesProcessor = new RulesProcessor(invokedVerbInstance.PathProject);
-                rulesProcessor.Run();
-                return 0;
+                return rulesProcessor.Run();
             }
             return 1;
         }

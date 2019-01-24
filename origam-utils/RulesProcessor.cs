@@ -27,14 +27,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Origam.Rule;
+using Origam.Schema.WorkflowModel;
 
 namespace Origam.Utils
 {
     class RulesProcessor
     {
-        private CancellationTokenSource ruleCheckCancellationTokenSource = new CancellationTokenSource();
         private readonly string pathProject;
-
         public RulesProcessor(string pathProject)
         {
             this.pathProject = pathProject;
@@ -42,28 +41,19 @@ namespace Origam.Utils
 
         internal int Run()
         {
-            OrigamEngine.OrigamEngine.ConnectRuntime();
-            var DefaultFolders = new List<ElementName>
-            {
-                ElementNameFactory.Create(typeof(SchemaExtension)),
-                ElementNameFactory.Create(typeof(SchemaItemGroup))
-            };
-            var persistenceService = new FilePersistenceService(DefaultFolders,
-               pathProject,false,false);
-
             List<Dictionary<IFilePersistent, string>> errorFragments
-                    = ModelRules.GetErrors(persistenceService, ruleCheckCancellationTokenSource.Token);
+                    = ModelRules.GetErrors(GetPersistence(), new CancellationTokenSource().Token);
             if (errorFragments.Count != 0)
             {
-                StringBuilder sb = new StringBuilder("Rule violations were found  in");
-                sb.Append(pathProject);
+                StringBuilder sb = new StringBuilder("Rule violations in ");
+                sb.Append(pathProject.ToUpper());
                 sb.Append("\n");
                 foreach (Dictionary<IFilePersistent, string> dict in errorFragments)
                 {
-                    var retrievedObj = dict.First().Key;
+                    IFilePersistent retrievedObj = dict.First().Key;
                     sb.Append("Object with Id: \"" + retrievedObj.Id +
                                "\" in file: \"" + retrievedObj.RelativeFilePath +
-                               "\"\n" + string.Join("\n", dict.First().Value));
+                                "\" --> " + string.Join("\n", dict.First().Value) + "\n");
                 }
                 System.Console.Write(sb.ToString());
                 return 1;
@@ -72,7 +62,30 @@ namespace Origam.Utils
             {
                 return 0;
             }
+        }
 
+        private FilePersistenceService GetPersistence()
+        {
+            var DefaultFolders = new List<ElementName>
+            {
+                ElementNameFactory.Create(typeof(SchemaExtension)),
+                ElementNameFactory.Create(typeof(SchemaItemGroup))
+            };
+            ServiceManager sManager = ServiceManager.Services;
+            SchemaService service = new SchemaService();
+            IParameterService parameterService = new NullParameterService();
+            sManager.AddService(service);
+            sManager.AddService(parameterService);
+            StateMachineSchemaItemProvider StateMachineSchema = new StateMachineSchemaItemProvider();
+            var settings = new OrigamSettings();
+            ConfigurationManager.SetActiveConfiguration(settings);
+            SecurityManager.SetServerIdentity();
+            var persistenceService = new FilePersistenceService(DefaultFolders,
+               pathProject, false, false);
+
+            sManager.AddService(persistenceService);
+            service.AddProvider(StateMachineSchema);
+            return persistenceService;
         }
     }
 }
