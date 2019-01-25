@@ -134,7 +134,7 @@ namespace Origam.Gui.Win
 		#region Public Methods
 		public string GetSortColumn(string columnName)
 		{
-			DataTable table = (grid.DataSource as DataSet).Tables[FormGenerator.FindTableByDataMember(grid.DataSource as DataSet, grid.DataMember)];
+			DataTable table = (grid.DataSource as DataSet).Tables[FormTools.FindTableByDataMember(grid.DataSource as DataSet, grid.DataMember)];
 
 			return (parentControl as AsPanel).GetSortColumn(columnName, table);
 		}
@@ -205,7 +205,7 @@ namespace Origam.Gui.Win
 			_styles = GetColumnStylesFromControls(control, 0, userConfig, ruleEngine);
 			
 			//mapping name to grid
-			tableStyle.MappingName  = FormGenerator.FindTableByDataMember(ds, member);
+			tableStyle.MappingName  = FormTools.FindTableByDataMember(ds, member);
 
 			UpdateColumns(grid, tableStyle, true, ds);
 
@@ -495,7 +495,7 @@ namespace Origam.Gui.Win
 			}
 			if (controlDataBinding.DataSource is DataSet dataSet)
 			{
-				string tableName = FormGenerator.FindTableByDataMember(
+				string tableName = FormTools.FindTableByDataMember(
 					dataSet,
 					controlDataBinding.BindingMemberInfo.BindingPath);
 				return dataSet

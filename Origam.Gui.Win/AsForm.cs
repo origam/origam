@@ -436,7 +436,7 @@ namespace Origam.Gui.Win
 				this.FormGenerator.DefaultTemplate = formRef.DefaultTemplate;
 				this.FormGenerator.RuleSet = formRef.RuleSet;
 				
-				_isReadOnly = FormGenerator.IsFormMenuReadOnly(formRef);
+				_isReadOnly = FormTools.IsFormMenuReadOnly(formRef);
 			}
 			else
 			{

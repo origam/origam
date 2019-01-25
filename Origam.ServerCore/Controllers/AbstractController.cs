@@ -14,9 +14,9 @@ namespace Origam.ServerCore.Controllers
     [Route("api/[controller]")]
     public abstract class AbstractController: ControllerBase
     {
-        protected readonly ILogger<MetaDataController> log;
+        protected readonly ILogger<AbstractController> log;
 
-        public AbstractController(ILogger<MetaDataController> log)
+        public AbstractController(ILogger<AbstractController> log)
         {
             this.log = log;
         }

@@ -21,9 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Origam.Gui.Win
 {
-	public enum CaptionPosition {Left, Right, Top, Bottom, None}
-
-	public static class CaptionDoc
+    public static class CaptionDoc
 	{
 		public const string GridColumnWidthDescription =
 			"Column Width (in pixels) to be used in grid-view. "

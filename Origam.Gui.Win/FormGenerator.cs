@@ -261,33 +261,8 @@ namespace Origam.Gui.Win
 		#endregion
 
 		#region Public Static Methods
-		public static ControlSetItem GetItemFromControlSet(AbstractControlSet controlSet)
-		{
-			ArrayList children = new ArrayList(controlSet.Alternatives);
-			children.Sort (new AlternativeControlSetItemComparer ());
 
-			foreach (ControlSetItem item in children) {
-				if (IsValid (item.Features, item.Roles)) {
-					return item;
-				}
-			}
-
-			return controlSet.MainItem;
-		}
-
-		public static bool IsValid(string features, string roles)
-		{
-			IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-			if(! parameterService.IsFeatureOn(features)) return false;
-			if(roles != null && roles != String.Empty)
-			{
-				if(! SecurityManager.GetAuthorizationProvider().Authorize(SecurityManager.CurrentPrincipal, roles))
-				{
-					return false;
-				}
-			}
-			return true;
-		}
+		
 		public static void SavePropertyValue(Control control, PropertyInfo property, PropertyValueItem propertyValueItem)
 		{
 			ProcessPropertyValue(control, property, propertyValueItem,ProcessPropertyValueOperation.Save);
@@ -310,49 +285,7 @@ namespace Origam.Gui.Win
 			return result;
 		}
 
-		public static string FindTableByDataMember(DataSet ds, string member)
-		{
-			if (member == null) return "";
-			if (ds == null) return "";
-
-			string tableName="";
-
-			if(member.IndexOf(".") > 0)
-			{
-				string[] path = member.Split(".".ToCharArray());
-				DataTable table = ds.Tables[path[0]];
-
-				if(table == null)
-				{
-					throw new Exception(ResourceUtils.GetString("ErrorGenerateForm", path[0]));
-				}
-
-				for(int i = 1; i < path.Length; i++)
-				{
-                    if (table.ChildRelations.Count > 0 &&
-                        table.ChildRelations[path[i]] != null &&
-                        table.ChildRelations[path[i]].ChildTable != null)
-                    {
-                        table = table.ChildRelations[path[i]].ChildTable;
-                    }
-                    else
-                    {
-						// if editing screen sections the last part of the member is
-						// the column name so we try to find it in the last table
-                        if(! table.Columns.Contains(path[i]))
-                        {
-                            throw (new ArgumentOutOfRangeException("DataMember", String.Format("Could not find entity `{0}' in data structure id `{1}'.", path[i], ds.ExtendedProperties["Id"])));
-                        }
-                    }
-				}
-				tableName = table.TableName;
-			}
-			else
-				tableName = member;
-
-			return tableName;
-
-		}
+		
 
 		public static string FindTableByDisplayMember(DataSet ds, string member)
 		{
@@ -827,7 +760,7 @@ namespace Origam.Gui.Win
 			sd.StartPosition = FormStartPosition.CenterParent;
 			sd.TitleName = ResourceUtils.GetString("SelectionTitle");
 			this.Form = sd;
-			ControlSetItem rootItem = GetItemFromControlSet(panelDefinition);
+			ControlSetItem rootItem = FormTools.GetItemFromControlSet(panelDefinition);
 			_mainFormData = xmlData.DataSet;
 			XmlData = xmlData;
             _selectionDialogEndRule = endRule;
@@ -902,7 +835,7 @@ namespace Origam.Gui.Win
                 {
 					return null;
                 }
-				ControlSetItem rootItem = GetItemFromControlSet(formControlSet);
+				ControlSetItem rootItem = FormTools.GetItemFromControlSet(formControlSet);
 				if(rootItem== null)
                 {
 					return null;
@@ -1180,83 +1113,14 @@ namespace Origam.Gui.Win
 		{
 			if(DefaultTemplate == null) return null;
 
-			return NewRecord(DefaultTemplate, dataSource, _mainDataStructureId);
-		}
-
-		public static DataSet NewRecord(DataStructureTemplate template, IDataDocument dataSource, Guid dataStructureId)
-		{
-			XslTransformation xslt = (template as DataStructureTransformationTemplate).Transformation as XslTransformation;
-			IDataStructure outputStructure = xslt.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(dataStructureId)) as IDataStructure;
-
-			IXsltEngine transform = AsTransform.GetXsltEngine(
-                xslt.XsltEngineType, template.PersistenceProvider);
-			IDataDocument result = transform.Transform(dataSource, xslt.TextStore, null, new RuleEngine(null, null), outputStructure, false);
-
-			if(result is IDataDocument)
-			{
-				return (result as IDataDocument).DataSet;
-			}
-
-			throw new Exception(ResourceUtils.GetString("ErrorResultNotSupported", result.GetType().ToString()));
+			return TemplateTools.NewRecord(DefaultTemplate, dataSource, _mainDataStructureId);
 		}
 
 		public object[] AddTemplateRecord(DataRow parentRow, string dataMember, Guid dataStructureId, DataSet formData)
 		{
 			if(this.DefaultTemplate == null) return null;
 
-			return AddTemplateRecord(parentRow, this.DefaultTemplate, dataMember, dataStructureId, formData);
-		}
-
-		public static object[] AddTemplateRecord(DataRow parentRow, DataStructureTemplate template, string dataMember, Guid dataStructureId, DataSet formData)
-		{
-			object[] templatePosition = null;
-			IDataDocument doc;
-
-			if(parentRow == null)
-			{
-				doc = DataDocumentFactory.New(new DataSet("ROOT"));
-			}
-			else
-			{
-				DataSet slice = formData.Clone();
-				DatasetTools.GetDataSlice(
-                    slice, new List<DataRow>{parentRow}, 
-                    null, false, new ArrayList());
-				
-				try
-				{
-					doc = DataDocumentFactory.New(slice);
-				}
-				catch
-				{
-					return new object[] {};
-				}
-			}
-
-			try
-			{
-				templatePosition = AddTemplateRecord(dataMember, template, doc, dataStructureId, formData);
-			}
-			catch(Exception ex)
-			{
-				throw new Exception(ResourceUtils.GetString("ErrorProcessTemplate"), ex);
-			}
-
-			return templatePosition;
-		}
-
-		private static object[] AddTemplateRecord(string dataMember, DataStructureTemplate template, IDataDocument dataSource, Guid dataStructureId, DataSet formData)
-		{
-			if(template == null) throw new NullReferenceException(ResourceUtils.GetString("ErrorNoTemplate"));
-			if(dataMember != template.Entity.Name)
-			{
-				if(dataMember != GetDataMember(template.Entity)) return null;
-			}
-			DataSet newData = NewRecord(template, dataSource, dataStructureId);
-			if(newData == null) return null;
-            UserProfile profile = SecurityManager.CurrentUserProfile();
-            DatasetTools.MergeDataSet(formData, newData, null, new MergeParams(profile.Id));
-			return DatasetTools.PrimaryKey(newData.Tables[template.Entity.Name].Rows[0]);
+			return TemplateTools.AddTemplateRecord(parentRow, this.DefaultTemplate, dataMember, dataStructureId, formData);
 		}
 
 
@@ -1274,30 +1138,6 @@ namespace Origam.Gui.Win
             tooltip.ShowAlways = true;
             tooltip.ToolTipIcon = ToolTipIcon.Info;
             return tooltip;
-		}
-
-		private static string GetDataMember(DataStructureEntity entity)
-		{
-			DataStructureEntity parentEntity = entity;
-			string result = "";
-
-			while(parentEntity != null)
-			{
-				if(result != "") result = "." + result;
-
-				result = parentEntity.Name + result;
-
-				if(parentEntity.ParentItem is DataStructureEntity)
-				{
-					parentEntity = parentEntity.ParentItem as DataStructureEntity;
-				}
-				else
-				{
-					parentEntity = null;
-				}
-			}
-
-			return result;
 		}
 
 		private string GetDataMember(DataTable table)
@@ -1602,48 +1442,11 @@ namespace Origam.Gui.Win
             return false;
         }
 
-        public static bool IsFormMenuReadOnly(FormReferenceMenuItem formRef)
-		{
-			bool result = formRef.ReadOnlyAccess;
-
-			if(! result)
-			{
-				string authContext = SecurityManager.GetReadOnlyRoles(formRef.AuthorizationContext);
-				result = SecurityManager.GetAuthorizationProvider().Authorize(SecurityManager.CurrentPrincipal, authContext);
-			}
-
-			return result;
-		}
-
-		/// <summary>
-		/// Get read only status.
-		/// If parent was read only, it will be re-examined here. That means, that when there is a menu item with ReadOnly
-		/// set to "true" and there exist some fields or complete panels/groups/tabs inside that form that have a "Roles" property
-		/// set, these might get not-read-only, unless they are also set ReadOnly in the user's security settings.
-		/// </summary>
-		/// <param name="cntrlSet"></param>
-		/// <returns></returns>
-		public static bool GetReadOnlyStatus(ControlSetItem cntrlSet, bool currentReadOnlyStatus)
-		{
-			if(cntrlSet.Roles != "" && cntrlSet.Roles != null)
-			{
-				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
-
-				if(settings.ActivateReadOnlyRoles)
-				{
-					string authContext = SecurityManager.GetReadOnlyRoles(cntrlSet.Roles);
-					return SecurityManager.GetAuthorizationProvider().Authorize(SecurityManager.CurrentPrincipal, authContext);
-				}
-			}
-
-			return currentReadOnlyStatus;
-		}
-
 		private Control LoadControl(ControlSetItem cntrlSet, string dataMember, Hashtable bindings,
 			Hashtable dataConsumers, Control parentControl, bool ignoreTabPages, bool readOnly)
 		{
-			if (!IsValid(cntrlSet.Features, cntrlSet.Roles)) return null;
-			readOnly = GetReadOnlyStatus(cntrlSet, readOnly);
+			if (!FormTools.IsValid(cntrlSet.Features, cntrlSet.Roles)) return null;
+			readOnly = FormTools.GetReadOnlyStatus(cntrlSet, readOnly);
 
 			//create control
 			Control cntrl = CreateInstance(cntrlSet, dataMember, bindings, dataConsumers, readOnly);
@@ -1710,7 +1513,7 @@ namespace Origam.Gui.Win
 
 			    if (addingControl is AsPanel panel)
 			    {
-			        string table = FindTableByDataMember(_mainFormData, panel.DataMember);
+			        string table = FormTools.FindTableByDataMember(_mainFormData, panel.DataMember);
 			        if (panel.HideNavigationPanel == false)
 			        {
 			            ShowNavigationPanel(panel, table);
@@ -1848,7 +1651,7 @@ namespace Origam.Gui.Win
 			
 			if(dataSource is DataSet)
 			{
-				table = (dataSource as DataSet).Tables[FormGenerator.FindTableByDataMember(_mainFormData, dataMember)];
+				table = (dataSource as DataSet).Tables[FormTools.FindTableByDataMember(_mainFormData, dataMember)];
 
 				if(table == null)
 				{
@@ -1933,7 +1736,7 @@ namespace Origam.Gui.Win
 					}
 
 					//found datamember provide to controlcreation
-					result = LoadControl(GetItemFromControlSet(panel), itemDataMember, bindings, dataConsumers, null, true, readOnly);
+					result = LoadControl(FormTools.GetItemFromControlSet(panel), itemDataMember, bindings, dataConsumers, null, true, readOnly);
 					result.Tag = cntrlSet;
 					SetControlProperties(result, readOnly);
 					return result;

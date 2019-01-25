@@ -391,7 +391,7 @@ namespace Origam.Gui.Win
 				}
 				else
 				{
-					templatePosition = FormGenerator.AddTemplateRecord(parentRow, template, _dataMember, fg.MainFormDataStructureId, fg.DataSet);
+					templatePosition = TemplateTools.AddTemplateRecord(parentRow, template, _dataMember, fg.MainFormDataStructureId, fg.DataSet);
 				}
 			}
 			catch(Exception ex)

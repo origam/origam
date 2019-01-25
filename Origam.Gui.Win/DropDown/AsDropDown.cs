@@ -299,7 +299,7 @@ namespace Origam.Gui.Win
 				{
 					AsDataGrid grid = this.Parent as AsDataGrid;
 
-					return FormGenerator.FindTableByDataMember(grid.DataSource as DataSet, grid.DataMember);
+					return FormTools.FindTableByDataMember(grid.DataSource as DataSet, grid.DataMember);
 				}
 
 				return null;
@@ -841,7 +841,7 @@ namespace Origam.Gui.Win
 
 			DataSet dataSource = binding.DataSource as DataSet;
 
-			DataTable table = dataSource.Tables[FormGenerator.FindTableByDataMember(dataSource, binding.BindingMemberInfo.BindingPath)];
+			DataTable table = dataSource.Tables[FormTools.FindTableByDataMember(dataSource, binding.BindingMemberInfo.BindingPath)];
 			DataColumn column = table.Columns[binding.BindingMemberInfo.BindingField];
 			
 			if(column != null)

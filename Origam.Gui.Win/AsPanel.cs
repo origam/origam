@@ -408,7 +408,7 @@ namespace Origam.Gui.Win
 		{
 			get
 			{
-				string tableName = FormGenerator.FindTableByDataMember(this.DataSource as DataSet, this.DataMember);
+				string tableName = FormTools.FindTableByDataMember(this.DataSource as DataSet, this.DataMember);
 				if(string.IsNullOrEmpty(tableName))
 				{
 					return Guid.Empty;
@@ -2063,13 +2063,13 @@ namespace Origam.Gui.Win
 					{
 						if(panel.OriginalShowNewButton)
 						{
-							toAdd.Add(FormGenerator.FindTableByDataMember(tmpDS, panel.DataMember));
+							toAdd.Add(FormTools.FindTableByDataMember(tmpDS, panel.DataMember));
 						}
 					}
 
 					foreach(AsPanel panel in (this.FindForm() as AsForm).Panels)
 					{
-						string tableName = FormGenerator.FindTableByDataMember(tmpDS, panel.DataMember);
+						string tableName = FormTools.FindTableByDataMember(tmpDS, panel.DataMember);
 						if(! panel.OriginalShowNewButton && ! toAdd.Contains(tableName))
 						{
 							toSkip.Add(tableName);
@@ -3006,8 +3006,8 @@ namespace Origam.Gui.Win
 					DataSet newData = ConvertInputData(value);
 					if(!this.DesignMode)
 					{
-						string oldTable = FormGenerator.FindTableByDataMember(_dataSource, this.DataMember);
-						string newTable = FormGenerator.FindTableByDataMember(newData, this.DataMember);
+						string oldTable = FormTools.FindTableByDataMember(_dataSource, this.DataMember);
+						string newTable = FormTools.FindTableByDataMember(newData, this.DataMember);
 
 						if(_dataSource != newData)
 						{
@@ -3074,7 +3074,7 @@ namespace Origam.Gui.Win
 				else
 				{
 					// normal form
-					return FormGenerator.GetItemFromControlSet((this.OrigamMetadata as ControlSetItem).ControlItem.PanelControlSet).Id;
+					return FormTools.GetItemFromControlSet((this.OrigamMetadata as ControlSetItem).ControlItem.PanelControlSet).Id;
 				}
 			}
 			set => _panelUniqueId = value;

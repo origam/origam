@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="BlobFileNotAvailable" xml:space="preserve">
+    <value>Soubor již není k dispozici.</value>
+  </data>
+  <data name="BlobMaxSizeError" xml:space="preserve">
+    <value>Byla přesažena maximální velikost přílohy {0} kB.</value>
+  </data>
+  <data name="BlobNoFileSelected" xml:space="preserve">
+    <value>Nebyl vybrán žádný soubor.</value>
+  </data>
+  <data name="BlobTooManyFilesSelected" xml:space="preserve">
+    <value>Není možné vybrat více než 1 soubor.</value>
+  </data>
+  <data name="DefaultTooltipNoChange" xml:space="preserve">
+    <value>Záznam nebyl aktualizován.</value>
+  </data>
+  <data name="DefaultTooltipRecordCreated" xml:space="preserve">
+    <value>Vytvořil &lt;b&gt;{0}&lt;/b&gt; dne &lt;b&gt;{1}&lt;/b&gt;</value>
+  </data>
+  <data name="DefaultTooltipRecordUpdated" xml:space="preserve">
+    <value>Naposledy aktualizoval &lt;b&gt;{0}&lt;/b&gt; dne &lt;b&gt;{1}&lt;/b&gt;</value>
+  </data>
+  <data name="ErrorAttachmentMaximumSize" xml:space="preserve">
+    <value>Byla přesažena maximální velikost přílohy ({0} bytů).</value>
+  </data>
+  <data name="ErrorAttachmentNoFile" xml:space="preserve">
+    <value>Nastala chyba při ukládání přílohy: Nebyl poskytnut soubor.</value>
+  </data>
+  <data name="ErrorAttachmentNotAvailable" xml:space="preserve">
+    <value>Příloha již není k dispozici.</value>
+  </data>
+  <data name="ErrorAttachmentNotFoundInDb" xml:space="preserve">
+    <value>Příloha nebyla v databázi nalezena.</value>
+  </data>
+  <data name="ErrorAttachmentNotFullyReceived" xml:space="preserve">
+    <value>Příloha nebyla řádně přijata.</value>
+  </data>
+  <data name="ErrorAttachmentRetrieval" xml:space="preserve">
+    <value>Nastala chyba při načítání přílohy.</value>
+  </data>
+  <data name="ErrorAttachmentsNotSupported" xml:space="preserve">
+    <value>Entita '{0}' nepodporuje přílohy.</value>
+  </data>
+  <data name="ErrorBlobRecordEmpty" xml:space="preserve">
+    <value>Záznam je prázdný, není možné uložit soubor.</value>
+  </data>
+  <data name="ErrorChangeUIMultipleRecords" xml:space="preserve">
+    <value>Pro metodu ChangeUI není podporováno označení více záznamů.</value>
+  </data>
+  <data name="ErrorCommandInProgress" xml:space="preserve">
+    <value>Data jsou nyní zpracovávána předchozím požadavkem. Vyčkejte dokončení předchozího požadavku a opakujte akci znovu.</value>
+  </data>
+  <data name="ErrorContextUnknownAction" xml:space="preserve">
+    <value>Neznámý povel.</value>
+  </data>
+  <data name="ErrorDashboardViewNotFound" xml:space="preserve">
+    <value>Nebyl nalezen dashboard pohled.</value>
+  </data>
+  <data name="ErrorExportNotAvailable" xml:space="preserve">
+    <value>Export již není k dispozici.</value>
+  </data>
+  <data name="ErrorFormNotSavedBeforeAction" xml:space="preserve">
+    <value>Před provedením této akce je potřeba uložit data ve formuláři.</value>
+  </data>
+  <data name="ErrorInForm" xml:space="preserve">
+    <value>Data formuláře obsahují chyby. Nejdříve chyby opravte a pak pokračujte.</value>
+  </data>
+  <data name="ErrorLoadingWorkQueueList" xml:space="preserve">
+    <value>Nastala chyba při načítání seznamu front zpráv.</value>
+  </data>
+  <data name="ErrorLogOut" xml:space="preserve">
+    <value>Relace nenalezena. Není možné se odhlásit.</value>
+  </data>
+  <data name="ErrorMultipleRecordsParameters" xml:space="preserve">
+    <value>Nepodporovaný mód. Pro označení více záznamů není možné předávat parametry.</value>
+  </data>
+  <data name="ErrorNoRecordsSelectedForAction" xml:space="preserve">
+    <value>Nebyly vybrány žádné záznamy, není možné spustit požadovaný povel.</value>
+  </data>
+  <data name="ErrorOpenFormMultipleRecords" xml:space="preserve">
+    <value>Pro metodu OpenForm není podporováno označení více záznamů.</value>
+  </data>
+  <data name="ErrorPrincipalNotSet" xml:space="preserve">
+    <value>Nebyl nastaven aktivní uživatel (Principal). Není možné načíst profil uživatele.</value>
+  </data>
+  <data name="ErrorProfileProviderNotSet" xml:space="preserve">
+    <value>Nebyl nastaven poskytovatel profilů. Není možné načíst profil uživatele.</value>
+  </data>
+  <data name="ErrorRecordNotFound" xml:space="preserve">
+    <value>Záznam nenalezen.</value>
+  </data>
+  <data name="ErrorRefreshReturnInvalid" xml:space="preserve">
+    <value>{0} vrátil neplatná data pro akci {1}.</value>
+  </data>
+  <data name="ErrorReportActionMultipleRecords" xml:space="preserve">
+    <value>Pro výstupní sestavy není podporováno označení více záznamů.</value>
+  </data>
+  <data name="ErrorReportNotAvailable" xml:space="preserve">
+    <value>Sestava již není k dispozici.</value>
+  </data>
+  <data name="ErrorReportOpenFormMultipleRecords" xml:space="preserve">
+    <value>Pro metodu Report/OpenForm není podporováno označení více záznamů.</value>
+  </data>
+  <data name="ErrorSessionExpired" xml:space="preserve">
+    <value>Vaše připojení bylo ukončeno z důvodu nečinnosti nebo z důvodu restartování aplikace. Obnovte, prosím, svůj prohlížeč nebo se znovu přihlašte.</value>
+  </data>
+  <data name="ErrorSessionNotFound" xml:space="preserve">
+    <value>Nebyla nalezena relace: {0}</value>
+  </data>
+  <data name="ErrorUnknownMenuType" xml:space="preserve">
+    <value>Neznámý druh položky nabídky.</value>
+  </data>
+  <data name="ErrorUnknownPageType" xml:space="preserve">
+    <value>Neznámý druh stránky.</value>
+  </data>
+  <data name="ErrorUnknownReportType" xml:space="preserve">
+    <value>Neznámý druh výstupní sestavy.</value>
+  </data>
+  <data name="ErrorUnknownRowChangeState" xml:space="preserve">
+    <value>Neznámý RowChangeState</value>
+  </data>
+  <data name="ErrorUnknownSessionType" xml:space="preserve">
+    <value>Neznámý druh relace.</value>
+  </data>
+  <data name="ErrorUnknownWorkflowPageAction" xml:space="preserve">
+    <value>Neznámý druh akce WorkflowPage.</value>
+  </data>
+  <data name="ErrorUnknownWorkQueueCommandValueType" xml:space="preserve">
+    <value>Neznámý druh hodnoty příkazu fronty zpráv.</value>
+  </data>
+  <data name="ErrorUnsupportedMenuItemType" xml:space="preserve">
+    <value>Druh položky menu není podporován.</value>
+  </data>
+  <data name="ErrorWorkflowActionNotSupported" xml:space="preserve">
+    <value>Nepodporovaná akce workflow.</value>
+  </data>
+  <data name="ErrorWorkflowSessionInvalid" xml:space="preserve">
+    <value>Neexistující relace.</value>
+  </data>
+  <data name="ErrorWorkQueueCommandNotFound" xml:space="preserve">
+    <value>Příkaz nenalezen.</value>
+  </data>
+  <data name="ExportLimitExceeded" xml:space="preserve">
+    <value>Počet exportovaných záznamů přesáhl limit nastavený administrátorem.</value>
+  </data>
+  <data name="WorkflowErrorTitle" xml:space="preserve">
+    <value>Chyba průvodce</value>
+  </data>
+  <data name="WorkflowFinished" xml:space="preserve">
+    <value>Průvodce byl úspěšně dokončen.</value>
+  </data>
+  <data name="WorkflowFinishedTitle" xml:space="preserve">
+    <value>Průvodce dokončen</value>
+  </data>
+  <data name="WorkQueueTitle" xml:space="preserve">
+    <value>Fronta zpráv</value>
+  </data>
+  <data name="ErrorCannotRefreshFormNotSaved" xml:space="preserve">
+    <value>Data nejsou uložena. Není možné obnovit záznam, který ještě nebyl uložen.</value>
+  </data>
+  <data name="ErrorDataNotSavedWhileChangingRow" xml:space="preserve">
+    <value>Kritická chyba: Data nejsou uložena ale došlo ke změně záznamu. Data formuláře nejsou v konzistentním stavu. Obnovte, prosím, prohlížeč a zkuste akci opakovat.</value>
+  </data>
+  <data name="ErrorTreeHasChildrenCannotDelete" xml:space="preserve">
+    <value>Položka nemůže být vymazána. Vymažte nejdříve všechny podřízené položky.</value>
+  </data>
+  <data name="ErrorTreeItemUsedCannotDelete" xml:space="preserve">
+    <value>Není možné vymazat položku, protože je již použita v jiných datech.</value>
+  </data>
+  <data name="ErrorCreateRecordNotAllowed" xml:space="preserve">
+    <value>Nemáte oprávnění přidávat nové záznamy.</value>
+  </data>
+  <data name="ErrorTooManyTabsOpen" xml:space="preserve">
+    <value>Je otevřeno příliš mnoho obrazovek. Před otevřením nové obrazovky zavřete některé záložky.</value>
+  </data>
+</root>
