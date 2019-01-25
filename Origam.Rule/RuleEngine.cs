@@ -2456,7 +2456,7 @@ namespace Origam.Rule
 				else
 				{
 					// convert value to XML
-					context = GetXmlDocumentFromData(context);
+					context = GetXmlDocumentFromData(context).Xml;
 				}
 			}
 			
