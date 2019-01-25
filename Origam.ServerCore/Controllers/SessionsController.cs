@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,24 +17,47 @@ namespace Origam.ServerCore.Controllers
     [Route("api/[controller]")]
     public class SessionsController : ControllerBase
     {
-        [HttpPost("[action]")]
-        public IActionResult New()
+        private readonly SessionObjects sessionObjects;
+
+        public SessionsController(SessionObjects sessionObjects)
         {
-            var portalSessions = new Dictionary<Guid, PortalSessionStore>();
-            var formSessions = new Dictionary<Guid, SessionStore>();
-            var sessionManager = new SessionManager(portalSessions, formSessions);
-            var uiManager = new UIManager(50, sessionManager);
-            var uiService = new BasicUiService();
+            this.sessionObjects = sessionObjects;
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult New(Guid menuId)
+        {
+            UserProfile profile = SecurityTools.CurrentUserProfile();
+
+            if (!sessionObjects.SessionManager.HasPortalSession(profile.Id))
+            {
+                PortalSessionStore pss = new PortalSessionStore(profile.Id);
+                sessionObjects.SessionManager.AddPortalSession(profile.Id, pss);
+            }
 
             Guid newSessionId = Guid.NewGuid();
-            UIRequest uiRequest = new UIRequest{FormSessionId = newSessionId.ToString()};
-            UIResult uiResult = uiManager.InitUI(
+            UIRequest uiRequest = new UIRequest
+            {
+                FormSessionId = newSessionId.ToString(),
+                ObjectId = menuId.ToString()
+            };
+            UIResult uiResult = sessionObjects.UiManager.InitUI(
                 request: uiRequest,
                 registerSession: true,
                 addChildSession: false,
                 parentSession: null,
-                basicUiService: uiService);
+                basicUiService: sessionObjects.UiService);
             return Ok(newSessionId);
+        }
+
+        public IList UpdateObject(Guid sessionFormIdentifier, string entity, object id, string property, object newValue)
+        {
+            SessionStore ss = sessionObjects.SessionManager.GetSession(sessionFormIdentifier);
+            IList output = ss.UpdateObject(entity, id, property, newValue);
+            Task.Run(() => SecurityTools.CreateUpdateOrigamOnlineUser(
+                SecurityManager.CurrentPrincipal.Identity.Name,
+                sessionObjects.SessionManager.GetSessionStats()));
+            return output;
         }
     }
 }

@@ -91,8 +91,15 @@ namespace Origam.Rule
 			}
 
 			_counter = new Counter();
-			_transformer = AsTransform.GetXsltEngine(
-                XsltEngineType.XslTransform, _persistence.SchemaProvider);
+
+#if NETSTANDARD
+            XsltEngineType xsltEngineType = XsltEngineType.XslCompiledTransform;
+#else
+            XsltEngineType xsltEngineType = XsltEngineType.XslTransform;
+#endif
+
+            _transformer = AsTransform.GetXsltEngine(
+                xsltEngineType, _persistence.SchemaProvider);
 			_dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 		}
 
