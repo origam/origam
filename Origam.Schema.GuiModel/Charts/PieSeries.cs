@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.ComponentModel;
+using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
 
@@ -43,6 +44,7 @@ namespace Origam.Schema.GuiModel
 		private string _namefield = "";
 		[Category("Series")]
 		[EntityColumn("SS03"), StringNotEmptyModelElementRule()]
+        [XmlAttribute("nameField")]
 		public string NameField
 		{
 			get
