@@ -27,13 +27,14 @@ using System.Web.UI;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using log4net;
+using Origam.DA.Service;
 
 namespace Origam.Workflow
 {
     public static class ProfilingTools
     {
         private static readonly ILog workflowProfilingLog =
-            LogManager.GetLogger("WorkflowProfiling");
+            LogManager.GetLogger(typeof(WorkflowProfiling));
 
         public static void LogDuration(string logEntryType, IWorkflowStep task,
             Stopwatch stoppedStopwatch)
