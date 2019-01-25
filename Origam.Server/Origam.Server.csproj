@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -78,7 +78,7 @@
     <Reference Include="FluorineFx, Version=1.0.0.15, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\EnterpriseLibrary\FluorineFx.dll</HintPath>
     </Reference>
-     <Reference Include="ICSharpCode.SharpZipLib, Version=1.1.0.145, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.1.0.145, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\EnterpriseLibrary\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
@@ -201,6 +201,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdaptivePropertyProvider.cs" />
+    <Compile Include="AnalyticsFx.cs" />
     <Compile Include="architect\ArchitectService.cs" />
     <Compile Include="architect\ModelBrowserElement.cs" />
     <Compile Include="AspMembershipLoginCommand.cs" />
@@ -237,6 +238,7 @@
     <Compile Include="doc\DocHandler.cs" />
     <Compile Include="OrigamDesignerDynamicMenuProvider.cs" />
     <Compile Include="pages\ReportPageRequestHandler.cs" />
+    <Compile Include="PropertyProviderFactoryFx.cs" />
     <Compile Include="ReportManager.cs" />
     <Compile Include="TreeNode.cs" />
     <Compile Include="TreeService.cs" />

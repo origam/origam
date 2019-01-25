@@ -31,22 +31,19 @@ namespace Origam.Server
         private static readonly ILog perfLog = LogManager.GetLogger(typeof(Analytics));
         public const string PropertyNamePrefix = "log4net_app_";
 
-        #region Factory methods
+        private readonly IPropertyProviderFactory providerFactory;
 
-        private static IAdaptivePropertyProvider Create(string propertyName, object propertyValue)
+        public Analytics(IPropertyProviderFactory providerFactory)
         {
-            Type type = Type.GetType("Origam.Server.AdaptivePropertyProvider,Origam.Server");
-            return type != null
-                ? (IAdaptivePropertyProvider)Activator.CreateInstance(type, new object[] { propertyName, propertyValue })
-                : new NullPropertyProvider();
+            this.providerFactory = providerFactory;
         }
 
-        public static void SetProperty(string propertyName, object value)
+        public void SetProperty(string propertyName, object value)
         {
-            log4net.ThreadContext.Properties[propertyName] = Create(propertyName, value);
+            log4net.ThreadContext.Properties[propertyName] = providerFactory.New(propertyName, value);
         }
 
-        public static void Log(string message)
+        public void Log(string message)
         {
             if (perfLog.IsInfoEnabled)
             {
@@ -54,7 +51,7 @@ namespace Origam.Server
             }
         }
 
-        public static void Log(Type type, string message, IDictionary<string, string> properties)
+        public void Log(Type type, string message, IDictionary<string, string> properties)
         {
             if (perfLog.IsInfoEnabled)
             {
@@ -74,14 +71,7 @@ namespace Origam.Server
             }
         }
 
-        public static bool IsAnalyticsEnabled
-        {
-            get
-            {
-                return perfLog.IsInfoEnabled;
-            }
-        }
-        #endregion
+        public bool IsAnalyticsEnabled => perfLog.IsInfoEnabled;
     }
 
     class NullPropertyProvider : IAdaptivePropertyProvider

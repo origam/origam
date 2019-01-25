@@ -41,8 +41,8 @@ namespace Origam.Server
         SimpleModelData _modelData;
 
         public OrigamDesignerSessionStore(IBasicUIService service, UIRequest request, 
-            string name, FormReferenceMenuItem menuItem, Guid entityId)
-            : base(service, request, name, menuItem)
+            string name, FormReferenceMenuItem menuItem, Guid entityId, Analytics analytics)
+            : base(service, request, name, menuItem, analytics)
         {
             FormId = entityId;
             GetModelData();

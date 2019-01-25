@@ -42,8 +42,8 @@ namespace Origam.Server
                _entityFieldDependencies = new Dictionary<Guid,Dictionary<Guid,IList<Guid>>>();
         private bool _dependenciesInitialized = false;
 
-        public SaveableSessionStore(IBasicUIService service, UIRequest request, string name)
-            : base(service, request, name)
+        public SaveableSessionStore(IBasicUIService service, UIRequest request, string name, Analytics analytics)
+            : base(service, request, name, analytics)
         {
         }
 

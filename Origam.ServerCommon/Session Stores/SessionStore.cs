@@ -81,6 +81,7 @@ namespace Origam.Server
         private bool _supressSave = false;
         private bool _refreshPortalAfterSave = false;
         private bool _isExclusive = false;
+        private readonly Analytics analytics;
 
         public const string LIST_LOADED_COLUMN_NAME = "___ORIGAM_IsLoaded";
         public const string ACTION_SAVE = "SAVE";
@@ -90,8 +91,9 @@ namespace Origam.Server
         public const string ACTION_ABORT = "ABORT";
         public const string ACTION_REPEAT = "REPEAT";
 
-        public SessionStore(IBasicUIService service, UIRequest request, string name)
+        public SessionStore(IBasicUIService service, UIRequest request, string name, Analytics analytics)
         {
+            this.analytics = analytics;
             this.Name = name;
             this.Service = service;
             if (request.FormSessionId == null)
@@ -620,9 +622,9 @@ namespace Origam.Server
 
         public void Dispose()
         {
-            Analytics.SetProperty("OrigamFormId", this.FormId);
-            Analytics.SetProperty("OrigamFormName", this.Name);
-            Analytics.Log("UI_CLOSEFORM");
+            analytics.SetProperty("OrigamFormId", this.FormId);
+            analytics.SetProperty("OrigamFormName", this.Name);
+            analytics.Log("UI_CLOSEFORM");
 
             if (this.ParentSession != null)
             {

@@ -32,8 +32,9 @@ namespace Origam.Server
 {
     class WorkQueueSessionStore : SessionStore
     {
-        public WorkQueueSessionStore(IBasicUIService service, UIRequest request, string name)
-            : base(service, request, name)
+        public WorkQueueSessionStore(IBasicUIService service, UIRequest request, string name,
+            Analytics analytics)
+            : base(service, request, name, analytics)
         {
             IWorkQueueService wqs = ServiceManager.Services.GetService(typeof(IWorkQueueService)) as IWorkQueueService;
             Guid workQueueId = new Guid(request.ObjectId);

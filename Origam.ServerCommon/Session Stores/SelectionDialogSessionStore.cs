@@ -46,8 +46,8 @@ namespace Origam.Server
 
         public SelectionDialogSessionStore(IBasicUIService service, UIRequest request,
             Guid dataSourceId, Guid beforeTransformationId, Guid afterTransformationId, 
-            Guid panelId, string name, IEndRule endRule)
-            : base(service, request, name)
+            Guid panelId, string name, IEndRule endRule, Analytics analytics)
+            : base(service, request, name, analytics)
         {
             this.DataStructureId = dataSourceId;
             this.BeforeTransformationId = beforeTransformationId;

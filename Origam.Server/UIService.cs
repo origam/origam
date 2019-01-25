@@ -65,7 +65,7 @@ namespace Origam.Server
         private const int INITIAL_PAGE_NUMBER_OF_RECORDS = 50;
         private readonly UIManager uiManager;
         private readonly ReportManager reportManager;
-        
+
         #endregion
 
         #region Constructors
@@ -88,8 +88,8 @@ namespace Origam.Server
                 FluorineFx.Context.FluorineContext.Current.ApplicationState["forms"] = formSessions;
             }
 
-            sessionManager = new SessionManager(portalSessions, formSessions);
-            uiManager = new UIManager(INITIAL_PAGE_NUMBER_OF_RECORDS,sessionManager);
+            sessionManager = new SessionManager(portalSessions, formSessions, AnalyticsFx.Instance);
+            uiManager = new UIManager(INITIAL_PAGE_NUMBER_OF_RECORDS,sessionManager, AnalyticsFx.Instance);
             reportManager = new ReportManager(sessionManager);
         }
 
@@ -99,7 +99,7 @@ namespace Origam.Server
         [JsonRpcMethod]
         public PortalResult InitPortal(string locale)
         {
-            Analytics.Log("UI_INIT");
+            AnalyticsFx.Instance.Log("UI_INIT");
 
             // set locale
             locale = locale.Replace("_", "-");
@@ -241,7 +241,7 @@ namespace Origam.Server
                 DestroyUI(pss.FormSessions[0].Id);
             }
 
-            Analytics.Log("UI_LOGOUT");
+            AnalyticsFx.Instance.Log("UI_LOGOUT");
 
             sessionManager.RemovePortalSession(SecurityTools.CurrentUserProfile().Id);
             Task.Run(() => SecurityTools.RemoveOrigamOnlineUser(

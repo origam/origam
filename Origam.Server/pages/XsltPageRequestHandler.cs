@@ -180,7 +180,7 @@ namespace Origam.Server.Pages
                 }
             }
 
-            if (Analytics.IsAnalyticsEnabled && xsltPage.LogTransformation != null)
+            if (AnalyticsFx.Instance.IsAnalyticsEnabled && xsltPage.LogTransformation != null)
             {
                 Type type = this.GetType();
                 IDataDocument log = transformer.Transform(xmlData, xsltPage.LogTransformationId, transformParams, ruleEngine, null, false);
@@ -205,7 +205,7 @@ namespace Origam.Server.Pages
                     {
                         properties[current.Name] = current.Value;
                     } while (current.MoveToNextAttribute());
-                    Analytics.Log(type, message, properties);
+                    AnalyticsFx.Instance.Log(type, message, properties);
                 }
             }
         }

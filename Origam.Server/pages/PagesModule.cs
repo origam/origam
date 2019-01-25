@@ -71,22 +71,22 @@ namespace Origam.Server.Pages
 
             string resultContentType = "text";
 
-            if (Analytics.IsAnalyticsEnabled)
+            if (AnalyticsFx.Instance.IsAnalyticsEnabled)
             {
-                Analytics.SetProperty("ContentType", mimeType);
-                Analytics.SetProperty("HttpMethod", context.Request.HttpMethod);
-                Analytics.SetProperty("RawUrl", context.Request.RawUrl);
-                Analytics.SetProperty("Url", context.Request.Url);
-                Analytics.SetProperty("UrlReferrer", context.Request.UrlReferrer);
-                Analytics.SetProperty("UserAgent", context.Request.UserAgent);
-                Analytics.SetProperty("BrowserName", context.Request.Browser.Browser);
-                Analytics.SetProperty("BrowserVersion", context.Request.Browser.Version);
-                Analytics.SetProperty("UserHostAddress", context.Request.UserHostAddress);
-                Analytics.SetProperty("UserHostName", context.Request.UserHostName);
-                Analytics.SetProperty("UserLanguages", context.Request.UserLanguages);
+                AnalyticsFx.Instance.SetProperty("ContentType", mimeType);
+                AnalyticsFx.Instance.SetProperty("HttpMethod", context.Request.HttpMethod);
+                AnalyticsFx.Instance.SetProperty("RawUrl", context.Request.RawUrl);
+                AnalyticsFx.Instance.SetProperty("Url", context.Request.Url);
+                AnalyticsFx.Instance.SetProperty("UrlReferrer", context.Request.UrlReferrer);
+                AnalyticsFx.Instance.SetProperty("UserAgent", context.Request.UserAgent);
+                AnalyticsFx.Instance.SetProperty("BrowserName", context.Request.Browser.Browser);
+                AnalyticsFx.Instance.SetProperty("BrowserVersion", context.Request.Browser.Version);
+                AnalyticsFx.Instance.SetProperty("UserHostAddress", context.Request.UserHostAddress);
+                AnalyticsFx.Instance.SetProperty("UserHostName", context.Request.UserHostName);
+                AnalyticsFx.Instance.SetProperty("UserLanguages", context.Request.UserLanguages);
                 foreach (string key in context.Request.Params.Keys)
                 {
-                    Analytics.SetProperty("Parameter_" + key, context.Request.Params[key]);
+                    AnalyticsFx.Instance.SetProperty("Parameter_" + key, context.Request.Params[key]);
                 }
             }
 
@@ -97,16 +97,16 @@ namespace Origam.Server.Pages
 
                 if (page != null)
                 {
-                    if (Analytics.IsAnalyticsEnabled)
+                    if (AnalyticsFx.Instance.IsAnalyticsEnabled)
                     {
-                        Analytics.SetProperty("OrigamPageId", page.Id);
-                        Analytics.SetProperty("OrigamPageName", page.Name);
+                        AnalyticsFx.Instance.SetProperty("OrigamPageId", page.Id);
+                        AnalyticsFx.Instance.SetProperty("OrigamPageName", page.Name);
                         foreach (KeyValuePair<string, string> pair in urlParameters)
                         {
-                            Analytics.SetProperty("Parameter_" + pair.Key, pair.Value);
+                            AnalyticsFx.Instance.SetProperty("Parameter_" + pair.Key, pair.Value);
                         }
 
-                        Analytics.Log("PAGE_ACCESS");
+                        AnalyticsFx.Instance.Log("PAGE_ACCESS");
                     }
 
                     if (page.MimeType != "?")

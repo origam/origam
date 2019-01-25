@@ -28,10 +28,12 @@ namespace Origam.Server
         private readonly int initialPageNumberOfRecords;
         private readonly SessionManager sessionManager;
         private static readonly AsThreadPool threadPool = new AsThreadPool();
+        private readonly Analytics analytics;
 
         public UIManager(int initialPageNumberOfRecords,
-            SessionManager sessionManager)
+            SessionManager sessionManager, Analytics analytics)
         {
+            this.analytics = analytics;
             this.initialPageNumberOfRecords = initialPageNumberOfRecords;
             this.sessionManager = sessionManager;
         }
@@ -98,9 +100,9 @@ namespace Origam.Server
                 registerSession == false)
             {
                 ss = sessionManager.CreateSessionStore(request, basicUiService);
-                Analytics.SetProperty("OrigamFormId", ss.FormId);
-                Analytics.SetProperty("OrigamFormName", ss.Name);
-                Analytics.Log("UI_OPENFORM");
+                analytics.SetProperty("OrigamFormId", ss.FormId);
+                analytics.SetProperty("OrigamFormName", ss.Name);
+                analytics.Log("UI_OPENFORM");
                 if (ss.SupportsFormXmlAsync &&
                     IsFormXmlNotCachedOnClient(request, ss))
                 {

@@ -42,8 +42,8 @@ namespace Origam.Server
 
         public ParameterSessionStore(IBasicUIService service, UIRequest request,
             DataConstant constant, IDataLookup lookup, string titleName, string name,
-            bool refreshPortalAfterSave)
-            : base(service, request, name)
+            bool refreshPortalAfterSave, Analytics analytics)
+            : base(service, request, name, analytics)
         {
             this.Constant = constant;
             this.Lookup = lookup;

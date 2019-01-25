@@ -45,15 +45,15 @@ namespace Origam.Server
         private XmlDocument _preparedFormXml = null;
 
         public FormSessionStore(IBasicUIService service, UIRequest request, string name, 
-            FormReferenceMenuItem menuItem)
-            : base(service, request, name)
+            FormReferenceMenuItem menuItem, Analytics analytics)
+            : base(service, request, name, analytics)
         {
             _menuItem = menuItem;
             SetMenuProperties();
         }
 
-        public FormSessionStore(IBasicUIService service, UIRequest request, string name)
-            : base(service, request, name)
+        public FormSessionStore(IBasicUIService service, UIRequest request, string name, Analytics analytics)
+            : base(service, request, name, analytics)
         {
             IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
             FormReferenceMenuItem fr = (FormReferenceMenuItem)ps.SchemaProvider.RetrieveInstance(typeof(FormReferenceMenuItem), new ModelElementKey(new Guid(this.Request.ObjectId)));

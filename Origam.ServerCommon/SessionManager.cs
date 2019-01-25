@@ -16,10 +16,12 @@ namespace Origam.Server
     {
         private readonly Dictionary<Guid, PortalSessionStore> portalSessions;
         private readonly Dictionary<Guid, SessionStore> formSessions;
+        private readonly Analytics analytics;
 
-
-        public SessionManager(Dictionary<Guid, PortalSessionStore> portalSessions, Dictionary<Guid, SessionStore> formSessions)
+        public SessionManager(Dictionary<Guid, PortalSessionStore> portalSessions,
+            Dictionary<Guid, SessionStore> formSessions, Analytics analytics)
         {
+            this.analytics = analytics;
             this.portalSessions = portalSessions;
             this.formSessions = formSessions;
         }
@@ -215,7 +217,7 @@ namespace Origam.Server
 
                         ss = new SelectionDialogSessionStore(basicUiService, request, formMenuItem.SelectionDialogPanel.DataSourceId,
                             formMenuItem.SelectionPanelBeforeTransformationId, formMenuItem.SelectionPanelAfterTransformationId,
-                            formMenuItem.SelectionPanelId, menuItem.Name, formMenuItem.SelectionDialogEndRule);
+                            formMenuItem.SelectionPanelId, menuItem.Name, formMenuItem.SelectionDialogEndRule, analytics);
                         break;
 
                     case UIRequestType.DataConstantReferenceMenuItem:
@@ -223,14 +225,14 @@ namespace Origam.Server
                         DataConstantReferenceMenuItem parMenuItem = menuItem as DataConstantReferenceMenuItem;
                         // PARAM
                         ss = new ParameterSessionStore(basicUiService, request, parMenuItem.Constant, parMenuItem.FinalLookup,
-                            parMenuItem.DisplayName, parMenuItem.Name, parMenuItem.RefreshPortalAfterSave);
+                            parMenuItem.DisplayName, parMenuItem.Name, parMenuItem.RefreshPortalAfterSave, analytics);
                         break;
 
                     case UIRequestType.FormReferenceMenuItem:
                         menuItem = ps.SchemaProvider.RetrieveInstance(typeof(AbstractMenuItem), new ModelElementKey(new Guid(request.ObjectId))) as AbstractMenuItem;
                         formMenuItem = menuItem as FormReferenceMenuItem;
                         // FORM
-                        ss = new FormSessionStore(basicUiService, request, menuItem.Name);
+                        ss = new FormSessionStore(basicUiService, request, menuItem.Name, analytics);
                         break;
 
                     case UIRequestType.WorkflowReferenceMenuItem:
@@ -253,7 +255,7 @@ namespace Origam.Server
                                 }
                             }
                         }
-                        ss = new WorkflowSessionStore(basicUiService, request, (Guid)wf.PrimaryKey["Id"], item.Name);
+                        ss = new WorkflowSessionStore(basicUiService, request, (Guid)wf.PrimaryKey["Id"], item.Name, analytics);
                         break;
 
                     case UIRequestType.ReportReferenceMenuItem:
@@ -264,12 +266,12 @@ namespace Origam.Server
                         ReportReferenceMenuItem reportMenuItem = menuItem as ReportReferenceMenuItem;
                         ss = new SelectionDialogSessionStore(basicUiService, request, reportMenuItem.SelectionDialogPanel.DataSourceId,
                             reportMenuItem.SelectionPanelBeforeTransformationId, reportMenuItem.SelectionPanelAfterTransformationId,
-                            reportMenuItem.SelectionPanelId, menuItem.Name, reportMenuItem.SelectionDialogEndRule);
+                            reportMenuItem.SelectionPanelId, menuItem.Name, reportMenuItem.SelectionDialogEndRule, analytics);
                         break;
 
                     case UIRequestType.WorkQueue:
                         // WORK QUEUE OK
-                        ss = new WorkQueueSessionStore(basicUiService, request, Resources.WorkQueueTitle + " " + request.Caption);
+                        ss = new WorkQueueSessionStore(basicUiService, request, Resources.WorkQueueTitle + " " + request.Caption, analytics);
                         break;
                 }
             }

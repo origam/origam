@@ -62,8 +62,9 @@ namespace Origam.Server
         private bool _isAutoNext;
         private bool _isFirstSaveDone = false;
 
-        public WorkflowSessionStore(IBasicUIService service, UIRequest request, Guid workflowId, string name)
-            : base(service, request, name)
+        public WorkflowSessionStore(IBasicUIService service, UIRequest request, Guid workflowId,
+            string name, Analytics analytics)
+            : base(service, request, name, analytics)
         {
             this.WorkflowId = workflowId;
         }

@@ -126,7 +126,8 @@ namespace Origam.Server
             menu.MethodId = new Guid("b8a9306e-1dca-4bdd-bb7b-77b425de79b9");
             menu.AutoSaveOnListRecordChange = true;
             menu.AutoRefreshIntervalConstantId = new Guid("fb80e964-1fb5-42f6-8b1c-9f22d27072be");
-            SessionStore result = new OrigamDesignerSessionStore(service, request, menu.DisplayName, menu, entityId);
+            SessionStore result = new OrigamDesignerSessionStore(service, request, menu.DisplayName, 
+                menu, entityId, AnalyticsFx.Instance);
             request.Parameters.Add("EntityId", entityId);
             request.Parameters.Add("OrigamRecord_parOrigamEntityId", entityId);
             return result;
@@ -138,7 +139,7 @@ namespace Origam.Server
             request.ObjectId = "ecfc2869-4a73-4191-b81e-a3235004ab9f";
             request.Parameters.Add("applicationId", appId);
             return new WorkflowSessionStore(service, request, 
-                new Guid("ecfc2869-4a73-4191-b81e-a3235004ab9f"), appName);
+                new Guid("ecfc2869-4a73-4191-b81e-a3235004ab9f"), appName, AnalyticsFx.Instance);
         }
     }
 }
