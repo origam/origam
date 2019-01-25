@@ -45,7 +45,8 @@ namespace Origam.Gui.UI
 
         private void SetTextWithCorrectWidth(string value)
         {
-            string valueWithSpace = " " +value;
+            string valueWithSpace = " " + (value.EndsWith("...") 
+                ? value.Substring(0, value.Length - 3) : value);
             base.Text = valueWithSpace.Wrap(Width, Font);
             if (!base.Text.Contains(Environment.NewLine))
             {
