@@ -608,6 +608,7 @@ namespace OrigamArchitect
 			_viewMenu.Clear();
 			_toolsMenu?.Clear();
 			_helpMenu.Clear();
+            _windowMenu?.Clear();
 			CreateHelpMenu();
 			CreateFileMenu();
             CreateWindowMenu();
