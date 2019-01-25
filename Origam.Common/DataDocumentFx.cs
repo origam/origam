@@ -8,6 +8,7 @@ using System.Xml;
 
 namespace Origam
 {
+#if !NETSTANDARD
     public class DataDocumentFx : IDataDocument
     {
         private readonly XmlDataDocument xmlDataDocument;
@@ -45,4 +46,5 @@ namespace Origam
             return new DataDocumentFx(xmlDataDocument);
         }
     }
+#endif
 }

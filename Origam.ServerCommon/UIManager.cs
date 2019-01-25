@@ -179,9 +179,15 @@ namespace Origam.Server
                 parentSession.AddChildSession(ss);
                 parentSession.ActiveSession = ss;
             }
-            Task.Run(() => SecurityTools.CreateUpdateOrigamOnlineUser(
-                SecurityManager.CurrentPrincipal.Identity.Name,
-                sessionManager.GetSessionStats()));
+
+            var principal = Thread.CurrentPrincipal;
+            Task.Run(() =>
+            {
+                Thread.CurrentPrincipal = principal;
+                SecurityTools.CreateUpdateOrigamOnlineUser(
+                    SecurityManager.CurrentPrincipal.Identity.Name,
+                    sessionManager.GetSessionStats());
+            });
             return result;
         }
 
