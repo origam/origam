@@ -25,7 +25,6 @@ using System.Xml;
 using System.Collections;
 
 using Origam.Schema;
-using Origam.Gui.Win;
 using Origam.Workbench.Services;
 using Origam.Schema.GuiModel;
 using Origam.DA;

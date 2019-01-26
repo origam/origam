@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Xml;
 using Origam.Gui;
-using Origam.Gui.Win;
 
 namespace Origam.OrigamEngine.ModelXmlBuilders
 {

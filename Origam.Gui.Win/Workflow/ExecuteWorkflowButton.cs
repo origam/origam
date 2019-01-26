@@ -619,10 +619,4 @@ namespace Origam.Gui.Win
         }
         #endregion
     }
-
-    public enum WorkflowExecutionType
-    {
-        ShowNewFormNoMerge = 0,
-        NoFormMerge = 1
-    }
 }

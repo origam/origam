@@ -21,10 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using Origam.DA.Service;
+using Origam.Gui;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 using Origam.Schema;
-using Origam.Gui.Win;
+
 
 namespace Origam.OrigamEngine.ModelXmlBuilders
 {
