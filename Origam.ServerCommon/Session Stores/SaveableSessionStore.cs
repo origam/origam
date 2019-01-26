@@ -29,7 +29,7 @@ using Origam.Schema.EntityModel;
 using Origam.Schema;
 using Origam.Workbench.Services;
 using Origam.DA;
-using Origam.Gui.Win;
+using Origam.Gui;
 using Origam.Schema.GuiModel;
 using Origam.Rule;
 using Origam.ServerCommon;

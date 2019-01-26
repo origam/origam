@@ -668,85 +668,7 @@ namespace Origam.Gui.Win
 			LoadFormWithData(formControlSet, methodId, sortSetId, defaultSetId, listDataStructureId, listMethodId, listDataMember);
 		}
 
-		public static DataSet GetSelectionDialogData(Guid entityId, Guid transformationBeforeId, bool createEmptyRow, object profileId)
-		{
-			return GetSelectionDialogData(entityId, transformationBeforeId, createEmptyRow, profileId, new Hashtable());
-		}
 		
-		public static DataSet GetSelectionDialogData(Guid entityId, Guid transformationBeforeId, bool createEmptyRow, object profileId, Hashtable parameters)
-		{
-			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			IDataEntity entity = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
-
-			DatasetGenerator gen = new DatasetGenerator(true);
-			DataSet sdData = gen.CreateDataSet(entity);
-				RemoveNullConstraints(sdData);
-
-			if(transformationBeforeId != Guid.Empty)
-			{
-				// we have to clone the dataset, because we need to return DataSet without XmlDataDocument bound to it
-				IDataDocument dataDoc = DataDocumentFactory.New(DatasetTools.CloneDataSet(sdData));
-
-				IDataDocument inputDoc = DataDocumentFactory.New(new DataSet("ROOT"));
-
-				IServiceAgent transformer = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataTransformationService", new RuleEngine(new System.Collections.Hashtable(), null), null);
-				transformer.MethodName = "Transform";
-				transformer.Parameters.Add("XslScript", transformationBeforeId);
-				transformer.Parameters.Add("Data", inputDoc);
-				transformer.Parameters.Add("Parameters", parameters);
-
-				transformer.Run();
-
-				XmlDocument transformationResult = transformer.Result as XmlDocument;
-
-				if(transformationResult != null)
-				{
-					dataDoc.Load(new XmlNodeReader(transformationResult));
-				}
-
-				sdData.Merge(dataDoc.DataSet);
-			}
-			else if(createEmptyRow)
-			{
-				DataRow row = DatasetTools.CreateRow(null, sdData.Tables[0], null, profileId);
-				sdData.Tables[0].Rows.Add(row);
-			}
-
-			return sdData;
-		}
-
-		public static DataRow GetSelectionDialogResultRow(Guid entityId, Guid transformationAfterId, IDataDocument dataDoc, object profileId)
-		{
-			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			IDataEntity entity = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
-
-			// TRANSFORMATION - AFTER
-			if(transformationAfterId != Guid.Empty)
-			{
-				IServiceAgent transformer = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataTransformationService", new RuleEngine(new System.Collections.Hashtable(), null), null);
-				transformer.MethodName = "Transform";
-				transformer.Parameters.Add("XslScript", transformationAfterId);
-				transformer.Parameters.Add("Data", dataDoc);
-
-				transformer.Run();
-
-				XmlDocument transformationResult = transformer.Result as XmlDocument;
-
-				if(transformationResult != null)
-				{
-					DatasetGenerator gen = new DatasetGenerator(true);
-					DataSet resultData = gen.CreateDataSet(entity);
-                    resultData.EnforceConstraints = false;
-					IDataDocument resultDoc = DataDocumentFactory.New(resultData);
-					resultDoc.Load(new XmlNodeReader(transformationResult));
-					DatasetTools.MergeDataSet(
-                        dataDoc.DataSet, resultDoc.DataSet, null, 
-                        new MergeParams(profileId));
-				}
-			}
-
-			return dataDoc.DataSet.Tables[0].Rows[0];
-		}
 
 		public Control LoadSelectionDialog(IDataDocument xmlData, PanelControlSet panelDefinition, IEndRule endRule)
 		{
@@ -2058,71 +1980,12 @@ namespace Origam.Gui.Win
 				}
 			}
 		}
-
-		private void RemoveNullConstraints()
-		{
-			RemoveNullConstraints(_mainFormData);
-		}
-
-		private static void RemoveNullConstraints(DataSet data)
-		{
-			foreach(DataTable table in data.Tables)
-			{
-				foreach(DataColumn col in table.Columns)
-				{
-					if(col.AllowDBNull == false & IsKey(col) == false)
-					{
-						col.AllowDBNull = true;
-					}
-				}
-			}
-		}
-
-		private static bool IsKey(DataColumn column)
-		{
-			// primary key
-			bool found = IsInColumns(column, column.Table.PrimaryKey);
-			if(found) return true;
-
-			// parent relations
-			found = IsInRelations(column, column.Table.ParentRelations);
-			if(found) return true;
-
-			// child relations
-			return IsInRelations(column, column.Table.ChildRelations);
-		}
-		
-		private static bool IsInRelations(DataColumn column, DataRelationCollection relations)
-		{
-			foreach(DataRelation relation in relations)
-			{
-				if(IsRelationKey(column, relation)) return true;
-			}
-
-			return false;
-		}
-
-		private static bool IsRelationKey(DataColumn column, DataRelation relation)
-		{
-			// parent columns
-			bool found = IsInColumns(column, relation.ParentColumns);
-
-			if(found) return true;
-
-			// child columns
-			return IsInColumns(column, relation.ChildColumns);
-		}
-
-		private static bool IsInColumns(DataColumn searchedColumn, DataColumn[] columns)
-		{
-			foreach(DataColumn col in columns)
-			{
-				if(col.Equals(searchedColumn)) return true;
-			}
-
-			return false;
-		}
-
+	    private void RemoveNullConstraints()
+	    {
+	        FormTools.RemoveNullConstraints(_mainFormData);
+	    }
+       
+	
 		#endregion
 
 		#region Event Handlers

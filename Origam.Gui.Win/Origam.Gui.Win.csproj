@@ -320,7 +320,6 @@
     </Compile>
     <Compile Include="Grid\IAsGridEditor.cs" />
     <Compile Include="DesktopEntityUIActionRunnerClient.cs" />
-    <Compile Include="TemplateTools.cs" />
     <Compile Include="Workflow\ExecuteWorkflowButton.cs">
       <SubType>Component</SubType>
     </Compile>

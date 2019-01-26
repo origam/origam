@@ -23,10 +23,8 @@ using System;
 using System.Collections;
 using System.Data;
 using System.Xml;
-using Origam;
 using Origam.OrigamEngine.ModelXmlBuilders;
 using Origam.DA;
-using Origam.Gui.Win;
 using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
@@ -35,7 +33,6 @@ using Origam.Schema.RuleModel;
 using Origam.Workbench.Services;
 using Origam.Gui;
 using Origam.ServerCommon;
-using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server
 {
@@ -72,7 +69,7 @@ namespace Origam.Server
         {
             Hashtable parameters = new Hashtable(this.Request.Parameters);
 
-            DataSet data = FormGenerator.GetSelectionDialogData(this.DataStructureId, this.BeforeTransformationId, true, SecurityTools.CurrentUserProfile().Id, parameters);
+            DataSet data = FormTools.GetSelectionDialogData(this.DataStructureId, this.BeforeTransformationId, true, SecurityTools.CurrentUserProfile().Id, parameters);
 
             SetDataSource(data);
         }
@@ -166,7 +163,7 @@ namespace Origam.Server
             PanelActionResult result = new PanelActionResult(ActionResultType.OpenUrl);
             result.Request = new UIRequest();
             result.Request.Caption = this.Request.Caption;
-            DataRow row = FormGenerator.GetSelectionDialogResultRow(this.DataStructureId, 
+            DataRow row = FormTools.GetSelectionDialogResultRow(this.DataStructureId, 
                 this.AfterTransformationId, this.XmlData, profile.Id);
             IPersistenceService ps = ServiceManager.Services.GetService(
                 typeof(IPersistenceService)) as IPersistenceService;
@@ -196,7 +193,7 @@ namespace Origam.Server
             request.Caption = this.Request.Caption;
             request.IsStandalone = this.Request.IsStandalone;
             request.ObjectId = this.Request.ObjectId;
-            DataRow row = FormGenerator.GetSelectionDialogResultRow(this.DataStructureId,
+            DataRow row = FormTools.GetSelectionDialogResultRow(this.DataStructureId,
                 this.AfterTransformationId, this.XmlData, profile.Id);
             IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
             AbstractSchemaItem item = ps.SchemaProvider.RetrieveInstance(typeof(AbstractMenuItem), new ModelElementKey(new Guid(this.Request.ObjectId))) as AbstractSchemaItem;

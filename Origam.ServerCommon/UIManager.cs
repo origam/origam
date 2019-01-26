@@ -9,7 +9,6 @@ using System.Xml;
 using Origam;
 using Origam.Gui;
 using Origam.OrigamEngine.ModelXmlBuilders;
-using Origam.Gui.Win;
 using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
