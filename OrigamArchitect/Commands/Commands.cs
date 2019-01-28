@@ -55,6 +55,7 @@ using MoreLinq;
 using Origam.DA.ObjectPersistence.Providers;
 using Origam.Extensions;
 using Origam.Git;
+using Origam.Gui;
 using Origam.Windows.Editor.GIT;
 
 namespace OrigamArchitect.Commands
@@ -391,11 +392,11 @@ namespace OrigamArchitect.Commands
 
 				if(transformationBeforeSelection == null)
 				{
-					dataDoc = DataDocumentFactory.New(FormGenerator.GetSelectionDialogData(selectionDialogPanel.DataSourceId, Guid.Empty, false, profile.Id));
+					dataDoc = DataDocumentFactory.New(FormTools.GetSelectionDialogData(selectionDialogPanel.DataSourceId, Guid.Empty, false, profile.Id));
 				}
 				else
 				{
-					dataDoc = DataDocumentFactory.New(FormGenerator.GetSelectionDialogData(selectionDialogPanel.DataSourceId, (Guid)transformationBeforeSelection.PrimaryKey["Id"], false, profile.Id));
+					dataDoc = DataDocumentFactory.New(FormTools.GetSelectionDialogData(selectionDialogPanel.DataSourceId, (Guid)transformationBeforeSelection.PrimaryKey["Id"], false, profile.Id));
 				}
 
 				sdGenerator = new FormGenerator();
@@ -410,11 +411,11 @@ namespace OrigamArchitect.Commands
 				DataRow row;
 				if(transformationAfterSelection == null)
 				{
-					row = FormGenerator.GetSelectionDialogResultRow(selectionDialogPanel.DataSourceId, Guid.Empty, dataDoc, profile.Id);
+					row = FormTools.GetSelectionDialogResultRow(selectionDialogPanel.DataSourceId, Guid.Empty, dataDoc, profile.Id);
 				}
 				else
 				{
-					row = FormGenerator.GetSelectionDialogResultRow(selectionDialogPanel.DataSourceId, (Guid)transformationAfterSelection.PrimaryKey["Id"], dataDoc, profile.Id);
+					row = FormTools.GetSelectionDialogResultRow(selectionDialogPanel.DataSourceId, (Guid)transformationAfterSelection.PrimaryKey["Id"], dataDoc, profile.Id);
 				}
 
 				return row;
