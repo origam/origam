@@ -31,7 +31,10 @@ namespace Origam
             get
             {
                 XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.LoadXml(dataSet.GetXml());
+                if (dataSet.Tables.Count != 0)
+                {
+                    xmlDocument.LoadXml(dataSet.GetXml());
+                }
                 return xmlDocument;
             }
         }
