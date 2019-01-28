@@ -27,9 +27,6 @@ using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using CSharpFunctionalExtensions;
-using Microsoft.SqlServer.Server;
 
 namespace Origam.Schema.DeploymentModel
 {

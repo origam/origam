@@ -138,6 +138,10 @@
       <Project>{4F05DB44-2BBD-4B54-8D37-E8038D1EE1E7}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.DeploymentModel.UI\Origam.Schema.DeploymentModel.UI.csproj">
+      <Project>{681A9BF2-3189-44AD-A628-0A9EE25DDE6E}</Project>
+      <Name>Origam.Schema.DeploymentModel.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel.csproj">
       <Project>{A802634D-DCF0-4F27-992D-E3FADCAA3FB4}</Project>
       <Name>Origam.Schema.DeploymentModel</Name>

@@ -270,7 +270,6 @@ namespace Origam.Server
         public bool IsDirty(string formSessionId)
         {
             SessionStore ss = sessionManager.GetSession(new Guid(formSessionId));
-
             return ss.Data.HasChanges();
         }
 

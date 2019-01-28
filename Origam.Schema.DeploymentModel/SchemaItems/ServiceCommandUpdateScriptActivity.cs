@@ -21,10 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.ComponentModel;
-
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.WorkflowModel;
-using System.Xml.Serialization;
+
 
 namespace Origam.Schema.DeploymentModel
 {

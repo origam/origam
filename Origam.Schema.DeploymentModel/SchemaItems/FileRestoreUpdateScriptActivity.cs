@@ -77,8 +77,6 @@ namespace Origam.Schema.DeploymentModel
 
 		[Category("File Information")]
 		[EntityColumn("BLB01")]
-		[Editor(typeof(FileSelectionUITypeEditor), 
-            typeof(System.Drawing.Design.UITypeEditor))]
         [XmlExternalFileReference(containerName: nameof(content), 
             extension: ExternalFileExtension.Bin)]
         public Byte[] File 

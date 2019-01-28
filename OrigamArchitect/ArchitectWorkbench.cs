@@ -71,6 +71,7 @@ using Origam.Workbench.BaseComponents;
 using Origam.Gui.UI;
 using Origam.Excel;
 using Origam.DA.ObjectPersistence.Providers;
+using Origam.Schema.DeploymentModel;
 
 namespace OrigamArchitect
 {
@@ -205,7 +206,9 @@ namespace OrigamArchitect
                             typeof(System.Drawing.Design.UITypeEditor)));
 		    TypeDescriptor.AddAttributes(typeof(Bitmap),
 		        new EditorAttribute(typeof(System.Drawing.Design.BitmapEditor), typeof(System.Drawing.Design.UITypeEditor)));
-        }
+		    TypeDescriptor.AddAttributes(typeof(Byte[]),
+		        new EditorAttribute(typeof(Byte[]), typeof(FileSelectionUITypeEditor)));
+    }
 
     public void OpenForm(object owner,Hashtable parameters)
 		{

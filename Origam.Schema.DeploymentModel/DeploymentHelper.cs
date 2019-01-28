@@ -23,8 +23,6 @@ using Origam.Services;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 using System;
-using System.Linq;
-using CSharpFunctionalExtensions;
 
 namespace Origam.Schema.DeploymentModel
 {
