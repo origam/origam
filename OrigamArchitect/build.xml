@@ -48,7 +48,6 @@
         <arg value="Origam.sln"/>
         <arg value="/p:Configuration=Release Architect"/>
         <arg value="/p:BaseOutputPath=${architect-dist}"/>
-        <arg value="/p:TargetFrameworkVersion=v4.6.1"/>
 		<arg value="/t:Restore;Build"/>
     </exec>
     <copy todir="${architect-dist}">
