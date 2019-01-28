@@ -2,7 +2,7 @@
 <project name="SIMPLICOR Core" default="standard" basedir=".">
   <description>Build file for ORIGAM backend</description>
   <property name="nant.settings.currentframework" value="net-2.0" />
-  <property name="dist" value="../../dist"/>
+  <property name="dist" value="../../dist/"/>
   <property name="architect-dist" value="../../architect_dist/"/>
   <property name="client-dist" value="../../client_dist/"/>
   <property name="repositoryRoot" value="D:\SharedData\_install\ORIGAM\web\lastbuild"/>
@@ -13,7 +13,7 @@
     <exec workingdir=".." program="${msbuild-exec}">
       <arg value="Origam.sln"/>
       <arg value="/p:Configuration=Release Server"/>
-      <arg value="/p:OutputPath=${dist}"/>
+      <arg value="/p:BaseOutputPath=${dist}"/>
 	  <arg value="/t:Restore;Build"/>
     </exec>
     <copy todir="${dist}" overwrite="true">
@@ -60,7 +60,7 @@
     <exec workingdir=".." program="${msbuild-exec}">
         <arg value="Origam.sln"/>
         <arg value="/p:Configuration=Release Client"/>
-        <arg value="/p:OutputPath=${client-dist}"/>
+        <arg value="/p:BaseOutputPath=${client-dist}"/>
 		<arg value="/t:Restore;Build"/>
     </exec>
     <copy todir="${client-dist}">
