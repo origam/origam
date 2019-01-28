@@ -2,7 +2,7 @@
 <project name="SIMPLICOR Core" default="standard" basedir=".">
   <description>Build file for ORIGAM backend</description>
   <property name="nant.settings.currentframework" value="net-2.0" />
-  <property name="dist" value="../../dist"/>
+  <property name="dist" value="../../dist/"/>
   <property name="architect-dist" value="../../architect_dist/"/>
   <property name="client-dist" value="../../client_dist/"/>
   <property name="repositoryRoot" value="D:\SharedData\_install\ORIGAM\web\lastbuild"/>
