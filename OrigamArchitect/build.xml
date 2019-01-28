@@ -13,7 +13,7 @@
     <exec workingdir=".." program="${msbuild-exec}">
       <arg value="Origam.sln"/>
       <arg value="/p:Configuration=Release Server"/>
-      <arg value="/p:OutputPath=${dist}"/>
+      <arg value="/p:BaseOutputPath=${dist}"/>
 	  <arg value="/t:Restore;Build"/>
     </exec>
     <copy todir="${dist}" overwrite="true">
@@ -60,7 +60,7 @@
     <exec workingdir=".." program="${msbuild-exec}">
         <arg value="Origam.sln"/>
         <arg value="/p:Configuration=Release Client"/>
-        <arg value="/p:OutputPath=${client-dist}"/>
+        <arg value="/p:BaseOutputPath=${client-dist}"/>
 		<arg value="/t:Restore;Build"/>
     </exec>
     <copy todir="${client-dist}">
