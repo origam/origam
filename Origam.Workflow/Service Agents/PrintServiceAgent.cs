@@ -75,8 +75,9 @@ namespace Origam.Workflow
             string filename, string printer,
             int copies, string paperSource, int timeout)
         {
-            string gsPath = System.Configuration.ConfigurationManager
-                .AppSettings["gsPath"];
+            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+            string gsPath = settings.GsPath;
+
             string arguments;
             if (String.IsNullOrEmpty(paperSource))
             {
