@@ -47,7 +47,7 @@
     <exec workingdir=".." program="${msbuild-exec}">
         <arg value="Origam.sln"/>
         <arg value="/p:Configuration=Release Architect"/>
-        <arg value="/p:OutputPath=${architect-dist}"/>
+        <arg value="/p:BaseOutputPath=${architect-dist}"/>
 		<arg value="/t:Restore;Build"/>
     </exec>
     <copy todir="${architect-dist}">
