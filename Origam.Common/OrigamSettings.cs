@@ -267,7 +267,10 @@ namespace Origam
 		[Category("Model Connection")]
 		public string ModelProvider { get; set; } = "Origam.OrigamEngine.FilePersistenceBuilder, Origam.OrigamEngine";
 
-		public string ReportsFolder()
+	    [Category("Services"), DefaultValue("")]
+        public string GsPath { get; set; }
+
+	    public string ReportsFolder()
 		{
 			return System.IO.Path.Combine(BaseFolder, this.ReportDefinitionsPath);
 		}

@@ -211,11 +211,6 @@
       <Project>{199DDE99-9EE7-4CCE-B71D-7FC1CC0896AA}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Sharepoint\Origam.Sharepoint.csproj">
-      <Name>Origam.Sharepoint</Name>
-      <Project>{F792069F-6F28-41F2-9E87-1EB236F409D2}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
     <ProjectReference Include="..\Origam.UI.Common.NetFx\Origam.UI.Common.NetFx.csproj">
       <Project>{b2b8b03e-cfd0-454f-94f0-10b817db3441}</Project>
       <Name>Origam.UI.Common.NetFx</Name>
@@ -344,6 +339,7 @@
     </Compile>
     <Compile Include="Commands\WindowCommands.cs" />
     <Compile Include="ControlsLookUpService.cs" />
+    <Compile Include="DebugInfo.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>

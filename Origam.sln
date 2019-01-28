@@ -10,8 +10,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Security", "Origam.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Schema.MenuModel", "Origam.Schema.MenuModel\Origam.Schema.MenuModel.csproj", "{01C6A542-4D42-4AFA-9744-5E92E71A8251}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Sharepoint", "Origam.Sharepoint\Origam.Sharepoint.csproj", "{F792069F-6F28-41F2-9E87-1EB236F409D2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.BI.CrystalReports", "Origam.BI.CrystalReports\Origam.BI.CrystalReports.csproj", "{D8090B11-35D3-43D7-AC66-5D7AE2D476DA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.BI", "Origam.BI\Origam.BI.csproj", "{54BFF654-2A00-4A8A-86B0-06F124D769A1}"
@@ -61,7 +59,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.ReflectorCache", "Or
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MIMEParser", "MIMEParser\MIMEParser.csproj", "{CC4C4334-335D-4369-B0ED-F3C17CD57364}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.DeploymentModel", "Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel.csproj", "{A802634D-DCF0-4F27-992D-E3FADCAA3FB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Schema.DeploymentModel", "Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel.csproj", "{A802634D-DCF0-4F27-992D-E3FADCAA3FB4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.OrigamEngine", "Origam.OrigamEngine\Origam.OrigamEngine.csproj", "{233D40C6-AE59-4651-B7BD-DD09D5835E21}"
 EndProject
@@ -284,22 +282,6 @@ Global
 		{01C6A542-4D42-4AFA-9744-5E92E71A8251}.Release Server|Any CPU.Build.0 = Release|Any CPU
 		{01C6A542-4D42-4AFA-9744-5E92E71A8251}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01C6A542-4D42-4AFA-9744-5E92E71A8251}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F792069F-6F28-41F2-9E87-1EB236F409D2}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
-		{F792069F-6F28-41F2-9E87-1EB236F409D2}.Debug Architect|Any CPU.Build.0 = Debug Architect|Any CPU
-		{F792069F-6F28-41F2-9E87-1EB236F409D2}.Debug Client|Any CPU.ActiveCfg = Debug Client|Any CPU
-		{F792069F-6F28-41F2-9E87-1EB236F409D2}.Debug Client|Any CPU.Build.0 = Debug Client|Any CPU
-		{F792069F-6F28-41F2-9E87-1EB236F409D2}.Debug Server|Any CPU.ActiveCfg = Debug Server|Any CPU
-		{F792069F-6F28-41F2-9E87-1EB236F409D2}.Debug Server|Any CPU.Build.0 = Debug Server|Any CPU
-		{F792069F-6F28-41F2-9E87-1EB236F409D2}.Debug|Any CPU.ActiveCfg = Debug Server|Any CPU
-		{F792069F-6F28-41F2-9E87-1EB236F409D2}.Debug|Any CPU.Build.0 = Debug Server|Any CPU
-		{F792069F-6F28-41F2-9E87-1EB236F409D2}.Release Architect|Any CPU.ActiveCfg = Release Architect|Any CPU
-		{F792069F-6F28-41F2-9E87-1EB236F409D2}.Release Architect|Any CPU.Build.0 = Release Architect|Any CPU
-		{F792069F-6F28-41F2-9E87-1EB236F409D2}.Release Client|Any CPU.ActiveCfg = Release Client|Any CPU
-		{F792069F-6F28-41F2-9E87-1EB236F409D2}.Release Client|Any CPU.Build.0 = Release Client|Any CPU
-		{F792069F-6F28-41F2-9E87-1EB236F409D2}.Release Server|Any CPU.ActiveCfg = Release Server|Any CPU
-		{F792069F-6F28-41F2-9E87-1EB236F409D2}.Release Server|Any CPU.Build.0 = Release Server|Any CPU
-		{F792069F-6F28-41F2-9E87-1EB236F409D2}.Release|Any CPU.ActiveCfg = Release Server|Any CPU
-		{F792069F-6F28-41F2-9E87-1EB236F409D2}.Release|Any CPU.Build.0 = Release Server|Any CPU
 		{D8090B11-35D3-43D7-AC66-5D7AE2D476DA}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
 		{D8090B11-35D3-43D7-AC66-5D7AE2D476DA}.Debug Architect|Any CPU.Build.0 = Debug Architect|Any CPU
 		{D8090B11-35D3-43D7-AC66-5D7AE2D476DA}.Debug Client|Any CPU.ActiveCfg = Debug Client|Any CPU
