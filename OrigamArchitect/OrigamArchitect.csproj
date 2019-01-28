@@ -344,6 +344,7 @@
     </Compile>
     <Compile Include="Commands\WindowCommands.cs" />
     <Compile Include="ControlsLookUpService.cs" />
+    <Compile Include="DebugInfo.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
