@@ -477,7 +477,7 @@ namespace Origam.Workbench.Commands
 			}
 			else if(itemType == "Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity")
 			{
-				System.Reflection.Assembly a = Assembly.LoadWithPartialName("Origam.Schema.DeploymentModel");
+				System.Reflection.Assembly a = Assembly.LoadWithPartialName("Origam.Schema.DeploymentModel.UI");
 				editor = a.CreateInstance("Origam.Schema.DeploymentModel.ServiceScriptCommandEditor") as IViewContent;
 				if(editor == null)
 					throw new Exception(ResourceUtils.GetString("ErrorLoadEditorFailed"));
