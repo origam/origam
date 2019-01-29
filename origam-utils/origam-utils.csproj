@@ -18,9 +18,6 @@
    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 </PropertyGroup> 
 
-  <PropertyGroup>
-      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
-  </PropertyGroup>
   
   <PropertyGroup>
       <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
