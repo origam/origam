@@ -18,10 +18,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
+using Origam.Schema;
 using Origam.Workbench.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -30,11 +31,17 @@ namespace Origam.Rule
 {
     public class ModelRules
     {
-        public static List<Dictionary<IFilePersistent, string>> GetErrors(FilePersistenceService independentPersistenceService, CancellationToken cancellationToken)
+        public static List<Dictionary<IFilePersistent, string>> GetErrors(SchemaService schemaService,FilePersistenceService independentPersistenceService, CancellationToken cancellationToken)
         {
+            ISchemaItemProvider[] providers = CloneProviders(schemaService, independentPersistenceService);
             List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
                     .SchemaProvider
                     .RetrieveList<IFilePersistent>()
+                    .OfType<AbstractSchemaItem>()
+                    .Select(retrievedObj => {
+                        retrievedObj.RootProvider = providers.FirstOrDefault(x => BelongsToProvider(x, retrievedObj));
+                        return retrievedObj;
+                    })
                     .Select(retrievedObj =>
                     {
                         cancellationToken.ThrowIfCancellationRequested();
@@ -51,6 +58,27 @@ namespace Origam.Rule
                     .Where(x => x != null)
                     .ToList();
             return errorFragments;
+        }
+
+        private static bool BelongsToProvider(ISchemaItemProvider provider, AbstractSchemaItem retrievedObj)
+        {
+            if(String.Compare(retrievedObj.ItemType, ((AbstractSchemaItemProvider)provider).RootItemType,true)==0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private static AbstractSchemaItemProvider[] CloneProviders(SchemaService schemaService, FilePersistenceService independentPersistenceService)
+        {
+            return schemaService.Providers
+                .Select(provider =>
+                {
+                    AbstractSchemaItemProvider abstractSchemaItemProvider = (AbstractSchemaItemProvider)Activator.CreateInstance(provider.GetType());
+                    abstractSchemaItemProvider.PersistenceProvider = independentPersistenceService.SchemaProvider;
+                    return abstractSchemaItemProvider;
+                })
+                .ToArray();
         }
     }
 }
