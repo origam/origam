@@ -44,8 +44,22 @@ namespace Origam.Schema.EntityModel
 
 		public DataConstant(Key primaryKey) : base(primaryKey)	{}
 
-		#region Properties
-		OrigamDataType _dataType = OrigamDataType.String;
+        #region Properties
+
+        [EntityColumn("Name")]
+        [Category("(Schema Item)")]
+        [RefreshProperties(RefreshProperties.Repaint)]
+        [StringNotEmptyModelElementRule]
+        [XmlAttribute("name")]
+        [Description("Name of the model element. The name is mainly used for giving the model elements a human readable name. In some cases the name is an identificator of the model element (e.g. for defining XML structures or for requesting constants from XSLT tranformations).")]
+        [NoDuplicateNamesInDataConstantRuleAtribute]
+        public override string Name
+        {
+            get => base.Name;
+            set => base.Name = value;
+        }
+
+        OrigamDataType _dataType = OrigamDataType.String;
 		[EntityColumn("I02")] 
 		[RefreshProperties(RefreshProperties.Repaint)]
 		[NotNullModelElementRule()]
