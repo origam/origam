@@ -752,7 +752,7 @@ namespace Origam.Workbench.Commands
         public override void Run()
         {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-            string filePath = Path.Combine(settings.ModelSourceControlLocation,
+            string filePath = Path.Combine(settings.ModelSourceControlLocation.Replace("/","\\"),
                 _schema.ActiveSchemaItem.RootItem.RelativeFilePath);
             if (File.Exists(filePath))
             {
