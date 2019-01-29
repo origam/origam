@@ -16,18 +16,15 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
-  
   <PropertyGroup>
-      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
-  
   <PropertyGroup>
-      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
-  
   <PropertyGroup>
-      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
-      <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
@@ -55,7 +52,7 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
     <DefineConstants>$(DefineConstants)</DefineConstants>
     <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
@@ -68,9 +65,6 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-
-
-
   <ItemGroup>
     <Reference Include="nunit.framework, Version=3.10.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\OrigamArchitect\packages\NUnit.3.10.1\lib\net45\nunit.framework.dll</HintPath>
@@ -81,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeploymentSorterTests.cs" />
     <Compile Include="FileStorageDocumentationServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -100,6 +95,14 @@
     <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service.csproj">
       <Project>{ff4722b4-01f8-4062-af39-f243a6bf336d}</Project>
       <Name>Origam.DA.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel.csproj">
+      <Project>{A802634D-DCF0-4F27-992D-E3FADCAA3FB4}</Project>
+      <Name>Origam.Schema.DeploymentModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
+      <Project>{976F3ABA-938D-4242-A93B-7D7A1861A66E}</Project>
+      <Name>Origam.Schema</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
       <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>

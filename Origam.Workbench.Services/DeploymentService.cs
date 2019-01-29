@@ -40,7 +40,8 @@ namespace Origam.Workbench.Services
 	/// </summary>
 	public class DeploymentService : IDeploymentService
     {
-		#region Local variables
+
+        #region Local variables
 		string _transactionId = null;
 		SchemaService _schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
 		OrigamModelVersionData _versionData = new OrigamModelVersionData();
@@ -207,19 +208,11 @@ namespace Origam.Workbench.Services
 
 			switch(activity.TargetLocation)
 			{
-				case DeploymentFileLocation.ApplicationStartupFolder:
-					fileName = Path.Combine(System.Windows.Forms.Application.StartupPath, activity.FileName);
-					break;
-
 				case DeploymentFileLocation.ReportsFolder:
-					OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+					OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
 					fileName = Path.Combine(settings.ReportsFolder(), activity.FileName);
 					break;
-			
-				case DeploymentFileLocation.SystemFolder:
-					fileName = Path.Combine(Environment.SystemDirectory, activity.FileName);
-					break;
-			
+
 				case DeploymentFileLocation.Manual:
 					fileName = activity.FileName;
 					break;
