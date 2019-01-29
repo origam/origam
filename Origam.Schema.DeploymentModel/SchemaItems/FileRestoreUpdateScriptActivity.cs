@@ -30,8 +30,6 @@ namespace Origam.Schema.DeploymentModel
 	public enum DeploymentFileLocation
 	{
 		Manual = 0,
-		SystemFolder = 1,
-		ApplicationStartupFolder = 2,
 		ReportsFolder = 3
 	}
 
