@@ -41,8 +41,13 @@ namespace Origam.Utils
 
         internal int Run()
         {
+            SchemaService schemaService = ServiceManager.Services.GetService<SchemaService>();
+            OrigamEngine.OrigamEngine.InitializeSchemaItemProviders(schemaService);
             List<Dictionary<IFilePersistent, string>> errorFragments
-                    = ModelRules.GetErrors(GetPersistence(), new CancellationTokenSource().Token);
+                    = ModelRules.GetErrors(
+                        schemaService, 
+                        GetPersistence(),
+                        new CancellationTokenSource().Token);
             if (errorFragments.Count != 0)
             {
                 StringBuilder sb = new StringBuilder("Rule violations in ");
