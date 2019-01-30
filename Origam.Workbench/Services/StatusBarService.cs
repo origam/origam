@@ -31,6 +31,7 @@ namespace Origam.Workbench.Services
 	{
 		public StatusBarService(StatusBar statusBar)
 		{
+		    this.statusBar = statusBar;
 		}
 
 		#region IService Members
