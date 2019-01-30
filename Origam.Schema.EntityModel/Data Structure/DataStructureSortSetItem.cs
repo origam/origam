@@ -80,6 +80,7 @@ namespace Origam.Schema.EntityModel
 
 		[EntityColumn("SS01")]  
 		[SortSetItemValidModelElementRuleAttribute()]
+		[TypeConverter(typeof(DataStructureColumnStringConverter))]
 		[Category("Sorting"), RefreshProperties(RefreshProperties.Repaint)]
         [XmlAttribute("fieldName")]
 		public string FieldName
