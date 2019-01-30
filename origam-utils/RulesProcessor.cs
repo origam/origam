@@ -34,6 +34,8 @@ namespace Origam.Utils
     class RulesProcessor
     {
         private readonly string pathProject;
+        private SchemaService service = new SchemaService();
+
         public RulesProcessor(string pathProject)
         {
             this.pathProject = pathProject;
@@ -41,11 +43,9 @@ namespace Origam.Utils
 
         internal int Run()
         {
-            SchemaService schemaService = ServiceManager.Services.GetService<SchemaService>();
-            OrigamEngine.OrigamEngine.InitializeSchemaItemProviders(schemaService);
             List<Dictionary<IFilePersistent, string>> errorFragments
                     = ModelRules.GetErrors(
-                        schemaService, 
+                        service, 
                         GetPersistence(),
                         new CancellationTokenSource().Token);
             if (errorFragments.Count != 0)
@@ -77,7 +77,6 @@ namespace Origam.Utils
                 ElementNameFactory.Create(typeof(SchemaItemGroup))
             };
             ServiceManager sManager = ServiceManager.Services;
-            SchemaService service = new SchemaService();
             IParameterService parameterService = new NullParameterService();
             sManager.AddService(service);
             sManager.AddService(parameterService);
@@ -90,6 +89,7 @@ namespace Origam.Utils
 
             sManager.AddService(persistenceService);
             service.AddProvider(StateMachineSchema);
+            OrigamEngine.OrigamEngine.InitializeSchemaItemProviders(service);
             return persistenceService;
         }
     }

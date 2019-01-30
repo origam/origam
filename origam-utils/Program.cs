@@ -131,8 +131,8 @@ namespace Origam.Utils
 
         class Options
         {
-            [VerbOption("procces-checkrules",
-                HelpText = "Check rules in All project.")]
+            [VerbOption("process-checkrules",
+                HelpText = "Check rules in project.")]
             public ProcessCheckRules ProcessCheckRules { get; set; }
 #if !NETCORE2_1
             [VerbOption("process-queue",
@@ -189,7 +189,7 @@ namespace Origam.Utils
             }
             switch(invokedVerb)
             {
-                case "procces-checkrules":
+                case "process-checkrules":
                 {
                         return ProcesRule(
                             (ProcessCheckRules)invokedVerbInstance);
