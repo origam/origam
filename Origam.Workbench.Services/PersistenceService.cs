@@ -878,5 +878,12 @@ namespace Origam.Workbench.Services
 			_isConnected = true;
 		}
 		#endregion
+
+	    public void Dispose()
+	    {
+	        _helperProvider?.Dispose();
+	        _schemaProvider?.Dispose();
+	        _schemaListProvider?.Dispose();
+	    }
 	}
 }

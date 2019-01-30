@@ -31,8 +31,8 @@ namespace Origam.Workbench.Services
 	/// <summary>
 	/// Summary description for IPersistenceService.
 	/// </summary>
-	public interface IPersistenceService : IWorkbenchService, ICloneable
-	{
+	public interface IPersistenceService : IWorkbenchService, ICloneable, IDisposable
+    {
 		IPersistenceProvider SchemaProvider{get;}
 		IPersistenceProvider SchemaListProvider{get;}
 

@@ -1627,17 +1627,25 @@ namespace OrigamArchitect.Commands
 //		    var resaveDbCommand = new ResaveDB();
 //		    resaveDbCommand.Run();
 
+            
 		    var filePersistenceBuilder = new FilePersistenceBuilder();
+	        try
+	        {
+	            newPersistenceService =
+	                filePersistenceBuilder.GetPersistenceService(watchFileChanges: false);
 
-		    newPersistenceService = filePersistenceBuilder
-	            .GetPersistenceService(watchFileChanges: false);
-		    
-		    PersistAllData();
+	            PersistAllData();
 
-		    IDocumentationService docService =
-			    filePersistenceBuilder.GetDocumentationService();
-		    ConvertDocumentation(docService);
-		    statusBar.SetStatusText("");
+	            IDocumentationService docService =
+	                filePersistenceBuilder.GetDocumentationService();
+	            ConvertDocumentation(docService);
+	        }
+	        finally
+	        {
+	            statusBar.SetStatusText("");
+	            newPersistenceService.Dispose();
+                newPersistenceService = null;
+            }
 	    }
 
 	    protected void ConvertDocumentation(IDocumentationService docService)

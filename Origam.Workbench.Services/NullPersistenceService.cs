@@ -74,5 +74,9 @@ namespace Origam.Workbench.Services
         public void InitializeRepository()
         {
         }
+
+        public void Dispose()
+        {
+        }
     }
 }
