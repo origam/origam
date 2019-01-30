@@ -131,7 +131,7 @@ namespace Origam
 		public string SchemaConnectionString { get; set; } = "Server=?;database=?;Integrated Security=SSPI;";
 
 		[Category("Model Connection")]
-		public string ModelSourceControlLocation { get; set; } = @"C:\OrigamProjects";
+		public string ModelSourceControlLocation { get; set; } = "";
 
 		[Category("Data Connection")]
 		public string DataConnectionString { get; set; } = "Server=?;database=?;Integrated Security=SSPI;";

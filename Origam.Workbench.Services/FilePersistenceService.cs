@@ -51,17 +51,10 @@ namespace Origam.Workbench.Services
             string basePath = null, bool watchFileChanges = true, bool useBinFile = true)    
         {
             this.defaultFolders = defaultFolders;
-            
-            if (basePath == null)
-            {
-                OrigamSettings settings =
-                        ConfigurationManager.GetActiveConfiguration() ;
-                basePath = settings.ModelSourceControlLocation; 
-            }
-            var topDirectory = new DirectoryInfo(basePath);
+            var topDirectory = GetTopDirectory(basePath);
             topDirectory.Create();
             var pathFactory = new OrigamPathFactory(topDirectory);
-            var pathToIndexBin = new FileInfo(Path.Combine(basePath, "index.bin"));
+            var pathToIndexBin = new FileInfo(Path.Combine(topDirectory.FullName, "index.bin"));
             var index = new FilePersistenceIndex(pathFactory);
             var fileChangesWatchDog =
                 GetNewWatchDog(topDirectory, watchFileChanges, pathToIndexBin);
@@ -100,6 +93,21 @@ namespace Origam.Workbench.Services
             
             FileEventQueue.ReloadNeeded += OnReloadNeeded;
             SchemaListProvider = schemaProvider;
+        }
+
+        private static DirectoryInfo GetTopDirectory(string basePath)
+        {
+            if (basePath == null)
+            {
+                basePath = ConfigurationManager.GetActiveConfiguration().ModelSourceControlLocation;
+            }
+
+            if (string.IsNullOrEmpty(basePath))
+            {
+                throw new ArgumentException("File system persisted model cannot be open because the "+nameof(OrigamSettings.ModelSourceControlLocation) +" is not set. ");
+            }
+
+            return new DirectoryInfo(basePath);
         }
 
         private void OnReloadNeeded(object sender, FileSystemChangeEventArgs args)
