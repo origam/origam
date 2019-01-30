@@ -33,6 +33,7 @@ using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using System.IO;
 using System.Diagnostics;
+using System.Linq;
 using Origam.Workbench.Editors;
 using System.Text;
 using Origam.DA.Service;
@@ -673,9 +674,13 @@ namespace Origam.Workbench.Commands
 		{
 			Pads.FindSchemaItemResultsPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(Pads.FindSchemaItemResultsPad)) as Pads.FindSchemaItemResultsPad;
 
-			ArrayList dependencies =_schema.ActiveSchemaItem.GetDependencies(false).ToArrayList();
+			var dependencies =_schema.ActiveSchemaItem
+			    .GetDependencies(false)
+			    .Cast<AbstractSchemaItem>()
+			    .Where(x => x!=null)
+			    .ToArray();
 
-			pad.DisplayResults((AbstractSchemaItem[])dependencies.ToArray(typeof(AbstractSchemaItem)));
+			pad.DisplayResults(dependencies);
 
 			ViewFindSchemaItemResultsPad cmd = new ViewFindSchemaItemResultsPad();
 			cmd.Run();
