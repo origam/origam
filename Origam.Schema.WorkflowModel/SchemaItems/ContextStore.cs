@@ -107,7 +107,7 @@ namespace Origam.Schema.WorkflowModel
 		[DefaultValue(false)]
 		[EntityColumn("B01")]  
 		[XmlAttribute ("isReturnValue")]
-        [ContexStoreOutputRuleAttribute()]
+       // [ContexStoreOutputRuleAttribute()]
 		public bool IsReturnValue { get; set; } = false;
 
 		[DefaultValue(false)]
