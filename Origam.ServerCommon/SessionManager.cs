@@ -17,10 +17,12 @@ namespace Origam.Server
         private readonly Dictionary<Guid, PortalSessionStore> portalSessions;
         private readonly Dictionary<Guid, SessionStore> formSessions;
         private readonly Analytics analytics;
+        private readonly bool runsOnCore;
 
         public SessionManager(Dictionary<Guid, PortalSessionStore> portalSessions,
-            Dictionary<Guid, SessionStore> formSessions, Analytics analytics)
+            Dictionary<Guid, SessionStore> formSessions, Analytics analytics, bool runsOnCore)
         {
+            this.runsOnCore = runsOnCore;
             this.analytics = analytics;
             this.portalSessions = portalSessions;
             this.formSessions = formSessions;
@@ -232,7 +234,7 @@ namespace Origam.Server
                         menuItem = ps.SchemaProvider.RetrieveInstance(typeof(AbstractMenuItem), new ModelElementKey(new Guid(request.ObjectId))) as AbstractMenuItem;
                         formMenuItem = menuItem as FormReferenceMenuItem;
                         // FORM
-                        ss = new FormSessionStore(basicUiService, request, menuItem.Name, analytics);
+                        ss = new FormSessionStore(basicUiService, request, menuItem.Name, analytics, runsOnCore);
                         break;
 
                     case UIRequestType.WorkflowReferenceMenuItem:

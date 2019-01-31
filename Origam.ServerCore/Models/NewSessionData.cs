@@ -10,5 +10,6 @@ namespace Origam.ServerCore.Models
         [RequireNonDefault]
         public Guid MenuId { get; set; }
         public Dictionary<string, string> Parameters { get; set; }
+        public bool InitializeStructure { get; set; }
     }
 }

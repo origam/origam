@@ -17,9 +17,10 @@ namespace Origam.ServerCore
         {
             var analytics = new Analytics(new StandardPropertyProviderFactory());
             SessionManager = new SessionManager(
-                new Dictionary<Guid, PortalSessionStore>(),
-                new Dictionary<Guid, SessionStore>(),
-                analytics);
+                portalSessions: new Dictionary<Guid, PortalSessionStore>(),
+                formSessions: new Dictionary<Guid, SessionStore>(),
+                analytics: analytics,
+                runsOnCore: true);
             UiManager = new UIManager(50, SessionManager, analytics);
             UiService = new BasicUiService();
         }

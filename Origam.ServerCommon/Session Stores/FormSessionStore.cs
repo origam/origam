@@ -43,6 +43,9 @@ namespace Origam.Server
         private FormReferenceMenuItem _menuItem;
         private object _getRowDataLock = new object();
         private XmlDocument _preparedFormXml = null;
+        private readonly bool runsOnCore; 
+
+        public FormReferenceMenuItem MenuItem => _menuItem;
 
         public FormSessionStore(IBasicUIService service, UIRequest request, string name, 
             FormReferenceMenuItem menuItem, Analytics analytics)
@@ -52,9 +55,10 @@ namespace Origam.Server
             SetMenuProperties();
         }
 
-        public FormSessionStore(IBasicUIService service, UIRequest request, string name, Analytics analytics)
+        public FormSessionStore(IBasicUIService service, UIRequest request, string name, Analytics analytics,bool runsOnCore)
             : base(service, request, name, analytics)
         {
+            this.runsOnCore = runsOnCore;
             IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
             FormReferenceMenuItem fr = (FormReferenceMenuItem)ps.SchemaProvider.RetrieveInstance(typeof(FormReferenceMenuItem), new ModelElementKey(new Guid(this.Request.ObjectId)));
             _menuItem = fr;
@@ -88,6 +92,30 @@ namespace Origam.Server
         }
 
         private void LoadData()
+        {
+            if (runsOnCore)
+            {
+                LoadDataCore();
+            }
+            else
+            {
+                LoadDataFxServer();
+            }
+        }
+
+        private void LoadDataCore()
+        {
+            if (Request.InitializeStructure)
+            {
+                var data = InitializeFullStructure();
+                SetDataSource(data);
+            }
+            else{
+                SetDelayedLoadingParameter(_menuItem.Method);
+            }
+        }
+
+        private void LoadDataFxServer()
         {
             DataSet data = null;
             if (this.Request.IsSingleRecordEdit && _menuItem.RecordEditMethod != null)
@@ -167,7 +195,7 @@ namespace Origam.Server
         private DataSet LoadListData(DataSet data, string listEntity, DataStructureSortSet sortSet)
         {
             DataListLoadedColumns.Clear();
-            QueryParameterCollection qparams = GetQueryParameters();
+            QueryParameterCollection qparams = Request.QueryParameters;
             string initialColumns = "";
             initialColumns = ListPrimaryKeyColumns(data, listEntity);
             if (sortSet != null)
@@ -222,7 +250,7 @@ namespace Origam.Server
             }
 
             DataSet data;
-            QueryParameterCollection qparams = GetQueryParameters();
+            QueryParameterCollection qparams = Request.QueryParameters;
             data = core.DataService.LoadData(DataStructureId, _menuItem.MethodId, 
                 _menuItem.DefaultSetId, _menuItem.SortSetId, null, qparams);
             return data;
@@ -230,7 +258,7 @@ namespace Origam.Server
 
         public override void LoadColumns(IList<string> columns)
         {
-            QueryParameterCollection qparams = GetQueryParameters();
+            QueryParameterCollection qparams = Request.QueryParameters;
             ArrayList finalColumns = new ArrayList();
             ArrayList arrayColumns = new ArrayList();
             foreach (var column in columns)
@@ -313,22 +341,14 @@ namespace Origam.Server
             }
         }
 
-        private QueryParameterCollection GetQueryParameters()
-        {
-            QueryParameterCollection qparams = new QueryParameterCollection();
-            foreach (DictionaryEntry entry in this.Request.Parameters)
-            {
-                qparams.Add(new QueryParameter((string)entry.Key, entry.Value));
-            }
-            return qparams;
-        }
+        
 
         private DataSet LoadSingleRecord()
         {
             DataSet data;
             // We use the RecordEdit filter set for single record editing.
             ResolveFormMethodParameters(_menuItem.RecordEditMethod);
-            QueryParameterCollection qparams = GetQueryParameters();
+            QueryParameterCollection qparams = Request.QueryParameters;
             data = core.DataService.LoadData(DataStructureId, _menuItem.RecordEditMethodId,
                 _menuItem.DefaultSetId, _menuItem.SortSetId, null, qparams);
             return data;

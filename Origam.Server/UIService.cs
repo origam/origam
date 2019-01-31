@@ -41,7 +41,6 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.LookupModel;
-using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Services;
 using Origam.Workbench;
@@ -65,6 +64,7 @@ namespace Origam.Server
         private const int INITIAL_PAGE_NUMBER_OF_RECORDS = 50;
         private readonly UIManager uiManager;
         private readonly ReportManager reportManager;
+        private readonly SessionHelper sessionHelper;
 
         #endregion
 
@@ -88,9 +88,14 @@ namespace Origam.Server
                 FluorineFx.Context.FluorineContext.Current.ApplicationState["forms"] = formSessions;
             }
 
-            sessionManager = new SessionManager(portalSessions, formSessions, AnalyticsFx.Instance);
+            sessionManager = new SessionManager(
+                portalSessions: portalSessions,
+                formSessions: formSessions,
+                analytics: AnalyticsFx.Instance,
+                runsOnCore: false);
             uiManager = new UIManager(INITIAL_PAGE_NUMBER_OF_RECORDS,sessionManager, AnalyticsFx.Instance);
             reportManager = new ReportManager(sessionManager);
+            sessionHelper = new SessionHelper(sessionManager);
         }
 
         #endregion
@@ -369,70 +374,7 @@ namespace Origam.Server
 
         public void DestroyUI(Guid sessionFormIdentifier)
         {
-            SessionStore ss = null;
-
-            // if session not found, we just remove it from the list of sessions
-            try
-            {
-                ss = sessionManager.GetSession(sessionFormIdentifier, true);
-
-                // if the form was a modal dialog that needs to pass data to its parent,
-                // we do it here
-                if (ss.Request.ParentSessionId != null && ss.IsModalDialogCommited)
-                {
-                    SessionStore parentSession = sessionManager.GetSession(new Guid(ss.Request.ParentSessionId));
-                    parentSession.PendingChanges = new ArrayList();
-                    EntityWorkflowAction ewa = UIActionTools.GetAction(
-                        ss.Request.SourceActionId) as EntityWorkflowAction;
-                        
-                    var actionRunnerClient = new ServerEntityUIActionRunnerClient(
-                        sessionManager, parentSession);
-
-                    actionRunnerClient.ProcessWorkflowResults(
-                        profile: SecurityTools.CurrentUserProfile(),
-                        processData: null,
-                        sourceData: ss.Data, 
-                        targetData: parentSession.Data, 
-                        entityWorkflowAction: ewa,
-                        changes: parentSession.PendingChanges);
-                    
-                    actionRunnerClient.PostProcessWorkflowAction( 
-                        data: parentSession.Data, 
-                        entityWorkflowAction: ewa, 
-                        changes: parentSession.PendingChanges);
-                }
-
-                ss.Dispose();
-            }
-            catch
-            {
-                if (ss != null && ss.IsModalDialog)
-                {
-                    throw;
-                }
-            }
-
-            sessionManager.RemoveFormSession(sessionFormIdentifier); 
-
-            if (ss != null && !ss.Request.IsStandalone)
-            {
-                PortalSessionStore pss = sessionManager.GetPortalSession();
-                IList<SessionStore> toRemove = new List<SessionStore>();
-
-                foreach (SessionStore childSS in pss.FormSessions)
-                {
-                    if (childSS.Id.Equals(ss.Id))
-                    {
-                        toRemove.Add(childSS);
-                    }
-                }
-
-                foreach (SessionStore rem in toRemove)
-                {
-                    pss.FormSessions.Remove(rem);
-                    pss.IsExclusiveScreenOpen = false;
-                }
-            }
+            sessionHelper.DeleteSession(sessionFormIdentifier);
             Task.Run(() => SecurityTools.CreateUpdateOrigamOnlineUser(
                 SecurityManager.CurrentPrincipal.Identity.Name,
                 sessionManager.GetSessionStats()));

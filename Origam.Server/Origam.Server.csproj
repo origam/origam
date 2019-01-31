@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -27,10 +27,9 @@
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
-  
   <PropertyGroup>
-      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
-      <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
@@ -58,7 +57,7 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
     <DefineConstants>$(DefineConstants)</DefineConstants>
     <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
@@ -71,7 +70,6 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-
   <ItemGroup>
     <Reference Include="AWSSDK, Version=1.3.17.0, Culture=neutral, PublicKeyToken=cd2d24cd2bace800">
       <HintPath>..\EnterpriseLibrary\AWSSDK.dll</HintPath>

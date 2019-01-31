@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,6 +39,7 @@ namespace Origam.ServerCore.Controllers
             Guid newSessionId = Guid.NewGuid();
             UIRequest uiRequest = new UIRequest
             {
+                InitializeStructure = sessionData.InitializeStructure,
                 FormSessionId = newSessionId.ToString(),
                 ObjectId = sessionData.MenuId.ToString(),
                 Parameters = sessionData.Parameters
@@ -53,8 +53,31 @@ namespace Origam.ServerCore.Controllers
             return Ok(newSessionId);
         }
 
+
         [HttpPost("[action]")]
-        public IList UpdateObject([FromBody]UpdateObjectData updateData )
+        public IActionResult Delete(Guid sessionId)
+        {
+            new SessionHelper(sessionObjects.SessionManager)
+                .DeleteSession(sessionId);
+            CallOrigamUserUpdate();
+            return Ok();
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult CreateRow([FromBody] NewRowData newRowData)
+        {            
+            SessionStore ss = sessionObjects.SessionManager.GetSession(newRowData.SessionFormIdentifier);
+            IList output = ss.CreateObject(
+                newRowData.Entity,
+                newRowData.Values,
+                newRowData.Parameters,
+                newRowData.RequestingGridId.ToString());
+            CallOrigamUserUpdate();
+            return Ok(output);
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult UpdateRow([FromBody]UpdateObjectData updateData )
         {
             SessionStore ss = sessionObjects.SessionManager.GetSession(updateData.SessionFormIdentifier);
             IList output = ss.UpdateObject(
@@ -62,22 +85,21 @@ namespace Origam.ServerCore.Controllers
                 id: updateData.Id, 
                 property: updateData.Property, 
                 newValue: updateData.NewValue);
-            var principal = Thread.CurrentPrincipal;
-            Task.Run(() =>
-            {
-                Thread.CurrentPrincipal = principal;
-                SecurityTools.CreateUpdateOrigamOnlineUser(
-                    SecurityManager.CurrentPrincipal.Identity.Name,
-                    sessionObjects.SessionManager.GetSessionStats());
-            });
-            return output;
+            CallOrigamUserUpdate();
+            return Ok(output);
         }
 
         [HttpPost("[action]")]
-        public IList SaveData([FromQuery]Guid sessionFormIdentifier)
+        public IActionResult SaveData([FromQuery]Guid sessionFormIdentifier)
         {
             SessionStore ss = sessionObjects.SessionManager.GetSession(sessionFormIdentifier);
             IList output = (IList)ss.ExecuteAction(SessionStore.ACTION_SAVE);
+            CallOrigamUserUpdate();
+            return Ok(output);
+        }
+
+        private void CallOrigamUserUpdate()
+        {
             var principal = Thread.CurrentPrincipal;
             Task.Run(() =>
             {
@@ -86,7 +108,6 @@ namespace Origam.ServerCore.Controllers
                     SecurityManager.CurrentPrincipal.Identity.Name,
                     sessionObjects.SessionManager.GetSessionStats());
             });
-            return output;
         }
     }
 }

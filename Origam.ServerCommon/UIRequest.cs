@@ -21,145 +21,69 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
 using System.Collections;
+using Origam.DA;
 
 namespace Origam.Server
 {
     public class UIRequest
     {
-        private IDictionary _parameters = new Hashtable();
-        private string _formSessionId;
-        private string _parentSessionId;
-        private string _sourceActionId;
-        private bool _isStandalone = false;
-        private bool _isDataOnly = false;
-        private UIRequestType _type;
-        private string _caption;
-        private string _objectId;
-        private string _icon;
-        private bool _isSingleRecordEdit;
-        private bool _requestCurrentRecordId;
-        private int _dialogWidth;
-        private int _dialogHeight;
-        private bool _supportsPagedData = false;
-        private bool _isModalDialog = false;
-        private bool _isNewSession = true;
-        private List<string> _cachedFormIds = new List<string>();
-
         public UIRequest()
         {
         }
 
-        public bool SupportsPagedData
-        {
-            get { return _supportsPagedData; }
-            set { _supportsPagedData = value; }
-        }
+        public bool SupportsPagedData { get; set; } = false;
 
-        public IDictionary Parameters
-        {
-            get { return _parameters; }
-            set { _parameters = value; }
-        }
+        public IDictionary Parameters { get; set; } = new Hashtable();
 
-        public List<string> CachedFormIds
-        {
-            get { return _cachedFormIds; }
-            set { _cachedFormIds = value; }
-        }
+        public List<string> CachedFormIds { get; set; } = new List<string>();
 
-        public string FormSessionId
-        {
-            get { return _formSessionId; }
-            set { _formSessionId = value; }
-        }
+        public string FormSessionId { get; set; }
 
-        public bool IsNewSession
-        {
-            get { return _isNewSession; }
-            set { _isNewSession = value; }
-        }
+        public bool IsNewSession { get; set; } = true;
 
-        public string ParentSessionId
-        {
-            get { return _parentSessionId; }
-            set { _parentSessionId = value; }
-        }
+        public string ParentSessionId { get; set; }
 
-        public string SourceActionId
-        {
-            get { return _sourceActionId; }
-            set { _sourceActionId = value; }
-        }
+        public string SourceActionId { get; set; }
 
-        public bool IsStandalone
-        {
-            get { return _isStandalone; }
-            set { _isStandalone = value; }
-        }
+        public bool IsStandalone { get; set; } = false;
 
-        public bool IsDataOnly
-        {
-            get { return _isDataOnly; }
-            set { _isDataOnly = value; }
-        }
+        public bool IsDataOnly { get; set; } = false;
 
-        public string TypeString
-        {
-            get { return _type.ToString(); }
-        }
+        public string TypeString => Type.ToString();
 
-        public UIRequestType Type
-        {
-            get { return _type; }
-            set { _type = value; }
-        }
-        
-        public string Caption
-        {
-            get { return _caption; }
-            set { _caption = value; }
-        }
+        public UIRequestType Type { get; set; }
 
-        public string Icon
-        {
-            get { return _icon; }
-            set { _icon = value; }
-        }
-	
-        public string ObjectId
-        {
-            get { return _objectId; }
-            set { _objectId = value; }
-        }
+        public string Caption { get; set; }
 
-        public bool IsSingleRecordEdit
-        {
-            get { return _isSingleRecordEdit; }
-            set { _isSingleRecordEdit = value; }
-        }
+        public string Icon { get; set; }
 
-        public bool RequestCurrentRecordId
-        {
-            get { return _requestCurrentRecordId; }
-            set { _requestCurrentRecordId = value; }
-        }
+        public string ObjectId { get; set; }
 
-        public int DialogWidth
-        {
-            get { return _dialogWidth; }
-            set { _dialogWidth = value; }
-        }
+        public bool IsSingleRecordEdit { get; set; }
 
-        public int DialogHeight
-        {
-            get { return _dialogHeight; }
-            set { _dialogHeight = value; }
-        }
+        public bool RequestCurrentRecordId { get; set; }
 
-        public bool IsModalDialog
+        public int DialogWidth { get; set; }
+
+        public int DialogHeight { get; set; }
+
+        public bool IsModalDialog { get; set; } = false;
+
+        public bool InitializeStructure { get; set; }
+
+
+        public QueryParameterCollection QueryParameters
         {
-            get { return _isModalDialog; }
-            set { _isModalDialog = value; }
+            get
+            {
+                QueryParameterCollection qparams = new QueryParameterCollection();
+                foreach (DictionaryEntry entry in Parameters)
+                {
+                    qparams.Add(new QueryParameter((string) entry.Key, entry.Value));
+                }
+
+                return qparams;
+            }
         }
     }
 }
