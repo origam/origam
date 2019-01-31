@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.Extensions.Logging;
 using Origam.Server;
 using Origam.ServerCommon;
@@ -70,6 +71,18 @@ namespace Origam.ServerCore.Controllers
         }
 
         [HttpPost("[action]")]
+        public IActionResult Save([FromBody]SaveSessionData saveData)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                SessionStore ss = sessionObjects.SessionManager.GetSession(saveData.SessionId);
+                IList output = (IList)ss.ExecuteAction(SessionStore.ACTION_SAVE);
+                CallOrigamUserUpdate();
+                return Ok(output);
+            });
+        }
+
+        [HttpPost("[action]")]
         public IActionResult CreateRow([FromBody] NewRowData newRowData)
         {
             return RunWithErrorHandler(() =>
@@ -101,17 +114,6 @@ namespace Origam.ServerCore.Controllers
             });
         }
 
-        [HttpPost("[action]")]
-        public IActionResult SaveData([FromQuery]Guid sessionFormIdentifier)
-        {
-            return RunWithErrorHandler(() =>
-            {
-                SessionStore ss = sessionObjects.SessionManager.GetSession(sessionFormIdentifier);
-                IList output = (IList)ss.ExecuteAction(SessionStore.ACTION_SAVE);
-                CallOrigamUserUpdate();
-                return Ok(output);
-            });
-        }
 
         private IActionResult RunWithErrorHandler(Func<IActionResult> func)
         {
