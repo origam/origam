@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Origam.ServerCommon
 {
-    class UIException: Exception
+    public class UIException: Exception
     {
         public UIException(string message) : base(message)
         {
