@@ -25,6 +25,8 @@ using System.ComponentModel;
 using System.Collections;
 using Origam.Services;
 using Origam.Workbench.Services;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Origam.Schema.EntityModel
 {
@@ -631,18 +633,17 @@ namespace Origam.Schema.EntityModel
             GetStandardValues(ITypeDescriptorContext context)
         {
             DataStructureSortSetItem dataStructureSortSet = context.Instance as DataStructureSortSetItem;
-            DataStructureEntity dsEntity = dataStructureSortSet.Entity ?? dataStructureSortSet.ParentItem as DataStructureEntity;
-
-            ArrayList columns = dsEntity.EntityDefinition.EntityColumns;
-
-            ArrayList columnArray = new ArrayList(columns.Count);
-            foreach (IDataEntityColumn column in columns)
+            if (dataStructureSortSet.Entity == null)
             {
-                columnArray.Add(column.Name);
+                return null;
             }
-
+            DataStructureEntity DataEntity = dataStructureSortSet.Entity;
+            IEnumerable<DataStructureColumn> childitem = DataEntity.ChildItemsByType(DataStructureColumn.ItemTypeConst).Cast<DataStructureColumn>();
+            IEnumerable<DataStructureColumn> columnEntity = DataEntity.GetColumnsFromEntity().Cast<DataStructureColumn>();
+            ArrayList columnArray = new ArrayList();
+            columnArray.AddRange(childitem.Select(x => x.Name).ToList());
+            columnArray.AddRange(columnEntity.Select(x => x.Name).ToList());
             columnArray.Sort();
-
             return new StandardValuesCollection(columnArray);
         }
 
@@ -659,14 +660,18 @@ namespace Origam.Schema.EntityModel
             if (value.GetType() == typeof(string))
             {
                 DataStructureSortSetItem dataStructureSortSet = context.Instance as DataStructureSortSetItem;
-                DataStructureEntity dsEntity = dataStructureSortSet.Entity ?? dataStructureSortSet.ParentItem as DataStructureEntity;
-
-                ArrayList columns = dsEntity.EntityDefinition.EntityColumns;
-
-                foreach (IDataEntityColumn item in columns)
+                if (dataStructureSortSet.Entity == null)
                 {
-                    if (item.Name == value.ToString())
-                        return item.Name;
+                    return null;
+                }
+                DataStructureEntity DataEntity = dataStructureSortSet.Entity;
+                IEnumerable<DataStructureColumn> childitem = DataEntity.ChildItemsByType(DataStructureColumn.ItemTypeConst).Cast<DataStructureColumn>();
+                IEnumerable<DataStructureColumn> columnEntity = DataEntity.GetColumnsFromEntity().Cast<DataStructureColumn>();
+                int count = childitem.Where(x => x.Name == value.ToString()).ToList().Count();
+                count += columnEntity.Where(x => x.Name == value.ToString()).ToList().Count();
+                if(count!=0)
+                {
+                    return value.ToString();
                 }
                 return null;
             }
