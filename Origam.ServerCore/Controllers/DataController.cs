@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -111,6 +112,7 @@ namespace Origam.ServerCore.Controllers
                 .OnSuccess(entityData => MakeEmptyRow(entityData.Entity))
                 .OnSuccess(rowData => FillRow(entityInsertData, rowData))
                 .OnSuccess(SubmitChange)
+                .OnSuccess(ThrowAwayReturnData)
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
 
@@ -131,7 +133,13 @@ namespace Origam.ServerCore.Controllers
                         rowData.Row.Delete();
                         return SubmitChange(rowData);
                     })
+                    .OnSuccess(ThrowAwayReturnData)
                     .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+        }
+
+        private IActionResult ThrowAwayReturnData(IActionResult arg)
+        {
+            return Ok();
         }
 
         class EntityData
@@ -347,7 +355,7 @@ namespace Origam.ServerCore.Controllers
                 }
                 return Conflict(ex.Message);
             }
-            return Ok();
+            return Ok(rowData.Row);
         }
 
         private IActionResult ToActionResult(object obj)
