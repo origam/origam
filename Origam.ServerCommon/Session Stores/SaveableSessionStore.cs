@@ -95,7 +95,7 @@ namespace Origam.Server
         {
             if (Data.HasErrors)
             {
-                throw new Exception(Resources.ErrorInForm);
+                throw new UIException(Resources.ErrorInForm);
             }
             ArrayList listOfChanges = new ArrayList();
             IList<DataRow> changedRows = new List<DataRow>();

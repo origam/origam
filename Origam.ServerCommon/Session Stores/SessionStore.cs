@@ -1073,7 +1073,7 @@ namespace Origam.Server
         {
             if (!data.Tables.Contains(entity))
             {
-                throw new Exception("Entity not found: " + entity);
+                throw new UIException("Entity not found: " + entity);
             }
 
             return data.Tables[entity];
