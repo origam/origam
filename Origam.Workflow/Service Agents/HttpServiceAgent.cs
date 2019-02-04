@@ -70,7 +70,11 @@ namespace Origam.Workflow
 						this.Parameters["ContentType"] as string,
 						this.Parameters["Headers"] as Hashtable,
 						timeout);
-					break;
+				    if (_result is IXmlContainer container)
+				    {
+				        _result = container.Xml;
+				    }
+				    break;
 
 				default:
 					throw new ArgumentOutOfRangeException("MethodName", this.MethodName, ResourceUtils.GetString("InvalidMethodName"));
