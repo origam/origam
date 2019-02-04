@@ -2199,7 +2199,7 @@ namespace Origam.Rule
 
 			string stringResult = result as string;
 			byte[] byteResult = result as byte[];
-            XmlDocument xmlResult = result as XmlDocument;
+            IXmlContainer xmlResult = result as IXmlContainer;
 
 			if(stringResult != null)
 			{
@@ -2211,7 +2211,7 @@ namespace Origam.Rule
 			}
             else if (xmlResult != null)
             {
-                return xmlResult.OuterXml;
+                return xmlResult.Xml.OuterXml;
             }
 			else
 			{

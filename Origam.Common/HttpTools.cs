@@ -267,12 +267,12 @@ namespace Origam
 							// because sometimes it is not present
 							// but we have the encoding in the XML header, so we take
 							// it from there
-							System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+							IXmlContainer container = new XmlContainer();
 							if (response.ContentLength != 0)
 							{
-								doc.Load(responseStream);
+								container.Xml.Load(responseStream);
 							}
-							return doc;
+							return container;
 						}
 						else if (httpResponse != null && response.ContentType.StartsWith("text/"))
 						{
