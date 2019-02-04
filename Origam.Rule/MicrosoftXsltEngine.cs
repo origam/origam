@@ -116,10 +116,10 @@ namespace Origam.Rule
                     foreach (DictionaryEntry param in parameters)
                     {
                         object val = param.Value;
-                        if (param.Value is XmlDocument)
+                        if (param.Value is IXmlContainer xmlContainer)
                         {
                             XPathDocument paramXpathDoc = new XPathDocument(
-                                new XmlNodeReader(param.Value as XmlDocument));
+                                new XmlNodeReader(xmlContainer.Xml));
                             XPathNavigator nav = paramXpathDoc.CreateNavigator();
                             XPathNodeIterator iterator = nav.Select("/");
                             val = iterator;
@@ -136,14 +136,13 @@ namespace Origam.Rule
                         if (this.Trace)
                         {
                             string traceValue;
-                            if (param.Value is XmlDocument)
+                            if (param.Value is IXmlContainer traceXmlContainer)
                             {
-                                XmlDocument xmlDoc = param.Value as XmlDocument;
                                 StringBuilder sb = new StringBuilder();
                                 sb.Append("AS:ToXml(&apos;");
                                 StringWriter sw = new StringWriter(sb);
                                 XmlTextWriter xtw = new XmlTextWriter(sw);
-                                xmlDoc.Save(xtw);
+                                traceXmlContainer.Xml.Save(xtw);
                                 sb.Append("&apos;)");
                                 traceValue = sb.ToString();
                                 if (traceValue == "AS:ToXml(&apos;&apos;)")
@@ -175,7 +174,6 @@ namespace Origam.Rule
                         }
                     }
                 }
-
                 if (this.Trace)
                 {
                     StringBuilder b = new StringBuilder();
@@ -185,13 +183,9 @@ namespace Origam.Rule
                     data.Xml.WriteTo(xwr);
                     xwr.Close();
                     swr.Close();
-
                     TracingService.TraceStep(this.TraceWorkflowId, this.TraceStepName, this.TraceStepId, "Transformation Service", "Input", null, b.ToString(), traceParameters.ToString(), null);
-
                 }
-
                 XPathDocument sourceXpathDoc = new XPathDocument(new XmlNodeReader(data.Xml));
-
                 try
                 {
                     if (this.Trace && resultDoc is IDataDocument) 
@@ -249,7 +243,6 @@ namespace Origam.Rule
                 {
                     TracingService.TraceStep(this.TraceWorkflowId, this.TraceStepName, this.TraceStepId, "Transformation Service", "Error", null, null, null, ex.Message);
                 }
-
                 throw;
             }
             catch (Exception ex)
@@ -258,11 +251,9 @@ namespace Origam.Rule
                 {
                     TracingService.TraceStep(this.TraceWorkflowId, this.TraceStepName, this.TraceStepId, "Transformation Service", "Error", null, null, null, ex.Message);
                 }
-
                 string innerMessage = (ex.InnerException == null ? ex.Message : (ex.InnerException.InnerException == null ? ex.InnerException.Message : (ex.InnerException.InnerException.InnerException == null ? ex.InnerException.InnerException.Message : ex.InnerException.InnerException.InnerException.Message)));
                 throw new Exception(innerMessage, ex);
             }
-
             return resultDoc;
         }
         internal override void Transform(
