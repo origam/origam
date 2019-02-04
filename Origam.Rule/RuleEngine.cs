@@ -4131,9 +4131,9 @@ namespace Origam.Rule
 #endregion
 
 #region Rule Evaluators
-		private object EvaluateRule(XPathRule rule, IDataDocument context, XPathNodeIterator contextPosition)
+		private object EvaluateRule(XPathRule rule, IXmlContainer context, XPathNodeIterator contextPosition)
 		{
-			if(context == null && context.Xml == null)
+			if(context?.Xml == null)
 			{
 				throw new NullReferenceException(ResourceUtils.GetString("ErrorEvaluateContextNull"));
 			}

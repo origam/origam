@@ -228,7 +228,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				string entityName = (string)entry.Key;
 				string identifier = table.PrimaryKey[0].ColumnName;
 				string lookupCacheKey = DatabaseTableName(table);
-			    string dataStructureEntityId = table.ExtendedProperties["Id"].ToString();
+			    string dataStructureEntityId = table.ExtendedProperties["EntityId"].ToString();
 
 				XmlElement dataSourceElement =
 				    AddDataSourceElement(dataSourcesElement, entityName,  identifier, lookupCacheKey, dataStructureEntityId);
