@@ -1073,7 +1073,7 @@ namespace Origam.Server
             return GetTooltip(id, tooltips).Xml;
         }
 
-        private static IDataDocument GetTooltip(object id, ArrayList tooltips)
+        private static IXmlContainer GetTooltip(object id, ArrayList tooltips)
         {
             tooltips.Sort();
 
@@ -1103,7 +1103,7 @@ namespace Origam.Server
             IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
             IXsltEngine transformer = AsTransform.GetXsltEngine(
                 XsltEngineType.XslTransform, persistence.SchemaProvider);
-            IDataDocument result = transformer.Transform(DataDocumentFactory.New(data), tooltip.TooltipTransformationId, new Hashtable(), new RuleEngine(null, null), null, false);
+            IXmlContainer result = transformer.Transform(DataDocumentFactory.New(data), tooltip.TooltipTransformationId, new Hashtable(), new RuleEngine(null, null), null, false);
 
             return result;
         }

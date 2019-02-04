@@ -39,7 +39,7 @@ namespace Origam.Workflow
 		{
 		}
 
-		private void PrintReport(Guid reportId, IDataDocument data, string printerName, int copies, Hashtable parameters)
+		private void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters)
 		{
             AbstractReport report = GetReport(reportId);
             IReportService service = GetService(report);
@@ -47,7 +47,7 @@ namespace Origam.Workflow
             service.PrintReport(reportId, data, printerName, copies, parameters);
 		}
 
-		private object GetReport(Guid reportId, IDataDocument data, string format, Hashtable parameters)
+		private object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters)
 		{
             AbstractReport report = GetReport(reportId);
             IReportService service = GetService(report);
@@ -122,7 +122,7 @@ namespace Origam.Workflow
 						throw new InvalidCastException(ResourceUtils.GetString("ErrorNotHashtable"));
 
 					PrintReport((Guid)this.Parameters["Report"],
-						this.Parameters["Data"] as IDataDocument,
+						this.Parameters["Data"] as IXmlContainer,
 						(string)this.Parameters["PrinterName"],
 						(int)this.Parameters["Copies"],
 						this.Parameters["Parameters"] as Hashtable);
@@ -134,11 +134,11 @@ namespace Origam.Workflow
 					if(! (this.Parameters["Report"] is Guid))
 						throw new InvalidCastException(ResourceUtils.GetString("ErrorReportNotGuid"));
 
-				    IDataDocument data = null;;
+				    IXmlContainer data = null;;
 					if (this.Parameters.Contains("Data")) {
-						if(! (this.Parameters["Data"] is IDataDocument | this.Parameters["Data"] == null))
+						if(! (this.Parameters["Data"] is IXmlContainer | this.Parameters["Data"] == null))
 							throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDocument"));
-						data = this.Parameters["Data"] as IDataDocument;
+						data = this.Parameters["Data"] as IXmlContainer;
 					}					
 
 					if(! (this.Parameters["Format"] is string | this.Parameters["Format"] == null))

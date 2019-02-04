@@ -43,7 +43,7 @@ namespace Origam.Workflow.Tasks
 		{
 			SetWorkflowPropertyTask setProperty = this.Step as SetWorkflowPropertyTask;
 
-		    IDataDocument data = this.Engine.RuleEngine.GetXmlDocumentFromData(setProperty.ContextStore);
+		    IXmlContainer data = this.Engine.RuleEngine.GetXmlDocumentFromData(setProperty.ContextStore);
 
 			if(setProperty.Transformation != null)
 			{

@@ -1949,7 +1949,7 @@ namespace Origam.Rule
 
 		public XPathNodeIterator NextStates(string entityId, string fieldId, string currentStateValue, XPathNodeIterator row)
 		{
-		    IDataDocument doc = DataDocumentFactory.New();
+            IXmlContainer doc = new XmlContainer();
 			XmlElement el = doc.Xml.CreateElement("row");
 			doc.Xml.AppendChild(el);
 			
@@ -2259,7 +2259,7 @@ namespace Origam.Rule
 		{
 			try
 			{
-			    IDataDocument xmlData = GetXmlDocumentFromData(data);
+			    IXmlContainer xmlData = GetXmlDocumentFromData(data);
 
 				if(rule is XPathRule) return EvaluateRule(rule as XPathRule, xmlData, contextPosition);
 				if(rule is XslRule) return EvaluateRule(rule as XslRule, xmlData);
@@ -2296,8 +2296,8 @@ namespace Origam.Rule
 
 		public RuleExceptionDataCollection EvaluateEndRule(IEndRule rule, object data, Hashtable parameters)
 		{
-		    IDataDocument context = GetXmlDocumentFromData(data);
-		    IDataDocument result = null;
+		    IXmlContainer context = GetXmlDocumentFromData(data);
+		    IXmlContainer result = null;
 
 			try
 			{
@@ -3994,9 +3994,9 @@ namespace Origam.Rule
 			}
 		}
 
-        public IDataDocument GetXmlDocumentFromData(object inputData)
+        public IXmlContainer GetXmlDocumentFromData(object inputData)
 		{
-            IDataDocument doc = inputData as IDataDocument;
+		    IXmlContainer doc = inputData as XmlContainer;
             if (doc != null)
             {
                 return doc;
@@ -4007,10 +4007,10 @@ namespace Origam.Rule
 				// Get the rule's context store
 				data = GetContext(contextStore);
 			}
-		    XmlDocument xmlDocument = data as XmlDocument;
+		    IXmlContainer xmlDocument = data as IXmlContainer;
 			if(xmlDocument != null)
 			{
-				doc = DataDocumentFactory.New(xmlDocument);
+				doc = xmlDocument;
 			}
 			else
 			{
@@ -4040,13 +4040,13 @@ namespace Origam.Rule
 				}
 				else if(data == null)
 				{
-					doc = DataDocumentFactory.New();
+					doc = new XmlContainer();
 					doc.Xml.LoadXml("<ROOT/>");
 					return doc;
 				}
 				else if (data is ArrayList)
 				{
-					doc = DataDocumentFactory.New();
+					doc = new XmlContainer();
 					XmlElement root = (XmlElement)doc.Xml.AppendChild(doc.Xml.CreateElement("ROOT"));
 					foreach (object item in data as ArrayList)
 					{
@@ -4059,7 +4059,7 @@ namespace Origam.Rule
 					data = data.ToString();
 				}
 
-				doc = DataDocumentFactory.New();
+				doc = new XmlContainer();
 				doc.Xml.LoadXml("<ROOT><value /></ROOT>");
                 doc.Xml.FirstChild.FirstChild.InnerText = (string)data;
 			}
@@ -4323,11 +4323,11 @@ namespace Origam.Rule
 		}
 
 
-		private object EvaluateRule(XslRule rule, IDataDocument context)
+		private object EvaluateRule(XslRule rule, IXmlContainer context)
 		{
 			try
 			{
-			    IDataDocument result = _transformer.Transform(context, rule.Id, null, this, rule.Structure, false);
+			    IXmlContainer result = _transformer.Transform(context, rule.Id, null, this, rule.Structure, false);
 
 				return result;
 			}

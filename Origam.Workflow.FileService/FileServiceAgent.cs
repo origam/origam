@@ -39,7 +39,7 @@ namespace Origam.Workflow.FileService
         private object _result;
         private static readonly log4net.ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IDataDocument ReadDelimitedFile(TextReader reader, XmlDocument optionsXml, string entity)
+        private IXmlContainer ReadDelimitedFile(TextReader reader, XmlDocument optionsXml, string entity)
         {
             DataSet data = CreateEmptyOutputData();
             DataTable dt = data.Tables[entity];
@@ -141,7 +141,7 @@ namespace Origam.Workflow.FileService
             DatasetTools.ApplyPrimaryKey(e.Row);
         }
 
-        private IDataDocument ReadFile(string fileName, XmlDocument optionsXml, 
+        private IXmlContainer ReadFile(string fileName, XmlDocument optionsXml, 
             string entity, object file, string encodingName)
         {
             string stringFile = file as string;

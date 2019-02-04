@@ -73,7 +73,7 @@ namespace Origam.Workflow
 					}
 
 					// Check input parameters
-					if(! (this.Parameters["Data"] is IDataDocument))
+					if(! (this.Parameters["Data"] is IXmlContainer))
 						throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDocument"));
 
 					if(! (this.Parameters["XslScript"] is Guid))
@@ -83,7 +83,7 @@ namespace Origam.Workflow
 						throw new InvalidCastException(ResourceUtils.GetString("ErrorNotHashtable"));
                     InitializeTransformer((Guid)Parameters["XslScript"]);
 					_result = 
-						_transformer.Transform(this.Parameters["Data"] as IDataDocument,
+						_transformer.Transform(this.Parameters["Data"] as IXmlContainer, 
 						(Guid)this.Parameters["XslScript"],
 						this.Parameters["Parameters"] as Hashtable,
 						this.RuleEngine as RuleEngine,
@@ -125,7 +125,7 @@ namespace Origam.Workflow
                 validateOnly = true;
             }
             _result = _transformer.Transform(
-                Parameters["Data"] as IDataDocument,
+                Parameters["Data"] as IXmlContainer, 
                 (string)Parameters["XslScript"],
                 Parameters["Parameters"] as Hashtable,
                 RuleEngine as RuleEngine,

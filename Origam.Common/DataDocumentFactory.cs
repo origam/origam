@@ -6,14 +6,6 @@ namespace Origam
 {
     public class DataDocumentFactory
     {
-        public static IDataDocument New()
-        {
-#if NETSTANDARD
-            return new DataDocumentCore();
-# else
-            return new DataDocumentFx();
-#endif
-        }
         public static IDataDocument New(XmlDocument xmlDoc)
         {
 #if NETSTANDARD

@@ -14,7 +14,7 @@ namespace Origam.Gui
         public static object[] AddTemplateRecord(DataRow parentRow, DataStructureTemplate template, string dataMember, Guid dataStructureId, DataSet formData)
         {
             object[] templatePosition = null;
-            IDataDocument doc;
+            IXmlContainer doc;
 
             if (parentRow == null)
             {
@@ -49,7 +49,7 @@ namespace Origam.Gui
             return templatePosition;
         }
 
-        private static object[] AddTemplateRecord(string dataMember, DataStructureTemplate template, IDataDocument dataSource, Guid dataStructureId, DataSet formData)
+        private static object[] AddTemplateRecord(string dataMember, DataStructureTemplate template, IXmlContainer dataSource, Guid dataStructureId, DataSet formData)
         {
             if (template == null) throw new NullReferenceException(ResourceUtils.GetString("ErrorNoTemplate"));
             if (dataMember != template.Entity.Name)
@@ -63,14 +63,14 @@ namespace Origam.Gui
             return DatasetTools.PrimaryKey(newData.Tables[template.Entity.Name].Rows[0]);
         }
 
-        public static DataSet NewRecord(DataStructureTemplate template, IDataDocument dataSource, Guid dataStructureId)
+        public static DataSet NewRecord(DataStructureTemplate template, IXmlContainer dataSource, Guid dataStructureId)
         {
             XslTransformation xslt = (template as DataStructureTransformationTemplate).Transformation as XslTransformation;
             IDataStructure outputStructure = xslt.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(dataStructureId)) as IDataStructure;
 
             IXsltEngine transform = AsTransform.GetXsltEngine(
                 xslt.XsltEngineType, template.PersistenceProvider);
-            IDataDocument result = transform.Transform(dataSource, xslt.TextStore, null, new RuleEngine(null, null), outputStructure, false);
+            IXmlContainer result = transform.Transform(dataSource, xslt.TextStore, null, new RuleEngine(null, null), outputStructure, false);
 
             if (result is IDataDocument)
             {

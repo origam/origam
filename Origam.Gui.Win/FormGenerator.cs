@@ -1031,7 +1031,7 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public DataSet NewRecord(IDataDocument dataSource)
+		public DataSet NewRecord(IXmlContainer dataSource)
 		{
 			if(DefaultTemplate == null) return null;
 

@@ -51,7 +51,7 @@ namespace Origam
 
         }
 
-        public IDataDocument Clone()
+        public object Clone()
         {
             return new DataDocumentCore(dataSet);
         }

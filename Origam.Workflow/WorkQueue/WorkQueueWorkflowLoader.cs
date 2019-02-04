@@ -118,7 +118,7 @@ namespace Origam.Workflow.WorkQueue
 			if (_resultIterator.MoveNext())
 			{
 				if(_resultIterator.CurrentPosition > _resultIterator.Count) return null;
-			    IDataDocument document = DataDocumentFactory.New(XmlTools.GetXmlSlice(_resultIterator));
+			    IXmlContainer document = DataDocumentFactory.New(XmlTools.GetXmlSlice(_resultIterator));
 				WorkQueueAdapterResult result = new WorkQueueAdapterResult(document);
 				result.State = _resultState;
 				result.Attachments = new WorkQueueAttachment[attachmentTable.Rows.Count];

@@ -30,12 +30,12 @@ namespace Origam.Workflow.WorkQueue
 	/// </summary>
 	public class WorkQueueAdapterResult
 	{
-	    public WorkQueueAdapterResult(IDataDocument document)
+	    public WorkQueueAdapterResult(IXmlContainer document)
 		{
 			this.Document = document;
 		}
 
-		public IDataDocument Document { get; set; }
+		public IXmlContainer Document { get; set; }
 
 	    private WorkQueueAttachment[] _attachments;
 		public WorkQueueAttachment[] Attachments

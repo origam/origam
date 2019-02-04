@@ -13,11 +13,6 @@ namespace Origam
     {
         private readonly XmlDataDocument xmlDataDocument;
 
-        public DataDocumentFx()
-        {
-            xmlDataDocument = new XmlDataDocument();
-        }
-
         public DataDocumentFx(DataSet dataSet)
         {
             xmlDataDocument = new XmlDataDocument(dataSet);
@@ -41,7 +36,7 @@ namespace Origam
             xmlDataDocument.Load(xmlNodeReader);
         }
 
-        public IDataDocument Clone()
+        public object Clone()
         {
             return new DataDocumentFx(xmlDataDocument);
         }

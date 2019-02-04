@@ -52,7 +52,7 @@ namespace Origam.BI.Excel
         {
         }
 
-        public object GetReport(Guid reportId, IDataDocument data, string format,
+        public object GetReport(Guid reportId, IXmlContainer data, string format,
             Hashtable parameters, string dbTransaction)
         {
             if(format != DataReportExportFormatType.MSExcel.ToString())
@@ -204,7 +204,7 @@ namespace Origam.BI.Excel
         }
 
         private static OrigamSpreadsheet GetSpreadsheetData(AbstractDataReport report,
-            IDataDocument data, Hashtable parameters, string dbTransaction)
+            IXmlContainer data, Hashtable parameters, string dbTransaction)
         {
             IDataDocument xmlDataDoc =
                 ReportHelper.LoadOrUseReportData(report, data, parameters, dbTransaction);
@@ -222,7 +222,8 @@ namespace Origam.BI.Excel
                     persistence.SchemaProvider, report.TransformationId);
                 RuleEngine ruleEngine = new RuleEngine(null, null);
                 IDataDocument resultDoc = transformer.Transform(xmlDataDoc,
-                    report.TransformationId, parameters, ruleEngine, outputDs, false);
+                    report.TransformationId, parameters, ruleEngine, outputDs, false)
+                    as IDataDocument;
                 spreadsheetData = resultDoc.DataSet as OrigamSpreadsheet;
             }
             else
@@ -236,7 +237,7 @@ namespace Origam.BI.Excel
             return spreadsheetData;
         }
 
-        public void PrintReport(Guid reportId, IDataDocument data,
+        public void PrintReport(Guid reportId, IXmlContainer data,
             string printerName, int copies, Hashtable parameters)
         {
             throw new NotSupportedException();

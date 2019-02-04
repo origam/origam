@@ -34,7 +34,7 @@ namespace Origam.Mail
         {
         }
 
-        public override int SendMail(IDataDocument mailDocument, string server, int port)
+        public override int SendMail(IXmlContainer mailDocument, string server, int port)
         {
             //return Value positive number (include 0zero) indicates OK result, negative -1 means error
             int retVal = 0;

@@ -63,7 +63,7 @@ namespace Origam.Workflow.Tasks
 			}
 
 			// 1. get a value from XPath and XPathContextStore
-			IDataDocument xPathXMLDoc = this.Engine.RuleEngine.GetXmlDocumentFromData(updateTask.XPathContextStore);
+			IXmlContainer xPathXMLDoc = this.Engine.RuleEngine.GetXmlDocumentFromData(updateTask.XPathContextStore);
 			string val = (string) this.Engine.RuleEngine.EvaluateContext(updateTask.ValueXPath, xPathXMLDoc, OrigamDataType.String, null);
 			
 			DataStructureRuleSet ruleSet = null;

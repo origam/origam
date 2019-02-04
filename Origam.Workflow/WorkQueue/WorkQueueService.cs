@@ -194,7 +194,7 @@ namespace Origam.Workflow.WorkQueue
                 wqc.WorkQueueStructureSortSetId, transactionId, parameters);
         }
 
-        public Guid WorkQueueAdd(string workQueueName, IDataDocument data, string transactionId)
+        public Guid WorkQueueAdd(string workQueueName, IXmlContainer data, string transactionId)
         {
             Guid workQueueId = GetQueueId(workQueueName);
             string workQueueClass = WQClassName(workQueueId);
@@ -203,7 +203,7 @@ namespace Origam.Workflow.WorkQueue
             return WorkQueueAdd(workQueueClass, workQueueName, workQueueId, condition, data, null, transactionId);
         }
 
-        public Guid WorkQueueAdd(string workQueueName, IDataDocument data, WorkQueueAttachment[] attachments, string transactionId)
+        public Guid WorkQueueAdd(string workQueueName, IXmlContainer data, WorkQueueAttachment[] attachments, string transactionId)
         {
             Guid workQueueId = GetQueueId(workQueueName);
             string workQueueClass = WQClassName(workQueueId);
@@ -212,12 +212,12 @@ namespace Origam.Workflow.WorkQueue
             return WorkQueueAdd(workQueueClass, workQueueName, workQueueId, condition, data, attachments, transactionId);
         }
 
-        public Guid WorkQueueAdd(string workQueueClass, string workQueueName, Guid workQueueId, string condition, IDataDocument data, string transactionId)
+        public Guid WorkQueueAdd(string workQueueClass, string workQueueName, Guid workQueueId, string condition, IXmlContainer data, string transactionId)
         {
             return WorkQueueAdd(workQueueClass, workQueueName, workQueueId, condition, data, null, transactionId);
         }
 
-        public Guid WorkQueueAdd(string workQueueClass, string workQueueName, Guid workQueueId, string condition, IDataDocument data, WorkQueueAttachment[] attachments, string transactionId)
+        public Guid WorkQueueAdd(string workQueueClass, string workQueueName, Guid workQueueId, string condition, IXmlContainer data, WorkQueueAttachment[] attachments, string transactionId)
         {
             if (log.IsDebugEnabled)
             {
@@ -303,7 +303,7 @@ namespace Origam.Workflow.WorkQueue
                 }
 
                 // notification source
-                IDataDocument notificationSource;
+                IXmlContainer notificationSource;
                 if (wqc.NotificationStructure == null)
                 {
                     if (log.IsDebugEnabled)
@@ -488,7 +488,7 @@ namespace Origam.Workflow.WorkQueue
         /// <returns>Xml containing in the first row of the first table non-empty fields named "Body" and "Subject"</returns>
         public IDataDocument GenerateNotificationMessage(
                 Guid notificationTemplateId
-                , IDataDocument notificationSource
+                , IXmlContainer notificationSource
                 , DataRow recipientRow
                 , DataRow workQueueRow
                 , string transactionId
@@ -541,7 +541,7 @@ namespace Origam.Workflow.WorkQueue
         }
 
         private OrigamNotificationContactData GetNotificationContacts(Guid workQueueNotificationContactTypeId,
-            Guid origamNotificationChannelTypeId, string value, IDataDocument context,
+            Guid origamNotificationChannelTypeId, string value, IXmlContainer context,
             DataRow workQueueRow, string transactionId)
         {
             OrigamNotificationContactData result = new OrigamNotificationContactData();
@@ -576,7 +576,7 @@ namespace Origam.Workflow.WorkQueue
             return result;
         }
 
-        private void WorkQueueRowFill(WorkQueueClass wqc, RuleEngine ruleEngine, DataRow row, IDataDocument data)
+        private void WorkQueueRowFill(WorkQueueClass wqc, RuleEngine ruleEngine, DataRow row, IXmlContainer data)
         {
             foreach (WorkQueueClassEntityMapping em in wqc.EntityMappings)
             {
@@ -764,7 +764,7 @@ namespace Origam.Workflow.WorkQueue
                 // record could have been deleted in the meantime, we test
                 if (originalRecord.Tables[0].Rows.Count > 0)
                 {
-                    IDataDocument data = DataDocumentFactory.New(DatasetTools.GetRowXml(originalRecord.Tables[0].Rows[0], DataRowVersion.Default));
+                    IXmlContainer data = DataDocumentFactory.New(DatasetTools.GetRowXml(originalRecord.Tables[0].Rows[0], DataRowVersion.Default));
 
                     // update entry from record
                     WorkQueueRowFill(wqc, ruleEngine, entry, data);

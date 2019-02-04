@@ -87,7 +87,7 @@ namespace Origam.BI
 
                 IXsltEngine transformer = AsTransform.GetXsltEngine(persistence.SchemaProvider, xslValueParam.transformationId);
 
-                IDataDocument xmlData = DataDocumentFactory.New();
+                IXmlContainer xmlData = new XmlContainer();
                 xmlData.Xml.LoadXml("<ROOT/>");
 
                 if (traceTaskInfo != null)
@@ -98,7 +98,7 @@ namespace Origam.BI
                     transformer.SetTraceTaskInfo(traceTaskInfo);
                 }
 
-                IDataDocument result = transformer.Transform(xmlData,
+                IXmlContainer result = transformer.Transform(xmlData,
                     xslValueParam.transformationId,
                     Guid.Empty, transformParams, null, ruleEngine, null, false);
 
@@ -193,7 +193,7 @@ namespace Origam.BI
 			return report;
 		}
 
-		public static string ResolveLanguage(IDataDocument doc, AbstractDataReport reportElement)
+		public static string ResolveLanguage(IXmlContainer doc, AbstractDataReport reportElement)
 		{
 			if (string.IsNullOrEmpty(reportElement.LocaleXPath)) return null;
 			RuleEngine ruleEngine = new RuleEngine(null, null);
@@ -205,7 +205,7 @@ namespace Origam.BI
 		}
 
 		public static IDataDocument LoadOrUseReportData(AbstractDataReport r,
-		    IDataDocument data, Hashtable parameters, string dbTransaction)
+		    IXmlContainer data, Hashtable parameters, string dbTransaction)
 		{
 			if (data == null && r.DataStructure != null)
 			{
@@ -222,15 +222,11 @@ namespace Origam.BI
                     r.DataStructureMethodId, Guid.Empty, 
                     r.DataStructureSortSetId, dbTransaction, qp));
 			}
-//			else if (data is XmlDataDocument)
-//			{
-//				return data as XmlDataDocument;
-//			}
-//			else
-//			{
-//				throw new ArgumentOutOfRangeException("data", data, ResourceUtils.GetString("OnlyXmlDocSupported"));
-//			}		
-		    return data;
+			if (data is IDataDocument)
+			{
+				return data as IDataDocument;
+			}
+		    throw new ArgumentOutOfRangeException("data", data, ResourceUtils.GetString("OnlyXmlDocSupported"));	
 		}
 	}	
 }

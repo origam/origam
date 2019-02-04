@@ -107,7 +107,7 @@ namespace Origam.Workflow
             }
             _result = wqs.GenerateNotificationMessage(
                 (Guid)this.Parameters["NotificationTemplateId"]
-                , this.Parameters["NotificationSource"] as IDataDocument
+                , this.Parameters["NotificationSource"] as IXmlContainer
                 , (recipientDataDS == null) ? null : recipientDataDS.OrigamNotificationContact[0],
                 null,
                 this.TransactionId);
@@ -162,7 +162,7 @@ namespace Origam.Workflow
                 }
             }
 
-            wqs.WorkQueueAdd(this.Parameters["QueueName"] as String, this.Parameters["Data"] as IDataDocument, attachments, this.TransactionId);
+            wqs.WorkQueueAdd(this.Parameters["QueueName"] as String, this.Parameters["Data"] as IXmlContainer, attachments, this.TransactionId);
             _result = null;
         }
     }

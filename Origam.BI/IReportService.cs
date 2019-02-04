@@ -30,7 +30,7 @@ namespace Origam.BI
 	/// </summary>
 	public interface IReportService : ITracable
     {
-		void PrintReport(Guid reportId, IDataDocument data, string printerName, int copies, Hashtable parameters);
-		object GetReport(Guid reportId, IDataDocument data, string format, Hashtable parameters, string dbTransaction);
+		void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters);
+		object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters, string dbTransaction);
 	}
 }

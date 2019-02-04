@@ -899,7 +899,7 @@ namespace Origam.Workbench.Editors
 
 		private void btnTransform_Click(object sender, EventArgs e)
 		{
-		    IDataDocument result = this.Transform(txtText.Text, txtSource.Text, false);
+		    IXmlContainer result = this.Transform(txtText.Text, txtSource.Text, false);
 
 			string resultText = GetFormattedXml(result.Xml);
 					
@@ -915,19 +915,19 @@ namespace Origam.Workbench.Editors
 				{
 					grdResult.DataSource = (result as IDataDocument).DataSet;
 				}
-//				else
-//				{
-//					DataSet data = new DataSet();
-//					data.ReadXml(new XmlNodeReader(result.Xml));
-//					grdResult.DataSource = data;
-//				}
+				else
+				{
+					DataSet data = new DataSet();
+					data.ReadXml(new XmlNodeReader(result.Xml));
+					grdResult.DataSource = data;
+				}
 			}
 			catch{}
 
 			tabControl.SelectedTab = tabResult;
 		}
 
-		private IDataDocument Transform(string xslt, string sourceXml, bool validateOnly)
+		private IXmlContainer Transform(string xslt, string sourceXml, bool validateOnly)
 		{
             Workbench.Commands.ViewOutputPad outputPad =
                 new Workbench.Commands.ViewOutputPad();
@@ -965,18 +965,22 @@ namespace Origam.Workbench.Editors
 				Hashtable parameterValues = GetParameterValues(xsltParams);
 				transformer.Parameters.Add("Parameters", parameterValues);
 				transformer.Run();
-			    IDataDocument result = transformer.Result as IDataDocument;
-				if(result == null) return DataDocumentFactory.New();
+			    IXmlContainer result = transformer.Result as IXmlContainer;
+			    if (result == null) return new XmlContainer();
 
 				// rule handling
 				DataStructureRuleSet ruleSet = cboRuleSet.SelectedItem as DataStructureRuleSet;
-				if(result.DataSet.HasErrors == false && ruleSet != null)
-				{
-					RuleEngine re = new RuleEngine(null, null);
-					re.ProcessRules(result, ruleSet, null);
-				}
-				return result;
-			}
+			    IDataDocument dataDoc = result as IDataDocument;
+			    if (dataDoc != null)
+			    {
+			        if (dataDoc.DataSet.HasErrors == false && ruleSet != null)
+			        {
+			            RuleEngine re = new RuleEngine(null, null);
+			            re.ProcessRules(dataDoc, ruleSet, null);
+			        }
+			    }
+			    return result;
+            }
 			catch(Exception ex)
 			{
 				StringBuilder sb = new StringBuilder();

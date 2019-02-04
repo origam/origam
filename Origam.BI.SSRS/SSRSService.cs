@@ -41,7 +41,7 @@ namespace Origam.BI.SSRS
         private static readonly ILog log = LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
-		public object GetReport(Guid reportId, IDataDocument data, string format, 
+		public object GetReport(Guid reportId, IXmlContainer data, string format, 
             Hashtable parameters, string dbTransaction)
         {
 			IPersistenceService persistenceService = ServiceManager.Services
@@ -116,7 +116,7 @@ namespace Origam.BI.SSRS
             return result;
         }
 
-		public void PrintReport(Guid reportId, IDataDocument data, string printerName, 
+		public void PrintReport(Guid reportId, IXmlContainer data, string printerName, 
             int copies, Hashtable parameters)
 		{
 			throw new NotSupportedException();

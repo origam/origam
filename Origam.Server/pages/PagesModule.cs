@@ -411,7 +411,7 @@ namespace Origam.Server.Pages
             }
 
             System.IO.StreamReader reader = new System.IO.StreamReader(context.Request.InputStream, context.Request.ContentEncoding);
-            IDataDocument doc = DataDocumentFactory.New();
+            IXmlContainer doc = new XmlContainer();
             DataSet data = null;
             WorkflowPage wfPage = page as WorkflowPage;
             XsltDataPage dataPage = page as XsltDataPage;
@@ -476,7 +476,7 @@ namespace Origam.Server.Pages
                             }
                             if (data == null)
                             {
-                                doc = DataDocumentFactory.New(xd);
+                                doc = new XmlContainer(xd);
                             }
                             else
                             {                                
@@ -515,14 +515,14 @@ namespace Origam.Server.Pages
             }
         }
 
-        private static void GetEmptyData(ref IDataDocument doc,
+        private static void GetEmptyData(ref IXmlContainer doc,
                 ref DataSet data, DataStructure ds,
                 Dictionary<string, object> mappedParameters)
         {
             GetEmptyData(ref doc, ref data, ds, mappedParameters, null);
         }
 
-        private static void GetEmptyData(ref IDataDocument doc,
+        private static void GetEmptyData(ref IXmlContainer doc,
                 ref DataSet data, DataStructure ds,
                 Dictionary<string, object> mappedParameters,
                 DataStructureDefaultSet defaultSet)

@@ -35,7 +35,7 @@ namespace Origam.Workflow.LcsHeliosService
             }
         }
 
-        private IDataDocument Browse(string serverName, string dbProfile, string userName, string password,
+        private IXmlContainer Browse(string serverName, string dbProfile, string userName, string password,
             int folderId, int templateNumber, string skipArguments)
         {
             ServiceGateConnector connector = ServiceGateConnector.Create(serverName);
@@ -57,7 +57,7 @@ namespace Origam.Workflow.LcsHeliosService
                 BrowseResponse response = request.Process(connector);
                 if (response.Data == null || response.Data.MainTable.Rows.Count == 0)
                 {
-                    IDataDocument emptyXml = DataDocumentFactory.New();
+                    IXmlContainer emptyXml = new XmlContainer();
                     emptyXml.Xml.LoadXml("<ROOT/>");
                     return emptyXml;
                 }

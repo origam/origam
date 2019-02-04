@@ -45,7 +45,7 @@ namespace Origam.Workflow.SimplicorService
 		}
 
 		#region Private Methods
-		private IDataDocument RecalculateWeightedAverage(PriceRecalculationData data)
+		private IXmlContainer RecalculateWeightedAverage(PriceRecalculationData data)
 		{
 			Hashtable inventory = new Hashtable();
 

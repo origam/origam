@@ -38,7 +38,7 @@ namespace Origam.Mail
 		{
 		}		
 
-		public override int SendMail(IDataDocument mailDocument, string server, int port)
+		public override int SendMail(IXmlContainer mailDocument, string server, int port)
 		{
             if (server == null)
             {

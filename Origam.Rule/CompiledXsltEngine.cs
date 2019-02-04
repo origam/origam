@@ -40,7 +40,7 @@ namespace Origam.Rule
 		}
 		#endregion
 
-        internal override object GetTransform(IDataDocument xslt)
+        internal override object GetTransform(IXmlContainer xslt)
         {
             XslCompiledTransform engine = new XslCompiledTransform();
             engine.Load(new XmlNodeReader(xslt.Xml), new XsltSettings(), new ModelXmlResolver());
@@ -56,7 +56,7 @@ namespace Origam.Rule
             return engine;
         }
 
-        public override void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, IDataDocument resultDoc)
+        public override void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, IXmlContainer resultDoc)
         {
             XslCompiledTransform xslt = engine as XslCompiledTransform;
             Mvp.Xml.Common.Xsl.XslReader xslReader = new Mvp.Xml.Common.Xsl.XslReader(xslt);

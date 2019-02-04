@@ -1,14 +1,17 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Xml;
 
 namespace Origam
 {
-    public interface IDataDocument
+    public interface IDataDocument: IXmlContainer
     {
-          XmlDocument Xml { get; }
-          DataSet DataSet { get; }
-          void Load(XmlNodeReader xmlNodeReader);
+         DataSet DataSet { get; }
+    }
 
-         IDataDocument Clone();
+    public interface IXmlContainer: ICloneable
+    {
+        XmlDocument Xml { get; }
+        void Load(XmlNodeReader xmlNodeReader);
     }
 }

@@ -63,21 +63,10 @@ namespace Origam.Server.Pages
 			return preprocessorParams;
 		}
 
-		protected static void Validate(IDataDocument data, Hashtable transformParams, RuleEngine ruleEngine, IEndRule validation)
+		protected static void Validate(IXmlContainer data, Hashtable transformParams, RuleEngine ruleEngine, IEndRule validation)
 		{
 			if (validation != null)
 			{
-//				XmlDocument inputData;
-//				if (data == null)
-//				{
-//					XmlDocument xmlRoot = new XmlDocument();
-//					xmlRoot.LoadXml("<ROOT/>");
-//					inputData = xmlRoot;
-//				}
-//				else
-//				{
-//					inputData = data;
-//				}
 				RuleExceptionDataCollection result =
 					ruleEngine.EvaluateEndRule(validation, data, transformParams);
 

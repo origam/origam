@@ -383,7 +383,7 @@ namespace Origam.Mail
             }
         }
 
-        public abstract int SendMail(IDataDocument mailDocument, string server, int port);
+        public abstract int SendMail(IXmlContainer mailDocument, string server, int port);
 
         public static string GetValue(XmlNode mailRoot, XmlNamespaceManager nsmgr, string where)
         {

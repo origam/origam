@@ -493,7 +493,7 @@ namespace Origam.Workflow
 							stores.Add(store.PrimaryKey, DataDocumentFactory.New(dataset));
 						} else if (store.Structure is XsdDataStructure)
 						{
-							stores.Add(store.PrimaryKey, DataDocumentFactory.New());
+							stores.Add(store.PrimaryKey, new XmlContainer());
 						} else if (store.Structure == null)
 						{
 							throw new NullReferenceException(
@@ -981,10 +981,10 @@ namespace Origam.Workflow
 					return DataDocumentFactory.New((context as IDataDocument).DataSet.Copy());
 				}
 			}
-			else if(context is XmlDocument)
+			else if(context is IXmlContainer)
 			{
-//				return (context as XmlDocument).Clone();
-                throw new NotImplementedException();
+				return (context as IXmlContainer).Clone();
+
 			}
 			else
 			{
@@ -1094,27 +1094,27 @@ namespace Origam.Workflow
 						throw new ArgumentOutOfRangeException("method", method, "Unsupported merge method.");
 					}
 				}
-				else if(inputContext is IDataDocument)
+				else if(inputContext is IXmlContainer)
 				{
 					IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 					ContextStore cs = persistence.SchemaProvider.RetrieveInstance(typeof(ContextStore), resultContextKey) as ContextStore;
 
 					if(cs.DataType == OrigamDataType.String)
 					{
-						this.RuleEngine.SetContext(resultContextKey, (inputContext as IDataDocument).Xml.InnerText);
+						this.RuleEngine.SetContext(resultContextKey, (inputContext as IXmlContainer).Xml.InnerText);
 					}
 					else
 					{
-						if(! (resultContext is IDataDocument)) throw new Exception("Cannot merge data into a context, which is not XML type. Context: " 
+						if(! (resultContext is IXmlContainer)) throw new Exception("Cannot merge data into a context, which is not XML type. Context: " 
 						                                                         + contextName
 						                                                         + ", type: " + (resultContext == null ? "NULL" : resultContext.GetType().ToString()));
 
 						changed = true;
 
-						if((inputContext as IDataDocument).Xml.DocumentElement != null)
+						if((inputContext as IXmlContainer).Xml.DocumentElement != null)
 						{
 							// copy document element, if it does not exist already
-							if(((IDataDocument)resultContext).Xml.DocumentElement == null)
+							if(((IXmlContainer)resultContext).Xml.DocumentElement == null)
 							{
 								if (resultContext is IDataDocument)
 								{
@@ -1127,7 +1127,7 @@ namespace Origam.Workflow
 										resultXmDatalDocument.DataSet.EnforceConstraints = false;
 									}
 
-									XmlNode newDoc = resultXmDatalDocument.Xml.ImportNode(((IDataDocument)inputContext).Xml.DocumentElement, true);
+									XmlNode newDoc = resultXmDatalDocument.Xml.ImportNode(((IXmlContainer)inputContext).Xml.DocumentElement, true);
 									resultXmDatalDocument.Xml.AppendChild(newDoc);
 
 									if (resultXmDatalDocument != null)
@@ -1143,8 +1143,8 @@ namespace Origam.Workflow
 								}
 								else
 								{
-									XmlNode newDoc = ((IDataDocument)resultContext).Xml.ImportNode(((IDataDocument)inputContext).Xml.DocumentElement, true);
-									(resultContext as IDataDocument).Xml.AppendChild(newDoc);
+									XmlNode newDoc = ((IXmlContainer)resultContext).Xml.ImportNode(((IXmlContainer)inputContext).Xml.DocumentElement, true);
+									(resultContext as IXmlContainer).Xml.AppendChild(newDoc);
 								}
 							}
 							else
@@ -1167,10 +1167,10 @@ namespace Origam.Workflow
 					// Web Service support - they send XML as string
 					changed = true;
 
-				    IDataDocument xmlDataDoc = this.RuleEngine.GetContext(resultContextKey) as IDataDocument;
-				    XmlDocument resultXml = xmlDataDoc?.Xml;
+				    IXmlContainer resultXml = this.RuleEngine.GetContext(resultContextKey) as IXmlContainer;
+				    IDataDocument xmlDataDoc = resultXml as IDataDocument;
 
-					bool previousEnforceConstraints = false;
+                    bool previousEnforceConstraints = false;
 
 					if(xmlDataDoc != null)
 					{
@@ -1182,7 +1182,7 @@ namespace Origam.Workflow
 
 					if(resultXml != null & inputString != null)
 					{
-						resultXml.LoadXml(inputString);
+						resultXml.Xml.LoadXml(inputString);
 
 						if(xmlDataDoc != null)
 						{
@@ -1320,13 +1320,13 @@ namespace Origam.Workflow
 
 		public static string ContextData(object context)
 		{
-			if(context is IDataDocument)
+			if(context is IXmlContainer)
 			{
 				StringBuilder b = new StringBuilder();
 				StringWriter swr = new StringWriter(b);
 				XmlTextWriter xwr = new XmlTextWriter(swr);
 				xwr.Formatting = Formatting.Indented;
-				(context as IDataDocument).Xml.WriteTo(xwr);
+				(context as IXmlContainer).Xml.WriteTo(xwr);
 				xwr.Close();
 				swr.Close();
 

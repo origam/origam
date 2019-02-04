@@ -80,13 +80,13 @@ namespace Origam.Server.Pages
 				}
 			}
 
-            IDataDocument xmlData;
+            IXmlContainer xmlData;
             DataSet data = null;
 
             if (xsltPage.DataStructure == null)
             {
                 // no data source
-                xmlData = DataDocumentFactory.New();
+                xmlData = new XmlContainer();
                 xmlData.Xml.LoadXml("<ROOT/>");
             }
             else
@@ -103,7 +103,7 @@ namespace Origam.Server.Pages
 
                 if (request.HttpMethod == "PUT")
                 {
-                    HandlePUT(parameters, xsltPage, xmlData, transformParams, ruleEngine);
+                    HandlePUT(parameters, xsltPage, (IDataDocument)xmlData, transformParams, ruleEngine);
                     return;
                 }
                 
@@ -111,7 +111,7 @@ namespace Origam.Server.Pages
 
             bool xpath = xsltPage.ResultXPath != null && xsltPage.ResultXPath != String.Empty;
 
-            IDataDocument result = null;
+            IXmlContainer result = null;
             bool isProcessed = false;
 
             if (xsltPage.Transformation == null && !xpath && page.MimeType == MIME_JSON)
@@ -183,7 +183,7 @@ namespace Origam.Server.Pages
             if (AnalyticsFx.Instance.IsAnalyticsEnabled && xsltPage.LogTransformation != null)
             {
                 Type type = this.GetType();
-                IDataDocument log = transformer.Transform(xmlData, xsltPage.LogTransformationId, transformParams, ruleEngine, null, false);
+                IXmlContainer log = transformer.Transform(xmlData, xsltPage.LogTransformationId, transformParams, ruleEngine, null, false);
 
                 XPathNavigator nav = log.Xml.CreateNavigator();
                 XPathNodeIterator iter = nav.Select("/ROOT/LogContext");
@@ -241,7 +241,7 @@ namespace Origam.Server.Pages
 
         private static void HandleDELETE(XsltDataPage xsltPage, DataSet data, Hashtable transformParams, RuleEngine ruleEngine)
         {
-            IDataDocument xmldoc = DataDocumentFactory.New();
+            IXmlContainer xmldoc = new XmlContainer();
             xmldoc.Xml.LoadXml(data.GetXml());
             Validate(xmldoc, transformParams, ruleEngine, xsltPage.SaveValidationBeforeMerge);
 

@@ -37,12 +37,12 @@ namespace Origam.Workbench.Services
 		ISchemaItem WQClass(Guid queueId);
 		DataSet LoadWorkQueueData(string workQueueClass, object queueId);
 		Guid WorkQueueAdd(string workQueueClass, string workQueueName, Guid workQueueId, 
-            string condition, IDataDocument data, WorkQueueAttachment[] attachments,
+            string condition, IXmlContainer data, WorkQueueAttachment[] attachments,
             string transactionId);
 		Guid WorkQueueAdd(string workQueueClass, string workQueueName, Guid workQueueId, 
-            string condition, IDataDocument data, string transactionId);
-		Guid WorkQueueAdd(string workQueueName, IDataDocument data, string transactionId);
-        Guid WorkQueueAdd(string workQueueName, IDataDocument data, WorkQueueAttachment[] attachments, string transactionId);
+            string condition, IXmlContainer data, string transactionId);
+		Guid WorkQueueAdd(string workQueueName, IXmlContainer data, string transactionId);
+        Guid WorkQueueAdd(string workQueueName, IXmlContainer data, WorkQueueAttachment[] attachments, string transactionId);
         DataRow GetNextItem(string workQueueName, string transactionId, bool processErrors);
         void WorkQueueRemove(string workQueueClass, string workQueueName, Guid workQueueId, 
             string condition, object rowKey, string transactionId);
@@ -56,7 +56,7 @@ namespace Origam.Workbench.Services
 		void HandleAction(Guid queueEntryId, Guid commandId, bool calledFromApi, string transactionId); 
         IDataDocument GenerateNotificationMessage(
                 Guid notificationTemplateId
-                , IDataDocument notificationSource
+                , IXmlContainer notificationSource
                 , DataRow recipient
                 , DataRow workQueueRow
                 , string transactionId
