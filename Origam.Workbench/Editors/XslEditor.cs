@@ -1317,12 +1317,12 @@ namespace Origam.Workbench.Editors
 			{
 				if (Type == OrigamDataType.Xml)
 				{
-					var xmlDocument = new XmlDocument();
+					var xmlContainer = new XmlContainer();
 					if (!string.IsNullOrEmpty(Text))
 					{
-						xmlDocument.LoadXml(Text);
+						xmlContainer.Xml.LoadXml(Text);
 					}
-					return xmlDocument;
+					return xmlContainer;
 				} else
 				{
 					Type systemType = DatasetGenerator.ConvertDataType(Type);
