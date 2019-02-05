@@ -28,14 +28,14 @@ using System.Text;
 using System.Threading;
 using Origam.Rule;
 using Origam.Schema.WorkflowModel;
+using Origam.OrigamEngine;
 
 namespace Origam.Utils
 {
     class RulesProcessor
     {
         private readonly string pathProject;
-        private SchemaService service = new SchemaService();
-
+        
         public RulesProcessor(string pathProject)
         {
             this.pathProject = pathProject;
@@ -43,10 +43,13 @@ namespace Origam.Utils
 
         internal int Run()
         {
+            FilePersistenceService persistence = GetPersistence();
+            List<AbstractSchemaItemProvider> allproviders = new OrigamProviders().GetAllProviders().Select(x =>
+            { x.PersistenceProvider = persistence.SchemaProvider; return x; }).ToList();
             List<Dictionary<IFilePersistent, string>> errorFragments
                     = ModelRules.GetErrors(
-                        service, 
-                        GetPersistence(),
+                        allproviders,
+                        persistence,
                         new CancellationTokenSource().Token);
             if (errorFragments.Count != 0)
             {
@@ -76,6 +79,7 @@ namespace Origam.Utils
                 ElementNameFactory.Create(typeof(SchemaExtension)),
                 ElementNameFactory.Create(typeof(SchemaItemGroup))
             };
+            SchemaService service = new SchemaService();
             ServiceManager sManager = ServiceManager.Services;
             IParameterService parameterService = new NullParameterService();
             sManager.AddService(service);
@@ -89,7 +93,6 @@ namespace Origam.Utils
 
             sManager.AddService(persistenceService);
             service.AddProvider(StateMachineSchema);
-            OrigamEngine.OrigamEngine.InitializeSchemaItemProviders(service);
             return persistenceService;
         }
     }

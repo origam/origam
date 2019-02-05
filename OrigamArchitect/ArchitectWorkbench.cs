@@ -1679,9 +1679,9 @@ namespace OrigamArchitect
             using (FilePersistenceService independentPersistenceService = new FilePersistenceBuilder()
 	            .CreateNoBinFilePersistenceService())
 	        {
-                SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-                OrigamEngine.InitializeSchemaItemProviders(schema);
-                List<Dictionary<IFilePersistent, string>> errorFragments = ModelRules.GetErrors(schema, independentPersistenceService, cancellationToken); 
+                List<AbstractSchemaItemProvider> allproviders = new OrigamProviders().GetAllProviders().Select(x =>
+                { x.PersistenceProvider = independentPersistenceService.SchemaProvider; return x; }).ToList();
+                List<Dictionary<IFilePersistent, string>> errorFragments = ModelRules.GetErrors(allproviders, independentPersistenceService, cancellationToken); 
 	            if (errorFragments.Count != 0)
 	            {
                     FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;

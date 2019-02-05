@@ -65,39 +65,44 @@ namespace Origam.OrigamEngine
 		{
 			service.RemoveAllProviders();
 
-			service.AddProvider(new StringSchemaItemProvider());
-			service.AddProvider(new FeatureSchemaItemProvider());
-			service.AddProvider(new EntityModelSchemaItemProvider());
-			service.AddProvider(new DataConstantSchemaItemProvider());
-            service.AddProvider(new DatabaseDataTypeSchemaItemProvider());
-            service.AddProvider(new UserControlSchemaItemProvider()); 
-			service.AddProvider(new PanelSchemaItemProvider()); 
-			service.AddProvider(new FormSchemaItemProvider()); 
-			service.AddProvider(new DataStructureSchemaItemProvider()); 
-			service.AddProvider(new FunctionSchemaItemProvider());
-			service.AddProvider(new ServiceSchemaItemProvider());
-			service.AddProvider(new WorkflowSchemaItemProvider());
-			service.AddProvider(new TransformationSchemaItemProvider());
-			service.AddProvider(new ReportSchemaItemProvider());
-			service.AddProvider(new RuleSchemaItemProvider());
-			service.AddProvider(new MenuSchemaItemProvider());
-//			service.AddProvider(new TestScenarioSchemaItemProvider());
-//			service.AddProvider(new TestChecklistRuleSchemaItemProvider());
-			service.AddProvider(new WorkflowScheduleSchemaItemProvider());
-			service.AddProvider(new ScheduleTimeSchemaItemProvider());
-			service.AddProvider(new DataLookupSchemaItemProvider());
-			service.AddProvider(new DeploymentSchemaItemProvider());
-			service.AddProvider(new GraphicsSchemaItemProvider());
-			service.AddProvider(new StateMachineSchemaItemProvider());
-			service.AddProvider(new WorkQueueClassSchemaItemProvider());
-			service.AddProvider(new ChartSchemaItemProvider());
-			service.AddProvider(new PagesSchemaItemProvider());
-			service.AddProvider(new DashboardWidgetsSchemaItemProvider());
-			service.AddProvider(new StylesSchemaItemProvider());
-			service.AddProvider(new NotificationBoxSchemaItemProvider());
-			service.AddProvider(new TreeStructureSchemaItemProvider());
-			service.AddProvider(new KeyboardShortcutsSchemaItemProvider());
-            service.AddProvider(new SearchSchemaItemProvider());
+            foreach (var schemaItemProvider in new OrigamProviders().GetAllProviders())
+            {
+                service.AddProvider(schemaItemProvider);
+            }
+
+//			service.AddProvider(new StringSchemaItemProvider());
+//			service.AddProvider(new FeatureSchemaItemProvider());
+//			service.AddProvider(new EntityModelSchemaItemProvider());
+//			service.AddProvider(new DataConstantSchemaItemProvider());
+//            service.AddProvider(new DatabaseDataTypeSchemaItemProvider());
+//            service.AddProvider(new UserControlSchemaItemProvider()); 
+//			service.AddProvider(new PanelSchemaItemProvider()); 
+//			service.AddProvider(new FormSchemaItemProvider()); 
+//			service.AddProvider(new DataStructureSchemaItemProvider()); 
+//			service.AddProvider(new FunctionSchemaItemProvider());
+//			service.AddProvider(new ServiceSchemaItemProvider());
+//			service.AddProvider(new WorkflowSchemaItemProvider());
+//			service.AddProvider(new TransformationSchemaItemProvider());
+//			service.AddProvider(new ReportSchemaItemProvider());
+//			service.AddProvider(new RuleSchemaItemProvider());
+//			service.AddProvider(new MenuSchemaItemProvider());
+////			service.AddProvider(new TestScenarioSchemaItemProvider());
+////			service.AddProvider(new TestChecklistRuleSchemaItemProvider());
+//			service.AddProvider(new WorkflowScheduleSchemaItemProvider());
+//			service.AddProvider(new ScheduleTimeSchemaItemProvider());
+//			service.AddProvider(new DataLookupSchemaItemProvider());
+//			service.AddProvider(new DeploymentSchemaItemProvider());
+//			service.AddProvider(new GraphicsSchemaItemProvider());
+//			service.AddProvider(new StateMachineSchemaItemProvider());
+//			service.AddProvider(new WorkQueueClassSchemaItemProvider());
+//			service.AddProvider(new ChartSchemaItemProvider());
+//			service.AddProvider(new PagesSchemaItemProvider());
+//			service.AddProvider(new DashboardWidgetsSchemaItemProvider());
+//			service.AddProvider(new StylesSchemaItemProvider());
+//			service.AddProvider(new NotificationBoxSchemaItemProvider());
+//			service.AddProvider(new TreeStructureSchemaItemProvider());
+//			service.AddProvider(new KeyboardShortcutsSchemaItemProvider());
+//            service.AddProvider(new SearchSchemaItemProvider());
 
             AbstractSchemaItem.ExtensionChildItemTypes.Add(new Type[] {typeof(AbstractDataEntity), typeof(EntityMenuAction)});
 			AbstractSchemaItem.ExtensionChildItemTypes.Add(new Type[] {typeof(AbstractDataEntity), typeof(EntityReportAction)});
