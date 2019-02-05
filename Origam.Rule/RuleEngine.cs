@@ -3921,7 +3921,7 @@ namespace Origam.Rule
 			// check business rule
 			if(rule != null)
 			{
-				object result = this.EvaluateRule(rule, data, contextPosition);
+				object result = this.EvaluateRule(rule, new XmlContainer(data), contextPosition);
 
 				if(result is bool)
 				{
