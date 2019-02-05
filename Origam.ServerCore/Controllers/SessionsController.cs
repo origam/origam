@@ -99,7 +99,7 @@ namespace Origam.ServerCore.Controllers
         }
 
         [HttpPost("[action]")]
-        public IActionResult UpdateRow([FromBody]UpdateObjectData updateData )
+        public IActionResult UpdateRow([FromBody]UpdateRowData updateData )
         {
             return RunWithErrorHandler(() =>
             {

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Origam.ServerCore.Models
 {
-    public class UpdateObjectData
+    public class UpdateRowData
     {
         public Guid SessionFormIdentifier { get; set; }
         public string Entity { get; set; }
