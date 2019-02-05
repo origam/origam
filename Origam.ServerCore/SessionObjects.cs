@@ -9,9 +9,9 @@ namespace Origam.ServerCore
 {
     public class SessionObjects
     {
-        internal SessionManager SessionManager { get; }
-        internal UIManager UiManager { get; }
-        internal BasicUiService UiService { get; }
+        public SessionManager SessionManager { get; }
+        public UIManager UiManager { get; }
+        public BasicUiService UiService { get; }
 
         public SessionObjects()
         {
