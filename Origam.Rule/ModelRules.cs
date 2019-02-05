@@ -31,15 +31,14 @@ namespace Origam.Rule
 {
     public class ModelRules
     {
-        public static List<Dictionary<IFilePersistent, string>> GetErrors(SchemaService schemaService,FilePersistenceService independentPersistenceService, CancellationToken cancellationToken)
+        public static List<Dictionary<IFilePersistent, string>> GetErrors(List<AbstractSchemaItemProvider> schemaProviders,FilePersistenceService independentPersistenceService, CancellationToken cancellationToken)
         {
-            ISchemaItemProvider[] providers = CloneProviders(schemaService, independentPersistenceService);
-            List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
+           List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
                     .SchemaProvider
                     .RetrieveList<IFilePersistent>()
                     .OfType<AbstractSchemaItem>()
                     .Select(retrievedObj => {
-                        retrievedObj.RootProvider = providers.FirstOrDefault(x => BelongsToProvider(x, retrievedObj));
+                        retrievedObj.RootProvider = schemaProviders.FirstOrDefault(x => BelongsToProvider(x, retrievedObj));
                         return retrievedObj;
                     })
                     .Select(retrievedObj =>
@@ -67,18 +66,6 @@ namespace Origam.Rule
                 return true;
             }
             return false;
-        }
-
-        private static AbstractSchemaItemProvider[] CloneProviders(SchemaService schemaService, FilePersistenceService independentPersistenceService)
-        {
-            return schemaService.Providers
-                .Select(provider =>
-                {
-                    AbstractSchemaItemProvider abstractSchemaItemProvider = (AbstractSchemaItemProvider)Activator.CreateInstance(provider.GetType());
-                    abstractSchemaItemProvider.PersistenceProvider = independentPersistenceService.SchemaProvider;
-                    return abstractSchemaItemProvider;
-                })
-                .ToArray();
         }
     }
 }
