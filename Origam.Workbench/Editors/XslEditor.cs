@@ -945,7 +945,7 @@ namespace Origam.Workbench.Editors
                     "DataTransformationService", 
                     new RuleEngine(new Hashtable(), null), null);
 
-				var doc = DataDocumentFactory.New(new XmlDocument());
+				var doc = new XmlContainer();
 				doc.Xml.LoadXml(sourceXml);
 
 				transformer.MethodName = "TransformText";

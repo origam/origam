@@ -212,7 +212,7 @@ namespace Origam.Workflow
 
         private void ValidateTransformTextParameters()
         {
-            if(!(Parameters["Data"] is IDataDocument))
+            if(!(Parameters["Data"] is IXmlContainer))
             {
                 throw new InvalidCastException(
                     ResourceUtils.GetString("ErrorNotXmlDocument"));
