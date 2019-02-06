@@ -13,11 +13,11 @@ using Origam.ServerCore;
 using Origam.ServerCore.Controllers;
 using Origam.ServerCore.Models;
 
-namespace Tests
+namespace Origam.ServerCoreTests
 {
-    public class SessionsControllerTests
+    [TestFixture]
+    class SessionsControllerTests : ControllerTests
     {
-        private SessionObjects sessionObjects;
         private SessionsController sut;
         private Guid sessionId;
         private Guid rowId;
@@ -25,28 +25,12 @@ namespace Tests
 
         public SessionsControllerTests()
         {
-            sessionObjects = new SessionObjects();
             sut = new SessionsController(sessionObjects);
-
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, "JohnDoe"),
-                new Claim(ClaimTypes.NameIdentifier, "1"),
-                new Claim("name", "JohnDoe"),
-            };
-            var identity = new ClaimsIdentity(claims, "TestAuthType");
-            var context = new ControllerContext
-            {
-                HttpContext = new DefaultHttpContext
-                {
-                    User = new ClaimsPrincipal(identity)
-                }
-            };
             dataController = new DataController(new NullLogger<AbstractController>());
             dataController.ControllerContext = context;
         }
 
-        [Test, Order(1)]
+        [Test, Order(101)]
         public void ShouldCreateNewEmptySession()
         {
             var actionResult = sut.New(new NewSessionData
@@ -66,7 +50,7 @@ namespace Tests
         }
 
 
-        [Test, Order(2)]
+        [Test, Order(102)]
         public void ShouldCreateNewRowInProducers()
         {
             var actionResult = sut.CreateRow(new NewRowData
@@ -94,7 +78,7 @@ namespace Tests
         }
 
 
-        [Test, Order(3)]
+        [Test, Order(103)]
         public void ShouldModifyTheNewRow()
         {
             sut.UpdateRow(new UpdateRowData
@@ -140,7 +124,7 @@ namespace Tests
             Assert.That(currentRowValues[5], Is.EqualTo("testNameAndAddress"));
         }
 
-        [Test, Order(4)]
+        [Test, Order(104)]
         public void ShouldSaveSession()
         {
             var actionResult = sut.Save(new SaveSessionData
@@ -177,7 +161,7 @@ namespace Tests
             Assert.That(retrievedObject[3], Is.EqualTo("test@test.test"));
         }
 
-        [Test, Order(5)]
+        [Test, Order(105)]
         public void ShouldDeleteSession()
         {
             var actionResult = sut.Delete(new DeleteSessionData

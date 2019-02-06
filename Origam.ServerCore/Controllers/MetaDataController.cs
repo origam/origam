@@ -14,17 +14,17 @@ namespace Origam.ServerCore.Controllers
         }
 
         [HttpGet("[action]")]
-        public ActionResult<string> GetMenu()
+        public IActionResult GetMenu()
         {    
-            return MenuXmlBuilder.GetMenu();
+            return Ok(MenuXmlBuilder.GetMenu());
         }
 
         [HttpGet("[action]")]
-        public ActionResult<string> GetScreeSection([FromQuery] [Required] Guid id)
+        public IActionResult GetScreeSection([FromQuery] [Required] Guid id)
         {
             XmlOutput xmlOutput = FormXmlBuilder.GetXml(id);
             MenuLookupIndex.AddIfNotPresent(id, xmlOutput.ContainedLookups);
-            return xmlOutput.Document.OuterXml;
+            return Ok(xmlOutput.Document.OuterXml);
         }
     }
 }

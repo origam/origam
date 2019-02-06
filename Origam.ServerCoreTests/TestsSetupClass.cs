@@ -4,7 +4,7 @@ using Microsoft.Extensions.Primitives;
 using NUnit.Framework;
 using Origam.ServerCore.Controllers;
 
-namespace Tests
+namespace Origam.ServerCoreTests
 {
     [SetUpFixture]
     public class TestsSetupClass
