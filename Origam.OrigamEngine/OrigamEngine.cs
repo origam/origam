@@ -195,11 +195,10 @@ namespace Origam.OrigamEngine
             IParameterService parameterService 
                 = ServiceManager.Services.GetService<IParameterService>();
 			parameterService.RefreshParameters();
-			RestartTimer.Elapsed += RestartTimer_Elapsed;
-			LastRestartRequestDate = GetLastRestartRequestDate();
 			if (runRestartTimer)
 			{
-				RestartTimer.Elapsed += RestartTimer_Elapsed;
+                LastRestartRequestDate = GetLastRestartRequestDate();
+                RestartTimer.Elapsed += RestartTimer_Elapsed;
 				RestartTimer.Start();
 			}
 			log.Info("ORIGAM Runtime Connected");
