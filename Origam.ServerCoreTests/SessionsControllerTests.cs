@@ -176,5 +176,16 @@ namespace Tests
             Assert.That(retrievedObject[2], Is.EqualTo("testNameAndAddress"));
             Assert.That(retrievedObject[3], Is.EqualTo("test@test.test"));
         }
+
+        [Test, Order(5)]
+        public void ShouldDeleteSession()
+        {
+            var actionResult = sut.Delete(new DeleteSessionData
+            {
+                SessionId = sessionId
+            });
+            Assert.IsInstanceOf<OkResult>(actionResult);
+            Assert.IsFalse(sessionObjects.SessionManager.HasFormSession(sessionId));
+        }
     }
 }

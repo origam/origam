@@ -59,12 +59,12 @@ namespace Origam.ServerCore.Controllers
 
 
         [HttpPost("[action]")]
-        public IActionResult Delete(Guid sessionId)
+        public IActionResult Delete([FromBody]DeleteSessionData sessionData)
         {
             return RunWithErrorHandler(() =>
             {
                 new SessionHelper(sessionObjects.SessionManager)
-                    .DeleteSession(sessionId);
+                    .DeleteSession(sessionData.SessionId);
                 CallOrigamUserUpdate();
                 return Ok();
             });
