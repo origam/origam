@@ -25,12 +25,16 @@ using CommandLine;
 using CommandLine.Text;
 using Origam.DA;
 using Origam.DA.Service;
+using Origam.OrigamEngine;
 using Origam.Schema;
+using Origam.Schema.MenuModel;
 using Origam.Workbench.Services;
 using System;
 using System.Collections;
+using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Origam.Utils
 {
@@ -123,10 +127,20 @@ namespace Origam.Utils
 
         public class ProcessCheckRules
         {
-            [Option('p', "path", Required = true,
-               HelpText = "Path to project")]
-            public string PathProject { get; set; }
-           
+        }
+
+        public class ProcessDocGeneratorArgs
+        {
+            [Option('o', "output", Required = true, HelpText = "Output directory")]
+            public string Dataout { get; set; }
+            [Option('l', "language", Required = true, HelpText = "Localization(ie. cs-CZ).")]
+            public string Language { get; set; }
+            [Option('x', "xslt", Required = true, HelpText = "Xslt template")]
+            public string Xslt { get; set; }
+            [Option('r', "rootfilename", Required = true, HelpText = "Output File")]
+            public string RootFile { get; set; }
+            [ParserState]
+            public IParserState LastParserState { get; set; }
         }
 
         class Options
@@ -134,6 +148,9 @@ namespace Origam.Utils
             [VerbOption("process-checkrules",
                 HelpText = "Check rules in project.")]
             public ProcessCheckRules ProcessCheckRules { get; set; }
+            [VerbOption("process-docgenerator",
+                HelpText = "Generate Menu into output with xslt template.")]
+            public ProcessDocGeneratorArgs ProcessDocGeneratorArgs { get; set; }
 #if !NETCORE2_1
             [VerbOption("process-queue",
                 HelpText = "Process a queue.")]
@@ -175,6 +192,7 @@ namespace Origam.Utils
 
         static int Main(string[] args)
         {
+            Console.WriteLine(string.Format(Strings.ShortGNU, System.Reflection.Assembly.GetEntryAssembly().GetName().Name));
             string invokedVerb = "";
             object invokedVerbInstance = null;
             var options = new Options();
@@ -193,6 +211,11 @@ namespace Origam.Utils
                 {
                         return ProcesRule(
                             (ProcessCheckRules)invokedVerbInstance);
+                }
+                case "process-docgenerator":
+                {
+                        return ProcesDocGenerator(
+                            (ProcessDocGeneratorArgs)invokedVerbInstance);
                 }
 #if !NETCORE2_1
                 case "process-queue":
@@ -230,14 +253,34 @@ namespace Origam.Utils
             }
         }
 
+        private static int ProcesDocGenerator(ProcessDocGeneratorArgs config)
+        {
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo(config.Language);
+            RuntimeServiceFactoryProcessor RuntimeServiceFactory = new RuntimeServiceFactoryProcessor();
+            OrigamEngine.OrigamEngine.ConnectRuntime( customServiceFactory: RuntimeServiceFactory);
+            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+            FilePersistenceService persistenceService = ServiceManager.Services.GetService(typeof(FilePersistenceService)) as FilePersistenceService;
+            MenuSchemaItemProvider menuprovider = new MenuSchemaItemProvider
+            {
+                PersistenceProvider = (FilePersistenceProvider)persistenceService.SchemaProvider
+            };
+
+            FilePersistenceProvider persprovider = (FilePersistenceProvider)persistenceService.SchemaProvider;
+            persistenceService.LoadSchema(settings.DefaultSchemaExtensionId, false, false, "");
+
+            var documentation = new FileStorageDocumentationService(
+                persprovider,
+                persistenceService.FileEventQueue);
+            new DocProcessor(config.Dataout, config.Xslt, config.RootFile, documentation,
+                 menuprovider, persistenceService, null).Run();
+            return 0;
+            
+        }
+
         private static int ProcesRule(ProcessCheckRules invokedVerbInstance)
         {
-            if (!string.IsNullOrEmpty(invokedVerbInstance.PathProject))
-            {
-                RulesProcessor rulesProcessor = new RulesProcessor(invokedVerbInstance.PathProject);
-                return rulesProcessor.Run();
-            }
-            return 1;
+            RulesProcessor rulesProcessor = new RulesProcessor();
+            return rulesProcessor.Run();
         }
 
         private static int ProcesQueue(ProcessQueueOptions options)

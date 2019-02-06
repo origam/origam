@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -27,10 +27,9 @@
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
   </PropertyGroup>
-  
   <PropertyGroup>
-      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
-      <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
@@ -58,7 +57,7 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
     <DefineConstants>$(DefineConstants)</DefineConstants>
     <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
@@ -71,8 +70,15 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-
   <ItemGroup>
+    <ProjectReference Include="..\MIMEParser\MIMEParser.csproj">
+      <Project>{cc4c4334-335d-4369-b0ed-f3c17cd57364}</Project>
+      <Name>MIMEParser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.BI.PrintIt\Origam.BI.PrintIt.csproj">
+      <Project>{65ccc71c-287f-47c2-9b37-f1ecefadc327}</Project>
+      <Name>Origam.BI.PrintIt</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
       <Name>Origam.Common</Name>
@@ -248,6 +254,10 @@
     <ProjectReference Include="..\Origam.Workflow.FileService\Origam.Workflow.FileService.csproj">
       <Project>{27826cc4-81ad-4c2a-88ea-6102f119ffa6}</Project>
       <Name>Origam.Workflow.FileService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workflow.SimplicorService\Origam.Workflow.SimplicorService.csproj">
+      <Project>{ee92b4de-5635-4b60-80b0-532c438b280f}</Project>
+      <Name>Origam.Workflow.SimplicorService</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Workflow\Origam.Workflow.csproj">
       <Name>Origam.Workflow</Name>

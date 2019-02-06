@@ -18,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Workbench.Services;
@@ -27,23 +26,24 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Origam.Rule;
-using Origam.Schema.WorkflowModel;
 using Origam.OrigamEngine;
 
 namespace Origam.Utils
 {
     class RulesProcessor
     {
-        private readonly string pathProject;
-        
-        public RulesProcessor(string pathProject)
+                
+        public RulesProcessor()
         {
-            this.pathProject = pathProject;
         }
 
         internal int Run()
         {
-            FilePersistenceService persistence = GetPersistence();
+            RuntimeServiceFactoryProcessor RuntimeServiceFactory = new RuntimeServiceFactoryProcessor();
+            OrigamEngine.OrigamEngine.ConnectRuntime(customServiceFactory: RuntimeServiceFactory);
+            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+            FilePersistenceService persistence = ServiceManager.Services.GetService(typeof(FilePersistenceService)) as FilePersistenceService;
+            
             List<AbstractSchemaItemProvider> allproviders = new OrigamProviders().GetAllProviders().Select(x =>
             { x.PersistenceProvider = persistence.SchemaProvider; return x; }).ToList();
             List<Dictionary<IFilePersistent, string>> errorFragments
@@ -54,7 +54,7 @@ namespace Origam.Utils
             if (errorFragments.Count != 0)
             {
                 StringBuilder sb = new StringBuilder("Rule violations in ");
-                sb.Append(pathProject.ToUpper());
+                sb.Append(settings.ModelSourceControlLocation.ToUpper());
                 sb.Append("\n");
                 foreach (Dictionary<IFilePersistent, string> dict in errorFragments)
                 {
@@ -70,30 +70,6 @@ namespace Origam.Utils
             {
                 return 0;
             }
-        }
-
-        private FilePersistenceService GetPersistence()
-        {
-            var DefaultFolders = new List<ElementName>
-            {
-                ElementNameFactory.Create(typeof(SchemaExtension)),
-                ElementNameFactory.Create(typeof(SchemaItemGroup))
-            };
-            SchemaService service = new SchemaService();
-            ServiceManager sManager = ServiceManager.Services;
-            IParameterService parameterService = new NullParameterService();
-            sManager.AddService(service);
-            sManager.AddService(parameterService);
-            StateMachineSchemaItemProvider StateMachineSchema = new StateMachineSchemaItemProvider();
-            var settings = new OrigamSettings();
-            ConfigurationManager.SetActiveConfiguration(settings);
-            SecurityManager.SetServerIdentity();
-            var persistenceService = new FilePersistenceService(DefaultFolders,
-               pathProject, false, false);
-
-            sManager.AddService(persistenceService);
-            service.AddProvider(StateMachineSchema);
-            return persistenceService;
         }
     }
 }
