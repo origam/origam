@@ -1656,7 +1656,7 @@ namespace Origam.DA.Service
                 return false;
             }
             i = 0;
-            foreach (DataStructureColumn column in entity.Columns)
+            foreach (DataStructureColumn column in GetSortedColumns(entity, scalarColumnNames))
             {
                 var expression = RenderDataStructureColumn(ds, entity,
                         replaceParameterTexts, dynamicParameters,
@@ -1704,6 +1704,18 @@ namespace Origam.DA.Service
                 }
             }
             return groupByNeeded;
+        }
+
+        private IEnumerable<DataStructureColumn> GetSortedColumns(DataStructureEntity entity,
+            ArrayList scalarColumnNames)
+        {
+            if (scalarColumnNames.Count == 0)
+            {
+                return entity.Columns.Cast<DataStructureColumn>();
+            }
+            return entity.Columns
+                .Cast<DataStructureColumn>()
+                .OrderBy(x => scalarColumnNames.IndexOf(x.Name));
         }
 
         public string RenderDataStructureColumn(DataStructure ds, 
