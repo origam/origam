@@ -112,7 +112,6 @@ namespace Origam.ServerCore.Controllers
                 .OnSuccess(entityData => MakeEmptyRow(entityData.Entity))
                 .OnSuccess(rowData => FillRow(entityInsertData, rowData))
                 .OnSuccess(SubmitChange)
-                .OnSuccess(ThrowAwayReturnData)
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
 

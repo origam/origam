@@ -21,16 +21,14 @@ namespace Origam.ServerCoreTests
         private SessionsController sut;
         private Guid sessionId;
         private Guid rowId;
-        private DataController dataController;
+
 
         public SessionsControllerTests()
         {
             sut = new SessionsController(sessionObjects);
-            dataController = new DataController(new NullLogger<AbstractController>());
-            dataController.ControllerContext = context;
         }
 
-        [Test, Order(101)]
+        [Test, Order(301)]
         public void ShouldCreateNewEmptySession()
         {
             var actionResult = sut.New(new NewSessionData
@@ -50,7 +48,7 @@ namespace Origam.ServerCoreTests
         }
 
 
-        [Test, Order(102)]
+        [Test, Order(302)]
         public void ShouldCreateNewRowInProducers()
         {
             var actionResult = sut.CreateRow(new NewRowData
@@ -78,7 +76,7 @@ namespace Origam.ServerCoreTests
         }
 
 
-        [Test, Order(103)]
+        [Test, Order(303)]
         public void ShouldModifyTheNewRow()
         {
             sut.UpdateRow(new UpdateRowData
@@ -124,7 +122,7 @@ namespace Origam.ServerCoreTests
             Assert.That(currentRowValues[5], Is.EqualTo("testNameAndAddress"));
         }
 
-        [Test, Order(104)]
+        [Test, Order(304)]
         public void ShouldSaveSession()
         {
             var actionResult = sut.Save(new SaveSessionData
@@ -138,30 +136,16 @@ namespace Origam.ServerCoreTests
             // Saving the session should result in saving it's contained objects to database.
             // Data Controller will retrieve the saved object from the database so that it's
             // contents can be checked.  
-            IActionResult entitiesActionResult = dataController.EntitiesGet(new EntityGetData
-            {
-                MenuId = session.MenuItem.Id,
-                DataStructureEntityId = new Guid("93053357-745b-4a8c-91d2-d60389d0f22e"),
-                Filter = $"[\"Id\",\"eq\",\"{rowId}\"]",
-                Ordering = new List<List<string>>(),
-                RowLimit = 0,
-                ColumnNames = new string[] {"Id", "Name", "NameAndAddress", "Email" }
-            });
-            Assert.IsInstanceOf<OkObjectResult>(entitiesActionResult);
-            OkObjectResult entitiesObjResult = (OkObjectResult)entitiesActionResult;
 
-            Assert.IsInstanceOf<IEnumerable<object>>(entitiesObjResult.Value);
-            var retrievedObjects = ((IEnumerable<object>)entitiesObjResult.Value).ToList();
-
-            Assert.That(retrievedObjects, Has.Count.EqualTo(1));
-            object[] retrievedObject = (object[])retrievedObjects[0];
-            Assert.That(retrievedObject[0], Is.EqualTo(rowId)); // order of values in retrievedObjects should correspond to order of "ColumnNames" 
-            Assert.That(retrievedObject[1], Is.EqualTo("testName"));
-            Assert.That(retrievedObject[2], Is.EqualTo("testNameAndAddress"));
-            Assert.That(retrievedObject[3], Is.EqualTo("test@test.test"));
+            AssertObjectIsPersisted(
+                menuId: session.MenuItem.Id, 
+                dataStructureId: new Guid("93053357-745b-4a8c-91d2-d60389d0f22e"), 
+                id: rowId, 
+                columnNames: new string[] { "Id", "Name", "NameAndAddress", "Email" }, 
+                expectedColumnValues: new object[] { rowId, "testName", "testNameAndAddress", "test@test.test" });
         }
 
-        [Test, Order(105)]
+        [Test, Order(305)]
         public void ShouldDeleteSession()
         {
             var actionResult = sut.Delete(new DeleteSessionData
