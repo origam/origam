@@ -278,6 +278,10 @@
       <Project>{65ccc71c-287f-47c2-9b37-f1ecefadc327}</Project>
       <Name>Origam.BI.PrintIt</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.BI.SSRS\Origam.BI.SSRS.csproj">
+      <Project>{dd8adce0-1a65-412b-a09b-0d139d1cd7ab}</Project>
+      <Name>Origam.BI.SSRS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.DocGenerator\Origam.DocGenerator.csproj">
       <Project>{a791b6ad-394d-44a1-84be-b1dbc6c8a720}</Project>
       <Name>Origam.DocGenerator</Name>
