@@ -298,6 +298,10 @@
       <Project>{ffc2dce2-b8b5-48a4-aa18-1e93f99e1d54}</Project>
       <Name>Origam.ReflectorCache</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.DeploymentModel.UI\Origam.Schema.DeploymentModel.UI.csproj">
+      <Project>{681a9bf2-3189-44ad-a628-0a9ee25dde6e}</Project>
+      <Name>Origam.Schema.DeploymentModel.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.EntityModel.UI\Origam.Schema.EntityModel.UI.csproj">
       <Project>{01aadfb6-2a85-4bfa-8998-392ca17e3e48}</Project>
       <Name>Origam.Schema.EntityModel.UI</Name>
