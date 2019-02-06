@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
+using Origam.Extensions;
 using Origam.Server;
 using Origam.ServerCore;
 using Origam.ServerCore.Controllers;
@@ -26,11 +28,11 @@ namespace Tests
             sessionObjects = new SessionObjects();
             sut = new SessionsController(sessionObjects);
 
-            var claims = new List<Claim>()
+            var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, "John Doe"),
+                new Claim(ClaimTypes.Name, "JohnDoe"),
                 new Claim(ClaimTypes.NameIdentifier, "1"),
-                new Claim("name", "John Doe"),
+                new Claim("name", "JohnDoe"),
             };
             var identity = new ClaimsIdentity(claims, "TestAuthType");
             var context = new ControllerContext
@@ -101,7 +103,7 @@ namespace Tests
                 Entity = "Producer",
                 Id = rowId,
                 Property = "Name",
-                NewValue = "test"
+                NewValue = "testName"
             });
             sut.UpdateRow(new UpdateRowData
             {
@@ -109,7 +111,7 @@ namespace Tests
                 Entity = "Producer",
                 Id = rowId,
                 Property = "NameAndAddress",
-                NewValue = "test"
+                NewValue = "testNameAndAddress"
             });
             var actionResult = sut.UpdateRow(new UpdateRowData
             {
@@ -133,9 +135,9 @@ namespace Tests
             Assert.IsInstanceOf<ArrayList>(changeInfo.WrappedObject);
             var currentRowValues = (ArrayList) changeInfo.WrappedObject;
 
-            Assert.That(currentRowValues[3], Is.EqualTo("test"));
+            Assert.That(currentRowValues[3], Is.EqualTo("testName"));
             Assert.That(currentRowValues[4], Is.EqualTo("test@test.test"));
-            Assert.That(currentRowValues[5], Is.EqualTo("test"));
+            Assert.That(currentRowValues[5], Is.EqualTo("testNameAndAddress"));
         }
 
         [Test, Order(4)]
@@ -146,23 +148,33 @@ namespace Tests
                 SessionId = sessionId
             });
             Assert.IsInstanceOf<OkObjectResult>(actionResult);
-            OkObjectResult okObjectResult = (OkObjectResult)actionResult;
-
-            //okObjectResult.Value
-
 
             var session = (FormSessionStore)sessionObjects.SessionManager.GetSession(sessionId);
 
-            //session.
-            dataController.EntitiesGet(new EntityGetData
+            // Saving the session should result in saving it's contained objects to database.
+            // Data Controller will retrieve the saved object from the database so that it's
+            // contents can be checked.  
+            IActionResult entitiesActionResult = dataController.EntitiesGet(new EntityGetData
             {
                 MenuId = session.MenuItem.Id,
                 DataStructureEntityId = new Guid("93053357-745b-4a8c-91d2-d60389d0f22e"),
-                Filter = "",
+                Filter = $"[\"Id\",\"eq\",\"{rowId}\"]",
                 Ordering = new List<List<string>>(),
                 RowLimit = 0,
+                ColumnNames = new string[] {"Id", "Name", "NameAndAddress", "Email" }
             });
+            Assert.IsInstanceOf<OkObjectResult>(entitiesActionResult);
+            OkObjectResult entitiesObjResult = (OkObjectResult)entitiesActionResult;
 
+            Assert.IsInstanceOf<IEnumerable<object>>(entitiesObjResult.Value);
+            var retrievedObjects = ((IEnumerable<object>)entitiesObjResult.Value).ToList();
+
+            Assert.That(retrievedObjects, Has.Count.EqualTo(1));
+            object[] retrievedObject = (object[])retrievedObjects[0];
+            Assert.That(retrievedObject[0], Is.EqualTo(rowId)); // order of values in retrievedObjects should correspond to order of "ColumnNames" 
+            Assert.That(retrievedObject[1], Is.EqualTo("testName"));
+            Assert.That(retrievedObject[2], Is.EqualTo("testNameAndAddress"));
+            Assert.That(retrievedObject[3], Is.EqualTo("test@test.test"));
         }
     }
 }

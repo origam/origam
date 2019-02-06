@@ -108,8 +108,10 @@ namespace Origam.DA
 
 	    public string[] ColumnNames
 	    {
-	        get => ColumnName.Split(';');
-	        set => ColumnName = string.Join(";", value);
+	        get => ColumnName?.Split(';');
+	        set => ColumnName = value == null 
+	                ? null 
+	                : string.Join(";", value);
 	    }
 
 	    public string Entity { get; set; }
