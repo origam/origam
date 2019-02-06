@@ -266,17 +266,69 @@
     <Folder Include="Json\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MIMEParser\MIMEParser.csproj">
+      <Project>{cc4c4334-335d-4369-b0ed-f3c17cd57364}</Project>
+      <Name>MIMEParser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.BI.CrystalReports\Origam.BI.CrystalReports.csproj">
+      <Project>{d8090b11-35d3-43d7-ac66-5d7ae2d476da}</Project>
+      <Name>Origam.BI.CrystalReports</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.BI.PrintIt\Origam.BI.PrintIt.csproj">
+      <Project>{65ccc71c-287f-47c2-9b37-f1ecefadc327}</Project>
+      <Name>Origam.BI.PrintIt</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.DocGenerator\Origam.DocGenerator.csproj">
       <Project>{a791b6ad-394d-44a1-84be-b1dbc6c8a720}</Project>
       <Name>Origam.DocGenerator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Gui.Designer\Origam.Gui.Designer.csproj">
+      <Project>{76038b9a-f924-4f7f-b4cc-4b9a0a6a55e3}</Project>
+      <Name>Origam.Gui.Designer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.ProjectAutomation\Origam.ProjectAutomation.csproj">
+      <Project>{f2f5cd17-b2a5-4b5f-9868-628bb76a1959}</Project>
+      <Name>Origam.ProjectAutomation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache.csproj">
+      <Project>{ffc2dce2-b8b5-48a4-aa18-1e93f99e1d54}</Project>
+      <Name>Origam.ReflectorCache</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.EntityModel.UI\Origam.Schema.EntityModel.UI.csproj">
+      <Project>{01aadfb6-2a85-4bfa-8998-392ca17e3e48}</Project>
+      <Name>Origam.Schema.EntityModel.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
       <Project>{FDF55D1B-BB0D-4191-AE53-98DE5A4465B5}</Project>
       <Name>Origam.Schema.EntityModel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.LookupModel.UI\Origam.Schema.LookupModel.UI.csproj">
+      <Project>{a167cb98-7655-4f6e-8b13-5633195dd12a}</Project>
+      <Name>Origam.Schema.LookupModel.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.TestModel\Origam.Schema.TestModel.csproj">
+      <Project>{4133a401-c886-48fc-b088-999c4591366f}</Project>
+      <Name>Origam.Schema.TestModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.WorkflowModel.UI\Origam.Schema.WorkflowModel.UI.csproj">
+      <Project>{d561db91-154b-43ce-88c1-f97e47539c73}</Project>
+      <Name>Origam.Schema.WorkflowModel.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
       <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
       <Name>Origam.Schema</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Security\Origam.Security.csproj">
+      <Project>{93b972c4-d58d-4681-a8b8-95a34c7c2980}</Project>
+      <Name>Origam.Security</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Server.Handlers\Origam.Server.Handlers.csproj">
+      <Project>{a61b1685-63ab-440c-a8c8-6839a6d33412}</Project>
+      <Name>Origam.Server.Handlers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Server.Utils\Origam.Server.Utils.csproj">
+      <Project>{cadb51d2-ff76-4a8e-8472-0ca5c27090bd}</Project>
+      <Name>Origam.Server.Utils</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.ServerCommon\Origam.ServerCommon.csproj">
       <Project>{988c44a3-3f3f-4f61-812d-719b3d8d449b}</Project>
@@ -285,6 +337,26 @@
     <ProjectReference Include="..\Origam.Services.NetFx\Origam.Services.NetFx.csproj">
       <Project>{442DB093-B99E-4A53-AE94-E611A26D901F}</Project>
       <Name>Origam.Services.NetFx</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench.Diagram\Origam.Workbench.Diagram.csproj">
+      <Project>{8c587dcb-0e49-4dca-9ad5-eacc69c980c3}</Project>
+      <Name>Origam.Workbench.Diagram</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workflow.FileService\Origam.Workflow.FileService.csproj">
+      <Project>{27826cc4-81ad-4c2a-88ea-6102f119ffa6}</Project>
+      <Name>Origam.Workflow.FileService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.workflow.mail\Origam.workflow.mail.csproj">
+      <Project>{5e18ce83-b56f-44d3-a106-99cdaab33c8b}</Project>
+      <Name>Origam.workflow.mail</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workflow.NetMembershipService\Origam.Workflow.NetMembershipService.csproj">
+      <Project>{933a55d3-6641-41da-be15-e7ab2840188c}</Project>
+      <Name>Origam.Workflow.NetMembershipService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workflow.SimplicorService\Origam.Workflow.SimplicorService.csproj">
+      <Project>{ee92b4de-5635-4b60-80b0-532c438b280f}</Project>
+      <Name>Origam.Workflow.SimplicorService</Name>
     </ProjectReference>
     <ProjectReference Include="..\ORIGAMLocaleResolver\ORIGAMLocaleResolver.csproj">
       <Project>{4f685ce8-44f7-4f46-9e86-2ec2143f9a1f}</Project>
