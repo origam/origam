@@ -27,7 +27,7 @@ using Origam.Workbench.Services;
 using Origam.Schema.GuiModel;
 using System.Reflection;
 using System.IO;
-using Origam.DocGenerator;
+using Origam.Utils;
 
 namespace Origam.Server.Doc
 {
@@ -76,7 +76,7 @@ namespace Origam.Server.Doc
             // Data Source
             WriteDataSource(writer, form);
             // Screen sections
-            new DocCreate(writer, documentation, ps).Screen(form, getAssemblyXslt());
+            new DocProcessor(writer, documentation, ps).Screen(form, getAssemblyXslt());
             // end body
             writer.WriteEndElement();
             #endregion

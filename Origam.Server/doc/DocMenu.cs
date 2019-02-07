@@ -25,7 +25,7 @@ using System.Xml;
 using Origam.Schema;
 using Origam.Workbench.Services;
 using Origam.Schema.MenuModel;
-using Origam.DocGenerator;
+using Origam.Utils;
 
 namespace Origam.Server.Doc
 {
@@ -117,7 +117,7 @@ namespace Origam.Server.Doc
             {
                 DocScreen doc = new DocScreen(writer);
                 DocScreen.WriteDataSource(writer, formItem.Screen);
-                new DocCreate(writer, documentation, ps).Screen(formItem.Screen,doc.getAssemblyXslt());
+                new DocProcessor(writer, documentation, ps).Screen(formItem.Screen,doc.getAssemblyXslt());
             }
             else if (wfItem != null)
             {

@@ -270,6 +270,10 @@
       <Project>{cc4c4334-335d-4369-b0ed-f3c17cd57364}</Project>
       <Name>MIMEParser</Name>
     </ProjectReference>
+    <ProjectReference Include="..\origam-utils\origam-utils.csproj">
+      <Project>{3896810a-d91a-48ab-b6d8-db2306f0b62d}</Project>
+      <Name>origam-utils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.BI.CrystalReports\Origam.BI.CrystalReports.csproj">
       <Project>{d8090b11-35d3-43d7-ac66-5d7ae2d476da}</Project>
       <Name>Origam.BI.CrystalReports</Name>
@@ -281,10 +285,6 @@
     <ProjectReference Include="..\Origam.BI.SSRS\Origam.BI.SSRS.csproj">
       <Project>{dd8adce0-1a65-412b-a09b-0d139d1cd7ab}</Project>
       <Name>Origam.BI.SSRS</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.DocGenerator\Origam.DocGenerator.csproj">
-      <Project>{a791b6ad-394d-44a1-84be-b1dbc6c8a720}</Project>
-      <Name>Origam.DocGenerator</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Gui.Designer\Origam.Gui.Designer.csproj">
       <Project>{76038b9a-f924-4f7f-b4cc-4b9a0a6a55e3}</Project>
