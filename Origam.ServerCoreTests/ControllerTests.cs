@@ -21,13 +21,15 @@ namespace Origam.ServerCoreTests
 
         protected ControllerTests()
         {
+            var configuration = ConfigHelper
+                .GetApplicationConfiguration(TestContext.CurrentContext.TestDirectory);
             sessionObjects = new SessionObjects();
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, "JohnDoe"),
+                new Claim(ClaimTypes.Name, configuration.UserName),
                 new Claim(ClaimTypes.NameIdentifier, "1"),
-                new Claim("name", "JohnDoe"),
+                new Claim("name", configuration.UserName),
             };
             var identity = new ClaimsIdentity(claims, "TestAuthType");
             var principal = new ClaimsPrincipal(identity);
