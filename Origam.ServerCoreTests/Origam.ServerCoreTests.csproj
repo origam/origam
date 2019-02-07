@@ -6,7 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.2.0" />
     <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="140.17283.0" />
@@ -17,15 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Origam.ServerCore\Origam.ServerCore.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Microsoft.AspNetCore.Http">
-      <HintPath>..\..\..\..\..\..\.nuget\packages\microsoft.aspnetcore.http\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNetCore.Mvc.Core">
-      <HintPath>..\..\..\..\..\..\.nuget\packages\microsoft.aspnetcore.mvc.core\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Core.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
