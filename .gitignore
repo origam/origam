@@ -9,3 +9,4 @@ _Resharper*/
 /Origam.ServerCore/logs
 /packages
 *.pubxml
+/Origam.ServerCoreTests/appsettings.json
