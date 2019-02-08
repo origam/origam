@@ -261,7 +261,8 @@ namespace Origam
 						{
 							return responseStream;
 						}
-						if (response.ContentType.Equals("text/xml"))
+						if (response.ContentType.Equals("text/xml")
+                        || response.ContentType.Equals("application/xm"))
 						{
 							// for xml we will ignore encoding set in the HTTP header 
 							// because sometimes it is not present
