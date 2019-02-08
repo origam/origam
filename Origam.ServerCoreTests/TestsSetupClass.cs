@@ -1,28 +1,30 @@
-using System;
-using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Primitives;
+using System.Data.SqlClient;
 using Microsoft.SqlServer.Management.Common;
 using Microsoft.SqlServer.Management.Smo;
 using NUnit.Framework;
-using Origam.ServerCore.Controllers;
 
 namespace Origam.ServerCoreTests
 {
     [SetUpFixture]
     public class TestsSetupClass
     {
+        private ServerCoreTestConfiguration configuration;
+
+        public TestsSetupClass()
+        {
+            configuration = ConfigHelper.GetApplicationConfiguration(TestContext.CurrentContext.TestDirectory);
+        }
 
         [OneTimeSetUp]
         public void GlobalSetup()
         {
-            var configuration = ConfigHelper.GetApplicationConfiguration(TestContext.CurrentContext.TestDirectory);
             RestoreDatabase(
                 databaseName: configuration.TestDbName,
                 backUpFile: configuration.PathToBakFile, 
                 serverName: configuration.ServerName, 
                 userName: configuration.UserName, 
                 password: configuration.Password);
+            UpdateTestUserName();
             OrigamEngine.OrigamEngine.ConnectRuntime();
         }
 
@@ -32,7 +34,28 @@ namespace Origam.ServerCoreTests
 
         }
 
-        private void RestoreDatabase(String databaseName, String backUpFile, String serverName, String userName, String password)
+        private void UpdateTestUserName()
+        {
+            SqlConnection conn = new SqlConnection($"Server={configuration.ServerName};Initial Catalog ={configuration.TestDbName}; Integrated Security = True; User ID =; Password=;Pooling=True");
+            string sql = "Update [BusinessPartner] " +
+                          "Set UserName = @username, FirstName = @username, Name = @username " + 
+                          "Where Id = @id";
+            SqlCommand command = new SqlCommand(sql, conn);
+            command.Parameters.AddWithValue("@username", configuration.UserName);
+            command.Parameters.AddWithValue("@id", configuration.UserIdInTestDatabase);
+
+            try
+            {
+                conn.Open();
+                command.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        private void RestoreDatabase(string databaseName, string backUpFile, string serverName, string userName, string password)
         {
             ServerConnection connection = new ServerConnection(serverName, userName, password);
             Microsoft.SqlServer.Management.Smo.Server sqlServer = new Microsoft.SqlServer.Management.Smo.Server(connection);

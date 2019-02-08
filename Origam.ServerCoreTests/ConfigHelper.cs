@@ -45,5 +45,6 @@ namespace Origam.ServerCoreTests
         public string TestDbName { get; set; }
         public string PathToBakFile { get; set; }
         public string ServerName { get; set; }
+        public string UserIdInTestDatabase { get; set; }
     }
 }
