@@ -80,8 +80,8 @@ namespace Origam.Schema.WorkflowModel
 		#region Properties
 		[EntityColumn("G01")]  
 		public Guid WorkflowTaskId;
-
-		[TypeConverter(typeof(WorkflowStepConverter))]
+        [NotNullModelElementRule]
+        [TypeConverter(typeof(WorkflowStepConverter))]
 		[RefreshProperties(RefreshProperties.Repaint)]
 		[XmlReference("task", "WorkflowTaskId")]
 		public IWorkflowStep Task
