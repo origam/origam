@@ -1252,6 +1252,8 @@ namespace Origam.Schema.EntityModel
 
     public class TransformOutputScalarOrigamDataTypeConverter : TypeConverter
     {
+        ISchemaService _schema = ServiceManager.Services.GetService(
+            typeof(ISchemaService)) as ISchemaService;
         public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
         {
             //true means show a combobox
@@ -1264,24 +1266,40 @@ namespace Origam.Schema.EntityModel
             //but allow free-form entry
             return true;
         }
-
         public override System.ComponentModel.TypeConverter.StandardValuesCollection
             GetStandardValues(ITypeDescriptorContext context)
         {
-            ArrayList osArray = new ArrayList(9);
-            osArray.Add(OrigamDataType.Integer);
-            osArray.Add(OrigamDataType.Long);
-            osArray.Add(OrigamDataType.UniqueIdentifier);
-            osArray.Add(OrigamDataType.Currency);
-            osArray.Add(OrigamDataType.Float);
-            osArray.Add(OrigamDataType.Date);
-            osArray.Add(OrigamDataType.Boolean);
-            osArray.Add(OrigamDataType.String);
-            osArray.Add(OrigamDataType.Memo);
-
+            XsltInitialValueParameter currentItem = (XsltInitialValueParameter)context.Instance;
+            List<OrigamDataType> osArray = currentItem.getOrigamDataType();
             osArray.Sort();
-
             return new StandardValuesCollection(osArray);
+        }
+
+        public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+        {
+            if (sourceType == typeof(string))
+                return true;
+            else
+                return base.CanConvertFrom(context, sourceType);
+        }
+
+        public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+        {
+            if (value.GetType() == typeof(string))
+            {
+               XsltInitialValueParameter currentItem = (XsltInitialValueParameter)context.Instance;
+               if (currentItem == null) throw new ArgumentOutOfRangeException("Instance", context.Instance, "Current context must be XsltInitialValueParameter");
+                foreach (OrigamDataType item in currentItem.getOrigamDataType())
+                {
+                    if (item.ToString() == value.ToString())
+                    {
+                        return item;
+                    }
+                }
+                return null;
+            }
+            else
+                return base.ConvertFrom(context, culture, value);
         }
     }
 
