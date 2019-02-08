@@ -165,7 +165,7 @@ namespace Origam.ServerCoreTests
                 Filter = $"[\"Name\",\"like\",\"name1%\"]",
                 Ordering = new List<List<string>>
                 {
-                    new List<string>{"PlotMinimumSize","ASC"}, 
+                    new List<string>{"PlotMinimumSize","asc"}, 
                 },
                 RowLimit = 3,
                 ColumnNames = columnNames
@@ -185,6 +185,56 @@ namespace Origam.ServerCoreTests
             Assert.That(firstRow[1], Is.EqualTo("name11"));
             Assert.That(secondRow[1], Is.EqualTo("name14"));
             Assert.That(thirdRow[1], Is.EqualTo("name13"));
+        }
+
+        [Test, Order(106)]
+        public void ShouldGetLookupLabels()
+        {
+            var actionResult = sut.GetLookupLabels(new LookupLabelsData
+            {
+                MenuId = new Guid("6d181c9f-c89c-4b0a-bfc2-1a59f2a025ce"),
+                LabelIds = new []
+                {
+                    new Guid("3107b7f8-43ec-41cd-8fc6-563ffdf72278"),
+                    new Guid("251fc6a3-9cda-4cfb-b515-001367c92194")
+                },
+                LookupId = new Guid("78d745c1-e83a-4ab6-ae89-7bbac2d8d146")
+            });
+
+            Assert.IsInstanceOf<OkObjectResult>(actionResult);
+            OkObjectResult entitiesObjResult = (OkObjectResult)actionResult;
+
+            Assert.IsInstanceOf<IDictionary<Guid,string>>(entitiesObjResult.Value);
+            var lookupDict = (IDictionary <Guid, string>)entitiesObjResult.Value;
+
+            Assert.That(lookupDict[new Guid("3107b7f8-43ec-41cd-8fc6-563ffdf72278")], Is.EqualTo("50000000 TALDIS AG Üüö"));
+            Assert.That(lookupDict[new Guid("251fc6a3-9cda-4cfb-b515-001367c92194")], Is.EqualTo("50000002 test678691"));
+        }
+
+
+        [Test, Order(107)]
+        public void ShouldGetLookupList()
+        {
+            var actionResult = sut.GetLookupListEx( new LookupListData
+            {
+                MenuId = new Guid("4c15ccbf-33ee-4746-b059-04f4a49c5a1a"),
+                Id = new Guid("05692FC4-1206-48FC-80B5-75DD2C7084BE"),
+                LookupId = new Guid("5f644fbe-7723-4004-9153-b296a1c27264"),
+                Property = "Name",
+                ColumnNames = new[] {"Name"},
+                ShowUniqueValues = false,
+                SearchText ="",
+                PageNumber = 1,
+                PageSize = 10,
+                DataStructureEntityId= new Guid("fc652e79-6822-465b-ab89-1cd8ada8100d")
+            });
+
+            Assert.IsInstanceOf<OkObjectResult>(actionResult);
+            OkObjectResult entitiesObjResult = (OkObjectResult)actionResult;
+
+            Assert.IsInstanceOf<IEnumerable<object>>(entitiesObjResult.Value);
+            var lookupList= ((IEnumerable<object>)entitiesObjResult.Value).ToList();
+            Assert.That(lookupList, Has.Count.EqualTo(24));
         }
     }
 }
