@@ -12,13 +12,13 @@ using Origam.ServerCore.Models;
 
 namespace Origam.ServerCoreTests
 {
-    class DataControllerTests: ControllerTests
+    class DataControllerTests : ControllerTests
     {
         private readonly DataController sut;
         private Guid producerMenuId = new Guid("f38fdadb-4bba-4bb7-8184-c9109d5d40cd");
         private Guid produceDataStructureEntityId = new Guid("93053357-745b-4a8c-91d2-d60389d0f22e");
         private List<Guid> createdProducers = new List<Guid>();
- 
+
         public DataControllerTests()
         {
             sut = new DataController(NullLogger<AbstractController>.Instance);
@@ -30,7 +30,7 @@ namespace Origam.ServerCoreTests
         {
             Guid producerId = new Guid("B61F9A1F-3719-46D3-BE0A-2713C1E5F4CA");
 
-            string[] columnNames = new[] { "Id", "Name", "NameAndAddress", "Email" };
+            string[] columnNames = new[] {"Id", "Name", "NameAndAddress", "Email"};
             IActionResult entitiesActionResult = sut.EntitiesGet(new EntityGetData
             {
                 MenuId = producerMenuId,
@@ -41,14 +41,14 @@ namespace Origam.ServerCoreTests
                 ColumnNames = columnNames
             });
             Assert.IsInstanceOf<OkObjectResult>(entitiesActionResult);
-            OkObjectResult entitiesObjResult = (OkObjectResult)entitiesActionResult;
+            OkObjectResult entitiesObjResult = (OkObjectResult) entitiesActionResult;
 
             Assert.IsInstanceOf<IEnumerable<object>>(entitiesObjResult.Value);
-            var retrievedObjects = ((IEnumerable<object>)entitiesObjResult.Value).ToList();
+            var retrievedObjects = ((IEnumerable<object>) entitiesObjResult.Value).ToList();
 
             Assert.That(retrievedObjects, Has.Count.EqualTo(1));
-            object[] retrievedObject = (object[])retrievedObjects[0];
-            Assert.That(retrievedObject[0], Is.EqualTo(producerId)); 
+            object[] retrievedObject = (object[]) retrievedObjects[0];
+            Assert.That(retrievedObject[0], Is.EqualTo(producerId));
             Assert.That(retrievedObject[1], Is.EqualTo("hu"));
             Assert.That(retrievedObject[2], Is.EqualTo("huhu"));
             Assert.That(retrievedObject[3], Is.EqualTo("hu@hu.hu"));
@@ -62,7 +62,7 @@ namespace Origam.ServerCoreTests
                 dataStructureId: produceDataStructureEntityId,
                 id: producerId,
                 columnNames: columnNames,
-                expectedColumnValues: new object[] { producerId, "hu", "huhu", "hu@hu.hu" });
+                expectedColumnValues: new object[] {producerId, "hu", "huhu", "hu@hu.hu"});
         }
 
         [Test, Order(102)]
@@ -74,24 +74,24 @@ namespace Origam.ServerCoreTests
                 DataStructureEntityId = produceDataStructureEntityId,
                 NewValues = new Dictionary<string, string>
                 {
-                    { "Name", "testName1" },
-                    { "NameAndAddress", "testNameAndAddress1" } ,
-                    { "Email", "test.test@test.test1" } 
+                    {"Name", "testName1"},
+                    {"NameAndAddress", "testNameAndAddress1"},
+                    {"Email", "test.test@test.test1"}
                 }
             });
 
             Assert.IsInstanceOf<OkObjectResult>(actionResult);
-            OkObjectResult entitiesObjResult = (OkObjectResult)actionResult;
+            OkObjectResult entitiesObjResult = (OkObjectResult) actionResult;
 
             Assert.IsInstanceOf<DataRow>(entitiesObjResult.Value);
-            Guid newProducerId = (Guid)((DataRow) entitiesObjResult.Value)["Id"];
+            Guid newProducerId = (Guid) ((DataRow) entitiesObjResult.Value)["Id"];
 
             AssertObjectIsPersisted(
                 menuId: producerMenuId,
                 dataStructureId: produceDataStructureEntityId,
                 id: newProducerId,
-                columnNames: new[] {"Name", "NameAndAddress", "Email" },
-                expectedColumnValues: new object[] { "testName1", "testNameAndAddress1", "test.test@test.test1" });
+                columnNames: new[] {"Name", "NameAndAddress", "Email"},
+                expectedColumnValues: new object[] {"testName1", "testNameAndAddress1", "test.test@test.test1"});
 
             createdProducers.Add(newProducerId);
         }
@@ -107,22 +107,23 @@ namespace Origam.ServerCoreTests
                 DataStructureEntityId = produceDataStructureEntityId,
                 NewValues = new Dictionary<string, string>
                 {
-                    { "Name", "testNameUpdated" },
-                    { "NameAndAddress", "testNameAndAddressUpdated" } ,
-                    { "Email", "test.testUpdated@test.test1" }
+                    {"Name", "testNameUpdated"},
+                    {"NameAndAddress", "testNameAndAddressUpdated"},
+                    {"Email", "test.testUpdated@test.test1"}
                 },
                 RowId = producerId
             });
 
             Assert.IsInstanceOf<OkObjectResult>(actionResult);
-            OkObjectResult entitiesObjResult = (OkObjectResult)actionResult;
+            OkObjectResult entitiesObjResult = (OkObjectResult) actionResult;
 
             AssertObjectIsPersisted(
                 menuId: producerMenuId,
                 dataStructureId: produceDataStructureEntityId,
                 id: producerId,
-                columnNames: new[] { "Name", "NameAndAddress", "Email" },
-                expectedColumnValues: new object[] { "testNameUpdated", "testNameAndAddressUpdated", "test.testUpdated@test.test1" });
+                columnNames: new[] {"Name", "NameAndAddress", "Email"},
+                expectedColumnValues: new object[]
+                    {"testNameUpdated", "testNameAndAddressUpdated", "test.testUpdated@test.test1"});
         }
 
         [Test, Order(104)]
@@ -143,14 +144,47 @@ namespace Origam.ServerCoreTests
                 Filter = $"[\"Id\",\"eq\",\"{producerId}\"]",
                 Ordering = new List<List<string>>(),
                 RowLimit = 0,
-                ColumnNames = new[] { "Name", "NameAndAddress", "Email" }
+                ColumnNames = new[] {"Name", "NameAndAddress", "Email"}
             });
             Assert.IsInstanceOf<OkObjectResult>(entitiesActionResult);
-            OkObjectResult entitiesObjResult = (OkObjectResult)entitiesActionResult;
+            OkObjectResult entitiesObjResult = (OkObjectResult) entitiesActionResult;
 
             Assert.IsInstanceOf<IEnumerable<object>>(entitiesObjResult.Value);
-            var retrievedObjects = ((IEnumerable<object>)entitiesObjResult.Value).ToList();
+            var retrievedObjects = ((IEnumerable<object>) entitiesObjResult.Value).ToList();
             Assert.That(retrievedObjects, Has.Count.EqualTo(0));
+        }
+
+        [Test, Order(105)]
+        public void ShouldRetrieveProducersWithParameters()
+        {
+            string[] columnNames = {"Id", "Name", "NameAndAddress", "PlotMinimumSize" };
+            IActionResult entitiesActionResult = sut.EntitiesGet(new EntityGetData
+            {
+                MenuId = producerMenuId,
+                DataStructureEntityId = produceDataStructureEntityId,
+                Filter = $"[\"Name\",\"like\",\"name1%\"]",
+                Ordering = new List<List<string>>
+                {
+                    new List<string>{"PlotMinimumSize","ASC"}, 
+                },
+                RowLimit = 3,
+                ColumnNames = columnNames
+            });
+            Assert.IsInstanceOf<OkObjectResult>(entitiesActionResult);
+            OkObjectResult entitiesObjResult = (OkObjectResult) entitiesActionResult;
+
+            Assert.IsInstanceOf<IEnumerable<object>>(entitiesObjResult.Value);
+            var retrievedObjects = ((IEnumerable<object>) entitiesObjResult.Value).ToList();
+
+            Assert.That(retrievedObjects, Has.Count.EqualTo(3));
+
+            object[] firstRow = (object[]) retrievedObjects[0];
+            object[] secondRow = (object[])retrievedObjects[1];
+            object[] thirdRow = (object[])retrievedObjects[2];
+
+            Assert.That(firstRow[1], Is.EqualTo("name11"));
+            Assert.That(secondRow[1], Is.EqualTo("name14"));
+            Assert.That(thirdRow[1], Is.EqualTo("name13"));
         }
     }
 }

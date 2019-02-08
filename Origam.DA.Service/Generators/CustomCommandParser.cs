@@ -146,7 +146,7 @@ namespace Origam.DA.Service.Generators
 
         private string OrderingToSQLName(string orderingName)
         {
-            switch (orderingName)
+            switch (orderingName.ToLower())
             {
                 case "asc": return "ASC";
                 case "desc": return "DESC";
