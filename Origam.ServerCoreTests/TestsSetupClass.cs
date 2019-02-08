@@ -20,7 +20,7 @@ namespace Origam.ServerCoreTests
             RestoreDatabase(
                 databaseName: configuration.TestDbName,
                 backUpFile: configuration.PathToBakFile, 
-                serverName: ".", 
+                serverName: configuration.ServerName, 
                 userName: configuration.UserName, 
                 password: configuration.Password);
             OrigamEngine.OrigamEngine.ConnectRuntime();
