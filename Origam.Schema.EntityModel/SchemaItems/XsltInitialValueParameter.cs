@@ -20,7 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel
@@ -32,11 +35,31 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Xslt+Initial+ValueParameter")]
     public class XsltInitialValueParameter : SchemaItemParameter
     {
-        public XsltInitialValueParameter() : base() { }
+        private List<OrigamDataType> osArray ;
 
-        public XsltInitialValueParameter(Guid schemaExtensionId) : base(schemaExtensionId) { }
+        public XsltInitialValueParameter() : base() {
+            InitArray();
+        }
 
-        public XsltInitialValueParameter(Key primaryKey) : base(primaryKey) { }
+        private void InitArray()
+        {
+            osArray = new List<OrigamDataType>
+            {
+                OrigamDataType.Integer,
+                OrigamDataType.Long,
+                OrigamDataType.UniqueIdentifier,
+                OrigamDataType.Currency,
+                OrigamDataType.Float,
+                OrigamDataType.Date,
+                OrigamDataType.Boolean,
+                OrigamDataType.String,
+                OrigamDataType.Memo
+            };
+        }
+
+        public XsltInitialValueParameter(Guid schemaExtensionId) : base(schemaExtensionId) { InitArray(); }
+
+        public XsltInitialValueParameter(Key primaryKey) : base(primaryKey) { InitArray(); }
 
         public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
         {
@@ -44,7 +67,9 @@ namespace Origam.Schema.EntityModel
         }
 
         #region Properties
+        //protected OrigamDataType _dataType;
         [EntityColumn("I01")]
+        [XmlAttribute("dataType")]
         [TypeConverter(typeof(TransformOutputScalarOrigamDataTypeConverter))]
         public override OrigamDataType DataType
         {
@@ -65,6 +90,7 @@ namespace Origam.Schema.EntityModel
         [TypeConverter(typeof(TransformationConverter))]
         [RefreshProperties(RefreshProperties.Repaint)]
         [NotNullModelElementRule()]
+        [XmlReference("transformation", "transformationId")]
         [Description("XSLT transformation that computes a value for a parameter. The transformation can use other non-xslt parameters as an input (as <xsl:param>s). The transformation has always <ROOT/> XmlDocument as an input (data). The value for a parameter is taken from /ROOT/Value output of the transformation.")]
         public XslTransformation Transformation
         {
@@ -83,6 +109,11 @@ namespace Origam.Schema.EntityModel
             {
                 this.transformationId = (Guid)value.PrimaryKey["Id"];
             }
+        }
+
+        public List<OrigamDataType> getOrigamDataType()
+        {
+            return osArray;
         }
         #endregion
     }
