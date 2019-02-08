@@ -204,7 +204,7 @@ namespace Origam.Schema.WorkflowModel
 
 		[EntityColumn("G01")]  
 		public Guid EntityId;
-
+        [NotNullModelElementRule]
 		[TypeConverter(typeof(EntityConverter))]
 		[RefreshProperties(RefreshProperties.Repaint)]
 		[XmlReference("entity", "EntityId")]
