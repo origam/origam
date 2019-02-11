@@ -1654,24 +1654,26 @@ namespace OrigamArchitect
 	        Task.Factory.StartNew(
 	            () => CheckModelRules(cancellationToken),
 	            cancellationToken 
-            ).ContinueWith( previousTask =>
-	            {
-	                try
-	                {
-	                    previousTask.Wait();
-	                }
-	                catch (AggregateException ae)
-	                {
-	                    if (!(ae.InnerException is OperationCanceledException))
-	                    {
-                            log.Error(ae.InnerException);
-	                        this.RunWithInvoke(() => AsMessageBox.ShowError(
-	                            null, ae.InnerException.Message, strings.GenericError_Title, ae.InnerException));
-                        }
-	                }
-	            },
+            ).ContinueWith(
+	            TaskErrorHandler,
 	            TaskScheduler.FromCurrentSynchronizationContext()
             );
+	    }
+
+	    private void TaskErrorHandler(Task previousTask)
+	    {
+	        try
+	        {
+	            previousTask.Wait();
+	        }
+	        catch (AggregateException ae)
+	        {
+	            if (!(ae.InnerException is OperationCanceledException))
+	            {
+	                log.Error(ae.InnerException);
+	                this.RunWithInvoke(() => AsMessageBox.ShowError(null, ae.InnerException.Message, strings.GenericError_Title, ae.InnerException));
+	            }
+	        }
 	    }
 
 	    private void CheckModelRules(CancellationToken cancellationToken)
@@ -1679,9 +1681,20 @@ namespace OrigamArchitect
             using (FilePersistenceService independentPersistenceService = new FilePersistenceBuilder()
 	            .CreateNoBinFilePersistenceService())
 	        {
-                List<AbstractSchemaItemProvider> allproviders = new OrigamProviders().GetAllProviders().Select(x =>
-                { x.PersistenceProvider = independentPersistenceService.SchemaProvider; return x; }).ToList();
-                List<Dictionary<IFilePersistent, string>> errorFragments = ModelRules.GetErrors(allproviders, independentPersistenceService, cancellationToken); 
+                List<AbstractSchemaItemProvider> allProviders = new OrigamProviders()
+                    .GetAllProviders()
+                    .Select(x =>{
+                            x.PersistenceProvider = independentPersistenceService.SchemaProvider;
+                            return x;
+                        })
+                    .ToList();
+                List<Dictionary<IFilePersistent, string>> errorFragments =
+                    ModelRules.GetErrors(allProviders, independentPersistenceService, cancellationToken); 
+
+	            var persistenceProvider = (FilePersistenceProvider)independentPersistenceService.SchemaProvider;
+	            List<string> fileErrors = persistenceProvider.GetFileErrors(
+	                ignoreDirectoryNames: new []{ ".git","l10n"});
+
 	            if (errorFragments.Count != 0)
 	            {
                     FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
@@ -1695,7 +1708,15 @@ namespace OrigamArchitect
                        }
                     );
                 }
-            }
+	            if (fileErrors.Count != 0)
+	            {
+	                this.RunWithInvoke(() =>
+	                    {
+	                        MessageBox.Show("The following file errors were found in the model: \n"+string.Join("\n",fileErrors), "File Errors");
+	                    }
+	                );
+                }
+	        }
 	    }
 
 	    protected override void WndProc(ref Message m)
