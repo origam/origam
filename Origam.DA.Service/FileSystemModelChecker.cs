@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using CSharpFunctionalExtensions;
 using Origam.Extensions;
+using Origam.Schema;
 
 namespace Origam.DA.Service
 {
@@ -11,18 +13,66 @@ namespace Origam.DA.Service
     {
         private readonly DirectoryInfo topDirectory;
         private readonly string[] ignoreDirectoryNames;
+        private readonly FilePersistenceProvider filePersistenceProvider;
 
-        public FileSystemModelChecker(DirectoryInfo topDirectory, string[] ignoreDirectoryNames)
+        public FileSystemModelChecker(DirectoryInfo topDirectory, string[] ignoreDirectoryNames,
+            FilePersistenceProvider filePersistenceProvider)
         {
             this.topDirectory = topDirectory;
             this.ignoreDirectoryNames = ignoreDirectoryNames;
+            this.filePersistenceProvider = filePersistenceProvider;
         }
 
         public List<string> GetFileErrors()
         {
+            var errors = new List<string>();
+            errors.AddRange(CheckDirectories());
+            errors.AddRange(CheckGroupReferenceFiles());
+            return errors;
+        }
+
+        private IEnumerable<string> CheckGroupReferenceFiles()
+        {
+            return topDirectory
+                .GetAllFilesInSubDirectories()
+                .Where(file => file.Name == OrigamFile.ReferenceFileName)
+                .Select(ReadToFileData)
+                .Select(CheckAndReturnErrors)
+                .Where(errMessage => !string.IsNullOrEmpty(errMessage));
+        }
+
+        private string CheckAndReturnErrors(ReferenceFileData fileData)
+        {
+            Guid groupId = fileData.ParentFolderIds.GroupId;
+            Guid packageId = fileData.ParentFolderIds.PackageId;
+
+            if (filePersistenceProvider.RetrieveInstance<SchemaItemGroup>(groupId) == null)
+            {
+                return "Group \"" + groupId + "\" referenced in " + fileData.XmlFileData.FileInfo.FullName + " cannot be found.";
+            }
+
+            if (filePersistenceProvider.RetrieveInstance<SchemaExtension>(packageId) == null)
+            {
+                return "Group \"" + groupId + "\" referenced in " + fileData.XmlFileData.FileInfo.FullName + " cannot be found.";
+            }
+
+            return null;
+        }
+
+        private static ReferenceFileData ReadToFileData(FileInfo groupReferenceFile)
+        {
+            var xmlFileDataFactory = new XmlFileDataFactory(new List<MetaVersionFixer>());
+            Result<XmlFileData, XmlLoadError> result = xmlFileDataFactory.Create(groupReferenceFile);
+
+            var xmlFileData = new ReferenceFileData(result.Value);
+            return xmlFileData;
+        }
+
+        private List<string> CheckDirectories()
+        {
             DirectoryInfo[] packageDirectories = topDirectory.GetDirectories()
-                    .Where(dir => !ignoreDirectoryNames.Contains(dir.Name))
-                    .ToArray();
+                .Where(dir => !ignoreDirectoryNames.Contains(dir.Name))
+                .ToArray();
             IEnumerable<DirectoryInfo> packageSubDirectories = packageDirectories
                 .SelectMany(dir => dir.GetDirectories())
                 .Where(dir => !ignoreDirectoryNames.Contains(dir.Name))

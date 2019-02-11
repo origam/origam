@@ -411,7 +411,7 @@ namespace Origam.DA.Service
 
         public List<string> GetFileErrors(string[] ignoreDirectoryNames)
         {
-            return new FileSystemModelChecker(TopDirectory, ignoreDirectoryNames).GetFileErrors();
+            return new FileSystemModelChecker(TopDirectory, ignoreDirectoryNames, this).GetFileErrors();
         }
     }
 }
