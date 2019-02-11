@@ -34,7 +34,7 @@ namespace Origam.DA.Service
             {
                 return new PlainTextFileSearcher(keyWord, fileInfo);
             }
-            if (OrigamFile.IsOrigamFile(fileInfo))
+            if (OrigamFile.IsPersistenceFile(fileInfo))
             {
                 return new OrigamFileSearcher(keyWord, fileInfo);
             }
@@ -53,7 +53,7 @@ namespace Origam.DA.Service
         }
 
         private bool IsSearchableFile(FileInfo file) =>
-            OrigamFile.IsOrigamFile(file)|| IsExternalSearchableFile(file);
+            OrigamFile.IsPersistenceFile(file)|| IsExternalSearchableFile(file);
 
         private static bool IsExternalSearchableFile(FileInfo fileInfo) =>
             ExternalFileExtensionTools.TryParse(fileInfo, out var extension)

@@ -68,7 +68,7 @@ namespace Origam.DA.Service
             List<Result<XmlFileData, XmlLoadError>> results = topDirectory
                 .GetAllFilesInSubDirectories()
                 .AsParallel()
-                .Where(OrigamFile.IsOrigamFile)
+                .Where(OrigamFile.IsPersistenceFile)
                 .Where(file =>
                     !itemTracker.ContainsFile(file))
                 .Select(fileInfo =>

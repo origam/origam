@@ -170,7 +170,7 @@ namespace Origam.DA.Service
 
         private Maybe<string> FindPersistenceFileHash(FileInfo file)
         {
-            if (OrigamFile.IsOrigamFile(file))
+            if (OrigamFile.IsPersistenceFile(file))
             {
                 return index.GetFileHash(file);
             }

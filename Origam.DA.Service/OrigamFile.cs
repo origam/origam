@@ -150,14 +150,20 @@ namespace Origam.DA.Service
         public object GetFromExternalFile(Guid instanceId, string fieldName) => 
             externalFileManger.GetValue(instanceId, fieldName);
 
-        public static bool IsOrigamFile(FileInfo fileInfo)
+        public static bool IsPersistenceFile(FileInfo fileInfo)
         {
             var ignoreCase = StringComparison.InvariantCultureIgnoreCase;
             return
-                string.Equals(fileInfo.Extension, OrigamExtension, ignoreCase )||
+                IsOrigamFile(fileInfo)||
                 string.Equals(fileInfo.Name, PackageFileName, ignoreCase) ||
                 string.Equals(fileInfo.Name, ReferenceFileName, ignoreCase) ||
                 string.Equals(fileInfo.Name, GroupFileName, ignoreCase) ;
+        }
+
+        public static bool IsOrigamFile(FileInfo fileInfo)
+        {
+            var ignoreCase = StringComparison.InvariantCultureIgnoreCase;
+            return string.Equals(fileInfo.Extension, OrigamExtension, ignoreCase);
         }
 
         public void FinalizeSave()    
