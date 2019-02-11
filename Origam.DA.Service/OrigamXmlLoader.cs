@@ -292,7 +292,7 @@ namespace Origam.DA.Service
             foreach (object nodeObj in currentNode.ChildNodes)
             {
                 var childNode = (XmlNode) nodeObj;
-                XmlAttribute idAttribute = childNode.Attributes?["x:id"];
+                XmlAttribute idAttribute = childNode.Attributes?[$"x:{OrigamFile.IdAttribute}"];
                 Guid currentNodeId; 
                 if (idAttribute != null)
                 {
@@ -319,14 +319,14 @@ namespace Origam.DA.Service
         private static bool ParseIsFolder(XmlNode childNode)
         {
             bool.TryParse(
-                childNode?.Attributes?["x:isFolder"]?.Value,
+                childNode?.Attributes?[$"x:{OrigamFile.IsFolderAttribute}"]?.Value,
                 out bool isFolder);
             return isFolder;
         }
 
         private static Guid ParseParentId(Guid parentNodeId, XmlNode childNode)
         {
-            XmlAttribute nodeAttribute = childNode?.Attributes?["x:parentId"];
+            XmlAttribute nodeAttribute = childNode?.Attributes?[$"x:{OrigamFile.ParentIdAttribute}"];
             Guid parentId = nodeAttribute != null
                 ? new Guid(nodeAttribute.Value)
                 : parentNodeId;
@@ -346,7 +346,7 @@ namespace Origam.DA.Service
                 xmlFileData
                 ?.XmlDocument
                 ?.SelectSingleNode("//g:group",xmlFileData.NamespaceManager)
-                ?.Attributes?["x:id"]
+                ?.Attributes?[$"x:{OrigamFile.IdAttribute}"]
                 ?.Value 
                 ?? throw new Exception($"Could not read group id from: {FileInfo.FullName}");
             
@@ -368,7 +368,7 @@ namespace Origam.DA.Service
                       ?? throw new Exception($"Could not find groupReference in: {xmlFileData.FileInfo.FullName}");
             foreach (object node in xmlNodeList)
             {
-                string name = (node as XmlNode)?.Attributes?["x:type"].Value 
+                string name = (node as XmlNode)?.Attributes?[$"x:{OrigamFile.TypeAttribute}"].Value 
                     ?? throw new Exception($"Could not read type form file: {xmlFileData.FileInfo.FullName} node: {node}");
                 string idStr = (node as XmlNode).Attributes?["x:refId"].Value
                     ?? throw new Exception($"Could not read id form file: {xmlFileData.FileInfo.FullName} node: {node}");
@@ -391,7 +391,7 @@ namespace Origam.DA.Service
             string idStr = xmlFileData
                 ?.XmlDocument
                 ?.SelectSingleNode("//p:package", xmlFileData.NamespaceManager)
-                ?.Attributes?["x:id"]
+                ?.Attributes?[$"x:{OrigamFile.IdAttribute}"]
                 ?.Value
                 ?? throw new Exception($"Could not read package id form file: {xmlFileData.FileInfo.FullName}");
             PackageId = new Guid(idStr);
