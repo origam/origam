@@ -46,9 +46,7 @@ namespace Origam.Server
             if (request.IsNewSession)
             {
                 PortalSessionStore pss = sessionManager.GetPortalSession();
-                OrigamSettings settings =
-                    (OrigamSettings) ConfigurationManager
-                        .GetActiveConfiguration();
+                OrigamSettings settings =  ConfigurationManager.GetActiveConfiguration();
                 if (settings.MaxOpenTabs > 0)
                 {
                     if (pss.FormSessions.Count >= settings.MaxOpenTabs)

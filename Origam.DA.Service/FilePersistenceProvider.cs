@@ -408,5 +408,10 @@ namespace Origam.DA.Service
                 primaryKey: new Key {{"Id", id}});
             return retrieveInstance != null;
         }
+
+        public List<string> GetFileErrors(string[] ignoreDirectoryNames)
+        {
+            return new FileSystemModelChecker(TopDirectory, ignoreDirectoryNames).GetFileErrors();
+        }
     }
 }

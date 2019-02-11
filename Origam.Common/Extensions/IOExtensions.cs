@@ -82,6 +82,24 @@ namespace Origam.Extensions
             }
         }
 
+        public static bool DoesNotContain(this DirectoryInfo directory, string fileName)
+        {
+            return !directory.Contains(fileName);
+        }
+
+        public static bool Contains(this DirectoryInfo directory, string fileName)
+        {
+            return directory.Contains(file => file.Name == fileName);
+        }
+
+
+        public static bool Contains(this DirectoryInfo directory, Func<FileInfo,bool> predicate)
+        {
+            return directory
+                .GetFiles()
+                .Any(predicate);
+        }
+
         public static IEnumerable<FileInfo> GetAllFilesInSubDirectories(
             this DirectoryInfo directory)
         {

@@ -67,8 +67,7 @@ namespace Origam.DA.Service
             fileEventQueue.Pause();
             HashChanged?.Invoke(this, new HashChangedEventArgs(newHash));
             index.AddOrReplaceHash(origamFile);
-            string parentDir = origamFile.Path.Directory.FullName;
-            Directory.CreateDirectory(parentDir);
+            Directory.CreateDirectory(origamFile.Path.Directory.FullName);
             File.WriteAllText(origamFile.Path.Absolute, xmlToWrite);
             fileEventQueue.Continue();
         }

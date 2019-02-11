@@ -44,7 +44,7 @@ namespace Origam.DA.Service
         public const string PackageFileName = PersistenceFiles.PackageFileName; 
         public const string ReferenceFileName = PersistenceFiles.ReferenceFileName; 
         public const string GroupFileName = PersistenceFiles.GroupFileName; 
-        private static readonly string OrigamExtension = PersistenceFiles.Extension;
+        public static readonly string OrigamExtension = PersistenceFiles.Extension;
         public static readonly ElementName ModelPersistenceUri =
             ElementNameFactory.CreatePersistenceElName(
                 $"http://schemas.origam.com/{VersionProvider.CurrentPersistenceMeta}/model-persistence");        
