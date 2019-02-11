@@ -1680,16 +1680,14 @@ namespace OrigamArchitect
 	    {
             using (FilePersistenceService independentPersistenceService = new FilePersistenceBuilder()
 	            .CreateNoBinFilePersistenceService())
-	        {
-                List<AbstractSchemaItemProvider> allProviders = new OrigamProviders()
-                    .GetAllProviders()
-                    .Select(x =>{
-                            x.PersistenceProvider = independentPersistenceService.SchemaProvider;
-                            return x;
-                        })
-                    .ToList();
+            {
                 List<Dictionary<IFilePersistent, string>> errorFragments =
-                    ModelRules.GetErrors(allProviders, independentPersistenceService, cancellationToken); 
+                    ModelRules.GetErrors(
+                        schemaProviders: new OrigamProviderBuilder()
+                            .SetSchemaProvider(independentPersistenceService.SchemaProvider)
+                            .GetAll(), 
+                        independentPersistenceService: independentPersistenceService, 
+                        cancellationToken: cancellationToken); 
 
 	            var persistenceProvider = (FilePersistenceProvider)independentPersistenceService.SchemaProvider;
 	            List<string> fileErrors = persistenceProvider.GetFileErrors(

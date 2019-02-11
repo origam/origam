@@ -65,7 +65,7 @@ namespace Origam.OrigamEngine
 		{
 			service.RemoveAllProviders();
 
-            foreach (var schemaItemProvider in new OrigamProviders().GetAllProviders())
+            foreach (var schemaItemProvider in new OrigamProviderBuilder().GetAll())
             {
                 service.AddProvider(schemaItemProvider);
             }

@@ -43,9 +43,10 @@ namespace Origam.Utils
             OrigamEngine.OrigamEngine.ConnectRuntime(customServiceFactory: RuntimeServiceFactory);
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             FilePersistenceService persistence = ServiceManager.Services.GetService(typeof(FilePersistenceService)) as FilePersistenceService;
-            
-            List<AbstractSchemaItemProvider> allproviders = new OrigamProviders().GetAllProviders().Select(x =>
-            { x.PersistenceProvider = persistence.SchemaProvider; return x; }).ToList();
+
+            List<AbstractSchemaItemProvider> allproviders = new OrigamProviderBuilder()
+                .SetSchemaProvider(persistence.SchemaProvider)
+                .GetAll();
             List<Dictionary<IFilePersistent, string>> errorFragments
                     = ModelRules.GetErrors(
                         allproviders,
