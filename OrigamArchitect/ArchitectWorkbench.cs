@@ -1694,7 +1694,7 @@ namespace OrigamArchitect
                         cancellationToken: cancellationToken); 
 
 	            var persistenceProvider = (FilePersistenceProvider)independentPersistenceService.SchemaProvider;
-	            List<string> fileErrors = persistenceProvider.GetFileErrors(
+	            var errorSections = persistenceProvider.GetFileErrors(
 	                ignoreDirectoryNames: new []{ ".git","l10n"},
 	                cancellationToken: cancellationToken);
 
@@ -1711,13 +1711,10 @@ namespace OrigamArchitect
                        }
                     );
                 }
-	            if (fileErrors.Count != 0)
+	            if (errorSections.Count != 0)
 	            {
-	                this.RunWithInvoke(() =>
-	                    {
-	                        MessageBox.Show("The following file errors were found in the model: \n"+string.Join("\n\n",fileErrors), "File Errors");
-	                    }
-	                );
+	                FlexibleMessageBox.Show("The following errors were found in the loaded model:\n\n"+
+	                                        string.Join("\n\n",errorSections), "Model Errors");
                 }
 	        }
 	    }

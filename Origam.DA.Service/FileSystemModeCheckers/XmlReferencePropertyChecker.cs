@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,7 +18,7 @@ namespace Origam.DA.Service.FileSystemModeCheckers
             this.filePersistenceProvider = filePersistenceProvider;
         }
 
-        public List<string> GetErrors()
+        public ModelErrorSection GetErrors()
         {
             var allInstances = filePersistenceProvider
                 .RetrieveList<IFilePersistent>()
@@ -28,16 +29,23 @@ namespace Origam.DA.Service.FileSystemModeCheckers
                 .Distinct()
                 .ToArray();
 
-            return
-                allTypes
-                    .Select(GetTypeData)
-                    .SelectMany(typeData =>
-                    {
-                        return allInstances
-                            .Where(instance => instance.GetType() == typeData.Type)
-                            .SelectMany(instance => CheckReferencedObjectsExistAndReturnErrors(instance, typeData));
-                    })
-                    .ToList();
+
+            List<string> errors = allTypes
+                .Select(GetTypeData)
+                .SelectMany(typeData =>
+                {
+                    return allInstances
+                        .Where(instance => instance.GetType() == typeData.Type)
+                        .SelectMany(instance => CheckReferencedObjectsExistAndReturnErrors(instance, typeData));
+                })
+                .ToList();
+
+
+            return new ModelErrorSection
+            {
+                Caption = "Invalid References Between Origam Files",
+                ErrorMessages = errors
+            };
         }
 
         private IEnumerable<string> CheckReferencedObjectsExistAndReturnErrors(
@@ -53,8 +61,8 @@ namespace Origam.DA.Service.FileSystemModeCheckers
                     var referencedObject = filePersistenceProvider.RetrieveInstance<IFilePersistent>(refId);
                     if (referencedObject == null)
                     {
-                        return "Instance with id:" + instance.Id + " persisted in " +
-                               instance.RelativeFilePath +
+                        return "Instance with id: " + instance.Id + " persisted in " +
+                               "file://" + GetFullPath(instance) +
                                " references " + info.Name + " with id: " + refId +
                                ". The referenced object cannot be found.";
                     }
@@ -63,6 +71,11 @@ namespace Origam.DA.Service.FileSystemModeCheckers
                 })
                 .Where(errMessage => errMessage != null)
                 .ToList();
+        }
+
+        private string GetFullPath(IFilePersistent instance)
+        {
+            return Path.Combine(filePersistenceProvider.TopDirectory.FullName, instance.RelativeFilePath);
         }
 
         private TypeData GetTypeData(Type type)

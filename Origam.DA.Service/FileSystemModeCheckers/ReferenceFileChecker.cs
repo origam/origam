@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CSharpFunctionalExtensions;
+using Origam.DA.Service.FileSystemModeCheckers;
 using Origam.Extensions;
 using Origam.Schema;
 
@@ -19,15 +20,21 @@ namespace Origam.DA.Service
             this.filePersistenceProvider = filePersistenceProvider;
         }
 
-        public List<string> GetErrors()
+        public ModelErrorSection GetErrors()
         {
-            return topDirectory
+            List<string> errors = topDirectory
                 .GetAllFilesInSubDirectories()
                 .Where(file => file.Name == OrigamFile.ReferenceFileName)
                 .Select(ReadToFileData)
                 .Select(CheckAndReturnErrors)
                 .Where(errMessage => !string.IsNullOrEmpty(errMessage))
                 .ToList();
+
+            return new ModelErrorSection
+            {
+                Caption = "Invalid Reference Files",
+                ErrorMessages = errors
+            };
         }
 
         private string CheckAndReturnErrors(ReferenceFileData fileData)
@@ -37,12 +44,12 @@ namespace Origam.DA.Service
 
             if (filePersistenceProvider.RetrieveInstance<SchemaItemGroup>(groupId) == null)
             {
-                return "Group \"" + groupId + "\" referenced in " + fileData.XmlFileData.FileInfo.FullName + " cannot be found.";
+                return "Group \"" + groupId + "\" referenced in file://" + fileData.XmlFileData.FileInfo.FullName + " cannot be found.";
             }
 
             if (filePersistenceProvider.RetrieveInstance<SchemaExtension>(packageId) == null)
             {
-                return "Group \"" + groupId + "\" referenced in " + fileData.XmlFileData.FileInfo.FullName + " cannot be found.";
+                return "Group \"" + groupId + "\" referenced in file://" + fileData.XmlFileData.FileInfo.FullName + " cannot be found.";
             }
 
             return null;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using Origam.DA.Service.FileSystemModeCheckers;
 using Origam.Extensions;
 using Origam.Schema;
 
@@ -22,7 +23,7 @@ namespace Origam.DA.Service
             this.filePersistenceProvider = filePersistenceProvider;
         }      
 
-        public  List<string> GetErrors()
+        public ModelErrorSection GetErrors()
         {
             DirectoryInfo[] packageDirectories = topDirectory.GetDirectories()
                 .Where(dir => !ignoreDirectoryNames.Contains(dir.Name))
@@ -39,7 +40,13 @@ namespace Origam.DA.Service
             errors.AddRange(FindErrorsInPackageDirectories(packageDirectories));
             errors.AddRange(FindErrorsInPackageSubDirectories(packageSubDirectories));
             errors.AddRange(FindErrorsInGroupDirectories(groupDirectories));
-            return errors;
+
+            return new ModelErrorSection
+            {
+                Caption = "Invalid Contents in Directories",
+                ErrorMessages = errors
+            };
+
         }
 
         private IEnumerable<string> FindErrorsInGroupDirectories(IEnumerable<DirectoryInfo> groupDirectories)
@@ -50,7 +57,7 @@ namespace Origam.DA.Service
                     && dir.DoesNotContain(OrigamFile.ReferenceFileName)
                     && dir.DoesNotContain(OrigamFile.GroupFileName)
                     && ContainsOrigamFilesWithMissingExplicitParent(dir))
-                .Select(dir => dir.FullName + " is a group directory and therefore must contain either " +
+                .Select(dir => "file://" + dir.FullName + " is a group directory and therefore must contain either " +
                                OrigamFile.ReferenceFileName + ", or " + OrigamFile.GroupFileName);
         }
 
@@ -58,14 +65,14 @@ namespace Origam.DA.Service
         {
             var packageFilesMissing = packageDirectories
                 .Where(dir => dir.DoesNotContain(OrigamFile.PackageFileName))
-                .Select(dir => dir.FullName + " is a package directory but the package file " + OrigamFile.PackageFileName + " is not in it");
+                .Select(dir => "file://" + dir.FullName + " is a package directory but the package file " + OrigamFile.PackageFileName + " is not in it");
 
             var wrongFilesPresent = packageDirectories
                 .Where(dir => 
                     dir.Contains(OrigamFile.GroupFileName)
                     || dir.Contains(OrigamFile.ReferenceFileName)
                     || dir.Contains(file => OrigamFile.IsOrigamFile(file)))
-                .Select(dir => dir.FullName + " is a package directory and therefore cannot contain any persistence files other than " + OrigamFile.PackageFileName);
+                .Select(dir => "file://" + dir.FullName + " is a package directory and therefore cannot contain any persistence files other than " + OrigamFile.PackageFileName);
 
             return packageFilesMissing.Concat(wrongFilesPresent);
         }
@@ -76,7 +83,7 @@ namespace Origam.DA.Service
                     .Where(dir => dir.Contains(OrigamFile.GroupFileName)
                                || dir.Contains(OrigamFile.ReferenceFileName)
                                || dir.Contains(OrigamFile.PackageFileName))
-                    .Select(dir => dir.FullName + " is a package sub directory and therefore cannot contain any of the following files: " +
+                    .Select(dir => "file://" + dir.FullName + " is a package sub directory and therefore cannot contain any of the following files: " +
                             OrigamFile.PackageFileName + ", " + OrigamFile.ReferenceFileName + ", or " + OrigamFile.GroupFileName);
         }
 
@@ -112,24 +119,6 @@ namespace Origam.DA.Service
                            return parentId == Guid.Empty;
                        })
                    ?? false;
-        }
-
-        private string CheckAndReturnErrors(ReferenceFileData fileData)
-        {
-            Guid groupId = fileData.ParentFolderIds.GroupId;
-            Guid packageId = fileData.ParentFolderIds.PackageId;
-
-            if (filePersistenceProvider.RetrieveInstance<SchemaItemGroup>(groupId) == null)
-            {
-                return "Group \"" + groupId + "\" referenced in " + fileData.XmlFileData.FileInfo.FullName + " cannot be found.";
-            }
-
-            if (filePersistenceProvider.RetrieveInstance<SchemaExtension>(packageId) == null)
-            {
-                return "Group \"" + groupId + "\" referenced in " + fileData.XmlFileData.FileInfo.FullName + " cannot be found.";
-            }
-
-            return null;
         }
     }
 }

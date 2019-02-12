@@ -411,7 +411,7 @@ namespace Origam.DA.Service
             return retrieveInstance != null;
         }
 
-        public List<string> GetFileErrors(string[] ignoreDirectoryNames, CancellationToken cancellationToken)
+        public List<ModelErrorSection> GetFileErrors(string[] ignoreDirectoryNames, CancellationToken cancellationToken)
         {
             return 
                 new IFileSystemModelChecker[]
@@ -420,7 +420,7 @@ namespace Origam.DA.Service
                         new DirectoryChecker(ignoreDirectoryNames, this),
                         new XmlReferencePropertyChecker(this)
                     }
-                    .SelectMany(checker =>
+                    .Select(checker =>
                     {
                         cancellationToken.ThrowIfCancellationRequested();
                         return checker.GetErrors();
