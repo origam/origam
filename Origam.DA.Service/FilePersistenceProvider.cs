@@ -31,6 +31,7 @@ using CSharpFunctionalExtensions;
 using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.ObjectPersistence.Providers;
+using Origam.DA.Service.FileSystemModeCheckers;
 using Origam.Extensions;
 using Origam.Schema;
 
@@ -415,7 +416,8 @@ namespace Origam.DA.Service
                 new IFileSystemModelChecker[]
                     {
                         new ReferenceFileChecker(this),
-                        new DirectoryChecker(ignoreDirectoryNames, this)
+                        new DirectoryChecker(ignoreDirectoryNames, this),
+                        new XmlReferencePropertyChecker(this)
                     }
                     .SelectMany(checker => checker.GetErrors())
                     .ToList();

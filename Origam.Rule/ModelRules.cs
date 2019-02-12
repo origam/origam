@@ -31,7 +31,10 @@ namespace Origam.Rule
 {
     public class ModelRules
     {
-        public static List<Dictionary<IFilePersistent, string>> GetErrors(List<AbstractSchemaItemProvider> schemaProviders,FilePersistenceService independentPersistenceService, CancellationToken cancellationToken)
+        public static List<Dictionary<IFilePersistent, string>> GetErrors(
+            List<AbstractSchemaItemProvider> schemaProviders,
+            FilePersistenceService independentPersistenceService,
+            CancellationToken cancellationToken)
         {
            List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
                     .SchemaProvider

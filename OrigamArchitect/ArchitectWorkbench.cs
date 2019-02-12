@@ -1710,7 +1710,7 @@ namespace OrigamArchitect
 	            {
 	                this.RunWithInvoke(() =>
 	                    {
-	                        MessageBox.Show("The following file errors were found in the model: \n"+string.Join("\n",fileErrors), "File Errors");
+	                        MessageBox.Show("The following file errors were found in the model: \n"+string.Join("\n\n",fileErrors), "File Errors");
 	                    }
 	                );
                 }
