@@ -62,6 +62,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
+using JR.Utils.GUI.Forms;
 using Origam.DA.ObjectPersistence;
 using OrigamArchitect.Commands;
 using Origam.Extensions;
@@ -1361,8 +1362,11 @@ namespace OrigamArchitect
             // and leaves application in unstable state
             try
             {
-                DialogResult dialogResult = LongMessageBox.ShowMsgBoxYesNo(this,
-                    $"Model file changes detected!{Environment.NewLine}{Environment.NewLine}{args}.{Environment.NewLine}{Environment.NewLine}Do you want to reload the model?", "Changes in Model Directory Detected");
+                DialogResult dialogResult = FlexibleMessageBox.Show(
+                    this,
+                    $"Model file changes detected!{Environment.NewLine}{Environment.NewLine}{args}.{Environment.NewLine}{Environment.NewLine}Do you want to reload the model?",
+                    "Changes in Model Directory Detected",
+                    MessageBoxButtons.YesNo);
                 return dialogResult == DialogResult.Yes;
             }
             catch(Exception ex)

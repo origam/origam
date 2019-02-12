@@ -40,7 +40,8 @@ namespace Origam.DA.Service.FileSystemModeCheckers
                     .ToList();
         }
 
-        private IEnumerable<string> CheckReferencedObjectsExistAndReturnErrors(IFilePersistent instance, TypeData typeData)
+        private IEnumerable<string> CheckReferencedObjectsExistAndReturnErrors(
+            IFilePersistent instance, TypeData typeData)
         {
             return typeData
                 .XmlReferenceFieldInfos
