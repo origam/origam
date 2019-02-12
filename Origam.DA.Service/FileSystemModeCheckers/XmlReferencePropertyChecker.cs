@@ -42,10 +42,10 @@ namespace Origam.DA.Service.FileSystemModeCheckers
 
 
             return new ModelErrorSection
-            {
-                Caption = "Invalid References Between Origam Files",
-                ErrorMessages = errors
-            };
+            (
+                caption : "Invalid References Between Origam Files",
+                errorMessages : errors
+            );
         }
 
         private IEnumerable<string> CheckReferencedObjectsExistAndReturnErrors(
@@ -62,7 +62,7 @@ namespace Origam.DA.Service.FileSystemModeCheckers
                     if (referencedObject == null)
                     {
                         return "Instance with id: " + instance.Id + " persisted in " +
-                               "file://" + GetFullPath(instance) +
+                               "\"file://" + GetFullPath(instance) + "\""+
                                " references " + info.Name + " with id: " + refId +
                                ". The referenced object cannot be found.";
                     }

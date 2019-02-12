@@ -13,14 +13,12 @@ namespace Origam.DA.Service
     {
         private readonly DirectoryInfo topDirectory;
         private readonly string[] ignoreDirectoryNames;
-        private readonly FilePersistenceProvider filePersistenceProvider;
 
         public DirectoryChecker(string[] ignoreDirectoryNames,
             FilePersistenceProvider filePersistenceProvider)
         {
             this.topDirectory = filePersistenceProvider.TopDirectory;
             this.ignoreDirectoryNames = ignoreDirectoryNames;
-            this.filePersistenceProvider = filePersistenceProvider;
         }      
 
         public ModelErrorSection GetErrors()
@@ -42,10 +40,10 @@ namespace Origam.DA.Service
             errors.AddRange(FindErrorsInGroupDirectories(groupDirectories));
 
             return new ModelErrorSection
-            {
-                Caption = "Invalid Contents in Directories",
-                ErrorMessages = errors
-            };
+            (
+                caption: "Invalid Contents in Directories",
+                errorMessages: errors
+            );
 
         }
 
@@ -57,7 +55,7 @@ namespace Origam.DA.Service
                     && dir.DoesNotContain(OrigamFile.ReferenceFileName)
                     && dir.DoesNotContain(OrigamFile.GroupFileName)
                     && ContainsOrigamFilesWithMissingExplicitParent(dir))
-                .Select(dir => "file://" + dir.FullName + " is a group directory and therefore must contain either " +
+                .Select(dir => "\"file://" + dir.FullName + "\" is a group directory and therefore must contain either " +
                                OrigamFile.ReferenceFileName + ", or " + OrigamFile.GroupFileName);
         }
 
@@ -65,14 +63,14 @@ namespace Origam.DA.Service
         {
             var packageFilesMissing = packageDirectories
                 .Where(dir => dir.DoesNotContain(OrigamFile.PackageFileName))
-                .Select(dir => "file://" + dir.FullName + " is a package directory but the package file " + OrigamFile.PackageFileName + " is not in it");
+                .Select(dir => "\"file://" + dir.FullName + "\" is a package directory but the package file " + OrigamFile.PackageFileName + " is not in it");
 
             var wrongFilesPresent = packageDirectories
                 .Where(dir => 
                     dir.Contains(OrigamFile.GroupFileName)
                     || dir.Contains(OrigamFile.ReferenceFileName)
                     || dir.Contains(file => OrigamFile.IsOrigamFile(file)))
-                .Select(dir => "file://" + dir.FullName + " is a package directory and therefore cannot contain any persistence files other than " + OrigamFile.PackageFileName);
+                .Select(dir => "\"file://" + dir.FullName + "\" is a package directory and therefore cannot contain any persistence files other than " + OrigamFile.PackageFileName);
 
             return packageFilesMissing.Concat(wrongFilesPresent);
         }
@@ -83,7 +81,7 @@ namespace Origam.DA.Service
                     .Where(dir => dir.Contains(OrigamFile.GroupFileName)
                                || dir.Contains(OrigamFile.ReferenceFileName)
                                || dir.Contains(OrigamFile.PackageFileName))
-                    .Select(dir => "file://" + dir.FullName + " is a package sub directory and therefore cannot contain any of the following files: " +
+                    .Select(dir => "\"file://" + dir.FullName + "\" is a package sub directory and therefore cannot contain any of the following files: " +
                             OrigamFile.PackageFileName + ", " + OrigamFile.ReferenceFileName + ", or " + OrigamFile.GroupFileName);
         }
 

@@ -425,6 +425,7 @@ namespace Origam.DA.Service
                         cancellationToken.ThrowIfCancellationRequested();
                         return checker.GetErrors();
                     })
+                    .Where(errorSection => !errorSection.IsEmpty)
                     .ToList();
         }
     }

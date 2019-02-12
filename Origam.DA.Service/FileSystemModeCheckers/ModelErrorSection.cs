@@ -6,8 +6,16 @@ namespace Origam.DA.Service.FileSystemModeCheckers
 {
     public class ModelErrorSection
     {
-        public string Caption { get; set; }
-        public List<string> ErrorMessages { get; set; }
+        public ModelErrorSection(string caption, List<string> errorMessages)
+        {
+            Caption = caption;
+            ErrorMessages = errorMessages;
+        }
+
+        public string Caption { get; }
+        public List<string> ErrorMessages { get; }
+
+        public bool IsEmpty => ErrorMessages == null || ErrorMessages.Count == 0;
 
         public override string ToString()
         {

@@ -31,10 +31,10 @@ namespace Origam.DA.Service
                 .ToList();
 
             return new ModelErrorSection
-            {
-                Caption = "Invalid Reference Files",
-                ErrorMessages = errors
-            };
+            (
+                caption : "Invalid Reference Files",
+                errorMessages : errors
+            );
         }
 
         private string CheckAndReturnErrors(ReferenceFileData fileData)
@@ -44,12 +44,12 @@ namespace Origam.DA.Service
 
             if (filePersistenceProvider.RetrieveInstance<SchemaItemGroup>(groupId) == null)
             {
-                return "Group \"" + groupId + "\" referenced in file://" + fileData.XmlFileData.FileInfo.FullName + " cannot be found.";
+                return "Group \"" + groupId + "\" referenced in \"file://" + fileData.XmlFileData.FileInfo.FullName + "\" cannot be found.";
             }
 
             if (filePersistenceProvider.RetrieveInstance<SchemaExtension>(packageId) == null)
             {
-                return "Group \"" + groupId + "\" referenced in file://" + fileData.XmlFileData.FileInfo.FullName + " cannot be found.";
+                return "Group \"" + groupId + "\" referenced in \"file://" + fileData.XmlFileData.FileInfo.FullName + "\" cannot be found.";
             }
 
             return null;
