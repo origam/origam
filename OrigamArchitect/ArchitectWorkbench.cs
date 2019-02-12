@@ -85,7 +85,7 @@ namespace OrigamArchitect
             = log4net.LogManager.GetLogger(
 			MethodBase.GetCurrentMethod().DeclaringType);
 
-        private CancellationTokenSource ruleCheckCancellationTokenSource = new CancellationTokenSource();
+        private CancellationTokenSource modelCheckCancellationTokenSource = new CancellationTokenSource();
         private readonly Dictionary<IToolStripContainer,List<ToolStrip>> loadedForms 
 			= new Dictionary<IToolStripContainer,List<ToolStrip>>();
 		
@@ -1610,7 +1610,7 @@ namespace OrigamArchitect
 				CreateMainMenuConnect();
 				IsConnected = true;
 #if !ORIGAM_CLIENT
-                CheckModelRulesAsync();
+                DoModelChecksAsync();
 #endif
 
 #if ORIGAM_CLIENT
@@ -1648,15 +1648,15 @@ namespace OrigamArchitect
 			cmd.Run();
 		}
 
-	    public void CheckModelRulesAsync()
+	    public void DoModelChecksAsync()
 	    {
 	       var currentPersistenceService =
 	            ServiceManager.Services.GetService<IPersistenceService>();
            if (!(currentPersistenceService is FilePersistenceService)) return;
 
-	       var cancellationToken = ruleCheckCancellationTokenSource.Token;
+	       var cancellationToken = modelCheckCancellationTokenSource.Token;
 	        Task.Factory.StartNew(
-	            () => CheckModelRules(cancellationToken),
+	            () => DoModelChecks(cancellationToken),
 	            cancellationToken 
             ).ContinueWith(
 	            TaskErrorHandler,
@@ -1680,7 +1680,7 @@ namespace OrigamArchitect
 	        }
 	    }
 
-	    private void CheckModelRules(CancellationToken cancellationToken)
+	    private void DoModelChecks(CancellationToken cancellationToken)
 	    {
             using (FilePersistenceService independentPersistenceService = new FilePersistenceBuilder()
 	            .CreateNoBinFilePersistenceService())
@@ -1695,7 +1695,8 @@ namespace OrigamArchitect
 
 	            var persistenceProvider = (FilePersistenceProvider)independentPersistenceService.SchemaProvider;
 	            List<string> fileErrors = persistenceProvider.GetFileErrors(
-	                ignoreDirectoryNames: new []{ ".git","l10n"});
+	                ignoreDirectoryNames: new []{ ".git","l10n"},
+	                cancellationToken: cancellationToken);
 
 	            if (errorFragments.Count != 0)
 	            {
@@ -1807,8 +1808,8 @@ namespace OrigamArchitect
 
             UpdateTitle();
 
-            ruleCheckCancellationTokenSource.Cancel();
-            ruleCheckCancellationTokenSource = new CancellationTokenSource();
+            modelCheckCancellationTokenSource.Cancel();
+            modelCheckCancellationTokenSource = new CancellationTokenSource();
             return true;
 		}
 

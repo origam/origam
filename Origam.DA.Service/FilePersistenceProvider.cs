@@ -27,6 +27,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using CSharpFunctionalExtensions;
 using MoreLinq;
 using Origam.DA.ObjectPersistence;
@@ -410,7 +411,7 @@ namespace Origam.DA.Service
             return retrieveInstance != null;
         }
 
-        public List<string> GetFileErrors(string[] ignoreDirectoryNames)
+        public List<string> GetFileErrors(string[] ignoreDirectoryNames, CancellationToken cancellationToken)
         {
             return 
                 new IFileSystemModelChecker[]
@@ -419,7 +420,11 @@ namespace Origam.DA.Service
                         new DirectoryChecker(ignoreDirectoryNames, this),
                         new XmlReferencePropertyChecker(this)
                     }
-                    .SelectMany(checker => checker.GetErrors())
+                    .SelectMany(checker =>
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        return checker.GetErrors();
+                    })
                     .ToList();
         }
     }
