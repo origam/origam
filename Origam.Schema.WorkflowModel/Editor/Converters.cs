@@ -510,6 +510,106 @@ namespace Origam.Schema.WorkflowModel
 		}
 	}
 
+	public class WorkflowStepFilteredConverter : System.ComponentModel.TypeConverter
+	{
+		public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+		{
+			//true means show a combobox
+			return true;
+		}
+
+		public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+		{
+			//true will limit to list. false will show the list, 
+			//but allow free-form entry
+			return true;
+		}
+
+		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
+			GetStandardValues(ITypeDescriptorContext context)
+		{
+			ArrayList stepArray;
+			ArrayList steps;
+
+			// Get our parent block
+			ISchemaItem currentItem = (context.Instance as AbstractSchemaItem).ParentItem.ParentItem;
+            // Get our parent step to filter it out
+            ISchemaItem parentStep = (context.Instance as AbstractSchemaItem).ParentItem;
+			while(! (currentItem is IWorkflowBlock || currentItem.ParentItem == null))
+			{
+				currentItem = currentItem.ParentItem;
+			} 
+
+			IWorkflowBlock wf = currentItem as IWorkflowBlock;
+				
+			if(wf == null)
+			{
+				return null;
+			}
+			else
+			{
+				steps = wf.ChildItemsByType(WorkflowTask.ItemTypeConst);
+			}
+
+			stepArray = new ArrayList(steps.Count);
+			
+			foreach(AbstractSchemaItem step in steps)
+			{
+                if(step.Id != parentStep?.Id)
+                {
+                    stepArray.Add(step);
+                }
+			}
+
+			stepArray.Sort();
+
+			return new StandardValuesCollection(stepArray);
+		}
+
+		public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type sourceType)
+		{
+			if( sourceType == typeof(string) )
+				return true;
+			else 
+				return base.CanConvertFrom(context, sourceType);
+		}
+
+		public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
+			if( value.GetType() == typeof(string) )
+			{
+				ArrayList tasks;
+
+				// Get our parent block
+				ISchemaItem currentItem = (context.Instance as AbstractSchemaItem).ParentItem.ParentItem;
+			
+				while(! (currentItem is IWorkflowBlock || currentItem.ParentItem == null))
+				{
+					currentItem = currentItem.ParentItem;
+				} 
+
+				IWorkflowBlock wf = currentItem as IWorkflowBlock;
+
+				if(wf == null)
+				{
+					return null;
+				}
+				else
+				{
+					tasks = wf.ChildItemsByType(WorkflowTask.ItemTypeConst);
+				}
+
+				foreach(AbstractSchemaItem task in tasks)
+				{
+					if(task.Name == value.ToString())
+						return task as AbstractSchemaItem;
+				}
+				return null;
+			}
+			else
+				return base.ConvertFrom(context, culture, value);
+		}
+	}
 
 	public class ServiceConverter : System.ComponentModel.TypeConverter
 	{
