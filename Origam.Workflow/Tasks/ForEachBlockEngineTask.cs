@@ -70,16 +70,16 @@ namespace Origam.Workflow.Tasks
             }
             this.Engine.Host.WorkflowFinished += Host_WorkflowFinished;
             ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
-            XmlDocument xmlDoc = this.Engine.RuleEngine.GetContext(
-                block.SourceContextStore) as XmlDocument;
-            if(xmlDoc == null)
+            IXmlContainer xmlContainer = this.Engine.RuleEngine.GetContext(
+                block.SourceContextStore) as IXmlContainer;
+            if(xmlContainer == null)
             {
                 throw new ArgumentOutOfRangeException(
                     "SourceContextStore",
                     block.SourceContextStore,
                     ResourceUtils.GetString("ErrorSourceContextNotXmlDocument"));
             }
-			XPathNavigator navigator = xmlDoc.CreateNavigator();
+			XPathNavigator navigator = xmlContainer.Xml.CreateNavigator();
 			OrigamXsltContext ctx =  new OrigamXsltContext(
                 new NameTable(), this.Engine.RuleEngine);
 			XPathExpression expr = navigator.Compile(block.IteratorXPath);
