@@ -356,11 +356,13 @@ namespace Origam.DA.Service
 
     public class ReferenceFileData
     {
+        public XmlFileData XmlFileData { get; }
         public ParentFolders ParentFolderIds { get; } = new ParentFolders();
         public Folder Folder { get; }
 
         public ReferenceFileData(XmlFileData xmlFileData)
         {
+            XmlFileData = xmlFileData;
             XmlNodeList xmlNodeList = xmlFileData
                       .XmlDocument
                       ?.SelectNodes("//x:groupReference",

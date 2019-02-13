@@ -901,7 +901,7 @@ namespace Origam.Workbench.Editors
 		{
 		    IXmlContainer result = this.Transform(txtText.Text, txtSource.Text, false);
 
-			string resultText = GetFormattedXml(result.Xml);
+			string resultText = GetFormattedXml(result?.Xml);
 					
 			txtResult.Text = resultText;
 					

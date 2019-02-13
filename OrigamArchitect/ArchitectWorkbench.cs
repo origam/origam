@@ -62,6 +62,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
+using JR.Utils.GUI.Forms;
 using Origam.DA.ObjectPersistence;
 using OrigamArchitect.Commands;
 using Origam.Extensions;
@@ -84,7 +85,7 @@ namespace OrigamArchitect
             = log4net.LogManager.GetLogger(
 			MethodBase.GetCurrentMethod().DeclaringType);
 
-        private CancellationTokenSource ruleCheckCancellationTokenSource = new CancellationTokenSource();
+        private CancellationTokenSource modelCheckCancellationTokenSource = new CancellationTokenSource();
         private readonly Dictionary<IToolStripContainer,List<ToolStrip>> loadedForms 
 			= new Dictionary<IToolStripContainer,List<ToolStrip>>();
 		
@@ -1361,8 +1362,11 @@ namespace OrigamArchitect
             // and leaves application in unstable state
             try
             {
-                DialogResult dialogResult = LongMessageBox.ShowMsgBoxYesNo(this,
-                    $"Model file changes detected!{Environment.NewLine}{Environment.NewLine}{args}.{Environment.NewLine}{Environment.NewLine}Do you want to reload the model?", "Changes in Model Directory Detected");
+                DialogResult dialogResult = FlexibleMessageBox.Show(
+                    this,
+                    $"Model file changes detected!{Environment.NewLine}{Environment.NewLine}{args}.{Environment.NewLine}{Environment.NewLine}Do you want to reload the model?",
+                    "Changes in Model Directory Detected",
+                    MessageBoxButtons.YesNo);
                 return dialogResult == DialogResult.Yes;
             }
             catch(Exception ex)
@@ -1606,7 +1610,7 @@ namespace OrigamArchitect
 				CreateMainMenuConnect();
 				IsConnected = true;
 #if !ORIGAM_CLIENT
-                CheckModelRulesAsync();
+                DoModelChecksAsync();
 #endif
 
 #if ORIGAM_CLIENT
@@ -1644,15 +1648,15 @@ namespace OrigamArchitect
 			cmd.Run();
 		}
 
-	    public void CheckModelRulesAsync()
+	    public void DoModelChecksAsync()
 	    {
 	       var currentPersistenceService =
 	            ServiceManager.Services.GetService<IPersistenceService>();
            if (!(currentPersistenceService is FilePersistenceService)) return;
 
-	       var cancellationToken = ruleCheckCancellationTokenSource.Token;
+	       var cancellationToken = modelCheckCancellationTokenSource.Token;
 	        Task.Factory.StartNew(
-	            () => CheckModelRules(cancellationToken),
+	            () => DoModelChecks(cancellationToken),
 	            cancellationToken 
             ).ContinueWith(
 	            TaskErrorHandler,
@@ -1676,24 +1680,23 @@ namespace OrigamArchitect
 	        }
 	    }
 
-	    private void CheckModelRules(CancellationToken cancellationToken)
+	    private void DoModelChecks(CancellationToken cancellationToken)
 	    {
             using (FilePersistenceService independentPersistenceService = new FilePersistenceBuilder()
 	            .CreateNoBinFilePersistenceService())
-	        {
-                List<AbstractSchemaItemProvider> allProviders = new OrigamProviders()
-                    .GetAllProviders()
-                    .Select(x =>{
-                            x.PersistenceProvider = independentPersistenceService.SchemaProvider;
-                            return x;
-                        })
-                    .ToList();
+            {
                 List<Dictionary<IFilePersistent, string>> errorFragments =
-                    ModelRules.GetErrors(allProviders, independentPersistenceService, cancellationToken); 
+                    ModelRules.GetErrors(
+                        schemaProviders: new OrigamProviderBuilder()
+                            .SetSchemaProvider(independentPersistenceService.SchemaProvider)
+                            .GetAll(), 
+                        independentPersistenceService: independentPersistenceService, 
+                        cancellationToken: cancellationToken); 
 
 	            var persistenceProvider = (FilePersistenceProvider)independentPersistenceService.SchemaProvider;
-	            List<string> fileErrors = persistenceProvider.GetFileErrors(
-	                ignoreDirectoryNames: new []{ ".git","l10n"});
+	            var errorSections = persistenceProvider.GetFileErrors(
+	                ignoreDirectoryNames: new []{ ".git","l10n"},
+	                cancellationToken: cancellationToken);
 
 	            if (errorFragments.Count != 0)
 	            {
@@ -1708,13 +1711,10 @@ namespace OrigamArchitect
                        }
                     );
                 }
-	            if (fileErrors.Count != 0)
+	            if (errorSections.Count != 0)
 	            {
-	                this.RunWithInvoke(() =>
-	                    {
-	                        MessageBox.Show("The following file errors were found in the model: \n"+string.Join("\n",fileErrors), "File Errors");
-	                    }
-	                );
+	                FlexibleMessageBox.Show("The following errors were found in the loaded model:\n\n"+
+	                                        string.Join("\n\n",errorSections), "Model Errors");
                 }
 	        }
 	    }
@@ -1805,8 +1805,8 @@ namespace OrigamArchitect
 
             UpdateTitle();
 
-            ruleCheckCancellationTokenSource.Cancel();
-            ruleCheckCancellationTokenSource = new CancellationTokenSource();
+            modelCheckCancellationTokenSource.Cancel();
+            modelCheckCancellationTokenSource = new CancellationTokenSource();
             return true;
 		}
 
