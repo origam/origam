@@ -62,27 +62,31 @@ namespace Origam.Workflow.Tasks
 			CleanUp();		
 		}
 
-		protected override void OnExecute()
-		{
-			if(log.IsInfoEnabled)
-			{
-				log.Info("ForEach Block started.");
-			}
-
-			this.Engine.Host.WorkflowFinished += Host_WorkflowFinished;
-			this.Engine.Host.WorkflowMessage += Host_WorkflowMessage;
-
-			ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
-
-			XmlDocument xmlDoc = this.Engine.RuleEngine.GetContext(block.SourceContextStore) as XmlDocument;
-
-			if(xmlDoc == null) throw new ArgumentOutOfRangeException("SourceContextStore", block.SourceContextStore, ResourceUtils.GetString("ErrorSourceContextNotXmlDocument"));
-
-			XPathNavigator navigator = xmlDoc.CreateNavigator();
-			OrigamXsltContext ctx =  new OrigamXsltContext(new NameTable(), this.Engine.RuleEngine);
+        protected override void OnExecute()
+        {
+            if(log.IsInfoEnabled)
+            {
+                log.Info("ForEach Block started.");
+            }
+            this.Engine.Host.WorkflowFinished += Host_WorkflowFinished;
+            ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
+            IXmlContainer xmlContainer = this.Engine.RuleEngine.GetContext(
+                block.SourceContextStore) as IXmlContainer;
+            if(xmlContainer == null)
+            {
+                throw new ArgumentOutOfRangeException(
+                    "SourceContextStore",
+                    block.SourceContextStore,
+                    ResourceUtils.GetString("ErrorSourceContextNotXmlDocument"));
+            }
+			XPathNavigator navigator = xmlContainer.Xml.CreateNavigator();
+			OrigamXsltContext ctx =  new OrigamXsltContext(
+                new NameTable(), this.Engine.RuleEngine);
 			XPathExpression expr = navigator.Compile(block.IteratorXPath);
 			expr.SetContext(ctx);
-
+            // code might fail and this handler doesn't get cleared
+            // and will interfer with other workflow invocations
+			this.Engine.Host.WorkflowMessage += Host_WorkflowMessage;
 			_iter = navigator.Select(expr);
 			ResumeIteration();
 		}
