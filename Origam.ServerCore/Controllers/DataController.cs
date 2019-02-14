@@ -13,6 +13,7 @@ using Origam.OrigamEngine.ModelXmlBuilders;
 using Origam.Schema.EntityModel;
 using Origam.Schema.LookupModel;
 using Origam.Schema.MenuModel;
+using Origam.ServerCore.Extensions;
 using Origam.ServerCore.Models;
 using Origam.Services;
 using Origam.Workbench.Services;
@@ -319,21 +320,24 @@ namespace Origam.ServerCore.Controllers
             }
         }
 
-        private Result<T,IActionResult> FindItem<T>(Guid id)
+        private Result<T,IActionResult> FindItem<T>(Guid id) where T : class
         {
-            T instance = (T)ServiceManager.Services
+            T instance = ServiceManager.Services
                 .GetService<IPersistenceService>()
                 .SchemaProvider
-                .RetrieveInstance(typeof(T), new Key(id));
+                .RetrieveInstance(typeof(T), new Key(id)) 
+                as T;
             return instance == null
-                ? Result.Fail<T, IActionResult>(BadRequest("Item not found."))
+                ? Result.Fail<T, IActionResult>(NotFound("Object with requested id not found."))
                 : Result.Ok<T, IActionResult>(instance);
-
         }
 
         private Result<DataStructureEntity, IActionResult> FindEntity(Guid id)
         {
-            return FindItem<DataStructureEntity>(id);
+            return FindItem<DataStructureEntity>(id)
+                .OnFailureCompensate(error =>
+                    Result.Fail<DataStructureEntity, IActionResult>(
+                        NotFound("Requested DataStructureEntity not found. " + error.GetMessage())));
         }
 
         private IActionResult SubmitChange(RowData rowData)
