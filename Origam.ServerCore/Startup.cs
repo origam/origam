@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -32,6 +33,10 @@ namespace Origam.ServerCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = ".";
+            });
             services.AddSingleton<SessionObjects, SessionObjects>();
             services.AddAuthentication(options =>
             {
@@ -73,8 +78,16 @@ namespace Origam.ServerCore
                 Thread.CurrentPrincipal =  context.User;               
                 return next();
             });
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
             app.UseMvc();
-
+            app.UseSpa(spa =>
+            {
+                if(env.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
+            });
             OrigamEngine.OrigamEngine.ConnectRuntime();
         }
     }
