@@ -10,3 +10,8 @@ _Resharper*/
 /packages
 *.pubxml
 /Origam.ServerCoreTests/appsettings.json
+/Origam.ServerCore/service-worker.js
+/Origam.ServerCore/manifest.json
+/Origam.ServerCore/index.html
+/Origam.ServerCore/asset-manifest.json
+/Origam.ServerCore/static
