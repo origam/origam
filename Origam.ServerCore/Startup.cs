@@ -5,7 +5,6 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -16,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Origam.Workbench.Services;
 
 namespace Origam.ServerCore
@@ -44,12 +44,23 @@ namespace Origam.ServerCore
                 options.DefaultChallengeScheme = "Jwt";
             }).AddJwtBearer("Jwt", options =>
             {
+                string securityKey = Configuration["SecurityKey"];
+                if (string.IsNullOrWhiteSpace(securityKey))
+                {
+                    throw new ArgumentException("SecurityKey was not found in configuration. Please add it to appsettings.json");
+                }
+
+                if (securityKey.Length < 16)
+                {
+                    throw new ArgumentException("SecurityKey found in appsettings.json has to be at least 16 characters long!");
+                }
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateAudience = false,  //ValidAudience = "the audience you want to validate",
                     ValidateIssuer = false,  //ValidIssuer = "the user you want to validate",
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecurityKey"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey)),
                     ValidateLifetime = true, //validate the expiration and not before values in the token
                     ClockSkew = TimeSpan.FromMinutes(5) // 5 minute tolerance for the expiration date
                 };
@@ -71,6 +82,7 @@ namespace Origam.ServerCore
             {
                 app.UseHsts();
             }
+            app.UseMiddleware<CustomApiRedirect>();
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.Use((context, next) =>

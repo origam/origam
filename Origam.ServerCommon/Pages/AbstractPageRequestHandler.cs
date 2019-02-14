@@ -28,16 +28,16 @@ using System.Xml;
 using Origam.Rule;
 using Origam.Schema.RuleModel;
 
-namespace Origam.Server.Pages
+namespace Origam.ServerCommon.Pages
 {
 	public abstract class AbstractPageRequestHandler : IPageRequestHandler
 	{
-		public virtual void Execute(AbstractPage page, Dictionary<string, object> parameters, HttpRequest request, HttpResponse response)
+		public virtual void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequest request, IResponse response)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static Hashtable GetPreprocessorParameters(HttpRequest request)
+		internal static Hashtable GetPreprocessorParameters(IRequest request)
 		{
 			Hashtable preprocessorParams = new Hashtable();
 
@@ -45,7 +45,7 @@ namespace Origam.Server.Pages
 			XmlElement capabilities = capabDoc.CreateElement("BrowserCapabilities");
 			capabDoc.AppendChild(capabilities);
 
-			foreach (DictionaryEntry capEntry in request.Browser.Capabilities)
+			foreach (DictionaryEntry capEntry in request.BrowserCapabilities)
 			{
 				XmlElement capability = capabDoc.CreateElement("Capability");
 				capability.SetAttribute("Name", capEntry.Key.ToString());

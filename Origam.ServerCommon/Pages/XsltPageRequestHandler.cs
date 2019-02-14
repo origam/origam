@@ -33,9 +33,12 @@ using Origam.DA;
 using Origam.JSON;
 using core = Origam.Workbench.Services.CoreServices;
 using System.Collections;
+using Microsoft.AspNetCore.Http;
 using Origam;
+using Origam.Server;
+using Origam.ServerCommon;
 
-namespace Origam.Server.Pages
+namespace Origam.ServerCommon.Pages
 {
     class XsltPageRequestHandler : AbstractPageRequestHandler
     {
@@ -43,7 +46,7 @@ namespace Origam.Server.Pages
         private const string MIME_HTML = "text/html";
         private const string MIME_OCTET_STREAM = "application/octet-stream";
 
-        public override void Execute(AbstractPage page, Dictionary<string, object> parameters, HttpRequest request, HttpResponse response)
+        public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequest request, IResponse response)
         {
             XsltDataPage xsltPage = page as XsltDataPage;
             IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
@@ -180,7 +183,7 @@ namespace Origam.Server.Pages
                 }
             }
 
-            if (AnalyticsFx.Instance.IsAnalyticsEnabled && xsltPage.LogTransformation != null)
+            if (Analytics.Instance.IsAnalyticsEnabled && xsltPage.LogTransformation != null)
             {
                 Type type = this.GetType();
                 IXmlContainer log = transformer.Transform(xmlData, xsltPage.LogTransformationId, transformParams, ruleEngine, null, false);
@@ -205,7 +208,7 @@ namespace Origam.Server.Pages
                     {
                         properties[current.Name] = current.Value;
                     } while (current.MoveToNextAttribute());
-                    AnalyticsFx.Instance.Log(type, message, properties);
+                    Analytics.Instance.Log(type, message, properties);
                 }
             }
         }
@@ -225,7 +228,7 @@ namespace Origam.Server.Pages
             }
             if (bodyKey == null)
             {
-                throw new Exception(Properties.Resources.ErrorPseudoparameterBodyNotDefined);
+                throw new Exception(Resources.ErrorPseudoparameterBodyNotDefined);
             }
             UserProfile profile = SecurityManager.CurrentUserProfile();
             DataSet original = (parameters[bodyKey] as IDataDocument).DataSet;

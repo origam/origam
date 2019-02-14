@@ -30,11 +30,11 @@ using System.Collections;
 using Origam.Rule;
 using System.Xml;
 
-namespace Origam.Server.Pages
+namespace Origam.ServerCommon.Pages
 {
     class WorkflowPageRequestHandler : AbstractPageRequestHandler
     {
-        public override void Execute(AbstractPage page, Dictionary<string, object> parameters, HttpRequest request, HttpResponse response)
+        public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequest request, IResponse response)
         {
             WorkflowPage workflowPage = page as WorkflowPage;
 
@@ -96,7 +96,7 @@ namespace Origam.Server.Pages
                     }
                     else
                     {
-                        throw new ArgumentOutOfRangeException("action", action, Properties.Resources.ErrorUnknownWorkflowPageAction);
+                        throw new ArgumentOutOfRangeException("action", action, Resources.ErrorUnknownWorkflowPageAction);
                     }
 
                     handler.Execute(action, workflowResult, request, response);
@@ -110,7 +110,7 @@ namespace Origam.Server.Pages
             {
                 if (request.UrlReferrer != null)
                 {
-                    response.Redirect(request.UrlReferrer.AbsolutePath);
+                    response.Redirect(request.UrlReferrerAbsolutePath);
                 }
             }
         }

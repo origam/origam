@@ -31,11 +31,11 @@ using core = Origam.Workbench.Services.CoreServices;
 using Origam;
 using Origam.Rule;
 
-namespace Origam.Server.Pages
+namespace Origam.ServerCommon.Pages
 {
     class FileDownloadPageRequestHandler : AbstractPageRequestHandler
     {
-        public override void Execute(AbstractPage page, Dictionary<string, object> parameters, HttpRequest request, HttpResponse response)
+        public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequest request, IResponse response)
         {
             FileDownloadPage fdPage = page as FileDownloadPage;
 
@@ -89,7 +89,8 @@ namespace Origam.Server.Pages
                 {
                     contentType = fdPage.MimeType;
                 }
-                NetFxHttpTools.WriteFile(request, response, bytes, (string)table.Rows[0][fdPage.FileNameField], true, contentType);
+                //NetFxHttpTools.WriteFile(request, response, bytes, (string)table.Rows[0][fdPage.FileNameField], true, contentType);
+                throw new NotImplementedException();
             }
             else
             {

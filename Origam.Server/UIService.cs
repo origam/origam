@@ -91,9 +91,9 @@ namespace Origam.Server
             sessionManager = new SessionManager(
                 portalSessions: portalSessions,
                 formSessions: formSessions,
-                analytics: AnalyticsFx.Instance,
+                analytics: Analytics.Instance,
                 runsOnCore: false);
-            uiManager = new UIManager(INITIAL_PAGE_NUMBER_OF_RECORDS,sessionManager, AnalyticsFx.Instance);
+            uiManager = new UIManager(INITIAL_PAGE_NUMBER_OF_RECORDS,sessionManager, Analytics.Instance);
             reportManager = new ReportManager(sessionManager);
             sessionHelper = new SessionHelper(sessionManager);
         }
@@ -104,7 +104,7 @@ namespace Origam.Server
         [JsonRpcMethod]
         public PortalResult InitPortal(string locale)
         {
-            AnalyticsFx.Instance.Log("UI_INIT");
+            Analytics.Instance.Log("UI_INIT");
 
             // set locale
             locale = locale.Replace("_", "-");
@@ -246,7 +246,7 @@ namespace Origam.Server
                 DestroyUI(pss.FormSessions[0].Id);
             }
 
-            AnalyticsFx.Instance.Log("UI_LOGOUT");
+            Analytics.Instance.Log("UI_LOGOUT");
 
             sessionManager.RemovePortalSession(SecurityTools.CurrentUserProfile().Id);
             Task.Run(() => SecurityTools.RemoveOrigamOnlineUser(

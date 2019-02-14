@@ -22,10 +22,10 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 using System.Web;
 using Origam.Schema.WorkflowModel;
 
-namespace Origam.Server.Pages
+namespace Origam.ServerCommon.Pages
 {
     public interface IWorkflowPageActionHandler
     {
-        void Execute(AbstractWorkflowPageAction action, object workflowResult, HttpRequest request, HttpResponse response);
+        void Execute(AbstractWorkflowPageAction action, object workflowResult, IRequest request, IResponse response);
     }
 }

@@ -23,11 +23,11 @@ using System;
 using System.Web;
 using Origam.Schema.WorkflowModel;
 
-namespace Origam.Server.Pages
+namespace Origam.ServerCommon.Pages
 {
     public class AbstractWorkflowPageActionHandler : IWorkflowPageActionHandler
     {
-        public virtual void Execute(AbstractWorkflowPageAction action, object workflowResult, HttpRequest request, HttpResponse response)
+        public virtual void Execute(AbstractWorkflowPageAction action, object workflowResult, IRequest request, IResponse response)
         {
             throw new NotImplementedException();
         }
