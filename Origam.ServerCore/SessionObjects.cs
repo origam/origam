@@ -15,7 +15,7 @@ namespace Origam.ServerCore
 
         public SessionObjects()
         {
-            var analytics = new Analytics(new StandardPropertyProviderFactory());
+            var analytics = Analytics.Instance;
             SessionManager = new SessionManager(
                 portalSessions: new Dictionary<Guid, PortalSessionStore>(),
                 formSessions: new Dictionary<Guid, SessionStore>(),

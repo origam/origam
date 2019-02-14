@@ -5,7 +5,6 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -15,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Origam.Workbench.Services;
 
 namespace Origam.ServerCore
@@ -66,6 +66,7 @@ namespace Origam.ServerCore
             {
                 app.UseHsts();
             }
+            app.UseMiddleware<CustomApiRedirect>();
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.Use((context, next) =>

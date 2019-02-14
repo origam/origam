@@ -23,10 +23,10 @@ using System.Collections.Generic;
 using Origam.Schema.GuiModel;
 using System.Web;
 
-namespace Origam.Server.Pages
-{
+namespace Origam.ServerCommon.Pages
+{ 
     public interface IPageRequestHandler
     {
-        void Execute(AbstractPage page, Dictionary<string, object> parameters, HttpRequest request, HttpResponse response);
+        void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequest request, IResponse response);
     }
 }

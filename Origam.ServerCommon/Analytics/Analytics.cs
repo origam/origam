@@ -28,19 +28,20 @@ namespace Origam.Server
 {
     public class Analytics
     {
+        private static Analytics instance;
+        public static Analytics Instance => instance ?? (instance = new Analytics());
+
         private static readonly ILog perfLog = LogManager.GetLogger(typeof(Analytics));
         public const string PropertyNamePrefix = "log4net_app_";
 
-        private readonly IPropertyProviderFactory providerFactory;
-
-        public Analytics(IPropertyProviderFactory providerFactory)
-        {
-            this.providerFactory = providerFactory;
-        }
 
         public void SetProperty(string propertyName, object value)
         {
-            log4net.ThreadContext.Properties[propertyName] = providerFactory.New(propertyName, value);
+#if NETSTANDARD
+            log4net.ThreadContext.Properties[propertyName] = new NullPropertyProvider();
+#else
+            log4net.ThreadContext.Properties[propertyName] = new AdaptivePropertyProvider(propertyName, value);
+#endif
         }
 
         public void Log(string message)

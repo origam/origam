@@ -25,13 +25,13 @@ using System.Web;
 using Origam.Rule;
 using System.Xml.XPath;
 using System.Xml;
-using Origam;
+using Microsoft.AspNetCore.Http;
 
-namespace Origam.Server.Pages
+namespace Origam.ServerCommon.Pages
 {
     class RedirectWorkflowPageActionHandler : AbstractWorkflowPageActionHandler
     {
-        public override void Execute(AbstractWorkflowPageAction action, object workflowResult, HttpRequest request, HttpResponse response)
+        public override void Execute(AbstractWorkflowPageAction action, object workflowResult, IRequest request, IResponse response)
         {
             RedirectWorkflowPageAction redirectAction = action as RedirectWorkflowPageAction;
 

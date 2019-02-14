@@ -127,7 +127,7 @@ namespace Origam.Server
             menu.AutoSaveOnListRecordChange = true;
             menu.AutoRefreshIntervalConstantId = new Guid("fb80e964-1fb5-42f6-8b1c-9f22d27072be");
             SessionStore result = new OrigamDesignerSessionStore(service, request, menu.DisplayName, 
-                menu, entityId, AnalyticsFx.Instance);
+                menu, entityId, Analytics.Instance);
             request.Parameters.Add("EntityId", entityId);
             request.Parameters.Add("OrigamRecord_parOrigamEntityId", entityId);
             return result;
@@ -139,7 +139,7 @@ namespace Origam.Server
             request.ObjectId = "ecfc2869-4a73-4191-b81e-a3235004ab9f";
             request.Parameters.Add("applicationId", appId);
             return new WorkflowSessionStore(service, request, 
-                new Guid("ecfc2869-4a73-4191-b81e-a3235004ab9f"), appName, AnalyticsFx.Instance);
+                new Guid("ecfc2869-4a73-4191-b81e-a3235004ab9f"), appName, Analytics.Instance);
         }
     }
 }

@@ -25,11 +25,11 @@ using core = Origam.Workbench.Services.CoreServices;
 using System.Collections;
 using Origam.Rule;
 
-namespace Origam.Server.Pages
+namespace Origam.ServerCommon.Pages
 {
 	class ReportPageRequestHandler : AbstractPageRequestHandler
 	{
-		public override void Execute(Origam.Schema.GuiModel.AbstractPage page, Dictionary<string, object> parameters, System.Web.HttpRequest request, System.Web.HttpResponse response)
+		public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequest request, IResponse response)
 		{
 			ReportPage reportPage = page as ReportPage;
 
@@ -61,7 +61,7 @@ namespace Origam.Server.Pages
 			// set proper content type
 			response.ContentType = "application/pdf";
 			// write to response.OutputStream
-			response.OutputStream.Write(result, 0, result.Length);
+			response.OutputStreamWrite(result, 0, result.Length);
 		}
 	}
 }

@@ -159,7 +159,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdaptivePropertyProvider.cs" />
-    <Compile Include="AnalyticsFx.cs" />
     <Compile Include="architect\ArchitectService.cs" />
     <Compile Include="architect\ModelBrowserElement.cs" />
     <Compile Include="AspMembershipLoginCommand.cs" />
@@ -195,21 +194,14 @@
     <Compile Include="logging\AndFilter.cs" />
     <Compile Include="doc\DocHandler.cs" />
     <Compile Include="OrigamDesignerDynamicMenuProvider.cs" />
-    <Compile Include="pages\ReportPageRequestHandler.cs" />
-    <Compile Include="PropertyProviderFactoryFx.cs" />
+    <Compile Include="pages\FxHttpContext.cs" />
+    <Compile Include="pages\FxHttpRequest.cs" />
+    <Compile Include="pages\FxHttpResponse.cs" />
     <Compile Include="ReportManager.cs" />
     <Compile Include="TreeNode.cs" />
     <Compile Include="TreeService.cs" />
     <Compile Include="InternalHandlers.cs" />
-    <Compile Include="pages\AbstractPageRequestHandler.cs" />
-    <Compile Include="pages\AbstractWorkflowPageActionHandler.cs" />
-    <Compile Include="pages\FileDownloadPageRequestHandler.cs" />
-    <Compile Include="pages\IPageRequestHandler.cs" />
     <Compile Include="pages\PagesModule.cs" />
-    <Compile Include="pages\IWorkflowPageActionHandler.cs" />
-    <Compile Include="pages\RedirectWorkflowPageActionHandler.cs" />
-    <Compile Include="pages\WorkflowPageRequestHandler.cs" />
-    <Compile Include="pages\XsltPageRequestHandler.cs" />
     <Compile Include="Properties\Resources.cs-CZ.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
