@@ -93,13 +93,7 @@ namespace Origam.ServerCore
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseMvc();
-            app.UseSpa(spa =>
-            {
-                if(env.IsDevelopment())
-                {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
-                }
-            });
+            app.UseSpa(spa => {});
             OrigamEngine.OrigamEngine.ConnectRuntime();
         }
     }
