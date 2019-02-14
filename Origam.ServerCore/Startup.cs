@@ -39,12 +39,18 @@ namespace Origam.ServerCore
                 options.DefaultChallengeScheme = "Jwt";
             }).AddJwtBearer("Jwt", options =>
             {
+                string securityKey = Configuration["SecurityKey"];
+                if (string.IsNullOrWhiteSpace(securityKey))
+                {
+                    throw new ArgumentException("SecurityKey was not found in configuration. Please add it to appsettings.json");
+                }
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateAudience = false,  //ValidAudience = "the audience you want to validate",
                     ValidateIssuer = false,  //ValidIssuer = "the user you want to validate",
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecurityKey"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey)),
                     ValidateLifetime = true, //validate the expiration and not before values in the token
                     ClockSkew = TimeSpan.FromMinutes(5) // 5 minute tolerance for the expiration date
                 };
