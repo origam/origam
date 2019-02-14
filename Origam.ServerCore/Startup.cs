@@ -45,6 +45,11 @@ namespace Origam.ServerCore
                     throw new ArgumentException("SecurityKey was not found in configuration. Please add it to appsettings.json");
                 }
 
+                if (securityKey.Length < 16)
+                {
+                    throw new ArgumentException("SecurityKey found in appsettings.json has to be at least 16 characters long!");
+                }
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateAudience = false,  //ValidAudience = "the audience you want to validate",
