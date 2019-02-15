@@ -49,15 +49,6 @@ namespace Origam.Schema.EntityModel
 				return ItemTypeConst;
 			}
 		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "16";
-			}
-		}
-
 		#endregion
 	}
 }

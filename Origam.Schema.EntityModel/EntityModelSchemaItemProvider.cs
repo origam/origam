@@ -63,7 +63,7 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "31";
+				return "icon_09_entities.png";
 			}
 		}
 

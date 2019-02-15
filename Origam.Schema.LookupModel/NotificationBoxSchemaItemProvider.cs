@@ -56,7 +56,7 @@ namespace Origam.Schema.LookupModel
 			get
 			{
 				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "7";
+				return "icon_19_notification-boxes.png";
 			}
 		}
 

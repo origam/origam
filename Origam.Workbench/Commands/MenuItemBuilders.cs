@@ -159,13 +159,22 @@ namespace Origam.Workbench.Commands
             cmd.ParentElement = parentElement;
 			cmd.Owner = type;
 			cmd.Name = newItemName;
-			SchemaItemDescriptionAttribute attr = AbstractEditor.SchemaItemDescription(type);
+			SchemaItemDescriptionAttribute attr = type.SchemaItemDescription();
 			Image image = null;
 			string name = type.Name;
 			if(attr != null)
 			{
 				name = attr.Name;
-                image = sch.SchemaBrowser.ImageList.Images[attr.Icon];
+                int imageIndex = -1;
+                if (attr.Icon is string)
+                {
+                    imageIndex = sch.SchemaBrowser.ImageList.Images.IndexOfKey((string)attr.Icon);
+                }
+                else
+                {
+                    imageIndex = (int)attr.Icon;
+                }
+                image = sch.SchemaBrowser.ImageList.Images[imageIndex];
             }
 			AsMenuCommand menu = new AsMenuCommand(name, cmd);
 			menu.Image = image;
@@ -233,7 +242,7 @@ namespace Origam.Workbench.Commands
 				{
 					ConvertSchemaItem cmd = new ConvertSchemaItem();
 					cmd.Owner = type;
-					SchemaItemDescriptionAttribute attr = SchemaItemDescription(type);
+                    SchemaItemDescriptionAttribute attr = type.SchemaItemDescription();
 					string name;
 					if(attr != null && attr.Name != null)
 					{
@@ -244,7 +253,16 @@ namespace Origam.Workbench.Commands
 						name = type.Name;
 					}
 					AsMenuCommand menu = new AsMenuCommand(name, cmd);
-					menu.Image = sch.SchemaBrowser.ImageList.Images[attr.Icon];
+                    int imageIndex = -1;
+                    if (attr.Icon is string)
+                    {
+                        imageIndex = sch.SchemaBrowser.ImageList.Images.IndexOfKey((string)attr.Icon);
+                    }
+                    else
+                    {
+                        imageIndex = (int)attr.Icon;
+                    }
+                    menu.Image = sch.SchemaBrowser.ImageList.Images[imageIndex];
 					menu.Click += new EventHandler(ConvertItem);
 					items.Add(menu);
 				}
@@ -270,17 +288,6 @@ namespace Origam.Workbench.Commands
 			}
 
 			return null;
-		}
-
-		private SchemaItemDescriptionAttribute SchemaItemDescription(Type type)
-		{
-			object[] attributes = type.GetCustomAttributes(typeof(SchemaItemDescriptionAttribute), true);
-
-			if(attributes != null && attributes.Length > 0)
-				return attributes[0] as SchemaItemDescriptionAttribute;
-			else
-				return null;
-
 		}
 
 		private void ConvertItem(object sender, EventArgs e)

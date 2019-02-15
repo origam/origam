@@ -113,158 +113,164 @@ namespace Origam.Workbench.Pads
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(DocumentationPad));
-			this.dataGrid1 = new System.Windows.Forms.DataGrid();
-			this.documentationComplete = new DocumentationComplete();
-			this.dataGridTableStyle1 = new System.Windows.Forms.DataGridTableStyle();
-			this.colCategory = new Origam.UI.DataGridComboBoxColumn();
-			this.colText = new System.Windows.Forms.DataGridTextBoxColumn();
-			this.tblCategory = new System.Data.DataTable();
-			this.categoryNameTableColumn = new System.Data.DataColumn();
-			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-			this.toolBar = new System.Windows.Forms.ToolBar();
-			this.butRefresh = new System.Windows.Forms.ToolBarButton();
-			this.dsCategories = new System.Data.DataSet();
-			((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.documentationComplete)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.tblCategory)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.dsCategories)).BeginInit();
-			this.SuspendLayout();
-			// 
-			// dataGrid1
-			// 
-			this.dataGrid1.AllowSorting = false;
-			this.dataGrid1.AlternatingBackColor = System.Drawing.Color.LightGoldenrodYellow;
-			this.dataGrid1.BackColor = System.Drawing.Color.White;
-			this.dataGrid1.BackgroundColor = System.Drawing.Color.LightGoldenrodYellow;
-			this.dataGrid1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.dataGrid1.CaptionBackColor = System.Drawing.Color.LightGoldenrodYellow;
-			this.dataGrid1.CaptionFont = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-			this.dataGrid1.CaptionForeColor = System.Drawing.Color.DarkSlateBlue;
-			this.dataGrid1.DataMember = "Documentation";
-			this.dataGrid1.DataSource = this.documentationComplete;
-			this.dataGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.dataGrid1.FlatMode = true;
-			this.dataGrid1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-			this.dataGrid1.ForeColor = System.Drawing.Color.DarkSlateBlue;
-			this.dataGrid1.GridLineColor = System.Drawing.Color.Peru;
-			this.dataGrid1.GridLineStyle = System.Windows.Forms.DataGridLineStyle.None;
-			this.dataGrid1.HeaderBackColor = System.Drawing.Color.Maroon;
-			this.dataGrid1.HeaderFont = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-			this.dataGrid1.HeaderForeColor = System.Drawing.Color.LightGoldenrodYellow;
-			this.dataGrid1.LinkColor = System.Drawing.Color.Maroon;
-			this.dataGrid1.Location = new System.Drawing.Point(0, 0);
-			this.dataGrid1.Name = "dataGrid1";
-			this.dataGrid1.ParentRowsBackColor = System.Drawing.Color.BurlyWood;
-			this.dataGrid1.ParentRowsForeColor = System.Drawing.Color.DarkSlateBlue;
-			this.dataGrid1.SelectionBackColor = System.Drawing.Color.DarkSlateBlue;
-			this.dataGrid1.SelectionForeColor = System.Drawing.Color.GhostWhite;
-			this.dataGrid1.Size = new System.Drawing.Size(600, 333);
-			this.dataGrid1.TabIndex = 1;
-			this.dataGrid1.TableStyles.AddRange(new System.Windows.Forms.DataGridTableStyle[] {
-																								  this.dataGridTableStyle1});
-			this.dataGrid1.TabStop = false;
-			this.dataGrid1.SizeChanged += new System.EventHandler(this.dataGrid1_SizeChanged);
-			// 
-			// documentationComplete
-			// 
-			this.documentationComplete.DataSetName = "DocumentationComplete";
-			this.documentationComplete.Locale = new System.Globalization.CultureInfo("cs-CZ");
-			// 
-			// dataGridTableStyle1
-			// 
-			this.dataGridTableStyle1.AllowSorting = false;
-			this.dataGridTableStyle1.DataGrid = this.dataGrid1;
-			this.dataGridTableStyle1.GridColumnStyles.AddRange(new System.Windows.Forms.DataGridColumnStyle[] {
-																												  this.colCategory,
-																												  this.colText});
-			this.dataGridTableStyle1.HeaderForeColor = System.Drawing.SystemColors.ControlText;
-			this.dataGridTableStyle1.MappingName = "Documentation";
-			// 
-			// colCategory
-			// 
-			this.colCategory.Format = "";
-			this.colCategory.FormatInfo = null;
-			this.colCategory.HeaderText = ResourceUtils.GetString("CategoryTitle");
-			this.colCategory.MappingName = "Category";
-			this.colCategory.Width = 150;
-			// 
-			// colText
-			// 
-			this.colText.Format = "";
-			this.colText.FormatInfo = null;
-			this.colText.HeaderText = ResourceUtils.GetString("TextTitle");
-			this.colText.MappingName = "Data";
-			this.colText.Width = 500;
-			// 
-			// tblCategory
-			// 
-			this.tblCategory.Columns.AddRange(new System.Data.DataColumn[] {
-																			   this.categoryNameTableColumn});
-			this.tblCategory.TableName = "Category";
-			// 
-			// categoryNameTableColumn
-			// 
-			this.categoryNameTableColumn.ColumnName = "Name";
-			// 
-			// imageList1
-			// 
-			this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth24Bit;
-			this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
-			this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-			this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
-			// 
-			// toolBar
-			// 
-			this.toolBar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
-			this.toolBar.AutoSize = false;
-			this.toolBar.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
-																					   this.butRefresh});
-			this.toolBar.ButtonSize = new System.Drawing.Size(17, 17);
-			this.toolBar.Divider = false;
-			this.toolBar.DropDownArrows = true;
-			this.toolBar.ImageList = this.imageList1;
-			this.toolBar.Location = new System.Drawing.Point(0, 0);
-			this.toolBar.Name = "toolBar";
-			this.toolBar.ShowToolTips = true;
-			this.toolBar.Size = new System.Drawing.Size(600, 19);
-			this.toolBar.TabIndex = 6;
-			this.toolBar.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.toolBar_ButtonClick);
-			// 
-			// butRefresh
-			// 
-			this.butRefresh.ImageIndex = 3;
-			this.butRefresh.ToolTipText = ResourceUtils.GetString("TooltipRefresh");
-			// 
-			// dsCategories
-			// 
-			this.dsCategories.DataSetName = "NewDataSet";
-			this.dsCategories.Locale = new System.Globalization.CultureInfo("cs-CZ");
-			this.dsCategories.Tables.AddRange(new System.Data.DataTable[] {
-																			  this.tblCategory});
-			// 
-			// DocumentationPad
-			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.BackColor = System.Drawing.Color.LightGoldenrodYellow;
-			this.ClientSize = new System.Drawing.Size(600, 333);
-			this.Controls.Add(this.toolBar);
-			this.Controls.Add(this.dataGrid1);
-			this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
-				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
-				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
-				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
-			this.HideOnClose = true;
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Name = "DocumentationPad";
-			this.TabText = ResourceUtils.GetString("DocumentationTitle");
-			this.Text = ResourceUtils.GetString("DocumentationTitle");
-			((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.documentationComplete)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.tblCategory)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.dsCategories)).EndInit();
-			this.ResumeLayout(false);
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DocumentationPad));
+            this.dataGrid1 = new System.Windows.Forms.DataGrid();
+            this.documentationComplete = new Origam.Workbench.Services.DocumentationComplete();
+            this.dataGridTableStyle1 = new System.Windows.Forms.DataGridTableStyle();
+            this.colCategory = new Origam.UI.DataGridComboBoxColumn();
+            this.colText = new System.Windows.Forms.DataGridTextBoxColumn();
+            this.tblCategory = new System.Data.DataTable();
+            this.categoryNameTableColumn = new System.Data.DataColumn();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.toolBar = new System.Windows.Forms.ToolBar();
+            this.butRefresh = new System.Windows.Forms.ToolBarButton();
+            this.dsCategories = new System.Data.DataSet();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.documentationComplete)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tblCategory)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dsCategories)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // dataGrid1
+            // 
+            this.dataGrid1.AllowSorting = false;
+            this.dataGrid1.AlternatingBackColor = System.Drawing.Color.LightGoldenrodYellow;
+            this.dataGrid1.BackColor = System.Drawing.Color.White;
+            this.dataGrid1.BackgroundColor = System.Drawing.Color.LightGoldenrodYellow;
+            this.dataGrid1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGrid1.CaptionBackColor = System.Drawing.Color.LightGoldenrodYellow;
+            this.dataGrid1.CaptionFont = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.dataGrid1.CaptionForeColor = System.Drawing.Color.DarkSlateBlue;
+            this.dataGrid1.DataMember = "Documentation";
+            this.dataGrid1.DataSource = this.documentationComplete;
+            this.dataGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGrid1.FlatMode = true;
+            this.dataGrid1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.dataGrid1.ForeColor = System.Drawing.Color.DarkSlateBlue;
+            this.dataGrid1.GridLineColor = System.Drawing.Color.Peru;
+            this.dataGrid1.GridLineStyle = System.Windows.Forms.DataGridLineStyle.None;
+            this.dataGrid1.HeaderBackColor = System.Drawing.Color.Maroon;
+            this.dataGrid1.HeaderFont = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.dataGrid1.HeaderForeColor = System.Drawing.Color.LightGoldenrodYellow;
+            this.dataGrid1.LinkColor = System.Drawing.Color.Maroon;
+            this.dataGrid1.Location = new System.Drawing.Point(0, 0);
+            this.dataGrid1.Name = "dataGrid1";
+            this.dataGrid1.ParentRowsBackColor = System.Drawing.Color.BurlyWood;
+            this.dataGrid1.ParentRowsForeColor = System.Drawing.Color.DarkSlateBlue;
+            this.dataGrid1.SelectionBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.dataGrid1.SelectionForeColor = System.Drawing.Color.GhostWhite;
+            this.dataGrid1.Size = new System.Drawing.Size(600, 333);
+            this.dataGrid1.TabIndex = 1;
+            this.dataGrid1.TableStyles.AddRange(new System.Windows.Forms.DataGridTableStyle[] {
+            this.dataGridTableStyle1});
+            this.dataGrid1.TabStop = false;
+            this.dataGrid1.SizeChanged += new System.EventHandler(this.dataGrid1_SizeChanged);
+            // 
+            // documentationComplete
+            // 
+            this.documentationComplete.DataSetName = "DocumentationComplete";
+            this.documentationComplete.Locale = new System.Globalization.CultureInfo("cs-CZ");
+            this.documentationComplete.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // dataGridTableStyle1
+            // 
+            this.dataGridTableStyle1.AllowSorting = false;
+            this.dataGridTableStyle1.DataGrid = this.dataGrid1;
+            this.dataGridTableStyle1.GridColumnStyles.AddRange(new System.Windows.Forms.DataGridColumnStyle[] {
+            this.colCategory,
+            this.colText});
+            this.dataGridTableStyle1.HeaderForeColor = System.Drawing.SystemColors.ControlText;
+            this.dataGridTableStyle1.MappingName = "Documentation";
+            // 
+            // colCategory
+            // 
+            this.colCategory.Format = "";
+            this.colCategory.FormatInfo = null;
+            this.colCategory.HeaderText = "Category";
+            this.colCategory.MappingName = "Category";
+            this.colCategory.Width = 150;
+            // 
+            // colText
+            // 
+            this.colText.Format = "";
+            this.colText.FormatInfo = null;
+            this.colText.HeaderText = "Text";
+            this.colText.MappingName = "Data";
+            this.colText.Width = 500;
+            // 
+            // tblCategory
+            // 
+            this.tblCategory.Columns.AddRange(new System.Data.DataColumn[] {
+            this.categoryNameTableColumn});
+            this.tblCategory.TableName = "Category";
+            // 
+            // categoryNameTableColumn
+            // 
+            this.categoryNameTableColumn.ColumnName = "Name";
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
+            this.imageList1.Images.SetKeyName(0, "");
+            this.imageList1.Images.SetKeyName(1, "");
+            this.imageList1.Images.SetKeyName(2, "");
+            this.imageList1.Images.SetKeyName(3, "");
+            this.imageList1.Images.SetKeyName(4, "");
+            // 
+            // toolBar
+            // 
+            this.toolBar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
+            this.toolBar.AutoSize = false;
+            this.toolBar.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
+            this.butRefresh});
+            this.toolBar.ButtonSize = new System.Drawing.Size(17, 17);
+            this.toolBar.Divider = false;
+            this.toolBar.DropDownArrows = true;
+            this.toolBar.ImageList = this.imageList1;
+            this.toolBar.Location = new System.Drawing.Point(0, 0);
+            this.toolBar.Name = "toolBar";
+            this.toolBar.ShowToolTips = true;
+            this.toolBar.Size = new System.Drawing.Size(600, 19);
+            this.toolBar.TabIndex = 6;
+            this.toolBar.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.toolBar_ButtonClick);
+            // 
+            // butRefresh
+            // 
+            this.butRefresh.ImageIndex = 3;
+            this.butRefresh.Name = "butRefresh";
+            this.butRefresh.ToolTipText = "Saves changes to the database";
+            // 
+            // dsCategories
+            // 
+            this.dsCategories.DataSetName = "NewDataSet";
+            this.dsCategories.Locale = new System.Globalization.CultureInfo("cs-CZ");
+            this.dsCategories.Tables.AddRange(new System.Data.DataTable[] {
+            this.tblCategory});
+            // 
+            // DocumentationPad
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.BackColor = System.Drawing.Color.LightGoldenrodYellow;
+            this.ClientSize = new System.Drawing.Size(600, 333);
+            this.Controls.Add(this.toolBar);
+            this.Controls.Add(this.dataGrid1);
+            this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.HideOnClose = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "DocumentationPad";
+            this.TabText = "Documentation";
+            this.Text = "Documentation";
+            ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.documentationComplete)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tblCategory)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dsCategories)).EndInit();
+            this.ResumeLayout(false);
 
 		}
 		#endregion

@@ -31,7 +31,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for EntityRelationItem.
 	/// </summary>
-	[SchemaItemDescription("Data Structure", 9)]
+	[SchemaItemDescription("Data Structure", "icon_07_data-structures.png")]
     [HelpTopic("Data+Structures")]
 	public class DataStructure : AbstractDataStructure, ISchemaItemFactory
 	{

@@ -31,7 +31,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for DataConstant.
 	/// </summary>
-	[SchemaItemDescription("Data Constant", 57)]
+	[SchemaItemDescription("Data Constant", "icon_06_constants.png")]
     [HelpTopic("Data+Constants")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class DataConstant : AbstractSchemaItem
@@ -432,14 +432,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "57";
 			}
 		}
 

@@ -374,27 +374,6 @@ namespace OrigamArchitect
 			RenderList();
 		}
 
-		private string SchemaItemDescription(Type type)
-		{
-			object[] attributes = type.GetCustomAttributes(typeof(SchemaItemDescriptionAttribute), true);
-
-			if(attributes != null && attributes.Length > 0)
-				return (attributes[0] as SchemaItemDescriptionAttribute).Name;
-			else
-				return type.Name;
-
-		}
-
-		private int SchemaItemIcon(Type type)
-		{
-			object[] attributes = type.GetCustomAttributes(typeof(SchemaItemDescriptionAttribute), true);
-
-			if(attributes != null && attributes.Length > 0)
-				return (attributes[0] as SchemaItemDescriptionAttribute).Icon;
-			else
-				return -1;
-
-		}
 
 		private ArrayList SelectedResults()
 		{
@@ -425,13 +404,22 @@ namespace OrigamArchitect
 					if(ShouldDisplayResult(result))
 					{
 						ListViewItem item = new ListViewItem(
-                            new string[] {SchemaItemDescription(result.SchemaItemType),
+                            new string[] {result.SchemaItem.ModelDescription(),
 											result.ItemName,
 											result.Remark 
 										}
 							);
 						item.Tag = result;
-						int imageIndex = SchemaItemIcon(result.SchemaItemType);
+                        int imageIndex = -1;
+                        object icon = result.SchemaItemType.SchemaItemIcon();
+                        if (icon is string)
+                        {
+                            imageIndex = lvwResults.SmallImageList.Images.IndexOfKey((string)icon);
+                        }
+                        else
+                        {
+                            imageIndex = (int)icon;
+                        }
 						item.ImageIndex = imageIndex;
 						lvwResults.Items.Add(item);
 					}
@@ -534,7 +522,7 @@ namespace OrigamArchitect
 				if(!string.IsNullOrEmpty(result.Script))
 				{
 					generatedActivities.Add(
-						AddActivity(SchemaItemDescription(result.SchemaItemType) 
+						AddActivity(result.SchemaItem.ModelDescription() 
 						+ "_" + result.ItemName, result.Script, version, dataService)
 						);
 				}
@@ -544,7 +532,7 @@ namespace OrigamArchitect
 				if(!string.IsNullOrEmpty(result.Script2))
 				{
 					generatedActivities.Add(
-						AddActivity(SchemaItemDescription(result.SchemaItemType) 
+						AddActivity(result.SchemaItem.ModelDescription() 
 						+ "_" + result.ItemName, result.Script2, version, dataService)
 						);
 				}

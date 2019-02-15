@@ -52,14 +52,6 @@ namespace Origam.Schema.RuleModel
 			}
 		}
 
-		public override string Icon
-		{
-			get
-			{
-				return "16";
-			}
-		}
-
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
 			if(this.Structure != null) dependencies.Add(this.Structure);

@@ -134,7 +134,7 @@ namespace Origam.Schema.RuleModel
 			get
 			{
 				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "7";
+				return "icon_27_rules.png";
 			}
 		}
 

@@ -38,5 +38,20 @@ namespace Origam.Workbench.Pads
 			this.TabText = "Log";
 			this.Text = "Log";
 		}
-	}
+
+        private void InitializeComponent()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LogPad));
+            this.SuspendLayout();
+            // 
+            // LogPad
+            // 
+            this.ClientSize = new System.Drawing.Size(352, 271);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "LogPad";
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+    }
 }

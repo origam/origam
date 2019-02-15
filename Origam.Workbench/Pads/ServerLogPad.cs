@@ -72,6 +72,7 @@ namespace Origam.Workbench.Pads
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ServerLogPad));
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.pauseCheckbox = new System.Windows.Forms.CheckBox();
             this.lblLogSize = new System.Windows.Forms.Label();
@@ -108,6 +109,7 @@ namespace Origam.Workbench.Pads
             // ServerLogPad
             // 
             this.ClientSize = new System.Drawing.Size(292, 271);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ServerLogPad";
             this.toolBar.ResumeLayout(false);
             this.toolBar.PerformLayout();

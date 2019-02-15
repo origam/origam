@@ -56,7 +56,7 @@ namespace Origam.Schema.WorkflowModel.WorkQueue
 			get
 			{
 				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "36";
+				return "icon_34_work-queue-classes.png";
 			}
 		}
 

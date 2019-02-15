@@ -507,7 +507,7 @@ namespace Origam.Utils
                 log.Info(header);
                 foreach (SchemaDbCompareResult result in results)
                 {
-                    log.Info($@"{AbstractSchemaItem.SchemaItemDescription(result.SchemaItemType)} {
+                    log.Info($@"{result.SchemaItemType.SchemaItemDescription()?.Name} {
                         result.ItemName} {result.Remark}");
                 }
             }

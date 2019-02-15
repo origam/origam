@@ -256,8 +256,8 @@ namespace Origam.Workbench.Pads
 				return;
 			}
 
-			string name = SchemaItemName(item.GetType());
-			string rootName = SchemaItemName(item.RootItem.GetType());
+			string name = item.ModelDescription();
+			string rootName = item.RootItem.ModelDescription();
 
 			if(name == null) name = item.ItemType;
 			if(rootName == null) rootName = item.RootItem.ItemType;
@@ -265,7 +265,7 @@ namespace Origam.Workbench.Pads
 			ListViewItem newItem = new ListViewItem(new string[] {item.Path, rootName, name, item.RootItem.Group == null ? "" : item.RootItem.Group.Path,
                 item.Package,string.IsNullOrEmpty(text)?"":text});
 			newItem.Tag = new RuleResult(item);
-			newItem.ImageIndex = Convert.ToInt32(item.RootItem.Icon);
+			newItem.ImageIndex = _schemaBrowser.ImageIndex(item.RootItem.Icon);
 
 			//_results.Add(item);
 			lvwResults.Items.Add(newItem);
@@ -299,17 +299,6 @@ namespace Origam.Workbench.Pads
         private void lvwResults_DoubleClick(object sender, System.EventArgs e)
 		{
 			ActivateItem();
-		}
-
-		private string SchemaItemName(Type type)
-		{
-			object[] attributes = type.GetCustomAttributes(typeof(SchemaItemDescriptionAttribute), true);
-
-			if(attributes != null && attributes.Length > 0)
-				return (attributes[0] as SchemaItemDescriptionAttribute).Name;
-			else
-				return null;
-
 		}
 
 		private void lvwResults_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)

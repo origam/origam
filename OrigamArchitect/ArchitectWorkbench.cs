@@ -813,11 +813,11 @@ namespace OrigamArchitect
 			CreateMenuItem(strings.Menu_MenuItem, new Commands.ViewProcessBrowserPad(), _workflowPad.Icon.ToBitmap(), Keys.F2, _viewMenu);
 			CreateMenuItem(strings.WorkQueue_MenuItem, new Commands.ViewWorkQueuePad(), null, Keys.None, _viewMenu);
 #else
-            CreateMenuItem(strings.Properties_MenuItem, new ViewPropertyPad(), Images.PropertyPad, Keys.F4, _viewMenu);
-			CreateMenuItem(strings.Output_MenuItem, new ViewOutputPad(), Images.Output, Keys.None, _viewMenu);
-			CreateMenuItem(strings.Log_MenuItem, new ViewLogPad(), Images.Output, Keys.None, _viewMenu);
-            CreateMenuItem(strings.ServerLog_MenuItem, new ViewServerLogPad(), Images.Output, Keys.None, _viewMenu);
-            CreateMenuItem(strings.ModelBrowser_MenuItem, new ViewSchemaBrowserPad(), Images.SchemaBrowser, Keys.F3, _viewMenu);
+            CreateMenuItem(strings.Properties_MenuItem, new ViewPropertyPad(), _propertyPad.Icon.ToBitmap(), Keys.F4, _viewMenu);
+			CreateMenuItem(strings.Output_MenuItem, new ViewOutputPad(), _outputPad.Icon.ToBitmap(), Keys.None, _viewMenu);
+			CreateMenuItem(strings.Log_MenuItem, new ViewLogPad(), _logPad.Icon.ToBitmap(), Keys.None, _viewMenu);
+            CreateMenuItem(strings.ServerLog_MenuItem, new ViewServerLogPad(), _serverLogPad.Icon.ToBitmap(), Keys.None, _viewMenu);
+            CreateMenuItem(strings.ModelBrowser_MenuItem, new ViewSchemaBrowserPad(), _schemaBrowserPad.Icon.ToBitmap(), Keys.F3, _viewMenu);
 #if ! ARCHITECT_EXPRESS
 			CreateMenuItem(strings.WorkQueue_MenuItem, new Commands.ViewWorkQueuePad(), null, Keys.None, _viewMenu);
 #endif
@@ -830,12 +830,12 @@ namespace OrigamArchitect
 			CreateMenuItem(strings.Attachements_MenuItem, new ViewAttachmentPad(), Images.Attachment, Keys.None, _viewMenu);
 			CreateMenuItem(strings.AuditLog_MenuItem, new ViewAuditLogPad(), Images.History, Keys.None, _viewMenu);
 #else
-            CreateMenuItem(strings.PackageBrowser_MenuItem, new ViewExtensionPad(), Images.ExtensionBrowser, Keys.None, _viewMenu);
+            CreateMenuItem(strings.PackageBrowser_MenuItem, new ViewExtensionPad(), _extensionPad.Icon.ToBitmap(), Keys.None, _viewMenu);
 #if ! ARCHITECT_EXPRESS
-			CreateMenuItem(strings.WorkflowWatch_MenuItem, new Commands.ViewWorkflowWatchPad(), Images.RecurringWorkflow, Keys.None, _viewMenu);
+			CreateMenuItem(strings.WorkflowWatch_MenuItem, new Commands.ViewWorkflowWatchPad(), _workflowWatchPad.Icon.ToBitmap(), Keys.None, _viewMenu);
 #endif
 			CreateMenuItem(strings.Documentation_MenuItem, new ViewDocumentationPad(), _documentationPad.Icon.ToBitmap(), Keys.None, _viewMenu);
-			CreateMenuItem(strings.FindSchemaItemResults_MenuItem, new ViewFindSchemaItemResultsPad(), Images.FindSchemaItemResults, Keys.None, _viewMenu);
+			CreateMenuItem(strings.FindSchemaItemResults_MenuItem, new ViewFindSchemaItemResultsPad(), _findSchemaItemResultsPad.Icon.ToBitmap(), Keys.None, _viewMenu);
 #endif
 		}
 
@@ -2041,9 +2041,11 @@ namespace OrigamArchitect
 
 			_workflowPad = new WorkflowPlayerPad();
 			this.PadContentCollection.Add(_workflowPad);
+            _serverLogPad = new ServerLogPad();
+            AddPad(_serverLogPad);
 
-#if ! ARCHITECT_EXPRESS
-			this.PadContentCollection.Add(new WorkQueuePad());
+#if !ARCHITECT_EXPRESS
+            this.PadContentCollection.Add(new WorkQueuePad());
 #endif
 		}
 
@@ -2093,8 +2095,6 @@ namespace OrigamArchitect
             AddPad(_documentationPad);
 			_findSchemaItemResultsPad = new FindSchemaItemResultsPad();
             AddPad(_findSchemaItemResultsPad);
-            _serverLogPad = new ServerLogPad();
-            AddPad(_serverLogPad);
             _findRulesPad = new FindRulesPad();
             AddPad(_findRulesPad);
 #endif

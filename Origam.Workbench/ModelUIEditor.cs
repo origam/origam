@@ -98,7 +98,7 @@ namespace Origam.Workbench
                 System.Diagnostics.Debug.WriteLine("Overriden paint");
                 var schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(IBrowserPad)) as IBrowserPad;
                 var imageList = schemaBrowser.ImageList;
-                int icon = int.Parse(schemaItem.Icon);
+                int icon = schemaBrowser.ImageIndex(schemaItem.Icon);
                 e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, 1));
                 e.Graphics.ExcludeClip(new Rectangle(e.Bounds.X, e.Bounds.Y, 1, e.Bounds.Height));
                 e.Graphics.ExcludeClip(new Rectangle(e.Bounds.Width, e.Bounds.Y, 1, e.Bounds.Height));

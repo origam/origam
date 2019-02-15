@@ -32,19 +32,31 @@ namespace Origam.Schema
 		private string _name;
 		private string _folderName;
 		private int _icon;
+        private string _iconName = null;
 
-		public SchemaItemDescriptionAttribute(string name, int icon)
+        public SchemaItemDescriptionAttribute(string name, int icon)
 		{
 			this._name = name;
 			this._icon = icon;
 		}
 
-		public SchemaItemDescriptionAttribute(string name, string folderName, int icon) : this(name, icon)
+        public SchemaItemDescriptionAttribute(string name, string iconName)
+        {
+            this._name = name;
+            this._iconName = iconName;
+        }
+
+        public SchemaItemDescriptionAttribute(string name, string folderName, int icon) : this(name, icon)
 		{
 			this._folderName = folderName;
 		}
 
-		public string Name 
+        public SchemaItemDescriptionAttribute(string name, string folderName, string iconName) : this(name, iconName)
+        {
+            this._folderName = folderName;
+        }
+
+        public string Name 
 		{
 			get{return _name ?? GetType().Name;}
 		}
@@ -54,9 +66,44 @@ namespace Origam.Schema
 			get{return _folderName;}
 		}
 
-		public int Icon
+		public object Icon
 		{
-			get{return _icon;}
+			get
+            {
+                if (_iconName != null)
+                {
+                    return _iconName;
+                }
+                else
+                {
+                    return _icon;
+                }
+            }
 		}
 	}
+
+    public static class Extensions
+    {
+        public static SchemaItemDescriptionAttribute SchemaItemDescription(this Type type)
+        {
+            object[] attributes = type.GetCustomAttributes(typeof(SchemaItemDescriptionAttribute), true);
+            if (attributes != null && attributes.Length > 0)
+                return attributes[0] as SchemaItemDescriptionAttribute;
+            else
+                return null;
+        }
+
+        public static object SchemaItemIcon(this Type type)
+        {
+            SchemaItemDescriptionAttribute att = type.SchemaItemDescription();
+            if (att == null)
+            {
+                return -1;
+            }
+            else
+            {
+                return att.Icon;
+            }
+        }
+    }
 }

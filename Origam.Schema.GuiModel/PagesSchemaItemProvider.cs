@@ -57,7 +57,7 @@ namespace Origam.Schema.GuiModel
 			get
 			{
 				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "79";
+				return "icon_36_web-api-pages.png";
 			}
 		}
 

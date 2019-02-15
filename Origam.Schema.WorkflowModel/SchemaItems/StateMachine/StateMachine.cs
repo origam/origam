@@ -36,7 +36,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for WorkflowStateMachine.
 	/// </summary>
-	[SchemaItemDescription("State Workflow", 60)]
+	[SchemaItemDescription("State Workflow", "icon_32_state-workflows.png")]
     [HelpTopic("State+Workflows")]
     [DefaultProperty("Entity")]
 	[XmlModelRoot(ItemTypeConst)]
@@ -84,8 +84,6 @@ namespace Origam.Schema.WorkflowModel
 		
 		[EntityColumn("ItemType")]
 		public override string ItemType => ItemTypeConst;
-
-		public override string Icon => "60";
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{

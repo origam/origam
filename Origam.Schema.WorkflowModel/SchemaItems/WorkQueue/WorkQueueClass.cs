@@ -31,7 +31,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for AbstractService.
 	/// </summary>
-	[SchemaItemDescription("Work Queue Class", 16)]
+	[SchemaItemDescription("Work Queue Class", "icon_34_work-queue-classes.png")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	{
@@ -70,8 +70,6 @@ namespace Origam.Schema.WorkflowModel
 		
 		[EntityColumn("ItemType")]
 		public override string ItemType => ItemTypeConst;
-
-		public override string Icon => "16";
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{

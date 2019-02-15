@@ -26,5 +26,6 @@ namespace Origam.Workbench
     public interface IBrowserPad
     {
         ImageList ImageList { get; }
+        int ImageIndex(string icon);
     }
 }

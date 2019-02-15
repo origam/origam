@@ -212,10 +212,13 @@ namespace Origam.Workbench.Editors
 
 		private void LoadSettings()
 		{
-		    showMenusInAppToolStrip = ConfigurationManager
-		        .GetActiveConfiguration()
-		        .ShowEditorMenusInAppToolStrip;
-		}
+            if(! DesignMode)
+            {
+                showMenusInAppToolStrip = ConfigurationManager
+                    .GetActiveConfiguration()
+                    .ShowEditorMenusInAppToolStrip;
+            }
+        }
 
 		public override string TitleName
         {
@@ -367,17 +370,6 @@ namespace Origam.Workbench.Editors
             RebuildActionsPane();
 		}
 
-        public static SchemaItemDescriptionAttribute SchemaItemDescription(Type type)
-		{
-            object[] attributes = type.GetCustomAttributes(typeof(SchemaItemDescriptionAttribute), true);
-		
-            if (attributes != null && attributes.Length > 0)
-                return attributes[0] as SchemaItemDescriptionAttribute;
-            else
-                return null;
-
-        }
-
         protected override void OnDirtyChanged(EventArgs e)
 			{
             base.OnDirtyChanged(e);
@@ -389,7 +381,7 @@ namespace Origam.Workbench.Editors
             AbstractSchemaItem schemaItem = objectToLoad as AbstractSchemaItem;
             if (schemaItem != null)
 			{
-                SchemaItemDescriptionAttribute attr = SchemaItemDescription(schemaItem.GetType());
+                SchemaItemDescriptionAttribute attr = schemaItem.GetType().SchemaItemDescription();
                 string type = schemaItem.GetType().Name;
                 if (attr != null)
                 {
@@ -399,8 +391,7 @@ namespace Origam.Workbench.Editors
                 lblName.Text = schemaItem.Name;
                 var schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(IBrowserPad)) as IBrowserPad;
                 var imageList = schemaBrowser.ImageList;
-                int icon = int.Parse(schemaItem.Icon);
-                elementPicture.Image = imageList.Images[icon];
+                elementPicture.Image = imageList.Images[schemaBrowser.ImageIndex(schemaItem.Icon)];
                 this.ModelContent = schemaItem;
 				OnContentLoaded(EventArgs.Empty);
 			}

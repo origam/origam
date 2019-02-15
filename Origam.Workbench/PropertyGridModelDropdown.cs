@@ -35,6 +35,7 @@ namespace Origam.Workbench
     {
         IDictionary<string, ISchemaItem> _list = new Dictionary<string, ISchemaItem>();
         IWindowsFormsEditorService _service;
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
         bool _isStringList = false;
 
         public PropertyGridModelDropdown(ISchemaItem value,
@@ -42,7 +43,6 @@ namespace Origam.Workbench
         {
             InitializeComponent();
             _service = service;
-            var _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
             listBox1.SmallImageList = _schemaBrowser.EbrSchemaBrowser.imgList;
             IEnumerable standardValues = 
                 context.PropertyDescriptor.Converter.GetStandardValues(context)
@@ -116,7 +116,7 @@ namespace Origam.Workbench
                     int icon = -1;
                     if (item.Value != null)
                     {
-                        icon = int.Parse(item.Value.Icon);
+                        icon = _schemaBrowser.ImageIndex(item.Value.Icon);
                     }
                     ListViewItem lvi = listBox1.Items.Add(item.Key, value, icon);
                     // in case we are displaying a string list we will return a string

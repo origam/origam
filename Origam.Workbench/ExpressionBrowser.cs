@@ -66,7 +66,6 @@ namespace Origam.Workbench
 		{
 			// This call is required by the Windows.Forms Form Designer.
 			InitializeComponent();
-			tvwExpressionBrowser.ItemHeight = 18;
 			_boldFont = new Font(tvwExpressionBrowser.Font, FontStyle.Bold);
 			// handle the exception because of the WinForms Designer
 			try
@@ -120,76 +119,207 @@ namespace Origam.Workbench
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ExpressionBrowser));
-			this.tvwExpressionBrowser = new Origam.UI.NativeTreeView();
-			this.imgList = new System.Windows.Forms.ImageList(this.components);
-			this.cboFilter = new System.Windows.Forms.ComboBox();
-			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-			this.SuspendLayout();
-			// 
-			// tvwExpressionBrowser
-			// 
-			this.tvwExpressionBrowser.AllowDrop = true;
-			this.tvwExpressionBrowser.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-				| System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
-			this.tvwExpressionBrowser.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.tvwExpressionBrowser.FullRowSelect = true;
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExpressionBrowser));
+            this.imgList = new System.Windows.Forms.ImageList(this.components);
+            this.cboFilter = new System.Windows.Forms.ComboBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.tvwExpressionBrowser = new Origam.UI.NativeTreeView();
+            this.SuspendLayout();
+            // 
+            // imgList
+            // 
+            this.imgList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgList.ImageStream")));
+            this.imgList.TransparentColor = System.Drawing.Color.Magenta;
+            this.imgList.Images.SetKeyName(0, "");
+            this.imgList.Images.SetKeyName(1, "");
+            this.imgList.Images.SetKeyName(2, "");
+            this.imgList.Images.SetKeyName(3, "");
+            this.imgList.Images.SetKeyName(4, "");
+            this.imgList.Images.SetKeyName(5, "");
+            this.imgList.Images.SetKeyName(6, "");
+            this.imgList.Images.SetKeyName(7, "");
+            this.imgList.Images.SetKeyName(8, "");
+            this.imgList.Images.SetKeyName(9, "");
+            this.imgList.Images.SetKeyName(10, "");
+            this.imgList.Images.SetKeyName(11, "");
+            this.imgList.Images.SetKeyName(12, "");
+            this.imgList.Images.SetKeyName(13, "");
+            this.imgList.Images.SetKeyName(14, "");
+            this.imgList.Images.SetKeyName(15, "");
+            this.imgList.Images.SetKeyName(16, "");
+            this.imgList.Images.SetKeyName(17, "");
+            this.imgList.Images.SetKeyName(18, "");
+            this.imgList.Images.SetKeyName(19, "");
+            this.imgList.Images.SetKeyName(20, "");
+            this.imgList.Images.SetKeyName(21, "");
+            this.imgList.Images.SetKeyName(22, "");
+            this.imgList.Images.SetKeyName(23, "");
+            this.imgList.Images.SetKeyName(24, "");
+            this.imgList.Images.SetKeyName(25, "");
+            this.imgList.Images.SetKeyName(26, "");
+            this.imgList.Images.SetKeyName(27, "");
+            this.imgList.Images.SetKeyName(28, "");
+            this.imgList.Images.SetKeyName(29, "");
+            this.imgList.Images.SetKeyName(30, "");
+            this.imgList.Images.SetKeyName(31, "");
+            this.imgList.Images.SetKeyName(32, "");
+            this.imgList.Images.SetKeyName(33, "");
+            this.imgList.Images.SetKeyName(34, "");
+            this.imgList.Images.SetKeyName(35, "");
+            this.imgList.Images.SetKeyName(36, "");
+            this.imgList.Images.SetKeyName(37, "");
+            this.imgList.Images.SetKeyName(38, "");
+            this.imgList.Images.SetKeyName(39, "");
+            this.imgList.Images.SetKeyName(40, "");
+            this.imgList.Images.SetKeyName(41, "");
+            this.imgList.Images.SetKeyName(42, "");
+            this.imgList.Images.SetKeyName(43, "");
+            this.imgList.Images.SetKeyName(44, "");
+            this.imgList.Images.SetKeyName(45, "");
+            this.imgList.Images.SetKeyName(46, "");
+            this.imgList.Images.SetKeyName(47, "");
+            this.imgList.Images.SetKeyName(48, "");
+            this.imgList.Images.SetKeyName(49, "");
+            this.imgList.Images.SetKeyName(50, "");
+            this.imgList.Images.SetKeyName(51, "");
+            this.imgList.Images.SetKeyName(52, "");
+            this.imgList.Images.SetKeyName(53, "");
+            this.imgList.Images.SetKeyName(54, "");
+            this.imgList.Images.SetKeyName(55, "");
+            this.imgList.Images.SetKeyName(56, "");
+            this.imgList.Images.SetKeyName(57, "");
+            this.imgList.Images.SetKeyName(58, "");
+            this.imgList.Images.SetKeyName(59, "");
+            this.imgList.Images.SetKeyName(60, "");
+            this.imgList.Images.SetKeyName(61, "");
+            this.imgList.Images.SetKeyName(62, "");
+            this.imgList.Images.SetKeyName(63, "");
+            this.imgList.Images.SetKeyName(64, "");
+            this.imgList.Images.SetKeyName(65, "");
+            this.imgList.Images.SetKeyName(66, "");
+            this.imgList.Images.SetKeyName(67, "");
+            this.imgList.Images.SetKeyName(68, "");
+            this.imgList.Images.SetKeyName(69, "");
+            this.imgList.Images.SetKeyName(70, "");
+            this.imgList.Images.SetKeyName(71, "");
+            this.imgList.Images.SetKeyName(72, "");
+            this.imgList.Images.SetKeyName(73, "");
+            this.imgList.Images.SetKeyName(74, "");
+            this.imgList.Images.SetKeyName(75, "");
+            this.imgList.Images.SetKeyName(76, "");
+            this.imgList.Images.SetKeyName(77, "");
+            this.imgList.Images.SetKeyName(78, "");
+            this.imgList.Images.SetKeyName(79, "");
+            this.imgList.Images.SetKeyName(80, "");
+            this.imgList.Images.SetKeyName(81, "");
+            this.imgList.Images.SetKeyName(82, "");
+            this.imgList.Images.SetKeyName(83, "");
+            this.imgList.Images.SetKeyName(84, "");
+            this.imgList.Images.SetKeyName(85, "icon_01_common.png");
+            this.imgList.Images.SetKeyName(86, "icon_02_deployment.png");
+            this.imgList.Images.SetKeyName(87, "icon_03_features.png");
+            this.imgList.Images.SetKeyName(88, "icon_03_features-2.png");
+            this.imgList.Images.SetKeyName(89, "icon_04_string-library.png");
+            this.imgList.Images.SetKeyName(90, "icon_05_data.png");
+            this.imgList.Images.SetKeyName(91, "icon_05_data-2.png");
+            this.imgList.Images.SetKeyName(92, "icon_06_constants.png");
+            this.imgList.Images.SetKeyName(93, "icon_07_data-structures.png");
+            this.imgList.Images.SetKeyName(94, "icon_08_database-data-types.png");
+            this.imgList.Images.SetKeyName(95, "icon_09_entities.png");
+            this.imgList.Images.SetKeyName(96, "icon_10_functions.png");
+            this.imgList.Images.SetKeyName(97, "icon_11_lookups.png");
+            this.imgList.Images.SetKeyName(98, "icon_12_tree-structures.png");
+            this.imgList.Images.SetKeyName(99, "icon_13_user-interface.png");
+            this.imgList.Images.SetKeyName(100, "icon_14_charts.png");
+            this.imgList.Images.SetKeyName(101, "icon_15_dashboard-widgets.png");
+            this.imgList.Images.SetKeyName(102, "icon_16_images.png");
+            this.imgList.Images.SetKeyName(103, "icon_17_keyboard-shortcuts.png");
+            this.imgList.Images.SetKeyName(104, "icon_18_menu.png");
+            this.imgList.Images.SetKeyName(105, "icon_19_notification-boxes.png");
+            this.imgList.Images.SetKeyName(106, "icon_20_reports.png");
+            this.imgList.Images.SetKeyName(107, "icon_21_screen-sections.png");
+            this.imgList.Images.SetKeyName(108, "icon_21_screen-sections-2.png");
+            this.imgList.Images.SetKeyName(109, "icon_22_screens.png");
+            this.imgList.Images.SetKeyName(110, "icon_23_search-data-sources.png");
+            this.imgList.Images.SetKeyName(111, "icon_24_styles.png");
+            this.imgList.Images.SetKeyName(112, "icon_25_widgets.png");
+            this.imgList.Images.SetKeyName(113, "icon_26_business-logic.png");
+            this.imgList.Images.SetKeyName(114, "icon_26_business-logic-2.png");
+            this.imgList.Images.SetKeyName(115, "icon_27_rules.png");
+            this.imgList.Images.SetKeyName(116, "icon_28_schedule-times.png");
+            this.imgList.Images.SetKeyName(117, "icon_28_schedule-times-2.png");
+            this.imgList.Images.SetKeyName(118, "icon_29_schedules.png");
+            this.imgList.Images.SetKeyName(119, "icon_30_sequential-workflows.png");
+            this.imgList.Images.SetKeyName(120, "icon_31_services.png");
+            this.imgList.Images.SetKeyName(121, "icon_31_services-2.png");
+            this.imgList.Images.SetKeyName(122, "icon_32_state-workflows.png");
+            this.imgList.Images.SetKeyName(123, "icon_33_transformations.png");
+            this.imgList.Images.SetKeyName(124, "icon_34_work-queue-classes.png");
+            this.imgList.Images.SetKeyName(125, "icon_35_API.png");
+            this.imgList.Images.SetKeyName(126, "icon_36_web-api-pages.png");
+            this.imgList.Images.SetKeyName(127, "icon_36_web-api-pages-2.png");
+            this.imgList.Images.SetKeyName(128, "09_packages-1.ico");
+            // 
+            // cboFilter
+            // 
+            this.cboFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cboFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboFilter.Location = new System.Drawing.Point(0, 0);
+            this.cboFilter.Name = "cboFilter";
+            this.cboFilter.Size = new System.Drawing.Size(176, 21);
+            this.cboFilter.TabIndex = 1;
+            this.cboFilter.Visible = false;
+            this.cboFilter.SelectedIndexChanged += new System.EventHandler(this.cboFilter_SelectedIndexChanged);
+            // 
+            // toolTip1
+            // 
+            this.toolTip1.AutoPopDelay = 20000;
+            this.toolTip1.InitialDelay = 500;
+            this.toolTip1.ReshowDelay = 100;
+            // 
+            // tvwExpressionBrowser
+            // 
+            this.tvwExpressionBrowser.AllowDrop = true;
+            this.tvwExpressionBrowser.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tvwExpressionBrowser.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tvwExpressionBrowser.FullRowSelect = true;
             this.tvwExpressionBrowser.HideSelection = false;
-			this.tvwExpressionBrowser.ImageList = this.imgList;
-			this.tvwExpressionBrowser.Location = new System.Drawing.Point(0, 0);
-			this.tvwExpressionBrowser.Name = "tvwExpressionBrowser";
-			this.tvwExpressionBrowser.ShowLines = false;
-			this.tvwExpressionBrowser.Size = new System.Drawing.Size(174, 144);
-			this.tvwExpressionBrowser.TabIndex = 0;
-			this.tvwExpressionBrowser.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.tvwExpressionBrowser_BeforeLabelEdit);
-			this.tvwExpressionBrowser.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.tvwExpressionBrowser_BeforeExpand);
-			this.tvwExpressionBrowser.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tvwExpressionBrowser_MouseDown);
-			this.tvwExpressionBrowser.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tvwExpressionBrowser_AfterCollapse);
-			this.tvwExpressionBrowser.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tvwExpressionBrowser_KeyPress);
-			this.tvwExpressionBrowser.DragOver += new System.Windows.Forms.DragEventHandler(this.tvwExpressionBrowser_DragOver);
-			this.tvwExpressionBrowser.MouseHover += new System.EventHandler(this.tvwExpressionBrowser_MouseHover);
-			this.tvwExpressionBrowser.DragDrop += new System.Windows.Forms.DragEventHandler(this.tvwExpressionBrowser_DragDrop);
-			this.tvwExpressionBrowser.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvwExpressionBrowser_AfterSelect);
-			this.tvwExpressionBrowser.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.tvwExpressionBrowser_AfterLabelEdit);
-			this.tvwExpressionBrowser.Click += new System.EventHandler(this.tvwExpressionBrowser_Click);
-			this.tvwExpressionBrowser.DoubleClick += new System.EventHandler(this.tvwExpressionBrowser_DoubleClick);
-			this.tvwExpressionBrowser.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tvwExpressionBrowser_MouseMove);
-			// 
-			// imgList
-			// 
-			this.imgList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-			this.imgList.ImageSize = new System.Drawing.Size(16, 16);
-			this.imgList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgList.ImageStream")));
-			this.imgList.TransparentColor = System.Drawing.Color.Magenta;
-			// 
-			// cboFilter
-			// 
-			this.cboFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
-			this.cboFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboFilter.Location = new System.Drawing.Point(0, 0);
-			this.cboFilter.Name = "cboFilter";
-			this.cboFilter.Size = new System.Drawing.Size(176, 21);
-			this.cboFilter.TabIndex = 1;
-			this.cboFilter.Visible = false;
-			this.cboFilter.SelectedIndexChanged += new System.EventHandler(this.cboFilter_SelectedIndexChanged);
-			// 
-			// toolTip1
-			// 
-			this.toolTip1.AutoPopDelay = 20000;
-			this.toolTip1.InitialDelay = 500;
-			this.toolTip1.ReshowDelay = 100;
-			// 
-			// ExpressionBrowser
-			// 
-			this.Controls.Add(this.cboFilter);
-			this.Controls.Add(this.tvwExpressionBrowser);
-			this.Name = "ExpressionBrowser";
-			this.Size = new System.Drawing.Size(176, 144);
-			this.BackColorChanged += new System.EventHandler(this.ExpressionBrowser_BackColorChanged);
-			this.ResumeLayout(false);
+            this.tvwExpressionBrowser.ImageIndex = 0;
+            this.tvwExpressionBrowser.ImageList = this.imgList;
+            this.tvwExpressionBrowser.Indent = 16;
+            this.tvwExpressionBrowser.ItemHeight = 20;
+            this.tvwExpressionBrowser.Location = new System.Drawing.Point(0, 0);
+            this.tvwExpressionBrowser.Name = "tvwExpressionBrowser";
+            this.tvwExpressionBrowser.SelectedImageIndex = 0;
+            this.tvwExpressionBrowser.ShowLines = false;
+            this.tvwExpressionBrowser.Size = new System.Drawing.Size(174, 144);
+            this.tvwExpressionBrowser.TabIndex = 0;
+            this.tvwExpressionBrowser.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.tvwExpressionBrowser_BeforeLabelEdit);
+            this.tvwExpressionBrowser.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.tvwExpressionBrowser_AfterLabelEdit);
+            this.tvwExpressionBrowser.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tvwExpressionBrowser_AfterCollapse);
+            this.tvwExpressionBrowser.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.tvwExpressionBrowser_BeforeExpand);
+            this.tvwExpressionBrowser.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvwExpressionBrowser_AfterSelect);
+            this.tvwExpressionBrowser.Click += new System.EventHandler(this.tvwExpressionBrowser_Click);
+            this.tvwExpressionBrowser.DragDrop += new System.Windows.Forms.DragEventHandler(this.tvwExpressionBrowser_DragDrop);
+            this.tvwExpressionBrowser.DragOver += new System.Windows.Forms.DragEventHandler(this.tvwExpressionBrowser_DragOver);
+            this.tvwExpressionBrowser.DoubleClick += new System.EventHandler(this.tvwExpressionBrowser_DoubleClick);
+            this.tvwExpressionBrowser.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tvwExpressionBrowser_KeyPress);
+            this.tvwExpressionBrowser.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tvwExpressionBrowser_MouseDown);
+            this.tvwExpressionBrowser.MouseHover += new System.EventHandler(this.tvwExpressionBrowser_MouseHover);
+            this.tvwExpressionBrowser.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tvwExpressionBrowser_MouseMove);
+            // 
+            // ExpressionBrowser
+            // 
+            this.Controls.Add(this.cboFilter);
+            this.Controls.Add(this.tvwExpressionBrowser);
+            this.Name = "ExpressionBrowser";
+            this.Size = new System.Drawing.Size(176, 144);
+            this.BackColorChanged += new System.EventHandler(this.ExpressionBrowser_BackColorChanged);
+            this.ResumeLayout(false);
 
 		}
 		#endregion
@@ -529,7 +659,7 @@ namespace Origam.Workbench
 			}
 			if(node.Tag is SchemaItemProviderGroup)
 			{
-				node.BackColor = Color.FromArgb(150, 150, 150);
+				node.BackColor = Color.FromArgb(170, 170, 170);
 				node.ForeColor = Color.White;
 				node.NodeFont = _boldFont;
 			}
@@ -563,7 +693,10 @@ namespace Origam.Workbench
 			}
 			else
 			{
-				imageIndex = Convert.ToInt32(bnode.Icon);
+                if (! int.TryParse(bnode.Icon, out imageIndex))
+                {
+                    imageIndex = imgList.Images.IndexOfKey(bnode.Icon);
+                }
 			}
 
 			return imageIndex;
@@ -1154,8 +1287,8 @@ namespace Origam.Workbench
 				{
 					tnode.Expand();
 
-//					// try to find a subfolder, if one exists and expand it
-					string subfolderName = SchemaItemFolderDescription(node.GetType());
+                    // try to find a subfolder, if one exists and expand it
+                    string subfolderName = node.GetType().SchemaItemDescription()?.Name;
 
 					foreach(TreeNode subnode in tnode.Nodes)
 					{
@@ -1178,17 +1311,6 @@ namespace Origam.Workbench
                 tvwExpressionBrowser.SelectedNode = tnode;
             }
         }
-
-		private string SchemaItemFolderDescription(Type type)
-		{
-			object[] attributes = type.GetCustomAttributes(typeof(SchemaItemDescriptionAttribute), true);
-
-			if(attributes != null && attributes.Length > 0)
-				return (attributes[0] as SchemaItemDescriptionAttribute).FolderName;
-			else
-				return "";
-
-		}
 
 		private void ExpressionBrowser_BackColorChanged(object sender, System.EventArgs e)
 		{

@@ -26,7 +26,7 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel
 {
-	[SchemaItemDescription("Database Data Type", 57)]
+	[SchemaItemDescription("Database Data Type", "icon_08_database-data-types.png")]
     [HelpTopic("Database+Data+Type")]
     [DefaultProperty("DataType")]
 	[XmlModelRoot(ItemTypeConst)]
@@ -94,14 +94,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "57";
 			}
 		}
 

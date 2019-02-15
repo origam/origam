@@ -26,7 +26,7 @@ namespace Origam.Schema.LookupModel
 	/// <summary>
 	/// Summary description for DataServiceDataLookup.
 	/// </summary>
-	[SchemaItemDescription("Data Service Lookup", 50)]
+	[SchemaItemDescription("Data Service Lookup", "icon_11_lookups.png")]
     [HelpTopic("Lookups")]
 	public class DataServiceDataLookup : AbstractDataLookup
 	{
@@ -35,13 +35,5 @@ namespace Origam.Schema.LookupModel
 		public DataServiceDataLookup(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
 		public DataServiceDataLookup(Key primaryKey) : base(primaryKey)	{}
-
-		public override string Icon
-		{
-			get
-			{
-				return "50";
-			}
-		}
 	}
 }
