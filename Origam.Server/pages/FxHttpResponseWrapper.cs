@@ -6,13 +6,14 @@ using Origam.ServerCommon.Pages;
 
 namespace Origam.Server.Pages
 {
-    internal class FxHttpResponse : IResponse
+    internal class FxHttpResponseWrapper : IResponseWrapper
     {
         private readonly HttpResponse response;
 
-        public FxHttpResponse(HttpResponse response)
+        public FxHttpResponseWrapper(HttpResponse response)
         {
             this.response = response;
+            response.ContentEncoding = Encoding.UTF8;
         }
 
         public bool BufferOutput
@@ -24,12 +25,6 @@ namespace Origam.Server.Pages
         {
             get => response.ContentType;
             set => response.ContentType = value;
-        }
-
-        public Encoding ContentEncoding
-        {
-            get => response.ContentEncoding;
-            set => response.ContentEncoding = value;
         }
 
         public bool TrySkipIisCustomErrors
@@ -44,11 +39,11 @@ namespace Origam.Server.Pages
             set => response.StatusCode = value;
         }
 
-        public TextWriter Output
+        public void WriteToOutput(Action<TextWriter> writeAction)
         {
-            get => response.Output;
-            set => response.Output = value;
+            writeAction(response.Output);
         }
+
         public void CacheSetMaxAge(TimeSpan timeSpan)
         {
             response.Cache.SetMaxAge(timeSpan);

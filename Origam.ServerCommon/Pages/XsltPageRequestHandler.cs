@@ -46,7 +46,7 @@ namespace Origam.ServerCommon.Pages
         private const string MIME_HTML = "text/html";
         private const string MIME_OCTET_STREAM = "application/octet-stream";
 
-        public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequest request, IResponse response)
+        public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response)
         {
             XsltDataPage xsltPage = page as XsltDataPage;
             IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
@@ -120,7 +120,7 @@ namespace Origam.ServerCommon.Pages
             if (xsltPage.Transformation == null && !xpath && page.MimeType == MIME_JSON)
             {
                 // pure dataset > json serialization
-                JsonUtils.SerializeToJson(response.Output, data, false);
+                response.WriteToOutput(textWriter => JsonUtils.SerializeToJson(textWriter, data, false));
                 isProcessed = true;
             }
             else if (xsltPage.Transformation == null)
@@ -140,8 +140,8 @@ namespace Origam.ServerCommon.Pages
 				// pure dataset > json serialization
 				if (resultDataDocument != null && !xpath && page.MimeType == MIME_JSON)
 				{
-					JsonUtils.SerializeToJson(response.Output,
-						resultDataDocument.DataSet, false);
+				    response.WriteToOutput(textWriter =>
+				        JsonUtils.SerializeToJson(textWriter, resultDataDocument.DataSet, false));
 					isProcessed = true;
 				}
 			}
@@ -171,7 +171,8 @@ namespace Origam.ServerCommon.Pages
             {
                 if (page.MimeType == MIME_JSON)
                 {
-                    JsonUtils.SerializeToJson(response.Output, result, xsltPage.OmitJsonRootElement);
+                    response.WriteToOutput(textWriter =>
+                        JsonUtils.SerializeToJson(textWriter, result, xsltPage.OmitJsonRootElement));
                 }
                 else
                 {
@@ -179,7 +180,7 @@ namespace Origam.ServerCommon.Pages
                     {
                         response.Write("<!DOCTYPE html>");
                     }
-                    result.Xml.Save(response.Output);
+                    response.WriteToOutput(textWriter => result.Xml.Save(textWriter));
                 }
             }
 

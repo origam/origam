@@ -31,7 +31,7 @@ namespace Origam.ServerCommon.Pages
 {
     class RedirectWorkflowPageActionHandler : AbstractWorkflowPageActionHandler
     {
-        public override void Execute(AbstractWorkflowPageAction action, object workflowResult, IRequest request, IResponse response)
+        public override void Execute(AbstractWorkflowPageAction action, object workflowResult, IRequestWrapper request, IResponseWrapper response)
         {
             RedirectWorkflowPageAction redirectAction = action as RedirectWorkflowPageAction;
 

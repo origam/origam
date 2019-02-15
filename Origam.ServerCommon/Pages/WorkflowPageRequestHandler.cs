@@ -34,7 +34,7 @@ namespace Origam.ServerCommon.Pages
 {
     class WorkflowPageRequestHandler : AbstractPageRequestHandler
     {
-        public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequest request, IResponse response)
+        public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response)
         {
             WorkflowPage workflowPage = page as WorkflowPage;
 

@@ -50,7 +50,7 @@ namespace Origam.Server.Pages
             HttpApplication application = (HttpApplication)sender;
 
             HttpContext context = application.Context;
-            IHttpContext contextWrapper = new FxHttpContext(context);
+            IHttpContextWrapper contextWrapper = new FxHttpContextWrapper(context);
             apiFilter.MapRequestHandler(contextWrapper);
         }
     }

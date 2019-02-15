@@ -32,12 +32,12 @@ namespace Origam.ServerCommon.Pages
 {
 	public abstract class AbstractPageRequestHandler : IPageRequestHandler
 	{
-		public virtual void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequest request, IResponse response)
+		public virtual void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static Hashtable GetPreprocessorParameters(IRequest request)
+		internal static Hashtable GetPreprocessorParameters(IRequestWrapper request)
 		{
 			Hashtable preprocessorParams = new Hashtable();
 

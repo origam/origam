@@ -29,7 +29,7 @@ namespace Origam.ServerCommon.Pages
 {
 	class ReportPageRequestHandler : AbstractPageRequestHandler
 	{
-		public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequest request, IResponse response)
+		public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response)
 		{
 			ReportPage reportPage = page as ReportPage;
 
