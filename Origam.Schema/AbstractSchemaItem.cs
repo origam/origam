@@ -1457,7 +1457,6 @@ namespace Origam.Schema
 			if(this.AllAncestors.Count > 0)
 			{
 				NonpersistentSchemaItemNode folder = new NonpersistentSchemaItemNode();
-				folder.Icon = "42";
 				folder.NodeText = "_Ancestors";
 				folder.ParentNode = this;
 				col.Add(folder);
@@ -1478,11 +1477,8 @@ namespace Origam.Schema
 						if(! folders.Contains(description))
 						{
 							NonpersistentSchemaItemNode folder = new NonpersistentSchemaItemNode();
-
 							folder.ParentNode = this;
-							folder.Icon = "42";
 							folder.NodeText = description;
-							
 							col.Add(folder);
 							folders.Add(description, folder);
 						}

@@ -260,6 +260,22 @@ namespace Origam.Workbench
             this.imgList.Images.SetKeyName(126, "icon_36_web-api-pages.png");
             this.imgList.Images.SetKeyName(127, "icon_36_web-api-pages-2.png");
             this.imgList.Images.SetKeyName(128, "09_packages-1.ico");
+            this.imgList.Images.SetKeyName(129, "37_folder-1.png");
+            this.imgList.Images.SetKeyName(130, "37_folder-2.png");
+            this.imgList.Images.SetKeyName(131, "37_folder-3.png");
+            this.imgList.Images.SetKeyName(132, "37_folder-4.png");
+            this.imgList.Images.SetKeyName(133, "37_folder-5.png");
+            this.imgList.Images.SetKeyName(134, "38_folder-categories-1.png");
+            this.imgList.Images.SetKeyName(135, "38_folder-categories-2.png");
+            this.imgList.Images.SetKeyName(136, "38_folder-categories-3.png");
+            this.imgList.Images.SetKeyName(137, "38_folder-categories-4.png");
+            this.imgList.Images.SetKeyName(138, "38_folder-categories-5.png");
+            this.imgList.Images.SetKeyName(139, "Home.png");
+            this.imgList.Images.SetKeyName(140, "menu_folder.png");
+            this.imgList.Images.SetKeyName(141, "menu_form.png");
+            this.imgList.Images.SetKeyName(142, "menu_parameter.png");
+            this.imgList.Images.SetKeyName(143, "menu_report.png");
+            this.imgList.Images.SetKeyName(144, "menu_workflow.png");
             // 
             // cboFilter
             // 

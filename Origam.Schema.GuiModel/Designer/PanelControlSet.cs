@@ -31,7 +31,7 @@ namespace Origam.Schema.GuiModel
 	/// <summary>
 	/// Summary description for PanelControlSet.
 	/// </summary>
-	[SchemaItemDescription("Screen Section", 14)]
+	[SchemaItemDescription("Screen Section", "icon_21_screen-sections-2.png")]
 	[System.Drawing.ToolboxBitmap(typeof(PanelControlSet))]
     [HelpTopic("Screen+Sections")]
 	[XmlModelRoot(ItemTypeConst)]
@@ -113,14 +113,6 @@ namespace Origam.Schema.GuiModel
 
 				//if all done delete main control
 				base.IsDeleted = value;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "14";
 			}
 		}
 

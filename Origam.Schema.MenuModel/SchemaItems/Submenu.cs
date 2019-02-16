@@ -31,7 +31,7 @@ namespace Origam.Schema.MenuModel
 	/// <summary>
 	/// Summary description for Submenu.
 	/// </summary>
-	[SchemaItemDescription("Submenu", 68)]
+	[SchemaItemDescription("Submenu", "menu_folder.png")]
     [HelpTopic("Submenu")]
 	public class Submenu : AbstractMenuItem, ISchemaItemFactory
 	{
@@ -40,8 +40,6 @@ namespace Origam.Schema.MenuModel
 		public Submenu(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
 		public Submenu(Key primaryKey) : base(primaryKey)	{}
-
-		public override string Icon => "68";
 
 		[Browsable(false)]
 		public override string Roles

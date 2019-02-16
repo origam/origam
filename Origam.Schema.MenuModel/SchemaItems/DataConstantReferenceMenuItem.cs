@@ -30,7 +30,7 @@ namespace Origam.Schema.MenuModel
 	/// <summary>
 	/// Summary description for DataConstantReferenceMenuItem.
 	/// </summary>
-	[SchemaItemDescription("Data Constant Reference", 57)]
+	[SchemaItemDescription("Data Constant Reference", "menu_parameter.png")]
     [HelpTopic("Data+Constant+Menu+Item")]
 	public class DataConstantReferenceMenuItem : AbstractMenuItem
 	{
@@ -39,14 +39,6 @@ namespace Origam.Schema.MenuModel
 		public DataConstantReferenceMenuItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
 		public DataConstantReferenceMenuItem(Key primaryKey) : base(primaryKey)	{}
-
-		public override string Icon
-		{
-			get
-			{
-				return "57";
-			}
-		}
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{

@@ -83,7 +83,7 @@ namespace Origam.Workbench.Editors
             this.headerPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.elementPicture)).BeginInit();
             this.SuspendLayout();
-			// 
+            // 
             // toolPanel
             // 
             this.toolPanel.AutoSize = true;
@@ -145,8 +145,8 @@ namespace Origam.Workbench.Editors
             this.lblName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.lblName.Location = new System.Drawing.Point(74, 0);
             this.lblName.Name = "lblName";
-            this.lblName.Padding = new System.Windows.Forms.Padding(0, 6, 0, 0);
-            this.lblName.Size = new System.Drawing.Size(57, 26);
+            this.lblName.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
+            this.lblName.Size = new System.Drawing.Size(57, 30);
             this.lblName.TabIndex = 1;
             this.lblName.Text = "label1";
             this.lblName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -159,8 +159,8 @@ namespace Origam.Workbench.Editors
             this.lblType.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.lblType.Location = new System.Drawing.Point(16, 0);
             this.lblType.Name = "lblType";
-            this.lblType.Padding = new System.Windows.Forms.Padding(0, 6, 0, 0);
-            this.lblType.Size = new System.Drawing.Size(58, 26);
+            this.lblType.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
+            this.lblType.Size = new System.Drawing.Size(58, 30);
             this.lblType.TabIndex = 1;
             this.lblType.Text = "lblType";
             this.lblType.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -170,22 +170,22 @@ namespace Origam.Workbench.Editors
             this.elementPicture.Dock = System.Windows.Forms.DockStyle.Left;
             this.elementPicture.Location = new System.Drawing.Point(0, 0);
             this.elementPicture.Name = "elementPicture";
-            this.elementPicture.Padding = new System.Windows.Forms.Padding(8, 8, 8, 16);
+            this.elementPicture.Padding = new System.Windows.Forms.Padding(12, 12, 12, 16);
             this.elementPicture.Size = new System.Drawing.Size(16, 40);
             this.elementPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.elementPicture.TabIndex = 0;
             this.elementPicture.TabStop = false;
             // 
-			// AbstractEditor
-			// 
+            // AbstractEditor
+            // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
             this.ClientSize = new System.Drawing.Size(714, 561);
             this.Controls.Add(this.toolPanel);
             this.Controls.Add(this.headerPanel);
             this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-			this.Name = "AbstractEditor";
-			this.Closing += new System.ComponentModel.CancelEventHandler(this.AbstractEditor_Closing);
+            this.Name = "AbstractEditor";
+            this.Closing += new System.ComponentModel.CancelEventHandler(this.AbstractEditor_Closing);
             this.toolPanel.ResumeLayout(false);
             this.toolPanel.PerformLayout();
             this.toolStrip1.ResumeLayout(false);

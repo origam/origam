@@ -115,6 +115,7 @@ namespace Origam.DA.Service
 
             return allNodes
                 .Cast<XmlNode>()
+                .Where(HasIdAttribute)
                 .Where(HasKeyWordInAttributes)
                 .Select(node => GetIdItemOrThrow(node,FileInfo))
                 .Select(idItem => idItem.Value) 
@@ -128,6 +129,13 @@ namespace Origam.DA.Service
                 .Cast<XmlAttribute>()
                 .Any(attr => ContainsAMatch(attr.Value));
         }
+        private bool HasIdAttribute(XmlNode node)
+        {
+            return node.Attributes
+                .Cast<XmlAttribute>()
+                .Any(attr => attr.Name == "x:id");
+        }
+
         private bool ContainsAMatch(string text) =>
             Regex
                 .Match(text, regExString, RegexOptions.IgnoreCase)

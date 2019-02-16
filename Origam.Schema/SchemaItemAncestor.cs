@@ -218,11 +218,8 @@ namespace Origam.Schema
 						if(! folders.Contains(description))
 						{
 							NonpersistentSchemaItemNode folder = new NonpersistentSchemaItemNode();
-
 							folder.ParentNode = this;
-							folder.Icon = "42";
 							folder.NodeText = description;
-							
 							col.Add(folder);
 							folders.Add(description, folder);
 						}

@@ -33,7 +33,7 @@ namespace Origam.Schema.MenuModel
 {
 	
 	
-	[SchemaItemDescription("Screen Reference", 67)]
+	[SchemaItemDescription("Screen Reference", "menu_form.png")]
     [HelpTopic("Screen+Menu+Item")]
 	public class FormReferenceMenuItem : AbstractMenuItem, ISchemaItemFactory
 	{
@@ -42,8 +42,6 @@ namespace Origam.Schema.MenuModel
 		public FormReferenceMenuItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
 		public FormReferenceMenuItem(Key primaryKey) : base(primaryKey)	{}
-
-		public override string Icon => "67";
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{

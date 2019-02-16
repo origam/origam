@@ -253,7 +253,7 @@ namespace Origam.Schema
 
 		public string NodeToolTipText => null;
 
-		public string Icon => "7";
+		public string Icon => "37_folder-3.png";
 		#endregion
 
 		#region ISchemaItemProvider Members

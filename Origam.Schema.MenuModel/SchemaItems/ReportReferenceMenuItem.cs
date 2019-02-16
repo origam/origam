@@ -35,7 +35,7 @@ namespace Origam.Schema.MenuModel
 	/// <summary>
 	/// Summary description for FormReferenceMenuItem.
 	/// </summary>
-	[SchemaItemDescription("Report Reference", 29)]
+	[SchemaItemDescription("Report Reference", "menu_report.png")]
     [HelpTopic("Report+Menu+Item")]
 	public class ReportReferenceMenuItem : AbstractMenuItem
 	{
@@ -44,14 +44,6 @@ namespace Origam.Schema.MenuModel
 		public ReportReferenceMenuItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
 		public ReportReferenceMenuItem(Key primaryKey) : base(primaryKey)	{}
-
-		public override string Icon
-		{
-			get
-			{
-				return "29";
-			}
-		}
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
