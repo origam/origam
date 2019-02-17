@@ -92,223 +92,234 @@ namespace Origam.Workbench.Pads
 		#region Windows Form Designer generated code
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(AttachmentPad));
-			this.dataGrid1 = new System.Windows.Forms.DataGrid();
-			this._dataset = new Origam.Workbench.AttachmentDataset();
-			this.dataGridTableStyle1 = new System.Windows.Forms.DataGridTableStyle();
-			this.colName = new Origam.Workbench.Pads.AttachmentPad.OtherTextColumn();
-			this.colDate = new Origam.Workbench.Pads.AttachmentPad.OtherTextColumn();
-			this.colRemark = new System.Windows.Forms.DataGridTextBoxColumn();
-			this.mnuContext = new System.Windows.Forms.ContextMenu();
-			this.menuItem1 = new System.Windows.Forms.MenuItem();
-			this.menuItem2 = new System.Windows.Forms.MenuItem();
-			this.panel1 = new System.Windows.Forms.Panel();
-			this.toolBar = new System.Windows.Forms.ToolBar();
-			this.butLoad = new System.Windows.Forms.ToolBarButton();
-			this.butSave = new System.Windows.Forms.ToolBarButton();
-			this.butShow = new System.Windows.Forms.ToolBarButton();
-			this.toolBarButton4 = new System.Windows.Forms.ToolBarButton();
-			this.butRefresh = new System.Windows.Forms.ToolBarButton();
-			this.butDelete = new System.Windows.Forms.ToolBarButton();
-			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-			((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this._dataset)).BeginInit();
-			this.panel1.SuspendLayout();
-			this.SuspendLayout();
-			// 
-			// dataGrid1
-			// 
-			this.dataGrid1.AllowSorting = false;
-			this.dataGrid1.AlternatingBackColor = System.Drawing.Color.LightGoldenrodYellow;
-			this.dataGrid1.BackColor = System.Drawing.Color.White;
-			this.dataGrid1.BackgroundColor = System.Drawing.Color.LightGoldenrodYellow;
-			this.dataGrid1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.dataGrid1.CaptionBackColor = System.Drawing.Color.LightGoldenrodYellow;
-			this.dataGrid1.CaptionFont = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-			this.dataGrid1.CaptionForeColor = System.Drawing.Color.DarkSlateBlue;
-			this.dataGrid1.CaptionVisible = false;
-			this.dataGrid1.DataMember = "Attachment";
-			this.dataGrid1.DataSource = this._dataset;
-			this.dataGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.dataGrid1.FlatMode = true;
-			this.dataGrid1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-			this.dataGrid1.ForeColor = System.Drawing.Color.DarkSlateBlue;
-			this.dataGrid1.GridLineColor = System.Drawing.Color.Peru;
-			this.dataGrid1.GridLineStyle = System.Windows.Forms.DataGridLineStyle.None;
-			this.dataGrid1.HeaderBackColor = System.Drawing.Color.Maroon;
-			this.dataGrid1.HeaderFont = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-			this.dataGrid1.HeaderForeColor = System.Drawing.Color.LightGoldenrodYellow;
-			this.dataGrid1.LinkColor = System.Drawing.Color.Maroon;
-			this.dataGrid1.Location = new System.Drawing.Point(0, 24);
-			this.dataGrid1.Name = "dataGrid1";
-			this.dataGrid1.ParentRowsBackColor = System.Drawing.Color.BurlyWood;
-			this.dataGrid1.ParentRowsForeColor = System.Drawing.Color.DarkSlateBlue;
-			this.dataGrid1.SelectionBackColor = System.Drawing.Color.DarkSlateBlue;
-			this.dataGrid1.SelectionForeColor = System.Drawing.Color.GhostWhite;
-			this.dataGrid1.Size = new System.Drawing.Size(592, 189);
-			this.dataGrid1.TabIndex = 0;
-			this.dataGrid1.TableStyles.AddRange(new System.Windows.Forms.DataGridTableStyle[] {
-																								  this.dataGridTableStyle1});
-			this.dataGrid1.Visible = false;
-			this.dataGrid1.Leave += new System.EventHandler(this.dataGrid1_Leave);
-			// 
-			// _dataset
-			// 
-			this._dataset.DataSetName = "AttachmentDataset";
-			this._dataset.Locale = new System.Globalization.CultureInfo("cs-CZ");
-			// 
-			// dataGridTableStyle1
-			// 
-			this.dataGridTableStyle1.AlternatingBackColor = System.Drawing.Color.LightGoldenrodYellow;
-			this.dataGridTableStyle1.BackColor = System.Drawing.Color.White;
-			this.dataGridTableStyle1.DataGrid = this.dataGrid1;
-			this.dataGridTableStyle1.ForeColor = System.Drawing.Color.DarkSlateBlue;
-			this.dataGridTableStyle1.GridColumnStyles.AddRange(new System.Windows.Forms.DataGridColumnStyle[] {
-																												  this.colName,
-																												  this.colDate,
-																												  this.colRemark});
-			this.dataGridTableStyle1.GridLineColor = System.Drawing.Color.Peru;
-			this.dataGridTableStyle1.GridLineStyle = System.Windows.Forms.DataGridLineStyle.None;
-			this.dataGridTableStyle1.HeaderBackColor = System.Drawing.Color.Maroon;
-			this.dataGridTableStyle1.HeaderForeColor = System.Drawing.Color.LightGoldenrodYellow;
-			this.dataGridTableStyle1.LinkColor = System.Drawing.Color.Maroon;
-			this.dataGridTableStyle1.MappingName = "Attachment";
-			this.dataGridTableStyle1.SelectionBackColor = System.Drawing.Color.DarkSlateBlue;
-			this.dataGridTableStyle1.SelectionForeColor = System.Drawing.Color.GhostWhite;
-			// 
-			// colName
-			// 
-			this.colName.Format = "";
-			this.colName.FormatInfo = null;
-			this.colName.HeaderText = ResourceUtils.GetString("FileNameTitle");
-			this.colName.MappingName = "FileName";
-			this.colName.NullText = ResourceUtils.GetString("Empty");
-			this.colName.Width = 75;
-			// 
-			// colDate
-			// 
-			this.colDate.Format = "";
-			this.colDate.FormatInfo = null;
-			this.colDate.HeaderText = ResourceUtils.GetString("DateTitle");
-			this.colDate.MappingName = "RecordCreated";
-			this.colDate.NullText = ResourceUtils.GetString("Empty");
-			this.colDate.Width = 75;
-			// 
-			// colRemark
-			// 
-			this.colRemark.Format = "";
-			this.colRemark.FormatInfo = null;
-			this.colRemark.HeaderText = ResourceUtils.GetString("NoteTitle");
-			this.colRemark.MappingName = "Note";
-			this.colRemark.NullText = ResourceUtils.GetString("Empty");
-			this.colRemark.Width = 200;
-			// 
-			// mnuContext
-			// 
-			this.mnuContext.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					   this.menuItem1,
-																					   this.menuItem2});
-			// 
-			// menuItem1
-			// 
-			this.menuItem1.Index = 0;
-			this.menuItem1.Text = "";
-			// 
-			// menuItem2
-			// 
-			this.menuItem2.Index = 1;
-			this.menuItem2.Text = "";
-			// 
-			// panel1
-			// 
-			this.panel1.BackColor = System.Drawing.Color.Transparent;
-			this.panel1.Controls.Add(this.toolBar);
-			this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-			this.panel1.Location = new System.Drawing.Point(0, 0);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(592, 24);
-			this.panel1.TabIndex = 5;
-			// 
-			// toolBar
-			// 
-			this.toolBar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
-			this.toolBar.AutoSize = false;
-			this.toolBar.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
-																					   this.butLoad,
-																					   this.butSave,
-																					   this.butShow,
-																					   this.toolBarButton4,
-																					   this.butRefresh,
-																					   this.butDelete});
-			this.toolBar.ButtonSize = new System.Drawing.Size(17, 17);
-			this.toolBar.Divider = false;
-			this.toolBar.DropDownArrows = true;
-			this.toolBar.ImageList = this.imageList1;
-			this.toolBar.Location = new System.Drawing.Point(0, 0);
-			this.toolBar.Name = "toolBar";
-			this.toolBar.ShowToolTips = true;
-			this.toolBar.Size = new System.Drawing.Size(592, 19);
-			this.toolBar.TabIndex = 5;
-			this.toolBar.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.toolBar_ButtonClick);
-			// 
-			// butLoad
-			// 
-			this.butLoad.ImageIndex = 0;
-			this.butLoad.ToolTipText = ResourceUtils.GetString("TooltipLoad");
-			// 
-			// butSave
-			// 
-			this.butSave.ImageIndex = 1;
-			this.butSave.ToolTipText = ResourceUtils.GetString("TooltipSave");
-			// 
-			// butShow
-			// 
-			this.butShow.ImageIndex = 2;
-			this.butShow.ToolTipText = ResourceUtils.GetString("TooltipShow");
-			// 
-			// toolBarButton4
-			// 
-			this.toolBarButton4.Style = System.Windows.Forms.ToolBarButtonStyle.Separator;
-			// 
-			// butRefresh
-			// 
-			this.butRefresh.ImageIndex = 3;
-			this.butRefresh.ToolTipText = ResourceUtils.GetString("TooltipRefresh");
-			// 
-			// butDelete
-			// 
-			this.butDelete.ImageIndex = 4;
-			this.butDelete.ToolTipText = ResourceUtils.GetString("TooltipDelete");
-			// 
-			// imageList1
-			// 
-			this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth24Bit;
-			this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
-			this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-			this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
-			// 
-			// AttachmentPad
-			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.BackColor = System.Drawing.Color.LightGoldenrodYellow;
-			this.ClientSize = new System.Drawing.Size(592, 213);
-			this.Controls.Add(this.dataGrid1);
-			this.Controls.Add(this.panel1);
-			this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
-				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
-				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
-				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
-			this.HideOnClose = true;
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Name = "AttachmentPad";
-			this.TabText = ResourceUtils.GetString("AttachmentsTitle");
-			this.Text = ResourceUtils.GetString("AttachmentsTitle");
-			this.Load += new System.EventHandler(this.AttachmentPad_Load);
-			((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this._dataset)).EndInit();
-			this.panel1.ResumeLayout(false);
-			this.ResumeLayout(false);
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AttachmentPad));
+            this.dataGrid1 = new System.Windows.Forms.DataGrid();
+            this._dataset = new Origam.Workbench.AttachmentDataset();
+            this.dataGridTableStyle1 = new System.Windows.Forms.DataGridTableStyle();
+            this.colName = new Origam.Workbench.Pads.AttachmentPad.OtherTextColumn();
+            this.colDate = new Origam.Workbench.Pads.AttachmentPad.OtherTextColumn();
+            this.colRemark = new System.Windows.Forms.DataGridTextBoxColumn();
+            this.mnuContext = new System.Windows.Forms.ContextMenu();
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.toolBar = new System.Windows.Forms.ToolBar();
+            this.butLoad = new System.Windows.Forms.ToolBarButton();
+            this.butSave = new System.Windows.Forms.ToolBarButton();
+            this.butShow = new System.Windows.Forms.ToolBarButton();
+            this.toolBarButton4 = new System.Windows.Forms.ToolBarButton();
+            this.butRefresh = new System.Windows.Forms.ToolBarButton();
+            this.butDelete = new System.Windows.Forms.ToolBarButton();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._dataset)).BeginInit();
+            this.panel1.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // dataGrid1
+            // 
+            this.dataGrid1.AllowSorting = false;
+            this.dataGrid1.AlternatingBackColor = System.Drawing.Color.LightGoldenrodYellow;
+            this.dataGrid1.BackColor = System.Drawing.Color.White;
+            this.dataGrid1.BackgroundColor = System.Drawing.Color.LightGoldenrodYellow;
+            this.dataGrid1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.dataGrid1.CaptionBackColor = System.Drawing.Color.LightGoldenrodYellow;
+            this.dataGrid1.CaptionFont = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.dataGrid1.CaptionForeColor = System.Drawing.Color.DarkSlateBlue;
+            this.dataGrid1.CaptionVisible = false;
+            this.dataGrid1.DataMember = "Attachment";
+            this.dataGrid1.DataSource = this._dataset;
+            this.dataGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGrid1.FlatMode = true;
+            this.dataGrid1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.dataGrid1.ForeColor = System.Drawing.Color.DarkSlateBlue;
+            this.dataGrid1.GridLineColor = System.Drawing.Color.Peru;
+            this.dataGrid1.GridLineStyle = System.Windows.Forms.DataGridLineStyle.None;
+            this.dataGrid1.HeaderBackColor = System.Drawing.Color.Maroon;
+            this.dataGrid1.HeaderFont = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.dataGrid1.HeaderForeColor = System.Drawing.Color.LightGoldenrodYellow;
+            this.dataGrid1.LinkColor = System.Drawing.Color.Maroon;
+            this.dataGrid1.Location = new System.Drawing.Point(0, 24);
+            this.dataGrid1.Name = "dataGrid1";
+            this.dataGrid1.ParentRowsBackColor = System.Drawing.Color.BurlyWood;
+            this.dataGrid1.ParentRowsForeColor = System.Drawing.Color.DarkSlateBlue;
+            this.dataGrid1.SelectionBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.dataGrid1.SelectionForeColor = System.Drawing.Color.GhostWhite;
+            this.dataGrid1.Size = new System.Drawing.Size(592, 189);
+            this.dataGrid1.TabIndex = 0;
+            this.dataGrid1.TableStyles.AddRange(new System.Windows.Forms.DataGridTableStyle[] {
+            this.dataGridTableStyle1});
+            this.dataGrid1.Visible = false;
+            this.dataGrid1.Leave += new System.EventHandler(this.dataGrid1_Leave);
+            // 
+            // _dataset
+            // 
+            this._dataset.DataSetName = "AttachmentDataset";
+            this._dataset.Locale = new System.Globalization.CultureInfo("cs-CZ");
+            this._dataset.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // dataGridTableStyle1
+            // 
+            this.dataGridTableStyle1.AlternatingBackColor = System.Drawing.Color.LightGoldenrodYellow;
+            this.dataGridTableStyle1.BackColor = System.Drawing.Color.White;
+            this.dataGridTableStyle1.DataGrid = this.dataGrid1;
+            this.dataGridTableStyle1.ForeColor = System.Drawing.Color.DarkSlateBlue;
+            this.dataGridTableStyle1.GridColumnStyles.AddRange(new System.Windows.Forms.DataGridColumnStyle[] {
+            this.colName,
+            this.colDate,
+            this.colRemark});
+            this.dataGridTableStyle1.GridLineColor = System.Drawing.Color.Peru;
+            this.dataGridTableStyle1.GridLineStyle = System.Windows.Forms.DataGridLineStyle.None;
+            this.dataGridTableStyle1.HeaderBackColor = System.Drawing.Color.Maroon;
+            this.dataGridTableStyle1.HeaderForeColor = System.Drawing.Color.LightGoldenrodYellow;
+            this.dataGridTableStyle1.LinkColor = System.Drawing.Color.Maroon;
+            this.dataGridTableStyle1.MappingName = "Attachment";
+            this.dataGridTableStyle1.SelectionBackColor = System.Drawing.Color.DarkSlateBlue;
+            this.dataGridTableStyle1.SelectionForeColor = System.Drawing.Color.GhostWhite;
+            // 
+            // colName
+            // 
+            this.colName.Format = "";
+            this.colName.FormatInfo = null;
+            this.colName.HeaderText = "File name";
+            this.colName.MappingName = "FileName";
+            this.colName.NullText = "(empty)";
+            this.colName.Width = 75;
+            // 
+            // colDate
+            // 
+            this.colDate.Format = "";
+            this.colDate.FormatInfo = null;
+            this.colDate.HeaderText = "Date";
+            this.colDate.MappingName = "RecordCreated";
+            this.colDate.NullText = "(empty)";
+            this.colDate.Width = 75;
+            // 
+            // colRemark
+            // 
+            this.colRemark.Format = "";
+            this.colRemark.FormatInfo = null;
+            this.colRemark.HeaderText = "Remark";
+            this.colRemark.MappingName = "Note";
+            this.colRemark.NullText = "(empty)";
+            this.colRemark.Width = 200;
+            // 
+            // mnuContext
+            // 
+            this.mnuContext.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem1,
+            this.menuItem2});
+            // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 0;
+            this.menuItem1.Text = "";
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 1;
+            this.menuItem2.Text = "";
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Transparent;
+            this.panel1.Controls.Add(this.toolBar);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(592, 24);
+            this.panel1.TabIndex = 5;
+            // 
+            // toolBar
+            // 
+            this.toolBar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
+            this.toolBar.AutoSize = false;
+            this.toolBar.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
+            this.butLoad,
+            this.butSave,
+            this.butShow,
+            this.toolBarButton4,
+            this.butRefresh,
+            this.butDelete});
+            this.toolBar.ButtonSize = new System.Drawing.Size(17, 17);
+            this.toolBar.Divider = false;
+            this.toolBar.DropDownArrows = true;
+            this.toolBar.ImageList = this.imageList1;
+            this.toolBar.Location = new System.Drawing.Point(0, 0);
+            this.toolBar.Name = "toolBar";
+            this.toolBar.ShowToolTips = true;
+            this.toolBar.Size = new System.Drawing.Size(592, 19);
+            this.toolBar.TabIndex = 5;
+            this.toolBar.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.toolBar_ButtonClick);
+            // 
+            // butLoad
+            // 
+            this.butLoad.ImageIndex = 0;
+            this.butLoad.Name = "butLoad";
+            this.butLoad.ToolTipText = "Appends the attachment to the current record";
+            // 
+            // butSave
+            // 
+            this.butSave.ImageIndex = 1;
+            this.butSave.Name = "butSave";
+            this.butSave.ToolTipText = "Saves the attachment to a file";
+            // 
+            // butShow
+            // 
+            this.butShow.ImageIndex = 2;
+            this.butShow.Name = "butShow";
+            this.butShow.ToolTipText = "Displays the attachment in an associated viewer";
+            // 
+            // toolBarButton4
+            // 
+            this.toolBarButton4.Name = "toolBarButton4";
+            this.toolBarButton4.Style = System.Windows.Forms.ToolBarButtonStyle.Separator;
+            // 
+            // butRefresh
+            // 
+            this.butRefresh.ImageIndex = 3;
+            this.butRefresh.Name = "butRefresh";
+            this.butRefresh.ToolTipText = "Saves changes to the database";
+            // 
+            // butDelete
+            // 
+            this.butDelete.ImageIndex = 4;
+            this.butDelete.Name = "butDelete";
+            this.butDelete.ToolTipText = "Removes the attachment";
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
+            this.imageList1.Images.SetKeyName(0, "");
+            this.imageList1.Images.SetKeyName(1, "");
+            this.imageList1.Images.SetKeyName(2, "");
+            this.imageList1.Images.SetKeyName(3, "");
+            this.imageList1.Images.SetKeyName(4, "");
+            // 
+            // AttachmentPad
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.BackColor = System.Drawing.Color.LightGoldenrodYellow;
+            this.ClientSize = new System.Drawing.Size(592, 213);
+            this.Controls.Add(this.dataGrid1);
+            this.Controls.Add(this.panel1);
+            this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.HideOnClose = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "AttachmentPad";
+            this.TabText = "Attachments";
+            this.Text = "Attachments";
+            this.Load += new System.EventHandler(this.AttachmentPad_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._dataset)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.ResumeLayout(false);
 
 		}
 		#endregion

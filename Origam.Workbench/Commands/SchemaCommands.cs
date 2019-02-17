@@ -517,7 +517,9 @@ namespace Origam.Workbench.Commands
 				editor.TitleName = (item as AbstractSchemaItem).Name;
 				if((item as AbstractSchemaItem).NodeImage == null)
 				{
-					(editor as Form).Icon = System.Drawing.Icon.FromHandle(((System.Drawing.Bitmap)_schemaService.SchemaBrowser.ImageList.Images[Convert.ToInt32((item as AbstractSchemaItem).Icon)]).GetHicon());
+					(editor as Form).Icon = System.Drawing.Icon.FromHandle(
+                        ((System.Drawing.Bitmap)_schemaService.SchemaBrowser.ImageList.Images[
+                            _schemaService.SchemaBrowser.ImageIndex((item as AbstractSchemaItem).Icon)]).GetHicon());
 				}
 				else
 				{

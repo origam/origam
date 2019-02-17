@@ -24,7 +24,7 @@ using System;
 
 namespace Origam.Schema.RuleModel
 {
-    [SchemaItemDescription("Simple Data Rule", 16)]
+    [SchemaItemDescription("Simple Data Rule", "icon_27_rules.png")]
     [HelpTopic("Simple+Data+Rule")]
     public class SimpleDataRule : XPathRule, IDataRule
     {

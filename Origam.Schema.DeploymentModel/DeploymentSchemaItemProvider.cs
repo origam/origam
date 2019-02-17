@@ -83,7 +83,7 @@ namespace Origam.Schema.DeploymentModel
 		{
 			get
 			{
-				return "46";
+				return "icon_02_deployment.png";
 			}
 		}
 

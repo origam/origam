@@ -184,7 +184,7 @@ namespace OrigamArchitect.Commands
                 if (schemaBrowser != null && item.NodeImage == null)
 				{
                     (frm as Form).Icon = System.Drawing.Icon.FromHandle((
-                        (System.Drawing.Bitmap)schemaBrowser.ImageList.Images[Convert.ToInt32(item.Icon)]).GetHicon());
+                        (System.Drawing.Bitmap)schemaBrowser.ImageList.Images[schemaBrowser.ImageIndex(item.Icon)]).GetHicon());
 				}
 				else
 				{
@@ -357,7 +357,7 @@ namespace OrigamArchitect.Commands
             if (schemaBrowser != null && item.NodeImage == null)
             {
                 icon = System.Drawing.Icon.FromHandle((
-                    (System.Drawing.Bitmap)schemaBrowser.ImageList.Images[Convert.ToInt32(item.Icon)]).GetHicon());
+                    (System.Drawing.Bitmap)schemaBrowser.ImageList.Images[schemaBrowser.ImageIndex(item.Icon)]).GetHicon());
             }
             else
             {

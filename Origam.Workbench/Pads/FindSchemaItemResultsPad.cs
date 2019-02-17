@@ -92,69 +92,71 @@ namespace Origam.Workbench.Pads
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(FindSchemaItemResultsPad));
-			this.lvwResults = new System.Windows.Forms.ListView();
-			this.colItemPath = new System.Windows.Forms.ColumnHeader();
-			this.colRootType = new System.Windows.Forms.ColumnHeader();
-			this.colItemType = new System.Windows.Forms.ColumnHeader();
-			this.colFolderPath = new System.Windows.Forms.ColumnHeader();
-			this.SuspendLayout();
-			// 
-			// lvwResults
-			// 
-			this.lvwResults.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.lvwResults.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-																						 this.colItemPath,
-																						 this.colRootType,
-																						 this.colItemType,
-																						 this.colFolderPath});
-			this.lvwResults.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.lvwResults.FullRowSelect = true;
-			this.lvwResults.Location = new System.Drawing.Point(0, 0);
-			this.lvwResults.MultiSelect = false;
-			this.lvwResults.Name = "lvwResults";
-			this.lvwResults.Size = new System.Drawing.Size(816, 245);
-			this.lvwResults.Sorting = System.Windows.Forms.SortOrder.Ascending;
-			this.lvwResults.TabIndex = 0;
-			this.lvwResults.View = System.Windows.Forms.View.Details;
-			this.lvwResults.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvwResults_KeyDown);
-			this.lvwResults.DoubleClick += new System.EventHandler(this.lvwResults_DoubleClick);
-			// 
-			// colItemPath
-			// 
-			this.colItemPath.Text = ResourceUtils.GetString("FoundInTitle");
-			this.colItemPath.Width = 375;
-			// 
-			// colRootType
-			// 
-			this.colRootType.Text = ResourceUtils.GetString("RootTypeTitle");
-			this.colRootType.Width = 131;
-			// 
-			// colItemType
-			// 
-			this.colItemType.Text = ResourceUtils.GetString("TypeTitle");
-			this.colItemType.Width = 120;
-			// 
-			// colFolderPath
-			// 
-			this.colFolderPath.Text = ResourceUtils.GetString("FolderTitle");
-			this.colFolderPath.Width = 324;
-			// 
-			// FindSchemaItemResultsPad
-			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(816, 245);
-			this.Controls.Add(this.lvwResults);
-			this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
-				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
-				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
-				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
-			this.HideOnClose = true;
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Name = "FindSchemaItemResultsPad";
-			this.TabText = ResourceUtils.GetString("FindResultsTitle");
-			this.Text = ResourceUtils.GetString("FindResultsTitle");
-			this.ResumeLayout(false);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FindSchemaItemResultsPad));
+            this.lvwResults = new System.Windows.Forms.ListView();
+            this.colItemPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colRootType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colItemType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colFolderPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.SuspendLayout();
+            // 
+            // lvwResults
+            // 
+            this.lvwResults.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lvwResults.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colItemPath,
+            this.colRootType,
+            this.colItemType,
+            this.colFolderPath});
+            this.lvwResults.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvwResults.FullRowSelect = true;
+            this.lvwResults.Location = new System.Drawing.Point(0, 0);
+            this.lvwResults.MultiSelect = false;
+            this.lvwResults.Name = "lvwResults";
+            this.lvwResults.Size = new System.Drawing.Size(816, 245);
+            this.lvwResults.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.lvwResults.TabIndex = 0;
+            this.lvwResults.UseCompatibleStateImageBehavior = false;
+            this.lvwResults.View = System.Windows.Forms.View.Details;
+            this.lvwResults.DoubleClick += new System.EventHandler(this.lvwResults_DoubleClick);
+            this.lvwResults.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvwResults_KeyDown);
+            // 
+            // colItemPath
+            // 
+            this.colItemPath.Text = "Found In";
+            this.colItemPath.Width = 375;
+            // 
+            // colRootType
+            // 
+            this.colRootType.Text = "Root Type";
+            this.colRootType.Width = 131;
+            // 
+            // colItemType
+            // 
+            this.colItemType.Text = "Type";
+            this.colItemType.Width = 120;
+            // 
+            // colFolderPath
+            // 
+            this.colFolderPath.Text = "Folder";
+            this.colFolderPath.Width = 324;
+            // 
+            // FindSchemaItemResultsPad
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.ClientSize = new System.Drawing.Size(816, 245);
+            this.Controls.Add(this.lvwResults);
+            this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.HideOnClose = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "FindSchemaItemResultsPad";
+            this.TabText = "Find Results";
+            this.Text = "Find Results";
+            this.ResumeLayout(false);
 
 		}
 		#endregion
@@ -206,15 +208,15 @@ namespace Origam.Workbench.Pads
 				return null;
 			}
 
-			string name = SchemaItemName(item.GetType());
-			string rootName = SchemaItemName(item.RootItem.GetType());
+			string name = item.ModelDescription();
+			string rootName = item.RootItem.ModelDescription();
 
 			if(name == null) name = item.ItemType;
 			if(rootName == null) rootName = item.RootItem.ItemType;
 
 			ListViewItem newItem = new ListViewItem(new string[] {item.Path, rootName, name, item.RootItem.Group == null ? "" : item.RootItem.Group.Path});
 			newItem.Tag = item;
-			newItem.ImageIndex = Convert.ToInt32(item.RootItem.Icon);
+			newItem.ImageIndex = _schemaBrowser.ImageIndex(item.RootItem.Icon);
 
 			return newItem;
 		}
@@ -242,17 +244,6 @@ namespace Origam.Workbench.Pads
         private void lvwResults_DoubleClick(object sender, System.EventArgs e)
 		{
 			ActivateItem();
-		}
-
-		private string SchemaItemName(Type type)
-		{
-			object[] attributes = type.GetCustomAttributes(typeof(SchemaItemDescriptionAttribute), true);
-
-			if(attributes != null && attributes.Length > 0)
-				return (attributes[0] as SchemaItemDescriptionAttribute).Name;
-			else
-				return null;
-
 		}
 
 		private void lvwResults_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)

@@ -29,7 +29,7 @@ namespace Origam.Schema.MenuModel
 	/// <summary>
 	/// Summary description for Menu.
 	/// </summary>
-	[SchemaItemDescription("Menu", 70)]
+	[SchemaItemDescription("Menu", "home.png")]
     [HelpTopic("Menu")]
 	[XmlModelRoot(ItemTypeConst)]
     public class Menu : AbstractSchemaItem, ISchemaItemFactory
@@ -59,14 +59,6 @@ namespace Origam.Schema.MenuModel
 			get
 			{
 				return false;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "70";
 			}
 		}
 

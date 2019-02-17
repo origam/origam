@@ -82,94 +82,102 @@ namespace Origam.Workbench.Pads
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ExtensionPad));
-			this.toolBar1 = new System.Windows.Forms.ToolBar();
-			this.tbrNew = new System.Windows.Forms.ToolBarButton();
-			this.tbrRemove = new System.Windows.Forms.ToolBarButton();
-			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-			this.lvwPackages = new System.Windows.Forms.ListView();
-			this.colPackage = new System.Windows.Forms.ColumnHeader();
-			this.colVersion = new System.Windows.Forms.ColumnHeader();
-			this.SuspendLayout();
-			// 
-			// toolBar1
-			// 
-			this.toolBar1.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
-			this.toolBar1.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
-																						this.tbrNew,
-																						this.tbrRemove});
-			this.toolBar1.DropDownArrows = true;
-			this.toolBar1.ImageList = this.imageList1;
-			this.toolBar1.Location = new System.Drawing.Point(0, 0);
-			this.toolBar1.Name = "toolBar1";
-			this.toolBar1.ShowToolTips = true;
-			this.toolBar1.Size = new System.Drawing.Size(272, 28);
-			this.toolBar1.TabIndex = 1;
-			this.toolBar1.TextAlign = System.Windows.Forms.ToolBarTextAlign.Right;
-			this.toolBar1.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.toolBar1_ButtonClick);
-			// 
-			// tbrNew
-			// 
-			this.tbrNew.ImageIndex = 0;
-			this.tbrNew.Text = ResourceUtils.GetString("ButtonAdd");
-			// 
-			// tbrRemove
-			// 
-			this.tbrRemove.ImageIndex = 1;
-			this.tbrRemove.Text = ResourceUtils.GetString("ButtonRemove");
-			// 
-			// imageList1
-			// 
-			this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
-			this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-			this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
-			// 
-			// lvwPackages
-			// 
-			this.lvwPackages.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.lvwPackages.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-																						  this.colPackage,
-																						  this.colVersion});
-			this.lvwPackages.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.lvwPackages.FullRowSelect = true;
-			this.lvwPackages.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-			this.lvwPackages.Location = new System.Drawing.Point(0, 28);
-			this.lvwPackages.Name = "lvwPackages";
-			this.lvwPackages.Size = new System.Drawing.Size(272, 245);
-			this.lvwPackages.SmallImageList = this.imageList1;
-			this.lvwPackages.Sorting = System.Windows.Forms.SortOrder.Ascending;
-			this.lvwPackages.TabIndex = 0;
-			this.lvwPackages.View = System.Windows.Forms.View.Details;
-			this.lvwPackages.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvwPackages_KeyDown);
-			this.lvwPackages.DoubleClick += new System.EventHandler(this.lvwPackages_DoubleClick);
-			// 
-			// colPackage
-			// 
-			this.colPackage.Text = ResourceUtils.GetString("PackageTitle");
-			this.colPackage.Width = 173;
-			// 
-			// colVersion
-			// 
-			this.colVersion.Text = ResourceUtils.GetString("VersionTitle");
-			this.colVersion.Width = 89;
-			// 
-			// ExtensionPad
-			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(272, 273);
-			this.Controls.Add(this.lvwPackages);
-			this.Controls.Add(this.toolBar1);
-			this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
-				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
-				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
-				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
-			this.HideOnClose = true;
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Name = "ExtensionPad";
-			this.TabText = ResourceUtils.GetString("PackagesTitle");
-			this.Text = ResourceUtils.GetString("PackageBrowserTitle");
-			this.ResumeLayout(false);
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExtensionPad));
+            this.toolBar1 = new System.Windows.Forms.ToolBar();
+            this.tbrNew = new System.Windows.Forms.ToolBarButton();
+            this.tbrRemove = new System.Windows.Forms.ToolBarButton();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.lvwPackages = new System.Windows.Forms.ListView();
+            this.colPackage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.SuspendLayout();
+            // 
+            // toolBar1
+            // 
+            this.toolBar1.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
+            this.toolBar1.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
+            this.tbrNew,
+            this.tbrRemove});
+            this.toolBar1.DropDownArrows = true;
+            this.toolBar1.ImageList = this.imageList1;
+            this.toolBar1.Location = new System.Drawing.Point(0, 0);
+            this.toolBar1.Name = "toolBar1";
+            this.toolBar1.ShowToolTips = true;
+            this.toolBar1.Size = new System.Drawing.Size(272, 28);
+            this.toolBar1.TabIndex = 1;
+            this.toolBar1.TextAlign = System.Windows.Forms.ToolBarTextAlign.Right;
+            this.toolBar1.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.toolBar1_ButtonClick);
+            // 
+            // tbrNew
+            // 
+            this.tbrNew.ImageIndex = 0;
+            this.tbrNew.Name = "tbrNew";
+            this.tbrNew.Text = "Add";
+            // 
+            // tbrRemove
+            // 
+            this.tbrRemove.ImageIndex = 1;
+            this.tbrRemove.Name = "tbrRemove";
+            this.tbrRemove.Text = "Remove";
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
+            this.imageList1.Images.SetKeyName(0, "");
+            this.imageList1.Images.SetKeyName(1, "");
+            this.imageList1.Images.SetKeyName(2, "");
+            this.imageList1.Images.SetKeyName(3, "09_packages-1.ico");
+            // 
+            // lvwPackages
+            // 
+            this.lvwPackages.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lvwPackages.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colPackage,
+            this.colVersion});
+            this.lvwPackages.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvwPackages.FullRowSelect = true;
+            this.lvwPackages.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lvwPackages.Location = new System.Drawing.Point(0, 28);
+            this.lvwPackages.Name = "lvwPackages";
+            this.lvwPackages.Size = new System.Drawing.Size(272, 245);
+            this.lvwPackages.SmallImageList = this.imageList1;
+            this.lvwPackages.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.lvwPackages.TabIndex = 0;
+            this.lvwPackages.UseCompatibleStateImageBehavior = false;
+            this.lvwPackages.View = System.Windows.Forms.View.Details;
+            this.lvwPackages.DoubleClick += new System.EventHandler(this.lvwPackages_DoubleClick);
+            this.lvwPackages.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvwPackages_KeyDown);
+            // 
+            // colPackage
+            // 
+            this.colPackage.Text = "Package";
+            this.colPackage.Width = 173;
+            // 
+            // colVersion
+            // 
+            this.colVersion.Text = "Version";
+            this.colVersion.Width = 89;
+            // 
+            // ExtensionPad
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.ClientSize = new System.Drawing.Size(272, 273);
+            this.Controls.Add(this.lvwPackages);
+            this.Controls.Add(this.toolBar1);
+            this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.HideOnClose = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "ExtensionPad";
+            this.TabText = "Packages";
+            this.Text = "Package Browser";
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 		#endregion

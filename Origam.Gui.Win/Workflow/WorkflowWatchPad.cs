@@ -67,66 +67,67 @@ namespace Origam.Workflow.Gui.Win
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(WorkflowWatchPad));
-			this.toolbar = new System.Windows.Forms.ToolBar();
-			this.btnRefresh = new System.Windows.Forms.ToolBarButton();
-			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-			this.tvwWorkflows = new System.Windows.Forms.TreeView();
-			this.SuspendLayout();
-			// 
-			// toolbar
-			// 
-			this.toolbar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
-			this.toolbar.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
-																					   this.btnRefresh});
-			this.toolbar.DropDownArrows = true;
-			this.toolbar.ImageList = this.imageList1;
-			this.toolbar.Location = new System.Drawing.Point(0, 0);
-			this.toolbar.Name = "toolbar";
-			this.toolbar.ShowToolTips = true;
-			this.toolbar.Size = new System.Drawing.Size(284, 28);
-			this.toolbar.TabIndex = 0;
-			this.toolbar.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.toolbar_ButtonClick);
-			// 
-			// btnRefresh
-			// 
-			this.btnRefresh.ImageIndex = 0;
-			// 
-			// imageList1
-			// 
-			this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-			this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
-			this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-			this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-			// 
-			// tvwWorkflows
-			// 
-			this.tvwWorkflows.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tvwWorkflows.ImageIndex = -1;
-			this.tvwWorkflows.Location = new System.Drawing.Point(0, 28);
-			this.tvwWorkflows.Name = "tvwWorkflows";
-			this.tvwWorkflows.SelectedImageIndex = -1;
-			this.tvwWorkflows.Size = new System.Drawing.Size(284, 236);
-			this.tvwWorkflows.Sorted = true;
-			this.tvwWorkflows.TabIndex = 1;
-			// 
-			// WorkflowWatchPad
-			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(284, 264);
-			this.Controls.Add(this.tvwWorkflows);
-			this.Controls.Add(this.toolbar);
-			this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
-				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
-				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
-				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
-			this.HideOnClose = true;
-			this.Name = "WorkflowWatchPad";
-			this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.DockRight;
-			this.TabText = ResourceUtils.GetString("WorkflowWatchTitle");
-			this.Text = ResourceUtils.GetString("WorkflowWatchTitle");
-			this.ResumeLayout(false);
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WorkflowWatchPad));
+            this.toolbar = new System.Windows.Forms.ToolBar();
+            this.btnRefresh = new System.Windows.Forms.ToolBarButton();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.tvwWorkflows = new System.Windows.Forms.TreeView();
+            this.SuspendLayout();
+            // 
+            // toolbar
+            // 
+            this.toolbar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
+            this.toolbar.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
+            this.btnRefresh});
+            this.toolbar.DropDownArrows = true;
+            this.toolbar.ImageList = this.imageList1;
+            this.toolbar.Location = new System.Drawing.Point(0, 0);
+            this.toolbar.Name = "toolbar";
+            this.toolbar.ShowToolTips = true;
+            this.toolbar.Size = new System.Drawing.Size(284, 28);
+            this.toolbar.TabIndex = 0;
+            this.toolbar.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.toolbar_ButtonClick);
+            // 
+            // btnRefresh
+            // 
+            this.btnRefresh.ImageIndex = 0;
+            this.btnRefresh.Name = "btnRefresh";
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "");
+            // 
+            // tvwWorkflows
+            // 
+            this.tvwWorkflows.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tvwWorkflows.Location = new System.Drawing.Point(0, 28);
+            this.tvwWorkflows.Name = "tvwWorkflows";
+            this.tvwWorkflows.Size = new System.Drawing.Size(284, 236);
+            this.tvwWorkflows.Sorted = true;
+            this.tvwWorkflows.TabIndex = 1;
+            // 
+            // WorkflowWatchPad
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.ClientSize = new System.Drawing.Size(284, 264);
+            this.Controls.Add(this.tvwWorkflows);
+            this.Controls.Add(this.toolbar);
+            this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.HideOnClose = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "WorkflowWatchPad";
+            this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.DockRight;
+            this.TabText = "Workflow Watch";
+            this.Text = "Workflow Watch";
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 		#endregion

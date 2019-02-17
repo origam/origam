@@ -128,16 +128,15 @@ namespace OrigamArchitect
             // 
             this.colReferenceCode.Format = "";
             this.colReferenceCode.FormatInfo = null;
-            this.colReferenceCode.HeaderText = strings.Code_TableColumn;
+            this.colReferenceCode.HeaderText = global::OrigamArchitect.strings.Code_TableColumn;
             this.colReferenceCode.MappingName = "ReferenceCode";
             this.colReferenceCode.Width = 60;
-		    
             // 
             // colName
             // 
             this.colName.Format = "";
             this.colName.FormatInfo = null;
-            this.colName.HeaderText = strings.Name_TableColumn;
+            this.colName.HeaderText = global::OrigamArchitect.strings.Name_TableColumn;
             this.colName.MappingName = "Name";
             this.colName.Width = 150;
             // 
@@ -146,7 +145,7 @@ namespace OrigamArchitect
             this.colCntTotal.Alignment = System.Windows.Forms.HorizontalAlignment.Right;
             this.colCntTotal.Format = "";
             this.colCntTotal.FormatInfo = null;
-            this.colCntTotal.HeaderText = strings.Count_TableColumn;
+            this.colCntTotal.HeaderText = global::OrigamArchitect.strings.Count_TableColumn;
             this.colCntTotal.MappingName = "CntTotal";
             this.colCntTotal.NullText = "";
             this.colCntTotal.Width = 50;
@@ -178,13 +177,13 @@ namespace OrigamArchitect
             // 
             this.btnShow.ImageIndex = 0;
             this.btnShow.Name = "btnShow";
-            this.btnShow.Text = strings.Open_Button;
+            this.btnShow.Text = global::OrigamArchitect.strings.Open_Button;
             // 
             // btnRefresh
             // 
             this.btnRefresh.ImageIndex = 1;
             this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Text = strings.Refresh_Button;
+            this.btnRefresh.Text = global::OrigamArchitect.strings.Refresh_Button;
             // 
             // imageList1
             // 
@@ -196,9 +195,9 @@ namespace OrigamArchitect
             // errorLabel
             // 
             this.errorLabel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.errorLabel.Location = new System.Drawing.Point(230, 37);
+            this.errorLabel.Location = new System.Drawing.Point(192, 30);
             this.errorLabel.Name = "errorLabel";
-            this.errorLabel.Size = new System.Drawing.Size(173, 65);
+            this.errorLabel.Size = new System.Drawing.Size(144, 52);
             this.errorLabel.TabIndex = 2;
             this.errorLabel.Text = "error text";
             this.errorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -206,7 +205,7 @@ namespace OrigamArchitect
             // 
             // WorkQueuePad
             // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
             this.ClientSize = new System.Drawing.Size(944, 420);
             this.Controls.Add(this.errorLabel);
             this.Controls.Add(this.dataGrid1);
@@ -221,8 +220,8 @@ namespace OrigamArchitect
             this.Name = "WorkQueuePad";
             this.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
             this.ShowInTaskbar = false;
-            this.TabText = strings.Massages_TabText;
-            this.Text = strings.WorkQueues_Title;
+            this.TabText = global::OrigamArchitect.strings.Massages_TabText;
+            this.Text = "Work Queues";
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

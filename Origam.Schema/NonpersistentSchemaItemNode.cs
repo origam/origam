@@ -184,17 +184,12 @@ namespace Origam.Schema
 			}
 		}
 
-		private string _icon = "";
 		public string Icon
 		{
 			get
 			{
-				return _icon;
-			}
-			set
-			{
-				_icon = value;
-			}
+				return "38_folder-categories-1.png";
+            }
 		}
 
         public virtual string FontStyle
@@ -284,7 +279,7 @@ namespace Origam.Schema
 
 		private string SchemaItemDescription(Type type)
 		{
-			SchemaItemDescriptionAttribute attr = SchemaItemDescriptionAtt(type);
+			SchemaItemDescriptionAttribute attr = type.SchemaItemDescription();
             if (attr == null)
             {
                 return null;
@@ -295,16 +290,6 @@ namespace Origam.Schema
             }
 		}
 
-		private SchemaItemDescriptionAttribute SchemaItemDescriptionAtt(Type type)
-		{
-			object[] attributes = type.GetCustomAttributes(typeof(SchemaItemDescriptionAttribute), true);
-
-			if(attributes != null && attributes.Length > 0)
-				return attributes[0] as SchemaItemDescriptionAttribute;
-			else
-				return null;
-
-		}
 		#region IComparable Members
 		public int CompareTo(object obj)
 		{
@@ -324,6 +309,6 @@ namespace Origam.Schema
 				throw new InvalidCastException();
 			}
 		}
-		#endregion
-	}
+        #endregion
+    }
 }

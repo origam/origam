@@ -57,40 +57,41 @@ namespace Origam.Workbench
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(SchemaBrowser));
-			this.EbrSchemaBrowser = new Origam.Workbench.ExpressionBrowser();
-			this.SuspendLayout();
-			// 
-			// ebrSchemaBrowser
-			// 
-			this.EbrSchemaBrowser.AllowEdit = true;
-			this.EbrSchemaBrowser.CheckSecurity = false;
-			this.EbrSchemaBrowser.DisableOtherExtensionNodes = true;
-			this.EbrSchemaBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.EbrSchemaBrowser.Location = new System.Drawing.Point(0, 0);
-			this.EbrSchemaBrowser.Name = "ebrSchemaBrowser";
-			this.EbrSchemaBrowser.NodeUnderMouse = null;
-			this.EbrSchemaBrowser.ShowFilter = false;
-			this.EbrSchemaBrowser.Size = new System.Drawing.Size(292, 271);
-			this.EbrSchemaBrowser.TabIndex = 1;
-			this.EbrSchemaBrowser.QueryFilterNode += new Origam.Workbench.FilterEventHandler(this.ebrSchemaBrowser_QueryFilterNode);
-			// 
-			// SchemaBrowser
-			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(292, 271);
-			this.Controls.Add(this.EbrSchemaBrowser);
-			this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
-				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
-				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
-				| WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-			this.HideOnClose = true;
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Name = "SchemaBrowser";
-			this.TabText = ResourceUtils.GetString("ModelBrowserTitle");
-			this.Text = ResourceUtils.GetString("ModelBrowserTitle");
-			this.ResumeLayout(false);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SchemaBrowser));
+            this.EbrSchemaBrowser = new Origam.Workbench.ExpressionBrowser();
+            this.SuspendLayout();
+            // 
+            // EbrSchemaBrowser
+            // 
+            this.EbrSchemaBrowser.AllowEdit = true;
+            this.EbrSchemaBrowser.CheckSecurity = false;
+            this.EbrSchemaBrowser.DisableOtherExtensionNodes = true;
+            this.EbrSchemaBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.EbrSchemaBrowser.Location = new System.Drawing.Point(0, 0);
+            this.EbrSchemaBrowser.Name = "EbrSchemaBrowser";
+            this.EbrSchemaBrowser.NodeUnderMouse = null;
+            this.EbrSchemaBrowser.ShowFilter = false;
+            this.EbrSchemaBrowser.Size = new System.Drawing.Size(292, 271);
+            this.EbrSchemaBrowser.TabIndex = 1;
+            this.EbrSchemaBrowser.QueryFilterNode += new Origam.Workbench.FilterEventHandler(this.ebrSchemaBrowser_QueryFilterNode);
+            // 
+            // SchemaBrowser
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.ClientSize = new System.Drawing.Size(292, 271);
+            this.Controls.Add(this.EbrSchemaBrowser);
+            this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.HideOnClose = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "SchemaBrowser";
+            this.TabText = "Model Browser";
+            this.Text = "Model Browser";
+            this.ResumeLayout(false);
 
 		}
 		#endregion
@@ -121,5 +122,15 @@ namespace Origam.Workbench
 		{
 			EbrSchemaBrowser.Redraw();
 		}
-	}
+
+        public int ImageIndex(string icon)
+        {
+            int imageIndex;
+            if (!int.TryParse(icon, out imageIndex))
+            {
+                imageIndex = this.ImageList.Images.IndexOfKey(icon);
+            }
+            return imageIndex;
+        }
+    }
 }

@@ -39,11 +39,11 @@ namespace Origam.Schema
 	{
        // public const string NAMESPACE = "http://schemas.origam.com/*.*.*/package";
 
-        SchemaItemProviderGroup _commonModelGroup = new SchemaItemProviderGroup("COMMON", "Common", "7", 0);
-		SchemaItemProviderGroup _dataModelGroup = new SchemaItemProviderGroup("DATA", "Data", "7", 1);
-		SchemaItemProviderGroup _userInterfaceModelGroup = new SchemaItemProviderGroup("UI", "User Interface", "7", 2);
-		SchemaItemProviderGroup _businessLogicModelGroup = new SchemaItemProviderGroup("BL", "Business Logic", "7", 3);
-		SchemaItemProviderGroup _apiModelGroup = new SchemaItemProviderGroup("API", "API", "7", 4);
+        SchemaItemProviderGroup _commonModelGroup = new SchemaItemProviderGroup("COMMON", "Common", "icon_01_common.png", 0);
+		SchemaItemProviderGroup _dataModelGroup = new SchemaItemProviderGroup("DATA", "Data", "icon_05_data.png", 1);
+		SchemaItemProviderGroup _userInterfaceModelGroup = new SchemaItemProviderGroup("UI", "User Interface", "icon_13_user-interface.png", 2);
+		SchemaItemProviderGroup _businessLogicModelGroup = new SchemaItemProviderGroup("BL", "Business Logic", "icon_26_business-logic.png", 3);
+		SchemaItemProviderGroup _apiModelGroup = new SchemaItemProviderGroup("API", "API", "icon_35_API.png", 4);
 		
 		public SchemaExtension()
 		{
@@ -200,7 +200,7 @@ namespace Origam.Schema
 
 		public string NodeToolTipText => null;
 
-		public string Icon => "59";
+		public string Icon => "09_packages-1.ico";
 
 		public string RelativeFilePath => this.Name + "\\"+ PersistenceFiles.PackageFileName;
 
@@ -231,6 +231,6 @@ namespace Origam.Schema
 				throw new InvalidCastException();
 			}
 		}
-		#endregion
-	}
+        #endregion
+    }
 }

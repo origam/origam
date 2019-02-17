@@ -83,5 +83,8 @@ namespace Origam.Schema
 		object Clone(bool keepKeys);
 
 		void SetExtensionRecursive(SchemaExtension extension);
-	}
+
+        string ModelDescription();
+
+    }
 }

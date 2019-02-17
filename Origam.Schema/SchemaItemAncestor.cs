@@ -211,18 +211,15 @@ namespace Origam.Schema
 				{
 					if(this.Ancestor.UseFolders)
 					{
-						SchemaItemDescriptionAttribute attr = SchemaItemDescription(item.GetType());
+						SchemaItemDescriptionAttribute attr = item.GetType().SchemaItemDescription();
 						string description = attr == null ? item.ItemType : attr.FolderName;
 						if(description == null) description = item.ItemType;
 
 						if(! folders.Contains(description))
 						{
 							NonpersistentSchemaItemNode folder = new NonpersistentSchemaItemNode();
-
 							folder.ParentNode = this;
-							folder.Icon = "42";
 							folder.NodeText = description;
-							
 							col.Add(folder);
 							folders.Add(description, folder);
 						}
@@ -338,16 +335,6 @@ namespace Origam.Schema
 
 		#endregion
 
-		private SchemaItemDescriptionAttribute SchemaItemDescription(Type type)
-		{
-			object[] attributes = type.GetCustomAttributes(typeof(SchemaItemDescriptionAttribute), true);
-
-			if(attributes != null && attributes.Length > 0)
-				return attributes[0] as SchemaItemDescriptionAttribute;
-			else
-				return null;
-
-		}
 		#region IComparable Members
 		public int CompareTo(object obj)
 		{
@@ -367,6 +354,6 @@ namespace Origam.Schema
 				throw new InvalidCastException();
 			}
 		}
-		#endregion
-	}
+        #endregion
+    }
 }

@@ -27,7 +27,7 @@ namespace Origam.Schema
 	/// <summary>
 	/// Summary description for Feature.
 	/// </summary>
-	[SchemaItemDescription("Feature", 16)]
+	[SchemaItemDescription("Feature", "icon_03_features.png")]
     [HelpTopic("Features")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class Feature : AbstractSchemaItem
@@ -48,14 +48,6 @@ namespace Origam.Schema
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "16";
 			}
 		}
 		#endregion

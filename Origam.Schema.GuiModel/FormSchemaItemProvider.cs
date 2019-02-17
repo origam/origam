@@ -61,7 +61,7 @@ namespace Origam.Schema.GuiModel
 			get
 			{
 				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "34";
+				return "icon_22_screens.png";
 			}
 		}
 

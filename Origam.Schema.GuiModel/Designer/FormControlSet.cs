@@ -29,7 +29,7 @@ namespace Origam.Schema.GuiModel
 	/// <summary>
 	/// Summary description for FormControlSet.
 	/// </summary>
-	[SchemaItemDescription("Screen", 13)]
+	[SchemaItemDescription("Screen", "icon_22_screens.png")]
     [HelpTopic("Screens")]
 	[XmlModelRoot(ItemTypeConst)]
     public class FormControlSet : AbstractControlSet
@@ -64,14 +64,6 @@ namespace Origam.Schema.GuiModel
 		}
 
 		#region Overriden AbstractSchemaItem Members
-		public override string Icon
-		{
-			get
-			{
-				return "13";
-			}
-		}
-
 		[EntityColumn("ItemType")]
 		public override string ItemType
 		{

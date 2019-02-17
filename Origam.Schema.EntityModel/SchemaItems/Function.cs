@@ -35,7 +35,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for FilterExpression.
 	/// </summary>
-	[SchemaItemDescription("Function", 2)]
+	[SchemaItemDescription("Function", "icon_10_functions.png")]
     [HelpTopic("Functions")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class Function : AbstractSchemaItem, ISchemaItemFactory
@@ -74,14 +74,11 @@ namespace Origam.Schema.EntityModel
 			{
 				switch(this.FunctionType) 
 				{
-					case OrigamFunctionType.Standard:
-						return "2";
-
 					case OrigamFunctionType.Database:
 						return "55";
 
 					default:
-						return "2";
+						return "icon_10_functions.png";
 				}
 			}
 		}

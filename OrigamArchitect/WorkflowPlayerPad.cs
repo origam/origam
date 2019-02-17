@@ -188,5 +188,10 @@ namespace Origam.Workbench.Pads
 				e.Filter = ! param.IsFeatureOn(menu.Features);
 			}
 		}
-	}
+
+        public int ImageIndex(string icon)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

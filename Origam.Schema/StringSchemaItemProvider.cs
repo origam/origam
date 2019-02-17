@@ -57,7 +57,7 @@ namespace Origam.Schema
 			get
 			{
 				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "58";
+				return "icon_04_string-library.png";
 			}
 		}
 

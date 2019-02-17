@@ -54,7 +54,7 @@ namespace Origam.Schema.MenuModel
 		{
 			get
 			{
-				return "7";
+				return "icon_23_search-data-sources.png";
 			}
 		}
 

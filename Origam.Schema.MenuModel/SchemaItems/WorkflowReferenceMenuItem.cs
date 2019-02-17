@@ -37,7 +37,7 @@ namespace Origam.Schema.MenuModel
 	/// <summary>
 	/// Summary description for WorkflowReferenceMenuItem.
 	/// </summary>
-	[SchemaItemDescription("Sequential Workflow Reference", 69)]
+	[SchemaItemDescription("Sequential Workflow Reference", "menu_workflow.png")]
     [HelpTopic("Sequential+Workflow+Menu+Item")]
 	public class WorkflowReferenceMenuItem : AbstractMenuItem
 	{
@@ -48,8 +48,6 @@ namespace Origam.Schema.MenuModel
 		public WorkflowReferenceMenuItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
 		public WorkflowReferenceMenuItem(Key primaryKey) : base(primaryKey)	{}
-
-		public override string Icon => "69";
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{

@@ -41,14 +41,6 @@ namespace Origam.Schema.EntityModel
 
 		#region Overriden AbstractSchemaItem Members
 
-		public override string Icon
-		{
-			get
-			{
-				return "9";
-			}
-		}
-
 		[EntityColumn("ItemType")]
 		public override string ItemType
 		{

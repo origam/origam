@@ -188,7 +188,12 @@ namespace Origam.Schema
 		#endregion
 
 		#region Public Methods
-		public virtual void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
+        public string ModelDescription()
+        {
+            return this.GetType().SchemaItemDescription()?.Name;
+        }
+
+        public virtual void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
 		{
 			if(parentItem == null) return;
 
@@ -1386,17 +1391,6 @@ namespace Origam.Schema
 			base.Dispose (disposing);
 		}
 
-	    public static SchemaItemDescriptionAttribute SchemaItemDescription(Type type)
-		{
-			object[] attributes = type.GetCustomAttributes(typeof(SchemaItemDescriptionAttribute), true);
-
-			if(attributes != null && attributes.Length > 0)
-				return attributes[0] as SchemaItemDescriptionAttribute;
-			else
-				return null;
-
-		}
-
         public virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, 
@@ -1463,7 +1457,6 @@ namespace Origam.Schema
 			if(this.AllAncestors.Count > 0)
 			{
 				NonpersistentSchemaItemNode folder = new NonpersistentSchemaItemNode();
-				folder.Icon = "42";
 				folder.NodeText = "_Ancestors";
 				folder.ParentNode = this;
 				col.Add(folder);
@@ -1477,18 +1470,15 @@ namespace Origam.Schema
 				{
 					if(this.UseFolders)
 					{
-						SchemaItemDescriptionAttribute attr = SchemaItemDescription(item.GetType());
+						SchemaItemDescriptionAttribute attr = item.GetType().SchemaItemDescription();
 						string description = attr == null ? item.ItemType : attr.FolderName;
 						if(description == null) description = item.ItemType;
 
 						if(! folders.Contains(description))
 						{
 							NonpersistentSchemaItemNode folder = new NonpersistentSchemaItemNode();
-
 							folder.ParentNode = this;
-							folder.Icon = "42";
 							folder.NodeText = description;
-							
 							col.Add(folder);
 							folders.Add(description, folder);
 						}
@@ -1543,7 +1533,13 @@ namespace Origam.Schema
 		}
 
 		[Browsable(false)] 
-		public abstract string Icon	{get;}
+		public virtual string Icon
+        {
+            get
+            {
+                return this.GetType().SchemaItemIcon()?.ToString();
+            }
+        }
 
 	    [Browsable(false)]
 	    public virtual byte[] NodeImage
