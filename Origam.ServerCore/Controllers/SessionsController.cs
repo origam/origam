@@ -16,7 +16,7 @@ namespace Origam.ServerCore.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("internalApi/[controller]")]
     public class SessionsController : ControllerBase
     {
         private readonly SessionObjects sessionObjects;

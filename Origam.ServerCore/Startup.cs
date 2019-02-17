@@ -1,30 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using Origam.Workbench.Services;
+using Origam.ServerCore.Configuration;
 
 namespace Origam.ServerCore
 {
     public class Startup
     {
+        private readonly StartUpConfiguration startUpConfiguration;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            startUpConfiguration = new StartUpConfiguration(configuration);
         }
 
         public IConfiguration Configuration { get; }
@@ -44,23 +42,12 @@ namespace Origam.ServerCore
                 options.DefaultChallengeScheme = "Jwt";
             }).AddJwtBearer("Jwt", options =>
             {
-                string securityKey = Configuration["SecurityKey"];
-                if (string.IsNullOrWhiteSpace(securityKey))
-                {
-                    throw new ArgumentException("SecurityKey was not found in configuration. Please add it to appsettings.json");
-                }
-
-                if (securityKey.Length < 16)
-                {
-                    throw new ArgumentException("SecurityKey found in appsettings.json has to be at least 16 characters long!");
-                }
-
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateAudience = false,  //ValidAudience = "the audience you want to validate",
                     ValidateIssuer = false,  //ValidIssuer = "the user you want to validate",
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(startUpConfiguration.SecurityKey)),
                     ValidateLifetime = true, //validate the expiration and not before values in the token
                     ClockSkew = TimeSpan.FromMinutes(5) // 5 minute tolerance for the expiration date
                 };
@@ -82,7 +69,20 @@ namespace Origam.ServerCore
             {
                 app.UseHsts();
             }
-            app.UseMiddleware<CustomApiRedirect>();
+
+            app.MapWhen(
+                IsPublicUserApiRoute,
+                apiBranch => {
+                    apiBranch.UseResponseBuffering();
+                    apiBranch.UseMiddleware<UserApiMiddleWare>();
+                });
+            app.MapWhen(
+                IsRestrictedUserApiRoute,
+                apiBranch => {
+                    apiBranch.UseAuthentication();
+                    apiBranch.UseResponseBuffering();
+                    apiBranch.UseMiddleware<UserApiMiddleWare>();
+                });
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.Use((context, next) =>
@@ -95,6 +95,20 @@ namespace Origam.ServerCore
             app.UseMvc();
             app.UseSpa(spa => {});
             OrigamEngine.OrigamEngine.ConnectRuntime();
+        }
+
+        private bool IsRestrictedUserApiRoute(HttpContext context)
+        {
+            return startUpConfiguration
+                .UserApiRestrictedRoutes
+                .Any(route => context.Request.Path.ToString().StartsWith(route));
+        }
+
+        private bool IsPublicUserApiRoute(HttpContext context)
+        {
+            return startUpConfiguration
+                .UserApiPublicRoutes
+                .Any(route => context.Request.Path.ToString().StartsWith(route));
         }
     }
 }

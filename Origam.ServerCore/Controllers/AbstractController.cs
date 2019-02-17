@@ -11,7 +11,7 @@ namespace Origam.ServerCore.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("internalApi/[controller]")]
     public abstract class AbstractController: ControllerBase
     {
         protected readonly ILogger<AbstractController> log;
