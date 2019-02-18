@@ -75,7 +75,7 @@ namespace Origam.Schema.EntityModel
         {
             get
             {
-                return "3";
+                return "16";
             }
         }
 

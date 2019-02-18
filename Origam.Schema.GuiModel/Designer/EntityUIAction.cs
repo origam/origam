@@ -251,12 +251,7 @@ namespace Origam.Schema.GuiModel
 			{
 				if(ButtonIcon == null)
 				{
-					var defaultImage = ResourceUtils.GetImage("defaultActionImage");
-					using (var ms = new MemoryStream())
-					{
-						defaultImage.Save(ms,defaultImage.RawFormat);
-						return  ms.ToArray();
-					}
+					return null;
 				}
 				return ButtonIcon.GraphicsData.ToByteArray();
 			}

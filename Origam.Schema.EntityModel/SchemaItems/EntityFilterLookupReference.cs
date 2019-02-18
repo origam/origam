@@ -32,7 +32,7 @@ namespace Origam.Schema.EntityModel
 	/// Summary description for TransformationReference.
 	/// </summary>
 	[SchemaItemDescription("Lookup Reference", 50)]
-    [HelpTopic("Filter+Lookup+Reference")]
+    [HelpTopic("Lookup+Reference")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class EntityFilterLookupReference : AbstractSchemaItem
 	{
