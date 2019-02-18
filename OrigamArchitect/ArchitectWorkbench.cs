@@ -162,28 +162,8 @@ namespace OrigamArchitect
 			InitializeComponent();
 
 			WorkflowHost.DefaultHost.SupportsUI = true;
-            AutoHideStripSkin hideSkin = dockPanel.Skin.AutoHideStripSkin;
-            DockPaneStripSkin dockSkin = dockPanel.Skin.DockPaneStripSkin;
-			dockPanel.BackColor = OrigamColorScheme.MdiBackColor;
-            dockPanel.SkinStyle = WeifenLuo.WinFormsUI.Docking.Skins.Style.VisualStudio2005;
-            hideSkin.DockStripGradient.StartColor = OrigamColorScheme.FormBackgroundColor;
-            hideSkin.DockStripGradient.EndColor = OrigamColorScheme.FormBackgroundColor;
-            hideSkin.TabGradient.StartColor = OrigamColorScheme.FormBackgroundColor;
-            hideSkin.TabGradient.EndColor = OrigamColorScheme.FormBackgroundColor;
-            dockSkin.DocumentGradient.DockStripGradient.StartColor = Color.White;
-            dockSkin.DocumentGradient.DockStripGradient.EndColor = Color.White;
-            dockSkin.DocumentGradient.ActiveTabGradient.StartColor = OrigamColorScheme.FormBackgroundColor;
-            dockSkin.DocumentGradient.ActiveTabGradient.EndColor = OrigamColorScheme.FormBackgroundColor;
-            dockSkin.DocumentGradient.ActiveTabGradient.TextColor = Color.Black;
-            dockSkin.DocumentGradient.InactiveTabGradient.StartColor = OrigamColorScheme.DocumentTabInactiveBackBegin;
-            dockSkin.DocumentGradient.InactiveTabGradient.EndColor = OrigamColorScheme.DocumentTabInactiveBackEnd;
-            dockSkin.DocumentGradient.InactiveTabGradient.TextColor = Color.Black;
-            dockSkin.ToolWindowGradient.ActiveCaptionGradient.StartColor = OrigamColorScheme.TitleActiveStartColor;
-            dockSkin.ToolWindowGradient.ActiveCaptionGradient.EndColor = OrigamColorScheme.TitleActiveEndColor;
-            dockSkin.ToolWindowGradient.ActiveCaptionGradient.TextColor = OrigamColorScheme.TitleActiveForeColor;
-            dockSkin.ToolWindowGradient.InactiveCaptionGradient.StartColor = OrigamColorScheme.TabInactiveStartColor;
-            dockSkin.ToolWindowGradient.InactiveCaptionGradient.EndColor = OrigamColorScheme.TabInactiveEndColor;
-            dockSkin.ToolWindowGradient.InactiveCaptionGradient.TextColor = OrigamColorScheme.TabInactiveForeColor;
+            dockPanel.Theme = new OrigamTheme();
+            dockPanel.ShowDocumentIcon = false;
 
             string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 			string origamPath = Path.Combine(appDataPath, "ORIGAM");
@@ -296,21 +276,6 @@ namespace OrigamArchitect
 		/// </summary>
 		private void InitializeComponent()
 		{
-            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
-            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin1 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient1 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient2 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient3 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient4 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient5 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient3 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient6 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient7 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.statusBar = new System.Windows.Forms.StatusBar();
@@ -341,53 +306,7 @@ namespace OrigamArchitect
             this.dockPanel.Location = new System.Drawing.Point(0, 119);
             this.dockPanel.Name = "dockPanel";
             this.dockPanel.ShowDocumentIcon = true;
-            this.dockPanel.Size = new System.Drawing.Size(864, 464);
-            dockPanelGradient1.EndColor = System.Drawing.SystemColors.ControlLight;
-            dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
-            autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
-            tabGradient1.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient1.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient1.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            autoHideStripSkin1.TabGradient = tabGradient1;
-            autoHideStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            dockPanelSkin1.AutoHideStripSkin = autoHideStripSkin1;
-            tabGradient2.EndColor = System.Drawing.SystemColors.ControlLightLight;
-            tabGradient2.StartColor = System.Drawing.SystemColors.ControlLightLight;
-            tabGradient2.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient1.ActiveTabGradient = tabGradient2;
-            dockPanelGradient2.EndColor = System.Drawing.SystemColors.Control;
-            dockPanelGradient2.StartColor = System.Drawing.SystemColors.Control;
-            dockPaneStripGradient1.DockStripGradient = dockPanelGradient2;
-            tabGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
-            tabGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
-            tabGradient3.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient1.InactiveTabGradient = tabGradient3;
-            dockPaneStripSkin1.DocumentGradient = dockPaneStripGradient1;
-            dockPaneStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            tabGradient4.EndColor = System.Drawing.SystemColors.ActiveCaption;
-            tabGradient4.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient4.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
-            tabGradient4.TextColor = System.Drawing.SystemColors.ActiveCaptionText;
-            dockPaneStripToolWindowGradient1.ActiveCaptionGradient = tabGradient4;
-            tabGradient5.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient5.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient5.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripToolWindowGradient1.ActiveTabGradient = tabGradient5;
-            dockPanelGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
-            dockPanelGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
-            dockPaneStripToolWindowGradient1.DockStripGradient = dockPanelGradient3;
-            tabGradient6.EndColor = System.Drawing.SystemColors.InactiveCaption;
-            tabGradient6.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient6.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            tabGradient6.TextColor = System.Drawing.SystemColors.InactiveCaptionText;
-            dockPaneStripToolWindowGradient1.InactiveCaptionGradient = tabGradient6;
-            tabGradient7.EndColor = System.Drawing.Color.Transparent;
-            tabGradient7.StartColor = System.Drawing.Color.Transparent;
-            tabGradient7.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            dockPaneStripToolWindowGradient1.InactiveTabGradient = tabGradient7;
-            dockPaneStripSkin1.ToolWindowGradient = dockPaneStripToolWindowGradient1;
-            dockPanelSkin1.DockPaneStripSkin = dockPaneStripSkin1;
-            this.dockPanel.Skin = dockPanelSkin1;
+            this.dockPanel.Size = new System.Drawing.Size(864, 464);            
             this.dockPanel.TabIndex = 7;
             // 
             // statusBar

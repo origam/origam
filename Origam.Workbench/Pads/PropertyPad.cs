@@ -96,6 +96,7 @@ namespace Origam.Workbench.Pads
 			this.pgrid.LineColor = OrigamColorScheme.PropertyGridHeaderColor;
 			this.pgrid.HelpBackColor = OrigamColorScheme.MdiBackColor;;
 			this.pgrid.HelpForeColor = OrigamColorScheme.MdiForeColor;
+            this.pgrid.SelectedItemWithFocusBackColor = OrigamColorScheme.TabActiveStartColor;
 
 			this.pgrid.SelectedObjectsChanged += new EventHandler(pgrid_SelectedObjectsChanged);
 		}

@@ -61,6 +61,36 @@ namespace Origam.Windows.Editor
                         HighlightingManager.Instance);
                 }
             }
+            var referenceBrush = new SimpleHighlightingBrush(
+                System.Windows.Media.Color.FromRgb(4, 139, 168));
+            var keywordBrush = new SimpleHighlightingBrush(
+                System.Windows.Media.Color.FromRgb(18, 53, 182));
+            var docBrush = new SimpleHighlightingBrush(
+                System.Windows.Media.Color.FromRgb(0, 154, 41));
+            var variableBrush = new SimpleHighlightingBrush(
+                System.Windows.Media.Color.FromRgb(255, 73, 61));
+            foreach (var color in editor.SyntaxHighlighting.NamedHighlightingColors)
+            {
+                switch (color.Name)
+                {
+                    case "DataType":
+                    case "Keyword":
+                        color.Foreground = keywordBrush;
+                        break;
+                    case "Comment":
+                        color.Foreground = docBrush;
+                        break;
+                    case "Variable":
+                        color.Foreground = variableBrush;
+                        break;
+                    case "ObjectReference":
+                    case "ObjectReference1":
+                    case "ObjectReferenceInBrackets":
+                    case "ObjectReferenceInBrackets1":
+                        color.Foreground = referenceBrush;
+                        break;
+                }
+            }
         }
 
         public event ChangedEventHandler ContentChanged;

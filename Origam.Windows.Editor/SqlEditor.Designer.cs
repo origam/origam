@@ -31,16 +31,18 @@
         {
             this.components = new System.ComponentModel.Container();
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
-            this.editor = new OrigamTextEditor();
+            this.editor = new Origam.Windows.Editor.OrigamTextEditor();
             this.foldingTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // elementHost1
             // 
-            this.elementHost1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.elementHost1.Location = new System.Drawing.Point(0, 0);
+            this.elementHost1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.elementHost1.Location = new System.Drawing.Point(3, 7);
             this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(284, 261);
+            this.elementHost1.Size = new System.Drawing.Size(353, 286);
             this.elementHost1.TabIndex = 0;
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = this.editor;
@@ -50,14 +52,14 @@
             this.foldingTimer.Enabled = true;
             this.foldingTimer.Interval = 2000;
             // 
-            // Form1
+            // SqlEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.elementHost1);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "SqlEditor";
+            this.Size = new System.Drawing.Size(356, 293);
             this.ResumeLayout(false);
 
         }

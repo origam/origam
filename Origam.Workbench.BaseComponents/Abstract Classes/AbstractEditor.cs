@@ -212,7 +212,7 @@ namespace Origam.Workbench.Editors
 
 		private void LoadSettings()
 		{
-            if(! DesignMode)
+            if (ConfigurationManager.GetActiveConfiguration() != null)
             {
                 showMenusInAppToolStrip = ConfigurationManager
                     .GetActiveConfiguration()

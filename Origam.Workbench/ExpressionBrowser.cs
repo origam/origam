@@ -675,8 +675,8 @@ namespace Origam.Workbench
 			}
 			if(node.Tag is SchemaItemProviderGroup)
 			{
-				node.BackColor = Color.FromArgb(170, 170, 170);
-				node.ForeColor = Color.White;
+				node.BackColor = Color.FromArgb(200, 200, 200);
+				node.ForeColor = Color.Black;
 				node.NodeFont = _boldFont;
 			}
 			if(node.Tag is AbstractSchemaItemProvider)
