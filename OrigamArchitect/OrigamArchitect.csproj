@@ -288,17 +288,6 @@
       <Project>{76a9b204-b2fd-4393-9084-420cec16e95f}</Project>
       <Name>Origam.Windows.Editor</Name>
     </ProjectReference>
-    <Reference Include="AeroWizard, Version=2.0.12.0, Culture=neutral, PublicKeyToken=915e74f5d64b8f37, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\EnterpriseLibrary\AeroWizard.dll</HintPath>
-    </Reference>
-    <Reference Include="LibGit2Sharp, Version=0.25.0.0, Culture=neutral, PublicKeyToken=7cbde695407f0333">
-      <HintPath>..\EnterpriseLibrary\LibGit2Sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="NPOI, Version=1.2.1.0, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\npoi-net2.0\NPOI.dll</HintPath>
-    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -485,11 +474,20 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AeroWizard">
+      <Version>2.2.2</Version>
+    </PackageReference>
     <PackageReference Include="DockPanelSuite">
       <Version>3.0.6</Version>
     </PackageReference>
     <PackageReference Include="DockPanelSuite.ThemeVS2015">
       <Version>3.0.6</Version>
+    </PackageReference>
+    <PackageReference Include="LibGit2Sharp">
+      <Version>0.26.0</Version>
+    </PackageReference>
+    <PackageReference Include="NPOI">
+      <Version>2.4.1</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

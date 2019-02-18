@@ -113,8 +113,6 @@ namespace Origam.Workbench.Editors
             this.gViewer1.UndoRedoButtonsVisible = true;
             this.gViewer1.WindowZoomButtonPressed = false;
             this.gViewer1.ZoomF = 1D;
-            this.gViewer1.ZoomFraction = 0.5D;
-            this.gViewer1.ZoomWhenMouseWheelScroll = true;
             this.gViewer1.ZoomWindowThreshold = 0.05D;
             // 
             // DiagramEditor
