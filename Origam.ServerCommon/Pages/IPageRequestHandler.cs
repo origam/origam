@@ -27,6 +27,6 @@ namespace Origam.ServerCommon.Pages
 { 
     public interface IPageRequestHandler
     {
-        void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequest request, IResponse response);
+        void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response);
     }
 }

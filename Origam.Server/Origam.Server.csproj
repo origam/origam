@@ -194,9 +194,9 @@
     <Compile Include="logging\AndFilter.cs" />
     <Compile Include="doc\DocHandler.cs" />
     <Compile Include="OrigamDesignerDynamicMenuProvider.cs" />
-    <Compile Include="pages\FxHttpContext.cs" />
-    <Compile Include="pages\FxHttpRequest.cs" />
-    <Compile Include="pages\FxHttpResponse.cs" />
+    <Compile Include="pages\FxHttpContextWrapper.cs" />
+    <Compile Include="pages\FxHttpRequestWrapper.cs" />
+    <Compile Include="pages\FxHttpResponseWrapper.cs" />
     <Compile Include="ReportManager.cs" />
     <Compile Include="TreeNode.cs" />
     <Compile Include="TreeService.cs" />

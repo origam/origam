@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Origam.ServerCore.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("internalApi/[controller]")]
     public class TokenController : ControllerBase
     {
         private readonly IConfiguration configuration;

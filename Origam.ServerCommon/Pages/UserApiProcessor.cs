@@ -8,7 +8,6 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Xml;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Origam.DA;
 using Origam.DA.Service;
@@ -21,7 +20,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.ServerCommon.Pages
 {
-    public class ApiFilter
+    public class UserApiProcessor
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -32,7 +31,7 @@ namespace Origam.ServerCommon.Pages
 
         }
 
-        public void MapRequestHandler(IHttpContext context)
+        public void Process(IHttpContextWrapper context)
         {
             if (context.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/assets/")) return;
 
@@ -44,20 +43,20 @@ namespace Origam.ServerCommon.Pages
             if (Analytics.Instance.IsAnalyticsEnabled)
             {
                 Analytics.Instance.SetProperty("ContentType", mimeType);
-//                Analytics.Instance.SetProperty("HttpMethod", context.Request.HttpMethod);
-//                Analytics.Instance.SetProperty("RawUrl", context.Request.RawUrl);
-//                Analytics.Instance.SetProperty("Url", context.Request.Url);
-//                Analytics.Instance.SetProperty("UrlReferrer", context.Request.UrlReferrer);
-//                Analytics.Instance.SetProperty("UserAgent", context.Request.UserAgent);
-//                Analytics.Instance.SetProperty("BrowserName", context.Request.Browser.Browser);
-//                Analytics.Instance.SetProperty("BrowserVersion", context.Request.Browser.Version);
-//                Analytics.Instance.SetProperty("UserHostAddress", context.Request.UserHostAddress);
-//                Analytics.Instance.SetProperty("UserHostName", context.Request.UserHostName);
-//                Analytics.Instance.SetProperty("UserLanguages", context.Request.UserLanguages);
-//                foreach (string key in context.Request.Params.Keys)
-//                {
-//                    Analytics.Instance.SetProperty("Parameter_" + key, context.Request.Params[key]);
-//                }
+                Analytics.Instance.SetProperty("HttpMethod", context.Request.HttpMethod);
+                Analytics.Instance.SetProperty("RawUrl", context.Request.RawUrl);
+                Analytics.Instance.SetProperty("Url", context.Request.Url);
+                Analytics.Instance.SetProperty("UrlReferrer", context.Request.UrlReferrer);
+                Analytics.Instance.SetProperty("UserAgent", context.Request.UserAgent);
+                Analytics.Instance.SetProperty("BrowserName", context.Request.Browser);
+                Analytics.Instance.SetProperty("BrowserVersion", context.Request.BrowserVersion);
+                Analytics.Instance.SetProperty("UserHostAddress", context.Request.UserHostAddress);
+                Analytics.Instance.SetProperty("UserHostName", context.Request.UserHostName);
+                Analytics.Instance.SetProperty("UserLanguages", context.Request.UserLanguages);
+                foreach (string key in context.Request.Params.Keys)
+                {
+                    Analytics.Instance.SetProperty("Parameter_" + key, context.Request.Params[key]);
+                }
             }
 
             try
@@ -102,7 +101,6 @@ namespace Origam.ServerCommon.Pages
                             page.CacheMaxAgeDataConstantId));
                         context.Response.CacheSetMaxAge(TimeSpan.FromSeconds(maxAge));
                     }
-                    context.Response.ContentEncoding = Encoding.UTF8;
                     Dictionary<string, object> mappedParameters = MapParameters(
                         context, urlParameters, page, mimeType);
                     IPageRequestHandler handler = HandlePage(page);
@@ -146,8 +144,6 @@ namespace Origam.ServerCommon.Pages
                 }
 
                 context.Response.StatusCode = 400;
-
-                context.Response.ContentEncoding = Encoding.UTF8;
                 context.Response.ContentType = resultContentType;
                 context.Response.Clear();
                 // context.Response.StatusDescription = ex.Message;
@@ -184,7 +180,7 @@ namespace Origam.ServerCommon.Pages
             return handler;
         }
 
-        private static Dictionary<string, object> MapParameters(IHttpContext context, Dictionary<string, string> urlParameters, AbstractPage page, string requestMimeType)
+        private static Dictionary<string, object> MapParameters(IHttpContextWrapper context, Dictionary<string, string> urlParameters, AbstractPage page, string requestMimeType)
         {
             IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
             Dictionary<string, object> mappedParameters = new Dictionary<string, object>();
@@ -234,7 +230,7 @@ namespace Origam.ServerCommon.Pages
             return mappedParameters;
         }
 
-        private static void MapOtherParameters(IHttpContext context, Dictionary<string, string> urlParameters,
+        private static void MapOtherParameters(IHttpContextWrapper context, Dictionary<string, string> urlParameters,
             IParameterService parameterService, Dictionary<string, object> mappedParameters, PageParameterMapping ppm,
             string requestMimeType)
         {
@@ -303,10 +299,10 @@ namespace Origam.ServerCommon.Pages
                     systemParameterValue = context.Request.RawUrl;
                     break;
                 case "Server_Url":
-                    systemParameterValue = context.Request.Url.ToString();
+                    systemParameterValue = context.Request.Url;
                     break;
                 case "Server_UrlReferrer":
-                    systemParameterValue = context.Request.UrlReferrer.ToString();
+                    systemParameterValue = context.Request.UrlReferrer;
                     break;
                 case "Server_UserAgent":
                     systemParameterValue = context.Request.UserAgent;
@@ -334,9 +330,9 @@ namespace Origam.ServerCommon.Pages
             }
         }
 
-        private static void MapFileToParameter(IHttpContext context, Dictionary<string, object> mappedParameters, PageParameterMapping ppm, PageParameterFileMapping fileMapping)
+        private static void MapFileToParameter(IHttpContextWrapper context, Dictionary<string, object> mappedParameters, PageParameterMapping ppm, PageParameterFileMapping fileMapping)
         {
-            HttpPostedFile file = context.Request.FilesGet(ppm.MappedParameter);
+            PostedFile file = context.Request.FilesGet(ppm.MappedParameter);
 
             if (file != null)
             {
@@ -370,7 +366,7 @@ namespace Origam.ServerCommon.Pages
             }
         }
 
-        private static void MapContentToParameter(IHttpContext context,
+        private static void MapContentToParameter(IHttpContextWrapper context,
                 AbstractPage page, string requestMimeType,
                 Dictionary<string, object> mappedParameters,
                 PageParameterMapping ppm)
@@ -543,7 +539,7 @@ namespace Origam.ServerCommon.Pages
             }
         }
 
-        private static byte[] GetFileBytes(PageParameterFileMapping fileMapping, HttpPostedFile file)
+        private static byte[] GetFileBytes(PageParameterFileMapping fileMapping, PostedFile file)
         {
             byte[] fileBytes = null;
 
@@ -581,7 +577,7 @@ namespace Origam.ServerCommon.Pages
             return fileBytes;
         }
 
-        private static AbstractPage ResolvePage(IHttpContext context, out Dictionary<string, string> urlParameters)
+        private static AbstractPage ResolvePage(IHttpContextWrapper context, out Dictionary<string, string> urlParameters)
         {
             urlParameters = new Dictionary<string, string>();
 
@@ -676,7 +672,7 @@ namespace Origam.ServerCommon.Pages
             return null;
         }
 
-        private static bool IsPageValidByVerb(AbstractPage page, IHttpContext context)
+        private static bool IsPageValidByVerb(AbstractPage page, IHttpContextWrapper context)
         {
             switch (context.Request.HttpMethod)
             {
@@ -698,52 +694,51 @@ namespace Origam.ServerCommon.Pages
         #endregion
     }
 
-    public class HttpPostedFile
+    public class PostedFile
     {
         public object ContentType { get; set; }
         public object FileName { get; set; }
-        public int ContentLength { get; set; }
+        public long ContentLength { get; set; }
         public Stream InputStream { get; set; }
     }
 
-    public interface IHttpContext
+    public interface IHttpContextWrapper
     {
-        IResponse Response { get; }
-        IRequest Request { get; }
+        IResponseWrapper Response { get; }
+        IRequestWrapper Request { get; }
     }
 
-    public interface IRequest
+    public interface IRequestWrapper
     {
         string AppRelativeCurrentExecutionFilePath { get; }
         string ContentType { get;  }
-        object AbsoluteUri { get;  }
-        NameValueCollection Params { get;  }
+        string AbsoluteUri { get;  }
         Stream InputStream { get;  }
         string HttpMethod { get;  }
         string RawUrl { get;  }
-        object Url { get;  }
-        object UrlReferrer { get; }
+        string Url { get;  }
+        string UrlReferrer { get; }
         string UserAgent { get;  }
         string Browser { get;  }
         string BrowserVersion { get;  }
         string UserHostAddress { get;  }
         string UserHostName { get;}
         IEnumerable<string> UserLanguages { get; }
-        bool ContentEncoding { get;  }
-        int ContentLength { get;  }
-        IEnumerable<DictionaryEntry> BrowserCapabilities { get;  }
+        Encoding ContentEncoding { get;  }
+        long ContentLength { get;  }
+        IDictionary BrowserCapabilities { get;  }
         string UrlReferrerAbsolutePath { get;  }
-        HttpPostedFile FilesGet(string name);
+        Dictionary<string, string> Params { get; }
+        PostedFile FilesGet(string name);
     }
 
-    public interface IResponse
+    public interface IResponseWrapper
     {
-        bool BufferOutput { get; set; }
-        string ContentType { get; set; }
-        Encoding ContentEncoding { get; set; }
-        bool TrySkipIisCustomErrors { get; set; }
-        int StatusCode { get; set; }
-        TextWriter Output { get; set; }
+        bool BufferOutput {  set; }
+        string ContentType {  set; }
+        bool TrySkipIisCustomErrors {  set; }
+        int StatusCode {  set; }
+        void WriteToOutput(Action<TextWriter> writeAction);
         void CacheSetMaxAge(TimeSpan timeSpan);
         void End();
         void Clear();

@@ -28,11 +28,11 @@ namespace Origam.Server.Pages
     public class PagesModule : IHttpModule
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly ApiFilter apiFilter;
+        private readonly UserApiProcessor userApiProcessor;
 
         public PagesModule()
         {
-            apiFilter = new ApiFilter();
+            userApiProcessor = new UserApiProcessor();
         }
 
         public void Dispose()
@@ -50,8 +50,8 @@ namespace Origam.Server.Pages
             HttpApplication application = (HttpApplication)sender;
 
             HttpContext context = application.Context;
-            IHttpContext contextWrapper = new FxHttpContext(context);
-            apiFilter.MapRequestHandler(contextWrapper);
+            IHttpContextWrapper contextWrapper = new FxHttpContextWrapper(context);
+            userApiProcessor.Process(contextWrapper);
         }
     }
 }

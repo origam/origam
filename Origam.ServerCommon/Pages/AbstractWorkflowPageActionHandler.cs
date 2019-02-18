@@ -27,7 +27,7 @@ namespace Origam.ServerCommon.Pages
 {
     public class AbstractWorkflowPageActionHandler : IWorkflowPageActionHandler
     {
-        public virtual void Execute(AbstractWorkflowPageAction action, object workflowResult, IRequest request, IResponse response)
+        public virtual void Execute(AbstractWorkflowPageAction action, object workflowResult, IRequestWrapper request, IResponseWrapper response)
         {
             throw new NotImplementedException();
         }
