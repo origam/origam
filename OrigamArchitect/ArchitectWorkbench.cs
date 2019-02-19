@@ -241,7 +241,7 @@ namespace OrigamArchitect
 		private void UpdateToolStrips()
 		{
 		    loadedForms.Keys.ForEach(RemoveToolStrips);
-            if (ActiveMdiChild is IToolStripContainer toolStripContainer)
+            if (ActiveDocument is IToolStripContainer toolStripContainer)
 			{
 				toolStripContainer.AllToolStripsRemoved += 
 					OnAllToolStripsRemovedFromALoadedForm;
