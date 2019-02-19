@@ -71,9 +71,6 @@
     <DebugType>full</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AWSSDK, Version=1.3.17.0, Culture=neutral, PublicKeyToken=cd2d24cd2bace800">
-      <HintPath>..\EnterpriseLibrary\AWSSDK.dll</HintPath>
-    </Reference>
     <Reference Include="FluorineFx, Version=1.0.0.15, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\EnterpriseLibrary\FluorineFx.dll</HintPath>
     </Reference>
@@ -376,6 +373,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AWSSDK">
+      <Version>1.3.17</Version>
+    </PackageReference>
     <PackageReference Include="log4net">
       <Version>2.0.8</Version>
     </PackageReference>
