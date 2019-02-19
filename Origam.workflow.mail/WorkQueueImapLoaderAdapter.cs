@@ -133,7 +133,7 @@ namespace Origam.workflow.mail
                 finalFolder = _badmail;
             }
 
-            UniqueId lastMessageId = inbox
+            MailKit.UniqueId lastMessageId = inbox
                 .Fetch(0, -1, MessageSummaryItems.UniqueId)
                 .Last()
                 .UniqueId;
@@ -182,9 +182,9 @@ namespace Origam.workflow.mail
             }
         }
 
-        private void FlagAsSeen(UniqueId messageid)
+        private void FlagAsSeen(MailKit.UniqueId messageid)
         {
-            inbox.AddFlags(new List<UniqueId> { messageid }, MessageFlags.Seen, true);
+            inbox.AddFlags(new List<MailKit.UniqueId> { messageid }, MessageFlags.Seen, true);
         }
 
         private static string GetSubject(MimeMessage lastMessage, MailData mailData)

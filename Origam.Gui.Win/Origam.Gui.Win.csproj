@@ -187,9 +187,6 @@
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
     </Reference>
-    <Reference Include="System.Drawing.Common">
-      <HintPath>..\EnterpriseLibrary\System.Drawing.Common.dll</HintPath>
-    </Reference>
     <Reference Include="System.Drawing.Design">
       <Name>System.Drawing.Design</Name>
     </Reference>
