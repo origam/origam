@@ -120,7 +120,6 @@
     <Compile Include="doc\DocTools.cs" />
     <Compile Include="EntityWorkflowActionScriptCallComparer.cs" />
     <Compile Include="HttpTools.cs" />
-    <Compile Include="IDynamicSessionStoreProvider.cs" />
     <Compile Include="JsonUIService.cs" />
     <Compile Include="logging\AndFilter.cs" />
     <Compile Include="doc\DocHandler.cs" />
