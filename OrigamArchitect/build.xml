@@ -14,7 +14,7 @@
       <arg value="Origam.sln"/>
       <arg value="/p:Configuration=Release Server"/>
       <arg value="/p:BaseOutputPath=${dist}"/>
-	  <arg value="/t:Restore;Build"/>
+	  <arg value="/t:Clean;Restore;Build"/>
     </exec>
     <copy todir="${dist}" overwrite="true">
       <fileset basedir="../EnterpriseLibrary/2.0/">
