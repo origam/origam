@@ -27,6 +27,7 @@ using core = Origam.Workbench.Services.CoreServices;
 using Origam.OrigamEngine;
 using Origam.Workbench.Services;
 using Origam;
+using Origam.ServerCommon;
 
 namespace Origam.Server
 {
@@ -89,7 +90,7 @@ namespace Origam.Server
             return el;
         }
 
-        public SessionStore GetSessionStore(UIService service, UIRequest request)
+        public SessionStore GetSessionStore(IBasicUIService service, UIRequest request)
         {
             string[] idArray = request.ObjectId.Split("|".ToCharArray());
             string[] idArray2 = idArray[0].Split("_".ToCharArray());
@@ -109,7 +110,7 @@ namespace Origam.Server
             }
         }
 
-        private static SessionStore GetAppSessionStore(UIService service, UIRequest request, Guid entityId)
+        private static SessionStore GetAppSessionStore(IBasicUIService service, UIRequest request, Guid entityId)
         {
             DataSet menuData = core.DataService.LoadData(new Guid("dbeac0e3-2696-4687-b7e6-c551c638f602"),
                 new Guid("f25b6a5b-44d4-4cd2-ac70-2dc3ce73841e"), Guid.Empty, Guid.Empty, null, "OrigamEntity_parId", entityId);
@@ -133,7 +134,7 @@ namespace Origam.Server
             return result;
         }
 
-        private static SessionStore GetAddTableSessionStore(UIService service, UIRequest request,
+        private static SessionStore GetAddTableSessionStore(IBasicUIService service, UIRequest request,
             Guid appId, string appName)
         {
             request.ObjectId = "ecfc2869-4a73-4191-b81e-a3235004ab9f";
