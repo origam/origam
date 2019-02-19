@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -13,7 +13,6 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
-  
   <PropertyGroup>
       <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
       <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
@@ -57,13 +56,7 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-
-
-
   <ItemGroup>
-    <Reference Include="Antlr4.StringTemplate">
-      <HintPath>..\EnterpriseLibrary\Antlr4.StringTemplate.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\..\Windows\System32\inetsrv\Microsoft.Web.Administration.dll</HintPath>
@@ -132,6 +125,11 @@
       <Project>{eca06542-5635-455e-b513-07f60222ca7d}</Project>
       <Name>Origam.Workbench.Services</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Antlr4.StringTemplate">
+      <Version>4.0.6.9004</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -12,12 +12,11 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
-	 <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
-  
   <PropertyGroup>
-      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
-      <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
@@ -45,7 +44,7 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
     <DefineConstants>$(DefineConstants)</DefineConstants>
     <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
@@ -58,13 +57,7 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-
-
-
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\EnterpriseLibrary\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.EnterpriseServices" />
@@ -179,6 +172,11 @@
     <None Include="Web References\SSRSWebReference\Warning.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="log4net">
+      <Version>2.0.8</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
