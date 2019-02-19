@@ -160,17 +160,17 @@ namespace OrigamArchitect
             // 
             // colType
             // 
-            this.colType.Text = strings.Type_TableColumn;
+            this.colType.Text = global::OrigamArchitect.strings.Type_TableColumn;
             this.colType.Width = 188;
             // 
             // colName
             // 
-            this.colName.Text = strings.Name_TableColumn;
+            this.colName.Text = global::OrigamArchitect.strings.Name_TableColumn;
             this.colName.Width = 259;
             // 
             // colRemark
             // 
-            this.colRemark.Text = strings.Remark_TableColumn;
+            this.colRemark.Text = global::OrigamArchitect.strings.Remark_TableColumn;
             this.colRemark.Width = 369;
             // 
             // lvwResults
@@ -185,9 +185,9 @@ namespace OrigamArchitect
             this.lvwResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvwResults.FullRowSelect = true;
             this.lvwResults.GridLines = true;
-            this.lvwResults.Location = new System.Drawing.Point(221, 23);
+            this.lvwResults.Location = new System.Drawing.Point(184, 23);
             this.lvwResults.Name = "lvwResults";
-            this.lvwResults.Size = new System.Drawing.Size(675, 367);
+            this.lvwResults.Size = new System.Drawing.Size(712, 367);
             this.lvwResults.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvwResults.TabIndex = 0;
             this.lvwResults.UseCompatibleStateImageBehavior = false;
@@ -205,7 +205,7 @@ namespace OrigamArchitect
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(221, 390);
+            this.panel1.Size = new System.Drawing.Size(184, 390);
             this.panel1.TabIndex = 1;
             // 
             // label3
@@ -213,27 +213,27 @@ namespace OrigamArchitect
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Location = new System.Drawing.Point(0, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(221, 23);
+            this.label3.Size = new System.Drawing.Size(184, 23);
             this.label3.TabIndex = 8;
-            this.label3.Text = strings.Options_Label;
+            this.label3.Text = "Options";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.btnScript);
-            this.groupBox2.Location = new System.Drawing.Point(10, 240);
+            this.groupBox2.Location = new System.Drawing.Point(8, 192);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(201, 74);
+            this.groupBox2.Size = new System.Drawing.Size(168, 59);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = strings.SourceCode_GroupBox;
+            this.groupBox2.Text = "Source Code";
             // 
             // btnScript
             // 
             this.btnScript.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnScript.Location = new System.Drawing.Point(19, 28);
+            this.btnScript.Location = new System.Drawing.Point(16, 22);
             this.btnScript.Name = "btnScript";
-            this.btnScript.Size = new System.Drawing.Size(163, 27);
+            this.btnScript.Size = new System.Drawing.Size(136, 22);
             this.btnScript.TabIndex = 0;
             this.btnScript.Text = "&Preview";
             this.btnScript.Click += new System.EventHandler(this.btnScript_Click);
@@ -244,64 +244,64 @@ namespace OrigamArchitect
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.cboDeploymentVersion);
             this.groupBox1.Controls.Add(this.btnAddToDeployment);
-            this.groupBox1.Location = new System.Drawing.Point(10, 83);
+            this.groupBox1.Location = new System.Drawing.Point(8, 66);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(201, 139);
+            this.groupBox1.Size = new System.Drawing.Size(168, 112);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = strings.DeploymentScript_GroupBox;
+            this.groupBox1.Text = "Deployment Script";
             // 
             // btnAddToModel
             // 
             this.btnAddToModel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddToModel.Location = new System.Drawing.Point(19, 92);
+            this.btnAddToModel.Location = new System.Drawing.Point(16, 74);
             this.btnAddToModel.Name = "btnAddToModel";
-            this.btnAddToModel.Size = new System.Drawing.Size(163, 28);
+            this.btnAddToModel.Size = new System.Drawing.Size(136, 22);
             this.btnAddToModel.TabIndex = 5;
-            this.btnAddToModel.Text = strings.AddToModel_Button;
+            this.btnAddToModel.Text = global::OrigamArchitect.strings.AddToModel_Button;
             this.btnAddToModel.Visible = false;
             this.btnAddToModel.Click += new System.EventHandler(this.btnAddToModel_Click);
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(19, 28);
+            this.label1.Location = new System.Drawing.Point(16, 22);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(96, 18);
+            this.label1.Size = new System.Drawing.Size(80, 15);
             this.label1.TabIndex = 3;
-            this.label1.Text = strings.Version_Label;
+            this.label1.Text = "Version:";
             // 
             // cboDeploymentVersion
             // 
             this.cboDeploymentVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboDeploymentVersion.Location = new System.Drawing.Point(19, 51);
+            this.cboDeploymentVersion.Location = new System.Drawing.Point(16, 41);
             this.cboDeploymentVersion.Name = "cboDeploymentVersion";
-            this.cboDeploymentVersion.Size = new System.Drawing.Size(163, 24);
+            this.cboDeploymentVersion.Size = new System.Drawing.Size(136, 21);
             this.cboDeploymentVersion.TabIndex = 2;
             // 
             // btnAddToDeployment
             // 
             this.btnAddToDeployment.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddToDeployment.Location = new System.Drawing.Point(19, 92);
+            this.btnAddToDeployment.Location = new System.Drawing.Point(16, 74);
             this.btnAddToDeployment.Name = "btnAddToDeployment";
-            this.btnAddToDeployment.Size = new System.Drawing.Size(163, 28);
+            this.btnAddToDeployment.Size = new System.Drawing.Size(136, 22);
             this.btnAddToDeployment.TabIndex = 4;
-            this.btnAddToDeployment.Text = strings.AddToDeployment_Button;
+            this.btnAddToDeployment.Text = global::OrigamArchitect.strings.AddToDeployment_Button;
             this.btnAddToDeployment.Click += new System.EventHandler(this.btnAddToDeployment_Click);
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(10, 37);
+            this.label2.Location = new System.Drawing.Point(8, 36);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(48, 18);
+            this.label2.Size = new System.Drawing.Size(31, 14);
             this.label2.TabIndex = 5;
-            this.label2.Text = strings.Filter_Label;
+            this.label2.Text = "Filter:";
             // 
             // cboFilter
             // 
             this.cboFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboFilter.Location = new System.Drawing.Point(58, 37);
+            this.cboFilter.Location = new System.Drawing.Point(46, 33);
             this.cboFilter.Name = "cboFilter";
-            this.cboFilter.Size = new System.Drawing.Size(153, 24);
+            this.cboFilter.Size = new System.Drawing.Size(128, 21);
             this.cboFilter.TabIndex = 1;
             this.cboFilter.SelectedIndexChanged += new System.EventHandler(this.cboFilter_SelectedIndexChanged);
             // 
@@ -309,29 +309,29 @@ namespace OrigamArchitect
             // 
             this.label4.BackColor = System.Drawing.Color.Transparent;
             this.label4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label4.Location = new System.Drawing.Point(221, 0);
+            this.label4.Location = new System.Drawing.Point(184, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(675, 23);
+            this.label4.Size = new System.Drawing.Size(712, 23);
             this.label4.TabIndex = 9;
-            this.label4.Text = strings.Results_Label;
+            this.label4.Text = "Results";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // SchemaCompareEditor
             // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.ClientSize = new System.Drawing.Size(896, 390);
             this.Controls.Add(this.lvwResults);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.panel1);
             this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsViewOnly = true;
             this.Name = "SchemaCompareEditor";
             this.ShowInTaskbar = false;
-            this.TabText = strings.DeploymentScriptGenerator_Title;
-            this.Text = strings.DeploymentScriptGenerator_Title;
-            this.TitleName = strings.DeploymentScriptGenerator_Title;
+            this.TabText = global::OrigamArchitect.strings.DeploymentScriptGenerator_Title;
+            this.Text = "Deployment Script Generator";
+            this.TitleName = global::OrigamArchitect.strings.DeploymentScriptGenerator_Title;
             this.panel1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
@@ -403,8 +403,9 @@ namespace OrigamArchitect
 				{
 					if(ShouldDisplayResult(result))
 					{
-						ListViewItem item = new ListViewItem(
-                            new string[] {result.SchemaItem.ModelDescription(),
+                        SchemaItemDescriptionAttribute desc = result.SchemaItemType.SchemaItemDescription();
+                        ListViewItem item = new ListViewItem(
+                            new string[] {desc == null ? result.SchemaItemType.Name : desc.Name,
 											result.ItemName,
 											result.Remark 
 										}
