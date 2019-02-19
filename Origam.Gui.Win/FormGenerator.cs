@@ -1282,14 +1282,28 @@ namespace Origam.Gui.Win
 			}
 			else if( column.DataType == typeof(int) )
 			{
-				//textBox.FormatType = C1.Win.C1Input.FormatTypeEnum.Integer;
-				textBox.CustomFormat = "###,###,###,###,##0";
-			}
+                //textBox.FormatType = C1.Win.C1Input.FormatTypeEnum.Integer;
+                if (!string.IsNullOrEmpty(textBox.CustomNumericFormat))
+                {
+                    textBox.CustomFormat = textBox.CustomNumericFormat;
+                }
+                else
+                {
+                    textBox.CustomFormat = "###,###,###,###,##0";
+                }
+            }
 			else if( column.DataType == typeof(long) )
 			{
-				//textBox.FormatType = C1.Win.C1Input.FormatTypeEnum.CustomFormat;
-				textBox.CustomFormat = "###,###,###,###,##0";
-			}
+                //textBox.FormatType = C1.Win.C1Input.FormatTypeEnum.CustomFormat;
+                if (!string.IsNullOrEmpty(textBox.CustomNumericFormat))
+                {
+                    textBox.CustomFormat = textBox.CustomNumericFormat;
+                }
+                else
+                {
+                    textBox.CustomFormat = "###,###,###,###,##0";
+                }
+            }
 			else if ( column.DataType == typeof(decimal) )
 			{
 				if(column.ExtendedProperties.Contains("OrigamDataType") && (OrigamDataType)column.ExtendedProperties["OrigamDataType"] == OrigamDataType.Currency)
