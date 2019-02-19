@@ -32,6 +32,7 @@ using System.Windows.Forms;
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Rendering;
 using UserControl = System.Windows.Forms.UserControl;
+using Origam.UI;
 
 namespace Origam.Windows.Editor
 {
@@ -77,6 +78,44 @@ namespace Origam.Windows.Editor
             editor.Options = options;
             editor.ShowLineNumbers = true;
             editor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition("XML");
+            var valueBrush = new SimpleHighlightingBrush(
+                System.Windows.Media.Color.FromRgb(18, 53, 182));
+            var elementBrush = new SimpleHighlightingBrush(
+                System.Windows.Media.Color.FromRgb(
+                OrigamColorScheme.TabActiveStartColor.R,
+                OrigamColorScheme.TabActiveStartColor.G,
+                OrigamColorScheme.TabActiveStartColor.B));
+    //            System.Windows.Media.Color.FromRgb(161, 19, 0));
+            var attributeBrush = new SimpleHighlightingBrush(
+                System.Windows.Media.Color.FromRgb(255, 73, 61));
+            var docBrush = new SimpleHighlightingBrush(
+                System.Windows.Media.Color.FromRgb(0, 154, 41));
+            var declarationBrush = new SimpleHighlightingBrush(
+                System.Windows.Media.Color.FromRgb(100,100,100));
+            editor.TextArea.TextView.LinkTextForegroundBrush =
+                new System.Windows.Media.SolidColorBrush(
+                    System.Windows.Media.Color.FromRgb(161, 112, 0));
+            foreach (var color in editor.SyntaxHighlighting.NamedHighlightingColors)
+            {
+                switch (color.Name)
+                {
+                    case "XmlTag":
+                        color.Foreground = elementBrush;
+                        break;
+                    case "AttributeName":
+                        color.Foreground = attributeBrush;
+                        break;
+                    case "AttributeValue":
+                        color.Foreground = valueBrush;
+                        break;
+                    case "CData":
+                    case "DocType":
+                    case "Entity":
+                    case "XmlDeclaration":
+                        color.Foreground = declarationBrush;
+                        break;
+                }
+            }
             SearchPanel.Install(editor);
             
             _foldingManager = FoldingManager.Install(editor.TextArea);

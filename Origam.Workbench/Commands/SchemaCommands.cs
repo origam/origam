@@ -527,8 +527,8 @@ namespace Origam.Workbench.Commands
 						.NodeImage.ToBitmap()
 						.GetHicon());
 				}
-			}
-			else if(item is SchemaExtension)
+            }
+            else if(item is SchemaExtension)
 			{
 				editor.TitleName = (item as SchemaExtension).Name;
 			}

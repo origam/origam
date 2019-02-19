@@ -110,7 +110,7 @@ namespace Origam.UI
         public static Color DocumentTabInactiveBackEnd = Color.White;
         public static Color DocumentTabInactiveEdge = MdiBackColor;
 
-		public static Color TitleActiveStartColor = Color.FromArgb(137, 152, 197);
+		public static Color TitleActiveStartColor = Color.FromArgb(4, 139, 168);
 		public static Color TitleActiveMiddleEndColor = TitleActiveStartColor;
 		public static Color TitleActiveMiddleStartColor = TitleActiveStartColor;
 		public static Color TitleActiveEndColor = TitleActiveStartColor; 
