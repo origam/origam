@@ -67,5 +67,13 @@ namespace Origam.DA.Service
         {
             objectDict[locale].Remove(id);
         }
+
+        public void AddRange(IEnumerable<IFilePersistent> newInstances)
+        {
+            foreach (IFilePersistent instance in newInstances)
+            {
+                Add(instance.Id, instance);
+            }
+        }
     }
 }
