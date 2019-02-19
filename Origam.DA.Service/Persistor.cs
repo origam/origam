@@ -23,9 +23,9 @@ namespace Origam.DA.Service
         private readonly TrackerLoaderFactory trackerLoaderFactory;
         public bool InTransaction { get; private set; }
 
-        public Persistor(IPersistenceProvider persistenceProvider, 
-            FilePersistenceIndex index, OrigamFileFactory origamFileFactory, 
-            OrigamFileManager origamFileManager,TrackerLoaderFactory trackerLoaderFactory)
+        public Persistor(IPersistenceProvider persistenceProvider,
+            FilePersistenceIndex index, OrigamFileFactory origamFileFactory,
+            OrigamFileManager origamFileManager, TrackerLoaderFactory trackerLoaderFactory)
         {
             this.persistenceProvider = persistenceProvider;
             this.index = index;
@@ -37,10 +37,10 @@ namespace Origam.DA.Service
         public void Persist(IPersistent obj)
         {
             CheckObjectCanBePersisted(obj);
-            IFilePersistent instance = (IFilePersistent)obj;
+            IFilePersistent instance = (IFilePersistent) obj;
             ElementName elementName = ElementNameFactory.Create(instance.GetType());
 
-            (OrigamFile origamFile, PersistedObjectInfo persistedObjectInfo) = 
+            (OrigamFile origamFile, PersistedObjectInfo persistedObjectInfo) =
                 FindOrigamFileAndObjectInfo(instance);
             if (persistedObjectInfo == null && instance.IsDeleted)
             {
@@ -48,9 +48,9 @@ namespace Origam.DA.Service
             }
 
             RenameRelatedItems(instance, persistedObjectInfo?.OrigamFile);
- 
+
             if (origamFile == null)
-            {                
+            {
                 origamFile = origamFileFactory.New(
                     parentFolderIds: instance.ParentFolderIds,
                     relativePath: instance.RelativeFilePath,
@@ -97,14 +97,14 @@ namespace Origam.DA.Service
         {
             if (instance.IsDeleted)
             {
-                 index.Remove(updatedObjectInfo);
+                index.Remove(updatedObjectInfo);
             }
             else
             {
                 index.AddOrReplace(updatedObjectInfo);
             }
         }
-        
+
         public void BeginTransaction()
         {
             if (InTransaction) throw new Exception("Already in transaction! Cannot start a new one.");
@@ -224,7 +224,7 @@ namespace Origam.DA.Service
                 persistenceProvider.RetrieveList<SchemaItemGroup>(null)
                     .Where(group => group.Name == schemaExtension.OldName)
                     .ForEach(group => RenameGroup(group, schemaExtension.Name));
-            } 
+            }
             catch (Exception e)
             {
                 throw new Exception(
@@ -261,8 +261,8 @@ namespace Origam.DA.Service
                 origamFile = transactionStore.Get(instance.RelativeFilePath);
                 origamFile.ContainedObjects.TryGetValue(id, out objInfo);
                 return (origamFile, objInfo);
-            }  
-           
+            }
+
             PersistedObjectInfo parentObjInfo = index.GetParent(instance);
             if (parentObjInfo?.OrigamFile.Path.Relative == instance.RelativeFilePath)
             {
@@ -271,7 +271,7 @@ namespace Origam.DA.Service
                 return (origamFile, objInfo);
             }
             objInfo = index.GetById(instance.Id);
-            origamFile = objInfo?.OrigamFile 
+            origamFile = objInfo?.OrigamFile
                          ?? index.GetByRelativePath(instance.RelativeFilePath);
             return (origamFile, objInfo);
         }
@@ -280,9 +280,9 @@ namespace Origam.DA.Service
         {
             if (InTransaction && transactionStore.Contains(origamFile.Path.Relative))
             {
-                return  transactionStore.Get(origamFile.Path.Relative)
+                return transactionStore.Get(origamFile.Path.Relative)
                     .DeferredSaveDocument;
-            } 
+            }
             if (origamFile.Path.Exists)
             {
                 XmlDocument openDoc = new XmlDocument();

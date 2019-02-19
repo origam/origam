@@ -92,7 +92,8 @@ namespace Origam.DA.Service
             {
                 if (loadedLocalizedObjects == null)
                 {
-                    ReLoadAllObjectsFromDisk(provider, useCache);
+                    loadedLocalizedObjects = new LocalizedObjectCache();
+                    loadedLocalizedObjects.AddRange(LoadAllObjectsFromDisk(provider, useCache));
                 }
                 if (!loadedLocalizedObjects.Contains(id))
                 {
@@ -113,19 +114,18 @@ namespace Origam.DA.Service
         {
             lock (Lock)
             {
-                var previouslyLoaded =
-                    new LocalizedObjectCache(loadedLocalizedObjects);
-                ReLoadAllObjectsFromDisk(provider,useCache);
-                previouslyLoaded.LocalizedPairs
+                var newObjects = new LocalizedObjectCache();
+                newObjects.AddRange(LoadAllObjectsFromDisk(provider, useCache));
+
+                newObjects.LocalizedPairs
                     .Where(keyVal => !loadedLocalizedObjects.Contains(keyVal.Key))
                     .ForEach(keyVal =>
                         loadedLocalizedObjects.Add(keyVal.Key, keyVal.Value));
             }
         }
 
-        private void ReLoadAllObjectsFromDisk(IPersistenceProvider provider, bool useCache)
+        private IEnumerable<IFilePersistent> LoadAllObjectsFromDisk(IPersistenceProvider provider, bool useCache)
         {
-            loadedLocalizedObjects = new LocalizedObjectCache();
             ParentIdTracker parentIdTracker = new ParentIdTracker();
             using (XmlReader xmlReader = GetDocumentReader())
             {
@@ -140,9 +140,10 @@ namespace Origam.DA.Service
                     IFilePersistent loadedObj = instanceCreator.RetrieveInstance( 
                         retrievedId.Value, provider, parentIdTracker.Get(xmlReader.Depth));
                     loadedObj.UseObjectCache=useCache;
-                    loadedLocalizedObjects.Add(loadedObj.Id, loadedObj);
+                    yield return loadedObj;
+
                 }
-            }  
+            }
         }
 
         private XmlReader GetDocumentReader()
@@ -243,5 +244,5 @@ namespace Origam.DA.Service
                 .Where(attr =>ExternalFilePath.IsExternalFileLink(attr.Value))
                 .ForEach(attr => attr.Value = attr.Value.Replace(find, replace));
         }
-    }
+  }
 }
