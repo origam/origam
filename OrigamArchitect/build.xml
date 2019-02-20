@@ -15,6 +15,7 @@
       <arg value="/p:Configuration=Release Server"/>
       <arg value="/p:BaseOutputPath=${dist}"/>
 	  <arg value="/t:Clean;Restore;Build"/>
+	  <arg value="-v:m"/>
     </exec>
     <copy todir="${dist}" overwrite="true">
       <fileset basedir="../EnterpriseLibrary/2.0/">
@@ -49,6 +50,7 @@
         <arg value="/p:Configuration=Release Architect"/>
         <arg value="/p:BaseOutputPath=${architect-dist}"/>
 		<arg value="/t:Restore;Build"/>
+        <arg value="-v:m"/>
     </exec>
     <copy todir="${architect-dist}">
       <fileset basedir="../EnterpriseLibrary/2.0">
@@ -62,6 +64,7 @@
         <arg value="/p:Configuration=Release Client"/>
         <arg value="/p:BaseOutputPath=${client-dist}"/>
 		<arg value="/t:Restore;Build"/>
+        <arg value="-v:m"/>
     </exec>
     <copy todir="${client-dist}">
       <fileset basedir="../EnterpriseLibrary/2.0">
