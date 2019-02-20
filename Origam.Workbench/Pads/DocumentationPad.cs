@@ -58,8 +58,11 @@ namespace Origam.Workbench.Pads
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
+            _schemaService = ServiceManager.Services.GetService(typeof(Services.SchemaService)) as Services.SchemaService;
+            _schemaService.SchemaLoaded += _schemaService_SchemaLoaded;
+            _schemaService.SchemaUnloaded += _schemaService_SchemaUnloaded;
 
-			this.colText.TextBox.Multiline = true;
+            this.colText.TextBox.Multiline = true;
 			this.dataGridTableStyle1.PreferredRowHeight *= 2;  
 
 			tblCategory.Rows.Add(new object[] {DBNull.Value});
@@ -72,13 +75,6 @@ namespace Origam.Workbench.Pads
 			this.colCategory.ColumnComboBox.ValueMember = "Name";
 			this.colCategory.ColumnComboBox.DisplayMember = "Name";
 
-			_documentationService = ServiceManager.Services.GetService(typeof(Services.IDocumentationService)) as Services.IDocumentationService;
-			if(_documentationService == null)
-			{
-				throw new NullReferenceException("Documentation service not found");
-			}
-
-			_schemaService = ServiceManager.Services.GetService(typeof(Services.SchemaService)) as Services.SchemaService;
 
 			_cm = this.BindingContext[documentationComplete, documentationComplete.Documentation.TableName] as CurrencyManager;
 			_cm.CurrentChanged += _cm_CurrentChanged;
@@ -87,10 +83,25 @@ namespace Origam.Workbench.Pads
 			this.dataGrid1.BackgroundColor = this.BackColor;
 		}
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		protected override void Dispose( bool disposing )
+        private void _schemaService_SchemaUnloaded(object sender, EventArgs e)
+        {
+            documentationComplete.Clear();
+            _documentationService = null;
+        }
+
+        private void _schemaService_SchemaLoaded(object sender, EventArgs e)
+        {
+            _documentationService = ServiceManager.Services.GetService<IDocumentationService>();
+            if (_documentationService == null)
+            {
+                throw new NullReferenceException("Documentation service not found");
+            }
+        }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        protected override void Dispose( bool disposing )
 		{
 			if( disposing )
 			{

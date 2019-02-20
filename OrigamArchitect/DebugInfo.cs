@@ -179,7 +179,6 @@ namespace Origam.Workflow
 				result.AppendFormat("The following exception occured while getting terminal session information: {0}{1}{2}", Environment.NewLine, ex.Message, Environment.NewLine);
 			}
 
-#if ! ARCHITECT_EXPRESS
 			// profile info
 			AddHeader("Authentication Information", result);
 			AddInfo("Identity Name", SecurityManager.CurrentPrincipal.Identity.Name, result);
@@ -247,7 +246,7 @@ namespace Origam.Workflow
 				AddLine("Could not get resource information. The following error occured:", result);
 				AddLine(ex.Message, result);
 			}
-#endif
+
             // service info (connection strings, remote time, errors...)
             AddLine("", result);
 			AddSection("Service Information", result);

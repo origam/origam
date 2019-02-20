@@ -64,15 +64,6 @@ namespace Origam.Workflow
 			}
 		}
 
-		public void DisconnectDataService()
-		{
-			_dataService.Dispose();
-			_dataService = null;
-		}
-
-
-
-
 		private IDataDocument LoadData(Guid dataStructureId, Hashtable parameters, Guid methodId, Guid sortSetId)
 		{
 			// (_dataService as MsSqlDataService).PersistenceProvider = this.PersistenceProvider;

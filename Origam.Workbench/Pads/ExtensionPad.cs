@@ -54,10 +54,7 @@ namespace Origam.Workbench.Pads
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
-
 			this.BackColor = OrigamColorScheme.FormBackgroundColor;
-
-			LoadPackages();
 		}
 
 		/// <summary>
@@ -114,12 +111,14 @@ namespace Origam.Workbench.Pads
             this.tbrNew.ImageIndex = 0;
             this.tbrNew.Name = "tbrNew";
             this.tbrNew.Text = "Add";
+            this.tbrNew.Enabled = false;
             // 
             // tbrRemove
             // 
             this.tbrRemove.ImageIndex = 1;
             this.tbrRemove.Name = "tbrRemove";
             this.tbrRemove.Text = "Remove";
+            this.tbrRemove.Enabled = false;
             // 
             // imageList1
             // 
@@ -184,8 +183,6 @@ namespace Origam.Workbench.Pads
 
 		public void LoadPackages()
 		{
-			if(this.DesignMode) return;
-
 			try
 			{
 				lvwPackages.SuspendLayout();
@@ -226,9 +223,18 @@ namespace Origam.Workbench.Pads
 			{
 				lvwPackages.ResumeLayout();
 			}
-		}
+            tbrNew.Enabled = true;
+            tbrRemove.Enabled = true;
+        }
 
-		public SchemaExtension SelectedExtension
+        public void UnloadPackages()
+        {
+            lvwPackages.Items.Clear();
+            tbrNew.Enabled = false;
+            tbrRemove.Enabled = false;
+        }
+
+        public SchemaExtension SelectedExtension
 		{
 			get
 			{

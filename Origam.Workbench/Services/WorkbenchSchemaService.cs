@@ -212,23 +212,6 @@ namespace Origam.Workbench.Services
 			return fullPath;
 		}
 
-		public override bool UnloadSchema()
-		{
-            SchemaExtension activeExtension = ActiveExtension;
-            if (base.UnloadSchema())
-            {
-                if (_schemaBrowser != null)
-                {
-                    _schemaBrowser.EbrSchemaBrowser.RemoveBrowserNode(activeExtension);
-                }
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-		}
-
 		override public void MergeSchema(DataSet schema)
 		{
             IStatusBarService statusBar = ServiceManager.Services.GetService(typeof(IStatusBarService)) as IStatusBarService;
