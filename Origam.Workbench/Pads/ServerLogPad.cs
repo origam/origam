@@ -123,7 +123,7 @@ namespace Origam.Workbench.Pads
             try
             {
                 OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
-                string url = settings.ServerLogUrl;
+                string url = settings==null ? null : settings.ServerLogUrl ;
 
                 if (url == "" || url == null)
                 {
