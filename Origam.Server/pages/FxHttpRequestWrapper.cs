@@ -16,16 +16,18 @@ namespace Origam.Server.Pages
         {
             this.request = request;
 
-            Params = request.Params.AllKeys
+            Dictionary<string, string> parametersDict = 
+                request.Params.AllKeys
                 .ToDictionary(
                     key => key,
                     key => request.Params[key]);
+            Params = new Parameters(parametersDict);
         }
 
         public string AppRelativeCurrentExecutionFilePath => request.AppRelativeCurrentExecutionFilePath;
         public string ContentType => request.ContentType;
         public string AbsoluteUri => request.Url.AbsoluteUri;
-        public Dictionary<string, string> Params { get; }
+        public Parameters Params { get; }
         public Stream InputStream => request.InputStream;
         public string HttpMethod => request.HttpMethod;
         public string RawUrl => request.RawUrl;

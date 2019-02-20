@@ -35,7 +35,7 @@ namespace Origam.ServerCommon.Pages
         {
             if (context.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/assets/")) return;
 
-            string mimeType = context.Request.ContentType.Split(";".ToCharArray())[0];
+            string mimeType = context.Request.ContentType?.Split(";".ToCharArray())[0];
             if (mimeType == "application/x-amf") return;
 
             string resultContentType = "text";
@@ -728,7 +728,7 @@ namespace Origam.ServerCommon.Pages
         long ContentLength { get;  }
         IDictionary BrowserCapabilities { get;  }
         string UrlReferrerAbsolutePath { get;  }
-        Dictionary<string, string> Params { get; }
+        Parameters Params { get; }
         PostedFile FilesGet(string name);
     }
 
@@ -747,6 +747,27 @@ namespace Origam.ServerCommon.Pages
         void BinaryWrite(byte[] bytes);
         void Redirect(string requestUrlReferrerAbsolutePath);
         void OutputStreamWrite(byte[] buffer, int offset, int count);
+    }
+
+    public class Parameters
+    {
+        private readonly Dictionary<string, string> paramsDictionary;
+
+        public Parameters(Dictionary<string, string> parameters)
+        {
+            paramsDictionary = parameters;
+        }
+
+        public string this[string key]
+        {
+            get
+            {
+                paramsDictionary.TryGetValue(key, out string value);
+                return value;
+            }
+        }
+
+        public IEnumerable<string> Keys => paramsDictionary.Keys;
     }
 }
 
