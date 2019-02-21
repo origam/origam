@@ -171,211 +171,223 @@ namespace Origam.Gui.Win
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-			this.pnlDataControl = new Origam.Gui.Win.AsPanelTitle();
-			this.dbNav = new Origam.Gui.Win.DbNavigator();
-			this.pnlButtonHolder = new System.Windows.Forms.Panel();
-			this.toolBar = new System.Windows.Forms.ToolBar();
-			this.btnGrid = new System.Windows.Forms.ToolBarButton();
-			this.btnAttachment = new System.Windows.Forms.ToolBarButton();
-			this.btnAuditLog = new System.Windows.Forms.ToolBarButton();
-			this.btnExcel = new System.Windows.Forms.ToolBarButton();
-			this.btnFilter = new System.Windows.Forms.ToolBarButton();
-			this.filterMenu = new System.Windows.Forms.ContextMenu();
-			this.mnuSetDefaultFilter = new System.Windows.Forms.MenuItem();
-			this.mnuUnsetDefaultFilter = new System.Windows.Forms.MenuItem();
-			this.menuItem2 = new System.Windows.Forms.MenuItem();
-			this.mnuFilterAdd = new System.Windows.Forms.MenuItem();
-			this.mnuFilterDelete = new System.Windows.Forms.MenuItem();
-			this.mnuFilterClear = new System.Windows.Forms.MenuItem();
-			this.menuItem4 = new System.Windows.Forms.MenuItem();
-			this.pnlFilter = new Origam.Gui.Win.FilterPanel();
-			this.pnlDataControl.SuspendLayout();
-			this.pnlButtonHolder.SuspendLayout();
-			this.SuspendLayout();
-			// 
-			// imageList1
-			// 
-			this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth24Bit;
-			this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
-			this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
-			// 
-			// pnlDataControl
-			// 
-			this.pnlDataControl.BackColor = System.Drawing.Color.Transparent;
-			this.pnlDataControl.Controls.Add(this.dbNav);
-			this.pnlDataControl.Controls.Add(this.pnlButtonHolder);
-			this.pnlDataControl.Dock = System.Windows.Forms.DockStyle.Top;
-			this.pnlDataControl.EndColor = System.Drawing.Color.DarkKhaki;
-			this.pnlDataControl.ForeColor = System.Drawing.Color.Black;
-			this.pnlDataControl.Location = new System.Drawing.Point(0, 0);
-			this.pnlDataControl.MiddleEndColor = System.Drawing.Color.Empty;
-			this.pnlDataControl.MiddleStartColor = System.Drawing.Color.Empty;
-			this.pnlDataControl.Name = "pnlDataControl";
-			this.pnlDataControl.PanelIcon = null;
-			this.pnlDataControl.PanelTitle = "";
-			this.pnlDataControl.Size = new System.Drawing.Size(552, 24);
-			this.pnlDataControl.StartColor = System.Drawing.Color.PaleGoldenrod;
-			this.pnlDataControl.StatusIcon = null;
-			this.pnlDataControl.TabIndex = 1;
-			this.pnlDataControl.TabStop = true;
-			this.pnlDataControl.Click += new System.EventHandler(this.pnlDataControl_Click);
-			// 
-			// dbNav
-			// 
-			this.dbNav.BackColor = System.Drawing.Color.Transparent;
-			this.dbNav.Dock = System.Windows.Forms.DockStyle.Right;
-			this.dbNav.ForeColor = System.Drawing.Color.Black;
-			this.dbNav.Location = new System.Drawing.Point(184, 0);
-			this.dbNav.Name = "dbNav";
-			this.dbNav.Size = new System.Drawing.Size(232, 24);
-			this.dbNav.TabIndex = 2;
-			this.dbNav.NewRecordAdded += new System.EventHandler(this.dbNav_NewRecordAdded);
-			// 
-			// pnlButtonHolder
-			// 
-			this.pnlButtonHolder.Controls.Add(this.toolBar);
-			this.pnlButtonHolder.Dock = System.Windows.Forms.DockStyle.Right;
-			this.pnlButtonHolder.Location = new System.Drawing.Point(416, 0);
-			this.pnlButtonHolder.Name = "pnlButtonHolder";
-			this.pnlButtonHolder.Size = new System.Drawing.Size(136, 24);
-			this.pnlButtonHolder.TabIndex = 5;
-			// 
-			// toolBar
-			// 
-			this.toolBar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
-			this.toolBar.AutoSize = false;
-			this.toolBar.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
-																					   this.btnGrid,
-																					   this.btnAttachment,
-																					   this.btnAuditLog,
-																					   this.btnExcel,
-																					   this.btnFilter});
-			this.toolBar.ButtonSize = new System.Drawing.Size(17, 17);
-			this.toolBar.Divider = false;
-			this.toolBar.DropDownArrows = true;
-			this.toolBar.ImageList = this.imageList1;
-			this.toolBar.Location = new System.Drawing.Point(0, 0);
-			this.toolBar.Name = "toolBar";
-			this.toolBar.ShowToolTips = true;
-			this.toolBar.Size = new System.Drawing.Size(136, 24);
-			this.toolBar.TabIndex = 4;
-			this.toolBar.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.toolBar_ButtonClick);
-			this.toolBar.Validated += new System.EventHandler(this.toolBar_Validated);
-			// 
-			// btnGrid
-			// 
-			this.btnGrid.ImageIndex = 0;
-			this.btnGrid.Style = System.Windows.Forms.ToolBarButtonStyle.ToggleButton;
-			this.btnGrid.ToolTipText = ResourceUtils.GetString("TooltipGrid");
-			// 
-			// btnAttachment
-			// 
-			this.btnAttachment.ImageIndex = 1;
-			this.btnAttachment.Style = System.Windows.Forms.ToolBarButtonStyle.ToggleButton;
-			this.btnAttachment.ToolTipText = ResourceUtils.GetString("TooltipAttachment");
-			// 
-			// btnAuditLog
-			// 
-			this.btnAuditLog.ImageIndex = 3;
-			this.btnAuditLog.ToolTipText = ResourceUtils.GetString("TooltipAudit");
-			// 
-			// btnExcel
-			// 
-			this.btnExcel.ImageIndex = 4;
-			this.btnExcel.ToolTipText = ResourceUtils.GetString("TooltipExcel");
-			// 
-			// btnFilter
-			// 
-			this.btnFilter.DropDownMenu = this.filterMenu;
-			this.btnFilter.ImageIndex = 2;
-			this.btnFilter.Style = System.Windows.Forms.ToolBarButtonStyle.DropDownButton;
-			this.btnFilter.ToolTipText = ResourceUtils.GetString("TooltipFilter");
-			// 
-			// filterMenu
-			// 
-			this.filterMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					   this.mnuSetDefaultFilter,
-																					   this.mnuUnsetDefaultFilter,
-																					   this.menuItem2,
-																					   this.mnuFilterAdd,
-																					   this.mnuFilterDelete,
-																					   this.mnuFilterClear,
-																					   this.menuItem4});
-			this.filterMenu.Popup += new System.EventHandler(this.filterMenu_Popup);
-            this.filterMenu.Disposed += new EventHandler(filterMenu_Disposed);
-			// 
-			// mnuSetDefaultFilter
-			// 
-			this.mnuSetDefaultFilter.Enabled = false;
-			this.mnuSetDefaultFilter.Index = 0;
-			this.mnuSetDefaultFilter.Text = ResourceUtils.GetString("MenuSetDefaultFilter");
-			this.mnuSetDefaultFilter.Click += new System.EventHandler(this.mnuSetDefaultFilter_Click);
-			// 
-			// mnuUnsetDefaultFilter
-			// 
-			this.mnuUnsetDefaultFilter.Index = 1;
-			this.mnuUnsetDefaultFilter.Text = ResourceUtils.GetString("MenuUnsetDefaultFilter");
-			this.mnuUnsetDefaultFilter.Click += new System.EventHandler(this.mnuUnsetDefaultFilter_Click);
-			// 
-			// menuItem2
-			// 
-			this.menuItem2.Index = 2;
-			this.menuItem2.Text = "-";
-			// 
-			// mnuFilterAdd
-			// 
-			this.mnuFilterAdd.Enabled = false;
-			this.mnuFilterAdd.Index = 3;
-			this.mnuFilterAdd.Text = ResourceUtils.GetString("MenuFilterAdd");
-			this.mnuFilterAdd.Click += new System.EventHandler(this.mnuFilterAdd_Click);
-			// 
-			// mnuFilterDelete
-			// 
-			this.mnuFilterDelete.Enabled = false;
-			this.mnuFilterDelete.Index = 4;
-			this.mnuFilterDelete.Text = ResourceUtils.GetString("MenuFilterDelete");
-			this.mnuFilterDelete.Click += new System.EventHandler(this.mnuFilterDelete_Click);
-			// 
-			// mnuFilterClear
-			// 
-			this.mnuFilterClear.Enabled = false;
-			this.mnuFilterClear.Index = 5;
-			this.mnuFilterClear.Text = ResourceUtils.GetString("MenuFilterClear");
-			this.mnuFilterClear.Click += new System.EventHandler(this.mnuFilterClear_Click);
-			// 
-			// menuItem4
-			// 
-			this.menuItem4.Index = 6;
-			this.menuItem4.Text = "-";
-			// 
-			// pnlFilter
-			// 
-			this.pnlFilter.Dock = System.Windows.Forms.DockStyle.Top;
-			this.pnlFilter.Location = new System.Drawing.Point(0, 24);
-			this.pnlFilter.Name = "pnlFilter";
-			this.pnlFilter.Query = null;
-			this.pnlFilter.Size = new System.Drawing.Size(552, 49);
-			this.pnlFilter.TabIndex = 2;
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AsPanel));
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.pnlDataControl = new Origam.Gui.Win.AsPanelTitle();
+            this.dbNav = new Origam.Gui.Win.DbNavigator();
+            this.pnlButtonHolder = new System.Windows.Forms.Panel();
+            this.toolBar = new System.Windows.Forms.ToolBar();
+            this.btnGrid = new System.Windows.Forms.ToolBarButton();
+            this.btnAttachment = new System.Windows.Forms.ToolBarButton();
+            this.btnAuditLog = new System.Windows.Forms.ToolBarButton();
+            this.btnExcel = new System.Windows.Forms.ToolBarButton();
+            this.btnFilter = new System.Windows.Forms.ToolBarButton();
+            this.filterMenu = new System.Windows.Forms.ContextMenu();
+            this.mnuSetDefaultFilter = new System.Windows.Forms.MenuItem();
+            this.mnuUnsetDefaultFilter = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.mnuFilterAdd = new System.Windows.Forms.MenuItem();
+            this.mnuFilterDelete = new System.Windows.Forms.MenuItem();
+            this.mnuFilterClear = new System.Windows.Forms.MenuItem();
+            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.pnlFilter = new Origam.Gui.Win.FilterPanel();
+            this.pnlDataControl.SuspendLayout();
+            this.pnlButtonHolder.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
+            this.imageList1.Images.SetKeyName(0, "grid_white.png");
+            this.imageList1.Images.SetKeyName(1, "attachment_white.png");
+            this.imageList1.Images.SetKeyName(2, "filter.png");
+            this.imageList1.Images.SetKeyName(3, "audit_white.png");
+            this.imageList1.Images.SetKeyName(4, "export_to_excel.png");
+            this.imageList1.Images.SetKeyName(5, "attachment_notification.png");
+            this.imageList1.Images.SetKeyName(6, "attachment_white.png");
+            // 
+            // pnlDataControl
+            // 
+            this.pnlDataControl.BackColor = System.Drawing.Color.Transparent;
+            this.pnlDataControl.Controls.Add(this.dbNav);
+            this.pnlDataControl.Controls.Add(this.pnlButtonHolder);
+            this.pnlDataControl.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlDataControl.EndColor = System.Drawing.Color.DarkKhaki;
+            this.pnlDataControl.ForeColor = System.Drawing.Color.Black;
+            this.pnlDataControl.Location = new System.Drawing.Point(0, 0);
+            this.pnlDataControl.MiddleEndColor = System.Drawing.Color.Empty;
+            this.pnlDataControl.MiddleStartColor = System.Drawing.Color.Empty;
+            this.pnlDataControl.Name = "pnlDataControl";
+            this.pnlDataControl.PanelIcon = null;
+            this.pnlDataControl.PanelTitle = "";
+            this.pnlDataControl.Size = new System.Drawing.Size(552, 24);
+            this.pnlDataControl.StartColor = System.Drawing.Color.PaleGoldenrod;
+            this.pnlDataControl.StatusIcon = null;
+            this.pnlDataControl.TabIndex = 1;
+            this.pnlDataControl.TabStop = true;
+            this.pnlDataControl.Click += new System.EventHandler(this.pnlDataControl_Click);
+            // 
+            // dbNav
+            // 
+            this.dbNav.BackColor = System.Drawing.Color.Transparent;
+            this.dbNav.Dock = System.Windows.Forms.DockStyle.Right;
+            this.dbNav.ForeColor = System.Drawing.Color.Black;
+            this.dbNav.Location = new System.Drawing.Point(184, 0);
+            this.dbNav.Name = "dbNav";
+            this.dbNav.Size = new System.Drawing.Size(232, 24);
+            this.dbNav.TabIndex = 2;
+            this.dbNav.NewRecordAdded += new System.EventHandler(this.dbNav_NewRecordAdded);
+            // 
+            // pnlButtonHolder
+            // 
+            this.pnlButtonHolder.Controls.Add(this.toolBar);
+            this.pnlButtonHolder.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnlButtonHolder.Location = new System.Drawing.Point(416, 0);
+            this.pnlButtonHolder.Name = "pnlButtonHolder";
+            this.pnlButtonHolder.Size = new System.Drawing.Size(136, 24);
+            this.pnlButtonHolder.TabIndex = 5;
+            // 
+            // toolBar
+            // 
+            this.toolBar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
+            this.toolBar.AutoSize = false;
+            this.toolBar.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
+            this.btnGrid,
+            this.btnAttachment,
+            this.btnAuditLog,
+            this.btnExcel,
+            this.btnFilter});
+            this.toolBar.ButtonSize = new System.Drawing.Size(17, 17);
+            this.toolBar.Divider = false;
+            this.toolBar.DropDownArrows = true;
+            this.toolBar.ImageList = this.imageList1;
+            this.toolBar.Location = new System.Drawing.Point(0, 0);
+            this.toolBar.Name = "toolBar";
+            this.toolBar.ShowToolTips = true;
+            this.toolBar.Size = new System.Drawing.Size(136, 24);
+            this.toolBar.TabIndex = 4;
+            this.toolBar.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.toolBar_ButtonClick);
+            this.toolBar.Validated += new System.EventHandler(this.toolBar_Validated);
+            // 
+            // btnGrid
+            // 
+            this.btnGrid.ImageIndex = 0;
+            this.btnGrid.Name = "btnGrid";
+            this.btnGrid.Style = System.Windows.Forms.ToolBarButtonStyle.ToggleButton;
+            this.btnGrid.ToolTipText = "Přepne mezi zobrazením tabulky a formuláře (Ctrl+G)";
+            // 
+            // btnAttachment
+            // 
+            this.btnAttachment.ImageIndex = 1;
+            this.btnAttachment.Name = "btnAttachment";
+            this.btnAttachment.Style = System.Windows.Forms.ToolBarButtonStyle.ToggleButton;
+            this.btnAttachment.ToolTipText = "Zapne zobrazování příloh v panelu Přílohy (Ctrl+A)";
+            // 
+            // btnAuditLog
+            // 
+            this.btnAuditLog.ImageIndex = 3;
+            this.btnAuditLog.Name = "btnAuditLog";
+            this.btnAuditLog.ToolTipText = "Zobrazí historii změn aktuálního záznamu (Ctrl+H)";
+            // 
+            // btnExcel
+            // 
+            this.btnExcel.ImageIndex = 4;
+            this.btnExcel.Name = "btnExcel";
+            this.btnExcel.ToolTipText = "Zkopíruje data do Excelu (Ctrl+E)";
+            // 
+            // btnFilter
+            // 
+            this.btnFilter.DropDownMenu = this.filterMenu;
+            this.btnFilter.ImageIndex = 2;
+            this.btnFilter.Name = "btnFilter";
+            this.btnFilter.Style = System.Windows.Forms.ToolBarButtonStyle.DropDownButton;
+            this.btnFilter.ToolTipText = "Zapne/vypne filtr na aktuální seznam (Ctrl+F)";
+            // 
+            // filterMenu
+            // 
+            this.filterMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.mnuSetDefaultFilter,
+            this.mnuUnsetDefaultFilter,
+            this.menuItem2,
+            this.mnuFilterAdd,
+            this.mnuFilterDelete,
+            this.mnuFilterClear,
+            this.menuItem4});
+            this.filterMenu.Popup += new System.EventHandler(this.filterMenu_Popup);
+            this.filterMenu.Disposed += new System.EventHandler(this.filterMenu_Disposed);
+            // 
+            // mnuSetDefaultFilter
+            // 
+            this.mnuSetDefaultFilter.Enabled = false;
+            this.mnuSetDefaultFilter.Index = 0;
+            this.mnuSetDefaultFilter.Text = "&Nastavit aktuální filtr jako standardní";
+            this.mnuSetDefaultFilter.Click += new System.EventHandler(this.mnuSetDefaultFilter_Click);
+            // 
+            // mnuUnsetDefaultFilter
+            // 
+            this.mnuUnsetDefaultFilter.Index = 1;
+            this.mnuUnsetDefaultFilter.Text = "Z&rušit standardní filtr";
+            this.mnuUnsetDefaultFilter.Click += new System.EventHandler(this.mnuUnsetDefaultFilter_Click);
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 2;
+            this.menuItem2.Text = "-";
+            // 
+            // mnuFilterAdd
+            // 
+            this.mnuFilterAdd.Enabled = false;
+            this.mnuFilterAdd.Index = 3;
+            this.mnuFilterAdd.Text = "&Uložit aktuální filtr";
+            this.mnuFilterAdd.Click += new System.EventHandler(this.mnuFilterAdd_Click);
+            // 
+            // mnuFilterDelete
+            // 
+            this.mnuFilterDelete.Enabled = false;
+            this.mnuFilterDelete.Index = 4;
+            this.mnuFilterDelete.Text = "&Smazat";
+            this.mnuFilterDelete.Click += new System.EventHandler(this.mnuFilterDelete_Click);
+            // 
+            // mnuFilterClear
+            // 
+            this.mnuFilterClear.Enabled = false;
+            this.mnuFilterClear.Index = 5;
+            this.mnuFilterClear.Text = "&Zrušit filtr";
+            this.mnuFilterClear.Click += new System.EventHandler(this.mnuFilterClear_Click);
+            // 
+            // menuItem4
+            // 
+            this.menuItem4.Index = 6;
+            this.menuItem4.Text = "-";
+            // 
+            // pnlFilter
+            // 
+            this.pnlFilter.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlFilter.Location = new System.Drawing.Point(0, 24);
+            this.pnlFilter.Name = "pnlFilter";
+            this.pnlFilter.Query = null;
+            this.pnlFilter.Size = new System.Drawing.Size(552, 49);
+            this.pnlFilter.TabIndex = 2;
             this.pnlFilter.TabStop = false;
-			this.pnlFilter.Visible = false;
-			// 
-			// AsPanel
-			// 
-			this.AutoScroll = true;
-			this.BackColor = System.Drawing.Color.FloralWhite;
-			this.Controls.Add(this.pnlFilter);
-			this.Controls.Add(this.pnlDataControl);
-			this.Name = "AsPanel";
-			this.Size = new System.Drawing.Size(552, 160);
-			this.Load += new System.EventHandler(this.AsPanel_Load_1);
-			this.GotFocus += new System.EventHandler(this.AsPanel_GotFocus);
-			this.Enter += new System.EventHandler(this.AsPanel_Enter);
-			this.Paint += new System.Windows.Forms.PaintEventHandler(this.AsPanel_Paint);
-			this.pnlDataControl.ResumeLayout(false);
-			this.pnlButtonHolder.ResumeLayout(false);
-			this.ResumeLayout(false);
+            this.pnlFilter.Visible = false;
+            // 
+            // AsPanel
+            // 
+            this.AutoScroll = true;
+            this.BackColor = System.Drawing.Color.FloralWhite;
+            this.Controls.Add(this.pnlFilter);
+            this.Controls.Add(this.pnlDataControl);
+            this.Name = "AsPanel";
+            this.Size = new System.Drawing.Size(552, 160);
+            this.Load += new System.EventHandler(this.AsPanel_Load_1);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.AsPanel_Paint);
+            this.Enter += new System.EventHandler(this.AsPanel_Enter);
+            this.GotFocus += new System.EventHandler(this.AsPanel_GotFocus);
+            this.pnlDataControl.ResumeLayout(false);
+            this.pnlButtonHolder.ResumeLayout(false);
+            this.ResumeLayout(false);
 
 		}
 

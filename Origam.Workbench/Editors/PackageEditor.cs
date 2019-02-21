@@ -134,6 +134,7 @@ namespace Origam.Workbench.Editors
             this.lblVersionInfo = new System.Windows.Forms.Label();
             this.lblId = new System.Windows.Forms.Label();
             this.txtId = new System.Windows.Forms.TextBox();
+            this.toolBar1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabInfo.SuspendLayout();
             this.tabReferences.SuspendLayout();
@@ -193,6 +194,7 @@ namespace Origam.Workbench.Editors
             // 
             this.btnAddReference.ImageIndex = 0;
             this.btnAddReference.Name = "btnAddReference";
+            this.btnAddReference.Size = new System.Drawing.Size(104, 22);
             this.btnAddReference.Text = "Add Reference";
             this.btnAddReference.ToolTipText = "Add Reference";
             // 
@@ -200,6 +202,7 @@ namespace Origam.Workbench.Editors
             // 
             this.btnDelete.ImageIndex = 1;
             this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(125, 22);
             this.btnDelete.Text = "Remove Reference";
             this.btnDelete.ToolTipText = "Remove Reference";
             // 
@@ -207,9 +210,9 @@ namespace Origam.Workbench.Editors
             // 
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
-            this.imageList1.Images.SetKeyName(0, "");
-            this.imageList1.Images.SetKeyName(1, "");
-            this.imageList1.Images.SetKeyName(2, "");
+            this.imageList1.Images.SetKeyName(0, "add_black.png");
+            this.imageList1.Images.SetKeyName(1, "delete_black.png");
+            this.imageList1.Images.SetKeyName(2, "09_packages-1.ico");
             // 
             // mnuAddReference
             // 
@@ -294,9 +297,9 @@ namespace Origam.Workbench.Editors
             this.panel1.Controls.Add(this.ebrElements);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(232, 26);
+            this.panel1.Location = new System.Drawing.Point(232, 25);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(544, 380);
+            this.panel1.Size = new System.Drawing.Size(544, 381);
             this.panel1.TabIndex = 14;
             // 
             // ebrElements
@@ -309,7 +312,7 @@ namespace Origam.Workbench.Editors
             this.ebrElements.Name = "ebrElements";
             this.ebrElements.NodeUnderMouse = null;
             this.ebrElements.ShowFilter = false;
-            this.ebrElements.Size = new System.Drawing.Size(544, 364);
+            this.ebrElements.Size = new System.Drawing.Size(544, 365);
             this.ebrElements.TabIndex = 13;
             this.ebrElements.QueryFilterNode += new Origam.Workbench.FilterEventHandler(this.ebrElements_QueryFilterNode);
             // 
@@ -324,9 +327,9 @@ namespace Origam.Workbench.Editors
             // 
             // splitter1
             // 
-            this.splitter1.Location = new System.Drawing.Point(224, 26);
+            this.splitter1.Location = new System.Drawing.Point(224, 25);
             this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(8, 380);
+            this.splitter1.Size = new System.Drawing.Size(8, 381);
             this.splitter1.TabIndex = 13;
             this.splitter1.TabStop = false;
             // 
@@ -335,9 +338,9 @@ namespace Origam.Workbench.Editors
             this.panel2.Controls.Add(this.lvwReferences);
             this.panel2.Controls.Add(this.lblReferences);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel2.Location = new System.Drawing.Point(0, 26);
+            this.panel2.Location = new System.Drawing.Point(0, 25);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(224, 380);
+            this.panel2.Size = new System.Drawing.Size(224, 381);
             this.panel2.TabIndex = 15;
             // 
             // lvwReferences
@@ -348,7 +351,7 @@ namespace Origam.Workbench.Editors
             this.lvwReferences.FullRowSelect = true;
             this.lvwReferences.Location = new System.Drawing.Point(0, 16);
             this.lvwReferences.Name = "lvwReferences";
-            this.lvwReferences.Size = new System.Drawing.Size(224, 364);
+            this.lvwReferences.Size = new System.Drawing.Size(224, 365);
             this.lvwReferences.SmallImageList = this.imageList1;
             this.lvwReferences.TabIndex = 14;
             this.lvwReferences.UseCompatibleStateImageBehavior = false;
@@ -414,6 +417,8 @@ namespace Origam.Workbench.Editors
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "PackageEditor";
             this.Closing += new System.ComponentModel.CancelEventHandler(this.PackageEditor_Closing);
+            this.toolBar1.ResumeLayout(false);
+            this.toolBar1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabInfo.ResumeLayout(false);
             this.tabInfo.PerformLayout();
@@ -691,7 +696,7 @@ namespace Origam.Workbench.Editors
 						if(! found)
 						{
 							AsMenuCommand item = new AsMenuCommand(package.Name);
-							item.Image = Images.ExtensionBrowser;
+							item.Image = imageList1.Images[2];
 							item.Tag = package;
 							item.Click += new EventHandler(AddPackage_Click);
 							mnuAddReference.Items.Add(item);
