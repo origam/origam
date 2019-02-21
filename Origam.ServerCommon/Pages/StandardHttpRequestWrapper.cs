@@ -45,8 +45,17 @@ namespace Origam.ServerCommon.Pages
         public string BrowserVersion => clientInfo.UserAgent.Major+"."+ clientInfo.UserAgent.Minor;
         public string UserHostAddress => httpContext.Connection.RemoteIpAddress?.ToString();
         public string UserHostName => request.Host.Value;
-        public IEnumerable<string> UserLanguages =>
-            httpContext.Request.Headers[HeaderNames.AcceptLanguage].ToArray()?[0]?.Split(',') ?? new string[0];
+        public IEnumerable<string> UserLanguages
+        {
+            get
+            {
+                var languages = httpContext.Request.Headers[HeaderNames.AcceptLanguage].ToArray();
+                return languages.Length == 0 
+                    ? new string[0] 
+                    : languages[0].Split(',');
+            }
+        }
+
         public Encoding ContentEncoding => mediaTypeHeader?.Encoding;
         public long ContentLength => request.ContentLength ?? 0;
         public IDictionary BrowserCapabilities => new Dictionary<string,string>(); //
