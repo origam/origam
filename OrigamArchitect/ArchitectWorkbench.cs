@@ -890,16 +890,7 @@ namespace OrigamArchitect
 #if ORIGAM_CLIENT
 				new Commands.ViewProcessBrowserPad().Run();
 #else
-					new ViewDocumentationPad().Run();
-					new ViewOutputPad().Run();
-					new ViewLogPad().Run();
-                    new ViewServerLogPad().Run();
-
-					new ViewPropertyPad().Run();
-					new ViewSchemaBrowserPad().Run();
-					new ViewAttachmentPad().Run();
-					new Commands.ViewWorkflowWatchPad().Run();
-					new ViewExtensionPad().Run();
+				new ViewExtensionPad().Run();
 #endif
 				}
 			}
