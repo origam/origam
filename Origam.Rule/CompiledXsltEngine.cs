@@ -61,7 +61,7 @@ namespace Origam.Rule
             XslCompiledTransform xslt = engine as XslCompiledTransform;
             Mvp.Xml.Common.Xsl.XslReader xslReader = new Mvp.Xml.Common.Xsl.XslReader(xslt);
             xslReader.StartTransform(new Mvp.Xml.Common.Xsl.XmlInput(sourceXpathDoc), xslArg);
-            resultDoc.Xml.Load(xslReader);
+            resultDoc.Load(xslReader);
         }
 
         public override void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, XmlTextWriter xwr)

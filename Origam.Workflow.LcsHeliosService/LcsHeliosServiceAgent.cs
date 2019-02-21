@@ -57,9 +57,7 @@ namespace Origam.Workflow.LcsHeliosService
                 BrowseResponse response = request.Process(connector);
                 if (response.Data == null || response.Data.MainTable.Rows.Count == 0)
                 {
-                    IXmlContainer emptyXml = new XmlContainer();
-                    emptyXml.Xml.LoadXml("<ROOT/>");
-                    return emptyXml;
+                    return  new XmlContainer("<ROOT/>");
                 }
                 else
                 {

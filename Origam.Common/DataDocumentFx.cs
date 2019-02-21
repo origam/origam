@@ -31,9 +31,32 @@ namespace Origam
         public XmlDocument Xml => xmlDataDocument;
 
         public DataSet DataSet => xmlDataDocument.DataSet;
-        public void Load(XmlNodeReader xmlNodeReader)
+        public void AppendChild(XmlNodeType element, string prefix, string name)
         {
-            xmlDataDocument.Load(xmlNodeReader);
+            XmlNode node = xmlDataDocument.CreateNode(element, prefix, name);
+            xmlDataDocument.AppendChild(node);
+        }
+
+        public void AppendChild(XmlElement documentElement, bool deep)
+        {
+            XmlNode node = xmlDataDocument.ImportNode(documentElement, true);
+            xmlDataDocument.AppendChild(node);
+        }
+
+        public void DocumentElementAppendChild(XmlNode node)
+        {
+            XmlNode newNode = xmlDataDocument.ImportNode(node, true);
+            xmlDataDocument.DocumentElement.AppendChild(newNode);
+        }
+
+        public void Load(XmlReader xmlReader)
+        {
+            xmlDataDocument.Load(xmlReader);
+        }
+
+        public void LoadXml(string xmlString)
+        {
+            xmlDataDocument.LoadXml(xmlString);
         }
 
         public object Clone()

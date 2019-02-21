@@ -87,8 +87,7 @@ namespace Origam.BI
 
                 IXsltEngine transformer = AsTransform.GetXsltEngine(persistence.SchemaProvider, xslValueParam.transformationId);
 
-                IXmlContainer xmlData = new XmlContainer();
-                xmlData.Xml.LoadXml("<ROOT/>");
+                IXmlContainer xmlData = new XmlContainer("<ROOT/>");
 
                 if (traceTaskInfo != null)
                 {

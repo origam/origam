@@ -945,8 +945,7 @@ namespace Origam.Workbench.Editors
                     "DataTransformationService", 
                     new RuleEngine(new Hashtable(), null), null);
 
-				var doc = new XmlContainer();
-				doc.Xml.LoadXml(sourceXml);
+				var doc = new XmlContainer(sourceXml);
 
 				transformer.MethodName = "TransformText";
 				transformer.Parameters.Add("XslScript", xslt);
@@ -1317,12 +1316,7 @@ namespace Origam.Workbench.Editors
 			{
 				if (Type == OrigamDataType.Xml)
 				{
-					var xmlContainer = new XmlContainer();
-					if (!string.IsNullOrEmpty(Text))
-					{
-						xmlContainer.Xml.LoadXml(Text);
-					}
-					return xmlContainer;
+					return new XmlContainer(Text);
 				} else
 				{
 					Type systemType = DatasetGenerator.ConvertDataType(Type);
