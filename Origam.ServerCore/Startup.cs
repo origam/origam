@@ -80,16 +80,13 @@ namespace Origam.ServerCore
                 IsRestrictedUserApiRoute,
                 apiBranch => {
                     apiBranch.UseAuthentication();
+                    apiBranch.UseMiddleware<SetCurrentPrincipalMiddleWare>();
                     apiBranch.UseResponseBuffering();
                     apiBranch.UseMiddleware<UserApiMiddleWare>();
                 });
             app.UseAuthentication();
             app.UseHttpsRedirection();
-            app.Use((context, next) =>
-            {
-                Thread.CurrentPrincipal =  context.User;               
-                return next();
-            });
+            app.UseMiddleware<SetCurrentPrincipalMiddleWare>();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseMvc();

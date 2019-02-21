@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System.Net.Mime;
+using System.Xml;
 
 namespace Origam
 {
@@ -14,11 +15,25 @@ namespace Origam
             Xml = xmlDocument;
         }
 
+        public XmlContainer(string xmlString)
+        {
+            Xml = new XmlDocument();
+            if (!string.IsNullOrEmpty(xmlString))
+            {
+                Xml.LoadXml(xmlString);
+            }
+        }
+
         public XmlDocument Xml { get; }
 
-        public void Load(XmlNodeReader xmlNodeReader)
+        public void Load(XmlReader xmlReader)
         {
-            Xml.Load(xmlNodeReader);
+            Xml.Load(xmlReader);
+        }
+
+        public void LoadXml(string xmlString)
+        {
+            Xml.LoadXml(xmlString);
         }
 
         public object Clone()

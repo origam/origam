@@ -27,11 +27,13 @@ namespace Origam.ServerCommon.Pages
 
             clientInfo = GetClientInfo();
             Params = GetParameters();
-            mediaTypeHeader = new MediaTypeHeaderValue(request.ContentType);
+            mediaTypeHeader = request.ContentType != null 
+                ? new MediaTypeHeaderValue(request.ContentType) 
+                : null;
         }
 
         public string AppRelativeCurrentExecutionFilePath => request.Path.ToUriComponent();
-        public string ContentType => mediaTypeHeader.MediaType.Value;
+        public string ContentType => mediaTypeHeader?.MediaType.Value;
         public string AbsoluteUri => Url;
         public Stream InputStream => request.Body;
         public string HttpMethod => request.Method;
@@ -43,14 +45,23 @@ namespace Origam.ServerCommon.Pages
         public string BrowserVersion => clientInfo.UserAgent.Major+"."+ clientInfo.UserAgent.Minor;
         public string UserHostAddress => httpContext.Connection.RemoteIpAddress?.ToString();
         public string UserHostName => request.Host.Value;
-        public IEnumerable<string> UserLanguages =>
-            httpContext.Request.Headers[HeaderNames.AcceptLanguage].ToArray()?[0]?.Split(',') ?? new string[0];
-        public Encoding ContentEncoding => mediaTypeHeader.Encoding;
+        public IEnumerable<string> UserLanguages
+        {
+            get
+            {
+                var languages = httpContext.Request.Headers[HeaderNames.AcceptLanguage].ToArray();
+                return languages.Length == 0 
+                    ? new string[0] 
+                    : languages[0].Split(',');
+            }
+        }
+
+        public Encoding ContentEncoding => mediaTypeHeader?.Encoding;
         public long ContentLength => request.ContentLength ?? 0;
         public IDictionary BrowserCapabilities => new Dictionary<string,string>(); //
 
         public string UrlReferrerAbsolutePath => headerDictionary[HeaderNames.Referer];
-        public Dictionary<string, string> Params { get; }
+        public Parameters Params { get; }
 
         public PostedFile FilesGet(string name)
         {
@@ -70,7 +81,7 @@ namespace Origam.ServerCommon.Pages
             return uaParser.Parse(httpContext.Request.Headers[HeaderNames.UserAgent]);
         }
 
-        private Dictionary<string, string> GetParameters()
+        private Parameters GetParameters()
         {
             var parameters = request.Query.Keys
                 .ToDictionary(
@@ -82,11 +93,15 @@ namespace Origam.ServerCommon.Pages
                 parameters.Add(keyValuePair.Key, keyValuePair.Value);
             }
 
-            foreach (var keyValuePair in request.Form)
+            if (request.ContentType != null)
             {
-                parameters.Add(keyValuePair.Key, keyValuePair.Value);
+                foreach (var keyValuePair in request.Form)
+                {
+                    parameters.Add(keyValuePair.Key, keyValuePair.Value);
+                }
             }
-            return parameters;
+
+            return new Parameters(parameters);
         }
     }
 }

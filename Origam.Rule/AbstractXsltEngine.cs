@@ -228,8 +228,7 @@ namespace Origam.Rule
             }
             else
             {
-                IXmlContainer oldXslt = new XmlContainer();
-                oldXslt.Xml.LoadXml(xsl);
+                IXmlContainer oldXslt = new XmlContainer(xsl);
                 IXmlContainer newXslt = Transform(oldXslt, retransformTemplateId, retransformationParameters, ruleEngine, null, false);
                 return GetTransform(newXslt);
             }

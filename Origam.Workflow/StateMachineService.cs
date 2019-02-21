@@ -115,6 +115,7 @@ namespace Origam.Workflow
                     // state has existed already, so we list all possible dynamic states
 
                     IXmlContainer dynData = data.Clone() as IXmlContainer;
+                    if (dynData is DataDocumentCore) throw new NotImplementedException("Cannot write to Xml property of DataDocumentCore");
                     if (sm.Field.XmlMappingType == EntityColumnXmlMapping.Attribute)
                     {
                         ((XmlElement)dynData.Xml.FirstChild).SetAttribute(sm.Field.Name, XmlTools.ConvertToString(currentStateValue));

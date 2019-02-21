@@ -79,9 +79,8 @@ namespace Origam.Rule
             {
 				bool oldEnforceConstraints = dataDocument.DataSet.EnforceConstraints;
                 dataDocument.DataSet.EnforceConstraints = false;
-                XmlNode doc = data.Xml.CreateNode(XmlNodeType.Element,
+                dataDocument.AppendChild(XmlNodeType.Element,
                     dataDocument.DataSet.DataSetName, "");
-                dataDocument.Xml.AppendChild(doc);
                 dataDocument.DataSet.EnforceConstraints = oldEnforceConstraints;
             }
 

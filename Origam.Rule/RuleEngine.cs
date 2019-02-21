@@ -4040,9 +4040,7 @@ namespace Origam.Rule
 				}
 				else if(data == null)
 				{
-					doc = new XmlContainer();
-					doc.Xml.LoadXml("<ROOT/>");
-					return doc;
+					return  new XmlContainer("<ROOT/>");
 				}
 				else if (data is ArrayList)
 				{

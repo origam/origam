@@ -116,6 +116,7 @@ namespace Origam.Server.Doc
             Dictionary<string, List<PageParameterMapping>> mappings = new Dictionary<string, List<PageParameterMapping>>();
             foreach (PageParameterMapping inputParameter in page.ChildItemsByType(PageParameterMapping.ItemTypeConst))
             {
+                if (inputParameter.MappedParameter == null) continue;
                 if (!mappings.ContainsKey(inputParameter.MappedParameter))
                 {
                     mappings.Add(inputParameter.MappedParameter, new List<PageParameterMapping>());

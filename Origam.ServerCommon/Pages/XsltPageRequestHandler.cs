@@ -89,8 +89,7 @@ namespace Origam.ServerCommon.Pages
             if (xsltPage.DataStructure == null)
             {
                 // no data source
-                xmlData = new XmlContainer();
-                xmlData.Xml.LoadXml("<ROOT/>");
+                xmlData = new XmlContainer("<ROOT/>");
             }
             else
             {

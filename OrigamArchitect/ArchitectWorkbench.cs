@@ -1935,7 +1935,6 @@ namespace OrigamArchitect
             _documentationPad = CreatePad<DocumentationPad>();
             _findSchemaItemResultsPad = CreatePad<FindSchemaItemResultsPad>();
             _findRulesPad = CreatePad<FindRulesPad>();
-            _documentationPad = CreatePad<DocumentationPad>();
 #endif
 
             _workflowPad = CreatePad<WorkflowPlayerPad>();

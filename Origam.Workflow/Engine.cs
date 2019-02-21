@@ -1126,11 +1126,9 @@ namespace Origam.Workflow
 										previousEnforceConstraints = resultXmDatalDocument.DataSet.EnforceConstraints;
 										resultXmDatalDocument.DataSet.EnforceConstraints = false;
 									}
+									resultXmDatalDocument.AppendChild(((IXmlContainer)inputContext).Xml.DocumentElement, true);
 
-									XmlNode newDoc = resultXmDatalDocument.Xml.ImportNode(((IXmlContainer)inputContext).Xml.DocumentElement, true);
-									resultXmDatalDocument.Xml.AppendChild(newDoc);
-
-									if (resultXmDatalDocument != null)
+                                    if (resultXmDatalDocument != null)
 									{
 										try {
 											resultXmDatalDocument.DataSet.EnforceConstraints = previousEnforceConstraints;
@@ -1150,12 +1148,11 @@ namespace Origam.Workflow
 							else
 							{
 								// otherwise copy each sub node
-								foreach(XmlNode node in ((inputContext as IDataDocument).Xml.DocumentElement as XmlNode).ChildNodes)
+								foreach(XmlNode node in (inputContext as IDataDocument).Xml.DocumentElement.ChildNodes)
 								{
 									if(!(node is XmlDeclaration))
 									{
-										XmlNode newNode = ((IDataDocument)resultContext).Xml.ImportNode(node, true);
-										((IDataDocument)resultContext).Xml.DocumentElement.AppendChild(newNode);
+										((IDataDocument)resultContext).DocumentElementAppendChild(node);
 									}
 								}
 							}
@@ -1182,7 +1179,7 @@ namespace Origam.Workflow
 
 					if(resultXml != null & inputString != null)
 					{
-						resultXml.Xml.LoadXml(inputString);
+						resultXml.LoadXml(inputString);
 
 						if(xmlDataDoc != null)
 						{
@@ -1326,6 +1323,7 @@ namespace Origam.Workflow
 				StringWriter swr = new StringWriter(b);
 				XmlTextWriter xwr = new XmlTextWriter(swr);
 				xwr.Formatting = Formatting.Indented;
+			    if (context is DataDocumentCore) throw new NotImplementedException("Cannot write to Xml property of DataDocumentCore");
 				(context as IXmlContainer).Xml.WriteTo(xwr);
 				xwr.Close();
 				swr.Close();
