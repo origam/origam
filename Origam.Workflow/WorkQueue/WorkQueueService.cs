@@ -1720,8 +1720,7 @@ namespace Origam.Workflow.WorkQueue
                     string creationCondition = (q.IsCreationConditionNull() 
                         ? null : q.CreationCondition);
                     // put it to the queue
-                    using(TransactionScope scope = new TransactionScope(
-                        TransactionScopeOption.Suppress))
+                    using(new TransactionScope(TransactionScopeOption.Suppress))
                     {
                         Guid qId = WorkQueueAdd(
                             q.WorkQueueClass, q.Name, q.Id, creationCondition, 
