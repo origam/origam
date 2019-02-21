@@ -33,15 +33,12 @@ namespace Origam.Workbench.Services
 {
     public class ControlsLookUpService: IControlsLookUpService
     {
-        public event EventHandler LookupShowSourceListRequested;
-        public event EventHandler LookupEditSourceRecordRequested;
-
         private Hashtable _controls = new Hashtable();
         private readonly DataLookupService dataLookupService;
 
-        public ControlsLookUpService(DataLookupService dataLookupService)
+        public ControlsLookUpService()
         {
-            this.dataLookupService = dataLookupService;
+            this.dataLookupService = ServiceManager.Services.GetService<DataLookupService>();
         }
 
         public void InitializeService()
@@ -143,12 +140,16 @@ namespace Origam.Workbench.Services
 
         protected virtual void OnLookupShowSourceListRequested(AbstractMenuItem menuItem, EventArgs e)
         {
-            LookupShowSourceListRequested?.Invoke(menuItem, e);
+            OrigamArchitect.Commands.ExecuteSchemaItem cmd = new OrigamArchitect.Commands.ExecuteSchemaItem();
+            cmd.Owner = menuItem;
+            cmd.Run();
         }
 
         protected virtual void OnLookupEditSourceRecordRequested(AbstractMenuItem menuItem, ParameterizedEventArgs e)
         {
-            LookupEditSourceRecordRequested?.Invoke(menuItem, e);
+            ParameterizedEventArgs args = e as ParameterizedEventArgs;
+            if (args == null) return;
+            WorkbenchSingleton.Workbench.ProcessGuiLink(args.SourceForm, menuItem, args.Parameters);
         }
 
         private bool HasEditListMenuBinding(AbstractDataLookup lookup)

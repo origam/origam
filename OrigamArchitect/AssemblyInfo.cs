@@ -30,9 +30,6 @@ using System.Windows.Media;
 #if ORIGAM_CLIENT
 [assembly: AssemblyTitle("ORIGAM Client")]
 [assembly: AssemblyDescription("ORIGAM Client Application")]
-#elif ARCHITECT_EXPRESS
-[assembly: AssemblyTitle("ORIGAM Architect - BI Edition")]
-[assembly: AssemblyDescription("Business Solutions Architect - Business Inteligence Edition")]
 #else
 [assembly: AssemblyTitle("ORIGAM Architect")]
 [assembly: AssemblyDescription("Enterprise software development and prototyping platform")]

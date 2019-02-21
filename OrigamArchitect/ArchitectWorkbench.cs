@@ -106,11 +106,9 @@ namespace OrigamArchitect
 		AttachmentPad _attachmentPad;
 		AuditLogPad _auditLogPad;
 #else
-#if ! ARCHITECT_EXPRESS
 		WorkflowWatchPad _workflowWatchPad;
 		AttachmentPad _attachmentPad;
 		AuditLogPad _auditLogPad;
-#endif
 		DocumentationPad _documentationPad;
 		FindSchemaItemResultsPad _findSchemaItemResultsPad;
         FindRulesPad _findRulesPad;
@@ -737,9 +735,7 @@ namespace OrigamArchitect
 			CreateMenuItem(strings.Log_MenuItem, new ViewLogPad(), _logPad.Icon.ToBitmap(), Keys.None, _viewMenu);
             CreateMenuItem(strings.ServerLog_MenuItem, new ViewServerLogPad(), _serverLogPad.Icon.ToBitmap(), Keys.None, _viewMenu);
             CreateMenuItem(strings.ModelBrowser_MenuItem, new ViewSchemaBrowserPad(), _schemaBrowserPad.Icon.ToBitmap(), Keys.F3, _viewMenu);
-#if ! ARCHITECT_EXPRESS
 			CreateMenuItem(strings.WorkQueue_MenuItem, new Commands.ViewWorkQueuePad(), null, Keys.None, _viewMenu);
-#endif
 #endif
 		}
 
@@ -750,9 +746,7 @@ namespace OrigamArchitect
 			CreateMenuItem(strings.AuditLog_MenuItem, new ViewAuditLogPad(), Images.History, Keys.None, _viewMenu);
 #else
             CreateMenuItem(strings.PackageBrowser_MenuItem, new ViewExtensionPad(), _extensionPad.Icon.ToBitmap(), Keys.None, _viewMenu);
-#if ! ARCHITECT_EXPRESS
 			CreateMenuItem(strings.WorkflowWatch_MenuItem, new Commands.ViewWorkflowWatchPad(), _workflowWatchPad.Icon.ToBitmap(), Keys.None, _viewMenu);
-#endif
 			CreateMenuItem(strings.Documentation_MenuItem, new ViewDocumentationPad(), _documentationPad.Icon.ToBitmap(), Keys.None, _viewMenu);
 			CreateMenuItem(strings.FindSchemaItemResults_MenuItem, new ViewFindSchemaItemResultsPad(), _findSchemaItemResultsPad.Icon.ToBitmap(), Keys.None, _viewMenu);
 #endif
@@ -771,10 +765,8 @@ namespace OrigamArchitect
 				
 			AsMenuCommand mnuEditSchemaItem = CreateMenuItem(strings.EditItem_MenuItem, new EditActiveSchemaItem(), Images.Edit, Keys.None, _schemaMenu);
 			AsMenuCommand mnuDelete = CreateMenuItem(strings.Delete_MenuItem, new DeleteActiveNode(), Images.Delete, Keys.None, _schemaMenu);
-#if ! ARCHITECT_EXPRESS
 			CreateMenuItem(strings.Execute_MenuItem, new Commands.ExecuteActiveSchemaItem(), Images.Preview, Keys.Control | Keys.X, _schemaMenu);
 			CreateMenuItem(strings.EditInDiagram_MenuItem, new EditDiagramActiveSchemaItem(), Images.Culture, Keys.None, _schemaMenu);
-#endif
 			_schemaMenu.SubItems.Add(CreateSeparator());	
 	
 			CreateMenuItem(strings.FindDependencies_MenuItem, new ShowDependencies(), Images.Search, Keys.None, _schemaMenu);
@@ -790,15 +782,9 @@ namespace OrigamArchitect
             CreateMenuItem(strings.ShowWebApplication_MenuItem, new Commands.ShowWebApplication(), null, Keys.None, _toolsMenu);
             CreateMenuItem(strings.GenerateGUID_MenuItem, new Commands.GenerateGuid(), null, Keys.Control | Keys.Shift | Keys.G, _toolsMenu);
 			CreateMenuItem(strings.DumpWindowXML_MenuItem, new Commands.DumpWindowXml(), null, Keys.None, _toolsMenu);
-#if ! ARCHITECT_EXPRESS
 			CreateMenuItem(strings.ShowTrace_MenuItem, new Commands.ShowTrace(), null, Keys.Control | Keys.T, _toolsMenu);
 			CreateMenuItem(strings.ResetUserCache_MenuItem, new Commands.ResetUserCaches(), null, Keys.None, _toolsMenu);
-#endif
 			CreateMenuItem(strings.RebuildLocalizationFiles_MenuItem, new Commands.GenerateLocalizationFile(), null, Keys.None, _toolsMenu);
-#if DEBUG && ! ARCHITECT_EXPRESS
-			CreateMenuItem(strings.BuildDataModelDocumentation_MenuItem, new Commands.CreateDataModelDocumentationCommand(), null, Keys.None, _toolsMenu);
-			CreateMenuItem(strings.GenerateReflectorCacheMethods_MenuItem, new Commands.GenerateReflectorCacheMethods(), null, Keys.None, _toolsMenu);
-#endif
             CreateMenuItem("Convert to File Storage", new Commands.ConvertModelToFileStorage(), null, Keys.None, _toolsMenu);
 			CreateMenuItem("Compare to Original DB data", new Commands.CompareToOriginalDBData(), null, Keys.None, _toolsMenu);
         }
@@ -904,18 +890,7 @@ namespace OrigamArchitect
 #if ORIGAM_CLIENT
 				new Commands.ViewProcessBrowserPad().Run();
 #else
-					new ViewDocumentationPad().Run();
-					new ViewOutputPad().Run();
-					new ViewLogPad().Run();
-                    new ViewServerLogPad().Run();
-
-					new ViewPropertyPad().Run();
-					new ViewSchemaBrowserPad().Run();
-#if ! ARCHITECT_EXPRESS
-					new ViewAttachmentPad().Run();
-					new Commands.ViewWorkflowWatchPad().Run();
-#endif
-					new ViewExtensionPad().Run();
+				new ViewExtensionPad().Run();
 #endif
 				}
 			}
@@ -1525,8 +1500,7 @@ namespace OrigamArchitect
 
 				// Initialize model-connected user interface
 				InitializeConnectedPads();
-
-				CreateMainMenuConnect();
+                CreateMainMenuConnect();
 				IsConnected = true;
 #if !ORIGAM_CLIENT
                 DoModelChecksAsync();
@@ -1702,21 +1676,18 @@ namespace OrigamArchitect
 			_findSchemaItemResultsPad?.ResetResults();
 			_documentationPad?.ClearDocumentation();
 #endif
-
-#if ! ARCHITECT_EXPRESS
 			_auditLogPad?.ClearList();
-#endif
 			return true;
 		}
 
-		public bool Disconnect()
+        public bool Disconnect()
 		{
 			if(IsConnected == false) return true;
-			SaveWorkspace();
-			if(! _schema.Disconnect()) return false;
+            SaveWorkspace();
+            if (! _schema.Disconnect()) return false;
 
 			UnloadConnectedServices();
-			UnloadConnectedPads();
+            UnloadConnectedPads();
 			UnloadMainMenu();
 
 			IsConnected = false;
@@ -1729,7 +1700,14 @@ namespace OrigamArchitect
             return true;
 		}
 
-		private void SaveWorkspace()
+        private void UnloadConnectedPads()
+        {
+            GetPad<AuditLogPad>().ClearList();
+            GetPad<ExtensionPad>().UnloadPackages();
+            GetPad<FindSchemaItemResultsPad>().Clear();
+        }
+
+        private void SaveWorkspace()
 		{
 			try
 			{
@@ -1795,8 +1773,7 @@ namespace OrigamArchitect
 				ServiceManager.Services.GetService<IControlsLookUpService>();
 			if (controlsLookupService != null)
 			{
-				controlsLookupService.LookupShowSourceListRequested -=
-					dataLookupService_LookupShowSourceListRequested;
+                ServiceManager.Services.UnloadService(controlsLookupService);
 			}
 
 		    var persistenceService =
@@ -1928,6 +1905,12 @@ namespace OrigamArchitect
 
 		private void InitializeDefaultPads()
 		{
+            // this will not be used in the Client, but we need to have an instance, because icons are taken from it
+            _extensionPad = CreatePad<ExtensionPad>();
+            _attachmentPad = CreatePad<AttachmentPad>();
+            _auditLogPad = CreatePad<AuditLogPad>();
+            _schema.SchemaListBrowser = _extensionPad;
+
 #if ORIGAM_CLIENT
 			_schemaBrowserPad = new SchemaBrowser();
 
@@ -1940,88 +1923,34 @@ namespace OrigamArchitect
 				this.PadContentCollection.Add(_outputPad);
 			}
 #else
-			
-			_schemaBrowserPad = new SchemaBrowser();
-			this.PadContentCollection.Add(_schemaBrowserPad);
 
-#if ! ARCHITECT_EXPRESS
-			_workflowWatchPad = new WorkflowWatchPad();
-			this.PadContentCollection.Add(_workflowWatchPad);
-#endif
-			_propertyPad = new PropertyPad();
-			this.PadContentCollection.Add(_propertyPad);
-
-			_outputPad = new OutputPad();
-			this.PadContentCollection.Add(_outputPad);
-
-			_logPad = new LogPad();
-			this.PadContentCollection.Add(_logPad);
+            _schemaBrowserPad = CreatePad<SchemaBrowser>();
+            _workflowWatchPad = CreatePad<WorkflowWatchPad>();
+            _propertyPad = CreatePad<PropertyPad>();
+            _logPad = CreatePad<LogPad>();
+            _outputPad = CreatePad<OutputPad>();
+            _documentationPad = CreatePad<DocumentationPad>();
+            _findSchemaItemResultsPad = CreatePad<FindSchemaItemResultsPad>();
+            _findRulesPad = CreatePad<FindRulesPad>();
+            _documentationPad = CreatePad<DocumentationPad>();
 #endif
 
-			_workflowPad = new WorkflowPlayerPad();
-			this.PadContentCollection.Add(_workflowPad);
-            _serverLogPad = new ServerLogPad();
-            AddPad(_serverLogPad);
-
-#if !ARCHITECT_EXPRESS
-            this.PadContentCollection.Add(new WorkQueuePad());
-#endif
-		}
-
-		private void UnloadConnectedPads()
-		{
-#if ORIGAM_CLIENT
-#else
-			this.PadContentCollection.Remove(_documentationPad);
-			_documentationPad = null;
-	
-			this.PadContentCollection.Remove(_findSchemaItemResultsPad);
-			_findSchemaItemResultsPad = null;
-            this.PadContentCollection.Remove(_findRulesPad);
-            _findRulesPad = null;
-#endif
-#if !ARCHITECT_EXPRESS
-            this.PadContentCollection.Remove(_auditLogPad);
-			_auditLogPad = null;
-
-			this.PadContentCollection.Remove(_attachmentPad);
-			_attachmentPad = null;
-#endif
-			this.PadContentCollection.Remove(_extensionPad);
-			_extensionPad = null;
+            _workflowPad = CreatePad<WorkflowPlayerPad>();
+            _serverLogPad = CreatePad<ServerLogPad>();
+            CreatePad<WorkQueuePad>();
 		}
 
 		private void InitializeConnectedPads()
 		{
-			// this will not be used in the Client, but we need to have an instance, because icons are taken from it
-			_extensionPad = new ExtensionPad();
-			_schema.SchemaListBrowser = _extensionPad;
-            AddPad(_extensionPad);
-
-#if ORIGAM_CLIENT
-			_attachmentPad = new AttachmentPad();
-			_auditLogPad = new AuditLogPad();
-            AddPad(_attachmentPad);
-            AddPad(_auditLogPad);
-#else
-#if ! ARCHITECT_EXPRESS
-			_attachmentPad = new AttachmentPad();
-            AddPad(_attachmentPad);
-			_auditLogPad = new AuditLogPad();
-            AddPad(_auditLogPad);
-#endif
-			_documentationPad = new DocumentationPad();
-            AddPad(_documentationPad);
-			_findSchemaItemResultsPad = new FindSchemaItemResultsPad();
-            AddPad(_findSchemaItemResultsPad);
-            _findRulesPad = new FindRulesPad();
-            AddPad(_findRulesPad);
+#if !ORIGAM_CLIENT
+            GetPad<ExtensionPad>()?.LoadPackages();
 #endif
         }
-
-        private void AddPad(IPadContent pad)
+        private T CreatePad<T>()
         {
-            this.PadContentCollection.Add(pad);
+            var pad = Activator.CreateInstance<T>();
+            PadContentCollection.Add((IPadContent)pad);
+            return pad;
         }
 
 		/// <summary>
@@ -2029,19 +1958,13 @@ namespace OrigamArchitect
 		/// </summary>
 		private void InitializeConnectedServices()
 		{
-			ServiceManager.Services.AddService(new Origam.Workbench.Services.ServiceAgentFactory());
-			ServiceManager.Services.AddService(new Origam.Workflow.StateMachineService());
+			ServiceManager.Services.AddService(new ServiceAgentFactory());
+			ServiceManager.Services.AddService(new StateMachineService());
 			ServiceManager.Services.AddService(OrigamEngine.CreateDocumentationService());
 			ServiceManager.Services.AddService(new TracingService());
-			
-			DataLookupService dataLookupService = new DataLookupService();
-		    ControlsLookUpService controlsLookUpService = new ControlsLookUpService(dataLookupService);
-		    ServiceManager.Services.AddService(controlsLookUpService);
-
-            ServiceManager.Services.AddService(dataLookupService);
-		    controlsLookUpService.LookupShowSourceListRequested += dataLookupService_LookupShowSourceListRequested;
-		    controlsLookUpService.LookupEditSourceRecordRequested += dataLookupService_LookupEditSourceRecordRequested;
-			ServiceManager.Services.AddService(new DeploymentService());
+            ServiceManager.Services.AddService(new DataLookupService());
+            ServiceManager.Services.AddService(new ControlsLookUpService());
+            ServiceManager.Services.AddService(new DeploymentService());
 			ServiceManager.Services.AddService(new ParameterService());
 			ServiceManager.Services.AddService(new Origam.Workflow.WorkQueue.WorkQueueService());
 			ServiceManager.Services.AddService(new AttachmentService());
@@ -2287,8 +2210,6 @@ namespace OrigamArchitect
         {
 #if ORIGAM_CLIENT
 			Title = "";
-#elif ARCHITECT_EXPRESS
-			Title = $"{strings.OrigamArchitect_Title} Online";       
 #else
             Title = strings.OrigamArchitect_Title;
 #endif
@@ -2320,7 +2241,6 @@ namespace OrigamArchitect
 
 		private void AttachmentDocument_ParentIdChanged(object sender, Guid mainEntityId, Guid mainRecordId, Hashtable childReferences)
 		{
-#if ! ARCHITECT_EXPRESS
 			try
 			{
 				_attachmentPad?.GetAttachments(mainEntityId, mainRecordId, childReferences);
@@ -2328,15 +2248,8 @@ namespace OrigamArchitect
 			catch
 			{
 			}
-#endif
 		}
 
-		private void dataLookupService_LookupShowSourceListRequested(object sender, EventArgs e)
-		{
-			OrigamArchitect.Commands.ExecuteSchemaItem cmd = new OrigamArchitect.Commands.ExecuteSchemaItem();
-			cmd.Owner = sender;
-			cmd.Run();
-		}
 
 		public void ProcessGuiLink(IOrigamForm sourceForm, object linkTarget, Hashtable parameters)
 		{
@@ -2372,14 +2285,6 @@ namespace OrigamArchitect
 			cmd.Owner = targetMenuItem;
 
 			cmd.Run();
-		}
-
-		private void dataLookupService_LookupEditSourceRecordRequested(object sender, EventArgs e)
-		{
-			ParameterizedEventArgs args = e as ParameterizedEventArgs;
-			if(args == null) return;
-
-			ProcessGuiLink(args.SourceForm, sender as AbstractMenuItem, args.Parameters);
 		}
 
 		public void ExitWorkbench()

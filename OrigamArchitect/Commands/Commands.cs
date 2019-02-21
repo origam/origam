@@ -1925,33 +1925,4 @@ namespace OrigamArchitect.Commands
             WorkbenchSingleton.Workbench.ShowView(viewer);
         }
     }
-
-	#if DEBUG
-	/// <summary>
-	/// Generates Reflector cache methods
-	/// </summary>
-	public class GenerateReflectorCacheMethods : AbstractMenuCommand
-	{
-		public override bool IsEnabled
-		{
-			get
-			{
-				return true;
-			}
-			set
-			{
-				base.IsEnabled = value;
-			}
-		}
-
-		public override void Run()
-		{
-			OutputPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(OutputPad)) as OutputPad;
-
-			pad.SetOutputText(Reflector.GenerateReflectorCacheMethods());
-
-			if(pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
-		}		
-	}
-#endif
 }

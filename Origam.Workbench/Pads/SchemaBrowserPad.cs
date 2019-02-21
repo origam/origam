@@ -39,9 +39,15 @@ namespace Origam.Workbench
 		{
 			InitializeComponent();
 			schemaService.SchemaLoaded += _schemaService_SchemaLoaded;
+            schemaService.SchemaUnloaded += SchemaService_SchemaUnloaded;
 		}
 
-		protected override void Dispose( bool disposing )
+        private void SchemaService_SchemaUnloaded(object sender, EventArgs e)
+        {
+            EbrSchemaBrowser.RemoveAllNodes();
+        }
+
+        protected override void Dispose( bool disposing )
 		{
 			if( disposing )
 			{

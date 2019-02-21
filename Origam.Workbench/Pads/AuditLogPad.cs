@@ -165,11 +165,7 @@ namespace Origam.Workbench.Pads
 
 
 		private System.Windows.Forms.DataGrid dataGrid1;
-		private IServiceAgent _dataServiceAgent;
-		private SchemaService _schemaService = ServiceManager.Services.GetService(typeof(Services.SchemaService)) as Services.SchemaService;
-		
 		private bool _supportLog = true;
-
 		private DataAuditLog _dataset;
 		private ActionTypeColumn col0;
 		private OtherTextColumn col1;
@@ -182,9 +178,6 @@ namespace Origam.Workbench.Pads
 		public AuditLogPad()
 		{
 			InitializeComponent();
-			
-			IBusinessServicesService services = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-			_dataServiceAgent = services.GetAgent("DataService", null, null);
 		}
 
 		#region Windows Form Designer generated code
@@ -419,8 +412,7 @@ namespace Origam.Workbench.Pads
 			this.ParentId = mainRecordId;
 			this.ParentEntityId = mainEntityId;
 			this.ChildReferences = childReferences;
-
-			if( _dataServiceAgent !=null ) GetLog();
+			GetLog();
 		}
 
 		public void GetLog()
@@ -465,20 +457,13 @@ namespace Origam.Workbench.Pads
 				{
 					_childReferences.Clear();
 				}
-
-				_dataServiceAgent = null;
-			
 				if(_dataset != null)
 				{
 					_dataset.Dispose();
 					_dataset = null;
 				}
-
-				_schemaService = null;
 			}
-
 			base.Dispose (disposing);
 		}
 	}
 }
-

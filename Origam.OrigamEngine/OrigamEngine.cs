@@ -136,8 +136,6 @@ namespace Origam.OrigamEngine
             IWorkbenchService attachment = ServiceManager.Services.GetService(typeof(IAttachmentService));
             IWorkbenchService ruleEngine = ServiceManager.Services.GetService(typeof(IRuleEngineService));
             IWorkbenchService workQueue = ServiceManager.Services.GetService(typeof(IWorkQueueService));
-            Origam.Workflow.DataServiceAgent dataServiceAgent = serviceAgent?.GetAgent("DataService", null, null) as Origam.Workflow.DataServiceAgent;
-            dataServiceAgent?.DisconnectDataService();
             ServiceManager.Services.UnloadService(stateMachine);
             ServiceManager.Services.UnloadService(parameter);
             ServiceManager.Services.UnloadService(deployment);
@@ -149,6 +147,7 @@ namespace Origam.OrigamEngine
             ServiceManager.Services.UnloadService(attachment);
             ServiceManager.Services.UnloadService(ruleEngine);
             ServiceManager.Services.UnloadService(workQueue);
+            Workbench.Services.CoreServices.DataService.ClearDataService();
         }
 
 		public static void ConnectRuntime(

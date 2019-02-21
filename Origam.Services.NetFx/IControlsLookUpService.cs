@@ -27,8 +27,6 @@ namespace Origam.Workbench.Services
 {
     public interface IControlsLookUpService: IWorkbenchService
     {
-        event EventHandler LookupShowSourceListRequested;
-
         void AddLookupControl(ILookupControl lookupControl, Form form, bool showEditCommand);
         void RemoveLookupControl(ILookupControl lookupControl);
         void RemoveLookupControlsByForm(Form form);
