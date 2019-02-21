@@ -46,14 +46,11 @@ namespace Origam.Workflow
 	public class DataServiceAgent : AbstractServiceAgent
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-		private static IDataService _dataService = null;
+		private IDataService _dataService = null;
 
 		public DataServiceAgent()
 		{
-			if(_dataService == null)
-			{
-                _dataService = core.DataService.GetDataService();
-			}
+            _dataService = core.DataService.GetDataService();
 		}
 
 		public IDataService DataService

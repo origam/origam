@@ -147,6 +147,7 @@ namespace Origam.OrigamEngine
             ServiceManager.Services.UnloadService(attachment);
             ServiceManager.Services.UnloadService(ruleEngine);
             ServiceManager.Services.UnloadService(workQueue);
+            Workbench.Services.CoreServices.DataService.ClearDataService();
         }
 
 		public static void ConnectRuntime(

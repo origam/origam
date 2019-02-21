@@ -1782,8 +1782,7 @@ namespace OrigamArchitect
 				ServiceManager.Services.GetService<IControlsLookUpService>();
 			if (controlsLookupService != null)
 			{
-				controlsLookupService.LookupShowSourceListRequested -=
-					dataLookupService_LookupShowSourceListRequested;
+                ServiceManager.Services.UnloadService(controlsLookupService);
 			}
 
 		    var persistenceService =
@@ -1968,19 +1967,13 @@ namespace OrigamArchitect
 		/// </summary>
 		private void InitializeConnectedServices()
 		{
-			ServiceManager.Services.AddService(new Origam.Workbench.Services.ServiceAgentFactory());
-			ServiceManager.Services.AddService(new Origam.Workflow.StateMachineService());
+			ServiceManager.Services.AddService(new ServiceAgentFactory());
+			ServiceManager.Services.AddService(new StateMachineService());
 			ServiceManager.Services.AddService(OrigamEngine.CreateDocumentationService());
 			ServiceManager.Services.AddService(new TracingService());
-			
-			DataLookupService dataLookupService = new DataLookupService();
-		    ControlsLookUpService controlsLookUpService = new ControlsLookUpService(dataLookupService);
-		    ServiceManager.Services.AddService(controlsLookUpService);
-
-            ServiceManager.Services.AddService(dataLookupService);
-		    controlsLookUpService.LookupShowSourceListRequested += dataLookupService_LookupShowSourceListRequested;
-		    controlsLookUpService.LookupEditSourceRecordRequested += dataLookupService_LookupEditSourceRecordRequested;
-			ServiceManager.Services.AddService(new DeploymentService());
+            ServiceManager.Services.AddService(new DataLookupService());
+            ServiceManager.Services.AddService(new ControlsLookUpService());
+            ServiceManager.Services.AddService(new DeploymentService());
 			ServiceManager.Services.AddService(new ParameterService());
 			ServiceManager.Services.AddService(new Origam.Workflow.WorkQueue.WorkQueueService());
 			ServiceManager.Services.AddService(new AttachmentService());
@@ -2266,12 +2259,6 @@ namespace OrigamArchitect
 			}
 		}
 
-		private void dataLookupService_LookupShowSourceListRequested(object sender, EventArgs e)
-		{
-			OrigamArchitect.Commands.ExecuteSchemaItem cmd = new OrigamArchitect.Commands.ExecuteSchemaItem();
-			cmd.Owner = sender;
-			cmd.Run();
-		}
 
 		public void ProcessGuiLink(IOrigamForm sourceForm, object linkTarget, Hashtable parameters)
 		{
@@ -2307,14 +2294,6 @@ namespace OrigamArchitect
 			cmd.Owner = targetMenuItem;
 
 			cmd.Run();
-		}
-
-		private void dataLookupService_LookupEditSourceRecordRequested(object sender, EventArgs e)
-		{
-			ParameterizedEventArgs args = e as ParameterizedEventArgs;
-			if(args == null) return;
-
-			ProcessGuiLink(args.SourceForm, sender as AbstractMenuItem, args.Parameters);
 		}
 
 		public void ExitWorkbench()

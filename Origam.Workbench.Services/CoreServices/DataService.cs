@@ -32,36 +32,49 @@ namespace Origam.Workbench.Services.CoreServices
 	/// </summary>
 	public class DataService
 	{
+        private static IDataService _dataService = null;
+
         public static IDataService GetDataService()
         {
-            IDataService dataService = null;
-            IPersistenceService persistence = ServiceManager.Services.GetService(
-                typeof(IPersistenceService)) as IPersistenceService;
-            OrigamSettings settings
-                = ConfigurationManager.GetActiveConfiguration() ;
-            if(settings == null)
+            if (_dataService == null)
             {
-                throw new NullReferenceException(
-                    ResourceUtils.GetString("ErrorSettingsNotFound"));
+                IDataService dataService = null;
+                IPersistenceService persistence = ServiceManager.Services.GetService(
+                    typeof(IPersistenceService)) as IPersistenceService;
+                OrigamSettings settings
+                    = ConfigurationManager.GetActiveConfiguration();
+                if (settings == null)
+                {
+                    throw new NullReferenceException(
+                        ResourceUtils.GetString("ErrorSettingsNotFound"));
+                }
+                string assembly = settings.DataDataService
+                    .Split(",".ToCharArray())[0].Trim();
+                string classname = settings.DataDataService
+                    .Split(",".ToCharArray())[1].Trim();
+                dataService
+                    = Reflector.InvokeObject(assembly, classname) as IDataService;
+                dataService.ConnectionString = settings.DataConnectionString;
+                dataService.BulkInsertThreshold = settings.DataBulkInsertThreshold;
+                dataService.UpdateBatchSize = settings.DataUpdateBatchSize;
+                dataService.StateMachine = ServiceManager.Services.GetService(
+                    typeof(IStateMachineService)) as IStateMachineService;
+                dataService.AttachmentService = ServiceManager.Services.GetService(
+                    typeof(IAttachmentService)) as IAttachmentService;
+                dataService.UserDefinedParameters = true;
+                (dataService as AbstractDataService).PersistenceProvider
+                    = persistence.SchemaProvider;
+                _dataService = dataService;
             }
-            string assembly = settings.DataDataService
-                .Split(",".ToCharArray())[0].Trim();
-            string classname = settings.DataDataService
-                .Split(",".ToCharArray())[1].Trim();
-            dataService
-                = Reflector.InvokeObject(assembly, classname) as IDataService;
-            dataService.ConnectionString = settings.DataConnectionString;
-            dataService.BulkInsertThreshold = settings.DataBulkInsertThreshold;
-            dataService.UpdateBatchSize = settings.DataUpdateBatchSize;
-            dataService.StateMachine = ServiceManager.Services.GetService(
-                typeof(IStateMachineService)) as IStateMachineService;
-            dataService.AttachmentService = ServiceManager.Services.GetService(
-                typeof(IAttachmentService)) as IAttachmentService;
-            dataService.UserDefinedParameters = true;
-            (dataService as AbstractDataService).PersistenceProvider
-                = persistence.SchemaProvider;
-            return dataService;
+            return _dataService;
         }
+
+        public static void ClearDataService()
+        {
+            _dataService.Dispose();
+            _dataService = null;
+        }
+
         internal DataService()
 		{
 		}
