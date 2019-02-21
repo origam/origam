@@ -123,12 +123,15 @@ namespace Origam.Workbench.Pads
             try
             {
                 OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
-                string url = settings==null ? null : settings.ServerLogUrl ;
-
+                if (settings == null)
+                {
+                    SetOutputText("Configuration not selected.");
+                    return;
+                }
+                string url = settings.ServerLogUrl ;
                 if (url == "" || url == null)
                 {
                     SetOutputText("ServerLogUrl not set in the settings.");
-                    timer.Stop();
                     return;
                 }
                 ServicePointManager.SecurityProtocol =
