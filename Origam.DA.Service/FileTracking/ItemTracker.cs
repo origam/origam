@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -474,6 +474,10 @@ namespace Origam.DA.Service
             sortedKeys.Sort();
             foreach (var key in sortedKeys)
             {
+                if (objectInfoIndex[key].Count == 0)
+                {
+                    continue;
+                }
                 str += key + ": " + objectInfoIndex[key].Print(inLine:true)+"|\n";
             }
             return str;
