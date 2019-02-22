@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,7 +36,7 @@ using Origam.Schema;
 
 namespace Origam.DA.Service
 {
-    public class OrigamFile:IDisposable
+    public class OrigamFile : ITrackeableFile
     {
         internal const string IdAttribute = "id";
         internal const string IsFolderAttribute = "isFolder";
@@ -238,7 +239,8 @@ namespace Origam.DA.Service
             string  contents = string.Join("\n", contentsList);
 
             string fullPath = System.IO.Path.Combine(directory.FullName, ReferenceFileName);
-            origamFileManager.WriteFileIfNotExist(fullPath, contents);
+            
+            origamFileManager.WriteReferenceFileToDisc(fullPath, contents, parentFolderIds);
         }
 
         public void RemoveFromCache(IPersistent instance)
@@ -290,7 +292,7 @@ namespace Origam.DA.Service
         public override bool MultipleFilesCanBeInSingleFolder => false;
     }
 
-    public class OrigamFileFactory
+    public class OrigamFileFactory : IOrigamFileFactory
     {
         private readonly IList<ElementName> defaultParentFolders;
         private readonly OrigamFileManager origamFileManager;
@@ -328,7 +330,7 @@ namespace Origam.DA.Service
             }
         }
         
-        public OrigamFile New(FileInfo fileInfo, IDictionary<ElementName,Guid> parentFolderIds,
+        public ITrackeableFile New(FileInfo fileInfo, IDictionary<ElementName,Guid> parentFolderIds,
            bool isAFullyWrittenFile=false)
         {
             IDictionary<ElementName, Guid> parentFolders =
@@ -338,6 +340,8 @@ namespace Origam.DA.Service
 
             switch (fileInfo.Name)
             {
+                case OrigamFile.ReferenceFileName:
+                    return new OrigamReferenceFile(path, parentFolders);
                 case OrigamFile.GroupFileName:
                     return new OrigamGroupFile( path,  parentFolders,
                         origamFileManager,origamPathFactory,fileEventQueue, isAFullyWrittenFile);
@@ -356,12 +360,14 @@ namespace Origam.DA.Service
             return parentFolders;
         }
 
-        public OrigamFile New(string relativePath, string fileHash,
+        public ITrackeableFile New(string relativePath, string fileHash,
             IDictionary<ElementName, Guid> parentFolderIds)
         {
             OrigamPath path = origamPathFactory.CreateFromRelative(relativePath);
             switch (path.FileName)
             {
+                case OrigamFile.ReferenceFileName:
+                    return new OrigamReferenceFile(path, parentFolderIds);
                 case OrigamFile.GroupFileName: 
                     return new OrigamGroupFile(path, parentFolderIds, 
                         origamFileManager, origamPathFactory, fileEventQueue, fileHash);
@@ -370,5 +376,32 @@ namespace Origam.DA.Service
                         origamFileManager, origamPathFactory, fileEventQueue, fileHash);
             }
         }  
+    }
+
+    public class OrigamReferenceFile : ITrackeableFile
+    {
+        public OrigamReferenceFile(OrigamPath origamPath, IDictionary<ElementName, Guid> parentFolders)
+        {
+            Path = origamPath;
+            FileHash = new FileInfo(Path.Absolute).GetFileBase64Hash();
+            ParentFolderIds = new ParentFolders(parentFolders, origamPath);
+        }
+
+        public OrigamReferenceFile(OrigamPath origamPath, List<ElementName> parentFolders)
+        {
+            Path = origamPath;
+            FileHash = new FileInfo(Path.Absolute).GetFileBase64Hash();
+            ParentFolderIds = new ParentFolders(parentFolders);
+        }
+
+        public void Dispose()
+        { 
+        }
+
+        public IDictionary<Guid, PersistedObjectInfo> ContainedObjects { get; } =
+            new Dictionary<Guid, PersistedObjectInfo>();
+        public OrigamPath Path { get; set; }
+        public string FileHash { get; }
+        public ParentFolders ParentFolderIds { get; }
     }
 }

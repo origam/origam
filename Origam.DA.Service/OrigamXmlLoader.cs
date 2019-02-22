@@ -258,25 +258,25 @@ namespace Origam.DA.Service
 
     public class ObjectFileData
     {
-        public ParentFolders ParentFolderIds { get; }
+        public virtual ParentFolders ParentFolderIds { get; }
         private readonly XmlFileData xmlFileData;
         public Folder Folder { get;}
         public FileInfo FileInfo => xmlFileData.FileInfo;
         public virtual Folder FolderToDetermineParentGroup => Folder;
-        private readonly OrigamFileFactory origamFileFactory;
+        private readonly IOrigamFileFactory origamFileFactory;
         
-        public ObjectFileData(IList<ElementName> parentFolders, XmlFileData xmlFileData,
-            OrigamFileFactory origamFileFactory)
+        public ObjectFileData(ParentFolders parentFolders, XmlFileData xmlFileData,
+            IOrigamFileFactory origamFileFactory)
         {
             this.origamFileFactory = origamFileFactory;
             this.xmlFileData = xmlFileData
                    ?? throw new ArgumentNullException(nameof(xmlFileData));
-            ParentFolderIds = new ParentFolders(parentFolders);
+            ParentFolderIds = parentFolders;
             Folder = new Folder(xmlFileData.FileInfo.DirectoryName);
         }
-        public OrigamFile Read()
+        public ITrackeableFile Read()
         {
-            OrigamFile origamFile = origamFileFactory.New(
+            ITrackeableFile origamFile = origamFileFactory.New(
                 fileInfo: xmlFileData.FileInfo,
                 parentFolderIds: ParentFolderIds,
                 isAFullyWrittenFile: true);
@@ -287,7 +287,7 @@ namespace Origam.DA.Service
         }
 
         private void RecursiveNodeRead(XmlNode currentNode, Guid parentNodeId,
-            OrigamFile origamFile )
+            ITrackeableFile origamFile )
         {
             foreach (object nodeObj in currentNode.ChildNodes)
             {
@@ -304,7 +304,7 @@ namespace Origam.DA.Service
                         id:currentNodeId ,
                         parentId: parentId,
                         isFolder: isFolder,
-                        origamFile: origamFile);
+                        origamFile: (OrigamFile)origamFile);
 
                     origamFile.ContainedObjects.Add(objectInfo.Id, objectInfo);
                 } 
@@ -340,7 +340,7 @@ namespace Origam.DA.Service
         public override Folder FolderToDetermineParentGroup => Folder.Parent;
         public GroupFileData(IList<ElementName> parentFolders,XmlFileData xmlFileData,
             OrigamFileFactory origamFileFactory) :
-            base(parentFolders, xmlFileData, origamFileFactory)
+            base(new ParentFolders(parentFolders), xmlFileData, origamFileFactory)
         {
             string groupIdStr = 
                 xmlFileData
@@ -354,13 +354,13 @@ namespace Origam.DA.Service
         }
     }
 
-    public class ReferenceFileData
+    public class ReferenceFileData: ObjectFileData
     {
         public XmlFileData XmlFileData { get; }
-        public ParentFolders ParentFolderIds { get; } = new ParentFolders();
-        public Folder Folder { get; }
 
-        public ReferenceFileData(XmlFileData xmlFileData)
+        public ReferenceFileData(XmlFileData xmlFileData,
+            IOrigamFileFactory origamFileFactory) : 
+            base(new ParentFolders(), xmlFileData, origamFileFactory)
         {
             XmlFileData = xmlFileData;
             XmlNodeList xmlNodeList = xmlFileData
@@ -378,7 +378,6 @@ namespace Origam.DA.Service
                 var folderUri = ElementNameFactory.Create(name);
                 ParentFolderIds[folderUri] = new Guid(idStr);
             }
-            Folder = new Folder(xmlFileData.FileInfo.DirectoryName);
         }
     }
 
@@ -388,7 +387,7 @@ namespace Origam.DA.Service
 
         public PackageFileData(IList<ElementName> parentFolders,XmlFileData xmlFileData, 
             OrigamFileFactory origamFileFactory) :
-            base(parentFolders,xmlFileData, origamFileFactory)
+            base(new ParentFolders(parentFolders),xmlFileData, origamFileFactory)
         {
             string idStr = xmlFileData
                 ?.XmlDocument
@@ -422,7 +421,12 @@ namespace Origam.DA.Service
         }
         public ObjectFileData NewObjectFileData(XmlFileData xmlData)
         {
-           return new ObjectFileData(parentFolders, xmlData, origamFileFactory); 
+           return new ObjectFileData(new ParentFolders(parentFolders), xmlData, origamFileFactory); 
+        }
+
+        public ReferenceFileData NewReferenceFileData(XmlFileData xmlData)
+        {
+            return new ReferenceFileData(xmlData, origamFileFactory);
         }
     }  
 
@@ -469,6 +473,10 @@ namespace Origam.DA.Service
                 {
                     yield return packageFileData;
                 }
+                foreach (ReferenceFileData referenceFileData in referenceFileDict.Values)
+                {
+                    yield return referenceFileData;
+                }
             }
         }
 
@@ -492,7 +500,7 @@ namespace Origam.DA.Service
                         groupFileDict.Add(groupFileData.Folder,groupFileData);
                         break;
                     case OrigamFile.ReferenceFileName:
-                        var referenceFileData = new ReferenceFileData(xmlData);
+                        var referenceFileData = objectFileDataFactory.NewReferenceFileData(xmlData);
                         referenceFileDict.Add(
                             referenceFileData.Folder,
                             referenceFileData);

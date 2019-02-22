@@ -13,11 +13,14 @@ namespace Origam.DA.Service
     {
         private readonly DirectoryInfo topDirectory;
         private readonly FilePersistenceProvider filePersistenceProvider;
+        private readonly ReferenceFileFactory referenceFileFactory;
 
         public ReferenceFileChecker(FilePersistenceProvider filePersistenceProvider)
         {
             topDirectory = filePersistenceProvider.TopDirectory;
             this.filePersistenceProvider = filePersistenceProvider;
+            var origamPathFactory = new OrigamPathFactory(topDirectory);
+            referenceFileFactory = new ReferenceFileFactory(origamPathFactory);
         }
 
         public ModelErrorSection GetErrors()
@@ -55,13 +58,47 @@ namespace Origam.DA.Service
             return null;
         }
 
-        private static ReferenceFileData ReadToFileData(FileInfo groupReferenceFile)
+        private  ReferenceFileData ReadToFileData(FileInfo groupReferenceFile)
         {
             var xmlFileDataFactory = new XmlFileDataFactory(new List<MetaVersionFixer>());
             Result<XmlFileData, XmlLoadError> result = xmlFileDataFactory.Create(groupReferenceFile);
 
-            var xmlFileData = new ReferenceFileData(result.Value);
+            var xmlFileData = new ReferenceFileData(result.Value, referenceFileFactory);
             return xmlFileData;
+        }
+    }
+
+    class ReferenceFileFactory: IOrigamFileFactory
+    {
+        private readonly OrigamPathFactory origamPathFactory;
+        private List<ElementName> parentFolders = new List<ElementName>
+        {
+            OrigamFile.PackageNameUri,
+            OrigamFile.GroupNameUri
+        };
+
+        public ReferenceFileFactory(OrigamPathFactory origamPathFactory)
+        {
+            this.origamPathFactory = origamPathFactory;
+        }
+
+        public ITrackeableFile New(FileInfo fileInfo, IDictionary<ElementName, Guid> parentFolderIds,
+            bool isAFullyWrittenFile = false)
+        {
+            OrigamPath path = origamPathFactory.Create(fileInfo);
+            return new OrigamReferenceFile(path, parentFolders);
+        }
+
+        public OrigamFile New(string relativePath, IDictionary<ElementName, Guid> parentFolderIds,
+            bool isGroup, bool isAFullyWrittenFile = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITrackeableFile New(string relativePath, string fileHash,
+            IDictionary<ElementName, Guid> parentFolderIds)
+        {
+            throw new NotImplementedException();
         }
     }
 }

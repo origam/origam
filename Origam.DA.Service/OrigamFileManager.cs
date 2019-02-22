@@ -29,16 +29,20 @@ namespace Origam.DA.Service
             this.fileEventQueue = fileEventQueue;
         }
 
-        public void WriteFileIfNotExist(string fullPath, string contents)
+        public void WriteReferenceFileToDisc(string fullPath, string contents, ParentFolders parentFolderIds)
         {
-            if (!File.Exists(fullPath))
+            if (File.Exists(fullPath)) return;
+            OrigamPath path = origamPathFactory.Create(fullPath);
+            OrigamReferenceFile referenceFile = new OrigamReferenceFile(path, parentFolderIds);
+
+            fileEventQueue.Pause();
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+            using (StreamWriter sw = File.CreateText(fullPath))
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
-                using (StreamWriter sw = File.CreateText(fullPath))
-                {
-                    sw.Write(contents);
-                }
+                sw.Write(contents);
             }
+            index.AddOrReplaceHash(referenceFile);
+            fileEventQueue.Continue();
         }
         
         public void RenameDirectory(DirectoryInfo dirToRename, string newName)
@@ -79,7 +83,7 @@ namespace Origam.DA.Service
             string source = origamFile.Path.Absolute;
 
             fileEventQueue.Pause();
-            int numFilesBefore = index.OrigamFiles.Count;
+            int numFilesBefore = index.OrigamFiles.Count();
             index.RemoveHash(origamFile);
             index.Remove(origamFile);
             origamFile.Path = origamFile.NewPath;
@@ -87,7 +91,7 @@ namespace Origam.DA.Service
             index.AddOrReplace(origamFile);
             index.AddOrReplaceHash(origamFile);
             File.Move(source, destination); 
-            System.Diagnostics.Debug.Assert(numFilesBefore == index.OrigamFiles.Count);
+            System.Diagnostics.Debug.Assert(numFilesBefore == index.OrigamFiles.Count());
             fileEventQueue.Continue();
         }
             

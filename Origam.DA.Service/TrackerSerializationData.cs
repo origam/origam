@@ -10,7 +10,7 @@ namespace Origam.DA.Service
     [ProtoContract]
     public class TrackerSerializationData
     {
-        public List<OrigamFile> GetOrigamFiles(OrigamFileFactory origamFileFactory) 
+        public List<ITrackeableFile> GetOrigamFiles(OrigamFileFactory origamFileFactory) 
             => TransformBack(origamFileFactory);
 
         public Dictionary<string, int> ItemTrackerStats => itemTrackerStats;
@@ -36,7 +36,7 @@ namespace Origam.DA.Service
         {
         }
 
-        public TrackerSerializationData(IEnumerable<OrigamFile> origamFiles, 
+        public TrackerSerializationData(IEnumerable<ITrackeableFile> origamFiles, 
             Dictionary<string, int> itemTrackerStats)
         {
             AutoIncrementedIntIndex<ElementName> elementNameIdIndex =
@@ -50,7 +50,7 @@ namespace Origam.DA.Service
         }
 
         private void ToSerializationForms(
-            IEnumerable<OrigamFile> origamFiles, IDictionary<ElementName,int> idElementDictionary)
+            IEnumerable<ITrackeableFile> origamFiles, IDictionary<ElementName,int> idElementDictionary)
         {
             serializationList = origamFiles
                 .Select(orFile =>
@@ -62,7 +62,7 @@ namespace Origam.DA.Service
                 .ToList();
         }
 
-        private List<OrigamFile> TransformBack(OrigamFileFactory origamFileFactory)
+        private List<ITrackeableFile> TransformBack(OrigamFileFactory origamFileFactory)
         {
             if (serializationList == null)
             {
@@ -111,7 +111,7 @@ namespace Origam.DA.Service
             {
             }
 
-            public OrigamFileSerializedForm(OrigamFile origamFile,
+            public OrigamFileSerializedForm(ITrackeableFile origamFile,
                 AutoIncrementedIntIndex<Guid> guidIndex,
                 AutoIncrementedIntIndex<ElementName> parentFolderIndex,
                 IDictionary<ElementName,int> idElementDictionary)
@@ -136,12 +136,12 @@ namespace Origam.DA.Service
                         entry => guidIndex.AddValueAndGetId(entry.Value));
             }
 
-            public OrigamFile GetOrigamFile(AutoIncrementedIntIndex<Guid> guidIndex,
+            public ITrackeableFile GetOrigamFile(AutoIncrementedIntIndex<Guid> guidIndex,
                 AutoIncrementedIntIndex<ElementName> parentFolderIndex,
                 IDictionary<int,ElementName> elementIdDictionary, 
                 OrigamFileFactory origamFileFactory)
             {
-                OrigamFile origamFile = origamFileFactory.New( 
+                ITrackeableFile trackableFile = origamFileFactory.New( 
                     relativePath: RelativePath,
                     fileHash: FileHash,
                     parentFolderIds: ParentFolderIdsNums
@@ -149,8 +149,12 @@ namespace Origam.DA.Service
                             entry => parentFolderIndex[entry.Key],
                             entry => guidIndex[entry.Value]));
 
-                origamFile = AddObjectInfo(guidIndex, origamFile, elementIdDictionary);
-                return origamFile;
+                if (trackableFile is OrigamFile origamFile)
+                {
+                    trackableFile = AddObjectInfo(guidIndex, origamFile, elementIdDictionary);
+                }
+
+                return trackableFile;
             }
 
             private OrigamFile AddObjectInfo(AutoIncrementedIntIndex<Guid> guidIndex,

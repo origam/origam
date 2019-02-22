@@ -15,19 +15,27 @@ namespace Origam.DA.Service
         private static readonly log4net.ILog log
             = log4net.LogManager.GetLogger(
                 MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly FileHashIndex fileHashIndex =
             new FileHashIndex();
-        private readonly IDictionary<Guid, PersistedObjectInfo> objectLocationIndex = 
-            new Dictionary<Guid, PersistedObjectInfo>();  
-        private readonly ObjectInfoIndex<ElementName> elementNameIndex = 
+
+        private readonly IDictionary<Guid, PersistedObjectInfo> objectLocationIndex =
+            new Dictionary<Guid, PersistedObjectInfo>();
+
+        private readonly ObjectInfoIndex<ElementName> elementNameIndex =
             new ObjectInfoIndex<ElementName>();
-        private readonly ObjectInfoIndex<Guid> treeIndex = 
+
+        private readonly ObjectInfoIndex<Guid> treeIndex =
             new ObjectInfoIndex<Guid>();
-        private readonly ObjectInfoIndex<string> folderIndex = 
+
+        private readonly ObjectInfoIndex<string> folderIndex =
             new ObjectInfoIndex<string>();
+
         private readonly OrigamPathFactory pathFactory;
 
-        public ICollection<OrigamFile> OrigamFiles => fileHashIndex.Files;
+        public IEnumerable<OrigamFile> OrigamFiles => fileHashIndex.Files.OfType<OrigamFile>();
+        public IEnumerable<ITrackeableFile> AllFiles => fileHashIndex.Files;
+        public bool IsEmpty => !OrigamFiles.Any();
 
         public ItemTracker(OrigamPathFactory pathFactory)
         {
@@ -63,15 +71,15 @@ namespace Origam.DA.Service
             LogTreeIndexState("ItemTracker cleared");
         }
 
-        public void AddOrReplaceHash(OrigamFile origamFile)
+        public void AddOrReplaceHash(ITrackeableFile origamFile)
         {
             fileHashIndex.AddOrReplace(origamFile);
         }
 
-        public void AddOrReplace(OrigamFile origamFile)
+        public void AddOrReplace(ITrackeableFile origamFile)
         {
             foreach (var entry in origamFile.ContainedObjects)
-            {   
+            {
                 PersistedObjectInfo objectInfo = entry.Value;
                 AddOrReplace(objectInfo);
             }
@@ -79,7 +87,7 @@ namespace Origam.DA.Service
 
         public void AddOrReplace(PersistedObjectInfo objectInfo)
         {
-            LogTreeIndexState("Adding: " + objectInfo.Id + "objectInfo.ParentId: "+ objectInfo.ParentId);
+            LogTreeIndexState("Adding: " + objectInfo.Id + "objectInfo.ParentId: " + objectInfo.ParentId);
 
             objectLocationIndex[objectInfo.Id] = objectInfo;
             treeIndex.AddOrReplace(objectInfo.ParentId, objectInfo);
@@ -95,10 +103,10 @@ namespace Origam.DA.Service
 
             LogTreeIndexState("Added: " + objectInfo.Id);
         }
-        
+
         public void Remove(PersistedObjectInfo objectInfo)
         {
-            LogTreeIndexState("Removing: "+ objectInfo.Id);
+            LogTreeIndexState("Removing: " + objectInfo.Id);
 
             objectLocationIndex.Remove(objectInfo.Id);
             treeIndex.Remove(objectInfo.Id);
@@ -111,16 +119,15 @@ namespace Origam.DA.Service
         private void LogTreeIndexState(string message)
         {
             if (!log.IsDebugEnabled) return;
-            log.Debug(message + ", treeIndex.Count: "+ treeIndex.Count);
+            log.Debug(message + ", treeIndex.Count: " + treeIndex.Count);
         }
 
-        public bool ContainsFile(FileInfo file) => 
+        public bool ContainsFile(FileInfo file) =>
             fileHashIndex.ContainsFile(file);
 
         public PersistedObjectInfo GetById(Guid id)
         {
-            return objectLocationIndex.ContainsKey(id) ?
-                objectLocationIndex[id] : null;
+            return objectLocationIndex.ContainsKey(id) ? objectLocationIndex[id] : null;
         }
 
         public IEnumerable<PersistedObjectInfo> GetByParentId(Guid parentId) =>
@@ -150,15 +157,15 @@ namespace Origam.DA.Service
         {
             LogTreeIndexState("KeepOnly method running");
 
-            HashSet<string> relativePathsToKeep = filesToKeep   
-                .Select(fileInfo=> pathFactory.Create(fileInfo).Relative)
+            HashSet<string> relativePathsToKeep = filesToKeep
+                .Select(fileInfo => pathFactory.Create(fileInfo).Relative)
                 .ToHashSet();
 
             fileHashIndex.RemoveValuesWhere(origamFile =>
                 !relativePathsToKeep.Contains(origamFile.Path.Relative));
-            objectLocationIndex.RemoveByValueSelector(objInfo =>    
+            objectLocationIndex.RemoveByValueSelector(objInfo =>
                 !relativePathsToKeep.Contains(objInfo.OrigamFile.Path.Relative));
-            
+
             elementNameIndex.KeepOnlyItemsOnPaths(relativePathsToKeep);
             treeIndex.KeepOnlyItemsOnPaths(relativePathsToKeep);
             folderIndex.KeepOnlyItemsOnPaths(relativePathsToKeep);
@@ -168,13 +175,13 @@ namespace Origam.DA.Service
 
         public bool HasFile(string relativePath)
         {
-            return OrigamFiles
+            return AllFiles
                 .Any(orFile => orFile.Path.Relative == relativePath);
         }
 
         public void RenameDirectory(DirectoryInfo dirToRename, string newDirPath)
         {
-            OrigamFiles.ToList()   
+            AllFiles.ToList()
                 .Where(origamFile => dirToRename.IsOnPathOf(origamFile.Path.Directory))
                 .ForEach(origamFile =>
                 {
@@ -185,18 +192,18 @@ namespace Origam.DA.Service
                 });
         }
 
-        public void RemoveHash(OrigamFile origamFile)
+        public void RemoveHash(ITrackeableFile origamFile)
         {
             fileHashIndex.Remove(origamFile);
         }
 
-        public void Remove(OrigamFile origamFile)
+        public void Remove(ITrackeableFile origamFile)
         {
-            LogTreeIndexState("Removing file: "+origamFile.Path.Relative);
+            LogTreeIndexState("Removing file: " + origamFile.Path.Relative);
 
-            bool removeFilter(PersistedObjectInfo objInfo) => 
+            bool removeFilter(PersistedObjectInfo objInfo) =>
                 objInfo.OrigamFile == origamFile;
-            
+
             objectLocationIndex.RemoveByValueSelector(removeFilter);
             elementNameIndex.RemoveWhere(removeFilter);
             treeIndex.RemoveWhere(removeFilter);
@@ -204,16 +211,16 @@ namespace Origam.DA.Service
 
             LogTreeIndexState("Removed file: " + origamFile.Path.Relative);
         }
-        
+
         public Dictionary<string, int> GetStats()
         {
             return new Dictionary<string, int>
             {
                 {"fileHashIndex count", fileHashIndex.Count},
-                {"objectLocationIndex count" , objectLocationIndex.Count},
-                {"elementNameIndex count" , elementNameIndex.Count},
-                {"treeIndex count" , treeIndex.Count},
-                {"folderIndex count" , folderIndex.Count}
+                {"objectLocationIndex count", objectLocationIndex.Count},
+                {"elementNameIndex count", elementNameIndex.Count},
+                {"treeIndex count", treeIndex.Count},
+                {"folderIndex count", folderIndex.Count}
             };
         }
 
@@ -243,25 +250,33 @@ namespace Origam.DA.Service
 
         public IEnumerable<FileInfo> GetByDirectory(DirectoryInfo dir)
         {
-            return OrigamFiles
+            return AllFiles
                 //.Where(origamFile => new FileInfo(origamFile.Path.Absolute).IsOnPathOf(dir))
                 .Where(origamFile => dir.IsOnPathOf(origamFile.Path.Absolute))
-                .SelectMany(origamFile => 
-                    origamFile.ExternalFiles.Concat(new FileInfo(origamFile.Path.Absolute)));
+                .SelectMany(file =>
+                    {
+                        if (file is OrigamFile origamFile)
+                        {
+                            return origamFile.ExternalFiles.Concat(new FileInfo(origamFile.Path.Absolute));
+                        }
+
+                        return new[] {new FileInfo(file.Path.Absolute)};
+                    }
+                );
         }
     }
-    
+
     internal class FileHashIndex
     {
         private readonly IDictionary<string,string> hashFileDict =
             new Dictionary<string, string>();
-        private readonly IDictionary<string,OrigamFile> pathDict =
-            new Dictionary<string,OrigamFile>();
+        private readonly IDictionary<string, ITrackeableFile> pathDict =
+            new Dictionary<string, ITrackeableFile>();
 
-        public ICollection<OrigamFile> Files => pathDict.Values;
+        public ICollection<ITrackeableFile> Files => pathDict.Values;
         public int Count => hashFileDict.Count;
        
-        public void AddOrReplace(OrigamFile newOrigamFile)
+        public void AddOrReplace(ITrackeableFile newOrigamFile)
         {
             if (newOrigamFile.FileHash == null) return;
             pathDict[newOrigamFile.Path.Relative] = newOrigamFile;
@@ -277,14 +292,14 @@ namespace Origam.DA.Service
             return registeredHash == file.GetFileBase64Hash();
         }
 
-        internal void RemoveValuesWhere(Func<OrigamFile, bool> func)
+        internal void RemoveValuesWhere(Func<ITrackeableFile, bool> func)
         {
-            List<KeyValuePair<string, OrigamFile>> removedPairs =
+            List<KeyValuePair<string, ITrackeableFile>> removedPairs =
                 pathDict.RemoveByValueSelector(func);
             
-            foreach (KeyValuePair<string, OrigamFile> keyValuePair in removedPairs)
+            foreach (KeyValuePair<string, ITrackeableFile> keyValuePair in removedPairs)
             {
-                OrigamFile origamFileToRemove = keyValuePair.Value;
+                ITrackeableFile origamFileToRemove = keyValuePair.Value;
                 hashFileDict.Remove(origamFileToRemove.Path.Absolute.ToLower());  
             }
         }
@@ -295,7 +310,7 @@ namespace Origam.DA.Service
             pathDict.Clear();
         }
 
-        public void Remove(OrigamFile orFileToRemove)
+        public void Remove(ITrackeableFile orFileToRemove)
         {
             hashFileDict.RemoveByKeySelector(fullPath =>
                 fullPath == orFileToRemove.Path.Absolute.ToLower());
