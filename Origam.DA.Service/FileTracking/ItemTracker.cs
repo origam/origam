@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -61,7 +61,6 @@ namespace Origam.DA.Service
 
         public void Clear()
         {
-            OrigamFiles.ForEach(x => x.Dispose());
             LogTreeIndexState("Clearing ItemTracker");
             fileHashIndex.Clear();
             objectLocationIndex.Clear();
@@ -189,6 +188,7 @@ namespace Origam.DA.Service
                     Remove(origamFile);
                     origamFile.Path = origamFile.Path.UpdateToNew(dirToRename, newDirPath);
                     AddOrReplace(origamFile);
+                    AddOrReplaceHash(origamFile);
                 });
         }
 
