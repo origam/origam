@@ -23,7 +23,7 @@ namespace Origam.DA.Service
         private readonly OrigamFileFactory origamFileFactory;
         private readonly DirectoryInfo topDirectory;
         private readonly FileInfo indexFile;
-        private readonly object Log = new object();
+        private readonly object Lock = new object();
 
         public BinFileLoader(OrigamFileFactory origamFileFactory,
             DirectoryInfo topDirectory, FileInfo indexFile)
@@ -36,7 +36,7 @@ namespace Origam.DA.Service
         public void LoadInto(ItemTracker itemTracker)
         {
             if (!indexFile.ExistsNow()) return;
-            lock (Log)
+            lock (Lock)
             {
                 TrackerSerializationData serializationData;
                 using (var file = indexFile.OpenRead())

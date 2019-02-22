@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -33,14 +33,14 @@ namespace Origam.DA.Service
         {
             if (File.Exists(fullPath)) return;
             OrigamPath path = origamPathFactory.Create(fullPath);
-            OrigamReferenceFile referenceFile = new OrigamReferenceFile(path, parentFolderIds);
-
+            
             fileEventQueue.Pause();
             Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
             using (StreamWriter sw = File.CreateText(fullPath))
             {
                 sw.Write(contents);
             }
+            OrigamReferenceFile referenceFile = new OrigamReferenceFile(path, parentFolderIds);
             index.AddOrReplaceHash(referenceFile);
             fileEventQueue.Continue();
         }

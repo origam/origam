@@ -79,7 +79,7 @@ namespace Origam.DA.Service
             switch (path.FileName)
             {
                 case OrigamFile.ReferenceFileName:
-                    return new OrigamReferenceFile(path, parentFolderIds);
+                    return new OrigamReferenceFile(path, parentFolderIds, fileHash);
                 case OrigamFile.GroupFileName: 
                     return new OrigamGroupFile(path, parentFolderIds, 
                         origamFileManager, origamPathFactory, fileEventQueue, fileHash);
