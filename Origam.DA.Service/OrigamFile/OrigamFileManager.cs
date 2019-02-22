@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -67,12 +67,11 @@ namespace Origam.DA.Service
             string xmlToWrite = OrigamDocumentSorter
                 .CopyAndSort(xmlDocument)
                 .ToBeautifulString(xmlWriterSettings);
-            string newHash = xmlToWrite.GetBase64Hash();
             fileEventQueue.Pause();
-            HashChanged?.Invoke(this, new HashChangedEventArgs(newHash));
+            File.WriteAllText(origamFile.Path.Absolute, xmlToWrite);
+            origamFile.UpdateHash();
             index.AddOrReplaceHash(origamFile);
             Directory.CreateDirectory(origamFile.Path.Directory.FullName);
-            File.WriteAllText(origamFile.Path.Absolute, xmlToWrite);
             fileEventQueue.Continue();
         }
 

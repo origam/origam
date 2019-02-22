@@ -21,8 +21,11 @@ namespace Origam.DA.Service
             ParentFolderIds = new ParentFolders(parentFolders);
         }
 
-        public void Dispose()
-        { 
+        public OrigamReferenceFile(OrigamPath origamPath, IDictionary<ElementName, Guid> parentFolderIds, string fileHash)
+        {
+            Path = origamPath;
+            ParentFolderIds = new ParentFolders(parentFolderIds, origamPath);
+            FileHash = fileHash;
         }
 
         public IDictionary<Guid, PersistedObjectInfo> ContainedObjects { get; } =

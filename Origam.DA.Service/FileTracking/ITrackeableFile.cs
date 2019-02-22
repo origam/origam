@@ -5,7 +5,7 @@ using CSharpFunctionalExtensions;
 
 namespace Origam.DA.Service
 {
-    public interface ITrackeableFile: IDisposable
+    public interface ITrackeableFile
     {
         IDictionary<Guid, PersistedObjectInfo> ContainedObjects { get; }
         OrigamPath Path { get; set; }

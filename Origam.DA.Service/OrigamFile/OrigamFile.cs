@@ -106,23 +106,17 @@ namespace Origam.DA.Service
             bool isAFullyWrittenFile = false )
         {
             this.origamFileManager = origamFileManager;
-            origamFileManager.HashChanged += OnHashChanged;
             this.path = path;
             externalFileManger = new ExternalFileManager(this, origamPathFactory, fileEventQueue);
             if (isAFullyWrittenFile)
             {
-                InitFileHash();
+                UpdateHash();
             }
             origamXmlManager = new OrigamXmlManager(
                 path, 
                 new ParentFolders(parentFolderIds, path),
                 externalFileManger,
                 origamPathFactory);
-        }
-
-        private void OnHashChanged(object sender, HashChangedEventArgs args)
-        {
-            FileHash = args.Hash;
         }
 
         public OrigamFile(OrigamPath path, IDictionary<ElementName, Guid> parentFolderIds,
@@ -223,7 +217,7 @@ namespace Origam.DA.Service
                     directory);
             }
         }
-        private void InitFileHash()
+        public void UpdateHash()
         {
             FileHash =  new FileInfo(Path.Absolute).GetFileBase64Hash();
         } 
@@ -246,11 +240,6 @@ namespace Origam.DA.Service
         public void RemoveFromCache(IPersistent instance)
         {
             origamXmlManager.RemoveFromCache(instance);
-        }
-
-        public void Dispose()
-        {
-            origamFileManager.HashChanged -= OnHashChanged;
         }
     }
 }
