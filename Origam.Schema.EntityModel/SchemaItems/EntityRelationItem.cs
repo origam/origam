@@ -62,19 +62,14 @@ namespace Origam.Schema.EntityModel
 			}
 			set
 			{
-				if(this.IsSelfJoin && !this.BaseEntity.PrimaryKey.Equals(value.PrimaryKey))
-					throw new ArgumentOutOfRangeException("RelatedEntity", value, ResourceUtils.GetString("ErrorSelfJoinSameBase"));
-
 				if(value == null)
 				{
 					this.RelatedEntityId = Guid.Empty;
-
 					this.Name = "";
 				}
 				else
 				{
 					this.RelatedEntityId = (Guid)value.PrimaryKey["Id"];
-
 					this.Name = this.RelatedEntity.Name;
 				}
 
@@ -99,37 +94,13 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		private bool _isSelfJoin = false;
 
+        [SelfJoinSameBaseRule]
 		[EntityColumn("B02")]
         [XmlAttribute("selfJoin")]
-        public bool IsSelfJoin
-		{
-			get
-			{
-				return _isSelfJoin;
-			}
-			set
-			{
-				try
-				{
-					if(this.BaseEntity != null && this.RelatedEntity != null && value && !this.BaseEntity.PrimaryKey.Equals(this.RelatedEntity.PrimaryKey))
-					{
-						throw new ArgumentOutOfRangeException("IsSelfJoin", value, ResourceUtils.GetString("ErrorSelfJoinSameBase"));
-					}
-					else
-					{
-						_isSelfJoin = value;
-					}
-				}
-				catch
-				{
-					_isSelfJoin = value;
-				}
-			}
-		}
+        public bool IsSelfJoin { get; set; }
 
-		private bool _isOR = false;
+        private bool _isOR = false;
 
 		[EntityColumn("B03")]
         [XmlAttribute("or")]
