@@ -14,4 +14,8 @@
       <Content Include="BrockAllen.IdentityReboot\license.txt" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj" />
+    </ItemGroup>
+
 </Project>

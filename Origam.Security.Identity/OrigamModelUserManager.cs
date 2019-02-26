@@ -3,6 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using System.Web.Security;
 using BrockAllen.IdentityReboot;
+using CSharpFunctionalExtensions;
 using Origam;
 using Origam.DA.Service;
 using Origam.Rule;
@@ -17,6 +18,7 @@ namespace Origam.Security.Identity
 {
     public class OrigamModelUserManager : AbstractUserManager
     {
+        private UserManager internalUserManager;
         public int MinimumPasswordLength { get; set; }
         public int NumberOfRequiredNonAlphanumericCharsInPassword { get; set; }
         public int NumberOfInvalidPasswordAttempts { get; set; }
@@ -31,6 +33,9 @@ namespace Origam.Security.Identity
             NumberOfInvalidPasswordAttempts = 3;
             UnlocksOnPasswordReset = false;
             IsPasswordRecoverySupported = true;
+            internalUserManager = new UserManager(
+                userName => new OrigamUser(userName),
+                NumberOfInvalidPasswordAttempts);
         }
 
         public static AbstractUserManager Create()
@@ -40,139 +45,17 @@ namespace Origam.Security.Identity
             return manager;
         }
 
-        override public Task<OrigamUser> FindAsync(
+        public override Task<OrigamUser> FindAsync(
             string userName, string password)
         {
-            Guid currentUserId = SecurityManager.CurrentUserProfile().Id;
-            DataSet origamUserDataSet = GetOrigamUserDataSet(userName);
-            if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
+            Result<IOrigamUser> userResult = internalUserManager.Find(userName, password);
+            if (userResult.IsFailure)
             {
-                // a user with the given username not found;
-                if (log.IsInfoEnabled)
-                {
-                    log.InfoFormat("Attempting to authentize a username `{0}'. The username not found."
-                        , userName);
-                }
-                return Task.FromException<OrigamUser>(new Exception(Resources.InvalidUsernameOrPassword));
+                throw new Exception(userResult.Error);
             }
-            DataRow origamUserRow 
-                = origamUserDataSet.Tables["OrigamUser"].Rows[0];
-            if ((bool)origamUserRow["IsLockedOut"])
-            {
-                // locked out
-                if (log.IsInfoEnabled)
-                {
-                    log.InfoFormat("Attempting to authentize a username `{0}'. The user is locked out."
-                        , userName);
-                }
-                return Task.FromException<OrigamUser>(new Exception(Resources.AccountLocked));
-            }
-            if (!(bool)origamUserRow["EmailConfirmed"])
-            {
-                // email not confirmed
-                if (log.IsInfoEnabled)
-                {
-                    log.InfoFormat("Attempting to authentize a username `{0}'. The user email isn't confirmed."
-                        , userName);
-                }
-                return Task.FromException<OrigamUser>(new Exception(Resources.AccountNotConfirmed));
-            }
-            string hashedPassword = (string)origamUserRow["Password"];
-            PasswordVerificationResult verificationResult 
-                = PasswordHasher.VerifyHashedPassword(hashedPassword, password);
-            bool goingToRehash = false;
-            switch (verificationResult)
-            {
-                case PasswordVerificationResult.Failed:
-                    if ((int)origamUserRow["FailedPasswordAttemptCount"] == 0)
-                    {
-                        origamUserRow["FailedPasswordAttemptWindowStart"] 
-                            = DateTime.Now;
-                    }
-                    origamUserRow["FailedPasswordAttemptCount"] 
-                        = (int)origamUserRow["FailedPasswordAttemptCount"] + 1;
-                    if ((int)origamUserRow["FailedPasswordAttemptCount"]
-                    >= NumberOfInvalidPasswordAttempts)
-                    {
-                        origamUserRow["IsLockedOut"] = true;
-                        origamUserRow["LastLockoutDate"] = DateTime.Now;
-                        origamUserRow["RecordUpdated"] = DateTime.Now;
-                        origamUserRow["RecordUpdatedBy"] = currentUserId;
-                    }
-                    if (log.IsDebugEnabled)
-                    {
-                        log.DebugFormat("Attempting to authentize a username `{0}'. "
-                            + "Failed to verify a password. Attempt: {1} of max {2}.{3}",
-                            userName, origamUserRow["FailedPasswordAttemptCount"],
-                            NumberOfInvalidPasswordAttempts,
-                            ((int)origamUserRow["FailedPasswordAttemptCount"]
-                            >= NumberOfInvalidPasswordAttempts) ? 
-                                " Locking out." : ""    
-                            );
-                    }
-                    DataService.StoreData(Queries.ORIGAM_USER_DATA_STRUCTURE, 
-                        origamUserDataSet, false, null);
-                    return Task.FromResult<OrigamUser>(null);
-                case PasswordVerificationResult.SuccessRehashNeeded:
-                    if (log.IsDebugEnabled)
-                    {
-                        log.DebugFormat("Attempting to authentize a username `{0}'."
-                            +" Success and going to rehash the password.",
-                            userName);
-                    }
-                    goingToRehash = true;
-                    break;
-                case PasswordVerificationResult.Success:
-                    if (log.IsDebugEnabled)
-                    {
-                        log.DebugFormat("Attempting to authentize a username `{0}'. Success.",
-                            userName);
-                    }
-                    break;
-                default:
-                    if (log.IsErrorEnabled)
-                    {
-                        log.ErrorFormat("Attempting to authentize a username `{0}'. An uneexpected result `{1}' returned.",
-                            userName, verificationResult.ToString());
-                    }
-                    throw new ArgumentOutOfRangeException("verificationResult", 
-                        verificationResult, "Unknown result");
-            }
-            // reload data to mitigate concurrency exception
-            origamUserDataSet = GetOrigamUserDataSet(userName);
-            origamUserRow = origamUserDataSet.Tables["OrigamUser"].Rows[0];
-            origamUserRow["FailedPasswordAttemptCount"] = 0;
-            origamUserRow["FailedPasswordAttemptWindowStart"] = DBNull.Value;
-            origamUserRow["LastLoginDate"] = DateTime.Now;
-            if (goingToRehash)
-            {
-                origamUserRow["Password"]
-                        = PasswordHasher.HashPassword(password);
-            }
-            try {
-                DataService.StoreData(Queries.ORIGAM_USER_DATA_STRUCTURE,
-                    origamUserDataSet, false, null);
-            } catch (Exception e)
-            {
-                if (log.IsErrorEnabled)
-                {
-                    log.ErrorFormat("Error updating authentization info for user `{0}': {1}"
-                        ,userName, e.Message);
-                }
-                throw e;
-            }
-            return Task.FromResult(
-                OrigamUserDataSetToOrigamUser(userName, origamUserDataSet));
+            return Task.FromResult((OrigamUser)userResult.Value);
         }
-
-        private DataSet GetOrigamUserDataSet(string userName)
-        {
-            DataSet origamUserDataSet = GetOrigamUserDataSet(
-                Queries.GET_ORIGAM_USER_BY_USER_NAME,
-                "OrigamUser_parUserName", userName);
-            return origamUserDataSet;
-        }
-
+        
         override public Task<IdentityResult> CreateAsync(
             OrigamUser user, string password)
         {
