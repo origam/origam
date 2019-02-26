@@ -68,10 +68,10 @@ namespace Origam.DA.Service
                 .CopyAndSort(xmlDocument)
                 .ToBeautifulString(xmlWriterSettings);
             fileEventQueue.Pause();
+            Directory.CreateDirectory(origamFile.Path.Directory.FullName);
             File.WriteAllText(origamFile.Path.Absolute, xmlToWrite);
             origamFile.UpdateHash();
             index.AddOrReplaceHash(origamFile);
-            Directory.CreateDirectory(origamFile.Path.Directory.FullName);
             fileEventQueue.Continue();
         }
 
