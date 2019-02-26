@@ -1,5 +1,4 @@
 ﻿using BrockAllen.IdentityReboot.Internal;
-using Microsoft.AspNet.Identity;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -8,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace BrockAllen.IdentityReboot
 {
-    public class AdaptivePasswordHasher : IPasswordHasher
+    public class AdaptivePasswordHasher
     {
         public const char PASSWORD_HASHING_ITERATION_COUNT_SEPARATOR = '.';
 
@@ -59,7 +58,7 @@ namespace BrockAllen.IdentityReboot
                 + PASSWORD_HASHING_ITERATION_COUNT_SEPARATOR + result;
         }
 
-        public virtual PasswordVerificationResult VerifyHashedPassword(
+        public virtual VerificationResult VerifyHashedPassword(
             string hashedPassword, string providedPassword)
         {
             if (!String.IsNullOrWhiteSpace(hashedPassword))
@@ -69,28 +68,28 @@ namespace BrockAllen.IdentityReboot
                 {
                     var parts = hashedPassword.Split(
                         PASSWORD_HASHING_ITERATION_COUNT_SEPARATOR);
-                    if (parts.Length != 2) return PasswordVerificationResult.Failed;
+                    if (parts.Length != 2) return VerificationResult.Failed;
                     int count = DecodeIterations(parts[0]);
                     if (count <= 0)
                     {
-                        return PasswordVerificationResult.Failed;
+                        return VerificationResult.Failed;
                     }
                     hashedPassword = parts[1];
                     if (VerifyHashedPasswordInternal(
                         hashedPassword, providedPassword, count))
                     {
                         return GetIterationCount() != count 
-                            ? PasswordVerificationResult.SuccessRehashNeeded 
-                            : PasswordVerificationResult.Success;
+                            ? VerificationResult.SuccessRehashNeeded 
+                            : VerificationResult.Success;
                     }
                 }
                 else if (Crypto.VerifyHashedPassword(
                     hashedPassword, providedPassword))
                 {
-                    return PasswordVerificationResult.SuccessRehashNeeded;
+                    return VerificationResult.SuccessRehashNeeded;
                 }
             }
-            return PasswordVerificationResult.Failed;
+            return VerificationResult.Failed;
         }
 
         public string EncodeIterations(int count)

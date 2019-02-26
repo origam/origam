@@ -90,8 +90,10 @@ namespace Origam.DA.Service_net2Tests
         public void ReadReferenceFile()
         {
             string fileName = Path.Combine(TestFilesDir.FullName,OrigamFile.ReferenceFileName);
-            var referenceFileData = new ReferenceFileData(
-                XmlFileDataFactory.Create(new FileInfo(fileName)).Value);
+            var objectFileDataFactory = MakeObjectFileDataFactory(TestFilesDir);
+            var xmlFileData = XmlFileDataFactory.Create(new FileInfo(fileName)).Value;
+            var referenceFileData =
+                objectFileDataFactory.NewReferenceFileData(xmlFileData);
             var locationAttributes = referenceFileData.ParentFolderIds;
 
             Assert.That(locationAttributes, Has.Count.EqualTo(2));
@@ -110,7 +112,7 @@ namespace Origam.DA.Service_net2Tests
         {            
             InitFilePersistenceProvider(parentFolders, TestFilesDir);
             var objectFileData = new ObjectFileData(
-                parentFolders, 
+                new ParentFolders(parentFolders), 
                 XmlFileDataFactory.Create(
                     new FileInfo(
                         Path.Combine(TestFilesDir.FullName,"MultiEntityTest.origam"))).Value,
@@ -118,7 +120,7 @@ namespace Origam.DA.Service_net2Tests
             
             objectFileData.ParentFolderIds[OrigamFile.PackageNameUri] = 
                 new Guid("e002a017-75b8-4f6e-8539-576ca05d6952");
-            OrigamFile origamFile = objectFileData.Read();
+            ITrackeableFile origamFile = objectFileData.Read();
             
         }
         protected override string DirName => "FilePersistenceProviderTests";

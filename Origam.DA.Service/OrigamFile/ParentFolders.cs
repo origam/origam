@@ -6,7 +6,7 @@ using Origam.Extensions;
 
 namespace Origam.DA.Service
 {
-    public class ParentFolders: IDictionary<ElementName, Guid>
+    public class ParentFolders : IDictionary<ElementName, Guid>
     {
         private readonly Dictionary<ElementName, Guid> innerDict =
             new Dictionary<ElementName, Guid>();

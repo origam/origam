@@ -4,36 +4,39 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
+using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Origam.Security.Common;
 
 namespace Origam.ServerCore.Controllers
 {
+    [Authorize]
     [Route("internalApi/[controller]")]
     public class TokenController : ControllerBase
     {
         private readonly IConfiguration configuration;
+        private readonly UserService userService;
 
-        public TokenController(IConfiguration configuration)
+        public TokenController(IConfiguration configuration, UserService userService)
         {
             this.configuration = configuration;
+            this.userService = userService;
         }
 
+        [AllowAnonymous]
         [HttpPost("[action]")]
         public IActionResult Create(string username, string password)
         {
-            if (IsValidUserAndPasswordCombination(username, password))
+            Result<IOrigamUser> userResult = userService.Authenticate(username, password);
+            if (userResult.IsSuccess)
             {
-                return new ObjectResult(GenerateToken(username));
+                return Ok(GenerateToken(username));
             }
-            return BadRequest();
-        }
-
-        private bool IsValidUserAndPasswordCombination(string username, string password)
-        {
-            return !string.IsNullOrEmpty(username) && username == password;
+            return BadRequest(userResult.Error);
         }
 
         private string GenerateToken(string username)

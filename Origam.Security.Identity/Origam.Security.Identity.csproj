@@ -71,8 +71,6 @@
   <ItemGroup>
     <Compile Include="AbstractUserManager.cs" />
     <Compile Include="AdaptivePasswordHasherWithLegacySupport.cs" />
-    <Compile Include="BrockAllen.IdentityReboot\AdaptivePasswordHasher.cs" />
-    <Compile Include="BrockAllen.IdentityReboot\System.Web.Helpers.Crypto.cs" />
     <Compile Include="IdentityEmailService.cs" />
     <Compile Include="IdentityServiceAgent.cs" />
     <Compile Include="NetMembershipUserManager.cs" />
@@ -102,9 +100,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BrockAllen.IdentityReboot\license.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Origam.Common.Nonstd\Origam.Common.NetFX.csproj">
       <Project>{84251d2b-43a4-4228-8d2a-8729722c25e4}</Project>
       <Name>Origam.Common.NetFX</Name>
@@ -132,6 +127,10 @@
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
       <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
       <Name>Origam.Schema</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Security.Common\Origam.Security.Common.csproj">
+      <Project>{66fae794-7352-440f-b24d-684686a62cf5}</Project>
+      <Name>Origam.Security.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Services.NetFx\Origam.Services.NetFx.csproj">
       <Project>{442DB093-B99E-4A53-AE94-E611A26D901F}</Project>

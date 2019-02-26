@@ -29,6 +29,7 @@
     <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj" />
     <ProjectReference Include="..\Origam.Schema.MenuModel\Origam.Schema.MenuModel.csproj" />
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj" />
+    <ProjectReference Include="..\Origam.Security.Common\Origam.Security.Common.csproj" />
     <ProjectReference Include="..\Origam.Security\Origam.Security.csproj" />
     <ProjectReference Include="..\Origam.ServerCommon\Origam.ServerCommon.csproj" />
     <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />

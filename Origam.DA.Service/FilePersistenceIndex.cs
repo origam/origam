@@ -44,8 +44,7 @@ namespace Origam.DA.Service
             new ReaderWriterLockSlim();
 
         public HashSet<Guid> LoadedPackages { internal get; set; }
-
-        public ICollection<OrigamFile> OrigamFiles => ItemTracker.OrigamFiles;
+        public IEnumerable<OrigamFile> OrigamFiles => ItemTracker.OrigamFiles;
         private ItemTracker ItemTracker {
             get
             {
@@ -198,12 +197,12 @@ namespace Origam.DA.Service
         {
             readWriteLock.RunWriter(() =>
             {
-                if (itemTracker.OrigamFiles.Count == 0)
+                if (itemTracker.IsEmpty)
                 {
                     trackerLoaderFactory.BinLoader.LoadInto(itemTracker);
                 }
 
-                if (itemTracker.OrigamFiles.Count == 0)
+                if (itemTracker.IsEmpty)
                 {
                     trackerLoaderFactory.XmlLoader.LoadInto(itemTracker, false);
                     itemTrackerWasJustLoadedFromBin = false;
@@ -231,7 +230,7 @@ namespace Origam.DA.Service
                 itemTracker.RenameDirectory(dirToRename, newDirPath));
         }
 
-        public void AddOrReplaceHash(OrigamFile origamFile)
+        public void AddOrReplaceHash(ITrackeableFile origamFile)
         {
             readWriteLock.RunWriter(() => 
                 itemTracker.AddOrReplaceHash(origamFile));

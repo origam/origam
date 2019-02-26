@@ -23,7 +23,7 @@ namespace Origam.DA.Service
         private readonly OrigamFileFactory origamFileFactory;
         private readonly DirectoryInfo topDirectory;
         private readonly FileInfo indexFile;
-        private readonly object Log = new object();
+        private readonly object Lock = new object();
 
         public BinFileLoader(OrigamFileFactory origamFileFactory,
             DirectoryInfo topDirectory, FileInfo indexFile)
@@ -36,7 +36,7 @@ namespace Origam.DA.Service
         public void LoadInto(ItemTracker itemTracker)
         {
             if (!indexFile.ExistsNow()) return;
-            lock (Log)
+            lock (Lock)
             {
                 TrackerSerializationData serializationData;
                 using (var file = indexFile.OpenRead())
@@ -76,8 +76,11 @@ namespace Origam.DA.Service
 
         private bool HashesAreUpToDate(ItemTracker itemTracker)
         {
-            var trackerFiles = itemTracker.OrigamFiles.ToDictionary(
-                origamFile => origamFile.Path.Absolute, origamFile => origamFile);
+            var trackerFiles = itemTracker
+                .AllFiles
+                .ToDictionary(
+                    origamFile => origamFile.Path.Absolute, 
+                    origamFile => origamFile);
 
             IEnumerable<FileInfo> fileInfos = topDirectory
                 .GetAllFilesInSubDirectories()
@@ -136,7 +139,7 @@ namespace Origam.DA.Service
             CheckDataConsistency(itemTracker);
             itemTracker.CleanUp();
             var serializationData = new TrackerSerializationData(
-                itemTracker.OrigamFiles, itemTracker.GetStats());
+                itemTracker.AllFiles, itemTracker.GetStats());
             using (var file = indexFile.Create())
             {
                 Serializer.Serialize(file, serializationData);
@@ -146,7 +149,7 @@ namespace Origam.DA.Service
         private void CheckDataConsistency(ItemTracker originalTracker)
         {
             ItemTracker testTracker = new ItemTracker(null);
-            originalTracker.OrigamFiles
+            originalTracker.AllFiles
                    .ForEach(x =>
                    {
                        testTracker.AddOrReplace(x);

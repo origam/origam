@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,7 +36,7 @@ using Origam.Schema;
 
 namespace Origam.DA.Service
 {
-    public class OrigamFile:IDisposable
+    public class OrigamFile : ITrackeableFile
     {
         internal const string IdAttribute = "id";
         internal const string IsFolderAttribute = "isFolder";
@@ -105,23 +106,17 @@ namespace Origam.DA.Service
             bool isAFullyWrittenFile = false )
         {
             this.origamFileManager = origamFileManager;
-            origamFileManager.HashChanged += OnHashChanged;
             this.path = path;
             externalFileManger = new ExternalFileManager(this, origamPathFactory, fileEventQueue);
             if (isAFullyWrittenFile)
             {
-                InitFileHash();
+                UpdateHash();
             }
             origamXmlManager = new OrigamXmlManager(
                 path, 
                 new ParentFolders(parentFolderIds, path),
                 externalFileManger,
                 origamPathFactory);
-        }
-
-        private void OnHashChanged(object sender, HashChangedEventArgs args)
-        {
-            FileHash = args.Hash;
         }
 
         public OrigamFile(OrigamPath path, IDictionary<ElementName, Guid> parentFolderIds,
@@ -222,7 +217,7 @@ namespace Origam.DA.Service
                     directory);
             }
         }
-        private void InitFileHash()
+        public void UpdateHash()
         {
             FileHash =  new FileInfo(Path.Absolute).GetFileBase64Hash();
         } 
@@ -238,137 +233,13 @@ namespace Origam.DA.Service
             string  contents = string.Join("\n", contentsList);
 
             string fullPath = System.IO.Path.Combine(directory.FullName, ReferenceFileName);
-            origamFileManager.WriteFileIfNotExist(fullPath, contents);
+            
+            origamFileManager.WriteReferenceFileToDisc(fullPath, contents, parentFolderIds);
         }
 
         public void RemoveFromCache(IPersistent instance)
         {
             origamXmlManager.RemoveFromCache(instance);
         }
-
-        public void Dispose()
-        {
-            origamFileManager.HashChanged -= OnHashChanged;
-        }
-    }
-
-    class OrigamGroupFile : OrigamFile
-    {
-        public OrigamGroupFile(OrigamPath path, IDictionary<ElementName, Guid> parentFolderIds,
-             OrigamFileManager origamFileManager, OrigamPathFactory origamPathFactory,
-            FileEventQueue fileEventQueue, bool isAFullyWrittenFile = false) 
-            : base(path, parentFolderIds, origamFileManager,origamPathFactory, fileEventQueue, isAFullyWrittenFile)
-        {
-        }
-
-        public OrigamGroupFile(OrigamPath path, IDictionary<ElementName, Guid> parentFolderIds,
-            OrigamFileManager origamFileManager, OrigamPathFactory origamPathFactory,
-            FileEventQueue fileEventQueue, string fileHash) 
-            : base(path, parentFolderIds, origamFileManager,origamPathFactory, fileEventQueue, fileHash)
-        {
-        }
-        
-        protected override void MakeNewReferenceFileIfNeeded(DirectoryInfo directory)
-        {
-        }
-        
-        public override void WriteInstance(IFilePersistent instance,
-            ElementName elementName)
-        {
-            XmlNode contentNode = DeferredSaveDocument.ChildNodes[1];
-            bool anotherGroupPresent = contentNode.ChildNodes
-                .Cast<XmlNode>()
-                .Where(node => node.Name == "group")
-                .Any(node => Guid.Parse(node.Attributes["x:id"].Value) != instance.Id);
-
-            if (anotherGroupPresent)
-            {
-                throw new InvalidOperationException("Single .origamGroup file can contain only one group");
-            }
-            base.WriteInstance(instance, elementName);
-        }
-        public override bool MultipleFilesCanBeInSingleFolder => false;
-    }
-
-    public class OrigamFileFactory
-    {
-        private readonly IList<ElementName> defaultParentFolders;
-        private readonly OrigamFileManager origamFileManager;
-        private readonly OrigamPathFactory origamPathFactory;
-        private readonly FileEventQueue fileEventQueue;
-
-        public OrigamFileFactory(
-            OrigamFileManager origamFileManager, IList<ElementName> defaultParentFolders,
-            OrigamPathFactory origamPathFactory,FileEventQueue fileEventQueue)
-        {
-            this.origamPathFactory = origamPathFactory;
-            this.defaultParentFolders = defaultParentFolders;
-
-            this.origamFileManager = origamFileManager;
-            this.fileEventQueue = fileEventQueue;
-        }
-        
-        public OrigamFile New(string  relativePath, IDictionary<ElementName,Guid> parentFolderIds,
-            bool isGroup, bool isAFullyWrittenFile=false)
-        {
-            IDictionary<ElementName, Guid> parentFolders =
-                GetNonEmptyParentFolders(parentFolderIds);
-
-            OrigamPath path = origamPathFactory.CreateFromRelative(relativePath);
-
-            if (isGroup)
-            {
-                return new OrigamGroupFile( path,  parentFolders,  
-                    origamFileManager,origamPathFactory,fileEventQueue, isAFullyWrittenFile);
-            } 
-            else
-            {
-                return new OrigamFile( path,  parentFolders, origamFileManager,
-                    origamPathFactory, fileEventQueue,isAFullyWrittenFile);  
-            }
-        }
-        
-        public OrigamFile New(FileInfo fileInfo, IDictionary<ElementName,Guid> parentFolderIds,
-           bool isAFullyWrittenFile=false)
-        {
-            IDictionary<ElementName, Guid> parentFolders =
-                GetNonEmptyParentFolders(parentFolderIds);
-
-            OrigamPath path = origamPathFactory.Create(fileInfo);
-
-            switch (fileInfo.Name)
-            {
-                case OrigamFile.GroupFileName:
-                    return new OrigamGroupFile( path,  parentFolders,
-                        origamFileManager,origamPathFactory,fileEventQueue, isAFullyWrittenFile);
-                default:
-                    return new OrigamFile( path,  parentFolders,
-                        origamFileManager, origamPathFactory, fileEventQueue,
-                        isAFullyWrittenFile);     
-            }
-        }
-
-        private IDictionary<ElementName, Guid> GetNonEmptyParentFolders(IDictionary<ElementName, Guid> parentFolderIds)
-        {
-            IDictionary<ElementName, Guid> parentFolders = parentFolderIds.Count == 0
-                ? new ParentFolders(defaultParentFolders)
-                : parentFolderIds;
-            return parentFolders;
-        }
-
-        public OrigamFile New(string relativePath, string fileHash,
-            IDictionary<ElementName, Guid> parentFolderIds)
-        {
-            OrigamPath path = origamPathFactory.CreateFromRelative(relativePath);
-            switch (path.FileName)
-            {
-                case OrigamFile.GroupFileName: 
-                    return new OrigamGroupFile(path, parentFolderIds, 
-                        origamFileManager, origamPathFactory, fileEventQueue, fileHash);
-                default:
-                    return new OrigamFile( path, parentFolderIds,
-                        origamFileManager, origamPathFactory, fileEventQueue, fileHash);
-            }
-        }  
     }
 }

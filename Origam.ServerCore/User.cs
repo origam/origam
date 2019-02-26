@@ -1,10 +1,9 @@
-﻿using System;
-using Microsoft.AspNet.Identity;
+using System;
 using Origam.Security.Common;
 
-namespace Origam.Security.Identity
+namespace Origam.ServerCore
 {
-    public class OrigamUser : IUser, IOrigamUser
+    public class User: IOrigamUser
     {
         public string Id { get; set; }
         public string UserName { get; set; }
@@ -23,8 +22,8 @@ namespace Origam.Security.Identity
         public string TransactionId { get; set; }
         public string SecurityStamp { get; set; }
         public bool Is2FAEnforced { get; set; }
-
-        public OrigamUser(string userName)
+        
+        public User(string userName)
         {
             UserName = userName;
             IsApproved = true;

@@ -20,11 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using MoreLinq;
-using Origam.DA.Service;
-using Origam.Extensions;
 
 namespace Origam.DA.Service
 {
