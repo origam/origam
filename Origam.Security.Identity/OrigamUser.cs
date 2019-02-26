@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.AspNet.Identity;
+using Origam.Security.Common;
 
 namespace Origam.Security.Identity
 {
-    public class OrigamUser : IUser
+    public class OrigamUser : IUser, IOrigamUser
     {
         public string Id { get; set; }
         public string UserName { get; set; }
