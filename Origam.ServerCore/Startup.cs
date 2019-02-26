@@ -36,6 +36,7 @@ namespace Origam.ServerCore
                 configuration.RootPath = ".";
             });
             services.AddSingleton<SessionObjects, SessionObjects>();
+            services.AddSingleton<UserService,UserService>();
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = "Jwt";
