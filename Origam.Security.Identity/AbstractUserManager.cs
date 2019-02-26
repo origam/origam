@@ -16,6 +16,7 @@ using Origam.Workbench.Services;
 using System.Data;
 using System.Collections.Generic;
 using System.Security;
+using Origam.Security.Common;
 
 namespace Origam.Security.Identity
 {

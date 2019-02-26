@@ -106,6 +106,10 @@
       <Project>{4f05db44-2bbd-4b54-8d37-e8038d1ee1e7}</Project>
       <Name>Origam.Rule</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.Security.Common\Origam.Security.Common.csproj">
+      <Project>{66fae794-7352-440f-b24d-684686a62cf5}</Project>
+      <Name>Origam.Security.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
       <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>
       <Name>Origam.Services</Name>

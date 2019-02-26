@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
+using Origam.Security.Common;
 
 namespace Origam.Security.Identity
 {

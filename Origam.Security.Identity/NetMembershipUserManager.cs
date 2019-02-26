@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using System.Data;
 using System.Security.Cryptography;
 using System.Text;
+using Origam.Security.Common;
 
 namespace Origam.Security.Identity
 {
