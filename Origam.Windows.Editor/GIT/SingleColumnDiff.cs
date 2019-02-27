@@ -170,7 +170,7 @@ namespace Origam.Windows.Editor.GIT
 
                 List<DiffLineViewModel> rightDiff = innerDiffContents
                     .Where(x => !x.Line.StartsWith("-"))
-                    .Zip(leftLineNumbers, (x, line) => new { x.Line, x.PositionInDiff,  LineNumber = line })
+                    .Zip(rightLineNumbers, (x, line) => new { x.Line, x.PositionInDiff,  LineNumber = line })
                     .Select(x => DiffLineViewModel.Create(x.PositionInDiff, x.LineNumber, x.Line))
                     .ToList();
 
