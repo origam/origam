@@ -54,7 +54,7 @@ namespace Origam.Server.Handlers
 						context.Authentication.SignOut();
 						context.Response.Write(
 							"{\"Status\":204,\"Message\":"
-							+ JsonConvert.ToString(Origam.Security.Identity.Resources.InvalidUsernameOrPassword)
+							+ JsonConvert.ToString(Origam.Security.Common.Resources.InvalidUsernameOrPassword)
 							+ "}");
 					}
 					else

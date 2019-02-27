@@ -6,6 +6,7 @@ using Origam.Rule;
 using Microsoft.AspNet.Identity;
 using System.Xml.Linq;
 using log4net;
+using Origam.Security.Common;
 
 namespace Origam.Security.Identity
 {
