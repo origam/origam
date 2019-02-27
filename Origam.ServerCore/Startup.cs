@@ -1,10 +1,14 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,10 +40,16 @@ namespace Origam.ServerCore
                 configuration.RootPath = ".";
             });
             services.AddSingleton<SessionObjects, SessionObjects>();
-            services.AddSingleton<UserService,UserService>();
+            services.AddTransient<IMessageService, FileMessageService>();
+            services.AddTransient<IUserStore<User>, UserStore>();
+            services.AddSingleton<IRoleStore<Role>, RoleStore>();
+            services.AddSingleton<IPasswordHasher<User>, CorePasswordHasher>();
+            services.AddIdentity<User, Role>()
+                .AddDefaultTokenProviders();
+      
             services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = "Jwt";
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = "Jwt";
             }).AddJwtBearer("Jwt", options =>
             {
@@ -53,6 +63,7 @@ namespace Origam.ServerCore
                     ClockSkew = TimeSpan.FromMinutes(5) // 5 minute tolerance for the expiration date
                 };
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -92,6 +103,7 @@ namespace Origam.ServerCore
             app.UseSpaStaticFiles();
             app.UseMvc();
             app.UseSpa(spa => {});
+            
             OrigamEngine.OrigamEngine.ConnectRuntime();
         }
 
