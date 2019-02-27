@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace Origam.DA.ObjectPersistence
@@ -165,6 +166,7 @@ namespace Origam.DA.ObjectPersistence
 			}
 		}
 
+        public List<string> Files => _persistenceProvider.Files(this);
 		#endregion
 
 		#region IDisposable Members

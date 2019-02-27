@@ -853,21 +853,13 @@ namespace Origam.Workbench.Commands
         public override void Run()
         {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-            List<string> filepaths = new List<string>();
             string activefile = Path.Combine(settings.ModelSourceControlLocation, _schema.ActiveSchemaItem.RootItem.RelativeFilePath);
-            filepaths.Add(_schema.ActiveSchemaItem.RootItem.RelativeFilePath);
             var provider = (FilePersistenceProvider)_schema.ActiveSchemaItem.PersistenceProvider;
             bool hasChange = false;
             if (provider != null)
             {
                 GitManager gitManager = new GitManager(settings.ModelSourceControlLocation);
-                filepaths.AddRange(
-                    provider
-                    .FindPersistedObjectInfo(_schema.ActiveSchemaItem.Id)
-                    .OrigamFile.ExternalFiles
-                    .Select(x=>x.FullName)
-                    .ToList());
-                foreach (string file in filepaths)
+                foreach (string file in _schema.ActiveSchemaItem.Files)
                 {
                     if (File.Exists(Path.Combine(settings.ModelSourceControlLocation, file)))
                     {

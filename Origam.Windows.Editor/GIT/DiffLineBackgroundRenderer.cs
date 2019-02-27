@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit.Rendering;
+using Origam.UI;
 
 namespace Origam.Windows.Editor.GIT
 {
@@ -16,9 +17,14 @@ namespace Origam.Windows.Editor.GIT
         static DiffLineBackgroundRenderer()
         {
             AddedBackground = new SolidColorBrush(Color.FromRgb(0x6e, 0xff, 0x6e));
+            AddedBackground.Opacity = 0.5;
             AddedBackground.Freeze();
 
-            DeletedBackground = new SolidColorBrush(Color.FromRgb(0xff, 0x6e, 0x6e));
+            DeletedBackground = new SolidColorBrush(Color.FromRgb(
+                OrigamColorScheme.DirtyColor.R,
+                OrigamColorScheme.DirtyColor.G,
+                OrigamColorScheme.DirtyColor.B));
+            DeletedBackground.Opacity = 0.3;
             DeletedBackground.Freeze();
 
             BlankBackground = new SolidColorBrush(Color.FromRgb(0xfa, 0xfa, 0xfa));

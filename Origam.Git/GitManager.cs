@@ -19,6 +19,9 @@ namespace Origam.Git
         {
             return Repo.Head.Tip;         
         }
+        public bool HasChanges(string filePath) 
+            => Repo.RetrieveStatus(filePath) != FileStatus.Unaltered;
+
         private string FixSlash(string file)
         {
             return file==null?"":file.Replace("\\", "/");

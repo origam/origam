@@ -89,5 +89,7 @@ namespace Origam.DA.ObjectPersistence
 		void RestrictToLoadedPackage(bool b);
 		
 		ILocalizationCache LocalizationCache { get; }
+
+        List<string> Files(IPersistent item);
 	}
 }
