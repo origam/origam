@@ -774,6 +774,7 @@ namespace OrigamArchitect
             _schemaMenu.SubItems.Add(CreateSeparator());
             CreateMenuItem(strings.SourceXml_MenuItem, new ShowExplorerXml(), Images.Search, Keys.None, _schemaMenu);
             CreateMenuItem(strings.XmlConsole, new ShowConsoleXml(), Images.Search, Keys.None, _schemaMenu);
+            AsMenuCommand schemamenuGit = CreateMenuWithSubmenu("Git", Images.Edit, new GitMenuBuilder(), _schemaMenu);
         }
 
 		private void CreateToolsMenu()
