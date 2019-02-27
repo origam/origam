@@ -889,7 +889,8 @@ namespace Origam.Workbench.Commands
             }
             if(!hasChange)
             {
-                throw new Exception("Found no changes in " + activefile);
+                MessageBox.Show("Found no changes in " + activefile, "Git Diff",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
         public override void Dispose()
