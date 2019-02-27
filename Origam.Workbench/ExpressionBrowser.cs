@@ -1304,7 +1304,7 @@ namespace Origam.Workbench
 					tnode.Expand();
 
                     // try to find a subfolder, if one exists and expand it
-                    string subfolderName = node.GetType().SchemaItemDescription()?.Name;
+                    string subfolderName = node.GetType().SchemaItemDescription()?.FolderName;
 
 					foreach(TreeNode subnode in tnode.Nodes)
 					{
