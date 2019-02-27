@@ -439,7 +439,7 @@ namespace Origam.Workbench.Commands
 
         public ToolStripMenuItem[] BuildSubmenu(object owner)
         {
-            AsMenuCommand menu = new AsMenuCommand("Diff", new ShowFileDiffXml());
+            AsMenuCommand menu = new AsMenuCommand("Diff with previous version", new ShowFileDiffXml());
             menu.Click += new EventHandler(ExeItem);
             items[0] = menu;
             return items;
