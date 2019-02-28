@@ -43,6 +43,7 @@ using LibGit2Sharp;
 using System.Collections.Generic;
 using Origam.Git;
 using Origam.Windows.Editor.GIT;
+using System.Text.RegularExpressions;
 
 namespace Origam.Workbench.Commands
 {
@@ -872,6 +873,7 @@ namespace Origam.Workbench.Commands
                             {
                                 Text = gitManager.getCompareFileName()
                             };
+                            text = Regex.Replace(text, @"^.*\ No newline at end of file.*\n", "", RegexOptions.Multiline);
                             gitDiferenceView.ShowDiff(file + " " + lastCommit.Sha, file, text);
                             WorkbenchSingleton.Workbench.ShowView(gitDiferenceView);
                             hasChange = true;
