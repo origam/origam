@@ -551,8 +551,9 @@ namespace Origam.Workbench
 									tnode.Nodes.Add(new DummyNode());
 								}
 								parentNode.Nodes.Add(tnode);
-							}
-						}
+                                RecolorNode(tnode);
+                            }
+                        }
 					}
 				}
 			}
@@ -643,8 +644,6 @@ namespace Origam.Workbench
 			TreeNode tnode = new TreeNode(bnode.NodeText, imageIndex, imageIndex);
 			tnode.Tag = bnode;
             tnode.NodeFont = GetFont(bnode);
-			RecolorNode(tnode);
-			
 			return tnode;
 		}
 
@@ -669,14 +668,22 @@ namespace Origam.Workbench
 
             if (item != null)
 			{
-                if (_supportsGit && IsFileDirty(item))
+                TreeNode parentNode = node.Parent;
+                if (this.DisableOtherExtensionNodes & !_schemaService.IsItemFromExtension(item))
+                {
+                    node.ForeColor = Color.Gray;
+                }
+                else if (parentNode != null
+                    && parentNode.Tag is IPersistent  parentItem
+                    && parentItem.Files.First() == item.Files.First())
+                {
+                    // same file as parent
+                    node.ForeColor = parentNode.ForeColor;
+                }
+                else if (_supportsGit && IsFileDirty(item))
                 {
                     node.ForeColor = OrigamColorScheme.DirtyColor;
                 }
-                else if (this.DisableOtherExtensionNodes & ! _schemaService.IsItemFromExtension(item))
-				{
-					node.ForeColor = Color.Gray;
-				}
 
 				Pads.FindSchemaItemResultsPad resultsPad = 
 					WorkbenchSingleton.Workbench.GetPad(typeof(Pads.FindSchemaItemResultsPad)) as Pads.FindSchemaItemResultsPad;
@@ -786,6 +793,7 @@ namespace Origam.Workbench
             }
             _supportsGit = GitManager.IsValid(_sourcePath);
             TreeNode tnode = RenderBrowserNode(node);
+            RecolorNode(tnode);
             try
             {
 				if(HasChildNodes(node))
