@@ -16,8 +16,11 @@ using Origam.Workbench.Services.CoreServices;
 namespace Origam.ServerCore
 {
     public class UserStore : IUserStore<User>, IUserEmailStore<User>,
-        IUserTwoFactorStore<User>, IUserPasswordStore<User>
+        IUserTwoFactorStore<User>, IUserPasswordStore<User>,IUserLockoutStore<User>
     {
+
+        private int accessFailedCount;
+
         public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
         {
             DatasetGenerator dataSetGenerator = new DatasetGenerator(true);
@@ -267,6 +270,41 @@ namespace Origam.ServerCore
             user.PasswordHash =(string)dataSet.Tables["OrigamUser"] 
                 .Rows[0]["Password"];
             return user;
+        }
+
+        public Task<DateTimeOffset?> GetLockoutEndDateAsync(User user, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetLockoutEndDateAsync(User user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> IncrementAccessFailedCountAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(accessFailedCount++);
+        }
+
+        public Task ResetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(accessFailedCount=0);
+        }
+
+        public Task<int> GetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(accessFailedCount);
+        }
+
+        public Task<bool> GetLockoutEnabledAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.Factory.StartNew(() => false);
+        }
+
+        public Task SetLockoutEnabledAsync(User user, bool enabled, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

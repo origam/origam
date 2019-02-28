@@ -83,7 +83,7 @@ namespace Origam.ServerCore.Controllers
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> Login(string userName, string password, bool rememberMe)
+        public async Task<IActionResult> Login(string userName, string password)
         {
             var claims = new List<Claim>
             {
