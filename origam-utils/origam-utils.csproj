@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
@@ -113,6 +113,7 @@
       <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
       <Name>Origam.Schema</Name>
     </ProjectReference>
+      <ProjectReference Include="..\Origam.Security.Common\Origam.Security.Common.csproj" />
     <ProjectReference Include="..\Origam.Security\Origam.Security.csproj">
       <Project>{93b972c4-d58d-4681-a8b8-95a34c7c2980}</Project>
       <Name>Origam.Security</Name>

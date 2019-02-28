@@ -35,6 +35,7 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
+using BrockAllen.IdentityReboot;
 
 namespace Origam.Utils
 {
@@ -142,6 +143,12 @@ namespace Origam.Utils
             [ParserState]
             public IParserState LastParserState { get; set; }
         }
+        
+        internal class GeneratePassHashOptions
+        {
+            [Option('p', "password", Required = true, HelpText = "String to hash")]
+            public string Password { get; set; }
+        }
 
         class Options
         {
@@ -151,6 +158,9 @@ namespace Origam.Utils
             [VerbOption("process-docgenerator",
                 HelpText = "Generate Menu into output with xslt template.")]
             public ProcessDocGeneratorArgs ProcessDocGeneratorArgs { get; set; }
+            [VerbOption("generate-password-hash",
+                HelpText = "Generate hash of supplied password. The hash can be inserted into column Password in OrigamUser table as development password reset.")]
+            public GeneratePassHashOptions GeneratePassHashOptions { get; set; }
 #if !NETCORE2_1
             [VerbOption("process-queue",
                 HelpText = "Process a queue.")]
@@ -217,6 +227,11 @@ namespace Origam.Utils
                         return ProcesDocGenerator(
                             (ProcessDocGeneratorArgs)invokedVerbInstance);
                 }
+                case "generate-password-hash":
+                {
+                    return HashPassword(
+                        (GeneratePassHashOptions)invokedVerbInstance);
+                }
 #if !NETCORE2_1
                 case "process-queue":
                 {
@@ -251,6 +266,17 @@ namespace Origam.Utils
                     return 1;
                 }
             }
+        }
+
+        private static int HashPassword(GeneratePassHashOptions options)
+        {
+            string hash = new AdaptivePasswordHasher().HashPassword(options.Password);
+            
+            log.Info("");
+            log.Info("Password: "+options.Password);
+            log.Info("Hash: "+hash);
+
+            return 0;
         }
 
         private static int ProcesDocGenerator(ProcessDocGeneratorArgs config)
@@ -513,4 +539,6 @@ namespace Origam.Utils
             }
         }
     }
+
+
 }
