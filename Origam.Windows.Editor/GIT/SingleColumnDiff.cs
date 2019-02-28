@@ -134,7 +134,7 @@ namespace Origam.Windows.Editor.GIT
                 .Where(x => x.StartsWith("@@ "))
                 .ToList();  
 
-            var lineNumberRegEx = new Regex(@"\-(?<leftStart>\d{1,})\,(?<leftCount>\d{1,})\s\+(?<rightStart>\d{1,})\,(?<rightCount>\d{1,})",
+            var lineNumberRegEx = new Regex(@"\-(?<leftStart>\d{1,})(\,(?<leftCount>\d{1,}))*\s\+(?<rightStart>\d{1,})(\,(?<rightCount>\d{1,}))*",
                 RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             var sections = new List<DiffSectionViewModel>();
@@ -150,9 +150,11 @@ namespace Origam.Windows.Editor.GIT
                     .ToList();
 
                 var leftStart = int.Parse(lineNumberResult.Groups["leftStart"].Value);
-                var leftDiffSize = int.Parse(lineNumberResult.Groups["leftCount"].Value);
+                var leftDiffSize = string.IsNullOrEmpty(lineNumberResult.Groups["leftCount"].Value)? leftStart :
+                    int.Parse(lineNumberResult.Groups["leftCount"].Value);
                 var rightStart = int.Parse(lineNumberResult.Groups["rightStart"].Value);
-                var rightDiffSize = int.Parse(lineNumberResult.Groups["rightCount"].Value);
+                var rightDiffSize = string.IsNullOrEmpty(lineNumberResult.Groups["rightCount"].Value)? rightStart:
+                    int.Parse(lineNumberResult.Groups["rightCount"].Value);
 
                 var leftLineNumbers = Enumerable.Range(leftStart, leftDiffSize)
                     .Select(x => x.ToString(CultureInfo.InvariantCulture));
