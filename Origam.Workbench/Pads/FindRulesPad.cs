@@ -177,8 +177,8 @@ namespace Origam.Workbench.Pads
             this.HideOnClose = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FindRulesPad";
-            this.TabText = "Rules Violated";
-            this.Text = "Rules Violation";
+            this.TabText = "Model Errors";
+            this.Text = "Model Errors";
             this.ResumeLayout(false);
 
 		}

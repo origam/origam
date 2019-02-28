@@ -1852,7 +1852,7 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show Xml.
+        ///   Looks up a localized string similar to Show XML.
         /// </summary>
         internal static string XmlConsole {
             get {

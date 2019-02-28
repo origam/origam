@@ -763,7 +763,7 @@ namespace OrigamArchitect
 				
 			_schemaMenu.SubItems.Add(CreateSeparator());	
 				
-			AsMenuCommand mnuEditSchemaItem = CreateMenuItem(strings.EditItem_MenuItem, new EditActiveSchemaItem(), Images.Edit, Keys.None, _schemaMenu);
+			AsMenuCommand mnuEditSchemaItem = CreateMenuItem(strings.EditItem_MenuItem, new EditActiveSchemaItem(), Images.PropertyPad, Keys.None, _schemaMenu);
 			AsMenuCommand mnuDelete = CreateMenuItem(strings.Delete_MenuItem, new DeleteActiveNode(), Images.Delete, Keys.None, _schemaMenu);
 			CreateMenuItem(strings.Execute_MenuItem, new Commands.ExecuteActiveSchemaItem(), Images.Preview, Keys.Control | Keys.X, _schemaMenu);
 			CreateMenuItem(strings.EditInDiagram_MenuItem, new EditDiagramActiveSchemaItem(), Images.Culture, Keys.None, _schemaMenu);
@@ -772,8 +772,9 @@ namespace OrigamArchitect
 			CreateMenuItem(strings.FindDependencies_MenuItem, new ShowDependencies(), Images.Search, Keys.None, _schemaMenu);
 			CreateMenuItem(strings.FindReferences_MenuItem, new ShowUsage(), Images.Search, Keys.None, _schemaMenu);
             _schemaMenu.SubItems.Add(CreateSeparator());
-            CreateMenuItem(strings.SourceXml_MenuItem, new ShowExplorerXml(), Images.Search, Keys.None, _schemaMenu);
-            CreateMenuItem(strings.XmlConsole, new ShowConsoleXml(), Images.Search, Keys.None, _schemaMenu);
+            CreateMenuItem(strings.SourceXml_MenuItem, new ShowExplorerXml(), Images.Parent, Keys.None, _schemaMenu);
+            CreateMenuItem(strings.XmlConsole, new ShowConsoleXml(), Images.Edit, Keys.None, _schemaMenu);
+            AsMenuCommand schemamenuGit = CreateMenuWithSubmenu("Git", Images.Git, new GitMenuBuilder(), _schemaMenu);
         }
 
 		private void CreateToolsMenu()
@@ -1596,7 +1597,10 @@ namespace OrigamArchitect
                     FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
                     this.RunWithInvoke(() =>
                        {
-                           DialogResult dialogResult = MessageBox.Show("Do you want to show the Rules Violation?", "Rules Violation", MessageBoxButtons.YesNo);
+                           DialogResult dialogResult = MessageBox.Show(
+                               "Some model elements do not satisfy model integrity rules. Do you want to show the rule violations?",
+                               "Model Errors",
+                               MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                            if (dialogResult == DialogResult.Yes)
                            {
                                resultsPad.DisplayResults(errorFragments);

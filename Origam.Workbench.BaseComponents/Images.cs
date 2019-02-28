@@ -101,5 +101,6 @@ namespace Origam.Workbench
 		public static Image Cancel => images[50];
 		public static Image GlobalTransactionHistoryPad => images[51];
 		public static Image RestartServer => images[52];
-	}
+        public static Image Git => images[53];
+    }
 }

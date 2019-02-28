@@ -81,6 +81,11 @@ namespace Origam.DA.ObjectPersistence
             }
         }
 
+        public virtual List<string> Files(IPersistent persistentObject)
+        {
+            return new List<string>();
+        }
+
         public abstract bool InTransaction { get; }
 
         public abstract void RefreshInstance(IPersistent persistentObject);

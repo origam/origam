@@ -228,13 +228,7 @@ namespace Origam.Schema
 			}
 		}
 
-		public string Icon
-		{
-			get
-			{
-				return "1";
-			}
-		}
+        public string Icon => "09_packages-1.ico";
 
         public string RelativeFilePath
         {

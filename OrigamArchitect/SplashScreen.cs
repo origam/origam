@@ -90,96 +90,101 @@ namespace OrigamArchitect
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(SplashScreen));
-			this.lblVersion = new System.Windows.Forms.Label();
-			this.btnOK = new System.Windows.Forms.Button();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
-			this.origamLink = new System.Windows.Forms.LinkLabel();
-			this.btnSystemInformation = new System.Windows.Forms.Button();
-			this.SuspendLayout();
-			// 
-			// lblVersion
-			// 
-			this.lblVersion.BackColor = System.Drawing.Color.Transparent;
-			this.lblVersion.ForeColor = System.Drawing.Color.FromArgb(((System.Byte)(35)), ((System.Byte)(35)), ((System.Byte)(35)));
-			this.lblVersion.Location = new System.Drawing.Point(392, 550);
-			this.lblVersion.Name = "lblVersion";
-			this.lblVersion.Size = new System.Drawing.Size(320, 24);
-			this.lblVersion.TabIndex = 3;
-			this.lblVersion.Text = strings.VersionInfo_Label;
-			this.lblVersion.TextAlign = System.Drawing.ContentAlignment.TopRight;
-			// 
-			// btnOK
-			// 
-			this.btnOK.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(234)), ((System.Byte)(234)), ((System.Byte)(234)));
-			this.btnOK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.btnOK.ForeColor = System.Drawing.Color.FromArgb(((System.Byte)(35)), ((System.Byte)(35)), ((System.Byte)(35)));
-			this.btnOK.Location = new System.Drawing.Point(576, 488);
-			this.btnOK.Name = "btnOK";
-			this.btnOK.Size = new System.Drawing.Size(134, 24);
-			this.btnOK.TabIndex = 4;
-			this.btnOK.Text = strings.Ok_Button;
-			this.btnOK.Visible = false;
-			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-			// 
-			// pictureBox1
-			// 
-			this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-			this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-			this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(744, 540);
-			this.pictureBox1.TabIndex = 2;
-			this.pictureBox1.TabStop = false;
-			// 
-			// origamLink
-			// 
-			this.origamLink.AutoSize = true;
-			this.origamLink.ForeColor = System.Drawing.Color.FromArgb(((System.Byte)(35)), ((System.Byte)(35)), ((System.Byte)(35)));
-			this.origamLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-			this.origamLink.LinkColor = System.Drawing.Color.FromArgb(((System.Byte)(64)), ((System.Byte)(64)), ((System.Byte)(64)));
-			this.origamLink.Location = new System.Drawing.Point(29, 550);
-			this.origamLink.Name = "origamLink";
-			this.origamLink.Size = new System.Drawing.Size(328, 16);
-			this.origamLink.TabIndex = 6;
-			this.origamLink.TabStop = true;
-			this.origamLink.Text = "Powered by ORIGAM® a product of Advantage Solutions, s. r. o.";
-			this.origamLink.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-			this.origamLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.origamLink_LinkClicked);
-			// 
-			// btnSystemInformation
-			// 
-			this.btnSystemInformation.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(234)), ((System.Byte)(234)), ((System.Byte)(234)));
-			this.btnSystemInformation.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.btnSystemInformation.ForeColor = System.Drawing.Color.FromArgb(((System.Byte)(35)), ((System.Byte)(35)), ((System.Byte)(35)));
-			this.btnSystemInformation.Location = new System.Drawing.Point(432, 488);
-			this.btnSystemInformation.Name = "btnSystemInformation";
-			this.btnSystemInformation.Size = new System.Drawing.Size(134, 24);
-			this.btnSystemInformation.TabIndex = 7;
-			this.btnSystemInformation.Text = "System &Information";
-			this.btnSystemInformation.Visible = false;
-			this.btnSystemInformation.Click += new System.EventHandler(this.btnSystemInformation_Click);
-			// 
-			// SplashScreen
-			// 
-			this.AcceptButton = this.btnOK;
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.BackColor = System.Drawing.Color.FromArgb(((System.Byte)(234)), ((System.Byte)(234)), ((System.Byte)(234)));
-			this.CancelButton = this.btnOK;
-			this.ClientSize = new System.Drawing.Size(740, 576);
-			this.Controls.Add(this.btnSystemInformation);
-			this.Controls.Add(this.origamLink);
-			this.Controls.Add(this.lblVersion);
-			this.Controls.Add(this.btnOK);
-			this.Controls.Add(this.pictureBox1);
-			this.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-			this.Name = "SplashScreen";
-			this.ShowInTaskbar = false;
-			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "SplashScreen";
-			this.ResumeLayout(false);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SplashScreen));
+            this.lblVersion = new System.Windows.Forms.Label();
+            this.btnOK = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.origamLink = new System.Windows.Forms.LinkLabel();
+            this.btnSystemInformation = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // lblVersion
+            // 
+            this.lblVersion.BackColor = System.Drawing.Color.Transparent;
+            this.lblVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
+            this.lblVersion.Location = new System.Drawing.Point(392, 550);
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(320, 24);
+            this.lblVersion.TabIndex = 3;
+            this.lblVersion.Text = "<< version info >>";
+            this.lblVersion.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // btnOK
+            // 
+            this.btnOK.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(234)))));
+            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOK.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
+            this.btnOK.Location = new System.Drawing.Point(586, 483);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(124, 24);
+            this.btnOK.TabIndex = 4;
+            this.btnOK.Text = global::OrigamArchitect.strings.Ok_Button;
+            this.btnOK.UseVisualStyleBackColor = false;
+            this.btnOK.Visible = false;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(738, 540);
+            this.pictureBox1.TabIndex = 2;
+            this.pictureBox1.TabStop = false;
+            // 
+            // origamLink
+            // 
+            this.origamLink.AutoSize = true;
+            this.origamLink.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
+            this.origamLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.origamLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.origamLink.Location = new System.Drawing.Point(29, 550);
+            this.origamLink.Name = "origamLink";
+            this.origamLink.Size = new System.Drawing.Size(313, 13);
+            this.origamLink.TabIndex = 6;
+            this.origamLink.TabStop = true;
+            this.origamLink.Text = "Powered by ORIGAM® a product of Advantage Solutions, s. r. o.";
+            this.origamLink.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.origamLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.origamLink_LinkClicked);
+            // 
+            // btnSystemInformation
+            // 
+            this.btnSystemInformation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(234)))));
+            this.btnSystemInformation.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSystemInformation.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
+            this.btnSystemInformation.Location = new System.Drawing.Point(438, 483);
+            this.btnSystemInformation.Name = "btnSystemInformation";
+            this.btnSystemInformation.Size = new System.Drawing.Size(125, 24);
+            this.btnSystemInformation.TabIndex = 7;
+            this.btnSystemInformation.Text = "System &Information";
+            this.btnSystemInformation.UseVisualStyleBackColor = false;
+            this.btnSystemInformation.Visible = false;
+            this.btnSystemInformation.Click += new System.EventHandler(this.btnSystemInformation_Click);
+            // 
+            // SplashScreen
+            // 
+            this.AcceptButton = this.btnOK;
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(234)))));
+            this.CancelButton = this.btnOK;
+            this.ClientSize = new System.Drawing.Size(736, 576);
+            this.Controls.Add(this.btnSystemInformation);
+            this.Controls.Add(this.origamLink);
+            this.Controls.Add(this.lblVersion);
+            this.Controls.Add(this.btnOK);
+            this.Controls.Add(this.pictureBox1);
+            this.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Name = "SplashScreen";
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "SplashScreen";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 		#endregion

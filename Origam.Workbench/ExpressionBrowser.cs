@@ -23,11 +23,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
+using Origam.Git;
 using Origam.Schema;
 using Origam.UI;
 using Origam.Workbench.Commands;
@@ -59,17 +61,21 @@ namespace Origam.Workbench
 		private bool _refreshPaused = false;
 		private bool _disposed = false;
 		private Font _boldFont;
-
-		private Hashtable _customImages = new Hashtable();
+        private string _sourcePath;
+        private FileSystemWatcher fileWatcher;
+        private Timer watcherTimer;
+        private Hashtable _customImages = new Hashtable();
+        private bool _fileChangesPending = false;
+        private bool _supportsGit = false;
 
 		public ExpressionBrowser()
 		{
 			// This call is required by the Windows.Forms Form Designer.
 			InitializeComponent();
 			_boldFont = new Font(tvwExpressionBrowser.Font, FontStyle.Bold);
-			// handle the exception because of the WinForms Designer
-			try
-			{
+            // handle the exception because of the WinForms Designer
+            try
+            {
 				_documentationService = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
 				_schemaService = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
 			}
@@ -125,6 +131,9 @@ namespace Origam.Workbench
             this.cboFilter = new System.Windows.Forms.ComboBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tvwExpressionBrowser = new Origam.UI.NativeTreeView();
+            this.fileWatcher = new System.IO.FileSystemWatcher();
+            this.watcherTimer = new System.Windows.Forms.Timer(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.fileWatcher)).BeginInit();
             this.SuspendLayout();
             // 
             // imgList
@@ -328,6 +337,19 @@ namespace Origam.Workbench
             this.tvwExpressionBrowser.MouseHover += new System.EventHandler(this.tvwExpressionBrowser_MouseHover);
             this.tvwExpressionBrowser.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tvwExpressionBrowser_MouseMove);
             // 
+            // fileWatcher
+            // 
+            this.fileWatcher.EnableRaisingEvents = true;
+            this.fileWatcher.IncludeSubdirectories = true;
+            this.fileWatcher.SynchronizingObject = this;
+            this.fileWatcher.Changed += new System.IO.FileSystemEventHandler(this.fileWatcher_Changed);
+            // 
+            // watcherTimer
+            // 
+            this.watcherTimer.Enabled = true;
+            this.watcherTimer.Interval = 1000;
+            this.watcherTimer.Tick += new System.EventHandler(this.watcherTimer_Tick);
+            // 
             // ExpressionBrowser
             // 
             this.Controls.Add(this.cboFilter);
@@ -335,6 +357,7 @@ namespace Origam.Workbench
             this.Name = "ExpressionBrowser";
             this.Size = new System.Drawing.Size(176, 144);
             this.BackColorChanged += new System.EventHandler(this.ExpressionBrowser_BackColorChanged);
+            ((System.ComponentModel.ISupportInitialize)(this.fileWatcher)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -528,8 +551,9 @@ namespace Origam.Workbench
 									tnode.Nodes.Add(new DummyNode());
 								}
 								parentNode.Nodes.Add(tnode);
-							}
-						}
+                                RecolorNode(tnode);
+                            }
+                        }
 					}
 				}
 			}
@@ -620,8 +644,6 @@ namespace Origam.Workbench
 			TreeNode tnode = new TreeNode(bnode.NodeText, imageIndex, imageIndex);
 			tnode.Tag = bnode;
             tnode.NodeFont = GetFont(bnode);
-			RecolorNode(tnode);
-			
 			return tnode;
 		}
 
@@ -639,18 +661,29 @@ namespace Origam.Workbench
 
 		private void RecolorNode(TreeNode node)
 		{
-#if ORIGAM_CLIENT
-#else
-			Origam.DA.ObjectPersistence.IPersistent item = node.Tag as Origam.DA.ObjectPersistence.IPersistent;
+#if ! ORIGAM_CLIENT
+            var item = node.Tag as IPersistent;
 			node.BackColor = tvwExpressionBrowser.BackColor;
 			node.ForeColor = Color.Black;
 
-			if(item != null)
+            if (item != null)
 			{
-				if(this.DisableOtherExtensionNodes & ! _schemaService.IsItemFromExtension(item))
-				{
-					node.ForeColor = Color.Gray;
-				}
+                TreeNode parentNode = node.Parent;
+                if (this.DisableOtherExtensionNodes & !_schemaService.IsItemFromExtension(item))
+                {
+                    node.ForeColor = Color.Gray;
+                }
+                else if (parentNode != null
+                    && parentNode.Tag is IPersistent  parentItem
+                    && parentItem.Files.First() == item.Files.First())
+                {
+                    // same file as parent
+                    node.ForeColor = parentNode.ForeColor;
+                }
+                else if (_supportsGit && IsFileDirty(item))
+                {
+                    node.ForeColor = OrigamColorScheme.DirtyColor;
+                }
 
 				Pads.FindSchemaItemResultsPad resultsPad = 
 					WorkbenchSingleton.Workbench.GetPad(typeof(Pads.FindSchemaItemResultsPad)) as Pads.FindSchemaItemResultsPad;
@@ -687,7 +720,37 @@ namespace Origam.Workbench
 #endif
 		}
 
-		private int ImageIndex(IBrowserNode bnode)
+        private bool IsFileDirty(IPersistent item)
+        {
+            GitManager gitManager = new GitManager(_sourcePath);
+            foreach (string file in item.Files)
+            {
+                if (File.Exists(Path.Combine(_sourcePath, file)))
+                {
+                    gitManager.SetFile(file);
+                    if(gitManager.HasChanges(file))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private void RecolorNodesByFile(TreeNode node, string file)
+        {
+            if (node.Tag is IPersistent persistent
+                && persistent.Files.First() == file)
+            {
+                RecolorNode(node);
+            }
+            foreach (TreeNode child in node.Nodes)
+            {
+                RecolorNodesByFile(child, file);
+            }
+        }
+
+        private int ImageIndex(IBrowserNode bnode)
 		{
 			int imageIndex = -1;
 
@@ -719,11 +782,20 @@ namespace Origam.Workbench
 		}
 
 		public void AddRootNode(IBrowserNode2 node)
-		{	
-			TreeNode tnode = RenderBrowserNode(node);
-
-			try
-			{
+		{
+            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+            _sourcePath = settings.ModelSourceControlLocation;
+            var gitPath = Path.Combine(_sourcePath, ".git");
+            if (Directory.Exists(gitPath))
+            {
+                fileWatcher.Path = gitPath;
+                fileWatcher.EnableRaisingEvents = true;
+            }
+            _supportsGit = GitManager.IsValid(_sourcePath);
+            TreeNode tnode = RenderBrowserNode(node);
+            RecolorNode(tnode);
+            try
+            {
 				if(HasChildNodes(node))
 				{
 					tnode.Nodes.Add(new DummyNode());
@@ -736,7 +808,7 @@ namespace Origam.Workbench
 				AsMessageBox.ShowError(this.FindForm(), ResourceUtils.GetString("ErrorWhenAddRoot", node.NodeText, Environment.NewLine + Environment.NewLine + ex.Message), 
 					ResourceUtils.GetString("ErrorTitle"), ex);
 			}
-			tnode.Expand();
+            tnode.Expand();
 		}
 
 		public void RemoveAllNodes()
@@ -744,6 +816,7 @@ namespace Origam.Workbench
 			if(! _disposed)
 			{
 				tvwExpressionBrowser.Nodes.Clear();
+                fileWatcher.EnableRaisingEvents = false;
 			}
 		}
 
@@ -815,15 +888,18 @@ namespace Origam.Workbench
 		private void RefreshNode(TreeNode treeNode)
 		{
 			if(_refreshPaused) return;
-
 			IBrowserNode2 node = treeNode.Tag as IBrowserNode2;
-
 			if(node != null)
 			{
 				treeNode.Text = node.NodeText;
 				treeNode.ImageIndex = ImageIndex(node);
 				treeNode.SelectedImageIndex = treeNode.ImageIndex;
                 treeNode.NodeFont = GetFont(node);
+                if (node is IPersistent persistent)
+                {
+                    RecolorNodesByFile(tvwExpressionBrowser.RootNode,
+                        persistent.Files.First());
+                }
             }
 
 			// after the node refresh is requested (because it was updated)
@@ -833,7 +909,7 @@ namespace Origam.Workbench
 			TreeNode parent = treeNode;
 			while(parent != null)
 			{
-				AbstractSchemaItem item = parent.Tag as AbstractSchemaItem;
+                AbstractSchemaItem item = parent.Tag as AbstractSchemaItem;
 				if(item != null)
 				{
                     if (item.ClearCacheOnPersist)
@@ -1304,7 +1380,7 @@ namespace Origam.Workbench
 					tnode.Expand();
 
                     // try to find a subfolder, if one exists and expand it
-                    string subfolderName = node.GetType().SchemaItemDescription()?.Name;
+                    string subfolderName = node.GetType().SchemaItemDescription()?.FolderName;
 
 					foreach(TreeNode subnode in tnode.Nodes)
 					{
@@ -1333,9 +1409,22 @@ namespace Origam.Workbench
 			tvwExpressionBrowser.BackColor = this.BackColor;
 		}
 
-	}
+        private void fileWatcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            _fileChangesPending = true;
+        }
 
-	public delegate void FilterEventHandler(object sender, ExpressionBrowserEventArgs e);
+        private void watcherTimer_Tick(object sender, EventArgs e)
+        {
+            if (_fileChangesPending)
+            {
+                _fileChangesPending = false;
+                Redraw();
+            }
+        }
+    }
+
+    public delegate void FilterEventHandler(object sender, ExpressionBrowserEventArgs e);
 	
 	public class ExpressionBrowserEventArgs : System.EventArgs
 	{

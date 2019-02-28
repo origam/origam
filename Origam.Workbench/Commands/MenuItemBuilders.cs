@@ -29,6 +29,7 @@ using Origam.UI;
 using Origam.Workbench.Services;
 using Origam.Schema;
 using Origam.Workbench.Editors;
+using Origam.Git;
 
 namespace Origam.Workbench.Commands
 {
@@ -422,4 +423,45 @@ namespace Origam.Workbench.Commands
 		}
 		#endregion
 	}
+
+    public class GitMenuBuilder : ISubmenuBuilder
+    {
+        readonly OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+                
+        ToolStripMenuItem[] items = new ToolStripMenuItem[1];
+        public bool LateBound
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public ToolStripMenuItem[] BuildSubmenu(object owner)
+        {
+            AsMenuCommand menu = new AsMenuCommand("Diff with previous version", new ShowFileDiffXml());
+            menu.Click += new EventHandler(ExeItem);
+            items[0] = menu;
+            return items;
+           
+        }
+
+        public bool HasItems()
+        {
+            return items.Length > 0 && GitManager.IsValid(settings.ModelSourceControlLocation);
+        }
+
+        private void ExeItem(object sender, EventArgs e)
+        {
+            try
+            {
+                (sender as AsMenuCommand).Command.Run();
+            }
+            catch (Exception ex)
+            {
+                AsMessageBox.ShowError(WorkbenchSingleton.Workbench as Form, ex.Message, ResourceUtils.GetString("ErrorTitle"), ex);
+            }
+        }
+
+    }
 }

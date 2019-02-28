@@ -49,8 +49,8 @@ namespace Origam.Gui.Win
 		private System.Windows.Forms.ToolBarButton _moveLastButton;
 		private System.Windows.Forms.Label _recordLabel;
 		private System.Windows.Forms.ImageList _navigatorImageList;
-		private System.Windows.Forms.ToolBar _leftToolBar;
-		private System.Windows.Forms.ToolBar _rightToolBar;
+		private System.Windows.Forms.ToolBar _navigationToolbar;
+		private System.Windows.Forms.ToolBar _addDeleteToolbar;
 		private System.Windows.Forms.Timer timer1;
 		private System.Windows.Forms.ContextMenu templateMenu;
 		private System.ComponentModel.IContainer components;
@@ -111,127 +111,139 @@ namespace Origam.Gui.Win
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			this._leftToolBar = new System.Windows.Forms.ToolBar();
-			this._moveFirstButton = new System.Windows.Forms.ToolBarButton();
-			this._movePreviousButton = new System.Windows.Forms.ToolBarButton();
-			this._moveNextButton = new System.Windows.Forms.ToolBarButton();
-			this._moveLastButton = new System.Windows.Forms.ToolBarButton();
-			this._navigatorImageList = new System.Windows.Forms.ImageList(this.components);
-			this._newButton = new System.Windows.Forms.ToolBarButton();
-			this.templateMenu = new System.Windows.Forms.ContextMenu();
-			this._deleteButton = new System.Windows.Forms.ToolBarButton();
-			this._rightToolBar = new System.Windows.Forms.ToolBar();
-			this._recordLabel = new System.Windows.Forms.Label();
-			this.timer1 = new System.Windows.Forms.Timer(this.components);
-			this.SuspendLayout();
-			// 
-			// _leftToolBar
-			// 
-			this._leftToolBar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
-			this._leftToolBar.AutoSize = false;
-			this._leftToolBar.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
-																							this._moveFirstButton,
-																							this._movePreviousButton,
-																							this._moveNextButton,
-																							this._moveLastButton});
-			this._leftToolBar.ButtonSize = new System.Drawing.Size(10, 10);
-			this._leftToolBar.Divider = false;
-			this._leftToolBar.Dock = System.Windows.Forms.DockStyle.Left;
-			this._leftToolBar.DropDownArrows = true;
-			this._leftToolBar.ImageList = this._navigatorImageList;
-			this._leftToolBar.Location = new System.Drawing.Point(0, 0);
-			this._leftToolBar.Name = "_leftToolBar";
-			this._leftToolBar.ShowToolTips = true;
-			this._leftToolBar.Size = new System.Drawing.Size(96, 24);
-			this._leftToolBar.TabIndex = 0;
-			this._leftToolBar.Wrappable = false;
-			this._leftToolBar.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.OnButtonClick);
-			// 
-			// _moveFirstButton
-			// 
-			this._moveFirstButton.ImageIndex = 0;
-			this._moveFirstButton.ToolTipText = ResourceUtils.GetString("TooltipFirst");
-			// 
-			// _movePreviousButton
-			// 
-			this._movePreviousButton.ImageIndex = 1;
-			this._movePreviousButton.ToolTipText = ResourceUtils.GetString("TooltipPrevious");
-			// 
-			// _moveNextButton
-			// 
-			this._moveNextButton.ImageIndex = 6;
-			this._moveNextButton.ToolTipText = ResourceUtils.GetString("TooltipNext");
-			// 
-			// _moveLastButton
-			// 
-			this._moveLastButton.ImageIndex = 7;
-			this._moveLastButton.ToolTipText = ResourceUtils.GetString("TooltipLast");
-			// 
-			// _navigatorImageList
-			// 
-			this._navigatorImageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth24Bit;
-			this._navigatorImageList.ImageSize = new System.Drawing.Size(16, 16);
-			this._navigatorImageList.TransparentColor = System.Drawing.Color.Magenta;
-			// 
-			// _newButton
-			// 
-			this._newButton.DropDownMenu = this.templateMenu;
-			this._newButton.ImageIndex = 2;
-			this._newButton.ToolTipText = ResourceUtils.GetString("TooltipNew");
-			// 
-			// templateMenu
-			// 
-			this.templateMenu.Popup += new System.EventHandler(this.templateMenu_Popup);
-			// 
-			// _deleteButton
-			// 
-			this._deleteButton.ImageIndex = 3;
-			this._deleteButton.ToolTipText = ResourceUtils.GetString("TooltipDelete");
-			// 
-			// _rightToolBar
-			// 
-			this._rightToolBar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
-			this._rightToolBar.AutoSize = false;
-			this._rightToolBar.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
-																							 this._newButton,
-																							 this._deleteButton});
-			this._rightToolBar.Divider = false;
-			this._rightToolBar.Dock = System.Windows.Forms.DockStyle.Right;
-			this._rightToolBar.DropDownArrows = true;
-			this._rightToolBar.ImageList = this._navigatorImageList;
-			this._rightToolBar.Location = new System.Drawing.Point(248, 0);
-			this._rightToolBar.Name = "_rightToolBar";
-			this._rightToolBar.ShowToolTips = true;
-			this._rightToolBar.Size = new System.Drawing.Size(64, 24);
-			this._rightToolBar.TabIndex = 1;
-			this._rightToolBar.Wrappable = false;
-			this._rightToolBar.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.OnButtonClick);
-			// 
-			// _recordLabel
-			// 
-			this._recordLabel.BackColor = System.Drawing.Color.Transparent;
-			this._recordLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this._recordLabel.Location = new System.Drawing.Point(96, 0);
-			this._recordLabel.Name = "_recordLabel";
-			this._recordLabel.Size = new System.Drawing.Size(152, 24);
-			this._recordLabel.TabIndex = 2;
-			this._recordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// timer1
-			// 
-			this.timer1.Enabled = true;
-			this.timer1.Interval = 200;
-			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-			// 
-			// DbNavigator
-			// 
-			this.BackColor = System.Drawing.Color.Transparent;
-			this.Controls.Add(this._recordLabel);
-			this.Controls.Add(this._rightToolBar);
-			this.Controls.Add(this._leftToolBar);
-			this.Size = new System.Drawing.Size(312, 24);
-			this.ResumeLayout(false);
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DbNavigator));
+            this._navigationToolbar = new System.Windows.Forms.ToolBar();
+            this._moveFirstButton = new System.Windows.Forms.ToolBarButton();
+            this._movePreviousButton = new System.Windows.Forms.ToolBarButton();
+            this._moveNextButton = new System.Windows.Forms.ToolBarButton();
+            this._moveLastButton = new System.Windows.Forms.ToolBarButton();
+            this._navigatorImageList = new System.Windows.Forms.ImageList(this.components);
+            this._newButton = new System.Windows.Forms.ToolBarButton();
+            this.templateMenu = new System.Windows.Forms.ContextMenu();
+            this._deleteButton = new System.Windows.Forms.ToolBarButton();
+            this._addDeleteToolbar = new System.Windows.Forms.ToolBar();
+            this._recordLabel = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.SuspendLayout();
+            // 
+            // _navigationToolbar
+            // 
+            this._navigationToolbar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
+            this._navigationToolbar.AutoSize = false;
+            this._navigationToolbar.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
+            this._moveFirstButton,
+            this._movePreviousButton,
+            this._moveNextButton,
+            this._moveLastButton});
+            this._navigationToolbar.ButtonSize = new System.Drawing.Size(10, 10);
+            this._navigationToolbar.Divider = false;
+            this._navigationToolbar.Dock = System.Windows.Forms.DockStyle.Right;
+            this._navigationToolbar.DropDownArrows = true;
+            this._navigationToolbar.ImageList = this._navigatorImageList;
+            this._navigationToolbar.Location = new System.Drawing.Point(0, 0);
+            this._navigationToolbar.Name = "_navigationToolbar";
+            this._navigationToolbar.ShowToolTips = true;
+            this._navigationToolbar.Size = new System.Drawing.Size(96, 24);
+            this._navigationToolbar.TabIndex = 0;
+            this._navigationToolbar.Wrappable = false;
+            this._navigationToolbar.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.OnButtonClick);
+            // 
+            // _moveFirstButton
+            // 
+            this._moveFirstButton.ImageIndex = 0;
+            this._moveFirstButton.Name = "_moveFirstButton";
+            this._moveFirstButton.ToolTipText = "Přejít na první záznam";
+            // 
+            // _movePreviousButton
+            // 
+            this._movePreviousButton.ImageIndex = 1;
+            this._movePreviousButton.Name = "_movePreviousButton";
+            this._movePreviousButton.ToolTipText = "Přejít na předchozí záznam";
+            // 
+            // _moveNextButton
+            // 
+            this._moveNextButton.ImageIndex = 4;
+            this._moveNextButton.Name = "_moveNextButton";
+            this._moveNextButton.ToolTipText = "Přejít na další záznam";
+            // 
+            // _moveLastButton
+            // 
+            this._moveLastButton.ImageIndex = 5;
+            this._moveLastButton.Name = "_moveLastButton";
+            this._moveLastButton.ToolTipText = "Přejít na poslední záznam";
+            // 
+            // _navigatorImageList
+            // 
+            this._navigatorImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("_navigatorImageList.ImageStream")));
+            this._navigatorImageList.TransparentColor = System.Drawing.Color.Magenta;
+            this._navigatorImageList.Images.SetKeyName(0, "first_white.png");
+            this._navigatorImageList.Images.SetKeyName(1, "previous_white.png");
+            this._navigatorImageList.Images.SetKeyName(2, "add_white.png");
+            this._navigatorImageList.Images.SetKeyName(3, "delete_white.png");
+            this._navigatorImageList.Images.SetKeyName(4, "next_white.png");
+            this._navigatorImageList.Images.SetKeyName(5, "last_white.png");
+            // 
+            // _newButton
+            // 
+            this._newButton.DropDownMenu = this.templateMenu;
+            this._newButton.ImageIndex = 2;
+            this._newButton.Name = "_newButton";
+            this._newButton.ToolTipText = "Přidat záznam (Insert)";
+            // 
+            // templateMenu
+            // 
+            this.templateMenu.Popup += new System.EventHandler(this.templateMenu_Popup);
+            // 
+            // _deleteButton
+            // 
+            this._deleteButton.ImageIndex = 3;
+            this._deleteButton.Name = "_deleteButton";
+            this._deleteButton.ToolTipText = "Vymazat aktuální záznam (Ctrl+Delete)";
+            // 
+            // _addDeleteToolbar
+            // 
+            this._addDeleteToolbar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
+            this._addDeleteToolbar.AutoSize = false;
+            this._addDeleteToolbar.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
+            this._newButton,
+            this._deleteButton});
+            this._addDeleteToolbar.Divider = false;
+            this._addDeleteToolbar.Dock = System.Windows.Forms.DockStyle.Left;
+            this._addDeleteToolbar.DropDownArrows = true;
+            this._addDeleteToolbar.ImageList = this._navigatorImageList;
+            this._addDeleteToolbar.Location = new System.Drawing.Point(248, 0);
+            this._addDeleteToolbar.Name = "_addDeleteToolbar";
+            this._addDeleteToolbar.ShowToolTips = true;
+            this._addDeleteToolbar.Size = new System.Drawing.Size(64, 24);
+            this._addDeleteToolbar.TabIndex = 1;
+            this._addDeleteToolbar.Wrappable = false;
+            this._addDeleteToolbar.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.OnButtonClick);
+            // 
+            // _recordLabel
+            // 
+            this._recordLabel.BackColor = System.Drawing.Color.Transparent;
+            this._recordLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._recordLabel.Location = new System.Drawing.Point(96, 0);
+            this._recordLabel.Name = "_recordLabel";
+            this._recordLabel.Size = new System.Drawing.Size(216, 24);
+            this._recordLabel.TabIndex = 2;
+            this._recordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 200;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // DbNavigator
+            // 
+            this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this._recordLabel);
+            this.Controls.Add(this._addDeleteToolbar);
+            this.Controls.Add(this._navigationToolbar);
+            this.Size = new System.Drawing.Size(312, 24);
+            this.ResumeLayout(false);
 
 		}
 		#endregion
@@ -249,9 +261,9 @@ namespace Origam.Gui.Win
 		{
 			get 
 			{
-				if(_rightToolBar.Buttons.Count > 0)
+				if(_addDeleteToolbar.Buttons.Count > 0)
 				{
-					return _rightToolBar.Buttons[0].Visible; 
+					return _addDeleteToolbar.Buttons[0].Visible; 
 				}
 				else
 				{
@@ -260,9 +272,9 @@ namespace Origam.Gui.Win
 			}
 			set 
 			{ 
-				if(_rightToolBar.Buttons.Count > 0)
+				if(_addDeleteToolbar.Buttons.Count > 0)
 				{
-					_rightToolBar.Buttons[0].Visible = value; 
+					_addDeleteToolbar.Buttons[0].Visible = value; 
 				}
 			}
 		}
@@ -280,9 +292,9 @@ namespace Origam.Gui.Win
 		{
 			get 
 			{
-				if(_rightToolBar.Buttons.Count > 1)
+				if(_addDeleteToolbar.Buttons.Count > 1)
 				{
-					return _rightToolBar.Buttons[1].Visible; 
+					return _addDeleteToolbar.Buttons[1].Visible; 
 				}
 				else
 				{
@@ -291,9 +303,9 @@ namespace Origam.Gui.Win
 			}
 			set 
 			{ 
-				if(_rightToolBar.Buttons.Count > 1)
+				if(_addDeleteToolbar.Buttons.Count > 1)
 				{
-					_rightToolBar.Buttons[1].Visible = value; 
+					_addDeleteToolbar.Buttons[1].Visible = value; 
 				}
 			}
 		}
@@ -312,8 +324,8 @@ namespace Origam.Gui.Win
 			Description("Indicates whether tool tips will be shown.")]
 		public bool ShowToolTips
 		{
-			get { return _leftToolBar.ShowToolTips; }
-			set { _leftToolBar.ShowToolTips = _rightToolBar.ShowToolTips = value; }
+			get { return _navigationToolbar.ShowToolTips; }
+			set { _navigationToolbar.ShowToolTips = _addDeleteToolbar.ShowToolTips = value; }
 		}
 
 		/// <summary>
@@ -555,7 +567,7 @@ namespace Origam.Gui.Win
 
 			int count = bindMan.Count;
 			this.Parent.Parent.Focus();
-			this._leftToolBar.Focus();
+			this._navigationToolbar.Focus();
 			Application.DoEvents();
 
 			DataRowView parentRowView = this.ParentRowView;

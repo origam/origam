@@ -35,6 +35,21 @@ namespace Origam.Windows.Editor.GIT
             singleColumnDiff1.Show(diffInfo);
         }
 
+        public void ShowDiff(string oldfile,string newfile, string text)
+        {
+            oldFileLabel.Text = oldfile;
+            newFileLabel.Text = newfile;
+
+            DiffModelInfo diffInfo = new DiffParser(text)
+                .ParseToLines(maxLinesToReturn: 1000);
+
+            noteLabel.Text = string.IsNullOrEmpty(text)
+                ? "No diferences found."
+                : $"Showing {diffInfo.LinesReturned} of {diffInfo.LinesTotal} lines.";
+
+            singleColumnDiff1.Show(diffInfo);
+        }
+
         public IWorkbenchWindow WorkbenchWindow { get; set; }
 
         public string TabPageText => "Diferences";

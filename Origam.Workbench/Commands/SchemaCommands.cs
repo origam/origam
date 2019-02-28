@@ -39,6 +39,10 @@ using System.Text;
 using Origam.DA.Service;
 using System.Xml;
 using Origam.Schema.GuiModel;
+using LibGit2Sharp;
+using System.Collections.Generic;
+using Origam.Git;
+using Origam.Windows.Editor.GIT;
 
 namespace Origam.Workbench.Commands
 {
@@ -824,5 +828,68 @@ namespace Origam.Workbench.Commands
             base.Dispose();
         }
 
+    }
+
+    /// <summary>
+    /// Show file in directory in explorer.
+    /// </summary>
+    public class ShowFileDiffXml : AbstractMenuCommand
+    {
+        WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+       
+
+        public override bool IsEnabled
+        {
+            get
+            {
+                return _schema.ActiveSchemaItem != null;
+            }
+            set
+            {
+                throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            }
+        }
+
+        public override void Run()
+        {
+            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+            string activefile = Path.Combine(settings.ModelSourceControlLocation, _schema.ActiveSchemaItem.RootItem.RelativeFilePath);
+            var provider = (FilePersistenceProvider)_schema.ActiveSchemaItem.PersistenceProvider;
+            bool hasChange = false;
+            if (provider != null)
+            {
+                GitManager gitManager = new GitManager(settings.ModelSourceControlLocation);
+                foreach (string file in _schema.ActiveSchemaItem.Files)
+                {
+                    if (File.Exists(Path.Combine(settings.ModelSourceControlLocation, file)))
+                    {
+                        gitManager.SetFile(file);
+                        Commit lastCommit = gitManager.GetLastCommit();
+                        string text = gitManager.GetModifiedChanges();
+                        if (!string.IsNullOrEmpty(text))
+                        {
+                            GitDiferenceView gitDiferenceView = new GitDiferenceView
+                            {
+                                Text = gitManager.getCompareFileName()
+                            };
+                            gitDiferenceView.ShowDiff(file + " " + lastCommit.Sha, file, text);
+                            WorkbenchSingleton.Workbench.ShowView(gitDiferenceView);
+                            hasChange = true;
+                        }
+                    }
+                }
+            }
+            if(!hasChange)
+            {
+                MessageBox.Show("Found no changes in " + activefile, "Git Diff",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+        public override void Dispose()
+        {
+            _schema = null;
+
+            base.Dispose();
+        }
     }
 }

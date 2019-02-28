@@ -108,24 +108,24 @@ namespace Origam.Workbench.Pads
             // 
             // tbrNew
             // 
+            this.tbrNew.Enabled = false;
             this.tbrNew.ImageIndex = 0;
             this.tbrNew.Name = "tbrNew";
             this.tbrNew.Text = "Add";
-            this.tbrNew.Enabled = false;
             // 
             // tbrRemove
             // 
+            this.tbrRemove.Enabled = false;
             this.tbrRemove.ImageIndex = 1;
             this.tbrRemove.Name = "tbrRemove";
             this.tbrRemove.Text = "Remove";
-            this.tbrRemove.Enabled = false;
             // 
             // imageList1
             // 
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Magenta;
-            this.imageList1.Images.SetKeyName(0, "");
-            this.imageList1.Images.SetKeyName(1, "");
+            this.imageList1.Images.SetKeyName(0, "add_black.png");
+            this.imageList1.Images.SetKeyName(1, "delete_black.png");
             this.imageList1.Images.SetKeyName(2, "");
             this.imageList1.Images.SetKeyName(3, "09_packages-1.ico");
             // 

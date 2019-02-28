@@ -192,6 +192,22 @@ namespace Origam.DA.Service
                 persistor.GetObjInfoFromTransactionStore(id) ?? index.GetById(id);
         }
 
+        public override List<string> Files(IPersistent persistentObject)
+        {
+            List<string> result = new List<string>();
+            var fileInfo = FindPersistedObjectInfo(persistentObject.Id);
+            if (fileInfo == null)
+            {
+                // new not yet persited instance
+                return new List<string>();
+            }
+            result.Add(fileInfo.OrigamFile.Path.Relative);
+            result.AddRange(fileInfo.OrigamFile.ExternalFiles
+                .Select(x => x.FullName)
+                .ToList());
+            return result;
+        }
+
         public override void RefreshInstance(IPersistent persistentObject)
         {
             if (!(persistentObject is IFilePersistent origObject))

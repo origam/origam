@@ -1207,7 +1207,7 @@ namespace Origam.DA.ObjectPersistence.Providers
 				ImportChildRows(originalTable, newTable, row);
 			}
 		}
-	}
+    }
 
 	internal class NullDataSetFormater: IDatasetFormater
 	{

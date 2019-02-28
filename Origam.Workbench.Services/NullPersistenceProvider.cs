@@ -115,5 +115,10 @@ namespace Origam.Workbench.Services
         }
 
         public ILocalizationCache LocalizationCache { get; }
+
+        public List<string> Files(IPersistent persistentObject)
+        {
+            return new List<string>();
+        }
     }
 }
