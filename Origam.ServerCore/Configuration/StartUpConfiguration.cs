@@ -45,5 +45,7 @@ namespace Origam.ServerCore.Configuration
                 .GetSection("RestrictedRoutes")
                 .GetChildren()
                 .Select(c => c.Value);
+
+        public string PathToClientApp => configuration["PathToClientApp"];
     }
 }

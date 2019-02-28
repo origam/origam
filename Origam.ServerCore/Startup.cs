@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
@@ -37,7 +37,7 @@ namespace Origam.ServerCore
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = ".";
+                configuration.RootPath = startUpConfiguration.PathToClientApp ?? ".";
             });
             services.AddSingleton<SessionObjects, SessionObjects>();
             services.AddTransient<IMessageService, FileMessageService>();
