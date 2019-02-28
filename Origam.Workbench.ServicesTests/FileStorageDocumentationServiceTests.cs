@@ -286,6 +286,10 @@ namespace Origam.Workbench.ServicesTests
         }
 
         public ILocalizationCache LocalizationCache { get; }
+        public List<string> Files(IPersistent item)
+        {
+            throw new NotImplementedException();
+        }
 
         public List<T> RetrieveListByGroup<T>(Key primaryKey)
         {
