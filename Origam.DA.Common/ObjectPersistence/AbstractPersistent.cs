@@ -166,6 +166,7 @@ namespace Origam.DA.ObjectPersistence
 			}
 		}
 
+        [Browsable(false)]
         public List<string> Files => _persistenceProvider.Files(this);
 		#endregion
 
