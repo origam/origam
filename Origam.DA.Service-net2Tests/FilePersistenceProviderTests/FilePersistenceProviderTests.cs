@@ -393,6 +393,7 @@ namespace Origam.DA.Service_net2Tests
         public string Path { get; }
         public bool IsFileRootElement => FileParentId == Guid.Empty;
 
+        public List<string> Files => throw new NotImplementedException();
 
         protected bool Equals(TestItem other) =>
             TestBool == other.TestBool &&
