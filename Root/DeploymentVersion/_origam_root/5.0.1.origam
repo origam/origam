@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DeploymentVersion
+    abstract="false"
+    deploymentDependenciesCsv="&#xD;&#xA;de1b2a3c-2d03-49ce-ba0d-5e44972daf1f, 1.0.0&#xD;&#xA;0fe05b88-11e4-4f28-81bc-7762afa76dc8, 1.2.23&#xD;&#xA;b9ab12fe-7f7d-43f7-bedc-93747647d6e4, 1.2.3&#xD;&#xA;951f2cda-2867-4b99-8824-071fa8749ead, 5.0"
+    x:id="9c736d0d-4e0f-4b46-a822-95f1f8fe8db1"
+    name="5.0.1"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="5.0.1">
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="10"
+      commandText="-***-ExternalFile:5.0.1.origam___commandText___123d29bf-bc8d-4887-b3f0-c0559e2cd05c.txt"
+      x:id="123d29bf-bc8d-4887-b3f0-c0559e2cd05c"
+      name="00010_Rename_AsapListValue_to_OrigamListValue"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>
