@@ -31,6 +31,7 @@ using System.IO;
 using System.Security.Principal;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using Origam.Git;
 
 namespace OrigamArchitect
 {
@@ -55,7 +56,18 @@ namespace OrigamArchitect
         public NewProjectWizard()
         {
             InitializeComponent();
+            InitGitConfig();
             wizard1.FinishButtonText = "Run";
+        }
+
+        private void InitGitConfig()
+        {
+            string[] creditials = new GitManager().GitConfig();
+            if (creditials != null)
+            {
+                txtGitUser.Text = creditials[0];
+                txtGitEmail.Text = creditials[1];
+            }
         }
 
         private DeploymentType Deployment
@@ -207,12 +219,6 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
-            if (string.IsNullOrEmpty(txtSourcesFolder.Text))
-            {
-                AsMessageBox.ShowError(this, strings.EnterSourceFolder_Message, strings.NewProjectWizard_Title, null);
-                e.Cancel = true;
-                return;
-            }
             DirectoryInfo dir = new DirectoryInfo(txtTemplateFolder.Text);
             if (!dir.Exists)
             {
@@ -227,16 +233,9 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
-            dir = new DirectoryInfo(txtSourcesFolder.Text);
-            if (!dir.Exists)
-            {
-                AsMessageBox.ShowError(this, strings.SourceFolderNotExists_Message, strings.NewProjectWizard_Title, null);
-                e.Cancel = true;
-                return;
-            }
             _project.ServerTemplateFolder = txtTemplateFolder.Text;
             _project.BinFolder = Path.Combine(txtBinFolderRoot.Text, txtName.Text);
-            _project.SourcesFolder = Path.Combine(txtSourcesFolder.Text, txtName.Text);
+            _project.GitRepository = gitrepo.Checked;
         }
 
         private void btnSelectBinFolderRoot_Click(object sender, EventArgs e)
@@ -356,6 +355,47 @@ namespace OrigamArchitect
         private void pageAzureDeploymentSettings_Commit(object sender, WizardPageConfirmEventArgs e)
         {
 
+        }
+
+        private void PageGit_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtGitUser.Text) && gitrepo.Checked)
+            {
+                AsMessageBox.ShowError(this, strings.EnterUser_name, strings.NewProjectWizard_Title, null);
+                e.Cancel = true;
+                return;
+            }
+
+            if (string.IsNullOrEmpty(txtGitEmail.Text) && gitrepo.Checked)
+            {
+                AsMessageBox.ShowError(this, strings.EnterEmail_name, strings.NewProjectWizard_Title, null);
+                e.Cancel = true;
+                return;
+            }
+
+            if (string.IsNullOrEmpty(txtSourcesFolder.Text))
+            {
+                AsMessageBox.ShowError(this, strings.EnterSourceFolder_Message, strings.NewProjectWizard_Title, null);
+                e.Cancel = true;
+                return;
+            }
+            DirectoryInfo dir = new DirectoryInfo(txtSourcesFolder.Text);
+            if (!dir.Exists)
+            {
+                AsMessageBox.ShowError(this, strings.SourceFolderNotExists_Message, strings.NewProjectWizard_Title, null);
+                e.Cancel = true;
+                return;
+            }
+            _project.SourcesFolder = Path.Combine(txtSourcesFolder.Text, txtName.Text);
+            _project.GitRepository = gitrepo.Checked;
+            _project.Gitusername = txtGitUser.Text;
+            _project.Gitemail = txtGitEmail.Text;
+        }
+
+        private void Gitrepo_CheckedChanged(object sender, EventArgs e)
+        {
+                txtGitUser.Enabled = gitrepo.Checked;
+                txtGitEmail.Enabled = gitrepo.Checked;
         }
     }
 }

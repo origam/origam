@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.ProjectAutomation.Builders;
 using System.Collections.Generic;
 
 namespace Origam.ProjectAutomation
@@ -43,6 +44,7 @@ namespace Origam.ProjectAutomation
             tasks.Add(configureWebServerBuilder);
             tasks.Add(new ApplyDatabasePermissionsBuilder());
             tasks.Add(new NewPackageBuilder());
+            tasks.Add(new GitBuilder());
         }
 
         public void Create(Project project)

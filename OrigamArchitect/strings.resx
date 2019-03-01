@@ -717,4 +717,10 @@
   <data name="XmlConsole" xml:space="preserve">
     <value>Show XML</value>
   </data>
+  <data name="EnterEmail_name" xml:space="preserve">
+    <value>Please Fill Your Email</value>
+  </data>
+  <data name="EnterUser_name" xml:space="preserve">
+    <value>Please Fill Your Name</value>
+  </data>
 </root>

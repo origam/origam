@@ -507,4 +507,10 @@
   <data name="XmlConsole" xml:space="preserve">
     <value>Zobrazit XML </value>
   </data>
+  <data name="EnterEmail_name" xml:space="preserve">
+    <value>Prosím vložte svůj email</value>
+  </data>
+  <data name="EnterUser_name" xml:space="preserve">
+    <value>Prosím vložte své jméno</value>
+  </data>
 </root>

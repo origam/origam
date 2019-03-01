@@ -59,17 +59,24 @@
             this.label5 = new System.Windows.Forms.Label();
             this.pagePaths = new AeroWizard.WizardPage();
             this.btnSelectTemplateFolder = new System.Windows.Forms.Button();
-            this.btnSelectSourcesFolder = new System.Windows.Forms.Button();
             this.btnSelectBinFolderRoot = new System.Windows.Forms.Button();
             this.lblTemplateFolderDescription = new System.Windows.Forms.Label();
             this.lblTemplateFolder = new System.Windows.Forms.Label();
             this.txtTemplateFolder = new System.Windows.Forms.TextBox();
-            this.lblSourcesFolderDescription = new System.Windows.Forms.Label();
-            this.lblSourcesFolder = new System.Windows.Forms.Label();
-            this.txtSourcesFolder = new System.Windows.Forms.TextBox();
             this.lblBinFolderRootDescription = new System.Windows.Forms.Label();
             this.lblBinFolderRoot = new System.Windows.Forms.Label();
             this.txtBinFolderRoot = new System.Windows.Forms.TextBox();
+            this.pageGit = new AeroWizard.WizardPage();
+            this.lblSourcesFolderDescription = new System.Windows.Forms.Label();
+            this.lblSourcesFolder = new System.Windows.Forms.Label();
+            this.txtSourcesFolder = new System.Windows.Forms.TextBox();
+            this.btnSelectSourcesFolder = new System.Windows.Forms.Button();
+            this.label15 = new System.Windows.Forms.Label();
+            this.gitrepo = new System.Windows.Forms.CheckBox();
+            this.pageReview = new AeroWizard.WizardPage();
+            this.lstTasks = new System.Windows.Forms.ListView();
+            this.colText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pageLocalDeploymentSettings = new AeroWizard.WizardPage();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -83,22 +90,26 @@
             this.txtServerName = new System.Windows.Forms.TextBox();
             this.lblServerName = new System.Windows.Forms.Label();
             this.txtDatabaseUserName = new System.Windows.Forms.TextBox();
-            this.pageReview = new AeroWizard.WizardPage();
-            this.lstTasks = new System.Windows.Forms.ListView();
-            this.colText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.txtGitUser = new System.Windows.Forms.TextBox();
+            this.txtGitEmail = new System.Windows.Forms.TextBox();
+            this.lblgituser = new System.Windows.Forms.Label();
+            this.lblgitemail = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.wizard1)).BeginInit();
             this.pageWelcome.SuspendLayout();
             this.pageDeploymentType.SuspendLayout();
             this.pageAzureDeploymentSettings.SuspendLayout();
             this.pagePaths.SuspendLayout();
-            this.pageLocalDeploymentSettings.SuspendLayout();
+            this.pageGit.SuspendLayout();
             this.pageReview.SuspendLayout();
+            this.pageLocalDeploymentSettings.SuspendLayout();
             this.SuspendLayout();
             // 
             // wizard1
             // 
+            this.wizard1.BackColor = System.Drawing.Color.White;
+            this.wizard1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.wizard1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.wizard1.Location = new System.Drawing.Point(0, 0);
             this.wizard1.Name = "wizard1";
             this.wizard1.Pages.Add(this.pageWelcome);
@@ -106,6 +117,7 @@
             this.wizard1.Pages.Add(this.pageAzureDeploymentSettings);
             this.wizard1.Pages.Add(this.pageLocalDeploymentSettings);
             this.wizard1.Pages.Add(this.pagePaths);
+            this.wizard1.Pages.Add(this.pageGit);
             this.wizard1.Pages.Add(this.pageReview);
             this.wizard1.Size = new System.Drawing.Size(621, 470);
             this.wizard1.TabIndex = 0;
@@ -258,7 +270,7 @@
             this.lblDeploymentType.Enabled = false;
             this.lblDeploymentType.Location = new System.Drawing.Point(8, 100);
             this.lblDeploymentType.Name = "lblDeploymentType";
-            this.lblDeploymentType.Size = new System.Drawing.Size(135, 15);
+            this.lblDeploymentType.Size = new System.Drawing.Size(134, 15);
             this.lblDeploymentType.TabIndex = 3;
             this.lblDeploymentType.Text = "Select Deployment Type";
             // 
@@ -343,7 +355,7 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(3, 73);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(57, 15);
+            this.label11.Size = new System.Drawing.Size(56, 15);
             this.label11.TabIndex = 4;
             this.label11.Text = "Tenant Id";
             // 
@@ -384,18 +396,15 @@
             // pagePaths
             // 
             this.pagePaths.Controls.Add(this.btnSelectTemplateFolder);
-            this.pagePaths.Controls.Add(this.btnSelectSourcesFolder);
             this.pagePaths.Controls.Add(this.btnSelectBinFolderRoot);
             this.pagePaths.Controls.Add(this.lblTemplateFolderDescription);
             this.pagePaths.Controls.Add(this.lblTemplateFolder);
             this.pagePaths.Controls.Add(this.txtTemplateFolder);
-            this.pagePaths.Controls.Add(this.lblSourcesFolderDescription);
-            this.pagePaths.Controls.Add(this.lblSourcesFolder);
-            this.pagePaths.Controls.Add(this.txtSourcesFolder);
             this.pagePaths.Controls.Add(this.lblBinFolderRootDescription);
             this.pagePaths.Controls.Add(this.lblBinFolderRoot);
             this.pagePaths.Controls.Add(this.txtBinFolderRoot);
             this.pagePaths.Name = "pagePaths";
+            this.pagePaths.NextPage = this.pageGit;
             this.pagePaths.Size = new System.Drawing.Size(574, 316);
             this.pagePaths.TabIndex = 2;
             this.pagePaths.Text = "Paths";
@@ -405,7 +414,7 @@
             // btnSelectTemplateFolder
             // 
             this.btnSelectTemplateFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectTemplateFolder.Location = new System.Drawing.Point(537, 157);
+            this.btnSelectTemplateFolder.Location = new System.Drawing.Point(538, 110);
             this.btnSelectTemplateFolder.Name = "btnSelectTemplateFolder";
             this.btnSelectTemplateFolder.Size = new System.Drawing.Size(25, 23);
             this.btnSelectTemplateFolder.TabIndex = 11;
@@ -413,21 +422,10 @@
             this.btnSelectTemplateFolder.UseVisualStyleBackColor = true;
             this.btnSelectTemplateFolder.Click += new System.EventHandler(this.btnSelectTemplateFolder_Click);
             // 
-            // btnSelectSourcesFolder
-            // 
-            this.btnSelectSourcesFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectSourcesFolder.Location = new System.Drawing.Point(537, 85);
-            this.btnSelectSourcesFolder.Name = "btnSelectSourcesFolder";
-            this.btnSelectSourcesFolder.Size = new System.Drawing.Size(25, 23);
-            this.btnSelectSourcesFolder.TabIndex = 10;
-            this.btnSelectSourcesFolder.Text = "...";
-            this.btnSelectSourcesFolder.UseVisualStyleBackColor = true;
-            this.btnSelectSourcesFolder.Click += new System.EventHandler(this.btnSelectSourcesFolder_Click);
-            // 
             // btnSelectBinFolderRoot
             // 
             this.btnSelectBinFolderRoot.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectBinFolderRoot.Location = new System.Drawing.Point(537, 13);
+            this.btnSelectBinFolderRoot.Location = new System.Drawing.Point(538, 23);
             this.btnSelectBinFolderRoot.Name = "btnSelectBinFolderRoot";
             this.btnSelectBinFolderRoot.Size = new System.Drawing.Size(25, 23);
             this.btnSelectBinFolderRoot.TabIndex = 9;
@@ -438,7 +436,7 @@
             // lblTemplateFolderDescription
             // 
             this.lblTemplateFolderDescription.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblTemplateFolderDescription.Location = new System.Drawing.Point(160, 187);
+            this.lblTemplateFolderDescription.Location = new System.Drawing.Point(161, 140);
             this.lblTemplateFolderDescription.Name = "lblTemplateFolderDescription";
             this.lblTemplateFolderDescription.Size = new System.Drawing.Size(370, 41);
             this.lblTemplateFolderDescription.TabIndex = 8;
@@ -448,9 +446,9 @@
             // lblTemplateFolder
             // 
             this.lblTemplateFolder.AutoSize = true;
-            this.lblTemplateFolder.Location = new System.Drawing.Point(3, 160);
+            this.lblTemplateFolder.Location = new System.Drawing.Point(4, 114);
             this.lblTemplateFolder.Name = "lblTemplateFolder";
-            this.lblTemplateFolder.Size = new System.Drawing.Size(93, 15);
+            this.lblTemplateFolder.Size = new System.Drawing.Size(92, 15);
             this.lblTemplateFolder.TabIndex = 7;
             this.lblTemplateFolder.Text = "Template Folder";
             // 
@@ -458,43 +456,15 @@
             // 
             this.txtTemplateFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtTemplateFolder.Location = new System.Drawing.Point(160, 157);
+            this.txtTemplateFolder.Location = new System.Drawing.Point(161, 110);
             this.txtTemplateFolder.Name = "txtTemplateFolder";
             this.txtTemplateFolder.Size = new System.Drawing.Size(370, 23);
             this.txtTemplateFolder.TabIndex = 6;
             // 
-            // lblSourcesFolderDescription
-            // 
-            this.lblSourcesFolderDescription.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblSourcesFolderDescription.Location = new System.Drawing.Point(160, 115);
-            this.lblSourcesFolderDescription.Name = "lblSourcesFolderDescription";
-            this.lblSourcesFolderDescription.Size = new System.Drawing.Size(370, 39);
-            this.lblSourcesFolderDescription.TabIndex = 5;
-            this.lblSourcesFolderDescription.Text = "Model XML files will be stored here. You can use it as a GIT repository. A new fo" +
-    "lder will be created for your application.";
-            // 
-            // lblSourcesFolder
-            // 
-            this.lblSourcesFolder.AutoSize = true;
-            this.lblSourcesFolder.Location = new System.Drawing.Point(3, 88);
-            this.lblSourcesFolder.Name = "lblSourcesFolder";
-            this.lblSourcesFolder.Size = new System.Drawing.Size(84, 15);
-            this.lblSourcesFolder.TabIndex = 4;
-            this.lblSourcesFolder.Text = "Sources Folder";
-            // 
-            // txtSourcesFolder
-            // 
-            this.txtSourcesFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtSourcesFolder.Location = new System.Drawing.Point(160, 85);
-            this.txtSourcesFolder.Name = "txtSourcesFolder";
-            this.txtSourcesFolder.Size = new System.Drawing.Size(370, 23);
-            this.txtSourcesFolder.TabIndex = 3;
-            // 
             // lblBinFolderRootDescription
             // 
             this.lblBinFolderRootDescription.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblBinFolderRootDescription.Location = new System.Drawing.Point(160, 43);
+            this.lblBinFolderRootDescription.Location = new System.Drawing.Point(161, 53);
             this.lblBinFolderRootDescription.Name = "lblBinFolderRootDescription";
             this.lblBinFolderRootDescription.Size = new System.Drawing.Size(370, 39);
             this.lblBinFolderRootDescription.TabIndex = 2;
@@ -504,7 +474,7 @@
             // lblBinFolderRoot
             // 
             this.lblBinFolderRoot.AutoSize = true;
-            this.lblBinFolderRoot.Location = new System.Drawing.Point(3, 16);
+            this.lblBinFolderRoot.Location = new System.Drawing.Point(4, 26);
             this.lblBinFolderRoot.Name = "lblBinFolderRoot";
             this.lblBinFolderRoot.Size = new System.Drawing.Size(131, 15);
             this.lblBinFolderRoot.TabIndex = 1;
@@ -514,10 +484,126 @@
             // 
             this.txtBinFolderRoot.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtBinFolderRoot.Location = new System.Drawing.Point(160, 13);
+            this.txtBinFolderRoot.Location = new System.Drawing.Point(161, 23);
             this.txtBinFolderRoot.Name = "txtBinFolderRoot";
             this.txtBinFolderRoot.Size = new System.Drawing.Size(370, 23);
             this.txtBinFolderRoot.TabIndex = 0;
+            // 
+            // pageGit
+            // 
+            this.pageGit.Controls.Add(this.lblgitemail);
+            this.pageGit.Controls.Add(this.lblgituser);
+            this.pageGit.Controls.Add(this.txtGitEmail);
+            this.pageGit.Controls.Add(this.txtGitUser);
+            this.pageGit.Controls.Add(this.lblSourcesFolderDescription);
+            this.pageGit.Controls.Add(this.lblSourcesFolder);
+            this.pageGit.Controls.Add(this.txtSourcesFolder);
+            this.pageGit.Controls.Add(this.btnSelectSourcesFolder);
+            this.pageGit.Controls.Add(this.label15);
+            this.pageGit.Controls.Add(this.gitrepo);
+            this.pageGit.Name = "pageGit";
+            this.pageGit.NextPage = this.pageReview;
+            this.pageGit.Size = new System.Drawing.Size(574, 316);
+            this.pageGit.TabIndex = 6;
+            this.pageGit.Text = "Configure Source Control";
+            this.pageGit.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageGit_Commit);
+            // 
+            // lblSourcesFolderDescription
+            // 
+            this.lblSourcesFolderDescription.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lblSourcesFolderDescription.Location = new System.Drawing.Point(160, 195);
+            this.lblSourcesFolderDescription.Name = "lblSourcesFolderDescription";
+            this.lblSourcesFolderDescription.Size = new System.Drawing.Size(370, 39);
+            this.lblSourcesFolderDescription.TabIndex = 5;
+            this.lblSourcesFolderDescription.Text = "Model XML files will be stored here. You can use it as a GIT repository. A new fo" +
+    "lder will be created for your application.";
+            // 
+            // lblSourcesFolder
+            // 
+            this.lblSourcesFolder.AutoSize = true;
+            this.lblSourcesFolder.Location = new System.Drawing.Point(3, 168);
+            this.lblSourcesFolder.Name = "lblSourcesFolder";
+            this.lblSourcesFolder.Size = new System.Drawing.Size(84, 15);
+            this.lblSourcesFolder.TabIndex = 4;
+            this.lblSourcesFolder.Text = "Sources Folder";
+            // 
+            // txtSourcesFolder
+            // 
+            this.txtSourcesFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSourcesFolder.Location = new System.Drawing.Point(160, 165);
+            this.txtSourcesFolder.Name = "txtSourcesFolder";
+            this.txtSourcesFolder.Size = new System.Drawing.Size(370, 23);
+            this.txtSourcesFolder.TabIndex = 3;
+            // 
+            // btnSelectSourcesFolder
+            // 
+            this.btnSelectSourcesFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSelectSourcesFolder.Location = new System.Drawing.Point(537, 165);
+            this.btnSelectSourcesFolder.Name = "btnSelectSourcesFolder";
+            this.btnSelectSourcesFolder.Size = new System.Drawing.Size(25, 23);
+            this.btnSelectSourcesFolder.TabIndex = 10;
+            this.btnSelectSourcesFolder.Text = "...";
+            this.btnSelectSourcesFolder.UseVisualStyleBackColor = true;
+            this.btnSelectSourcesFolder.Click += new System.EventHandler(this.btnSelectSourcesFolder_Click);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(3, 33);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(118, 15);
+            this.label15.TabIndex = 13;
+            this.label15.Text = "Create GIT repository";
+            // 
+            // gitrepo
+            // 
+            this.gitrepo.AutoSize = true;
+            this.gitrepo.Checked = true;
+            this.gitrepo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.gitrepo.Location = new System.Drawing.Point(160, 34);
+            this.gitrepo.Name = "gitrepo";
+            this.gitrepo.Size = new System.Drawing.Size(15, 14);
+            this.gitrepo.TabIndex = 12;
+            this.gitrepo.UseVisualStyleBackColor = true;
+            this.gitrepo.CheckedChanged += new System.EventHandler(this.Gitrepo_CheckedChanged);
+            // 
+            // pageReview
+            // 
+            this.pageReview.Controls.Add(this.lstTasks);
+            this.pageReview.IsFinishPage = true;
+            this.pageReview.Name = "pageReview";
+            this.pageReview.NextPage = this.pageReview;
+            this.pageReview.Size = new System.Drawing.Size(574, 316);
+            this.pageReview.TabIndex = 1;
+            this.pageReview.Text = "Progress";
+            this.pageReview.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageReview_Commit);
+            this.pageReview.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageReview_Initialize);
+            // 
+            // lstTasks
+            // 
+            this.lstTasks.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colText,
+            this.colStatus});
+            this.lstTasks.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstTasks.FullRowSelect = true;
+            this.lstTasks.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lstTasks.Location = new System.Drawing.Point(0, 0);
+            this.lstTasks.Name = "lstTasks";
+            this.lstTasks.Size = new System.Drawing.Size(574, 316);
+            this.lstTasks.TabIndex = 0;
+            this.lstTasks.UseCompatibleStateImageBehavior = false;
+            this.lstTasks.View = System.Windows.Forms.View.Details;
+            // 
+            // colText
+            // 
+            this.colText.Text = "Task";
+            this.colText.Width = 439;
+            // 
+            // colStatus
+            // 
+            this.colStatus.Text = "Status";
+            this.colStatus.Width = 81;
             // 
             // pageLocalDeploymentSettings
             // 
@@ -655,41 +741,37 @@
             this.txtDatabaseUserName.Size = new System.Drawing.Size(121, 23);
             this.txtDatabaseUserName.TabIndex = 8;
             // 
-            // pageReview
+            // txtGitUser
             // 
-            this.pageReview.Controls.Add(this.lstTasks);
-            this.pageReview.IsFinishPage = true;
-            this.pageReview.Name = "pageReview";
-            this.pageReview.Size = new System.Drawing.Size(574, 316);
-            this.pageReview.TabIndex = 1;
-            this.pageReview.Text = "Progress";
-            this.pageReview.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageReview_Commit);
-            this.pageReview.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageReview_Initialize);
+            this.txtGitUser.Location = new System.Drawing.Point(163, 73);
+            this.txtGitUser.Name = "txtGitUser";
+            this.txtGitUser.Size = new System.Drawing.Size(204, 23);
+            this.txtGitUser.TabIndex = 14;
             // 
-            // lstTasks
+            // txtGitEmail
             // 
-            this.lstTasks.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.colText,
-            this.colStatus});
-            this.lstTasks.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstTasks.FullRowSelect = true;
-            this.lstTasks.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lstTasks.Location = new System.Drawing.Point(0, 0);
-            this.lstTasks.Name = "lstTasks";
-            this.lstTasks.Size = new System.Drawing.Size(574, 316);
-            this.lstTasks.TabIndex = 0;
-            this.lstTasks.UseCompatibleStateImageBehavior = false;
-            this.lstTasks.View = System.Windows.Forms.View.Details;
+            this.txtGitEmail.Location = new System.Drawing.Point(163, 119);
+            this.txtGitEmail.Name = "txtGitEmail";
+            this.txtGitEmail.Size = new System.Drawing.Size(204, 23);
+            this.txtGitEmail.TabIndex = 15;
             // 
-            // colText
+            // lblgituser
             // 
-            this.colText.Text = "Task";
-            this.colText.Width = 439;
+            this.lblgituser.AutoSize = true;
+            this.lblgituser.Location = new System.Drawing.Point(19, 76);
+            this.lblgituser.Name = "lblgituser";
+            this.lblgituser.Size = new System.Drawing.Size(30, 15);
+            this.lblgituser.TabIndex = 16;
+            this.lblgituser.Text = "User";
             // 
-            // colStatus
+            // lblgitemail
             // 
-            this.colStatus.Text = "Status";
-            this.colStatus.Width = 81;
+            this.lblgitemail.AutoSize = true;
+            this.lblgitemail.Location = new System.Drawing.Point(19, 122);
+            this.lblgitemail.Name = "lblgitemail";
+            this.lblgitemail.Size = new System.Drawing.Size(36, 15);
+            this.lblgitemail.TabIndex = 17;
+            this.lblgitemail.Text = "Email";
             // 
             // NewProjectWizard
             // 
@@ -713,9 +795,11 @@
             this.pageAzureDeploymentSettings.PerformLayout();
             this.pagePaths.ResumeLayout(false);
             this.pagePaths.PerformLayout();
+            this.pageGit.ResumeLayout(false);
+            this.pageGit.PerformLayout();
+            this.pageReview.ResumeLayout(false);
             this.pageLocalDeploymentSettings.ResumeLayout(false);
             this.pageLocalDeploymentSettings.PerformLayout();
-            this.pageReview.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -781,5 +865,12 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox txtAzureSubscriptionId;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.CheckBox gitrepo;
+        private AeroWizard.WizardPage pageGit;
+        private System.Windows.Forms.Label lblgitemail;
+        private System.Windows.Forms.Label lblgituser;
+        private System.Windows.Forms.TextBox txtGitEmail;
+        private System.Windows.Forms.TextBox txtGitUser;
     }
 }

@@ -43,6 +43,9 @@ namespace Origam.ProjectAutomation
         private string _newPackageId;
         private string _sourcesFolder;
         private string _baseUrl;
+        private bool _gitrepo;
+        private string _gitusername;
+        private string _gitemail;
 
         // Root Menu package
         private string _basePackageId = "b9ab12fe-7f7d-43f7-bedc-93747647d6e4";
@@ -130,6 +133,12 @@ namespace Origam.ProjectAutomation
             {
                 _databaseIntegratedAuthentication = value;
             }
+        }
+
+        public bool GitRepository
+        {
+            get => _gitrepo;
+            set => _gitrepo = value;
         }
 
         public string WebRootName
@@ -295,6 +304,9 @@ namespace Origam.ProjectAutomation
                 return BaseUrl + "/" + Url;
             }
         }
+
+        public string Gitusername { get => _gitusername; set => _gitusername = value; }
+        public string Gitemail { get => _gitemail; set => _gitemail = value; }
         #endregion
     }
 }
