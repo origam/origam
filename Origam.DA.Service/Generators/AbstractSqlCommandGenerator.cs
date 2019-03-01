@@ -3261,15 +3261,8 @@ namespace Origam.DA.Service
 
                     if (listExpressions.Count == 1 && listExpressions[0] is ParameterReference && (listExpressions[0] as ParameterReference).Parameter.DataType == OrigamDataType.Array)
                     {
-#if NET_20
                         result = RenderExpression(leftArg.ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                             + " IN (SELECT ListValue FROM " + RenderExpression(listExpressions[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences) + " origamListValue)";
-#else
-							// special mode - if the list is an array, we produce
-							//                '|xx|yy|zz|' LIKE '%|' + Table.Field + '|%'
-							result = RenderExpression(listArg.ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences) 
-								+ " LIKE '%|' + cast(" + RenderExpression(leftArg.ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences) + " as nvarchar(1000)) + '%|'";
-#endif
                     }
                     else
                     {
