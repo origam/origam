@@ -114,13 +114,9 @@ namespace Origam.DA.Service
         {
             lock (Lock)
             {
-                var newObjects = new LocalizedObjectCache();
-                newObjects.AddRange(LoadAllObjectsFromDisk(provider, useCache));
-
-                newObjects.LocalizedPairs
-                    .Where(keyVal => !loadedLocalizedObjects.Contains(keyVal.Key))
-                    .ForEach(keyVal =>
-                        loadedLocalizedObjects.Add(keyVal.Key, keyVal.Value));
+                LoadAllObjectsFromDisk(provider, useCache)
+                    .Where(instance => !loadedLocalizedObjects.Contains(instance.Id))
+                    .ForEach(instance => loadedLocalizedObjects.Add(instance.Id,instance));
             }
         }
 
