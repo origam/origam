@@ -72,7 +72,9 @@
     <Compile Include="AbstractUserManager.cs" />
     <Compile Include="AdaptivePasswordHasherWithLegacySupport.cs" />
     <Compile Include="IdentityEmailService.cs" />
+    <Compile Include="IdentityResultExtensions.cs" />
     <Compile Include="IdentityServiceAgent.cs" />
+    <Compile Include="AspNetManagerAdapter.cs" />
     <Compile Include="NetMembershipUserManager.cs" />
     <Compile Include="OrigamModelUserManager.cs" />
     <Compile Include="OrigamModelUserStore.cs" />

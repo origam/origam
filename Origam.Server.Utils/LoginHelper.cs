@@ -444,7 +444,7 @@ namespace Origam.Server.Utils
 
 					OrigamUser origamUser = userManager.FindByName(page.Request[userNameField]);
 										
-					if (userManager.IsEmailConfirmed(origamUser.Id))
+					if (userManager.EmailConfirmed(origamUser.Id))
 					{
 						return Resources.NewUserRegistrationSucceeded;
 					}

@@ -18,14 +18,13 @@ namespace Origam.Security.Identity
 {
     public class OrigamModelUserManager : AbstractUserManager
     {
-        private UserManager internalUserManager;
         public int MinimumPasswordLength { get; set; }
         public int NumberOfRequiredNonAlphanumericCharsInPassword { get; set; }
         public int NumberOfInvalidPasswordAttempts { get; set; }
         public bool UnlocksOnPasswordReset { get; set; }
 
         public OrigamModelUserManager(IUserStore<OrigamUser> store)
-            : base(store)
+            : base(store, 3)
         {
             PasswordHasher = new AdaptivePasswordHasherWithLegacySupport();
             MinimumPasswordLength = 12;
@@ -33,9 +32,6 @@ namespace Origam.Security.Identity
             NumberOfInvalidPasswordAttempts = 3;
             UnlocksOnPasswordReset = false;
             IsPasswordRecoverySupported = true;
-            internalUserManager = new UserManager(
-                userName => new OrigamUser(userName),
-                NumberOfInvalidPasswordAttempts);
         }
 
         public static AbstractUserManager Create()

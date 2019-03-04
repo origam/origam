@@ -20,7 +20,7 @@ using Origam.Security.Common;
 
 namespace Origam.Security.Identity
 {
-    public abstract class AbstractUserManager : UserManager<OrigamUser>
+    public abstract class AbstractUserManager : UserManager<OrigamUser>, IFrameworkSpecificManager
     {
         private static Guid BUSINESS_PARTNER_DATA_STRUCTURE
             = new Guid("f4c92dce-d634-4179-adb4-98876b870cc7");
@@ -58,6 +58,8 @@ namespace Origam.Security.Identity
             = LogManager.GetLogger(typeof(AbstractUserManager));
 
         private static Func<AbstractUserManager> createUserManagerCallback = null;
+        
+        protected InternalUserManager internalUserManager;
 
         public static void RegisterCreateUserManagerCallback(
             Func<AbstractUserManager> callback)
@@ -103,9 +105,24 @@ namespace Origam.Security.Identity
             set { _IsPasswordRecoverySupported = value; }
         }
 
-        public AbstractUserManager(IUserStore<OrigamUser> store)
+        public AbstractUserManager(IUserStore<OrigamUser> store, int numberOfInvalidPasswordAttempts)
             : base(store)
         {
+            internalUserManager = new InternalUserManager(
+                userName => new OrigamUser(userName),
+                numberOfInvalidPasswordAttempts,
+                this,
+                mailTemplateDirectoryPath: AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
+                mailQueueName:MAIL_QUEUE_NAME,
+                portalBaseUrl:PORTAL_BASE_URL,
+                registerNewUserFilename:REGISTER_NEW_USER_FILENAME,
+                fromAddress:FROM_ADDRESS,
+                registerNewUserSubject: REGISTER_NEW_USER_SUBJECT,
+                resetPwdSubject: RESET_PWD_SUBJECT,
+                resetPwdBodyFilename: RESET_PWD_BODY_FILENAME,
+                userUnlockNotificationBodyFilename: USER_UNLOCK_NOTIFICATION_BODY_FILENAME,
+                userUnlockNotificationSubject:USER_UNLOCK_NOTIFICATION_SUBJECT
+                );
         }
 
         /// <summary>
@@ -132,28 +149,13 @@ namespace Origam.Security.Identity
         public void CreateInitialUser(string userName, string password,
             string firstName, string name, string email)
         {
-            if (IsInitialSetupNeeded())
-            {
-                if (log.IsDebugEnabled)
-                {
-                    log.Debug("Creating an initial user.");
-                }
-                string roleId = SecurityManager.BUILTIN_SUPER_USER_ROLE;
-                CreateUser(userName, password, firstName, name, email, roleId, false);
-                IParameterService parameterService =
-                    ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-                parameterService.SetCustomParameterValue(INITIAL_SETUP_PARAMETERNAME, true, Guid.Empty, 0, null, true, 0, 0, null);
-            }
-            else
-            {
-                throw new Exception("Initial user has already been set up.");
-            }
+            internalUserManager.CreateInitialUser(userName,password,firstName,name,email);
         }
 
 		public void RegisterNewUser(string userName, string password, string firstName,
 			string name, string email, string roleId)
 		{
-			CreateUser(userName, password, firstName, name, email, roleId, true);
+			internalUserManager.CreateUser(userName, password, firstName, name, email, roleId, true);
 		}
 
 
@@ -161,60 +163,10 @@ namespace Origam.Security.Identity
 			string name, string email, string roleId,
 			Dictionary<string, object> additionalWFParameters)
 		{
-			CreateUser(userName, password, firstName, name, email, roleId, true,
+            internalUserManager.CreateUser(userName, password, firstName, name, email, roleId, true,
 				additionalWFParameters);
 		}
-
-		private void CreateUser(string userName, string password, string firstName,
-			string name, string email, string roleId, bool requestEmailConfirmation)
-		{
-			CreateUser(userName, password, firstName, name, email,
-				roleId, requestEmailConfirmation, null);
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="userName"></param>
-		/// <param name="password"></param>
-		/// <param name="firstName"></param>
-		/// <param name="name"></param>
-		/// <param name="email"></param>
-		/// <param name="roleId"></param>
-		/// <param name="requestEmailConfirmation"></param>
-		/// <param name="additionalWFParameters">A dictionary with parameters (key is name of the parameter) to be passed into Identity_CreateUser workflow. Can be used for extra BusinessPartner fields.</param>
-		private void CreateUser(string userName, string password, string firstName, 
-            string name, string email, string roleId, bool requestEmailConfirmation,
-			Dictionary<string, object> additionalWFParameters)
-        {
-            string id = Guid.NewGuid().ToString();
-            QueryParameterCollection parameters = new QueryParameterCollection();
-            parameters.Add(new QueryParameter("Id", id));
-            parameters.Add(new QueryParameter("UserName", userName));
-            parameters.Add(new QueryParameter("Password", password));
-            parameters.Add(new QueryParameter("FirstName", firstName));
-            parameters.Add(new QueryParameter("Name", name));
-            parameters.Add(new QueryParameter("Email", email));
-            parameters.Add(new QueryParameter("RoleId", roleId));
-            parameters.Add(new QueryParameter("RequestEmailConfirmation",
-                requestEmailConfirmation));
-			// add extra parameters
-			if (additionalWFParameters != null)
-			{
-				foreach (KeyValuePair<string, object> x in additionalWFParameters)
-				{
-					parameters.Add(new QueryParameter(x.Key, x.Value));
-                }
-			}
-            WorkflowService.ExecuteWorkflow(
-                new Guid("2bd4dbcc-d01e-4c5d-bedb-a4150dcefd54"), parameters, null);
-			
-            if (requestEmailConfirmation && !this.IsEmailConfirmed(id))
-            {
-                SendNewUserToken(id, email, userName, name, firstName);
-            }
-        }
-
+		
         public virtual bool IsSecondFactorAvailable()
         {
             return TwoFactorProviders.Count > 0;
@@ -244,7 +196,8 @@ namespace Origam.Security.Identity
                 }
                 return IdentityResult.Failed(Resources.ErrorUserNotFound);
             }
-            return await ResetPasswordAsync(origamUser.Id, token, newPassword);
+
+            return await ResetPasswordAsync(origamUser.Id, token,newPassword);
         }
 
         public virtual async Task<IdentityResult> ValidatePasswordResetTokenFromUsernameAsync(
@@ -279,13 +232,6 @@ namespace Origam.Security.Identity
             return IdentityResult.Success;
         }
 
-        public class TokenResult
-        {
-            public string token;
-            public string userName;
-            public string errorMessage;
-            public int tokenValidityHours;
-        }
 
         public virtual async Task<string> GetPasswordResetTokenAsync(string userId)
         {
@@ -298,7 +244,7 @@ namespace Origam.Security.Identity
             }
 
             // generate password reset token
-            string passwordResetToken = await GeneratePasswordResetTokenAsync
+            string passwordResetToken = await GeneratePasswordResetTokenAsync1
                 (userId.ToString()); 
             {
                 return passwordResetToken;
@@ -307,72 +253,75 @@ namespace Origam.Security.Identity
 
         public virtual async Task<TokenResult>
             GetPasswordResetTokenFromEmailAsync(string email)
-        {            
-            // resolve username, id from email
-            DataSet businessPartnerDataSet = GetBusinessPartnerDataSet(
-                GET_BUSINESS_PARTNER_BY_USER_EMAIL,
-                "BusinessPartner_parUserEmail", email);
-            if (businessPartnerDataSet.Tables["BusinessPartner"].Rows.Count == 0)
-            {
-                if (log.IsErrorEnabled)
-                {
-                    log.ErrorFormat(
-                        "Generating password reset token for email {0}, "
-                        + " failed to find the user by email.",
-                        email);
-                }
-                return new TokenResult
-                    { token = "", userName = "",
-                    errorMessage = Resources.EmailInvalid,
-                    tokenValidityHours = 0};
-            }
-            Guid userId = (Guid)businessPartnerDataSet.Tables["BusinessPartner"]
-                .Rows[0]["Id"];
-            string userName = (string)businessPartnerDataSet.Tables["BusinessPartner"]
-                .Rows[0]["UserName"];
-            if (string.IsNullOrEmpty(userName))
-            {
-                if (log.IsErrorEnabled)
-                {
-                    log.ErrorFormat(
-                        "Generating password reset token for email `{0}', "
-                        + " failed. Business partner `{1}' is not a user.",
-                        email, userId);
-                }
-                return new TokenResult
-                { token = "", userName = "",
-                    errorMessage = Resources.EmailInvalid,
-                    tokenValidityHours = 0};
-            }
-            
-            // find out if user exists in identity
-            OrigamUser origamUser = await FindByIdAsync(userId.ToString());
-            if (origamUser == null)
-            {
-                return new TokenResult
-                { token = "", userName = "", errorMessage = Resources.EmailInvalid,
-                tokenValidityHours = 0};
-            }
-            // generate password reset token
-            string resetToken = await GeneratePasswordResetTokenAsync(
-                userId.ToString()); 
-            if (log.IsDebugEnabled)
-            {
-                log.DebugFormat(
-                    "Generating password reset token for email `{0}`, "
-                    + "success. User=`{1}' Username=`{2}', token=`{3}'",
-                    email, userId, userName, resetToken);
-            }
-            OrigamTokenProvider origamTokenProvider =
-                UserTokenProvider as OrigamTokenProvider;
-            int tokenValidityHours = (origamTokenProvider == null) ?
-                24
-                : (int) origamTokenProvider.TokenLifespan.TotalHours;
-            return new TokenResult
-                { token = resetToken,
-                    userName = userName, errorMessage = "",
-                    tokenValidityHours = tokenValidityHours};
+        {
+            return internalUserManager.GetPasswordResetTokenFromEmailAsync(
+                email).Result;
         }
+//            // resolve username, id from email
+//            DataSet businessPartnerDataSet = GetBusinessPartnerDataSet(
+//                GET_BUSINESS_PARTNER_BY_USER_EMAIL,
+//                "BusinessPartner_parUserEmail", email);
+//            if (businessPartnerDataSet.Tables["BusinessPartner"].Rows.Count == 0)
+//            {
+//                if (log.IsErrorEnabled)
+//                {
+//                    log.ErrorFormat(
+//                        "Generating password reset token for email {0}, "
+//                        + " failed to find the user by email.",
+//                        email);
+//                }
+//                return new TokenResult
+//                    { token = "", userName = "",
+//                    errorMessage = Resources.EmailInvalid,
+//                    tokenValidityHours = 0};
+//            }
+//            Guid userId = (Guid)businessPartnerDataSet.Tables["BusinessPartner"]
+//                .Rows[0]["Id"];
+//            string userName = (string)businessPartnerDataSet.Tables["BusinessPartner"]
+//                .Rows[0]["UserName"];
+//            if (string.IsNullOrEmpty(userName))
+//            {
+//                if (log.IsErrorEnabled)
+//                {
+//                    log.ErrorFormat(
+//                        "Generating password reset token for email `{0}', "
+//                        + " failed. Business partner `{1}' is not a user.",
+//                        email, userId);
+//                }
+//                return new TokenResult
+//                { token = "", userName = "",
+//                    errorMessage = Resources.EmailInvalid,
+//                    tokenValidityHours = 0};
+//            }
+//            
+//            // find out if user exists in identity
+//            OrigamUser origamUser = await FindByIdAsync(userId.ToString());
+//            if (origamUser == null)
+//            {
+//                return new TokenResult
+//                { token = "", userName = "", errorMessage = Resources.EmailInvalid,
+//                tokenValidityHours = 0};
+//            }
+//            // generate password reset token
+//            string resetToken = await GeneratePasswordResetTokenAsync(
+//                userId.ToString()); 
+//            if (log.IsDebugEnabled)
+//            {
+//                log.DebugFormat(
+//                    "Generating password reset token for email `{0}`, "
+//                    + "success. User=`{1}' Username=`{2}', token=`{3}'",
+//                    email, userId, userName, resetToken);
+//            }
+//            OrigamTokenProvider origamTokenProvider =
+//                UserTokenProvider as OrigamTokenProvider;
+//            int tokenValidityHours = (origamTokenProvider == null) ?
+//                24
+//                : (int) origamTokenProvider.TokenLifespan.TotalHours;
+//            return new TokenResult
+//                { token = resetToken,
+//                    userName = userName, errorMessage = "",
+//                    tokenValidityHours = tokenValidityHours};
+//        }
 
         public virtual Task<bool> ChangePasswordQuestionAndAnswerAsync(
             string username, string password, string question, string answer)
@@ -409,318 +358,323 @@ namespace Origam.Security.Identity
         protected bool SendUserUnlockingNotification(string username,
             string email = null)
         {
-            // get profile data for an unlocked user
-            DataRow businessPartnerRow = getBusinessPartnerDataRow(username);
-            // resolve language
-            string languageId = businessPartnerRow["refLanguageId"].ToString();
-            string userLangIETF = ResolveIetfTagFromOrigamLanguageId(languageId);
-            // build template replacements
-            List<KeyValuePair<string, string>> replacements =
-                new List<KeyValuePair<string, string>>
-                    { new KeyValuePair<string, string>("<%UserName%>", username) };
-            replacements.AddRange(BuildReplacementsFromBusinessPartnerData(
-                businessPartnerRow));
-            // resolve recipient email
-            string resultEmail = email;
-            if (resultEmail == null)
-            {
-                resultEmail = (string)businessPartnerRow["UserEmail"];
-            }
-
-            MailMessage userUnlockNotificationMail;
-            using (LanguageSwitcher langSwitcher = new LanguageSwitcher(
-                userLangIETF))
-            {
-                try
-                {
-                    userUnlockNotificationMail = GenerateMail(resultEmail,
-                        FROM_ADDRESS, USER_UNLOCK_NOTIFICATION_BODY_FILENAME,
-                        Resources.UserUnlockNotificationTemplate,
-                        USER_UNLOCK_NOTIFICATION_SUBJECT, userLangIETF, replacements);
-                }
-                catch (Exception ex)
-                {
-                    if (log.IsErrorEnabled)
-                    {
-                        log.ErrorFormat("Unlocking user: Failed to generate a mail"
-                            + " for a user `{0}' to `{1}': {2}"
-                            , username, resultEmail, ex);
-                    }
-                    throw ex;
-                }
-            }
-
-            try
-            {
-				SendMailByAWorkflow(userUnlockNotificationMail);
-			}
-            catch (Exception ex)
-            {
-                if (log.IsErrorEnabled)
-                {
-                    log.ErrorFormat("Unlocking user: Failed to send a mail"
-                        + " for a user `{0}' to `{1}': {2}"
-                        , username, resultEmail, ex);
-                }
-                throw new Exception(
-                    Resources.FailedToSendUserUnlockNotification);
-            }
-            finally
-            {
-                userUnlockNotificationMail.Dispose();
-            }
-            if (log.IsDebugEnabled)
-            {
-                log.DebugFormat("User `{0}' has been unlocked and the"
-                    + " notification mail has been sent to `{1}'.",
-                    username, resultEmail);
-            }
-            return true;
+            return internalUserManager.SendUserUnlockingNotification(username,email);
         }
+//            // get profile data for an unlocked user
+//            DataRow businessPartnerRow = getBusinessPartnerDataRow(username);
+//            // resolve language
+//            string languageId = businessPartnerRow["refLanguageId"].ToString();
+//            string userLangIETF = ResolveIetfTagFromOrigamLanguageId(languageId);
+//            // build template replacements
+//            List<KeyValuePair<string, string>> replacements =
+//                new List<KeyValuePair<string, string>>
+//                    { new KeyValuePair<string, string>("<%UserName%>", username) };
+//            replacements.AddRange(BuildReplacementsFromBusinessPartnerData(
+//                businessPartnerRow));
+//            // resolve recipient email
+//            string resultEmail = email;
+//            if (resultEmail == null)
+//            {
+//                resultEmail = (string)businessPartnerRow["UserEmail"];
+//            }
+//
+//            MailMessage userUnlockNotificationMail;
+//            using (LanguageSwitcher langSwitcher = new LanguageSwitcher(
+//                userLangIETF))
+//            {
+//                try
+//                {
+//                    userUnlockNotificationMail = GenerateMail(resultEmail,
+//                        FROM_ADDRESS, USER_UNLOCK_NOTIFICATION_BODY_FILENAME,
+//                        Resources.UserUnlockNotificationTemplate,
+//                        USER_UNLOCK_NOTIFICATION_SUBJECT, userLangIETF, replacements);
+//                }
+//                catch (Exception ex)
+//                {
+//                    if (log.IsErrorEnabled)
+//                    {
+//                        log.ErrorFormat("Unlocking user: Failed to generate a mail"
+//                            + " for a user `{0}' to `{1}': {2}"
+//                            , username, resultEmail, ex);
+//                    }
+//                    throw ex;
+//                }
+//            }
+//
+//            try
+//            {
+//				SendMailByAWorkflow(userUnlockNotificationMail);
+//			}
+//            catch (Exception ex)
+//            {
+//                if (log.IsErrorEnabled)
+//                {
+//                    log.ErrorFormat("Unlocking user: Failed to send a mail"
+//                        + " for a user `{0}' to `{1}': {2}"
+//                        , username, resultEmail, ex);
+//                }
+//                throw new Exception(
+//                    Resources.FailedToSendUserUnlockNotification);
+//            }
+//            finally
+//            {
+//                userUnlockNotificationMail.Dispose();
+//            }
+//            if (log.IsDebugEnabled)
+//            {
+//                log.DebugFormat("User `{0}' has been unlocked and the"
+//                    + " notification mail has been sent to `{1}'.",
+//                    username, resultEmail);
+//            }
+//            return true;
+//        }
 
-        private static List<KeyValuePair<string, string> > 
-            BuildReplacementsFromBusinessPartnerData(DataRow businessPartnerRow)
-        {
-            string firstNameAndName =
-                businessPartnerRow["FirstNameAndName"].ToString();
+//        private static List<KeyValuePair<string, string> > 
+//            BuildReplacementsFromBusinessPartnerData(DataRow businessPartnerRow)
+//        {
+//            string firstNameAndName =
+//                businessPartnerRow["FirstNameAndName"].ToString();
+//
+//            return new List<KeyValuePair<string, string>>
+//                {                   
+//                    new KeyValuePair<string, string>("<%FirstNameAndName%>",
+//                    firstNameAndName)
+//                };
+//        }
 
-            return new List<KeyValuePair<string, string>>
-                {                   
-                    new KeyValuePair<string, string>("<%FirstNameAndName%>",
-                    firstNameAndName)
-                };
-        }
+//        private static string ResolveIetfTagFromOrigamLanguageId(
+//            string languageId)
+//        {
+//            IDataLookupService ls = ServiceManager.Services.GetService(
+//                typeof(IDataLookupService)) as IDataLookupService;
+//            string userLangIETF = "";
+//            if (!string.IsNullOrEmpty(languageId))
+//            {
+//                object ret = ls.GetDisplayText(LANGUAGE_TAGIETF_LOOKUP,
+//                    languageId, false, false, null);
+//                if (ret != null)
+//                {
+//                    userLangIETF = (string)ret;
+//                }
+//            }
+//
+//            return userLangIETF;
+//        }
 
-        private static string ResolveIetfTagFromOrigamLanguageId(
-            string languageId)
-        {
-            IDataLookupService ls = ServiceManager.Services.GetService(
-                typeof(IDataLookupService)) as IDataLookupService;
-            string userLangIETF = "";
-            if (!string.IsNullOrEmpty(languageId))
-            {
-                object ret = ls.GetDisplayText(LANGUAGE_TAGIETF_LOOKUP,
-                    languageId, false, false, null);
-                if (ret != null)
-                {
-                    userLangIETF = (string)ret;
-                }
-            }
+//        private static DataRow getBusinessPartnerDataRow(string username)
+//        {
+//            DataSet data = GetBusinessPartnerDataSet(
+//                GET_BUSINESS_PARTNER_BY_USER_NAME,
+//                "BusinessPartner_parUserName", username);
+//            DataTable table = data.Tables["BusinessPartner"];
+//            if (table.Rows.Count == 0)
+//            {
+//                // user to unlock doesn't exist in business partner
+//                throw new Exception(String.Format(
+//                    Resources.BusinessPartnerNotFoundForTheUser, username));
+//            }
+//            DataRow businessPartnerRow = table.Rows[0];
+//            return businessPartnerRow;
+//        }
 
-            return userLangIETF;
-        }
-
-        private static DataRow getBusinessPartnerDataRow(string username)
-        {
-            DataSet data = GetBusinessPartnerDataSet(
-                GET_BUSINESS_PARTNER_BY_USER_NAME,
-                "BusinessPartner_parUserName", username);
-            DataTable table = data.Tables["BusinessPartner"];
-            if (table.Rows.Count == 0)
-            {
-                // user to unlock doesn't exist in business partner
-                throw new Exception(String.Format(
-                    Resources.BusinessPartnerNotFoundForTheUser, username));
-            }
-            DataRow businessPartnerRow = table.Rows[0];
-            return businessPartnerRow;
-        }
-
-        public static string FindBestLocalizedFile(string filePath,
-            string languageIETF)
-        {
-            if (String.IsNullOrEmpty(languageIETF))
-            {
-                // language not sent, use current thread one
-                languageIETF = System.Threading.Thread.CurrentThread.
-                    CurrentUICulture.IetfLanguageTag;
-            }
-
-            // find the last '.'
-            int lastDotIndex = filePath.LastIndexOf('.');
-            // create a localized file candidate ( password_reset.de-DE.txt )
-            /*
-                password_reset.txt -> password_reset.de-DE.txt
-                password_reset -> password_reset.de-DE
-             */
-            string candidate;
-            if (lastDotIndex == -1)
-            {
-                // dot not found
-                candidate = String.Format("{0}.{1}", filePath, languageIETF);
-            }
-            else
-            {
-                candidate = String.Format("{0}.{1}{2}", filePath.Substring(0,
-                    lastDotIndex), languageIETF,
-                    filePath.Substring(lastDotIndex));
-            }
-            if (File.Exists(candidate)) return candidate;
-            // try better
-            /*
-                password_reset.txt -> password_reset.de.txt
-                password_reset -> password_reset.de
-             */
-            string[] splittedIETF = languageIETF.Split('-');
-            if (splittedIETF.Length == 2)
-            {
-                if (lastDotIndex == -1)
-                {
-                    candidate = String.Format("{0}.{1}", filePath,
-                        splittedIETF[0]);
-                }
-                else
-                {
-                    candidate = String.Format("{0}.{1}{2}", filePath.Substring(
-                        0, lastDotIndex), splittedIETF[0],
-                        filePath.Substring(lastDotIndex));
-                }
-                if (File.Exists(candidate)) return candidate;
-            }
-            // fallback
-            return filePath;            
-        }
+//        public static string FindBestLocalizedFile(string filePath,
+//            string languageIETF)
+//        {
+//            if (String.IsNullOrEmpty(languageIETF))
+//            {
+//                // language not sent, use current thread one
+//                languageIETF = System.Threading.Thread.CurrentThread.
+//                    CurrentUICulture.IetfLanguageTag;
+//            }
+//
+//            // find the last '.'
+//            int lastDotIndex = filePath.LastIndexOf('.');
+//            // create a localized file candidate ( password_reset.de-DE.txt )
+//            /*
+//                password_reset.txt -> password_reset.de-DE.txt
+//                password_reset -> password_reset.de-DE
+//             */
+//            string candidate;
+//            if (lastDotIndex == -1)
+//            {
+//                // dot not found
+//                candidate = String.Format("{0}.{1}", filePath, languageIETF);
+//            }
+//            else
+//            {
+//                candidate = String.Format("{0}.{1}{2}", filePath.Substring(0,
+//                    lastDotIndex), languageIETF,
+//                    filePath.Substring(lastDotIndex));
+//            }
+//            if (File.Exists(candidate)) return candidate;
+//            // try better
+//            /*
+//                password_reset.txt -> password_reset.de.txt
+//                password_reset -> password_reset.de
+//             */
+//            string[] splittedIETF = languageIETF.Split('-');
+//            if (splittedIETF.Length == 2)
+//            {
+//                if (lastDotIndex == -1)
+//                {
+//                    candidate = String.Format("{0}.{1}", filePath,
+//                        splittedIETF[0]);
+//                }
+//                else
+//                {
+//                    candidate = String.Format("{0}.{1}{2}", filePath.Substring(
+//                        0, lastDotIndex), splittedIETF[0],
+//                        filePath.Substring(lastDotIndex));
+//                }
+//                if (File.Exists(candidate)) return candidate;
+//            }
+//            // fallback
+//            return filePath;            
+//        }
 
         protected bool SendPasswordResetToken(string email, string username,
             ref string resultMessage)
-		{
-			// get profile data for an unlocked user
-			DataRow businessPartnerRow = getBusinessPartnerDataRow(username);
-			// resolve language
-			string languageId = businessPartnerRow["refLanguageId"].ToString();
-			string userLangIETF = ResolveIetfTagFromOrigamLanguageId(languageId);
-			if (userLangIETF == "")
-			{
-				userLangIETF = System.Threading.Thread.CurrentThread.
-					CurrentUICulture.IetfLanguageTag;
-			}
+        {
+            return internalUserManager.SendPasswordResetToken(email, username,
+                ref resultMessage);
+        }
+//			// get profile data for an unlocked user
+//			DataRow businessPartnerRow = getBusinessPartnerDataRow(username);
+//			// resolve language
+//			string languageId = businessPartnerRow["refLanguageId"].ToString();
+//			string userLangIETF = ResolveIetfTagFromOrigamLanguageId(languageId);
+//			if (userLangIETF == "")
+//			{
+//				userLangIETF = System.Threading.Thread.CurrentThread.
+//					CurrentUICulture.IetfLanguageTag;
+//			}
+//
+//			// generate password reset token
+//			Task<TokenResult> getTokenTask = GetPasswordResetTokenFromEmailAsync(email);
+//			if (getTokenTask.IsFaulted)
+//			{
+//				throw getTokenTask.Exception;
+//			}
+//			TokenResult tokenResult = getTokenTask.Result;
+//
+//			if (!string.IsNullOrEmpty(tokenResult.errorMessage))
+//			{
+//				resultMessage = tokenResult.errorMessage;
+//				return false;
+//			}
+//
+//			List<KeyValuePair<string, string>> replacements
+//				= new List<KeyValuePair<string, string>>
+//				{
+//					new KeyValuePair<string, string>("<%Token%>",
+//						Uri.EscapeDataString(tokenResult.token)),
+//					new KeyValuePair<string, string>("<%TokenValidityHours%>",
+//						tokenResult.tokenValidityHours.ToString()),
+//					new KeyValuePair<string, string>("<%UserName%>", tokenResult.userName),
+//					new KeyValuePair<string, string>("<%EscapedUserName%>",
+//						Uri.EscapeDataString(tokenResult.userName)),
+//					new KeyValuePair<string, string>("<%Name%>", (string)businessPartnerRow["Name"]),
+//					new KeyValuePair<string, string>("<%EscapedName%>",
+//						Uri.EscapeDataString((string)businessPartnerRow["Name"])),
+//					new KeyValuePair<string, string>("<%UserEmail%>",
+//						(string)businessPartnerRow["UserEmail"]),
+//					new KeyValuePair<string, string>("<%EscapedUserEmail%>",
+//						Uri.EscapeDataString((string)businessPartnerRow["UserEmail"])),
+//					new KeyValuePair<string, string>("<%PortalBaseUrl%>",
+//						PORTAL_BASE_URL)
+//				};
+//			if (!DBNull.Value.Equals(businessPartnerRow["FirstName"]))
+//            {
+//				replacements.AddRange(
+//					new List<KeyValuePair<string, string>>
+//					{
+//						new KeyValuePair<string, string>("<%FirstName%>",
+//							(string)businessPartnerRow["FirstName"]),
+//						new KeyValuePair<string, string>("<%EscapedFirstName%>",
+//							Uri.EscapeDataString((string)businessPartnerRow["FirstName"]))
+//					}
+//				);
+//			}
+//			
+//			// PORTAL_BASE_URL is mandatory if using default template
+//			if (string.IsNullOrWhiteSpace(PORTAL_BASE_URL) && string.IsNullOrEmpty(RESET_PWD_BODY_FILENAME))
+//			{
+//				log.Error("'PortalBaseUrl' not configured while default template"
+//					+ "is used. Can't send a password reset email.");
+//				throw new Exception(Resources.ResetPasswordMail_PortalBaseUrlNotConfigured);
+//			}
+//			MailMessage mail = null;
+//			using (LanguageSwitcher langSwitcher = new LanguageSwitcher(
+//				userLangIETF))
+//			{
+//				try
+//				{
+//					mail = GenerateMail(email, FROM_ADDRESS,
+//						RESET_PWD_BODY_FILENAME,
+//						Resources.ResetPasswordMailTemplate,
+//						RESET_PWD_SUBJECT, userLangIETF, replacements);
+//				}
+//				catch (Exception ex)
+//				{
+//					if (log.IsErrorEnabled)
+//					{
+//						log.ErrorFormat("Failed to generate a password reset mail "
+//							+ " for the user `{0}' to email `{1}': {2}",
+//							username, email, ex);
+//					}
+//					resultMessage = Resources.FailedToSendPasswordResetToken;
+//					return false;
+//				}
+//			}
+//
+//			try
+//			{
+//				SendMailByAWorkflow(mail);
+//			}
+//			catch (Exception ex)
+//			{
+//				if (log.IsErrorEnabled)
+//				{
+//					log.Error(string.Format("Failed to send password reset "
+//						+ "mail for username `{0}', email `{1}'",
+//						username, email), ex);
+//				}
+//				resultMessage = Resources.FailedToSendPassword;
+//				return false;
+//			}
+//			finally
+//			{
+//				mail.Dispose();
+//			}
+//			if (log.IsDebugEnabled)
+//			{
+//				log.DebugFormat(
+//					"A new password for the user `{0}' " +
+//					"successfully generated and sent to `{1}'."
+//					, username, email);
+//			}
+//			resultMessage = Resources.PasswordResetMailSent;
+//			return true;
+//		}
 
-			// generate password reset token
-			Task<TokenResult> getTokenTask = GetPasswordResetTokenFromEmailAsync(email);
-			if (getTokenTask.IsFaulted)
-			{
-				throw getTokenTask.Exception;
-			}
-			TokenResult tokenResult = getTokenTask.Result;
-
-			if (!string.IsNullOrEmpty(tokenResult.errorMessage))
-			{
-				resultMessage = tokenResult.errorMessage;
-				return false;
-			}
-
-			List<KeyValuePair<string, string>> replacements
-				= new List<KeyValuePair<string, string>>
-				{
-					new KeyValuePair<string, string>("<%Token%>",
-						Uri.EscapeDataString(tokenResult.token)),
-					new KeyValuePair<string, string>("<%TokenValidityHours%>",
-						tokenResult.tokenValidityHours.ToString()),
-					new KeyValuePair<string, string>("<%UserName%>", tokenResult.userName),
-					new KeyValuePair<string, string>("<%EscapedUserName%>",
-						Uri.EscapeDataString(tokenResult.userName)),
-					new KeyValuePair<string, string>("<%Name%>", (string)businessPartnerRow["Name"]),
-					new KeyValuePair<string, string>("<%EscapedName%>",
-						Uri.EscapeDataString((string)businessPartnerRow["Name"])),
-					new KeyValuePair<string, string>("<%UserEmail%>",
-						(string)businessPartnerRow["UserEmail"]),
-					new KeyValuePair<string, string>("<%EscapedUserEmail%>",
-						Uri.EscapeDataString((string)businessPartnerRow["UserEmail"])),
-					new KeyValuePair<string, string>("<%PortalBaseUrl%>",
-						PORTAL_BASE_URL)
-				};
-			if (!DBNull.Value.Equals(businessPartnerRow["FirstName"]))
-            {
-				replacements.AddRange(
-					new List<KeyValuePair<string, string>>
-					{
-						new KeyValuePair<string, string>("<%FirstName%>",
-							(string)businessPartnerRow["FirstName"]),
-						new KeyValuePair<string, string>("<%EscapedFirstName%>",
-							Uri.EscapeDataString((string)businessPartnerRow["FirstName"]))
-					}
-				);
-			}
-			
-			// PORTAL_BASE_URL is mandatory if using default template
-			if (string.IsNullOrWhiteSpace(PORTAL_BASE_URL) && string.IsNullOrEmpty(RESET_PWD_BODY_FILENAME))
-			{
-				log.Error("'PortalBaseUrl' not configured while default template"
-					+ "is used. Can't send a password reset email.");
-				throw new Exception(Resources.ResetPasswordMail_PortalBaseUrlNotConfigured);
-			}
-			MailMessage mail = null;
-			using (LanguageSwitcher langSwitcher = new LanguageSwitcher(
-				userLangIETF))
-			{
-				try
-				{
-					mail = GenerateMail(email, FROM_ADDRESS,
-						RESET_PWD_BODY_FILENAME,
-						Resources.ResetPasswordMailTemplate,
-						RESET_PWD_SUBJECT, userLangIETF, replacements);
-				}
-				catch (Exception ex)
-				{
-					if (log.IsErrorEnabled)
-					{
-						log.ErrorFormat("Failed to generate a password reset mail "
-							+ " for the user `{0}' to email `{1}': {2}",
-							username, email, ex);
-					}
-					resultMessage = Resources.FailedToSendPasswordResetToken;
-					return false;
-				}
-			}
-
-			try
-			{
-				SendMailByAWorkflow(mail);
-			}
-			catch (Exception ex)
-			{
-				if (log.IsErrorEnabled)
-				{
-					log.Error(string.Format("Failed to send password reset "
-						+ "mail for username `{0}', email `{1}'",
-						username, email), ex);
-				}
-				resultMessage = Resources.FailedToSendPassword;
-				return false;
-			}
-			finally
-			{
-				mail.Dispose();
-			}
-			if (log.IsDebugEnabled)
-			{
-				log.DebugFormat(
-					"A new password for the user `{0}' " +
-					"successfully generated and sent to `{1}'."
-					, username, email);
-			}
-			resultMessage = Resources.PasswordResetMailSent;
-			return true;
-		}
-
-		private static void SendMailByAWorkflow(MailMessage mail)
-		{
-			// send mail - by a workflow located at root package			
-			QueryParameterCollection pms = new QueryParameterCollection();
-			pms.Add(new QueryParameter("subject", mail.Subject));
-			pms.Add(new QueryParameter("body", mail.Body));
-			pms.Add(new QueryParameter("recipientEmail", mail.To.First().Address));
-			pms.Add(new QueryParameter("senderEmail", mail.From.Address));
-			if (!string.IsNullOrWhiteSpace(mail.From.DisplayName))
-			{
-				pms.Add(new QueryParameter("senderName", mail.From.DisplayName));
-			}
-			if (!string.IsNullOrWhiteSpace(MAIL_QUEUE_NAME))
-			{
-				pms.Add(new QueryParameter("MailWorkQueueName", MAIL_QUEUE_NAME));
-			}
-			WorkflowService.ExecuteWorkflow(new Guid("6e6d4e02-812a-4c95-afd1-eb2428802e2b"), pms, null);
-		}
+//		private static void SendMailByAWorkflow(MailMessage mail)
+//		{
+//			// send mail - by a workflow located at root package			
+//			QueryParameterCollection pms = new QueryParameterCollection();
+//			pms.Add(new QueryParameter("subject", mail.Subject));
+//			pms.Add(new QueryParameter("body", mail.Body));
+//			pms.Add(new QueryParameter("recipientEmail", mail.To.First().Address));
+//			pms.Add(new QueryParameter("senderEmail", mail.From.Address));
+//			if (!string.IsNullOrWhiteSpace(mail.From.DisplayName))
+//			{
+//				pms.Add(new QueryParameter("senderName", mail.From.DisplayName));
+//			}
+//			if (!string.IsNullOrWhiteSpace(MAIL_QUEUE_NAME))
+//			{
+//				pms.Add(new QueryParameter("MailWorkQueueName", MAIL_QUEUE_NAME));
+//			}
+//			WorkflowService.ExecuteWorkflow(new Guid("6e6d4e02-812a-4c95-afd1-eb2428802e2b"), pms, null);
+//		}
 
 		/// <summary>
 		/// Generates and return MailMessage ready to send with smtp.
@@ -750,30 +704,30 @@ namespace Origam.Security.Identity
 		/// <param name="replacements">list of template replacements
 		/// (key-value pairs) (key:placeholer string, value:new value)</param>
 		/// <returns></returns>
-		private static MailMessage GenerateMail(string userEmail, string fromAddress,
-            string templateFilename, string templateFromResources,
-            string subjectFromConfig,
-            string userLangIETF, List<KeyValuePair<string, string>> replacements)
-        {
-            MailMessage passwordRecoveryMail = new MailMessage(fromAddress,
-                userEmail);
-            string templateContent =
-                (String.IsNullOrEmpty(templateFilename)) ?
-                    templateFromResources
-                    : GetLocalizedMailTemplateText(templateFilename,
-                         userLangIETF);
-
-            string[] subjectAndBody = processMailTemplate(templateContent,
-                replacements);
-            passwordRecoveryMail.Subject = subjectAndBody[0];
-            passwordRecoveryMail.Body = subjectAndBody[1];
-
-            if (string.IsNullOrWhiteSpace(passwordRecoveryMail.Subject))
-            {
-                passwordRecoveryMail.Subject = subjectFromConfig;
-            }
-            return passwordRecoveryMail;
-        }
+//		private static MailMessage GenerateMail(string userEmail, string fromAddress,
+//            string templateFilename, string templateFromResources,
+//            string subjectFromConfig,
+//            string userLangIETF, List<KeyValuePair<string, string>> replacements)
+//        {
+//            MailMessage passwordRecoveryMail = new MailMessage(fromAddress,
+//                userEmail);
+//            string templateContent =
+//                (String.IsNullOrEmpty(templateFilename)) ?
+//                    templateFromResources
+//                    : GetLocalizedMailTemplateText(templateFilename,
+//                         userLangIETF);
+//
+//            string[] subjectAndBody = processMailTemplate(templateContent,
+//                replacements);
+//            passwordRecoveryMail.Subject = subjectAndBody[0];
+//            passwordRecoveryMail.Body = subjectAndBody[1];
+//
+//            if (string.IsNullOrWhiteSpace(passwordRecoveryMail.Subject))
+//            {
+//                passwordRecoveryMail.Subject = subjectFromConfig;
+//            }
+//            return passwordRecoveryMail;
+//        }
 
 
         /// <summary>
@@ -785,153 +739,153 @@ namespace Origam.Security.Identity
         /// </param>
         /// <param name="languageIETF"></param>
         /// <returns></returns>
-        private static string GetLocalizedMailTemplateText(
-            string templateFilename,
-            string languageIETF = "")
-        {
-            string filePath = Path.Combine(
-                AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
-                templateFilename);
-            return File.ReadAllText(
-                FindBestLocalizedFile(filePath, languageIETF)).Trim();     
-        }
+//        private static string GetLocalizedMailTemplateText(
+//            string templateFilename,
+//            string languageIETF = "")
+//        {
+//            string filePath = Path.Combine(
+//                AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
+//                templateFilename);
+//            return File.ReadAllText(
+//                FindBestLocalizedFile(filePath, languageIETF)).Trim();     
+//        }
 
-        private static string[] processMailTemplate(string templateContent,
-            List<KeyValuePair<string, string>> replacements)
-        {
-            string subject = null;
-            if (templateContent.ToLower().StartsWith("subject:"))
-            {
-                subject = templateContent.Substring(8,
-                    templateContent.IndexOf('\n') - 8).Trim();
-                foreach (KeyValuePair<string, string> replacement
-                    in replacements)
-                {
-                    subject = subject.Replace(replacement.Key, replacement.Value);
-                }
-                templateContent = templateContent.Substring(
-                    templateContent.IndexOf('\n')).TrimStart();
-            }
-            foreach (KeyValuePair<string, string> replacement in replacements)
-            {
-                templateContent = templateContent.Replace(replacement.Key,
-                    replacement.Value);
-            }
-            return new string[] { subject, templateContent };
-        }
+//        private static string[] processMailTemplate(string templateContent,
+//            List<KeyValuePair<string, string>> replacements)
+//        {
+//            string subject = null;
+//            if (templateContent.ToLower().StartsWith("subject:"))
+//            {
+//                subject = templateContent.Substring(8,
+//                    templateContent.IndexOf('\n') - 8).Trim();
+//                foreach (KeyValuePair<string, string> replacement
+//                    in replacements)
+//                {
+//                    subject = subject.Replace(replacement.Key, replacement.Value);
+//                }
+//                templateContent = templateContent.Substring(
+//                    templateContent.IndexOf('\n')).TrimStart();
+//            }
+//            foreach (KeyValuePair<string, string> replacement in replacements)
+//            {
+//                templateContent = templateContent.Replace(replacement.Key,
+//                    replacement.Value);
+//            }
+//            return new string[] { subject, templateContent };
+//        }
 
 		public void SendNewUserToken(string username
 			, string transactionId = null)
-		{
-			// get profile data for an unlocked user
-			DataRow businessPartnerRow = getBusinessPartnerDataRow(username);
-			SendNewUserToken(
-				((Guid) businessPartnerRow["Id"]).ToString(),
-				(string) businessPartnerRow["UserEmail"],
-				username,
-				(string) businessPartnerRow["Name"],
-				(string) businessPartnerRow["firstName"]);
-		}
-
-        internal void SendNewUserToken(
-            string userId, string email, string username, string name, 
-            string firstName)
         {
-            string token;
-            Task<string> task = GenerateEmailConfirmationTokenAsync(userId);
-            if (task.IsFaulted)
-            {
-                throw task.Exception;
-            }
-            else
-            {
-                token = task.Result;
-            }
-            
-            List<KeyValuePair<string, string>> replacements
-                = new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("<%Token%>",
-                        Uri.EscapeDataString(token)),
-                    new KeyValuePair<string, string>("<%UserId%>", userId),
-                    new KeyValuePair<string, string>("<%UserName%>", username),
-                    new KeyValuePair<string, string>("<%Name%>", name),
-                    new KeyValuePair<string, string>("<%FirstName%>",
-                        firstName),
-                    new KeyValuePair<string, string>("<%PortalBaseUrl%>",
-                        PORTAL_BASE_URL),
-					new KeyValuePair<string, string>("<%EscapedUserName%>",
-						Uri.EscapeDataString(username)),
-					new KeyValuePair<string, string>("<%Name%>", name),
-					new KeyValuePair<string, string>("<%EscapedName%>",
-						Uri.EscapeDataString(name)),
-					new KeyValuePair<string, string>("<%FirstName%>", firstName),
-					new KeyValuePair<string, string>("<%EscapedFirstName%>",
-						Uri.EscapeDataString(firstName)),
-					new KeyValuePair<string, string>("<%UserEmail%>", email),
-					new KeyValuePair<string, string>("<%EscapedUserEmail%>",
-						Uri.EscapeDataString(email)),
-					new KeyValuePair<string, string>("<%PortalBaseUrl%>",
-						PORTAL_BASE_URL)
-				};
-            // PORTAL_BASE_URL is mandatory if using default template
-            if (string.IsNullOrWhiteSpace(PORTAL_BASE_URL) &&  string.IsNullOrEmpty(REGISTER_NEW_USER_FILENAME))
-            {
-                log.Error("'PortalBaseUrl' not configured while default template"
-                    +"is used. Can't send a new registration email confirmation.");
-                throw new Exception(Resources.RegisterNewUser_PortalBaseUrlNotConfigured);
-            }
-            MailMessage mail = null;
-            string userLangIETF = System.Threading.Thread.CurrentThread.
-                CurrentUICulture.IetfLanguageTag;
-            using (LanguageSwitcher langSwitcher = new LanguageSwitcher(
-                userLangIETF))
-            {
-                mail = GenerateMail(email, FROM_ADDRESS,
-                    REGISTER_NEW_USER_FILENAME,
-                    Resources.RegisterNewUserTemplate,
-                    REGISTER_NEW_USER_SUBJECT, userLangIETF, replacements);
-            }
-            
-            try
-            {
-				SendMailByAWorkflow(mail);
-			}
-            catch (Exception ex)
-            {
-                if (log.IsErrorEnabled)
-                {
-                    log.Error("Failed to send new user registration mail", ex);
-                }
-                throw new Exception(Resources.FailedToSendNewUserRegistrationMail);
-            }
-            finally
-            {
-                mail.Dispose();
-            }
+	        internalUserManager.SendNewUserToken(username,transactionId);
+        }
+
+//        internal void SendNewUserToken(
+//            string userId, string email, string username, string name, 
+//            string firstName)
+//        {
+//            string token;
+//            Task<string> task = GenerateEmailConfirmationTokenAsync(userId);
+//            if (task.IsFaulted)
+//            {
+//                throw task.Exception;
+//            }
+//            else
+//            {
+//                token = task.Result;
+//            }
+//            
+//            List<KeyValuePair<string, string>> replacements
+//                = new List<KeyValuePair<string, string>>
+//                {
+//                    new KeyValuePair<string, string>("<%Token%>",
+//                        Uri.EscapeDataString(token)),
+//                    new KeyValuePair<string, string>("<%UserId%>", userId),
+//                    new KeyValuePair<string, string>("<%UserName%>", username),
+//                    new KeyValuePair<string, string>("<%Name%>", name),
+//                    new KeyValuePair<string, string>("<%FirstName%>",
+//                        firstName),
+//                    new KeyValuePair<string, string>("<%PortalBaseUrl%>",
+//                        PORTAL_BASE_URL),
+//					new KeyValuePair<string, string>("<%EscapedUserName%>",
+//						Uri.EscapeDataString(username)),
+//					new KeyValuePair<string, string>("<%Name%>", name),
+//					new KeyValuePair<string, string>("<%EscapedName%>",
+//						Uri.EscapeDataString(name)),
+//					new KeyValuePair<string, string>("<%FirstName%>", firstName),
+//					new KeyValuePair<string, string>("<%EscapedFirstName%>",
+//						Uri.EscapeDataString(firstName)),
+//					new KeyValuePair<string, string>("<%UserEmail%>", email),
+//					new KeyValuePair<string, string>("<%EscapedUserEmail%>",
+//						Uri.EscapeDataString(email)),
+//					new KeyValuePair<string, string>("<%PortalBaseUrl%>",
+//						PORTAL_BASE_URL)
+//				};
+//            // PORTAL_BASE_URL is mandatory if using default template
+//            if (string.IsNullOrWhiteSpace(PORTAL_BASE_URL) &&  string.IsNullOrEmpty(REGISTER_NEW_USER_FILENAME))
+//            {
+//                log.Error("'PortalBaseUrl' not configured while default template"
+//                    +"is used. Can't send a new registration email confirmation.");
+//                throw new Exception(Resources.RegisterNewUser_PortalBaseUrlNotConfigured);
+//            }
+//            
+//            
+//            MailMessage mail = null;
+//            string userLangIETF = System.Threading.Thread.CurrentThread.
+//                CurrentUICulture.IetfLanguageTag;
+//            using (LanguageSwitcher langSwitcher = new LanguageSwitcher(
+//                userLangIETF))
+//            {
+//                mail = GenerateMail(email, FROM_ADDRESS,
+//                    REGISTER_NEW_USER_FILENAME,
+//                    Resources.RegisterNewUserTemplate,
+//                    REGISTER_NEW_USER_SUBJECT, userLangIETF, replacements);
+//            }
+//            
+//            try
+//            {
+//				SendMailByAWorkflow(mail);
+//			}
+//            catch (Exception ex)
+//            {
+//                if (log.IsErrorEnabled)
+//                {
+//                    log.Error("Failed to send new user registration mail", ex);
+//                }
+//                throw new Exception(Resources.FailedToSendNewUserRegistrationMail);
+//            }
+//            finally
+//            {
+//                mail.Dispose();
+//            }
+//        }
+
+        public bool EmailConfirmed(string id)
+        {
+            return this.IsEmailConfirmed(id);
         }
 
 
-        internal static DataSet GetBusinessPartnerDataSet(
+        internal DataSet GetBusinessPartnerDataSet(
         Guid methodId, string paramName, object paramValue)
         {
-            return GetBusinessPartnerDataSet(
-                methodId, paramName, paramValue, null);
+            return InternalUserManager.GetBusinessPartnerDataSet(
+                methodId, paramName, paramValue);
         }
 
-        internal static DataSet GetBusinessPartnerDataSet(
-            Guid methodId, string paramName, object paramValue,
-            string transactionId)
-        {
-            return DataService.LoadData(
-                BUSINESS_PARTNER_DATA_STRUCTURE,
-                methodId,
-                Guid.Empty,
-                Guid.Empty,
-                transactionId,
-                paramName,
-                paramValue);
-        }
+//        internal static DataSet GetBusinessPartnerDataSet(
+//            Guid methodId, string paramName, object paramValue,
+//            string transactionId)
+//        {
+//            return DataService.LoadData(
+//                BUSINESS_PARTNER_DATA_STRUCTURE,
+//                methodId,
+//                Guid.Empty,
+//                Guid.Empty,
+//                transactionId,
+//                paramName,
+//                paramValue);
+//        }
 
         public override async Task<bool> IsInRoleAsync(string userId,
             string role)
@@ -947,6 +901,29 @@ namespace Origam.Security.Identity
         protected virtual void CheckEmailUniqueness()
         {
             emailUniquenessChecked = true;
+        }
+
+        public bool UserExists(Guid userId)
+        {
+            // find out if user exists in identity
+            OrigamUser origamUser = FindByIdAsync(userId.ToString()).Result;
+            return origamUser != null;
+        }
+
+        public Task<string> GeneratePasswordResetTokenAsync1(string toString)
+        {
+           return GeneratePasswordResetTokenAsync(toString);
+        }
+
+        public int? TokenLifespan {
+            get
+            {
+                if (UserTokenProvider is OrigamTokenProvider origamTokenProvider)
+                {
+                    return (int)origamTokenProvider.TokenLifespan.TotalHours;
+                }
+                return null;
+            }
         }
     }
 }
