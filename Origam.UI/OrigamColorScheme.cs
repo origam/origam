@@ -165,7 +165,7 @@ namespace Origam.UI
 
 		public static Color FilterOperatorActiveBackColor = GridHeaderBackColor;
 		public static Color FilterOperatorActiveForeColor = System.Drawing.Color.White;
-        public static Color DirtyColor = Color.FromArgb(241, 91, 71);
+       
 #endif
 	}
 }

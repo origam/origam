@@ -34,6 +34,10 @@ namespace Origam.ServerCore
             set => Is2FAEnforced = value;
         }
 
+        public string RoleId { get; set; }
+        public string FirstName { get; set; }
+        public string Name { get; set; }
+
         public User(string userName)
         {
             UserName = userName;

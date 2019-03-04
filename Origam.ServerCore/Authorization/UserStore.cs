@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Origam.DA;
 using Origam.DA.Service;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
@@ -21,42 +22,73 @@ namespace Origam.ServerCore
 
         private int accessFailedCount;
 
-        public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
+        public Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
         {
-            DatasetGenerator dataSetGenerator = new DatasetGenerator(true);
-            IPersistenceService persistenceService = ServiceManager.Services
-                .GetService(typeof(IPersistenceService)) as IPersistenceService;
-            DataStructure dataStructure = (DataStructure)persistenceService
-                .SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), 
-                    new ModelElementKey(Queries.ORIGAM_USER_DATA_STRUCTURE));
-            DataSet origamUserDataSet = dataSetGenerator.CreateDataSet(
-                dataStructure);
-            DataRow origamUserRow 
-                = origamUserDataSet.Tables["OrigamUser"].NewRow();
-            origamUserRow.SetField("Id",user.Id);
-            origamUserRow.SetField("UserName", user.UserName);
-            origamUserRow.SetField("refBusinessPartnerId", 
-                user.ProviderUserKey);
-            origamUserRow.SetField("Password",  user.PasswordHash);
-            origamUserRow.SetField("RecordCreated", DateTime.Now);
-            origamUserRow.SetField("EmailConfirmed", user.IsApproved);
-            origamUserRow["RecordCreatedBy"]  = SecurityManager.CurrentUserProfile().Id;
-            origamUserDataSet.Tables["OrigamUser"].Rows.Add(origamUserRow);
-            try
-            {
-                DataService.StoreData(Queries.ORIGAM_USER_DATA_STRUCTURE,
-                    origamUserDataSet, false, user.TransactionId);
-            } catch (Exception ex)
-            {
-//                if (log.IsErrorEnabled)
+
+            bool requestEmailConfirmation = !user.EmailConfirmed;
+            string id = Guid.NewGuid().ToString();
+            QueryParameterCollection parameters = new QueryParameterCollection();
+            parameters.Add(new QueryParameter("Id", id));
+            parameters.Add(new QueryParameter("UserName", user.UserName));
+            parameters.Add(new QueryParameter("Password", user.PasswordHash));
+            parameters.Add(new QueryParameter("FirstName", user.FirstName));
+            parameters.Add(new QueryParameter("Name", user.Name));
+            parameters.Add(new QueryParameter("Email", user.Email));
+            parameters.Add(new QueryParameter("RoleId", user.RoleId));
+            parameters.Add(new QueryParameter("RequestEmailConfirmation",
+                requestEmailConfirmation));
+            // add extra parameters
+//            if (additionalWFParameters != null)
+//            {
+//                foreach (KeyValuePair<string, object> x in additionalWFParameters)
 //                {
-//                    log.ErrorFormat(
-//                        "Failed to create a user `{0}': {1}"
-//                        , user.UserName, ex.Message);
+//                    parameters.Add(new QueryParameter(x.Key, x.Value));
 //                }
-                throw ex;
-            }
-            return IdentityResult.Success;
+//            }
+            WorkflowService.ExecuteWorkflow(
+                new Guid("2bd4dbcc-d01e-4c5d-bedb-a4150dcefd54"), parameters, null);
+			
+//            if (requestEmailConfirmation)
+//            {
+//                SendNewUserToken(id, email, userName, name, firstName);
+//            }
+            
+            
+            
+//            DatasetGenerator dataSetGenerator = new DatasetGenerator(true);
+//            IPersistenceService persistenceService = ServiceManager.Services
+//                .GetService(typeof(IPersistenceService)) as IPersistenceService;
+//            DataStructure dataStructure = (DataStructure)persistenceService
+//                .SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), 
+//                    new ModelElementKey(Queries.ORIGAM_USER_DATA_STRUCTURE));
+//            DataSet origamUserDataSet = dataSetGenerator.CreateDataSet(
+//                dataStructure);
+//            DataRow origamUserRow 
+//                = origamUserDataSet.Tables["OrigamUser"].NewRow();
+//            origamUserRow.SetField("Id",user.Id);
+//            origamUserRow.SetField("UserName", user.UserName);
+//            origamUserRow.SetField("refBusinessPartnerId", 
+//                user.ProviderUserKey);
+//            origamUserRow.SetField("Password",  user.PasswordHash);
+//            origamUserRow.SetField("RecordCreated", DateTime.Now);
+//            origamUserRow.SetField("EmailConfirmed", user.IsApproved);
+//            origamUserRow["RecordCreatedBy"]  = SecurityManager.CurrentUserProfile().Id;
+//            origamUserDataSet.Tables["OrigamUser"].Rows.Add(origamUserRow);
+//            try
+//            {
+//                DataService.StoreData(Queries.ORIGAM_USER_DATA_STRUCTURE,
+//                    origamUserDataSet, false, user.TransactionId);
+//            } catch (Exception ex)
+//            {
+////                if (log.IsErrorEnabled)
+////                {
+////                    log.ErrorFormat(
+////                        "Failed to create a user `{0}': {1}"
+////                        , user.UserName, ex.Message);
+////                }
+//                throw ex;
+//            }
+            return Task.FromResult(IdentityResult.Success);
         }
      
         public async Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
@@ -279,6 +311,15 @@ namespace Origam.ServerCore
 
         public Task SetLockoutEndDateAsync(User user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
         {
+            if (!lockoutEnd.HasValue)
+            {
+                throw new NotImplementedException();
+            }
+            if (lockoutEnd.Value < DateTimeOffset.Now)
+            {
+                user.IsLockedOut = false;
+                return Task.CompletedTask;
+            }
             throw new NotImplementedException();
         }
 
@@ -299,12 +340,13 @@ namespace Origam.ServerCore
 
         public Task<bool> GetLockoutEnabledAsync(User user, CancellationToken cancellationToken)
         {
-            return Task.Factory.StartNew(() => false);
+           
+            return Task.Factory.StartNew(() =>  user.IsLockedOut);
         }
 
         public Task SetLockoutEnabledAsync(User user, bool enabled, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.Factory.StartNew(() =>  user.IsLockedOut = enabled);
         }
     }
 }

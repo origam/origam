@@ -12,6 +12,9 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Origam.Security.Common;
+using Origam.ServerCore.Authorization;
+using Origam.ServerCore.Extensions;
 
 namespace Origam.ServerCore.Controllers
 {
@@ -19,52 +22,141 @@ namespace Origam.ServerCore.Controllers
   [Route("internalApi/[controller]")]
   public class AccountController : Controller
     {
-        private readonly UserManager<User> userManager;
+        private readonly CoreUserManager userManager;
         private readonly SignInManager<User> signInManager;
         private readonly IMessageService messageService;
         private readonly IConfiguration configuration;
+        private readonly InternalUserManager internalUserManager;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, 
+        public AccountController(CoreUserManager userManager, SignInManager<User> signInManager, 
             IMessageService messageService, IConfiguration configuration)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.messageService = messageService;
             this.configuration = configuration;
+            //internalUserManager = new InternalUserManager(name=>new User(name),3, new NullTokenSender() );
+            internalUserManager = new InternalUserManager(
+                userName => new User(userName),
+                numberOfInvalidPasswordAttempts: 3,
+                frameworkSpecificManager: userManager,
+                mailTemplateDirectoryPath: "",
+                mailQueueName: "",
+                portalBaseUrl:"",
+                registerNewUserFilename:"",
+                fromAddress:"",
+                registerNewUserSubject: "",
+                resetPwdSubject: "",
+                resetPwdBodyFilename: "",
+                userUnlockNotificationBodyFilename: "",
+                userUnlockNotificationSubject:""
+            );
         }
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> Register(string email, string password, string repassword)
+        public async Task<IActionResult> CreateInitialUser(string userName, string email,
+            string password, string repassword)
         {
             if (password != repassword)
             {
                 return BadRequest("Passwords don't match");
             }
+            
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, "origam_server"),
+                new Claim(ClaimTypes.NameIdentifier, "1"),
+                new Claim("name", "origam_server"),
+            };
+            var identity = new ClaimsIdentity(claims, "TestAuthType");
+            Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
 
+           //internalUserManager.CreateInitialUser(userName,password,"",userName,email);
+//            if (!internalUserManager.IsInitialSetupNeeded())
+//            {
+//                return BadRequest("Initial user already exists");
+//            }
             var newUser = new User 
             {
-                UserName = email,
-                Email = email
+                UserName = userName,
+                Email = email,
+                RoleId = SecurityManager.BUILTIN_SUPER_USER_ROLE
             };
 
             var userCreationResult = await userManager.CreateAsync(newUser, password);
             if (!userCreationResult.Succeeded)
             {
-                foreach(var error in userCreationResult.Errors)
-                    ModelState.AddModelError(string.Empty, error.Description);
-                return BadRequest();
+                return BadRequest(userCreationResult.Errors.ToErrorMessage());
             }
 
-            await userManager.AddClaimAsync(newUser, new Claim(ClaimTypes.Role, "Administrator"));
+            await userManager.AddClaimAsync(
+                newUser, 
+                new Claim(ClaimTypes.Role, "Administrator"));
             
             
-            var emailConfirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(newUser);
-            var tokenVerificationUrl = Url.Action("VerifyEmail", "Account", new {id = newUser.Id, token = emailConfirmationToken}, Request.Scheme);
+            await SendMailWithVerificationToken(newUser);
+//            return Content("Check your email for a verification link");
+            internalUserManager.SetInitialSetupComplete();
+            return Ok();
+        }
+        
+        
+        [AllowAnonymous]
+        [HttpPost("[action]")]
+        public async Task<IActionResult> CreateNewUser(string userName, string email,
+            string password, string repassword)
+        {
+            if (password != repassword)
+            {
+                return BadRequest("Passwords don't match");
+            }
+            
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, "origam_server"),
+                new Claim(ClaimTypes.NameIdentifier, "1"),
+                new Claim("name", "origam_server"),
+            };
+            var identity = new ClaimsIdentity(claims, "TestAuthType");
+            Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
 
-            await messageService.Send(email, "Verify your email", $"Click <a href=\"{tokenVerificationUrl}\">here</a> to verify your email");
+            var newUser = new User 
+            {
+                UserName = userName,
+                Email = email,
+            };
 
-            return Content("Check your email for a verification link");
+            var userCreationResult = await userManager.CreateAsync(newUser, password);
+            if (!userCreationResult.Succeeded)
+            {
+                return BadRequest(userCreationResult.Errors.ToErrorMessage());
+            }
+
+//            await userManager.AddClaimAsync(
+//                newUser, 
+//                new Claim(ClaimTypes.Role, "Administrator"));
+            
+            
+            return Ok();
+        }
+
+        private async Task SendMailWithVerificationToken(User user)
+        {
+            var emailConfirmationToken =
+                await userManager.GenerateEmailConfirmationTokenAsync(user);
+            var tokenVerificationUrl = Url.Action(
+                "VerifyEmail",
+                "Account",
+                new
+                {
+                    id = user.Id,
+                    token = emailConfirmationToken
+                },
+                Request.Scheme);
+
+            await messageService.Send(user.Email, "Verify your email",
+                $"Click <a href=\"{tokenVerificationUrl}\">here</a> to verify your email");
         }
 
 
@@ -75,8 +167,10 @@ namespace Origam.ServerCore.Controllers
                 throw new InvalidOperationException();
             
             var emailConfirmationResult = await userManager.ConfirmEmailAsync(user, token);
-            if (!emailConfirmationResult.Succeeded)            
-                return Content(emailConfirmationResult.Errors.Select(error => error.Description).Aggregate((allErrors, error) => allErrors += ", " + error));                            
+            if (!emailConfirmationResult.Succeeded)
+            {
+                return Content(emailConfirmationResult.Errors.ToErrorMessage());
+            }
 
             return Content("Email confirmed, you can now log in");
         }      
@@ -105,7 +199,8 @@ namespace Origam.ServerCore.Controllers
 //            }
 
             //var passwordSignInResult = await signInManager.PasswordSignInAsync(userName, password, false, false);
-            var passwordSignInResult = await signInManager.CheckPasswordSignInAsync(user, password, false);
+            var passwordSignInResult =
+                await signInManager.CheckPasswordSignInAsync(user, password, false);
 //            
             if (!passwordSignInResult.Succeeded)
             {                
@@ -124,7 +219,11 @@ namespace Origam.ServerCore.Controllers
                 return Content("Check your email for a password reset link");
 
             var passwordResetToken = await userManager.GeneratePasswordResetTokenAsync(user);
-            var passwordResetUrl = Url.Action("ResetPassword", "Account", new {id = user.Id, token = passwordResetToken}, Request.Scheme);
+            var passwordResetUrl = Url.Action(
+                "ResetPassword", 
+                "Account", 
+                new {id = user.Id, token = passwordResetToken},
+                Request.Scheme);
 
             await messageService.Send(email, "Password reset", $"Click <a href=\"" + passwordResetUrl + "\">here</a> to reset your password");
 
@@ -132,7 +231,8 @@ namespace Origam.ServerCore.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> ResetPassword(string id, string token, string password, string repassword)
+        public async Task<IActionResult> ResetPassword(string id, string token,
+            string password, string repassword)
         {           
             var user = await userManager.FindByIdAsync(id);
             if (user == null)
@@ -143,10 +243,11 @@ namespace Origam.ServerCore.Controllers
                 return BadRequest("Passwords do not match");
             }
 
-            var resetPasswordResult = await userManager.ResetPasswordAsync(user, token, password);
+            var resetPasswordResult = 
+                await userManager.ResetPasswordAsync(user, token, password);
             if (!resetPasswordResult.Succeeded)
             {
-                return BadRequest(resetPasswordResult.Errors.Aggregate("",(x, y) => x + y.Description));
+                return BadRequest(resetPasswordResult.Errors.ToErrorMessage());
             }
 
             return Content("Password updated");
