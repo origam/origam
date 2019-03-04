@@ -1709,6 +1709,7 @@ namespace OrigamArchitect
             GetPad<AuditLogPad>().ClearList();
             GetPad<ExtensionPad>().UnloadPackages();
             GetPad<FindSchemaItemResultsPad>().Clear();
+            GetPad<FindRulesPad>().Clear();
         }
 
         private void SaveWorkspace()
