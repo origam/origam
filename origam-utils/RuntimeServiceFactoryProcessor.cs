@@ -53,5 +53,10 @@ namespace Origam.Utils
         {
             return new ParameterService();
         }
+
+        public void UnloadServices()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

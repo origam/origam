@@ -1,3 +1,4 @@
+using Origam.DA;
 using Origam.Rule;
 using Origam.Workbench.Services;
 
@@ -8,6 +9,7 @@ namespace Origam.OrigamEngine
         void InitializeServices();
         IPersistenceService CreatePersistenceService();
         IDocumentationService CreateDocumentationService();
+        void UnloadServices();
     }
 
     public class RuntimeServiceFactory : IRuntimeServiceFactory
@@ -31,7 +33,31 @@ namespace Origam.OrigamEngine
             ServiceManager.Services.AddService(new AttachmentService());
             ServiceManager.Services.AddService(new RuleEngineService());
         }
-
+        public void UnloadServices()
+        {
+            IWorkbenchService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService));
+            IWorkbenchService stateMachine = ServiceManager.Services.GetService(typeof(IStateMachineService));
+            IBusinessServicesService serviceAgent = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
+            IWorkbenchService documentation = ServiceManager.Services.GetService(typeof(IDocumentationService));
+            IWorkbenchService tracing = ServiceManager.Services.GetService(typeof(TracingService));
+            IDataLookupService dataLookupService = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
+            IWorkbenchService parameter = ServiceManager.Services.GetService(typeof(IParameterService));
+            IWorkbenchService deployment = ServiceManager.Services.GetService(typeof(IDeploymentService));
+            IWorkbenchService workQueue = ServiceManager.Services.GetService(typeof(IWorkQueueService));
+            IWorkbenchService attachment = ServiceManager.Services.GetService(typeof(IAttachmentService));
+            IWorkbenchService ruleEngine = ServiceManager.Services.GetService(typeof(IRuleEngineService));
+            ServiceManager.Services.UnloadService(stateMachine);
+            ServiceManager.Services.UnloadService(parameter);
+            ServiceManager.Services.UnloadService(deployment);
+            ServiceManager.Services.UnloadService(dataLookupService);
+            ServiceManager.Services.UnloadService(tracing);
+            ServiceManager.Services.UnloadService(documentation);
+            ServiceManager.Services.UnloadService(serviceAgent);
+            ServiceManager.Services.UnloadService(persistence);
+            ServiceManager.Services.UnloadService(attachment);
+            ServiceManager.Services.UnloadService(ruleEngine);
+            ServiceManager.Services.UnloadService(workQueue);
+        }
         protected virtual IParameterService CreateParameterService()
         {
             return new ParameterService();
