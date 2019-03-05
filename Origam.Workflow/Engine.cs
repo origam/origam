@@ -1323,7 +1323,6 @@ namespace Origam.Workflow
 				StringWriter swr = new StringWriter(b);
 				XmlTextWriter xwr = new XmlTextWriter(swr);
 				xwr.Formatting = Formatting.Indented;
-			    if (context is DataDocumentCore) throw new NotImplementedException("Cannot write to Xml property of DataDocumentCore");
 				(context as IXmlContainer).Xml.WriteTo(xwr);
 				xwr.Close();
 				swr.Close();
