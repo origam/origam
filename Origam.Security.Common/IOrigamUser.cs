@@ -21,5 +21,12 @@ namespace Origam.Security.Common
         string TransactionId { get; set; }
         string SecurityStamp { get; set; }
         bool Is2FAEnforced { get; set; }
+        string PasswordHash { get; set; }
+        bool TwoFactorEnabled { get; set; }
+        string NormalizedEmail { get; }
+        bool EmailConfirmed { get; set; }
+        string NormalizedUserName { get;}
+        string RoleId { get; set; }
+        string FirstName { get; set; }
     }
 }

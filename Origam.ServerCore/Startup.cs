@@ -15,7 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Origam.ServerCore.Authorization;
+using Origam.Security.Common;
+using Origam.Security.Identity;
 using Origam.ServerCore.Configuration;
 
 namespace Origam.ServerCore
@@ -42,11 +43,13 @@ namespace Origam.ServerCore
             });
             services.AddSingleton<SessionObjects, SessionObjects>();
             services.AddTransient<IMessageService, FileMessageService>();
-            services.AddTransient<IUserStore<User>, UserStore>();
+            services.AddTransient<IUserStore<IOrigamUser>, UserStore>();
             services.AddSingleton<IRoleStore<Role>, RoleStore>();
-            services.AddSingleton<IPasswordHasher<User>, CorePasswordHasher>();
+            services.AddSingleton<IPasswordHasher<IOrigamUser>, CorePasswordHasher>();
+            services.AddScoped<SignInManager<IOrigamUser>>();
+            services.AddScoped<IUserClaimsPrincipalFactory<IOrigamUser>,UserClaimsPrincipalFactory<IOrigamUser>>();
             services.AddScoped<CoreUserManager>();
-            services.AddScoped<UserManager<User>>(x =>
+            services.AddScoped<UserManager<IOrigamUser>>(x =>
                 x.GetRequiredService<CoreUserManager>());
             
             services.AddIdentity<User, Role>()

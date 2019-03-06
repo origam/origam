@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Origam.Security.Common;
-using Origam.ServerCore.Authorization;
+using Origam.Security.Identity;
 using Origam.ServerCore.Extensions;
 
 namespace Origam.ServerCore.Controllers
@@ -23,18 +23,20 @@ namespace Origam.ServerCore.Controllers
   public class AccountController : Controller
     {
         private readonly CoreUserManager userManager;
-        private readonly SignInManager<User> signInManager;
+        private readonly SignInManager<IOrigamUser> signInManager;
         private readonly IMessageService messageService;
         private readonly IConfiguration configuration;
+        private readonly IServiceProvider serviceProvioder;
         private readonly InternalUserManager internalUserManager;
 
-        public AccountController(CoreUserManager userManager, SignInManager<User> signInManager, 
-            IMessageService messageService, IConfiguration configuration)
+        public AccountController(CoreUserManager userManager, SignInManager<IOrigamUser> signInManager, 
+            IMessageService messageService, IConfiguration configuration, IServiceProvider serviceProvioder)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.messageService = messageService;
             this.configuration = configuration;
+            this.serviceProvioder = serviceProvioder;
             //internalUserManager = new InternalUserManager(name=>new User(name),3, new NullTokenSender() );
             internalUserManager = new InternalUserManager(
                 userName => new User(userName),
@@ -71,7 +73,8 @@ namespace Origam.ServerCore.Controllers
             };
             var identity = new ClaimsIdentity(claims, "TestAuthType");
             Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
-
+            
+          
            //internalUserManager.CreateInitialUser(userName,password,"",userName,email);
 //            if (!internalUserManager.IsInitialSetupNeeded())
 //            {
@@ -121,6 +124,8 @@ namespace Origam.ServerCore.Controllers
             var identity = new ClaimsIdentity(claims, "TestAuthType");
             Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
 
+            IdentityServiceAgent.ServiceProvider = serviceProvioder;
+            
             var newUser = new User 
             {
                 UserName = userName,

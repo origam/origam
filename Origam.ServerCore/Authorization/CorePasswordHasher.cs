@@ -2,20 +2,21 @@ using System;
 using BrockAllen.IdentityReboot;
 using Microsoft.AspNetCore.Identity;
 using Origam.Security.Common;
+using Origam.Security.Identity;
 
 namespace Origam.ServerCore
 {
-    class CorePasswordHasher: IPasswordHasher<User>
+    class CorePasswordHasher: IPasswordHasher<IOrigamUser>
     {
         private readonly InternalPasswordHasherWithLegacySupport internalHasher 
             = new InternalPasswordHasherWithLegacySupport();
 
-        public string HashPassword(User user, string password)
+        public string HashPassword(IOrigamUser user, string password)
         {
             return internalHasher.HashPassword(password);
         }
 
-        public PasswordVerificationResult VerifyHashedPassword(User user, string hashedPassword, string providedPassword)
+        public PasswordVerificationResult VerifyHashedPassword(IOrigamUser user, string hashedPassword, string providedPassword)
         {
             VerificationResult verificationResult = internalHasher.VerifyHashedPassword(hashedPassword, providedPassword);
             return ToAspNetCoreResult(verificationResult);
