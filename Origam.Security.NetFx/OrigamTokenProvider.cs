@@ -7,7 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using log4net;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Owin.Security.DataProtection;
+using IDataProtector = Microsoft.Owin.Security.DataProtection.IDataProtector;
 
 namespace Origam.Security.Identity
 {

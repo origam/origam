@@ -110,6 +110,10 @@
       <Project>{66fae794-7352-440f-b24d-684686a62cf5}</Project>
       <Name>Origam.Security.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.Security.NetFx\Origam.Security.NetFx.csproj">
+      <Project>{22066f4c-117c-4910-bc00-9c1a4bb14551}</Project>
+      <Name>Origam.Security.NetFx</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
       <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>
       <Name>Origam.Services</Name>

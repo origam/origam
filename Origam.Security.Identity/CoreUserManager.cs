@@ -6,19 +6,19 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Origam.Security.Common;
 
-namespace Origam.ServerCore.Authorization
+namespace Origam.Security.Identity
 {
-    public class CoreUserManager: UserManager<User>, IFrameworkSpecificManager
+    public class CoreUserManager: UserManager<IOrigamUser>, IFrameworkSpecificManager
     {
-        public CoreUserManager(IUserStore<User> store, 
+        public CoreUserManager(IUserStore<IOrigamUser> store, 
             IOptions<IdentityOptions> optionsAccessor,
-            IPasswordHasher<User> passwordHasher, 
-            IEnumerable<IUserValidator<User>> userValidators, 
-            IEnumerable<IPasswordValidator<User>> passwordValidators, 
+            IPasswordHasher<IOrigamUser> passwordHasher, 
+            IEnumerable<IUserValidator<IOrigamUser>> userValidators, 
+            IEnumerable<IPasswordValidator<IOrigamUser>> passwordValidators, 
             ILookupNormalizer keyNormalizer, 
             IdentityErrorDescriber errors, 
             IServiceProvider services, 
-            ILogger<UserManager<User>> logger) 
+            ILogger<UserManager<IOrigamUser>> logger) 
             : base(store, optionsAccessor, passwordHasher, 
                 userValidators, passwordValidators, keyNormalizer,
                 errors, services, logger)

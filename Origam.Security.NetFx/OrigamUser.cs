@@ -1,10 +1,10 @@
-using System;
-
+﻿using System;
+using Microsoft.AspNet.Identity;
 using Origam.Security.Common;
 
-namespace Origam.ServerCore
+namespace Origam.Security.Identity
 {
-    public class User: IOrigamUser//, IUser<string>
+    public class OrigamUser : IUser, IOrigamUser
     {
         public string Id { get; set; }
         public string UserName { get; set; }
@@ -23,29 +23,18 @@ namespace Origam.ServerCore
         public string TransactionId { get; set; }
         public string SecurityStamp { get; set; }
         public bool Is2FAEnforced { get; set; }
-        
-        public string NormalizedUserName => UserName;//.ToUpper();
-        public bool EmailConfirmed { get; set; }
-        public string NormalizedEmail => Email.ToUpper();
         public string PasswordHash { get; set; }
-        public bool TwoFactorEnabled
-        {
-            get => Is2FAEnforced;
-            set => Is2FAEnforced = value;
-        }
-
+        public bool TwoFactorEnabled { get; set; }
+        public string NormalizedEmail { get; set; }
+        public bool EmailConfirmed { get; set; }
+        public string NormalizedUserName { get; set; }
         public string RoleId { get; set; }
         public string FirstName { get; set; }
-        public string Name { get; set; }
 
-        public User(string userName)
+        public OrigamUser(string userName)
         {
             UserName = userName;
             IsApproved = true;
-        }
-
-        public User()
-        {
         }
     }
 }

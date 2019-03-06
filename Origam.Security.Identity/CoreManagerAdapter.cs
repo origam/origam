@@ -1,21 +1,17 @@
 using System;
 using System.Linq;
-using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Xml;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
 using Origam.Security.Common;
-using Origam.Security.Identity;
-using Origam.ServerCore.Authorization;
-using Origam.ServerCore.Extensions;
 
-namespace Origam.ServerCore
+namespace Origam.Security.Identity
 {
     public class CoreManagerAdapter:IManager
     {
         private readonly CoreUserManager coreUserManager;
-        private readonly Action<User> verificationTokenMailSender;
+        private readonly Action<IOrigamUser> verificationTokenMailSender;
         private readonly InternalUserManager internalUserManager;
 
         public CoreManagerAdapter(CoreUserManager coreUserManager)
@@ -118,13 +114,13 @@ namespace Origam.ServerCore
         public async Task<InternalIdentityResult> DeleteAsync(IOrigamUser user)
         {
             IdentityResult coreIdentityResult = 
-                await coreUserManager.DeleteAsync((User)user);
+                await coreUserManager.DeleteAsync(user);
             return ToInternalIdentityResult(coreIdentityResult);
         }
 
         public async Task<InternalIdentityResult> UpdateAsync(IOrigamUser user)
         {
-            IdentityResult coreIdentityResult = await coreUserManager.UpdateAsync((User) user);
+            IdentityResult coreIdentityResult = await coreUserManager.UpdateAsync( user);
             return ToInternalIdentityResult(coreIdentityResult);
         }
 
@@ -137,7 +133,7 @@ namespace Origam.ServerCore
         public async Task<InternalIdentityResult> CreateAsync(IOrigamUser user, string password)
         {
             IdentityResult coreIdentityResult = 
-                await coreUserManager.CreateAsync((User)user, password);
+                await coreUserManager.CreateAsync(user, password);
             return ToInternalIdentityResult(coreIdentityResult);
         }
 

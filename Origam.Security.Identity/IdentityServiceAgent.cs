@@ -5,6 +5,8 @@ using Origam.Workflow;
 using Origam.Rule;
 using log4net;
 using Origam.Security.Common;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Origam.Security.Identity
 {
@@ -13,10 +15,31 @@ namespace Origam.Security.Identity
 		protected static readonly ILog log
 			= LogManager.GetLogger(typeof(IdentityServiceAgent));
 
-		private IManager userManager 
-            = new AspNetManagerAdapter(AbstractUserManager.GetUserManager());
+       
 
+
+#if NETSTANDARD
+        public static IServiceProvider ServiceProvider { get; set; }
+
+        private IManager userManager;
+
+          public IdentityServiceAgent()
+          {
+              if (ServiceProvider == null)
+              {
+                  throw new InvalidOperationException("ServiceProvider was not set");
+              }
+              userManager
+                  = new CoreManagerAdapter(ServiceProvider.GetService<CoreUserManager>());
+          }
+#else
+        private IManager userManager
+            = new AspNetManagerAdapter(AbstractUserManager.GetUserManager());
+#endif
         private object result;
+
+        
+        
 
         public override object Result
         {
