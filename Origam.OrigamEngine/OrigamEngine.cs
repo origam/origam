@@ -49,7 +49,7 @@ namespace Origam.OrigamEngine
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static System.Timers.Timer RestartTimer = new System.Timers.Timer(1000);
         private static DateTime LastRestartRequestDate;
-		private static readonly IRuntimeServiceFactory standardServiceFactory = new RuntimeServiceFactory();
+        private static readonly IRuntimeServiceFactory standardServiceFactory = new RuntimeServiceFactory();
         #endregion
 
         #region Constructors
@@ -125,28 +125,7 @@ namespace Origam.OrigamEngine
 
         public static void UnloadConnectedServices()
         {
-            IWorkbenchService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService));
-            IBusinessServicesService serviceAgent = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-            IWorkbenchService documentation = ServiceManager.Services.GetService(typeof(IDocumentationService));
-            IWorkbenchService tracing = ServiceManager.Services.GetService(typeof(TracingService));
-            IDataLookupService dataLookupService = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-            IWorkbenchService deployment = ServiceManager.Services.GetService(typeof(IDeploymentService));
-            IWorkbenchService parameter = ServiceManager.Services.GetService(typeof(IParameterService));
-            IWorkbenchService stateMachine = ServiceManager.Services.GetService(typeof(IStateMachineService));
-            IWorkbenchService attachment = ServiceManager.Services.GetService(typeof(IAttachmentService));
-            IWorkbenchService ruleEngine = ServiceManager.Services.GetService(typeof(IRuleEngineService));
-            IWorkbenchService workQueue = ServiceManager.Services.GetService(typeof(IWorkQueueService));
-            ServiceManager.Services.UnloadService(stateMachine);
-            ServiceManager.Services.UnloadService(parameter);
-            ServiceManager.Services.UnloadService(deployment);
-            ServiceManager.Services.UnloadService(dataLookupService);
-            ServiceManager.Services.UnloadService(tracing);
-            ServiceManager.Services.UnloadService(documentation);
-            ServiceManager.Services.UnloadService(serviceAgent);
-            ServiceManager.Services.UnloadService(persistence);
-            ServiceManager.Services.UnloadService(attachment);
-            ServiceManager.Services.UnloadService(ruleEngine);
-            ServiceManager.Services.UnloadService(workQueue);
+            standardServiceFactory.UnloadServices();
             Workbench.Services.CoreServices.DataService.ClearDataService();
         }
 

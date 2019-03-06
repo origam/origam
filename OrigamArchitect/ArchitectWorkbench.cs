@@ -1686,8 +1686,10 @@ namespace OrigamArchitect
 
         public bool Disconnect()
 		{
-			if(IsConnected == false) return true;
-            SaveWorkspace();
+            if (IsConnected)
+            {
+                SaveWorkspace();
+            }
             if (! _schema.Disconnect()) return false;
 
 			UnloadConnectedServices();

@@ -803,22 +803,25 @@ namespace Origam.Workbench.Commands
         public override void Run()
         {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-            string filePath = Path.Combine(settings.ModelSourceControlLocation,
-                _schema.ActiveSchemaItem.RootItem.RelativeFilePath);
-            if (File.Exists(filePath))
+            foreach (string file in _schema.ActiveSchemaItem.Files)
             {
-                XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
+                string filePath = Path.Combine(settings.ModelSourceControlLocation,file);
+                if (File.Exists(filePath))
                 {
-                    Indent = true,
-                    NewLineOnAttributes = true
+                    XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
+                    {
+                        Indent = true,
+                        NewLineOnAttributes = true
+                    };
+                    XmlDocument xml = new XmlDocument();
+                    xml.Load(filePath);
+                    XmlViewer viewer = new XmlViewer
+                    {
+                        Content = xml.ToBeautifulString(xmlWriterSettings),
+                        Text = file.Replace("\\", "/").Split('/').LastOrDefault()
                 };
-                XmlDocument xml = new XmlDocument();
-                xml.Load(filePath);
-                XmlViewer viewer = new XmlViewer
-                {
-                    Content = xml.ToBeautifulString(xmlWriterSettings)
-                };
-                WorkbenchSingleton.Workbench.ShowView(viewer);
+                    WorkbenchSingleton.Workbench.ShowView(viewer);
+                }
             }
         }
 

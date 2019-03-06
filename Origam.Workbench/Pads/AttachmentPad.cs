@@ -572,7 +572,7 @@ namespace Origam.Workbench.Pads
 		private IServiceAgent GetDataServiceAgent()
 		{
 			IBusinessServicesService services = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-			return services.GetAgent("DataService", null, null);
+			return services==null?null:services.GetAgent("DataService", null, null);
 		}
 		#endregion
 

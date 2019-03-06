@@ -71,7 +71,7 @@ namespace Origam.Workbench.Services.CoreServices
 
         public static void ClearDataService()
         {
-            _dataService.Dispose();
+            _dataService?.Dispose();
             _dataService = null;
         }
 
