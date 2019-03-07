@@ -34,30 +34,23 @@ namespace Origam.ServerCore
             };
             var identity = new ClaimsIdentity(claims, "TestAuthType");
             Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
+     
 
-            DatasetGenerator dataSetGenerator = new DatasetGenerator(true);
-            IPersistenceService persistenceService = ServiceManager.Services
-                .GetService(typeof(IPersistenceService)) as IPersistenceService;
-            DataStructure dataStructure = (DataStructure)persistenceService
-                .SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), 
-                new ModelElementKey(Queries.ORIGAM_USER_DATA_STRUCTURE));
-            DataSet origamUserDataSet = dataSetGenerator.CreateDataSet(
-                dataStructure);
-            DataRow origamUserRow 
-                = origamUserDataSet.Tables["OrigamUser"].NewRow();
-            origamUserRow.SetField("Id", Guid.NewGuid());
-            origamUserRow.SetField("UserName", user.UserName);
-            origamUserRow.SetField("refBusinessPartnerId", 
-                user.ProviderUserKey);
-            origamUserRow.SetField("Password", user.PasswordHash);
-            origamUserRow.SetField("RecordCreated", DateTime.Now);
-            origamUserRow.SetField("EmailConfirmed", user.IsApproved);
-            origamUserRow["RecordCreatedBy"] 
-                = SecurityManager.CurrentUserProfile().Id;
-            origamUserDataSet.Tables["OrigamUser"].Rows.Add(origamUserRow);
+            user.BusinessPartnerId = Guid.NewGuid().ToString();
 
-            DataService.StoreData(Queries.ORIGAM_USER_DATA_STRUCTURE,
-                origamUserDataSet, false, user.TransactionId);
+            QueryParameterCollection parameters = new QueryParameterCollection();
+            parameters.Add(new QueryParameter("Id", user.BusinessPartnerId));
+            parameters.Add(new QueryParameter("UserName", user.UserName));
+            parameters.Add(new QueryParameter("Password", user.PasswordHash));
+            parameters.Add(new QueryParameter("FirstName", user.FirstName));
+            parameters.Add(new QueryParameter("Name", user.Name));
+            parameters.Add(new QueryParameter("Email", user.Email));
+            parameters.Add(new QueryParameter("RoleId", user.RoleId));
+            parameters.Add(new QueryParameter("RequestEmailConfirmation",
+                !user.EmailConfirmed));
+             // Will create new line in BusinessPartner and OrigamUser
+            WorkflowService.ExecuteWorkflow(
+                ModelItems.CREATE_USER_WORKFLOW, parameters, null);
 
             return Task.FromResult(IdentityResult.Success);
         }
@@ -82,7 +75,7 @@ namespace Origam.ServerCore
         public async Task<IOrigamUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
             DataSet origamUserDataSet = GetOrigamUserDataSet(
-                Queries.GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID, 
+                ModelItems.GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID, 
                 "OrigamUser_parBusinessPartnerId", userId);
             if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
             {

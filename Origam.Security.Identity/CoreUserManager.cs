@@ -1,10 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Origam.DA.Service;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
 using Origam.Security.Common;
+using Origam.Workbench.Services;
+using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Security.Identity
 {
@@ -24,7 +30,34 @@ namespace Origam.Security.Identity
                 errors, services, logger)
         {
         }
-      
+
+        public void CreateOrigamUser(IOrigamUser user)
+        {  
+            DatasetGenerator dataSetGenerator = new DatasetGenerator(true);
+            IPersistenceService persistenceService = ServiceManager.Services
+                .GetService(typeof(IPersistenceService)) as IPersistenceService;
+            DataStructure dataStructure = (DataStructure)persistenceService
+                .SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), 
+                new ModelElementKey(ModelItems.ORIGAM_USER_DATA_STRUCTURE));
+            DataSet origamUserDataSet = dataSetGenerator.CreateDataSet(
+                dataStructure);
+            DataRow origamUserRow 
+                = origamUserDataSet.Tables["OrigamUser"].NewRow();
+            origamUserRow.SetField("Id",Guid.NewGuid());
+            origamUserRow.SetField("UserName", user.UserName);
+            origamUserRow.SetField("refBusinessPartnerId", 
+                user.ProviderUserKey);
+            origamUserRow.SetField("Password", user.PasswordHash);
+            origamUserRow.SetField("RecordCreated", DateTime.Now);
+            origamUserRow.SetField("EmailConfirmed", user.IsApproved);
+            origamUserRow["RecordCreatedBy"] 
+                = SecurityManager.CurrentUserProfile().Id;
+            origamUserDataSet.Tables["OrigamUser"].Rows.Add(origamUserRow);
+
+            DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE,
+                origamUserDataSet, false, user.TransactionId);
+        }
+
         HashSet<string> emailConfirmedUserIds= new HashSet<string>();
 
         public void SetEmailConfirmed(string userId)

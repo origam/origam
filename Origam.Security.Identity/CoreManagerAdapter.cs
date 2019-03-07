@@ -132,9 +132,9 @@ namespace Origam.Security.Identity
 
         public async Task<InternalIdentityResult> CreateAsync(IOrigamUser user, string password)
         {
-            IdentityResult coreIdentityResult = 
-                await coreUserManager.CreateAsync(user, password);
-            return ToInternalIdentityResult(coreIdentityResult);
+            user.PasswordHash = password;
+            coreUserManager.CreateOrigamUser(user);
+            return InternalIdentityResult.Success;
         }
 
         public async Task<string> GenerateEmailConfirmationTokenAsync(string userId)
