@@ -100,10 +100,9 @@ namespace Origam.ServerCore.Controllers
         
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> CreateNewUser(string userName, string email,
-            string password, string repassword)
+        public async Task<IActionResult> CreateNewUser([FromBody] NewUserModel userModel)
         {
-            if (password != repassword)
+            if (userModel.Password != userModel.RePassword)
             {
                 return BadRequest("Passwords don't match");
             }
@@ -114,11 +113,11 @@ namespace Origam.ServerCore.Controllers
             
             var newUser = new User 
             {
-                UserName = userName,
-                Email = email,
+                UserName = userModel.UserName,
+                Email = userModel.Email,
             };
 
-            var userCreationResult = await userManager.CreateAsync(newUser, password);
+            var userCreationResult = await userManager.CreateAsync(newUser, userModel.Password);
             if (!userCreationResult.Succeeded)
             {
                 return BadRequest(userCreationResult.Errors.ToErrorMessage());
