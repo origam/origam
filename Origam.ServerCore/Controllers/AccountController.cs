@@ -65,14 +65,7 @@ namespace Origam.ServerCore.Controllers
                 return BadRequest("Passwords don't match");
             }
             
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, "origam_server"),
-                new Claim(ClaimTypes.NameIdentifier, "1"),
-                new Claim("name", "origam_server"),
-            };
-            var identity = new ClaimsIdentity(claims, "TestAuthType");
-            Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
+            SetOrigamServerAsCurrentUser();
             
           
            //internalUserManager.CreateInitialUser(userName,password,"",userName,email);
@@ -115,14 +108,7 @@ namespace Origam.ServerCore.Controllers
                 return BadRequest("Passwords don't match");
             }
             
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, "origam_server"),
-                new Claim(ClaimTypes.NameIdentifier, "1"),
-                new Claim("name", "origam_server"),
-            };
-            var identity = new ClaimsIdentity(claims, "TestAuthType");
-            Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
+            SetOrigamServerAsCurrentUser();
 
             IdentityServiceAgent.ServiceProvider = serviceProvioder;
             
@@ -167,6 +153,7 @@ namespace Origam.ServerCore.Controllers
 
         public async Task<IActionResult> VerifyEmail(string id, string token)
         {
+            SetOrigamServerAsCurrentUser();
             var user = await userManager.FindByIdAsync(id);
             if(user == null)
                 throw new InvalidOperationException();
@@ -184,14 +171,7 @@ namespace Origam.ServerCore.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Login(string userName, string password)
         {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, "origam_server"),
-                new Claim(ClaimTypes.NameIdentifier, "1"),
-                new Claim("name", "origam_server"),
-            };
-            var identity = new ClaimsIdentity(claims, "TestAuthType");
-            Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
+            SetOrigamServerAsCurrentUser();
             
             var user = await userManager.FindByNameAsync(userName);
             if (user == null)
@@ -262,6 +242,18 @@ namespace Origam.ServerCore.Controllers
             await signInManager.SignOutAsync();
             return Ok();
         }  
+        
+        private static void SetOrigamServerAsCurrentUser()
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, "origam_server"),
+                new Claim(ClaimTypes.NameIdentifier, "1"),
+                new Claim("name", "origam_server"),
+            };
+            var identity = new ClaimsIdentity(claims, "TestAuthType");
+            Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
+        }
         
         private string GenerateToken(string username)
         {
