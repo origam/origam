@@ -167,7 +167,7 @@ namespace Origam.Security.Common
                                 " Locking out." : ""    
                             );
                     }
-                    DataService.StoreData(Queries.ORIGAM_USER_DATA_STRUCTURE, 
+                    DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE, 
                         origamUserDataSet, false, null);
                     return Result.Fail<IOrigamUser>("Verification failed.");
                 case VerificationResult.SuccessRehashNeeded:
@@ -207,7 +207,7 @@ namespace Origam.Security.Common
                         = internalHasher.HashPassword(password);
             }
             try {
-                DataService.StoreData(Queries.ORIGAM_USER_DATA_STRUCTURE,
+                DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE,
                     origamUserDataSet, false, null);
             } catch (Exception e)
             {
@@ -247,7 +247,7 @@ namespace Origam.Security.Common
        private DataSet GetOrigamUserDataSet(string userName)
        {
            DataSet origamUserDataSet = GetOrigamUserDataSet(
-               Queries.GET_ORIGAM_USER_BY_USER_NAME,
+               ModelItems.GET_ORIGAM_USER_BY_USER_NAME,
                "OrigamUser_parUserName", userName);
            return origamUserDataSet;
        }
@@ -264,7 +264,7 @@ namespace Origam.Security.Common
            string transactionId)
        {
            return DataService.LoadData(
-               Queries.ORIGAM_USER_DATA_STRUCTURE,
+               ModelItems.ORIGAM_USER_DATA_STRUCTURE,
                methodId,
                Guid.Empty,
                Guid.Empty,

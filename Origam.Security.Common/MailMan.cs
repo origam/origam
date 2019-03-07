@@ -8,7 +8,7 @@ using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Security.Common
 {
-    class MailMan
+    public class MailMan
     {
         private readonly string mailTemplateDirectoryPath;
         private readonly string mailQueueName;

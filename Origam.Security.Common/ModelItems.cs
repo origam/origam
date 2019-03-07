@@ -2,7 +2,7 @@ using System;
 
 namespace Origam.Security.Common
 {
-    public class Queries
+    public static class ModelItems
     {
         public static readonly Guid ORIGAM_USER_DATA_STRUCTURE
             = new Guid("43b67a51-68f3-4696-b08d-de46ae0223ce");

@@ -65,7 +65,7 @@ namespace Origam.ServerCore
         public async Task<IdentityResult> DeleteAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
             DataSet origamUserDataSet = GetOrigamUserDataSet(
-                Queries.GET_ORIGAM_USER_BY_USER_NAME, 
+                ModelItems.GET_ORIGAM_USER_BY_USER_NAME, 
                 "OrigamUser_parUserName", user.UserName);
             if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
             {
@@ -74,7 +74,7 @@ namespace Origam.ServerCore
                             + " already doesn't have access to the system.");
             }
             origamUserDataSet.Tables["OrigamUser"].Rows[0].Delete();
-            DataService.StoreData(Queries.ORIGAM_USER_DATA_STRUCTURE, origamUserDataSet, 
+            DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE, origamUserDataSet, 
                 false, user.TransactionId);
             return IdentityResult.Success;
         }
@@ -98,7 +98,7 @@ namespace Origam.ServerCore
         public async Task<IOrigamUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
             DataSet origamUserDataSet = GetOrigamUserDataSet(
-                Queries.GET_ORIGAM_USER_BY_USER_NAME, 
+                ModelItems.GET_ORIGAM_USER_BY_USER_NAME, 
                 "OrigamUser_parUserName", normalizedUserName);
             if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
             {
@@ -241,7 +241,7 @@ namespace Origam.ServerCore
             string transactionId)
         {
             return DataService.LoadData(
-                Queries.ORIGAM_USER_DATA_STRUCTURE,
+                ModelItems.ORIGAM_USER_DATA_STRUCTURE,
                 methodId,
                 Guid.Empty,
                 Guid.Empty,

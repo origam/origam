@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Threading.Tasks;
 using System.Web.Security;
@@ -92,7 +92,7 @@ namespace Origam.Security.Identity
             origamUserDataSet.Tables["OrigamUser"].Rows.Add(origamUserRow);
             try
             {
-                DataService.StoreData(Queries.ORIGAM_USER_DATA_STRUCTURE,
+                DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE,
                     origamUserDataSet, false, user.TransactionId);
             } catch (Exception ex)
             {
@@ -148,7 +148,7 @@ namespace Origam.Security.Identity
                 log.DebugFormat("Finding out if the user {0} is locked out.", userId);
             }
             DataSet origamUserDataSet = GetOrigamUserDataSet(
-                Queries.GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID, 
+                ModelItems.GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID, 
                 "OrigamUser_parBusinessPartnerId", userId);
             if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
             {
@@ -175,7 +175,7 @@ namespace Origam.Security.Identity
                     userId);
             }
             DataSet origamUserDataSet = GetOrigamUserDataSet(
-                Queries.GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID, 
+                ModelItems.GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID, 
                 "OrigamUser_parBusinessPartnerId", userId);
             if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
             {
@@ -204,7 +204,7 @@ namespace Origam.Security.Identity
                     userId, enabled);
             }
             DataSet origamUserDataSet = GetOrigamUserDataSet(
-                Queries.GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID, 
+                ModelItems.GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID, 
                 "OrigamUser_parBusinessPartnerId", userId);
             if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
             {
@@ -220,7 +220,7 @@ namespace Origam.Security.Identity
             origamUserRow["RecordUpdated"] = DateTime.Now;
             origamUserRow["RecordUpdatedBy"] 
                 = SecurityManager.CurrentUserProfile().Id;
-            DataService.StoreData(Queries.ORIGAM_USER_DATA_STRUCTURE, origamUserDataSet,
+            DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE, origamUserDataSet,
                 false, null);
             return Task.FromResult(IdentityResult.Success);
         }
@@ -233,7 +233,7 @@ namespace Origam.Security.Identity
                     userId);
             }
             DataSet origamUserDataSet = GetOrigamUserDataSet(
-                Queries.GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID, 
+                ModelItems.GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID, 
                 "OrigamUser_parBusinessPartnerId", userId);
             if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
             {
@@ -256,7 +256,7 @@ namespace Origam.Security.Identity
         override public Task<bool> UnlockUserAsync(string userName)
         {
             DataSet origamUserDataSet = GetOrigamUserDataSet(
-                Queries.GET_ORIGAM_USER_BY_USER_NAME, 
+                ModelItems.GET_ORIGAM_USER_BY_USER_NAME, 
                 "OrigamUser_parUserName", userName);
             if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
             {
@@ -271,7 +271,7 @@ namespace Origam.Security.Identity
             origamUserRow["RecordUpdated"] = DateTime.Now;
             origamUserRow["RecordUpdatedBy"] 
                 = SecurityManager.CurrentUserProfile().Id;
-            DataService.StoreData(Queries.ORIGAM_USER_DATA_STRUCTURE, origamUserDataSet,
+            DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE, origamUserDataSet,
                 false, null);
             bool result = SendUserUnlockingNotification(
                 (string) origamUserRow["UserName"]);
@@ -281,7 +281,7 @@ namespace Origam.Security.Identity
         override public Task<IdentityResult> DeleteAsync(OrigamUser user)
         {
             DataSet origamUserDataSet = GetOrigamUserDataSet(
-                Queries.GET_ORIGAM_USER_BY_USER_NAME, 
+                ModelItems.GET_ORIGAM_USER_BY_USER_NAME, 
                 "OrigamUser_parUserName", user.UserName);
             if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
             {
@@ -290,7 +290,7 @@ namespace Origam.Security.Identity
                     + " already doesn't have access to the system.");
             }
             origamUserDataSet.Tables["OrigamUser"].Rows[0].Delete();
-            DataService.StoreData(Queries.ORIGAM_USER_DATA_STRUCTURE, origamUserDataSet, 
+            DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE, origamUserDataSet, 
                 false, user.TransactionId);
             return Task.FromResult(IdentityResult.Success);
         }
@@ -304,7 +304,7 @@ namespace Origam.Security.Identity
         override public Task<OrigamUser> FindByIdAsync(string userId)
         {
             DataSet origamUserDataSet = GetOrigamUserDataSet(
-                Queries.GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID, 
+                ModelItems.GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID, 
                 "OrigamUser_parBusinessPartnerId", userId);
             if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
             {
@@ -319,7 +319,7 @@ namespace Origam.Security.Identity
         override public Task<OrigamUser> FindByNameAsync(string userName)
         {
             DataSet origamUserDataSet = GetOrigamUserDataSet(
-                Queries.GET_ORIGAM_USER_BY_USER_NAME, 
+                ModelItems.GET_ORIGAM_USER_BY_USER_NAME, 
                 "OrigamUser_parUserName", userName);
             if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
             {
@@ -337,7 +337,7 @@ namespace Origam.Security.Identity
                 typeof(IDataLookupService)) as IDataLookupService;
             string securityStamp = "";
             object res = _lookupService.GetDisplayText(
-                Queries.LOOKUP_ORIGAM_USER_SECURITY_STAMP_BY_BUSINESSPARTNER_ID,
+                ModelItems.LOOKUP_ORIGAM_USER_SECURITY_STAMP_BY_BUSINESSPARTNER_ID,
                 Guid.Parse(userId),
                 false,
                 false, // return message if null
@@ -399,7 +399,7 @@ namespace Origam.Security.Identity
                 return IdentityResult.Failed(Resources.TokenInvalid);
             }
             DataSet origamUserDataSet = GetOrigamUserDataSet(
-                Queries.GET_ORIGAM_USER_BY_USER_NAME, 
+                ModelItems.GET_ORIGAM_USER_BY_USER_NAME, 
                 "OrigamUser_parUserName", user.UserName);
             if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
             {
@@ -411,7 +411,7 @@ namespace Origam.Security.Identity
             origamUserRow["RecordUpdated"] = DateTime.Now;
             origamUserRow["RecordUpdatedBy"] 
                 = SecurityManager.CurrentUserProfile().Id;
-            DataService.StoreData(Queries.ORIGAM_USER_DATA_STRUCTURE, origamUserDataSet,
+            DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE, origamUserDataSet,
                 false, null);
             return IdentityResult.Success;
         }
@@ -469,7 +469,7 @@ namespace Origam.Security.Identity
                 return validationTask.Result;
             }
             DataSet origamUserDataSet = GetOrigamUserDataSet(
-                Queries.GET_ORIGAM_USER_BY_USER_NAME,
+                ModelItems.GET_ORIGAM_USER_BY_USER_NAME,
                 "OrigamUser_parUserName", origamUser.UserName);
             if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
             {
@@ -491,7 +491,7 @@ namespace Origam.Security.Identity
             }
             try
             {
-                DataService.StoreData(Queries.ORIGAM_USER_DATA_STRUCTURE,
+                DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE,
                     origamUserDataSet, false, null);
             }
             catch (Exception e)
@@ -515,7 +515,7 @@ namespace Origam.Security.Identity
             string userId, string currentPassword, string newPassword)
         {
             DataSet origamUserDataSet = GetOrigamUserDataSet(
-                Queries.GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID, 
+                ModelItems.GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID, 
                 "OrigamUser_parBusinessPartnerId", userId);
             if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
             {
@@ -553,7 +553,7 @@ namespace Origam.Security.Identity
             origamUserRow["RecordUpdated"] = DateTime.Now;
             origamUserRow["RecordUpdatedBy"] 
                 = SecurityManager.CurrentUserProfile().Id;
-            DataService.StoreData(Queries.ORIGAM_USER_DATA_STRUCTURE, 
+            DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE, 
                 origamUserDataSet, false, null);
             return Task.FromResult(IdentityResult.Success);
         }
@@ -566,7 +566,7 @@ namespace Origam.Security.Identity
                 return IdentityResult.Failed(Resources.UserIdNotFound);
             }            
             DataSet origamUserDataSet = GetOrigamUserDataSet(
-                Queries.GET_ORIGAM_USER_BY_USER_NAME, 
+                ModelItems.GET_ORIGAM_USER_BY_USER_NAME, 
                 "OrigamUser_parUserName", user.UserName);
             if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
             {
@@ -578,7 +578,7 @@ namespace Origam.Security.Identity
             origamUserRow["RecordUpdated"] = DateTime.Now;
             origamUserRow["RecordUpdatedBy"] 
                 = SecurityManager.CurrentUserProfile().Id;
-            DataService.StoreData(Queries.ORIGAM_USER_DATA_STRUCTURE, origamUserDataSet,
+            DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE, origamUserDataSet,
                 false, null);
             return IdentityResult.Success;
         }
@@ -594,7 +594,7 @@ namespace Origam.Security.Identity
             string transactionId)
         {
             return DataService.LoadData(
-                Queries.ORIGAM_USER_DATA_STRUCTURE,
+                ModelItems.ORIGAM_USER_DATA_STRUCTURE,
                 methodId,
                 Guid.Empty,
                 Guid.Empty,
