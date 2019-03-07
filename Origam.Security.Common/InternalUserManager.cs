@@ -238,7 +238,7 @@ namespace Origam.Security.Common
             }
             user.ProviderUserKey = (Guid)dataSet.Tables["OrigamUser"]
                 .Rows[0]["refBusinessPartnerId"];
-            user.Id = user.ProviderUserKey.ToString();
+            user.BusinessPartnerId = user.ProviderUserKey.ToString();
             user.Is2FAEnforced = (bool)dataSet.Tables["OrigamUser"]
                 .Rows[0]["Is2FAEnforced"];
             return user;

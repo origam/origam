@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Data;
 using System.Threading.Tasks;
 using System.Web.Security;
@@ -74,7 +74,7 @@ namespace Origam.Security.Identity
                 .GetService(typeof(IPersistenceService)) as IPersistenceService;
             DataStructure dataStructure = (DataStructure)persistenceService
                 .SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), 
-                new ModelElementKey(Queries.ORIGAM_USER_DATA_STRUCTURE));
+                new ModelElementKey(ModelItems.ORIGAM_USER_DATA_STRUCTURE));
             DataSet origamUserDataSet = dataSetGenerator.CreateDataSet(
                 dataStructure);
             DataRow origamUserRow 
@@ -620,7 +620,7 @@ namespace Origam.Security.Identity
             }
             user.ProviderUserKey = (Guid)dataSet.Tables["OrigamUser"]
                 .Rows[0]["refBusinessPartnerId"];
-            user.Id = user.ProviderUserKey.ToString();
+            user.BusinessPartnerId = user.ProviderUserKey.ToString();
             user.Is2FAEnforced = (bool)dataSet.Tables["OrigamUser"]
                 .Rows[0]["Is2FAEnforced"];
             return user;

@@ -197,7 +197,7 @@ namespace Origam.Security.Identity
                 return IdentityResult.Failed(Resources.ErrorUserNotFound);
             }
 
-            return await ResetPasswordAsync(origamUser.Id, token,newPassword);
+            return await ResetPasswordAsync(origamUser.BusinessPartnerId, token,newPassword);
         }
 
         public virtual async Task<IdentityResult> ValidatePasswordResetTokenFromUsernameAsync(
@@ -217,7 +217,7 @@ namespace Origam.Security.Identity
 
             // verify password-reset token
             bool verificationResult = await
-                VerifyUserTokenAsync(origamUser.Id.ToString(), "ResetPassword", token);
+                VerifyUserTokenAsync(origamUser.BusinessPartnerId.ToString(), "ResetPassword", token);
             if (!verificationResult)
             {
                 if (log.IsInfoEnabled)

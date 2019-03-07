@@ -394,7 +394,7 @@ namespace Origam.Security.Identity
                 throw new Exception(Resources.ErrorUserNotFound);
             }
             Task<InternalIdentityResult> task = userManager.ChangePasswordAsync(
-                user.Id, 
+                user.BusinessPartnerId, 
                 Parameters["OldPassword"].ToString().TrimEnd(), 
                 Parameters["NewPassword"].ToString().TrimEnd());
             if (task.IsFaulted)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.AspNet.Identity;
 using Origam.Security.Common;
 
@@ -6,7 +6,8 @@ namespace Origam.Security.Identity
 {
     public class OrigamUser : IUser, IOrigamUser
     {
-        public string Id { get; set; }
+        public string BusinessPartnerId { get; set; }
+        public string Id { get; }
         public string UserName { get; set; }
         public DateTime CreationDate { get; set; }
         public string Email { get; set; }

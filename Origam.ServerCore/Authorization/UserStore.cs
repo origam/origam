@@ -108,7 +108,7 @@ namespace Origam.ServerCore
      
         public Task<string> GetUserIdAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(user.Id);
+            return Task.FromResult(user.BusinessPartnerId);
         }
      
         public Task<string> GetUserNameAsync(IOrigamUser user, CancellationToken cancellationToken)
@@ -260,7 +260,7 @@ namespace Origam.ServerCore
             }
             user.ProviderUserKey = (Guid)dataSet.Tables["OrigamUser"]
                 .Rows[0]["refBusinessPartnerId"];
-            user.Id = user.ProviderUserKey.ToString();
+            user.BusinessPartnerId = user.ProviderUserKey.ToString();
             user.Is2FAEnforced = (bool)dataSet.Tables["OrigamUser"]
                 .Rows[0]["Is2FAEnforced"];
             user.PasswordHash =(string)dataSet.Tables["OrigamUser"] 

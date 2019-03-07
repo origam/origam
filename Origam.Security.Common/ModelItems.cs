@@ -12,5 +12,7 @@ namespace Origam.Security.Common
             = new Guid("a60c9817-ae18-465c-a91f-d4b8a25f15a4");
         public static readonly Guid LOOKUP_ORIGAM_USER_SECURITY_STAMP_BY_BUSINESSPARTNER_ID
             = new Guid("918a69c4-094c-456b-8ed7-af854b6b612f");
+        public static readonly Guid CREATE_USER_WORKFLOW 
+            = new Guid("2bd4dbcc-d01e-4c5d-bedb-a4150dcefd54");
     }
 }

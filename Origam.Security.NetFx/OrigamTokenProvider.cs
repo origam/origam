@@ -41,12 +41,12 @@ namespace Origam.Security.Identity
             using (var writer = ms.CreateWriter())
             {
                 writer.Write(DateTimeOffset.UtcNow);
-                writer.Write(Convert.ToString(user.Id, CultureInfo.InvariantCulture));
+                writer.Write(Convert.ToString(user.BusinessPartnerId, CultureInfo.InvariantCulture));
                 writer.Write(purpose ?? "");
                 string stamp = null;
                 if (manager.SupportsUserSecurityStamp)
                 {
-                    stamp = await manager.GetSecurityStampAsync(user.Id);
+                    stamp = await manager.GetSecurityStampAsync(user.BusinessPartnerId);
                 }
                 writer.Write(stamp ?? "");
             }
@@ -89,7 +89,7 @@ namespace Origam.Security.Identity
                         return false;
                     }
                     string userId = reader.ReadString();
-                    if (!userId.Equals(user.Id))
+                    if (!userId.Equals(user.BusinessPartnerId))
                     {
                         if (log.IsDebugEnabled)
                         {
@@ -117,7 +117,7 @@ namespace Origam.Security.Identity
                     }
                     if (manager.SupportsUserSecurityStamp)
                     {
-                        var expectedStamp = await manager.GetSecurityStampAsync(user.Id).ConfigureAwait(false);
+                        var expectedStamp = await manager.GetSecurityStampAsync(user.BusinessPartnerId).ConfigureAwait(false);
                         if (stamp != (expectedStamp ?? ""))
                         {
                             if (log.IsDebugEnabled)

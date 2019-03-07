@@ -4,7 +4,7 @@ namespace Origam.Security.Common
 {
     public interface IOrigamUser
     {
-        string Id { get; set; }
+        string BusinessPartnerId { get; set; }
         string UserName { get; set; }
         DateTime CreationDate { get; set; }
         string Email { get; set; }

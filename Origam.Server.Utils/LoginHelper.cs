@@ -102,7 +102,7 @@ namespace Origam.Server.Utils
                         {
                             Task<string> tokenTask 
                                 = userManager.GenerateTwoFactorTokenAsync(
-                                user.Id,
+                                user.BusinessPartnerId,
                                 userManager.GetSecondFactorProvider());
                             if (tokenTask.IsFaulted)
                             {
@@ -118,7 +118,7 @@ namespace Origam.Server.Utils
                             {
                                 Task<IdentityResult> notifyTask
                                     = userManager.NotifyTwoFactorTokenAsync(
-                                    user.Id,
+                                    user.BusinessPartnerId,
                                     userManager.GetSecondFactorProvider(),
                                     tokenTask.Result);
                                 if (notifyTask.IsFaulted)
@@ -136,7 +136,7 @@ namespace Origam.Server.Utils
                                         DefaultAuthenticationTypes.TwoFactorCookie);
                                     identity.AddClaim(
                                         new Claim(ClaimTypes.NameIdentifier,
-                                            user.Id));
+                                            user.BusinessPartnerId));
                                     ctx.Authentication.SignIn(identity);
                                     page.Response.Redirect(secondFactorUrl);
                                 }
@@ -444,7 +444,7 @@ namespace Origam.Server.Utils
 
 					OrigamUser origamUser = userManager.FindByName(page.Request[userNameField]);
 										
-					if (userManager.EmailConfirmed(origamUser.Id))
+					if (userManager.EmailConfirmed(origamUser.BusinessPartnerId))
 					{
 						return Resources.NewUserRegistrationSucceeded;
 					}
