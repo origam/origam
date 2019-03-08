@@ -28,6 +28,9 @@ namespace Origam.Security.Identity
             user.BusinessPartnerId = user.ProviderUserKey.ToString();
             user.Is2FAEnforced = (bool)origamUserRow["Is2FAEnforced"];
             user.PasswordHash =(string)origamUserRow["Password"];
+
+            user.Email = (string)businessPartnerRow["UserEmail"];
+            
             return user;
         }
 
