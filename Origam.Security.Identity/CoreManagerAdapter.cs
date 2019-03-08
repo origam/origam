@@ -8,30 +8,14 @@ using Origam.Security.Common;
 
 namespace Origam.Security.Identity
 {
-    public class CoreManagerAdapter:IManager
+    public class CoreManagerAdapter: IManager
     {
         private readonly CoreUserManager coreUserManager;
         private readonly Action<IOrigamUser> verificationTokenMailSender;
-        private readonly InternalUserManager internalUserManager;
 
         public CoreManagerAdapter(CoreUserManager coreUserManager)
         {
             this.coreUserManager = coreUserManager;
-            internalUserManager = new InternalUserManager(
-                userName => new User(userName),
-                numberOfInvalidPasswordAttempts: 3,
-                frameworkSpecificManager: coreUserManager,
-                mailTemplateDirectoryPath: "",
-                mailQueueName: "",
-                portalBaseUrl:"",
-                registerNewUserFilename:"",
-                fromAddress:"",
-                registerNewUserSubject: "",
-                resetPwdSubject: "",
-                resetPwdBodyFilename: "",
-                userUnlockNotificationBodyFilename: "",
-                userUnlockNotificationSubject:""
-            );
         }
 
         public async Task<IOrigamUser> FindByNameAsync(string name)
@@ -145,8 +129,9 @@ namespace Origam.Security.Identity
 
         public async Task<TokenResult> GetPasswordResetTokenFromEmailAsync(string email)
         {
-            Maybe<Tuple<Guid,string>> maybeUserInfo = internalUserManager.UserNameAndIdFromMail(email);
-            if (maybeUserInfo.HasNoValue)
+            IOrigamUser user = await coreUserManager.FindByEmailAsync(email);
+            
+            if (user == null)
             {
                 return new TokenResult
                 { Token = "", UserName = "",
@@ -154,12 +139,11 @@ namespace Origam.Security.Identity
                     TokenValidityHours = 0};
             }
 
-            (Guid userId, string userName) = maybeUserInfo.Value;
-            string token = await GenerateEmailConfirmationTokenAsync(userId.ToString());
+            string token = await GenerateEmailConfirmationTokenAsync(user.BusinessPartnerId);
             
             return new TokenResult
             { Token = token,
-                UserName = userName, ErrorMessage = "",
+                UserName = user.UserName, ErrorMessage = "",
                 TokenValidityHours = 24};
         }
 
