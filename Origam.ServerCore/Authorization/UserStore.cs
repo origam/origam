@@ -129,6 +129,22 @@ namespace Origam.ServerCore
      
         public async Task<IdentityResult> UpdateAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
+            DataSet origamUserDataSet = GetOrigamUserDataSet(
+                ModelItems.GET_ORIGAM_USER_BY_USER_NAME, 
+                "OrigamUser_parUserName", user.UserName);
+            if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
+            {
+                return IdentityResult.Failed( 
+                    new IdentityError{Description = Resources.ErrorUserNotFound});
+            }
+            DataRow origamUserRow 
+                = origamUserDataSet.Tables["OrigamUser"].Rows[0];
+            origamUserRow["EmailConfirmed"] = user.EmailConfirmed;
+            origamUserRow["RecordUpdated"] = DateTime.Now;
+            origamUserRow["RecordUpdatedBy"] 
+                = SecurityManager.CurrentUserProfile().Id;
+            DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE, origamUserDataSet,
+                false, null);
             return IdentityResult.Success;
         }
      

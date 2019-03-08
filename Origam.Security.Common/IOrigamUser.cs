@@ -28,5 +28,6 @@ namespace Origam.Security.Common
         string NormalizedUserName { get;}
         string RoleId { get; set; }
         string FirstName { get; set; }
+        string Name { get; set; }
     }
 }

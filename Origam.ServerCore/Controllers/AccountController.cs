@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mail;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.ServerCore.Extensions;
+using Origam.ServerCore.Models;
 
 namespace Origam.ServerCore.Controllers
 {
@@ -29,8 +31,8 @@ namespace Origam.ServerCore.Controllers
         private readonly IServiceProvider serviceProvioder;
         private readonly InternalUserManager internalUserManager;
 
-        public AccountController(CoreUserManager userManager, SignInManager<IOrigamUser> signInManager, 
-            IMessageService messageService, IConfiguration configuration, IServiceProvider serviceProvioder)
+        public AccountController(CoreUserManager userManager, SignInManager<IOrigamUser> signInManager,
+            IConfiguration configuration, IServiceProvider serviceProvioder)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -92,7 +94,7 @@ namespace Origam.ServerCore.Controllers
             
             
             await SendMailWithVerificationToken(newUser);
-//            return Content("Check your email for a verification link");
+
             internalUserManager.SetInitialSetupComplete();
             return Ok();
         }
@@ -113,8 +115,11 @@ namespace Origam.ServerCore.Controllers
             
             var newUser = new User 
             {
+                FirstName = userModel.FirstName,
+                Name = userModel.Name,
                 UserName = userModel.UserName,
                 Email = userModel.Email,
+                RoleId = configuration.GetSection("UserRegistration")["DefaultRoleId"]
             };
 
             var userCreationResult = await userManager.CreateAsync(newUser, userModel.Password);
@@ -122,11 +127,7 @@ namespace Origam.ServerCore.Controllers
             {
                 return BadRequest(userCreationResult.Errors.ToErrorMessage());
             }
-
-//            await userManager.AddClaimAsync(
-//                newUser, 
-//                new Claim(ClaimTypes.Role, "Administrator"));
-            
+            await SendMailWithVerificationToken(newUser);         
             
             return Ok();
         }
@@ -136,26 +137,33 @@ namespace Origam.ServerCore.Controllers
             var emailConfirmationToken =
                 await userManager.GenerateEmailConfirmationTokenAsync(user);
             var tokenVerificationUrl = Url.Action(
-                "VerifyEmail",
+                 "VerifyEmail",
                 "Account",
                 new
                 {
-                    id = user.Id,
+                    id = user.BusinessPartnerId,
                     token = emailConfirmationToken
                 },
                 Request.Scheme);
 
-            await messageService.Send(user.Email, "Verify your email",
-                $"Click <a href=\"{tokenVerificationUrl}\">here</a> to verify your email");
+            var mail = new MailMessage(
+                from: configuration.GetSection("Mailing")["FromAddress"],
+                to: user.Email,
+                subject: "Verify your email" ,
+                body: $"Click <a href=\"{tokenVerificationUrl}\">here</a> to verify your email" );
+
+            var mailMan = new MailMan("","");
+            mailMan.SendMailByAWorkflow(mail);
         }
 
-
+        [AllowAnonymous]
+        [HttpPost("[action]")]
         public async Task<IActionResult> VerifyEmail(string id, string token)
         {
             SetOrigamServerAsCurrentUser();
             var user = await userManager.FindByIdAsync(id);
-            if(user == null)
-                throw new InvalidOperationException();
+            if (user == null)
+                return BadRequest();
             
             var emailConfirmationResult = await userManager.ConfirmEmailAsync(user, token);
             if (!emailConfirmationResult.Succeeded)
@@ -177,10 +185,10 @@ namespace Origam.ServerCore.Controllers
             {
                 return BadRequest("Invalid login");
             }
-//            if (!user.EmailConfirmed)
-//            {
-//                return BadRequest("Confirm your email first");
-//            }
+            if (!user.EmailConfirmed)
+            {
+                return BadRequest("Confirm your email first");
+            }
 
             //var passwordSignInResult = await signInManager.PasswordSignInAsync(userName, password, false, false);
             var passwordSignInResult =
@@ -206,7 +214,7 @@ namespace Origam.ServerCore.Controllers
             var passwordResetUrl = Url.Action(
                 "ResetPassword", 
                 "Account", 
-                new {id = user.Id, token = passwordResetToken},
+                new {id = user.BusinessPartnerId, token = passwordResetToken},
                 Request.Scheme);
 
             await messageService.Send(email, "Password reset", $"Click <a href=\"" + passwordResetUrl + "\">here</a> to reset your password");

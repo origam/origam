@@ -42,7 +42,6 @@ namespace Origam.ServerCore
                 configuration.RootPath = startUpConfiguration.PathToClientApp ?? ".";
             });
             services.AddSingleton<SessionObjects, SessionObjects>();
-            services.AddTransient<IMessageService, FileMessageService>();
             services.AddTransient<IUserStore<IOrigamUser>, UserStore>();
             services.AddSingleton<IRoleStore<Role>, RoleStore>();
             services.AddSingleton<IPasswordHasher<IOrigamUser>, CorePasswordHasher>();
@@ -52,9 +51,8 @@ namespace Origam.ServerCore
             services.AddScoped<UserManager<IOrigamUser>>(x =>
                 x.GetRequiredService<CoreUserManager>());
             
-            services.AddIdentity<User, Role>()
+            services.AddIdentity<IOrigamUser, Role>()
                 .AddDefaultTokenProviders();
-      
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = "Jwt";

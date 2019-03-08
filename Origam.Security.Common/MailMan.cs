@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
+using Microsoft.SqlServer.Server;
 using Origam.DA;
 using Origam.Workbench.Services.CoreServices;
 
@@ -19,7 +20,7 @@ namespace Origam.Security.Common
             this.mailQueueName = mailQueueName;
         }
 
-        internal void SendMailByAWorkflow(MailMessage mail)
+        public void SendMailByAWorkflow(MailMessage mail)
         {
             // send mail - by a workflow located at root package			
             QueryParameterCollection pms = new QueryParameterCollection();
@@ -46,8 +47,8 @@ namespace Origam.Security.Common
             MailMessage passwordRecoveryMail = new MailMessage(fromAddress,
                 userEmail);
             string templateContent =
-                (String.IsNullOrEmpty(templateFilename)) ?
-                    templateFromResources
+                (string.IsNullOrEmpty(templateFilename)) 
+                    ? templateFromResources
                     : GetLocalizedMailTemplateText(templateFilename,
                         userLangIETF);
 

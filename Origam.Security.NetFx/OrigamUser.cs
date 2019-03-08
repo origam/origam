@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.AspNet.Identity;
 using Origam.Security.Common;
 
@@ -31,6 +31,7 @@ namespace Origam.Security.Identity
         public string NormalizedUserName { get; set; }
         public string RoleId { get; set; }
         public string FirstName { get; set; }
+        public string Name { get; set; }
 
         public OrigamUser(string userName)
         {
