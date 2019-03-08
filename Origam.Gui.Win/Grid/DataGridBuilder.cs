@@ -485,8 +485,8 @@ namespace Origam.Gui.Win
 
 		private static DataColumn GetDataColumn(Control control)
 		{
-			var controlDataBinding = control.DataBindings[0];
-			if (controlDataBinding == null) return null;
+            Binding controlDataBinding = control.DataBindings.Count > 0 ? control.DataBindings[0] : null;
+            if (controlDataBinding == null) return null;
 
 			var bindingField = controlDataBinding.BindingMemberInfo.BindingField;
 			if (controlDataBinding.DataSource is DataView dataView)
