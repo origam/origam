@@ -14,8 +14,10 @@ using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Security.Identity
 {
-    public class CoreUserManager: UserManager<IOrigamUser>, IFrameworkSpecificManager
+    public class CoreUserManager: UserManager<IOrigamUser>
     {
+        private const string INITIAL_SETUP_PARAMETERNAME = "InitialUserCreated";
+        
         public CoreUserManager(IUserStore<IOrigamUser> store, 
             IOptions<IdentityOptions> optionsAccessor,
             IPasswordHasher<IOrigamUser> passwordHasher, 
@@ -49,38 +51,21 @@ namespace Origam.Security.Identity
             DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE,
                 origamUserDataSet, false, user.TransactionId);
         }
-
-      
-
-        HashSet<string> emailConfirmedUserIds= new HashSet<string>();
-
-        public void SetEmailConfirmed(string userId)
+        
+        public void SetInitialSetupComplete()
         {
-            emailConfirmedUserIds.Add(userId);
+            IParameterService parameterService =
+                ServiceManager.Services.GetService(typeof(IParameterService)) as
+                    IParameterService;
+            parameterService.SetCustomParameterValue(INITIAL_SETUP_PARAMETERNAME, true,
+                Guid.Empty, 0, null, true, 0, 0, null);
         }
-
-        public bool EmailConfirmed(string id)
+          public bool IsInitialSetupNeeded()
         {
-            return emailConfirmedUserIds.Contains(id);
+            IParameterService parameterService =
+                ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+        
+            return !(bool)parameterService.GetParameterValue(INITIAL_SETUP_PARAMETERNAME);
         }
-
-        public Task<string> GenerateEmailConfirmationTokenAsync(string userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool UserExists(Guid userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> GeneratePasswordResetTokenAsync1(string toString)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int? TokenLifespan { get; }
-
-
     }
 }

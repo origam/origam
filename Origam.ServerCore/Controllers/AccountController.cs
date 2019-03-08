@@ -29,7 +29,6 @@ namespace Origam.ServerCore.Controllers
         private readonly IMailService mailService;
         private readonly IConfiguration configuration;
         private readonly IServiceProvider serviceProvider;
-        private readonly InternalUserManager internalUserManager;
 
         public AccountController(CoreUserManager userManager, SignInManager<IOrigamUser> signInManager,
             IConfiguration configuration, IServiceProvider serviceProvider, IMailService mailService)
@@ -39,21 +38,6 @@ namespace Origam.ServerCore.Controllers
             this.mailService = mailService;
             this.configuration = configuration;
             this.serviceProvider = serviceProvider;
-            internalUserManager = new InternalUserManager(
-                userName => new User(userName),
-                numberOfInvalidPasswordAttempts: 3,
-                frameworkSpecificManager: userManager,
-                mailTemplateDirectoryPath: "",
-                mailQueueName: "",
-                portalBaseUrl:"",
-                registerNewUserFilename:"",
-                fromAddress:"",
-                registerNewUserSubject: "",
-                resetPwdSubject: "",
-                resetPwdBodyFilename: "",
-                userUnlockNotificationBodyFilename: "",
-                userUnlockNotificationSubject:""
-            );
         }
 
         [AllowAnonymous]
@@ -70,10 +54,10 @@ namespace Origam.ServerCore.Controllers
             
           
            //internalUserManager.CreateInitialUser(userName,password,"",userName,email);
-//            if (!internalUserManager.IsInitialSetupNeeded())
-//            {
-//                return BadRequest("Initial user already exists");
-//            }
+            if (!userManager.IsInitialSetupNeeded())
+            {
+                return BadRequest("Initial user already exists");
+            }
             var newUser = new User 
             {
                 UserName = userName,
@@ -94,7 +78,7 @@ namespace Origam.ServerCore.Controllers
             
             await SendMailWithVerificationToken(newUser);
 
-            internalUserManager.SetInitialSetupComplete();
+            userManager.SetInitialSetupComplete();
             return Ok();
         }
         

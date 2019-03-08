@@ -116,7 +116,7 @@ namespace Origam.Security.Identity
 
         public async Task<string> GeneratePasswordResetTokenAsync1(string userId)
         {
-            return await aspNetUserManager.GeneratePasswordResetTokenAsync1(
+            return await aspNetUserManager.GeneratePasswordResetTokenAsync(
                 userId);
         }
 

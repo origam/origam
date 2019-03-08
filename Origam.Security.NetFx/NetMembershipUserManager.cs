@@ -14,7 +14,7 @@ namespace Origam.Security.Identity
     public class NetMembershipUserManager : AbstractUserManager
     {
         public NetMembershipUserManager(IUserStore<OrigamUser> store)
-            : base(store, 3)
+            : base(store)
         {
             UnlocksOnPasswordReset = false;
             IsPasswordRecoverySupported = true;
