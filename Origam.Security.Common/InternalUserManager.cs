@@ -15,16 +15,7 @@ namespace Origam.Security.Common
     public class InternalUserManager
     {
         
-         private static Guid BUSINESS_PARTNER_DATA_STRUCTURE
-            = new Guid("f4c92dce-d634-4179-adb4-98876b870cc7");
-        internal static Guid GET_BUSINESS_PARTNER_BY_USER_NAME
-            = new Guid("545396e7-d88e-4315-a112-f8feda7229bf");
-        internal static Guid GET_BUSINESS_PARTNER_BY_ID
-            = new Guid("4e46424b-349f-4314-bc75-424206cd35b0");
-        internal static Guid GET_BUSINESS_PARTNER_BY_USER_EMAIL
-            = new Guid("46fd2484-4506-45a2-8a96-7855ea116210");
-        internal readonly static Guid LANGUAGE_TAGIETF_LOOKUP
-            = new Guid("7823d8af-4968-48c3-a772-287475d429e1");
+
 
 //        private static readonly String FROM_ADDRESS =
 //            System.Configuration.ConfigurationManager.AppSettings["mailFrom"];
@@ -532,7 +523,7 @@ namespace Origam.Security.Common
           private static DataRow getBusinessPartnerDataRow(string username)
         {
             DataSet data = GetBusinessPartnerDataSet(
-                GET_BUSINESS_PARTNER_BY_USER_NAME,
+                ModelItems.GET_BUSINESS_PARTNER_BY_USER_NAME,
                 "BusinessPartner_parUserName", username);
             DataTable table = data.Tables["BusinessPartner"];
             if (table.Rows.Count == 0)
@@ -557,7 +548,7 @@ namespace Origam.Security.Common
               string transactionId)
           {
               return DataService.LoadData(
-                  BUSINESS_PARTNER_DATA_STRUCTURE,
+                  ModelItems.BUSINESS_PARTNER_DATA_STRUCTURE,
                   methodId,
                   Guid.Empty,
                   Guid.Empty,
@@ -574,7 +565,7 @@ namespace Origam.Security.Common
               string userLangIETF = "";
               if (!string.IsNullOrEmpty(languageId))
               {
-                  object ret = ls.GetDisplayText(LANGUAGE_TAGIETF_LOOKUP,
+                  object ret = ls.GetDisplayText(ModelItems.LANGUAGE_TAGIETF_LOOKUP,
                       languageId, false, false, null);
                   if (ret != null)
                   {
@@ -726,7 +717,7 @@ namespace Origam.Security.Common
         {
             // resolve username, id from email
             DataSet businessPartnerDataSet = GetBusinessPartnerDataSet(
-                GET_BUSINESS_PARTNER_BY_USER_EMAIL,
+                ModelItems.GET_BUSINESS_PARTNER_BY_USER_EMAIL,
                 "BusinessPartner_parUserEmail", email);
             if (businessPartnerDataSet.Tables["BusinessPartner"].Rows.Count == 0)
             {
