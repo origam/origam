@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Workflow
     transactionBehavior="InheritExisting"
@@ -259,7 +259,7 @@
           x:type="Origam.Schema.EntityModel.TransformationReference" />
       </ServiceMethodCallParameter>
       <WorkflowTaskDependency
-        startEvent="Success"
+        startEvent="Finish"
         name="After_00_LoadData_Attachment_structure"
         abstract="false"
         task="Root/Workflow/SendEmail.origam#SendEmail/00_LoadData_Attachment_structure/8749b173-a49e-4b27-a4c4-5d85154ec8e0"
