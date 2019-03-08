@@ -6,75 +6,73 @@ namespace Origam.Security.Identity
 {
     public static class UserTools
     {
-        public static User Create( DataSet dataSet)
+        public static User Create(DataRow origamUserRow, DataRow businessPartnerRow)
         {
             User user = new User();
-            if (dataSet.Tables["OrigamUser"].Rows[0]["RecordUpdated"] != null)
+            if (origamUserRow["RecordUpdated"] != null)
             {
-                user.SecurityStamp = dataSet.Tables["OrigamUser"] 
-                    .Rows[0]["RecordUpdated"].ToString();
+                user.SecurityStamp = origamUserRow["RecordUpdated"].ToString();
             } 
-            else if (dataSet.Tables["OrigamUser"].Rows[0]["RecordCreated"] 
+            else if (origamUserRow["RecordCreated"] 
                      != null)
             {
-                user.SecurityStamp = dataSet.Tables["OrigamUser"] 
-                    .Rows[0]["RecordCreated"].ToString();
+                user.SecurityStamp = origamUserRow["RecordCreated"].ToString();
             }
-            user.UserName = (string)dataSet.Tables["OrigamUser"].Rows[0]["UserName"];
-            user.Is2FAEnforced = (bool)dataSet.Tables["OrigamUser"].Rows[0]["Is2FAEnforced"];
-            user.EmailConfirmed = (bool)dataSet.Tables["OrigamUser"].Rows[0]["EmailConfirmed"];
-            user.LastLockoutDate = GetValue<DateTime>(dataSet,"LastLockoutDate" );
-            user.LastLoginDate = GetValue<DateTime>(dataSet,"LastLoginDate");
-            user.IsLockedOut = (bool)dataSet.Tables["OrigamUser"].Rows[0]["IsLockedOut"];
-            user.ProviderUserKey = (Guid)dataSet.Tables["OrigamUser"].Rows[0]["refBusinessPartnerId"];
+            user.UserName = (string)origamUserRow["UserName"];
+            user.Is2FAEnforced = (bool)origamUserRow["Is2FAEnforced"];
+            user.EmailConfirmed = (bool)origamUserRow["EmailConfirmed"];
+            user.LastLockoutDate = GetValue<DateTime>(origamUserRow,"LastLockoutDate" );
+            user.LastLoginDate = GetValue<DateTime>(origamUserRow,"LastLoginDate");
+            user.IsLockedOut = (bool)origamUserRow["IsLockedOut"];
+            user.ProviderUserKey = (Guid)origamUserRow["refBusinessPartnerId"];
             user.BusinessPartnerId = user.ProviderUserKey.ToString();
-            user.Is2FAEnforced = (bool)dataSet.Tables["OrigamUser"].Rows[0]["Is2FAEnforced"];
-            user.PasswordHash =(string)dataSet.Tables["OrigamUser"] .Rows[0]["Password"];
+            user.Is2FAEnforced = (bool)origamUserRow["Is2FAEnforced"];
+            user.PasswordHash =(string)origamUserRow["Password"];
             return user;
         }
 
-        private static T GetValue<T>(DataSet dataSet, string propertyName)
+        public static void AddToOrigamUserRow(IOrigamUser user, DataRow origamUserRow)
         {
-            var value = dataSet.Tables["OrigamUser"].Rows[0][propertyName];
-            return value is DBNull 
-                ? default 
-                : (T)value;
+            origamUserRow["Id"] = Guid.NewGuid();
+            origamUserRow["UserName"] = user.UserName;
+            origamUserRow["refBusinessPartnerId"] = user.ProviderUserKey;
+            origamUserRow["RecordCreated"] = DateTime.Now;
+            origamUserRow["EmailConfirmed"] = user.EmailConfirmed;
+            origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
+            SetDate(origamUserRow,"LastLockoutDate", user.LastLockoutDate);
+            SetDate(origamUserRow,"LastLoginDate",user.LastLoginDate);
+            origamUserRow["IsLockedOut"] = user.IsLockedOut;
+            origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
+            origamUserRow["Password"] = user.PasswordHash;
+            origamUserRow["RecordCreatedBy"] = SecurityManager.CurrentUserProfile().Id;
         }
         
-        public static void AddToDataRow(IOrigamUser user, DataRow row)
+
+        public static void UpdateOrigamUserRow(IOrigamUser user, DataRow origamnUserRow)
         {
-            row["Id"] = Guid.NewGuid();
-            row["UserName"] = user.UserName;
-            row["refBusinessPartnerId"] = user.ProviderUserKey;
-            row["RecordCreated"] = DateTime.Now;
-            row["EmailConfirmed"] = user.EmailConfirmed;
-            row["Is2FAEnforced"] = user.Is2FAEnforced;
-            SetDate(row,"LastLockoutDate", user.LastLockoutDate);
-            SetDate(row,"LastLoginDate",user.LastLoginDate);
-            row["IsLockedOut"] = user.IsLockedOut;
-            row["Is2FAEnforced"] = user.Is2FAEnforced;
-            row["Password"] = user.PasswordHash;
-            row["RecordCreatedBy"] = SecurityManager.CurrentUserProfile().Id;
+            origamnUserRow["EmailConfirmed"] = user.EmailConfirmed;
+            origamnUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
+            SetDate(origamnUserRow,"LastLockoutDate", user.LastLockoutDate);
+            SetDate(origamnUserRow,"LastLoginDate",user.LastLoginDate);
+            origamnUserRow["IsLockedOut"] = user.IsLockedOut;
+            origamnUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
+            origamnUserRow["Password"] = user.PasswordHash;
+            origamnUserRow["RecordUpdated"] = DateTime.Now;
+            origamnUserRow["RecordUpdatedBy"] = SecurityManager.CurrentUserProfile().Id;
         }
 
-        public static void UpdateRow(IOrigamUser user, DataRow row)
-        {
-            row["EmailConfirmed"] = user.EmailConfirmed;
-            row["Is2FAEnforced"] = user.Is2FAEnforced;
-            SetDate(row,"LastLockoutDate", user.LastLockoutDate);
-            SetDate(row,"LastLoginDate",user.LastLoginDate);
-            row["IsLockedOut"] = user.IsLockedOut;
-            row["Is2FAEnforced"] = user.Is2FAEnforced;
-
-
-            row["Password"] = user.PasswordHash;
-            row["RecordUpdated"] = DateTime.Now;
-            row["RecordUpdatedBy"] = SecurityManager.CurrentUserProfile().Id;
-        }
         private static void SetDate(DataRow row,string columnName, DateTime dateTime)
         {
             if (dateTime == DateTime.MinValue) return;
             row[columnName] = dateTime;
+        }
+
+        private static T GetValue<T>(DataRow row, string propertyName)
+        {
+            var value = row[propertyName];
+            return value is DBNull 
+                ? default 
+                : (T)value;
         }
     }
 }
