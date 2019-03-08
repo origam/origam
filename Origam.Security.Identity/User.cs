@@ -1,5 +1,4 @@
 using System;
-using System.Data;
 using Origam.Security.Common;
 
 namespace Origam.Security.Identity
@@ -48,39 +47,5 @@ namespace Origam.Security.Identity
         {
         }
         
-        public static User Create( DataSet dataSet)
-        {
-            User user = new User();
-            if (dataSet.Tables["OrigamUser"].Rows[0]["RecordUpdated"] != null)
-            {
-                user.SecurityStamp = dataSet.Tables["OrigamUser"] 
-                    .Rows[0]["RecordUpdated"].ToString();
-            } 
-            else if (dataSet.Tables["OrigamUser"].Rows[0]["RecordCreated"] 
-                     != null)
-            {
-                user.SecurityStamp = dataSet.Tables["OrigamUser"] 
-                    .Rows[0]["RecordCreated"].ToString();
-            }
-            user.UserName = (string)dataSet.Tables["OrigamUser"].Rows[0]["UserName"];
-            user.Is2FAEnforced = (bool)dataSet.Tables["OrigamUser"].Rows[0]["Is2FAEnforced"];
-            user.EmailConfirmed = (bool)dataSet.Tables["OrigamUser"].Rows[0]["EmailConfirmed"];
-            user.LastLockoutDate = GetValue<DateTime>(dataSet,"LastLockoutDate" );
-            user.LastLoginDate = GetValue<DateTime>(dataSet,"LastLoginDate");
-            user.IsLockedOut = (bool)dataSet.Tables["OrigamUser"].Rows[0]["IsLockedOut"];
-            user.ProviderUserKey = (Guid)dataSet.Tables["OrigamUser"].Rows[0]["refBusinessPartnerId"];
-            user.BusinessPartnerId = user.ProviderUserKey.ToString();
-            user.Is2FAEnforced = (bool)dataSet.Tables["OrigamUser"].Rows[0]["Is2FAEnforced"];
-            user.PasswordHash =(string)dataSet.Tables["OrigamUser"] .Rows[0]["Password"];
-            return user;
-        }
-
-        private static T GetValue<T>(DataSet dataSet, string propertyName)
-        {
-            var value = dataSet.Tables["OrigamUser"].Rows[0][propertyName];
-            return value is DBNull 
-                ? default 
-                : (T)value;
-        }
     }
 }

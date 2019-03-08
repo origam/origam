@@ -43,23 +43,14 @@ namespace Origam.Security.Identity
                 dataStructure);
             DataRow origamUserRow
                 = origamUserDataSet.Tables["OrigamUser"].NewRow();
-            origamUserRow["Id"] = Guid.NewGuid();
-            origamUserRow["UserName"] = user.UserName;
-            origamUserRow["refBusinessPartnerId"] = user.ProviderUserKey;
-            origamUserRow["RecordCreated"] = DateTime.Now;
-            origamUserRow["EmailConfirmed"] = user.EmailConfirmed;
-            origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
-            origamUserRow["LastLockoutDate"] = user.LastLockoutDate;
-            origamUserRow["LastLoginDate"] = user.LastLoginDate;
-            origamUserRow["IsLockedOut"] = user.IsLockedOut;
-            origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
-            origamUserRow["PasswordHash"] = user.PasswordHash;
-            origamUserRow["RecordCreatedBy"] = SecurityManager.CurrentUserProfile().Id;
+            UserTools.AddToDataRow(user ,origamUserRow);
             origamUserDataSet.Tables["OrigamUser"].Rows.Add(origamUserRow);
 
             DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE,
                 origamUserDataSet, false, user.TransactionId);
         }
+
+      
 
         HashSet<string> emailConfirmedUserIds= new HashSet<string>();
 
