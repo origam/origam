@@ -32,26 +32,29 @@ namespace Origam.Security.Identity
         }
 
         public void CreateOrigamUser(IOrigamUser user)
-        {  
+        {
             DatasetGenerator dataSetGenerator = new DatasetGenerator(true);
             IPersistenceService persistenceService = ServiceManager.Services
                 .GetService(typeof(IPersistenceService)) as IPersistenceService;
-            DataStructure dataStructure = (DataStructure)persistenceService
-                .SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), 
-                new ModelElementKey(ModelItems.ORIGAM_USER_DATA_STRUCTURE));
+            DataStructure dataStructure = (DataStructure) persistenceService
+                .SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem),
+                    new ModelElementKey(ModelItems.ORIGAM_USER_DATA_STRUCTURE));
             DataSet origamUserDataSet = dataSetGenerator.CreateDataSet(
                 dataStructure);
-            DataRow origamUserRow 
+            DataRow origamUserRow
                 = origamUserDataSet.Tables["OrigamUser"].NewRow();
-            origamUserRow.SetField("Id",Guid.NewGuid());
-            origamUserRow.SetField("UserName", user.UserName);
-            origamUserRow.SetField("refBusinessPartnerId", 
-                user.ProviderUserKey);
-            origamUserRow.SetField("Password", user.PasswordHash);
-            origamUserRow.SetField("RecordCreated", DateTime.Now);
-            origamUserRow.SetField("EmailConfirmed", user.IsApproved);
-            origamUserRow["RecordCreatedBy"] 
-                = SecurityManager.CurrentUserProfile().Id;
+            origamUserRow["Id"] = Guid.NewGuid();
+            origamUserRow["UserName"] = user.UserName;
+            origamUserRow["refBusinessPartnerId"] = user.ProviderUserKey;
+            origamUserRow["RecordCreated"] = DateTime.Now;
+            origamUserRow["EmailConfirmed"] = user.EmailConfirmed;
+            origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
+            origamUserRow["LastLockoutDate"] = user.LastLockoutDate;
+            origamUserRow["LastLoginDate"] = user.LastLoginDate;
+            origamUserRow["IsLockedOut"] = user.IsLockedOut;
+            origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
+            origamUserRow["PasswordHash"] = user.PasswordHash;
+            origamUserRow["RecordCreatedBy"] = SecurityManager.CurrentUserProfile().Id;
             origamUserDataSet.Tables["OrigamUser"].Rows.Add(origamUserRow);
 
             DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE,

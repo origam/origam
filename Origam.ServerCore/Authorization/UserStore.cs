@@ -82,10 +82,7 @@ namespace Origam.ServerCore
                 // no access;
                 return null;
             }
-            return 
-                OrigamUserDataSetToOrigamUser(
-                (string)origamUserDataSet.Tables["OrigamUser"]
-                    .Rows[0]["UserName"], origamUserDataSet);
+            return User.Create(origamUserDataSet);
         }
      
         public async Task<IOrigamUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
@@ -98,7 +95,7 @@ namespace Origam.ServerCore
                 // no access;
                 return null;
             }
-            return OrigamUserDataSetToOrigamUser(normalizedUserName, origamUserDataSet);
+            return User.Create(origamUserDataSet);
         }
      
         public Task<string> GetNormalizedUserNameAsync(IOrigamUser user, CancellationToken cancellationToken)
@@ -140,9 +137,14 @@ namespace Origam.ServerCore
             DataRow origamUserRow 
                 = origamUserDataSet.Tables["OrigamUser"].Rows[0];
             origamUserRow["EmailConfirmed"] = user.EmailConfirmed;
+            origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
+            origamUserRow["LastLockoutDate"] = user.LastLockoutDate;
+            origamUserRow["LastLoginDate"] = user.LastLoginDate;
+            origamUserRow["IsLockedOut"] = user.IsLockedOut;
+            origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
+            origamUserRow["PasswordHash"] = user.PasswordHash;
             origamUserRow["RecordUpdated"] = DateTime.Now;
-            origamUserRow["RecordUpdatedBy"] 
-                = SecurityManager.CurrentUserProfile().Id;
+            origamUserRow["RecordUpdatedBy"] = SecurityManager.CurrentUserProfile().Id;
             DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE, origamUserDataSet,
                 false, null);
             return IdentityResult.Success;
@@ -259,30 +261,7 @@ namespace Origam.ServerCore
                 paramValue);
         }
 
-        private IOrigamUser OrigamUserDataSetToOrigamUser(
-            string userName, DataSet dataSet)
-        {
-            IOrigamUser user = new User(userName);
-            if (dataSet.Tables["OrigamUser"].Rows[0]["RecordUpdated"] != null)
-            {
-                user.SecurityStamp = dataSet.Tables["OrigamUser"] 
-                    .Rows[0]["RecordUpdated"].ToString();
-            } 
-            else if (dataSet.Tables["OrigamUser"].Rows[0]["RecordCreated"] 
-                     != null)
-            {
-                user.SecurityStamp = dataSet.Tables["OrigamUser"] 
-                    .Rows[0]["RecordCreated"].ToString();
-            }
-            user.ProviderUserKey = (Guid)dataSet.Tables["OrigamUser"]
-                .Rows[0]["refBusinessPartnerId"];
-            user.BusinessPartnerId = user.ProviderUserKey.ToString();
-            user.Is2FAEnforced = (bool)dataSet.Tables["OrigamUser"]
-                .Rows[0]["Is2FAEnforced"];
-            user.PasswordHash =(string)dataSet.Tables["OrigamUser"] 
-                .Rows[0]["Password"];
-            return user;
-        }
+       
 
         public Task<DateTimeOffset?> GetLockoutEndDateAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
