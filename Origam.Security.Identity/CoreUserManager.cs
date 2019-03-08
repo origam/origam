@@ -43,7 +43,7 @@ namespace Origam.Security.Identity
                 dataStructure);
             DataRow origamUserRow
                 = origamUserDataSet.Tables["OrigamUser"].NewRow();
-            UserTools.AddToDataRow(user ,origamUserRow);
+            UserTools.AddToOrigamUserRow(user ,origamUserRow);
             origamUserDataSet.Tables["OrigamUser"].Rows.Add(origamUserRow);
 
             DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE,

@@ -26,20 +26,19 @@ namespace Origam.ServerCore.Controllers
     {
         private readonly CoreUserManager userManager;
         private readonly SignInManager<IOrigamUser> signInManager;
-        private readonly IMessageService messageService;
+        private readonly IMailService mailService;
         private readonly IConfiguration configuration;
-        private readonly IServiceProvider serviceProvioder;
+        private readonly IServiceProvider serviceProvider;
         private readonly InternalUserManager internalUserManager;
 
         public AccountController(CoreUserManager userManager, SignInManager<IOrigamUser> signInManager,
-            IConfiguration configuration, IServiceProvider serviceProvioder)
+            IConfiguration configuration, IServiceProvider serviceProvider, IMailService mailService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
-            this.messageService = messageService;
+            this.mailService = mailService;
             this.configuration = configuration;
-            this.serviceProvioder = serviceProvioder;
-            //internalUserManager = new InternalUserManager(name=>new User(name),3, new NullTokenSender() );
+            this.serviceProvider = serviceProvider;
             internalUserManager = new InternalUserManager(
                 userName => new User(userName),
                 numberOfInvalidPasswordAttempts: 3,
@@ -111,7 +110,7 @@ namespace Origam.ServerCore.Controllers
             
             SetOrigamServerAsCurrentUser();
 
-            IdentityServiceAgent.ServiceProvider = serviceProvioder;
+            IdentityServiceAgent.ServiceProvider = serviceProvider;
             
             var newUser = new User 
             {
@@ -151,9 +150,7 @@ namespace Origam.ServerCore.Controllers
                 to: user.Email,
                 subject: "Verify your email" ,
                 body: $"Click <a href=\"{tokenVerificationUrl}\">here</a> to verify your email" );
-
-            var mailMan = new MailMan("","");
-            mailMan.SendMailByAWorkflow(mail);
+            mailService.Send(mail);
         }
 
         [AllowAnonymous]
@@ -193,7 +190,7 @@ namespace Origam.ServerCore.Controllers
             //var passwordSignInResult = await signInManager.PasswordSignInAsync(userName, password, false, false);
             var passwordSignInResult =
                 await signInManager.CheckPasswordSignInAsync(user, password, false);
-//            
+           
             if (!passwordSignInResult.Succeeded)
             {                
                 await userManager.AccessFailedAsync(user);
@@ -203,9 +200,12 @@ namespace Origam.ServerCore.Controllers
             return Ok(GenerateToken(userName));
         }
 
+        [AllowAnonymous]
         [HttpPost("[action]")]
         public async Task<IActionResult> ForgotPassword(string email)
         {
+            IdentityServiceAgent.ServiceProvider = serviceProvider;
+            SetOrigamServerAsCurrentUser();
             var user = await userManager.FindByEmailAsync(email);
             if (user == null)
                 return Content("Check your email for a password reset link");
@@ -217,15 +217,22 @@ namespace Origam.ServerCore.Controllers
                 new {id = user.BusinessPartnerId, token = passwordResetToken},
                 Request.Scheme);
 
-            await messageService.Send(email, "Password reset", $"Click <a href=\"" + passwordResetUrl + "\">here</a> to reset your password");
+            var mail = new MailMessage(
+                from: configuration.GetSection("Mailing")["FromAddress"],
+                to: user.Email,
+                subject: "Reset Password" ,
+                body: $"Click <a href=\"{passwordResetUrl}\">here</a> to reset your password");
+            mailService.Send(mail);
 
             return Content("Check your email for a password reset link");
         }
 
+        [AllowAnonymous]
         [HttpPost("[action]")]
         public async Task<IActionResult> ResetPassword(string id, string token,
             string password, string repassword)
         {           
+            SetOrigamServerAsCurrentUser();
             var user = await userManager.FindByIdAsync(id);
             if (user == null)
                 throw new InvalidOperationException();

@@ -41,6 +41,7 @@ namespace Origam.ServerCore
             {
                 configuration.RootPath = startUpConfiguration.PathToClientApp ?? ".";
             });
+            services.AddSingleton<IMailService, MailService>();
             services.AddSingleton<SessionObjects, SessionObjects>();
             services.AddTransient<IUserStore<IOrigamUser>, UserStore>();
             services.AddSingleton<IRoleStore<Role>, RoleStore>();
