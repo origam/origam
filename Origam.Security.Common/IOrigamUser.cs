@@ -6,28 +6,26 @@ namespace Origam.Security.Common
     {
         string BusinessPartnerId { get; set; }
         string UserName { get; set; }
-        DateTime CreationDate { get; set; }
+        DateTime CreationDate { get; }
         string Email { get; set; }
-        bool IsApproved { get; set; }
+        bool IsApproved { get; }
         bool IsLockedOut { get; set; }
         bool IsOnline { get; set; }
-        DateTime LastActivityDate { get; set; }
-        DateTime LastLockoutDate { get; set; }
-        DateTime LastLoginDate { get; set; }
-        DateTime LastPasswordChangedDate { get; set; }
-        string PasswordQuestion { get; set; }
-        string PasswordAnswer { get; set; }
-        Guid ProviderUserKey { get; set; }
-        string TransactionId { get; set; }
-        string SecurityStamp { get; set; }
-        bool Is2FAEnforced { get; set; }
+        DateTime LastActivityDate { get;  }
+        DateTime LastLockoutDate { get; }
+        DateTime LastLoginDate { get;  }
+        DateTime LastPasswordChangedDate { get;}
+        string PasswordQuestion { get; }
+        Guid ProviderUserKey { get; }
+        string TransactionId { get;  }
+        bool Is2FAEnforced { get;  }
         string PasswordHash { get; set; }
         bool TwoFactorEnabled { get; set; }
         string NormalizedEmail { get; }
         bool EmailConfirmed { get; set; }
         string NormalizedUserName { get;}
-        string RoleId { get; set; }
-        string FirstName { get; set; }
-        string Name { get; set; }
+        string RoleId { get; }
+        string FirstName { get;  }
+        string Name { get;  }
     }
 }
