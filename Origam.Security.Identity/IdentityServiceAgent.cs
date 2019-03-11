@@ -30,7 +30,8 @@ namespace Origam.Security.Identity
                   throw new InvalidOperationException("ServiceProvider was not set");
               }
               userManager
-                  = new CoreManagerAdapter(ServiceProvider.GetService<CoreUserManager>());
+               //   = new CoreManagerAdapter(ServiceProvider.GetService<CoreUserManager>());
+                = ServiceProvider.GetService<IManager>();
           }
 #else
         private IManager userManager

@@ -1,9 +1,9 @@
 using System;
 using Origam.Security.Common;
 
-namespace Origam.Security.Identity
+namespace Origam.ServerCore.Authorization
 {
-    public class User: IOrigamUser//, IUser<string>
+    public class User: IOrigamUser
     {
         public string BusinessPartnerId { get; set; }
         public string UserName { get; set; }

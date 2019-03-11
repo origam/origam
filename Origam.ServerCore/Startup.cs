@@ -17,6 +17,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Origam.Security.Common;
 using Origam.Security.Identity;
+using Origam.ServerCore.Authorization;
 using Origam.ServerCore.Configuration;
 
 namespace Origam.ServerCore
@@ -41,6 +42,7 @@ namespace Origam.ServerCore
             {
                 configuration.RootPath = startUpConfiguration.PathToClientApp ?? ".";
             });
+            services.AddScoped<IManager, CoreManagerAdapter>();
             services.AddSingleton<IMailService, MailService>();
             services.AddSingleton<SessionObjects, SessionObjects>();
             services.AddTransient<IUserStore<IOrigamUser>, UserStore>();

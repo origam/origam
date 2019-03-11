@@ -13,6 +13,7 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Security.Common;
 using Origam.Security.Identity;
+using Origam.ServerCore.Authorization;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 

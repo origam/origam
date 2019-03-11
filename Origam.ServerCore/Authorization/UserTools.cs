@@ -2,7 +2,7 @@ using System;
 using System.Data;
 using Origam.Security.Common;
 
-namespace Origam.Security.Identity
+namespace Origam.ServerCore.Authorization
 {
     public static class UserTools
     {

@@ -2,11 +2,11 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
-using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
 using Origam.Security.Common;
+using Origam.Security.Identity;
 
-namespace Origam.Security.Identity
+namespace Origam.ServerCore.Authorization
 {
     public class CoreManagerAdapter: IManager
     {

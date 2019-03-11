@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -9,10 +8,11 @@ using Origam.DA.Service;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Security.Common;
+using Origam.Security.Identity;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
-namespace Origam.Security.Identity
+namespace Origam.ServerCore.Authorization
 {
     public class CoreUserManager: UserManager<IOrigamUser>
     {

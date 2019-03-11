@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Origam.Security.Common;
 using Origam.Security.Identity;
+using Origam.ServerCore.Authorization;
 using Origam.ServerCore.Extensions;
 using Origam.ServerCore.Models;
 
