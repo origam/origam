@@ -16,6 +16,8 @@ namespace Origam.ServerCore.Authorization
 {
     public class CoreUserManager: UserManager<IOrigamUser>
     {
+        public static readonly Guid ORIGAM_USER_DATA_STRUCTURE
+            = new Guid("43b67a51-68f3-4696-b08d-de46ae0223ce");
         private const string INITIAL_SETUP_PARAMETERNAME = "InitialUserCreated";
         
         public CoreUserManager(IUserStore<IOrigamUser> store, 
@@ -40,7 +42,7 @@ namespace Origam.ServerCore.Authorization
                 .GetService(typeof(IPersistenceService)) as IPersistenceService;
             DataStructure dataStructure = (DataStructure) persistenceService
                 .SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem),
-                    new ModelElementKey(ModelItems.ORIGAM_USER_DATA_STRUCTURE));
+                    new ModelElementKey(ORIGAM_USER_DATA_STRUCTURE));
             DataSet origamUserDataSet = dataSetGenerator.CreateDataSet(
                 dataStructure);
             DataRow origamUserRow
@@ -48,7 +50,7 @@ namespace Origam.ServerCore.Authorization
             UserTools.AddToOrigamUserRow(user ,origamUserRow);
             origamUserDataSet.Tables["OrigamUser"].Rows.Add(origamUserRow);
 
-            DataService.StoreData(ModelItems.ORIGAM_USER_DATA_STRUCTURE,
+            DataService.StoreData(ORIGAM_USER_DATA_STRUCTURE,
                 origamUserDataSet, false, user.TransactionId);
         }
         
