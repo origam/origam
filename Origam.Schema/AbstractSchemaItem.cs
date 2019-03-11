@@ -1771,10 +1771,7 @@ namespace Origam.Schema
 			{
 				this.RootProvider.ChildItems.Add(newItem);
 			}
-			else
-			{
-				newItem.ParentItem = this.ParentItem;
-			}
+			
 
 			foreach(SchemaItemAncestor ancestor in this.Ancestors)
 			{
