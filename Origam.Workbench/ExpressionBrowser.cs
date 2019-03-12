@@ -1329,8 +1329,6 @@ namespace Origam.Workbench
             TreeNode tnode = null;
 			try
 			{
-				tvwExpressionBrowser.BeginUpdate();
-
 				bool expandNode = false;
 
 				tnode = LookUpNode(null, node);
@@ -1372,8 +1370,8 @@ namespace Origam.Workbench
 					// node was found, so we refresh the inner pointer to the model element
 					tnode.Tag = node;
 				}
-
-				RefreshNode(tnode);
+                tvwExpressionBrowser.BeginUpdate();
+                RefreshNode(tnode);
 
 				if(expandNode)
 				{
