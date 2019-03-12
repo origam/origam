@@ -235,7 +235,6 @@ namespace Origam.Workbench.Services
 			}
 
 			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			persistence.SchemaProvider.InstancePersisted -= new EventHandler(SchemaProvider_InstancePersisted);
 
 			if(persistence != null)
 			{

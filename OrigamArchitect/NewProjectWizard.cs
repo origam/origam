@@ -96,10 +96,10 @@ namespace OrigamArchitect
             try
             {
                 _builder.Create(_project);
-                WorkbenchSchemaService schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
-                    as WorkbenchSchemaService;
                 WorkbenchSingleton.Workbench.Disconnect();
                 WorkbenchSingleton.Workbench.Connect(_project.Name);
+                WorkbenchSchemaService schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
+                   as WorkbenchSchemaService;
                 schema.LoadSchema(new Guid(_project.NewPackageId), false, true);
                 ViewSchemaBrowserPad cmdViewBrowser = new ViewSchemaBrowserPad();
                 cmdViewBrowser.Run();
