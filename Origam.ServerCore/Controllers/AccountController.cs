@@ -53,8 +53,6 @@ namespace Origam.ServerCore.Controllers
             
             SetOrigamServerAsCurrentUser();
             
-          
-           //internalUserManager.CreateInitialUser(userName,password,"",userName,email);
             if (!userManager.IsInitialSetupNeeded())
             {
                 return BadRequest("Initial user already exists");
@@ -76,14 +74,12 @@ namespace Origam.ServerCore.Controllers
                 newUser, 
                 new Claim(ClaimTypes.Role, "Administrator"));
             
-            
             await SendMailWithVerificationToken(newUser);
 
             userManager.SetInitialSetupComplete();
             return Ok();
         }
-        
-        
+
         [AllowAnonymous]
         [HttpPost("[action]")]
         public async Task<IActionResult> CreateNewUser([FromBody] NewUserModel userModel)
