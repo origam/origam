@@ -62,6 +62,7 @@ namespace Origam.ServerCore.Authorization
             origamnUserRow["Password"] = user.PasswordHash;
             origamnUserRow["RecordUpdated"] = DateTime.Now;
             origamnUserRow["RecordUpdatedBy"] = SecurityManager.CurrentUserProfile().Id;
+            origamnUserRow["FailedPasswordAttemptCount"] = user.FailedPasswordAttemptCount;
         }
 
         private static void SetDate(DataRow row,string columnName, DateTime dateTime)

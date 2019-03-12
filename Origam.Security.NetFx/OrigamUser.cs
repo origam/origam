@@ -32,6 +32,7 @@ namespace Origam.Security.Identity
         public string RoleId { get; set; }
         public string FirstName { get; set; }
         public string Name { get; set; }
+        public int FailedPasswordAttemptCount { get; set; }
 
         public OrigamUser(string userName)
         {

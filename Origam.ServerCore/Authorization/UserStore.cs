@@ -38,8 +38,6 @@ namespace Origam.ServerCore
             = new Guid("4e46424b-349f-4314-bc75-424206cd35b0");
         public static readonly Guid GET_BUSINESS_PARTNER_BY_USER_EMAIL
             = new Guid("46fd2484-4506-45a2-8a96-7855ea116210");
-        
-        private int accessFailedCount;
 
         public Task<IdentityResult> CreateAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
@@ -202,28 +200,6 @@ namespace Origam.ServerCore
             return Task.FromResult(0);
         }
      
-//    public Task SetPhoneNumberAsync(User user, string phoneNumber, CancellationToken cancellationToken)
-//    {
-//        user.PhoneNumber = phoneNumber;
-//        return Task.FromResult(0);
-//    }
-// 
-//    public Task<string> GetPhoneNumberAsync(User user, CancellationToken cancellationToken)
-//    {
-//        return Task.FromResult(user.PhoneNumber);
-//    }
-// 
-//    public Task<bool> GetPhoneNumberConfirmedAsync(User user, CancellationToken cancellationToken)
-//    {
-//        return Task.FromResult(user.PhoneNumberConfirmed);
-//    }
-// 
-//    public Task SetPhoneNumberConfirmedAsync(User user, bool confirmed, CancellationToken cancellationToken)
-//    {
-//        user.PhoneNumberConfirmed = confirmed;
-//        return Task.FromResult(0);
-//    }
-     
         public Task SetTwoFactorEnabledAsync(IOrigamUser user, bool enabled, CancellationToken cancellationToken)
         {
             user.TwoFactorEnabled = enabled;
@@ -383,17 +359,17 @@ namespace Origam.ServerCore
 
         public Task<int> IncrementAccessFailedCountAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(accessFailedCount++);
+            return Task.FromResult(user.FailedPasswordAttemptCount++);
         }
 
         public Task ResetAccessFailedCountAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(accessFailedCount=0);
+            return Task.FromResult(user.FailedPasswordAttemptCount=0);
         }
 
         public Task<int> GetAccessFailedCountAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(accessFailedCount);
+            return Task.FromResult(user.FailedPasswordAttemptCount);
         }
 
         public Task<bool> GetLockoutEnabledAsync(IOrigamUser user, CancellationToken cancellationToken)
