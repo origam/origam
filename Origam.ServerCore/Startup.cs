@@ -72,6 +72,7 @@ namespace Origam.ServerCore
                     ClockSkew = TimeSpan.FromMinutes(5) // 5 minute tolerance for the expiration date
                 };
             });
+            services.Configure<AccountConfig>(options => Configuration.GetSection("AccountConfig").Bind(options));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

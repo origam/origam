@@ -12,10 +12,12 @@ using System.Net.Mail;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.ServerCore.Authorization;
+using Origam.ServerCore.Configuration;
 using Origam.ServerCore.Extensions;
 using Origam.ServerCore.Models;
 
@@ -28,15 +30,18 @@ namespace Origam.ServerCore.Controllers
         private readonly CoreUserManager userManager;
         private readonly SignInManager<IOrigamUser> signInManager;
         private readonly IMailService mailService;
+        private readonly AccountConfig accountConfig;
         private readonly IConfiguration configuration;
         private readonly IServiceProvider serviceProvider;
 
         public AccountController(CoreUserManager userManager, SignInManager<IOrigamUser> signInManager,
-            IConfiguration configuration, IServiceProvider serviceProvider, IMailService mailService)
+            IConfiguration configuration, IServiceProvider serviceProvider,
+            IMailService mailService, IOptions<AccountConfig> accountConfig)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.mailService = mailService;
+            this.accountConfig = accountConfig.Value;
             this.configuration = configuration;
             this.serviceProvider = serviceProvider;
         }
@@ -99,7 +104,7 @@ namespace Origam.ServerCore.Controllers
                 Name = userModel.Name,
                 UserName = userModel.UserName,
                 Email = userModel.Email,
-                RoleId = configuration.GetSection("UserRegistration")["DefaultRoleId"]
+                RoleId = accountConfig.NewUserRoleId//configuration.GetSection("UserRegistration")["DefaultRoleId"]
             };
 
             var userCreationResult = await userManager.CreateAsync(newUser, userModel.Password);
@@ -127,7 +132,7 @@ namespace Origam.ServerCore.Controllers
                 Request.Scheme);
 
             var mail = new MailMessage(
-                from: configuration.GetSection("Mailing")["FromAddress"],
+                from: accountConfig.FromAddress,// configuration.GetSection("Mailing")["FromAddress"],
                 to: user.Email,
                 subject: "Verify your email" ,
                 body: $"Click <a href=\"{tokenVerificationUrl}\">here</a> to verify your email" );
