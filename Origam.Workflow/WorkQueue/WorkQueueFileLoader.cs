@@ -292,6 +292,10 @@ namespace Origam.Workflow.WorkQueue
             catch
             {
             }
+            if(!(row["CreationTime"] is DateTime))
+            {
+                row["CreationTime"] = DateTime.Now;
+            }
 
             row["Name"] = title;
             if (mode == MODE_TEXT)
