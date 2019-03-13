@@ -146,24 +146,18 @@ namespace Origam.Gui
             {
                 // we have to clone the dataset, because we need to return DataSet without XmlDataDocument bound to it
                 IDataDocument dataDoc = DataDocumentFactory.New(DatasetTools.CloneDataSet(sdData));
-
                 IDataDocument inputDoc = DataDocumentFactory.New(new DataSet("ROOT"));
-
                 IServiceAgent transformer = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataTransformationService", new RuleEngine(new System.Collections.Hashtable(), null), null);
                 transformer.MethodName = "Transform";
                 transformer.Parameters.Add("XslScript", transformationBeforeId);
                 transformer.Parameters.Add("Data", inputDoc);
                 transformer.Parameters.Add("Parameters", parameters);
-
                 transformer.Run();
-
-                XmlDocument transformationResult = transformer.Result as XmlDocument;
-
+                IXmlContainer transformationResult = transformer.Result as IXmlContainer;
                 if (transformationResult != null)
                 {
-                    dataDoc.Load(new XmlNodeReader(transformationResult));
+                    dataDoc.Load(new XmlNodeReader(transformationResult.Xml));
                 }
-
                 sdData.Merge(dataDoc.DataSet);
             }
             else if (createEmptyRow)
@@ -171,7 +165,6 @@ namespace Origam.Gui
                 DataRow row = DatasetTools.CreateRow(null, sdData.Tables[0], null, profileId);
                 sdData.Tables[0].Rows.Add(row);
             }
-
             return sdData;
         }
 

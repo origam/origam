@@ -14,9 +14,8 @@ namespace Origam.ProjectAutomation.Builders
         {
             if (project.GitRepository)
             {
-                OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-                GitManager.CreateRepository(settings.ModelSourceControlLocation);
-                GitManager gitmanager = new GitManager(settings.ModelSourceControlLocation);
+                GitManager.CreateRepository(project.SourcesFolder);
+                GitManager gitmanager = new GitManager(project.SourcesFolder);
                 gitmanager.Init(project.Gitusername,project.Gitemail);
             }
         }
