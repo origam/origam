@@ -1108,7 +1108,7 @@ namespace OrigamArchitect
 			if (ActiveDocument is AbstractEditor editor)
             {
                 editor.ActionsBuilder = new SchemaActionsMenuBuilder();
-                editor.NewElementsBuilder = new SchemaItemEditorsMenuBuilder(true);
+                editor.NewElementsBuilder = new SchemaItemEditorsMenuBuilder(showDialog: false);
 			}
 			UpdateToolStrips();
         }
