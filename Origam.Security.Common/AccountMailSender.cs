@@ -210,9 +210,11 @@ namespace Origam.Security.Common
             return userLangIETF;
         }
 
-        public bool SendPasswordResetToken(string email, string username,
-            out string resultMessage, string languageId, string name, string userMail,
-            string userFirstName, string token, int tokenValidityHours)
+        public bool SendPasswordResetToken(string username,
+            string name,
+            string email, string languageId,
+            string firstName, string token, int tokenValidityHours,
+            out string resultMessage)
         {
             string userLangIETF = ResolveIetfTagFromOrigamLanguageId(languageId);
             if (userLangIETF == "")
@@ -236,21 +238,21 @@ namespace Origam.Security.Common
                     new KeyValuePair<string, string>("<%EscapedName%>",
                         Uri.EscapeDataString(name)),
                     new KeyValuePair<string, string>("<%UserEmail%>",
-                        userMail),
+                        email),
                     new KeyValuePair<string, string>("<%EscapedUserEmail%>",
-                        Uri.EscapeDataString(userMail)),
+                        Uri.EscapeDataString(email)),
                     new KeyValuePair<string, string>("<%PortalBaseUrl%>",
                         portalBaseUrl)
                 };
-            if (userFirstName != null)
+            if (firstName != null)
             {
                 replacements.AddRange(
                     new List<KeyValuePair<string, string>>
                     {
                         new KeyValuePair<string, string>("<%FirstName%>",
-                            userFirstName),
+                            firstName),
                         new KeyValuePair<string, string>("<%EscapedFirstName%>",
-                            Uri.EscapeDataString(userFirstName))
+                            Uri.EscapeDataString(firstName))
                     }
                 );
             }

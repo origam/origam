@@ -33,6 +33,7 @@ namespace Origam.Security.Identity
         public string FirstName { get; set; }
         public string Name { get; set; }
         public int FailedPasswordAttemptCount { get; set; }
+        public Guid LanguageId { get; set; }
 
         public OrigamUser(string userName)
         {

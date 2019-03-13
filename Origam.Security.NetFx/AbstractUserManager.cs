@@ -444,7 +444,6 @@ namespace Origam.Security.Identity
 			// resolve language
 			string languageId = businessPartnerRow["refLanguageId"].ToString();
             string name = (string)businessPartnerRow["Name"];
-            string userMail = (string)businessPartnerRow["UserEmail"];
             string userFirstName = DBNull.Value.Equals(businessPartnerRow["FirstName"])
                 ? null 
                 : (string)businessPartnerRow["FirstName"];
@@ -462,9 +461,8 @@ namespace Origam.Security.Identity
                 resultMessage = tokenResult.ErrorMessage;
                 return false;
             }
-			return accountMailSender.SendPasswordResetToken(email, username,
-                out resultMessage, languageId, name, userMail,
-                userFirstName,tokenResult.Token, tokenResult.TokenValidityHours);
+			return accountMailSender.SendPasswordResetToken(username, name,
+                email,languageId, userFirstName, tokenResult.Token, tokenResult.TokenValidityHours, out resultMessage);
         }
         
 		public void SendNewUserToken(string username

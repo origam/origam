@@ -2,20 +2,26 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Origam.Security.Common;
 using Origam.Security.Identity;
+using Origam.ServerCore.Controllers;
 
 namespace Origam.ServerCore.Authorization
 {
     public class CoreManagerAdapter: IManager
     {
         private readonly CoreUserManager coreUserManager;
-        private readonly Action<IOrigamUser> verificationTokenMailSender;
+        private readonly IMailService mailService;
 
-        public CoreManagerAdapter(CoreUserManager coreUserManager)
+        public CoreManagerAdapter(CoreUserManager coreUserManager,
+            IMailService mailService)
         {
             this.coreUserManager = coreUserManager;
+            this.mailService = mailService;
         }
 
         public async Task<IOrigamUser> FindByNameAsync(string name)
@@ -110,8 +116,10 @@ namespace Origam.ServerCore.Authorization
 
         public async void SendNewUserToken(string userName)
         {
-            var user = await coreUserManager.FindByIdAsync(userName);
-            verificationTokenMailSender(user);
+            IOrigamUser user = await coreUserManager.FindByIdAsync(userName);
+            string token =
+                await coreUserManager.GenerateEmailConfirmationTokenAsync(user);
+            mailService.SendNewUserToken(user,token);
         }
 
         public async Task<InternalIdentityResult> CreateAsync(IOrigamUser user, string password)

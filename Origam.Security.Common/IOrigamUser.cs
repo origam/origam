@@ -27,6 +27,7 @@ namespace Origam.Security.Common
         string RoleId { get; }
         string FirstName { get;  }
         string Name { get;  }
-        int FailedPasswordAttemptCount { get; set; }    
+        int FailedPasswordAttemptCount { get; set; }
+        Guid LanguageId { get; set; }
     }
 }

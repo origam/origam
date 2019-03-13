@@ -28,7 +28,8 @@ namespace Origam.ServerCore.Authorization
             user.BusinessPartnerId = user.ProviderUserKey.ToString();
             user.Is2FAEnforced = (bool)origamUserRow["Is2FAEnforced"];
             user.PasswordHash =(string)origamUserRow["Password"];
-
+            
+            user.LanguageId = (Guid)businessPartnerRow["refLanguageId"];
             user.Email = (string)businessPartnerRow["UserEmail"];
             
             return user;

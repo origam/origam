@@ -104,7 +104,7 @@ namespace Origam.ServerCore.Controllers
                 Name = userModel.Name,
                 UserName = userModel.UserName,
                 Email = userModel.Email,
-                RoleId = accountConfig.NewUserRoleId//configuration.GetSection("UserRegistration")["DefaultRoleId"]
+                RoleId = accountConfig.NewUserRoleId
             };
 
             var userCreationResult = await userManager.CreateAsync(newUser, userModel.Password);
@@ -119,24 +119,9 @@ namespace Origam.ServerCore.Controllers
 
         private async Task SendMailWithVerificationToken(User user)
         {
-            var emailConfirmationToken =
+            string token =
                 await userManager.GenerateEmailConfirmationTokenAsync(user);
-            var tokenVerificationUrl = Url.Action(
-                 "VerifyEmail",
-                "Account",
-                new
-                {
-                    id = user.BusinessPartnerId,
-                    token = emailConfirmationToken
-                },
-                Request.Scheme);
-
-            var mail = new MailMessage(
-                from: accountConfig.FromAddress,// configuration.GetSection("Mailing")["FromAddress"],
-                to: user.Email,
-                subject: "Verify your email" ,
-                body: $"Click <a href=\"{tokenVerificationUrl}\">here</a> to verify your email" );
-            mailService.Send(mail);
+            mailService.SendNewUserToken(user,token);
         }
 
         [AllowAnonymous]
@@ -197,19 +182,7 @@ namespace Origam.ServerCore.Controllers
                 return Content("Check your email for a password reset link");
 
             var passwordResetToken = await userManager.GeneratePasswordResetTokenAsync(user);
-            var passwordResetUrl = Url.Action(
-                "ResetPassword", 
-                "Account", 
-                new {id = user.BusinessPartnerId, token = passwordResetToken},
-                Request.Scheme);
-
-            var mail = new MailMessage(
-                from: configuration.GetSection("Mailing")["FromAddress"],
-                to: user.Email,
-                subject: "Reset Password" ,
-                body: $"Click <a href=\"{passwordResetUrl}\">here</a> to reset your password");
-            mailService.Send(mail);
-
+            mailService.SendPasswordResetToken( user, passwordResetToken, 24 );           
             return Content("Check your email for a password reset link");
         }
 
