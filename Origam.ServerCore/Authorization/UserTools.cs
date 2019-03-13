@@ -33,7 +33,9 @@ namespace Origam.ServerCore.Authorization
                 ? Guid.Empty 
                 :(Guid)businessPartnerRow["refLanguageId"];
             user.Email = (string)businessPartnerRow["UserEmail"];
-            
+            user.Name = (string)businessPartnerRow["Name"];
+            user.FirstName = (string)businessPartnerRow["FirstName"];
+
             return user;
         }
 

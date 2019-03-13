@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net.Mail;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +17,7 @@ using Origam.Security.Identity;
 using Origam.ServerCore.Authorization;
 using Origam.ServerCore.Configuration;
 using Origam.ServerCore.Extensions;
-using Origam.ServerCore.Models;
+using Origam.ServerCore.Models.Account;
 
 namespace Origam.ServerCore.Controllers
 {
@@ -122,31 +120,33 @@ namespace Origam.ServerCore.Controllers
             mailService.SendNewUserToken(user,token);
         }
 
+
+
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> VerifyEmail(string id, string token)
+        public async Task<IActionResult> VerifyEmail( [FromBody]VerifyEmailData verifyEmailData)
         {
             SetOrigamServerAsCurrentUser();
-            var user = await userManager.FindByIdAsync(id);
+            var user = await userManager.FindByIdAsync(verifyEmailData.Id);
             if (user == null)
                 return BadRequest();
             
-            var emailConfirmationResult = await userManager.ConfirmEmailAsync(user, token);
+            var emailConfirmationResult = await userManager.ConfirmEmailAsync(user, verifyEmailData.Token);
             if (!emailConfirmationResult.Succeeded)
             {
                 return Content(emailConfirmationResult.Errors.ToErrorMessage());
             }
 
             return Content("Email confirmed, you can now log in");
-        }      
+        }
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> Login(string userName, string password)
+        public async Task<IActionResult> Login([FromBody]LoginData loginData)
         {
             SetOrigamServerAsCurrentUser();
             
-            var user = await userManager.FindByNameAsync(userName);
+            var user = await userManager.FindByNameAsync(loginData.UserName);
             if (user == null)
             {
                 return BadRequest("Invalid login");
@@ -158,7 +158,7 @@ namespace Origam.ServerCore.Controllers
 
             //var passwordSignInResult = await signInManager.PasswordSignInAsync(userName, password, false, false);
             var passwordSignInResult =
-                await signInManager.CheckPasswordSignInAsync(user, password, false);
+                await signInManager.CheckPasswordSignInAsync(user, loginData.Password, false);
            
             if (!passwordSignInResult.Succeeded)
             {                
@@ -166,18 +166,18 @@ namespace Origam.ServerCore.Controllers
                 return BadRequest("Invalid login");
             }
 
-            return Ok(GenerateToken(userName));
+            return Ok(GenerateToken(loginData.UserName));
         }
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> ForgotPassword(string email)
+        public async Task<IActionResult> ForgotPassword([FromBody]ForgotPasswordData passwordData) // [Required][FromQuery]
         {
             IdentityServiceAgent.ServiceProvider = serviceProvider;
             SetOrigamServerAsCurrentUser();
-            var user = await userManager.FindByEmailAsync(email);
+            var user = await userManager.FindByEmailAsync(passwordData.Email);
             if (user == null)
-                return Content("Check your email for a password reset link");
+                return Content("User with that email was not found");
 
             var passwordResetToken = await userManager.GeneratePasswordResetTokenAsync(user);
             mailService.SendPasswordResetToken( user, passwordResetToken, 24 );           
@@ -186,21 +186,20 @@ namespace Origam.ServerCore.Controllers
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> ResetPassword(string id, string token,
-            string password, string repassword)
+        public async Task<IActionResult> ResetPassword([FromBody]ResetPasswordData passwordData)
         {           
             SetOrigamServerAsCurrentUser();
-            var user = await userManager.FindByIdAsync(id);
+            var user = await userManager.FindByIdAsync(passwordData.Id);
             if (user == null)
                 throw new InvalidOperationException();
 
-            if (password != repassword)
+            if (passwordData.Password != passwordData.RePassword)
             {
                 return BadRequest("Passwords do not match");
             }
 
             var resetPasswordResult = 
-                await userManager.ResetPasswordAsync(user, token, password);
+                await userManager.ResetPasswordAsync(user, passwordData.Token, passwordData.Password);
             if (!resetPasswordResult.Succeeded)
             {
                 return BadRequest(resetPasswordResult.Errors.ToErrorMessage());
@@ -208,6 +207,8 @@ namespace Origam.ServerCore.Controllers
 
             return Content("Password updated");
         }
+
+        [HttpPost("[action]")]
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();

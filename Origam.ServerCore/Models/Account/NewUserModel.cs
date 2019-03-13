@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Origam.ServerCore.Models
+namespace Origam.ServerCore.Models.Account
 {
     public class NewUserModel
     {
