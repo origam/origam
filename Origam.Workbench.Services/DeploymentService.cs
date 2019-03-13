@@ -405,33 +405,38 @@ namespace Origam.Workbench.Services
 			}
 		}
 
-		private void TryLoadVersions()
-		{
-			if(_versionsLoaded) return;
+        private void TryLoadVersions()
+        {
+            if (_versionsLoaded) return;
 
-			ClearVersions();
+            ClearVersions();
+            DataSet data = null;
 
-			DataSet versionDataFromAsapModelVersion =
-				LoadversionDataFrom(asapModelVersionQueryId,"AsapModelVersion");
-			DataSet data;
-			if (versionDataFromAsapModelVersion != null && 
-			    versionDataFromAsapModelVersion.Tables.Count != 0)
-			{
-				versionDataFromAsapModelVersion.Tables[0].TableName = "OrigamModelVersion";
-				data = versionDataFromAsapModelVersion;
-			}
-			else
-			{
-				DataSet versionDataFromOrigamModelVersion =
-					LoadversionDataFrom(origamModelVersionQueryId, "OrigamModelVersion");
-				data = versionDataFromOrigamModelVersion;
-			}
-			if (data == null) return;
-			_versionData.Merge(data);
-			_versionsLoaded = true;
-		}		
+            DataSet versionDataFromOrigamModelVersion =
+                LoadversionDataFrom(origamModelVersionQueryId, "OrigamModelVersion");
+            if (versionDataFromOrigamModelVersion == null)
+            {
+                DataSet versionDataFromAsapModelVersion =
+                    LoadversionDataFrom(asapModelVersionQueryId, "AsapModelVersion");
 
-		private void SaveVersions()
+                if (versionDataFromAsapModelVersion != null &&
+                    versionDataFromAsapModelVersion.Tables.Count != 0)
+                {
+                    versionDataFromAsapModelVersion.Tables[0].TableName = "OrigamModelVersion";
+                    data = versionDataFromAsapModelVersion;
+                }
+            }
+            else
+            {
+                data = versionDataFromOrigamModelVersion;
+            }
+
+            if (data == null) return;
+            _versionData.Merge(data);
+            _versionsLoaded = true;
+        }
+
+        private void SaveVersions()
 		{
 			if (TrySaveVersions(origamModelVersionQueryId)) return;
 			if (TrySaveVersions(asapModelVersionQueryId))return;
