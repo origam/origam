@@ -1980,14 +1980,14 @@ namespace Origam.DA.Service
             DataStructureEntity lookupEntity = dataServiceLookup.ValueDataStructure.Entities[0] as DataStructureEntity;
 
             // any lookups with same entity name as any of the entities in this datastructure must be renamed
-            string origName = "";
+            bool lookupRenamed = false;
             foreach (DataStructureEntity e in ds.Entities)
             {
                 if (e.Name == lookupEntity.Name)
                 {
-                    origName = lookupEntity.Name;
-                    lookupEntity = lookupEntity.Clone(true) as DataStructureEntity;
+                   lookupEntity = lookupEntity.Clone(true) as DataStructureEntity;
                     lookupEntity.Name = "lookup" + lookupEntity.Name;
+                    lookupRenamed = true;
                     break;
                 }
             }
@@ -2010,7 +2010,7 @@ namespace Origam.DA.Service
             foreach (object key in dataServiceLookup.ValueMethod.ParameterReferences.Keys)
             {
                 string finalKey = key as string;
-                if (!string.IsNullOrEmpty(origName))
+                if (lookupRenamed)
                 {
                     if (finalKey != null)
                     {
@@ -2046,10 +2046,6 @@ namespace Origam.DA.Service
             }
             PrettyIndent(builder);
             builder.Append(")");
-            if (!string.IsNullOrEmpty(origName))
-            {
-                lookupEntity.Name = origName;
-            }
             return builder.ToString();
         }
 
