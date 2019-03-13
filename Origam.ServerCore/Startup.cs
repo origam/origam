@@ -46,7 +46,6 @@ namespace Origam.ServerCore
             services.AddSingleton<IMailService, MailService>();
             services.AddSingleton<SessionObjects, SessionObjects>();
             services.AddTransient<IUserStore<IOrigamUser>, UserStore>();
-            services.AddSingleton<IRoleStore<Role>, RoleStore>();
             services.AddSingleton<IPasswordHasher<IOrigamUser>, CorePasswordHasher>();
             services.AddScoped<SignInManager<IOrigamUser>>();
             services.AddScoped<IUserClaimsPrincipalFactory<IOrigamUser>,UserClaimsPrincipalFactory<IOrigamUser>>();
