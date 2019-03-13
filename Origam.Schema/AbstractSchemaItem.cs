@@ -1759,7 +1759,6 @@ namespace Origam.Schema
 
             // in case that for any reason child items were populated already 
             // in the item's construction, we clear them
-            newItem.UseObjectCache = false;
 			newItem.ChildItems.DeleteItemsOnClear = false;
 			newItem.ChildItems.Clear();
 			newItem.ChildItems.DeleteItemsOnClear = true;
