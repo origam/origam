@@ -49,38 +49,35 @@ namespace Origam.ServerCore.Controllers
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> CreateInitialUser(string userName, string email,
-            string password, string repassword)
+        public async Task<IActionResult> CreateInitialUser([FromBody] NewUserModel userModel)
         {
-            if (password != repassword)
+            if (userModel.Password != userModel.RePassword)
             {
                 return BadRequest("Passwords don't match");
             }
-            
+
             SetOrigamServerAsCurrentUser();
-            
+            IdentityServiceAgent.ServiceProvider = serviceProvider;
+
             if (!userManager.IsInitialSetupNeeded())
             {
                 return BadRequest("Initial user already exists");
             }
-            var newUser = new User 
+
+            var newUser = new User
             {
-                UserName = userName,
-                Email = email,
+                FirstName = userModel.FirstName,
+                Name = userModel.Name,
+                UserName = userModel.UserName,
+                Email = userModel.Email,
                 RoleId = SecurityManager.BUILTIN_SUPER_USER_ROLE
             };
 
-            var userCreationResult = await userManager.CreateAsync(newUser, password);
+            var userCreationResult = await userManager.CreateAsync(newUser, userModel.Password);
             if (!userCreationResult.Succeeded)
             {
                 return BadRequest(userCreationResult.Errors.ToErrorMessage());
             }
-
-            await userManager.AddClaimAsync(
-                newUser, 
-                new Claim(ClaimTypes.Role, "Administrator"));
-            
-            await SendMailWithVerificationToken(newUser);
 
             userManager.SetInitialSetupComplete();
             return Ok();

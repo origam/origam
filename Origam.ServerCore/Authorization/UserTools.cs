@@ -29,7 +29,9 @@ namespace Origam.ServerCore.Authorization
             user.Is2FAEnforced = (bool)origamUserRow["Is2FAEnforced"];
             user.PasswordHash =(string)origamUserRow["Password"];
             
-            user.LanguageId = (Guid)businessPartnerRow["refLanguageId"];
+            user.LanguageId = businessPartnerRow["refLanguageId"] is DBNull
+                ? Guid.Empty 
+                :(Guid)businessPartnerRow["refLanguageId"];
             user.Email = (string)businessPartnerRow["UserEmail"];
             
             return user;
