@@ -23,9 +23,10 @@ using Origam.ServerCore.Models;
 
 namespace Origam.ServerCore.Controllers
 {
-  [Authorize]
-  [Route("internalApi/[controller]")]
-  public class AccountController : Controller
+    [ApiController]
+    [Authorize]
+    [Route("internalApi/[controller]")]
+    public class AccountController : ControllerBase
     {
         private readonly CoreUserManager userManager;
         private readonly SignInManager<IOrigamUser> signInManager;
