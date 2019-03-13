@@ -195,7 +195,7 @@ namespace Origam
 		public string TranslationBuilderLanguages { get; set; } = "";
 
 		[Category("(Configuration)")]
-		public string HelpUrl { get; set; } = "http://wiki.simplicor.com";
+		public string HelpUrl { get; set; } = "http://origam.com/doc";
 
 		[Category("Data Connection"), DefaultValue(60)]
 		public int DataServiceSelectTimeout { get; set; } = 60;

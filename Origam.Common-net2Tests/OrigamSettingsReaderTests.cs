@@ -38,7 +38,7 @@ namespace Origam.Common_net2Tests.Properties
             Assert.That(firstSettings.Slogan, Is.Empty);
             Assert.That(firstSettings.LocalizationFolder, Is.Empty);
             Assert.That(firstSettings.TranslationBuilderLanguages, Is.Empty);
-            Assert.That(firstSettings.HelpUrl, Is.EqualTo("http://wiki.simplicor.com"));
+            Assert.That(firstSettings.HelpUrl, Is.EqualTo("http://origam.com/doc"));
             Assert.That(firstSettings.ModelProvider, Is.EqualTo("Origam.OrigamEngine.FilePersistenceBuilder, Origam.OrigamEngine"));
             Assert.That(firstSettings.AuthorizationProvider, Is.EqualTo("Origam.Security.OrigamDatabaseAuthorizationProvider, Origam.Security"));
             Assert.That(firstSettings.ProfileProvider, Is.EqualTo("Origam.Security.OrigamProfileProvider, Origam.Security"));
