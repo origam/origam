@@ -26,6 +26,7 @@ namespace Origam.DA.Service
             NoteExternalReferences(instance);
             SetParentAttributes(parentId, instance, provider);
             SetReferences(instance);
+            instance.UseObjectCache = false;
             return instance;
         }
         protected abstract void SetValue(IFilePersistent instance, MemberAttributeInfo mi, object value, IPersistenceProvider provider);
