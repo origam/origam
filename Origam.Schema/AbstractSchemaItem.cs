@@ -1757,8 +1757,8 @@ namespace Origam.Schema
 				newItem.PrimaryKey = new ModelElementKey(Guid.NewGuid());
 			}
 
-			// in case that for any reason child items were populated already 
-			// in the item's construction, we clear them
+            // in case that for any reason child items were populated already 
+            // in the item's construction, we clear them
 			newItem.ChildItems.DeleteItemsOnClear = false;
 			newItem.ChildItems.Clear();
 			newItem.ChildItems.DeleteItemsOnClear = true;
