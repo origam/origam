@@ -8,8 +8,8 @@ namespace Origam.ServerCore.Configuration
         public string ResetPasswordMailBodyFileName { get; set; }
         public string UserUnlockNotificationSubject { get; set; }
         public string UserUnlockNotificationBodyFileName { get; set; }
-        public string userRegistrationMailSubject { get; set; }
-        public string userRegistrationMailBodyFileName { get; set; }
+        public string UserRegistrationMailSubject { get; set; }
+        public string UserRegistrationMailBodyFileName { get; set; }
         public string MailQueueName { get; set; }
     }
 }

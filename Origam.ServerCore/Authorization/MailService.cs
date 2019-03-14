@@ -20,8 +20,8 @@ namespace Origam.ServerCore.Authorization
                 resetPwdBodyFilename: accountConfig.Value.ResetPasswordMailBodyFileName,
                 userUnlockNotificationSubject: accountConfig.Value.UserUnlockNotificationSubject,
                 userUnlockNotificationBodyFilename: accountConfig.Value.UserUnlockNotificationBodyFileName,
-                registerNewUserSubject: accountConfig.Value.userRegistrationMailSubject,
-                registerNewUserFilename: accountConfig.Value.userRegistrationMailBodyFileName,
+                registerNewUserSubject: accountConfig.Value.UserRegistrationMailSubject,
+                registerNewUserFilename: accountConfig.Value.UserRegistrationMailBodyFileName,
                 mailQueueName: accountConfig.Value.MailQueueName,
                 portalBaseUrl: baseUrl,
                 applicationBasePath: AppContext.BaseDirectory);

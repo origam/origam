@@ -171,7 +171,7 @@ namespace Origam.ServerCore.Controllers
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> ForgotPassword([FromBody]ForgotPasswordData passwordData) // [Required][FromQuery]
+        public async Task<IActionResult> ForgotPassword([FromBody]ForgotPasswordData passwordData) 
         {
             IdentityServiceAgent.ServiceProvider = serviceProvider;
             SetOrigamServerAsCurrentUser();
