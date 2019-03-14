@@ -208,12 +208,12 @@ namespace Origam.ServerCore.Controllers
             return Content("Password updated");
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> Logout()
-        {
-            await signInManager.SignOutAsync();
-            return Ok();
-        }  
+//        [HttpPost("[action]")]
+//        public async Task<IActionResult> Logout()
+//        {
+//            await signInManager.SignOutAsync();
+//            return Ok();
+//        }  
         
         private static void SetOrigamServerAsCurrentUser()
         {
