@@ -33,6 +33,7 @@ using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.ObjectPersistence.Providers;
 using Origam.DA.Service.FileSystemModeCheckers;
+using Origam.DA.Service.FileSystemModelCheckers;
 using Origam.Extensions;
 using Origam.Schema;
 
@@ -432,6 +433,7 @@ namespace Origam.DA.Service
             return 
                 new IFileSystemModelChecker[]
                     {
+                        new DuplicateIdChecker(this),
                         new ReferenceFileChecker(this),
                         new DirectoryChecker(ignoreDirectoryNames, this),
                         new XmlReferencePropertyChecker(this)
