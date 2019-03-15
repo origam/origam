@@ -124,6 +124,48 @@
   <data name="FinishTask" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\FinishTask.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="icon_actions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\icon_actions.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_convert_to" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\icon_convert-to.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\icon_delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_edit_in_diagram" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\icon_edit-in-diagram.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_edit_item" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\icon_edit-item.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_execute" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\icon_execute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_find_dependencies" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\icon_find-dependencies.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_find_references" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\icon_find-references.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_move_to_package" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\icon_move-to-package.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_new" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\icon_new.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_new_group" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\icon_new-group.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_repeat_new" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\icon_repeat-new.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_show_in_explorer" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\icon_show-in-explorer.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_show_xml" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\icon_show-xml.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="LoadSource" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\LoadSource.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
