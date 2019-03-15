@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using Origam.Extensions;
@@ -32,6 +31,7 @@ using Origam.Schema;
 using Origam.Workbench.Services;
 using Origam.UI;
 using Origam.Workbench.BaseComponents;
+using Type = System.Type;
 
 namespace Origam.Workbench.Editors
 {
@@ -49,7 +49,8 @@ namespace Origam.Workbench.Editors
         private PictureBox elementPicture;
         private Label lblType;
         ToolStripMenuItem _saveCmd = new ToolStripMenuItem("Save", Images.Save);
-		private ISubmenuBuilder _actionsBuilder = null;
+	    ToolStripMenuItem dockCmd = new ToolStripMenuItem("Dock", null);
+        private ISubmenuBuilder _actionsBuilder = null;
         private ISubmenuBuilder _newElementsBuilder = null;
 
 	    protected bool showMenusInAppToolStrip = false;
@@ -185,7 +186,7 @@ namespace Origam.Workbench.Editors
             this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.Name = "AbstractEditor";
-            this.Closing += new System.ComponentModel.CancelEventHandler(this.AbstractEditor_Closing);
+            this.Closing += AbstractEditor_Closing;
             this.toolPanel.ResumeLayout(false);
             this.toolPanel.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
@@ -207,7 +208,9 @@ namespace Origam.Workbench.Editors
             toolPanel.AutoScroll = true;
             toolPanel.Hide();
             _saveCmd.Click += SaveCmd_Click;
-			LoadSettings();
+		    dockCmd.Click += DockCmd_Click;
+
+            LoadSettings();
 		}
 
 		private void LoadSettings()
@@ -303,6 +306,7 @@ namespace Origam.Workbench.Editors
             {
                 toolPanel.Show();
                 toolStrip1.Items.Add(_saveCmd);
+                toolStrip1.Items.Add(dockCmd);
             }
             else if (!IsDialog() && !showMenusInAppToolStrip)
             {
@@ -340,6 +344,16 @@ namespace Origam.Workbench.Editors
             }
             toolPanel.BackColor = toolStrip1.BackColor;
         }
+
+        private void DockCmd_Click(object sender, EventArgs e)
+        {
+            AbstractEditor newEditor = (AbstractEditor)Activator.CreateInstance(this.GetType());
+            newEditor.LoadObject(ModelContent);
+            newEditor.TitleName = ModelContent.Name;
+	        WorkbenchSingleton.Workbench.ShowView(newEditor);
+            this.Closing -= AbstractEditor_Closing;
+            Close();
+	    }
 
         private void SaveCmd_Click(object sender, EventArgs e)
         {
