@@ -35,6 +35,7 @@ namespace Origam.Gui.UI
             imageSize = ToolStripButtonTools.IMAGE_SIZE;
             Font = new Font(Font.Name,8);
             ToolStripButtonTools.InitBigButton(this);
+            ImageScaling = ToolStripItemImageScaling.None;
         }
 
         public override string Text

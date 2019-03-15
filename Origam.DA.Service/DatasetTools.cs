@@ -1486,7 +1486,7 @@ namespace Origam.DA
 			{
                 string parameterName = (string)entry.Key;
                 string columnName = (string)entry.Value; ;
-                if (columnName.StartsWith("'"))
+                if (columnName != null && columnName.StartsWith("'"))
                 {
                     // not a field name but a constant, we just return it
                     result.Add(parameterName, columnName.Trim("'".ToCharArray()));

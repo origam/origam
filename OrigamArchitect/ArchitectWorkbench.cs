@@ -754,26 +754,35 @@ namespace OrigamArchitect
 
 		private void CreateModelMenu()
 		{
-			AsMenuCommand schemaNewMenu = CreateMenuWithSubmenu(strings.New_MenuItem, Images.New, new SchemaItemEditorsMenuBuilder(), _schemaMenu);
-			CreateMenuItem(strings.NewGroup_MenuItem, new AddNewGroup(), Images.FolderProperties, Keys.None, _schemaMenu);
-            CreateMenuItem(strings.RepeatNew_MenuItem, new AddRepeatingSchemaItem(), null, Keys.F12, _schemaMenu);
-			CreateMenuWithSubmenu(strings.Actions_MenuItem, null, new Commands.SchemaActionsMenuBuilder(), _schemaMenu);
-			CreateMenuWithSubmenu(strings.ConvertTo_MenuItem, null, new SchemaItemConvertMenuBuilder(), _schemaMenu);
-			CreateMenuWithSubmenu(strings.MoveToPackage_MenuItem, null, new ExtensionMenuBuilder(), _schemaMenu);
+			AsMenuCommand schemaNewMenu = CreateMenuWithSubmenu(strings.New_MenuItem, ImageRes.icon_new, new SchemaItemEditorsMenuBuilder(), _schemaMenu);
+			CreateMenuItem(strings.NewGroup_MenuItem, new AddNewGroup(), ImageRes.icon_new_group, Keys.None, _schemaMenu);
+            CreateMenuItem(strings.RepeatNew_MenuItem, new AddRepeatingSchemaItem(), ImageRes.icon_repeat_new, Keys.F12, _schemaMenu);
+			CreateMenuWithSubmenu(strings.Actions_MenuItem, ImageRes.icon_actions, new Commands.SchemaActionsMenuBuilder(), _schemaMenu);
+			CreateMenuWithSubmenu(strings.ConvertTo_MenuItem, ImageRes.icon_convert_to, new SchemaItemConvertMenuBuilder(), _schemaMenu);
+			CreateMenuWithSubmenu(strings.MoveToPackage_MenuItem, ImageRes.icon_move_to_package, new ExtensionMenuBuilder(), _schemaMenu);
 				
 			_schemaMenu.SubItems.Add(CreateSeparator());	
 				
-			AsMenuCommand mnuEditSchemaItem = CreateMenuItem(strings.EditItem_MenuItem, new EditActiveSchemaItem(), Images.PropertyPad, Keys.None, _schemaMenu);
-			AsMenuCommand mnuDelete = CreateMenuItem(strings.Delete_MenuItem, new DeleteActiveNode(), Images.Delete, Keys.None, _schemaMenu);
-			CreateMenuItem(strings.Execute_MenuItem, new Commands.ExecuteActiveSchemaItem(), Images.Preview, Keys.Control | Keys.X, _schemaMenu);
-			CreateMenuItem(strings.EditInDiagram_MenuItem, new EditDiagramActiveSchemaItem(), Images.Culture, Keys.None, _schemaMenu);
+			AsMenuCommand mnuEditSchemaItem = CreateMenuItem(strings.EditItem_MenuItem, 
+                new EditActiveSchemaItem(), ImageRes.icon_edit_item, Keys.None, 
+                _schemaMenu);
+			AsMenuCommand mnuDelete = CreateMenuItem(strings.Delete_MenuItem, 
+                new DeleteActiveNode(), ImageRes.icon_delete, Keys.None, _schemaMenu);
+			CreateMenuItem(strings.Execute_MenuItem, new ExecuteActiveSchemaItem(), 
+                ImageRes.icon_execute, Keys.Control | Keys.X, _schemaMenu);
+			CreateMenuItem(strings.EditInDiagram_MenuItem, new EditDiagramActiveSchemaItem(), 
+                ImageRes.icon_edit_in_diagram, Keys.None, _schemaMenu);
 			_schemaMenu.SubItems.Add(CreateSeparator());	
 	
-			CreateMenuItem(strings.FindDependencies_MenuItem, new ShowDependencies(), Images.Search, Keys.None, _schemaMenu);
-			CreateMenuItem(strings.FindReferences_MenuItem, new ShowUsage(), Images.Search, Keys.None, _schemaMenu);
+			CreateMenuItem(strings.FindDependencies_MenuItem, new ShowDependencies(),
+                ImageRes.icon_find_dependencies, Keys.None, _schemaMenu);
+			CreateMenuItem(strings.FindReferences_MenuItem, new ShowUsage(), 
+                ImageRes.icon_find_references, Keys.None, _schemaMenu);
             _schemaMenu.SubItems.Add(CreateSeparator());
-            CreateMenuItem(strings.SourceXml_MenuItem, new ShowExplorerXml(), Images.Parent, Keys.None, _schemaMenu);
-            CreateMenuItem(strings.XmlConsole, new ShowConsoleXml(), Images.Edit, Keys.None, _schemaMenu);
+            CreateMenuItem(strings.SourceXml_MenuItem, new ShowExplorerXml(), 
+                ImageRes.icon_show_in_explorer, Keys.None, _schemaMenu);
+            CreateMenuItem(strings.XmlConsole, new ShowConsoleXml(), 
+                ImageRes.icon_show_xml, Keys.None, _schemaMenu);
             AsMenuCommand schemamenuGit = CreateMenuWithSubmenu("Git", Images.Git, new GitMenuBuilder(), _schemaMenu);
         }
 
@@ -847,7 +856,7 @@ namespace OrigamArchitect
 			if(image != null)
 			{
 				menuItem.Image = image;
-			}
+            }
 
 			return menuItem;
 		}
