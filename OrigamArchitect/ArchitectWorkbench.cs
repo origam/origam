@@ -856,7 +856,6 @@ namespace OrigamArchitect
 			if(image != null)
 			{
 				menuItem.Image = image;
-                menuItem.ImageScaling = ToolStripItemImageScaling.None;
             }
 
 			return menuItem;

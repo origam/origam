@@ -37,24 +37,28 @@ namespace Origam.UI
 
 		public AsMenuCommand()
 		{
-		}
+            DefaultImageScaling();
+        }
 
 		public AsMenuCommand(string label) : base(label)
 		{
 			this.Description = label;
-		}
+            DefaultImageScaling();
+        }
 
 		public AsMenuCommand(string label, object caller) : base(label)
 		{
 			this.Description = label;
 			this.caller = caller;
-		}
+            DefaultImageScaling();
+        }
 
 		public AsMenuCommand(string label, ICommand menuCommand) : base(label)
 		{
 			this.Description = label;
 			this.Command = menuCommand;
-		}
+            DefaultImageScaling();
+        }
 
 		public AsMenuCommand(AsMenuCommand other): base(other.Description)
 		{
@@ -64,10 +68,14 @@ namespace Origam.UI
 			this.SubItems = other.SubItems;
 			this.Image = other.Image;
 			this.ShortcutKeys = other.ShortcutKeys;
-			
-			ShareAllEventHandlers(other);
+            DefaultImageScaling();
+            ShareAllEventHandlers(other);
 		}
 
+        private void DefaultImageScaling()
+        {
+            this.ImageScaling = ToolStripItemImageScaling.None;
+        }
 		// This method causes this AsMenuCommand to share event handlers with
 		// the other AsMenuCommand. When any handler is added or removed in this
 		// the same happens in the other and vice versa.
