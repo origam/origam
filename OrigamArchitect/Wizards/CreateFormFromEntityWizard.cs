@@ -249,7 +249,9 @@ namespace OrigamArchitect
 
 			foreach(IDataEntityColumn column in this.Entity.EntityColumns)
 			{
-				if (!this._textColumnsOnly || (column.DataType == Origam.Schema.OrigamDataType.String
+			    if (string.IsNullOrEmpty(column.ToString())) continue;
+				if (!this._textColumnsOnly 
+				    || (column.DataType == Origam.Schema.OrigamDataType.String
 					|| column.DataType == Origam.Schema.OrigamDataType.Memo))
 				{
 					lstFields.Items.Add(column);

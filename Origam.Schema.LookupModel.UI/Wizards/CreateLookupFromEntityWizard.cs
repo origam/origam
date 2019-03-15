@@ -315,6 +315,7 @@ namespace Origam.Schema.LookupModel.Wizards
 
 			foreach(IDataEntityColumn column in this.Entity.EntityColumns)
 			{
+			    if(string.IsNullOrEmpty(column.ToString())) continue;
 				if(column.Name == "Name") nameColumn = column;
 				if(column.IsPrimaryKey && !column.ExcludeFromAllFields) _idColumn = column;
 

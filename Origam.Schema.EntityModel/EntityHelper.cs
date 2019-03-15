@@ -380,7 +380,8 @@ namespace Origam.Schema.EntityModel
 			bool createParameter, string leftName, string rightName, bool isRightArray, 
             IList<AbstractSchemaItem> generatedElements)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(
+		    if (field.Name == null) throw new ArgumentException("Filed Name is not set.");
+            ISchemaService schema = ServiceManager.Services.GetService(
                 typeof(ISchemaService)) as ISchemaService;
 			IDataEntity entity = field.ParentItem as IDataEntity;
             // filter

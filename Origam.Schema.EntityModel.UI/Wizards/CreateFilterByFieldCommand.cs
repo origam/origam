@@ -95,7 +95,8 @@ namespace Origam.Schema.EntityModel.Wizards
 
 		public override void Run()
 		{
-			IDataEntityColumn field = Owner as IDataEntityColumn;
+		    IDataEntityColumn field = Owner as IDataEntityColumn;
+            if (field.Name == null) throw new ArgumentException("Filed Name is not set.");
 			IDataEntity entity = field.ParentItem as IDataEntity;
             // first paramater
 			DatabaseParameter param1 = entity.NewItem(typeof(DatabaseParameter), 
