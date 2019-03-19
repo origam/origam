@@ -47,6 +47,10 @@ namespace Origam.Gui.Designer
 	/// 
 	public class ControlSetEditor : AbstractEditor
 	{
+		private static readonly log4net.ILog log 
+			= log4net.LogManager.GetLogger(
+				MethodBase.GetCurrentMethod().DeclaringType);
+		
 		private System.Windows.Forms.PropertyGrid _propertyGrid; 
 		private const string  origamDataSetName="OrigamDataSet";
 		private eDataSource _dataSourceMode;
@@ -1732,7 +1736,9 @@ namespace Origam.Gui.Designer
 			}
 			catch(Exception ex)
 			{
-				MessageBox.Show(this, ex.Message,"Error when closing window");
+				log.Error(ex);
+				MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK,
+					MessageBoxIcon.Error);
 			}
 		}
 

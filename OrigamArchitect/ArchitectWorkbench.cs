@@ -1695,24 +1695,37 @@ namespace OrigamArchitect
 
         public bool Disconnect()
 		{
-            if (IsConnected)
-            {
-                SaveWorkspace();
-            }
-            if (! _schema.Disconnect()) return false;
+			try
+			{
+				if (IsConnected)
+				{
+					SaveWorkspace();
+				}
 
-			UnloadConnectedServices();
-            UnloadConnectedPads();
-			UnloadMainMenu();
+				if (!_schema.Disconnect()) return false;
 
-			IsConnected = false;
-            ConfigurationManager.SetActiveConfiguration(null);
+				UnloadConnectedServices();
+				UnloadConnectedPads();
+				UnloadMainMenu();
 
-            UpdateTitle();
+				IsConnected = false;
+				ConfigurationManager.SetActiveConfiguration(null);
 
-            modelCheckCancellationTokenSource.Cancel();
-            modelCheckCancellationTokenSource = new CancellationTokenSource();
-            return true;
+				UpdateTitle();
+
+				modelCheckCancellationTokenSource.Cancel();
+				modelCheckCancellationTokenSource =
+					new CancellationTokenSource();
+				return true;
+			}
+			catch (Exception ex)
+			{
+				log.Error(ex);
+				MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK,
+					MessageBoxIcon.Error);
+			}
+
+			return true;
 		}
 
         private void UnloadConnectedPads()
