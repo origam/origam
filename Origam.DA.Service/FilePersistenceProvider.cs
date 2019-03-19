@@ -226,8 +226,9 @@ namespace Origam.DA.Service
                 this.RetrieveInstance(
                     primaryKey: origObject.PrimaryKey, 
                     useCache: true, 
-                    throwNotFoundException: false);
-
+                    throwNotFoundException: false) 
+                ?? throw new Exception("Cannot refresh object that does not exist any more. Object id: "+persistentObject.Id);
+            
             Reflector.CopyMembers(
                 source: upToDateObject,
                 target: origObject,
