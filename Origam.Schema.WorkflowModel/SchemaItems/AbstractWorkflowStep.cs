@@ -147,7 +147,10 @@ namespace Origam.Schema.WorkflowModel
 						{
 							break;
 						}
-
+						if(parentStep.ParentItem as IWorkflowStep == null)
+                        {
+                            _InheritTrace = true;
+                        }
 						parentStep = parentStep.ParentItem as IWorkflowStep;
 					}
 
@@ -166,7 +169,18 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		[EntityColumn("G02")]  
+        [Browsable(false)]
+        bool _InheritTrace = false;
+        public bool InheritTrace
+        {
+            get
+            {
+                _InheritTrace = false;
+                _ = Trace;
+                return _InheritTrace;
+            }
+        }
+        [EntityColumn("G02")]  
 		public Guid StartRuleId;
 
 		[Category("Rules")]

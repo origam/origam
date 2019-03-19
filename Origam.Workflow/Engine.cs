@@ -620,7 +620,7 @@ namespace Origam.Workflow
 				log.Error(step.GetType().Name + " " + step.Name + " failed.");
 			}
 			// Trace the error
-			if(step.Trace)
+			if(IsTrace(step))
 			{
 				_tracingService.TraceStep(this.WorkflowInstanceId, (step as AbstractSchemaItem).Path, (step as AbstractSchemaItem).Id, "Process", "Error", null, null, null, ex.Message);
 			}
@@ -734,7 +734,7 @@ namespace Origam.Workflow
 				rule, 
 				data);
 
-			if(step != null && step.Trace)
+			if(step != null && IsTrace(step))
 			{
 				_tracingService.TraceStep(
 					this.WorkflowInstanceId,
@@ -1039,7 +1039,7 @@ namespace Origam.Workflow
 
 			try
 			{
-				if(step != null && step.Trace)
+				if(step != null && IsTrace(step))
 				{
 					_tracingService.TraceStep(
 						this.WorkflowInstanceId,
@@ -1227,7 +1227,7 @@ namespace Origam.Workflow
 					}
 				}
 
-				if(step != null && step.Trace)
+				if(step != null && IsTrace(step))
 				{
 					_tracingService.TraceStep(
 						this.WorkflowInstanceId,
@@ -1248,7 +1248,7 @@ namespace Origam.Workflow
 					
 					ProcessRulesTimed(resultContextKey, ruleSet, step);
 
-					if(step != null && step.Trace)
+					if(step != null && IsTrace(step))
 					{
 						_tracingService.TraceStep(
 							this.WorkflowInstanceId,
@@ -1299,7 +1299,17 @@ namespace Origam.Workflow
 			}
 		}
 
-		private void ProcessRulesTimed(Key resultContextKey,
+        public bool IsTrace(IWorkflowStep task)
+        {
+            if (task.InheritTrace && !task.Trace)
+            {
+                //need take trace from workflow before.
+                return Host.ParentTrace;
+            }
+            return task.Trace;
+        }
+
+        private void ProcessRulesTimed(Key resultContextKey,
 			DataStructureRuleSet ruleSet,IWorkflowStep step)
 		{				
 			ProfilingTools.ExecuteAndLogDuration(

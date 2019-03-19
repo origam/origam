@@ -56,6 +56,7 @@ namespace Origam.Schema.WorkflowModel
 	{
 		WorkflowStepTraceLevel TraceLevel{get; set;}
 		bool Trace{get;}
+        bool InheritTrace { get;}
 		StartRule StartConditionRule{get; set;}
 		IContextStore StartConditionRuleContextStore{get; set;}
 		IEndRule ValidationRule{get; set;}
