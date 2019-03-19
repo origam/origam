@@ -164,10 +164,11 @@ namespace Origam.DA.Service
 
         private void SaveItemTrackersForDebugging(ItemTracker originalTracker, ItemTracker testTracker)
         {
-            string toFile = "originalTracker: +\n" + originalTracker.Print() + 
-                            "\n\ntestTracker: \n" + testTracker.Print();
-            FileInfo txtFileInfo = indexFile.MakeNew("debug");
-            File.WriteAllText(txtFileInfo.FullName, toFile);
+            FileInfo originalTrackerTxt = indexFile.MakeNew("originalTracker");
+            File.WriteAllText(originalTrackerTxt.FullName,  originalTracker.Print());
+            
+            FileInfo testTrackerTxt = indexFile.MakeNew("testTracker");
+            File.WriteAllText(testTrackerTxt.FullName, testTracker.Print());
         }
         
         private void SaveIndexToTxtForDebugging(
