@@ -1719,20 +1719,20 @@ namespace Origam.Gui.Designer
 
 		private void ControlSetEditor_Closed(object sender, System.EventArgs e)
 		{
-			// refresh the model element, e.g. if editing is cancelled, so it reads its original content
-			if(this._rootControl != null && this._rootControl.IsPersisted)
-			{
-				this._rootControl.ClearCacheOnPersist = true;
-				this._rootControl.Refresh();
-				this._rootControl.ClearCacheOnPersist = false;
-			}
-
 			try
 			{
+				// refresh the model element, e.g. if editing is cancelled, so it reads its original content
+				if(this._rootControl != null && this._rootControl.IsPersisted)
+				{
+					this._rootControl.ClearCacheOnPersist = true;
+					this._rootControl.Refresh();
+					this._rootControl.ClearCacheOnPersist = false;
+				}
 				_propertyGrid.SelectedObjects = null;
 			}
-			catch
+			catch(Exception ex)
 			{
+				MessageBox.Show(this, ex.Message,"Error when closing window");
 			}
 		}
 
