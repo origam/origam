@@ -10,9 +10,9 @@
       <fileset basedir="../.">
         <include name="*.xml"/>
         <include name="l10n/*.*"/>
-        <include name="Root/*.*"/>
-        <include name="Security/*.*"/>
-        <include name="Root Menu/*.*"/>
+        <include name="Root/**/*.*"/>
+        <include name="Security/**/*.*"/>
+        <include name="Root Menu/**/*.*"/>
       </fileset>
     </copy>
   </target>
