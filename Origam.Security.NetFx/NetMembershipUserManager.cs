@@ -354,7 +354,7 @@ namespace Origam.Security.Identity
                 return null;
             }
             DataRow businessPartnerRow = table.Rows[0];
-            origamUser.Id = businessPartnerRow["Id"].ToString();
+            origamUser.BusinessPartnerId = businessPartnerRow["Id"].ToString();
             if (!businessPartnerRow.IsNull("UserEmail"))
             {
                 // set email set in the BusinessPartner table instead of the one

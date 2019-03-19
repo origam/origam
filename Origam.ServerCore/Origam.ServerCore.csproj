@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <UserSecretsId>8a03936d-700c-4edd-9ffa-e3df428dc822</UserSecretsId>
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,24 +31,13 @@
     <ProjectReference Include="..\Origam.Schema.MenuModel\Origam.Schema.MenuModel.csproj" />
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj" />
     <ProjectReference Include="..\Origam.Security.Common\Origam.Security.Common.csproj" />
+    <ProjectReference Include="..\Origam.Security.Identity\Origam.Security.Identity.csproj" />
     <ProjectReference Include="..\Origam.Security\Origam.Security.csproj" />
     <ProjectReference Include="..\Origam.ServerCommon\Origam.ServerCommon.csproj" />
     <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />
     <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj" />
     <ProjectReference Include="..\Origam.Workbench\Origam.Workbench.csproj" />
     <ProjectReference Include="..\Origam.Workflow\Origam.Workflow.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="CSharpFunctionalExtensions">
-      <HintPath>..\EnterpriseLibrary\CSharpFunctionalExtensions.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\EnterpriseLibrary\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <HintPath>..\..\..\..\..\..\.nuget\packages\microsoft.aspnet.identity.core\2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>

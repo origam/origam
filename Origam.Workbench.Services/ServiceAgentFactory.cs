@@ -111,16 +111,8 @@ namespace Origam.Workbench.Services
                     result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.Star21Service.WarehouseServiceAgent", "Origam.Workflow.Star21Service");
                     break;
 
-                case "SharepointListService":
-                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Sharepoint.SharepointListAgent", "Origam.Sharepoint");
-                    break;
-
                 case "ReportService":
                     result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.ReportServiceAgent", "Origam.Workflow");
-                    break;
-
-                case "SerialPortCommunicationService":
-                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.SerialPortAgent", "Origam.Workflow");
                     break;
 
                 case "MobilePhoneService":

@@ -85,7 +85,7 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.IO.Compression, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" /> 
+    <Reference Include="System.IO.Compression, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdaptivePropertyProvider.cs" />
@@ -246,6 +246,14 @@
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
       <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
       <Name>Origam.Schema</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Security.Identity\Origam.Security.Identity.csproj">
+      <Project>{01708bd3-093a-42bf-baf9-0a4cd1e69107}</Project>
+      <Name>Origam.Security.Identity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Security.NetFx\Origam.Security.NetFx.csproj">
+      <Project>{22066f4c-117c-4910-bc00-9c1a4bb14551}</Project>
+      <Name>Origam.Security.NetFx</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Security\Origam.Security.csproj">
       <Project>{93b972c4-d58d-4681-a8b8-95a34c7c2980}</Project>

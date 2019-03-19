@@ -383,8 +383,24 @@ namespace Origam.Mail
             }
         }
 
-        public abstract int SendMail(IXmlContainer mailDocument, string server, int port);
+        
+        public int SendMail(IXmlContainer mailDocument, string server, int port)
+        {
+            if (mailDocument is IDataDocument)
+            {
+                MailData mailData = new MailData();
+                mailData.Merge((mailDocument as IDataDocument).DataSet);
 
+                return SendMail2(mailData, server, port);
+            }
+            else
+            {
+                return SendMail1(mailDocument, server, port);
+            }
+        }
+        public abstract int SendMail1(IXmlContainer mailDocument, string server, int port);
+        
+        public abstract int SendMail2(MailData mailData, string server, int port);
         public static string GetValue(XmlNode mailRoot, XmlNamespaceManager nsmgr, string where)
         {
             return mailRoot.SelectSingleNode(where, nsmgr).InnerXml;

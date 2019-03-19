@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 using System.Xml;
 using Origam.Workflow;
 using Origam.Rule;
-using Microsoft.AspNet.Identity;
-using System.Xml.Linq;
 using log4net;
 using Origam.Security.Common;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Origam.Security.Identity
 {
@@ -15,9 +14,23 @@ namespace Origam.Security.Identity
 		protected static readonly ILog log
 			= LogManager.GetLogger(typeof(IdentityServiceAgent));
 
-		private AbstractUserManager userManager 
-            = AbstractUserManager.GetUserManager();
+#if NETSTANDARD
+        public static IServiceProvider ServiceProvider { get; set; }
 
+        private IManager userManager;
+
+          public IdentityServiceAgent()
+          {
+              if (ServiceProvider == null)
+              {
+                  throw new InvalidOperationException("ServiceProvider was not set");
+              }
+              userManager = ServiceProvider.GetService<IManager>();
+          }
+#else
+        private IManager userManager
+            = new AspNetManagerAdapter(AbstractUserManager.GetUserManager());
+#endif
         private object result;
 
         public override object Result
@@ -106,7 +119,7 @@ namespace Origam.Security.Identity
                 throw new InvalidCastException(
                     Resources.ErrorUsernameNotString);
             }
-            Task<OrigamUser> task = userManager.FindByNameAsync(
+            Task<IOrigamUser> task = userManager.FindByNameAsync(
                 Parameters["Username"].ToString());
             if (task.IsFaulted)
             {
@@ -205,7 +218,7 @@ namespace Origam.Security.Identity
                 throw new InvalidCastException(
                     Resources.ErrorEnforceNotBool);
             }
-            Task<IdentityResult> task = userManager.SetTwoFactorEnabledAsync(
+            Task<bool> task = userManager.SetTwoFactorEnabledAsync(
                Parameters["UserId"].ToString(), (Boolean) Parameters["Enforce"]);
             if (task.IsFaulted)
             {
@@ -262,7 +275,7 @@ namespace Origam.Security.Identity
                 throw new InvalidCastException(
                     Resources.ErrorUserIdNotGuid);
             }
-            Task<IdentityResult> task = userManager.ConfirmEmailAsync(
+            Task<InternalIdentityResult> task = userManager.ConfirmEmailAsync(
                 Parameters["UserId"].ToString());
 			RuleException ex = new RuleException();
             if (task.IsFaulted)
@@ -306,7 +319,7 @@ namespace Origam.Security.Identity
                 throw new InvalidCastException(
                     Resources.ErrorTokenNotString);
             }
-            Task<IdentityResult> task = userManager.ConfirmEmailAsync(
+            Task<InternalIdentityResult> task = userManager.ConfirmEmailAsync(
                 Parameters["UserId"].ToString()
                 , Parameters["Token"].ToString());
 			RuleException ex = new RuleException();
@@ -357,8 +370,8 @@ namespace Origam.Security.Identity
                 throw new InvalidCastException(
                     Resources.ErrorNewPasswordNotString);
             }
-            OrigamUser user = null;
-            Task<OrigamUser> taskFindUser = userManager.FindByNameAsync(
+            IOrigamUser user = null;
+            Task<IOrigamUser> taskFindUser = userManager.FindByNameAsync(
                 Parameters["Username"].ToString());
             if (taskFindUser.IsFaulted)
             {
@@ -372,8 +385,8 @@ namespace Origam.Security.Identity
             {
                 throw new Exception(Resources.ErrorUserNotFound);
             }
-            Task<IdentityResult> task = userManager.ChangePasswordAsync(
-                user.Id, 
+            Task<InternalIdentityResult> task = userManager.ChangePasswordAsync(
+                user.BusinessPartnerId, 
                 Parameters["OldPassword"].ToString().TrimEnd(), 
                 Parameters["NewPassword"].ToString().TrimEnd());
             if (task.IsFaulted)
@@ -407,7 +420,7 @@ namespace Origam.Security.Identity
                 throw new InvalidCastException(
                     Resources.ErrorNewPasswordNotString);
             }
-            Task<IdentityResult> resetPasswordTask
+            Task<InternalIdentityResult> resetPasswordTask
                 = userManager.ResetPasswordFromUsernameAsync(
                 Parameters["UserName"].ToString(),
                 Parameters["Token"].ToString(),
@@ -442,7 +455,7 @@ namespace Origam.Security.Identity
             OrigamUser user 
                 = new OrigamUser(Parameters["Username"].ToString());
             user.TransactionId = TransactionId;
-            Task<IdentityResult> task = userManager.DeleteAsync(user);
+            Task<InternalIdentityResult> task = userManager.DeleteAsync(user);
             if (task.IsFaulted)
             {
                 throw task.Exception;
@@ -478,7 +491,7 @@ namespace Origam.Security.Identity
                 ? Parameters["Email"].ToString() : null;
             user.IsApproved = Parameters.ContainsKey("IsApproved") 
                 ? (Boolean)Parameters["IsApproved"] : false;
-            Task<IdentityResult> task = userManager.UpdateAsync(user);
+            Task<InternalIdentityResult> task = userManager.UpdateAsync(user);
             if (task.IsFaulted)
             {
                 throw task.Exception;
@@ -587,7 +600,7 @@ namespace Origam.Security.Identity
             }
             user.IsApproved = emailConfirmed;            
             user.TransactionId = TransactionId;
-            Task<IdentityResult> task = userManager.CreateAsync(
+            Task<InternalIdentityResult> task = userManager.CreateAsync(
                 user, Parameters["Password"].ToString().TrimEnd());
 			if (task.IsFaulted)
 			{
@@ -627,7 +640,7 @@ namespace Origam.Security.Identity
                 throw new InvalidCastException(
                     Resources.ErrorEmailNotString);
             }
-            Task<AbstractUserManager.TokenResult> generateTask = 
+            Task<TokenResult> generateTask = 
                 userManager.GetPasswordResetTokenFromEmailAsync(
                     (string)Parameters["Email"]);
             if (generateTask.IsFaulted)
@@ -643,19 +656,19 @@ namespace Origam.Security.Identity
                 XmlNode tokenResultNode = xmlDoc.CreateElement("TokenResult");
                 // token
                 XmlAttribute tokenAttr = xmlDoc.CreateAttribute("Token");
-                tokenAttr.Value = generateTask.Result.token;
+                tokenAttr.Value = generateTask.Result.Token;
                 tokenResultNode.Attributes.Append(tokenAttr);
                 // userId
                 XmlAttribute userNameAttr = xmlDoc.CreateAttribute("UserName");
-                userNameAttr.Value = generateTask.Result.userName.ToString();
+                userNameAttr.Value = generateTask.Result.UserName.ToString();
                 tokenResultNode.Attributes.Append(userNameAttr);
                 // tokenValidityHours
                 XmlAttribute tokenValidityAttr = xmlDoc.CreateAttribute("TokenValidityHours");
-                tokenValidityAttr.Value = generateTask.Result.tokenValidityHours.ToString();
+                tokenValidityAttr.Value = generateTask.Result.TokenValidityHours.ToString();
                 tokenResultNode.Attributes.Append(tokenValidityAttr);
                 // errorMessage
                 XmlAttribute errorMessageAttr = xmlDoc.CreateAttribute("ErrorMessage");
-                errorMessageAttr.Value = generateTask.Result.errorMessage;
+                errorMessageAttr.Value = generateTask.Result.ErrorMessage;
                 tokenResultNode.Attributes.Append(errorMessageAttr);
 
                 rootNode.AppendChild(tokenResultNode);
@@ -671,7 +684,7 @@ namespace Origam.Security.Identity
                     Resources.ErrorUserIdNotGuid);
             }
             Task<string> task = userManager
-                .GeneratePasswordResetTokenAsync(
+                .GeneratePasswordResetTokenAsync1(
                 Parameters["UserId"].ToString());
             if (task.IsFaulted)
             {
@@ -696,7 +709,7 @@ namespace Origam.Security.Identity
             }
         }
 
-        private XmlDocument GetUserDataXml(OrigamUser user)
+        private XmlDocument GetUserDataXml(IOrigamUser user)
         {
             XmlDocument xmlDoc = new System.Xml.XmlDocument();
             XmlNode root = xmlDoc.CreateElement("ROOT");
@@ -741,4 +754,5 @@ namespace Origam.Security.Identity
             return xmlDoc;
         }
     }
+
 }

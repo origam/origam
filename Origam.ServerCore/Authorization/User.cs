@@ -1,12 +1,11 @@
 using System;
-
 using Origam.Security.Common;
 
-namespace Origam.ServerCore
+namespace Origam.ServerCore.Authorization
 {
-    public class User: IOrigamUser//, IUser<string>
+    public class User: IOrigamUser
     {
-        public string Id { get; set; }
+        public string BusinessPartnerId { get; set; }
         public string UserName { get; set; }
         public DateTime CreationDate { get; set; }
         public string Email { get; set; }
@@ -34,6 +33,12 @@ namespace Origam.ServerCore
             set => Is2FAEnforced = value;
         }
 
+        public string RoleId { get; set; }
+        public string FirstName { get; set; }
+        public string Name { get; set; }
+        public int FailedPasswordAttemptCount { get; set; }
+        public Guid LanguageId { get; set; }
+
         public User(string userName)
         {
             UserName = userName;
@@ -43,5 +48,6 @@ namespace Origam.ServerCore
         public User()
         {
         }
+        
     }
 }

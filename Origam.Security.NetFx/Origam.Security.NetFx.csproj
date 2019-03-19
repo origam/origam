@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{22066F4C-117C-4910-BC00-9C1A4BB14551}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Origam.Security.NetFx</RootNamespace>
+    <AssemblyName>Origam.Security.NetFx</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CSharpFunctionalExtensions, Version=1.16.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\CSharpFunctionalExtensions.1.16.1\lib\net461\CSharpFunctionalExtensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.1.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.DataProtection.Abstractions, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\microsoft.aspnetcore.dataprotection.abstractions\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.DataProtection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.2.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbstractUserManager.cs" />
+    <Compile Include="AdaptivePasswordHasherWithLegacySupport.cs" />
+    <Compile Include="AspNetManagerAdapter.cs" />
+    <Compile Include="IdentityEmailService.cs" />
+    <Compile Include="IdentityResultExtensions.cs" />
+    <Compile Include="NetMembershipUserManager.cs" />
+    <Compile Include="OrigamModelUserManager.cs" />
+    <Compile Include="OrigamModelUserStore.cs" />
+    <Compile Include="OrigamPasswordValidator.cs" />
+    <Compile Include="OrigamTokenProvider.cs" />
+    <Compile Include="OrigamUser.cs" />
+    <Compile Include="OrigamUserStore.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
+      <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
+      <Name>Origam.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj">
+      <Project>{b4e4dc00-766a-4ca3-83d8-0a5383462f53}</Project>
+      <Name>Origam.DA.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service.csproj">
+      <Project>{ff4722b4-01f8-4062-af39-f243a6bf336d}</Project>
+      <Name>Origam.DA.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Rule\Origam.Rule.csproj">
+      <Project>{4f05db44-2bbd-4b54-8d37-e8038d1ee1e7}</Project>
+      <Name>Origam.Rule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
+      <Project>{50186a07-6ed9-4751-b0e2-52feba2a4518}</Project>
+      <Name>Origam.Schema.EntityModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
+      <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
+      <Name>Origam.Schema</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Security.Common\Origam.Security.Common.csproj">
+      <Project>{66fae794-7352-440f-b24d-684686a62cf5}</Project>
+      <Name>Origam.Security.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
+      <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>
+      <Name>Origam.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common.csproj">
+      <Project>{EF5DE64E-88B2-4B0A-BB7F-4A537B56F3D1}</Project>
+      <Name>Origam.UI.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj">
+      <Project>{eca06542-5635-455e-b513-07f60222ca7d}</Project>
+      <Name>Origam.Workbench.Services</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+</Project>

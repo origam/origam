@@ -54,7 +54,7 @@ namespace Origam.Workflow
 			{
 				case "SendMail":
 					// Check input parameters
-					if(! (this.Parameters["Data"] is XmlDocument))
+					if(! (this.Parameters["Data"] is IXmlContainer))
 						throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDocument"));
 
                     string server = null;

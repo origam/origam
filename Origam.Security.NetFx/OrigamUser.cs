@@ -6,7 +6,8 @@ namespace Origam.Security.Identity
 {
     public class OrigamUser : IUser, IOrigamUser
     {
-        public string Id { get; set; }
+        public string BusinessPartnerId { get; set; }
+        public string Id { get; }
         public string UserName { get; set; }
         public DateTime CreationDate { get; set; }
         public string Email { get; set; }
@@ -23,6 +24,16 @@ namespace Origam.Security.Identity
         public string TransactionId { get; set; }
         public string SecurityStamp { get; set; }
         public bool Is2FAEnforced { get; set; }
+        public string PasswordHash { get; set; }
+        public bool TwoFactorEnabled { get; set; }
+        public string NormalizedEmail { get; set; }
+        public bool EmailConfirmed { get; set; }
+        public string NormalizedUserName { get; set; }
+        public string RoleId { get; set; }
+        public string FirstName { get; set; }
+        public string Name { get; set; }
+        public int FailedPasswordAttemptCount { get; set; }
+        public Guid LanguageId { get; set; }
 
         public OrigamUser(string userName)
         {

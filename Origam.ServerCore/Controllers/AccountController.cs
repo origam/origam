@@ -1,89 +1,221 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Origam.Security.Common;
+using Origam.Security.Identity;
+using Origam.ServerCore.Authorization;
+using Origam.ServerCore.Configuration;
+using Origam.ServerCore.Extensions;
+using Origam.ServerCore.Models.Account;
 
 namespace Origam.ServerCore.Controllers
 {
-  [Authorize]
-  [Route("internalApi/[controller]")]
-  public class AccountController : Controller
+    [ApiController]
+    [Authorize]
+    [Route("internalApi/[controller]")]
+    public class AccountController : ControllerBase
     {
-        private readonly UserManager<User> userManager;
-        private readonly SignInManager<User> signInManager;
-        private readonly IMessageService messageService;
+        private readonly CoreUserManager userManager;
+        private readonly SignInManager<IOrigamUser> signInManager;
+        private readonly IMailService mailService;
+        private readonly AccountConfig accountConfig;
         private readonly IConfiguration configuration;
+        private readonly IServiceProvider serviceProvider;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, 
-            IMessageService messageService, IConfiguration configuration)
+        public AccountController(CoreUserManager userManager, SignInManager<IOrigamUser> signInManager,
+            IConfiguration configuration, IServiceProvider serviceProvider,
+            IMailService mailService, IOptions<AccountConfig> accountConfig)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
-            this.messageService = messageService;
+            this.mailService = mailService;
+            this.accountConfig = accountConfig.Value;
             this.configuration = configuration;
+            this.serviceProvider = serviceProvider;
         }
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> Register(string email, string password, string repassword)
+        public async Task<IActionResult> CreateInitialUser([FromBody] NewUserModel userModel)
         {
-            if (password != repassword)
+            if (userModel.Password != userModel.RePassword)
             {
                 return BadRequest("Passwords don't match");
             }
 
-            var newUser = new User 
-            {
-                UserName = email,
-                Email = email
-            };
+            SetOrigamServerAsCurrentUser();
+            IdentityServiceAgent.ServiceProvider = serviceProvider;
 
-            var userCreationResult = await userManager.CreateAsync(newUser, password);
-            if (!userCreationResult.Succeeded)
+            if (!userManager.IsInitialSetupNeeded())
             {
-                foreach(var error in userCreationResult.Errors)
-                    ModelState.AddModelError(string.Empty, error.Description);
-                return BadRequest();
+                return BadRequest("Initial user already exists");
             }
 
-            await userManager.AddClaimAsync(newUser, new Claim(ClaimTypes.Role, "Administrator"));
-            
-            
-            var emailConfirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(newUser);
-            var tokenVerificationUrl = Url.Action("VerifyEmail", "Account", new {id = newUser.Id, token = emailConfirmationToken}, Request.Scheme);
+            var newUser = new User
+            {
+                FirstName = userModel.FirstName,
+                Name = userModel.Name,
+                UserName = userModel.UserName,
+                Email = userModel.Email,
+                RoleId = SecurityManager.BUILTIN_SUPER_USER_ROLE
+            };
 
-            await messageService.Send(email, "Verify your email", $"Click <a href=\"{tokenVerificationUrl}\">here</a> to verify your email");
+            var userCreationResult = await userManager.CreateAsync(newUser, userModel.Password);
+            if (!userCreationResult.Succeeded)
+            {
+                return BadRequest(userCreationResult.Errors.ToErrorMessage());
+            }
 
-            return Content("Check your email for a verification link");
+            userManager.SetInitialSetupComplete();
+            return Ok();
         }
-
-
-        public async Task<IActionResult> VerifyEmail(string id, string token)
-        {
-            var user = await userManager.FindByIdAsync(id);
-            if(user == null)
-                throw new InvalidOperationException();
-            
-            var emailConfirmationResult = await userManager.ConfirmEmailAsync(user, token);
-            if (!emailConfirmationResult.Succeeded)            
-                return Content(emailConfirmationResult.Errors.Select(error => error.Description).Aggregate((allErrors, error) => allErrors += ", " + error));                            
-
-            return Content("Email confirmed, you can now log in");
-        }      
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> Login(string userName, string password)
+        public async Task<IActionResult> CreateNewUser([FromBody] NewUserModel userModel)
+        {
+            if (userModel.Password != userModel.RePassword)
+            {
+                return BadRequest("Passwords don't match");
+            }
+            
+            SetOrigamServerAsCurrentUser();
+
+            IdentityServiceAgent.ServiceProvider = serviceProvider;
+            
+            var newUser = new User 
+            {
+                FirstName = userModel.FirstName,
+                Name = userModel.Name,
+                UserName = userModel.UserName,
+                Email = userModel.Email,
+                RoleId = accountConfig.NewUserRoleId
+            };
+
+            var userCreationResult = await userManager.CreateAsync(newUser, userModel.Password);
+            if (!userCreationResult.Succeeded)
+            {
+                return BadRequest(userCreationResult.Errors.ToErrorMessage());
+            }
+            await SendMailWithVerificationToken(newUser);         
+            
+            return Ok();
+        }
+
+        private async Task SendMailWithVerificationToken(User user)
+        {
+            string token =
+                await userManager.GenerateEmailConfirmationTokenAsync(user);
+            mailService.SendNewUserToken(user,token);
+        }
+
+
+
+        [AllowAnonymous]
+        [HttpPost("[action]")]
+        public async Task<IActionResult> VerifyEmail( [FromBody]VerifyEmailData verifyEmailData)
+        {
+            SetOrigamServerAsCurrentUser();
+            var user = await userManager.FindByIdAsync(verifyEmailData.Id);
+            if (user == null)
+                return BadRequest();
+            
+            var emailConfirmationResult = await userManager.ConfirmEmailAsync(user, verifyEmailData.Token);
+            if (!emailConfirmationResult.Succeeded)
+            {
+                return Content(emailConfirmationResult.Errors.ToErrorMessage());
+            }
+
+            return Content("Email confirmed, you can now log in");
+        }
+
+        [AllowAnonymous]
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Login([FromBody]LoginData loginData)
+        {
+            SetOrigamServerAsCurrentUser();
+            
+            var user = await userManager.FindByNameAsync(loginData.UserName);
+            if (user == null)
+            {
+                return BadRequest("Invalid login");
+            }
+            if (!user.EmailConfirmed)
+            {
+                return BadRequest("Confirm your email first");
+            }
+
+            //var passwordSignInResult = await signInManager.PasswordSignInAsync(userName, password, false, false);
+            var passwordSignInResult =
+                await signInManager.CheckPasswordSignInAsync(user, loginData.Password, false);
+           
+            if (!passwordSignInResult.Succeeded)
+            {                
+                await userManager.AccessFailedAsync(user);
+                return BadRequest("Invalid login");
+            }
+
+            return Ok(GenerateToken(loginData.UserName));
+        }
+
+        [AllowAnonymous]
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ForgotPassword([FromBody]ForgotPasswordData passwordData) 
+        {
+            IdentityServiceAgent.ServiceProvider = serviceProvider;
+            SetOrigamServerAsCurrentUser();
+            var user = await userManager.FindByEmailAsync(passwordData.Email);
+            if (user == null)
+                return Content("User with that email was not found");
+
+            var passwordResetToken = await userManager.GeneratePasswordResetTokenAsync(user);
+            mailService.SendPasswordResetToken( user, passwordResetToken, 24 );           
+            return Content("Check your email for a password reset link");
+        }
+
+        [AllowAnonymous]
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ResetPassword([FromBody]ResetPasswordData passwordData)
+        {           
+            SetOrigamServerAsCurrentUser();
+            var user = await userManager.FindByIdAsync(passwordData.Id);
+            if (user == null)
+                throw new InvalidOperationException();
+
+            if (passwordData.Password != passwordData.RePassword)
+            {
+                return BadRequest("Passwords do not match");
+            }
+
+            var resetPasswordResult = 
+                await userManager.ResetPasswordAsync(user, passwordData.Token, passwordData.Password);
+            if (!resetPasswordResult.Succeeded)
+            {
+                return BadRequest(resetPasswordResult.Errors.ToErrorMessage());
+            }
+
+            return Content("Password updated");
+        }
+
+//        [HttpPost("[action]")]
+//        public async Task<IActionResult> Logout()
+//        {
+//            await signInManager.SignOutAsync();
+//            return Ok();
+//        }  
+        
+        private static void SetOrigamServerAsCurrentUser()
         {
             var claims = new List<Claim>
             {
@@ -93,69 +225,7 @@ namespace Origam.ServerCore.Controllers
             };
             var identity = new ClaimsIdentity(claims, "TestAuthType");
             Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
-            
-            var user = await userManager.FindByNameAsync(userName);
-            if (user == null)
-            {
-                return BadRequest("Invalid login");
-            }
-//            if (!user.EmailConfirmed)
-//            {
-//                return BadRequest("Confirm your email first");
-//            }
-
-            //var passwordSignInResult = await signInManager.PasswordSignInAsync(userName, password, false, false);
-            var passwordSignInResult = await signInManager.CheckPasswordSignInAsync(user, password, false);
-//            
-            if (!passwordSignInResult.Succeeded)
-            {                
-                await userManager.AccessFailedAsync(user);
-                return BadRequest("Invalid login");
-            }
-
-            return Ok(GenerateToken(userName));
         }
-
-        [HttpPost("[action]")]
-        public async Task<IActionResult> ForgotPassword(string email)
-        {
-            var user = await userManager.FindByEmailAsync(email);
-            if (user == null)
-                return Content("Check your email for a password reset link");
-
-            var passwordResetToken = await userManager.GeneratePasswordResetTokenAsync(user);
-            var passwordResetUrl = Url.Action("ResetPassword", "Account", new {id = user.Id, token = passwordResetToken}, Request.Scheme);
-
-            await messageService.Send(email, "Password reset", $"Click <a href=\"" + passwordResetUrl + "\">here</a> to reset your password");
-
-            return Content("Check your email for a password reset link");
-        }
-
-        [HttpPost("[action]")]
-        public async Task<IActionResult> ResetPassword(string id, string token, string password, string repassword)
-        {           
-            var user = await userManager.FindByIdAsync(id);
-            if (user == null)
-                throw new InvalidOperationException();
-
-            if (password != repassword)
-            {
-                return BadRequest("Passwords do not match");
-            }
-
-            var resetPasswordResult = await userManager.ResetPasswordAsync(user, token, password);
-            if (!resetPasswordResult.Succeeded)
-            {
-                return BadRequest(resetPasswordResult.Errors.Aggregate("",(x, y) => x + y.Description));
-            }
-
-            return Content("Password updated");
-        }
-        public async Task<IActionResult> Logout()
-        {
-            await signInManager.SignOutAsync();
-            return Ok();
-        }  
         
         private string GenerateToken(string username)
         {

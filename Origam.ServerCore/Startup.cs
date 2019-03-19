@@ -15,6 +15,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Origam.Security.Common;
+using Origam.Security.Identity;
+using Origam.ServerCore.Authorization;
 using Origam.ServerCore.Configuration;
 
 namespace Origam.ServerCore
@@ -39,14 +42,19 @@ namespace Origam.ServerCore
             {
                 configuration.RootPath = startUpConfiguration.PathToClientApp ?? ".";
             });
+            services.AddScoped<IManager, CoreManagerAdapter>();
+            services.AddSingleton<IMailService, MailService>();
             services.AddSingleton<SessionObjects, SessionObjects>();
-            services.AddTransient<IMessageService, FileMessageService>();
-            services.AddTransient<IUserStore<User>, UserStore>();
-            services.AddSingleton<IRoleStore<Role>, RoleStore>();
-            services.AddSingleton<IPasswordHasher<User>, CorePasswordHasher>();
-            services.AddIdentity<User, Role>()
+            services.AddTransient<IUserStore<IOrigamUser>, UserStore>();
+            services.AddSingleton<IPasswordHasher<IOrigamUser>, CorePasswordHasher>();
+            services.AddScoped<SignInManager<IOrigamUser>>();
+            services.AddScoped<IUserClaimsPrincipalFactory<IOrigamUser>,UserClaimsPrincipalFactory<IOrigamUser>>();
+            services.AddScoped<CoreUserManager>();
+            services.AddScoped<UserManager<IOrigamUser>>(x =>
+                x.GetRequiredService<CoreUserManager>());
+            
+            services.AddIdentity<IOrigamUser, Role>()
                 .AddDefaultTokenProviders();
-      
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = "Jwt";
@@ -63,6 +71,7 @@ namespace Origam.ServerCore
                     ClockSkew = TimeSpan.FromMinutes(5) // 5 minute tolerance for the expiration date
                 };
             });
+            services.Configure<AccountConfig>(options => Configuration.GetSection("AccountConfig").Bind(options));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
