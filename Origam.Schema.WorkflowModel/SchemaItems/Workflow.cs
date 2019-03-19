@@ -220,6 +220,8 @@ namespace Origam.Schema.WorkflowModel
 				throw new InvalidOperationException("Cannot set Features to Workflow");
 			}
 		}
+        [Browsable(false)]
+        public bool InheritTrace => false;
         #endregion
     }
 }

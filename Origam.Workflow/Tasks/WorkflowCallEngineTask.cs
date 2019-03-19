@@ -54,11 +54,33 @@ namespace Origam.Workflow.Tasks
 
 		protected override void MeasuredExecution()
 		{
-			WorkflowCallTask task = this.Step as WorkflowCallTask;
-			_call = this.Engine.GetSubEngine(task.Workflow);
-			_call.Name = task.Workflow.Name;
-			
-			if (ProfilingTools.IsDebugEnabled)
+            WorkflowCallTask task = this.Step as WorkflowCallTask;
+            bool lastTrace = Engine.Host.ParentTrace;
+            Engine.Host.ParentTrace = false;
+            if (task.Workflow.TraceLevel == WorkflowStepTraceLevel.InheritFromParent)
+            {
+               if (task.TraceLevel!= WorkflowStepTraceLevel.None)
+               {
+                    if(task.TraceLevel == WorkflowStepTraceLevel.InheritFromParent)
+                    {
+                        bool isEnableTrace = task.Trace;
+                        if(task.InheritTrace && !isEnableTrace)
+                        {
+                            isEnableTrace = lastTrace;
+                        }
+                        Engine.Host.ParentTrace = isEnableTrace;
+                    }
+                    else
+                    {
+                        Engine.Host.ParentTrace = true;
+                    }
+                }
+            }
+            
+            _call = this.Engine.GetSubEngine(task.Workflow);
+            _call.Name = task.Workflow.Name;
+
+            if (ProfilingTools.IsDebugEnabled)
 			{
 				OperationTimer.Global.Start(
 					logEntryType: WorkflowItemType,
