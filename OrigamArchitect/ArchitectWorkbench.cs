@@ -1399,16 +1399,16 @@ namespace OrigamArchitect
 		private void ActivateViewByContent(IViewContent refContent)
 		{
 			if(refContent == null) return;
-			ISchemaItem loadedObject = (ISchemaItem)refContent.LoadedObject;
+			IBrowserNode2 loadedObject = (IBrowserNode2)refContent.LoadedObject;
 			
 			ViewContentCollection
 				.Cast<IViewContent>()
 			    .Where(cont => cont.LoadedObject !=null)
 				.Where(cont => 
-					((ISchemaItem)cont.LoadedObject).NodeId == loadedObject.NodeId)
+					((IBrowserNode2)cont.LoadedObject).NodeId == loadedObject.NodeId)
 				.Where(content => refContent.GetType() == content.GetType())
 				.Cast<DockContent>()
-				.First()
+				.Single()
 				.Activate();
 		}
 

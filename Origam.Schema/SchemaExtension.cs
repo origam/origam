@@ -59,6 +59,26 @@ namespace Origam.Schema
 			this._childNodes.Add(_commonModelGroup);
 		}
 
+		public void Persist()
+		{
+			PersistenceProvider.BeginTransaction();
+			if(!IsDeleted)
+			{
+				base.Persist();
+			}
+
+			foreach (var packageReference in References)
+			{
+				packageReference.Persist();
+			}
+
+			if(IsDeleted)
+			{
+				base.Persist();
+			}
+			PersistenceProvider.EndTransaction();
+		}
+
 		public override string ToString() => this.Name;
 
 		#region Properties

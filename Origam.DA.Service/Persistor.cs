@@ -47,14 +47,14 @@ namespace Origam.DA.Service
                 return;
             }
 
-            RenameRelatedItems(instance,newOrigamFile);
-
             if (newOrigamFile != currentOrigamFile)
             {
                 RemoveFromFile(instance, currentOrigamFile);
             }
 
             UpdateFile(instance, newOrigamFile);
+            
+            RenameRelatedItems(instance, currentOrigamFile);
             
             if (!InTransaction)
             {
@@ -113,6 +113,10 @@ namespace Origam.DA.Service
 
         private void ProcessTransactionStore()
         {
+            foreach (IDeferredTask task in transactionStore.FolderRenamingTasks)
+            {
+                task.Run();
+            }
             foreach (OrigamFile origamFile in transactionStore.Files)
             {
                 origamFile.FinalizeSave();
@@ -306,10 +310,119 @@ namespace Origam.DA.Service
                     action: ex => throw new Exception("Instance " + instance.Id + " cannot be persisted!\n" + ex.Message, ex));
             }
         }
+        
+        private void ScheduleFolderRenamingTaskIfApplicable(IFilePersistent instance, OrigamFile origamFile)
+        {
+            switch (instance)
+            {
+                case SchemaExtension schemaExtension:
+                    transactionStore.FolderRenamingTasks.Enqueue(
+                        new RenameSchemaExtensionTask(
+                            origamFileManager: origamFileManager,
+                            index: index,
+                            persistenceProvider: persistenceProvider,
+                            origamFile: origamFile,
+                            schemaExtension: schemaExtension));
+                    break;
+                case SchemaItemGroup group:
+                    transactionStore.FolderRenamingTasks.Enqueue(
+                        new RenameGroupDirectoryTask(
+                            origamFileManager: origamFileManager,
+                            persistenceIndex: index, 
+                            group: group, 
+                            newName: group.Name));
+                    break;
+                default:
+                    break;
+            }
+        }
     }
+
+    class RenameSchemaExtensionTask: IDeferredTask
+    {
+        private readonly SchemaExtension schemaExtension;
+        private readonly OrigamFile origamFile;
+        private readonly IPersistenceProvider persistenceProvider;
+        private readonly FilePersistenceIndex index;
+        private readonly OrigamFileManager origamFileManager;
+        public RenameSchemaExtensionTask(OrigamFileManager origamFileManager,
+            FilePersistenceIndex index,
+            IPersistenceProvider persistenceProvider, OrigamFile origamFile,
+            SchemaExtension schemaExtension)
+        {
+            this.schemaExtension = schemaExtension;
+            this.origamFile = origamFile;
+            this.origamFileManager = origamFileManager;
+            this.index = index;
+            this.persistenceProvider = persistenceProvider;
+        }
+
+        public void Run()
+        {
+            if (!schemaExtension.WasRenamed) return;
+            if (origamFile == null) return;
+            try
+            {
+                origamFileManager.RenameDirectory(origamFile.Path.Directory,
+                    schemaExtension.Name);
+                persistenceProvider
+                    .RetrieveList<SchemaItemGroup>(null)
+                    .Where(group => group.Name == schemaExtension.OldName)
+                    .ForEach(group => RenameGroup(group, schemaExtension.Name));
+            }
+            catch (Exception e)
+            {
+                throw new Exception(
+                    "There was an error during renaming. Some directories and groups were not renamed and model " +
+                    "is in inconsistent state as a result of that. Please rename the already processed " +
+                    "directories and groups back as a rollback of this operation is not implemented yet." +
+                    "Original error: " + e.Message, e);
+            }
+        }
+        private void RenameGroup(SchemaItemGroup group, string newName)
+        {
+            new RenameGroupDirectoryTask(
+                origamFileManager,
+                index,
+                group, 
+                newName)
+            .Run();
+            group.Name = newName;
+            group.Persist();
+        }
+    }
+
+    class RenameGroupDirectoryTask: IDeferredTask
+    {
+        private readonly SchemaItemGroup group;
+        private readonly string newName;
+        private readonly FilePersistenceIndex persistenceIndex;
+        private readonly OrigamFileManager origamFileManager;
+
+        public RenameGroupDirectoryTask(OrigamFileManager origamFileManager,
+            FilePersistenceIndex persistenceIndex, SchemaItemGroup group, string newName)
+        {
+            this.origamFileManager = origamFileManager;
+            this.persistenceIndex = persistenceIndex;
+            this.group = group;
+            this.newName = newName;
+        }
+
+        public void Run()   
+        {
+            PersistedObjectInfo objInfo = persistenceIndex.GetById(group.Id);
+            if (objInfo == null) return;
+            DirectoryInfo groupDir = persistenceIndex.GetById(group.Id).OrigamFile.Path.Directory;
+            origamFileManager.RenameDirectory(groupDir, newName);
+        }
+    }
+    
 
     internal class TransactionStore
     {
+        public Queue<IDeferredTask> FolderRenamingTasks { get; } =
+            new Queue<IDeferredTask>();
+
         private readonly IDictionary<string, OrigamFile> pathFileDict =
             new Dictionary<string, OrigamFile>();
         public IEnumerable<OrigamFile> Files => pathFileDict.Values;
