@@ -28,6 +28,10 @@ namespace Origam.Git
         }
         public static bool IsValid(string modelSourceControlLocation)
         {
+            if (!File.Exists(Path.Combine(modelSourceControlLocation, ".git")))
+            {
+                return false;
+            }
             return Repository.IsValid(modelSourceControlLocation);
         }
         private void InitValues()
