@@ -19,7 +19,6 @@ namespace Origam.DA.Service
         private readonly FilePersistenceIndex index;
         private readonly OrigamPathFactory origamPathFactory;
         private readonly FileEventQueue fileEventQueue;
-        internal event EventHandler<HashChangedEventArgs> HashChanged;
 
         public OrigamFileManager(FilePersistenceIndex index,
             OrigamPathFactory origamPathFactory,  FileEventQueue fileEventQueue)
@@ -133,17 +132,6 @@ namespace Origam.DA.Service
         {
             index?.Dispose();
             fileEventQueue?.Dispose();
-            HashChanged = null;
-        }
-    }
-
-    internal class HashChangedEventArgs : EventArgs
-    {
-        public string Hash { get;}
-
-        public HashChangedEventArgs(string hash)
-        {
-            Hash = hash;
         }
     }
 }
