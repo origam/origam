@@ -42,6 +42,5 @@ namespace Origam.DA.Service
             }
             base.WriteInstance(instance, elementName);
         }
-        public override bool MultipleFilesCanBeInSingleFolder => false;
     }
 }

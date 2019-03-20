@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using MoreLinq;
 using Origam.DA.ObjectPersistence;
-using Origam.DA.ObjectPersistence.Providers;
 using Origam.Extensions;
 using Origam.Schema;
 
@@ -38,37 +36,28 @@ namespace Origam.DA.Service
         {
             CheckObjectCanBePersisted(obj);
             IFilePersistent instance = (IFilePersistent) obj;
-            ElementName elementName = ElementNameFactory.Create(instance.GetType());
+           
 
-            (OrigamFile origamFile, PersistedObjectInfo persistedObjectInfo) =
-                FindOrigamFileAndObjectInfo(instance);
-            if (persistedObjectInfo == null && instance.IsDeleted)
+            var newOrigamFile = FindFileWhereInstanceShouldBeStored(instance);
+            var currentOrigamFile = FindFileWhereInstanceIsStoredNow(instance);
+
+            bool isNotInCurrentFile = currentOrigamFile
+                          ?.ContainedObjects
+                          .ContainsKey(instance.Id) == false;
+            if (isNotInCurrentFile && instance.IsDeleted)
             {
                 return;
             }
 
-            RenameRelatedItems(instance, persistedObjectInfo?.OrigamFile);
+            RenameRelatedItems(instance,newOrigamFile);
 
-            if (origamFile == null)
+            if (newOrigamFile != currentOrigamFile)
             {
-                origamFile = origamFileFactory.New(
-                    parentFolderIds: instance.ParentFolderIds,
-                    relativePath: instance.RelativeFilePath,
-                    isGroup: instance.IsFolder);
+                RemoveFromFile(instance, currentOrigamFile);
             }
 
-            RemoveFromOldFile(instance, origamFile);
-
-            var updatedObjectInfo = UpdateObjectInfo(elementName, instance, origamFile);
-
-            if (instance.IsFileRootElement)
-            {
-                origamFile.ParentFolderIds.AddRange(instance.ParentFolderIds);
-            }
-
-            WriteToXmlDocument(origamFile, instance, elementName);
-            UpdateIndex(instance, updatedObjectInfo);
-            transactionStore.AddOrReplace(origamFile);
+            UpdateFile(instance, newOrigamFile);
+            
             if (!InTransaction)
             {
                 ProcessTransactionStore();
@@ -76,20 +65,26 @@ namespace Origam.DA.Service
             instance.IsPersisted = true;
         }
 
-        private void RemoveFromOldFile(IFilePersistent instance, OrigamFile origamFile)
+        private void UpdateFile(IFilePersistent instance, OrigamFile newFile)
         {
-            bool mightBeMovingBetweenFiles = !instance.IsDeleted && !instance.IsFileRootElement;
-            if (mightBeMovingBetweenFiles)
+            ElementName elementName = ElementNameFactory.Create(instance.GetType());
+            if (instance.IsFileRootElement)
             {
-                OrigamFile oldOrigamFile = index.GetById(instance.Id)?.OrigamFile;
-                bool movingBetweenFiles = oldOrigamFile?.Path.Relative != origamFile.Path.Relative;
-                if (oldOrigamFile != null && movingBetweenFiles)
-                {
-                    oldOrigamFile.DeferredSaveDocument = GetDocumentToWriteTo(oldOrigamFile);
-                    oldOrigamFile.RemoveInstance(instance.Id);
-                    transactionStore.AddOrReplace(oldOrigamFile);
-                }
+                newFile.ParentFolderIds.AddRange(instance.ParentFolderIds);
             }
+
+            var objectInfo = CraeteObjectInfo(elementName, instance, newFile);
+            WriteToXmlDocument(newFile, instance, elementName); 
+            UpdateIndex(instance, objectInfo);
+            transactionStore.AddOrReplace(newFile);
+        }
+
+        private void RemoveFromFile(IFilePersistent instance, OrigamFile origamFile)
+        {
+            if (origamFile == null) return;
+            origamFile.DeferredSaveDocument = GetDocumentToWriteTo(origamFile);
+            origamFile.RemoveInstance(instance.Id);
+            transactionStore.AddOrReplace(origamFile);
         }
 
         private void UpdateIndex(IFilePersistent instance,
@@ -152,7 +147,7 @@ namespace Origam.DA.Service
             return null;
         }
 
-        private PersistedObjectInfo UpdateObjectInfo(ElementName elementName,
+        private PersistedObjectInfo CraeteObjectInfo(ElementName elementName,
             IFilePersistent instance, OrigamFile origamFile)
         {
             PersistedObjectInfo updatedObjectInfo = new PersistedObjectInfo(
@@ -162,22 +157,6 @@ namespace Origam.DA.Service
                 isFolder: instance.IsFolder,
                 origamFile: origamFile);
             origamFile.ContainedObjects[instance.Id] = updatedObjectInfo;
-
-            bool fileWillBeMoved =
-                origamFile != null &&
-                !instance.IsDeleted &&
-                instance.IsFileRootElement &&
-                origamFile.Path.Relative != instance.RelativeFilePath;
-
-            if (fileWillBeMoved)
-            {
-                updatedObjectInfo.OrigamFile.NewPath =
-                    origamFileManager.MakeNewOrigamPath(
-                        instance: instance,
-                        resolveNamingConflicts: origamFile
-                            .MultipleFilesCanBeInSingleFolder);
-            }
-
             return updatedObjectInfo;
         }
 
@@ -239,7 +218,7 @@ namespace Origam.DA.Service
         {
             RenameGroupDirectory(group, newName);
             group.Name = newName;
-            Persist(group);
+            group.Persist();
         }
 
         private void RenameGroupDirectory(SchemaItemGroup group, string newName)
@@ -250,8 +229,7 @@ namespace Origam.DA.Service
             origamFileManager.RenameDirectory(groupDir, newName);
         }
 
-        private (OrigamFile, PersistedObjectInfo) FindOrigamFileAndObjectInfo(
-            IFilePersistent instance)
+        private OrigamFile FindFileWhereInstanceIsStoredNow(IFilePersistent instance)
         {
             PersistedObjectInfo objInfo;
             OrigamFile origamFile;
@@ -260,20 +238,43 @@ namespace Origam.DA.Service
                 Guid id = instance.Id;
                 origamFile = transactionStore.Get(instance.RelativeFilePath);
                 origamFile.ContainedObjects.TryGetValue(id, out objInfo);
-                return (origamFile, objInfo);
+                if(objInfo != null) return origamFile;
+            }
+
+            objInfo = index.GetById(instance.Id);
+            origamFile = objInfo?.OrigamFile;
+            return origamFile;
+        }
+        
+        private OrigamFile FindFileWhereInstanceShouldBeStored(
+            IFilePersistent instance)
+        {
+            if (InTransaction && transactionStore.Contains(instance.RelativeFilePath))
+            {
+                return transactionStore.Get(instance.RelativeFilePath);
             }
 
             PersistedObjectInfo parentObjInfo = index.GetParent(instance);
             if (parentObjInfo?.OrigamFile.Path.Relative == instance.RelativeFilePath)
             {
-                origamFile = parentObjInfo.OrigamFile;
-                origamFile.ContainedObjects.TryGetValue(instance.Id, out objInfo);
-                return (origamFile, objInfo);
+                return parentObjInfo.OrigamFile;
             }
-            objInfo = index.GetById(instance.Id);
-            origamFile = objInfo?.OrigamFile
-                         ?? index.GetByRelativePath(instance.RelativeFilePath);
-            return (origamFile, objInfo);
+            var objInfo = index.GetById(instance.Id);
+            if(objInfo?.OrigamFile.Path.Relative == instance.RelativeFilePath)
+            {
+                return objInfo.OrigamFile;
+            }
+
+            OrigamFile origamFile = index.GetByRelativePath(instance.RelativeFilePath);
+            if (origamFile?.Path.Relative == instance.RelativeFilePath)
+            {
+                return origamFile;
+            }
+
+            return origamFileFactory.New(
+                     parentFolderIds: instance.ParentFolderIds,
+                     relativePath: instance.RelativeFilePath,
+                     isGroup: instance.IsFolder);
         }
 
         private XmlDocument GetDocumentToWriteTo(OrigamFile origamFile)

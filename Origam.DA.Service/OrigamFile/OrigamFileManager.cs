@@ -75,25 +75,6 @@ namespace Origam.DA.Service
             fileEventQueue.Continue();
         }
 
-        public void MoveFile(OrigamFile origamFile)
-        {
-            origamFile.NewPath.Directory.Create();
-            string destination = origamFile.NewPath.Absolute;
-            string source = origamFile.Path.Absolute;
-
-            fileEventQueue.Pause();
-            int numFilesBefore = index.OrigamFiles.Count();
-            index.RemoveHash(origamFile);
-            index.Remove(origamFile);
-            origamFile.Path = origamFile.NewPath;
-            origamFile.NewPath = null;
-            index.AddOrReplace(origamFile);
-            index.AddOrReplaceHash(origamFile);
-            File.Move(source, destination); 
-            System.Diagnostics.Debug.Assert(numFilesBefore == index.OrigamFiles.Count());
-            fileEventQueue.Continue();
-        }
-            
         public void RemoveDirectoryIfEmpty(DirectoryInfo oldFullDirectory)
         {
             bool isEmpty = !oldFullDirectory
@@ -104,25 +85,6 @@ namespace Origam.DA.Service
                 Directory.Delete(oldFullDirectory.FullName, true);
             }
         } 
-        
-        public OrigamPath MakeNewOrigamPath(IFilePersistent instance, bool resolveNamingConflicts)
-        {
-            string newRelativePath = instance.RelativeFilePath;
-            if (index.HasFile(newRelativePath))
-            {
-                if (!resolveNamingConflicts)
-                {
-                    throw new InvalidOperationException($"Cannot create path at: {newRelativePath} because another file is already there");
-                }
-                string newFileName =
-                    Path.GetFileNameWithoutExtension(newRelativePath) +
-                    "_" +
-                    Path.GetExtension(newRelativePath);
-                newRelativePath =
-                    Path.Combine(Path.GetDirectoryName(newRelativePath), newFileName);
-            }
-            return origamPathFactory.CreateFromRelative(newRelativePath);
-        }
 
         public void DeleteFile(OrigamFile origamFile)
         {

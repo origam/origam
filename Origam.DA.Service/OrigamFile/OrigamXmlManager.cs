@@ -14,7 +14,6 @@ namespace Origam.DA.Service
     internal class OrigamXmlManager
     {
         private readonly ExternalFileManager externalFileManger;
-        private readonly OrigamPathFactory origamPathFactory;
         public XmlDocument OpenDocument { get; set; }
         private readonly object Lock = new object();
         
@@ -42,12 +41,11 @@ namespace Origam.DA.Service
         }
 
         public OrigamXmlManager(OrigamPath path, ParentFolders parentFolderIds,
-            ExternalFileManager externalFileManger, OrigamPathFactory origamPathFactory)
+            ExternalFileManager externalFileManger)
         {
             Path = path;
             ParentFolderIds = parentFolderIds;
             this.externalFileManger = externalFileManger;
-            this.origamPathFactory = origamPathFactory;
         }
 
         public IFilePersistent LoadObject(Guid id, IPersistenceProvider provider,
@@ -210,35 +208,6 @@ namespace Origam.DA.Service
 
                 loadedLocalizedObjects[instance.Id] = instance;
             }
-        }
-
-        public IEnumerable<ExternalFilePath> GetExternalFilePaths()
-        {
-            return OpenDocument.GetAllNodes()
-                .Where(node => node?.Attributes != null)
-                .SelectMany(node => node.Attributes.Cast<XmlAttribute>())
-                .Select(xmlAttribute => xmlAttribute.Value)
-                .Where(ExternalFilePath.IsExternalFileLink)
-                .Select(attrValue => origamPathFactory.Create(Path, attrValue));
-        }
-
-        public void UpdateExternalLinks(OrigamFile origamFile)
-        {
-            if (origamFile.NewPath == null) return;
-            origamFile.DeferredSaveDocument
-                .GetAllNodes()
-                .ForEach(node => ReplaceInLink(
-                                    node: node, 
-                                    find: origamFile.Path.FileName, 
-                                    replace: origamFile.NewPath.FileName));
-        }
-
-        private void ReplaceInLink(XmlNode node, string find, string replace)
-        {
-             node.Attributes
-                ?.Cast<XmlAttribute>()
-                .Where(attr =>ExternalFilePath.IsExternalFileLink(attr.Value))
-                .ForEach(attr => attr.Value = attr.Value.Replace(find, replace));
         }
   }
 }

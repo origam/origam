@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using CSharpFunctionalExtensions;
 using Origam.DA.ObjectPersistence;
-using Origam.DA.Service;
 using Origam.Extensions;
 
 namespace Origam.DA.Service
@@ -95,45 +92,6 @@ namespace Origam.DA.Service
             pathFileDict.TryGetValue(externalFile.FullName,out var extFile);
             return extFile;
         }
-
-        public void MoveFiles(IEnumerable<ExternalFilePath> oldPaths,
-            OrigamFile origamFileBeforeMoving)
-        {
-            if (origamFileBeforeMoving.NewPath == null)
-            {
-                throw new InvalidOperationException();
-            }
-               
-            fileEventQueue.Pause();
-            foreach (var oldPath in oldPaths)
-            {
-                MoveFile(oldPath, origamFileBeforeMoving);
-            }
-            fileEventQueue.Continue();
-        }
-            
-        private void MoveFile(ExternalFilePath oldPath, OrigamFile origamFileBeforeMoving)
-        {
-            origamFileBeforeMoving.NewPath.Directory.Create();
-            string newLink = oldPath.LinkWithPrefix.Replace(
-                origamFileBeforeMoving.Path.FileName,
-                origamFileBeforeMoving.NewPath.FileName);
-            ExternalFilePath newPath =
-                pathFactory.Create(origamFileBeforeMoving.NewPath, newLink);
-            File.Move(oldPath.Absolute, newPath.Absolute);
-            pathFileDict.TryGetValue(oldPath.Absolute, out var oldFile);    
-            if (oldFile != null)
-            {
-                pathFileDict.Remove(oldPath.Absolute);
-                ExternalFile newFile = new ExternalFile(newPath, oldFile.FileHash);
-                pathFileDict.Add(newPath.Absolute, newFile);
-            }
-        }
-    }
-
-    interface IDeferredTask
-    {
-        void Run();
     }
 
     class DeferredDeletingTask : IDeferredTask
