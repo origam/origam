@@ -36,15 +36,13 @@ namespace Origam.DA.Service
         {
             CheckObjectCanBePersisted(obj);
             IFilePersistent instance = (IFilePersistent) obj;
-           
 
-            var newOrigamFile = FindFileWhereInstanceShouldBeStored(instance);
-            var currentOrigamFile = FindFileWhereInstanceIsStoredNow(instance);
+            OrigamFile newOrigamFile = FindFileWhereInstanceShouldBeStored(instance);
+            OrigamFile currentOrigamFile = FindFileWhereInstanceIsStoredNow(instance);
 
-            bool isNotInCurrentFile = currentOrigamFile
-                          ?.ContainedObjects
-                          .ContainsKey(instance.Id) == false;
-            if (isNotInCurrentFile && instance.IsDeleted)
+            if (currentOrigamFile!= null 
+                && !currentOrigamFile.ContainedObjects.ContainsKey(instance.Id) 
+                && instance.IsDeleted)
             {
                 return;
             }
@@ -73,7 +71,7 @@ namespace Origam.DA.Service
                 newFile.ParentFolderIds.AddRange(instance.ParentFolderIds);
             }
 
-            var objectInfo = CraeteObjectInfo(elementName, instance, newFile);
+            var objectInfo = CreateObjectInfo(elementName, instance, newFile);
             WriteToXmlDocument(newFile, instance, elementName); 
             UpdateIndex(instance, objectInfo);
             transactionStore.AddOrReplace(newFile);
@@ -147,7 +145,7 @@ namespace Origam.DA.Service
             return null;
         }
 
-        private PersistedObjectInfo CraeteObjectInfo(ElementName elementName,
+        private PersistedObjectInfo CreateObjectInfo(ElementName elementName,
             IFilePersistent instance, OrigamFile origamFile)
         {
             PersistedObjectInfo updatedObjectInfo = new PersistedObjectInfo(
