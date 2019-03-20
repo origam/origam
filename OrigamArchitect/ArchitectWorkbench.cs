@@ -1382,7 +1382,7 @@ namespace OrigamArchitect
 		{
 			if (viewContent is SchemaCompareEditor) return true;
 			if (viewContent.LoadedObject == null) return false;
-			ISchemaItem loadedObject = (ISchemaItem) viewContent.LoadedObject;
+			IPersistent loadedObject = (IPersistent) viewContent.LoadedObject;
 			return filePersistenceProvider.Has(loadedObject.Id);
 		}
 
