@@ -19,9 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using Origam.Schema;
 using Origam.Workbench.Diagram;
 using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.GraphViewerGdi;
+using Origam.Workbench.Commands;
+using Origam.Workbench.Services;
 
 namespace Origam.Workbench.Editors
 {
@@ -73,6 +77,8 @@ namespace Origam.Workbench.Editors
 		{
             Microsoft.Msagl.Core.Geometry.Curves.PlaneTransformation planeTransformation1 = new Microsoft.Msagl.Core.Geometry.Curves.PlaneTransformation();
             this.gViewer1 = new Microsoft.Msagl.GraphViewerGdi.GViewer();
+            
+            gViewer1.DoubleClick += GViewer1OnDoubleClick;
             this.SuspendLayout();
             // 
             // gViewer1
@@ -125,6 +131,26 @@ namespace Origam.Workbench.Editors
             this.ResumeLayout(false);
 
 		}
+
+		private void GViewer1OnDoubleClick(object sender, EventArgs e)
+		{
+			GViewer viewer = sender as GViewer;
+			if (viewer.SelectedObject is Node node)
+			{
+				AbstractSchemaItem clickedItem = 
+					(AbstractSchemaItem)ServiceManager
+						.Services.GetService<IPersistenceService>()
+						.SchemaProvider
+						.RetrieveInstance(typeof(AbstractSchemaItem), new Key(node.Id));
+				if(clickedItem != null)
+				{
+					EditSchemaItem cmd = new EditSchemaItem();
+					cmd.Owner = clickedItem;
+					cmd.Run();
+				}
+			}
+		}
+
 		#endregion
 
 		protected override void ViewSpecificLoad(object objectToLoad)
