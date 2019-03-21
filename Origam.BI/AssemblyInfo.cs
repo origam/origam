@@ -10,7 +10,7 @@ using System.Reflection;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Advantage Solutions, s. r. o.")]
 [assembly: AssemblyProduct("ORIGAM")]
-[assembly: AssemblyCopyright("(c) 2005 - 2018 Advantage Solutions, s. r. o.")]
+[assembly: AssemblyCopyright("(c) 2005 - 2019 Advantage Solutions, s. r. o.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
