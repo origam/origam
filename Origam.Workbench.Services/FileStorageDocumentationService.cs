@@ -125,7 +125,7 @@ namespace Origam.Workbench.Services
             string docFilePath = Path.Combine(
                 packageDirectory.FullName,
                 DocumentationXmlDocument.DocFilename);
-            return new DocXmlDocument(docFilePath, fileEventQueue);
+            return new DocXmlDocument(docFilePath);
         }
 
         public override DocumentationComplete GetAllDocumentation()
@@ -135,7 +135,7 @@ namespace Origam.Workbench.Services
                 .GetAllFilesInSubDirectories()
                 .Where(file =>
                     file.Extension == DocumentationXmlDocument.DocFilename)
-                .Select(file => new DocXmlDocument(file.FullName, fileEventQueue))
+                .Select(file => new DocXmlDocument(file.FullName))
                 .SelectMany(xmlDoc => xmlDoc.DocNodes);
 
             var documentationCompleteXmlDocument = new DocumentationCompleteXmlDocument(documentationNodes);
@@ -258,15 +258,13 @@ namespace Origam.Workbench.Services
 
     internal class DocXmlDocument: DocumentationXmlDocument
     {
-        private readonly FileEventQueue fileEventQueue;
         public string FilePath { get;}
 
         public IEnumerable<XmlNode> DocNodes => 
             FirstChild.ChildNodes.Cast<XmlNode>();
         
-        public DocXmlDocument(string filePath, FileEventQueue fileEventQueue)
+        public DocXmlDocument(string filePath)
         {
-            this.fileEventQueue = fileEventQueue;
             FilePath = filePath;
             Load();
             AddRootNodeIfEmpty();
