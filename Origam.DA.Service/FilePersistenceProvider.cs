@@ -434,6 +434,7 @@ namespace Origam.DA.Service
             return 
                 new IFileSystemModelChecker[]
                     {
+                        new FileNameChecker(this, index),
                         new DuplicateIdChecker(this),
                         new ReferenceFileChecker(this),
                         new DirectoryChecker(ignoreDirectoryNames, this),
@@ -446,6 +447,6 @@ namespace Origam.DA.Service
                     })
                     .Where(errorSection => !errorSection.IsEmpty)
                     .ToList();
-        }
+        }   
     }
 }

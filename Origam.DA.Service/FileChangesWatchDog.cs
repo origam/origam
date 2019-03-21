@@ -73,8 +73,6 @@ namespace Origam.DA.Service
             
             FileChanged?.Invoke(
                 null, new FileSystemChangeEventArgs(e.FullPath, null, e.ChangeType));
-
-
         }
 
         private bool ShouldBeIgnored(string fullPath) =>
