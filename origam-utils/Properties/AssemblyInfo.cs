@@ -30,7 +30,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Advantage Solutions s. r. o.")]
 [assembly: AssemblyProduct("origam-utils")]
-[assembly: AssemblyCopyright("(c) Advantage Solutions s. r. o. 2018")]
+[assembly: AssemblyCopyright("(c) 2005 - 2019 Advantage Solutions, s. r. o.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
