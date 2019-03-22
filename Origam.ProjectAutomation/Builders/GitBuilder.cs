@@ -17,8 +17,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-﻿using Origam.Git;
+#endregion
+
+using Origam.Git;
 using System;
 using System.Collections.Generic;
 using System.Linq;
