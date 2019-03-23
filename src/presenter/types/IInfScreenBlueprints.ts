@@ -1,5 +1,4 @@
-import { IUIScreenTreeNode } from "./IUIScreenBlueprints";
-
+import { IUIScreenTreeNode, IUIFormRoot } from "./IUIScreenBlueprints";
 
 export interface IInfScreenBlueprints {
 
@@ -42,14 +41,14 @@ export interface IDataView {
   id: string;
   isHeadless: boolean;
   initialView: string;
-  availableViews: [],
+  availableViews: Array<IFormView | ITableView>,
   properties: IGridProperty[],
   propertiesMap: Map<string, IGridProperty>
 }
 
 export interface IFormView {
   type: "FormView",
-  uiStructure: IUIScreenTreeNode[],
+  uiStructure: IUIFormRoot[],
   isHeadless: boolean,
 }
 
@@ -62,4 +61,5 @@ export interface IScreen {
   cardTitle: string;
   screenTitle: string;
   uiStructure: IUIScreenTreeNode[];
+  dataViewsMap: Map<string, IDataView>;
 }

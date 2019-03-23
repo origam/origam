@@ -69,12 +69,12 @@ export function collectDataViews(
             isHeadless: parseBoolean(uiDV.attributes.IsHeadless)
           };
           // TODO: Has to be driven by grid
-          (infDataView.availableViews as any).push(formView);
+          infDataView.availableViews.push(formView);
           const tableView: ScreenInfBp.ITableView = {
             type: "TableView",
             properties: infDataView.properties
           };
-          (infDataView.availableViews as any).push(tableView);
+          infDataView.availableViews.push(tableView);
         });
       });
     });

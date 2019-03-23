@@ -20,7 +20,8 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "rootDir": "src",
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "experimentalDecorators": true
   },
   "include": [
     "src"

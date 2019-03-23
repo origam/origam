@@ -19,6 +19,7 @@ export function collectWindows(
         cardTitle: ch.attributes.Title,
         screenTitle: ch.attributes.Title,
         uiStructure: [],
+        dataViewsMap: new Map()
       };
       exhs.add(ch);
       reprs.set(ch, window);
@@ -26,13 +27,13 @@ export function collectWindows(
         const root = findFirstDFS(ch, (n: any) => n.name === "UIRoot");
         const rootRepr = reprs.get(root)!;
         window.uiStructure.push(rootRepr);
-        /*findDataViewsStopping(ch).forEach((dv: any) => {
+        findDataViewsStopping(ch).forEach((dv: any) => {
           const repr = infReprs.get(dv)!;
           window.dataViewsMap.set(repr.id, repr);
         });
-        findTabbedPanels(ch).forEach((tp: any) => {
+        /*findTabbedPanels(ch).forEach((tp: any) => {
           const repr = reprs.get(tp)!;
-          (window.tabPanelsMap as any).set(repr.props.id, {
+          window.tabPanelsMap.set(repr.props.id, {
             activeTabId: repr.props.panels[0].id
           })
         })*/

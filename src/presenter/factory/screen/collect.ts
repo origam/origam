@@ -13,6 +13,7 @@ import { collectDataViews } from "./collectDataViews";
 import { collectUIRoots } from "./collectUIRoots";
 import { collectWindows } from "./collectWindows";
 import { findFirstBFS, findAll } from "src/util/xmlObj";
+import { IScreen } from "src/presenter/types/IInfScreenBlueprints";
 
 
 export function collectElements(
@@ -21,7 +22,7 @@ export function collectElements(
   exhs: Set<any>,
   infReprs: Map<any, any>,
   infExhs: Set<any>
-) {
+): IScreen {
   const nextPhase: Array<() => void> = [];
   collectFormFields(node, reprs, exhs, nextPhase);
   collectGridProps(node, reprs, exhs, infReprs, infExhs, nextPhase);
@@ -39,7 +40,7 @@ export function collectElements(
   collectWindows(node, reprs, exhs, infReprs, infExhs, nextPhase);
   nextPhase.forEach(nph => nph());
   nextPhase.length = 0;
-  showUncollectedUIElements(node, reprs, exhs);
+  // showUncollectedUIElements(node, reprs, exhs);
 
   const rootOrigNode = findFirstBFS(node, (cn: any) => reprs.has(cn));
   return reprs.get(rootOrigNode);
