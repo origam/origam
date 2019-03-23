@@ -1,0 +1,317 @@
+<Window xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Title="Nájemní smlouvy" MenuId="8713c618-b4fb-4749-ab28-0811b85481b0" ShowInfoPanel="false" AutoRefreshInterval="0" CacheOnClient="true" autoSaveOnListRecordChange="false" RequestSaveAfterUpdate="false">
+  <DataSources>
+    <DataSource Entity="LongTermRentalAgreementTenant" Identifier="Id" LookupCacheKey="LongTermRentalAgreementTenant">
+      <Field Name="refLongTermRentalAgreementId" Index="0" />
+      <Field Name="refBEBusinessPartnerId" Index="1" />
+      <Field Name="IdentityDocument" Index="2" />
+      <Field Name="RecordCreatedBy" Index="3" />
+      <Field Name="RecordUpdatedBy" Index="4" />
+      <Field Name="Id" Index="5" />
+      <Field Name="RecordCreated" Index="6" />
+      <Field Name="RecordUpdated" Index="7" />
+      <Field Name="Selected" Index="8" />
+      <Field Name="__Errors" Index="9" />
+    </DataSource>
+    <DataSource Entity="LongTermRentalAgreement" Identifier="Id" LookupCacheKey="LongTermRentalAgreement">
+      <Field Name="LongTermRentalAgreementId" Index="0" />
+      <Field Name="refBEBusinessPartnerId" Index="1" />
+      <Field Name="SignedDate" Index="2" />
+      <Field Name="ValidFrom" Index="3" />
+      <Field Name="ValidTill" Index="4" />
+      <Field Name="Notice" Index="5" />
+      <Field Name="refRealEstateId" Index="6" />
+      <Field Name="InflationClause" Index="7" />
+      <Field Name="CreditLimit" Index="8" />
+      <Field Name="RecordCreatedBy" Index="9" />
+      <Field Name="RecordUpdatedBy" Index="10" />
+      <Field Name="Id" Index="11" />
+      <Field Name="RecordCreated" Index="12" />
+      <Field Name="RecordUpdated" Index="13" />
+      <Field Name="Selected" Index="14" />
+      <Field Name="__Errors" Index="15" />
+    </DataSource>
+    <DataSource Entity="LongTermRentalAgreementTenantSignatureRights" Identifier="Id" LookupCacheKey="LongTermRentalAgreementTenantSignatureRights">
+      <Field Name="refLongTermRentalAgreementId" Index="0" />
+      <Field Name="refBEBusinessPartnerId" Index="1" />
+      <Field Name="RecordCreatedBy" Index="2" />
+      <Field Name="RecordUpdatedBy" Index="3" />
+      <Field Name="Id" Index="4" />
+      <Field Name="RecordCreated" Index="5" />
+      <Field Name="RecordUpdated" Index="6" />
+      <Field Name="Selected" Index="7" />
+      <Field Name="__Errors" Index="8" />
+    </DataSource>
+    <DataSource Entity="RequiredPaymentTemplate" Identifier="Id" LookupCacheKey="RequiredPaymentTemplate">
+      <Field Name="refPaymentIndicationId" Index="0" />
+      <Field Name="RecordCreated" Index="1" />
+      <Field Name="Id" Index="2" />
+      <Field Name="RecordUpdatedBy" Index="3" />
+      <Field Name="RecordCreatedBy" Index="4" />
+      <Field Name="refLongTermRentalAgreementId" Index="5" />
+      <Field Name="Remark" Index="6" />
+      <Field Name="StandingOrder" Index="7" />
+      <Field Name="refPaymentTypeId" Index="8" />
+      <Field Name="refPaymentPriorityId" Index="9" />
+      <Field Name="refPeriodPaymentTypeId" Index="10" />
+      <Field Name="LastPaymentDate" Index="11" />
+      <Field Name="FirstPaymentDate" Index="12" />
+      <Field Name="PeriodDay" Index="13" />
+      <Field Name="refPaymentPeriodicityId" Index="14" />
+      <Field Name="SpecificSymbol" Index="15" />
+      <Field Name="ConstantSymbol" Index="16" />
+      <Field Name="VariableSymbol" Index="17" />
+      <Field Name="VATRate" Index="18" />
+      <Field Name="AmountTotal" Index="19" />
+      <Field Name="VATAmount" Index="20" />
+      <Field Name="Amount" Index="21" />
+      <Field Name="refBankAccountId" Index="22" />
+      <Field Name="refBEBusinessPartnerId" Index="23" />
+      <Field Name="Detail" Index="24" />
+      <Field Name="refMandateAgreementId" Index="25" />
+      <Field Name="RecordUpdated" Index="26" />
+      <Field Name="Selected" Index="27" />
+      <Field Name="__Errors" Index="28" />
+    </DataSource>
+    <DataSource Entity="LongTremRenatlAgreementBEISignatureRights" Identifier="Id" LookupCacheKey="LongTremRenatlAgreementBEISignatureRights">
+      <Field Name="refLongTermRentalAgreementId" Index="0" />
+      <Field Name="refBusinessPartnerId" Index="1" />
+      <Field Name="RecordCreatedBy" Index="2" />
+      <Field Name="RecordUpdatedBy" Index="3" />
+      <Field Name="Id" Index="4" />
+      <Field Name="RecordCreated" Index="5" />
+      <Field Name="RecordUpdated" Index="6" />
+      <Field Name="Selected" Index="7" />
+      <Field Name="__Errors" Index="8" />
+    </DataSource>
+  </DataSources>
+  <ComponentBindings>
+    <Binding ParentId="e6f0b6d1-e2cd-4260-941a-f6045bbcef23" ParentProperty="Id" ParentEntity="LongTermRentalAgreement" ChildId="93317ab0-9870-498e-bf8a-966b68538140" ChildProperty="refLongTermRentalAgreementId" ChildEntity="LongTermRentalAgreementTenant" ChildPropertyType="Field" />
+    <Binding ParentId="e6f0b6d1-e2cd-4260-941a-f6045bbcef23" ParentProperty="Id" ParentEntity="LongTermRentalAgreement" ChildId="76318ce9-556e-4b04-a30e-215519a0ab5e" ChildProperty="refLongTermRentalAgreementId" ChildEntity="LongTermRentalAgreementTenantSignatureRights" ChildPropertyType="Field" />
+    <Binding ParentId="e6f0b6d1-e2cd-4260-941a-f6045bbcef23" ParentProperty="Id" ParentEntity="LongTermRentalAgreement" ChildId="440c75c7-f7a1-4e8b-ac34-bbf077984577" ChildProperty="refLongTermRentalAgreementId" ChildEntity="LongTremRenatlAgreementBEISignatureRights" ChildPropertyType="Field" />
+    <Binding ParentId="e6f0b6d1-e2cd-4260-941a-f6045bbcef23" ParentProperty="Id" ParentEntity="LongTermRentalAgreement" ChildId="7e8b49a8-f75e-4e42-96e0-96e586282074" ChildProperty="refLongTermRentalAgreementId" ChildEntity="RequiredPaymentTemplate" ChildPropertyType="Field" />
+  </ComponentBindings>
+  <UIRoot Id="SplitPanel1_0" ModelInstanceId="a9db2e15-a718-429a-bbf0-1c70e279da4e" xsi:type="UIElement" Type="VSplit" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+    <Configuration />
+    <UIChildren>
+      <UIElement Id="AsPanel1_1" ModelInstanceId="e6f0b6d1-e2cd-4260-941a-f6045bbcef23" Name="Nájemní smlouva" xsi:type="Grid" Type="Grid" ModelId="5496e236-e2d7-4f01-9952-39b50b856e49" DefaultPanelView="1" IsHeadless="false" DisableActionButtons="false" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="LongTermRentalAgreement" DataMember="LongTermRentalAgreement" IsRootGrid="true" IsRootEntity="true" IsPreloaded="true">
+        <Properties>
+          <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+          <Property Id="LongTermRentalAgreementId" ModelInstanceId="60b29d5c-499c-4610-aeb1-682937367364" Name="Nájemní smlouva" ReadOnly="false" X="160" Y="10" Width="400" Height="20" CaptionLength="150" CaptionPosition="Left" Entity="String" Column="Text" Dock="None" Multiline="false" IsPassword="false" IsRichText="false" MaxLength="50" />
+          <Property Id="refBEBusinessPartnerId" ModelInstanceId="e9170f2f-70fa-4a46-9f0d-0fc5f8d8a01b" Name="Klient" ReadOnly="false" X="160" Y="36" Width="400" Height="20" CaptionLength="150" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="08246912-5252-4905-82c2-21d80804c001" Identifier="Id" IdentifierIndex="0" EntityName="08246912_5252_4905_82c2_21d80804c001" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+            <DropDownColumns>
+              <Property Id="LastName" Name="Příjmení" Entity="String" Column="Text" Index="1" />
+              <Property Id="FirstName" Name="Jméno" Entity="String" Column="Text" Index="2" />
+            </DropDownColumns>
+            <DropDownParameters />
+          </Property>
+          <Property Id="refRealEstateId" ModelInstanceId="eb596cac-5c66-47b9-8036-8ea7d2c06d12" Name="Nemovitost" ReadOnly="false" X="160" Y="62" Width="400" Height="20" CaptionLength="150" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="f3c49963-b3ee-4ea6-87d4-efdb3ed15332" Identifier="refRealEstateId" IdentifierIndex="1" EntityName="f3c49963_b3ee_4ea6_87d4_efdb3ed15332" IsTree="false" AllowReturnToForm="false" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="false">
+            <DropDownColumns>
+              <Property Id="RealEstateId" Name="RealEstateId" Entity="String" Column="Text" Index="2" />
+            </DropDownColumns>
+            <DropDownParameters>
+              <ComboBoxParameterMapping ParameterName="LookupOwnerRealEstate_par_refBEBusinessPartnerId" FieldName="refBEBusinessPartnerId" />
+            </DropDownParameters>
+          </Property>
+          <Property Id="SignedDate" ModelInstanceId="ca154b3a-90fe-4073-89e1-5b6d8d0b4ad6" Name="Datum uzavření/podpisu" ReadOnly="false" X="160" Y="88" Width="142" Height="20" CaptionLength="150" CaptionPosition="Left" Entity="Date" Column="Date" FormatterPattern="M/D/YYYY" />
+          <Property Id="ValidFrom" ModelInstanceId="12d0d19d-c7bb-4a30-a344-cffa6a287d1a" Name="Datum platnosti od" ReadOnly="false" X="160" Y="114" Width="142" Height="20" CaptionLength="150" CaptionPosition="Left" Entity="Date" Column="Date" FormatterPattern="M/D/YYYY" />
+          <Property Id="ValidTill" ModelInstanceId="cb80a58d-c949-409a-8268-c740bc53fac7" Name="Datum platnosti do" ReadOnly="false" X="160" Y="140" Width="142" Height="20" CaptionLength="150" CaptionPosition="Left" Entity="Date" Column="Date" FormatterPattern="M/D/YYYY" />
+          <Property Id="Notice" ModelInstanceId="eeeb1948-4c07-41a1-a9da-33bff46f0391" Name="Výpovědní lhůta" ReadOnly="false" X="160" Y="166" Width="400" Height="20" CaptionLength="150" CaptionPosition="Left" Entity="String" Column="Text" Dock="None" Multiline="false" IsPassword="false" IsRichText="false" MaxLength="50" />
+          <Property Id="InflationClause" ModelInstanceId="a647fdd9-6456-4a1c-b456-86411edac377" Name="Inflační doložka" ReadOnly="false" X="10" Y="192" Width="400" Height="19" CaptionLength="100" CaptionPosition="Right" Entity="Boolean" Column="CheckBox" />
+          <Property Id="CreditLimit" ModelInstanceId="366b0968-272d-4fe2-bf43-02e1c67ce972" Name="Úvěrový limit" ReadOnly="false" X="160" Y="217" Width="400" Height="20" CaptionLength="150" CaptionPosition="Left" Entity="Currency" Column="Number" CustomNumericFormat="" />
+        </Properties>
+        <Actions />
+        <FormRoot Type="Canvas">
+          <PropertyNames>
+            <string>LongTermRentalAgreementId</string>
+            <string>refBEBusinessPartnerId</string>
+            <string>refRealEstateId</string>
+            <string>SignedDate</string>
+            <string>ValidFrom</string>
+            <string>ValidTill</string>
+            <string>Notice</string>
+            <string>InflationClause</string>
+            <string>CreditLimit</string>
+          </PropertyNames>
+        </FormRoot>
+        <Configuration />
+      </UIElement>
+      <UIElement Id="AsTabControl1_2" ModelInstanceId="05055c54-085b-476c-8946-7313b987563e" xsi:type="UIElement" Type="Tab" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+        <Configuration />
+        <UIChildren>
+          <UIElement Id="TabPage1_3" ModelInstanceId="a3171c4a-602d-4afc-80ae-473aee3ea8e2" xsi:type="UIElement" Type="Box" Name="Nájemce" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+            <Configuration />
+            <UIChildren>
+              <UIElement Id="AsPanel2_4" ModelInstanceId="93317ab0-9870-498e-bf8a-966b68538140" Name="Nájemce" xsi:type="Grid" Type="Grid" ModelId="4f70ba63-638b-47c5-8784-97e95054488b" DefaultPanelView="1" IsHeadless="false" DisableActionButtons="false" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="LongTermRentalAgreementTenant" DataMember="LongTermRentalAgreement.LongTermRentalAgreementTenant" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="e6f0b6d1-e2cd-4260-941a-f6045bbcef23" ParentEntityName="LongTermRentalAgreement">
+                <Properties>
+                  <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+                  <Property Id="refBEBusinessPartnerId" ModelInstanceId="62bd8012-7054-402e-925d-a96e341e2389" Name="Nájemce" ReadOnly="false" X="108" Y="16" Width="400" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="08246912-5252-4905-82c2-21d80804c001" Identifier="Id" IdentifierIndex="0" EntityName="08246912_5252_4905_82c2_21d80804c001" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                    <DropDownColumns>
+                      <Property Id="LastName" Name="Příjmení" Entity="String" Column="Text" Index="1" />
+                      <Property Id="FirstName" Name="Jméno" Entity="String" Column="Text" Index="2" />
+                    </DropDownColumns>
+                    <DropDownParameters />
+                  </Property>
+                  <Property Id="IdentityDocument" ModelInstanceId="97da0af5-50cc-4f74-b9c9-becccb0f27c1" Name="Doklad totožnosti" ReadOnly="false" X="108" Y="43" Width="231" Height="20" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="Text" Dock="None" Multiline="false" IsPassword="false" IsRichText="false" MaxLength="30" />
+                </Properties>
+                <Actions />
+                <FormRoot Type="Canvas">
+                  <PropertyNames>
+                    <string>refBEBusinessPartnerId</string>
+                    <string>IdentityDocument</string>
+                  </PropertyNames>
+                </FormRoot>
+                <Configuration />
+                <FilterExpressions />
+              </UIElement>
+            </UIChildren>
+          </UIElement>
+          <UIElement Id="TabPage2_5" ModelInstanceId="06307706-e936-4d2f-b67e-52feb34ed41d" xsi:type="UIElement" Type="Box" Name="Osoby nájemce oprávněné k podpisu" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+            <Configuration />
+            <UIChildren>
+              <UIElement Id="AsPanel3_6" ModelInstanceId="76318ce9-556e-4b04-a30e-215519a0ab5e" Name="Osoba nájemce oprávněná k podpisu" xsi:type="Grid" Type="Grid" ModelId="abd21722-5c83-407a-88fd-9bc3ebfc67a3" DefaultPanelView="1" IsHeadless="false" DisableActionButtons="false" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="LongTermRentalAgreementTenantSignatureRights" DataMember="LongTermRentalAgreement.LongTermRentalAgreementTenantSignatureRights" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="e6f0b6d1-e2cd-4260-941a-f6045bbcef23" ParentEntityName="LongTermRentalAgreement">
+                <Properties>
+                  <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+                  <Property Id="refBEBusinessPartnerId" ModelInstanceId="42cd12ab-a898-4def-96d5-2b161072b589" Name="Osoba nájemce oprávněná k podpisu" ReadOnly="false" X="200" Y="16" Width="386" Height="20" CaptionLength="190" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="08246912-5252-4905-82c2-21d80804c001" Identifier="Id" IdentifierIndex="0" EntityName="08246912_5252_4905_82c2_21d80804c001" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                    <DropDownColumns>
+                      <Property Id="LastName" Name="Příjmení" Entity="String" Column="Text" Index="1" />
+                      <Property Id="FirstName" Name="Jméno" Entity="String" Column="Text" Index="2" />
+                    </DropDownColumns>
+                    <DropDownParameters />
+                  </Property>
+                </Properties>
+                <Actions />
+                <FormRoot Type="Canvas">
+                  <PropertyNames>
+                    <string>refBEBusinessPartnerId</string>
+                  </PropertyNames>
+                </FormRoot>
+                <Configuration />
+                <FilterExpressions />
+              </UIElement>
+            </UIChildren>
+          </UIElement>
+          <UIElement Id="TabPage3_7" ModelInstanceId="b1d7e257-97b0-40a5-b288-7ef20d3d2e86" xsi:type="UIElement" Type="Box" Name="Osoby BEI oprávněné k podpisu" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+            <Configuration />
+            <UIChildren>
+              <UIElement Id="AsPanel4_8" ModelInstanceId="440c75c7-f7a1-4e8b-ac34-bbf077984577" Name="Osoba BEI oprávněná k podpisu" xsi:type="Grid" Type="Grid" ModelId="7b62647c-cf68-443b-b8b1-910cd1d625a4" DefaultPanelView="1" IsHeadless="false" DisableActionButtons="false" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="LongTremRenatlAgreementBEISignatureRights" DataMember="LongTermRentalAgreement.LongTremRenatlAgreementBEISignatureRights" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="e6f0b6d1-e2cd-4260-941a-f6045bbcef23" ParentEntityName="LongTermRentalAgreement">
+                <Properties>
+                  <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+                  <Property Id="refBusinessPartnerId" ModelInstanceId="b89eafd4-26f0-4239-9ced-c86484e40051" Name="Osoba BEI oprávněná k podpisu" ReadOnly="false" X="200" Y="16" Width="388" Height="20" CaptionLength="190" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6" Identifier="Id" IdentifierIndex="2" EntityName="08d82ef5_df38_48d6_a276_ee5b7f027bd6" IsTree="false" AllowReturnToForm="false" SearchByFirstColumnOnly="false" AutoSort="false" DropDownType="LazilyLoadedGrid" Cached="false">
+                    <DropDownColumns>
+                      <Property Id="ReferenceCode" Name="Shortcut" Entity="String" Column="Text" Index="3" />
+                      <Property Id="Text" Name="Name" Entity="String" Column="Text" Index="1" />
+                    </DropDownColumns>
+                    <DropDownParameters>
+                      <ComboBoxParameterMapping ParameterName="BusinessPartner_parSearchText" FieldName="" />
+                    </DropDownParameters>
+                  </Property>
+                </Properties>
+                <Actions />
+                <FormRoot Type="Canvas">
+                  <PropertyNames>
+                    <string>refBusinessPartnerId</string>
+                  </PropertyNames>
+                </FormRoot>
+                <Configuration />
+                <FilterExpressions />
+              </UIElement>
+            </UIChildren>
+          </UIElement>
+          <UIElement Id="TabPage4_9" ModelInstanceId="4abb74ea-2757-4aac-9266-3b6e7cac6e4b" xsi:type="UIElement" Type="Box" Name="Vzory předpisů k platbě" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+            <Configuration />
+            <UIChildren>
+              <UIElement Id="AsPanel5_10" ModelInstanceId="7e8b49a8-f75e-4e42-96e0-96e586282074" Name="Vzor předpisu platby" xsi:type="Grid" Type="Grid" ModelId="551fbc8f-c088-4c0c-b955-e0fe098c1e4f" DefaultPanelView="1" IsHeadless="false" DisableActionButtons="false" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="RequiredPaymentTemplate" DataMember="LongTermRentalAgreement.RequiredPaymentTemplate" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="e6f0b6d1-e2cd-4260-941a-f6045bbcef23" ParentEntityName="LongTermRentalAgreement">
+                <Properties>
+                  <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+                  <Property Id="refPaymentIndicationId" ModelInstanceId="06a3a942-4769-41ee-a34b-006dafd2f12a" Name="Označení platby" ReadOnly="false" X="130" Y="10" Width="278" Height="20" CaptionLength="120" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="e8dc34bf-9692-4c9d-bed3-ac82e1c905f9" Identifier="Id" IdentifierIndex="0" EntityName="e8dc34bf_9692_4c9d_bed3_ac82e1c905f9" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                    <DropDownColumns>
+                      <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="1" />
+                    </DropDownColumns>
+                    <DropDownParameters />
+                  </Property>
+                  <Property Id="Detail" ModelInstanceId="156a03d1-d158-4a2b-ac2a-050c497de30a" Name="Upřesnění platby" ReadOnly="false" X="130" Y="36" Width="278" Height="20" CaptionLength="120" CaptionPosition="Left" Entity="String" Column="Text" Dock="None" Multiline="false" IsPassword="false" IsRichText="false" MaxLength="50" />
+                  <Property Id="refBEBusinessPartnerId" ModelInstanceId="2690c5ef-7968-4d31-b010-332f9273ed65" Name="Adresát platby" ReadOnly="false" X="130" Y="62" Width="278" Height="20" CaptionLength="120" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="08246912-5252-4905-82c2-21d80804c001" Identifier="Id" IdentifierIndex="0" EntityName="08246912_5252_4905_82c2_21d80804c001" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                    <DropDownColumns>
+                      <Property Id="LastName" Name="Příjmení" Entity="String" Column="Text" Index="1" />
+                      <Property Id="FirstName" Name="Jméno" Entity="String" Column="Text" Index="2" />
+                    </DropDownColumns>
+                    <DropDownParameters />
+                  </Property>
+                  <Property Id="refBankAccountId" ModelInstanceId="cfd15d23-ea41-4538-bdde-2b8b14e467aa" Name="Bankovní účet" ReadOnly="false" X="130" Y="88" Width="278" Height="20" CaptionLength="120" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="40791c40-bdeb-4d41-91a4-4aae1cbe0902" Identifier="Id" IdentifierIndex="0" EntityName="40791c40_bdeb_4d41_91a4_4aae1cbe0902" IsTree="false" AllowReturnToForm="false" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="false">
+                    <DropDownColumns>
+                      <Property Id="AccountNumber" Name="Číslo účtu" Entity="String" Column="Text" Index="1" />
+                    </DropDownColumns>
+                    <DropDownParameters>
+                      <ComboBoxParameterMapping ParameterName="BankAccount_par_refBEBusinessPartnerId" FieldName="refBEBusinessPartnerId" />
+                    </DropDownParameters>
+                  </Property>
+                  <Property Id="Amount" ModelInstanceId="8f93e514-b1af-4c8d-98a3-1320e6689db6" Name="Částka" ReadOnly="false" X="130" Y="115" Width="100" Height="20" CaptionLength="120" CaptionPosition="Left" Entity="Currency" Column="Number" CustomNumericFormat="" />
+                  <Property Id="VATAmount" ModelInstanceId="d6dda92f-af92-4cf9-918e-0bc0e7884b1d" Name="Částka DPH" ReadOnly="false" X="130" Y="142" Width="100" Height="20" CaptionLength="120" CaptionPosition="Left" Entity="Currency" Column="Number" CustomNumericFormat="" />
+                  <Property Id="AmountTotal" ModelInstanceId="b16e7b45-cdf2-47c1-850b-d2ceed24b923" Name="Částka celkem" ReadOnly="false" X="130" Y="169" Width="100" Height="20" CaptionLength="120" CaptionPosition="Left" Entity="Currency" Column="Number" CustomNumericFormat="" />
+                  <Property Id="VATRate" ModelInstanceId="2334128e-08eb-458d-9a1f-3a83853ceef0" Name="Sazba DPH" ReadOnly="false" X="130" Y="196" Width="100" Height="20" CaptionLength="120" CaptionPosition="Left" Entity="Currency" Column="Number" CustomNumericFormat="" />
+                  <Property Id="VariableSymbol" ModelInstanceId="54b0b630-6bc1-4791-a35c-25097a842fba" Name="Variabilní symbol" ReadOnly="false" X="130" Y="223" Width="100" Height="20" CaptionLength="120" CaptionPosition="Left" Entity="Integer" Column="Number" CustomNumericFormat="" />
+                  <Property Id="ConstantSymbol" ModelInstanceId="6b4b3c21-e32d-478c-863d-3dd9d514d678" Name="Konstatní symbol" ReadOnly="false" X="130" Y="250" Width="100" Height="20" CaptionLength="120" CaptionPosition="Left" Entity="Integer" Column="Number" CustomNumericFormat="" />
+                  <Property Id="SpecificSymbol" ModelInstanceId="142ca042-eb2a-4f00-a58a-309df8f8b40c" Name="Specifický symbol" ReadOnly="false" X="130" Y="277" Width="100" Height="20" CaptionLength="120" CaptionPosition="Left" Entity="Integer" Column="Number" CustomNumericFormat="" />
+                  <Property Id="refPaymentPeriodicityId" ModelInstanceId="cd141e35-b272-45bb-88fe-8499a98621e8" Name="Periodicita" ReadOnly="false" X="130" Y="304" Width="278" Height="20" CaptionLength="120" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="a0d9048a-f0ac-4e1f-9f79-c84587af00b7" Identifier="Id" IdentifierIndex="0" EntityName="a0d9048a_f0ac_4e1f_9f79_c84587af00b7" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                    <DropDownColumns>
+                      <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="1" />
+                    </DropDownColumns>
+                    <DropDownParameters />
+                  </Property>
+                  <Property Id="PeriodDay" ModelInstanceId="08b897cb-31a5-4891-bcfa-999d947828b5" Name="Den v rámci periody" ReadOnly="false" X="130" Y="331" Width="100" Height="20" CaptionLength="120" CaptionPosition="Left" Entity="Integer" Column="Number" CustomNumericFormat="" />
+                  <Property Id="FirstPaymentDate" ModelInstanceId="b0c395cb-921f-4e0a-b832-701593fd7394" Name="Datum první platby" ReadOnly="false" X="130" Y="358" Width="132" Height="20" CaptionLength="120" CaptionPosition="Left" Entity="Date" Column="Date" FormatterPattern="M/D/YYYY" />
+                  <Property Id="LastPaymentDate" ModelInstanceId="dda2a6fd-9df5-4ffb-a569-ad8de0fbfb08" Name="Datum poslední platby" ReadOnly="false" X="130" Y="385" Width="132" Height="20" CaptionLength="120" CaptionPosition="Left" Entity="Date" Column="Date" FormatterPattern="M/D/YYYY" />
+                  <Property Id="refPeriodPaymentTypeId" ModelInstanceId="1b5225ee-87f7-407e-91bb-43ad767258c9" Name="Platba periody" ReadOnly="false" X="130" Y="412" Width="278" Height="20" CaptionLength="120" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="bfeb3fb5-090b-431e-983a-d79b2ae1a2cd" Identifier="Id" IdentifierIndex="0" EntityName="bfeb3fb5_090b_431e_983a_d79b2ae1a2cd" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                    <DropDownColumns>
+                      <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="1" />
+                    </DropDownColumns>
+                    <DropDownParameters />
+                  </Property>
+                  <Property Id="refPaymentPriorityId" ModelInstanceId="d30c2d4c-ce57-4c88-9636-f64125fd80a2" Name="Priorita platby" ReadOnly="false" X="130" Y="438" Width="278" Height="20" CaptionLength="120" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="6d47a78c-105c-48c0-8c0b-926357d5eae2" Identifier="Id" IdentifierIndex="0" EntityName="6d47a78c_105c_48c0_8c0b_926357d5eae2" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                    <DropDownColumns>
+                      <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="1" />
+                    </DropDownColumns>
+                    <DropDownParameters />
+                  </Property>
+                  <Property Id="refPaymentTypeId" ModelInstanceId="e31acfd3-147b-4693-b703-d5807f5c0c6b" Name="Typ platby" ReadOnly="false" X="130" Y="464" Width="278" Height="20" CaptionLength="120" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="615b3c3d-b84f-4138-95ec-0e031f4eeb73" Identifier="Id" IdentifierIndex="0" EntityName="615b3c3d_b84f_4138_95ec_0e031f4eeb73" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                    <DropDownColumns>
+                      <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="1" />
+                    </DropDownColumns>
+                    <DropDownParameters />
+                  </Property>
+                  <Property Id="Remark" ModelInstanceId="904b2fce-1b3f-44c2-95f6-ef3ad5be0c6b" Name="Poznámka" ReadOnly="false" X="130" Y="491" Width="278" Height="75" CaptionLength="120" CaptionPosition="Left" Entity="String" Column="Text" Dock="None" Multiline="true" IsPassword="false" IsRichText="false" MaxLength="-1" />
+                </Properties>
+                <Actions />
+                <FormRoot Type="Canvas">
+                  <PropertyNames>
+                    <string>refPaymentIndicationId</string>
+                    <string>Detail</string>
+                    <string>refBEBusinessPartnerId</string>
+                    <string>refBankAccountId</string>
+                    <string>Amount</string>
+                    <string>VATAmount</string>
+                    <string>AmountTotal</string>
+                    <string>VATRate</string>
+                    <string>VariableSymbol</string>
+                    <string>ConstantSymbol</string>
+                    <string>SpecificSymbol</string>
+                    <string>refPaymentPeriodicityId</string>
+                    <string>PeriodDay</string>
+                    <string>FirstPaymentDate</string>
+                    <string>LastPaymentDate</string>
+                    <string>refPeriodPaymentTypeId</string>
+                    <string>refPaymentPriorityId</string>
+                    <string>refPaymentTypeId</string>
+                    <string>Remark</string>
+                  </PropertyNames>
+                </FormRoot>
+                <Configuration />
+                <FilterExpressions />
+              </UIElement>
+            </UIChildren>
+          </UIElement>
+        </UIChildren>
+      </UIElement>
+    </UIChildren>
+  </UIRoot>
+</Window>

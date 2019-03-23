@@ -19,7 +19,8 @@
     "noEmit": true,
     "jsx": "preserve",
     "baseUrl": ".",
-    "rootDir": "src"
+    "rootDir": "src",
+    "downlevelIteration": true
   },
   "include": [
     "src"
