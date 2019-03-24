@@ -6,7 +6,9 @@ import {
   ITabs,
   ISplitter,
   ISpecificDataView,
-  IViewType
+  IViewType,
+  IViewTypeBtn,
+  IToolbarButtonState
 } from "../../types/IScreenPresenter";
 import {
   IUIScreenTreeNode,
@@ -27,10 +29,12 @@ import { IFormField as ITableFormField } from "src/presenter/types/ITableViewPre
 class Screen implements IScreen {
   constructor(
     uiStructure: IUIScreenTreeNode[],
-    dataViewsMap: Map<string, IDataView>
+    dataViewsMap: Map<string, IDataView>,
+    tabPanelsMap: Map<string, ITabs>
   ) {
     this.uiStructure = uiStructure;
     this.dataViewsMap = dataViewsMap;
+    this.tabPanelsMap = tabPanelsMap;
   }
 
   cardTitle: string = "Test screen";
@@ -44,10 +48,14 @@ class Screen implements IScreen {
 }
 
 class DataView implements IDataView {
-  constructor(id: string, availableViews: ISpecificDataView[]) {
+  constructor(
+    id: string,
+    defaultActiveView: IViewType,
+    availableViews: ISpecificDataView[]
+  ) {
     this.id = id;
     this.availableViews = availableViews;
-    this.activeViewType = IViewType.FormView;
+    this.activeViewType = defaultActiveView;
   }
 
   id: string;
@@ -60,13 +68,14 @@ class DataView implements IDataView {
   availableViews: ISpecificDataView[];
 
   setActiveViewType(viewType: IViewType): void {
-    throw new Error("Method not implemented.");
+    this.activeViewType = viewType;
   }
 }
 
 export class FormView implements IFormView {
-  constructor(uiStructure: IUIFormRoot[]) {
+  constructor(uiStructure: IUIFormRoot[], toolbar: IToolbar | undefined) {
     this.uiStructure = uiStructure;
+    this.toolbar = toolbar;
   }
 
   type: IViewType.FormView = IViewType.FormView;
@@ -76,13 +85,104 @@ export class FormView implements IFormView {
 }
 
 export class TableView implements ITableView {
-  constructor(table: ITable) {
+  constructor(table: ITable, toolbar: IToolbar | undefined) {
     this.table = table;
+    this.toolbar = toolbar;
   }
 
   type: IViewType.TableView = IViewType.TableView;
   toolbar: IToolbar | undefined;
   table: ITable;
+}
+
+export class DefaultToolbar implements IToolbar {
+  constructor(public btnsViews: IViewTypeBtn[]) {}
+
+  dataView: IDataView | undefined;
+
+  isLoading = false;
+  isError = true;
+  isFiltered = true;
+  label = "Example table view";
+  recordNo = "17";
+  recordTotal = "29";
+  btnAdd = {
+    isEnabled: true,
+    isActive: false,
+    isVisible: true
+  };
+  btnCopy = {
+    isEnabled: true,
+    isActive: false,
+    isVisible: true
+  };
+  btnDelete = {
+    isEnabled: false,
+    isActive: false,
+    isVisible: true
+  };
+  btnFilter = {
+    isEnabled: true,
+    isActive: false,
+    isVisible: true
+  };
+  btnFilterDropdown = {
+    isEnabled: true,
+    isActive: false,
+    isVisible: true
+  };
+  btnFirst = {
+    isEnabled: true,
+    isActive: false,
+    isVisible: true
+  };
+  btnPrev = {
+    isEnabled: true,
+    isActive: false,
+    isVisible: true
+  };
+  btnNext = {
+    isEnabled: true,
+    isActive: false,
+    isVisible: true
+  };
+  btnLast = {
+    isEnabled: true,
+    isActive: false,
+    isVisible: true
+  };
+  btnMoveDown = {
+    isEnabled: true,
+    isActive: false,
+    isVisible: true
+  };
+  btnMoveUp = {
+    isEnabled: true,
+    isActive: false,
+    isVisible: true
+  };
+  btnSettings = {
+    isEnabled: true,
+    isActive: false,
+    isVisible: true
+  };
+}
+
+export class DefaultViewButton implements IViewTypeBtn {
+  constructor(public type: IViewType, public getDataView: () => IDataView) {}
+
+  @action.bound handleClick(event: any) {
+    this.getDataView().setActiveViewType(this.type);
+  }
+
+  @computed get btn(): IToolbarButtonState {
+    return {
+      isEnabled: true,
+      isVisible: true,
+      isActive: this.getDataView().activeViewType === this.type,
+      onClick: this.handleClick
+    };
+  }
 }
 
 export class Table implements ITable {
@@ -188,32 +288,70 @@ class ScrollState implements IScrollState {
   }
 }
 
+export class TabbedPanel implements ITabs {
+  constructor(activeTabId: string) {
+    this.activeTabId = activeTabId;
+  }
+
+  @observable activeTabId: string;
+
+  @action.bound
+  onHandleClick(event: any, handleId: string) {
+    this.activeTabId = handleId;
+  }
+}
+
 export class ScreenFactory implements IScreenFactory {
   getScreen(blueprint: ScreenBp.IScreen): IScreen {
     const dataViewsBp = Array.from(blueprint.dataViewsMap);
     const dataViewsEnt = dataViewsBp.map(([id, view]) => {
-      const availableViews = view.availableViews
+      const availableViews: ISpecificDataView[] = view.availableViews
         .map(availV => {
           switch (availV.type) {
-            case IViewType.FormView:
-              return new FormView(availV.uiStructure);
-            case IViewType.TableView:
+            case IViewType.FormView: {
+              let toolbar: IToolbar | undefined = undefined;
+              if (!availV.isHeadless) {
+                toolbar = new DefaultToolbar([
+                  new DefaultViewButton(IViewType.FormView, () => dataView),
+                  new DefaultViewButton(IViewType.TableView, () => dataView)
+                ]);
+              }
+              return new FormView(availV.uiStructure, toolbar);
+            }
+            case IViewType.TableView: {
+              const toolbar: IToolbar = new DefaultToolbar([
+                new DefaultViewButton(IViewType.FormView, () => dataView),
+                new DefaultViewButton(IViewType.TableView, () => dataView)
+              ]);
               return new TableView(
                 new Table(new Cells(), {
                   field: undefined,
                   rowIndex: 0,
                   columnIndex: 0,
                   isEditing: false
-                })
+                }),
+                toolbar
               );
+            }
           }
         })
-        .filter(item => item !== undefined);
-      return [
-        id,
-        new DataView(view.initialView, availableViews as FormView[])
-      ] as [string, IDataView];
+        .filter(item => item !== undefined) as ISpecificDataView[];
+      const dataView = new DataView(
+        view.id,
+        view.initialView,
+        availableViews as ISpecificDataView[]
+      );
+      return [id, dataView] as [string, IDataView];
     });
-    return new Screen(blueprint.uiStructure, new Map(dataViewsEnt));
+
+    const tabPanelsBp = Array.from(blueprint.tabPanelsMap);
+    const tabPanelsEnt = tabPanelsBp.map(([id, panel]) => {
+      return [id, new TabbedPanel(panel.activeTabId)] as [string, ITabs];
+    });
+    return new Screen(
+      blueprint.uiStructure,
+      new Map(dataViewsEnt),
+      new Map(tabPanelsEnt)
+    );
   }
 }

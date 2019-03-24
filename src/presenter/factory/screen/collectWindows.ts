@@ -19,7 +19,8 @@ export function collectWindows(
         cardTitle: ch.attributes.Title,
         screenTitle: ch.attributes.Title,
         uiStructure: [],
-        dataViewsMap: new Map()
+        dataViewsMap: new Map(),
+        tabPanelsMap: new Map()
       };
       exhs.add(ch);
       reprs.set(ch, window);
@@ -31,12 +32,13 @@ export function collectWindows(
           const repr = infReprs.get(dv)!;
           window.dataViewsMap.set(repr.id, repr);
         });
-        /*findTabbedPanels(ch).forEach((tp: any) => {
+        findTabbedPanels(ch).forEach((tp: any) => {
           const repr = reprs.get(tp)!;
-          window.tabPanelsMap.set(repr.props.id, {
+          const tabbedPanel: ScreenInfBp.ITabbedPanel = {
             activeTabId: repr.props.panels[0].id
-          })
-        })*/
+          }
+          window.tabPanelsMap.set(repr.props.id, tabbedPanel)
+        })
       });
     });
 }

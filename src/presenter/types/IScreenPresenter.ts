@@ -30,6 +30,12 @@ export interface IToolbarButtonState {
   onClick?(event: any): void;
 }
 
+export interface ITabPanel {
+  label: string;
+  id: string;
+  content: React.ReactNode;
+}
+
 export interface ITabs {
   activeTabId: string;
   onHandleClick?(event: any, handleId: string): void;

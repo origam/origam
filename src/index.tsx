@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import './index.scss';
+import App from './examples/Example04/App';
 import * as serviceWorker from './serviceWorker';
 import { exampleScreenFactory } from './presenter/factory/screen/Example';
 
-exampleScreenFactory();
+// exampleScreenFactory();
 
 
 ReactDOM.render(<App />, document.getElementById('root'));
@@ -16,4 +16,3 @@ ReactDOM.render(<App />, document.getElementById('root'));
 serviceWorker.unregister();
 
  
-

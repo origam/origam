@@ -1,4 +1,6 @@
 import { IUIScreenTreeNode, IUIFormRoot } from "./IUIScreenBlueprints";
+import { ICaptionPosition } from "./IFormViewPresenter/ICaptionPosition";
+import { ITabs, IViewType } from "./IScreenPresenter";
 
 export interface IInfScreenBlueprints {
 
@@ -9,7 +11,7 @@ export interface IGridProperty {
   autoSort: boolean;
   cached: boolean;
   captionLength: number | undefined;
-  captionPosition: "Left" | "Right" | "Top";
+  captionPosition: ICaptionPosition;
   column: string;
   entity: string;
   entityName: string | undefined;
@@ -40,7 +42,7 @@ export interface IDropDownProperty {
 export interface IDataView {
   id: string;
   isHeadless: boolean;
-  initialView: string;
+  initialView: IViewType;
   availableViews: Array<IFormView | ITableView>,
   properties: IGridProperty[],
   propertiesMap: Map<string, IGridProperty>
@@ -57,9 +59,14 @@ export interface ITableView {
   properties: IGridProperty[],
 }
 
+export interface ITabbedPanel {
+  activeTabId: string;
+}
+
 export interface IScreen {
   cardTitle: string;
   screenTitle: string;
   uiStructure: IUIScreenTreeNode[];
   dataViewsMap: Map<string, IDataView>;
+  tabPanelsMap: Map<string, ITabbedPanel>;
 }

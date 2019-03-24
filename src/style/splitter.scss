@@ -1,0 +1,45 @@
+.splitter-container {
+  flex-grow: 1;
+  display: flex;
+  overflow: hidden;
+  &.horizontal {
+    flex-direction: row;
+  }
+  &.vertical {
+    flex-direction: column;
+  }
+  &.moving {
+    user-select: none;
+  }
+
+  & > .splitter-panel {
+    display: flex;
+    overflow: hidden;
+    flex-shrink: 0;
+    flex-grow: 0;
+  }
+
+  & > .splitter-handle {
+    z-index: 1000;
+    flex-shrink: 0;
+    flex-grow: 0;
+    &.horizontal {
+      width: 3px;
+      cursor: col-resize;
+    }
+    &.vertical {
+      height: 3px;
+      cursor: row-resize;
+    }
+    &.moving {
+      position: relative;
+      background-color: #5f5f5f6b;
+    }
+    &.impossible {
+      background-color: #ff02026b;
+    }
+  }
+}
+
+
+

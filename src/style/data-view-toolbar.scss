@@ -1,0 +1,63 @@
+.data-view-toolbar {
+  height: 20px;
+  background-color: #8998c5;
+  color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  white-space: nowrap;
+  .red {
+    color: #ff0000;
+    text-shadow:
+    -1px -1px 0 #fff,  
+     1px -1px 0 #fff,
+     -1px 1px 0 #fff,
+      1px 1px 0 #fff;
+  }
+  .section {
+    display: flex;
+    align-items: center;
+    
+    padding-left: 10px;
+    padding-right: 10px;
+    flex-direction: row;
+  }
+  .loading {
+    font-size: 14px;
+    padding-right: 10px;
+    color: white;
+    text-shadow:
+    -1px -1px 0 #000,  
+     1px -1px 0 #000,
+     -1px 1px 0 #000,
+      1px 1px 0 #000;
+    
+  }
+  .label {
+    display: flex;
+    font-weight: bold;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .pusher {
+    flex-grow: 1;
+  }
+  button {
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    &.active {
+      background-color: #435BA3;
+    }
+    &:hover:not(.disabled) {
+      background-color: #435ba3;
+    }
+    &.disabled {
+      color: #D6D6D6;
+      &:hover {
+        background-color: inherit;
+      }
+    }
+  }
+}

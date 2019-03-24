@@ -1,3 +1,5 @@
+import { ICaptionPosition } from "./IFormViewPresenter/ICaptionPosition";
+
 export interface IPanelDef {
   label: string;
   id: string;
@@ -85,7 +87,7 @@ export interface IUIFormField {
     id: string;
     name?: string;
     captionLength?: number;
-    captionPosition?: "Left" | "Top" | "Right";
+    captionPosition?: ICaptionPosition;
     column?: string;
     entity?: string;
     height?: number;

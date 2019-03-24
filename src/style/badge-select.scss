@@ -1,0 +1,52 @@
+.badge-select {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  position: relative;
+  .btn-add-container {
+    position: relative;
+    .dropdown-trigger {
+      border: none;
+      padding: 3px;
+      background: transparent;
+      &:hover {
+        background: #8998c5;
+        color: #ffffff;
+      }
+    }
+    .dropdown-list {
+      background-color: #dddddd;
+      position: absolute;
+      top: 100%;
+      right: 100%;
+      min-width: 100px;
+      max-height: 200px;
+      overflow: auto;
+      .list-item {
+        padding: 5px;
+        cursor: pointer;
+        &:hover {
+          background-color: #8998c5;
+          color: white;
+        }
+      }
+    }
+  }
+
+  .badge {
+    background-color: #8998c5;
+    color: white;
+    padding: 0px;
+    padding-left: 3px;
+    margin: 1px;
+    button.remove-badge {
+      border: none;
+      padding: 3px;
+      background: transparent;
+      color: white;
+      &:hover {
+        background-color: #333333;
+      }
+    }
+  }
+}

@@ -7,7 +7,7 @@ import {
 import * as ScreenXml from "src/common/types/IScreenXml";
 import * as ScreenUIBp from "../../types/IUIScreenBlueprints";
 import * as ScreenInfBp from "../../types/IInfScreenBlueprints";
-import { parseBoolean } from "src/util/xmlValues";
+import { parseBoolean, parseViewType } from "src/util/xmlValues";
 
 export function collectDataViews(
   node: any,
@@ -35,7 +35,7 @@ export function collectDataViews(
       const infDataView: ScreenInfBp.IDataView = {
         id: uiDV.attributes.Id,
         isHeadless: parseBoolean(uiDV.attributes.IsHeadless),
-        initialView: uiDV.attributes.DefaultPanelView,
+        initialView: parseViewType(uiDV.attributes.DefaultPanelView),
         availableViews: [],
         properties: [],
         propertiesMap: new Map()
@@ -65,7 +65,7 @@ export function collectDataViews(
           const repr = reprs.get(ch)!;
           const formView: ScreenInfBp.IFormView = {
             type: "FormView",
-            uiStructure: repr,
+            uiStructure: [repr],
             isHeadless: parseBoolean(uiDV.attributes.IsHeadless)
           };
           // TODO: Has to be driven by grid
