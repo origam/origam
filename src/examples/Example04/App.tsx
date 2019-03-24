@@ -7,6 +7,7 @@ import { Screen } from "../../presenter/ReactUI/screenElements/Screen";
 import { parseScreenXml } from "src/common/ScreenXml";
 import { collectElements } from "src/presenter/factory/screen/collect";
 import { ScreenFactory } from "src/presenter/factory/screen/ScreenFactory";
+import { buildScreen } from "src/Application";
 
 /*
 async function getScreen() {
@@ -51,17 +52,7 @@ class App extends React.Component {
   async componentDidMount() {
     const resp = await axios.get("/screen03.xml");
     const screenXml = parseScreenXml(resp.data);
-    console.log(screenXml);
-    const reprs = new Map();
-    const exhs = new Set();
-    const infReprs = new Map();
-    const infExhs = new Set();
-    const elements = collectElements(screenXml, reprs, exhs, infReprs, infExhs);
-    console.log(elements)
-    const screenFactory = new ScreenFactory();
-    const screen = screenFactory.getScreen(elements);
-    console.log(screen)
-    this.screen = screen;
+    this.screen = buildScreen(screenXml);
   }
 
   public render() {
