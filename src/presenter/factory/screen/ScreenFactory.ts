@@ -25,6 +25,8 @@ import { ICells } from "src/presenter/types/ITableViewPresenter/ICells";
 import { IOrderByDirection } from "src/presenter/types/ITableViewPresenter/IOrderByDirection";
 import { ICell } from "src/presenter/types/ITableViewPresenter/ICell";
 import { IFormField as ITableFormField } from "src/presenter/types/ITableViewPresenter/ICursor";
+import { IDataTable } from "src/model/entities/data/types/IDataTable";
+import { IModel } from "src/model/types/IModel";
 
 class Screen implements IScreen {
   constructor(
@@ -198,13 +200,18 @@ export class Table implements ITable {
 }
 
 export class Cells implements ICells {
+  constructor(dataTable: IDataTable) {
+    this.dataTable = dataTable;
+  }
+
+  dataTable: IDataTable;
   @observable columnReordering: string[] = [];
 
   CW = 80;
   RH = 20;
 
   get columnCount() {
-    return 100;
+    return this.dataTable.columnCount;
   }
 
   get rowCount() {
@@ -246,8 +253,10 @@ export class Cells implements ICells {
   }
 
   getHeader(colIdx: number) {
+    // TODO: It would be more pure to store property labes in the view layer.
+    const property = this.dataTable.getColumnByIndex(colIdx);
     return {
-      label: `Col ${colIdx}`,
+      label: property ? property.name : "Unknown property",
       orderBy: {
         direction: IOrderByDirection.NONE,
         order: 2
@@ -302,6 +311,8 @@ export class TabbedPanel implements ITabs {
 }
 
 export class ScreenFactory implements IScreenFactory {
+  constructor(public model: IModel) {}
+
   getScreen(blueprint: ScreenBp.IScreen): IScreen {
     const dataViewsBp = Array.from(blueprint.dataViewsMap);
     const dataViewsEnt = dataViewsBp.map(([id, view]) => {
@@ -323,8 +334,14 @@ export class ScreenFactory implements IScreenFactory {
                 new DefaultViewButton(IViewType.FormView, () => dataView),
                 new DefaultViewButton(IViewType.TableView, () => dataView)
               ]);
+              const dataTable = this.model.getDataTable({
+                dataViewId: view.id
+              });
+              if (!dataTable) {
+                throw new Error("No data table");
+              }
               return new TableView(
-                new Table(new Cells(), {
+                new Table(new Cells(dataTable), {
                   field: undefined,
                   rowIndex: 0,
                   columnIndex: 0,

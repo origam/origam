@@ -53,6 +53,7 @@ class App extends React.Component {
     const resp = await axios.get("/screen03.xml");
     const screenXml = parseScreenXml(resp.data);
     this.screen = buildScreen(screenXml);
+    
   }
 
   public render() {

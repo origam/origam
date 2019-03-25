@@ -14,7 +14,6 @@ interface IDataTableParam {
 }
 
 export class DataTable implements IDataTable {
-
   
   constructor(param: IDataTableParam) {
     this.records = param.records;
@@ -26,6 +25,10 @@ export class DataTable implements IDataTable {
 
   get visibleRecordCount(): number {
     return this.records.visibleCount;
+  }
+
+  get columnCount(): number {
+    return this.properties.count;
   }
 
   getInitialValue(record: IRecord, property: IProperty) {
@@ -115,6 +118,10 @@ export class DataTable implements IDataTable {
     if (record && property) {
       this.setDirtyValue(record, property, value);
     } // TODO: Exception when rec/prop not found?
+  }
+
+  getColumnByIndex(idx: number): IProperty | undefined {
+    return this.properties.byIndex(idx);
   }
 
   getNewRecord(): IRecord {

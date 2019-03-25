@@ -11,6 +11,7 @@ export interface IDataTable extends ITableDataTable {
   records: IRecords;
   properties: IProperties;
 
+  columnCount: number;
   visibleRecordCount: number;
 
   getInitialValue(record: IRecord, property: IProperty): ICellValue;
@@ -33,6 +34,8 @@ export interface IDataTable extends ITableDataTable {
   getRowIdByIndex(idx: number): string | undefined;
   getColumnIndexById(id: string): number | undefined;
   getColumnIdByIndex(idx: number): string | undefined;
+
+  getColumnByIndex(idx: number): IProperty | undefined;
 
   createRecord(): IRecord;
 }

@@ -5,7 +5,7 @@ import { IPropertyId } from "../../values/types/IPropertyId";
 export interface IRecord {
   id: IRecordId;
   values: ICellValue[];
-  dirtyValues: Map<IRecordId, ICellValue>;
+  dirtyValues: Map<IRecordId, ICellValue> | undefined;
 
   getValueByIndex(idx: number): ICellValue;
   getDirtyValueByKey(key: IPropertyId): ICellValue;

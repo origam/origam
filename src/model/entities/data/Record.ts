@@ -6,7 +6,7 @@ import { IPropertyId } from "../values/types/IPropertyId";
 interface IRecordParam {
   id: string;
   values: ICellValue[];
-  dirtyValues: Map<string, any>;
+  dirtyValues?: Map<string, any>;
 }
 
 export class Record implements IRecord {
@@ -18,7 +18,7 @@ export class Record implements IRecord {
 
   id: string;
   @observable values: ICellValue[];
-  @observable dirtyValues: Map<string, any>;
+  @observable dirtyValues: Map<string, any> | undefined;
   @observable dirtyDeleted: boolean = false;
 
   getValueByIndex(idx: number) {
@@ -26,7 +26,7 @@ export class Record implements IRecord {
   }
 
   getDirtyValueByKey(key: string) {
-    return this.dirtyValues.get(key);
+    return this.dirtyValues ? this.dirtyValues.get(key) : undefined;
   }
 
   hasDirtyValue(key: IPropertyId): boolean {

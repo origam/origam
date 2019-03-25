@@ -3,9 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.scss';
 import App from './examples/Example04/App';
 // import * as serviceWorker from './serviceWorker';
-import { exampleScreenFactory } from './presenter/factory/screen/Example';
 
-// exampleScreenFactory();
 
 
 ReactDOM.render(<App />, document.getElementById('root'));
