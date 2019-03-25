@@ -17,7 +17,7 @@ export interface ICursorQuery {
 }
 
 export interface IModel {
-  getDataView(query: IDataViewQuery): ITableView | undefined;
+  getTableView(query: IDataViewQuery): ITableView | undefined;
   getDataTable(query: IDataTableQuery): IDataTable | undefined;
   getCursor(query: ICursorQuery): ICursor | undefined;
 }

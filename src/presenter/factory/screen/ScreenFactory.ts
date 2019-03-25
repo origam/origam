@@ -28,6 +28,7 @@ import { IFormField as ITableFormField } from "src/presenter/types/ITableViewPre
 import { IDataTable } from "src/model/entities/data/types/IDataTable";
 import { IModel } from "src/model/types/IModel";
 import { ICursor } from "src/model/entities/cursor/types/ICursor";
+import { IProperties } from "src/model/entities/data/types/IProperties";
 
 class Screen implements IScreen {
   constructor(
@@ -225,7 +226,11 @@ export class Table implements ITable {
 }
 
 export class Cells implements ICells {
-  constructor(dataTable: IDataTable, public cursor: ICursor) {
+  constructor(
+    dataTable: IDataTable,
+    public cursor: ICursor,
+    public reorderedProperties: IProperties
+  ) {
     this.dataTable = dataTable;
   }
 
@@ -235,8 +240,14 @@ export class Cells implements ICells {
   CW = 80;
   RH = 20;
 
+  @computed get reorderedPropertyIndices() {
+    return this.reorderedProperties.items
+      .map(prop => this.dataTable.getColumnIndexById(prop.id))
+      .filter(idx => idx !== undefined) as number[];
+  }
+
   get columnCount() {
-    return this.dataTable.columnCount;
+    return this.reorderedProperties.count;
   }
 
   get rowCount() {
@@ -279,7 +290,7 @@ export class Cells implements ICells {
 
   getHeader(colIdx: number) {
     // TODO: It would be more pure to store property labes in the view layer.
-    const property = this.dataTable.getColumnByIndex(colIdx);
+    const property = this.reorderedProperties.byIndex(colIdx);
     return {
       label: property ? property.name : "Unknown property",
       orderBy: {
@@ -290,7 +301,8 @@ export class Cells implements ICells {
     };
   }
 
-  getCell(rowIdx: number, colIdx: number): ICell {
+  getCell(rowIdx: number, reorderedColIdx: number): ICell {
+    const colIdx = this.reorderedPropertyIndices[reorderedColIdx];
     const value = this.dataTable.getValueByIndex(rowIdx, colIdx);
     return {
       type: "TextCell",
@@ -346,6 +358,7 @@ export class ScreenFactory implements IScreenFactory {
       const availableViews: ISpecificDataView[] = view.availableViews
         .map(availV => {
           switch (availV.type) {
+            /* FORM */
             case IViewType.FormView: {
               let toolbar: IToolbar | undefined = undefined;
               if (!availV.isHeadless) {
@@ -356,31 +369,33 @@ export class ScreenFactory implements IScreenFactory {
               }
               return new FormView(availV.uiStructure, toolbar);
             }
+            /* TABLE */
             case IViewType.TableView: {
+              const modTableView = this.model.getTableView({
+                dataViewId: view.id
+              });
+              if (!modTableView) {
+                throw new Error("No table view.");
+              }
               const toolbar: IToolbar = new DefaultToolbar([
                 new DefaultViewButton(IViewType.FormView, () => dataView),
                 new DefaultViewButton(IViewType.TableView, () => dataView)
               ]);
-              const dataTable = this.model.getDataTable({
-                dataViewId: view.id
-              });
-              const cursor = this.model.getCursor({ dataViewId: view.id });
-              if (!dataTable) {
-                throw new Error("No data table");
-              }
-              if (!cursor) {
-                throw new Error("No cursor");
-              }
+
               return new TableView(
                 new Table(
-                  new Cells(dataTable, cursor),
+                  new Cells(
+                    modTableView.dataTable,
+                    modTableView.cursor,
+                    modTableView.reorderedProperties
+                  ),
                   {
                     field: undefined,
                     rowIndex: 0,
                     columnIndex: 0,
                     isEditing: false
                   },
-                  cursor
+                  modTableView.cursor
                 ),
                 toolbar
               );

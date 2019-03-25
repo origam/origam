@@ -3,6 +3,8 @@ import { IProperty } from "./IProperty";
 
 export interface IProperties {
   count: number;
+  items: IProperty[];
+  reorderingIds?: string[];
   byId(id: IPropertyId): IProperty | undefined;
   byIndex(idx: number): IProperty | undefined;
   getIndex(property: IProperty): number | undefined;

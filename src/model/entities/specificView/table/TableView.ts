@@ -12,6 +12,7 @@ export interface ITableViewParam {
   cursor: ICursor;
   dataTable: IDataTable;
   properties: IProperties;
+  reorderedProperties: IProperties;
 }
 
 export class TableView implements ITableView {
@@ -21,6 +22,7 @@ export class TableView implements ITableView {
     this.cursor = param.cursor;
     this.dataTable = param.dataTable;
     this.properties = param.properties;
+    this.reorderedProperties = param.reorderedProperties;
   }
 
   id: string;
@@ -28,6 +30,7 @@ export class TableView implements ITableView {
   cursor: ICursor;
   dataTable: IDataTable;
   properties: IProperties;
+  reorderedProperties: IProperties;
   form: IForm | undefined;
 
   // form: IForm | undefined;
@@ -91,3 +94,4 @@ export class TableView implements ITableView {
     return
   }
 }
+

@@ -12,7 +12,7 @@ export class Model implements IModel {
 
   tableViews: ITableView[];
 
-  getDataView(query: IDataViewQuery): ITableView | undefined {
+  getTableView(query: IDataViewQuery): ITableView | undefined {
     if (query.dataViewId) {
       return this.tableViews.find(obj => obj.id === query.dataViewId);
     }
@@ -20,12 +20,15 @@ export class Model implements IModel {
   }
 
   getDataTable(query: IDataTableQuery): IDataTable | undefined {
-    const dataView = this.getDataView(query);
+    const dataView = this.getTableView(query);
     return dataView && dataView.dataTable;
   }
 
   getCursor(query: ICursorQuery): ICursor | undefined {
-    const dataView = this.getDataView(query);
+    const dataView = this.getTableView(query);
     return dataView && dataView.cursor;
   }
+
+
+  
 }

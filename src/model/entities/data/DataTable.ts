@@ -135,6 +135,8 @@ export class DataTable implements IDataTable {
     throw new Error("Method not implemented.");
   }
 
+
+  // TODO: This should go to Records class
   getRecordIdAfterId(recordId: string): string | undefined {
     const idx = this.getRowIndexById(recordId);
     const newRecord = idx !== undefined && this.getRecordByIndex(idx + 1);
@@ -142,6 +144,7 @@ export class DataTable implements IDataTable {
     return newId ? newId : undefined;
   }
 
+  // TODO: This should go to Records class
   getRecordIdBeforeId(recordId: string): string | undefined {
     const idx = this.getRowIndexById(recordId);
     const newRecord = idx !== undefined && this.getRecordByIndex(idx - 1);
@@ -150,17 +153,11 @@ export class DataTable implements IDataTable {
   }
 
   getPropertyIdAfterId(propertyId: string): string | undefined {
-    const idx = this.getColumnIndexById(propertyId);
-    const newColumn = idx !== undefined && this.getColumnByIndex(idx + 1);
-    const newId = newColumn && newColumn.id;
-    return newId ? newId : undefined;
+    return this.properties.getPropertyIdAfterId(propertyId);
   }
 
   getPropertyIdBeforeId(propertyId: string): string | undefined {
-    const idx = this.getColumnIndexById(propertyId);
-    const newColumn = idx !== undefined && this.getColumnByIndex(idx - 1);
-    const newId = newColumn && newColumn.id;
-    return newId ? newId : undefined;
+    return this.properties.getPropertyIdBeforeId(propertyId);
   }
 
   getRowIndexById(id: string): number | undefined {

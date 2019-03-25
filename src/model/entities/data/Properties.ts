@@ -1,14 +1,26 @@
 import { IProperties } from "./types/IProperties";
 import { IProperty } from "./types/IProperty";
 import { IPropertyId } from "../values/types/IPropertyId";
+import { computed } from "mobx";
 
 export class Properties implements IProperties {
-  
-  constructor(items: IProperty[]) {
-    this.items = items;
+  constructor(items: IProperty[], reorderingIds?: string[]) {
+    this.originalItems = items;
+    this.reorderingIds = reorderingIds;
   }
 
-  items: IProperty[] = [];
+  reorderingIds?: string[];
+  originalItems: IProperty[] = [];
+
+  @computed get items() {
+    if (!this.reorderingIds) {
+      return this.originalItems;
+    } else {
+      return this.reorderingIds
+        .map(id => this.originalItems.find(item => item.id === id))
+        .filter(item => item !== undefined) as IProperty[];
+    }
+  }
 
   get count(): number {
     return this.items.length;
@@ -37,11 +49,15 @@ export class Properties implements IProperties {
     return property ? this.getIndex(property) : undefined;
   }
 
-  getPropertyIdAfterId(id: string): string {
-    throw new Error("Method not implemented.");
+  getPropertyIdAfterId(id: string): string | undefined {
+    const idx = this.id2Index(id);
+    const newIdx = idx !== undefined ? idx + 1 : undefined;
+    return newIdx !== undefined ? this.index2Id(newIdx) : undefined;
   }
 
-  getPropertyIdBeforeId(id: string): string {
-    throw new Error("Method not implemented.");
+  getPropertyIdBeforeId(id: string): string | undefined {
+    const idx = this.id2Index(id);
+    const newIdx = idx !== undefined ? idx - 1 : undefined;
+    return newIdx !== undefined ? this.index2Id(newIdx) : undefined;
   }
 }

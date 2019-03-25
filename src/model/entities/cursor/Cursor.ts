@@ -1,9 +1,13 @@
 import { ICursor } from "./types/ICursor";
 import { observable, computed } from "mobx";
 import { IDataTable } from "../data/types/IDataTable";
+import { IProperties } from "../data/types/IProperties";
 
 export class Cursor implements ICursor {
-  constructor(public dataTable: IDataTable) {}
+  constructor(
+    public dataTable: IDataTable,
+    public propertiesTopology: IProperties
+  ) {}
 
   @observable selRowId: string | undefined;
   @observable selColId: string | undefined;
@@ -134,14 +138,18 @@ export class Cursor implements ICursor {
 
   selectNextColumn(): void {
     if (this.isSelected) {
-      const newId = this.dataTable.getPropertyIdAfterId(this.selColId!);
+      const newId = this.propertiesTopology.getPropertyIdAfterId(
+        this.selColId!
+      );
       newId && this.selectColumn(newId);
     }
   }
 
   selectPrevColumn(): void {
     if (this.isSelected) {
-      const newId = this.dataTable.getPropertyIdBeforeId(this.selColId!);
+      const newId = this.propertiesTopology.getPropertyIdBeforeId(
+        this.selColId!
+      );
       newId && this.selectColumn(newId);
     }
   }
