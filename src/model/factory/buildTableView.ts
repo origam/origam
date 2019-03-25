@@ -27,25 +27,6 @@ export function buildTableView(param: IDataViewParam) {
     )
   });
 
-  if (param.id === "AsPanel9_30") {
-    for (let i = 0; i < 10; i++) {
-      const row = [];
-      for (let j = 0; j < properties.count; j++) {
-        row.push(`${i} & ${j}`);
-      }
-      records.items.push(
-        new Record({
-          id: row[0],
-          values: row,
-          dirtyValues: new Map()
-        })
-      );
-    }
-
-    dataTable.deleteRecordById("7 & 0");
-    dataTable.setDirtyValueById("3 & 0", "refBusinessPartnerId", "DIRTY_VALUE");
-    cursor.selectCell("4 & 0", "refBusinessPartnerId");
-  }
 
   return tableView;
 }

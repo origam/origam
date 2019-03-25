@@ -27,6 +27,7 @@ import { ICell } from "src/presenter/types/ITableViewPresenter/ICell";
 import { IFormField as ITableFormField } from "src/presenter/types/ITableViewPresenter/ICursor";
 import { IDataTable } from "src/model/entities/data/types/IDataTable";
 import { IModel } from "src/model/types/IModel";
+import { ICursor } from "src/model/entities/cursor/types/ICursor";
 
 class Screen implements IScreen {
   constructor(
@@ -200,7 +201,7 @@ export class Table implements ITable {
 }
 
 export class Cells implements ICells {
-  constructor(dataTable: IDataTable) {
+  constructor(dataTable: IDataTable, public cursor: ICursor) {
     this.dataTable = dataTable;
   }
 
@@ -266,14 +267,15 @@ export class Cells implements ICells {
   }
 
   getCell(rowIdx: number, colIdx: number): ICell {
+    const value = this.dataTable.getValueByIndex(rowIdx, colIdx);
     return {
       type: "TextCell",
-      value: `${rowIdx}-${colIdx}`,
+      value: value !== undefined ? value : "Unknown value",
       isLoading: false,
       isInvalid: false,
       isReadOnly: false,
-      isRowCursor: false,
-      isCellCursor: false,
+      isRowCursor: this.cursor.selRowIdx === rowIdx,
+      isCellCursor: this.cursor.selRowIdx === rowIdx && this.cursor.selColumnIdx === colIdx,
       onChange(event: any, val: string) {
         return;
       }
@@ -337,11 +339,15 @@ export class ScreenFactory implements IScreenFactory {
               const dataTable = this.model.getDataTable({
                 dataViewId: view.id
               });
+              const cursor = this.model.getCursor({dataViewId: view.id});
               if (!dataTable) {
                 throw new Error("No data table");
               }
+              if (!cursor) {
+                throw new Error("No cursor");
+              }
               return new TableView(
-                new Table(new Cells(dataTable), {
+                new Table(new Cells(dataTable, cursor), {
                   field: undefined,
                   rowIndex: 0,
                   columnIndex: 0,

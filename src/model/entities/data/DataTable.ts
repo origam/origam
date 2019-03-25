@@ -14,6 +14,7 @@ interface IDataTableParam {
 }
 
 export class DataTable implements IDataTable {
+
   
   constructor(param: IDataTableParam) {
     this.records = param.records;
@@ -118,6 +119,10 @@ export class DataTable implements IDataTable {
     if (record && property) {
       this.setDirtyValue(record, property, value);
     } // TODO: Exception when rec/prop not found?
+  }
+
+  getRecordByIndex(idx: number): IRecord | undefined {
+    return this.records.byIndex(idx);
   }
 
   getColumnByIndex(idx: number): IProperty | undefined {

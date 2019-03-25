@@ -47,6 +47,7 @@ export function buildScreen(screenXml: IScreenXml) {
 
   presenter.tabPanelsMap.get("AsTabControl1_2")!.activeTabId = "TabPage3_29";
 
+
   const dt01 = model.getDataTable({dataViewId: "AsPanel9_30"})!
 
   for(let i = 0; i < 100; i++) {
@@ -57,6 +58,12 @@ export function buildScreen(screenXml: IScreenXml) {
     (dt01.records as Records).items.push(new Record({id: values[0], values}))
   }
   
+  dt01.deleteRecordById("7 & 0");
+  dt01.setDirtyValueById("3 & 0", "Length", "DIRTY_VALUE");
+
+  const cursor = model.getCursor({dataViewId: "AsPanel9_30"})!;
+  cursor.selectCell("4 & 0", "refBusinessPartnerId");
+
   return presenter;
 }
 
