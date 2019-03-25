@@ -62,7 +62,8 @@ export function buildScreen(screenXml: IScreenXml) {
   dt01.setDirtyValueById("3 & 0", "Length", "DIRTY_VALUE");
 
   const cursor = model.getCursor({dataViewId: "AsPanel9_30"})!;
-  cursor.selectCell("4 & 0", "refBusinessPartnerId");
+  // cursor.selectCell("4 & 0", "refBusinessPartnerId");
+  cursor.selectCellByIdx(8, 10)
 
   return presenter;
 }

@@ -6,6 +6,7 @@ interface ITableCell {
   isReadOnly: boolean;
   isCellCursor: boolean;
   isRowCursor: boolean;
+  onCellClick?(event: any): void;
 }
 
 export type ICell = ICellTypeDU & ITableCell;

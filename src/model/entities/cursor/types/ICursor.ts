@@ -17,6 +17,10 @@ export interface ICursor {
     rowId: IRecordId | undefined,
     colId: IPropertyId | undefined
   ): void;
+  selectCellByIdx(
+    rowIdx: number | undefined,
+    colIdx: number | undefined
+  ): void;
   selectRow(rowId: IRecordId | undefined): void;
   selectColumn(rowId: IPropertyId | undefined): void;
   selectClosestRowToId( rowId: IRecordId): void;

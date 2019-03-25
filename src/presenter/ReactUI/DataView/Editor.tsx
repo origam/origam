@@ -24,7 +24,7 @@ export class Editor extends React.Component<{ field: IField }> {
             value={field.value}
             isReadOnly={field.isReadOnly}
             isInvalid={field.isInvalid}
-            onChange={field.onChange}
+            // onChange={field.onChange}
           />
         );
       case "DateTimeCell":
@@ -42,7 +42,7 @@ export class Editor extends React.Component<{ field: IField }> {
           <BoolEditor
             value={field.value}
             isReadOnly={field.isReadOnly}
-            onChange={field.onChange}
+            // onChange={field.onChange}
           />
         );
       default:

@@ -32,9 +32,12 @@ const renderCell = (
   cursor: IFormField,
   onCellClick: PubSub<any>
 ) => {
-  onCellClick.subscribe(() => {
-    console.log(rowIndex, columnIndex);
-  });
+  if (cell.onCellClick) {
+    onCellClick.subscribe((event: any) => {
+      console.log(rowIndex, columnIndex);
+      cell.onCellClick && cell.onCellClick(event);
+    });
+  }
 
   /* BACKGROUND FILL */
   if (cell.isCellCursor) {

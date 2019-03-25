@@ -275,9 +275,10 @@ export class Cells implements ICells {
       isInvalid: false,
       isReadOnly: false,
       isRowCursor: this.cursor.selRowIdx === rowIdx,
-      isCellCursor: this.cursor.selRowIdx === rowIdx && this.cursor.selColumnIdx === colIdx,
-      onChange(event: any, val: string) {
-        return;
+      isCellCursor:
+        this.cursor.selRowIdx === rowIdx && this.cursor.selColumnIdx === colIdx,
+      onCellClick: (event: any) => {
+        this.cursor.selectCellByIdx(rowIdx, colIdx);
       }
     };
   }
@@ -339,7 +340,7 @@ export class ScreenFactory implements IScreenFactory {
               const dataTable = this.model.getDataTable({
                 dataViewId: view.id
               });
-              const cursor = this.model.getCursor({dataViewId: view.id});
+              const cursor = this.model.getCursor({ dataViewId: view.id });
               if (!dataTable) {
                 throw new Error("No data table");
               }

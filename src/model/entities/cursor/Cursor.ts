@@ -54,6 +54,18 @@ export class Cursor implements ICursor {
     }
   }
 
+  selectCellByIdx(
+    rowIdx: number | undefined,
+    colIdx: number | undefined
+  ): void {
+    this.selectCell(
+      rowIdx !== undefined ? this.dataTable.getRowIdByIndex(rowIdx) : undefined,
+      colIdx !== undefined
+        ? this.dataTable.getColumnIdByIndex(colIdx)
+        : undefined
+    );
+  }
+
   editCell(rowId: string | undefined, colId: string | undefined): void {
     /*
       Stop editing when we are editing now and selected row is going to change or
@@ -137,7 +149,7 @@ export class Cursor implements ICursor {
   }
 
   ensureSelectionVisible() {
-    return
+    return;
     throw new Error("Method not implemented.");
   }
 
