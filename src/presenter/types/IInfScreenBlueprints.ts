@@ -41,6 +41,7 @@ export interface IDropDownProperty {
 
 export interface IDataView {
   id: string;
+  name: string;
   isHeadless: boolean;
   initialView: IViewType;
   availableViews: Array<IFormView | ITableView>,

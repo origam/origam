@@ -34,6 +34,7 @@ export function collectDataViews(
       reprs.set(uiDV, dataView);
       const infDataView: ScreenInfBp.IDataView = {
         id: uiDV.attributes.Id,
+        name: uiDV.attributes.Name,
         isHeadless: parseBoolean(uiDV.attributes.IsHeadless),
         initialView: parseViewType(uiDV.attributes.DefaultPanelView),
         availableViews: [],

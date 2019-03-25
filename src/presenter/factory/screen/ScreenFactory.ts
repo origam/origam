@@ -100,14 +100,13 @@ export class TableView implements ITableView {
 }
 
 export class DefaultToolbar implements IToolbar {
-  constructor(public btnsViews: IViewTypeBtn[]) {}
+  constructor(public btnsViews: IViewTypeBtn[], public label: string) {}
 
   dataView: IDataView | undefined;
 
   isLoading = false;
   isError = true;
   isFiltered = true;
-  label = "Example table view";
   recordNo = "17";
   recordTotal = "29";
   btnAdd = {
@@ -362,10 +361,13 @@ export class ScreenFactory implements IScreenFactory {
             case IViewType.FormView: {
               let toolbar: IToolbar | undefined = undefined;
               if (!availV.isHeadless) {
-                toolbar = new DefaultToolbar([
-                  new DefaultViewButton(IViewType.FormView, () => dataView),
-                  new DefaultViewButton(IViewType.TableView, () => dataView)
-                ]);
+                toolbar = new DefaultToolbar(
+                  [
+                    new DefaultViewButton(IViewType.FormView, () => dataView),
+                    new DefaultViewButton(IViewType.TableView, () => dataView)
+                  ],
+                  view.name
+                );
               }
               return new FormView(availV.uiStructure, toolbar);
             }
@@ -377,10 +379,13 @@ export class ScreenFactory implements IScreenFactory {
               if (!modTableView) {
                 throw new Error("No table view.");
               }
-              const toolbar: IToolbar = new DefaultToolbar([
-                new DefaultViewButton(IViewType.FormView, () => dataView),
-                new DefaultViewButton(IViewType.TableView, () => dataView)
-              ]);
+              const toolbar: IToolbar = new DefaultToolbar(
+                [
+                  new DefaultViewButton(IViewType.FormView, () => dataView),
+                  new DefaultViewButton(IViewType.TableView, () => dataView)
+                ],
+                view.name
+              );
 
               return new TableView(
                 new Table(
