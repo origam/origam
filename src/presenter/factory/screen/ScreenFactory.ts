@@ -189,15 +189,39 @@ export class DefaultViewButton implements IViewTypeBtn {
 }
 
 export class Table implements ITable {
-  constructor(cells: ICells, tableFormField: ITableFormField) {
+  constructor(
+    cells: ICells,
+    tableFormField: ITableFormField,
+    public cursor: ICursor
+  ) {
     this.cells = cells;
-    this.cursor = tableFormField;
+    this.tableFormField = tableFormField;
   }
   isLoading: boolean = false;
   filterSettingsVisible: boolean = false;
   scrollState: IScrollState = new ScrollState(0, 0);
   cells: ICells;
-  cursor: ITableFormField;
+  tableFormField: ITableFormField;
+
+  @action.bound
+  onKeyDown(event: any) {
+    console.log(event.key);
+    event.preventDefault();
+    switch (event.key) {
+      case "ArrowUp":
+        this.cursor.selectPrevRow();
+        break;
+      case "ArrowDown":
+        this.cursor.selectNextRow();
+        break;
+      case "ArrowLeft":
+        this.cursor.selectPrevColumn();
+        break;
+      case "ArrowRight":
+        this.cursor.selectNextColumn();
+        break;
+    }
+  }
 }
 
 export class Cells implements ICells {
@@ -216,10 +240,10 @@ export class Cells implements ICells {
   }
 
   get rowCount() {
-    return 1000;
+    return this.dataTable.visibleRecordCount;
   }
 
-  fixedColumnCount = 2;
+  @observable fixedColumnCount = 2;
 
   get contentWidth() {
     return this.getColumnRight(this.columnCount - 1);
@@ -348,12 +372,16 @@ export class ScreenFactory implements IScreenFactory {
                 throw new Error("No cursor");
               }
               return new TableView(
-                new Table(new Cells(dataTable, cursor), {
-                  field: undefined,
-                  rowIndex: 0,
-                  columnIndex: 0,
-                  isEditing: false
-                }),
+                new Table(
+                  new Cells(dataTable, cursor),
+                  {
+                    field: undefined,
+                    rowIndex: 0,
+                    columnIndex: 0,
+                    isEditing: false
+                  },
+                  cursor
+                ),
                 toolbar
               );
             }

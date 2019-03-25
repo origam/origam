@@ -249,7 +249,7 @@ export class Table extends React.Component<{ controller: ITable }> {
                                 scrollOffsetSource={this.scrollState}
                                 gridDimensions={this.gridDimensions}
                                 cells={this.props.controller.cells}
-                                cursor={this.props.controller.cursor}
+                                cursor={this.props.controller.tableFormField}
                                 renderCell={renderCell}
                               />
                               <Canvas
@@ -266,7 +266,7 @@ export class Table extends React.Component<{ controller: ITable }> {
                                 scrollOffsetSource={this.scrollState}
                                 gridDimensions={this.gridDimensions}
                                 cells={this.props.controller.cells}
-                                cursor={this.props.controller.cursor}
+                                cursor={this.props.controller.tableFormField}
                                 renderCell={renderCell}
                               />
                             </>
@@ -282,25 +282,25 @@ export class Table extends React.Component<{ controller: ITable }> {
                               scrollOffsetSource={this.scrollState}
                               gridDimensions={this.gridDimensions}
                               cells={this.props.controller.cells}
-                              cursor={this.props.controller.cursor}
+                              cursor={this.props.controller.tableFormField}
                               renderCell={renderCell}
                             />
                           )}
                         </div>
-                        {this.props.controller.cursor.isEditing && (
+                        {this.props.controller.tableFormField.isEditing && (
                           <PositionedField
                             fixedColumnsCount={this.fixedColumnsCount}
-                            rowIndex={this.props.controller.cursor.rowIndex}
+                            rowIndex={this.props.controller.tableFormField.rowIndex}
                             columnIndex={
-                              this.props.controller.cursor.columnIndex
+                              this.props.controller.tableFormField.columnIndex
                             }
                             scrollOffsetSource={this.scrollState}
                             gridDimensions={this.gridDimensions}
                             worldBounds={contentRect.bounds!}
                           >
-                            {this.props.controller.cursor.field && (
+                            {this.props.controller.tableFormField.field && (
                               <Editor
-                                field={this.props.controller.cursor.field}
+                                field={this.props.controller.tableFormField.field}
                               />
                             )}
                           </PositionedField>

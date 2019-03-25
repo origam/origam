@@ -8,7 +8,10 @@ export class Cursor implements ICursor {
   @observable selRowId: string | undefined;
   @observable selColId: string | undefined;
   @observable isEditing: boolean = false;
-  @observable isSelected: boolean = false;
+
+  @computed get isSelected(): boolean {
+    return this.selRowId !== undefined && this.selColId !== undefined;
+  }
 
   @computed get selRowIdx(): number | undefined {
     return this.selRowId
@@ -117,25 +120,29 @@ export class Cursor implements ICursor {
 
   selectNextRow(): void {
     if (this.isSelected) {
-      this.selectRow(this.dataTable.getRecordIdAfterId(this.selRowId!));
+      const newId = this.dataTable.getRecordIdAfterId(this.selRowId!);
+      newId && this.selectRow(newId);
     }
   }
 
   selectPrevRow(): void {
     if (this.isSelected) {
-      this.selectRow(this.dataTable.getRecordIdBeforeId(this.selRowId!));
+      const newId = this.dataTable.getRecordIdBeforeId(this.selRowId!);
+      newId && this.selectRow(newId);
     }
   }
 
   selectNextColumn(): void {
     if (this.isSelected) {
-      this.selectColumn(this.dataTable.getPropertyIdAfterId(this.selColId!));
+      const newId = this.dataTable.getPropertyIdAfterId(this.selColId!);
+      newId && this.selectColumn(newId);
     }
   }
 
   selectPrevColumn(): void {
     if (this.isSelected) {
-      this.selectColumn(this.dataTable.getPropertyIdBeforeId(this.selColId!));
+      const newId = this.dataTable.getPropertyIdBeforeId(this.selColId!);
+      newId && this.selectColumn(newId);
     }
   }
 

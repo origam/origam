@@ -7,7 +7,7 @@ export interface ITable {
   filterSettingsVisible: boolean;
   scrollState: IScrollState;
   cells: ICells;
-  cursor: IFormField;
+  tableFormField: IFormField;
   onKeyDown?(event: any): void;
   onCellClick?(event: any, rowIdx: number, columnIdx: number): void;
   onFieldClick?(event: any): void;

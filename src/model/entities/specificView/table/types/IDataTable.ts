@@ -4,10 +4,10 @@ import { IPropertyId } from '../../../values/types/IPropertyId';
 
 export interface IDataTable {
   getNewRecord(): IRecord;
-  getRecordIdAfterId(recordId: IRecordId): IRecordId;
-  getRecordIdBeforeId(recordId: IRecordId): IRecordId;
-  getPropertyIdAfterId(propertyId: IPropertyId): IPropertyId;
-  getPropertyIdBeforeId(propertyId: IPropertyId): IPropertyId;
+  getRecordIdAfterId(recordId: IRecordId): IRecordId | undefined;
+  getRecordIdBeforeId(recordId: IRecordId): IRecordId | undefined;
+  getPropertyIdAfterId(propertyId: IPropertyId): IPropertyId | undefined;
+  getPropertyIdBeforeId(propertyId: IPropertyId): IPropertyId | undefined;
   insertRecordAfterId(rowId: IRecordId, record: IRecord): void;
   insertRecordBeforeId(rowId: IRecordId, record: IRecord): void;
   deleteRecordById(rowId: IRecordId): void;

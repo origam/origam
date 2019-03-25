@@ -4,9 +4,9 @@ import { IProperties } from "./types/IProperties";
 import { IRecord } from "./types/IRecord";
 import { IProperty } from "./types/IProperty";
 import { action, computed } from "mobx";
-import { IRecordId } from '../values/types/IRecordId';
+import { IRecordId } from "../values/types/IRecordId";
 import { IPropertyId } from "../values/types/IPropertyId";
-import { ICellValue } from './types/ICellValue';
+import { ICellValue } from "./types/ICellValue";
 
 interface IDataTableParam {
   records: IRecords;
@@ -14,8 +14,6 @@ interface IDataTableParam {
 }
 
 export class DataTable implements IDataTable {
-
-  
   constructor(param: IDataTableParam) {
     this.records = param.records;
     this.properties = param.properties;
@@ -104,7 +102,11 @@ export class DataTable implements IDataTable {
   }
 
   @action.bound
-  setDirtyValueById(recId: IRecordId, propId: IPropertyId, value: ICellValue): void {
+  setDirtyValueById(
+    recId: IRecordId,
+    propId: IPropertyId,
+    value: ICellValue
+  ): void {
     const record = this.records.byId(recId);
     const property = this.properties.byId(propId);
     if (property && record) {
@@ -133,20 +135,32 @@ export class DataTable implements IDataTable {
     throw new Error("Method not implemented.");
   }
 
-  getRecordIdAfterId(recordId: string): string {
-    throw new Error("Method not implemented.");
+  getRecordIdAfterId(recordId: string): string | undefined {
+    const idx = this.getRowIndexById(recordId);
+    const newRecord = idx !== undefined && this.getRecordByIndex(idx + 1);
+    const newId = newRecord && newRecord.id;
+    return newId ? newId : undefined;
   }
 
-  getRecordIdBeforeId(recordId: string): string {
-    throw new Error("Method not implemented.");
+  getRecordIdBeforeId(recordId: string): string | undefined {
+    const idx = this.getRowIndexById(recordId);
+    const newRecord = idx !== undefined && this.getRecordByIndex(idx - 1);
+    const newId = newRecord && newRecord.id;
+    return newId ? newId : undefined;
   }
 
-  getPropertyIdAfterId(propertyId: string): string {
-    throw new Error("Method not implemented.");
+  getPropertyIdAfterId(propertyId: string): string | undefined {
+    const idx = this.getColumnIndexById(propertyId);
+    const newColumn = idx !== undefined && this.getColumnByIndex(idx + 1);
+    const newId = newColumn && newColumn.id;
+    return newId ? newId : undefined;
   }
 
-  getPropertyIdBeforeId(propertyId: string): string {
-    throw new Error("Method not implemented.");
+  getPropertyIdBeforeId(propertyId: string): string | undefined {
+    const idx = this.getColumnIndexById(propertyId);
+    const newColumn = idx !== undefined && this.getColumnByIndex(idx - 1);
+    const newId = newColumn && newColumn.id;
+    return newId ? newId : undefined;
   }
 
   getRowIndexById(id: string): number | undefined {
@@ -163,7 +177,7 @@ export class DataTable implements IDataTable {
 
   getColumnIdByIndex(idx: number): string | undefined {
     return this.properties.index2Id(idx);
-  }  
+  }
 
   @action.bound
   insertRecordAfterId(rowId: string, record: IRecord): void {
@@ -182,7 +196,7 @@ export class DataTable implements IDataTable {
       this.records.deleteRecord(record);
     }
   }
-  
+
   @action.bound
   copyRecordById(rowId: string): IRecord {
     throw new Error("Method not implemented.");
