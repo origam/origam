@@ -55,8 +55,8 @@ namespace Origam.Workflow
 		private IParameterService _parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 		private Exception _exception;
 		private Exception _caughtException;
-
-		private readonly OperationTimer localOperationTimer = new OperationTimer();
+        public Boolean ParentTrace { get; set; } = false;
+        private readonly OperationTimer localOperationTimer = new OperationTimer();
 
 		public WorkflowEngine()
 		{
@@ -455,7 +455,7 @@ namespace Origam.Workflow
 					this.Notification = "";
 					this.ResultMessage = "";
 
-					if (this.WorkflowBlock.Trace)
+					if (this.WorkflowBlock.Trace??ParentTrace)
 					{
 						_tracingService.TraceWorkflow(this.WorkflowInstanceId,
 							(Guid) this.WorkflowBlock.PrimaryKey["Id"],
@@ -516,7 +516,7 @@ namespace Origam.Workflow
 						{
 							log.Debug("Passing input context");
 						}
-						if (this.WorkflowBlock.Trace)
+						if (this.WorkflowBlock.Trace??ParentTrace)
 						{
 							_tracingService.TraceStep(this.WorkflowInstanceId,
 								(this.WorkflowBlock as AbstractSchemaItem).Path,
@@ -620,7 +620,7 @@ namespace Origam.Workflow
 				log.Error(step.GetType().Name + " " + step.Name + " failed.");
 			}
 			// Trace the error
-			if(IsTrace(step))
+			if(step.Trace ?? ParentTrace)
 			{
 				_tracingService.TraceStep(this.WorkflowInstanceId, (step as AbstractSchemaItem).Path, (step as AbstractSchemaItem).Id, "Process", "Error", null, null, null, ex.Message);
 			}
@@ -681,7 +681,7 @@ namespace Origam.Workflow
 				}
 			}
 
-			if(this.WorkflowBlock.Trace)
+			if(this.WorkflowBlock.Trace ?? ParentTrace)
 			{
 				string recursiveExceptionText = ex.Message;
 				Exception recursiveEx = ex;
@@ -734,7 +734,7 @@ namespace Origam.Workflow
 				rule, 
 				data);
 
-			if(step != null && IsTrace(step))
+			if(step != null && (step.Trace ?? ParentTrace))
 			{
 				_tracingService.TraceStep(
 					this.WorkflowInstanceId,
@@ -955,6 +955,7 @@ namespace Origam.Workflow
 
 			call.IterationTotal = this.IterationTotal;
 			call.IterationNumber = this.IterationNumber;
+            call.ParentTrace = this.ParentTrace;
 			return call;
 		}
 
@@ -1039,7 +1040,7 @@ namespace Origam.Workflow
 
 			try
 			{
-				if(step != null && IsTrace(step))
+				if(step != null && (step.Trace ?? ParentTrace))
 				{
 					_tracingService.TraceStep(
 						this.WorkflowInstanceId,
@@ -1227,7 +1228,7 @@ namespace Origam.Workflow
 					}
 				}
 
-				if(step != null && IsTrace(step))
+				if(step != null && (step.Trace ?? ParentTrace))
 				{
 					_tracingService.TraceStep(
 						this.WorkflowInstanceId,
@@ -1248,7 +1249,7 @@ namespace Origam.Workflow
 					
 					ProcessRulesTimed(resultContextKey, ruleSet, step);
 
-					if(step != null && IsTrace(step))
+					if(step != null && (step.Trace ?? ParentTrace))
 					{
 						_tracingService.TraceStep(
 							this.WorkflowInstanceId,
@@ -1262,7 +1263,7 @@ namespace Origam.Workflow
 							null);
 					}
 
-					if(step == null && this.WorkflowBlock.Trace)
+					if(step == null && (this.WorkflowBlock.Trace ?? ParentTrace))
 					{
 						_tracingService.TraceStep(
 							this.WorkflowInstanceId,
@@ -1298,16 +1299,6 @@ namespace Origam.Workflow
 				log.Info("Finished merging context '" + contextName + "'" + stepNameLog);
 			}
 		}
-
-        public bool IsTrace(IWorkflowStep task)
-        {
-            if (task.InheritTrace && !task.Trace)
-            {
-                //need take trace from workflow before.
-                return Host.ParentTrace;
-            }
-            return task.Trace;
-        }
 
         private void ProcessRulesTimed(Key resultContextKey,
 			DataStructureRuleSet ruleSet,IWorkflowStep step)

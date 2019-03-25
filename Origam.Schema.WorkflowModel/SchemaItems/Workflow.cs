@@ -114,7 +114,8 @@ namespace Origam.Schema.WorkflowModel
 		public WorkflowStepTraceLevel TraceLevel { get; set; } = WorkflowStepTraceLevel.None;
 
 		[Category("Tracing")]
-		public bool Trace
+   
+        public bool? Trace
 		{
 			get
 			{
@@ -122,7 +123,7 @@ namespace Origam.Schema.WorkflowModel
 				{
 					if(s is IWorkflowStep)
 					{
-						if((s as IWorkflowStep).Trace)
+						if((s as IWorkflowStep).Trace is true)
 						{
 							return true;
 						}
@@ -131,9 +132,9 @@ namespace Origam.Schema.WorkflowModel
 							// skip any direct recursion
 							if(!(s as WorkflowCallTask).Workflow.PrimaryKey.Equals(this.PrimaryKey))
 							{
-								bool result = (s as WorkflowCallTask).Workflow.Trace;
+								bool? result = (s as WorkflowCallTask).Workflow.Trace;
 
-								if(result) return result;
+								if(result is true) return true;
 							}
 						}
 					}
@@ -220,8 +221,6 @@ namespace Origam.Schema.WorkflowModel
 				throw new InvalidOperationException("Cannot set Features to Workflow");
 			}
 		}
-        [Browsable(false)]
-        public bool InheritTrace => false;
         #endregion
     }
 }

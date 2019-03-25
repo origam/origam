@@ -125,7 +125,22 @@ namespace Origam.Schema.WorkflowModel
 		public WorkflowStepTraceLevel TraceLevel { get; set; } = WorkflowStepTraceLevel.InheritFromParent;
 
 		[Category("Tracing")]
-		public bool Trace
+
+        public string ShowTrace
+        {
+            get
+            {
+                bool? trace = Trace;
+                if (trace == null)
+                {
+                    return "Parent";
+                }
+                return trace.ToString();
+            }
+        }
+
+        [Browsable(false)]
+        public bool? Trace
 		{
 			get
 			{
@@ -149,7 +164,7 @@ namespace Origam.Schema.WorkflowModel
 						}
 						if(parentStep.ParentItem as IWorkflowStep == null)
                         {
-                            _InheritTrace = true;
+                            return null;
                         }
 						parentStep = parentStep.ParentItem as IWorkflowStep;
 					}
@@ -169,17 +184,6 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-        [Browsable(false)]
-        bool _InheritTrace = false;
-        public bool InheritTrace
-        {
-            get
-            {
-                _InheritTrace = false;
-                _ = Trace;
-                return _InheritTrace;
-            }
-        }
         [EntityColumn("G02")]  
 		public Guid StartRuleId;
 
