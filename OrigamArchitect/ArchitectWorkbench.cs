@@ -1619,9 +1619,13 @@ namespace OrigamArchitect
                 }
 	            if (errorSections.Count != 0)
 	            {
-	                FlexibleMessageBox.Show("The following errors were found in the loaded model:\n\n"+
-	                                        string.Join("\n\n",errorSections), "Model Errors");
-                }
+		            this.RunWithInvoke(() =>
+		            {
+			            FlexibleMessageBox.Show(
+				            "The following errors were found in the loaded model:\n\n" +
+				            string.Join("\n\n", errorSections), "Model Errors");
+		            });
+	            }
 	        }
 	    }
 
