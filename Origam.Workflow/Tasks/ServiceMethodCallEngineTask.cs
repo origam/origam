@@ -44,7 +44,7 @@ namespace Origam.Workflow.Tasks
 			ServiceAgentFactory serviceAgentFactory = new ServiceAgentFactory();
 			IServiceAgent agent = serviceAgentFactory.GetAgent(task.Service.Name, this.Engine.RuleEngine, this.Engine);
 			
-            agent.Trace = task.Trace??Engine.ParentTrace;
+            agent.Trace = Engine.IsTrace(task);
 			agent.TraceStepName = task.Path;
 			agent.TraceWorkflowId = this.Engine.WorkflowInstanceId;
 			agent.TraceStepId = task.Id;

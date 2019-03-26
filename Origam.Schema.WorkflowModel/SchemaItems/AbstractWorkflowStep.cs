@@ -125,30 +125,15 @@ namespace Origam.Schema.WorkflowModel
 		public WorkflowStepTraceLevel TraceLevel { get; set; } = WorkflowStepTraceLevel.InheritFromParent;
 
 		[Category("Tracing")]
-
-        public string ShowTrace
-        {
-            get
-            {
-                bool? trace = Trace;
-                if (trace == null)
-                {
-                    return "Parent";
-                }
-                return trace.ToString();
-            }
-        }
-
-        [Browsable(false)]
-        public bool? Trace
+        public Trace Trace
 		{
 			get
 			{
-				#if ORIGAM_CLIENT
-					if(this.TraceLevel == WorkflowStepTraceLevel.TraceClientAndArchitect) return true;
-				#else
-					if(this.TraceLevel == WorkflowStepTraceLevel.TraceClientAndArchitect |
-						this.TraceLevel == WorkflowStepTraceLevel.TraceArchitect) return true;
+#if ORIGAM_CLIENT
+					if(this.TraceLevel == WorkflowStepTraceLevel.TraceClientAndArchitect) return Trace.Yes;
+#else
+                if (this.TraceLevel == WorkflowStepTraceLevel.TraceClientAndArchitect |
+						this.TraceLevel == WorkflowStepTraceLevel.TraceArchitect) return Trace.Yes;
 				#endif
 
 				if(this.TraceLevel == WorkflowStepTraceLevel.InheritFromParent)
@@ -164,7 +149,7 @@ namespace Origam.Schema.WorkflowModel
 						}
 						if(parentStep.ParentItem as IWorkflowStep == null)
                         {
-                            return null;
+                            return Trace.InheritFromParent;
                         }
 						parentStep = parentStep.ParentItem as IWorkflowStep;
 					}
@@ -172,15 +157,15 @@ namespace Origam.Schema.WorkflowModel
 					if(parentStep != null)
 					{
 						#if ORIGAM_CLIENT
-							if(parentStep.TraceLevel == WorkflowStepTraceLevel.TraceClientAndArchitect) return true;
+							if(parentStep.TraceLevel == WorkflowStepTraceLevel.TraceClientAndArchitect) return Trace.Yes;
 						#else
 							if(parentStep.TraceLevel == WorkflowStepTraceLevel.TraceClientAndArchitect |
-								parentStep.TraceLevel == WorkflowStepTraceLevel.TraceArchitect) return true;
+								parentStep.TraceLevel == WorkflowStepTraceLevel.TraceArchitect) return Trace.Yes;
 						#endif
 					}
 				}
 
-				return false;
+				return Trace.No;
 			}
 		}
 

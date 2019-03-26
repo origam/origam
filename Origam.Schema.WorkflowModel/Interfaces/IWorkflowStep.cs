@@ -49,13 +49,20 @@ namespace Origam.Schema.WorkflowModel
 		TraceClientAndArchitect = 3
 	}
 
-	/// <summary>
+    public enum Trace
+    {
+        Yes,
+        No,
+        InheritFromParent
+    }
+        
+    /// <summary>
 	/// Summary description for IWorkflowStep.
 	/// </summary>
 	public interface IWorkflowStep : ISchemaItem
 	{
 		WorkflowStepTraceLevel TraceLevel{get; set;}
-		bool? Trace{get;}
+        Trace Trace { get;}
 		StartRule StartConditionRule{get; set;}
 		IContextStore StartConditionRuleContextStore{get; set;}
 		IEndRule ValidationRule{get; set;}

@@ -43,7 +43,7 @@ namespace Origam.Workflow.Tasks
 			try
 			{
 				MeasuredExecution();
-                LastWorkflowTrace();
+                SetWorkflowTrace();
                 OnExecute();
             }
 			catch(Exception ex)
@@ -53,33 +53,17 @@ namespace Origam.Workflow.Tasks
 			}
 		}
 
-        private void LastWorkflowTrace()
+        private void SetWorkflowTrace()
         {
             WorkflowCallTask task = this.Step as WorkflowCallTask;
-            bool lastTrace = _call.ParentTrace;
-            _call.ParentTrace = false;
-            if (task.Workflow.TraceLevel == WorkflowStepTraceLevel.InheritFromParent)
+            switch (task.Trace)
             {
-                if (task.TraceLevel != WorkflowStepTraceLevel.None)
-                {
-                    if (task.TraceLevel == WorkflowStepTraceLevel.InheritFromParent)
-                    {
-                        bool? isEnableTrace = task.Trace;
-                        if (isEnableTrace==null)
-                        {
-                            _call.ParentTrace = lastTrace;
-                            
-                        }
-                        else
-                        {
-                            _call.ParentTrace = isEnableTrace is true?true:false;
-                        }
-                    }
-                    else
-                    {
-                        _call.ParentTrace = true;
-                    }
-                }
+                case Trace.Yes:
+                    _call.Trace = true;
+                    break;
+                case Trace.No :
+                    _call.Trace = false;
+                    break;
             }
         }
 
