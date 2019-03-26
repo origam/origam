@@ -14,7 +14,7 @@ import {
   IUIScreenTreeNode,
   IUIFormRoot
 } from "src/presenter/types/IUIScreenBlueprints";
-import { ITableView } from "src/presenter/types/ITableViewPresenter/ITableView";
+import { ITableView as IPresTableView } from "src/presenter/types/ITableViewPresenter/ITableView";
 import { IFormView } from "src/presenter/types/IFormViewPresenter/IFormView";
 import { computed, observable, action } from "mobx";
 import { IFormField } from "src/presenter/types/IFormViewPresenter/IFormField";
@@ -29,6 +29,7 @@ import { IDataTable } from "src/model/entities/data/types/IDataTable";
 import { IModel } from "src/model/types/IModel";
 import { ICursor } from "src/model/entities/cursor/types/ICursor";
 import { IProperties } from "src/model/entities/data/types/IProperties";
+import { ITableView as IModTableView } from "src/model/entities/specificView/table/types/ITableView";
 
 class Screen implements IScreen {
   constructor(
@@ -88,7 +89,7 @@ export class FormView implements IFormView {
   toolbar: IToolbar | undefined;
 }
 
-export class TableView implements ITableView {
+export class TableView implements IPresTableView {
   constructor(table: ITable, toolbar: IToolbar | undefined) {
     this.table = table;
     this.toolbar = toolbar;
@@ -356,6 +357,11 @@ export class ScreenFactory implements IScreenFactory {
     const dataViewsEnt = dataViewsBp.map(([id, view]) => {
       const availableViews: ISpecificDataView[] = view.availableViews
         .map(availV => {
+          const modDataViews = this.model.getDataViews({ dataViewId: view.id });
+          if (!modDataViews) {
+            console.error("Data view model not found:", view.id);
+            return;
+          }
           switch (availV.type) {
             /* FORM */
             case IViewType.FormView: {
@@ -373,9 +379,9 @@ export class ScreenFactory implements IScreenFactory {
             }
             /* TABLE */
             case IViewType.TableView: {
-              const modTableView = this.model.getTableView({
-                dataViewId: view.id
-              });
+              const modTableView = modDataViews.byType(IViewType.TableView) as (
+                | IModTableView
+                | undefined);
               if (!modTableView) {
                 throw new Error("No table view.");
               }

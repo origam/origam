@@ -8,7 +8,7 @@ import { IProperties } from "src/model/entities/data/types/IProperties";
 import { IDataTable } from "src/model/entities/data/types/IDataTable";
 
 export interface ITableView {
-  type: IViewType.FormView;
+  type: IViewType.TableView;
   id: string;
   cursor: ICursor;
   dataTable: IDataTable;

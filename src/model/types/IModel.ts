@@ -1,23 +1,12 @@
-import { IDataTable } from "../entities/data/types/IDataTable";
-import { ITableView } from '../entities/specificView/table/types/ITableView';
-import { ICursor } from "../entities/cursor/types/ICursor";
 
-
-
-export interface IDataTableQuery {
-  dataViewId?: string;
-}
+import { IDataViews } from "../entities/specificViews/types/IDataViews";
 
 export interface IDataViewQuery {
   dataViewId?: string;
 }
 
-export interface ICursorQuery {
-  dataViewId?: string;
-}
-
 export interface IModel {
-  getTableView(query: IDataViewQuery): ITableView | undefined;
-  getDataTable(query: IDataTableQuery): IDataTable | undefined;
-  getCursor(query: ICursorQuery): ICursor | undefined;
+  getDataViews(query: IDataViewQuery): IDataViews | undefined;
+  // getDataTable(query: IDataTableQuery): IDataTable | undefined;
+  // getCursor(query: ICursorQuery): ICursor | undefined;
 }

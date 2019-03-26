@@ -4,8 +4,7 @@ import { IProperties } from "../../data/types/IProperties";
 import { IDataTable } from "../../data/types/IDataTable";
 
 import { IForm } from "../../form/types/IForm";
-import { IViewType } from 'src/model/entities/specificViews/types/IViewType';
-
+import { IViewType } from "src/model/entities/specificViews/types/IViewType";
 
 export interface ITableViewParam {
   id: string;
@@ -16,7 +15,6 @@ export interface ITableViewParam {
 }
 
 export class TableView implements ITableView {
-  
   constructor(param: ITableViewParam) {
     this.id = param.id;
     this.cursor = param.cursor;
@@ -26,7 +24,7 @@ export class TableView implements ITableView {
   }
 
   id: string;
-  type: IViewType.FormView = IViewType.FormView;
+  type: IViewType.TableView = IViewType.TableView;
   cursor: ICursor;
   dataTable: IDataTable;
   properties: IProperties;
@@ -85,13 +83,11 @@ export class TableView implements ITableView {
     }
   }
 
-
   nextColumn() {
-    return 
+    return;
   }
 
   prevColumn() {
-    return
+    return;
   }
 }
-

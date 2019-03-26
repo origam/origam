@@ -2,10 +2,12 @@ import * as presenterCollect from "./presenter/factory/screen/collect";
 import { ScreenFactory as PresenterScreenFactory } from "./presenter/factory/screen/ScreenFactory";
 
 import * as modelCollect from "./model/ScreenInterpreter/collect";
-import { ScreenFactory as ModelScreenFactory } from "./model/factory/ScreenFactory";
+import { buildScreen as buildScreenModel } from "./model/factory/ScreenFactory";
 
 import { IScreenXml } from "./common/types/IScreenXml";
 import { IModel } from "./model/types/IModel";
+import { IViewType } from "./model/entities/specificViews/types/IViewType";
+import { ITableView } from "./model/entities/specificView/table/types/ITableView";
 import { Records } from "./model/entities/data/Records";
 import { Record } from "./model/entities/data/Record";
 
@@ -28,26 +30,28 @@ export function buildScreenPresenter(screenXml: IScreenXml, model: IModel) {
   return screen;
 }
 
-export function buildScreenModel(screenXml: IScreenXml) {
+export function createScreenModel(screenXml: IScreenXml) {
   const reprs = new Map();
   const exhs = new Set();
   const elements = modelCollect.collectElements(screenXml, reprs, exhs);
   console.log(elements);
-  const screenFactory = new ModelScreenFactory();
-  const screen = screenFactory.getScreen(elements);
+
+  const screen = buildScreenModel(elements);
   console.log(screen);
   return screen;
 }
 
 export function buildScreen(screenXml: IScreenXml) {
   console.log(screenXml);
-  const model = buildScreenModel(screenXml);
+  const model = createScreenModel(screenXml);
   const presenter = buildScreenPresenter(screenXml, model);
   console.log(model);
 
   presenter.tabPanelsMap.get("AsTabControl1_2")!.activeTabId = "TabPage3_29";
 
-  const dt01 = model.getDataTable({ dataViewId: "AsPanel9_30" })!;
+  const dataViews = model.getDataViews({ dataViewId: "AsPanel9_30" })!;
+  const tableView = dataViews.byType(IViewType.TableView)! as ITableView;
+  const dt01 = tableView.dataTable;
 
   for (let i = 0; i < 100; i++) {
     const values = [];
@@ -60,11 +64,9 @@ export function buildScreen(screenXml: IScreenXml) {
   dt01.deleteRecordById("7 & 0");
   dt01.setDirtyValueById("3 & 0", "Length", "DIRTY_VALUE");
 
-  const cursor = model.getCursor({ dataViewId: "AsPanel9_30" })!;
-  cursor.selectCell("4 & 0", "Comment");
+  tableView.cursor.selectCell("4 & 0", "Comment");
   // cursor.selectCellByIdx(8, 10)
 
-  const tableView = model.getTableView({ dataViewId: "AsPanel9_30" })!;
   tableView.reorderedProperties.reorderingIds = ["Comment", "From", "Subject"];
 
   return presenter;

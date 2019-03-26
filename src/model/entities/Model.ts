@@ -1,34 +1,20 @@
-import { IModel, IDataViewQuery, IDataTableQuery, ICursorQuery } from "../types/IModel";
-import { ITableView } from "./specificView/table/types/ITableView";
+import {
+  IModel,
+  IDataViewQuery,
+} from "../types/IModel";
+
 import { IDataTable } from "./data/types/IDataTable";
 import { ICursor } from "./cursor/types/ICursor";
-
-
+import { IDataViews } from "./specificViews/types/IDataViews";
 
 export class Model implements IModel {
-  constructor(tableViews: ITableView[]) {
-    this.tableViews = tableViews;
-  }
+  constructor(public dataViews: IDataViews[]) {}
 
-  tableViews: ITableView[];
-
-  getTableView(query: IDataViewQuery): ITableView | undefined {
+  getDataViews(query: IDataViewQuery): IDataViews| undefined {
     if (query.dataViewId) {
-      return this.tableViews.find(obj => obj.id === query.dataViewId);
+      return this.dataViews.find(obj => obj.id === query.dataViewId);
     }
     return;
   }
 
-  getDataTable(query: IDataTableQuery): IDataTable | undefined {
-    const dataView = this.getTableView(query);
-    return dataView && dataView.dataTable;
-  }
-
-  getCursor(query: ICursorQuery): ICursor | undefined {
-    const dataView = this.getTableView(query);
-    return dataView && dataView.cursor;
-  }
-
-
-  
 }

@@ -5,45 +5,8 @@ import * as React from "react";
 import { IScreen } from "src/presenter/types/IScreenPresenter";
 import { Screen } from "../../presenter/ReactUI/screenElements/Screen";
 import { parseScreenXml } from "src/common/ScreenXml";
-import { collectElements } from "src/presenter/factory/screen/collect";
-import { ScreenFactory } from "src/presenter/factory/screen/ScreenFactory";
 import { buildScreen } from "src/Application";
 
-/*
-async function getScreen() {
-  const response = await axios.get("/screen03.xml");
-  const { data } = response;
-  const scrObj = xmlJs.xml2js(data, {
-    compact: false,
-    alwaysChildren: true,
-    addParent: true,
-    alwaysArray: true
-  });
-
-  const modReprs = new Map();
-  const modExhs = new Set();
-  const modelParam = collectModelElements(scrObj, modReprs, modExhs);
-  const model = createModel(modelParam);
-  console.log(modelParam, model)
-
-  const reprs = new Map();
-  const exhs = new Set();
-  const infReprs = new Map();
-  const infExhs = new Set();
-  const screenParam = collectScreenElements(
-    scrObj,
-    reprs,
-    exhs,
-    infReprs,
-    infExhs
-  );
-  const presenterFactory = new PresenterFactory();
-  const screen = presenterFactory.createScreen(model, screenParam);
-
-  console.log(screenParam, screen);
-  
-  return screen;
-}*/
 
 @observer
 class App extends React.Component {
@@ -52,6 +15,7 @@ class App extends React.Component {
   async componentDidMount() {
     const resp = await axios.get("/screen03.xml");
     const screenXml = parseScreenXml(resp.data);
+    
     this.screen = buildScreen(screenXml);
     
   }
