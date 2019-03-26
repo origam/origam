@@ -64,6 +64,8 @@ namespace Origam.Workflow.Tasks
                 case Trace.No :
                     _call.Trace = false;
                     break;
+                case Trace.InheritFromParent:
+                    break;
             }
         }
 
