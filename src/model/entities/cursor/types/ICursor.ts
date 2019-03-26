@@ -1,9 +1,9 @@
 import { IPropertyId } from "../../values/types/IPropertyId";
 import { IRecordId } from "../../values/types/IRecordId";
 
-export interface IEditCtx {}
-
-export interface ISelectCtx {}
+export interface IExtSelRowState {
+  selRowId: IRecordId | undefined;
+}
 
 export interface ICursor {
   selRowId: IRecordId | undefined;

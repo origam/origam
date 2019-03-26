@@ -1,15 +1,28 @@
-import { ICursor } from "./types/ICursor";
+import { ICursor, IExtSelRowState } from "./types/ICursor";
 import { observable, computed } from "mobx";
 import { IDataTable } from "../data/types/IDataTable";
 import { IProperties } from "../data/types/IProperties";
+import { ExtSelRowState } from "./ExtSelRowState";
 
 export class Cursor implements ICursor {
   constructor(
     public dataTable: IDataTable,
-    public propertiesTopology: IProperties
-  ) {}
+    public propertiesTopology: IProperties,
+    extSelRowState?: IExtSelRowState
+  ) {
+    this.selRowState = extSelRowState || new ExtSelRowState();
+  }
 
-  @observable selRowId: string | undefined;
+  selRowState: IExtSelRowState
+
+  get selRowId(): string | undefined {
+    return this.selRowState.selRowId;
+  }
+
+  set selRowId(value: string | undefined) {
+    this.selRowState.selRowId = value;
+  }
+
   @observable selColId: string | undefined;
   @observable isEditing: boolean = false;
 
