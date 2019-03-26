@@ -42,6 +42,7 @@ input.editor {
   &:hover:not(:read-only) {
     border: 1px solid #8998c5;
     outline: #8998c5 solid 1px;
+    outline-offset: -2px;
     position: relative;
     z-index: 100;
   }
@@ -52,6 +53,10 @@ input.editor {
     width: initial;
     height: initial;
     background: initial;
+  }
+  &:focus {
+    outline: #8998c5 solid 1px;
+    outline-offset: -2px;
   }
 }
 

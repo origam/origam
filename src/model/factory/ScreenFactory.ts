@@ -8,21 +8,26 @@ import { DataViews } from "../entities/specificViews/DataViews";
 import { IPropertyParam, IDataViewParam } from "../types/ModelParam";
 import { Model } from "../entities/Model";
 import { IViewType } from "../entities/specificViews/types/IViewType";
+import { ExtSelRowState } from "../entities/cursor/ExtSelRowState";
+import { IExtSelRowState } from "../entities/cursor/types/ICursor";
+import { FormView } from "../entities/specificView/form/FormView";
 
 export function buildTableView({
   id,
   dataTable,
-  properties
+  properties,
+  extSelRowState
 }: {
   id: string;
   dataTable: DataTable;
   properties: Properties;
+  extSelRowState: IExtSelRowState;
 }) {
   const reorderedProperties = new Properties(
     properties.items,
     properties.items.map(item => item.id).filter(id => id !== "Id")
   );
-  const cursor = new Cursor(dataTable, reorderedProperties);
+  const cursor = new Cursor(dataTable, reorderedProperties, extSelRowState);
   const tableView = new TableView({
     id,
     dataTable,
@@ -33,7 +38,31 @@ export function buildTableView({
   return tableView;
 }
 
-export function buildFormView() {}
+export function buildFormView({
+  id,
+  dataTable,
+  properties,
+  extSelRowState
+}: {
+  id: string;
+  dataTable: DataTable;
+  properties: Properties;
+  extSelRowState: IExtSelRowState;
+}) {
+  const reorderedProperties = new Properties(
+    properties.items,
+    properties.items.map(item => item.id).filter(id => id !== "Id")
+  );
+  const cursor = new Cursor(dataTable, reorderedProperties, extSelRowState);
+  const formView = new FormView({
+    id,
+    dataTable,
+    cursor,
+    properties,
+    reorderedProperties
+  });
+  return formView;
+}
 
 export function buildDataViews({
   id,
@@ -56,13 +85,27 @@ export function buildDataViews({
     )
   );
   const dataTable = new DataTable({ records, properties });
-  const tableView = buildTableView({ id, dataTable, properties });
-  const dataViews = new DataViews(id, [tableView], initialView);
+  const extSelRowState = new ExtSelRowState();
+  const tableView = buildTableView({
+    id,
+    dataTable,
+    properties,
+    extSelRowState
+  });
+  const formView = buildFormView({
+    id,
+    dataTable,
+    properties,
+    extSelRowState
+  });
+  const dataViews = new DataViews(id, [tableView, formView], initialView);
   return dataViews;
 }
 
 export function buildAllDataViews(modelParam: IDataViewParam[]) {
-  const dataViews = modelParam.map(mp => buildDataViews({...mp, propertyParams: mp.properties}));
+  const dataViews = modelParam.map(mp =>
+    buildDataViews({ ...mp, propertyParams: mp.properties })
+  );
   const model = new Model(dataViews);
   return model;
 }

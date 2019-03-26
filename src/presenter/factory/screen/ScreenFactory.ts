@@ -15,7 +15,7 @@ import {
   IUIFormRoot
 } from "src/presenter/types/IUIScreenBlueprints";
 import { ITableView as IPresTableView } from "src/presenter/types/ITableViewPresenter/ITableView";
-import { IFormView } from "src/presenter/types/IFormViewPresenter/IFormView";
+import { IFormView as IPresFormView } from "src/presenter/types/IFormViewPresenter/IFormView";
 import { computed, observable, action } from "mobx";
 import { IFormField } from "src/presenter/types/IFormViewPresenter/IFormField";
 import { IToolbar } from "src/presenter/types/ITableViewPresenter/IToolbar";
@@ -31,6 +31,7 @@ import { ICursor } from "src/model/entities/cursor/types/ICursor";
 import { IProperties } from "src/model/entities/data/types/IProperties";
 import { ITableView as IModTableView } from "src/model/entities/specificView/table/types/ITableView";
 import { IDataViews } from "src/model/entities/specificViews/types/IDataViews";
+import { IFormView as IModFormView } from "src/model/entities/specificView/form/types/IFormView";
 
 class Screen implements IScreen {
   constructor(
@@ -80,16 +81,39 @@ class DataView implements IPresDataView {
   }
 }
 
-export class FormView implements IFormView {
-  constructor(uiStructure: IUIFormRoot[], toolbar: IToolbar | undefined) {
+export class FormView implements IPresFormView {
+  constructor(
+    uiStructure: IUIFormRoot[],
+    toolbar: IToolbar | undefined,
+    public modFormView: IModFormView
+  ) {
     this.uiStructure = uiStructure;
     this.toolbar = toolbar;
   }
 
   type: IViewType.FormView = IViewType.FormView;
   uiStructure: IUIFormRoot[];
-  fields: Map<string, IFormField> = new Map();
   toolbar: IToolbar | undefined;
+
+  @computed
+  get fields(): Map<string, IFormField> {
+    const { dataTable, reorderedProperties, cursor } = this.modFormView;
+    return new Map(reorderedProperties.items.map(prop => {
+      const value = cursor.selRowId
+        ? dataTable.getValueById(cursor.selRowId, prop.id)
+        : "";
+      return [
+        prop.id,
+        {
+          isLoading: false,
+          isInvalid: false,
+          isReadOnly: prop.isReadOnly,
+          type: "TextCell",
+          value
+        }
+      ];
+    }) as Array<[string, IFormField]>);
+  }
 }
 
 export class TableView implements IPresTableView {
@@ -370,6 +394,12 @@ export class ScreenFactory implements IScreenFactory {
           switch (availV.type) {
             /* FORM */
             case IViewType.FormView: {
+              const modFormView = modDataViews.byType(IViewType.FormView) as (
+                | IModFormView
+                | undefined);
+              if (!modFormView) {
+                throw new Error("No form view.");
+              }
               let toolbar: IToolbar | undefined = undefined;
               if (!availV.isHeadless) {
                 toolbar = new DefaultToolbar(
@@ -380,7 +410,7 @@ export class ScreenFactory implements IScreenFactory {
                   view.name
                 );
               }
-              return new FormView(availV.uiStructure, toolbar);
+              return new FormView(availV.uiStructure, toolbar, modFormView);
             }
             /* TABLE */
             case IViewType.TableView: {

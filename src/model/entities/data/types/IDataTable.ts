@@ -36,7 +36,9 @@ export interface IDataTable extends ITableDataTable {
   getColumnIdByIndex(idx: number): string | undefined;
 
   getColumnByIndex(idx: number): IProperty | undefined;
+  getColumnById(id: string): IProperty | undefined;
   getRecordByIndex(idx: number): IRecord | undefined;
+  getRecordById(id: string): IRecord | undefined;
 
   getRecordIdAfterId(recordId: IRecordId): IRecordId | undefined;
   getRecordIdBeforeId(recordId: IRecordId): IRecordId | undefined;

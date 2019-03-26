@@ -14,6 +14,7 @@ interface IDataTableParam {
 }
 
 export class DataTable implements IDataTable {
+
   constructor(param: IDataTableParam) {
     this.records = param.records;
     this.properties = param.properties;
@@ -130,6 +131,15 @@ export class DataTable implements IDataTable {
   getColumnByIndex(idx: number): IProperty | undefined {
     return this.properties.byIndex(idx);
   }
+
+  getRecordById(id: string): IRecord | undefined {
+    return this.records.byId(id);
+  }
+
+  getColumnById(id: string): IProperty | undefined {
+    return this.properties.byId(id);
+  }
+
 
   getNewRecord(): IRecord {
     throw new Error("Method not implemented.");

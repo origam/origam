@@ -177,21 +177,18 @@ export class Cursor implements ICursor {
   }
 
   ensureSelectionVisible() {
-    return;
-    throw new Error("Method not implemented.");
+    console.log("Ensure selection visible.")
   }
 
   finishEditing() {
-    throw new Error("Method not implemented.");
     this.isEditing = false;
   }
 
   startEditing() {
-    throw new Error("Method not implemented.");
     this.isEditing = true;
   }
 
   focusColumn(colId: string) {
-    throw new Error("Method not implemented.");
+    console.log("Focus column", colId)
   }
 }
