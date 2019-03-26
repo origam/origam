@@ -28,8 +28,10 @@ export interface ICursor {
   selectPrevRow(): void;
   selectNextColumn(): void;
   selectPrevColumn(): void;
+  selectFirstColumn(): void;
 
   startEditRow(rowId: IRecordId): void;
+  startEditing() : void;
   editCell(
     rowId: IRecordId,
     colId: IPropertyId

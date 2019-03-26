@@ -3,11 +3,14 @@ import { observable, computed } from "mobx";
 import { IDataTable } from "../data/types/IDataTable";
 import { IProperties } from "../data/types/IProperties";
 import { ExtSelRowState } from "./ExtSelRowState";
+import { IDataView } from "../specificViews/types/IDataView";
 
 export class Cursor implements ICursor {
+
   constructor(
     public dataTable: IDataTable,
     public propertiesTopology: IProperties,
+    public getView: () => IDataView,
     extSelRowState?: IExtSelRowState
   ) {
     this.selRowState = extSelRowState || new ExtSelRowState();
@@ -135,6 +138,11 @@ export class Cursor implements ICursor {
     throw new Error("Method not implemented.");
   }
 
+  selectFirstColumn(): void {
+    const prop = this.propertiesTopology.firstProperty;
+    prop && this.selectColumn(prop.id);
+  }
+
   selectNextRow(): void {
     if (this.isSelected) {
       const newId = this.dataTable.getRecordIdAfterId(this.selRowId!);
@@ -181,6 +189,7 @@ export class Cursor implements ICursor {
   }
 
   finishEditing() {
+
     this.isEditing = false;
   }
 

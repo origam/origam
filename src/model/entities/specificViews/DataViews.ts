@@ -32,9 +32,9 @@ export class DataViews implements IDataViews {
 
   @action.bound
   activateView(viewType: IViewType): void {
-    // this.activeView && this.activeView.deactivateView();
-    // const newView = this.getViewByType(viewType);
-    // newView && newView.activateView();
+    this.activeView && this.activeView.deactivate();
+    const newView = this.getViewByType(viewType);
+    newView && newView.activate();
     this.activeViewType = viewType;
   }
 }

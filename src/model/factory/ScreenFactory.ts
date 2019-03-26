@@ -27,7 +27,12 @@ export function buildTableView({
     properties.items,
     properties.items.map(item => item.id).filter(id => id !== "Id")
   );
-  const cursor = new Cursor(dataTable, reorderedProperties, extSelRowState);
+  const cursor: Cursor = new Cursor(
+    dataTable,
+    reorderedProperties,
+    () => tableView,
+    extSelRowState
+  );
   const tableView = new TableView({
     id,
     dataTable,
@@ -53,7 +58,12 @@ export function buildFormView({
     properties.items,
     properties.items.map(item => item.id).filter(id => id !== "Id")
   );
-  const cursor = new Cursor(dataTable, reorderedProperties, extSelRowState);
+  const cursor: Cursor = new Cursor(
+    dataTable,
+    reorderedProperties,
+    () => formView,
+    extSelRowState
+  );
   const formView = new FormView({
     id,
     dataTable,

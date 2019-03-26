@@ -5,6 +5,8 @@ import { IDataTable } from "../../data/types/IDataTable";
 
 import { IForm } from "../../form/types/IForm";
 import { IViewType } from "src/model/entities/specificViews/types/IViewType";
+import { action } from "mobx";
+import { Form } from "../../form/Form";
 
 export interface ITableViewParam {
   id: string;
@@ -15,6 +17,7 @@ export interface ITableViewParam {
 }
 
 export class TableView implements ITableView {
+
   constructor(param: ITableViewParam) {
     this.id = param.id;
     this.cursor = param.cursor;
@@ -47,6 +50,37 @@ export class TableView implements ITableView {
       columnIdxStart,
       columnIdxEnd
     );*/
+  }
+
+  activate(): void {
+    return
+  }
+
+  deactivate(): void {
+    return
+  }
+
+  @action.bound
+  initForm() {
+    const initialValues = this.reorderedProperties.items.map(prop => {
+      return [
+        prop.id,
+        this.cursor.selRowId
+          ? this.dataTable.getValueById(this.cursor.selRowId, prop.id)
+          : ""
+      ] as [string, any];
+    });
+    this.form = new Form(new Map(initialValues));
+  }
+
+  @action.bound
+  finishForm() {
+    this.form = undefined;
+  }
+
+  @action.bound
+  cancelForm(): void {
+    this.form = undefined;
   }
 
   selectCell(rowId: string | undefined, columnId: string | undefined): void {

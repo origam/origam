@@ -6,6 +6,7 @@ import { IViewType } from "src/model/entities/specificViews/types/IViewType";
 import { ICursor } from "src/model/entities/cursor/types/ICursor";
 import { IProperties } from "src/model/entities/data/types/IProperties";
 import { IDataTable } from "src/model/entities/data/types/IDataTable";
+import { IForm } from '../../../form/types/IForm';
 
 export interface ITableView {
   type: IViewType.TableView;
@@ -14,6 +15,13 @@ export interface ITableView {
   dataTable: IDataTable;
   properties: IProperties;
   reorderedProperties: IProperties;
+  form: IForm | undefined;
+  
+  activate(): void;
+  deactivate(): void;
+  initForm(): void;
+  finishForm() : void;
+  cancelForm(): void;
 
   updateVisibleRegion(
     rowIdxStart: number,

@@ -1,9 +1,13 @@
 import { IForm } from "./types/IForm";
-import { computed, action } from "mobx";
+import { computed, action, observable } from "mobx";
 
 export class Form implements IForm {
-  initialValues: Map<string, any> = new Map();
-  dirtyValues: Map<string, any> = new Map();
+  constructor(initialValues: Map<string, any> = new Map()) {
+    this.initialValues = initialValues;
+  }
+
+  @observable initialValues: Map<string, any> = new Map();
+  @observable dirtyValues: Map<string, any> = new Map();
 
   @computed get valueMap(): Map<string, any> {
     return new Map(Array.from(this.initialValues.keys()).map(key => [

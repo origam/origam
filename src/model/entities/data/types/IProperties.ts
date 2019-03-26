@@ -5,6 +5,7 @@ export interface IProperties {
   count: number;
   items: IProperty[];
   reorderingIds?: string[];
+  firstProperty: IProperty | undefined;
   byId(id: IPropertyId): IProperty | undefined;
   byIndex(idx: number): IProperty | undefined;
   getIndex(property: IProperty): number | undefined;

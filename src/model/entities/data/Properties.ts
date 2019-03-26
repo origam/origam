@@ -4,6 +4,7 @@ import { IPropertyId } from "../values/types/IPropertyId";
 import { computed } from "mobx";
 
 export class Properties implements IProperties {
+  
   constructor(items: IProperty[], reorderingIds?: string[]) {
     this.originalItems = items;
     this.reorderingIds = reorderingIds;
@@ -24,6 +25,11 @@ export class Properties implements IProperties {
 
   get count(): number {
     return this.items.length;
+  }
+
+  @computed 
+  get firstProperty(): IProperty | undefined {
+    return this.byIndex(0);
   }
 
   byId(id: string): IProperty | undefined {
