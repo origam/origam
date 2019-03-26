@@ -80,7 +80,8 @@ namespace Origam.DA.ObjectPersistence
 		void FlushCache();
 
 		void DeletePackage(Guid packageId);
-
+		bool  IsInTransaction { get; }
+		void RunInTransaction(Action action);
         void BeginTransaction();
         void EndTransaction();
 	    void EndTransactionDontSave();

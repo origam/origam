@@ -113,6 +113,13 @@ namespace Origam.Workbench.Services
         {
         }
 
+        public bool IsInTransaction { get; }
+
+        public void RunInTransaction(Action action)
+        {
+            action();
+        }
+
         public void BeginTransaction()
         {
         }

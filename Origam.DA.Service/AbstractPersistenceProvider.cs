@@ -38,6 +38,13 @@ namespace Origam.DA.ObjectPersistence
 
         public event EventHandler InstancePersisted;
 
+        public void RunInTransaction(Action action)
+        {
+            BeginTransaction();
+            action();
+            EndTransaction();
+        }
+
         public virtual void BeginTransaction()
         {
         }
@@ -45,6 +52,7 @@ namespace Origam.DA.ObjectPersistence
         public abstract object Clone();
 
         public abstract void DeletePackage(Guid packageId);
+        public virtual bool IsInTransaction { get; }
 
         public abstract void Dispose();
 

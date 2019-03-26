@@ -281,6 +281,13 @@ namespace Origam.Workbench.ServicesTests
             throw new NotImplementedException();
         }
 
+        public bool IsInTransaction { get; }
+
+        public void RunInTransaction(Action action)
+        {
+            action();
+        }
+
         public void BeginTransaction()
         {
             throw new NotImplementedException();
