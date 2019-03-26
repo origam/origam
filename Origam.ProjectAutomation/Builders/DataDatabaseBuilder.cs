@@ -20,12 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam;
+using static Origam.ProjectAutomation.Project;
 
 namespace Origam.ProjectAutomation
 {
     public class DataDatabaseBuilder : AbstractDatabaseBuilder
     {
         string _databaseName;
+        DatabaseType _databaseType;
 
         public override string Name
         {
@@ -37,16 +39,17 @@ namespace Origam.ProjectAutomation
 
         public override void Execute(Project project)
         {
+            _databaseType = project.DatabaseTp;
             _databaseName = project.DataDatabaseName;
-            this.DataService.ConnectionString = DataService.BuildConnectionString(
+            DataService(_databaseType).ConnectionString = DataService(_databaseType).BuildConnectionString(
                 project.DatabaseServerName, "", project.DatabaseUserName,
                 project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
-            this.DataService.CreateDatabase(_databaseName);
+            this.DataService(_databaseType).CreateDatabase(_databaseName);
         }
 
         public string BuildConnectionString(Project project, bool pooling)
         {
-            return DataService.BuildConnectionString(project.DatabaseServerName,
+            return DataService(_databaseType).BuildConnectionString(project.DatabaseServerName,
                 project.DataDatabaseName, project.DatabaseUserName,
                 project.DatabasePassword, project.DatabaseIntegratedAuthentication, pooling);
         }
@@ -54,7 +57,7 @@ namespace Origam.ProjectAutomation
         public override void Rollback()
         {
             OrigamUserContext.Reset();
-            this.DataService.DropDatabase(_databaseName);
+            this.DataService(_databaseType).DropDatabase(_databaseName);
         }
     }
 }

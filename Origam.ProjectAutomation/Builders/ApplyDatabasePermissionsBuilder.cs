@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam;
 using Origam.DA.Service;
 using System;
+using static Origam.ProjectAutomation.Project;
 
 namespace Origam.ProjectAutomation
 {
@@ -29,6 +30,7 @@ namespace Origam.ProjectAutomation
     {
         string _loginName;
         bool _integratedAuthentication = false;
+        DatabaseType _databaseType;
 
         public override string Name
         {
@@ -40,8 +42,9 @@ namespace Origam.ProjectAutomation
 
         public override void Execute(Project project)
         {
-            DataService.ConnectionString =
-                DataService.BuildConnectionString(project.DatabaseServerName,
+            _databaseType = project.DatabaseTp;
+            DataService(_databaseType).ConnectionString =
+                DataService(_databaseType).BuildConnectionString(project.DatabaseServerName,
                 project.DataDatabaseName, project.DatabaseUserName,
                 project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
             if (project.DatabaseIntegratedAuthentication)
@@ -55,10 +58,10 @@ namespace Origam.ProjectAutomation
                 string transaction1 = Guid.NewGuid().ToString();
                 try
                 {
-                    DataService.ExecuteUpdate(command1, transaction1);
-                    DataService.ExecuteUpdate(command2, transaction1);
-                    DataService.ExecuteUpdate(command3, transaction1);
-                    DataService.ExecuteUpdate(command4, transaction1);
+                    DataService(_databaseType).ExecuteUpdate(command1, transaction1);
+                    DataService(_databaseType).ExecuteUpdate(command2, transaction1);
+                    DataService(_databaseType).ExecuteUpdate(command3, transaction1);
+                    DataService(_databaseType).ExecuteUpdate(command4, transaction1);
                     ResourceMonitor.Commit(transaction1);
                 }
                 catch (Exception)
@@ -74,7 +77,7 @@ namespace Origam.ProjectAutomation
             if (_integratedAuthentication)
             {
                 string command1 = string.Format("DROP LOGIN {0}", _loginName);
-                DataService.ExecuteUpdate(command1, null);
+                DataService(_databaseType).ExecuteUpdate(command1, null);
             }
         }
     }

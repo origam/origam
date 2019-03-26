@@ -465,10 +465,10 @@
     </EmbeddedResource>
     <None Include="App.config" />
     <None Include="origam.vstheme.gz" />
+    <None Include="Properties\DataSources\Origam.ProjectAutomation.Project.datasource" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Origam\Workbench\" />
-    <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AeroWizard">

@@ -21,12 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Data;
+using System.Data.SqlClient;
 using Npgsql;
 
 namespace Origam.DA.Service
 {
 	/// <summary>
-	/// Summary description for MsSqlDataService.
+	/// Summary description for PgSqlDataService.
 	/// </summary>
 	public class PgSqlDataService : AbstractSqlDataService
 	{
@@ -55,7 +56,14 @@ namespace Origam.DA.Service
 
         public override string BuildConnectionString(string serverName, string databaseName, string userName, string password, bool integratedAuthentication, bool pooling)
         {
-            throw new NotImplementedException();
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+            builder.IntegratedSecurity = integratedAuthentication;
+            builder.UserID = userName;
+            builder.Password = password;
+            builder.DataSource = serverName;
+            builder.InitialCatalog = databaseName;
+            builder.Pooling = pooling;
+            return builder.ConnectionString;
         }
 
         internal override void HandleException(Exception ex, string rowErrorMessage, DataRow row)

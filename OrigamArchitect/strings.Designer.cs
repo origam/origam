@@ -1735,6 +1735,15 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unknown Database Type.
+        /// </summary>
+        internal static string UnknownDatabaseType {
+            get {
+                return ResourceManager.GetString("UnknownDatabaseType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unknown deployment type selected..
         /// </summary>
         internal static string UnknownDeploymentType {

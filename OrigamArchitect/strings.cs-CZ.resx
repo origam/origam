@@ -513,4 +513,7 @@
   <data name="EnterUser_name" xml:space="preserve">
     <value>Prosím vložte své jméno</value>
   </data>
+  <data name="UnknownDatabaseType" xml:space="preserve">
+    <value>Neznámý Typ Databáze</value>
+  </data>
 </root>

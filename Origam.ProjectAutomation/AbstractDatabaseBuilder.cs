@@ -20,6 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.DA.Service;
+using System;
+using static Origam.ProjectAutomation.Project;
 
 namespace Origam.ProjectAutomation
 {
@@ -27,21 +29,29 @@ namespace Origam.ProjectAutomation
     {
         AbstractSqlDataService _dataService = null;
 
-        internal AbstractSqlDataService DataService
+        internal AbstractSqlDataService DataService(DatabaseType DatabaseType)
         {
-            get
-            {
+           
                 if (_dataService == null)
                 {
-                    _dataService = CreateService();
+                    _dataService = CreateService(DatabaseType);
                 }
                 return _dataService;
-            }
+            
         }
 
-        internal AbstractSqlDataService CreateService()
+        internal AbstractSqlDataService CreateService(DatabaseType DatabaseType)
         {
-            return new MsSqlDataService();
+            if (DatabaseType == DatabaseType.MsSql)
+            {
+                return new MsSqlDataService();
+            }
+            if (DatabaseType == DatabaseType.PostgreSql)
+            {
+                return new PgSqlDataService();
+            }
+            throw new ArgumentOutOfRangeException("DatabaseType is wrong ",
+                            DatabaseType.ToString());
         }
     }
 }

@@ -32,6 +32,7 @@ using System.Security.Principal;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using Origam.Git;
+using static Origam.ProjectAutomation.Project;
 
 namespace OrigamArchitect
 {
@@ -83,6 +84,24 @@ namespace OrigamArchitect
                     default:
                         throw new ArgumentOutOfRangeException("DeploymentType", 
                             cboDeploymentType.SelectedIndex, strings.UnknownDeploymentType);
+                }
+            }
+        }
+
+        private DatabaseType DatabaseTp
+        {
+            get
+            {
+                switch (txtDatabasetype.SelectedIndex)
+                {
+                    case 0:
+                        return DatabaseType.MsSql;
+                    case 1:
+                        return DatabaseType.PostgreSql;
+                    default:
+                        throw new ArgumentOutOfRangeException("DatabaseType",
+                            txtDatabasetype.SelectedIndex, strings.UnknownDatabaseType);
+
                 }
             }
         }
@@ -183,6 +202,8 @@ namespace OrigamArchitect
             _project.WebRootName = cboWebRoot.Text;
             _project.Url = txtName.Text;
             _project.ArchitectUserName = System.Threading.Thread.CurrentPrincipal.Identity.Name;
+            
+            _project.DatabaseTp = DatabaseTp;
             _project.NewPackageId = Guid.NewGuid().ToString();
         }
 
