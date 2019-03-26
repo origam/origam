@@ -2,7 +2,7 @@ import { IScreenFactory } from "src/presenter/types/IScreenFactory";
 import * as ScreenBp from "../../types/IInfScreenBlueprints";
 import {
   IScreen,
-  IDataView,
+  IDataView as IPresDataView,
   ITabs,
   ISplitter,
   ISpecificDataView,
@@ -30,11 +30,12 @@ import { IModel } from "src/model/types/IModel";
 import { ICursor } from "src/model/entities/cursor/types/ICursor";
 import { IProperties } from "src/model/entities/data/types/IProperties";
 import { ITableView as IModTableView } from "src/model/entities/specificView/table/types/ITableView";
+import { IDataViews } from "src/model/entities/specificViews/types/IDataViews";
 
 class Screen implements IScreen {
   constructor(
     uiStructure: IUIScreenTreeNode[],
-    dataViewsMap: Map<string, IDataView>,
+    dataViewsMap: Map<string, IPresDataView>,
     tabPanelsMap: Map<string, ITabs>
   ) {
     this.uiStructure = uiStructure;
@@ -47,16 +48,17 @@ class Screen implements IScreen {
   isLoading: boolean = false;
   isFullScreen: boolean = true;
   uiStructure: IUIScreenTreeNode[];
-  dataViewsMap: Map<string, IDataView> = new Map();
+  dataViewsMap: Map<string, IPresDataView> = new Map();
   tabPanelsMap: Map<string, ITabs> = new Map();
   splittersMap: Map<string, ISplitter> = new Map();
 }
 
-class DataView implements IDataView {
+class DataView implements IPresDataView {
   constructor(
     id: string,
     defaultActiveView: IViewType,
-    availableViews: ISpecificDataView[]
+    availableViews: ISpecificDataView[],
+    public modDataViews: IDataViews
   ) {
     this.id = id;
     this.availableViews = availableViews;
@@ -73,6 +75,7 @@ class DataView implements IDataView {
   availableViews: ISpecificDataView[];
 
   setActiveViewType(viewType: IViewType): void {
+    this.modDataViews.activateView(viewType);
     this.activeViewType = viewType;
   }
 }
@@ -103,7 +106,7 @@ export class TableView implements IPresTableView {
 export class DefaultToolbar implements IToolbar {
   constructor(public btnsViews: IViewTypeBtn[], public label: string) {}
 
-  dataView: IDataView | undefined;
+  dataView: IPresDataView | undefined;
 
   isLoading = false;
   isError = true;
@@ -173,7 +176,10 @@ export class DefaultToolbar implements IToolbar {
 }
 
 export class DefaultViewButton implements IViewTypeBtn {
-  constructor(public type: IViewType, public getDataView: () => IDataView) {}
+  constructor(
+    public type: IViewType,
+    public getDataView: () => IPresDataView
+  ) {}
 
   @action.bound handleClick(event: any) {
     this.getDataView().setActiveViewType(this.type);
@@ -355,13 +361,12 @@ export class ScreenFactory implements IScreenFactory {
   getScreen(blueprint: ScreenBp.IScreen): IScreen {
     const dataViewsBp = Array.from(blueprint.dataViewsMap);
     const dataViewsEnt = dataViewsBp.map(([id, view]) => {
+      const modDataViews = this.model.getDataViews({ dataViewId: view.id });
+      if (!modDataViews) {
+        throw new Error("Data view model not found: " + view.id);
+      }
       const availableViews: ISpecificDataView[] = view.availableViews
         .map(availV => {
-          const modDataViews = this.model.getDataViews({ dataViewId: view.id });
-          if (!modDataViews) {
-            console.error("Data view model not found:", view.id);
-            return;
-          }
           switch (availV.type) {
             /* FORM */
             case IViewType.FormView: {
@@ -417,9 +422,10 @@ export class ScreenFactory implements IScreenFactory {
       const dataView = new DataView(
         view.id,
         view.initialView,
-        availableViews as ISpecificDataView[]
+        availableViews as ISpecificDataView[],
+        modDataViews
       );
-      return [id, dataView] as [string, IDataView];
+      return [id, dataView] as [string, IPresDataView];
     });
 
     const tabPanelsBp = Array.from(blueprint.tabPanelsMap);

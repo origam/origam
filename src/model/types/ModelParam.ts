@@ -1,6 +1,9 @@
+import { IViewType } from "../entities/specificViews/types/IViewType";
+
 
 export interface IDataViewParam {
   id: string;
+  initialView: IViewType;
   properties: IPropertyParam[];
 }
 

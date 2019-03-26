@@ -4,9 +4,13 @@ import { IDataViews } from "./types/IDataViews";
 import { IDataView } from "./types/IDataView";
 
 export class DataViews implements IDataViews {
-
-  constructor(public id: string, availableViews: IDataView[]) {
+  constructor(
+    public id: string,
+    availableViews: IDataView[],
+    initialActiveView: IViewType
+  ) {
     this.availableViews = availableViews;
+    this.activeViewType = initialActiveView;
   }
 
   availableViews: IDataView[];

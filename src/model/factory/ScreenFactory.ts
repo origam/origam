@@ -7,6 +7,7 @@ import { TableView } from "../entities/specificView/table/TableView";
 import { DataViews } from "../entities/specificViews/DataViews";
 import { IPropertyParam, IDataViewParam } from "../types/ModelParam";
 import { Model } from "../entities/Model";
+import { IViewType } from "../entities/specificViews/types/IViewType";
 
 export function buildTableView({
   id,
@@ -36,9 +37,11 @@ export function buildFormView() {}
 
 export function buildDataViews({
   id,
+  initialView,
   propertyParams
 }: {
   id: string;
+  initialView: IViewType;
   propertyParams: IPropertyParam[];
 }) {
   const records = new Records();
@@ -54,7 +57,7 @@ export function buildDataViews({
   );
   const dataTable = new DataTable({ records, properties });
   const tableView = buildTableView({ id, dataTable, properties });
-  const dataViews = new DataViews(id, [tableView]);
+  const dataViews = new DataViews(id, [tableView], initialView);
   return dataViews;
 }
 
