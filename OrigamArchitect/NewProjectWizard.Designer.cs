@@ -83,8 +83,11 @@
             this.colText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pageLocalDeploymentSettings = new AeroWizard.WizardPage();
+            this.labelPort = new System.Windows.Forms.Label();
+            this.txtPort = new System.Windows.Forms.TextBox();
+            this.labelPrivileges = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
-            this.txtDatabasetype = new System.Windows.Forms.ComboBox();
+            this.txtDatabaseType = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -646,8 +649,11 @@
             // 
             // pageLocalDeploymentSettings
             // 
+            this.pageLocalDeploymentSettings.Controls.Add(this.labelPort);
+            this.pageLocalDeploymentSettings.Controls.Add(this.txtPort);
+            this.pageLocalDeploymentSettings.Controls.Add(this.labelPrivileges);
             this.pageLocalDeploymentSettings.Controls.Add(this.label16);
-            this.pageLocalDeploymentSettings.Controls.Add(this.txtDatabasetype);
+            this.pageLocalDeploymentSettings.Controls.Add(this.txtDatabaseType);
             this.pageLocalDeploymentSettings.Controls.Add(this.label4);
             this.pageLocalDeploymentSettings.Controls.Add(this.label2);
             this.pageLocalDeploymentSettings.Controls.Add(this.label3);
@@ -667,6 +673,34 @@
             this.pageLocalDeploymentSettings.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageLocalDeploymentSettings_Commit);
             this.pageLocalDeploymentSettings.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageLocalDeploymentSettings_Initialize);
             // 
+            // labelPort
+            // 
+            this.labelPort.AutoSize = true;
+            this.labelPort.Location = new System.Drawing.Point(412, 134);
+            this.labelPort.Name = "labelPort";
+            this.labelPort.Size = new System.Drawing.Size(29, 15);
+            this.labelPort.TabIndex = 19;
+            this.labelPort.Text = "Port";
+            this.labelPort.Visible = false;
+            // 
+            // txtPort
+            // 
+            this.txtPort.Location = new System.Drawing.Point(456, 131);
+            this.txtPort.Name = "txtPort";
+            this.txtPort.Size = new System.Drawing.Size(100, 23);
+            this.txtPort.TabIndex = 18;
+            this.txtPort.Visible = false;
+            // 
+            // labelPrivileges
+            // 
+            this.labelPrivileges.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.labelPrivileges.Location = new System.Drawing.Point(160, 262);
+            this.labelPrivileges.Name = "labelPrivileges";
+            this.labelPrivileges.Size = new System.Drawing.Size(396, 36);
+            this.labelPrivileges.TabIndex = 17;
+            this.labelPrivileges.Text = "Enter UserName and Password witch has privileges for create Database and user.";
+            this.labelPrivileges.Visible = false;
+            // 
             // label16
             // 
             this.label16.AutoSize = true;
@@ -676,18 +710,18 @@
             this.label16.TabIndex = 16;
             this.label16.Text = "Database";
             // 
-            // txtDatabasetype
+            // txtDatabaseType
             // 
-            this.txtDatabasetype.Enabled = false;
-            this.txtDatabasetype.FormattingEnabled = true;
-            this.txtDatabasetype.Items.AddRange(new object[] {
+            this.txtDatabaseType.FormattingEnabled = true;
+            this.txtDatabaseType.Items.AddRange(new object[] {
             "Microsoft Sql Server",
             "Postgre Sql Server"});
-            this.txtDatabasetype.Location = new System.Drawing.Point(160, 86);
-            this.txtDatabasetype.Name = "txtDatabasetype";
-            this.txtDatabasetype.Size = new System.Drawing.Size(226, 23);
-            this.txtDatabasetype.TabIndex = 15;
-            this.txtDatabasetype.Text = "Microsoft Sql Server";
+            this.txtDatabaseType.Location = new System.Drawing.Point(160, 86);
+            this.txtDatabaseType.Name = "txtDatabaseType";
+            this.txtDatabaseType.Size = new System.Drawing.Size(223, 23);
+            this.txtDatabaseType.TabIndex = 15;
+            this.txtDatabaseType.Text = "Microsoft Sql Server";
+            this.txtDatabaseType.SelectedIndexChanged += new System.EventHandler(this.TxtDatabaseType_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -784,7 +818,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtServerName.Location = new System.Drawing.Point(160, 131);
             this.txtServerName.Name = "txtServerName";
-            this.txtServerName.Size = new System.Drawing.Size(396, 23);
+            this.txtServerName.Size = new System.Drawing.Size(223, 23);
             this.txtServerName.TabIndex = 3;
             // 
             // lblServerName
@@ -914,8 +948,11 @@
         private System.Windows.Forms.TextBox txtGitEmail;
         private System.Windows.Forms.TextBox txtGitUser;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.ComboBox txtDatabasetype;
+        private System.Windows.Forms.ComboBox txtDatabaseType;
         private System.Windows.Forms.BindingSource projectBindingSource;
         private System.Windows.Forms.BindingSource projectBindingSource1;
+        private System.Windows.Forms.Label labelPrivileges;
+        private System.Windows.Forms.Label labelPort;
+        private System.Windows.Forms.TextBox txtPort;
     }
 }

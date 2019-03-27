@@ -314,6 +314,7 @@ namespace Origam.ProjectAutomation
         public string Gitusername { get => _gitusername; set => _gitusername = value; }
         public string Gitemail { get => _gitemail; set => _gitemail = value; }
         public DatabaseType DatabaseTp { get; set; }
+        public int Port { get; set; }
         #endregion
     }
 }

@@ -516,4 +516,7 @@
   <data name="UnknownDatabaseType" xml:space="preserve">
     <value>Neznámý Typ Databáze</value>
   </data>
+  <data name="PortError" xml:space="preserve">
+    <value>Port není číslo !</value>
+  </data>
 </root>

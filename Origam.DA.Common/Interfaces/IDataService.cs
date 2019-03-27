@@ -39,7 +39,7 @@ namespace Origam.DA
         int BulkInsertThreshold { get; set; }
         int UpdateBatchSize { get; set; }
 
-        string BuildConnectionString(string serverName, string databaseName, string userName, string password, bool integratedAuthentication, bool pooling);
+        string BuildConnectionString(string serverName, int port ,string databaseName, string userName, string password, bool integratedAuthentication, bool pooling);
 		IStateMachineService StateMachine{get; set;}
         IAttachmentService AttachmentService { get; set; }
 

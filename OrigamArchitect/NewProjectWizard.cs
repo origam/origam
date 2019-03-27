@@ -92,7 +92,7 @@ namespace OrigamArchitect
         {
             get
             {
-                switch (txtDatabasetype.SelectedIndex)
+                switch (txtDatabaseType.SelectedIndex)
                 {
                     case 0:
                         return DatabaseType.MsSql;
@@ -100,7 +100,7 @@ namespace OrigamArchitect
                         return DatabaseType.PostgreSql;
                     default:
                         throw new ArgumentOutOfRangeException("DatabaseType",
-                            txtDatabasetype.SelectedIndex, strings.UnknownDatabaseType);
+                            txtDatabaseType.SelectedIndex, strings.UnknownDatabaseType);
 
                 }
             }
@@ -140,6 +140,7 @@ namespace OrigamArchitect
             _settings.SourcesFolder = txtSourcesFolder.Text;
             _settings.BinFolder = txtBinFolderRoot.Text;
             _settings.DatabaseServerName = txtServerName.Text;
+            _settings.DatabaseTypeText = txtDatabaseType.SelectedText;
             _settings.Save();
         }
 
@@ -191,6 +192,12 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
+            if (!int.TryParse(txtPort.Text, out int Port))
+            {
+                AsMessageBox.ShowError(this, strings.PortError, strings.NewProjectWizard_Title, null);
+                e.Cancel = true;
+                return;
+            }
 
             _project.Name = txtName.Text;
             _project.DatabaseServerName = txtServerName.Text;
@@ -204,6 +211,7 @@ namespace OrigamArchitect
             _project.ArchitectUserName = System.Threading.Thread.CurrentPrincipal.Identity.Name;
             
             _project.DatabaseTp = DatabaseTp;
+            _project.Port = Port;
             _project.NewPackageId = Guid.NewGuid().ToString();
         }
 
@@ -217,15 +225,32 @@ namespace OrigamArchitect
 
         private void pageLocalDeploymentSettings_Initialize(object sender, WizardPageInitEventArgs e)
         {
-            txtServerName.Text = _settings.DatabaseServerName;
+            txtServerName.Text = string.IsNullOrEmpty(txtServerName.Text)?_settings.DatabaseServerName: txtServerName.Text;
             cboWebRoot.Items.Clear();
             cboWebRoot.Items.AddRange(_builder.WebSites());
             if(cboWebRoot.Items.Count > 0)
             {
                 cboWebRoot.SelectedIndex = 0;
             }
+            if (txtDatabaseType.SelectedIndex == -1)
+            {
+                txtDatabaseType.SelectedItem = null;
+                txtDatabaseType.SelectedText = _settings.DatabaseTypeText;
+                TxtDatabaseType_SelectedIndexChanged(null, EventArgs.Empty);
+            }
         }
 
+        private void SetPort()
+        {
+                if (DatabaseTp == DatabaseType.MsSql)
+                {
+                    txtPort.Text = "0";
+                }
+                if (DatabaseTp == DatabaseType.PostgreSql)
+                {
+                    txtPort.Text = "5432";
+                }
+        }
         private void pagePaths_Commit(object sender, WizardPageConfirmEventArgs e)
         {
             if (string.IsNullOrEmpty(txtTemplateFolder.Text))
@@ -417,6 +442,28 @@ namespace OrigamArchitect
         {
                 txtGitUser.Enabled = gitrepo.Checked;
                 txtGitEmail.Enabled = gitrepo.Checked;
+        }
+
+        private void TxtDatabaseType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(DatabaseTp == DatabaseType.PostgreSql)
+            {
+                chkIntegratedAuthentication.Enabled = false;
+                chkIntegratedAuthentication.Checked = false;
+                labelPrivileges.Visible = true;
+                txtServerName.Width = txtDatabaseType.Width;
+                txtPort.Visible = true;
+                labelPort.Visible = true;
+            }
+            else
+            {
+                chkIntegratedAuthentication.Enabled = true;
+                labelPrivileges.Visible = false;
+                txtServerName.Width = cboWebRoot.Width;
+                txtPort.Visible = false;
+                labelPort.Visible = false;
+            }
+            SetPort();
         }
     }
 }

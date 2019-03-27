@@ -726,4 +726,7 @@
   <data name="UnknownDatabaseType" xml:space="preserve">
     <value>Unknown Database Type</value>
   </data>
+  <data name="PortError" xml:space="preserve">
+    <value>Port is not Number!</value>
+  </data>
 </root>

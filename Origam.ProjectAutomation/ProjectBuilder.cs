@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.ProjectAutomation.Builders;
+using System;
 using System.Collections.Generic;
 
 namespace Origam.ProjectAutomation
@@ -67,7 +68,7 @@ namespace Origam.ProjectAutomation
                     builder.State = TaskState.Finished;
                 }
             }
-            catch
+            catch (Exception e)
             {
                 activeTask.State = TaskState.Failed;
                 for (int i = tasks.Count - 1; i >= 0; i--)

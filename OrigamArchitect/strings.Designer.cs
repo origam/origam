@@ -1240,6 +1240,15 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Port is not Number!.
+        /// </summary>
+        internal static string PortError {
+            get {
+                return ResourceManager.GetString("PortError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Processes.
         /// </summary>
         internal static string ProcessesTabText {

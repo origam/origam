@@ -44,7 +44,7 @@ namespace Origam.ProjectAutomation
         {
             _databaseType = project.DatabaseTp;
             DataService(_databaseType).ConnectionString =
-                DataService(_databaseType).BuildConnectionString(project.DatabaseServerName,
+                DataService(_databaseType).BuildConnectionString(project.DatabaseServerName,project.Port,
                 project.DataDatabaseName, project.DatabaseUserName,
                 project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
             if (project.DatabaseIntegratedAuthentication)
