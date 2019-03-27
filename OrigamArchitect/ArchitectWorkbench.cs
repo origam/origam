@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -1382,7 +1382,7 @@ namespace OrigamArchitect
 		{
 			if (viewContent is SchemaCompareEditor) return true;
 			if (viewContent.LoadedObject == null) return false;
-			ISchemaItem loadedObject = (ISchemaItem) viewContent.LoadedObject;
+			IPersistent loadedObject = (IPersistent) viewContent.LoadedObject;
 			return filePersistenceProvider.Has(loadedObject.Id);
 		}
 
@@ -1399,16 +1399,16 @@ namespace OrigamArchitect
 		private void ActivateViewByContent(IViewContent refContent)
 		{
 			if(refContent == null) return;
-			ISchemaItem loadedObject = (ISchemaItem)refContent.LoadedObject;
+			IBrowserNode2 loadedObject = (IBrowserNode2)refContent.LoadedObject;
 			
 			ViewContentCollection
 				.Cast<IViewContent>()
 			    .Where(cont => cont.LoadedObject !=null)
 				.Where(cont => 
-					((ISchemaItem)cont.LoadedObject).NodeId == loadedObject.NodeId)
+					((IBrowserNode2)cont.LoadedObject).NodeId == loadedObject.NodeId)
 				.Where(content => refContent.GetType() == content.GetType())
 				.Cast<DockContent>()
-				.First()
+				.Single()
 				.Activate();
 		}
 
@@ -1619,9 +1619,13 @@ namespace OrigamArchitect
                 }
 	            if (errorSections.Count != 0)
 	            {
-	                FlexibleMessageBox.Show("The following errors were found in the loaded model:\n\n"+
-	                                        string.Join("\n\n",errorSections), "Model Errors");
-                }
+		            this.RunWithInvoke(() =>
+		            {
+			            FlexibleMessageBox.Show(
+				            "The following errors were found in the loaded model:\n\n" +
+				            string.Join("\n\n", errorSections), "Model Errors");
+		            });
+	            }
 	        }
 	    }
 
@@ -1695,24 +1699,37 @@ namespace OrigamArchitect
 
         public bool Disconnect()
 		{
-            if (IsConnected)
-            {
-                SaveWorkspace();
-            }
-            if (! _schema.Disconnect()) return false;
+			try
+			{
+				if (IsConnected)
+				{
+					SaveWorkspace();
+				}
 
-			UnloadConnectedServices();
-            UnloadConnectedPads();
-			UnloadMainMenu();
+				if (!_schema.Disconnect()) return false;
 
-			IsConnected = false;
-            ConfigurationManager.SetActiveConfiguration(null);
+				UnloadConnectedServices();
+				UnloadConnectedPads();
+				UnloadMainMenu();
 
-            UpdateTitle();
+				IsConnected = false;
+				ConfigurationManager.SetActiveConfiguration(null);
 
-            modelCheckCancellationTokenSource.Cancel();
-            modelCheckCancellationTokenSource = new CancellationTokenSource();
-            return true;
+				UpdateTitle();
+
+				modelCheckCancellationTokenSource.Cancel();
+				modelCheckCancellationTokenSource =
+					new CancellationTokenSource();
+				return true;
+			}
+			catch (Exception ex)
+			{
+				log.Error(ex);
+				MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK,
+					MessageBoxIcon.Error);
+			}
+
+			return true;
 		}
 
         private void UnloadConnectedPads()

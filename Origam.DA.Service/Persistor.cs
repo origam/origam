@@ -1,12 +1,31 @@
-﻿using System;
+#region license
+/*
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using MoreLinq;
 using Origam.DA.ObjectPersistence;
-using Origam.DA.ObjectPersistence.Providers;
 using Origam.Extensions;
 using Origam.Schema;
 
@@ -21,7 +40,7 @@ namespace Origam.DA.Service
         private readonly OrigamFileFactory origamFileFactory;
         private readonly OrigamFileManager origamFileManager;
         private readonly TrackerLoaderFactory trackerLoaderFactory;
-        public bool InTransaction { get; private set; }
+        public bool IsInTransaction { get; private set; }
 
         public Persistor(IPersistenceProvider persistenceProvider,
             FilePersistenceIndex index, OrigamFileFactory origamFileFactory,
@@ -38,58 +57,53 @@ namespace Origam.DA.Service
         {
             CheckObjectCanBePersisted(obj);
             IFilePersistent instance = (IFilePersistent) obj;
-            ElementName elementName = ElementNameFactory.Create(instance.GetType());
 
-            (OrigamFile origamFile, PersistedObjectInfo persistedObjectInfo) =
-                FindOrigamFileAndObjectInfo(instance);
-            if (persistedObjectInfo == null && instance.IsDeleted)
+            OrigamFile newOrigamFile = FindFileWhereInstanceShouldBeStored(instance);
+            OrigamFile currentOrigamFile = FindFileWhereInstanceIsStoredNow(instance);
+
+            if (currentOrigamFile!= null 
+                && !currentOrigamFile.ContainedObjects.ContainsKey(instance.Id) 
+                && instance.IsDeleted)
             {
                 return;
             }
 
-            RenameRelatedItems(instance, persistedObjectInfo?.OrigamFile);
-
-            if (origamFile == null)
+            if (newOrigamFile != currentOrigamFile)
             {
-                origamFile = origamFileFactory.New(
-                    parentFolderIds: instance.ParentFolderIds,
-                    relativePath: instance.RelativeFilePath,
-                    isGroup: instance.IsFolder);
+                RemoveFromFile(instance, currentOrigamFile);
             }
 
-            RemoveFromOldFile(instance, origamFile);
-
-            var updatedObjectInfo = UpdateObjectInfo(elementName, instance, origamFile);
-
-            if (instance.IsFileRootElement)
-            {
-                origamFile.ParentFolderIds.AddRange(instance.ParentFolderIds);
-            }
-
-            WriteToXmlDocument(origamFile, instance, elementName);
-            UpdateIndex(instance, updatedObjectInfo);
-            transactionStore.AddOrReplace(origamFile);
-            if (!InTransaction)
+            UpdateFile(instance, newOrigamFile);
+            
+            RenameRelatedItems(instance, currentOrigamFile);
+            
+            if (!IsInTransaction)
             {
                 ProcessTransactionStore();
             }
             instance.IsPersisted = true;
         }
 
-        private void RemoveFromOldFile(IFilePersistent instance, OrigamFile origamFile)
+        private void UpdateFile(IFilePersistent instance, OrigamFile newFile)
         {
-            bool mightBeMovingBetweenFiles = !instance.IsDeleted && !instance.IsFileRootElement;
-            if (mightBeMovingBetweenFiles)
+            ElementName elementName = ElementNameFactory.Create(instance.GetType());
+            if (instance.IsFileRootElement)
             {
-                OrigamFile oldOrigamFile = index.GetById(instance.Id)?.OrigamFile;
-                bool movingBetweenFiles = oldOrigamFile?.Path.Relative != origamFile.Path.Relative;
-                if (oldOrigamFile != null && movingBetweenFiles)
-                {
-                    oldOrigamFile.DeferredSaveDocument = GetDocumentToWriteTo(oldOrigamFile);
-                    oldOrigamFile.RemoveInstance(instance.Id);
-                    transactionStore.AddOrReplace(oldOrigamFile);
-                }
+                newFile.ParentFolderIds.AddRange(instance.ParentFolderIds);
             }
+
+            var objectInfo = CreateObjectInfo(elementName, instance, newFile);
+            WriteToXmlDocument(newFile, instance, elementName); 
+            UpdateIndex(instance, objectInfo);
+            transactionStore.AddOrReplace(newFile);
+        }
+
+        private void RemoveFromFile(IFilePersistent instance, OrigamFile origamFile)
+        {
+            if (origamFile == null) return;
+            origamFile.DeferredSaveDocument = GetDocumentToWriteTo(origamFile);
+            origamFile.RemoveInstance(instance.Id);
+            transactionStore.AddOrReplace(origamFile);
         }
 
         private void UpdateIndex(IFilePersistent instance,
@@ -107,19 +121,23 @@ namespace Origam.DA.Service
 
         public void BeginTransaction()
         {
-            if (InTransaction) throw new Exception("Already in transaction! Cannot start a new one.");
-            InTransaction = true;
+            if (IsInTransaction) throw new Exception("Already in transaction! Cannot start a new one.");
+            IsInTransaction = true;
         }
 
         public void EndTransaction()
         {
-            if (!InTransaction) throw new Exception("Not in transaction! No transaction  to end.");
+            if (!IsInTransaction) throw new Exception("Not in transaction! No transaction  to end.");
             ProcessTransactionStore();
-            InTransaction = false;
+            IsInTransaction = false;
         }
 
         private void ProcessTransactionStore()
         {
+            foreach (IDeferredTask task in transactionStore.FolderRenamingTasks)
+            {
+                task.Run();
+            }
             foreach (OrigamFile origamFile in transactionStore.Files)
             {
                 origamFile.FinalizeSave();
@@ -137,7 +155,7 @@ namespace Origam.DA.Service
                 origamFile.DeferredSaveDocument = null;
             }
             transactionStore.Clear();
-            InTransaction = false;
+            IsInTransaction = false;
         }
 
         public PersistedObjectInfo GetObjInfoFromTransactionStore(Guid id)
@@ -152,7 +170,7 @@ namespace Origam.DA.Service
             return null;
         }
 
-        private PersistedObjectInfo UpdateObjectInfo(ElementName elementName,
+        private PersistedObjectInfo CreateObjectInfo(ElementName elementName,
             IFilePersistent instance, OrigamFile origamFile)
         {
             PersistedObjectInfo updatedObjectInfo = new PersistedObjectInfo(
@@ -162,22 +180,6 @@ namespace Origam.DA.Service
                 isFolder: instance.IsFolder,
                 origamFile: origamFile);
             origamFile.ContainedObjects[instance.Id] = updatedObjectInfo;
-
-            bool fileWillBeMoved =
-                origamFile != null &&
-                !instance.IsDeleted &&
-                instance.IsFileRootElement &&
-                origamFile.Path.Relative != instance.RelativeFilePath;
-
-            if (fileWillBeMoved)
-            {
-                updatedObjectInfo.OrigamFile.NewPath =
-                    origamFileManager.MakeNewOrigamPath(
-                        instance: instance,
-                        resolveNamingConflicts: origamFile
-                            .MultipleFilesCanBeInSingleFolder);
-            }
-
             return updatedObjectInfo;
         }
 
@@ -239,7 +241,7 @@ namespace Origam.DA.Service
         {
             RenameGroupDirectory(group, newName);
             group.Name = newName;
-            Persist(group);
+            group.Persist();
         }
 
         private void RenameGroupDirectory(SchemaItemGroup group, string newName)
@@ -250,35 +252,57 @@ namespace Origam.DA.Service
             origamFileManager.RenameDirectory(groupDir, newName);
         }
 
-        private (OrigamFile, PersistedObjectInfo) FindOrigamFileAndObjectInfo(
-            IFilePersistent instance)
+        private OrigamFile FindFileWhereInstanceIsStoredNow(IFilePersistent instance)
         {
             PersistedObjectInfo objInfo;
             OrigamFile origamFile;
-            if (InTransaction && transactionStore.Contains(instance.RelativeFilePath))
+            if (IsInTransaction && transactionStore.Contains(instance.RelativeFilePath))
             {
                 Guid id = instance.Id;
                 origamFile = transactionStore.Get(instance.RelativeFilePath);
                 origamFile.ContainedObjects.TryGetValue(id, out objInfo);
-                return (origamFile, objInfo);
+                if(objInfo != null) return origamFile;
+            }
+
+            objInfo = index.GetById(instance.Id);
+            origamFile = objInfo?.OrigamFile;
+            return origamFile;
+        }
+        
+        private OrigamFile FindFileWhereInstanceShouldBeStored(
+            IFilePersistent instance)
+        {
+            if (IsInTransaction && transactionStore.Contains(instance.RelativeFilePath))
+            {
+                return transactionStore.Get(instance.RelativeFilePath);
             }
 
             PersistedObjectInfo parentObjInfo = index.GetParent(instance);
             if (parentObjInfo?.OrigamFile.Path.Relative == instance.RelativeFilePath)
             {
-                origamFile = parentObjInfo.OrigamFile;
-                origamFile.ContainedObjects.TryGetValue(instance.Id, out objInfo);
-                return (origamFile, objInfo);
+                return parentObjInfo.OrigamFile;
             }
-            objInfo = index.GetById(instance.Id);
-            origamFile = objInfo?.OrigamFile
-                         ?? index.GetByRelativePath(instance.RelativeFilePath);
-            return (origamFile, objInfo);
+            var objInfo = index.GetById(instance.Id);
+            if(objInfo?.OrigamFile.Path.Relative == instance.RelativeFilePath)
+            {
+                return objInfo.OrigamFile;
+            }
+
+            OrigamFile origamFile = index.GetByRelativePath(instance.RelativeFilePath);
+            if (origamFile?.Path.Relative == instance.RelativeFilePath)
+            {
+                return origamFile;
+            }
+
+            return origamFileFactory.New(
+                     parentFolderIds: instance.ParentFolderIds,
+                     relativePath: instance.RelativeFilePath,
+                     isGroup: instance.IsFolder);
         }
 
         private XmlDocument GetDocumentToWriteTo(OrigamFile origamFile)
         {
-            if (InTransaction && transactionStore.Contains(origamFile.Path.Relative))
+            if (IsInTransaction && transactionStore.Contains(origamFile.Path.Relative))
             {
                 return transactionStore.Get(origamFile.Path.Relative)
                     .DeferredSaveDocument;
@@ -307,10 +331,119 @@ namespace Origam.DA.Service
                     action: ex => throw new Exception("Instance " + instance.Id + " cannot be persisted!\n" + ex.Message, ex));
             }
         }
+        
+        private void ScheduleFolderRenamingTaskIfApplicable(IFilePersistent instance, OrigamFile origamFile)
+        {
+            switch (instance)
+            {
+                case SchemaExtension schemaExtension:
+                    transactionStore.FolderRenamingTasks.Enqueue(
+                        new RenameSchemaExtensionTask(
+                            origamFileManager: origamFileManager,
+                            index: index,
+                            persistenceProvider: persistenceProvider,
+                            origamFile: origamFile,
+                            schemaExtension: schemaExtension));
+                    break;
+                case SchemaItemGroup group:
+                    transactionStore.FolderRenamingTasks.Enqueue(
+                        new RenameGroupDirectoryTask(
+                            origamFileManager: origamFileManager,
+                            persistenceIndex: index, 
+                            group: group, 
+                            newName: group.Name));
+                    break;
+                default:
+                    break;
+            }
+        }
     }
+
+    class RenameSchemaExtensionTask: IDeferredTask
+    {
+        private readonly SchemaExtension schemaExtension;
+        private readonly OrigamFile origamFile;
+        private readonly IPersistenceProvider persistenceProvider;
+        private readonly FilePersistenceIndex index;
+        private readonly OrigamFileManager origamFileManager;
+        public RenameSchemaExtensionTask(OrigamFileManager origamFileManager,
+            FilePersistenceIndex index,
+            IPersistenceProvider persistenceProvider, OrigamFile origamFile,
+            SchemaExtension schemaExtension)
+        {
+            this.schemaExtension = schemaExtension;
+            this.origamFile = origamFile;
+            this.origamFileManager = origamFileManager;
+            this.index = index;
+            this.persistenceProvider = persistenceProvider;
+        }
+
+        public void Run()
+        {
+            if (!schemaExtension.WasRenamed) return;
+            if (origamFile == null) return;
+            try
+            {
+                origamFileManager.RenameDirectory(origamFile.Path.Directory,
+                    schemaExtension.Name);
+                persistenceProvider
+                    .RetrieveList<SchemaItemGroup>(null)
+                    .Where(group => group.Name == schemaExtension.OldName)
+                    .ForEach(group => RenameGroup(group, schemaExtension.Name));
+            }
+            catch (Exception e)
+            {
+                throw new Exception(
+                    "There was an error during renaming. Some directories and groups were not renamed and model " +
+                    "is in inconsistent state as a result of that. Please rename the already processed " +
+                    "directories and groups back as a rollback of this operation is not implemented yet." +
+                    "Original error: " + e.Message, e);
+            }
+        }
+        private void RenameGroup(SchemaItemGroup group, string newName)
+        {
+            new RenameGroupDirectoryTask(
+                origamFileManager,
+                index,
+                group, 
+                newName)
+            .Run();
+            group.Name = newName;
+            group.Persist();
+        }
+    }
+
+    class RenameGroupDirectoryTask: IDeferredTask
+    {
+        private readonly SchemaItemGroup group;
+        private readonly string newName;
+        private readonly FilePersistenceIndex persistenceIndex;
+        private readonly OrigamFileManager origamFileManager;
+
+        public RenameGroupDirectoryTask(OrigamFileManager origamFileManager,
+            FilePersistenceIndex persistenceIndex, SchemaItemGroup group, string newName)
+        {
+            this.origamFileManager = origamFileManager;
+            this.persistenceIndex = persistenceIndex;
+            this.group = group;
+            this.newName = newName;
+        }
+
+        public void Run()   
+        {
+            PersistedObjectInfo objInfo = persistenceIndex.GetById(group.Id);
+            if (objInfo == null) return;
+            DirectoryInfo groupDir = persistenceIndex.GetById(group.Id).OrigamFile.Path.Directory;
+            origamFileManager.RenameDirectory(groupDir, newName);
+        }
+    }
+    
 
     internal class TransactionStore
     {
+        public Queue<IDeferredTask> FolderRenamingTasks { get; } =
+            new Queue<IDeferredTask>();
+
         private readonly IDictionary<string, OrigamFile> pathFileDict =
             new Dictionary<string, OrigamFile>();
         public IEnumerable<OrigamFile> Files => pathFileDict.Values;

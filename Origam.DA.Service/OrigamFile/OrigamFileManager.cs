@@ -1,4 +1,25 @@
-﻿using System;
+#region license
+/*
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -19,7 +40,6 @@ namespace Origam.DA.Service
         private readonly FilePersistenceIndex index;
         private readonly OrigamPathFactory origamPathFactory;
         private readonly FileEventQueue fileEventQueue;
-        internal event EventHandler<HashChangedEventArgs> HashChanged;
 
         public OrigamFileManager(FilePersistenceIndex index,
             OrigamPathFactory origamPathFactory,  FileEventQueue fileEventQueue)
@@ -75,25 +95,6 @@ namespace Origam.DA.Service
             fileEventQueue.Continue();
         }
 
-        public void MoveFile(OrigamFile origamFile)
-        {
-            origamFile.NewPath.Directory.Create();
-            string destination = origamFile.NewPath.Absolute;
-            string source = origamFile.Path.Absolute;
-
-            fileEventQueue.Pause();
-            int numFilesBefore = index.OrigamFiles.Count();
-            index.RemoveHash(origamFile);
-            index.Remove(origamFile);
-            origamFile.Path = origamFile.NewPath;
-            origamFile.NewPath = null;
-            index.AddOrReplace(origamFile);
-            index.AddOrReplaceHash(origamFile);
-            File.Move(source, destination); 
-            System.Diagnostics.Debug.Assert(numFilesBefore == index.OrigamFiles.Count());
-            fileEventQueue.Continue();
-        }
-            
         public void RemoveDirectoryIfEmpty(DirectoryInfo oldFullDirectory)
         {
             bool isEmpty = !oldFullDirectory
@@ -104,25 +105,6 @@ namespace Origam.DA.Service
                 Directory.Delete(oldFullDirectory.FullName, true);
             }
         } 
-        
-        public OrigamPath MakeNewOrigamPath(IFilePersistent instance, bool resolveNamingConflicts)
-        {
-            string newRelativePath = instance.RelativeFilePath;
-            if (index.HasFile(newRelativePath))
-            {
-                if (!resolveNamingConflicts)
-                {
-                    throw new InvalidOperationException($"Cannot create path at: {newRelativePath} because another file is already there");
-                }
-                string newFileName =
-                    Path.GetFileNameWithoutExtension(newRelativePath) +
-                    "_" +
-                    Path.GetExtension(newRelativePath);
-                newRelativePath =
-                    Path.Combine(Path.GetDirectoryName(newRelativePath), newFileName);
-            }
-            return origamPathFactory.CreateFromRelative(newRelativePath);
-        }
 
         public void DeleteFile(OrigamFile origamFile)
         {
@@ -171,17 +153,6 @@ namespace Origam.DA.Service
         {
             index?.Dispose();
             fileEventQueue?.Dispose();
-            HashChanged = null;
-        }
-    }
-
-    internal class HashChangedEventArgs : EventArgs
-    {
-        public string Hash { get;}
-
-        public HashChangedEventArgs(string hash)
-        {
-            Hash = hash;
         }
     }
 }

@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -47,6 +47,10 @@ namespace Origam.Gui.Designer
 	/// 
 	public class ControlSetEditor : AbstractEditor
 	{
+		private static readonly log4net.ILog log 
+			= log4net.LogManager.GetLogger(
+				MethodBase.GetCurrentMethod().DeclaringType);
+		
 		private System.Windows.Forms.PropertyGrid _propertyGrid; 
 		private const string  origamDataSetName="OrigamDataSet";
 		private eDataSource _dataSourceMode;
@@ -1719,20 +1723,22 @@ namespace Origam.Gui.Designer
 
 		private void ControlSetEditor_Closed(object sender, System.EventArgs e)
 		{
-			// refresh the model element, e.g. if editing is cancelled, so it reads its original content
-			if(this._rootControl != null && this._rootControl.IsPersisted)
-			{
-				this._rootControl.ClearCacheOnPersist = true;
-				this._rootControl.Refresh();
-				this._rootControl.ClearCacheOnPersist = false;
-			}
-
 			try
 			{
+				// refresh the model element, e.g. if editing is cancelled, so it reads its original content
+				if(this._rootControl != null && this._rootControl.IsPersisted)
+				{
+					this._rootControl.ClearCacheOnPersist = true;
+					this._rootControl.Refresh();
+					this._rootControl.ClearCacheOnPersist = false;
+				}
 				_propertyGrid.SelectedObjects = null;
 			}
-			catch
+			catch(Exception ex)
 			{
+				log.Error(ex);
+				MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK,
+					MessageBoxIcon.Error);
 			}
 		}
 

@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2017 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -59,7 +59,7 @@ namespace Origam.DA.Service
         private readonly TrackerLoaderFactory trackerLoaderFactory;
         private readonly OrigamFileManager origamFileManager;
 
-        public override bool InTransaction => persistor.InTransaction;
+        public override bool InTransaction => persistor.IsInTransaction;
         public override ILocalizationCache LocalizationCache => localizationCache;
 
         public HashSet<Guid> LoadedPackages {
@@ -121,6 +121,8 @@ namespace Origam.DA.Service
             ReloadFiles(tryUpdate: false);
             PersistIndex();
         }
+
+        public override bool IsInTransaction => persistor.IsInTransaction;
 
         private IFilePersistent RetrieveInstance(PersistedObjectInfo persistedObjInfo,
             bool useCache=true)
@@ -226,8 +228,9 @@ namespace Origam.DA.Service
                 this.RetrieveInstance(
                     primaryKey: origObject.PrimaryKey, 
                     useCache: true, 
-                    throwNotFoundException: false);
-
+                    throwNotFoundException: false) 
+                ?? throw new Exception("Cannot refresh object that does not exist any more. Object id: "+persistentObject.Id);
+            
             Reflector.CopyMembers(
                 source: upToDateObject,
                 target: origObject,
@@ -433,6 +436,7 @@ namespace Origam.DA.Service
             return 
                 new IFileSystemModelChecker[]
                     {
+                        new FileNameChecker(this, index),
                         new DuplicateIdChecker(this),
                         new ReferenceFileChecker(this),
                         new DirectoryChecker(ignoreDirectoryNames, this),
@@ -445,6 +449,6 @@ namespace Origam.DA.Service
                     })
                     .Where(errorSection => !errorSection.IsEmpty)
                     .ToList();
-        }
+        }   
     }
 }
