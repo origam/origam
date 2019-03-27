@@ -1560,7 +1560,7 @@
                   <Property Id="Date" ModelInstanceId="82adcd4f-1c30-423b-ae22-7d5041ba0ebe" Name="Datum/čas" ReadOnly="false" X="108" Y="34" Width="168" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="Date" Column="Date" FormatterPattern="M/D/YYYY K:NN A">
                     <ToolTip>Datum a čas záznamu komunikace. </ToolTip>
                   </Property>
-                  <Property Id="refBusinessPartnerCommunicationDirectionId" ModelInstanceId="8f1607fb-9ddb-4248-b225-e5968f358492" Name="Směr" ReadOnly="false" X="108" Y="52" Width="168" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="a9e7c9ce-5cff-4b6b-abc6-b891a847864f" Identifier="Id" IdentifierIndex="1" EntityName="a9e7c9ce_5cff_4b6b_abc6_b891a847864f" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                  <Property Id="refBusinessPartnerCommunicationDirectionId" ModelInstanceId="8f1607fb-9ddb-4248-b225-e5968f358492" Name="Směr" ReadOnly="true" X="108" Y="52" Width="168" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="a9e7c9ce-5cff-4b6b-abc6-b891a847864f" Identifier="Id" IdentifierIndex="1" EntityName="a9e7c9ce_5cff_4b6b_abc6_b891a847864f" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
                     <ToolTip>Příchozí/Odchozí </ToolTip>
                     <DropDownColumns>
                       <Property Id="Name" Name="Název" Entity="String" Column="Text" Index="0" />

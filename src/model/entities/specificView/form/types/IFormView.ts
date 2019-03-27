@@ -15,7 +15,5 @@ export interface IFormView {
 
   activate(): void;
   deactivate(): void;
-  initForm(): void;
-  finishForm(): void;
-  cancelForm(): void;
+
 }

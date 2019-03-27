@@ -3,20 +3,21 @@ import { TextEditor } from "../editors/Text";
 import { DateTimeEditor } from "../editors/DateTime";
 import { BoolEditor } from "../editors/Bool";
 import { observer } from "mobx-react";
-import { ICellTypeDU } from "src/presenter/types/cells/ICellTypeDU";
+import { ITableField } from "src/presenter/types/ITableViewPresenter/ITableField";
 
 
+/*
 interface IEditorField {
   isReadOnly: boolean;
   isInvalid: boolean;
   isLoading: boolean;
 }
 
-type IField = IEditorField & ICellTypeDU;
+type IField = IEditorField & ICellTypeDU;*/
 
 @observer
-export class Editor extends React.Component<{ field: IField }> {
-  getEditor(field: IField) {
+export class Editor extends React.Component<{ field: ITableField}> {
+  getEditor(field: ITableField) {
     switch (field.type) {
       case "TextCell":
         return (
@@ -24,7 +25,7 @@ export class Editor extends React.Component<{ field: IField }> {
             value={field.value}
             isReadOnly={field.isReadOnly}
             isInvalid={field.isInvalid}
-            // onChange={field.onChange}
+            onChange={field.onChange}
           />
         );
       case "DateTimeCell":

@@ -1,22 +1,21 @@
-import { ICursor, IExtSelRowState } from "./types/ICursor";
-import { observable, computed } from "mobx";
+import { computed, observable, action } from "mobx";
 import { IDataTable } from "../data/types/IDataTable";
 import { IProperties } from "../data/types/IProperties";
+import { IFormManager } from "../form/types/IFormManager";
 import { ExtSelRowState } from "./ExtSelRowState";
-import { IDataView } from "../specificViews/types/IDataView";
+import { ICursor, IExtSelRowState } from "./types/ICursor";
 
 export class Cursor implements ICursor {
-
   constructor(
     public dataTable: IDataTable,
     public propertiesTopology: IProperties,
-    public getView: () => IDataView,
+    public getFormManager: () => IFormManager,
     extSelRowState?: IExtSelRowState
   ) {
     this.selRowState = extSelRowState || new ExtSelRowState();
   }
 
-  selRowState: IExtSelRowState
+  selRowState: IExtSelRowState;
 
   get selRowId(): string | undefined {
     return this.selRowState.selRowId;
@@ -39,9 +38,15 @@ export class Cursor implements ICursor {
       : undefined;
   }
 
-  @computed get selColumnIdx(): number | undefined {
+  @computed get selColIdx(): number | undefined {
     return this.selColId
       ? this.dataTable.getColumnIndexById(this.selColId)
+      : undefined;
+  }
+
+  @computed get selColIdxReo(): number | undefined {
+    return this.selColId
+      ? this.propertiesTopology.id2Index(this.selColId)
       : undefined;
   }
 
@@ -185,19 +190,29 @@ export class Cursor implements ICursor {
   }
 
   ensureSelectionVisible() {
-    console.log("Ensure selection visible.")
+    console.log("Ensure selection visible.");
   }
 
+  @action.bound
   finishEditing() {
-
+    console.log("submit form")
+    this.getFormManager().submitForm();
     this.isEditing = false;
   }
 
+  @action.bound
   startEditing() {
+    this.getFormManager().initFormIfNeeded();
     this.isEditing = true;
   }
 
+  @action.bound
+  cancelEditing() {
+    this.getFormManager().destroyForm();
+    this.isEditing = false;
+  }
+
   focusColumn(colId: string) {
-    console.log("Focus column", colId)
+    console.log("Focus column", colId);
   }
 }

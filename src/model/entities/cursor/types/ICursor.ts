@@ -9,7 +9,8 @@ export interface ICursor {
   selRowId: IRecordId | undefined;
   selColId: IPropertyId | undefined;
   selRowIdx: number | undefined;
-  selColumnIdx: number | undefined;
+  selColIdx: number | undefined;
+  selColIdxReo: number | undefined; // Index for reordered/hidden fields
   isEditing: boolean;
   isSelected: boolean;
 

@@ -287,24 +287,33 @@ export class Table extends React.Component<{ controller: ITable }> {
                             />
                           )}
                         </div>
-                        {this.props.controller.tableFormField.isEditing && (
-                          <PositionedField
-                            fixedColumnsCount={this.fixedColumnsCount}
-                            rowIndex={this.props.controller.tableFormField.rowIndex}
-                            columnIndex={
-                              this.props.controller.tableFormField.columnIndex
-                            }
-                            scrollOffsetSource={this.scrollState}
-                            gridDimensions={this.gridDimensions}
-                            worldBounds={contentRect.bounds!}
-                          >
-                            {this.props.controller.tableFormField.field && (
-                              <Editor
-                                field={this.props.controller.tableFormField.field}
-                              />
-                            )}
-                          </PositionedField>
-                        )}
+                        <Observer>
+                          {() =>
+                            this.props.controller.tableFormField.isEditing && (
+                              <PositionedField
+                                fixedColumnsCount={this.fixedColumnsCount}
+                                rowIndex={
+                                  this.props.controller.tableFormField.rowIndex
+                                }
+                                columnIndex={
+                                  this.props.controller.tableFormField
+                                    .columnIndex
+                                }
+                                scrollOffsetSource={this.scrollState}
+                                gridDimensions={this.gridDimensions}
+                                worldBounds={contentRect.bounds!}
+                              >
+                                {this.props.controller.tableFormField.field && (
+                                  <Editor
+                                    field={
+                                      this.props.controller.tableFormField.field
+                                    }
+                                  />
+                                )}
+                              </PositionedField>
+                            )
+                          }
+                        </Observer>
                         <Scroller
                           width={contentRect.bounds!.width}
                           height={contentRect.bounds!.height}

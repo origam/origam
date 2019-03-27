@@ -19,9 +19,6 @@ export interface ITableView {
   
   activate(): void;
   deactivate(): void;
-  initForm(): void;
-  finishForm() : void;
-  cancelForm(): void;
 
   updateVisibleRegion(
     rowIdxStart: number,

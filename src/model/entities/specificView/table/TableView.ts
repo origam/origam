@@ -7,6 +7,7 @@ import { IForm } from "../../form/types/IForm";
 import { IViewType } from "src/model/entities/specificViews/types/IViewType";
 import { action } from "mobx";
 import { Form } from "../../form/Form";
+import { IFormManager } from "../../form/types/IFormManager";
 
 export interface ITableViewParam {
   id: string;
@@ -16,8 +17,7 @@ export interface ITableViewParam {
   reorderedProperties: IProperties;
 }
 
-export class TableView implements ITableView {
-
+export class TableView implements ITableView, IFormManager {
   constructor(param: ITableViewParam) {
     this.id = param.id;
     this.cursor = param.cursor;
@@ -53,33 +53,41 @@ export class TableView implements ITableView {
   }
 
   activate(): void {
-    return
+    return;
   }
 
   deactivate(): void {
-    return
+    return;
   }
 
   @action.bound
-  initForm() {
-    const initialValues = this.reorderedProperties.items.map(prop => {
-      return [
-        prop.id,
-        this.cursor.selRowId
-          ? this.dataTable.getValueById(this.cursor.selRowId, prop.id)
-          : ""
-      ] as [string, any];
-    });
-    this.form = new Form(new Map(initialValues));
+  initFormIfNeeded() {
+    if (!this.form) {
+      const initialValues = this.reorderedProperties.items.map(prop => {
+        return [
+          prop.id,
+          this.cursor.selRowId
+            ? this.dataTable.getValueById(this.cursor.selRowId, prop.id)
+            : ""
+        ] as [string, any];
+      });
+      this.form = new Form(new Map(initialValues));
+    }
   }
 
   @action.bound
-  finishForm() {
+  destroyForm() {
     this.form = undefined;
   }
 
   @action.bound
-  cancelForm(): void {
+  submitForm(): void {
+    const { selRowId, selColId } = this.cursor;
+    if (selRowId && selColId && this.form) {
+      for (let [fieldId, value] of this.form.dirtyValues) {
+        this.dataTable.setDirtyValueById(selRowId, fieldId, value);
+      }
+    }
     this.form = undefined;
   }
 

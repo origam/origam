@@ -34,7 +34,7 @@ export class Form implements IForm {
     return this.initialValues.get(id);
   }
 
-  @action.bound setDirty(id: string, value: any) {
+  @action.bound setDirtyValue(id: string, value: any) {
     this.dirtyValues.set(id, value);
   }
 }

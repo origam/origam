@@ -1,37 +1,39 @@
-import { IScreenFactory } from "src/presenter/types/IScreenFactory";
-import * as ScreenBp from "../../types/IInfScreenBlueprints";
-import {
-  IScreen,
-  IDataView as IPresDataView,
-  ITabs,
-  ISplitter,
-  ISpecificDataView,
-  IViewType,
-  IViewTypeBtn,
-  IToolbarButtonState
-} from "../../types/IScreenPresenter";
-import {
-  IUIScreenTreeNode,
-  IUIFormRoot
-} from "src/presenter/types/IUIScreenBlueprints";
-import { ITableView as IPresTableView } from "src/presenter/types/ITableViewPresenter/ITableView";
-import { IFormView as IPresFormView } from "src/presenter/types/IFormViewPresenter/IFormView";
-import { computed, observable, action } from "mobx";
-import { IFormField } from "src/presenter/types/IFormViewPresenter/IFormField";
-import { IToolbar } from "src/presenter/types/ITableViewPresenter/IToolbar";
-import { ITable } from "src/presenter/types/ITableViewPresenter/ITable";
-import { IScrollState } from "src/presenter/types/ITableViewPresenter/IScrollState";
-import { ICells } from "src/presenter/types/ITableViewPresenter/ICells";
-import { IOrderByDirection } from "src/presenter/types/ITableViewPresenter/IOrderByDirection";
-import { ICell } from "src/presenter/types/ITableViewPresenter/ICell";
-import { IFormField as ITableFormField } from "src/presenter/types/ITableViewPresenter/ICursor";
-import { IDataTable } from "src/model/entities/data/types/IDataTable";
-import { IModel } from "src/model/types/IModel";
+import { action, computed, observable } from "mobx";
 import { ICursor } from "src/model/entities/cursor/types/ICursor";
+import { IDataTable } from "src/model/entities/data/types/IDataTable";
 import { IProperties } from "src/model/entities/data/types/IProperties";
+import { IFormView as IModFormView } from "src/model/entities/specificView/form/types/IFormView";
 import { ITableView as IModTableView } from "src/model/entities/specificView/table/types/ITableView";
 import { IDataViews } from "src/model/entities/specificViews/types/IDataViews";
-import { IFormView as IModFormView } from "src/model/entities/specificView/form/types/IFormView";
+import { IModel } from "src/model/types/IModel";
+import { IFormField } from "src/presenter/types/IFormViewPresenter/IFormField";
+import { IFormView as IPresFormView } from "src/presenter/types/IFormViewPresenter/IFormView";
+import { IScreenFactory } from "src/presenter/types/IScreenFactory";
+import { ICell } from "src/presenter/types/ITableViewPresenter/ICell";
+import { ICells } from "src/presenter/types/ITableViewPresenter/ICells";
+import { IFormField as ITableFormField } from "src/presenter/types/ITableViewPresenter/ICursor";
+import { IOrderByDirection } from "src/presenter/types/ITableViewPresenter/IOrderByDirection";
+import { IScrollState } from "src/presenter/types/ITableViewPresenter/IScrollState";
+import { ITable } from "src/presenter/types/ITableViewPresenter/ITable";
+import { ITableView as IPresTableView } from "src/presenter/types/ITableViewPresenter/ITableView";
+import { IToolbar } from "src/presenter/types/ITableViewPresenter/IToolbar";
+import {
+  IUIFormRoot,
+  IUIScreenTreeNode
+} from "src/presenter/types/IUIScreenBlueprints";
+import * as ScreenBp from "../../types/IInfScreenBlueprints";
+import {
+  IDataView as IPresDataView,
+  IScreen,
+  ISpecificDataView,
+  ISplitter,
+  ITabs,
+  IToolbarButtonState,
+  IViewType,
+  IViewTypeBtn
+} from "../../types/IScreenPresenter";
+import { ITableField } from "../../types/ITableViewPresenter/ITableField";
+import { IForm } from "src/model/entities/form/types/IForm";
 
 class Screen implements IScreen {
   constructor(
@@ -259,7 +261,8 @@ export class Cells implements ICells {
   constructor(
     dataTable: IDataTable,
     public cursor: ICursor,
-    public reorderedProperties: IProperties
+    public reorderedProperties: IProperties,
+    public getForm: () => IForm | undefined
   ) {
     this.dataTable = dataTable;
   }
@@ -333,16 +336,25 @@ export class Cells implements ICells {
 
   getCell(rowIdx: number, reorderedColIdx: number): ICell {
     const colIdx = this.reorderedPropertyIndices[reorderedColIdx];
-    const value = this.dataTable.getValueByIndex(rowIdx, colIdx);
+    const colId = this.dataTable.getColumnIdByIndex(colIdx);
+    const isCellCursor =
+      this.cursor.selRowIdx === rowIdx && this.cursor.selColIdx === colIdx;
+    const isRowCursor = this.cursor.selRowIdx === rowIdx;
+    let value;
+    if (this.cursor.isEditing && isRowCursor) {
+      const form = this.getForm();
+      value = form && colId && form.getValue(colId);
+    } else {
+      value = this.dataTable.getValueByIndex(rowIdx, colIdx);
+    }
     return {
       type: "TextCell",
       value: value !== undefined ? value : "Unknown value",
       isLoading: false,
       isInvalid: false,
       isReadOnly: false,
-      isRowCursor: this.cursor.selRowIdx === rowIdx,
-      isCellCursor:
-        this.cursor.selRowIdx === rowIdx && this.cursor.selColumnIdx === colIdx,
+      isRowCursor,
+      isCellCursor,
       onCellClick: (event: any) => {
         this.cursor.selectCellByIdx(rowIdx, colIdx);
       }
@@ -376,6 +388,62 @@ export class TabbedPanel implements ITabs {
   @action.bound
   onHandleClick(event: any, handleId: string) {
     this.activeTabId = handleId;
+  }
+}
+
+export class TableFormField implements ITableFormField {
+  constructor(
+    public cursor: ICursor,
+    public dataTable: IDataTable,
+    public getForm: () => IForm | undefined
+  ) {}
+
+  @computed get field(): ITableField | undefined {
+    const rowId = this.cursor.selRowId;
+    const colId = this.cursor.selColId;
+    const isEditing = this.cursor.isEditing;
+
+    let value;
+    if (rowId && colId) {
+      if (isEditing) {
+        const form = this.getForm();
+        value = form ? form.getValue(colId) : "";
+      } else {
+        value = this.dataTable.getValueById(rowId, colId) || "";
+      }
+    } else {
+      value = "";
+    }
+
+    const property = colId && this.dataTable.getColumnById(colId);
+    const isReadOnly = property ? property.isReadOnly : false;
+
+    return {
+      isLoading: false,
+      isInvalid: false,
+      isReadOnly,
+      type: "TextCell",
+      value,
+      onChange: (event: any, value: string) => {
+        console.log(value);
+        if (colId) {
+          const form = this.getForm();
+          form && form.setDirtyValue(colId, value);
+        }
+      }
+    };
+  }
+
+  @computed get columnIndex(): number {
+    return this.cursor.selColIdxReo || 0;
+  }
+
+  @computed get rowIndex(): number {
+    return this.cursor.selRowIdx || 0;
+  }
+
+  @computed get isEditing(): boolean {
+    return this.cursor.isEditing;
   }
 }
 
@@ -427,24 +495,24 @@ export class ScreenFactory implements IScreenFactory {
                 ],
                 view.name
               );
-
-              return new TableView(
+              const tableView: IPresTableView = new TableView(
                 new Table(
                   new Cells(
                     modTableView.dataTable,
                     modTableView.cursor,
-                    modTableView.reorderedProperties
+                    modTableView.reorderedProperties,
+                    () => modTableView.form
                   ),
-                  {
-                    field: undefined,
-                    rowIndex: 0,
-                    columnIndex: 0,
-                    isEditing: false
-                  },
+                  new TableFormField(
+                    modTableView.cursor,
+                    modTableView.dataTable,
+                    () => modTableView.form
+                  ),
                   modTableView.cursor
                 ),
                 toolbar
               );
+              return tableView;
             }
           }
         })

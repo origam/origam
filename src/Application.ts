@@ -67,7 +67,7 @@ export function buildScreen(screenXml: IScreenXml) {
   tableView.cursor.selectCell("4 & 0", "Comment");
   // cursor.selectCellByIdx(8, 10)
 
-  tableView.reorderedProperties.reorderingIds = ["Comment", "From", "Subject"];
+  // tableView.reorderedProperties.reorderingIds = ["Comment", "From", "Subject"];
 
   return presenter;
 }
