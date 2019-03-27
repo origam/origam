@@ -251,6 +251,7 @@ export class Table extends React.Component<{ controller: ITable }> {
                                 cells={this.props.controller.cells}
                                 cursor={this.props.controller.tableFormField}
                                 renderCell={renderCell}
+                                onNoCellClickHandled={this.props.controller.onNoCellClick}
                               />
                               <Canvas
                                 ref={this.refCanvasMoving}
@@ -268,6 +269,7 @@ export class Table extends React.Component<{ controller: ITable }> {
                                 cells={this.props.controller.cells}
                                 cursor={this.props.controller.tableFormField}
                                 renderCell={renderCell}
+                                onNoCellClickHandled={this.props.controller.onNoCellClick}
                               />
                             </>
                           )}
@@ -284,6 +286,7 @@ export class Table extends React.Component<{ controller: ITable }> {
                               cells={this.props.controller.cells}
                               cursor={this.props.controller.tableFormField}
                               renderCell={renderCell}
+                              onNoCellClickHandled={this.props.controller.onNoCellClick}
                             />
                           )}
                         </div>
@@ -322,6 +325,7 @@ export class Table extends React.Component<{ controller: ITable }> {
                           contentHeight={this.gridDimensions.contentHeight}
                           scrollOffsetTarget={this.scrollState}
                           onClick={this.handleScrollerClick}
+                          onOutsideClick={this.props.controller.onGridOutsideClick}
                           onKeyDown={this.props.controller.onKeyDown}
                         />
                       </>

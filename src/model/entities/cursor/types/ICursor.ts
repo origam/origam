@@ -18,13 +18,10 @@ export interface ICursor {
     rowId: IRecordId | undefined,
     colId: IPropertyId | undefined
   ): void;
-  selectCellByIdx(
-    rowIdx: number | undefined,
-    colIdx: number | undefined
-  ): void;
+  selectCellByIdx(rowIdx: number | undefined, colIdx: number | undefined): void;
   selectRow(rowId: IRecordId | undefined): void;
   selectColumn(rowId: IPropertyId | undefined): void;
-  selectClosestRowToId( rowId: IRecordId): void;
+  selectClosestRowToId(rowId: IRecordId): void;
   selectNextRow(): void;
   selectPrevRow(): void;
   selectNextColumn(): void;
@@ -32,9 +29,8 @@ export interface ICursor {
   selectFirstColumn(): void;
 
   startEditRow(rowId: IRecordId): void;
-  startEditing() : void;
-  editCell(
-    rowId: IRecordId,
-    colId: IPropertyId
-  ): void;
+  startEditing(): void;
+  finishEditing(): void;
+  cancelEditing(): void;
+  editCell(rowId: IRecordId, colId: IPropertyId): void;
 }

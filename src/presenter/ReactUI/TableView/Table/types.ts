@@ -1,10 +1,8 @@
 import { ICell } from "src/presenter/types/ITableViewPresenter/ICell";
-import { IFormField } from 'src/presenter/types/ITableViewPresenter/ICursor';
+import { IFormField } from "src/presenter/types/ITableViewPresenter/ICursor";
 import { PubSub } from "src/util/events";
 import { ICells } from "src/presenter/types/ITableViewPresenter/ICells";
 import { IHeader } from "src/presenter/types/ITableViewPresenter/IHeader";
-
-
 
 export type IRenderCell = (
   rowIndex: number,
@@ -70,6 +68,8 @@ export interface IGridCanvasProps {
 
   onBeforeRender?(): void;
   onAfterRender?(): void;
+
+  onNoCellClickHandled?(event: any): void;
 }
 
 export interface IPositionedFieldProps {

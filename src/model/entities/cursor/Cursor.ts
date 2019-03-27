@@ -195,21 +195,27 @@ export class Cursor implements ICursor {
 
   @action.bound
   finishEditing() {
-    console.log("submit form")
-    this.getFormManager().submitForm();
-    this.isEditing = false;
+    if (this.isEditing) {
+      console.log("submit form");
+      this.getFormManager().submitForm();
+      this.isEditing = false;
+    }
   }
 
   @action.bound
   startEditing() {
-    this.getFormManager().initFormIfNeeded();
-    this.isEditing = true;
+    if (!this.isEditing) {
+      this.getFormManager().initFormIfNeeded();
+      this.isEditing = true;
+    }
   }
 
   @action.bound
   cancelEditing() {
-    this.getFormManager().destroyForm();
-    this.isEditing = false;
+    if (this.isEditing) {
+      this.getFormManager().destroyForm();
+      this.isEditing = false;
+    }
   }
 
   focusColumn(colId: string) {

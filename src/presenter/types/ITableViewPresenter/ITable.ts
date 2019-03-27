@@ -10,6 +10,8 @@ export interface ITable {
   tableFormField: IFormField;
   onKeyDown?(event: any): void;
   onCellClick?(event: any, rowIdx: number, columnIdx: number): void;
+  onNoCellClick?(event: any): void;
+  onGridOutsideClick?(event: any): void;
   onFieldClick?(event: any): void;
   onFieldFocus?(event: any): void;
   onFieldBlur?(event: any): void;

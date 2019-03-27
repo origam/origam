@@ -255,6 +255,14 @@ export class Table implements ITable {
         break;
     }
   }
+
+  @action.bound onNoCellClick(event: any) {
+    this.cursor.finishEditing();
+  }
+
+  @action.bound onGridOutsideClick(event: any) {
+    this.cursor.finishEditing();
+  }
 }
 
 export class Cells implements ICells {

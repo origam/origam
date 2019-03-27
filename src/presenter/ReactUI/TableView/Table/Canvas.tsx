@@ -269,6 +269,7 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
   }
 
   @action.bound public triggerCellClick(event: any, x: number, y: number) {
+    let onClickFired = false;
     for (let subs of this.onClickSubscriptions) {
       if (
         subs.left <= x &&
@@ -276,9 +277,12 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
         subs.top <= y &&
         y < subs.bottom
       ) {
-        console.log("trig");
+        onClickFired = true;
         subs.onClick.trigger();
       }
+    }
+    if (!onClickFired) {
+      this.props.onNoCellClickHandled && this.props.onNoCellClickHandled(event);
     }
   }
 
