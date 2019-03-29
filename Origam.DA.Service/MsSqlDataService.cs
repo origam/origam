@@ -36,6 +36,7 @@ namespace Origam.DA.Service
 	/// </summary>
 	public class MsSqlDataService : AbstractSqlDataService
 	{
+        private string _IISUser;
         private static readonly log4net.ILog log = 
             log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -66,7 +67,7 @@ namespace Origam.DA.Service
             return result;
 		}
 
-        public override string BuildConnectionString(string serverName, string databaseName, string userName, string password, bool integratedAuthentication, bool pooling)
+        public override string BuildConnectionString(string serverName, int port,string databaseName, string userName, string password, bool integratedAuthentication, bool pooling)
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.IntegratedSecurity = integratedAuthentication;
@@ -77,8 +78,30 @@ namespace Origam.DA.Service
             builder.Pooling = pooling;
             return builder.ConnectionString;
         }
+        
+        public override void UpdateDatabaseSchemaVersion(string version, string transactionId)
+        {
+            ExecuteUpdate("ALTER  PROCEDURE [OrigamDatabaseSchemaVersion] AS SELECT '" + version + "'", transactionId);
+        }
+        public override void DeleteDatabase(string name)
+        {
+            CheckDatabaseName(name);
+            ExecuteUpdate(string.Format("DROP DATABASE [{0}]", name), null);
+        }
+        public override void CreateDatabase(string name)
+        {
+            CheckDatabaseName(name);
+            ExecuteUpdate(string.Format("CREATE DATABASE [{0}]", name), null);
+        }
+        private static void CheckDatabaseName(string name)
+        {
+            if (name.Contains("]"))
+            {
+                throw new Exception(string.Format("Invalid database name: {0}", name));
+            }
+        }
 
-		internal override void HandleException(Exception ex, string recordErrorMessage, DataRow row)
+        internal override void HandleException(Exception ex, string recordErrorMessage, DataRow row)
 		{
 			SqlException sqle = ex as SqlException;
             if (log.IsDebugEnabled)
@@ -210,6 +233,40 @@ namespace Origam.DA.Service
             return Enum.GetNames(typeof(SqlDbType));
         }
 
+        public override void CreateUser(string _loginName, string password, string name, bool DatabaseIntegratedAuthentication)
+        {
+            if (DatabaseIntegratedAuthentication)
+            {
+                string command1 = string.Format("CREATE LOGIN {0} FROM WINDOWS WITH DEFAULT_DATABASE=[master]", _loginName);
+                string command2 = string.Format("CREATE USER {0} FOR LOGIN {0}", _loginName);
+                string command3 = string.Format("ALTER ROLE [db_datareader] ADD MEMBER {0}", _loginName);
+                string command4 = string.Format("ALTER ROLE [db_datawriter] ADD MEMBER {0}", _loginName);
+                string transaction1 = Guid.NewGuid().ToString();
+                try
+                {
+                    ExecuteUpdate(command1, transaction1);
+                    ExecuteUpdate(command2, transaction1);
+                    ExecuteUpdate(command3, transaction1);
+                    ExecuteUpdate(command4, transaction1);
+                    ResourceMonitor.Commit(transaction1);
+                }
+                catch (Exception)
+                {
+                    ResourceMonitor.Rollback(transaction1);
+                    throw;
+                }
+            }
+        }
+
+        public override void DeleteUser(string _loginName, bool DatabaseIntegratedAuthentication)
+        {
+            if (DatabaseIntegratedAuthentication)
+            {
+                string command1 = string.Format("DROP LOGIN {0}", _loginName);
+                ExecuteUpdate(command1, null);
+            }
+        }
+
         public override string Info
 		{
 			get
@@ -282,5 +339,8 @@ namespace Origam.DA.Service
 				return result;
 			}
 		}
-	}
+
+        public override string DbUser { get { return _IISUser; } set { _IISUser = string.Format("[IIS APPPOOL\\{0}]", value); } }
+        public override string DBPassword { get ; set ; }
+    }
 }

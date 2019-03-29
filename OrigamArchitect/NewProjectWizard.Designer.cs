@@ -731,7 +731,7 @@
             this.label4.Size = new System.Drawing.Size(232, 78);
             this.label4.TabIndex = 14;
             this.label4.Text = "Enter the connection information to your database server. A new database will be " +
-    "created for storing the data. Example: .\\SQLEXPRESS";
+    "created for storing the data. Example: .\\SQLEXPRESS or localhost";
             // 
             // label2
             // 

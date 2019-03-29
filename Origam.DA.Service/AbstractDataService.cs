@@ -115,8 +115,9 @@ namespace Origam.DA.Service
         public abstract string BuildConnectionString(string serverName, int port, string databaseName, 
             string userName, string password, bool integratedAuthentication, bool pooling);
         public abstract void CreateDatabase(string name);
-        public abstract void DropDatabase(string name);
-
+        public abstract void DeleteDatabase(string name);
+        public abstract void CreateUser(string user, string password, string name, bool databaseIntegratedAuthentication);
+        public abstract void DeleteUser(string user, bool _integratedAuthentication);
         public virtual string EntityDdl(Guid entity)
         {
             throw new NotImplementedException();
@@ -731,8 +732,10 @@ namespace Origam.DA.Service
 		}
 
 		public abstract string ConnectionString{get; set;}
+        public abstract string DbUser { get; set; }
+        public abstract string DBPassword { get; set; }
 
-		public string Xsd(Guid dataStructureId)
+        public string Xsd(Guid dataStructureId)
 		{
 			System.Text.StringBuilder mysb = new System.Text.StringBuilder();
 			// Create the StringWriter object with the StringBuilder object.

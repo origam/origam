@@ -21,7 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Data;
-using System.Data.SqlClient;
+using System.Text;
 using Npgsql;
 
 namespace Origam.DA.Service
@@ -31,8 +31,9 @@ namespace Origam.DA.Service
 	/// </summary>
 	public class PgSqlDataService : AbstractSqlDataService
 	{
-		#region Constructors
-		public PgSqlDataService() : base()
+        private string _DbUser = "";
+        #region Constructors
+        public PgSqlDataService() : base()
 		{
 			Init();
 		}
@@ -47,23 +48,28 @@ namespace Origam.DA.Service
 		private void Init()
 		{
 			this.DbDataAdapterFactory = new PgSqlCommandGenerator();
-		}
+            DBPassword = "heslicko";
+        }
 
-		internal override IDbConnection GetConnection(string connectionString)
+        internal override IDbConnection GetConnection(string connectionString)
 		{
 			return new NpgsqlConnection(connectionString);
 		}
 
-        public override string BuildConnectionString(string serverName, string databaseName, string userName, string password, bool integratedAuthentication, bool pooling)
+        public override string BuildConnectionString(string serverName,int port, string databaseName, string userName, string password, bool integratedAuthentication, bool pooling)
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder.IntegratedSecurity = integratedAuthentication;
-            builder.UserID = userName;
-            builder.Password = password;
-            builder.DataSource = serverName;
-            builder.InitialCatalog = databaseName;
-            builder.Pooling = pooling;
-            return builder.ConnectionString;
+            NpgsqlConnectionStringBuilder sb = new NpgsqlConnectionStringBuilder
+            {
+                ApplicationName = "Origam",
+                Host = serverName,
+                Port = port,
+                Username = userName,
+                Password = password,
+                Database = string.IsNullOrEmpty(databaseName) ? "postgres":databaseName,
+                Pooling = pooling,
+                SearchPath = string.IsNullOrEmpty(databaseName) ? "" : databaseName
+            };
+            return sb.ConnectionString;
         }
 
         internal override void HandleException(Exception ex, string rowErrorMessage, DataRow row)
@@ -90,6 +96,68 @@ namespace Origam.DA.Service
         public override string[] DatabaseSpecificDatatypes()
         {
             return Enum.GetNames(typeof(NpgsqlTypes.NpgsqlDbType));
+        }
+        public override void CreateUser(string user,string password,string database, bool DatabaseIntegratedAuthentication)
+        {
+            string transaction1 = Guid.NewGuid().ToString();
+            try
+            {
+            ExecuteUpdate(string.Format("CREATE ROLE {0} WITH LOGIN NOSUPERUSER INHERIT CREATEDB NOCREATEROLE NOREPLICATION PASSWORD '{1}'",user,password), transaction1);
+            ExecuteUpdate(string.Format("CREATE ROLE {0}role NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION", user), transaction1);
+            ExecuteUpdate(string.Format("GRANT {0}role TO {0}", user), transaction1);
+            ExecuteUpdate(string.Format("GRANT CONNECT ON DATABASE {0} TO {1}", database, user), transaction1);
+            ExecuteUpdate(string.Format("GRANT ALL PRIVILEGES ON DATABASE {0} TO {1}", database, user), transaction1);
+            ExecuteUpdate(string.Format("GRANT ALL ON SCHEMA {0} TO GROUP {1}role WITH GRANT OPTION", database, user), transaction1);
+                ResourceMonitor.Commit(transaction1);
+            }
+            catch (Exception)
+            {
+                ResourceMonitor.Rollback(transaction1);
+                throw;
+            }
+        }
+
+        public override void DeleteUser(string user,bool DatabaseIntegratedAuthentication)
+        {
+            ExecuteUpdate(string.Format("DROP ROLE \"{0}role\" ", user), null);
+            ExecuteUpdate(string.Format("DROP ROLE \"{0}\" ", user), null);
+        }
+        public override void UpdateDatabaseSchemaVersion(string version, string transactionId)
+        {
+            ExecuteUpdate("ALTER  PROCEDURE OrigamDatabaseSchemaVersion AS SELECT '" + version + "'", transactionId);
+        }
+        public override void DeleteDatabase(string name)
+        {
+            CheckDatabaseName(name);
+            ExecuteUpdate(string.Format("DROP DATABASE \"{0}\"", name), null);
+        }
+
+        public override void CreateDatabase(string name)
+        {
+            CheckDatabaseName(name);
+            ExecuteUpdate(string.Format("CREATE DATABASE \"{0}\"", name), null);
+            ExecuteUpdate("CREATE EXTENSION IF NOT EXISTS dblink", null);
+            string transaction1 = Guid.NewGuid().ToString();
+            try
+            { 
+               ExecuteUpdate(string.Format("SELECT dblink_connect('myconn','dbname={0}')", name), transaction1);
+               ExecuteUpdate(string.Format("SELECT dblink_exec('myconn','CREATE SCHEMA IF NOT EXISTS {0};')", name), transaction1);
+               ExecuteUpdate(string.Format("SELECT dblink_disconnect('myconn')"), transaction1);
+               ResourceMonitor.Commit(transaction1);
+            }
+            catch (Exception)
+            {
+                ResourceMonitor.Rollback(transaction1);
+                throw;
+            }
+}
+
+        private void CheckDatabaseName(string name)
+        {
+            if(name.Contains("\""))
+            {
+                throw new Exception(string.Format("Invalid database name: {0}", name));
+            }
         }
 
         public override string Info
@@ -166,5 +234,8 @@ namespace Origam.DA.Service
 				return result;
 			}
 		}
-	}
+
+        public override string DbUser { get { return _DbUser; }  set { _DbUser = string.Format("{0}", value);  }}
+        public override string DBPassword { get;  set; }
+    }
 }

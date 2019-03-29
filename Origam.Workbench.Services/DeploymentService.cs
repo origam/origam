@@ -465,7 +465,7 @@ namespace Origam.Workbench.Services
 			{
 				dataServiceAgent.Run();
 			}
-			catch (DatabaseTableNotFoundException ex)
+			catch 
 			{
 				return false;
 			}

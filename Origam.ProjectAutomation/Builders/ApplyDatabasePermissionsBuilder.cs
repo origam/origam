@@ -44,41 +44,27 @@ namespace Origam.ProjectAutomation
         {
             _databaseType = project.DatabaseTp;
             DataService(_databaseType).ConnectionString =
-                DataService(_databaseType).BuildConnectionString(project.DatabaseServerName,project.Port,
-                project.DataDatabaseName, project.DatabaseUserName,
-                project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
-            if (project.DatabaseIntegratedAuthentication)
-            {
-                _loginName = string.Format("[IIS APPPOOL\\{0}]", project.Name);
-                _integratedAuthentication = project.DatabaseIntegratedAuthentication;
-                string command1 = string.Format("CREATE LOGIN {0} FROM WINDOWS WITH DEFAULT_DATABASE=[master]", _loginName);
-                string command2 = string.Format("CREATE USER {0} FOR LOGIN {0}", _loginName);
-                string command3 = string.Format("ALTER ROLE [db_datareader] ADD MEMBER {0}", _loginName);
-                string command4 = string.Format("ALTER ROLE [db_datawriter] ADD MEMBER {0}", _loginName);
-                string transaction1 = Guid.NewGuid().ToString();
-                try
-                {
-                    DataService(_databaseType).ExecuteUpdate(command1, transaction1);
-                    DataService(_databaseType).ExecuteUpdate(command2, transaction1);
-                    DataService(_databaseType).ExecuteUpdate(command3, transaction1);
-                    DataService(_databaseType).ExecuteUpdate(command4, transaction1);
-                    ResourceMonitor.Commit(transaction1);
-                }
-                catch (Exception)
-                {
-                    ResourceMonitor.Rollback(transaction1);
-                    throw;
-                }
-            }
+            DataService(_databaseType).BuildConnectionString(project.DatabaseServerName,project.Port,
+            project.DataDatabaseName, project.DatabaseUserName,
+            project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
+            DataService(_databaseType).DbUser = project.Name;
+            _loginName = DataService(_databaseType).DbUser;
+            project.ConnectionDatabaseUser = _loginName;
+            project.ConnectionDatabasePassword = DataService(_databaseType).DBPassword;
+            _integratedAuthentication = project.DatabaseIntegratedAuthentication;
+            DataService(_databaseType)
+                .CreateUser(
+                    project.ConnectionDatabaseUser, 
+                    project.ConnectionDatabasePassword,
+                    project.DataDatabaseName,
+                    project.DatabaseIntegratedAuthentication
+                );
+            
         }
 
         public override void Rollback()
         {
-            if (_integratedAuthentication)
-            {
-                string command1 = string.Format("DROP LOGIN {0}", _loginName);
-                DataService(_databaseType).ExecuteUpdate(command1, null);
-            }
+            DataService(_databaseType).DeleteUser(_loginName, _integratedAuthentication);
         }
     }
 }

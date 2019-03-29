@@ -237,6 +237,7 @@ namespace OrigamArchitect
                 txtDatabaseType.SelectedItem = null;
                 txtDatabaseType.SelectedText = _settings.DatabaseTypeText;
                 TxtDatabaseType_SelectedIndexChanged(null, EventArgs.Empty);
+                txtPort.Text = "0";
             }
         }
 
@@ -346,7 +347,7 @@ namespace OrigamArchitect
             {
                 Process p = Process.Start(startInfo);
             }
-            catch (System.ComponentModel.Win32Exception ex)
+            catch 
             {
                 return;
             }

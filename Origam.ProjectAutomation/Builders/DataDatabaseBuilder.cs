@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam;
+using System.Web.Security;
 using static Origam.ProjectAutomation.Project;
 
 namespace Origam.ProjectAutomation
@@ -45,6 +46,9 @@ namespace Origam.ProjectAutomation
                 project.DatabaseServerName,project.Port, "", project.DatabaseUserName,
                 project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
             this.DataService(_databaseType).CreateDatabase(_databaseName);
+            //this.DataService(_databaseType).DbUser=project.Name;
+            //_user = this.DataService(_databaseType).DbUser;
+            //this.DataService(_databaseType).CreateUser(_user, this.DataService(_databaseType).DBPassword,project.Name,false);
         }
 
         public string BuildConnectionString(Project project, bool pooling)
@@ -54,11 +58,26 @@ namespace Origam.ProjectAutomation
                 project.DataDatabaseName, project.DatabaseUserName,
                 project.DatabasePassword, project.DatabaseIntegratedAuthentication, pooling);
         }
-
+        public string BuildConnectionStringArchitect(Project project, bool pooling)
+        {
+            _databaseType = project.DatabaseTp;
+            if(_databaseType==DatabaseType.MsSql)
+            {
+                return BuildConnectionString(project, pooling);
+            }
+            if (_databaseType == DatabaseType.PostgreSql)
+            {
+                this.DataService(_databaseType).DbUser=project.Name;
+                return DataService(project.DatabaseTp).BuildConnectionString(project.DatabaseServerName, project.Port,
+                    project.DataDatabaseName, DataService(_databaseType).DbUser,
+                     DataService(_databaseType).DBPassword, project.DatabaseIntegratedAuthentication, pooling);
+            }
+            return null;
+        }
         public override void Rollback()
         {
             OrigamUserContext.Reset();
-            this.DataService(_databaseType).DropDatabase(_databaseName);
+            this.DataService(_databaseType).DeleteDatabase(_databaseName);
         }
     }
 }

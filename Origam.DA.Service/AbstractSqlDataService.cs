@@ -1497,24 +1497,6 @@ namespace Origam.DA.Service
 				return (string) cmd.ExecuteScalar();
 			}
 		}
-
-		public override void UpdateDatabaseSchemaVersion(string version, string transactionId)
-		{
-			ExecuteUpdate("ALTER  PROCEDURE [OrigamDatabaseSchemaVersion] AS SELECT '" + version + "'", transactionId);
-		}
-
-        public override void CreateDatabase(string name)
-        {
-            CheckDatabaseName(name);
-            ExecuteUpdate(string.Format("CREATE DATABASE [{0}]", name), null);
-        }
-
-        public override void DropDatabase(string name)
-        {
-            CheckDatabaseName(name);
-            ExecuteUpdate(string.Format("DROP DATABASE [{0}]", name), null);
-        }
-
         public override string EntityDdl(Guid entityId)
         {
             TableMappingItem table = PersistenceProvider.RetrieveInstance(
@@ -2518,8 +2500,8 @@ namespace Origam.DA.Service
 			base.Dispose ();
 		}
 
-		#endregion
-	}
+        #endregion
+    }
     // version of log4net for NetStandard 1.3 does not have the method
     // LogManager.GetLogger(string)... have to use the overload with Type as parameter 
     public class WorkflowProfiling

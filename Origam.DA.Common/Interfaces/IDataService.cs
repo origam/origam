@@ -34,7 +34,9 @@ namespace Origam.DA
 	/// </summary>
 	public interface IDataService : IDisposable
 	{
-		bool UserDefinedParameters{get; set;}
+        string DbUser { get; set; }
+        string DBPassword { get; set; }
+        bool UserDefinedParameters{get; set;}
 		string ConnectionString{get; set;}
         int BulkInsertThreshold { get; set; }
         int UpdateBatchSize { get; set; }
@@ -68,7 +70,7 @@ namespace Origam.DA
 
 		string Info{get;}
         void CreateDatabase(string name);
-        void DropDatabase(string name);
+        void DeleteDatabase(string name);
         string EntityDdl(Guid entityId);
         string[] FieldDdl(Guid fieldId);
         string[] DatabaseSpecificDatatypes();

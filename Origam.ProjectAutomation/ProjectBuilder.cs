@@ -36,6 +36,7 @@ namespace Origam.ProjectAutomation
         {           
             tasks.Add(settingsBuilder);
             tasks.Add(dataDatabaseBuilder);
+            tasks.Add(new ApplyDatabasePermissionsBuilder());
             tasks.Add(new FileModelImportBuilder());
             tasks.Add(new FileModelInitBuilder());
             tasks.Add(new DataDatabaseStructureBuilder());
@@ -43,17 +44,20 @@ namespace Origam.ProjectAutomation
             tasks.Add(new CopyServerFilesBuilder());
             tasks.Add(new ModifyConfigurationFilesBuilder());
             tasks.Add(configureWebServerBuilder);
-            tasks.Add(new ApplyDatabasePermissionsBuilder());
             tasks.Add(new NewPackageBuilder());
             tasks.Add(new GitBuilder());
         }
 
         public void Create(Project project)
         {
-            project.DataConnectionString = 
-                dataDatabaseBuilder.BuildConnectionString(project, true);
-            project.BuilderDataConnectionString = 
-                dataDatabaseBuilder.BuildConnectionString(project, false);
+            //for New wizard connection connection 
+            project.DataConnectionString =
+            dataDatabaseBuilder.BuildConnectionString(project, true);
+            //for OrigamSettings
+            project.BuilderDataConnectionString =
+            dataDatabaseBuilder.BuildConnectionStringArchitect(project, false);
+            
+
             project.BaseUrl =
                 configureWebServerBuilder.WebSiteUrl(project.WebRootName);
 
