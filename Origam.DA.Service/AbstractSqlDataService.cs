@@ -1477,7 +1477,7 @@ namespace Origam.DA.Service
 					settings: settings,
 					versionCommandName: "OrigamDatabaseSchemaVersion");
 			} 
-			catch (SqlException ex)
+			catch 
 			{
 				return TryGetSchemaVersion(
 					connection: connection,
@@ -1688,59 +1688,10 @@ namespace Origam.DA.Service
 			DoCompare(results, dbTableList, schemaTableList, columns, DbCompareResultType.MissingInDatabase, typeof(TableMappingItem), provider);
 			DoCompare(results, dbTableList, schemaTableList, columns, DbCompareResultType.MissingInSchema, typeof(TableMappingItem), provider);
 
-			// fields
-			foreach(TableMappingItem t in schemaTables)
-			{
-				// only if the table exists in the database - otherwise we will be creating the whole table later on
-				// so it makes no sense to list all the columns with it
-				if(dbTableList.ContainsKey(t.MappedObjectName))
-				{
-					foreach(IDataEntityColumn col in t.EntityColumns)
-					{
-						if(col is FieldMappingItem)
-						{
-							string key = t.MappedObjectName + "." + (col as FieldMappingItem).MappedColumnName;
-							if(! schemaColumnList.ContainsKey(key))
-							{
-								schemaColumnList.Add(key, col);
-							}
+            // fields
+            // model exists in database
 
-							if(columns.Tables[0].Select("TABLE_NAME = '" + t.MappedObjectName + "' AND COLUMN_NAME = '" + (col as FieldMappingItem).MappedColumnName + "'").Length == 0)
-							{
-								// column does not exist in the database
-								SchemaDbCompareResult result = new SchemaDbCompareResult();
-								result.ResultType = DbCompareResultType.MissingInDatabase;
-								result.ItemName = key;
-								result.SchemaItem = col;
-								result.SchemaItemType = typeof(FieldMappingItem);
-								if(t.DatabaseObjectType == DatabaseMappingObjectType.Table)
-								{
-									result.Script = (this.DbDataAdapterFactory as AbstractSqlCommandGenerator).AddColumnDdl(col as FieldMappingItem);
-								}
-								else
-								{
-									result.Remark = ResourceUtils.GetString("ViewCantBeScripted");
-								}
-								results.Add(result);
-                                // foreign key
-                                DataEntityConstraint fk = col.ForeignKeyConstraint;
-                                if (t.DatabaseObjectType == DatabaseMappingObjectType.Table
-                                    && fk != null)
-                                {
-                                    result = new SchemaDbCompareResult();
-                                    result.ResultType = DbCompareResultType.MissingInDatabase;
-                                    result.ItemName = ConstraintName(t, fk);
-                                    result.SchemaItem = col;
-                                    result.SchemaItemType = typeof(DataEntityConstraint);
-                                    result.Script = (this.DbDataAdapterFactory as AbstractSqlCommandGenerator)
-                                        .AddForeignKeyConstraintDdl(t, fk);
-                                    results.Add(result);
-                                }
-                            }
-						}
-					}
-				}
-			}
+            DoCompareModelinDatabase(results,schemaTables, dbTableList,schemaColumnList, columns);
 
             AbstractSqlCommandGenerator gen = new MsSqlCommandGenerator();
 
@@ -1811,6 +1762,10 @@ namespace Origam.DA.Service
 					}
 				}
 			}
+            //End fields
+
+
+            //indexes
 			string sqlIndexes = "select	so.name TableName, si.name IndexName "
 				+ "from sysindexes si "
 				+ "inner join sysobjects so on si.id = so.id "
@@ -2117,6 +2072,66 @@ namespace Origam.DA.Service
 
 			return results;
 		}
+
+        private void DoCompareModelinDatabase(ArrayList results, ArrayList schemaTables, Hashtable dbTableList, Hashtable schemaColumnList, DataSet columns)
+        {
+            foreach (TableMappingItem t in schemaTables)
+            {
+                // only if the table exists in the database - otherwise we will be creating the whole table later on
+                // so it makes no sense to list all the columns with it
+                if (dbTableList.ContainsKey(t.MappedObjectName))
+                {
+                    foreach (IDataEntityColumn col in t.EntityColumns)
+                    {
+                        if (col is FieldMappingItem)
+                        {
+                            string key = t.MappedObjectName + "." + (col as FieldMappingItem).MappedColumnName;
+                            if (!schemaColumnList.ContainsKey(key))
+                            {
+                                schemaColumnList.Add(key, col);
+                            }
+
+                            if (columns.Tables[0].Select("TABLE_NAME = '" + t.MappedObjectName + "' AND COLUMN_NAME = '" + (col as FieldMappingItem).MappedColumnName + "'").Length == 0)
+                            {
+                                // column does not exist in the database
+                                SchemaDbCompareResult result = new SchemaDbCompareResult
+                                {
+                                    ResultType = DbCompareResultType.MissingInDatabase,
+                                    ItemName = key,
+                                    SchemaItem = col,
+                                    SchemaItemType = typeof(FieldMappingItem)
+                                };
+                                if (t.DatabaseObjectType == DatabaseMappingObjectType.Table)
+                                {
+                                    result.Script = (this.DbDataAdapterFactory as AbstractSqlCommandGenerator).AddColumnDdl(col as FieldMappingItem);
+                                }
+                                else
+                                {
+                                    result.Remark = ResourceUtils.GetString("ViewCantBeScripted");
+                                }
+                                results.Add(result);
+                                // foreign key
+                                DataEntityConstraint fk = col.ForeignKeyConstraint;
+                                if (t.DatabaseObjectType == DatabaseMappingObjectType.Table
+                                    && fk != null)
+                                {
+                                    result = new SchemaDbCompareResult
+                                    {
+                                        ResultType = DbCompareResultType.MissingInDatabase,
+                                        ItemName = ConstraintName(t, fk),
+                                        SchemaItem = col,
+                                        SchemaItemType = typeof(DataEntityConstraint),
+                                        Script = (this.DbDataAdapterFactory as AbstractSqlCommandGenerator)
+                                        .AddForeignKeyConstraintDdl(t, fk)
+                                    };
+                                    results.Add(result);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         internal abstract string GetAllColumnsSQL();
 

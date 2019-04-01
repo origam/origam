@@ -20,13 +20,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.Data;
 using System.Data.Common;
+using System.Text;
 using Npgsql;
 using NpgsqlTypes;
 
 using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.Workbench.Services;
 
 namespace Origam.DA.Service
 {
@@ -303,5 +306,222 @@ namespace Origam.DA.Service
 		{
 			return "AsText(" + argument + ")";
 		}
-	}
+
+        public override string AddColumnDdl(FieldMappingItem field)
+        {
+            StringBuilder ddl = new StringBuilder();
+
+            ddl.AppendFormat("ALTER TABLE {0} ADD {1}",
+                RenderExpression(field.ParentItem as TableMappingItem),
+                ColumnDefinitionDdl(field));
+
+            if (!field.AllowNulls && field.DefaultValue != null)
+            {
+                string constraintName = "DF_" + (field.ParentItem as TableMappingItem).MappedObjectName + "_" + field.MappedColumnName;
+                ddl.AppendFormat(" CONSTRAINT {0} DEFAULT {1}",
+                    NameLeftBracket + constraintName + NameRightBracket,
+                    this.RenderConstant(field.DefaultValue, false));
+
+                ddl.Append(Environment.NewLine);
+                ddl.AppendFormat("ALTER TABLE {0} DROP CONSTRAINT {1}",
+                    RenderExpression(field.ParentItem as TableMappingItem),
+                    NameLeftBracket + constraintName + NameRightBracket);
+            }
+
+            return ddl.ToString();
+        }
+
+        internal override string RenderConstant(DataConstant constant, bool userDefinedParameters)
+        {
+            //needs set
+            if (constant.Name == "null") return "NULL";
+
+            IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+
+            object value;
+            if (userDefinedParameters && parameterService != null)
+            {
+                value = parameterService.GetParameterValue(constant.Id);
+            }
+            else
+            {
+                value = constant.Value;
+            }
+
+            switch (constant.DataType)
+            {
+                case OrigamDataType.Integer:
+                case OrigamDataType.Float:
+                case OrigamDataType.Currency:
+                    return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
+
+                case OrigamDataType.Boolean:
+                    if ((bool)constant.Value)
+                    {
+                        return this.True;
+                    }
+                    else
+                    {
+                        return this.False;
+                    }
+
+                case OrigamDataType.UniqueIdentifier:
+                    return "'" + value.ToString() + "'";
+
+                case OrigamDataType.Xml:
+                case OrigamDataType.Memo:
+                case OrigamDataType.String:
+                    return this.RenderString(value.ToString());
+
+                case OrigamDataType.Date:
+                    if (value == null) return "null";
+
+                    return ((DateTime)value).ToString(@"{ \t\s \'yyyy-MM-dd HH:mm:ss\' }");
+
+                default:
+                    throw new NotImplementedException(ResourceUtils.GetString("TypeNotImplementedByPostgres", constant.DataType.ToString()));
+            }
+        }
+
+        internal override string ColumnDefinitionDdl(FieldMappingItem field)
+        {
+            StringBuilder ddl = new StringBuilder();
+            // fname | varchar(20) | NOT NULL | PRIMARY KEY
+            ddl.AppendFormat("{0} {1}",
+                NameLeftBracket + field.MappedColumnName + NameRightBracket,
+                DdlDataType(field.DataType, field.DataLength, field.MappedDataType)
+                );
+            if (field.AllowNulls)
+                ddl.Append(" NULL");
+            else
+                ddl.Append(" NOT NULL");
+            if (field.IsPrimaryKey)
+                ddl.Append(" PRIMARY KEY NONCLUSTERED");
+            return ddl.ToString();
+        }
+
+        public override string AlterColumnDdl(FieldMappingItem field)
+        {
+            StringBuilder ddl = new StringBuilder();
+
+            ddl.AppendFormat("ALTER TABLE {0} ALTER COLUMN {1}",
+                RenderExpression(field.ParentItem as TableMappingItem),
+                ColumnDefinitionDdl(field));
+            return ddl.ToString();
+        }
+
+        public override string TableDefinitionDdl(TableMappingItem table)
+        {
+            if (table.DatabaseObjectType != DatabaseMappingObjectType.Table)
+            {
+                throw new InvalidOperationException(ResourceUtils.GetString("CantDDLScript", table.DatabaseObjectType.ToString()));
+            }
+
+            StringBuilder ddl = new StringBuilder();
+            ddl.AppendFormat("CREATE TABLE {0} (",
+                NameLeftBracket + table.MappedObjectName + NameRightBracket);
+
+            int i = 0;
+            foreach (ISchemaItem item in table.EntityColumns)
+            {
+                if (item is FieldMappingItem)
+                {
+                    FieldMappingItem field = item as FieldMappingItem;
+
+                    if (i > 0) ddl.Append(",");
+
+                    ddl.Append(Environment.NewLine + "\t" + ColumnDefinitionDdl(field));
+
+                    i++;
+                }
+            }
+
+            ddl.Append(")");
+
+            if (table.EntityIndexes.Count > 0)
+            {
+                foreach (DataEntityIndex index in table.EntityIndexes)
+                {
+                    ddl.Append(Environment.NewLine);
+                    ddl.Append(IndexDefinitionDdl(table, index, false));
+                }
+            }
+
+            return ddl.ToString();
+        }
+
+        public override string IndexDefinitionDdl(IDataEntity entity, DataEntityIndex index, bool complete)
+        {
+            StringBuilder ddl = new StringBuilder();
+            ddl.AppendFormat("CREATE {0}INDEX {1} ON {2} (",
+                (index.IsUnique ? "UNIQUE " : ""),
+                NameLeftBracket + GetIndexName(entity, index) + NameRightBracket,
+                NameLeftBracket + (index.ParentItem as TableMappingItem).MappedObjectName + NameRightBracket
+                );
+
+            int i = 0;
+            ArrayList sortedFields = index.ChildItemsByType(DataEntityIndexField.ItemTypeConst);
+            sortedFields.Sort();
+
+            foreach (DataEntityIndexField field in sortedFields)
+            {
+                if (i > 0) ddl.Append(", ");
+
+                ddl.AppendFormat("{0} {1}",
+                    RenderExpression(field.Field, null, null, null, null),
+                    field.SortOrder == DataEntityIndexSortOrder.Descending ? "DESC" : "ASC");
+
+                i++;
+            }
+            ddl.Append(")");
+
+            return ddl.ToString();
+        }
+
+        internal override string RenderExpression(FieldMappingItem item, DataStructureEntity dsEntity)
+        {
+            bool localize = dsEntity != null && dsEntity.RootItem is DataStructure
+                && (dsEntity.RootItem as DataStructure).IsLocalized;
+
+            TableMappingItem tmi = null;
+            FieldMappingItem localizedItem = null;
+            if (localize)
+            {
+                if (dsEntity != null) {
+                    tmi = dsEntity.Entity as TableMappingItem;
+                    if (tmi == null)
+                    {
+                        // it could be a relation
+                        EntityRelationItem eri = dsEntity.Entity as EntityRelationItem;
+                        if (eri != null)
+                        {
+                            tmi = eri.RelatedEntity as TableMappingItem;
+                        }
+                    }
+                }
+                localizedItem = ((localize) ? (item.GetLocalizationField(tmi)) : null);
+            }
+
+
+
+            string nonLocalizedResult = NameLeftBracket + item.MappedColumnName + NameRightBracket;
+
+            if (dsEntity != null)
+                nonLocalizedResult = NameLeftBracket + dsEntity.Name + NameRightBracket + "." + nonLocalizedResult;
+
+
+            if (localize && localizedItem != null)
+            {
+                string result = NameLeftBracket + item.GetLocalizationField(tmi).MappedColumnName + NameRightBracket;
+                result = NameLeftBracket + FieldMappingItem.GetLocalizationTable(tmi).Name
+                    + NameRightBracket + "." + result;
+                result = String.Format("ISNULL({0},{1})", result, nonLocalizedResult);
+                return result;
+            }
+            else
+            {
+                return nonLocalizedResult;
+            }
+        }
+    }
 }

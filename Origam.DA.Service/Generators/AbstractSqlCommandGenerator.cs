@@ -633,126 +633,11 @@ namespace Origam.DA.Service
 
             return ddl.ToString();
         }
-
-        public string AddColumnDdl(FieldMappingItem field)
-        {
-            StringBuilder ddl = new StringBuilder();
-
-            ddl.AppendFormat("ALTER TABLE {0} ADD {1}",
-                RenderExpression(field.ParentItem as TableMappingItem),
-                ColumnDefinitionDdl(field));
-
-			if(! field.AllowNulls && field.DefaultValue != null)
-			{
-				string constraintName = "DF_" + (field.ParentItem as TableMappingItem).MappedObjectName + "_" + field.MappedColumnName;
-				ddl.AppendFormat(" CONSTRAINT {0} DEFAULT {1}",
-					NameLeftBracket + constraintName + NameRightBracket,
-					this.RenderConstant(field.DefaultValue, false));
-
-                ddl.Append(Environment.NewLine);
-                ddl.AppendFormat("ALTER TABLE {0} DROP CONSTRAINT {1}",
-                    RenderExpression(field.ParentItem as TableMappingItem),
-                    NameLeftBracket + constraintName + NameRightBracket);
-            }
-
-            return ddl.ToString();
-        }
-
-        public string AlterColumnDdl(FieldMappingItem field)
-        {
-            StringBuilder ddl = new StringBuilder();
-
-            ddl.AppendFormat("ALTER TABLE {0} ALTER COLUMN {1}",
-                RenderExpression(field.ParentItem as TableMappingItem),
-                ColumnDefinitionDdl(field));
-            return ddl.ToString();
-        }
-
-        private string ColumnDefinitionDdl(FieldMappingItem field)
-        {
-            StringBuilder ddl = new StringBuilder();
-            // fname | varchar(20) | NOT NULL | PRIMARY KEY
-            ddl.AppendFormat("{0} {1}",
-                NameLeftBracket + field.MappedColumnName + NameRightBracket,
-                DdlDataType(field.DataType, field.DataLength, field.MappedDataType)
-                );
-            if (field.AllowNulls)
-                ddl.Append(" NULL");
-            else
-                ddl.Append(" NOT NULL");
-            if (field.IsPrimaryKey)
-                ddl.Append(" PRIMARY KEY NONCLUSTERED");
-            return ddl.ToString();
-        }
-
-        public string IndexDefinitionDdl(IDataEntity entity, DataEntityIndex index, bool complete)
-        {
-            StringBuilder ddl = new StringBuilder();
-            ddl.AppendFormat("CREATE {0}INDEX {1} ON {2} (",
-                (index.IsUnique ? "UNIQUE " : ""),
-                NameLeftBracket + GetIndexName(entity, index) + NameRightBracket,
-                NameLeftBracket + (index.ParentItem as TableMappingItem).MappedObjectName + NameRightBracket
-                );
-
-            int i = 0;
-            ArrayList sortedFields = index.ChildItemsByType(DataEntityIndexField.ItemTypeConst);
-            sortedFields.Sort();
-
-            foreach (DataEntityIndexField field in sortedFields)
-            {
-                if (i > 0) ddl.Append(", ");
-
-                ddl.AppendFormat("{0} {1}",
-                    RenderExpression(field.Field, null, null, null, null),
-                    field.SortOrder == DataEntityIndexSortOrder.Descending ? "DESC" : "ASC");
-
-                i++;
-            }
-            ddl.Append(")");
-
-            return ddl.ToString();
-        }
-
-        public string TableDefinitionDdl(TableMappingItem table)
-        {
-            if (table.DatabaseObjectType != DatabaseMappingObjectType.Table)
-            {
-                throw new InvalidOperationException(ResourceUtils.GetString("CantDDLScript", table.DatabaseObjectType.ToString()));
-            }
-
-            StringBuilder ddl = new StringBuilder();
-            ddl.AppendFormat("CREATE TABLE {0} (",
-                NameLeftBracket + table.MappedObjectName + NameRightBracket);
-
-            int i = 0;
-            foreach (ISchemaItem item in table.EntityColumns)
-            {
-                if (item is FieldMappingItem)
-                {
-                    FieldMappingItem field = item as FieldMappingItem;
-
-                    if (i > 0) ddl.Append(",");
-
-                    ddl.Append(Environment.NewLine + "\t" + ColumnDefinitionDdl(field));
-
-                    i++;
-                }
-            }
-
-            ddl.Append(")");
-
-            if (table.EntityIndexes.Count > 0)
-            {
-                foreach (DataEntityIndex index in table.EntityIndexes)
-                {
-                    ddl.Append(Environment.NewLine);
-                    ddl.Append(IndexDefinitionDdl(table, index, false));
-                }
-            }
-
-            return ddl.ToString();
-        }
-
+        public abstract string AddColumnDdl(FieldMappingItem field);
+        public abstract string AlterColumnDdl(FieldMappingItem field);
+        internal abstract string ColumnDefinitionDdl(FieldMappingItem field);
+        public abstract string IndexDefinitionDdl(IDataEntity entity, DataEntityIndex index, bool complete);
+        public abstract string TableDefinitionDdl(TableMappingItem table);
         public string SelectParameterDeclarationsSql(DataStructureFilterSet filter, bool paging,
             string columnName)
         {
@@ -2563,7 +2448,7 @@ namespace Origam.DA.Service
         #endregion
 
         #region Expression rendering
-        private string RenderExpression(ISchemaItem item, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
+        internal string RenderExpression(ISchemaItem item, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
         {
             return RenderExpression(item, entity, replaceParameterTexts, dynamicParameters, parameterReferences, false);
         }
@@ -2595,7 +2480,7 @@ namespace Origam.DA.Service
             else if (item is AggregatedColumn)
                 return RenderExpression(item as AggregatedColumn, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
             else
-                throw new NotImplementedException(ResourceUtils.GetString("TypeNotSupportedByMS", item.GetType().ToString()));
+                throw new NotImplementedException(ResourceUtils.GetString("TypeNotSupported", item.GetType().ToString()));
         }
 
         private string AggregationHelper(AggregatedColumn topLevelItem, DataStructureEntity topLevelEntity, AggregatedColumn item, Hashtable replaceParameterTexts, int level, StringBuilder joins, Hashtable dynamicParameters, Hashtable parameterReferences)
@@ -2747,7 +2632,7 @@ namespace Origam.DA.Service
             return AggregationHelper(item, entity, item, replaceParameterTexts, 1, joins, dynamicParameters, parameterReferences);
         }
 
-        private string RenderExpression(TableMappingItem item)
+        internal string RenderExpression(TableMappingItem item)
         {
             return NameLeftBracket + item.MappedObjectName + NameRightBracket;
         }
@@ -2757,53 +2642,9 @@ namespace Origam.DA.Service
             return RenderExpression(item.RelatedEntity as ISchemaItem, null, null, null, null);
         }
 
-        private string RenderExpression(FieldMappingItem item, DataStructureEntity dsEntity)
-        {
-            bool localize = dsEntity != null && dsEntity.RootItem is DataStructure
-                && (dsEntity.RootItem as DataStructure).IsLocalized;
-
-            TableMappingItem tmi = null;
-            FieldMappingItem localizedItem = null;
-            if (localize)
-            {
-                if (dsEntity != null) {
-                    tmi = dsEntity.Entity as TableMappingItem;
-                    if (tmi == null)
-                    {
-                        // it could be a relation
-                        EntityRelationItem eri = dsEntity.Entity as EntityRelationItem;
-                        if (eri != null)
-                        {
-                            tmi = eri.RelatedEntity as TableMappingItem;
-                        }
-                    }
-                }
-                localizedItem = ((localize) ? (item.GetLocalizationField(tmi)) : null);
-            }
-
-
-
-            string nonLocalizedResult = NameLeftBracket + item.MappedColumnName + NameRightBracket;
-
-            if (dsEntity != null)
-                nonLocalizedResult = NameLeftBracket + dsEntity.Name + NameRightBracket + "." + nonLocalizedResult;
-
-
-            if (localize && localizedItem != null)
-            {
-                string result = NameLeftBracket + item.GetLocalizationField(tmi).MappedColumnName + NameRightBracket;
-                result = NameLeftBracket + FieldMappingItem.GetLocalizationTable(tmi).Name
-                    + NameRightBracket + "." + result;
-                result = String.Format("ISNULL({0},{1})", result, nonLocalizedResult);
-                return result;
-            }
-            else
-            {
-                return nonLocalizedResult;
-            }
-        }
-
-        private string RenderExpression(ParameterReference item, DataStructureEntity entity, Hashtable replaceParameterTexts, string parameterName, Hashtable parameterReferences)
+        internal abstract string RenderExpression(FieldMappingItem item, DataStructureEntity dsEntity);
+        
+        internal string RenderExpression(ParameterReference item, DataStructureEntity entity, Hashtable replaceParameterTexts, string parameterName, Hashtable parameterReferences)
         {
             if (parameterName == null)
             {
@@ -2835,7 +2676,7 @@ namespace Origam.DA.Service
             return entity.Name + "_" + item.Parameter.Name;
         }
 
-        private string RenderExpression(EntityColumnReference item, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
+        internal string RenderExpression(EntityColumnReference item, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
         {
             if (item.Field == null)
             {
@@ -2862,57 +2703,8 @@ namespace Origam.DA.Service
             }
         }
 
-        private string RenderConstant(DataConstant constant, bool userDefinedParameters)
-        {
-            if (constant.Name == "null") return "NULL";
-
-            IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-
-            object value;
-            if (userDefinedParameters && parameterService != null)
-            {
-                value = parameterService.GetParameterValue(constant.Id);
-            }
-            else
-            {
-                value = constant.Value;
-            }
-
-            switch (constant.DataType)
-            {
-                case OrigamDataType.Integer:
-                case OrigamDataType.Float:
-                case OrigamDataType.Currency:
-                    return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
-
-                case OrigamDataType.Boolean:
-                    if ((bool)constant.Value)
-                    {
-                        return this.True;
-                    }
-                    else
-                    {
-                        return this.False;
-                    }
-
-                case OrigamDataType.UniqueIdentifier:
-                    return "'" + value.ToString() + "'";
-
-                case OrigamDataType.Xml:
-                case OrigamDataType.Memo:
-                case OrigamDataType.String:
-                    return this.RenderString(value.ToString());
-
-                case OrigamDataType.Date:
-                    if (value == null) return "null";
-
-                    return ((DateTime)value).ToString(@"{ \t\s \'yyyy-MM-dd HH:mm:ss\' }");
-
-                default:
-                    throw new NotImplementedException(ResourceUtils.GetString("TypeNotImplementedByMS", constant.DataType.ToString()));
-            }
-        }
-
+        internal abstract string RenderConstant(DataConstant constant, bool userDefinedParameters);
+        
         private string RenderExpression(DataConstantReference item)
         {
             return RenderConstant(item.DataConstant, UserDefinedParameters);
@@ -2923,7 +2715,7 @@ namespace Origam.DA.Service
 //            return RenderConstant(item.DataConstant);
 //        }
 
-        private string RenderString(string text)
+        internal string RenderString(string text)
         {
             return "'" + text.Replace("'", "''") + "'";
         }
