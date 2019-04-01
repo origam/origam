@@ -48,7 +48,7 @@ namespace Origam.Workflow.Tasks
 			UpdateContextTask updateTask = this.Step as UpdateContextTask;
 			Key outputCtxtKey = updateTask.OutputContextStore.PrimaryKey;
 
-			if (this.Step.Trace)
+			if (Engine.IsTrace(Step))
 			{
 				tracingService.TraceStep(
 					this.Engine.WorkflowInstanceId,
@@ -116,8 +116,8 @@ namespace Origam.Workflow.Tasks
 			}
 
 
-			if (this.Step.Trace)
-			{
+            if (Engine.IsTrace(Step))
+            {
 				tracingService.TraceStep(
 					this.Engine.WorkflowInstanceId,
 					(this.Step as AbstractSchemaItem).Path,
@@ -138,8 +138,8 @@ namespace Origam.Workflow.Tasks
 						as IDataDocument,
 					ruleSet,
 					null);
-				if (this.Step.Trace)
-				{
+                if (Engine.IsTrace(Step))
+                {
 					tracingService.TraceStep(
 						this.Engine.WorkflowInstanceId,
 						(this.Step as AbstractSchemaItem).Path,
