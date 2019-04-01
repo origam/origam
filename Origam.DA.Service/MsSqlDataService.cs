@@ -277,6 +277,81 @@ namespace Origam.DA.Service
             return "SELECT TABLE_NAME, COLUMN_NAME, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS ORDER BY TABLE_NAME";
         }
 
+        internal override string GetSqlIndexFields()
+        {
+            return "select	so.name TableName, si.name IndexName, "
+                + "sc.name ColumnName, sik.keyno as OrdinalPosition, "
+                + "indexkey_property(sik.id, sik.indid, sik.keyno, 'IsDescending') as IsDescending "
+                + "from sysindexes si "
+                + "inner join sysobjects so on si.id = so.id "
+                + "inner join sysindexkeys sik on si.indid = sik.indid and sik.id = so.id "
+                + "inner join syscolumns sc on sik.colid = sc.colid and sc.id = so.id "
+                + "where indexproperty(si.id, si.name, 'IsStatistics') = 0	"
+                + "and indexproperty(si.id, si.name, 'IsHypothetical') = 0 "
+                + "and si.status & 2048 = 0 "
+                + "and si.impid = 0";
+        }
+
+        internal override string GetSqlIndexes()
+        {
+            return "select	so.name TableName, si.name IndexName "
+                + "from sysindexes si "
+                + "inner join sysobjects so on si.id = so.id "
+                + "where indexproperty(si.id, si.name, 'IsStatistics') = 0 "    // no statistics
+                + "and indexproperty(si.id, si.name, 'IsHypothetical') = 0 "    // whatever it is, we don't want it...
+                + "and si.status & 2048 = 0 "   // no primary keys
+                + "and si.impid = 0"            // no awkward indexes...
+                + "and si.name is not null";
+        }
+
+        internal override string GetSqlFk()
+        {
+            return "select "
+                + "N'PK_Table' = PKT.name, "
+                + "N'FK_Table' = FKT.name, "
+                + "N'Constraint' = object_name(r.constid), "
+                + "c.status, "
+                + "cKeyCol1 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey1)), "
+                + "cKeyCol2 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey2)), "
+                + "cKeyCol3 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey3)), "
+                + "cKeyCol4 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey4)), "
+                + "cKeyCol5 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey5)), "
+                + "cKeyCol6 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey6)), "
+                + "cKeyCol7 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey7)), "
+                + "cKeyCol8 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey8)), "
+                + "cKeyCol9 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey9)), "
+                + "cKeyCol10 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey10)), "
+                + "cKeyCol11 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey11)), "
+                + "cKeyCol12 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey12)), "
+                + "cKeyCol13 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey13)), "
+                + "cKeyCol14 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey14)), "
+                + "cKeyCol15 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey15)), "
+                + "cKeyCol16 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey16)), "
+                + "cRefCol1 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey1)), "
+                + "cRefCol2 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey2)),	 "
+                + "cRefCol3 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey3)), "
+                + "cRefCol4 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey4)), "
+                + "cRefCol5 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey5)), "
+                + "cRefCol6 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey6)), "
+                + "cRefCol7 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey7)), "
+                + "cRefCol8 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey8)), "
+                + "cRefCol9 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey9)), "
+                + "cRefCol10 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey10)), "
+                + "cRefCol11 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey11)), "
+                + "cRefCol12 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey12)), "
+                + "cRefCol13 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey13)), "
+                + "cRefCol14 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey14)), "
+                + "cRefCol15 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey15)), "
+                + "cRefCol16 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey16)), "
+                + "N'PK_Table_Owner' = user_name(PKT.uid), "
+                + "N'FK_Table_Owner' = user_name(FKT.uid), "
+                + "N'DeleteCascade' = OBJECTPROPERTY( r.constid, N'CnstIsDeleteCascade'), "
+                + "N'UpdateCascade' = OBJECTPROPERTY( r.constid, N'CnstIsUpdateCascade') "
+                + "from dbo.sysreferences r, dbo.sysconstraints c, dbo.sysobjects PKT, dbo.sysobjects FKT "
+                + "where r.constid = c.constid  "
+                + "and PKT.id = r.rkeyid and FKT.id = r.fkeyid ";
+        }
+
         public override string Info
 		{
 			get
