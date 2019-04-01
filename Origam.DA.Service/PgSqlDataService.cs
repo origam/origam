@@ -160,6 +160,16 @@ namespace Origam.DA.Service
             }
         }
 
+        internal override string GetAllTablesSQL()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override string GetAllColumnsSQL()
+        {
+            throw new NotImplementedException();
+        }
+
         public override string Info
 		{
 			get

@@ -267,6 +267,16 @@ namespace Origam.DA.Service
             }
         }
 
+        internal override string GetAllTablesSQL()
+        {
+            return "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_NAME";
+        }
+
+        internal override string GetAllColumnsSQL()
+        {
+            return "SELECT TABLE_NAME, COLUMN_NAME, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS ORDER BY TABLE_NAME";
+        }
+
         public override string Info
 		{
 			get

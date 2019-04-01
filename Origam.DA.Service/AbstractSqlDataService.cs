@@ -190,9 +190,11 @@ namespace Origam.DA.Service
 		private DbDataAdapterFactory _adapterFactory;
 		private string _connectionString = "";
         private const int DATA_VISUALIZATION_MAX_LENGTH = 100;
+        internal abstract string GetAllTablesSQL();
+        
 
-		#region Constructors
-		public AbstractSqlDataService() : base()
+        #region Constructors
+        public AbstractSqlDataService() : base()
 		{
 		}
 
@@ -1670,49 +1672,17 @@ namespace Origam.DA.Service
 		public override ArrayList CompareSchema(IPersistenceProvider provider)
 		{
 			ArrayList results = new ArrayList();
+            ArrayList schemaTables = GetSchemaTables(provider);
 
-			// tables
-			Hashtable schemaTableList = new Hashtable();
+            // tables
+            Hashtable schemaTableList = GetSchemaTableList(schemaTables);
 			Hashtable schemaColumnList = new Hashtable();
 			Hashtable schemaIndexListGenerate = new Hashtable();
             Hashtable schemaIndexListAll = new Hashtable();
-            Hashtable dbTableList = new Hashtable();
+            Hashtable dbTableList = getDbTableList();
 			Hashtable dbIndexList = new Hashtable();
-
-			List<AbstractSchemaItem> entityList = provider.RetrieveListByType<AbstractSchemaItem>(AbstractDataEntity.ItemTypeConst);
-			ArrayList schemaTables = new ArrayList();
-
-			foreach(IDataEntity e in entityList)
-			{
-				if(e is TableMappingItem)
-				{
-					schemaTables.Add(e);
-				}
-			}
-
-			foreach(TableMappingItem t in schemaTables)
-			{
-				//				try
-				//				{
-				if(! schemaTableList.Contains(t.MappedObjectName))
-				{
-					schemaTableList.Add(t.MappedObjectName, t);
-				}
-				//				}
-				//				catch
-				//				{
-				//					throw new Exception("Duplicate source table name in the model: " + t.SourceTableName);
-				//				}
-			}
-
-			DataSet tables = GetData("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_NAME");
-			
-			foreach(DataRow row in tables.Tables[0].Rows)
-			{
-				dbTableList.Add(row["TABLE_NAME"], null);
-			}
-
-			DataSet columns = GetData("SELECT TABLE_NAME, COLUMN_NAME, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS ORDER BY TABLE_NAME");
+            
+			DataSet columns = GetData(GetAllColumnsSQL());
 			columns.CaseSensitive = true;
 
 			DoCompare(results, dbTableList, schemaTableList, columns, DbCompareResultType.MissingInDatabase, typeof(TableMappingItem), provider);
@@ -1745,7 +1715,7 @@ namespace Origam.DA.Service
 								result.SchemaItemType = typeof(FieldMappingItem);
 								if(t.DatabaseObjectType == DatabaseMappingObjectType.Table)
 								{
-									result.Script = (this.DbDataAdapterFactory as MsSqlCommandGenerator).AddColumnDdl(col as FieldMappingItem);
+									result.Script = (this.DbDataAdapterFactory as AbstractSqlCommandGenerator).AddColumnDdl(col as FieldMappingItem);
 								}
 								else
 								{
@@ -1762,7 +1732,7 @@ namespace Origam.DA.Service
                                     result.ItemName = ConstraintName(t, fk);
                                     result.SchemaItem = col;
                                     result.SchemaItemType = typeof(DataEntityConstraint);
-                                    result.Script = (this.DbDataAdapterFactory as MsSqlCommandGenerator)
+                                    result.Script = (this.DbDataAdapterFactory as AbstractSqlCommandGenerator)
                                         .AddForeignKeyConstraintDdl(t, fk);
                                     results.Add(result);
                                 }
@@ -1771,8 +1741,8 @@ namespace Origam.DA.Service
 					}
 				}
 			}
-			
-			MsSqlCommandGenerator gen = new MsSqlCommandGenerator();
+
+            AbstractSqlCommandGenerator gen = new MsSqlCommandGenerator();
 
 			foreach(DataRow row in columns.Tables[0].Rows)
 			{
@@ -2147,6 +2117,46 @@ namespace Origam.DA.Service
 
 			return results;
 		}
+
+        internal abstract string GetAllColumnsSQL();
+
+        private Hashtable getDbTableList()
+        {
+            DataSet tables = GetData(GetAllTablesSQL());
+            Hashtable dbTableList = new Hashtable();
+            foreach (DataRow row in tables.Tables[0].Rows)
+            {
+                dbTableList.Add(row["TABLE_NAME"], null);
+            }
+            return dbTableList;
+        }
+        private Hashtable GetSchemaTableList(ArrayList schemaTables)
+        {
+            Hashtable schemaTableList = new Hashtable();
+            foreach (TableMappingItem t in schemaTables)
+            {
+                if (!schemaTableList.Contains(t.MappedObjectName))
+                {
+                    schemaTableList.Add(t.MappedObjectName, t);
+                }
+            }
+            return schemaTableList;
+        }
+
+        private ArrayList GetSchemaTables(IPersistenceProvider provider)
+        {
+            List<AbstractSchemaItem> entityList = provider.RetrieveListByType<AbstractSchemaItem>(AbstractDataEntity.ItemTypeConst);
+            ArrayList schemaTables = new ArrayList();
+
+            foreach (IDataEntity e in entityList)
+            {
+                if (e is TableMappingItem)
+                {
+                    schemaTables.Add(e);
+                }
+            }
+            return schemaTables;
+        }
 
         private static string ConstraintName(TableMappingItem t, 
             DataEntityConstraint constraint)
