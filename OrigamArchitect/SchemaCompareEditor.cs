@@ -38,6 +38,8 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Services;
 using Origam.UI;
+using Origam.Workbench.Services.CoreServices;
+using Origam.DA.Service;
 
 namespace OrigamArchitect
 {
@@ -364,9 +366,10 @@ namespace OrigamArchitect
 		{
 			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
-			Origam.DA.Service.MsSqlDataService da = 
-                new Origam.DA.Service.MsSqlDataService(settings.DataConnectionString,
-                settings.DataBulkInsertThreshold, settings.DataUpdateBatchSize);
+            Origam.DA.Service.AbstractSqlDataService da = (AbstractSqlDataService)DataService.GetDataService();
+            
+            //new Origam.DA.Service.MsSqlDataService(settings.DataConnectionString,
+            //    settings.DataBulkInsertThreshold, settings.DataUpdateBatchSize);
 			da.PersistenceProvider = persistence.SchemaProvider;
 			
 			_results = da.CompareSchema(persistence.SchemaProvider);

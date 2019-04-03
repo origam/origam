@@ -1779,7 +1779,7 @@ namespace Origam.DA.Service
                                     result.ItemName = ConstraintName(t, constraint);
                                     result.SchemaItem = t;
                                     result.SchemaItemType = typeof(DataEntityConstraint);
-                                    result.Script = (this.DbDataAdapterFactory as MsSqlCommandGenerator).AddForeignKeyConstraintDdl(t, constraint);
+                                    result.Script = (this.DbDataAdapterFactory as AbstractSqlCommandGenerator).AddForeignKeyConstraintDdl(t, constraint);
 
                                     results.Add(result);
                                 }
@@ -1905,7 +1905,7 @@ namespace Origam.DA.Service
                                 result.ItemName = t.MappedObjectName + "." + index.Name;
                                 result.SchemaItem = index;
                                 result.SchemaItemType = typeof(DataEntityIndex);
-                                result.Script = (this.DbDataAdapterFactory as MsSqlCommandGenerator).IndexDefinitionDdl(t, result.SchemaItem as DataEntityIndex, true);
+                                result.Script = (this.DbDataAdapterFactory as AbstractSqlCommandGenerator).IndexDefinitionDdl(t, result.SchemaItem as DataEntityIndex, true);
 
                                 results.Add(result);
                             }

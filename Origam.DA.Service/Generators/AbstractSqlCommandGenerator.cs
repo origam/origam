@@ -628,7 +628,7 @@ namespace Origam.DA.Service
                     i++;
                 }
 
-                ddl.Append(Environment.NewLine + "\t)");
+                ddl.Append(Environment.NewLine + "\t);");
             }
 
             return ddl.ToString();

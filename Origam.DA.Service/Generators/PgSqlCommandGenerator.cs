@@ -179,7 +179,50 @@ namespace Origam.DA.Service
 
         public override OrigamDataType ToOrigamDataType(string ddlType)
         {
-            throw new NotImplementedException();
+            switch (ddlType.ToUpper())
+            {
+                case "IMAGE":
+                    return OrigamDataType.Blob;
+
+                case "BIT":
+                    return OrigamDataType.Boolean;
+
+                case "TINYINT":
+                    return OrigamDataType.Byte;
+
+                case "MONEY":
+                    return OrigamDataType.Currency;
+
+                case "DATETIME":
+                    return OrigamDataType.Date;
+
+                case "BIGINT":
+                    return OrigamDataType.Long;
+
+                case "NTEXT":
+                    return OrigamDataType.Memo;
+
+                case "SMALLINT":
+                case "INT":
+                    return OrigamDataType.Integer;
+
+                case "FLOAT":
+                case "DECIMAL":
+                    return OrigamDataType.Float;
+
+                case "VARCHAR":
+                case "NVARCHAR":
+                    return OrigamDataType.String;
+
+                case "UNIQUEIDENTIFIER":
+                    return OrigamDataType.UniqueIdentifier;
+
+                case "GEOGRAPHY":
+                    return OrigamDataType.Geography;
+
+                default:
+                    return OrigamDataType.String;
+            }
         }
 
         public NpgsqlDbType ConvertDataType(OrigamDataType columnType,
@@ -396,7 +439,7 @@ namespace Origam.DA.Service
             else
                 ddl.Append(" NOT NULL");
             if (field.IsPrimaryKey)
-                ddl.Append(" PRIMARY KEY NONCLUSTERED");
+                ddl.Append(" PRIMARY KEY ");
             return ddl.ToString();
         }
 
@@ -436,7 +479,7 @@ namespace Origam.DA.Service
                 }
             }
 
-            ddl.Append(")");
+            ddl.Append(");");
 
             if (table.EntityIndexes.Count > 0)
             {
@@ -453,7 +496,7 @@ namespace Origam.DA.Service
         public override string IndexDefinitionDdl(IDataEntity entity, DataEntityIndex index, bool complete)
         {
             StringBuilder ddl = new StringBuilder();
-            ddl.AppendFormat("CREATE {0}INDEX {1} ON {2} (",
+            ddl.AppendFormat("CREATE {0} INDEX  {1} ON {2} (",
                 (index.IsUnique ? "UNIQUE " : ""),
                 NameLeftBracket + GetIndexName(entity, index) + NameRightBracket,
                 NameLeftBracket + (index.ParentItem as TableMappingItem).MappedObjectName + NameRightBracket
@@ -473,7 +516,7 @@ namespace Origam.DA.Service
 
                 i++;
             }
-            ddl.Append(")");
+            ddl.Append(");");
 
             return ddl.ToString();
         }

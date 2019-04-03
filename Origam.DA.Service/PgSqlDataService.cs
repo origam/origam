@@ -108,6 +108,7 @@ namespace Origam.DA.Service
             ExecuteUpdate(string.Format("GRANT CONNECT ON DATABASE {0} TO {1}", database, user), transaction1);
             ExecuteUpdate(string.Format("GRANT ALL PRIVILEGES ON DATABASE {0} TO {1}", database, user), transaction1);
             ExecuteUpdate(string.Format("GRANT ALL ON SCHEMA {0} TO GROUP {1}role WITH GRANT OPTION", database, user), transaction1);
+            ExecuteUpdate(string.Format("ALTER DATABASE {0} OWNER TO {1}role ", database, user), transaction1);
                 ResourceMonitor.Commit(transaction1);
             }
             catch (Exception)
@@ -119,6 +120,8 @@ namespace Origam.DA.Service
 
         public override void DeleteUser(string user,bool DatabaseIntegratedAuthentication)
         {
+            //change owner of object  to postgres. it is not good , but for testing is ok.
+            ExecuteUpdate(string.Format("REASSIGN OWNED BY \"{0}role\" TO postgres", user), null);
             ExecuteUpdate(string.Format("DROP ROLE \"{0}role\" ", user), null);
             ExecuteUpdate(string.Format("DROP ROLE \"{0}\" ", user), null);
         }
@@ -172,77 +175,77 @@ namespace Origam.DA.Service
 
         internal override string GetSqlIndexFields()
         {
-            return "select	so.name TableName, si.name IndexName, "
-                + "sc.name ColumnName, sik.keyno as OrdinalPosition, "
-                + "indexkey_property(sik.id, sik.indid, sik.keyno, 'IsDescending') as IsDescending "
-                + "from sysindexes si "
-                + "inner join sysobjects so on si.id = so.id "
-                + "inner join sysindexkeys sik on si.indid = sik.indid and sik.id = so.id "
-                + "inner join syscolumns sc on sik.colid = sc.colid and sc.id = so.id "
-                + "where indexproperty(si.id, si.name, 'IsStatistics') = 0	"
-                + "and indexproperty(si.id, si.name, 'IsHypothetical') = 0 "
-                + "and si.status & 2048 = 0 "
-                + "and si.impid = 0";
+            return "SELECT c.relname AS TableName, "
+                + "i.relname as IndexName,f.attname AS ColumnName, "
+                + "f.attnum as OrdinalPosition, "
+                + "(select pg_index_column_has_property(i.oid, f.attnum, p.name) from unnest(array['desc']) p(name)) as IsDescending "
+                + "FROM pg_attribute f "
+                + "JOIN pg_class c ON c.oid = f.attrelid "
+                + "JOIN pg_type t ON t.oid = f.atttypid "
+                + "LEFT JOIN pg_attrdef d ON d.adrelid = c.oid AND d.adnum = f.attnum "
+                + "LEFT JOIN pg_namespace n ON n.oid = c.relnamespace "
+                + "LEFT JOIN pg_constraint p ON p.conrelid = c.oid AND f.attnum = ANY(p.conkey) "
+                + "LEFT JOIN pg_class AS g ON p.confrelid = g.oid "
+                + "LEFT JOIN pg_index AS ix ON f.attnum = ANY(ix.indkey) and c.oid = f.attrelid and c.oid = ix.indrelid "
+                + "LEFT JOIN pg_class AS i ON ix.indexrelid = i.oid "
+                + "WHERE c.relkind = 'r'::char "
+                + "AND n.nspname not in ('pg_catalog', 'pg_toast', 'information_schema') "
+                + "AND f.attnum > 0";
         }
 
         internal override string GetSqlIndexes()
         {
-            return "select	so.name TableName, si.name IndexName "
-                + "from sysindexes si "
-                + "inner join sysobjects so on si.id = so.id "
-                + "where indexproperty(si.id, si.name, 'IsStatistics') = 0 "    // no statistics
-                + "and indexproperty(si.id, si.name, 'IsHypothetical') = 0 "    // whatever it is, we don't want it...
-                + "and si.status & 2048 = 0 "   // no primary keys
-                + "and si.impid = 0"            // no awkward indexes...
-                + "and si.name is not null";
+            return "select tablename as TableName,indexname as IndexName  from pg_indexes where schemaname not in ('pg_catalog', 'pg_toast')";
         }
 
         internal override string GetSqlFk()
         {
-            return "select "
-                + "N'PK_Table' = PKT.name, "
-                + "N'FK_Table' = FKT.name, "
-                + "N'Constraint' = object_name(r.constid), "
-                + "c.status, "
-                + "cKeyCol1 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey1)), "
-                + "cKeyCol2 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey2)), "
-                + "cKeyCol3 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey3)), "
-                + "cKeyCol4 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey4)), "
-                + "cKeyCol5 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey5)), "
-                + "cKeyCol6 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey6)), "
-                + "cKeyCol7 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey7)), "
-                + "cKeyCol8 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey8)), "
-                + "cKeyCol9 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey9)), "
-                + "cKeyCol10 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey10)), "
-                + "cKeyCol11 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey11)), "
-                + "cKeyCol12 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey12)), "
-                + "cKeyCol13 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey13)), "
-                + "cKeyCol14 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey14)), "
-                + "cKeyCol15 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey15)), "
-                + "cKeyCol16 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey16)), "
-                + "cRefCol1 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey1)), "
-                + "cRefCol2 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey2)),	 "
-                + "cRefCol3 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey3)), "
-                + "cRefCol4 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey4)), "
-                + "cRefCol5 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey5)), "
-                + "cRefCol6 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey6)), "
-                + "cRefCol7 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey7)), "
-                + "cRefCol8 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey8)), "
-                + "cRefCol9 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey9)), "
-                + "cRefCol10 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey10)), "
-                + "cRefCol11 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey11)), "
-                + "cRefCol12 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey12)), "
-                + "cRefCol13 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey13)), "
-                + "cRefCol14 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey14)), "
-                + "cRefCol15 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey15)), "
-                + "cRefCol16 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey16)), "
-                + "N'PK_Table_Owner' = user_name(PKT.uid), "
-                + "N'FK_Table_Owner' = user_name(FKT.uid), "
-                + "N'DeleteCascade' = OBJECTPROPERTY( r.constid, N'CnstIsDeleteCascade'), "
-                + "N'UpdateCascade' = OBJECTPROPERTY( r.constid, N'CnstIsUpdateCascade') "
-                + "from dbo.sysreferences r, dbo.sysconstraints c, dbo.sysobjects PKT, dbo.sysobjects FKT "
-                + "where r.constid = c.constid  "
-                + "and PKT.id = r.rkeyid and FKT.id = r.fkeyid ";
+            return @"SELECT 
+    ccu.table_name AS PK_Table,
+    tc.table_name AS FK_Table, 
+    tc.constraint_name as ""Constraint"",
+    2067 as Status, 
+    (select kcu.column_name from  information_schema.key_column_usage AS kcu where tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema OFFSET 0 LIMIT 1) as cKeyCol1,
+    (select kcu.column_name from  information_schema.key_column_usage AS kcu where tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema OFFSET 1 LIMIT 1) as cKeyCol2,
+    (select kcu.column_name from  information_schema.key_column_usage AS kcu where tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema OFFSET 2 LIMIT 1) as cKeyCol3,
+    (select kcu.column_name from  information_schema.key_column_usage AS kcu where tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema OFFSET 3 LIMIT 1) as cKeyCol4,
+    (select kcu.column_name from  information_schema.key_column_usage AS kcu where tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema OFFSET 4 LIMIT 1) as cKeyCol5,
+    (select kcu.column_name from  information_schema.key_column_usage AS kcu where tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema OFFSET 5 LIMIT 1) as cKeyCol6,
+    (select kcu.column_name from  information_schema.key_column_usage AS kcu where tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema OFFSET 6 LIMIT 1) as cKeyCol7,
+    (select kcu.column_name from  information_schema.key_column_usage AS kcu where tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema OFFSET 7 LIMIT 1) as cKeyCol8,
+    (select kcu.column_name from  information_schema.key_column_usage AS kcu where tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema OFFSET 8 LIMIT 1) as cKeyCol9,
+    (select kcu.column_name from  information_schema.key_column_usage AS kcu where tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema OFFSET 9 LIMIT 1) as cKeyCol10,
+    (select kcu.column_name from  information_schema.key_column_usage AS kcu where tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema OFFSET 10 LIMIT 1) as cKeyCol11,
+    (select kcu.column_name from  information_schema.key_column_usage AS kcu where tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema OFFSET 11 LIMIT 1) as cKeyCol12,
+    (select kcu.column_name from  information_schema.key_column_usage AS kcu where tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema OFFSET 12 LIMIT 1) as cKeyCol13,
+    (select kcu.column_name from  information_schema.key_column_usage AS kcu where tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema OFFSET 13 LIMIT 1) as cKeyCol14,
+    (select kcu.column_name from  information_schema.key_column_usage AS kcu where tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema OFFSET 14 LIMIT 1) as cKeyCol15,
+    (select kcu.column_name from  information_schema.key_column_usage AS kcu where tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema OFFSET 15 LIMIT 1) as cKeyCol16,
+    (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 0 LIMIT 1) as cRefCol1,
+    (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 1 LIMIT 1) as cRefCol2,
+    (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 2 LIMIT 1) as cRefCol3,
+    (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 3 LIMIT 1) as cRefCol4,
+    (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 4 LIMIT 1) as cRefCol5,
+    (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 5 LIMIT 1) as cRefCol6,
+    (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 6 LIMIT 1) as cRefCol7,
+    (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 7 LIMIT 1) as cRefCol8,
+    (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 8 LIMIT 1) as cRefCol9,
+    (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 9 LIMIT 1) as cRefCol10,
+    (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 10 LIMIT 1) as cRefCol11,
+    (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 11 LIMIT 1) as cRefCol12,
+    (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 12 LIMIT 1) as cRefCol13,
+    (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 13 LIMIT 1) as cRefCol14,
+    (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 14 LIMIT 1) as cRefCol15,
+    (select ccu.column_name from  information_schema.constraint_column_usage AS ccu where ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema OFFSET 15 LIMIT 1) as cRefCol16
+   FROM
+    information_schema.table_constraints AS tc
+    JOIN information_schema.constraint_column_usage AS ccu
+      ON ccu.constraint_name = tc.constraint_name
+      AND ccu.table_schema = tc.table_schema
+WHERE tc.constraint_type = 'FOREIGN KEY' and
+ccu.table_schema = tc.table_schema
+group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
+
         }
 
         public override string Info
