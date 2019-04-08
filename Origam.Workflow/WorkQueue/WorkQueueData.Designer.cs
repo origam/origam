@@ -1209,7 +1209,6 @@ namespace Origam.Workflow.WorkQueue {
                 this.columnCntFromMe.Namespace = "";
                 this.columnExternalSourceConnection.Namespace = "";
                 this.columnExternalSourceConnection.Caption = "Connection String";
-                this.columnExternalSourceConnection.MaxLength = 200;
                 this.columnExternalSourcePassword.Namespace = "";
                 this.columnExternalSourcePassword.Caption = "Password";
                 this.columnExternalSourcePassword.MaxLength = 50;
