@@ -108,7 +108,10 @@ namespace Origam.Workflow
 				if(WorkflowFinished != null)
 				{
 					this.WorkflowFinished(this, new WorkflowHostEventArgs(engine, exception));
-					log.Error(exception);
+                    if(exception != null)
+                    {
+                        log.Error(exception);
+                    }
 				}
 			}
 			finally
