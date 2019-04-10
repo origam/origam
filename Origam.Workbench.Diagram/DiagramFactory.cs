@@ -73,20 +73,17 @@ namespace Origam.Workbench.Diagram
 		#endregion
 
 		#region Private Methods
-        private Node AddBasicShape(string id,string label)
+        private Node AddNode(string id,string label)
         {
-            return AddBasicShape(id, label, null);
+            return AddNode(id, label, null);
         }
 
-		private Node AddBasicShape(string id, string label, Subgraph subgraph)
+		public Node AddNode(string id, string label, Subgraph subGraph)
 		{
-			Node shape = this.Graph.AddNode(id);
+			Node shape = Graph.AddNode(id);
             shape.LabelText = label;
-            if (subgraph != null)
-            {
-                subgraph.AddNode(shape);
-            }
-			return shape;
+            subGraph?.AddNode(shape);
+            return shape;
 		}
 
 		#region Workflow Diagram
@@ -112,7 +109,7 @@ namespace Origam.Workbench.Diagram
                 IWorkflowBlock subBlock = step as IWorkflowBlock;
                 if (subBlock == null)
                 {
-                    Node shape = this.AddBasicShape(step.NodeId, step.Name, subgraph);
+                    Node shape = this.AddNode(step.NodeId, step.Name, subgraph);
                     ht.Add(step.PrimaryKey, shape);
                 }
                 else
@@ -156,7 +153,7 @@ namespace Origam.Workbench.Diagram
 
 		private void DrawUniShape(ISchemaItem schemaItem, Node parentShape)
 		{
-			Node shape = this.AddBasicShape(schemaItem.NodeId, schemaItem.Name);
+			Node shape = this.AddNode(schemaItem.Id.ToString(), schemaItem.Name);
 			if(parentShape != null)
 			{
 				this.Graph.AddEdge(shape.Id, parentShape.Id);

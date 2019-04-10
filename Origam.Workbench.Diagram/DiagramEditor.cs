@@ -211,17 +211,15 @@ namespace Origam.Workbench.Editors
         private void OnChildAdded(ISchemaItem schemaItem)
         {
 	        var objectAt = gViewer.GetObjectAt(_mouseRightButtonDownPoint.InScreenSystem);
-	        Subgraph subgraph = (objectAt as DNode)?.Node as Subgraph;
-	        if (subgraph == null) return;
+	        Subgraph subGraph = (objectAt as DNode)?.Node as Subgraph;
+	        if (subGraph == null) return;
 
 	        string nodeId = schemaItem.Id.ToString();
 	        string nodeName = string.IsNullOrEmpty(schemaItem.Name)
 		        ? "New Node"
 		        : schemaItem.Name;
 
-	        Node shape = gViewer.Graph.AddNode(nodeId);
-	        shape.LabelText = nodeName;
-	        subgraph.AddNode(shape);
+	        _factory.AddNode(nodeId, nodeName, subGraph);
 	        gViewer.Redraw();
 
 	        ServiceManager.Services.GetService<IPersistenceService>()
