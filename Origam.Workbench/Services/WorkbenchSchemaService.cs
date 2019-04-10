@@ -156,13 +156,13 @@ namespace Origam.Workbench.Services
 			}
 		}
 
-		override protected void SchemaProvider_InstancePersisted(object sender, EventArgs e)
+		override protected void SchemaProvider_InstancePersisted(object sender, IPersistent persistedObject)
 		{
-            if (this.SchemaBrowser != null && sender is IBrowserNode browserNode)
+            if (this.SchemaBrowser != null && persistedObject is IBrowserNode browserNode)
             {
                 this.SchemaBrowser.EbrSchemaBrowser.RefreshItem(browserNode);
             }
-			base.SchemaProvider_InstancePersisted(sender, e);
+			base.SchemaProvider_InstancePersisted(sender, persistedObject);
 		}
 
         public override bool SupportsSave

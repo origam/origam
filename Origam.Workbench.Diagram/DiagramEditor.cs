@@ -58,10 +58,13 @@ namespace Origam.Workbench.Editors
         }
 
         private ClickPoint _mouseRightButtonDownPoint;
-        private IPersistenceProvider persistenceProvider;
+        private readonly IPersistenceProvider persistenceProvider;
 
         public DiagramEditor()
 		{
+			persistenceProvider = ServiceManager.Services
+				.GetService<IPersistenceService>()
+				.SchemaProvider;
 			InitializeComponent();
 		    (gViewer as IViewer).MouseDown += Form1_MouseDown;
 		}
@@ -147,9 +150,6 @@ namespace Origam.Workbench.Editors
 			GViewer viewer = sender as GViewer;
 			if (viewer.SelectedObject is Node node)
 			{
-				persistenceProvider = ServiceManager.Services
-					.GetService<IPersistenceService>()
-					.SchemaProvider;
 				AbstractSchemaItem clickedItem = 
 					(AbstractSchemaItem)persistenceProvider
 						.RetrieveInstance(typeof(AbstractSchemaItem), new Key(node.Id));
@@ -172,13 +172,13 @@ namespace Origam.Workbench.Editors
 			_factory.DrawDiagram();
 			gViewer.Graph = _factory.Graph;
                 
-			persistenceProvider.InstancePersisted += (sender, args) =>
+			persistenceProvider.InstancePersisted += (sender, persistedObject) =>
 			{
-				OnInstancePersisted(graphParent.Id, sender);
+				OnInstancePersisted(graphParent.Id, persistedObject);
 			};
 		}
 
-		private void OnInstancePersisted(Guid graphParentId, object sender)
+		private void OnInstancePersisted(Guid graphParentId, IPersistent sender)
 		{
 			var upToDateGraphParent =
 				persistenceProvider.RetrieveInstance(

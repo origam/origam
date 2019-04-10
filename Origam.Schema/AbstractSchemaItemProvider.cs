@@ -151,7 +151,7 @@ namespace Origam.Schema
 				if (_persistenceProvider != null)
 				{
 					_persistenceProvider.InstancePersisted -=
-						new EventHandler(_persistenceProvider_InstancePersisted);
+						_persistenceProvider_InstancePersisted;
 					System.Diagnostics.Debug.Assert(_childItems == null ||
 					                                _childItems.Count == 0);
 				}
@@ -161,7 +161,7 @@ namespace Origam.Schema
 				if (_persistenceProvider != null)
 				{
 					_persistenceProvider.InstancePersisted +=
-						new EventHandler(_persistenceProvider_InstancePersisted);
+						_persistenceProvider_InstancePersisted;
 					System.Diagnostics.Debug.Assert(_childItems == null ||
 					                                _childItems.Count == 0);
 				}
@@ -170,9 +170,9 @@ namespace Origam.Schema
 		}
 
 #if ! ORIGAM_CLIENT
-        void _persistenceProvider_InstancePersisted(object sender, EventArgs e)
+        void _persistenceProvider_InstancePersisted(object sender, IPersistent persistedObject)
         {
-            ISchemaItem persistedItem = sender as ISchemaItem;
+            ISchemaItem persistedItem = persistedObject as ISchemaItem;
             if (persistedItem != null)
             {
                 if (persistedItem.IsDeleted)

@@ -36,7 +36,7 @@ namespace Origam.DA.ObjectPersistence
             set => throw new NotImplementedException();
         }
 
-        public event EventHandler InstancePersisted;
+        public event EventHandler<IPersistent> InstancePersisted;
 
         public void RunInTransaction(Action action)
         {
@@ -61,7 +61,7 @@ namespace Origam.DA.ObjectPersistence
             while (transactionEndEventQueue.Count > 0)
             {
                 object sender = transactionEndEventQueue.Dequeue();
-                InstancePersisted?.Invoke(sender, EventArgs.Empty);
+                InstancePersisted?.Invoke(this, (IPersistent)sender);
             }
         }
 
@@ -106,7 +106,7 @@ namespace Origam.DA.ObjectPersistence
         {
             if (!InTransaction)
             { 
-                InstancePersisted?.Invoke(obj, EventArgs.Empty);
+                InstancePersisted?.Invoke(this, obj);
             }
         }
 

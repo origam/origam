@@ -209,7 +209,7 @@ namespace Origam.Workbench.ServicesTests
             throw new NotImplementedException();
         }
 
-        public event EventHandler InstancePersisted;
+        public event EventHandler<IPersistent> InstancePersisted;
         public void OnTransactionEnded(object sender)
         {
             throw new NotImplementedException();
