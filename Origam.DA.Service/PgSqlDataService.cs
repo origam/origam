@@ -139,12 +139,14 @@ namespace Origam.DA.Service
         {
             CheckDatabaseName(name);
             ExecuteUpdate(string.Format("CREATE DATABASE \"{0}\"", name), null);
-            ExecuteUpdate("CREATE EXTENSION IF NOT EXISTS dblink", null);
+            ExecuteUpdate("CREATE EXTENSION IF NOT EXISTS dblink SCHEMA pg_catalog;", null);
             string transaction1 = Guid.NewGuid().ToString();
             try
             { 
                ExecuteUpdate(string.Format("SELECT dblink_connect('myconn','dbname={0}')", name), transaction1);
                ExecuteUpdate(string.Format("SELECT dblink_exec('myconn','CREATE SCHEMA IF NOT EXISTS {0};')", name), transaction1);
+                ExecuteUpdate(string.Format("DROP EXTENSION pgcrypto;')",""), transaction1);
+                ExecuteUpdate(string.Format("CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA pg_catalog;')", name), transaction1);
                ExecuteUpdate(string.Format("SELECT dblink_disconnect('myconn')"), transaction1);
                ResourceMonitor.Commit(transaction1);
             }
