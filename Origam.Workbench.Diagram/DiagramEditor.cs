@@ -36,9 +36,6 @@ using DrawingNode = Microsoft.Msagl.Drawing.Node;
 
 namespace Origam.Workbench.Editors
 {
-	/// <summary>
-	/// Summary description for DiagramEditor.
-	/// </summary>
 	public class DiagramEditor : AbstractViewContent
 	{
         private Graph graph = new Graph();
@@ -61,12 +58,10 @@ namespace Origam.Workbench.Editors
         }
 
         private ClickPoint _mouseRightButtonDownPoint;
+        private IPersistenceProvider persistenceProvider;
 
-	    public DiagramEditor()
+        public DiagramEditor()
 		{
-			//
-			// Required for Windows Form Designer support
-			//
 			InitializeComponent();
 		    (gViewer as IViewer).MouseDown += Form1_MouseDown;
 		}
@@ -152,10 +147,11 @@ namespace Origam.Workbench.Editors
 			GViewer viewer = sender as GViewer;
 			if (viewer.SelectedObject is Node node)
 			{
+				persistenceProvider = ServiceManager.Services
+					.GetService<IPersistenceService>()
+					.SchemaProvider;
 				AbstractSchemaItem clickedItem = 
-					(AbstractSchemaItem)ServiceManager
-						.Services.GetService<IPersistenceService>()
-						.SchemaProvider
+					(AbstractSchemaItem)persistenceProvider
 						.RetrieveInstance(typeof(AbstractSchemaItem), new Key(node.Id));
 				if(clickedItem != null)
 				{
@@ -170,14 +166,36 @@ namespace Origam.Workbench.Editors
 
 		protected override void ViewSpecificLoad(object objectToLoad)
 		{
-			if(objectToLoad is ISchemaItem schemaItem)
+			if (!(objectToLoad is ISchemaItem graphParent)) return;
+			
+			_factory= new DiagramFactory(graph, graphParent);
+			_factory.DrawDiagram();
+			gViewer.Graph = _factory.Graph;
+                
+			persistenceProvider.InstancePersisted += (sender, args) =>
 			{
-			    _factory= new DiagramFactory(graph, schemaItem);
-                _factory.DrawDiagram();
-                gViewer.Graph = _factory.Graph;
+				OnInstancePersisted(graphParent.Id, sender);
+			};
+		}
+
+		private void OnInstancePersisted(Guid graphParentId, object sender)
+		{
+			var upToDateGraphParent =
+				persistenceProvider.RetrieveInstance(
+						typeof(AbstractSchemaItem),
+						new Key(graphParentId))
+					as AbstractSchemaItem;
+
+			if (sender is AbstractSchemaItem persistedSchemaItem &&
+			    upToDateGraphParent.ChildItems.Contains(persistedSchemaItem))
+			{
+				Node node = gViewer.Graph.FindNode(persistedSchemaItem.Id.ToString());
+				node.LabelText = persistedSchemaItem.Name;
+				gViewer.Redraw();
 			}
 		}
-	    void Form1_MouseDown(object sender, MsaglMouseEventArgs e)
+
+		void Form1_MouseDown(object sender, MsaglMouseEventArgs e)
 	    {
 	        if (e.RightButtonIsPressed && !e.Handled)
 	        {
@@ -221,18 +239,6 @@ namespace Origam.Workbench.Editors
 
 	        _factory.AddNode(nodeId, nodeName, subGraph);
 	        gViewer.Redraw();
-
-	        ServiceManager.Services.GetService<IPersistenceService>()
-		        .SchemaProvider.InstancePersisted += (sender, args) =>
-	        {
-		        if (sender is ISchemaItem persistedSchemaItem &&
-		            persistedSchemaItem.Id == schemaItem.Id)
-		        {
-			        Node node = gViewer.Graph.FindNode(schemaItem.Id.ToString());
-			        node.LabelText = persistedSchemaItem.Name;
-			        gViewer.Redraw();
-		        }
-	        };
         }
 	}
 }
