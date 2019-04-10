@@ -20,6 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Origam.Schema;
@@ -28,6 +30,7 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Origam.DA.ObjectPersistence;
 using Origam.UI;
+using Origam.Workbench.BaseComponents;
 using Origam.Workbench.Commands;
 using Origam.Workbench.Diagram.Extensions;
 using Origam.Workbench.Services;
@@ -44,18 +47,6 @@ namespace Origam.Workbench.Editors
         private int idcounter = 0;
 
         private System.ComponentModel.Container components = null;
-
-        class ClickPoint
-        {
-	        public Point InMsaglSystem { get; }
-	        public System.Drawing.Point InScreenSystem { get;}
-
-	        public ClickPoint(GViewer gViewer,  MsaglMouseEventArgs e)
-	        {
-		        InMsaglSystem = gViewer.ScreenToSource(e);
-		        InScreenSystem = new System.Drawing.Point(e.X, e.Y);
-	        }
-        }
 
         private ClickPoint _mouseRightButtonDownPoint;
         private readonly IPersistenceProvider persistenceProvider;
@@ -180,14 +171,15 @@ namespace Origam.Workbench.Editors
 
 		private void OnInstancePersisted(Guid graphParentId, IPersistent sender)
 		{
+			if (!(sender is AbstractSchemaItem persistedSchemaItem)) return;
+			
 			var upToDateGraphParent =
 				persistenceProvider.RetrieveInstance(
 						typeof(AbstractSchemaItem),
 						new Key(graphParentId))
 					as AbstractSchemaItem;
 
-			if (sender is AbstractSchemaItem persistedSchemaItem &&
-			    upToDateGraphParent.ChildItems.Contains(persistedSchemaItem))
+			if (upToDateGraphParent.ChildItems.Contains(persistedSchemaItem))
 			{
 				Node node = gViewer.Graph.FindNode(persistedSchemaItem.Id.ToString());
 				node.LabelText = persistedSchemaItem.Name;
@@ -201,30 +193,63 @@ namespace Origam.Workbench.Editors
 	        {
 		        _mouseRightButtonDownPoint = new ClickPoint( gViewer, e);
 
-	            ContextMenuStrip cm = BuildContextMenu(_mouseRightButtonDownPoint.InMsaglSystem);
-                cm.Show(this, new System.Drawing.Point(e.X, e.Y));
+	            ContextMenuStrip cm = BuildContextMenu();
+                cm.Show(this,_mouseRightButtonDownPoint.InScreenSystem);
 	        }
 	    }
 
-        protected virtual ContextMenuStrip BuildContextMenu(Point point)
-	    {
-	        var cm = new ContextMenuStrip();
-	        //	        mi = new MenuItem();
-	        //	        mi.Text = "Delete selected";
-	        //	        mi.Click += deleteSelected_Click;
-	        //	        cm.MenuItems.Add(mi);
+        protected virtual ContextMenuStrip BuildContextMenu()
+        {
+        
+	        var contextMenu = new AsContextMenu(WorkbenchSingleton.Workbench);
+
+            var deleteMenuItem = new ToolStripMenuItem();
+            deleteMenuItem.Text = "Delete";
+            deleteMenuItem.Image = ImageRes.icon_delete;
+            deleteMenuItem.Click += DeleteNode_Click;
+            deleteMenuItem.Enabled = gViewer.SelectedObject != null;
+
+	        AsMenuCommand newMenu = new AsMenuCommand("New");
+	        newMenu.Image = ImageRes.icon_new;
 
 	        var builder = new SchemaItemEditorsMenuBuilder();
-	        var submenu = builder.BuildSubmenu(null).OfType<AsMenuCommand>();
-	        foreach (AsMenuCommand item in submenu)
+	        var submenuItems = builder.BuildSubmenu(null).OfType<AsMenuCommand>();
+	        foreach (AsMenuCommand item in submenuItems)
 	        {
-                cm.Items.Add(item);
+                newMenu.SubItems.Add(item);
                 ISchemaItemFactory parentSchemItem = (item.Command as AddNewSchemaItem)?.ParentElement;
                 parentSchemItem.ItemCreated += OnChildAdded;
 	        }
+	        
+	        var objectAt = gViewer.GetObjectAt(_mouseRightButtonDownPoint.InScreenSystem);
+	        Subgraph subGraph = (objectAt as DNode)?.Node as Subgraph;
 
-            return cm;
+	        newMenu.Enabled = subGraph != null;
+			newMenu.IsEnabled  = subGraph != null;
+			
+	        contextMenu.AddSubItem(newMenu);
+	        contextMenu.AddSubItem(deleteMenuItem);
+	        
+            return contextMenu;
 	    }
+
+        private void DeleteNode_Click(object sender, EventArgs e)
+        {
+	        var markedObjects = gViewer.Entities
+		        .Where(ob => ob.MarkedForDragging)
+		        .ToList();
+	        
+	        foreach (IViewerObject obj in markedObjects) {
+		        if (obj is IViewerEdge edge)
+		        {
+			        gViewer.RemoveEdge(edge, true);
+		        }
+		        else if (obj is IViewerNode node)
+		        {
+			        gViewer.RemoveNode(node, true);
+		        }
+	        }
+        }
 
         private void OnChildAdded(ISchemaItem schemaItem)
         {
@@ -239,6 +264,18 @@ namespace Origam.Workbench.Editors
 
 	        _factory.AddNode(nodeId, nodeName, subGraph);
 	        gViewer.Redraw();
+        }
+        
+        class ClickPoint
+        {
+	        public Point InMsaglSystem { get; }
+	        public System.Drawing.Point InScreenSystem { get;}
+
+	        public ClickPoint(GViewer gViewer,  MsaglMouseEventArgs e)
+	        {
+		        InMsaglSystem = gViewer.ScreenToSource(e);
+		        InScreenSystem = new System.Drawing.Point(e.X, e.Y);
+	        }
         }
 	}
 }
