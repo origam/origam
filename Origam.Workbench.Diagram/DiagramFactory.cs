@@ -32,11 +32,15 @@ namespace Origam.Workbench.Diagram
 	/// </summary>
 	public class DiagramFactory
 	{
-		#region Constructors
-		public DiagramFactory(Graph graph)
-		{
+
+	    private readonly ISchemaItem schemaItem;
+
+        #region Constructors
+        public DiagramFactory(Graph graph, ISchemaItem schemaItem)
+        {
             this.Graph = graph;
-		}
+            this.schemaItem = schemaItem;
+        }
 		#endregion
 
 		#region Properties
@@ -55,15 +59,15 @@ namespace Origam.Workbench.Diagram
 		#endregion
 
 		#region Public Methods
-		public void DrawDiagram(ISchemaItem item)
+		public void DrawDiagram()
 		{
-			if(item is IWorkflowBlock)
+			if(schemaItem is IWorkflowBlock workflowBlock)
 			{
-				DrawWorkflowDiagram(item as IWorkflowBlock, null);
+				DrawWorkflowDiagram(workflowBlock, null);
 			}
 			else
 			{
-				DrawUniSchemaDiagram(item);
+				DrawUniSchemaDiagram(schemaItem);
 			}
 		}
 		#endregion
