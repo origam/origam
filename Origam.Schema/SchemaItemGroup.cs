@@ -406,6 +406,8 @@ namespace Origam.Schema
 		[Browsable(false)]
 		public virtual Type[] NameableTypes => NewItemTypes;
 
+		public event Action<ISchemaItem> ItemCreated;
+
 		public string RelativeFilePath => SchemaExtension.Name + "\\" + RootItemType + "\\" + Path.Replace("/", "\\") + "\\"+PersistenceFiles.GroupFileName;
 
 		public bool IsFolder => true;
@@ -443,7 +445,7 @@ namespace Origam.Schema
 				newItem = this.RootProvider.NewItem(type, schemaExtensionId, this);
 			else
 				newItem = (this.ParentItem as ISchemaItemFactory).NewItem(type, schemaExtensionId, this);
-
+			ItemCreated?.Invoke(newItem);
 			return newItem;
 		}
 

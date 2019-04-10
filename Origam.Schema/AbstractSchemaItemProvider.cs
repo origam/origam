@@ -419,6 +419,7 @@ namespace Origam.Schema
 			item.RootProvider = this;
 			item.PersistenceProvider = this.PersistenceProvider;
 			this.ChildItems.Add(item);
+			ItemCreated?.Invoke(item);
 			return item;
 		}
 
@@ -491,6 +492,9 @@ namespace Origam.Schema
 				return NewItemTypes;
 			}
 		}
+
+		public event Action<ISchemaItem> ItemCreated;
+
 		#endregion
 
 		private ArrayList GetChildItemsRecursive(AbstractSchemaItem parentItem)

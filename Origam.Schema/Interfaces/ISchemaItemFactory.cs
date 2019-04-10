@@ -59,5 +59,7 @@ namespace Origam.Schema
 		/// need to be populated by predefined names.
 		/// </summary>
 		Type[] NameableTypes {get;}
+
+		event Action<ISchemaItem> ItemCreated;
 	}
 }

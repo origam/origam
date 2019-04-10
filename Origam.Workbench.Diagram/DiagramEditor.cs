@@ -26,8 +26,10 @@ using Origam.Schema;
 using Origam.Workbench.Diagram;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
+using Origam.DA.ObjectPersistence;
 using Origam.UI;
 using Origam.Workbench.Commands;
+using Origam.Workbench.Diagram.Extensions;
 using Origam.Workbench.Services;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
 using DrawingNode = Microsoft.Msagl.Drawing.Node;
@@ -194,52 +196,45 @@ namespace Origam.Workbench.Editors
 	        //	        mi.Click += deleteSelected_Click;
 	        //	        cm.MenuItems.Add(mi);
 
-
 	        var builder = new SchemaItemEditorsMenuBuilder();
 	        var submenu = builder.BuildSubmenu(null).OfType<AsMenuCommand>();
 	        foreach (AsMenuCommand item in submenu)
 	        {
                 cm.Items.Add(item);
-//                ISchemaItemFactory parentSchemItem = (item.Command as AddNewSchemaItem)?.ParentElement;
-//                parentSchemItem.ItemCreated +=
-//	                (schemaItem) => { };
-	            item.Click += (sender, args) =>
-	            {
-	                var objectAt = gViewer.GetObjectAt(_mouseRightButtonDownPoint.InScreenSystem);
-	                
-                    string nodeId = GetNewId();
-
-                    Subgraph subgraph = (objectAt as DNode)?.Node as Subgraph;
-                    if (subgraph != null)
-                    {
-                        var graph = gViewer.Graph;
-                        gViewer.Graph = null;
-                        Node shape = graph.AddNode(nodeId);
-                        shape.LabelText = item.Text;
-	                    subgraph.AddNode(shape);
-                        gViewer.Graph = graph;
-                    }
-                    else
-	                { 
-		                var node = new DrawingNode(nodeId);
-		                node.Label.Text = item.Text;
-                        IViewerNode dNode = gViewer.CreateIViewerNode(node, _mouseRightButtonDownPoint.InMsaglSystem, null);
-	                    gViewer.AddNode(dNode, true);
-	                    
-                    }
-	            };
+                ISchemaItemFactory parentSchemItem = (item.Command as AddNewSchemaItem)?.ParentElement;
+                parentSchemItem.ItemCreated += OnChildAdded;
 	        }
 
             return cm;
 	    }
 
-        string GetNewId()
-	    {
-	        string ret = "_ID" + idcounter++;
-	        if (gViewer.Graph.FindNode(ret) != null)
-	            return GetNewId();
-	        return ret;
-	    }
+        private void OnChildAdded(ISchemaItem schemaItem)
+        {
+	        var objectAt = gViewer.GetObjectAt(_mouseRightButtonDownPoint.InScreenSystem);
+	        Subgraph subgraph = (objectAt as DNode)?.Node as Subgraph;
+	        if (subgraph == null) return;
 
-    }
+	        string nodeId = schemaItem.Id.ToString();
+	        string nodeName = string.IsNullOrEmpty(schemaItem.Name)
+		        ? "New Node"
+		        : schemaItem.Name;
+
+	        Node shape = gViewer.Graph.AddNode(nodeId);
+	        shape.LabelText = nodeName;
+	        subgraph.AddNode(shape);
+	        gViewer.Redraw();
+
+	        ServiceManager.Services.GetService<IPersistenceService>()
+		        .SchemaProvider.InstancePersisted += (sender, args) =>
+	        {
+		        if (sender is ISchemaItem persistedSchemaItem &&
+		            persistedSchemaItem.Id == schemaItem.Id)
+		        {
+			        Node node = gViewer.Graph.FindNode(schemaItem.Id.ToString());
+			        node.LabelText = persistedSchemaItem.Name;
+			        gViewer.Redraw();
+		        }
+	        };
+        }
+	}
 }

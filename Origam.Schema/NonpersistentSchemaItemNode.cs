@@ -215,7 +215,7 @@ namespace Origam.Schema
 			{
 				throw new Exception(ResourceUtils.GetString("ErrorUnknownParent"));
 			}
-
+			ItemCreated?.Invoke(newItem);
 			return newItem;
 		}
 
@@ -275,6 +275,9 @@ namespace Origam.Schema
 				return NewItemTypes;
 			}
 		}
+
+		public event Action<ISchemaItem> ItemCreated;
+
 		#endregion
 
 		private string SchemaItemDescription(Type type)

@@ -70,7 +70,7 @@ namespace Origam.Workbench.Editors
 			this.propertyGrid1.LineColor = OrigamColorScheme.PropertyGridHeaderColor;
 			this.propertyGrid1.HelpBackColor = OrigamColorScheme.MdiBackColor;;
 			this.propertyGrid1.HelpForeColor = OrigamColorScheme.MdiForeColor;
-            this.propertyGrid1.SelectedItemWithFocusBackColor = OrigamColorScheme.TabActiveStartColor;
+//            this.propertyGrid1.SelectedItemWithFocusBackColor = OrigamColorScheme.TabActiveStartColor;
         }
 
 

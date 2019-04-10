@@ -1644,6 +1644,7 @@ namespace Origam.Schema
 #if ORIGAM_CLIENT
 			AddItemToTypeCache(item);
 #endif
+			ItemCreated?.Invoke(item);
 			return item;
 		}
 
@@ -1682,6 +1683,8 @@ namespace Origam.Schema
 				return NewItemTypes;
 			}
 		}
+
+		public event Action<ISchemaItem> ItemCreated;
 
 		#endregion
 
