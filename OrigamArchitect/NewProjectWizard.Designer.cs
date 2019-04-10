@@ -689,6 +689,7 @@
             this.txtPort.Name = "txtPort";
             this.txtPort.Size = new System.Drawing.Size(100, 23);
             this.txtPort.TabIndex = 18;
+            this.txtPort.Text = "0";
             this.txtPort.Visible = false;
             // 
             // labelPrivileges

@@ -203,8 +203,8 @@ namespace OrigamArchitect
             _project.DatabaseServerName = txtServerName.Text;
             _project.DatabaseUserName = txtDatabaseUserName.Text;
             _project.DatabasePassword = txtDatabasePassword.Text;
-            _project.DataDatabaseName = txtName.Text;
-            _project.ModelDatabaseName = txtName.Text + "_model";
+            _project.DataDatabaseName = txtName.Text.ToLower().Replace("\\s+","_");
+            _project.ModelDatabaseName = txtName.Text.ToLower().Replace("\\s+", "_") + "_model";
             _project.DatabaseIntegratedAuthentication = chkIntegratedAuthentication.Checked;
             _project.WebRootName = cboWebRoot.Text;
             _project.Url = txtName.Text;
@@ -237,7 +237,6 @@ namespace OrigamArchitect
                 txtDatabaseType.SelectedItem = null;
                 txtDatabaseType.SelectedText = _settings.DatabaseTypeText;
                 TxtDatabaseType_SelectedIndexChanged(null, EventArgs.Empty);
-                txtPort.Text = "0";
             }
         }
 
