@@ -261,7 +261,7 @@ namespace Origam.DA.Service
 				case OrigamDataType.String:
 					return NpgsqlDbType.Varchar;
 				case OrigamDataType.UniqueIdentifier:
-					return NpgsqlDbType.Varchar;
+					return NpgsqlDbType.Uuid;
 				default:
 					throw new NotSupportedException(ResourceUtils.GetString("UnsupportedType"));
 			}
