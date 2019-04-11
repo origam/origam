@@ -37,7 +37,7 @@ namespace Origam.Workbench.Services
         {
         }
 
-        public event EventHandler InstancePersisted;
+        public event EventHandler<IPersistent> InstancePersisted;
         public void OnInstancePersisted(object sender)
         {
         }
@@ -111,6 +111,13 @@ namespace Origam.Workbench.Services
 
         public void DeletePackage(Guid packageId)
         {
+        }
+
+        public bool IsInTransaction { get; }
+
+        public void RunInTransaction(Action action)
+        {
+            action();
         }
 
         public void BeginTransaction()

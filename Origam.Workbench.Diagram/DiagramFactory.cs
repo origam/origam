@@ -32,57 +32,52 @@ namespace Origam.Workbench.Diagram
 	/// </summary>
 	public class DiagramFactory
 	{
-		#region Constructors
-		public DiagramFactory(Graph graph)
-		{
-            this.Graph = graph;
-		}
+
+	    private readonly ISchemaItem graphParent;
+
+        #region Constructors
+        public DiagramFactory(ISchemaItem graphParent)
+        {
+            this.graphParent = graphParent;
+        }
 		#endregion
 
 		#region Properties
-		private Graph _graph;
-		public Graph Graph 
-		{
-			get
-			{
-                return _graph;
-			}
-			set
-			{
-                _graph = value;
-			}
-		}
+
+		private Graph graph;
+
 		#endregion
 
 		#region Public Methods
-		public void DrawDiagram(ISchemaItem item)
+		public Graph Draw()
 		{
-			if(item is IWorkflowBlock)
+			graph = new Graph();
+			
+			if(graphParent is IWorkflowBlock workflowBlock)
 			{
-				DrawWorkflowDiagram(item as IWorkflowBlock, null);
+				DrawWorkflowDiagram(workflowBlock, null);
 			}
 			else
 			{
-				DrawUniSchemaDiagram(item);
+				DrawUniSchemaDiagram(graphParent);
 			}
+
+			return graph;
 		}
 		#endregion
 
 		#region Private Methods
-        private Node AddBasicShape(string id,string label)
+        private Node AddNode(string id,string label)
         {
-            return AddBasicShape(id, label, null);
+            return AddNode(id, label, null);
         }
 
-		private Node AddBasicShape(string id, string label, Subgraph subgraph)
+		public Node AddNode(string id, string label, Subgraph subGraph)
 		{
-			Node shape = this.Graph.AddNode(id);
+			Node shape = graph.AddNode(id);
             shape.LabelText = label;
-            if (subgraph != null)
-            {
-                subgraph.AddNode(shape);
-            }
-			return shape;
+            subGraph?.AddNode(shape);
+            return shape;
 		}
 
 		#region Workflow Diagram
@@ -92,7 +87,7 @@ namespace Origam.Workbench.Diagram
             subgraph.LabelText = block.Name;
             if (parentSubgraph == null)
             {
-                this.Graph.RootSubgraph.AddSubgraph(subgraph);
+                this.graph.RootSubgraph.AddSubgraph(subgraph);
             }
             else
             {
@@ -108,7 +103,7 @@ namespace Origam.Workbench.Diagram
                 IWorkflowBlock subBlock = step as IWorkflowBlock;
                 if (subBlock == null)
                 {
-                    Node shape = this.AddBasicShape(step.NodeId, step.Name, subgraph);
+                    Node shape = this.AddNode(step.NodeId, step.Name, subgraph);
                     ht.Add(step.PrimaryKey, shape);
                 }
                 else
@@ -129,7 +124,7 @@ namespace Origam.Workbench.Diagram
 					Node sourceShape = ht[dependency.Task.PrimaryKey];
 					if(sourceShape == null) throw new NullReferenceException(ResourceUtils.GetString("ErrorSourceShapeNotFound"));
 
-					this.Graph.AddEdge(sourceShape.Id,
+					this.graph.AddEdge(sourceShape.Id,
                         destinationShape.Id);
 					i++;
 				}
@@ -152,10 +147,10 @@ namespace Origam.Workbench.Diagram
 
 		private void DrawUniShape(ISchemaItem schemaItem, Node parentShape)
 		{
-			Node shape = this.AddBasicShape(schemaItem.NodeId, schemaItem.Name);
+			Node shape = this.AddNode(schemaItem.Id.ToString(), schemaItem.Name);
 			if(parentShape != null)
 			{
-				this.Graph.AddEdge(shape.Id, parentShape.Id);
+				this.graph.AddEdge(shape.Id, parentShape.Id);
 			}
 			foreach(ISchemaItem child in schemaItem.ChildItems)
 			{

@@ -72,6 +72,10 @@ namespace Origam.Schema
 			return this.Name;
 		}
 
+		public IEnumerable<AbstractSchemaItem> ChildrenRecursive =>
+			GetChildrenRecursive(this);
+
+
 		private ModelElementKey _oldPrimarykey = null;
 		[Browsable(false)]
 		public ModelElementKey OldPrimaryKey
@@ -276,8 +280,21 @@ namespace Origam.Schema
 			{
 				child.SetExtensionRecursive(extension);
 			}
-
 		}
+		
+		
+		private IEnumerable<AbstractSchemaItem> GetChildrenRecursive(AbstractSchemaItem schemaItem)
+		{
+			foreach (var child1 in schemaItem.ChildItems)
+			{
+				foreach (var child2 in GetChildrenRecursive(child1))
+				{
+					yield return child2;
+				}
+			}
+			yield return schemaItem;
+		}
+
 
 		public void InvalidateParentPersistenceCache()
 		{
@@ -1644,6 +1661,7 @@ namespace Origam.Schema
 #if ORIGAM_CLIENT
 			AddItemToTypeCache(item);
 #endif
+			ItemCreated?.Invoke(item);
 			return item;
 		}
 
@@ -1682,6 +1700,8 @@ namespace Origam.Schema
 				return NewItemTypes;
 			}
 		}
+
+		public event Action<ISchemaItem> ItemCreated;
 
 		#endregion
 
@@ -1841,5 +1861,6 @@ namespace Origam.Schema
 				item.Dump();
 			}
 		}
+		
 	}
 }

@@ -36,7 +36,14 @@ namespace Origam.DA.ObjectPersistence
             set => throw new NotImplementedException();
         }
 
-        public event EventHandler InstancePersisted;
+        public event EventHandler<IPersistent> InstancePersisted;
+
+        public void RunInTransaction(Action action)
+        {
+            BeginTransaction();
+            action();
+            EndTransaction();
+        }
 
         public virtual void BeginTransaction()
         {
@@ -45,6 +52,7 @@ namespace Origam.DA.ObjectPersistence
         public abstract object Clone();
 
         public abstract void DeletePackage(Guid packageId);
+        public virtual bool IsInTransaction { get; }
 
         public abstract void Dispose();
 
@@ -53,7 +61,7 @@ namespace Origam.DA.ObjectPersistence
             while (transactionEndEventQueue.Count > 0)
             {
                 object sender = transactionEndEventQueue.Dequeue();
-                InstancePersisted?.Invoke(sender, EventArgs.Empty);
+                InstancePersisted?.Invoke(this, (IPersistent)sender);
             }
         }
 
@@ -98,7 +106,7 @@ namespace Origam.DA.ObjectPersistence
         {
             if (!InTransaction)
             { 
-                InstancePersisted?.Invoke(obj, EventArgs.Empty);
+                InstancePersisted?.Invoke(this, obj);
             }
         }
 

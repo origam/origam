@@ -40,11 +40,12 @@ namespace Origam.Workflow.Tasks
 		public override void Execute()
 		{
 			Exception exception = null;
-
 			try
 			{
 				MeasuredExecution();
-			}
+                SetWorkflowTrace();
+                OnExecute();
+            }
 			catch(Exception ex)
 			{
 				exception = ex;
@@ -52,31 +53,26 @@ namespace Origam.Workflow.Tasks
 			}
 		}
 
-		protected override void MeasuredExecution()
+        private void SetWorkflowTrace()
+        {
+            WorkflowCallTask task = this.Step as WorkflowCallTask;
+            switch (task.Trace)
+            {
+                case Trace.Yes:
+                    _call.Trace = true;
+                    break;
+                case Trace.No :
+                    _call.Trace = false;
+                    break;
+                case Trace.InheritFromParent:
+                    break;
+            }
+        }
+
+        protected override void MeasuredExecution()
 		{
             WorkflowCallTask task = this.Step as WorkflowCallTask;
-            bool lastTrace = Engine.Host.ParentTrace;
-            Engine.Host.ParentTrace = false;
-            if (task.Workflow.TraceLevel == WorkflowStepTraceLevel.InheritFromParent)
-            {
-               if (task.TraceLevel!= WorkflowStepTraceLevel.None)
-               {
-                    if(task.TraceLevel == WorkflowStepTraceLevel.InheritFromParent)
-                    {
-                        bool isEnableTrace = task.Trace;
-                        if(task.InheritTrace && !isEnableTrace)
-                        {
-                            isEnableTrace = lastTrace;
-                        }
-                        Engine.Host.ParentTrace = isEnableTrace;
-                    }
-                    else
-                    {
-                        Engine.Host.ParentTrace = true;
-                    }
-                }
-            }
-            
+
             _call = this.Engine.GetSubEngine(task.Workflow);
             _call.Name = task.Workflow.Name;
 
@@ -88,7 +84,6 @@ namespace Origam.Workflow.Tasks
 					hash: _call.GetHashCode(),
 					id: Step.NodeId);
 			}
-			OnExecute();
 		}
 
 		protected override void OnExecute()

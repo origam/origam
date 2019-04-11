@@ -29,7 +29,7 @@ namespace Origam.DA.ObjectPersistence
 	/// </summary>
 	public interface IPersistenceProvider : ICloneable, IDisposable
 	{
-		event EventHandler InstancePersisted;
+		event EventHandler<IPersistent> InstancePersisted;
 		void OnTransactionEnded(object sender);
 
 		ICompiledModel CompiledModel {get; set;}
@@ -80,7 +80,8 @@ namespace Origam.DA.ObjectPersistence
 		void FlushCache();
 
 		void DeletePackage(Guid packageId);
-
+		bool  IsInTransaction { get; }
+		void RunInTransaction(Action action);
         void BeginTransaction();
         void EndTransaction();
 	    void EndTransactionDontSave();

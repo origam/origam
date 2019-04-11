@@ -61,22 +61,32 @@ namespace Origam.Schema
 
 		public void Persist()
 		{
-			PersistenceProvider.BeginTransaction();
-			if(!IsDeleted)
+			Action persistsAction = () =>
 			{
-				base.Persist();
-			}
+				if (!IsDeleted)
+				{
+					base.Persist();
+				}
 
-			foreach (var packageReference in References)
-			{
-				packageReference.Persist();
-			}
+				foreach (var packageReference in References)
+				{
+					packageReference.Persist();
+				}
 
-			if(IsDeleted)
+				if (IsDeleted)
+				{
+					base.Persist();
+				}
+			};
+			
+			if (PersistenceProvider.IsInTransaction)
 			{
-				base.Persist();
+				persistsAction();
 			}
-			PersistenceProvider.EndTransaction();
+			else
+			{
+				PersistenceProvider.RunInTransaction(persistsAction);
+			}
 		}
 
 		public override string ToString() => this.Name;

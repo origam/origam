@@ -209,7 +209,7 @@ namespace Origam.Workbench.ServicesTests
             throw new NotImplementedException();
         }
 
-        public event EventHandler InstancePersisted;
+        public event EventHandler<IPersistent> InstancePersisted;
         public void OnTransactionEnded(object sender)
         {
             throw new NotImplementedException();
@@ -279,6 +279,13 @@ namespace Origam.Workbench.ServicesTests
         public void DeletePackage(Guid packageId)
         {
             throw new NotImplementedException();
+        }
+
+        public bool IsInTransaction { get; }
+
+        public void RunInTransaction(Action action)
+        {
+            action();
         }
 
         public void BeginTransaction()

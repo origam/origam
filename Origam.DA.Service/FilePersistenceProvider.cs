@@ -59,7 +59,7 @@ namespace Origam.DA.Service
         private readonly TrackerLoaderFactory trackerLoaderFactory;
         private readonly OrigamFileManager origamFileManager;
 
-        public override bool InTransaction => persistor.InTransaction;
+        public override bool InTransaction => persistor.IsInTransaction;
         public override ILocalizationCache LocalizationCache => localizationCache;
 
         public HashSet<Guid> LoadedPackages {
@@ -121,6 +121,8 @@ namespace Origam.DA.Service
             ReloadFiles(tryUpdate: false);
             PersistIndex();
         }
+
+        public override bool IsInTransaction => persistor.IsInTransaction;
 
         private IFilePersistent RetrieveInstance(PersistedObjectInfo persistedObjInfo,
             bool useCache=true)

@@ -125,15 +125,15 @@ namespace Origam.Schema.WorkflowModel
 		public WorkflowStepTraceLevel TraceLevel { get; set; } = WorkflowStepTraceLevel.InheritFromParent;
 
 		[Category("Tracing")]
-		public bool Trace
+        public Trace Trace
 		{
 			get
 			{
-				#if ORIGAM_CLIENT
-					if(this.TraceLevel == WorkflowStepTraceLevel.TraceClientAndArchitect) return true;
-				#else
-					if(this.TraceLevel == WorkflowStepTraceLevel.TraceClientAndArchitect |
-						this.TraceLevel == WorkflowStepTraceLevel.TraceArchitect) return true;
+#if ORIGAM_CLIENT
+					if(this.TraceLevel == WorkflowStepTraceLevel.TraceClientAndArchitect) return Trace.Yes;
+#else
+                if (this.TraceLevel == WorkflowStepTraceLevel.TraceClientAndArchitect |
+						this.TraceLevel == WorkflowStepTraceLevel.TraceArchitect) return Trace.Yes;
 				#endif
 
 				if(this.TraceLevel == WorkflowStepTraceLevel.InheritFromParent)
@@ -149,7 +149,7 @@ namespace Origam.Schema.WorkflowModel
 						}
 						if(parentStep.ParentItem as IWorkflowStep == null)
                         {
-                            _InheritTrace = true;
+                            return Trace.InheritFromParent;
                         }
 						parentStep = parentStep.ParentItem as IWorkflowStep;
 					}
@@ -157,29 +157,18 @@ namespace Origam.Schema.WorkflowModel
 					if(parentStep != null)
 					{
 						#if ORIGAM_CLIENT
-							if(parentStep.TraceLevel == WorkflowStepTraceLevel.TraceClientAndArchitect) return true;
+							if(parentStep.TraceLevel == WorkflowStepTraceLevel.TraceClientAndArchitect) return Trace.Yes;
 						#else
 							if(parentStep.TraceLevel == WorkflowStepTraceLevel.TraceClientAndArchitect |
-								parentStep.TraceLevel == WorkflowStepTraceLevel.TraceArchitect) return true;
+								parentStep.TraceLevel == WorkflowStepTraceLevel.TraceArchitect) return Trace.Yes;
 						#endif
 					}
 				}
 
-				return false;
+				return Trace.No;
 			}
 		}
 
-        [Browsable(false)]
-        bool _InheritTrace = false;
-        public bool InheritTrace
-        {
-            get
-            {
-                _InheritTrace = false;
-                _ = Trace;
-                return _InheritTrace;
-            }
-        }
         [EntityColumn("G02")]  
 		public Guid StartRuleId;
 

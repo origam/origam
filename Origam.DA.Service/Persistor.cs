@@ -40,7 +40,7 @@ namespace Origam.DA.Service
         private readonly OrigamFileFactory origamFileFactory;
         private readonly OrigamFileManager origamFileManager;
         private readonly TrackerLoaderFactory trackerLoaderFactory;
-        public bool InTransaction { get; private set; }
+        public bool IsInTransaction { get; private set; }
 
         public Persistor(IPersistenceProvider persistenceProvider,
             FilePersistenceIndex index, OrigamFileFactory origamFileFactory,
@@ -77,7 +77,7 @@ namespace Origam.DA.Service
             
             RenameRelatedItems(instance, currentOrigamFile);
             
-            if (!InTransaction)
+            if (!IsInTransaction)
             {
                 ProcessTransactionStore();
             }
@@ -121,15 +121,15 @@ namespace Origam.DA.Service
 
         public void BeginTransaction()
         {
-            if (InTransaction) throw new Exception("Already in transaction! Cannot start a new one.");
-            InTransaction = true;
+            if (IsInTransaction) throw new Exception("Already in transaction! Cannot start a new one.");
+            IsInTransaction = true;
         }
 
         public void EndTransaction()
         {
-            if (!InTransaction) throw new Exception("Not in transaction! No transaction  to end.");
+            if (!IsInTransaction) throw new Exception("Not in transaction! No transaction  to end.");
             ProcessTransactionStore();
-            InTransaction = false;
+            IsInTransaction = false;
         }
 
         private void ProcessTransactionStore()
@@ -155,7 +155,7 @@ namespace Origam.DA.Service
                 origamFile.DeferredSaveDocument = null;
             }
             transactionStore.Clear();
-            InTransaction = false;
+            IsInTransaction = false;
         }
 
         public PersistedObjectInfo GetObjInfoFromTransactionStore(Guid id)
@@ -256,7 +256,7 @@ namespace Origam.DA.Service
         {
             PersistedObjectInfo objInfo;
             OrigamFile origamFile;
-            if (InTransaction && transactionStore.Contains(instance.RelativeFilePath))
+            if (IsInTransaction && transactionStore.Contains(instance.RelativeFilePath))
             {
                 Guid id = instance.Id;
                 origamFile = transactionStore.Get(instance.RelativeFilePath);
@@ -272,7 +272,7 @@ namespace Origam.DA.Service
         private OrigamFile FindFileWhereInstanceShouldBeStored(
             IFilePersistent instance)
         {
-            if (InTransaction && transactionStore.Contains(instance.RelativeFilePath))
+            if (IsInTransaction && transactionStore.Contains(instance.RelativeFilePath))
             {
                 return transactionStore.Get(instance.RelativeFilePath);
             }
@@ -302,7 +302,7 @@ namespace Origam.DA.Service
 
         private XmlDocument GetDocumentToWriteTo(OrigamFile origamFile)
         {
-            if (InTransaction && transactionStore.Contains(origamFile.Path.Relative))
+            if (IsInTransaction && transactionStore.Contains(origamFile.Path.Relative))
             {
                 return transactionStore.Get(origamFile.Path.Relative)
                     .DeferredSaveDocument;
