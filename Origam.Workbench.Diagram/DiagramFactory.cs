@@ -36,31 +36,23 @@ namespace Origam.Workbench.Diagram
 	    private readonly ISchemaItem graphParent;
 
         #region Constructors
-        public DiagramFactory(Graph graph, ISchemaItem graphParent)
+        public DiagramFactory(ISchemaItem graphParent)
         {
-            this.Graph = graph;
             this.graphParent = graphParent;
         }
 		#endregion
 
 		#region Properties
-		private Graph _graph;
-		public Graph Graph 
-		{
-			get
-			{
-                return _graph;
-			}
-			set
-			{
-                _graph = value;
-			}
-		}
+
+		private Graph graph;
+
 		#endregion
 
 		#region Public Methods
-		public void DrawDiagram()
+		public Graph Draw()
 		{
+			graph = new Graph();
+			
 			if(graphParent is IWorkflowBlock workflowBlock)
 			{
 				DrawWorkflowDiagram(workflowBlock, null);
@@ -69,6 +61,8 @@ namespace Origam.Workbench.Diagram
 			{
 				DrawUniSchemaDiagram(graphParent);
 			}
+
+			return graph;
 		}
 		#endregion
 
@@ -80,7 +74,7 @@ namespace Origam.Workbench.Diagram
 
 		public Node AddNode(string id, string label, Subgraph subGraph)
 		{
-			Node shape = Graph.AddNode(id);
+			Node shape = graph.AddNode(id);
             shape.LabelText = label;
             subGraph?.AddNode(shape);
             return shape;
@@ -93,7 +87,7 @@ namespace Origam.Workbench.Diagram
             subgraph.LabelText = block.Name;
             if (parentSubgraph == null)
             {
-                this.Graph.RootSubgraph.AddSubgraph(subgraph);
+                this.graph.RootSubgraph.AddSubgraph(subgraph);
             }
             else
             {
@@ -130,7 +124,7 @@ namespace Origam.Workbench.Diagram
 					Node sourceShape = ht[dependency.Task.PrimaryKey];
 					if(sourceShape == null) throw new NullReferenceException(ResourceUtils.GetString("ErrorSourceShapeNotFound"));
 
-					this.Graph.AddEdge(sourceShape.Id,
+					this.graph.AddEdge(sourceShape.Id,
                         destinationShape.Id);
 					i++;
 				}
@@ -156,7 +150,7 @@ namespace Origam.Workbench.Diagram
 			Node shape = this.AddNode(schemaItem.Id.ToString(), schemaItem.Name);
 			if(parentShape != null)
 			{
-				this.Graph.AddEdge(shape.Id, parentShape.Id);
+				this.graph.AddEdge(shape.Id, parentShape.Id);
 			}
 			foreach(ISchemaItem child in schemaItem.ChildItems)
 			{

@@ -41,7 +41,6 @@ namespace Origam.Workbench.Editors
 {
 	public class DiagramEditor : AbstractViewContent
 	{
-        private readonly Graph graph = new Graph();
 		DiagramFactory _factory;
         private GViewer gViewer;
 
@@ -169,13 +168,13 @@ namespace Origam.Workbench.Editors
 		{
 			if (!(objectToLoad is ISchemaItem graphParent)) return;
 			
-			_factory= new DiagramFactory(graph, graphParent);
-			_factory.DrawDiagram();
-			gViewer.Graph = _factory.Graph;
-                
+			_factory= new DiagramFactory(graphParent);
+			gViewer.Graph = _factory.Draw();
+			Guid graphParentId = graphParent.Id;
+			
 			persistenceProvider.InstancePersisted += (sender, persistedObject) =>
 			{
-				OnInstancePersisted(graphParent.Id, persistedObject);
+				OnInstancePersisted(graphParentId, persistedObject);
 			};
 		}
 
@@ -196,8 +195,16 @@ namespace Origam.Workbench.Editors
 			if (childPersisted)
 			{
 				Node node = gViewer.Graph.FindNode(persistedSchemaItem.Id.ToString());
-				node.LabelText = persistedSchemaItem.Name;
-				gViewer.Redraw();
+				if (node == null)
+				{
+					_factory = new DiagramFactory(upToDateGraphParent);
+					gViewer.Graph = _factory.Draw();
+				}
+				else
+				{
+					node.LabelText = persistedSchemaItem.Name;
+					gViewer.Redraw();
+				}
 				return;
 			}
 			
@@ -258,8 +265,6 @@ namespace Origam.Workbench.Editors
 	        foreach (AsMenuCommand item in submenuItems)
 	        {
                 newMenu.SubItems.Add(item);
-                ISchemaItemFactory parentSchemaItem = (item.Command as AddNewSchemaItem)?.ParentElement;
-//                parentSchemaItem.ItemCreated += OnChildAdded;
 	        }
 	        
 	        Subgraph subGraph = objectUnderMouse?.Node as Subgraph;
@@ -285,21 +290,6 @@ namespace Origam.Workbench.Editors
 	        {
 		        throw new Exception("Could not delete node because it is not selected in the tree.");
 	        }
-        }
-
-        private void OnChildAdded(ISchemaItem schemaItem)
-        {
-	        var objectAt = gViewer.GetObjectAt(_mouseRightButtonDownPoint.InScreenSystem);
-	        Subgraph subGraph = (objectAt as DNode)?.Node as Subgraph;
-	        if (subGraph == null) return;
-
-	        string nodeId = schemaItem.Id.ToString();
-	        string nodeName = string.IsNullOrEmpty(schemaItem.Name)
-		        ? "New Node"
-		        : schemaItem.Name;
-
-	        _factory.AddNode(nodeId, nodeName, subGraph);
-	        gViewer.Redraw();
         }
         
         class ClickPoint
