@@ -45,8 +45,6 @@ namespace Origam.Workbench.Editors
 		DiagramFactory _factory;
         private GViewer gViewer;
 
-        private System.ComponentModel.Container components = null;
-
         private ClickPoint _mouseRightButtonDownPoint;
         private readonly IPersistenceProvider persistenceProvider;
         private readonly WorkbenchSchemaService schemaService;
@@ -84,19 +82,6 @@ namespace Origam.Workbench.Editors
 
 	        return false;
         }
-
-        protected override void Dispose( bool disposing )
-		{
-			if( disposing )
-			{
-				if(components != null)
-				{
-					components.Dispose();
-				}
-			}
-			base.Dispose( disposing );
-		}
-
 		#region Windows Form Designer generated code
 		/// <summary>
 		/// Required method for Designer support - do not modify
