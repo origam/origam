@@ -189,7 +189,11 @@ namespace Origam.Workbench.Editors
 						new Key(graphParentId))
 					as AbstractSchemaItem;
 
-			if (upToDateGraphParent.ChildItems.Contains(persistedSchemaItem))
+			bool childPersisted = upToDateGraphParent
+				.ChildrenRecursive
+				.Any(x => x.Id == persistedSchemaItem.Id);
+			
+			if (childPersisted)
 			{
 				Node node = gViewer.Graph.FindNode(persistedSchemaItem.Id.ToString());
 				node.LabelText = persistedSchemaItem.Name;
@@ -207,8 +211,6 @@ namespace Origam.Workbench.Editors
 				gViewer.Graph.RemoveNodeEverywhere(node);
 			}
 		}
-
-	
 
 		void Form1_MouseDown(object sender, MsaglMouseEventArgs e)
 	    {
@@ -257,7 +259,7 @@ namespace Origam.Workbench.Editors
 	        {
                 newMenu.SubItems.Add(item);
                 ISchemaItemFactory parentSchemaItem = (item.Command as AddNewSchemaItem)?.ParentElement;
-                parentSchemaItem.ItemCreated += OnChildAdded;
+//                parentSchemaItem.ItemCreated += OnChildAdded;
 	        }
 	        
 	        Subgraph subGraph = objectUnderMouse?.Node as Subgraph;
