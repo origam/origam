@@ -42,11 +42,7 @@ namespace Origam.Workbench.Diagram
         }
 		#endregion
 
-		#region Properties
-
 		private Graph graph;
-
-		#endregion
 
 		#region Public Methods
 		public Graph Draw()

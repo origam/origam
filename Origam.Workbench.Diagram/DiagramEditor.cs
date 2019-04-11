@@ -62,7 +62,26 @@ namespace Origam.Workbench.Editors
 		    };
 		    schemaService = ServiceManager.Services.GetService<WorkbenchSchemaService>();
 			gViewer.EdgeAdded += OnEdgeAdded;
+			gViewer.EdgeRemoved += OnEdgeRemoved;
 		}
+
+        private void OnEdgeRemoved(object sender, EventArgs e)
+        {
+	        Edge edge = (Edge)sender;
+
+	        var dependentItem = persistenceProvider.RetrieveInstance(
+		        typeof(AbstractSchemaItem),
+		        new Key(edge.Target)) as AbstractSchemaItem;
+
+	        var workflowTaskDependency = dependentItem.ChildItems
+		        .ToEnumerable()
+		        .OfType<WorkflowTaskDependency>()
+		        .SingleOrDefault(x => x.WorkflowTaskId == Guid.Parse(edge.Source));
+	        workflowTaskDependency.IsDeleted = true;
+	        workflowTaskDependency.Persist();
+	        
+	        schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(dependentItem);
+        }
 
         private void OnEdgeAdded(object sender, EventArgs e)
         {
