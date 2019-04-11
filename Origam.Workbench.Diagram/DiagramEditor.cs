@@ -29,6 +29,7 @@ using Origam.Workbench.Diagram;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.WorkflowModel;
 using Origam.UI;
 using Origam.Workbench.BaseComponents;
 using Origam.Workbench.Commands;
@@ -60,7 +61,32 @@ namespace Origam.Workbench.Editors
 			    SelectActiveNodeInModelView();
 		    };
 		    schemaService = ServiceManager.Services.GetService<WorkbenchSchemaService>();
+			gViewer.EdgeAdded += OnEdgeAdded;
 		}
+
+        private void OnEdgeAdded(object sender, EventArgs e)
+        {
+	        Edge edge = (Edge)sender;
+
+	        var independentItem = persistenceProvider.RetrieveInstance(
+		        typeof(IWorkflowStep),
+		        new Key(edge.Source)) as IWorkflowStep;
+	        var dependentItem = persistenceProvider.RetrieveInstance(
+		        typeof(AbstractSchemaItem),
+		        new Key(edge.Target)) as AbstractSchemaItem;
+
+
+	        var workflowTaskDependency = new WorkflowTaskDependency
+	        {
+		        SchemaExtensionId = dependentItem.SchemaExtensionId,
+		        PersistenceProvider = persistenceProvider,
+		        ParentItem = dependentItem,
+		        Task = independentItem
+	        };
+	        workflowTaskDependency.Persist();
+
+	        schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(dependentItem);
+        }
 
         private bool SelectActiveNodeInModelView()
         {
