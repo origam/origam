@@ -230,5 +230,10 @@ namespace Origam.Workbench.Services
             this.OnSchemaChanged(this, EventArgs.Empty);
             if (statusBar != null) statusBar.SetStatusText("");
         }
+
+		public void SelectItem(AbstractSchemaItem schemaItem)
+		{
+			SchemaBrowser.EbrSchemaBrowser.SelectItem(schemaItem);
+		}
 	}
 }

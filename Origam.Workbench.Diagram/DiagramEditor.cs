@@ -41,15 +41,15 @@ namespace Origam.Workbench.Editors
 {
 	public class DiagramEditor : AbstractViewContent
 	{
-        private Graph graph = new Graph();
+        private readonly Graph graph = new Graph();
 		DiagramFactory _factory;
         private GViewer gViewer;
-        private int idcounter = 0;
 
         private System.ComponentModel.Container components = null;
 
         private ClickPoint _mouseRightButtonDownPoint;
         private readonly IPersistenceProvider persistenceProvider;
+        private readonly WorkbenchSchemaService schemaService;
 
         public DiagramEditor()
 		{
@@ -58,9 +58,34 @@ namespace Origam.Workbench.Editors
 				.SchemaProvider;
 			InitializeComponent();
 		    (gViewer as IViewer).MouseDown += Form1_MouseDown;
+		    gViewer.MouseClick += (sender, args) =>
+		    {
+			    SelectActiveNodeInModelView();
+		    };
+		    schemaService = ServiceManager.Services.GetService<WorkbenchSchemaService>();
 		}
-	    
-		protected override void Dispose( bool disposing )
+
+        private bool SelectActiveNodeInModelView()
+        {
+	        if (gViewer.SelectedObject is Node node)
+	        {
+		        Guid nodeId = Guid.Parse(node.Id);
+		        var schemaItem = persistenceProvider.RetrieveInstance(
+			        typeof(AbstractSchemaItem),
+			        new Key(nodeId))
+			        as AbstractSchemaItem;
+		        if (schemaItem != null)
+		        {
+			        schemaService.SelectItem(schemaItem);
+			        Guid activeNodeId = Guid.Parse(schemaService.ActiveNode.NodeId);
+			        return nodeId == activeNodeId;
+		        }
+	        }
+
+	        return false;
+        }
+
+        protected override void Dispose( bool disposing )
 		{
 			if( disposing )
 			{
@@ -169,9 +194,9 @@ namespace Origam.Workbench.Editors
 			};
 		}
 
-		private void OnInstancePersisted(Guid graphParentId, IPersistent sender)
+		private void OnInstancePersisted(Guid graphParentId, IPersistent persistedObject)
 		{
-			if (!(sender is AbstractSchemaItem persistedSchemaItem)) return;
+			if (!(persistedObject is AbstractSchemaItem persistedSchemaItem)) return;
 			
 			var upToDateGraphParent =
 				persistenceProvider.RetrieveInstance(
@@ -184,8 +209,21 @@ namespace Origam.Workbench.Editors
 				Node node = gViewer.Graph.FindNode(persistedSchemaItem.Id.ToString());
 				node.LabelText = persistedSchemaItem.Name;
 				gViewer.Redraw();
+				return;
+			}
+			
+			if (persistedSchemaItem.IsDeleted)
+			{
+				Node node = gViewer.Graph.FindNode(persistedSchemaItem.Id.ToString());
+				if (node == null) return;
+				
+				IViewerNode viewerNode = gViewer.FindViewerNode(node);
+				gViewer.RemoveNode(viewerNode, true);
+				gViewer.Graph.RemoveNodeEverywhere(node);
 			}
 		}
+
+	
 
 		void Form1_MouseDown(object sender, MsaglMouseEventArgs e)
 	    {
@@ -198,18 +236,34 @@ namespace Origam.Workbench.Editors
 	        }
 	    }
 
-        protected virtual ContextMenuStrip BuildContextMenu()
-        {
-        
-	        var contextMenu = new AsContextMenu(WorkbenchSingleton.Workbench);
+		private bool IsDeleteAvailable(DNode objectUnderMouse)
+		{
+			if (objectUnderMouse == null) return false;
 
+			List<IViewerObject> highLightedEntities = gViewer.Entities
+				.Where(x => x.MarkedForDragging)
+				.ToList();
+			if (highLightedEntities.Count != 1) return false;
+			if (!(highLightedEntities[0] is IViewerNode viewerNode))return false;
+			
+			Subgraph workFlowSubGraph = gViewer.Graph.RootSubgraph.Subgraphs.FirstOrDefault();
+			if (viewerNode.Node == workFlowSubGraph) return false;
+			return objectUnderMouse.Node == viewerNode.Node;
+		}
+
+		protected virtual ContextMenuStrip BuildContextMenu()
+        {
+	        var objectUnderMouse = gViewer.GetObjectAt(_mouseRightButtonDownPoint.InScreenSystem) as DNode;
+
+	        var contextMenu = new AsContextMenu(WorkbenchSingleton.Workbench);
+	        
             var deleteMenuItem = new ToolStripMenuItem();
             deleteMenuItem.Text = "Delete";
             deleteMenuItem.Image = ImageRes.icon_delete;
             deleteMenuItem.Click += DeleteNode_Click;
-            deleteMenuItem.Enabled = gViewer.SelectedObject != null;
+            deleteMenuItem.Enabled = IsDeleteAvailable(objectUnderMouse);
 
-	        AsMenuCommand newMenu = new AsMenuCommand("New");
+            AsMenuCommand newMenu = new AsMenuCommand("New");
 	        newMenu.Image = ImageRes.icon_new;
 
 	        var builder = new SchemaItemEditorsMenuBuilder();
@@ -217,12 +271,11 @@ namespace Origam.Workbench.Editors
 	        foreach (AsMenuCommand item in submenuItems)
 	        {
                 newMenu.SubItems.Add(item);
-                ISchemaItemFactory parentSchemItem = (item.Command as AddNewSchemaItem)?.ParentElement;
-                parentSchemItem.ItemCreated += OnChildAdded;
+                ISchemaItemFactory parentSchemaItem = (item.Command as AddNewSchemaItem)?.ParentElement;
+                parentSchemaItem.ItemCreated += OnChildAdded;
 	        }
 	        
-	        var objectAt = gViewer.GetObjectAt(_mouseRightButtonDownPoint.InScreenSystem);
-	        Subgraph subGraph = (objectAt as DNode)?.Node as Subgraph;
+	        Subgraph subGraph = objectUnderMouse?.Node as Subgraph;
 
 	        newMenu.Enabled = subGraph != null;
 			newMenu.IsEnabled  = subGraph != null;
@@ -234,20 +287,16 @@ namespace Origam.Workbench.Editors
 	    }
 
         private void DeleteNode_Click(object sender, EventArgs e)
-        {
-	        var markedObjects = gViewer.Entities
-		        .Where(ob => ob.MarkedForDragging)
-		        .ToList();
-	        
-	        foreach (IViewerObject obj in markedObjects) {
-		        if (obj is IViewerEdge edge)
-		        {
-			        gViewer.RemoveEdge(edge, true);
-		        }
-		        else if (obj is IViewerNode node)
-		        {
-			        gViewer.RemoveNode(node, true);
-		        }
+        { 
+	        bool nodeSelected = SelectActiveNodeInModelView();
+
+	        if (nodeSelected)
+	        {
+		        new DeleteActiveNode().Run();
+	        }
+	        else
+	        {
+		        throw new Exception("Could not delete node because it is not selected in the tree.");
 	        }
         }
 
