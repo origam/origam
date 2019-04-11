@@ -230,7 +230,7 @@ namespace Origam.Workbench.Editors
 	        }
 	    }
 
-		private bool IsDeleteAvailable(DNode objectUnderMouse)
+		private bool IsDeleteMenuItemAvailable(DNode objectUnderMouse)
 		{
 			if (objectUnderMouse == null) return false;
 
@@ -240,8 +240,20 @@ namespace Origam.Workbench.Editors
 			if (highLightedEntities.Count != 1) return false;
 			if (!(highLightedEntities[0] is IViewerNode viewerNode))return false;
 			
-			Subgraph workFlowSubGraph = gViewer.Graph.RootSubgraph.Subgraphs.FirstOrDefault();
-			if (viewerNode.Node == workFlowSubGraph) return false;
+			Subgraph topWorkFlowSubGraph = gViewer.Graph.RootSubgraph.Subgraphs.FirstOrDefault();
+			if (viewerNode.Node == topWorkFlowSubGraph) return false;
+			return objectUnderMouse.Node == viewerNode.Node;
+		}
+
+		private bool IsNewMenuAvailable(DNode objectUnderMouse)
+		{
+			if (objectUnderMouse == null) return false;
+			if (!(objectUnderMouse.Node is Subgraph)) return false;
+			List<IViewerObject> highLightedEntities = gViewer.Entities
+				.Where(x => x.MarkedForDragging)
+				.ToList();
+			if (highLightedEntities.Count != 1) return false;
+			if (!(highLightedEntities[0] is IViewerNode viewerNode))return false;
 			return objectUnderMouse.Node == viewerNode.Node;
 		}
 
@@ -255,22 +267,14 @@ namespace Origam.Workbench.Editors
             deleteMenuItem.Text = "Delete";
             deleteMenuItem.Image = ImageRes.icon_delete;
             deleteMenuItem.Click += DeleteNode_Click;
-            deleteMenuItem.Enabled = IsDeleteAvailable(objectUnderMouse);
+            deleteMenuItem.Enabled = IsDeleteMenuItemAvailable(objectUnderMouse);
 
-            AsMenuCommand newMenu = new AsMenuCommand("New");
-	        newMenu.Image = ImageRes.icon_new;
-
-	        var builder = new SchemaItemEditorsMenuBuilder();
-	        var submenuItems = builder.BuildSubmenu(null).OfType<AsMenuCommand>();
-	        foreach (AsMenuCommand item in submenuItems)
-	        {
-                newMenu.SubItems.Add(item);
-	        }
-	        
-	        Subgraph subGraph = objectUnderMouse?.Node as Subgraph;
-
-	        newMenu.Enabled = subGraph != null;
-			newMenu.IsEnabled  = subGraph != null;
+            ToolStripMenuItem newMenu = new ToolStripMenuItem("New");
+            var builder = new SchemaItemEditorsMenuBuilder();
+            var submenuItems = builder.BuildSubmenu(null);
+	        newMenu.DropDownItems.AddRange(submenuItems);
+            newMenu.Image = ImageRes.icon_new;
+            newMenu.Enabled = IsNewMenuAvailable(objectUnderMouse);
 			
 	        contextMenu.AddSubItem(newMenu);
 	        contextMenu.AddSubItem(deleteMenuItem);
