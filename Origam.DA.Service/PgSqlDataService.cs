@@ -144,10 +144,9 @@ namespace Origam.DA.Service
             try
             { 
                ExecuteUpdate(string.Format("SELECT dblink_connect('myconn','dbname={0}')", name), transaction1);
-               ExecuteUpdate(string.Format("SELECT dblink_exec('myconn','CREATE SCHEMA IF NOT EXISTS {0};')", name), transaction1);
-                ExecuteUpdate(string.Format("DROP EXTENSION pgcrypto;')",""), transaction1);
-                ExecuteUpdate(string.Format("CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA pg_catalog;')", name), transaction1);
-               ExecuteUpdate(string.Format("SELECT dblink_disconnect('myconn')"), transaction1);
+               ExecuteUpdate(string.Format("SELECT dblink_exec('myconn','CREATE SCHEMA {0};')", name), transaction1);
+               ExecuteUpdate("SELECT dblink_exec('myconn','CREATE EXTENSION pgcrypto SCHEMA pg_catalog;')", transaction1);
+               ExecuteUpdate("SELECT dblink_disconnect('myconn')", transaction1);
                ResourceMonitor.Commit(transaction1);
             }
             catch (Exception)
@@ -248,6 +247,11 @@ WHERE tc.constraint_type = 'FOREIGN KEY' and
 ccu.table_schema = tc.table_schema
 group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
 
+        }
+
+        internal override string GetPid()
+        {
+            return "select pg_backend_pid()";
         }
 
         public override string Info

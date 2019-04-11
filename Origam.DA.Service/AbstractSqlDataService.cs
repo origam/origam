@@ -2437,7 +2437,7 @@ namespace Origam.DA.Service
 			if(log.IsDebugEnabled)
 			{
 				IDbCommand processIdCommand = command.Connection.CreateCommand();
-				processIdCommand.CommandText = "SELECT @@SPID";
+                processIdCommand.CommandText = GetPid(); 
 				processIdCommand.Transaction = command.Transaction;
 				object spid = processIdCommand.ExecuteScalar();
 				log.Debug("SQL Command; Connection ID: " + spid.ToString() + ", Transaction ID: " + transactionId + ", " + command.CommandText); 
@@ -2450,7 +2450,9 @@ namespace Origam.DA.Service
 			}
 		}
 
-		private void SetTransaction(DbDataAdapter adapter, IDbTransaction transaction)
+        internal abstract string GetPid();
+
+        private void SetTransaction(DbDataAdapter adapter, IDbTransaction transaction)
 		{
 			((IDbDataAdapter)adapter).SelectCommand.Transaction = transaction;
 			((IDbDataAdapter)adapter).UpdateCommand.Transaction = transaction;

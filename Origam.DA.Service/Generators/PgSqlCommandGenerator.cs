@@ -34,10 +34,11 @@ using Origam.Workbench.Services;
 namespace Origam.DA.Service
 {
 	/// <summary>
-	/// Summary description for MsSqlCommandGenerator.
+	/// Summary description for PgSqlCommandGenerator.
 	/// </summary>
 	public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
 	{
+
 		public PgSqlCommandGenerator() : base()
 		{
 		}
@@ -558,13 +559,34 @@ namespace Origam.DA.Service
                 string result = NameLeftBracket + item.GetLocalizationField(tmi).MappedColumnName + NameRightBracket;
                 result = NameLeftBracket + FieldMappingItem.GetLocalizationTable(tmi).Name
                     + NameRightBracket + "." + result;
-                result = String.Format("ISNULL({0},{1})", result, nonLocalizedResult);
+                result = String.Format("coalesce({0},{1})", result, nonLocalizedResult);
                 return result;
             }
             else
             {
                 return nonLocalizedResult;
             }
+        }
+
+        internal override string getSql(ConvertSql v)
+        {
+                switch (v)
+                {
+                    case ConvertSql.FREETEXT:
+                        throw new NotImplementedException();
+                    case ConvertSql.ISNULL:
+                        return "coalesce";
+                    case ConvertSql.DBO:
+                        return "";
+                    case ConvertSql.NVARCHAR_MAX:
+                        return "AS TEXT";
+                    case ConvertSql.NVARCHAR:
+                        return "AS VARCHAR";
+                    case ConvertSql.INT:
+                        return "AS INTEGER";
+                }
+            
+            throw new NotImplementedException();
         }
     }
 }

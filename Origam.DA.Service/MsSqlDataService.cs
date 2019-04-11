@@ -352,6 +352,11 @@ namespace Origam.DA.Service
                 + "and PKT.id = r.rkeyid and FKT.id = r.fkeyid ";
         }
 
+        internal override string GetPid()
+        {
+            return "SELECT @@SPID";
+        }
+
         public override string Info
 		{
 			get

@@ -199,7 +199,7 @@ namespace OrigamArchitect
                 return;
             }
 
-            _project.Name = txtName.Text;
+            _project.Name = txtName.Text.ToLower().Replace("\\s+", "_"); 
             _project.DatabaseServerName = txtServerName.Text;
             _project.DatabaseUserName = txtDatabaseUserName.Text;
             _project.DatabasePassword = txtDatabasePassword.Text;
@@ -210,7 +210,7 @@ namespace OrigamArchitect
             _project.Url = txtName.Text;
             _project.ArchitectUserName = System.Threading.Thread.CurrentPrincipal.Identity.Name;
             
-            _project.DatabaseTp = DatabaseTp;
+            _project.DatabaseTyp = DatabaseTp;
             _project.Port = Port;
             _project.NewPackageId = Guid.NewGuid().ToString();
         }

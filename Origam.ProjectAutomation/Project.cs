@@ -50,7 +50,7 @@ namespace Origam.ProjectAutomation
         private string _gitemail;
         public string Gitusername { get => _gitusername; set => _gitusername = value; }
         public string Gitemail { get => _gitemail; set => _gitemail = value; }
-        public DatabaseType DatabaseTp { get; set; }
+        public DatabaseType DatabaseTyp { get; set; }
         public int Port { get; set; }
         public string ConnectionDatabasePassword { get; internal set; }
         public string ConnectionDatabaseUser { get; internal set; }
@@ -66,7 +66,7 @@ namespace Origam.ProjectAutomation
 
         internal string GetDataDataService()
         {
-           switch (DatabaseTp)
+           switch (DatabaseTyp)
             {
                 case DatabaseType.MsSql:
                     return "Origam.DA.Service.MsSqlDataService, Origam.DA.Service";

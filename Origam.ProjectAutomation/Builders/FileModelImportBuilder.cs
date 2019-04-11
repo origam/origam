@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Linq;
+using static Origam.ProjectAutomation.Project;
 
 namespace Origam.ProjectAutomation
 {
@@ -41,8 +42,19 @@ namespace Origam.ProjectAutomation
 
         private void UnzipDefaultModel(Project project)
         {
+            string prefix = "";
+            switch (project.DatabaseTyp)
+                {
+                case DatabaseType.MsSql:
+                    prefix = "MS";
+                    break;
+                case DatabaseType.PostgreSql:
+                    prefix = "Pg";
+                    break;
+            }
+
             string zipPath =
-                Path.Combine(project.ServerTemplateFolder,"Model", ModelZipName);
+                Path.Combine(project.ServerTemplateFolder,"Model", prefix + ModelZipName);
             System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, sourcesFolder);
         }
 

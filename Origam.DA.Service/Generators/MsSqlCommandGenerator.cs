@@ -615,5 +615,26 @@ namespace Origam.DA.Service
                 return nonLocalizedResult;
             }
         }
+
+        internal override string getSql(ConvertSql v)
+        {
+            switch (v)
+            {
+                case ConvertSql.FREETEXT:
+                    return "FREETEXT";
+                case ConvertSql.ISNULL:
+                    return "ISNULL";
+                case ConvertSql.DBO:
+                    return "dbo.";
+                case ConvertSql.NVARCHAR_MAX:
+                    return "AS NVARCHAR(MAX)";
+                case ConvertSql.NVARCHAR:
+                    return "AS NVARCHAR";
+                case ConvertSql.INT:
+                    return "AS INT";
+            }
+
+            throw new NotImplementedException();
+        }
     }
 }

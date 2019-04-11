@@ -44,6 +44,17 @@ namespace Origam.DA.Service
         private string _pageSizeParameterName;
         private int _indentLevel = 0;
 
+        internal enum ConvertSql
+        {
+            FREETEXT,
+            ISNULL,
+            DBO,
+            NVARCHAR_MAX,
+            NVARCHAR,
+            INT,
+            INTEGER,
+        }
+
         private struct SortOrder
         {
             public string Expression;
@@ -1802,9 +1813,9 @@ namespace Origam.DA.Service
             switch (dataType)
             {
                 case OrigamDataType.UniqueIdentifier:
-                    return "CAST(" + expression + " AS NVARCHAR(36))";
+                    return " CAST (" + expression + " " +getSql(ConvertSql.NVARCHAR)+"(36))";
                 case OrigamDataType.Boolean:
-                    return "CAST(" + expression + " AS INT)";
+                    return " CAST (" + expression + "  "+getSql(ConvertSql.INT)+")";
                 default:
                     return expression;
             }
@@ -1814,13 +1825,14 @@ namespace Origam.DA.Service
         {
             if (aggregationType == AggregationType.Sum)
             {
-                return "ISNULL(" + expression + ", 0)";
+                return getSql(ConvertSql.ISNULL) +"(" + expression + ", 0)";
             }
             else
             {
                 return expression;
             }
         }
+        
 
         private string RenderLookupColumnExpression(DataStructure ds, DataStructureEntity entity,
             DataStructureColumn column, Hashtable replaceParameterTexts, Hashtable dynamicParameters,
@@ -2842,7 +2854,7 @@ namespace Origam.DA.Service
                     ISchemaItem fieldsArg = item.GetChildByName("Fields");
 
                     if (item.Function.Name == "FullTextContains") result = "CONTAINS(";
-                    if (item.Function.Name == "FullText") result = "FREETEXT(";
+                    if (item.Function.Name == "FullText") result =  getSql(ConvertSql.FREETEXT) +"(";
 
                     if (fieldsArg.ChildItems.Count == 0)
                     {
@@ -2902,8 +2914,8 @@ namespace Origam.DA.Service
                     break;
 
                 case "ToDate":
-                    result = "CAST(" + RenderExpression(item.GetChildByName("argument").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + " AS DATE)";
+                    result = " CAST (" + RenderExpression(item.GetChildByName("argument").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
+                        + " AS DATE )";
                     break;
 
                 case "Round":
@@ -2926,7 +2938,7 @@ namespace Origam.DA.Service
 
 
                 default:
-                    result = "dbo." + item.Function.Name + "(";
+                    result = getSql(ConvertSql.DBO) + item.Function.Name + "(";
 
                     ArrayList sortedParams = new ArrayList(item.ChildItems);
                     sortedParams.Sort();
@@ -2949,6 +2961,8 @@ namespace Origam.DA.Service
 
             return result;
         }
+
+        internal abstract string getSql(ConvertSql v);
 
         private string RenderBuiltinFunction(FunctionCall item, DataStructureEntity entity,
             Hashtable replaceParameterTexts, Hashtable dynamicParameters,
@@ -3175,9 +3189,11 @@ namespace Origam.DA.Service
 					}
 				}
 
-				concatBuilder.Append("CAST(");
+                concatBuilder.Append("CAST (");
 				concatBuilder.Append(RenderExpression(concatItem.Key, concatItem.Value, replaceParameterTexts, dynamicParameters, parameterReferences));
-				concatBuilder.Append(" AS NVARCHAR(MAX))");
+                concatBuilder.Append(" ");
+                concatBuilder.Append(getSql(ConvertSql.NVARCHAR_MAX));
+                concatBuilder.Append(")");
 
 				i++;
 			}
