@@ -815,8 +815,8 @@ namespace Origam.DA.Service
                     _pageSizeParameterName = ParameterReferenceChar + PageSizeParameterReference.Parameter.Name;
                 }
 
-                selectParameterReferences.Add(_pageNumberParameterName, PageNumberParameterReference);
-                selectParameterReferences.Add(_pageSizeParameterName, PageSizeParameterReference);
+                selectParameterReferences.Add(ParameterDeclarationChar + PageNumberParameterReference.Parameter.Name, PageNumberParameterReference);
+                selectParameterReferences.Add(ParameterDeclarationChar + PageSizeParameterReference.Parameter.Name, PageSizeParameterReference);
             }
 
             StringBuilder sqlExpression = new StringBuilder();
@@ -2670,12 +2670,12 @@ namespace Origam.DA.Service
             else
             {
                 string name = ParameterReferenceChar + parameterName;
-
+                string declarationName = ParameterDeclarationChar + parameterName;
                 if (parameterReferences != null)
                 {
-                    if (!parameterReferences.Contains(name))
+                    if (!parameterReferences.Contains(declarationName))
                     {
-                        parameterReferences.Add(name, item);
+                        parameterReferences.Add(declarationName, item);
                     }
                 }
 

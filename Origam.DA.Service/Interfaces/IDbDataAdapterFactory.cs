@@ -63,5 +63,6 @@ namespace Origam.DA.Service
         string AddColumnDdl(FieldMappingItem field);
         string AlterColumnDdl(FieldMappingItem field);
         string AddForeignKeyConstraintDdl(TableMappingItem table, DataEntityConstraint constraint);
+		string ParameterDeclarationChar { get; }
     }
 }

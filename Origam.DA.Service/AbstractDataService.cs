@@ -415,7 +415,8 @@ namespace Origam.DA.Service
 					QueryParameter param = null;
 					foreach(QueryParameter p in parameters)
 					{
-						if(p.Name == dbParam.ParameterName.Substring(1))
+						if(p.Name == dbParam.ParameterName.Substring(
+                            this.DbDataAdapterFactory.ParameterDeclarationChar.Length))
 						{
 							param = p;
 							break;
