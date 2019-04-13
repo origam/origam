@@ -49,7 +49,7 @@ namespace Origam.Workbench.Editors
         private readonly IPersistenceProvider persistenceProvider;
         private readonly WorkbenchSchemaService schemaService;
         private Guid graphParentId;
-
+        
         public DiagramEditor()
 		{
 			persistenceProvider = ServiceManager.Services
@@ -64,6 +64,14 @@ namespace Origam.Workbench.Editors
 		    schemaService = ServiceManager.Services.GetService<WorkbenchSchemaService>();
 			gViewer.EdgeAdded += OnEdgeAdded;
 			gViewer.EdgeRemoved += OnEdgeRemoved;
+			var edgeInsertionRule = new EdgeInsertionRule(
+				viewerToImposeOn: gViewer,
+				predicate: (sourceNode, targetNode) =>
+				{
+					var sourcesParent = gViewer.Graph.FindParentSubGraph(sourceNode);
+					var targetsParent = gViewer.Graph.FindParentSubGraph(targetNode);
+					return sourcesParent == targetsParent;
+				});
 		}
 
         private void OnEdgeRemoved(object sender, EventArgs e)
@@ -87,7 +95,7 @@ namespace Origam.Workbench.Editors
         private void OnEdgeAdded(object sender, EventArgs e)
         {
 	        Edge edge = (Edge)sender;
-
+			 
 	        var independentItem = persistenceProvider.RetrieveInstance(
 		        typeof(IWorkflowStep),
 		        new Key(edge.Source)) as IWorkflowStep;
