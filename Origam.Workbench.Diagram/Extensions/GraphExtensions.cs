@@ -31,5 +31,23 @@ namespace Origam.Workbench.Diagram.Extensions
         	}
         	yield return subGraph;
         }
+	    
+	    public static IEnumerable<Node> GetAllNodes(this Subgraph subGraph)
+	    {
+		    foreach (Subgraph childSubGraph in subGraph.Subgraphs)
+		    {
+			    foreach (Node childNode in GetAllNodes(childSubGraph))
+			    {
+				    yield return childNode;
+			    }
+		    }
+
+		    foreach (Node node in subGraph.Nodes)
+		    {
+			    yield return node;
+		    }
+
+		    yield return subGraph;
+	    }
     }
 }

@@ -255,12 +255,30 @@ namespace Origam.Workbench.Editors
 			
 			if (persistedSchemaItem.IsDeleted)
 			{
-				Node node = gViewer.Graph.FindNode(persistedSchemaItem.Id.ToString());
-				if (node == null) return;
+				if (persistedSchemaItem is IWorkflowStep)
+				{
+					Node node = gViewer.Graph.FindNode(persistedSchemaItem.Id.ToString());
+					if (node == null) return;
 				
-				IViewerNode viewerNode = gViewer.FindViewerNode(node);
-				gViewer.RemoveNode(viewerNode, true);
-				gViewer.Graph.RemoveNodeEverywhere(node);
+					IViewerNode viewerNode = gViewer.FindViewerNode(node);
+					gViewer.RemoveNode(viewerNode, true);
+					gViewer.Graph.RemoveNodeEverywhere(node);
+				}
+
+				if (persistedSchemaItem is WorkflowTaskDependency taskDependency)
+				{
+					bool edgeWasRemovedOutsideDiagram = gViewer.Graph.RootSubgraph
+						.GetAllNodes()
+						.SelectMany(node => node.Edges.Select(edge => edge.Source))
+						.Select(Guid.Parse)
+						.Any(targetNodeId => targetNodeId == taskDependency.WorkflowTaskId);
+					
+					if (edgeWasRemovedOutsideDiagram)
+					{
+						_factory = new DiagramFactory(upToDateGraphParent);
+						gViewer.Graph = _factory.Draw();
+					}
+				}
 			}
 		}
 
