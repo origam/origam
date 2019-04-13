@@ -48,6 +48,7 @@ namespace Origam.Workbench.Editors
         private ClickPoint _mouseRightButtonDownPoint;
         private readonly IPersistenceProvider persistenceProvider;
         private readonly WorkbenchSchemaService schemaService;
+        private Guid graphParentId;
 
         public DiagramEditor()
 		{
@@ -56,7 +57,7 @@ namespace Origam.Workbench.Editors
 				.SchemaProvider;
 			InitializeComponent();
 		    (gViewer as IViewer).MouseDown += Form1_MouseDown;
-		    gViewer.MouseClick += (sender, args) =>
+		    gViewer.MouseClick += ( sender, args) =>
 		    {
 			    SelectActiveNodeInModelView();
 		    };
@@ -215,71 +216,85 @@ namespace Origam.Workbench.Editors
 			
 			_factory= new DiagramFactory(graphParent);
 			gViewer.Graph = _factory.Draw();
-			Guid graphParentId = graphParent.Id;
+			graphParentId = graphParent.Id;
 			
-			persistenceProvider.InstancePersisted += (sender, persistedObject) =>
-			{
-				OnInstancePersisted(graphParentId, persistedObject);
-			};
+			persistenceProvider.InstancePersisted += OnInstancePersisted;
 		}
 
-		private void OnInstancePersisted(Guid graphParentId, IPersistent persistedObject)
+		private void OnInstancePersisted(object sender,IPersistent persistedObject)
 		{
 			if (!(persistedObject is AbstractSchemaItem persistedSchemaItem)) return;
 			
-			var upToDateGraphParent =
-				persistenceProvider.RetrieveInstance(
-						typeof(AbstractSchemaItem),
-						new Key(graphParentId))
-					as AbstractSchemaItem;
-
-			bool childPersisted = upToDateGraphParent
+			bool childPersisted = UpToDateGraphParent
 				.ChildrenRecursive
 				.Any(x => x.Id == persistedSchemaItem.Id);
 			
 			if (childPersisted)
 			{
-				Node node = gViewer.Graph.FindNode(persistedSchemaItem.Id.ToString());
-				if (node == null)
-				{
-					_factory = new DiagramFactory(upToDateGraphParent);
-					gViewer.Graph = _factory.Draw();
-				}
-				else
-				{
-					node.LabelText = persistedSchemaItem.Name;
-					gViewer.Redraw();
-				}
+				UpdateNodeOf(persistedSchemaItem);
 				return;
 			}
 			
 			if (persistedSchemaItem.IsDeleted)
 			{
-				if (persistedSchemaItem is IWorkflowStep)
+				switch (persistedSchemaItem)
 				{
-					Node node = gViewer.Graph.FindNode(persistedSchemaItem.Id.ToString());
-					if (node == null) return;
-				
-					IViewerNode viewerNode = gViewer.FindViewerNode(node);
-					gViewer.RemoveNode(viewerNode, true);
-					gViewer.Graph.RemoveNodeEverywhere(node);
-				}
-
-				if (persistedSchemaItem is WorkflowTaskDependency taskDependency)
-				{
-					bool edgeWasRemovedOutsideDiagram = gViewer.Graph.RootSubgraph
-						.GetAllNodes()
-						.SelectMany(node => node.Edges.Select(edge => edge.Source))
-						.Select(Guid.Parse)
-						.Any(targetNodeId => targetNodeId == taskDependency.WorkflowTaskId);
-					
-					if (edgeWasRemovedOutsideDiagram)
-					{
-						_factory = new DiagramFactory(upToDateGraphParent);
-						gViewer.Graph = _factory.Draw();
-					}
+					case IWorkflowStep _:
+						RemoveNode(persistedSchemaItem.Id);
+						break;
+					case WorkflowTaskDependency taskDependency:
+						RemoveEdge(taskDependency.WorkflowTaskId);
+						break;
 				}
 			}
+		}
+
+		private void UpdateNodeOf(AbstractSchemaItem persistedSchemaItem)
+		{
+			Node node = gViewer.Graph.FindNode(persistedSchemaItem.Id.ToString());
+			if (node == null)
+			{
+				_factory = new DiagramFactory(UpToDateGraphParent);
+				gViewer.Graph = _factory.Draw();
+			}
+			else
+			{
+				node.LabelText = persistedSchemaItem.Name;
+				gViewer.Redraw();
+			}
+		}
+
+		private AbstractSchemaItem UpToDateGraphParent =>
+			persistenceProvider.RetrieveInstance(
+					typeof(AbstractSchemaItem),
+					new Key(graphParentId))
+				as AbstractSchemaItem;
+		
+
+		private void RemoveEdge(Guid sourceId)
+		{
+			bool edgeWasRemovedOutsideDiagram = gViewer.Graph.RootSubgraph
+				.GetAllNodes()
+				.SelectMany(node => node.Edges.Select(edge => edge.Source))
+				.Select(Guid.Parse)
+				.Any(targetNodeId => targetNodeId == sourceId);
+
+			if (edgeWasRemovedOutsideDiagram)
+			{
+				_factory = new DiagramFactory(UpToDateGraphParent);
+				gViewer.Graph = _factory.Draw();
+			}
+		}
+
+		private bool RemoveNode(Guid nodeId)
+		{
+			Node node = gViewer.Graph.FindNode(nodeId.ToString());
+			if (node == null) return true;
+
+			IViewerNode viewerNode = gViewer.FindViewerNode(node);
+			gViewer.RemoveNode(viewerNode, true);
+			gViewer.Graph.RemoveNodeEverywhere(node);
+			return false;
 		}
 
 		void Form1_MouseDown(object sender, MsaglMouseEventArgs e)
