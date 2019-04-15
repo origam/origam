@@ -158,6 +158,12 @@ namespace Origam.Workbench.Editors
 						parentForm: this,
 						persistenceProvider: persistenceProvider);
 					break;
+				case IContextStore contextStore:
+					internalEditor = new ContextStoreDependencyEditor(
+						gViewer: gViewer,
+						contextStore: contextStore,
+						persistenceProvider: persistenceProvider);
+					break;
 				case ISchemaItem schemaItem:
 					internalEditor = new GeneralDiagramEditor(gViewer, schemaItem);
 					break;
