@@ -49,22 +49,20 @@ namespace Origam.Workbench.Editors
         private readonly IPersistenceProvider persistenceProvider;
         private readonly WorkbenchSchemaService schemaService;
         private Guid graphParentId;
-        
+        private readonly EdgeInsertionRule edgeInsertionRule;
+
         public DiagramEditor()
 		{
 			persistenceProvider = ServiceManager.Services
 				.GetService<IPersistenceService>()
 				.SchemaProvider;
 			InitializeComponent();
-		    (gViewer as IViewer).MouseDown += Form1_MouseDown;
-		    gViewer.MouseClick += ( sender, args) =>
-		    {
-			    SelectActiveNodeInModelView();
-		    };
+		    (gViewer as IViewer).MouseDown += OnMouseDown;
+		    gViewer.MouseClick += OnMouseClick;
 		    schemaService = ServiceManager.Services.GetService<WorkbenchSchemaService>();
 			gViewer.EdgeAdded += OnEdgeAdded;
 			gViewer.EdgeRemoved += OnEdgeRemoved;
-			var edgeInsertionRule = new EdgeInsertionRule(
+			edgeInsertionRule = new EdgeInsertionRule(
 				viewerToImposeOn: gViewer,
 				predicate: (sourceNode, targetNode) =>
 				{
@@ -75,6 +73,28 @@ namespace Origam.Workbench.Editors
 					return sourcesParent == targetsParent;
 				});
 		}
+
+        private void OnMouseClick(object sender, MouseEventArgs args)
+        {
+	        SelectActiveNodeInModelView();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+	        if (disposing)
+	        {
+		        persistenceProvider.InstancePersisted -= OnInstancePersisted;
+		        (gViewer as IViewer).MouseDown -= OnMouseDown;
+		        gViewer.MouseClick -= OnMouseClick;
+		        gViewer.EdgeAdded -= OnEdgeAdded;
+		        gViewer.EdgeRemoved -= OnEdgeRemoved;
+		        edgeInsertionRule?.Dispose();
+		        gViewer?.Dispose();
+	        }
+
+	        base.Dispose(disposing);
+        }
+
 
         private void OnEdgeRemoved(object sender, EventArgs e)
         {
@@ -307,7 +327,7 @@ namespace Origam.Workbench.Editors
 			return false;
 		}
 
-		void Form1_MouseDown(object sender, MsaglMouseEventArgs e)
+		void OnMouseDown(object sender, MsaglMouseEventArgs e)
 	    {
 	        if (e.RightButtonIsPressed && !e.Handled)
 	        {

@@ -5,7 +5,7 @@ using Microsoft.Msagl.GraphViewerGdi;
 
 namespace Origam.Workbench.Editors
 {
-    class EdgeInsertionRule
+    class EdgeInsertionRule: IDisposable
     {
         private readonly GViewer viewerToImposeOn;
         private readonly Func<Node, Node, bool> predicate;
@@ -50,6 +50,12 @@ namespace Origam.Workbench.Editors
         {
             var point = new System.Drawing.Point(args.X, args.Y);
             return (gViewer.GetObjectAt(point) as DNode)?.Node;
+        }
+
+        public void Dispose()
+        {
+            viewerToImposeOn.MouseDown -= OnMouseDown;
+            viewerToImposeOn.MouseUp -= OnMouseUp;
         }
     }
 }
