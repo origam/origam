@@ -23,6 +23,7 @@ using System;
 using Origam.Schema.WorkflowModel;
 using Microsoft.Msagl.Drawing;
 using System.Collections.Generic;
+using Origam.Workbench.Diagram.DiagramFactory;
 
 namespace Origam.Workbench.Diagram
 {
@@ -30,17 +31,14 @@ namespace Origam.Workbench.Diagram
 	{
 		private Graph graph;
 
-		#region Public Methods
 		public Graph Draw(IWorkflowBlock graphParent)
 		{
 			graph = new Graph();
 			DrawWorkflowDiagram(graphParent, null);
 			return graph;
 		}
-		#endregion
 
-		#region Private Methods
-		public Node AddNode(string id, string label, Subgraph subGraph)
+		private Node AddNode(string id, string label, Subgraph subGraph)
 		{
 			Node shape = graph.AddNode(id);
             shape.LabelText = label;
@@ -48,7 +46,6 @@ namespace Origam.Workbench.Diagram
             return shape;
 		}
 
-		#region Workflow Diagram
 		private Subgraph DrawWorkflowDiagram(IWorkflowBlock workFlowBlock, Subgraph parentSubgraph)
 		{
             Subgraph subgraph = new Subgraph(workFlowBlock.NodeId);
@@ -62,9 +59,6 @@ namespace Origam.Workbench.Diagram
                 parentSubgraph.AddSubgraph(subgraph);
             }
             IDictionary<Key, Node> ht = new Dictionary<Key, Node>();
-			// root shape
-			//Node blockShape = this.AddBasicShape(block.Name, subgraph);
-			//ht.Add(block.PrimaryKey, blockShape);
 
 			foreach(IWorkflowStep step in workFlowBlock.ChildItemsByType(AbstractWorkflowStep.ItemTypeConst))
 			{
@@ -105,8 +99,5 @@ namespace Origam.Workbench.Diagram
 			}
             return subgraph;
         }
-		#endregion
-
-		#endregion
 	}
 }

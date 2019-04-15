@@ -15,13 +15,8 @@ using Origam.Workbench.Diagram.Extensions;
 using Origam.Workbench.Editors;
 using Origam.Workbench.Services;
 
-namespace Origam.Workbench.Diagram
+namespace Origam.Workbench.Diagram.InternalEditor
 {
-
-	interface IDiagramEditor: IDisposable
-	{
-	}
-
 	public class WorkFlowDiagramEditor: IDiagramEditor
     {
       	private readonly WorkFlowDiagramFactory factory;

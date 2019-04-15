@@ -1,7 +1,8 @@
 using Microsoft.Msagl.GraphViewerGdi;
 using Origam.Schema;
+using Origam.Workbench.Diagram.DiagramFactory;
 
-namespace Origam.Workbench.Diagram
+namespace Origam.Workbench.Diagram.InternalEditor
 {
     public class GeneralDiagramEditor<T>: IDiagramEditor where T: ISchemaItem
     {

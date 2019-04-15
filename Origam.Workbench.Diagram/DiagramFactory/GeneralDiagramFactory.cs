@@ -1,7 +1,7 @@
 using Microsoft.Msagl.Drawing;
 using Origam.Schema;
 
-namespace Origam.Workbench.Diagram
+namespace Origam.Workbench.Diagram.DiagramFactory
 {
     class GeneralDiagramFactory: IDiagramFactory<ISchemaItem>
     {
@@ -26,8 +26,8 @@ namespace Origam.Workbench.Diagram
                 DrawUniShape(child, shape);
             }
         }
-		
-        public Node AddNode(string id, string label)
+
+        private Node AddNode(string id, string label)
         {
             Node shape = graph.AddNode(id);
             shape.LabelText = label;

@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 
-namespace Origam.Workbench.Editors
+namespace Origam.Workbench.Diagram.InternalEditor
 {
     class EdgeInsertionRule: IDisposable
     {

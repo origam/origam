@@ -35,6 +35,7 @@ using Origam.Workbench.BaseComponents;
 using Origam.Workbench.Commands;
 using Origam.Workbench.Diagram.DiagramFactory;
 using Origam.Workbench.Diagram.Extensions;
+using Origam.Workbench.Diagram.InternalEditor;
 using Origam.Workbench.Services;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
 using DrawingNode = Microsoft.Msagl.Drawing.Node;
