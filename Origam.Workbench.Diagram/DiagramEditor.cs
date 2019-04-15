@@ -33,6 +33,7 @@ using Origam.Schema.WorkflowModel;
 using Origam.UI;
 using Origam.Workbench.BaseComponents;
 using Origam.Workbench.Commands;
+using Origam.Workbench.Diagram.DiagramFactory;
 using Origam.Workbench.Diagram.Extensions;
 using Origam.Workbench.Services;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
@@ -160,10 +161,10 @@ namespace Origam.Workbench.Editors
 						factory: new WorkFlowDiagramFactory());
 					break;
 				case IContextStore contextStore:
-					internalEditor = new ContextStoreDependencyEditor(
+					internalEditor = new GeneralDiagramEditor<IContextStore>(
 						gViewer: gViewer,
-						contextStore: contextStore,
-						persistenceProvider: persistenceProvider);
+						schemaItem: contextStore,
+						factory: new ContextStoreDiagramFactory(persistenceProvider));
 					break;
 				case ISchemaItem schemaItem:
 					internalEditor = new GeneralDiagramEditor<ISchemaItem>(

@@ -1,31 +1,24 @@
 using System.Collections.Generic;
 using Microsoft.Msagl.Drawing;
-using Microsoft.Msagl.GraphViewerGdi;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.WorkflowModel;
-using Origam.Workbench.Diagram.Extensions;
 
-
-namespace Origam.Workbench.Diagram
+namespace Origam.Workbench.Diagram.DiagramFactory
 {
-    public class ContextStoreDependencyEditor: IDiagramEditor
+    class ContextStoreDiagramFactory: IDiagramFactory<IContextStore>
     {
-        private readonly GViewer gViewer;
-        private readonly IContextStore contextStore;
+        private Graph graph;
         private readonly IPersistenceProvider persistenceProvider;
 
-        public ContextStoreDependencyEditor(GViewer gViewer, IContextStore contextStore, IPersistenceProvider persistenceProvider)
+        public ContextStoreDiagramFactory(IPersistenceProvider persistenceProvider)
         {
-            this.gViewer = gViewer;
-            this.contextStore = contextStore;
             this.persistenceProvider = persistenceProvider;
-
-           Draw();
         }
 
-        private void Draw()
+        public Graph Draw(IContextStore contextStore)
         {
-            gViewer.Graph = new Graph();
+            graph = new Graph();
+            
             Node storeNode = AddNode(contextStore.Id.ToString(), contextStore.Name);
             List<IWorkflowStep> steps = persistenceProvider
                 .RetrieveList<IWorkflowStep>();
@@ -36,32 +29,23 @@ namespace Origam.Workbench.Diagram
                     task.OutputContextStoreId == contextStore.Id)
                 {
                     Node taskNode = AddNode(task.Id.ToString(), task.Name);
-                    gViewer.Graph.AddEdge(storeNode.Id, taskNode.Id);
+                    graph.AddEdge(storeNode.Id, taskNode.Id);
                 }else if (step is UpdateContextTask updateTask &&
                           updateTask.XPathContextStore.Id == contextStore.Id)
                 {
                     Node taskNode = AddNode(updateTask.Id.ToString(), updateTask.Name);
-                    gViewer.Graph.AddEdge(taskNode.Id, storeNode.Id);
+                    graph.AddEdge(taskNode.Id, storeNode.Id);
                 }
             }
-            gViewer.Redraw();
-        }
-        
-        private Node AddNode(string id,string label)
-        {
-            return AddNode(id, label, null);
+
+            return graph;
         }
 
-        public Node AddNode(string id, string label, Subgraph subGraph)
+        private Node AddNode(string id, string label)
         {
-            Node shape = gViewer.Graph.AddNode(id);
+            Node shape = graph.AddNode(id);
             shape.LabelText = label;
-            subGraph?.AddNode(shape);
             return shape;
-        }
-
-        public void Dispose()
-        {
         }
     }
 }
