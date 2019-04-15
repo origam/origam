@@ -29,10 +29,13 @@ using Origam.Workbench.Diagram;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema.WorkflowModel;
 using Origam.UI;
 using Origam.Workbench.BaseComponents;
 using Origam.Workbench.Commands;
+using Origam.Workbench.Diagram.DiagramFactory;
 using Origam.Workbench.Diagram.Extensions;
+using Origam.Workbench.Diagram.InternalEditor;
 using Origam.Workbench.Services;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
 using DrawingNode = Microsoft.Msagl.Drawing.Node;
@@ -41,12 +44,9 @@ namespace Origam.Workbench.Editors
 {
 	public class DiagramEditor : AbstractViewContent
 	{
-		DiagramFactory _factory;
         private GViewer gViewer;
-
-        private ClickPoint _mouseRightButtonDownPoint;
         private readonly IPersistenceProvider persistenceProvider;
-        private readonly WorkbenchSchemaService schemaService;
+        private IDiagramEditor internalEditor;
 
         public DiagramEditor()
 		{
@@ -54,33 +54,18 @@ namespace Origam.Workbench.Editors
 				.GetService<IPersistenceService>()
 				.SchemaProvider;
 			InitializeComponent();
-		    (gViewer as IViewer).MouseDown += Form1_MouseDown;
-		    gViewer.MouseClick += (sender, args) =>
-		    {
-			    SelectActiveNodeInModelView();
-		    };
-		    schemaService = ServiceManager.Services.GetService<WorkbenchSchemaService>();
 		}
 
-        private bool SelectActiveNodeInModelView()
+		protected override void Dispose(bool disposing)
         {
-	        if (gViewer.SelectedObject is Node node)
+	        if (disposing)
 	        {
-		        Guid nodeId = Guid.Parse(node.Id);
-		        var schemaItem = persistenceProvider.RetrieveInstance(
-			        typeof(AbstractSchemaItem),
-			        new Key(nodeId))
-			        as AbstractSchemaItem;
-		        if (schemaItem != null)
-		        {
-			        schemaService.SelectItem(schemaItem);
-			        Guid activeNodeId = Guid.Parse(schemaService.ActiveNode.NodeId);
-			        return nodeId == activeNodeId;
-		        }
+		        internalEditor.Dispose();
 	        }
 
-	        return false;
+	        base.Dispose(disposing);
         }
+
 		#region Windows Form Designer generated code
 		/// <summary>
 		/// Required method for Designer support - do not modify
@@ -145,6 +130,8 @@ namespace Origam.Workbench.Editors
 
 		}
 
+		#endregion
+
 		private void GViewerOnDoubleClick(object sender, EventArgs e)
 		{
 			GViewer viewer = sender as GViewer;
@@ -161,151 +148,32 @@ namespace Origam.Workbench.Editors
 				}
 			}
 		}
-
-		#endregion
-
+		
 		protected override void ViewSpecificLoad(object objectToLoad)
 		{
-			if (!(objectToLoad is ISchemaItem graphParent)) return;
-			
-			_factory= new DiagramFactory(graphParent);
-			gViewer.Graph = _factory.Draw();
-			Guid graphParentId = graphParent.Id;
-			
-			persistenceProvider.InstancePersisted += (sender, persistedObject) =>
+			switch (objectToLoad)
 			{
-				OnInstancePersisted(graphParentId, persistedObject);
-			};
-		}
-
-		private void OnInstancePersisted(Guid graphParentId, IPersistent persistedObject)
-		{
-			if (!(persistedObject is AbstractSchemaItem persistedSchemaItem)) return;
-			
-			var upToDateGraphParent =
-				persistenceProvider.RetrieveInstance(
-						typeof(AbstractSchemaItem),
-						new Key(graphParentId))
-					as AbstractSchemaItem;
-
-			bool childPersisted = upToDateGraphParent
-				.ChildrenRecursive
-				.Any(x => x.Id == persistedSchemaItem.Id);
-			
-			if (childPersisted)
-			{
-				Node node = gViewer.Graph.FindNode(persistedSchemaItem.Id.ToString());
-				if (node == null)
-				{
-					_factory = new DiagramFactory(upToDateGraphParent);
-					gViewer.Graph = _factory.Draw();
-				}
-				else
-				{
-					node.LabelText = persistedSchemaItem.Name;
-					gViewer.Redraw();
-				}
-				return;
-			}
-			
-			if (persistedSchemaItem.IsDeleted)
-			{
-				Node node = gViewer.Graph.FindNode(persistedSchemaItem.Id.ToString());
-				if (node == null) return;
-				
-				IViewerNode viewerNode = gViewer.FindViewerNode(node);
-				gViewer.RemoveNode(viewerNode, true);
-				gViewer.Graph.RemoveNodeEverywhere(node);
+				case IWorkflowBlock workflowBlock:
+					internalEditor = new WorkFlowDiagramEditor(
+						graphParentId: workflowBlock.Id,
+						gViewer: gViewer,
+						parentForm: this,
+						persistenceProvider: persistenceProvider,
+						factory: new WorkFlowDiagramFactory());
+					break;
+				case IContextStore contextStore:
+					internalEditor = new GeneralDiagramEditor<IContextStore>(
+						gViewer: gViewer,
+						schemaItem: contextStore,
+						factory: new ContextStoreDiagramFactory(persistenceProvider));
+					break;
+				case ISchemaItem schemaItem:
+					internalEditor = new GeneralDiagramEditor<ISchemaItem>(
+						gViewer: gViewer, 
+						schemaItem: schemaItem, 
+						factory: new GeneralDiagramFactory());
+					break;
 			}
 		}
-
-		void Form1_MouseDown(object sender, MsaglMouseEventArgs e)
-	    {
-	        if (e.RightButtonIsPressed && !e.Handled)
-	        {
-		        _mouseRightButtonDownPoint = new ClickPoint( gViewer, e);
-
-	            ContextMenuStrip cm = BuildContextMenu();
-                cm.Show(this,_mouseRightButtonDownPoint.InScreenSystem);
-	        }
-	    }
-
-		private bool IsDeleteMenuItemAvailable(DNode objectUnderMouse)
-		{
-			if (objectUnderMouse == null) return false;
-
-			List<IViewerObject> highLightedEntities = gViewer.Entities
-				.Where(x => x.MarkedForDragging)
-				.ToList();
-			if (highLightedEntities.Count != 1) return false;
-			if (!(highLightedEntities[0] is IViewerNode viewerNode))return false;
-			
-			Subgraph topWorkFlowSubGraph = gViewer.Graph.RootSubgraph.Subgraphs.FirstOrDefault();
-			if (viewerNode.Node == topWorkFlowSubGraph) return false;
-			return objectUnderMouse.Node == viewerNode.Node;
-		}
-
-		private bool IsNewMenuAvailable(DNode objectUnderMouse)
-		{
-			if (objectUnderMouse == null) return false;
-			if (!(objectUnderMouse.Node is Subgraph)) return false;
-			List<IViewerObject> highLightedEntities = gViewer.Entities
-				.Where(x => x.MarkedForDragging)
-				.ToList();
-			if (highLightedEntities.Count != 1) return false;
-			if (!(highLightedEntities[0] is IViewerNode viewerNode))return false;
-			return objectUnderMouse.Node == viewerNode.Node;
-		}
-
-		protected virtual ContextMenuStrip BuildContextMenu()
-        {
-	        var objectUnderMouse = gViewer.GetObjectAt(_mouseRightButtonDownPoint.InScreenSystem) as DNode;
-
-	        var contextMenu = new AsContextMenu(WorkbenchSingleton.Workbench);
-	        
-            var deleteMenuItem = new ToolStripMenuItem();
-            deleteMenuItem.Text = "Delete";
-            deleteMenuItem.Image = ImageRes.icon_delete;
-            deleteMenuItem.Click += DeleteNode_Click;
-            deleteMenuItem.Enabled = IsDeleteMenuItemAvailable(objectUnderMouse);
-
-            ToolStripMenuItem newMenu = new ToolStripMenuItem("New");
-            var builder = new SchemaItemEditorsMenuBuilder();
-            var submenuItems = builder.BuildSubmenu(null);
-	        newMenu.DropDownItems.AddRange(submenuItems);
-            newMenu.Image = ImageRes.icon_new;
-            newMenu.Enabled = IsNewMenuAvailable(objectUnderMouse);
-			
-	        contextMenu.AddSubItem(newMenu);
-	        contextMenu.AddSubItem(deleteMenuItem);
-	        
-            return contextMenu;
-	    }
-
-        private void DeleteNode_Click(object sender, EventArgs e)
-        { 
-	        bool nodeSelected = SelectActiveNodeInModelView();
-
-	        if (nodeSelected)
-	        {
-		        new DeleteActiveNode().Run();
-	        }
-	        else
-	        {
-		        throw new Exception("Could not delete node because it is not selected in the tree.");
-	        }
-        }
-        
-        class ClickPoint
-        {
-	        public Point InMsaglSystem { get; }
-	        public System.Drawing.Point InScreenSystem { get;}
-
-	        public ClickPoint(GViewer gViewer,  MsaglMouseEventArgs e)
-	        {
-		        InMsaglSystem = gViewer.ScreenToSource(e);
-		        InScreenSystem = new System.Drawing.Point(e.X, e.Y);
-	        }
-        }
 	}
 }

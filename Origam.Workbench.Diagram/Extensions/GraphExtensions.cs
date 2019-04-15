@@ -20,6 +20,14 @@ namespace Origam.Workbench.Diagram.Extensions
 		    }
 	    }
 
+	    public static Subgraph FindParentSubGraph(this Graph graph, Node node)
+	    {
+		    return graph
+			    .RootSubgraph
+			    .GetSubGraphs()
+			    .SingleOrDefault(subgraph => subgraph.Nodes.Contains(node));
+	    }
+
 	    public static IEnumerable<Subgraph> GetSubGraphs(this Subgraph subGraph)
         {
         	foreach (Subgraph childSubGraph1 in subGraph.Subgraphs)
@@ -31,5 +39,23 @@ namespace Origam.Workbench.Diagram.Extensions
         	}
         	yield return subGraph;
         }
+	    
+	    public static IEnumerable<Node> GetAllNodes(this Subgraph subGraph)
+	    {
+		    foreach (Subgraph childSubGraph in subGraph.Subgraphs)
+		    {
+			    foreach (Node childNode in GetAllNodes(childSubGraph))
+			    {
+				    yield return childNode;
+			    }
+		    }
+
+		    foreach (Node node in subGraph.Nodes)
+		    {
+			    yield return node;
+		    }
+
+		    yield return subGraph;
+	    }
     }
 }
