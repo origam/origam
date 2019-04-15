@@ -1,6 +1,6 @@
 ﻿#region license
 /*
-Copyright 2005 - 2017 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -75,7 +75,6 @@ namespace Origam.DA.Service
             set => origamXmlManager.OpenDocument = value;
         }
 
-        public OrigamPath NewPath { get; set; }
         public IEnumerable<FileInfo> ExternalFiles => externalFileManger
             .Files
             .Select(filePath => new FileInfo(filePath));
@@ -95,8 +94,6 @@ namespace Origam.DA.Service
             origamXmlManager.ParentFolderIds;
 
         private bool IsEmpty => ContainedObjects.Count == 0;
-        public virtual bool MultipleFilesCanBeInSingleFolder => true;
-
         
         public override string ToString() => Path.Absolute;
 
@@ -115,8 +112,7 @@ namespace Origam.DA.Service
             origamXmlManager = new OrigamXmlManager(
                 path, 
                 new ParentFolders(parentFolderIds, path),
-                externalFileManger,
-                origamPathFactory);
+                externalFileManger);
         }
 
         public OrigamFile(OrigamPath path, IDictionary<ElementName, Guid> parentFolderIds,
@@ -172,28 +168,12 @@ namespace Origam.DA.Service
             }
             origamFileManager.WriteToDisc(this, DeferredSaveDocument);
             MakeNewReferenceFileIfNeeded(Path.Directory);
-            if (NewPath != null)
-            {
-                MoveToNewPath();
-            }
             origamXmlManager.InvalidateCache();
         }
 
         public void ClearCache()
         {
             origamXmlManager.InvalidateCache();
-        }
-
-        private void MoveToNewPath()
-        {
-            IEnumerable<ExternalFilePath> externalPaths = origamXmlManager.GetExternalFilePaths();
-            externalFileManger.MoveFiles(externalPaths,this);
-            DirectoryInfo oldDirectory = Path.Directory;
-            origamXmlManager.UpdateExternalLinks(this);
-            origamFileManager.WriteToDisc(this, DeferredSaveDocument);
-            origamFileManager.MoveFile(this);
-            origamFileManager.RemoveDirectoryIfEmpty(oldDirectory);
-            MakeNewReferenceFileIfNeeded(Path.Directory);
         }
 
         public Maybe<ExternalFile> GetExternalFile(FileInfo externalFile)

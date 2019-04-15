@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -41,8 +41,7 @@ namespace Origam.Workflow
 		private static WorkflowHost _defaultHost = new WorkflowHost();
 
 		private AsThreadPool _threadPool = new AsThreadPool();
-        public Boolean ParentTrace { get; set; } = false;
-
+      
 		private ArrayList _runningWorkflows = new ArrayList();
 		private Hashtable _runningForms = new Hashtable();
 		private bool _supportsUI = false;
@@ -109,7 +108,10 @@ namespace Origam.Workflow
 				if(WorkflowFinished != null)
 				{
 					this.WorkflowFinished(this, new WorkflowHostEventArgs(engine, exception));
-					log.Error(exception);
+                    if(exception != null)
+                    {
+                        log.Error(exception);
+                    }
 				}
 			}
 			finally

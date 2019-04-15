@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -435,6 +435,10 @@ namespace Origam.Workbench.Editors
 
 		protected override void ViewSpecificLoad(object objectToLoad)
 		{
+			txtName.TextChanged -= txtName_TextChanged;
+			txtCopyright.TextChanged -= txtCopyright_TextChanged;
+			txtDescription.TextChanged -= txtDescription_TextChanged;
+			
 			if(! (objectToLoad is SchemaExtension)) throw new ArgumentOutOfRangeException("objectToLoad", objectToLoad, ResourceUtils.GetString("ErrorEditPackagesOnly"));
 
 			_package = objectToLoad as SchemaExtension;
@@ -446,6 +450,10 @@ namespace Origam.Workbench.Editors
 			txtId.Text = _package.PrimaryKey["Id"].ToString();
 
 			LoadReferences();
+			
+			txtName.TextChanged += txtName_TextChanged;
+			txtCopyright.TextChanged += txtCopyright_TextChanged;
+			txtDescription.TextChanged += txtDescription_TextChanged;
 		}
 
 		public override void SaveObject()

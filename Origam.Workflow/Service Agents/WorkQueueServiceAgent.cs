@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -94,7 +94,7 @@ namespace Origam.Workflow
             // check input parameters
             if (!(this.Parameters["NotificationTemplateId"] is Guid))
                 throw new InvalidCastException(ResourceUtils.GetString("ErrorNotificationTemplateIdNotGuid"));
-            if (!(this.Parameters["NotificationSource"] is XmlDocument))
+            if (!(this.Parameters["NotificationSource"] is IXmlContainer))
                 throw new InvalidCastException(ResourceUtils.GetString("ErrorNotificationSourceNotXmlDocument"));
 
             WorkQueue.OrigamNotificationContactData recipientDataDS = null;
@@ -135,7 +135,7 @@ namespace Origam.Workflow
         private void Add(IWorkQueueService wqs)
         {
             // Check input parameters
-            if (!(this.Parameters["Data"] is XmlDocument))
+            if (!(this.Parameters["Data"] is IXmlContainer))
                 throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDocument"));
 
             if (!(this.Parameters["QueueName"] is string))

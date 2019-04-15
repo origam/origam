@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -49,14 +49,20 @@ namespace Origam.Schema.WorkflowModel
 		TraceClientAndArchitect = 3
 	}
 
-	/// <summary>
+    public enum Trace
+    {
+        Yes,
+        No,
+        InheritFromParent
+    }
+        
+    /// <summary>
 	/// Summary description for IWorkflowStep.
 	/// </summary>
 	public interface IWorkflowStep : ISchemaItem
 	{
 		WorkflowStepTraceLevel TraceLevel{get; set;}
-		bool Trace{get;}
-        bool InheritTrace { get;}
+        Trace Trace { get;}
 		StartRule StartConditionRule{get; set;}
 		IContextStore StartConditionRuleContextStore{get; set;}
 		IEndRule ValidationRule{get; set;}

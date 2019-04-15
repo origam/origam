@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -55,8 +55,8 @@ namespace Origam.Workflow
 		private IParameterService _parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 		private Exception _exception;
 		private Exception _caughtException;
-
-		private readonly OperationTimer localOperationTimer = new OperationTimer();
+        public Boolean Trace { get; set; } = false;
+        private readonly OperationTimer localOperationTimer = new OperationTimer();
 
 		public WorkflowEngine()
 		{
@@ -455,7 +455,7 @@ namespace Origam.Workflow
 					this.Notification = "";
 					this.ResultMessage = "";
 
-					if (this.WorkflowBlock.Trace)
+					if (IsTrace(this.WorkflowBlock))
 					{
 						_tracingService.TraceWorkflow(this.WorkflowInstanceId,
 							(Guid) this.WorkflowBlock.PrimaryKey["Id"],
@@ -516,7 +516,7 @@ namespace Origam.Workflow
 						{
 							log.Debug("Passing input context");
 						}
-						if (this.WorkflowBlock.Trace)
+						if (IsTrace(this.WorkflowBlock))
 						{
 							_tracingService.TraceStep(this.WorkflowInstanceId,
 								(this.WorkflowBlock as AbstractSchemaItem).Path,
@@ -556,7 +556,23 @@ namespace Origam.Workflow
 			}
 		}
 
-		private void ResumeWorkflow()
+        public bool IsTrace(IWorkflowStep workflowStep)
+        {
+            switch (workflowStep.Trace)
+            {
+                // when all workflow has InheritFromParent then gets Trace from Parent Workflow
+                case Schema.WorkflowModel.Trace.InheritFromParent:
+                    return Trace;
+                case Schema.WorkflowModel.Trace.Yes:
+                    return true;
+                case Schema.WorkflowModel.Trace.No:
+                    return false;
+                default:
+                    return false;
+            }
+        }
+
+        private void ResumeWorkflow()
 		{
 			ArrayList tasks = this.WorkflowBlock.ChildItemsByType(WorkflowTask.ItemTypeConst);
 
@@ -681,7 +697,7 @@ namespace Origam.Workflow
 				}
 			}
 
-			if(this.WorkflowBlock.Trace)
+			if(IsTrace(this.WorkflowBlock))
 			{
 				string recursiveExceptionText = ex.Message;
 				Exception recursiveEx = ex;
@@ -955,6 +971,7 @@ namespace Origam.Workflow
 
 			call.IterationTotal = this.IterationTotal;
 			call.IterationNumber = this.IterationNumber;
+            call.Trace = this.Trace;
 			return call;
 		}
 
@@ -1262,7 +1279,7 @@ namespace Origam.Workflow
 							null);
 					}
 
-					if(step == null && this.WorkflowBlock.Trace)
+					if(step == null && IsTrace(this.WorkflowBlock))
 					{
 						_tracingService.TraceStep(
 							this.WorkflowInstanceId,
@@ -1298,16 +1315,6 @@ namespace Origam.Workflow
 				log.Info("Finished merging context '" + contextName + "'" + stepNameLog);
 			}
 		}
-
-        public bool IsTrace(IWorkflowStep task)
-        {
-            if (task.InheritTrace && !task.Trace)
-            {
-                //need take trace from workflow before.
-                return Host.ParentTrace;
-            }
-            return task.Trace;
-        }
 
         private void ProcessRulesTimed(Key resultContextKey,
 			DataStructureRuleSet ruleSet,IWorkflowStep step)

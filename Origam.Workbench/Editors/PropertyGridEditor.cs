@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -70,7 +70,7 @@ namespace Origam.Workbench.Editors
 			this.propertyGrid1.LineColor = OrigamColorScheme.PropertyGridHeaderColor;
 			this.propertyGrid1.HelpBackColor = OrigamColorScheme.MdiBackColor;;
 			this.propertyGrid1.HelpForeColor = OrigamColorScheme.MdiForeColor;
-            this.propertyGrid1.SelectedItemWithFocusBackColor = OrigamColorScheme.TabActiveStartColor;
+//            this.propertyGrid1.SelectedItemWithFocusBackColor = OrigamColorScheme.TabActiveStartColor;
         }
 
 

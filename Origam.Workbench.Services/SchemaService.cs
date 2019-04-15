@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -238,7 +238,7 @@ namespace Origam.Workbench.Services
 
 			if(persistence != null)
 			{
-				persistence.SchemaProvider.InstancePersisted -= new EventHandler(SchemaProvider_InstancePersisted);
+				persistence.SchemaProvider.InstancePersisted -= SchemaProvider_InstancePersisted;
 			}
 
 			RemoveAllProviders();
@@ -262,7 +262,7 @@ namespace Origam.Workbench.Services
 			if( ! UnloadSchema()) return false;
 		
 			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			persistence.SchemaProvider.InstancePersisted += new EventHandler(SchemaProvider_InstancePersisted);
+			persistence.SchemaProvider.InstancePersisted += SchemaProvider_InstancePersisted;
 
 			ArrayList ids = new ArrayList();
 
@@ -313,7 +313,7 @@ namespace Origam.Workbench.Services
 			if( ! UnloadSchema()) return false;
 		
 			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			persistence.SchemaProvider.InstancePersisted += new EventHandler(SchemaProvider_InstancePersisted);
+			persistence.SchemaProvider.InstancePersisted += SchemaProvider_InstancePersisted;
 
 			SchemaExtension extension = persistence.LoadSchema(schemaExtensionId, extraExtensionId, loadDocumentation, loadDeploymentScripts, null);
 			
@@ -549,9 +549,9 @@ namespace Origam.Workbench.Services
 		#endregion
 
 		#region Event Handlers
-		protected virtual void SchemaProvider_InstancePersisted(object sender, EventArgs e)
+		protected virtual void SchemaProvider_InstancePersisted(object sender, IPersistent persistedObject)
 		{
-			OnSchemaChanged(sender, e);
+			OnSchemaChanged(persistedObject, EventArgs.Empty);
 		}
 		#endregion
 	}

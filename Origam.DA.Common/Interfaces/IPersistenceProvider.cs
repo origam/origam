@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -29,7 +29,7 @@ namespace Origam.DA.ObjectPersistence
 	/// </summary>
 	public interface IPersistenceProvider : ICloneable, IDisposable
 	{
-		event EventHandler InstancePersisted;
+		event EventHandler<IPersistent> InstancePersisted;
 		void OnTransactionEnded(object sender);
 
 		ICompiledModel CompiledModel {get; set;}
@@ -80,7 +80,8 @@ namespace Origam.DA.ObjectPersistence
 		void FlushCache();
 
 		void DeletePackage(Guid packageId);
-
+		bool  IsInTransaction { get; }
+		void RunInTransaction(Action action);
         void BeginTransaction();
         void EndTransaction();
 	    void EndTransactionDontSave();

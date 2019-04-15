@@ -1,6 +1,6 @@
 ﻿#region license
 /*
-Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -43,7 +43,7 @@ namespace Origam.Gui
                     typeof(AbstractDataEntity), new ModelElementKey(entityId));
                 ArrayList actionsSorted = entity.ChildItemsByTypeRecursive(
                     EntityUIAction.ItemTypeConst);
-                actionsSorted.Sort();
+                actionsSorted.Sort(new EntityUIActionOrderComparer());
                 foreach (EntityUIAction action in actionsSorted)
                 {
                     if (RenderTools.ShouldRenderAction(

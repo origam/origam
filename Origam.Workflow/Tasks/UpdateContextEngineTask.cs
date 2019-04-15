@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -48,7 +48,7 @@ namespace Origam.Workflow.Tasks
 			UpdateContextTask updateTask = this.Step as UpdateContextTask;
 			Key outputCtxtKey = updateTask.OutputContextStore.PrimaryKey;
 
-			if (this.Step.Trace)
+			if (Engine.IsTrace(Step))
 			{
 				tracingService.TraceStep(
 					this.Engine.WorkflowInstanceId,
@@ -116,8 +116,8 @@ namespace Origam.Workflow.Tasks
 			}
 
 
-			if (this.Step.Trace)
-			{
+            if (Engine.IsTrace(Step))
+            {
 				tracingService.TraceStep(
 					this.Engine.WorkflowInstanceId,
 					(this.Step as AbstractSchemaItem).Path,
@@ -138,8 +138,8 @@ namespace Origam.Workflow.Tasks
 						as IDataDocument,
 					ruleSet,
 					null);
-				if (this.Step.Trace)
-				{
+                if (Engine.IsTrace(Step))
+                {
 					tracingService.TraceStep(
 						this.Engine.WorkflowInstanceId,
 						(this.Step as AbstractSchemaItem).Path,

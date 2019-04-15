@@ -94,7 +94,7 @@
     </exec>
     <exec workingdir="c:/TeamCity/src/origam-source" program="${git-exec}" output="../rn/release-notes__Desktop_${projectSuffix}_${projectName}_${configurationSuffix}_${tc_buildNumber}_artifacts__backend__${branchMarker}.txt">
         <arg value="log"/>
-        <!--<arg value="^origin/${previousBranch}"/>-->
+        <arg value="^origin/${previousBranch}"/>
         <arg value="origin/${currentBranch}"/>
         <arg value="--oneline"/>
         <arg value="--no-merges"/>
@@ -111,7 +111,7 @@
     </exec>
     <exec workingdir="c:/TeamCity/src/origam-source" program="${git-exec}" output="../rn/release-notes-backend-${currentBranch}.txt">
       <arg value="log"/>
-      <!--<arg value="^origin/${previousBranch}"/>-->
+      <arg value="^origin/${previousBranch}"/>
       <arg value="origin/${currentBranch}"/>
       <arg value="--oneline"/>
       <arg value="--no-merges"/>

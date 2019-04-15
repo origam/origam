@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -285,7 +285,7 @@ namespace Origam.Schema.GuiModel
 		{
 			if(obj is EntityUIAction compared)
 			{
-				return this.Order.CompareTo(compared.Order);
+				return this.Name.CompareTo(compared.Name);
 			}
 			else
 			{
@@ -294,4 +294,11 @@ namespace Origam.Schema.GuiModel
 		}
 		#endregion
 	}
+
+    public class EntityUIActionOrderComparer : IComparer
+    {
+        public int Compare(object x, object y) 
+            => (x as EntityUIAction).Order.CompareTo(
+                (y as EntityUIAction).Order);
+    }
 }

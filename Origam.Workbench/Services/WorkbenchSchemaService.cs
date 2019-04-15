@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -156,13 +156,13 @@ namespace Origam.Workbench.Services
 			}
 		}
 
-		override protected void SchemaProvider_InstancePersisted(object sender, EventArgs e)
+		override protected void SchemaProvider_InstancePersisted(object sender, IPersistent persistedObject)
 		{
-            if (this.SchemaBrowser != null && sender is IBrowserNode browserNode)
+            if (this.SchemaBrowser != null && persistedObject is IBrowserNode browserNode)
             {
                 this.SchemaBrowser.EbrSchemaBrowser.RefreshItem(browserNode);
             }
-			base.SchemaProvider_InstancePersisted(sender, e);
+			base.SchemaProvider_InstancePersisted(sender, persistedObject);
 		}
 
         public override bool SupportsSave
@@ -230,5 +230,10 @@ namespace Origam.Workbench.Services
             this.OnSchemaChanged(this, EventArgs.Empty);
             if (statusBar != null) statusBar.SetStatusText("");
         }
+
+		public void SelectItem(AbstractSchemaItem schemaItem)
+		{
+			SchemaBrowser.EbrSchemaBrowser.SelectItem(schemaItem);
+		}
 	}
 }

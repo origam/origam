@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -59,5 +59,7 @@ namespace Origam.Schema
 		/// need to be populated by predefined names.
 		/// </summary>
 		Type[] NameableTypes {get;}
+
+		event Action<ISchemaItem> ItemCreated;
 	}
 }

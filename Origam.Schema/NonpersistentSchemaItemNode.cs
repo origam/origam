@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -215,7 +215,7 @@ namespace Origam.Schema
 			{
 				throw new Exception(ResourceUtils.GetString("ErrorUnknownParent"));
 			}
-
+			ItemCreated?.Invoke(newItem);
 			return newItem;
 		}
 
@@ -275,6 +275,9 @@ namespace Origam.Schema
 				return NewItemTypes;
 			}
 		}
+
+		public event Action<ISchemaItem> ItemCreated;
+
 		#endregion
 
 		private string SchemaItemDescription(Type type)

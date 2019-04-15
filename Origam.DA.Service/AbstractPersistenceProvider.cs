@@ -1,4 +1,25 @@
-﻿
+#region license
+/*
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +36,14 @@ namespace Origam.DA.ObjectPersistence
             set => throw new NotImplementedException();
         }
 
-        public event EventHandler InstancePersisted;
+        public event EventHandler<IPersistent> InstancePersisted;
+
+        public void RunInTransaction(Action action)
+        {
+            BeginTransaction();
+            action();
+            EndTransaction();
+        }
 
         public virtual void BeginTransaction()
         {
@@ -24,6 +52,7 @@ namespace Origam.DA.ObjectPersistence
         public abstract object Clone();
 
         public abstract void DeletePackage(Guid packageId);
+        public virtual bool IsInTransaction { get; }
 
         public abstract void Dispose();
 
@@ -32,7 +61,7 @@ namespace Origam.DA.ObjectPersistence
             while (transactionEndEventQueue.Count > 0)
             {
                 object sender = transactionEndEventQueue.Dequeue();
-                InstancePersisted?.Invoke(sender, EventArgs.Empty);
+                InstancePersisted?.Invoke(this, (IPersistent)sender);
             }
         }
 
@@ -77,7 +106,7 @@ namespace Origam.DA.ObjectPersistence
         {
             if (!InTransaction)
             { 
-                InstancePersisted?.Invoke(obj, EventArgs.Empty);
+                InstancePersisted?.Invoke(this, obj);
             }
         }
 

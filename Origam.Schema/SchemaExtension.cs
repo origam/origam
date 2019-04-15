@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2018 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -57,6 +57,36 @@ namespace Origam.Schema
 			this._childNodes.Add(_userInterfaceModelGroup);
 			this._childNodes.Add(_apiModelGroup);
 			this._childNodes.Add(_commonModelGroup);
+		}
+
+		public void Persist()
+		{
+			Action persistsAction = () =>
+			{
+				if (!IsDeleted)
+				{
+					base.Persist();
+				}
+
+				foreach (var packageReference in References)
+				{
+					packageReference.Persist();
+				}
+
+				if (IsDeleted)
+				{
+					base.Persist();
+				}
+			};
+			
+			if (PersistenceProvider.IsInTransaction)
+			{
+				persistsAction();
+			}
+			else
+			{
+				PersistenceProvider.RunInTransaction(persistsAction);
+			}
 		}
 
 		public override string ToString() => this.Name;
