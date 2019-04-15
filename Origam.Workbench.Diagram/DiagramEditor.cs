@@ -88,7 +88,6 @@ namespace Origam.Workbench.Editors
             this.gViewer.BuildHitTree = true;
             this.gViewer.CurrentLayoutMethod = Microsoft.Msagl.GraphViewerGdi.LayoutMethod.UseSettingsOfTheGraph;
             this.gViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gViewer.EdgeInsertButtonVisible = true;
             this.gViewer.FileName = "";
             this.gViewer.ForwardEnabled = false;
             this.gViewer.Graph = null;

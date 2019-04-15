@@ -9,6 +9,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
         public GeneralDiagramEditor( GViewer gViewer, T schemaItem, IDiagramFactory<T> factory)
         {           
             gViewer.Graph = factory.Draw(schemaItem);
+            gViewer.EdgeInsertButtonVisible = false;
         }
 
         public void Dispose()

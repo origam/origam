@@ -48,6 +48,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 					return sourcesParent == targetsParent;
 				});
 
+			gViewer.EdgeInsertButtonVisible = true;
+			
 			this.graphParentId = graphParentId;
 			this.gViewer = gViewer;
 			this.parentForm = parentForm;
