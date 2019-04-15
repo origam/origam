@@ -29,7 +29,8 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for EntitySecurityFilterReference.
 	/// </summary>
-	[SchemaItemDescription("Row Level Security Filter", "Row Level Security", 5)]
+	[SchemaItemDescription("Row Level Security Filter", "Row Level Security",
+        "icon_row-level-security-filter.png")]
     [HelpTopic("Row+Level+Security+Filters")]
 	[XmlModelRoot(ItemTypeConst)]
 	[DefaultProperty("Filter")]
@@ -51,14 +52,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "5";
 			}
 		}
 

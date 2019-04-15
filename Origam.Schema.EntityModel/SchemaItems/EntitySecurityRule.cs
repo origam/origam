@@ -29,7 +29,8 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for EntitySecurityRule.
 	/// </summary>
-	[SchemaItemDescription("Row Level Security Rule", "Row Level Security", 5)]
+	[SchemaItemDescription("Row Level Security Rule", "Row Level Security", 
+        "icon_row-level-security-rule.png")]
     [HelpTopic("Row+Level+Security+Rules")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class EntitySecurityRule : AbstractEntitySecurityRule

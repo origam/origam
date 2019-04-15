@@ -31,7 +31,7 @@ namespace Origam.Schema.MenuModel
 	/// <summary>
 	/// Summary description for EntitySecurityRule.
 	/// </summary>
-	[SchemaItemDescription("Menu Action", "UI Actions", 69)]
+	[SchemaItemDescription("Menu Action", "UI Actions", "icon_menu-action.png")]
     [HelpTopic("Menu+Action")]
 	public class EntityMenuAction : EntityUIAction
 	{
@@ -42,14 +42,6 @@ namespace Origam.Schema.MenuModel
 		public EntityMenuAction(Key primaryKey) : base(primaryKey)	{}
 	
 		#region Overriden AbstractDataEntityColumn Members
-		public override string Icon
-		{
-			get
-			{
-				return "69";
-			}
-		}
-
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
 			dependencies.Add(this.Menu);

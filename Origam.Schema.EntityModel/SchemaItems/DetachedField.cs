@@ -31,7 +31,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for DetachedField.
 	/// </summary>
-	[SchemaItemDescription("Virtual Field", "Fields", 1)]
+	[SchemaItemDescription("Virtual Field", "Fields", "icon_virtual-field.png")]
     [HelpTopic("Virtual+Field")]
 	public class DetachedField : AbstractDataEntityColumn, IRelationReference
 	{
@@ -123,14 +123,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return false;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "1";
 			}
 		}
 

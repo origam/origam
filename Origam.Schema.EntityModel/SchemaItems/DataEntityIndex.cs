@@ -36,7 +36,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for DataEntityIndex.
 	/// </summary>
-	[SchemaItemDescription("Index", "Indexes", 43)]
+	[SchemaItemDescription("Index", "Indexes", "icon_index.png")]
     [HelpTopic("Indexes")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class DataEntityIndex : AbstractSchemaItem, ISchemaItemFactory
@@ -90,14 +90,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return false;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "43";
 			}
 		}
 

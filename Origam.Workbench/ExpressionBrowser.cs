@@ -285,6 +285,23 @@ namespace Origam.Workbench
             this.imgList.Images.SetKeyName(142, "menu_parameter.png");
             this.imgList.Images.SetKeyName(143, "menu_report.png");
             this.imgList.Images.SetKeyName(144, "menu_workflow.png");
+            this.imgList.Images.SetKeyName(145, "icon_agregated-field.png");
+            this.imgList.Images.SetKeyName(146, "icon_conditional-formatting-rule.png");
+            this.imgList.Images.SetKeyName(147, "icon_database-field.png");
+            this.imgList.Images.SetKeyName(148, "icon_dropdown-action.png");
+            this.imgList.Images.SetKeyName(149, "icon_edit-in-diagram.png");
+            this.imgList.Images.SetKeyName(150, "icon_filter.png");
+            this.imgList.Images.SetKeyName(151, "icon_function-call.png");
+            this.imgList.Images.SetKeyName(152, "icon_index.png");
+            this.imgList.Images.SetKeyName(153, "icon_lookup-field.png");
+            this.imgList.Images.SetKeyName(154, "icon_menu-action.png");
+            this.imgList.Images.SetKeyName(155, "icon_parameter.png");
+            this.imgList.Images.SetKeyName(156, "icon_relationship.png");
+            this.imgList.Images.SetKeyName(157, "icon_report-action.png");
+            this.imgList.Images.SetKeyName(158, "icon_row-level-security-filter.png");
+            this.imgList.Images.SetKeyName(159, "icon_row-level-security-rule.png");
+            this.imgList.Images.SetKeyName(160, "icon_sequential-workflow-action.png");
+            this.imgList.Images.SetKeyName(161, "icon_virtual-field.png");
             // 
             // cboFilter
             // 

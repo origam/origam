@@ -34,7 +34,8 @@ namespace Origam.Schema.MenuModel
 	/// <summary>
 	/// Summary description for EntitySecurityRule.
 	/// </summary>
-	[SchemaItemDescription("Sequential Workflow Action", "UI Actions", 19)]
+	[SchemaItemDescription("Sequential Workflow Action", "UI Actions",
+        "icon_sequential-workflow-action.png")]
     [HelpTopic("Sequential+Workflow+Action")]
 	public class EntityWorkflowAction : EntityUIAction
 	{
@@ -51,14 +52,6 @@ namespace Origam.Schema.MenuModel
 	
 		#region Overriden AbstractDataEntityColumn Members
 		
-		public override string Icon
-		{
-			get
-			{
-				return "19";
-			}
-		}
-
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
 			dependencies.Add(this.Workflow);

@@ -31,7 +31,8 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Maps a physical database field to an entity column.
 	/// </summary>
-	[SchemaItemDescription("Database Field", "Fields", 51)]
+	[SchemaItemDescription("Database Field", "Fields", 
+        "icon_database-field.png")]
     [HelpTopic("Database+Field")]
 	public class FieldMappingItem : AbstractDataEntityColumn, ISchemaItemFactory,
         IDatabaseDataTypeMapping
@@ -126,14 +127,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return false;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "51";
 			}
 		}
 
