@@ -88,7 +88,6 @@ namespace Origam.Workbench.Editors
             this.gViewer.BuildHitTree = true;
             this.gViewer.CurrentLayoutMethod = Microsoft.Msagl.GraphViewerGdi.LayoutMethod.UseSettingsOfTheGraph;
             this.gViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gViewer.EdgeInsertButtonVisible = true;
             this.gViewer.FileName = "";
             this.gViewer.ForwardEnabled = false;
             this.gViewer.Graph = null;
@@ -118,6 +117,7 @@ namespace Origam.Workbench.Editors
             this.gViewer.WindowZoomButtonPressed = false;
             this.gViewer.ZoomF = 1D;
             this.gViewer.ZoomWindowThreshold = 0.05D;
+            this.gViewer.SaveAsMsaglEnabled = false;
             // 
             // DiagramEditor
             // 
@@ -165,7 +165,8 @@ namespace Origam.Workbench.Editors
 					internalEditor = new GeneralDiagramEditor<IContextStore>(
 						gViewer: gViewer,
 						schemaItem: contextStore,
-						factory: new ContextStoreDiagramFactory(persistenceProvider));
+						factory: new ContextStoreDiagramFactory(
+							persistenceProvider,this));
 					break;
 				case ISchemaItem schemaItem:
 					internalEditor = new GeneralDiagramEditor<ISchemaItem>(
