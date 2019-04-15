@@ -53,6 +53,7 @@ namespace Origam.DA.Service
             NVARCHAR,
             INT,
             INTEGER,
+            COUNT
         }
 
         private struct SortOrder
@@ -3212,7 +3213,7 @@ namespace Origam.DA.Service
 					return "SUM";
 
 				case AggregationType.Count:
-					return "COUNT";
+					return getSql(ConvertSql.COUNT);
 
 				case AggregationType.Average:
 					return "AVG";

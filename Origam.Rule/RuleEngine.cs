@@ -1236,7 +1236,7 @@ namespace Origam.Rule
 			return true;
 		}
 
-		public int ReferenceCount(string entityId, string value)
+		public long ReferenceCount(string entityId, string value)
 		{
 			return core.DataService.ReferenceCount(new Guid(entityId), value, this.TransactionId);
 		}

@@ -2270,7 +2270,7 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private int _attachmentCount = 0;
+		private long _attachmentCount = 0;
 
 		private void UpdateAttachmentIcon(DataRow row)
 		{
@@ -2312,19 +2312,18 @@ namespace Origam.Gui.Win
 		{
 			IDataLookupService ls = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
 
-			int count = 0;
+			long count = 0;
 			foreach(RecordReference r in references.Values)
 			{
 				lock(ls)
 				{
 					object result = ls.GetDisplayText(new Guid("fbf2cadd-e529-401d-80ce-d68de0a89f13"), r.RecordId, false, false, null);
 
-					if(result is long)
+					if(result is int)
 					{
-						result = Convert.ToInt32((long)result);
+						result = (int)result;
 					}
-
-					count += (int)result;
+					count += (long)result;
 				}
 			}
 

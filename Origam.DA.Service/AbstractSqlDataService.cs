@@ -968,6 +968,12 @@ namespace Origam.DA.Service
 							result = (result.Equals(1));
 						}
 						break;
+                    case OrigamDataType.Long:
+                        if(result is int)
+                        {
+                            result = (long)(int)result;
+                        }
+                        break;
 				}
 
 				//					// Reset the transaction isolation level to its default. See the following from MSDN:

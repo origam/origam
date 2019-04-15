@@ -214,7 +214,7 @@ namespace Origam.Workbench.Services.CoreServices
 			return ds;
 		}
 
-		public static int ReferenceCount(Guid entityId, object value, string transactionId)
+		public static long ReferenceCount(Guid entityId, object value, string transactionId)
 		{
 			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 
@@ -226,7 +226,7 @@ namespace Origam.Workbench.Services.CoreServices
 
 			dataServiceAgent.Run();
 
-			int result = (int)dataServiceAgent.Result;
+			long result = (long)dataServiceAgent.Result;
 
 			return result;
 		}

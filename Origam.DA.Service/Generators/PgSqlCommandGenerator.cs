@@ -584,6 +584,8 @@ namespace Origam.DA.Service
                         return "AS VARCHAR";
                     case ConvertSql.INT:
                         return "AS INTEGER";
+                    case ConvertSql.COUNT:
+                        return "COUNT";
                 }
             
             throw new NotImplementedException();

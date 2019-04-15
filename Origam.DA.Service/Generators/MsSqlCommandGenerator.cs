@@ -632,6 +632,8 @@ namespace Origam.DA.Service
                     return "AS NVARCHAR";
                 case ConvertSql.INT:
                     return "AS INT";
+                case ConvertSql.COUNT:
+                    return "COUNT_BIG";
             }
 
             throw new NotImplementedException();
