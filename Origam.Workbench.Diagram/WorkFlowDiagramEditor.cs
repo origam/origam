@@ -24,7 +24,7 @@ namespace Origam.Workbench.Diagram
 
 	public class WorkFlowDiagramEditor: IDiagramEditor
     {
-      	private DiagramFactory _factory;
+      	private readonly WorkFlowDiagramFactory factory;
         private readonly GViewer gViewer;
         private readonly Form parentForm;
 
@@ -35,7 +35,7 @@ namespace Origam.Workbench.Diagram
         private readonly EdgeInsertionRule edgeInsertionRule;
 
         public WorkFlowDiagramEditor(Guid graphParentId, GViewer gViewer, Form parentForm,
-	        IPersistenceProvider persistenceProvider)
+	        IPersistenceProvider persistenceProvider, WorkFlowDiagramFactory factory)
 		{
 		    (gViewer as IViewer).MouseDown += OnMouseDown;
 		    gViewer.MouseClick += OnMouseClick;
@@ -57,9 +57,9 @@ namespace Origam.Workbench.Diagram
 			this.gViewer = gViewer;
 			this.parentForm = parentForm;
 			this.persistenceProvider = persistenceProvider;
-			
-			_factory = new DiagramFactory(UpToDateGraphParent);
-			gViewer.Graph = _factory.Draw();
+			this.factory = factory;
+
+			gViewer.Graph = factory.Draw(UpToDateGraphParent);
 
 			persistenceProvider.InstancePersisted += OnInstancePersisted;
 		}
@@ -135,9 +135,10 @@ namespace Origam.Workbench.Diagram
 		{
 			if (!(persistedObject is AbstractSchemaItem persistedSchemaItem)) return;
 			
-			bool childPersisted = UpToDateGraphParent
-				.ChildrenRecursive
-				.Any(x => x.Id == persistedSchemaItem.Id);
+			bool childPersisted = (UpToDateGraphParent as AbstractSchemaItem)
+				?.ChildrenRecursive
+				.Any(x => x.Id == persistedSchemaItem.Id)
+				?? false;
 			
 			if (childPersisted)
 			{
@@ -164,8 +165,7 @@ namespace Origam.Workbench.Diagram
 			Node node = gViewer.Graph.FindNode(persistedSchemaItem.Id.ToString());
 			if (node == null)
 			{
-				_factory = new DiagramFactory(UpToDateGraphParent);
-				gViewer.Graph = _factory.Draw();
+				gViewer.Graph = factory.Draw(UpToDateGraphParent);
 			}
 			else
 			{
@@ -174,11 +174,11 @@ namespace Origam.Workbench.Diagram
 			}
 		}
 
-		private AbstractSchemaItem UpToDateGraphParent =>
+		private IWorkflowBlock UpToDateGraphParent =>
 			persistenceProvider.RetrieveInstance(
-					typeof(AbstractSchemaItem),
+					typeof(IWorkflowBlock),
 					new Key(graphParentId))
-				as AbstractSchemaItem;
+				as IWorkflowBlock;
 		
 
 		private void RemoveEdge(Guid sourceId)
@@ -191,8 +191,7 @@ namespace Origam.Workbench.Diagram
 
 			if (edgeWasRemovedOutsideDiagram)
 			{
-				_factory = new DiagramFactory(UpToDateGraphParent);
-				gViewer.Graph = _factory.Draw();
+				gViewer.Graph = factory.Draw(UpToDateGraphParent);
 			}
 		}
 

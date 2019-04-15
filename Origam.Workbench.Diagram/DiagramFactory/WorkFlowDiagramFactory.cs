@@ -20,50 +20,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Microsoft.Msagl.Drawing;
 using System.Collections.Generic;
 
 namespace Origam.Workbench.Diagram
 {
-	public class DiagramFactory
+	public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock>
 	{
-	    private readonly ISchemaItem graphParent;
-
-        #region Constructors
-        public DiagramFactory(ISchemaItem graphParent)
-        {
-            this.graphParent = graphParent;
-        }
-		#endregion
-
 		private Graph graph;
 
 		#region Public Methods
-		public Graph Draw()
+		public Graph Draw(IWorkflowBlock graphParent)
 		{
 			graph = new Graph();
-			
-			if(graphParent is IWorkflowBlock workflowBlock)
-			{
-				DrawWorkflowDiagram(workflowBlock, null);
-			}
-			else
-			{
-				DrawUniSchemaDiagram(graphParent);
-			}
-
+			DrawWorkflowDiagram(graphParent, null);
 			return graph;
 		}
 		#endregion
 
 		#region Private Methods
-        private Node AddNode(string id,string label)
-        {
-            return AddNode(id, label, null);
-        }
-
 		public Node AddNode(string id, string label, Subgraph subGraph)
 		{
 			Node shape = graph.AddNode(id);
@@ -73,10 +49,10 @@ namespace Origam.Workbench.Diagram
 		}
 
 		#region Workflow Diagram
-		private Subgraph DrawWorkflowDiagram(IWorkflowBlock block, Subgraph parentSubgraph)
+		private Subgraph DrawWorkflowDiagram(IWorkflowBlock workFlowBlock, Subgraph parentSubgraph)
 		{
-            Subgraph subgraph = new Subgraph(block.NodeId);
-            subgraph.LabelText = block.Name;
+            Subgraph subgraph = new Subgraph(workFlowBlock.NodeId);
+            subgraph.LabelText = workFlowBlock.Name;
             if (parentSubgraph == null)
             {
                 this.graph.RootSubgraph.AddSubgraph(subgraph);
@@ -90,7 +66,7 @@ namespace Origam.Workbench.Diagram
 			//Node blockShape = this.AddBasicShape(block.Name, subgraph);
 			//ht.Add(block.PrimaryKey, blockShape);
 
-			foreach(IWorkflowStep step in block.ChildItemsByType(AbstractWorkflowStep.ItemTypeConst))
+			foreach(IWorkflowStep step in workFlowBlock.ChildItemsByType(AbstractWorkflowStep.ItemTypeConst))
 			{
                 IWorkflowBlock subBlock = step as IWorkflowBlock;
                 if (subBlock == null)
@@ -106,7 +82,7 @@ namespace Origam.Workbench.Diagram
 			}
 
 			// add connections
-			foreach(IWorkflowStep step in block.ChildItemsByType(AbstractWorkflowStep.ItemTypeConst))
+			foreach(IWorkflowStep step in workFlowBlock.ChildItemsByType(AbstractWorkflowStep.ItemTypeConst))
 			{
 				Node destinationShape = ht[step.PrimaryKey];
 				if(destinationShape == null) throw new NullReferenceException(ResourceUtils.GetString("ErrorDestinationShapeNotFound"));
@@ -131,25 +107,6 @@ namespace Origam.Workbench.Diagram
         }
 		#endregion
 
-		#region Uni Diagram
-		private void DrawUniSchemaDiagram(ISchemaItem item)
-		{
-			DrawUniShape(item, null);
-		}
-
-		private void DrawUniShape(ISchemaItem schemaItem, Node parentShape)
-		{
-			Node shape = this.AddNode(schemaItem.Id.ToString(), schemaItem.Name);
-			if(parentShape != null)
-			{
-				this.graph.AddEdge(shape.Id, parentShape.Id);
-			}
-			foreach(ISchemaItem child in schemaItem.ChildItems)
-			{
-				DrawUniShape(child, shape);
-			}
-		}
-		#endregion
 		#endregion
 	}
 }

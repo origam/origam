@@ -10,7 +10,6 @@ namespace Origam.Workbench.Diagram
 {
     public class ContextStoreDependencyEditor: IDiagramEditor
     {
-        private DiagramFactory _factory;
         private readonly GViewer gViewer;
         private readonly IContextStore contextStore;
         private readonly IPersistenceProvider persistenceProvider;

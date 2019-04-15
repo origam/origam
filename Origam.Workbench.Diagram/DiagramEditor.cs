@@ -156,7 +156,8 @@ namespace Origam.Workbench.Editors
 						graphParentId: workflowBlock.Id,
 						gViewer: gViewer,
 						parentForm: this,
-						persistenceProvider: persistenceProvider);
+						persistenceProvider: persistenceProvider,
+						factory: new WorkFlowDiagramFactory());
 					break;
 				case IContextStore contextStore:
 					internalEditor = new ContextStoreDependencyEditor(
@@ -165,7 +166,10 @@ namespace Origam.Workbench.Editors
 						persistenceProvider: persistenceProvider);
 					break;
 				case ISchemaItem schemaItem:
-					internalEditor = new GeneralDiagramEditor(gViewer, schemaItem);
+					internalEditor = new GeneralDiagramEditor<ISchemaItem>(
+						gViewer: gViewer, 
+						schemaItem: schemaItem, 
+						factory: new GeneralDiagramFactory());
 					break;
 			}
 		}
