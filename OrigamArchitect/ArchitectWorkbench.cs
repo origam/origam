@@ -2022,8 +2022,8 @@ namespace OrigamArchitect
 		private void _schema_ActiveNodeChanged(object sender, EventArgs e)
 		{
 			UpdateToolbar();
-
-			if(_schema.ActiveSchemaItem != null)
+            AbstractSqlCommandGenerator abstractSqlCommandGenerator = ServiceManager.Services.GetService(typeof(IDataService)) as AbstractSqlCommandGenerator;
+            if (_schema.ActiveSchemaItem != null)
 			{
 				ShowDocumentation cmd = new ShowDocumentation();
 				cmd.Run();
@@ -2033,8 +2033,8 @@ namespace OrigamArchitect
 			{
 				try
 				{
-					_outputPad.SetOutputText(new MsSqlCommandGenerator().TableDefinitionDdl(_schema.ActiveNode as TableMappingItem));
-					_outputPad.AppendText(new MsSqlCommandGenerator().ForeignKeyConstraintsDdl(_schema.ActiveNode as TableMappingItem));
+					_outputPad.SetOutputText(abstractSqlCommandGenerator.TableDefinitionDdl(_schema.ActiveNode as TableMappingItem));
+					_outputPad.AppendText(abstractSqlCommandGenerator.ForeignKeyConstraintsDdl(_schema.ActiveNode as TableMappingItem));
 				}
 				catch(Exception ex)
 				{
@@ -2046,7 +2046,7 @@ namespace OrigamArchitect
 			{
 				try
 				{
-					_outputPad.SetOutputText(new MsSqlCommandGenerator().FunctionDefinitionDdl(_schema.ActiveNode as Function));
+					_outputPad.SetOutputText(abstractSqlCommandGenerator.FunctionDefinitionDdl(_schema.ActiveNode as Function));
 				}
 				catch(Exception ex)
 				{
