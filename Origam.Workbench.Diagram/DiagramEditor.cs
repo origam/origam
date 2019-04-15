@@ -165,7 +165,8 @@ namespace Origam.Workbench.Editors
 					internalEditor = new GeneralDiagramEditor<IContextStore>(
 						gViewer: gViewer,
 						schemaItem: contextStore,
-						factory: new ContextStoreDiagramFactory(persistenceProvider));
+						factory: new ContextStoreDiagramFactory(
+							persistenceProvider,this));
 					break;
 				case ISchemaItem schemaItem:
 					internalEditor = new GeneralDiagramEditor<ISchemaItem>(
