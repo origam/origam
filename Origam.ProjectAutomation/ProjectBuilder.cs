@@ -34,22 +34,12 @@ namespace Origam.ProjectAutomation
 
         public ProjectBuilder()
         {           
-            tasks.Add(settingsBuilder);
-            tasks.Add(dataDatabaseBuilder);
-            tasks.Add(new ApplyDatabasePermissionsBuilder());
-            tasks.Add(new FileModelImportBuilder());
-            tasks.Add(new FileModelInitBuilder());
-            tasks.Add(new DataDatabaseStructureBuilder());
-            tasks.Add(new SettingsFinalConnectionStringBuilder());
-            tasks.Add(new CopyServerFilesBuilder());
-            tasks.Add(new ModifyConfigurationFilesBuilder());
-            tasks.Add(configureWebServerBuilder);
-            tasks.Add(new NewPackageBuilder());
-            tasks.Add(new GitBuilder());
+            
         }
 
         public void Create(Project project)
         {
+            SetTasks(project.DatabaseTyp);
             //for New wizard connection connection 
             project.DataConnectionString =
             dataDatabaseBuilder.BuildConnectionString(project, true);
@@ -80,6 +70,40 @@ namespace Origam.ProjectAutomation
                     Rollback(tasks[i]);
                 }
                 throw;
+            }
+        }
+
+        private void SetTasks(Project.DatabaseType DatabaseTyp)
+        {
+            if(DatabaseTyp == Project.DatabaseType.MsSql)
+            {
+                tasks.Add(settingsBuilder);
+                tasks.Add(dataDatabaseBuilder);
+                tasks.Add(new FileModelImportBuilder());
+                tasks.Add(new FileModelInitBuilder());
+                tasks.Add(new DataDatabaseStructureBuilder());
+                tasks.Add(new SettingsFinalConnectionStringBuilder());
+                tasks.Add(new CopyServerFilesBuilder());
+                tasks.Add(new ModifyConfigurationFilesBuilder());
+                tasks.Add(configureWebServerBuilder);
+                tasks.Add(new ApplyDatabasePermissionsBuilder());
+                tasks.Add(new NewPackageBuilder());
+                tasks.Add(new GitBuilder());
+            }
+            if(DatabaseTyp==Project.DatabaseType.PostgreSql)
+            {
+                tasks.Add(settingsBuilder);
+                tasks.Add(dataDatabaseBuilder);
+                tasks.Add(new ApplyDatabasePermissionsBuilder());
+                tasks.Add(new FileModelImportBuilder());
+                tasks.Add(new FileModelInitBuilder());
+                tasks.Add(new DataDatabaseStructureBuilder());
+                tasks.Add(new SettingsFinalConnectionStringBuilder());
+                tasks.Add(new CopyServerFilesBuilder());
+                tasks.Add(new ModifyConfigurationFilesBuilder());
+                tasks.Add(configureWebServerBuilder);
+                tasks.Add(new NewPackageBuilder());
+                tasks.Add(new GitBuilder());
             }
         }
 
