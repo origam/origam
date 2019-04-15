@@ -48,7 +48,7 @@ namespace Origam.DA.Service
 		private void Init()
 		{
 			this.DbDataAdapterFactory = new PgSqlCommandGenerator();
-            DBPassword = "heslicko";
+            DBPassword = Guid.NewGuid().ToString().Replace("-","").Substring(1,9);
         }
 
         internal override IDbConnection GetConnection(string connectionString)
