@@ -550,36 +550,8 @@ namespace Origam.DA.Service
             return ddl.ToString();
         }
 
-        public string FunctionDefinitionDdl(Function function)
-        {
-            if (function.FunctionType == OrigamFunctionType.Database)
-            {
-                StringBuilder builder = new StringBuilder("CREATE FUNCTION dbo.");
-                builder.Append(function.Name + "(");
-                int i = 0;
-                foreach (FunctionParameter parameter in function.ChildItems)
-                {
-                    if (i > 0) builder.Append(", ");
-                    builder.Append(ParameterDeclarationChar + parameter.Name + " as ?");
-                    i++;
-                }
-                builder.Append(")" + Environment.NewLine);
-                builder.Append("RETURNS " + DdlDataType(function.DataType, 0, null)
-                    + Environment.NewLine);
-                builder.Append("AS" + Environment.NewLine + "BEGIN" + Environment.NewLine);
-                builder.Append("DECLARE " + ParameterDeclarationChar + "result AS "
-                    + DdlDataType(function.DataType, 0, null) + Environment.NewLine);
-                builder.Append("RETURN " + ParameterReferenceChar + "result"
-                    + Environment.NewLine);
-                builder.Append("END");
-                return builder.ToString();
-            }
-            else
-            {
-                throw new InvalidOperationException(
-                    ResourceUtils.GetString("DDLForFunctionsOnly"));
-            }
-        }
+        public abstract string FunctionDefinitionDdl(Function function);
+        
 
         public string ForeignKeyConstraintsDdl(TableMappingItem table)
         {
@@ -3088,7 +3060,7 @@ namespace Origam.DA.Service
                     ISchemaItem expressionArg = item.GetChildByName("Expression").ChildItems[0];
                     ISchemaItem replacementArg = item.GetChildByName("ReplacementValue").ChildItems[0];
 
-                    result = "ISNULL(" + RenderExpression(expressionArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + ", " + RenderExpression(replacementArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + ")";
+                    result = getSql(ConvertSql.ISNULL)+"(" + RenderExpression(expressionArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + ", " + RenderExpression(replacementArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + ")";
 
                     break;
 
