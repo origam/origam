@@ -363,7 +363,6 @@ namespace Origam.Workbench.Commands
 			_schema = null;
 			_persistence = null;
 		}
-
 	}
 
 	/// <summary>

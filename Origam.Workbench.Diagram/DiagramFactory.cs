@@ -27,12 +27,8 @@ using System.Collections.Generic;
 
 namespace Origam.Workbench.Diagram
 {
-	/// <summary>
-	/// Summary description for DiagramFactory.
-	/// </summary>
 	public class DiagramFactory
 	{
-
 	    private readonly ISchemaItem graphParent;
 
         #region Constructors
