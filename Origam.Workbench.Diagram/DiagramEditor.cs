@@ -118,6 +118,7 @@ namespace Origam.Workbench.Editors
             this.gViewer.WindowZoomButtonPressed = false;
             this.gViewer.ZoomF = 1D;
             this.gViewer.ZoomWindowThreshold = 0.05D;
+            this.gViewer.SaveAsMsaglEnabled = false;
             // 
             // DiagramEditor
             // 
