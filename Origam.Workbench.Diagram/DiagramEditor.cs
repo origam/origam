@@ -68,6 +68,8 @@ namespace Origam.Workbench.Editors
 				viewerToImposeOn: gViewer,
 				predicate: (sourceNode, targetNode) =>
 				{
+					if (sourceNode is Subgraph) return false;
+					if (targetNode is Subgraph) return false;
 					var sourcesParent = gViewer.Graph.FindParentSubGraph(sourceNode);
 					var targetsParent = gViewer.Graph.FindParentSubGraph(targetNode);
 					return sourcesParent == targetsParent;
