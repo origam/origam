@@ -690,7 +690,7 @@ namespace Origam.DA.Service
             DataStructureSortSet sort, bool paging, string columnName);
 
 
-        internal abstract string SqlDataType(System.Data.SqlClient.SqlParameter param);
+        internal abstract string SqlDataType(IDataParameter param);
        
 
         internal void SelectParameterDeclarationsSetSql(StringBuilder result, Hashtable parameters)
@@ -1015,102 +1015,8 @@ namespace Origam.DA.Service
             return false;
         }
 
-        public string UpsertSql(DataStructure ds, DataStructureEntity entity)
-        {
-            StringBuilder sqlExpression = new StringBuilder();
-            StringBuilder keysBuilder = new StringBuilder();
-            StringBuilder searchPredicatesBuilder = new StringBuilder();
-            StringBuilder updateBuilder = new StringBuilder();
-            StringBuilder insertColumnsBuilder = new StringBuilder();
-            StringBuilder insertValuesBuilder = new StringBuilder();
-            string tableName = RenderExpression(entity.EntityDefinition, null, null, null, null);
-
-            int updateColumns = 0;
-            int insertColumns = 0;
-            int keys = 0;
-            foreach (DataStructureColumn column in entity.Columns)
-            {
-                if (ShouldUpdateColumn(column, entity))
-                {
-                    string fieldName = RenderExpression(column.Field, null, null, null, null);
-                    string paramName = NewValueParameterName(column, false);
-
-                    if (column.Field.AutoIncrement == false)
-                    {
-                        if (insertColumns > 0)
-                        {
-                            insertColumnsBuilder.Append(", ");
-                            insertValuesBuilder.Append(", ");
-                        }
-                        insertColumnsBuilder.Append(fieldName);
-                        insertValuesBuilder.Append(paramName);
-                        insertColumns++;
-                    }
-
-                    UpsertType type = column.UpsertType;
-                    if (entity.AllFields && column.Field.IsPrimaryKey)
-                    {
-                        type = UpsertType.Key;
-                    }
-
-                    if (type != UpsertType.Key && type != UpsertType.InsertOnly)
-                    {
-                        if (updateColumns > 0)
-                        {
-                            updateBuilder.Append(", ");
-                        }
-                        updateColumns++;
-                    }
-
-                    switch (type)
-                    {
-                        case UpsertType.Key:
-                            if (keys > 0)
-                            {
-                                keysBuilder.Append(", ");
-                                searchPredicatesBuilder.Append(" AND ");
-                            }
-                            keysBuilder.AppendFormat("{0} as {1}",
-                                paramName,
-                                fieldName);
-                            searchPredicatesBuilder.AppendFormat("{0}.{1} = src.{1}",
-                                tableName, fieldName);
-                            keys++;
-                            break;
-                        case UpsertType.Replace:
-                            updateBuilder.AppendFormat("{0} = {1}", fieldName, paramName);
-                            break;
-                        case UpsertType.Increase:
-                            updateBuilder.AppendFormat("{0} = {0} + {1}", fieldName, paramName);
-                            break;
-                        case UpsertType.Decrease:
-                            updateBuilder.AppendFormat("{0} = {0} - {1}", fieldName, paramName);
-                            break;
-                        case UpsertType.InsertOnly:
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException("UpsertType", column.UpsertType, "Unknown UpsertType");
-                    }
-                }
-            }
-
-            if (keys == 0)
-            {
-                throw new Exception("Cannot build an UPSERT command, no UPSERT keys specified in the entity.");
-            }
-
-            sqlExpression.AppendFormat("MERGE INTO {0} USING (SELECT {1}) AS src ON {2} WHEN MATCHED THEN UPDATE SET {3} WHEN NOT MATCHED THEN INSERT ({4}) VALUES ({5});",
-                tableName,
-                keysBuilder,
-                searchPredicatesBuilder,
-                updateBuilder,
-                insertColumnsBuilder,
-                insertValuesBuilder
-                );
-
-            return sqlExpression.ToString();
-        }
-
+        public abstract string UpsertSql(DataStructure ds, DataStructureEntity entity);
+       
         public string InsertSql(DataStructure ds, DataStructureEntity entity)
         {
             if (entity.UseUPSERT)
@@ -1424,7 +1330,7 @@ namespace Origam.DA.Service
             return sqlExpression.ToString();
         }
 
-        private bool ShouldUpdateColumn(DataStructureColumn column, DataStructureEntity entity)
+        internal bool ShouldUpdateColumn(DataStructureColumn column, DataStructureEntity entity)
         {
             if (!(column.Field is FieldMappingItem)) return false;
             if (column.UseLookupValue) return false;

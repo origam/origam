@@ -613,7 +613,7 @@ namespace Origam.DA.Service
                 {
                     result.AppendFormat("DECLARE {0} {1}{2}",
                         param.ParameterName,
-                        SqlDataType(param as System.Data.SqlClient.SqlParameter),
+                        SqlDataType(param),
                         Environment.NewLine);
 
                     ht.Add(param.ParameterName, null);
@@ -621,9 +621,10 @@ namespace Origam.DA.Service
             }
         }
 
-        internal override string SqlDataType(System.Data.SqlClient.SqlParameter param)
+        internal override string SqlDataType(IDataParameter Iparam)
         {
-            string result = param.SqlDbType.ToString();
+            NpgsqlParameter param = Iparam as Npgsql.NpgsqlParameter;
+            string result = param.PostgresType.ToString();
 
             if (param.DbType == DbType.String)
             {
@@ -1049,6 +1050,98 @@ namespace Origam.DA.Service
                 default:
                     throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("UnsupportedAggreg"));
             }
+        }
+
+        public override string UpsertSql(DataStructure ds, DataStructureEntity entity)
+        {
+            StringBuilder sqlExpression = new StringBuilder();
+            StringBuilder keysBuilder = new StringBuilder();
+            StringBuilder updateBuilder = new StringBuilder();
+            StringBuilder insertColumnsBuilder = new StringBuilder();
+            StringBuilder insertValuesBuilder = new StringBuilder();
+            string tableName = RenderExpression(entity.EntityDefinition, null, null, null, null);
+
+            int updateColumns = 0;
+            int insertColumns = 0;
+            int keys = 0;
+            keysBuilder.Append("(");
+            foreach (DataStructureColumn column in entity.Columns)
+            {
+                if (ShouldUpdateColumn(column, entity))
+                {
+                    string fieldName = RenderExpression(column.Field, null, null, null, null);
+                    string paramName = NewValueParameterName(column, false);
+
+                    if (column.Field.AutoIncrement == false)
+                    {
+                        if (insertColumns > 0)
+                        {
+                            insertColumnsBuilder.Append(", ");
+                            insertValuesBuilder.Append(", ");
+                        }
+                        insertColumnsBuilder.Append(fieldName);
+                        insertValuesBuilder.Append(paramName);
+                        insertColumns++;
+                    }
+
+                    UpsertType type = column.UpsertType;
+                    if (entity.AllFields && column.Field.IsPrimaryKey)
+                    {
+                        type = UpsertType.Key;
+                    }
+
+                    if (type != UpsertType.Key && type != UpsertType.InsertOnly)
+                    {
+                        if (updateColumns > 0)
+                        {
+                            updateBuilder.Append(", ");
+                        }
+                        updateColumns++;
+                    }
+
+                    switch (type)
+                    {
+                        case UpsertType.Key:
+                            if (keys > 0)
+                            {
+                                keysBuilder.Append(", ");
+                            }
+                            keysBuilder.AppendFormat("{0}",
+                                fieldName);
+                            keys++;
+                            break;
+                        case UpsertType.Replace:
+                            updateBuilder.AppendFormat("{0} = {1}", fieldName, paramName);
+                            break;
+                        case UpsertType.Increase:
+                            updateBuilder.AppendFormat("{0} = {0} + {1}", fieldName, paramName);
+                            break;
+                        case UpsertType.Decrease:
+                            updateBuilder.AppendFormat("{0} = {0} - {1}", fieldName, paramName);
+                            break;
+                        case UpsertType.InsertOnly:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException("UpsertType", column.UpsertType, "Unknown UpsertType");
+                    }
+                }
+            }
+            keysBuilder.Append(")");
+            if (keys == 0)
+            {
+                throw new Exception("Cannot build an UPSERT command, no UPSERT keys specified in the entity.");
+            }
+
+            sqlExpression.AppendFormat(
+                "INSERT INTO {0} ({1}) VALUES ({2}) ON CONFLICT {3} DO UPDATE SET {4};",
+                tableName,
+                insertColumnsBuilder,
+                insertValuesBuilder,
+                keysBuilder,
+                updateBuilder
+                );
+
+            return sqlExpression.ToString();
         }
     }
 }
