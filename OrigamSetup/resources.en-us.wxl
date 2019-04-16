@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="en-us" Codepage="850" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+  <String Id="InstallDialogTitle" Overridable="yes">[ProductName] Setup</String>
+  <String Id="DatabaseDialogDescr" Overridable="yes">{\DlgFont16}Select Database Options</String>
+  <String Id="ServerDialogDescr" Overridable="yes">{\DlgFont16}Select IIS Options</String>
+  <String Id="Install" Overridable="yes">Install</String>
+  <String Id="Cancel" Overridable="yes">Cancel</String>
+  <String Id="Server" Overridable="yes">{\DlgTitleFont}Server:</String>
+  <String Id="DatabaseName" Overridable="yes">{\DlgTitleFont}Database Name:</String>
+  <String Id="Username" Overridable="yes">{\DlgTitleFont}Username:</String>
+  <String Id="Password" Overridable="yes">{\DlgTitleFont}Password:</String>
+  <String Id="RestoreDatabase" Overridable="yes">{\DlgTitleFont}Restore database</String>
+  <String Id="No" Overridable="yes">{\DlgFontBlack}No</String>
+  <String Id="Yes" Overridable="yes">{\DlgFontBlack}Yes</String>
+  <String Id="OK" Overridable="yes">{\DlgFontBlack}OK</String>
+  <String Id="Finish" Overridable="yes">Finish</String>
+  <String Id="SureToCancelInstall" Overridable="yes">{\DlgFontBlack}Are you sure you want to cancel [ProductName] installation?</String>
+  <String Id="IncompleteDatabaseInput" Overridable="yes">{\DlgFontBlack}Mandatory fields are Server Name, Database Name and if Widnows authentication is not used Username. Not all mandatory fields were filled.</String>
+  <String Id="IncompleteServerInput" Overridable="yes">{\DlgFontBlack}Server Port is mandatory field and if installation type is virtual directory, then Virtual Directory Alias is mandatory as well. Not all mandatory fields were filled.</String>
+  <String Id="Status" Overridable="yes">Status:</String>
+  <String Id="InstallInProggress" Overridable="yes">Installation in progress. This may take several minutes.</String>
+  <String Id="InstallationFinished" Overridable="yes">{\DlgFont16}Installation Finished</String>
+  <String Id="PressFinish" Overridable="yes">Press Finish button to exit Setup Wizard.</String>
+  <String Id="LicenseAgreementDialogTitle" Overridable="yes">[ProductName] License Agreement</String>
+  <String Id="EndUserLicense" Overridable="yes">{\DlgFont16}End-User License Agreement</String>
+  <String Id="ReadCarefully" Overridable="yes">Please read the following license agreement carefully</String>
+  <String Id="EULA_file" Overridable="yes">eula.en-us.rtf</String>
+  <String Id="AcceptEULA" Overridable="yes">I accept the terms in the License Agreement</String>
+  <String Id="DontAcceptEULA" Overridable="yes">I do not accept the terms in the License Agreement</String>
+  <String Id="Continue" Overridable="yes">Continue</String>
+  <String Id="WinAuthentication" Overridable="yes">Windows Authentication</String>
+  <String Id="SqlAuthentication" Overridable="yes">SQL Server Authentication</String>
+  <String Id="AuthenticationType" Overridable="yes">{\DlgTitleFont}Authentication Type:</String>
+  <String Id="WelcomeDialogTitle" Overridable="yes">Welcome to [ProductName] Setup</String>
+  <String Id="Exit" Overridable="yes">Exit</String>
+  <String Id="Ignore" Overridable="yes">Ignore</String>
+  <String Id="Retry" Overridable="yes">Retry</String>
+  <String Id="Welcome" Overridable="yes">{\DlgFont16}Welcome to [ProductName] Setup</String>
+  <String Id="InstallationReady" Overridable="yes">Installation is ready. Press Continue button.</String>
+  <String Id="PrerequisitesNotMet" Overridable="yes">Unable to perform the installation. See above which prerequisites were not found and restart the setup after you install them.</String>
+  <String Id="Next" Overridable="yes">Next</String>
+  <String Id="Back" Overridable="yes">Back</String>
+  <String Id="ServerPort" Overridable="yes">{\DlgTitleFont}Server Port:</String>
+  <String Id="SiteInstallation" Overridable="yes">Install as a new web site.</String>
+  <String Id="VDirInstallation" Overridable="yes">Install as virtual directory of an existing web site.</String>
+  <String Id="VDirAlias" Overridable="yes">{\DlgTitleFont}Virtual Directory Alias:</String>
+  <String Id="InstallationType" Overridable="yes">{\DlgTitleFont}Installation Type:</String>
+  <String Id="ServerNameExplanation" Overridable="yes">SQL Server instance name. E.g. SERVERNAME\SqlExpress.</String>
+  <String Id="DatabaseNameExplanation" Overridable="yes">Specify a prefix. _Data and _Model will be added automatically.</String>
+  <String Id="CheckPrerequisitesDialogDescr" Overridable="yes">{\DlgFont16}Prerequisites</String>
+</WixLocalization>
