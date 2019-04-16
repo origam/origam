@@ -1708,7 +1708,7 @@ namespace OrigamArchitect.Commands
 
         public override void Run()
         {
-            MsSqlCommandGenerator generator = new MsSqlCommandGenerator();
+            AbstractSqlCommandGenerator generator = ServiceManager.Services.GetService(typeof(IDataService)) as AbstractSqlCommandGenerator;
             generator.PrettyFormat = true;
             StringBuilder builder = new StringBuilder();
             DataStructureEntity entity = Owner as DataStructureEntity;
@@ -1718,7 +1718,7 @@ namespace OrigamArchitect.Commands
                 builder.AppendLine("-- SQL statements for data structure: " + ds.Name);
                 // parameter declarations
                 builder.AppendLine(
-                    new MsSqlCommandGenerator().SelectParameterDeclarationsSql(
+                    generator.SelectParameterDeclarationsSql(
                     ds,
                     Owner as DataStructureEntity,
                     (DataStructureFilterSet)null, false, null)
@@ -1809,8 +1809,8 @@ namespace OrigamArchitect.Commands
 
         public override void Run()
         {
+            AbstractSqlCommandGenerator generator = ServiceManager.Services.GetService(typeof(IDataService)) as AbstractSqlCommandGenerator;
             DataStructureFilterSet filterSet = Owner as DataStructureFilterSet;
-            MsSqlCommandGenerator generator = new MsSqlCommandGenerator();
             generator.PrettyFormat = true;
             StringBuilder builder = new StringBuilder();
             DataStructure ds = filterSet.RootItem as DataStructure;
@@ -1865,7 +1865,7 @@ namespace OrigamArchitect.Commands
         public override void Run()
         {
             StringBuilder builder = new StringBuilder();
-            MsSqlCommandGenerator generator = new MsSqlCommandGenerator();
+            AbstractSqlCommandGenerator generator = ServiceManager.Services.GetService(typeof(IDataService)) as AbstractSqlCommandGenerator;
             generator.PrettyFormat = true;
             bool displayPagingParameters = true;
             DataStructure ds = (Owner as ISchemaItem).RootItem as DataStructure;

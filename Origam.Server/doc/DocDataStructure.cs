@@ -50,6 +50,7 @@ using Origam.Schema.EntityModel;
 using Origam.DA.Service;
 using System.Collections;
 using System.Web;
+using Origam.DA;
 
 namespace Origam.Server.Doc
 {
@@ -206,13 +207,14 @@ namespace Origam.Server.Doc
                 {
                     DocTools.WriteSectionStart(writer, method.Name + " Method");
                     DataStructureFilterSet filterSet = method as DataStructureFilterSet;
+                    AbstractSqlCommandGenerator abstractSqlCommandGenerator = ServiceManager.Services.GetService(typeof(IDataService)) as AbstractSqlCommandGenerator;
                     if (filterSet != null)
                     {
                         try
                         {
                             StringBuilder sql = new StringBuilder();
                             // parameter declarations
-                            sql.Append(new MsSqlCommandGenerator().SelectParameterDeclarationsSql(filterSet, false, null));
+                            sql.Append(abstractSqlCommandGenerator.SelectParameterDeclarationsSql(filterSet, false, null));
 
                             foreach (DataStructureEntity entity in ds.Entities)
                             {
@@ -221,7 +223,7 @@ namespace Origam.Server.Doc
                                     sql.AppendLine();
                                     sql.AppendLine("-- " + entity.Name);
                                     sql.AppendLine(
-                                        new MsSqlCommandGenerator().SelectSql(ds,
+                                        abstractSqlCommandGenerator.SelectSql(ds,
                                         entity,
                                         filterSet,
                                         null,
