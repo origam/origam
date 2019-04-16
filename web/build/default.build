@@ -25,13 +25,8 @@
       <fileset basedir=".">
         <include name="*.*" />
         <exclude name="*.txt" />
-        <exclude name="web.config"/>
-        <exclude name="packages.config"/>
-        <exclude name="OrigamSettings.config"/>
-        <exclude name="problemReporting.config"/>
-        <exclude name="securityconfiguration.config"/>
-        <exclude name="geoLocation.config"/>
-        <exclude name="language.config"/>
+        <exclude name="*.swf" />
+        <exclude name="*.config" />
         <exclude name="fixtureRunner.aspx"/>
         <include name="upgrade\**\*.*" />
         <include name="css\**\*.*" />
