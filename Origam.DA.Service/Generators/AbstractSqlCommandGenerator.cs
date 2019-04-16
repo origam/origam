@@ -39,22 +39,10 @@ namespace Origam.DA.Service
     {
         private readonly ParameterReference PageNumberParameterReference = new ParameterReference();
         private readonly ParameterReference PageSizeParameterReference = new ParameterReference();
-        private readonly FilterRenderer filterRenderer = new FilterRenderer();
+        internal readonly FilterRenderer filterRenderer = new FilterRenderer();
         private string _pageNumberParameterName;
         private string _pageSizeParameterName;
         private int _indentLevel = 0;
-
-        internal enum ConvertSql
-        {
-            FREETEXT,
-            ISNULL,
-            DBO,
-            NVARCHAR_MAX,
-            NVARCHAR,
-            INT,
-            INTEGER,
-            COUNT
-        }
 
         private struct SortOrder
         {
@@ -658,7 +646,7 @@ namespace Origam.DA.Service
             return result.ToString();
         }
 
-        private ArrayList Parameters(IDbCommand cmd)
+        internal ArrayList Parameters(IDbCommand cmd)
         {
             int declarationLength = ParameterDeclarationChar.Length;
             ArrayList list = new ArrayList(cmd.Parameters.Count);
@@ -671,7 +659,7 @@ namespace Origam.DA.Service
             return list;
         }
 
-        private IDbCommand SelectCommand(DataStructure ds, DataStructureEntity entity,
+        internal IDbCommand SelectCommand(DataStructure ds, DataStructureEntity entity,
             DataStructureFilterSet filter, DataStructureSortSet sort, bool paging,
             string columnName)
         {
@@ -697,41 +685,15 @@ namespace Origam.DA.Service
             return Parameters(cmd);
         }
 
-        private void SelectParameterDeclarationsSql(StringBuilder result, Hashtable ht,
+        internal abstract void SelectParameterDeclarationsSql(StringBuilder result, Hashtable ht,
             DataStructure ds, DataStructureEntity entity, DataStructureFilterSet filter,
-            DataStructureSortSet sort, bool paging, string columnName)
-        {
-            IDbCommand cmd = SelectCommand(ds, entity, filter, sort, paging, columnName);
-            ArrayList list = Parameters(cmd);
-            foreach (string paramName in list)
-            {
-                IDataParameter param = cmd.Parameters[ParameterDeclarationChar + paramName] as IDataParameter;
+            DataStructureSortSet sort, bool paging, string columnName);
 
-                if (!ht.Contains(param.ParameterName))
-                {
-                    result.AppendFormat("DECLARE {0} AS {1}{2}",
-                        param.ParameterName,
-                        SqlDataType(param as System.Data.SqlClient.SqlParameter),
-                        Environment.NewLine);
 
-                    ht.Add(param.ParameterName, null);
-                }
-            }
-        }
+        internal abstract string SqlDataType(System.Data.SqlClient.SqlParameter param);
+       
 
-        private string SqlDataType(System.Data.SqlClient.SqlParameter param)
-        {
-            string result = param.SqlDbType.ToString();
-
-            if (param.DbType == DbType.String)
-            {
-                result += "(" + param.Size + ")";
-            }
-
-            return result;
-        }
-
-        private void SelectParameterDeclarationsSetSql(StringBuilder result, Hashtable parameters)
+        internal void SelectParameterDeclarationsSetSql(StringBuilder result, Hashtable parameters)
         {
             foreach (string name in parameters.Keys)
             {
@@ -1781,30 +1743,10 @@ namespace Origam.DA.Service
             }
         }
 
-        private string FixAggregationDataType(OrigamDataType dataType, string expression)
-        {
-            switch (dataType)
-            {
-                case OrigamDataType.UniqueIdentifier:
-                    return " CAST (" + expression + " " +getSql(ConvertSql.NVARCHAR)+"(36))";
-                case OrigamDataType.Boolean:
-                    return " CAST (" + expression + "  "+getSql(ConvertSql.INT)+")";
-                default:
-                    return expression;
-            }
-        }
+        internal abstract string FixAggregationDataType(OrigamDataType dataType, string expression);
 
-        private string FixSumAggregation(AggregationType aggregationType, string expression)
-        {
-            if (aggregationType == AggregationType.Sum)
-            {
-                return getSql(ConvertSql.ISNULL) +"(" + expression + ", 0)";
-            }
-            else
-            {
-                return expression;
-            }
-        }
+
+        internal abstract string FixSumAggregation(AggregationType aggregationType, string expression);
         
 
         private string RenderLookupColumnExpression(DataStructure ds, DataStructureEntity entity,
@@ -2735,352 +2677,13 @@ namespace Origam.DA.Service
                     dynamicParameters, parameterReferences);
             }
         }
-
-        private string RenderDatabaseFunction(FunctionCall item, DataStructureEntity entity,
+        internal abstract string RenderDatabaseFunction(FunctionCall item, DataStructureEntity entity,
             Hashtable replaceParameterTexts, Hashtable dynamicParameters,
-            Hashtable parameterReferences)
-        {
-            string result = "";
-
-            switch (item.Function.Name)
-            {
-                case "DaysToAnniversary":
-                    if (item.ChildItems[0].ChildItems.Count == 0)
-                    {
-                        throw new Exception(ResourceUtils.GetString("ErrorExpressionNotSet", item.Path));
-                    }
-
-                    string date = RenderExpression(item.ChildItems[0].ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences);
-
-                    result = "DATEDIFF(dd, DATEADD(yy, -(DATEPART(yy,GETDATE())-1900),GETDATE()),"
-                        + "DATEADD(yy, -(DATEPART(yy,"
-                        + date
-                        + ")-1900),"
-                        + date
-                        + "))";
-                    break;
-
-                case "Exists":
-                    if (item.ChildItems[0].ChildItems.Count == 0)
-                    {
-                        throw new Exception(ResourceUtils.GetString("ErrorLookupNotSet", item.Path));
-                    }
-
-                    result = "EXISTS (" + RenderExpression(item.ChildItems[0].ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ")";
-                    break;
-
-                case "Month":
-                case "Year":
-                case "Day":
-                    if (item.ChildItems[0].ChildItems.Count == 0)
-                    {
-                        throw new Exception(ResourceUtils.GetString("ErrorExpressionNotSet", item.Path));
-                    }
-
-                    result = item.Function.Name + "(" + RenderExpression(item.ChildItems[0].ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ")";
-                    break;
-
-                case "Hour":
-                case "Minute":
-                case "Second":
-                    if (item.ChildItems[0].ChildItems.Count == 0)
-                    {
-                        throw new Exception(ResourceUtils.GetString("ErrorExpressionNotSet", item.Path));
-                    }
-
-                    result = "DATEPART(" + item.Function.Name + ", " + RenderExpression(item.ChildItems[0].ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ")";
-                    break;
-
-                case "AddDays":
-                    {
-                        ISchemaItem dateArg = item.GetChildByName("Date").ChildItems[0];
-                        ISchemaItem daysArg = item.GetChildByName("Days").ChildItems[0];
-
-                        result = "DATEADD(d, " + RenderExpression(daysArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + ", " + RenderExpression(dateArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + ")";
-                    }
-                    break;
-                case "AddMinutes":
-                    {
-                        ISchemaItem dateArg = item.GetChildByName("Date").ChildItems[0];
-                        ISchemaItem countArg = item.GetChildByName("Minutes").ChildItems[0];
-                        result = string.Format("DATEADD(mi,{0},{1})"
-                            , RenderExpression(countArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                            , RenderExpression(dateArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences));
-                    }
-                    break;
-                case "AddSeconds":
-                    {
-                        ISchemaItem dateArg = item.GetChildByName("Date").ChildItems[0];
-                        ISchemaItem countArg = item.GetChildByName("Seconds").ChildItems[0];
-                        result = string.Format("DATEADD(s,{0},{1})"
-                            , RenderExpression(countArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                            , RenderExpression(dateArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences));
-                    }
-                    break;
-                case "FullTextContains":
-                case "FullText":
-                    ISchemaItem expressionArg = item.GetChildByName("Expression").ChildItems[0];
-                    ISchemaItem languageArg = item.GetChildByName("Language");
-                    ISchemaItem fieldsArg = item.GetChildByName("Fields");
-
-                    if (item.Function.Name == "FullTextContains") result = "CONTAINS(";
-                    if (item.Function.Name == "FullText") result =  getSql(ConvertSql.FREETEXT) +"(";
-
-                    if (fieldsArg.ChildItems.Count == 0)
-                    {
-                        result += NameLeftBracket + entity.Name + NameRightBracket + ".*";
-                    }
-                    else
-                    {
-                        if (fieldsArg.ChildItems.Count > 1) result += "(";
-
-                        int fieldNum = 0;
-                        foreach (ISchemaItem field in fieldsArg.ChildItems)
-                        {
-                            if (fieldNum > 0) result += ", ";
-                            result += RenderExpression(field, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
-                            fieldNum++;
-                        }
-
-                        if (fieldsArg.ChildItems.Count > 1) result += ")";
-                    }
-
-                    result += ",";
-                    result += RenderExpression(expressionArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
-
-                    if (languageArg.ChildItems.Count > 0)
-                    {
-                        result += ",";
-                        result += RenderExpression(languageArg.ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences);
-                    }
-                    result += ")";
-                    break;
-
-                case "Soundex":
-                    result = "SOUNDEX("
-                        + RenderExpression(item.GetChildByName("Text").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ")";
-                    break;
-
-                case "Distance":
-                    ISchemaItem param1 = item.GetChildByName("Param1").ChildItems[0];
-                    ISchemaItem param2 = item.GetChildByName("Param2").ChildItems[0];
-
-                    result = RenderExpression(param1, entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ".STDistance("
-                        + RenderExpression(param2, entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ")";
-
-                    break;
-
-                case "Latitude":
-                    result = RenderExpression(item.GetChildByName("Point").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ".Lat";
-                    break;
-
-                case "Longitude":
-                    result = RenderExpression(item.GetChildByName("Point").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ".Long";
-                    break;
-
-                case "ToDate":
-                    result = " CAST (" + RenderExpression(item.GetChildByName("argument").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + " AS DATE )";
-                    break;
-
-                case "Round":
-                    result = "ROUND(" + RenderExpression(item.GetChildByName("Expression").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ", " + RenderExpression(item.GetChildByName("Precision").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ")";
-                    break;
-                case "Abs":
-                    result = string.Format("ABS({0})",
-                        RenderExpression(item.GetChildByName("Expression").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        );
-                    break;
-                case "DateDiffMinutes":
-                    result = string.Format("DATEDIFF(MINUTE, {0}, {1})",
-                        RenderExpression(item.GetChildByName("DateFrom").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        , RenderExpression(item.GetChildByName("DateTo").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        );
-                    break;
-
-
-
-                default:
-                    result = getSql(ConvertSql.DBO) + item.Function.Name + "(";
-
-                    ArrayList sortedParams = new ArrayList(item.ChildItems);
-                    sortedParams.Sort();
-
-                    int i = 0;
-                    foreach (FunctionCallParameter param in sortedParams)
-                    {
-                        if (i > 0) result += ", ";
-
-                        if (param.ChildItems.Count != 1) throw new ArgumentOutOfRangeException("Count", param.ChildItems.Count, "Argument number must be 1");
-
-                        result += RenderExpression(param.ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences);
-
-                        i++;
-                    }
-
-                    result += ")";
-                    break;
-            }
-
-            return result;
-        }
-
-        internal abstract string getSql(ConvertSql v);
-
-        private string RenderBuiltinFunction(FunctionCall item, DataStructureEntity entity,
+            Hashtable parameterReferences);
+        internal abstract string RenderBuiltinFunction(FunctionCall item, DataStructureEntity entity,
             Hashtable replaceParameterTexts, Hashtable dynamicParameters,
-            Hashtable parameterReferences)
-        {
-            string result = "";
-
-            switch (item.Function.Name)
-            {
-                case "Equal":
-                case "NotEqual":
-                case "Like":
-                case "Add":
-                case "Deduct":
-                case "Multiply":
-                case "Divide":
-                case "LessThan":
-                case "LessThanOrEqual":
-                case "GreaterThan":
-                case "GreaterThanOrEqual":
-                    string leftValue = GetItemByFunctionParameter(item, "Left", entity,
-                        replaceParameterTexts, dynamicParameters, parameterReferences);
-                    string rightValue = GetItemByFunctionParameter(item, "Right", entity,
-                        replaceParameterTexts, dynamicParameters, parameterReferences);
-                    result = filterRenderer.BinaryOperator(leftValue, rightValue, item.Function.Name);
-                    break;
-
-                case "Not":
-                    string argument = GetItemByFunctionParameter(item, "Argument", entity,
-                        replaceParameterTexts, dynamicParameters, parameterReferences);
-                    result = filterRenderer.Not(argument);
-                    break;
-
-                case "Concat":
-                    ISchemaItem concatArg = item.GetChildByName("Strings");
-                    ArrayList concatStrings = new ArrayList(concatArg.ChildItems);
-                    if (concatStrings.Count < 2) throw new ArgumentOutOfRangeException("Strings", null, "There have to be at least 2 strings to concatenate.");
-                    concatStrings.Sort();
-                    result = RenderConcat(concatStrings, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
-                    break;
-
-                case "LogicalOr":
-                case "LogicalAnd":
-                    var arguments = GetItemListByFunctionParameter(item, "Arguments",
-                         entity, replaceParameterTexts, dynamicParameters, 
-                         parameterReferences);
-                    result = filterRenderer.LogicalAndOr(item.Function.Name, arguments);
-                    break;
-
-                case "Space":
-                    ISchemaItem spacesArg = item.GetChildByName("NumberOfSpaces");
-
-                    System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("en-US");
-                    decimal numberOfSpaces = Convert.ToDecimal(RenderExpression(spacesArg.ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences), ci.NumberFormat);
-
-                    for (int i = 0; i < numberOfSpaces; i++)
-                    {
-                        result += " ";
-                    }
-
-                    result = RenderString(result);
-                    break;
-
-                case "Substring":
-                    result = "SUBSTRING("
-                        + RenderExpression(item.GetChildByName("Expression").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences) + ", "
-                        + RenderExpression(item.GetChildByName("Start").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences) + ", "
-                        + RenderExpression(item.GetChildByName("Length").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences) + ")";
-                    break;
-
-                case "Condition":
-                    result = "(CASE WHEN "
-                        + RenderExpression(item.GetChildByName("If").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + " THEN "
-                        + (item.GetChildByName("Then").ChildItems.Count == 0 ? "NULL" : RenderExpression(item.GetChildByName("Then").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences))
-                        + " ELSE "
-                        + (item.GetChildByName("Else").ChildItems.Count == 0 ? "NULL" : RenderExpression(item.GetChildByName("Else").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences))
-                        + " END)";
-                    break;
-
-                case "Length":
-                    result = "LEN("
-                        + RenderExpression(item.GetChildByName("Text").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ")";
-                    break;
-
-                case "ConvertDateToString":
-                    result = "CONVERT("
-                        + "NVARCHAR(" + item.DataLength + "), "
-                        + RenderExpression(item.GetChildByName("Expression").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ", 104)";
-                    break;
-
-                case "In":
-                    ISchemaItem leftArg = item.GetChildByName("FilterExpression");
-                    ISchemaItem listArg = item.GetChildByName("List");
-                    SchemaItemCollection listExpressions = listArg.ChildItems;
-
-                    if (listExpressions.Count < 1) throw new ArgumentOutOfRangeException("List", null, ResourceUtils.GetString("ErrorNoParamIN"));
-
-                    if (listExpressions.Count == 1 && listExpressions[0] is ParameterReference && (listExpressions[0] as ParameterReference).Parameter.DataType == OrigamDataType.Array)
-                    {
-                        result = RenderExpression(leftArg.ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                            + " IN (SELECT ListValue FROM " + RenderExpression(listExpressions[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences) + " origamListValue)";
-                    }
-                    else
-                    {
-                        // list of parameters
-                        string leftOperand = RenderExpression(leftArg.ChildItems[0], entity,
-                            replaceParameterTexts, dynamicParameters, parameterReferences);
-                        IEnumerable<string> options = listExpressions
-                            .ToEnumerable()
-                            .Cast<ISchemaItem>()
-                            .Select(listExpression =>
-                                RenderExpression(listExpression, entity, replaceParameterTexts,
-                                    dynamicParameters, parameterReferences));    
-                        result = filterRenderer.In(leftOperand, options);
-                    }
-                    break;
-
-                case "IsNull":
-                    ISchemaItem expressionArg = item.GetChildByName("Expression").ChildItems[0];
-                    ISchemaItem replacementArg = item.GetChildByName("ReplacementValue").ChildItems[0];
-
-                    result = getSql(ConvertSql.ISNULL)+"(" + RenderExpression(expressionArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + ", " + RenderExpression(replacementArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + ")";
-
-                    break;
-
-                case "Between":
-                    expressionArg = item.GetChildByName("Expression").ChildItems[0];
-                    leftArg = item.GetChildByName("Left").ChildItems[0];
-                    ISchemaItem rightArg = item.GetChildByName("Right").ChildItems[0];
-
-                    result = RenderExpression(expressionArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + " BETWEEN " + RenderExpression(leftArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + " AND " + RenderExpression(rightArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
-
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException("Function.Name", item.Function.Name, ResourceUtils.GetString("UnknownFunction"));
-            }
-
-            return result;
-        }
-
-        private string GetItemByFunctionParameter(
+            Hashtable parameterReferences);
+        internal string GetItemByFunctionParameter(
             FunctionCall item, string parameterName, DataStructureEntity entity,
             Hashtable replaceParameterTexts, Hashtable dynamicParameters,
             Hashtable parameterReferences)
@@ -3104,8 +2707,7 @@ namespace Origam.DA.Service
             return RenderExpression(value, entity, replaceParameterTexts, 
                 dynamicParameters, parameterReferences);
         }
-
-        private IList<string> GetItemListByFunctionParameter(
+        internal IList<string> GetItemListByFunctionParameter(
             FunctionCall item, string parameterName, DataStructureEntity entity,
             Hashtable replaceParameterTexts, Hashtable dynamicParameters,
             Hashtable parameterReferences)
@@ -3120,7 +2722,6 @@ namespace Origam.DA.Service
             }
             return result;
         }
-
         private static ISchemaItem GetFunctionParameter(FunctionCall item,
             string parameterName)
         {
@@ -3133,8 +2734,7 @@ namespace Origam.DA.Service
             }
             return param;
         }
-
-        private string RenderConcat(ArrayList concatSchemaItems, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
+        internal string RenderConcat(ArrayList concatSchemaItems, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
 		{
 			List<KeyValuePair<ISchemaItem, DataStructureEntity>> concatSchemaItemList =
 				new List<KeyValuePair<ISchemaItem, DataStructureEntity>>();
@@ -3145,63 +2745,12 @@ namespace Origam.DA.Service
 			}
             return RenderConcat(concatSchemaItemList, null, replaceParameterTexts, dynamicParameters, parameterReferences);
 		}
-	
-		private string RenderConcat(List<KeyValuePair<ISchemaItem, DataStructureEntity> > concatSchemaItemList, string separator, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
-		{
-			int i = 0;
-			StringBuilder concatBuilder = new StringBuilder();
-			foreach(KeyValuePair<ISchemaItem, DataStructureEntity> concatItem in concatSchemaItemList)
-			{
-				if(i > 0) 
-				{
-					concatBuilder.Append(" " + StringConcatenationChar + " ");
-					if(separator != null)
-					{
-						concatBuilder.Append(separator);
-						concatBuilder.Append(" " + StringConcatenationChar + " ");
-					}
-				}
+        internal abstract string RenderConcat(List<KeyValuePair<ISchemaItem, DataStructureEntity>> concatSchemaItemList, string separator, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences);
+        #endregion
 
-                concatBuilder.Append("CAST (");
-				concatBuilder.Append(RenderExpression(concatItem.Key, concatItem.Value, replaceParameterTexts, dynamicParameters, parameterReferences));
-                concatBuilder.Append(" ");
-                concatBuilder.Append(getSql(ConvertSql.NVARCHAR_MAX));
-                concatBuilder.Append(")");
-
-				i++;
-			}
-
-			return concatBuilder.ToString();
-		}
+        #region Operators
+        internal abstract string GetAggregationString(AggregationType type);
 		#endregion
-
-		#region Operators
-		
-		private string GetAggregationString(AggregationType type)
-		{
-			switch(type)
-			{
-				case AggregationType.Sum:
-					return "SUM";
-
-				case AggregationType.Count:
-					return getSql(ConvertSql.COUNT);
-
-				case AggregationType.Average:
-					return "AVG";
-
-				case AggregationType.Minimum:
-					return "MIN";
-
-				case AggregationType.Maximum:
-					return "MAX";
-
-				default:
-					throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("UnsupportedAggreg"));
-			}
-		}
-		#endregion
-
 		#region Conversions
 		public string DdlDataType(OrigamDataType columnType,
             DatabaseDataType dbDataType)
