@@ -57,7 +57,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			this.factory = factory;
 
 			gViewer.Graph = factory.Draw(UpToDateGraphParent);
-
+			//gViewer.GraphHeight
 			persistenceProvider.InstancePersisted += OnInstancePersisted;
 		}
 
