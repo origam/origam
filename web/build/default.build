@@ -27,8 +27,13 @@
         <exclude name="*.txt" />
         <exclude name="Portal.swf" />
         <exclude name="Portal_dbg.swf" />
-        <exclude name="*.config" />
-        <include name="portal.config" />
+        <exclude name="web.config"/>
+        <exclude name="packages.config"/>
+        <exclude name="OrigamSettings.config"/>
+        <exclude name="problemReporting.config"/>
+        <exclude name="securityconfiguration.config"/>
+        <exclude name="geoLocation.config"/>
+        <exclude name="language.config"/>
         <exclude name="fixtureRunner.aspx"/>
         <include name="upgrade\**\*.*" />
         <include name="css\**\*.*" />
