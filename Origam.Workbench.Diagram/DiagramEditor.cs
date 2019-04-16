@@ -39,6 +39,7 @@ using Origam.Workbench.Diagram.InternalEditor;
 using Origam.Workbench.Services;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
 using DrawingNode = Microsoft.Msagl.Drawing.Node;
+using MouseButtons = System.Windows.Forms.MouseButtons;
 
 namespace Origam.Workbench.Editors
 {
@@ -159,13 +160,13 @@ namespace Origam.Workbench.Editors
 						gViewer: gViewer,
 						parentForm: this,
 						persistenceProvider: persistenceProvider,
-						factory: new WorkFlowDiagramFactory());
+						factory: new WorkFlowDiagramFactory(gViewer));
 					break;
 				case IContextStore contextStore:
 					internalEditor = new GeneralDiagramEditor<IContextStore>(
 						gViewer: gViewer,
 						schemaItem: contextStore,
-						factory: new ContextStoreDiagramFactory(persistenceProvider));
+						factory: new ContextStoreDiagramFactory(persistenceProvider, gViewer));
 					break;
 				case ISchemaItem schemaItem:
 					internalEditor = new GeneralDiagramEditor<ISchemaItem>(

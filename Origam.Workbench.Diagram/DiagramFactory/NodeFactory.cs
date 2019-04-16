@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.GraphViewerGdi;
 using Origam.Schema;
 using Origam.Workbench.Diagram.Extensions;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
@@ -14,11 +15,19 @@ namespace Origam.Workbench.Diagram.DiagramFactory
         private readonly int margin = 3;
         private readonly int marginLeft = 5;
         private readonly Font font = new Font("Arial", 12);
-        private readonly Pen blackPen = new Pen(System.Drawing.Color.Black, 1);
         private readonly SolidBrush drawBrush = new SolidBrush(System.Drawing.Color.Black);
         private readonly StringFormat drawFormat = new StringFormat();
         private readonly Graphics measurementGraphics = new Control().CreateGraphics();
-        
+        private readonly Pen boldBlackPen = new Pen(System.Drawing.Color.Black, 2);
+        private readonly Pen blackPen =new Pen(System.Drawing.Color.Black, 1);
+        private readonly GViewer viewer;
+
+        public NodeFactory(GViewer viewer)
+        {
+            this.viewer = viewer;
+        }
+
+
         public Node AddNode(Graph graph, ISchemaItem schemaItem)
         {
             Node node = graph.AddNode(schemaItem.Id.ToString());
@@ -40,6 +49,10 @@ namespace Origam.Workbench.Diagram.DiagramFactory
             Graphics editorGraphics = (Graphics)graphicsObj;
             var image = GetImage(node);
 
+            Pen pen = viewer.SelectedObject == node
+                ? boldBlackPen 
+                : blackPen;
+            
             SizeF stringSize = editorGraphics.MeasureString(node.LabelText, font);
 
             var borderSize = CalculateBorderSize(node, image);
@@ -60,7 +73,7 @@ namespace Origam.Workbench.Diagram.DiagramFactory
                 {
                     graphics.DrawString(node.LabelText, font, drawBrush,
                         labelPoint, drawFormat);
-                    graphics.DrawRectangle(blackPen, border);
+                    graphics.DrawRectangle(pen, border);
                     graphics.DrawImage(image, imagePoint);
                 }, 
                 yAxisCoordinate: (float)node.GeometryNode.Center.Y);
@@ -96,6 +109,7 @@ namespace Origam.Workbench.Diagram.DiagramFactory
             blackPen?.Dispose();
             drawBrush?.Dispose();
             drawFormat?.Dispose();
+            boldBlackPen?.Dispose();
             measurementGraphics?.Dispose();
         }
     }

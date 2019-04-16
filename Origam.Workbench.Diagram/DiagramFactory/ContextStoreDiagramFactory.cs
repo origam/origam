@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.GraphViewerGdi;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.WorkflowModel;
 using DrawingNode = Microsoft.Msagl.Drawing.Node;
@@ -17,10 +18,10 @@ namespace Origam.Workbench.Diagram.DiagramFactory
 
         private readonly NodeFactory nodeFactory;
 
-        public ContextStoreDiagramFactory(IPersistenceProvider persistenceProvider)
+        public ContextStoreDiagramFactory(IPersistenceProvider persistenceProvider, GViewer viewer)
         {
             this.persistenceProvider = persistenceProvider;
-            nodeFactory = new NodeFactory();
+            nodeFactory = new NodeFactory(viewer);
         }
 
         public Graph Draw(IContextStore contextStore)

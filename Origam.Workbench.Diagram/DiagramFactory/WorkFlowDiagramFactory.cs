@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Microsoft.Msagl.Core.Geometry.Curves;
+using Microsoft.Msagl.GraphViewerGdi;
 using Origam.Schema;
 using Origam.Workbench.Diagram.DiagramFactory;
 using Origam.Workbench.Diagram.Extensions;
@@ -38,10 +39,13 @@ namespace Origam.Workbench.Diagram
 	{
 		private Graph graph;
 		private readonly NodeFactory nodeFactory;
+		private readonly Pen boldBlackPen = new Pen(System.Drawing.Color.Black, 2);
+		private readonly GViewer viewer;
 
-		public WorkFlowDiagramFactory()
+		public WorkFlowDiagramFactory(GViewer viewer)
 		{
-			nodeFactory = new NodeFactory();
+			this.viewer = viewer;
+			nodeFactory = new NodeFactory(viewer);
 		}
 
 		public Graph Draw(IWorkflowBlock graphParent)
@@ -144,6 +148,10 @@ namespace Origam.Workbench.Diagram
 				(int)node.BoundingBox.Width, 
 				(int)node.BoundingBox.Height);
 			
+			Pen pen = viewer.SelectedObject == node
+				? boldBlackPen 
+				: blackPen;
+			
 			Graphics editorGraphics = (Graphics)graphicsObj;
 			var image = GetImage(node);
 
@@ -167,7 +175,7 @@ namespace Origam.Workbench.Diagram
 				{
 					graphics.DrawString(node.LabelText, font, drawBrush,
 						labelPoint, drawFormat);
-					graphics.DrawRectangle(blackPen, border);
+					graphics.DrawRectangle(pen, border);
 					graphics.DrawImage(image, imagePoint);
 				}, 
 				yAxisCoordinate: (float)node.GeometryNode.Center.Y);
