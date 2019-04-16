@@ -28,6 +28,7 @@
         <exclude name="Portal.swf" />
         <exclude name="Portal_dbg.swf" />
         <exclude name="*.config" />
+        <include name="portal.config" />
         <exclude name="fixtureRunner.aspx"/>
         <include name="upgrade\**\*.*" />
         <include name="css\**\*.*" />
