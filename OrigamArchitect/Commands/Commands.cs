@@ -57,6 +57,7 @@ using Origam.Extensions;
 using Origam.Git;
 using Origam.Gui;
 using Origam.Windows.Editor.GIT;
+using Origam.Workbench.Services.CoreServices;
 
 namespace OrigamArchitect.Commands
 {
@@ -1708,14 +1709,15 @@ namespace OrigamArchitect.Commands
 
         public override void Run()
         {
-            AbstractSqlCommandGenerator generator = ServiceManager.Services.GetService(typeof(IDataService)) as AbstractSqlCommandGenerator;
-            generator.PrettyFormat = true;
-            StringBuilder builder = new StringBuilder();
+            AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+            AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator) abstractSqlDataService.DbDataAdapterFactory;
             DataStructureEntity entity = Owner as DataStructureEntity;
+            StringBuilder builder = new StringBuilder();
             if (entity.Columns.Count > 0)
             {
                 DataStructure ds = (Owner as ISchemaItem).RootItem as DataStructure;
                 builder.AppendLine("-- SQL statements for data structure: " + ds.Name);
+                generator.PrettyFormat = true;
                 // parameter declarations
                 builder.AppendLine(
                     generator.SelectParameterDeclarationsSql(
@@ -1728,15 +1730,15 @@ namespace OrigamArchitect.Commands
                 builder.AppendLine("-----------------------------------------------------------------");
                 builder.AppendLine(
                     generator.SelectSql(
-                    ds,
-                    Owner as DataStructureEntity,
-                    null,
-                    null,
-                    null,
-                    new Hashtable(),
-                    null,
-                    false
-                    )
+                        ds: ds,
+                        entity: Owner as DataStructureEntity,
+                        filter: null,
+                        sortSet: null,
+                        scalarColumn: null,
+                        parameters: new Hashtable(),
+                        selectParameterReferences: null,
+                        forceDatabaseCalculation: false
+                        )
                     );
                 builder.AppendLine();
                 builder.AppendLine("-----------------------------------------------------------------");

@@ -221,13 +221,13 @@ namespace Origam.DA.Service
 		}
 
 
-		internal override DbDataAdapterFactory DbDataAdapterFactory
+		public override DbDataAdapterFactory DbDataAdapterFactory
 		{
 			get
 			{
 				return _adapterFactory;
 			}
-			set
+			internal set
 			{
 				_adapterFactory = value;
 			}

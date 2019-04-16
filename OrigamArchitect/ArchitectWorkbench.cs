@@ -73,6 +73,7 @@ using Origam.Gui.UI;
 using Origam.Excel;
 using Origam.DA.ObjectPersistence.Providers;
 using Origam.Schema.DeploymentModel;
+using Origam.Workbench.Services.CoreServices;
 
 namespace OrigamArchitect
 {
@@ -2022,7 +2023,8 @@ namespace OrigamArchitect
 		private void _schema_ActiveNodeChanged(object sender, EventArgs e)
 		{
 			UpdateToolbar();
-            AbstractSqlCommandGenerator abstractSqlCommandGenerator = ServiceManager.Services.GetService(typeof(IDataService)) as AbstractSqlCommandGenerator;
+            AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+            AbstractSqlCommandGenerator abstractSqlCommandGenerator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory;
             if (_schema.ActiveSchemaItem != null)
 			{
 				ShowDocumentation cmd = new ShowDocumentation();

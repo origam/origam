@@ -109,7 +109,7 @@ namespace Origam.DA.Service
             }
         }
 
-        internal abstract DbDataAdapterFactory DbDataAdapterFactory{get; set;}
+        public abstract DbDataAdapterFactory DbDataAdapterFactory{get;  internal set; }
 		internal abstract IDbConnection GetConnection(string connectionString);
 		internal abstract IDbTransaction GetTransaction(string transactionId, IsolationLevel isolation);
         public abstract string BuildConnectionString(string serverName, int port, string databaseName, 
