@@ -37,6 +37,13 @@ namespace Origam.Workbench.Diagram
 {
 	public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock>
 	{
+		private static readonly int margin = 3;
+		private static readonly int marginLeft = 5;
+		private static readonly Font font = new Font("Arial", 12);
+		private static readonly Pen blackPen = new Pen(System.Drawing.Color.Black, 1);
+		private static readonly SolidBrush drawBrush = new SolidBrush(System.Drawing.Color.Black);
+		private static readonly StringFormat drawFormat = new StringFormat();
+		
 		private Graph graph;
 		private readonly NodeFactory nodeFactory;
 		private readonly Pen boldBlackPen = new Pen(System.Drawing.Color.Black, 2);
@@ -133,14 +140,6 @@ namespace Origam.Workbench.Diagram
 			Image image = imageList.Images[schemaBrowser.ImageIndex(schemaItem.Icon)];
 			return image;
 		}
-
-
-		private readonly int margin = 3;
-		private readonly int marginLeft = 5;
-		private readonly Font font = new Font("Arial", 12);
-		private readonly Pen blackPen = new Pen(System.Drawing.Color.Black, 1);
-		private readonly SolidBrush drawBrush = new SolidBrush(System.Drawing.Color.Black);
-		private readonly StringFormat drawFormat = new StringFormat();
 		
 		private bool DrawSubgraph(Node node, object graphicsObj)
 		{

@@ -10,18 +10,18 @@ using Point = Microsoft.Msagl.Core.Geometry.Point;
 
 namespace Origam.Workbench.Diagram.DiagramFactory
 {
-    class NodeFactory: IDisposable
+    class NodeFactory
     {
-        private readonly int margin = 3;
-        private readonly int textSideMargin = 15;
-        private readonly Font font = new Font("Arial", 12);
-        private readonly SolidBrush drawBrush = new SolidBrush(System.Drawing.Color.Black);
-        private readonly StringFormat drawFormat = new StringFormat();
-        private readonly Graphics measurementGraphics = new Control().CreateGraphics();
-        private readonly Pen boldBlackPen = new Pen(System.Drawing.Color.Black, 2);
-        private readonly Pen blackPen =new Pen(System.Drawing.Color.Black, 1);
-        private readonly SolidBrush greyBrush = new SolidBrush(System.Drawing.Color.LightGray);
-        private readonly int nodeHeight = 30;
+        private static readonly int margin = 3;
+        private static readonly int textSideMargin = 15;
+        private static readonly Font font = new Font("Arial", 12);
+        private static readonly SolidBrush drawBrush = new SolidBrush(System.Drawing.Color.Black);
+        private static readonly StringFormat drawFormat = new StringFormat();
+        private static readonly Graphics measurementGraphics = new Control().CreateGraphics();
+        private static readonly Pen boldBlackPen = new Pen(System.Drawing.Color.Black, 2);
+        private static readonly Pen blackPen =new Pen(System.Drawing.Color.Black, 1);
+        private static readonly SolidBrush greyBrush = new SolidBrush(System.Drawing.Color.LightGray);
+        private static readonly int nodeHeight = 30;
         private readonly GViewer viewer;
 
         public NodeFactory(GViewer viewer)
@@ -101,17 +101,6 @@ namespace Origam.Workbench.Diagram.DiagramFactory
 
             int totalWidth = (int) (margin + nodeHeight + textSideMargin + stringSize.Width + textSideMargin);
             return  new Size(totalWidth, nodeHeight);
-        }
-       
-
-        public void Dispose()
-        {
-            font?.Dispose();
-            blackPen?.Dispose();
-            drawBrush?.Dispose();
-            drawFormat?.Dispose();
-            boldBlackPen?.Dispose();
-            measurementGraphics?.Dispose();
         }
     }
 }
