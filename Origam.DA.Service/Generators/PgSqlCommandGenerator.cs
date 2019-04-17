@@ -1143,5 +1143,25 @@ namespace Origam.DA.Service
 
             return sqlExpression.ToString();
         }
+
+        internal override void RenderSelectUpdatedData(StringBuilder sqlExpression, DataStructureEntity entity)
+        {
+            ArrayList primaryKeys = new ArrayList();
+            StringBuilder actualsequence = new StringBuilder();
+            actualsequence.Append(entity.Name);
+            actualsequence.Append("_");
+            foreach (DataStructureColumn column in entity.Columns)
+            {
+                if (column.Field.IsPrimaryKey) primaryKeys.Add(column);
+            }
+            if (primaryKeys.Count == 0)
+            {
+                throw new OrigamException(ResourceUtils.GetString("NoPrimaryKey", entity.Name));
+            }
+            PrettyLine(sqlExpression);
+            actualsequence.Append(((DataStructureColumn)primaryKeys[0]).Name);
+            actualsequence.Append("_seq");
+            sqlExpression.Append("; SELECT currval(" + actualsequence.ToString() + ")");
+        }
     }
 }

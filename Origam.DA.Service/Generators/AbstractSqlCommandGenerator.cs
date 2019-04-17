@@ -1058,22 +1058,7 @@ namespace Origam.DA.Service
             }
             return sqlExpression.ToString();
         }
-
-        private void RenderSelectUpdatedData(StringBuilder sqlExpression, DataStructureEntity entity)
-        {
-            ArrayList primaryKeys = new ArrayList();
-            foreach (DataStructureColumn column in entity.Columns)
-            {
-                if (column.Field.IsPrimaryKey) primaryKeys.Add(column);
-            }
-            if (primaryKeys.Count == 0)
-            {
-                throw new OrigamException(ResourceUtils.GetString("NoPrimaryKey", entity.Name));
-            }
-            PrettyLine(sqlExpression);
-            sqlExpression.Append("; SELECT @@IDENTITY AS " + ((DataStructureColumn)primaryKeys[0]).Name);
-        }
-
+        internal abstract void RenderSelectUpdatedData(StringBuilder sqlExpression, DataStructureEntity entity);
         public string SelectRowSql(DataStructureEntity entity, Hashtable selectParameterReferences,
             string columnName, bool forceDatabaseCalculation)
         {
@@ -1623,7 +1608,7 @@ namespace Origam.DA.Service
                    );
         }
 
-        private void PrettyLine(StringBuilder sqlExpression)
+        internal void PrettyLine(StringBuilder sqlExpression)
         {
             if (PrettyFormat)
             {

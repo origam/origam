@@ -1194,5 +1194,20 @@ namespace Origam.DA.Service
 
             return sqlExpression.ToString();
         }
+
+        internal override void RenderSelectUpdatedData(StringBuilder sqlExpression, DataStructureEntity entity)
+        {
+            ArrayList primaryKeys = new ArrayList();
+            foreach (DataStructureColumn column in entity.Columns)
+            {
+                if (column.Field.IsPrimaryKey) primaryKeys.Add(column);
+            }
+            if (primaryKeys.Count == 0)
+            {
+                throw new OrigamException(ResourceUtils.GetString("NoPrimaryKey", entity.Name));
+            }
+            PrettyLine(sqlExpression);
+            sqlExpression.Append("; SELECT @@IDENTITY AS " + ((DataStructureColumn)primaryKeys[0]).Name);
+        }
     }
 }
