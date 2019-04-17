@@ -25,6 +25,8 @@
       <fileset basedir=".">
         <include name="*.*" />
         <exclude name="*.txt" />
+        <exclude name="Portal.swf" />
+        <exclude name="Portal_dbg.swf" />
         <exclude name="web.config"/>
         <exclude name="packages.config"/>
         <exclude name="OrigamSettings.config"/>
