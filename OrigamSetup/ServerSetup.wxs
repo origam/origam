@@ -1,0 +1,1786 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension" xmlns:sql="http://schemas.microsoft.com/wix/SqlExtension" xmlns:iis="http://schemas.microsoft.com/wix/IIsExtension">
+    <Product Id="46792910-C321-4DF6-885C-84481A84E3B4" Name="ORIGAM Application Server" Language="1033" Version="14.6.0" Manufacturer="Advantage Solutions s. r. o." UpgradeCode="3BACE826-CCBB-4D31-93B4-60EBF2FAF33B">
+        <Package Id="*" Keywords="Installer" Description="ORIGAM Application Server" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+        <Media Id="1" Cabinet="install.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1" CompressionLevel="high" />
+        <Property Id="DiskPrompt" Value="Advantage Solutions's ORIGAM Server Installation [1]" />
+        <util:User Id="SQLUser" Name="[SERVER_USERNAME]" Password="[SERVER_PASSWORD]" />
+        <Property Id="SERVER_NAME" Hidden="yes">.\ORIGAM</Property>
+        <Property Id="SERVER_USERNAME" Hidden="yes" />
+        <Property Id="SERVER_PASSWORD" Hidden="yes" />
+        <Property Id="SERVER_PORT" Hidden="yes">80</Property>
+        <Property Id="VDIR_ALIAS" Hidden="yes">origam</Property>
+        <Property Id="DATABASE_NAME" Hidden="yes" />
+        <Property Id="AUTHENTICATION_TYPE" Hidden="yes">WIN</Property>
+        <Property Id="INSTALLATION_TYPE" Hidden="yes">VDIR</Property>
+        <Property Id="RESTORE_DATABASE" Hidden="yes">Yes</Property>
+        <Property Id="EULA_AGREEMENT" Hidden="yes">
+        </Property>
+        <Property Id="MSIUSEREALADMINDETECTION" Value="1" />
+        <Property Id="ARPPRODUCTICON" Value="icon" />
+        <Property Id="IIS_VALID">
+            <RegistrySearch Id="CheckIIS" Root="HKLM" Key="SOFTWARE\Microsoft\InetStp\Components" Name="W3SVC" Type="raw" />
+        </Property>
+        <Property Id="IIS_WIN_AUTH">
+            <RegistrySearch Id="CheckIISWinAuth" Root="HKLM" Key="SOFTWARE\Microsoft\InetStp\Components" Name="WindowsAuthentication" Type="raw" />
+        </Property>
+        <Property Id="IIS_WIN_AUTH_64">
+            <RegistrySearch Id="CheckIISWinAuth64" Root="HKLM" Key="SOFTWARE\Microsoft\InetStp\Components" Name="WindowsAuthentication" Type="raw" Win64="yes" />
+        </Property>
+        <Property Id="PREREQUISITES_OK" Hidden="yes" />
+        <Property Id="ASPNET">
+            <RegistrySearch Id="CheckASPNET45" Root="HKLM" Key="SOFTWARE\Microsoft\InetStp\Components" Name="ASPNET45" Type="raw" />
+        </Property>
+        <Property Id="ASPNET4">
+            <RegistrySearch Id="CheckASPNET" Root="HKLM" Key="SOFTWARE\Microsoft\InetStp\Components" Name="ASPNET" Type="raw" />
+        </Property>
+        <!-- 32-bit edition of Windows knows where to find dism.exe -->
+        <Property Id="DISMEXEPATH" Value="dism.exe" />
+        <!-- 64-bit edition of Windows requires this workaround to get proper dism.exe version -->
+        <SetProperty Id="IIS_WIN_AUTH" Value="Yes" Before="SetPREREQUISITES_OK">IIS_WIN_AUTH_64</SetProperty>
+        <SetProperty Id="PREREQUISITES_OK" Value="1" After="AppSearch">IIS_WIN_AUTH and IIS_VALID and ASPNET</SetProperty>
+        <SetProperty Id="ASPNET" Before="SetPREREQUISITES_OK" Value="Yes">ASPNET4</SetProperty>
+        <Binary Id="CreateModelDbScript" SourceFile="binary\create_model_db.sql" />
+        <Binary Id="CreateDataDbScript" SourceFile="binary\create_data_db.sql" />
+        <Binary Id="background" SourceFile="binary\origam-installer-background.jpg" />
+        <Binary Id="background_welcome" SourceFile="binary\origam-installer-welcome.jpg" />
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder" Name="PFiles">
+                <Directory Id="origam" Name="ORIGAM">
+                    <Directory Id="INSTALLDIR" Name="ORIGAM Server">
+                        <Component Id="ModelDBSQLAuth" Guid="434FB9E7-48A9-4E89-889A-58663A6F23EA" KeyPath="yes">
+                            <sql:SqlDatabase Id="ModelDatabaseSqlAuthentication" Database="[DATABASE_NAME]_Model" User="SQLUser" Server="[SERVER_NAME]" CreateOnInstall="yes" DropOnUninstall="no" ContinueOnError="no">
+                                <sql:SqlScript Id="CreateModelDbSQLAuth" BinaryKey="CreateModelDbScript" ExecuteOnInstall="yes" />
+                            </sql:SqlDatabase>
+                        </Component>
+                        <Component Id="DataDBSQLAuth" Guid="8E925D2B-C7F8-4146-8934-D5B196383E21" KeyPath="yes">
+                            <sql:SqlDatabase Id="DataDatabaseSqlAuthentication" Database="[DATABASE_NAME]_Data" User="SQLUser" Server="[SERVER_NAME]" CreateOnInstall="yes" DropOnUninstall="no" ContinueOnError="no">
+                                <sql:SqlScript Id="CreateDataDbSQLAuth" BinaryKey="CreateDataDbScript" ExecuteOnInstall="yes" />
+                            </sql:SqlDatabase>
+                        </Component>
+                        <Component Id="SQLAuthSettings" Guid="9993BF4D-9A9A-4C70-9B20-587954F95BD1" KeyPath="yes">
+                            <util:XmlFile Id="ModelConnectionStringSQLAuth" File="[INSTALLDIR]OrigamSettings.config" Action="setValue" ElementPath="//OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings/OrigamSettings/SchemaConnectionString" Value="Server=[SERVER_NAME];database=[DATABASE_NAME]_Model;User Id=[SERVER_USERNAME];Password=[SERVER_PASSWORD]" />
+                            <util:XmlFile Id="DataConnectionStringSQLAuth" File="[INSTALLDIR]OrigamSettings.config" Action="setValue" ElementPath="//OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings/OrigamSettings/DataConnectionString" Value="Server=[SERVER_NAME];database=[DATABASE_NAME]_Data;User Id=[SERVER_USERNAME];Password=[SERVER_PASSWORD]" />
+                        </Component>
+                        <Component Id="WINAuthSettings" Guid="460958AE-E058-42C3-82E8-BC3F2C7CC1AB" KeyPath="yes">
+                            <util:XmlFile Id="ModelConnectionStringWINAuth" File="[INSTALLDIR]OrigamSettings.config" Action="setValue" ElementPath="//OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings/OrigamSettings/SchemaConnectionString" Value="Server=[SERVER_NAME];database=[DATABASE_NAME]_Model;Integrated Security=SSPI" />
+                            <util:XmlFile Id="DataConnectionStringWINAuth" File="[INSTALLDIR]OrigamSettings.config" Action="setValue" ElementPath="//OrigamSettings/xmlSerializerSection/ArrayOfOrigamSettings/OrigamSettings/DataConnectionString" Value="Server=[SERVER_NAME];database=[DATABASE_NAME]_Data;Integrated Security=SSPI" />
+                        </Component>
+                        <Component Id="ModelDBWINAuth" Guid="F0308722-0419-4A45-A90C-1EE6EB697F93" KeyPath="yes">
+                            <sql:SqlDatabase Id="ModelDatabaseWinAuthentication" Database="[DATABASE_NAME]_Model" Server="[SERVER_NAME]" CreateOnInstall="yes" DropOnUninstall="no" ContinueOnError="no">
+                                <sql:SqlScript Id="CreateModelDbWINAuth" BinaryKey="CreateModelDbScript" ExecuteOnInstall="yes" />
+                            </sql:SqlDatabase>
+                        </Component>
+                        <Component Id="DataDBWINAuth" Guid="1F3CB8AA-03F2-467B-BC37-B1A198AC3AEE" KeyPath="yes">
+                            <sql:SqlDatabase Id="DataDatabaseWinAuthentication" Database="[DATABASE_NAME]_Data" Server="[SERVER_NAME]" CreateOnInstall="yes" DropOnUninstall="no" ContinueOnError="no">
+                                <sql:SqlScript Id="CreateDataDbWINAuth" BinaryKey="CreateDataDbScript" ExecuteOnInstall="yes" />
+                            </sql:SqlDatabase>
+                        </Component>
+                        <Component Id="ConfigFile" Guid="7B6BD6B8-6FAD-40CA-BE27-917EAEA2A82E">
+                            <File Id="OrigamSettings" Name="OrigamSettings.config" DiskId="1" Source="config/OrigamSettings.server.config" KeyPath="yes" />
+                        </Component>
+                        <Directory Id="JS" Name="js">
+                            <Component Id="CHOSEN.JQUERY.MIN.JS" DiskId="1" Guid="0C6B6E87-4D19-4103-8E5A-46A3BCFC0768">
+                                <File Id="CHOSEN.JQUERY.MIN.JS" Name="chosen.jquery.min.js" Source="server_source\js\chosen.jquery.min.js" />
+                            </Component>
+                            <Component Id="INPUTOVERLAY.JQUERY.JS" DiskId="1" Guid="EB8C63A3-FC0C-46C6-BF58-D84B390C844A">
+                                <File Id="INPUTOVERLAY.JQUERY.JS" Name="inputoverlay.jquery.js" Source="server_source\js\inputoverlay.jquery.js" />
+                            </Component>
+                            <Component Id="JQUERY_1.9.1.MIN.JS" DiskId="1" Guid="FF577F19-ACD3-43BA-9860-50AF7A3ACBEE">
+                                <File Id="JQUERY_1.9.1.MIN.JS" Name="jquery-1.9.1.min.js" Source="server_source\js\jquery-1.9.1.min.js" />
+                            </Component>
+                            <Component Id="JQUERY_UI.MIN.JS" DiskId="1" Guid="D4CD6DE1-8746-4A19-AADF-D8F27C08824B">
+                                <File Id="JQUERY_UI.MIN.JS" Name="jquery-ui.min.js" Source="server_source\js\jquery-ui.min.js" />
+                            </Component>
+                            <Component Id="JQUERY.JSPLUMB_1.5.5.MIN.JS" DiskId="1" Guid="1A7A5907-63B5-4791-AE9D-D41E3C67F2B6">
+                                <File Id="JQUERY.JSPLUMB_1.5.5.MIN.JS" Name="jquery.jsPlumb-1.5.5.min.js" Source="server_source\js\jquery.jsPlumb-1.5.5.min.js" />
+                            </Component>
+                            <Component Id="JQUERY.MIN.JS" DiskId="1" Guid="787A5A66-71D5-4389-B923-5F3C5B475041">
+                                <File Id="JQUERY.MIN.JS" Name="jquery.min.js" Source="server_source\js\jquery.min.js" />
+                            </Component>
+                            <Component Id="LANG_SQL.JS" DiskId="1" Guid="92A23966-54B5-45B7-AD30-CD936002E230">
+                                <File Id="LANG_SQL.JS" Name="lang-sql.js" Source="server_source\js\lang-sql.js" />
+                            </Component>
+                            <Component Id="PRETTIFY.JS" DiskId="1" Guid="0CD70599-AFC7-46ED-A297-D37CC41A4667">
+                                <File Id="PRETTIFY.JS" Name="prettify.js" Source="server_source\js\prettify.js" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="CSS" Name="css">
+                            <Component Id="ORIGAM.CSS" DiskId="1" Guid="D9334F0D-1D5D-400E-B8A1-F47D67452B62">
+                                <File Id="ORIGAM.CSS" Name="origam.css" Source="server_source\css\origam.css" />
+                            </Component>
+                            <Component Id="CHOSEN.CSS" DiskId="1" Guid="5008AAB4-D614-4647-ACBB-63FBF749CC37">
+                                <File Id="CHOSEN.CSS" Name="chosen.css" Source="server_source\css\chosen.css" />
+                            </Component>
+                            <Component Id="DOC.CSS" DiskId="1" Guid="6760E2F8-19B0-4AEA-BB11-0D605A97DD1E">
+                                <File Id="DOC.CSS" Name="doc.css" Source="server_source\css\doc.css" />
+                            </Component>
+                            <Component Id="PRETTIFY.CSS" DiskId="1" Guid="157B8C9C-222C-4D5C-A009-29FCA598E139">
+                                <File Id="PRETTIFY.CSS" Name="prettify.css" Source="server_source\css\prettify.css" />
+                            </Component>
+                            <Component Id="RESET.CSS" DiskId="1" Guid="E24DADD1-0FE8-4A1F-94A8-482732A65249">
+                                <File Id="RESET.CSS" Name="reset.css" Source="server_source\css\reset.css" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="ASSETS_1" Name="assets">
+                            <Component Id="ADMINBTN.GIF" DiskId="1" Guid="0B8F78A9-EE7D-4954-99EA-7E19A676BE44">
+                                <File Id="ADMINBTN.GIF" Name="adminBtn.gif" Source="server_source\assets\adminBtn.gif" />
+                            </Component>
+                            <Component Id="ADMINHOVER.GIF" DiskId="1" Guid="2DF40F8A-FB3F-4B54-B04C-2280DAA3CFC3">
+                                <File Id="ADMINHOVER.GIF" Name="adminHover.gif" Source="server_source\assets\adminHover.gif" />
+                            </Component>
+                            <Component Id="BACKGROUNDFOCUS.PNG" DiskId="1" Guid="A9C69CBA-E5F1-4FA9-8368-55250DA066A6">
+                                <File Id="BACKGROUNDFOCUS.PNG" Name="backgroundfocus.png" Source="server_source\assets\backgroundfocus.png" />
+                            </Component>
+                            <Component Id="CHOSEN_SPRITE.PNG" DiskId="1" Guid="FEC2DFCF-985F-4DDF-8AA1-CA2A3B74330E">
+                                <File Id="CHOSEN_SPRITE.PNG" Name="chosen-sprite.png" Source="server_source\assets\chosen-sprite.png" />
+                            </Component>
+                            <Component Id="HELPBTN.GIF" DiskId="1" Guid="2221F8FB-1C31-4F52-B3A1-06D7411BD7CF">
+                                <File Id="HELPBTN.GIF" Name="helpBtn.gif" Source="server_source\assets\helpBtn.gif" />
+                            </Component>
+                            <Component Id="HELPHOVER.GIF" DiskId="1" Guid="5F1A62CE-8359-4ED3-88A0-C97AFEBE681F">
+                                <File Id="HELPHOVER.GIF" Name="helpHover.gif" Source="server_source\assets\helpHover.gif" />
+                            </Component>
+                            <Component Id="STAR.PNG" DiskId="1" Guid="2FAB8B38-3031-45EB-AAF0-95A55847963C">
+                                <File Id="STAR.PNG" Name="star.png" Source="server_source\assets\star.png" />
+                            </Component>
+                            <Component Id="mapHandle.png" Guid="B84603CA-995A-4533-B3A5-722E84566D60">
+                                <File Id="MAPHANDLE.PNG" Name="mapHandle.png" Source="server_source\assets\mapHandle.png" />
+                            </Component>
+                            <Component Id="queue_remove.png" Guid="EE824F05-EEFA-4572-8818-C51AC27A85CC">
+                                <File Id="QUEUE_REMOVE.PNG" Name="queue_remove.png" Source="server_source\assets\queue_remove.png" />
+                            </Component>
+                            <Component Id="queue_satechange.png" Guid="2A23F398-5444-4F08-9F4D-DC849EB4647C">
+                                <File Id="QUEUE_STATECHANGE.PNG" Name="queue_statechange.png" Source="server_source\assets\queue_statechange.png" />
+                            </Component>
+                            <Component Id="formAlert0.png" Guid="B3A12F6B-6747-4A81-9A8C-2EC31115104E">
+                                <File Id="FORMALERT0.PNG" Name="formAlert0.png" Source="server_source\assets\formAlert0.png" />
+                            </Component>
+                            <Component Id="formAlert1.png" Guid="E7C65963-F669-421E-9F4E-A2D1AB84BE9F">
+                                <File Id="FORMALERT1.PNG" Name="formAlert1.png" Source="server_source\assets\formAlert1.png" />
+                            </Component>
+                            <Component Id="formAlert2.png" Guid="8AEAE6D0-DD59-42B6-BF2B-153F2475A2B7">
+                                <File Id="FORMALERT2.PNG" Name="formAlert2.png" Source="server_source\assets\formAlert2.png" />
+                            </Component>
+                            <Directory Id="DOC" Name="doc">
+                                <Component Id="MODEL0.PNG" DiskId="1" Guid="D8345774-6289-4375-AA89-1FC182C43483">
+                                    <File Id="MODEL0.PNG" Name="model0.png" Source="server_source\assets\doc\model0.png" />
+                                </Component>
+                                <Component Id="MODEL1.PNG" DiskId="1" Guid="F4E102C5-5A28-4571-84AE-896415CE4769">
+                                    <File Id="MODEL1.PNG" Name="model1.png" Source="server_source\assets\doc\model1.png" />
+                                </Component>
+                                <Component Id="MODEL10.PNG" DiskId="1" Guid="7A40C48C-9B1C-459C-927A-F6C52879F459">
+                                    <File Id="MODEL10.PNG" Name="model10.png" Source="server_source\assets\doc\model10.png" />
+                                </Component>
+                                <Component Id="MODEL11.PNG" DiskId="1" Guid="31CB116B-8013-4B64-8311-9263A49D2310">
+                                    <File Id="MODEL11.PNG" Name="model11.png" Source="server_source\assets\doc\model11.png" />
+                                </Component>
+                                <Component Id="MODEL12.PNG" DiskId="1" Guid="67A00354-82E9-4110-8B2F-BBE5E9C3795A">
+                                    <File Id="MODEL12.PNG" Name="model12.png" Source="server_source\assets\doc\model12.png" />
+                                </Component>
+                                <Component Id="MODEL13.PNG" DiskId="1" Guid="01D7429F-EED0-4A16-BB45-0E83DFBE898E">
+                                    <File Id="MODEL13.PNG" Name="model13.png" Source="server_source\assets\doc\model13.png" />
+                                </Component>
+                                <Component Id="MODEL14.PNG" DiskId="1" Guid="CC199149-41E5-40B9-AEC5-554646F1E152">
+                                    <File Id="MODEL14.PNG" Name="model14.png" Source="server_source\assets\doc\model14.png" />
+                                </Component>
+                                <Component Id="MODEL15.PNG" DiskId="1" Guid="A5DA3D62-1276-4074-B461-543057C480B5">
+                                    <File Id="MODEL15.PNG" Name="model15.png" Source="server_source\assets\doc\model15.png" />
+                                </Component>
+                                <Component Id="MODEL16.PNG" DiskId="1" Guid="6003393F-2DBC-4FA0-9720-63EC4061BBA9">
+                                    <File Id="MODEL16.PNG" Name="model16.png" Source="server_source\assets\doc\model16.png" />
+                                </Component>
+                                <Component Id="MODEL17.PNG" DiskId="1" Guid="D3468822-A77D-482C-817E-DF5810AA0075">
+                                    <File Id="MODEL17.PNG" Name="model17.png" Source="server_source\assets\doc\model17.png" />
+                                </Component>
+                                <Component Id="MODEL18.PNG" DiskId="1" Guid="4958BECD-17C0-41CC-81DF-53BC38070855">
+                                    <File Id="MODEL18.PNG" Name="model18.png" Source="server_source\assets\doc\model18.png" />
+                                </Component>
+                                <Component Id="MODEL19.PNG" DiskId="1" Guid="A7CFAFBD-07DF-47E3-BCF0-4F539EB39DCC">
+                                    <File Id="MODEL19.PNG" Name="model19.png" Source="server_source\assets\doc\model19.png" />
+                                </Component>
+                                <Component Id="MODEL2.PNG" DiskId="1" Guid="6AA9E6FF-463B-4634-98BC-8E7AF2A7EFB6">
+                                    <File Id="MODEL2.PNG" Name="model2.png" Source="server_source\assets\doc\model2.png" />
+                                </Component>
+                                <Component Id="MODEL20.PNG" DiskId="1" Guid="39F737FC-31F1-4576-8A73-E2B979F7BF59">
+                                    <File Id="MODEL20.PNG" Name="model20.png" Source="server_source\assets\doc\model20.png" />
+                                </Component>
+                                <Component Id="MODEL21.PNG" DiskId="1" Guid="9AC6E6AE-1798-43B9-B60E-00A4EF436C18">
+                                    <File Id="MODEL21.PNG" Name="model21.png" Source="server_source\assets\doc\model21.png" />
+                                </Component>
+                                <Component Id="MODEL22.PNG" DiskId="1" Guid="008A3D65-9E01-499C-8B2A-0F96F48E211A">
+                                    <File Id="MODEL22.PNG" Name="model22.png" Source="server_source\assets\doc\model22.png" />
+                                </Component>
+                                <Component Id="MODEL23.PNG" DiskId="1" Guid="636438E3-785A-46B2-BF5E-90C6CF72AB58">
+                                    <File Id="MODEL23.PNG" Name="model23.png" Source="server_source\assets\doc\model23.png" />
+                                </Component>
+                                <Component Id="MODEL24.PNG" DiskId="1" Guid="7FBC7C65-7C5D-4362-9E93-010360B1F284">
+                                    <File Id="MODEL24.PNG" Name="model24.png" Source="server_source\assets\doc\model24.png" />
+                                </Component>
+                                <Component Id="MODEL25.PNG" DiskId="1" Guid="B76E3F88-5113-4582-88D7-43527FEDEE14">
+                                    <File Id="MODEL25.PNG" Name="model25.png" Source="server_source\assets\doc\model25.png" />
+                                </Component>
+                                <Component Id="MODEL26.PNG" DiskId="1" Guid="BB7C8547-5DE1-4A2A-9497-6469E2BB3A55">
+                                    <File Id="MODEL26.PNG" Name="model26.png" Source="server_source\assets\doc\model26.png" />
+                                </Component>
+                                <Component Id="MODEL27.PNG" DiskId="1" Guid="46C98F4E-E6C2-48A5-A538-83526BC494D6">
+                                    <File Id="MODEL27.PNG" Name="model27.png" Source="server_source\assets\doc\model27.png" />
+                                </Component>
+                                <Component Id="MODEL28.PNG" DiskId="1" Guid="4C7EF391-D694-4926-B610-DCBFEA435EA7">
+                                    <File Id="MODEL28.PNG" Name="model28.png" Source="server_source\assets\doc\model28.png" />
+                                </Component>
+                                <Component Id="MODEL29.PNG" DiskId="1" Guid="06518D87-D02A-48AC-8C4A-C9FB66AD16BD">
+                                    <File Id="MODEL29.PNG" Name="model29.png" Source="server_source\assets\doc\model29.png" />
+                                </Component>
+                                <Component Id="MODEL3.PNG" DiskId="1" Guid="3391415D-4748-4A49-8FB1-4166BBB468DD">
+                                    <File Id="MODEL3.PNG" Name="model3.png" Source="server_source\assets\doc\model3.png" />
+                                </Component>
+                                <Component Id="MODEL30.PNG" DiskId="1" Guid="47982A42-0174-4ADE-B64B-1AE1B5B2424B">
+                                    <File Id="MODEL30.PNG" Name="model30.png" Source="server_source\assets\doc\model30.png" />
+                                </Component>
+                                <Component Id="MODEL31.PNG" DiskId="1" Guid="FB15B47B-81AA-4323-AF90-6333EC891E7F">
+                                    <File Id="MODEL31.PNG" Name="model31.png" Source="server_source\assets\doc\model31.png" />
+                                </Component>
+                                <Component Id="MODEL32.PNG" DiskId="1" Guid="DF19C6D8-CAA8-4091-9D64-58F0622CE87E">
+                                    <File Id="MODEL32.PNG" Name="model32.png" Source="server_source\assets\doc\model32.png" />
+                                </Component>
+                                <Component Id="MODEL33.PNG" DiskId="1" Guid="94F08072-D5DA-4BA4-B043-FC5D5CC14CB0">
+                                    <File Id="MODEL33.PNG" Name="model33.png" Source="server_source\assets\doc\model33.png" />
+                                </Component>
+                                <Component Id="MODEL34.PNG" DiskId="1" Guid="17047416-AFCA-4D87-8B98-575116F992D2">
+                                    <File Id="MODEL34.PNG" Name="model34.png" Source="server_source\assets\doc\model34.png" />
+                                </Component>
+                                <Component Id="MODEL35.PNG" DiskId="1" Guid="8258F409-A5AA-4618-95EE-FBC67FA91648">
+                                    <File Id="MODEL35.PNG" Name="model35.png" Source="server_source\assets\doc\model35.png" />
+                                </Component>
+                                <Component Id="MODEL36.PNG" DiskId="1" Guid="234E65B5-CABD-44FF-BBF6-3FB52719945A">
+                                    <File Id="MODEL36.PNG" Name="model36.png" Source="server_source\assets\doc\model36.png" />
+                                </Component>
+                                <Component Id="MODEL37.PNG" DiskId="1" Guid="08828853-9DC8-48D4-9D5E-2DAFF81F1A89">
+                                    <File Id="MODEL37.PNG" Name="model37.png" Source="server_source\assets\doc\model37.png" />
+                                </Component>
+                                <Component Id="MODEL38.PNG" DiskId="1" Guid="ABE29E7E-8C29-4FD9-ABF4-1DD2E30063D0">
+                                    <File Id="MODEL38.PNG" Name="model38.png" Source="server_source\assets\doc\model38.png" />
+                                </Component>
+                                <Component Id="MODEL39.PNG" DiskId="1" Guid="2B9FCCF2-263F-4DA9-B494-8C1488C3450B">
+                                    <File Id="MODEL39.PNG" Name="model39.png" Source="server_source\assets\doc\model39.png" />
+                                </Component>
+                                <Component Id="MODEL4.PNG" DiskId="1" Guid="AE5F20AB-DE9B-4585-A09C-7D1B7FA6823C">
+                                    <File Id="MODEL4.PNG" Name="model4.png" Source="server_source\assets\doc\model4.png" />
+                                </Component>
+                                <Component Id="MODEL40.PNG" DiskId="1" Guid="5F911D8A-4BEB-46E6-90D7-E5B0D4BD74CA">
+                                    <File Id="MODEL40.PNG" Name="model40.png" Source="server_source\assets\doc\model40.png" />
+                                </Component>
+                                <Component Id="MODEL41.PNG" DiskId="1" Guid="65057B31-1C74-4C7A-B32A-50F88C220E78">
+                                    <File Id="MODEL41.PNG" Name="model41.png" Source="server_source\assets\doc\model41.png" />
+                                </Component>
+                                <Component Id="MODEL42.PNG" DiskId="1" Guid="AF5D50CA-4D9C-40DF-A633-AEB19EF7F57F">
+                                    <File Id="MODEL42.PNG" Name="model42.png" Source="server_source\assets\doc\model42.png" />
+                                </Component>
+                                <Component Id="MODEL43.PNG" DiskId="1" Guid="D26BEAA6-85E2-493B-84E7-B2244CF90295">
+                                    <File Id="MODEL43.PNG" Name="model43.png" Source="server_source\assets\doc\model43.png" />
+                                </Component>
+                                <Component Id="MODEL44.PNG" DiskId="1" Guid="847E2A99-6964-4DE2-A2F5-C47103022093">
+                                    <File Id="MODEL44.PNG" Name="model44.png" Source="server_source\assets\doc\model44.png" />
+                                </Component>
+                                <Component Id="MODEL45.PNG" DiskId="1" Guid="9C53B6C1-C9D0-4075-8974-5B60BC3858D6">
+                                    <File Id="MODEL45.PNG" Name="model45.png" Source="server_source\assets\doc\model45.png" />
+                                </Component>
+                                <Component Id="MODEL46.PNG" DiskId="1" Guid="315C3D51-1F8E-4DA1-B9E3-763270403894">
+                                    <File Id="MODEL46.PNG" Name="model46.png" Source="server_source\assets\doc\model46.png" />
+                                </Component>
+                                <Component Id="MODEL47.PNG" DiskId="1" Guid="0454C809-8157-49DD-8A2C-34586B08A054">
+                                    <File Id="MODEL47.PNG" Name="model47.png" Source="server_source\assets\doc\model47.png" />
+                                </Component>
+                                <Component Id="MODEL48.PNG" DiskId="1" Guid="3C01852C-7A9A-4A0C-9F4A-3905BFAD6556">
+                                    <File Id="MODEL48.PNG" Name="model48.png" Source="server_source\assets\doc\model48.png" />
+                                </Component>
+                                <Component Id="MODEL49.PNG" DiskId="1" Guid="62BC8121-CA5C-41EA-8BFF-A34988F3F30B">
+                                    <File Id="MODEL49.PNG" Name="model49.png" Source="server_source\assets\doc\model49.png" />
+                                </Component>
+                                <Component Id="MODEL5.PNG" DiskId="1" Guid="18BE30A5-05A5-476B-BA3A-64722F24852F">
+                                    <File Id="MODEL5.PNG" Name="model5.png" Source="server_source\assets\doc\model5.png" />
+                                </Component>
+                                <Component Id="MODEL50.PNG" DiskId="1" Guid="F2AE726B-C619-435C-A795-74CEDA217D5F">
+                                    <File Id="MODEL50.PNG" Name="model50.png" Source="server_source\assets\doc\model50.png" />
+                                </Component>
+                                <Component Id="MODEL51.PNG" DiskId="1" Guid="499510EA-1A38-4DEF-B46B-19EB407016C6">
+                                    <File Id="MODEL51.PNG" Name="model51.png" Source="server_source\assets\doc\model51.png" />
+                                </Component>
+                                <Component Id="MODEL52.PNG" DiskId="1" Guid="D765A3D2-8551-4741-AB40-75AAE87F2828">
+                                    <File Id="MODEL52.PNG" Name="model52.png" Source="server_source\assets\doc\model52.png" />
+                                </Component>
+                                <Component Id="MODEL53.PNG" DiskId="1" Guid="0DDB02D0-E952-4413-8C58-0B9B270A9E6F">
+                                    <File Id="MODEL53.PNG" Name="model53.png" Source="server_source\assets\doc\model53.png" />
+                                </Component>
+                                <Component Id="MODEL54.PNG" DiskId="1" Guid="4B597532-B892-422C-AB5E-B7271D37444F">
+                                    <File Id="MODEL54.PNG" Name="model54.png" Source="server_source\assets\doc\model54.png" />
+                                </Component>
+                                <Component Id="MODEL55.PNG" DiskId="1" Guid="DBA8CC85-BDF6-4E2F-8C87-8B79B8D31834">
+                                    <File Id="MODEL55.PNG" Name="model55.png" Source="server_source\assets\doc\model55.png" />
+                                </Component>
+                                <Component Id="MODEL56.PNG" DiskId="1" Guid="865566DF-C208-4FD1-9AEC-267210CD22EE">
+                                    <File Id="MODEL56.PNG" Name="model56.png" Source="server_source\assets\doc\model56.png" />
+                                </Component>
+                                <Component Id="MODEL57.PNG" DiskId="1" Guid="F45F0E01-699F-40A6-AE8B-89B487C4AE57">
+                                    <File Id="MODEL57.PNG" Name="model57.png" Source="server_source\assets\doc\model57.png" />
+                                </Component>
+                                <Component Id="MODEL58.PNG" DiskId="1" Guid="BA41202A-5237-4AC4-A5AD-AF23728E94F3">
+                                    <File Id="MODEL58.PNG" Name="model58.png" Source="server_source\assets\doc\model58.png" />
+                                </Component>
+                                <Component Id="MODEL59.PNG" DiskId="1" Guid="B3278147-871A-41F5-AC9E-55E60608A719">
+                                    <File Id="MODEL59.PNG" Name="model59.png" Source="server_source\assets\doc\model59.png" />
+                                </Component>
+                                <Component Id="MODEL6.PNG" DiskId="1" Guid="DD57DF79-BC4C-4800-809A-07B3CE250334">
+                                    <File Id="MODEL6.PNG" Name="model6.png" Source="server_source\assets\doc\model6.png" />
+                                </Component>
+                                <Component Id="MODEL60.PNG" DiskId="1" Guid="CD684534-F531-4D4C-8391-1F6733DBE7CA">
+                                    <File Id="MODEL60.PNG" Name="model60.png" Source="server_source\assets\doc\model60.png" />
+                                </Component>
+                                <Component Id="MODEL61.PNG" DiskId="1" Guid="4876FEF3-E07A-4C9D-B8B7-FC97CC314535">
+                                    <File Id="MODEL61.PNG" Name="model61.png" Source="server_source\assets\doc\model61.png" />
+                                </Component>
+                                <Component Id="MODEL62.PNG" DiskId="1" Guid="72F8B9BC-7AE9-4876-8C16-C73C1FD30A18">
+                                    <File Id="MODEL62.PNG" Name="model62.png" Source="server_source\assets\doc\model62.png" />
+                                </Component>
+                                <Component Id="MODEL63.PNG" DiskId="1" Guid="D32A7478-1B21-47D1-A177-4BB6E9D30E4F">
+                                    <File Id="MODEL63.PNG" Name="model63.png" Source="server_source\assets\doc\model63.png" />
+                                </Component>
+                                <Component Id="MODEL64.PNG" DiskId="1" Guid="F07B764F-7C95-4307-9AF0-7E33241245DB">
+                                    <File Id="MODEL64.PNG" Name="model64.png" Source="server_source\assets\doc\model64.png" />
+                                </Component>
+                                <Component Id="MODEL65.PNG" DiskId="1" Guid="015C8E36-00ED-4CBE-9F4C-E1C8F25C916E">
+                                    <File Id="MODEL65.PNG" Name="model65.png" Source="server_source\assets\doc\model65.png" />
+                                </Component>
+                                <Component Id="MODEL66.PNG" DiskId="1" Guid="7FEF7C1A-D801-44FD-A39F-BC30D789BA66">
+                                    <File Id="MODEL66.PNG" Name="model66.png" Source="server_source\assets\doc\model66.png" />
+                                </Component>
+                                <Component Id="MODEL67.PNG" DiskId="1" Guid="BD967C97-4850-4D39-84FC-FA862D8F614C">
+                                    <File Id="MODEL67.PNG" Name="model67.png" Source="server_source\assets\doc\model67.png" />
+                                </Component>
+                                <Component Id="MODEL68.PNG" DiskId="1" Guid="33136E47-2673-4759-9CDF-1E80685A56EE">
+                                    <File Id="MODEL68.PNG" Name="model68.png" Source="server_source\assets\doc\model68.png" />
+                                </Component>
+                                <Component Id="MODEL69.PNG" DiskId="1" Guid="1479915D-B374-4620-9FAF-0AB850CC709A">
+                                    <File Id="MODEL69.PNG" Name="model69.png" Source="server_source\assets\doc\model69.png" />
+                                </Component>
+                                <Component Id="MODEL7.PNG" DiskId="1" Guid="A67F5872-9767-4AC9-BE07-8DEB7E32B517">
+                                    <File Id="MODEL7.PNG" Name="model7.png" Source="server_source\assets\doc\model7.png" />
+                                </Component>
+                                <Component Id="MODEL70.PNG" DiskId="1" Guid="5F5E5DD8-811B-431A-B907-5502642D0835">
+                                    <File Id="MODEL70.PNG" Name="model70.png" Source="server_source\assets\doc\model70.png" />
+                                </Component>
+                                <Component Id="MODEL71.PNG" DiskId="1" Guid="F5E974A1-4801-448D-BFAB-966D8E272DF4">
+                                    <File Id="MODEL71.PNG" Name="model71.png" Source="server_source\assets\doc\model71.png" />
+                                </Component>
+                                <Component Id="MODEL72.PNG" DiskId="1" Guid="445F4912-40C9-4295-9919-17ED0AF71E06">
+                                    <File Id="MODEL72.PNG" Name="model72.png" Source="server_source\assets\doc\model72.png" />
+                                </Component>
+                                <Component Id="MODEL73.PNG" DiskId="1" Guid="E0C0795F-DC49-40F1-ADEF-B2587E7E3CB2">
+                                    <File Id="MODEL73.PNG" Name="model73.png" Source="server_source\assets\doc\model73.png" />
+                                </Component>
+                                <Component Id="MODEL74.PNG" DiskId="1" Guid="1455BE55-7A92-4EBB-80E6-E41913BC339B">
+                                    <File Id="MODEL74.PNG" Name="model74.png" Source="server_source\assets\doc\model74.png" />
+                                </Component>
+                                <Component Id="MODEL75.PNG" DiskId="1" Guid="91D5D9DC-050E-47EC-AB20-8AB99E14D48F">
+                                    <File Id="MODEL75.PNG" Name="model75.png" Source="server_source\assets\doc\model75.png" />
+                                </Component>
+                                <Component Id="MODEL76.PNG" DiskId="1" Guid="7B725C3D-442B-45CB-83AA-C5FFC48D29AB">
+                                    <File Id="MODEL76.PNG" Name="model76.png" Source="server_source\assets\doc\model76.png" />
+                                </Component>
+                                <Component Id="MODEL77.PNG" DiskId="1" Guid="27CDECEA-5B7A-41BA-B278-461F5FC0CC62">
+                                    <File Id="MODEL77.PNG" Name="model77.png" Source="server_source\assets\doc\model77.png" />
+                                </Component>
+                                <Component Id="MODEL78.PNG" DiskId="1" Guid="D104E6CB-8591-454B-9C4D-64C70F50EAFB">
+                                    <File Id="MODEL78.PNG" Name="model78.png" Source="server_source\assets\doc\model78.png" />
+                                </Component>
+                                <Component Id="MODEL79.PNG" DiskId="1" Guid="B0A71D81-CE2E-47C3-8E52-D3713C613C3D">
+                                    <File Id="MODEL79.PNG" Name="model79.png" Source="server_source\assets\doc\model79.png" />
+                                </Component>
+                                <Component Id="MODEL8.PNG" DiskId="1" Guid="F3416DF8-7827-497A-8690-6A562959AF2F">
+                                    <File Id="MODEL8.PNG" Name="model8.png" Source="server_source\assets\doc\model8.png" />
+                                </Component>
+                                <Component Id="MODEL80.PNG" DiskId="1" Guid="A9ED1F0D-4FEC-4E16-B09A-BFF1F79782FB">
+                                    <File Id="MODEL80.PNG" Name="model80.png" Source="server_source\assets\doc\model80.png" />
+                                </Component>
+                                <Component Id="MODEL81.PNG" DiskId="1" Guid="AE0DCE89-1D4B-490E-8483-243A3131A10A">
+                                    <File Id="MODEL81.PNG" Name="model81.png" Source="server_source\assets\doc\model81.png" />
+                                </Component>
+                                <Component Id="MODEL82.PNG" DiskId="1" Guid="2A3708F8-B639-458F-AC47-864AA8D3D34F">
+                                    <File Id="MODEL82.PNG" Name="model82.png" Source="server_source\assets\doc\model82.png" />
+                                </Component>
+                                <Component Id="MODEL83.PNG" DiskId="1" Guid="27CBF4CB-2413-45F6-8759-EE58045C2E78">
+                                    <File Id="MODEL83.PNG" Name="model83.png" Source="server_source\assets\doc\model83.png" />
+                                </Component>
+                                <Component Id="MODEL84.PNG" DiskId="1" Guid="58EEF398-08EE-4930-A53D-580A40A5B0F8">
+                                    <File Id="MODEL84.PNG" Name="model84.png" Source="server_source\assets\doc\model84.png" />
+                                </Component>
+                                <Component Id="MODEL9.PNG" DiskId="1" Guid="9944C6CB-A528-440D-A49F-478B9C581F80">
+                                    <File Id="MODEL9.PNG" Name="model9.png" Source="server_source\assets\doc\model9.png" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="BIN" Name="bin">
+                            <Component Id="ADMINISTRATION.ASPX.CDCAB7D2.COMPILED" DiskId="1" Guid="4EFD9492-3744-40D3-B798-6360F9275851">
+                                <File Id="ADMINISTRATION.ASPX.CDCAB7D2.COMPILED" Name="administration.aspx.cdcab7d2.compiled" Source="server_source\bin\administration.aspx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="APP_GLOBAL.ASAX.COMPILED" DiskId="1" Guid="5357ECC9-E5E2-4732-8D1B-313CC8C677FA">
+                                <File Id="APP_GLOBAL.ASAX.COMPILED" Name="App_global.asax.compiled" Source="server_source\bin\App_global.asax.compiled" />
+                            </Component>
+                            <Component Id="APP_GLOBALRESOURCES.COMPILED" DiskId="1" Guid="360CB742-C3AF-47FF-9C78-7E4DA3CC9FA8">
+                                <File Id="APP_GLOBALRESOURCES.COMPILED" Name="App_GlobalResources.compiled" Source="server_source\bin\App_GlobalResources.compiled" />
+                            </Component>
+                            <Component Id="ORIGAMHOSTING.DLL" DiskId="1" Guid="5C672FA7-2F02-4649-AF66-002BA6FA22C0">
+                                <File Id="ORIGAMHOSTING.DLL" Name="ORIGAMHosting.dll" Source="server_source\bin\ORIGAMHosting.dll" />
+                            </Component>
+                            <Component Id="ORIGAMHOSTINGMASTERPAGE.MASTER.CDCAB7D2.COMPILED" DiskId="1" Guid="6C74419C-811E-45A4-82B1-52040B5DBE6C">
+                                <File Id="ORIGAMHOSTINGMASTERPAGE.MASTER.CDCAB7D2.COMPILED" Name="origamhostingmasterpage.master.cdcab7d2.compiled" Source="server_source\bin\origamhostingmasterpage.master.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="ORIGAMHOSTINGMASTERPAGESO.MASTER.CDCAB7D2.COMPILED" DiskId="1" Guid="80FE7188-C4C9-4636-A892-B86CDDEA80D1">
+                                <File Id="ORIGAMHOSTINGMASTERPAGESO.MASTER.CDCAB7D2.COMPILED" Name="origamhostingmasterpageso.master.cdcab7d2.compiled" Source="server_source\bin\origamhostingmasterpageso.master.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="ORIGAMLOCALERESOLVER.DLL" DiskId="1" Guid="95EB074D-4315-45EE-A196-01BA99E41A51">
+                                <File Id="ORIGAMLOCALERESOLVER.DLL" Name="ORIGAMLocaleResolver.dll" Source="server_source\bin\ORIGAMLocaleResolver.dll" />
+                            </Component>
+                            <Component Id="ATTACHUSER.ASPX.CDCAB7D2.COMPILED" DiskId="1" Guid="9D77EA6C-104C-48F5-8D74-E302B7A6EF47">
+                                <File Id="ATTACHUSER.ASPX.CDCAB7D2.COMPILED" Name="attachuser.aspx.cdcab7d2.compiled" Source="server_source\bin\attachuser.aspx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="CHANGEPASSWORD.ASPX.CDCAB7D2.COMPILED" DiskId="1" Guid="A4C814AE-911B-4646-9F8B-70059412AF2E">
+                                <File Id="CHANGEPASSWORD.ASPX.CDCAB7D2.COMPILED" Name="changepassword.aspx.cdcab7d2.compiled" Source="server_source\bin\changepassword.aspx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="CREATEANDATTACHUSER.ASPX.CDCAB7D2.COMPILED" DiskId="1" Guid="9E157B57-36A3-47E9-B0CD-2E6119696075">
+                                <File Id="CREATEANDATTACHUSER.ASPX.CDCAB7D2.COMPILED" Name="createandattachuser.aspx.cdcab7d2.compiled" Source="server_source\bin\createandattachuser.aspx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="CREATENEWCOMPANY.ASPX.CDCAB7D2.COMPILED" DiskId="1" Guid="9165F504-86D0-4344-9931-E91B66C62C70">
+                                <File Id="CREATENEWCOMPANY.ASPX.CDCAB7D2.COMPILED" Name="createnewcompany.aspx.cdcab7d2.compiled" Source="server_source\bin\createnewcompany.aspx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="ORIGAM.ORIGAMENGINE.DLL" DiskId="1" Guid="1E457B18-1A5D-477F-ACD3-396A8EB36E08">
+                                <File Id="ORIGAM.ORIGAMENGINE.DLL" Name="Origam.OrigamEngine.dll" Source="server_source\bin\Origam.OrigamEngine.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.BI.CRYSTALREPORTS.DLL" DiskId="1" Guid="C63B0781-A782-45DE-9A7F-9BEBA79624D3">
+                                <File Id="ORIGAM.BI.CRYSTALREPORTS.DLL" Name="Origam.BI.CrystalReports.dll" Source="server_source\bin\Origam.BI.CrystalReports.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.BI.DLL" DiskId="1" Guid="D07FB606-A48B-4DBF-92C1-941A75741FB1">
+                                <File Id="ORIGAM.BI.DLL" Name="Origam.BI.dll" Source="server_source\bin\Origam.BI.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.DA.DLL" DiskId="1" Guid="F51A011E-B25E-43B8-BA56-EA2AAFC460C0">
+                                <File Id="ORIGAM.DA.DLL" Name="Origam.DA.dll" Source="server_source\bin\Origam.DA.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.DA.SERVICE.DLL" DiskId="1" Guid="555FFC08-8C20-467F-845F-976355C8E06C">
+                                <File Id="ORIGAM.DA.SERVICE.DLL" Name="Origam.DA.Service.dll" Source="server_source\bin\Origam.DA.Service.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.DLL" DiskId="1" Guid="89C6D1C7-68B6-4A75-8BC7-A9ADCC8E0B9F">
+                                <File Id="ORIGAM.DLL" Name="Origam.dll" Source="server_source\bin\Origam.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.GUI.DESIGNER.DLL" DiskId="1" Guid="C59EEE36-991A-43E2-9CF4-D98D9778FEC8">
+                                <File Id="ORIGAM.GUI.DESIGNER.DLL" Name="Origam.Gui.Designer.dll" Source="server_source\bin\Origam.Gui.Designer.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.GUI.WIN.DLL" DiskId="1" Guid="6F963EAA-D7BF-4C35-B2E7-CAD8B4C7769D">
+                                <File Id="ORIGAM.GUI.WIN.DLL" Name="Origam.Gui.Win.dll" Source="server_source\bin\Origam.Gui.Win.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.MAIL.DLL" DiskId="1" Guid="B6F0D1BD-95C9-4A1B-A3F1-8F80B2E61BD3">
+                                <File Id="ORIGAM.MAIL.DLL" Name="Origam.Mail.dll" Source="server_source\bin\Origam.Mail.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.REFLECTORCACHE.DLL" DiskId="1" Guid="9710D7BD-5E50-43C1-868D-3AEFC0428CA2">
+                                <File Id="ORIGAM.REFLECTORCACHE.DLL" Name="Origam.ReflectorCache.dll" Source="server_source\bin\Origam.ReflectorCache.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.RULE.DLL" DiskId="1" Guid="84FAD7A3-9896-4D87-84FF-FCEE2F7D256B">
+                                <File Id="ORIGAM.RULE.DLL" Name="Origam.Rule.dll" Source="server_source\bin\Origam.Rule.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.SCHEMA.DEPLOYMENTMODEL.DLL" DiskId="1" Guid="51BD81A2-2250-4B5B-99C1-69E40009C8D1">
+                                <File Id="ORIGAM.SCHEMA.DEPLOYMENTMODEL.DLL" Name="Origam.Schema.DeploymentModel.dll" Source="server_source\bin\Origam.Schema.DeploymentModel.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.SCHEMA.DLL" DiskId="1" Guid="9CD8208D-FAB9-4A62-90DA-EEDA49051597">
+                                <File Id="ORIGAM.SCHEMA.DLL" Name="Origam.Schema.dll" Source="server_source\bin\Origam.Schema.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.SCHEMA.ENTITYMODEL.DLL" DiskId="1" Guid="D3BCDAE3-4379-4E0A-82E6-3DC06719BBF9">
+                                <File Id="ORIGAM.SCHEMA.ENTITYMODEL.DLL" Name="Origam.Schema.EntityModel.dll" Source="server_source\bin\Origam.Schema.EntityModel.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.SCHEMA.GUIMODEL.DLL" DiskId="1" Guid="858732D3-C803-4A16-8BE2-D6F310E298B9">
+                                <File Id="ORIGAM.SCHEMA.GUIMODEL.DLL" Name="Origam.Schema.GuiModel.dll" Source="server_source\bin\Origam.Schema.GuiModel.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.GUI" DiskId="1" Guid="07a6ab88-21d6-4522-a784-db1edd8ca1a1">
+                                <File Id="ORIGAM.GUI.DLL" Name="Origam.Gui.dll" Source="server_source\bin\Origam.Gui.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.SCHEMA.LOOKUPMODEL.DLL" DiskId="1" Guid="1E08221A-042B-4DE5-B0A1-9A8CD9AE9DDB">
+                                <File Id="ORIGAM.SCHEMA.LOOKUPMODEL.DLL" Name="Origam.Schema.LookupModel.dll" Source="server_source\bin\Origam.Schema.LookupModel.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.SCHEMA.MENUMODEL.DLL" DiskId="1" Guid="A8B601E7-641D-4EF2-8496-E69CDA85E823">
+                                <File Id="ORIGAM.SCHEMA.MENUMODEL.DLL" Name="Origam.Schema.MenuModel.dll" Source="server_source\bin\Origam.Schema.MenuModel.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.SCHEMA.RULEMODEL.DLL" DiskId="1" Guid="FEAF9D78-83FE-4C94-8494-8CD76C54716A">
+                                <File Id="ORIGAM.SCHEMA.RULEMODEL.DLL" Name="Origam.Schema.RuleModel.dll" Source="server_source\bin\Origam.Schema.RuleModel.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.SCHEMA.TESTMODEL.DLL" DiskId="1" Guid="51DC4ACE-F8B9-48FB-965E-3FBC4A58BADB">
+                                <File Id="ORIGAM.SCHEMA.TESTMODEL.DLL" Name="Origam.Schema.TestModel.dll" Source="server_source\bin\Origam.Schema.TestModel.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.SCHEMA.WORKFLOWMODEL.DLL" DiskId="1" Guid="F29C0BB6-0377-4142-824B-72FAF3D9E027">
+                                <File Id="ORIGAM.SCHEMA.WORKFLOWMODEL.DLL" Name="Origam.Schema.WorkflowModel.dll" Source="server_source\bin\Origam.Schema.WorkflowModel.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.SECURITY.DLL" DiskId="1" Guid="6924A65C-B18C-44C2-8CE9-71AD2D865144">
+                                <File Id="ORIGAM.SECURITY.DLL" Name="Origam.Security.dll" Source="server_source\bin\Origam.Security.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.SERVICES.DLL" DiskId="1" Guid="56F436F8-5DAC-4D7C-9473-BA75106CE6DE">
+                                <File Id="ORIGAM.SERVICES.DLL" Name="Origam.services.dll" Source="server_source\bin\Origam.services.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.SHAREPOINT.DLL" DiskId="1" Guid="6BBD1DEB-4976-4D54-9494-BEEDA4582F43">
+                                <File Id="ORIGAM.SHAREPOINT.DLL" Name="Origam.Sharepoint.dll" Source="server_source\bin\Origam.Sharepoint.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.UI.DLL" DiskId="1" Guid="4CAB9175-71E0-45B1-8990-E4DE1EC345A2">
+                                <File Id="ORIGAM.UI.DLL" Name="Origam.UI.dll" Source="server_source\bin\Origam.UI.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.WORKBENCH.DIAGRAM.DLL" DiskId="1" Guid="33C63027-4AC5-4AD8-B3E0-31EA2F65D522">
+                                <File Id="ORIGAM.WORKBENCH.DIAGRAM.DLL" Name="Origam.Workbench.Diagram.dll" Source="server_source\bin\Origam.Workbench.Diagram.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.WORKBENCH.DLL" DiskId="1" Guid="DFDD3C1B-85C4-4A45-B29A-D36C893ED0E4">
+                                <File Id="ORIGAM.WORKBENCH.DLL" Name="Origam.Workbench.dll" Source="server_source\bin\Origam.Workbench.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.WORKBENCH.SERVICES.DLL" DiskId="1" Guid="335E4621-06A7-48EB-A2E0-34E83D5E6B51">
+                                <File Id="ORIGAM.WORKBENCH.SERVICES.DLL" Name="Origam.Workbench.Services.dll" Source="server_source\bin\Origam.Workbench.Services.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.WORKFLOW.DLL" DiskId="1" Guid="97D8F98A-CD4A-470F-BE94-461CE65AA4D9">
+                                <File Id="ORIGAM.WORKFLOW.DLL" Name="Origam.Workflow.dll" Source="server_source\bin\Origam.Workflow.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.WORKFLOW.MAIL.DLL" DiskId="1" Guid="E45D56B8-7B44-4BD9-8B92-F126FD5F3ED5">
+                                <File Id="ORIGAM.WORKFLOW.MAIL.DLL" Name="Origam.workflow.mail.dll" Source="server_source\bin\Origam.workflow.mail.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.WORKFLOW.SIMPLICORSERVICE.DLL" DiskId="1" Guid="F1A5B048-6326-4B8F-A31C-3DC9C7858D61">
+                                <File Id="ORIGAM.WORKFLOW.SIMPLICORSERVICE.DLL" Name="Origam.Workflow.SimplicorService.dll" Source="server_source\bin\Origam.Workflow.SimplicorService.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.WORKFLOW.STAR21SERVICE.DLL" DiskId="1" Guid="0D893CC5-8F9B-4D06-A293-E2C3FB20A6AC">
+                                <File Id="ORIGAM.WORKFLOW.STAR21SERVICE.DLL" Name="Origam.Workflow.Star21Service.dll" Source="server_source\bin\Origam.Workflow.Star21Service.dll" />
+                            </Component>
+                            <Component Id="EXTERNALSIGNOUT.ASHX.CDCAB7D2.COMPILED" DiskId="1" Guid="A5E5E952-7356-409E-8F67-139A99CE3348">
+                                <File Id="EXTERNALSIGNOUT.ASHX.CDCAB7D2.COMPILED" Name="externalsignout.ashx.cdcab7d2.compiled" Source="server_source\bin\externalsignout.ashx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="FIXTURERUNNER.ASPX.CDCAB7D2.COMPILED" DiskId="1" Guid="2CA5DEF5-D6A7-48D5-B2AB-A769F613BF21">
+                                <File Id="FIXTURERUNNER.ASPX.CDCAB7D2.COMPILED" Name="fixturerunner.aspx.cdcab7d2.compiled" Source="server_source\bin\fixturerunner.aspx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="FLUORINEFX.DLL" DiskId="1" Guid="E4DF2C0E-60A9-4AA0-9C19-830EE2D277C2">
+                                <File Id="FLUORINEFX.DLL" Name="FluorineFx.dll" Source="server_source\bin\FluorineFx.dll" />
+                            </Component>
+                            <Component Id="FULLSCREEN.ASPX.CDCAB7D2.COMPILED" DiskId="1" Guid="4D1FADC3-8521-403B-92FA-76822FBE2746">
+                                <File Id="FULLSCREEN.ASPX.CDCAB7D2.COMPILED" Name="fullscreen.aspx.cdcab7d2.compiled" Source="server_source\bin\fullscreen.aspx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="GATE.ASHX.CDCAB7D2.COMPILED" DiskId="1" Guid="E74C6DEB-CF27-49CD-9ECC-7E4E39BC258E">
+                                <File Id="GATE.ASHX.CDCAB7D2.COMPILED" Name="gate.ashx.cdcab7d2.compiled" Source="server_source\bin\gate.ashx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="GATEWAY.ASPX.CDCAB7D2.COMPILED" DiskId="1" Guid="8E9732CB-3A54-4CE1-8F44-0BFF862DA75E">
+                                <File Id="GATEWAY.ASPX.CDCAB7D2.COMPILED" Name="gateway.aspx.cdcab7d2.compiled" Source="server_source\bin\gateway.aspx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="GEOLOCATION.ASHX.CDCAB7D2.COMPILED" DiskId="1" Guid="8A4FC969-090F-4526-AB7C-7BE9DE1F2F1A">
+                                <File Id="GEOLOCATION.ASHX.CDCAB7D2.COMPILED" Name="geolocation.ashx.cdcab7d2.compiled" Source="server_source\bin\geolocation.ashx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="GOTDOTNET.EXSLT.DLL" DiskId="1" Guid="798DFA2B-F53B-42AC-B59D-DE417A47ED66">
+                                <File Id="GOTDOTNET.EXSLT.DLL" Name="GotDotNet.Exslt.dll" Source="server_source\bin\GotDotNet.Exslt.dll" />
+                            </Component>
+                            <Component Id="ICSHARPCODE.SHARPZIPLIB.DLL" DiskId="1" Guid="02FA22DD-B70A-41C8-A88F-A658567A4887">
+                                <File Id="ICSHARPCODE.SHARPZIPLIB.DLL" Name="ICSharpCode.SharpZipLib.dll" Source="server_source\bin\ICSharpCode.SharpZipLib.dll" />
+                            </Component>
+                            <Component Id="INTERNALUTILS.ASMX.CDCAB7D2.COMPILED" DiskId="1" Guid="33344BE3-B9C8-4E65-A136-1C4BD944DE0D">
+                                <File Id="INTERNALUTILS.ASMX.CDCAB7D2.COMPILED" Name="internalutils.asmx.cdcab7d2.compiled" Source="server_source\bin\internalutils.asmx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="INTEROP.MSCOMMLIB.DLL" DiskId="1" Guid="365FC894-B4F4-4B83-907E-6AB1C2852C8F">
+                                <File Id="INTEROP.MSCOMMLIB.DLL" Name="Interop.MSCommLib.dll" Source="server_source\bin\Interop.MSCommLib.dll" />
+                            </Component>
+                            <Component Id="KOOLWIRED.IMAP.DLL" DiskId="1" Guid="5D16099D-6C7C-42F1-82F3-43D77B1D979C">
+                                <File Id="KOOLWIRED.IMAP.DLL" Name="Koolwired.Imap.dll" Source="server_source\bin\Koolwired.Imap.dll" />
+                            </Component>
+                            <Component Id="LDAPMEMBERSHIPPROVIDER.DLL" DiskId="1" Guid="F293B18A-680B-4629-9516-4A853EBE3BDD">
+                                <File Id="LDAPMEMBERSHIPPROVIDER.DLL" Name="LDAPMembershipProvider.dll" Source="server_source\bin\LDAPMembershipProvider.dll" />
+                            </Component>
+                            <Component Id="LOG4NET.DLL" DiskId="1" Guid="211FD207-43F0-4883-85C7-0F041FC13AD8">
+                                <File Id="LOG4NET.DLL" Name="log4net.dll" Source="server_source\bin\log4net.dll" />
+                            </Component>
+                            <Component Id="LOGIN.ASPX.CDCAB7D2.COMPILED" DiskId="1" Guid="FC29996A-0E70-438F-9EDC-667A52727C46">
+                                <File Id="LOGIN.ASPX.CDCAB7D2.COMPILED" Name="login.aspx.cdcab7d2.compiled" Source="server_source\bin\login.aspx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="MICROSOFT.OFFICE.INTEROP.EXCEL.DLL" DiskId="1" Guid="9C663226-CD6F-440A-943D-008E54519145">
+                                <File Id="MICROSOFT.OFFICE.INTEROP.EXCEL.DLL" Name="Microsoft.Office.Interop.Excel.dll" Source="server_source\bin\Microsoft.Office.Interop.Excel.dll" />
+                            </Component>
+                            <Component Id="MICROSOFT.OFFICE.INTEROP.POWERPOINT.DLL" DiskId="1" Guid="182764E0-DF07-430E-99DE-FD29931E1087">
+                                <File Id="MICROSOFT.OFFICE.INTEROP.POWERPOINT.DLL" Name="Microsoft.Office.Interop.PowerPoint.dll" Source="server_source\bin\Microsoft.Office.Interop.PowerPoint.dll" />
+                            </Component>
+                            <Component Id="MICROSOFT.PRACTICES.ENTERPRISELIBRARY.COMMON.DLL" DiskId="1" Guid="0DAAB7C2-1B74-4212-B4F2-3B58B82B8ECF">
+                                <File Id="MICROSOFT.PRACTICES.ENTERPRISELIBRARY.COMMON.DLL" Name="Microsoft.Practices.EnterpriseLibrary.Common.dll" Source="server_source\bin\Microsoft.Practices.EnterpriseLibrary.Common.dll" />
+                            </Component>
+                            <Component Id="MICROSOFT.PRACTICES.ENTERPRISELIBRARY.CONFIGURATION.DLL" DiskId="1" Guid="10033220-FED2-4488-B910-EA8F23D5C048">
+                                <File Id="MICROSOFT.PRACTICES.ENTERPRISELIBRARY.CONFIGURATION.DLL" Name="Microsoft.Practices.EnterpriseLibrary.Configuration.dll" Source="server_source\bin\Microsoft.Practices.EnterpriseLibrary.Configuration.dll" />
+                            </Component>
+                            <Component Id="MICROSOFT.PRACTICES.ENTERPRISELIBRARY.SECURITY.DLL" DiskId="1" Guid="4B3B1947-AE2E-4C80-B9ED-1AB78B916777">
+                                <File Id="MICROSOFT.PRACTICES.ENTERPRISELIBRARY.SECURITY.DLL" Name="Microsoft.Practices.EnterpriseLibrary.Security.dll" Source="server_source\bin\Microsoft.Practices.EnterpriseLibrary.Security.dll" />
+                            </Component>
+                            <Component Id="MICROSOFT.VBE.INTEROP.DLL" DiskId="1" Guid="7BB9250B-6E01-406F-B168-9790955366A7">
+                                <File Id="MICROSOFT.VBE.INTEROP.DLL" Name="Microsoft.Vbe.Interop.dll" Source="server_source\bin\Microsoft.Vbe.Interop.dll" />
+                            </Component>
+                            <Component Id="MIMEPARSER.DLL" DiskId="1" Guid="7CF3B39F-EEDF-4EF2-B15F-F09193F8786C">
+                                <File Id="MIMEPARSER.DLL" Name="MIMEParser.dll" Source="server_source\bin\MIMEParser.dll" />
+                            </Component>
+                            <Component Id="NANDOF.DLL" DiskId="1" Guid="BC35A3FB-76FA-4D0E-AECC-D30AA2E762D6">
+                                <File Id="NANDOF.DLL" Name="NandoF.dll" Source="server_source\bin\NandoF.dll" />
+                            </Component>
+                            <Component Id="NEON.DLL" DiskId="1" Guid="5E9E047C-0016-481C-91C2-0B35EF3DC1B1">
+                                <File Id="NEON.DLL" Name="Neon.dll" Source="server_source\bin\Neon.dll" />
+                            </Component>
+                            <Component Id="NETRONGRAPHLIB.DLL" DiskId="1" Guid="5466EAF0-AE9C-48EA-95CF-3C18946CF968">
+                                <File Id="NETRONGRAPHLIB.DLL" Name="NetronGraphLib.dll" Source="server_source\bin\NetronGraphLib.dll" />
+                            </Component>
+                            <Component Id="NEWTONSOFT.JSON.DLL" DiskId="1" Guid="12C9D79E-C6F5-49C8-8E57-613BC4D7B5F6">
+                                <File Id="NEWTONSOFT.JSON.DLL" Name="Newtonsoft.Json.dll" Source="server_source\bin\Newtonsoft.Json.dll" />
+                            </Component>
+                            <Component Id="NPGSQL.DLL" DiskId="1" Guid="C9F48A32-32C3-4D24-8A23-42B951085D44">
+                                <File Id="NPGSQL.DLL" Name="Npgsql.dll" Source="server_source\bin\Npgsql.dll" />
+                            </Component>
+                            <Component Id="NPOI.DDF.DLL" DiskId="1" Guid="862D567A-EFCB-4069-B5A4-993A6402D635">
+                                <File Id="NPOI.DDF.DLL" Name="NPOI.DDF.dll" Source="server_source\bin\NPOI.DDF.dll" />
+                            </Component>
+                            <Component Id="NPOI.DLL" DiskId="1" Guid="B3E9E986-5265-4FF6-9E5E-76B640A7F795">
+                                <File Id="NPOI.DLL" Name="NPOI.dll" Source="server_source\bin\NPOI.dll" />
+                            </Component>
+                            <Component Id="NPOI.HPSF.DLL" DiskId="1" Guid="D203587B-C9AF-4DFD-B7A5-2A8BA7632F72">
+                                <File Id="NPOI.HPSF.DLL" Name="NPOI.HPSF.dll" Source="server_source\bin\NPOI.HPSF.dll" />
+                            </Component>
+                            <Component Id="NPOI.HSSF.DLL" DiskId="1" Guid="F3CA8914-84C7-46EF-9376-1552DC15E206">
+                                <File Id="NPOI.HSSF.DLL" Name="NPOI.HSSF.dll" Source="server_source\bin\NPOI.HSSF.dll" />
+                            </Component>
+                            <Component Id="NPOI.POIFS.DLL" DiskId="1" Guid="27BF9034-35FA-4612-A7E0-22DEDB536999">
+                                <File Id="NPOI.POIFS.DLL" Name="NPOI.POIFS.dll" Source="server_source\bin\NPOI.POIFS.dll" />
+                            </Component>
+                            <Component Id="NPOI.UTIL.DLL" DiskId="1" Guid="815EFD6E-CFA5-4707-BD25-25EA75577A9F">
+                                <File Id="NPOI.UTIL.DLL" Name="NPOI.Util.dll" Source="server_source\bin\NPOI.Util.dll" />
+                            </Component>
+                            <Component Id="OFFICE.DLL" DiskId="1" Guid="34ACB931-0B75-40BD-AF97-1488066E53F8">
+                                <File Id="OFFICE.DLL" Name="office.dll" Source="server_source\bin\office.dll" />
+                            </Component>
+                            <Component Id="OPENPOP.DLL" DiskId="1" Guid="900B22BA-A927-4758-A592-908D75EE7075">
+                                <File Id="OPENPOP.DLL" Name="OpenPOP.dll" Source="server_source\bin\OpenPOP.dll" />
+                            </Component>
+                            <Component Id="OPENSMTP.DLL" DiskId="1" Guid="5543575B-D25C-4CEE-86BF-C6F13658948A">
+                                <File Id="OPENSMTP.DLL" Name="OpenSmtp.dll" Source="server_source\bin\OpenSmtp.dll" />
+                            </Component>
+                            <Component Id="PORTAL.ASPX.CDCAB7D2.COMPILED" DiskId="1" Guid="259A4732-DF51-4E3B-B9D2-062A3406A6C2">
+                                <File Id="PORTAL.ASPX.CDCAB7D2.COMPILED" Name="portal.aspx.cdcab7d2.compiled" Source="server_source\bin\portal.aspx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="RECOVER.ASPX.CDCAB7D2.COMPILED" DiskId="1" Guid="A3A9E686-600B-4BF7-91CB-6F7194C4C394">
+                                <File Id="RECOVER.ASPX.CDCAB7D2.COMPILED" Name="recover.aspx.cdcab7d2.compiled" Source="server_source\bin\recover.aspx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="REGISTER.ASPX.CDCAB7D2.COMPILED" DiskId="1" Guid="47A993FC-56E8-49EC-A5BF-8216A21619C7">
+                                <File Id="REGISTER.ASPX.CDCAB7D2.COMPILED" Name="register.aspx.cdcab7d2.compiled" Source="server_source\bin\register.aspx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="REGISTERDONE.ASPX.CDCAB7D2.COMPILED" DiskId="1" Guid="8943AF58-0BBB-49E2-B195-14DB54D45311">
+                                <File Id="REGISTERDONE.ASPX.CDCAB7D2.COMPILED" Name="registerdone.aspx.cdcab7d2.compiled" Source="server_source\bin\registerdone.aspx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="REPORTPROBLEM.ASHX.CDCAB7D2.COMPILED" DiskId="1" Guid="BC2260E2-44DA-40EA-AA00-F47E894C4660">
+                                <File Id="REPORTPROBLEM.ASHX.CDCAB7D2.COMPILED" Name="reportproblem.ashx.cdcab7d2.compiled" Source="server_source\bin\reportproblem.ashx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="SCHEDULETIMER.DLL" DiskId="1" Guid="4A0FEC55-A292-472E-BE10-567B30EA0B94">
+                                <File Id="SCHEDULETIMER.DLL" Name="ScheduleTimer.dll" Source="server_source\bin\ScheduleTimer.dll" />
+                            </Component>
+                            <Component Id="SELECTCOMPANY.ASPX.CDCAB7D2.COMPILED" DiskId="1" Guid="C2D262CA-E493-4D98-AEF2-01EAD9013BAF">
+                                <File Id="SELECTCOMPANY.ASPX.CDCAB7D2.COMPILED" Name="selectcompany.aspx.cdcab7d2.compiled" Source="server_source\bin\selectcompany.aspx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="SIGNOUT.ASHX.CDCAB7D2.COMPILED" DiskId="1" Guid="0A5DFB48-D5CF-4836-A9BE-E667A96B168C">
+                                <File Id="SIGNOUT.ASHX.CDCAB7D2.COMPILED" Name="signout.ashx.cdcab7d2.compiled" Source="server_source\bin\signout.ashx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="VERIFYNEWUSER.ASPX.CDCAB7D2.COMPILED" DiskId="1" Guid="B6B77A69-B463-4AD7-A968-4437F1A0778A">
+                                <File Id="VERIFYNEWUSER.ASPX.CDCAB7D2.COMPILED" Name="verifynewuser.aspx.cdcab7d2.compiled" Source="server_source\bin\verifynewuser.aspx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="WEIFENLUO.WINFORMSUI.DOCKING.DLL" DiskId="1" Guid="2E70DD8F-F9AA-4E53-BAD7-2A32932268E7">
+                                <File Id="WEIFENLUO.WINFORMSUI.DOCKING.DLL" Name="WeifenLuo.WinFormsUI.Docking.dll" Source="server_source\bin\WeifenLuo.WinFormsUI.Docking.dll" />
+                            </Component>
+                            <Component Id="MARKDOWNSHARP.DLL" Guid="1941BC44-8496-42B9-A007-C5A6701C741E" DiskId="1">
+                                <File Id="MARKDOWNSHARP.DLL" Name="MarkdownSharp.dll" Source="server_source\bin\MarkdownSharp.dll" />
+                            </Component>
+                            <Component Id="AJAXLOGIN.ASHX.CDCAB7D2.COMPILED" DiskId="1" Guid="C011C232-A44D-4540-B6F6-C6DADFC83236">
+                                <File Id="AJAXLOGIN.ASHX.CDCAB7D2.COMPILED" Name="ajaxlogin.ashx.cdcab7d2.compiled" Source="server_source\bin\ajaxlogin.ashx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="AJAXSIGNOUT.ASHX.CDCAB7D2.COMPILED" DiskId="1" Guid="11F7EE59-D708-4E2F-B1B4-B086EF026A46">
+                                <File Id="AJAXSIGNOUT.ASHX.CDCAB7D2.COMPILED" Name="ajaxsignout.ashx.cdcab7d2.compiled" Source="server_source\bin\ajaxsignout.ashx.cdcab7d2.compiled" />
+                            </Component>
+                            <Component Id="ORIGAM.MODELIMPORT.DLL" DiskId="1" Guid="9C35410C-B3DF-4B13-B556-C668CEF6F163">
+                                <File Id="ORIGAM.MODELIMPORT.DLL" Name="Origam.ModelImport.dll" Source="server_source\bin\Origam.ModelImport.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.SCHEMA.ENTITYMODEL.UI.DLL" DiskId="1" Guid="4E979BA0-48A8-4D57-B1C3-76EED52127EC">
+                                <File Id="ORIGAM.SCHEMA.ENTITYMODEL.UI.DLL" Name="Origam.Schema.EntityModel.UI.dll" Source="server_source\bin\Origam.Schema.EntityModel.UI.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.SCHEMA.LOOKUPMODEL.UI.DLL" DiskId="1" Guid="E21C7F1D-DEEC-4361-99A3-F6EA038B21AD">
+                                <File Id="ORIGAM.SCHEMA.LOOKUPMODEL.UI.DLL" Name="Origam.Schema.LookupModel.UI.dll" Source="server_source\bin\Origam.Schema.LookupModel.UI.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.SCHEMA.WORKFLOWMODEL.UI.DLL" DiskId="1" Guid="7E44A95D-E2DF-4AC7-8B76-8B8C09D3E186">
+                                <File Id="ORIGAM.SCHEMA.WORKFLOWMODEL.UI.DLL" Name="Origam.Schema.WorkflowModel.UI.dll" Source="server_source\bin\Origam.Schema.WorkflowModel.UI.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.SERVER.DLL" DiskId="1" Guid="6F466146-CBFF-4EFA-85A7-69411F01D856">
+                                <File Id="ORIGAM.SERVER.DLL" Name="Origam.Server.dll" Source="server_source\bin\Origam.Server.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.UI.COMMON.DLL" DiskId="1" Guid="364E1682-57FC-4586-AA06-1DD6BB3BB392">
+                                <File Id="ORIGAM.UI.COMMON.DLL" Name="Origam.UI.Common.dll" Source="server_source\bin\Origam.UI.Common.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.WORKBENCH.BASECOMPONENTS.DLL" DiskId="1" Guid="8676724D-E7FD-46EF-8054-C62D957E8625">
+                                <File Id="ORIGAM.WORKBENCH.BASECOMPONENTS.DLL" Name="Origam.Workbench.BaseComponents.dll" Source="server_source\bin\Origam.Workbench.BaseComponents.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.WORKFLOW.FILESERVICE.DLL" DiskId="1" Guid="F358B97E-0BA4-486D-A93B-D145467D8C4E">
+                                <File Id="ORIGAM.WORKFLOW.FILESERVICE.DLL" Name="Origam.Workflow.FileService.dll" Source="server_source\bin\Origam.Workflow.FileService.dll" />
+                            </Component>
+                            <Component Id="ORIGAM.WORKFLOW.NETMEMBERSHIPSERVICE.DLL" DiskId="1" Guid="9DC5B854-8D94-43DA-83A7-CD26051F99ED">
+                                <File Id="ORIGAM.WORKFLOW.NETMEMBERSHIPSERVICE.DLL" Name="Origam.Workflow.NetMembershipService.dll" Source="server_source\bin\Origam.Workflow.NetMembershipService.dll" />
+                            </Component>
+                            <Component Id="FILEHELPERS.DLL" DiskId="1" Guid="FC9DC289-6BFE-4328-961A-4A075745BA51">
+                                <File Id="FILEHELPERS.DLL" Name="FileHelpers.dll" Source="server_source\bin\FileHelpers.dll" />
+                            </Component>
+                            <Directory Id="CS_CZ" Name="cs-CZ">
+                                <Component Id="ORIGAMHOSTING.RESOURCES.DLL" DiskId="1" Guid="BDD3D025-9FC8-43BA-B461-5FBF223BC2B4">
+                                    <File Id="ORIGAMHOSTING.RESOURCES.DLL" Name="ORIGAMHosting.resources.dll" Source="server_source\bin\cs-CZ\ORIGAMHosting.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.ORIGAMENGINE.RESOURCES.DLL" DiskId="1" Guid="BFA63575-E0D9-4E0A-BEA0-07BE89AAEF01">
+                                    <File Id="ORIGAM.ORIGAMENGINE.RESOURCES.DLL" Name="Origam.OrigamEngine.resources.dll" Source="server_source\bin\cs-CZ\Origam.OrigamEngine.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.BI.CRYSTALREPORTS.RESOURCES.DLL" DiskId="1" Guid="887F2813-AC8C-4E4F-8662-3552949FC6E5">
+                                    <File Id="ORIGAM.BI.CRYSTALREPORTS.RESOURCES.DLL" Name="Origam.BI.CrystalReports.resources.dll" Source="server_source\bin\cs-CZ\Origam.BI.CrystalReports.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.DA.RESOURCES.DLL" DiskId="1" Guid="285D44D6-61E3-47DF-8F2B-BE50C9890D03">
+                                    <File Id="ORIGAM.DA.RESOURCES.DLL" Name="Origam.DA.resources.dll" Source="server_source\bin\cs-CZ\Origam.DA.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.DA.SERVICE.RESOURCES.DLL" DiskId="1" Guid="6D815836-10E9-491A-9194-8D97A2B9DF98">
+                                    <File Id="ORIGAM.DA.SERVICE.RESOURCES.DLL" Name="Origam.DA.Service.resources.dll" Source="server_source\bin\cs-CZ\Origam.DA.Service.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.GUI.WIN.RESOURCES.DLL" DiskId="1" Guid="7B131474-6797-405A-AA01-20E09445A5FD">
+                                    <File Id="ORIGAM.GUI.WIN.RESOURCES.DLL" Name="Origam.Gui.Win.resources.dll" Source="server_source\bin\cs-CZ\Origam.Gui.Win.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.MAIL.RESOURCES.DLL" DiskId="1" Guid="55793CA1-87E9-43F3-841F-C3B953282A58">
+                                    <File Id="ORIGAM.MAIL.RESOURCES.DLL" Name="Origam.Mail.resources.dll" Source="server_source\bin\cs-CZ\Origam.Mail.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.RESOURCES.DLL" DiskId="1" Guid="049409D0-079A-448D-A598-CA7DD0C6575E">
+                                    <File Id="ORIGAM.RESOURCES.DLL" Name="Origam.resources.dll" Source="server_source\bin\cs-CZ\Origam.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.RULE.RESOURCES.DLL" DiskId="1" Guid="FF01021C-8088-467B-B281-414DED915A87">
+                                    <File Id="ORIGAM.RULE.RESOURCES.DLL" Name="Origam.Rule.resources.dll" Source="server_source\bin\cs-CZ\Origam.Rule.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SCHEMA.DEPLOYMENTMODEL.RESOURCES.DLL" DiskId="1" Guid="8ADB8C8B-F6EA-469F-9C96-DC7422014DBA">
+                                    <File Id="ORIGAM.SCHEMA.DEPLOYMENTMODEL.RESOURCES.DLL" Name="Origam.Schema.DeploymentModel.resources.dll" Source="server_source\bin\cs-CZ\Origam.Schema.DeploymentModel.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SCHEMA.ENTITYMODEL.RESOURCES.DLL" DiskId="1" Guid="FFC2DD94-8CED-4FF1-86D8-93E8E913D0D1">
+                                    <File Id="ORIGAM.SCHEMA.ENTITYMODEL.RESOURCES.DLL" Name="Origam.Schema.EntityModel.resources.dll" Source="server_source\bin\cs-CZ\Origam.Schema.EntityModel.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SCHEMA.GUIMODEL.RESOURCES.DLL" DiskId="1" Guid="E947F2CE-9884-43A6-A5A5-437699FC5FF2">
+                                    <File Id="ORIGAM.SCHEMA.GUIMODEL.RESOURCES.DLL" Name="Origam.Schema.GuiModel.resources.dll" Source="server_source\bin\cs-CZ\Origam.Schema.GuiModel.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SCHEMA.LOOKUPMODEL.RESOURCES.DLL" DiskId="1" Guid="FB8C8C73-3279-4301-9F44-96DAD6F44B3D">
+                                    <File Id="ORIGAM.SCHEMA.LOOKUPMODEL.RESOURCES.DLL" Name="Origam.Schema.LookupModel.resources.dll" Source="server_source\bin\cs-CZ\Origam.Schema.LookupModel.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SCHEMA.MENUMODEL.RESOURCES.DLL" DiskId="1" Guid="F1CBC6AB-0207-4801-8A7A-62F043CAC2CC">
+                                    <File Id="ORIGAM.SCHEMA.MENUMODEL.RESOURCES.DLL" Name="Origam.Schema.MenuModel.resources.dll" Source="server_source\bin\cs-CZ\Origam.Schema.MenuModel.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SCHEMA.RESOURCES.DLL" DiskId="1" Guid="AA16AA82-B7F0-4826-ABC3-3C7D6601C55B">
+                                    <File Id="ORIGAM.SCHEMA.RESOURCES.DLL" Name="Origam.Schema.resources.dll" Source="server_source\bin\cs-CZ\Origam.Schema.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SCHEMA.RULEMODEL.RESOURCES.DLL" DiskId="1" Guid="AB01E1A6-7A56-4F3B-A067-800AAD2F9E47">
+                                    <File Id="ORIGAM.SCHEMA.RULEMODEL.RESOURCES.DLL" Name="Origam.Schema.RuleModel.resources.dll" Source="server_source\bin\cs-CZ\Origam.Schema.RuleModel.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SCHEMA.TESTMODEL.RESOURCES.DLL" DiskId="1" Guid="558745AC-5900-4FA2-9B81-FE0717655A6A">
+                                    <File Id="ORIGAM.SCHEMA.TESTMODEL.RESOURCES.DLL" Name="Origam.Schema.TestModel.resources.dll" Source="server_source\bin\cs-CZ\Origam.Schema.TestModel.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SCHEMA.WORKFLOWMODEL.RESOURCES.DLL" DiskId="1" Guid="F96523CE-9D98-4AA0-9C44-DBDF4D8D0005">
+                                    <File Id="ORIGAM.SCHEMA.WORKFLOWMODEL.RESOURCES.DLL" Name="Origam.Schema.WorkflowModel.resources.dll" Source="server_source\bin\cs-CZ\Origam.Schema.WorkflowModel.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SECURITY.RESOURCES.DLL" DiskId="1" Guid="0909CD92-6FCD-46D3-B421-366681DE54AA">
+                                    <File Id="ORIGAM.SECURITY.RESOURCES.DLL" Name="Origam.Security.resources.dll" Source="server_source\bin\cs-CZ\Origam.Security.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SHAREPOINT.RESOURCES.DLL" DiskId="1" Guid="1CBCF119-FD23-43D1-924C-7B04CEBE714A">
+                                    <File Id="ORIGAM.SHAREPOINT.RESOURCES.DLL" Name="Origam.Sharepoint.resources.dll" Source="server_source\bin\cs-CZ\Origam.Sharepoint.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.UI.RESOURCES.DLL" DiskId="1" Guid="68B315A9-4511-4C82-ACD0-195682670B54">
+                                    <File Id="ORIGAM.UI.RESOURCES.DLL" Name="Origam.UI.resources.dll" Source="server_source\bin\cs-CZ\Origam.UI.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.WORKBENCH.DIAGRAM.RESOURCES.DLL" DiskId="1" Guid="EDF25B24-A377-403D-8652-660043845547">
+                                    <File Id="ORIGAM.WORKBENCH.DIAGRAM.RESOURCES.DLL" Name="Origam.Workbench.Diagram.resources.dll" Source="server_source\bin\cs-CZ\Origam.Workbench.Diagram.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.WORKBENCH.RESOURCES.DLL" DiskId="1" Guid="5DBE55BA-8CF1-4349-8365-193ECAE3B869">
+                                    <File Id="ORIGAM.WORKBENCH.RESOURCES.DLL" Name="Origam.Workbench.resources.dll" Source="server_source\bin\cs-CZ\Origam.Workbench.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.WORKBENCH.SERVICES.RESOURCES.DLL" DiskId="1" Guid="7928C58D-E2B6-4361-BDA5-47937340319C">
+                                    <File Id="ORIGAM.WORKBENCH.SERVICES.RESOURCES.DLL" Name="Origam.Workbench.Services.resources.dll" Source="server_source\bin\cs-CZ\Origam.Workbench.Services.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.WORKFLOW.RESOURCES.DLL" DiskId="1" Guid="1592FE81-5C27-4EB8-BAF7-B7EA7F5CE14F">
+                                    <File Id="ORIGAM.WORKFLOW.RESOURCES.DLL" Name="Origam.Workflow.resources.dll" Source="server_source\bin\cs-CZ\Origam.Workflow.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.WORKFLOW.SIMPLICORSERVICE.RESOURCES.DLL" DiskId="1" Guid="65F34AC8-24D1-463F-8B12-983F71D21E83">
+                                    <File Id="ORIGAM.WORKFLOW.SIMPLICORSERVICE.RESOURCES.DLL" Name="Origam.Workflow.SimplicorService.resources.dll" Source="server_source\bin\cs-CZ\Origam.Workflow.SimplicorService.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.WORKFLOW.STAR21SERVICE.RESOURCES.DLL" DiskId="1" Guid="9D384F07-336F-4680-BAC6-8440756F2F93">
+                                    <File Id="ORIGAM.WORKFLOW.STAR21SERVICE.RESOURCES.DLL" Name="Origam.Workflow.Star21Service.resources.dll" Source="server_source\bin\cs-CZ\Origam.Workflow.Star21Service.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SERVER.RESOURCES.DLL" DiskId="1" Guid="6E8ABBBF-8973-4990-94D8-3F01A13BA07E">
+                                    <File Id="ORIGAM.SERVER.RESOURCES.DLL" Name="Origam.Server.resources.dll" Source="server_source\bin\cs-CZ\Origam.Server.resources.dll" />
+                                </Component>
+                            </Directory>
+                            <Directory Id="DE_DE" Name="de-DE">
+                                <Component Id="ORIGAMHOSTING.RESOURCES.DLL_1" DiskId="1" Guid="27B10F59-E2A7-4A44-A41A-BFF76E8BDB08">
+                                    <File Id="ORIGAMHOSTING.RESOURCES.DLL_1" Name="ORIGAMHosting.resources.dll" Source="server_source\bin\de-DE\ORIGAMHosting.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.ORIGAMENGINE.RESOURCES.DLL_1" DiskId="1" Guid="ED7715F6-39E1-4297-AA36-5F87422F5B5F">
+                                    <File Id="ORIGAM.ORIGAMENGINE.RESOURCES.DLL_1" Name="Origam.OrigamEngine.resources.dll" Source="server_source\bin\de-DE\Origam.OrigamEngine.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.BI.CRYSTALREPORTS.RESOURCES.DLL_1" DiskId="1" Guid="799F724D-9F12-4B3F-8925-DC97D0BB9C16">
+                                    <File Id="ORIGAM.BI.CRYSTALREPORTS.RESOURCES.DLL_1" Name="Origam.BI.CrystalReports.resources.dll" Source="server_source\bin\de-DE\Origam.BI.CrystalReports.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.DA.RESOURCES.DLL_1" DiskId="1" Guid="9C057B41-79C9-472E-AD5F-62613CE452A8">
+                                    <File Id="ORIGAM.DA.RESOURCES.DLL_1" Name="Origam.DA.resources.dll" Source="server_source\bin\de-DE\Origam.DA.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.DA.SERVICE.RESOURCES.DLL_1" DiskId="1" Guid="62907B7C-B10D-4D58-815E-7334E899EBA0">
+                                    <File Id="ORIGAM.DA.SERVICE.RESOURCES.DLL_1" Name="Origam.DA.Service.resources.dll" Source="server_source\bin\de-DE\Origam.DA.Service.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.GUI.WIN.RESOURCES.DLL_1" DiskId="1" Guid="8FABA288-20D5-402D-8590-0ACDCA4397B1">
+                                    <File Id="ORIGAM.GUI.WIN.RESOURCES.DLL_1" Name="Origam.Gui.Win.resources.dll" Source="server_source\bin\de-DE\Origam.Gui.Win.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.MAIL.RESOURCES.DLL_1" DiskId="1" Guid="661B5A04-20CD-414F-AD7F-E8936B557515">
+                                    <File Id="ORIGAM.MAIL.RESOURCES.DLL_1" Name="Origam.Mail.resources.dll" Source="server_source\bin\de-DE\Origam.Mail.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.RESOURCES.DLL_1" DiskId="1" Guid="75F30E29-AF96-4809-B201-6E7C582861D1">
+                                    <File Id="ORIGAM.RESOURCES.DLL_1" Name="Origam.resources.dll" Source="server_source\bin\de-DE\Origam.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.RULE.RESOURCES.DLL_1" DiskId="1" Guid="F5FCC777-49D2-4E25-B98E-04D5465ED768">
+                                    <File Id="ORIGAM.RULE.RESOURCES.DLL_1" Name="Origam.Rule.resources.dll" Source="server_source\bin\de-DE\Origam.Rule.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SCHEMA.DEPLOYMENTMODEL.RESOURCES.DLL_1" DiskId="1" Guid="33DD4134-A547-41A2-9AF4-CBB321736608">
+                                    <File Id="ORIGAM.SCHEMA.DEPLOYMENTMODEL.RESOURCES.DLL_1" Name="Origam.Schema.DeploymentModel.resources.dll" Source="server_source\bin\de-DE\Origam.Schema.DeploymentModel.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SCHEMA.ENTITYMODEL.RESOURCES.DLL_1" DiskId="1" Guid="3FBA85CE-4F4D-4340-80E4-0BB308001AC9">
+                                    <File Id="ORIGAM.SCHEMA.ENTITYMODEL.RESOURCES.DLL_1" Name="Origam.Schema.EntityModel.resources.dll" Source="server_source\bin\de-DE\Origam.Schema.EntityModel.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SCHEMA.GUIMODEL.RESOURCES.DLL_1" DiskId="1" Guid="4BE586E7-49AA-4FB2-994B-CD73EA5BCA5A">
+                                    <File Id="ORIGAM.SCHEMA.GUIMODEL.RESOURCES.DLL_1" Name="Origam.Schema.GuiModel.resources.dll" Source="server_source\bin\de-DE\Origam.Schema.GuiModel.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SCHEMA.LOOKUPMODEL.RESOURCES.DLL_1" DiskId="1" Guid="B3124C61-5FF2-4B10-BB0F-76F71D042787">
+                                    <File Id="ORIGAM.SCHEMA.LOOKUPMODEL.RESOURCES.DLL_1" Name="Origam.Schema.LookupModel.resources.dll" Source="server_source\bin\de-DE\Origam.Schema.LookupModel.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SCHEMA.RESOURCES.DLL_1" DiskId="1" Guid="06FEA1C8-4611-47FD-BFF2-8DC608913A98">
+                                    <File Id="ORIGAM.SCHEMA.RESOURCES.DLL_1" Name="Origam.Schema.resources.dll" Source="server_source\bin\de-DE\Origam.Schema.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SECURITY.RESOURCES.DLL_1" DiskId="1" Guid="C88B7024-9708-4EE2-9A82-FBD9CABC7028">
+                                    <File Id="ORIGAM.SECURITY.RESOURCES.DLL_1" Name="Origam.Security.resources.dll" Source="server_source\bin\de-DE\Origam.Security.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.SHAREPOINT.RESOURCES.DLL_1" DiskId="1" Guid="2F74EA12-2442-42C3-A6B0-3868F79D64A5">
+                                    <File Id="ORIGAM.SHAREPOINT.RESOURCES.DLL_1" Name="Origam.Sharepoint.resources.dll" Source="server_source\bin\de-DE\Origam.Sharepoint.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.WORKBENCH.RESOURCES.DLL_1" DiskId="1" Guid="9ACACB55-4CC8-4B85-8E58-CA7F53C9DD92">
+                                    <File Id="ORIGAM.WORKBENCH.RESOURCES.DLL_1" Name="Origam.Workbench.resources.dll" Source="server_source\bin\de-DE\Origam.Workbench.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.WORKBENCH.SERVICES.RESOURCES.DLL_1" DiskId="1" Guid="02F26EC2-C5FB-49DB-B40A-07EFF9DB5007">
+                                    <File Id="ORIGAM.WORKBENCH.SERVICES.RESOURCES.DLL_1" Name="Origam.Workbench.Services.resources.dll" Source="server_source\bin\de-DE\Origam.Workbench.Services.resources.dll" />
+                                </Component>
+                                <Component Id="ORIGAM.WORKFLOW.RESOURCES.DLL_1" DiskId="1" Guid="9EED7112-5987-42C6-93F2-01BFDA4503F0">
+                                    <File Id="ORIGAM.WORKFLOW.RESOURCES.DLL_1" Name="Origam.Workflow.resources.dll" Source="server_source\bin\de-DE\Origam.Workflow.resources.dll" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="logs" />
+                        <Directory Id="WEB_INF" Name="WEB-INF">
+                            <Directory Id="flex" Name="flex">
+                                <Component Id="servicesConfig" Guid="BF65D185-3251-4130-AD61-2C1C6DA047DC">
+                                    <File Id="SERVICES_CONFIG.XML" Name="services-config.xml" Source="config\services-config.xml" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="ASSETS" Name="assets">
+                            <Component Id="_APP_LOGO.PNG" DiskId="1" Guid="A51D6A2F-6ECF-4704-B581-1600E1858C10">
+                                <File Id="_APP_LOGO.PNG" Name="app_logo.png" Source="assets\app_logo.png" />
+                            </Component>
+                            <Component Id="_LOGO.PNG" DiskId="1" Guid="6C0F162E-F7A6-46A5-9355-59D6047A7A0B">
+                                <File Id="_LOGO.PNG" Name="logo.png" Source="assets\logo.png" />
+                            </Component>
+                            <Component Id="_LOGO_HOSTING.PNG" DiskId="1" Guid="7BC45EFD-FB41-42F8-AEE8-F6CF6F70122F">
+                                <File Id="_LOGO_HOSTING.PNG" Name="logo_hosting.png" Source="assets\logo_hosting.png" />
+                            </Component>
+                            <Component Id="_LOGO_HOSTING_BOTTOM.PNG" DiskId="1" Guid="659FFDF0-6851-49EE-9A1C-1F447AC6E33A">
+                                <File Id="_LOGO_HOSTING_BOTTOM.PNG" Name="logo_hosting_bottom.png" Source="assets\logo_hosting_bottom.png" />
+                            </Component>
+                            <Component Id="_LOGO_HOSTING_BOTTOM_ACTIVE.PNG" DiskId="1" Guid="A30E01D1-3799-4F48-A80B-1BB99E949B51">
+                                <File Id="_LOGO_HOSTING_BOTTOM_ACTIVE.PNG" Name="logo_hosting_bottom_active.png" Source="assets\logo_hosting_bottom_active.png" />
+                            </Component>
+                            <Component Id="FAVICON.ICO" DiskId="1" Guid="9E2FA66C-1C36-47B8-9C8C-CBDFB0E9C979">
+                                <File Id="FAVICON.ICO" Name="favicon.ico" Source="assets\favicon.ico" />
+                            </Component>
+                            <Component Id="FAVICON.PNG" DiskId="1" Guid="3232DEAE-4BC1-47E4-8813-49801F05DF8B">
+                                <File Id="FAVICON.PNG" Name="favicon.png" Source="assets\favicon.png" />
+                            </Component>
+                            <Component Id="ADDRESSCARD.PNG" DiskId="1" Guid="7E9CFD58-D284-420A-A2A8-80C4302AC2E2">
+                                <File Id="ADDRESSCARD.PNG" Name="AddressCard.png" Source="assets\AddressCard.png" />
+                            </Component>
+                            <Component Id="BASKET.PNG" DiskId="1" Guid="B182D93A-8AFE-4ED9-BDE3-F1190BCF9F34">
+                                <File Id="BASKET.PNG" Name="Basket.png" Source="assets\Basket.png" />
+                            </Component>
+                            <Component Id="BOX.PNG" DiskId="1" Guid="C6221858-456A-46F0-A549-8450DBC10FB6">
+                                <File Id="BOX.PNG" Name="Box.png" Source="assets\Box.png" />
+                            </Component>
+                            <Component Id="CALENDAR.PNG" DiskId="1" Guid="DC6FB677-847D-4EDB-B906-12EE6DC7AE2C">
+                                <File Id="CALENDAR.PNG" Name="Calendar.png" Source="assets\Calendar.png" />
+                            </Component>
+                            <Component Id="CALENDAREDIT.PNG" DiskId="1" Guid="53DDA832-B542-4F94-AEE2-7F5A234B6BFC">
+                                <File Id="CALENDAREDIT.PNG" Name="CalendarEdit.png" Source="assets\CalendarEdit.png" />
+                            </Component>
+                            <Component Id="CAR.PNG" DiskId="1" Guid="AE25434F-9AAC-4C18-B7ED-311580F89CD5">
+                                <File Id="CAR.PNG" Name="Car.png" Source="assets\Car.png" />
+                            </Component>
+                            <Component Id="CART.PNG" DiskId="1" Guid="9E8C8921-8331-4FF9-9524-BB7A82357FD8">
+                                <File Id="CART.PNG" Name="Cart.png" Source="assets\Cart.png" />
+                            </Component>
+                            <Component Id="CHARTBAR.PNG" DiskId="1" Guid="46DD2F97-2EE5-4C19-A582-E8F34025C852">
+                                <File Id="CHARTBAR.PNG" Name="ChartBar.png" Source="assets\ChartBar.png" />
+                            </Component>
+                            <Component Id="CHART_DROPDOWN.PNG" DiskId="1" Guid="3DE5637E-8D65-45CF-977D-5787966FA021">
+                                <File Id="CHART_DROPDOWN.PNG" Name="chart_dropdown.png" Source="assets\chart_dropdown.png" />
+                            </Component>
+                            <Component Id="CHART_PIE_LARGE.PNG" DiskId="1" Guid="96C84B77-66F2-42EE-8B4B-C7500D2F848F">
+                                <File Id="CHART_PIE_LARGE.PNG" Name="chart_pie_large.png" Source="assets\chart_pie_large.png" />
+                            </Component>
+                            <Component Id="COINS.PNG" DiskId="1" Guid="68CEF387-FCAB-40E3-92A1-96A3E3884E10">
+                                <File Id="COINS.PNG" Name="Coins.png" Source="assets\Coins.png" />
+                            </Component>
+                            <Component Id="CONTACTFOLDER.PNG" DiskId="1" Guid="EACFA860-B3A4-48A9-A49F-094179476B84">
+                                <File Id="CONTACTFOLDER.PNG" Name="ContactFolder.png" Source="assets\ContactFolder.png" />
+                            </Component>
+                            <Component Id="CONTACT_TYPE_EMAIL.PNG" DiskId="1" Guid="3EFD96C2-0C4B-4D98-885C-7E4816DF7B7F">
+                                <File Id="CONTACT_TYPE_EMAIL.PNG" Name="contact_type_email.png" Source="assets\contact_type_email.png" />
+                            </Component>
+                            <Component Id="CONTACT_TYPE_FAX.PNG" DiskId="1" Guid="B640670E-E87A-45A0-BB15-DF211181656A">
+                                <File Id="CONTACT_TYPE_FAX.PNG" Name="contact_type_fax.png" Source="assets\contact_type_fax.png" />
+                            </Component>
+                            <Component Id="CONTACT_TYPE_IM.PNG" DiskId="1" Guid="C13E95BB-234F-4C0A-8CC7-648708C9641B">
+                                <File Id="CONTACT_TYPE_IM.PNG" Name="contact_type_im.png" Source="assets\contact_type_im.png" />
+                            </Component>
+                            <Component Id="CONTACT_TYPE_PHONE.PNG" DiskId="1" Guid="F4B0D57C-C5B7-47E2-A5CA-80491813EA30">
+                                <File Id="CONTACT_TYPE_PHONE.PNG" Name="contact_type_phone.png" Source="assets\contact_type_phone.png" />
+                            </Component>
+                            <Component Id="CONTACT_TYPE_POSTAL.PNG" DiskId="1" Guid="8F791326-724A-464C-AAB3-58548B94383A">
+                                <File Id="CONTACT_TYPE_POSTAL.PNG" Name="contact_type_postal.png" Source="assets\contact_type_postal.png" />
+                            </Component>
+                            <Component Id="CONTACT_TYPE_SHIPPING.PNG" DiskId="1" Guid="754E3B1B-C55A-40BB-BD23-4D031A059243">
+                                <File Id="CONTACT_TYPE_SHIPPING.PNG" Name="contact_type_shipping.png" Source="assets\contact_type_shipping.png" />
+                            </Component>
+                            <Component Id="CONTACT_TYPE_WEB.PNG" DiskId="1" Guid="2477AE7C-EB19-496A-B870-143D755A4CB9">
+                                <File Id="CONTACT_TYPE_WEB.PNG" Name="contact_type_web.png" Source="assets\contact_type_web.png" />
+                            </Component>
+                            <Component Id="CONVERSATION.PNG" DiskId="1" Guid="075958D9-DB28-4FEA-9F6F-1D53747EC104">
+                                <File Id="CONVERSATION.PNG" Name="conversation.png" Source="assets\conversation.png" />
+                            </Component>
+                            <Component Id="CONVERSATION_NEW.PNG" DiskId="1" Guid="E79F71B8-2094-4399-B885-E33A100EB04C">
+                                <File Id="CONVERSATION_NEW.PNG" Name="conversation_new.png" Source="assets\conversation_new.png" />
+                            </Component>
+                            <Component Id="EMAILADD.PNG" DiskId="1" Guid="5856D593-9DD8-4814-B94F-FE53C85DC214">
+                                <File Id="EMAILADD.PNG" Name="EmailAdd.png" Source="assets\EmailAdd.png" />
+                            </Component>
+                            <Component Id="EMAILGO.PNG" DiskId="1" Guid="63E255F5-2746-4BAF-BF6A-C2F80EEF23D6">
+                                <File Id="EMAILGO.PNG" Name="EmailGo.png" Source="assets\EmailGo.png" />
+                            </Component>
+                            <Component Id="EMAILIN.PNG" DiskId="1" Guid="63572F53-6082-41E4-9291-57A49F662D4B">
+                                <File Id="EMAILIN.PNG" Name="EmailIn.png" Source="assets\EmailIn.png" />
+                            </Component>
+                            <Component Id="FOLDER.PNG" DiskId="1" Guid="EE279306-CF28-4E95-8C47-ECD041A0A3FD">
+                                <File Id="FOLDER.PNG" Name="folder.png" Source="assets\folder.png" />
+                            </Component>
+                            <Component Id="FOLDEREXPLORE.PNG" DiskId="1" Guid="1176B445-BBB5-49F2-9BA9-E0B34BF82939">
+                                <File Id="FOLDEREXPLORE.PNG" Name="FolderExplore.png" Source="assets\FolderExplore.png" />
+                            </Component>
+                            <Component Id="FOLDERFIND.PNG" DiskId="1" Guid="C4A39DD4-62A3-456B-B412-115B72AF4287">
+                                <File Id="FOLDERFIND.PNG" Name="FolderFind.png" Source="assets\FolderFind.png" />
+                            </Component>
+                            <Component Id="FOLDERPAGE.PNG" DiskId="1" Guid="89A0117F-1E3A-4263-BFCF-27AA0FDC2BE5">
+                                <File Id="FOLDERPAGE.PNG" Name="FolderPage.png" Source="assets\FolderPage.png" />
+                            </Component>
+                            <Component Id="FOLDERWRENCH.PNG" DiskId="1" Guid="5E7F2393-B37D-434E-AF04-C0040FD51FEB">
+                                <File Id="FOLDERWRENCH.PNG" Name="FolderWrench.png" Source="assets\FolderWrench.png" />
+                            </Component>
+                            <Component Id="FOLDER_USER.PNG" DiskId="1" Guid="FF771946-CA9B-4E5C-B0D4-11F320C0264A">
+                                <File Id="FOLDER_USER.PNG" Name="folder_user.png" Source="assets\folder_user.png" />
+                            </Component>
+                            <Component Id="GROUPKEY.PNG" DiskId="1" Guid="3BDE7E9A-ED43-4FCF-AEAD-69BCFFCFC8E3">
+                                <File Id="GROUPKEY.PNG" Name="GroupKey.png" Source="assets\GroupKey.png" />
+                            </Component>
+                            <Component Id="HOME.PNG" DiskId="1" Guid="1F416282-A3E0-4CEB-9F1C-1F6FD72D9197">
+                                <File Id="HOME.PNG" Name="Home.png" Source="assets\Home.png" />
+                            </Component>
+                            <Component Id="KEY.PNG" DiskId="1" Guid="C524E322-0403-412E-AEC5-077381A9F47D">
+                                <File Id="KEY.PNG" Name="Key.png" Source="assets\Key.png" />
+                            </Component>
+                            <Component Id="LORRY.PNG" DiskId="1" Guid="2BD8E711-62A8-4460-A3A5-AC93FB043211">
+                                <File Id="LORRY.PNG" Name="lorry.png" Source="assets\lorry.png" />
+                            </Component>
+                            <Component Id="MAIL_GET.PNG" DiskId="1" Guid="111DC2D1-EE88-4BF0-9B61-64B3EF954FA3">
+                                <File Id="MAIL_GET.PNG" Name="mail_get.png" Source="assets\mail_get.png" />
+                            </Component>
+                            <Component Id="MAP.PNG" DiskId="1" Guid="42D8335D-0D8B-4F9F-8995-6EE4AC8584FB">
+                                <File Id="MAP.PNG" Name="Map.png" Source="assets\Map.png" />
+                            </Component>
+                            <Component Id="MAP_GO.PNG" DiskId="1" Guid="94E191D2-DB1C-423A-A616-3149779A7F09">
+                                <File Id="MAP_GO.PNG" Name="map_go.png" Source="assets\map_go.png" />
+                            </Component>
+                            <Component Id="MENU_FOLDER.PNG" DiskId="1" Guid="BDB25BA1-252F-4E38-B634-2A98B1962142">
+                                <File Id="MENU_FOLDER.PNG" Name="menu_folder.png" Source="assets\menu_folder.png" />
+                            </Component>
+                            <Component Id="MENU_FORM.PNG" DiskId="1" Guid="71D0A693-B518-4867-B55F-47B9E6830129">
+                                <File Id="MENU_FORM.PNG" Name="menu_form.png" Source="assets\menu_form.png" />
+                            </Component>
+                            <Component Id="MENU_PARAMETER.PNG" DiskId="1" Guid="E59E892C-C3C2-4252-AB36-0B707B98070B">
+                                <File Id="MENU_PARAMETER.PNG" Name="menu_parameter.png" Source="assets\menu_parameter.png" />
+                            </Component>
+                            <Component Id="MENU_REPORT.PNG" DiskId="1" Guid="C63E4552-A8DE-42C7-9CDD-4EAAB61C1F52">
+                                <File Id="MENU_REPORT.PNG" Name="menu_report.png" Source="assets\menu_report.png" />
+                            </Component>
+                            <Component Id="MENU_WORKFLOW.PNG" DiskId="1" Guid="457282DF-FF92-4FDA-B895-931CE82A7B71">
+                                <File Id="MENU_WORKFLOW.PNG" Name="menu_workflow.png" Source="assets\menu_workflow.png" />
+                            </Component>
+                            <Component Id="MONEY.PNG" DiskId="1" Guid="1D374F8B-6405-4542-B9C5-168D648754E4">
+                                <File Id="MONEY.PNG" Name="Money.png" Source="assets\Money.png" />
+                            </Component>
+                            <Component Id="NOTE.PNG" DiskId="1" Guid="D36F95E7-7558-4FE6-A958-16FE6C2024E9">
+                                <File Id="NOTE.PNG" Name="Note.png" Source="assets\Note.png" />
+                            </Component>
+                            <Component Id="PACKAGE.PNG" DiskId="1" Guid="5CD6A708-F171-4037-87D9-B9A072B6FBAC">
+                                <File Id="PACKAGE.PNG" Name="Package.png" Source="assets\Package.png" />
+                            </Component>
+                            <Component Id="PHOTOGALLERY.PNG" DiskId="1" Guid="47C68948-B44B-4182-90F7-92CF246C15BA">
+                                <File Id="PHOTOGALLERY.PNG" Name="PhotoGallery.png" Source="assets\PhotoGallery.png" />
+                            </Component>
+                            <Component Id="REPORT.PNG" DiskId="1" Guid="006B332E-37E9-46B6-9E26-795D28E5EB71">
+                                <File Id="REPORT.PNG" Name="report.png" Source="assets\report.png" />
+                            </Component>
+                            <Component Id="SCHEDULEFOLDER.PNG" DiskId="1" Guid="FC0BEC51-2B1F-41F9-A96E-B75E2DBFF531">
+                                <File Id="SCHEDULEFOLDER.PNG" Name="ScheduleFolder.png" Source="assets\ScheduleFolder.png" />
+                            </Component>
+                            <Component Id="SHIELD.PNG" DiskId="1" Guid="F089BDF4-52A7-4FCB-83A8-2352F55F7A53">
+                                <File Id="SHIELD.PNG" Name="shield.png" Source="assets\shield.png" />
+                            </Component>
+                            <Component Id="TELEPHONEADD.PNG" DiskId="1" Guid="F4F1D6BF-814E-43B6-A0DB-FD14A81D79CE">
+                                <File Id="TELEPHONEADD.PNG" Name="TelephoneAdd.png" Source="assets\TelephoneAdd.png" />
+                            </Component>
+                            <Component Id="TELEPHONEGO.PNG" DiskId="1" Guid="39A545F5-3BD9-47BF-B796-3720948A38E5">
+                                <File Id="TELEPHONEGO.PNG" Name="TelephoneGo.png" Source="assets\TelephoneGo.png" />
+                            </Component>
+                            <Component Id="TELEPHONEIN.PNG" DiskId="1" Guid="6BD5FDE7-C1B5-41F5-ADF4-13961DFDB805">
+                                <File Id="TELEPHONEIN.PNG" Name="TelephoneIn.png" Source="assets\TelephoneIn.png" />
+                            </Component>
+                            <Component Id="TIMESHEETEDIT.PNG" DiskId="1" Guid="F5B835C7-1A69-4A22-A09A-CB766257D976">
+                                <File Id="TIMESHEETEDIT.PNG" Name="TimeSheetEdit.png" Source="assets\TimeSheetEdit.png" />
+                            </Component>
+                            <Component Id="USERS.PNG" DiskId="1" Guid="6B8A34F2-9D77-436A-92CC-3F3B7AD3383B">
+                                <File Id="USERS.PNG" Name="Users.png" Source="assets\Users.png" />
+                            </Component>
+                            <Component Id="save_active.png" Guid="2CADC277-3CB8-4362-BB71-8316CEF21D4D">
+                                <File Id="SAVE_ACTIVE.PNG" Name="save_active.png" Source="assets\save_active.png" />
+                            </Component>
+                            <Component Id="refresh.png" Guid="04BFE92D-AF8B-444C-98D7-E8702DDFEEC3">
+                                <File Id="REFRESH.PNG" Name="refresh.png" Source="assets\refresh.png" />
+                            </Component>
+                        </Directory>
+                        <Component Id="AC_OETagsScriptInclude" Guid="73C87954-11DB-41D9-99C2-9D425D30CB5C">
+                            <File Id="AC_OETagsJs" Name="AC_OETags.js" DiskId="1" Source="server_source\AC_OETags.js" KeyPath="yes" />
+                        </Component>
+                        <Component Id="AdministrationPage" Guid="CEE0EB38-CD37-4C19-A117-2C13F67AB085">
+                            <File Id="AdministrationAspx" Name="Administration.aspx" DiskId="1" Source="server_source\Administration.aspx" KeyPath="yes" />
+                        </Component>
+                        <Component Id="AttachUserPage" Guid="38DB8AFD-CBEF-41CB-94C7-3A0C27C4C33E">
+                            <File Id="AttachUserAspx" Name="AttachUser.aspx" DiskId="1" Source="server_source\AttachUser.aspx" KeyPath="yes" />
+                        </Component>
+                        <Component Id="CreateAndAttachUserPage" Guid="A1A2A614-1C37-48AA-99C8-1BE6C5B29507">
+                            <File Id="CreateAndAttachUserAspx" Name="CreateAndAttachUser.aspx" DiskId="1" Source="server_source\CreateAndAttachUser.aspx" KeyPath="yes" />
+                        </Component>
+                        <Component Id="CreateNewCompanyPage" Guid="BC4EF89B-8B6C-482F-B46D-568837DD32F5">
+                            <File Id="CreateNewCompanyAspx" Name="CreateNewCompany.aspx" DiskId="1" Source="server_source\CreateNewCompany.aspx" KeyPath="yes" />
+                        </Component>
+                        <Component Id="ErrorCSCZ" Guid="8C364986-9877-4996-A9AD-FC9369B06553">
+                            <File Id="ErrorCsCZHtml" Name="Error.cs-CZ.html" DiskId="1" Source="server_source\Error.cs-CZ.html" KeyPath="yes" />
+                        </Component>
+                        <Component Id="ErrorENUS" Guid="99D3C4E2-C80B-45A9-B72F-D0603BC45D2E">
+                            <File Id="ErrorEnUSHtml" Name="Error.en-US.html" DiskId="1" Source="server_source\Error.en-US.html" KeyPath="yes" />
+                        </Component>
+                        <Component Id="FullScreenPage" Guid="FB1FC451-592D-455C-B12C-A3C280986C0A">
+                            <File Id="FullScreenAspx" Name="FullScreen.aspx" DiskId="1" Source="server_source\FullScreen.aspx" KeyPath="yes" />
+                        </Component>
+                        <Component Id="GateHandler" Guid="16C215C7-0CBC-4259-900E-FE73850E37A9">
+                            <File Id="GateAshx" Name="Gate.ashx" DiskId="1" Source="server_source\Gate.ashx" KeyPath="yes" />
+                        </Component>
+                        <Component Id="GatewayPage" Guid="1B27AAD9-475A-4F5A-8BCB-298230460FC1">
+                            <File Id="GatewayAspx" Name="Gateway.aspx" DiskId="1" Source="server_source\Gateway.aspx" KeyPath="yes" />
+                        </Component>
+                        <Component Id="ChangePasswordPage" Guid="C695027E-32C6-424B-A4C1-492C4F4BEFCC">
+                            <File Id="ChangePasswordAspx" Name="ChangePassword.aspx" DiskId="1" Source="server_source\ChangePassword.aspx" KeyPath="yes" />
+                        </Component>
+                        <Component Id="InternalUtilsService" Guid="C886A3AD-72D7-4A07-8157-131AAABD18D4">
+                            <File Id="InternalUtilsAsmx" Name="InternalUtils.asmx" DiskId="1" Source="server_source\InternalUtils.asmx" KeyPath="yes" />
+                        </Component>
+                        <Component Id="LoginPage" Guid="41B3A1DE-4A8E-47F0-A6C7-B616F6C9EDFC">
+                            <File Id="LoginAspx" Name="Login.aspx" DiskId="1" Source="server_source\Login.aspx" KeyPath="yes" />
+                        </Component>
+                        <Component Id="PortalPage" Guid="559422F3-754F-43DD-9BA2-C475FEF79D0D">
+                            <File Id="PortalAspx" Name="Portal.aspx" DiskId="1" Source="server_source\Portal.aspx" KeyPath="yes" />
+                        </Component>
+                        <Component Id="AppConfig" Guid="9E849CE3-3B3F-40B3-8C5B-BED91268ED24">
+                            <File Id="PrecompiledAppConfig" Name="PrecompiledApp.config" DiskId="1" Source="server_source\PrecompiledApp.config" KeyPath="yes" />
+                        </Component>
+                        <Component Id="RecoverPage" Guid="32681D33-6E32-49A4-A6CF-349B23B92E8E">
+                            <File Id="RecoverAspx" Name="Recover.aspx" DiskId="1" Source="server_source\Recover.aspx" KeyPath="yes" />
+                        </Component>
+                        <Component Id="RegisterPage" Guid="C6496FD5-80DE-4CD6-AFB2-B44F32300BBB">
+                            <File Id="RegisterAspx" Name="Register.aspx" DiskId="1" Source="server_source\Register.aspx" KeyPath="yes" />
+                        </Component>
+                        <Component Id="SelectCompanyPage" Guid="FB662C2D-91E0-40DD-B7E5-091A6A431384">
+                            <File Id="SelectCompanyAspx" Name="SelectCompany.aspx" DiskId="1" Source="server_source\SelectCompany.aspx" KeyPath="yes" />
+                        </Component>
+                        <Component Id="SignOutHandler" Guid="E6768BEF-1B34-44D7-911E-DF9CAE96E41F">
+                            <File Id="SignOutAshx" Name="SignOut.ashx" DiskId="1" Source="server_source\SignOut.ashx" KeyPath="yes" />
+                        </Component>
+                        <Component Id="ReportProblemHandler" Guid="3450591C-FD8C-41cf-82CA-45D01ABCB24F">
+                            <File Id="ReportProblemAshx" Name="ReportProblem.ashx" DiskId="1" Source="server_source\ReportProblem.ashx" KeyPath="yes" />
+                        </Component>
+                        <Component Id="PortalClient" Guid="3B8A2B31-FABA-478A-8522-C296424635B9">
+                            <File Id="PORTAL_ID.SWF" Name="Portal_SWF-BUILDNUMBER.swf" Source="server_source\Portal_SWF-BUILDNUMBER.swf" />
+                        </Component>
+                        <Component Id="PortalClientDebug" Guid="C2413AA2-5CDD-4159-8D1F-9AE36690DC7E">
+                            <File Id="PORTAL_ID_DBG.SWF" Name="Portal_SWF-BUILDNUMBER_dbg.swf" Source="server_source\Portal_SWF-BUILDNUMBER_dbg.swf" />
+                        </Component>
+                        <Component Id="Theme" Guid="43415D9D-23DB-4FD5-B0AA-69D5E3E3EDC8">
+                            <File Id="THEME_ID.SWF" Name="theme_SWF-BUILDNUMBER.swf" Source="server_source\theme_SWF-BUILDNUMBER.swf" />
+                        </Component>
+                        <Component Id="ExternalSignOutHandler" Guid="BA095936-3339-4AFD-A717-27BFEF92CF50">
+                            <File Id="EXTERNALSIGNOUT.ASHX" Name="ExternalSignOut.ashx" Source="server_source\ExternalSignOut.ashx" />
+                        </Component>
+                        <Component Id="GeoLocationHandler" Guid="DAA2D3BC-879A-4173-8335-01FE190FEC06">
+                            <File Id="GEOLOCATION.ASHX" Name="GeoLocation.ashx" Source="server_source\GeoLocation.ashx" />
+                        </Component>
+                        <Component Id="mousetrap" Guid="075272B6-924C-4B9C-AFA6-050087FFE0E5">
+                            <File Id="MOUSETRAP.MIN.JS" Name="mousetrap.min.js" Source="server_source\mousetrap.min.js" />
+                        </Component>
+                        <Component Id="portalConfig" Guid="4476306B-A199-42DA-A2A8-9717A93F66D3">
+                            <File Id="PORTAL.CONFIG" Name="portal.config" Source="server_source\portal.config" />
+                        </Component>
+                        <Component Id="RegisterDonePage" Guid="0F4998AA-AE26-4B33-B938-9908830CDCDC">
+                            <File Id="REGISTERDONE.ASPX" Name="RegisterDone.aspx" Source="server_source\RegisterDone.aspx" />
+                        </Component>
+                        <Component Id="VerifyNewUserPage" Guid="FACEDF74-BAA7-4C0F-BD01-DA0D76615321">
+                            <File Id="VERIFYNEWUSER.ASPX" Name="VerifyNewUser.aspx" Source="server_source\VerifyNewUser.aspx" />
+                        </Component>
+                        <Component Id="webconfig" Guid="17BE3B74-C209-4C33-A990-085320CFEDF0">
+                            <File Id="WEB.CONFIG" Name="web.config" Source="config\web.config" />
+                        </Component>
+                        <Component Id="securitySettingsConfig" Guid="DFAF0BD1-90A7-49A7-999F-741D99894B27">
+                            <File Id="SECURITYCONFIGURATION.CONFIG" Name="securityconfiguration.config" Source="config\securityconfiguration.config" />
+                        </Component>
+                    </Directory>
+                </Directory>
+            </Directory>
+            <Component Id="OrigamVirtualDirectory" Guid="889A1B3B-ECCE-42BC-92B0-5EB80D1B21D9" KeyPath="yes">
+                <iis:WebVirtualDir Id="OrigamVirtualDir" Alias="[VDIR_ALIAS]" Directory="INSTALLDIR" WebSite="ExistingWebSite" WebApplication="OrigamWebApplication" DirProperties="WebDirProperties">
+                </iis:WebVirtualDir>
+            </Component>
+            <Component Id="OrigamWebSite" Guid="13A02AB1-07F7-42A2-8B91-FF7349D8AD05" KeyPath="yes">
+                <iis:WebSite Id="WebSite" Description="ORIGAM Web Site" Directory="INSTALLDIR" WebApplication="OrigamWebApplication">
+                    <iis:WebAddress Id="WebSiteAddress" Port="[SERVER_PORT]" />
+                </iis:WebSite>
+            </Component>
+            <Component Id="OrigamAppPool" KeyPath="yes" Guid="4BE4F1B2-3210-4E4B-9825-37E2531081B0">
+                <iis:WebAppPool Id="OrigamAppPool" Name="[VDIR_ALIAS]" Identity="applicationPoolIdentity" RecycleMinutes="0" ManagedRuntimeVersion="v4.0" ManagedPipelineMode="Integrated" />
+            </Component>
+            <Directory Id="ProgramMenuFolder">
+                <Directory Id="ProgramMenuDir" Name="ORIGAM">
+                    <Component Id="StartMenuShortcuts_VDIR" Guid="B49E1587-B8BA-4000-B388-3E12F94504A8">
+                        <RemoveFolder Id="ProgramMenuDir_VDIR" On="uninstall" />
+                        <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="" />
+                        <util:InternetShortcut Id="WebsiteShortcut_VDIR" Name="Website" Target="http://localhost/[VDIR_ALIAS]" />
+                    </Component>
+                    <Component Id="StartMenuShortcuts_SITE" Guid="BF5BD057-1202-4485-9530-212151A4FFBE">
+                        <RemoveFolder Id="ProgramMenuDir_SITE" On="uninstall" />
+                        <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="" />
+                        <util:InternetShortcut Id="WebsiteShortcut_SITE" Name="Website" Target="http://localhost:[SERVER_PORT]" />
+                    </Component>
+                </Directory>
+            </Directory>
+        </Directory>
+        <iis:WebSite Id="ExistingWebSite" Description="ORIGAM Web Site" Directory="INSTALLDIR">
+            <iis:WebAddress Id="ExistingWebSiteAddress" Port="[SERVER_PORT]" />
+        </iis:WebSite>
+        <iis:WebApplication Id="OrigamWebApplication" Name="ORIGAM" WebAppPool="OrigamAppPool" />
+        <Feature Id="Server" Level="1">
+            <ComponentRef Id="ConfigFile" />
+            <ComponentRef Id="CHOSEN.JQUERY.MIN.JS" />
+            <ComponentRef Id="INPUTOVERLAY.JQUERY.JS" />
+            <ComponentRef Id="JQUERY_1.9.1.MIN.JS" />
+            <ComponentRef Id="JQUERY_UI.MIN.JS" />
+            <ComponentRef Id="JQUERY.JSPLUMB_1.5.5.MIN.JS" />
+            <ComponentRef Id="JQUERY.MIN.JS" />
+            <ComponentRef Id="LANG_SQL.JS" />
+            <ComponentRef Id="PRETTIFY.JS" />
+            <ComponentRef Id="ORIGAM.CSS" />
+            <ComponentRef Id="CHOSEN.CSS" />
+            <ComponentRef Id="DOC.CSS" />
+            <ComponentRef Id="PRETTIFY.CSS" />
+            <ComponentRef Id="RESET.CSS" />
+            <ComponentRef Id="ADMINBTN.GIF" />
+            <ComponentRef Id="ADMINHOVER.GIF" />
+            <ComponentRef Id="BACKGROUNDFOCUS.PNG" />
+            <ComponentRef Id="CHOSEN_SPRITE.PNG" />
+            <ComponentRef Id="FAVICON.ICO" />
+            <ComponentRef Id="FAVICON.PNG" />
+            <ComponentRef Id="HELPBTN.GIF" />
+            <ComponentRef Id="HELPHOVER.GIF" />
+            <ComponentRef Id="STAR.PNG" />
+            <ComponentRef Id="_APP_LOGO.PNG" />
+            <ComponentRef Id="_LOGO.PNG" />
+            <ComponentRef Id="_LOGO_HOSTING.PNG" />
+            <ComponentRef Id="_LOGO_HOSTING_BOTTOM.PNG" />
+            <ComponentRef Id="_LOGO_HOSTING_BOTTOM_ACTIVE.PNG" />
+            <ComponentRef Id="mapHandle.png" />
+            <ComponentRef Id="queue_remove.png" />
+            <ComponentRef Id="queue_satechange.png" />
+            <ComponentRef Id="formAlert0.png" />
+            <ComponentRef Id="formAlert1.png" />
+            <ComponentRef Id="formAlert2.png" />
+            <ComponentRef Id="MODEL0.PNG" />
+            <ComponentRef Id="MODEL1.PNG" />
+            <ComponentRef Id="MODEL10.PNG" />
+            <ComponentRef Id="MODEL11.PNG" />
+            <ComponentRef Id="MODEL12.PNG" />
+            <ComponentRef Id="MODEL13.PNG" />
+            <ComponentRef Id="MODEL14.PNG" />
+            <ComponentRef Id="MODEL15.PNG" />
+            <ComponentRef Id="MODEL16.PNG" />
+            <ComponentRef Id="MODEL17.PNG" />
+            <ComponentRef Id="MODEL18.PNG" />
+            <ComponentRef Id="MODEL19.PNG" />
+            <ComponentRef Id="MODEL2.PNG" />
+            <ComponentRef Id="MODEL20.PNG" />
+            <ComponentRef Id="MODEL21.PNG" />
+            <ComponentRef Id="MODEL22.PNG" />
+            <ComponentRef Id="MODEL23.PNG" />
+            <ComponentRef Id="MODEL24.PNG" />
+            <ComponentRef Id="MODEL25.PNG" />
+            <ComponentRef Id="MODEL26.PNG" />
+            <ComponentRef Id="MODEL27.PNG" />
+            <ComponentRef Id="MODEL28.PNG" />
+            <ComponentRef Id="MODEL29.PNG" />
+            <ComponentRef Id="MODEL3.PNG" />
+            <ComponentRef Id="MODEL30.PNG" />
+            <ComponentRef Id="MODEL31.PNG" />
+            <ComponentRef Id="MODEL32.PNG" />
+            <ComponentRef Id="MODEL33.PNG" />
+            <ComponentRef Id="MODEL34.PNG" />
+            <ComponentRef Id="MODEL35.PNG" />
+            <ComponentRef Id="MODEL36.PNG" />
+            <ComponentRef Id="MODEL37.PNG" />
+            <ComponentRef Id="MODEL38.PNG" />
+            <ComponentRef Id="MODEL39.PNG" />
+            <ComponentRef Id="MODEL4.PNG" />
+            <ComponentRef Id="MODEL40.PNG" />
+            <ComponentRef Id="MODEL41.PNG" />
+            <ComponentRef Id="MODEL42.PNG" />
+            <ComponentRef Id="MODEL43.PNG" />
+            <ComponentRef Id="MODEL44.PNG" />
+            <ComponentRef Id="MODEL45.PNG" />
+            <ComponentRef Id="MODEL46.PNG" />
+            <ComponentRef Id="MODEL47.PNG" />
+            <ComponentRef Id="MODEL48.PNG" />
+            <ComponentRef Id="MODEL49.PNG" />
+            <ComponentRef Id="MODEL5.PNG" />
+            <ComponentRef Id="MODEL50.PNG" />
+            <ComponentRef Id="MODEL51.PNG" />
+            <ComponentRef Id="MODEL52.PNG" />
+            <ComponentRef Id="MODEL53.PNG" />
+            <ComponentRef Id="MODEL54.PNG" />
+            <ComponentRef Id="MODEL55.PNG" />
+            <ComponentRef Id="MODEL56.PNG" />
+            <ComponentRef Id="MODEL57.PNG" />
+            <ComponentRef Id="MODEL58.PNG" />
+            <ComponentRef Id="MODEL59.PNG" />
+            <ComponentRef Id="MODEL6.PNG" />
+            <ComponentRef Id="MODEL60.PNG" />
+            <ComponentRef Id="MODEL61.PNG" />
+            <ComponentRef Id="MODEL62.PNG" />
+            <ComponentRef Id="MODEL63.PNG" />
+            <ComponentRef Id="MODEL64.PNG" />
+            <ComponentRef Id="MODEL65.PNG" />
+            <ComponentRef Id="MODEL66.PNG" />
+            <ComponentRef Id="MODEL67.PNG" />
+            <ComponentRef Id="MODEL68.PNG" />
+            <ComponentRef Id="MODEL69.PNG" />
+            <ComponentRef Id="MODEL7.PNG" />
+            <ComponentRef Id="MODEL70.PNG" />
+            <ComponentRef Id="MODEL71.PNG" />
+            <ComponentRef Id="MODEL72.PNG" />
+            <ComponentRef Id="MODEL73.PNG" />
+            <ComponentRef Id="MODEL74.PNG" />
+            <ComponentRef Id="MODEL75.PNG" />
+            <ComponentRef Id="MODEL76.PNG" />
+            <ComponentRef Id="MODEL77.PNG" />
+            <ComponentRef Id="MODEL78.PNG" />
+            <ComponentRef Id="MODEL79.PNG" />
+            <ComponentRef Id="MODEL8.PNG" />
+            <ComponentRef Id="MODEL80.PNG" />
+            <ComponentRef Id="MODEL81.PNG" />
+            <ComponentRef Id="MODEL82.PNG" />
+            <ComponentRef Id="MODEL83.PNG" />
+            <ComponentRef Id="MODEL84.PNG" />
+            <ComponentRef Id="MODEL9.PNG" />
+            <ComponentRef Id="ADMINISTRATION.ASPX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="APP_GLOBAL.ASAX.COMPILED" />
+            <ComponentRef Id="APP_GLOBALRESOURCES.COMPILED" />
+            <ComponentRef Id="ORIGAMHOSTING.DLL" />
+            <ComponentRef Id="ORIGAMHOSTINGMASTERPAGE.MASTER.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="ORIGAMHOSTINGMASTERPAGESO.MASTER.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="ORIGAMLOCALERESOLVER.DLL" />
+            <ComponentRef Id="ATTACHUSER.ASPX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="CHANGEPASSWORD.ASPX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="CREATEANDATTACHUSER.ASPX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="CREATENEWCOMPANY.ASPX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="ORIGAM.ORIGAMENGINE.DLL" />
+            <ComponentRef Id="ORIGAM.BI.CRYSTALREPORTS.DLL" />
+            <ComponentRef Id="ORIGAM.BI.DLL" />
+            <ComponentRef Id="ORIGAM.DA.DLL" />
+            <ComponentRef Id="ORIGAM.DA.SERVICE.DLL" />
+            <ComponentRef Id="ORIGAM.DLL" />
+            <ComponentRef Id="ORIGAM.GUI.DESIGNER.DLL" />
+            <ComponentRef Id="ORIGAM.GUI.WIN.DLL" />
+            <ComponentRef Id="ORIGAM.MAIL.DLL" />
+            <ComponentRef Id="ORIGAM.REFLECTORCACHE.DLL" />
+            <ComponentRef Id="ORIGAM.RULE.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.DEPLOYMENTMODEL.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.ENTITYMODEL.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.GUIMODEL.DLL" />
+            <ComponentRef Id="ORIGAM.GUI.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.LOOKUPMODEL.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.MENUMODEL.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.RULEMODEL.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.TESTMODEL.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.WORKFLOWMODEL.DLL" />
+            <ComponentRef Id="ORIGAM.SECURITY.DLL" />
+            <ComponentRef Id="ORIGAM.SERVICES.DLL" />
+            <ComponentRef Id="ORIGAM.SHAREPOINT.DLL" />
+            <ComponentRef Id="ORIGAM.UI.DLL" />
+            <ComponentRef Id="ORIGAM.WORKBENCH.DIAGRAM.DLL" />
+            <ComponentRef Id="ORIGAM.WORKBENCH.DLL" />
+            <ComponentRef Id="ORIGAM.WORKBENCH.SERVICES.DLL" />
+            <ComponentRef Id="ORIGAM.WORKFLOW.DLL" />
+            <ComponentRef Id="ORIGAM.WORKFLOW.MAIL.DLL" />
+            <ComponentRef Id="ORIGAM.WORKFLOW.SIMPLICORSERVICE.DLL" />
+            <ComponentRef Id="ORIGAM.WORKFLOW.STAR21SERVICE.DLL" />
+            <ComponentRef Id="EXTERNALSIGNOUT.ASHX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="FIXTURERUNNER.ASPX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="FLUORINEFX.DLL" />
+            <ComponentRef Id="FULLSCREEN.ASPX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="GATE.ASHX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="GATEWAY.ASPX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="GEOLOCATION.ASHX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="GOTDOTNET.EXSLT.DLL" />
+            <ComponentRef Id="ICSHARPCODE.SHARPZIPLIB.DLL" />
+            <ComponentRef Id="INTERNALUTILS.ASMX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="INTEROP.MSCOMMLIB.DLL" />
+            <ComponentRef Id="KOOLWIRED.IMAP.DLL" />
+            <ComponentRef Id="LDAPMEMBERSHIPPROVIDER.DLL" />
+            <ComponentRef Id="LOG4NET.DLL" />
+            <ComponentRef Id="LOGIN.ASPX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="MICROSOFT.OFFICE.INTEROP.EXCEL.DLL" />
+            <ComponentRef Id="MICROSOFT.OFFICE.INTEROP.POWERPOINT.DLL" />
+            <ComponentRef Id="MICROSOFT.PRACTICES.ENTERPRISELIBRARY.COMMON.DLL" />
+            <ComponentRef Id="MICROSOFT.PRACTICES.ENTERPRISELIBRARY.CONFIGURATION.DLL" />
+            <ComponentRef Id="MICROSOFT.PRACTICES.ENTERPRISELIBRARY.SECURITY.DLL" />
+            <ComponentRef Id="MICROSOFT.VBE.INTEROP.DLL" />
+            <ComponentRef Id="MIMEPARSER.DLL" />
+            <ComponentRef Id="NANDOF.DLL" />
+            <ComponentRef Id="NEON.DLL" />
+            <ComponentRef Id="NETRONGRAPHLIB.DLL" />
+            <ComponentRef Id="NEWTONSOFT.JSON.DLL" />
+            <ComponentRef Id="NPGSQL.DLL" />
+            <ComponentRef Id="NPOI.DDF.DLL" />
+            <ComponentRef Id="NPOI.DLL" />
+            <ComponentRef Id="NPOI.HPSF.DLL" />
+            <ComponentRef Id="NPOI.HSSF.DLL" />
+            <ComponentRef Id="NPOI.POIFS.DLL" />
+            <ComponentRef Id="NPOI.UTIL.DLL" />
+            <ComponentRef Id="OFFICE.DLL" />
+            <ComponentRef Id="OPENPOP.DLL" />
+            <ComponentRef Id="OPENSMTP.DLL" />
+            <ComponentRef Id="PORTAL.ASPX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="RECOVER.ASPX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="REGISTER.ASPX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="REGISTERDONE.ASPX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="REPORTPROBLEM.ASHX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="SCHEDULETIMER.DLL" />
+            <ComponentRef Id="SELECTCOMPANY.ASPX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="SIGNOUT.ASHX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="VERIFYNEWUSER.ASPX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="WEIFENLUO.WINFORMSUI.DOCKING.DLL" />
+            <ComponentRef Id="ORIGAMHOSTING.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.ORIGAMENGINE.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.BI.CRYSTALREPORTS.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.DA.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.DA.SERVICE.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.GUI.WIN.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.MAIL.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.RULE.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.DEPLOYMENTMODEL.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.ENTITYMODEL.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.GUIMODEL.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.LOOKUPMODEL.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.MENUMODEL.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.RULEMODEL.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.TESTMODEL.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.WORKFLOWMODEL.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.SECURITY.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.SHAREPOINT.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.UI.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.WORKBENCH.DIAGRAM.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.WORKBENCH.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.WORKBENCH.SERVICES.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.WORKFLOW.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.WORKFLOW.SIMPLICORSERVICE.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAM.WORKFLOW.STAR21SERVICE.RESOURCES.DLL" />
+            <ComponentRef Id="ORIGAMHOSTING.RESOURCES.DLL_1" />
+            <ComponentRef Id="ORIGAM.ORIGAMENGINE.RESOURCES.DLL_1" />
+            <ComponentRef Id="ORIGAM.BI.CRYSTALREPORTS.RESOURCES.DLL_1" />
+            <ComponentRef Id="ORIGAM.DA.RESOURCES.DLL_1" />
+            <ComponentRef Id="ORIGAM.DA.SERVICE.RESOURCES.DLL_1" />
+            <ComponentRef Id="ORIGAM.GUI.WIN.RESOURCES.DLL_1" />
+            <ComponentRef Id="ORIGAM.MAIL.RESOURCES.DLL_1" />
+            <ComponentRef Id="ORIGAM.RESOURCES.DLL_1" />
+            <ComponentRef Id="ORIGAM.RULE.RESOURCES.DLL_1" />
+            <ComponentRef Id="ORIGAM.SCHEMA.DEPLOYMENTMODEL.RESOURCES.DLL_1" />
+            <ComponentRef Id="ORIGAM.SCHEMA.ENTITYMODEL.RESOURCES.DLL_1" />
+            <ComponentRef Id="ORIGAM.SCHEMA.GUIMODEL.RESOURCES.DLL_1" />
+            <ComponentRef Id="ORIGAM.SCHEMA.LOOKUPMODEL.RESOURCES.DLL_1" />
+            <ComponentRef Id="ORIGAM.SCHEMA.RESOURCES.DLL_1" />
+            <ComponentRef Id="ORIGAM.SECURITY.RESOURCES.DLL_1" />
+            <ComponentRef Id="ORIGAM.SHAREPOINT.RESOURCES.DLL_1" />
+            <ComponentRef Id="ORIGAM.WORKBENCH.RESOURCES.DLL_1" />
+            <ComponentRef Id="ORIGAM.WORKBENCH.SERVICES.RESOURCES.DLL_1" />
+            <ComponentRef Id="ORIGAM.WORKFLOW.RESOURCES.DLL_1" />
+            <ComponentRef Id="servicesConfig" />
+            <ComponentRef Id="ADDRESSCARD.PNG" />
+            <ComponentRef Id="BASKET.PNG" />
+            <ComponentRef Id="BOX.PNG" />
+            <ComponentRef Id="CALENDAR.PNG" />
+            <ComponentRef Id="CALENDAREDIT.PNG" />
+            <ComponentRef Id="CAR.PNG" />
+            <ComponentRef Id="CART.PNG" />
+            <ComponentRef Id="CHARTBAR.PNG" />
+            <ComponentRef Id="CHART_DROPDOWN.PNG" />
+            <ComponentRef Id="CHART_PIE_LARGE.PNG" />
+            <ComponentRef Id="COINS.PNG" />
+            <ComponentRef Id="CONTACTFOLDER.PNG" />
+            <ComponentRef Id="CONTACT_TYPE_EMAIL.PNG" />
+            <ComponentRef Id="CONTACT_TYPE_FAX.PNG" />
+            <ComponentRef Id="CONTACT_TYPE_IM.PNG" />
+            <ComponentRef Id="CONTACT_TYPE_PHONE.PNG" />
+            <ComponentRef Id="CONTACT_TYPE_POSTAL.PNG" />
+            <ComponentRef Id="CONTACT_TYPE_SHIPPING.PNG" />
+            <ComponentRef Id="CONTACT_TYPE_WEB.PNG" />
+            <ComponentRef Id="CONVERSATION.PNG" />
+            <ComponentRef Id="CONVERSATION_NEW.PNG" />
+            <ComponentRef Id="EMAILADD.PNG" />
+            <ComponentRef Id="EMAILGO.PNG" />
+            <ComponentRef Id="EMAILIN.PNG" />
+            <ComponentRef Id="FOLDER.PNG" />
+            <ComponentRef Id="FOLDEREXPLORE.PNG" />
+            <ComponentRef Id="FOLDERFIND.PNG" />
+            <ComponentRef Id="FOLDERPAGE.PNG" />
+            <ComponentRef Id="FOLDERWRENCH.PNG" />
+            <ComponentRef Id="FOLDER_USER.PNG" />
+            <ComponentRef Id="GROUPKEY.PNG" />
+            <ComponentRef Id="HOME.PNG" />
+            <ComponentRef Id="KEY.PNG" />
+            <ComponentRef Id="LORRY.PNG" />
+            <ComponentRef Id="MAIL_GET.PNG" />
+            <ComponentRef Id="MAP.PNG" />
+            <ComponentRef Id="MAP_GO.PNG" />
+            <ComponentRef Id="MENU_FOLDER.PNG" />
+            <ComponentRef Id="MENU_FORM.PNG" />
+            <ComponentRef Id="MENU_PARAMETER.PNG" />
+            <ComponentRef Id="MENU_REPORT.PNG" />
+            <ComponentRef Id="MENU_WORKFLOW.PNG" />
+            <ComponentRef Id="MONEY.PNG" />
+            <ComponentRef Id="NOTE.PNG" />
+            <ComponentRef Id="PACKAGE.PNG" />
+            <ComponentRef Id="PHOTOGALLERY.PNG" />
+            <ComponentRef Id="REPORT.PNG" />
+            <ComponentRef Id="SCHEDULEFOLDER.PNG" />
+            <ComponentRef Id="SHIELD.PNG" />
+            <ComponentRef Id="TELEPHONEADD.PNG" />
+            <ComponentRef Id="TELEPHONEGO.PNG" />
+            <ComponentRef Id="TELEPHONEIN.PNG" />
+            <ComponentRef Id="TIMESHEETEDIT.PNG" />
+            <ComponentRef Id="USERS.PNG" />
+            <ComponentRef Id="AC_OETagsScriptInclude" />
+            <ComponentRef Id="AdministrationPage" />
+            <ComponentRef Id="AttachUserPage" />
+            <ComponentRef Id="CreateAndAttachUserPage" />
+            <ComponentRef Id="CreateNewCompanyPage" />
+            <ComponentRef Id="ErrorCSCZ" />
+            <ComponentRef Id="ErrorENUS" />
+            <ComponentRef Id="FullScreenPage" />
+            <ComponentRef Id="GateHandler" />
+            <ComponentRef Id="GatewayPage" />
+            <ComponentRef Id="ChangePasswordPage" />
+            <ComponentRef Id="InternalUtilsService" />
+            <ComponentRef Id="LoginPage" />
+            <ComponentRef Id="PortalPage" />
+            <ComponentRef Id="AppConfig" />
+            <ComponentRef Id="RecoverPage" />
+            <ComponentRef Id="RegisterPage" />
+            <ComponentRef Id="SelectCompanyPage" />
+            <ComponentRef Id="SignOutHandler" />
+            <ComponentRef Id="ReportProblemHandler" />
+            <ComponentRef Id="PortalClient" />
+            <ComponentRef Id="PortalClientDebug" />
+            <ComponentRef Id="Theme" />
+            <ComponentRef Id="ExternalSignOutHandler" />
+            <ComponentRef Id="GeoLocationHandler" />
+            <ComponentRef Id="mousetrap" />
+            <ComponentRef Id="portalConfig" />
+            <ComponentRef Id="RegisterDonePage" />
+            <ComponentRef Id="VerifyNewUserPage" />
+            <ComponentRef Id="webconfig" />
+            <ComponentRef Id="securitySettingsConfig" />
+            <ComponentRef Id="save_active.png" />
+            <ComponentRef Id="refresh.png" />
+            <ComponentRef Id="MARKDOWNSHARP.DLL" />
+            <ComponentRef Id="ORIGAM.MODELIMPORT.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.ENTITYMODEL.UI.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.LOOKUPMODEL.UI.DLL" />
+            <ComponentRef Id="ORIGAM.SCHEMA.WORKFLOWMODEL.UI.DLL" />
+            <ComponentRef Id="ORIGAM.SERVER.DLL" />
+            <ComponentRef Id="ORIGAM.UI.COMMON.DLL" />
+            <ComponentRef Id="ORIGAM.WORKBENCH.BASECOMPONENTS.DLL" />
+            <ComponentRef Id="ORIGAM.WORKFLOW.FILESERVICE.DLL" />
+            <ComponentRef Id="ORIGAM.WORKFLOW.NETMEMBERSHIPSERVICE.DLL" />
+            <ComponentRef Id="FILEHELPERS.DLL" />
+            <ComponentRef Id="ORIGAM.SERVER.RESOURCES.DLL" />
+            <ComponentRef Id="AJAXLOGIN.ASHX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="AJAXSIGNOUT.ASHX.CDCAB7D2.COMPILED" />
+        </Feature>
+        <Feature Id="NewWebSite" Level="2">
+            <ComponentRef Id="OrigamWebSite" />
+            <ComponentRef Id="OrigamAppPool" />
+            <ComponentRef Id="StartMenuShortcuts_SITE" />
+        </Feature>
+        <Feature Id="VirtualDirectoryOfExistingWebSite" Level="2">
+            <ComponentRef Id="OrigamVirtualDirectory" />
+            <ComponentRef Id="OrigamAppPool" />
+            <ComponentRef Id="StartMenuShortcuts_VDIR" />
+        </Feature>
+        <Feature Id="ConnectionSettingsSQLAuth" Level="2">
+            <ComponentRef Id="SQLAuthSettings" />
+        </Feature>
+        <Feature Id="ConnectionSettingsWINAuth" Level="2">
+            <ComponentRef Id="WINAuthSettings" />
+        </Feature>
+        <Feature Id="RestoreModelDatabaseWinAuthentication" Level="2">
+            <ComponentRef Id="ModelDBWINAuth" />
+        </Feature>
+        <Feature Id="RestoreDataDatabaseWinAuthentication" Level="2">
+            <ComponentRef Id="DataDBWINAuth" />
+        </Feature>
+        <Feature Id="RestoreModelDatabaseSqlAuthentication" Level="2">
+            <ComponentRef Id="ModelDBSQLAuth" />
+        </Feature>
+        <Feature Id="RestoreDataDatabaseSqlAuthentication" Level="2">
+            <ComponentRef Id="DataDBSQLAuth" />
+        </Feature>
+        <UI>
+            <Property Id="DefaultUIFont">DlgFont8</Property>
+            <Dialog Id="ServerDlg" Width="370" Height="270" Title="!(loc.InstallDialogTitle)" NoMinimize="yes">
+                <Control Type="Bitmap" Id="logo" Width="370" Height="270" X="0" Y="0" Text="background">
+                </Control>
+                <Control Id="Title" Type="Text" X="15" Y="10" Width="333" Height="32" Transparent="yes" NoPrefix="yes" Text="!(loc.ServerDialogDescr)" TabSkip="no" />
+                <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.Next)" TabSkip="yes">
+                    <Publish Event="NewDialog" Value="DatabaseDlg" Order="2"><![CDATA[SERVER_PORT <> "    " and (INSTALLATION_TYPE = "SITE" or VDIR_ALIAS)]]></Publish>
+                    <Publish Event="SpawnDialog" Value="ServerErrorDlg" Order="3"><![CDATA[not (SERVER_PORT <> "    ") or (INSTALLATION_TYPE = "VDIR" and not VDIR_ALIAS)]]></Publish>
+                    <Publish Property="DATABASE_NAME" Value="[VDIR_ALIAS]">VDIR_ALIAS</Publish>
+                </Control>
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.Cancel)" TabSkip="yes">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+                <Control Id="ServerPortLbl" Type="Text" X="15" Y="49" Width="100" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.ServerPort)" />
+                <Control Id="ServerPortInput" Type="MaskedEdit" X="120" Y="45" Width="24" Height="15" Text="####" Property="SERVER_PORT" TabSkip="yes" />
+                <Control Id="InstallationTypeRadioButtonGroup" Type="RadioButtonGroup" X="120" Y="75" Width="240" Height="40" Property="INSTALLATION_TYPE" TabSkip="yes" />
+                <Control Id="VDirAliasLbl" Type="Text" X="15" Y="128" Width="100" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.VDirAlias)" />
+                <Control Id="VDirAliasInput" Type="Edit" X="120" Y="128" Width="240" Height="15" Property="VDIR_ALIAS" TabSkip="yes" Sunken="no">
+                    <Condition Action="disable"><![CDATA[INSTALLATION_TYPE <> "VDIR"]]></Condition>
+                    <Condition Action="enable"><![CDATA[INSTALLATION_TYPE = "VDIR"]]></Condition>
+                </Control>
+                <Control Type="Text" Id="InstallationTypeLabel" Width="94" Height="17" X="15" Y="75" NoPrefix="yes" Transparent="yes" Text="!(loc.InstallationType)" />
+            </Dialog>
+            <Dialog Id="DatabaseDlg" Width="370" Height="270" Title="!(loc.InstallDialogTitle)" NoMinimize="yes">
+                <Control Type="Bitmap" Id="logo" Width="370" Height="270" X="0" Y="0" Text="background">
+                </Control>
+                <Control Id="Title" Type="Text" X="15" Y="10" Width="327" Height="25" Transparent="yes" NoPrefix="yes" Text="!(loc.DatabaseDialogDescr)" TabSkip="no" />
+                <Control Id="Install" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.Install)" TabSkip="yes">
+                    <Publish Event="Remove" Value="ALL" Order="1">SERVER_NAME and DATABASE_NAME and (AUTHENTICATION_TYPE = "WIN" or SERVER_USERNAME)</Publish>
+                    <Publish Event="AddLocal" Value="Server" Order="2">SERVER_NAME and DATABASE_NAME and (AUTHENTICATION_TYPE = "WIN" or SERVER_USERNAME)</Publish>
+                    <Publish Event="AddLocal" Value="NewWebSite" Order="2">SERVER_NAME and DATABASE_NAME and (AUTHENTICATION_TYPE = "WIN" or SERVER_USERNAME) and INSTALLATION_TYPE = "SITE"</Publish>
+                    <Publish Event="AddLocal" Value="VirtualDirectoryOfExistingWebSite" Order="2">SERVER_NAME and DATABASE_NAME and (AUTHENTICATION_TYPE = "WIN" or SERVER_USERNAME) and INSTALLATION_TYPE = "VDIR"</Publish>
+                    <Publish Event="AddLocal" Value="ConnectionSettingsWINAuth" Order="2">SERVER_NAME and DATABASE_NAME and AUTHENTICATION_TYPE = "WIN"</Publish>
+                    <Publish Event="AddLocal" Value="ConnectionSettingsSQLAuth" Order="2">SERVER_NAME and DATABASE_NAME and AUTHENTICATION_TYPE = "SQL" and SERVER_USERNAME</Publish>
+                    <Publish Event="AddLocal" Value="RestoreModelDatabaseWinAuthentication" Order="3">SERVER_NAME and DATABASE_NAME and AUTHENTICATION_TYPE = "WIN" and RESTORE_DATABASE</Publish>
+                    <Publish Event="AddLocal" Value="RestoreDataDatabaseWinAuthentication" Order="3">SERVER_NAME and DATABASE_NAME and AUTHENTICATION_TYPE = "WIN" and RESTORE_DATABASE</Publish>
+                    <Publish Event="AddLocal" Value="RestoreModelDatabaseSqlAuthentication" Order="3">SERVER_NAME and DATABASE_NAME and AUTHENTICATION_TYPE = "SQL" and SERVER_USERNAME and RESTORE_DATABASE</Publish>
+                    <Publish Event="AddLocal" Value="RestoreDataDatabaseSqlAuthentication" Order="3">SERVER_NAME and DATABASE_NAME and AUTHENTICATION_TYPE = "SQL" and SERVER_USERNAME and RESTORE_DATABASE</Publish>
+                    <Publish Event="NewDialog" Value="ProgressDlg" Order="4">SERVER_NAME and DATABASE_NAME and (AUTHENTICATION_TYPE = "WIN" or SERVER_USERNAME)</Publish>
+                    <Publish Event="SpawnDialog" Value="DatabaseErrorDlg" Order="5">not SERVER_NAME or not DATABASE_NAME or (AUTHENTICATION_TYPE = "SQL" and not SERVER_USERNAME)</Publish>
+                </Control>
+                <Control Id="Back" Type="PushButton" X="178" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.Back)" TabSkip="yes">
+                    <Publish Event="NewDialog" Value="ServerDlg">1</Publish>
+                </Control>
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.Cancel)" TabSkip="yes">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+                <Control Id="ServerLbl" Type="Text" X="15" Y="41" Width="100" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.Server)" />
+                <Control Id="ServerInput" Type="Edit" X="120" Y="41" Width="240" Height="15" Property="SERVER_NAME" TabSkip="yes" />
+                <Control Id="DatabaseNameLbl" Type="Text" X="15" Y="79" Width="100" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.DatabaseName)" />
+                <Control Id="DatabaseNameInput" Type="Edit" X="120" Y="75" Width="240" Height="15" Property="DATABASE_NAME" TabSkip="yes" />
+                <Control Id="AuthenticationTypeLabel" Type="Text" X="15" Y="116" Width="100" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.AuthenticationType)" />
+                <Control Id="AuthenticationTypeRadioButtonGroup" Type="RadioButtonGroup" X="120" Y="116" Width="240" Height="39" Property="AUTHENTICATION_TYPE" TabSkip="yes" />
+                <Control Id="UsernameLbl" Type="Text" X="15" Y="158" Width="100" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.Username)" />
+                <Control Id="UsernameInput" Type="Edit" X="120" Y="158" Width="240" Height="15" Property="SERVER_USERNAME" TabSkip="yes">
+                    <Condition Action="disable"><![CDATA[AUTHENTICATION_TYPE <> "SQL"]]></Condition>
+                    <Condition Action="enable"><![CDATA[AUTHENTICATION_TYPE = "SQL"]]></Condition>
+                </Control>
+                <Control Id="PasswordLbl" Type="Text" X="15" Y="180" Width="100" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.Password)" />
+                <Control Id="PasswordInput" Type="Edit" X="120" Y="180" Width="240" Height="15" Property="SERVER_PASSWORD" Password="yes" TabSkip="yes">
+                    <Condition Action="disable"><![CDATA[AUTHENTICATION_TYPE <> "SQL"]]></Condition>
+                    <Condition Action="enable"><![CDATA[AUTHENTICATION_TYPE = "SQL"]]></Condition>
+                </Control>
+                <Control Type="Text" Id="ServerNameExplanation" Width="238" Height="15" X="120" Y="60" Text="!(loc.ServerNameExplanation)" Transparent="yes" />
+                <Control Type="Text" Id="DatabaseNameExplanation" Width="238" Height="15" X="120" Y="94" Text="!(loc.DatabaseNameExplanation)" Transparent="yes" />
+                <Control Type="Text" Id="RestoreDatabaseLabel" Width="105" Height="13" X="15" Y="206" Text="!(loc.RestoreDatabase)" Transparent="yes" NoPrefix="yes" />
+                <Control Id="RestoreDatabaseChkbx" Type="CheckBox" X="120" Y="206" Width="10" Height="10" Property="RESTORE_DATABASE" CheckBoxValue="1" TabSkip="yes" />
+            </Dialog>
+            <Dialog Id="CancelDlg" Width="260" Height="85" Title="!(loc.InstallDialogTitle)" NoMinimize="yes">
+                <Control Id="No" Type="PushButton" X="132" Y="57" Width="56" Height="17" Default="yes" Cancel="yes" Text="!(loc.No)">
+                    <Publish Event="EndDialog" Value="Return">1</Publish>
+                </Control>
+                <Control Id="Yes" Type="PushButton" X="72" Y="57" Width="56" Height="17" Text="!(loc.Yes)">
+                    <Publish Event="EndDialog" Value="Exit">1</Publish>
+                </Control>
+                <Control Id="Text" Type="Text" X="17" Y="15" Width="225" Height="30" Text="!(loc.SureToCancelInstall)" />
+            </Dialog>
+            <Dialog Id="DatabaseErrorDlg" Width="260" Height="85" Title="!(loc.InstallDialogTitle)" NoMinimize="yes">
+                <Control Id="OK" Type="PushButton" X="102" Y="57" Width="56" Height="17" Text="!(loc.OK)" Default="yes" Cancel="yes">
+                    <Publish Event="EndDialog" Value="Return">1</Publish>
+                </Control>
+                <Control Id="Text" Type="Text" X="21" Y="15" Width="221" Height="30" Text="!(loc.IncompleteDatabaseInput)" />
+            </Dialog>
+            <Dialog Id="ServerErrorDlg" Width="260" Height="85" Title="!(loc.InstallDialogTitle)" NoMinimize="yes">
+                <Control Id="OK" Type="PushButton" X="102" Y="57" Width="56" Height="17" Text="!(loc.OK)" Default="yes" Cancel="yes">
+                    <Publish Event="EndDialog" Value="Return">1</Publish>
+                </Control>
+                <Control Id="Text" Type="Text" X="15" Y="15" Width="227" Height="30" Text="!(loc.IncompleteServerInput)" />
+            </Dialog>
+            <Dialog Id="ProgressDlg" Width="370" Height="270" Title="!(loc.InstallDialogTitle)" Modeless="yes">
+                <Control Type="Bitmap" Id="logo" Width="370" Height="270" X="0" Y="0" Text="background">
+                </Control>
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.Cancel)" TabSkip="yes">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+                <Control Id="InstallInProgressLbl" Type="Text" X="15" Y="10" Width="300" Height="70" Text="!(loc.InstallInProggress)" TabSkip="no" Transparent="yes" />
+                <Control Id="StatusLbl" Type="Text" X="15" Y="100" Width="302" Height="10" Text="!(loc.Status)" Transparent="yes" />
+                <Control Id="ActionText" Type="Text" X="35" Y="130" Width="265" Height="10">
+                    <Subscribe Event="ActionText" Attribute="Text" />
+                </Control>
+                <Control Id="ProgressBar" Type="ProgressBar" X="15" Y="115" Width="343" Height="10" ProgressBlocks="yes" Text="Progress done" TabSkip="yes">
+                    <Subscribe Event="SetProgress" Attribute="Progress" />
+                </Control>
+            </Dialog>
+            <Dialog Id="ExitDlg" Width="370" Height="270" Title="!(loc.InstallDialogTitle)" NoMinimize="yes">
+                <Control Type="Bitmap" Id="logo" Width="370" Height="270" X="0" Y="0" Text="background">
+                </Control>
+                <Control Id="Finish" Type="PushButton" X="304" Y="244" Width="56" Height="17" Default="yes" Text="!(loc.Finish)" TabSkip="yes">
+                    <Publish Event="EndDialog" Value="Return">1</Publish>
+                </Control>
+                <Control Id="FinishedLbl" Type="Text" X="15" Y="6" Width="300" Height="30" Text="!(loc.InstallationFinished)" Transparent="yes" TabSkip="no" />
+                <Control Id="PressFinishLbl" Type="Text" X="15" Y="40" Width="300" Height="30" Text="!(loc.PressFinish)" Transparent="yes" />
+            </Dialog>
+            <Dialog Id="LicenseAgreementDlg" Width="370" Height="270" Title="!(loc.LicenseAgreementDialogTitle)" NoMinimize="yes">
+                <Control Type="Bitmap" Id="logo" Width="370" Height="270" X="0" Y="0" Text="background" TabSkip="yes">
+                </Control>
+                <Control Id="Continue" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.Continue)" TabSkip="no">
+                    <Publish Event="NewDialog" Value="ServerDlg">1</Publish>
+                    <Condition Action="disable"><![CDATA[not EULA_AGREEMENT]]></Condition>
+                    <Condition Action="enable"><![CDATA[EULA_AGREEMENT]]></Condition>
+                </Control>
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.Cancel)" TabSkip="yes">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+                <Control Id="EndUserLicenseLbl" Type="Text" X="15" Y="10" Width="317" Height="19" Text="!(loc.EndUserLicense)" Transparent="yes" />
+                <Control Id="ReadCarefullyLbl" Type="Text" X="15" Y="34" Width="300" Height="10" Text="!(loc.ReadCarefully)" Transparent="yes" />
+                <Control Id="AgreementText" Type="ScrollableText" X="15" Y="49" Width="345" Height="144" TabSkip="yes">
+                    <Text SourceFile="binary\!(loc.EULA_file)" />
+                </Control>
+                <Control Type="Text" Id="AcceptEulaLabel" Width="325" Height="12" X="34" Y="206" Text="!(loc.AcceptEULA)" Transparent="yes" NoPrefix="yes" />
+                <Control Type="CheckBox" Id="AcceptEula" Width="10" Height="10" X="15" Y="206" Property="EULA_AGREEMENT" TabSkip="yes" CheckBoxValue="Yes" />
+            </Dialog>
+            <Dialog Id="WelcomeDlg" Width="370" Height="270" Title="!(loc.WelcomeDialogTitle)" NoMinimize="yes">
+                <Control Type="Bitmap" Id="logo" Width="370" Height="270" X="0" Y="0" Text="background_welcome">
+                </Control>
+                <Control Id="Continue" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.Continue)" TabSkip="yes">
+                    <Publish Event="NewDialog" Value="CheckPrerequisitesDlg">1</Publish>
+                </Control>
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.Cancel)" TabSkip="yes">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+                <Control Id="WelcomeLbl" Type="Text" X="15" Y="10" Width="178" Height="62" Text="!(loc.Welcome)" Transparent="yes" TabSkip="no" />
+                <Control Id="InstallationReadyLbl" Type="Text" X="15" Y="82" Width="300" Height="80" Text="!(loc.InstallationReady)" Transparent="yes">
+                </Control>
+            </Dialog>
+            <Dialog Id="CheckPrerequisitesDlg" Width="370" Height="270">
+                <Control Type="Bitmap" Id="logo" Width="370" Height="270" X="0" Y="0" Text="background_welcome" TabSkip="no">
+                </Control>
+                <Control Id="Title" Type="Text" X="15" Y="10" Width="327" Height="25" Transparent="yes" NoPrefix="yes" Text="!(loc.CheckPrerequisitesDialogDescr)" TabSkip="no" />
+                <Control Id="Continue" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.Continue)" TabSkip="yes">
+                    <Publish Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
+                    <Condition Action="enable">PREREQUISITES_OK</Condition>
+                    <Condition Action="disable">not PREREQUISITES_OK</Condition>
+                </Control>
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.Cancel)" TabSkip="yes">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+                <Control Type="Text" Id="CheckWinAuthLabel" Width="149" Height="17" X="49" Y="64" Text="IIS Windows Authentication Module" Transparent="yes" />
+                <Control Type="CheckBox" Id="CheckWinAuth" Width="10" Height="10" X="19" Y="64" Disabled="yes" Property="IIS_WIN_AUTH" TabSkip="yes" />
+                <Control Type="Text" Id="CheckIISLabel" Width="149" Height="17" X="49" Y="45" Text="IIS Version 7 or higher" Transparent="yes" />
+                <Control Type="CheckBox" Id="CheckIIS" Width="10" Height="10" X="19" Y="45" Disabled="yes" Property="IIS_VALID" TabSkip="yes" />
+                <Control Type="CheckBox" Id="CheckASPNET" Width="10" Height="10" X="19" Y="82" TabSkip="yes" Disabled="yes" Property="ASPNET" />
+                <Control Type="Text" Id="CheckASPNETLabel" Width="173" Height="17" X="49" Y="82" Text="IIS ASP.NET 4/4.5 Module" Transparent="yes" />
+                <Control Type="Text" Id="WarnPrerequisitesNotInstalled" Width="337" Height="46" X="16" Y="180" Text="!(loc.PrerequisitesNotMet)" Transparent="yes">
+                    <Condition Action="show">not PREREQUISITES_OK</Condition>
+                    <Condition Action="hide">PREREQUISITES_OK</Condition>
+                </Control>
+            </Dialog>
+            <RadioButtonGroup Property="AUTHENTICATION_TYPE">
+                <RadioButton Text="!(loc.WinAuthentication)" Value="WIN" X="5" Y="0" Width="250" Height="15" />
+                <RadioButton Text="!(loc.SqlAuthentication)" Value="SQL" X="5" Y="20" Width="250" Height="15" />
+            </RadioButtonGroup>
+            <RadioButtonGroup Property="INSTALLATION_TYPE">
+                <RadioButton Text="!(loc.SiteInstallation)" Value="SITE" X="5" Y="0" Width="250" Height="15" />
+                <RadioButton Text="!(loc.VDirInstallation)" Value="VDIR" X="5" Y="20" Width="250" Height="15" />
+            </RadioButtonGroup>
+            <TextStyle Id="DlgFontBlack" FaceName="Tahoma" Size="8" />
+            <TextStyle Id="DlgFont8" FaceName="Tahoma" Size="8" Red="255" Green="255" Blue="255" />
+            <TextStyle Id="DlgFont16" FaceName="Tahoma" Size="16" Red="255" Green="255" Blue="255" />
+            <TextStyle Id="DlgTitleFont" FaceName="Tahoma" Size="8" Bold="yes" Red="255" Green="255" Blue="255" />
+            <InstallUISequence>
+                <Show Dialog="WelcomeDlg" After="CostFinalize" />
+                <Show Dialog="ExitDlg" OnExit="success" />
+            </InstallUISequence>
+        </UI>
+        <iis:WebDirProperties Id="WebDirProperties" AnonymousAccess="no" WindowsAuthentication="yes" />
+        <!-- And the CA to do the job (with the help of [quiet execution CA][2]) -->
+        <CustomAction Id="createWinAuthSqlLogin" Return="ignore" Directory="TARGETDIR" ExeCommand="sqlcmd -S [SERVER_NAME] -E -q &quot;exit(CREATE LOGIN [\[]IIS APPPOOL\[VDIR_ALIAS][\]] FROM WINDOWS)&quot;" Execute="commit" />
+        <CustomAction Id="createWinAuthSqlDataUser" Return="ignore" Directory="TARGETDIR" ExeCommand="sqlcmd -S [SERVER_NAME] -E -d [DATABASE_NAME]_Data -q &quot;exit(CREATE USER appServer FOR LOGIN [\[]IIS APPPOOL\[VDIR_ALIAS][\]];EXEC sp_addrolemember N'db_datawriter', N'appServer';EXEC sp_addrolemember N'db_datareader', N'appServer';EXEC sp_addrolemember N'db_ddladmin', N'appServer';UPDATE BusinessPartner SET UserName = '[%USERDOMAIN]\[LogonUser]')&quot;" Execute="commit" />
+        <CustomAction Id="createWinAuthSqlModelUser" Return="ignore" Directory="TARGETDIR" ExeCommand="sqlcmd -S [SERVER_NAME] -E -d [DATABASE_NAME]_Model -q &quot;exit(CREATE USER appServer FOR LOGIN [\[]IIS APPPOOL\[VDIR_ALIAS][\]];EXEC sp_addrolemember N'db_datawriter', N'appServer';EXEC sp_addrolemember N'db_datareader', N'appServer';EXEC sp_addrolemember N'db_ddladmin', N'appServer')&quot;" Execute="commit" />
+        <InstallExecuteSequence>
+            <Custom Action="createWinAuthSqlLogin" After="ConfigureIIs">NOT Installed</Custom>
+            <Custom Action="createWinAuthSqlDataUser" After="createWinAuthSqlLogin">NOT Installed</Custom>
+            <Custom Action="createWinAuthSqlModelUser" After="createWinAuthSqlLogin">NOT Installed</Custom>
+        </InstallExecuteSequence>
+        <Icon Id="icon" SourceFile="assets\favicon.ico" />
+    </Product>
+</Wix>
