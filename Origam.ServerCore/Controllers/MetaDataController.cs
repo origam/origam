@@ -25,13 +25,19 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.OrigamEngine.ModelXmlBuilders;
+using Origam.Schema;
+using Origam.Schema.MenuModel;
+using Origam.Workbench.Services;
 
 namespace Origam.ServerCore.Controllers
 {
     public class MetaDataController: AbstractController
     {
+        private readonly IPersistenceService persistenceService;
+
         public MetaDataController(ILogger<MetaDataController> log) : base(log)
         {
+            persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
         }
 
         [HttpGet("[action]")]
@@ -43,6 +49,11 @@ namespace Origam.ServerCore.Controllers
         [HttpGet("[action]")]
         public IActionResult GetScreeSection([FromQuery] [Required] Guid id)
         {
+            FormReferenceMenuItem menuItem = persistenceService.SchemaProvider.RetrieveInstance(
+                typeof(FormReferenceMenuItem), new ModelElementKey(id)) as FormReferenceMenuItem;
+
+            if (menuItem == null) return BadRequest("Menu with that Id does not exist");
+            
             XmlOutput xmlOutput = FormXmlBuilder.GetXml(id);
             MenuLookupIndex.AddIfNotPresent(id, xmlOutput.ContainedLookups);
             return Ok(xmlOutput.Document.OuterXml);
