@@ -23,36 +23,59 @@ using System;
 using Origam.Schema.WorkflowModel;
 using Microsoft.Msagl.Drawing;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
+using Microsoft.Msagl.Core.Geometry.Curves;
+using Microsoft.Msagl.GraphViewerGdi;
+using Origam.Schema;
 using Origam.Workbench.Diagram.DiagramFactory;
+using Origam.Workbench.Diagram.Extensions;
+using WeifenLuo.WinFormsUI.Docking;
+using Point = Microsoft.Msagl.Core.Geometry.Point;
 
 namespace Origam.Workbench.Diagram
 {
 	public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock>
 	{
 		private Graph graph;
+		private readonly NodeFactory nodeFactory;
+		private readonly Pen boldBlackPen = new Pen(System.Drawing.Color.Black, 2);
+		private readonly GViewer viewer;
+
+		public WorkFlowDiagramFactory(GViewer viewer)
+		{
+			this.viewer = viewer;
+			nodeFactory = new NodeFactory(viewer);
+		}
 
 		public Graph Draw(IWorkflowBlock graphParent)
 		{
 			graph = new Graph();
 			DrawWorkflowDiagram(graphParent, null);
+			graph.LayoutAlgorithmSettings.ClusterMargin = 20;
 			return graph;
 		}
 
-		private Node AddNode(string id, string label, Subgraph subGraph)
+		private Node AddNode(IWorkflowStep step, Subgraph subGraph)
 		{
-			Node shape = graph.AddNode(id);
-            shape.LabelText = label;
-            subGraph?.AddNode(shape);
-            return shape;
+			Node node = nodeFactory.AddNode(graph, step);
+            node.LabelText = step.Name;
+            node.UserData = step;
+            subGraph?.AddNode(node);
+            return node;
 		}
 
 		private Subgraph DrawWorkflowDiagram(IWorkflowBlock workFlowBlock, Subgraph parentSubgraph)
 		{
             Subgraph subgraph = new Subgraph(workFlowBlock.NodeId);
+            subgraph.Attr.Shape = Shape.DrawFromGeometry;
+            subgraph.DrawNodeDelegate = DrawSubgraph;
+            subgraph.UserData = workFlowBlock;
             subgraph.LabelText = workFlowBlock.Name;
+            
             if (parentSubgraph == null)
             {
-                this.graph.RootSubgraph.AddSubgraph(subgraph);
+                graph.RootSubgraph.AddSubgraph(subgraph);
             }
             else
             {
@@ -65,7 +88,7 @@ namespace Origam.Workbench.Diagram
                 IWorkflowBlock subBlock = step as IWorkflowBlock;
                 if (subBlock == null)
                 {
-                    Node shape = this.AddNode(step.NodeId, step.Name, subgraph);
+                    Node shape = AddNode(step, subgraph);
                     ht.Add(step.PrimaryKey, shape);
                 }
                 else
@@ -99,5 +122,65 @@ namespace Origam.Workbench.Diagram
 			}
             return subgraph;
         }
+		
+		private static Image GetImage(Node node)
+		{
+			var schemaItem = (ISchemaItem) node.UserData;
+
+			var schemaBrowser =
+				WorkbenchSingleton.Workbench.GetPad(typeof(IBrowserPad)) as IBrowserPad;
+			var imageList = schemaBrowser.ImageList;
+			Image image = imageList.Images[schemaBrowser.ImageIndex(schemaItem.Icon)];
+			return image;
+		}
+
+
+		private readonly int margin = 3;
+		private readonly int marginLeft = 5;
+		private readonly Font font = new Font("Arial", 12);
+		private readonly Pen blackPen = new Pen(System.Drawing.Color.Black, 1);
+		private readonly SolidBrush drawBrush = new SolidBrush(System.Drawing.Color.Black);
+		private readonly StringFormat drawFormat = new StringFormat();
+		
+		private bool DrawSubgraph(Node node, object graphicsObj)
+		{
+			var borderSize = new Size(
+				(int)node.BoundingBox.Width, 
+				(int)node.BoundingBox.Height);
+			
+			Pen pen = viewer.SelectedObject == node
+				? boldBlackPen 
+				: blackPen;
+			
+			Graphics editorGraphics = (Graphics)graphicsObj;
+			var image = GetImage(node);
+
+			SizeF stringSize = editorGraphics.MeasureString(node.LabelText, font);
+			var labelWidth = stringSize.Width + margin + image.Width;
+			
+			var borderCorner = new System.Drawing.Point(
+				(int)node.GeometryNode.Center.X - borderSize.Width / 2,
+				(int)node.GeometryNode.Center.Y - borderSize.Height / 2);
+			Rectangle border = new Rectangle(borderCorner, borderSize);
+
+			var labelPoint = new PointF(
+				(float)(node.GeometryNode.Center.X - labelWidth / 2 + marginLeft + margin + image.Width),
+				(float)node.GeometryNode.Center.Y - border.Height / 2.0f + margin);
+
+			var imagePoint = new PointF(
+				(float)(node.GeometryNode.Center.X - labelWidth / 2 + marginLeft),
+				(float)(node.GeometryNode.Center.Y - border.Height / 2.0f + margin ));
+
+			editorGraphics.DrawUpSideDown(drawAction: graphics =>
+				{
+					graphics.DrawString(node.LabelText, font, drawBrush,
+						labelPoint, drawFormat);
+					graphics.DrawRectangle(pen, border);
+					graphics.DrawImage(image, imagePoint);
+				}, 
+				yAxisCoordinate: (float)node.GeometryNode.Center.Y);
+            
+			return true;
+		}
 	}
 }
