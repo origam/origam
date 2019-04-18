@@ -265,7 +265,8 @@ namespace Origam.ServerCore.Controllers
                 CustomFilters = entityQueryData.Filter,
                 CustomOrdering = entityQueryData.OrderingAsTuples,
                 RowLimit = entityQueryData.RowLimit,
-                ColumnNames = entityQueryData.ColumnNames
+                ColumnNames = entityQueryData.ColumnNames,
+                ForceDatabaseCalculation = true
             };
 
             if (entityData.MenuItem.ListDataStructure == null)

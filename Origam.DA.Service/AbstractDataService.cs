@@ -195,7 +195,7 @@ namespace Origam.DA.Service
 
 		private DbDataAdapter GetAdapterNonCached(SelectParameters adParameters)
         {
-			return DbDataAdapterFactory.CreateDataAdapter(adParameters,  false);
+			return DbDataAdapterFactory.CreateDataAdapter(adParameters,  adParameters.ForceDatabaseCalculation);
 		}
 
 		private Hashtable GetCache()

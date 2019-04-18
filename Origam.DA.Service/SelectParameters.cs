@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -38,5 +39,7 @@ namespace Origam.DA.Service
         public int RowLimit { get; set; }
         public List<Tuple<string, string>> CustomOrdering { get; set; } =
             new List<Tuple<string, string>>();
+
+        public bool ForceDatabaseCalculation { get; set; }
     }
 }
