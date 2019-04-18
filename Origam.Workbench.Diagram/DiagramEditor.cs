@@ -143,8 +143,11 @@ namespace Origam.Workbench.Editors
 						.RetrieveInstance(typeof(AbstractSchemaItem), new Key(node.Id));
 				if(clickedItem != null)
 				{
-					EditSchemaItem cmd = new EditSchemaItem();
-					cmd.Owner = clickedItem;
+					EditSchemaItem cmd = new EditSchemaItem
+					{
+						ShowDialog = true,
+						Owner = clickedItem
+					};
 					cmd.Run();
 				}
 			}
