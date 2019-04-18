@@ -102,13 +102,10 @@ namespace Origam.DA.Service
             string transaction1 = Guid.NewGuid().ToString();
             try
             {
-            ExecuteUpdate(string.Format("CREATE ROLE {0} WITH LOGIN NOSUPERUSER INHERIT CREATEDB NOCREATEROLE NOREPLICATION PASSWORD '{1}'",user,password), transaction1);
-            ExecuteUpdate(string.Format("CREATE ROLE {0}role NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION", user), transaction1);
-            ExecuteUpdate(string.Format("GRANT {0}role TO {0}", user), transaction1);
+            ExecuteUpdate(string.Format("CREATE USER {0} WITH LOGIN NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION PASSWORD '{1}'", user,password), transaction1);
             ExecuteUpdate(string.Format("GRANT CONNECT ON DATABASE {0} TO {1}", database, user), transaction1);
-            ExecuteUpdate(string.Format("GRANT ALL PRIVILEGES ON DATABASE {0} TO {1}", database, user), transaction1);
-            ExecuteUpdate(string.Format("GRANT ALL ON SCHEMA {0} TO GROUP {1}role WITH GRANT OPTION", database, user), transaction1);
-            ExecuteUpdate(string.Format("ALTER DATABASE {0} OWNER TO {1}role ", database, user), transaction1);
+            ExecuteUpdate(string.Format("GRANT ALL PRIVILEGES ON DATABASE {0} TO {1} ", database, user), transaction1);
+            ExecuteUpdate(string.Format("GRANT ALL ON SCHEMA {0} TO {1} WITH GRANT OPTION ", database, user), transaction1);
                 ResourceMonitor.Commit(transaction1);
             }
             catch (Exception)
@@ -121,8 +118,8 @@ namespace Origam.DA.Service
         public override void DeleteUser(string user,bool DatabaseIntegratedAuthentication)
         {
             //change owner of object  to postgres. it is not good , but for testing is ok.
-            ExecuteUpdate(string.Format("REASSIGN OWNED BY \"{0}role\" TO postgres", user), null);
-            ExecuteUpdate(string.Format("DROP ROLE \"{0}role\" ", user), null);
+            ExecuteUpdate(string.Format("REASSIGN OWNED BY \"{0}\" TO postgres", user), null);
+            ExecuteUpdate(string.Format("DROP OWNED BY \"{0}\" ", user), null);
             ExecuteUpdate(string.Format("DROP ROLE \"{0}\" ", user), null);
         }
         public override void UpdateDatabaseSchemaVersion(string version, string transactionId)
