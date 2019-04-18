@@ -1,0 +1,33 @@
+import { IScreen, IUIScreenTreeNode } from "./types";
+import { ML } from "../../utils/types";
+import { unpack } from "../../utils/objects";
+
+import { computed } from "mobx";
+import { DataView } from "../../model/DataView/DataView";
+
+export class Screen implements IScreen {
+  constructor(
+    public P: {
+      screenModel: ML<ScreenModel>;
+    }
+  ) {}
+
+  cardTitle: string = "";
+  screenTitle: string = "Testing screen";
+  isLoading: boolean = false;
+
+  @computed get uiStructure(): IUIScreenTreeNode[] {
+    return this.screenModel.uiStructure;
+  }
+
+  @computed
+  get dataViewsMap(): Map<string, any> {
+    return new Map(
+      this.screenModel.dataViews.map(dv => [dv.id, dv] as [string, DataView])
+    );
+  }
+
+  get screenModel() {
+    return unpack(this.P.screenModel);
+  }
+}
