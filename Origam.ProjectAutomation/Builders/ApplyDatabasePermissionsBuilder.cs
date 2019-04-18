@@ -42,7 +42,7 @@ namespace Origam.ProjectAutomation
 
         public override void Execute(Project project)
         {
-            _databaseType = project.DatabaseTyp;
+            _databaseType = project.DatabaseType;
             DataService(_databaseType).ConnectionString =
             DataService(_databaseType).BuildConnectionString(project.DatabaseServerName,project.Port,
             project.DataDatabaseName, project.DatabaseUserName,

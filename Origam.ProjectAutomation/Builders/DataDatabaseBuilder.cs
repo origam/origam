@@ -40,7 +40,7 @@ namespace Origam.ProjectAutomation
 
         public override void Execute(Project project)
         {
-            _databaseType = project.DatabaseTyp;
+            _databaseType = project.DatabaseType;
             _databaseName = project.DataDatabaseName;
             DataService(_databaseType).ConnectionString = DataService(_databaseType).BuildConnectionString(
                 project.DatabaseServerName,project.Port, "", project.DatabaseUserName,
@@ -50,14 +50,14 @@ namespace Origam.ProjectAutomation
 
         public string BuildConnectionString(Project project, bool pooling)
         {
-            _databaseType = project.DatabaseTyp;
-            return DataService(project.DatabaseTyp).BuildConnectionString(project.DatabaseServerName,project.Port,
+            _databaseType = project.DatabaseType;
+            return DataService(project.DatabaseType).BuildConnectionString(project.DatabaseServerName,project.Port,
                 project.DataDatabaseName, project.DatabaseUserName,
                 project.DatabasePassword, project.DatabaseIntegratedAuthentication, pooling);
         }
         public string BuildConnectionStringArchitect(Project project, bool pooling)
         {
-            _databaseType = project.DatabaseTyp;
+            _databaseType = project.DatabaseType;
             if(_databaseType==DatabaseType.MsSql)
             {
                 return BuildConnectionString(project, pooling);
@@ -65,7 +65,7 @@ namespace Origam.ProjectAutomation
             if (_databaseType == DatabaseType.PostgreSql)
             {
                 this.DataService(_databaseType).DbUser=project.Name;
-                return DataService(project.DatabaseTyp).BuildConnectionString(project.DatabaseServerName, project.Port,
+                return DataService(project.DatabaseType).BuildConnectionString(project.DatabaseServerName, project.Port,
                     project.DataDatabaseName, DataService(_databaseType).DbUser,
                      DataService(_databaseType).DBPassword, project.DatabaseIntegratedAuthentication, pooling);
             }

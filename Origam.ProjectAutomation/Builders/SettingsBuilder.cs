@@ -56,8 +56,8 @@ namespace Origam.ProjectAutomation
             _setting.SchemaConnectionString = project.BuilderModelConnectionString;
             _setting.ModelSourceControlLocation = Path.Combine(project.ServerTemplateFolder, "Model");
             _setting.ServerUrl = project.FullUrl;
-            _setting.DataDataService = project.GetDataDataService();
-            _setting.SchemaDataService = project.GetDataDataService();
+            _setting.DataDataService = project.GetDataDataService;
+            _setting.SchemaDataService = project.GetDataDataService;
             _setting.ServerLocalPath = project.BinFolder;
             _setting.ModelSourceControlLocation = project.SourcesFolder;
             _settingsIndex = _settings.Add(_setting);

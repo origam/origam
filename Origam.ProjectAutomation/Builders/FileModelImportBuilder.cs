@@ -43,7 +43,7 @@ namespace Origam.ProjectAutomation
         private void UnzipDefaultModel(Project project)
         {
             string prefix = "";
-            switch (project.DatabaseTyp)
+            switch (project.DatabaseType)
                 {
                 case DatabaseType.MsSql:
                     prefix = "MS";

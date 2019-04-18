@@ -108,6 +108,7 @@ namespace OrigamArchitect
 
         private void pageReview_Commit(object sender, WizardPageConfirmEventArgs e)
         {
+            _builder.CreateTasks(_project);
             InitTaskList();
             WorkbenchSingleton.Workbench.Disconnect();
             WorkbenchSingleton.Workbench.PopulateEmptyDatabaseOnLoad = false;
@@ -210,7 +211,7 @@ namespace OrigamArchitect
             _project.Url = txtName.Text;
             _project.ArchitectUserName = System.Threading.Thread.CurrentPrincipal.Identity.Name;
             
-            _project.DatabaseTyp = DatabaseTp;
+            _project.DatabaseType = DatabaseTp;
             _project.Port = Port;
             _project.NewPackageId = Guid.NewGuid().ToString();
         }

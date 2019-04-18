@@ -24,6 +24,11 @@ using System;
 
 namespace Origam.ProjectAutomation
 {
+    public enum DatabaseType
+    {
+        MsSql,
+        PostgreSql
+    }
     public class Project
     {
         private string _name;
@@ -50,7 +55,7 @@ namespace Origam.ProjectAutomation
         private string _gitemail;
         public string Gitusername { get => _gitusername; set => _gitusername = value; }
         public string Gitemail { get => _gitemail; set => _gitemail = value; }
-        public DatabaseType DatabaseTyp { get; set; }
+        public DatabaseType DatabaseType { get; set; }
         public int Port { get; set; }
         public string ConnectionDatabasePassword { get; internal set; }
         public string ConnectionDatabaseUser { get; internal set; }
@@ -58,22 +63,20 @@ namespace Origam.ProjectAutomation
         // Root Menu package
         private string _basePackageId = "b9ab12fe-7f7d-43f7-bedc-93747647d6e4";
 
-        public enum DatabaseType
+       
+        public string GetDataDataService
         {
-            MsSql,
-            PostgreSql
-        }
-
-        internal string GetDataDataService()
-        {
-           switch (DatabaseTyp)
+            get
             {
-                case DatabaseType.MsSql:
-                    return "Origam.DA.Service.MsSqlDataService, Origam.DA.Service";
-                case DatabaseType.PostgreSql:
-                    return "Origam.DA.Service.PgSqlDataService, Origam.DA.Service";
-                default:
-                    throw new ArgumentOutOfRangeException("DatabaseType");
+                switch (DatabaseType)
+                {
+                    case DatabaseType.MsSql:
+                        return "Origam.DA.Service.MsSqlDataService, Origam.DA.Service";
+                    case DatabaseType.PostgreSql:
+                        return "Origam.DA.Service.PgSqlDataService, Origam.DA.Service";
+                    default:
+                        throw new ArgumentOutOfRangeException("DatabaseType");
+                }
             }
         }
 

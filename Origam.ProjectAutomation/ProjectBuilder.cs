@@ -39,7 +39,6 @@ namespace Origam.ProjectAutomation
 
         public void Create(Project project)
         {
-            SetTasks(project.DatabaseTyp);
             //for New wizard connection connection 
             project.DataConnectionString =
             dataDatabaseBuilder.BuildConnectionString(project, true);
@@ -62,7 +61,7 @@ namespace Origam.ProjectAutomation
                     builder.State = TaskState.Finished;
                 }
             }
-            catch (Exception e)
+            catch
             {
                 activeTask.State = TaskState.Failed;
                 for (int i = tasks.Count - 1; i >= 0; i--)
@@ -73,9 +72,9 @@ namespace Origam.ProjectAutomation
             }
         }
 
-        private void SetTasks(Project.DatabaseType DatabaseTyp)
+        public void CreateTasks(Project _project)
         {
-            if(DatabaseTyp == Project.DatabaseType.MsSql)
+            if (_project.DatabaseType == DatabaseType.MsSql)
             {
                 tasks.Add(settingsBuilder);
                 tasks.Add(dataDatabaseBuilder);
@@ -90,7 +89,7 @@ namespace Origam.ProjectAutomation
                 tasks.Add(new NewPackageBuilder());
                 tasks.Add(new GitBuilder());
             }
-            if(DatabaseTyp==Project.DatabaseType.PostgreSql)
+            if (_project.DatabaseType == DatabaseType.PostgreSql)
             {
                 tasks.Add(settingsBuilder);
                 tasks.Add(dataDatabaseBuilder);
