@@ -23,7 +23,7 @@ using System;
 using System.Data;
 using System.Text;
 using Npgsql;
-using static Origam.DA.Const;
+using static Origam.DA.Common.Enums;
 
 namespace Origam.DA.Service
 {
@@ -32,7 +32,7 @@ namespace Origam.DA.Service
 	/// </summary>
 	public class PgSqlDataService : AbstractSqlDataService
 	{
-        public const DatabaseType PlatformName = DatabaseType.PostgreSql;
+        private const DatabaseType _PlatformName = DatabaseType.PostgreSql;
         private string _DbUser = "";
         #region Constructors
         public PgSqlDataService() : base()
@@ -40,7 +40,15 @@ namespace Origam.DA.Service
 			Init();
 		}
 
-		public PgSqlDataService(string connection, int bulkInsertThreshold,
+        public override DatabaseType PlatformName
+        {
+            get
+            {
+                return _PlatformName;
+            }
+        }
+
+        public PgSqlDataService(string connection, int bulkInsertThreshold,
             int updateBatchSize) : base(connection, bulkInsertThreshold, updateBatchSize)
 		{
 			Init();

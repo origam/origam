@@ -28,6 +28,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using System.Text.RegularExpressions;
+using static Origam.DA.Common.Enums;
 using static Origam.DA.Const;
 
 namespace Origam.DA.Service
@@ -37,7 +38,7 @@ namespace Origam.DA.Service
 	/// </summary>
 	public class MsSqlDataService : AbstractSqlDataService
 	{
-        public const DatabaseType PlatformName = DatabaseType.MsSql;
+        private const DatabaseType _PlatformName = DatabaseType.MsSql;
         private string _IISUser;
         private static readonly log4net.ILog log = 
             log4net.LogManager.GetLogger(
@@ -61,7 +62,14 @@ namespace Origam.DA.Service
 			this.DbDataAdapterFactory = new MsSqlCommandGenerator();
 		}
 
-		internal override IDbConnection GetConnection(string connectionString)
+        public override DatabaseType PlatformName
+        {
+            get
+            {
+                return _PlatformName;
+            }
+        }
+        internal override IDbConnection GetConnection(string connectionString)
 		{
             SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder(connectionString);
             sb.ApplicationName = "ORIGAM [" + System.Threading.Thread.CurrentPrincipal.Identity.Name + "]";

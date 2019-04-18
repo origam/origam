@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Security.Principal;
@@ -30,22 +29,25 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
+using static Origam.DA.Common.Enums;
 
 namespace Origam.DA.Service
 {
-	/// <summary>
-	/// Abstract implementation of IDataService, based on ORIGAM metadata
-	/// </summary>
-	public abstract class AbstractDataService : IDataService
-	{
-		private IPersistenceProvider _persistence = null; // = new OrigamPersistenceProvider();
+    /// <summary>
+    /// Abstract implementation of IDataService, based on ORIGAM metadata
+    /// </summary>
+    public abstract class AbstractDataService : IDataService
+    {
+        private IPersistenceProvider _persistence = null; // = new OrigamPersistenceProvider();
 
-		public AbstractDataService()
-		{
-		}
+        public AbstractDataService()
+        {
+        }
 
         public int BulkInsertThreshold { get; set; }
         public int UpdateBatchSize { get; set; }
+
+        public abstract DatabaseType PlatformName { get;  }
 
         private bool _userDefinedParameters = false;
 		public bool UserDefinedParameters
