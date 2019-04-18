@@ -21,14 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 
 using System;
+using static Origam.DA.Const;
 
 namespace Origam.ProjectAutomation
 {
-    public enum DatabaseType
-    {
-        MsSql,
-        PostgreSql
-    }
     public class Project
     {
         private string _name;

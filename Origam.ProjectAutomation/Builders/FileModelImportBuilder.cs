@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Linq;
+using static Origam.DA.Const;
 using static Origam.ProjectAutomation.Project;
 
 namespace Origam.ProjectAutomation

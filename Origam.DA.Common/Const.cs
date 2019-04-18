@@ -47,8 +47,13 @@ namespace Origam.DA
 		public static string FieldId = "FieldId";
 		public static string DescribingField = "DescribingField";
 		public static string IsWriteOnlyAttribute = "IsWriteOnly";
+        public  enum DatabaseType
+        {
+            MsSql,
+            PostgreSql
+        }
 
-		public Const(){}
+        public Const(){}
 		
 	}
 }
