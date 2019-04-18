@@ -37,9 +37,7 @@ namespace Origam.DA.Service
         public string ColumnName { get; set; }
         public string CustomFilters { get; set; } = "";
         public int RowLimit { get; set; }
-        public List<Tuple<string, string>> CustomOrdering { get; set; } =
-            new List<Tuple<string, string>>();
-
+        public List<Tuple<string, string>> CustomOrdering { get; set; }
         public bool ForceDatabaseCalculation { get; set; }
     }
 }
