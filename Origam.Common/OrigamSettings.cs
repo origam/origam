@@ -270,7 +270,9 @@ namespace Origam
 	    [Category("Services"), DefaultValue("")]
         public string GsPath { get; set; }
 
-	    public string ReportsFolder()
+        public DeployPlatforms DeployPlatforms { get; set; }
+
+        public string ReportsFolder()
 		{
 			return System.IO.Path.Combine(BaseFolder, this.ReportDefinitionsPath);
 		}
@@ -333,4 +335,55 @@ namespace Origam
 
 		#endregion
 	}
+
+    public class DeployPlatforms
+    {
+        public Platform Platform { get; set; }
+    }
+
+    public class Platform
+    {
+        private string nameField;
+
+        private string dataConnectionStringField;
+
+        private string dataServiceField;
+
+        /// <remarks/>
+        public string Name
+        {
+            get
+            {
+                return this.nameField;
+            }
+            set
+            {
+                this.nameField = value;
+            }
+        }
+
+        public string DataConnectionString
+        {
+            get
+            {
+                return this.dataConnectionStringField;
+            }
+            set
+            {
+                this.dataConnectionStringField = value;
+            }
+        }
+
+        public string DataService
+        {
+            get
+            {
+                return this.dataServiceField;
+            }
+            set
+            {
+                this.dataServiceField = value;
+            }
+        }
+    }
 }
