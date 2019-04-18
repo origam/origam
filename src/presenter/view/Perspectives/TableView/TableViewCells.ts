@@ -26,7 +26,7 @@ export class TableViewCells implements ICells {
     return this.propReorder.count;
   }
 
-  fixedColumnCount: number = 2;
+  fixedColumnCount: number = 0;
 
   @computed get selPropIdx() {
     return this.propCursor.selId
