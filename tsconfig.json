@@ -18,8 +18,6 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "preserve",
-    "baseUrl": ".",
-    "rootDir": "src",
     "downlevelIteration": true,
     "experimentalDecorators": true
   },

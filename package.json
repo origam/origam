@@ -1,75 +1,38 @@
 {
-  "name": "origam-html5",
+  "name": "tstest01",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@babel/core": "7.2.2",
-    "@svgr/webpack": "4.1.0",
     "@types/jest": "24.0.11",
-    "@types/node": "11.11.6",
-    "@types/react": "16.8.8",
+    "@types/jsonwebtoken": "^8.3.2",
+    "@types/node": "11.12.1",
+    "@types/react": "16.8.10",
     "@types/react-dom": "16.8.3",
     "axios": "^0.18.0",
-    "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "9.0.0",
-    "babel-jest": "23.6.0",
-    "babel-loader": "8.0.5",
-    "babel-plugin-named-asset-import": "^0.3.1",
-    "babel-preset-react-app": "^7.0.2",
-    "bfj": "6.1.1",
     "bind-decorator": "^1.0.11",
-    "case-sensitive-paths-webpack-plugin": "2.2.0",
-    "css-loader": "1.0.0",
-    "dotenv": "6.0.0",
-    "dotenv-expand": "4.2.0",
-    "eslint": "5.12.0",
-    "eslint-config-react-app": "^3.0.8",
-    "eslint-loader": "2.1.1",
-    "eslint-plugin-flowtype": "2.50.1",
-    "eslint-plugin-import": "2.14.0",
-    "eslint-plugin-jsx-a11y": "6.1.2",
-    "eslint-plugin-react": "7.12.4",
-    "file-loader": "2.0.0",
-    "fs-extra": "7.0.1",
-    "html-webpack-plugin": "4.0.0-alpha.2",
-    "identity-obj-proxy": "3.0.0",
-    "jest": "23.6.0",
-    "jest-pnp-resolver": "1.0.2",
-    "jest-resolve": "23.6.0",
-    "jest-watch-typeahead": "^0.2.1",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",
-    "mini-css-extract-plugin": "0.5.0",
     "mobx": "4.9.2",
     "mobx-react": "^5.4.3",
     "moment": "^2.24.0",
-    "optimize-css-assets-webpack-plugin": "5.0.1",
-    "pnp-webpack-plugin": "1.2.1",
-    "postcss-flexbugs-fixes": "4.1.0",
-    "postcss-loader": "3.0.0",
-    "postcss-preset-env": "6.5.0",
-    "postcss-safe-parser": "4.0.1",
-    "react": "^16.8.5",
-    "react-app-polyfill": "^0.2.2",
-    "react-dev-utils": "^8.0.0",
-    "react-dom": "^16.8.5",
-    "react-measure": "^2.2.4",
+    "node-sass": "^4.11.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-measure": "^2.2.5",
+    "react-scripts": "2.1.8",
     "react-virtualized": "^9.21.0",
-    "resolve": "1.10.0",
-    "sass-loader": "7.1.0",
-    "style-loader": "0.23.1",
-    "terser-webpack-plugin": "1.2.2",
-    "typescript": "3.3.4000",
-    "url-loader": "1.1.2",
-    "webpack": "4.28.3",
-    "webpack-dev-server": "3.1.14",
-    "webpack-manifest-plugin": "2.0.4",
-    "workbox-webpack-plugin": "3.6.3",
-    "xml-js": "^1.6.11"
+    "styled-components": "^4.2.0",
+    "ts-action": "^9.0.0",
+    "typescript": "3.4.1",
+    "uuid": "^3.3.2",
+    "xml-js": "^1.6.11",
+    "xstate": "^4.4.0"
   },
   "scripts": {
-    "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -80,61 +43,12 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
-    ],
-    "resolver": "jest-pnp-resolver",
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
-      "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
-    ],
-    "testEnvironment": "jsdom",
-    "testURL": "http://localhost",
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
-    ],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ],
-    "watchPlugins": [
-      "C:\\experiments\\origam-html5\\node_modules\\jest-watch-typeahead\\filename.js",
-      "C:\\experiments\\origam-html5\\node_modules\\jest-watch-typeahead\\testname.js"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "react-app"
-    ]
-  },
   "devDependencies": {
     "@types/lodash": "^4.14.123",
     "@types/react-measure": "^2.0.5",
     "@types/react-virtualized": "^9.21.0",
-    "node-sass": "^4.11.0",
-    "tsconfig-paths-webpack-plugin": "^3.2.0"
-  }
+    "@types/styled-components": "^4.1.12",
+    "@types/uuid": "^3.4.4"
+  },
+  "proxy": "https://localhost:44356"
 }
