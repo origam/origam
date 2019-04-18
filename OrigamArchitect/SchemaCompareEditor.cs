@@ -23,7 +23,6 @@ using System;
 using System.Text;
 using System.Drawing;
 using System.Collections;
-using System.Linq;
 using System.Windows.Forms;
 
 using Origam;
@@ -31,15 +30,14 @@ using Origam.Workbench.Pads;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 using Origam.DA;
-using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
-using Origam.Services;
 using Origam.UI;
 using Origam.Workbench.Services.CoreServices;
 using Origam.DA.Service;
+using static Origam.DA.Common.Enums;
 
 namespace OrigamArchitect
 {
@@ -67,12 +65,14 @@ namespace OrigamArchitect
 		private System.Windows.Forms.ComboBox cboFilter;
 		private ContextMenuStrip contextMenu;
 		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.Button btnAddToModel; 
+		private System.Windows.Forms.Button btnAddToModel;
+        private Label label5;
+        private ComboBox cboDatabaseType;
 
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.Container components = null;
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.Container components = null;
 
 		public SchemaCompareEditor()
 		{
@@ -100,6 +100,26 @@ namespace OrigamArchitect
 			{
 				cboDeploymentVersion.SelectedItem = currentVersion;
 			}
+            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+            AbstractSqlDataService abstractDataService = (AbstractSqlDataService)DataService.GetDataService();
+            if (settings.DeployPlatforms != null)
+            {
+                foreach (var itemm in Enum.GetValues(typeof(DatabaseType)))
+                {
+                    cboDatabaseType.Items.Add(itemm);
+                    if(abstractDataService.PlatformName==(DatabaseType)itemm)
+                    {
+                        cboDatabaseType.SelectedItem = itemm;
+                    }
+                }
+            }
+            else
+            {
+                cboDatabaseType.Items.Add(abstractDataService.PlatformName);
+                cboDatabaseType.SelectedIndex = 0;
+                cboDatabaseType.Enabled = false;
+            }
+            
             contextMenu = new ContextMenuStrip();
             ToolStripMenuItem item = new ToolStripMenuItem(strings.GoToDefinition_MenuItem);
 			item.Click += new EventHandler(gotoDefinition_click);
@@ -148,6 +168,8 @@ namespace OrigamArchitect
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btnScript = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cboDatabaseType = new System.Windows.Forms.ComboBox();
             this.btnAddToModel = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.cboDeploymentVersion = new System.Windows.Forms.ComboBox();
@@ -223,7 +245,7 @@ namespace OrigamArchitect
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.btnScript);
-            this.groupBox2.Location = new System.Drawing.Point(8, 192);
+            this.groupBox2.Location = new System.Drawing.Point(8, 248);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(168, 59);
             this.groupBox2.TabIndex = 7;
@@ -242,21 +264,40 @@ namespace OrigamArchitect
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Controls.Add(this.cboDatabaseType);
             this.groupBox1.Controls.Add(this.btnAddToModel);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.cboDeploymentVersion);
             this.groupBox1.Controls.Add(this.btnAddToDeployment);
-            this.groupBox1.Location = new System.Drawing.Point(8, 66);
+            this.groupBox1.Location = new System.Drawing.Point(8, 74);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(168, 112);
+            this.groupBox1.Size = new System.Drawing.Size(168, 168);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Deployment Script";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(16, 24);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(83, 13);
+            this.label5.TabIndex = 7;
+            this.label5.Text = "Database Type:";
+            // 
+            // cboDatabaseType
+            // 
+            this.cboDatabaseType.FormattingEnabled = true;
+            this.cboDatabaseType.Location = new System.Drawing.Point(13, 43);
+            this.cboDatabaseType.Name = "cboDatabaseType";
+            this.cboDatabaseType.Size = new System.Drawing.Size(136, 21);
+            this.cboDatabaseType.TabIndex = 6;
+            // 
             // btnAddToModel
             // 
             this.btnAddToModel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddToModel.Location = new System.Drawing.Point(16, 74);
+            this.btnAddToModel.Location = new System.Drawing.Point(13, 128);
             this.btnAddToModel.Name = "btnAddToModel";
             this.btnAddToModel.Size = new System.Drawing.Size(136, 22);
             this.btnAddToModel.TabIndex = 5;
@@ -266,7 +307,7 @@ namespace OrigamArchitect
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(16, 22);
+            this.label1.Location = new System.Drawing.Point(13, 76);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(80, 15);
             this.label1.TabIndex = 3;
@@ -275,7 +316,7 @@ namespace OrigamArchitect
             // cboDeploymentVersion
             // 
             this.cboDeploymentVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboDeploymentVersion.Location = new System.Drawing.Point(16, 41);
+            this.cboDeploymentVersion.Location = new System.Drawing.Point(13, 95);
             this.cboDeploymentVersion.Name = "cboDeploymentVersion";
             this.cboDeploymentVersion.Size = new System.Drawing.Size(136, 21);
             this.cboDeploymentVersion.TabIndex = 2;
@@ -283,7 +324,7 @@ namespace OrigamArchitect
             // btnAddToDeployment
             // 
             this.btnAddToDeployment.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddToDeployment.Location = new System.Drawing.Point(16, 74);
+            this.btnAddToDeployment.Location = new System.Drawing.Point(13, 128);
             this.btnAddToDeployment.Name = "btnAddToDeployment";
             this.btnAddToDeployment.Size = new System.Drawing.Size(136, 22);
             this.btnAddToDeployment.TabIndex = 4;
@@ -337,6 +378,7 @@ namespace OrigamArchitect
             this.panel1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
 		}

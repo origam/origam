@@ -21,8 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Service;
 using System;
-using static Origam.DA.Const;
-using static Origam.ProjectAutomation.Project;
+using static Origam.DA.Common.Enums;
 
 namespace Origam.ProjectAutomation
 {

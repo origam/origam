@@ -20,9 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.ProjectAutomation.Builders;
-using System;
 using System.Collections.Generic;
-using static Origam.DA.Const;
+using static Origam.DA.Common.Enums;
 
 namespace Origam.ProjectAutomation
 {

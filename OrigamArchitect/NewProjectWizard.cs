@@ -32,8 +32,7 @@ using System.Security.Principal;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using Origam.Git;
-using static Origam.ProjectAutomation.Project;
-using static Origam.DA.Const;
+using static Origam.DA.Common.Enums;
 
 namespace OrigamArchitect
 {
@@ -89,7 +88,7 @@ namespace OrigamArchitect
             }
         }
 
-        private DatabaseType DatabaseTp
+        private DatabaseType DatabaseType
         {
             get
             {
@@ -212,7 +211,7 @@ namespace OrigamArchitect
             _project.Url = txtName.Text;
             _project.ArchitectUserName = System.Threading.Thread.CurrentPrincipal.Identity.Name;
             
-            _project.DatabaseType = DatabaseTp;
+            _project.DatabaseType = DatabaseType;
             _project.Port = Port;
             _project.NewPackageId = Guid.NewGuid().ToString();
         }
@@ -244,11 +243,11 @@ namespace OrigamArchitect
 
         private void SetPort()
         {
-                if (DatabaseTp == DatabaseType.MsSql)
+                if (DatabaseType == DatabaseType.MsSql)
                 {
                     txtPort.Text = "0";
                 }
-                if (DatabaseTp == DatabaseType.PostgreSql)
+                if (DatabaseType == DatabaseType.PostgreSql)
                 {
                     txtPort.Text = "5432";
                 }
@@ -448,7 +447,7 @@ namespace OrigamArchitect
 
         private void TxtDatabaseType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(DatabaseTp == DatabaseType.PostgreSql)
+            if(DatabaseType == DatabaseType.PostgreSql)
             {
                 chkIntegratedAuthentication.Enabled = false;
                 chkIntegratedAuthentication.Checked = false;
