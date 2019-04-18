@@ -1582,7 +1582,6 @@ namespace Origam.DA.Service
 			{
 				connection = transaction.Connection;
 			}
-
             var adapterParameters = new SelectParameters
             {
                 DataStructure = dataStructure,
@@ -1602,6 +1601,7 @@ namespace Origam.DA.Service
             ((IDbDataAdapter)adapter).SelectCommand.Connection = connection;
             ((IDbDataAdapter)adapter).SelectCommand.Transaction = transaction;
             ((IDbDataAdapter)adapter).SelectCommand.CommandTimeout = timeout;
+            BuildParameters(query.Parameters, adapter.SelectCommand.Parameters, currentProfile);
             if (connection.State == ConnectionState.Closed)
             {
                 connection.Open();
