@@ -28,6 +28,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using System.Text.RegularExpressions;
+using static Origam.DA.Const;
 
 namespace Origam.DA.Service
 {
@@ -36,6 +37,7 @@ namespace Origam.DA.Service
 	/// </summary>
 	public class MsSqlDataService : AbstractSqlDataService
 	{
+        public const DatabaseType PlatformName = DatabaseType.MsSql;
         private string _IISUser;
         private static readonly log4net.ILog log = 
             log4net.LogManager.GetLogger(
