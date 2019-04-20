@@ -28,6 +28,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private readonly WorkbenchSchemaService schemaService;
         private readonly Guid graphParentId;
         private readonly EdgeInsertionRule edgeInsertionRule;
+        private static readonly int graphScale = 1;
 
         public WorkFlowDiagramEditor(Guid graphParentId, GViewer gViewer, Form parentForm,
 	        IPersistenceProvider persistenceProvider, WorkFlowDiagramFactory factory)
@@ -56,10 +57,19 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			this.persistenceProvider = persistenceProvider;
 			this.factory = factory;
 
-			gViewer.Graph = factory.Draw(UpToDateGraphParent);
-			//gViewer.GraphHeight
+			ReDraw();
+
 			persistenceProvider.InstancePersisted += OnInstancePersisted;
 		}
+
+        private void ReDraw()
+        {
+	        gViewer.Graph = factory.Draw(UpToDateGraphParent);
+	        double scaleTo1 = 1 / gViewer.CurrentScale * graphScale;
+//	        double scaleToPixels =
+//		        -(460 - gViewer.GraphHeight) * 0.000502352941176 + 0.9677;
+	        gViewer.ZoomF = scaleTo1; //* scaleToPixels;
+        }
 
         private void OnMouseClick(object sender, MouseEventArgs args)
         {
@@ -162,7 +172,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			Node node = gViewer.Graph.FindNode(persistedSchemaItem.Id.ToString());
 			if (node == null)
 			{
-				gViewer.Graph = factory.Draw(UpToDateGraphParent);
+				ReDraw();
 			}
 			else
 			{
@@ -188,7 +198,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 			if (edgeWasRemovedOutsideDiagram)
 			{
-				gViewer.Graph = factory.Draw(UpToDateGraphParent);
+				ReDraw();
 			}
 		}
 
