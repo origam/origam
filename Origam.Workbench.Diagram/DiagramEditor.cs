@@ -55,9 +55,10 @@ namespace Origam.Workbench.Editors
 				.GetService<IPersistenceService>()
 				.SchemaProvider;
 			InitializeComponent();
+			gViewer.OutsideAreaBrush = Brushes.White;
 		}
 
-		protected override void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
 	        if (disposing)
 	        {
