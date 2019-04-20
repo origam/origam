@@ -297,6 +297,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 		private AbstractSchemaItem DNodeToSchemaItem(DNode dNodeUnderMouse)
 		{
+			if (dNodeUnderMouse == null) return null;
 			AbstractSchemaItem schemaItemUnderMouse = persistenceProvider
 					.RetrieveInstance(
 						typeof(AbstractSchemaItem),
