@@ -185,11 +185,17 @@ namespace Origam.Workbench.Editors
 			LabeledToolStrip toolStrip = new LabeledToolStrip(this);
 			toolStrip.Text = "Diagram Editor";
 
-			BigToolStripButton zoomHome = new BigToolStripButton();
-			zoomHome.Text = "Zoom Home";
-			zoomHome.Image = ImageRes.UnknownIcon;
-			zoomHome.Click += ZoomHome;
-			toolStrip.Items.Add(zoomHome);
+			BigToolStripButton panButton = new BigToolStripButton();
+			panButton.Text = "Pan";
+			panButton.Image = ImageRes.UnknownIcon;
+			panButton.Click += (sender, args) => gViewer.PanButtonPressed = !gViewer.PanButtonPressed; 
+			toolStrip.Items.Add(panButton);
+			
+			BigToolStripButton zoomHomeButton = new BigToolStripButton();
+			zoomHomeButton.Text = "Zoom Home";
+			zoomHomeButton.Image = ImageRes.UnknownIcon;
+			zoomHomeButton.Click += ZoomHome;
+			toolStrip.Items.Add(zoomHomeButton);
 
 			BigToolStripButton zoomInButton = new BigToolStripButton();
 			zoomInButton.Text = "Zoom +";
@@ -212,15 +218,17 @@ namespace Origam.Workbench.Editors
 			return new List<ToolStrip>{toolStrip};
 		}
 		
-		private void ToggleInsertEdge(object sender, EventArgs e) {
-			if (!gViewer.InsertingEdge) {
-				gViewer.PanButtonPressed = false;
-				gViewer.InsertingEdge = true;
-			}
-			else {
-				gViewer.InsertingEdge = false;
-				gViewer.PanButtonPressed = true;
-			}
+		private void ToggleInsertEdge(object sender, EventArgs e)
+		{
+			gViewer.InsertingEdge = !gViewer.InsertingEdge;
+//			if (!gViewer.InsertingEdge) {
+//				gViewer.PanButtonPressed = false;
+//				gViewer.InsertingEdge = true;
+//			}
+//			else {
+//				gViewer.InsertingEdge = false;
+//				gViewer.PanButtonPressed = true;
+//			}
 		}
 
 		private void ZoomHome(object sender, EventArgs e) {
