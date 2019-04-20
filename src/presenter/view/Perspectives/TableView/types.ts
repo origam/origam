@@ -29,6 +29,9 @@ export interface ITable {
   onFieldChange?(event: any, value: any): void;
   onFieldKeyDown?(event: any): void;
   onFieldOutsideClick?(event: any): void;
+
+  onBeforeRender?(): void;
+  onAfterRender?(): void;
 }
 
 export interface IFormField {
@@ -63,6 +66,8 @@ export interface ICells {
 
   getCell(rowIdx: number, columnIdx: number): ICell;
   getHeader(columnIdx: number): IHeader;
+
+  
 }
 
 

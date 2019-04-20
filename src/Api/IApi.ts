@@ -17,4 +17,9 @@ export interface IApi {
     RowLimit?: number;
     MasterRowId?: string;
   }): Promise<any>;
+  getLookupLabels(query: {
+    LookupId: string;
+    MenuId: string;
+    LabelIds: string[];
+  }): Promise<{[key: string]: string}>;
 }

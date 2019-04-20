@@ -255,7 +255,20 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
         scheduler(fn) {
           requestAnimationFrame(fn);
         }
-      })
+      }),
+      reaction(
+        () =>
+          [
+            this.firstVisibleColumnIndex,
+            this.lastVisibleColumnIndex,
+            this.firstVisibleRowIndex,
+            this.lastVisibleRowIndex
+          ] as [number, number, number, number],
+        data => {
+          this.props.onVisibleDataChanged &&
+            this.props.onVisibleDataChanged(...data);
+        }
+      )
     );
   }
 

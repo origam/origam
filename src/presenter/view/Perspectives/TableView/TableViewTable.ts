@@ -9,6 +9,7 @@ import * as DataViewActions from "../../../../DataView/DataViewActions";
 import { action } from "mobx";
 import * as TableViewActions from "../../../../DataView/TableView/TableViewActions";
 
+
 export class TableViewTable implements ITable {
   constructor(
     public P: {
@@ -56,6 +57,14 @@ export class TableViewTable implements ITable {
 
   listenMediator(listener: IListener) {
     return this.mediator.listen(listener);
+  }
+
+  onBeforeRender() {
+    console.log("before render")
+  }
+
+  onAfterRender() {
+    console.log("after render")
   }
 
   get scrollState(): IScrollState {

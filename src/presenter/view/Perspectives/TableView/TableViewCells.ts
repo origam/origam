@@ -76,14 +76,24 @@ export class TableViewCells implements ICells {
   getCell(rowIdx: number, columnIdx: number): ICell {
     const record = this.dataTable.getRecordByIdx(rowIdx);
     const property = this.propReorder.getByIndex(columnIdx);
+    let value;
+    let isLoading = false;
+    let isError = false;
+    if (record && property) {
+      value = this.dataTable.getValue(record, property);
+      if (property.lookupResolver) {
+        isError = property.lookupResolver.isError(value);
+        isLoading = property.lookupResolver.isLoading(value);
+        value = property.lookupResolver.getValue(value);
+      }
+    }
     return {
       type: "TextCell",
-      value:
-        record && property ? this.dataTable.getValue(record, property) : "",
+      value: value !== undefined ? value : "",
       onChange(event: any, value: string) {
         console.log("change", event, value);
       },
-      isLoading: false,
+      isLoading,
       isInvalid: false,
       isReadOnly: false,
       isRowCursor: this.selRecIdx === rowIdx,

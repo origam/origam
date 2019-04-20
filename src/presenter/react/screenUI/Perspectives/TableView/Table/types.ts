@@ -67,6 +67,12 @@ export interface IGridCanvasProps {
 
   onBeforeRender?(): void;
   onAfterRender?(): void;
+  onVisibleDataChanged?(
+    firstVisibleColumnIndex: number,
+    lastVisibleColumnIndex: number,
+    firstVisibleRowIndex: number,
+    lastVisibleRowIndex: number
+  ): void;
 }
 
 export interface IPositionedFieldProps {

@@ -343,6 +343,16 @@ export class Table extends React.Component<{ controller: ITable }> {
                               cells={this.props.controller.cells}
                               cursor={this.props.controller.cursor}
                               renderCell={renderCell(this.props.controller)}
+                              onVisibleDataChanged={(
+                                fvci,
+                                lvci,
+                                fvri,
+                                lvri
+                              ) => {
+                                console.log("VDC", fvci, lvci, fvri, lvri);
+                              }}
+                              onBeforeRender={this.props.controller.onBeforeRender}
+                              onAfterRender={this.props.controller.onAfterRender}
                             />
                           )}
                         </div>

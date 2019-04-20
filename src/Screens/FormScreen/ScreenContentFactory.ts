@@ -51,9 +51,10 @@ export class ScreenContentFactory implements IScreenContentFactory {
       const formUI = extractFormUI(gridFormRoot, gridProps);
       // --------------------------------------------------------
 
-      
       const dataSource = dataSources.getByEntityName(grid.attributes.Entity);
-      const dataStructureEntityId =dataSource ? dataSource.dataStructureEntityId : "";
+      const dataStructureEntityId = dataSource
+        ? dataSource.dataStructureEntityId
+        : "";
 
       const mediator = new DataViewMediator();
 
@@ -73,7 +74,7 @@ export class ScreenContentFactory implements IScreenContentFactory {
         items: () => propertyItems
       });
       const tableView = new TableView({
-        dataView: () => dataView, 
+        dataView: () => dataView,
         mediator
       });
       const specificDataViews = [
@@ -81,7 +82,9 @@ export class ScreenContentFactory implements IScreenContentFactory {
         tableView
       ];
 
-      const propertyItems = gridProps.map((gp, idx) => buildProperty(gp, idx));
+      const propertyItems = gridProps.map((gp, idx) =>
+        buildProperty(gp, idx, unpack(this.menuItemId), unpack(this.api))
+      );
       tableView.propReorder.setIds(
         properties.items.map(prop => prop.id).filter(id => id !== "Id")
       );
@@ -91,7 +94,7 @@ export class ScreenContentFactory implements IScreenContentFactory {
     const uiRoot = xmlFind.findUIRoot(win);
     const screenUI = extractScreenUI(uiRoot);
     // -----------------------------------------------------------
-
+    console.log(dataViews)
     console.timeEnd("xml-processing");
     return {
       screenUI,

@@ -210,6 +210,7 @@ export class DataTable implements IDataTable {
     return record[property.dataIndex];
   }
 
+
   getRecValueMap(id: string): Map<string, any> {
     const record = this.records.getById(id);
     const result = new Map();
