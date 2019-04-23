@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace Origam
@@ -270,7 +271,7 @@ namespace Origam
 	    [Category("Services"), DefaultValue("")]
         public string GsPath { get; set; }
 
-        public DeployPlatforms DeployPlatforms { get; set; }
+        public Platform [] DeployPlatforms { get; set; }
 
         public string ReportsFolder()
 		{
@@ -336,11 +337,6 @@ namespace Origam
 		#endregion
 	}
 
-    public class DeployPlatforms
-    {
-        public Platform Platform { get; set; }
-    }
-
     public class Platform
     {
         private string nameField;
@@ -384,6 +380,20 @@ namespace Origam
             {
                 this.dataServiceField = value;
             }
+        }
+        public bool IsPrimary { get; set; } = false;
+        public override string ToString()
+        {
+            string _name = Name;
+            if (IsPrimary)
+                _name += " - Primary";
+
+            return _name;
+        }
+        public string GetParseEnum()
+        {
+            return  DataService
+                    .Split(",".ToCharArray())[0].Trim().Split("\\.".ToCharArray())[3].Trim().Replace("DataService","");
         }
     }
 }
