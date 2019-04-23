@@ -60,7 +60,7 @@ namespace Origam.ProjectAutomation
             {
                 return BuildConnectionString(project, pooling);
             }
-            if (_databaseType == DatabaseType.PostgreSql)
+            if (_databaseType == DatabaseType.PgSql)
             {
                 this.DataService(_databaseType).DbUser=project.Name;
                 return DataService(project.DatabaseType).BuildConnectionString(project.DatabaseServerName, project.Port,

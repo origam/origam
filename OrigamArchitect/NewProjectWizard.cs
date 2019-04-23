@@ -97,7 +97,7 @@ namespace OrigamArchitect
                     case 0:
                         return DatabaseType.MsSql;
                     case 1:
-                        return DatabaseType.PostgreSql;
+                        return DatabaseType.PgSql;
                     default:
                         throw new ArgumentOutOfRangeException("DatabaseType",
                             txtDatabaseType.SelectedIndex, strings.UnknownDatabaseType);
@@ -247,7 +247,7 @@ namespace OrigamArchitect
                 {
                     txtPort.Text = "0";
                 }
-                if (DatabaseType == DatabaseType.PostgreSql)
+                if (DatabaseType == DatabaseType.PgSql)
                 {
                     txtPort.Text = "5432";
                 }
@@ -447,7 +447,7 @@ namespace OrigamArchitect
 
         private void TxtDatabaseType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(DatabaseType == DatabaseType.PostgreSql)
+            if(DatabaseType == DatabaseType.PgSql)
             {
                 chkIntegratedAuthentication.Enabled = false;
                 chkIntegratedAuthentication.Checked = false;

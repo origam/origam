@@ -32,7 +32,7 @@ namespace Origam.DA.Service
 	/// </summary>
 	public class PgSqlDataService : AbstractSqlDataService
 	{
-        private const DatabaseType _PlatformName = DatabaseType.PostgreSql;
+        private const DatabaseType _PlatformName = DatabaseType.PgSql;
         private string _DbUser = "";
         #region Constructors
         public PgSqlDataService() : base()

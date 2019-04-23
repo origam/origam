@@ -68,7 +68,7 @@ namespace Origam.ProjectAutomation
                 {
                     case DatabaseType.MsSql:
                         return "Origam.DA.Service.MsSqlDataService, Origam.DA.Service";
-                    case DatabaseType.PostgreSql:
+                    case DatabaseType.PgSql:
                         return "Origam.DA.Service.PgSqlDataService, Origam.DA.Service";
                     default:
                         throw new ArgumentOutOfRangeException("DatabaseType");

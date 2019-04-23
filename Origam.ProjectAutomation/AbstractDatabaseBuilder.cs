@@ -46,7 +46,7 @@ namespace Origam.ProjectAutomation
             {
                 return new MsSqlDataService();
             }
-            if (DatabaseType == DatabaseType.PostgreSql)
+            if (DatabaseType == DatabaseType.PgSql)
             {
                 return new PgSqlDataService();
             }

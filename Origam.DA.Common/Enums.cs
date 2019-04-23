@@ -9,7 +9,7 @@ namespace Origam.DA.Common
         public enum DatabaseType
         {
             MsSql,
-            PostgreSql
+            PgSql
         }
     }
 }

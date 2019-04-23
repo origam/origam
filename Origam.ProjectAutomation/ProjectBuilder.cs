@@ -89,7 +89,7 @@ namespace Origam.ProjectAutomation
                 tasks.Add(new NewPackageBuilder());
                 tasks.Add(new GitBuilder());
             }
-            if (_project.DatabaseType == DatabaseType.PostgreSql)
+            if (_project.DatabaseType == DatabaseType.PgSql)
             {
                 tasks.Add(settingsBuilder);
                 tasks.Add(dataDatabaseBuilder);

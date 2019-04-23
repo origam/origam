@@ -48,7 +48,7 @@ namespace Origam.ProjectAutomation
                 case DatabaseType.MsSql:
                     prefix = "MS";
                     break;
-                case DatabaseType.PostgreSql:
+                case DatabaseType.PgSql:
                     prefix = "Pg";
                     break;
             }
