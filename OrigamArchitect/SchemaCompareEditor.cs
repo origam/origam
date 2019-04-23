@@ -24,7 +24,7 @@ using System.Text;
 using System.Drawing;
 using System.Collections;
 using System.Windows.Forms;
-
+using System.Linq;
 using Origam;
 using Origam.Workbench.Pads;
 using Origam.Workbench;
@@ -102,24 +102,29 @@ namespace OrigamArchitect
 			}
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             AbstractSqlDataService abstractDataService = (AbstractSqlDataService)DataService.GetDataService();
+            Platform primaryPlatform = new Platform
+            {
+                Name = abstractDataService.PlatformName.ToString(),
+                IsPrimary = true,
+                DataService = settings.DataDataService
+            };
+            var obj = settings.DeployPlatforms;
+            Array.Resize(ref obj, obj.Length + 1);
+            obj[obj.Length - 1] = primaryPlatform;
+            settings.DeployPlatforms = obj;
+            
             if (settings.DeployPlatforms != null)
             {
-                foreach (var itemm in Enum.GetValues(typeof(DatabaseType)))
+                foreach (Platform platform in settings.DeployPlatforms)
                 {
-                    cboDatabaseType.Items.Add(itemm);
-                    if(abstractDataService.PlatformName==(DatabaseType)itemm)
-                    {
-                        cboDatabaseType.SelectedItem = itemm;
-                    }
+                    cboDatabaseType.Items.Add(platform);
                 }
             }
             else
             {
-                cboDatabaseType.Items.Add(abstractDataService.PlatformName);
-                cboDatabaseType.SelectedIndex = 0;
                 cboDatabaseType.Enabled = false;
             }
-            
+            cboDatabaseType.SelectedIndex = cboDatabaseType.Items.Count-1;
             contextMenu = new ContextMenuStrip();
             ToolStripMenuItem item = new ToolStripMenuItem(strings.GoToDefinition_MenuItem);
 			item.Click += new EventHandler(gotoDefinition_click);
@@ -288,11 +293,13 @@ namespace OrigamArchitect
             // 
             // cboDatabaseType
             // 
+            this.cboDatabaseType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboDatabaseType.FormattingEnabled = true;
             this.cboDatabaseType.Location = new System.Drawing.Point(13, 43);
             this.cboDatabaseType.Name = "cboDatabaseType";
             this.cboDatabaseType.Size = new System.Drawing.Size(136, 21);
             this.cboDatabaseType.TabIndex = 6;
+            this.cboDatabaseType.SelectedIndexChanged += new System.EventHandler(this.CboDatabaseType_SelectedIndexChanged);
             // 
             // btnAddToModel
             // 
@@ -407,16 +414,19 @@ namespace OrigamArchitect
 		private void DisplayResults()
 		{
 			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
-            Origam.DA.Service.AbstractSqlDataService da = (AbstractSqlDataService)DataService.GetDataService();
-            
-            //new Origam.DA.Service.MsSqlDataService(settings.DataConnectionString,
-            //    settings.DataBulkInsertThreshold, settings.DataUpdateBatchSize);
-			da.PersistenceProvider = persistence.SchemaProvider;
-			
-			_results = da.CompareSchema(persistence.SchemaProvider);
-
-			RenderList();
+			AbstractSqlDataService da = (AbstractSqlDataService)DataService.GetDataService();
+            da.PersistenceProvider = persistence.SchemaProvider;
+            Platform platform = (Platform)cboDatabaseType.SelectedItem;
+            _results = da.CompareSchema(persistence.SchemaProvider);
+            if (!platform.IsPrimary)
+            {
+                AbstractSqlDataService DaPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
+                DaPlatform.PersistenceProvider = persistence.SchemaProvider;
+                _results = DaPlatform.CompareSchema(persistence.SchemaProvider);
+                DaPlatform.Dispose();
+            }
+            _results.ToArray().Select(x => ((SchemaDbCompareResult)x).Platform = platform).ToList();
+            RenderList();
 		}
 
 
@@ -545,8 +555,8 @@ namespace OrigamArchitect
 		private void btnAddToDeployment_Click(object sender, System.EventArgs e)
 		{
 			IService dataService = null;
-
-			foreach(IService service in 
+           
+            foreach (IService service in 
                 _schema.GetProvider(typeof(ServiceSchemaItemProvider)).ChildItems)
 			{
 				if(service.Name == "DataService")
@@ -567,9 +577,11 @@ namespace OrigamArchitect
 			{
 				if(!string.IsNullOrEmpty(result.Script))
 				{
+                    DatabaseType dbType = (DatabaseType)Enum.Parse(typeof(DatabaseType), result.Platform.GetParseEnum().ToString());
+
 					generatedActivities.Add(
 						AddActivity(result.SchemaItem.ModelDescription() 
-						+ "_" + result.ItemName, result.Script, version, dataService)
+						+ "_" + result.ItemName, result.Script, version, dataService, dbType)
 						);
 				}
 			}
@@ -577,9 +589,10 @@ namespace OrigamArchitect
 			{
 				if(!string.IsNullOrEmpty(result.Script2))
 				{
-					generatedActivities.Add(
+                    DatabaseType dbType = (DatabaseType)Enum.Parse(typeof(DatabaseType), result.Platform.GetParseEnum().ToString());
+                    generatedActivities.Add(
 						AddActivity(result.SchemaItem.ModelDescription() 
-						+ "_" + result.ItemName, result.Script2, version, dataService)
+						+ "_" + result.ItemName, result.Script2, version, dataService, dbType)
 						);
 				}
 			}
@@ -602,12 +615,14 @@ namespace OrigamArchitect
 			}
 		}
 
-		private ServiceCommandUpdateScriptActivity AddActivity(string name, string command, DeploymentVersion version, Origam.Schema.WorkflowModel.IService dataService)
+		private ServiceCommandUpdateScriptActivity AddActivity(string name, string command, DeploymentVersion version, 
+            Origam.Schema.WorkflowModel.IService dataService, DatabaseType databaseType)
 		{
 			ServiceCommandUpdateScriptActivity activity = version.NewItem(typeof(ServiceCommandUpdateScriptActivity), _schema.ActiveSchemaExtensionId, null) as ServiceCommandUpdateScriptActivity;
 			activity.Name = activity.ActivityOrder.ToString("00000") + "_" + name.Replace(" ", "_");
 			activity.Service = dataService;
 			activity.CommandText = command;
+            activity.DatabaseType = databaseType;
 			activity.Persist();
             return activity;
 		}
@@ -686,5 +701,10 @@ namespace OrigamArchitect
 				}
 			}
 		}
-	}
+
+        private void CboDatabaseType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DisplayResults();
+        }
+    }
 }
