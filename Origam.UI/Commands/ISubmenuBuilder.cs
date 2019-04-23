@@ -28,7 +28,7 @@ namespace Origam.UI
 	/// </summary>
 	public interface ISubmenuBuilder
 	{
-        ToolStripMenuItem[] BuildSubmenu(object owner);
+		AsMenuCommand[] BuildSubmenu(object owner);
 		bool HasItems();
         bool LateBound { get; }
 	}

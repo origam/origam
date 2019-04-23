@@ -60,10 +60,10 @@ namespace OrigamArchitect.Commands
             return true;
         }
 
-		public ToolStripMenuItem[] BuildSubmenu(object owner)
+		public AsMenuCommand[] BuildSubmenu(object owner)
 		{
             _owner = owner ?? _schemaService.ActiveNode;
-			ArrayList list = new ArrayList();
+			var list = new List<AsMenuCommand>();
             //			CreateMenuItem(list, "Generate &Test Documentation", new Commands.GenerateTestDocumentation(), null);
             //			CreateMenuItem(list, "Generate &Use Case Documentation", new Commands.GenerateUseCaseDocumentation(), null);
             CreateMenuItem(list, "Show SQL", new ShowDataStructureFilterSetSql(), null);
@@ -105,7 +105,7 @@ namespace OrigamArchitect.Commands
 			CreateMenuItem(list, "New StoreData Task", new CreateStoreDataCommand(), null);
 			CreateMenuItem(list, "New Transform Task", new CreateTransformDataCommand(), null);
 			CreateMenuItem(list, "Load/Transform/Save Tasks", new CreateLoadTransformSaveCommand(), null);
-            return (ToolStripMenuItem[])list.ToArray(typeof(ToolStripMenuItem)); ;
+            return list.ToArray(); 
 		}
 
 		#endregion
@@ -159,7 +159,7 @@ namespace OrigamArchitect.Commands
 			}
 		}
 
-		private void CreateMenuItem(ArrayList list, string text, ICommand command, Image image)
+		private void CreateMenuItem(List<AsMenuCommand> list, string text, ICommand command, Image image)
 		{
 			AsMenuCommand menuItem = new AsMenuCommand(text, command);
             command.Owner = _owner;

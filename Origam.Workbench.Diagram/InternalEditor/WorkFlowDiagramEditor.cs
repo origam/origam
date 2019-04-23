@@ -29,6 +29,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private readonly Guid graphParentId;
         private readonly EdgeInsertionRule edgeInsertionRule;
         private static readonly int graphScale = 1;
+        private readonly List<DeferedDependency> deferedDependencies = new List<DeferedDependency>();
 
         public WorkFlowDiagramEditor(Guid graphParentId, GViewer gViewer, Form parentForm,
 	        IPersistenceProvider persistenceProvider, WorkFlowDiagramFactory factory)
@@ -150,6 +151,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			if (childPersisted)
 			{
 				UpdateNodeOf(persistedSchemaItem);
+				CreateDeferedDependency(persistedSchemaItem);
 				return;
 			}
 			
@@ -165,6 +167,28 @@ namespace Origam.Workbench.Diagram.InternalEditor
 						break;
 				}
 			}
+		}
+
+		private void CreateDeferedDependency(AbstractSchemaItem persistedSchemaItem)
+		{
+			DeferedDependency deferedDependency = deferedDependencies
+				.SingleOrDefault(x => x.DependentItem.Id == persistedSchemaItem.Id);
+			IWorkflowStep independentItem = deferedDependency
+				?.IndependentItem 
+				as IWorkflowStep;
+			if (independentItem == null) return;
+			
+			var workflowTaskDependency = new WorkflowTaskDependency
+			{
+				SchemaExtensionId = persistedSchemaItem.SchemaExtensionId,
+				PersistenceProvider = persistenceProvider,
+				ParentItem = persistedSchemaItem,
+				Task = independentItem
+			};
+			workflowTaskDependency.Persist();
+
+			schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(persistedSchemaItem);
+			deferedDependencies.Remove(deferedDependency);
 		}
 
 		private void UpdateNodeOf(AbstractSchemaItem persistedSchemaItem)
@@ -266,6 +290,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
             deleteMenuItem.Image = ImageRes.icon_delete;
             deleteMenuItem.Click += DeleteNode_Click;
             deleteMenuItem.Enabled = IsDeleteMenuItemAvailable(dNodeUnderMouse);
+            contextMenu.AddSubItem(deleteMenuItem);
 
             ToolStripMenuItem newMenu = new ToolStripMenuItem("New");
             newMenu.Image = ImageRes.icon_new;
@@ -288,10 +313,28 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	            var submenuItems = builder.BuildSubmenu(schemaItemUnderMouse);
 	            newMenu.DropDownItems.AddRange(submenuItems);
             }
-
             contextMenu.AddSubItem(newMenu);
-	        contextMenu.AddSubItem(deleteMenuItem);
-	        
+
+            if (!(dNodeUnderMouse?.Node is Subgraph))
+            {
+				ToolStripMenuItem addAfterMenu = new ToolStripMenuItem("Add After");
+				addAfterMenu.Image = ImageRes.icon_new;
+	            var builder = new SchemaItemEditorsMenuBuilder();
+	            var submenuItems = builder.BuildSubmenu(UpToDateGraphParent);
+	            submenuItems[0].Click += (sender, args) =>
+	            {
+		            var command = ((AsMenuCommand)sender).Command as AddNewSchemaItem;
+		            if (command?.CreatedItem == null) return;
+		            deferedDependencies.Add(new DeferedDependency
+		            {
+			            DependentItem = command.CreatedItem,
+			            IndependentItem = schemaItemUnderMouse
+		            });
+	            };
+	            addAfterMenu.DropDownItems.AddRange(submenuItems);
+				contextMenu.AddSubItem(addAfterMenu);
+            }
+
             return contextMenu;
 	    }
 
@@ -343,4 +386,10 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        gViewer?.Dispose();
         }
     }
+
+	internal class DeferedDependency
+	{
+		public AbstractSchemaItem IndependentItem { get; set; }
+		public AbstractSchemaItem DependentItem { get; set; }
+	}
 }

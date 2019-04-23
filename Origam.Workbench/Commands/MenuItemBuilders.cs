@@ -63,12 +63,12 @@ namespace Origam.Workbench.Commands
             if (factory.NewItemTypes.Length == 0) return false;
             return true;
         }
-        public ToolStripMenuItem[] BuildSubmenu(object owner)
+        public AsMenuCommand[] BuildSubmenu(object owner)
         {
             WorkbenchSchemaService sch = ServiceManager.Services.GetService(
                 typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
             object activeNode = owner ?? sch.ActiveNode;
-            if (activeNode == null) return new ToolStripMenuItem[0];
+            if (activeNode == null) return new AsMenuCommand[0];
 
             ISchemaItemFactory factory = (ISchemaItemFactory)activeNode;
             NonpersistentSchemaItemNode nonpersistentNode = activeNode as NonpersistentSchemaItemNode;
@@ -78,8 +78,7 @@ namespace Origam.Workbench.Commands
                 activeItem = nonpersistentNode.ParentNode as AbstractSchemaItem;
             }
             Type[] validTypes = ValidTypes(factory);
-            ArrayList items;
-            items = new ArrayList();
+            var items = new List<AsMenuCommand>();
             if (factory.NewItemTypes != null)
             {
                 ArrayList names = new ArrayList();
@@ -123,7 +122,7 @@ namespace Origam.Workbench.Commands
                 }
             }
 
-            return (ToolStripMenuItem[])items.ToArray(typeof(ToolStripMenuItem));
+            return items.ToArray();
         }
 
 		private static bool IsNameableType(ISchemaItemFactory factory, Type type)
@@ -153,7 +152,7 @@ namespace Origam.Workbench.Commands
 		}
 
 		public static void AddNewItem(WorkbenchSchemaService sch, Type type,
-            ISchemaItemFactory parentElement, string newItemName, ArrayList items,
+            ISchemaItemFactory parentElement, string newItemName, List<AsMenuCommand> items,
             bool showDialog)
 		{
 			AddNewSchemaItem cmd = new AddNewSchemaItem(showDialog);
@@ -183,7 +182,7 @@ namespace Origam.Workbench.Commands
 			menu.Click += new EventHandler(EditNewItem);
 		}
 
-		private static void AddNewSubmenu(string name, ISubmenuBuilder builder, ArrayList items)
+		private static void AddNewSubmenu(string name, ISubmenuBuilder builder, List<AsMenuCommand> items)
 		{
 			AsMenuCommand result = new AsMenuCommand(name, builder);
 			result.SubItems.Add(builder);
@@ -226,16 +225,16 @@ namespace Origam.Workbench.Commands
             if (factory.NewItemTypes == null) return false;
             return true;
         }
-        public ToolStripMenuItem[] BuildSubmenu(object owner)
+        public AsMenuCommand[] BuildSubmenu(object owner)
 		{
             if (! HasItems())
             {
-                return new ToolStripMenuItem[0];
+                return new AsMenuCommand[0];
             }
 			WorkbenchSchemaService sch = ServiceManager.Services.GetService(
                 typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
 			ISchemaItemFactory factory = ParentFactory(sch.ActiveNode);
-			ArrayList items = new ArrayList();
+			var items = new List<AsMenuCommand>();
 			for (int i = 0; i < factory.NewItemTypes.Length; ++i) 
 			{
 				Type type = factory.NewItemTypes[i];
@@ -268,7 +267,7 @@ namespace Origam.Workbench.Commands
 					items.Add(menu);
 				}
 			}
-            return (ToolStripMenuItem[])items.ToArray(typeof(ToolStripMenuItem));
+            return items.ToArray();
 		}
 		#endregion
 
@@ -336,14 +335,14 @@ namespace Origam.Workbench.Commands
             return sch.LoadedPackages.Count > 1;
         }
 
-        public ToolStripMenuItem[] BuildSubmenu(object owner)
+        public AsMenuCommand[] BuildSubmenu(object owner)
 		{
 			ArrayList extArray = new ArrayList();
             WorkbenchSchemaService sch = ServiceManager.Services.GetService(
                 typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
             AddExtensionsToList(extArray, sch.LoadedPackages);
 			extArray.Sort();
-            ToolStripMenuItem[] items = new ToolStripMenuItem[extArray.Count];
+			AsMenuCommand[] items = new AsMenuCommand[extArray.Count];
 			int i = 0;
 			foreach(SchemaExtension ext in extArray)
 			{
@@ -411,15 +410,15 @@ namespace Origam.Workbench.Commands
         {
             return _types.Count > 0;
         }
-		public ToolStripMenuItem[] BuildSubmenu(object owner)
+		public AsMenuCommand[] BuildSubmenu(object owner)
 		{
 			WorkbenchSchemaService sch = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-			ArrayList items = new ArrayList();
+			var items = new List<AsMenuCommand>();
 			foreach(Type type in _types)
 			{
 				SchemaItemEditorsMenuBuilder.AddNewItem(sch, type, _parentElement, _name, items, ShowDialog);
 			}
-            return items.ToArray(typeof(ToolStripMenuItem)) as ToolStripMenuItem[];
+            return items.ToArray();
 		}
 		#endregion
 	}
@@ -428,7 +427,7 @@ namespace Origam.Workbench.Commands
     {
         readonly OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
                 
-        ToolStripMenuItem[] items = new ToolStripMenuItem[1];
+        AsMenuCommand[] items = new AsMenuCommand[1];
         public bool LateBound
         {
             get
@@ -437,7 +436,7 @@ namespace Origam.Workbench.Commands
             }
         }
 
-        public ToolStripMenuItem[] BuildSubmenu(object owner)
+        public AsMenuCommand[] BuildSubmenu(object owner)
         {
             AsMenuCommand menu = new AsMenuCommand("Diff with previous version", new ShowFileDiffXml());
             menu.Click += new EventHandler(ExeItem);
