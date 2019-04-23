@@ -26,6 +26,7 @@ using Origam.UI;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Editors;
 using Origam.Windows.Editor;
+using static Origam.DA.Common.Enums;
 
 namespace Origam.Schema.DeploymentModel
 {
@@ -46,6 +47,8 @@ namespace Origam.Schema.DeploymentModel
 		private System.Windows.Forms.ComboBox cboService;
 		private SqlEditor txtCommand;
         private Panel panel1;
+        private Label label5;
+        private ComboBox cboPlatform;
 
         /// <summary>
         /// Required designer variable.
@@ -85,7 +88,6 @@ namespace Origam.Schema.DeploymentModel
 		/// </summary>
 		private void InitializeComponent()
 		{
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ServiceScriptCommandEditor));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -93,8 +95,10 @@ namespace Origam.Schema.DeploymentModel
             this.txtOrder = new System.Windows.Forms.TextBox();
             this.cboService = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.txtCommand = new SqlEditor();
+            this.txtCommand = new Origam.Windows.Editor.SqlEditor();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cboPlatform = new System.Windows.Forms.ComboBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -154,7 +158,7 @@ namespace Origam.Schema.DeploymentModel
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(12, 92);
+            this.label4.Location = new System.Drawing.Point(12, 129);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(72, 16);
             this.label4.TabIndex = 7;
@@ -165,13 +169,17 @@ namespace Origam.Schema.DeploymentModel
             this.txtCommand.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCommand.Location = new System.Drawing.Point(0, 111);
+            this.txtCommand.BackColor = System.Drawing.Color.White;
+            this.txtCommand.IsReadOnly = false;
+            this.txtCommand.Location = new System.Drawing.Point(3, 162);
             this.txtCommand.Name = "txtCommand";
             this.txtCommand.Size = new System.Drawing.Size(710, 375);
             this.txtCommand.TabIndex = 8;
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.cboPlatform);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.txtCommand);
             this.panel1.Controls.Add(this.label2);
@@ -185,6 +193,24 @@ namespace Origam.Schema.DeploymentModel
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(716, 486);
             this.panel1.TabIndex = 9;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(15, 95);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(45, 13);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "Platform";
+            // 
+            // cboPlatform
+            // 
+            this.cboPlatform.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboPlatform.FormattingEnabled = true;
+            this.cboPlatform.Location = new System.Drawing.Point(92, 88);
+            this.cboPlatform.Name = "cboPlatform";
+            this.cboPlatform.Size = new System.Drawing.Size(205, 21);
+            this.cboPlatform.TabIndex = 9;
             // 
             // ServiceScriptCommandEditor
             // 
@@ -227,7 +253,15 @@ namespace Origam.Schema.DeploymentModel
 				txtCommand.Text = activity.CommandText;
 
 				LoadServices();
-
+                foreach (var item in Enum.GetValues(typeof(DatabaseType)))
+                {
+                    cboPlatform.Items.Add(item);
+                    if((DatabaseType)item==activity.DatabaseType)
+                    {
+                        cboPlatform.SelectedItem = item;
+                    }
+                }
+                
 				if(activity.Service == null)
 				{
                     // default service selected is DataService
@@ -260,6 +294,7 @@ namespace Origam.Schema.DeploymentModel
 			activity.CommandText = txtCommand.Text;
 			
 			activity.Service = null;
+            activity.DatabaseType = (DatabaseType)cboPlatform.SelectedItem;
 
 			if(cboService.SelectedItem != null)
 			{
