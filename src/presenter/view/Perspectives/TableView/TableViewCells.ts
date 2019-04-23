@@ -89,7 +89,7 @@ export class TableViewCells implements ICells {
     }
     return {
       type: "TextCell",
-      value: value !== undefined ? value : "",
+      value: value !== undefined && value !== null ? value : "",
       onChange(event: any, value: string) {
         console.log("change", event, value);
       },

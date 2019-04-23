@@ -15,11 +15,12 @@ import { unpack } from "../../utils/objects";
 import { DataSources } from "../DataSources";
 import { DataViewMediator } from "../../DataView/DataViewMediator";
 
+
 export class ScreenContentFactory implements IScreenContentFactory {
   constructor(public P: { api: ML<IApi>; menuItemId: ML<string> }) {}
 
   create(xmlObj: any) {
-    console.time("xml-processing");
+    // console.time("xml-processing");
     const win = xmlFind.findWindow(xmlObj);
     const xmlDataSources = xmlFind.findDataSources(win);
     const dataSources = new DataSources({
@@ -37,10 +38,12 @@ export class ScreenContentFactory implements IScreenContentFactory {
         });
       })
     });
-    console.log(dataSources);
-
+    // console.log(dataSources);
+    
     const grids = xmlFind.findGrids(win);
+    const dataViewByModelInstanceId = new Map<string, DataView>();
     const dataViews = grids.map(grid => {
+      
       const gridProps = xmlFind.findProps(grid);
       for (let gridProp of gridProps) {
         const dropDownProps = xmlFind.findDropDownProps(gridProp);
@@ -70,6 +73,7 @@ export class ScreenContentFactory implements IScreenContentFactory {
         mediator,
         api: this.P.api
       });
+      dataViewByModelInstanceId.set(grid.attributes.ModelInstanceId, dataView);
       const properties: Properties = new Properties({
         items: () => propertyItems
       });
@@ -90,12 +94,25 @@ export class ScreenContentFactory implements IScreenContentFactory {
       );
       return dataView;
     });
+
     const screenBindings = xmlFind.findBindings(win);
+    for(let screenBinding of screenBindings) {
+      const parentDataView = dataViewByModelInstanceId.get(screenBinding.attributes.ParentId);
+      const childDataView = dataViewByModelInstanceId.get(screenBinding.attributes.ChildId);
+      if(parentDataView && childDataView) {
+        console.log("Connecting parent to child:", screenBinding.attributes.ParentId, screenBinding.attributes.ChildId)
+        parentDataView.machine.addChild(childDataView.machine);
+        childDataView.machine.setParent(parentDataView.machine);
+        parentDataView.machine.controllingFieldId = screenBinding.attributes.ParentProperty;
+        childDataView.machine.controlledFieldId = screenBinding.attributes.ChildProperty;
+      }
+    }
+
     const uiRoot = xmlFind.findUIRoot(win);
     const screenUI = extractScreenUI(uiRoot);
     // -----------------------------------------------------------
-    console.log(dataViews)
-    console.timeEnd("xml-processing");
+    // console.log(dataViews)
+    // console.timeEnd("xml-processing");
     return {
       screenUI,
       dataViews

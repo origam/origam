@@ -110,7 +110,8 @@ export class TableView implements ITableView {
 
   aSelProp = new ASelProp({
     propCursor: () => this.propCursor,
-    properties: () => this.propReorder
+    properties: () => this.propReorder,
+    aReloadChildren: () => this.dataView.aReloadChildren
   });
 
   aSelNextRec = new ASelNextRec({

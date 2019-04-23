@@ -17,6 +17,7 @@ import { IEditing } from "./IEditing";
 import { IAStartView } from './IAStartView';
 import { IAStopView } from "./IAStopView";
 import { IDataViewMediator } from "./IDataViewMediator";
+import { IAReloadChildren } from "./IAReloadChildren";
 
 export interface IDataView {
   mediator: IDataViewMediator;
@@ -34,6 +35,7 @@ export interface IDataView {
   aSwitchView: IASwitchView;
   aInitForm: IAInitForm;
   aSubmitForm: IASubmitForm;
+  aReloadChildren: IAReloadChildren;
   isHeadless: boolean;
   props: IProperties;
   specificDataViews: Array<IFormView | ITableView>;

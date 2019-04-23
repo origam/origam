@@ -6,12 +6,15 @@ import { IProperties } from "./types/IProperties";
 import { unpack } from "../utils/objects";
 import { IPropReorder } from "./types/IPropReorder";
 import { IProperty } from "./types/IProperty";
+import { IDataViewMediator } from "./types/IDataViewMediator";
+import { IAReloadChildren } from "./types/IAReloadChildren";
 
 export class ASelProp implements IASelProp {
   constructor(
     public P: {
       propCursor: ML<IPropCursor>;
       properties: ML<IPropReorder>;
+      aReloadChildren: ML<IAReloadChildren>;
     }
   ) {}
 
@@ -19,6 +22,7 @@ export class ASelProp implements IASelProp {
   do(id: string | undefined) {
     const propCursor = this.propCursor;
     propCursor.setSelId(id);
+    this.aReloadChildren.do();
   }
 
   @action.bound
@@ -40,5 +44,9 @@ export class ASelProp implements IASelProp {
 
   get properties() {
     return unpack(this.P.properties);
+  }
+
+  get aReloadChildren() {
+    return unpack(this.P.aReloadChildren);
   }
 }

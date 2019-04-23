@@ -1,4 +1,5 @@
 import { action, payload, props } from "ts-action";
+import { IDataView } from "./types/IDataView";
 
 export const NS = "DataView";
 
@@ -11,18 +12,18 @@ export const selectPrevColumn = action(`[${NS}] SelectPrevColumn`);
 
 export const selectCellById = action(
   `[${NS}] SelectCell`,
-  (
-    payload:
-      | { rowId: string | undefined; columnId: string | undefined }
-  ) => ({ NS, payload })
+  (payload: { rowId: string | undefined; columnId: string | undefined }) => ({
+    NS,
+    payload
+  })
 );
 
 export const selectCellByIdx = action(
   `[${NS}] SelectCell`,
-  (
-    payload:
-      | { rowIdx: number | undefined; columnIdx: number | undefined }
-  ) => ({ NS, payload })
+  (payload: { rowIdx: number | undefined; columnIdx: number | undefined }) => ({
+    NS,
+    payload
+  })
 );
 
 export const selectRow = action(
@@ -36,3 +37,5 @@ export const selectColumn = action(
     payload: { rowId: string | undefined } | { rowIdx: number | undefined }
   ) => ({ NS, payload })
 );
+
+

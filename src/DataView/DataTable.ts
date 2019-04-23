@@ -103,6 +103,7 @@ export class Records implements IRecords {
   }
 
   getById(id: string): IRecord | undefined {
+    // TODO: Not finding by id...?
     return this.items.find(item => item[0] === id);
   }
 

@@ -68,7 +68,8 @@ export class FormView implements IFormView {
 
   aSelProp = new ASelProp({
     propCursor: () => this.propCursor,
-    properties: () => this.propReorder
+    properties: () => this.propReorder,
+    aReloadChildren: () => this.dataView.aReloadChildren
   });
   aSelRec = new ASelRec({
     aFinishEditing: () => this.aFinishEditing,

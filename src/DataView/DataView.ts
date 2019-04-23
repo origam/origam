@@ -23,10 +23,11 @@ import { AStopView } from "./AStopView";
 import { IApi } from "../Api/IApi";
 import { IProperties } from "./types/IProperties";
 import { IDataSource } from "../Screens/types";
-import { ASelCell } from './ASelCell';
+import { ASelCell } from "./ASelCell";
 import { DataViewMediator } from "./DataViewMediator";
 import { IDataViewMediator } from "./types/IDataViewMediator";
 import { IDataViewMachine } from "./types/IDataViewMachine";
+import { AReloadChildren } from "./AReloadChildren";
 
 export class DataView implements IDataView {
   constructor(
@@ -52,13 +53,16 @@ export class DataView implements IDataView {
       propertyIdsToLoad: () => this.props.ids,
       dataTable: () => this.dataTable,
       dataSource: this.P.dataSource,
-      mediator: this.mediator
+      mediator: this.mediator,
+      selectedIdGetter: () => {
+        console.log("selIdGetter:", this.recCursor.selId);
+        return this.recCursor.selId;
+      }
     });
   }
- 
+
   mediator: IDataViewMediator;
   machine: IDataViewMachine;
-
 
   availViews: AvailViews = new AvailViews({
     items: () => this.specificDataViews,
@@ -107,6 +111,9 @@ export class DataView implements IDataView {
     recCursor: () => this.recCursor,
     dataTable: () => this.dataTable,
     form: () => this.form
+  });
+  aReloadChildren = new AReloadChildren({
+    dataViewMachine: () => this.machine
   });
 
   get isHeadless() {
