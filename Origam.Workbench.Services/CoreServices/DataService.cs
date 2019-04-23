@@ -33,10 +33,13 @@ namespace Origam.Workbench.Services.CoreServices
 	public class DataService
 	{
         private static IDataService _dataService = null;
-
         public static IDataService GetDataService()
         {
-            if (_dataService == null)
+            return GetDataService(null);
+        }
+            public static IDataService GetDataService(Platform deployPlatform)
+        {
+            if (_dataService == null || deployPlatform != null)
             {
                 IDataService dataService = null;
                 IPersistenceService persistence = ServiceManager.Services.GetService(
@@ -52,7 +55,15 @@ namespace Origam.Workbench.Services.CoreServices
                     .Split(",".ToCharArray())[0].Trim();
                 string classname = settings.DataDataService
                     .Split(",".ToCharArray())[1].Trim();
-                dataService
+
+                if (deployPlatform != null)
+                {
+                    assembly = deployPlatform.DataService
+                    .Split(",".ToCharArray())[0].Trim();
+                    classname = deployPlatform.DataService
+                        .Split(",".ToCharArray())[1].Trim();
+                }
+                    dataService
                     = Reflector.InvokeObject(assembly, classname) as IDataService;
                 dataService.ConnectionString = settings.DataConnectionString;
                 dataService.BulkInsertThreshold = settings.DataBulkInsertThreshold;
@@ -64,6 +75,11 @@ namespace Origam.Workbench.Services.CoreServices
                 dataService.UserDefinedParameters = true;
                 (dataService as AbstractDataService).PersistenceProvider
                     = persistence.SchemaProvider;
+                if (deployPlatform != null)
+                {
+                    dataService.ConnectionString = deployPlatform.DataConnectionString;
+                    return dataService;
+                }
                 _dataService = dataService;
             }
             return _dataService;
