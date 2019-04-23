@@ -10,7 +10,7 @@ using DrawingNode = Microsoft.Msagl.Drawing.Node;
 
 namespace Origam.Workbench.Diagram.DiagramFactory
 {
-    class ContextStoreDiagramFactory: IDiagramFactory<IContextStore>, IDisposable
+    class ContextStoreDiagramFactory: IDiagramFactory<IContextStore>
     {
 
         private Graph graph;
@@ -48,10 +48,6 @@ namespace Origam.Workbench.Diagram.DiagramFactory
             }
 
             return graph;
-        }
-        public void Dispose()
-        {
-            nodeFactory?.Dispose();
         }
     }
 }

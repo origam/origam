@@ -1572,7 +1572,6 @@ namespace Origam.DA.Service
 			{
 				connection = transaction.Connection;
 			}
-
             var adapterParameters = new SelectParameters
             {
                 DataStructure = dataStructure,
@@ -1584,13 +1583,15 @@ namespace Origam.DA.Service
                 ColumnName = query.ColumnName,
                 CustomFilters = query.CustomFilters,
                 CustomOrdering = query.CustomOrdering,
-                RowLimit = query.RowLimit
+                RowLimit = query.RowLimit,
+                ForceDatabaseCalculation = query.ForceDatabaseCalculation
             };
             DbDataAdapter adapter = GetAdapter(
                 adapterParameters, currentProfile);
             ((IDbDataAdapter)adapter).SelectCommand.Connection = connection;
             ((IDbDataAdapter)adapter).SelectCommand.Transaction = transaction;
             ((IDbDataAdapter)adapter).SelectCommand.CommandTimeout = timeout;
+            BuildParameters(query.Parameters, adapter.SelectCommand.Parameters, currentProfile);
             if (connection.State == ConnectionState.Closed)
             {
                 connection.Open();

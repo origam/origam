@@ -29,6 +29,7 @@ using Origam.Workbench.Diagram;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Origam.DA.ObjectPersistence;
+using Origam.Gui.UI;
 using Origam.Schema.WorkflowModel;
 using Origam.UI;
 using Origam.Workbench.BaseComponents;
@@ -43,7 +44,7 @@ using MouseButtons = System.Windows.Forms.MouseButtons;
 
 namespace Origam.Workbench.Editors
 {
-	public class DiagramEditor : AbstractViewContent
+	public class DiagramEditor : AbstractViewContent, IToolStripContainer
 	{
         private GViewer gViewer;
         private readonly IPersistenceProvider persistenceProvider;
@@ -55,9 +56,13 @@ namespace Origam.Workbench.Editors
 				.GetService<IPersistenceService>()
 				.SchemaProvider;
 			InitializeComponent();
+			gViewer.OutsideAreaBrush = Brushes.White;
+			gViewer.PanButtonPressed = true;
+			gViewer.EdgeRemoved +=
+				(sender, args) => gViewer.PanButtonPressed = true;
 		}
 
-		protected override void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
 	        if (disposing)
 	        {
@@ -93,7 +98,6 @@ namespace Origam.Workbench.Editors
             this.gViewer.ForwardEnabled = false;
             this.gViewer.Graph = null;
             this.gViewer.InsertingEdge = false;
-            this.gViewer.LayoutAlgorithmSettingsButtonVisible = true;
             this.gViewer.LayoutEditingEnabled = true;
             this.gViewer.Location = new System.Drawing.Point(0, 0);
             this.gViewer.LooseOffsetForRouting = 0.25D;
@@ -106,15 +110,12 @@ namespace Origam.Workbench.Editors
             this.gViewer.PanButtonPressed = false;
             this.gViewer.SaveAsImageEnabled = true;
             this.gViewer.SaveAsMsaglEnabled = true;
-            this.gViewer.SaveButtonVisible = true;
-            this.gViewer.SaveGraphButtonVisible = true;
             this.gViewer.SaveInVectorFormatEnabled = true;
             this.gViewer.Size = new System.Drawing.Size(656, 445);
             this.gViewer.TabIndex = 0;
             this.gViewer.TightOffsetForRouting = 0.125D;
-            this.gViewer.ToolBarIsVisible = true;
+            this.gViewer.ToolBarIsVisible = false;
             this.gViewer.Transform = planeTransformation1;
-            this.gViewer.UndoRedoButtonsVisible = true;
             this.gViewer.WindowZoomButtonPressed = false;
             this.gViewer.ZoomF = 1D;
             this.gViewer.ZoomWindowThreshold = 0.05D;
@@ -128,7 +129,6 @@ namespace Origam.Workbench.Editors
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.Name = "DiagramEditor";
             this.ResumeLayout(false);
-
 		}
 
 		#endregion
@@ -143,8 +143,11 @@ namespace Origam.Workbench.Editors
 						.RetrieveInstance(typeof(AbstractSchemaItem), new Key(node.Id));
 				if(clickedItem != null)
 				{
-					EditSchemaItem cmd = new EditSchemaItem();
-					cmd.Owner = clickedItem;
+					EditSchemaItem cmd = new EditSchemaItem
+					{
+						ShowDialog = true,
+						Owner = clickedItem
+					};
 					cmd.Run();
 				}
 			}
@@ -176,5 +179,64 @@ namespace Origam.Workbench.Editors
 					break;
 			}
 		}
+
+		public List<ToolStrip> GetToolStrips(int maxWidth = -1)
+		{
+			LabeledToolStrip toolStrip = new LabeledToolStrip(this);
+			toolStrip.Text = "Diagram Editor";
+
+			BigToolStripButton panButton = new BigToolStripButton();
+			panButton.Text = "Pan";
+			panButton.Image = ImageRes.UnknownIcon;
+			panButton.Click += (sender, args) => gViewer.PanButtonPressed = !gViewer.PanButtonPressed; 
+			toolStrip.Items.Add(panButton);
+			
+			BigToolStripButton zoomHomeButton = new BigToolStripButton();
+			zoomHomeButton.Text = "Zoom Home";
+			zoomHomeButton.Image = ImageRes.UnknownIcon;
+			zoomHomeButton.Click += ZoomHome;
+			toolStrip.Items.Add(zoomHomeButton);
+
+			BigToolStripButton zoomInButton = new BigToolStripButton();
+			zoomInButton.Text = "Zoom +";
+			zoomInButton.Image = ImageRes.UnknownIcon;
+			zoomInButton.Click += (sender, args) => gViewer.ZoomInPressed();
+			toolStrip.Items.Add(zoomInButton);
+			
+			BigToolStripButton zoomOutButton = new BigToolStripButton();
+			zoomOutButton.Text = "Zoom -";
+			zoomOutButton.Image = ImageRes.UnknownIcon;
+			zoomOutButton.Click += (sender, args) => gViewer.ZoomOutPressed();
+			toolStrip.Items.Add(zoomOutButton);
+			
+			BigToolStripButton edgeButton = new BigToolStripButton();
+			edgeButton.Text = "Dependency";
+			edgeButton.Image = ImageRes.UnknownIcon;
+			edgeButton.Click += ToggleInsertEdge;
+			toolStrip.Items.Add(edgeButton);
+
+			return new List<ToolStrip>{toolStrip};
+		}
+		
+		private void ToggleInsertEdge(object sender, EventArgs e)
+		{
+			gViewer.InsertingEdge = !gViewer.InsertingEdge;
+//			if (!gViewer.InsertingEdge) {
+//				gViewer.PanButtonPressed = false;
+//				gViewer.InsertingEdge = true;
+//			}
+//			else {
+//				gViewer.InsertingEdge = false;
+//				gViewer.PanButtonPressed = true;
+//			}
+		}
+
+		private void ZoomHome(object sender, EventArgs e) {
+			gViewer.Transform = null;
+			gViewer.Invalidate();
+		}
+		
+		public event EventHandler ToolStripsLoaded;
+		public event EventHandler AllToolStripsRemoved;
 	}
 }

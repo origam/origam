@@ -143,8 +143,10 @@ namespace Origam.DA.Service
                 identityId = userProfile.Id.ToString();
             }
 
-            bool hasDynamicFilter = (selectParameters.Filter != null && selectParameters.Filter.IsDynamic);
-            if (hasDynamicFilter || selectParameters.CustomFilters != null || selectParameters.CustomOrdering != null)
+            bool hasDynamicFilter = selectParameters.Filter != null && selectParameters.Filter.IsDynamic;
+            bool hasCustomFilters = !string.IsNullOrWhiteSpace(selectParameters.CustomFilters);
+            bool hasCustomOrdering = selectParameters.CustomOrdering != null && selectParameters.CustomOrdering.Count > 0;
+            if (hasDynamicFilter || hasCustomFilters || hasCustomOrdering)
             {
                 return GetAdapterNonCached(selectParameters);
             }
@@ -198,7 +200,7 @@ namespace Origam.DA.Service
 
 		private DbDataAdapter GetAdapterNonCached(SelectParameters adParameters)
         {
-			return DbDataAdapterFactory.CreateDataAdapter(adParameters,  false);
+			return DbDataAdapterFactory.CreateDataAdapter(adParameters,  adParameters.ForceDatabaseCalculation);
 		}
 
 		private Hashtable GetCache()

@@ -37,7 +37,7 @@ namespace Origam.DA.Service
 		bool ResolveAllFilters{get; set;}
         bool PrettyFormat { get; set; }
 		DbDataAdapter CreateDataAdapter(SelectParameters adParameters,
-            bool forceDatabaseCalculationa);
+            bool forceDatabaseCalculation);
 		DbDataAdapter CreateDataAdapter(string procedureName, ArrayList entitiesOrdered, 
             IDbConnection connection, IDbTransaction transaction);
 		DbDataAdapter CreateSelectRowDataAdapter(DataStructureEntity entity, 
