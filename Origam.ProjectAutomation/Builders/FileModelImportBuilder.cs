@@ -42,19 +42,8 @@ namespace Origam.ProjectAutomation
 
         private void UnzipDefaultModel(Project project)
         {
-            string prefix = "";
-            switch (project.DatabaseType)
-                {
-                case DatabaseType.MsSql:
-                    prefix = "MS";
-                    break;
-                case DatabaseType.PgSql:
-                    prefix = "Pg";
-                    break;
-            }
-
             string zipPath =
-                Path.Combine(project.ServerTemplateFolder,"Model", prefix + ModelZipName);
+                Path.Combine(project.ServerTemplateFolder,"Model", ModelZipName);
             System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, sourcesFolder);
         }
 

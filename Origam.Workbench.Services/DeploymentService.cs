@@ -32,6 +32,8 @@ using MoreLinq;
 using Origam.DA;
 using Origam.Schema;
 using Origam.Schema.DeploymentModel;
+using Origam.Workbench.Services.CoreServices;
+using Origam.DA.Service;
 
 namespace Origam.Workbench.Services
 {
@@ -173,7 +175,11 @@ namespace Origam.Workbench.Services
 			{
 				if(activity is ServiceCommandUpdateScriptActivity)
 				{
-					ExecuteActivity(activity as ServiceCommandUpdateScriptActivity);
+                    ServiceCommandUpdateScriptActivity activityPlatform = activity as ServiceCommandUpdateScriptActivity;
+                    if(activityPlatform.DatabaseType==((AbstractSqlDataService)DataService.GetDataService()).PlatformName)
+                    { 
+				    	ExecuteActivity(activityPlatform);
+                    }
 				}
 				else if(activity is FileRestoreUpdateScriptActivity)
 				{
