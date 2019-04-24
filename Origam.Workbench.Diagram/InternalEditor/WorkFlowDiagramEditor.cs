@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Microsoft.Msagl.Core.Geometry;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
+using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
@@ -277,7 +278,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			var schemaItemUnderMouse = DNodeToSchemaItem(dNodeUnderMouse);
 			if (!(dNodeUnderMouse.Node is Subgraph) &&
 			    !(schemaItemUnderMouse is ServiceMethodCallTask)) return false;
-			//if (!(objectUnderMouse.Node is Subgraph)) return false;
 			List<IViewerObject> highLightedEntities = gViewer.Entities
 				.Where(x => x.MarkedForDragging)
 				.ToList();
@@ -303,17 +303,20 @@ namespace Origam.Workbench.Diagram.InternalEditor
             ToolStripMenuItem newMenu = new ToolStripMenuItem("New");
             newMenu.Image = ImageRes.icon_new;
             newMenu.Enabled = IsNewMenuAvailable(dNodeUnderMouse);
-            
-            if (schemaItemUnderMouse is ServiceMethodCallTask task)
+
+            if (schemaItemUnderMouse is ServiceMethodCallTask)
             {
-	            foreach (var schemaItem in schemaItemUnderMouse.ChildItems)
-	            {
-		            var menuItem = new ToolStripMenuItem(schemaItem.Name);
-		            var builder = new SchemaItemEditorsMenuBuilder();
-		            var submenuItems = builder.BuildSubmenu(schemaItem);
-		            menuItem.DropDownItems.AddRange(submenuItems);
-		            newMenu.DropDownItems.Add(menuItem);
-	            }
+	            schemaItemUnderMouse.ChildItems
+		            .ToEnumerable()
+		            .Where(item => !(item is WorkflowTaskDependency))
+		            .ForEach(schemaItem => 
+			        {
+						var menuItem = new ToolStripMenuItem(schemaItem.Name);
+						var builder = new SchemaItemEditorsMenuBuilder();
+						var submenuItems = builder.BuildSubmenu(schemaItem);
+						menuItem.DropDownItems.AddRange(submenuItems);
+						newMenu.DropDownItems.Add(menuItem);
+					});
             }
             else
             {
