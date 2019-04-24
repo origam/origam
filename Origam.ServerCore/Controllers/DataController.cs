@@ -283,7 +283,7 @@ namespace Origam.ServerCore.Controllers
                         .OnSuccess(CustomParameterService.GetFirstNonCustomParameter)
                         .OnSuccess(parameterName =>
                         {
-                            query.DataSourceId = entityData.MenuItem.ListDataStructure.Id;
+                            query.DataSourceId = entityData.Entity.RootEntity.ParentItemId;
                             query.Parameters.Add(new QueryParameter(parameterName, entityQueryData.MasterRowId));
                             if (entityQueryData.MasterRowId == Guid.Empty)
                             {
