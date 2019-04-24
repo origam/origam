@@ -24,6 +24,7 @@ export class FormView implements IFormView {
     public P: {
       uiStructure: ML<any>;
       dataView: ML<IDataView>;
+      propIds?: string[];
     }
   ) {}
 
@@ -68,7 +69,7 @@ export class FormView implements IFormView {
 
   aSelProp = new ASelProp({
     propCursor: () => this.propCursor,
-    properties: () => this.propReorder,
+    properties: () => this.propReorder
   });
   aSelRec = new ASelRec({
     aFinishEditing: () => this.aFinishEditing,
@@ -80,7 +81,10 @@ export class FormView implements IFormView {
     aReloadChildren: () => this.dataView.aReloadChildren
   });
 
-  propReorder = new PropReorder({ props: () => this.props, initPropIds: [] });
+  propReorder = new PropReorder({
+    props: () => this.props,
+    initPropIds: this.P.propIds
+  });
 
   propCursor = new PropCursor({});
 

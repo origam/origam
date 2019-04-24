@@ -23,6 +23,8 @@ export function buildProperty(
     xmlObj.attributes.Id,
     xmlObj.attributes.Name,
     parseBoolean(xmlObj.attributes.ReadOnly),
+    xmlObj.attributes.Entity,
+    xmlObj.attributes.Column,
     dataIndex,
     lookupResolver
   );
@@ -33,6 +35,8 @@ export class Property implements IProperty {
     public id: string,
     public name: string,
     public isReadOnly: boolean,
+    public entity: string,
+    public  column: string,
     dataIndex: number,
     public lookupResolver: ILookupResolver | undefined
   ) {

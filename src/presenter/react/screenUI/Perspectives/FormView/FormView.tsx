@@ -170,7 +170,11 @@ export class FormView extends React.Component<{ controller: IFormView }> {
     super(props);
     this.formViewPresenter = new FormViewPresenter({
       toolbar: () => toolbar,
-      uiStructure: () => this.props.controller.uiStructure
+      uiStructure: () => this.props.controller.uiStructure,
+      propReorder: () => this.props.controller.propReorder,
+      dataTable: () => this.props.controller.dataView.dataTable,
+      recCursor: () => this.props.controller.dataView.recCursor,
+      propCursor: () => this.props.controller.propCursor
     });
     const toolbar = this.props.controller.dataView.isHeadless
       ? undefined

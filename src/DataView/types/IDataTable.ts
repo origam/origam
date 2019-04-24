@@ -9,6 +9,7 @@ export interface IDataTable {
   dirtyValues: Map<string, Map<string, any>> | undefined;
   newRecordIds: Map<string, boolean> | undefined;
   getRecordByIdx(idx: number): IRecord | undefined;
+  getRecordById(id: string): IRecord | undefined;
   addDirtyValues(recId: string, values: Map<string, any>): void;
   getValueByIdx(recIdx: number, propIdx: number): any;
   getValueById(recId: string, propId: string): any;

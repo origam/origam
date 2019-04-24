@@ -86,6 +86,36 @@ export class TableViewCells implements ICells {
         isLoading = property.lookupResolver.isLoading(value);
         value = property.lookupResolver.getValue(value);
       }
+      switch (property.column) {
+        case "CheckBox":
+          return {
+            type: "BoolCell",
+            value: value !== undefined && value !== null ? value : "",
+            onChange(event: any, value: boolean) {
+              console.log("change", event, value);
+            },
+            isLoading,
+            isInvalid: false,
+            isReadOnly: property.isReadOnly,
+            isRowCursor: this.selRecIdx === rowIdx,
+            isCellCursor:
+              this.selRecIdx === rowIdx && this.selPropIdx === columnIdx
+          };
+        case "Text":
+          return {
+            type: "TextCell",
+            value: value !== undefined && value !== null ? value : "",
+            onChange(event: any, value: string) {
+              console.log("change", event, value);
+            },
+            isLoading,
+            isInvalid: false,
+            isReadOnly: property.isReadOnly,
+            isRowCursor: this.selRecIdx === rowIdx,
+            isCellCursor:
+              this.selRecIdx === rowIdx && this.selPropIdx === columnIdx
+          };
+      }
     }
     return {
       type: "TextCell",
@@ -95,7 +125,7 @@ export class TableViewCells implements ICells {
       },
       isLoading,
       isInvalid: false,
-      isReadOnly: false,
+      isReadOnly: true,
       isRowCursor: this.selRecIdx === rowIdx,
       isCellCursor: this.selRecIdx === rowIdx && this.selPropIdx === columnIdx
     };

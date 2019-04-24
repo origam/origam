@@ -180,9 +180,14 @@ export class DataTable implements IDataTable {
     }
   }
 
-  getRecordByIdx(idx: number): IRecord[] | undefined {
+  getRecordByIdx(idx: number): IRecord | undefined {
     return this.records.getByIndex(idx);
   }
+
+  getRecordById(id: string): IRecord | undefined {
+    return this.records.getById(id);
+  }
+
 
   getValueByIdx(recIdx: number, propIdx: number): any {
     const record = this.getRecordByIdx(recIdx);
