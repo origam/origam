@@ -312,7 +312,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		            .ForEach(schemaItem => 
 			        {
 						var menuItem = new ToolStripMenuItem(schemaItem.Name);
-						var builder = new SchemaItemEditorsMenuBuilder();
+						var builder = new SchemaItemEditorsMenuBuilder(true);
 						var submenuItems = builder.BuildSubmenu(schemaItem);
 						menuItem.DropDownItems.AddRange(submenuItems);
 						newMenu.DropDownItems.Add(menuItem);
@@ -320,7 +320,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
             }
             else
             {
-	            var builder = new SchemaItemEditorsMenuBuilder();
+	            var builder = new SchemaItemEditorsMenuBuilder(true);
 	            var submenuItems = builder.BuildSubmenu(schemaItemUnderMouse);
 	            newMenu.DropDownItems.AddRange(submenuItems);
             }
@@ -330,7 +330,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
             {
 				ToolStripMenuItem addAfterMenu = new ToolStripMenuItem("Add After");
 				addAfterMenu.Image = ImageRes.icon_new;
-	            var builder = new SchemaItemEditorsMenuBuilder();
+	            var builder = new SchemaItemEditorsMenuBuilder(true);
 	            var submenuItems = builder.BuildSubmenu(UpToDateGraphParent);
 	            submenuItems[0].Click += (sender, args) =>
 	            {
