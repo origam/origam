@@ -211,6 +211,7 @@ namespace Origam.Schema.DeploymentModel
             this.cboPlatform.Name = "cboPlatform";
             this.cboPlatform.Size = new System.Drawing.Size(205, 21);
             this.cboPlatform.TabIndex = 9;
+            this.cboPlatform.SelectedIndexChanged += new System.EventHandler(this.CboPlatform_SelectedIndexChanged);
             // 
             // ServiceScriptCommandEditor
             // 
@@ -360,5 +361,10 @@ namespace Origam.Schema.DeploymentModel
 		{
 			if(! _isLoading & ! this.IsViewOnly) this.IsDirty = true;
 		}
-	}
+
+        private void CboPlatform_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!_isLoading & !this.IsViewOnly) this.IsDirty = true;
+        }
+    }
 }
