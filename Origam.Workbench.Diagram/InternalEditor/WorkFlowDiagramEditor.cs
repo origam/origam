@@ -30,9 +30,10 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private readonly EdgeInsertionRule edgeInsertionRule;
         private static readonly int graphScale = 1;
         private readonly List<DeferedDependency> deferedDependencies = new List<DeferedDependency>();
+        private readonly NodeSelector nodeSelector;
 
         public WorkFlowDiagramEditor(Guid graphParentId, GViewer gViewer, Form parentForm,
-	        IPersistenceProvider persistenceProvider, WorkFlowDiagramFactory factory)
+	        IPersistenceProvider persistenceProvider, WorkFlowDiagramFactory factory, NodeSelector nodeSelector)
 		{
 		    (gViewer as IViewer).MouseDown += OnMouseDown;
 		    gViewer.MouseClick += OnMouseClick;
@@ -57,6 +58,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			this.parentForm = parentForm;
 			this.persistenceProvider = persistenceProvider;
 			this.factory = factory;
+			this.nodeSelector = nodeSelector;
 
 			ReDraw();
 
@@ -245,6 +247,12 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 	            ContextMenuStrip cm = BuildContextMenu();
                 cm.Show(parentForm,_mouseRightButtonDownPoint.InScreenSystem);
+	        }else if (e.LeftButtonIsPressed)
+	        {
+		        if (gViewer.SelectedObject is Node node)
+		        {
+					nodeSelector.Selected = node;
+		        }
 	        }
 	    }
 

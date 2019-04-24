@@ -44,15 +44,17 @@ namespace Origam.Workbench.Diagram
 		private static readonly SolidBrush drawBrush = new SolidBrush(System.Drawing.Color.Black);
 		private static readonly StringFormat drawFormat = new StringFormat();
 		
+		private readonly INodeSelector nodeSelector;
 		private Graph graph;
 		private readonly NodeFactory nodeFactory;
 		private readonly Pen boldBlackPen = new Pen(System.Drawing.Color.Black, 2);
 		private readonly GViewer viewer;
 
-		public WorkFlowDiagramFactory(GViewer viewer)
+		public WorkFlowDiagramFactory(GViewer viewer, INodeSelector nodeSelector)
 		{
 			this.viewer = viewer;
-			nodeFactory = new NodeFactory(viewer);
+			this.nodeSelector = nodeSelector;
+			nodeFactory = new NodeFactory(nodeSelector);
 		}
 
 		public Graph Draw(IWorkflowBlock graphParent)
@@ -147,7 +149,7 @@ namespace Origam.Workbench.Diagram
 				(int)node.BoundingBox.Width, 
 				(int)node.BoundingBox.Height);
 			
-			Pen pen = viewer.SelectedObject == node
+			Pen pen = nodeSelector.Selected == node
 				? boldBlackPen 
 				: blackPen;
 			
