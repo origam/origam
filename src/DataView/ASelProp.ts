@@ -14,7 +14,6 @@ export class ASelProp implements IASelProp {
     public P: {
       propCursor: ML<IPropCursor>;
       properties: ML<IPropReorder>;
-      aReloadChildren: ML<IAReloadChildren>;
     }
   ) {}
 
@@ -22,7 +21,6 @@ export class ASelProp implements IASelProp {
   do(id: string | undefined) {
     const propCursor = this.propCursor;
     propCursor.setSelId(id);
-    this.aReloadChildren.do();
   }
 
   @action.bound
@@ -46,7 +44,4 @@ export class ASelProp implements IASelProp {
     return unpack(this.P.properties);
   }
 
-  get aReloadChildren() {
-    return unpack(this.P.aReloadChildren);
-  }
 }

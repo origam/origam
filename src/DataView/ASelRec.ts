@@ -8,6 +8,7 @@ import { IAFinishEditing } from "./types/IAFinishEditing";
 import { IAStartEditing } from "./types/IAStartEditing";
 import { IRecords } from "./types/IRecords";
 import { unpack } from "../utils/objects";
+import { IAReloadChildren } from "./types/IAReloadChildren";
 
 export class ASelRec implements IASelRec {
   constructor(
@@ -18,6 +19,7 @@ export class ASelRec implements IASelRec {
       aFinishEditing: ML<IAFinishEditing>;
       aStartEditing: ML<IAStartEditing>;
       records: ML<IRecords>;
+      aReloadChildren: ML<IAReloadChildren>;
     }
   ) {}
 
@@ -32,6 +34,7 @@ export class ASelRec implements IASelRec {
     }
     if (id) {
       this.recCursor.setSelId(id);
+      // this.aReloadChildren.do();
     }
     if (
       isEditing &&
@@ -76,5 +79,9 @@ export class ASelRec implements IASelRec {
 
   get records() {
     return unpack(this.P.records);
+  }
+
+  get aReloadChildren() {
+    return unpack(this.P.aReloadChildren);
   }
 }

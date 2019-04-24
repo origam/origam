@@ -1,6 +1,6 @@
 import { Machine, State, interpret } from "xstate";
 import { Interpreter } from "xstate/lib/interpreter";
-import { observable, action, computed } from "mobx";
+import { observable, action, computed, reaction } from "mobx";
 import { IDataViewMachine } from "./types/IDataViewMachine";
 import { IApi } from "../Api/IApi";
 import { ML } from "../utils/types";
@@ -120,7 +120,17 @@ export class DataViewMachine implements IDataViewMachine {
     return this.state.value;
   }
 
+  disposers: Array<() => void> = [];
+
   @action.bound start() {
+    this.disposers.push(
+      reaction(
+        () => this.controlledValueFromParent,
+        () => {
+          this.treeDispatch("LOAD_FRESH");
+        }
+      )
+    );
     this.interpreter.start();
     if (this.isRoot) {
       this.interpreter.send("LOAD_FRESH");
@@ -128,6 +138,7 @@ export class DataViewMachine implements IDataViewMachine {
   }
 
   @action.bound stop() {
+    this.disposers.forEach(d => d());
     this.interpreter.stop();
   }
 
