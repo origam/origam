@@ -367,6 +367,18 @@ namespace Origam.DA.Service
             return "SELECT @@SPID";
         }
 
+        public override string CreateSystemRole(string roleName)
+        {
+            string roleId = Guid.NewGuid().ToString();
+            return string.Format(
+@"INSERT INTO OrigamApplicationRole (Id, Name, Description, IsSystemRole , RecordCreated)
+VALUES ('{0}', '{1}', '', 1, getdate())
+-- add to the built-in SuperUser role
+INSERT INTO OrigamRoleOrigamApplicationRole (Id, refOrigamRoleId, refOrigamApplicationRoleId, RecordCreated, IsFormReadOnly)
+VALUES (newid(), '{2}', '{0}', getdate(), 0)",
+                 roleId, roleName, SecurityManager.BUILTIN_SUPER_USER_ROLE);
+        }
+
         public override string Info
 		{
 			get

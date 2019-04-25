@@ -29,6 +29,9 @@ using Origam.Schema.MenuModel;
 using Origam.Schema.DeploymentModel;
 using Origam.UI;
 using Origam.Workbench.Services;
+using Origam.Workbench.Services.CoreServices;
+using Origam.DA.Service;
+using static Origam.DA.Common.Enums;
 
 namespace OrigamArchitect
 {
@@ -109,7 +112,7 @@ namespace OrigamArchitect
                 GeneratedModelElements.Add(menu);
 				if(wiz.Role != "*" && wiz.Role != "")
 				{
-					ServiceCommandUpdateScriptActivity activity = DeploymentHelper.CreateSystemRole(wiz.Role);
+					ServiceCommandUpdateScriptActivity activity = CreateRole(wiz.Role);
                     GeneratedModelElements.Add(activity);
 				}
 			}
@@ -172,7 +175,7 @@ namespace OrigamArchitect
 				bool createRole = wiz.Role != "*" && wiz.Role != "";
 				if(createRole)
 				{
-					ServiceCommandUpdateScriptActivity activity = DeploymentHelper.CreateSystemRole(wiz.Role);
+					ServiceCommandUpdateScriptActivity activity = CreateRole(wiz.Role);
                     GeneratedModelElements.Add(activity);
                 }
 			}
@@ -205,12 +208,12 @@ namespace OrigamArchitect
                 bool createRole = wiz.Role != "*" && wiz.Role != "";
 				if(createRole)
 				{
-					ServiceCommandUpdateScriptActivity activity = DeploymentHelper.CreateSystemRole(wiz.Role);
+                    ServiceCommandUpdateScriptActivity activity = CreateRole(wiz.Role);
                     GeneratedModelElements.Add(activity);
 				}
 			}
 		}
-	}
+    }
 
 	public class CreateMenuFromSequentialWorkflowCommand : AbstractMenuCommand
 	{
@@ -238,7 +241,7 @@ namespace OrigamArchitect
 				bool createRole = wiz.Role != "*" && wiz.Role != "";
 				if(createRole)
 				{
-					ServiceCommandUpdateScriptActivity activity = DeploymentHelper.CreateSystemRole(wiz.Role);
+					ServiceCommandUpdateScriptActivity activity = CreateRole(wiz.Role);
                     GeneratedModelElements.Add(activity);
 				}
 			}

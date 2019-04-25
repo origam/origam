@@ -23,6 +23,9 @@ using Origam.Services;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 using System;
+using Origam.DA.Service;
+using Origam.DA;
+using static Origam.DA.Common.Enums;
 
 namespace Origam.Schema.DeploymentModel
 {
@@ -49,7 +52,7 @@ namespace Origam.Schema.DeploymentModel
 		}
 		
 		public static ServiceCommandUpdateScriptActivity
-            CreateDatabaseScript(string name, string script)
+            CreateDatabaseScript(string name, string script, DatabaseType platformName)
         {
             ISchemaService schema = ServiceManager.Services.GetService(
                 typeof(ISchemaService)) as ISchemaService;
@@ -63,27 +66,19 @@ namespace Origam.Schema.DeploymentModel
             ServiceCommandUpdateScriptActivity newActivity = currentVersion.NewItem(
                 typeof(ServiceCommandUpdateScriptActivity), schema.ActiveSchemaExtensionId, null)
                 as ServiceCommandUpdateScriptActivity;
-            newActivity.Name = newActivity.Name + name;
+            newActivity.Name += name;
+            newActivity.DatabaseType = platformName;
             newActivity.CommandText = script;
             newActivity.Service = service;
             newActivity.Persist();
             return newActivity;
         }
 
-        public static ServiceCommandUpdateScriptActivity CreateSystemRole(string roleName)
+        public static ServiceCommandUpdateScriptActivity CreateSystemRole(string roleName, AbstractSqlDataService abstractSqlData)
         {
-            string roleId = Guid.NewGuid().ToString();
-            string script = string.Format(
-@"INSERT INTO OrigamApplicationRole (Id, Name, Description, IsSystemRole , RecordCreated)
-VALUES ('{0}', '{1}', '', 1, getdate())
--- add to the built-in SuperUser role
-INSERT INTO OrigamRoleOrigamApplicationRole (Id, refOrigamRoleId, refOrigamApplicationRoleId, RecordCreated, IsFormReadOnly)
-VALUES (newid(), '{2}', '{0}', getdate(), 0)",
-                 roleId, roleName, SecurityManager.BUILTIN_SUPER_USER_ROLE);
-
+            string script = abstractSqlData.CreateSystemRole(roleName);
             ServiceCommandUpdateScriptActivity activity =
-                CreateDatabaseScript("AddRole_" + roleName, script);
-
+                CreateDatabaseScript("AddRole_" + roleName, script,abstractSqlData.PlatformName);
             return activity;
         }
 	}

@@ -261,6 +261,18 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
             return "select pg_backend_pid()";
         }
 
+        public override string CreateSystemRole(string roleName)
+        {
+            string roleId = Guid.NewGuid().ToString();
+            return string.Format(
+@"INSERT INTO OrigamApplicationRole (Id, Name, Description, IsSystemRole , RecordCreated)
+VALUES ('{0}', '{1}', '', 1, now());
+-- add to the built-in SuperUser role
+INSERT INTO OrigamRoleOrigamApplicationRole (Id, refOrigamRoleId, refOrigamApplicationRoleId, RecordCreated, IsFormReadOnly)
+VALUES (gen_random_uuid(), '{2}', '{0}', now(), 0)",
+                 roleId, roleName, SecurityManager.BUILTIN_SUPER_USER_ROLE);
+        }
+
         public override string Info
 		{
 			get

@@ -19,6 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Service;
+using Origam.Schema.DeploymentModel;
+using Origam.Workbench.Services.CoreServices;
+
 namespace Origam.UI
 {
 	/// <summary>
@@ -28,6 +32,23 @@ namespace Origam.UI
 	{
 	    public virtual bool IsEnabled { get; set; } = true;
 
+        #region Property
+        public ServiceCommandUpdateScriptActivity CreateRole(string role)
+        {
+            AbstractSqlDataService abstractSqlData = (AbstractSqlDataService)DataService.GetDataService();
+            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+            if (settings.DeployPlatforms != null)
+            {
+                foreach (Platform platform in settings.DeployPlatforms)
+                {
+                    AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
+                    ServiceCommandUpdateScriptActivity _create = DeploymentHelper.CreateSystemRole(role, DsPlatform);
+                    DsPlatform.Dispose();
+                }
+            }
+            return DeploymentHelper.CreateSystemRole(role,abstractSqlData);
+        }
+        #endregion
         #region IDisposable Members
 
         public virtual void Dispose()
