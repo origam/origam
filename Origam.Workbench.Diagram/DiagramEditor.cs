@@ -49,9 +49,11 @@ namespace Origam.Workbench.Editors
         private GViewer gViewer;
         private readonly IPersistenceProvider persistenceProvider;
         private IDiagramEditor internalEditor;
+        private readonly NodeSelector nodeSelector;
 
         public DiagramEditor()
 		{
+			nodeSelector = new NodeSelector();
 			persistenceProvider = ServiceManager.Services
 				.GetService<IPersistenceService>()
 				.SchemaProvider;
@@ -161,15 +163,16 @@ namespace Origam.Workbench.Editors
 					internalEditor = new WorkFlowDiagramEditor(
 						graphParentId: workflowBlock.Id,
 						gViewer: gViewer,
+						nodeSelector: nodeSelector,
 						parentForm: this,
 						persistenceProvider: persistenceProvider,
-						factory: new WorkFlowDiagramFactory(gViewer));
+						factory: new WorkFlowDiagramFactory(gViewer, nodeSelector));
 					break;
 				case IContextStore contextStore:
 					internalEditor = new GeneralDiagramEditor<IContextStore>(
 						gViewer: gViewer,
 						schemaItem: contextStore,
-						factory: new ContextStoreDiagramFactory(persistenceProvider, gViewer));
+						factory: new ContextStoreDiagramFactory(persistenceProvider, nodeSelector));
 					break;
 				case ISchemaItem schemaItem:
 					internalEditor = new GeneralDiagramEditor<ISchemaItem>(
@@ -221,14 +224,6 @@ namespace Origam.Workbench.Editors
 		private void ToggleInsertEdge(object sender, EventArgs e)
 		{
 			gViewer.InsertingEdge = !gViewer.InsertingEdge;
-//			if (!gViewer.InsertingEdge) {
-//				gViewer.PanButtonPressed = false;
-//				gViewer.InsertingEdge = true;
-//			}
-//			else {
-//				gViewer.InsertingEdge = false;
-//				gViewer.PanButtonPressed = true;
-//			}
 		}
 
 		private void ZoomHome(object sender, EventArgs e) {

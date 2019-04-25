@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Microsoft.Msagl.Core.Geometry;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
+using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
@@ -30,9 +31,10 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private readonly EdgeInsertionRule edgeInsertionRule;
         private static readonly int graphScale = 1;
         private readonly List<DeferedDependency> deferedDependencies = new List<DeferedDependency>();
+        private readonly NodeSelector nodeSelector;
 
         public WorkFlowDiagramEditor(Guid graphParentId, GViewer gViewer, Form parentForm,
-	        IPersistenceProvider persistenceProvider, WorkFlowDiagramFactory factory)
+	        IPersistenceProvider persistenceProvider, WorkFlowDiagramFactory factory, NodeSelector nodeSelector)
 		{
 		    (gViewer as IViewer).MouseDown += OnMouseDown;
 		    gViewer.MouseClick += OnMouseClick;
@@ -57,6 +59,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			this.parentForm = parentForm;
 			this.persistenceProvider = persistenceProvider;
 			this.factory = factory;
+			this.nodeSelector = nodeSelector;
 
 			ReDraw();
 
@@ -245,6 +248,12 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 	            ContextMenuStrip cm = BuildContextMenu();
                 cm.Show(parentForm,_mouseRightButtonDownPoint.InScreenSystem);
+	        }else if (e.LeftButtonIsPressed)
+	        {
+		        if (gViewer.SelectedObject is Node node)
+		        {
+					nodeSelector.Selected = node;
+		        }
 	        }
 	    }
 
@@ -269,7 +278,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			var schemaItemUnderMouse = DNodeToSchemaItem(dNodeUnderMouse);
 			if (!(dNodeUnderMouse.Node is Subgraph) &&
 			    !(schemaItemUnderMouse is ServiceMethodCallTask)) return false;
-			//if (!(objectUnderMouse.Node is Subgraph)) return false;
 			List<IViewerObject> highLightedEntities = gViewer.Entities
 				.Where(x => x.MarkedForDragging)
 				.ToList();
@@ -295,21 +303,24 @@ namespace Origam.Workbench.Diagram.InternalEditor
             ToolStripMenuItem newMenu = new ToolStripMenuItem("New");
             newMenu.Image = ImageRes.icon_new;
             newMenu.Enabled = IsNewMenuAvailable(dNodeUnderMouse);
-            
-            if (schemaItemUnderMouse is ServiceMethodCallTask task)
+
+            if (schemaItemUnderMouse is ServiceMethodCallTask)
             {
-	            foreach (var schemaItem in schemaItemUnderMouse.ChildItems)
-	            {
-		            var menuItem = new ToolStripMenuItem(schemaItem.Name);
-		            var builder = new SchemaItemEditorsMenuBuilder();
-		            var submenuItems = builder.BuildSubmenu(schemaItem);
-		            menuItem.DropDownItems.AddRange(submenuItems);
-		            newMenu.DropDownItems.Add(menuItem);
-	            }
+	            schemaItemUnderMouse.ChildItems
+		            .ToEnumerable()
+		            .Where(item => !(item is WorkflowTaskDependency))
+		            .ForEach(schemaItem => 
+			        {
+						var menuItem = new ToolStripMenuItem(schemaItem.Name);
+						var builder = new SchemaItemEditorsMenuBuilder(true);
+						var submenuItems = builder.BuildSubmenu(schemaItem);
+						menuItem.DropDownItems.AddRange(submenuItems);
+						newMenu.DropDownItems.Add(menuItem);
+					});
             }
             else
             {
-	            var builder = new SchemaItemEditorsMenuBuilder();
+	            var builder = new SchemaItemEditorsMenuBuilder(true);
 	            var submenuItems = builder.BuildSubmenu(schemaItemUnderMouse);
 	            newMenu.DropDownItems.AddRange(submenuItems);
             }
@@ -319,7 +330,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
             {
 				ToolStripMenuItem addAfterMenu = new ToolStripMenuItem("Add After");
 				addAfterMenu.Image = ImageRes.icon_new;
-	            var builder = new SchemaItemEditorsMenuBuilder();
+	            var builder = new SchemaItemEditorsMenuBuilder(true);
 	            var submenuItems = builder.BuildSubmenu(UpToDateGraphParent);
 	            submenuItems[0].Click += (sender, args) =>
 	            {

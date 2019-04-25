@@ -22,11 +22,11 @@ namespace Origam.Workbench.Diagram.DiagramFactory
         private static readonly Pen blackPen =new Pen(System.Drawing.Color.Black, 1);
         private static readonly SolidBrush greyBrush = new SolidBrush(System.Drawing.Color.LightGray);
         private static readonly int nodeHeight = 30;
-        private readonly GViewer viewer;
+        private readonly INodeSelector nodeSelector;
 
-        public NodeFactory(GViewer viewer)
+        public NodeFactory(INodeSelector nodeSelector)
         {
-            this.viewer = viewer;
+            this.nodeSelector = nodeSelector;
         }
 
         public Node AddNode(Graph graph, ISchemaItem schemaItem)
@@ -49,7 +49,7 @@ namespace Origam.Workbench.Diagram.DiagramFactory
             Graphics editorGraphics = (Graphics)graphicsObj;
             var image = GetImage(node);
 
-            Pen pen = viewer.SelectedObject == node
+            Pen pen = nodeSelector.Selected == node
                 ? boldBlackPen 
                 : blackPen;
             

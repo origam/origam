@@ -41,10 +41,11 @@ namespace Origam.Workbench.Commands
         }
         public SchemaItemEditorsMenuBuilder(bool showDialog)
         {
-            ShowDialog = showDialog;
+            this.showDialog = showDialog;
         }
 
-        public bool ShowDialog { get; set; }
+        private readonly bool showDialog;
+        
         #region ISubmenuBuilder Members
         public bool LateBound
         {
@@ -105,7 +106,7 @@ namespace Origam.Workbench.Commands
                 {
                     if (names.Count == 0 || !IsNameableType(factory, type))
                     {
-                        AddNewItem(sch, type, factory, null, items, ShowDialog);
+                        AddNewItem(sch, type, factory, null, items, showDialog);
                     }
                     else
                     {
@@ -117,7 +118,7 @@ namespace Origam.Workbench.Commands
                 foreach (string name in names)
                 {
                     SchemaItemEditorNamesBuilder builder =
-                        new SchemaItemEditorNamesBuilder(nameableTypes, name, factory, ShowDialog);
+                        new SchemaItemEditorNamesBuilder(nameableTypes, name, factory, showDialog);
                     AddNewSubmenu(name, builder, items);
                 }
             }
