@@ -28,6 +28,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Origam;
+using Origam.Extensions;
 using Origam.Gui;
 using Origam.OrigamEngine.ModelXmlBuilders;
 using Origam.Rule;
@@ -63,6 +64,17 @@ namespace Origam.Server
             IBasicUIService basicUiService)
         {
             IAsyncResult asyncFormXmlResult = null;
+            // Stack can't handle resending DataDocumentFx, 
+            // it needs to be converted to XmlDocument 
+            // and then converted back to DataDocumentFx
+            foreach(object key in request.Parameters.Keys.ToList<object>())
+            {
+                if (request.Parameters[key] is XmlDocument)
+                {
+                    request.Parameters[key] = new XmlContainer(
+                        request.Parameters[key] as XmlDocument);
+                }
+            }
             bool isExclusive = false;
             if (request.IsNewSession)
             {

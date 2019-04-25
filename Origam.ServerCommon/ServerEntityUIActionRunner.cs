@@ -31,6 +31,7 @@ using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 using Origam.Gui;
 using Origam.ServerCommon;
+using Origam.Extensions;
 
 namespace Origam.Server
 {
@@ -232,6 +233,16 @@ namespace Origam.Server
                 ActionResultType.OpenForm);
             UIRequest uir = RequestTools.GetActionRequest(processData.Parameters, 
                 processData.SelectedItems, processData.Action);
+            // Stack can't handle resending DataDocumentFx, 
+            // it needs to be converted to XmlDocument
+            // and then converted back to DataDocumentFx
+            foreach(object key in uir.Parameters.Keys.ToList<object>())
+            {
+                if (uir.Parameters[key] is IXmlContainer)
+                {
+                    uir.Parameters[key] = ((IXmlContainer)uir.Parameters[key]).Xml;
+                }
+            }
             if (processData.Action.RefreshAfterReturn == ReturnRefreshType.MergeModalDialogChanges)
             {
                 uir.ParentSessionId = processData.SessionFormIdentifier;
