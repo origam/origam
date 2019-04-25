@@ -60,8 +60,8 @@ namespace OrigamArchitect
             {
                 GeneratedModelElements.Add(item);
             }
-            var script = DeploymentHelper.CreateDatabaseScript(
-                table.Name, core.DataService.EntityDdl(table.Id));
+            var script = CreateTableScript(
+                table.Name, table.Id);
             GeneratedModelElements.Add(script);
         }
     }

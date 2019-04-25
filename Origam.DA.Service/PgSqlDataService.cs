@@ -273,6 +273,25 @@ VALUES (gen_random_uuid(), '{2}', '{0}', now(), false)",
                  roleId, roleName, SecurityManager.BUILTIN_SUPER_USER_ROLE);
         }
 
+        public override string CreateInsert(int fieldcount)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append("INSERT INTO {0} (");
+            for (int i=1;i<fieldcount+1;i++)
+            {
+                stringBuilder.Append("{"+i+"}");
+                stringBuilder.Append(i == fieldcount ? "" : ",");
+            }
+            stringBuilder.Append(" VALUES (");
+            for (int i = fieldcount; i < fieldcount + fieldcount + 1; i++)
+            {
+                stringBuilder.Append("'{" + i + "}'");
+                stringBuilder.Append(i == fieldcount ? "" : ",");
+            }
+            stringBuilder.Append(");\r\n");
+            return stringBuilder.ToString();
+        }
+
         public override string Info
 		{
 			get

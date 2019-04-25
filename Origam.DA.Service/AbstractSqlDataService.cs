@@ -205,10 +205,14 @@ namespace Origam.DA.Service
             UpdateBatchSize = updateBatchSize;
             BulkInsertThreshold = bulkInsertThreshold;
 		}
-		#endregion
+        #endregion
 
-		#region Public Methods
-		public override string ConnectionString
+        #region Public Methods
+
+        public abstract string CreateSystemRole(string roleName);
+        public abstract string CreateInsert(int fieldcount);
+
+        public override string ConnectionString
 		{
 			get
 			{
@@ -2491,9 +2495,6 @@ namespace Origam.DA.Service
 			
 			base.Dispose ();
 		}
-
-        public abstract string CreateSystemRole(string roleName);
-
         #endregion
     }
     // version of log4net for NetStandard 1.3 does not have the method
