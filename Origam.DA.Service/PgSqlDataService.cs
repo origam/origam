@@ -269,7 +269,7 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
 VALUES ('{0}', '{1}', '', 1, now());
 -- add to the built-in SuperUser role
 INSERT INTO OrigamRoleOrigamApplicationRole (Id, refOrigamRoleId, refOrigamApplicationRoleId, RecordCreated, IsFormReadOnly)
-VALUES (gen_random_uuid(), '{2}', '{0}', now(), 0)",
+VALUES (gen_random_uuid(), '{2}', '{0}', now(), false)",
                  roleId, roleName, SecurityManager.BUILTIN_SUPER_USER_ROLE);
         }
 
