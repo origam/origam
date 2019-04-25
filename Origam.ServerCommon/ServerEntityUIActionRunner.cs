@@ -147,10 +147,10 @@ namespace Origam.Server
                         processData.Parameters.Add(pm.Name, val);
                     }
                     // resend the execute - now with the actual action and with queue-command parameters
-                    resultList.AddRange(ExecuteAction(processData.SessionFormIdentifier, 
+                    ExecuteAction(processData.SessionFormIdentifier, 
                         processData.RequestingGrid, processData.Entity, cmd.ActionType.ToString(), 
                         cmd.Id.ToString(), new Hashtable(), 
-                        processData.SelectedItems, processData.Parameters));
+                        processData.SelectedItems, processData.Parameters);
                     return;
                 }
             }
