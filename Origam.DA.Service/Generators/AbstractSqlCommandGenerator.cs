@@ -717,7 +717,7 @@ namespace Origam.DA.Service
 
         public abstract string UpsertSql(DataStructure ds, DataStructureEntity entity);
 
-        internal abstract string InsertSql(DataStructure ds, DataStructureEntity entity);
+        public abstract string InsertSql(DataStructure ds, DataStructureEntity entity);
         
         internal abstract void RenderSelectUpdatedData(StringBuilder sqlExpression, DataStructureEntity entity);
         public  abstract string SelectRowSql(DataStructureEntity entity, Hashtable selectParameterReferences,

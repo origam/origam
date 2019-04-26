@@ -1196,7 +1196,7 @@ namespace Origam.DA.Service
             return sqlExpression.ToString();
         }
 
-        internal override string InsertSql(DataStructure ds, DataStructureEntity entity)
+        public override string InsertSql(DataStructure ds, DataStructureEntity entity)
         {
             if (entity.UseUPSERT)
             {
