@@ -470,6 +470,25 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0)",
 			}
 		}
 
+        internal override bool IsDataEntityIndexInDatabase(DataEntityIndex dataEntityIndex)
+        {
+            string tableName = (dataEntityIndex.ParentItem as TableMappingItem)
+                .MappedObjectName;
+            string indexName = dataEntityIndex.Name;
+            // from CompareSchema
+            string sqlIndex = "select so.name TableName, si.name IndexName "
+                + "from sysindexes si "
+                + "inner join sysobjects so on si.id = so.id "
+                + "where indexproperty(si.id, si.name, 'IsStatistics') = 0 "
+                + "and indexproperty(si.id, si.name, 'IsHypothetical') = 0 "
+                + "and si.status & 2048 = 0 "
+                + "and si.impid = 0 "
+                + "and so.name = '" + tableName + "' "
+                + "and si.name = '" + indexName + "'";
+            DataSet index = GetData(sqlIndex);
+            return index.Tables[0].Rows.Count == 1;
+        }
+
         public override string DbUser { get { return _IISUser; } set { _IISUser = string.Format("[IIS APPPOOL\\{0}]", value); } }
         public override string DBPassword { get ; set ; }
     }

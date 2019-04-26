@@ -1195,6 +1195,48 @@ namespace Origam.DA.Service
             return sqlExpression.ToString();
         }
 
+        internal override string InsertSql(DataStructure ds, DataStructureEntity entity)
+        {
+            if (entity.UseUPSERT)
+            {
+                return UpsertSql(ds, entity);
+            }
+            StringBuilder sqlExpression = new StringBuilder();
+            StringBuilder sqlExpression2 = new StringBuilder();
+            sqlExpression.AppendFormat("INSERT INTO {0} (",
+                RenderExpression(entity.EntityDefinition, null, null, null, null)
+                );
+            bool existAutoIncrement = false;
+            int i = 0;
+            foreach (DataStructureColumn column in entity.Columns)
+            {
+                if (ShouldUpdateColumn(column, entity) && column.Field.AutoIncrement == false)
+                {
+                    if (i > 0)
+                    {
+                        sqlExpression.Append(",");
+                        sqlExpression2.Append(",");
+                    }
+                    PrettyIndent(sqlExpression);
+                    PrettyIndent(sqlExpression2);
+                    sqlExpression.Append(RenderExpression(column.Field, null, null, null, null));
+                    sqlExpression2.Append(NewValueParameterName(column, false));
+                    i++;
+                    if (column.Field.AutoIncrement) existAutoIncrement = true;
+                }
+            }
+            PrettyLine(sqlExpression);
+            sqlExpression.Append(") VALUES (");
+            sqlExpression.Append(sqlExpression2);
+            sqlExpression.Append(")");
+            // If there is any auto increment column, we include a SELECT statement after INSERT
+            if (existAutoIncrement)
+            {
+                RenderSelectUpdatedData(sqlExpression, entity);
+            }
+            return sqlExpression.ToString();
+        }
+
         internal override void RenderSelectUpdatedData(StringBuilder sqlExpression, DataStructureEntity entity)
         {
             ArrayList primaryKeys = new ArrayList();

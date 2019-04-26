@@ -1658,24 +1658,8 @@ namespace Origam.DA.Service
             return false;
         }
 
-        private bool IsDataEntityIndexInDatabase(DataEntityIndex dataEntityIndex)
-        {
-            string tableName = (dataEntityIndex.ParentItem as TableMappingItem)
-                .MappedObjectName;
-            string indexName = dataEntityIndex.Name;
-            // from CompareSchema
-			string sqlIndex = "select so.name TableName, si.name IndexName "
-				+ "from sysindexes si "
-				+ "inner join sysobjects so on si.id = so.id "
-				+ "where indexproperty(si.id, si.name, 'IsStatistics') = 0 "
-				+ "and indexproperty(si.id, si.name, 'IsHypothetical') = 0 "
-				+ "and si.status & 2048 = 0 "
-				+ "and si.impid = 0 "
-                + "and so.name = '" + tableName + "' "
-                + "and si.name = '" + indexName + "'";
-            DataSet index = GetData(sqlIndex);
-            return index.Tables[0].Rows.Count == 1;
-        }
+        internal abstract bool IsDataEntityIndexInDatabase(DataEntityIndex dataEntityIndex);
+        
 
         #endregion
 
@@ -2285,7 +2269,7 @@ namespace Origam.DA.Service
             }
         }
 
-        private DataSet GetData(string sql)
+        internal DataSet GetData(string sql)
 		{
 			using(IDbConnection connection = GetConnection(_connectionString))
 			{

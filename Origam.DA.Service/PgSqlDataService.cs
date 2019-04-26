@@ -23,6 +23,7 @@ using System;
 using System.Data;
 using System.Text;
 using Npgsql;
+using Origam.Schema.EntityModel;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.DA.Service
@@ -366,6 +367,20 @@ VALUES (gen_random_uuid(), '{2}', '{0}', now(), false)",
 				return result;
 			}
 		}
+
+        internal override bool IsDataEntityIndexInDatabase(DataEntityIndex dataEntityIndex)
+        {
+            string tableName = (dataEntityIndex.ParentItem as TableMappingItem)
+                .MappedObjectName;
+            string indexName = dataEntityIndex.Name;
+            // from CompareSchema
+            string sqlIndex = "SELECT  tablename as TableName,indexname as IndexName FROM pg_indexes  WHERE " +
+                "tablename ='"+tableName+"'" +
+                "and indexname ='"+indexName+"'" +
+                " ORDER BY tablename, indexname; ";
+            DataSet index = GetData(sqlIndex);
+            return index.Tables[0].Rows.Count == 1;
+        }
 
         public override string DbUser { get { return _DbUser; }  set { _DbUser = string.Format("{0}", value);  }}
         public override string DBPassword { get;  set; }

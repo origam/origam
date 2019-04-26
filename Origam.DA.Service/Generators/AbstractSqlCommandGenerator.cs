@@ -1016,48 +1016,9 @@ namespace Origam.DA.Service
         }
 
         public abstract string UpsertSql(DataStructure ds, DataStructureEntity entity);
-       
-        public string InsertSql(DataStructure ds, DataStructureEntity entity)
-        {
-            if (entity.UseUPSERT)
-            {
-                return UpsertSql(ds, entity);
-            }
-            StringBuilder sqlExpression = new StringBuilder();
-            StringBuilder sqlExpression2 = new StringBuilder();
-            sqlExpression.AppendFormat("INSERT INTO {0} (",
-                RenderExpression(entity.EntityDefinition, null, null, null, null)
-                );
-            bool existAutoIncrement = false;
-            int i = 0;
-            foreach (DataStructureColumn column in entity.Columns)
-            {
-                if (ShouldUpdateColumn(column, entity) && column.Field.AutoIncrement == false)
-                {
-                    if (i > 0)
-                    {
-                        sqlExpression.Append(",");
-                        sqlExpression2.Append(",");
-                    }
-                    PrettyIndent(sqlExpression);
-                    PrettyIndent(sqlExpression2);
-                    sqlExpression.Append(RenderExpression(column.Field, null, null, null, null));
-                    sqlExpression2.Append(NewValueParameterName(column, false));
-                    i++;
-                    if (column.Field.AutoIncrement) existAutoIncrement = true;
-                }
-            }
-            PrettyLine(sqlExpression);
-            sqlExpression.Append(") VALUES (");
-            sqlExpression.Append(sqlExpression2);
-            sqlExpression.Append(")");
-            // If there is any auto increment column, we include a SELECT statement after INSERT
-            if (existAutoIncrement)
-            {
-                RenderSelectUpdatedData(sqlExpression, entity);
-            }
-            return sqlExpression.ToString();
-        }
+
+        internal abstract string InsertSql(DataStructure ds, DataStructureEntity entity);
+        
         internal abstract void RenderSelectUpdatedData(StringBuilder sqlExpression, DataStructureEntity entity);
         public string SelectRowSql(DataStructureEntity entity, Hashtable selectParameterReferences,
             string columnName, bool forceDatabaseCalculation)
@@ -1621,7 +1582,7 @@ namespace Origam.DA.Service
             }
         }
 
-        private void PrettyIndent(StringBuilder sqlExpression)
+        internal void PrettyIndent(StringBuilder sqlExpression)
         {
             if (PrettyFormat)
             {
