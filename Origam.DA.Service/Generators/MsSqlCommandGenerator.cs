@@ -30,6 +30,7 @@ using System.Linq;
 using System.Text;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.Schema.LookupModel;
 using Origam.Workbench.Services;
 
 namespace Origam.DA.Service
@@ -1251,5 +1252,1247 @@ namespace Origam.DA.Service
             PrettyLine(sqlExpression);
             sqlExpression.Append("; SELECT @@IDENTITY AS " + ((DataStructureColumn)primaryKeys[0]).Name);
         }
+
+        internal override string SelectSql(DataStructure ds, DataStructureEntity entity, DataStructureFilterSet filter,
+               DataStructureSortSet sortSet, string scalarColumn, Hashtable replaceParameterTexts,
+               Hashtable dynamicParameters, Hashtable selectParameterReferences, bool restrictScalarToTop1,
+               bool paging, bool isInRecursion, bool forceDatabaseCalculation,
+               string customWhereClause = null, string customOrderByClause = null, int? rowLimit = null)
+        {
+            if (!(entity.EntityDefinition is TableMappingItem))
+            {
+                throw new Exception("Only database mapped entities can be processed by the Data Service!");
+            }
+
+            if (paging)
+            {
+                if (PageNumberParameterReference.PersistenceProvider == null)
+                {
+                    PageNumberParameterReference.PersistenceProvider = ds.PersistenceProvider;
+                    PageSizeParameterReference.PersistenceProvider = ds.PersistenceProvider;
+                    _pageNumberParameterName = ParameterReferenceChar + PageNumberParameterReference.Parameter.Name;
+                    _pageSizeParameterName = ParameterReferenceChar + PageSizeParameterReference.Parameter.Name;
+                }
+
+                selectParameterReferences.Add(ParameterDeclarationChar + PageNumberParameterReference.Parameter.Name, PageNumberParameterReference);
+                selectParameterReferences.Add(ParameterDeclarationChar + PageSizeParameterReference.Parameter.Name, PageSizeParameterReference);
+            }
+
+            StringBuilder sqlExpression = new StringBuilder();
+            StringBuilder orderByBuilder = new StringBuilder();
+            StringBuilder groupByBuilder = new StringBuilder();
+
+            // when processing lookup columns we process semicolon delimited list of columns
+            // to be returned as a single concatted field
+            // Example: FirstName;Name -> concat(FirstName, ', ', Name)
+            bool concatScalarColumns = restrictScalarToTop1;
+            // Select
+            RenderSelectColumns(ds, sqlExpression, orderByBuilder,
+                groupByBuilder, entity, scalarColumn, replaceParameterTexts, dynamicParameters,
+                sortSet, selectParameterReferences, isInRecursion, concatScalarColumns,
+                forceDatabaseCalculation);
+
+            // paging column
+            if (paging)
+            {
+                if (sortSet == null)
+                {
+                    sqlExpression.AppendFormat(", ROW_NUMBER() OVER (ORDER BY (SELECT 1)) AS {0}", RowNumColumnName);
+                }
+                else
+                {
+                    sqlExpression.AppendFormat(", ROW_NUMBER() OVER (ORDER BY {0}) AS {1}", orderByBuilder, RowNumColumnName);
+                }
+            }
+
+            // From
+            RenderSelectFromClause(sqlExpression, entity, entity, filter, replaceParameterTexts);
+
+            bool whereExists = false;
+
+            if (!entity.ParentItem.PrimaryKey.Equals(ds.PrimaryKey))
+            {
+                // render joins that we need for fields in this entity
+                foreach (DataStructureEntity relation in (entity.ChildItemsByType(DataStructureEntity.ItemTypeConst)))
+                {
+                    if (relation.RelationType == RelationType.LeftJoin || relation.RelationType == RelationType.InnerJoin)
+                    {
+                        RenderSelectRelation(sqlExpression, relation, relation, filter, replaceParameterTexts, true, true, 0, false, dynamicParameters, selectParameterReferences);
+                    }
+                }
+
+                // if this is not a root entity, we make "where exists( )...to parent entities, so only detail records 
+                // are selected for their master records
+                RenderSelectExistsClause(sqlExpression, entity.RootEntity, entity, filter, replaceParameterTexts, dynamicParameters, selectParameterReferences);
+                whereExists = true;
+            }
+            else
+            {
+                // for the root entity we render all child relation filters (filterParent relations)
+                StringBuilder joinedFilterBuilder = new StringBuilder();
+                int counter = 0;
+                foreach (DataStructureEntity relation in (entity.ChildItemsByType(DataStructureEntity.ItemTypeConst)))
+                {
+                    if (relation.RelationType == RelationType.LeftJoin || relation.RelationType == RelationType.InnerJoin)
+                    {
+                        RenderSelectRelation(sqlExpression, relation, relation, filter, replaceParameterTexts, true, true, 0, false, dynamicParameters, selectParameterReferences);
+                    }
+                    else if (relation.RelationType == RelationType.FilterParent || relation.RelationType == RelationType.NotExists)
+                    {
+                        bool skip = false;
+
+                        skip = IgnoreConditionalEntity(relation, dynamicParameters);
+
+                        // skip dynamic filter parts
+                        if (!skip && relation.IgnoreCondition != DataStructureIgnoreCondition.None)
+                        {
+                            skip = IgnoreEntityWhenNoFilters(relation, filter, dynamicParameters);
+                        }
+
+                        // process all joined entities except all those dynamically skipped
+                        if (!skip)
+                        {
+                            if (counter > 0)
+                            {
+                                joinedFilterBuilder.Append(" AND ");
+                            }
+
+                            string existsClause = null;
+                            switch (relation.RelationType)
+                            {
+                                case RelationType.FilterParent:
+                                    existsClause = " EXISTS";
+                                    break;
+
+                                case RelationType.NotExists:
+                                    existsClause = " NOT EXISTS";
+                                    break;
+                            }
+
+                            joinedFilterBuilder.AppendFormat(existsClause + " (SELECT * FROM {0} AS {1}",
+                                RenderExpression(relation.EntityDefinition, null, null, null, null),
+                                NameLeftBracket + relation.Name + NameRightBracket);
+
+                            RenderSelectRelation(joinedFilterBuilder, relation, relation, filter, replaceParameterTexts, true, true, 0, false, dynamicParameters, selectParameterReferences);
+
+                            joinedFilterBuilder.Append(")");
+
+                            counter++;
+                        }
+                    }
+                }
+
+                if (joinedFilterBuilder.Length > 0)
+                {
+                    if (whereExists)
+                    {
+                        PrettyIndent(sqlExpression);
+                        sqlExpression.Append("AND ");
+                    }
+                    else
+                    {
+                        PrettyLine(sqlExpression);
+                        sqlExpression.Append("WHERE ");
+                        whereExists = true;
+                    }
+
+                    sqlExpression.Append(joinedFilterBuilder);
+                }
+            }
+
+            // Where filter - only on root entity, all other filters are on relations
+            StringBuilder whereBuilder = new StringBuilder();
+            RenderSelectWherePart(whereBuilder, entity, filter, replaceParameterTexts, dynamicParameters, selectParameterReferences);
+
+            if (whereBuilder.Length > 0)
+            {
+                if (whereExists)
+                {
+                    PrettyIndent(sqlExpression);
+                    sqlExpression.Append("AND ");
+                }
+                else
+                {
+                    PrettyLine(sqlExpression);
+                    sqlExpression.Append("WHERE ");
+                    whereExists = true;
+                }
+
+                sqlExpression.Append(whereBuilder);
+            }
+
+            if (!string.IsNullOrEmpty(customWhereClause))
+            {
+                if (whereExists)
+                {
+                    PrettyIndent(sqlExpression);
+                    sqlExpression.Append("AND ");
+                }
+                else
+                {
+                    PrettyLine(sqlExpression);
+                    sqlExpression.Append("WHERE ");
+                }
+                sqlExpression.Append(customWhereClause);
+            }
+
+            // GROUP BY
+            if (groupByBuilder.Length > 0)
+            {
+                PrettyLine(sqlExpression);
+                sqlExpression.AppendFormat("GROUP BY {0}", groupByBuilder);
+            }
+
+            // ORDER BY
+            if (!string.IsNullOrWhiteSpace(customOrderByClause))
+            {
+                PrettyLine(sqlExpression);
+                sqlExpression.AppendFormat("ORDER BY {0}", customOrderByClause);
+            }
+            else
+            {
+                if ((!paging || paging && PagingCanIncludeOrderBy) && orderByBuilder.Length > 0)
+                {
+                    PrettyLine(sqlExpression);
+                    sqlExpression.AppendFormat("ORDER BY {0}", orderByBuilder);
+                }
+            }
+
+            string finalString = sqlExpression.ToString();
+
+            // subqueries, etc. will have TOP 1, so it is sure that they select only 1 value
+            if (scalarColumn != null && restrictScalarToTop1)
+            {
+                finalString = SelectClause(finalString, 1);
+            }
+            else if (rowLimit.HasValue)
+            {
+                finalString = SelectClause(finalString, rowLimit.Value);
+            }
+            else
+            {
+                finalString = SelectClause(finalString, 0);
+            }
+
+            if (paging)
+            {
+                finalString = string.Format(
+                    "SELECT * FROM ({0}) _page WHERE _page.{1} BETWEEN (({2} - 1) * {3}) + 1 AND {3} * {2}",
+                    finalString, RowNumColumnName, _pageNumberParameterName, _pageSizeParameterName);
+            }
+
+            return finalString;
+        }
+        internal override void RenderSelectWherePart(StringBuilder sqlExpression, DataStructureEntity entity, DataStructureFilterSet filterSet, Hashtable replaceParameterTexts, Hashtable parameters, Hashtable parameterReferences)
+        {
+            int i = 0;
+            foreach (EntityFilter filter in Filters(filterSet, entity, parameters, false))
+            {
+                if (i > 0)
+                {
+                    sqlExpression.Append(" AND");
+                }
+                else
+                {
+                    sqlExpression.Append(" (");
+                }
+                PrettyIndent(sqlExpression);
+                RenderFilter(sqlExpression, filter, entity, replaceParameterTexts, parameters, parameterReferences);
+
+                i++;
+            }
+
+            if (i > 0) sqlExpression.Append(")");
+        }
+
+        internal override void RenderFilter(StringBuilder sqlExpression, EntityFilter filter, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
+        {
+            int i = 0;
+            foreach (AbstractSchemaItem filterItem in filter.ChildItems)
+            {
+                if (i > 0)
+                    sqlExpression.Append(" AND ");
+                else
+                    sqlExpression.Append(" (");
+
+                sqlExpression.Append(RenderExpression(filterItem, entity, replaceParameterTexts, dynamicParameters, parameterReferences));
+
+                i++;
+            }
+
+            if (i > 0)
+                sqlExpression.Append(")");
+        }
+
+        internal override string AggregationHelper(AggregatedColumn topLevelItem, DataStructureEntity topLevelEntity, AggregatedColumn item, Hashtable replaceParameterTexts, int level, StringBuilder joins, Hashtable dynamicParameters, Hashtable parameterReferences)
+        {
+            AggregatedColumn agg2 = item.Field as AggregatedColumn;
+
+            DataStructureEntity aggregationVirtualEntity = new DataStructureEntity();
+            aggregationVirtualEntity.PersistenceProvider = topLevelEntity.PersistenceProvider;
+            aggregationVirtualEntity.ParentItem = topLevelEntity.RootItem;
+            aggregationVirtualEntity.Name = "aggregation" + level;
+
+            if (agg2 != null)
+            {
+                if (agg2.AggregationType != item.AggregationType)
+                {
+                    throw new ArgumentOutOfRangeException("AggregationType", agg2.AggregationType, "Nested aggregations must be of the same type. Path: " + agg2.Path);
+                }
+
+                // nested aggregated expression
+                DataStructureEntity aggregationVirtualEntity2 = new DataStructureEntity();
+                aggregationVirtualEntity2.PersistenceProvider = topLevelEntity.PersistenceProvider;
+                aggregationVirtualEntity2.ParentItem = topLevelEntity.RootItem;
+                aggregationVirtualEntity2.Name = "aggregation" + (level + 1);
+
+                joins.AppendFormat(" INNER JOIN {0} AS {1} ON ",
+                    RenderExpression(agg2.Relation.AssociatedEntity as ISchemaItem, null, replaceParameterTexts, dynamicParameters, parameterReferences),
+                    NameLeftBracket + aggregationVirtualEntity2.Name + NameRightBracket
+                    );
+
+                int i = 0;
+                foreach (AbstractSchemaItem relationItem in agg2.Relation.ChildItems)
+                {
+                    EntityRelationColumnPairItem key = relationItem as EntityRelationColumnPairItem;
+                    EntityRelationFilter filter = relationItem as EntityRelationFilter;
+
+                    if (i > 0) joins.Append(" AND ");
+
+                    if (key != null)
+                    {
+                        RenderSelectRelationKey(joins,
+                            key, aggregationVirtualEntity, aggregationVirtualEntity2,
+                            replaceParameterTexts, dynamicParameters, parameterReferences);
+                    }
+
+                    if (filter != null)
+                    {
+                        RenderFilter(joins, filter.Filter, aggregationVirtualEntity2, parameterReferences);
+                    }
+
+                    i++;
+                }
+
+                // recursion - get nested expressions
+                return AggregationHelper(topLevelItem, topLevelEntity, agg2, replaceParameterTexts, level + 1, joins, dynamicParameters, parameterReferences);
+            }
+            else
+            {
+                // final - non-aggregated expression
+                StringBuilder result = new StringBuilder();
+                DataStructureEntity topLevelAggregationVirtualEntity = new DataStructureEntity();
+                topLevelAggregationVirtualEntity.PersistenceProvider = topLevelEntity.PersistenceProvider;
+                topLevelAggregationVirtualEntity.Name = "aggregation1";
+                topLevelAggregationVirtualEntity.ParentItem = topLevelEntity.RootItem;
+                string expression = RenderExpression(item.Field as ISchemaItem, aggregationVirtualEntity, replaceParameterTexts, dynamicParameters, parameterReferences);
+                expression = FixAggregationDataType(item.DataType, expression);
+                string aggregationPart = string.Format("{0}({1})", GetAggregationString(item.AggregationType), expression);
+                aggregationPart = FixSumAggregation(item.AggregationType, aggregationPart);
+                result.AppendFormat("(SELECT {0} FROM {1} AS " + NameLeftBracket + "aggregation1" + NameRightBracket + " {2} WHERE ",
+                    aggregationPart,
+                    RenderExpression(topLevelItem.Relation.AssociatedEntity as ISchemaItem, null, replaceParameterTexts, dynamicParameters, parameterReferences),
+                    joins
+                    );
+
+                int i = 0;
+                foreach (AbstractSchemaItem relationItem in topLevelItem.Relation.ChildItems)
+                {
+                    EntityRelationColumnPairItem key = relationItem as EntityRelationColumnPairItem;
+                    EntityRelationFilter filter = relationItem as EntityRelationFilter;
+
+                    if (i > 0) result.Append(" AND ");
+
+                    if (key != null)
+                    {
+                        RenderSelectRelationKey(result,
+                            key, topLevelEntity, topLevelAggregationVirtualEntity,
+                            replaceParameterTexts, dynamicParameters, parameterReferences);
+                    }
+
+                    if (filter != null)
+                    {
+                        RenderFilter(result, filter.Filter, topLevelAggregationVirtualEntity, parameterReferences);
+                    }
+
+                    i++;
+                }
+
+                result.Append(")");
+
+                return result.ToString();
+            }
+        }
+
+        internal override void RenderUpdateDeleteWherePart(StringBuilder sqlExpression, DataStructureEntity entity)
+        {
+            PrettyLine(sqlExpression);
+            sqlExpression.Append("WHERE (");
+            int i = 0;
+            foreach (DataStructureColumn column in entity.Columns)
+            {
+                if (ShouldUpdateColumn(column, entity)
+                   && column.Field.DataType != OrigamDataType.Memo
+                   && column.Field.DataType != OrigamDataType.Blob
+                   && column.Field.DataType != OrigamDataType.Geography
+                   && !column.IsWriteOnly
+                   && (entity.ConcurrencyHandling
+                       == DataStructureConcurrencyHandling.Standard
+                       || column.Field.IsPrimaryKey)
+                   )
+                {
+                    if (i > 0)
+                    {
+                        PrettyIndent(sqlExpression);
+                        sqlExpression.Append("AND ");
+                    }
+                    sqlExpression.AppendFormat(
+                        "(({0} = {1}) OR ({0} IS NULL AND {2} IS NULL))",
+                        RenderExpression(column.Field, null, null, null, null),
+                        OriginalParameterName(column, false),
+                        OriginalParameterNameForNullComparison(column, false));
+                    i++;
+                }
+            }
+            sqlExpression.Append(")");
+        }
+        internal override string RenderSortDirection(DataStructureColumnSortDirection direction)
+        {
+            switch (direction)
+            {
+                case DataStructureColumnSortDirection.Ascending:
+                    return "ASC";
+
+                case DataStructureColumnSortDirection.Descending:
+                    return "DESC";
+
+                default:
+                    throw new ArgumentOutOfRangeException("direction", direction, ResourceUtils.GetString("UnknownSortDirection"));
+            }
+        }
+
+        internal override void RenderSelectRelation(StringBuilder sqlExpression, DataStructureEntity dsEntity, DataStructureEntity stopAtEntity, DataStructureFilterSet filter, Hashtable replaceParameterTexts, bool skipStopAtEntity, bool includeFilter, int numberOfJoins, bool includeAllRelations, Hashtable dynamicParameters, Hashtable parameterReferences)
+        {
+            // we render the sub relation only if
+            // 1. this relation is INNER JOIN (except when IgnoreWhenNoFilters = true and there ARE no filters)
+            // 2. our target entity is one of sub-entities of this relation
+            // 3. one of sub-relations of this relation is INNER JOIN (except when IgnoreWhenNoFilters = true and there ARE no filters)
+            // 4. this is actually our stopAtEntity relation
+            if (includeAllRelations)
+            {
+                if (!dsEntity.PrimaryKey.Equals(stopAtEntity.PrimaryKey))
+                {
+                    if (dsEntity.RelationType == RelationType.Normal
+                        || dsEntity.RelationType == RelationType.LeftJoin)
+                    {
+                        if (!dsEntity.ChildItemsRecursive.Contains(stopAtEntity))
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (CanSkipSelectRelation(dsEntity, stopAtEntity))
+                {
+                    return;
+                }
+            }
+
+            // ignore conditional relations
+            if (IgnoreConditionalEntity(dsEntity, dynamicParameters))
+            {
+                return;
+            }
+
+            // ignore relations when no filters
+            if (dsEntity.IgnoreCondition != DataStructureIgnoreCondition.None)
+            {
+                if (IgnoreEntityWhenNoFilters(dsEntity, filter, dynamicParameters))
+                {
+                    return;
+                }
+            }
+
+            JoinBeginType beginType;
+            if (skipStopAtEntity && dsEntity.PrimaryKey.Equals(stopAtEntity.PrimaryKey)
+                && dsEntity.RelationType != RelationType.InnerJoin
+                && dsEntity.RelationType != RelationType.LeftJoin
+                )
+            {
+                if (numberOfJoins > 0)
+                {
+                    beginType = JoinBeginType.And;
+                }
+                else
+                {
+                    beginType = JoinBeginType.Where;
+                }
+            }
+            else
+            {
+                beginType = JoinBeginType.Join;
+            }
+
+            IAssociation assoc = dsEntity.Entity as IAssociation;
+            StringBuilder relationBuilder = new StringBuilder();
+            PrettyIndent(relationBuilder);
+            switch (beginType)
+            {
+                case JoinBeginType.Join:
+                    string joinString = (dsEntity.RelationType == RelationType.LeftJoin ? "LEFT OUTER JOIN" : "INNER JOIN");
+
+                    relationBuilder.AppendFormat("{0} {1} AS {2} ON",
+                        joinString,
+                        RenderExpression(assoc.AssociatedEntity as AbstractSchemaItem, null, null, null, null),
+                        NameLeftBracket + dsEntity.Name + NameRightBracket
+                        );
+                    numberOfJoins++;
+                    break;
+                case JoinBeginType.Where:
+                    relationBuilder.Append("WHERE ");
+                    break;
+                case JoinBeginType.And:
+                    relationBuilder.Append("AND ");
+                    break;
+            }
+            int i = 0;
+            if (assoc.IsOR)
+            {
+                relationBuilder.Append("(");
+            }
+
+            foreach (AbstractSchemaItem item in assoc.ChildItems)
+            {
+                PrettyIndent(relationBuilder);
+                if (i > 0)
+                {
+                    if (assoc.IsOR)
+                    {
+                        relationBuilder.Append(" OR");
+                    }
+                    else
+                    {
+                        relationBuilder.Append(" AND");
+                    }
+                }
+
+                if (item is EntityRelationColumnPairItem)
+                {
+                    RenderSelectRelationKey(relationBuilder,
+                        item as EntityRelationColumnPairItem, dsEntity.ParentItem as DataStructureEntity,
+                        dsEntity, replaceParameterTexts, dynamicParameters, parameterReferences);
+                }
+                else if (item is EntityRelationFilter)
+                {
+                    RenderFilter(relationBuilder, (item as EntityRelationFilter).Filter, dsEntity, parameterReferences);
+                }
+                else
+                    throw new NotSupportedException(ResourceUtils.GetString("TypeNotSupportedByMS", item.GetType().ToString()));
+
+                i++;
+            }
+
+            if (assoc.IsOR)
+            {
+                relationBuilder.Append(")");
+            }
+
+            if (!(dsEntity.PrimaryKey.Equals(stopAtEntity.PrimaryKey) & skipStopAtEntity & includeFilter == false))
+            {
+                StringBuilder whereBuilder = new StringBuilder();
+                RenderSelectWherePart(whereBuilder, dsEntity, filter, replaceParameterTexts, dynamicParameters, parameterReferences);
+
+                if (whereBuilder.Length > 0)
+                {
+                    PrettyIndent(relationBuilder);
+                    relationBuilder.AppendFormat(" AND {0}",
+                        whereBuilder);
+                }
+
+                // if this is our main entity, we check it's columns to reference parent entities
+                // foreach(IAssociation parentRelation in dsEntity.UnresolvedParentRelations)
+                // {
+                //     // render relation keys, if there is a filter, throw exception
+                // }
+
+                // ArrayList - get parent entities 
+
+                // for-each parent entity - render relation
+            }
+
+            StringBuilder recursionBuilder = new StringBuilder();
+            // Let's go to recursion!
+            foreach (DataStructureEntity relation in (dsEntity.ChildItemsByType(DataStructureEntity.ItemTypeConst)))
+            {
+                RenderSelectRelation(recursionBuilder, relation, stopAtEntity, filter, replaceParameterTexts, skipStopAtEntity, includeFilter, numberOfJoins, includeAllRelations, dynamicParameters, parameterReferences);
+            }
+
+            if (beginType == JoinBeginType.Join)
+            {
+                sqlExpression.Append(relationBuilder);
+                sqlExpression.Append(recursionBuilder);
+            }
+            else
+            {
+                sqlExpression.Append(recursionBuilder);
+                sqlExpression.Append(relationBuilder);
+            }
+        }
+
+        public override IDbCommand UpdateFieldCommand(TableMappingItem entity, FieldMappingItem field)
+        {
+            IDbCommand cmd = GetCommand(
+                "UPDATE "
+                + RenderExpression(entity)
+                + " SET "
+                + RenderExpression(field, null)
+                + " = " + ParameterReferenceChar + "newValue WHERE "
+                + RenderExpression(field, null)
+                + " = " + ParameterReferenceChar + "oldValue");
+            cmd.CommandType = CommandType.Text;
+            IDataParameter sqlParam = BuildParameter(
+                ParameterDeclarationChar + "oldValue", null, field.DataType,
+                field.MappedDataType, field.DataLength, field.AllowNulls);
+            cmd.Parameters.Add(sqlParam);
+            sqlParam = BuildParameter(ParameterDeclarationChar + "newValue",
+                null, field.DataType, field.MappedDataType, field.DataLength,
+                field.AllowNulls);
+            cmd.Parameters.Add(sqlParam);
+            return cmd;
+        }
+        public override string AddForeignKeyConstraintDdl(TableMappingItem table, DataEntityConstraint constraint)
+        {
+            StringBuilder ddl = new StringBuilder();
+
+            ddl.AppendFormat("ALTER TABLE {0} ADD {1}",
+                NameLeftBracket + table.MappedObjectName + NameRightBracket,
+                ForeignKeyConstraintDdl(table, constraint));
+            return ddl.ToString();
+        }
+
+        public override string ForeignKeyConstraintDdl(TableMappingItem table, DataEntityConstraint constraint)
+        {
+            StringBuilder ddl = new StringBuilder();
+
+            if (constraint.ForeignEntity is TableMappingItem && constraint.Fields[0] is FieldMappingItem)
+            {
+                string pkTableName = (constraint.ForeignEntity as TableMappingItem).MappedObjectName;
+
+                ddl.AppendFormat("CONSTRAINT {1}",
+                    NameLeftBracket + table.MappedObjectName + NameRightBracket,
+                    "FK_" + table.MappedObjectName + "_" + (constraint.Fields[0] as FieldMappingItem).MappedColumnName + "_" + pkTableName);
+
+                ddl.Append(Environment.NewLine + "\tFOREIGN KEY (");
+                int i = 0;
+                foreach (FieldMappingItem field in constraint.Fields)
+                {
+                    if (i > 0) ddl.Append(", ");
+                    ddl.Append(Environment.NewLine + "\t\t" + RenderExpression(field, null));
+
+                    i++;
+                }
+                ddl.Append(Environment.NewLine + "\t)" + Environment.NewLine);
+
+                ddl.AppendFormat(Environment.NewLine + "\tREFERENCES {0} (",
+                    NameLeftBracket + pkTableName + NameRightBracket);
+
+                i = 0;
+                foreach (FieldMappingItem field in constraint.Fields)
+                {
+                    if (i > 0) ddl.Append(", ");
+                    ddl.Append(Environment.NewLine + "\t\t" + RenderExpression(field.ForeignKeyField, null, null, null, null));
+
+                    i++;
+                }
+
+                ddl.Append(Environment.NewLine + "\t);");
+            }
+
+            return ddl.ToString();
+        }
+        internal override void SelectParameterDeclarationsSetSql(StringBuilder result, Hashtable parameters)
+        {
+            foreach (string name in parameters.Keys)
+            {
+                result.AppendFormat("SET {0} = NULL{1}", name, Environment.NewLine);
+            }
+        }
+        public override string SelectRowSql(DataStructureEntity entity, Hashtable selectParameterReferences,
+            string columnName, bool forceDatabaseCalculation)
+        {
+            StringBuilder sqlExpression = new StringBuilder();
+
+            ArrayList primaryKeys = new ArrayList();
+            sqlExpression.Append("SELECT ");
+
+            RenderSelectColumns(entity.RootItem as DataStructure, sqlExpression, new StringBuilder(),
+                new StringBuilder(), entity, columnName, new Hashtable(), new Hashtable(), null,
+                selectParameterReferences, forceDatabaseCalculation);
+
+            int i = 0;
+            foreach (DataStructureColumn column in entity.Columns)
+            {
+                if (column.Field is FieldMappingItem && column.UseLookupValue == false && column.UseCopiedValue == false)
+                {
+                    if (column.Field.IsPrimaryKey) primaryKeys.Add(column);
+                    i++;
+                }
+            }
+            PrettyLine(sqlExpression);
+            sqlExpression.AppendFormat("FROM {0} AS {1} ",
+                RenderExpression(entity.EntityDefinition, null, null, null, null),
+                NameLeftBracket + entity.Name + NameRightBracket
+                );
+
+            foreach (DataStructureEntity relation in (entity.ChildItemsByType(DataStructureEntity.ItemTypeConst)))
+            {
+                if (relation.RelationType == RelationType.LeftJoin || relation.RelationType == RelationType.InnerJoin)
+                {
+                    RenderSelectRelation(sqlExpression, relation, relation, null, null, true, true, 0, false, null, selectParameterReferences);
+                }
+            }
+            PrettyLine(sqlExpression);
+            sqlExpression.Append("WHERE (");
+
+            i = 0;
+            foreach (DataStructureColumn column in primaryKeys)
+            {
+                if (i > 0) sqlExpression.Append(" AND");
+                PrettyIndent(sqlExpression);
+                sqlExpression.AppendFormat("{0}.{1} = {2}",
+                    NameLeftBracket + entity.Name + NameRightBracket,
+                    RenderExpression(column.Field, null, null, null, null),
+                    NewValueParameterName(column, false)
+                    );
+                i++;
+            }
+
+            sqlExpression.Append(")");
+
+            return sqlExpression.ToString();
+        }
+        public override string SelectUpdateFieldSql(TableMappingItem table, FieldMappingItem updatedField)
+        {
+            DataStructureEntity entity = new DataStructureEntity();
+            entity.PersistenceProvider = table.PersistenceProvider;
+            entity.Name = table.Name;
+            entity.Entity = table;
+
+            StringBuilder sqlExpression = new StringBuilder();
+
+            ArrayList selectKeys = new ArrayList();
+            sqlExpression.Append("SELECT ");
+
+            int i = 0;
+            foreach (DataStructureColumn column in entity.Columns)
+            {
+                // we only select the primary key and the changed field
+                if (column.Field.IsPrimaryKey | column.Field.PrimaryKey.Equals(updatedField.PrimaryKey))
+                {
+                    if (i > 0) sqlExpression.Append(", ");
+
+                    if (column.Field.PrimaryKey.Equals(updatedField.PrimaryKey)) selectKeys.Add(column);
+
+                    sqlExpression.AppendFormat("{0} AS {1}",
+                        RenderExpression(column.Field, entity, null, null, null),
+                        NameLeftBracket + column.Name + NameRightBracket
+                        );
+
+                    i++;
+                }
+            }
+
+            sqlExpression.AppendFormat(" FROM {0} AS {1} WHERE (",
+                RenderExpression(entity.EntityDefinition, null, null, null, null),
+                NameLeftBracket + entity.Name + NameRightBracket
+                );
+
+            i = 0;
+            foreach (DataStructureColumn column in selectKeys)
+            {
+                if (i > 0) sqlExpression.Append(" AND ");
+
+                sqlExpression.AppendFormat("{0} = {1}",
+                    RenderExpression(column.Field, null, null, null, null),
+                    NewValueParameterName(column, false)
+                    );
+                i++;
+            }
+
+            sqlExpression.Append(")");
+
+            return sqlExpression.ToString();
+        }
+        public override string SelectReferenceCountSql(TableMappingItem table, FieldMappingItem updatedField)
+        {
+            DataStructureEntity entity = new DataStructureEntity();
+            entity.PersistenceProvider = table.PersistenceProvider;
+            entity.Name = table.Name;
+            entity.Entity = table;
+
+            StringBuilder sqlExpression = new StringBuilder();
+
+            ArrayList selectKeys = new ArrayList();
+            sqlExpression.Append("SELECT COUNT(*) ");
+
+            foreach (DataStructureColumn column in entity.Columns)
+            {
+                if (column.Field.PrimaryKey.Equals(updatedField.PrimaryKey))
+                {
+                    selectKeys.Add(column);
+                }
+            }
+
+            sqlExpression.AppendFormat(" FROM {0} AS {1} WHERE (",
+                RenderExpression(entity.EntityDefinition, null, null, null, null),
+                NameLeftBracket + entity.Name + NameRightBracket
+                );
+
+            int i = 0;
+            foreach (DataStructureColumn column in selectKeys)
+            {
+                if (i > 0) sqlExpression.Append(" AND ");
+
+                sqlExpression.AppendFormat("{0} = {1}",
+                    RenderExpression(column.Field, null, null, null, null),
+                    NewValueParameterName(column, false)
+                    );
+                i++;
+            }
+
+            sqlExpression.Append(")");
+
+            return sqlExpression.ToString();
+        }
+        public override string DeleteSql(DataStructure ds, DataStructureEntity entity)
+        {
+            StringBuilder sqlExpression = new StringBuilder();
+
+            sqlExpression.AppendFormat("DELETE FROM {0} ",
+                    RenderExpression(entity.EntityDefinition, null, null, null, null)
+                    );
+
+            RenderUpdateDeleteWherePart(sqlExpression, entity);
+
+            return sqlExpression.ToString();
+        }
+        public override string UpdateSql(DataStructure ds, DataStructureEntity entity)
+        {
+            StringBuilder sqlExpression = new StringBuilder();
+
+            sqlExpression.AppendFormat("UPDATE {0} SET ",
+                RenderExpression(entity.EntityDefinition, null, null, null, null));
+
+            bool existAutoIncrement = false;
+
+            int i = 0;
+            foreach (DataStructureColumn column in entity.Columns)
+            {
+                if (ShouldUpdateColumn(column, entity))
+                {
+                    string field = RenderExpression(column.Field, null, null, null, null);
+                    string parameter = NewValueParameterName(column, false);
+                    if (i > 0)
+                    {
+                        sqlExpression.Append(",");
+                    }
+                    PrettyIndent(sqlExpression);
+                    if (column.IsWriteOnly)
+                    {
+                        // Check dependencies only on WriteOnly fields.
+                        // This is the only way to empty a write-only field to make it dependent
+                        // on something else. E.g. make blob field dependent ona file name field.
+                        // When no file name, then the blob field will be emptied. Without dependency it would
+                        // not touch the write only field.
+                        const string writeOnlyValue = "WHEN {1} IS NULL THEN {0} ELSE {1}";
+                        ArrayList dependenciesSource = column.Field.ChildItemsByType(EntityFieldDependency.ItemTypeConst);
+                        ArrayList dependencies = new ArrayList();
+                        // skip dependencies to virtual fields
+                        foreach (EntityFieldDependency dep in dependenciesSource)
+                        {
+                            if (dep.Field is FieldMappingItem)
+                            {
+                                dependencies.Add(dep);
+                            }
+                        }
+                        if (dependencies.Count == 0)
+                        {
+                            // no dependencies and the field is write only - in that case it is not possible
+                            // to delete the contents of the field because empty = no change
+                            sqlExpression.AppendFormat("{0} = (CASE " + writeOnlyValue + " END)",
+                                field,
+                                parameter
+                                );
+                        }
+                        else
+                        {
+                            sqlExpression.AppendFormat("{0} = (CASE", field);
+                            // if the field it depends on is empty this field has to be emptied as well
+                            foreach (EntityFieldDependency dep in dependencies)
+                            {
+                                foreach (DataStructureColumn dependentColumn in entity.Columns)
+                                {
+                                    if (dependentColumn.Field.Name == dep.Field.Name
+                                        && ShouldUpdateColumn(dependentColumn, entity))
+                                    {
+                                        sqlExpression.AppendFormat(" WHEN {0} IS NULL THEN NULL",
+                                            NewValueParameterName(dependentColumn, false));
+                                        break;
+                                    }
+                                }
+                            }
+                            sqlExpression.AppendFormat(" " + writeOnlyValue + " END)",
+                                field,
+                                parameter);
+                        }
+                    }
+                    else
+                    {
+                        // simple field, just update
+                        sqlExpression.AppendFormat("{0} = {1}",
+                            field,
+                            parameter
+                            );
+                    }
+                    i++;
+                    if (column.Field.AutoIncrement) existAutoIncrement = true;
+                }
+            }
+            RenderUpdateDeleteWherePart(sqlExpression, entity);
+
+            // If there is any auto increment column, we include a SELECT statement after INSERT
+            if (existAutoIncrement)
+            {
+                RenderSelectUpdatedData(sqlExpression, entity);
+            }
+
+            return sqlExpression.ToString();
+        }
+
+        internal override bool RenderSelectColumns(DataStructure ds, StringBuilder sqlExpression,
+            StringBuilder orderByBuilder, StringBuilder groupByBuilder, DataStructureEntity entity,
+            string scalarColumn, Hashtable replaceParameterTexts, Hashtable dynamicParameters,
+            DataStructureSortSet sortSet, Hashtable selectParameterReferences, bool isInRecursion,
+            bool concatScalarColumns, bool forceDatabaseCalculation)
+        {
+
+            int i = 0;
+            ArrayList group = new ArrayList();
+            SortedList order = new SortedList();
+            bool groupByNeeded = false;
+            ArrayList scalarColumnNames = new ArrayList();
+            if (scalarColumn != null)
+            {
+                scalarColumnNames.AddRange(scalarColumn.Split(";".ToCharArray()));
+            }
+            if (concatScalarColumns && scalarColumnNames.Count > 1)
+            {
+                List<KeyValuePair<ISchemaItem, DataStructureEntity>> scalarColumns =
+                    new List<KeyValuePair<ISchemaItem, DataStructureEntity>>();
+
+                foreach (string scalar in scalarColumnNames)
+                {
+                    foreach (DataStructureColumn column in entity.Columns)
+                    {
+                        if (column.Name == scalar)
+                        {
+                            scalarColumns.Add(new KeyValuePair<ISchemaItem, DataStructureEntity>
+                                (column.Field, (column.Entity == null) ? entity : column.Entity));
+                            break;
+                        }
+                    }
+                }
+                sqlExpression.Append(" ");
+                sqlExpression.Append(RenderConcat(scalarColumns, RenderString(", "),
+                    replaceParameterTexts, dynamicParameters, selectParameterReferences));
+                return false;
+            }
+            i = 0;
+            foreach (DataStructureColumn column in GetSortedColumns(entity, scalarColumnNames))
+            {
+                var expression = RenderDataStructureColumn(ds, entity,
+                        replaceParameterTexts, dynamicParameters,
+                        sortSet, selectParameterReferences, isInRecursion,
+                        forceDatabaseCalculation, group, order, ref groupByNeeded, scalarColumnNames, column);
+                if (expression != null)
+                {
+                    if (i > 0) sqlExpression.Append(",");
+                    PrettyIndent(sqlExpression);
+                    i++;
+                    sqlExpression.Append(expression);
+                }
+            }
+
+            if (order.Count > 0)
+            {
+                i = 0;
+                foreach (DictionaryEntry entry in order)
+                {
+                    if (i > 0)
+                    {
+                        orderByBuilder.Append(",");
+                    }
+                    PrettyIndent(orderByBuilder);
+                    orderByBuilder.AppendFormat("{0} {1}",
+                        ((SortOrder)entry.Value).Expression,
+                        RenderSortDirection(((SortOrder)entry.Value).SortDirection)
+                        );
+
+                    i++;
+                }
+            }
+            if (groupByNeeded)
+            {
+                i = 0;
+                foreach (string expression in group)
+                {
+                    if (i > 0)
+                    {
+                        groupByBuilder.Append(",");
+                    }
+                    PrettyIndent(groupByBuilder);
+                    groupByBuilder.Append(expression);
+                    i++;
+                }
+            }
+            return groupByNeeded;
+        }
+        internal override string RenderLookupColumnExpression(DataStructure ds, DataStructureEntity entity, IDataEntityColumn field,
+            IDataLookup lookup, Hashtable replaceParameterTexts, Hashtable dynamicParameters,
+            Hashtable parameterReferences, bool isInRecursion)
+        {
+            DataServiceDataLookup dataServiceLookup = lookup as DataServiceDataLookup;
+
+            if (dataServiceLookup == null)
+            {
+                throw new ArgumentOutOfRangeException("DefaultLookup", lookup, ResourceUtils.GetString("LookupTypeUnsupportedException"));
+            }
+
+            if (dataServiceLookup.ValueMethod != null && !(dataServiceLookup.ValueMethod is DataStructureFilterSet))
+            {
+                throw new ArgumentOutOfRangeException("ListMethod", dataServiceLookup.ListMethod, ResourceUtils.GetString("LookupListMethodTypeUnsupportedException"));
+            }
+
+            DataStructureFilterSet valueFilterSet = dataServiceLookup.ValueMethod as DataStructureFilterSet;
+            DataStructureEntity lookupEntity = dataServiceLookup.ValueDataStructure.Entities[0] as DataStructureEntity;
+
+            // any lookups with same entity name as any of the entities in this datastructure must be renamed
+            bool lookupRenamed = false;
+            foreach (DataStructureEntity e in ds.Entities)
+            {
+                if (e.Name == lookupEntity.Name)
+                {
+                    lookupEntity = lookupEntity.Clone(true) as DataStructureEntity;
+                    lookupEntity.Name = "lookup" + lookupEntity.Name;
+                    lookupRenamed = true;
+                    break;
+                }
+            }
+
+            Hashtable replaceTexts = new Hashtable(1);
+
+            AbstractSchemaItem renderField = field as AbstractSchemaItem;
+            if (field is LookupField)
+            {
+                renderField = (field as LookupField).Field as AbstractSchemaItem;
+            }
+            string myColumn = RenderExpression(renderField, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
+
+            if (dataServiceLookup.ValueMethod == null)
+            {
+                throw new ArgumentOutOfRangeException("ValueFilterSet", null, ResourceUtils.GetString("NoValueFilterSetForLookup", dataServiceLookup.Path));
+            }
+
+            // replace lookup parameters with keys from the entity
+            foreach (object key in dataServiceLookup.ValueMethod.ParameterReferences.Keys)
+            {
+                string finalKey = key as string;
+                if (lookupRenamed)
+                {
+                    if (finalKey != null)
+                    {
+                        finalKey = "lookup" + finalKey;
+                    }
+                }
+
+                // check if the parameters are not system (custom) parameters
+                if (CustomParameterService.MatchParameter(finalKey) == null)
+                {
+                    replaceTexts.Add(finalKey, myColumn);
+                }
+            }
+            _indentLevel++;
+            StringBuilder builder = new StringBuilder();
+            try
+            {
+                builder.Append("("
+                    + SelectSql(dataServiceLookup.ValueDataStructure,
+                    lookupEntity,
+                    valueFilterSet,
+                    dataServiceLookup.ValueSortSet,
+                    dataServiceLookup.ValueDisplayMember,
+                    replaceTexts,
+                    dynamicParameters,
+                    parameterReferences,
+                    true, false, true, true)
+                    );
+            }
+            finally
+            {
+                _indentLevel--;
+            }
+            PrettyIndent(builder);
+            builder.Append(")");
+            return builder.ToString();
+        }
+
+        internal override void RenderSelectFromClause(StringBuilder sqlExpression, DataStructureEntity baseEntity, DataStructureEntity stopAtEntity, DataStructureFilterSet filter, Hashtable replaceParameterTexts)
+        {
+            PrettyLine(sqlExpression);
+            sqlExpression.Append("FROM");
+            PrettyIndent(sqlExpression);
+            sqlExpression.AppendFormat("{0} AS {1}",
+                RenderExpression(baseEntity.EntityDefinition, null, null, null, null),
+                NameLeftBracket + baseEntity.Name + NameRightBracket);
+        }
+
+        internal override void RenderSelectExistsClause(StringBuilder sqlExpression, DataStructureEntity baseEntity, DataStructureEntity stopAtEntity, DataStructureFilterSet filter, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
+        {
+            PrettyLine(sqlExpression);
+            sqlExpression.AppendFormat("WHERE EXISTS (SELECT * FROM {0} AS {1}",
+                RenderExpression(baseEntity.Entity, null, null, null, null),
+                NameLeftBracket + baseEntity.Name + NameRightBracket);
+
+            bool stopAtIncluded = false;
+            bool notExistsIncluded = false;
+
+            foreach (DataStructureEntity relation in (baseEntity.ChildItemsByType(DataStructureEntity.ItemTypeConst)))
+            {
+                if (relation.RelationType != RelationType.LeftJoin)
+                {
+                    if (relation.PrimaryKey.Equals(stopAtEntity.PrimaryKey))
+                    {
+                        // current entity we do after all the others, because it will depend on the others
+                        stopAtIncluded = true;
+                    }
+                    else if (relation.RelationType == RelationType.NotExists)
+                    {
+                        notExistsIncluded = true;
+                    }
+                    else
+                    {
+                        RenderSelectRelation(sqlExpression, relation, stopAtEntity, filter, replaceParameterTexts, true, false, 0, true, dynamicParameters, parameterReferences);
+                    }
+                }
+            }
+
+            // finally we do current entity
+            if (stopAtIncluded)
+            {
+                RenderSelectRelation(sqlExpression, stopAtEntity, stopAtEntity, filter, replaceParameterTexts, true, false, 0, false, dynamicParameters, parameterReferences);
+            }
+
+            if (notExistsIncluded)
+            {
+                int notExistsCount = (stopAtIncluded ? 1 : 0);
+                foreach (DataStructureEntity relation in (baseEntity.ChildItemsByType(DataStructureEntity.ItemTypeConst)))
+                {
+                    if (relation.RelationType == RelationType.NotExists)
+                    {
+                        string s;
+                        if (notExistsCount == 0)
+                        {
+                            s = " WHERE ";
+                        }
+                        else
+                        {
+                            s = " AND ";
+                        }
+
+                        sqlExpression.AppendFormat(s + "NOT EXISTS (SELECT * FROM {0} AS {1}",
+                            RenderExpression(relation.EntityDefinition, null, null, null, null),
+                            NameLeftBracket + relation.Name + NameRightBracket);
+
+                        RenderSelectRelation(sqlExpression, relation, relation, filter, replaceParameterTexts, true, false, 0, true, dynamicParameters, parameterReferences);
+
+                        sqlExpression.Append(")");
+                    }
+                }
+            }
+
+            StringBuilder whereBuilder = new StringBuilder();
+            RenderSelectWherePart(whereBuilder, baseEntity, filter, replaceParameterTexts, dynamicParameters, parameterReferences);
+
+            if (whereBuilder.Length > 0)
+            {
+                sqlExpression.Append(" AND ");
+                sqlExpression.Append(whereBuilder);
+            }
+
+            sqlExpression.Append(")");
+        }
+        internal override string RenderExpression(EntityFilterLookupReference lookupReference, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
+        {
+            DataServiceDataLookup lookup = lookupReference.Lookup as DataServiceDataLookup;
+
+            if (lookup == null)
+            {
+                throw new ArgumentOutOfRangeException("lookup", lookupReference.Lookup, ResourceUtils.GetString("LookupTypeUnsupportedException"));
+            }
+
+            if (lookup.ListMethod != null && !(lookup.ListMethod is DataStructureFilterSet))
+            {
+                throw new ArgumentOutOfRangeException("ListMethod", lookup.ListMethod, ResourceUtils.GetString("LookupListMethodTypeUnsupportedException"));
+            }
+
+            DataStructureEntity lookupEntity = (lookup.ListDataStructure.Entities[0] as DataStructureEntity);
+            lookupEntity = lookupEntity.Clone(true) as DataStructureEntity;
+            lookupEntity.Name = "lookup" + lookupEntity.Name;
+
+            Hashtable replaceTexts = new Hashtable();
+
+            foreach (AbstractSchemaItem paramMapping in lookupReference.ChildItems)
+            {
+                replaceTexts.Add(paramMapping.Name,
+                    RenderExpression(paramMapping, entity, replaceParameterTexts, dynamicParameters, parameterReferences)
+                    );
+            }
+
+            string resultExpression = "("
+                + SelectSql(lookup.ListDataStructure,
+                lookupEntity,
+                lookup.ListMethod as DataStructureFilterSet,
+                null,
+                lookup.ListDisplayMember,
+                replaceTexts,
+                dynamicParameters,
+                parameterReferences,
+                false, false, true, true)
+                + ")";
+
+            return resultExpression;
+        }
+        public override string DdlDataType(OrigamDataType columnType, int dataLenght,
+            DatabaseDataType dbDataType)
+        {
+            switch (columnType)
+            {
+                case OrigamDataType.String:
+                    return DdlDataType(columnType, dbDataType)
+                        + "(" + dataLenght + ")";
+
+                case OrigamDataType.Xml:
+                    return DdlDataType(columnType, dbDataType) + "(2000)";
+
+                case OrigamDataType.Float:
+                    return DdlDataType(columnType, dbDataType) + "(28,10)";
+
+                default:
+                    return DdlDataType(columnType, dbDataType);
+            }
+        }
+
     }
 }
