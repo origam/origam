@@ -328,7 +328,8 @@ namespace Origam.Workbench.Commands
 			// First we test, if the item is not opened already
 			foreach(IViewContent content in WorkbenchSingleton.Workbench.ViewContentCollection)
 			{
-				if(content.DisplayedItemId == item.Id)
+				if(content.DisplayedItemId == item.Id &&
+				   content.GetType().ToString() == "Origam.Workbench.Editors.DiagramEditor")
 				{
 					(content as DockContent).Activate();
 
@@ -434,7 +435,8 @@ namespace Origam.Workbench.Commands
 			// First we test, if the item is not opened already
 			foreach(IViewContent content in WorkbenchSingleton.Workbench.ViewContentCollection)
 			{
-				if(content.DisplayedItemId == (Owner as IPersistent).Id)
+				if(content.DisplayedItemId == (Owner as IPersistent).Id 
+				   && content is AbstractEditor)
 				{
 					(content as DockContent).Activate();
 
