@@ -176,10 +176,7 @@ namespace Origam.Workbench.Services
 				if(activity is ServiceCommandUpdateScriptActivity)
 				{
                     ServiceCommandUpdateScriptActivity activityPlatform = activity as ServiceCommandUpdateScriptActivity;
-                    if(activityPlatform.DatabaseType==((AbstractSqlDataService)DataService.GetDataService()).PlatformName)
-                    { 
-				    	ExecuteActivity(activityPlatform);
-                    }
+			    	ExecuteActivity(activityPlatform);
 				}
 				else if(activity is FileRestoreUpdateScriptActivity)
 				{
@@ -203,7 +200,21 @@ namespace Origam.Workbench.Services
 		private void ExecuteActivity(ServiceCommandUpdateScriptActivity activity)
 		{
 			IBusinessServicesService service = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-			IServiceAgent agent = service.GetAgent(activity.Service.Name, null, null);
+            IServiceAgent agent = service.GetAgent(activity.Service.Name, null, null); 
+            if (activity.DatabaseType != ((AbstractSqlDataService)DataService.GetDataService()).PlatformName)
+            {
+                OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+                foreach (Platform platform in settings.DeployPlatforms)
+                {
+                    DA.Common.Enums.DatabaseType databaseType = 
+                        (DA.Common.Enums.DatabaseType)Enum.Parse(typeof(DA.Common.Enums.DatabaseType), platform.GetParseEnum());
+                    if(databaseType == activity.DatabaseType)
+                    {
+                        agent.SetDataService(DataService.GetDataService(platform));
+                        break;
+                    }
+                }
+            }
 			string result = agent.ExecuteUpdate(activity.CommandText, _transactionId);
 			Log(DateTime.Now + " " + result);
 		}

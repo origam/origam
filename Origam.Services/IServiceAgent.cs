@@ -43,8 +43,9 @@ namespace Origam.Workbench.Services
 		ISchemaItem OutputStructure{get; set;}
         bool DisableOutputStructureConstraints { get; set; }
 		ServiceOutputMethod OutputMethod{get; set;}
+        void SetDataService(DA.IDataService dataService);
 
-		string TransactionId{get; set;}
+        string TransactionId{get; set;}
 
 		string Info{get;}
 
