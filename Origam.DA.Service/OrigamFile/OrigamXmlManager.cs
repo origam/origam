@@ -26,7 +26,8 @@ using System.Linq;
 using System.Reflection;
 using System.Xml;
 using CSharpFunctionalExtensions;
-using MoreLinq;
+using MoreLinq.Extensions;
+//using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 
@@ -195,13 +196,19 @@ namespace Origam.DA.Service
                 .Where(node => XmlUtils.ReadId(node).HasValue)
                 .FirstOrDefault(node => XmlUtils.ReadId(node).Value == id);
 
-            nodeToDelete?.Attributes
-                .Cast<XmlAttribute>()
-                .Select(attribute => attribute.Value)
-                .Where(attrText => ExternalFilePath.IsExternalFileLink(attrText))
-                .ForEach(attrText => externalFileManger.RemoveExternalFile(attrText));
+            if (nodeToDelete != null)
+            {
+                var nodeAndChildren = new List<XmlNode> {nodeToDelete};
+                nodeAndChildren.AddRange(nodeToDelete.GetAllNodes());
 
-            nodeToDelete?.ParentNode.RemoveChild(nodeToDelete);
+                nodeAndChildren
+                    .SelectMany(node => node?.Attributes?.Cast<XmlAttribute>())
+                    .Select(attribute => attribute?.Value)
+                    .Where(ExternalFilePath.IsExternalFileLink)
+                    .ForEach(attrText => externalFileManger.RemoveExternalFile(attrText));
+
+                nodeToDelete.ParentNode.RemoveChild(nodeToDelete);
+            }
             ContainedObjects.Remove(id);
         }
 
