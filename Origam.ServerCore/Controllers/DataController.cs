@@ -260,36 +260,46 @@ namespace Origam.ServerCore.Controllers
         {
             DataStructureQuery query = new DataStructureQuery
             {
-                DataSourceId = entityData.Entity.RootEntity.ParentItemId,
                 Entity = entityData.Entity.Name,
-                CustomFilters = entityQueryData.Filter,
+                CustomFilters = string.IsNullOrWhiteSpace(entityQueryData.Filter)
+                    ? null 
+                    : entityQueryData.Filter,
                 CustomOrdering = entityQueryData.OrderingAsTuples,
                 RowLimit = entityQueryData.RowLimit,
-                ColumnNames = entityQueryData.ColumnNames
+                ColumnNames = entityQueryData.ColumnNames,
+                ForceDatabaseCalculation = true,
             };
 
-            if (entityData.MenuItem.ListDataStructure == null)
-            {
-                query.MethodId = entityData.MenuItem.MethodId;
-            }
-            else
+            if (entityData.MenuItem.ListDataStructure != null)
             {
                 if (entityData.MenuItem.ListEntity.Name == entityData.Entity.Name)
                 {
                     query.MethodId = entityData.MenuItem.ListMethodId;
+                    query.DataSourceId = entityData.MenuItem.ListDataStructure.Id;
                 }
                 else
                 {
-                    return FindItem<DataStructureMethod>(entityQueryData.MenuId)
+                    return FindItem<DataStructureMethod>(entityData.MenuItem.MethodId)
                         .OnSuccess(CustomParameterService.GetFirstNonCustomParameter)
                         .OnSuccess(parameterName =>
                         {
+                            query.DataSourceId = entityData.Entity.RootEntity.ParentItemId;
                             query.Parameters.Add(new QueryParameter(parameterName, entityQueryData.MasterRowId));
-                            query.MethodId = entityData.MenuItem.ListMethodId;
+                            if (entityQueryData.MasterRowId == Guid.Empty)
+                            {
+                                return Result.Fail<DataStructureQuery, IActionResult>(BadRequest("MasterRowId cannot be empty"));
+                            }
+                            query.MethodId = entityData.MenuItem.MethodId;
                             return Result.Ok<DataStructureQuery, IActionResult>(query);
                         });
                 }
             }
+            else
+            {
+                query.MethodId = entityData.MenuItem.MethodId;
+                query.DataSourceId = entityData.Entity.RootEntity.ParentItemId;
+            }
+
             return Result.Ok<DataStructureQuery, IActionResult>(query);
         }
 

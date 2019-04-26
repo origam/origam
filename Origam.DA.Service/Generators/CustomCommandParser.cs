@@ -55,7 +55,7 @@ namespace Origam.DA.Service.Generators
         /// </param>
         public string ToSqlWhere(string strFilter)
         {
-            if (strFilter?.Trim() == "") return "";
+            if (string.IsNullOrWhiteSpace(strFilter)) return "";
             var inpValue = GetCheckedInput(strFilter);
             ParseToNodeTree(inpValue);
             return root.SqlRepresentation();
@@ -143,7 +143,7 @@ namespace Origam.DA.Service.Generators
 
         internal string ToSqlOrderBy(List<Tuple<string, string>> ordering)
         {
-            if (ordering == null) throw new ArgumentException(nameof(ordering) + " cannot be null");
+            if (ordering == null) return "";
             return string.Join(", ",
                 ordering
                     .Select(x => ToSql(x.Item1, x.Item2))

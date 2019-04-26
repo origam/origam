@@ -110,10 +110,11 @@ namespace Origam.DA
 	    {
 	        get => ColumnName?.Split(';');
 	        set => ColumnName = value == null 
-	                ? null 
+	                ? null 	
 	                : string.Join(";", value);
 	    }
 
 	    public string Entity { get; set; }
+	    public bool ForceDatabaseCalculation { get; set; }
 	}
 }
