@@ -59,7 +59,6 @@ namespace Origam.Workbench.Editors
 				.SchemaProvider;
 			InitializeComponent();
 			gViewer.OutsideAreaBrush = Brushes.White;
-			gViewer.PanButtonPressed = true;
 			gViewer.EdgeRemoved +=
 				(sender, args) => gViewer.PanButtonPressed = true;
 		}
@@ -187,12 +186,6 @@ namespace Origam.Workbench.Editors
 		{
 			LabeledToolStrip toolStrip = new LabeledToolStrip(this);
 			toolStrip.Text = "Diagram Editor";
-
-			BigToolStripButton panButton = new BigToolStripButton();
-			panButton.Text = "Pan";
-			panButton.Image = ImageRes.UnknownIcon;
-			panButton.Click += (sender, args) => gViewer.PanButtonPressed = !gViewer.PanButtonPressed; 
-			toolStrip.Items.Add(panButton);
 			
 			BigToolStripButton zoomHomeButton = new BigToolStripButton();
 			zoomHomeButton.Text = "Zoom Home";
