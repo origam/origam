@@ -154,9 +154,9 @@ namespace Origam.Gui.Win
 
             if (!DatasetTools.HasRowValidParent(row)) return new List<string>();
 
-            XmlDocument originalData =
+            XmlContainer originalData =
                 DatasetTools.GetRowXml(row, DataRowVersion.Original);
-            XmlDocument actualData = DatasetTools.GetRowXml(row,
+            XmlContainer actualData = DatasetTools.GetRowXml(row,
                 row.HasVersion(DataRowVersion.Proposed)
                     ? DataRowVersion.Proposed
                     : DataRowVersion.Default);
