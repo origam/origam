@@ -61,6 +61,7 @@ namespace Origam.Workbench.Editors
 			gViewer.OutsideAreaBrush = Brushes.White;
 			gViewer.EdgeAdded += (sender, args) => gViewer.InsertingEdge = false;
 			gViewer.LayoutEditor.NodeMovingEnabled = false;
+			gViewer.FixedScale = 1;
 		}
 
         protected override void Dispose(bool disposing)
@@ -118,7 +119,6 @@ namespace Origam.Workbench.Editors
             this.gViewer.ToolBarIsVisible = false;
             this.gViewer.Transform = planeTransformation1;
             this.gViewer.WindowZoomButtonPressed = false;
-            this.gViewer.ZoomF = 1D;
             this.gViewer.ZoomWindowThreshold = 0.05D;
             this.gViewer.SaveAsMsaglEnabled = false;
             // 
@@ -180,6 +180,7 @@ namespace Origam.Workbench.Editors
 						factory: new GeneralDiagramFactory());
 					break;
 			}
+			internalEditor.ReDraw();
 		}
 
 		public List<ToolStrip> GetToolStrips(int maxWidth = -1)
@@ -220,7 +221,8 @@ namespace Origam.Workbench.Editors
 		}
 
 		private void ZoomHome(object sender, EventArgs e) {
-			internalEditor.ReDraw();
+			gViewer.Transform = null;
+			gViewer.Invalidate();
 		}
 		
 		public event EventHandler ToolStripsLoaded;

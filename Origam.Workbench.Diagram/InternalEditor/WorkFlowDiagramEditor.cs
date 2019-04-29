@@ -29,7 +29,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private readonly WorkbenchSchemaService schemaService;
         private readonly Guid graphParentId;
         private readonly EdgeInsertionRule edgeInsertionRule;
-        private static readonly int graphScale = 1;
         private readonly List<DeferedDependency> deferedDependencies = new List<DeferedDependency>();
         private readonly NodeSelector nodeSelector;
 
@@ -69,10 +68,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
         public void ReDraw()
         {
 	        gViewer.Graph = factory.Draw(UpToDateGraphParent);
-	        double scaleTo1 = 1 / gViewer.CurrentScale * graphScale;
-//	        double scaleToPixels =
-//		        -(460 - gViewer.GraphHeight) * 0.000502352941176 + 0.9677;
-	        gViewer.ZoomF = scaleTo1 * 0.7; //* scaleToPixels;
+	        gViewer.Transform = null;
+	        gViewer.Invalidate();
         }
 
         private void OnMouseClick(object sender, MouseEventArgs args)

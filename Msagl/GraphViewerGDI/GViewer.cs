@@ -110,7 +110,7 @@ namespace Microsoft.Msagl.GraphViewerGdi {
             
             panel.Invalidate(MapSourceRectangleToScreenRectangle(box));
         }
-
+        public double FixedScale { get; set; }
         internal Point SourcePortLocation { get; private set; }
 
         internal bool SourcePortIsPresent { get; private set; }
@@ -2357,8 +2357,13 @@ namespace Microsoft.Msagl.GraphViewerGdi {
                 mouseMove(this, args);
         }
 
-        double GetFitScale() {
-            return OriginalGraph == null ? 1 : Math.Min(panel.Width/originalGraph.Width, panel.Height/originalGraph.Height);
+        double GetFitScale()
+        {
+            if (FixedScale == 0)
+            {
+                return OriginalGraph == null ? 1 : Math.Min(panel.Width/originalGraph.Width, panel.Height/originalGraph.Height); 
+            }
+            return FixedScale;
         }
     }
 
