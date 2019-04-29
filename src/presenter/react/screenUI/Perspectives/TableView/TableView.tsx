@@ -25,7 +25,8 @@ export class TableView extends React.Component<{
       ? undefined
       : new TableViewToolbar({
           dataTable: () => this.props.controller.dataView.dataTable,
-          aSwitchView: () => this.props.controller.dataView.aSwitchView
+          aSwitchView: () => this.props.controller.dataView.aSwitchView,
+          mediator: () => this.props.controller.dataView.mediator
         });
     const tableViewTable = new TableViewTable({
       scrollState: () => tableViewScrollState,

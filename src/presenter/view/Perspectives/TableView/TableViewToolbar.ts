@@ -1,15 +1,23 @@
 import { IToolbarButtonState, IViewTypeBtn } from "../types";
 import { IViewType } from "../../../../DataView/types/IViewType";
 import { unpack } from "../../../../utils/objects";
-import { computed } from "mobx";
+import { computed, action } from "mobx";
 import { ML } from "../../../../utils/types";
 import { IDataTable } from "../../../../DataView/types/IDataTable";
 import { IASwitchView } from "../../../../DataView/types/IASwitchView";
 import { IAvailViews } from "../../../../DataView/types/IAvailViews";
+import { IASelNextRec } from "../../../../DataView/types/IASelNextRec";
+import { IASelPrevRec } from "../../../../DataView/types/IASelPrevRec";
+import { IDataViewMediator } from "../../../../DataView/types/IDataViewMediator";
+import * as DataViewActions from "../../../../DataView/DataViewActions";
 
 export class TableViewToolbar {
   constructor(
-    public P: { dataTable: ML<IDataTable>; aSwitchView: ML<IASwitchView> }
+    public P: {
+      dataTable: ML<IDataTable>;
+      aSwitchView: ML<IASwitchView>;
+      mediator: ML<IDataViewMediator>;
+    }
   ) {}
 
   isLoading: boolean = false;
@@ -49,12 +57,18 @@ export class TableViewToolbar {
   btnPrev: IToolbarButtonState = {
     isActive: false,
     isEnabled: true,
-    isVisible: true
+    isVisible: true,
+    onClick: action(() => {
+      this.mediator.dispatch(DataViewActions.selectPrevRow());
+    })
   };
   btnNext: IToolbarButtonState = {
     isActive: false,
     isEnabled: true,
-    isVisible: true
+    isVisible: true,
+    onClick: action(() => {
+      this.mediator.dispatch(DataViewActions.selectNextRow());
+    })
   };
   btnLast: IToolbarButtonState = {
     isActive: false,
@@ -103,5 +117,9 @@ export class TableViewToolbar {
 
   get aSwitchView() {
     return unpack(this.P.aSwitchView);
+  }
+
+  get mediator() {
+    return unpack(this.P.mediator);
   }
 }

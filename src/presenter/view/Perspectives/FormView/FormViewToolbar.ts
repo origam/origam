@@ -3,9 +3,14 @@ import { IViewType } from "../../../../DataView/types/IViewType";
 import { ML } from "../../../../utils/types";
 import { IASwitchView } from "../../../../DataView/types/IASwitchView";
 import { unpack } from "../../../../utils/objects";
+import * as DataViewActions from "../../../../DataView/DataViewActions";
+import { action } from "mobx";
+import { IDataViewMediator } from "../../../../DataView/types/IDataViewMediator";
 
 export class FormViewToolbar {
-  constructor(public P: { aSwitchView: ML<IASwitchView> }) {}
+  constructor(
+    public P: { aSwitchView: ML<IASwitchView>; mediator: ML<IDataViewMediator> }
+  ) {}
 
   isLoading: boolean = false;
   isError: boolean = false;
@@ -44,12 +49,18 @@ export class FormViewToolbar {
   btnPrev: IToolbarButtonState = {
     isActive: false,
     isEnabled: true,
-    isVisible: true
+    isVisible: true,
+    onClick: action(() => {
+      this.mediator.dispatch(DataViewActions.selectPrevRow());
+    })
   };
   btnNext: IToolbarButtonState = {
     isActive: false,
     isEnabled: true,
-    isVisible: true
+    isVisible: true,
+    onClick: action(() => {
+      this.mediator.dispatch(DataViewActions.selectNextRow());
+    })
   };
   btnLast: IToolbarButtonState = {
     isActive: false,
@@ -91,5 +102,9 @@ export class FormViewToolbar {
 
   get aSwitchView() {
     return unpack(this.P.aSwitchView);
+  }
+
+  get mediator() {
+    return unpack(this.P.mediator);
   }
 }
