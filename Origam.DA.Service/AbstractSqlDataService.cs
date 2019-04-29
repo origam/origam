@@ -1910,45 +1910,9 @@ namespace Origam.DA.Service
             }
         }
 
-        private Hashtable GetDbIndexList(DataSet indexes, Hashtable schemaTableList)
-        {
-            Hashtable dbIndexList = new Hashtable();
-            foreach (DataRow row in indexes.Tables[0].Rows)
-            {
-                // only existing tables
-                if (schemaTableList.ContainsKey(row["TableName"]))
-                {
-                    dbIndexList.Add(row["TableName"] + "." + row["IndexName"], schemaTableList[row["TableName"]]);
-                }
-            }
-            return dbIndexList;
-        }
-
-        private Hashtable GetSchemaIndexListGenerate(ArrayList schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll)
-        {
-            Hashtable schemaIndexListGenerate = new Hashtable();
-            foreach (TableMappingItem t in schemaTables)
-            {
-                if (t.GenerateDeploymentScript & t.DatabaseObjectType == DatabaseMappingObjectType.Table)
-                {
-                    // only existing tables
-                    if (dbTableList.Contains(t.MappedObjectName))
-                    {
-                        foreach (DataEntityIndex index in t.EntityIndexes)
-                        {
-                            string key = t.MappedObjectName + "." + index.Name;
-                            schemaIndexListAll.Add(key, index);
-                            if (index.GenerateDeploymentScript)
-                            {
-                                schemaIndexListGenerate.Add(key, index);
-                            }
-                        }
-                    }
-                }
-            }
-            return schemaIndexListGenerate;
-        }
-
+        internal abstract Hashtable GetDbIndexList(DataSet indexes, Hashtable schemaTableList);
+        internal abstract Hashtable GetSchemaIndexListGenerate(ArrayList schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll);
+        
         internal abstract string GetSqlIndexFields();
         internal abstract string GetSqlIndexes();
 
@@ -2242,6 +2206,7 @@ namespace Origam.DA.Service
                     result.ResultType = DbCompareResultType.MissingInDatabase;
                     result.ItemName = (string)entry.Key;
                     result.SchemaItem = (ISchemaItem)entry.Value;
+                    result.ParentSchemaItem = ((ISchemaItem)entry.Value).ParentItem;
                     result.SchemaItemType = schemaItemType;
                     if (schemaItemType == typeof(TableMappingItem))
                     {

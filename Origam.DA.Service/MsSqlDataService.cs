@@ -489,6 +489,45 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0)",
             return index.Tables[0].Rows.Count == 1;
         }
 
+        internal override Hashtable GetDbIndexList(DataSet indexes, Hashtable schemaTableList)
+        {
+            Hashtable dbIndexList = new Hashtable();
+            foreach (DataRow row in indexes.Tables[0].Rows)
+            {
+                // only existing tables
+                if (schemaTableList.ContainsKey(row["TableName"]))
+                {
+                    dbIndexList.Add(row["TableName"] + "." + row["IndexName"], schemaTableList[row["TableName"]]);
+                }
+            }
+            return dbIndexList;
+        }
+
+        internal override Hashtable GetSchemaIndexListGenerate(ArrayList schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll)
+        {
+            Hashtable schemaIndexListGenerate = new Hashtable();
+            foreach (TableMappingItem t in schemaTables)
+            {
+                if (t.GenerateDeploymentScript & t.DatabaseObjectType == DatabaseMappingObjectType.Table)
+                {
+                    // only existing tables
+                    if (dbTableList.Contains(t.MappedObjectName))
+                    {
+                        foreach (DataEntityIndex index in t.EntityIndexes)
+                        {
+                            string key = t.MappedObjectName + "." + index.Name;
+                            schemaIndexListAll.Add(key, index);
+                            if (index.GenerateDeploymentScript)
+                            {
+                                schemaIndexListGenerate.Add(key, index);
+                            }
+                        }
+                    }
+                }
+            }
+            return schemaIndexListGenerate;
+        }
+
         public override string DbUser { get { return _IISUser; } set { _IISUser = string.Format("[IIS APPPOOL\\{0}]", value); } }
         public override string DBPassword { get ; set ; }
     }

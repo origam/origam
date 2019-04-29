@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.Data;
 using System.Text;
 using Npgsql;
@@ -174,12 +175,13 @@ namespace Origam.DA.Service
 
         internal override string GetAllTablesSQL()
         {
-            return "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_NAME";
+            return "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES where table_schema=(select current_schema) ORDER BY TABLE_NAME";
         }
 
         internal override string GetAllColumnsSQL()
         {
-            return "SELECT TABLE_NAME, COLUMN_NAME, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS ORDER BY TABLE_NAME";
+            return "SELECT TABLE_NAME, COLUMN_NAME, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH " +
+                "FROM INFORMATION_SCHEMA.COLUMNS where table_schema=(select current_schema) ORDER BY TABLE_NAME";
         }
 
         internal override string GetSqlIndexFields()
@@ -198,13 +200,13 @@ namespace Origam.DA.Service
                 + "LEFT JOIN pg_index AS ix ON f.attnum = ANY(ix.indkey) and c.oid = f.attrelid and c.oid = ix.indrelid "
                 + "LEFT JOIN pg_class AS i ON ix.indexrelid = i.oid "
                 + "WHERE c.relkind = 'r'::char "
-                + "AND n.nspname not in ('pg_catalog', 'pg_toast', 'information_schema') "
+                + "AND n.nspname = (select current_schema) "
                 + "AND f.attnum > 0";
         }
 
         internal override string GetSqlIndexes()
         {
-            return "select tablename as TableName,indexname as IndexName  from pg_indexes where schemaname not in ('pg_catalog', 'pg_toast')";
+            return "select tablename as TableName,indexname as IndexName  from pg_indexes where schemaname =(select current_schema)";
         }
 
         internal override string GetSqlFk()
@@ -380,6 +382,44 @@ VALUES (gen_random_uuid(), '{2}', '{0}', now(), false)",
                 " ORDER BY tablename, indexname; ";
             DataSet index = GetData(sqlIndex);
             return index.Tables[0].Rows.Count == 1;
+        }
+        internal override Hashtable GetDbIndexList(DataSet indexes, Hashtable schemaTableList)
+        {
+            Hashtable dbIndexList = new Hashtable();
+            foreach (DataRow row in indexes.Tables[0].Rows)
+            {
+                // only existing tables
+                if (schemaTableList.ContainsKey(row["TableName"]))
+                {
+                    dbIndexList.Add(row["TableName"] + "." + row["IndexName"], schemaTableList[row["TableName"]]);
+                }
+            }
+            return dbIndexList;
+        }
+
+        internal override Hashtable GetSchemaIndexListGenerate(ArrayList schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll)
+        {
+            Hashtable schemaIndexListGenerate = new Hashtable();
+            foreach (TableMappingItem t in schemaTables)
+            {
+                if (t.GenerateDeploymentScript & t.DatabaseObjectType == DatabaseMappingObjectType.Table)
+                {
+                    // only existing tables
+                    if (dbTableList.Contains(t.MappedObjectName))
+                    {
+                        foreach (DataEntityIndex index in t.EntityIndexes)
+                        {
+                            string key = t.MappedObjectName + "." + t.MappedObjectName+"_"+index.Name;
+                            schemaIndexListAll.Add(key, index);
+                            if (index.GenerateDeploymentScript)
+                            {
+                                schemaIndexListGenerate.Add(key, index);
+                            }
+                        }
+                    }
+                }
+            }
+            return schemaIndexListGenerate;
         }
 
         public override string DbUser { get { return _DbUser; }  set { _DbUser = string.Format("{0}", value);  }}
