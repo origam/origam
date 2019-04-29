@@ -50,6 +50,7 @@ namespace Origam.Workbench.Editors
         private readonly IPersistenceProvider persistenceProvider;
         private IDiagramEditor internalEditor;
         private readonly NodeSelector nodeSelector;
+        private readonly Graphics graphics;
 
         public DiagramEditor()
 		{
@@ -63,6 +64,7 @@ namespace Origam.Workbench.Editors
 			gViewer.LayoutEditor.NodeMovingEnabled = false;
 			gViewer.LayoutEditor.ShouldProcessRightClickOnSelectedEdge = false;
 			gViewer.FixedScale = 1;
+			graphics = CreateGraphics();
 		}
 
         protected override void Dispose(bool disposing)
@@ -166,7 +168,7 @@ namespace Origam.Workbench.Editors
 						nodeSelector: nodeSelector,
 						parentForm: this,
 						persistenceProvider: persistenceProvider,
-						factory: new WorkFlowDiagramFactory(gViewer, nodeSelector));
+						factory: new WorkFlowDiagramFactory(nodeSelector, graphics));
 					break;
 				case IContextStore contextStore:
 					internalEditor = new GeneralDiagramEditor<IContextStore>(

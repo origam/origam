@@ -24,36 +24,46 @@ using Origam.Schema.WorkflowModel;
 using Microsoft.Msagl.Drawing;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
 using Microsoft.Msagl.Core.Geometry.Curves;
-using Microsoft.Msagl.GraphViewerGdi;
+using Microsoft.Msagl.Core.Layout;
 using Origam.Schema;
 using Origam.Workbench.Diagram.DiagramFactory;
 using Origam.Workbench.Diagram.Extensions;
-using WeifenLuo.WinFormsUI.Docking;
+using Edge = Microsoft.Msagl.Drawing.Edge;
+using Node = Microsoft.Msagl.Drawing.Node;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
 
 namespace Origam.Workbench.Diagram
 {
 	public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock>
 	{
-		private static readonly int margin = 3;
-		private static readonly int marginLeft = 5;
-		private static readonly Font font = new Font("Arial", 12);
+		private static readonly int labelTopMargin = 8;
+		private static readonly double labelSideMargin = 20;
+		
+		private static readonly int imageTopMargin = 8;
+		private static readonly int imageRightMargin = 3;
+		private static readonly int imageLeftMargin = 5;
+		
+		private static readonly int headingBackgroundHeight = 30;
+		private static readonly int nodeMargin = 40;
+		
+		private static readonly Font font = new Font("Arial", 10);
 		private static readonly Pen blackPen = new Pen(System.Drawing.Color.Black, 1);
+		private static readonly Pen boldBlackPen = new Pen(System.Drawing.Color.Black, 2);
 		private static readonly SolidBrush drawBrush = new SolidBrush(System.Drawing.Color.Black);
 		private static readonly StringFormat drawFormat = new StringFormat();
+		private static readonly SolidBrush greyBrush = new SolidBrush(System.Drawing.Color.LightGray);
 		
+		private readonly Graphics graphics;
 		private readonly INodeSelector nodeSelector;
 		private Graph graph;
 		private readonly NodeFactory nodeFactory;
-		private readonly Pen boldBlackPen = new Pen(System.Drawing.Color.Black, 2);
-		private readonly GViewer viewer;
 
-		public WorkFlowDiagramFactory(GViewer viewer, INodeSelector nodeSelector)
+
+		public WorkFlowDiagramFactory(INodeSelector nodeSelector, Graphics graphics)
 		{
-			this.viewer = viewer;
 			this.nodeSelector = nodeSelector;
+			this.graphics = graphics;
 			nodeFactory = new NodeFactory(nodeSelector);
 		}
 
@@ -61,7 +71,7 @@ namespace Origam.Workbench.Diagram
 		{
 			graph = new Graph();
 			DrawWorkflowDiagram(graphParent, null);
-			graph.LayoutAlgorithmSettings.ClusterMargin = 20;
+			graph.LayoutAlgorithmSettings.ClusterMargin = nodeMargin;
 			return graph;
 		}
 
@@ -79,6 +89,7 @@ namespace Origam.Workbench.Diagram
             Subgraph subgraph = new Subgraph(workFlowBlock.NodeId);
             subgraph.Attr.Shape = Shape.DrawFromGeometry;
             subgraph.DrawNodeDelegate = DrawSubgraph;
+            subgraph.NodeBoundaryDelegate = GetSubgraphBoundary;
             subgraph.UserData = workFlowBlock;
             subgraph.LabelText = workFlowBlock.Name;
             
@@ -143,44 +154,69 @@ namespace Origam.Workbench.Diagram
 			return image;
 		}
 		
+		private ICurve GetSubgraphBoundary(Node node) {
+			var clusterBoundary = ((Cluster) node.GeometryNode).RectangularBoundary;
+
+			var height = clusterBoundary.TopMargin;
+			var labelWidth = GetLabelWidth(node);
+
+			var width = clusterBoundary.MinWidth > labelWidth
+				? clusterBoundary.MinWidth 
+				: labelWidth + labelSideMargin * 2;
+
+			return CurveFactory.CreateRectangle(width, height, new Point());
+		}
+		
+		private float GetLabelWidth(Node node)
+		{
+			Image image = GetImage(node);
+			SizeF stringSize = graphics.MeasureString(node.LabelText, font);
+			var labelWidth = stringSize.Width + imageRightMargin + image.Width;
+			return labelWidth;
+		}
+		
 		private bool DrawSubgraph(Node node, object graphicsObj)
 		{
 			var borderSize = new Size(
-				(int)node.BoundingBox.Width, 
+				(int)node.BoundingBox.Width,
 				(int)node.BoundingBox.Height);
-			
+
 			Pen pen = nodeSelector.Selected == node
 				? boldBlackPen 
 				: blackPen;
-			
+
 			Graphics editorGraphics = (Graphics)graphicsObj;
 			var image = GetImage(node);
 
-			SizeF stringSize = editorGraphics.MeasureString(node.LabelText, font);
-			var labelWidth = stringSize.Width + margin + image.Width;
-			
+			var labelWidth = GetLabelWidth(node);
+
 			var borderCorner = new System.Drawing.Point(
 				(int)node.GeometryNode.Center.X - borderSize.Width / 2,
 				(int)node.GeometryNode.Center.Y - borderSize.Height / 2);
 			Rectangle border = new Rectangle(borderCorner, borderSize);
 
 			var labelPoint = new PointF(
-				(float)(node.GeometryNode.Center.X - labelWidth / 2 + marginLeft + margin + image.Width),
-				(float)node.GeometryNode.Center.Y - border.Height / 2.0f + margin);
+				(float)(node.GeometryNode.Center.X - labelWidth / 2 + imageLeftMargin + image.Width +imageRightMargin),
+				(float)node.GeometryNode.Center.Y - border.Height / 2.0f + labelTopMargin);
 
 			var imagePoint = new PointF(
-				(float)(node.GeometryNode.Center.X - labelWidth / 2 + marginLeft),
-				(float)(node.GeometryNode.Center.Y - border.Height / 2.0f + margin ));
+				(float)(node.GeometryNode.Center.X - labelWidth / 2 + imageLeftMargin),
+				(float)(node.GeometryNode.Center.Y - border.Height / 2.0f + imageTopMargin));
+
+			Rectangle imageBackground = new Rectangle(
+				borderCorner,
+				new Size(border.Width, headingBackgroundHeight));
 
 			editorGraphics.DrawUpSideDown(drawAction: graphics =>
 				{
+					graphics.FillRectangle(greyBrush, imageBackground);
 					graphics.DrawString(node.LabelText, font, drawBrush,
 						labelPoint, drawFormat);
 					graphics.DrawRectangle(pen, border);
 					graphics.DrawImage(image, imagePoint);
-				}, 
+				},
 				yAxisCoordinate: (float)node.GeometryNode.Center.Y);
-            
+
 			return true;
 		}
 	}
