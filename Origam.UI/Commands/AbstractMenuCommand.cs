@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using MoreLinq;
 using Origam.DA.Service;
 using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel;
@@ -45,17 +46,15 @@ namespace Origam.UI
             AbstractSqlDataService abstractSqlData = (AbstractSqlDataService)DataService.GetDataService();
             string script = abstractSqlData.EntityDdl(guid);
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-            if (settings.DeployPlatforms != null)
+
+            settings.DeployPlatforms?.ForEach(platform =>
             {
-                foreach (Platform platform in settings.DeployPlatforms)
-                {
-                    AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
-                    string platformscript = DsPlatform.EntityDdl(guid);
-                    ServiceCommandUpdateScriptActivity _create = DeploymentHelper.CreateDatabaseScript(name, platformscript, DsPlatform.PlatformName);
-                    DsPlatform.Dispose();
-                }
-            }
-            return DeploymentHelper.CreateDatabaseScript(name, script, abstractSqlData.PlatformName);
+                AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
+                string platformscript = DsPlatform.EntityDdl(guid);
+                ServiceCommandUpdateScriptActivity _create = DeploymentHelper.CreateDatabaseScript(name, platformscript, DsPlatform.PlatformName);
+                DsPlatform.Dispose();
+            });
+           return DeploymentHelper.CreateDatabaseScript(name, script, abstractSqlData.PlatformName);
         }
       
         public ServiceCommandUpdateScriptActivity CreateDatabaseScript(string name, IDictionary<AbstractSqlDataService, StringBuilder> dict)
@@ -75,14 +74,11 @@ namespace Origam.UI
             IDictionary<AbstractSqlDataService, StringBuilder> dict = new Dictionary<AbstractSqlDataService, StringBuilder>();
             AbstractSqlDataService abstractSqlData = (AbstractSqlDataService)DataService.GetDataService();
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-            if (settings.DeployPlatforms != null)
+            settings.DeployPlatforms?.ForEach(platform =>
             {
-                foreach (Platform platform in settings.DeployPlatforms)
-                {
-                    AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
-                    dict.Add(DsPlatform, new StringBuilder());
-                }
-            }
+                AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
+                dict.Add(DsPlatform, new StringBuilder());
+            });
             dict.Add(abstractSqlData, new StringBuilder());
             return dict;
         }
@@ -103,40 +99,36 @@ namespace Origam.UI
                 }
                 i++;
             }
-            if (settings.DeployPlatforms != null)
+
+            settings.DeployPlatforms?.ForEach(platform =>
             {
-                foreach (Platform platform in settings.DeployPlatforms)
+                AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
+                fkDdl = DsPlatform.FieldDdl(fk.Id);
+                i = 0;
+                foreach (string ddl in fkDdl)
                 {
-                    AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
-                    fkDdl = DsPlatform.FieldDdl(fk.Id);
-                    i = 0;
-                    foreach (string ddl in fkDdl)
+                    // if the foreign key is based on an existing field 
+                    // take only the foreign key ddl
+                    if (baseField == null || i == 1)
                     {
-                        // if the foreign key is based on an existing field 
-                        // take only the foreign key ddl
-                        if (baseField == null || i == 1)
-                        {
-                            var script3 = DeploymentHelper.CreateDatabaseScript(baseEntity.Name + "_" + fk.Name, ddl,DsPlatform.PlatformName);
-                        }
-                        i++;
+                        var script3 = DeploymentHelper.CreateDatabaseScript(baseEntity.Name + "_" + fk.Name, ddl, DsPlatform.PlatformName);
                     }
-                    DsPlatform.Dispose();
+                    i++;
                 }
-            }
+                DsPlatform.Dispose();
+            });
+            
         }
         public ServiceCommandUpdateScriptActivity CreateRole(string role)
         {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             AbstractSqlDataService abstractSqlData = (AbstractSqlDataService)DataService.GetDataService();
-            if (settings.DeployPlatforms != null)
+            settings.DeployPlatforms?.ForEach(platform =>
             {
-                foreach (Platform platform in settings.DeployPlatforms)
-                {
-                    AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
-                    ServiceCommandUpdateScriptActivity _create = DeploymentHelper.CreateSystemRole(role, DsPlatform);
-                    DsPlatform.Dispose();
-                }
-            }
+                AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
+                ServiceCommandUpdateScriptActivity _create = DeploymentHelper.CreateSystemRole(role, DsPlatform);
+                DsPlatform.Dispose();
+            });
             return DeploymentHelper.CreateSystemRole(role,abstractSqlData);
         }
         #endregion

@@ -38,6 +38,7 @@ using Origam.UI;
 using Origam.Workbench.Services.CoreServices;
 using Origam.DA.Service;
 using static Origam.DA.Common.Enums;
+using MoreLinq;
 
 namespace OrigamArchitect
 {
@@ -112,18 +113,12 @@ namespace OrigamArchitect
             Array.Resize(ref obj, obj.Length + 1);
             obj[obj.Length - 1] = primaryPlatform;
             settings.DeployPlatforms = obj;
-            
-            if (settings.DeployPlatforms != null)
+            cboDatabaseType.Enabled = false;
+            settings.DeployPlatforms?.ForEach(platform =>
             {
-                foreach (Platform platform in settings.DeployPlatforms)
-                {
                     cboDatabaseType.Items.Add(platform);
-                }
-            }
-            else
-            {
-                cboDatabaseType.Enabled = false;
-            }
+                    cboDatabaseType.Enabled = true;
+            });
             cboDatabaseType.SelectedIndex = cboDatabaseType.Items.Count-1;
             contextMenu = new ContextMenuStrip();
             ToolStripMenuItem item = new ToolStripMenuItem(strings.GoToDefinition_MenuItem);
