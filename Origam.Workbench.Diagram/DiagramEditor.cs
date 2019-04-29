@@ -59,8 +59,7 @@ namespace Origam.Workbench.Editors
 				.SchemaProvider;
 			InitializeComponent();
 			gViewer.OutsideAreaBrush = Brushes.White;
-			gViewer.EdgeRemoved +=
-				(sender, args) => gViewer.PanButtonPressed = true;
+			gViewer.EdgeAdded += (sender, args) => gViewer.InsertingEdge = false;
 		}
 
         protected override void Dispose(bool disposing)
