@@ -68,7 +68,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
         public void ReDraw()
         {
 	        gViewer.Graph = factory.Draw(UpToDateGraphParent);
-	        gViewer.DefaultDragObject= gViewer.ViewerGraph.Nodes().Single(x=>x.Node == gViewer.Graph.RootSubgraph.Subgraphs.First());
+	        gViewer.DefaultDragObject = gViewer.ViewerGraph.Nodes()
+		        .Single(x => x.Node == gViewer.Graph.RootSubgraph.Subgraphs.First());
 	        gViewer.Transform = null;
 	        gViewer.Invalidate();
         }
@@ -252,8 +253,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        if (e.RightButtonIsPressed && !e.Handled)
 	        {
 		        _mouseRightButtonDownPoint = new ClickPoint( gViewer, e);
-
-	            ContextMenuStrip cm = BuildContextMenu();
+		        ContextMenuStrip cm = BuildContextMenu();
                 cm.Show(parentForm,_mouseRightButtonDownPoint.InScreenSystem);
 	        }else if (e.LeftButtonIsPressed)
 	        {
@@ -295,66 +295,93 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 		private ContextMenuStrip BuildContextMenu()
         {
-	        var dNodeUnderMouse = gViewer.GetObjectAt(_mouseRightButtonDownPoint.InScreenSystem) as DNode;
-	        var schemaItemUnderMouse = DNodeToSchemaItem(dNodeUnderMouse);
-	        
-	        var contextMenu = new AsContextMenu(WorkbenchSingleton.Workbench);
-	        
-            var deleteMenuItem = new ToolStripMenuItem();
-            deleteMenuItem.Text = "Delete";
-            deleteMenuItem.Image = ImageRes.icon_delete;
-            deleteMenuItem.Click += DeleteNode_Click;
-            deleteMenuItem.Enabled = IsDeleteMenuItemAvailable(dNodeUnderMouse);
-            contextMenu.AddSubItem(deleteMenuItem);
+	        object objectUnderMouse = 
+		        gViewer.GetObjectAt(_mouseRightButtonDownPoint.InScreenSystem);
+	        if (objectUnderMouse is DEdge edge)
+	        {
+		        return CreateContextMenuForEdge(edge);
+	        }
+	        if(objectUnderMouse is DNode node)
+	        {
+		        return CreateContextMenuForNode(node);
+	        } 
+	        return  new ContextMenuStrip();
+        }
+		
+		private ContextMenuStrip CreateContextMenuForEdge(DEdge edge)
+		{
+			var deleteMenuItem = new ToolStripMenuItem();
+			deleteMenuItem.Text = "Delete";
+			deleteMenuItem.Image = ImageRes.icon_delete;
+			deleteMenuItem.Click += (sender, args) => gViewer.RemoveEdge(edge, true); ;
+		        
+			var contextMenu = new ContextMenuStrip();
+			contextMenu.Items.Add(deleteMenuItem);
+			return contextMenu;
+		}
 
-            ToolStripMenuItem newMenu = new ToolStripMenuItem("New");
-            newMenu.Image = ImageRes.icon_new;
-            newMenu.Enabled = IsNewMenuAvailable(dNodeUnderMouse);
+		private ContextMenuStrip CreateContextMenuForNode(DNode dNodeUnderMouse)
+		{
+			var schemaItemUnderMouse = DNodeToSchemaItem(dNodeUnderMouse);
 
-            if (schemaItemUnderMouse is ServiceMethodCallTask)
-            {
-	            schemaItemUnderMouse.ChildItems
-		            .ToEnumerable()
-		            .Where(item => !(item is WorkflowTaskDependency))
-		            .ForEach(schemaItem => 
-			        {
+			var contextMenu = new AsContextMenu(WorkbenchSingleton.Workbench);
+
+			var deleteMenuItem = new ToolStripMenuItem();
+			deleteMenuItem.Text = "Delete";
+			deleteMenuItem.Image = ImageRes.icon_delete;
+			deleteMenuItem.Click += DeleteNode_Click;
+			deleteMenuItem.Enabled = IsDeleteMenuItemAvailable(dNodeUnderMouse);
+			contextMenu.AddSubItem(deleteMenuItem);
+
+			ToolStripMenuItem newMenu = new ToolStripMenuItem("New");
+			newMenu.Image = ImageRes.icon_new;
+			newMenu.Enabled = IsNewMenuAvailable(dNodeUnderMouse);
+
+			if (schemaItemUnderMouse is ServiceMethodCallTask)
+			{
+				schemaItemUnderMouse.ChildItems
+					.ToEnumerable()
+					.Where(item => !(item is WorkflowTaskDependency))
+					.ForEach(schemaItem =>
+					{
 						var menuItem = new ToolStripMenuItem(schemaItem.Name);
 						var builder = new SchemaItemEditorsMenuBuilder(true);
 						var submenuItems = builder.BuildSubmenu(schemaItem);
 						menuItem.DropDownItems.AddRange(submenuItems);
 						newMenu.DropDownItems.Add(menuItem);
 					});
-            }
-            else
-            {
-	            var builder = new SchemaItemEditorsMenuBuilder(true);
-	            var submenuItems = builder.BuildSubmenu(schemaItemUnderMouse);
-	            newMenu.DropDownItems.AddRange(submenuItems);
-            }
-            contextMenu.AddSubItem(newMenu);
+			}
+			else
+			{
+				var builder = new SchemaItemEditorsMenuBuilder(true);
+				var submenuItems = builder.BuildSubmenu(schemaItemUnderMouse);
+				newMenu.DropDownItems.AddRange(submenuItems);
+			}
 
-            if (!(dNodeUnderMouse?.Node is Subgraph))
-            {
+			contextMenu.AddSubItem(newMenu);
+
+			if (!(dNodeUnderMouse?.Node is Subgraph))
+			{
 				ToolStripMenuItem addAfterMenu = new ToolStripMenuItem("Add After");
 				addAfterMenu.Image = ImageRes.icon_new;
-	            var builder = new SchemaItemEditorsMenuBuilder(true);
-	            var submenuItems = builder.BuildSubmenu(UpToDateGraphParent);
-	            submenuItems[0].Click += (sender, args) =>
-	            {
-		            var command = ((AsMenuCommand)sender).Command as AddNewSchemaItem;
-		            if (command?.CreatedItem == null) return;
-		            deferedDependencies.Add(new DeferedDependency
-		            {
-			            DependentItem = command.CreatedItem,
-			            IndependentItem = schemaItemUnderMouse
-		            });
-	            };
-	            addAfterMenu.DropDownItems.AddRange(submenuItems);
+				var builder = new SchemaItemEditorsMenuBuilder(true);
+				var submenuItems = builder.BuildSubmenu(UpToDateGraphParent);
+				submenuItems[0].Click += (sender, args) =>
+				{
+					var command = ((AsMenuCommand) sender).Command as AddNewSchemaItem;
+					if (command?.CreatedItem == null) return;
+					deferedDependencies.Add(new DeferedDependency
+					{
+						DependentItem = command.CreatedItem,
+						IndependentItem = schemaItemUnderMouse
+					});
+				};
+				addAfterMenu.DropDownItems.AddRange(submenuItems);
 				contextMenu.AddSubItem(addAfterMenu);
-            }
+			}
 
-            return contextMenu;
-	    }
+			return contextMenu;
+		}
 
 		private AbstractSchemaItem DNodeToSchemaItem(DNode dNodeUnderMouse)
 		{

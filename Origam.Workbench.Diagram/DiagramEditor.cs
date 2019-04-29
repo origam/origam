@@ -61,6 +61,7 @@ namespace Origam.Workbench.Editors
 			gViewer.OutsideAreaBrush = Brushes.White;
 			gViewer.EdgeAdded += (sender, args) => gViewer.InsertingEdge = false;
 			gViewer.LayoutEditor.NodeMovingEnabled = false;
+			gViewer.LayoutEditor.ShouldProcessRightClickOnSelectedEdge = false;
 			gViewer.FixedScale = 1;
 		}
 

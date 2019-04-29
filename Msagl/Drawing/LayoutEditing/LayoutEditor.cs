@@ -23,6 +23,7 @@ namespace Microsoft.Msagl.Drawing {
 
         internal IViewerObject ActiveDraggedObject { get; set; }
         public bool NodeMovingEnabled { get; set; } = true;
+        public bool ShouldProcessRightClickOnSelectedEdge { get; set; } = true;
         internal Site PolylineVertex { get; set; }
 
         Tuple<Site, PolylineCornerType> cornerInfo;
@@ -635,7 +636,7 @@ namespace Microsoft.Msagl.Drawing {
                 } else if (SourceOfInsertedEdge != null && SourcePort != null && DraggingStraightLine())
                     viewer.StartDrawingRubberLine(sourcePort.Location);
             } else if (e.RightButtonIsPressed)
-                if (SelectedEdge != null)
+                if (SelectedEdge != null && ShouldProcessRightClickOnSelectedEdge)
                     ProcessRightClickOnSelectedEdge(e);
         }
 
