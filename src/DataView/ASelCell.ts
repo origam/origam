@@ -18,6 +18,7 @@ export class ASelCell implements IASelCell {
 
   @action.bound
   doSelFirst() {
+    // debugger
     this.P.aSelRec().doSelFirst();
     this.P.aSelProp().doSelFirst();
   }

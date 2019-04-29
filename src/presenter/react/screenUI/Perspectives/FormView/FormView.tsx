@@ -62,6 +62,7 @@ export class Editor extends React.Component<{ field: IFormField }> {
   }
 }
 
+@observer
 export class FormSection extends React.Component<{
   Width: string;
   Height: string;
@@ -165,6 +166,7 @@ export class FormField extends React.Component<{
   }
 }
 
+@observer
 export class FormView extends React.Component<{ controller: IFormView }> {
   constructor(props: any) {
     super(props);
