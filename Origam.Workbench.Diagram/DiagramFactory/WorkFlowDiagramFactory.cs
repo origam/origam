@@ -118,8 +118,8 @@ namespace Origam.Workbench.Diagram
 					Node sourceShape = ht[dependency.Task.PrimaryKey];
 					if(sourceShape == null) throw new NullReferenceException(ResourceUtils.GetString("ErrorSourceShapeNotFound"));
 
-					this.graph.AddEdge(sourceShape.Id,
-                        destinationShape.Id);
+					Edge edge = graph.AddEdge(sourceShape.Id,destinationShape.Id);
+					edge.UserData = dependency;
 					i++;
 				}
 

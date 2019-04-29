@@ -77,7 +77,17 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
         private void OnMouseClick(object sender, MouseEventArgs args)
         {
-	        SelectActiveNodeInModelView();
+	        TrySelectActiveNodeInModelView();
+	        TrySelectActiveEdgeInModelView();
+        }
+
+        private void TrySelectActiveEdgeInModelView()
+        {
+	        if (gViewer.SelectedObject is Edge edge)
+	        {
+		        var dependencyItem = edge.UserData as WorkflowTaskDependency;
+		        schemaService.SelectItem(dependencyItem);
+	        }
         }
 
         private void OnEdgeRemoved(object sender, EventArgs e)
@@ -118,11 +128,11 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		        Task = independentItem
 	        };
 	        workflowTaskDependency.Persist();
-
+	        edge.UserData = workflowTaskDependency;
 	        schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(dependentItem);
         }
 
-        private bool SelectActiveNodeInModelView()
+        private bool TrySelectActiveNodeInModelView()
         {
 	        if (gViewer.SelectedObject is Node node)
 	        {
@@ -138,7 +148,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			        return nodeId == activeNodeId;
 		        }
 	        }
-
 	        return false;
         }
 
@@ -362,7 +371,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 		private void DeleteNode_Click(object sender, EventArgs e)
         { 
-	        bool nodeSelected = SelectActiveNodeInModelView();
+	        bool nodeSelected = TrySelectActiveNodeInModelView();
 
 	        if (nodeSelected)
 	        {
