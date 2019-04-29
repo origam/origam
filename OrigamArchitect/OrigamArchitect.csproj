@@ -75,6 +75,18 @@
       <Project>{cc4c4334-335d-4369-b0ed-f3c17cd57364}</Project>
       <Name>MIMEParser</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Msagl\Drawing\drawing.csproj">
+      <Project>{b76f8f71-4b00-4242-be36-c9f0732511f7}</Project>
+      <Name>drawing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Msagl\GraphViewerGDI\GraphViewerGDI.csproj">
+      <Project>{725cd2cb-cf37-414e-a5a6-f1d87d4d6ede}</Project>
+      <Name>GraphViewerGDI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Msagl\MSAGL\Msagl.csproj">
+      <Project>{415d3e3f-7105-46c1-84d2-7ecb34213d92}</Project>
+      <Name>Msagl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.BI.PrintIt\Origam.BI.PrintIt.csproj">
       <Project>{65ccc71c-287f-47c2-9b37-f1ecefadc327}</Project>
       <Name>Origam.BI.PrintIt</Name>
