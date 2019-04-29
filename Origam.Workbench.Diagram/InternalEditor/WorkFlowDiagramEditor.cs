@@ -333,10 +333,9 @@ namespace Origam.Workbench.Diagram.InternalEditor
 					.Where(item => !(item is WorkflowTaskDependency))
 					.ForEach(schemaItem =>
 					{
-						var menuItem = new ToolStripMenuItem(schemaItem.Name);
+						var menuItem = new AsMenuCommand(schemaItem.Name, schemaItem);
 						var builder = new SchemaItemEditorsMenuBuilder(true);
-						var submenuItems = builder.BuildSubmenu(schemaItem);
-						menuItem.DropDownItems.AddRange(submenuItems);
+						menuItem.PopulateMenu(builder);
 						newMenu.DropDownItems.Add(menuItem);
 					});
 			}
