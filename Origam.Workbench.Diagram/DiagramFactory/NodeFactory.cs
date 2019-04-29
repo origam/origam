@@ -14,14 +14,14 @@ namespace Origam.Workbench.Diagram.DiagramFactory
     {
         private static readonly int margin = 3;
         private static readonly int textSideMargin = 15;
-        private static readonly Font font = new Font("Arial", 12);
+        private static readonly Font font = new Font("Arial", 10);
         private static readonly SolidBrush drawBrush = new SolidBrush(System.Drawing.Color.Black);
         private static readonly StringFormat drawFormat = new StringFormat();
         private static readonly Graphics measurementGraphics = new Control().CreateGraphics();
         private static readonly Pen boldBlackPen = new Pen(System.Drawing.Color.Black, 2);
         private static readonly Pen blackPen =new Pen(System.Drawing.Color.Black, 1);
         private static readonly SolidBrush greyBrush = new SolidBrush(System.Drawing.Color.LightGray);
-        private static readonly int nodeHeight = 30;
+        private static readonly int nodeHeight = 25;
         private readonly INodeSelector nodeSelector;
 
         public NodeFactory(INodeSelector nodeSelector)

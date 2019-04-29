@@ -66,13 +66,13 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			persistenceProvider.InstancePersisted += OnInstancePersisted;
 		}
 
-        private void ReDraw()
+        public void ReDraw()
         {
 	        gViewer.Graph = factory.Draw(UpToDateGraphParent);
 	        double scaleTo1 = 1 / gViewer.CurrentScale * graphScale;
 //	        double scaleToPixels =
 //		        -(460 - gViewer.GraphHeight) * 0.000502352941176 + 0.9677;
-	        gViewer.ZoomF = scaleTo1; //* scaleToPixels;
+	        gViewer.ZoomF = scaleTo1 * 0.7; //* scaleToPixels;
         }
 
         private void OnMouseClick(object sender, MouseEventArgs args)
