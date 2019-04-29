@@ -260,6 +260,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		        if (gViewer.SelectedObject is Node node)
 		        {
 					nodeSelector.Selected = node;
+					gViewer.Invalidate();
 		        }
 	        }
 	    }
@@ -267,16 +268,9 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		private bool IsDeleteMenuItemAvailable(DNode objectUnderMouse)
 		{
 			if (objectUnderMouse == null) return false;
-
-			List<IViewerObject> highLightedEntities = gViewer.Entities
-				.Where(x => x.MarkedForDragging)
-				.ToList();
-			if (highLightedEntities.Count != 1) return false;
-			if (!(highLightedEntities[0] is IViewerNode viewerNode))return false;
-			
 			Subgraph topWorkFlowSubGraph = gViewer.Graph.RootSubgraph.Subgraphs.FirstOrDefault();
-			if (viewerNode.Node == topWorkFlowSubGraph) return false;
-			return objectUnderMouse.Node == viewerNode.Node;
+			if (nodeSelector.Selected == topWorkFlowSubGraph) return false;
+			return objectUnderMouse.Node == nodeSelector.Selected;
 		}
 
 		private bool IsNewMenuAvailable(DNode dNodeUnderMouse)
@@ -285,12 +279,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			var schemaItemUnderMouse = DNodeToSchemaItem(dNodeUnderMouse);
 			if (!(dNodeUnderMouse.Node is Subgraph) &&
 			    !(schemaItemUnderMouse is ServiceMethodCallTask)) return false;
-			List<IViewerObject> highLightedEntities = gViewer.Entities
-				.Where(x => x.MarkedForDragging)
-				.ToList();
-			if (highLightedEntities.Count != 1) return false;
-			if (!(highLightedEntities[0] is IViewerNode viewerNode))return false;
-			return dNodeUnderMouse.Node == viewerNode.Node;
+			return dNodeUnderMouse.Node == nodeSelector.Selected;
 		}
 
 		private ContextMenuStrip BuildContextMenu()
@@ -377,6 +366,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 					});
 				};
 				addAfterMenu.DropDownItems.AddRange(submenuItems);
+				addAfterMenu.Enabled = IsDeleteMenuItemAvailable(dNodeUnderMouse);
 				contextMenu.AddSubItem(addAfterMenu);
 			}
 
