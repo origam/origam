@@ -109,7 +109,7 @@ namespace OrigamArchitect
                 IsPrimary = true,
                 DataService = settings.DataDataService
             };
-            var obj = settings.DeployPlatforms;
+            Platform[] obj = settings.DeployPlatforms?? new Platform[0];
             Array.Resize(ref obj, obj.Length + 1);
             obj[obj.Length - 1] = primaryPlatform;
             settings.DeployPlatforms = obj;
