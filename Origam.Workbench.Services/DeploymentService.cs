@@ -206,15 +206,19 @@ namespace Origam.Workbench.Services
             {
                 OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
                 settings.DeployPlatforms?.ForEach(platform =>
-                { 
-                    DA.Common.Enums.DatabaseType databaseType = 
+                {
+                    DA.Common.Enums.DatabaseType databaseType =
                         (DA.Common.Enums.DatabaseType)Enum.Parse(typeof(DA.Common.Enums.DatabaseType), platform.GetParseEnum());
-                    if(databaseType == activity.DatabaseType)
+                    if (databaseType == activity.DatabaseType)
                     {
                         agent.SetDataService(DataService.GetDataService(platform));
                         result = agent.ExecuteUpdate(activity.CommandText, _transactionId);
                     }
                 });
+                if(string.IsNullOrEmpty(result))
+                {
+                    throw new PlatformNotSupportedException("This platform not Supported!");
+                }
             }
             else
             {
