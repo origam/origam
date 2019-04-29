@@ -60,6 +60,7 @@ namespace Origam.Workbench.Editors
 			InitializeComponent();
 			gViewer.OutsideAreaBrush = Brushes.White;
 			gViewer.EdgeAdded += (sender, args) => gViewer.InsertingEdge = false;
+			gViewer.LayoutEditor.NodeMovingEnabled = false;
 		}
 
         protected override void Dispose(bool disposing)
