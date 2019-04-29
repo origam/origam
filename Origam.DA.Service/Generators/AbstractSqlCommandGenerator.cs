@@ -1447,12 +1447,8 @@ namespace Origam.DA.Service
 
 		#region ICloneable Members
 
-		public object Clone()
-		{
-			MsSqlCommandGenerator gen = new MsSqlCommandGenerator();
-			return gen;
-		}
-
+        public abstract object Clone();
+		
 		#endregion
 
 		#region IDisposable Members

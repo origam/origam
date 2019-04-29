@@ -2494,5 +2494,10 @@ namespace Origam.DA.Service
             }
         }
 
+        public override object Clone()
+        {
+            MsSqlCommandGenerator gen = new MsSqlCommandGenerator();
+            return gen;
+        }
     }
 }

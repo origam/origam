@@ -33,6 +33,7 @@ using Origam.Schema.GuiModel;
 using Origam.Schema.EntityModel;
 using Origam.Schema.LookupModel;
 using Origam.Workbench.Services;
+using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Gui.Win
 {
@@ -559,8 +560,9 @@ namespace Origam.Gui.Win
 
 			if(this.DataLookup != null)
 			{
-				MsSqlCommandGenerator cmdGenerator = new MsSqlCommandGenerator();
-				AbstractDataLookup l = this.DataLookup;
+                AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+                AbstractSqlCommandGenerator cmdGenerator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory;
+                AbstractDataLookup l = this.DataLookup;
 				DataServiceDataLookup dl = this.DataLookup as DataServiceDataLookup;
 
 				ArrayList parameters = cmdGenerator.Parameters(

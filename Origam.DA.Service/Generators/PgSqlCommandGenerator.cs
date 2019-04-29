@@ -2448,6 +2448,10 @@ namespace Origam.DA.Service
             }
         }
 
-
+        public override object Clone()
+        {
+            PgSqlCommandGenerator gen = new PgSqlCommandGenerator();
+            return gen;
+        }
     }
 }
