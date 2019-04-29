@@ -68,6 +68,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
         public void ReDraw()
         {
 	        gViewer.Graph = factory.Draw(UpToDateGraphParent);
+	        gViewer.DefaultDragObject= gViewer.ViewerGraph.Nodes().Single(x=>x.Node == gViewer.Graph.RootSubgraph.Subgraphs.First());
 	        gViewer.Transform = null;
 	        gViewer.Invalidate();
         }

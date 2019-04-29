@@ -1097,6 +1097,8 @@ namespace Microsoft.Msagl.GraphViewerGdi {
             set { transformation = value; }
         }
 
+        public IViewerObject DefaultDragObject { get; set; }
+
         void InitTransform() {
             if (originalGraph == null) {
                 transformation = PlaneTransformation.UnitTransformation;

@@ -626,6 +626,12 @@ namespace Microsoft.Msagl.Drawing {
                         if (SelectedEdge != null)
                             CheckIfDraggingPolylineVertex(e);
                     }
+                    else
+                    {
+                        ActiveDraggedObject = viewer.DefaultDragObject;
+                        if (ActiveDraggedObject != null)
+                            e.Handled = true;
+                    }
                 } else if (SourceOfInsertedEdge != null && SourcePort != null && DraggingStraightLine())
                     viewer.StartDrawingRubberLine(sourcePort.Location);
             } else if (e.RightButtonIsPressed)
