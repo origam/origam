@@ -276,6 +276,15 @@ namespace OrigamArchitect.Commands
 			}		 
 			else if(item is AbstractUpdateScriptActivity)
 			{
+                OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+                ServiceCommandUpdateScriptActivity scriptActivity = (ServiceCommandUpdateScriptActivity)item;
+                Platform[] platforms = settings.GetAllPlatform();
+                if(!platforms
+                    .Where(platform => platform.GetParseEnum() == scriptActivity.DatabaseType.ToString()).Any())
+                {
+                    MessageBox.Show("Platform is not supported for execute this script!","Platform",MessageBoxButtons.OK);
+                    return;
+                }
                 ProcessUpdateScript(item);
 			}
 			else if(item is DataConstantReferenceMenuItem)

@@ -102,19 +102,9 @@ namespace OrigamArchitect
 				cboDeploymentVersion.SelectedItem = currentVersion;
 			}
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-            AbstractSqlDataService abstractDataService = (AbstractSqlDataService)DataService.GetDataService();
-            Platform primaryPlatform = new Platform
-            {
-                Name = abstractDataService.PlatformName.ToString(),
-                IsPrimary = true,
-                DataService = settings.DataDataService
-            };
-            Platform[] obj = settings.DeployPlatforms?? new Platform[0];
-            Array.Resize(ref obj, obj.Length + 1);
-            obj[obj.Length - 1] = primaryPlatform;
-            settings.DeployPlatforms = obj;
+            Platform[] platforms = settings.GetAllPlatform();
             cboDatabaseType.Enabled = false;
-            settings.DeployPlatforms?.ForEach(platform =>
+            platforms?.ForEach(platform =>
             {
                     cboDatabaseType.Items.Add(platform);
                     cboDatabaseType.Enabled = true;

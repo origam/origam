@@ -215,10 +215,6 @@ namespace Origam.Workbench.Services
                         result = agent.ExecuteUpdate(activity.CommandText, _transactionId);
                     }
                 });
-                if(string.IsNullOrEmpty(result))
-                {
-                    throw new PlatformNotSupportedException("This platform not Supported!");
-                }
             }
             else
             {

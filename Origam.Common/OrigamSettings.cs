@@ -334,8 +334,21 @@ namespace Origam
 				);
 		}
 
-		#endregion
-	}
+        public Platform[] GetAllPlatform()
+        {
+            Platform[] platforms = DeployPlatforms??new Platform[0];
+            Platform platform = new Platform
+            {
+                IsPrimary = true,
+                DataService = DataDataService
+            };
+            platform.Name = platform.GetParseEnum();
+            Array.Resize(ref platforms, platforms.Length + 1);
+            platforms[platforms.Length - 1] = platform;
+            return platforms;
+        }
+        #endregion
+    }
 
     public class Platform
     {
