@@ -42,7 +42,7 @@ namespace Origam.Schema.DeploymentModel
 	/// <summary>
 	/// Summary description for DeploymentVersion.
 	/// </summary>
-	[SchemaItemDescription("Deployment Version", 47)]
+	[SchemaItemDescription("Deployment Version", "icon_deployment-version.png")]
     [HelpTopic("Deployment+Version")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class DeploymentVersion : AbstractSchemaItem, ISchemaItemFactory, IDeploymentVersion
@@ -114,7 +114,7 @@ namespace Origam.Schema.DeploymentModel
 				}
 				else
 				{
-					return "47";
+					return "icon_deployment-version.png";
 				}
 			}
 		}

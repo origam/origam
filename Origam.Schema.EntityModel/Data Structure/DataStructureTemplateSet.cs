@@ -30,7 +30,8 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for DataQuery.
 	/// </summary>
-	[SchemaItemDescription("Template Set", "Template Sets", 18)]
+	[SchemaItemDescription("Template Set", "Template Sets", 
+        "icon_template-set.png")]
     [HelpTopic("Template+Sets")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class DataStructureTemplateSet : AbstractSchemaItem, ISchemaItemFactory
@@ -79,14 +80,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "18";
 			}
 		}
 

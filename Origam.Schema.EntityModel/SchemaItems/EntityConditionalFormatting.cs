@@ -31,7 +31,9 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for EntitySecurityRule.
 	/// </summary>
-	[SchemaItemDescription("Conditional Formatting Rule", "Conditional Formatting", 5)]
+	[SchemaItemDescription("Conditional Formatting Rule", 
+        "Conditional Formatting", 
+        "icon_conditional-formatting-rule.png")]
     [HelpTopic("Conditional+Formatting+Rules")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
@@ -52,14 +54,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "5";
 			}
 		}
 

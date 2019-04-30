@@ -36,7 +36,8 @@ namespace Origam.Schema.DeploymentModel
 	/// <summary>
 	/// Summary description for FileRestoreUpdateScriptActivity.
 	/// </summary>
-	[SchemaItemDescription("File Restore Update Activity", 48)]
+	[SchemaItemDescription("File Restore Update Activity", 
+        "icon_file-restore-update-activity.png")]
     [HelpTopic("File+Restore+Update+Activity")]
 	public class FileRestoreUpdateScriptActivity : AbstractUpdateScriptActivity
 	{
@@ -61,14 +62,6 @@ namespace Origam.Schema.DeploymentModel
                 containerName: nameof(content),
                 containingObject: this);
         }
-
-        public override string Icon
-		{
-			get
-			{
-				return "48";
-			}
-		}
 
 		#region Properties
 		private PropertyContainer<byte[]> content;

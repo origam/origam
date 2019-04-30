@@ -29,7 +29,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for EntityColumnReference.
 	/// </summary>
-	[SchemaItemDescription("Field Reference", 1)]
+	[SchemaItemDescription("Field Reference", "icon_field-reference.png")]
     [HelpTopic("Field+Reference")]
 	[XmlModelRoot(ItemTypeConst)]
 	[DefaultProperty("Field")]
@@ -64,7 +64,7 @@ namespace Origam.Schema.EntityModel
 				}
 				catch
 				{
-					return "1";
+					return "icon_field-reference.png";
 				}
 			}
 		}

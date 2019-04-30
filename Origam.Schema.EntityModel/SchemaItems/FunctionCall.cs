@@ -29,7 +29,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for FunctionCall.
 	/// </summary>
-	[SchemaItemDescription("Function Call", "Fields", 2)]
+	[SchemaItemDescription("Function Call", "Fields", "icon_function-call.png")]
     [HelpTopic("Function+Call+Field")]
     [DefaultProperty("Function")]
     public class FunctionCall : AbstractDataEntityColumn, ISchemaItemFactory
@@ -72,7 +72,7 @@ namespace Origam.Schema.EntityModel
 			{
 				if(this.Function == null)
 				{
-					return "2";
+					return "icon_function-call.png";
 				}
 				else
 				{

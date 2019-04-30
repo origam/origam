@@ -782,13 +782,13 @@ namespace Origam.DA
 			return doc;
 		}
 
-		public static XmlDocument GetRowXml(DataRow row, DataRowVersion version)
+		public static XmlContainer GetRowXml(DataRow row, DataRowVersion version)
 		{
 			XmlDocument doc = new XmlDocument();
 			XmlElement e = doc.CreateElement("row");
 			doc.AppendChild(e);
 			GetRowXml(e, doc, row, version);
-			return doc;
+			return  new XmlContainer(doc);
 		}
 
         public static void MergeDataSetVerbose(DataSet mergeInDS, DataSet mergeFromDS)

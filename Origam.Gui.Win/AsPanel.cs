@@ -1162,7 +1162,7 @@ namespace Origam.Gui.Win
 			{
 				if(! DatasetTools.HasRowValidParent(row)) return null;
 
-				XmlDocument data = DatasetTools.GetRowXml(row, DataRowVersion.Default);
+				XmlContainer data = DatasetTools.GetRowXml(row, DataRowVersion.Default);
 				formatting = ruleEngine.Formatting(data, entityId, Guid.Empty, null);
 			}
 		
@@ -2155,8 +2155,8 @@ namespace Origam.Gui.Win
 			if(! DatasetTools.HasRowValidParent(row)) return;
 
 			bool isNewRow = (row.RowState == DataRowState.Added | row.RowState == DataRowState.Detached);
-			XmlDocument originalData = DatasetTools.GetRowXml(row, DataRowVersion.Original);
-			XmlDocument actualData = DatasetTools.GetRowXml(row, row.HasVersion(DataRowVersion.Proposed) ? DataRowVersion.Proposed : DataRowVersion.Default);
+			XmlContainer originalData = DatasetTools.GetRowXml(row, DataRowVersion.Original);
+			XmlContainer actualData = DatasetTools.GetRowXml(row, row.HasVersion(DataRowVersion.Proposed) ? DataRowVersion.Proposed : DataRowVersion.Default);
 
 			if(! this.GridVisible) 
 			{

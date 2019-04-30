@@ -31,7 +31,8 @@ namespace Origam.Schema.DeploymentModel
 	/// <summary>
 	/// Summary description for ServiceCommandUpdateScriptActivity.
 	/// </summary>
-	[SchemaItemDescription("Service Command Update Activity", 49)]
+	[SchemaItemDescription("Service Command Update Activity", 
+        "icon_service-command-update-activity.png")]
     [HelpTopic("Service+Command+Update+Activity")]
 	public class ServiceCommandUpdateScriptActivity : AbstractUpdateScriptActivity
 	{
@@ -62,14 +63,6 @@ namespace Origam.Schema.DeploymentModel
 			dependencies.Add(this.Service);
 
 			base.GetExtraDependencies (dependencies);
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "49";
-			}
 		}
 
         #region Properties

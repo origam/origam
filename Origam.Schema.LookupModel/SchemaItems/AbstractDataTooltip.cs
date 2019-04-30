@@ -50,14 +50,6 @@ namespace Origam.Schema.LookupModel
 			}
 		}
 
-		public override string Icon
-		{
-			get
-			{
-				return "83";
-			}
-		}
-
         public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
         {
             base.GetParameterReferences(this.TooltipLoadMethod, list);

@@ -29,7 +29,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for EntityFilter.
 	/// </summary>
-	[SchemaItemDescription("Filter", "Filters", 5)]
+	[SchemaItemDescription("Filter", "Filters", "icon_filter.png")]
     [HelpTopic("Filters")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class EntityFilter : AbstractSchemaItem, ISchemaItemFactory
@@ -54,14 +54,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "5";
 			}
 		}
 

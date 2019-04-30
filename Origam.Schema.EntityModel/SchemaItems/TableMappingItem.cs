@@ -37,7 +37,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Maps physical table to an entity.
 	/// </summary>
-	[SchemaItemDescription("Database Entity", 0)]
+	[SchemaItemDescription("Database Entity", "icon_entity.png")]
     [HelpTopic("Entities")]
 	public class TableMappingItem : AbstractDataEntity
 	{
@@ -126,7 +126,7 @@ namespace Origam.Schema.EntityModel
 				switch(DatabaseObjectType)
 				{
 					case DatabaseMappingObjectType.Table:
-						return "0";
+						return "icon_entity.png";
 
 					case DatabaseMappingObjectType.View:
 						return "54";

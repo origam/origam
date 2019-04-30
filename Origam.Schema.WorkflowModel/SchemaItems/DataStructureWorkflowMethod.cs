@@ -30,7 +30,8 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for DataStructureWorkflowMethod.
 	/// </summary>
-	[SchemaItemDescription("Workflow Method", "Workflow Methods", 18)]
+	[SchemaItemDescription("Workflow Method", "Workflow Methods",
+        "icon_workflow-method.png")]
     [HelpTopic("Data+Structure+Workflow+Method")]
     [DefaultProperty("LoadWorkflow")]
 	public class DataStructureWorkflowMethod : DataStructureMethod

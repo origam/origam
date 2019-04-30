@@ -15,5 +15,10 @@ namespace Origam.Workbench.Diagram.InternalEditor
         public void Dispose()
         {
         }
+
+        public void ReDraw()
+        {
+            
+        }
     }
 }

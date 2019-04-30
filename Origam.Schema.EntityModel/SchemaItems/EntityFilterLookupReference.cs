@@ -31,7 +31,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for TransformationReference.
 	/// </summary>
-	[SchemaItemDescription("Lookup Reference", 50)]
+	[SchemaItemDescription("Lookup Reference", "icon_lookup-reference.png")]
     [HelpTopic("Lookup+Reference")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class EntityFilterLookupReference : AbstractSchemaItem
@@ -65,14 +65,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "50";
 			}
 		}
 

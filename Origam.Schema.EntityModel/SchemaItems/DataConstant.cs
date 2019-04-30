@@ -31,7 +31,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for DataConstant.
 	/// </summary>
-	[SchemaItemDescription("Data Constant", "icon_06_constants.png")]
+	[SchemaItemDescription("Data Constant", "icon_data-constant.png")]
     [HelpTopic("Data+Constants")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class DataConstant : AbstractSchemaItem

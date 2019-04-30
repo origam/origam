@@ -3499,7 +3499,7 @@ namespace Origam.Rule
 #endregion
 
 #region Conditional Formatting Functions
-		public EntityFormatting Formatting(XmlDocument data, Guid entityId, Guid fieldId, XPathNodeIterator contextPosition)
+		public EntityFormatting Formatting(XmlContainer data, Guid entityId, Guid fieldId, XPathNodeIterator contextPosition)
 		{
 			EntityFormatting formatting = new EntityFormatting(NullColor, NullColor);
 
@@ -3586,7 +3586,7 @@ namespace Origam.Rule
 			return formatting;
 		}
 
-		public string DynamicLabel(XmlDocument data, Guid entityId, Guid fieldId, XPathNodeIterator contextPosition)
+		public string DynamicLabel(XmlContainer data, Guid entityId, Guid fieldId, XPathNodeIterator contextPosition)
 		{
 			ArrayList rules = new ArrayList(); 
 			
@@ -3627,8 +3627,8 @@ namespace Origam.Rule
 
 			if(row.Table.ExtendedProperties.Contains("EntityId"))
 			{
-				XmlDocument originalData = DatasetTools.GetRowXml(row, DataRowVersion.Original);
-				XmlDocument actualData = DatasetTools.GetRowXml(row, row.HasVersion(DataRowVersion.Proposed) ? DataRowVersion.Proposed : DataRowVersion.Default);
+				XmlContainer originalData = DatasetTools.GetRowXml(row, DataRowVersion.Original);
+				XmlContainer actualData = DatasetTools.GetRowXml(row, row.HasVersion(DataRowVersion.Proposed) ? DataRowVersion.Proposed : DataRowVersion.Default);
 
 				fieldId = (Guid)row.Table.Columns[field].ExtendedProperties["Id"];
 				entityId = (Guid)row.Table.ExtendedProperties["EntityId"];
@@ -3649,9 +3649,9 @@ namespace Origam.Rule
 			{
 				Guid entityId = (Guid)row.Table.ExtendedProperties["EntityId"];
 
-				XmlDocument originalData = DatasetTools.GetRowXml(row,
+				XmlContainer originalData = DatasetTools.GetRowXml(row,
                     DataRowVersion.Original);
-				XmlDocument actualData = DatasetTools.GetRowXml(row, 
+				XmlContainer actualData = DatasetTools.GetRowXml(row, 
                     row.HasVersion(DataRowVersion.Proposed) 
                     ? DataRowVersion.Proposed : DataRowVersion.Default);
 
@@ -3728,9 +3728,9 @@ namespace Origam.Rule
                             }
                         }
 
-                        XmlDocument originalChildData = DatasetTools.GetRowXml(
+                        XmlContainer originalChildData = DatasetTools.GetRowXml(
                             childRow, DataRowVersion.Original);
-                        XmlDocument actualChildData = DatasetTools.GetRowXml(
+                        XmlContainer actualChildData = DatasetTools.GetRowXml(
                             childRow, childRow.HasVersion(DataRowVersion.Proposed)
                             ? DataRowVersion.Proposed : DataRowVersion.Default);
 
@@ -3776,7 +3776,7 @@ namespace Origam.Rule
 		}
 
         public ArrayList GetDisabledActions(
-            XmlDocument originalData, XmlDocument actualData, Guid entityId)
+	        XmlContainer originalData, XmlContainer actualData, Guid entityId)
         {
             ArrayList result = new ArrayList();
             IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(
@@ -3804,10 +3804,10 @@ namespace Origam.Rule
 
 		// Performance sensitive! RuleDisablesAction method should not
 		// be invoked unless it is realy necessary.
-		private bool RuleDisablesAction(XmlDocument originalData,
-			XmlDocument actualData, EntityUIAction action)
+		private bool RuleDisablesAction(XmlContainer originalData,
+			XmlContainer actualData, EntityUIAction action)
 		{
-			XmlDocument dataToUseForRule
+			XmlContainer dataToUseForRule
 				= action.ValueType == CredentialValueType.ActualValue
 					? actualData
 					: originalData;
@@ -3817,7 +3817,7 @@ namespace Origam.Rule
 				        dataToUseForRule, action.Rule, action.Roles, null);
 		}
 
-		public bool RowLevelSecurityState(XmlDocument originalData, XmlDocument actualData, string field, CredentialType type, Guid entityId, Guid fieldId, bool isNewRow)
+		public bool RowLevelSecurityState(XmlContainer originalData, XmlContainer actualData, string field, CredentialType type, Guid entityId, Guid fieldId, bool isNewRow)
 		{
 			ArrayList rules = new ArrayList();
 				
@@ -3904,12 +3904,12 @@ namespace Origam.Rule
 			}
 		}
 
-		private bool IsRowLevelSecurityRuleMatching(AbstractEntitySecurityRule rule, XmlDocument data)
+		private bool IsRowLevelSecurityRuleMatching(AbstractEntitySecurityRule rule, XmlContainer data)
 		{
 			return IsRuleMatching(data, rule.Rule, rule.Roles, null);
 		}
 
-		private bool IsRuleMatching(XmlDocument data, IRule rule, string roles, XPathNodeIterator contextPosition)
+		private bool IsRuleMatching(XmlContainer data, IRule rule, string roles, XPathNodeIterator contextPosition)
 		{
 			// check roles
 			IOrigamAuthorizationProvider authorizationProvider = SecurityManager.GetAuthorizationProvider();
@@ -3921,7 +3921,7 @@ namespace Origam.Rule
 			// check business rule
 			if(rule != null)
 			{
-				object result = this.EvaluateRule(rule, new XmlContainer(data), contextPosition);
+				object result = this.EvaluateRule(rule, data, contextPosition);
 
 				if(result is bool)
 				{

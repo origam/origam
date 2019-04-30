@@ -28,7 +28,8 @@ namespace Origam.Schema.GuiModel
 	/// <summary>
 	/// Summary description for EntitySecurityRule.
 	/// </summary>
-	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", 15)]
+	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", 
+        "icon_parameter-mapping.png")]
     [HelpTopic("Action+Parameter+Mapping")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class EntityUIActionParameterMapping : AbstractSchemaItem, IComparable
@@ -49,14 +50,6 @@ namespace Origam.Schema.GuiModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "15";
 			}
 		}
 		#endregion

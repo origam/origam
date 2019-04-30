@@ -29,7 +29,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for DataQuery.
 	/// </summary>
-	[SchemaItemDescription("Filter Set", "Filter Sets", 18)]
+	[SchemaItemDescription("Filter Set", "Filter Sets", "icon_filter-set.png")]
     [HelpTopic("Filter+Sets")]
     public class DataStructureFilterSet : DataStructureMethod, ISchemaItemFactory
 	{

@@ -28,7 +28,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for XsdDataStructure.
 	/// </summary>
-	[SchemaItemDescription("XSD Data Structure", 9)]
+	[SchemaItemDescription("XSD Data Structure", "icon_xsd-data-structure.png")]
     [HelpTopic("Data+Structures")]
 	public class XsdDataStructure : AbstractDataStructure
 	{

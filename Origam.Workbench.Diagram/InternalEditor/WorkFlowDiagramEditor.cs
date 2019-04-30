@@ -29,7 +29,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private readonly WorkbenchSchemaService schemaService;
         private readonly Guid graphParentId;
         private readonly EdgeInsertionRule edgeInsertionRule;
-        private static readonly int graphScale = 1;
         private readonly List<DeferedDependency> deferedDependencies = new List<DeferedDependency>();
         private readonly NodeSelector nodeSelector;
 
@@ -41,6 +40,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		    schemaService = ServiceManager.Services.GetService<WorkbenchSchemaService>();
 			gViewer.EdgeAdded += OnEdgeAdded;
 			gViewer.EdgeRemoved += OnEdgeRemoved;
+			gViewer.MouseDoubleClick += OnDoubleClick;
 			edgeInsertionRule = new EdgeInsertionRule(
 				viewerToImposeOn: gViewer,
 				predicate: (sourceNode, targetNode) =>
@@ -66,18 +66,48 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			persistenceProvider.InstancePersisted += OnInstancePersisted;
 		}
 
-        private void ReDraw()
+        public void ReDraw()
         {
 	        gViewer.Graph = factory.Draw(UpToDateGraphParent);
-	        double scaleTo1 = 1 / gViewer.CurrentScale * graphScale;
-//	        double scaleToPixels =
-//		        -(460 - gViewer.GraphHeight) * 0.000502352941176 + 0.9677;
-	        gViewer.ZoomF = scaleTo1; //* scaleToPixels;
+	        gViewer.DefaultDragObject = gViewer.ViewerGraph.Nodes()
+		        .Single(x => x.Node == gViewer.Graph.RootSubgraph.Subgraphs.First());
+	        gViewer.Transform = null;
+	        gViewer.Invalidate();
+        }
+        
+        private void OnDoubleClick(object sender, EventArgs e)
+        {
+	        GViewer viewer = sender as GViewer;
+	        if (!(viewer.SelectedObject is Edge edge)) return;
+	        Guid? id = (edge.UserData as WorkflowTaskDependency)?.Id;
+	        if (id == null) return;
+	        AbstractSchemaItem clickedItem = 
+		        (AbstractSchemaItem)persistenceProvider
+			        .RetrieveInstance(typeof(AbstractSchemaItem), new Key(id.Value));
+	        if(clickedItem != null)
+	        {
+		        EditSchemaItem cmd = new EditSchemaItem
+		        {
+			        ShowDialog = true,
+			        Owner = clickedItem
+		        };
+		        cmd.Run();
+	        }
         }
 
         private void OnMouseClick(object sender, MouseEventArgs args)
         {
-	        SelectActiveNodeInModelView();
+	        TrySelectActiveNodeInModelView();
+	        TrySelectActiveEdgeInModelView();
+        }
+
+        private void TrySelectActiveEdgeInModelView()
+        {
+	        if (gViewer.SelectedObject is Edge edge)
+	        {
+		        var dependencyItem = edge.UserData as WorkflowTaskDependency;
+		        schemaService.SelectItem(dependencyItem);
+	        }
         }
 
         private void OnEdgeRemoved(object sender, EventArgs e)
@@ -118,11 +148,11 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		        Task = independentItem
 	        };
 	        workflowTaskDependency.Persist();
-
+	        edge.UserData = workflowTaskDependency;
 	        schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(dependentItem);
         }
 
-        private bool SelectActiveNodeInModelView()
+        private bool TrySelectActiveNodeInModelView()
         {
 	        if (gViewer.SelectedObject is Node node)
 	        {
@@ -138,7 +168,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			        return nodeId == activeNodeId;
 		        }
 	        }
-
 	        return false;
         }
 
@@ -245,14 +274,14 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        if (e.RightButtonIsPressed && !e.Handled)
 	        {
 		        _mouseRightButtonDownPoint = new ClickPoint( gViewer, e);
-
-	            ContextMenuStrip cm = BuildContextMenu();
+		        ContextMenuStrip cm = BuildContextMenu();
                 cm.Show(parentForm,_mouseRightButtonDownPoint.InScreenSystem);
 	        }else if (e.LeftButtonIsPressed)
 	        {
 		        if (gViewer.SelectedObject is Node node)
 		        {
 					nodeSelector.Selected = node;
+					gViewer.Invalidate();
 		        }
 	        }
 	    }
@@ -260,16 +289,9 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		private bool IsDeleteMenuItemAvailable(DNode objectUnderMouse)
 		{
 			if (objectUnderMouse == null) return false;
-
-			List<IViewerObject> highLightedEntities = gViewer.Entities
-				.Where(x => x.MarkedForDragging)
-				.ToList();
-			if (highLightedEntities.Count != 1) return false;
-			if (!(highLightedEntities[0] is IViewerNode viewerNode))return false;
-			
 			Subgraph topWorkFlowSubGraph = gViewer.Graph.RootSubgraph.Subgraphs.FirstOrDefault();
-			if (viewerNode.Node == topWorkFlowSubGraph) return false;
-			return objectUnderMouse.Node == viewerNode.Node;
+			if (nodeSelector.Selected == topWorkFlowSubGraph) return false;
+			return objectUnderMouse.Node == nodeSelector.Selected;
 		}
 
 		private bool IsNewMenuAvailable(DNode dNodeUnderMouse)
@@ -278,76 +300,98 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			var schemaItemUnderMouse = DNodeToSchemaItem(dNodeUnderMouse);
 			if (!(dNodeUnderMouse.Node is Subgraph) &&
 			    !(schemaItemUnderMouse is ServiceMethodCallTask)) return false;
-			List<IViewerObject> highLightedEntities = gViewer.Entities
-				.Where(x => x.MarkedForDragging)
-				.ToList();
-			if (highLightedEntities.Count != 1) return false;
-			if (!(highLightedEntities[0] is IViewerNode viewerNode))return false;
-			return dNodeUnderMouse.Node == viewerNode.Node;
+			return dNodeUnderMouse.Node == nodeSelector.Selected;
 		}
 
 		private ContextMenuStrip BuildContextMenu()
         {
-	        var dNodeUnderMouse = gViewer.GetObjectAt(_mouseRightButtonDownPoint.InScreenSystem) as DNode;
-	        var schemaItemUnderMouse = DNodeToSchemaItem(dNodeUnderMouse);
-	        
-	        var contextMenu = new AsContextMenu(WorkbenchSingleton.Workbench);
-	        
-            var deleteMenuItem = new ToolStripMenuItem();
-            deleteMenuItem.Text = "Delete";
-            deleteMenuItem.Image = ImageRes.icon_delete;
-            deleteMenuItem.Click += DeleteNode_Click;
-            deleteMenuItem.Enabled = IsDeleteMenuItemAvailable(dNodeUnderMouse);
-            contextMenu.AddSubItem(deleteMenuItem);
+	        object objectUnderMouse = 
+		        gViewer.GetObjectAt(_mouseRightButtonDownPoint.InScreenSystem);
+	        if (objectUnderMouse is DEdge edge)
+	        {
+		        return CreateContextMenuForEdge(edge);
+	        }
+	        if(objectUnderMouse is DNode node)
+	        {
+		        return CreateContextMenuForNode(node);
+	        } 
+	        return  new ContextMenuStrip();
+        }
+		
+		private ContextMenuStrip CreateContextMenuForEdge(DEdge edge)
+		{
+			var deleteMenuItem = new ToolStripMenuItem();
+			deleteMenuItem.Text = "Delete";
+			deleteMenuItem.Image = ImageRes.icon_delete;
+			deleteMenuItem.Click += (sender, args) => gViewer.RemoveEdge(edge, true); ;
+		        
+			var contextMenu = new ContextMenuStrip();
+			contextMenu.Items.Add(deleteMenuItem);
+			return contextMenu;
+		}
 
-            ToolStripMenuItem newMenu = new ToolStripMenuItem("New");
-            newMenu.Image = ImageRes.icon_new;
-            newMenu.Enabled = IsNewMenuAvailable(dNodeUnderMouse);
+		private ContextMenuStrip CreateContextMenuForNode(DNode dNodeUnderMouse)
+		{
+			var schemaItemUnderMouse = DNodeToSchemaItem(dNodeUnderMouse);
 
-            if (schemaItemUnderMouse is ServiceMethodCallTask)
-            {
-	            schemaItemUnderMouse.ChildItems
-		            .ToEnumerable()
-		            .Where(item => !(item is WorkflowTaskDependency))
-		            .ForEach(schemaItem => 
-			        {
-						var menuItem = new ToolStripMenuItem(schemaItem.Name);
+			var contextMenu = new AsContextMenu(WorkbenchSingleton.Workbench);
+
+			var deleteMenuItem = new ToolStripMenuItem();
+			deleteMenuItem.Text = "Delete";
+			deleteMenuItem.Image = ImageRes.icon_delete;
+			deleteMenuItem.Click += DeleteNode_Click;
+			deleteMenuItem.Enabled = IsDeleteMenuItemAvailable(dNodeUnderMouse);
+			contextMenu.AddSubItem(deleteMenuItem);
+
+			ToolStripMenuItem newMenu = new ToolStripMenuItem("New");
+			newMenu.Image = ImageRes.icon_new;
+			newMenu.Enabled = IsNewMenuAvailable(dNodeUnderMouse);
+
+			if (schemaItemUnderMouse is ServiceMethodCallTask)
+			{
+				schemaItemUnderMouse.ChildItems
+					.ToEnumerable()
+					.Where(item => !(item is WorkflowTaskDependency))
+					.ForEach(schemaItem =>
+					{
+						var menuItem = new AsMenuCommand(schemaItem.Name, schemaItem);
 						var builder = new SchemaItemEditorsMenuBuilder(true);
-						var submenuItems = builder.BuildSubmenu(schemaItem);
-						menuItem.DropDownItems.AddRange(submenuItems);
+						menuItem.PopulateMenu(builder);
 						newMenu.DropDownItems.Add(menuItem);
 					});
-            }
-            else
-            {
-	            var builder = new SchemaItemEditorsMenuBuilder(true);
-	            var submenuItems = builder.BuildSubmenu(schemaItemUnderMouse);
-	            newMenu.DropDownItems.AddRange(submenuItems);
-            }
-            contextMenu.AddSubItem(newMenu);
+			}
+			else
+			{
+				var builder = new SchemaItemEditorsMenuBuilder(true);
+				var submenuItems = builder.BuildSubmenu(schemaItemUnderMouse);
+				newMenu.DropDownItems.AddRange(submenuItems);
+			}
 
-            if (!(dNodeUnderMouse?.Node is Subgraph))
-            {
+			contextMenu.AddSubItem(newMenu);
+
+			if (!(dNodeUnderMouse?.Node is Subgraph))
+			{
 				ToolStripMenuItem addAfterMenu = new ToolStripMenuItem("Add After");
 				addAfterMenu.Image = ImageRes.icon_new;
-	            var builder = new SchemaItemEditorsMenuBuilder(true);
-	            var submenuItems = builder.BuildSubmenu(UpToDateGraphParent);
-	            submenuItems[0].Click += (sender, args) =>
-	            {
-		            var command = ((AsMenuCommand)sender).Command as AddNewSchemaItem;
-		            if (command?.CreatedItem == null) return;
-		            deferedDependencies.Add(new DeferedDependency
-		            {
-			            DependentItem = command.CreatedItem,
-			            IndependentItem = schemaItemUnderMouse
-		            });
-	            };
-	            addAfterMenu.DropDownItems.AddRange(submenuItems);
+				var builder = new SchemaItemEditorsMenuBuilder(true);
+				var submenuItems = builder.BuildSubmenu(UpToDateGraphParent);
+				submenuItems[0].Click += (sender, args) =>
+				{
+					var command = ((AsMenuCommand) sender).Command as AddNewSchemaItem;
+					if (command?.CreatedItem == null) return;
+					deferedDependencies.Add(new DeferedDependency
+					{
+						DependentItem = command.CreatedItem,
+						IndependentItem = schemaItemUnderMouse
+					});
+				};
+				addAfterMenu.DropDownItems.AddRange(submenuItems);
+				addAfterMenu.Enabled = IsDeleteMenuItemAvailable(dNodeUnderMouse);
 				contextMenu.AddSubItem(addAfterMenu);
-            }
+			}
 
-            return contextMenu;
-	    }
+			return contextMenu;
+		}
 
 		private AbstractSchemaItem DNodeToSchemaItem(DNode dNodeUnderMouse)
 		{
@@ -362,7 +406,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 		private void DeleteNode_Click(object sender, EventArgs e)
         { 
-	        bool nodeSelected = SelectActiveNodeInModelView();
+	        bool nodeSelected = TrySelectActiveNodeInModelView();
 
 	        if (nodeSelected)
 	        {

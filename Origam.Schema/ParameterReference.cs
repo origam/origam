@@ -28,7 +28,7 @@ namespace Origam.Schema
 	/// <summary>
 	/// Summary description for ParameterReference.
 	/// </summary>
-	[SchemaItemDescription("Parameter Reference", 15)]
+	[SchemaItemDescription("Parameter Reference", "icon_parameter-reference.png")]
     [HelpTopic("Parameter+Reference")]
 	[XmlModelRoot(ItemTypeConst)]
 	[DefaultProperty("Parameter")]
@@ -50,14 +50,6 @@ namespace Origam.Schema
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "15";
 			}
 		}
 

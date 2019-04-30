@@ -50,6 +50,7 @@ namespace Origam.Workbench.Editors
         private readonly IPersistenceProvider persistenceProvider;
         private IDiagramEditor internalEditor;
         private readonly NodeSelector nodeSelector;
+        private readonly Graphics graphics;
 
         public DiagramEditor()
 		{
@@ -59,9 +60,11 @@ namespace Origam.Workbench.Editors
 				.SchemaProvider;
 			InitializeComponent();
 			gViewer.OutsideAreaBrush = Brushes.White;
-			gViewer.PanButtonPressed = true;
-			gViewer.EdgeRemoved +=
-				(sender, args) => gViewer.PanButtonPressed = true;
+			gViewer.EdgeAdded += (sender, args) => gViewer.InsertingEdge = false;
+			gViewer.LayoutEditor.NodeMovingEnabled = false;
+			gViewer.LayoutEditor.ShouldProcessRightClickOnSelectedEdge = false;
+			gViewer.FixedScale = 1;
+			graphics = CreateGraphics();
 		}
 
         protected override void Dispose(bool disposing)
@@ -119,7 +122,6 @@ namespace Origam.Workbench.Editors
             this.gViewer.ToolBarIsVisible = false;
             this.gViewer.Transform = planeTransformation1;
             this.gViewer.WindowZoomButtonPressed = false;
-            this.gViewer.ZoomF = 1D;
             this.gViewer.ZoomWindowThreshold = 0.05D;
             this.gViewer.SaveAsMsaglEnabled = false;
             // 
@@ -166,7 +168,7 @@ namespace Origam.Workbench.Editors
 						nodeSelector: nodeSelector,
 						parentForm: this,
 						persistenceProvider: persistenceProvider,
-						factory: new WorkFlowDiagramFactory(gViewer, nodeSelector));
+						factory: new WorkFlowDiagramFactory(nodeSelector, graphics));
 					break;
 				case IContextStore contextStore:
 					internalEditor = new GeneralDiagramEditor<IContextStore>(
@@ -181,18 +183,13 @@ namespace Origam.Workbench.Editors
 						factory: new GeneralDiagramFactory());
 					break;
 			}
+			internalEditor.ReDraw();
 		}
 
 		public List<ToolStrip> GetToolStrips(int maxWidth = -1)
 		{
 			LabeledToolStrip toolStrip = new LabeledToolStrip(this);
 			toolStrip.Text = "Diagram Editor";
-
-			BigToolStripButton panButton = new BigToolStripButton();
-			panButton.Text = "Pan";
-			panButton.Image = ImageRes.UnknownIcon;
-			panButton.Click += (sender, args) => gViewer.PanButtonPressed = !gViewer.PanButtonPressed; 
-			toolStrip.Items.Add(panButton);
 			
 			BigToolStripButton zoomHomeButton = new BigToolStripButton();
 			zoomHomeButton.Text = "Zoom Home";
@@ -227,8 +224,7 @@ namespace Origam.Workbench.Editors
 		}
 
 		private void ZoomHome(object sender, EventArgs e) {
-			gViewer.Transform = null;
-			gViewer.Invalidate();
+			internalEditor.ReDraw();
 		}
 		
 		public event EventHandler ToolStripsLoaded;

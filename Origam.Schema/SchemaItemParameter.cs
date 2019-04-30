@@ -28,7 +28,7 @@ namespace Origam.Schema
 	/// <summary>
 	/// Parameter that can be used to parametrize any kind of schema item.
 	/// </summary>
-	[SchemaItemDescription("Parameter", "Parameters", 15)]
+	[SchemaItemDescription("Parameter", "Parameters", "icon_parameter.png")]
     [XmlModelRoot(ItemTypeConst)]
     public class SchemaItemParameter : AbstractSchemaItem
 	{
@@ -100,14 +100,6 @@ namespace Origam.Schema
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "15";
 			}
 		}
 
