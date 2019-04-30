@@ -284,15 +284,16 @@ namespace Origam.Workbench.Editors
 
         private void RebuildActionsPane()
         {
-            int width = toolPanel.Width;
-            toolStrip1.AutoSize = false;
-            toolPanel.AutoSize = false;
-            toolPanel.Width = width;
-            toolStrip1.Items.Clear();
-            toolStrip1.Top = 0;
-            // Actions
-            toolStrip1.Items.Add(actionsLabel);
-            if (!IsDialog() && (ActionsBuilder == null || NewElementsBuilder == null))
+	        int width = toolPanel.Width;
+	        toolStrip1.AutoSize = false;
+	        toolPanel.AutoSize = false;
+	        toolPanel.Width = width;
+	        toolStrip1.Items.Clear();
+	        toolStrip1.Top = 0;
+	        // Actions
+	        toolStrip1.Items.Add(actionsLabel);
+
+			if (!IsDialog() && (ActionsBuilder == null || NewElementsBuilder == null))
             {
                 toolPanel.Hide();
                 return;
@@ -304,9 +305,8 @@ namespace Origam.Workbench.Editors
             }
             else if (IsDirty && IsDialog())
             {
-                toolPanel.Show();
+	            toolPanel.Show();
                 toolStrip1.Items.Add(_saveCmd);
-                toolStrip1.Items.Add(dockCmd);
             }
             else if (!IsDialog() && !showMenusInAppToolStrip)
             {
@@ -342,7 +342,19 @@ namespace Origam.Workbench.Editors
                 toolPanel.AutoSize = true;
                 toolStrip1.AutoSize = true;
             }
-            toolPanel.BackColor = toolStrip1.BackColor;
+			if (IsDialog()){
+				toolStrip1.Items.Add(dockCmd);
+				toolPanel.Show();
+			}
+
+			if (!IsDialog() && 
+			    toolStrip1.Items.Count == 1 &&
+			    toolStrip1.Items.Contains(actionsLabel))
+			{
+				toolPanel.Hide();
+			}
+
+			toolPanel.BackColor = toolStrip1.BackColor;
         }
 
         private void DockCmd_Click(object sender, EventArgs e)

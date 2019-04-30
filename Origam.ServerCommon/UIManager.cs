@@ -411,9 +411,9 @@ namespace Origam.Server
                     grid.GetAttribute("ShowAddButton") == "true")
                 {
                     RuleEngine re = new RuleEngine(new Hashtable(), null);
-                    XmlDocument newRecordData = new XmlDocument();
-                    newRecordData.AppendChild(
-                        newRecordData.CreateElement("ROOT"));
+                    XmlContainer newRecordData = new XmlContainer();
+                    newRecordData.Xml.AppendChild(
+                        newRecordData.Xml.CreateElement("ROOT"));
                     panelConfig.AllowCreate = re.RowLevelSecurityState(
                         newRecordData, newRecordData, null,
                         CredentialType.Create,

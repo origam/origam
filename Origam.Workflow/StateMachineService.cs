@@ -305,7 +305,7 @@ namespace Origam.Workflow
             // recordCreated
             if (row.RowState == DataRowState.Added)
             {
-                XmlDocument data = DatasetTools.GetRowXml(row, DataRowVersion.Default);
+                XmlContainer data = DatasetTools.GetRowXml(row, DataRowVersion.Default);
                 ExecuteStatelessEvents(entityId, StateMachineServiceStatelessEventType.RecordCreated, row, transactionId);
             }
         }
@@ -736,7 +736,7 @@ namespace Origam.Workflow
 
                 if (creationQueues.Length > 0)
                 {
-                    XmlDocument data = DatasetTools.GetRowXml(dataRow,
+                    XmlContainer data = DatasetTools.GetRowXml(dataRow,
                         eventType == StateMachineServiceStatelessEventType.RecordDeleted
                             || eventType == StateMachineServiceStatelessEventType.BeforeRecordDeleted
                         ? DataRowVersion.Original
@@ -758,7 +758,7 @@ namespace Origam.Workflow
                             // write to queue
                             WQService.WorkQueueAdd(wq.WorkQueueClass, wq.Name, wq.Id, wq.IsCreationConditionNull()
                                 ? null
-                                : wq.CreationCondition, new XmlContainer(data), transactionId);
+                                : wq.CreationCondition, data, transactionId);
                         }
                     }
                 }
@@ -1190,7 +1190,7 @@ namespace Origam.Workflow
                                 if (log.IsDebugEnabled)
                                 {
                                     log.DebugFormat("Evaluating ConditionFilter {0} of work queue class {1} for row {2}.",
-                                        wqc.ConditionFilter, wqc.Path, DatasetTools.GetRowXml(row, DataRowVersion.Default).OuterXml);
+                                        wqc.ConditionFilter, wqc.Path, DatasetTools.GetRowXml(row, DataRowVersion.Default).Xml.OuterXml);
                                 }
                                 StringBuilder filterBuilder = new StringBuilder();
                                 string filter;

@@ -256,7 +256,7 @@ namespace Origam.Gui
             if(scriptCall.Rule != null)
             {
                 RuleEngine ruleEngine = new RuleEngine(new Hashtable(), null);
-                XmlDocument rowXml = DatasetTools.GetRowXml(
+                XmlContainer rowXml = DatasetTools.GetRowXml(
                     dataRow, DataRowVersion.Current);
                 object result = ruleEngine.EvaluateRule(
                     scriptCall.Rule, rowXml, null);
