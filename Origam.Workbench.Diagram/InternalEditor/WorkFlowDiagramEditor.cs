@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Msagl.Core.Geometry;
@@ -29,15 +28,16 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private readonly WorkbenchSchemaService schemaService;
         private readonly Guid graphParentId;
         private readonly EdgeInsertionRule edgeInsertionRule;
-        private readonly List<DeferedDependency> deferedDependencies = new List<DeferedDependency>();
         private readonly NodeSelector nodeSelector;
+        private readonly DependencyTaskRunner taskRunner;
 
         public WorkFlowDiagramEditor(Guid graphParentId, GViewer gViewer, Form parentForm,
 	        IPersistenceProvider persistenceProvider, WorkFlowDiagramFactory factory, NodeSelector nodeSelector)
-		{
+        {
 		    (gViewer as IViewer).MouseDown += OnMouseDown;
 		    gViewer.MouseClick += OnMouseClick;
 		    schemaService = ServiceManager.Services.GetService<WorkbenchSchemaService>();
+	        taskRunner = new DependencyTaskRunner(persistenceProvider, schemaService);
 			gViewer.EdgeAdded += OnEdgeAdded;
 			gViewer.EdgeRemoved += OnEdgeRemoved;
 			gViewer.MouseDoubleClick += OnDoubleClick;
@@ -81,9 +81,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        if (!(viewer.SelectedObject is Edge edge)) return;
 	        Guid? id = (edge.UserData as WorkflowTaskDependency)?.Id;
 	        if (id == null) return;
-	        AbstractSchemaItem clickedItem = 
-		        (AbstractSchemaItem)persistenceProvider
-			        .RetrieveInstance(typeof(AbstractSchemaItem), new Key(id.Value));
+	        AbstractSchemaItem clickedItem = RetrieveItem(id.Value.ToString());
 	        if(clickedItem != null)
 	        {
 		        EditSchemaItem cmd = new EditSchemaItem
@@ -111,13 +109,10 @@ namespace Origam.Workbench.Diagram.InternalEditor
         }
 
         private void OnEdgeRemoved(object sender, EventArgs e)
-        {
+        {	
 	        Edge edge = (Edge)sender;
 
-	        var dependentItem = persistenceProvider.RetrieveInstance(
-		        typeof(AbstractSchemaItem),
-		        new Key(edge.Target)) as AbstractSchemaItem;
-
+	        AbstractSchemaItem dependentItem = RetrieveItem(edge.Target);
 	        var workflowTaskDependency = dependentItem.ChildItems
 		        .ToEnumerable()
 		        .OfType<WorkflowTaskDependency>()
@@ -135,11 +130,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        var independentItem = persistenceProvider.RetrieveInstance(
 		        typeof(IWorkflowStep),
 		        new Key(edge.Source)) as IWorkflowStep;
-	        var dependentItem = persistenceProvider.RetrieveInstance(
-		        typeof(AbstractSchemaItem),
-		        new Key(edge.Target)) as AbstractSchemaItem;
-
-
+	        AbstractSchemaItem dependentItem = RetrieveItem(edge.Target);
 	        var workflowTaskDependency = new WorkflowTaskDependency
 	        {
 		        SchemaExtensionId = dependentItem.SchemaExtensionId,
@@ -157,10 +148,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        if (gViewer.SelectedObject is Node node)
 	        {
 		        Guid nodeId = Guid.Parse(node.Id);
-		        var schemaItem = persistenceProvider.RetrieveInstance(
-			        typeof(AbstractSchemaItem),
-			        new Key(nodeId))
-			        as AbstractSchemaItem;
+		        var schemaItem = RetrieveItem(nodeId.ToString());
 		        if (schemaItem != null)
 		        {
 			        schemaService.SelectItem(schemaItem);
@@ -183,7 +171,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			if (childPersisted)
 			{
 				UpdateNodeOf(persistedSchemaItem);
-				CreateDeferedDependency(persistedSchemaItem);
+				taskRunner.UpdateDependencies(persistedSchemaItem);
 				return;
 			}
 			
@@ -201,27 +189,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			}
 		}
 
-		private void CreateDeferedDependency(AbstractSchemaItem persistedSchemaItem)
-		{
-			DeferedDependency deferedDependency = deferedDependencies
-				.SingleOrDefault(x => x.DependentItem.Id == persistedSchemaItem.Id);
-			IWorkflowStep independentItem = deferedDependency
-				?.IndependentItem 
-				as IWorkflowStep;
-			if (independentItem == null) return;
-			
-			var workflowTaskDependency = new WorkflowTaskDependency
-			{
-				SchemaExtensionId = persistedSchemaItem.SchemaExtensionId,
-				PersistenceProvider = persistenceProvider,
-				ParentItem = persistedSchemaItem,
-				Task = independentItem
-			};
-			workflowTaskDependency.Persist();
 
-			schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(persistedSchemaItem);
-			deferedDependencies.Remove(deferedDependency);
-		}
 
 		private void UpdateNodeOf(AbstractSchemaItem persistedSchemaItem)
 		{
@@ -325,8 +293,41 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			deleteMenuItem.Image = ImageRes.icon_delete;
 			deleteMenuItem.Click += (sender, args) => gViewer.RemoveEdge(edge, true); ;
 		        
+			ToolStripMenuItem addBetweenMenu = new ToolStripMenuItem("Add Between");
+			addBetweenMenu.Image = ImageRes.icon_new;
+			var builder = new SchemaItemEditorsMenuBuilder(true);
+			var submenuItems = builder.BuildSubmenu(UpToDateGraphParent);
+			foreach (AsMenuCommand submenuItem in submenuItems)
+            {
+             	if (!(submenuItem.Command is AddNewSchemaItem addNewCommand))
+             	{
+             		continue;
+             	}
+                addNewCommand.ItemCreated += (sender, newItem) =>
+             	{ 
+	                AbstractSchemaItem sourceItem = RetrieveItem(edge.Edge.Source);
+	                AbstractSchemaItem targetItem = RetrieveItem(edge.Edge.Target);
+
+	                taskRunner.AddDependencyTask(
+		                independentItem: (IWorkflowStep)newItem, 
+		                dependentItem: targetItem, 
+		                triggerItemId: newItem.Id);
+
+	                taskRunner.AddDependencyTask(
+		                independentItem: (IWorkflowStep) sourceItem,
+		                dependentItem: newItem,
+		                triggerItemId: newItem.Id);
+	                
+	                taskRunner.RemoveDepedenceyTask(
+		               dependency: (WorkflowTaskDependency)edge.Edge.UserData, 
+		               triggerItemId: newItem.Id);
+             	};
+            }
+			addBetweenMenu.DropDownItems.AddRange(submenuItems);
+		
 			var contextMenu = new ContextMenuStrip();
 			contextMenu.Items.Add(deleteMenuItem);
+			contextMenu.Items.Add(addBetweenMenu);
 			return contextMenu;
 		}
 
@@ -377,18 +378,18 @@ namespace Origam.Workbench.Diagram.InternalEditor
 				var submenuItems = builder.BuildSubmenu(UpToDateGraphParent);
 				foreach (AsMenuCommand submenuItem in submenuItems)
 				{
-					if (!(submenuItem.Command is AddNewSchemaItem addNewCommand))
+					if (!(submenuItem.Command is AddNewSchemaItem addNewCommand) ||
+					    !(schemaItemUnderMouse is IWorkflowStep workflowStep))
 					{
 						continue;
 					}
 
 					addNewCommand.ItemCreated += (sender, item) =>
 					{
-						deferedDependencies.Add(new DeferedDependency
-						{
-							DependentItem = item,
-							IndependentItem = schemaItemUnderMouse
-						});
+						taskRunner.AddDependencyTask(
+							independentItem: workflowStep,
+							dependentItem: item, 
+							triggerItemId: item.Id);
 					};
 				}
 				addAfterMenu.DropDownItems.AddRange(submenuItems);
@@ -401,13 +402,17 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 		private AbstractSchemaItem DNodeToSchemaItem(DNode dNodeUnderMouse)
 		{
-			if (dNodeUnderMouse == null) return null;
-			AbstractSchemaItem schemaItemUnderMouse = persistenceProvider
+			return RetrieveItem(dNodeUnderMouse.Node.Id);
+		}
+		
+		private AbstractSchemaItem RetrieveItem(string id)
+		{
+			if (string.IsNullOrWhiteSpace(id)) return null;
+			return persistenceProvider
 					.RetrieveInstance(
 						typeof(AbstractSchemaItem),
-						new Key(dNodeUnderMouse.Node.Id))
+						new Key(id))
 				as AbstractSchemaItem;
-			return schemaItemUnderMouse;
 		}
 
 		private void DeleteNode_Click(object sender, EventArgs e)
@@ -447,10 +452,4 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        gViewer?.Dispose();
         }
     }
-
-	internal class DeferedDependency
-	{
-		public AbstractSchemaItem IndependentItem { get; set; }
-		public AbstractSchemaItem DependentItem { get; set; }
-	}
 }
