@@ -41,7 +41,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for AggregatedColumn.
 	/// </summary>
-	[SchemaItemDescription("Aggregated Field", "Fields", 52)]
+	[SchemaItemDescription("Aggregated Field", "Fields", "icon_agregated-field.png")]
     [HelpTopic("Aggregated+Field")]
     [DefaultProperty("Relation")]
 	public class AggregatedColumn : AbstractDataEntityColumn, IRelationReference
@@ -59,14 +59,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return true;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "52";
 			}
 		}
 

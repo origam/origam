@@ -416,27 +416,27 @@ namespace Origam.Schema.EntityModel
 				{
 					if(this.UseLookupValue)
 					{
-						return "50";
+						return "icon_lookup-field.png";
 					}
 					else
 					{
 						if(this.Field == null)
 						{
-							return "10";
+							return "icon_field.png";
 						}
 						else if(this.Field.IsPrimaryKey)
 						{
-							return "11";
+							return "icon_key.png";
 						}
 						else
 						{
 							if(this.Field is FieldMappingItem)
 							{
-								return "22";
+								return "icon_database-field.png";
 							}
 							else
 							{
-								return "10";
+								return "icon_field.png";
 							}
 						}
 					}

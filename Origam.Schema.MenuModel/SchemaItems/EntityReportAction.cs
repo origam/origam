@@ -33,7 +33,7 @@ namespace Origam.Schema.MenuModel
 	/// <summary>
 	/// Summary description for EntitySecurityRule.
 	/// </summary>
-	[SchemaItemDescription("Report Action", "UI Actions", 29)]
+	[SchemaItemDescription("Report Action", "UI Actions", "icon_report-action.png")]
     [HelpTopic("Report+Action")]
 	public class EntityReportAction : EntityUIAction
 	{
@@ -51,14 +51,6 @@ namespace Origam.Schema.MenuModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "29";
 			}
 		}
 

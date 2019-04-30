@@ -26,7 +26,8 @@ namespace Origam.Schema.LookupModel
 	/// <summary>
 	/// Summary description for DataServiceDataLookup.
 	/// </summary>
-	[SchemaItemDescription("Data Service Tooltip", 83)]
+	[SchemaItemDescription("Data Service Tooltip", 
+        "icon_data-service-tooltip.png")]
     [HelpTopic("Tooltips")]
 	public class DataServiceDataTooltip : AbstractDataTooltip
 	{

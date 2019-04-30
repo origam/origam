@@ -29,7 +29,8 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for EntityColumnReference.
 	/// </summary>
-	[SchemaItemDescription("Data Constant Reference", "Parameters", 57)]
+	[SchemaItemDescription("Data Constant Reference", "Parameters",
+        "icon_data-constant-reference.png")]
     [HelpTopic("Data+Constant+Reference")]
 	[XmlModelRoot(ItemTypeConst)]
     [DefaultProperty("DataConstant")]
@@ -51,14 +52,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "57";
 			}
 		}
 

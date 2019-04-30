@@ -28,7 +28,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for DataQuery.
 	/// </summary>
-	[SchemaItemDescription("Sort Set", "Sort Sets", 18)]
+	[SchemaItemDescription("Sort Set", "Sort Sets", "icon_sort-set.png")]
     [HelpTopic("Sort+Sets")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class DataStructureSortSet : AbstractSchemaItem, ISchemaItemFactory
@@ -49,14 +49,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "18";
 			}
 		}
 

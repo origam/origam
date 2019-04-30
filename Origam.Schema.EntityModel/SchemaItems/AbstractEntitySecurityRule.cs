@@ -71,14 +71,6 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		public override string Icon
-		{
-			get
-			{
-				return "5";
-			}
-		}
-
 		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
 		{
 			if(this.Rule != null)

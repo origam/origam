@@ -28,7 +28,8 @@ namespace Origam.Schema.GuiModel
 	/// <summary>
 	/// Summary description for EntityFilter.
 	/// </summary>
-	[SchemaItemDescription("Tree Structure", "Tree Structures", 3)]
+	[SchemaItemDescription("Tree Structure", "Tree Structures", 
+        "icon_tree-structures.png")]
     [HelpTopic("Tree+Structures")]
 	[XmlModelRoot(ItemTypeConst)]
     public class TreeStructure : AbstractSchemaItem, ISchemaItemFactory
@@ -53,14 +54,6 @@ namespace Origam.Schema.GuiModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "3";
 			}
 		}
 

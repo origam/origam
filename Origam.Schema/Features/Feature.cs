@@ -27,7 +27,7 @@ namespace Origam.Schema
 	/// <summary>
 	/// Summary description for Feature.
 	/// </summary>
-	[SchemaItemDescription("Feature", "icon_03_features.png")]
+	[SchemaItemDescription("Feature", "icon_feature.png")]
     [HelpTopic("Features")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class Feature : AbstractSchemaItem

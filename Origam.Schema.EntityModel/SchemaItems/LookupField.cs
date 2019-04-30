@@ -32,7 +32,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Implementation of LookupField.
 	/// </summary>
-	[SchemaItemDescription("Lookup Field", "Fields", 50)]
+	[SchemaItemDescription("Lookup Field", "Fields", "icon_lookup-field.png")]
     [HelpTopic("Lookup+Field")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class LookupField : AbstractSchemaItem, IDataEntityColumn
@@ -261,8 +261,6 @@ namespace Origam.Schema.EntityModel
         #region Overriden AbstractSchemaItem Methods
         [Browsable(false)]
 		public bool ReadOnly => false;
-
-		public override string Icon => "50";
 
 		public override bool CanMove(Origam.UI.IBrowserNode2 newNode) => newNode is IDataEntity;
 

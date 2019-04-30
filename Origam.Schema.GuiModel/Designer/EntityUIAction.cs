@@ -60,8 +60,6 @@ namespace Origam.Schema.GuiModel
 		[EntityColumn("ItemType")]
 		public override string ItemType => ItemTypeConst;
 
-		public override string Icon => "5";
-
 		public Hashtable ParameterMappings {
 			get
 			{

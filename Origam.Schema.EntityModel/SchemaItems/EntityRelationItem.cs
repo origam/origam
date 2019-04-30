@@ -29,7 +29,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for EntityRelationItem.
 	/// </summary>
-	[SchemaItemDescription("Relationship", "Relationships", 4)]
+	[SchemaItemDescription("Relationship", "Relationships", "icon_relationship.png")]
     [HelpTopic("Relationships")]
 	[XmlModelRoot(ItemTypeConst)]
 	[DefaultProperty("RelatedEntity")]
@@ -123,14 +123,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return false;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "4";
 			}
 		}
 

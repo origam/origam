@@ -28,7 +28,8 @@ namespace Origam.Schema.GuiModel
 	/// <summary>
 	/// Summary description for EntityDropdownAction.
 	/// </summary>
-	[SchemaItemDescription("Dropdown Action", "UI Actions", 29)]
+	[SchemaItemDescription("Dropdown Action", "UI Actions", 
+        "icon_dropdown-action.png")]
     [HelpTopic("DropDown+Action")]
     public class EntityDropdownAction : EntityUIAction
 	{

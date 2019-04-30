@@ -29,7 +29,7 @@ namespace Origam.Schema
 	/// <summary>
 	/// Summary description for String.
 	/// </summary>
-	[SchemaItemDescription("String", 58)]
+	[SchemaItemDescription("String", "icon_string.png")]
     [HelpTopic("String+Library")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class StringItem : AbstractSchemaItem
@@ -50,14 +50,6 @@ namespace Origam.Schema
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "58";
 			}
 		}
 		#endregion

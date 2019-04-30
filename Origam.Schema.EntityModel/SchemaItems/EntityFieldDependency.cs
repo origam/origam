@@ -30,7 +30,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for EntityFilter.
 	/// </summary>
-	[SchemaItemDescription("Dependency", "Dependencies", 3)]
+	[SchemaItemDescription("Dependency", "Dependencies", "icon_dependency.png")]
     [HelpTopic("Field+Dependencies")]
 	[XmlModelRoot(ItemTypeConst)]
 	[DefaultProperty("Field")]
@@ -56,14 +56,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "3";
 			}
 		}
 
