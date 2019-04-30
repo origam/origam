@@ -141,7 +141,7 @@ namespace OrigamArchitect
             _settings.SourcesFolder = txtSourcesFolder.Text;
             _settings.BinFolder = txtBinFolderRoot.Text;
             _settings.DatabaseServerName = txtServerName.Text;
-            _settings.DatabaseTypeText = txtDatabaseType.SelectedText;
+            _settings.DatabaseTypeText = txtDatabaseType.GetItemText(txtDatabaseType.SelectedItem);
             _settings.Save();
         }
 
@@ -236,9 +236,12 @@ namespace OrigamArchitect
             if (txtDatabaseType.SelectedIndex == -1)
             {
                 txtDatabaseType.SelectedItem = null;
-                txtDatabaseType.SelectedText = _settings.DatabaseTypeText;
-                TxtDatabaseType_SelectedIndexChanged(null, EventArgs.Empty);
+                txtDatabaseType.Items.AddRange(new object[] {
+                    "Microsoft Sql Server",
+                    "Postgre Sql Server"});
+                txtDatabaseType.SelectedIndex = txtDatabaseType.FindStringExact(_settings.DatabaseTypeText);
             }
+            TxtDatabaseType_SelectedIndexChanged(null, EventArgs.Empty);
         }
 
         private void SetPort()

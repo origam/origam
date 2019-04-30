@@ -714,14 +714,10 @@
             // txtDatabaseType
             // 
             this.txtDatabaseType.FormattingEnabled = true;
-            this.txtDatabaseType.Items.AddRange(new object[] {
-            "Microsoft Sql Server",
-            "Postgre Sql Server"});
             this.txtDatabaseType.Location = new System.Drawing.Point(160, 86);
             this.txtDatabaseType.Name = "txtDatabaseType";
             this.txtDatabaseType.Size = new System.Drawing.Size(223, 23);
             this.txtDatabaseType.TabIndex = 15;
-            this.txtDatabaseType.Text = "Microsoft Sql Server";
             this.txtDatabaseType.SelectedIndexChanged += new System.EventHandler(this.TxtDatabaseType_SelectedIndexChanged);
             // 
             // label4
