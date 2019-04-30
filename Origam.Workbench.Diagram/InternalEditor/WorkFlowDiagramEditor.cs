@@ -47,6 +47,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 				{
 					if (sourceNode is Subgraph) return false;
 					if (targetNode is Subgraph) return false;
+					if (RetrieveItem(sourceNode.Id) is ContextStore ) return false;
+					if (RetrieveItem(targetNode.Id) is ContextStore ) return false;
 					var sourcesParent = gViewer.Graph.FindParentSubGraph(sourceNode);
 					var targetsParent = gViewer.Graph.FindParentSubGraph(targetNode);
 					return sourcesParent == targetsParent;
