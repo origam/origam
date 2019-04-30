@@ -375,16 +375,22 @@ namespace Origam.Workbench.Diagram.InternalEditor
 				addAfterMenu.Image = ImageRes.icon_new;
 				var builder = new SchemaItemEditorsMenuBuilder(true);
 				var submenuItems = builder.BuildSubmenu(UpToDateGraphParent);
-				submenuItems[0].Click += (sender, args) =>
+				foreach (AsMenuCommand submenuItem in submenuItems)
 				{
-					var command = ((AsMenuCommand) sender).Command as AddNewSchemaItem;
-					if (command?.CreatedItem == null) return;
-					deferedDependencies.Add(new DeferedDependency
+					if (!(submenuItem.Command is AddNewSchemaItem addNewCommand))
 					{
-						DependentItem = command.CreatedItem,
-						IndependentItem = schemaItemUnderMouse
-					});
-				};
+						continue;
+					}
+
+					addNewCommand.ItemCreated += (sender, item) =>
+					{
+						deferedDependencies.Add(new DeferedDependency
+						{
+							DependentItem = item,
+							IndependentItem = schemaItemUnderMouse
+						});
+					};
+				}
 				addAfterMenu.DropDownItems.AddRange(submenuItems);
 				addAfterMenu.Enabled = IsDeleteMenuItemAvailable(dNodeUnderMouse);
 				contextMenu.AddSubItem(addAfterMenu);

@@ -99,8 +99,7 @@ namespace Origam.Workbench.Commands
 			}
 		}
 
-        public AbstractSchemaItem CreatedItem { get; private set; }
-
+        public event EventHandler<AbstractSchemaItem> ItemCreated ;
         public override void Run()
 		{
 			AbstractSchemaItem item = ParentElement.NewItem(this.Owner as Type, _schema.ActiveSchemaExtensionId, null);
@@ -122,7 +121,7 @@ namespace Origam.Workbench.Commands
 
 			_schema.LastAddedNodeParent = ParentElement;
 			_schema.LastAddedType = this.Owner as Type;
-			CreatedItem = item;
+			ItemCreated?.Invoke(this, item);
 			cmd.Run();
 		}
 	
