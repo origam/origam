@@ -230,10 +230,16 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		{
 			Node node = gViewer.Graph.FindNode(nodeId.ToString());
 			if (node == null) return true;
+			Subgraph parentSubgraph = gViewer.Graph.FindParentSubGraph(node);
 
 			IViewerNode viewerNode = gViewer.FindViewerNode(node);
 			gViewer.RemoveNode(viewerNode, true);
 			gViewer.Graph.RemoveNodeEverywhere(node);
+			if (parentSubgraph != null && !parentSubgraph.Nodes.Any())
+			{
+				ReDraw();
+			}
+
 			return false;
 		}
 
