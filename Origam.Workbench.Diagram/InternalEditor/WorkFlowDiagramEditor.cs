@@ -40,6 +40,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		    schemaService = ServiceManager.Services.GetService<WorkbenchSchemaService>();
 			gViewer.EdgeAdded += OnEdgeAdded;
 			gViewer.EdgeRemoved += OnEdgeRemoved;
+			gViewer.MouseDoubleClick += OnDoubleClick;
 			edgeInsertionRule = new EdgeInsertionRule(
 				viewerToImposeOn: gViewer,
 				predicate: (sourceNode, targetNode) =>
@@ -72,6 +73,26 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		        .Single(x => x.Node == gViewer.Graph.RootSubgraph.Subgraphs.First());
 	        gViewer.Transform = null;
 	        gViewer.Invalidate();
+        }
+        
+        private void OnDoubleClick(object sender, EventArgs e)
+        {
+	        GViewer viewer = sender as GViewer;
+	        if (!(viewer.SelectedObject is Edge edge)) return;
+	        Guid? id = (edge.UserData as WorkflowTaskDependency)?.Id;
+	        if (id == null) return;
+	        AbstractSchemaItem clickedItem = 
+		        (AbstractSchemaItem)persistenceProvider
+			        .RetrieveInstance(typeof(AbstractSchemaItem), new Key(id.Value));
+	        if(clickedItem != null)
+	        {
+		        EditSchemaItem cmd = new EditSchemaItem
+		        {
+			        ShowDialog = true,
+			        Owner = clickedItem
+		        };
+		        cmd.Run();
+	        }
         }
 
         private void OnMouseClick(object sender, MouseEventArgs args)
