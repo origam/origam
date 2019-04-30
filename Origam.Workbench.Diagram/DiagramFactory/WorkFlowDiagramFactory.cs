@@ -48,6 +48,9 @@ namespace Origam.Workbench.Diagram
 		
 		private static readonly int headingBackgroundHeight = 30;
 		private static readonly int nodeMargin = 40;
+
+		private readonly int emptySubgraphWidth = 200;
+		private readonly int emptySubgraphHeight = 80;
 		
 		private static readonly Font font = new Font("Arial", 10);
 		private static readonly Pen blackPen = new Pen(System.Drawing.Color.Black, 1);
@@ -107,7 +110,7 @@ namespace Origam.Workbench.Diagram
             subgraph.NodeBoundaryDelegate = GetSubgraphBoundary;
             subgraph.UserData = workFlowBlock;
             subgraph.LabelText = workFlowBlock.Name;
-            
+  
             if (parentSubgraph == null)
             {
                 graph.RootSubgraph.AddSubgraph(subgraph);
@@ -169,6 +172,13 @@ namespace Origam.Workbench.Diagram
 		}
 		
 		private ICurve GetSubgraphBoundary(Node node) {
+			
+			Subgraph subgraph = (Subgraph) node;
+			if (!subgraph.Nodes.Any())
+			{
+				return CurveFactory.CreateRectangle(emptySubgraphWidth, emptySubgraphHeight, new Point());
+			}
+			
 			var clusterBoundary = ((Cluster) node.GeometryNode).RectangularBoundary;
 
 			var height = clusterBoundary.TopMargin;
@@ -204,34 +214,63 @@ namespace Origam.Workbench.Diagram
 
 			var labelWidth = GetLabelWidth(node);
 
+			double centerX = node.GeometryNode.Center.X;
+			double centerY = node.GeometryNode.Center.Y;
 			var borderCorner = new System.Drawing.Point(
-				(int)node.GeometryNode.Center.X - borderSize.Width / 2,
-				(int)node.GeometryNode.Center.Y - borderSize.Height / 2);
+				(int)centerX - borderSize.Width / 2,
+				(int)centerY - borderSize.Height / 2);
 			Rectangle border = new Rectangle(borderCorner, borderSize);
 
 			var labelPoint = new PointF(
-				(float)(node.GeometryNode.Center.X - labelWidth / 2 + imageLeftMargin + image.Width +imageRightMargin),
-				(float)node.GeometryNode.Center.Y - border.Height / 2.0f + labelTopMargin);
+				(float)(centerX - labelWidth / 2 + imageLeftMargin + image.Width +imageRightMargin),
+				(float)centerY - border.Height / 2.0f + labelTopMargin);
 
 			var imagePoint = new PointF(
-				(float)(node.GeometryNode.Center.X - labelWidth / 2 + imageLeftMargin),
-				(float)(node.GeometryNode.Center.Y - border.Height / 2.0f + imageTopMargin));
+				(float)(centerX - labelWidth / 2 + imageLeftMargin),
+				(float)(centerY - border.Height / 2.0f + imageTopMargin));
 
 			Rectangle imageBackground = new Rectangle(
 				borderCorner,
 				new Size(border.Width, headingBackgroundHeight));
 
+			var (emptyMessagePoint, emptyGraphMessage) = GetEmptyNodeMessage(node);
+			
 			editorGraphics.DrawUpSideDown(drawAction: graphics =>
 				{
 					graphics.FillRectangle(greyBrush, imageBackground);
 					graphics.DrawString(node.LabelText, font, drawBrush,
 						labelPoint, drawFormat);
+					if (!string.IsNullOrWhiteSpace(emptyGraphMessage))
+					{
+						graphics.DrawString(emptyGraphMessage, font, drawBrush,
+							emptyMessagePoint, drawFormat);
+					}
 					graphics.DrawRectangle(pen, border);
 					graphics.DrawImage(image, imagePoint);
 				},
 				yAxisCoordinate: (float)node.GeometryNode.Center.Y);
 
 			return true;
+		}
+
+		private Tuple<PointF, string> GetEmptyNodeMessage(Node node)
+		{
+			Subgraph subgraph = (Subgraph) node;
+			double centerX = node.GeometryNode.Center.X;
+			double centerY = node.GeometryNode.Center.Y;
+			
+			if (subgraph.Nodes.Any())
+			{
+				return new Tuple<PointF, string>(new PointF(), "");
+			}
+
+			string emptyGraphMessage = "Right click here to add steps";
+			SizeF messageSize = graphics.MeasureString(emptyGraphMessage, font);
+			var emptyMessagePoint = new PointF(
+				(float)centerX -  messageSize.Width / 2,
+				(float)centerY + headingBackgroundHeight / 2 - messageSize.Height / 2 );
+			
+			return new Tuple<PointF, string>(emptyMessagePoint, emptyGraphMessage);
 		}
 	}
 }

@@ -314,7 +314,7 @@ namespace Microsoft.Msagl.Layout.Initial {
 
             var bounds = MdsGraphLayout.PackGraphs(components, settings);
 
-            bounds = AdjustNewBoundstSoThatTheyRespectTheClusterWidth(cluster, bounds);
+            bounds = AdjustNewBoundstSoThatTheyRespectTheClusterSize(cluster, bounds);
             
             
             foreach (var g in components)
@@ -336,14 +336,14 @@ namespace Microsoft.Msagl.Layout.Initial {
 //            LayoutAlgorithmSettings.ShowDebugCurves(l.ToArray());
         }
 
-        private static Rectangle AdjustNewBoundstSoThatTheyRespectTheClusterWidth(
+        private static Rectangle AdjustNewBoundstSoThatTheyRespectTheClusterSize(
             Cluster cluster, Rectangle bounds)
         {
             if (cluster.BoundaryCurve.BoundingBox.Width > bounds.Width)
             {
                 bounds = new Rectangle(
                     new Point(0, 0),
-                    new Point(cluster.BoundaryCurve.BoundingBox.Width, bounds.Height));
+                    new Point(cluster.BoundaryCurve.BoundingBox.Width, cluster.BoundaryCurve.BoundingBox.Height));
             }
 
             return bounds;

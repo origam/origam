@@ -191,8 +191,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			}
 		}
 
-
-
 		private void UpdateNodeOf(AbstractSchemaItem persistedSchemaItem)
 		{
 			Node node = gViewer.Graph.FindNode(persistedSchemaItem.Id.ToString());
