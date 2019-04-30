@@ -24,8 +24,10 @@ using Origam.Schema.WorkflowModel;
 using Microsoft.Msagl.Drawing;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Core.Layout;
+using MoreLinq.Extensions;
 using Origam.Schema;
 using Origam.Workbench.Diagram.DiagramFactory;
 using Origam.Workbench.Diagram.Extensions;
@@ -71,14 +73,27 @@ namespace Origam.Workbench.Diagram
 		{
 			graph = new Graph();
 			DrawWorkflowDiagram(graphParent, null);
+			AddContextStores(graphParent);
 			graph.LayoutAlgorithmSettings.ClusterMargin = nodeMargin;
 			return graph;
+		}
+
+		private void AddContextStores(IWorkflowBlock graphParent)
+		{
+			foreach (var childItem in graphParent.ChildItems)
+			{
+				if (childItem is ContextStore contextStore)
+				{
+					Node node = nodeFactory.AddNode(graph, contextStore);
+					Subgraph subgraph = graph.RootSubgraph.Subgraphs.First();
+					subgraph.AddNode(node);
+				}
+			}
 		}
 
 		private Node AddNode(IWorkflowStep step, Subgraph subGraph)
 		{
 			Node node = nodeFactory.AddNode(graph, step);
-            node.LabelText = step.Name;
             node.UserData = step;
             subGraph?.AddNode(node);
             return node;
@@ -105,8 +120,7 @@ namespace Origam.Workbench.Diagram
 
 			foreach(IWorkflowStep step in workFlowBlock.ChildItemsByType(AbstractWorkflowStep.ItemTypeConst))
 			{
-                IWorkflowBlock subBlock = step as IWorkflowBlock;
-                if (subBlock == null)
+				if (!(step is IWorkflowBlock subBlock))
                 {
                     Node shape = AddNode(step, subgraph);
                     ht.Add(step.PrimaryKey, shape);
