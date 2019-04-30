@@ -31,7 +31,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for DataStructureFilterSetFilter.
 	/// </summary>
-	[SchemaItemDescription("Filter", 5)]
+	[SchemaItemDescription("Filter", "icon_filter.png")]
     [HelpTopic("Filter+Set+Filter")]
 	[XmlModelRoot(ItemTypeConst)]
     [DefaultProperty("Entity")]
@@ -164,14 +164,6 @@ namespace Origam.Schema.EntityModel
 		#endregion
 
 		#region Overriden AbstractSchemaItem Members
-		public override string Icon
-		{
-			get
-			{
-				return "5";
-			}
-		}
-
 		[EntityColumn("ItemType")]
 		public override string ItemType
 		{

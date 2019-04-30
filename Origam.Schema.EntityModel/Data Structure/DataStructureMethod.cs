@@ -50,14 +50,6 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		public override string Icon
-		{
-			get
-			{
-				return "18";
-			}
-		}
-
 		public override bool UseFolders
 		{
 			get

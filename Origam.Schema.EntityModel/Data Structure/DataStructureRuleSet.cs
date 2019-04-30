@@ -30,7 +30,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for DataQuery.
 	/// </summary>
-	[SchemaItemDescription("Rule Set", "Rule Sets", 3)]
+	[SchemaItemDescription("Rule Set", "Rule Sets", "icon_rule-set.png")]
     [HelpTopic("Rule+Sets")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class DataStructureRuleSet : AbstractSchemaItem, ISchemaItemFactory
@@ -160,14 +160,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "3";
 			}
 		}
 

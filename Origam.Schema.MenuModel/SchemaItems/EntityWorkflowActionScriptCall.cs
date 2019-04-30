@@ -30,7 +30,8 @@ using Origam.Schema.EntityModel;
 namespace Origam.Schema.MenuModel
 {
 
-	[SchemaItemDescription("Client Script Invocation", "Scripts", 20)]
+	[SchemaItemDescription("Client Script Invocation", "Scripts", 
+        "icon_client-script-invocation.png")]
     [HelpTopic("Client+Script")]
 	[XmlModelRoot(ItemTypeConst)]
     public class EntityWorkflowActionScriptCall : AbstractSchemaItem
@@ -49,14 +50,6 @@ namespace Origam.Schema.MenuModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "20";
 			}
 		}
 

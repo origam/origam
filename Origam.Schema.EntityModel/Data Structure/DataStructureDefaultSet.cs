@@ -28,7 +28,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for DataQuery.
 	/// </summary>
-	[SchemaItemDescription("Default Set", "Default Sets", 3)]
+	[SchemaItemDescription("Default Set", "Default Sets", "icon_default-set.png")]
     [HelpTopic("Default+Set+Default")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class DataStructureDefaultSet : AbstractSchemaItem, ISchemaItemFactory
@@ -49,14 +49,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "3";
 			}
 		}
 

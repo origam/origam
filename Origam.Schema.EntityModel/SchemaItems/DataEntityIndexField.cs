@@ -30,7 +30,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for DataEntityIndexField.
 	/// </summary>
-	[SchemaItemDescription("Index Field", "Fields", 44)]
+	[SchemaItemDescription("Index Field", "Fields", "icon_index-field.png")]
     [HelpTopic("Index+Field")]
 	[XmlModelRoot(ItemTypeConst)]
 	[DefaultProperty("Field")]
@@ -111,14 +111,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return false;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "44";
 			}
 		}
 

@@ -29,7 +29,8 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for DataStructureTransformationTemplate.
 	/// </summary>
-	[SchemaItemDescription("Transformation Template", 16)]
+	[SchemaItemDescription("Transformation Template", 
+        "icon_transformation-template.png")]
     [HelpTopic("Template+Set+Template")]
 	public class DataStructureTransformationTemplate : DataStructureTemplate
 	{
@@ -66,14 +67,6 @@ namespace Origam.Schema.EntityModel
 		#endregion
 
 		#region Overriden Members
-		public override string Icon
-		{
-			get
-			{
-				return "16";
-			}
-		}
-
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
 			if(this.Transformation != null) dependencies.Add(this.Transformation);

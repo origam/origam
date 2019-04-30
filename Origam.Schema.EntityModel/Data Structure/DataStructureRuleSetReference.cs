@@ -29,7 +29,7 @@ using System.Xml.Serialization;
 namespace Origam.Schema.EntityModel
 {
 
-    [SchemaItemDescription("Rule Set Reference", 16)]
+    [SchemaItemDescription("Rule Set Reference", "icon_rule-set-reference.png")]
     [HelpTopic("Rule+Set+Reference")]
     [XmlModelRoot(ItemTypeConst)]
     [DefaultProperty("RuleSet")]
@@ -71,14 +71,6 @@ namespace Origam.Schema.EntityModel
         #endregion
 
         #region Overriden AbstractSchemaItem Members
-        public override string Icon
-        {
-            get
-            {
-                return "16";
-            }
-        }
-
         [EntityColumn("ItemType")]
         public override string ItemType
         {

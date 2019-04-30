@@ -30,7 +30,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for DataStructureFilterSetFilter.
 	/// </summary>
-	[SchemaItemDescription("Sort Field", 5)]
+	[SchemaItemDescription("Sort Field", "icon_sort-field.png")]
     [HelpTopic("Sort+Field")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class DataStructureSortSetItem : AbstractSchemaItem
@@ -130,14 +130,6 @@ namespace Origam.Schema.EntityModel
 		#endregion
 
 		#region Overriden AbstractSchemaItem Members
-		public override string Icon
-		{
-			get
-			{
-				return "5";
-			}
-		}
-
 		[EntityColumn("ItemType")]
 		public override string ItemType
 		{

@@ -31,7 +31,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for DataStructureDefaultSetDefault.
 	/// </summary>
-	[SchemaItemDescription("Default", 3)]
+	[SchemaItemDescription("Default", "icon_default.png")]
     [HelpTopic("Default+Sets")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class DataStructureDefaultSetDefault : AbstractSchemaItem
@@ -136,14 +136,6 @@ namespace Origam.Schema.EntityModel
 		#endregion
 
 		#region Overriden AbstractSchemaItem Members
-		public override string Icon
-		{
-			get
-			{
-				return "3";
-			}
-		}
-
 		[EntityColumn("ItemType")]
 		public override string ItemType
 		{

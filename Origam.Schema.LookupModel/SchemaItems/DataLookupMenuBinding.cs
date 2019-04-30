@@ -32,7 +32,7 @@ namespace Origam.Schema.LookupModel
 	/// <summary>
 	/// Summary description for DataConstantReferenceMenuItem.
 	/// </summary>
-	[SchemaItemDescription("Menu Binding", 57)]
+	[SchemaItemDescription("Menu Binding", "icon_menu-binding.png")]
     [HelpTopic("Menu+Bindings")]
 	[XmlModelRoot(ItemTypeConst)]
     [DefaultProperty("MenuItem")]
@@ -55,15 +55,6 @@ namespace Origam.Schema.LookupModel
 				return ItemTypeConst;
 			}
 		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "57";
-			}
-		}
-
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
 			dependencies.Add(this.MenuItem);

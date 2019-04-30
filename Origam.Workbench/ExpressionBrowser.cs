@@ -130,9 +130,9 @@ namespace Origam.Workbench
             this.imgList = new System.Windows.Forms.ImageList(this.components);
             this.cboFilter = new System.Windows.Forms.ComboBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.tvwExpressionBrowser = new Origam.UI.NativeTreeView();
             this.fileWatcher = new System.IO.FileSystemWatcher();
             this.watcherTimer = new System.Windows.Forms.Timer(this.components);
+            this.tvwExpressionBrowser = new Origam.UI.NativeTreeView();
             ((System.ComponentModel.ISupportInitialize)(this.fileWatcher)).BeginInit();
             this.SuspendLayout();
             // 
@@ -286,22 +286,56 @@ namespace Origam.Workbench
             this.imgList.Images.SetKeyName(143, "menu_report.png");
             this.imgList.Images.SetKeyName(144, "menu_workflow.png");
             this.imgList.Images.SetKeyName(145, "icon_agregated-field.png");
-            this.imgList.Images.SetKeyName(146, "icon_conditional-formatting-rule.png");
-            this.imgList.Images.SetKeyName(147, "icon_database-field.png");
-            this.imgList.Images.SetKeyName(148, "icon_dropdown-action.png");
-            this.imgList.Images.SetKeyName(149, "icon_edit-in-diagram.png");
-            this.imgList.Images.SetKeyName(150, "icon_filter.png");
-            this.imgList.Images.SetKeyName(151, "icon_function-call.png");
-            this.imgList.Images.SetKeyName(152, "icon_index.png");
-            this.imgList.Images.SetKeyName(153, "icon_lookup-field.png");
-            this.imgList.Images.SetKeyName(154, "icon_menu-action.png");
-            this.imgList.Images.SetKeyName(155, "icon_parameter.png");
-            this.imgList.Images.SetKeyName(156, "icon_relationship.png");
-            this.imgList.Images.SetKeyName(157, "icon_report-action.png");
-            this.imgList.Images.SetKeyName(158, "icon_row-level-security-filter.png");
-            this.imgList.Images.SetKeyName(159, "icon_row-level-security-rule.png");
-            this.imgList.Images.SetKeyName(160, "icon_sequential-workflow-action.png");
-            this.imgList.Images.SetKeyName(161, "icon_virtual-field.png");
+            this.imgList.Images.SetKeyName(146, "icon_client-script-invocation.png");
+            this.imgList.Images.SetKeyName(147, "icon_conditional-formatting-rule.png");
+            this.imgList.Images.SetKeyName(148, "icon_database-field.png");
+            this.imgList.Images.SetKeyName(149, "icon_data-constant.png");
+            this.imgList.Images.SetKeyName(150, "icon_data-constant-reference.png");
+            this.imgList.Images.SetKeyName(151, "icon_data-service-lookup.png");
+            this.imgList.Images.SetKeyName(152, "icon_data-service-tooltip.png");
+            this.imgList.Images.SetKeyName(153, "icon_data-structure.png");
+            this.imgList.Images.SetKeyName(154, "icon_default.png");
+            this.imgList.Images.SetKeyName(155, "icon_default-set.png");
+            this.imgList.Images.SetKeyName(156, "icon_dependency.png");
+            this.imgList.Images.SetKeyName(157, "icon_dropdown-action.png");
+            this.imgList.Images.SetKeyName(158, "icon_entity.png");
+            this.imgList.Images.SetKeyName(159, "icon_field.png");
+            this.imgList.Images.SetKeyName(160, "icon_field-reference.png");
+            this.imgList.Images.SetKeyName(161, "icon_filter.png");
+            this.imgList.Images.SetKeyName(162, "icon_filter-reference.png");
+            this.imgList.Images.SetKeyName(163, "icon_filter-set.png");
+            this.imgList.Images.SetKeyName(164, "icon_function-call.png");
+            this.imgList.Images.SetKeyName(165, "icon_index.png");
+            this.imgList.Images.SetKeyName(166, "icon_index-field.png");
+            this.imgList.Images.SetKeyName(167, "icon_key.png");
+            this.imgList.Images.SetKeyName(168, "icon_lookup-field.png");
+            this.imgList.Images.SetKeyName(169, "icon_lookup-reference.png");
+            this.imgList.Images.SetKeyName(170, "icon_menu-action.png");
+            this.imgList.Images.SetKeyName(171, "icon_menu-binding.png");
+            this.imgList.Images.SetKeyName(172, "icon_parameter.png");
+            this.imgList.Images.SetKeyName(173, "icon_parameter-mapping.png");
+            this.imgList.Images.SetKeyName(174, "icon_parameter-reference.png");
+            this.imgList.Images.SetKeyName(175, "icon_relationship.png");
+            this.imgList.Images.SetKeyName(176, "icon_report-action.png");
+            this.imgList.Images.SetKeyName(177, "icon_row-level-security-filter.png");
+            this.imgList.Images.SetKeyName(178, "icon_row-level-security-rule.png");
+            this.imgList.Images.SetKeyName(179, "icon_rule-set.png");
+            this.imgList.Images.SetKeyName(180, "icon_rule-set-reference.png");
+            this.imgList.Images.SetKeyName(181, "icon_sequential-workflow-action.png");
+            this.imgList.Images.SetKeyName(182, "icon_sort-field.png");
+            this.imgList.Images.SetKeyName(183, "icon_sort-set.png");
+            this.imgList.Images.SetKeyName(184, "icon_template-set.png");
+            this.imgList.Images.SetKeyName(185, "icon_transformation-template.png");
+            this.imgList.Images.SetKeyName(186, "icon_tree-node.png");
+            this.imgList.Images.SetKeyName(187, "icon_tree-structures.png");
+            this.imgList.Images.SetKeyName(188, "icon_virtual-field.png");
+            this.imgList.Images.SetKeyName(189, "icon_workflow-method.png");
+            this.imgList.Images.SetKeyName(190, "icon_xsd-data-structure.png");
+            this.imgList.Images.SetKeyName(191, "icon_deployment-version.png");
+            this.imgList.Images.SetKeyName(192, "icon_feature.png");
+            this.imgList.Images.SetKeyName(193, "icon_file-restore-update-activity.png");
+            this.imgList.Images.SetKeyName(194, "icon_service-command-update-activity.png");
+            this.imgList.Images.SetKeyName(195, "icon_string.png");
             // 
             // cboFilter
             // 
@@ -320,6 +354,19 @@ namespace Origam.Workbench
             this.toolTip1.AutoPopDelay = 20000;
             this.toolTip1.InitialDelay = 500;
             this.toolTip1.ReshowDelay = 100;
+            // 
+            // fileWatcher
+            // 
+            this.fileWatcher.EnableRaisingEvents = true;
+            this.fileWatcher.IncludeSubdirectories = true;
+            this.fileWatcher.SynchronizingObject = this;
+            this.fileWatcher.Changed += new System.IO.FileSystemEventHandler(this.fileWatcher_Changed);
+            // 
+            // watcherTimer
+            // 
+            this.watcherTimer.Enabled = true;
+            this.watcherTimer.Interval = 1000;
+            this.watcherTimer.Tick += new System.EventHandler(this.watcherTimer_Tick);
             // 
             // tvwExpressionBrowser
             // 
@@ -353,19 +400,6 @@ namespace Origam.Workbench
             this.tvwExpressionBrowser.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tvwExpressionBrowser_MouseDown);
             this.tvwExpressionBrowser.MouseHover += new System.EventHandler(this.tvwExpressionBrowser_MouseHover);
             this.tvwExpressionBrowser.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tvwExpressionBrowser_MouseMove);
-            // 
-            // fileWatcher
-            // 
-            this.fileWatcher.EnableRaisingEvents = true;
-            this.fileWatcher.IncludeSubdirectories = true;
-            this.fileWatcher.SynchronizingObject = this;
-            this.fileWatcher.Changed += new System.IO.FileSystemEventHandler(this.fileWatcher_Changed);
-            // 
-            // watcherTimer
-            // 
-            this.watcherTimer.Enabled = true;
-            this.watcherTimer.Interval = 1000;
-            this.watcherTimer.Tick += new System.EventHandler(this.watcherTimer_Tick);
             // 
             // ExpressionBrowser
             // 
