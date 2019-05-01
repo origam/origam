@@ -65,7 +65,7 @@ namespace Microsoft.Msagl.GraphViewerGdi{
         bool saveAsImageEnabled = true;
         bool saveAsMsaglEnabled = true;
         bool saveInVectorFormatEnabled = true;
-        bool zoomWhenMouseWheelScroll = true;
+        public bool ZoomWhenMouseWheelScroll { get; set; } = true;
 
         const string panButtonToolTipText = "Pan";
         RectangleF srcRect = new RectangleF(0, 0, 0, 0);
@@ -645,7 +645,7 @@ namespace Microsoft.Msagl.GraphViewerGdi{
 
         void GViewer_MouseWheel(object sender, MouseEventArgs e){
            
-            if (zoomWhenMouseWheelScroll){
+            if (ZoomWhenMouseWheelScroll){
                 if (OriginalGraph == null) return;
                 var pointSrc = ScreenToSource(e.X, e.Y);
                 const double zoomFractionLocal = 0.9;

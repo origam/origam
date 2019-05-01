@@ -64,6 +64,8 @@ namespace Origam.Workbench.Editors
 			gViewer.LayoutEditor.NodeMovingEnabled = false;
 			gViewer.LayoutEditor.ShouldProcessRightClickOnSelectedEdge = false;
 			gViewer.FixedScale = 1;
+			gViewer.MouseWheel += GViewerMouseWheel;
+			gViewer.ZoomWhenMouseWheelScroll = false;
 			graphics = CreateGraphics();
 		}
 
@@ -137,6 +139,12 @@ namespace Origam.Workbench.Editors
 
 		#endregion
 
+		void GViewerMouseWheel(object sender, MouseEventArgs e) {
+			int delta = e.Delta / 3;
+			if (delta != 0) {
+				gViewer.Pan(0,delta);
+			}
+		}
 		private void GViewerOnDoubleClick(object sender, EventArgs e)
 		{
 			GViewer viewer = sender as GViewer;
