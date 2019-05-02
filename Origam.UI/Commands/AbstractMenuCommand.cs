@@ -52,7 +52,6 @@ namespace Origam.UI
                 AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
                 string platformscript = DsPlatform.EntityDdl(guid);
                 ServiceCommandUpdateScriptActivity _create = DeploymentHelper.CreateDatabaseScript(name, platformscript, DsPlatform.PlatformName);
-                DsPlatform.Dispose();
             });
            return DeploymentHelper.CreateDatabaseScript(name, script, abstractSqlData.PlatformName);
         }
@@ -115,7 +114,6 @@ namespace Origam.UI
                     }
                     i++;
                 }
-                DsPlatform.Dispose();
             });
             
         }
@@ -127,7 +125,6 @@ namespace Origam.UI
             {
                 AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
                 ServiceCommandUpdateScriptActivity _create = DeploymentHelper.CreateSystemRole(role, DsPlatform);
-                DsPlatform.Dispose();
             });
             return DeploymentHelper.CreateSystemRole(role,abstractSqlData);
         }
