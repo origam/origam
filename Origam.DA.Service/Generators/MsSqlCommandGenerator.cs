@@ -459,25 +459,6 @@ namespace Origam.DA.Service
             }
         }
 
-        public override string DdlDataType(OrigamDataType columnType, int dataLenght,
-            DatabaseDataType dbDataType)
-        {
-            switch (columnType)
-            {
-                case OrigamDataType.String:
-                    return DdlDataType(columnType, dbDataType)
-                        + "(" + dataLenght + ")";
-
-                case OrigamDataType.Xml:
-                    return DdlDataType(columnType, dbDataType) + "(2000)";
-
-                case OrigamDataType.Float:
-                    return DdlDataType(columnType, dbDataType) + "(28,10)";
-
-                default:
-                    return DdlDataType(columnType, dbDataType);
-            }
-        }
         internal override string MergeSql(string tableName, StringBuilder keysBuilder, StringBuilder searchPredicatesBuilder, StringBuilder updateBuilder, StringBuilder insertColumnsBuilder, StringBuilder insertValuesBuilder)
         {
             StringBuilder sqlExpression = new StringBuilder();
@@ -490,15 +471,15 @@ namespace Origam.DA.Service
                 insertValuesBuilder
                 ).ToString();
         }
-        internal override string GenerateSequence(string entityName, string primaryKeyName)
+        internal override string SequenceSql(string entityName, string primaryKeyName)
         {
             return "; SELECT @@IDENTITY AS " + primaryKeyName;
         }
-        internal override string IsNull()
+        internal override string IsNullSql()
         {
             return " ISNULL ";
         }
-        internal override string GetAggregateCount()
+        internal override string CountAggregateSql()
         {
             return " COUNT_BIG ";
         }
@@ -506,6 +487,27 @@ namespace Origam.DA.Service
         {
             MsSqlCommandGenerator gen = new MsSqlCommandGenerator();
             return gen;
+        }
+
+        internal override string DeclareAsSql()
+        {
+            return " AS ";
+        }
+        internal override string FunctionPrefixSql()
+        {
+            return "dbo.";
+        }
+        internal override string VarcharSql()
+        {
+            return "NVARCHAR";
+        }
+        internal override string LengthSql()
+        {
+            return "LEN";
+        }
+        internal override string TextSql()
+        {
+            return "NVARCHAR(MAX)";
         }
     }
 }

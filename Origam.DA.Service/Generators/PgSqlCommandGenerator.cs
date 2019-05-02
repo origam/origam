@@ -411,27 +411,7 @@ namespace Origam.DA.Service
                     return expression;
             }
         }
-                
-        public override string DdlDataType(OrigamDataType columnType, int dataLenght,
-            DatabaseDataType dbDataType)
-        {
-            switch (columnType)
-            {
-                case OrigamDataType.String:
-                    return DdlDataType(columnType, dbDataType)
-                        + "(" + dataLenght + ")";
-
-                case OrigamDataType.Xml:
-                    return DdlDataType(columnType, dbDataType) + "(2000)";
-
-                case OrigamDataType.Float:
-                    return DdlDataType(columnType, dbDataType) + "(28,10)";
-
-                default:
-                    return DdlDataType(columnType, dbDataType);
-            }
-        }
-
+        
         internal override string MergeSql(string tableName, StringBuilder keysBuilder, StringBuilder searchPredicatesBuilder, StringBuilder updateBuilder, StringBuilder insertColumnsBuilder, StringBuilder insertValuesBuilder)
         {
             StringBuilder sqlExpression = new StringBuilder();
@@ -445,7 +425,7 @@ namespace Origam.DA.Service
                 ).ToString(); 
         }
 
-        internal override string GenerateSequence(string entityName, string primaryKeyName)
+        internal override string SequenceSql(string entityName, string primaryKeyName)
         {
             StringBuilder actualsequence = new StringBuilder();
             actualsequence.Append(entityName);
@@ -455,11 +435,11 @@ namespace Origam.DA.Service
             return "; SELECT currval(" + actualsequence.ToString() + ")";
         }
 
-        internal override string IsNull()
+        internal override string IsNullSql()
         {
             return " COALESCE ";
         }
-        internal override string GetAggregateCount()
+        internal override string CountAggregateSql()
         {
             return "COUNT";
         }
@@ -468,6 +448,27 @@ namespace Origam.DA.Service
         {
             PgSqlCommandGenerator gen = new PgSqlCommandGenerator();
             return gen;
+        }
+
+        internal override string DeclareAsSql()
+        {
+            return "";
+        }
+        internal override string FunctionPrefixSql()
+        {
+            return "";
+        }
+        internal override string VarcharSql()
+        {
+            return "VARCHAR";
+        }
+        internal override string LengthSql()
+        {
+            return "LENGTH";
+        }
+        internal override string TextSql()
+        {
+            return "TEXT";
         }
     }
 }

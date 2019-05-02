@@ -555,6 +555,16 @@ namespace Origam.DA.Service
             }
             return result;
         }
+
+		public string AddForeignKeyConstraintDdl(TableMappingItem table, DataEntityConstraint constraint)
+        {
+            StringBuilder ddl = new StringBuilder();
+
+            ddl.AppendFormat("ALTER TABLE {0} ADD {1}",
+                NameLeftBracket + table.MappedObjectName + NameRightBracket,
+                ForeignKeyConstraintDdl(table, constraint));
+            return ddl.ToString();
+        }
         public string ForeignKeyConstraintDdl(TableMappingItem table, DataEntityConstraint constraint)
         {
             StringBuilder ddl = new StringBuilder();
@@ -596,16 +606,7 @@ namespace Origam.DA.Service
             return ddl.ToString();
         }
 
-        public string AddForeignKeyConstraintDdl(TableMappingItem table, DataEntityConstraint constraint)
-        {
-            StringBuilder ddl = new StringBuilder();
-
-            ddl.AppendFormat("ALTER TABLE {0} ADD {1}",
-                NameLeftBracket + table.MappedObjectName + NameRightBracket,
-                ForeignKeyConstraintDdl(table, constraint));
-            return ddl.ToString();
-        }
-
+        
         public string AddColumnDdl(FieldMappingItem field)
         {
             StringBuilder ddl = new StringBuilder();
@@ -797,7 +798,9 @@ namespace Origam.DA.Service
             return Parameters(cmd);
         }
 
-        internal void SelectParameterDeclarationsSql(StringBuilder result, Hashtable ht, DataStructure ds, DataStructureEntity entity, DataStructureFilterSet filter, DataStructureSortSet sort, bool paging, string columnName)
+        internal void SelectParameterDeclarationsSql(StringBuilder result, Hashtable ht,
+        DataStructure ds, DataStructureEntity entity, DataStructureFilterSet filter, 
+		DataStructureSortSet sort, bool paging, string columnName)
         {
             IDbCommand cmd = SelectCommand(ds, entity, filter, sort, paging, columnName);
             ArrayList list = Parameters(cmd);
@@ -807,7 +810,7 @@ namespace Origam.DA.Service
 
                 if (!ht.Contains(param.ParameterName))
                 {
-                    result.AppendFormat("DECLARE {0} {1}{2}",
+                    result.AppendFormat("DECLARE {0} "+ DeclareAsSql() + " {1}{2}",
                         param.ParameterName,
                         SqlDataType(param),
                         Environment.NewLine);
@@ -817,6 +820,7 @@ namespace Origam.DA.Service
             }
         }
 
+        internal abstract string DeclareAsSql();
         internal abstract string SqlDataType(IDataParameter param);
 
         internal void SelectParameterDeclarationsSetSql(StringBuilder result, Hashtable parameters)
@@ -902,7 +906,7 @@ namespace Origam.DA.Service
                 }
                 else
                 {
-                    sqlExpression.AppendFormat(", ROW_NUMBER() OVER (ORDER BY {0}) AS {1}", orderByBuilder, RowNumColumnName);
+                    sqlExpression.AppendFormat(", ROW_NUMBER() OVER (ORDER BY {0}) AS {1}", orderByBuilder.ToString(), RowNumColumnName);
                 }
             }
 
@@ -997,7 +1001,7 @@ namespace Origam.DA.Service
                         whereExists = true;
                     }
 
-                    sqlExpression.Append(joinedFilterBuilder);
+                    sqlExpression.Append(joinedFilterBuilder.ToString());
                 }
             }
 
@@ -1019,7 +1023,7 @@ namespace Origam.DA.Service
                     whereExists = true;
                 }
 
-                sqlExpression.Append(whereBuilder);
+                sqlExpression.Append(whereBuilder.ToString());
             }
 
             if (!string.IsNullOrEmpty(customWhereClause))
@@ -1041,7 +1045,7 @@ namespace Origam.DA.Service
             if (groupByBuilder.Length > 0)
             {
                 PrettyLine(sqlExpression);
-                sqlExpression.AppendFormat("GROUP BY {0}", groupByBuilder);
+                sqlExpression.AppendFormat("GROUP BY {0}", groupByBuilder.ToString());
             }
 
             // ORDER BY
@@ -1055,7 +1059,7 @@ namespace Origam.DA.Service
                 if ((!paging || paging && PagingCanIncludeOrderBy) && orderByBuilder.Length > 0)
                 {
                     PrettyLine(sqlExpression);
-                    sqlExpression.AppendFormat("ORDER BY {0}", orderByBuilder);
+                    sqlExpression.AppendFormat("ORDER BY {0}", orderByBuilder.ToString());
                 }
             }
 
@@ -1267,7 +1271,7 @@ namespace Origam.DA.Service
             }
             PrettyLine(sqlExpression);
             sqlExpression.Append(") VALUES (");
-            sqlExpression.Append(sqlExpression2);
+            sqlExpression.Append(sqlExpression2.ToString());
             sqlExpression.Append(")");
             // If there is any auto increment column, we include a SELECT statement after INSERT
             if (existAutoIncrement)
@@ -1289,10 +1293,10 @@ namespace Origam.DA.Service
                 throw new OrigamException(ResourceUtils.GetString("NoPrimaryKey", entity.Name));
             }
             PrettyLine(sqlExpression);
-            sqlExpression.Append(GenerateSequence(entity.Name, ((DataStructureColumn)primaryKeys[0]).Name));
+            sqlExpression.Append(SequenceSql(entity.Name, ((DataStructureColumn)primaryKeys[0]).Name));
         }
 
-        internal abstract string GenerateSequence(string entityName, string primaryKeyName);
+        internal abstract string SequenceSql(string entityName, string primaryKeyName);
 
         public string SelectRowSql(DataStructureEntity entity, Hashtable selectParameterReferences,
             string columnName, bool forceDatabaseCalculation)
@@ -1412,7 +1416,7 @@ namespace Origam.DA.Service
             StringBuilder sqlExpression = new StringBuilder();
 
             ArrayList selectKeys = new ArrayList();
-            sqlExpression.Append("SELECT "+GetAggregateCount()+"(*) ");
+            sqlExpression.Append("SELECT "+CountAggregateSql()+"(*) ");
 
             foreach (DataStructureColumn column in entity.Columns)
             {
@@ -1874,7 +1878,7 @@ namespace Origam.DA.Service
         {
             if (aggregationType == AggregationType.Sum)
             {
-                return IsNull() + " (" + expression + ", 0)";
+                return IsNullSql() + " (" + expression + ", 0)";
             }
             else
             {
@@ -1882,7 +1886,7 @@ namespace Origam.DA.Service
             }
         }
 
-        internal abstract string IsNull();
+        internal abstract string IsNullSql();
 
         private string RenderLookupColumnExpression(DataStructure ds, DataStructureEntity entity,
             DataStructureColumn column, Hashtable replaceParameterTexts, Hashtable dynamicParameters,
@@ -2746,7 +2750,7 @@ namespace Origam.DA.Service
                 string result = NameLeftBracket + item.GetLocalizationField(tmi).MappedColumnName + NameRightBracket;
                 result = NameLeftBracket + FieldMappingItem.GetLocalizationTable(tmi).Name
                     + NameRightBracket + "." + result;
-                result = String.Format(IsNull()+"({0},{1})", result, nonLocalizedResult);
+                result = String.Format(IsNullSql()+"({0},{1})", result, nonLocalizedResult);
                 return result;
             }
             else
@@ -3087,7 +3091,7 @@ namespace Origam.DA.Service
 
 
                 default:
-                    result = item.Function.Name + "(";
+                    result = FunctionPrefixSql() + item.Function.Name + "(";
 
                     ArrayList sortedParams = new ArrayList(item.ChildItems);
                     sortedParams.Sort();
@@ -3110,6 +3114,9 @@ namespace Origam.DA.Service
 
             return result;
         }
+
+        internal abstract string FunctionPrefixSql();
+
         internal  string RenderBuiltinFunction(FunctionCall item, DataStructureEntity entity,
            Hashtable replaceParameterTexts, Hashtable dynamicParameters,
            Hashtable parameterReferences)
@@ -3190,14 +3197,14 @@ namespace Origam.DA.Service
                     break;
 
                 case "Length":
-                    result = "LEN("
+                    result = LengthSql() +"("
                         + RenderExpression(item.GetChildByName("Text").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                         + ")";
                     break;
 
                 case "ConvertDateToString":
                     result = "CONVERT("
-                        + "VARCHAR(" + item.DataLength + "), "
+                        + VarcharSql() + "(" + item.DataLength.ToString() + "), "
                         + RenderExpression(item.GetChildByName("Expression").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                         + ", 104)";
                     break;
@@ -3232,9 +3239,8 @@ namespace Origam.DA.Service
                 case "IsNull":
                     ISchemaItem expressionArg = item.GetChildByName("Expression").ChildItems[0];
                     ISchemaItem replacementArg = item.GetChildByName("ReplacementValue").ChildItems[0];
-
-                    result = "COALESCE (" + RenderExpression(expressionArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + ", " + RenderExpression(replacementArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + ")";
-
+                    result = IsNullSql() +"(" + RenderExpression(expressionArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + 
+                        ", " + RenderExpression(replacementArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + ")";
                     break;
 
                 case "Between":
@@ -3242,8 +3248,9 @@ namespace Origam.DA.Service
                     leftArg = item.GetChildByName("Left").ChildItems[0];
                     ISchemaItem rightArg = item.GetChildByName("Right").ChildItems[0];
 
-                    result = RenderExpression(expressionArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + " BETWEEN " + RenderExpression(leftArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + " AND " + RenderExpression(rightArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
-
+                    result = RenderExpression(expressionArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + 
+                        " BETWEEN " + RenderExpression(leftArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + 
+                        " AND " + RenderExpression(rightArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
                     break;
 
                 default:
@@ -3252,6 +3259,9 @@ namespace Origam.DA.Service
 
             return result;
         }
+
+        internal abstract string LengthSql();
+        internal abstract string VarcharSql();
 
         internal string GetItemByFunctionParameter(
             FunctionCall item, string parameterName, DataStructureEntity entity,
@@ -3333,15 +3343,16 @@ namespace Origam.DA.Service
 
                 concatBuilder.Append("CAST (");
                 concatBuilder.Append(RenderExpression(concatItem.Key, concatItem.Value, replaceParameterTexts, dynamicParameters, parameterReferences));
-                concatBuilder.Append(" ");
-                concatBuilder.Append("AS TEXT");
+                concatBuilder.Append(" AS ");
+                concatBuilder.Append(TextSql());
                 concatBuilder.Append(")");
-
                 i++;
             }
 
             return concatBuilder.ToString();
         }
+
+        internal abstract string TextSql();
         #endregion
 
         #region Operators
@@ -3353,7 +3364,7 @@ namespace Origam.DA.Service
                     return "SUM";
 
                 case AggregationType.Count:
-                    return GetAggregateCount();
+                    return CountAggregateSql();
                 case AggregationType.Average:
                     return "AVG";
 
@@ -3368,7 +3379,7 @@ namespace Origam.DA.Service
             }
         }
 
-        internal abstract string GetAggregateCount();
+        internal abstract string CountAggregateSql();
         #endregion
         #region Conversions
         public string DdlDataType(OrigamDataType columnType,
@@ -3388,11 +3399,28 @@ namespace Origam.DA.Service
 
         public abstract OrigamDataType ToOrigamDataType(string ddlType);
 
-        public abstract string DdlDataType(OrigamDataType columnType, int dataLenght,
-            DatabaseDataType dbDataType);
-		#endregion
+        public string DdlDataType(OrigamDataType columnType, int dataLenght,
+            DatabaseDataType dbDataType)
+        {
+            switch (columnType)
+            {
+                case OrigamDataType.String:
+                    return DdlDataType(columnType, dbDataType)
+                        + "(" + dataLenght + ")";
 
-		#region ICloneable Members
+                case OrigamDataType.Xml:
+                    return DdlDataType(columnType, dbDataType) + "(2000)";
+
+                case OrigamDataType.Float:
+                    return DdlDataType(columnType, dbDataType) + "(28,10)";
+
+                default:
+                    return DdlDataType(columnType, dbDataType);
+            }
+        }
+        #endregion
+
+        #region ICloneable Members
 
         public abstract object Clone();
 		
