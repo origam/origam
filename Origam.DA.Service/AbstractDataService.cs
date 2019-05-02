@@ -738,7 +738,6 @@ namespace Origam.DA.Service
 
 		public abstract string ConnectionString{get; set;}
         public abstract string DbUser { get; set; }
-        public abstract string DBPassword { get; set; }
 
         public string Xsd(Guid dataStructureId)
 		{

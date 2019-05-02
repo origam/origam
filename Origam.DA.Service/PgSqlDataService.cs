@@ -60,7 +60,6 @@ namespace Origam.DA.Service
 		private void Init()
 		{
 			this.DbDataAdapterFactory = new PgSqlCommandGenerator();
-            DBPassword = Guid.NewGuid().ToString().Replace("-","").Substring(1,9);
         }
 
         internal override IDbConnection GetConnection(string connectionString)
@@ -414,6 +413,5 @@ VALUES (gen_random_uuid(), '{2}', '{0}', now(), false)",
         }
 
         public override string DbUser { get { return _DbUser; }  set { _DbUser = string.Format("{0}", value);  }}
-        public override string DBPassword { get;  set; }
     }
 }

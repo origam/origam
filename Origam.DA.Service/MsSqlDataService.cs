@@ -529,6 +529,5 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0)",
         }
 
         public override string DbUser { get { return _IISUser; } set { _IISUser = string.Format("[IIS APPPOOL\\{0}]", value); } }
-        public override string DBPassword { get ; set ; }
     }
 }

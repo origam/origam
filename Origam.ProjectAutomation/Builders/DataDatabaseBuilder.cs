@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.ProjectAutomation
@@ -48,6 +49,9 @@ namespace Origam.ProjectAutomation
                 project.DatabaseServerName, project.Port, project.DataDatabaseName, project.DatabaseUserName,
                 project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
             this.DataService(_databaseType).CreateSchema(_databaseName);
+            DataService(_databaseType).ConnectionString = DataService(_databaseType).BuildConnectionString(
+                project.DatabaseServerName, project.Port, "", project.DatabaseUserName,
+                project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
         }
 
         public string BuildConnectionString(Project project, bool pooling)
@@ -69,7 +73,7 @@ namespace Origam.ProjectAutomation
                 this.DataService(_databaseType).DbUser=project.Name;
                 return DataService(project.DatabaseType).BuildConnectionString(project.DatabaseServerName, project.Port,
                     project.DataDatabaseName, DataService(_databaseType).DbUser,
-                     DataService(_databaseType).DBPassword, project.DatabaseIntegratedAuthentication, pooling);
+                     project.UserPassword, project.DatabaseIntegratedAuthentication, pooling);
             }
             return null;
         }

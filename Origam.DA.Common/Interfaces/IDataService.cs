@@ -35,7 +35,6 @@ namespace Origam.DA
 	public interface IDataService : IDisposable
 	{
         string DbUser { get; set; }
-        string DBPassword { get; set; }
         bool UserDefinedParameters{get; set;}
 		string ConnectionString{get; set;}
         int BulkInsertThreshold { get; set; }

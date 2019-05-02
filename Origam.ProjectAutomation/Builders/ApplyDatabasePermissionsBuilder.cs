@@ -47,7 +47,7 @@ namespace Origam.ProjectAutomation
             DataService(_databaseType).DbUser = project.Name;
             _loginName = DataService(_databaseType).DbUser;
             project.ConnectionDatabaseUser = _loginName;
-            project.ConnectionDatabasePassword = DataService(_databaseType).DBPassword;
+            project.ConnectionDatabasePassword = project.UserPassword;
             _integratedAuthentication = project.DatabaseIntegratedAuthentication;
             DataService(_databaseType)
                 .CreateUser(
