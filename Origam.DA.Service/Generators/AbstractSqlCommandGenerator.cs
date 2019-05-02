@@ -3203,7 +3203,7 @@ namespace Origam.DA.Service
                     break;
 
                 case "ConvertDateToString":
-                    result = "CONVERT("
+                    result = "CONVERT( "
                         + VarcharSql() + "(" + item.DataLength.ToString() + "), "
                         + RenderExpression(item.GetChildByName("Expression").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                         + ", 104)";

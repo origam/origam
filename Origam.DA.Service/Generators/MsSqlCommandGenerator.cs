@@ -477,11 +477,11 @@ namespace Origam.DA.Service
         }
         internal override string IsNullSql()
         {
-            return " ISNULL ";
+            return "ISNULL";
         }
         internal override string CountAggregateSql()
         {
-            return " COUNT_BIG ";
+            return "COUNT_BIG";
         }
         public override object Clone()
         {
@@ -491,7 +491,7 @@ namespace Origam.DA.Service
 
         internal override string DeclareAsSql()
         {
-            return " AS ";
+            return "AS";
         }
         internal override string FunctionPrefixSql()
         {

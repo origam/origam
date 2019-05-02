@@ -437,7 +437,7 @@ namespace Origam.DA.Service
 
         internal override string IsNullSql()
         {
-            return " COALESCE ";
+            return "COALESCE";
         }
         internal override string CountAggregateSql()
         {

@@ -2444,6 +2444,10 @@ namespace Origam.DA.Service
 			
 			base.Dispose ();
 		}
+
+        public virtual void CreateSchema(string databaseName)
+        {
+        }
         #endregion
     }
     // version of log4net for NetStandard 1.3 does not have the method

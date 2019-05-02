@@ -67,13 +67,13 @@ namespace Origam.DA.Service
 		{
 			return new NpgsqlConnection(connectionString);
 		}
-
-        public override string BuildConnectionString(string serverName,int port, string databaseName, string userName, string password, bool integratedAuthentication, bool pooling)
+        public override string BuildConnectionString(string hostName,int port, string databaseName, 
+			string userName, string password, bool integratedAuthentication, bool pooling)
         {
             NpgsqlConnectionStringBuilder sb = new NpgsqlConnectionStringBuilder
             {
                 ApplicationName = "Origam",
-                Host = serverName,
+                Host = hostName,
                 Port = port,
                 Username = userName,
                 Password = password,
@@ -114,10 +114,10 @@ namespace Origam.DA.Service
             string transaction1 = Guid.NewGuid().ToString();
             try
             {
-            ExecuteUpdate(string.Format("CREATE USER {0} WITH LOGIN NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION PASSWORD '{1}'", user,password), transaction1);
-            ExecuteUpdate(string.Format("GRANT CONNECT ON DATABASE {0} TO {1}", database, user), transaction1);
-            ExecuteUpdate(string.Format("GRANT ALL PRIVILEGES ON DATABASE {0} TO {1} ", database, user), transaction1);
-            ExecuteUpdate(string.Format("GRANT ALL ON SCHEMA {0} TO {1} WITH GRANT OPTION ", database, user), transaction1);
+            ExecuteUpdate(string.Format("CREATE USER \"{0}\" WITH LOGIN NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION PASSWORD '{1}'", user,password), transaction1);
+            ExecuteUpdate(string.Format("GRANT CONNECT ON DATABASE \"{0}\" TO \"{1}\"", database, user), transaction1);
+            ExecuteUpdate(string.Format("GRANT ALL PRIVILEGES ON DATABASE \"{0}\" TO \"{1}\" ", database, user), transaction1);
+            ExecuteUpdate(string.Format("GRANT ALL ON SCHEMA \"{0}\" TO \"{1}\" WITH GRANT OPTION ", database, user), transaction1);
                 ResourceMonitor.Commit(transaction1);
             }
             catch (Exception)
@@ -147,23 +147,14 @@ namespace Origam.DA.Service
         public override void CreateDatabase(string name)
         {
             CheckDatabaseName(name);
-            ExecuteUpdate(string.Format("CREATE DATABASE \"{0}\"", name), null);
-            ExecuteUpdate("CREATE EXTENSION IF NOT EXISTS dblink SCHEMA pg_catalog;", null);
-            string transaction1 = Guid.NewGuid().ToString();
-            try
-            { 
-               ExecuteUpdate(string.Format("SELECT dblink_connect('myconn','dbname={0}')", name), transaction1);
-               ExecuteUpdate(string.Format("SELECT dblink_exec('myconn','CREATE SCHEMA {0};')", name), transaction1);
-               ExecuteUpdate("SELECT dblink_exec('myconn','CREATE EXTENSION pgcrypto SCHEMA pg_catalog;')", transaction1);
-               ExecuteUpdate("SELECT dblink_disconnect('myconn')", transaction1);
-               ResourceMonitor.Commit(transaction1);
-            }
-            catch (Exception)
-            {
-                ResourceMonitor.Rollback(transaction1);
-                throw;
-            }
-}
+            ExecuteUpdate(string.Format("CREATE DATABASE \"{0}\" ENCODING ='UTF8' ", name), null);
+        }
+
+        public override void CreateSchema(string SchemaName)
+        {
+            ExecuteUpdate(string.Format("CREATE SCHEMA \"{0}\";", SchemaName), null);
+            ExecuteUpdate(string.Format("CREATE EXTENSION pgcrypto SCHEMA \"{0}\";", SchemaName), null);
+        }
 
         private void CheckDatabaseName(string name)
         {

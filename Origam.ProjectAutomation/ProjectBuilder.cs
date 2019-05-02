@@ -39,10 +39,10 @@ namespace Origam.ProjectAutomation
 
         public void Create(Project project)
         {
-            //for New wizard connection connection 
+            //Wizard connection
             project.DataConnectionString =
             dataDatabaseBuilder.BuildConnectionString(project, true);
-            //for OrigamSettings
+            //OrigamSettings
             project.BuilderDataConnectionString =
             dataDatabaseBuilder.BuildConnectionStringArchitect(project, false);
             

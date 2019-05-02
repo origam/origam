@@ -44,6 +44,10 @@ namespace Origam.ProjectAutomation
                 project.DatabaseServerName,project.Port, "", project.DatabaseUserName,
                 project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
             this.DataService(_databaseType).CreateDatabase(_databaseName);
+            DataService(_databaseType).ConnectionString = DataService(_databaseType).BuildConnectionString(
+                project.DatabaseServerName, project.Port, project.DataDatabaseName, project.DatabaseUserName,
+                project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
+            this.DataService(_databaseType).CreateSchema(_databaseName);
         }
 
         public string BuildConnectionString(Project project, bool pooling)
