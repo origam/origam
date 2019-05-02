@@ -37,7 +37,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		    (gViewer as IViewer).MouseDown += OnMouseDown;
 		    gViewer.MouseClick += OnMouseClick;
 		    schemaService = ServiceManager.Services.GetService<WorkbenchSchemaService>();
-	        taskRunner = new DependencyTaskRunner(persistenceProvider, schemaService);
+	        taskRunner = new DependencyTaskRunner(persistenceProvider);
 			gViewer.EdgeAdded += OnEdgeAdded;
 			gViewer.EdgeRemoved += OnEdgeRemoved;
 			gViewer.MouseDoubleClick += OnDoubleClick;
@@ -121,8 +121,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		        .SingleOrDefault(x => x.WorkflowTaskId == Guid.Parse(edge.Source));
 	        workflowTaskDependency.IsDeleted = true;
 	        workflowTaskDependency.Persist();
-	        
-	        schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(dependentItem);
         }
 
         private void OnEdgeAdded(object sender, EventArgs e)
@@ -142,7 +140,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        };
 	        workflowTaskDependency.Persist();
 	        edge.UserData = workflowTaskDependency;
-	        schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(dependentItem);
         }
 
         private bool TrySelectActiveNodeInModelView()
@@ -324,7 +321,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		                dependentItem: newItem,
 		                triggerItemId: newItem.Id);
 	                
-	                taskRunner.RemoveDepedenceyTask(
+	                taskRunner.RemoveDependencyTask(
 		               dependency: (WorkflowTaskDependency)edge.Edge.UserData, 
 		               triggerItemId: newItem.Id);
              	};

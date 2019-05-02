@@ -191,7 +191,6 @@ namespace Origam.Workbench.Editors
 						factory: new GeneralDiagramFactory());
 					break;
 			}
-			internalEditor.ReDraw();
 		}
 
 		public List<ToolStrip> GetToolStrips(int maxWidth = -1)

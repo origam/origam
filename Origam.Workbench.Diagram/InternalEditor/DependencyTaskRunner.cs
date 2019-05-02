@@ -12,27 +12,23 @@ namespace Origam.Workbench.Diagram.InternalEditor
     class DependencyTaskRunner
     {
         private readonly List<IDefferedPersistenceTask> deferedTasks = new List<IDefferedPersistenceTask>();
-        private readonly WorkbenchSchemaService schemaService;
         private readonly IPersistenceProvider persistenceProvider;
 
-        public DependencyTaskRunner(IPersistenceProvider persistenceProvider, WorkbenchSchemaService schemaService)
+        public DependencyTaskRunner(IPersistenceProvider persistenceProvider)
         {
             this.persistenceProvider = persistenceProvider;
-            this.schemaService = schemaService;
         }
 
         public void AddDependencyTask(IWorkflowStep independentItem,
             AbstractSchemaItem dependentItem, Guid triggerItemId)
         {
             deferedTasks.Add(new AddDependencyTask(
-                persistenceProvider, schemaService,
-                independentItem, dependentItem, triggerItemId));
+                persistenceProvider, independentItem, dependentItem, triggerItemId));
         }
 
-        public void RemoveDepedenceyTask(WorkflowTaskDependency dependency, Guid triggerItemId)
+        public void RemoveDependencyTask(WorkflowTaskDependency dependency, Guid triggerItemId)
         {
-            deferedTasks.Add(new RemoveDependencyTask(
-                schemaService, dependency, triggerItemId));
+            deferedTasks.Add(new RemoveDependencyTask( dependency, triggerItemId));
         }
 
         internal void UpdateDependencies(AbstractSchemaItem persistedSchemaItem)
@@ -52,14 +48,11 @@ namespace Origam.Workbench.Diagram.InternalEditor
     
 	internal class RemoveDependencyTask : IDefferedPersistenceTask
 	{
-		private readonly WorkbenchSchemaService schemaService;
 		private readonly WorkflowTaskDependency dependency;
 		private readonly Guid triggerItemId;
-
-		public RemoveDependencyTask(WorkbenchSchemaService schemaService,
+		public RemoveDependencyTask(
 			WorkflowTaskDependency dependency, Guid triggerItemId)
 		{
-			this.schemaService = schemaService;
 			this.dependency = dependency;
 			this.triggerItemId = triggerItemId;
 		}
@@ -69,7 +62,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			if (persistedItem.Id == triggerItemId)
 			{
                 dependency.Delete();
-                schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(dependency.ParentItem);
                 return true;			
 			}
 			return true;
@@ -79,17 +71,15 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	internal class AddDependencyTask: IDefferedPersistenceTask
 	{
 		private readonly IPersistenceProvider persistenceProvider;
-		private readonly WorkbenchSchemaService schemaService;
 		private readonly IWorkflowStep independentItem;
-		private readonly AbstractSchemaItem dependentItem;
 		private readonly Guid triggerItemId;
+		private readonly AbstractSchemaItem dependentItem;
 
 		public AddDependencyTask(IPersistenceProvider persistenceProvider, 
-			WorkbenchSchemaService schemaService, IWorkflowStep independentItem,
+			IWorkflowStep independentItem,
 			AbstractSchemaItem dependentItem, Guid triggerItemId)
 		{
 			this.persistenceProvider = persistenceProvider;
-			this.schemaService = schemaService;
 			this.independentItem = independentItem;
 			this.dependentItem = dependentItem;
 			this.triggerItemId = triggerItemId;
@@ -106,7 +96,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
 				Task = independentItem
 			};
 			workflowTaskDependency.Persist();
-			schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(dependentItem);
 			return true;
 		}
 	}
