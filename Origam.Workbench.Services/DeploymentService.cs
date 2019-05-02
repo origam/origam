@@ -208,7 +208,7 @@ namespace Origam.Workbench.Services
                 settings.DeployPlatforms?.ForEach(platform =>
                 {
                     DA.Common.Enums.DatabaseType databaseType =
-                        (DA.Common.Enums.DatabaseType)Enum.Parse(typeof(DA.Common.Enums.DatabaseType), platform.GetParseEnum());
+                        (DA.Common.Enums.DatabaseType)Enum.Parse(typeof(DA.Common.Enums.DatabaseType), platform.GetParseEnum(platform.DataService));
                     if (databaseType == activity.DatabaseType)
                     {
                         agent.SetDataService(DataService.GetDataService(platform));

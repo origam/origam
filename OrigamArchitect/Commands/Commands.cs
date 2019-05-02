@@ -280,7 +280,7 @@ namespace OrigamArchitect.Commands
                 ServiceCommandUpdateScriptActivity scriptActivity = (ServiceCommandUpdateScriptActivity)item;
                 Platform[] platforms = settings.GetAllPlatform();
                 if(!platforms
-                    .Where(platform => platform.GetParseEnum() == scriptActivity.DatabaseType.ToString()).Any())
+                    .Where(platform => platform.GetParseEnum(platform.DataService) == scriptActivity.DatabaseType.ToString()).Any())
                 {
                     MessageBox.Show("Platform is not supported for execute this script!","Platform",MessageBoxButtons.OK);
                     return;

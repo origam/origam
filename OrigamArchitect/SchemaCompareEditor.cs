@@ -408,7 +408,6 @@ namespace OrigamArchitect
                 AbstractSqlDataService DaPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
                 DaPlatform.PersistenceProvider = persistence.SchemaProvider;
                 _results = DaPlatform.CompareSchema(persistence.SchemaProvider);
-                DaPlatform.Dispose();
             }
             _results.ToArray().Select(x => ((SchemaDbCompareResult)x).Platform = platform).ToList();
             RenderList();
@@ -562,7 +561,8 @@ namespace OrigamArchitect
 			{
 				if(!string.IsNullOrEmpty(result.Script))
 				{
-                    DatabaseType dbType = (DatabaseType)Enum.Parse(typeof(DatabaseType), result.Platform.GetParseEnum().ToString());
+                    DatabaseType dbType = (DatabaseType)Enum.Parse(typeof(DatabaseType), 
+                        result.Platform.GetParseEnum(result.Platform.DataService).ToString());
 
 					generatedActivities.Add(
 						AddActivity(result.SchemaItem.ModelDescription() 
@@ -574,7 +574,8 @@ namespace OrigamArchitect
 			{
 				if(!string.IsNullOrEmpty(result.Script2))
 				{
-                    DatabaseType dbType = (DatabaseType)Enum.Parse(typeof(DatabaseType), result.Platform.GetParseEnum().ToString());
+                    DatabaseType dbType = (DatabaseType)Enum.Parse(typeof(DatabaseType), 
+                        result.Platform.GetParseEnum(result.Platform.DataService).ToString());
                     generatedActivities.Add(
 						AddActivity(result.SchemaItem.ModelDescription() 
 						+ "_" + result.ItemName, result.Script2, version, dataService, dbType)

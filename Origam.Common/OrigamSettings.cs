@@ -342,7 +342,7 @@ namespace Origam
                 IsPrimary = true,
                 DataService = DataDataService
             };
-            platform.Name = platform.GetParseEnum();
+            platform.Name = platform.GetParseEnum(DataDataService);
             Array.Resize(ref platforms, platforms.Length + 1);
             platforms[platforms.Length - 1] = platform;
             return platforms;
@@ -403,9 +403,9 @@ namespace Origam
 
             return _name;
         }
-        public string GetParseEnum()
+        public string GetParseEnum(string dataDataService)
         {
-            return  DataService
+            return  dataDataService
                     .Split(",".ToCharArray())[0].Trim().Split("\\.".ToCharArray())[3].Trim().Replace("DataService","");
         }
     }
