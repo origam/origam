@@ -51,6 +51,7 @@ using Origam.DA.Service;
 using System.Collections;
 using System.Web;
 using Origam.DA;
+using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server.Doc
 {
@@ -207,7 +208,8 @@ namespace Origam.Server.Doc
                 {
                     DocTools.WriteSectionStart(writer, method.Name + " Method");
                     DataStructureFilterSet filterSet = method as DataStructureFilterSet;
-                    AbstractSqlCommandGenerator abstractSqlCommandGenerator = ServiceManager.Services.GetService(typeof(IDataService)) as AbstractSqlCommandGenerator;
+                    AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+                    AbstractSqlCommandGenerator abstractSqlCommandGenerator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory;
                     if (filterSet != null)
                     {
                         try

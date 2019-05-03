@@ -1820,7 +1820,8 @@ namespace OrigamArchitect.Commands
 
         public override void Run()
         {
-            AbstractSqlCommandGenerator generator = ServiceManager.Services.GetService(typeof(IDataService)) as AbstractSqlCommandGenerator;
+            AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+            AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory;
             DataStructureFilterSet filterSet = Owner as DataStructureFilterSet;
             generator.PrettyFormat = true;
             StringBuilder builder = new StringBuilder();
@@ -1876,7 +1877,8 @@ namespace OrigamArchitect.Commands
         public override void Run()
         {
             StringBuilder builder = new StringBuilder();
-            AbstractSqlCommandGenerator generator = ServiceManager.Services.GetService(typeof(IDataService)) as AbstractSqlCommandGenerator;
+            AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+            AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory;
             generator.PrettyFormat = true;
             bool displayPagingParameters = true;
             DataStructure ds = (Owner as ISchemaItem).RootItem as DataStructure;
