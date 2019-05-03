@@ -389,7 +389,7 @@ namespace Origam.DA.Service
         internal override string SqlDataType(IDataParameter Iparam)
         {
             NpgsqlParameter param = Iparam as Npgsql.NpgsqlParameter;
-            string result = param.PostgresType.ToString();
+            string result = param.NpgsqlDbType.ToString();
 
             if (param.DbType == DbType.String)
             {
