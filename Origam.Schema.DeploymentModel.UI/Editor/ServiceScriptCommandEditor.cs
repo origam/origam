@@ -171,9 +171,9 @@ namespace Origam.Schema.DeploymentModel
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCommand.BackColor = System.Drawing.Color.White;
             this.txtCommand.IsReadOnly = false;
-            this.txtCommand.Location = new System.Drawing.Point(3, 162);
+            this.txtCommand.Location = new System.Drawing.Point(3, 148);
             this.txtCommand.Name = "txtCommand";
-            this.txtCommand.Size = new System.Drawing.Size(710, 375);
+            this.txtCommand.Size = new System.Drawing.Size(710, 326);
             this.txtCommand.TabIndex = 8;
             // 
             // panel1
@@ -243,6 +243,7 @@ namespace Origam.Schema.DeploymentModel
 				txtOrder.ReadOnly = true;
 				txtCommand.IsReadOnly = true;
 				cboService.Enabled = false;
+                cboPlatform.Enabled = false;
 			}
 
 			_isLoading = true;
