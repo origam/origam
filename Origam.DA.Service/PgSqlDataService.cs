@@ -256,13 +256,16 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
 
         public override string CreateSystemRole(string roleName)
         {
+            StringBuilder systemRole = new StringBuilder();
             string roleId = Guid.NewGuid().ToString();
-            return string.Format(
-@"INSERT INTO OrigamApplicationRole (Id, Name, Description, IsSystemRole , RecordCreated)
-VALUES ('{0}', '{1}', '', 1, now());
--- add to the built-in SuperUser role
-INSERT INTO OrigamRoleOrigamApplicationRole (Id, refOrigamRoleId, refOrigamApplicationRoleId, RecordCreated, IsFormReadOnly)
-VALUES (gen_random_uuid(), '{2}', '{0}', now(), false)",
+            systemRole.Append(" INSERT INTO \"OrigamApplicationRole\" (\"Id\", \"Name\", \"Description\", \"IsSystemRole\" , \"RecordCreated\")");
+            systemRole.Append(" VALUES ('{0}', '{1}', '', true, now()); ");
+            systemRole.Append(Environment.NewLine);
+            systemRole.Append("-- add to the built-in SuperUser role ");
+            systemRole.Append(Environment.NewLine);
+            systemRole.Append(" INSERT INTO \"OrigamRoleOrigamApplicationRole\" (\"Id\", \"refOrigamRoleId\", \"refOrigamApplicationRoleId\", \"RecordCreated\", \"IsFormReadOnly\") ");
+            systemRole.Append(" VALUES (gen_random_uuid(), '{2}', '{0}', now(), false)");
+            return string.Format(systemRole.ToString(),
                  roleId, roleName, SecurityManager.BUILTIN_SUPER_USER_ROLE);
         }
 
