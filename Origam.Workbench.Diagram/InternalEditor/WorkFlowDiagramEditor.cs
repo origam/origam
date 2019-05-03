@@ -71,6 +71,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
         public void ReDraw()
         {
 	        gViewer.Graph = factory.Draw(UpToDateGraphParent);
+	        factory.AlignContextStoreSubgraph();
 	        gViewer.DefaultDragObject = gViewer.ViewerGraph.Nodes()
 		        .Single(x => x.Node == gViewer.Graph.RootSubgraph.Subgraphs.First());
 	        gViewer.Transform = null;
@@ -146,7 +147,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
         {
 	        if (gViewer.SelectedObject is Node node)
 	        {
-		        Guid nodeId = Guid.Parse(node.Id);
+		        bool idParsed = Guid.TryParse(node.Id, out Guid nodeId);
+		        if (!idParsed) return false;
 		        var schemaItem = RetrieveItem(nodeId.ToString());
 		        if (schemaItem != null)
 		        {
@@ -260,7 +262,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		private bool IsDeleteMenuItemAvailable(DNode objectUnderMouse)
 		{
 			if (objectUnderMouse == null) return false;
-			Subgraph topWorkFlowSubGraph = gViewer.Graph.RootSubgraph.Subgraphs.FirstOrDefault();
+			Subgraph topWorkFlowSubGraph = gViewer.Graph.RootSubgraph.Subgraphs
+				.FirstOrDefault(x=>x.Id == UpToDateGraphParent.Id.ToString());
 			if (nodeSelector.Selected == topWorkFlowSubGraph) return false;
 			return objectUnderMouse.Node == nodeSelector.Selected;
 		}

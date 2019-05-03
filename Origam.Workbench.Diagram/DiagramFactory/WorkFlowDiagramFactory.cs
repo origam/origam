@@ -63,6 +63,8 @@ namespace Origam.Workbench.Diagram
 		private readonly INodeSelector nodeSelector;
 		private Graph graph;
 		private readonly NodeFactory nodeFactory;
+		private Subgraph workflowSubgraph;
+		private Subgraph contextStoresSubgraph;
 
 
 		public WorkFlowDiagramFactory(INodeSelector nodeSelector, Graphics graphics)
@@ -75,23 +77,57 @@ namespace Origam.Workbench.Diagram
 		public Graph Draw(IWorkflowBlock graphParent)
 		{
 			graph = new Graph();
-			DrawWorkflowDiagram(graphParent, null);
-			AddContextStores(graphParent);
+			Subgraph topSubGraph = new Subgraph("topSubGraph");
+			topSubGraph.DrawNodeDelegate = DrawHiddenSubgraph;
+			graph.RootSubgraph.AddSubgraph(topSubGraph);
+			workflowSubgraph = AddWorkflowDiagram(graphParent, topSubGraph);
+			contextStoresSubgraph = AddContextStores(graphParent, topSubGraph);
 			graph.LayoutAlgorithmSettings.ClusterMargin = nodeMargin;
 			return graph;
 		}
 
-		private void AddContextStores(IWorkflowBlock graphParent)
+		public void AlignContextStoreSubgraph()
 		{
+			if(contextStoresSubgraph == null || workflowSubgraph == null)
+			{
+				throw new InvalidOperationException();
+			}
+
+			MoveSubgraphRight(contextStoresSubgraph, workflowSubgraph);
+		}
+
+		private void MoveSubgraphRight(Subgraph subgraphToMove, Subgraph refSubgraph) {
+            
+			double dx = refSubgraph.Pos.X - subgraphToMove.Pos.X  +
+			            refSubgraph.Width / 2 + subgraphToMove.Width / 2;
+            
+			double dy = refSubgraph.Pos.Y - subgraphToMove.Pos.Y  +
+			            refSubgraph.Height / 2 - subgraphToMove.Height / 2;
+            
+			subgraphToMove.GeometryNode.Center = new Point(subgraphToMove.Pos.X + dx, subgraphToMove.Pos.Y + dy);
+			((Cluster)subgraphToMove.GeometryNode).RectangularBoundary.Rect = 
+				new Microsoft.Msagl.Core.Geometry.Rectangle(subgraphToMove.GeometryNode.BoundingBox.Size, subgraphToMove.Pos); 
+			foreach (var node in subgraphToMove.Nodes)
+			{
+				node.GeometryNode.Center = new Point(node.Pos.X + dx, node.Pos.Y+ dy);
+			}
+		}
+
+		private Subgraph AddContextStores(IWorkflowBlock graphParent, Subgraph topSubGraph)
+		{
+			Subgraph subgraph = new Subgraph("contextStores");
+			subgraph.DrawNodeDelegate = DrawHiddenSubgraph;
+			topSubGraph.AddSubgraph(subgraph);
 			foreach (var childItem in graphParent.ChildItems)
 			{
 				if (childItem is ContextStore contextStore)
 				{
 					Node node = nodeFactory.AddNode(graph, contextStore);
-					Subgraph subgraph = graph.RootSubgraph.Subgraphs.First();
 					subgraph.AddNode(node);
 				}
 			}
+
+			return subgraph;
 		}
 
 		private Node AddNode(IWorkflowStep step, Subgraph subGraph)
@@ -102,7 +138,7 @@ namespace Origam.Workbench.Diagram
             return node;
 		}
 
-		private Subgraph DrawWorkflowDiagram(IWorkflowBlock workFlowBlock, Subgraph parentSubgraph)
+		private Subgraph AddWorkflowDiagram(IWorkflowBlock workFlowBlock, Subgraph parentSubgraph)
 		{
             Subgraph subgraph = new Subgraph(workFlowBlock.NodeId);
             subgraph.Attr.Shape = Shape.DrawFromGeometry;
@@ -111,14 +147,8 @@ namespace Origam.Workbench.Diagram
             subgraph.UserData = workFlowBlock;
             subgraph.LabelText = workFlowBlock.Name;
   
-            if (parentSubgraph == null)
-            {
-                graph.RootSubgraph.AddSubgraph(subgraph);
-            }
-            else
-            {
-                parentSubgraph.AddSubgraph(subgraph);
-            }
+            parentSubgraph.AddSubgraph(subgraph);
+            
             IDictionary<Key, Node> ht = new Dictionary<Key, Node>();
 
 			foreach(IWorkflowStep step in workFlowBlock.ChildItemsByType(AbstractWorkflowStep.ItemTypeConst))
@@ -130,7 +160,7 @@ namespace Origam.Workbench.Diagram
                 }
                 else
                 {
-                    Node shape = DrawWorkflowDiagram(subBlock, subgraph);
+                    Node shape = AddWorkflowDiagram(subBlock, subgraph);
                     ht.Add(step.PrimaryKey, shape);
                 }
 			}
@@ -197,6 +227,11 @@ namespace Origam.Workbench.Diagram
 			SizeF stringSize = graphics.MeasureString(node.LabelText, font);
 			var labelWidth = stringSize.Width + imageRightMargin + image.Width;
 			return labelWidth;
+		}
+		
+		private bool DrawHiddenSubgraph(Node node, object graphicsObj)
+		{
+			return true;
 		}
 		
 		private bool DrawSubgraph(Node node, object graphicsObj)
