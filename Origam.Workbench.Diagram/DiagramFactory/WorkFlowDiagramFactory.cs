@@ -132,9 +132,10 @@ namespace Origam.Workbench.Diagram
 
 		private Node AddNode(IWorkflowStep step, Subgraph subGraph)
 		{
-			Node node = nodeFactory.AddNode(graph, step);
+//			Node node = nodeFactory.AddNode(graph, step);
+			Node node = nodeFactory.AddSubgraphNode(subGraph, step);
             node.UserData = step;
-            subGraph?.AddNode(node);
+           // subGraph.AddNode(node);
             return node;
 		}
 
@@ -201,8 +202,8 @@ namespace Origam.Workbench.Diagram
 			return image;
 		}
 		
-		private ICurve GetSubgraphBoundary(Node node) {
-			
+		private ICurve GetSubgraphBoundary(Node node) 
+		{
 			Subgraph subgraph = (Subgraph) node;
 			if (!subgraph.Nodes.Any())
 			{
@@ -294,7 +295,7 @@ namespace Origam.Workbench.Diagram
 			double centerX = node.GeometryNode.Center.X;
 			double centerY = node.GeometryNode.Center.Y;
 			
-			if (subgraph.Nodes.Any())
+			if (subgraph.Nodes.Any() || subgraph.Subgraphs.Any())
 			{
 				return new Tuple<PointF, string>(new PointF(), "");
 			}

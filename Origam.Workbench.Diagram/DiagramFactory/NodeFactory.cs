@@ -1,11 +1,14 @@
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Msagl.Core.Geometry.Curves;
+using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Origam.Schema;
 using Origam.Workbench.Diagram.Extensions;
+using Node = Microsoft.Msagl.Drawing.Node;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
 
 namespace Origam.Workbench.Diagram.DiagramFactory
@@ -39,7 +42,29 @@ namespace Origam.Workbench.Diagram.DiagramFactory
             node.LabelText = schemaItem.Name;
             return node;
         }
- 
+        
+        public Subgraph AddSubgraphNode(Subgraph parentSbubgraph, ISchemaItem schemaItem)
+        {
+            Subgraph subgraph = new Subgraph(schemaItem.Id.ToString());
+            subgraph.Attr.Shape = Shape.DrawFromGeometry;
+            subgraph.DrawNodeDelegate = DrawSubgraph;
+            subgraph.NodeBoundaryDelegate = GetSubgraphBoundary;
+            subgraph.UserData = schemaItem;
+            subgraph.LabelText = schemaItem.Name;
+            parentSbubgraph.AddSubgraph(subgraph);
+            return subgraph;
+        }
+
+        private ICurve GetSubgraphBoundary(Node node)
+        {
+            return GetNodeBoundary(node);
+        }
+
+        private bool DrawSubgraph(Node node, object graphics)
+        {
+            return DrawNode(node, graphics);
+        }
+
         private ICurve GetNodeBoundary(Node node) {
             var borderSize = CalculateBorderSize(node);
             return CurveFactory.CreateRectangle(borderSize.Width, borderSize.Height, new Point());
