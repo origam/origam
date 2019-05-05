@@ -6,6 +6,8 @@ export class TextEditor extends React.Component<{
   isInvalid: boolean;
   isFocused: boolean;
   onChange?(event: any, value: string): void;
+  onKeyDown?(event: any): void;
+  onClick?(event: any): void;
 }> {
  
   componentDidMount() {
@@ -45,6 +47,8 @@ export class TextEditor extends React.Component<{
             this.props.onChange &&
             this.props.onChange(event, event.target.value)
           }
+          onKeyDown={this.props.onKeyDown}
+          onClick={this.props.onClick}
         />
         {this.props.isInvalid && (
           <div className="notification">

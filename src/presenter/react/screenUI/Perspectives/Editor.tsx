@@ -5,6 +5,7 @@ import { DateTimeEditor } from "./editors/DateTime";
 import { BoolEditor } from "./editors/Bool";
 import { ITypedField } from "../../../view/Perspectives/types";
 
+// TODO: Refactor - this duplicates with Editor in FormView/FormView - Editor
 @observer
 export class Editor extends React.Component<{ field: ITypedField }> {
   getEditor(field: ITypedField) {
@@ -27,6 +28,7 @@ export class Editor extends React.Component<{ field: ITypedField }> {
             outputFormat={field.outputFormat}
             isReadOnly={field.isReadOnly}
             isInvalid={field.isInvalid}
+            isFocused={field.isFocused}
           />
         );
       case "BoolCell":

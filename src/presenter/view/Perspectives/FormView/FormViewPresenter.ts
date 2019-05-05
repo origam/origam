@@ -3,13 +3,19 @@ import { IViewType } from "../../../../DataView/types/IViewType";
 import { ML } from "../../../../utils/types";
 import { IToolbar } from "../types";
 import { unpack } from "../../../../utils/objects";
-import { computed } from "mobx";
+import { computed, action } from "mobx";
 import { IPropReorder } from "../../../../DataView/types/IPropReorder";
 import { IDataTable } from "../../../../DataView/types/IDataTable";
 import { IRecCursor } from "../../../../DataView/types/IRecCursor";
 import { IPropCursor } from "../../../../DataView/types/IPropCursor";
 import { IProperty } from "../../../../DataView/types/IProperty";
 import { IForm } from "../../../../DataView/types/IForm";
+import { IASelNextProp } from "../../../../DataView/types/IASelNextProp";
+import { IASelPrevProp } from "../../../../DataView/types/IASelPrevProp";
+import { AOnHandleClick } from "../../../../Screens/AOnHandleClick";
+import { IASelProp } from "../../../../DataView/types/IASelProp";
+
+
 
 export class FormViewPresenter implements IFormView {
   constructor(
@@ -21,6 +27,9 @@ export class FormViewPresenter implements IFormView {
       recCursor: ML<IRecCursor>;
       propCursor: ML<IPropCursor>;
       form: ML<IForm>;
+      aSelNextProp: ML<IASelNextProp>;
+      aSelPrevProp: ML<IASelPrevProp>;
+      aSelProp: ML<IASelProp>;
     }
   ) {}
 
@@ -59,6 +68,8 @@ export class FormViewPresenter implements IFormView {
             onChange: (event: any, value: boolean) => {
               this.form.setDirtyValue(property.id, value);
             },
+            onKeyDown: this.handleKeyDown,
+            onClick: (event: any) => this.handleClick(event, property.id),
             isLoading,
             isFocused: this.propCursor.selId === prop.id,
             isInvalid: false,
@@ -71,6 +82,8 @@ export class FormViewPresenter implements IFormView {
             onChange: (event: any, value: string) => {
               this.form.setDirtyValue(property.id, value);
             },
+            onKeyDown: this.handleKeyDown,
+            onClick: (event: any) => this.handleClick(event, property.id),
             isFocused: this.propCursor.selId === prop.id,
             isLoading,
             isInvalid: false,
@@ -84,11 +97,32 @@ export class FormViewPresenter implements IFormView {
       onChange(event: any, value: string) {
         console.log("change", event, value);
       },
+      onKeyDown: this.handleKeyDown,
+      onClick: (event: any) => this.handleClick(event, property.id),
       isFocused: this.propCursor.selId === prop.id,
       isLoading,
       isInvalid: false,
       isReadOnly: property.isReadOnly
     };
+  }
+
+  @action.bound handleKeyDown(event: any) {
+    console.log("Form view tex editor key down", event.key)
+    switch(event.key) {
+      case "Tab":
+        if(event.shiftKey) {
+          this.aSelPrevProp.do();
+        } else {
+          this.aSelNextProp.do();
+        }
+        event.stopPropagation();
+        event.preventDefault();
+      break;
+    }
+  }
+
+  @action.bound handleClick(event: any, propId: string) {
+    this.aSelProp.do(propId)
   }
 
   get toolbar() {
@@ -117,5 +151,17 @@ export class FormViewPresenter implements IFormView {
 
   get form() {
     return unpack(this.P.form);
+  }
+
+  get aSelNextProp() {
+    return unpack(this.P.aSelNextProp);
+  }
+
+  get aSelPrevProp() {
+    return unpack(this.P.aSelPrevProp);
+  }
+
+  get aSelProp() {
+    return unpack(this.P.aSelProp);
   }
 }

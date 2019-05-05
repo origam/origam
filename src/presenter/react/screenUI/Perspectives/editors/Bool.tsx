@@ -7,6 +7,8 @@ export class BoolEditor extends React.Component<{
   value: boolean;
   isReadOnly: boolean;
   onChange?(event: any, value: boolean): void;
+  onKeyDown?(event: any): void;
+  onClick?(event: any): void;
 }> {
   render() {
     return (
@@ -20,6 +22,8 @@ export class BoolEditor extends React.Component<{
             this.props.onChange &&
               this.props.onChange(event, event.target.checked);
           }}
+          onKeyDown={this.props.onKeyDown}
+          onClick={this.props.onClick}
         />
       </div>
     );

@@ -33,6 +33,8 @@ export class Editor extends React.Component<{ field: IFormField }> {
             isInvalid={field.isInvalid}
             isFocused={field.isFocused}
             onChange={field.onChange}
+            onKeyDown={field.onKeyDown}
+            onClick={field.onClick}
           />
         );
       case "DateTimeCell":
@@ -43,6 +45,7 @@ export class Editor extends React.Component<{ field: IFormField }> {
             outputFormat={field.outputFormat}
             isReadOnly={field.isReadOnly}
             isInvalid={field.isInvalid}
+            isFocused={field.isFocused}
           />
         );
       case "BoolCell":
@@ -51,6 +54,8 @@ export class Editor extends React.Component<{ field: IFormField }> {
             value={field.value}
             isReadOnly={field.isReadOnly}
             onChange={field.onChange}
+            onClick={field.onClick}
+            onKeyDown={field.onKeyDown}
           />
         );
       default:
@@ -178,8 +183,10 @@ export class FormView extends React.Component<{ controller: IFormView }> {
       dataTable: () => this.props.controller.dataView.dataTable,
       recCursor: () => this.props.controller.dataView.recCursor,
       propCursor: () => this.props.controller.propCursor,
-      form: () => this.props.controller.form
-    });
+      form: () => this.props.controller.form,
+      aSelPrevProp: () => this.props.controller.aSelPrevProp,
+      aSelNextProp: () => this.props.controller.aSelNextProp,
+      aSelProp: () => this.props.controller.aSelProp   });
     const toolbar = this.props.controller.dataView.isHeadless
       ? undefined
       : new FormViewToolbar({

@@ -9,6 +9,7 @@ export class DateTimeEditor extends React.Component<{
   outputFormat: string;
   isReadOnly: boolean;
   isInvalid: boolean;
+  isFocused: boolean;
 }> {
   render() {
     return (

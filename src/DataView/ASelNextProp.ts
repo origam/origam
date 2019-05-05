@@ -8,6 +8,7 @@ import { unpack } from "../utils/objects";
 import { IPropReorder } from "./types/IPropReorder";
 import { IProperty } from "./types/IProperty";
 
+
 export class ASelNextProp implements IASelNextProp {
   constructor(
     public P: {
@@ -22,6 +23,7 @@ export class ASelNextProp implements IASelNextProp {
     const id1 = selId && this.props.getIdAfterId(selId);
     if (id1) {
       this.aSelProp.do(id1);
+      console.log("Newly selected prop id:", this.propCursor.selId)
     }
   }
 

@@ -6,12 +6,12 @@ export interface IFormView {
   uiStructure: Array<IUIFormRoot>;
   toolbar: IToolbar | undefined;
   fields: Map<string, IFormField>;
-  onFieldClick?(event: any, id: string): void;
+  /*onFieldClick?(event: any, id: string): void;
   onFieldFocus?(event: any, id: string): void;
   onFieldBlur?(event: any, id: string): void;
   onFieldChange?(event: any, id: string, value: any): void;
   onFieldKeyDown?(event: any, id: string): void;
-  onFieldOutsideClick?(event: any, id: string): void;
+  onFieldOutsideClick?(event: any, id: string): void;*/
 }
 
 interface IField {
@@ -19,6 +19,8 @@ interface IField {
   isLoading: boolean;
   isInvalid: boolean;
   isReadOnly: boolean;
+  onKeyDown?(event: any): void;
+  onClick?(event: any): void;
 }
 
 export type IFormField = ICellTypeDU & IField;
