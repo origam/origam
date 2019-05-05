@@ -16,6 +16,7 @@ export interface IDataTable {
   getValue(record: IRecord, property: IProperty): any;
   getRecValueMap(id: string): Map<string, any>;
   getRecordIndexById(id: string): number | undefined;
+  getRecordIdByIndex(idx: number): string | undefined;
   setRecords(records: IRecord[]): void;
   resetDirty(): void;
   records: IRecords;

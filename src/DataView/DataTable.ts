@@ -9,11 +9,7 @@ import { Property } from "./Property";
 import { IDataTable } from "./types/IDataTable";
 import { IRecord } from "./types/IRecord";
 
-
-
-
 export class Properties implements IProperties {
-  
   constructor(public P: { items: ML<IProperty[]> }) {}
 
   @observable.shallow items: IProperty[] = unpack(this.P.items);
@@ -66,7 +62,6 @@ export class Properties implements IProperties {
 }
 
 export class Records implements IRecords {
-
   @observable.shallow items: Array<Array<any>> = [];
   @observable deletedRecordIds: Map<string, boolean> | undefined;
 
@@ -133,9 +128,6 @@ export class Records implements IRecords {
 }
 
 export class DataTable implements IDataTable {
-
-
-
   constructor(
     public P: {
       records: L<IRecords>;
@@ -188,7 +180,6 @@ export class DataTable implements IDataTable {
     return this.records.getById(id);
   }
 
-
   getValueByIdx(recIdx: number, propIdx: number): any {
     const record = this.getRecordByIdx(recIdx);
     const property = this.properties.getByIndex(propIdx);
@@ -216,7 +207,6 @@ export class DataTable implements IDataTable {
     return record[property.dataIndex];
   }
 
-
   getRecValueMap(id: string): Map<string, any> {
     const record = this.records.getById(id);
     const result = new Map();
@@ -230,6 +220,10 @@ export class DataTable implements IDataTable {
 
   getRecordIndexById(id: string): number | undefined {
     return this.records.getIndexById(id);
+  }
+
+  getRecordIdByIndex(idx: number): string | undefined {
+    return this.records.getIdByIndex(idx);
   }
 
   @computed get records() {

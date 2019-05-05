@@ -18,6 +18,11 @@ import { AOnNoEditorClick } from "./AOnNoEditorClick";
 import { AOnOutsideFormClick } from "./AOnOutsideFormClick";
 import { computed } from "mobx";
 import { IFormView } from "./types";
+import { ASelCell } from "../ASelCell";
+import { AStartEditing } from "../AStartEditing";
+import { AFinishEditing } from "../AFinishEditing";
+import { AInitForm } from "../AInitForm";
+import { ASubmitForm } from "../ASubmitForm";
 
 export class FormView implements IFormView {
   constructor(
@@ -68,19 +73,45 @@ export class FormView implements IFormView {
   });
 
   aSelProp = new ASelProp({
-    propCursor: () => this.propCursor,
-    properties: () => this.propReorder
+    aSelCell: () => this.aSelCell
   });
   aSelRec = new ASelRec({
-    aFinishEditing: () => this.aFinishEditing,
-    aStartEditing: () => this.aStartEditing,
-    editing: () => this.editing,
-    propCursor: () => this.propCursor,
+    aSelCell: () => this.aSelCell
+  })
+
+  aSelCell = new ASelCell({
     recCursor: () => this.recCursor,
-    records: () => this.records,
-    aReloadChildren: () => this.dataView.aReloadChildren
+    propCursor: () => this.propCursor,
+    propReorder: () => this.propReorder,
+    dataTable: () => this.dataView.dataTable,
+    editing: () => this.editing,
+    aStartEditing: () => this.aStartEdit,
+    aFinishEditing: () => this.aFinishEdit,
+    form: () => this.form
   });
 
+  aStartEdit = new AStartEditing({
+    editing: () => this.editing,
+    aInitForm: () => this.aInitForm,
+  })
+
+  aFinishEdit = new AFinishEditing({
+    editing: () => this.editing,
+    aSubmitForm: () => this.aSubmitForm
+  });
+
+  aInitForm = new AInitForm({
+    recCursor: () => this.recCursor,
+    dataTable: () => this.dataView.dataTable,
+    form: () => this.form
+  });
+
+  aSubmitForm = new ASubmitForm({
+    recCursor: () => this.recCursor,
+    dataTable: () => this.dataView.dataTable,
+    form: () => this.form
+  })
+  
   propReorder = new PropReorder({
     props: () => this.props,
     initPropIds: this.P.propIds
@@ -117,6 +148,10 @@ export class FormView implements IFormView {
 
   get dataView() {
     return unpack(this.P.dataView);
+  }
+
+  get form() {
+    return this.dataView.form;
   }
 
   @computed get uiStructure() {

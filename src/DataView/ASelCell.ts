@@ -10,38 +10,91 @@ import { IAStartEditing } from "./types/IAStartEditing";
 import { IEditing } from "./types/IEditing";
 import { action, computed } from "mobx";
 import { unpack } from "../utils/objects";
-
+import { IAFinishEditing } from "./types/IAFinishEditing";
+import { IForm } from "./types/IForm";
 
 export class ASelCell implements IASelCell {
   constructor(
     public P: {
-      aSelRec: L<IASelRec>;
-      aSelProp: L<IASelProp>;
       recCursor: ML<IRecCursor>;
       propCursor: ML<IPropCursor>;
       dataTable: ML<IDataTable>;
       propReorder: ML<IPropReorder>;
-      aStartEditing: ML<IAStartEditing>;
       editing: ML<IEditing>;
+      aStartEditing: ML<IAStartEditing>;
+      aFinishEditing: ML<IAFinishEditing>;
+      form: ML<IForm>;
+      // aOnChange:
     }
   ) {}
 
   @action.bound
   doByIdx(rowIdx: number | undefined, colIdx: number | undefined) {
-    const isSameCell = rowIdx === this.selRecIdx && colIdx === this.selPropIdx;
+    const rowId =
+      rowIdx !== undefined
+        ? this.dataTable.getRecordIdByIndex(rowIdx)
+        : undefined;
+    const colId =
+      colIdx !== undefined ? this.propReorder.getIdByIndex(colIdx) : undefined;
+    this.do(rowId, colId);
+  }
 
-    this.P.aSelProp().doByIdx(colIdx);
-    this.P.aSelRec().doByIdx(rowIdx);
-    if (isSameCell) {
+  @action.bound do(rowId: string | undefined, colId: string | undefined) {
+    const isSessioned = false;
+    const sel0 = {
+      rowId: this.recCursor.selId,
+      colId: this.propCursor.selId
+    };
+    const sel1 = {
+      rowId: rowId || sel0.rowId,
+      colId: colId || sel0.colId
+    };
+    const willSelect = !!(sel1.rowId && sel1.colId);
+    const isRowChange = sel0.rowId !== sel1.rowId;
+    const isColChange = sel0.colId !== sel1.colId;
+    const isFreshSel = !(sel0.rowId !== undefined && sel0.colId !== undefined);
+    const isFinishEditing =
+      this.editing.isEditing && (isRowChange || (isColChange && !isSessioned));
+    const isStartEditing =
+      willSelect &&
+      ((!this.editing.isEditing &&
+        !isFreshSel &&
+        !isRowChange &&
+        !isColChange) ||
+        isFinishEditing);
+
+    const prop = this.propReorder.getById(sel1.colId);
+    if (prop && willSelect) {
+      if (
+        !this.editing.isEditing &&
+        prop.column === "CheckBox" &&
+        !prop.isReadOnly
+      ) {
+        this.propCursor.setSelId(sel1.colId!);
+        this.recCursor.setSelId(sel1.rowId!);
+        this.aStartEditing.do();
+        const value = this.dataTable.getValueById(sel1.rowId!, sel1.colId!);
+        this.form.setDirtyValue(prop.id, !value);
+        this.aFinishEditing.do();
+        return;
+      }
+    }
+
+    if (isFinishEditing) {
+      this.aFinishEditing.do();
+    }
+    if (willSelect) {
+      this.propCursor.setSelId(sel1.colId!);
+      this.recCursor.setSelId(sel1.rowId!);
+    }
+    if (isStartEditing) {
       this.aStartEditing.do();
     }
   }
 
   @action.bound
   doSelFirst() {
-    // debugger
-    this.P.aSelProp().doSelFirst();
-    this.P.aSelRec().doSelFirst();
+    this.doByIdx(0, 0);
   }
 
   @computed get selPropIdx() {
@@ -68,12 +121,8 @@ export class ASelCell implements IASelCell {
     return unpack(this.P.aStartEditing);
   }
 
-  get aSelProp() {
-    return unpack(this.P.aSelProp);
-  }
-
-  get aSelRec() {
-    return unpack(this.P.aSelRec);
+  get aFinishEditing() {
+    return unpack(this.P.aFinishEditing);
   }
 
   get dataTable() {
@@ -82,5 +131,13 @@ export class ASelCell implements IASelCell {
 
   get propReorder() {
     return unpack(this.P.propReorder);
+  }
+
+  get editing() {
+    return unpack(this.P.editing);
+  }
+
+  get form() {
+    return unpack(this.P.form);
   }
 }

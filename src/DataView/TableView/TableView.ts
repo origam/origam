@@ -26,6 +26,7 @@ import * as DataViewActions from "../DataViewActions";
 import { stopDispatch } from "../DataViewMediator";
 import * as TableViewActions from "./TableViewActions";
 
+
 export class TableView implements ITableView {
   constructor(
     public P: {
@@ -109,8 +110,7 @@ export class TableView implements ITableView {
   });
 
   aSelProp = new ASelProp({
-    propCursor: () => this.propCursor,
-    properties: () => this.propReorder,     
+    aSelCell: () => this.aSelCell   
   });
 
   aSelNextRec = new ASelNextRec({
@@ -125,24 +125,19 @@ export class TableView implements ITableView {
   });
 
   aSelRec = new ASelRec({
-    editing: () => this.editing,
-    aStartEditing: () => this.aStartEdit,
-    aFinishEditing: () => this.aFinishEdit,
-    recCursor: () => this.recCursor,
-    propCursor: () => this.propCursor,
-    records: () => this.records,
-    aReloadChildren: () => this.dataView.aReloadChildren
+    aSelCell: () => this.aSelCell
   });
 
+
   aSelCell = new ASelCell({
-    aSelRec: () => this.aSelRec,
-    aSelProp: () => this.aSelProp,
     recCursor: () => this.recCursor,
     propCursor: () => this.propCursor,
     propReorder: () => this.propReorder,
     dataTable: () => this.dataView.dataTable,
     editing: () => this.editing,
-    aStartEditing: () => this.aStartEdit
+    aStartEditing: () => this.aStartEdit,
+    aFinishEditing: () => this.aFinishEdit,
+    form: () => this.form
   });
 
   propCursor = new PropCursor({});

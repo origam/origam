@@ -9,79 +9,30 @@ import { IAStartEditing } from "./types/IAStartEditing";
 import { IRecords } from "./types/IRecords";
 import { unpack } from "../utils/objects";
 import { IAReloadChildren } from "./types/IAReloadChildren";
+import { IASelCell } from "./types/IASelCell";
 
 export class ASelRec implements IASelRec {
   constructor(
     public P: {
-      editing: ML<IEditing>;
-      recCursor: ML<IRecCursor>;
-      propCursor: ML<IPropCursor>;
-      aFinishEditing: ML<IAFinishEditing>;
-      aStartEditing: ML<IAStartEditing>;
-      records: ML<IRecords>;
-      aReloadChildren: ML<IAReloadChildren>;
+      aSelCell: ML<IASelCell>;
     }
   ) {}
 
   @action.bound
   do(id: string | undefined) {
-    // --------------------------------------------------------
-    const isEditing = this.editing.isEditing;
-    const isRowChange = id !== this.recCursor.selId;
-
-    if (isEditing && isRowChange) {
-      this.aFinishEditing.do();
-    }
-    if (id) {
-      this.recCursor.setSelId(id);
-      // this.aReloadChildren.do();
-    }
-    if (
-      isEditing &&
-      isRowChange &&
-      this.recCursor.isSelected &&
-      this.propCursor.isSelected
-    ) {
-      this.aStartEditing.do();
-    }
+    this.aSelCell.do(id, undefined);
   }
 
   @action.bound doByIdx(idx: number | undefined) {
-    const id = idx !== undefined ? this.records.getIdByIndex(idx) : undefined;
-    this.do(id);
+    this.aSelCell.doByIdx(idx, undefined);
   }
 
   @action.bound
   doSelFirst() {
-    // TODO
     this.doByIdx(0);
   }
 
-  get editing() {
-    return unpack(this.P.editing);
-  }
-
-  get recCursor() {
-    return unpack(this.P.recCursor);
-  }
-
-  get propCursor() {
-    return unpack(this.P.propCursor);
-  }
-
-  get aFinishEditing() {
-    return unpack(this.P.aFinishEditing);
-  }
-
-  get aStartEditing() {
-    return unpack(this.P.aStartEditing);
-  }
-
-  get records() {
-    return unpack(this.P.records);
-  }
-
-  get aReloadChildren() {
-    return unpack(this.P.aReloadChildren);
+  get aSelCell() {
+    return unpack(this.P.aSelCell);
   }
 }

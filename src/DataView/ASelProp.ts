@@ -8,40 +8,31 @@ import { IPropReorder } from "./types/IPropReorder";
 import { IProperty } from "./types/IProperty";
 import { IDataViewMediator } from "./types/IDataViewMediator";
 import { IAReloadChildren } from "./types/IAReloadChildren";
+import { IASelCell } from "./types/IASelCell";
 
 export class ASelProp implements IASelProp {
   constructor(
     public P: {
-      propCursor: ML<IPropCursor>;
-      properties: ML<IPropReorder>;
+      aSelCell: ML<IASelCell>;
     }
   ) {}
 
   @action.bound
   do(id: string | undefined) {
-    const propCursor = this.propCursor;
-    propCursor.setSelId(id);
+    this.aSelCell.do(undefined, id);
   }
 
   @action.bound
   doByIdx(idx: number | undefined) {
-    const properties = this.properties;
-    const id = idx !== undefined ? properties.getIdByIndex(idx) : undefined;
-    this.do(id);
+    this.aSelCell.doByIdx(undefined, idx);
   }
 
   @action.bound
   doSelFirst() {
-    // TODO
     this.doByIdx(0);
   }
 
-  get propCursor() {
-    return unpack(this.P.propCursor);
+  get aSelCell() {
+    return unpack(this.P.aSelCell);
   }
-
-  get properties() {
-    return unpack(this.P.properties);
-  }
-
 }
