@@ -31,6 +31,7 @@ export class Editor extends React.Component<{ field: IFormField }> {
             value={field.value}
             isReadOnly={field.isReadOnly}
             isInvalid={field.isInvalid}
+            isFocused={field.isFocused}
             onChange={field.onChange}
           />
         );

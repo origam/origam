@@ -1,4 +1,5 @@
 import * as React from "react";
+import ReactDOM from 'react-dom';
 import Canvas from "./Canvas";
 
 import Measure, { BoundingRect, ContentRect } from "react-measure";
@@ -111,6 +112,15 @@ export class Table extends React.Component<{ controller: ITable }> {
   @observable.ref elmCanvasMoving: Canvas | null = null;
   @observable.ref elmScroller: Scroller | null = null;
 
+  
+  @action.bound handleWindowClick(event: any) {
+    const domNode = ReactDOM.findDOMNode(this.elmScroller);
+    if (domNode && !domNode.contains(event.target)) {
+      this.props.controller.onOutsideTableClick &&
+        this.props.controller.onOutsideTableClick(event);
+    }
+  }
+
   @action.bound refCanvasFixed(elm: Canvas | null) {
     this.elmCanvasFixed = elm;
   }
@@ -121,6 +131,11 @@ export class Table extends React.Component<{ controller: ITable }> {
 
   @action.bound refScroller(elm: Scroller | null) {
     this.elmScroller = elm;
+    if (elm) {
+      window.addEventListener("click", this.handleWindowClick);
+    } else {
+      window.removeEventListener("click", this.handleWindowClick);
+    }
   }
 
   disposer: (() => void) | undefined;
@@ -310,6 +325,7 @@ export class Table extends React.Component<{ controller: ITable }> {
                                 cells={this.props.controller.cells}
                                 cursor={this.props.controller.cursor}
                                 renderCell={renderCell(this.props.controller)}
+                                onNoCellClick={this.props.controller.onNoCellClick}
                               />
                               <Canvas
                                 ref={this.refCanvasMoving}
@@ -327,6 +343,7 @@ export class Table extends React.Component<{ controller: ITable }> {
                                 cells={this.props.controller.cells}
                                 cursor={this.props.controller.cursor}
                                 renderCell={renderCell(this.props.controller)}
+                                onNoCellClick={this.props.controller.onNoCellClick}
                               />
                             </>
                           )}
@@ -351,8 +368,13 @@ export class Table extends React.Component<{ controller: ITable }> {
                               ) => {
                                 console.log("VDC", fvci, lvci, fvri, lvri);
                               }}
-                              onBeforeRender={this.props.controller.onBeforeRender}
-                              onAfterRender={this.props.controller.onAfterRender}
+                              onBeforeRender={
+                                this.props.controller.onBeforeRender
+                              }
+                              onAfterRender={
+                                this.props.controller.onAfterRender
+                              }
+                              onNoCellClick={this.props.controller.onNoCellClick}
                             />
                           )}
                         </div>
@@ -369,6 +391,9 @@ export class Table extends React.Component<{ controller: ITable }> {
                           >
                             {this.props.controller.cursor.field && (
                               <Editor
+                                key={`${
+                                  this.props.controller.cursor.rowIndex
+                                }@${this.props.controller.cursor.columnIndex}`}
                                 field={this.props.controller.cursor.field}
                               />
                             )}

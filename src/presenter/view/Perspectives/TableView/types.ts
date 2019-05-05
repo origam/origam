@@ -2,8 +2,7 @@ import { IViewType } from "../../../../DataView/types/IViewType";
 import { IToolbar, ICellTypeDU } from "../types";
 import { IOrderByState } from "../../../../DataView/Ordering/types";
 import { PubSub } from "../../../../utils/events";
-import { IListener } from '../../../../DataView/types/IDataViewMediator';
-
+import { IListener } from "../../../../DataView/types/IDataViewMediator";
 
 // Toolbar plus table
 export interface ITableView {
@@ -11,7 +10,6 @@ export interface ITableView {
   toolbar: IToolbar | undefined;
   table: ITable;
 }
-
 
 // Whole table
 export interface ITable {
@@ -23,6 +21,8 @@ export interface ITable {
   listenMediator(listener: IListener): () => void;
   onKeyDown?(event: any): void;
   onCellClick?(event: any, rowIdx: number, columnIdx: number): void;
+  onNoCellClick?(event: any): void;
+  onOutsideTableClick?(event: any): void;
   onFieldClick?(event: any): void;
   onFieldFocus?(event: any): void;
   onFieldBlur?(event: any): void;
@@ -47,7 +47,6 @@ export interface IScrollState {
   setScrollOffset(event: any, scrollTop: number, scrollLeft: number): void;
 }
 
-
 // Everything about the data area (data cells, headers, content size...)
 export interface ICells {
   rowCount: number;
@@ -66,17 +65,13 @@ export interface ICells {
 
   getCell(rowIdx: number, columnIdx: number): ICell;
   getHeader(columnIdx: number): IHeader;
-
-  
 }
-
 
 export interface IHeader {
   label: string;
   orderBy: IOrderByState;
   // filter: IHeaderFilter;
 }
-
 
 // Describes one table cellwhen not editing.
 interface ITableCell {
@@ -89,10 +84,9 @@ interface ITableCell {
 
 export type ICell = ICellTypeDU & ITableCell;
 
-
-
 // Describes the field of form when editing a cell.
 export interface IField {
+  isFocused: boolean;
   isLoading: boolean;
   isInvalid: boolean;
   isReadOnly: boolean;

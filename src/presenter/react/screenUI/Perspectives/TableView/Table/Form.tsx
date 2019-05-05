@@ -16,6 +16,7 @@ export class PositionedField extends React.Component<IPositionedFieldProps> {
     return ReactDOM.createPortal(
       <div
         className="positioned-field"
+        onClick={(event: any) => event.stopPropagation()}
         style={{
           top: worldBounds.top + rowTop - scrollTop,
           left:

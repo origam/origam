@@ -35,6 +35,7 @@ export interface IViewTypeBtn {
 }
 
 export interface IField {
+  isFocused: boolean;
   isLoading: boolean;
   isInvalid: boolean;
   isReadOnly: boolean;

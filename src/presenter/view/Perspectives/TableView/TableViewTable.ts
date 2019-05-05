@@ -8,6 +8,8 @@ import {
 import * as DataViewActions from "../../../../DataView/DataViewActions";
 import { action } from "mobx";
 import * as TableViewActions from "../../../../DataView/TableView/TableViewActions";
+import { IEditing } from "../../../../DataView/types/IEditing";
+import { IAFinishEditing } from "../../../../DataView/types/IAFinishEditing";
 
 
 export class TableViewTable implements ITable {
@@ -17,6 +19,8 @@ export class TableViewTable implements ITable {
       cells: ML<ICells>;
       cursor: ML<IFormField>;
       mediator: ML<IDataViewMediator>;
+      editing: ML<IEditing>;
+      aFinishEditing: ML<IAFinishEditing>;
     }
   ) {}
 
@@ -31,6 +35,19 @@ export class TableViewTable implements ITable {
     this.mediator.dispatch(
       TableViewActions.makeCellVisibleByIdx({ rowIdx, columnIdx })
     );
+  }
+
+  @action.bound onNoCellClick(event: any) {
+    if(this.editing.isEditing) {
+      this.aFinishEditing.do();
+    }
+  }
+
+  @action.bound onOutsideTableClick(event: any) {
+    console.log('Outside table click');
+    if(this.editing.isEditing) {
+      this.aFinishEditing.do();
+    }
   }
 
   @action.bound
@@ -81,5 +98,13 @@ export class TableViewTable implements ITable {
 
   get mediator() {
     return unpack(this.P.mediator);
+  }
+
+  get editing() {
+    return unpack(this.P.editing);
+  }
+
+  get aFinishEditing() {
+    return unpack(this.P.aFinishEditing);
   }
 }

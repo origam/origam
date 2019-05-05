@@ -48,6 +48,7 @@ export class FormViewPresenter implements IFormView {
         isLoading = property.lookupResolver.isLoading(value);
         value = property.lookupResolver.getValue(value);
       }
+      console.log("+++", this.propCursor.selId, prop.id);
       switch (property.column) {
         case "CheckBox":
           return {
@@ -57,6 +58,7 @@ export class FormViewPresenter implements IFormView {
               console.log("change", event, value);
             },
             isLoading,
+            isFocused: this.propCursor.selId === prop.id,
             isInvalid: false,
             isReadOnly: property.isReadOnly
           };
@@ -67,6 +69,7 @@ export class FormViewPresenter implements IFormView {
             onChange(event: any, value: string) {
               console.log("change", event, value);
             },
+            isFocused: this.propCursor.selId === prop.id,
             isLoading,
             isInvalid: false,
             isReadOnly: property.isReadOnly
@@ -79,6 +82,7 @@ export class FormViewPresenter implements IFormView {
       onChange(event: any, value: string) {
         console.log("change", event, value);
       },
+      isFocused: this.propCursor.selId === prop.id,
       isLoading,
       isInvalid: false,
       isReadOnly: property.isReadOnly

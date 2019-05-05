@@ -73,6 +73,7 @@ export interface IGridCanvasProps {
     firstVisibleRowIndex: number,
     lastVisibleRowIndex: number
   ): void;
+  onNoCellClick?(event: any): void;
 }
 
 export interface IPositionedFieldProps {

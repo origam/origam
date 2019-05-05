@@ -10,6 +10,7 @@ import { TableViewTable } from "../../../../view/Perspectives/TableView/TableVie
 import { TableViewScrollState } from "../../../../view/Perspectives/TableView/TableViewScrollState";
 import { TableViewCells } from "../../../../view/Perspectives/TableView/TableViewCells";
 import { ITableView } from "../../../../view/Perspectives/TableView/types";
+import { TableViewField } from "../../../../view/Perspectives/TableView/TableViewField";
 
 @observer
 export class TableView extends React.Component<{
@@ -31,19 +32,24 @@ export class TableView extends React.Component<{
     const tableViewTable = new TableViewTable({
       scrollState: () => tableViewScrollState,
       cells: () => tableViewCells,
-      cursor: () => ({
-        field: undefined,
-        rowIndex: 0,
-        columnIndex: 0,
-        isEditing: false
-      }),
-      mediator: () => this.props.controller.dataView.mediator
+      cursor: () => tableViewField,
+      mediator: () => this.props.controller.dataView.mediator,
+      editing: () => this.props.controller.dataView.editing,
+      aFinishEditing: () => this.props.controller.dataView.aFinishEditing
     });
     const tableViewCells = new TableViewCells({
       dataTable: this.props.controller.dataView.dataTable,
       propReorder: () => this.props.controller.propReorder,
       recCursor: () => this.props.controller.recCursor,
       propCursor: () => this.props.controller.propCursor
+    });
+    const tableViewField = new TableViewField({
+      dataTable: this.props.controller.dataView.dataTable,
+      propReorder: () => this.props.controller.propReorder,
+      recCursor: () => this.props.controller.recCursor,
+      propCursor: () => this.props.controller.propCursor,
+      editing: () => this.props.controller.dataView.editing,
+      form: () => this.props.controller.dataView.form
     });
     const tableViewScrollState = new TableViewScrollState(0, 0);
   }

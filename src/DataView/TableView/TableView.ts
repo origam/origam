@@ -136,7 +136,13 @@ export class TableView implements ITableView {
 
   aSelCell = new ASelCell({
     aSelRec: () => this.aSelRec,
-    aSelProp: () => this.aSelProp
+    aSelProp: () => this.aSelProp,
+    recCursor: () => this.recCursor,
+    propCursor: () => this.propCursor,
+    propReorder: () => this.propReorder,
+    dataTable: () => this.dataView.dataTable,
+    editing: () => this.editing,
+    aStartEditing: () => this.aStartEdit
   });
 
   propCursor = new PropCursor({});

@@ -21,4 +21,13 @@ export class Form implements IForm {
     this.dirtyValues = new Map();
   }
 
+  isDirtyField(id: string): boolean {
+    return this.dirtyValues.has(id);
+  }
+
+  getValue(id: string) {
+    return this.isDirtyField(id)
+      ? this.dirtyValues.get(id)
+      : this.initialValues.get(id);
+  }
 }
