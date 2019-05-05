@@ -25,7 +25,7 @@ import { isType } from "ts-action";
 import * as DataViewActions from "../DataViewActions";
 import { stopDispatch } from "../DataViewMediator";
 import * as TableViewActions from "./TableViewActions";
-
+import { ADeactivateView } from "./ADeactivateView";
 
 export class TableView implements ITableView {
   constructor(
@@ -96,7 +96,8 @@ export class TableView implements ITableView {
     aFinishEditing: () => this.aFinishEdit
   });
 
-  activateView = new AActivateView({ availViews: () => this.availViews });
+  aActivateView = new AActivateView({});
+  aDeactivateView = new ADeactivateView();
 
   aSelNextProp = new ASelNextProp({
     propCursor: () => this.propCursor,
@@ -110,7 +111,7 @@ export class TableView implements ITableView {
   });
 
   aSelProp = new ASelProp({
-    aSelCell: () => this.aSelCell   
+    aSelCell: () => this.aSelCell
   });
 
   aSelNextRec = new ASelNextRec({
@@ -127,7 +128,6 @@ export class TableView implements ITableView {
   aSelRec = new ASelRec({
     aSelCell: () => this.aSelCell
   });
-
 
   aSelCell = new ASelCell({
     recCursor: () => this.recCursor,

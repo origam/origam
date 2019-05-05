@@ -23,6 +23,7 @@ import { AStartEditing } from "../AStartEditing";
 import { AFinishEditing } from "../AFinishEditing";
 import { AInitForm } from "../AInitForm";
 import { ASubmitForm } from "../ASubmitForm";
+import { ADeactivateView } from "./ADeactivateView";
 
 export class FormView implements IFormView {
   constructor(
@@ -49,6 +50,10 @@ export class FormView implements IFormView {
     aSelProp: () => this.aSelProp,
     aStartEditing: () => this.aStartEditing,
     availViews: () => this.availViews
+  });
+  aDeactivateView = new ADeactivateView({
+    editing: () => this.editing,
+    aFinishEditing: () => this.aFinishEdit
   });
 
   aSelNextProp = new ASelNextProp({

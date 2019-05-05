@@ -9,6 +9,7 @@ import { IDataTable } from "../../../../DataView/types/IDataTable";
 import { IRecCursor } from "../../../../DataView/types/IRecCursor";
 import { IPropCursor } from "../../../../DataView/types/IPropCursor";
 import { IProperty } from "../../../../DataView/types/IProperty";
+import { IForm } from "../../../../DataView/types/IForm";
 
 export class FormViewPresenter implements IFormView {
   constructor(
@@ -19,6 +20,7 @@ export class FormViewPresenter implements IFormView {
       dataTable: ML<IDataTable>;
       recCursor: ML<IRecCursor>;
       propCursor: ML<IPropCursor>;
+      form: ML<IForm>;
     }
   ) {}
 
@@ -29,7 +31,6 @@ export class FormViewPresenter implements IFormView {
     for (let prop of this.propReorder.reorderedItems) {
       entries.push([prop.id, this.getField(prop)]);
     }
-    console.log("***** FE", entries);
     return new Map(entries);
   }
 
@@ -42,20 +43,21 @@ export class FormViewPresenter implements IFormView {
     let isLoading = false;
     let isError = false;
     if (record && property) {
-      value = this.dataTable.getValue(record, property);
+      // value = this.dataTable.getValue(record, property);
+      value = this.form.getValue(prop.id)
       if (property.lookupResolver) {
         isError = property.lookupResolver.isError(value);
         isLoading = property.lookupResolver.isLoading(value);
         value = property.lookupResolver.getValue(value);
       }
-      console.log("+++", this.propCursor.selId, prop.id);
+      // console.log("+++", this.propCursor.selId, prop.id);
       switch (property.column) {
         case "CheckBox":
           return {
             type: "BoolCell",
             value: value !== undefined && value !== null ? value : "",
-            onChange(event: any, value: boolean) {
-              console.log("change", event, value);
+            onChange: (event: any, value: boolean) => {
+              this.form.setDirtyValue(property.id, value);
             },
             isLoading,
             isFocused: this.propCursor.selId === prop.id,
@@ -66,8 +68,8 @@ export class FormViewPresenter implements IFormView {
           return {
             type: "TextCell",
             value: value !== undefined && value !== null ? value : "",
-            onChange(event: any, value: string) {
-              console.log("change", event, value);
+            onChange: (event: any, value: string) => {
+              this.form.setDirtyValue(property.id, value);
             },
             isFocused: this.propCursor.selId === prop.id,
             isLoading,
@@ -111,5 +113,9 @@ export class FormViewPresenter implements IFormView {
 
   get propCursor() {
     return unpack(this.P.propCursor);
+  }
+
+  get form() {
+    return unpack(this.P.form);
   }
 }

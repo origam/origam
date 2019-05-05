@@ -89,8 +89,8 @@ export class FormSection extends React.Component<{
   }
 }
 
-@inject(({ formFields }) => {
-  return { formFields };
+@inject(({ formViewPresenter }) => {
+  return { formFields: formViewPresenter.fields };
 })
 @observer
 export class FormField extends React.Component<{
@@ -159,8 +159,8 @@ export class FormField extends React.Component<{
           {field ? (
             <Editor field={field} />
           ) : (
-            <div className="unknown-editor">{this.props.Id}</div>
-          )}
+              <div className="unknown-editor">{this.props.Id}</div>
+            )}
         </div>
       </>
     );
@@ -177,7 +177,8 @@ export class FormView extends React.Component<{ controller: IFormView }> {
       propReorder: () => this.props.controller.propReorder,
       dataTable: () => this.props.controller.dataView.dataTable,
       recCursor: () => this.props.controller.dataView.recCursor,
-      propCursor: () => this.props.controller.propCursor
+      propCursor: () => this.props.controller.propCursor,
+      form: () => this.props.controller.form
     });
     const toolbar = this.props.controller.dataView.isHeadless
       ? undefined
@@ -228,7 +229,7 @@ export class FormView extends React.Component<{ controller: IFormView }> {
         {this.formViewPresenter.toolbar && (
           <Toolbar controller={this.formViewPresenter.toolbar} />
         )}
-        <Provider formFields={this.formViewPresenter.fields}>
+        <Provider formViewPresenter={this.formViewPresenter}>
           <>{this.buildForm()}</>
         </Provider>
       </div>

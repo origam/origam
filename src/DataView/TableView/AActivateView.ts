@@ -1,22 +1,16 @@
 import { action } from "mobx";
 import { IViewType } from "../types/IViewType";
 import { L } from "../../utils/types";
+import { IAActivateView } from "../types/IAActivateView";
 
-interface IAvailViews {
-  setActiveView(viewType: IViewType): void;
-}
-
-export class AActivateView {
+export class AActivateView implements IAActivateView{
   constructor(
     public P: {
-      availViews: L<IAvailViews>;
     }
   ) {}
 
   @action.bound
   do() {
-    const availViews = this.P.availViews();
-    // -------------------------------------------------------------
-    availViews.setActiveView(IViewType.Form);
+    return
   }
 }

@@ -11,7 +11,13 @@ export class ASwitchView implements IASwitchView {
 
   @action.bound
   do(viewType: IViewType): void {
+    if(this.availViews.activeView) {
+      this.availViews.activeView.aDeactivateView.do();
+    }
     this.availViews.setActiveView(viewType);
+    if(this.availViews.activeView) {
+      this.availViews.activeView.aActivateView.do();
+    }
   }
 
   get availViews() {
