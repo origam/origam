@@ -462,13 +462,29 @@ namespace Origam.DA.Service
         {
             return "VARCHAR";
         }
-        internal override string LengthSql()
+        internal override string LengthSql(string expresion)
         {
-            return "LENGTH";
+            return string.Format("LENGTH({0})", expresion);
         }
-        internal override string TextSql()
+        internal override string TextSql(string expresion)
         {
-            return "TEXT";
+            return string.Format("CAST ({0} AS {1} )", expresion, "TEXT");
+        }
+        internal override string GetXmlLenghSql(string expresion)
+        {
+            return expresion;
+        }
+        internal override string DatePartSql(string datetype, string expresion)
+        {
+            return string.Format("DATE_PART({0},{1})", datetype ,expresion );
+        }
+        internal override string DateAddSql(string datepart, string number, string date)
+        {
+            return string.Format("(date '{0}' interval '{1} {2}')",date,number,datepart);
+        }
+        internal override string DateDiffSql(string datepart, string startdate, string enddate)
+        {
+            return string.Format("EXTRACT({0} FROM MAX({1}) - MIN({2}))", datepart, enddate, startdate);
         }
     }
 }

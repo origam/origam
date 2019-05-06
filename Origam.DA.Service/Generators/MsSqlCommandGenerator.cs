@@ -501,13 +501,29 @@ namespace Origam.DA.Service
         {
             return "NVARCHAR";
         }
-        internal override string LengthSql()
+        internal override string LengthSql(string expresion)
         {
-            return "LEN";
+            return string.Format("LEN({0})", expresion);
         }
-        internal override string TextSql()
+        internal override string TextSql(string expresion)
         {
-            return "NVARCHAR(MAX)";
+            return string.Format("CAST ({0} AS {1} )", expresion, "NVARCHAR(MAX)");
+        }
+        internal override string GetXmlLenghSql(string expresion)
+        {
+            return expresion + " (2000)";
+        }
+        internal override string DatePartSql(string datetype, string expresion)
+        {
+           return string.Format("DATEPART({0},{1})", datetype, expresion);
+        }
+        internal override string DateAddSql(string datepart, string number, string date)
+        {
+            return string.Format("DATEADD({0},{1},{2})", datepart,number,date);
+        }
+        internal override string DateDiffSql(string datepart, string startdate, string enddate)
+        {
+            return string.Format("DATEDIFF({0}, {1}, {2})", datepart, startdate, enddate);
         }
     }
 }

@@ -2969,9 +2969,8 @@ namespace Origam.DA.Service
                     {
                         throw new Exception(ResourceUtils.GetString("ErrorExpressionNotSet", item.Path));
                     }
-
-                    result = "DATEPART(" + item.Function.Name + ", " + RenderExpression(item.ChildItems[0].ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ")";
+                      result = DatePartSql(item.Function.Name,
+                            RenderExpression(item.ChildItems[0].ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     break;
 
                 case "AddDays":
@@ -2979,14 +2978,16 @@ namespace Origam.DA.Service
                         ISchemaItem dateArg = item.GetChildByName("Date").ChildItems[0];
                         ISchemaItem daysArg = item.GetChildByName("Days").ChildItems[0];
 
-                        result = "DATEADD(d, " + RenderExpression(daysArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + ", " + RenderExpression(dateArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + ")";
+                       result = DateAddSql("d", 
+                           RenderExpression(daysArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences), 
+                           RenderExpression(dateArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     }
                     break;
                 case "AddMinutes":
                     {
                         ISchemaItem dateArg = item.GetChildByName("Date").ChildItems[0];
                         ISchemaItem countArg = item.GetChildByName("Minutes").ChildItems[0];
-                        result = string.Format("DATEADD(mi,{0},{1})"
+                        result = DateAddSql("mi"
                             , RenderExpression(countArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                             , RenderExpression(dateArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     }
@@ -2995,7 +2996,7 @@ namespace Origam.DA.Service
                     {
                         ISchemaItem dateArg = item.GetChildByName("Date").ChildItems[0];
                         ISchemaItem countArg = item.GetChildByName("Seconds").ChildItems[0];
-                        result = string.Format("DATEADD(s,{0},{1})"
+                        result = DateAddSql("s"
                             , RenderExpression(countArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                             , RenderExpression(dateArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     }
@@ -3082,13 +3083,11 @@ namespace Origam.DA.Service
                         );
                     break;
                 case "DateDiffMinutes":
-                    result = string.Format("DATEDIFF(MINUTE, {0}, {1})",
+                    result = DateDiffSql("MINUTE",
                         RenderExpression(item.GetChildByName("DateFrom").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                         , RenderExpression(item.GetChildByName("DateTo").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                         );
                     break;
-
-
 
                 default:
                     result = FunctionPrefixSql() + item.Function.Name + "(";
@@ -3115,6 +3114,9 @@ namespace Origam.DA.Service
             return result;
         }
 
+        internal abstract string DateDiffSql(string v1, string v2, string v3);
+        internal abstract string DateAddSql(string v1, string v2, string v3);
+        internal abstract string DatePartSql(string datetype, string expresion);
         internal abstract string FunctionPrefixSql();
 
         internal  string RenderBuiltinFunction(FunctionCall item, DataStructureEntity entity,
@@ -3197,9 +3199,8 @@ namespace Origam.DA.Service
                     break;
 
                 case "Length":
-                    result = LengthSql() +"("
-                        + RenderExpression(item.GetChildByName("Text").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ")";
+                    result = LengthSql(
+                        RenderExpression(item.GetChildByName("Text").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     break;
 
                 case "ConvertDateToString":
@@ -3260,7 +3261,7 @@ namespace Origam.DA.Service
             return result;
         }
 
-        internal abstract string LengthSql();
+        internal abstract string LengthSql(string expresion);
         internal abstract string VarcharSql();
 
         internal string GetItemByFunctionParameter(
@@ -3340,19 +3341,15 @@ namespace Origam.DA.Service
                         concatBuilder.Append(" " + StringConcatenationChar + " ");
                     }
                 }
-
-                concatBuilder.Append("CAST (");
-                concatBuilder.Append(RenderExpression(concatItem.Key, concatItem.Value, replaceParameterTexts, dynamicParameters, parameterReferences));
-                concatBuilder.Append(" AS ");
-                concatBuilder.Append(TextSql());
-                concatBuilder.Append(")");
+                concatBuilder.Append(TextSql(
+                    RenderExpression(concatItem.Key, concatItem.Value, replaceParameterTexts, dynamicParameters, parameterReferences)));
                 i++;
             }
 
             return concatBuilder.ToString();
         }
 
-        internal abstract string TextSql();
+        internal abstract string TextSql(string expresion);
         #endregion
 
         #region Operators
@@ -3409,7 +3406,7 @@ namespace Origam.DA.Service
                         + "(" + dataLenght + ")";
 
                 case OrigamDataType.Xml:
-                    return DdlDataType(columnType, dbDataType) + "(2000)";
+                    return GetXmlLenghSql(DdlDataType(columnType, dbDataType));
 
                 case OrigamDataType.Float:
                     return DdlDataType(columnType, dbDataType) + "(28,10)";
@@ -3418,6 +3415,8 @@ namespace Origam.DA.Service
                     return DdlDataType(columnType, dbDataType);
             }
         }
+
+        internal abstract string GetXmlLenghSql(string expresion);
         #endregion
 
         #region ICloneable Members
