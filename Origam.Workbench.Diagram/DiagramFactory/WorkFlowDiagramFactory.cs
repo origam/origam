@@ -37,7 +37,7 @@ using Point = Microsoft.Msagl.Core.Geometry.Point;
 
 namespace Origam.Workbench.Diagram
 {
-	public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock>
+	public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGraph>
 	{
 		private static readonly int labelTopMargin = 8;
 		private static readonly double labelSideMargin = 20;
@@ -61,11 +61,8 @@ namespace Origam.Workbench.Diagram
 		
 		private readonly Graphics graphics;
 		private readonly INodeSelector nodeSelector;
-		private Graph graph;
+		private WorkFlowGraph graph;
 		private readonly NodeFactory nodeFactory;
-		private Subgraph workflowSubgraph;
-		private Subgraph contextStoresSubgraph;
-
 
 		public WorkFlowDiagramFactory(INodeSelector nodeSelector, Graphics graphics)
 		{
@@ -74,26 +71,24 @@ namespace Origam.Workbench.Diagram
 			nodeFactory = new NodeFactory(nodeSelector);
 		}
 
-		public Graph Draw(IWorkflowBlock graphParent)
+		public WorkFlowGraph Draw(IWorkflowBlock graphParent)
 		{
-			graph = new Graph();
-			Subgraph topSubGraph = new Subgraph("topSubGraph");
-			topSubGraph.DrawNodeDelegate = DrawHiddenSubgraph;
-			graph.RootSubgraph.AddSubgraph(topSubGraph);
-			workflowSubgraph = AddWorkflowDiagram(graphParent, topSubGraph);
-			contextStoresSubgraph = AddContextStores(graphParent, topSubGraph);
+			graph = new WorkFlowGraph();
+			graph.TopSubgraph.DrawNodeDelegate = DrawHiddenSubgraph;
+			AddWorkflowDiagram(graphParent, graph.TopSubgraph);
+			AddContextStores(graphParent);
 			graph.LayoutAlgorithmSettings.ClusterMargin = nodeMargin;
 			return graph;
 		}
 
 		public void AlignContextStoreSubgraph()
 		{
-			if(contextStoresSubgraph == null || workflowSubgraph == null)
+			if(graph.ContextStoreSubgraph == null || graph.MainDrawingSubgraf == null)
 			{
 				throw new InvalidOperationException();
 			}
 
-			MoveSubgraphRight(contextStoresSubgraph, workflowSubgraph);
+			MoveSubgraphRight(graph.ContextStoreSubgraph, graph.MainDrawingSubgraf);
 		}
 
 		private void MoveSubgraphRight(Subgraph subgraphToMove, Subgraph refSubgraph) {
@@ -113,21 +108,17 @@ namespace Origam.Workbench.Diagram
 			}
 		}
 
-		private Subgraph AddContextStores(IWorkflowBlock graphParent, Subgraph topSubGraph)
+		private void AddContextStores(IWorkflowBlock graphParent)
 		{
-			Subgraph subgraph = new Subgraph("contextStores");
-			subgraph.DrawNodeDelegate = DrawHiddenSubgraph;
-			topSubGraph.AddSubgraph(subgraph);
+			graph.ContextStoreSubgraph.DrawNodeDelegate = DrawHiddenSubgraph;
 			foreach (var childItem in graphParent.ChildItems)
 			{
 				if (childItem is ContextStore contextStore)
 				{
 					Node node = nodeFactory.AddNode(graph, contextStore);
-					subgraph.AddNode(node);
+					graph.ContextStoreSubgraph.AddNode(node);
 				}
 			}
-
-			return subgraph;
 		}
 
 		private Node AddNode(IWorkflowStep step, Subgraph subGraph)

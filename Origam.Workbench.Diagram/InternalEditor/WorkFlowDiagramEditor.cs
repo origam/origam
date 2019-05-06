@@ -376,7 +376,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 			contextMenu.AddSubItem(newMenu);
 
-			if (!(dNodeUnderMouse?.Node is Subgraph))
+			if (!(dNodeUnderMouse?.Node  == gViewer.Graph.UserData))
 			{
 				ToolStripMenuItem addAfterMenu = new ToolStripMenuItem("Add After");
 				addAfterMenu.Image = ImageRes.icon_new;

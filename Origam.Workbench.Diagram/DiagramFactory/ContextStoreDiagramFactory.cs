@@ -10,7 +10,7 @@ using DrawingNode = Microsoft.Msagl.Drawing.Node;
 
 namespace Origam.Workbench.Diagram.DiagramFactory
 {
-    class ContextStoreDiagramFactory: IDiagramFactory<IContextStore>
+    class ContextStoreDiagramFactory: IDiagramFactory<IContextStore, Graph>
     {
 
         private Graph graph;

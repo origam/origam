@@ -3,8 +3,8 @@ using Origam.Schema;
 
 namespace Origam.Workbench.Diagram.DiagramFactory
 {
-    public interface IDiagramFactory<in T> where T : ISchemaItem
+    public interface IDiagramFactory<in Titem, out Tgraph> where Titem : ISchemaItem where Tgraph: Graph
     {
-        Graph Draw(T graphParent);
+        Tgraph Draw(Titem graphParent);
     }
 }
