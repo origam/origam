@@ -31,6 +31,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private readonly NodeSelector nodeSelector;
         private readonly DependencyTaskRunner taskRunner;
 
+        private WorkFlowGraph Graph => (WorkFlowGraph)gViewer.Graph;
+
         public WorkFlowDiagramEditor(Guid graphParentId, GViewer gViewer, Form parentForm,
 	        IPersistenceProvider persistenceProvider, WorkFlowDiagramFactory factory, NodeSelector nodeSelector)
         {
@@ -339,8 +341,12 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 		private ContextMenuStrip CreateContextMenuForNode(DNode dNodeUnderMouse)
 		{
-			var schemaItemUnderMouse = DNodeToSchemaItem(dNodeUnderMouse);
+			if (Graph.IsInfrastructureSubGraph(dNodeUnderMouse?.Node))
+			{
+				return new ContextMenuStrip();
+			}
 
+			var schemaItemUnderMouse = DNodeToSchemaItem(dNodeUnderMouse);
 			var contextMenu = new AsContextMenu(WorkbenchSingleton.Workbench);
 
 			var deleteMenuItem = new ToolStripMenuItem();
@@ -376,7 +382,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 			contextMenu.AddSubItem(newMenu);
 
-			if (!(dNodeUnderMouse?.Node  == gViewer.Graph.UserData))
+			if (Graph.IsWorkFlowItemSubGraph(dNodeUnderMouse?.Node)) 
 			{
 				ToolStripMenuItem addAfterMenu = new ToolStripMenuItem("Add After");
 				addAfterMenu.Image = ImageRes.icon_new;
@@ -408,6 +414,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 		private AbstractSchemaItem DNodeToSchemaItem(DNode dNodeUnderMouse)
 		{
+			if (!Guid.TryParse(dNodeUnderMouse.Node.Id, out Guid _)) return null;
 			return RetrieveItem(dNodeUnderMouse.Node.Id);
 		}
 		

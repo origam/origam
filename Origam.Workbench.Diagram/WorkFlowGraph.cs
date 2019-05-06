@@ -12,12 +12,12 @@ namespace Origam.Workbench.Diagram
 
         public Subgraph ContextStoreSubgraph
         {
-            get => ContextStoreSubgraph.Subgraphs.SingleOrDefault(x=>x.Id == contextStoreSubgraphId);
+            get => TopSubgraph.Subgraphs.SingleOrDefault(x=>x.Id == contextStoreSubgraphId);
         }
 
         public Subgraph MainDrawingSubgraf
         {
-            get => ContextStoreSubgraph.Subgraphs.SingleOrDefault(x=>x.Id != contextStoreSubgraphId);
+            get => TopSubgraph.Subgraphs.SingleOrDefault(x=>x.Id != contextStoreSubgraphId);
             set => TopSubgraph.AddSubgraph(value);
         }
 
@@ -25,6 +25,22 @@ namespace Origam.Workbench.Diagram
         {
             RootSubgraph.AddSubgraph(new Subgraph(topSubgraphId));
             TopSubgraph.AddSubgraph(new Subgraph(contextStoreSubgraphId));
+        }
+
+        public bool IsWorkFlowItemSubGraph(Node node)
+        {
+            if (!(node is Subgraph)) return false;
+            if (node == TopSubgraph) return false;
+            if (node == ContextStoreSubgraph) return false;
+            if (node == MainDrawingSubgraf) return false;
+            return true;
+        }
+        public bool IsInfrastructureSubGraph(Node node)
+        {
+            if (!(node is Subgraph)) return false;
+            if (node == TopSubgraph) return true;
+            if (node == ContextStoreSubgraph) return true;
+            return false;
         }
     }
 }
