@@ -525,5 +525,9 @@ namespace Origam.DA.Service
         {
             return string.Format("DATEDIFF({0}, {1}, {2})", datepart, startdate, enddate);
         }
+        internal override string STDistanceSql(string point1, string point2)
+        {
+            return string.Format("{0}.STDistance({1})", point1, point2);
+        }
     }
 }

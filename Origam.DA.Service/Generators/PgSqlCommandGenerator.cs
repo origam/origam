@@ -486,5 +486,9 @@ namespace Origam.DA.Service
         {
             return string.Format("EXTRACT({0} FROM MAX({1}) - MIN({2}))", datepart, enddate, startdate);
         }
+        internal override string STDistanceSql(string point1, string point2)
+        {
+            return string.Format("ST_Distance({0},{1})", point1, point2);
+        }
     }
 }

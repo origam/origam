@@ -3050,11 +3050,8 @@ namespace Origam.DA.Service
                     ISchemaItem param1 = item.GetChildByName("Param1").ChildItems[0];
                     ISchemaItem param2 = item.GetChildByName("Param2").ChildItems[0];
 
-                    result = RenderExpression(param1, entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ".STDistance("
-                        + RenderExpression(param2, entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ")";
-
+                    result = STDistanceSql(RenderExpression(param1, entity, replaceParameterTexts, dynamicParameters, parameterReferences),
+                        RenderExpression(param2, entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     break;
 
                 case "Latitude":
@@ -3114,8 +3111,9 @@ namespace Origam.DA.Service
             return result;
         }
 
-        internal abstract string DateDiffSql(string v1, string v2, string v3);
-        internal abstract string DateAddSql(string v1, string v2, string v3);
+        internal abstract string STDistanceSql(string point1, string point2);
+        internal abstract string DateDiffSql(string datepart, string startdate, string enddate);
+        internal abstract string DateAddSql(string datepart, string number, string date);
         internal abstract string DatePartSql(string datetype, string expresion);
         internal abstract string FunctionPrefixSql();
 
