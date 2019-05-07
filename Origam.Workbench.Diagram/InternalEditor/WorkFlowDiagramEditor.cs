@@ -47,8 +47,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 				viewerToImposeOn: gViewer,
 				predicate: (sourceNode, targetNode) =>
 				{
-					if (sourceNode is Subgraph) return false;
-					if (targetNode is Subgraph) return false;
+					if (!Graph.IsWorkFlowItemSubGraph(sourceNode)) return false;
+					if (!Graph.IsWorkFlowItemSubGraph(targetNode)) return false;
 					if (RetrieveItem(sourceNode.Id) is ContextStore ) return false;
 					if (RetrieveItem(targetNode.Id) is ContextStore ) return false;
 					var sourcesParent = gViewer.Graph.FindParentSubGraph(sourceNode);
@@ -121,7 +121,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        var workflowTaskDependency = dependentItem.ChildItems
 		        .ToEnumerable()
 		        .OfType<WorkflowTaskDependency>()
-		        .SingleOrDefault(x => x.WorkflowTaskId == Guid.Parse(edge.Source));
+		        .Single(x => x.WorkflowTaskId == Guid.Parse(edge.Source));
 	        workflowTaskDependency.IsDeleted = true;
 	        workflowTaskDependency.Persist();
         }
