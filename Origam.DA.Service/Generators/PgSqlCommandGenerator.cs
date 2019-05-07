@@ -351,7 +351,7 @@ namespace Origam.DA.Service
 
 		public override string ConvertGeoToTextClause(string argument)
 		{
-			return "AsText(" + argument + ")";
+            return "ST_AsText(" + argument + ")";
 		}
 
         public override string FunctionDefinitionDdl(Function function)
