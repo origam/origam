@@ -36,7 +36,7 @@ namespace Origam.Workbench.Diagram.DiagramFactory
                 if (step is WorkflowTask task &&
                     task.OutputContextStoreId == contextStore.Id)
                 {
-                    Node taskNode =nodeFactory.AddNode(graph, task);
+                    Node taskNode = nodeFactory.AddNode(graph, task);
                     graph.AddEdge(storeNode.Id, taskNode.Id);
                 }else if (step is UpdateContextTask updateTask &&
                           updateTask.XPathContextStore.Id == contextStore.Id)

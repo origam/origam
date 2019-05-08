@@ -27,6 +27,7 @@ using System.Drawing;
 using System.Linq;
 using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Core.Layout;
+using Microsoft.Msagl.Layout.Layered;
 using MoreLinq.Extensions;
 using Origam.Schema;
 using Origam.Workbench.Diagram.DiagramFactory;
@@ -121,13 +122,37 @@ namespace Origam.Workbench.Diagram
 			}
 		}
 
-		private Node AddNode(IWorkflowStep step, Subgraph subGraph)
+		private Subgraph AddSubgraphNode(IWorkflowStep step, Subgraph subGraph)
 		{
-//			Node node = nodeFactory.AddNode(graph, step);
-			Node node = nodeFactory.AddSubgraphNode(subGraph, step);
-            node.UserData = step;
-           // subGraph.AddNode(node);
-            return node;
+			Subgraph subgraphNode = nodeFactory.AddSubgraphNode(subGraph, step);
+            subgraphNode.UserData = step;
+            step.ChildItems.ToEnumerable()
+	            .SelectMany(GetItemWithChildren)
+	            .ForEach(item => AddNodeItem(item, subgraphNode));
+            
+            subgraphNode.LayoutSettings = new SugiyamaLayoutSettings();
+            subgraphNode.LayoutSettings.PackingMethod = PackingMethod.Columns;
+            subgraphNode.LayoutSettings.PackingAspectRatio = 0.01;
+            subgraphNode.LayoutSettings.ClusterTopMargin = 30;
+            subgraphNode.LayoutSettings.ClusterMargin = 1;
+            
+            return subgraphNode;
+		}
+
+		private IEnumerable<AbstractSchemaItem> GetItemWithChildren(AbstractSchemaItem item)
+		{
+			yield return item;
+			foreach (AbstractSchemaItem childItem in item.ChildItems)
+			{
+				yield return childItem;
+			}
+		}
+
+		private void AddNodeItem(AbstractSchemaItem item, Subgraph subGraph)
+		{
+			Node node = nodeFactory.AddNodeItem(graph, item);
+			node.UserData = item;
+			subGraph.AddNode(node);
 		}
 
 		private Subgraph AddWorkflowDiagram(IWorkflowBlock workFlowBlock, Subgraph parentSubgraph)
@@ -147,7 +172,7 @@ namespace Origam.Workbench.Diagram
 			{
 				if (!(step is IWorkflowBlock subBlock))
                 {
-                    Node shape = AddNode(step, subgraph);
+                    Subgraph shape = AddSubgraphNode(step, subgraph);
                     ht.Add(step.PrimaryKey, shape);
                 }
                 else
