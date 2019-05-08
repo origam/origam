@@ -32,6 +32,7 @@ using MoreLinq.Extensions;
 using Origam.Schema;
 using Origam.Workbench.Diagram.DiagramFactory;
 using Origam.Workbench.Diagram.Extensions;
+using Origam.Workbench.Diagram.NodeDrawing;
 using Edge = Microsoft.Msagl.Drawing.Edge;
 using Node = Microsoft.Msagl.Drawing.Node;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
