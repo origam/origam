@@ -24,7 +24,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         public ICurve GetBoundary(Node node) 
         {
             Subgraph subgraph = (Subgraph) node;
-            if (!subgraph.Nodes.Any())
+            if (!subgraph.Nodes.Any() && !subgraph.Subgraphs.Any())
             {
                 return CurveFactory.CreateRectangle(emptySubgraphWidth, emptySubgraphHeight, new Point());
             }

@@ -23,7 +23,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         public ICurve GetBoundary(Node node)
         {
             Subgraph subgraph = (Subgraph) node;
-            if (!subgraph.Nodes.Any())
+            if (!subgraph.Nodes.Any() && ! subgraph.Subgraphs.Any())
             {
                 return nodePainter.GetBoundary(node);
             }
@@ -32,7 +32,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                 ((Cluster) node.GeometryNode).RectangularBoundary;
 
             var height = clusterBoundary.TopMargin;
-            var labelWidth = painter.GetLabelWidth(node);
+            var labelWidth = GetLabelWidth(node);
 
             var width = clusterBoundary.MinWidth > labelWidth
                 ? clusterBoundary.MinWidth
@@ -92,6 +92,13 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                 yAxisCoordinate: (float) node.GeometryNode.Center.Y);
 
             return true;
+        }
+        
+        private float GetLabelWidth(Node node)
+        {
+            SizeF stringSize = painter.MeasureString(node.LabelText);
+            var labelWidth = stringSize.Width + painter.NodeHeight + painter.Margin + painter.TextSideMargin;
+            return labelWidth;
         }
     }
 }
