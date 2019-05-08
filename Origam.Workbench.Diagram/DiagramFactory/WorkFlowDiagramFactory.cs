@@ -40,42 +40,20 @@ namespace Origam.Workbench.Diagram
 {
 	public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGraph>
 	{
-		private static readonly int labelTopMargin = 8;
-		private static readonly double labelSideMargin = 20;
-		
-		private static readonly int imageTopMargin = 8;
-		private static readonly int imageRightMargin = 3;
-		private static readonly int imageLeftMargin = 5;
-		
-		private static readonly int headingBackgroundHeight = 30;
 		private static readonly int nodeMargin = 40;
-
-		private readonly int emptySubgraphWidth = 200;
-		private readonly int emptySubgraphHeight = 80;
 		
-		private static readonly Font font = new Font("Arial", 10);
-		private static readonly Pen blackPen = new Pen(System.Drawing.Color.Black, 1);
-		private static readonly Pen boldBlackPen = new Pen(System.Drawing.Color.Black, 2);
-		private static readonly SolidBrush drawBrush = new SolidBrush(System.Drawing.Color.Black);
-		private static readonly StringFormat drawFormat = new StringFormat();
-		private static readonly SolidBrush greyBrush = new SolidBrush(System.Drawing.Color.LightGray);
-		
-		private readonly Graphics graphics;
-		private readonly INodeSelector nodeSelector;
 		private WorkFlowGraph graph;
 		private readonly NodeFactory nodeFactory;
 
-		public WorkFlowDiagramFactory(INodeSelector nodeSelector, Graphics graphics)
+		public WorkFlowDiagramFactory(INodeSelector nodeSelector)
 		{
-			this.nodeSelector = nodeSelector;
-			this.graphics = graphics;
 			nodeFactory = new NodeFactory(nodeSelector);
 		}
 
 		public WorkFlowGraph Draw(IWorkflowBlock graphParent)
 		{
 			graph = new WorkFlowGraph();
-			graph.TopSubgraph.DrawNodeDelegate = DrawHiddenSubgraph;
+			graph.TopSubgraph.DrawNodeDelegate =  (node, graphics) => true;
 			AddWorkflowDiagram(graphParent, graph.TopSubgraph);
 			AddContextStores(graphParent);
 			graph.LayoutAlgorithmSettings.ClusterMargin = nodeMargin;
@@ -111,7 +89,7 @@ namespace Origam.Workbench.Diagram
 
 		private void AddContextStores(IWorkflowBlock graphParent)
 		{
-			graph.ContextStoreSubgraph.DrawNodeDelegate = DrawHiddenSubgraph;
+			graph.ContextStoreSubgraph.DrawNodeDelegate = (node, graphics) => true;
 			foreach (var childItem in graphParent.ChildItems)
 			{
 				if (childItem is ContextStore contextStore)
@@ -157,16 +135,9 @@ namespace Origam.Workbench.Diagram
 
 		private Subgraph AddWorkflowDiagram(IWorkflowBlock workFlowBlock, Subgraph parentSubgraph)
 		{
-            Subgraph subgraph = new Subgraph(workFlowBlock.NodeId);
-            subgraph.Attr.Shape = Shape.DrawFromGeometry;
-            subgraph.DrawNodeDelegate = DrawSubgraph;
-            subgraph.NodeBoundaryDelegate = GetSubgraphBoundary;
-            subgraph.UserData = workFlowBlock;
-            subgraph.LabelText = workFlowBlock.Name;
-  
-            parentSubgraph.AddSubgraph(subgraph);
-            
-            IDictionary<Key, Node> ht = new Dictionary<Key, Node>();
+			Subgraph subgraph = nodeFactory.AddSubgraph(parentSubgraph, workFlowBlock);
+
+			IDictionary<Key, Node> ht = new Dictionary<Key, Node>();
 
 			foreach(IWorkflowStep step in workFlowBlock.ChildItemsByType(AbstractWorkflowStep.ItemTypeConst))
 			{
@@ -197,132 +168,8 @@ namespace Origam.Workbench.Diagram
 					edge.UserData = dependency;
 					i++;
 				}
-
-				if(i==0)
-				{
-					// no connections, we set the connection to the root block
-                    //this.Graph.AddEdge(blockShape.Id, destinationShape.Id);
-				}
 			}
             return subgraph;
         }
-		
-		private static Image GetImage(Node node)
-		{
-			var schemaItem = (ISchemaItem) node.UserData;
-
-			var schemaBrowser =
-				WorkbenchSingleton.Workbench.GetPad(typeof(IBrowserPad)) as IBrowserPad;
-			var imageList = schemaBrowser.ImageList;
-			Image image = imageList.Images[schemaBrowser.ImageIndex(schemaItem.Icon)];
-			return image;
-		}
-		
-		private ICurve GetSubgraphBoundary(Node node) 
-		{
-			Subgraph subgraph = (Subgraph) node;
-			if (!subgraph.Nodes.Any())
-			{
-				return CurveFactory.CreateRectangle(emptySubgraphWidth, emptySubgraphHeight, new Point());
-			}
-			
-			var clusterBoundary = ((Cluster) node.GeometryNode).RectangularBoundary;
-
-			var height = clusterBoundary.TopMargin;
-			var labelWidth = GetLabelWidth(node);
-
-			var width = clusterBoundary.MinWidth > labelWidth
-				? clusterBoundary.MinWidth 
-				: labelWidth + labelSideMargin * 2;
-
-			return CurveFactory.CreateRectangle(width, height, new Point());
-		}
-		
-		private float GetLabelWidth(Node node)
-		{
-			Image image = GetImage(node);
-			SizeF stringSize = graphics.MeasureString(node.LabelText, font);
-			var labelWidth = stringSize.Width + imageRightMargin + image.Width;
-			return labelWidth;
-		}
-		
-		private bool DrawHiddenSubgraph(Node node, object graphicsObj)
-		{
-			return true;
-		}
-		
-		private bool DrawSubgraph(Node node, object graphicsObj)
-		{
-			var borderSize = new Size(
-				(int)node.BoundingBox.Width,
-				(int)node.BoundingBox.Height);
-
-			Pen pen = nodeSelector.Selected == node
-				? boldBlackPen 
-				: blackPen;
-
-			Graphics editorGraphics = (Graphics)graphicsObj;
-			var image = GetImage(node);
-
-			var labelWidth = GetLabelWidth(node);
-
-			double centerX = node.GeometryNode.Center.X;
-			double centerY = node.GeometryNode.Center.Y;
-			var borderCorner = new System.Drawing.Point(
-				(int)centerX - borderSize.Width / 2,
-				(int)centerY - borderSize.Height / 2);
-			Rectangle border = new Rectangle(borderCorner, borderSize);
-
-			var labelPoint = new PointF(
-				(float)(centerX - labelWidth / 2 + imageLeftMargin + image.Width +imageRightMargin),
-				(float)centerY - border.Height / 2.0f + labelTopMargin);
-
-			var imagePoint = new PointF(
-				(float)(centerX - labelWidth / 2 + imageLeftMargin),
-				(float)(centerY - border.Height / 2.0f + imageTopMargin));
-
-			Rectangle imageBackground = new Rectangle(
-				borderCorner,
-				new Size(border.Width, headingBackgroundHeight));
-
-			var (emptyMessagePoint, emptyGraphMessage) = GetEmptyNodeMessage(node);
-			
-			editorGraphics.DrawUpSideDown(drawAction: graphics =>
-				{
-					graphics.FillRectangle(greyBrush, imageBackground);
-					graphics.DrawString(node.LabelText, font, drawBrush,
-						labelPoint, drawFormat);
-					if (!string.IsNullOrWhiteSpace(emptyGraphMessage))
-					{
-						graphics.DrawString(emptyGraphMessage, font, drawBrush,
-							emptyMessagePoint, drawFormat);
-					}
-					graphics.DrawRectangle(pen, border);
-					graphics.DrawImage(image, imagePoint);
-				},
-				yAxisCoordinate: (float)node.GeometryNode.Center.Y);
-
-			return true;
-		}
-
-		private Tuple<PointF, string> GetEmptyNodeMessage(Node node)
-		{
-			Subgraph subgraph = (Subgraph) node;
-			double centerX = node.GeometryNode.Center.X;
-			double centerY = node.GeometryNode.Center.Y;
-			
-			if (subgraph.Nodes.Any() || subgraph.Subgraphs.Any())
-			{
-				return new Tuple<PointF, string>(new PointF(), "");
-			}
-
-			string emptyGraphMessage = "Right click here to add steps";
-			SizeF messageSize = graphics.MeasureString(emptyGraphMessage, font);
-			var emptyMessagePoint = new PointF(
-				(float)centerX -  messageSize.Width / 2,
-				(float)centerY + headingBackgroundHeight / 2 - messageSize.Height / 2 );
-			
-			return new Tuple<PointF, string>(emptyMessagePoint, emptyGraphMessage);
-		}
 	}
 }
