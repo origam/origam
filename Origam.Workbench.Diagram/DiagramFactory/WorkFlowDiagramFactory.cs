@@ -79,12 +79,18 @@ namespace Origam.Workbench.Diagram
 			double dy = refSubgraph.Pos.Y - subgraphToMove.Pos.Y  +
 			            refSubgraph.Height / 2 - subgraphToMove.Height / 2;
             
-			subgraphToMove.GeometryNode.Center = new Point(subgraphToMove.Pos.X + dx, subgraphToMove.Pos.Y + dy);
+			subgraphToMove.GeometryNode.Center = new Point(
+				subgraphToMove.Pos.X + dx,
+				subgraphToMove.Pos.Y + dy);
 			((Cluster)subgraphToMove.GeometryNode).RectangularBoundary.Rect = 
-				new Microsoft.Msagl.Core.Geometry.Rectangle(subgraphToMove.GeometryNode.BoundingBox.Size, subgraphToMove.Pos); 
+				new Microsoft.Msagl.Core.Geometry.Rectangle(
+					subgraphToMove.GeometryNode.BoundingBox.Size,
+					subgraphToMove.Pos); 
 			foreach (var node in subgraphToMove.Nodes)
 			{
-				node.GeometryNode.Center = new Point(node.Pos.X + dx, node.Pos.Y+ dy);
+				node.GeometryNode.Center = new Point(
+					node.Pos.X + dx, 
+					node.Pos.Y+ dy);
 			}
 		}
 
@@ -105,31 +111,36 @@ namespace Origam.Workbench.Diagram
 		{
 			Subgraph subgraphNode = nodeFactory.AddSubgraphNode(subGraph, step);
             subgraphNode.UserData = step;
+            
             step.ChildItems.ToEnumerable()
-	            .SelectMany(GetItemWithChildren)
-	            .ForEach(item => AddNodeItem(item, subgraphNode));
+	            .Where(x=>!(x is WorkflowTaskDependency))
+	            .OrderByDescending(x=>x.Name)
+	            .ForEach(stepChild =>
+	            {
+		            stepChild.ChildItems.ToEnumerable()
+			            .OrderByDescending(x=>x.Name)
+			            .ForEach(innerChild => 
+			            {
+				            AddNodeItem(innerChild, subgraphNode,30);
+			            });
+		            AddNodeItem(stepChild, subgraphNode,15);
+	            });
             
-            subgraphNode.LayoutSettings = new SugiyamaLayoutSettings();
-            subgraphNode.LayoutSettings.PackingMethod = PackingMethod.Columns;
-            subgraphNode.LayoutSettings.PackingAspectRatio = 0.01;
-            subgraphNode.LayoutSettings.ClusterTopMargin = 30;
-            subgraphNode.LayoutSettings.ClusterMargin = 1;
-            
+
+            subgraphNode.LayoutSettings = new SugiyamaLayoutSettings
+            {
+	            PackingMethod = PackingMethod.Columns,
+	            PackingAspectRatio = 0.01,
+	            ClusterTopMargin = 30,
+	            ClusterMargin = 1
+            };
+
             return subgraphNode;
 		}
-
-		private IEnumerable<AbstractSchemaItem> GetItemWithChildren(AbstractSchemaItem item)
+		
+		private void AddNodeItem(AbstractSchemaItem item, Subgraph subGraph, int leftMargin)
 		{
-			yield return item;
-			foreach (AbstractSchemaItem childItem in item.ChildItems)
-			{
-				yield return childItem;
-			}
-		}
-
-		private void AddNodeItem(AbstractSchemaItem item, Subgraph subGraph)
-		{
-			Node node = nodeFactory.AddNodeItem(graph, item);
+			Node node = nodeFactory.AddNodeItem(graph, item, leftMargin);
 			node.UserData = item;
 			subGraph.AddNode(node);
 		}

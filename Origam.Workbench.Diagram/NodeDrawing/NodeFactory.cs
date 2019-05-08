@@ -25,11 +25,12 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             return node;
         }
 
-        public Node AddNodeItem(Graph graph, ISchemaItem schemaItem)
+        public Node AddNodeItem(Graph graph, ISchemaItem schemaItem,
+            int leftMargin)
         {
             Node node = graph.AddNode(schemaItem.Id.ToString());
             node.Attr.Shape = Shape.DrawFromGeometry;
-            var painter = new NodeItemPainter(internalPainter, 0);
+            var painter = new NodeItemPainter(internalPainter, leftMargin);
             node.DrawNodeDelegate = painter.Draw;
             node.NodeBoundaryDelegate = painter.GetBoundary;
             node.UserData = schemaItem;
