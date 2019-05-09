@@ -4,7 +4,7 @@ import { IPropReorder } from "../types/IPropReorder";
 import { IRecCursor } from "../types/IRecCursor";
 import { IPropCursor } from "../types/IPropCursor";
 import { IAActivateView } from "../types/IAActivateView";
-import { IADeactivateView } from "../types/IADeactivateVIew";
+import { IADeactivateView } from "../types/IADeactivateView";
 
 export function isTableView(obj: any): obj is ITableView {
   return obj.type === IViewType.Table;

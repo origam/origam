@@ -12,6 +12,9 @@ import { action, computed } from "mobx";
 import { unpack } from "../utils/objects";
 import { IAFinishEditing } from "./types/IAFinishEditing";
 import { IForm } from "./types/IForm";
+import { IDataViewMediator } from "./types/IDataViewMediator";
+import { isType } from "ts-action";
+import * as DataViewActions from './DataViewActions';
 
 export class ASelCell implements IASelCell {
   constructor(
@@ -24,9 +27,18 @@ export class ASelCell implements IASelCell {
       aStartEditing: ML<IAStartEditing>;
       aFinishEditing: ML<IAFinishEditing>;
       form: ML<IForm>;
+      mediator: ML<IDataViewMediator>
       // aOnChange:
     }
   ) {}
+
+    subscribemediator() {
+      this.mediator.listen((action: any) => {
+        if(isType(action, DataViewActions.selectFirstCell)) {
+          this.doSelFirst();
+        }
+      })
+    }
 
   @action.bound
   doByIdx(rowIdx: number | undefined, colIdx: number | undefined) {
@@ -139,5 +151,9 @@ export class ASelCell implements IASelCell {
 
   get form() {
     return unpack(this.P.form);
+  }
+
+  get mediator() {
+    return unpack(this.P.mediator);
   }
 }

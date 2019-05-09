@@ -27,9 +27,6 @@ export class AActivateView implements IAActivateView{
     // -------------------------------------------------------------
     console.log('FormView - activate')
     availViews.setActiveView(IViewType.Form);
-    if (recCursor.isSelected) {
-      aSelProp.doSelFirst();
-      aStartEditing.do();
-    }
+
   }
 }

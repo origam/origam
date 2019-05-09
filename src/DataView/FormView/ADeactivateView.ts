@@ -1,6 +1,6 @@
 
 import { action } from "mobx";
-import { IADeactivateView } from "../types/IADeactivateVIew";
+import { IADeactivateView } from "../types/IADeactivateView";
 import { IAFinishEditing } from "../types/IAFinishEditing";
 import { IEditing } from "../types/IEditing";
 import { ML } from "../../utils/types";

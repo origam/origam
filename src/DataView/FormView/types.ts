@@ -5,7 +5,7 @@ import { IPropReorder } from "../types/IPropReorder";
 import { IPropCursor } from "../types/IPropCursor";
 import { IForm } from "../types/IForm";
 import { IAActivateView } from "../types/IAActivateView";
-import { IADeactivateView } from "../types/IADeactivateVIew";
+import { IADeactivateView } from "../types/IADeactivateView";
 import { IASelNextProp } from "../types/IASelNextProp";
 import { IASelPrevProp } from "../types/IASelPrevProp";
 import { IASelProp } from "../types/IASelProp";

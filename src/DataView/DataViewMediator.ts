@@ -14,9 +14,6 @@ export class DataViewMediator implements IDataViewMediator {
     }
   }
 
-  openScope(): IMediatorScope {
-    return new MediatorScope(this);
-  }
 
   listeners: Map<number, IListener> = new Map();
   idGen = 0;
@@ -28,35 +25,4 @@ export class DataViewMediator implements IDataViewMediator {
   }
 }
 
-const STOP_DISPATCH = Symbol("STOP_DISPATCH");
 
-export function stopDispatch() {
-  throw STOP_DISPATCH;
-}
-
-class MediatorScope implements IMediatorScope {
-  constructor(mediator: IDataViewMediator) {
-    this.disposer = mediator.listen(this.dispatch);
-  }
-
-  disposer: () => void;
-
-  listeners: Map<number, IListener> = new Map();
-  idGen = 0;
-
-  @action.bound dispatch(act: any, sender: any) {
-    for (let listener of this.listeners.values()) {
-      listener(act, sender);
-    }
-  }
-
-  listen(listener: IListener): () => void {
-    let myId = this.idGen++;
-    this.listeners.set(myId, listener);
-    return () => this.listeners.delete(myId);
-  }
-
-  closeScope(): void {
-    this.disposer();
-  }
-}

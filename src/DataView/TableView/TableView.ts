@@ -23,9 +23,20 @@ import { IDataViewMediator } from "../types/IDataViewMediator";
 import { action } from "mobx";
 import { isType } from "ts-action";
 import * as DataViewActions from "../DataViewActions";
-import { stopDispatch } from "../DataViewMediator";
 import * as TableViewActions from "./TableViewActions";
 import { ADeactivateView } from "./ADeactivateView";
+
+import { IADeactivateView } from "../types/IADeactivateView";
+import { IASelNextProp } from "../types/IASelNextProp";
+import { IASelPrevProp } from "../types/IASelPrevProp";
+import { IASelProp } from "../types/IASelProp";
+import { IASelNextRec } from "../types/IASelNextRec";
+import { IASelPrevRec } from "../types/IASelPrevRec";
+import { IASelRec } from "../types/IASelRec";
+import { IASelCell } from "../types/IASelCell";
+import { IPropCursor } from "../types/IPropCursor";
+import { IPropReorder } from "../types/IPropReorder";
+import { IAActivateView } from "../types/IAActivateView";
 
 export class TableView implements ITableView {
   constructor(
@@ -36,6 +47,75 @@ export class TableView implements ITableView {
     }
   ) {
     this.mediator = P.mediator;
+
+    /* ACTIONS */
+    this.aOnCellClick = new AOnCellClick({ aSelCell: () => this.aSelCell });
+    this.aOnNoCellClick = new AOnNoCellClick({
+      aFinishEditing: () => this.aFinishEdit
+    });
+    this.aOnGridKeyDown = new AOnGridKeyDown({});
+    this.aOnEditorKeyDown = new AOnEditorKeyDown({}); // TODO
+    this.aOnScroll = new AOnScroll({}); // TODO
+    this.aOnOutsideGridClick = new AOnOutsideGridClick({
+      aFinishEditing: () => this.aFinishEdit
+    });
+
+    this.aActivateView = new AActivateView({});
+    this.aDeactivateView = new ADeactivateView();
+
+    this.aSelNextProp = new ASelNextProp({
+      propCursor: () => this.propCursor,
+      props: () => this.propReorder,
+      aSelProp: () => this.aSelProp
+    });
+    this.aSelPrevProp = new ASelPrevProp({
+      propCursor: () => this.propCursor,
+      props: () => this.propReorder,
+      aSelProp: () => this.aSelProp
+    });
+
+    this.aSelProp = new ASelProp({
+      aSelCell: () => this.aSelCell
+    });
+
+    this.aSelNextRec = new ASelNextRec({
+      records: () => this.records,
+      recCursor: () => this.recCursor,
+      aSelRec: () => this.aSelRec
+    });
+    this.aSelPrevRec = new ASelPrevRec({
+      records: () => this.records,
+      recCursor: () => this.recCursor,
+      aSelRec: () => this.aSelRec
+    });
+
+    this.aSelRec = new ASelRec({
+      aSelCell: () => this.aSelCell
+    });
+
+    this.aSelCell = new ASelCell({
+      recCursor: () => this.recCursor,
+      propCursor: () => this.propCursor,
+      propReorder: () => this.propReorder,
+      dataTable: () => this.dataView.dataTable,
+      editing: () => this.editing,
+      aStartEditing: () => this.aStartEdit,
+      aFinishEditing: () => this.aFinishEdit,
+      form: () => this.form,
+      mediator: this.mediator
+    });
+
+    this.propCursor = new PropCursor({});
+
+    this.propReorder = new PropReorder({
+      props: () => this.props,
+      initPropIds: this.P.propIds
+    });
+
+    this.subscribeMediator();
+  }
+
+  subscribeMediator() {
     this.mediator.listen((action, sender) => {
       if (isType(action, DataViewActions.selectFirstCell)) {
         this.aSelCell.doSelFirst();
@@ -80,72 +160,28 @@ export class TableView implements ITableView {
     }
   }
 
+  // TODO: Change to abstractions
+  aOnCellClick: AOnCellClick;
+  aOnNoCellClick: AOnNoCellClick;
+  aOnGridKeyDown: AOnGridKeyDown;
+  aOnEditorKeyDown: AOnEditorKeyDown;
+  aOnScroll: AOnScroll;
+  aOnOutsideGridClick: AOnOutsideGridClick;
+  aActivateView: IAActivateView;
+  aDeactivateView: IADeactivateView;
+  aSelNextProp: IASelNextProp;
+  aSelPrevProp: IASelPrevProp;
+  aSelProp: IASelProp;
+  aSelNextRec: IASelNextRec;
+  aSelPrevRec: IASelPrevRec;
+  aSelRec: IASelRec;
+  aSelCell: IASelCell;
+  propCursor: IPropCursor;
+  propReorder: IPropReorder;
+
   mediator: IDataViewMediator;
 
   type: IViewType.Table = IViewType.Table;
-
-  /* ACTIONS */
-  aOnCellClick = new AOnCellClick({ aSelCell: () => this.aSelCell });
-  aOnNoCellClick = new AOnNoCellClick({
-    aFinishEditing: () => this.aFinishEdit
-  });
-  aOnGridKeyDown = new AOnGridKeyDown({});
-  aOnEditorKeyDown = new AOnEditorKeyDown({}); // TODO
-  aOnScroll = new AOnScroll({}); // TODO
-  aOnOutsideGridClick = new AOnOutsideGridClick({
-    aFinishEditing: () => this.aFinishEdit
-  });
-
-  aActivateView = new AActivateView({});
-  aDeactivateView = new ADeactivateView();
-
-  aSelNextProp = new ASelNextProp({
-    propCursor: () => this.propCursor,
-    props: () => this.propReorder,
-    aSelProp: () => this.aSelProp
-  });
-  aSelPrevProp = new ASelPrevProp({
-    propCursor: () => this.propCursor,
-    props: () => this.propReorder,
-    aSelProp: () => this.aSelProp
-  });
-
-  aSelProp = new ASelProp({
-    aSelCell: () => this.aSelCell
-  });
-
-  aSelNextRec = new ASelNextRec({
-    records: () => this.records,
-    recCursor: () => this.recCursor,
-    aSelRec: () => this.aSelRec
-  });
-  aSelPrevRec = new ASelPrevRec({
-    records: () => this.records,
-    recCursor: () => this.recCursor,
-    aSelRec: () => this.aSelRec
-  });
-
-  aSelRec = new ASelRec({
-    aSelCell: () => this.aSelCell
-  });
-
-  aSelCell = new ASelCell({
-    recCursor: () => this.recCursor,
-    propCursor: () => this.propCursor,
-    propReorder: () => this.propReorder,
-    dataTable: () => this.dataView.dataTable,
-    editing: () => this.editing,
-    aStartEditing: () => this.aStartEdit,
-    aFinishEditing: () => this.aFinishEdit,
-    form: () => this.form
-  });
-
-  propCursor = new PropCursor({});
-
-  propReorder = new PropReorder({
-    props: () => this.props,
-    initPropIds: this.P.propIds
-  });
 
   get dataView() {
     return unpack(this.P.dataView);

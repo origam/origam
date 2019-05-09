@@ -143,6 +143,10 @@ export class DataTable implements IDataTable {
     return this.properties.count;
   }
 
+  @computed get hasContent(): boolean {
+    return this.records.count > 0;
+  }
+
   @observable dirtyValues:
     | Map<string, Map<string, any>>
     | undefined = undefined;

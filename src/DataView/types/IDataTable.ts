@@ -19,6 +19,7 @@ export interface IDataTable {
   getRecordIdByIndex(idx: number): string | undefined;
   setRecords(records: IRecord[]): void;
   resetDirty(): void;
+  hasContent: boolean;
   records: IRecords;
   properties: IProperties
 }

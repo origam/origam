@@ -8,7 +8,7 @@ export type IForwardee = (action: any, sender?: any) => any;
 export interface IDataViewMediator {
   dispatch: IForwardee;
   listen(listener: IListener): () => void;
-  openScope(): IMediatorScope;
+  // openScope(): IMediatorScope;
 }
 
 export interface IMediatorScope {
