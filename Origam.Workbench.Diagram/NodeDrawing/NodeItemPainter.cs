@@ -59,6 +59,10 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                     graphics.DrawString(node.LabelText, painter.Font, painter.DrawBrush,
                         labelPoint, painter.DrawFormat);
                     graphics.DrawImage(image, imagePoint);
+                    if (painter.NodeSelector.Selected == node)
+                    {
+                        graphics.DrawRectangle(painter.GetActiveBorderPen(node), border);
+                    }
                 },
                 yAxisCoordinate: (float) node.GeometryNode.Center.Y);
 

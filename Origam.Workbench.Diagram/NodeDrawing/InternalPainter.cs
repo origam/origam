@@ -30,11 +30,11 @@ namespace Origam.Workbench.Diagram.NodeDrawing
 
         public readonly int NodeHeight = 25;
 
-        private INodeSelector nodeSelector;
-        
+        internal INodeSelector NodeSelector { get; }
+
         public InternalPainter(INodeSelector nodeSelector)
         {
-            this.nodeSelector = nodeSelector;
+            this.NodeSelector = nodeSelector;
         }
 
         internal Image GetImage(Node node)
@@ -52,7 +52,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         
         internal Pen GetActiveBorderPen(Node node)
         {
-            return nodeSelector.Selected == node
+            return NodeSelector.Selected == node
                 ? BoldBlackPen
                 : BlackPen;
         }
