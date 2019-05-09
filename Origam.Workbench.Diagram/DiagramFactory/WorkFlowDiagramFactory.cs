@@ -98,6 +98,10 @@ namespace Origam.Workbench.Diagram
 		private void AddContextStores(IWorkflowBlock graphParent)
 		{
 			graph.ContextStoreSubgraph.DrawNodeDelegate = (node, graphics) => true;
+			graph.ContextStoreSubgraph.LayoutSettings = new SugiyamaLayoutSettings
+			{
+				ClusterMargin = 20
+			};
 			foreach (var childItem in graphParent.ChildItems)
 			{
 				if (childItem is ContextStore contextStore)
