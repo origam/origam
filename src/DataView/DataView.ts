@@ -123,7 +123,7 @@ export class DataView implements IDataView {
       dataSource: this.P.dataSource,
       mediator: this.mediator,
       selectedIdGetter: () => {
-        console.log("selIdGetter:", this.recCursor.selId);
+        // console.log("selIdGetter:", this.recCursor.selId);
         return this.recCursor.selId;
       }
     });

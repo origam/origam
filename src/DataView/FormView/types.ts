@@ -29,3 +29,7 @@ export interface IFormView {
   aSelProp: IASelProp;
 }
 
+export interface IFormViewMachine {
+  start(): void;
+  stop(): void;
+}

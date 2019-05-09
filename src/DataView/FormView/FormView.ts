@@ -17,7 +17,7 @@ import { AOnEditorKeyDown } from "./AOnEditorKeyDown";
 import { AOnNoEditorClick } from "./AOnNoEditorClick";
 import { AOnOutsideFormClick } from "./AOnOutsideFormClick";
 import { computed } from "mobx";
-import { IFormView } from "./types";
+import { IFormView, IFormViewMachine } from "./types";
 import { ASelCell } from "../ASelCell";
 import { AStartEditing } from "../AStartEditing";
 import { AFinishEditing } from "../AFinishEditing";
@@ -41,6 +41,8 @@ import { IASelCell } from "../types/IASelCell";
 import { IASelNextRec } from "../types/IASelNextRec";
 import { IASelPrevRec } from "../types/IASelPrevRec";
 import { IAActivateView } from "../types/IAActivateView";
+import { FormViewMachine } from "./FormViewMachine";
+import { IDataTable } from "../types/IDataTable";
 
 export class FormView implements IFormView {
   constructor(
@@ -60,11 +62,13 @@ export class FormView implements IFormView {
       recCursor: () => this.recCursor,
       aSelProp: () => this.aSelProp,
       aStartEditing: () => this.aStartEditing,
-      availViews: () => this.availViews
+      availViews: () => this.availViews,
+      machine: () => this.machine
     });
     this.aDeactivateView = new ADeactivateView({
       editing: () => this.editing,
-      aFinishEditing: () => this.aFinishEdit
+      aFinishEditing: () => this.aFinishEdit,
+      machine: () => this.machine
     });
   
     this.aSelNextProp = new ASelNextProp({
@@ -136,6 +140,11 @@ export class FormView implements IFormView {
     });
   
     this.propCursor = new PropCursor({});
+    this.machine = new FormViewMachine({
+      mediator: () => this.mediator,
+      dataTable: () => this.dataTable,
+      recCursor: () => this.recCursor,
+    });
   }
 
   type: IViewType.Form = IViewType.Form;
@@ -160,6 +169,7 @@ export class FormView implements IFormView {
   aSelNextRec: IASelNextRec;
   aSelPrevRec: IASelPrevRec;
   aActivateView: IAActivateView;
+  machine: IFormViewMachine;
 
   init(): void {
     return;
@@ -203,6 +213,10 @@ export class FormView implements IFormView {
 
   get mediator() {
     return this.dataView.mediator;
+  }
+
+  get dataTable() {
+    return this.dataView.dataTable;
   }
 
   @computed get uiStructure() {

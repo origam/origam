@@ -8,8 +8,9 @@ import { isType } from "ts-action";
 import * as DataViewActions from "../DataViewActions";
 import { IDataTable } from "../types/IDataTable";
 import { IRecCursor } from "../types/IRecCursor";
+import { IFormViewMachine } from "./types";
 
-export class FormViewMachine {
+export class FormViewMachine implements IFormViewMachine {
   constructor(
     public P: {
       mediator: ML<IDataViewMediator>;
@@ -21,7 +22,7 @@ export class FormViewMachine {
     this.interpreter.onTransition(
       action((state: State<any>) => {
         this.state = state;
-        console.log(state);
+        console.log("FormViewMachine:", state);
       })
     );
     this.state = this.interpreter.state;
@@ -38,6 +39,7 @@ export class FormViewMachine {
 
   definition = Machine(
     {
+      initial: "PRE_INIT",
       states: {
         PRE_INIT: {
           on: {
@@ -53,6 +55,7 @@ export class FormViewMachine {
         },
         START_EDIT: {
           invoke: { src: "startEdit" },
+          onEntry: "startEdit",
           on: {
             "": "IDLE"
           }
@@ -68,15 +71,17 @@ export class FormViewMachine {
       }
     },
     {
-      services: {
-        startEdit: (ctx, event) =>
-          action((send: any, onEvent: any) => {
-            this.mediator.dispatch(DataViewActions.selectFirstCell());
-            this.mediator.dispatch(DataViewActions.startEditing());
-          })
+      actions: {
+        startEdit: action(() => {
+          console.log("Start edit");
+          this.mediator.dispatch(DataViewActions.selectFirstCell());
+          this.mediator.dispatch(DataViewActions.startEditing());
+        })
       },
+      services: {},
       guards: {
         dataTableHasContent: () => {
+          console.log("FVM cond", this.dataTable.hasContent);
           return this.dataTable.hasContent;
         }
       }

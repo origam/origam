@@ -77,11 +77,11 @@ export class TableViewTable implements ITable {
   }
 
   onBeforeRender() {
-    console.log("before render")
+    return 
   }
 
   onAfterRender() {
-    console.log("after render")
+    return 
   }
 
   get scrollState(): IScrollState {

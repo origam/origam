@@ -5,6 +5,7 @@ import { IEditing } from "./types/IEditing";
 import { IASubmitForm } from "./types/IASubmitForm";
 
 
+
 export class AFinishEditing implements IAFinishEditing {
   constructor(public P: {
     editing: L<IEditing>;
@@ -13,6 +14,7 @@ export class AFinishEditing implements IAFinishEditing {
 
   @action.bound
   public do() {
+    console.log('FinishEditing')
     const editing = this.P.editing();
     // --------------------------------------------------------
     editing.setEditing(false);

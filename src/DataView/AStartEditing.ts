@@ -29,6 +29,7 @@ export class AStartEditing implements IAStartEditing {
 
   @action.bound
   public do() {
+    console.log('StartEditing')
     const editing = this.P.editing();
     // --------------------------------------------------------
     editing.setEditing(true);

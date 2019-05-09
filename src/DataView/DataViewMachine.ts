@@ -86,7 +86,7 @@ export class DataViewMachine implements IDataViewMachine {
             })
             .then(
               action((entities: any) => {
-                console.log("ENTITIES", entities);
+                // console.log("ENTITIES", entities);
                 this.dataTable.resetDirty();
                 this.dataTable.setRecords(entities);
                 this.mediator.dispatch(DataViewActions.selectFirstCell());
@@ -98,14 +98,14 @@ export class DataViewMachine implements IDataViewMachine {
       },
       guards: {
         loadingAllowed: () => {
-          console.log("Evaluating loadingAllowed");
+          // console.log("Evaluating loadingAllowed");
           if (this.isRoot) {
             return true;
           } else {
-            console.log(
+            /*console.log(
               "Loading allowed in child:",
               !this.isAnyAscendantLoading && this.isControlIdValid
-            );
+            );*/
             return !this.isAnyAscendantLoading && this.isControlIdValid;
           }
         }
@@ -198,7 +198,7 @@ export class DataViewMachine implements IDataViewMachine {
   }
 
   get isControlIdValid() {
-    console.log(this.controlledValueFromParent);
+    // console.log(this.controlledValueFromParent);
     return this.controlledValueFromParent !== undefined;
   }
 

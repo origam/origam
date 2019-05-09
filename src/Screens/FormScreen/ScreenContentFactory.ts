@@ -81,7 +81,7 @@ export class ScreenContentFactory implements IScreenContentFactory {
       });
       const formView = new FormView({
         dataView: () => dataView,
-        uiStructure: () => formUI
+        uiStructure: () => formUI,
       });
       const specificDataViews = [formView, tableView];
 
@@ -106,11 +106,11 @@ export class ScreenContentFactory implements IScreenContentFactory {
         screenBinding.attributes.ChildId
       );
       if (parentDataView && childDataView) {
-        console.log(
+        /*console.log(
           "Connecting parent to child:",
           screenBinding.attributes.ParentId,
           screenBinding.attributes.ChildId
-        );
+        );*/
         parentDataView.machine.addChild(childDataView.machine);
         childDataView.machine.setParent(parentDataView.machine);
         parentDataView.machine.controllingFieldId =

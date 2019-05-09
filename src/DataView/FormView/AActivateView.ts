@@ -1,20 +1,22 @@
 import { action } from "mobx";
 import { IViewType } from "../types/IViewType";
-import { L } from "../../utils/types";
+import { L, ML } from "../../utils/types";
 import { IRecCursor } from "../types/IRecCursor";
 import { IASelProp } from "../types/IASelProp";
 import { IAStartEditing } from "../types/IAStartEditing";
 import { IAvailViews } from "../types/IAvailViews";
 import { IAActivateView } from "../../Screens/types";
+import { IFormViewMachine } from "./types";
+import { unpack } from "../../utils/objects";
 
-
-export class AActivateView implements IAActivateView{
+export class AActivateView implements IAActivateView {
   constructor(
     public P: {
       recCursor: L<IRecCursor>;
       aSelProp: L<IASelProp>;
       aStartEditing: L<IAStartEditing>;
       availViews: L<IAvailViews>;
+      machine: ML<IFormViewMachine>;
     }
   ) {}
 
@@ -25,8 +27,12 @@ export class AActivateView implements IAActivateView{
     const aStartEditing = this.P.aStartEditing();
     const availViews = this.P.availViews();
     // -------------------------------------------------------------
-    console.log('FormView - activate')
+    console.log("FormView - activate");
     availViews.setActiveView(IViewType.Form);
+    this.machine.start();
+  }
 
+  get machine() {
+    return unpack(this.P.machine);
   }
 }
