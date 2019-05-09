@@ -8,7 +8,7 @@ export interface IDataTable {
   propertyCount: number;
   dirtyValues: Map<string, Map<string, any>>;
   newRecordIds: Map<string, boolean> | undefined;
-  dirtyDeletedIds: Map<String, boolean>;
+  dirtyDeletedIds: Map<string, boolean>;
   getRecordByIdx(idx: number): IRecord | undefined;
   getRecordById(id: string): IRecord | undefined;
   addDirtyValues(recId: string, values: Map<string, any>): void;
@@ -19,8 +19,10 @@ export interface IDataTable {
   getRecordIndexById(id: string): number | undefined;
   getRecordIdByIndex(idx: number): string | undefined;
   setRecords(records: IRecord[]): void;
+  markDeletedRow(rowId: string): void;
   resetDirty(): void;
   removeDirtyRow(rowId: string): void;
+  removeDirtyDeleted(rowId: string): void;
   mutateRow(rowId: string, values: { [key: string]: any }): void;
   substRecord(rowId: string, record: IRecord): void;
   hasContent: boolean;

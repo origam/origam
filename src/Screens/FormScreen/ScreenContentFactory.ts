@@ -61,6 +61,7 @@ export class ScreenContentFactory implements IScreenContentFactory {
 
       const dataView: DataView = new DataView({
         id: () => grid.attributes.Id,
+        label: grid.attributes.Name,
         menuItemId: this.P.menuItemId,
         dataStructureEntityId,
         initialDataView: parseViewType(grid.attributes.DefaultPanelView)!,

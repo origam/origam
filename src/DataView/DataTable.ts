@@ -62,6 +62,7 @@ export class Properties implements IProperties {
 }
 
 export class Records implements IRecords {
+
   @observable.shallow items: Array<Array<any>> = [];
   @observable deletedRecordIds: Map<string, boolean> | undefined;
 
@@ -86,6 +87,13 @@ export class Records implements IRecords {
       this.deletedRecordIds = new Map();
     }
     this.deletedRecordIds.set(recId, true);
+  }
+
+  @action.bound
+  removeDirtyDeleted(rowId: string): void {
+    if(this.deletedRecordIds) {
+      this.deletedRecordIds.delete(rowId);
+    }
   }
 
   @action.bound
@@ -136,6 +144,7 @@ export class Records implements IRecords {
 }
 
 export class DataTable implements IDataTable {
+
   constructor(
     public P: {
       records: L<IRecords>;
@@ -179,6 +188,11 @@ export class DataTable implements IDataTable {
   @action.bound
   resetDirty(): void {
     this._dirtyValues = undefined;
+  }
+
+  @action.bound
+  markDeletedRow(rowId: string): void {
+    this.records.markDeleted(rowId);
   }
 
   @action.bound
@@ -248,10 +262,16 @@ export class DataTable implements IDataTable {
     return this.records.getIdByIndex(idx);
   }
 
+  @action.bound
   removeDirtyRow(rowId: string): void {
     if (this._dirtyValues) {
       this._dirtyValues.delete(rowId);
     }
+  }
+
+  @action.bound
+  removeDirtyDeleted(rowId: string): void {
+    this.records.removeDirtyDeleted(rowId);
   }
 
   @action.bound

@@ -44,3 +44,7 @@ export const startEditing = action(`[${NS}] StartEditing`);
 export const dataTableLoaded = action(`[${NS}] DataTableLoaded`);
 
 export const requestSaveData = action(`[${NS}] RequestSaveData`);
+export const requestCreateRow = action(`[${NS}] RequestCreateRow`);
+
+export const deleteSelectedRow = action(`[${NS}] DeleteSelectedRow`);
+export const createRow = action(`[${NS}] CreateRow`);

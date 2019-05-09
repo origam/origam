@@ -9,12 +9,18 @@ import { IDataViewMediator } from "../../../../DataView/types/IDataViewMediator"
 
 export class FormViewToolbar {
   constructor(
-    public P: { aSwitchView: ML<IASwitchView>; mediator: ML<IDataViewMediator> }
+    public P: {
+      aSwitchView: ML<IASwitchView>;
+      mediator: ML<IDataViewMediator>;
+      label: string;
+    }
   ) {}
 
   isLoading: boolean = false;
   isError: boolean = false;
-  label: string = "Form view label";
+  get label(): string {
+    return this.P.label;
+  }
   isFiltered: boolean = false;
   btnMoveUp: IToolbarButtonState = {
     isActive: false,

@@ -191,7 +191,8 @@ export class FormView extends React.Component<{ controller: IFormView }> {
       ? undefined
       : new FormViewToolbar({
         aSwitchView: () => this.props.controller.dataView.aSwitchView,
-        mediator: () => this.props.controller.dataView.mediator
+        mediator: () => this.props.controller.dataView.mediator,
+        label: this.props.controller.dataView.label
       });
   }
 

@@ -18,6 +18,7 @@ import { IAStartView } from './IAStartView';
 import { IAStopView } from "./IAStopView";
 import { IDataViewMediator } from "./IDataViewMediator";
 import { IAReloadChildren } from "./IAReloadChildren";
+import { IADeleteRow } from "./IADeleteRow";
 
 export interface IDataView {
   mediator: IDataViewMediator;
@@ -36,9 +37,11 @@ export interface IDataView {
   aInitForm: IAInitForm;
   aSubmitForm: IASubmitForm;
   aReloadChildren: IAReloadChildren;
+  aDeleteRow: IADeleteRow;
   isHeadless: boolean;
   props: IProperties;
   specificDataViews: Array<IFormView | ITableView>;
   initialDataView: IViewType;
   id: string;
+  label: string;
 }

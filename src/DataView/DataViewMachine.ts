@@ -12,6 +12,7 @@ import { IDataViewMediator } from "./types/IDataViewMediator";
 import * as DataViewActions from "./DataViewActions";
 import { isType } from "ts-action";
 
+
 export class DataViewMachine implements IDataViewMachine {
   constructor(
     public P: {
@@ -41,6 +42,8 @@ export class DataViewMachine implements IDataViewMachine {
     this.mediator.listen((action: any) => {
       if (isType(action, DataViewActions.requestSaveData)) {
         this.interpreter.send("REQUEST_SAVE_DATA");
+      } else if(isType(action, DataViewActions.requestCreateRow)) {
+        this.interpreter.send("REQUEST_CREATE_ROW")
       }
     });
   }
@@ -61,7 +64,8 @@ export class DataViewMachine implements IDataViewMachine {
           on: {
             LOAD_FRESH: { target: "LOAD_FRESH", cond: "loadingAllowed" },
             LOAD_INCREMENT: "LOAD_INCREMENT",
-            REQUEST_SAVE_DATA: "SAVE_DIRTY_DATA"
+            REQUEST_SAVE_DATA: "SAVE_DIRTY_DATA",
+            REQUEST_CREATE_ROW: "CREATE_NEW_RECORD"
           }
         },
         LOAD_FRESH: {
@@ -86,6 +90,12 @@ export class DataViewMachine implements IDataViewMachine {
             DONE: "IDLE"
           },
           invoke: { src: "saveDirtyData" }
+        },
+        CREATE_NEW_RECORD: {
+          on: {
+            DONE: "IDLE"
+          },
+          invoke: {src: 'createNewRecord'}
         }
       }
     },
@@ -117,20 +127,40 @@ export class DataViewMachine implements IDataViewMachine {
             "Dirty changed:",
             JSON.stringify(this.dataTable.dirtyValues)
           );
-          for(let [RowId, values] of this.dataTable.dirtyValues) {
-            console.log('Saving', RowId);
+          console.log(
+            "Dirty deleted:",
+            JSON.stringify(this.dataTable.dirtyDeletedIds)
+          );
+          for(let RowId of this.dataTable.dirtyDeletedIds.keys()) {
+            console.log("Deleting", RowId);
+            const result = await this.api.deleteEntity({
+              MenuId: this.menuItemId,
+              DataStructureEntityId: this.dataStructureEntityId,
+              RowIdToDelete: RowId,
+            });
+            console.log("...Deleted.")
+            runInAction(() => {
+              this.dataTable.removeDirtyDeleted(RowId)
+            })
+          }
+          for (let [RowId, values] of this.dataTable.dirtyValues) {
+            console.log("Updating", RowId);
             const result = await this.api.putEntity({
               MenuId: this.menuItemId,
-                DataStructureEntityId: this.dataStructureEntityId,
-                RowId,
-                NewValues: values
+              DataStructureEntityId: this.dataStructureEntityId,
+              RowId,
+              NewValues: values
             });
-            console.log("...Saved.")
+            console.log("...Updated.");
             runInAction(() => {
               this.dataTable.substRecord(RowId, result.itemArray);
               this.dataTable.removeDirtyRow(RowId);
-            })
+            });
           }
+          send("DONE");
+        },
+        createNewRecord: (ctx, event) => async (send, onEvent) => {
+          console.log('Create new record.')
           send("DONE")
         }
       },

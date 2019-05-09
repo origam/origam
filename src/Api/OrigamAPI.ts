@@ -112,7 +112,10 @@ export class OrigamAPI implements IApi {
     RowIdToDelete: string;
     MenuId: string;
   }) {
-    return (await axios.post(`${this.urlPrefix}/Data/Entities`, data, {
+    return (await axios.request({
+      url: `${this.urlPrefix}/Data/Entities`,
+      method: "DELETE",
+      data,
       headers: this.httpAuthHeader
     })).data;
   }

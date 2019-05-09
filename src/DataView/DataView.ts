@@ -43,11 +43,16 @@ import { IASwitchView } from "./types/IASwitchView";
 import { IAInitForm } from "./types/IAInitForm";
 import { IASubmitForm } from "./types/IASubmitForm";
 import { IAReloadChildren } from "./types/IAReloadChildren";
+import { ADeleteRow } from "./ADeleteRow";
+import { IADeleteRow } from "./types/IADeleteRow";
+import { IACreateRow } from "./types/IACreateRow";
+import { ACreateRow } from "./ACreateRow";
 
 export class DataView implements IDataView {
   constructor(
     public P: {
       id: ML<string>;
+      label: string;
       menuItemId: ML<string>;
       dataStructureEntityId: ML<string>;
       initialDataView: ML<IViewType>;
@@ -101,6 +106,17 @@ export class DataView implements IDataView {
       availViews: () => this.availViews
     });
 
+    this.aDeleteRow = new ADeleteRow({
+      dataTable: () => this.dataTable,
+      mediator: () => this.mediator,
+      recCursor: () => this.recCursor
+    });
+
+    this.aCreateRow = new ACreateRow({
+      recCursor: () => this.recCursor,
+      mediator: () => this.mediator
+    });
+
     this.aInitForm = new AInitForm({
       recCursor: () => this.recCursor,
       dataTable: () => this.dataTable,
@@ -147,6 +163,8 @@ export class DataView implements IDataView {
   aInitForm: IAInitForm;
   aSubmitForm: IASubmitForm;
   aReloadChildren: IAReloadChildren;
+  aDeleteRow: IADeleteRow;
+  aCreateRow: IACreateRow;
 
   get isHeadless() {
     return unpack(this.P.isHeadless);
@@ -166,5 +184,9 @@ export class DataView implements IDataView {
 
   get id() {
     return unpack(this.P.id);
+  }
+
+  get label() {
+    return this.P.label;
   }
 }

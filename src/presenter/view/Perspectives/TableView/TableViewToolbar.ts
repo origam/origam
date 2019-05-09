@@ -11,18 +11,22 @@ import { IASelPrevRec } from "../../../../DataView/types/IASelPrevRec";
 import { IDataViewMediator } from "../../../../DataView/types/IDataViewMediator";
 import * as DataViewActions from "../../../../DataView/DataViewActions";
 
+
 export class TableViewToolbar {
   constructor(
     public P: {
       dataTable: ML<IDataTable>;
       aSwitchView: ML<IASwitchView>;
       mediator: ML<IDataViewMediator>;
+      label: string;
     }
   ) {}
 
   isLoading: boolean = false;
   isError: boolean = false;
-  label: string = "Form view label";
+  get label(): string {
+    return this.P.label
+  }
   isFiltered: boolean = false;
   btnMoveUp: IToolbarButtonState = {
     isActive: false,
@@ -37,12 +41,18 @@ export class TableViewToolbar {
   btnAdd: IToolbarButtonState = {
     isActive: false,
     isEnabled: true,
-    isVisible: true
+    isVisible: true,
+    onClick: action(() => {
+      this.mediator.dispatch(DataViewActions.createRow());
+    })    
   };
   btnDelete: IToolbarButtonState = {
     isActive: false,
     isEnabled: true,
-    isVisible: true
+    isVisible: true,
+    onClick: action(() => {
+      this.mediator.dispatch(DataViewActions.deleteSelectedRow());
+    })
   };
   btnCopy: IToolbarButtonState = {
     isActive: false,
@@ -122,4 +132,5 @@ export class TableViewToolbar {
   get mediator() {
     return unpack(this.P.mediator);
   }
+
 }
