@@ -30,10 +30,15 @@ export class FormViewPresenter implements IFormView {
       aSelNextProp: ML<IASelNextProp>;
       aSelPrevProp: ML<IASelPrevProp>;
       aSelProp: ML<IASelProp>;
+      isLoading: () => boolean;
     }
   ) {}
 
   type: IViewType.Form = IViewType.Form;
+
+  get isLoading() {
+    return this.P.isLoading();
+  }
 
   @computed get fields() {
     const entries: Array<[string, IFormField]> = [];

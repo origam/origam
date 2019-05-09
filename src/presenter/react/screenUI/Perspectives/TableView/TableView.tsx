@@ -28,7 +28,8 @@ export class TableView extends React.Component<{
           dataTable: () => this.props.controller.dataView.dataTable,
           aSwitchView: () => this.props.controller.dataView.aSwitchView,
           mediator: () => this.props.controller.dataView.mediator,
-          label: this.props.controller.dataView.label
+          label: this.props.controller.dataView.label,
+          isLoading: () => this.props.controller.dataView.machine.isLoading
         });
     const tableViewTable = new TableViewTable({
       scrollState: () => tableViewScrollState,
@@ -36,7 +37,8 @@ export class TableView extends React.Component<{
       cursor: () => tableViewField,
       mediator: () => this.props.controller.dataView.mediator,
       editing: () => this.props.controller.dataView.editing,
-      aFinishEditing: () => this.props.controller.dataView.aFinishEditing
+      aFinishEditing: () => this.props.controller.dataView.aFinishEditing,
+      isLoading: () => this.props.controller.dataView.machine.isLoading
     });
     const tableViewCells = new TableViewCells({
       dataTable: this.props.controller.dataView.dataTable,

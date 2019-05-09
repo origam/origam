@@ -186,13 +186,16 @@ export class FormView extends React.Component<{ controller: IFormView }> {
       form: () => this.props.controller.form,
       aSelPrevProp: () => this.props.controller.aSelPrevProp,
       aSelNextProp: () => this.props.controller.aSelNextProp,
-      aSelProp: () => this.props.controller.aSelProp   });
+      aSelProp: () => this.props.controller.aSelProp,
+      isLoading: () => this.props.controller.dataView.machine.isLoading
+    });
     const toolbar = this.props.controller.dataView.isHeadless
       ? undefined
       : new FormViewToolbar({
         aSwitchView: () => this.props.controller.dataView.aSwitchView,
         mediator: () => this.props.controller.dataView.mediator,
-        label: this.props.controller.dataView.label
+        label: this.props.controller.dataView.label,
+        isLoading: () => this.props.controller.dataView.machine.isLoading
       });
   }
 

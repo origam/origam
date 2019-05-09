@@ -294,6 +294,8 @@ export class DataViewMachine implements IDataViewMachine {
     switch (this.stateValue) {
       case "LOAD_FRESH":
       case "LOAD_INCREMENT":
+      case "SAVE_DIRTY_DATA": 
+      case "CREATE_NEW_RECORD": 
         return true;
       default:
         return false;

@@ -13,13 +13,17 @@ export class FormViewToolbar {
       aSwitchView: ML<IASwitchView>;
       mediator: ML<IDataViewMediator>;
       label: string;
+      isLoading: () => boolean;
     }
   ) {}
 
-  isLoading: boolean = false;
+
   isError: boolean = false;
   get label(): string {
     return this.P.label;
+  }
+  get isLoading(): boolean {
+    return this.P.isLoading();
   }
   isFiltered: boolean = false;
   btnMoveUp: IToolbarButtonState = {

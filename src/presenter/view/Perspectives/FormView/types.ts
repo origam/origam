@@ -6,6 +6,7 @@ export interface IFormView {
   uiStructure: Array<IUIFormRoot>;
   toolbar: IToolbar | undefined;
   fields: Map<string, IFormField>;
+  isLoading: boolean;
   /*onFieldClick?(event: any, id: string): void;
   onFieldFocus?(event: any, id: string): void;
   onFieldBlur?(event: any, id: string): void;

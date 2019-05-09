@@ -19,10 +19,13 @@ export class TableViewToolbar {
       aSwitchView: ML<IASwitchView>;
       mediator: ML<IDataViewMediator>;
       label: string;
+      isLoading: () => boolean;
     }
   ) {}
 
-  isLoading: boolean = false;
+  get isLoading(): boolean {
+    return this.P.isLoading();
+  }
   isError: boolean = false;
   get label(): string {
     return this.P.label

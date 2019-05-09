@@ -21,10 +21,13 @@ export class TableViewTable implements ITable {
       mediator: ML<IDataViewMediator>;
       editing: ML<IEditing>;
       aFinishEditing: ML<IAFinishEditing>;
+      isLoading: () => boolean;
     }
   ) {}
 
-  isLoading: boolean = false;
+  get isLoading(): boolean {
+    return this.P.isLoading();
+  }
   filterSettingsVisible: boolean = false;
 
   @action.bound

@@ -19,6 +19,7 @@ import { IAStopView } from "./IAStopView";
 import { IDataViewMediator } from "./IDataViewMediator";
 import { IAReloadChildren } from "./IAReloadChildren";
 import { IADeleteRow } from "./IADeleteRow";
+import { IDataViewMachine } from "./IDataViewMachine";
 
 export interface IDataView {
   mediator: IDataViewMediator;
@@ -44,4 +45,5 @@ export interface IDataView {
   initialDataView: IViewType;
   id: string;
   label: string;
+  machine: IDataViewMachine
 }
