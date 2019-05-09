@@ -273,9 +273,9 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		private bool IsNewMenuAvailable(DNode dNodeUnderMouse)
 		{
 			if (dNodeUnderMouse == null) return false;
-			var schemaItemUnderMouse = DNodeToSchemaItem(dNodeUnderMouse);
-			if (!(dNodeUnderMouse.Node is Subgraph) &&
-			    !(schemaItemUnderMouse is ServiceMethodCallTask)) return false;
+			var schemaItem = DNodeToSchemaItem(dNodeUnderMouse);
+			if (!(dNodeUnderMouse.Node is Subgraph) && 
+			    !(schemaItem is ServiceMethodCallParameter)) return false;
 			return dNodeUnderMouse.Node == nodeSelector.Selected;
 		}
 
