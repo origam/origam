@@ -65,23 +65,23 @@ export class DataView implements IDataView {
       items: () => this.specificDataViews,
       initialActiveViewType: () => this.initialDataView
     });
-  
+
     this.recCursor = new RecCursor({});
-  
+
     this.form = new Form();
     this.editing = new Editing({});
-  
+
     this.dataTable = new DataTable({
       records: () => this.records,
       properties: () => this.props
     });
-  
+
     this.records = new Records();
-  
+
     this.aStartView = new AStartView({ machine: () => this.machine });
-  
+
     this.aStopView = new AStopView({ machine: () => this.machine });
-  
+
     this.aStartEditing = new AStartEditing({
       editing: () => this.editing,
       aInitForm: () => this.aInitForm,
@@ -89,17 +89,18 @@ export class DataView implements IDataView {
     });
     this.aFinishEditing = new AFinishEditing({
       editing: () => this.editing,
-      aSubmitForm: () => this.aSubmitForm
+      aSubmitForm: () => this.aSubmitForm,
+      mediator: () => this.mediator
     });
     this.aCancelEditing = new ACancelEditing({
       editing: () => this.editing,
       form: () => this.form
     });
-  
+
     this.aSwitchView = new ASwitchView({
       availViews: () => this.availViews
     });
-  
+
     this.aInitForm = new AInitForm({
       recCursor: () => this.recCursor,
       dataTable: () => this.dataTable,
@@ -127,13 +128,10 @@ export class DataView implements IDataView {
         return this.recCursor.selId;
       }
     });
-
-
-
   }
 
   machine: IDataViewMachine;
-  mediator: IDataViewMediator;  
+  mediator: IDataViewMediator;
   availViews: IAvailViews;
   recCursor: IRecCursor;
   form: IForm;
@@ -149,9 +147,6 @@ export class DataView implements IDataView {
   aInitForm: IAInitForm;
   aSubmitForm: IASubmitForm;
   aReloadChildren: IAReloadChildren;
-
-
-
 
   get isHeadless() {
     return unpack(this.P.isHeadless);
@@ -173,4 +168,3 @@ export class DataView implements IDataView {
     return unpack(this.P.id);
   }
 }
-

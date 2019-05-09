@@ -93,6 +93,14 @@ export class Records implements IRecords {
     this.items = records;
   }
 
+  @action.bound
+  substRecord(rowId: string, record: IRecord) {
+    let idx = this.getIndexById(rowId);
+    if (idx !== undefined) {
+      this.items.splice(idx, 1, record);
+    }
+  }
+
   getByIndex(idx: number): IRecord | undefined {
     return this.existingItems[idx];
   }
@@ -147,9 +155,19 @@ export class DataTable implements IDataTable {
     return this.records.count > 0;
   }
 
-  @observable dirtyValues:
+  @observable _dirtyValues:
     | Map<string, Map<string, any>>
     | undefined = undefined;
+
+  @computed get dirtyValues() {
+    return this._dirtyValues ? this._dirtyValues : new Map<string, any>();
+  }
+
+  @computed get dirtyDeletedIds() {
+    return this.records.deletedRecordIds
+      ? this.records.deletedRecordIds
+      : new Map<string, boolean>();
+  }
 
   @observable newRecordIds: Map<string, boolean> | undefined;
 
@@ -160,19 +178,19 @@ export class DataTable implements IDataTable {
 
   @action.bound
   resetDirty(): void {
-    this.dirtyValues = undefined;
+    this._dirtyValues = undefined;
   }
 
   @action.bound
   addDirtyValues(recId: string, values: Map<string, any>) {
-    if (!this.dirtyValues) {
-      this.dirtyValues = new Map();
+    if (!this._dirtyValues) {
+      this._dirtyValues = new Map();
     }
-    if (!this.dirtyValues.get(recId)) {
-      this.dirtyValues.set(recId, new Map());
+    if (!this._dirtyValues.get(recId)) {
+      this._dirtyValues.set(recId, new Map());
     }
     for (let [propId, value] of values) {
-      this.dirtyValues.get(recId)!.set(propId, value);
+      this._dirtyValues.get(recId)!.set(propId, value);
     }
   }
 
@@ -202,11 +220,11 @@ export class DataTable implements IDataTable {
 
   getValue(record: IRecord, property: IProperty) {
     if (
-      this.dirtyValues &&
-      this.dirtyValues.has(record[0]) &&
-      this.dirtyValues.get(record[0])!.has(property.id)
+      this._dirtyValues &&
+      this._dirtyValues.has(record[0]) &&
+      this._dirtyValues.get(record[0])!.has(property.id)
     ) {
-      return this.dirtyValues.get(record[0])!.get(property.id);
+      return this._dirtyValues.get(record[0])!.get(property.id);
     }
     return record[property.dataIndex];
   }
@@ -228,6 +246,32 @@ export class DataTable implements IDataTable {
 
   getRecordIdByIndex(idx: number): string | undefined {
     return this.records.getIdByIndex(idx);
+  }
+
+  removeDirtyRow(rowId: string): void {
+    if (this._dirtyValues) {
+      this._dirtyValues.delete(rowId);
+    }
+  }
+
+  @action.bound
+  mutateRow(rowId: string, values: { [key: string]: any }) {
+    const record = this.records.getById(rowId);
+    if (record) {
+      const newRecord = [...record];
+      for (let prop of this.properties.items) {
+        newRecord[prop.dataIndex] =
+          values[prop.id] !== undefined
+            ? values[prop.id]
+            : record[prop.dataIndex];
+      }
+      this.records.substRecord(rowId, record);
+    }
+  }
+
+  @action.bound
+  substRecord(rowId: string, record: any[]): void {
+    this.records.substRecord(rowId, record);
   }
 
   @computed get records() {

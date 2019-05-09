@@ -119,7 +119,8 @@ export class FormView implements IFormView {
   
     this.aFinishEdit = new AFinishEditing({
       editing: () => this.editing,
-      aSubmitForm: () => this.aSubmitForm
+      aSubmitForm: () => this.aSubmitForm,
+      mediator: () => this.mediator
     });
   
     this.aInitForm = new AInitForm({

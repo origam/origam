@@ -21,5 +21,24 @@ export interface IApi {
     LookupId: string;
     MenuId: string;
     LabelIds: string[];
-  }): Promise<{[key: string]: string}>;
+  }): Promise<{ [key: string]: string }>;
+
+  putEntity(data: {
+    DataStructureEntityId: string;
+    RowId: string;
+    NewValues: { [key: string]: any };
+    MenuId: string;
+  }): Promise<any>;
+
+  postEntity(data: {
+    DataStructureEntityId: string;
+    NewValues: { [key: string]: any };
+    MenuId: string;
+  }): Promise<any>;
+
+  deleteEntity(data: {
+    DataStructureEntityId: string;
+    RowIdToDelete: string;
+    MenuId: string;
+  }): Promise<any>;
 }

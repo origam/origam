@@ -42,3 +42,5 @@ export const finishEditing = action(`[${NS}] FinishEditing`);
 export const cancelEditing = action(`[${NS}] CancelEditing`);
 export const startEditing = action(`[${NS}] StartEditing`);
 export const dataTableLoaded = action(`[${NS}] DataTableLoaded`);
+
+export const requestSaveData = action(`[${NS}] RequestSaveData`);

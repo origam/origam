@@ -1,6 +1,6 @@
 import { Machine, State, interpret } from "xstate";
 import { Interpreter } from "xstate/lib/interpreter";
-import { observable, action, computed, reaction } from "mobx";
+import { observable, action, computed, reaction, runInAction } from "mobx";
 import { IDataViewMachine } from "./types/IDataViewMachine";
 import { IApi } from "../Api/IApi";
 import { ML } from "../utils/types";
@@ -10,6 +10,7 @@ import { IDataSource } from "../Screens/types";
 import { IASelCell } from "./types/IASelCell";
 import { IDataViewMediator } from "./types/IDataViewMediator";
 import * as DataViewActions from "./DataViewActions";
+import { isType } from "ts-action";
 
 export class DataViewMachine implements IDataViewMachine {
   constructor(
@@ -25,6 +26,7 @@ export class DataViewMachine implements IDataViewMachine {
     }
   ) {
     this.mediator = P.mediator;
+    this.subscribeMediator();
     this.interpreter = interpret(this.definition);
     this.interpreter.onTransition(
       action((state: State<any>) => {
@@ -33,6 +35,14 @@ export class DataViewMachine implements IDataViewMachine {
       })
     );
     this.state = this.interpreter.state;
+  }
+
+  subscribeMediator() {
+    this.mediator.listen((action: any) => {
+      if (isType(action, DataViewActions.requestSaveData)) {
+        this.interpreter.send("REQUEST_SAVE_DATA");
+      }
+    });
   }
 
   parent: IDataViewMachine | undefined;
@@ -50,7 +60,8 @@ export class DataViewMachine implements IDataViewMachine {
         IDLE: {
           on: {
             LOAD_FRESH: { target: "LOAD_FRESH", cond: "loadingAllowed" },
-            LOAD_INCREMENT: "LOAD_INCREMENT"
+            LOAD_INCREMENT: "LOAD_INCREMENT",
+            REQUEST_SAVE_DATA: "SAVE_DIRTY_DATA"
           }
         },
         LOAD_FRESH: {
@@ -69,6 +80,12 @@ export class DataViewMachine implements IDataViewMachine {
             LOAD_INCREMENT: "LOAD_INCREMENT",
             DONE: "IDLE"
           }
+        },
+        SAVE_DIRTY_DATA: {
+          on: {
+            DONE: "IDLE"
+          },
+          invoke: { src: "saveDirtyData" }
         }
       }
     },
@@ -94,6 +111,27 @@ export class DataViewMachine implements IDataViewMachine {
                 this.descendantsDispatch("LOAD_FRESH");
               })
             );
+        },
+        saveDirtyData: (ctx, event) => async (send, onEvent) => {
+          console.log(
+            "Dirty changed:",
+            JSON.stringify(this.dataTable.dirtyValues)
+          );
+          for(let [RowId, values] of this.dataTable.dirtyValues) {
+            console.log('Saving', RowId);
+            const result = await this.api.putEntity({
+              MenuId: this.menuItemId,
+                DataStructureEntityId: this.dataStructureEntityId,
+                RowId,
+                NewValues: values
+            });
+            console.log("...Saved.")
+            runInAction(() => {
+              this.dataTable.substRecord(RowId, result.itemArray);
+              this.dataTable.removeDirtyRow(RowId);
+            })
+          }
+          send("DONE")
         }
       },
       guards: {

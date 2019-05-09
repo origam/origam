@@ -85,4 +85,35 @@ export class OrigamAPI implements IApi {
       headers: this.httpAuthHeader
     })).data;
   }
+
+  async putEntity(data: {
+    DataStructureEntityId: string;
+    RowId: string;
+    NewValues: { [key: string]: any };
+    MenuId: string;
+  }) {
+    return (await axios.put(`${this.urlPrefix}/Data/Entities`, data, {
+      headers: this.httpAuthHeader
+    })).data;
+  }
+
+  async postEntity(data: {
+    DataStructureEntityId: string;
+    NewValues: { [key: string]: any };
+    MenuId: string;
+  }) {
+    return (await axios.post(`${this.urlPrefix}/Data/Entities`, data, {
+      headers: this.httpAuthHeader
+    })).data;
+  }
+
+  async deleteEntity(data: {
+    DataStructureEntityId: string;
+    RowIdToDelete: string;
+    MenuId: string;
+  }) {
+    return (await axios.post(`${this.urlPrefix}/Data/Entities`, data, {
+      headers: this.httpAuthHeader
+    })).data;
+  }
 }

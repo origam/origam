@@ -22,7 +22,9 @@ export class ASubmitForm implements IASubmitForm {
     // -------------------------------------------------------
     if (recCursor.isSelected) {
       const selRowId = recCursor.selId;
-      selRowId && dataTable.addDirtyValues(selRowId, form.dirtyValues);
+      if (form.dirtyValues.size > 0) {
+        selRowId && dataTable.addDirtyValues(selRowId, form.dirtyValues);
+      }
       form.destroy();
     }
   }

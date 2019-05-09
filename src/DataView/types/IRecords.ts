@@ -10,4 +10,6 @@ export interface IRecords {
   getIdAfterId(id: string): string | undefined;
   getIdBeforeId(id: string): string | undefined;
   setRecords(records: IRecord[]): void;
+  substRecord(rowId: string, record: IRecord): void;
+  deletedRecordIds: Map<string, boolean> | undefined;
 }
