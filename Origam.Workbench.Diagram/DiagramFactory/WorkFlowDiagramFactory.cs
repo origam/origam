@@ -58,6 +58,7 @@ namespace Origam.Workbench.Diagram
 			AddWorkflowDiagram(graphParent, graph.TopSubgraph);
 			AddContextStores(graphParent);
 			graph.LayoutAlgorithmSettings.ClusterMargin = nodeMargin;
+			AddBalloons();
 			return graph;
 		}
 
@@ -183,5 +184,24 @@ namespace Origam.Workbench.Diagram
 			}
             return subgraph;
         }
+
+		private void AddBalloons()
+		{
+			foreach (var subgraph in graph.MainDrawingSubgraf.Subgraphs)
+			{
+				if (!subgraph.InEdges.Any())
+				{
+					Node startBalloon = nodeFactory.AddStarBalloon(graph);
+					graph.MainDrawingSubgraf.AddNode(startBalloon);
+					graph.AddEdge(startBalloon.Id, subgraph.Id);
+				}
+				if (!subgraph.OutEdges.Any())
+				{
+					Node endBalloon = nodeFactory.AddEndBalloon(graph);
+					graph.MainDrawingSubgraf.AddNode(endBalloon);
+					graph.AddEdge(subgraph.Id, endBalloon.Id);
+				}
+			}
+		}
 	}
 }

@@ -1,3 +1,4 @@
+using System.Drawing;
 using Microsoft.Msagl.Drawing;
 using Origam.Schema;
 using Node = Microsoft.Msagl.Drawing.Node;
@@ -7,6 +8,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
     class NodeFactory
     {
         private readonly InternalPainter internalPainter;
+        private static int balloonNumber = 0;
 
         public NodeFactory(INodeSelector nodeSelector)
         {
@@ -64,6 +66,27 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             subgraph.LabelText = schemaItem.Name;
             parentSbubgraph.AddSubgraph(subgraph);
             return subgraph;
+        }
+
+        public Node AddStarBalloon(Graph graph)
+        {
+            return AddBalloon(graph, internalPainter.GreenBrush, "Start");
+        }
+        
+        public Node AddEndBalloon(Graph graph)
+        {
+            return AddBalloon(graph, internalPainter.RedBrush, "End");
+        }
+
+        private Node AddBalloon(Graph graph, SolidBrush balloonBrush, string label)
+        {
+            Node node = graph.AddNode($"{label} balloon {balloonNumber++}");
+            node.Attr.Shape = Shape.DrawFromGeometry;
+            var painter = new BalloonPainter(internalPainter, balloonBrush);
+            node.DrawNodeDelegate = painter.Draw;
+            node.NodeBoundaryDelegate = painter.GetBoundary;
+            node.LabelText = label;
+            return node;
         }
     }
 }

@@ -20,13 +20,15 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         public readonly int TextSideMargin = 15;
         public readonly Font Font = new Font("Arial", 10);
 
-        public readonly SolidBrush DrawBrush = new SolidBrush(System.Drawing.Color.Black);
         public readonly StringFormat DrawFormat = new StringFormat();
         private readonly Graphics measurementGraphics = new Control().CreateGraphics();
         private Pen BoldBlackPen = new Pen(System.Drawing.Color.Black, 2);
-        private Pen BlackPen = new Pen(System.Drawing.Color.Black, 1);
+        public Pen BlackPen { get; } = new Pen(System.Drawing.Color.Black, 1);
 
+        public readonly SolidBrush BlackBrush = new SolidBrush(System.Drawing.Color.Black);
         public readonly SolidBrush GreyBrush = new SolidBrush(System.Drawing.Color.LightGray);
+        public readonly SolidBrush GreenBrush = new SolidBrush(System.Drawing.Color.LimeGreen);
+        public readonly SolidBrush RedBrush = new SolidBrush(System.Drawing.Color.Red);
 
         public readonly int NodeHeight = 25;
 

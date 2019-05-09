@@ -56,7 +56,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
 
             editorGraphics.DrawUpSideDown(drawAction: graphics =>
                 {
-                    graphics.DrawString(node.LabelText, painter.Font, painter.DrawBrush,
+                    graphics.DrawString(node.LabelText, painter.Font, painter.BlackBrush,
                         labelPoint, painter.DrawFormat);
                     graphics.FillRectangle(painter.GreyBrush, imageBackground);
                     graphics.DrawImage(image, imagePoint);
