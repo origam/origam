@@ -10,14 +10,22 @@ namespace Origam.Workbench.Diagram
 
     public class NodeSelector: INodeSelector
     {
-        public Node Selected { get; set; }
-        public Guid SelectedNodeId {
-            get
+        private Node selected;
+        public Guid? SelectedNodeId { get; private set; }
+
+        public Node Selected
+        {
+            get => selected;
+            set
             {
-                if(Guid.TryParse(Selected?.Id, out Guid id)){
-                    return id;
+                if(Guid.TryParse(value?.Id, out Guid id)){
+                    SelectedNodeId = id;
                 }
-                return Guid.Empty;
+                else
+                {
+                    SelectedNodeId = null;
+                }
+                selected = value;
             }
         }
     }

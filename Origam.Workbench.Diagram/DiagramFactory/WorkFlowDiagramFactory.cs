@@ -120,19 +120,7 @@ namespace Origam.Workbench.Diagram
             subgraphNode.UserData = step;
             if (subgraphNode.Id == nodeSelector.Selected?.Id)
             {
-	            step.ChildItems.ToEnumerable()
-		            .Where(x => !(x is WorkflowTaskDependency))
-		            .OrderByDescending(x => x.Name)
-		            .ForEach(stepChild =>
-		            {
-			            stepChild.ChildItems.ToEnumerable()
-				            .OrderByDescending(x => x.Name)
-				            .ForEach(innerChild =>
-				            {
-					            AddNodeItem(innerChild, subgraphNode, 30);
-				            });
-			            AddNodeItem(stepChild, subgraphNode, 15);
-		            });
+	            AddNodeItems(step, subgraphNode);
             }
 
             subgraphNode.LayoutSettings = new SugiyamaLayoutSettings
@@ -145,7 +133,24 @@ namespace Origam.Workbench.Diagram
 
             return subgraphNode;
 		}
-		
+
+		private void AddNodeItems(IWorkflowStep step, Subgraph subgraphNode)
+		{
+			step.ChildItems.ToEnumerable()
+				.Where(x => !(x is WorkflowTaskDependency))
+				.OrderByDescending(x => x.Name)
+				.ForEach(stepChild =>
+				{
+					stepChild.ChildItems.ToEnumerable()
+						.OrderByDescending(x => x.Name)
+						.ForEach(innerChild =>
+						{
+							AddNodeItem(innerChild, subgraphNode, 30);
+						});
+					AddNodeItem(stepChild, subgraphNode, 15);
+				});
+		}
+
 		private void AddNodeItem(AbstractSchemaItem item, Subgraph subGraph, int leftMargin)
 		{
 			Node node = nodeFactory.AddNodeItem(graph, item, leftMargin);

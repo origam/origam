@@ -183,29 +183,42 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			
 			if (persistedSchemaItem.IsDeleted)
 			{
-				switch (persistedSchemaItem)
+				if (persistedSchemaItem is WorkflowTaskDependency taskDependency)
 				{
-					case IWorkflowStep _:
-						RemoveNode(persistedSchemaItem.Id);
-						break;
-					case WorkflowTaskDependency taskDependency:
-						RemoveEdge(taskDependency.WorkflowTaskId);
-						break;
+					RemoveEdge(taskDependency.WorkflowTaskId);
+				}
+				else
+				{
+					RemoveNode(persistedSchemaItem.Id);
 				}
 			}
 		}
 
+		
 		private void UpdateNodeOf(AbstractSchemaItem persistedSchemaItem)
 		{
-			Node node = gViewer.Graph.FindNode(persistedSchemaItem.Id.ToString());
+			Node node = gViewer.Graph.FindNodeOrSubgraph(persistedSchemaItem.Id.ToString());
 			if (node == null)
 			{
+				TrySelectParentStep(persistedSchemaItem);
 				ReDraw();
 			}
 			else
 			{
 				node.LabelText = persistedSchemaItem.Name;
 				gViewer.Redraw();
+			}
+		}
+
+		private void TrySelectParentStep(AbstractSchemaItem persistedSchemaItem)
+		{
+			if (!(persistedSchemaItem is IWorkflowStep))
+			{
+				AbstractSchemaItem parentStep =
+					persistedSchemaItem.FirstParentOfType<IWorkflowStep>();
+				Node stepNode =
+					gViewer.Graph.FindNodeOrSubgraph(parentStep.Id.ToString());
+				nodeSelector.Selected = stepNode;
 			}
 		}
 
@@ -237,20 +250,30 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 		private void RemoveNode(Guid nodeId)
 		{
-			if (nodeSelector.SelectedNodeId == nodeId)
+			bool deletedNodeWasSelected = nodeSelector.SelectedNodeId == nodeId;
+			if (deletedNodeWasSelected)
 			{
 				nodeSelector.Selected = null;
 			}
 			Node node = gViewer.Graph.FindNodeOrSubgraph(nodeId.ToString());
-			if (node == null) return;
+			if (node == null)
+			{
+				return;
+			}
 			
+			Subgraph parentSubgraph = gViewer.Graph.FindParentSubGraph(node);
+			if (deletedNodeWasSelected)
+			{
+				nodeSelector.Selected = parentSubgraph;
+			}
 			gViewer.Graph.RemoveNodeEverywhere(node);
 			IViewerNode viewerNode = gViewer.FindViewerNode(node);
 			if (viewerNode == null) return;
 			
 			gViewer.RemoveNode(viewerNode, true);
-			Subgraph parentSubgraph = gViewer.Graph.FindParentSubGraph(node);
-			if (parentSubgraph != null && !parentSubgraph.Nodes.Any())
+			bool deletedNodeItem = !(node is Subgraph);
+			bool deletedLastNode = !parentSubgraph.Nodes.Any();
+			if (deletedLastNode || deletedNodeItem)
 			{
 				ReDraw();
 			}
