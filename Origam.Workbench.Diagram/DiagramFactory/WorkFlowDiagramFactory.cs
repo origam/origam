@@ -41,6 +41,7 @@ namespace Origam.Workbench.Diagram
 {
 	public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGraph>
 	{
+		private readonly INodeSelector nodeSelector;
 		private static readonly int nodeMargin = 40;
 		
 		private WorkFlowGraph graph;
@@ -48,6 +49,7 @@ namespace Origam.Workbench.Diagram
 
 		public WorkFlowDiagramFactory(INodeSelector nodeSelector)
 		{
+			this.nodeSelector = nodeSelector;
 			nodeFactory = new NodeFactory(nodeSelector);
 		}
 
@@ -116,21 +118,22 @@ namespace Origam.Workbench.Diagram
 		{
 			Subgraph subgraphNode = nodeFactory.AddSubgraphNode(subGraph, step);
             subgraphNode.UserData = step;
-            
-            step.ChildItems.ToEnumerable()
-	            .Where(x=>!(x is WorkflowTaskDependency))
-	            .OrderByDescending(x=>x.Name)
-	            .ForEach(stepChild =>
-	            {
-		            stepChild.ChildItems.ToEnumerable()
-			            .OrderByDescending(x=>x.Name)
-			            .ForEach(innerChild => 
-			            {
-				            AddNodeItem(innerChild, subgraphNode,30);
-			            });
-		            AddNodeItem(stepChild, subgraphNode,15);
-	            });
-            
+            if (subgraphNode.Id == nodeSelector.Selected?.Id)
+            {
+	            step.ChildItems.ToEnumerable()
+		            .Where(x => !(x is WorkflowTaskDependency))
+		            .OrderByDescending(x => x.Name)
+		            .ForEach(stepChild =>
+		            {
+			            stepChild.ChildItems.ToEnumerable()
+				            .OrderByDescending(x => x.Name)
+				            .ForEach(innerChild =>
+				            {
+					            AddNodeItem(innerChild, subgraphNode, 30);
+				            });
+			            AddNodeItem(stepChild, subgraphNode, 15);
+		            });
+            }
 
             subgraphNode.LayoutSettings = new SugiyamaLayoutSettings
             {

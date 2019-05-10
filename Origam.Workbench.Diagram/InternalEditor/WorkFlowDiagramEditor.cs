@@ -253,10 +253,30 @@ namespace Origam.Workbench.Diagram.InternalEditor
                 cm.Show(parentForm,_mouseRightButtonDownPoint.InScreenSystem);
 	        }else if (e.LeftButtonIsPressed)
 	        {
-		        if (gViewer.SelectedObject is Node node)
+		        if(gViewer.SelectedObject is Node node)
 		        {
-					nodeSelector.Selected = node;
-					gViewer.Invalidate();
+			        if (nodeSelector.Selected == node)
+			        {
+				        return;
+			        }
+			        else if (nodeSelector.Selected?.Id == node.Id)
+			        {
+				        nodeSelector.Selected=node;
+			        }
+			        else if (Graph.AreRelatives(nodeSelector.Selected, node))
+			        {
+				        nodeSelector.Selected=node;
+				        gViewer.Invalidate();
+			        }
+			        else 
+			        {
+				        nodeSelector.Selected=node;
+				        var origTransform = gViewer.Transform;
+				        ReDraw();
+				        nodeSelector.Selected=Graph.FindNodeOrSubgraph(node.Id);
+				        gViewer.Transform = origTransform;
+				        gViewer.Invalidate();
+			        }
 		        }
 	        }
 	    }
@@ -299,7 +319,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			var deleteMenuItem = new ToolStripMenuItem();
 			deleteMenuItem.Text = "Delete";
 			deleteMenuItem.Image = ImageRes.icon_delete;
-			deleteMenuItem.Click += (sender, args) => gViewer.RemoveEdge(edge, true); ;
+			deleteMenuItem.Click += (sender, args) => gViewer.RemoveEdge(edge, true);
 		        
 			ToolStripMenuItem addBetweenMenu = new ToolStripMenuItem("Add Between");
 			addBetweenMenu.Image = ImageRes.icon_new;
