@@ -19,7 +19,7 @@ export class BoolEditor extends React.Component<{
           checked={this.props.value}
           readOnly={this.props.isReadOnly}
           onChange={(event: any) => {
-            this.props.onChange &&
+            this.props.onChange && !this.props.isReadOnly &&
               this.props.onChange(event, event.target.checked);
           }}
           onKeyDown={this.props.onKeyDown}
