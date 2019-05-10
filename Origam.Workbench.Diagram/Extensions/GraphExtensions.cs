@@ -34,6 +34,7 @@ namespace Origam.Workbench.Diagram.Extensions
 
 	    public static Node FindNodeOrSubgraph(this Graph graph, string id)
 	    {
+		    if (string.IsNullOrWhiteSpace(id)) return null;
 		    Node node = graph.FindNode(id);
 		    if (node != null) return node;
 		    return graph.SubgraphMap.ContainsKey(id) 

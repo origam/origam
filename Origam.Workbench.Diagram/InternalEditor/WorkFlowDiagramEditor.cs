@@ -78,6 +78,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		        .Single(x => x.Node == gViewer.Graph.RootSubgraph.Subgraphs.First());
 	        gViewer.Transform = null;
 	        gViewer.Invalidate();
+	        nodeSelector.Selected = Graph.FindNodeOrSubgraph(nodeSelector.Selected?.Id);
         }
         
         private void OnDoubleClick(object sender, EventArgs e)
@@ -213,14 +214,19 @@ namespace Origam.Workbench.Diagram.InternalEditor
 					typeof(IWorkflowBlock),
 					new Key(graphParentId))
 				as IWorkflowBlock;
-		
+
 
 		private void RemoveEdge(Guid sourceId)
 		{
 			bool edgeWasRemovedOutsideDiagram = gViewer.Graph.RootSubgraph
 				.GetAllNodes()
 				.SelectMany(node => node.Edges.Select(edge => edge.Source))
-				.Select(Guid.Parse)
+				.Select(source =>
+				{
+					Guid.TryParse(source, out Guid id);
+					return id;
+				})
+				.Where(id => id != Guid.Empty)
 				.Any(targetNodeId => targetNodeId == sourceId);
 
 			if (edgeWasRemovedOutsideDiagram)
@@ -229,21 +235,25 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			}
 		}
 
-		private bool RemoveNode(Guid nodeId)
+		private void RemoveNode(Guid nodeId)
 		{
-			Node node = gViewer.Graph.FindNode(nodeId.ToString());
-			if (node == null) return true;
-			Subgraph parentSubgraph = gViewer.Graph.FindParentSubGraph(node);
-
-			IViewerNode viewerNode = gViewer.FindViewerNode(node);
-			gViewer.RemoveNode(viewerNode, true);
+			if (nodeSelector.SelectedNodeId == nodeId)
+			{
+				nodeSelector.Selected = null;
+			}
+			Node node = gViewer.Graph.FindNodeOrSubgraph(nodeId.ToString());
+			if (node == null) return;
+			
 			gViewer.Graph.RemoveNodeEverywhere(node);
+			IViewerNode viewerNode = gViewer.FindViewerNode(node);
+			if (viewerNode == null) return;
+			
+			gViewer.RemoveNode(viewerNode, true);
+			Subgraph parentSubgraph = gViewer.Graph.FindParentSubGraph(node);
 			if (parentSubgraph != null && !parentSubgraph.Nodes.Any())
 			{
 				ReDraw();
 			}
-
-			return false;
 		}
 
 		void OnMouseDown(object sender, MsaglMouseEventArgs e)
@@ -275,7 +285,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
 				        nodeSelector.Selected=node;
 				        var origTransform = gViewer.Transform;
 				        ReDraw();
-				        nodeSelector.Selected=Graph.FindNodeOrSubgraph(node.Id);
 				        gViewer.Transform = origTransform;
 				        gViewer.Invalidate();
 			        }
@@ -286,9 +295,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		private bool IsDeleteMenuItemAvailable(DNode objectUnderMouse)
 		{
 			if (objectUnderMouse == null) return false;
-			Subgraph topWorkFlowSubGraph = gViewer.Graph.RootSubgraph.Subgraphs
-				.FirstOrDefault(x=>x.Id == UpToDateGraphParent.Id.ToString());
-			if (nodeSelector.Selected == topWorkFlowSubGraph) return false;
+			if (nodeSelector.Selected == Graph.MainDrawingSubgraf) return false;
 			return objectUnderMouse.Node == nodeSelector.Selected;
 		}
 
