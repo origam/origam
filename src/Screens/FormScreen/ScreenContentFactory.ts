@@ -82,13 +82,32 @@ export class ScreenContentFactory implements IScreenContentFactory {
       });
       const formView = new FormView({
         dataView: () => dataView,
-        uiStructure: () => formUI,
+        uiStructure: () => formUI
       });
       const specificDataViews = [formView, tableView];
 
-      const propertyItems = gridProps.map((gp, idx) =>
-        buildProperty(gp, idx, unpack(this.menuItemId), unpack(this.api))
-      );
+      const propertyItems = gridProps.map((gp, idx) => {
+
+        const dataSourceField = dataSource
+          ? dataSource.fieldById(gp.attributes.Id)
+          : undefined;
+
+        const dataSourceIndex = dataSourceField
+          ? dataSourceField.idx
+          : undefined;
+
+        if (dataSourceIndex === undefined) {
+          throw new Error("DataSourceIndex is 0");
+        }
+        const prop = buildProperty(
+          gp,
+          idx,
+          dataSourceIndex,
+          unpack(this.menuItemId),
+          unpack(this.api)
+        );
+        return prop;
+      });
       tableView.propReorder.setIds(
         properties.items.map(prop => prop.id).filter(id => id !== "Id")
       );

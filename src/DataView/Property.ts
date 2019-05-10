@@ -8,6 +8,7 @@ import { LookupResolver } from "./Lookup/LookupResolver";
 export function buildProperty(
   xmlObj: any,
   dataIndex: number,
+  dataSourceIndex: number,
   menuItemId: string,
   api: IApi
 ) {
@@ -26,6 +27,7 @@ export function buildProperty(
     xmlObj.attributes.Entity,
     xmlObj.attributes.Column,
     dataIndex,
+    dataSourceIndex,
     lookupResolver
   );
 }
@@ -38,6 +40,7 @@ export class Property implements IProperty {
     public entity: string,
     public  column: string,
     dataIndex: number,
+    public dataSourceIndex: number,
     public lookupResolver: ILookupResolver | undefined
   ) {
     this.dataIndex = dataIndex;

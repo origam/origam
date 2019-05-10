@@ -7,5 +7,6 @@ export interface IProperty {
   entity: string;
   isReadOnly: boolean;
   dataIndex: number;
+  dataSourceIndex: number;
   lookupResolver: ILookupResolver | undefined;
 }
