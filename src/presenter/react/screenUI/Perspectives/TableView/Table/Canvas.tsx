@@ -171,12 +171,17 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
     ctx.fillRect(0, 0, width * CPR, height * CPR);
 
     this.onClickSubscriptions = [];
-
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(0, 0, Math.min(this.props.contentWidth - this.scrollLeft) * CPR, this.props.contentHeight * CPR);
+    ctx.clip();
     for (
       let columnIndex = firstVisibleColumnIndex; // + this.props.columnStartIndex;
       columnIndex <= lastVisibleColumnIndex; // + this.props.columnStartIndex;
       columnIndex++
     ) {
+
+
       for (
         let rowIndex = firstVisibleRowIndex;
         rowIndex <= lastVisibleRowIndex;
@@ -184,7 +189,9 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
       ) {
         this.renderCell(columnIndex, rowIndex, ctx);
       }
+
     }
+    ctx.restore();
     this.props.onAfterRender && this.props.onAfterRender();
   }
 

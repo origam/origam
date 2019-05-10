@@ -112,7 +112,7 @@ export class Table extends React.Component<{ controller: ITable }> {
   @observable.ref elmCanvasMoving: Canvas | null = null;
   @observable.ref elmScroller: Scroller | null = null;
 
-  
+
   @action.bound handleWindowClick(event: any) {
     const domNode = ReactDOM.findDOMNode(this.elmScroller);
     if (domNode && !domNode.contains(event.target)) {
@@ -222,9 +222,9 @@ export class Table extends React.Component<{ controller: ITable }> {
         this.elmCanvasMoving.triggerCellClick(
           event,
           event.clientX -
-            this.contentBounds.left +
-            this.scrollState.scrollLeft -
-            this.fixedColumnsWidth,
+          this.contentBounds.left +
+          this.scrollState.scrollLeft -
+          this.fixedColumnsWidth,
           event.clientY - this.contentBounds.top + this.scrollState.scrollTop
         );
     } else {
@@ -291,19 +291,19 @@ export class Table extends React.Component<{ controller: ITable }> {
                           </Scrollee>
                         </>
                       ) : (
-                        <Scrollee
-                          scrollOffsetSource={this.scrollState}
-                          fixedVert={true}
-                          width={contentRect.bounds!.width - 10}
-                        >
-                          <HeaderRow
-                            gridDimensions={this.gridDimensions}
-                            headers={this.props.controller.cells}
-                            columnStartIndex={0}
-                            columnEndIndex={this.gridDimensions.columnCount}
-                          />
-                        </Scrollee>
-                      )}
+                          <Scrollee
+                            scrollOffsetSource={this.scrollState}
+                            fixedVert={true}
+                            width={contentRect.bounds!.width - 10}
+                          >
+                            <HeaderRow
+                              gridDimensions={this.gridDimensions}
+                              headers={this.props.controller.cells}
+                              columnStartIndex={0}
+                              columnEndIndex={this.gridDimensions.columnCount}
+                            />
+                          </Scrollee>
+                        )}
                     </div>
                   ) : null}
 
@@ -319,7 +319,9 @@ export class Table extends React.Component<{ controller: ITable }> {
                                 leftOffset={0}
                                 isHorizontalScroll={false}
                                 width={this.fixedColumnsWidth}
+                                contentWidth={this.fixedColumnsWidth}
                                 height={contentRect.bounds!.height - 10}
+                                contentHeight={this.props.controller.cells.contentHeight}
                                 scrollOffsetSource={this.scrollState}
                                 gridDimensions={this.gridDimensions}
                                 cells={this.props.controller.cells}
@@ -336,6 +338,12 @@ export class Table extends React.Component<{ controller: ITable }> {
                                   contentRect.bounds!.width -
                                   10 -
                                   this.fixedColumnsWidth
+                                }
+                                contentWidth={
+                                  this.props.controller.cells.contentWidth
+                                }
+                                contentHeight={
+                                  this.props.controller.cells.contentHeight
                                 }
                                 height={contentRect.bounds!.height - 10}
                                 scrollOffsetSource={this.scrollState}
@@ -354,6 +362,12 @@ export class Table extends React.Component<{ controller: ITable }> {
                               leftOffset={0}
                               isHorizontalScroll={true}
                               width={contentRect.bounds!.width - 10}
+                              contentWidth={
+                                this.props.controller.cells.contentWidth
+                              }
+                              contentHeight={
+                                this.props.controller.cells.contentHeight
+                              }
                               height={contentRect.bounds!.height - 10}
                               scrollOffsetSource={this.scrollState}
                               gridDimensions={this.gridDimensions}
@@ -393,7 +407,7 @@ export class Table extends React.Component<{ controller: ITable }> {
                               <Editor
                                 key={`${
                                   this.props.controller.cursor.rowIndex
-                                }@${this.props.controller.cursor.columnIndex}`}
+                                  }@${this.props.controller.cursor.columnIndex}`}
                                 field={this.props.controller.cursor.field}
                               />
                             )}

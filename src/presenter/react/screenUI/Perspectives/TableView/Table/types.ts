@@ -43,6 +43,9 @@ export interface IGridCanvasProps {
   width: number;
   height: number;
 
+  contentWidth: number;
+  contentHeight: number;
+
   cells: ICells;
   cursor: IFormField;
 
