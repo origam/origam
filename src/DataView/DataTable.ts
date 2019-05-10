@@ -62,7 +62,6 @@ export class Properties implements IProperties {
 }
 
 export class Records implements IRecords {
-
   @observable.shallow items: Array<Array<any>> = [];
   @observable deletedRecordIds: Map<string, boolean> | undefined;
 
@@ -91,7 +90,7 @@ export class Records implements IRecords {
 
   @action.bound
   removeDirtyDeleted(rowId: string): void {
-    if(this.deletedRecordIds) {
+    if (this.deletedRecordIds) {
       this.deletedRecordIds.delete(rowId);
     }
   }
@@ -106,6 +105,14 @@ export class Records implements IRecords {
     let idx = this.getIndexById(rowId);
     if (idx !== undefined) {
       this.items.splice(idx, 1, record);
+    }
+  }
+
+  @action.bound
+  removeRow(rowId: string): void {
+    const idx = this.getFullIndexById(rowId);
+    if (idx) {
+      this.items.splice(idx, 1);
     }
   }
 
@@ -128,6 +135,11 @@ export class Records implements IRecords {
     return idx > -1 ? idx : undefined;
   }
 
+  getFullIndexById(id: string): number | undefined {
+    const idx = this.items.findIndex(item => item[0] === id);
+    return idx > -1 ? idx : undefined;
+  }
+
   getIdAfterId(id: string): string | undefined {
     const idx = this.getIndexById(id);
     const newIdx = idx !== undefined ? idx + 1 : undefined;
@@ -144,7 +156,6 @@ export class Records implements IRecords {
 }
 
 export class DataTable implements IDataTable {
-
   constructor(
     public P: {
       records: L<IRecords>;
@@ -287,6 +298,11 @@ export class DataTable implements IDataTable {
       }
       this.records.substRecord(rowId, record);
     }
+  }
+
+  @action.bound
+  removeRow(rowId: string): void {
+    this.records.removeRow(rowId);
   }
 
   @action.bound

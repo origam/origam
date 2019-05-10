@@ -13,5 +13,6 @@ export interface IRecords {
   substRecord(rowId: string, record: IRecord): void;
   markDeleted(rowId: string): void;
   removeDirtyDeleted(rowId: string): void;
+  removeRow(rowId: string): void;
   deletedRecordIds: Map<string, boolean> | undefined;
 }

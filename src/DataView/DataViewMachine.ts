@@ -141,6 +141,7 @@ export class DataViewMachine implements IDataViewMachine {
             console.log("...Deleted.");
             runInAction(() => {
               this.dataTable.removeDirtyDeleted(RowId);
+              this.dataTable.removeRow(RowId);
             });
           }
           for (let [RowId, values] of this.dataTable.dirtyValues) {

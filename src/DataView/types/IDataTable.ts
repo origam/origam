@@ -23,6 +23,7 @@ export interface IDataTable {
   resetDirty(): void;
   removeDirtyRow(rowId: string): void;
   removeDirtyDeleted(rowId: string): void;
+  removeRow(rowId: string): void;
   mutateRow(rowId: string, values: { [key: string]: any }): void;
   substRecord(rowId: string, record: IRecord): void;
   hasContent: boolean;
