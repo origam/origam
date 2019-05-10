@@ -108,8 +108,10 @@ namespace Origam.Workbench.Diagram.InternalEditor
         {
 	        if (gViewer.SelectedObject is Edge edge)
 	        {
-		        var dependencyItem = edge.UserData as WorkflowTaskDependency;
-		        schemaService.SelectItem(dependencyItem);
+		        if (edge.UserData is WorkflowTaskDependency dependencyItem)
+		        {
+			        schemaService.SelectItem(dependencyItem);
+		        }
 	        }
         }
 
@@ -316,6 +318,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		
 		private ContextMenuStrip CreateContextMenuForEdge(DEdge edge)
 		{
+			if(edge.Edge.UserData == null) return new ContextMenuStrip();
+			
 			var deleteMenuItem = new ToolStripMenuItem();
 			deleteMenuItem.Text = "Delete";
 			deleteMenuItem.Image = ImageRes.icon_delete;
