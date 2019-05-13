@@ -27,8 +27,7 @@ namespace Origam.Workbench.Diagram.Extensions
 		    return graph
 			    .SubgraphMap
 			    .Select(x => x.Value)
-			    .FirstOrDefault(subgraph => Equals(node, subgraph) ||
-			                                 subgraph.Subgraphs.Contains(node) ||
+			    .FirstOrDefault(subgraph =>  subgraph.Subgraphs.Contains(node) ||
 			                                 subgraph.Nodes.Any(x => x.Id == node.Id));
 	    }
 
