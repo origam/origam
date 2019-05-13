@@ -6,6 +6,7 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using MoreLinq;
 using Origam.DA.ObjectPersistence;
+using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.UI;
@@ -410,7 +411,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			deleteMenuItem.Enabled = IsDeleteMenuItemAvailable(dNodeUnderMouse);
 			contextMenu.AddSubItem(deleteMenuItem);
 
-			AsMenuCommand newMenu = new AsMenuCommand("New");
+			ToolStripMenuItem newMenu = new ToolStripMenuItem("New");
 			newMenu.Image = ImageRes.icon_new;
 			newMenu.Enabled = IsNewMenuAvailable(dNodeUnderMouse);
 
@@ -429,9 +430,13 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			}
 			else
 			{
+				AsMenuCommand menuItem = new AsMenuCommand("New");
 				var builder = new SchemaItemEditorsMenuBuilder(true);
-				newMenu.PopulateMenu(builder);
-				newMenu.SubItems.AddRange(newMenu.DropDownItems);
+				menuItem.PopulateMenu(builder);
+				menuItem.SubItems.AddRange(menuItem.DropDownItems);
+				new AsContextMenu(WorkbenchSingleton.Workbench).AddSubItem(menuItem);
+				menuItem.ShowDropDown();
+				newMenu.DropDownItems.AddRange(menuItem.DropDownItems.ToArray<ToolStripItem>());
 			}
 
 			contextMenu.AddSubItem(newMenu);
