@@ -187,9 +187,10 @@ namespace Origam.Workbench.Editors
 			GViewer viewer = sender as GViewer;
 			if (viewer.SelectedObject is Node node)
 			{
+				if (!Guid.TryParse(node.Id, out Guid id)) return;
 				AbstractSchemaItem clickedItem = 
 					(AbstractSchemaItem)persistenceProvider
-						.RetrieveInstance(typeof(AbstractSchemaItem), new Key(node.Id));
+						.RetrieveInstance(typeof(AbstractSchemaItem), new Key(id));
 				if(clickedItem != null)
 				{
 					EditSchemaItem cmd = new EditSchemaItem
