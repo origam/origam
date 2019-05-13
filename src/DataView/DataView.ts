@@ -76,12 +76,14 @@ export class DataView implements IDataView {
     this.form = new Form();
     this.editing = new Editing({});
 
+    this.records = new Records();
+
     this.dataTable = new DataTable({
-      records: () => this.records,
-      properties: () => this.props
+      records: this.records,
+      properties: this.props
     });
 
-    this.records = new Records();
+ 
 
     this.aStartView = new AStartView({ machine: () => this.machine });
 

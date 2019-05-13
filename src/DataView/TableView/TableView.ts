@@ -108,7 +108,7 @@ export class TableView implements ITableView {
     this.propCursor = new PropCursor({});
 
     this.propReorder = new PropReorder({
-      props: () => this.props,
+      properties: () => this.props,
       initPropIds: this.P.propIds
     });
 

@@ -7,7 +7,7 @@ import { unpack } from "../utils/objects";
 
 export class PropReorder implements IPropReorder {
   constructor(
-    public P: { props: ML<IProperties>; initPropIds: string[] | undefined }
+    public P: { properties: ML<IProperties>; initPropIds: string[] | undefined }
   ) {
     const initPropIds = P.initPropIds;
     if (initPropIds) {
@@ -70,6 +70,6 @@ export class PropReorder implements IPropReorder {
 
   /* WIRING */
   get props() {
-    return unpack(this.P.props);
+    return unpack(this.P.properties);
   }
 }

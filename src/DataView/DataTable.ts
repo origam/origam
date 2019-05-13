@@ -158,8 +158,8 @@ export class Records implements IRecords {
 export class DataTable implements IDataTable {
   constructor(
     public P: {
-      records: L<IRecords>;
-      properties: L<IProperties>;
+      records: IRecords;
+      properties: IProperties;
     }
   ) {}
 
@@ -311,10 +311,10 @@ export class DataTable implements IDataTable {
   }
 
   @computed get records() {
-    return this.P.records();
+    return this.P.records;
   }
 
   @computed get properties() {
-    return this.P.properties();
+    return this.P.properties;
   }
 }

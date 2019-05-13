@@ -136,7 +136,7 @@ export class FormView implements IFormView {
     });
   
     this.propReorder = new PropReorder({
-      props: () => this.props,
+      properties: () => this.props,
       initPropIds: this.P.propIds
     });
   
