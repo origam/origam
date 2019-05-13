@@ -118,9 +118,12 @@ namespace Origam.Workbench.Diagram.InternalEditor
         }
 
         private void OnEdgeRemoved(object sender, EventArgs e)
-        {	
-	        Edge edge = (Edge)sender;
+        {
+	        DeleteDependency((Edge)sender);
+        }
 
+        private void DeleteDependency(Edge edge)
+        {
 	        AbstractSchemaItem dependentItem = RetrieveItem(edge.Target);
 	        var workflowTaskDependency = dependentItem.ChildItems
 		        .ToEnumerable()
@@ -133,11 +136,16 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private void OnEdgeAdded(object sender, EventArgs e)
         {
 	        Edge edge = (Edge)sender;
-			 
+	        var workflowTaskDependency = AddDependency(edge.Source, edge.Target);
+	        edge.UserData = workflowTaskDependency;
+        }
+
+        private WorkflowTaskDependency AddDependency(string source, string target)
+        {
 	        var independentItem = persistenceProvider.RetrieveInstance(
 		        typeof(IWorkflowStep),
-		        new Key(edge.Source)) as IWorkflowStep;
-	        AbstractSchemaItem dependentItem = RetrieveItem(edge.Target);
+		        new Key(source)) as IWorkflowStep;
+	        AbstractSchemaItem dependentItem = RetrieveItem(target);
 	        var workflowTaskDependency = new WorkflowTaskDependency
 	        {
 		        SchemaExtensionId = dependentItem.SchemaExtensionId,
@@ -146,7 +154,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		        Task = independentItem
 	        };
 	        workflowTaskDependency.Persist();
-	        edge.UserData = workflowTaskDependency;
+	        return workflowTaskDependency;
         }
 
         private bool TrySelectActiveNodeInModelView()
@@ -493,15 +501,41 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 	        if (nodeSelected)
 	        {
-		        new DeleteActiveNode().Run();
+		        DeleteActiveNodeWithDependencies();
 	        }
 	        else
 	        {
 		        throw new Exception("Could not delete node because it is not selected in the tree.");
 	        }
         }
-        
-        class ClickPoint
+
+		private void DeleteActiveNodeWithDependencies()
+		{
+			Node nodeToDelete =
+				Graph.FindNodeOrSubgraph(schemaService.ActiveNode.NodeId);
+
+			var deleteNodeCommand = new DeleteActiveNode();
+			deleteNodeCommand.BeforeDelete += (o, args) =>
+			{
+				nodeToDelete.OutEdges.ToArray()
+					.ForEach(DeleteDependency);
+			};
+			deleteNodeCommand.AfterDelete += (o, args) =>
+			{
+				var sourceIds = nodeToDelete.InEdges.Select(edge => edge.Source);
+				var targetIds = nodeToDelete.OutEdges.Select(edge => edge.Target);
+				foreach (string sourceId in sourceIds)
+				{
+					foreach (string targetId in targetIds)
+					{
+						AddDependency(sourceId, targetId);
+					}
+				}
+			};
+			deleteNodeCommand.Run();
+		}
+
+		class ClickPoint
         {
 	        public Point InMsaglSystem { get; }
 	        public System.Drawing.Point InScreenSystem { get;}

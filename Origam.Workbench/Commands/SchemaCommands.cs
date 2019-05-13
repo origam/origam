@@ -558,7 +558,8 @@ namespace Origam.Workbench.Commands
 	public class DeleteActiveNode : AbstractMenuCommand
 	{
 		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-
+		public event EventHandler BeforeDelete;
+		public event EventHandler AfterDelete;
 		public override bool IsEnabled
 		{
 			get
@@ -607,7 +608,9 @@ namespace Origam.Workbench.Commands
 				// then delete from the model
                 try
                 {
+	                BeforeDelete(this, EventArgs.Empty);
                     _schema.ActiveNode.Delete();
+                    AfterDelete(this,EventArgs.Empty);
                 }
                 catch(Exception ex)
                 {
