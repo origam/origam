@@ -29,6 +29,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         public readonly SolidBrush GreyBrush = new SolidBrush(System.Drawing.Color.LightGray);
         public readonly SolidBrush GreenBrush = new SolidBrush(System.Drawing.Color.LimeGreen);
         public readonly SolidBrush RedBrush = new SolidBrush(System.Drawing.Color.Red);
+        public readonly Brush WhiteBrush  = new SolidBrush(System.Drawing.Color.White);
 
         public readonly int NodeHeight = 25;
 

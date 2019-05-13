@@ -43,7 +43,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             editorGraphics.DrawUpSideDown(drawAction: graphics =>
                 {
                     graphics.FillEllipse(balloonBrush, boundingRectangle);
-                    graphics.DrawString(node.LabelText, painter.Font, painter.BlackBrush,
+                    graphics.DrawString(node.LabelText, painter.Font, painter.WhiteBrush,
                         labelPoint, painter.DrawFormat);
                     graphics.DrawEllipse(painter.BlackPen, boundingRectangle);
                 },
