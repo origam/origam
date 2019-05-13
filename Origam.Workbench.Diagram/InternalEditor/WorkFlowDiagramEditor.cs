@@ -410,7 +410,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			deleteMenuItem.Enabled = IsDeleteMenuItemAvailable(dNodeUnderMouse);
 			contextMenu.AddSubItem(deleteMenuItem);
 
-			ToolStripMenuItem newMenu = new ToolStripMenuItem("New");
+			AsMenuCommand newMenu = new AsMenuCommand("New");
 			newMenu.Image = ImageRes.icon_new;
 			newMenu.Enabled = IsNewMenuAvailable(dNodeUnderMouse);
 
@@ -430,8 +430,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			else
 			{
 				var builder = new SchemaItemEditorsMenuBuilder(true);
-				var submenuItems = builder.BuildSubmenu(schemaItemUnderMouse);
-				newMenu.DropDownItems.AddRange(submenuItems);
+				newMenu.PopulateMenu(builder);
+				newMenu.SubItems.AddRange(newMenu.DropDownItems);
 			}
 
 			contextMenu.AddSubItem(newMenu);
