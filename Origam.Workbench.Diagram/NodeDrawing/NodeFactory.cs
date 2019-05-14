@@ -1,5 +1,6 @@
 using System.Drawing;
 using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.Layout.Layered;
 using Origam.Schema;
 using Node = Microsoft.Msagl.Drawing.Node;
 

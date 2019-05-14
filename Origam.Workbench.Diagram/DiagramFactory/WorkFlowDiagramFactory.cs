@@ -127,7 +127,7 @@ namespace Origam.Workbench.Diagram
             {
 	            PackingMethod = PackingMethod.Columns,
 	            PackingAspectRatio = 0.01,
-	            ClusterTopMargin = 30,
+	            AdditionalClusterTopMargin = 30,
 	            ClusterMargin = 1
             };
 
@@ -161,6 +161,9 @@ namespace Origam.Workbench.Diagram
 		private Subgraph AddWorkflowDiagram(IWorkflowBlock workFlowBlock, Subgraph parentSubgraph)
 		{
 			Subgraph subgraph = nodeFactory.AddSubgraph(parentSubgraph, workFlowBlock);
+			subgraph.LayoutSettings = new SugiyamaLayoutSettings();
+			subgraph.LayoutSettings.AdditionalClusterTopMargin = 30;
+			subgraph.LayoutSettings.ClusterMargin = 40;
 
 			IDictionary<Key, Node> ht = new Dictionary<Key, Node>();
 
