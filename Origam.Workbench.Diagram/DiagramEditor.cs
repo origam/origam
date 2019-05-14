@@ -52,6 +52,7 @@ namespace Origam.Workbench.Editors
         private HScrollBar hScrollBar;
         private TableLayoutPanel tableLayoutPanel1;
         private readonly NodeSelector nodeSelector;
+        private System.Drawing.Point lastMouseLocation;
 
         public DiagramEditor()
 		{
@@ -68,6 +69,19 @@ namespace Origam.Workbench.Editors
 			gViewer.MouseWheel += GViewerMouseWheel;
 			gViewer.ZoomWhenMouseWheelScroll = false;
 			gViewer.DoubleClick += GViewerOnDoubleClick;
+			gViewer.MouseMove += (sender, args) => {
+				if (args.Button == MouseButtons.Left &&
+				    lastMouseLocation != System.Drawing.Point.Empty) {
+					int dx = args.Location.X - lastMouseLocation.X;
+					int dy = args.Location.Y - lastMouseLocation.Y;
+					gViewer.Pan(dx,dy);
+				}
+				lastMouseLocation = args.Location;
+			};
+			gViewer.MouseLeave += (sender, args) =>
+			{
+				lastMouseLocation = System.Drawing.Point.Empty;
+			};
 		}
 
         protected override void Dispose(bool disposing)
@@ -111,7 +125,6 @@ namespace Origam.Workbench.Editors
             this.gViewer.BackwardEnabled = false;
             this.gViewer.BuildHitTree = true;
             this.gViewer.CurrentLayoutMethod = Microsoft.Msagl.GraphViewerGdi.LayoutMethod.UseSettingsOfTheGraph;
-            this.gViewer.DefaultDragObject = null;
             this.gViewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gViewer.EdgeInsertButtonVisible = true;
             this.gViewer.FileName = "";

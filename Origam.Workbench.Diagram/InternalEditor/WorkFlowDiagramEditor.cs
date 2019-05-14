@@ -75,8 +75,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
         {
 	        gViewer.Graph = factory.Draw(UpToDateGraphParent);
 	        factory.AlignContextStoreSubgraph();
-	        gViewer.DefaultDragObject = gViewer.ViewerGraph.Nodes()
-		        .Single(x => x.Node == gViewer.Graph.RootSubgraph.Subgraphs.First());
 	        gViewer.Transform = null;
 	        gViewer.Invalidate();
 	        nodeSelector.Selected = Graph.FindNodeOrSubgraph(nodeSelector.Selected?.Id);
