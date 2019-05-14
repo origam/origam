@@ -470,11 +470,11 @@ namespace Origam.DA.Service
         }
         internal override string DatePartSql(string datetype, string expresion)
         {
-            return string.Format("DATE_PART({0},{1})", datetype ,expresion );
+            return string.Format("DATE_PART('{0}',{1})", datetype ,expresion );
         }
         internal override string DateAddSql(DateTypeSql datepart, string number, string date)
         {
-            return string.Format("({0} + interval '{1} {2}')",date,number,GetAddDateSql(datepart));
+            return string.Format("({0} + ( {1} || '{2}')::interval)",date,number,GetAddDateSql(datepart));
         }
 
         private string GetAddDateSql(DateTypeSql datepart)
@@ -489,6 +489,11 @@ namespace Origam.DA.Service
                     return "hour";
                 case DateTypeSql.Day:
                     return "day";
+                case DateTypeSql.Month:
+                    return "month";
+                case DateTypeSql.Year:
+                    return "year";
+
                 default:
                     throw new NotSupportedException("Unsuported in AddDateSql " + datepart.ToString());
             }
@@ -499,7 +504,7 @@ namespace Origam.DA.Service
             switch (datepart)
             {
                 case DateTypeSql.Day:
-                    stringBuilder.Append("DATE_PART('day', {0}::timestamp - {1}::timestamp) * 24");
+                    stringBuilder.Append("DATE_PART('day', {0}::timestamp - {1}::timestamp) ");
                     break;
                 case DateTypeSql.Hour:
                     stringBuilder.Append("DATE_PART('day', {0}::timestamp - {1}::timestamp) * 24 + ");
@@ -525,6 +530,10 @@ namespace Origam.DA.Service
         internal override string STDistanceSql(string point1, string point2)
         {
             return string.Format("ST_Distance({0},{1})", point1, point2);
+        }
+        internal override string NowSql()
+        {
+            return "NOW()";
         }
     }
 }

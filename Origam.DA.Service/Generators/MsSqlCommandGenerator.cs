@@ -529,6 +529,10 @@ namespace Origam.DA.Service
                     return "hh";
                 case DateTypeSql.Day:
                     return "d";
+                case DateTypeSql.Month:
+                    return "m";
+                case DateTypeSql.Year:
+                    return "yy";
                 default:
                     throw new NotSupportedException("Unsuported in AddDateSql " + datepart.ToString());
             }
@@ -541,6 +545,10 @@ namespace Origam.DA.Service
         internal override string STDistanceSql(string point1, string point2)
         {
             return string.Format("{0}.STDistance({1})", point1, point2);
+        }
+        internal override string NowSql()
+        {
+            return "GETDATE()";
         }
     }
 }

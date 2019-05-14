@@ -61,7 +61,10 @@ namespace Origam.DA.Service
             Second,
             Minute,
             Hour,
-            Day
+            Day,
+            Month,
+            Year
+
         }
         
         public AbstractSqlCommandGenerator()
@@ -2936,15 +2939,17 @@ namespace Origam.DA.Service
                     {
                         throw new Exception(ResourceUtils.GetString("ErrorExpressionNotSet", item.Path));
                     }
-
                     string date = RenderExpression(item.ChildItems[0].ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences);
-
-                    result = "DATEDIFF(dd, DATEADD(yy, -(DATEPART(yy,GETDATE())-1900),GETDATE()),"
-                        + "DATEADD(yy, -(DATEPART(yy,"
-                        + date
-                        + ")-1900),"
-                        + date
-                        + "))";
+                    //return "DATEDIFF(dd, DATEADD(yy, -(DATEPART(yy,GETDATE())-1900),GETDATE()),"
+                    //            + "DATEADD(yy, -(DATEPART(yy,"
+                    //            + date
+                    //            + ")-1900),"
+                    //            + date
+                    //            + "))";
+                    result = DateDiffSql(DateTypeSql.Day,
+                            DateAddSql(DateTypeSql.Year, "-" + DatePartSql("year", NowSql()) + "-1900", NowSql()),
+                            DateAddSql(DateTypeSql.Year, "-" + DatePartSql("year", date) + "-1900", date)
+                    );
                     break;
 
                 case "Exists":
@@ -2964,9 +2969,8 @@ namespace Origam.DA.Service
                     {
                         throw new Exception(ResourceUtils.GetString("ErrorExpressionNotSet", item.Path));
                     }
-
-                    result = item.Function.Name + "(" + RenderExpression(item.ChildItems[0].ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ")";
+                    result = DatePartSql(item.Function.Name,
+                        RenderExpression(item.ChildItems[0].ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     break;
 
                 case "Hour":
@@ -3118,6 +3122,7 @@ namespace Origam.DA.Service
             return result;
         }
 
+        internal abstract string NowSql();
         internal abstract string STDistanceSql(string point1, string point2);
         internal abstract string DateDiffSql(DateTypeSql addDateSql, string startdate, string enddate);
         internal abstract string DateAddSql(DateTypeSql addDateSql, string number, string date);
