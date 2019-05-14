@@ -478,28 +478,55 @@ namespace Origam.DA.Service
         {
             return string.Format("DATE_PART({0},{1})", datetype ,expresion );
         }
-        internal override string DateAddSql(AddDateSql datepart, string number, string date)
+        internal override string DateAddSql(DateTypeSql datepart, string number, string date)
         {
             return string.Format("({0} + interval '{1} {2}')",date,number,GetAddDateSql(datepart));
         }
 
-        private string GetAddDateSql(AddDateSql datepart)
+        private string GetAddDateSql(DateTypeSql datepart)
         {
             switch (datepart)
             {
-                case AddDateSql.Seccond:
+                case DateTypeSql.Second:
                     return "second";
-                case AddDateSql.Minute:
+                case DateTypeSql.Minute:
                     return "minute";
-                case AddDateSql.Day:
+                case DateTypeSql.Hour:
+                    return "hour";
+                case DateTypeSql.Day:
                     return "day";
                 default:
                     throw new NotSupportedException("Unsuported in AddDateSql " + datepart.ToString());
             }
         }
-        internal override string DateDiffSql(string datepart, string startdate, string enddate)
+        internal override string DateDiffSql(DateTypeSql datepart, string startdate, string enddate)
         {
-            return string.Format("EXTRACT({0} FROM {1} - {2})", datepart, enddate, startdate);
+            StringBuilder stringBuilder = new StringBuilder();
+            switch (datepart)
+            {
+                case DateTypeSql.Day:
+                    stringBuilder.Append("DATE_PART('day', {0}::timestamp - {1}::timestamp) * 24");
+                    break;
+                case DateTypeSql.Hour:
+                    stringBuilder.Append("DATE_PART('day', {0}::timestamp - {1}::timestamp) * 24 + ");
+                    stringBuilder.Append("DATE_PART('hour', {0}::timestamp - {1}::timestamp) ");
+                    break;
+                case DateTypeSql.Minute:
+                    stringBuilder.Append("(DATE_PART('day', {0}::timestamp - {1}::timestamp) * 24 + ");
+                    stringBuilder.Append("DATE_PART('hour', {0}::timestamp - {1}::timestamp)) * 60 + ");
+                    stringBuilder.Append("DATE_PART('minute', {0}::timestamp - {1}::timestamp)");
+                    break;
+                case DateTypeSql.Second:
+                    stringBuilder.Append("(((DATE_PART('day', {0}::timestamp - {1}::timestamp) * 24 + ");
+                    stringBuilder.Append("DATE_PART('hour', {0}::timestamp - {1}::timestamp)) * 60 + ");
+                    stringBuilder.Append("DATE_PART('minute', {0}::timestamp - {1}::timestamp)) *60 ");
+                    stringBuilder.Append("DATE_PART('second', {0}::timestamp - {1}::timestamp)");
+                    break;
+                default:
+                    throw new NotSupportedException("Unsuported DateDiffSql " + datepart.ToString());
+
+            }
+            return string.Format(stringBuilder.ToString(),enddate, startdate);
         }
         internal override string STDistanceSql(string point1, string point2)
         {

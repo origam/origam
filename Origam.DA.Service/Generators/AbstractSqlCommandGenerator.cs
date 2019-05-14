@@ -57,10 +57,11 @@ namespace Origam.DA.Service
             And = 2
         }
 
-        internal enum AddDateSql
+        internal enum DateTypeSql
         {
-            Seccond,
+            Second,
             Minute,
+            Hour,
             Day
         }
         
@@ -2985,7 +2986,7 @@ namespace Origam.DA.Service
                         ISchemaItem dateArg = item.GetChildByName("Date").ChildItems[0];
                         ISchemaItem daysArg = item.GetChildByName("Days").ChildItems[0];
 
-                       result = DateAddSql(AddDateSql.Day, 
+                       result = DateAddSql(DateTypeSql.Day, 
                            RenderExpression(daysArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences), 
                            RenderExpression(dateArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     }
@@ -2994,7 +2995,7 @@ namespace Origam.DA.Service
                     {
                         ISchemaItem dateArg = item.GetChildByName("Date").ChildItems[0];
                         ISchemaItem countArg = item.GetChildByName("Minutes").ChildItems[0];
-                        result = DateAddSql(AddDateSql.Minute
+                        result = DateAddSql(DateTypeSql.Minute
                             , RenderExpression(countArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                             , RenderExpression(dateArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     }
@@ -3003,7 +3004,7 @@ namespace Origam.DA.Service
                     {
                         ISchemaItem dateArg = item.GetChildByName("Date").ChildItems[0];
                         ISchemaItem countArg = item.GetChildByName("Seconds").ChildItems[0];
-                        result = DateAddSql(AddDateSql.Seccond
+                        result = DateAddSql(DateTypeSql.Second
                             , RenderExpression(countArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                             , RenderExpression(dateArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     }
@@ -3087,7 +3088,7 @@ namespace Origam.DA.Service
                         );
                     break;
                 case "DateDiffMinutes":
-                    result = DateDiffSql("MINUTE",
+                    result = DateDiffSql(DateTypeSql.Minute,
                         RenderExpression(item.GetChildByName("DateFrom").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                         , RenderExpression(item.GetChildByName("DateTo").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                         );
@@ -3119,8 +3120,8 @@ namespace Origam.DA.Service
         }
 
         internal abstract string STDistanceSql(string point1, string point2);
-        internal abstract string DateDiffSql(string datepart, string startdate, string enddate);
-        internal abstract string DateAddSql(AddDateSql addDateSql, string number, string date);
+        internal abstract string DateDiffSql(DateTypeSql addDateSql, string startdate, string enddate);
+        internal abstract string DateAddSql(DateTypeSql addDateSql, string number, string date);
         internal abstract string DatePartSql(string datetype, string expresion);
         internal abstract string FunctionPrefixSql();
 
