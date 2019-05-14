@@ -478,13 +478,28 @@ namespace Origam.DA.Service
         {
             return string.Format("DATE_PART({0},{1})", datetype ,expresion );
         }
-        internal override string DateAddSql(string datepart, string number, string date)
+        internal override string DateAddSql(AddDateSql datepart, string number, string date)
         {
-            return string.Format("(date '{0}' interval '{1} {2}')",date,number,datepart);
+            return string.Format("({0} + interval '{1} {2}')",date,number,GetAddDateSql(datepart));
+        }
+
+        private string GetAddDateSql(AddDateSql datepart)
+        {
+            switch (datepart)
+            {
+                case AddDateSql.Seccond:
+                    return "second";
+                case AddDateSql.Minute:
+                    return "minute";
+                case AddDateSql.Day:
+                    return "day";
+                default:
+                    throw new NotSupportedException("Unsuported in AddDateSql " + datepart.ToString());
+            }
         }
         internal override string DateDiffSql(string datepart, string startdate, string enddate)
         {
-            return string.Format("EXTRACT({0} FROM MAX({1}) - MIN({2}))", datepart, enddate, startdate);
+            return string.Format("EXTRACT({0} FROM {1} - {2})", datepart, enddate, startdate);
         }
         internal override string STDistanceSql(string point1, string point2)
         {

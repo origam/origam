@@ -57,6 +57,13 @@ namespace Origam.DA.Service
             And = 2
         }
 
+        internal enum AddDateSql
+        {
+            Seccond,
+            Minute,
+            Day
+        }
+        
         public AbstractSqlCommandGenerator()
         {
             PageNumberParameterReference.ParameterId = new Guid("3e5e12e4-a0dd-4d35-a00a-2fdb267536d1");
@@ -2978,7 +2985,7 @@ namespace Origam.DA.Service
                         ISchemaItem dateArg = item.GetChildByName("Date").ChildItems[0];
                         ISchemaItem daysArg = item.GetChildByName("Days").ChildItems[0];
 
-                       result = DateAddSql("d", 
+                       result = DateAddSql(AddDateSql.Day, 
                            RenderExpression(daysArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences), 
                            RenderExpression(dateArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     }
@@ -2987,7 +2994,7 @@ namespace Origam.DA.Service
                     {
                         ISchemaItem dateArg = item.GetChildByName("Date").ChildItems[0];
                         ISchemaItem countArg = item.GetChildByName("Minutes").ChildItems[0];
-                        result = DateAddSql("mi"
+                        result = DateAddSql(AddDateSql.Minute
                             , RenderExpression(countArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                             , RenderExpression(dateArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     }
@@ -2996,7 +3003,7 @@ namespace Origam.DA.Service
                     {
                         ISchemaItem dateArg = item.GetChildByName("Date").ChildItems[0];
                         ISchemaItem countArg = item.GetChildByName("Seconds").ChildItems[0];
-                        result = DateAddSql("s"
+                        result = DateAddSql(AddDateSql.Seccond
                             , RenderExpression(countArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                             , RenderExpression(dateArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     }
@@ -3113,7 +3120,7 @@ namespace Origam.DA.Service
 
         internal abstract string STDistanceSql(string point1, string point2);
         internal abstract string DateDiffSql(string datepart, string startdate, string enddate);
-        internal abstract string DateAddSql(string datepart, string number, string date);
+        internal abstract string DateAddSql(AddDateSql addDateSql, string number, string date);
         internal abstract string DatePartSql(string datetype, string expresion);
         internal abstract string FunctionPrefixSql();
 
