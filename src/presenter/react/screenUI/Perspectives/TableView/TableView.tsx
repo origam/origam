@@ -27,7 +27,7 @@ export class TableView extends React.Component<{
       : new TableViewToolbar({
           dataTable: () => this.props.controller.dataView.dataTable,
           aSwitchView: () => this.props.controller.dataView.aSwitchView,
-          mediator: () => this.props.controller.dataView.mediator,
+          mediator: () => this.props.controller.dataView,
           label: this.props.controller.dataView.label,
           isLoading: () => this.props.controller.dataView.machine.isLoading
         });
@@ -35,7 +35,7 @@ export class TableView extends React.Component<{
       scrollState: () => tableViewScrollState,
       cells: () => tableViewCells,
       cursor: () => tableViewField,
-      mediator: () => this.props.controller.dataView.mediator,
+      mediator: () => this.props.controller.dataView,
       editing: () => this.props.controller.dataView.editing,
       aFinishEditing: () => this.props.controller.dataView.aFinishEditing,
       isLoading: () => this.props.controller.dataView.machine.isLoading

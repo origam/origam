@@ -67,7 +67,7 @@ export class DataView implements IDataView {
     this.mediator = P.mediator;
 
     this.availViews = new AvailViews({
-      items: () => this.specificDataViews,
+      availViewItems: () => this.specificDataViews,
       initialActiveViewType: () => this.initialDataView
     });
 
@@ -80,7 +80,7 @@ export class DataView implements IDataView {
 
     this.dataTable = new DataTable({
       records: this.records,
-      properties: this.props
+      properties: this.properties
     });
 
  
@@ -90,8 +90,8 @@ export class DataView implements IDataView {
     this.aStopView = new AStopView({ machine: () => this.machine });
 
     this.aStartEditing = new AStartEditing({
-      editing: () => this.editing,
-      aInitForm: () => this.aInitForm,
+      editing: this.editing,
+      aInitForm: this.aInitForm,
       mediator: this.mediator
     });
     this.aFinishEditing = new AFinishEditing({
@@ -137,7 +137,7 @@ export class DataView implements IDataView {
       api: this.P.api,
       menuItemId: this.P.menuItemId,
       dataStructureEntityId: this.P.dataStructureEntityId,
-      propertyIdsToLoad: () => this.props.ids,
+      propertyIdsToLoad: () => this.properties.ids,
       dataTable: () => this.dataTable,
       dataSource: this.P.dataSource,
       mediator: this.mediator,
@@ -172,7 +172,7 @@ export class DataView implements IDataView {
     return unpack(this.P.isHeadless);
   }
 
-  get props() {
+  get properties() {
     return unpack(this.P.properties);
   }
 

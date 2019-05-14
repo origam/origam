@@ -1,10 +1,10 @@
-import { IDataView } from "../types/IDataView";
 import { IViewType } from "../types/IViewType";
 import { IPropReorder } from "../types/IPropReorder";
 import { IRecCursor } from "../types/IRecCursor";
 import { IPropCursor } from "../types/IPropCursor";
 import { IAActivateView } from "../types/IAActivateView";
 import { IADeactivateView } from "../types/IADeactivateView";
+import { IDataViewMediator02 } from "../DataViewMediator02";
 
 export function isTableView(obj: any): obj is ITableView {
   return obj.type === IViewType.Table;
@@ -12,7 +12,7 @@ export function isTableView(obj: any): obj is ITableView {
 
 export interface ITableView {
   type: IViewType.Table;
-  dataView: IDataView;
+  dataView: IDataViewMediator02;
   propReorder: IPropReorder;
   recCursor: IRecCursor;
   propCursor: IPropCursor;

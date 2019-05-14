@@ -8,17 +8,17 @@ import { IForm } from "./types/IForm";
 export class ASubmitForm implements IASubmitForm {
   constructor(
     public P: {
-      recCursor: L<IRecCursor>;
-      dataTable: L<IDataTable>;
-      form: L<IForm>;
+      recCursor: IRecCursor;
+      dataTable: IDataTable;
+      form: IForm;
     }
   ) {}
 
   @action.bound
   do() {
-    const recCursor = this.P.recCursor();
-    const dataTable = this.P.dataTable();
-    const form = this.P.form();
+    const recCursor = this.P.recCursor;
+    const dataTable = this.P.dataTable;
+    const form = this.P.form;
     // -------------------------------------------------------
     if (recCursor.isSelected) {
       const selRowId = recCursor.selId;

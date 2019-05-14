@@ -1,5 +1,5 @@
 import { IScreenType, IMainView } from "../types";
-import { IDataView } from "../../DataView/types/IDataView";
+import { IDataViewMediator02 } from "../../DataView/DataViewMediator02";
 
 export interface IFormScreen extends IMainView {
   type: IScreenType.FormRef;
@@ -7,9 +7,9 @@ export interface IFormScreen extends IMainView {
   isLoading: boolean;
   isVisible: boolean;
   uiStructure: any;
-  dataViewMap: Map<string, IDataView>;
+  dataViewMap: Map<string, IDataViewMediator02>;
   setUIStructure(uiStructure: any): void;
-  setDataViews(views: IDataView[]): void;
+  setDataViews(views: IDataViewMediator02[]): void;
   activateDataViews(): void;
 }
 

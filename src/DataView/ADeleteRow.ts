@@ -12,20 +12,21 @@ import { isType } from "ts-action";
 export class ADeleteRow implements IADeleteRow {
   constructor(
     public P: {
-      dataTable: ML<IDataTable>;
-      mediator: ML<IDataViewMediator>;
-      recCursor: ML<IRecCursor>;
+      dataTable: IDataTable;
+      recCursor: IRecCursor;
+      dispatch: (action: any) => void;
+      listen: (cb: (action: any) => void) => void;
     }
   ) {
     this.subscribeMediator();
   }
 
   subscribeMediator() {
-    this.mediator.listen((action: any) => {
-      if(isType(action, DataViewActions.deleteSelectedRow)) {
+    this.P.listen((action: any) => {
+      if (isType(action, DataViewActions.deleteSelectedRow)) {
         this.doSelected();
       }
-    })
+    });
   }
 
   @action.bound
@@ -34,19 +35,15 @@ export class ADeleteRow implements IADeleteRow {
     if (rowId) {
       this.dataTable.markDeletedRow(rowId);
       // TODO: Select closest existing row...
-      this.mediator.dispatch(DataViewActions.requestSaveData);
+      this.P.dispatch(DataViewActions.requestSaveData);
     }
   }
 
   get dataTable() {
-    return unpack(this.P.dataTable);
-  }
-
-  get mediator() {
-    return unpack(this.P.mediator);
+    return this.P.dataTable;
   }
 
   get recCursor() {
-    return unpack(this.P.recCursor);
+    return this.P.recCursor;
   }
 }

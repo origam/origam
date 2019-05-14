@@ -1,8 +1,4 @@
 import { Properties } from "../../DataView/DataTable";
-import { DataView } from "../../DataView/DataView";
-import { FormView } from "../../DataView/FormView/FormView";
-import { TableView } from "../../DataView/TableView/TableView";
-import { IViewType } from "../../DataView/types/IViewType";
 import { IScreenContentFactory } from "./types";
 import * as xmlFind from "./xmlFind";
 import { parseViewType, parseBoolean, parseNumber } from "../../utils/xml";
@@ -13,7 +9,10 @@ import { ML } from "../../utils/types";
 import { IApi } from "../../Api/IApi";
 import { unpack } from "../../utils/objects";
 import { DataSources } from "../DataSources";
-import { DataViewMediator } from "../../DataView/DataViewMediator";
+import { buildDataView } from "../../DataView/buildDataView";
+import { buildFormView } from "../../DataView/FormView/buildFormView";
+import { buildTableView } from "../../DataView/TableView/buildTableView";
+import { IDataViewMediator02 } from "../../DataView/DataViewMediator02";
 
 export class ScreenContentFactory implements IScreenContentFactory {
   constructor(public P: { api: ML<IApi>; menuItemId: ML<string> }) {}
@@ -40,7 +39,7 @@ export class ScreenContentFactory implements IScreenContentFactory {
     // console.log(dataSources);
 
     const grids = xmlFind.findGrids(win);
-    const dataViewByModelInstanceId = new Map<string, DataView>();
+    const dataViewByModelInstanceId = new Map<string, IDataViewMediator02>();
     const dataViews = grids.map(grid => {
       const gridProps = xmlFind.findProps(grid);
       for (let gridProp of gridProps) {
@@ -57,9 +56,26 @@ export class ScreenContentFactory implements IScreenContentFactory {
         ? dataSource.dataStructureEntityId
         : "";
 
-      const mediator = new DataViewMediator();
+      // const mediator = new DataViewMediator();
 
-      const dataView: DataView = new DataView({
+      const dataViewMediator02: IDataViewMediator02 = buildDataView(
+        grid.attributes.Id,
+        grid.attributes.Name,
+        parseBoolean(grid.attributes.IsHeadless),
+        dataStructureEntityId,
+        dataSource!,
+        () => availViewItems,
+        () => propertyItems,
+        parseViewType(grid.attributes.DefaultPanelView)!,
+        { api: this.api, menuItemId: this.menuItemId }
+      );
+
+      const formView = buildFormView(undefined, formUI, dataViewMediator02);
+      const tableView = buildTableView(undefined, dataViewMediator02);
+
+      const availViewItems = [formView, tableView];
+
+      /*const dataView: DataView = new DataView({
         id: () => grid.attributes.Id,
         label: grid.attributes.Name,
         menuItemId: this.P.menuItemId,
@@ -71,23 +87,28 @@ export class ScreenContentFactory implements IScreenContentFactory {
         dataSource: () => dataSource!,
         mediator,
         api: this.P.api
-      });
-      dataViewByModelInstanceId.set(grid.attributes.ModelInstanceId, dataView);
+      });*/
+
+      dataViewByModelInstanceId.set(
+        grid.attributes.ModelInstanceId,
+        dataViewMediator02
+      );
       const properties: Properties = new Properties({
-        items: () => propertyItems
+        propertyItems: () => propertyItems
       });
-      const tableView = new TableView({
+
+      /*const tableView = new TableView({
         dataView: () => dataView,
         mediator
       });
       const formView = new FormView({
         dataView: () => dataView,
         uiStructure: () => formUI
-      });
-      const specificDataViews = [formView, tableView];
+      });*/
+
+      // const specificDataViews = [formView, tableView];
 
       const propertyItems = gridProps.map((gp, idx) => {
-
         const dataSourceField = dataSource
           ? dataSource.fieldById(gp.attributes.Id)
           : undefined;
@@ -114,7 +135,7 @@ export class ScreenContentFactory implements IScreenContentFactory {
       formView.propReorder.setIds(
         properties.items.map(prop => prop.id).filter(id => id !== "Id")
       );
-      return dataView;
+      return dataViewMediator02;
     });
 
     const screenBindings = xmlFind.findBindings(win);

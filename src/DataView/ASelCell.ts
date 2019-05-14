@@ -27,13 +27,14 @@ export class ASelCell implements IASelCell {
       aStartEditing: ML<IAStartEditing>;
       aFinishEditing: ML<IAFinishEditing>;
       form: ML<IForm>;
-      mediator: ML<IDataViewMediator>
+      dispatch(action: any): void;
+      listen(cb: (action: any) => void): void;
       // aOnChange:
     }
   ) {}
 
     subscribemediator() {
-      this.mediator.listen((action: any) => {
+      this.P.listen((action: any) => {
         if(isType(action, DataViewActions.selectFirstCell)) {
           this.doSelFirst();
         }
@@ -151,9 +152,5 @@ export class ASelCell implements IASelCell {
 
   get form() {
     return unpack(this.P.form);
-  }
-
-  get mediator() {
-    return unpack(this.P.mediator);
   }
 }

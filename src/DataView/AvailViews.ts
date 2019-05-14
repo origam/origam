@@ -10,7 +10,7 @@ import { ISpecificView } from './types/ISpecificView';
 export class AvailViews implements IAvailViews {
   constructor(
     public P: {
-      items: ML<ISpecificView[]>;
+      availViewItems: ML<ISpecificView[]>;
       initialActiveViewType: ML<IViewType | undefined>;
     }
   ) {
@@ -28,6 +28,6 @@ export class AvailViews implements IAvailViews {
   }
 
   get items() {
-    return unpack(this.P.items);
+    return unpack(this.P.availViewItems);
   }
 }

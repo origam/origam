@@ -12,8 +12,8 @@ import { BoolEditor } from "../editors/Bool";
 import { Toolbar } from "../DefaultToolbar/Toolbar";
 import { parseNumber } from "../../../../../utils/xml";
 import { FormViewPresenter } from "../../../../view/Perspectives/FormView/FormViewPresenter";
-import { IFormView } from "../../../../../DataView/FormView/types";
 import { FormViewToolbar } from "../../../../view/Perspectives/FormView/FormViewToolbar";
+import { IFormViewMediator } from "../../../../../DataView/FormView/FormViewMediator";
 
 export class FormRoot extends React.Component {
   render() {
@@ -173,7 +173,7 @@ export class FormField extends React.Component<{
 }
 
 @observer
-export class FormView extends React.Component<{ controller: IFormView }> {
+export class FormView extends React.Component<{ controller: IFormViewMediator }> {
   constructor(props: any) {
     super(props);
     this.formViewPresenter = new FormViewPresenter({
@@ -193,7 +193,7 @@ export class FormView extends React.Component<{ controller: IFormView }> {
       ? undefined
       : new FormViewToolbar({
         aSwitchView: () => this.props.controller.dataView.aSwitchView,
-        mediator: () => this.props.controller.dataView.mediator,
+        mediator: () => this.props.controller.dataView,
         label: this.props.controller.dataView.label,
         isLoading: () => this.props.controller.dataView.machine.isLoading
       });

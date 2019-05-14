@@ -12,7 +12,7 @@ import { IProperty } from "./types/IProperty";
 export class ASelNextProp implements IASelNextProp {
   constructor(
     public P: {
-      props: ML<IPropReorder>;
+      propReorder: ML<IPropReorder>;
       propCursor: ML<IPropCursor>;
       aSelProp: ML<IASelProp>;
     }
@@ -28,7 +28,7 @@ export class ASelNextProp implements IASelNextProp {
   }
 
   get props() {
-    return unpack(this.P.props);
+    return unpack(this.P.propReorder);
   }
 
   get propCursor() {

@@ -11,16 +11,16 @@ import { isType } from "ts-action";
 export class AStartEditing implements IAStartEditing {
   constructor(
     public P: {
-      editing: L<IEditing>;
-      aInitForm: L<IAInitForm>;
-      mediator: ML<IDataViewMediator>;
+      editing: IEditing;
+      aInitForm: IAInitForm;
+      listen(cb: (action: any) => void): void;
     }
   ) {
     this.subscribeMediator();
   }
 
   subscribeMediator() {
-    this.mediator.listen((action: any) => {
+    this.P.listen((action: any) => {
       if (isType(action, DataViewAction.startEditing)) {
         this.do();
       }
@@ -29,14 +29,10 @@ export class AStartEditing implements IAStartEditing {
 
   @action.bound
   public do() {
-    console.log('StartEditing')
-    const editing = this.P.editing();
+    console.log("StartEditing");
+    const editing = this.P.editing;
     // --------------------------------------------------------
     editing.setEditing(true);
-    this.P.aInitForm().do();
-  }
-
-  get mediator() {
-    return unpack(this.P.mediator);
+    this.P.aInitForm.do();
   }
 }

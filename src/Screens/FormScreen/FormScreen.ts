@@ -1,11 +1,11 @@
 import axios from "axios";
 import xmlJs from "xml-js";
 import { ML } from "../../utils/types";
-import { IDataView } from "../../DataView/types/IDataView";
 import { unpack } from "../../utils/objects";
 import { IScreenType, IMainViews } from "../types";
 import { IFormScreen, IFormScreenMachine } from "./types";
 import { observable, computed, action } from "mobx";
+import { IDataViewMediator02 } from "../../DataView/DataViewMediator02";
 
 function spc(n: number) {
   let result = "";
@@ -35,15 +35,15 @@ export class FormScreen implements IFormScreen {
     this.uiStructure = uiStructure;
   }
 
-  @observable dataViews: IDataView[] = [];
+  @observable dataViews: IDataViewMediator02[] = [];
 
-  @computed get dataViewMap(): Map<string, IDataView> {
+  @computed get dataViewMap(): Map<string, IDataViewMediator02> {
     return new Map(
-      this.dataViews.map(dv => [dv.id, dv] as [string, IDataView])
+      this.dataViews.map(dv => [dv.id, dv] as [string, IDataViewMediator02])
     );
   }
 
-  @action.bound setDataViews(views: IDataView[]) {
+  @action.bound setDataViews(views: IDataViewMediator02[]) {
     console.log("setDataViews", views);
     this.dataViews = views;
   }

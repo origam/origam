@@ -22,11 +22,12 @@ export class DataViewMachine implements IDataViewMachine {
       propertyIdsToLoad: ML<string[]>;
       dataTable: ML<IDataTable>;
       dataSource: ML<IDataSource>;
-      mediator: IDataViewMediator;
       selectedIdGetter: () => string | undefined;
+
+      listen(cb: (action: any) => void): void;
+      dispatch(action: any): void;
     }
   ) {
-    this.mediator = P.mediator;
     this.subscribeMediator();
     this.interpreter = interpret(this.definition);
     this.interpreter.onTransition(
@@ -39,7 +40,7 @@ export class DataViewMachine implements IDataViewMachine {
   }
 
   subscribeMediator() {
-    this.mediator.listen((action: any) => {
+    this.P.listen((action: any) => {
       if (isType(action, DataViewActions.requestSaveData)) {
         this.interpreter.send("REQUEST_SAVE_DATA");
       } else if (isType(action, DataViewActions.requestCreateRow)) {
@@ -53,8 +54,6 @@ export class DataViewMachine implements IDataViewMachine {
 
   controlledFieldId: string = "";
   controllingFieldId: string = "";
-
-  mediator: IDataViewMediator;
 
   definition = Machine(
     {
@@ -116,7 +115,7 @@ export class DataViewMachine implements IDataViewMachine {
                 // console.log("ENTITIES", entities);
                 this.dataTable.resetDirty();
                 this.dataTable.setRecords(entities);
-                this.mediator.dispatch(DataViewActions.selectFirstCell());
+                this.P.dispatch(DataViewActions.selectFirstCell());
                 send("DONE");
                 this.descendantsDispatch("LOAD_FRESH");
               })

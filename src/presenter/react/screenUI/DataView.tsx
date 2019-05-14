@@ -11,11 +11,11 @@ import {
   IViewTypeBtn
 } from "../../view/Perspectives/types";
 import { IViewType } from "../../../DataView/types/IViewType";
-import { DataView as DataViewModel } from "../../../DataView/DataView";
-import { FormView as FormViewModel } from "../../../DataView/FormView/FormView";
+
 import { IFormScreen } from "../../../Screens/FormScreen/types";
 import { isFormView } from "../../../DataView/FormView/types";
 import { isTableView } from "../../../DataView/TableView/ITableView";
+import { IDataViewMediator02 } from "../../../DataView/DataViewMediator02";
 
 /*@inject(
   (
@@ -38,7 +38,7 @@ import { isTableView } from "../../../DataView/TableView/ITableView";
 export class DataView extends React.Component<{
   Id: string;
   Height?: string;
-  dataView?: DataViewModel;
+  dataView?: IDataViewMediator02;
 }> {
   // tableView: ITableView
 

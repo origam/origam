@@ -7,7 +7,6 @@ import { ASelPrevProp } from "../ASelPrevProp";
 import { ASelPrevRec } from "../ASelPrevRec";
 import { ASelProp } from "../ASelProp";
 import { ASelRec } from "../ASelRec";
-import { DataView } from "../DataView";
 import { AOnEditorKeyDown } from "../FormView/AOnEditorKeyDown";
 import { PropCursor } from "../PropCursor";
 import { PropReorder } from "../PropReorder";
@@ -196,7 +195,7 @@ export class TableView implements ITableView {
   }
 
   get props() {
-    return this.dataView.props;
+    return this.dataView.properties;
   }
 
   get records() {

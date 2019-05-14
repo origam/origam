@@ -5,14 +5,14 @@ import { unpack } from "../utils/objects";
 import { action } from "mobx";
 
 export class AReloadChildren implements IAReloadChildren {
-  constructor(public P: { dataViewMachine: ML<IDataViewMachine> }) {}
+  constructor(public P: { machine: IDataViewMachine }) {}
 
   @action.bound
   do(): void {
-    this.dataViewMachine.descendantsDispatch("LOAD_FRESH");
+    this.machine.descendantsDispatch("LOAD_FRESH");
   }
 
-  get dataViewMachine() {
-    return unpack(this.P.dataViewMachine);
+  get machine() {
+    return this.P.machine;
   }
 }

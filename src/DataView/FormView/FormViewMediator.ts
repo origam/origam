@@ -8,6 +8,16 @@ import { IEditing } from "../types/IEditing";
 import { IAvailViews } from "../types/IAvailViews";
 import { IForm } from "../types/IForm";
 import { IDataTable } from "../types/IDataTable";
+import { IDataViewMediator02 } from "../DataViewMediator02";
+import { IASelPrevProp } from "../types/IASelPrevProp";
+import { IASelNextProp } from "../types/IASelNextProp";
+import { IASelProp } from "../types/IASelProp";
+import { IAActivateView } from "../types/IAActivateView";
+import { IADeactivateView } from "../types/IADeactivateView";
+import { IViewType } from "../types/IViewType";
+import { IAStartEditing } from "../types/IAStartEditing";
+import { IAFinishEditing } from "../types/IAFinishEditing";
+import { IASelCell } from "../types/IASelCell";
 
 export interface IParentMediator {
   properties: IProperties;
@@ -20,7 +30,9 @@ export interface IParentMediator {
 }
 
 export interface IFormViewMediator {
-  initPropIds: string[];
+  type: IViewType.Form;
+
+  initPropIds: string[] | undefined;
   propReorder: IPropReorder;
   propCursor: IPropCursor;
   machine: IFormViewMachine;
@@ -32,19 +44,50 @@ export interface IFormViewMediator {
   availViews: IAvailViews;
   form: IForm;
   dataTable: IDataTable;
+  dataView: IDataViewMediator02;
+  uiStructure: any[];
+  aSelPrevProp: IASelPrevProp;
+  aSelNextProp: IASelNextProp;
+  aSelProp: IASelProp;
+  aSelCell: IASelCell;
+  aActivateView: IAActivateView;
+  aDeactivateView: IADeactivateView;
+  aStartEditing: IAStartEditing;
+  aFinishEditing: IAFinishEditing;
+
+  dispatch(action: any): void;
+  listen(cb: (action: any) => void): void;
 }
 
 export class FormViewMediator implements IFormViewMediator {
   
+
+  type: IViewType.Form = IViewType.Form;
+
   constructor(
     public P: {
-      initPropIds: string[];
-      parentMediator: IParentMediator;
+      initPropIds: string[] | undefined;
+      uiStructure: any[];
+      parentMediator: IDataViewMediator02;
       propReorder: () => IPropReorder;
       propCursor: () => IPropCursor;
       machine: () => IFormViewMachine;
+      aSelNextProp: () => IASelNextProp;
+      aSelPrevProp: () => IASelPrevProp;
+      aSelProp: () => IASelProp;
+      aSelCell: () => IASelCell;
+      aActivateView: () => IAActivateView;
+      aDeactivateView: () => IADeactivateView;
     }
   ) {}
+
+  dispatch(action: any): void {
+    throw new Error("Method not implemented.");
+  }
+
+  listen(cb: (action: any) => void): void {
+    throw new Error("Method not implemented.");
+  }
 
   get propReorder(): IPropReorder {
     return this.P.propReorder();
@@ -86,7 +129,47 @@ export class FormViewMediator implements IFormViewMediator {
     return this.P.parentMediator.dataTable;
   }
 
-  get initPropIds(): string[] {
+  get initPropIds(): string[] | undefined {
     return this.P.initPropIds;
+  }
+
+  get dataView(): IDataViewMediator02 {
+    return this.P.parentMediator;
+  }
+
+  get uiStructure(): any[] {
+    return this.P.uiStructure;
+  }
+
+  get aSelPrevProp(): IASelPrevProp {
+    return this.P.aSelPrevProp();
+  }
+
+  get aSelNextProp(): IASelNextProp {
+    return this.P.aSelNextProp();
+  }
+
+  get aSelProp() : IASelProp {
+    return this.P.aSelProp();
+  }
+
+  get aSelCell(): IASelCell {
+    return this.P.aSelCell();
+  }
+
+  get aActivateView(): IAActivateView{
+    return this.P.aActivateView();
+  }
+
+  get aDeactivateView(): IADeactivateView {
+    return this.P.aDeactivateView();
+  }
+
+  get aStartEditing(): IAStartEditing {
+    return this.P.parentMediator.aStartEditing;
+  }
+
+  get aFinishEditing(): IAFinishEditing {
+    return this.P.parentMediator.aFinishEditing;
   }
 }

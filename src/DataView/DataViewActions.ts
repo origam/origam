@@ -1,5 +1,5 @@
 import { action, payload, props } from "ts-action";
-import { IDataView } from "./types/IDataView";
+
 
 export const NS = "DataView";
 

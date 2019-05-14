@@ -22,7 +22,7 @@ import { IADeleteRow } from "./IADeleteRow";
 import { IDataViewMachine } from "./IDataViewMachine";
 
 export interface IDataView {
-  mediator: IDataViewMediator;
+  // mediator: IDataViewMediator;
   availViews: IAvailViews;
   recCursor: IRecCursor;
   form: IForm;
@@ -40,7 +40,7 @@ export interface IDataView {
   aReloadChildren: IAReloadChildren;
   aDeleteRow: IADeleteRow;
   isHeadless: boolean;
-  props: IProperties;
+  properties: IProperties;
   specificDataViews: Array<IFormView | ITableView>;
   initialDataView: IViewType;
   id: string;

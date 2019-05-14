@@ -13,9 +13,10 @@ import { IFormViewMachine } from "./types";
 export class FormViewMachine implements IFormViewMachine {
   constructor(
     public P: {
-      mediator: ML<IDataViewMediator>;
-      dataTable: ML<IDataTable>;
-      recCursor: ML<IRecCursor>;
+      dataTable: IDataTable;
+      recCursor: IRecCursor;
+      dispatch(action: any): void;
+      listen(cb: (action: any) => void): void;
     }
   ) {
     this.interpreter = interpret(this.definition);
@@ -30,7 +31,7 @@ export class FormViewMachine implements IFormViewMachine {
   }
 
   subscribeMediator() {
-    this.mediator.listen((action: any) => {
+    this.P.listen((action: any) => {
       if (isType(action, DataViewActions.dataTableLoaded)) {
         this.interpreter.send("DATA_TABLE_LOADED");
       }
@@ -74,8 +75,8 @@ export class FormViewMachine implements IFormViewMachine {
       actions: {
         startEdit: action(() => {
           console.log("Start edit");
-          this.mediator.dispatch(DataViewActions.selectFirstCell());
-          this.mediator.dispatch(DataViewActions.startEditing());
+          this.P.dispatch(DataViewActions.selectFirstCell());
+          this.P.dispatch(DataViewActions.startEditing());
         })
       },
       services: {},
@@ -101,10 +102,6 @@ export class FormViewMachine implements IFormViewMachine {
 
   @action.bound stop() {
     this.interpreter.stop();
-  }
-
-  get mediator() {
-    return unpack(this.P.mediator);
   }
 
   get dataTable() {

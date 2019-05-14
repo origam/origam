@@ -1,4 +1,5 @@
-import { IFormView } from "../FormView/types";
-import { ITableView } from "../TableView/ITableView";
+import { IFormViewMediator } from "../FormView/FormViewMediator";
+import { ITableViewMediator } from "../TableView/TableViewMediator";
 
-export type ISpecificView = IFormView | ITableView;
+
+export type ISpecificView = IFormViewMediator | ITableViewMediator;

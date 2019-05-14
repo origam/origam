@@ -10,9 +10,9 @@ import { IDataTable } from "./types/IDataTable";
 import { IRecord } from "./types/IRecord";
 
 export class Properties implements IProperties {
-  constructor(public P: { items: ML<IProperty[]> }) {}
+  constructor(public P: { propertyItems: ML<IProperty[]> }) {}
 
-  @observable.shallow items: IProperty[] = unpack(this.P.items);
+  @observable.shallow items: IProperty[] = unpack(this.P.propertyItems);
 
   @computed get count(): number {
     return this.items.length;

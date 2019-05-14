@@ -12,20 +12,20 @@ import { unpack } from "../../utils/objects";
 export class AActivateView implements IAActivateView {
   constructor(
     public P: {
-      recCursor: L<IRecCursor>;
-      aSelProp: L<IASelProp>;
-      aStartEditing: L<IAStartEditing>;
-      availViews: L<IAvailViews>;
-      machine: ML<IFormViewMachine>;
+      recCursor: IRecCursor;
+      aSelProp: IASelProp;
+      aStartEditing: IAStartEditing;
+      availViews: IAvailViews;
+      machine: IFormViewMachine;
     }
   ) {}
 
   @action.bound
   do() {
-    const recCursor = this.P.recCursor();
-    const aSelProp = this.P.aSelProp();
-    const aStartEditing = this.P.aStartEditing();
-    const availViews = this.P.availViews();
+    const recCursor = this.P.recCursor;
+    const aSelProp = this.P.aSelProp;
+    const aStartEditing = this.P.aStartEditing;
+    const availViews = this.P.availViews;
     // -------------------------------------------------------------
     console.log("FormView - activate");
     availViews.setActiveView(IViewType.Form);

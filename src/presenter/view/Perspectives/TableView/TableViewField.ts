@@ -7,7 +7,6 @@ import { unpack } from "../../../../utils/objects";
 import { IDataTable } from "../../../../DataView/types/IDataTable";
 import { IPropReorder } from "../../../../DataView/types/IPropReorder";
 import { IEditing } from "../../../../DataView/types/IEditing";
-import { IDataView } from "../../../../DataView/types/IDataView";
 import { IForm } from "../../../../DataView/types/IForm";
 
 export class TableViewField implements IFormField {

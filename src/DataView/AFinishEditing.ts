@@ -10,23 +10,21 @@ import * as DataViewActions from "./DataViewActions";
 export class AFinishEditing implements IAFinishEditing {
   constructor(
     public P: {
-      editing: L<IEditing>;
-      aSubmitForm: L<IASubmitForm>;
-      mediator: ML<IDataViewMediator>;
+      editing: IEditing;
+      aSubmitForm: IASubmitForm;
+      dispatch: (action: any) => void;
     }
   ) {}
 
   @action.bound
   public do() {
     console.log("FinishEditing");
-    const editing = this.P.editing();
+    const editing = this.P.editing;
     // --------------------------------------------------------
     editing.setEditing(false);
-    this.P.aSubmitForm().do();
-    this.mediator.dispatch(DataViewActions.requestSaveData());
+    this.P.aSubmitForm.do();
+    this.P.dispatch(DataViewActions.requestSaveData());
   }
 
-  get mediator() {
-    return unpack(this.P.mediator);
-  }
+
 }
