@@ -20,18 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 
+using Origam.Schema;
+using Origam.Schema.EntityModel;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Text;
-using Origam.Schema;
-using Origam.Schema.EntityModel;
-using Origam.Schema.LookupModel;
-using Origam.Workbench.Services;
 
 namespace Origam.DA.Service
 {

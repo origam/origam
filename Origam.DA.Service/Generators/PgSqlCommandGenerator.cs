@@ -19,27 +19,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
 using Npgsql;
 using NpgsqlTypes;
-
 using Origam.Schema;
 using Origam.Schema.EntityModel;
-using Origam.Schema.LookupModel;
-using Origam.Workbench.Services;
+using System;
+using System.Data;
+using System.Data.Common;
+using System.Text;
 
 namespace Origam.DA.Service
 {
-	/// <summary>
-	/// Summary description for PgSqlCommandGenerator.
-	/// </summary>
-	public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
+    /// <summary>
+    /// Summary description for PgSqlCommandGenerator.
+    /// </summary>
+    public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
 	{
 
 		public PgSqlCommandGenerator() : base()
