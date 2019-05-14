@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Microsoft.Msagl.Drawing;
 
@@ -6,27 +7,12 @@ namespace Origam.Workbench.Diagram
     public class WorkFlowGraph: Graph
     {
         private readonly string contextStoreSubgraphId = "contextStores";
-        private readonly string topSubgraphId = "topSubGraph";
+        private readonly string mainSubgraphId = "mainSubGraph";
 
         public Subgraph TopSubgraph => RootSubgraph.Subgraphs.FirstOrDefault();
-
-        public Subgraph ContextStoreSubgraph
-        {
-            get => TopSubgraph.Subgraphs.SingleOrDefault(x=>x.Id == contextStoreSubgraphId);
-        }
-
-        public Subgraph MainDrawingSubgraf
-        {
-            get => TopSubgraph.Subgraphs.SingleOrDefault(x=>x.Id != contextStoreSubgraphId);
-            set => TopSubgraph.AddSubgraph(value);
-        }
-
-        public WorkFlowGraph()
-        {
-            RootSubgraph.AddSubgraph(new Subgraph(topSubgraphId));
-            TopSubgraph.AddSubgraph(new Subgraph(contextStoreSubgraphId));
-        }
-
+        public Subgraph ContextStoreSubgraph => GetTopSubgraphChild(contextStoreSubgraphId);
+        public Subgraph MainDrawingSubgraf => GetTopSubgraphChild(mainSubgraphId);
+        
         public bool IsWorkFlowItemSubGraph(Node node)
         {
             if (!(node is Subgraph)) return false;
@@ -41,6 +27,20 @@ namespace Origam.Workbench.Diagram
             if (node == TopSubgraph) return true;
             if (node == ContextStoreSubgraph) return true;
             return false;
+        }
+        private Subgraph GetTopSubgraphChild(string childId)
+        {
+            if (TopSubgraph == null)
+                throw new InvalidOperationException("TopSubgraph must be set first");
+            var mainDrawingSubraph = TopSubgraph.Subgraphs
+                .SingleOrDefault(x => x.Id == childId);
+            if (mainDrawingSubraph == null)
+            {
+                mainDrawingSubraph = new Subgraph(childId);
+                TopSubgraph.AddSubgraph(mainDrawingSubraph);
+            }
+
+            return mainDrawingSubraph;
         }
     }
 }

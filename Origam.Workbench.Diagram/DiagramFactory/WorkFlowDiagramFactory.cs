@@ -56,14 +56,19 @@ namespace Origam.Workbench.Diagram
 		public WorkFlowGraph Draw(IWorkflowBlock graphParent)
 		{
 			graph = new WorkFlowGraph();
-			graph.TopSubgraph.DrawNodeDelegate =  (node, graphics) => true;
-			AddWorkflowDiagram(graphParent, graph.TopSubgraph);
+			nodeFactory.AddSubgraph(graph.RootSubgraph, graphParent);
+			graph.TopSubgraph.LayoutSettings = new SugiyamaLayoutSettings
+			{
+				PackingAspectRatio = 1000, AdditionalClusterTopMargin = 30
+			};
+			graph.MainDrawingSubgraf.DrawNodeDelegate =  (node, graphics) => true;
+			AddToSubgraph(graphParent, graph.MainDrawingSubgraf);
+
 			AddContextStores(graphParent);
 			graph.LayoutAlgorithmSettings.ClusterMargin = nodeMargin;
 			AddBalloons();
 			return graph;
 		}
-
 		public void AlignContextStoreSubgraph()
 		{
 			if(graph.ContextStoreSubgraph == null || graph.MainDrawingSubgraf == null)
@@ -165,40 +170,53 @@ namespace Origam.Workbench.Diagram
 			subgraph.LayoutSettings.AdditionalClusterTopMargin = 30;
 			subgraph.LayoutSettings.ClusterMargin = 40;
 
+			return AddToSubgraph(workFlowBlock, subgraph);
+		}
+
+		private Subgraph AddToSubgraph(IWorkflowBlock workFlowBlock, Subgraph subgraph)
+		{
 			IDictionary<Key, Node> ht = new Dictionary<Key, Node>();
 
-			foreach(IWorkflowStep step in workFlowBlock.ChildItemsByType(AbstractWorkflowStep.ItemTypeConst))
+			foreach (IWorkflowStep step in workFlowBlock.ChildItemsByType(
+				AbstractWorkflowStep.ItemTypeConst))
 			{
 				if (!(step is IWorkflowBlock subBlock))
-                {
-                    Subgraph shape = AddSubgraphNode(step, subgraph);
-                    ht.Add(step.PrimaryKey, shape);
-                }
-                else
-                {
-                    Node shape = AddWorkflowDiagram(subBlock, subgraph);
-                    ht.Add(step.PrimaryKey, shape);
-                }
+				{
+					Subgraph shape = AddSubgraphNode(step, subgraph);
+					ht.Add(step.PrimaryKey, shape);
+				}
+				else
+				{
+					Node shape = AddWorkflowDiagram(subBlock, subgraph);
+					ht.Add(step.PrimaryKey, shape);
+				}
 			}
 
 			// add connections
-			foreach(IWorkflowStep step in workFlowBlock.ChildItemsByType(AbstractWorkflowStep.ItemTypeConst))
+			foreach (IWorkflowStep step in workFlowBlock.ChildItemsByType(
+				AbstractWorkflowStep.ItemTypeConst))
 			{
 				Node destinationShape = ht[step.PrimaryKey];
-				if(destinationShape == null) throw new NullReferenceException(ResourceUtils.GetString("ErrorDestinationShapeNotFound"));
+				if (destinationShape == null)
+					throw new NullReferenceException(
+						ResourceUtils.GetString("ErrorDestinationShapeNotFound"));
 				int i = 0;
-				foreach(WorkflowTaskDependency dependency in step.ChildItemsByType(WorkflowTaskDependency.ItemTypeConst))
+				foreach (WorkflowTaskDependency dependency in step.ChildItemsByType(
+					WorkflowTaskDependency.ItemTypeConst))
 				{
 					Node sourceShape = ht[dependency.Task.PrimaryKey];
-					if(sourceShape == null) throw new NullReferenceException(ResourceUtils.GetString("ErrorSourceShapeNotFound"));
+					if (sourceShape == null)
+						throw new NullReferenceException(
+							ResourceUtils.GetString("ErrorSourceShapeNotFound"));
 
-					Edge edge = graph.AddEdge(sourceShape.Id,destinationShape.Id);
+					Edge edge = graph.AddEdge(sourceShape.Id, destinationShape.Id);
 					edge.UserData = dependency;
 					i++;
 				}
 			}
-            return subgraph;
-        }
+
+			return subgraph;
+		}
 
 		private void AddBalloons()
 		{
