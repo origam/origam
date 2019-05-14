@@ -599,6 +599,7 @@ namespace Origam.Gui.Win
                 ResetTempColumns();
                 DataSet result = _dataServiceAgent.Result as DataSet;
                 _mainFormData.Merge(result, false, MissingSchemaAction.Ignore);
+                ResourceMonitor.Commit(_dataServiceAgent.TransactionId);
             }
             finally
             {
