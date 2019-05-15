@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -121,6 +122,20 @@ namespace Origam.ServerCore.Controllers
             });
         }
 
+        [HttpGet("[action]")]
+        public IActionResult EntityData([FromQuery][RequireNonDefault] Guid sessionFormIdentifier, 
+            [FromQuery][Required] string childEntity, [FromQuery][Required] string parentRecordId,
+            [FromQuery][Required] string rootRecordId)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                SessionStore ss = sessionObjects.SessionManager.GetSession(sessionFormIdentifier);
+                IList output = ss.GetData(childEntity, parentRecordId,  rootRecordId);
+                CallOrigamUserUpdate();
+                return Ok(output);
+            });
+        }
+        
         [HttpPost("[action]")]
         public IActionResult Save([FromBody]SaveSessionData saveData)
         {
