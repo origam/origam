@@ -293,11 +293,11 @@ namespace Origam.Server
                             switch (changeType)
                             {
                                 case DataRowState.Added:
-                                    changes.AddRange(sessionStore.GetChanges(tableName, rowEntry.Key, 1, ignoreKeys, false, hasErrors, hasChanges));
+                                    changes.AddRange(sessionStore.GetChanges(tableName, rowEntry.Key, Operation.Create, ignoreKeys, false, hasErrors, hasChanges));
                                     break;
 
                                 case DataRowState.Modified:
-                                    changes.AddRange(sessionStore.GetChanges(tableName, rowEntry.Key, 0, ignoreKeys, false, hasErrors, hasChanges));
+                                    changes.AddRange(sessionStore.GetChanges(tableName, rowEntry.Key, Operation.Update, ignoreKeys, false, hasErrors, hasChanges));
                                     break;
 
                                 case DataRowState.Deleted:
@@ -326,7 +326,7 @@ namespace Origam.Server
             int i = 0;
             while (changes.Count > i)
             {
-                if (((ChangeInfo)changes[i]).Operation == 2)
+                if (((ChangeInfo)changes[i]).Operation == Operation.FormSaved)
                 {
                     changes.RemoveAt(i);
                 }

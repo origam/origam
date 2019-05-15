@@ -48,7 +48,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                 (int)node.BoundingBox.Height);
 
             Graphics editorGraphics = (Graphics)graphicsObj;
-            var image = painter.GetImage(node);
+            var image = painter.GetImages(node).Primary;
 
             var labelWidth = painter.GetLabelWidth(node);
 

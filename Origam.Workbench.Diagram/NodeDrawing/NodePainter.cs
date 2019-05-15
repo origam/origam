@@ -25,7 +25,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         public bool Draw(Node node, object graphicsObj)
         {
             Graphics editorGraphics = (Graphics) graphicsObj;
-            var image = painter.GetImage(node);
+            var image = painter.GetImages(node).Primary;
 
             SizeF stringSize =
                 editorGraphics.MeasureString(node.LabelText, painter.Font);

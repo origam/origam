@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2019 Advantage Solutions, s. r. o.
@@ -51,7 +52,7 @@ namespace Origam.Server
         #region Private Fields
         private string entity = string.Empty;
         private string requestingGrid;
-        private int operation;
+        private Operation operation;
         private object objectId = string.Empty;
         private object wrappedObject = null;
         private RowSecurityState _state;
@@ -88,7 +89,7 @@ namespace Origam.Server
         ///  3 - FORM NEEDS REFRESH
         ///  4 - CURRENT RECORD NEEDS RELOAD
         /// </summary>
-        public int Operation
+        public Operation Operation
         {
             get { return operation; }
             set { operation = value; }
@@ -123,35 +124,35 @@ namespace Origam.Server
         public static ChangeInfo SavedChangeInfo()
         {
             ChangeInfo ci = new ChangeInfo();
-            ci.Operation = 2;
+            ci.Operation = Operation.FormSaved;
             return ci;
         }
 
         public static ChangeInfo RefreshFormChangeInfo()
         {
             ChangeInfo ci = new ChangeInfo();
-            ci.Operation = 3;
+            ci.Operation = Operation.FormNeedsRefresh;
             return ci;
         }
 
         public static ChangeInfo ReloadCurrentRecordChangeInfo()
         {
             ChangeInfo ci = new ChangeInfo();
-            ci.Operation = 4;
+            ci.Operation = Operation.CurrentRecordNeedsUpdate;
             return ci;
         }
 
         public static ChangeInfo RefreshPortalInfo()
         {
             ChangeInfo ci = new ChangeInfo();
-            ci.Operation = 5;
+            ci.Operation = Operation.RefreshPortal;
             return ci;
         }
 
         public static ChangeInfo CleanDataChangeInfo()
         {
             ChangeInfo ci = new ChangeInfo();
-            ci.Operation = -2;
+            ci.Operation = Operation.DeleteAllData;
             return ci;
         }
     }

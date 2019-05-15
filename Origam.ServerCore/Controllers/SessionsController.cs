@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ using Microsoft.Extensions.Logging;
 using Origam.Server;
 using Origam.ServerCommon;
 using Origam.ServerCore.Models;
+using Origam.ServerCore.Models.Session;
 
 namespace Origam.ServerCore.Controllers
 {
@@ -90,7 +92,50 @@ namespace Origam.ServerCore.Controllers
                 return Ok();
             });
         }
+        
+        [HttpPost("[action]")]
+        public IActionResult DeleteRow([FromBody]DeleteRowData sessionData)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                SessionStore ss = sessionObjects.SessionManager.GetSession(sessionData.SessionFormIdentifier);
+                IList output = ss.DeleteObject(
+                    sessionData.Entity,
+                    sessionData.RowId);
+                CallOrigamUserUpdate();
+                return Ok(output);
+            });
+        }
 
+        [HttpPost("[action]")]
+        public IActionResult ChangeMasterRecord([FromBody]ChangeMasterRecordData sessionData)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                SessionStore ss = sessionObjects.SessionManager.GetSession(sessionData.SessionFormIdentifier);
+                IList output = ss.GetRowData(
+                    sessionData.Entity,
+                    sessionData.RowId,
+                    false);
+                CallOrigamUserUpdate();
+                return Ok(output);
+            });
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult EntityData([FromQuery][RequireNonDefault] Guid sessionFormIdentifier, 
+            [FromQuery][Required] string childEntity, [FromQuery][Required] string parentRecordId,
+            [FromQuery][Required] string rootRecordId)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                SessionStore ss = sessionObjects.SessionManager.GetSession(sessionFormIdentifier);
+                IList output = ss.GetData(childEntity, parentRecordId,  rootRecordId);
+                CallOrigamUserUpdate();
+                return Ok(output);
+            });
+        }
+        
         [HttpPost("[action]")]
         public IActionResult Save([FromBody]SaveSessionData saveData)
         {

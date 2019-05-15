@@ -2,6 +2,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Microsoft.Msagl.Drawing;
 using Origam.Schema;
+using Origam.Schema.WorkflowModel;
 
 namespace Origam.Workbench.Diagram.NodeDrawing
 {
@@ -40,17 +41,32 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             this.NodeSelector = nodeSelector;
         }
 
-        internal Image GetImage(Node node)
+        private Image GetImage(string iconId)
         {
-            var schemaItem = (ISchemaItem) node.UserData;
-
             var schemaBrowser =
                 WorkbenchSingleton.Workbench.GetPad(typeof(IBrowserPad)) as
                     IBrowserPad;
             var imageList = schemaBrowser.ImageList;
-            Image image =
-                imageList.Images[schemaBrowser.ImageIndex(schemaItem.Icon)];
-            return image;
+            return imageList.Images[schemaBrowser.ImageIndex(iconId)];
+        }
+        
+        internal NodeImages GetImages(Node node)
+        {
+            var schemaItem = (ISchemaItem) node.UserData;
+            
+            Image primaryImage = GetImage(schemaItem.Icon);
+
+            Image secondaryImage = null;
+            if (schemaItem is AbstractWorkflowStep workflowStep)
+            {
+                secondaryImage = GetImage(workflowStep.StartConditionRule.Icon);
+            }
+
+            return new NodeImages
+            {
+                Primary = primaryImage,
+                Secondary = secondaryImage
+            };
         }
         
         internal Pen GetActiveBorderPen(Node node)
@@ -77,10 +93,16 @@ namespace Origam.Workbench.Diagram.NodeDrawing
 
         internal float GetLabelWidth(Node node)
         {
-            Image image = GetImage(node);
+            Image image = GetImages(node).Primary;
             SizeF stringSize = MeasureString(node.LabelText);
             var labelWidth = stringSize.Width + ImageRightMargin + image.Width;
             return labelWidth;
         }
+    }
+
+    class NodeImages
+    {
+        public Image Primary { get; set; }
+        public Image Secondary { get; set; }
     }
 }
