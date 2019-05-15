@@ -107,6 +107,21 @@ namespace Origam.ServerCore.Controllers
         }
 
         [HttpPost("[action]")]
+        public IActionResult ChangeMasterRecord([FromBody]ChangeMasterRecordData sessionData)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                SessionStore ss = sessionObjects.SessionManager.GetSession(sessionData.SessionFormIdentifier);
+                IList output = ss.GetRowData(
+                    sessionData.Entity,
+                    sessionData.RowId,
+                    false);
+                CallOrigamUserUpdate();
+                return Ok(output);
+            });
+        }
+
+        [HttpPost("[action]")]
         public IActionResult Save([FromBody]SaveSessionData saveData)
         {
             return RunWithErrorHandler(() =>
