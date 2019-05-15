@@ -137,6 +137,23 @@ namespace Origam.ServerCore.Controllers
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
 
+
+        [HttpPost("[action]")]
+        public IActionResult NewEmptyRow([FromBody] NewEmptyRowData rowData)
+        {
+            return FindItem<FormReferenceMenuItem>(rowData.MenuId)
+                .OnSuccess(Authorize)
+                .OnSuccess(menuItem =>
+                    GetEntityData(rowData.DataStructureEntityId,
+                        menuItem))
+                .OnSuccess(CheckEntityBelongsToMenu)
+                .OnSuccess(entityData => MakeEmptyRow(entityData.Entity))
+                .OnSuccess(SubmitChange)
+                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+        }
+
+
+
         [HttpDelete("[action]")]
         public IActionResult Entities([FromBody] EntityDeleteData entityDeleteData)
         {
