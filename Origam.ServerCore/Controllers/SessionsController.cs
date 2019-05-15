@@ -32,6 +32,7 @@ using Microsoft.Extensions.Logging;
 using Origam.Server;
 using Origam.ServerCommon;
 using Origam.ServerCore.Models;
+using Origam.ServerCore.Models.Session;
 
 namespace Origam.ServerCore.Controllers
 {
@@ -88,6 +89,20 @@ namespace Origam.ServerCore.Controllers
                     .DeleteSession(sessionData.SessionId);
                 CallOrigamUserUpdate();
                 return Ok();
+            });
+        }
+        
+        [HttpPost("[action]")]
+        public IActionResult DeleteRow([FromBody]DeleteRowData sessionData)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                SessionStore ss = sessionObjects.SessionManager.GetSession(sessionData.SessionFormIdentifier);
+                IList output = ss.DeleteObject(
+                    sessionData.Entity,
+                    sessionData.RowId);
+                CallOrigamUserUpdate();
+                return Ok(output);
             });
         }
 
