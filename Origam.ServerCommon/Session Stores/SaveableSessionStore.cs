@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2019 Advantage Solutions, s. r. o.
@@ -215,7 +216,7 @@ namespace Origam.Server
 
                 DataRow newRow = table.Rows.Find(key);
                 NewRowToDataList(newRow);
-                ArrayList listOfChanges = GetChangesByRow(requestingGrid, newRow, 1, this.Data.HasErrors, this.Data.HasChanges());
+                ArrayList listOfChanges = GetChangesByRow(requestingGrid, newRow, Operation.Create, this.Data.HasErrors, this.Data.HasChanges());
 
                 return listOfChanges;
             }
