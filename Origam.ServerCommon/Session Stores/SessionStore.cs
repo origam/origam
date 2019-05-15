@@ -735,7 +735,7 @@ namespace Origam.Server
             return false;
         }
 
-        internal ArrayList GetChangesByRow(string requestingGrid, DataRow row, Operation operation, bool hasErrors, bool hasChanges)
+        public ArrayList GetChangesByRow(string requestingGrid, DataRow row, Operation operation, bool hasErrors, bool hasChanges)
         {
             return GetChangesByRow(requestingGrid, row, operation, null, true, hasErrors, hasChanges);
         }
@@ -763,7 +763,11 @@ namespace Origam.Server
             {
                 // this entity has no dependencies in other tables, we only
                 // return data from this row
-                ChangeInfo ci = GetChangeInfo(requestingGrid, row, operation, includeRowStates);
+                ChangeInfo ci = GetChangeInfo(
+                    requestingGrid: requestingGrid, 
+                    row: row, 
+                    operation: operation, 
+                    RowStateProcessor: includeRowStates ? new Func<string, object[], ArrayList>(RowStates) : null);
                 listOfChanges.Add(ci);
             }
 
@@ -838,7 +842,11 @@ namespace Origam.Server
                 string ignoreRowIndex = row.Table.TableName + rowKey.ToString();
                 if (row.Equals(changedRow))
                 {
-                    ChangeInfo ci = GetChangeInfo(requestingGrid, row, operation, includeRowStates);
+                    ChangeInfo ci = GetChangeInfo(
+                        requestingGrid: requestingGrid, 
+                        row: row,
+                        operation: operation, 
+                        RowStateProcessor: includeRowStates ? new Func<string, object[], ArrayList>(RowStates) : null);
                     changes.Add(ci);
                 }
                 else if (ignoreKeys == null || ! ignoreKeys.Contains(ignoreRowIndex))
@@ -863,7 +871,11 @@ namespace Origam.Server
                             op = Operation.Update;
                         }
 
-                        ChangeInfo ci = GetChangeInfo(null, row, op, includeRowStates);
+                        ChangeInfo ci = GetChangeInfo(
+                            requestingGrid: null,
+                            row: row, 
+                            operation: op, 
+                            RowStateProcessor: includeRowStates ? new Func<string, object[], ArrayList>(RowStates) : null);
                         changes.Add(ci);
                         // we processed it once so we do not want to get it again in a next iteration
                         if (ignoreKeys != null)
@@ -918,10 +930,10 @@ namespace Origam.Server
 
         internal ChangeInfo GetChangeInfo(string requestingGrid, DataRow row, Operation operation)
         {
-            return GetChangeInfo(requestingGrid, row, operation, true);
+            return GetChangeInfo(requestingGrid, row, operation, RowStates);
         }
 
-        internal ChangeInfo GetChangeInfo(string requestingGrid, DataRow row, Operation operation, bool includeRowState)
+        public static ChangeInfo GetChangeInfo(string requestingGrid, DataRow row, Operation operation, Func<string, object[], ArrayList> RowStateProcessor)
         {
             ChangeInfo ci = new ChangeInfo();
             ci.Entity = row.Table.TableName;
@@ -929,13 +941,13 @@ namespace Origam.Server
             ci.RequestingGrid = requestingGrid;
             ci.ObjectId = row[row.Table.PrimaryKey[0]];
             // for create-update we return the updated state (read-only + colors)
-            if (operation >= 0)
+            if (operation >= Operation.Update)
             {
                 string[] columns = GetColumnNames(row.Table);
                 ci.WrappedObject = GetRowData(row, columns);
-                if (includeRowState)
+                if (RowStateProcessor != null)
                 {
-                    ci.State = RowStates(ci.Entity, new object[] { ci.ObjectId })[0] as RowSecurityState;
+                    ci.State = RowStateProcessor.Invoke(ci.Entity, new[] {ci.ObjectId})[0] as RowSecurityState;
                 }
             }
             return ci;

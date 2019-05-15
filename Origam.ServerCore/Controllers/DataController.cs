@@ -34,6 +34,7 @@ using Origam.OrigamEngine.ModelXmlBuilders;
 using Origam.Schema.EntityModel;
 using Origam.Schema.LookupModel;
 using Origam.Schema.MenuModel;
+using Origam.Server;
 using Origam.ServerCore.Extensions;
 using Origam.ServerCore.Models;
 using Origam.Services;
@@ -119,7 +120,7 @@ namespace Origam.ServerCore.Controllers
                         entityUpdateData.DataStructureEntityId,
                         entityUpdateData.RowId))
                 .OnSuccess(rowData => FillRow(rowData, entityUpdateData.NewValues))
-                .OnSuccess(SubmitChange)
+                .OnSuccess(rowData => SubmitChange(rowData, Operation.Update))
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
 
@@ -133,22 +134,22 @@ namespace Origam.ServerCore.Controllers
                 .OnSuccess(CheckEntityBelongsToMenu)
                 .OnSuccess(entityData => MakeEmptyRow(entityData.Entity))
                 .OnSuccess(rowData => FillRow(entityInsertData, rowData))
-                .OnSuccess(SubmitChange)
+                .OnSuccess(rowData => SubmitChange(rowData, Operation.Create))
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
 
 
         [HttpPost("[action]")]
-        public IActionResult NewEmptyRow([FromBody] NewEmptyRowData rowData)
+        public IActionResult NewEmptyRow([FromBody] NewEmptyRowData emptyRowData)
         {
-            return FindItem<FormReferenceMenuItem>(rowData.MenuId)
+            return FindItem<FormReferenceMenuItem>(emptyRowData.MenuId)
                 .OnSuccess(Authorize)
                 .OnSuccess(menuItem =>
-                    GetEntityData(rowData.DataStructureEntityId,
+                    GetEntityData(emptyRowData.DataStructureEntityId,
                         menuItem))
                 .OnSuccess(CheckEntityBelongsToMenu)
                 .OnSuccess(entityData => MakeEmptyRow(entityData.Entity))
-                .OnSuccess(SubmitChange)
+                .OnSuccess(rowData => SubmitChange(rowData, Operation.Create))
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
 
@@ -169,7 +170,7 @@ namespace Origam.ServerCore.Controllers
                     .OnSuccess(rowData =>
                     {
                         rowData.Row.Delete();
-                        return SubmitChange(rowData);
+                        return  SubmitChange(rowData, Operation.Delete);
                     })
                     .OnSuccess(ThrowAwayReturnData)
                     .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
@@ -388,7 +389,7 @@ namespace Origam.ServerCore.Controllers
                         NotFound("Requested DataStructureEntity not found. " + error.GetMessage())));
         }
 
-        private IActionResult SubmitChange(RowData rowData)
+        private IActionResult SubmitChange(RowData rowData, Operation operation)
         {
             try
             {
@@ -406,7 +407,12 @@ namespace Origam.ServerCore.Controllers
                 }
                 return Conflict(ex.Message);
             }
-            return Ok(rowData.Row);
+
+            return Ok(SessionStore.GetChangeInfo(
+                                requestingGrid: null, 
+                                row: rowData.Row, 
+                                operation: operation, 
+                                RowStateProcessor: null));
         }
 
         private IActionResult ToActionResult(object obj)
