@@ -3017,38 +3017,34 @@ namespace Origam.DA.Service
                     ISchemaItem expressionArg = item.GetChildByName("Expression").ChildItems[0];
                     ISchemaItem languageArg = item.GetChildByName("Language");
                     ISchemaItem fieldsArg = item.GetChildByName("Fields");
-                    //Postgres upravit
-                    if (item.Function.Name == "FullTextContains") result = "CONTAINS(";
-                    if (item.Function.Name == "FullText") result = " @@ to_tsquery ('";
-
+                    
+                    string columnsForSeach = "";
                     if (fieldsArg.ChildItems.Count == 0)
                     {
-                        result += NameLeftBracket + entity.Name + NameRightBracket + ".*";
+                        columnsForSeach += NameLeftBracket + entity.Name + NameRightBracket + ".*";
                     }
                     else
                     {
-                        if (fieldsArg.ChildItems.Count > 1) result += "(";
+                        if (fieldsArg.ChildItems.Count > 1) columnsForSeach += "(";
 
                         int fieldNum = 0;
                         foreach (ISchemaItem field in fieldsArg.ChildItems)
                         {
                             if (fieldNum > 0) result += ", ";
-                            result += RenderExpression(field, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
+                            columnsForSeach += RenderExpression(field, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
                             fieldNum++;
                         }
 
                         if (fieldsArg.ChildItems.Count > 1) result += ")";
                     }
-
-                    result += ",";
-                    result += RenderExpression(expressionArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
-
+                    string freetext_string = RenderExpression(expressionArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
+                    string languageForFullText = "";
                     if (languageArg.ChildItems.Count > 0)
                     {
-                        result += ",";
-                        result += RenderExpression(languageArg.ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences);
+                        languageForFullText += RenderExpression(languageArg.ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences);
                     }
-                    result += "')";
+                    if (item.Function.Name == "FullText") result = FreeTextSql(columnsForSeach, freetext_string, languageForFullText);
+                    if (item.Function.Name == "FullTextContains") result = ContainsSql(columnsForSeach, freetext_string, languageForFullText);
                     break;
 
                 case "Soundex":
@@ -3122,6 +3118,8 @@ namespace Origam.DA.Service
             return result;
         }
 
+        internal abstract string ContainsSql(string columnsForSeach, string freetext_string, string languageForFullText);
+        internal abstract string FreeTextSql(string columnsForSeach, string freetext_string, string languageForFullText);
         internal abstract string NowSql();
         internal abstract string STDistanceSql(string point1, string point2);
         internal abstract string DateDiffSql(DateTypeSql addDateSql, string startdate, string enddate);

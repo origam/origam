@@ -550,5 +550,21 @@ namespace Origam.DA.Service
         {
             return "GETDATE()";
         }
+        internal override string FreeTextSql(string columnsForSeach, string freetext_string, string languageForFullText)
+        {
+            if(string.IsNullOrEmpty(languageForFullText))
+            {
+                return string.Format("FREETEXT({0},{1})", columnsForSeach, freetext_string);
+            }
+            return string.Format("FREETEXT({0},{1},{2})", columnsForSeach,freetext_string,languageForFullText);
+        }
+        internal override string ContainsSql(string columnsForSeach, string freetext_string, string languageForFullText)
+        {
+            if (string.IsNullOrEmpty(languageForFullText))
+            {
+                return string.Format("CONTAINS({0},{1})", columnsForSeach, freetext_string);
+            }
+            return string.Format("CONTAINS({0},{1},{2})", columnsForSeach, freetext_string, languageForFullText);
+        }
     }
 }

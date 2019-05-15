@@ -535,5 +535,13 @@ namespace Origam.DA.Service
         {
             return "NOW()";
         }
+        internal override string FreeTextSql(string columnsForSeach, string freetext_string, string languageForFullText)
+        {
+            return string.Format("{0} @@ to_tsquery({1})", columnsForSeach, freetext_string);
+        }
+        internal override string ContainsSql(string columnsForSeach, string freetext_string, string languageForFullText)
+        {
+            return string.Format("levenshtein({0},{1})", columnsForSeach, freetext_string);
+        }
     }
 }
