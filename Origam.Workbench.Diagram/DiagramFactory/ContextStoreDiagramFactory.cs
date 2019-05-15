@@ -39,7 +39,8 @@ namespace Origam.Workbench.Diagram.DiagramFactory
                 {
                     Node taskNode = nodeFactory.AddNode(graph, task);
                     graph.AddEdge(storeNode.Id, taskNode.Id);
-                }else if (step is UpdateContextTask updateTask &&
+                }
+                else if (step is UpdateContextTask updateTask &&
                           updateTask.XPathContextStore.Id == contextStore.Id)
                 {
                     Node taskNode = nodeFactory.AddNode(graph, updateTask);

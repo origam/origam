@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Msagl.Core.Geometry;
@@ -31,6 +32,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private readonly EdgeInsertionRule edgeInsertionRule;
         private readonly NodeSelector nodeSelector;
         private readonly DependencyTaskRunner taskRunner;
+        private readonly ContextStoreDependencyPainter dependencyPainter;
 
         private WorkFlowGraph Graph => (WorkFlowGraph)gViewer.Graph;
 
@@ -69,6 +71,12 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			ReDraw();
 
 			persistenceProvider.InstancePersisted += OnInstancePersisted;
+			
+			dependencyPainter = new ContextStoreDependencyPainter(
+				nodeSelector,
+				persistenceProvider,
+				gViewer, 
+				() => (AbstractSchemaItem)UpToDateGraphParent);
 		}
 
         public void ReDraw()
@@ -117,7 +125,24 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
         private void OnEdgeRemoved(object sender, EventArgs e)
         {
-	        DeleteDependency((Edge)sender);
+	        Edge edge  = (Edge)sender;
+	        if (IsContextStoreDependencyArrow(edge) || !ConnectsSchemaItems(edge))
+	        {
+		        return;
+	        }
+	        DeleteDependency(edge);
+        }
+
+        private bool IsContextStoreDependencyArrow(Edge edge)
+        {
+	        return Graph.ContextStoreSubgraph.Nodes.Contains(edge.SourceNode) ||
+	               Graph.ContextStoreSubgraph.Nodes.Contains(edge.TargetNode);
+        }
+
+        private bool ConnectsSchemaItems(Edge edge)
+        {
+	        return Guid.TryParse(edge.Source, out Guid sourceId) &&
+		           Guid.TryParse(edge.Target, out Guid targetId);
         }
 
         private void DeleteDependency(Edge edge)
@@ -134,6 +159,10 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private void OnEdgeAdded(object sender, EventArgs e)
         {
 	        Edge edge = (Edge)sender;
+	        if (IsContextStoreDependencyArrow(edge) || !ConnectsSchemaItems(edge))
+	        {
+		        return;
+	        }
 	        var workflowTaskDependency = AddDependency(edge.Source, edge.Target);
 	        edge.UserData = workflowTaskDependency;
         }
@@ -516,6 +545,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			deleteNodeCommand.BeforeDelete += (o, args) =>
 			{
 				nodeToDelete.OutEdges.ToArray()
+					.Where(ConnectsSchemaItems)
 					.ForEach(DeleteDependency);
 			};
 			deleteNodeCommand.AfterDelete += (o, args) =>
@@ -524,8 +554,10 @@ namespace Origam.Workbench.Diagram.InternalEditor
 				var targetIds = nodeToDelete.OutEdges.Select(edge => edge.Target);
 				foreach (string sourceId in sourceIds)
 				{
+					if (!Guid.TryParse(sourceId, out _)) continue;
 					foreach (string targetId in targetIds)
 					{
+						if (!Guid.TryParse(targetId, out _)) continue;
 						AddDependency(sourceId, targetId);
 					}
 				}
