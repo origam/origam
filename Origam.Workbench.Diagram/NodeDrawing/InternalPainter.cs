@@ -57,7 +57,8 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             Image primaryImage = GetImage(schemaItem.Icon);
 
             Image secondaryImage = null;
-            if (schemaItem is AbstractWorkflowStep workflowStep)
+            if (schemaItem is AbstractWorkflowStep workflowStep
+                && workflowStep.StartConditionRule != null)
             {
                 secondaryImage = GetImage(workflowStep.StartConditionRule.Icon);
             }
