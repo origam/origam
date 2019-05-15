@@ -54,7 +54,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                 (int) node.BoundingBox.Height);
 
             Graphics editorGraphics = (Graphics) graphicsObj;
-            var image = painter.GetImage(node);
+            var image = painter.GetImages(node).Primary;
 
             double centerX = node.GeometryNode.Center.X;
             double centerY = node.GeometryNode.Center.Y;
