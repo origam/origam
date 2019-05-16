@@ -64,7 +64,11 @@ namespace Origam.DA.Service
             Day,
             Month,
             Year
-
+        }
+        internal enum geoLatLonSql
+        {
+            Lat,
+            Lon
         }
         
         public AbstractSqlCommandGenerator()
@@ -3062,13 +3066,15 @@ namespace Origam.DA.Service
                     break;
 
                 case "Latitude":
-                    result = RenderExpression(item.GetChildByName("Point").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ".Lat";
+                    result = LatLonSql(
+                        geoLatLonSql.Lat,
+                        RenderExpression(item.GetChildByName("Point").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     break;
 
                 case "Longitude":
-                    result = RenderExpression(item.GetChildByName("Point").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                        + ".Long";
+                    result = LatLonSql(
+                        geoLatLonSql.Lon,
+                        RenderExpression(item.GetChildByName("Point").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     break;
 
                 case "ToDate":
@@ -3118,6 +3124,7 @@ namespace Origam.DA.Service
             return result;
         }
 
+        internal abstract string LatLonSql(geoLatLonSql latLon, string expresion);
         internal abstract string ContainsSql(string columnsForSeach, string freetext_string, string languageForFullText);
         internal abstract string FreeTextSql(string columnsForSeach, string freetext_string, string languageForFullText);
         internal abstract string NowSql();

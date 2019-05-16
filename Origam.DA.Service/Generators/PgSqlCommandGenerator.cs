@@ -552,5 +552,17 @@ namespace Origam.DA.Service
         {
             return string.Format("levenshtein({0},{1})", columnsForSeach, freetext_string);
         }
+        internal override string LatLonSql(geoLatLonSql latLon, string expresion)
+        {
+            switch (latLon)
+            {
+                case geoLatLonSql.Lat:
+                    return string.Format("(regexp_split_to_array(ST_AsLatLonText(ST_AsText({0})),E'\\\\s+'))[1]", expresion);
+                case geoLatLonSql.Lon:
+                    return string.Format("(regexp_split_to_array(ST_AsLatLonText(ST_AsText({0})),E'\\\\s+'))[2]", expresion);
+                default:
+                    throw new NotSupportedException("Unsuported in Latitude or Longtitude " + latLon.ToString());
+            }
+        }
     }
 }

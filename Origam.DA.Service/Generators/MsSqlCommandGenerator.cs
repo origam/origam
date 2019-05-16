@@ -566,5 +566,17 @@ namespace Origam.DA.Service
             }
             return string.Format("CONTAINS({0},{1},{2})", columnsForSeach, freetext_string, languageForFullText);
         }
+        internal override string LatLonSql(geoLatLonSql latLon, string expresion)
+        {
+            switch (latLon)
+            {
+                case geoLatLonSql.Lat:
+                    return string.Format("{0}.Lat", expresion);
+                case geoLatLonSql.Lon:
+                    return string.Format("{0}.Long", expresion);
+                default:
+                    throw new NotSupportedException("Unsuported in Latitude or Longtitude " + latLon.ToString());
+            }
+        }
     }
 }
