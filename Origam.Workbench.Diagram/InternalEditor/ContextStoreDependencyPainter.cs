@@ -7,6 +7,7 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Diagram.Extensions;
+using Origam.Workbench.Services;
 
 namespace Origam.Workbench.Diagram.InternalEditor
 {
@@ -114,10 +115,10 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
         private bool IsOutpuContextStore(AbstractSchemaItem item,  IContextStore contextStore)
         {
-            if (item is WorkflowTask workflowTask &&
-                workflowTask.OutputContextStore == contextStore)
+            if (item is WorkflowTask workflowTask)
             {
-                return true;
+               if (workflowTask.OutputMethod == ServiceOutputMethod.Ignore) return false;
+               if (workflowTask.OutputContextStore == contextStore) return true;
             }
             if (item is ContextStoreLink link)
             {
@@ -129,6 +130,14 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
         private bool IsInputContextStore(AbstractSchemaItem item,  IContextStore contextStore)
         {
+            if (item is WorkflowTask workflowTask)
+            {
+                if (workflowTask.OutputContextStore == contextStore ||
+                    workflowTask.OutputMethod == ServiceOutputMethod.Ignore)
+                {
+                    return false;
+                }
+            }
             if (item is ServiceMethodCallTask callTask)
             {
                 return callTask.ValidationRuleContextStore == contextStore ||
@@ -139,11 +148,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
                 link.Direction == ContextStoreLinkDirection.Input)
             {
                 return true;
-            }
-            if (item is WorkflowTask workflowTask &&
-                workflowTask.OutputContextStore == contextStore)
-            {
-                return false;
             }
             return item.GetDependencies(true).Contains(contextStore);
         }
