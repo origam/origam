@@ -273,7 +273,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 		private IWorkflowBlock UpToDateGraphParent =>
 			persistenceProvider.RetrieveInstance(
-					typeof(IWorkflowBlock),
+					typeof(AbstractSchemaItem),
 					new Key(graphParentId))
 				as IWorkflowBlock;
 

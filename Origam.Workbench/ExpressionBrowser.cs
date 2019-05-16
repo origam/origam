@@ -726,6 +726,7 @@ namespace Origam.Workbench
                 }
                 else if (parentNode != null
                     && parentNode.Tag is IPersistent  parentItem
+                    && parentItem.Files.Count > 0
                     && parentItem.Files.First() == item.Files.First())
                 {
                     // same file as parent
@@ -946,7 +947,8 @@ namespace Origam.Workbench
 				treeNode.ImageIndex = ImageIndex(node);
 				treeNode.SelectedImageIndex = treeNode.ImageIndex;
                 treeNode.NodeFont = GetFont(node);
-                if (node is IPersistent persistent)
+                if (node is IPersistent persistent
+                    && persistent.Files.Count > 0)
                 {
                     RecolorNodesByFile(tvwExpressionBrowser.RootNode,
                         persistent.Files.First());

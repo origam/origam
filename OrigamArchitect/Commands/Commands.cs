@@ -1632,8 +1632,10 @@ namespace OrigamArchitect.Commands
 	        try
 	        {
 	            newPersistenceService =
-	                filePersistenceBuilder.GetPersistenceService(watchFileChanges: false);
-
+	                filePersistenceBuilder.GetPersistenceService(
+                        watchFileChanges: false,
+                        checkRules: false);
+                
 	            PersistAllData();
 
 	            IDocumentationService docService =
@@ -1643,7 +1645,7 @@ namespace OrigamArchitect.Commands
 	        finally
 	        {
 	            statusBar.SetStatusText("");
-	            newPersistenceService.Dispose();
+	            newPersistenceService?.Dispose();
                 newPersistenceService = null;
             }
 	    }
