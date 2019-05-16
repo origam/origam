@@ -19,7 +19,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
 
         public ICurve GetBoundary(Node node)
         {
-            var borderSize = painter.CalculateBorderSize(node);
+            var borderSize = painter.CalculateMinHeaderBorder(node);
             return CurveFactory.CreateRectangle(borderSize.Width + leftMargin,
                 borderSize.Height, new Point());
         }
@@ -32,7 +32,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             SizeF stringSize =
                 editorGraphics.MeasureString(node.LabelText, painter.Font);
 
-            var borderSize = painter.CalculateBorderSize(node);
+            var borderSize = painter.CalculateMinHeaderBorder(node);
             var borderCorner = new System.Drawing.Point(
                 (int) node.GeometryNode.Center.X - borderSize.Width / 2,
                 (int) node.GeometryNode.Center.Y - borderSize.Height / 2);

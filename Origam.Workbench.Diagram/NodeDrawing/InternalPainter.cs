@@ -77,7 +77,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                 : BlackPen;
         }
 
-        internal Size CalculateBorderSize(Node node)
+        internal Size CalculateMinHeaderBorder(Node node)
         {
             SizeF stringSize =
                 measurementGraphics.MeasureString(node.LabelText, Font);
