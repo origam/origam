@@ -69,20 +69,28 @@ namespace Origam.Workbench.Editors
 			gViewer.MouseWheel += GViewerMouseWheel;
 			gViewer.ZoomWhenMouseWheelScroll = false;
 			gViewer.DoubleClick += GViewerOnDoubleClick;
-			gViewer.MouseMove += (sender, args) => {
-				if (args.Button == MouseButtons.Left &&
-				    lastMouseLocation != System.Drawing.Point.Empty) {
-					int dx = args.Location.X - lastMouseLocation.X;
-					int dy = args.Location.Y - lastMouseLocation.Y;
-					gViewer.Pan(dx,dy);
-				}
-				lastMouseLocation = args.Location;
-			};
-			gViewer.MouseLeave += (sender, args) =>
-			{
-				lastMouseLocation = System.Drawing.Point.Empty;
-			};
+			gViewer.MouseMove += OnMouseMove;
+			gViewer.MouseLeave += OnMouseLeave;
 		}
+
+        private void OnMouseLeave(object sender, EventArgs args)
+        {
+	        lastMouseLocation = System.Drawing.Point.Empty;
+        }
+
+        private void OnMouseMove(object sender, MouseEventArgs args)
+        {
+	        if (args.Button == MouseButtons.Left && 
+	            lastMouseLocation != System.Drawing.Point.Empty && 
+	            !gViewer.InsertingEdge)
+	        {
+		        int dx = args.Location.X - lastMouseLocation.X;
+		        int dy = args.Location.Y - lastMouseLocation.Y;
+		        gViewer.Pan(dx, dy);
+	        }
+
+	        lastMouseLocation = args.Location;
+        }
 
         protected override void Dispose(bool disposing)
         {

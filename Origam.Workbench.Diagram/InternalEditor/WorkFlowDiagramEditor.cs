@@ -316,7 +316,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		}
 
 		void OnMouseDown(object sender, MsaglMouseEventArgs e)
-	    {
+		{
+			if (gViewer.InsertingEdge) return;
 	        if (e.RightButtonIsPressed && !e.Handled)
 	        {
 		        _mouseRightButtonDownPoint = new ClickPoint( gViewer, e);
