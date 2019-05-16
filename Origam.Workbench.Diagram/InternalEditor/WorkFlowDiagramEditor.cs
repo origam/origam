@@ -338,7 +338,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			        {
 				        nodeSelector.Selected=node;
 			        }
-			        else if (Graph.AreRelatives(nodeSelector.Selected, node))
+			        else if (Graph.AreRelatives(nodeSelector.Selected, node) && 
+							 !(node is Subgraph))
 			        {
 				        nodeSelector.Selected=node;
 				        gViewer.Invalidate();
