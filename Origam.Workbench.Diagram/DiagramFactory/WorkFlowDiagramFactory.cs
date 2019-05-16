@@ -44,6 +44,7 @@ namespace Origam.Workbench.Diagram
 		private readonly INodeSelector nodeSelector;
 		private static readonly int nodeMargin = 40;
 		
+		private List<string> expandedSubgraphNodeIds = new List<string>();
 		private WorkFlowGraph graph;
 		private readonly NodeFactory nodeFactory;
 
@@ -55,6 +56,12 @@ namespace Origam.Workbench.Diagram
 
 		public WorkFlowGraph Draw(IWorkflowBlock graphParent)
 		{
+			return Draw(graphParent, new List<string>());
+		}
+
+		public WorkFlowGraph Draw(IWorkflowBlock graphParent, List<string> expandedSubgraphNodeIds)
+		{
+			this.expandedSubgraphNodeIds = expandedSubgraphNodeIds;
 			graph = new WorkFlowGraph();
 			nodeFactory.AddSubgraph(graph.RootSubgraph, graphParent);
 			graph.TopSubgraph.LayoutSettings = new SugiyamaLayoutSettings
@@ -123,7 +130,7 @@ namespace Origam.Workbench.Diagram
 		{
 			Subgraph subgraphNode = nodeFactory.AddSubgraphNode(subGraph, step);
             subgraphNode.UserData = step;
-            if (subgraphNode.Id == nodeSelector.Selected?.Id)
+            if (expandedSubgraphNodeIds.Contains(subgraphNode.Id))
             {
 	            AddNodeItems(step, subgraphNode);
             }

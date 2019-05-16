@@ -1862,13 +1862,13 @@ namespace Origam.Schema
 			}
 		}
 		
-		public AbstractSchemaItem FirstParentOfType<T>()
+		public T FirstParentOfType<T>() where T : class
 		{
 			AbstractSchemaItem parent = ParentItem;
 			for (int i = 0; i < 1000; i++)
 			{
-				if (parent is T) return parent;
-				if (parent == null) return parent;
+				if (parent is T typedParent) return typedParent;
+				if (parent == null) return null;
 				parent = parent.ParentItem;
 			}
 			return null;

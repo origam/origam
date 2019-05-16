@@ -290,7 +290,7 @@ namespace Origam.Workbench.Editors
 		}
 
 		private void ZoomHome(object sender, EventArgs e) {
-			internalEditor.ReDraw();
+			internalEditor.ReDrawAndReselect();
 		}
 		
 		public event EventHandler ToolStripsLoaded;

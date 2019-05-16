@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Msagl.Core.Geometry;
@@ -68,7 +69,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			this.factory = factory;
 			this.nodeSelector = nodeSelector;
 
-			ReDraw();
+			ReDrawAndReselect();
 
 			persistenceProvider.InstancePersisted += OnInstancePersisted;
 			
@@ -76,16 +77,25 @@ namespace Origam.Workbench.Diagram.InternalEditor
 				nodeSelector,
 				persistenceProvider,
 				gViewer, 
-				() => (AbstractSchemaItem)UpToDateGraphParent);
+				graphParentItemGetter: () => (AbstractSchemaItem)UpToDateGraphParent,
+				redrawGraphAction: ReDraw);
 		}
-
-        public void ReDraw()
+        
+        public void ReDrawAndReselect()
         {
-	        gViewer.Graph = factory.Draw(UpToDateGraphParent);
+			ReDraw(nodeSelector.Selected == null 
+				? new List<string>() 
+				: new List<string>{nodeSelector.Selected?.Id}
+			);
+	        nodeSelector.Selected = Graph.FindNodeOrSubgraph(nodeSelector.Selected?.Id);
+        }
+
+        public void ReDraw(List<string> expandedSubgraphNodeIds)
+        {
+	        gViewer.Graph = factory.Draw(UpToDateGraphParent, expandedSubgraphNodeIds);
 	        factory.AlignContextStoreSubgraph();
 	        gViewer.Transform = null;
 	        gViewer.Invalidate();
-	        nodeSelector.Selected = Graph.FindNodeOrSubgraph(nodeSelector.Selected?.Id);
         }
         
         private void OnDoubleClick(object sender, EventArgs e)
@@ -240,7 +250,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			if (node == null)
 			{
 				TrySelectParentStep(persistedSchemaItem);
-				ReDraw();
+				ReDrawAndReselect();
 			}
 			else
 			{
@@ -254,7 +264,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			if (!(persistedSchemaItem is IWorkflowStep))
 			{
 				AbstractSchemaItem parentStep =
-					persistedSchemaItem.FirstParentOfType<IWorkflowStep>();
+					persistedSchemaItem.FirstParentOfType<WorkflowTask>();
 				Node stepNode =
 					gViewer.Graph.FindNodeOrSubgraph(parentStep.Id.ToString());
 				nodeSelector.Selected = stepNode;
@@ -283,7 +293,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 			if (edgeWasRemovedOutsideDiagram)
 			{
-				ReDraw();
+				ReDrawAndReselect();
 			}
 		}
 
@@ -314,7 +324,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			bool deletedLastNode = !parentSubgraph.Nodes.Any();
 			if (deletedLastNode || deletedNodeItem)
 			{
-				ReDraw();
+				ReDrawAndReselect();
 			}
 		}
 
@@ -348,7 +358,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			        {
 				        nodeSelector.Selected=node;
 				        var origTransform = gViewer.Transform;
-				        ReDraw();
+				        ReDrawAndReselect();
 				        gViewer.Transform = origTransform;
 				        gViewer.Invalidate();
 			        }
