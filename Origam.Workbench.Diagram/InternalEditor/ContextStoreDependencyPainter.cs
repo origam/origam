@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Origam.DA.ObjectPersistence;
@@ -45,8 +46,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 				
                 foreach (var schemaItem in allChildren)
                 {
-                    bool isTargetOfFromArrow = IsOutpuContextStore(schemaItem, contextStore);
-                    bool isSourceOfToArrow = IsInputContextStore(schemaItem, contextStore);
+                    bool isTargetOfFromArrow = IsInputContextStore(schemaItem, contextStore);
+                    bool isSourceOfToArrow =  IsOutpuContextStore(schemaItem, contextStore);
                     if (isTargetOfFromArrow && isSourceOfToArrow)
                     {
                         DrawBothDirectionConnection(contextStoreNode, schemaItem);
@@ -110,6 +111,12 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
         private bool IsOutpuContextStore(AbstractSchemaItem item,  IContextStore contextStore)
         {
+            bool hasOutputLink = item.ChildItems
+                .ToEnumerable()
+                .OfType<ContextStoreLink>()
+                .Any(link => link.CallerContextStore == contextStore && 
+                             link.Direction == ContextStoreLinkDirection.Output);
+            if (hasOutputLink) return true;
             return item.GetDependencies(true).Contains(contextStore);
         }
 
@@ -120,11 +127,11 @@ namespace Origam.Workbench.Diagram.InternalEditor
                 return callTask.ValidationRuleContextStore == contextStore ||
                        callTask.StartConditionRuleContextStore == contextStore;
             }
-//			else if (Work)
-//			{
-//			}
-
-            return false;
+            return item.ChildItems
+                .ToEnumerable()
+                .OfType<ContextStoreLink>()
+                .Any(link => link.CallerContextStore == contextStore && 
+                             link.Direction == ContextStoreLinkDirection.Input);
         }
     }
 }
