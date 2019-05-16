@@ -75,6 +75,10 @@
       <Project>{cc4c4334-335d-4369-b0ed-f3c17cd57364}</Project>
       <Name>MIMEParser</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.BI.FastReport\Origam.BI.FastReport.csproj">
+      <Project>{183e889e-77ab-46b0-8d4f-30bb68671907}</Project>
+      <Name>Origam.BI.FastReport</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.BI.PrintIt\Origam.BI.PrintIt.csproj">
       <Project>{65ccc71c-287f-47c2-9b37-f1ecefadc327}</Project>
       <Name>Origam.BI.PrintIt</Name>

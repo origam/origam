@@ -608,9 +608,15 @@ namespace Origam.Workbench.Commands
 				// then delete from the model
                 try
                 {
-	                BeforeDelete(this, EventArgs.Empty);
+                    if (BeforeDelete != null)
+                    {
+                        BeforeDelete(this, EventArgs.Empty);
+                    }
                     _schema.ActiveNode.Delete();
-                    AfterDelete(this,EventArgs.Empty);
+                    if (AfterDelete != null)
+                    {
+                        AfterDelete(this, EventArgs.Empty);
+                    }
                 }
                 catch(Exception ex)
                 {

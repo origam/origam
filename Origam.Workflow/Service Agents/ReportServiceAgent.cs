@@ -83,6 +83,10 @@ namespace Origam.Workflow
             {
                 serviceName = "Origam.BI.SSRS.SSRSService,Origam.BI.SSRS";
             }
+            else if (report is FastReport)
+            {
+                serviceName = "Origam.BI.FastReport.FastReportService,Origam.BI.FastReport";
+            }
             else
             {
                 throw new ArgumentOutOfRangeException("report", report, "Unsupported report type.");

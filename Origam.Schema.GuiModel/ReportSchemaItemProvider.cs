@@ -34,10 +34,11 @@ namespace Origam.Schema.GuiModel
             this.ChildItemTypes.Add(typeof(ExcelReport));
             this.ChildItemTypes.Add(typeof(SSRSReport));
             this.ChildItemTypes.Add(typeof(FileSystemReport));
+            this.ChildItemTypes.Add(typeof(FastReport));
         }
-		
-		#region ISchemaItemProvider Members
-		public override string RootItemType
+
+        #region ISchemaItemProvider Members
+        public override string RootItemType
 		{
 			get
 			{
