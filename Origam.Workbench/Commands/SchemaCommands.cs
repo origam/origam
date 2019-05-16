@@ -593,13 +593,12 @@ namespace Origam.Workbench.Commands
 			if(MessageBox.Show(ResourceUtils.GetString("DoYouWishDelete", _schema.ActiveNode.NodeText), ResourceUtils.GetString("DeleteTile"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
 			{
 				// first close an open editor
-				foreach(IViewContent content in WorkbenchSingleton.Workbench.ViewContentCollection)
+				foreach(IViewContent content in WorkbenchSingleton.Workbench.ViewContentCollection.ToArrayList())
 				{
 					if(content.DisplayedItemId == (_schema.ActiveNode as IPersistent).Id)
 					{
-						(content as IViewContent).IsDirty = false;
+						content.IsDirty = false;
 						(content as DockContent).Close();
-						break;
 					}
 				}
                 IPersistenceProvider persistenceProvider = ServiceManager.Services
