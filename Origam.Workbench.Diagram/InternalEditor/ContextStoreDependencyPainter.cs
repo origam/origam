@@ -127,11 +127,21 @@ namespace Origam.Workbench.Diagram.InternalEditor
                 return callTask.ValidationRuleContextStore == contextStore ||
                        callTask.StartConditionRuleContextStore == contextStore;
             }
-            return item.ChildItems
-                .ToEnumerable()
-                .OfType<ContextStoreLink>()
-                .Any(link => link.CallerContextStore == contextStore && 
-                             link.Direction == ContextStoreLinkDirection.Input);
+            foreach (AbstractSchemaItem childItem in item.ChildItems)
+            {
+                if (childItem is ContextStoreLink link &&
+                    link.CallerContextStore == contextStore &&
+                    link.Direction == ContextStoreLinkDirection.Input)
+                {
+                    return true;
+                }
+
+                if (item.GetDependencies(true).Contains(contextStore))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
