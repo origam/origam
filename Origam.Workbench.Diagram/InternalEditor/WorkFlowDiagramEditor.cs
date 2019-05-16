@@ -188,7 +188,10 @@ namespace Origam.Workbench.Diagram.InternalEditor
         {
 	        if (gViewer.SelectedObject is Node node)
 	        {
-		        bool idParsed = Guid.TryParse(node.Id, out Guid nodeId);
+		        string id = !Graph.IsWorkFlowItemSubGraph(node)
+			        ? UpToDateGraphParent.NodeId
+			        : node.Id;
+		        bool idParsed = Guid.TryParse(id, out Guid nodeId);
 		        if (!idParsed) return false;
 		        var schemaItem = RetrieveItem(nodeId.ToString());
 		        if (schemaItem != null)
@@ -361,6 +364,11 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 		private bool IsNewMenuAvailable(DNode dNodeUnderMouse)
 		{
+			if (!Graph.IsWorkFlowItemSubGraph(dNodeUnderMouse?.Node) && 
+			    !Graph.IsWorkFlowItemSubGraph(nodeSelector.Selected))
+			{
+				return true;
+			}
 			if (dNodeUnderMouse == null) return false;
 			var schemaItem = DNodeToSchemaItem(dNodeUnderMouse);
 			if (!(dNodeUnderMouse.Node is Subgraph) && 
@@ -432,11 +440,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 		private ContextMenuStrip CreateContextMenuForNode(DNode dNodeUnderMouse)
 		{
-			if (Graph.IsInfrastructureSubGraph(dNodeUnderMouse?.Node))
-			{
-				return new ContextMenuStrip();
-			}
-
 			var schemaItemUnderMouse = DNodeToSchemaItem(dNodeUnderMouse);
 			var contextMenu = new AsContextMenu(WorkbenchSingleton.Workbench);
 

@@ -16,16 +16,16 @@ namespace Origam.Workbench.Diagram
         public bool IsWorkFlowItemSubGraph(Node node)
         {
             if (!(node is Subgraph)) return false;
-            if (node == TopSubgraph) return false;
-            if (node == ContextStoreSubgraph) return false;
-            if (node == MainDrawingSubgraf) return false;
+            if (Equals(node, TopSubgraph)) return false;
+            if (Equals(node, ContextStoreSubgraph)) return false;
+            if (Equals(node, MainDrawingSubgraf)) return false;
             return true;
         }
         public bool IsInfrastructureSubGraph(Node node)
         {
             if (!(node is Subgraph)) return false;
-            if (node == TopSubgraph) return true;
-            if (node == ContextStoreSubgraph) return true;
+            if (Equals(node, TopSubgraph)) return true;
+            if (Equals(node, ContextStoreSubgraph)) return true;
             return false;
         }
         private Subgraph GetTopSubgraphChild(string childId)
