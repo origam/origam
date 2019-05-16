@@ -71,8 +71,10 @@ namespace Origam.DA.Service
         public FilePersistenceProvider(DirectoryInfo topDirectory,
             FileEventQueue fileEventQueue,
             TrackerLoaderFactory trackerLoaderFactory, OrigamFileFactory origamFileFactory,
-            FilePersistenceIndex index, OrigamFileManager origamFileManager)
+            FilePersistenceIndex index, OrigamFileManager origamFileManager,
+            bool checkRules)
         {
+            CheckRules = checkRules;
             this.origamFileManager = origamFileManager;
             this.trackerLoaderFactory = trackerLoaderFactory;
             localizationCache = new LocalizationCache();
@@ -123,6 +125,8 @@ namespace Origam.DA.Service
         }
 
         public override bool IsInTransaction => persistor.IsInTransaction;
+
+        public bool CheckRules { get; private set; } = true;
 
         private IFilePersistent RetrieveInstance(PersistedObjectInfo persistedObjInfo,
             bool useCache=true)
@@ -304,7 +308,7 @@ namespace Origam.DA.Service
 
         public override void Persist(IPersistent obj)
         {
-            persistor.Persist(obj);
+            persistor.Persist(obj, CheckRules);
             base.Persist(obj);
         }
 
