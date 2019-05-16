@@ -319,7 +319,7 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
 						string currentUser = "";
 						string systemUser = "";
 
-						using(NpgsqlCommand cmd = new NpgsqlCommand("SELECT CURRENT_TIMESTAMP", cn))
+						using(NpgsqlCommand cmd = new NpgsqlCommand("SELECT CURRENT_TIMESTAMP(3)", cn))
 						{
 							time = cmd.ExecuteScalar();
 						}

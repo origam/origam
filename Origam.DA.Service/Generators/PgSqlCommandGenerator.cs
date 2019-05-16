@@ -97,8 +97,11 @@ namespace Origam.DA.Service
 				sqlParam.Precision = 18;
 				sqlParam.Scale = 10;
 			}
-
-			return sqlParam;
+            if (sqlParam.NpgsqlDbType == NpgsqlTypes.NpgsqlDbType.Timestamp)
+            {
+                sqlParam.Precision = 3;
+            }
+            return sqlParam;
 		}
 
 		public override void DeriveStoredProcedureParameters(IDbCommand command)
@@ -172,7 +175,13 @@ namespace Origam.DA.Service
 
         public override string DefaultDdlDataType(OrigamDataType columnType)
         {
-            return ConvertDataType(columnType, null).ToString();
+            switch (columnType)
+            {
+                case OrigamDataType.Date:
+                    return string.Format("{0}(3)", ConvertDataType(columnType, null).ToString());
+                default:
+                    return ConvertDataType(columnType, null).ToString();
+            }
         }
 
         public override OrigamDataType ToOrigamDataType(string ddlType)
