@@ -180,7 +180,8 @@ namespace Origam.DA.Service_net2Tests
                     trackerLoaderFactory,
                     origamFileFactory,
                     index,
-                    origamFileManager);
+                    origamFileManager,
+                    true);
         }
     }
 }
