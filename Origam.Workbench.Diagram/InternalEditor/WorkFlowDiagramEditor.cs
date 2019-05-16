@@ -188,7 +188,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
         {
 	        if (gViewer.SelectedObject is Node node)
 	        {
-		        string id = !Graph.IsWorkFlowItemSubGraph(node)
+		        string id = node is Subgraph && !Graph.IsWorkFlowItemSubGraph(node)
 			        ? UpToDateGraphParent.NodeId
 			        : node.Id;
 		        bool idParsed = Guid.TryParse(id, out Guid nodeId);
@@ -364,7 +364,9 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 		private bool IsNewMenuAvailable(DNode dNodeUnderMouse)
 		{
-			if (!Graph.IsWorkFlowItemSubGraph(dNodeUnderMouse?.Node) && 
+			if (dNodeUnderMouse?.Node is Subgraph &&
+			    nodeSelector.Selected is Subgraph &&
+				!Graph.IsWorkFlowItemSubGraph(dNodeUnderMouse.Node) && 
 			    !Graph.IsWorkFlowItemSubGraph(nodeSelector.Selected))
 			{
 				return true;
@@ -478,7 +480,10 @@ namespace Origam.Workbench.Diagram.InternalEditor
 				newMenu.DropDownItems.AddRange(menuItem.DropDownItems.ToArray<ToolStripItem>());
 			}
 
-			contextMenu.AddSubItem(newMenu);
+			if (newMenu.DropDownItems.Count > 0)
+			{
+				contextMenu.AddSubItem(newMenu);
+			}
 
 			if (Graph.IsWorkFlowItemSubGraph(dNodeUnderMouse?.Node)) 
 			{
