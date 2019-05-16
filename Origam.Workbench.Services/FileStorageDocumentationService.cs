@@ -55,7 +55,7 @@ namespace Origam.Workbench.Services
         public override string GetDocumentation(Guid schemaItemId,
             DocumentationType docType)
         {
-            if(schemaItemId == Guid.Empty) throw new ArgumentException("schemaItemId cannot be empty");
+            if(schemaItemId == Guid.Empty) return "";
             DocXmlDocument docXmlDocument = GetDocumentFor(schemaItemId);
             IEnumerable<XmlNode> nodes = docXmlDocument.GetNodesFor(schemaItemId);
             string documentation = new DocumentationCompleteXmlDocument(nodes)
