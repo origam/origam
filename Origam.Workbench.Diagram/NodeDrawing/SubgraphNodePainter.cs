@@ -13,11 +13,13 @@ namespace Origam.Workbench.Diagram.NodeDrawing
     {
         private readonly InternalPainter painter;
         private readonly NodePainter nodePainter;
+        private readonly NodeHeaderPainter nodeHeaderPainter;
 
         public SubgraphNodePainter(InternalPainter internalPainter)
         {
             painter = internalPainter;
             nodePainter = new NodePainter(internalPainter);
+            nodeHeaderPainter = new NodeHeaderPainter(internalPainter);
         }
         
         public ICurve GetBoundary(Node node)
@@ -52,52 +54,34 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             var borderSize = new Size(
                 (int) node.BoundingBox.Width,
                 (int) node.BoundingBox.Height);
-
-            Graphics editorGraphics = (Graphics) graphicsObj;
-            var image = painter.GetImages(node).Primary;
-
-            double centerX = node.GeometryNode.Center.X;
-            double centerY = node.GeometryNode.Center.Y;
             var borderCorner = new System.Drawing.Point(
-                (int) centerX - borderSize.Width / 2,
-                (int) centerY - borderSize.Height / 2);
+                (int) node.GeometryNode.Center.X - borderSize.Width / 2,
+                (int) node.GeometryNode.Center.Y - borderSize.Height / 2);
             Rectangle border = new Rectangle(borderCorner, borderSize);
 
-            var labelPoint = new PointF(
-                (float) node.GeometryNode.Center.X - (float) border.Width / 2 +
-                painter.NodeHeight + painter.Margin + painter.TextSideMargin,
-                (float) centerY - border.Height / 2.0f + painter.LabelTopMargin);
-
-            Rectangle imageBackground = new Rectangle(borderCorner,
-                new Size(painter.NodeHeight, painter.NodeHeight));
-            var imageHorizontalBorder =
-                (imageBackground.Width - image.Width) / 2;
-            var imageVerticalBorder =
-                (imageBackground.Height - image.Height) / 2;
-            var imagePoint = new PointF(
-                (float) (node.GeometryNode.Center.X - (float) border.Width / 2 +
-                         imageHorizontalBorder),
-                (float) (node.GeometryNode.Center.Y -
-                         (float) border.Height / 2 + imageVerticalBorder));
-
-
+            Rectangle headerBorder = new Rectangle(
+                borderCorner.X, 
+                border.Bottom - painter.NodeHeaderHeight, 
+                border.Width, 
+                painter.NodeHeaderHeight);
+            
+            Graphics editorGraphics = (Graphics) graphicsObj;
+            nodeHeaderPainter.Draw(node, editorGraphics, headerBorder);
+            
             editorGraphics.DrawUpSideDown(drawAction: graphics =>
-                {
-                    graphics.FillRectangle(painter.GreyBrush, imageBackground);
-                    graphics.DrawString(node.LabelText, painter.Font, painter.BlackBrush,
-                        labelPoint, painter.DrawFormat);
-                    graphics.DrawRectangle(painter.GetActiveBorderPen(node), border);
-                    graphics.DrawImage(image, imagePoint);
-                },
-                yAxisCoordinate: (float) node.GeometryNode.Center.Y);
+            {
+                graphics.DrawRectangle(painter.GetActiveBorderPen(node), border);
 
+            },
+            yAxisCoordinate: (float) node.GeometryNode.Center.Y);
+            
             return true;
         }
         
         private float GetLabelWidth(Node node)
         {
             SizeF stringSize = painter.MeasureString(node.LabelText);
-            var labelWidth = stringSize.Width + painter.NodeHeight + painter.Margin + painter.TextSideMargin;
+            var labelWidth = stringSize.Width + painter.NodeHeaderHeight + painter.Margin + painter.TextSideMargin;
             return labelWidth;
         }
     }

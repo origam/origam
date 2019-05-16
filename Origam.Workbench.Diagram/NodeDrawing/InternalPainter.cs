@@ -32,7 +32,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         public readonly SolidBrush RedBrush = new SolidBrush(System.Drawing.Color.Red);
         public readonly Brush WhiteBrush  = new SolidBrush(System.Drawing.Color.White);
 
-        public readonly int NodeHeight = 25;
+        public readonly int NodeHeaderHeight = 25;
 
         internal INodeSelector NodeSelector { get; }
 
@@ -82,9 +82,10 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             SizeF stringSize =
                 measurementGraphics.MeasureString(node.LabelText, Font);
 
-            int totalWidth = (int) (Margin + NodeHeight + TextSideMargin +
+            int totalWidth = (int) (Margin + NodeHeaderHeight + TextSideMargin +
                                     stringSize.Width + TextSideMargin);
-            return new Size(totalWidth, NodeHeight);
+            if(GetImages(node).Secondary != null) totalWidth += NodeHeaderHeight;
+            return new Size(totalWidth, NodeHeaderHeight);
         }
 
         internal SizeF MeasureString(string nodeLabelText)

@@ -40,14 +40,14 @@ namespace Origam.Workbench.Diagram.NodeDrawing
 
             var labelPoint = new PointF(
                 (float) node.GeometryNode.Center.X - (float) border.Width / 2 +
-                painter.NodeHeight +  leftMargin,
+                painter.NodeHeaderHeight +  leftMargin,
                 (float) node.GeometryNode.Center.Y -
                 (int) stringSize.Height / 2);
 
             var imageHorizontalBorder =
-                (painter.NodeHeight - image.Width) / 2;
+                (painter.NodeHeaderHeight - image.Width) / 2;
             var imageVerticalBorder =
-                (painter.NodeHeight - image.Height) / 2;
+                (painter.NodeHeaderHeight - image.Height) / 2;
             var imagePoint = new PointF(
                 (float) (node.GeometryNode.Center.X - (float) border.Width / 2 +
                          imageHorizontalBorder) + leftMargin,
