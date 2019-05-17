@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Msagl.Core.Geometry;
@@ -6,6 +8,7 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using MoreLinq;
 using Origam.DA.ObjectPersistence;
+using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.UI;
@@ -30,6 +33,9 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private readonly EdgeInsertionRule edgeInsertionRule;
         private readonly NodeSelector nodeSelector;
         private readonly DependencyTaskRunner taskRunner;
+        private readonly ContextStoreDependencyPainter dependencyPainter;
+
+        private WorkFlowGraph Graph => (WorkFlowGraph)gViewer.Graph;
 
         public WorkFlowDiagramEditor(Guid graphParentId, GViewer gViewer, Form parentForm,
 	        IPersistenceProvider persistenceProvider, WorkFlowDiagramFactory factory, NodeSelector nodeSelector)
@@ -45,8 +51,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 				viewerToImposeOn: gViewer,
 				predicate: (sourceNode, targetNode) =>
 				{
-					if (sourceNode is Subgraph) return false;
-					if (targetNode is Subgraph) return false;
+					if (!Graph.IsWorkFlowItemSubGraph(sourceNode)) return false;
+					if (!Graph.IsWorkFlowItemSubGraph(targetNode)) return false;
 					if (RetrieveItem(sourceNode.Id) is ContextStore ) return false;
 					if (RetrieveItem(targetNode.Id) is ContextStore ) return false;
 					var sourcesParent = gViewer.Graph.FindParentSubGraph(sourceNode);
@@ -63,16 +69,31 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			this.factory = factory;
 			this.nodeSelector = nodeSelector;
 
-			ReDraw();
+			ReDrawAndReselect();
 
 			persistenceProvider.InstancePersisted += OnInstancePersisted;
+			
+			dependencyPainter = new ContextStoreDependencyPainter(
+				nodeSelector,
+				persistenceProvider,
+				gViewer, 
+				graphParentItemGetter: () => (AbstractSchemaItem)UpToDateGraphParent,
+				redrawGraphAction: ReDraw);
 		}
-
-        public void ReDraw()
+        
+        public void ReDrawAndReselect()
         {
-	        gViewer.Graph = factory.Draw(UpToDateGraphParent);
-	        gViewer.DefaultDragObject = gViewer.ViewerGraph.Nodes()
-		        .Single(x => x.Node == gViewer.Graph.RootSubgraph.Subgraphs.First());
+			ReDraw(nodeSelector.Selected == null 
+				? new List<string>() 
+				: new List<string>{nodeSelector.Selected?.Id}
+			);
+	        nodeSelector.Selected = Graph.FindNodeOrSubgraph(nodeSelector.Selected?.Id);
+        }
+
+        public void ReDraw(List<string> expandedSubgraphNodeIds)
+        {
+	        gViewer.Graph = factory.Draw(UpToDateGraphParent, expandedSubgraphNodeIds);
+	        factory.AlignContextStoreSubgraph();
 	        gViewer.Transform = null;
 	        gViewer.Invalidate();
         }
@@ -105,20 +126,42 @@ namespace Origam.Workbench.Diagram.InternalEditor
         {
 	        if (gViewer.SelectedObject is Edge edge)
 	        {
-		        var dependencyItem = edge.UserData as WorkflowTaskDependency;
-		        schemaService.SelectItem(dependencyItem);
+		        if (edge.UserData is WorkflowTaskDependency dependencyItem)
+		        {
+			        schemaService.SelectItem(dependencyItem);
+		        }
 	        }
         }
 
         private void OnEdgeRemoved(object sender, EventArgs e)
-        {	
-	        Edge edge = (Edge)sender;
+        {
+	        Edge edge  = (Edge)sender;
+	        if (IsContextStoreDependencyArrow(edge) || !ConnectsSchemaItems(edge))
+	        {
+		        return;
+	        }
+	        DeleteDependency(edge);
+        }
 
+        private bool IsContextStoreDependencyArrow(Edge edge)
+        {
+	        return Graph.ContextStoreSubgraph.Nodes.Contains(edge.SourceNode) ||
+	               Graph.ContextStoreSubgraph.Nodes.Contains(edge.TargetNode);
+        }
+
+        private bool ConnectsSchemaItems(Edge edge)
+        {
+	        return Guid.TryParse(edge.Source, out Guid sourceId) &&
+		           Guid.TryParse(edge.Target, out Guid targetId);
+        }
+
+        private void DeleteDependency(Edge edge)
+        {
 	        AbstractSchemaItem dependentItem = RetrieveItem(edge.Target);
 	        var workflowTaskDependency = dependentItem.ChildItems
 		        .ToEnumerable()
 		        .OfType<WorkflowTaskDependency>()
-		        .SingleOrDefault(x => x.WorkflowTaskId == Guid.Parse(edge.Source));
+		        .Single(x => x.WorkflowTaskId == Guid.Parse(edge.Source));
 	        workflowTaskDependency.IsDeleted = true;
 	        workflowTaskDependency.Persist();
         }
@@ -126,11 +169,20 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private void OnEdgeAdded(object sender, EventArgs e)
         {
 	        Edge edge = (Edge)sender;
-			 
+	        if (IsContextStoreDependencyArrow(edge) || !ConnectsSchemaItems(edge))
+	        {
+		        return;
+	        }
+	        var workflowTaskDependency = AddDependency(edge.Source, edge.Target);
+	        edge.UserData = workflowTaskDependency;
+        }
+
+        private WorkflowTaskDependency AddDependency(string source, string target)
+        {
 	        var independentItem = persistenceProvider.RetrieveInstance(
 		        typeof(IWorkflowStep),
-		        new Key(edge.Source)) as IWorkflowStep;
-	        AbstractSchemaItem dependentItem = RetrieveItem(edge.Target);
+		        new Key(source)) as IWorkflowStep;
+	        AbstractSchemaItem dependentItem = RetrieveItem(target);
 	        var workflowTaskDependency = new WorkflowTaskDependency
 	        {
 		        SchemaExtensionId = dependentItem.SchemaExtensionId,
@@ -139,14 +191,18 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		        Task = independentItem
 	        };
 	        workflowTaskDependency.Persist();
-	        edge.UserData = workflowTaskDependency;
+	        return workflowTaskDependency;
         }
 
         private bool TrySelectActiveNodeInModelView()
         {
 	        if (gViewer.SelectedObject is Node node)
 	        {
-		        Guid nodeId = Guid.Parse(node.Id);
+		        string id = node is Subgraph && !Graph.IsWorkFlowItemSubGraph(node)
+			        ? UpToDateGraphParent.NodeId
+			        : node.Id;
+		        bool idParsed = Guid.TryParse(id, out Guid nodeId);
+		        if (!idParsed) return false;
 		        var schemaItem = RetrieveItem(nodeId.ToString());
 		        if (schemaItem != null)
 		        {
@@ -176,24 +232,25 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			
 			if (persistedSchemaItem.IsDeleted)
 			{
-				switch (persistedSchemaItem)
+				if (persistedSchemaItem is WorkflowTaskDependency taskDependency)
 				{
-					case IWorkflowStep _:
-						RemoveNode(persistedSchemaItem.Id);
-						break;
-					case WorkflowTaskDependency taskDependency:
-						RemoveEdge(taskDependency.WorkflowTaskId);
-						break;
+					RemoveEdge(taskDependency.WorkflowTaskId);
+				}
+				else
+				{
+					RemoveNode(persistedSchemaItem.Id);
 				}
 			}
 		}
 
+		
 		private void UpdateNodeOf(AbstractSchemaItem persistedSchemaItem)
 		{
-			Node node = gViewer.Graph.FindNode(persistedSchemaItem.Id.ToString());
+			Node node = gViewer.Graph.FindNodeOrSubgraph(persistedSchemaItem.Id.ToString());
 			if (node == null)
 			{
-				ReDraw();
+				TrySelectParentStep(persistedSchemaItem);
+				ReDrawAndReselect();
 			}
 			else
 			{
@@ -202,46 +259,78 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			}
 		}
 
+		private void TrySelectParentStep(AbstractSchemaItem persistedSchemaItem)
+		{
+			if (!(persistedSchemaItem is IWorkflowStep))
+			{
+				AbstractSchemaItem parentStep =
+					persistedSchemaItem.FirstParentOfType<WorkflowTask>();
+				Node stepNode =
+					gViewer.Graph.FindNodeOrSubgraph(parentStep.Id.ToString());
+				nodeSelector.Selected = stepNode;
+			}
+		}
+
 		private IWorkflowBlock UpToDateGraphParent =>
 			persistenceProvider.RetrieveInstance(
-					typeof(IWorkflowBlock),
+					typeof(AbstractSchemaItem),
 					new Key(graphParentId))
 				as IWorkflowBlock;
-		
+
 
 		private void RemoveEdge(Guid sourceId)
 		{
 			bool edgeWasRemovedOutsideDiagram = gViewer.Graph.RootSubgraph
 				.GetAllNodes()
 				.SelectMany(node => node.Edges.Select(edge => edge.Source))
-				.Select(Guid.Parse)
+				.Select(source =>
+				{
+					Guid.TryParse(source, out Guid id);
+					return id;
+				})
+				.Where(id => id != Guid.Empty)
 				.Any(targetNodeId => targetNodeId == sourceId);
 
 			if (edgeWasRemovedOutsideDiagram)
 			{
-				ReDraw();
+				ReDrawAndReselect();
 			}
 		}
 
-		private bool RemoveNode(Guid nodeId)
+		private void RemoveNode(Guid nodeId)
 		{
-			Node node = gViewer.Graph.FindNode(nodeId.ToString());
-			if (node == null) return true;
-			Subgraph parentSubgraph = gViewer.Graph.FindParentSubGraph(node);
-
-			IViewerNode viewerNode = gViewer.FindViewerNode(node);
-			gViewer.RemoveNode(viewerNode, true);
-			gViewer.Graph.RemoveNodeEverywhere(node);
-			if (parentSubgraph != null && !parentSubgraph.Nodes.Any())
+			bool deletedNodeWasSelected = nodeSelector.SelectedNodeId == nodeId;
+			if (deletedNodeWasSelected)
 			{
-				ReDraw();
+				nodeSelector.Selected = null;
 			}
-
-			return false;
+			Node node = gViewer.Graph.FindNodeOrSubgraph(nodeId.ToString());
+			if (node == null)
+			{
+				return;
+			}
+			
+			Subgraph parentSubgraph = gViewer.Graph.FindParentSubGraph(node);
+			if (deletedNodeWasSelected)
+			{
+				nodeSelector.Selected = parentSubgraph;
+			}
+			gViewer.Graph.RemoveNodeEverywhere(node);
+			IViewerNode viewerNode = gViewer.FindViewerNode(node);
+			if (viewerNode == null) return;
+			
+			gViewer.RemoveNode(viewerNode, true);
+			bool deletedNodeItem = !(node is Subgraph);
+			bool deletedLastNode = !parentSubgraph.Nodes.Any();
+			if (deletedLastNode || deletedNodeItem)
+			{
+				ReDrawAndReselect();
+			}
 		}
 
 		void OnMouseDown(object sender, MsaglMouseEventArgs e)
-	    {
+		{
+			if (gViewer.InsertingEdge) return;
 	        if (e.RightButtonIsPressed && !e.Handled)
 	        {
 		        _mouseRightButtonDownPoint = new ClickPoint( gViewer, e);
@@ -249,10 +338,30 @@ namespace Origam.Workbench.Diagram.InternalEditor
                 cm.Show(parentForm,_mouseRightButtonDownPoint.InScreenSystem);
 	        }else if (e.LeftButtonIsPressed)
 	        {
-		        if (gViewer.SelectedObject is Node node)
+		        if(gViewer.SelectedObject is Node node)
 		        {
-					nodeSelector.Selected = node;
-					gViewer.Invalidate();
+			        if (nodeSelector.Selected == node)
+			        {
+				        return;
+			        }
+			        else if (nodeSelector.Selected?.Id == node.Id)
+			        {
+				        nodeSelector.Selected=node;
+			        }
+			        else if (Graph.AreRelatives(nodeSelector.Selected, node) && 
+							 !(node is Subgraph))
+			        {
+				        nodeSelector.Selected=node;
+				        gViewer.Invalidate();
+			        }
+			        else 
+			        {
+				        nodeSelector.Selected=node;
+				        var origTransform = gViewer.Transform;
+				        ReDrawAndReselect();
+				        gViewer.Transform = origTransform;
+				        gViewer.Invalidate();
+			        }
 		        }
 	        }
 	    }
@@ -260,17 +369,23 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		private bool IsDeleteMenuItemAvailable(DNode objectUnderMouse)
 		{
 			if (objectUnderMouse == null) return false;
-			Subgraph topWorkFlowSubGraph = gViewer.Graph.RootSubgraph.Subgraphs.FirstOrDefault();
-			if (nodeSelector.Selected == topWorkFlowSubGraph) return false;
+			if (nodeSelector.Selected == Graph.MainDrawingSubgraf) return false;
 			return objectUnderMouse.Node == nodeSelector.Selected;
 		}
 
 		private bool IsNewMenuAvailable(DNode dNodeUnderMouse)
 		{
+			if (dNodeUnderMouse?.Node is Subgraph &&
+			    nodeSelector.Selected is Subgraph &&
+				!Graph.IsWorkFlowItemSubGraph(dNodeUnderMouse.Node) && 
+			    !Graph.IsWorkFlowItemSubGraph(nodeSelector.Selected))
+			{
+				return true;
+			}
 			if (dNodeUnderMouse == null) return false;
-			var schemaItemUnderMouse = DNodeToSchemaItem(dNodeUnderMouse);
-			if (!(dNodeUnderMouse.Node is Subgraph) &&
-			    !(schemaItemUnderMouse is ServiceMethodCallTask)) return false;
+			var schemaItem = DNodeToSchemaItem(dNodeUnderMouse);
+			if (!(dNodeUnderMouse.Node is Subgraph) && 
+			    !(schemaItem is ServiceMethodCallParameter)) return false;
 			return dNodeUnderMouse.Node == nodeSelector.Selected;
 		}
 
@@ -291,10 +406,12 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		
 		private ContextMenuStrip CreateContextMenuForEdge(DEdge edge)
 		{
+			if(edge.Edge.UserData == null) return new ContextMenuStrip();
+			
 			var deleteMenuItem = new ToolStripMenuItem();
 			deleteMenuItem.Text = "Delete";
 			deleteMenuItem.Image = ImageRes.icon_delete;
-			deleteMenuItem.Click += (sender, args) => gViewer.RemoveEdge(edge, true); ;
+			deleteMenuItem.Click += (sender, args) => gViewer.RemoveEdge(edge, true);
 		        
 			ToolStripMenuItem addBetweenMenu = new ToolStripMenuItem("Add Between");
 			addBetweenMenu.Image = ImageRes.icon_new;
@@ -337,7 +454,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		private ContextMenuStrip CreateContextMenuForNode(DNode dNodeUnderMouse)
 		{
 			var schemaItemUnderMouse = DNodeToSchemaItem(dNodeUnderMouse);
-
 			var contextMenu = new AsContextMenu(WorkbenchSingleton.Workbench);
 
 			var deleteMenuItem = new ToolStripMenuItem();
@@ -366,14 +482,21 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			}
 			else
 			{
+				AsMenuCommand menuItem = new AsMenuCommand("New");
 				var builder = new SchemaItemEditorsMenuBuilder(true);
-				var submenuItems = builder.BuildSubmenu(schemaItemUnderMouse);
-				newMenu.DropDownItems.AddRange(submenuItems);
+				menuItem.PopulateMenu(builder);
+				menuItem.SubItems.AddRange(menuItem.DropDownItems);
+				new AsContextMenu(WorkbenchSingleton.Workbench).AddSubItem(menuItem);
+				menuItem.ShowDropDown();
+				newMenu.DropDownItems.AddRange(menuItem.DropDownItems.ToArray<ToolStripItem>());
 			}
 
-			contextMenu.AddSubItem(newMenu);
+			if (newMenu.DropDownItems.Count > 0)
+			{
+				contextMenu.AddSubItem(newMenu);
+			}
 
-			if (!(dNodeUnderMouse?.Node is Subgraph))
+			if (Graph.IsWorkFlowItemSubGraph(dNodeUnderMouse?.Node)) 
 			{
 				ToolStripMenuItem addAfterMenu = new ToolStripMenuItem("Add After");
 				addAfterMenu.Image = ImageRes.icon_new;
@@ -405,6 +528,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 		private AbstractSchemaItem DNodeToSchemaItem(DNode dNodeUnderMouse)
 		{
+			if (!Guid.TryParse(dNodeUnderMouse.Node.Id, out Guid _)) return null;
 			return RetrieveItem(dNodeUnderMouse.Node.Id);
 		}
 		
@@ -424,15 +548,44 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 	        if (nodeSelected)
 	        {
-		        new DeleteActiveNode().Run();
+		        DeleteActiveNodeWithDependencies();
 	        }
 	        else
 	        {
 		        throw new Exception("Could not delete node because it is not selected in the tree.");
 	        }
         }
-        
-        class ClickPoint
+
+		private void DeleteActiveNodeWithDependencies()
+		{
+			Node nodeToDelete =
+				Graph.FindNodeOrSubgraph(schemaService.ActiveNode.NodeId);
+
+			var deleteNodeCommand = new DeleteActiveNode();
+			deleteNodeCommand.BeforeDelete += (o, args) =>
+			{
+				nodeToDelete.OutEdges.ToArray()
+					.Where(ConnectsSchemaItems)
+					.ForEach(DeleteDependency);
+			};
+			deleteNodeCommand.AfterDelete += (o, args) =>
+			{
+				var sourceIds = nodeToDelete.InEdges.Select(edge => edge.Source);
+				var targetIds = nodeToDelete.OutEdges.Select(edge => edge.Target);
+				foreach (string sourceId in sourceIds)
+				{
+					if (!Guid.TryParse(sourceId, out _)) continue;
+					foreach (string targetId in targetIds)
+					{
+						if (!Guid.TryParse(targetId, out _)) continue;
+						AddDependency(sourceId, targetId);
+					}
+				}
+			};
+			deleteNodeCommand.Run();
+		}
+
+		class ClickPoint
         {
 	        public Point InMsaglSystem { get; }
 	        public System.Drawing.Point InScreenSystem { get;}

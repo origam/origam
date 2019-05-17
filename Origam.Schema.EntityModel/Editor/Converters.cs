@@ -1841,8 +1841,8 @@ namespace Origam.Schema.EntityModel
 			if(constant.DataType == OrigamDataType.Boolean)
 			{
 				ArrayList list = new ArrayList(2);
-				list.Add(true);
-				list.Add(false);
+				list.Add(ResourceUtils.GetString("Yes"));
+				list.Add(ResourceUtils.GetString("No"));
 				return new StandardValuesCollection(list);
 			}
 
@@ -1875,14 +1875,7 @@ namespace Origam.Schema.EntityModel
 
 			if(constant.DataType == OrigamDataType.Boolean)
 			{
-				if(value.ToString() == "Ano")
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+                return value.ToString() == ResourceUtils.GetString("Yes");
 			}
 
 			if(lookup == null | value == null)

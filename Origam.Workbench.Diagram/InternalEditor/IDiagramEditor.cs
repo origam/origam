@@ -4,6 +4,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
 {
     interface IDiagramEditor: IDisposable
     {
-        void ReDraw();
+        void ReDrawAndReselect();
     }
 }

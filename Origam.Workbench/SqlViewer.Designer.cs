@@ -57,7 +57,7 @@ namespace Origam.Workbench
             this.btnExecuteSql.Margin = new System.Windows.Forms.Padding(5, 5, 5, 20);
             this.btnExecuteSql.Name = "btnExecuteSql";
             this.btnExecuteSql.Size = new System.Drawing.Size(72, 70);
-            this.btnExecuteSql.Text = "E&xecute SQL\r\n ";
+            this.btnExecuteSql.Text = "E&xecute SQL";
             this.btnExecuteSql.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnExecuteSql.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnExecuteSql.Click += new System.EventHandler(this.btnExecuteSql_Click);

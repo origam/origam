@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Msagl.Drawing;
 
 namespace Origam.Workbench.Diagram
@@ -9,6 +10,26 @@ namespace Origam.Workbench.Diagram
 
     public class NodeSelector: INodeSelector
     {
-        public Node Selected { get; set; }
+        private Node selected;
+        public Guid? SelectedNodeId { get; private set; }
+
+        public Node Selected
+        {
+            get => selected;
+            set
+            {
+                if(Guid.TryParse(value?.Id, out Guid id)){
+                    SelectedNodeId = id;
+                }
+                else
+                {
+                    SelectedNodeId = null;
+                }
+                selected = value;
+                NodeSelected?.Invoke(this,SelectedNodeId);
+            }
+        }
+
+        public event EventHandler<Guid?> NodeSelected;
     }
 }

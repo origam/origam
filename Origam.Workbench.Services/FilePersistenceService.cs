@@ -48,7 +48,8 @@ namespace Origam.Workbench.Services
         public event EventHandler<FileSystemChangeEventArgs> ReloadNeeded;
             
         public FilePersistenceService(IList<ElementName> defaultFolders,
-            string basePath = null, bool watchFileChanges = true, bool useBinFile = true)    
+            string basePath = null, bool watchFileChanges = true, bool useBinFile = true,
+            bool checkRules = true)
         {
             this.defaultFolders = defaultFolders;
             var topDirectory = GetTopDirectory(basePath);
@@ -89,7 +90,8 @@ namespace Origam.Workbench.Services
                 index: index,
                 origamFileFactory: origamFileFactory,
                 trackerLoaderFactory: trackerLoaderFactory,
-                origamFileManager: origamFileManager);
+                origamFileManager: origamFileManager,
+                checkRules: checkRules);
             
             FileEventQueue.ReloadNeeded += OnReloadNeeded;
             SchemaListProvider = schemaProvider;

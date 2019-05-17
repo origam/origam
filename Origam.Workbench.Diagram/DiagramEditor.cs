@@ -49,8 +49,10 @@ namespace Origam.Workbench.Editors
         private GViewer gViewer;
         private readonly IPersistenceProvider persistenceProvider;
         private IDiagramEditor internalEditor;
+        private HScrollBar hScrollBar;
+        private TableLayoutPanel tableLayoutPanel1;
         private readonly NodeSelector nodeSelector;
-        private readonly Graphics graphics;
+        private System.Drawing.Point lastMouseLocation;
 
         public DiagramEditor()
 		{
@@ -66,8 +68,29 @@ namespace Origam.Workbench.Editors
 			gViewer.FixedScale = 1;
 			gViewer.MouseWheel += GViewerMouseWheel;
 			gViewer.ZoomWhenMouseWheelScroll = false;
-			graphics = CreateGraphics();
+			gViewer.DoubleClick += GViewerOnDoubleClick;
+			gViewer.MouseMove += OnMouseMove;
+			gViewer.MouseLeave += OnMouseLeave;
 		}
+
+        private void OnMouseLeave(object sender, EventArgs args)
+        {
+	        lastMouseLocation = System.Drawing.Point.Empty;
+        }
+
+        private void OnMouseMove(object sender, MouseEventArgs args)
+        {
+	        if (args.Button == MouseButtons.Left && 
+	            lastMouseLocation != System.Drawing.Point.Empty && 
+	            !gViewer.InsertingEdge)
+	        {
+		        int dx = args.Location.X - lastMouseLocation.X;
+		        int dy = args.Location.Y - lastMouseLocation.Y;
+		        gViewer.Pan(dx, dy);
+	        }
+
+	        lastMouseLocation = args.Location;
+        }
 
         protected override void Dispose(bool disposing)
         {
@@ -87,12 +110,22 @@ namespace Origam.Workbench.Editors
 		private void InitializeComponent()
 		{
             Microsoft.Msagl.Core.Geometry.Curves.PlaneTransformation planeTransformation1 = new Microsoft.Msagl.Core.Geometry.Curves.PlaneTransformation();
+            this.hScrollBar = new System.Windows.Forms.HScrollBar();
             this.gViewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
-            
-            gViewer.DoubleClick += GViewerOnDoubleClick;
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // gViewer1
+            // hScrollBar
+            // 
+            this.hScrollBar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.hScrollBar.Location = new System.Drawing.Point(0, 325);
+            this.hScrollBar.Name = "hScrollBar";
+            this.hScrollBar.Size = new System.Drawing.Size(548, 20);
+            this.hScrollBar.TabIndex = 1;
+            this.hScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.HScrollBar_Scroll);
+            // 
+            // gViewer
             // 
             this.gViewer.ArrowheadLength = 10D;
             this.gViewer.AsyncLayout = false;
@@ -101,12 +134,15 @@ namespace Origam.Workbench.Editors
             this.gViewer.BuildHitTree = true;
             this.gViewer.CurrentLayoutMethod = Microsoft.Msagl.GraphViewerGdi.LayoutMethod.UseSettingsOfTheGraph;
             this.gViewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gViewer.EdgeInsertButtonVisible = true;
             this.gViewer.FileName = "";
+            this.gViewer.FixedScale = 0D;
             this.gViewer.ForwardEnabled = false;
             this.gViewer.Graph = null;
             this.gViewer.InsertingEdge = false;
+            this.gViewer.LayoutAlgorithmSettingsButtonVisible = true;
             this.gViewer.LayoutEditingEnabled = true;
-            this.gViewer.Location = new System.Drawing.Point(0, 0);
+            this.gViewer.Location = new System.Drawing.Point(3, 3);
             this.gViewer.LooseOffsetForRouting = 0.25D;
             this.gViewer.MouseHitDistance = 0.05D;
             this.gViewer.Name = "gViewer";
@@ -116,25 +152,47 @@ namespace Origam.Workbench.Editors
             this.gViewer.PaddingForEdgeRouting = 8D;
             this.gViewer.PanButtonPressed = false;
             this.gViewer.SaveAsImageEnabled = true;
-            this.gViewer.SaveAsMsaglEnabled = true;
+            this.gViewer.SaveAsMsaglEnabled = false;
+            this.gViewer.SaveButtonVisible = true;
+            this.gViewer.SaveGraphButtonVisible = true;
             this.gViewer.SaveInVectorFormatEnabled = true;
-            this.gViewer.Size = new System.Drawing.Size(656, 445);
+            this.gViewer.Size = new System.Drawing.Size(542, 319);
             this.gViewer.TabIndex = 0;
             this.gViewer.TightOffsetForRouting = 0.125D;
             this.gViewer.ToolBarIsVisible = false;
             this.gViewer.Transform = planeTransformation1;
+            this.gViewer.UndoRedoButtonsVisible = true;
             this.gViewer.WindowZoomButtonPressed = false;
+            this.gViewer.ZoomF = 1D;
+            this.gViewer.ZoomWhenMouseWheelScroll = true;
             this.gViewer.ZoomWindowThreshold = 0.05D;
-            this.gViewer.SaveAsMsaglEnabled = false;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 0F));
+            this.tableLayoutPanel1.Controls.Add(this.gViewer, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.hScrollBar, 0, 1);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(548, 345);
+            this.tableLayoutPanel1.TabIndex = 2;
             // 
             // DiagramEditor
             // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(656, 445);
-            this.Controls.Add(this.gViewer);
+            this.AutoScaleBaseSize = new System.Drawing.Size(7, 16);
+            this.ClientSize = new System.Drawing.Size(548, 345);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.Name = "DiagramEditor";
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
+
 		}
 
 		#endregion
@@ -150,9 +208,10 @@ namespace Origam.Workbench.Editors
 			GViewer viewer = sender as GViewer;
 			if (viewer.SelectedObject is Node node)
 			{
+				if (!Guid.TryParse(node.Id, out Guid id)) return;
 				AbstractSchemaItem clickedItem = 
 					(AbstractSchemaItem)persistenceProvider
-						.RetrieveInstance(typeof(AbstractSchemaItem), new Key(node.Id));
+						.RetrieveInstance(typeof(AbstractSchemaItem), new Key(id));
 				if(clickedItem != null)
 				{
 					EditSchemaItem cmd = new EditSchemaItem
@@ -176,7 +235,7 @@ namespace Origam.Workbench.Editors
 						nodeSelector: nodeSelector,
 						parentForm: this,
 						persistenceProvider: persistenceProvider,
-						factory: new WorkFlowDiagramFactory(nodeSelector, graphics));
+						factory: new WorkFlowDiagramFactory(nodeSelector));
 					break;
 				case IContextStore contextStore:
 					internalEditor = new GeneralDiagramEditor<IContextStore>(
@@ -231,10 +290,30 @@ namespace Origam.Workbench.Editors
 		}
 
 		private void ZoomHome(object sender, EventArgs e) {
-			internalEditor.ReDraw();
+			internalEditor.ReDrawAndReselect();
 		}
 		
 		public event EventHandler ToolStripsLoaded;
 		public event EventHandler AllToolStripsRemoved;
-	}
+
+        private void HScrollBar_Scroll(object sender, ScrollEventArgs e)
+        {
+            if (e.NewValue == e.OldValue) return;
+            var focusSubgraph = gViewer.Graph.RootSubgraph.Subgraphs.FirstOrDefault();
+            if (focusSubgraph == null) return;
+
+            double distanceFromCenter = focusSubgraph.Width / 100 * e.NewValue - focusSubgraph.Width / 2;
+            gViewer.CenterToXCoordinate(focusSubgraph.Pos.X + distanceFromCenter);
+        }
+
+//        private void VScrollBar_Scroll(object sender, ScrollEventArgs e)
+//        {
+//	        if (e.NewValue == e.OldValue) return;
+//	        var focusSubgraph = gViewer.Graph.RootSubgraph.Subgraphs.FirstOrDefault();
+//	        if (focusSubgraph == null) return;
+//
+//	        double distanceFromCenter = -(focusSubgraph.Height / 100 * (100 - e.NewValue) - focusSubgraph.Height / 2);
+//	        gViewer.CenterToYCoordinate(focusSubgraph.Pos.Y + distanceFromCenter);
+//        }
+    }
 }

@@ -40,15 +40,19 @@ namespace Origam.OrigamEngine
                 persistenceService.FileEventQueue);
 
         public IPersistenceService GetPersistenceService() => 
-            GetPersistenceService(watchFileChanges: true);
+            GetPersistenceService(watchFileChanges: true,
+                checkRules: true);
 
-        public IPersistenceService GetPersistenceService(bool watchFileChanges)
+        public IPersistenceService GetPersistenceService(bool watchFileChanges,
+            bool checkRules)
         {
-            persistenceService = CreateNewPersistenceService(watchFileChanges);
+            persistenceService = CreateNewPersistenceService(watchFileChanges,
+                checkRules);
             return persistenceService;
         }
 
-        public FilePersistenceService CreateNewPersistenceService(bool watchFileChanges)
+        public FilePersistenceService CreateNewPersistenceService(bool watchFileChanges,
+            bool checkRules)
         {
             List<ElementName> defaultFolders = new List<ElementName>
             {
@@ -58,7 +62,8 @@ namespace Origam.OrigamEngine
 
             return new FilePersistenceService(
                 defaultFolders: defaultFolders,
-                watchFileChanges: watchFileChanges);
+                watchFileChanges: watchFileChanges,
+                checkRules: checkRules);
         }
 
         public FilePersistenceService CreateNoBinFilePersistenceService()

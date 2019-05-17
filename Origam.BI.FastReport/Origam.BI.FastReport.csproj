@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FastReport.OpenSource.Export.PdfSimple" Version="2019.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Origam.BI\Origam.BI.csproj" />
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
+    <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel.csproj" />
+  </ItemGroup>
+
+</Project>

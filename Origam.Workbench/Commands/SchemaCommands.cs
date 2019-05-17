@@ -558,7 +558,8 @@ namespace Origam.Workbench.Commands
 	public class DeleteActiveNode : AbstractMenuCommand
 	{
 		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-
+		public event EventHandler BeforeDelete;
+		public event EventHandler AfterDelete;
 		public override bool IsEnabled
 		{
 			get
@@ -592,13 +593,12 @@ namespace Origam.Workbench.Commands
 			if(MessageBox.Show(ResourceUtils.GetString("DoYouWishDelete", _schema.ActiveNode.NodeText), ResourceUtils.GetString("DeleteTile"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
 			{
 				// first close an open editor
-				foreach(IViewContent content in WorkbenchSingleton.Workbench.ViewContentCollection)
+				foreach(IViewContent content in WorkbenchSingleton.Workbench.ViewContentCollection.ToArrayList())
 				{
 					if(content.DisplayedItemId == (_schema.ActiveNode as IPersistent).Id)
 					{
-						(content as IViewContent).IsDirty = false;
+						content.IsDirty = false;
 						(content as DockContent).Close();
-						break;
 					}
 				}
                 IPersistenceProvider persistenceProvider = ServiceManager.Services
@@ -607,7 +607,15 @@ namespace Origam.Workbench.Commands
 				// then delete from the model
                 try
                 {
+                    if (BeforeDelete != null)
+                    {
+                        BeforeDelete(this, EventArgs.Empty);
+                    }
                     _schema.ActiveNode.Delete();
+                    if (AfterDelete != null)
+                    {
+                        AfterDelete(this, EventArgs.Empty);
+                    }
                 }
                 catch(Exception ex)
                 {

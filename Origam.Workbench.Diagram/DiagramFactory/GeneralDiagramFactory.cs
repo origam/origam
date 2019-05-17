@@ -3,7 +3,7 @@ using Origam.Schema;
 
 namespace Origam.Workbench.Diagram.DiagramFactory
 {
-    class GeneralDiagramFactory: IDiagramFactory<ISchemaItem>
+    class GeneralDiagramFactory: IDiagramFactory<ISchemaItem, Graph>
     {
         private Graph graph;
 		

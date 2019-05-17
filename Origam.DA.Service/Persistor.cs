@@ -53,9 +53,9 @@ namespace Origam.DA.Service
             this.trackerLoaderFactory = trackerLoaderFactory;
         }
 
-        public void Persist(IPersistent obj)
+        public void Persist(IPersistent obj, bool checkRules)
         {
-            CheckObjectCanBePersisted(obj);
+            CheckObjectCanBePersisted(obj, checkRules);
             IFilePersistent instance = (IFilePersistent) obj;
 
             OrigamFile newOrigamFile = FindFileWhereInstanceShouldBeStored(instance);
@@ -316,7 +316,7 @@ namespace Origam.DA.Service
             return OrigamXmlManager.NewDocument();
         }
 
-        private static void CheckObjectCanBePersisted(IPersistent obj)
+        private static void CheckObjectCanBePersisted(IPersistent obj, bool checkRules)
         {
             if (!(obj is IFilePersistent instance))
             {
@@ -324,7 +324,7 @@ namespace Origam.DA.Service
                     "Object does not implement IFilePersistent interface "
                     + obj.GetType());
             }
-            if (!instance.IsDeleted)
+            if (checkRules && !instance.IsDeleted)
             {
                 RuleTools.DoOnFirstViolation(
                     objectToCheck: instance,

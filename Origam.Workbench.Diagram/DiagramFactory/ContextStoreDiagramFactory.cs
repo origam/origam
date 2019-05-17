@@ -6,11 +6,12 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.WorkflowModel;
+using Origam.Workbench.Diagram.NodeDrawing;
 using DrawingNode = Microsoft.Msagl.Drawing.Node;
 
 namespace Origam.Workbench.Diagram.DiagramFactory
 {
-    class ContextStoreDiagramFactory: IDiagramFactory<IContextStore>
+    class ContextStoreDiagramFactory: IDiagramFactory<IContextStore, Graph>
     {
 
         private Graph graph;
@@ -36,9 +37,10 @@ namespace Origam.Workbench.Diagram.DiagramFactory
                 if (step is WorkflowTask task &&
                     task.OutputContextStoreId == contextStore.Id)
                 {
-                    Node taskNode =nodeFactory.AddNode(graph, task);
+                    Node taskNode = nodeFactory.AddNode(graph, task);
                     graph.AddEdge(storeNode.Id, taskNode.Id);
-                }else if (step is UpdateContextTask updateTask &&
+                }
+                else if (step is UpdateContextTask updateTask &&
                           updateTask.XPathContextStore.Id == contextStore.Id)
                 {
                     Node taskNode = nodeFactory.AddNode(graph, updateTask);

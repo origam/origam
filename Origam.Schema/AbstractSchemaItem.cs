@@ -72,6 +72,7 @@ namespace Origam.Schema
 			return this.Name;
 		}
 
+        [Browsable(false)]
 		public IEnumerable<AbstractSchemaItem> ChildrenRecursive =>
 			GetChildrenRecursive(this);
 
@@ -1860,6 +1861,18 @@ namespace Origam.Schema
 			{
 				item.Dump();
 			}
+		}
+		
+		public T FirstParentOfType<T>() where T : class
+		{
+			AbstractSchemaItem parent = ParentItem;
+			for (int i = 0; i < 1000; i++)
+			{
+				if (parent is T typedParent) return typedParent;
+				if (parent == null) return null;
+				parent = parent.ParentItem;
+			}
+			return null;
 		}
 		
 	}
