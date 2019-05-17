@@ -62,9 +62,15 @@ namespace Origam.Git
         }
         public void Init(string gitusername, string gitemail)
         {
+            List<string> rules = new List<string>
+            {
+                "/index.bin"
+            };
+            Repo.Ignore.AddTemporaryRules(rules);
             Commands.Stage(Repo, "*");
             Signature author = new Signature(gitusername, gitemail, DateTime.Now);
             Signature committer = author;
+           
             Repo.Commit("Initial commit", author, committer);
             CreateGitConfig(gitusername,gitemail);
         }
