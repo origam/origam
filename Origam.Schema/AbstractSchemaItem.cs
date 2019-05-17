@@ -72,6 +72,7 @@ namespace Origam.Schema
 			return this.Name;
 		}
 
+        [Browsable(false)]
 		public IEnumerable<AbstractSchemaItem> ChildrenRecursive =>
 			GetChildrenRecursive(this);
 
