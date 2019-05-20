@@ -205,6 +205,8 @@ namespace Origam.DA.Service
                     return "geography";
                 case OrigamDataType.Memo:
                     return "nvarchar(max)";
+                case OrigamDataType.Xml:
+                    return "nvarchar(max)";
                 case OrigamDataType.Blob:
                     return "varbinary(max)";
                 default:
@@ -284,9 +286,6 @@ namespace Origam.DA.Service
                     return SqlDbType.DateTime;
                 case OrigamDataType.Long:
                     return SqlDbType.BigInt;
-                case OrigamDataType.Xml:
-                case OrigamDataType.Memo:
-                    return SqlDbType.NText;
                 case OrigamDataType.Array:
                     return SqlDbType.Structured;
                 case OrigamDataType.Geography:
@@ -503,10 +502,6 @@ namespace Origam.DA.Service
         internal override string TextSql(string expresion)
         {
             return string.Format("CAST ({0} AS {1} )", expresion, "NVARCHAR(MAX)");
-        }
-        internal override string GetXmlLenghSql(string expresion)
-        {
-            return expresion + " (2000)";
         }
         internal override string DatePartSql(string datetype, string expresion)
         {
