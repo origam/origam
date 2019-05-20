@@ -286,6 +286,9 @@ namespace Origam.DA.Service
                     return SqlDbType.DateTime;
                 case OrigamDataType.Long:
                     return SqlDbType.BigInt;
+                case OrigamDataType.Xml:
+                case OrigamDataType.Memo:
+                    return SqlDbType.NText;
                 case OrigamDataType.Array:
                     return SqlDbType.Structured;
                 case OrigamDataType.Geography:

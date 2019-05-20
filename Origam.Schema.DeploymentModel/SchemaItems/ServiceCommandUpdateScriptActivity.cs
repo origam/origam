@@ -68,9 +68,9 @@ namespace Origam.Schema.DeploymentModel
         #region Properties
 
         [Category("Update Script Activity")]
-        [EntityColumn("E01")]
+        [EntityColumn("SS01")]
         [XmlAttribute("databasetype")]
-        public DatabaseType DatabaseType { get; set; }
+        public DatabaseType DatabaseType { get; set; } 
 
         [EntityColumn("G05")]  
 		public Guid ServiceId;
