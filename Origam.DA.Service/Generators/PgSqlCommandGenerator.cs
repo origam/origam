@@ -258,8 +258,9 @@ namespace Origam.DA.Service
 				case OrigamDataType.Xml:
 				case OrigamDataType.Geography:
 				case OrigamDataType.Memo:
+                    return NpgsqlDbType.Text;
 				case OrigamDataType.Array:
-					return NpgsqlDbType.Text;
+					return NpgsqlDbType.Array;
 				case OrigamDataType.Integer: 
 					return NpgsqlDbType.Integer;
 				case OrigamDataType.Float:
@@ -472,10 +473,6 @@ namespace Origam.DA.Service
         internal override string TextSql(string expresion)
         {
             return string.Format("CAST ({0} AS {1} )", expresion, "TEXT");
-        }
-        internal override string GetXmlLenghSql(string expresion)
-        {
-            return expresion;
         }
         internal override string DatePartSql(string datetype, string expresion)
         {
