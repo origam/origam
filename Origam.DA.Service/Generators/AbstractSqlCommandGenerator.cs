@@ -3421,7 +3421,7 @@ namespace Origam.DA.Service
                         + "(" + dataLenght + ")";
 
                 case OrigamDataType.Xml:
-                    return GetXmlLenghSql(DdlDataType(columnType, dbDataType));
+                    return DdlDataType(columnType, dbDataType);
 
                 case OrigamDataType.Float:
                     return DdlDataType(columnType, dbDataType) + "(28,10)";
@@ -3430,8 +3430,6 @@ namespace Origam.DA.Service
                     return DdlDataType(columnType, dbDataType);
             }
         }
-
-        internal abstract string GetXmlLenghSql(string expresion);
         #endregion
 
         #region ICloneable Members
