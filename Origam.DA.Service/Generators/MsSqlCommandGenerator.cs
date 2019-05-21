@@ -528,7 +528,7 @@ namespace Origam.DA.Service
                 case DateTypeSql.Hour:
                     return "hh";
                 case DateTypeSql.Day:
-                    return "d";
+                    return "dd";
                 case DateTypeSql.Month:
                     return "m";
                 case DateTypeSql.Year:

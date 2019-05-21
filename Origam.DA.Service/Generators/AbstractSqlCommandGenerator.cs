@@ -2951,8 +2951,8 @@ namespace Origam.DA.Service
                     //            + date
                     //            + "))";
                     result = DateDiffSql(DateTypeSql.Day,
-                            DateAddSql(DateTypeSql.Year, "-" + DatePartSql("year", NowSql()) + "-1900", NowSql()),
-                            DateAddSql(DateTypeSql.Year, "-" + DatePartSql("year", date) + "-1900", date)
+                            DateAddSql(DateTypeSql.Year, "-(" + DatePartSql("year", NowSql()) + "-1900)", NowSql()),
+                            DateAddSql(DateTypeSql.Year, "-(" + DatePartSql("year", date) + "-1900)", date)
                     );
                     break;
 
