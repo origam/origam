@@ -535,7 +535,9 @@ namespace Origam.DA.Service
         }
         internal override string STDistanceSql(string point1, string point2)
         {
-            return string.Format("ST_Distance({0},{1})", point1, point2);
+            return string.Format("ST_Distance(('SRID=4326;' || {0})::geography,('SRID=4326;' || {1})::geography)", 
+                ConvertGeoToTextClause(point1),
+                ConvertGeoToTextClause(point2));
         }
         internal override string NowSql()
         {
