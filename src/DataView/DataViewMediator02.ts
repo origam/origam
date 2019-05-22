@@ -25,10 +25,9 @@ import { ITableViewMediator } from "./TableView/TableViewMediator";
 import { IFormViewMediator } from "./FormView/FormViewMediator";
 import { Machine } from "xstate";
 import { IDispatcher } from "../utils/mediator";
+import * as DataViewActions from './DataViewActions';
+import { isType } from "ts-action";
 
-export const dataViewMachine02 = Machine({
-  states: {}
-});
 
 export interface IParentMediator {
   api: IApi;
@@ -111,7 +110,21 @@ export class DataViewMediator02 implements IDataViewMediator02 {
       aReloadChildren: () => IAReloadChildren;
       aDeleteRow: () => IADeleteRow;
     }
-  ) {}
+  ) {
+    this.subscribeMediator();
+  }
+
+  subscribeMediator() {
+    this.listen((event: any) => {
+      if(isType(event, DataViewActions.startEditing)) {
+
+      } else if(isType(event, DataViewActions.finishEditing)) {
+
+      } else if(isType(event, DataViewActions.cancelEditing)) {
+
+      }
+    })
+  }
 
   getRoot() {
     return this;

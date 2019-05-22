@@ -18,3 +18,7 @@ export const makeCellVisibleById = action(
     payload
   })
 );
+
+export const makeSelectedCellVisible = action(
+  `[${NS}] makeSelectedCellVisible`
+);

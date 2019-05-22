@@ -48,3 +48,8 @@ export const requestCreateRow = action(`[${NS}] RequestCreateRow`);
 
 export const deleteSelectedRow = action(`[${NS}] DeleteSelectedRow`);
 export const createRow = action(`[${NS}] CreateRow`);
+
+
+
+export const ACTIVATE_VIEW = "ACTIVATE_VIEW";
+export const DEACTIVATE_VIEW = "DEACTIVATE_VIEW";

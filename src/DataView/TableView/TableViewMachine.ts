@@ -1,18 +1,15 @@
-import { interpret, Machine, State } from "xstate";
-import { Interpreter } from "xstate/lib/interpreter";
-import { action, observable, computed } from "mobx";
-import { IDataViewMediator } from "../types/IDataViewMediator";
-import { unpack } from "../../utils/objects";
-import { ML } from "../../utils/types";
-import { isType } from "ts-action";
-import * as DataViewActions from "../DataViewActions";
-import * as FormViewActions from "./FormViewActions";
 import { IDataTable } from "../types/IDataTable";
 import { IRecCursor } from "../types/IRecCursor";
-import { IFormViewMachine } from "./types";
+import { interpret, State, Machine } from "xstate";
+import { action, observable, computed } from "mobx";
+import { isType } from "ts-action";
+import { Interpreter } from "xstate/lib/interpreter";
+import { unpack } from "../../utils/objects";
+import * as DataViewActions from "../DataViewActions";
+import * as TableViewActions from "./TableViewActions";
 import { IPropCursor } from "../types/IPropCursor";
 
-export class FormViewMachine implements IFormViewMachine {
+export class TableViewMachine {
   constructor(
     public P: {
       dataTable: IDataTable;
@@ -26,20 +23,14 @@ export class FormViewMachine implements IFormViewMachine {
     this.interpreter.onTransition(
       action((state: State<any>) => {
         this.state = state;
-        console.log("FormViewMachine:", state);
+        console.log("TableViewMachine:", state);
       })
     );
     this.state = this.interpreter.state;
     this.subscribeMediator();
   }
 
-  subscribeMediator() {
-    this.P.listen((action: any) => {
-      if (isType(action, DataViewActions.dataTableLoaded)) {
-        this.interpreter.send("DATA_TABLE_LOADED");
-      }
-    });
-  }
+  subscribeMediator() {}
 
   machine = Machine(
     {
@@ -48,7 +39,7 @@ export class FormViewMachine implements IFormViewMachine {
         inactive: {
           on: {
             [DataViewActions.ACTIVATE_VIEW]: {
-              cond: "isFormView",
+              cond: "isTableView",
               target: "active"
             }
           }
@@ -96,7 +87,7 @@ export class FormViewMachine implements IFormViewMachine {
         notShallSleep: (ctx, event) => !this.shallSleep,
         hasData: (ctx, event) => this.hasData,
         notHasData: (ctx, event) => !this.hasData,
-        isTableView: (ctx, event) => event.viewType === "Form"
+        isTableView: (ctx, event) => event.viewType === "Table"
       }
     }
   );
@@ -106,7 +97,7 @@ export class FormViewMachine implements IFormViewMachine {
     if (!this.isCellSelected) {
       this.dispatch(DataViewActions.selectFirstCell());
     }
-    this.dispatch(DataViewActions.startEditing());
+    this.dispatch(TableViewActions.makeSelectedCellVisible());
   }
 
   @action.bound
@@ -121,63 +112,12 @@ export class FormViewMachine implements IFormViewMachine {
   }
 
   @computed get isCellSelected() {
-    return this.P.recCursor.isSelected && this.P.propCursor.isSelected;
+    return this.P.propCursor.isSelected && this.P.recCursor.isSelected;
   }
 
   @action.bound dispatch(event: any) {
     this.P.dispatch(event);
   }
-
-  /*definition = Machine(
-    {
-      initial: "PRE_INIT",
-      states: {
-        PRE_INIT: {
-          on: {
-            "": {
-              target: "START_EDIT",
-              cond: "dataTableHasContent"
-            },
-            DATA_TABLE_LOADED: {
-              target: "START_EDIT",
-              cond: "dataTableHasContent"
-            }
-          }
-        },
-        START_EDIT: {
-          invoke: { src: "startEdit" },
-          onEntry: "startEdit",
-          on: {
-            "": "IDLE"
-          }
-        },
-        IDLE: {
-          on: {
-            DATA_TABLE_LOADED: {
-              target: "START_EDIT",
-              cond: "dataTableHasContent"
-            }
-          }
-        }
-      }
-    },
-    {
-      actions: {
-        startEdit: action(() => {
-          console.log("Start edit");
-          this.P.dispatch(DataViewActions.selectFirstCell());
-          this.P.dispatch(DataViewActions.startEditing());
-        })
-      },
-      services: {},
-      guards: {
-        dataTableHasContent: () => {
-          console.log("FVM cond", this.dataTable.hasContent);
-          return this.dataTable.hasContent;
-        }
-      }
-    }
-  );*/
 
   interpreter: Interpreter<any, any, any>;
   @observable state: State<any, any>;

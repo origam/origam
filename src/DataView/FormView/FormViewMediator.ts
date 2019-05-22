@@ -80,15 +80,20 @@ const formViewMachine = Machine(
             cond: "isNotForMe"
           }
         }
-      },
-
+      }
     }
   },
   {
     guards: {
-      dataTableHasContent: (ctx: any, event: any) => {return false},
-      isForMe: (ctx: any, event: any) => {return false},
-      isNotForMe: (ctx: any, event: any) => {return false}
+      dataTableHasContent: (ctx: any, event: any) => {
+        return false;
+      },
+      isForMe: (ctx: any, event: any) => {
+        return false;
+      },
+      isNotForMe: (ctx: any, event: any) => {
+        return false;
+      }
     },
     actions: {
       onCreateRowClick: (ctx: any, event: any) => {},
@@ -143,7 +148,6 @@ export interface IFormViewMediator extends IDispatcher {
 }
 
 export class FormViewMediator implements IFormViewMediator {
-
   type: IViewType.Form = IViewType.Form;
 
   constructor(
@@ -161,7 +165,11 @@ export class FormViewMediator implements IFormViewMediator {
       aActivateView: () => IAActivateView;
       aDeactivateView: () => IADeactivateView;
     }
-  ) {}
+  ) {
+    this.subscribeMediator();
+  }
+
+  subscribeMediator() {}
 
   dispatch(event: any): void {
     this.getRoot().downstreamDispatch(event);
@@ -181,9 +189,11 @@ export class FormViewMediator implements IFormViewMediator {
   }
 
   downstreamDispatch(event: any): void {
+    for (let l of this.listeners.values()) {
+      l(event);
+    }
     console.log("FormView received:", event);
   }
-
 
   get propReorder(): IPropReorder {
     return this.P.propReorder();
