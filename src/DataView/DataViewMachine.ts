@@ -158,7 +158,7 @@ export class DataViewMachine implements IDataViewMachine {
               ) as IRecord;
               for (let prop of this.dataTable.properties.items) {
                 newRecord[prop.dataIndex] =
-                  result.itemArray[prop.dataSourceIndex];
+                  result.wrappedObject[prop.dataSourceIndex];
               }
               this.dataTable.substRecord(RowId, newRecord);
               this.dataTable.removeDirtyRow(RowId);

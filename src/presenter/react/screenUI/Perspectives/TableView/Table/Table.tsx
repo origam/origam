@@ -138,17 +138,21 @@ export class Table extends React.Component<{ controller: ITable }> {
     }
   }
 
-  disposer: (() => void) | undefined;
+  disposers: Array<() => void> = [];
 
   componentDidMount() {
-    this.disposer = this.props.controller.listenMediator((action, sender) => {
+    this.disposers.push(this.props.controller.listenMediator((action) => {
       if (isType(action, TableViewActions.makeCellVisibleByIdx)) {
         this.scrollToCellShortest(
           action.payload.rowIdx,
           action.payload.columnIdx
         );
       }
-    });
+    }))
+  }
+
+  componentWillUnmount() {
+    this.disposers.forEach(d => d());
   }
 
   @action.bound scrollToCellShortest(rowIdx: number, columnIdx: number) {

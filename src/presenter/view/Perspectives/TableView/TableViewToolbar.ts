@@ -5,11 +5,8 @@ import { computed, action } from "mobx";
 import { ML } from "../../../../utils/types";
 import { IDataTable } from "../../../../DataView/types/IDataTable";
 import { IASwitchView } from "../../../../DataView/types/IASwitchView";
-import { IAvailViews } from "../../../../DataView/types/IAvailViews";
-import { IASelNextRec } from "../../../../DataView/types/IASelNextRec";
-import { IASelPrevRec } from "../../../../DataView/types/IASelPrevRec";
-import { IDataViewMediator } from "../../../../DataView/types/IDataViewMediator";
 import * as DataViewActions from "../../../../DataView/DataViewActions";
+import { IDataViewMediator02 } from "../../../../DataView/DataViewMediator02";
 
 
 export class TableViewToolbar {
@@ -17,7 +14,7 @@ export class TableViewToolbar {
     public P: {
       dataTable: ML<IDataTable>;
       aSwitchView: ML<IASwitchView>;
-      mediator: ML<IDataViewMediator>;
+      mediator: ML<IDataViewMediator02>;
       label: string;
       isLoading: () => boolean;
     }

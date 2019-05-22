@@ -14,7 +14,6 @@ export class DataViewMediator implements IDataViewMediator {
     }
   }
 
-
   listeners: Map<number, IListener> = new Map();
   idGen = 0;
 

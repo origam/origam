@@ -23,6 +23,12 @@ import { IADeleteRow } from "./types/IADeleteRow";
 import { action } from "mobx";
 import { ITableViewMediator } from "./TableView/TableViewMediator";
 import { IFormViewMediator } from "./FormView/FormViewMediator";
+import { Machine } from "xstate";
+import { IDispatcher } from "../utils/mediator";
+
+export const dataViewMachine02 = Machine({
+  states: {}
+});
 
 export interface IParentMediator {
   api: IApi;
@@ -36,10 +42,7 @@ export interface ISelection {
   selColIdx: number | undefined;
 }
 
-export interface IDataViewMediator02 {
-  dispatch(action: any): void;
-  listen(cb: (action: any, sender: any) => void): () => void;
-
+export interface IDataViewMediator02 extends IDispatcher {
   editing: IEditing;
   dataTable: IDataTable;
   availViews: IAvailViews;
@@ -110,14 +113,32 @@ export class DataViewMediator02 implements IDataViewMediator02 {
     }
   ) {}
 
-  @action.bound
-  dispatch(action: any) {
-    throw new Error("Not implemented.");
+  getRoot() {
+    return this;
   }
 
   @action.bound
-  listen(cb: (action: any, sender: any) => void): () => void {
-    throw new Error("Method not implemented.");
+  dispatch(event: any) {
+    this.getRoot().downstreamDispatch(event);
+  }
+
+  listeners = new Map<number, (event: any) => void>();
+  idgen = 0;
+  @action.bound
+  listen(cb: (event: any) => void): () => void {
+    const myId = this.idgen++;
+    this.listeners.set(myId, cb);
+    return () => this.listeners.delete(myId);
+  }
+
+  downstreamDispatch(event: any) {
+    console.log("FormView received:", event);
+    for (let l of this.listeners.values()) {
+      l(event);
+    }
+    this.availViews.items.forEach(availView =>
+      availView.downstreamDispatch(event)
+    );
   }
 
   get editing(): IEditing {

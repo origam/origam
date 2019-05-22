@@ -5,13 +5,14 @@ import { IASwitchView } from "../../../../DataView/types/IASwitchView";
 import { unpack } from "../../../../utils/objects";
 import * as DataViewActions from "../../../../DataView/DataViewActions";
 import { action } from "mobx";
-import { IDataViewMediator } from "../../../../DataView/types/IDataViewMediator";
+
+import { IDataViewMediator02 } from "../../../../DataView/DataViewMediator02";
 
 export class FormViewToolbar {
   constructor(
     public P: {
       aSwitchView: ML<IASwitchView>;
-      mediator: ML<IDataViewMediator>;
+      mediator: ML<IDataViewMediator02>;
       label: string;
       isLoading: () => boolean;
     }

@@ -60,7 +60,7 @@ export class FormScreen implements IFormScreen {
 
   @action.bound
   open(): void {
-    console.log("Opening FormView", this.menuItemId, this.order);
+    console.log("Opening FormScreen", this.menuItemId, this.order);
     this.machine.start();
     for (let dv of this.dataViews) {
       dv.aStartView.do();

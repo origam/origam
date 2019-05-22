@@ -28,3 +28,11 @@ export interface IScreenContentFactory {
     dataViews: any
   }
 }
+
+export interface IFormScreenMediator {
+
+}
+
+export interface IFormScreenDispatcher {
+  
+}

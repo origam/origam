@@ -18,6 +18,91 @@ import { IViewType } from "../types/IViewType";
 import { IAStartEditing } from "../types/IAStartEditing";
 import { IAFinishEditing } from "../types/IAFinishEditing";
 import { IASelCell } from "../types/IASelCell";
+import { Machine } from "xstate";
+import { IDispatcher } from "../../utils/mediator";
+import { action } from "mobx";
+
+const activeTransitions = {
+  ON_CREATE_ROW_CLICK: { actions: "onCreateRowClick" },
+  ON_DELETE_ROW_CLICK: { actions: "onDeleteRowClick" },
+  ON_SELECT_PREV_ROW_CLICK: { actions: "onSelectPrevRowClick" },
+  ON_SELECT_NEXT_ROW_CLICK: { actions: "onSelectNextRowClick" },
+  ON_FIELD_CLICK: { actions: "onFieldClick" },
+  ON_NO_FIELD_CLICK: { actions: "onNoFieldClick" },
+  ON_FORM_OUTSIDE_CLICK: { actions: "onFormOutsideClick" },
+  ON_FIELD_KEY_DOWN: { actions: "onFieldKeyDown" },
+  ON_FIELD_CHANGE: { actions: "onFieldChange" },
+
+  START_EDITING: {}, // ?
+  CANCEL_EDITING: {}, // ?
+  FINISH_EDITING: {}, // ?
+  SELECT_PREV_ROW: {}, // ?
+  SELECT_NEXT_ROW: {}, // ?
+  SELECT_PREV_CELL: {}, // ?
+  SELECT_NEXT_CELL: {}, // ?
+  SELECT_CELL: {}, // ?
+  MAKE_CELL_VISIBLE: {} // ?
+};
+
+const formViewMachine = Machine(
+  {
+    initial: "INACTIVE",
+    states: {
+      INACTIVE: {
+        on: {
+          ACTIVATE: {
+            target: "ACTIVE",
+            cond: "isForMe"
+          }
+        }
+      },
+      ACTIVE: {
+        initial: "WAIT_FOR_CONTENT",
+        states: {
+          WAIT_FOR_CONTENT: {
+            on: {
+              "": { cond: "dataTableHasContent", target: "RUNNING" },
+              DATA_TABLE_LOADED: {
+                cond: "dataTableHasContent",
+                target: "RUNNING"
+              }
+            }
+          },
+          RUNNING: {
+            on: {
+              ...activeTransitions
+            }
+          }
+        },
+        on: {
+          ACTIVATE: {
+            target: "INACTIVE",
+            cond: "isNotForMe"
+          }
+        }
+      },
+
+    }
+  },
+  {
+    guards: {
+      dataTableHasContent: (ctx: any, event: any) => {return false},
+      isForMe: (ctx: any, event: any) => {return false},
+      isNotForMe: (ctx: any, event: any) => {return false}
+    },
+    actions: {
+      onCreateRowClick: (ctx: any, event: any) => {},
+      onDeleteRowClick: (ctx: any, event: any) => {},
+      onSelectPrevRowClick: (ctx: any, event: any) => {},
+      onSelectNextRowClick: (ctx: any, event: any) => {},
+      onFieldClick: (ctx: any, event: any) => {},
+      onNoFieldClick: (ctx: any, event: any) => {},
+      onFormOutsideClick: (ctx: any, event: any) => {},
+      onFieldKeyDown: (ctx: any, event: any) => {},
+      onFieldChange: (ctx: any, event: any) => {}
+    }
+  }
+);
 
 export interface IParentMediator {
   properties: IProperties;
@@ -29,7 +114,7 @@ export interface IParentMediator {
   dataTable: IDataTable;
 }
 
-export interface IFormViewMediator {
+export interface IFormViewMediator extends IDispatcher {
   type: IViewType.Form;
 
   initPropIds: string[] | undefined;
@@ -46,6 +131,7 @@ export interface IFormViewMediator {
   dataTable: IDataTable;
   dataView: IDataViewMediator02;
   uiStructure: any[];
+
   aSelPrevProp: IASelPrevProp;
   aSelNextProp: IASelNextProp;
   aSelProp: IASelProp;
@@ -54,13 +140,9 @@ export interface IFormViewMediator {
   aDeactivateView: IADeactivateView;
   aStartEditing: IAStartEditing;
   aFinishEditing: IAFinishEditing;
-
-  dispatch(action: any): void;
-  listen(cb: (action: any) => void): void;
 }
 
 export class FormViewMediator implements IFormViewMediator {
-  
 
   type: IViewType.Form = IViewType.Form;
 
@@ -81,13 +163,27 @@ export class FormViewMediator implements IFormViewMediator {
     }
   ) {}
 
-  dispatch(action: any): void {
-    throw new Error("Method not implemented.");
+  dispatch(event: any): void {
+    this.getRoot().downstreamDispatch(event);
   }
 
-  listen(cb: (action: any) => void): void {
-    throw new Error("Method not implemented.");
+  listeners = new Map<number, (event: any) => void>();
+  idgen = 0;
+  @action.bound
+  listen(cb: (event: any) => void): () => void {
+    const myId = this.idgen++;
+    this.listeners.set(myId, cb);
+    return () => this.listeners.delete(myId);
   }
+
+  getRoot(): IDispatcher {
+    return this.P.parentMediator.getRoot();
+  }
+
+  downstreamDispatch(event: any): void {
+    console.log("FormView received:", event);
+  }
+
 
   get propReorder(): IPropReorder {
     return this.P.propReorder();
@@ -149,7 +245,7 @@ export class FormViewMediator implements IFormViewMediator {
     return this.P.aSelNextProp();
   }
 
-  get aSelProp() : IASelProp {
+  get aSelProp(): IASelProp {
     return this.P.aSelProp();
   }
 
@@ -157,7 +253,7 @@ export class FormViewMediator implements IFormViewMediator {
     return this.P.aSelCell();
   }
 
-  get aActivateView(): IAActivateView{
+  get aActivateView(): IAActivateView {
     return this.P.aActivateView();
   }
 

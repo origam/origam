@@ -18,7 +18,6 @@ export interface ITable {
   scrollState: IScrollState;
   cells: ICells;
   cursor: IFormField;
-  listenMediator(listener: IListener): () => void;
   onKeyDown?(event: any): void;
   onCellClick?(event: any, rowIdx: number, columnIdx: number): void;
   onNoCellClick?(event: any): void;
@@ -32,6 +31,8 @@ export interface ITable {
 
   onBeforeRender?(): void;
   onAfterRender?(): void;
+
+  listenMediator(cb: (event: any) => void): () => void;
 }
 
 export interface IFormField {

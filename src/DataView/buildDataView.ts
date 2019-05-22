@@ -25,6 +25,10 @@ import { ASubmitForm } from "./ASubmitForm";
 import { ASwitchView } from "./ASwitchView";
 import { IFormViewMediator } from "./FormView/FormViewMediator";
 import { ITableViewMediator } from "./TableView/TableViewMediator";
+import { IASelNextRec } from "./types/IASelNextRec";
+import { IASelPrevRec } from "./types/IASelPrevRec";
+import { ASelNextRec } from "./ASelNextRec";
+import { ASelPrevRec } from "./ASelPrevRec";
 
 export function buildDataView(
   id: string,
@@ -74,9 +78,7 @@ export function buildDataView(
   const recCursor = new RecCursor({});
   const form = new Form();
   const records = new Records();
-  const properties = new Properties({
-    propertyItems: []
-  });
+  const properties = new Properties(mediator);
   const machine = new DataViewMachine(mediator);
 
   const aCancelEditing = new ACancelEditing(mediator);

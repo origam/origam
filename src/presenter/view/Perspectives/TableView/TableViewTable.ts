@@ -1,24 +1,22 @@
 import { ITable, IScrollState, ICells, IFormField } from "./types";
 import { ML } from "../../../../utils/types";
 import { unpack } from "../../../../utils/objects";
-import {
-  IDataViewMediator,
-  IListener
-} from "../../../../DataView/types/IDataViewMediator";
 import * as DataViewActions from "../../../../DataView/DataViewActions";
 import { action } from "mobx";
 import * as TableViewActions from "../../../../DataView/TableView/TableViewActions";
 import { IEditing } from "../../../../DataView/types/IEditing";
 import { IAFinishEditing } from "../../../../DataView/types/IAFinishEditing";
+import { IDataViewMediator02 } from "../../../../DataView/DataViewMediator02";
 
 
 export class TableViewTable implements ITable {
+
   constructor(
     public P: {
       scrollState: ML<IScrollState>;
       cells: ML<ICells>;
       cursor: ML<IFormField>;
-      mediator: ML<IDataViewMediator>;
+      mediator: ML<IDataViewMediator02>;
       editing: ML<IEditing>;
       aFinishEditing: ML<IAFinishEditing>;
       isLoading: () => boolean;
@@ -75,8 +73,9 @@ export class TableViewTable implements ITable {
     }
   }
 
-  listenMediator(listener: IListener) {
-    return this.mediator.listen(listener);
+
+  listenMediator(cb: (event: any) => void): () => void {
+    return this.mediator.listen(cb);
   }
 
   onBeforeRender() {
