@@ -561,9 +561,9 @@ namespace Origam.DA.Service
             switch (latLon)
             {
                 case geoLatLonSql.Lat:
-                    return string.Format("(regexp_split_to_array(ST_AsLatLonText(ST_AsText({0})),E'\\\\s+'))[1]", expresion);
+                    return string.Format("st_y({0})", expresion);
                 case geoLatLonSql.Lon:
-                    return string.Format("(regexp_split_to_array(ST_AsLatLonText(ST_AsText({0})),E'\\\\s+'))[2]", expresion);
+                    return string.Format("st_x({0})", expresion);
                 default:
                     throw new NotSupportedException("Unsuported in Latitude or Longtitude " + latLon.ToString());
             }
