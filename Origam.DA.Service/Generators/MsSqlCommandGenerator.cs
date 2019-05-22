@@ -578,5 +578,9 @@ namespace Origam.DA.Service
                     throw new NotSupportedException("Unsuported in Latitude or Longtitude " + latLon.ToString());
             }
         }
+        internal override string ArraySql(string expresion1, string expresion2)
+        {
+            return string.Format("{0} IN (SELECT ListValue FROM {1} origamListValue)", expresion1,expresion2);
+        }
     }
 }

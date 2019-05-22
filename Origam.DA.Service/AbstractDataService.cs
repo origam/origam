@@ -30,6 +30,8 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 using static Origam.DA.Common.Enums;
+using System.Text;
+using System.Collections.Generic;
 
 namespace Origam.DA.Service
 {
@@ -529,22 +531,36 @@ namespace Origam.DA.Service
 
 									default:
                                         ICollection ar = param.Value as ICollection;
-											if(ar != null)
-											{
-												DataTable dt = new OrigamDataTable("ListTable");
-												dt.Columns.Add("ListValue", typeof(string));
-												dt.Columns[0].MaxLength = -1;
-												dt.BeginLoadData();
-												foreach(object v in ar)
-												{
-													DataRow row = dt.NewRow();
-													row[0] = v.ToString();
-													dt.Rows.Add(row);
-												}
-												dt.EndLoadData();
-												value = dt;
-											}
-											else
+										if(ar != null)
+										{
+                                            if (this.PlatformName == DatabaseType.MsSql)
+                                            {
+                                                DataTable dt = new OrigamDataTable("ListTable");
+                                                dt.Columns.Add("ListValue", typeof(string));
+                                                dt.Columns[0].MaxLength = -1;
+                                                dt.BeginLoadData();
+                                                foreach (object v in ar)
+                                                {
+                                                    DataRow row = dt.NewRow();
+                                                    row[0] = v.ToString();
+                                                    dt.Rows.Add(row);
+                                                }
+                                                dt.EndLoadData();
+                                                value = dt;
+                                            }
+                                            if (this.PlatformName == DatabaseType.PgSql)
+                                            {
+                                                String[] vs = new String[ar.Count];
+                                                int arrayposition = 0;
+                                                foreach (object v in ar)
+                                                {
+                                                    vs[arrayposition] = v.ToString();
+                                                    arrayposition++;
+                                                }
+                                                value =  vs;
+                                            }
+                                        }
+										else
 										{
 											value = param.Value;
 										}

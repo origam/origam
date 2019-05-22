@@ -83,9 +83,14 @@ namespace Origam.DA.Service
             string sourceColumn, OrigamDataType dataType, DatabaseDataType dbDataType,
             int dataLength, bool allowNulls)
 		{
-			NpgsqlParameter sqlParam = new NpgsqlParameter(
+            NpgsqlDbType convDataType = ConvertDataType(dataType, dbDataType);
+            if (dataType == OrigamDataType.Array)
+            {
+                convDataType =   ConvertDataType(dataType, dbDataType) | NpgsqlDbType.Text;
+            }
+            NpgsqlParameter sqlParam = new NpgsqlParameter(
 				paramName,
-				ConvertDataType(dataType, dbDataType),
+                convDataType,
 				dataLength,
 				sourceColumn
 				);
@@ -562,6 +567,10 @@ namespace Origam.DA.Service
                 default:
                     throw new NotSupportedException("Unsuported in Latitude or Longtitude " + latLon.ToString());
             }
+        }
+        internal override string ArraySql(string expresion1, string expresion2)
+        {
+            return string.Format("SELECT {0}::text = ANY ({1})", expresion1, expresion2);
         }
     }
 }

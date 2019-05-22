@@ -3234,8 +3234,8 @@ namespace Origam.DA.Service
 
                     if (listExpressions.Count == 1 && listExpressions[0] is ParameterReference && (listExpressions[0] as ParameterReference).Parameter.DataType == OrigamDataType.Array)
                     {
-                        result = RenderExpression(leftArg.ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
-                            + " IN (SELECT ListValue FROM " + RenderExpression(listExpressions[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences) + " origamListValue)";
+                        result = ArraySql(RenderExpression(leftArg.ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences),
+                             RenderExpression(listExpressions[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     }
                     else
                     {
@@ -3276,6 +3276,7 @@ namespace Origam.DA.Service
             return result;
         }
 
+        internal abstract string ArraySql(string expresion1, string expresion2);
         internal abstract string LengthSql(string expresion);
         internal abstract string VarcharSql();
 
