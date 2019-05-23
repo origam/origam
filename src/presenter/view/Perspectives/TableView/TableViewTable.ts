@@ -10,7 +10,6 @@ import { IDataViewMediator02 } from "../../../../DataView/DataViewMediator02";
 
 
 export class TableViewTable implements ITable {
-
   constructor(
     public P: {
       scrollState: ML<IScrollState>;
@@ -30,25 +29,34 @@ export class TableViewTable implements ITable {
 
   @action.bound
   onCellClick(event: any, rowIdx: number, columnIdx: number) {
+    this.mediator.dispatch(TableViewActions.onCellClick({rowIdx, columnIdx}));
+    /*
     this.mediator.dispatch(
       DataViewActions.selectCellByIdx({ rowIdx, columnIdx })
     );
     this.mediator.dispatch(
       TableViewActions.makeCellVisibleByIdx({ rowIdx, columnIdx })
-    );
+    );*/
   }
 
   @action.bound onNoCellClick(event: any) {
-    if(this.editing.isEditing) {
+    console.log("No cell click");
+    this.mediator.dispatch(TableViewActions.onNoCellClick());
+    /*
+    if (this.editing.isEditing) {
       this.aFinishEditing.do();
-    }
+    }*/
   }
 
   @action.bound onOutsideTableClick(event: any) {
-    console.log('Outside table click');
+    console.log("Outside table click");
+    this.mediator.dispatch(TableViewActions.onOutsideTableClick());
+
+    /*
     if(this.editing.isEditing) {
       this.aFinishEditing.do();
     }
+    */
   }
 
   @action.bound
@@ -73,17 +81,16 @@ export class TableViewTable implements ITable {
     }
   }
 
-
   listenMediator(cb: (event: any) => void): () => void {
     return this.mediator.listen(cb);
   }
 
   onBeforeRender() {
-    return 
+    return;
   }
 
   onAfterRender() {
-    return 
+    return;
   }
 
   get scrollState(): IScrollState {

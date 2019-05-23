@@ -42,7 +42,10 @@ import { IFormScreen } from "../Screens/FormScreen/types";
 import { SELECT_FIRST_FIELD } from "./FormView/FormViewActions";
 import {
   selectFirstCell,
-  SELECT_FIRST_CELL
+  SELECT_FIRST_CELL,
+  ON_OUTSIDE_TABLE_CLICK,
+  ON_NO_CELL_CLICK,
+  ON_CELL_CLICK
 } from "./TableView/TableViewActions";
 
 export interface IParentMediator {
@@ -51,12 +54,6 @@ export interface IParentMediator {
   getParent(): IDispatcher;
 }
 
-export interface ISelection {
-  selRowId: string | undefined;
-  selColId: string | undefined;
-  selRowIdx: number | undefined;
-  selColIdx: number | undefined;
-}
 
 export interface IDataViewMediator02 extends IDispatcher {
   editing: IEditing;
@@ -153,7 +150,12 @@ export class DataViewMediator02 implements IDataViewMediator02 {
       case DataViewActions.cancelEditing.type:
       case SELECT_FIRST_FIELD:
       case SELECT_FIRST_CELL:
+      case DataViewActions.selectCellById.type:
+      case DataViewActions.selectCellByIdx.type:
       case DataViewActions.requestSaveData.type:
+      case ON_OUTSIDE_TABLE_CLICK:
+      case ON_NO_CELL_CLICK:
+      case ON_CELL_CLICK:
         this.downstreamDispatch(event);
         break;
       default:

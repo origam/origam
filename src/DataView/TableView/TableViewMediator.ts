@@ -32,6 +32,7 @@ import { IASelRec } from "../types/IASelRec";
 import { IRecords } from "../types/IRecords";
 import { ITableViewMachine } from "./types/ITableViewMachine";
 import { START_DATA_VIEWS, STOP_DATA_VIEWS } from "../DataViewActions";
+import { ISelection } from "../Selection";
 
 const activeTransitions = {
   ON_CREATE_ROW_CLICK: {},
@@ -85,6 +86,7 @@ export interface ITableViewMediator extends IDispatcher {
   propReorder: IPropReorder;
   properties: IProperties;
   records: IRecords;
+  selection: ISelection;
   initPropIds: string[] | undefined;
   recCursor: IRecCursor;
   availViews: IAvailViews;
@@ -111,6 +113,7 @@ export class TableViewMediator implements ITableViewMediator, ITableView {
       machine: () => ITableViewMachine;
       propCursor: () => IPropCursor;
       propReorder: () => IPropReorder;
+      selection: () => ISelection;
       aActivateView: () => IAActivateView;
       aDeactivateView: () => IADeactivateView;
       aSelProp: () => IASelProp;
@@ -304,5 +307,9 @@ export class TableViewMediator implements ITableViewMediator, ITableView {
 
   get machine(): ITableViewMachine {
     return this.P.machine();
+  }
+
+  get selection(): ISelection {
+    return this.P.selection();
   }
 }

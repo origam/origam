@@ -7,6 +7,7 @@ export class PropCursor implements IPropCursor {
   @observable selId: string | undefined;
 
   @action.bound setSelId(id: string | undefined) {
+    console.log(id)
     this.selId = id;
   }
 

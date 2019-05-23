@@ -12,6 +12,6 @@ export class AOnOutsideGridClick {
   ) {}
 
   do(event: any) {
-    this.P.aFinishEditing().do();
+    //this.P.aFinishEditing().do();
   }
 }

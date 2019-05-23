@@ -8,6 +8,7 @@ import { IDataTable } from "../../../../DataView/types/IDataTable";
 import { IRecCursor } from "../../../../DataView/types/IRecCursor";
 import { IPropCursor } from "../../../../DataView/types/IPropCursor";
 
+
 export class TableViewCells implements ICells {
   constructor(
     public P: {
@@ -28,16 +29,22 @@ export class TableViewCells implements ICells {
 
   fixedColumnCount: number = 0;
 
+  // TODO: Use method from Selection class
   @computed get selPropIdx() {
-    return this.propCursor.selId
+    const idx = this.propCursor.selId
       ? this.propReorder.getIndexById(this.propCursor.selId)
       : undefined;
+    console.log("computed selPropIdx:", idx);
+    return idx;
   }
 
+  // TODO: Use method from Selection class
   @computed get selRecIdx() {
-    return this.recCursor.selId
+    const idx = this.recCursor.selId
       ? this.dataTable.getRecordIndexById(this.recCursor.selId)
       : undefined;
+    console.log("computed selRecIdx,Id:", idx, this.recCursor.selId);
+    return idx;
   }
 
   @computed

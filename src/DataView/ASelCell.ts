@@ -14,7 +14,7 @@ import { IAFinishEditing } from "./types/IAFinishEditing";
 import { IForm } from "./types/IForm";
 import { IDataViewMediator } from "./types/IDataViewMediator";
 import { isType } from "ts-action";
-import * as DataViewActions from './DataViewActions';
+import * as DataViewActions from "./DataViewActions";
 
 export class ASelCell implements IASelCell {
   constructor(
@@ -33,9 +33,9 @@ export class ASelCell implements IASelCell {
     }
   ) {}
 
-
   @action.bound
   doByIdx(rowIdx: number | undefined, colIdx: number | undefined) {
+    // debugger
     const rowId =
       rowIdx !== undefined
         ? this.dataTable.getRecordIdByIndex(rowIdx)
@@ -46,6 +46,15 @@ export class ASelCell implements IASelCell {
   }
 
   @action.bound do(rowId: string | undefined, colId: string | undefined) {
+    if (rowId && colId) {
+      this.recCursor.setSelId(rowId);
+      this.propCursor.setSelId(colId);
+    }
+  }
+
+  // TODO: Remove this method.
+  /*
+  @action.bound doOld(rowId: string | undefined, colId: string | undefined) {
     const isSessioned = false;
     const sel0 = {
       rowId: this.recCursor.selId,
@@ -96,24 +105,14 @@ export class ASelCell implements IASelCell {
     if (isStartEditing) {
       this.aStartEditing.do();
     }
-  }
+  }*/
 
   @action.bound
   doSelFirst() {
     this.doByIdx(0, 0);
   }
 
-  @computed get selPropIdx() {
-    return this.propCursor.selId
-      ? this.propReorder.getIndexById(this.propCursor.selId)
-      : undefined;
-  }
 
-  @computed get selRecIdx() {
-    return this.recCursor.selId
-      ? this.dataTable.getRecordIndexById(this.recCursor.selId)
-      : undefined;
-  }
 
   get recCursor() {
     return unpack(this.P.recCursor);

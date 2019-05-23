@@ -9,6 +9,8 @@ import * as DataViewActions from "../DataViewActions";
 import * as TableViewActions from "./TableViewActions";
 import { IPropCursor } from "../types/IPropCursor";
 import { ITableViewMachine } from "./types/ITableViewMachine";
+import { IEditing } from "../types/IEditing";
+import { ISelection } from "../Selection";
 
 export class TableViewMachine implements ITableViewMachine {
   constructor(
@@ -16,6 +18,8 @@ export class TableViewMachine implements ITableViewMachine {
       dataTable: IDataTable;
       recCursor: IRecCursor;
       propCursor: IPropCursor;
+      editing: IEditing;
+      selection: ISelection;
       dispatch(action: any): void;
       listen(cb: (action: any) => void): void;
     }
@@ -63,6 +67,15 @@ export class TableViewMachine implements ITableViewMachine {
                   { cond: "notHasData", target: "waitForData" },
                   { cond: "shallSleep", target: "sleeping" }
                 ],
+                [TableViewActions.ON_CELL_CLICK]: {
+                  actions: "onCellClick"
+                },
+                [TableViewActions.ON_NO_CELL_CLICK]: {
+                  actions: "onNoCellClick"
+                },
+                [TableViewActions.ON_OUTSIDE_TABLE_CLICK]: {
+                  actions: "onOutsideTableClick"
+                }
               }
             },
             sleeping: {
@@ -84,6 +97,11 @@ export class TableViewMachine implements ITableViewMachine {
       actions: {
         runningEn: (ctx, event) => this.runningEn(),
         runningEx: (ctx, event) => this.runningEx(),
+
+        onCellClick: (ctx, event) =>
+          this.onCellClick(event as TableViewActions.IOnCellClick),
+        onNoCellClick: (ctx, event) => this.onNoCellClick(),
+        onOutsideTableClick: (ctx, event) => this.onOutsideTableClick()
       },
       guards: {
         shallSleep: (ctx, event) => this.shallSleep,
@@ -102,7 +120,7 @@ export class TableViewMachine implements ITableViewMachine {
 
   @action.bound
   runningEn() {
-    console.log("---RUNNINGED")
+    console.log("---RUNNINGED");
     if (!this.isCellSelected) {
       this.dispatch(TableViewActions.selectFirstCell());
     }
@@ -112,6 +130,59 @@ export class TableViewMachine implements ITableViewMachine {
   @action.bound
   runningEx() {
     this.dispatch(DataViewActions.finishEditing());
+  }
+
+  @action.bound onCellClick(event: TableViewActions.IOnCellClick) {
+    console.log("on cell click from machine");
+    // TODO: Bool field behaviour.
+    // debugger
+    if (!this.P.editing.isEditing) {
+      if (
+        this.P.selection.isSelectedCellByIdx({
+          rowIdx: event.rowIdx,
+          colIdx: event.columnIdx
+        })
+      ) {
+        this.dispatch(DataViewActions.startEditing());
+      } else {
+        this.dispatch(
+          DataViewActions.selectCellByIdx({
+            rowIdx: event.rowIdx,
+            columnIdx: event.columnIdx
+          })
+        );
+      }
+    } else {
+      if (
+        !this.P.selection.isSelectedCellByIdx({
+          rowIdx: event.rowIdx,
+          colIdx: event.columnIdx
+        })
+      ) {
+        this.dispatch(DataViewActions.finishEditing());
+        this.dispatch(
+          DataViewActions.selectCellByIdx({
+            rowIdx: event.rowIdx,
+            columnIdx: event.columnIdx
+          })
+        );
+        this.dispatch(DataViewActions.startEditing());
+      }
+    }
+  }
+
+  @action.bound onNoCellClick() {
+    console.log("on no cell click from machine");
+    if (this.P.editing.isEditing) {
+      this.P.dispatch(DataViewActions.finishEditing());
+    }
+  }
+
+  @action.bound onOutsideTableClick() {
+    console.log("on outside table click from machine");
+    if (this.P.editing.isEditing) {
+      this.P.dispatch(DataViewActions.finishEditing());
+    }
   }
 
   @observable shallSleep = false;

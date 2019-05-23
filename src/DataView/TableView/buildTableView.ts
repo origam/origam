@@ -1,4 +1,4 @@
-import { TableViewMediator, ITableViewMediator} from "./TableViewMediator";
+import { TableViewMediator, ITableViewMediator } from "./TableViewMediator";
 import { PropCursor } from "../PropCursor";
 import { IPropReorder } from "../types/IPropReorder";
 import { PropReorder } from "../PropReorder";
@@ -24,6 +24,8 @@ import { ASelRec } from "../ASelRec";
 import { IASelRec } from "../types/IASelRec";
 import { TableViewMachine } from "./TableViewMachine";
 import { ITableViewMachine } from "./types/ITableViewMachine";
+import { ISelection } from "../Selection";
+import { Selection } from "../Selection";
 
 export function buildTableView(
   initPropIds: string[] | undefined,
@@ -35,8 +37,9 @@ export function buildTableView(
     machine: () => machine,
     propCursor: () => propCursor,
     propReorder: () => propReorder,
+    selection: () => selection,
     aActivateView: () => aActivateView,
-    aDeactivateView: () =>aDeactivateView,
+    aDeactivateView: () => aDeactivateView,
     aSelProp: () => aSelProp,
     aSelCell: () => aSelCell,
     aSelRec: () => aSelRec,
@@ -48,6 +51,7 @@ export function buildTableView(
   const propCursor: IPropCursor = new PropCursor(mediator);
   const propReorder: IPropReorder = new PropReorder(mediator);
   const machine: ITableViewMachine = new TableViewMachine(mediator);
+  const selection: ISelection = new Selection(mediator);
   const aActivateView: IAActivateView = new AActivateView(mediator);
   const aDeactivateView: IADeactivateView = new ADeactivateView();
   const aSelProp: IASelProp = new ASelProp(mediator);
