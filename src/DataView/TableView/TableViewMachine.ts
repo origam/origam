@@ -11,6 +11,8 @@ import { IPropCursor } from "../types/IPropCursor";
 import { ITableViewMachine } from "./types/ITableViewMachine";
 import { IEditing } from "../types/IEditing";
 import { ISelection } from "../Selection";
+import { IForm } from "../types/IForm";
+import { IPropReorder } from "../types/IPropReorder";
 
 export class TableViewMachine implements ITableViewMachine {
   constructor(
@@ -18,8 +20,10 @@ export class TableViewMachine implements ITableViewMachine {
       dataTable: IDataTable;
       recCursor: IRecCursor;
       propCursor: IPropCursor;
+      propReorder: IPropReorder;
       editing: IEditing;
       selection: ISelection;
+      form: IForm;
       dispatch(action: any): void;
       listen(cb: (action: any) => void): void;
     }
@@ -137,6 +141,24 @@ export class TableViewMachine implements ITableViewMachine {
     // TODO: Bool field behaviour.
     // debugger
     if (!this.P.editing.isEditing) {
+      const prop = this.P.propReorder.getByIndex(event.columnIdx);
+      const isCheckBox = prop ? prop.column === "CheckBox" : false;
+      if (isCheckBox) {
+        this.dispatch(
+          DataViewActions.selectCellByIdx({
+            rowIdx: event.rowIdx,
+            columnIdx: event.columnIdx
+          })
+        );
+        this.dispatch(DataViewActions.startEditing());
+        const value = this.dataTable.getValueById(
+          this.P.selection.selRowId!,
+          this.P.selection.selColId!
+        );
+        this.P.form.setDirtyValue(prop!.id, !value);
+        this.dispatch(DataViewActions.finishEditing());
+        return
+      }
       if (
         this.P.selection.isSelectedCellByIdx({
           rowIdx: event.rowIdx,

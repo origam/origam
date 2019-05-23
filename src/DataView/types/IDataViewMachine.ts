@@ -7,6 +7,8 @@ export interface IDataViewMachine {
   isLoading: boolean;
   isMeOrAnyAscendantLoading: boolean;
   isAnyAscendantLoading: boolean;
+  isMeOrAnyAscendantReadingData: boolean;
+  isAnyAscendantReadingData: boolean;
   root: IDataViewMachine;
   parent: IDataViewMachine | undefined;
   children: IDataViewMachine[];

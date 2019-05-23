@@ -12,9 +12,10 @@ import { IDataViewMediator } from "./types/IDataViewMediator";
 import * as DataViewActions from "./DataViewActions";
 import { isType } from "ts-action";
 import { IRecord } from "./types/IRecord";
+import { stateVariableChanged } from "../utils/mediator";
+
 
 export class DataViewMachine implements IDataViewMachine {
-
   constructor(
     public P: {
       api: ML<IApi>;
@@ -32,9 +33,9 @@ export class DataViewMachine implements IDataViewMachine {
     this.subscribeMediator();
     this.interpreter = interpret(this.definition);
     this.interpreter.onTransition(
-      action((state: State<any>) => {
+      action((state: State<any>, event: any) => {
         this.state = state;
-        console.log(state);
+        console.log('DataViewMachine:', state, event);
       })
     );
     this.state = this.interpreter.state;
@@ -172,18 +173,7 @@ export class DataViewMachine implements IDataViewMachine {
         }
       },
       guards: {
-        loadingAllowed: () => {
-          // console.log("Evaluating loadingAllowed");
-          if (this.isRoot) {
-            return true;
-          } else {
-            /*console.log(
-              "Loading allowed in child:",
-              !this.isAnyAscendantLoading && this.isControlIdValid
-            );*/
-            return !this.isAnyAscendantLoading && this.isControlIdValid;
-          }
-        }
+        loadingAllowed: () => this.isLoadingAllowed
       }
     }
   );
@@ -199,7 +189,7 @@ export class DataViewMachine implements IDataViewMachine {
 
   @action.bound
   send(event: any): void {
-    this.interpreter.send(event)
+    this.interpreter.send(event);
   }
 
   @action.bound start() {
@@ -207,8 +197,13 @@ export class DataViewMachine implements IDataViewMachine {
       reaction(
         () => this.controlledValueFromParent,
         () => {
+          console.log(' *** Controlled value from parent changed')
           this.treeDispatch("LOAD_FRESH");
         }
+      ),
+      reaction(
+        () => [this.isLoadingAllowed],
+        () => this.P.dispatch(stateVariableChanged())
       )
     );
     this.interpreter.start();
@@ -248,6 +243,15 @@ export class DataViewMachine implements IDataViewMachine {
     this.parent = parent;
   }
 
+  @computed get isLoadingAllowed() {
+    if (this.isRoot) {
+      return true;
+    } else {
+      return !this.isAnyAscendantReadingData && this.isControlIdValid;
+    }
+  }
+
+  @computed
   get filterString() {
     if (this.isMasterDetail && !this.isRoot) {
       return JSON.stringify([
@@ -302,6 +306,7 @@ export class DataViewMachine implements IDataViewMachine {
     return !this.parent;
   }
 
+  @computed
   get isLoading(): boolean {
     switch (this.stateValue) {
       case "LOAD_FRESH":
@@ -314,12 +319,31 @@ export class DataViewMachine implements IDataViewMachine {
     }
   }
 
+  @computed
+  get isReadingData(): boolean {
+    switch (this.stateValue) {
+      case "LOAD_FRESH":
+      case "LOAD_INCREMENT":
+        return true;
+      default:
+        return false;
+    }
+  }
+
   get isAnyAscendantLoading(): boolean {
     return this.parent ? this.parent.isMeOrAnyAscendantLoading : false;
   }
 
   get isMeOrAnyAscendantLoading(): boolean {
     return this.isLoading || this.isAnyAscendantLoading;
+  }
+
+  get isAnyAscendantReadingData(): boolean {
+    return this.parent ? this.parent.isMeOrAnyAscendantReadingData : false;
+  }
+
+  get isMeOrAnyAscendantReadingData(): boolean {
+    return this.isReadingData || this.isAnyAscendantReadingData;
   }
 
   get api() {
