@@ -86,18 +86,19 @@ namespace Origam.DA.Service
             NpgsqlDbType convDataType = ConvertDataType(dataType, dbDataType);
             if (dataType == OrigamDataType.Array)
             {
-                convDataType =   ConvertDataType(dataType, dbDataType) | NpgsqlDbType.Text;
+                convDataType = ConvertDataType(dataType, dbDataType) | NpgsqlDbType.Text;
             }
             NpgsqlParameter sqlParam = new NpgsqlParameter(
-				paramName,
+                paramName,
                 convDataType,
-				dataLength,
-				sourceColumn
-				);
+                dataLength,
+                sourceColumn
+                )
+            {
+                IsNullable = allowNulls
+            };
 
-			sqlParam.IsNullable = allowNulls;
-
-			if(sqlParam.NpgsqlDbType == NpgsqlTypes.NpgsqlDbType.Numeric)
+            if (sqlParam.NpgsqlDbType == NpgsqlTypes.NpgsqlDbType.Numeric)
 			{
 				sqlParam.Precision = 18;
 				sqlParam.Scale = 10;
@@ -231,7 +232,8 @@ namespace Origam.DA.Service
 
                 case "GEOGRAPHY":
                     return OrigamDataType.Geography;
-
+                case "TSVECTOR":
+                    return OrigamDataType.TsVector;
                 default:
                     return OrigamDataType.String;
             }
@@ -275,7 +277,10 @@ namespace Origam.DA.Service
 					return NpgsqlDbType.Varchar;
 				case OrigamDataType.UniqueIdentifier:
 					return NpgsqlDbType.Uuid;
-				default:
+                case OrigamDataType.TsVector:
+                    return NpgsqlDbType.TsVector;
+
+                default:
 					throw new NotSupportedException(ResourceUtils.GetString("UnsupportedType"));
 			}
 		}
@@ -550,7 +555,7 @@ namespace Origam.DA.Service
         }
         internal override string FreeTextSql(string columnsForSeach, string freetext_string, string languageForFullText)
         {
-            return string.Format("{0} @@ to_tsquery({1})", columnsForSeach, freetext_string);
+            return string.Format("{0} @@ to_tsquery({1},{2})", columnsForSeach, languageForFullText, freetext_string);
         }
         internal override string ContainsSql(string columnsForSeach, string freetext_string, string languageForFullText)
         {
@@ -570,7 +575,7 @@ namespace Origam.DA.Service
         }
         internal override string ArraySql(string expresion1, string expresion2)
         {
-            return string.Format("SELECT {0}::text = ANY ({1})", expresion1, expresion2);
+            return string.Format("{0}::text = ANY ({1})", expresion1, expresion2);
         }
     }
 }

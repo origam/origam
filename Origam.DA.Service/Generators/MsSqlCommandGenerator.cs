@@ -299,6 +299,7 @@ namespace Origam.DA.Service
                     return SqlDbType.Int;
                 case OrigamDataType.Float:
                     return SqlDbType.Decimal;
+                case OrigamDataType.TsVector:
                 case OrigamDataType.Object:
                 case OrigamDataType.String:
                     return SqlDbType.NVarChar;
