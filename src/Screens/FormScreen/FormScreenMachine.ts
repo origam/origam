@@ -12,6 +12,7 @@ import { start } from "xstate/lib/actions";
 import { ML } from "../../utils/types";
 import { unpack } from "../../utils/objects";
 import { IApi } from "../../Api/IApi";
+import { startDataViews, activateInitialViewTypes } from "../../DataView/DataViewActions";
 
 
 export class FormScreenMachine implements IFormScreenMachine {
@@ -65,10 +66,13 @@ export class FormScreenMachine implements IFormScreenMachine {
             .then(
               action((xmlObj: any) => {
                 console.log("Loaded", xmlObj);
+                // debugger
                 const content = this.screenContentFactory.create(xmlObj);
                 this.formScreen.setDataViews(content.dataViews);
                 this.formScreen.setUIStructure(content.screenUI);
-                this.formScreen.activateDataViews();
+                
+                this.formScreen.dispatch(startDataViews());
+                this.formScreen.dispatch(activateInitialViewTypes());
                 send("DONE");
               })
             )

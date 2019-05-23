@@ -17,7 +17,8 @@ export function createFormScreen(P: {
     order: P.order,
     menuItemLabel: P.menuItemLabel,
     mainViews: P.mainViews,
-    machine: () => screenMachine
+    machine: () => screenMachine,
+    api: P.api
   });
 
   const screenMachine: FormScreenMachine = new FormScreenMachine({
@@ -26,9 +27,6 @@ export function createFormScreen(P: {
     screenContentFactory: () => screenContentFactory,
     api: P.api
   });
-  const screenContentFactory = new ScreenContentFactory({
-    api: P.api,
-    menuItemId: P.menuItemId
-  });
+  const screenContentFactory = new ScreenContentFactory({ formScreen });
   return formScreen;
 }

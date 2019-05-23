@@ -29,6 +29,8 @@ import { IASelNextRec } from "./types/IASelNextRec";
 import { IASelPrevRec } from "./types/IASelPrevRec";
 import { ASelNextRec } from "./ASelNextRec";
 import { ASelPrevRec } from "./ASelPrevRec";
+import { activateView } from "./DataViewActions";
+import { IFormScreen } from "../Screens/FormScreen/types";
 
 export function buildDataView(
   id: string,
@@ -39,7 +41,7 @@ export function buildDataView(
   availViewItems: () => (IFormViewMediator | ITableViewMediator)[],
   propertyItems: () => IProperty[],
   initialActiveViewType: IViewType,
-  parentMediator: IParentMediator
+  parentMediator: IFormScreen
 ) {
   const mediator: IDataViewMediator02 = new DataViewMediator02({
     id,

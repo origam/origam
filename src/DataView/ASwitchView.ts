@@ -5,22 +5,17 @@ import { unpack } from "../utils/objects";
 import { action } from "mobx";
 import { IAvailViews } from "./types/IAvailViews";
 import { IViewType } from "./types/IViewType";
+import { activateView, deactivateView } from "./DataViewActions";
 
 export class ASwitchView implements IASwitchView {
-  constructor(public P: { availViews: ML<IAvailViews> }) {}
+  constructor(
+    public P: { dispatch: (event: any) => void /*availViews: ML<IAvailViews>*/ }
+  ) {}
 
   @action.bound
   do(viewType: IViewType): void {
-    if(this.availViews.activeView) {
-      this.availViews.activeView.aDeactivateView.do();
-    }
-    this.availViews.setActiveView(viewType);
-    if(this.availViews.activeView) {
-      this.availViews.activeView.aActivateView.do();
-    }
+    this.P.dispatch(deactivateView());
+    this.P.dispatch(activateView({ viewType }));
   }
 
-  get availViews() {
-    return unpack(this.P.availViews);
-  }
 }

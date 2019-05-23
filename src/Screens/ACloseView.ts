@@ -2,6 +2,7 @@ import { IACloseView, IMainViews, IAActivateView } from "./types";
 import { ML } from "../utils/types";
 import { unpack } from "../utils/objects";
 import { action } from "mobx";
+import * as ScreensActions from "./ScreensActions";
 
 export class ACloseView implements IACloseView {
   constructor(
@@ -13,6 +14,10 @@ export class ACloseView implements IACloseView {
 
   @action.bound
   do(id: string, order: number): void {
+    const view = this.mainViews.findView(id, order);
+    // view && view.deactivate();
+    // view && view.close();
+    view && view.dispatch(ScreensActions.stopScreen());
     if (
       this.mainViews.activeViewId === id &&
       this.mainViews.activeViewOrder === order
@@ -23,9 +28,7 @@ export class ACloseView implements IACloseView {
         this.aActivateView.do(closest.menuItemId, closest.order);
       }
     }
-    const view = this.mainViews.findView(id, order);
-    view && view.deactivate();
-    view && view.close();
+
     this.mainViews.deleteView(id, order);
   }
 

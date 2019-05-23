@@ -20,7 +20,9 @@ import { IAFinishEditing } from "../types/IAFinishEditing";
 import { IASelCell } from "../types/IASelCell";
 import { Machine } from "xstate";
 import { IDispatcher } from "../../utils/mediator";
-import { action } from "mobx";
+import { action, computed } from "mobx";
+import { START_DATA_VIEWS, STOP_DATA_VIEWS } from "../DataViewActions";
+import { SELECT_FIRST_FIELD } from "./FormViewActions";
 
 const activeTransitions = {
   ON_CREATE_ROW_CLICK: { actions: "onCreateRowClick" },
@@ -122,6 +124,7 @@ export interface IParentMediator {
 export interface IFormViewMediator extends IDispatcher {
   type: IViewType.Form;
 
+  isActive: boolean;
   initPropIds: string[] | undefined;
   propReorder: IPropReorder;
   propCursor: IPropCursor;
@@ -171,8 +174,18 @@ export class FormViewMediator implements IFormViewMediator {
 
   subscribeMediator() {}
 
-  dispatch(event: any): void {
-    this.getRoot().downstreamDispatch(event);
+  getParent(): IDispatcher {
+    return this.P.parentMediator;
+  }
+
+  @action.bound dispatch(event: any) {
+    switch (event.type) {
+      case SELECT_FIRST_FIELD:
+        this.downstreamDispatch(event);
+        break;
+      default:
+        this.getParent().dispatch(event);
+    }
   }
 
   listeners = new Map<number, (event: any) => void>();
@@ -184,15 +197,31 @@ export class FormViewMediator implements IFormViewMediator {
     return () => this.listeners.delete(myId);
   }
 
-  getRoot(): IDispatcher {
-    return this.P.parentMediator.getRoot();
-  }
-
   downstreamDispatch(event: any): void {
+    console.log("FormView received:", event);
+    switch (event.type) {
+      case START_DATA_VIEWS: {
+        this.machine.start();
+        break;
+      }
+      case STOP_DATA_VIEWS: {
+        this.machine.stop();
+        break;
+      }
+      case SELECT_FIRST_FIELD: {
+        this.aSelCell.doSelFirst();
+        break;
+      }
+    }
     for (let l of this.listeners.values()) {
       l(event);
     }
-    console.log("FormView received:", event);
+    this.machine.send(event);
+  }
+
+  @computed
+  get isActive(): boolean {
+    return this.P.machine().isActive;
   }
 
   get propReorder(): IPropReorder {

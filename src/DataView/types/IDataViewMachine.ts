@@ -2,6 +2,7 @@
 export interface IDataViewMachine {
   start(): void;
   stop(): void;
+  send(event: any): void;
   loadFresh(): void;
   isLoading: boolean;
   isMeOrAnyAscendantLoading: boolean;

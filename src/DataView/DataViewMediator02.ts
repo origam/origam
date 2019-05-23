@@ -20,18 +20,35 @@ import { IAInitForm } from "./types/IAInitForm";
 import { IASubmitForm } from "./types/IASubmitForm";
 import { IAReloadChildren } from "./types/IAReloadChildren";
 import { IADeleteRow } from "./types/IADeleteRow";
-import { action } from "mobx";
+import { action, reaction } from "mobx";
 import { ITableViewMediator } from "./TableView/TableViewMediator";
 import { IFormViewMediator } from "./FormView/FormViewMediator";
 import { Machine } from "xstate";
-import { IDispatcher } from "../utils/mediator";
-import * as DataViewActions from './DataViewActions';
+import {
+  IDispatcher,
+  stateVariableChanged,
+  STATE_VARIABLE_CHANGED
+} from "../utils/mediator";
+import * as DataViewActions from "./DataViewActions";
 import { isType } from "ts-action";
-
+import {
+  ACTIVATE_INITIAL_VIEW_TYPES,
+  START_DATA_VIEWS,
+  STOP_DATA_VIEWS,
+  ACTIVATE_VIEW,
+  DEACTIVATE_VIEW
+} from "./DataViewActions";
+import { IFormScreen } from "../Screens/FormScreen/types";
+import { SELECT_FIRST_FIELD } from "./FormView/FormViewActions";
+import {
+  selectFirstCell,
+  SELECT_FIRST_CELL
+} from "./TableView/TableViewActions";
 
 export interface IParentMediator {
   api: IApi;
   menuItemId: string;
+  getParent(): IDispatcher;
 }
 
 export interface ISelection {
@@ -81,7 +98,7 @@ export interface IDataViewMediator02 extends IDispatcher {
 export class DataViewMediator02 implements IDataViewMediator02 {
   constructor(
     public P: {
-      parentMediator: IParentMediator;
+      parentMediator: IFormScreen;
       id: string;
       label: string;
       isHeadless: boolean;
@@ -116,23 +133,38 @@ export class DataViewMediator02 implements IDataViewMediator02 {
 
   subscribeMediator() {
     this.listen((event: any) => {
-      if(isType(event, DataViewActions.startEditing)) {
-
-      } else if(isType(event, DataViewActions.finishEditing)) {
-
-      } else if(isType(event, DataViewActions.cancelEditing)) {
-
+      if (isType(event, DataViewActions.startEditing)) {
+      } else if (isType(event, DataViewActions.finishEditing)) {
+      } else if (isType(event, DataViewActions.cancelEditing)) {
       }
-    })
+    });
   }
 
-  getRoot() {
-    return this;
+  getParent(): IDispatcher {
+    return this.P.parentMediator;
   }
 
-  @action.bound
-  dispatch(event: any) {
-    this.getRoot().downstreamDispatch(event);
+  @action.bound dispatch(event: any) {
+    switch (event.type) {
+      case ACTIVATE_VIEW:
+      case DEACTIVATE_VIEW:
+      case DataViewActions.startEditing.type:
+      case DataViewActions.finishEditing.type:
+      case DataViewActions.cancelEditing.type:
+      case SELECT_FIRST_FIELD:
+      case SELECT_FIRST_CELL:
+      case DataViewActions.requestSaveData.type:
+        this.downstreamDispatch(event);
+        break;
+      default:
+        this.getParent().dispatch(event);
+    }
+    /*switch (event.type) {
+      case STATE_VARIABLE_CHANGED:
+        break;
+      default:
+        this.downstreamDispatch(event);
+    }*/
   }
 
   listeners = new Map<number, (event: any) => void>();
@@ -144,14 +176,44 @@ export class DataViewMediator02 implements IDataViewMediator02 {
     return () => this.listeners.delete(myId);
   }
 
+  disposers: Array<() => void> = [];
   downstreamDispatch(event: any) {
-    console.log("FormView received:", event);
+    console.log("DataView received:", event);
+    switch (event.type) {
+      case START_DATA_VIEWS: {
+        this.machine.start();
+        this.disposers.push(
+          reaction(
+            () => [this.dataTable.hasContent],
+            () => this.dispatch(stateVariableChanged())
+          )
+        );
+        break;
+      }
+      case STOP_DATA_VIEWS: {
+        this.machine.stop();
+        this.disposers.forEach(d => d());
+        break;
+      }
+    }
     for (let l of this.listeners.values()) {
       l(event);
     }
     this.availViews.items.forEach(availView =>
       availView.downstreamDispatch(event)
     );
+    switch (event.type) {
+      case ACTIVATE_INITIAL_VIEW_TYPES: {
+        this.downstreamDispatch(
+          DataViewActions.activateView({ viewType: this.initialActiveViewType })
+        );
+        break;
+      }
+      case DataViewActions.finishEditing.type:
+        this.aFinishEditing.do();
+        break;
+    }
+    this.machine.send(event);
   }
 
   get editing(): IEditing {

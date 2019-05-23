@@ -24,20 +24,22 @@ export class FormViewMachine implements IFormViewMachine {
   ) {
     this.interpreter = interpret(this.machine);
     this.interpreter.onTransition(
-      action((state: State<any>) => {
+      action((state: State<any>, event: any) => {
         this.state = state;
-        console.log("FormViewMachine:", state);
+        console.log("FormViewMachine:", state, event);
       })
     );
     this.state = this.interpreter.state;
     this.subscribeMediator();
+    // this.interpreter.start();
   }
 
   subscribeMediator() {
-    this.P.listen((action: any) => {
-      if (isType(action, DataViewActions.dataTableLoaded)) {
+    this.P.listen((event: any) => {
+      /*if (isType(action, DataViewActions.dataTableLoaded)) {
         this.interpreter.send("DATA_TABLE_LOADED");
-      }
+      }*/
+      // this.interpreter.send(event);
     });
   }
 
@@ -54,6 +56,7 @@ export class FormViewMachine implements IFormViewMachine {
           }
         },
         active: {
+          initial: "waitForData",
           states: {
             waitForData: {
               on: {
@@ -96,15 +99,20 @@ export class FormViewMachine implements IFormViewMachine {
         notShallSleep: (ctx, event) => !this.shallSleep,
         hasData: (ctx, event) => this.hasData,
         notHasData: (ctx, event) => !this.hasData,
-        isTableView: (ctx, event) => event.viewType === "Form"
+        isFormView: (ctx, event) => event.viewType === "Form"
       }
     }
   );
 
   @action.bound
+  send(event: any): void {
+    this.interpreter.send(event);
+  }
+
+  @action.bound
   runningEn() {
     if (!this.isCellSelected) {
-      this.dispatch(DataViewActions.selectFirstCell());
+      this.dispatch(FormViewActions.selectFirstField());
     }
     this.dispatch(DataViewActions.startEditing());
   }
@@ -122,6 +130,10 @@ export class FormViewMachine implements IFormViewMachine {
 
   @computed get isCellSelected() {
     return this.P.recCursor.isSelected && this.P.propCursor.isSelected;
+  }
+
+  @computed get isActive() {
+    return this.state.matches("active");
   }
 
   @action.bound dispatch(event: any) {

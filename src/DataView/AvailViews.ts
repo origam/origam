@@ -14,18 +14,21 @@ export class AvailViews implements IAvailViews {
       initialActiveViewType: ML<IViewType | undefined>;
     }
   ) {
-    this.activeViewType = unpack(P.initialActiveViewType);
+    // this.activeViewType = unpack(P.initialActiveViewType);
   }
 
-  @observable activeViewType: IViewType | undefined;
+  @computed get activeViewType(): IViewType | undefined {
+    const activeItem = this.items.find(item => item.isActive)
+    return activeItem ? activeItem.type : undefined;
+  }
 
   @computed get activeView(): ISpecificView | undefined {
     return this.items.find(item => item.type === this.activeViewType);
   }
 
-  @action.bound setActiveView(viewType: IViewType) {
+  /*@action.bound setActiveView(viewType: IViewType) {
     this.activeViewType = viewType;
-  }
+  }*/
 
   get items() {
     return unpack(this.P.availViewItems);

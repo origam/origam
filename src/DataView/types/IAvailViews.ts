@@ -9,5 +9,5 @@ export interface IAvailViews {
   activeViewType: IViewType | undefined;
   activeView: ISpecificView | undefined;
   items: ISpecificView[];
-  setActiveView(viewType: IViewType): void;
+  // setActiveView(viewType: IViewType): void;
 }

@@ -14,6 +14,7 @@ import { isType } from "ts-action";
 import { IRecord } from "./types/IRecord";
 
 export class DataViewMachine implements IDataViewMachine {
+
   constructor(
     public P: {
       api: ML<IApi>;
@@ -115,7 +116,6 @@ export class DataViewMachine implements IDataViewMachine {
                 // console.log("ENTITIES", entities);
                 this.dataTable.resetDirty();
                 this.dataTable.setRecords(entities);
-                this.P.dispatch(DataViewActions.selectFirstCell());
                 send("DONE");
                 this.descendantsDispatch("LOAD_FRESH");
               })
@@ -196,6 +196,11 @@ export class DataViewMachine implements IDataViewMachine {
   }
 
   disposers: Array<() => void> = [];
+
+  @action.bound
+  send(event: any): void {
+    this.interpreter.send(event)
+  }
 
   @action.bound start() {
     this.disposers.push(

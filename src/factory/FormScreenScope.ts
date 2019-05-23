@@ -23,7 +23,8 @@ export class FormScreenScope implements IFormScreenScope {
     order: this.P.order,
     menuItemLabel: this.P.menuItemLabel,
     mainViews: this.P.mainViews,
-    machine: () => this.screenMachine
+    machine: () => this.screenMachine,
+    api: this.P.api
   });
 
   screenMachine: IFormScreenMachine = new FormScreenMachine({
@@ -33,7 +34,6 @@ export class FormScreenScope implements IFormScreenScope {
     api: this.P.api
   });
   screenContentFactory = new ScreenContentFactory({
-    api: this.P.api,
-    menuItemId: this.P.menuItemId 
+    formScreen: this.formScreen
   });
 }

@@ -4,8 +4,16 @@ import { ML } from "../../utils/types";
 import { unpack } from "../../utils/objects";
 import { IScreenType, IMainViews } from "../types";
 import { IFormScreen, IFormScreenMachine } from "./types";
-import { observable, computed, action } from "mobx";
+import { observable, computed, action, reaction, autorun } from "mobx";
 import { IDataViewMediator02 } from "../../DataView/DataViewMediator02";
+import { IApi } from "../../Api/IApi";
+import { START_SCREEN, STOP_SCREEN } from "../ScreensActions";
+import {
+  IDispatcher,
+  STATE_VARIABLE_CHANGED,
+  stateVariableChanged
+} from "../../utils/mediator";
+
 
 function spc(n: number) {
   let result = "";
@@ -23,10 +31,73 @@ export class FormScreen implements IFormScreen {
       menuItemLabel: string;
       mainViews: ML<IMainViews>;
       machine: ML<IFormScreenMachine>;
+      api: ML<IApi>;
     }
   ) {}
 
   type: IScreenType.FormRef = IScreenType.FormRef;
+
+  getParent(): IDispatcher {
+    return this;
+  }
+
+  @action.bound dispatch(event: any) {
+    /*switch (event.type) {
+      default:
+        this.getParent().dispatch(event);
+    }*/
+
+    console.log("FormScreen received:", event);
+    // debugger
+    // THIS IS ROOT FOR NOW
+    switch (event.type) {
+      case STATE_VARIABLE_CHANGED: {
+        this.stateVariableChanged = true;
+        break;
+      }
+      default:
+        this.downstreamDispatch(event);
+    }
+  }
+
+  listeners = new Map<number, (event: any) => void>();
+  idgen = 0;
+  @action.bound
+  listen(cb: (event: any) => void): () => void {
+    const myId = this.idgen++;
+    this.listeners.set(myId, cb);
+    return () => this.listeners.delete(myId);
+  }
+
+  @observable stateVariableChanged = false;
+
+  disposers: Array<() => void> = [];
+  downstreamDispatch(event: any) {
+    switch (event.type) {
+      case START_SCREEN: {
+        this.machine.start();
+        this.disposers.push(
+          autorun(() => {
+            if (this.stateVariableChanged) {
+              this.stateVariableChanged = false;
+              this.dispatch({ type: "" });
+            }
+          })
+        );
+        break;
+      }
+      case STOP_SCREEN: {
+        this.machine.stop();
+        this.disposers.forEach(d => d());
+        break;
+      }
+    }
+    for (let l of this.listeners.values()) {
+      console.log(l)
+      l(event);
+    }
+    this.dataViews.forEach(view => view.downstreamDispatch(event));
+  }
 
   @observable.ref uiStructure: any = undefined;
 
@@ -61,22 +132,22 @@ export class FormScreen implements IFormScreen {
   @action.bound
   open(): void {
     console.log("Opening FormScreen", this.menuItemId, this.order);
-    this.machine.start();
+    /*this.machine.start();
     for (let dv of this.dataViews) {
       dv.aStartView.do();
-    }
+    }*/
   }
 
   @action.bound
   activateDataViews() {
-    for (let dv of this.dataViews) {
+    /*for (let dv of this.dataViews) {
       dv.aStartView.do();
-    }
+    }*/
   }
 
   @action.bound
   close(): void {
-    console.log("Closing FormView", this.menuItemId, this.order);
+    console.log("Closing FormScreen", this.menuItemId, this.order);
     for (let dv of this.dataViews) {
       dv.aStopView.do();
     }
@@ -117,5 +188,9 @@ export class FormScreen implements IFormScreen {
 
   get machine() {
     return unpack(this.P.machine);
+  }
+
+  get api() {
+    return unpack(this.P.api);
   }
 }

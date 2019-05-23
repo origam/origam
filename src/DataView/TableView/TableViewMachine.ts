@@ -8,8 +8,9 @@ import { unpack } from "../../utils/objects";
 import * as DataViewActions from "../DataViewActions";
 import * as TableViewActions from "./TableViewActions";
 import { IPropCursor } from "../types/IPropCursor";
+import { ITableViewMachine } from "./types/ITableViewMachine";
 
-export class TableViewMachine {
+export class TableViewMachine implements ITableViewMachine {
   constructor(
     public P: {
       dataTable: IDataTable;
@@ -21,13 +22,14 @@ export class TableViewMachine {
   ) {
     this.interpreter = interpret(this.machine);
     this.interpreter.onTransition(
-      action((state: State<any>) => {
+      action((state: State<any>, event: any) => {
         this.state = state;
-        console.log("TableViewMachine:", state);
+        console.log("TableViewMachine:", state, event);
       })
     );
     this.state = this.interpreter.state;
     this.subscribeMediator();
+    this.interpreter.start();
   }
 
   subscribeMediator() {}
@@ -45,6 +47,7 @@ export class TableViewMachine {
           }
         },
         active: {
+          initial: "waitForData",
           states: {
             waitForData: {
               on: {
@@ -59,7 +62,7 @@ export class TableViewMachine {
                 "": [
                   { cond: "notHasData", target: "waitForData" },
                   { cond: "shallSleep", target: "sleeping" }
-                ]
+                ],
               }
             },
             sleeping: {
@@ -80,7 +83,7 @@ export class TableViewMachine {
     {
       actions: {
         runningEn: (ctx, event) => this.runningEn(),
-        runningEx: (ctx, event) => this.runningEx()
+        runningEx: (ctx, event) => this.runningEx(),
       },
       guards: {
         shallSleep: (ctx, event) => this.shallSleep,
@@ -93,9 +96,15 @@ export class TableViewMachine {
   );
 
   @action.bound
+  send(event: any): void {
+    this.interpreter.send(event);
+  }
+
+  @action.bound
   runningEn() {
+    console.log("---RUNNINGED")
     if (!this.isCellSelected) {
-      this.dispatch(DataViewActions.selectFirstCell());
+      this.dispatch(TableViewActions.selectFirstCell());
     }
     this.dispatch(TableViewActions.makeSelectedCellVisible());
   }
@@ -113,6 +122,10 @@ export class TableViewMachine {
 
   @computed get isCellSelected() {
     return this.P.propCursor.isSelected && this.P.recCursor.isSelected;
+  }
+
+  @computed get isActive(): boolean {
+    return this.state && this.state.matches("active");
   }
 
   @action.bound dispatch(event: any) {

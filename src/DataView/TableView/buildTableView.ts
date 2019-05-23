@@ -22,6 +22,8 @@ import { IASelNextRec } from "../types/IASelNextRec";
 import { IASelPrevRec } from "../types/IASelPrevRec";
 import { ASelRec } from "../ASelRec";
 import { IASelRec } from "../types/IASelRec";
+import { TableViewMachine } from "./TableViewMachine";
+import { ITableViewMachine } from "./types/ITableViewMachine";
 
 export function buildTableView(
   initPropIds: string[] | undefined,
@@ -30,6 +32,7 @@ export function buildTableView(
   const mediator: ITableViewMediator = new TableViewMediator({
     initPropIds,
     parentMediator,
+    machine: () => machine,
     propCursor: () => propCursor,
     propReorder: () => propReorder,
     aActivateView: () => aActivateView,
@@ -44,7 +47,7 @@ export function buildTableView(
   });
   const propCursor: IPropCursor = new PropCursor(mediator);
   const propReorder: IPropReorder = new PropReorder(mediator);
-
+  const machine: ITableViewMachine = new TableViewMachine(mediator);
   const aActivateView: IAActivateView = new AActivateView(mediator);
   const aDeactivateView: IADeactivateView = new ADeactivateView();
   const aSelProp: IASelProp = new ASelProp(mediator);

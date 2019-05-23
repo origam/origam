@@ -22,13 +22,15 @@ export class AActivateView implements IAActivateView {
 
   @action.bound
   do() {
+    // TODO: Delete this....
+    return 
     const recCursor = this.P.recCursor;
     const aSelProp = this.P.aSelProp;
     const aStartEditing = this.P.aStartEditing;
     const availViews = this.P.availViews;
     // -------------------------------------------------------------
     console.log("FormView - activate");
-    availViews.setActiveView(IViewType.Form);
+    // availViews.setActiveView(IViewType.Form);
     this.machine.start();
   }
 

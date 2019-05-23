@@ -13,8 +13,8 @@ export class AActivateView implements IAActivateView {
   @action.bound
   do(id: string, order: number): void {
     this.mainViews.activateView(id, order);
-    const view = this.mainViews.findView(id, order);
-    view && view.activate();
+    // const view = this.mainViews.findView(id, order);
+    // view && view.activate();
   }
 
   get mainViews() {

@@ -1,13 +1,16 @@
 import { IScreenType, IMainView } from "../types";
 import { IDataViewMediator02 } from "../../DataView/DataViewMediator02";
+import { IDispatcher } from "../../utils/mediator";
+import { IApi } from "../../Api/IApi";
 
-export interface IFormScreen extends IMainView {
+export interface IFormScreen extends IMainView{
   type: IScreenType.FormRef;
   title: string;
   isLoading: boolean;
   isVisible: boolean;
   uiStructure: any;
   dataViewMap: Map<string, IDataViewMediator02>;
+  api: IApi,
   setUIStructure(uiStructure: any): void;
   setDataViews(views: IDataViewMediator02[]): void;
   activateDataViews(): void;

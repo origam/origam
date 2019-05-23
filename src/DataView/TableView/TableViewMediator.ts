@@ -16,7 +16,7 @@ import { IDataTable } from "../types/IDataTable";
 import { IEditing } from "../types/IEditing";
 import { IAFinishEditing } from "../types/IAFinishEditing";
 import { IForm } from "../types/IForm";
-import { action } from "mobx";
+import { action, computed } from "mobx";
 import { Machine } from "xstate";
 import { IDispatcher } from "../../utils/mediator";
 import { isType } from "ts-action";
@@ -30,6 +30,8 @@ import { IASelPrevRec } from "../types/IASelPrevRec";
 import { IASelNextRec } from "../types/IASelNextRec";
 import { IASelRec } from "../types/IASelRec";
 import { IRecords } from "../types/IRecords";
+import { ITableViewMachine } from "./types/ITableViewMachine";
+import { START_DATA_VIEWS, STOP_DATA_VIEWS } from "../DataViewActions";
 
 const activeTransitions = {
   ON_CREATE_ROW_CLICK: {},
@@ -78,6 +80,7 @@ const tableViewMachine = Machine({
 
 export interface ITableViewMediator extends IDispatcher {
   type: IViewType.Table;
+  isActive: boolean;
   propCursor: IPropCursor;
   propReorder: IPropReorder;
   properties: IProperties;
@@ -99,13 +102,13 @@ export interface ITableViewMediator extends IDispatcher {
 }
 
 export class TableViewMediator implements ITableViewMediator, ITableView {
-
   type: IViewType.Table = IViewType.Table;
 
   constructor(
     public P: {
       initPropIds: string[] | undefined;
       parentMediator: IDataViewMediator02;
+      machine: () => ITableViewMachine;
       propCursor: () => IPropCursor;
       propReorder: () => IPropReorder;
       aActivateView: () => IAActivateView;
@@ -124,9 +127,7 @@ export class TableViewMediator implements ITableViewMediator, ITableView {
 
   subscribeMediator() {
     this.listen(event => {
-      if (isType(event, DataViewActions.selectFirstCell)) {
-        this.aSelCell.doSelFirst();
-      } else if (isType(event, DataViewActions.selectCellByIdx)) {
+      if (isType(event, DataViewActions.selectCellByIdx)) {
         this.aSelCell.doByIdx(event.payload.rowIdx, event.payload.columnIdx);
       } else if (isType(event, DataViewActions.selectNextColumn)) {
         this.aSelNextProp.do();
@@ -163,8 +164,23 @@ export class TableViewMediator implements ITableViewMediator, ITableView {
     }
   }
 
-  dispatch(event: any): void {
-    this.getRoot().downstreamDispatch(event);
+  @computed get isActive(): boolean {
+    return this.P.machine().isActive;
+  }
+
+  getParent(): IDispatcher {
+    return this.P.parentMediator;
+  }
+
+  @action.bound dispatch(event: any) {
+    switch (event.type) {
+      case TableViewActions.SELECT_FIRST_CELL:
+      case TableViewActions.makeSelectedCellVisible.type:
+        this.downstreamDispatch(event);
+        break;
+      default:
+        this.getParent().dispatch(event);
+    }
   }
 
   listeners = new Map<number, (event: any) => void>();
@@ -176,15 +192,26 @@ export class TableViewMediator implements ITableViewMediator, ITableView {
     return () => this.listeners.delete(myId);
   }
 
-  getRoot(): IDispatcher {
-    return this.P.parentMediator.getRoot();
-  }
-
   downstreamDispatch(event: any): void {
     console.log("TableView received:", event);
+    switch (event.type) {
+      case START_DATA_VIEWS: {
+        this.machine.start();
+        break;
+      }
+      case STOP_DATA_VIEWS: {
+        this.machine.stop();
+        break;
+      }
+      case TableViewActions.SELECT_FIRST_CELL: {
+        this.aSelCell.doSelFirst();
+        break;
+      }
+    }
     for (let l of this.listeners.values()) {
       l(event);
     }
+    this.machine.send(event);
   }
 
   get dataView(): IDataViewMediator02 {
@@ -273,5 +300,9 @@ export class TableViewMediator implements ITableViewMediator, ITableView {
 
   get form(): IForm {
     return this.P.parentMediator.form;
+  }
+
+  get machine(): ITableViewMachine {
+    return this.P.machine();
   }
 }

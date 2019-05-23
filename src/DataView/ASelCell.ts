@@ -33,13 +33,6 @@ export class ASelCell implements IASelCell {
     }
   ) {}
 
-    subscribemediator() {
-      this.P.listen((action: any) => {
-        if(isType(action, DataViewActions.selectFirstCell)) {
-          this.doSelFirst();
-        }
-      })
-    }
 
   @action.bound
   doByIdx(rowIdx: number | undefined, colIdx: number | undefined) {

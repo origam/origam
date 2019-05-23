@@ -4,6 +4,7 @@ import { ML } from "../utils/types";
 import { IMainViews } from "./types";
 import { unpack } from "../utils/objects";
 import { ICommandType } from "../MainMenu/MainMenu";
+import * as ScreensActions from "./ScreensActions";
 
 export class AOpenView implements IAOpenView {
   constructor(
@@ -25,11 +26,12 @@ export class AOpenView implements IAOpenView {
       id,
       order,
       itemType,
-      menuItemLabel,
+      menuItemLabel
     );
     this.mainViews.pushView(newView);
-    newView.open();
+    // newView.open();
     this.aActivateView.do(id, order);
+    newView.dispatch(ScreensActions.startScreen());
   }
 
   get mainViews() {

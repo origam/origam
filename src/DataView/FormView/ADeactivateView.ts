@@ -18,10 +18,10 @@ export class ADeactivateView implements IADeactivateView {
 
   @action.bound
   do(): void {
-    if (this.editing.isEditing) {
+    /*if (this.editing.isEditing) {
       this.aFinishEditing.do();
     }
-    this.machine.stop();
+    this.machine.stop();*/
   }
 
   get editing() {

@@ -1,5 +1,5 @@
 import { Properties } from "../../DataView/DataTable";
-import { IScreenContentFactory } from "./types";
+import { IScreenContentFactory, IFormScreen } from "./types";
 import * as xmlFind from "./xmlFind";
 import { parseViewType, parseBoolean, parseNumber } from "../../utils/xml";
 import { buildProperty } from "../../DataView/Property";
@@ -15,7 +15,7 @@ import { buildTableView } from "../../DataView/TableView/buildTableView";
 import { IDataViewMediator02 } from "../../DataView/DataViewMediator02";
 
 export class ScreenContentFactory implements IScreenContentFactory {
-  constructor(public P: { api: ML<IApi>; menuItemId: ML<string> }) {}
+  constructor(public P: { formScreen: IFormScreen}) {}
 
   create(xmlObj: any) {
     // console.time("xml-processing");
@@ -67,7 +67,7 @@ export class ScreenContentFactory implements IScreenContentFactory {
         () => availViewItems,
         () => propertyItems,
         parseViewType(grid.attributes.DefaultPanelView)!,
-        { api: this.api, menuItemId: this.menuItemId }
+        this.P.formScreen
       );
 
       const formView = buildFormView(undefined, formUI, dataViewMediator02);
@@ -124,8 +124,8 @@ export class ScreenContentFactory implements IScreenContentFactory {
           gp,
           idx,
           dataSourceIndex,
-          unpack(this.menuItemId),
-          unpack(this.api)
+          unpack(this.P.formScreen.menuItemId),
+          unpack(this.P.formScreen.api)
         );
         return prop;
       });
@@ -172,13 +172,7 @@ export class ScreenContentFactory implements IScreenContentFactory {
     };
   }
 
-  get api() {
-    return unpack(this.P.api);
-  }
 
-  get menuItemId() {
-    return unpack(this.P.menuItemId);
-  }
 }
 
 function extractScreenUI(node: any) {

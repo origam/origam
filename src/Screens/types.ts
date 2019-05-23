@@ -1,6 +1,7 @@
 import { ICommandType } from "../MainMenu/MainMenu";
 import { ML } from "../utils/types";
 import { IApi } from "../Api/IApi";
+import { IDispatcher } from "../utils/mediator";
 
 export interface IAActivateView {
   do(id: string, order: number): void;
@@ -50,7 +51,7 @@ export interface IMainViews {
   activateView(id: string, order: number): void;
 }
 
-export interface IMainView {
+export interface IMainView extends IDispatcher  {
   menuItemId: string;
   order: number;
   label: string;

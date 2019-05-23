@@ -31,6 +31,8 @@ export function isFormView(obj: any): obj is IFormViewMediator {
 }*/
 
 export interface IFormViewMachine {
+  isActive: boolean;
   start(): void;
   stop(): void;
+  send(event: any): void;
 }
