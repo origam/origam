@@ -1,5 +1,6 @@
 import * as React from "react";
 import { observer } from "mobx-react";
+import style from './Bool.module.css';
 
 
 @observer
@@ -12,7 +13,7 @@ export class BoolEditor extends React.Component<{
 }> {
   render() {
     return (
-      <div className="editor-container">
+      <div className={`editor-container ${style.checkbox}`}>
         <input
           className="editor"
           type="checkbox"
