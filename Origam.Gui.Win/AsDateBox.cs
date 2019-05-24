@@ -332,6 +332,7 @@ namespace Origam.Gui.Win
 
 		private void EditControl_ValueChanged(object sender, EventArgs e)
 		{
+            if (!this.Enabled) return;
 			if (! this.DateValue.Equals(this.EditControl.Value))
 		    {
 		        valueChangedByUser = true;

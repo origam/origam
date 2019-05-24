@@ -28,7 +28,13 @@ namespace Origam.Security.Identity
     public class OrigamUser : IUser, IOrigamUser
     {
         public string BusinessPartnerId { get; set; }
-        public string Id { get; }
+        public string Id
+        {
+            get
+            {
+                return BusinessPartnerId;
+            }
+        }
         public string UserName { get; set; }
         public DateTime CreationDate { get; set; }
         public string Email { get; set; }
