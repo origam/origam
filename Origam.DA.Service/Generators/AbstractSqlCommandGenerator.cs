@@ -143,7 +143,7 @@ namespace Origam.DA.Service
         public bool ResolveAllFilters { get; set; }
 
         public bool PrettyFormat { get; set; }
-
+        public bool generateConsoleUseSyntax { get; set; }  = false;
         public IDbCommand ScalarValueCommand(DataStructure ds, DataStructureFilterSet filter,
             DataStructureSortSet sortSet, string columnName, Hashtable parameters)
         {

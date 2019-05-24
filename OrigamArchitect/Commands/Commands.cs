@@ -1721,7 +1721,7 @@ namespace OrigamArchitect.Commands
         public override void Run()
         {
             AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
-            AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator) abstractSqlDataService.DbDataAdapterFactory;
+            AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator) abstractSqlDataService.DbDataAdapterFactory.Clone();
             DataStructureEntity entity = Owner as DataStructureEntity;
             StringBuilder builder = new StringBuilder();
             if (entity.Columns.Count > 0)
@@ -1729,6 +1729,7 @@ namespace OrigamArchitect.Commands
                 DataStructure ds = (Owner as ISchemaItem).RootItem as DataStructure;
                 builder.AppendLine("-- SQL statements for data structure: " + ds.Name);
                 generator.PrettyFormat = true;
+                generator.generateConsoleUseSyntax = true;
                 // parameter declarations
                 builder.AppendLine(
                     generator.SelectParameterDeclarationsSql(
@@ -1823,9 +1824,10 @@ namespace OrigamArchitect.Commands
         public override void Run()
         {
             AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
-            AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory;
+            AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory.Clone();
             DataStructureFilterSet filterSet = Owner as DataStructureFilterSet;
             generator.PrettyFormat = true;
+            generator.generateConsoleUseSyntax = true;
             StringBuilder builder = new StringBuilder();
             DataStructure ds = filterSet.RootItem as DataStructure;
             builder.AppendFormat("-- SQL statements for data structure: {0}\r\n", ds.Name);
@@ -1880,8 +1882,9 @@ namespace OrigamArchitect.Commands
         {
             StringBuilder builder = new StringBuilder();
             AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
-            AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory;
+            AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory.Clone();
             generator.PrettyFormat = true;
+            generator.generateConsoleUseSyntax = true;
             bool displayPagingParameters = true;
             DataStructure ds = (Owner as ISchemaItem).RootItem as DataStructure;
             builder.AppendLine("-- SQL statements for data structure: " + ds.Name);
