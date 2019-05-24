@@ -65,18 +65,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="ConfigurationManager.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Interfaces\IOrigamAuthorizationProvider.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Interfaces\IOrigamProfileProvider.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="SecurityManager.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Update="ConfigurationManager.cs" />
+    <Compile Update="Interfaces\IOrigamAuthorizationProvider.cs" />
+    <Compile Update="Interfaces\IOrigamProfileProvider.cs" />
+    <Compile Update="SecurityManager.cs" />
   </ItemGroup>
 
 </Project>

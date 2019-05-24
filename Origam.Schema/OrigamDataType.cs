@@ -37,7 +37,6 @@ namespace Origam.Schema
 		Xml,
 		Array,
 		Geography,
-		Object,
-        TsVector
+		Object
     }
 }

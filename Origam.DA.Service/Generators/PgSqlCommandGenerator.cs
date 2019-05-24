@@ -232,8 +232,6 @@ namespace Origam.DA.Service
 
                 case "GEOGRAPHY":
                     return OrigamDataType.Geography;
-                case "TSVECTOR":
-                    return OrigamDataType.TsVector;
                 default:
                     return OrigamDataType.String;
             }
@@ -277,9 +275,6 @@ namespace Origam.DA.Service
 					return NpgsqlDbType.Varchar;
 				case OrigamDataType.UniqueIdentifier:
 					return NpgsqlDbType.Uuid;
-                case OrigamDataType.TsVector:
-                    return NpgsqlDbType.TsVector;
-
                 default:
 					throw new NotSupportedException(ResourceUtils.GetString("UnsupportedType"));
 			}

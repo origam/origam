@@ -83,9 +83,7 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Update="Search\SearchRequest.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Update="Search\SearchRequest.cs" />
   </ItemGroup>
 
   <ItemGroup>
