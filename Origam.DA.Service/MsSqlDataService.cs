@@ -529,5 +529,20 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0)",
         }
 
         public override string DbUser { get { return _IISUser; } set { _IISUser = string.Format("[IIS APPPOOL\\{0}]", value); } }
+        internal override object FillParameterArrayData(ICollection ar)
+        {
+            DataTable dt = new OrigamDataTable("ListTable");
+            dt.Columns.Add("ListValue", typeof(string));
+            dt.Columns[0].MaxLength = -1;
+            dt.BeginLoadData();
+            foreach (object v in ar)
+            {
+                DataRow row = dt.NewRow();
+                row[0] = v.ToString();
+                dt.Rows.Add(row);
+            }
+            dt.EndLoadData();
+            return dt;
+        }
     }
 }

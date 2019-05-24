@@ -533,32 +533,7 @@ namespace Origam.DA.Service
                                         ICollection ar = param.Value as ICollection;
 										if(ar != null)
 										{
-                                            if (this.PlatformName == DatabaseType.MsSql)
-                                            {
-                                                DataTable dt = new OrigamDataTable("ListTable");
-                                                dt.Columns.Add("ListValue", typeof(string));
-                                                dt.Columns[0].MaxLength = -1;
-                                                dt.BeginLoadData();
-                                                foreach (object v in ar)
-                                                {
-                                                    DataRow row = dt.NewRow();
-                                                    row[0] = v.ToString();
-                                                    dt.Rows.Add(row);
-                                                }
-                                                dt.EndLoadData();
-                                                value = dt;
-                                            }
-                                            if (this.PlatformName == DatabaseType.PgSql)
-                                            {
-                                                String[] vs = new String[ar.Count];
-                                                int arrayposition = 0;
-                                                foreach (object v in ar)
-                                                {
-                                                    vs[arrayposition] = v.ToString();
-                                                    arrayposition++;
-                                                }
-                                                value =  vs;
-                                            }
+                                            value = FillParameterArrayData(ar);
                                         }
 										else
 										{
@@ -579,8 +554,9 @@ namespace Origam.DA.Service
 				}
 			}
 		}
+        internal abstract object FillParameterArrayData(ICollection ar);
 
-		internal DataAuditLog GetLog(
+        internal DataAuditLog GetLog(
             DataTable table, UserProfile profile, string transactionId, 
             int overrideActionType)
 		{
