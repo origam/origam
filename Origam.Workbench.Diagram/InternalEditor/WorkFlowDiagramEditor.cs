@@ -57,7 +57,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 					if (RetrieveItem(targetNode.Id) is ContextStore ) return false;
 					var sourcesParent = gViewer.Graph.FindParentSubGraph(sourceNode);
 					var targetsParent = gViewer.Graph.FindParentSubGraph(targetNode);
-					return sourcesParent == targetsParent;
+					return Equals(sourcesParent, targetsParent);
 				});
 
 			gViewer.EdgeInsertButtonVisible = true;
@@ -340,7 +340,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        {
 		        if(gViewer.SelectedObject is Node node)
 		        {
-			        if (nodeSelector.Selected == node)
+			        if (Equals(nodeSelector.Selected, node))
 			        {
 				        return;
 			        }
@@ -369,8 +369,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		private bool IsDeleteMenuItemAvailable(DNode objectUnderMouse)
 		{
 			if (objectUnderMouse == null) return false;
-			if (nodeSelector.Selected == Graph.MainDrawingSubgraf) return false;
-			return objectUnderMouse.Node == nodeSelector.Selected;
+			if (Equals(nodeSelector.Selected, Graph.MainDrawingSubgraf)) return false;
+			return Equals(objectUnderMouse.Node, nodeSelector.Selected);
 		}
 
 		private bool IsNewMenuAvailable(DNode dNodeUnderMouse)
@@ -386,7 +386,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			var schemaItem = DNodeToSchemaItem(dNodeUnderMouse);
 			if (!(dNodeUnderMouse.Node is Subgraph) && 
 			    !(schemaItem is ServiceMethodCallParameter)) return false;
-			return dNodeUnderMouse.Node == nodeSelector.Selected;
+			return Equals(dNodeUnderMouse.Node, nodeSelector.Selected);
 		}
 
 		private ContextMenuStrip BuildContextMenu()

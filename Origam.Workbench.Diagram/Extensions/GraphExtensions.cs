@@ -44,7 +44,7 @@ namespace Origam.Workbench.Diagram.Extensions
 	    public static bool AreRelatives(this Graph graph, Node node1, Node node2)
 	    {
 		    if (node1 == null || node2 == null) return false;
-		    if (node1 == node2) return true;
+		    if (Equals(node1, node2)) return true;
 		    if (node1 is Subgraph subgraph1 && subgraph1.Nodes.Contains(node2))
 		    {
 			    return true;
@@ -54,7 +54,7 @@ namespace Origam.Workbench.Diagram.Extensions
 			    return true;
 		    }
 		    Subgraph parent = graph.FindParentSubGraph(node1);
-		    if (parent == node2) return true;
+		    if (Equals(parent, node2)) return true;
 		    if(parent.Nodes.Contains(node2)) return true;
 		    return false;
 	    }
