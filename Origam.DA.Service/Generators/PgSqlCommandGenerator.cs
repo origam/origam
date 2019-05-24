@@ -308,7 +308,7 @@ namespace Origam.DA.Service
 		{
 			get
 			{
-				return ":";
+				return generateConsoleUseSyntax?"":":";
 			}
 		}
 
@@ -399,7 +399,10 @@ namespace Origam.DA.Service
         {
             NpgsqlParameter param = Iparam as Npgsql.NpgsqlParameter;
             string result = param.NpgsqlDbType.ToString();
-
+            if(param.NpgsqlDbType == (NpgsqlDbType.Array| NpgsqlDbType.Text))
+            {
+                result = "text[]";
+            }
             if (param.DbType == DbType.String)
             {
                 result += "(" + param.Size + ")";
@@ -571,6 +574,27 @@ namespace Origam.DA.Service
         internal override string ArraySql(string expresion1, string expresion2)
         {
             return string.Format("{0}::text = ANY ({1})", expresion1, expresion2);
+        }
+       
+        internal override string CreateDataStructureHeadSql()
+        {
+            return "DO $$";
+        }
+        internal override string DeclareBegin()
+        {
+            return "BEGIN";
+        }
+        public override string CreateOutputTableSql()
+        {
+            return string.Format("CREATE TEMP TABLE tmp_output ON COMMIT DROP AS {0}", Environment.NewLine);
+        }
+        public override string CreateDataStructureFooterSql()
+        {
+            return string.Format(";{0}END $$;{0}SELECT* FROM tmp_output;", Environment.NewLine);
+        }
+        internal override string SetParameterSql(string name)
+        {
+            return string.Format("{0} = NULL;{1}", name, Environment.NewLine);
         }
     }
 }

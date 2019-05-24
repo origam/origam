@@ -1737,6 +1737,7 @@ namespace OrigamArchitect.Commands
                     Owner as DataStructureEntity,
                     (DataStructureFilterSet)null, false, null)
                     );
+                builder.AppendLine(generator.CreateDataStructureFooterSql());
                 builder.AppendLine("-----------------------------------------------------------------");
                 builder.AppendLine("-- " + (Owner as DataStructureEntity).Name);
                 builder.AppendLine("-----------------------------------------------------------------");
@@ -1752,6 +1753,7 @@ namespace OrigamArchitect.Commands
                         forceDatabaseCalculation: false
                         )
                     );
+                builder.AppendLine(generator.CreateDataStructureFooterSql());
                 builder.AppendLine();
                 builder.AppendLine("-----------------------------------------------------------------");
                 builder.AppendLine("-- Load Record After Update SQL");
@@ -1840,6 +1842,7 @@ namespace OrigamArchitect.Commands
             {
                 if (entity.Columns.Count > 0)
                 {
+                    builder.AppendLine(generator.CreateOutputTableSql());
                     builder.AppendLine("-----------------------------------------------------------------");
                     builder.AppendLine("-- " + entity.Name);
                     builder.AppendLine("-----------------------------------------------------------------");
@@ -1854,6 +1857,7 @@ namespace OrigamArchitect.Commands
                         false
                         )
                         );
+                    builder.AppendLine(generator.CreateDataStructureFooterSql());
                 }
             }
             new ShowSqlConsole(builder.ToString()).Run();
@@ -1900,6 +1904,7 @@ namespace OrigamArchitect.Commands
                         generator.SelectParameterDeclarationsSql(
                         ds, entity, Owner as DataStructureSortSet,
                         displayPagingParameters, null));
+                    builder.AppendLine(generator.CreateOutputTableSql());
                     builder.AppendLine(
                         generator.SelectSql(ds,
                         entity,
@@ -1911,6 +1916,7 @@ namespace OrigamArchitect.Commands
                         displayPagingParameters
                         )
                         );
+                    builder.AppendLine(generator.CreateDataStructureFooterSql());
                 }
             }
             new ShowSqlConsole(builder.ToString()).Run();

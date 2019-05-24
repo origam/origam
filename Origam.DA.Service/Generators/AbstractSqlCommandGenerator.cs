@@ -143,7 +143,7 @@ namespace Origam.DA.Service
         public bool ResolveAllFilters { get; set; }
 
         public bool PrettyFormat { get; set; }
-        public bool generateConsoleUseSyntax { get; set; }  = false;
+        public bool generateConsoleUseSyntax { get; set; } = false;
         public IDbCommand ScalarValueCommand(DataStructure ds, DataStructureFilterSet filter,
             DataStructureSortSet sortSet, string columnName, Hashtable parameters)
         {
@@ -743,22 +743,27 @@ namespace Origam.DA.Service
             StringBuilder result = new StringBuilder();
             Hashtable ht = new Hashtable();
             DataStructure ds = filter.RootItem as DataStructure;
-
+            result.AppendLine(CreateDataStructureHeadSql());
             foreach (DataStructureEntity entity in ds.Entities)
             {
                 SelectParameterDeclarationsSql(result, ht, ds, entity, filter, null, paging,
                     columnName);
             }
+            result.AppendLine(DeclareBegin());
             SelectParameterDeclarationsSetSql(result, ht);
             return result.ToString();
         }
+
+        internal abstract string DeclareBegin();
 
         public string SelectParameterDeclarationsSql(DataStructure ds, DataStructureEntity entity,
             DataStructureFilterSet filter, bool paging, string columnName)
         {
             StringBuilder result = new StringBuilder();
             Hashtable ht = new Hashtable();
+            result.AppendLine(CreateDataStructureHeadSql());
             SelectParameterDeclarationsSql(result, ht, ds, entity, filter, null, paging, columnName);
+            result.AppendLine(DeclareBegin());
             SelectParameterDeclarationsSetSql(result, ht);
             return result.ToString();
         }
@@ -768,7 +773,9 @@ namespace Origam.DA.Service
         {
             StringBuilder result = new StringBuilder();
             Hashtable ht = new Hashtable();
+            result.AppendLine(CreateDataStructureHeadSql());
             SelectParameterDeclarationsSql(result, ht, ds, entity, null, sort, paging, columnName);
+            result.AppendLine(DeclareBegin());
             SelectParameterDeclarationsSetSql(result, ht);
             return result.ToString();
         }
@@ -824,7 +831,7 @@ namespace Origam.DA.Service
 
                 if (!ht.Contains(param.ParameterName))
                 {
-                    result.AppendFormat("DECLARE {0} "+ DeclareAsSql() + " {1}{2}",
+                    result.AppendFormat("DECLARE {0} "+ DeclareAsSql() + " {1};{2}",
                         param.ParameterName,
                         SqlDataType(param),
                         Environment.NewLine);
@@ -841,17 +848,25 @@ namespace Origam.DA.Service
         {
             foreach (string name in parameters.Keys)
             {
-                result.AppendFormat("SET {0} = NULL{1}", name, Environment.NewLine);
+                result.Append(SetParameterSql(name));
             }
         }
+
+        internal abstract string SetParameterSql(string name);
+
         public string SelectSql(DataStructure ds, DataStructureEntity entity,
             DataStructureFilterSet filter, DataStructureSortSet sortSet, string scalarColumn,
             Hashtable parameters, Hashtable selectParameterReferences,
             bool forceDatabaseCalculation)
         {
-            return SelectSql(ds, entity, filter, sortSet, scalarColumn, null, parameters,
-                selectParameterReferences, true, false, false, forceDatabaseCalculation);
+            StringBuilder builder = new StringBuilder();
+            builder.Append(SelectSql(ds, entity, filter, sortSet, scalarColumn, null, parameters,
+                selectParameterReferences, true, false, false, forceDatabaseCalculation));
+            return builder.ToString();
         }
+
+        public abstract string CreateDataStructureFooterSql();
+        public abstract string CreateOutputTableSql();
 
         public string SelectSql(DataStructure ds, DataStructureEntity entity,
             DataStructureFilterSet filter, DataStructureSortSet sortSet, string scalarColumn,
@@ -1099,7 +1114,6 @@ namespace Origam.DA.Service
                     "SELECT * FROM ({0}) _page WHERE _page.{1} BETWEEN (({2} - 1) * {3}) + 1 AND {3} * {2}",
                     finalString, RowNumColumnName, _pageNumberParameterName, _pageSizeParameterName);
             }
-
             return finalString;
         }
 
@@ -1419,6 +1433,8 @@ namespace Origam.DA.Service
 
             return sqlExpression.ToString();
         }
+
+        internal abstract string CreateDataStructureHeadSql();
 
         public string SelectReferenceCountSql(TableMappingItem table, FieldMappingItem updatedField)
         {

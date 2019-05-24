@@ -582,5 +582,25 @@ namespace Origam.DA.Service
         {
             return string.Format("{0} IN (SELECT ListValue FROM {1} origamListValue)", expresion1,expresion2);
         }
+        internal override string CreateDataStructureHeadSql()
+        {
+            return "";
+        }
+        public override string CreateOutputTableSql()
+        {
+            return "";
+        }
+        internal override string DeclareBegin()
+        {
+            return "";
+        }
+        public override string CreateDataStructureFooterSql()
+        {
+            return "";
+        }
+        internal override string SetParameterSql(string name)
+        {
+            return string.Format("SET {0} = NULL{1}", name, Environment.NewLine);
+        }
     }
 }
