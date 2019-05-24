@@ -87,22 +87,22 @@ namespace Origam.DA.Service
 		{
 			NpgsqlException sqle = ex as NpgsqlException;
 
-//			if(sqle != null)
-//			{
-//				if(sqle.Number == 547)
-//				{
-//					throw new ConstraintException("Pøi aktualizaci nebo mazání dat došlo k porušení integrity dat. Patrnì jste se pokusili vymazat záznam, který je již použit jinde.\nOperace byla pøerušena a nebyla uložena žádná data.\n\nHlášení datového zdroje: " + ex.Message);
-//				}
-//				else if(sqle.Number == 2601)
-//				{
-//					throw new DataException("Pokusili jste se vložit duplicitní data. Data nebylo možno uložit.", ex);
-//				}
-//				else
-//				{
-//					throw new DataException("Exception was was encountered while updating data." + Environment.NewLine + ex.Message, ex);
-//				}	
-//			}
-		}
+            if (sqle != null)
+            {
+                PostgresException postgresException = ((Npgsql.PostgresException)sqle);
+
+                if (postgresException.SqlState == "42601")
+                {
+                    throw new DataException("Syntax Error" + 
+                        Environment.NewLine  + rowErrorMessage + Environment.NewLine + ex.Message, ex);
+                }
+                else
+                {
+                    throw new DataException("An exception has been encountered " +
+                        Environment.NewLine + rowErrorMessage + Environment.NewLine + ex.Message, ex);
+                }
+            }
+        }
 
         public override string[] DatabaseSpecificDatatypes()
         {
