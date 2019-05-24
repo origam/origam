@@ -18,7 +18,6 @@ import {
 } from "../../../../../view/Perspectives/TableView/types";
 import { PubSub } from "../../../../../../utils/events";
 import { CPR } from "../../../../../../utils/canvas";
-import { isType } from "ts-action";
 import * as TableViewActions from "../../../../../../DataView/TableView/TableViewActions";
 
 const renderCell = (table: ITable) => (
@@ -141,12 +140,14 @@ export class Table extends React.Component<{ controller: ITable }> {
   disposers: Array<() => void> = [];
 
   componentDidMount() {
-    this.disposers.push(this.props.controller.listenMediator((action) => {
-      if (isType(action, TableViewActions.makeCellVisibleByIdx)) {
-        this.scrollToCellShortest(
-          action.payload.rowIdx,
-          action.payload.columnIdx
-        );
+    this.disposers.push(this.props.controller.listenMediator((event) => {
+      switch (event.type) {
+        case TableViewActions.MAKE_CELL_VISIBLE_BY_IDX:
+          this.scrollToCellShortest(
+            event.payload.rowIdx,
+            event.payload.columnIdx
+          );
+          break;
       }
     }))
   }

@@ -22,94 +22,9 @@ import { Machine } from "xstate";
 import { IDispatcher } from "../../utils/mediator";
 import { action, computed } from "mobx";
 import { START_DATA_VIEWS, STOP_DATA_VIEWS } from "../DataViewActions";
-import { SELECT_FIRST_FIELD } from "./FormViewActions";
+import * as FormViewActions from "./FormViewActions";
+import { ISelection } from "../Selection";
 
-const activeTransitions = {
-  ON_CREATE_ROW_CLICK: { actions: "onCreateRowClick" },
-  ON_DELETE_ROW_CLICK: { actions: "onDeleteRowClick" },
-  ON_SELECT_PREV_ROW_CLICK: { actions: "onSelectPrevRowClick" },
-  ON_SELECT_NEXT_ROW_CLICK: { actions: "onSelectNextRowClick" },
-  ON_FIELD_CLICK: { actions: "onFieldClick" },
-  ON_NO_FIELD_CLICK: { actions: "onNoFieldClick" },
-  ON_FORM_OUTSIDE_CLICK: { actions: "onFormOutsideClick" },
-  ON_FIELD_KEY_DOWN: { actions: "onFieldKeyDown" },
-  ON_FIELD_CHANGE: { actions: "onFieldChange" },
-
-  START_EDITING: {}, // ?
-  CANCEL_EDITING: {}, // ?
-  FINISH_EDITING: {}, // ?
-  SELECT_PREV_ROW: {}, // ?
-  SELECT_NEXT_ROW: {}, // ?
-  SELECT_PREV_CELL: {}, // ?
-  SELECT_NEXT_CELL: {}, // ?
-  SELECT_CELL: {}, // ?
-  MAKE_CELL_VISIBLE: {} // ?
-};
-
-const formViewMachine = Machine(
-  {
-    initial: "INACTIVE",
-    states: {
-      INACTIVE: {
-        on: {
-          ACTIVATE: {
-            target: "ACTIVE",
-            cond: "isForMe"
-          }
-        }
-      },
-      ACTIVE: {
-        initial: "WAIT_FOR_CONTENT",
-        states: {
-          WAIT_FOR_CONTENT: {
-            on: {
-              "": { cond: "dataTableHasContent", target: "RUNNING" },
-              DATA_TABLE_LOADED: {
-                cond: "dataTableHasContent",
-                target: "RUNNING"
-              }
-            }
-          },
-          RUNNING: {
-            on: {
-              ...activeTransitions
-            }
-          }
-        },
-        on: {
-          ACTIVATE: {
-            target: "INACTIVE",
-            cond: "isNotForMe"
-          }
-        }
-      }
-    }
-  },
-  {
-    guards: {
-      dataTableHasContent: (ctx: any, event: any) => {
-        return false;
-      },
-      isForMe: (ctx: any, event: any) => {
-        return false;
-      },
-      isNotForMe: (ctx: any, event: any) => {
-        return false;
-      }
-    },
-    actions: {
-      onCreateRowClick: (ctx: any, event: any) => {},
-      onDeleteRowClick: (ctx: any, event: any) => {},
-      onSelectPrevRowClick: (ctx: any, event: any) => {},
-      onSelectNextRowClick: (ctx: any, event: any) => {},
-      onFieldClick: (ctx: any, event: any) => {},
-      onNoFieldClick: (ctx: any, event: any) => {},
-      onFormOutsideClick: (ctx: any, event: any) => {},
-      onFieldKeyDown: (ctx: any, event: any) => {},
-      onFieldChange: (ctx: any, event: any) => {}
-    }
-  }
-);
 
 export interface IParentMediator {
   properties: IProperties;
@@ -129,6 +44,7 @@ export interface IFormViewMediator extends IDispatcher {
   propReorder: IPropReorder;
   propCursor: IPropCursor;
   machine: IFormViewMachine;
+  selection: ISelection;
 
   properties: IProperties;
   records: IRecords;
@@ -151,6 +67,7 @@ export interface IFormViewMediator extends IDispatcher {
 }
 
 export class FormViewMediator implements IFormViewMediator {
+  
   type: IViewType.Form = IViewType.Form;
 
   constructor(
@@ -160,6 +77,7 @@ export class FormViewMediator implements IFormViewMediator {
       parentMediator: IDataViewMediator02;
       propReorder: () => IPropReorder;
       propCursor: () => IPropCursor;
+      selection: () => ISelection;
       machine: () => IFormViewMachine;
       aSelNextProp: () => IASelNextProp;
       aSelPrevProp: () => IASelPrevProp;
@@ -179,10 +97,11 @@ export class FormViewMediator implements IFormViewMediator {
   }
 
   @action.bound dispatch(event: any) {
+    if (event.NS === FormViewActions.NS) {
+      this.downstreamDispatch(event);
+      return;
+    }
     switch (event.type) {
-      case SELECT_FIRST_FIELD:
-        this.downstreamDispatch(event);
-        break;
       default:
         this.getParent().dispatch(event);
     }
@@ -208,7 +127,7 @@ export class FormViewMediator implements IFormViewMediator {
         this.machine.stop();
         break;
       }
-      case SELECT_FIRST_FIELD: {
+      case FormViewActions.SELECT_FIRST_CELL: {
         this.aSelCell.doSelFirst();
         break;
       }
@@ -250,6 +169,10 @@ export class FormViewMediator implements IFormViewMediator {
 
   get editing(): IEditing {
     return this.P.parentMediator.editing;
+  }
+
+  get selection(): ISelection {
+    return this.P.selection();
   }
 
   get availViews(): IAvailViews {

@@ -7,6 +7,8 @@ export interface IFormView {
   toolbar: IToolbar | undefined;
   fields: Map<string, IFormField>;
   isLoading: boolean;
+  onNoFieldClick?(event: any): void;
+  onOutsideFormClick?(event: any): void;
   /*onFieldClick?(event: any, id: string): void;
   onFieldFocus?(event: any, id: string): void;
   onFieldBlur?(event: any, id: string): void;

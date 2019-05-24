@@ -1,18 +1,14 @@
-import { Machine, State, interpret } from "xstate";
+import { action, computed, observable, reaction, runInAction } from "mobx";
+import { interpret, Machine, State } from "xstate";
 import { Interpreter } from "xstate/lib/interpreter";
-import { observable, action, computed, reaction, runInAction } from "mobx";
-import { IDataViewMachine } from "./types/IDataViewMachine";
 import { IApi } from "../Api/IApi";
-import { ML } from "../utils/types";
-import { unpack } from "../utils/objects";
-import { IDataTable } from "./types/IDataTable";
 import { IDataSource } from "../Screens/types";
-import { IASelCell } from "./types/IASelCell";
-import { IDataViewMediator } from "./types/IDataViewMediator";
-import * as DataViewActions from "./DataViewActions";
-import { isType } from "ts-action";
-import { IRecord } from "./types/IRecord";
 import { stateVariableChanged } from "../utils/mediator";
+import { unpack } from "../utils/objects";
+import { ML } from "../utils/types";
+import { IDataTable } from "./types/IDataTable";
+import { IDataViewMachine } from "./types/IDataViewMachine";
+import { IRecord } from "./types/IRecord";
 
 
 export class DataViewMachine implements IDataViewMachine {
@@ -35,19 +31,15 @@ export class DataViewMachine implements IDataViewMachine {
     this.interpreter.onTransition(
       action((state: State<any>, event: any) => {
         this.state = state;
-        console.log('DataViewMachine:', state, event);
+        console.log("DataViewMachine:", state, event);
       })
     );
     this.state = this.interpreter.state;
   }
 
   subscribeMediator() {
-    this.P.listen((action: any) => {
-      if (isType(action, DataViewActions.requestSaveData)) {
-        this.interpreter.send("REQUEST_SAVE_DATA");
-      } else if (isType(action, DataViewActions.requestCreateRow)) {
-        this.interpreter.send("REQUEST_CREATE_ROW");
-      }
+    this.P.listen((event: any) => {
+      this.interpreter.send(event);
     });
   }
 
@@ -197,7 +189,7 @@ export class DataViewMachine implements IDataViewMachine {
       reaction(
         () => this.controlledValueFromParent,
         () => {
-          console.log(' *** Controlled value from parent changed')
+          console.log(" *** Controlled value from parent changed");
           this.treeDispatch("LOAD_FRESH");
         }
       ),

@@ -1,59 +1,48 @@
-import { IDataTable } from "./types/IDataTable";
-import { IEditing } from "./types/IEditing";
-import { IAvailViews } from "./types/IAvailViews";
-import { IRecCursor } from "./types/IRecCursor";
-import { IForm } from "./types/IForm";
-import { IRecords } from "./types/IRecords";
-import { IDataViewMachine } from "./types/IDataViewMachine";
-import { IProperties } from "./types/IProperties";
+import { action, reaction } from "mobx";
 import { IApi } from "../Api/IApi";
+import { IFormScreen } from "../Screens/FormScreen/types";
 import { IDataSource } from "../Screens/types";
-import { IViewType } from "./types/IViewType";
-import { IProperty } from "./types/IProperty";
+import { IDispatcher, stateVariableChanged } from "../utils/mediator";
+import * as DataViewActions from "./DataViewActions";
+import { ACTIVATE_INITIAL_VIEW_TYPES, START_DATA_VIEWS, STOP_DATA_VIEWS } from "./DataViewActions";
+import { IFormViewMediator } from "./FormView/FormViewMediator";
+import { ITableViewMediator } from "./TableView/TableViewMediator";
+import { IACancelEditing } from "./types/IACancelEditing";
+import { IADeleteRow } from "./types/IADeleteRow";
+import { IAFinishEditing } from "./types/IAFinishEditing";
+import { IAInitForm } from "./types/IAInitForm";
+import { IAReloadChildren } from "./types/IAReloadChildren";
+import { IAStartEditing } from "./types/IAStartEditing";
 import { IAStartView } from "./types/IAStartView";
 import { IAStopView } from "./types/IAStopView";
-import { IAStartEditing } from "./types/IAStartEditing";
-import { IAFinishEditing } from "./types/IAFinishEditing";
-import { IACancelEditing } from "./types/IACancelEditing";
-import { IASwitchView } from "./types/IASwitchView";
-import { IAInitForm } from "./types/IAInitForm";
 import { IASubmitForm } from "./types/IASubmitForm";
-import { IAReloadChildren } from "./types/IAReloadChildren";
-import { IADeleteRow } from "./types/IADeleteRow";
-import { action, reaction } from "mobx";
-import { ITableViewMediator } from "./TableView/TableViewMediator";
-import { IFormViewMediator } from "./FormView/FormViewMediator";
-import { Machine } from "xstate";
-import {
-  IDispatcher,
-  stateVariableChanged,
-  STATE_VARIABLE_CHANGED
-} from "../utils/mediator";
-import * as DataViewActions from "./DataViewActions";
-import { isType } from "ts-action";
-import {
-  ACTIVATE_INITIAL_VIEW_TYPES,
-  START_DATA_VIEWS,
-  STOP_DATA_VIEWS,
-  ACTIVATE_VIEW,
-  DEACTIVATE_VIEW
-} from "./DataViewActions";
-import { IFormScreen } from "../Screens/FormScreen/types";
-import { SELECT_FIRST_FIELD } from "./FormView/FormViewActions";
+import { IASwitchView } from "./types/IASwitchView";
+import { IAvailViews } from "./types/IAvailViews";
+import { IDataTable } from "./types/IDataTable";
+import { IDataViewMachine } from "./types/IDataViewMachine";
+import { IEditing } from "./types/IEditing";
+import { IForm } from "./types/IForm";
+import { IProperties } from "./types/IProperties";
+import { IProperty } from "./types/IProperty";
+import { IRecCursor } from "./types/IRecCursor";
+import { IRecords } from "./types/IRecords";
+import { IViewType } from "./types/IViewType";
+
+
+/* import { SELECT_FIRST_CELL } from "./FormView/FormViewActions";
 import {
   selectFirstCell,
   SELECT_FIRST_CELL,
   ON_OUTSIDE_TABLE_CLICK,
   ON_NO_CELL_CLICK,
   ON_CELL_CLICK
-} from "./TableView/TableViewActions";
+} from "./TableView/TableViewActions"; */
 
 export interface IParentMediator {
   api: IApi;
   menuItemId: string;
   getParent(): IDispatcher;
 }
-
 
 export interface IDataViewMediator02 extends IDispatcher {
   editing: IEditing;
@@ -130,10 +119,7 @@ export class DataViewMediator02 implements IDataViewMediator02 {
 
   subscribeMediator() {
     this.listen((event: any) => {
-      if (isType(event, DataViewActions.startEditing)) {
-      } else if (isType(event, DataViewActions.finishEditing)) {
-      } else if (isType(event, DataViewActions.cancelEditing)) {
-      }
+
     });
   }
 
@@ -142,31 +128,14 @@ export class DataViewMediator02 implements IDataViewMediator02 {
   }
 
   @action.bound dispatch(event: any) {
+    if (event.NS === DataViewActions.NS) {
+      this.downstreamDispatch(event);
+      return;
+    }
     switch (event.type) {
-      case ACTIVATE_VIEW:
-      case DEACTIVATE_VIEW:
-      case DataViewActions.startEditing.type:
-      case DataViewActions.finishEditing.type:
-      case DataViewActions.cancelEditing.type:
-      case SELECT_FIRST_FIELD:
-      case SELECT_FIRST_CELL:
-      case DataViewActions.selectCellById.type:
-      case DataViewActions.selectCellByIdx.type:
-      case DataViewActions.requestSaveData.type:
-      case ON_OUTSIDE_TABLE_CLICK:
-      case ON_NO_CELL_CLICK:
-      case ON_CELL_CLICK:
-        this.downstreamDispatch(event);
-        break;
       default:
         this.getParent().dispatch(event);
     }
-    /*switch (event.type) {
-      case STATE_VARIABLE_CHANGED:
-        break;
-      default:
-        this.downstreamDispatch(event);
-    }*/
   }
 
   listeners = new Map<number, (event: any) => void>();
@@ -211,7 +180,7 @@ export class DataViewMediator02 implements IDataViewMediator02 {
         );
         break;
       }
-      case DataViewActions.finishEditing.type:
+      case DataViewActions.FINISH_EDITING:
         this.aFinishEditing.do();
         break;
     }

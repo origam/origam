@@ -1,12 +1,13 @@
-import { ITable, IScrollState, ICells, IFormField } from "./types";
-import { ML } from "../../../../utils/types";
-import { unpack } from "../../../../utils/objects";
-import * as DataViewActions from "../../../../DataView/DataViewActions";
 import { action } from "mobx";
-import * as TableViewActions from "../../../../DataView/TableView/TableViewActions";
-import { IEditing } from "../../../../DataView/types/IEditing";
-import { IAFinishEditing } from "../../../../DataView/types/IAFinishEditing";
 import { IDataViewMediator02 } from "../../../../DataView/DataViewMediator02";
+import * as TableViewActions from "../../../../DataView/TableView/TableViewActions";
+import { IAFinishEditing } from "../../../../DataView/types/IAFinishEditing";
+import { IEditing } from "../../../../DataView/types/IEditing";
+import { unpack } from "../../../../utils/objects";
+import { ML } from "../../../../utils/types";
+import { ICells, IFormField, IScrollState, ITable } from "./types";
+import { ITableViewMachine } from "../../../../DataView/TableView/types/ITableViewMachine";
+import { ITableViewMediator } from "../../../../DataView/TableView/TableViewMediator";
 
 
 export class TableViewTable implements ITable {
@@ -15,7 +16,7 @@ export class TableViewTable implements ITable {
       scrollState: ML<IScrollState>;
       cells: ML<ICells>;
       cursor: ML<IFormField>;
-      mediator: ML<IDataViewMediator02>;
+      mediator: ML<ITableViewMediator>;
       editing: ML<IEditing>;
       aFinishEditing: ML<IAFinishEditing>;
       isLoading: () => boolean;
@@ -29,53 +30,38 @@ export class TableViewTable implements ITable {
 
   @action.bound
   onCellClick(event: any, rowIdx: number, columnIdx: number) {
+    debugger
     this.mediator.dispatch(TableViewActions.onCellClick({rowIdx, columnIdx}));
-    /*
-    this.mediator.dispatch(
-      DataViewActions.selectCellByIdx({ rowIdx, columnIdx })
-    );
-    this.mediator.dispatch(
-      TableViewActions.makeCellVisibleByIdx({ rowIdx, columnIdx })
-    );*/
   }
 
   @action.bound onNoCellClick(event: any) {
     console.log("No cell click");
     this.mediator.dispatch(TableViewActions.onNoCellClick());
-    /*
-    if (this.editing.isEditing) {
-      this.aFinishEditing.do();
-    }*/
   }
 
   @action.bound onOutsideTableClick(event: any) {
     console.log("Outside table click");
     this.mediator.dispatch(TableViewActions.onOutsideTableClick());
-
-    /*
-    if(this.editing.isEditing) {
-      this.aFinishEditing.do();
-    }
-    */
   }
 
   @action.bound
   onKeyDown(event: any) {
+    // TODO: dispatch this simply as onKeyDown
     switch (event.key) {
       case "ArrowUp":
-        this.mediator.dispatch(DataViewActions.selectPrevRow());
+        this.mediator.dispatch(TableViewActions.selectPrevRow());
         event.preventDefault();
         break;
       case "ArrowDown":
-        this.mediator.dispatch(DataViewActions.selectNextRow());
+        this.mediator.dispatch(TableViewActions.selectNextRow());
         event.preventDefault();
         break;
       case "ArrowLeft":
-        this.mediator.dispatch(DataViewActions.selectPrevColumn());
+        this.mediator.dispatch(TableViewActions.selectPrevColumn());
         event.preventDefault();
         break;
       case "ArrowRight":
-        this.mediator.dispatch(DataViewActions.selectNextColumn());
+        this.mediator.dispatch(TableViewActions.selectNextColumn());
         event.preventDefault();
         break;
     }

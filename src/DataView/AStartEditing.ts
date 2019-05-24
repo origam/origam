@@ -1,12 +1,8 @@
 import { action } from "mobx";
-import { L, ML } from "../utils/types";
+import * as DataViewAction from "./DataViewActions";
+import { IAInitForm } from "./types/IAInitForm";
 import { IAStartEditing } from "./types/IAStartEditing";
 import { IEditing } from "./types/IEditing";
-import { IAInitForm } from "./types/IAInitForm";
-import { IDataViewMediator } from "./types/IDataViewMediator";
-import { unpack } from "../utils/objects";
-import * as DataViewAction from "./DataViewActions";
-import { isType } from "ts-action";
 
 export class AStartEditing implements IAStartEditing {
   constructor(
@@ -21,8 +17,10 @@ export class AStartEditing implements IAStartEditing {
 
   subscribeMediator() {
     this.P.listen((action: any) => {
-      if (isType(action, DataViewAction.startEditing)) {
-        this.do();
+      switch(action.type) {
+        case DataViewAction.START_EDITING:
+          this.do();
+          break;
       }
     });
   }

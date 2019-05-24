@@ -1,16 +1,15 @@
+import { action, computed, observable } from "mobx";
 import { interpret, Machine, State } from "xstate";
 import { Interpreter } from "xstate/lib/interpreter";
-import { action, observable, computed } from "mobx";
-import { IDataViewMediator } from "../types/IDataViewMediator";
 import { unpack } from "../../utils/objects";
-import { ML } from "../../utils/types";
-import { isType } from "ts-action";
 import * as DataViewActions from "../DataViewActions";
-import * as FormViewActions from "./FormViewActions";
 import { IDataTable } from "../types/IDataTable";
-import { IRecCursor } from "../types/IRecCursor";
-import { IFormViewMachine } from "./types";
+import { IEditing } from "../types/IEditing";
 import { IPropCursor } from "../types/IPropCursor";
+import { IRecCursor } from "../types/IRecCursor";
+import * as FormViewActions from "./FormViewActions";
+import { IFormViewMachine } from "./types";
+
 
 export class FormViewMachine implements IFormViewMachine {
   constructor(
@@ -18,6 +17,7 @@ export class FormViewMachine implements IFormViewMachine {
       dataTable: IDataTable;
       recCursor: IRecCursor;
       propCursor: IPropCursor;
+      editing: IEditing;
       dispatch(action: any): void;
       listen(cb: (action: any) => void): void;
     }
@@ -64,6 +64,9 @@ export class FormViewMachine implements IFormViewMachine {
               }
             },
             running: {
+              /* Start in deadPeriod because switching views triggers 
+              onOutsideFormClick in the end which would end editing. */
+              initial: "deadPeriod",
               // Delegate messages...
               onEntry: "runningEn",
               onExit: "runningEx",
@@ -72,6 +75,31 @@ export class FormViewMachine implements IFormViewMachine {
                   { cond: "notHasData", target: "waitForData" },
                   { cond: "shallSleep", target: "sleeping" }
                 ]
+              },
+              states: {
+                /* TODO: Make this parallel so that user interface events 
+                have deadPeriod, but others do not. */
+                deadPeriod: { on: { 0: "receivingEvents" } },
+                receivingEvents: {
+                  on: {
+                    [FormViewActions.ON_NO_FIELD_CLICK]: {
+                      actions: "onNoFieldClick",
+                      target: "deadPeriod"
+                    },
+                    [FormViewActions.ON_OUTSIDE_FORM_CLICK]: {
+                      actions: "onOutsideFormClick",
+                      target: "deadPeriod"
+                    },
+                    [FormViewActions.ON_PREV_ROW_CLICK]: {
+                      actions: "onPrevRowClick",
+                      target: "deadPeriod"
+                    },
+                    [FormViewActions.ON_NEXT_ROW_CLICK]: {
+                      actions: "onNextRowClick",
+                      target: "deadPeriod"
+                    }
+                  }
+                }
               }
             },
             sleeping: {
@@ -92,7 +120,12 @@ export class FormViewMachine implements IFormViewMachine {
     {
       actions: {
         runningEn: (ctx, event) => this.runningEn(),
-        runningEx: (ctx, event) => this.runningEx()
+        runningEx: (ctx, event) => this.runningEx(),
+
+        onNoFieldClick: (ctx, event) => this.onNoFieldClick(),
+        onOutsideFormClick: (ctx, event) => this.onOutsideFormClick(),
+        onNextRowClick: () => this.onNextRowClick(),
+        onPrevRowClick: () => this.onPrevRowClick()
       },
       guards: {
         shallSleep: (ctx, event) => this.shallSleep,
@@ -112,7 +145,7 @@ export class FormViewMachine implements IFormViewMachine {
   @action.bound
   runningEn() {
     if (!this.isCellSelected) {
-      this.dispatch(FormViewActions.selectFirstField());
+      this.dispatch(FormViewActions.selectFirstCell());
     }
     this.dispatch(DataViewActions.startEditing());
   }
@@ -120,6 +153,43 @@ export class FormViewMachine implements IFormViewMachine {
   @action.bound
   runningEx() {
     this.dispatch(DataViewActions.finishEditing());
+  }
+
+  @action.bound
+  onNoFieldClick() {
+    if (this.P.editing.isEditing) {
+      this.dispatch(DataViewActions.finishEditing());
+    }
+  }
+
+  @action.bound
+  onOutsideFormClick() {
+    if (this.P.editing.isEditing) {
+      this.dispatch(DataViewActions.finishEditing());
+    }
+  }
+
+  withRefreshedEditing(fn: () => void) {
+    const { isEditing } = this.P.editing;
+    if (isEditing) {
+      this.dispatch(DataViewActions.finishEditing());
+    }
+    fn();
+    if (isEditing) {
+      this.dispatch(DataViewActions.startEditing());
+    }
+  }
+
+  @action.bound onNextRowClick() {
+    this.withRefreshedEditing(() =>
+      this.dispatch(FormViewActions.selectNextRow())
+    );
+  }
+
+  @action.bound onPrevRowClick() {
+    this.withRefreshedEditing(() =>
+      this.dispatch(FormViewActions.selectPrevRow())
+    );
   }
 
   @observable shallSleep = false;

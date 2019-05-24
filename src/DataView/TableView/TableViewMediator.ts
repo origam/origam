@@ -19,7 +19,6 @@ import { IForm } from "../types/IForm";
 import { action, computed } from "mobx";
 import { Machine } from "xstate";
 import { IDispatcher } from "../../utils/mediator";
-import { isType } from "ts-action";
 
 import * as DataViewActions from "../DataViewActions";
 import * as TableViewActions from "./TableViewActions";
@@ -34,50 +33,6 @@ import { ITableViewMachine } from "./types/ITableViewMachine";
 import { START_DATA_VIEWS, STOP_DATA_VIEWS } from "../DataViewActions";
 import { ISelection } from "../Selection";
 
-const activeTransitions = {
-  ON_CREATE_ROW_CLICK: {},
-  ON_DELETE_ROW_CLICK: {},
-  ON_SELECT_PREV_ROW_CLICK: {},
-  ON_SELECT_NEXT_ROW_CLICK: {},
-  ON_CELL_CLICK: {},
-  ON_NO_CELL_CLICK: {},
-  ON_TABLE_OUTSIDE_CLICK: {},
-  ON_CELL_KEY_DOWN: {},
-  ON_CELL_CHANGE: {},
-
-  START_EDITING: {}, // ?
-  CANCEL_EDITING: {}, // ?
-  FINISH_EDITING: {}, // ?
-  SELECT_PREV_ROW: {}, // ?
-  SELECT_NEXT_ROW: {}, // ?
-  SELECT_PREV_CELL: {}, // ?
-  SELECT_NEXT_CELL: {}, // ?
-  SELECT_CELL: {}, // ?
-  MAKE_CELL_VISIBLE: {} // ?
-};
-
-const tableViewMachine = Machine({
-  initial: "INACTIVE",
-  states: {
-    ACTIVE: {
-      on: {
-        ACTIVATE: {
-          target: "INACTIVE",
-          cond: "isNotForMe"
-        },
-        ...activeTransitions
-      }
-    },
-    INACTIVE: {
-      on: {
-        ACTIVATE: {
-          target: "ACTIVE",
-          cond: "isForMe"
-        }
-      }
-    }
-  }
-});
 
 export interface ITableViewMediator extends IDispatcher {
   type: IViewType.Table;
@@ -94,6 +49,7 @@ export interface ITableViewMediator extends IDispatcher {
   editing: IEditing;
   aFinishEditing: IAFinishEditing;
   form: IForm;
+  dataView: IDataViewMediator02;
 
   aSelProp: IASelProp;
   aSelRec: IASelRec;
@@ -130,21 +86,26 @@ export class TableViewMediator implements ITableViewMediator, ITableView {
 
   subscribeMediator() {
     this.listen(event => {
-      if (isType(event, DataViewActions.selectCellByIdx)) {
+      // TODO: Move this to a proper place? 
+
+      /*if (isType(event, DataViewActions.selectCellByIdx)) {
         this.aSelCell.doByIdx(event.payload.rowIdx, event.payload.columnIdx);
-      } else if (isType(event, DataViewActions.selectNextColumn)) {
+      }*/ 
+      
+      /*else if (isType(event, TableViewActions.selectNextColumn)) {
         this.aSelNextProp.do();
         this.makeSelectedCellVisible();
-      } else if (isType(event, DataViewActions.selectPrevColumn)) {
+      } else if (isType(event, TableViewActions.selectPrevColumn)) {
         this.aSelPrevProp.do();
         this.makeSelectedCellVisible();
-      } else if (isType(event, DataViewActions.selectNextRow)) {
+      } /* else if (isType(event, DataViewActions.selectNextRow)) {
+        console.log('@', event)
         this.aSelNextRec.do();
         this.makeSelectedCellVisible();
       } else if (isType(event, DataViewActions.selectPrevRow)) {
         this.aSelPrevRec.do();
         this.makeSelectedCellVisible();
-      } else if (isType(event, TableViewActions.makeCellVisibleById)) {
+    } */ /*if (isType(event, TableViewActions.makeCellVisibleById)) {
         // TODO: Move this to its own method.
         const columnIdx = this.propReorder.getIndexById(event.payload.columnId);
         const rowIdx = this.dataView.dataTable.getRecordIndexById(
@@ -155,7 +116,7 @@ export class TableViewMediator implements ITableViewMediator, ITableView {
             TableViewActions.makeCellVisibleByIdx({ rowIdx, columnIdx })
           );
         }
-      }
+      }*/
     });
   }
 
@@ -176,11 +137,11 @@ export class TableViewMediator implements ITableViewMediator, ITableView {
   }
 
   @action.bound dispatch(event: any) {
+    if (event.NS === TableViewActions.NS) {
+      this.downstreamDispatch(event);
+      return;
+    }
     switch (event.type) {
-      case TableViewActions.SELECT_FIRST_CELL:
-      case TableViewActions.makeSelectedCellVisible.type:
-        this.downstreamDispatch(event);
-        break;
       default:
         this.getParent().dispatch(event);
     }

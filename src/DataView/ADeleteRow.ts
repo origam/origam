@@ -1,13 +1,9 @@
 import { action } from "mobx";
-import { ML } from "../utils/types";
-import { IDataTable } from "./types/IDataTable";
-import { IDataViewMachine } from "./types/IDataViewMachine";
-import { unpack } from "../utils/objects";
-import { IDataViewMediator } from "./types/IDataViewMediator";
 import * as DataViewActions from "./DataViewActions";
 import { IADeleteRow } from "./types/IADeleteRow";
+import { IDataTable } from "./types/IDataTable";
 import { IRecCursor } from "./types/IRecCursor";
-import { isType } from "ts-action";
+
 
 export class ADeleteRow implements IADeleteRow {
   constructor(
@@ -23,8 +19,10 @@ export class ADeleteRow implements IADeleteRow {
 
   subscribeMediator() {
     this.P.listen((action: any) => {
-      if (isType(action, DataViewActions.deleteSelectedRow)) {
-        this.doSelected();
+      switch(action.type) {
+        case DataViewActions.DELETE_SELECTED_ROW:
+          this.doSelected();
+          break;
       }
     });
   }
@@ -35,7 +33,7 @@ export class ADeleteRow implements IADeleteRow {
     if (rowId) {
       this.dataTable.markDeletedRow(rowId);
       // TODO: Select closest existing row...
-      this.P.dispatch(DataViewActions.requestSaveData);
+      this.P.dispatch(DataViewActions.requestSaveData());
     }
   }
 

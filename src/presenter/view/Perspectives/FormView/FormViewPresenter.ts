@@ -14,6 +14,9 @@ import { IASelNextProp } from "../../../../DataView/types/IASelNextProp";
 import { IASelPrevProp } from "../../../../DataView/types/IASelPrevProp";
 import { AOnHandleClick } from "../../../../Screens/AOnHandleClick";
 import { IASelProp } from "../../../../DataView/types/IASelProp";
+import { onNoCellClick } from "../../../../DataView/TableView/TableViewActions";
+import * as FormViewActions from "../../../../DataView/FormView/FormViewActions";
+import { IFormViewMediator } from "../../../../DataView/FormView/FormViewMediator";
 
 
 
@@ -21,6 +24,7 @@ export class FormViewPresenter implements IFormView {
   constructor(
     public P: {
       toolbar: ML<IToolbar | undefined>;
+      mediator: IFormViewMediator;
       uiStructure: ML<IUIFormRoot[]>;
       propReorder: ML<IPropReorder>;
       dataTable: ML<IDataTable>;
@@ -128,6 +132,14 @@ export class FormViewPresenter implements IFormView {
 
   @action.bound handleClick(event: any, propId: string) {
     this.aSelProp.do(propId)
+  }
+
+  @action.bound onNoFieldClick() {
+    this.P.mediator.dispatch(FormViewActions.onNoFieldClick());
+  }
+
+  @action.bound onOutsideFormClick() {
+    this.P.mediator.dispatch(FormViewActions.onOutsideFormClick());
   }
 
   get toolbar() {

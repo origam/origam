@@ -6,6 +6,7 @@ import {
 import { PropReorder } from "../PropReorder";
 import { PropCursor } from "../PropCursor";
 import { FormViewMachine } from "./FormViewMachine";
+import { Selection } from "../Selection";
 import { IPropReorder } from "../types/IPropReorder";
 import { IDataViewMediator02 } from "../DataViewMediator02";
 import { AActivateView } from "./AActivateView";
@@ -26,6 +27,7 @@ export function buildFormView(
     propReorder: () => propReorder,
     propCursor: () => propCursor,
     machine: () => machine,
+    selection: () => selection,
     aActivateView: () => aActivateView,
     aDeactivateView: () => aDeactivateView,
     aSelNextProp: () => aSelNextProp,
@@ -38,6 +40,7 @@ export function buildFormView(
   const propReorder: IPropReorder = new PropReorder(mediator);
   const propCursor = new PropCursor(mediator);
   const machine = new FormViewMachine(mediator);
+  const selection = new Selection(mediator);
   const aActivateView = new AActivateView(mediator);
   const aDeactivateView = new ADeactivateView(mediator);
   const aSelNextProp = new ASelNextProp(mediator);

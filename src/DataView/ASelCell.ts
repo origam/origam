@@ -1,20 +1,15 @@
-import { IASelCell } from "./types/IASelCell";
-import { L, ML } from "../utils/types";
-import { IASelRec } from "./types/IASelRec";
-import { IASelProp } from "./types/IASelProp";
-import { IRecCursor } from "./types/IRecCursor";
-import { IPropCursor } from "./types/IPropCursor";
-import { IDataTable } from "./types/IDataTable";
-import { IPropReorder } from "./types/IPropReorder";
-import { IAStartEditing } from "./types/IAStartEditing";
-import { IEditing } from "./types/IEditing";
-import { action, computed } from "mobx";
+import { action } from "mobx";
 import { unpack } from "../utils/objects";
+import { ML } from "../utils/types";
 import { IAFinishEditing } from "./types/IAFinishEditing";
+import { IASelCell } from "./types/IASelCell";
+import { IAStartEditing } from "./types/IAStartEditing";
+import { IDataTable } from "./types/IDataTable";
+import { IEditing } from "./types/IEditing";
 import { IForm } from "./types/IForm";
-import { IDataViewMediator } from "./types/IDataViewMediator";
-import { isType } from "ts-action";
-import * as DataViewActions from "./DataViewActions";
+import { IPropCursor } from "./types/IPropCursor";
+import { IPropReorder } from "./types/IPropReorder";
+import { IRecCursor } from "./types/IRecCursor";
 
 export class ASelCell implements IASelCell {
   constructor(
@@ -46,8 +41,10 @@ export class ASelCell implements IASelCell {
   }
 
   @action.bound do(rowId: string | undefined, colId: string | undefined) {
-    if (rowId && colId) {
+    if (rowId) {
       this.recCursor.setSelId(rowId);
+    }
+    if (colId) {
       this.propCursor.setSelId(colId);
     }
   }
@@ -111,8 +108,6 @@ export class ASelCell implements IASelCell {
   doSelFirst() {
     this.doByIdx(0, 0);
   }
-
-
 
   get recCursor() {
     return unpack(this.P.recCursor);

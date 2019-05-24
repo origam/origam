@@ -4,7 +4,8 @@ import { Provider, observer, inject } from "mobx-react";
 import {
   IFormField,
   ICaptionPosition,
-  IUIFormViewTreeNode
+  IUIFormViewTreeNode,
+  IFormView
 } from "../../../../view/Perspectives/FormView/types";
 import { TextEditor } from "../editors/Text";
 import { DateTimeEditor } from "../editors/DateTime";
@@ -14,10 +15,39 @@ import { parseNumber } from "../../../../../utils/xml";
 import { FormViewPresenter } from "../../../../view/Perspectives/FormView/FormViewPresenter";
 import { FormViewToolbar } from "../../../../view/Perspectives/FormView/FormViewToolbar";
 import { IFormViewMediator } from "../../../../../DataView/FormView/FormViewMediator";
+import { action } from "mobx";
 
-export class FormRoot extends React.Component {
+
+@inject(({ formViewPresenter }) => {
+  return {
+    formViewPresenter
+  }
+})
+@observer
+export class FormRoot extends React.Component<{ formViewPresenter?: IFormView }> {
+  componentDidMount() {
+    window.addEventListener("click", this.handleWindowClick);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("click", this.handleWindowClick);
+  }
+
+  @action.bound handleWindowClick(event: any) {
+    if (this.elmFormRoot && !this.elmFormRoot.contains(event.target)) {
+      this.props.formViewPresenter!.onOutsideFormClick &&
+        this.props.formViewPresenter!.onOutsideFormClick(event);
+    }
+  }
+
+  elmFormRoot: HTMLDivElement | null = null;
+  refFormRoot = (elm: HTMLDivElement | null) => this.elmFormRoot = elm;
+
   render() {
-    return <div className="form-root">{this.props.children}</div>;
+    return <div ref={this.refFormRoot} className="form-root"
+      onClick={this.props.formViewPresenter!.onNoFieldClick}>
+      {this.props.children}
+    </div>;
   }
 }
 
@@ -160,6 +190,7 @@ export class FormField extends React.Component<{
             width: parseNumber(this.props.Width),
             height: parseNumber(this.props.Height)
           }}
+          onClick={(event: any) => event.stopPropagation()}
         >
           {field ? (
             <Editor field={field} />
@@ -178,6 +209,7 @@ export class FormView extends React.Component<{ controller: IFormViewMediator }>
     super(props);
     this.formViewPresenter = new FormViewPresenter({
       toolbar: () => toolbar,
+      mediator: this.props.controller,
       uiStructure: () => this.props.controller.uiStructure,
       propReorder: () => this.props.controller.propReorder,
       dataTable: () => this.props.controller.dataView.dataTable,
@@ -195,7 +227,9 @@ export class FormView extends React.Component<{ controller: IFormViewMediator }>
         aSwitchView: () => this.props.controller.dataView.aSwitchView,
         mediator: () => this.props.controller.dataView,
         label: this.props.controller.dataView.label,
-        isLoading: () => this.props.controller.dataView.machine.isLoading
+        isLoading: () => this.props.controller.dataView.machine.isLoading,
+        selection: this.props.controller.selection,
+        dataTable: this.props.controller.dataTable
       });
   }
 

@@ -6,15 +6,18 @@ import { ML } from "../../../../utils/types";
 import { IDataTable } from "../../../../DataView/types/IDataTable";
 import { IASwitchView } from "../../../../DataView/types/IASwitchView";
 import * as DataViewActions from "../../../../DataView/DataViewActions";
+import * as TableViewActions from "../../../../DataView/TableView/TableViewActions";
 import { IDataViewMediator02 } from "../../../../DataView/DataViewMediator02";
-
+import { ISelection } from "../../../../DataView/Selection";
+import { ITableViewMediator } from "../../../../DataView/TableView/TableViewMediator";
 
 export class TableViewToolbar {
   constructor(
     public P: {
       dataTable: ML<IDataTable>;
+      selection: ISelection;
       aSwitchView: ML<IASwitchView>;
-      mediator: ML<IDataViewMediator02>;
+      mediator: ML<ITableViewMediator>;
       label: string;
       isLoading: () => boolean;
     }
@@ -25,7 +28,7 @@ export class TableViewToolbar {
   }
   isError: boolean = false;
   get label(): string {
-    return this.P.label
+    return this.P.label;
   }
   isFiltered: boolean = false;
   btnMoveUp: IToolbarButtonState = {
@@ -44,7 +47,7 @@ export class TableViewToolbar {
     isVisible: true,
     onClick: action(() => {
       this.mediator.dispatch(DataViewActions.createRow());
-    })    
+    })
   };
   btnDelete: IToolbarButtonState = {
     isActive: false,
@@ -69,7 +72,7 @@ export class TableViewToolbar {
     isEnabled: true,
     isVisible: true,
     onClick: action(() => {
-      this.mediator.dispatch(DataViewActions.selectPrevRow());
+      this.mediator.dispatch(TableViewActions.onPrevRowClick());
     })
   };
   btnNext: IToolbarButtonState = {
@@ -77,7 +80,7 @@ export class TableViewToolbar {
     isEnabled: true,
     isVisible: true,
     onClick: action(() => {
-      this.mediator.dispatch(DataViewActions.selectNextRow());
+      this.mediator.dispatch(TableViewActions.onNextRowClick());
     })
   };
   btnLast: IToolbarButtonState = {
@@ -85,7 +88,11 @@ export class TableViewToolbar {
     isEnabled: true,
     isVisible: true
   };
-  recordNo: string = "0";
+
+  @computed get recordNo(): string {
+    return "" + ((this.P.selection.selRowIdx || 0) + 1);
+  }
+
   @computed get recordTotal(): string {
     return "" + this.dataTable.existingRecordCount;
   }
@@ -132,5 +139,4 @@ export class TableViewToolbar {
   get mediator() {
     return unpack(this.P.mediator);
   }
-
 }

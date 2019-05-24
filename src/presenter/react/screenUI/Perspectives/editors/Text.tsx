@@ -1,5 +1,7 @@
 import * as React from "react";
+import { observer } from "mobx-react";
 
+@observer
 export class TextEditor extends React.Component<{
   value: string;
   isReadOnly: boolean;

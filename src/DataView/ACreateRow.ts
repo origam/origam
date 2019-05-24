@@ -5,7 +5,6 @@ import { IRecCursor } from "./types/IRecCursor";
 import { IDataViewMediator } from "./types/IDataViewMediator";
 import * as DataViewActions from "./DataViewActions";
 import { unpack } from "../utils/objects";
-import { isType } from "ts-action";
 
 export class ACreateRow implements IACreateRow {
   constructor(
@@ -19,8 +18,10 @@ export class ACreateRow implements IACreateRow {
 
   subscribeMediator() {
     this.mediator.listen((action: any) => {
-      if (isType(action, DataViewActions.createRow)) {
-        this.do();
+      switch (action.type) {
+        case DataViewActions.CREATE_ROW:
+          this.do();
+          break;
       }
     });
   }

@@ -11,10 +11,11 @@ import { TableViewScrollState } from "../../../../view/Perspectives/TableView/Ta
 import { TableViewCells } from "../../../../view/Perspectives/TableView/TableViewCells";
 import { ITableView } from "../../../../view/Perspectives/TableView/types";
 import { TableViewField } from "../../../../view/Perspectives/TableView/TableViewField";
+import { ITableViewMediator } from "../../../../../DataView/TableView/TableViewMediator";
 
 @observer
 export class TableView extends React.Component<{
-  controller: ITableViewModel;
+  controller: ITableViewMediator;
 }> {
   constructor(props: any) {
     super(props);
@@ -25,17 +26,18 @@ export class TableView extends React.Component<{
     const tableViewToolbar = this.props.controller.dataView.isHeadless
       ? undefined
       : new TableViewToolbar({
-          dataTable: () => this.props.controller.dataView.dataTable,
+          dataTable: () => this.props.controller.dataTable,
           aSwitchView: () => this.props.controller.dataView.aSwitchView,
-          mediator: () => this.props.controller.dataView,
+          mediator: () => this.props.controller,
           label: this.props.controller.dataView.label,
+          selection: this.props.controller.selection,
           isLoading: () => this.props.controller.dataView.machine.isLoading
         });
     const tableViewTable = new TableViewTable({
       scrollState: () => tableViewScrollState,
       cells: () => tableViewCells,
       cursor: () => tableViewField,
-      mediator: () => this.props.controller.dataView,
+      mediator: () => this.props.controller,
       editing: () => this.props.controller.dataView.editing,
       aFinishEditing: () => this.props.controller.dataView.aFinishEditing,
       isLoading: () => this.props.controller.dataView.machine.isLoading

@@ -2,7 +2,6 @@ import { IDataTable } from "../types/IDataTable";
 import { IRecCursor } from "../types/IRecCursor";
 import { interpret, State, Machine } from "xstate";
 import { action, observable, computed } from "mobx";
-import { isType } from "ts-action";
 import { Interpreter } from "xstate/lib/interpreter";
 import { unpack } from "../../utils/objects";
 import * as DataViewActions from "../DataViewActions";
@@ -13,6 +12,7 @@ import { IEditing } from "../types/IEditing";
 import { ISelection } from "../Selection";
 import { IForm } from "../types/IForm";
 import { IPropReorder } from "../types/IPropReorder";
+import { IProperty } from "../types/IProperty";
 
 export class TableViewMachine implements ITableViewMachine {
   constructor(
@@ -140,55 +140,52 @@ export class TableViewMachine implements ITableViewMachine {
     console.log("on cell click from machine");
     // TODO: Bool field behaviour.
     // debugger
+    const finishEditing = () =>
+      this.P.dispatch(DataViewActions.finishEditing());
+    const selectCellByEvent = (event: TableViewActions.IOnCellClick) =>
+      this.dispatch(
+        TableViewActions.selectCellByIdx({
+          rowIdx: event.rowIdx,
+          columnIdx: event.columnIdx
+        })
+      );
+    const startEditing = () => this.dispatch(DataViewActions.startEditing());
+    const getValueFromSelectedCell = () =>
+      this.dataTable.getValueById(
+        this.P.selection.selRowId!,
+        this.P.selection.selColId!
+      );
+    const isCheckBox = (prop?: IProperty) =>
+      prop ? prop.column === "CheckBox" : false;
+    const cellAlreadySelected = (event: TableViewActions.IOnCellClick) =>
+      this.P.selection.isSelectedCellByIdx({
+        rowIdx: event.rowIdx,
+        colIdx: event.columnIdx
+      });
+
+    /* ============================================================================== */
+    
     if (!this.P.editing.isEditing) {
       const prop = this.P.propReorder.getByIndex(event.columnIdx);
-      const isCheckBox = prop ? prop.column === "CheckBox" : false;
-      if (isCheckBox) {
-        this.dispatch(
-          DataViewActions.selectCellByIdx({
-            rowIdx: event.rowIdx,
-            columnIdx: event.columnIdx
-          })
-        );
-        this.dispatch(DataViewActions.startEditing());
-        const value = this.dataTable.getValueById(
-          this.P.selection.selRowId!,
-          this.P.selection.selColId!
-        );
+      if (isCheckBox(prop)) {
+        selectCellByEvent(event);
+        startEditing();
+        const value = getValueFromSelectedCell();
+        // TODO: refactor to use dispatching
         this.P.form.setDirtyValue(prop!.id, !value);
-        this.dispatch(DataViewActions.finishEditing());
-        return
+        finishEditing();
+        return;
       }
-      if (
-        this.P.selection.isSelectedCellByIdx({
-          rowIdx: event.rowIdx,
-          colIdx: event.columnIdx
-        })
-      ) {
-        this.dispatch(DataViewActions.startEditing());
+      if (cellAlreadySelected(event)) {
+        startEditing();
       } else {
-        this.dispatch(
-          DataViewActions.selectCellByIdx({
-            rowIdx: event.rowIdx,
-            columnIdx: event.columnIdx
-          })
-        );
+        selectCellByEvent(event);
       }
     } else {
-      if (
-        !this.P.selection.isSelectedCellByIdx({
-          rowIdx: event.rowIdx,
-          colIdx: event.columnIdx
-        })
-      ) {
-        this.dispatch(DataViewActions.finishEditing());
-        this.dispatch(
-          DataViewActions.selectCellByIdx({
-            rowIdx: event.rowIdx,
-            columnIdx: event.columnIdx
-          })
-        );
-        this.dispatch(DataViewActions.startEditing());
+      if (!cellAlreadySelected(event)) {
+        finishEditing();
+        selectCellByEvent(event);
+        finishEditing();
       }
     }
   }

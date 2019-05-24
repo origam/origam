@@ -6,11 +6,13 @@ import { IASubmitForm } from "./types/IASubmitForm";
 import { IDataViewMediator } from "./types/IDataViewMediator";
 import { unpack } from "../utils/objects";
 import * as DataViewActions from "./DataViewActions";
+import { IForm } from "./types/IForm";
 
 export class AFinishEditing implements IAFinishEditing {
   constructor(
     public P: {
       editing: IEditing;
+      form: IForm;
       aSubmitForm: IASubmitForm;
       dispatch: (action: any) => void;
     }
@@ -23,6 +25,7 @@ export class AFinishEditing implements IAFinishEditing {
     // --------------------------------------------------------
     editing.setEditing(false);
     this.P.aSubmitForm.do();
+    this.P.form.destroy();
     this.P.dispatch(DataViewActions.requestSaveData());
   }
 

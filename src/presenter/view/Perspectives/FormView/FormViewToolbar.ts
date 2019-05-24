@@ -3,21 +3,24 @@ import { IViewType } from "../../../../DataView/types/IViewType";
 import { ML } from "../../../../utils/types";
 import { IASwitchView } from "../../../../DataView/types/IASwitchView";
 import { unpack } from "../../../../utils/objects";
-import * as DataViewActions from "../../../../DataView/DataViewActions";
-import { action } from "mobx";
+import * as FormViewActions from "../../../../DataView/FormView/FormViewActions";
+import { action, computed } from "mobx";
 
 import { IDataViewMediator02 } from "../../../../DataView/DataViewMediator02";
+import { ISelection } from "../../../../DataView/Selection";
+import { IDataTable } from "../../../../DataView/types/IDataTable";
 
 export class FormViewToolbar {
   constructor(
     public P: {
       aSwitchView: ML<IASwitchView>;
       mediator: ML<IDataViewMediator02>;
+      selection: ISelection;
+      dataTable: IDataTable;
       label: string;
       isLoading: () => boolean;
     }
   ) {}
-
 
   isError: boolean = false;
   get label(): string {
@@ -62,7 +65,7 @@ export class FormViewToolbar {
     isEnabled: true,
     isVisible: true,
     onClick: action(() => {
-      this.mediator.dispatch(DataViewActions.selectPrevRow());
+      this.mediator.dispatch(FormViewActions.selectPrevRow());
     })
   };
   btnNext: IToolbarButtonState = {
@@ -70,7 +73,7 @@ export class FormViewToolbar {
     isEnabled: true,
     isVisible: true,
     onClick: action(() => {
-      this.mediator.dispatch(DataViewActions.selectNextRow());
+      this.mediator.dispatch(FormViewActions.selectNextRow());
     })
   };
   btnLast: IToolbarButtonState = {
@@ -78,8 +81,15 @@ export class FormViewToolbar {
     isEnabled: true,
     isVisible: true
   };
-  recordNo: string = "99";
-  recordTotal: string = "117";
+
+  @computed get recordNo(): string {
+    return "" + ((this.P.selection.selRowIdx || 0) + 1);
+  }
+
+  @computed get recordTotal(): string {
+    return "" + this.P.dataTable.existingRecordCount;
+  }
+
   btnsViews: IViewTypeBtn[] = [
     {
       btn: { isActive: true, isVisible: true, isEnabled: true },
