@@ -1,43 +1,44 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DeploymentVersion
-    version="5.0"
-    name="5.0"
     abstract="false"
     deploymentDependenciesCsv="147FA70D-6519-4393-B5D0-87931F9FD609, 4.31"
     x:id="1b0aa37a-9395-4dab-b916-95aa4b50088c"
-    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    name="5.0"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="5.0">
     <DeploymentUpdateScriptActivity
-      activityOrder="10"
-      name="00010_RenameTables"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="10"
       commandText="-***-ExternalFile:5.0.origam___commandText___818d2f54-0c2d-4d85-837b-2d10ad954f59.txt"
+      databasetype="MsSql"
       x:id="818d2f54-0c2d-4d85-837b-2d10ad954f59"
+      name="00010_RenameTables"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
-      activityOrder="20"
-      name="00020_RenameColumns"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="20"
       commandText="-***-ExternalFile:5.0.origam___commandText___f541faeb-3193-4e06-b66c-7959381def0e.txt"
       x:id="f541faeb-3193-4e06-b66c-7959381def0e"
+      name="00020_RenameColumns"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
-      activityOrder="15"
-      name="00015_CreateRenamingProcedure"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="15"
       commandText="-***-ExternalFile:5.0.origam___commandText___8322ab43-36df-4e15-baf4-85fdf78538ee.txt"
       x:id="8322ab43-36df-4e15-baf4-85fdf78538ee"
+      name="00015_CreateRenamingProcedure"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
-      activityOrder="25"
-      name="00025_DropRenamingProcedure"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="25"
       commandText="-***-ExternalFile:5.0.origam___commandText___3f4f5302-c06b-4e59-a7ea-eb7cebc28ffc.txt"
       x:id="3f4f5302-c06b-4e59-a7ea-eb7cebc28ffc"
+      name="00025_DropRenamingProcedure"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>
 </x:file>

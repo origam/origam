@@ -1,4 +1,4 @@
---EXEC sp_rename 'AsapOrganization','OrigamOrganization';
+﻿--EXEC sp_rename 'AsapOrganization','OrigamOrganization';
 --EXEC sp_rename 'AsapOrganizationMapping','OrigamOrganizationMapping';
 EXEC sp_rename 'AsapCalendar','OrigamCalendar';
 EXEC sp_rename 'AsapCalendarDetail','OrigamCalendarDetail';
@@ -52,4 +52,3 @@ EXEC sp_rename 'AsapTraceWorkflow','OrigamTraceWorkflow';
 EXEC sp_rename 'AsapTraceWorkflowStep','OrigamTraceWorkflowStep';
 EXEC sp_rename 'AsapValidationRule','OrigamValidationRule';
 EXEC sp_rename 'AsapWorkflowMenuItemConfig','OrigamWorkflowMenuItemConfig';
-EXEC sp_rename 'AsapListValue','OrigamListValue';
