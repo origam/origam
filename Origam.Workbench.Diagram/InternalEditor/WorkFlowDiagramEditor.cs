@@ -34,6 +34,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private readonly NodeSelector nodeSelector;
         private readonly DependencyTaskRunner taskRunner;
         private readonly ContextStoreDependencyPainter dependencyPainter;
+        private Point lastMouseLeftClickPoint;
 
         private WorkFlowGraph Graph => (WorkFlowGraph)gViewer.Graph;
 
@@ -92,9 +93,12 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
         public void ReDraw(List<string> expandedSubgraphNodeIds)
         {
+	        var originalTransform = gViewer.Transform;
 	        gViewer.Graph = factory.Draw(UpToDateGraphParent, expandedSubgraphNodeIds);
 	        factory.AlignContextStoreSubgraph();
 	        gViewer.Transform = null;
+//		        ? originalTransform 
+//		        : null;
 	        gViewer.Invalidate();
         }
         
@@ -344,17 +348,27 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			        {
 				        return;
 			        }
-			        else if (nodeSelector.Selected?.Id == node.Id)
+			        if (nodeSelector.Selected?.Id == node.Id)
 			        {
 				        nodeSelector.Selected=node;
+				        return;
 			        }
-			        else if (Graph.AreRelatives(nodeSelector.Selected, node) && 
-							 !(node is Subgraph))
+			        bool currentOrPreviousNodeIsContextStore =
+				        RetrieveItem(node) is ContextStore ||
+				        RetrieveItem(nodeSelector.Selected) is ContextStore;
+			        if (Graph.AreRelatives(nodeSelector.Selected, node) && 
+							 !(node is Subgraph) &&
+							 !currentOrPreviousNodeIsContextStore)
 			        {
 				        nodeSelector.Selected=node;
 				        gViewer.Invalidate();
+				        return;
 			        }
-			        else 
+			        if (currentOrPreviousNodeIsContextStore)
+			        {
+				        ReDrawAndKeepFocus(node);
+			        }
+			        else
 			        {
 				        nodeSelector.Selected=node;
 				        var origTransform = gViewer.Transform;
@@ -366,6 +380,25 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        }
 	    }
 
+		private void ReDrawAndKeepFocus(Node node)
+		{
+			var newNodeTracker = new NodePositionTracker(gViewer, node.Id);
+			var oldNodeTracker = new NodePositionTracker(gViewer, nodeSelector.Selected?.Id);
+			
+			nodeSelector.Selected = node;
+
+			ReDrawAndReselect();
+			newNodeTracker.LoadUpdatedState();
+			oldNodeTracker.LoadUpdatedState();
+			
+			NodePositionTracker nodeTrackerToUse =
+				oldNodeTracker.NodeDoesNotExist || newNodeTracker.NodeWasNotNodeWasResized
+					? newNodeTracker
+					: oldNodeTracker;
+
+			gViewer.Transform = nodeTrackerToUse.UpdatedTransformation;
+			gViewer.Invalidate();
+		}
 		private bool IsDeleteMenuItemAvailable(DNode objectUnderMouse)
 		{
 			if (objectUnderMouse == null) return false;
@@ -383,7 +416,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 				return true;
 			}
 			if (dNodeUnderMouse == null) return false;
-			var schemaItem = DNodeToSchemaItem(dNodeUnderMouse);
+			var schemaItem = RetrieveItem(dNodeUnderMouse.Node);
 			if (!(dNodeUnderMouse.Node is Subgraph) && 
 			    !(schemaItem is ServiceMethodCallParameter)) return false;
 			return Equals(dNodeUnderMouse.Node, nodeSelector.Selected);
@@ -453,7 +486,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 		private ContextMenuStrip CreateContextMenuForNode(DNode dNodeUnderMouse)
 		{
-			var schemaItemUnderMouse = DNodeToSchemaItem(dNodeUnderMouse);
+			var schemaItemUnderMouse = RetrieveItem(dNodeUnderMouse.Node);
 			var contextMenu = new AsContextMenu(WorkbenchSingleton.Workbench);
 
 			var deleteMenuItem = new ToolStripMenuItem();
@@ -526,12 +559,13 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			return contextMenu;
 		}
 
-		private AbstractSchemaItem DNodeToSchemaItem(DNode dNodeUnderMouse)
+		private AbstractSchemaItem RetrieveItem(Node node)
 		{
-			if (!Guid.TryParse(dNodeUnderMouse.Node.Id, out Guid _)) return null;
-			return RetrieveItem(dNodeUnderMouse.Node.Id);
+			if (node == null) return null;
+			if (!Guid.TryParse(node.Id, out Guid _)) return null;
+			return RetrieveItem(node.Id);
 		}
-		
+
 		private AbstractSchemaItem RetrieveItem(string id)
 		{
 			if (string.IsNullOrWhiteSpace(id)) return null;
