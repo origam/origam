@@ -761,10 +761,7 @@ namespace Origam.DA.Service
         {
             StringBuilder result = new StringBuilder();
             Hashtable ht = new Hashtable();
-            result.AppendLine(CreateDataStructureHeadSql());
             SelectParameterDeclarationsSql(result, ht, ds, entity, filter, null, paging, columnName);
-            result.AppendLine(DeclareBegin());
-            SelectParameterDeclarationsSetSql(result, ht);
             return result.ToString();
         }
 
