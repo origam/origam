@@ -14,16 +14,16 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private readonly string nodeId;
         private readonly Point pointOnScreen;
         private readonly Node originalNode;
-        private Node currentNode;
+        private Node updatedNode;
 
-        private Point CurrentSourcePoint => currentNode.GeometryNode.Center;
+        private Point CurrentSourcePoint => updatedNode.GeometryNode.Center;
 
-        public bool NodeWasNotNodeWasResized =>
-            Math.Abs(originalNode.BoundingBox.Size.Height - currentNode.BoundingBox.Size.Height) < 0.01 &&
-            Math.Abs(originalNode.BoundingBox.Size.Width - currentNode.BoundingBox.Size.Width) < 0.01;
+        public bool NodeWasNotResized =>
+            Math.Abs(originalNode.BoundingBox.Size.Height - updatedNode.BoundingBox.Size.Height) < 0.01 &&
+            Math.Abs(originalNode.BoundingBox.Size.Width - updatedNode.BoundingBox.Size.Width) < 0.01;
 
         public bool NodeDoesNotExist =>
-            string.IsNullOrWhiteSpace(nodeId) || currentNode ==null;
+            string.IsNullOrWhiteSpace(nodeId) || updatedNode ==null;
 
         public PlaneTransformation UpdatedTransformation =>
             new PlaneTransformation(
@@ -47,7 +47,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
         public void LoadUpdatedState()
         {
-            currentNode = gViewer.Graph.FindNodeOrSubgraph(nodeId);
+            updatedNode = gViewer.Graph.FindNodeOrSubgraph(nodeId);
         }
     }
 }

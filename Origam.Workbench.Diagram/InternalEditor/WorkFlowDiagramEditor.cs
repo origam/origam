@@ -392,7 +392,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			oldNodeTracker.LoadUpdatedState();
 			
 			NodePositionTracker nodeTrackerToUse =
-				oldNodeTracker.NodeDoesNotExist || newNodeTracker.NodeWasNotNodeWasResized
+				oldNodeTracker.NodeDoesNotExist || newNodeTracker.NodeWasNotResized
 					? newNodeTracker
 					: oldNodeTracker;
 
