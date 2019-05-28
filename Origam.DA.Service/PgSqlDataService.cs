@@ -83,10 +83,10 @@ namespace Origam.DA.Service
             return sb.ConnectionString;
         }
 
-        internal override void HandleException(Exception ex, string rowErrorMessage, DataRow row)
+        internal override void HandleException(Exception ex, string recordErrorMessage, DataRow row)
 		{
 			NpgsqlException sqle = ex as NpgsqlException;
-
+            string customMessage = "";
             if (sqle != null)
             {
                 PostgresException postgresException = ((Npgsql.PostgresException)sqle);
@@ -94,13 +94,40 @@ namespace Origam.DA.Service
                 if (postgresException.SqlState == "42601")
                 {
                     throw new DataException("Syntax Error" + 
-                        Environment.NewLine  + rowErrorMessage + Environment.NewLine + ex.Message, ex);
+                        Environment.NewLine  + recordErrorMessage + Environment.NewLine + ex.Message, ex);
+                }
+                else if (postgresException.SqlState == "42P01")
+                {
+                    int firstApostrophe = ex.Message.IndexOf("\"");
+                    if (ex.Message.Length > firstApostrophe)
+                    {
+                        int secondApostrophe = ex.Message.IndexOf("\"", firstApostrophe + 1);
+                        string tableName = ex.Message.Substring(firstApostrophe + 1,
+                            secondApostrophe - firstApostrophe - 1);
+                        throw new DatabaseTableNotFoundException(tableName, ex);
+                    }
+                }
+                else if (postgresException.SqlState == "42883")
+                {
+                    int firstApostrophe = ex.Message.IndexOf("\"");
+                    if (ex.Message.Length > firstApostrophe)
+                    {
+                        int secondApostrophe = ex.Message.IndexOf("\"", firstApostrophe + 1);
+                        string procedureName = ex.Message.Substring(firstApostrophe + 1,
+                            secondApostrophe - firstApostrophe - 1);
+                        throw new DatabaseProcedureNotFoundException(procedureName, ex);
+                    }
+                }
+                else if(postgresException.SqlState.StartsWith("23"))
+                {
+                    customMessage = ResourceUtils.GetString("IntegrityError");
                 }
                 else
                 {
-                    throw new DataException("An exception has been encountered " +
-                        Environment.NewLine + rowErrorMessage + Environment.NewLine + ex.Message, ex);
+                    customMessage = ResourceUtils.GetString("ExceptionWhenUpdate");
                 }
+                string message = string.Format("{0} {1}", recordErrorMessage, customMessage);
+                throw new OrigamException(message, ex.Message, ex);
             }
         }
 

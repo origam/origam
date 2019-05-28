@@ -46,10 +46,24 @@ namespace Origam.Workbench.Services
         #region Local variables
 		string _transactionId = null;
 		SchemaService _schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-		OrigamModelVersionData _versionData = new OrigamModelVersionData();
+        private static OrigamModelVersionData _versionData = null;
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		
-		private bool _versionsLoaded = false;
+        public OrigamModelVersionData VersionData
+        {
+            get
+            {
+                if(_versionData==null)
+                    _versionData = new OrigamModelVersionData();
+                return _versionData;
+            }
+            set
+            {
+                _versionData = value;
+            }
+        }
+
+        private bool _versionsLoaded = false;
 
 		private readonly Guid asapModelVersionQueryId =
 			new Guid("f3e89044-68b2-49c1-a203-4fe3a7b1ca1d");
@@ -75,7 +89,8 @@ namespace Origam.Workbench.Services
 		{
 			if(_transactionId == null)
 			{
-				_transactionId = Guid.NewGuid().ToString();
+                TryLoadVersions();
+                _transactionId = Guid.NewGuid().ToString();
 				try
 				{
 					Update();
@@ -89,8 +104,9 @@ namespace Origam.Workbench.Services
 				finally
 				{
 					_transactionId = null;
-					ClearVersions();
+                    ClearVersions();
 				}
+                SaveVersionAfterUpdate();
 			}
 			else
 			{
@@ -98,7 +114,21 @@ namespace Origam.Workbench.Services
 			}
 		}
 
-		public bool CanUpdate(SchemaExtension extension)
+        private void SaveVersionAfterUpdate()
+        {
+            //_transactionId = Guid.NewGuid().ToString();
+            IList <SchemaExtension> packages = _schema.ActiveExtension.IncludedPackages;
+            packages.Add(_schema.ActiveExtension);
+
+            AddMissingDeploymentDependencies(packages);
+
+            packages?.ForEach(package => UpdateVersionData(package));
+            SaveVersions();
+            //_transactionId = null;
+            ClearVersions();
+        }
+
+        public bool CanUpdate(SchemaExtension extension)
 		{
 			TryLoadVersions();
 			return CurrentDeployedVersion(extension) < extension.Version;
@@ -106,7 +136,7 @@ namespace Origam.Workbench.Services
 
 		public PackageVersion CurrentDeployedVersion(SchemaExtension extension)
 		{
-			foreach(OrigamModelVersionData.OrigamModelVersionRow versionRow in _versionData.OrigamModelVersion)
+			foreach(OrigamModelVersionData.OrigamModelVersionRow versionRow in VersionData.OrigamModelVersion)
 			{
 				if(versionRow.refSchemaExtensionId == extension.Id)
 				{
@@ -156,7 +186,7 @@ namespace Origam.Workbench.Services
 		public void UnloadService()
 		{
 			_schema = null;
-			_versionData = null;
+            VersionData = null;
 			_versionsLoaded = false;
 		}
 
@@ -273,9 +303,7 @@ namespace Origam.Workbench.Services
 
 		private void Update()
 		{
-			TryLoadVersions();
-
-			Log("=======================================================================" + Environment.NewLine);
+            Log("=======================================================================" + Environment.NewLine);
 			Log(DateTime.Now + " Starting update");
 
 			IList<SchemaExtension> packages = _schema.ActiveExtension.IncludedPackages;
@@ -294,13 +322,7 @@ namespace Origam.Workbench.Services
 				.Where(WasNotRunAlready)
 				.SelectMany(deplVersion => deplVersion.UpdateScriptActivities)
 				.ForEach(ExecuteActivity);
-
-			foreach (SchemaExtension package in packages)
-			{
-				UpdateVersionData(package);
-			}
-			SaveVersions();
-		}
+        }
 
 		private bool WasNotRunAlready(DeploymentVersion deplversion)
 		{
@@ -316,7 +338,7 @@ namespace Origam.Workbench.Services
 			bool found = false;
 			// update version number
 			foreach (OrigamModelVersionData.OrigamModelVersionRow version in
-				_versionData.OrigamModelVersion)
+                VersionData.OrigamModelVersion)
 			{
 				if (version.refSchemaExtensionId == package.Id)
 				{
@@ -329,7 +351,7 @@ namespace Origam.Workbench.Services
 			}
 			if (!found)
 			{
-				_versionData.OrigamModelVersion.AddOrigamModelVersionRow(
+                VersionData.OrigamModelVersion.AddOrigamModelVersionRow(
 					DateTime.Now, package.Version, package.Id);
 			}
 		}
@@ -392,38 +414,36 @@ namespace Origam.Workbench.Services
 
 		private void ClearVersions()
 		{
-			_versionData.Clear();
+            VersionData.Clear();
 			_versionsLoaded = false;
 		}
-
-		private DataSet LoadversionDataFrom(Guid queryId, string tableName)
+        private DataSet LoadversionDataFrom(Guid queryId, string tableName,string localTransaction)
 		{
 			IServiceAgent dataServiceAgent = 
 				ServiceManager.Services.
 					GetService<IBusinessServicesService>()
 					.GetAgent("DataService", null, null);
+            DataStructureQuery origamVersionQuery = new DataStructureQuery(queryId);
+                origamVersionQuery.LoadByIdentity = false;
 
-			DataStructureQuery origamVersionQuery = new DataStructureQuery(queryId);
-			origamVersionQuery.LoadByIdentity = false;
-			
-			dataServiceAgent.MethodName = "LoadDataByQuery";
-			dataServiceAgent.Parameters.Clear();
-			dataServiceAgent.Parameters.Add("Query", origamVersionQuery);
-			dataServiceAgent.TransactionId = _transactionId;
-
-			try
-			{
-				dataServiceAgent.Run();
-				return  (DataSet)dataServiceAgent.Result;
-			} 
-			catch (DatabaseTableNotFoundException ex)
-			{
-				if (ex.TableName == tableName)
-				{
-					return null;
-				}
-				throw;
-			}
+                dataServiceAgent.MethodName = "LoadDataByQuery";
+                dataServiceAgent.Parameters.Clear();
+                dataServiceAgent.Parameters.Add("Query", origamVersionQuery);
+                dataServiceAgent.TransactionId = localTransaction;
+                try
+                {
+                    dataServiceAgent.Run();
+                    return (DataSet)dataServiceAgent.Result;
+                }
+                catch (DatabaseTableNotFoundException ex)
+                {
+                    if (ex.TableName == tableName)
+                    {
+                        ResourceMonitor.Commit(localTransaction);
+                        return null;
+                    }
+                    throw;
+                }
 		}
 
         private void TryLoadVersions()
@@ -431,14 +451,15 @@ namespace Origam.Workbench.Services
             if (_versionsLoaded) return;
 
             ClearVersions();
+            string localTransaction = Guid.NewGuid().ToString();
             DataSet data = null;
 
             DataSet versionDataFromOrigamModelVersion =
-                LoadversionDataFrom(origamModelVersionQueryId, "OrigamModelVersion");
+                LoadversionDataFrom(origamModelVersionQueryId, "OrigamModelVersion", localTransaction);
             if (versionDataFromOrigamModelVersion == null)
             {
                 DataSet versionDataFromAsapModelVersion =
-                    LoadversionDataFrom(asapModelVersionQueryId, "AsapModelVersion");
+                    LoadversionDataFrom(asapModelVersionQueryId, "AsapModelVersion", localTransaction);
 
                 if (versionDataFromAsapModelVersion != null &&
                     versionDataFromAsapModelVersion.Tables.Count != 0)
@@ -453,7 +474,7 @@ namespace Origam.Workbench.Services
             }
 
             if (data == null) return;
-            _versionData.Merge(data);
+            VersionData.Merge(data);
             _versionsLoaded = true;
         }
 
@@ -480,13 +501,13 @@ namespace Origam.Workbench.Services
 			dataServiceAgent.MethodName = "StoreDataByQuery";
 			dataServiceAgent.Parameters.Clear();
 			dataServiceAgent.Parameters.Add("Query", query);
-			dataServiceAgent.Parameters.Add("Data", _versionData);
+			dataServiceAgent.Parameters.Add("Data", VersionData);
 
 			try
 			{
 				dataServiceAgent.Run();
 			}
-			catch 
+			catch
 			{
 				return false;
 			}
