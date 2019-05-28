@@ -83,6 +83,12 @@ namespace Origam.Workbench.Diagram
 				throw new InvalidOperationException();
 			}
 
+			if (!graph.MainDrawingSubgraf.Subgraphs.Any() &&
+			    !graph.MainDrawingSubgraf.Nodes.Any())
+			{
+				return;
+			}
+
 			MoveSubgraphRight(graph.ContextStoreSubgraph, graph.MainDrawingSubgraf);
 		}
 

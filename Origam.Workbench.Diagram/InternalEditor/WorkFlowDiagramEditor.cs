@@ -88,7 +88,15 @@ namespace Origam.Workbench.Diagram.InternalEditor
 				? new List<string>() 
 				: new List<string>{nodeSelector.Selected?.Id}
 			);
-	        nodeSelector.Selected = Graph.FindNodeOrSubgraph(nodeSelector.Selected?.Id);
+			Node nodeToSelect = Graph.FindNodeOrSubgraph(nodeSelector.Selected?.Id);
+			if (nodeToSelect == null &&
+			    Guid.TryParse(nodeSelector.Selected?.Id, out var id) &&
+			    UpToDateGraphParent.Id == id)
+			{
+				nodeToSelect = Graph.MainDrawingSubgraf;
+			}
+
+			nodeSelector.Selected = nodeToSelect;
         }
 
         private void ReDraw(List<string> expandedSubgraphNodeIds)
@@ -269,6 +277,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			{
 				AbstractSchemaItem parentStep =
 					persistedSchemaItem.FirstParentOfType<WorkflowTask>();
+				if (parentStep == null) return;
 				Node stepNode =
 					gViewer.Graph.FindNodeOrSubgraph(parentStep.Id.ToString());
 				nodeSelector.Selected = stepNode;

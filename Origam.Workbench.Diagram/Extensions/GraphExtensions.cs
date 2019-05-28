@@ -24,11 +24,14 @@ namespace Origam.Workbench.Diagram.Extensions
 	    public static Subgraph FindParentSubGraph(this Graph graph, Node node)
 	    {
 		    if (node == null) return null;
+		    
 		    return graph
 			    .SubgraphMap
 			    .Select(x => x.Value)
-			    .FirstOrDefault(subgraph =>  subgraph.Subgraphs.Contains(node) ||
-			                                 subgraph.Nodes.Any(x => x.Id == node.Id));
+			    .Concat(new []{graph.RootSubgraph})
+			    .FirstOrDefault(subgraph => subgraph.Subgraphs.Contains(node) ||
+			                                subgraph.Nodes.Any(x => x.Id == node.Id));
+
 	    }
 
 	    public static Node FindNodeOrSubgraph(this Graph graph, string id)
@@ -54,6 +57,7 @@ namespace Origam.Workbench.Diagram.Extensions
 			    return true;
 		    }
 		    Subgraph parent = graph.FindParentSubGraph(node1);
+		    if (parent == null) return false;
 		    if (Equals(parent, node2)) return true;
 		    if(parent.Nodes.Contains(node2)) return true;
 		    return false;
