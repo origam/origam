@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Microsoft.Msagl.Core.Geometry;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using MoreLinq;
@@ -15,7 +13,6 @@ using Origam.UI;
 using Origam.Workbench.BaseComponents;
 using Origam.Workbench.Commands;
 using Origam.Workbench.Diagram.Extensions;
-using Origam.Workbench.Editors;
 using Origam.Workbench.Services;
 
 namespace Origam.Workbench.Diagram.InternalEditor
@@ -26,7 +23,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private readonly GViewer gViewer;
         private readonly Form parentForm;
 
-        private ClickPoint _mouseRightButtonDownPoint;
+        private System.Drawing.Point mouseRightButtonDownPoint;
         private readonly IPersistenceProvider persistenceProvider;
         private readonly WorkbenchSchemaService schemaService;
         private readonly Guid graphParentId;
@@ -34,7 +31,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private readonly NodeSelector nodeSelector;
         private readonly DependencyTaskRunner taskRunner;
         private readonly ContextStoreDependencyPainter dependencyPainter;
-        private Point lastMouseLeftClickPoint;
 
         private WorkFlowGraph Graph => (WorkFlowGraph)gViewer.Graph;
 
@@ -346,9 +342,9 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			if (gViewer.InsertingEdge) return;
 	        if (e.RightButtonIsPressed && !e.Handled)
 	        {
-		        _mouseRightButtonDownPoint = new ClickPoint( gViewer, e);
+		        mouseRightButtonDownPoint  = new System.Drawing.Point(e.X, e.Y);
 		        ContextMenuStrip cm = BuildContextMenu();
-                cm.Show(parentForm,_mouseRightButtonDownPoint.InScreenSystem);
+                cm.Show(parentForm,mouseRightButtonDownPoint);
 	        }else if (e.LeftButtonIsPressed)
 	        {
 		        if(gViewer.SelectedObject is Node node)
@@ -440,8 +436,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 		private ContextMenuStrip BuildContextMenu()
         {
-	        object objectUnderMouse = 
-		        gViewer.GetObjectAt(_mouseRightButtonDownPoint.InScreenSystem);
+	        object objectUnderMouse = gViewer.GetObjectAt(mouseRightButtonDownPoint);
 	        if (objectUnderMouse is DEdge edge)
 	        {
 		        return CreateContextMenuForEdge(edge);
@@ -646,19 +641,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			deleteNodeCommand.Run();
 		}
 
-		class ClickPoint
-        {
-	        public Point InMsaglSystem { get; }
-	        public System.Drawing.Point InScreenSystem { get;}
-
-	        public ClickPoint(GViewer gViewer,  MsaglMouseEventArgs e)
-	        {
-		        InMsaglSystem = gViewer.ScreenToSource(e);
-		        InScreenSystem = new System.Drawing.Point(e.X, e.Y);
-	        }
-        }
-
-        public void Dispose()
+		public void Dispose()
         {
 	        persistenceProvider.InstancePersisted -= OnInstancePersisted;
 	        (gViewer as IViewer).MouseDown -= OnMouseDown;
