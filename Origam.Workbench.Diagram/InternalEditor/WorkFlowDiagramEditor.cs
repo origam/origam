@@ -80,7 +80,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 				gViewer, 
 				graphParentItemGetter: () => (AbstractSchemaItem)UpToDateGraphParent,
 				redrawGraphAction: ReDraw);
-		}
+        }
         
         public void ReDrawAndReselect()
         {
@@ -91,14 +91,14 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        nodeSelector.Selected = Graph.FindNodeOrSubgraph(nodeSelector.Selected?.Id);
         }
 
-        public void ReDraw(List<string> expandedSubgraphNodeIds)
+        private void ReDraw(List<string> expandedSubgraphNodeIds)
         {
 	        var originalTransform = gViewer.Transform;
 	        gViewer.Graph = factory.Draw(UpToDateGraphParent, expandedSubgraphNodeIds);
 	        factory.AlignContextStoreSubgraph();
-	        gViewer.Transform = null;
-//		        ? originalTransform 
-//		        : null;
+	        gViewer.Transform = originalTransform.IsIdentity
+		        ? null
+		        : originalTransform;
 	        gViewer.Invalidate();
         }
         
@@ -502,6 +502,17 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			deleteMenuItem.Click += DeleteNode_Click;
 			deleteMenuItem.Enabled = IsDeleteMenuItemAvailable(dNodeUnderMouse);
 			contextMenu.AddSubItem(deleteMenuItem);
+
+
+			if (schemaItemUnderMouse is IContextStore)
+			{
+				var hideDataFlowItem = new ToolStripMenuItem();
+				hideDataFlowItem.Text = "Hide data flow";
+				hideDataFlowItem.Image = ImageRes.icon_delete;
+				hideDataFlowItem.Click += (sender, args) => dependencyPainter.DeActivate();
+				hideDataFlowItem.Enabled = dependencyPainter.IsActive;
+				contextMenu.AddSubItem(hideDataFlowItem);
+			}
 
 			ToolStripMenuItem newMenu = new ToolStripMenuItem("New");
 			newMenu.Image = ImageRes.icon_new;
