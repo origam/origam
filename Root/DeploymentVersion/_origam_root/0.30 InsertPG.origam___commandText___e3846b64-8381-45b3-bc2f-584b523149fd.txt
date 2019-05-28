@@ -1,0 +1,2 @@
+﻿INSERT INTO "BusinessPartner" ("Id", "Name", "UserName", "RecordCreated") VALUES (gen_random_uuid(), 'ORIGAM Server', 'origam_server', now());
+INSERT INTO "BusinessPartner" ("Id", "Name", "UserName", "RecordCreated") VALUES (gen_random_uuid(), 'Anonymous User', 'guest', now());

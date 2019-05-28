@@ -1,0 +1,8 @@
+﻿CREATE TABLE "OrigamRegularExpression" (
+	"Name" Varchar(200) NOT NULL,
+	"Expression" Text NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);

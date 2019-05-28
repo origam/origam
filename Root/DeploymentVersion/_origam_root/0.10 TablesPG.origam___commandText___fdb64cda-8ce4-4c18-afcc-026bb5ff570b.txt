@@ -1,0 +1,12 @@
+﻿CREATE TABLE "WorkQueueNotificationContact" (
+	"IsRecipient" Boolean NOT NULL,
+	"refWorkQueueNotificationId" Uuid NOT NULL,
+	"refOrigamNotificationChannelTypeId" Uuid NOT NULL,
+	"Value" Varchar(200) NULL,
+	"refWorkQueueNotificationContactTypeId" Uuid NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "WorkQueueNotificationContact_ix_WorkQueueNotification" ON "WorkQueueNotificationContact" ("refWorkQueueNotificationId" ASC, "IsRecipient" ASC);

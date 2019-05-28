@@ -1,0 +1,195 @@
+﻿--
+-- refresh data in language master data
+--
+
+INSERT INTO "Language" ("Id", "Name", "TagIETF", "RecordCreated")
+select '{4574d756-8970-4369-9125-94defcfeeec6}', 'English (US)', 'en-US', now()  
+where NOT EXISTS (select * from "Language" WHERE "TagIETF" = 'en-US');
+
+
+INSERT INTO "Language" ("Id", "Name", "TagIETF", "RecordCreated")
+select '{5477d278-ba2b-46ea-9bd3-509d4c699762}', 'Čeština', 'cs-CZ', now()
+where NOT EXISTS (select * from "Language" WHERE "TagIETF" = 'cs-CZ');
+
+INSERT INTO "Language" ("Id", "Name", "TagIETF", "RecordCreated")
+select '{8b92f824-289c-4f93-a245-ecb67b81de1b}', 'Deutsch (Deutschland)', 'de-DE', now()
+where NOT EXISTS (select * from "Language" WHERE "TagIETF" = 'de-DE');
+
+INSERT INTO "Language" ("Id", "Name", "TagIETF", "RecordCreated")
+select '{81fef0eb-8492-4a26-9532-44b8567d0a1b}', 'Deutsch (Schweiz)', 'de-CH', now()
+where NOT EXISTS (select * from "Language" WHERE "TagIETF" = 'de-CH');
+
+--
+-- Refresh data in OrigamStateMachineEventType
+--
+
+
+INSERT INTO "OrigamStateMachineEventType" ("Name", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated") 
+select N'StateEntry', NULL, NULL, '{371e5c12-3896-4bab-bfd1-a25f74d25104}', castdate('0x0000A46800F2D16B'), NULL
+where NOT EXISTS (select * from "OrigamStateMachineEventType" WHERE "Name" = 'StateEntry');
+
+INSERT INTO "OrigamStateMachineEventType" ("Name", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated") 
+select N'StateTransition', NULL, NULL, '{02b5f4d9-2187-44f6-8c32-4cd76c099fd6}', castdate('0x0000A46800F2D16C'), NULL
+where NOT EXISTS (select * from "OrigamStateMachineEventType" WHERE "Name" = 'StateTransition');
+
+INSERT INTO "OrigamStateMachineEventType" ("Name", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated") 
+select N'StateExit', NULL, NULL, '{d4b3b294-6a20-45d8-80bd-1583901e5ac3}', castdate('0x0000A46800F2D16C'), NULL
+where NOT EXISTS (select * from "OrigamStateMachineEventType" WHERE "Name" = 'StateExit');
+
+INSERT INTO "OrigamStateMachineEventType" ("Name", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated") 
+select N'RecordCreated', NULL, NULL, '{8b2464f5-3278-433c-b68e-74c339c19ddb}', castdate('0x0000A46800F2D16D'), NULL 
+where NOT EXISTS (select * from "OrigamStateMachineEventType" WHERE "Name" = 'RecordCreated');
+
+INSERT INTO "OrigamStateMachineEventType" ("Name", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated") 
+select N'RecordUpdated', NULL, NULL, '{6828f423-f9f5-4011-b0bf-305473731fd7}', castdate('0x0000A46800F2D16D'), NULL
+where NOT EXISTS (select * from "OrigamStateMachineEventType" WHERE "Name" = 'RecordUpdated');
+
+INSERT INTO "OrigamStateMachineEventType" ("Name", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated") 
+select N'RecordDeleted', NULL, NULL, '{aa050ca9-b3a6-4abd-aced-146895b379ea}', castdate('0x0000A46800F2D16D'), NULL
+where NOT EXISTS (select * from "OrigamStateMachineEventType" WHERE "Name" = 'RecordDeleted');
+
+INSERT INTO "OrigamStateMachineEventType" ("Name", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated") 
+select N'ValueUpdated', NULL, NULL, '{c14b5bc9-bcd2-4e0a-a254-77a09606bf87}', castdate('0x0000A46800F2D16D'), NULL
+where NOT EXISTS (select * from "OrigamStateMachineEventType" WHERE "Name" = 'ValueUpdated');
+
+
+
+
+--
+-- delete old work queue localization
+--
+
+delete from "WorkQueueNotificationContactType_l10n";
+delete from "OrigamNotificationChannelType_l10n";
+delete from "WorkQueueCommandType_l10n";
+delete from "WorkQueueNotificationEvent_l10n";
+delete from "WorkQueueExternalSourceType_l10n";
+delete from "OrigamStateMachineEventType_l10n";
+
+--
+-- Update base language translations
+--
+update "WorkQueueNotificationContactType" set "Name"='Inserted Value' WHERE "Id"='{3535C6F5-C48D-4AE9-BA21-43852D4F66F8}';
+
+update "OrigamNotificationChannelType" set "Name"='Email' WHERE "Id"='{3A0BBBB5-A7F0-4667-93D0-071F935702BE}';
+
+
+update "WorkQueueCommandType" set "Name"='Remove' WHERE "Id"='{8D4117E0-590B-4495-9FD3-DE46D9E768AF}';
+update "WorkQueueCommandType" set "Name"='Queue Command' WHERE "Id"='{E7B1761F-7126-4A20-9DA3-80872DE80227}';
+update "WorkQueueCommandType" set "Name"='Move To Queue' WHERE "Id"='{CB9D374C-DA12-46FF-8810-980597AE0A21}';
+
+update "WorkQueueNotificationEvent" set "Name"='Message Creation' WHERE "Id"='{FE40902F-8A44-477E-96F9-D157EEE16A0F}';
+update "WorkQueueNotificationEvent" set "Name"='Once a Day' WHERE "Id"='{96340243-E360-4409-9EE6-26192748EAD0}';
+update "WorkQueueNotificationEvent" set "Name"='Message Removal' WHERE "Id"='{DC3B0836-B94F-4502-BB20-2C3AA3206F63}';
+update "WorkQueueNotificationEvent" set "Name"='Escalation' WHERE "Id"='{E1B66E46-7961-4D91-8C71-AB9E57E656A5}';
+
+update "WorkQueueExternalSourceType" set "Name"='IMAP' WHERE "Id"='{57BED127-45CC-46F1-B29B-53C635F665B3}';
+update "WorkQueueExternalSourceType" set "Name"='File' WHERE "Id"='{07329B7B-90E8-4594-B738-C04856FC998E}';
+update "WorkQueueExternalSourceType" set "Name"='POP3' WHERE "Id"='{4C15F1A1-4BD8-4FA6-9A37-DF5AA19F02A5}';
+update "WorkQueueExternalSourceType" set "Name"='Sequential Workflow' WHERE "Id"='{75E3B51A-E4F5-48ED-941C-597F49FCC775}';
+update "WorkQueueExternalSourceType" set "Name"='Web Request' WHERE "Id"='{CB882379-80E7-41FD-BDE7-C65045660CA7}';
+
+update "OrigamStateMachineEventType" set "Name"='StateEntry' WHERE "Id"='{371E5C12-3896-4BAB-BFD1-A25F74D25104}';
+update "OrigamStateMachineEventType" set "Name"='StateTransition' WHERE "Id"='{02B5F4D9-2187-44F6-8C32-4CD76C099FD6}';
+update "OrigamStateMachineEventType" set "Name"='StateExit' WHERE "Id"='{D4B3B294-6A20-45D8-80BD-1583901E5AC3}';
+update "OrigamStateMachineEventType" set "Name"='RecordCreated' WHERE "Id"='{8B2464F5-3278-433C-B68E-74C339C19DDB}';
+update "OrigamStateMachineEventType" set "Name"='RecordUpdated' WHERE "Id"='{6828F423-F9F5-4011-B0BF-305473731FD7}';
+update "OrigamStateMachineEventType" set "Name"='RecordDeleted' WHERE "Id"='{AA050CA9-B3A6-4ABD-ACED-146895B379EA}';
+update "OrigamStateMachineEventType" set "Name"='ValueUpdated' WHERE "Id"='{C14B5BC9-BCD2-4E0A-A254-77A09606BF87}';
+
+
+--
+-- insert new values from translations czech
+--
+insert into "WorkQueueNotificationContactType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueNotificationContactTypeId") VALUES (gen_random_uuid(),'Vložená hodnota', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{3535C6F5-C48D-4AE9-BA21-43852D4F66F8}');
+
+insert into "OrigamNotificationChannelType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamNotificationChannelTypeId") VALUES (gen_random_uuid(),'E-mail', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{3A0BBBB5-A7F0-4667-93D0-071F935702BE}');
+
+
+insert into "WorkQueueCommandType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueCommandTypeId") VALUES (gen_random_uuid(),'Odstranění', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{8D4117E0-590B-4495-9FD3-DE46D9E768AF}');
+insert into "WorkQueueCommandType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueCommandTypeId") VALUES (gen_random_uuid(),'Příkaz fronty', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{E7B1761F-7126-4A20-9DA3-80872DE80227}');
+insert into "WorkQueueCommandType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueCommandTypeId") VALUES (gen_random_uuid(),'Přesun do fronty', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{CB9D374C-DA12-46FF-8810-980597AE0A21}');
+
+insert into "WorkQueueNotificationEvent_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueNotificationEventId") VALUES (gen_random_uuid(),'Vytvoření záznamu', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{FE40902F-8A44-477E-96F9-D157EEE16A0F}');
+insert into "WorkQueueNotificationEvent_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueNotificationEventId") VALUES (gen_random_uuid(),'1x denně', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{96340243-E360-4409-9EE6-26192748EAD0}');
+insert into "WorkQueueNotificationEvent_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueNotificationEventId") VALUES (gen_random_uuid(),'Zrušení zprávy', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{DC3B0836-B94F-4502-BB20-2C3AA3206F63}');
+insert into "WorkQueueNotificationEvent_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueNotificationEventId") VALUES (gen_random_uuid(),'Eskalace', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{E1B66E46-7961-4D91-8C71-AB9E57E656A5}');
+
+insert into "WorkQueueExternalSourceType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueExternalSourceTypeId") VALUES (gen_random_uuid(),'IMAP', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{57BED127-45CC-46F1-B29B-53C635F665B3}');
+insert into "WorkQueueExternalSourceType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueExternalSourceTypeId") VALUES (gen_random_uuid(),'Soubor', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{07329B7B-90E8-4594-B738-C04856FC998E}');
+insert into "WorkQueueExternalSourceType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueExternalSourceTypeId") VALUES (gen_random_uuid(),'POP3', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{4C15F1A1-4BD8-4FA6-9A37-DF5AA19F02A5}');
+insert into "WorkQueueExternalSourceType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueExternalSourceTypeId") VALUES (gen_random_uuid(),'Sekvenční workflow', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{75E3B51A-E4F5-48ED-941C-597F49FCC775}');
+insert into "WorkQueueExternalSourceType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueExternalSourceTypeId") VALUES (gen_random_uuid(),'Webový požadavek', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{CB882379-80E7-41FD-BDE7-C65045660CA7}');
+
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Vstup do stavu', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{371E5C12-3896-4BAB-BFD1-A25F74D25104}');
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Změna stavu', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{02B5F4D9-2187-44F6-8C32-4CD76C099FD6}');
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Výstup ze stavu', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{D4B3B294-6A20-45D8-80BD-1583901E5AC3}');
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Vytvoření záznamu', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{8B2464F5-3278-433C-B68E-74C339C19DDB}');
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Změna záznamu', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{6828F423-F9F5-4011-B0BF-305473731FD7}');
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Smazání záznamu', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{AA050CA9-B3A6-4ABD-ACED-146895B379EA}');
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Změna hodnoty', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),now(), '{C14B5BC9-BCD2-4E0A-A254-77A09606BF87}');
+
+
+--
+-- insert new values from translations swiss
+--
+insert into "WorkQueueNotificationContactType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueNotificationContactTypeId") VALUES (gen_random_uuid(),'Eingegebener Wert', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{3535C6F5-C48D-4AE9-BA21-43852D4F66F8}');
+
+insert into "OrigamNotificationChannelType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamNotificationChannelTypeId") VALUES (gen_random_uuid(),'E-Mail', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{3A0BBBB5-A7F0-4667-93D0-071F935702BE}');
+
+
+insert into "WorkQueueCommandType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueCommandTypeId") VALUES (gen_random_uuid(),'Entfernen', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{8D4117E0-590B-4495-9FD3-DE46D9E768AF}');
+insert into "WorkQueueCommandType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueCommandTypeId") VALUES (gen_random_uuid(),'Queue Befehl', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{E7B1761F-7126-4A20-9DA3-80872DE80227}');
+insert into "WorkQueueCommandType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueCommandTypeId") VALUES (gen_random_uuid(),'Zu anderer Queue verschieben', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{CB9D374C-DA12-46FF-8810-980597AE0A21}');
+
+insert into "WorkQueueNotificationEvent_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueNotificationEventId") VALUES (gen_random_uuid(),'Nachrichten erstellen', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{FE40902F-8A44-477E-96F9-D157EEE16A0F}');
+insert into "WorkQueueNotificationEvent_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueNotificationEventId") VALUES (gen_random_uuid(),'1x täglich', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{96340243-E360-4409-9EE6-26192748EAD0}');
+insert into "WorkQueueNotificationEvent_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueNotificationEventId") VALUES (gen_random_uuid(),'Nachricht löschen', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{DC3B0836-B94F-4502-BB20-2C3AA3206F63}');
+insert into "WorkQueueNotificationEvent_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueNotificationEventId") VALUES (gen_random_uuid(),'Eskalation', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{E1B66E46-7961-4D91-8C71-AB9E57E656A5}');
+
+insert into "WorkQueueExternalSourceType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueExternalSourceTypeId") VALUES (gen_random_uuid(),'IMAP', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{57BED127-45CC-46F1-B29B-53C635F665B3}');
+insert into "WorkQueueExternalSourceType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueExternalSourceTypeId") VALUES (gen_random_uuid(),'Datei', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{07329B7B-90E8-4594-B738-C04856FC998E}');
+insert into "WorkQueueExternalSourceType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueExternalSourceTypeId") VALUES (gen_random_uuid(),'POP3', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{4C15F1A1-4BD8-4FA6-9A37-DF5AA19F02A5}');
+insert into "WorkQueueExternalSourceType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueExternalSourceTypeId") VALUES (gen_random_uuid(),'Sequentieller Workflow', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{75E3B51A-E4F5-48ED-941C-597F49FCC775}');
+insert into "WorkQueueExternalSourceType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueExternalSourceTypeId") VALUES (gen_random_uuid(),'Web Anfrage', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{CB882379-80E7-41FD-BDE7-C65045660CA7}');
+
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Zustandseingang', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{371E5C12-3896-4BAB-BFD1-A25F74D25104}');
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Zustandsübergang', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{02B5F4D9-2187-44F6-8C32-4CD76C099FD6}');
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Zustandsausgang', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{D4B3B294-6A20-45D8-80BD-1583901E5AC3}');
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Datensatz erstellt', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{8B2464F5-3278-433C-B68E-74C339C19DDB}');
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Datensatz aktualisiert', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{6828F423-F9F5-4011-B0BF-305473731FD7}');
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Datensatz gelöscht', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{AA050CA9-B3A6-4ABD-ACED-146895B379EA}');
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Wert aktualisiert', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),now(), '{C14B5BC9-BCD2-4E0A-A254-77A09606BF87}');
+
+
+
+--
+-- insert new values from translations german
+--
+insert into "WorkQueueNotificationContactType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueNotificationContactTypeId") VALUES (gen_random_uuid(),'Eingegebener Wert', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{3535C6F5-C48D-4AE9-BA21-43852D4F66F8}');
+
+insert into "OrigamNotificationChannelType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamNotificationChannelTypeId") VALUES (gen_random_uuid(),'E-Mail', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{3A0BBBB5-A7F0-4667-93D0-071F935702BE}');
+
+
+insert into "WorkQueueCommandType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueCommandTypeId") VALUES (gen_random_uuid(),'Entfernen', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{8D4117E0-590B-4495-9FD3-DE46D9E768AF}');
+insert into "WorkQueueCommandType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueCommandTypeId") VALUES (gen_random_uuid(),'Queue Befehl', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{E7B1761F-7126-4A20-9DA3-80872DE80227}');
+insert into "WorkQueueCommandType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueCommandTypeId") VALUES (gen_random_uuid(),'Zu anderer Queue verschieben', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{CB9D374C-DA12-46FF-8810-980597AE0A21}');
+
+insert into "WorkQueueNotificationEvent_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueNotificationEventId") VALUES (gen_random_uuid(),'Nachrichten erstellen', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{FE40902F-8A44-477E-96F9-D157EEE16A0F}');
+insert into "WorkQueueNotificationEvent_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueNotificationEventId") VALUES (gen_random_uuid(),'1x täglich', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{96340243-E360-4409-9EE6-26192748EAD0}');
+insert into "WorkQueueNotificationEvent_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueNotificationEventId") VALUES (gen_random_uuid(),'Nachricht löschen', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{DC3B0836-B94F-4502-BB20-2C3AA3206F63}');
+insert into "WorkQueueNotificationEvent_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueNotificationEventId") VALUES (gen_random_uuid(),'Eskalation', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{E1B66E46-7961-4D91-8C71-AB9E57E656A5}');
+
+insert into "WorkQueueExternalSourceType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueExternalSourceTypeId") VALUES (gen_random_uuid(),'IMAP', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{57BED127-45CC-46F1-B29B-53C635F665B3}');
+insert into "WorkQueueExternalSourceType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueExternalSourceTypeId") VALUES (gen_random_uuid(),'Datei', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{07329B7B-90E8-4594-B738-C04856FC998E}');
+insert into "WorkQueueExternalSourceType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueExternalSourceTypeId") VALUES (gen_random_uuid(),'POP3', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{4C15F1A1-4BD8-4FA6-9A37-DF5AA19F02A5}');
+insert into "WorkQueueExternalSourceType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueExternalSourceTypeId") VALUES (gen_random_uuid(),'Sequentieller Workflow', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{75E3B51A-E4F5-48ED-941C-597F49FCC775}');
+insert into "WorkQueueExternalSourceType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueExternalSourceTypeId") VALUES (gen_random_uuid(),'Web Anfrage', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{CB882379-80E7-41FD-BDE7-C65045660CA7}');
+
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Zustandseingang', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{371E5C12-3896-4BAB-BFD1-A25F74D25104}');
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Zustandsübergang', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{02B5F4D9-2187-44F6-8C32-4CD76C099FD6}');
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Zustandsausgang', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{D4B3B294-6A20-45D8-80BD-1583901E5AC3}');
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Datensatz erstellt', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{8B2464F5-3278-433C-B68E-74C339C19DDB}');
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Datensatz aktualisiert', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{6828F423-F9F5-4011-B0BF-305473731FD7}');
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Datensatz gelöscht', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{AA050CA9-B3A6-4ABD-ACED-146895B379EA}');
+insert into "OrigamStateMachineEventType_l10n" ("Id","Name","refLanguageId","RecordCreated","refOrigamStateMachineEventTypeId") VALUES (gen_random_uuid(),'Wert aktualisiert', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),now(), '{C14B5BC9-BCD2-4E0A-A254-77A09606BF87}');

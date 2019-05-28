@@ -1,0 +1,1 @@
+﻿INSERT INTO "OrigamApplicationRole" ("Id", "Name", "Description", "IsSystemRole", "RecordCreated") VALUES (gen_random_uuid(), 'FRM_Language', 'Menu > Settings > General > Languages', true, now())

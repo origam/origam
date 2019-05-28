@@ -1,0 +1,25 @@
+﻿
+ALTER TABLE "WorkQueueCommand" ADD CONSTRAINT FK_WorkQueueCommand_refWorkQueueId_WorkQueue
+	FOREIGN KEY (
+		"refWorkQueueId"
+	)
+
+	REFERENCES "WorkQueue" (
+		"Id"
+	);
+ALTER TABLE "WorkQueueCommand" ADD CONSTRAINT FK_WorkQueueCommand_refWorkQueueCommandTypeId_WorkQueueCommandType
+	FOREIGN KEY (
+		"refWorkQueueCommandTypeId"
+	)
+
+	REFERENCES "WorkQueueCommandType" (
+		"Id"
+	);
+ALTER TABLE "WorkQueueCommand" ADD CONSTRAINT FK_WorkQueueCommand_refErrorWorkQueueId_WorkQueue
+	FOREIGN KEY (
+		"refErrorWorkQueueId"
+	)
+
+	REFERENCES "WorkQueue" (
+		"Id"
+	);

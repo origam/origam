@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE "OrigamStateMachineEventType_l10n" ADD CONSTRAINT FK_OrigamStateMachineEventType_l10n_refOrigamStateMachineEventTypeId_OrigamStateMachineEventType
+	FOREIGN KEY (
+		"refOrigamStateMachineEventTypeId"
+	)
+
+	REFERENCES "OrigamStateMachineEventType" (
+		"Id"
+	);
+ALTER TABLE "OrigamStateMachineEventType_l10n" ADD CONSTRAINT FK_OrigamStateMachineEventType_l10n_refLanguageId_Language
+	FOREIGN KEY (
+		"refLanguageId"
+	)
+
+	REFERENCES "Language" (
+		"Id"
+	);

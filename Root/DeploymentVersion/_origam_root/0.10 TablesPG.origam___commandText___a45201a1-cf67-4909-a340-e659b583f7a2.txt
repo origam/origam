@@ -1,0 +1,12 @@
+﻿CREATE TABLE "OrigamSyncConfig" (
+	"refSourceOrigamSyncConnectionId" Uuid NOT NULL,
+	"Name" Varchar(200) NOT NULL,
+	"refSourceOrigamSyncProviderConfigId" Uuid NOT NULL,
+	"refTargetOrigamSyncConnectionId" Uuid NOT NULL,
+	"refTargetOrigamSyncProviderConfigId" Uuid NOT NULL,
+	"refCounterReferenceCode" Varchar(40) NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);

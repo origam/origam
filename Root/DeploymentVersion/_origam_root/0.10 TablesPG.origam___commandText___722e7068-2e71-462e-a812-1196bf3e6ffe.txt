@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE "OrigamSyncRun" ADD CONSTRAINT FK_OrigamSyncRun_refOrigamSyncConfigId_OrigamSyncConfig
+	FOREIGN KEY (
+		"refOrigamSyncConfigId"
+	)
+
+	REFERENCES "OrigamSyncConfig" (
+		"Id"
+	);

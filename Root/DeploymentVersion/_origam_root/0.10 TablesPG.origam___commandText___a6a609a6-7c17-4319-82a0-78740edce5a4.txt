@@ -1,0 +1,16 @@
+﻿CREATE TABLE "OrigamCalendar" (
+	"IsThursdayWorkingDay" Boolean NOT NULL,
+	"IsWednesdayWorkingDay" Boolean NOT NULL,
+	"Name" Varchar(100) NOT NULL,
+	"IsFridayWorkingDay" Boolean NOT NULL,
+	"IsSundayWorkingDay" Boolean NOT NULL,
+	"IsSaturdayWorkingDay" Boolean NOT NULL,
+	"IsMondayWorkingDay" Boolean NOT NULL,
+	"IsTuesdayWorkingDay" Boolean NOT NULL,
+	"RecordUpdated" Timestamp(3) NULL,
+	"RecordCreatedServer" Timestamp(3) NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordUpdatedServer" Timestamp(3) NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdatedBy" Uuid NULL);

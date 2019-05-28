@@ -1,0 +1,12 @@
+﻿CREATE TABLE "OrigamWorkflowMenuItemConfig" (
+	"IsRepeatable" Boolean NOT NULL,
+	"ProfileId" Uuid NOT NULL,
+	"WorkflowMenuItemId" Uuid NOT NULL,
+	"RecordUpdated" Timestamp(3) NULL,
+	"RecordCreatedServer" Timestamp(3) NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordUpdatedServer" Timestamp(3) NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdatedBy" Uuid NULL);
+CREATE  INDEX  "OrigamWorkflowMenuItemConfig_ix_Main" ON "OrigamWorkflowMenuItemConfig" ("ProfileId" ASC, "WorkflowMenuItemId" ASC);

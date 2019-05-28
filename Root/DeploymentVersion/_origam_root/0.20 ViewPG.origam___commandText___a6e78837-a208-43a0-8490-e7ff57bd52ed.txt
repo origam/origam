@@ -1,0 +1,14 @@
+﻿create view "OrganizationMappingList" as
+select 
+	om."refParentOrganizationId",
+	om."refOrganizationId"
+from 
+	"OrganizationMapping" om
+
+union
+
+select 
+	"Organization"."Id",
+	"Organization"."Id"
+from 
+	"Organization"

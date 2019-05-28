@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE "OrigamTraceWorkflowStep" ADD CONSTRAINT FK_OrigamTraceWorkflowStep_refOrigamTraceWorkflowId_OrigamTraceWorkflow
+	FOREIGN KEY (
+		"refOrigamTraceWorkflowId"
+	)
+
+	REFERENCES "OrigamTraceWorkflow" (
+		"Id"
+	);

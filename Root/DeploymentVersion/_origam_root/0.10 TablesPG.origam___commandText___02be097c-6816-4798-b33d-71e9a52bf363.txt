@@ -1,0 +1,20 @@
+﻿CREATE TABLE "WorkQueueCommand" (
+	"Command" Varchar(40) NULL,
+	"Param1" Varchar(200) NULL,
+	"IsDefault" Boolean NOT NULL,
+	"Roles" Varchar(500) NULL,
+	"refWorkQueueId" Uuid NOT NULL,
+	"AutoProcessingConditionXPath" Text NULL,
+	"refWorkQueueCommandTypeId" Uuid NOT NULL,
+	"IsAutoProcessedWithErrors" Boolean NOT NULL,
+	"Text" Varchar(100) NOT NULL,
+	"refErrorWorkQueueId" Uuid NULL,
+	"Param2" Varchar(200) NULL,
+	"SortOrder" Integer NOT NULL,
+	"IsAutoProcessed" Boolean NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "WorkQueueCommand_ix_WorkQueue" ON "WorkQueueCommand" ("refWorkQueueId" ASC);

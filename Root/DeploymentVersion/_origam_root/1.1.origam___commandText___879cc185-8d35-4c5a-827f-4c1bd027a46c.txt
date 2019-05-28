@@ -1,0 +1,10 @@
+﻿CREATE TABLE [Dimension4] (
+	[refDimensionTypeId] UNIQUEIDENTIFIER NOT NULL,
+	[Name] NVARCHAR(200) NOT NULL,
+	[IsActive] BIT NOT NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL)
+CREATE INDEX [ix_refDimensionTypeId] ON [Dimension4] ([refDimensionTypeId] ASC)

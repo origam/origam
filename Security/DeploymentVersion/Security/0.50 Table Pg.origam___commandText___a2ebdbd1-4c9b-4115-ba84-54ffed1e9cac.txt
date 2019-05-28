@@ -1,0 +1,11 @@
+﻿CREATE TABLE "OrigamApplicationRole" (
+	"Description" Varchar(200) NULL,
+	"IsSystemRole" Boolean NOT NULL,
+	"Name" Varchar(255) NOT NULL,
+	"UserRemarks" Text NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "OrigamApplicationRole_ix_Name" ON "OrigamApplicationRole" ("Name" ASC);

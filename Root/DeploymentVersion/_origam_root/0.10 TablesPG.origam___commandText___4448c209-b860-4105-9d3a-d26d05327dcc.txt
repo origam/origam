@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE "WorkQueueNotificationContactType_l10n" ADD CONSTRAINT FK_WorkQueueNotificationContactType_l10n_refWorkQueueNotificationContactTypeId_WorkQueueNotificationContactType
+	FOREIGN KEY (
+		"refWorkQueueNotificationContactTypeId"
+	)
+
+	REFERENCES "WorkQueueNotificationContactType" (
+		"Id"
+	);
+ALTER TABLE "WorkQueueNotificationContactType_l10n" ADD CONSTRAINT FK_WorkQueueNotificationContactType_l10n_refLanguageId_Language
+	FOREIGN KEY (
+		"refLanguageId"
+	)
+
+	REFERENCES "Language" (
+		"Id"
+	);

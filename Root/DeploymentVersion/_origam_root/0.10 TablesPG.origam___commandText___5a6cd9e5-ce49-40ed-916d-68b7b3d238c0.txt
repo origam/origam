@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE "OrigamTooltipHelpUsage" ADD CONSTRAINT FK_OrigamTooltipHelpUsage_refBusinessPartnerId_BusinessPartner
+	FOREIGN KEY (
+		"refBusinessPartnerId"
+	)
+
+	REFERENCES "BusinessPartner" (
+		"Id"
+	);
+ALTER TABLE "OrigamTooltipHelpUsage" ADD CONSTRAINT FK_OrigamTooltipHelpUsage_refOrigamTooltipHelpId_OrigamTooltipHelp
+	FOREIGN KEY (
+		"refOrigamTooltipHelpId"
+	)
+
+	REFERENCES "OrigamTooltipHelp" (
+		"Id"
+	);

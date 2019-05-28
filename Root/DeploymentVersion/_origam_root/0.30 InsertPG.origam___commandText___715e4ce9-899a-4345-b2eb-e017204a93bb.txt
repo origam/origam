@@ -1,0 +1,1 @@
+﻿INSERT INTO "OrigamNotificationChannelType" ("Id", "Name", "RecordCreated") VALUES ('{88db965b-ff44-4b82-8820-acc45cd5d123}', 'E-mail (queued)', now())

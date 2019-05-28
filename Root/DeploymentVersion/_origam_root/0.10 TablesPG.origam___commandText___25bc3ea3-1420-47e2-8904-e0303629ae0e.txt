@@ -1,0 +1,10 @@
+﻿CREATE TABLE "ResourceGroupMember" (
+	"refGroupResourceId" Uuid NOT NULL,
+	"refMemberResourceId" Uuid NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "ResourceGroupMember_ix_Resource" ON "ResourceGroupMember" ("refMemberResourceId" ASC);
+CREATE  INDEX  "ResourceGroupMember_ix_MemberResource" ON "ResourceGroupMember" ("refMemberResourceId" ASC);

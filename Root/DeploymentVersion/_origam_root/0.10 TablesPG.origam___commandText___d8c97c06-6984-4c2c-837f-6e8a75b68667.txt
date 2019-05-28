@@ -1,0 +1,12 @@
+﻿CREATE TABLE "Mail" (
+	"DateSent" Timestamp(3) NOT NULL,
+	"Sender" Varchar(500) NOT NULL,
+	"Recipient" Text NOT NULL,
+	"Subject" Varchar(500) NULL,
+	"DateReceived" Timestamp(3) NULL,
+	"MessageBody" Text NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);

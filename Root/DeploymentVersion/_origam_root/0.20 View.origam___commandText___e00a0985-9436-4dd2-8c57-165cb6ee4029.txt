@@ -1,0 +1,10 @@
+﻿CREATE  VIEW "BusinessPartnerLookup"
+AS
+SELECT
+	cast("BusinessPartner"."Name" || COALESCE(' ' || "BusinessPartner"."FirstName", '') || 
+		 COALESCE('\, ' || ParentBusinessPartner."Name", '') as varchar(1000)) AS "LookupText",
+	"BusinessPartner".*
+FROM
+	"BusinessPartner"
+	left outer join "BusinessPartner" ParentBusinessPartner
+		ON (ParentBusinessPartner."Id" = "BusinessPartner"."ParentId")

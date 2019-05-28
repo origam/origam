@@ -1,0 +1,13 @@
+﻿CREATE TABLE "WorkQueueNotification" (
+	"SendAttachments" Boolean NOT NULL,
+	"refWorkQueueId" Uuid NOT NULL,
+	"refOrigamNotificationTemplateId" Uuid NOT NULL,
+	"refWorkQueueNotificationEventId" Uuid NOT NULL,
+	"Description" Varchar(200) NOT NULL,
+	"IsActive" Boolean NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "WorkQueueNotification_ix_WorkQueue" ON "WorkQueueNotification" ("refWorkQueueId" ASC);

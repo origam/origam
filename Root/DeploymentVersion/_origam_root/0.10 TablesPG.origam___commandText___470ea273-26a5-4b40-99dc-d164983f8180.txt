@@ -1,0 +1,11 @@
+﻿CREATE TABLE "OrigamOnlineUser" (
+	"UserName" Varchar(255) NOT NULL,
+	"LastOperationTimestamp" Timestamp(3) NOT NULL,
+	"DirtyScreens" Integer NOT NULL,
+	"RunningWorkflows" Integer NOT NULL,
+	"ClearSessionRequestTimestamp" Timestamp(3) NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);

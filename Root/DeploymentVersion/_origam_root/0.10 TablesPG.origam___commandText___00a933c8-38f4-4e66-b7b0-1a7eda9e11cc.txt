@@ -1,0 +1,10 @@
+﻿CREATE TABLE "OrigamTooltipHelpContextComponent" (
+	"IdString" Varchar(500) NOT NULL,
+	"refOrigamTooltipHelpSubcontextId" Uuid NOT NULL,
+	"Name" Varchar(200) NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "OrigamTooltipHelpContextComponent_ix_OrigamTooltipHelpSubcontext" ON "OrigamTooltipHelpContextComponent" ("refOrigamTooltipHelpSubcontextId" ASC);

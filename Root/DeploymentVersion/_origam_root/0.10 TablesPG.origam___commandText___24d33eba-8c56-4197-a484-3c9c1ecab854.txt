@@ -1,0 +1,18 @@
+﻿CREATE TABLE "OrigamParameters" (
+	"FloatValue" Numeric(28,10) NULL,
+	"StringValue" Varchar(2000) NULL,
+	"DateValue" Timestamp(3) NULL,
+	"BooleanValue" Boolean NOT NULL,
+	"IntValue" Integer NULL,
+	"GuidValue" Uuid NULL,
+	"ProfileId" Uuid NOT NULL,
+	"CurrencyValue" Money NULL,
+	"RecordUpdated" Timestamp(3) NULL,
+	"RecordCreatedServer" Timestamp(3) NULL,
+	"Id" Uuid NOT NULL  ,
+	"RecordUpdatedServer" Timestamp(3) NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdatedBy" Uuid NULL);
+	ALTER TABLE "OrigamParameters" 
+ADD CONSTRAINT OrigamParameters PRIMARY KEY ("Id", "ProfileId");

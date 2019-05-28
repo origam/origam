@@ -1,0 +1,10 @@
+﻿CREATE TABLE "OrigamStyleColor" (
+	"Name" Varchar(100) NOT NULL,
+	"Color" Integer NOT NULL,
+	"Description" Text NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE UNIQUE  INDEX  "OrigamStyleColor_ix_Unique" ON "OrigamStyleColor" ("Name" ASC);

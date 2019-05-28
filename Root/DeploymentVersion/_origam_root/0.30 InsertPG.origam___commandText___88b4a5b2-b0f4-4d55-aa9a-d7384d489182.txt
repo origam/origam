@@ -1,0 +1,4 @@
+﻿INSERT INTO "OrigamTooltipHelpPosition" ("RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated", "Name") VALUES (NULL, NULL, '{41fa1c4f-9a12-4402-aa21-a921b0ceb52e}', now(), NULL, N'Left');
+INSERT INTO "OrigamTooltipHelpPosition" ("RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated", "Name") VALUES (NULL, NULL, '{bdf7ca80-b110-4e16-932b-684f34c4fed3}', now(), NULL, N'Top');
+INSERT INTO "OrigamTooltipHelpPosition" ("RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated", "Name") VALUES (NULL, NULL, '{c6f27d77-ab60-421c-b110-a2429a3e1c8b}', now(), NULL, N'Right');
+INSERT INTO "OrigamTooltipHelpPosition" ("RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated", "Name") VALUES (NULL, NULL, '{da40379a-ae75-4982-888c-17205b64bf4d}', now(), NULL, N'Bottom');
