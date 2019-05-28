@@ -18,6 +18,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private readonly GViewer gViewer;
         private readonly Action<List<string>> redrawGraphAction;
         private readonly List<IArrowPainter> arrowPainters = new List<IArrowPainter>();
+        private IContextStore lastContextStore;
 
         public ContextStoreDependencyPainter(NodeSelector nodeSelector,
             IPersistenceProvider persistenceProvider,
@@ -31,55 +32,80 @@ namespace Origam.Workbench.Diagram.InternalEditor
             nodeSelector.NodeSelected += OnNodeSelected;
         }
 
+        public bool IsActive => lastContextStore != null;
+
+        public void DeActivate()
+        {
+            lastContextStore = null;
+            RemoveEdges();
+        }
+
         private void OnNodeSelected(object sender, Guid? id)
         {
             RemoveEdges();
-            if (id == null)
-            {
-                return;
-            }
 
-            var selectedItem = persistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new Key(id.Value));
+            var selectedItem = id == null 
+                ? null 
+                : persistenceProvider.RetrieveInstance(
+                    typeof(AbstractSchemaItem), new Key(id.Value)
+                    ) as AbstractSchemaItem;
 
             if (selectedItem is IContextStore contextStore)
             {
-                var allChildren =
-                    graphParentItemGetter.Invoke()
-                        .ChildrenRecursive;
-				
-                foreach (var schemaItem in allChildren)
-                {
-                    bool isTargetOfFromArrow = IsInputContextStore(schemaItem, contextStore);
-                    bool isSourceOfToArrow =  IsOutpuContextStore(schemaItem, contextStore);
-                    if (isTargetOfFromArrow && isSourceOfToArrow)
-                    {
-                        arrowPainters.Add(
-                            new BidirectionalArrowPainter(
-                                gViewer,
-                                schemaItem)
-                            );
-                    }
-                    else if (isTargetOfFromArrow)
-                    {
-                        arrowPainters.Add( 
-                            new FromArrowPainter(
-                                gViewer,
-                                schemaItem)
-                            );
-                    }
-                    else if (isSourceOfToArrow)
-                    {
-                        arrowPainters.Add(
-                            new ToArrowPainter(
-                                gViewer,
-                                schemaItem)
-                            );
-                    }
-                }
-
+                DrawDependencies(contextStore);
+                lastContextStore = contextStore;
                 var tasksToExpand = FindTasksToExpand();
                 redrawGraphAction(tasksToExpand);
                 DrawEdges(contextStore.NodeId);
+            }
+            else if (lastContextStore !=null)
+            {
+                DrawDependencies(lastContextStore);
+                var tasksToExpand = FindTasksToExpand();
+                if (selectedItem != null)
+                {
+                    tasksToExpand.Add(selectedItem.NodeId);
+                }
+                redrawGraphAction(tasksToExpand);
+                DrawEdges(lastContextStore.NodeId);
+            }
+        }
+
+        private void DrawDependencies(IContextStore contextStore)
+        {
+            var allChildren =
+                graphParentItemGetter.Invoke()
+                    .ChildrenRecursive;
+
+            foreach (var schemaItem in allChildren)
+            {
+                bool isTargetOfFromArrow =
+                    IsInputContextStore(schemaItem, contextStore);
+                bool isSourceOfToArrow = IsOutpuContextStore(schemaItem, contextStore);
+                if (isTargetOfFromArrow && isSourceOfToArrow)
+                {
+                    arrowPainters.Add(
+                        new BidirectionalArrowPainter(
+                            gViewer,
+                            schemaItem)
+                    );
+                }
+                else if (isTargetOfFromArrow)
+                {
+                    arrowPainters.Add(
+                        new FromArrowPainter(
+                            gViewer,
+                            schemaItem)
+                    );
+                }
+                else if (isSourceOfToArrow)
+                {
+                    arrowPainters.Add(
+                        new ToArrowPainter(
+                            gViewer,
+                            schemaItem)
+                    );
+                }
             }
         }
 

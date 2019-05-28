@@ -72,7 +72,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         
         internal Pen GetActiveBorderPen(Node node)
         {
-            return NodeSelector.Selected == node
+            return Equals(NodeSelector.Selected, node)
                 ? BoldBlackPen
                 : BlackPen;
         }

@@ -11,7 +11,7 @@ namespace Origam.Workbench.Diagram.Extensions
         {
             return gViewer
                 .Entities.OfType<IViewerNode>()
-                .SingleOrDefault(viewerNode => viewerNode.Node == node);
+                .SingleOrDefault(viewerNode => Equals(viewerNode.Node, node));
         }
        
         public static void Redraw(this GViewer gViewer)
