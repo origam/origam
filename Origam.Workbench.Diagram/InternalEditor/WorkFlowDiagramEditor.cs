@@ -384,19 +384,26 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		{
 			var newNodeTracker = new NodePositionTracker(gViewer, node.Id);
 			var oldNodeTracker = new NodePositionTracker(gViewer, nodeSelector.Selected?.Id);
-			
+			var originalTransform = gViewer.Transform;
 			nodeSelector.Selected = node;
 
 			ReDrawAndReselect();
 			newNodeTracker.LoadUpdatedState();
 			oldNodeTracker.LoadUpdatedState();
 			
-			NodePositionTracker nodeTrackerToUse =
-				oldNodeTracker.NodeDoesNotExist || newNodeTracker.NodeWasNotResized
-					? newNodeTracker
-					: oldNodeTracker;
+			if (oldNodeTracker.NodeExists && oldNodeTracker.NodeWasNotResized)
+			{
+				gViewer.Transform = oldNodeTracker.UpdatedTransformation;
+			}
+			else if (newNodeTracker.NodeExists && newNodeTracker.NodeWasNotResized)
+			{
+				gViewer.Transform = newNodeTracker.UpdatedTransformation;
+			}
+			else
+			{
+				gViewer.Transform = originalTransform;
+			}
 
-			gViewer.Transform = nodeTrackerToUse.UpdatedTransformation;
 			gViewer.Invalidate();
 		}
 		private bool IsDeleteMenuItemAvailable(DNode objectUnderMouse)

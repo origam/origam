@@ -22,9 +22,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
             Math.Abs(originalNode.BoundingBox.Size.Height - updatedNode.BoundingBox.Size.Height) < 0.01 &&
             Math.Abs(originalNode.BoundingBox.Size.Width - updatedNode.BoundingBox.Size.Width) < 0.01;
 
-        public bool NodeDoesNotExist =>
-            string.IsNullOrWhiteSpace(nodeId) || updatedNode ==null;
-
+        public bool NodeExists => !string.IsNullOrWhiteSpace(nodeId) && updatedNode != null;
+        
         public PlaneTransformation UpdatedTransformation =>
             new PlaneTransformation(
                 originalTransformation[0, 0],
