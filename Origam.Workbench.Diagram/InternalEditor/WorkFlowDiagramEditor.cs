@@ -65,25 +65,21 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			this.persistenceProvider = persistenceProvider;
 			this.factory = factory;
 			this.nodeSelector = nodeSelector;
-
-			ReDrawAndReselect();
-
+			
 			persistenceProvider.InstancePersisted += OnInstancePersisted;
 			
 			dependencyPainter = new ContextStoreDependencyPainter(
 				nodeSelector,
 				persistenceProvider,
 				gViewer, 
-				graphParentItemGetter: () => (AbstractSchemaItem)UpToDateGraphParent,
-				redrawGraphAction: ReDraw);
+				graphParentItemGetter: () => (AbstractSchemaItem)UpToDateGraphParent);
+			
+			ReDrawAndReselect();
         }
         
         public void ReDrawAndReselect()
         {
-			ReDraw(nodeSelector.Selected == null 
-				? new List<string>() 
-				: new List<string>{nodeSelector.Selected?.Id}
-			);
+			ReDraw();
 			Node nodeToSelect = Graph.FindNodeOrSubgraph(nodeSelector.Selected?.Id);
 			if (nodeToSelect == null &&
 			    Guid.TryParse(nodeSelector.Selected?.Id, out var id) &&
@@ -95,15 +91,26 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			nodeSelector.Selected = nodeToSelect;
         }
 
-        private void ReDraw(List<string> expandedSubgraphNodeIds)
+        private void ReDraw()
         {
 	        var originalTransform = gViewer.Transform;
-	        gViewer.Graph = factory.Draw(UpToDateGraphParent, expandedSubgraphNodeIds);
+
+	        List<string> nodesToExpand = nodeSelector.Selected == null
+		        ? new List<string>()
+		        : new List<string> {nodeSelector.Selected?.Id};
+	        nodesToExpand.AddRange(dependencyPainter.GetNodesToExpand());
+	        gViewer.Graph = factory.Draw(UpToDateGraphParent, nodesToExpand);
 	        factory.AlignContextStoreSubgraph();
+	        dependencyPainter.Draw();
 	        gViewer.Transform = originalTransform.IsIdentity
 		        ? null
 		        : originalTransform;
-	        gViewer.Invalidate();
+	        //gViewer.Invalidate();
+//	        var graph = gViewer.Graph;
+//	        gViewer.Graph = null;
+//	        //factory.AlignContextStoreSubgraph();
+//	        gViewer.Graph = graph;
+	        //gViewer.Redraw();
         }
         
         private void OnDoubleClick(object sender, EventArgs e)
@@ -263,7 +270,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			else
 			{
 				node.LabelText = persistedSchemaItem.Name;
-				gViewer.Redraw();
+				//gViewer.Redraw();
+				ReDraw();
 			}
 		}
 

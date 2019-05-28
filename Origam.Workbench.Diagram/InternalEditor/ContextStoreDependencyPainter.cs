@@ -13,23 +13,22 @@ namespace Origam.Workbench.Diagram.InternalEditor
 {
     class ContextStoreDependencyPainter
     {
+        private readonly NodeSelector nodeSelector;
         private readonly IPersistenceProvider persistenceProvider;
         private readonly Func<AbstractSchemaItem> graphParentItemGetter;
         private readonly GViewer gViewer;
-        private readonly Action<List<string>> redrawGraphAction;
         private readonly List<IArrowPainter> arrowPainters = new List<IArrowPainter>();
         private IContextStore lastContextStore;
 
         public ContextStoreDependencyPainter(NodeSelector nodeSelector,
             IPersistenceProvider persistenceProvider,
-            GViewer gViewer, Func<AbstractSchemaItem> graphParentItemGetter, 
-            Action<List<string>> redrawGraphAction)
+            GViewer gViewer, Func<AbstractSchemaItem> graphParentItemGetter)
         {
+            this.nodeSelector = nodeSelector;
             this.persistenceProvider = persistenceProvider;
             this.gViewer = gViewer;
             this.graphParentItemGetter = graphParentItemGetter;
-            this.redrawGraphAction = redrawGraphAction;
-            nodeSelector.NodeSelected += OnNodeSelected;
+
         }
 
         public bool IsActive => lastContextStore != null;
@@ -40,38 +39,38 @@ namespace Origam.Workbench.Diagram.InternalEditor
             RemoveEdges();
         }
 
-        private void OnNodeSelected(object sender, Guid? id)
+        public List<string> GetNodesToExpand()
         {
+            Guid? id = nodeSelector.SelectedNodeId;
             RemoveEdges();
 
             var selectedItem = id == null 
                 ? null 
                 : persistenceProvider.RetrieveInstance(
                     typeof(AbstractSchemaItem), new Key(id.Value)
-                    ) as AbstractSchemaItem;
+                ) as AbstractSchemaItem;
 
-            if (selectedItem is IContextStore contextStore)
+            lastContextStore = selectedItem is IContextStore contextStore
+                ? contextStore
+                : lastContextStore;
+            
+            if (lastContextStore != null)
             {
-                DrawDependencies(contextStore);
-                lastContextStore = contextStore;
-                var tasksToExpand = FindTasksToExpand();
-                redrawGraphAction(tasksToExpand);
-                DrawEdges(contextStore.NodeId);
+                PreparePainters(lastContextStore);
+                return FindTasksToExpand();
             }
-            else if (lastContextStore !=null)
+            return new List<string>();
+        }
+
+        public void Draw()
+        {
+            if (lastContextStore != null)
             {
-                DrawDependencies(lastContextStore);
-                var tasksToExpand = FindTasksToExpand();
-                if (selectedItem != null)
-                {
-                    tasksToExpand.Add(selectedItem.NodeId);
-                }
-                redrawGraphAction(tasksToExpand);
                 DrawEdges(lastContextStore.NodeId);
             }
         }
 
-        private void DrawDependencies(IContextStore contextStore)
+        private void PreparePainters(IContextStore contextStore)
         {
             var allChildren =
                 graphParentItemGetter.Invoke()
