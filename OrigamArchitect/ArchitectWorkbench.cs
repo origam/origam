@@ -771,8 +771,6 @@ namespace OrigamArchitect
                 new DeleteActiveNode(), ImageRes.icon_delete, Keys.None, _schemaMenu);
 			CreateMenuItem(strings.Execute_MenuItem, new ExecuteActiveSchemaItem(), 
                 ImageRes.icon_execute, Keys.Control | Keys.X, _schemaMenu);
-			CreateMenuItem(strings.EditInDiagram_MenuItem, new EditDiagramActiveSchemaItem(), 
-                ImageRes.icon_edit_in_diagram, Keys.None, _schemaMenu);
 			_schemaMenu.SubItems.Add(CreateSeparator());	
 	
 			CreateMenuItem(strings.FindDependencies_MenuItem, new ShowDependencies(),

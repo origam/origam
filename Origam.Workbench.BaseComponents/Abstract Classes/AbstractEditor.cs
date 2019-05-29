@@ -484,6 +484,7 @@ namespace Origam.Workbench.Editors
             {
                 ModelContent.PersistenceProvider.EndTransaction();
             }
+            this.DialogResult = DialogResult.OK;
         }
 
         public override string HelpTopic
