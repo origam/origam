@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2019 Advantage Solutions, s. r. o.
@@ -1607,7 +1608,7 @@ namespace Origam.Server
         }
 
         [JsonRpcMethod]
-        public int AttachmentCount(string sessionId, string entity, object id)
+        public long AttachmentCount(string sessionId, string entity, object id)
         {
             SecurityTools.CurrentUserProfile();
             SessionStore ss = null;
@@ -1629,7 +1630,7 @@ namespace Origam.Server
             {
                 entityId = (Guid)t.ExtendedProperties["EntityId"];
             }
-            int result = 0;
+            long result = 0;
             List<object> idList = new List<object>();
             // We catch any problems with reading record ids (they could have been unloaded by another request
             // and we don't want to hear messages about this.
@@ -1644,7 +1645,7 @@ namespace Origam.Server
             foreach (object recordId in idList)
             {
                 IDataLookupService ls = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-                int oneRecordCount = (int)ls.GetDisplayText(new Guid("fbf2cadd-e529-401d-80ce-d68de0a89f13"), recordId, false, false, null);
+                long oneRecordCount = (long)ls.GetDisplayText(new Guid("fbf2cadd-e529-401d-80ce-d68de0a89f13"), recordId, false, false, null);
 
                 result += oneRecordCount;
             }

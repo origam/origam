@@ -32,6 +32,7 @@ using System.Security.Principal;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using Origam.Git;
+using static Origam.DA.Common.Enums;
 
 namespace OrigamArchitect
 {
@@ -87,8 +88,27 @@ namespace OrigamArchitect
             }
         }
 
+        private DatabaseType DatabaseType
+        {
+            get
+            {
+                switch (txtDatabaseType.SelectedIndex)
+                {
+                    case 0:
+                        return DatabaseType.MsSql;
+                    case 1:
+                        return DatabaseType.PgSql;
+                    default:
+                        throw new ArgumentOutOfRangeException("DatabaseType",
+                            txtDatabaseType.SelectedIndex, strings.UnknownDatabaseType);
+
+                }
+            }
+        }
+
         private void pageReview_Commit(object sender, WizardPageConfirmEventArgs e)
         {
+            _builder.CreateTasks(_project);
             InitTaskList();
             WorkbenchSingleton.Workbench.Disconnect();
             WorkbenchSingleton.Workbench.PopulateEmptyDatabaseOnLoad = false;
@@ -121,6 +141,7 @@ namespace OrigamArchitect
             _settings.SourcesFolder = txtSourcesFolder.Text;
             _settings.BinFolder = txtBinFolderRoot.Text;
             _settings.DatabaseServerName = txtServerName.Text;
+            _settings.DatabaseTypeText = txtDatabaseType.GetItemText(txtDatabaseType.SelectedItem);
             _settings.Save();
         }
 
@@ -172,17 +193,26 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
+            if (!int.TryParse(txtPort.Text, out int Port))
+            {
+                AsMessageBox.ShowError(this, strings.PortError, strings.NewProjectWizard_Title, null);
+                e.Cancel = true;
+                return;
+            }
 
-            _project.Name = txtName.Text;
+            _project.Name = txtName.Text.ToLower().Replace("\\s+", "_"); 
             _project.DatabaseServerName = txtServerName.Text;
             _project.DatabaseUserName = txtDatabaseUserName.Text;
             _project.DatabasePassword = txtDatabasePassword.Text;
-            _project.DataDatabaseName = txtName.Text;
-            _project.ModelDatabaseName = txtName.Text + "_model";
+            _project.DataDatabaseName = txtName.Text.ToLower().Replace("\\s+","_");
+            _project.ModelDatabaseName = txtName.Text.ToLower().Replace("\\s+", "_") + "_model";
             _project.DatabaseIntegratedAuthentication = chkIntegratedAuthentication.Checked;
             _project.WebRootName = cboWebRoot.Text;
             _project.Url = txtName.Text;
             _project.ArchitectUserName = System.Threading.Thread.CurrentPrincipal.Identity.Name;
+            
+            _project.DatabaseType = DatabaseType;
+            _project.Port = Port;
             _project.NewPackageId = Guid.NewGuid().ToString();
         }
 
@@ -196,15 +226,35 @@ namespace OrigamArchitect
 
         private void pageLocalDeploymentSettings_Initialize(object sender, WizardPageInitEventArgs e)
         {
-            txtServerName.Text = _settings.DatabaseServerName;
+            txtServerName.Text = string.IsNullOrEmpty(txtServerName.Text)?_settings.DatabaseServerName: txtServerName.Text;
             cboWebRoot.Items.Clear();
             cboWebRoot.Items.AddRange(_builder.WebSites());
             if(cboWebRoot.Items.Count > 0)
             {
                 cboWebRoot.SelectedIndex = 0;
             }
+            if (txtDatabaseType.SelectedIndex == -1)
+            {
+                txtDatabaseType.SelectedItem = null;
+                txtDatabaseType.Items.AddRange(new object[] {
+                    "Microsoft Sql Server",
+                    "Postgre Sql Server"});
+                txtDatabaseType.SelectedIndex = txtDatabaseType.FindStringExact(_settings.DatabaseTypeText);
+            }
+            TxtDatabaseType_SelectedIndexChanged(null, EventArgs.Empty);
         }
 
+        private void SetPort()
+        {
+                if (DatabaseType == DatabaseType.MsSql)
+                {
+                    txtPort.Text = "0";
+                }
+                if (DatabaseType == DatabaseType.PgSql)
+                {
+                    txtPort.Text = "5432";
+                }
+        }
         private void pagePaths_Commit(object sender, WizardPageConfirmEventArgs e)
         {
             if (string.IsNullOrEmpty(txtTemplateFolder.Text))
@@ -300,7 +350,7 @@ namespace OrigamArchitect
             {
                 Process p = Process.Start(startInfo);
             }
-            catch (System.ComponentModel.Win32Exception ex)
+            catch 
             {
                 return;
             }
@@ -396,6 +446,28 @@ namespace OrigamArchitect
         {
                 txtGitUser.Enabled = gitrepo.Checked;
                 txtGitEmail.Enabled = gitrepo.Checked;
+        }
+
+        private void TxtDatabaseType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(DatabaseType == DatabaseType.PgSql)
+            {
+                chkIntegratedAuthentication.Enabled = false;
+                chkIntegratedAuthentication.Checked = false;
+                labelPrivileges.Visible = true;
+                txtServerName.Width = txtDatabaseType.Width;
+                txtPort.Visible = true;
+                labelPort.Visible = true;
+            }
+            else
+            {
+                chkIntegratedAuthentication.Enabled = true;
+                labelPrivileges.Visible = false;
+                txtServerName.Width = cboWebRoot.Width;
+                txtPort.Visible = false;
+                labelPort.Visible = false;
+            }
+            SetPort();
         }
     }
 }

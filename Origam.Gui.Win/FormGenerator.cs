@@ -541,11 +541,13 @@ namespace Origam.Gui.Win
 				catch
 				{
 					ResourceMonitor.Rollback(transactionId);
-					throw;
+                    _dataServiceAgent.TransactionId = null;
+                    throw;
 				}
 
 				ResourceMonitor.Commit(transactionId);
-			}
+                _dataServiceAgent.TransactionId = null;
+            }
 			finally
 			{
 				// reset temporary columns
@@ -569,8 +571,7 @@ namespace Origam.Gui.Win
 				_dataServiceAgent.MethodName = "LoadDataByQuery";
 				_dataServiceAgent.Parameters.Clear();
 				_dataServiceAgent.Parameters.Add("Query", query);
-
-				AddQueryParameters(query);
+                AddQueryParameters(query);
 
 				RefreshData();
 			}

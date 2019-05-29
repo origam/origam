@@ -79,4 +79,27 @@
     </Reference>
   </ItemGroup>
 
+ 
+
+  <ItemGroup>
+    <Compile Update="MobilePhoneShortMessages.Designer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="SerialCommunicationBuffer.Designer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="SimpleModelData.Designer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="WorkflowStateData.Designer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="WorkQueue\OrigamNotificationContactData.Designer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="WorkQueue\WorkQueueData.Designer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>

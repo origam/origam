@@ -1240,6 +1240,15 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Port is not Number!.
+        /// </summary>
+        internal static string PortError {
+            get {
+                return ResourceManager.GetString("PortError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Processes.
         /// </summary>
         internal static string ProcessesTabText {
@@ -1731,6 +1740,15 @@ namespace OrigamArchitect {
         internal static string Type_TableColumn {
             get {
                 return ResourceManager.GetString("Type_TableColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown Database Type.
+        /// </summary>
+        internal static string UnknownDatabaseType {
+            get {
+                return ResourceManager.GetString("UnknownDatabaseType", resourceCulture);
             }
         }
         

@@ -48,8 +48,8 @@ namespace Origam.Workbench.Editors
         private Label lblName;
         private PictureBox elementPicture;
         private Label lblType;
-        ToolStripMenuItem _saveCmd = new ToolStripMenuItem("Save", Images.Save);
-	    ToolStripMenuItem dockCmd = new ToolStripMenuItem("Dock", null);
+        ToolStripMenuItem _saveCmd = new ToolStripMenuItem("Save", ImageRes.Save_16x);
+	    ToolStripMenuItem dockCmd = new ToolStripMenuItem("Dock", ImageRes.dock);
         private ISubmenuBuilder _actionsBuilder = null;
         private ISubmenuBuilder _newElementsBuilder = null;
 
@@ -484,6 +484,7 @@ namespace Origam.Workbench.Editors
             {
                 ModelContent.PersistenceProvider.EndTransaction();
             }
+            this.DialogResult = DialogResult.OK;
         }
 
         public override string HelpTopic

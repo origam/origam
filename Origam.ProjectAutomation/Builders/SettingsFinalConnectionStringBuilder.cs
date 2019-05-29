@@ -40,6 +40,8 @@ namespace Origam.ProjectAutomation
             activeSettings.DataConnectionString = project.DataConnectionString;
             activeSettings.SchemaConnectionString = project.ModelConnectionString;
             activeSettings.ModelSourceControlLocation = project.SourcesFolder;
+            activeSettings.DataDataService = project.GetDataDataService;
+            activeSettings.SchemaDataService = project.GetDataDataService;
             SettingsBuilder.SaveSettings(SettingsBuilder.GetSettings());
         }
 

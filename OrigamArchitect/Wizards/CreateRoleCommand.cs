@@ -46,7 +46,7 @@ namespace OrigamArchitect
 		{
             IAuthorizationContextContainer obj = Owner as IAuthorizationContextContainer;
             ServiceCommandUpdateScriptActivity activity = 
-                DeploymentHelper.CreateSystemRole(obj.AuthorizationContext);
+                CreateRole(obj.AuthorizationContext);
             GeneratedModelElements.Add(activity);
         }
 	}

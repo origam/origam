@@ -38,8 +38,8 @@ namespace Origam.DA.Service
 		{
 		}
 
-		#region IDataService Members
-		public virtual string Info
+        #region IDataService Members
+        public virtual string Info
 		{
 			get
 			{
@@ -101,6 +101,9 @@ namespace Origam.DA.Service
                 _attachmentService = value;
             }
         }
+
+        public string DbUser { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string DBPassword { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public string Xsd(Guid dataStructureId)
 		{
@@ -186,7 +189,7 @@ namespace Origam.DA.Service
 		{
 			throw new NotImplementedException("ReferenceCount() is not implemented by this data service");
 		}
-        public string BuildConnectionString(string serverName, string databaseName, string userName, string password, bool integratedAuthentication, bool pooling)
+        public string BuildConnectionString(string serverName, int port, string databaseName, string userName, string password, bool integratedAuthentication, bool pooling)
         {
             throw new NotImplementedException();
         }
@@ -194,7 +197,7 @@ namespace Origam.DA.Service
         {
             throw new NotImplementedException();
         }
-        public void DropDatabase(string name)
+        public void DeleteDatabase(string name)
         {
             throw new NotImplementedException();
         }

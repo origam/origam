@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace Origam
@@ -270,7 +271,9 @@ namespace Origam
 	    [Category("Services"), DefaultValue("")]
         public string GsPath { get; set; }
 
-	    public string ReportsFolder()
+        public Platform [] DeployPlatforms { get; set; }
+
+        public string ReportsFolder()
 		{
 			return System.IO.Path.Combine(BaseFolder, this.ReportDefinitionsPath);
 		}
@@ -331,6 +334,79 @@ namespace Origam
 				);
 		}
 
-		#endregion
-	}
+        public Platform[] GetAllPlatform()
+        {
+            Platform[] platforms = DeployPlatforms??new Platform[0];
+            Platform platform = new Platform
+            {
+                IsPrimary = true,
+                DataService = DataDataService
+            };
+            platform.Name = platform.GetParseEnum(DataDataService);
+            Array.Resize(ref platforms, platforms.Length + 1);
+            platforms[platforms.Length - 1] = platform;
+            return platforms;
+        }
+        #endregion
+    }
+
+    public class Platform
+    {
+        private string nameField;
+
+        private string dataConnectionStringField;
+
+        private string dataServiceField;
+
+        /// <remarks/>
+        public string Name
+        {
+            get
+            {
+                return this.nameField;
+            }
+            set
+            {
+                this.nameField = value;
+            }
+        }
+
+        public string DataConnectionString
+        {
+            get
+            {
+                return this.dataConnectionStringField;
+            }
+            set
+            {
+                this.dataConnectionStringField = value;
+            }
+        }
+
+        public string DataService
+        {
+            get
+            {
+                return this.dataServiceField;
+            }
+            set
+            {
+                this.dataServiceField = value;
+            }
+        }
+        public bool IsPrimary { get; set; } = false;
+        public override string ToString()
+        {
+            string _name = Name;
+            if (IsPrimary)
+                _name += " - Primary";
+
+            return _name;
+        }
+        public string GetParseEnum(string dataDataService)
+        {
+            return  dataDataService
+                    .Split(",".ToCharArray())[0].Trim().Split("\\.".ToCharArray())[3].Trim().Replace("DataService","");
+        }
+    }
 }

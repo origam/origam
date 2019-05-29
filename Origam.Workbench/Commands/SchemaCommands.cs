@@ -303,29 +303,17 @@ namespace Origam.Workbench.Commands
 	/// <summary>
 	/// Edits an active schema item in a diagram editor.
 	/// </summary>
-	public class EditDiagramActiveSchemaItem : AbstractMenuCommand
+	public class EditDiagramActiveSchemaItem : AbstractCommand
 	{
 		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
 		IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 
-		public override bool IsEnabled
-		{
-			get
-			{
-				return _schema.ActiveNode is AbstractSchemaItem;
-			}
-			set
-			{
-				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-			}
-		}
-
 		public override void Run()
 		{
-			AbstractSchemaItem item = _schema.ActiveSchemaItem;
+            AbstractSchemaItem item = this.Owner as AbstractSchemaItem;
 
-			// First we test, if the item is not opened already
-			foreach(IViewContent content in WorkbenchSingleton.Workbench.ViewContentCollection)
+            // First we test, if the item is not opened already
+            foreach (IViewContent content in WorkbenchSingleton.Workbench.ViewContentCollection)
 			{
 				if(content.DisplayedItemId == item.Id &&
 				   content.GetType().ToString() == "Origam.Workbench.Editors.DiagramEditor")
@@ -358,12 +346,6 @@ namespace Origam.Workbench.Commands
 			WorkbenchSingleton.Workbench.ShowView(editor);
 			System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Default;
 
-		}
-
-		public override void Dispose()
-		{
-			_schema = null;
-			_persistence = null;
 		}
 	}
 
@@ -425,6 +407,7 @@ namespace Origam.Workbench.Commands
         }
 
         public bool ShowDialog { get; set; }
+        public bool ShowDiagramEditorAfterSave { get; set; }
         IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 		WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
 //		private IParameterService _parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
@@ -494,13 +477,29 @@ namespace Origam.Workbench.Commands
             {
                editor = new UiActionEditor();
             }
+            else if (itemType == "Origam.Schema.WorkflowModel.Workflow" && ! ShowDialog)
+            {
+                if (item.IsPersisted)
+                {
+                    var diagramAction = new EditDiagramActiveSchemaItem();
+                    diagramAction.Owner = this.Owner;
+                    diagramAction.Run();
+                    return;
+                }
+                else
+                {
+                    editor = new PropertyGridEditor();
+                    this.ShowDialog = true;
+                    this.ShowDiagramEditorAfterSave = true;
+                }
+            }
             else
 			{
-				editor = new Origam.Workbench.Editors.PropertyGridEditor();
-			}
+                editor = new PropertyGridEditor();
+            }
 
-			// Set editor to dirty, if object has not been persisted, yet (new item)
-			if(!item.IsPersisted)
+            // Set editor to dirty, if object has not been persisted, yet (new item)
+            if (!item.IsPersisted)
 			{
 				editor.IsDirty = true;
 			}
@@ -542,7 +541,13 @@ namespace Origam.Workbench.Commands
 
             if (ShowDialog)
             {
-                (editor as Form).ShowDialog(WorkbenchSingleton.Workbench as IWin32Window);
+                var result = (editor as Form).ShowDialog(WorkbenchSingleton.Workbench as IWin32Window);
+                if (result == DialogResult.OK && ShowDiagramEditorAfterSave)
+                {
+                    this.ShowDialog = false;
+                    ShowDiagramEditorAfterSave = false;
+                    Run();
+                }
             }
             else
             {

@@ -38,5 +38,5 @@ namespace Origam.Schema
 		Array,
 		Geography,
 		Object
-	}
+    }
 }

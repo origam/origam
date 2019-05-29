@@ -19,9 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam;
-using Origam.DA.Service;
 using System;
+using static Origam.DA.Common.Enums;
 
 namespace Origam.ProjectAutomation
 {
@@ -29,6 +28,7 @@ namespace Origam.ProjectAutomation
     {
         string _loginName;
         bool _integratedAuthentication = false;
+        DatabaseType _databaseType;
 
         public override string Name
         {
@@ -40,42 +40,30 @@ namespace Origam.ProjectAutomation
 
         public override void Execute(Project project)
         {
-            DataService.ConnectionString =
-                DataService.BuildConnectionString(project.DatabaseServerName,
-                project.DataDatabaseName, project.DatabaseUserName,
-                project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
-            if (project.DatabaseIntegratedAuthentication)
-            {
-                _loginName = string.Format("[IIS APPPOOL\\{0}]", project.Name);
-                _integratedAuthentication = project.DatabaseIntegratedAuthentication;
-                string command1 = string.Format("CREATE LOGIN {0} FROM WINDOWS WITH DEFAULT_DATABASE=[master]", _loginName);
-                string command2 = string.Format("CREATE USER {0} FOR LOGIN {0}", _loginName);
-                string command3 = string.Format("ALTER ROLE [db_datareader] ADD MEMBER {0}", _loginName);
-                string command4 = string.Format("ALTER ROLE [db_datawriter] ADD MEMBER {0}", _loginName);
-                string transaction1 = Guid.NewGuid().ToString();
-                try
-                {
-                    DataService.ExecuteUpdate(command1, transaction1);
-                    DataService.ExecuteUpdate(command2, transaction1);
-                    DataService.ExecuteUpdate(command3, transaction1);
-                    DataService.ExecuteUpdate(command4, transaction1);
-                    ResourceMonitor.Commit(transaction1);
-                }
-                catch (Exception)
-                {
-                    ResourceMonitor.Rollback(transaction1);
-                    throw;
-                }
-            }
+            _databaseType = project.DatabaseType;
+            DataService(_databaseType).DbUser = project.Name;
+            _loginName = DataService(_databaseType).DbUser;
+            _integratedAuthentication = project.DatabaseIntegratedAuthentication;
+            DataService(_databaseType).ConnectionString = BuildConnectionString(project);
+            DataService(_databaseType)
+                .CreateUser(
+                    _loginName,
+                    project.UserPassword,
+                    project.DataDatabaseName,
+                    project.DatabaseIntegratedAuthentication
+                );
+        }
+
+        private string BuildConnectionString(Project project)
+        {
+            return DataService(_databaseType).BuildConnectionString(project.DatabaseServerName, project.Port,
+            project.DataDatabaseName, project.DatabaseUserName,
+            project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
         }
 
         public override void Rollback()
         {
-            if (_integratedAuthentication)
-            {
-                string command1 = string.Format("DROP LOGIN {0}", _loginName);
-                DataService.ExecuteUpdate(command1, null);
-            }
+            DataService(_databaseType).DeleteUser(_loginName, _integratedAuthentication);
         }
     }
 }

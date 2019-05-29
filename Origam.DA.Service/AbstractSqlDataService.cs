@@ -190,9 +190,11 @@ namespace Origam.DA.Service
 		private DbDataAdapterFactory _adapterFactory;
 		private string _connectionString = "";
         private const int DATA_VISUALIZATION_MAX_LENGTH = 100;
+        internal abstract string GetAllTablesSQL();
+        
 
-		#region Constructors
-		public AbstractSqlDataService() : base()
+        #region Constructors
+        public AbstractSqlDataService() : base()
 		{
 		}
 
@@ -203,10 +205,14 @@ namespace Origam.DA.Service
             UpdateBatchSize = updateBatchSize;
             BulkInsertThreshold = bulkInsertThreshold;
 		}
-		#endregion
+        #endregion
 
-		#region Public Methods
-		public override string ConnectionString
+        #region Public Methods
+
+        public abstract string CreateSystemRole(string roleName);
+        public abstract string CreateInsert(int fieldcount);
+
+        public override string ConnectionString
 		{
 			get
 			{
@@ -219,13 +225,13 @@ namespace Origam.DA.Service
 		}
 
 
-		internal override DbDataAdapterFactory DbDataAdapterFactory
+		public override DbDataAdapterFactory DbDataAdapterFactory
 		{
 			get
 			{
 				return _adapterFactory;
 			}
-			set
+			internal set
 			{
 				_adapterFactory = value;
 			}
@@ -966,6 +972,12 @@ namespace Origam.DA.Service
 							result = (result.Equals(1));
 						}
 						break;
+                    case OrigamDataType.Long:
+                        if(result is int)
+                        {
+                            result = (long)(int)result;
+                        }
+                        break;
 				}
 
 				//					// Reset the transaction isolation level to its default. See the following from MSDN:
@@ -1475,7 +1487,7 @@ namespace Origam.DA.Service
 					settings: settings,
 					versionCommandName: "OrigamDatabaseSchemaVersion");
 			} 
-			catch (SqlException ex)
+			catch 
 			{
 				return TryGetSchemaVersion(
 					connection: connection,
@@ -1497,24 +1509,6 @@ namespace Origam.DA.Service
 				return (string) cmd.ExecuteScalar();
 			}
 		}
-
-		public override void UpdateDatabaseSchemaVersion(string version, string transactionId)
-		{
-			ExecuteUpdate("ALTER  PROCEDURE [OrigamDatabaseSchemaVersion] AS SELECT '" + version + "'", transactionId);
-		}
-
-        public override void CreateDatabase(string name)
-        {
-            CheckDatabaseName(name);
-            ExecuteUpdate(string.Format("CREATE DATABASE [{0}]", name), null);
-        }
-
-        public override void DropDatabase(string name)
-        {
-            CheckDatabaseName(name);
-            ExecuteUpdate(string.Format("DROP DATABASE [{0}]", name), null);
-        }
-
         public override string EntityDdl(Guid entityId)
         {
             TableMappingItem table = PersistenceProvider.RetrieveInstance(
@@ -1664,24 +1658,8 @@ namespace Origam.DA.Service
             return false;
         }
 
-        private bool IsDataEntityIndexInDatabase(DataEntityIndex dataEntityIndex)
-        {
-            string tableName = (dataEntityIndex.ParentItem as TableMappingItem)
-                .MappedObjectName;
-            string indexName = dataEntityIndex.Name;
-            // from CompareSchema
-			string sqlIndex = "select so.name TableName, si.name IndexName "
-				+ "from sysindexes si "
-				+ "inner join sysobjects so on si.id = so.id "
-				+ "where indexproperty(si.id, si.name, 'IsStatistics') = 0 "
-				+ "and indexproperty(si.id, si.name, 'IsHypothetical') = 0 "
-				+ "and si.status & 2048 = 0 "
-				+ "and si.impid = 0 "
-                + "and so.name = '" + tableName + "' "
-                + "and si.name = '" + indexName + "'";
-            DataSet index = GetData(sqlIndex);
-            return index.Tables[0].Rows.Count == 1;
-        }
+        internal abstract bool IsDataEntityIndexInDatabase(DataEntityIndex dataEntityIndex);
+        
 
         #endregion
 
@@ -1689,483 +1667,428 @@ namespace Origam.DA.Service
 		public override ArrayList CompareSchema(IPersistenceProvider provider)
 		{
 			ArrayList results = new ArrayList();
+            ArrayList schemaTables = GetSchemaTables(provider);
 
-			// tables
-			Hashtable schemaTableList = new Hashtable();
+            // tables
+            Hashtable schemaTableList = GetSchemaTableList(schemaTables);
 			Hashtable schemaColumnList = new Hashtable();
-			Hashtable schemaIndexListGenerate = new Hashtable();
-            Hashtable schemaIndexListAll = new Hashtable();
-            Hashtable dbTableList = new Hashtable();
-			Hashtable dbIndexList = new Hashtable();
-
-			List<AbstractSchemaItem> entityList = provider.RetrieveListByType<AbstractSchemaItem>(AbstractDataEntity.ItemTypeConst);
-			ArrayList schemaTables = new ArrayList();
-
-			foreach(IDataEntity e in entityList)
-			{
-				if(e is TableMappingItem)
-				{
-					schemaTables.Add(e);
-				}
-			}
-
-			foreach(TableMappingItem t in schemaTables)
-			{
-				//				try
-				//				{
-				if(! schemaTableList.Contains(t.MappedObjectName))
-				{
-					schemaTableList.Add(t.MappedObjectName, t);
-				}
-				//				}
-				//				catch
-				//				{
-				//					throw new Exception("Duplicate source table name in the model: " + t.SourceTableName);
-				//				}
-			}
-
-			DataSet tables = GetData("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_NAME");
-			
-			foreach(DataRow row in tables.Tables[0].Rows)
-			{
-				dbTableList.Add(row["TABLE_NAME"], null);
-			}
-
-			DataSet columns = GetData("SELECT TABLE_NAME, COLUMN_NAME, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS ORDER BY TABLE_NAME");
+			Hashtable schemaIndexListAll = new Hashtable();
+            Hashtable dbTableList = getDbTableList();
+			            
+			DataSet columns = GetData(GetAllColumnsSQL());
 			columns.CaseSensitive = true;
 
 			DoCompare(results, dbTableList, schemaTableList, columns, DbCompareResultType.MissingInDatabase, typeof(TableMappingItem), provider);
 			DoCompare(results, dbTableList, schemaTableList, columns, DbCompareResultType.MissingInSchema, typeof(TableMappingItem), provider);
 
-			// fields
-			foreach(TableMappingItem t in schemaTables)
-			{
-				// only if the table exists in the database - otherwise we will be creating the whole table later on
-				// so it makes no sense to list all the columns with it
-				if(dbTableList.ContainsKey(t.MappedObjectName))
-				{
-					foreach(IDataEntityColumn col in t.EntityColumns)
-					{
-						if(col is FieldMappingItem)
-						{
-							string key = t.MappedObjectName + "." + (col as FieldMappingItem).MappedColumnName;
-							if(! schemaColumnList.ContainsKey(key))
-							{
-								schemaColumnList.Add(key, col);
-							}
+            // fields
+            // model exists in database
+            DoCompareModelInDatabase(results,schemaTables, dbTableList,schemaColumnList, columns);
+            DoCompareDatabaseInModel(results,schemaTableList,schemaColumnList,columns);
+            //End fields
 
-							if(columns.Tables[0].Select("TABLE_NAME = '" + t.MappedObjectName + "' AND COLUMN_NAME = '" + (col as FieldMappingItem).MappedColumnName + "'").Length == 0)
-							{
-								// column does not exist in the database
-								SchemaDbCompareResult result = new SchemaDbCompareResult();
-								result.ResultType = DbCompareResultType.MissingInDatabase;
-								result.ItemName = key;
-								result.SchemaItem = col;
-								result.SchemaItemType = typeof(FieldMappingItem);
-								if(t.DatabaseObjectType == DatabaseMappingObjectType.Table)
-								{
-									result.Script = (this.DbDataAdapterFactory as MsSqlCommandGenerator).AddColumnDdl(col as FieldMappingItem);
-								}
-								else
-								{
-									result.Remark = ResourceUtils.GetString("ViewCantBeScripted");
-								}
-								results.Add(result);
-                                // foreign key
-                                DataEntityConstraint fk = col.ForeignKeyConstraint;
-                                if (t.DatabaseObjectType == DatabaseMappingObjectType.Table
-                                    && fk != null)
-                                {
-                                    result = new SchemaDbCompareResult();
-                                    result.ResultType = DbCompareResultType.MissingInDatabase;
-                                    result.ItemName = ConstraintName(t, fk);
-                                    result.SchemaItem = col;
-                                    result.SchemaItemType = typeof(DataEntityConstraint);
-                                    result.Script = (this.DbDataAdapterFactory as MsSqlCommandGenerator)
-                                        .AddForeignKeyConstraintDdl(t, fk);
-                                    results.Add(result);
-                                }
-                            }
-						}
-					}
-				}
-			}
-			
-			MsSqlCommandGenerator gen = new MsSqlCommandGenerator();
-
-			foreach(DataRow row in columns.Tables[0].Rows)
-			{
-				string key = row["TABLE_NAME"] + "." + row["COLUMN_NAME"];
-				
-				// only if the table exists in the model - otherwise we will be creating the whole table later on
-				// so it makes no sense to list all the columns with it
-				if(schemaTableList.ContainsKey(row["TABLE_NAME"]))
-				{
-					if(schemaColumnList.ContainsKey(key))
-					{
-						FieldMappingItem fld = schemaColumnList[key] as FieldMappingItem;
-						string differenceDescription = "";
-						if(	(string)row["IS_NULLABLE"] == "YES" && fld.AllowNulls == false)
-						{
-							differenceDescription = 
-                                (differenceDescription == "" ? "" : "; ") 
-                                + "AllowNulls: Schema-NO, Database-YES";
-						}
-						if((string)row["IS_NULLABLE"] == "NO" && fld.AllowNulls == true)
-						{
-							differenceDescription = 
-                                (differenceDescription == "" ? "" : "; ") 
-                                + "AllowNulls: Schema-YES, Database-NO";
-						}
-						if(((string)row["DATA_TYPE"]).ToUpper() != 
-                            gen.DdlDataType(fld.DataType, fld.MappedDataType).ToUpper())
-						{
-							differenceDescription = (differenceDescription == "" ? "" : "; ") 
-                                + "DataType: Schema-" 
-                                + gen.DdlDataType(fld.DataType, fld.MappedDataType) 
-                                + ", Database-" + (string)row["DATA_TYPE"];
-						}
-						if(fld.DataType == OrigamDataType.String 
-                            && ! row.IsNull("CHARACTER_MAXIMUM_LENGTH")
-                            &&  (int)row["CHARACTER_MAXIMUM_LENGTH"] != fld.DataLength)
-						{
-							differenceDescription = 
-                                (differenceDescription == "" ? "" : "; ") 
-                                + "DataLength: Schema-" + fld.DataLength.ToString() 
-                                + ", Database-" + row["CHARACTER_MAXIMUM_LENGTH"].ToString();
-						}
-						if(differenceDescription != "")
-						{
-							// exists in both schema and database, but they are different
-							SchemaDbCompareResult result = new SchemaDbCompareResult();
-							result.ResultType = DbCompareResultType.ExistingButDifferent;
-							result.ItemName = key;
-							result.SchemaItem = fld;
-							result.Remark = differenceDescription;
-							result.SchemaItemType = typeof(FieldMappingItem);
-                            result.Script = gen.AlterColumnDdl(fld);
-							results.Add(result);
-						}
-					}
-					else
-					{
-						// does not exist in schema
-						SchemaDbCompareResult result = new SchemaDbCompareResult();
-						result.ResultType = DbCompareResultType.MissingInSchema;
-						result.ItemName = key;
-						result.SchemaItem = null;
-						result.ParentSchemaItem = schemaTableList[row["TABLE_NAME"]];
-						result.SchemaItemType = typeof(FieldMappingItem);
-						results.Add(result);
-					}
-				}
-			}
-			string sqlIndexes = "select	so.name TableName, si.name IndexName "
-				+ "from sysindexes si "
-				+ "inner join sysobjects so on si.id = so.id "
-				+ "where indexproperty(si.id, si.name, 'IsStatistics') = 0 "	// no statistics
-				+ "and indexproperty(si.id, si.name, 'IsHypothetical') = 0 "	// whatever it is, we don't want it...
-				+ "and si.status & 2048 = 0 "	// no primary keys
-				+ "and si.impid = 0"            // no awkward indexes...
-                + "and si.name is not null";
-
-			// index fields
-			string sqlIndexFields = "select	so.name TableName, si.name IndexName, "
-				+ "sc.name ColumnName, sik.keyno as OrdinalPosition, " 
-				+ "indexkey_property(sik.id, sik.indid, sik.keyno, 'IsDescending') as IsDescending " 
-				+ "from sysindexes si "
-				+ "inner join sysobjects so on si.id = so.id " 
-				+ "inner join sysindexkeys sik on si.indid = sik.indid and sik.id = so.id "
-				+ "inner join syscolumns sc on sik.colid = sc.colid and sc.id = so.id "
-				+ "where indexproperty(si.id, si.name, 'IsStatistics') = 0	"
-				+ "and indexproperty(si.id, si.name, 'IsHypothetical') = 0 "
-				+ "and si.status & 2048 = 0 "
-				+ "and si.impid = 0";
-
-			
-			DataSet indexes = GetData(sqlIndexes);
-			DataSet indexFields = GetData(sqlIndexFields);
+            //indexes
+			DataSet indexes = GetData(GetSqlIndexes());
+			DataSet indexFields = GetData(GetSqlIndexFields());
 			indexFields.CaseSensitive = true;
 
-			foreach(TableMappingItem t in schemaTables)
-			{
-				if(t.GenerateDeploymentScript & t.DatabaseObjectType == DatabaseMappingObjectType.Table)
-				{
-					// only existing tables
-					if(dbTableList.Contains(t.MappedObjectName))
-					{
-						foreach(DataEntityIndex index in t.EntityIndexes)
-						{
-                            string key = t.MappedObjectName + "." + index.Name;
-                            schemaIndexListAll.Add(key, index);
-                            if (index.GenerateDeploymentScript)
-                            {
-                                schemaIndexListGenerate.Add(key, index);
-                            }
-						}
-					}
-				}
-			}
-
-			foreach(DataRow row in indexes.Tables[0].Rows)
-			{
-				// only existing tables
-				if(schemaTableList.ContainsKey(row["TableName"]))
-				{
-					dbIndexList.Add(row["TableName"] + "." + row["IndexName"], schemaTableList[row["TableName"]]);
-				}
-			}
+            Hashtable schemaIndexListGenerate = GetSchemaIndexListGenerate(schemaTables, dbTableList, schemaIndexListAll);
+            Hashtable dbIndexList = GetDbIndexList(indexes, schemaTableList);
 
 			DoCompare(results, dbIndexList, schemaIndexListGenerate, columns, 
                 DbCompareResultType.MissingInDatabase, typeof(DataEntityIndex), provider);
 			DoCompare(results, dbIndexList, schemaIndexListAll, columns, 
                 DbCompareResultType.MissingInSchema, typeof(DataEntityIndex), provider);
 
-			// For index fields we only compare if the whole index is equal, we do not return
-			// result for each different field. In case of a different index, we have to re-create
-			// the whole index anyway.
-			foreach(TableMappingItem t in schemaTables)
-			{
-				if(t.GenerateDeploymentScript & t.DatabaseObjectType == DatabaseMappingObjectType.Table)
-				{
-					foreach(DataEntityIndex index in t.EntityIndexes)
-					{
+            // For index fields we only compare if the whole index is equal, we do not return
+            // result for each different field. In case of a different index, we have to re-create
+            // the whole index anyway.
+            DoCompareIndex(results, schemaTables, indexFields);
+			// foreign keys
+			DataSet foreignKeys = GetData(GetSqlFk());
+            // for each existing table - we skip foreign keys where table does not exist in the database or schema,
+            // they will be re-created completely anyway
+            DoCompareIndexExistingTables(results, schemaTables, foreignKeys, columns);
+			return results;
+		}
+
+        private void DoCompareIndexExistingTables(ArrayList results, ArrayList schemaTables, DataSet foreignKeys, DataSet columns)
+        {
+            foreach (TableMappingItem t in schemaTables)
+            {
+                // not for views and not for tables where generating script is turned off
+                if (t.GenerateDeploymentScript & t.DatabaseObjectType == DatabaseMappingObjectType.Table)
+                {
+                    DataRow[] dbRows = foreignKeys.Tables[0].Select("FK_Table = '" + t.MappedObjectName + "'");
+
+                    // there are some constraints for this table in the database
+                    if (dbRows.Length > 0)
+                    {
+                        // we try to see which of these we don't find in the model
+                        foreach (DataRow row in dbRows)
+                        {
+                            bool found = false;
+                            foreach (DataEntityConstraint constraint in t.Constraints)
+                            {
+                                if (constraint.Type == ConstraintType.ForeignKey && constraint.ForeignEntity is TableMappingItem)
+                                {
+                                    if ((string)row["PK_Table"] == (constraint.ForeignEntity as TableMappingItem).MappedObjectName
+                                        & (string)row["FK_Table"] == t.MappedObjectName)
+                                    {
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (!found)
+                            {
+                                // constraint found in database but not in the model
+                                SchemaDbCompareResult result = new SchemaDbCompareResult();
+                                result.ResultType = DbCompareResultType.MissingInSchema;
+                                result.ItemName = (string)row["Constraint"];
+                                // TODO: result.SchemaItem = ?
+                                result.ParentSchemaItem = t;
+                                result.SchemaItemType = typeof(DataEntityConstraint);
+
+                                results.Add(result);
+                            }
+                        }
+                    }
+
+                    // we compare what is missing in the database
+                    foreach (DataEntityConstraint constraint in t.Constraints)
+                    {
+                        if (constraint.Type == ConstraintType.ForeignKey && constraint.ForeignEntity is TableMappingItem && constraint.Fields[0] is FieldMappingItem)
+                        {
+                            DataRow[] rows = foreignKeys.Tables[0].Select("PK_Table = '" + (constraint.ForeignEntity as TableMappingItem).MappedObjectName + "'"
+                                + " AND FK_Table = '" + t.MappedObjectName + "' AND cKeyCol1 = '" + (constraint.Fields[0] as FieldMappingItem).MappedColumnName + "'");
+
+                            if (columns.Tables[0].Select("TABLE_NAME = '" + t.MappedObjectName + "' AND COLUMN_NAME = '" + (constraint.Fields[0] as FieldMappingItem).MappedColumnName + "'").Length > 0)
+                            {
+                                if (rows.Length == 0)
+                                {
+                                    // constraint was not found in the database at all
+                                    SchemaDbCompareResult result = new SchemaDbCompareResult();
+                                    result.ResultType = DbCompareResultType.MissingInDatabase;
+                                    result.ItemName = ConstraintName(t, constraint);
+                                    result.SchemaItem = t;
+                                    result.SchemaItemType = typeof(DataEntityConstraint);
+                                    result.Script = (this.DbDataAdapterFactory as AbstractSqlCommandGenerator).AddForeignKeyConstraintDdl(t, constraint);
+
+                                    results.Add(result);
+                                }
+                                else
+                                {
+                                    bool constraintEqual = true;
+
+                                    // constraint found in database, we check if it has the same fields
+                                    foreach (IDataEntityColumn col in constraint.Fields)
+                                    {
+                                        if (col is FieldMappingItem)
+                                        {
+                                            if (col.ForeignKeyField is FieldMappingItem)
+                                            {
+                                                string pk = (col.ForeignKeyField as FieldMappingItem).MappedColumnName;
+                                                string fk = (col as FieldMappingItem).MappedColumnName;
+
+                                                bool foundPair = false;
+                                                for (int i = 1; i < 17; i++)
+                                                {
+                                                    if (rows[0]["cKeyCol" + i.ToString()] != DBNull.Value)
+                                                    {
+                                                        if ((string)rows[0]["cKeyCol" + i.ToString()] == fk &
+                                                            (string)rows[0]["cRefCol" + i.ToString()] == pk)
+                                                        {
+                                                            foundPair = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+
+                                                // if pair was found, we set constraint to equal
+                                                if (!foundPair)
+                                                {
+                                                    constraintEqual = false;
+                                                    break;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                // one of the columns is not a physical column
+                                                constraintEqual = false;
+                                                break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            // one of the columns is not a physical column
+                                            constraintEqual = false;
+                                            break;
+                                        }
+                                    }
+
+                                    if (!constraintEqual)
+                                    {
+                                        // constraint found but different
+                                        SchemaDbCompareResult result = new SchemaDbCompareResult();
+                                        result.ResultType = DbCompareResultType.ExistingButDifferent;
+                                        result.ItemName = "FK_" + t.MappedObjectName + "_" + (constraint.Fields[0] as FieldMappingItem).MappedColumnName + "_" + (constraint.ForeignEntity as TableMappingItem).MappedObjectName;
+                                        result.SchemaItem = t;
+                                        result.SchemaItemType = typeof(DataEntityConstraint);
+
+                                        results.Add(result);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        internal abstract string GetSqlFk();
+
+        private void DoCompareIndex(ArrayList results, ArrayList schemaTables, DataSet indexFields)
+        {
+            foreach (TableMappingItem t in schemaTables)
+            {
+                if (t.GenerateDeploymentScript & t.DatabaseObjectType == DatabaseMappingObjectType.Table)
+                {
+                    foreach (DataEntityIndex index in t.EntityIndexes)
+                    {
                         if (index.GenerateDeploymentScript == false)
                         {
                             continue;
                         }
-						bool different = false;
+                        bool different = false;
 
-						DataRow[] rows = indexFields.Tables[0].Select("TableName = '" + t.MappedObjectName + "' AND IndexName = '" + index.Name + "'");
+                        DataRow[] rows = indexFields.Tables[0].Select("TableName = '" + t.MappedObjectName + "' AND IndexName = '" + index.Name + "'");
 
-						// for indexes that exist in both schema and database we compare if they are equal
-						if(rows.Length > 0)
-						{
-							// if there is a different number of fields, we consider them non-equal without even checking the details
-							if(rows.Length != index.ChildItemsByType(DataEntityIndexField.ItemTypeConst).Count)
-							{
-								different = true;
-							}
+                        // for indexes that exist in both schema and database we compare if they are equal
+                        if (rows.Length > 0)
+                        {
+                            // if there is a different number of fields, we consider them non-equal without even checking the details
+                            if (rows.Length != index.ChildItemsByType(DataEntityIndexField.ItemTypeConst).Count)
+                            {
+                                different = true;
+                            }
 
-							if(!different)
-							{
-								foreach(DataEntityIndexField fld in index.ChildItemsByType(DataEntityIndexField.ItemTypeConst))
-								{
-									rows = indexFields.Tables[0].Select("TableName = '" + t.MappedObjectName 
-										+ "' AND IndexName = '" + index.Name 
-										+ "' AND ColumnName = '" + (fld.Field as FieldMappingItem).MappedColumnName
-										+ "' AND OrdinalPosition = " + (fld.OrdinalPosition + 1).ToString()
-										+ " AND IsDescending = " + (fld.SortOrder == DataEntityIndexSortOrder.Descending ? "1" : "0"));
+                            if (!different)
+                            {
+                                foreach (DataEntityIndexField fld in index.ChildItemsByType(DataEntityIndexField.ItemTypeConst))
+                                {
+                                    rows = indexFields.Tables[0].Select("TableName = '" + t.MappedObjectName
+                                        + "' AND IndexName = '" + index.Name
+                                        + "' AND ColumnName = '" + (fld.Field as FieldMappingItem).MappedColumnName
+                                        + "' AND OrdinalPosition = " + (fld.OrdinalPosition + 1).ToString()
+                                        + " AND IsDescending = " + (fld.SortOrder == DataEntityIndexSortOrder.Descending ? "1" : "0"));
 
-									if(rows.Length == 0)
-									{
-										different = true;
-										break;
-									}
-								}
-							}
+                                    if (rows.Length == 0)
+                                    {
+                                        different = true;
+                                        break;
+                                    }
+                                }
+                            }
 
-							if(different)
-							{
-								// exists in both schema and database, but they are different
-								SchemaDbCompareResult result = new SchemaDbCompareResult();
-								result.ResultType = DbCompareResultType.ExistingButDifferent;
-								result.ItemName = t.MappedObjectName + "." + index.Name;
-								result.SchemaItem = index;
-								result.SchemaItemType = typeof(DataEntityIndex);
-								result.Script = (this.DbDataAdapterFactory as MsSqlCommandGenerator).IndexDefinitionDdl(t, result.SchemaItem as DataEntityIndex, true);
-							
-								results.Add(result);
-							}
-						}
-					}
-				}
-			}
+                            if (different)
+                            {
+                                // exists in both schema and database, but they are different
+                                SchemaDbCompareResult result = new SchemaDbCompareResult();
+                                result.ResultType = DbCompareResultType.ExistingButDifferent;
+                                result.ItemName = t.MappedObjectName + "." + index.Name;
+                                result.SchemaItem = index;
+                                result.SchemaItemType = typeof(DataEntityIndex);
+                                result.Script = (this.DbDataAdapterFactory as AbstractSqlCommandGenerator).IndexDefinitionDdl(t, result.SchemaItem as DataEntityIndex, true);
 
-			// foreign keys
-			string sqlFk = "select "
-				+ "N'PK_Table' = PKT.name, "
-				+ "N'FK_Table' = FKT.name, "
-				+ "N'Constraint' = object_name(r.constid), "
-				+ "c.status, "
-				+ "cKeyCol1 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey1)), "
-				+ "cKeyCol2 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey2)), "
-				+ "cKeyCol3 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey3)), "
-				+ "cKeyCol4 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey4)), "
-				+ "cKeyCol5 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey5)), "
-				+ "cKeyCol6 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey6)), "
-				+ "cKeyCol7 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey7)), "
-				+ "cKeyCol8 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey8)), "
-				+ "cKeyCol9 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey9)), "
-				+ "cKeyCol10 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey10)), "
-				+ "cKeyCol11 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey11)), "
-				+ "cKeyCol12 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey12)), "
-				+ "cKeyCol13 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey13)), "
-				+ "cKeyCol14 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey14)), "
-				+ "cKeyCol15 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey15)), "
-				+ "cKeyCol16 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey16)), "
-				+ "cRefCol1 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey1)), "
-				+ "cRefCol2 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey2)),	 "
-				+ "cRefCol3 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey3)), "
-				+ "cRefCol4 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey4)), "
-				+ "cRefCol5 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey5)), "
-				+ "cRefCol6 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey6)), "
-				+ "cRefCol7 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey7)), "
-				+ "cRefCol8 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey8)), "
-				+ "cRefCol9 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey9)), "
-				+ "cRefCol10 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey10)), "
-				+ "cRefCol11 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey11)), "
-				+ "cRefCol12 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey12)), "
-				+ "cRefCol13 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey13)), "
-				+ "cRefCol14 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey14)), "
-				+ "cRefCol15 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey15)), "
-				+ "cRefCol16 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey16)), "
-				+ "N'PK_Table_Owner' = user_name(PKT.uid), "
-				+ "N'FK_Table_Owner' = user_name(FKT.uid), "
-				+ "N'DeleteCascade' = OBJECTPROPERTY( r.constid, N'CnstIsDeleteCascade'), "
-				+ "N'UpdateCascade' = OBJECTPROPERTY( r.constid, N'CnstIsUpdateCascade') "
-				+ "from dbo.sysreferences r, dbo.sysconstraints c, dbo.sysobjects PKT, dbo.sysobjects FKT "
-				+ "where r.constid = c.constid  "
-				+ "and PKT.id = r.rkeyid and FKT.id = r.fkeyid ";
+                                results.Add(result);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-			DataSet foreignKeys = GetData(sqlFk);
+        internal abstract Hashtable GetDbIndexList(DataSet indexes, Hashtable schemaTableList);
+        internal abstract Hashtable GetSchemaIndexListGenerate(ArrayList schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll);
+        
+        internal abstract string GetSqlIndexFields();
+        internal abstract string GetSqlIndexes();
 
-			// for each existing table - we skip foreign keys where table does not exist in the database or schema,
-			// they will be re-created completely anyway
-			foreach(TableMappingItem t in schemaTables)
-			{
-				// not for views and not for tables where generating script is turned off
-				if(t.GenerateDeploymentScript & t.DatabaseObjectType == DatabaseMappingObjectType.Table)
-				{
-					DataRow[] dbRows = foreignKeys.Tables[0].Select("FK_Table = '" + t.MappedObjectName + "'");
-				
-					// there are some constraints for this table in the database
-					if(dbRows.Length > 0)
-					{
-						// we try to see which of these we don't find in the model
-						foreach(DataRow row in dbRows)
-						{
-							bool found = false;
-							foreach(DataEntityConstraint constraint in t.Constraints)
-							{
-								if(constraint.Type == ConstraintType.ForeignKey && constraint.ForeignEntity is TableMappingItem)
-								{
-									if((string)row["PK_Table"] == (constraint.ForeignEntity as TableMappingItem).MappedObjectName
-										& (string)row["FK_Table"] == t.MappedObjectName)
-									{
-										found = true;
-										break;
-									}												  
-								}
-							}
+        private void DoCompareDatabaseInModel(ArrayList results, Hashtable schemaTableList, Hashtable schemaColumnList, DataSet columns)
+        {
+            AbstractSqlCommandGenerator gen = (AbstractSqlCommandGenerator)this.DbDataAdapterFactory;
+            foreach (DataRow row in columns.Tables[0].Rows)
+            {
+                string key = row["TABLE_NAME"] + "." + row["COLUMN_NAME"];
 
-							if(!found)
-							{
-								// constraint found in database but not in the model
-								SchemaDbCompareResult result = new SchemaDbCompareResult();
-								result.ResultType = DbCompareResultType.MissingInSchema;
-								result.ItemName = (string)row["Constraint"];
-								// TODO: result.SchemaItem = ?
-								result.ParentSchemaItem = t;
-								result.SchemaItemType = typeof(DataEntityConstraint);
+                // only if the table exists in the model - otherwise we will be creating the whole table later on
+                // so it makes no sense to list all the columns with it
+                if (schemaTableList.ContainsKey(row["TABLE_NAME"]))
+                {
+                    if (schemaColumnList.ContainsKey(key))
+                    {
+                        FieldMappingItem fld = schemaColumnList[key] as FieldMappingItem;
+                        string differenceDescription = "";
+                        if ((string)row["IS_NULLABLE"] == "YES" && fld.AllowNulls == false)
+                        {
+                            differenceDescription =
+                                (differenceDescription == "" ? "" : "; ")
+                                + "AllowNulls: Schema-NO, Database-YES";
+                        }
+                        if ((string)row["IS_NULLABLE"] == "NO" && fld.AllowNulls == true)
+                        {
+                            differenceDescription =
+                                (differenceDescription == "" ? "" : "; ")
+                                + "AllowNulls: Schema-YES, Database-NO";
+                        }
+                        if (((string)row["DATA_TYPE"]).ToUpper() !=
+                            gen.DdlDataType(fld.DataType, fld.MappedDataType).ToUpper())
+                        {
+                            differenceDescription = (differenceDescription == "" ? "" : "; ")
+                                + "DataType: Schema-"
+                                + gen.DdlDataType(fld.DataType, fld.MappedDataType)
+                                + ", Database-" + (string)row["DATA_TYPE"];
+                        }
+                        if (fld.DataType == OrigamDataType.String
+                            && !row.IsNull("CHARACTER_MAXIMUM_LENGTH")
+                            && (int)row["CHARACTER_MAXIMUM_LENGTH"] != fld.DataLength)
+                        {
+                            differenceDescription =
+                                (differenceDescription == "" ? "" : "; ")
+                                + "DataLength: Schema-" + fld.DataLength.ToString()
+                                + ", Database-" + row["CHARACTER_MAXIMUM_LENGTH"].ToString();
+                        }
+                        if (differenceDescription != "")
+                        {
+                            // exists in both schema and database, but they are different
+                            SchemaDbCompareResult result = new SchemaDbCompareResult
+                            {
+                                ResultType = DbCompareResultType.ExistingButDifferent,
+                                ItemName = key,
+                                SchemaItem = fld,
+                                Remark = differenceDescription,
+                                SchemaItemType = typeof(FieldMappingItem),
+                                Script = gen.AlterColumnDdl(fld)
+                            };
+                            results.Add(result);
+                        }
+                    }
+                    else
+                    {
+                        // does not exist in schema
+                        SchemaDbCompareResult result = new SchemaDbCompareResult();
+                        result.ResultType = DbCompareResultType.MissingInSchema;
+                        result.ItemName = key;
+                        result.SchemaItem = null;
+                        result.ParentSchemaItem = schemaTableList[row["TABLE_NAME"]];
+                        result.SchemaItemType = typeof(FieldMappingItem);
+                        results.Add(result);
+                    }
+                }
+            }
+        }
 
-								results.Add(result);
-							}
-						}
-					}
+        private void DoCompareModelInDatabase(ArrayList results, ArrayList schemaTables, Hashtable dbTableList, Hashtable schemaColumnList, DataSet columns)
+        {
+            foreach (TableMappingItem t in schemaTables)
+            {
+                // only if the table exists in the database - otherwise we will be creating the whole table later on
+                // so it makes no sense to list all the columns with it
+                if (dbTableList.ContainsKey(t.MappedObjectName))
+                {
+                    foreach (IDataEntityColumn col in t.EntityColumns)
+                    {
+                        if (col is FieldMappingItem)
+                        {
+                            string key = t.MappedObjectName + "." + (col as FieldMappingItem).MappedColumnName;
+                            if (!schemaColumnList.ContainsKey(key))
+                            {
+                                schemaColumnList.Add(key, col);
+                            }
 
-					// we compare what is missing in the database
-					foreach(DataEntityConstraint constraint in t.Constraints)
-					{
-						if(constraint.Type == ConstraintType.ForeignKey && constraint.ForeignEntity is TableMappingItem && constraint.Fields[0] is FieldMappingItem)
-						{
-							DataRow[] rows = foreignKeys.Tables[0].Select("PK_Table = '" + (constraint.ForeignEntity as TableMappingItem).MappedObjectName + "'"
-								+ " AND FK_Table = '" + t.MappedObjectName + "' AND cKeyCol1 = '" + (constraint.Fields[0] as FieldMappingItem).MappedColumnName + "'");
+                            if (columns.Tables[0].Select("TABLE_NAME = '" + t.MappedObjectName + "' AND COLUMN_NAME = '" + (col as FieldMappingItem).MappedColumnName + "'").Length == 0)
+                            {
+                                // column does not exist in the database
+                                SchemaDbCompareResult result = new SchemaDbCompareResult
+                                {
+                                    ResultType = DbCompareResultType.MissingInDatabase,
+                                    ItemName = key,
+                                    SchemaItem = col,
+                                    SchemaItemType = typeof(FieldMappingItem)
+                                };
+                                if (t.DatabaseObjectType == DatabaseMappingObjectType.Table)
+                                {
+                                    result.Script = (this.DbDataAdapterFactory as AbstractSqlCommandGenerator).AddColumnDdl(col as FieldMappingItem);
+                                }
+                                else
+                                {
+                                    result.Remark = ResourceUtils.GetString("ViewCantBeScripted");
+                                }
+                                results.Add(result);
+                                // foreign key
+                                DataEntityConstraint fk = col.ForeignKeyConstraint;
+                                if (t.DatabaseObjectType == DatabaseMappingObjectType.Table
+                                    && fk != null)
+                                {
+                                    result = new SchemaDbCompareResult
+                                    {
+                                        ResultType = DbCompareResultType.MissingInDatabase,
+                                        ItemName = ConstraintName(t, fk),
+                                        SchemaItem = col,
+                                        SchemaItemType = typeof(DataEntityConstraint),
+                                        Script = (this.DbDataAdapterFactory as AbstractSqlCommandGenerator)
+                                        .AddForeignKeyConstraintDdl(t, fk)
+                                    };
+                                    results.Add(result);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-							if(columns.Tables[0].Select("TABLE_NAME = '" + t.MappedObjectName + "' AND COLUMN_NAME = '" + (constraint.Fields[0] as FieldMappingItem).MappedColumnName + "'").Length > 0)
-							{
-								if(rows.Length == 0)
-								{
-									// constraint was not found in the database at all
-									SchemaDbCompareResult result = new SchemaDbCompareResult();
-									result.ResultType = DbCompareResultType.MissingInDatabase;
-                                    result.ItemName = ConstraintName(t, constraint);
-									result.SchemaItem = t;
-									result.SchemaItemType = typeof(DataEntityConstraint);
-									result.Script = (this.DbDataAdapterFactory as MsSqlCommandGenerator).AddForeignKeyConstraintDdl(t, constraint);
+        internal abstract string GetAllColumnsSQL();
 
-									results.Add(result);
-								}
-								else
-								{
-									bool constraintEqual = true;
+        private Hashtable getDbTableList()
+        {
+            DataSet tables = GetData(GetAllTablesSQL());
+            Hashtable dbTableList = new Hashtable();
+            foreach (DataRow row in tables.Tables[0].Rows)
+            {
+                dbTableList.Add(row["TABLE_NAME"], null);
+            }
+            return dbTableList;
+        }
+        private Hashtable GetSchemaTableList(ArrayList schemaTables)
+        {
+            Hashtable schemaTableList = new Hashtable();
+            foreach (TableMappingItem t in schemaTables)
+            {
+                if (!schemaTableList.Contains(t.MappedObjectName))
+                {
+                    schemaTableList.Add(t.MappedObjectName, t);
+                }
+            }
+            return schemaTableList;
+        }
 
-									// constraint found in database, we check if it has the same fields
-									foreach(IDataEntityColumn col in constraint.Fields)
-									{
-										if(col is FieldMappingItem)
-										{
-											if(col.ForeignKeyField is FieldMappingItem)
-											{
-												string pk = (col.ForeignKeyField as FieldMappingItem).MappedColumnName;
-												string fk = (col as FieldMappingItem).MappedColumnName;
+        private ArrayList GetSchemaTables(IPersistenceProvider provider)
+        {
+            List<AbstractSchemaItem> entityList = provider.RetrieveListByType<AbstractSchemaItem>(AbstractDataEntity.ItemTypeConst);
+            ArrayList schemaTables = new ArrayList();
 
-												bool foundPair = false;
-												for(int i = 1; i < 17; i++)
-												{
-													if(rows[0]["cKeyCol" + i.ToString()] != DBNull.Value)
-													{
-														if((string)rows[0]["cKeyCol" + i.ToString()] == fk & 
-															(string)rows[0]["cRefCol" + i.ToString()] == pk)
-														{
-															foundPair = true;
-															break;
-														}
-													}
-												}
-									
-												// if pair was found, we set constraint to equal
-												if(!foundPair)
-												{
-													constraintEqual = false;
-													break;
-												}
-											}
-											else
-											{
-												// one of the columns is not a physical column
-												constraintEqual = false;
-												break;
-											}
-										}
-										else
-										{
-											// one of the columns is not a physical column
-											constraintEqual = false;
-											break;
-										}
-									}
-
-									if(!constraintEqual)
-									{
-										// constraint found but different
-										SchemaDbCompareResult result = new SchemaDbCompareResult();
-										result.ResultType = DbCompareResultType.ExistingButDifferent;
-										result.ItemName = "FK_" + t.MappedObjectName + "_" + (constraint.Fields[0] as FieldMappingItem).MappedColumnName  + "_" + (constraint.ForeignEntity as TableMappingItem).MappedObjectName;
-										result.SchemaItem = t;
-										result.SchemaItemType = typeof(DataEntityConstraint);
-
-										results.Add(result);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-
-			return results;
-		}
+            foreach (IDataEntity e in entityList)
+            {
+                if (e is TableMappingItem)
+                {
+                    schemaTables.Add(e);
+                }
+            }
+            return schemaTables;
+        }
 
         private static string ConstraintName(TableMappingItem t, 
             DataEntityConstraint constraint)
@@ -2283,6 +2206,7 @@ namespace Origam.DA.Service
                     result.ResultType = DbCompareResultType.MissingInDatabase;
                     result.ItemName = (string)entry.Key;
                     result.SchemaItem = (ISchemaItem)entry.Value;
+                    result.ParentSchemaItem = ((ISchemaItem)entry.Value).ParentItem;
                     result.SchemaItemType = schemaItemType;
                     if (schemaItemType == typeof(TableMappingItem))
                     {
@@ -2310,7 +2234,7 @@ namespace Origam.DA.Service
             }
         }
 
-        private DataSet GetData(string sql)
+        internal DataSet GetData(string sql)
 		{
 			using(IDbConnection connection = GetConnection(_connectionString))
 			{
@@ -2473,7 +2397,7 @@ namespace Origam.DA.Service
 			if(log.IsDebugEnabled)
 			{
 				IDbCommand processIdCommand = command.Connection.CreateCommand();
-				processIdCommand.CommandText = "SELECT @@SPID";
+                processIdCommand.CommandText = GetPid(); 
 				processIdCommand.Transaction = command.Transaction;
 				object spid = processIdCommand.ExecuteScalar();
 				log.Debug("SQL Command; Connection ID: " + spid.ToString() + ", Transaction ID: " + transactionId + ", " + command.CommandText); 
@@ -2486,7 +2410,9 @@ namespace Origam.DA.Service
 			}
 		}
 
-		private void SetTransaction(DbDataAdapter adapter, IDbTransaction transaction)
+        internal abstract string GetPid();
+
+        private void SetTransaction(DbDataAdapter adapter, IDbTransaction transaction)
 		{
 			((IDbDataAdapter)adapter).SelectCommand.Transaction = transaction;
 			((IDbDataAdapter)adapter).UpdateCommand.Transaction = transaction;
@@ -2519,8 +2445,11 @@ namespace Origam.DA.Service
 			base.Dispose ();
 		}
 
-		#endregion
-	}
+        public virtual void CreateSchema(string databaseName)
+        {
+        }
+        #endregion
+    }
     // version of log4net for NetStandard 1.3 does not have the method
     // LogManager.GetLogger(string)... have to use the overload with Type as parameter 
     public class WorkflowProfiling

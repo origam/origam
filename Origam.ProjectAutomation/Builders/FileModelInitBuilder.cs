@@ -50,7 +50,7 @@ namespace Origam.ProjectAutomation
                 schema.LoadSchema(new Guid(project.BasePackageId), false, false);
             } catch
             {
-                Rollback();
+                
                 try
                 {
                     // In case something went wrong AFTER the model was loaded
@@ -58,6 +58,7 @@ namespace Origam.ProjectAutomation
                     // Since we do not know if it failed really AFTER, we just catch
                     // possible exceptions.
                     schema.UnloadSchema();
+                    Rollback();
                 } catch
                 {
                 }

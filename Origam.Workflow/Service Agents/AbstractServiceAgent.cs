@@ -43,6 +43,10 @@ namespace Origam.Workflow
 		public AbstractServiceAgent()
 		{
 		}
+        public virtual void SetDataService(DA.IDataService dataService)
+        {
+
+        }
 
         protected TraceTaskInfo TraceTaskInfo
         {

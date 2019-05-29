@@ -28,6 +28,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using System.Text.RegularExpressions;
+using static Origam.DA.Common.Enums;
+using static Origam.DA.Const;
 
 namespace Origam.DA.Service
 {
@@ -36,6 +38,8 @@ namespace Origam.DA.Service
 	/// </summary>
 	public class MsSqlDataService : AbstractSqlDataService
 	{
+        private const DatabaseType _PlatformName = DatabaseType.MsSql;
+        private string _IISUser;
         private static readonly log4net.ILog log = 
             log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -58,7 +62,14 @@ namespace Origam.DA.Service
 			this.DbDataAdapterFactory = new MsSqlCommandGenerator();
 		}
 
-		internal override IDbConnection GetConnection(string connectionString)
+        public override DatabaseType PlatformName
+        {
+            get
+            {
+                return _PlatformName;
+            }
+        }
+        internal override IDbConnection GetConnection(string connectionString)
 		{
             SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder(connectionString);
             sb.ApplicationName = "ORIGAM [" + System.Threading.Thread.CurrentPrincipal.Identity.Name + "]";
@@ -66,7 +77,7 @@ namespace Origam.DA.Service
             return result;
 		}
 
-        public override string BuildConnectionString(string serverName, string databaseName, string userName, string password, bool integratedAuthentication, bool pooling)
+        public override string BuildConnectionString(string serverName, int port,string databaseName, string userName, string password, bool integratedAuthentication, bool pooling)
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.IntegratedSecurity = integratedAuthentication;
@@ -77,8 +88,30 @@ namespace Origam.DA.Service
             builder.Pooling = pooling;
             return builder.ConnectionString;
         }
+        
+        public override void UpdateDatabaseSchemaVersion(string version, string transactionId)
+        {
+            ExecuteUpdate("ALTER  PROCEDURE [OrigamDatabaseSchemaVersion] AS SELECT '" + version + "'", transactionId);
+        }
+        public override void DeleteDatabase(string name)
+        {
+            CheckDatabaseName(name);
+            ExecuteUpdate(string.Format("DROP DATABASE [{0}]", name), null);
+        }
+        public override void CreateDatabase(string name)
+        {
+            CheckDatabaseName(name);
+            ExecuteUpdate(string.Format("CREATE DATABASE [{0}]", name), null);
+        }
+        private static void CheckDatabaseName(string name)
+        {
+            if (name.Contains("]"))
+            {
+                throw new Exception(string.Format("Invalid database name: {0}", name));
+            }
+        }
 
-		internal override void HandleException(Exception ex, string recordErrorMessage, DataRow row)
+        internal override void HandleException(Exception ex, string recordErrorMessage, DataRow row)
 		{
 			SqlException sqle = ex as SqlException;
             if (log.IsDebugEnabled)
@@ -210,6 +243,160 @@ namespace Origam.DA.Service
             return Enum.GetNames(typeof(SqlDbType));
         }
 
+        public override void CreateUser(string _loginName, string password, string name, bool DatabaseIntegratedAuthentication)
+        {
+            if (DatabaseIntegratedAuthentication)
+            {
+                string command1 = string.Format("CREATE LOGIN {0} FROM WINDOWS WITH DEFAULT_DATABASE=[master]", _loginName);
+                string command2 = string.Format("CREATE USER {0} FOR LOGIN {0}", _loginName);
+                string command3 = string.Format("ALTER ROLE [db_datareader] ADD MEMBER {0}", _loginName);
+                string command4 = string.Format("ALTER ROLE [db_datawriter] ADD MEMBER {0}", _loginName);
+                string transaction1 = Guid.NewGuid().ToString();
+                try
+                {
+                    ExecuteUpdate(command1, transaction1);
+                    ExecuteUpdate(command2, transaction1);
+                    ExecuteUpdate(command3, transaction1);
+                    ExecuteUpdate(command4, transaction1);
+                    ResourceMonitor.Commit(transaction1);
+                }
+                catch (Exception)
+                {
+                    ResourceMonitor.Rollback(transaction1);
+                    throw;
+                }
+            }
+        }
+
+        public override void DeleteUser(string _loginName, bool DatabaseIntegratedAuthentication)
+        {
+            if (DatabaseIntegratedAuthentication)
+            {
+                string command1 = string.Format("DROP LOGIN {0}", _loginName);
+                ExecuteUpdate(command1, null);
+            }
+        }
+
+        internal override string GetAllTablesSQL()
+        {
+            return "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_NAME";
+        }
+
+        internal override string GetAllColumnsSQL()
+        {
+            return "SELECT TABLE_NAME, COLUMN_NAME, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS ORDER BY TABLE_NAME";
+        }
+
+        internal override string GetSqlIndexFields()
+        {
+            return "select	so.name TableName, si.name IndexName, "
+                + "sc.name ColumnName, sik.keyno as OrdinalPosition, "
+                + "indexkey_property(sik.id, sik.indid, sik.keyno, 'IsDescending') as IsDescending "
+                + "from sysindexes si "
+                + "inner join sysobjects so on si.id = so.id "
+                + "inner join sysindexkeys sik on si.indid = sik.indid and sik.id = so.id "
+                + "inner join syscolumns sc on sik.colid = sc.colid and sc.id = so.id "
+                + "where indexproperty(si.id, si.name, 'IsStatistics') = 0	"
+                + "and indexproperty(si.id, si.name, 'IsHypothetical') = 0 "
+                + "and si.status & 2048 = 0 "
+                + "and si.impid = 0";
+        }
+
+        internal override string GetSqlIndexes()
+        {
+            return "select	so.name TableName, si.name IndexName "
+                + "from sysindexes si "
+                + "inner join sysobjects so on si.id = so.id "
+                + "where indexproperty(si.id, si.name, 'IsStatistics') = 0 "    // no statistics
+                + "and indexproperty(si.id, si.name, 'IsHypothetical') = 0 "    // whatever it is, we don't want it...
+                + "and si.status & 2048 = 0 "   // no primary keys
+                + "and si.impid = 0"            // no awkward indexes...
+                + "and si.name is not null";
+        }
+
+        internal override string GetSqlFk()
+        {
+            return "select "
+                + "N'PK_Table' = PKT.name, "
+                + "N'FK_Table' = FKT.name, "
+                + "N'Constraint' = object_name(r.constid), "
+                + "c.status, "
+                + "cKeyCol1 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey1)), "
+                + "cKeyCol2 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey2)), "
+                + "cKeyCol3 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey3)), "
+                + "cKeyCol4 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey4)), "
+                + "cKeyCol5 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey5)), "
+                + "cKeyCol6 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey6)), "
+                + "cKeyCol7 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey7)), "
+                + "cKeyCol8 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey8)), "
+                + "cKeyCol9 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey9)), "
+                + "cKeyCol10 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey10)), "
+                + "cKeyCol11 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey11)), "
+                + "cKeyCol12 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey12)), "
+                + "cKeyCol13 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey13)), "
+                + "cKeyCol14 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey14)), "
+                + "cKeyCol15 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey15)), "
+                + "cKeyCol16 = convert(nvarchar(132), col_name(r.fkeyid, r.fkey16)), "
+                + "cRefCol1 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey1)), "
+                + "cRefCol2 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey2)),	 "
+                + "cRefCol3 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey3)), "
+                + "cRefCol4 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey4)), "
+                + "cRefCol5 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey5)), "
+                + "cRefCol6 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey6)), "
+                + "cRefCol7 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey7)), "
+                + "cRefCol8 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey8)), "
+                + "cRefCol9 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey9)), "
+                + "cRefCol10 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey10)), "
+                + "cRefCol11 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey11)), "
+                + "cRefCol12 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey12)), "
+                + "cRefCol13 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey13)), "
+                + "cRefCol14 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey14)), "
+                + "cRefCol15 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey15)), "
+                + "cRefCol16 = convert(nvarchar(132), col_name(r.rkeyid, r.rkey16)), "
+                + "N'PK_Table_Owner' = user_name(PKT.uid), "
+                + "N'FK_Table_Owner' = user_name(FKT.uid), "
+                + "N'DeleteCascade' = OBJECTPROPERTY( r.constid, N'CnstIsDeleteCascade'), "
+                + "N'UpdateCascade' = OBJECTPROPERTY( r.constid, N'CnstIsUpdateCascade') "
+                + "from dbo.sysreferences r, dbo.sysconstraints c, dbo.sysobjects PKT, dbo.sysobjects FKT "
+                + "where r.constid = c.constid  "
+                + "and PKT.id = r.rkeyid and FKT.id = r.fkeyid ";
+        }
+
+        internal override string GetPid()
+        {
+            return "SELECT @@SPID";
+        }
+
+        public override string CreateSystemRole(string roleName)
+        {
+            string roleId = Guid.NewGuid().ToString();
+            return string.Format(
+@"INSERT INTO OrigamApplicationRole (Id, Name, Description, IsSystemRole , RecordCreated)
+VALUES ('{0}', '{1}', '', 1, getdate())
+-- add to the built-in SuperUser role
+INSERT INTO OrigamRoleOrigamApplicationRole (Id, refOrigamRoleId, refOrigamApplicationRoleId, RecordCreated, IsFormReadOnly)
+VALUES (newid(), '{2}', '{0}', getdate(), 0)",
+                 roleId, roleName, SecurityManager.BUILTIN_SUPER_USER_ROLE);
+        }
+
+        public override string CreateInsert(int fieldcount)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append("INSERT INTO [{0}] (");
+            for (int i = 1; i < fieldcount + 1; i++)
+            {
+                stringBuilder.Append("[{" + i + "}]");
+                stringBuilder.Append(i == fieldcount ? "" : ",");
+            }
+            stringBuilder.Append(") VALUES (");
+            for (int i = fieldcount + 1; i < fieldcount + fieldcount + 1; i++)
+            {
+                stringBuilder.Append("'{" + i + "}'");
+                stringBuilder.Append(i == fieldcount + fieldcount ? "" : ",");
+            }
+            stringBuilder.Append(");\r\n");
+            return stringBuilder.ToString();
+        }
         public override string Info
 		{
 			get
@@ -282,5 +469,80 @@ namespace Origam.DA.Service
 				return result;
 			}
 		}
-	}
+
+        internal override bool IsDataEntityIndexInDatabase(DataEntityIndex dataEntityIndex)
+        {
+            string tableName = (dataEntityIndex.ParentItem as TableMappingItem)
+                .MappedObjectName;
+            string indexName = dataEntityIndex.Name;
+            // from CompareSchema
+            string sqlIndex = "select so.name TableName, si.name IndexName "
+                + "from sysindexes si "
+                + "inner join sysobjects so on si.id = so.id "
+                + "where indexproperty(si.id, si.name, 'IsStatistics') = 0 "
+                + "and indexproperty(si.id, si.name, 'IsHypothetical') = 0 "
+                + "and si.status & 2048 = 0 "
+                + "and si.impid = 0 "
+                + "and so.name = '" + tableName + "' "
+                + "and si.name = '" + indexName + "'";
+            DataSet index = GetData(sqlIndex);
+            return index.Tables[0].Rows.Count == 1;
+        }
+
+        internal override Hashtable GetDbIndexList(DataSet indexes, Hashtable schemaTableList)
+        {
+            Hashtable dbIndexList = new Hashtable();
+            foreach (DataRow row in indexes.Tables[0].Rows)
+            {
+                // only existing tables
+                if (schemaTableList.ContainsKey(row["TableName"]))
+                {
+                    dbIndexList.Add(row["TableName"] + "." + row["IndexName"], schemaTableList[row["TableName"]]);
+                }
+            }
+            return dbIndexList;
+        }
+
+        internal override Hashtable GetSchemaIndexListGenerate(ArrayList schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll)
+        {
+            Hashtable schemaIndexListGenerate = new Hashtable();
+            foreach (TableMappingItem t in schemaTables)
+            {
+                if (t.GenerateDeploymentScript & t.DatabaseObjectType == DatabaseMappingObjectType.Table)
+                {
+                    // only existing tables
+                    if (dbTableList.Contains(t.MappedObjectName))
+                    {
+                        foreach (DataEntityIndex index in t.EntityIndexes)
+                        {
+                            string key = t.MappedObjectName + "." + index.Name;
+                            schemaIndexListAll.Add(key, index);
+                            if (index.GenerateDeploymentScript)
+                            {
+                                schemaIndexListGenerate.Add(key, index);
+                            }
+                        }
+                    }
+                }
+            }
+            return schemaIndexListGenerate;
+        }
+
+        public override string DbUser { get { return _IISUser; } set { _IISUser = string.Format("[IIS APPPOOL\\{0}]", value); } }
+        internal override object FillParameterArrayData(ICollection ar)
+        {
+            DataTable dt = new OrigamDataTable("ListTable");
+            dt.Columns.Add("ListValue", typeof(string));
+            dt.Columns[0].MaxLength = -1;
+            dt.BeginLoadData();
+            foreach (object v in ar)
+            {
+                DataRow row = dt.NewRow();
+                row[0] = v.ToString();
+                dt.Rows.Add(row);
+            }
+            dt.EndLoadData();
+            return dt;
+        }
+    }
 }

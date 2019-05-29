@@ -21,9 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.ComponentModel;
+using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.WorkflowModel;
-
+using static Origam.DA.Common.Enums;
 
 namespace Origam.Schema.DeploymentModel
 {
@@ -64,8 +65,14 @@ namespace Origam.Schema.DeploymentModel
 			base.GetExtraDependencies (dependencies);
 		}
 
-		#region Properties
-		[EntityColumn("G05")]  
+        #region Properties
+
+        [Category("Update Script Activity")]
+        [EntityColumn("SS01")]
+        [XmlAttribute("databasetype")]
+        public DatabaseType DatabaseType { get; set; } 
+
+        [EntityColumn("G05")]  
 		public Guid ServiceId;
 
 		[Category("Service Command Information")]
@@ -93,7 +100,7 @@ namespace Origam.Schema.DeploymentModel
 			}
 		}
 
-		private PropertyContainer<string> commandText;
+        private PropertyContainer<string> commandText;
 
 		[Category("Service Command Information")]
         [EntityColumn("M01")]

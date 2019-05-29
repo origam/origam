@@ -20,6 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 
+using System;
+using static Origam.DA.Common.Enums;
+
 namespace Origam.ProjectAutomation
 {
     public class Project
@@ -46,9 +49,32 @@ namespace Origam.ProjectAutomation
         private bool _gitrepo;
         private string _gitusername;
         private string _gitemail;
-
+        public string Gitusername { get => _gitusername; set => _gitusername = value; }
+        public string Gitemail { get => _gitemail; set => _gitemail = value; }
+        public DatabaseType DatabaseType { get; set; }
+        public int Port { get; set; }
+        public string ConnectionDatabasePassword { get; internal set; }
+        public string ConnectionDatabaseUser { get; internal set; }
+        public string UserPassword { get; } = Guid.NewGuid().ToString().Replace("-", "").Substring(1, 9);
         // Root Menu package
         private string _basePackageId = "b9ab12fe-7f7d-43f7-bedc-93747647d6e4";
+
+       
+        public string GetDataDataService
+        {
+            get
+            {
+                switch (DatabaseType)
+                {
+                    case DatabaseType.MsSql:
+                        return "Origam.DA.Service.MsSqlDataService, Origam.DA.Service";
+                    case DatabaseType.PgSql:
+                        return "Origam.DA.Service.PgSqlDataService, Origam.DA.Service";
+                    default:
+                        throw new ArgumentOutOfRangeException("DatabaseType");
+                }
+            }
+        }
 
         #region Properties
         public string Name
@@ -304,9 +330,6 @@ namespace Origam.ProjectAutomation
                 return BaseUrl + "/" + Url;
             }
         }
-
-        public string Gitusername { get => _gitusername; set => _gitusername = value; }
-        public string Gitemail { get => _gitemail; set => _gitemail = value; }
         #endregion
     }
 }

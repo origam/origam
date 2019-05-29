@@ -73,6 +73,7 @@ using Origam.Gui.UI;
 using Origam.Excel;
 using Origam.DA.ObjectPersistence.Providers;
 using Origam.Schema.DeploymentModel;
+using Origam.Workbench.Services.CoreServices;
 
 namespace OrigamArchitect
 {
@@ -770,8 +771,6 @@ namespace OrigamArchitect
                 new DeleteActiveNode(), ImageRes.icon_delete, Keys.None, _schemaMenu);
 			CreateMenuItem(strings.Execute_MenuItem, new ExecuteActiveSchemaItem(), 
                 ImageRes.icon_execute, Keys.Control | Keys.X, _schemaMenu);
-			CreateMenuItem(strings.EditInDiagram_MenuItem, new EditDiagramActiveSchemaItem(), 
-                ImageRes.icon_edit_in_diagram, Keys.None, _schemaMenu);
 			_schemaMenu.SubItems.Add(CreateSeparator());	
 	
 			CreateMenuItem(strings.FindDependencies_MenuItem, new ShowDependencies(),
@@ -2022,8 +2021,9 @@ namespace OrigamArchitect
 		private void _schema_ActiveNodeChanged(object sender, EventArgs e)
 		{
 			UpdateToolbar();
-
-			if(_schema.ActiveSchemaItem != null)
+            AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+            AbstractSqlCommandGenerator abstractSqlCommandGenerator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory;
+            if (_schema.ActiveSchemaItem != null)
 			{
 				ShowDocumentation cmd = new ShowDocumentation();
 				cmd.Run();
@@ -2033,8 +2033,8 @@ namespace OrigamArchitect
 			{
 				try
 				{
-					_outputPad.SetOutputText(new MsSqlCommandGenerator().TableDefinitionDdl(_schema.ActiveNode as TableMappingItem));
-					_outputPad.AppendText(new MsSqlCommandGenerator().ForeignKeyConstraintsDdl(_schema.ActiveNode as TableMappingItem));
+					_outputPad.SetOutputText(abstractSqlCommandGenerator.TableDefinitionDdl(_schema.ActiveNode as TableMappingItem));
+					_outputPad.AppendText(abstractSqlCommandGenerator.ForeignKeyConstraintsDdl(_schema.ActiveNode as TableMappingItem));
 				}
 				catch(Exception ex)
 				{
@@ -2046,7 +2046,7 @@ namespace OrigamArchitect
 			{
 				try
 				{
-					_outputPad.SetOutputText(new MsSqlCommandGenerator().FunctionDefinitionDdl(_schema.ActiveNode as Function));
+					_outputPad.SetOutputText(abstractSqlCommandGenerator.FunctionDefinitionDdl(_schema.ActiveNode as Function));
 				}
 				catch(Exception ex)
 				{

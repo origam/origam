@@ -57,6 +57,7 @@ using Origam.Extensions;
 using Origam.Git;
 using Origam.Gui;
 using Origam.Windows.Editor.GIT;
+using Origam.Workbench.Services.CoreServices;
 
 namespace OrigamArchitect.Commands
 {
@@ -275,6 +276,15 @@ namespace OrigamArchitect.Commands
 			}		 
 			else if(item is AbstractUpdateScriptActivity)
 			{
+                OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+                ServiceCommandUpdateScriptActivity scriptActivity = (ServiceCommandUpdateScriptActivity)item;
+                Platform[] platforms = settings.GetAllPlatform();
+                if(!platforms
+                    .Where(platform => platform.GetParseEnum(platform.DataService) == scriptActivity.DatabaseType.ToString()).Any())
+                {
+                    MessageBox.Show("Platform is not supported for execute this script!","Platform",MessageBoxButtons.OK);
+                    return;
+                }
                 ProcessUpdateScript(item);
 			}
 			else if(item is DataConstantReferenceMenuItem)
@@ -1710,17 +1720,19 @@ namespace OrigamArchitect.Commands
 
         public override void Run()
         {
-            MsSqlCommandGenerator generator = new MsSqlCommandGenerator();
-            generator.PrettyFormat = true;
-            StringBuilder builder = new StringBuilder();
+            AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+            AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator) abstractSqlDataService.DbDataAdapterFactory.Clone();
             DataStructureEntity entity = Owner as DataStructureEntity;
+            StringBuilder builder = new StringBuilder();
             if (entity.Columns.Count > 0)
             {
                 DataStructure ds = (Owner as ISchemaItem).RootItem as DataStructure;
                 builder.AppendLine("-- SQL statements for data structure: " + ds.Name);
+                generator.PrettyFormat = true;
+                generator.generateConsoleUseSyntax = true;
                 // parameter declarations
                 builder.AppendLine(
-                    new MsSqlCommandGenerator().SelectParameterDeclarationsSql(
+                    generator.SelectParameterDeclarationsSql(
                     ds,
                     Owner as DataStructureEntity,
                     (DataStructureFilterSet)null, false, null)
@@ -1730,15 +1742,15 @@ namespace OrigamArchitect.Commands
                 builder.AppendLine("-----------------------------------------------------------------");
                 builder.AppendLine(
                     generator.SelectSql(
-                    ds,
-                    Owner as DataStructureEntity,
-                    null,
-                    null,
-                    null,
-                    new Hashtable(),
-                    null,
-                    false
-                    )
+                        ds: ds,
+                        entity: Owner as DataStructureEntity,
+                        filter: null,
+                        sortSet: null,
+                        scalarColumn: null,
+                        parameters: new Hashtable(),
+                        selectParameterReferences: null,
+                        forceDatabaseCalculation: false
+                        )
                     );
                 builder.AppendLine();
                 builder.AppendLine("-----------------------------------------------------------------");
@@ -1811,9 +1823,11 @@ namespace OrigamArchitect.Commands
 
         public override void Run()
         {
+            AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+            AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory.Clone();
             DataStructureFilterSet filterSet = Owner as DataStructureFilterSet;
-            MsSqlCommandGenerator generator = new MsSqlCommandGenerator();
             generator.PrettyFormat = true;
+            generator.generateConsoleUseSyntax = true;
             StringBuilder builder = new StringBuilder();
             DataStructure ds = filterSet.RootItem as DataStructure;
             builder.AppendFormat("-- SQL statements for data structure: {0}\r\n", ds.Name);
@@ -1826,6 +1840,7 @@ namespace OrigamArchitect.Commands
             {
                 if (entity.Columns.Count > 0)
                 {
+                    builder.AppendLine(generator.CreateOutputTableSql());
                     builder.AppendLine("-----------------------------------------------------------------");
                     builder.AppendLine("-- " + entity.Name);
                     builder.AppendLine("-----------------------------------------------------------------");
@@ -1840,6 +1855,7 @@ namespace OrigamArchitect.Commands
                         false
                         )
                         );
+                    builder.AppendLine(generator.CreateDataStructureFooterSql());
                 }
             }
             new ShowSqlConsole(builder.ToString()).Run();
@@ -1867,8 +1883,10 @@ namespace OrigamArchitect.Commands
         public override void Run()
         {
             StringBuilder builder = new StringBuilder();
-            MsSqlCommandGenerator generator = new MsSqlCommandGenerator();
+            AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+            AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory.Clone();
             generator.PrettyFormat = true;
+            generator.generateConsoleUseSyntax = true;
             bool displayPagingParameters = true;
             DataStructure ds = (Owner as ISchemaItem).RootItem as DataStructure;
             builder.AppendLine("-- SQL statements for data structure: " + ds.Name);
@@ -1884,6 +1902,7 @@ namespace OrigamArchitect.Commands
                         generator.SelectParameterDeclarationsSql(
                         ds, entity, Owner as DataStructureSortSet,
                         displayPagingParameters, null));
+                    builder.AppendLine(generator.CreateOutputTableSql());
                     builder.AppendLine(
                         generator.SelectSql(ds,
                         entity,
@@ -1895,6 +1914,7 @@ namespace OrigamArchitect.Commands
                         displayPagingParameters
                         )
                         );
+                    builder.AppendLine(generator.CreateDataStructureFooterSql());
                 }
             }
             new ShowSqlConsole(builder.ToString()).Run();

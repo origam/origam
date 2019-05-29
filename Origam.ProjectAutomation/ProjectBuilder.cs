@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.ProjectAutomation.Builders;
 using System.Collections.Generic;
+using static Origam.DA.Common.Enums;
 
 namespace Origam.ProjectAutomation
 {
@@ -33,26 +34,19 @@ namespace Origam.ProjectAutomation
 
         public ProjectBuilder()
         {           
-            tasks.Add(settingsBuilder);
-            tasks.Add(dataDatabaseBuilder);
-            tasks.Add(new FileModelImportBuilder());
-            tasks.Add(new FileModelInitBuilder());
-            tasks.Add(new DataDatabaseStructureBuilder());
-            tasks.Add(new SettingsFinalConnectionStringBuilder());
-            tasks.Add(new CopyServerFilesBuilder());
-            tasks.Add(new ModifyConfigurationFilesBuilder());
-            tasks.Add(configureWebServerBuilder);
-            tasks.Add(new ApplyDatabasePermissionsBuilder());
-            tasks.Add(new NewPackageBuilder());
-            tasks.Add(new GitBuilder());
+            
         }
 
         public void Create(Project project)
         {
-            project.DataConnectionString = 
-                dataDatabaseBuilder.BuildConnectionString(project, true);
-            project.BuilderDataConnectionString = 
-                dataDatabaseBuilder.BuildConnectionString(project, false);
+            //Wizard connection
+            project.DataConnectionString =
+            dataDatabaseBuilder.BuildConnectionString(project, true);
+            //OrigamSettings
+            project.BuilderDataConnectionString =
+            dataDatabaseBuilder.BuildConnectionStringArchitect(project, false);
+            
+
             project.BaseUrl =
                 configureWebServerBuilder.WebSiteUrl(project.WebRootName);
 
@@ -75,6 +69,40 @@ namespace Origam.ProjectAutomation
                     Rollback(tasks[i]);
                 }
                 throw;
+            }
+        }
+
+        public void CreateTasks(Project _project)
+        {
+            if (_project.DatabaseType == DatabaseType.MsSql)
+            {
+                tasks.Add(settingsBuilder);
+                tasks.Add(dataDatabaseBuilder);
+                tasks.Add(new FileModelImportBuilder());
+                tasks.Add(new FileModelInitBuilder());
+                tasks.Add(new DataDatabaseStructureBuilder());
+                tasks.Add(new SettingsFinalConnectionStringBuilder());
+                tasks.Add(new CopyServerFilesBuilder());
+                tasks.Add(new ModifyConfigurationFilesBuilder());
+                tasks.Add(configureWebServerBuilder);
+                tasks.Add(new ApplyDatabasePermissionsBuilder());
+                tasks.Add(new NewPackageBuilder());
+                tasks.Add(new GitBuilder());
+            }
+            if (_project.DatabaseType == DatabaseType.PgSql)
+            {
+                tasks.Add(settingsBuilder);
+                tasks.Add(dataDatabaseBuilder);
+                tasks.Add(new ApplyDatabasePermissionsBuilder());
+                tasks.Add(new FileModelImportBuilder());
+                tasks.Add(new FileModelInitBuilder());
+                tasks.Add(new DataDatabaseStructureBuilder());
+                tasks.Add(new SettingsFinalConnectionStringBuilder());
+                tasks.Add(new CopyServerFilesBuilder());
+                tasks.Add(new ModifyConfigurationFilesBuilder());
+                tasks.Add(configureWebServerBuilder);
+                tasks.Add(new NewPackageBuilder());
+                tasks.Add(new GitBuilder());
             }
         }
 

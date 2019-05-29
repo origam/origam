@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Security.Principal;
@@ -30,22 +29,27 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
+using static Origam.DA.Common.Enums;
+using System.Text;
+using System.Collections.Generic;
 
 namespace Origam.DA.Service
 {
-	/// <summary>
-	/// Abstract implementation of IDataService, based on ORIGAM metadata
-	/// </summary>
-	public abstract class AbstractDataService : IDataService
-	{
-		private IPersistenceProvider _persistence = null; // = new OrigamPersistenceProvider();
+    /// <summary>
+    /// Abstract implementation of IDataService, based on ORIGAM metadata
+    /// </summary>
+    public abstract class AbstractDataService : IDataService
+    {
+        private IPersistenceProvider _persistence = null; // = new OrigamPersistenceProvider();
 
-		public AbstractDataService()
-		{
-		}
+        public AbstractDataService()
+        {
+        }
 
         public int BulkInsertThreshold { get; set; }
         public int UpdateBatchSize { get; set; }
+
+        public abstract DatabaseType PlatformName { get;  }
 
         private bool _userDefinedParameters = false;
 		public bool UserDefinedParameters
@@ -109,14 +113,15 @@ namespace Origam.DA.Service
             }
         }
 
-        internal abstract DbDataAdapterFactory DbDataAdapterFactory{get; set;}
+        public abstract DbDataAdapterFactory DbDataAdapterFactory{get;  internal set; }
 		internal abstract IDbConnection GetConnection(string connectionString);
 		internal abstract IDbTransaction GetTransaction(string transactionId, IsolationLevel isolation);
-        public abstract string BuildConnectionString(string serverName, string databaseName, 
+        public abstract string BuildConnectionString(string serverName, int port, string databaseName, 
             string userName, string password, bool integratedAuthentication, bool pooling);
         public abstract void CreateDatabase(string name);
-        public abstract void DropDatabase(string name);
-
+        public abstract void DeleteDatabase(string name);
+        public abstract void CreateUser(string user, string password, string name, bool databaseIntegratedAuthentication);
+        public abstract void DeleteUser(string user, bool _integratedAuthentication);
         public virtual string EntityDdl(Guid entity)
         {
             throw new NotImplementedException();
@@ -416,7 +421,8 @@ namespace Origam.DA.Service
 					QueryParameter param = null;
 					foreach(QueryParameter p in parameters)
 					{
-						if(p.Name == dbParam.ParameterName.Substring(1))
+						if(p.Name == dbParam.ParameterName.Substring(
+                            this.DbDataAdapterFactory.ParameterDeclarationChar.Length))
 						{
 							param = p;
 							break;
@@ -525,22 +531,11 @@ namespace Origam.DA.Service
 
 									default:
                                         ICollection ar = param.Value as ICollection;
-											if(ar != null)
-											{
-												DataTable dt = new OrigamDataTable("ListTable");
-												dt.Columns.Add("ListValue", typeof(string));
-												dt.Columns[0].MaxLength = -1;
-												dt.BeginLoadData();
-												foreach(object v in ar)
-												{
-													DataRow row = dt.NewRow();
-													row[0] = v.ToString();
-													dt.Rows.Add(row);
-												}
-												dt.EndLoadData();
-												value = dt;
-											}
-											else
+										if(ar != null)
+										{
+                                            value = FillParameterArrayData(ar);
+                                        }
+										else
 										{
 											value = param.Value;
 										}
@@ -559,8 +554,9 @@ namespace Origam.DA.Service
 				}
 			}
 		}
+        internal abstract object FillParameterArrayData(ICollection ar);
 
-		internal DataAuditLog GetLog(
+        internal DataAuditLog GetLog(
             DataTable table, UserProfile profile, string transactionId, 
             int overrideActionType)
 		{
@@ -733,8 +729,9 @@ namespace Origam.DA.Service
 		}
 
 		public abstract string ConnectionString{get; set;}
+        public abstract string DbUser { get; set; }
 
-		public string Xsd(Guid dataStructureId)
+        public string Xsd(Guid dataStructureId)
 		{
 			System.Text.StringBuilder mysb = new System.Text.StringBuilder();
 			// Create the StringWriter object with the StringBuilder object.

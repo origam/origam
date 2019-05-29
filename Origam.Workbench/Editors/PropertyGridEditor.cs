@@ -61,8 +61,8 @@ namespace Origam.Workbench.Editors
             this.PerformLayout();
 
 		}
-	
-		public PropertyGridEditor()
+
+        public PropertyGridEditor()
 		{
 			InitializeComponent();
             this.ContentLoaded += new EventHandler(PropertyGridEditor_ContentLoaded);
@@ -71,8 +71,22 @@ namespace Origam.Workbench.Editors
 			this.propertyGrid1.HelpBackColor = OrigamColorScheme.MdiBackColor;;
 			this.propertyGrid1.HelpForeColor = OrigamColorScheme.MdiForeColor;
             this.propertyGrid1.SelectedItemWithFocusBackColor = OrigamColorScheme.TabActiveStartColor;
+            WorkbenchSingleton.Workbench.ViewOpened += Workbench_ViewOpened;
         }
 
+        /// <summary>
+        /// If another editor opens while in dialog mode, we close the dialog.
+        /// This happens when user double clicks on a model element link.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Workbench_ViewOpened(object sender, ViewContentEventArgs e)
+        {
+            if (!IsDirty && Modal)
+            {
+                Close();
+            }
+        }
 
         private void propertyGrid1_PropertyValueChanged(object s, System.Windows.Forms.PropertyValueChangedEventArgs e)
 		{

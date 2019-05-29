@@ -66,5 +66,20 @@ namespace OrigamArchitect
                 this["BinFolder"] = value;
             }
         }
+
+        [UserScopedSetting()]
+        [DefaultSettingValue("Microsoft Sql Server")]
+        public string DatabaseTypeText
+        {
+            get
+            {
+                return (string)this["DatabaseTypeText"];
+            }
+            set
+            {
+                this["DatabaseTypeText"] = value;
+            }
+        }
+
     }
 }

@@ -25,7 +25,12 @@ using Origam.Schema.EntityModel;
 using Origam.UI;
 using Origam.Schema.DeploymentModel;
 using System.Text;
-using core=Origam.Workbench.Services.CoreServices;
+using core = Origam.Workbench.Services.CoreServices;
+using System.Collections.Generic;
+using System.Collections;
+using static Origam.DA.Common.Enums;
+using Origam.DA.Common;
+using Origam.DA.Service;
 
 namespace Origam.Schema.LookupModel.Wizards
 {
@@ -136,14 +141,14 @@ namespace Origam.Schema.LookupModel.Wizards
                     EntityHelper.CreateIndex(table, codeField, true, true);
                 }
                 // 5. new table script
-                var script1 = DeploymentHelper.CreateDatabaseScript(
-                    table.Name, core.DataService.EntityDdl(table.Id));
+                ServiceCommandUpdateScriptActivity script1 = CreateTableScript(
+                    table.Name, table.Id);
                 GeneratedModelElements.Add(script1);
                 // 6. initial values
                 if (wiz.InitialValues.Count > 0)
                 {
                     DataConstant defaultConstant = null;
-                    StringBuilder script = new StringBuilder();
+                    IDictionary<AbstractSqlDataService, StringBuilder> dict = InitDictionary();
                     foreach (var initialValue in wiz.InitialValues)
                     {
                         string constantName = table.Name + "_" + initialValue.Name.Replace(" ", "_");
@@ -152,25 +157,32 @@ namespace Origam.Schema.LookupModel.Wizards
                         {
                             if (baseField == null)
                             {
-                                script.AppendFormat(
-                                    "INSERT INTO {0} ({1}, {2}, {3}) VALUES ('{4}', '{5}', '{6}')\r\n",
+                                foreach (KeyValuePair<AbstractSqlDataService, StringBuilder> item in dict)
+                                {
+                                    item.Value.AppendFormat(item.Key.CreateInsert(3),
                                     table.Name, idField.Name, wiz.KeyFieldName,
                                     wiz.NameFieldName, pkValue, initialValue.Code,
                                     initialValue.Name);
+                                }
                             }
                             else
                             {
-                                script.AppendFormat(
-                                    "INSERT INTO {0} ({1}, {2}) VALUES ('{3}', '{4}')\r\n",
+                                foreach (KeyValuePair<AbstractSqlDataService, StringBuilder> item in dict)
+                                {
+                                    item.Value.AppendFormat(item.Key.CreateInsert(2),
                                     table.Name, wiz.KeyFieldName,
                                     wiz.NameFieldName, initialValue.Code,
                                     initialValue.Name);
+                                }
                             }
                         }
                         else
                         {
-                            script.AppendFormat("INSERT INTO {0} ({1}, {2}) VALUES ('{3}', '{4}')\r\n",
+                            foreach (KeyValuePair<AbstractSqlDataService, StringBuilder> item in dict)
+                            {
+                                item.Value.AppendFormat(item.Key.CreateInsert(2),
                                 table.Name, idField.Name, nameField.Name, pkValue, initialValue.Name);
+                            }
                         }
                         DataConstant c = EntityHelper.CreateConstant(
                             constantName, lookup, idField.DataType, pkValue,
@@ -183,26 +195,15 @@ namespace Origam.Schema.LookupModel.Wizards
                     }
                     fk.DefaultValue = defaultConstant;
                     fk.Persist();
-                    var script2 = DeploymentHelper.CreateDatabaseScript(table.Name + "_values", script.ToString());
+                    var script2 = CreateDatabaseScript(table.Name + "_values",dict);
                     GeneratedModelElements.Add(script2);
                 }
                 // 7. new field script (after values because of a default value
-                string[] fkDdl = core.DataService.FieldDdl(fk.Id);
-                int i = 0;
-                foreach (var ddl in fkDdl)
-                {
-                    // if the foreign key is based on an existing field 
-                    // take only the foreign key ddl
-                    if (baseField == null || i == 1)
-                    {
-                        var script3 = DeploymentHelper.CreateDatabaseScript(baseEntity.Name + "_" + fk.Name, ddl);
-                        GeneratedModelElements.Add(script3);
-                    }
-                    i++;
-                }
+                FieldsScripts(fk,
+                              baseField,
+                              baseEntity);
             }
         }
-
         private TableMappingItem CreateLookupEntity(
             CreateFieldWithLookupEntityWizard wiz, IDataEntity baseEntity,
             IDataEntityColumn baseField)

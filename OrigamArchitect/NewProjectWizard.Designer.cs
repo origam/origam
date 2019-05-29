@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewProjectWizard));
             this.wizard1 = new AeroWizard.WizardControl();
             this.pageWelcome = new AeroWizard.WizardPage();
@@ -67,6 +68,10 @@
             this.lblBinFolderRoot = new System.Windows.Forms.Label();
             this.txtBinFolderRoot = new System.Windows.Forms.TextBox();
             this.pageGit = new AeroWizard.WizardPage();
+            this.lblgitemail = new System.Windows.Forms.Label();
+            this.lblgituser = new System.Windows.Forms.Label();
+            this.txtGitEmail = new System.Windows.Forms.TextBox();
+            this.txtGitUser = new System.Windows.Forms.TextBox();
             this.lblSourcesFolderDescription = new System.Windows.Forms.Label();
             this.lblSourcesFolder = new System.Windows.Forms.Label();
             this.txtSourcesFolder = new System.Windows.Forms.TextBox();
@@ -78,6 +83,11 @@
             this.colText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pageLocalDeploymentSettings = new AeroWizard.WizardPage();
+            this.labelPort = new System.Windows.Forms.Label();
+            this.txtPort = new System.Windows.Forms.TextBox();
+            this.labelPrivileges = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.txtDatabaseType = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -91,10 +101,8 @@
             this.lblServerName = new System.Windows.Forms.Label();
             this.txtDatabaseUserName = new System.Windows.Forms.TextBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.txtGitUser = new System.Windows.Forms.TextBox();
-            this.txtGitEmail = new System.Windows.Forms.TextBox();
-            this.lblgituser = new System.Windows.Forms.Label();
-            this.lblgitemail = new System.Windows.Forms.Label();
+            this.projectBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.projectBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.wizard1)).BeginInit();
             this.pageWelcome.SuspendLayout();
             this.pageDeploymentType.SuspendLayout();
@@ -103,6 +111,8 @@
             this.pageGit.SuspendLayout();
             this.pageReview.SuspendLayout();
             this.pageLocalDeploymentSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
             // wizard1
@@ -508,6 +518,38 @@
             this.pageGit.Text = "Configure Source Control";
             this.pageGit.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageGit_Commit);
             // 
+            // lblgitemail
+            // 
+            this.lblgitemail.AutoSize = true;
+            this.lblgitemail.Location = new System.Drawing.Point(19, 122);
+            this.lblgitemail.Name = "lblgitemail";
+            this.lblgitemail.Size = new System.Drawing.Size(36, 15);
+            this.lblgitemail.TabIndex = 17;
+            this.lblgitemail.Text = "Email";
+            // 
+            // lblgituser
+            // 
+            this.lblgituser.AutoSize = true;
+            this.lblgituser.Location = new System.Drawing.Point(19, 76);
+            this.lblgituser.Name = "lblgituser";
+            this.lblgituser.Size = new System.Drawing.Size(30, 15);
+            this.lblgituser.TabIndex = 16;
+            this.lblgituser.Text = "User";
+            // 
+            // txtGitEmail
+            // 
+            this.txtGitEmail.Location = new System.Drawing.Point(163, 119);
+            this.txtGitEmail.Name = "txtGitEmail";
+            this.txtGitEmail.Size = new System.Drawing.Size(204, 23);
+            this.txtGitEmail.TabIndex = 15;
+            // 
+            // txtGitUser
+            // 
+            this.txtGitUser.Location = new System.Drawing.Point(163, 73);
+            this.txtGitUser.Name = "txtGitUser";
+            this.txtGitUser.Size = new System.Drawing.Size(204, 23);
+            this.txtGitUser.TabIndex = 14;
+            // 
             // lblSourcesFolderDescription
             // 
             this.lblSourcesFolderDescription.ForeColor = System.Drawing.SystemColors.GrayText;
@@ -607,6 +649,11 @@
             // 
             // pageLocalDeploymentSettings
             // 
+            this.pageLocalDeploymentSettings.Controls.Add(this.labelPort);
+            this.pageLocalDeploymentSettings.Controls.Add(this.txtPort);
+            this.pageLocalDeploymentSettings.Controls.Add(this.labelPrivileges);
+            this.pageLocalDeploymentSettings.Controls.Add(this.label16);
+            this.pageLocalDeploymentSettings.Controls.Add(this.txtDatabaseType);
             this.pageLocalDeploymentSettings.Controls.Add(this.label4);
             this.pageLocalDeploymentSettings.Controls.Add(this.label2);
             this.pageLocalDeploymentSettings.Controls.Add(this.label3);
@@ -626,15 +673,62 @@
             this.pageLocalDeploymentSettings.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageLocalDeploymentSettings_Commit);
             this.pageLocalDeploymentSettings.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageLocalDeploymentSettings_Initialize);
             // 
+            // labelPort
+            // 
+            this.labelPort.AutoSize = true;
+            this.labelPort.Location = new System.Drawing.Point(412, 134);
+            this.labelPort.Name = "labelPort";
+            this.labelPort.Size = new System.Drawing.Size(29, 15);
+            this.labelPort.TabIndex = 19;
+            this.labelPort.Text = "Port";
+            this.labelPort.Visible = false;
+            // 
+            // txtPort
+            // 
+            this.txtPort.Location = new System.Drawing.Point(456, 131);
+            this.txtPort.Name = "txtPort";
+            this.txtPort.Size = new System.Drawing.Size(100, 23);
+            this.txtPort.TabIndex = 18;
+            this.txtPort.Text = "0";
+            this.txtPort.Visible = false;
+            // 
+            // labelPrivileges
+            // 
+            this.labelPrivileges.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.labelPrivileges.Location = new System.Drawing.Point(160, 262);
+            this.labelPrivileges.Name = "labelPrivileges";
+            this.labelPrivileges.Size = new System.Drawing.Size(396, 36);
+            this.labelPrivileges.TabIndex = 17;
+            this.labelPrivileges.Text = "Enter UserName and Password witch has privileges for create Database and user.";
+            this.labelPrivileges.Visible = false;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(7, 86);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(55, 15);
+            this.label16.TabIndex = 16;
+            this.label16.Text = "Database";
+            // 
+            // txtDatabaseType
+            // 
+            this.txtDatabaseType.FormattingEnabled = true;
+            this.txtDatabaseType.Location = new System.Drawing.Point(160, 86);
+            this.txtDatabaseType.Name = "txtDatabaseType";
+            this.txtDatabaseType.Size = new System.Drawing.Size(223, 23);
+            this.txtDatabaseType.TabIndex = 15;
+            this.txtDatabaseType.SelectedIndexChanged += new System.EventHandler(this.TxtDatabaseType_SelectedIndexChanged);
+            // 
             // label4
             // 
             this.label4.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label4.Location = new System.Drawing.Point(299, 117);
+            this.label4.Location = new System.Drawing.Point(298, 165);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(232, 78);
             this.label4.TabIndex = 14;
             this.label4.Text = "Enter the connection information to your database server. A new database will be " +
-    "created for storing the data. Example: .\\SQLEXPRESS";
+    "created for storing the data. Example: .\\SQLEXPRESS or localhost";
             // 
             // label2
             // 
@@ -649,7 +743,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(5, 117);
+            this.label3.Location = new System.Drawing.Point(4, 165);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(143, 15);
             this.label3.TabIndex = 11;
@@ -660,7 +754,7 @@
             this.chkIntegratedAuthentication.AutoSize = true;
             this.chkIntegratedAuthentication.Checked = true;
             this.chkIntegratedAuthentication.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkIntegratedAuthentication.Location = new System.Drawing.Point(161, 118);
+            this.chkIntegratedAuthentication.Location = new System.Drawing.Point(160, 166);
             this.chkIntegratedAuthentication.Name = "chkIntegratedAuthentication";
             this.chkIntegratedAuthentication.Size = new System.Drawing.Size(15, 14);
             this.chkIntegratedAuthentication.TabIndex = 10;
@@ -681,7 +775,7 @@
             // 
             this.lblDatabasePassword.AutoSize = true;
             this.lblDatabasePassword.Enabled = false;
-            this.lblDatabasePassword.Location = new System.Drawing.Point(5, 180);
+            this.lblDatabasePassword.Location = new System.Drawing.Point(4, 228);
             this.lblDatabasePassword.Name = "lblDatabasePassword";
             this.lblDatabasePassword.Size = new System.Drawing.Size(57, 15);
             this.lblDatabasePassword.TabIndex = 7;
@@ -690,7 +784,7 @@
             // txtDatabasePassword
             // 
             this.txtDatabasePassword.Enabled = false;
-            this.txtDatabasePassword.Location = new System.Drawing.Point(161, 177);
+            this.txtDatabasePassword.Location = new System.Drawing.Point(160, 225);
             this.txtDatabasePassword.Name = "txtDatabasePassword";
             this.txtDatabasePassword.PasswordChar = '*';
             this.txtDatabasePassword.Size = new System.Drawing.Size(121, 23);
@@ -709,7 +803,7 @@
             // 
             this.lblDatabaseUserName.AutoSize = true;
             this.lblDatabaseUserName.Enabled = false;
-            this.lblDatabaseUserName.Location = new System.Drawing.Point(5, 150);
+            this.lblDatabaseUserName.Location = new System.Drawing.Point(4, 198);
             this.lblDatabaseUserName.Name = "lblDatabaseUserName";
             this.lblDatabaseUserName.Size = new System.Drawing.Size(65, 15);
             this.lblDatabaseUserName.TabIndex = 6;
@@ -719,15 +813,15 @@
             // 
             this.txtServerName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtServerName.Location = new System.Drawing.Point(161, 83);
+            this.txtServerName.Location = new System.Drawing.Point(160, 131);
             this.txtServerName.Name = "txtServerName";
-            this.txtServerName.Size = new System.Drawing.Size(396, 23);
+            this.txtServerName.Size = new System.Drawing.Size(223, 23);
             this.txtServerName.TabIndex = 3;
             // 
             // lblServerName
             // 
             this.lblServerName.AutoSize = true;
-            this.lblServerName.Location = new System.Drawing.Point(4, 86);
+            this.lblServerName.Location = new System.Drawing.Point(3, 134);
             this.lblServerName.Name = "lblServerName";
             this.lblServerName.Size = new System.Drawing.Size(90, 15);
             this.lblServerName.TabIndex = 5;
@@ -736,42 +830,18 @@
             // txtDatabaseUserName
             // 
             this.txtDatabaseUserName.Enabled = false;
-            this.txtDatabaseUserName.Location = new System.Drawing.Point(161, 147);
+            this.txtDatabaseUserName.Location = new System.Drawing.Point(160, 195);
             this.txtDatabaseUserName.Name = "txtDatabaseUserName";
             this.txtDatabaseUserName.Size = new System.Drawing.Size(121, 23);
             this.txtDatabaseUserName.TabIndex = 8;
             // 
-            // txtGitUser
+            // projectBindingSource
             // 
-            this.txtGitUser.Location = new System.Drawing.Point(163, 73);
-            this.txtGitUser.Name = "txtGitUser";
-            this.txtGitUser.Size = new System.Drawing.Size(204, 23);
-            this.txtGitUser.TabIndex = 14;
+            this.projectBindingSource.DataSource = typeof(Origam.ProjectAutomation.Project);
             // 
-            // txtGitEmail
+            // projectBindingSource1
             // 
-            this.txtGitEmail.Location = new System.Drawing.Point(163, 119);
-            this.txtGitEmail.Name = "txtGitEmail";
-            this.txtGitEmail.Size = new System.Drawing.Size(204, 23);
-            this.txtGitEmail.TabIndex = 15;
-            // 
-            // lblgituser
-            // 
-            this.lblgituser.AutoSize = true;
-            this.lblgituser.Location = new System.Drawing.Point(19, 76);
-            this.lblgituser.Name = "lblgituser";
-            this.lblgituser.Size = new System.Drawing.Size(30, 15);
-            this.lblgituser.TabIndex = 16;
-            this.lblgituser.Text = "User";
-            // 
-            // lblgitemail
-            // 
-            this.lblgitemail.AutoSize = true;
-            this.lblgitemail.Location = new System.Drawing.Point(19, 122);
-            this.lblgitemail.Name = "lblgitemail";
-            this.lblgitemail.Size = new System.Drawing.Size(36, 15);
-            this.lblgitemail.TabIndex = 17;
-            this.lblgitemail.Text = "Email";
+            this.projectBindingSource1.DataSource = typeof(Origam.ProjectAutomation.Project);
             // 
             // NewProjectWizard
             // 
@@ -800,6 +870,8 @@
             this.pageReview.ResumeLayout(false);
             this.pageLocalDeploymentSettings.ResumeLayout(false);
             this.pageLocalDeploymentSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -872,5 +944,12 @@
         private System.Windows.Forms.Label lblgituser;
         private System.Windows.Forms.TextBox txtGitEmail;
         private System.Windows.Forms.TextBox txtGitUser;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.ComboBox txtDatabaseType;
+        private System.Windows.Forms.BindingSource projectBindingSource;
+        private System.Windows.Forms.BindingSource projectBindingSource1;
+        private System.Windows.Forms.Label labelPrivileges;
+        private System.Windows.Forms.Label labelPort;
+        private System.Windows.Forms.TextBox txtPort;
     }
 }

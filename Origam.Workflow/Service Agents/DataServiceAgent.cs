@@ -61,6 +61,10 @@ namespace Origam.Workflow
 			}
 		}
 
+        public  override void SetDataService(IDataService dataService)
+        {
+            _dataService = dataService;
+        }
 		private IDataDocument LoadData(Guid dataStructureId, Hashtable parameters, Guid methodId, Guid sortSetId)
 		{
 			// (_dataService as MsSqlDataService).PersistenceProvider = this.PersistenceProvider;
@@ -669,7 +673,7 @@ namespace Origam.Workflow
 					}
 					else
 					{
-						MsSqlCommandGenerator sqlGenerator = new MsSqlCommandGenerator();
+                        AbstractSqlCommandGenerator sqlGenerator =  (AbstractSqlCommandGenerator)_dataService;
 						sqlGenerator.ResolveAllFilters = true;
 						foreach(DataStructureEntity entity in ds.Entities)
 						{

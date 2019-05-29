@@ -19,13 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam;
+using System;
+using static Origam.DA.Common.Enums;
 
 namespace Origam.ProjectAutomation
 {
     public class DataDatabaseBuilder : AbstractDatabaseBuilder
     {
         string _databaseName;
+        DatabaseType _databaseType;
 
         public override string Name
         {
@@ -37,24 +39,58 @@ namespace Origam.ProjectAutomation
 
         public override void Execute(Project project)
         {
+            _databaseType = project.DatabaseType;
             _databaseName = project.DataDatabaseName;
-            this.DataService.ConnectionString = DataService.BuildConnectionString(
-                project.DatabaseServerName, "", project.DatabaseUserName,
+            CreateDatabase(project);
+            CreateSchema(project);
+            DataService(_databaseType).ConnectionString = BuildConnectionStringCreateDatabase(project, "");
+        }
+               
+        public string BuildConnectionStringCreateDatabase(Project project, string creatingDatabase)
+        {
+            return DataService(_databaseType).BuildConnectionString(
+                project.DatabaseServerName, project.Port, creatingDatabase, project.DatabaseUserName,
                 project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
-            this.DataService.CreateDatabase(_databaseName);
+            
         }
 
         public string BuildConnectionString(Project project, bool pooling)
         {
-            return DataService.BuildConnectionString(project.DatabaseServerName,
+            _databaseType = project.DatabaseType;
+            return DataService(project.DatabaseType).BuildConnectionString(project.DatabaseServerName,project.Port,
                 project.DataDatabaseName, project.DatabaseUserName,
                 project.DatabasePassword, project.DatabaseIntegratedAuthentication, pooling);
         }
-
+        public string BuildConnectionStringArchitect(Project project, bool pooling)
+        {
+            _databaseType = project.DatabaseType;
+            if(_databaseType==DatabaseType.MsSql)
+            {
+                return BuildConnectionString(project, pooling);
+            }
+            if (_databaseType == DatabaseType.PgSql)
+            {
+                this.DataService(_databaseType).DbUser=project.Name;
+                return DataService(project.DatabaseType).BuildConnectionString(project.DatabaseServerName, project.Port,
+                    project.DataDatabaseName, DataService(_databaseType).DbUser,
+                     project.UserPassword, project.DatabaseIntegratedAuthentication, pooling);
+            }
+            return null;
+        }
+        private void CreateSchema(Project project)
+        {
+            DataService(_databaseType).ConnectionString = BuildConnectionStringCreateDatabase(project, project.DataDatabaseName);
+            DataService(_databaseType).CreateSchema(_databaseName);
+        }
+        private void CreateDatabase(Project project)
+        {
+            DataService(_databaseType).ConnectionString = BuildConnectionStringCreateDatabase(project, "");
+            DataService(_databaseType).CreateDatabase(_databaseName);
+        }
         public override void Rollback()
         {
             OrigamUserContext.Reset();
-            this.DataService.DropDatabase(_databaseName);
+            DataService(_databaseType).DeleteDatabase(_databaseName);
         }
     }
 }
