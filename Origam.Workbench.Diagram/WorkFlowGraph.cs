@@ -38,6 +38,7 @@ namespace Origam.Workbench.Diagram
 
         public bool IsInfrastructureGraph(Node node)
         {
+            if (node == null) return false;
             return node.Id == mainSubgraphId ||
                    node.Id == contextStoreSubgraphId;
         }
