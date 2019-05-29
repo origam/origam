@@ -116,7 +116,6 @@ namespace Origam.Workbench.Services
 
         private void SaveVersionAfterUpdate()
         {
-            //_transactionId = Guid.NewGuid().ToString();
             IList <SchemaExtension> packages = _schema.ActiveExtension.IncludedPackages;
             packages.Add(_schema.ActiveExtension);
 
@@ -124,7 +123,6 @@ namespace Origam.Workbench.Services
 
             packages?.ForEach(package => UpdateVersionData(package));
             SaveVersions();
-            //_transactionId = null;
             ClearVersions();
         }
 
@@ -439,10 +437,13 @@ namespace Origam.Workbench.Services
                 {
                     if (ex.TableName == tableName)
                     {
-                        ResourceMonitor.Commit(localTransaction);
                         return null;
                     }
                     throw;
+                }
+                finally
+                {
+                    ResourceMonitor.Commit(localTransaction);
                 }
 		}
 
