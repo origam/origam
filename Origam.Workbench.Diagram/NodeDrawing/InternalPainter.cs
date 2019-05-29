@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using Microsoft.Msagl.Drawing;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
+using Origam.UI;
 
 namespace Origam.Workbench.Diagram.NodeDrawing
 {
@@ -28,8 +29,8 @@ namespace Origam.Workbench.Diagram.NodeDrawing
 
         public readonly SolidBrush BlackBrush = new SolidBrush(System.Drawing.Color.Black);
         public readonly SolidBrush GreyBrush = new SolidBrush(System.Drawing.Color.LightGray);
-        public readonly SolidBrush GreenBrush = new SolidBrush(System.Drawing.Color.LimeGreen);
-        public readonly SolidBrush RedBrush = new SolidBrush(System.Drawing.Color.Red);
+        public readonly SolidBrush GreenBrush = new SolidBrush(System.Drawing.Color.FromArgb(0, 154, 41));
+        public readonly SolidBrush RedBrush = new SolidBrush(System.Drawing.Color.FromArgb(255, 73, 61));
         public readonly Brush WhiteBrush  = new SolidBrush(System.Drawing.Color.White);
 
         public readonly int NodeHeaderHeight = 25;
