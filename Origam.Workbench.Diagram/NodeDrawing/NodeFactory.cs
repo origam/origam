@@ -3,6 +3,8 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Layout.Layered;
 using Origam.Schema;
+using Origam.Schema.WorkflowModel;
+using Origam.Workbench.Diagram.Graphs;
 using Node = Microsoft.Msagl.Drawing.Node;
 
 namespace Origam.Workbench.Diagram.NodeDrawing
@@ -55,11 +57,11 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             parentSbubgraph.AddSubgraph(subgraph);
             return subgraph;
         }
-
-        public Subgraph AddSubgraph(Subgraph parentSbubgraph,
-            ISchemaItem schemaItem)
+        
+        public BlockSubGraph AddSubgraph(Subgraph parentSbubgraph,
+            IWorkflowBlock schemaItem)
         {
-            Subgraph subgraph = new Subgraph(schemaItem.NodeId);
+            BlockSubGraph subgraph = new BlockSubGraph(schemaItem.NodeId);
             subgraph.Attr.Shape = Shape.DrawFromGeometry;
             var painter = new SubgraphPainter(internalPainter);
             subgraph.DrawNodeDelegate = painter.Draw;

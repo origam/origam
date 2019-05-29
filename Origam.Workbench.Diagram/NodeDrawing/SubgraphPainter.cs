@@ -5,6 +5,7 @@ using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Drawing;
 using Origam.Workbench.Diagram.Extensions;
+using Origam.Workbench.Diagram.Graphs;
 using Node = Microsoft.Msagl.Drawing.Node;
 using Point = Microsoft.Msagl.Core.Geometry.Point;
 
@@ -24,8 +25,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         
         public ICurve GetBoundary(Node node) 
         {
-            Subgraph subgraph = (Subgraph) node;
-            if (!subgraph.Nodes.Any() && !subgraph.Subgraphs.Any())
+            if (((BlockSubGraph) node).IsEmpty)
             {
                 return CurveFactory.CreateRectangle(emptySubgraphWidth, emptySubgraphHeight, new Point());
             }
@@ -103,11 +103,10 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         
         private Tuple<PointF, string> GetEmptyNodeMessage(Node node)
         {
-            Subgraph subgraph = (Subgraph) node;
             double centerX = node.GeometryNode.Center.X;
             double centerY = node.GeometryNode.Center.Y;
 			
-            if (subgraph.Nodes.Any() || subgraph.Subgraphs.Any())
+            if (!((BlockSubGraph) node).IsEmpty)
             {
                 return new Tuple<PointF, string>(new PointF(), "");
             }

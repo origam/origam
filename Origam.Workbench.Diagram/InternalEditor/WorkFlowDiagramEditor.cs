@@ -13,6 +13,7 @@ using Origam.UI;
 using Origam.Workbench.BaseComponents;
 using Origam.Workbench.Commands;
 using Origam.Workbench.Diagram.Extensions;
+using Origam.Workbench.Diagram.Graphs;
 using Origam.Workbench.Services;
 
 namespace Origam.Workbench.Diagram.InternalEditor
@@ -160,8 +161,11 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
         private bool IsContextStoreDependencyArrow(Edge edge)
         {
-	        return Graph.ContextStoreSubgraph.Nodes.Contains(edge.SourceNode) ||
-	               Graph.ContextStoreSubgraph.Nodes.Contains(edge.TargetNode);
+	        return Graph
+		        .AllContextStoreSubgraphs
+		        .Any(contextStoreSubgraph =>
+			        contextStoreSubgraph.Nodes.Contains(edge.SourceNode) ||
+			        contextStoreSubgraph.Nodes.Contains(edge.TargetNode));
         }
 
         private bool ConnectsSchemaItems(Edge edge)
@@ -213,8 +217,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
         {
 	        if (gViewer.SelectedObject is Node node)
 	        {
-		        string id = node is Subgraph && !Graph.IsWorkFlowItemSubGraph(node)
-			        ? UpToDateGraphParent.NodeId
+		        string id = node is IWorkflowSubgraph workflowSubgraph
+			        ? workflowSubgraph.WorkflowItemId
 			        : node.Id;
 		        bool idParsed = Guid.TryParse(id, out Guid nodeId);
 		        if (!idParsed) return false;

@@ -4,6 +4,7 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
+using Origam.Workbench.Diagram.Graphs;
 
 namespace Origam.Workbench.Diagram.NodeDrawing
 {
@@ -76,11 +77,12 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         
         internal Pen GetActiveBorderPen(Node node)
         {
-            var graph = (WorkFlowGraph)gViewer.Graph;
-            bool markedAsSelected = 
+            bool markAsSelected =
                 Equals(NodeSelector.Selected, node) ||
-                Equals(graph.TopSubgraph, node) && graph.IsInfrastructureGraph(NodeSelector.Selected);
-            return markedAsSelected
+                node is IWorkflowSubgraph subgraph && 
+                NodeSelector.Selected is IWorkflowSubgraph selectedSubgraph &&
+                Equals(subgraph.WorkflowItemId, selectedSubgraph.WorkflowItemId);
+            return markAsSelected
                 ? BoldBlackPen
                 : BlackPen;
         }

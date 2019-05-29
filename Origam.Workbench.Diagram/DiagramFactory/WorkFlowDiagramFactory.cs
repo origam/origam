@@ -33,6 +33,7 @@ using MoreLinq.Extensions;
 using Origam.Schema;
 using Origam.Workbench.Diagram.DiagramFactory;
 using Origam.Workbench.Diagram.Extensions;
+using Origam.Workbench.Diagram.Graphs;
 using Origam.Workbench.Diagram.NodeDrawing;
 using Edge = Microsoft.Msagl.Drawing.Edge;
 using Node = Microsoft.Msagl.Drawing.Node;
@@ -42,8 +43,6 @@ namespace Origam.Workbench.Diagram
 {
 	public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGraph>
 	{
-		private static readonly int nodeMargin = 40;
-		
 		private List<string> expandedSubgraphNodeIds = new List<string>();
 		private WorkFlowGraph graph;
 		private readonly NodeFactory nodeFactory;
@@ -64,15 +63,9 @@ namespace Origam.Workbench.Diagram
 			this.expandedSubgraphNodeIds = expandedSubgraphNodeIds;
 			graph = new WorkFlowGraph();
 			nodeFactory.AddSubgraph(graph.RootSubgraph, graphParent);
-			graph.TopSubgraph.LayoutSettings = new SugiyamaLayoutSettings
-			{
-				PackingAspectRatio = 1000, AdditionalClusterTopMargin = 30
-			};
-			graph.MainDrawingSubgraf.DrawNodeDelegate =  (node, graphics) => true;
 			AddToSubgraph(graphParent, graph.MainDrawingSubgraf);
 
-			AddContextStores(graphParent);
-			graph.LayoutAlgorithmSettings.ClusterMargin = nodeMargin;
+			AddContextStores(graphParent, graph.TopSubgraph);
 			AddBalloons();
 			return graph;
 		}
@@ -115,19 +108,14 @@ namespace Origam.Workbench.Diagram
 			}
 		}
 
-		private void AddContextStores(IWorkflowBlock graphParent)
+		private void AddContextStores(IWorkflowBlock block, BlockSubGraph blockSubGraph)
 		{
-			graph.ContextStoreSubgraph.DrawNodeDelegate = (node, graphics) => true;
-			graph.ContextStoreSubgraph.LayoutSettings = new SugiyamaLayoutSettings
-			{
-				ClusterMargin = 20
-			};
-			foreach (var childItem in graphParent.ChildItems)
+			foreach (var childItem in block.ChildItems)
 			{
 				if (childItem is ContextStore contextStore)
 				{
 					Node node = nodeFactory.AddNode(graph, contextStore);
-					graph.ContextStoreSubgraph.AddNode(node);
+					blockSubGraph.ContextStoreSubgraph.AddNode(node);
 				}
 			}
 		}
@@ -178,11 +166,8 @@ namespace Origam.Workbench.Diagram
 
 		private Subgraph AddWorkflowDiagram(IWorkflowBlock workFlowBlock, Subgraph parentSubgraph)
 		{
-			Subgraph subgraph = nodeFactory.AddSubgraph(parentSubgraph, workFlowBlock);
-			subgraph.LayoutSettings = new SugiyamaLayoutSettings();
-			subgraph.LayoutSettings.AdditionalClusterTopMargin = 30;
-			subgraph.LayoutSettings.ClusterMargin = 40;
-
+			BlockSubGraph subgraph = nodeFactory.AddSubgraph(parentSubgraph, workFlowBlock);
+			AddContextStores(workFlowBlock, subgraph);
 			return AddToSubgraph(workFlowBlock, subgraph);
 		}
 
@@ -193,14 +178,14 @@ namespace Origam.Workbench.Diagram
 			foreach (IWorkflowStep step in workFlowBlock.ChildItemsByType(
 				AbstractWorkflowStep.ItemTypeConst))
 			{
-				if (!(step is IWorkflowBlock subBlock))
+				if (step is IWorkflowBlock subBlock)
 				{
-					Subgraph shape = AddSubgraphNode(step, subgraph);
+					Node shape = AddWorkflowDiagram(subBlock, subgraph);
 					ht.Add(step.PrimaryKey, shape);
 				}
 				else
 				{
-					Node shape = AddWorkflowDiagram(subBlock, subgraph);
+					Subgraph shape = AddSubgraphNode(step, subgraph);
 					ht.Add(step.PrimaryKey, shape);
 				}
 			}

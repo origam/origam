@@ -80,5 +80,17 @@ namespace Origam.Workbench.Diagram.Extensions
 
 		    yield return subGraph;
 	    }
+	    
+	    public static IEnumerable<Subgraph> GetAllSubgraphs(this Subgraph subGraph)
+	    {
+		    foreach (Subgraph childSubgraph in subGraph.Subgraphs)
+		    {
+			    foreach (Subgraph childSubgraph1 in GetAllSubgraphs(childSubgraph))
+			    {
+				    yield return childSubgraph1;
+			    }
+			    yield return childSubgraph;
+		    }
+	    }
     }
 }
