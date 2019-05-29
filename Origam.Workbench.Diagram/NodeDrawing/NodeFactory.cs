@@ -1,5 +1,6 @@
 using System.Drawing;
 using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Layout.Layered;
 using Origam.Schema;
 using Node = Microsoft.Msagl.Drawing.Node;
@@ -11,9 +12,9 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         private readonly InternalPainter internalPainter;
         private static int balloonNumber = 0;
 
-        public NodeFactory(INodeSelector nodeSelector)
+        public NodeFactory(INodeSelector nodeSelector, GViewer gViewer)
         {
-            internalPainter = new InternalPainter(nodeSelector);
+            internalPainter = new InternalPainter(nodeSelector, gViewer);
         }
 
         public Node AddNode(Graph graph, ISchemaItem schemaItem)

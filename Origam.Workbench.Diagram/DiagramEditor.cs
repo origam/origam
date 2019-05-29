@@ -235,13 +235,15 @@ namespace Origam.Workbench.Editors
 						nodeSelector: nodeSelector,
 						parentForm: this,
 						persistenceProvider: persistenceProvider,
-						factory: new WorkFlowDiagramFactory(nodeSelector));
+						factory: new WorkFlowDiagramFactory(nodeSelector,gViewer));
 					break;
 				case IContextStore contextStore:
 					internalEditor = new GeneralDiagramEditor<IContextStore>(
 						gViewer: gViewer,
 						schemaItem: contextStore,
-						factory: new ContextStoreDiagramFactory(persistenceProvider, nodeSelector));
+						factory: new ContextStoreDiagramFactory(
+							persistenceProvider, nodeSelector, gViewer)
+						);
 					break;
 				case ISchemaItem schemaItem:
 					internalEditor = new GeneralDiagramEditor<ISchemaItem>(

@@ -27,6 +27,7 @@ using System.Drawing;
 using System.Linq;
 using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Core.Layout;
+using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Layout.Layered;
 using MoreLinq.Extensions;
 using Origam.Schema;
@@ -48,10 +49,11 @@ namespace Origam.Workbench.Diagram
 		private WorkFlowGraph graph;
 		private readonly NodeFactory nodeFactory;
 
-		public WorkFlowDiagramFactory(INodeSelector nodeSelector)
+		public WorkFlowDiagramFactory(INodeSelector nodeSelector,
+			GViewer gViewer)
 		{
 			this.nodeSelector = nodeSelector;
-			nodeFactory = new NodeFactory(nodeSelector);
+			nodeFactory = new NodeFactory(nodeSelector, gViewer);
 		}
 
 		public WorkFlowGraph Draw(IWorkflowBlock graphParent)

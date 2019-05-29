@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.GraphViewerGdi;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 
@@ -34,11 +35,14 @@ namespace Origam.Workbench.Diagram.NodeDrawing
 
         public readonly int NodeHeaderHeight = 25;
 
+        private readonly GViewer gViewer;
+
         internal INodeSelector NodeSelector { get; }
 
-        public InternalPainter(INodeSelector nodeSelector)
+        public InternalPainter(INodeSelector nodeSelector, GViewer gViewer)
         {
-            this.NodeSelector = nodeSelector;
+            NodeSelector = nodeSelector;
+            this.gViewer = gViewer;
         }
 
         private Image GetImage(string iconId)
@@ -72,7 +76,11 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         
         internal Pen GetActiveBorderPen(Node node)
         {
-            return Equals(NodeSelector.Selected, node)
+            var graph = (WorkFlowGraph)gViewer.Graph;
+            bool markedAsSelected = 
+                Equals(NodeSelector.Selected, node) ||
+                Equals(graph.TopSubgraph, node) && graph.IsInfrastructureGraph(NodeSelector.Selected);
+            return markedAsSelected
                 ? BoldBlackPen
                 : BlackPen;
         }

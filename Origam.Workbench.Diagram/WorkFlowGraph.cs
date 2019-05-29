@@ -35,5 +35,11 @@ namespace Origam.Workbench.Diagram
 
             return mainDrawingSubraph;
         }
+
+        public bool IsInfrastructureGraph(Node node)
+        {
+            return node.Id == mainSubgraphId ||
+                   node.Id == contextStoreSubgraphId;
+        }
     }
 }

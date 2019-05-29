@@ -18,10 +18,12 @@ namespace Origam.Workbench.Diagram.DiagramFactory
         private readonly IPersistenceProvider persistenceProvider;
         private readonly NodeFactory nodeFactory;
 
-        public ContextStoreDiagramFactory(IPersistenceProvider persistenceProvider, INodeSelector nodeSelector)
+        public ContextStoreDiagramFactory(
+            IPersistenceProvider persistenceProvider,
+            INodeSelector nodeSelector, GViewer gViewer)
         {
             this.persistenceProvider = persistenceProvider;
-            nodeFactory = new NodeFactory(nodeSelector);
+            nodeFactory = new NodeFactory(nodeSelector, gViewer);
         }
 
         public Graph Draw(IContextStore contextStore)
