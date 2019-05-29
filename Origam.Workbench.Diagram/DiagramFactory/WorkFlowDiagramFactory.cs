@@ -69,44 +69,6 @@ namespace Origam.Workbench.Diagram
 			AddBalloons();
 			return graph;
 		}
-		public void AlignContextStoreSubgraph()
-		{
-			if(graph.ContextStoreSubgraph == null || graph.MainDrawingSubgraf == null)
-			{
-				throw new InvalidOperationException();
-			}
-
-			if (!graph.MainDrawingSubgraf.Subgraphs.Any() &&
-			    !graph.MainDrawingSubgraf.Nodes.Any())
-			{
-				return;
-			}
-
-			MoveSubgraphRight(graph.ContextStoreSubgraph, graph.MainDrawingSubgraf);
-		}
-
-		private void MoveSubgraphRight(Subgraph subgraphToMove, Subgraph refSubgraph) {
-            
-			double dx = refSubgraph.Pos.X - subgraphToMove.Pos.X  +
-			            refSubgraph.Width / 2 + subgraphToMove.Width / 2;
-            
-			double dy = refSubgraph.Pos.Y - subgraphToMove.Pos.Y  +
-			            refSubgraph.Height / 2 - subgraphToMove.Height / 2;
-            
-			subgraphToMove.GeometryNode.Center = new Point(
-				subgraphToMove.Pos.X + dx,
-				subgraphToMove.Pos.Y + dy);
-			((Cluster)subgraphToMove.GeometryNode).RectangularBoundary.Rect = 
-				new Microsoft.Msagl.Core.Geometry.Rectangle(
-					subgraphToMove.GeometryNode.BoundingBox.Size,
-					subgraphToMove.Pos); 
-			foreach (var node in subgraphToMove.Nodes)
-			{
-				node.GeometryNode.Center = new Point(
-					node.Pos.X + dx, 
-					node.Pos.Y+ dy);
-			}
-		}
 
 		private void AddContextStores(IWorkflowBlock block, BlockSubGraph blockSubGraph)
 		{

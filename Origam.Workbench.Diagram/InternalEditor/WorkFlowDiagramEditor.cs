@@ -101,17 +101,17 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		        : new List<string> {nodeSelector.Selected?.Id};
 	        nodesToExpand.AddRange(dependencyPainter.GetNodesToExpand());
 	        gViewer.Graph = factory.Draw(UpToDateGraphParent, nodesToExpand);
-	        factory.AlignContextStoreSubgraph();
 	        dependencyPainter.Draw();
-	        gViewer.Transform = originalTransform.IsIdentity
-		        ? null
-		        : originalTransform;
-	        //gViewer.Invalidate();
-//	        var graph = gViewer.Graph;
-//	        gViewer.Graph = null;
-//	        //factory.AlignContextStoreSubgraph();
-//	        gViewer.Graph = graph;
-	        //gViewer.Redraw();
+
+	        if (originalTransform.IsIdentity)
+	        {
+		        gViewer.Transform =  null;
+	        }
+	        else
+	        {
+		        gViewer.Transform = originalTransform;
+		        gViewer.Redraw();
+	        }
         }
         
         private void OnDoubleClick(object sender, EventArgs e)

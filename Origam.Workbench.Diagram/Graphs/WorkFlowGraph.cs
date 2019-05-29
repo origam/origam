@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Msagl.Drawing;
 using Origam.Workbench.Diagram.Extensions;
+using Node = Microsoft.Msagl.Drawing.Node;
 
 namespace Origam.Workbench.Diagram.Graphs
 {

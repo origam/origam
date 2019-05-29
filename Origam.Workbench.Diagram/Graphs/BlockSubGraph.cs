@@ -1,4 +1,5 @@
 using System.Linq;
+using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.Layout.Layered;
 
@@ -23,7 +24,8 @@ namespace Origam.Workbench.Diagram.Graphs
             {
                 PackingAspectRatio = 1000,
                 AdditionalClusterTopMargin = 30,
-                ClusterMargin = 20
+                ClusterMargin = 20,
+                PackingMethod = PackingMethod.CompactTop
             };
         }
 
