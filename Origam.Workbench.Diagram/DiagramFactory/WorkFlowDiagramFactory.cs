@@ -42,7 +42,6 @@ namespace Origam.Workbench.Diagram
 {
 	public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGraph>
 	{
-		private readonly INodeSelector nodeSelector;
 		private static readonly int nodeMargin = 40;
 		
 		private List<string> expandedSubgraphNodeIds = new List<string>();
@@ -52,7 +51,6 @@ namespace Origam.Workbench.Diagram
 		public WorkFlowDiagramFactory(INodeSelector nodeSelector,
 			GViewer gViewer)
 		{
-			this.nodeSelector = nodeSelector;
 			nodeFactory = new NodeFactory(nodeSelector, gViewer);
 		}
 

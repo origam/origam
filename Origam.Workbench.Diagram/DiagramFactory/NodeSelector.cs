@@ -26,10 +26,7 @@ namespace Origam.Workbench.Diagram
                     SelectedNodeId = null;
                 }
                 selected = value;
-                NodeSelected?.Invoke(this,SelectedNodeId);
             }
         }
-
-        public event EventHandler<Guid?> NodeSelected;
     }
 }
