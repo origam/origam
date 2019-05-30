@@ -20,19 +20,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Xml;
 using System.Data;
-using OrigamArchitect;
+using System.Xml;
 using Origam.DA.Service;
+using Origam.OrigamEngine.ModelXmlBuilders;
+using Origam.Schema.GuiModel;
+using Origam.Schema.WorkflowModel;
+using Origam.UI;
 using Origam.Workbench;
 using Origam.Workbench.Pads;
-using Origam.UI;
-using Origam.Schema.WorkflowModel;
 
-using Origam.Schema.GuiModel;
-
-
-namespace Origam.Schema.Wizards
+namespace Origam.Gui.Win.Commands
 {
     /// <summary>
     /// Summary description for SetInheritanceOff.
@@ -44,9 +42,9 @@ namespace Origam.Schema.Wizards
 			get
 			{
 				return Owner is FormControlSet 
-					|| Owner is MenuModel.Menu
+					|| Owner is Schema.MenuModel.Menu
 					|| Owner is WorkQueueClass
-					|| Owner is MenuModel.FormReferenceMenuItem
+					|| Owner is Schema.MenuModel.FormReferenceMenuItem
 					|| (Owner is AbstractDashboardWidget && ! (Owner is DashboardWidgetFolder));
 			}
 			set
@@ -65,17 +63,17 @@ namespace Origam.Schema.Wizards
 			if(Owner is FormControlSet)
 			{
 				FormControlSet item = Owner as FormControlSet;
-				doc = Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(item, item.Name, true, Guid.Empty, item.DataStructure, false, "").Document;
+				doc = FormXmlBuilder.GetXml(item, item.Name, true, Guid.Empty, item.DataStructure, false, "").Document;
 			}
-			else if(Owner is MenuModel.FormReferenceMenuItem)
+			else if(Owner is Schema.MenuModel.FormReferenceMenuItem)
 			{
-				MenuModel.FormReferenceMenuItem formMenu = Owner as MenuModel.FormReferenceMenuItem;
-				doc = Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(formMenu.Screen, formMenu.DisplayName, formMenu.ListDataStructure == null, formMenu.Id, formMenu.Screen.DataStructure, formMenu.ReadOnlyAccess, formMenu.SelectionChangeEntity).Document;
+				Schema.MenuModel.FormReferenceMenuItem formMenu = Owner as Schema.MenuModel.FormReferenceMenuItem;
+				doc = FormXmlBuilder.GetXml(formMenu.Screen, formMenu.DisplayName, formMenu.ListDataStructure == null, formMenu.Id, formMenu.Screen.DataStructure, formMenu.ReadOnlyAccess, formMenu.SelectionChangeEntity).Document;
 			}
-			else if(Owner is MenuModel.Menu)
+			else if(Owner is Schema.MenuModel.Menu)
 			{
-				MenuModel.Menu item = Owner as MenuModel.Menu;
-				doc = Origam.OrigamEngine.ModelXmlBuilders.MenuXmlBuilder.GetXml(item);
+				Schema.MenuModel.Menu item = Owner as Schema.MenuModel.Menu;
+				doc = MenuXmlBuilder.GetXml(item);
 			}
 			else if(Owner is WorkQueueClass)
 			{

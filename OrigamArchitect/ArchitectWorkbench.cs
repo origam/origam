@@ -72,6 +72,7 @@ using Origam.Workbench.BaseComponents;
 using Origam.Gui.UI;
 using Origam.Excel;
 using Origam.DA.ObjectPersistence.Providers;
+using Origam.Gui.Win.Commands;
 using Origam.Schema.DeploymentModel;
 using Origam.Workbench.Services.CoreServices;
 
@@ -670,7 +671,7 @@ namespace OrigamArchitect
 			AsMenuCommand mnuServerRestart = CreateMenuItem(strings.SetServerRestart_MenuItem, new Commands.SetServerRestart(), Images.RestartServer, Keys.None, _toolsMenu);
             SqlViewer vwr = new SqlViewer();
             AsMenuCommand mnuShowSqlConsole = CreateMenuItem(strings.SqlConsole_MenuItem, 
-                new Commands.ShowSqlConsole(""), vwr.Icon.ToBitmap(), Keys.None, _toolsMenu);
+                new ShowSqlConsole(""), vwr.Icon.ToBitmap(), Keys.None, _toolsMenu);
 
 			_fileMenu.SubItems.Add(CreateSeparator());
 			
@@ -758,7 +759,7 @@ namespace OrigamArchitect
 			AsMenuCommand schemaNewMenu = CreateMenuWithSubmenu(strings.New_MenuItem, ImageRes.icon_new, new SchemaItemEditorsMenuBuilder(), _schemaMenu);
 			CreateMenuItem(strings.NewGroup_MenuItem, new AddNewGroup(), ImageRes.icon_new_group, Keys.None, _schemaMenu);
             CreateMenuItem(strings.RepeatNew_MenuItem, new AddRepeatingSchemaItem(), ImageRes.icon_repeat_new, Keys.F12, _schemaMenu);
-			CreateMenuWithSubmenu(strings.Actions_MenuItem, ImageRes.icon_actions, new Commands.SchemaActionsMenuBuilder(), _schemaMenu);
+			CreateMenuWithSubmenu(strings.Actions_MenuItem, ImageRes.icon_actions, new SchemaActionsMenuBuilder(), _schemaMenu);
 			CreateMenuWithSubmenu(strings.ConvertTo_MenuItem, ImageRes.icon_convert_to, new SchemaItemConvertMenuBuilder(), _schemaMenu);
 			CreateMenuWithSubmenu(strings.MoveToPackage_MenuItem, ImageRes.icon_move_to_package, new ExtensionMenuBuilder(), _schemaMenu);
 				

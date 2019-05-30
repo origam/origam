@@ -88,10 +88,22 @@
       <Project>{FF4722B4-01F8-4062-AF39-F243A6BF336D}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj">
+      <Project>{233d40c6-ae59-4651-b7bd-dd09d5835e21}</Project>
+      <Name>Origam.OrigamEngine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Rule\Origam.Rule.csproj">
       <Name>Origam.Rule</Name>
       <Project>{4F05DB44-2BBD-4B54-8D37-E8038D1EE1E7}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel.csproj">
+      <Project>{a802634d-dcf0-4f27-992d-e3fadcaa3fb4}</Project>
+      <Name>Origam.Schema.DeploymentModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.EntityModel.UI\Origam.Schema.EntityModel.UI.csproj">
+      <Project>{01aadfb6-2a85-4bfa-8998-392ca17e3e48}</Project>
+      <Name>Origam.Schema.EntityModel.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
       <Project>{FDF55D1B-BB0D-4191-AE53-98DE5A4465B5}</Project>
@@ -100,6 +112,10 @@
     <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel.csproj">
       <Project>{ECFF4A9D-9196-4962-823C-A65D552FF6D8}</Project>
       <Name>Origam.Schema.GuiModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.LookupModel.UI\Origam.Schema.LookupModel.UI.csproj">
+      <Project>{a167cb98-7655-4f6e-8b13-5633195dd12a}</Project>
+      <Name>Origam.Schema.LookupModel.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.LookupModel\Origam.Schema.LookupModel.csproj">
       <Name>Origam.Schema.LookupModel</Name>
@@ -115,6 +131,10 @@
       <Name>Origam.Schema.RuleModel</Name>
       <Project>{B2FFC838-98F6-4D52-8BFF-99546B1B8A4D}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.WorkflowModel.UI\Origam.Schema.WorkflowModel.UI.csproj">
+      <Project>{d561db91-154b-43ce-88c1-f97e47539c73}</Project>
+      <Name>Origam.Schema.WorkflowModel.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.WorkflowModel\Origam.Schema.WorkflowModel.csproj">
       <Project>{5b6e4021-152c-4276-a1ae-e3b9ba223024}</Project>
@@ -271,6 +291,13 @@
     <Compile Include="ColumnParameterMappingCollection.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands\Commands.cs" />
+    <Compile Include="Commands\SchemaActionMenuBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\ShowModelElementXmlCommand.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ComponentBinding.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -312,6 +339,24 @@
     </Compile>
     <Compile Include="Grid\IAsGridEditor.cs" />
     <Compile Include="DesktopEntityUIActionRunnerClient.cs" />
+    <Compile Include="Strings.Designer.cs" />
+    <Compile Include="Wizards\CreateFormFromEntityCommand.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Wizards\CreateFormFromEntityWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Wizards\CreateLanguageTranslationEntityCommand.cs" />
+    <Compile Include="Wizards\CreateMenuFromFormWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Wizards\CreatePanelFromEntityCommand.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Wizards\CreateRoleCommand.cs" />
+    <Compile Include="Wizards\CreateWorkQueueClassFromEntityCommand.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Workflow\ExecuteWorkflowButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -597,6 +642,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Tree\AsTreeView2.resx">
       <DependentUpon>AsTreeView2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\CreateFormFromEntityWizard.resx">
+      <DependentUpon>CreateFormFromEntityWizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizards\CreateMenuFromFormWizard.resx">
+      <DependentUpon>CreateMenuFromFormWizard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Workflow\WorkflowForm.resx">
       <DependentUpon>WorkflowForm.cs</DependentUpon>

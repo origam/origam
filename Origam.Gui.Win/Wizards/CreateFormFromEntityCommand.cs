@@ -21,19 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Windows.Forms;
-
-using Origam.Schema.WorkflowModel;
-using Origam.Schema.GuiModel;
-using Origam.Schema.EntityModel;
-using Origam.Schema.MenuModel;
 using Origam.Schema.DeploymentModel;
+using Origam.Schema.EntityModel;
+using Origam.Schema.GuiModel;
+using Origam.Schema.MenuModel;
 using Origam.UI;
-using Origam.Workbench.Services;
-using Origam.Workbench.Services.CoreServices;
-using Origam.DA.Service;
-using static Origam.DA.Common.Enums;
 
-namespace OrigamArchitect
+namespace Origam.Gui.Win.Wizards
 {
 	/// <summary>
 	/// Summary description for CreateFormFromEntityCommand.
@@ -221,7 +215,7 @@ namespace OrigamArchitect
 		{
 			get
 			{
-				return Owner is Workflow;
+				return Owner is Schema.WorkflowModel.Workflow;
 			}
 			set
 			{
@@ -231,7 +225,7 @@ namespace OrigamArchitect
 
 		public override void Run()
 		{
-			Workflow wf = Owner as Workflow;
+			Schema.WorkflowModel.Workflow wf = Owner as Schema.WorkflowModel.Workflow;
 			CreateMenuFromFormWizard wiz = new CreateMenuFromFormWizard();
 			wiz.Role = wf.Name;
 			if(wiz.ShowDialog() == DialogResult.OK)

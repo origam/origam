@@ -20,16 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using Origam.UI;
-using Origam.Schema.EntityModel;
-using System.Windows.Forms;
 using System.Collections;
-using Origam.Schema.DeploymentModel;
-using core = Origam.Workbench.Services.CoreServices;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
+using Origam.UI;
 
-namespace OrigamArchitect
+namespace Origam.Gui.Win.Wizards
 {
 	class CreateLanguageTranslationEntityCommand : AbstractMenuCommand
 	{

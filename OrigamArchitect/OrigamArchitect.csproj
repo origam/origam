@@ -328,12 +328,6 @@
     <Compile Include="Commands\GenerateXamlCommand.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Commands\SchemaActionMenuBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Commands\ShowModelElementXmlCommand.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Commands\WindowCommands.cs" />
     <Compile Include="ControlsLookUpService.cs" />
     <Compile Include="DebugInfo.cs" />
@@ -387,23 +381,6 @@
     <Compile Include="SystemInformation.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Wizards\CreateLanguageTranslationEntityCommand.cs" />
-    <Compile Include="Wizards\CreateFormFromEntityCommand.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Wizards\CreateFormFromEntityWizard.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Wizards\CreateMenuFromFormWizard.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Wizards\CreatePanelFromEntityCommand.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Wizards\CreateRoleCommand.cs" />
-    <Compile Include="Wizards\CreateWorkQueueClassFromEntityCommand.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="WorkflowPlayerPad.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -452,12 +429,6 @@
     <EmbeddedResource Include="SystemInformation.resx">
       <DependentUpon>SystemInformation.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Wizards\CreateFormFromEntityWizard.resx">
-      <DependentUpon>CreateFormFromEntityWizard.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Wizards\CreateMenuFromFormWizard.resx">
-      <DependentUpon>CreateMenuFromFormWizard.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="WorkflowPlayerPad.resx">
       <DependentUpon>WorkflowPlayerPad.cs</DependentUpon>
     </EmbeddedResource>
@@ -473,6 +444,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Origam\Workbench\" />
+    <Folder Include="Wizards" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AeroWizard">

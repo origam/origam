@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
@@ -20,23 +20,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Windows.Forms;
-using Origam.Schema.EntityModel;
-using Origam.Schema.WorkflowModel;
+using Origam.Schema.DeploymentModel;
 using Origam.UI;
 
-namespace OrigamArchitect
+namespace Origam.Gui.Win.Wizards
 {
-	/// <summary>
-	/// Summary description for CreatePanelFromEntityCommand.
-	/// </summary>
-	public class CreateWorkQueueClassFromEntityCommand : AbstractMenuCommand
-	{
+    class CreateRoleCommand : AbstractMenuCommand
+    {
 		public override bool IsEnabled
 		{
 			get
 			{
-				return Owner is IDataEntity;
+                IAuthorizationContextContainer obj = Owner as IAuthorizationContextContainer;
+                return obj != null && obj.AuthorizationContext != "" && obj.AuthorizationContext != null
+                    && obj.AuthorizationContext != "*";
 			}
 			set
 			{
@@ -46,13 +43,10 @@ namespace OrigamArchitect
 
 		public override void Run()
 		{
-			CreateFormFromEntityWizard wiz = new CreateFormFromEntityWizard();
-			wiz.Entity = Owner as IDataEntity;
-			if(wiz.ShowDialog() == DialogResult.OK)
-			{
-				WorkQueueClass result = WorkflowHelper.CreateWorkQueueClass(
-                    wiz.Entity, wiz.SelectedFields, GeneratedModelElements);
-			}
-		}
+            IAuthorizationContextContainer obj = Owner as IAuthorizationContextContainer;
+            ServiceCommandUpdateScriptActivity activity = 
+                CreateRole(obj.AuthorizationContext);
+            GeneratedModelElements.Add(activity);
+        }
 	}
 }

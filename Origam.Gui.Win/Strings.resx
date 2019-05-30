@@ -462,4 +462,37 @@
   <data name="WrongCustomFormatMeaasge" xml:space="preserve">
     <value>The date {0} could not be formated with the specified custom fromat {1}. Please check that the format is correct.</value>
   </data>
+  <data name="Cancel_Button" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Caption_Label" xml:space="preserve">
+    <value>Caption:</value>
+  </data>
+  <data name="DeploymentScripts_Title" xml:space="preserve">
+    <value>Deployment Scripts</value>
+  </data>
+  <data name="ExecuteDeploymentScripts_Question" xml:space="preserve">
+    <value>Deployment scripts have been created. Do you want to execute them?</value>
+  </data>
+  <data name="GenericError_Title" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Massages_XmlItem" xml:space="preserve">
+    <value>Messages</value>
+  </data>
+  <data name="ModelElementsUpdate_Message" xml:space="preserve">
+    <value>Generated model elements are now shown in the search results.</value>
+  </data>
+  <data name="Ok_Button" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Results_Title" xml:space="preserve">
+    <value>Results</value>
+  </data>
+  <data name="Role_Label" xml:space="preserve">
+    <value>Role:</value>
+  </data>
+  <data name="SaveXmlResult_Title" xml:space="preserve">
+    <value>Save XML result</value>
+  </data>
 </root>

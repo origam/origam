@@ -20,27 +20,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Drawing;
-using System.Collections;
-
-using System.Windows.Forms;
-using Origam;
-using Origam.UI;
-using Origam.Workbench;
-using Origam.Workbench.Services;
-using Origam.Workbench.Pads;
-using Origam.Schema.DeploymentModel;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
 using Origam.DA.ObjectPersistence;
-using Origam.Gui.UI;
-using Origam.UI;
-using Origam.Schema.LookupModel.Wizards;
-using Origam.Schema.EntityModel.Wizards;
+using Origam.Gui.Win.Wizards;
+using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel.UI.Wizards;
+using Origam.Schema.EntityModel.Wizards;
+using Origam.Schema.LookupModel.Wizards;
 using Origam.Schema.Wizards;
 using Origam.Schema.WorkflowModel;
+using Origam.UI;
+using Origam.Workbench;
+using Origam.Workbench.Pads;
+using Origam.Workbench.Services;
 
-namespace OrigamArchitect.Commands
+namespace Origam.Gui.Win.Commands
 {
 	public class SchemaActionsMenuBuilder : ISubmenuBuilder
 	{
