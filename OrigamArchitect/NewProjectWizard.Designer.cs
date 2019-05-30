@@ -90,7 +90,7 @@
             this.txtDatabaseType = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.IntegratedLabel = new System.Windows.Forms.Label();
             this.chkIntegratedAuthentication = new System.Windows.Forms.CheckBox();
             this.cboWebRoot = new System.Windows.Forms.ComboBox();
             this.lblDatabasePassword = new System.Windows.Forms.Label();
@@ -656,7 +656,7 @@
             this.pageLocalDeploymentSettings.Controls.Add(this.txtDatabaseType);
             this.pageLocalDeploymentSettings.Controls.Add(this.label4);
             this.pageLocalDeploymentSettings.Controls.Add(this.label2);
-            this.pageLocalDeploymentSettings.Controls.Add(this.label3);
+            this.pageLocalDeploymentSettings.Controls.Add(this.IntegratedLabel);
             this.pageLocalDeploymentSettings.Controls.Add(this.chkIntegratedAuthentication);
             this.pageLocalDeploymentSettings.Controls.Add(this.cboWebRoot);
             this.pageLocalDeploymentSettings.Controls.Add(this.lblDatabasePassword);
@@ -695,12 +695,11 @@
             // labelPrivileges
             // 
             this.labelPrivileges.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.labelPrivileges.Location = new System.Drawing.Point(160, 262);
+            this.labelPrivileges.Location = new System.Drawing.Point(157, 257);
             this.labelPrivileges.Name = "labelPrivileges";
             this.labelPrivileges.Size = new System.Drawing.Size(396, 36);
             this.labelPrivileges.TabIndex = 17;
-            this.labelPrivileges.Text = "Enter UserName and Password witch has privileges for create Database and user.";
-            this.labelPrivileges.Visible = false;
+            this.labelPrivileges.Text = "Enter User Name and Password witch has privileges to create Database and user.";
             // 
             // label16
             // 
@@ -713,6 +712,7 @@
             // 
             // txtDatabaseType
             // 
+            this.txtDatabaseType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.txtDatabaseType.FormattingEnabled = true;
             this.txtDatabaseType.Location = new System.Drawing.Point(160, 86);
             this.txtDatabaseType.Name = "txtDatabaseType";
@@ -733,21 +733,21 @@
             // label2
             // 
             this.label2.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label2.Location = new System.Drawing.Point(161, 43);
+            this.label2.Location = new System.Drawing.Point(157, 42);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(370, 39);
             this.label2.TabIndex = 13;
             this.label2.Text = "A new virtual directory/application will be created under the selected web site. " +
     "Example: Default Web Site";
             // 
-            // label3
+            // IntegratedLabel
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(4, 165);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(143, 15);
-            this.label3.TabIndex = 11;
-            this.label3.Text = "Integrated Authentication";
+            this.IntegratedLabel.AutoSize = true;
+            this.IntegratedLabel.Location = new System.Drawing.Point(7, 165);
+            this.IntegratedLabel.Name = "IntegratedLabel";
+            this.IntegratedLabel.Size = new System.Drawing.Size(143, 15);
+            this.IntegratedLabel.TabIndex = 11;
+            this.IntegratedLabel.Text = "Integrated Authentication";
             // 
             // chkIntegratedAuthentication
             // 
@@ -775,7 +775,7 @@
             // 
             this.lblDatabasePassword.AutoSize = true;
             this.lblDatabasePassword.Enabled = false;
-            this.lblDatabasePassword.Location = new System.Drawing.Point(4, 228);
+            this.lblDatabasePassword.Location = new System.Drawing.Point(7, 228);
             this.lblDatabasePassword.Name = "lblDatabasePassword";
             this.lblDatabasePassword.Size = new System.Drawing.Size(57, 15);
             this.lblDatabasePassword.TabIndex = 7;
@@ -793,7 +793,7 @@
             // lblWebRoot
             // 
             this.lblWebRoot.AutoSize = true;
-            this.lblWebRoot.Location = new System.Drawing.Point(5, 16);
+            this.lblWebRoot.Location = new System.Drawing.Point(7, 16);
             this.lblWebRoot.Name = "lblWebRoot";
             this.lblWebRoot.Size = new System.Drawing.Size(90, 15);
             this.lblWebRoot.TabIndex = 4;
@@ -803,7 +803,7 @@
             // 
             this.lblDatabaseUserName.AutoSize = true;
             this.lblDatabaseUserName.Enabled = false;
-            this.lblDatabaseUserName.Location = new System.Drawing.Point(4, 198);
+            this.lblDatabaseUserName.Location = new System.Drawing.Point(7, 198);
             this.lblDatabaseUserName.Name = "lblDatabaseUserName";
             this.lblDatabaseUserName.Size = new System.Drawing.Size(65, 15);
             this.lblDatabaseUserName.TabIndex = 6;
@@ -821,7 +821,7 @@
             // lblServerName
             // 
             this.lblServerName.AutoSize = true;
-            this.lblServerName.Location = new System.Drawing.Point(3, 134);
+            this.lblServerName.Location = new System.Drawing.Point(7, 134);
             this.lblServerName.Name = "lblServerName";
             this.lblServerName.Size = new System.Drawing.Size(90, 15);
             this.lblServerName.TabIndex = 5;
@@ -891,7 +891,7 @@
         private AeroWizard.WizardPage pageReview;
         private System.Windows.Forms.ListView lstTasks;
         private System.Windows.Forms.ColumnHeader colText;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label IntegratedLabel;
         private System.Windows.Forms.CheckBox chkIntegratedAuthentication;
         private System.Windows.Forms.ColumnHeader colStatus;
         private AeroWizard.WizardPage pagePaths;
