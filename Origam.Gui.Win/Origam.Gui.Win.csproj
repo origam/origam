@@ -291,13 +291,21 @@
     <Compile Include="ColumnParameterMappingCollection.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Commands\Commands.cs" />
+    <Compile Include="Commands\MakeVersionCurrent.cs" />
+    <Compile Include="Commands\GenerateDataStructureEntityColumns.cs" />
+    <Compile Include="Commands\GenerateWorkQueueClassEntityMappings.cs" />
+    <Compile Include="Commands\MakeActiveVersionCurrent.cs" />
+    <Compile Include="Commands\SaveDataFromDataStructure.cs" />
     <Compile Include="Commands\SchemaActionMenuBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands\ShowDataStructureEntitySql.cs" />
+    <Compile Include="Commands\ShowDataStructureFilterSetSql.cs" />
+    <Compile Include="Commands\ShowDataStructureSortSetSql.cs" />
     <Compile Include="Commands\ShowModelElementXmlCommand.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands\ShowSqlConsole.cs" />
     <Compile Include="ComponentBinding.cs">
       <SubType>Code</SubType>
     </Compile>
