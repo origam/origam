@@ -880,9 +880,10 @@ namespace Origam.Workbench.Commands
                 GitManager gitManager = new GitManager(settings.ModelSourceControlLocation);
                 foreach (string file in _schema.ActiveSchemaItem.Files)
                 {
-                    if (File.Exists(Path.Combine(settings.ModelSourceControlLocation, file)))
+                    string fileName = Path.Combine(settings.ModelSourceControlLocation, file);
+                    if (File.Exists(fileName))
                     {
-                        gitManager.SetFile(file);
+                        gitManager.SetFile(fileName);
                         Commit lastCommit = gitManager.GetLastCommit();
                         string text = gitManager.GetModifiedChanges();
                         if (!string.IsNullOrEmpty(text))
@@ -892,7 +893,7 @@ namespace Origam.Workbench.Commands
                                 Text = gitManager.getCompareFileName()
                             };
                             text = Regex.Replace(text, @"^.*\ No newline at end of file.*\n", "", RegexOptions.Multiline);
-                            gitDiferenceView.ShowDiff(file + " " + lastCommit.Sha, file, text);
+                            gitDiferenceView.ShowDiff(fileName + " " + lastCommit.Sha, fileName, text);
                             WorkbenchSingleton.Workbench.ShowView(gitDiferenceView);
                             hasChange = true;
                         }

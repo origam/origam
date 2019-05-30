@@ -677,6 +677,7 @@ namespace Origam.Workbench
             bn.NodeText = e.Label;
 		    persistenceProvider.EndTransaction();
             _refreshPaused = false;
+            RefreshNode(e.Node);
 		}
 
 		private void tvwExpressionBrowser_BeforeLabelEdit(object sender, System.Windows.Forms.NodeLabelEditEventArgs e)
@@ -777,10 +778,10 @@ namespace Origam.Workbench
             GitManager gitManager = new GitManager(_sourcePath);
             foreach (string file in item.Files)
             {
-                if (File.Exists(Path.Combine(_sourcePath, file)))
+                string path = Path.Combine(_sourcePath, file);
+                if (File.Exists(path))
                 {
-                    gitManager.SetFile(file);
-                    if(gitManager.HasChanges(file))
+                    if(gitManager.HasChanges(path))
                     {
                         return true;
                     }
@@ -837,13 +838,13 @@ namespace Origam.Workbench
 		{
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             _sourcePath = settings.ModelSourceControlLocation;
-            var gitPath = Path.Combine(_sourcePath, ".git");
-            if (Directory.Exists(gitPath))
+            string gitPath = GitManager.GetRepositoryPath(settings.ModelSourceControlLocation);
+            if (gitPath != null)
             {
                 fileWatcher.Path = gitPath;
                 fileWatcher.EnableRaisingEvents = true;
+                _supportsGit = true;
             }
-            _supportsGit = GitManager.IsValid(_sourcePath);
             TreeNode tnode = RenderBrowserNode(node);
             RecolorNode(tnode);
             try

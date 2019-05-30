@@ -37,10 +37,14 @@ namespace Origam.Git
         private string patname = @"name\s*=\s*(.*)";
         private string patemail = @"email\s*=\s*(.*)";
 
-        public GitManager(string repositoryPath)
+        public GitManager(string path)
         {
+            repositoryPath = Repository.Discover(path);
+            if (repositoryPath == null)
+            {
+                throw new Exception("Not a valid git directory " + path);
+            }
             Repo = new Repository(repositoryPath);
-            this.repositoryPath = repositoryPath;
             InitValues();
         }
         public GitManager()
@@ -49,7 +53,12 @@ namespace Origam.Git
         }
         public static bool IsValid(string modelSourceControlLocation)
         {
-            return Repository.IsValid(modelSourceControlLocation);
+            return Repository.Discover(modelSourceControlLocation) != null;
+        }
+
+        public static string GetRepositoryPath(string modelSourceControlLocation)
+        {
+            return Repository.Discover(modelSourceControlLocation);
         }
         private void InitValues()
         {
