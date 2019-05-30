@@ -428,7 +428,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		{
 			if (objectUnderMouse == null) return false;
 			if (Equals(nodeSelector.Selected, Graph.MainDrawingSubgraf)) return false;
-			if (schemaItemUnderMouse.SchemaExtension.Id !=
+			if (schemaItemUnderMouse?.SchemaExtension?.Id !=
 			    schemaService.ActiveSchemaExtensionId) return false;
 			return Equals(objectUnderMouse.Node, nodeSelector.Selected);
 		}
