@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Linq;
 using Origam.DA.ObjectPersistence;
@@ -49,7 +50,7 @@ namespace Origam.DA.EntityModel
 
             AbstractSchemaItem itemWithDuplicateName = abstractSchemaItem
                 .ParentItem.ChildItems
-                .ToEnumerable()
+                .ToGeneric()
                 .Where(item => item is AbstractDataEntityColumn)
                 .Where(item => item.Name == instanceName)
                 .FirstOrDefault(item => item.Id != abstractSchemaItem.Id);

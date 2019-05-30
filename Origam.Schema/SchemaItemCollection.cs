@@ -640,7 +640,7 @@ namespace Origam.Schema
 
 		#endregion
 		
-		public IEnumerable<AbstractSchemaItem> ToEnumerable()
+		public IEnumerable<AbstractSchemaItem> ToGeneric()
 		{
 			foreach (var item in this)
 			{
@@ -650,7 +650,7 @@ namespace Origam.Schema
 
 		public List<AbstractSchemaItem> ToList()
 		{
-			return  ToEnumerable().ToList();
+			return  ToGeneric().ToList();
 		}
 	}
 }

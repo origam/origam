@@ -101,12 +101,12 @@ namespace Origam.Workbench.Diagram
 
 		private void AddNodeItems(IWorkflowStep step, Subgraph subgraphNode)
 		{
-			step.ChildItems.ToEnumerable()
+			step.ChildItems.ToGeneric()
 				.Where(x => !(x is WorkflowTaskDependency))
 				.OrderByDescending(x => x.Name)
 				.ForEach(stepChild =>
 				{
-					stepChild.ChildItems.ToEnumerable()
+					stepChild.ChildItems.ToGeneric()
 						.OrderByDescending(x => x.Name)
 						.ForEach(innerChild =>
 						{

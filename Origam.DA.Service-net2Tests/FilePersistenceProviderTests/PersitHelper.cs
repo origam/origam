@@ -77,7 +77,7 @@ namespace Origam.DA.Service_net2Tests
         {
             List<AbstractSchemaItem> abstractSchemaItems = TypeTools.AllProviderTypes
                 .Select(TypeTools.GetAllItems)
-                .SelectMany(itemCollection => itemCollection.ToEnumerable())
+                .SelectMany(itemCollection => itemCollection.ToGeneric())
                 .ToList();
 
             return abstractSchemaItems;

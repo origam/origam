@@ -3256,7 +3256,7 @@ namespace Origam.DA.Service
                         string leftOperand = RenderExpression(leftArg.ChildItems[0], entity,
                             replaceParameterTexts, dynamicParameters, parameterReferences);
                         IEnumerable<string> options = listExpressions
-                            .ToEnumerable()
+                            .ToGeneric()
                             .Cast<ISchemaItem>()
                             .Select(listExpression =>
                                 RenderExpression(listExpression, entity, replaceParameterTexts,

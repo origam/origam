@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Data;
 using System.Linq;
@@ -52,7 +53,7 @@ namespace Origam.Schema.EntityModel
 
             var itemWithDuplicateName = dataconstant
                 .RootProvider.ChildItems
-                .ToEnumerable()
+                .ToGeneric()
                 .Where(item => item is DataConstant)
                 .Where(item => item.Name == instanceName)
                 .FirstOrDefault(item => item.Id != dataconstant.Id);

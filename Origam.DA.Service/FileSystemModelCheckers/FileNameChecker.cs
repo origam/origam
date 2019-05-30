@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -77,7 +78,7 @@ namespace Origam.DA.Service
         private IEnumerable<Guid> GetChildrenIds(AbstractSchemaItem item)
         {
             return item.ChildItems
-                .ToEnumerable()
+                .ToGeneric()
                 .Select(x=>x.Id);
         }
 

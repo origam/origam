@@ -163,7 +163,7 @@ namespace Origam.Schema.DeploymentModel
         [Browsable(false)]
         public IEnumerable<AbstractUpdateScriptActivity> UpdateScriptActivities =>
 			ChildItems
-				.ToEnumerable()
+				.ToGeneric()
 				.OrderBy(activity => ((AbstractUpdateScriptActivity)activity).ActivityOrder)
 				.Cast<AbstractUpdateScriptActivity>();
 

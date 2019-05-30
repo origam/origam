@@ -179,7 +179,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
         {
 	        AbstractSchemaItem dependentItem = RetrieveItem(edge.Target);
 	        var workflowTaskDependency = dependentItem.ChildItems
-		        .ToEnumerable()
+		        .ToGeneric()
 		        .OfType<WorkflowTaskDependency>()
 		        .Single(x => x.WorkflowTaskId == Guid.Parse(edge.Source));
 	        workflowTaskDependency.IsDeleted = true;
@@ -549,7 +549,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			if (schemaItemUnderMouse is ServiceMethodCallTask)
 			{
 				schemaItemUnderMouse.ChildItems
-					.ToEnumerable()
+					.ToGeneric()
 					.Where(item => !(item is WorkflowTaskDependency))
 					.ForEach(schemaItem =>
 					{
