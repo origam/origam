@@ -15,11 +15,12 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         private readonly NodePainter nodePainter;
         private readonly NodeHeaderPainter nodeHeaderPainter;
 
-        public SubgraphNodePainter(InternalPainter internalPainter)
+        public SubgraphNodePainter(InternalPainter internalPainter,
+            bool isFromActivePackage)
         {
             painter = internalPainter;
-            nodePainter = new NodePainter(internalPainter);
-            nodeHeaderPainter = new NodeHeaderPainter(internalPainter);
+            nodePainter = new NodePainter(internalPainter, isFromActivePackage);
+            nodeHeaderPainter = new NodeHeaderPainter(internalPainter, isFromActivePackage);
         }
         
         public ICurve GetBoundary(Node node)

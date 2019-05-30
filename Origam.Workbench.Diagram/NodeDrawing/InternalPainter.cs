@@ -29,7 +29,8 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         public Pen BlackPen { get; } = new Pen(System.Drawing.Color.Black, 1);
 
         public readonly SolidBrush BlackBrush = new SolidBrush(System.Drawing.Color.Black);
-        public readonly SolidBrush GreyBrush = new SolidBrush(System.Drawing.Color.LightGray);
+        public readonly SolidBrush LightGreyBrush = new SolidBrush(System.Drawing.Color.LightGray);
+        public readonly SolidBrush DarkGreyBrush = new SolidBrush(System.Drawing.Color.DarkGray);
         public readonly SolidBrush GreenBrush = new SolidBrush(System.Drawing.Color.FromArgb(0, 154, 41));
         public readonly SolidBrush RedBrush = new SolidBrush(System.Drawing.Color.FromArgb(255, 73, 61));
         public readonly Brush WhiteBrush  = new SolidBrush(System.Drawing.Color.White);
@@ -109,6 +110,13 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             SizeF stringSize = MeasureString(node.LabelText);
             var labelWidth = stringSize.Width + ImageRightMargin + image.Width;
             return labelWidth;
+        }
+
+        public Brush GetTextBrush(bool isFromActivePackage)
+        {
+            return isFromActivePackage
+                ? BlackBrush
+                : DarkGreyBrush;
         }
     }
 

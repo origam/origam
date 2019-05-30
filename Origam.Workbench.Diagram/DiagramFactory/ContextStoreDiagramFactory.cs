@@ -7,6 +7,7 @@ using Microsoft.Msagl.GraphViewerGdi;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Diagram.NodeDrawing;
+using Origam.Workbench.Services;
 using DrawingNode = Microsoft.Msagl.Drawing.Node;
 
 namespace Origam.Workbench.Diagram.DiagramFactory
@@ -20,10 +21,11 @@ namespace Origam.Workbench.Diagram.DiagramFactory
 
         public ContextStoreDiagramFactory(
             IPersistenceProvider persistenceProvider,
-            INodeSelector nodeSelector, GViewer gViewer)
+            INodeSelector nodeSelector, GViewer gViewer,
+            WorkbenchSchemaService schemaService)
         {
             this.persistenceProvider = persistenceProvider;
-            nodeFactory = new NodeFactory(nodeSelector, gViewer);
+            nodeFactory = new NodeFactory(nodeSelector, gViewer, schemaService );
         }
 
         public Graph Draw(IContextStore contextStore)

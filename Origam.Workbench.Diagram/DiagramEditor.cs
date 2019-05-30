@@ -31,14 +31,11 @@ using Microsoft.Msagl.GraphViewerGdi;
 using Origam.DA.ObjectPersistence;
 using Origam.Gui.UI;
 using Origam.Schema.WorkflowModel;
-using Origam.UI;
 using Origam.Workbench.BaseComponents;
 using Origam.Workbench.Commands;
 using Origam.Workbench.Diagram.DiagramFactory;
-using Origam.Workbench.Diagram.Extensions;
 using Origam.Workbench.Diagram.InternalEditor;
 using Origam.Workbench.Services;
-using Point = Microsoft.Msagl.Core.Geometry.Point;
 using DrawingNode = Microsoft.Msagl.Drawing.Node;
 using MouseButtons = System.Windows.Forms.MouseButtons;
 
@@ -53,9 +50,12 @@ namespace Origam.Workbench.Editors
         private TableLayoutPanel tableLayoutPanel1;
         private readonly NodeSelector nodeSelector;
         private System.Drawing.Point lastMouseLocation;
+        private WorkbenchSchemaService schemaService;
 
         public DiagramEditor()
 		{
+			schemaService = ServiceManager.Services
+				.GetService<WorkbenchSchemaService>();
 			nodeSelector = new NodeSelector();
 			persistenceProvider = ServiceManager.Services
 				.GetService<IPersistenceService>()
@@ -235,14 +235,15 @@ namespace Origam.Workbench.Editors
 						nodeSelector: nodeSelector,
 						parentForm: this,
 						persistenceProvider: persistenceProvider,
-						factory: new WorkFlowDiagramFactory(nodeSelector,gViewer));
+						factory: new WorkFlowDiagramFactory(
+							nodeSelector,gViewer, schemaService));
 					break;
 				case IContextStore contextStore:
 					internalEditor = new GeneralDiagramEditor<IContextStore>(
 						gViewer: gViewer,
 						schemaItem: contextStore,
 						factory: new ContextStoreDiagramFactory(
-							persistenceProvider, nodeSelector, gViewer)
+							persistenceProvider, nodeSelector, gViewer, schemaService)
 						);
 					break;
 				case ISchemaItem schemaItem:

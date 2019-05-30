@@ -7,10 +7,13 @@ namespace Origam.Workbench.Diagram.NodeDrawing
     class NodeHeaderPainter
     {
         private readonly InternalPainter painter;
+        private readonly bool isFromActivePackage;
 
-        public NodeHeaderPainter(InternalPainter painter)
+        public NodeHeaderPainter(InternalPainter painter,
+            bool isFromActivePackage)
         {
             this.painter = painter;
+            this.isFromActivePackage = isFromActivePackage;
         }
 
         public void Draw(Node node, Graphics editorGraphics, Rectangle border)
@@ -44,13 +47,14 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                 imageBorder.Width  + imageBackground.Width,
                 headerCenter.Y -
                 (float) border.Height / 2 + imageBorder.Height);
-
+            
+            
             
             editorGraphics.DrawUpSideDown(drawAction: graphics =>
                 {
-                    graphics.DrawString(node.LabelText, painter.Font, painter.BlackBrush,
+                    graphics.DrawString(node.LabelText, painter.Font, painter.GetTextBrush(isFromActivePackage),
                         labelPoint, painter.DrawFormat);
-                    graphics.FillRectangle(painter.GreyBrush, imageBackground);
+                    graphics.FillRectangle(painter.LightGreyBrush, imageBackground);
                     graphics.DrawImage(images.Primary, primaryImagePoint);
                     if (images.Secondary != null)
                     {

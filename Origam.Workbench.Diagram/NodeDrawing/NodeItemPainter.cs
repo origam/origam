@@ -10,11 +10,14 @@ namespace Origam.Workbench.Diagram.NodeDrawing
     {
         private readonly InternalPainter painter;
         private readonly int leftMargin;
+        private readonly bool isFromActivePackage;
 
-        public NodeItemPainter(InternalPainter internalPainter, int leftMargin)
+        public NodeItemPainter(InternalPainter internalPainter, int leftMargin,
+            bool isFromActivePackage)
         {
             painter = internalPainter;
             this.leftMargin = leftMargin;
+            this.isFromActivePackage = isFromActivePackage;
         }
 
         public ICurve GetBoundary(Node node)
@@ -56,7 +59,8 @@ namespace Origam.Workbench.Diagram.NodeDrawing
 
             editorGraphics.DrawUpSideDown(drawAction: graphics =>
                 {
-                    graphics.DrawString(node.LabelText, painter.Font, painter.BlackBrush,
+                    graphics.DrawString(node.LabelText, painter.Font,
+                        painter.GetTextBrush(isFromActivePackage),
                         labelPoint, painter.DrawFormat);
                     graphics.DrawImage(image, imagePoint);
                     if (Equals(painter.NodeSelector.Selected, node))

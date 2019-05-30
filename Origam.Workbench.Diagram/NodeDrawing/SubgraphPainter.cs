@@ -14,13 +14,16 @@ namespace Origam.Workbench.Diagram.NodeDrawing
     internal class SubgraphPainter : INodeItemPainter
     {
         private readonly InternalPainter painter;
+        private readonly bool isFromActivePackage;
         private readonly int emptySubgraphWidth = 200;
         private readonly int emptySubgraphHeight = 80;
         private readonly int imageGap = 10;
 
-        public SubgraphPainter(InternalPainter internalPainter)
+        public SubgraphPainter(InternalPainter internalPainter,
+            bool isFromActivePackage)
         {
             painter = internalPainter;
+            this.isFromActivePackage = isFromActivePackage;
         }
         
         public ICurve GetBoundary(Node node) 
@@ -81,13 +84,14 @@ namespace Origam.Workbench.Diagram.NodeDrawing
 			
             editorGraphics.DrawUpSideDown(drawAction: graphics =>
                 {
-                    graphics.FillRectangle(painter.GreyBrush, imageBackground);
-                    graphics.DrawString(node.LabelText, painter.Font, painter.BlackBrush,
+                    graphics.FillRectangle(painter.LightGreyBrush, imageBackground);
+                    graphics.DrawString(node.LabelText, painter.Font,
+                        painter.GetTextBrush(isFromActivePackage),
                         labelPoint, painter.DrawFormat);
                     if (!string.IsNullOrWhiteSpace(emptyGraphMessage))
                     {
-                        graphics.DrawString(emptyGraphMessage, painter.Font, painter.BlackBrush,
-                            emptyMessagePoint, painter.DrawFormat);
+                        graphics.DrawString(emptyGraphMessage, painter.Font,
+                            painter.BlackBrush, emptyMessagePoint, painter.DrawFormat);
                     }
                     graphics.DrawRectangle(painter.GetActiveBorderPen(node), border);
                     graphics.DrawImage(image, imagePoint);
