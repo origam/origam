@@ -423,7 +423,17 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 			gViewer.Invalidate();
 		}
-		private bool IsDeleteMenuItemAvailable(DNode objectUnderMouse)
+		private bool IsDeleteMenuItemAvailable(DNode objectUnderMouse,
+			AbstractSchemaItem schemaItemUnderMouse)
+		{
+			if (objectUnderMouse == null) return false;
+			if (Equals(nodeSelector.Selected, Graph.MainDrawingSubgraf)) return false;
+			if (schemaItemUnderMouse.SchemaExtension.Id !=
+			    schemaService.ActiveSchemaExtensionId) return false;
+			return Equals(objectUnderMouse.Node, nodeSelector.Selected);
+		}
+		
+		private bool IsAddAfterMenuItemAvailable(DNode objectUnderMouse)
 		{
 			if (objectUnderMouse == null) return false;
 			if (Equals(nodeSelector.Selected, Graph.MainDrawingSubgraf)) return false;
@@ -516,7 +526,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			deleteMenuItem.Text = "Delete";
 			deleteMenuItem.Image = ImageRes.icon_delete;
 			deleteMenuItem.Click += DeleteNode_Click;
-			deleteMenuItem.Enabled = IsDeleteMenuItemAvailable(dNodeUnderMouse);
+			deleteMenuItem.Enabled = 
+				IsDeleteMenuItemAvailable(dNodeUnderMouse, schemaItemUnderMouse);
 			contextMenu.AddSubItem(deleteMenuItem);
 
 
@@ -586,7 +597,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 					};
 				}
 				addAfterMenu.DropDownItems.AddRange(submenuItems);
-				addAfterMenu.Enabled = IsDeleteMenuItemAvailable(dNodeUnderMouse);
+				addAfterMenu.Enabled = IsAddAfterMenuItemAvailable(dNodeUnderMouse);
 				contextMenu.AddSubItem(addAfterMenu);
 			}
 
