@@ -454,18 +454,20 @@ namespace OrigamArchitect
             {
                 chkIntegratedAuthentication.Enabled = false;
                 chkIntegratedAuthentication.Checked = false;
-                labelPrivileges.Visible = true;
                 txtServerName.Width = txtDatabaseType.Width;
                 txtPort.Visible = true;
                 labelPort.Visible = true;
+                chkIntegratedAuthentication.Visible = false;
+                IntegratedLabel.Visible = false;
             }
             else
             {
                 chkIntegratedAuthentication.Enabled = true;
-                labelPrivileges.Visible = false;
                 txtServerName.Width = cboWebRoot.Width;
                 txtPort.Visible = false;
                 labelPort.Visible = false;
+                chkIntegratedAuthentication.Visible = true;
+                IntegratedLabel.Visible = true;
             }
             SetPort();
         }
