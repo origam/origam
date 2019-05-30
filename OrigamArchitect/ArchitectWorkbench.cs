@@ -229,6 +229,11 @@ namespace OrigamArchitect
 			loadedForms.Remove(toolStripContainer);
 		}
 
+		private void OnToolStripsNeedUpdate(object sender, EventArgs args)
+		{
+			UpdateToolStrips();
+		}
+		
 		private void CleanUpToolStripsWhenClosing(IViewContent closingForm)
 		{
 			if (closingForm is IToolStripContainer toolStripContainer)
@@ -245,7 +250,7 @@ namespace OrigamArchitect
 			{
 				toolStripContainer.AllToolStripsRemoved += 
 					OnAllToolStripsRemovedFromALoadedForm;
-			    
+			    toolStripContainer.ToolStripsNeedUpdate += OnToolStripsNeedUpdate;
 			    int widthOfDisplayedToolStrips = toolStripPanel.Controls
 			        .Cast<Control>()
 			        .Select(x => x.Width)

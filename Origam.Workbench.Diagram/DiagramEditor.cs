@@ -299,8 +299,9 @@ namespace Origam.Workbench.Editors
 		
 		public event EventHandler ToolStripsLoaded;
 		public event EventHandler AllToolStripsRemoved;
+		public event EventHandler ToolStripsNeedUpdate;
 
-        private void HScrollBar_Scroll(object sender, ScrollEventArgs e)
+		private void HScrollBar_Scroll(object sender, ScrollEventArgs e)
         {
             if (e.NewValue == e.OldValue) return;
             var focusSubgraph = gViewer.Graph.RootSubgraph.Subgraphs.FirstOrDefault();

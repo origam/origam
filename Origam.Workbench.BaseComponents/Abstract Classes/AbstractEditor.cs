@@ -209,8 +209,7 @@ namespace Origam.Workbench.Editors
             toolPanel.Hide();
             _saveCmd.Click += SaveCmd_Click;
 		    dockCmd.Click += DockCmd_Click;
-
-            LoadSettings();
+		    LoadSettings();
 		}
 
 		private void LoadSettings()
@@ -397,9 +396,10 @@ namespace Origam.Workbench.Editors
 		}
 
         protected override void OnDirtyChanged(EventArgs e)
-			{
+        {
             base.OnDirtyChanged(e);
             RebuildActionsPane();
+            ToolStripsNeedUpdate?.Invoke(this, EventArgs.Empty);
         }
 
         protected override void ViewSpecificLoad(object objectToLoad)
@@ -576,7 +576,7 @@ namespace Origam.Workbench.Editors
 	    public virtual List<ToolStrip> GetToolStrips(int maxWidth =-1) {
 		    if (!showMenusInAppToolStrip) return new List<ToolStrip>();
 			var actions = ActionsBuilder.BuildSubmenu(Content);
-			var actionToolStrip = MakeLabeledToolStrip(actions, "Actions", maxWidth/2);
+			var actionToolStrip = MakeLabeledToolStrip(actions, "Actions",maxWidth/2);
             var newItems = NewElementsBuilder.BuildSubmenu(Content);
 			var newToolStrip = MakeLabeledToolStrip(newItems, "New", maxWidth/2);
 			return new List<ToolStrip> {actionToolStrip, newToolStrip};			        
@@ -585,13 +585,15 @@ namespace Origam.Workbench.Editors
 	    protected ToolStrip MakeLabeledToolStrip(ToolStripMenuItem[] items,
 	        string toolStripName, int maxWidth)
 	    {
-	        BigToolStripButton[] toolStripButtons = items
-	            .Select(x =>
+		    BigToolStripButton[] toolStripButtons = items
+	            .Select(item =>
 	            {
 	                BigToolStripButton button = new BigToolStripButton();
-	                button.Text = x.Text;
-	                button.Image = x.Image ?? ImageRes.UnknownIcon;
-	                button.Click += (sender, args) => x.PerformClick();
+	                button.Text = item.Text;
+	                button.Image = item.Image ?? ImageRes.UnknownIcon;
+	                button.Click += (sender, args) => item.PerformClick();
+	                button.Enabled = !IsDirty;
+		            item.Enabled = !IsDirty;
 	                return button;
 	            }).ToArray();
 
@@ -641,5 +643,6 @@ namespace Origam.Workbench.Editors
 
 	    public event EventHandler ToolStripsLoaded;
 	    public event EventHandler AllToolStripsRemoved;
+	    public event EventHandler ToolStripsNeedUpdate;
 	}
 }

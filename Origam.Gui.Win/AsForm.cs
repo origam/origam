@@ -51,8 +51,9 @@ namespace Origam.Gui.Win
 		
 		public event EventHandler ToolStripsLoaded;
 		public event EventHandler AllToolStripsRemoved;
+		public event EventHandler ToolStripsNeedUpdate;
 
-	    public List<ToolStrip> GetToolStrips(int maxWidth = -1)
+		public List<ToolStrip> GetToolStrips(int maxWidth = -1)
 	    {
 	        return Panels.Select(x => x.ToolStrip).ToList();
 	    }

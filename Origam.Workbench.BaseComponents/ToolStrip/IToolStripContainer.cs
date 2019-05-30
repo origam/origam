@@ -30,5 +30,6 @@ namespace Origam.Gui.UI
         List<ToolStrip> GetToolStrips(int maxWidth=-1);
         event EventHandler ToolStripsLoaded;
         event EventHandler AllToolStripsRemoved;
+        event EventHandler ToolStripsNeedUpdate;
     }
 }
