@@ -35,15 +35,6 @@
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
       abstract="false"
-      activityOrder="40"
-      commandText="-***-ExternalFile:0.55 Insert Pg.origam___commandText___e3ce4f71-7d8a-44fe-bf03-808652e69f3f.txt"
-      databasetype="PgSql"
-      x:id="e3ce4f71-7d8a-44fe-bf03-808652e69f3f"
-      name="00040_Feature_NET_MEMBERSHIP_EXCLUSIVE_USE_TurnedOnForInitialDbScript"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
       activityOrder="50"
       commandText="-***-ExternalFile:0.55 Insert Pg.origam___commandText___ed6bf254-f3b6-4b55-9bcf-d095fd6c13c6.txt"
       databasetype="PgSql"
