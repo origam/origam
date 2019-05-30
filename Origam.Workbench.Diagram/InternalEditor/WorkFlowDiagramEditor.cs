@@ -7,6 +7,7 @@ using Microsoft.Msagl.GraphViewerGdi;
 using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
+using Origam.Gui.Win.Commands;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.UI;
@@ -572,6 +573,18 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			if (newMenu.DropDownItems.Count > 0)
 			{
 				contextMenu.AddSubItem(newMenu);
+			}
+
+						
+			ToolStripMenuItem actionsMenu = new ToolStripMenuItem("Actions"); 			
+			actionsMenu.Image = ImageRes.icon_actions;
+			AsMenuCommand dummyMenu = new AsMenuCommand();
+			var builder1 = new SchemaActionsMenuBuilder();
+			dummyMenu.PopulateMenu(builder1);
+			actionsMenu.DropDownItems.AddRange(dummyMenu.DropDownItems.ToArray<ToolStripItem>());
+			if (actionsMenu.DropDownItems.Count > 0)
+			{
+				contextMenu.AddSubItem(actionsMenu);
 			}
 
 			if (Graph.IsWorkFlowItemSubGraph(dNodeUnderMouse?.Node)) 
