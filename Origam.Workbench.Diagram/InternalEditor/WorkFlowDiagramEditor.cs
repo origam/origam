@@ -645,6 +645,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			{
 				nodeToDelete.OutEdges.ToArray()
 					.Where(ConnectsSchemaItems)
+					.Where(x=> !(x.UserData is IContextStore))
 					.ForEach(DeleteDependency);
 			};
 			deleteNodeCommand.AfterDelete += (o, args) =>
