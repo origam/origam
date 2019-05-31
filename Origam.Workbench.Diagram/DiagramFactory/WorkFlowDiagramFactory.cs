@@ -82,8 +82,7 @@ namespace Origam.Workbench.Diagram
 		private Subgraph AddSubgraphNode(IWorkflowStep step, Subgraph subGraph)
 		{
 			Subgraph subgraphNode = nodeFactory.AddSubgraphNode(subGraph, step);
-            subgraphNode.UserData = step;
-            if (expandedSubgraphNodeIds.Contains(subgraphNode.Id))
+			if (expandedSubgraphNodeIds.Contains(subgraphNode.Id))
             {
 	            AddNodeItems(step, subgraphNode);
             }
@@ -119,7 +118,6 @@ namespace Origam.Workbench.Diagram
 		private void AddNodeItem(AbstractSchemaItem item, Subgraph subGraph, int leftMargin)
 		{
 			Node node = nodeFactory.AddNodeItem(graph, item, leftMargin);
-			node.UserData = item;
 			subGraph.AddNode(node);
 		}
 

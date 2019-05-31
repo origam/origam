@@ -9,26 +9,23 @@ namespace Origam.Workbench.Diagram.NodeDrawing
     class NodeItemPainter : INodeItemPainter
     {
         private readonly InternalPainter painter;
-        private readonly int leftMargin;
-        private readonly bool isFromActivePackage;
 
-        public NodeItemPainter(InternalPainter internalPainter, int leftMargin,
-            bool isFromActivePackage)
+        public NodeItemPainter(InternalPainter internalPainter)
         {
             painter = internalPainter;
-            this.leftMargin = leftMargin;
-            this.isFromActivePackage = isFromActivePackage;
         }
 
         public ICurve GetBoundary(Node node)
         {
+            INodeData nodeData = (INodeData) node.UserData;
             var borderSize = painter.CalculateMinHeaderBorder(node);
-            return CurveFactory.CreateRectangle(borderSize.Width + leftMargin,
+            return CurveFactory.CreateRectangle(borderSize.Width + nodeData.LeftMargin,
                 borderSize.Height, new Point());
         }
 
         public bool Draw(Node node, object graphicsObj)
         {
+            INodeData nodeData = (INodeData) node.UserData;
             Graphics editorGraphics = (Graphics) graphicsObj;
             var image = painter.GetImages(node).Primary;
             
@@ -43,7 +40,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
 
             var labelPoint = new PointF(
                 (float) node.GeometryNode.Center.X - (float) border.Width / 2 +
-                painter.NodeHeaderHeight +  leftMargin,
+                painter.NodeHeaderHeight +  nodeData.LeftMargin,
                 (float) node.GeometryNode.Center.Y -
                 (int) stringSize.Height / 2);
 
@@ -53,14 +50,14 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                 (painter.NodeHeaderHeight - image.Height) / 2;
             var imagePoint = new PointF(
                 (float) (node.GeometryNode.Center.X - (float) border.Width / 2 +
-                         imageHorizontalBorder) + leftMargin,
+                         imageHorizontalBorder) +  nodeData.LeftMargin,
                 (float) (node.GeometryNode.Center.Y -
                          (float) border.Height / 2 + imageVerticalBorder));
 
             editorGraphics.DrawUpSideDown(drawAction: graphics =>
                 {
                     graphics.DrawString(node.LabelText, painter.Font,
-                        painter.GetTextBrush(isFromActivePackage),
+                        painter.GetTextBrush(nodeData.IsFromActivePackage),
                         labelPoint, painter.DrawFormat);
                     graphics.DrawImage(image, imagePoint);
                     if (Equals(painter.NodeSelector.Selected, node))

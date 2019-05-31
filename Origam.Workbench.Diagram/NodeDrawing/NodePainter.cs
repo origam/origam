@@ -11,10 +11,10 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         private readonly InternalPainter painter;
         private readonly NodeHeaderPainter nodeHeaderPainter;
 
-        public NodePainter(InternalPainter painter, bool isFromActivePackage)
+        public NodePainter(InternalPainter painter)
         {
             this.painter = painter;
-            nodeHeaderPainter = new NodeHeaderPainter(painter,isFromActivePackage );
+            nodeHeaderPainter = new NodeHeaderPainter(painter);
         }
         
         public ICurve GetBoundary(Node node)

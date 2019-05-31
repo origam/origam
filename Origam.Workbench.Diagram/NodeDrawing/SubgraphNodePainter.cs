@@ -14,13 +14,14 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         private readonly InternalPainter painter;
         private readonly NodePainter nodePainter;
         private readonly NodeHeaderPainter nodeHeaderPainter;
+        private readonly INodeFooterPainter footerPainter;
 
-        public SubgraphNodePainter(InternalPainter internalPainter,
-            bool isFromActivePackage)
+        public SubgraphNodePainter(InternalPainter internalPainter)
         {
             painter = internalPainter;
-            nodePainter = new NodePainter(internalPainter, isFromActivePackage);
-            nodeHeaderPainter = new NodeHeaderPainter(internalPainter, isFromActivePackage);
+            nodePainter = new NodePainter(internalPainter);
+            nodeHeaderPainter = new NodeHeaderPainter(internalPainter);
+            footerPainter = new FooterPainter();
         }
         
         public ICurve GetBoundary(Node node)
@@ -30,11 +31,13 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             {
                 return nodePainter.GetBoundary(node);
             }
-
+            
+            //subgraph.Nodes.Where(x=>x.)
+            
             var clusterBoundary =
                 ((Cluster) node.GeometryNode).RectangularBoundary;
 
-            var height = clusterBoundary.TopMargin;
+            var height = clusterBoundary.TopMargin + footerPainter.GetHeight(node);
             var labelWidth = GetLabelWidth(node);
 
             var width = clusterBoundary.MinWidth > labelWidth
@@ -68,11 +71,9 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             
             Graphics editorGraphics = (Graphics) graphicsObj;
             nodeHeaderPainter.Draw(node, editorGraphics, headerBorder);
-            
             editorGraphics.DrawUpSideDown(drawAction: graphics =>
             {
                 graphics.DrawRectangle(painter.GetActiveBorderPen(node), border);
-
             },
             yAxisCoordinate: (float) node.GeometryNode.Center.Y);
             
@@ -84,6 +85,18 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             SizeF stringSize = painter.MeasureString(node.LabelText);
             var labelWidth = stringSize.Width + painter.NodeHeaderHeight + painter.Margin + painter.TextSideMargin;
             return labelWidth;
+        }
+    }
+
+    interface INodeFooterPainter{
+        double GetHeight(Node node);
+    }
+
+    class FooterPainter: INodeFooterPainter
+    {
+        public double GetHeight(Node node)
+        {
+            return 0;
         }
     }
 }

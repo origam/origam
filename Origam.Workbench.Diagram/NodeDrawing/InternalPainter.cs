@@ -58,7 +58,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         
         internal NodeImages GetImages(Node node)
         {
-            var schemaItem = (ISchemaItem) node.UserData;
+            var schemaItem = ((NodeData)node.UserData).SchemaItem;
             
             Image primaryImage = GetImage(schemaItem.Icon);
 

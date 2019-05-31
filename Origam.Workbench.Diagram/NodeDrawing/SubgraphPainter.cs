@@ -14,16 +14,13 @@ namespace Origam.Workbench.Diagram.NodeDrawing
     internal class SubgraphPainter : INodeItemPainter
     {
         private readonly InternalPainter painter;
-        private readonly bool isFromActivePackage;
         private readonly int emptySubgraphWidth = 200;
         private readonly int emptySubgraphHeight = 80;
         private readonly int imageGap = 10;
 
-        public SubgraphPainter(InternalPainter internalPainter,
-            bool isFromActivePackage)
+        public SubgraphPainter(InternalPainter internalPainter)
         {
             painter = internalPainter;
-            this.isFromActivePackage = isFromActivePackage;
         }
         
         public ICurve GetBoundary(Node node) 
@@ -47,6 +44,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         
         public bool Draw(Node node, object graphicsObj)
         {
+            INodeData nodeData = (INodeData)node.UserData;
             var borderSize = new Size(
                 (int)node.BoundingBox.Width,
                 (int)node.BoundingBox.Height);
@@ -86,7 +84,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                 {
                     graphics.FillRectangle(painter.LightGreyBrush, imageBackground);
                     graphics.DrawString(node.LabelText, painter.Font,
-                        painter.GetTextBrush(isFromActivePackage),
+                        painter.GetTextBrush(nodeData.IsFromActivePackage),
                         labelPoint, painter.DrawFormat);
                     if (!string.IsNullOrWhiteSpace(emptyGraphMessage))
                     {

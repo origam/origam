@@ -7,17 +7,15 @@ namespace Origam.Workbench.Diagram.NodeDrawing
     class NodeHeaderPainter
     {
         private readonly InternalPainter painter;
-        private readonly bool isFromActivePackage;
 
-        public NodeHeaderPainter(InternalPainter painter,
-            bool isFromActivePackage)
+        public NodeHeaderPainter(InternalPainter painter)
         {
             this.painter = painter;
-            this.isFromActivePackage = isFromActivePackage;
         }
 
         public void Draw(Node node, Graphics editorGraphics, Rectangle border)
         {
+            INodeData nodeData = (INodeData)node.UserData;
             NodeImages images = painter.GetImages(node);
 
             SizeF stringSize =
@@ -52,7 +50,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             
             editorGraphics.DrawUpSideDown(drawAction: graphics =>
                 {
-                    graphics.DrawString(node.LabelText, painter.Font, painter.GetTextBrush(isFromActivePackage),
+                    graphics.DrawString(node.LabelText, painter.Font, painter.GetTextBrush(nodeData.IsFromActivePackage),
                         labelPoint, painter.DrawFormat);
                     graphics.FillRectangle(painter.LightGreyBrush, imageBackground);
                     graphics.DrawImage(images.Primary, primaryImagePoint);
