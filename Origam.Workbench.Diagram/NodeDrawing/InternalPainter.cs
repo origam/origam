@@ -46,35 +46,6 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             NodeSelector = nodeSelector;
             this.gViewer = gViewer;
         }
-
-        private Image GetImage(string iconId)
-        {
-            var schemaBrowser =
-                WorkbenchSingleton.Workbench.GetPad(typeof(IBrowserPad)) as
-                    IBrowserPad;
-            var imageList = schemaBrowser.ImageList;
-            return imageList.Images[schemaBrowser.ImageIndex(iconId)];
-        }
-        
-        internal NodeImages GetImages(Node node)
-        {
-            var schemaItem = ((NodeData)node.UserData).SchemaItem;
-            
-            Image primaryImage = GetImage(schemaItem.Icon);
-
-            Image secondaryImage = null;
-            if (schemaItem is AbstractWorkflowStep workflowStep
-                && workflowStep.StartConditionRule != null)
-            {
-                secondaryImage = GetImage(workflowStep.StartConditionRule.Icon);
-            }
-
-            return new NodeImages
-            {
-                Primary = primaryImage,
-                Secondary = secondaryImage
-            };
-        }
         
         internal Pen GetActiveBorderPen(Node node)
         {
@@ -90,12 +61,13 @@ namespace Origam.Workbench.Diagram.NodeDrawing
 
         internal Size CalculateMinHeaderBorder(Node node)
         {
+            var nodeData = (INodeData)node.UserData;
             SizeF stringSize =
                 measurementGraphics.MeasureString(node.LabelText, Font);
 
             int totalWidth = (int) (Margin + NodeHeaderHeight + TextSideMargin +
                                     stringSize.Width + TextSideMargin);
-            if(GetImages(node).Secondary != null) totalWidth += NodeHeaderHeight;
+            if(nodeData.SecondaryImage != null) totalWidth += NodeHeaderHeight;
             return new Size(totalWidth, NodeHeaderHeight);
         }
 
@@ -106,9 +78,10 @@ namespace Origam.Workbench.Diagram.NodeDrawing
 
         internal float GetLabelWidth(Node node)
         {
-            Image image = GetImages(node).Primary;
+            var nodeData = (INodeData)node.UserData;
+            Image image = nodeData.PrimaryImage;
             SizeF stringSize = MeasureString(node.LabelText);
-            var labelWidth = stringSize.Width + ImageRightMargin + image.Width;
+            var labelWidth = stringSize.Width + ImageRightMargin + image?.Width ?? 0;
             return labelWidth;
         }
 
@@ -118,11 +91,5 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                 ? BlackBrush
                 : DarkGreyBrush;
         }
-    }
-
-    class NodeImages
-    {
-        public Image Primary { get; set; }
-        public Image Secondary { get; set; }
     }
 }
