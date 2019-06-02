@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Origam.Extensions;
 using Origam.Schema.GuiModel;
 using Origam.Schema.GuiModel.Designer;
 
