@@ -68,8 +68,7 @@ namespace Origam.Schema.DeploymentModel
         #region Properties
 
         [Category("Update Script Activity")]
-        [EntityColumn("SS01")]
-        [XmlAttribute("databasetype")]
+        [XmlAttribute("platform")]
         public DatabaseType DatabaseType { get; set; } 
 
         [EntityColumn("G05")]  
