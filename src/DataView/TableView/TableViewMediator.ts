@@ -143,6 +143,7 @@ export class TableViewMediator implements ITableViewMediator, ITableView {
     }
     switch (event.type) {
       default:
+        // debugger
         this.getParent().dispatch(event);
     }
   }
@@ -170,6 +171,9 @@ export class TableViewMediator implements ITableViewMediator, ITableView {
       case TableViewActions.SELECT_FIRST_CELL: {
         this.aSelCell.doSelFirst();
         break;
+      }
+      case TableViewActions.SELECT_CELL_BY_IDX: {
+        this.aSelCell.doByIdx(event.rowIdx, event.columnIdx);
       }
     }
     for (let l of this.listeners.values()) {

@@ -79,7 +79,8 @@ export class TableViewMachine implements ITableViewMachine {
                 },
                 [TableViewActions.ON_OUTSIDE_TABLE_CLICK]: {
                   actions: "onOutsideTableClick"
-                }
+                },
+                
               }
             },
             sleeping: {
@@ -129,6 +130,7 @@ export class TableViewMachine implements ITableViewMachine {
       this.dispatch(TableViewActions.selectFirstCell());
     }
     this.dispatch(TableViewActions.makeSelectedCellVisible());
+    this.dispatch(DataViewActions.startEditing());
   }
 
   @action.bound
@@ -164,7 +166,7 @@ export class TableViewMachine implements ITableViewMachine {
       });
 
     /* ============================================================================== */
-    
+
     if (!this.P.editing.isEditing) {
       const prop = this.P.propReorder.getByIndex(event.columnIdx);
       if (isCheckBox(prop)) {
@@ -185,7 +187,7 @@ export class TableViewMachine implements ITableViewMachine {
       if (!cellAlreadySelected(event)) {
         finishEditing();
         selectCellByEvent(event);
-        finishEditing();
+        startEditing();
       }
     }
   }

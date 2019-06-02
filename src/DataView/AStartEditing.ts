@@ -9,21 +9,8 @@ export class AStartEditing implements IAStartEditing {
     public P: {
       editing: IEditing;
       aInitForm: IAInitForm;
-      listen(cb: (action: any) => void): void;
     }
-  ) {
-    this.subscribeMediator();
-  }
-
-  subscribeMediator() {
-    this.P.listen((action: any) => {
-      switch(action.type) {
-        case DataViewAction.START_EDITING:
-          this.do();
-          break;
-      }
-    });
-  }
+  ) {}
 
   @action.bound
   public do() {

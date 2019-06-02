@@ -9,7 +9,7 @@ import { ML } from "../utils/types";
 import { IDataTable } from "./types/IDataTable";
 import { IDataViewMachine } from "./types/IDataViewMachine";
 import { IRecord } from "./types/IRecord";
-
+import * as DataViewActions from "./DataViewActions";
 
 export class DataViewMachine implements IDataViewMachine {
   constructor(
@@ -55,15 +55,18 @@ export class DataViewMachine implements IDataViewMachine {
       states: {
         IDLE: {
           on: {
-            LOAD_FRESH: { target: "LOAD_FRESH", cond: "loadingAllowed" },
-            LOAD_INCREMENT: "LOAD_INCREMENT",
-            REQUEST_SAVE_DATA: "SAVE_DIRTY_DATA",
-            REQUEST_CREATE_ROW: "CREATE_NEW_RECORD"
+            [DataViewActions.LOAD_FRESH]: {
+              target: "LOAD_FRESH",
+              cond: "loadingAllowed"
+            },
+            [DataViewActions.LOAD_INCREMENT]: "LOAD_INCREMENT",
+            [DataViewActions.REQUEST_SAVE_DATA]: "SAVE_DIRTY_DATA",
+            [DataViewActions.REQUEST_CREATE_ROW]: "CREATE_NEW_RECORD"
           }
         },
         LOAD_FRESH: {
           on: {
-            LOAD_FRESH: [
+            [DataViewActions.LOAD_FRESH]: [
               { target: "LOAD_FRESH", cond: "loadingAllowed" },
               { target: "IDLE" }
             ],
@@ -73,8 +76,8 @@ export class DataViewMachine implements IDataViewMachine {
         },
         LOAD_INCREMENT: {
           on: {
-            LOAD_FRESH: "LOAD_FRESH",
-            LOAD_INCREMENT: "LOAD_INCREMENT",
+            [DataViewActions.LOAD_FRESH]: "LOAD_FRESH",
+            [DataViewActions.LOAD_INCREMENT]: "LOAD_INCREMENT",
             DONE: "IDLE"
           }
         },
@@ -110,7 +113,7 @@ export class DataViewMachine implements IDataViewMachine {
                 this.dataTable.resetDirty();
                 this.dataTable.setRecords(entities);
                 send("DONE");
-                this.descendantsDispatch("LOAD_FRESH");
+                this.descendantsDispatch(DataViewActions.loadFresh());
               })
             );
         },
@@ -190,7 +193,7 @@ export class DataViewMachine implements IDataViewMachine {
         () => this.controlledValueFromParent,
         () => {
           console.log(" *** Controlled value from parent changed");
-          this.treeDispatch("LOAD_FRESH");
+          this.treeDispatch(DataViewActions.loadFresh());
         }
       ),
       reaction(
@@ -200,7 +203,7 @@ export class DataViewMachine implements IDataViewMachine {
     );
     this.interpreter.start();
     if (this.isRoot) {
-      this.interpreter.send("LOAD_FRESH");
+      this.interpreter.send(DataViewActions.loadFresh());
     }
   }
 
@@ -211,7 +214,7 @@ export class DataViewMachine implements IDataViewMachine {
 
   @action.bound loadFresh() {
     // this.interpreter.send("LOAD_FRESH");
-    this.treeDispatch("LOAD_FRESH");
+    this.treeDispatch(DataViewActions.loadFresh());
   }
 
   @action.bound treeDispatch(message: any) {

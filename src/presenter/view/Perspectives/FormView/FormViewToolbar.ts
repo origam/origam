@@ -6,15 +6,16 @@ import { unpack } from "../../../../utils/objects";
 import * as FormViewActions from "../../../../DataView/FormView/FormViewActions";
 import { action, computed } from "mobx";
 
-import { IDataViewMediator02 } from "../../../../DataView/DataViewMediator02";
 import { ISelection } from "../../../../DataView/Selection";
 import { IDataTable } from "../../../../DataView/types/IDataTable";
+import * as DataViewActions from "../../../../DataView/DataViewActions";
+import { IFormViewMediator } from "../../../../DataView/FormView/FormViewMediator";
 
 export class FormViewToolbar {
   constructor(
     public P: {
       aSwitchView: ML<IASwitchView>;
-      mediator: ML<IDataViewMediator02>;
+      mediator: ML<IFormViewMediator>;
       selection: ISelection;
       dataTable: IDataTable;
       label: string;
@@ -100,7 +101,10 @@ export class FormViewToolbar {
         isActive: false,
         isVisible: true,
         isEnabled: true,
-        onClick: () => this.aSwitchView.do(IViewType.Table)
+        onClick: () =>
+          this.mediator.dispatch(
+            DataViewActions.switchView({ viewType: IViewType.Table })
+          )
       },
       type: IViewType.Table
     }

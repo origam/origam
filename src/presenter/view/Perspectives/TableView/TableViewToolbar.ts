@@ -103,7 +103,10 @@ export class TableViewToolbar {
         isActive: false,
         isVisible: true,
         isEnabled: true,
-        onClick: () => this.aSwitchView.do(IViewType.Form)
+        onClick: () =>
+          this.mediator.dispatch(
+            DataViewActions.switchView({ viewType: IViewType.Form })
+          )
       },
       type: IViewType.Form
     },

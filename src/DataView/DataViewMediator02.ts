@@ -4,7 +4,11 @@ import { IFormScreen } from "../Screens/FormScreen/types";
 import { IDataSource } from "../Screens/types";
 import { IDispatcher, stateVariableChanged } from "../utils/mediator";
 import * as DataViewActions from "./DataViewActions";
-import { ACTIVATE_INITIAL_VIEW_TYPES, START_DATA_VIEWS, STOP_DATA_VIEWS } from "./DataViewActions";
+import {
+  ACTIVATE_INITIAL_VIEW_TYPES,
+  START_DATA_VIEWS,
+  STOP_DATA_VIEWS
+} from "./DataViewActions";
 import { IFormViewMediator } from "./FormView/FormViewMediator";
 import { ITableViewMediator } from "./TableView/TableViewMediator";
 import { IACancelEditing } from "./types/IACancelEditing";
@@ -27,7 +31,7 @@ import { IProperty } from "./types/IProperty";
 import { IRecCursor } from "./types/IRecCursor";
 import { IRecords } from "./types/IRecords";
 import { IViewType } from "./types/IViewType";
-
+import { start } from "xstate/lib/actions";
 
 /* import { SELECT_FIRST_CELL } from "./FormView/FormViewActions";
 import {
@@ -113,15 +117,7 @@ export class DataViewMediator02 implements IDataViewMediator02 {
       aReloadChildren: () => IAReloadChildren;
       aDeleteRow: () => IADeleteRow;
     }
-  ) {
-    this.subscribeMediator();
-  }
-
-  subscribeMediator() {
-    this.listen((event: any) => {
-
-    });
-  }
+  ) {}
 
   getParent(): IDispatcher {
     return this.P.parentMediator;
@@ -151,40 +147,49 @@ export class DataViewMediator02 implements IDataViewMediator02 {
   downstreamDispatch(event: any) {
     console.log("DataView received:", event);
     switch (event.type) {
-      case START_DATA_VIEWS: {
-        this.machine.start();
-        this.disposers.push(
-          reaction(
-            () => [this.dataTable.hasContent],
-            () => this.dispatch(stateVariableChanged())
-          )
-        );
+      case START_DATA_VIEWS:
+        this.start();
         break;
-      }
-      case STOP_DATA_VIEWS: {
-        this.machine.stop();
-        this.disposers.forEach(d => d());
+      case STOP_DATA_VIEWS:
+        this.stop();
         break;
-      }
-    }
-    for (let l of this.listeners.values()) {
-      l(event);
-    }
-    this.availViews.items.forEach(availView =>
-      availView.downstreamDispatch(event)
-    );
-    switch (event.type) {
-      case ACTIVATE_INITIAL_VIEW_TYPES: {
+      case ACTIVATE_INITIAL_VIEW_TYPES:
         this.downstreamDispatch(
           DataViewActions.activateView({ viewType: this.initialActiveViewType })
         );
         break;
-      }
+      case DataViewActions.START_EDITING:
+        this.aStartEditing.do();
+        break;
       case DataViewActions.FINISH_EDITING:
         this.aFinishEditing.do();
         break;
+      case DataViewActions.CANCEL_EDITING:
+        this.aCancelEditing.do();
+        break;
+      case DataViewActions.SWITCH_VIEW:
+        this.aSwitchView.do(event.viewType);
+        break;
     }
     this.machine.send(event);
+    this.availViews.items.forEach(availView =>
+      availView.downstreamDispatch(event)
+    );
+  }
+
+  @action.bound start() {
+    this.machine.start();
+    this.disposers.push(
+      reaction(
+        () => [this.dataTable.hasContent],
+        () => this.dispatch(stateVariableChanged())
+      )
+    );
+  }
+
+  @action.bound stop() {
+    this.machine.stop();
+    this.disposers.forEach(d => d());
   }
 
   get editing(): IEditing {

@@ -30,7 +30,6 @@ export class TableViewTable implements ITable {
 
   @action.bound
   onCellClick(event: any, rowIdx: number, columnIdx: number) {
-    debugger
     this.mediator.dispatch(TableViewActions.onCellClick({rowIdx, columnIdx}));
   }
 
