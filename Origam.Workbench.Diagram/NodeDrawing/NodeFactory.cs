@@ -1,11 +1,8 @@
 using System.Drawing;
 using System.Linq;
-using System.Net.Mime;
-using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Layout.Layered;
-using Origam.Extensions;
 using Origam.Gui.UI;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
@@ -43,8 +40,10 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             return node;
         }
 
-        public Node AddNodeItem(Graph graph, INodeData nodeData)
+        public Node AddNodeItem(Graph graph, ISchemaItem schemaItem,
+            int leftMargin)
         {
+            INodeData nodeData = new NodeData(schemaItem, leftMargin, schemaService);
             Node node = graph.AddNode(nodeData.Id);
             node.Attr.Shape = Shape.DrawFromGeometry;
             var painter =
@@ -87,45 +86,6 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             return subgraph;
         }
 
-        public Subgraph AddActionSubgraph(Subgraph parentSbubgraph, ISchemaItem schemaItem)
-        {
-            INodeData nodeData = new NodeItemLabel(schemaItem.Name);
-            Subgraph subgraph = new Subgraph(nodeData.Id);
-            subgraph.Attr.Shape = Shape.DrawFromGeometry;
-            var painter =
-                new ActionSubgraphPainter(internalPainter);
-            subgraph.DrawNodeDelegate = painter.Draw;
-            subgraph.NodeBoundaryDelegate = painter.GetBoundary;
-            subgraph.UserData = nodeData;
-
-            subgraph.LayoutSettings = new SugiyamaLayoutSettings
-            {
-                PackingMethod = PackingMethod.Compact,
-                PackingAspectRatio = 1000,
-                AdditionalClusterTopMargin = 20,
-                ClusterMargin = 10
-            };
-            
-            parentSbubgraph.AddSubgraph(subgraph);
-            return subgraph;
-        }
-        
-        
-        public void AddActionNode(Subgraph actionSubgraph,
-            EntityMenuAction action)
-        {
-            INodeData nodeData = new NodeData(action, schemaService);
-            Subgraph subgraph = new Subgraph(nodeData.Id);
-  
-            subgraph.Attr.Shape = Shape.DrawFromGeometry;
-            var painter =
-                new ActionNodePainter(internalPainter);
-            subgraph.DrawNodeDelegate = painter.Draw;
-            subgraph.NodeBoundaryDelegate = painter.GetBoundary;
-            subgraph.UserData = nodeData;
-            actionSubgraph.AddSubgraph(subgraph);
-        }
-        
         public Node AddStarBalloon(Graph graph)
         {
             return AddBalloon(graph, internalPainter.GreenBrush, "Start");
@@ -152,113 +112,34 @@ namespace Origam.Workbench.Diagram.NodeDrawing
     {
         ISchemaItem SchemaItem { get; }
         string Text { get; }
-        Image PrimaryImage { get;}
-        Image SecondaryImage { get;}
+        Image Icon { get; set; }
         bool IsFromActivePackage { get; }
         string Id { get; }
         int LeftMargin { get; }
     }
 
-    class NodeItemLabel: INodeData
-    {
-        private static int lastId;
-        
-        public ISchemaItem SchemaItem { get; }
-        public string Text { get; }
-        public Image PrimaryImage { get; }
-        public Image SecondaryImage { get; }
-        public bool IsFromActivePackage { get; } = true;
-        public string Id { get; }
-        public int LeftMargin { get; }
-
-        public NodeItemLabel(string text)
-        {
-            Text = text;
-            Id = "NodeItemLabel_" + lastId++;
-        }
-
-        public NodeItemLabel(string text, int leftMargin):this(text)
-        {
-            LeftMargin = leftMargin;
-        }
-    }
-
-    class ActionNodeData : NodeData
-    {
-        public ActionNodeData(EntityMenuAction action, int leftMargin, WorkbenchSchemaService schemaService
-        ) 
-            : base(action, schemaService)
-        {
-            LeftMargin = leftMargin;
-        }
-    }
-
-    class NodeItemData: NodeData
-    {
-        public NodeItemData(ISchemaItem schemaItem, int leftMargin, WorkbenchSchemaService schemaService)
-            : base(schemaItem, schemaService)
-        {
-            LeftMargin = leftMargin;
-        }
-    }
-
-
     class NodeData : INodeData
     {
         private readonly WorkbenchSchemaService schemaService;
-        private Image primaryImage;
-        private Image secondaryImage;
-        
-        public virtual Image PrimaryImage
-        {
-            get
-            {
-                if (primaryImage == null)
-                {
-                    if (SchemaItem.NodeImage != null)
-                    {
-                        primaryImage = SchemaItem.NodeImage.ToBitmap();
-                        return primaryImage;
-                    }
-                    primaryImage = GetImage(SchemaItem.Icon);
-                }
-
-                return primaryImage;
-            }
-        }
-
-        public Image SecondaryImage {
-            get
-            {
-                if (secondaryImage  == null &&
-                    SchemaItem is AbstractWorkflowStep workflowStep &&
-                    workflowStep.StartConditionRule != null)
-                {
-                    secondaryImage = GetImage(workflowStep.StartConditionRule.Icon);
-                }
-                return secondaryImage;
-            }
-        }
         public ISchemaItem SchemaItem { get; }
         public string Text => SchemaItem.Name;
+        public Image Icon { get; set; }
         public bool IsFromActivePackage =>
             SchemaItem.SchemaExtension.Id == schemaService.ActiveSchemaExtensionId;
         public string Id => SchemaItem.Id.ToString();
-        public int LeftMargin { get; protected set; } = 0;
+        public int LeftMargin { get; }
 
         public NodeData(ISchemaItem schemaItem, WorkbenchSchemaService schemaService)
+            : this(schemaItem, 0, schemaService)
+        {
+           
+        }
+
+        public NodeData(ISchemaItem schemaItem, int leftMargin, WorkbenchSchemaService schemaService)
         {
             this.schemaService = schemaService;
             SchemaItem = schemaItem;
-        }
-        
-        private Image GetImage(string iconId)
-        {
-            var schemaBrowser =
-                WorkbenchSingleton.Workbench.GetPad(typeof(IBrowserPad)) as
-                    IBrowserPad;
-            var imageList = schemaBrowser.ImageList;
-            return imageList.Images[schemaBrowser.ImageIndex(iconId)];
+            LeftMargin = leftMargin;
         }
     }
 }

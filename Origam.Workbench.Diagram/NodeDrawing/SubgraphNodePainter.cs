@@ -68,7 +68,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                 border.Bottom - painter.NodeHeaderHeight, 
                 border.Width, 
                 painter.NodeHeaderHeight);
-
+            
             Graphics editorGraphics = (Graphics) graphicsObj;
             nodeHeaderPainter.Draw(node, editorGraphics, headerBorder);
             editorGraphics.DrawUpSideDown(drawAction: graphics =>

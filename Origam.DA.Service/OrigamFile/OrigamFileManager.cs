@@ -78,21 +78,29 @@ namespace Origam.DA.Service
         
         public void WriteToDisc(OrigamFile origamFile, XmlDocument xmlDocument)
         {
-            XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
+            try
             {
-                Indent = true,
-                NewLineOnAttributes = true
-            };
-            
-            string xmlToWrite = OrigamDocumentSorter
-                .CopyAndSort(xmlDocument)
-                .ToBeautifulString(xmlWriterSettings);
-            fileEventQueue.Pause();
-            Directory.CreateDirectory(origamFile.Path.Directory.FullName);
-            File.WriteAllText(origamFile.Path.Absolute, xmlToWrite);
-            origamFile.UpdateHash();
-            index.AddOrReplaceHash(origamFile);
-            fileEventQueue.Continue();
+                XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
+                {
+                    Indent = true,
+                    NewLineOnAttributes = true
+                };
+
+                string xmlToWrite = OrigamDocumentSorter
+                    .CopyAndSort(xmlDocument)
+                    .ToBeautifulString(xmlWriterSettings);
+                fileEventQueue.Pause();
+                Directory.CreateDirectory(origamFile.Path.Directory.FullName);
+                File.WriteAllText(origamFile.Path.Absolute, xmlToWrite);
+                origamFile.UpdateHash();
+                index.AddOrReplaceHash(origamFile);
+                fileEventQueue.Continue();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to save file: "
+                    + origamFile.Path + ". " + ex.Message, ex);
+            }
         }
 
         public void RemoveDirectoryIfEmpty(DirectoryInfo oldFullDirectory)

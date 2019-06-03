@@ -16,6 +16,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         public void Draw(Node node, Graphics editorGraphics, Rectangle border)
         {
             INodeData nodeData = (INodeData)node.UserData;
+            NodeImages images = painter.GetImages(node);
 
             SizeF stringSize =
                 editorGraphics.MeasureString(node.LabelText, painter.Font);
@@ -26,13 +27,13 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             Point headerCenter = border.GetCenter();
             var labelPoint = new PointF(
                 headerCenter.X - (float) border.Width / 2 +
-                painter.NodeHeaderHeight + painter.TextSideMargin + (nodeData.SecondaryImage == null ? 0 : imageBackground.Width - 5),
+                painter.NodeHeaderHeight + painter.TextSideMargin + (images.Secondary == null ? 0 : imageBackground.Width - 5),
                 (float) headerCenter.Y -
                 (int) stringSize.Height / 2);
 
             var imageBorder = new Size(
-                (imageBackground.Width - nodeData.PrimaryImage.Width) / 2,
-                (imageBackground.Height - nodeData.PrimaryImage.Height) / 2);
+                (imageBackground.Width - images.Primary.Width) / 2,
+                (imageBackground.Height - images.Primary.Height) / 2);
             var primaryImagePoint = new PointF(
                 headerCenter.X - (float) border.Width / 2 +
                 imageBorder.Width,
@@ -44,16 +45,18 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                 imageBorder.Width  + imageBackground.Width,
                 headerCenter.Y -
                 (float) border.Height / 2 + imageBorder.Height);
-
+            
+            
+            
             editorGraphics.DrawUpSideDown(drawAction: graphics =>
                 {
                     graphics.DrawString(node.LabelText, painter.Font, painter.GetTextBrush(nodeData.IsFromActivePackage),
                         labelPoint, painter.DrawFormat);
                     graphics.FillRectangle(painter.LightGreyBrush, imageBackground);
-                    graphics.DrawImage( nodeData.PrimaryImage, primaryImagePoint);
-                    if (nodeData.SecondaryImage != null)
+                    graphics.DrawImage(images.Primary, primaryImagePoint);
+                    if (images.Secondary != null)
                     {
-                        graphics.DrawImage(nodeData.SecondaryImage, secondaryImagePoint);
+                        graphics.DrawImage(images.Secondary, secondaryImagePoint);
                     }
                 },
                 yAxisCoordinate: headerCenter.Y);

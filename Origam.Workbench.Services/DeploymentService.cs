@@ -455,8 +455,17 @@ namespace Origam.Workbench.Services
             string localTransaction = Guid.NewGuid().ToString();
             DataSet data = null;
 
-            DataSet versionDataFromOrigamModelVersion =
-                LoadversionDataFrom(origamModelVersionQueryId, "OrigamModelVersion", localTransaction);
+
+            DataSet versionDataFromOrigamModelVersion = null;
+
+            try
+            {
+                versionDataFromOrigamModelVersion = LoadversionDataFrom(
+                    origamModelVersionQueryId, "OrigamModelVersion", localTransaction);
+            }
+            catch
+            {
+            }
             if (versionDataFromOrigamModelVersion == null)
             {
                 DataSet versionDataFromAsapModelVersion =
