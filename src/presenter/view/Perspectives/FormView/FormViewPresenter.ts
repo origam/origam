@@ -61,8 +61,11 @@ export class FormViewPresenter implements IFormView {
     let isLoading = false;
     let isError = false;
     if (record && property) {
-      // value = this.dataTable.getValue(record, property);
-      value = this.form.getValue(prop.id);
+      if (this.editing.isEditing) {
+        value = this.form.getValue(prop.id);
+      } else {
+        value = this.dataTable.getValue(record, property);
+      }
       if (property.lookupResolver) {
         isError = property.lookupResolver.isError(value);
         isLoading = property.lookupResolver.isLoading(value);
