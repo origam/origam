@@ -31,6 +31,7 @@ import { ASelNextRec } from "./ASelNextRec";
 import { ASelPrevRec } from "./ASelPrevRec";
 import { activateView } from "./DataViewActions";
 import { IFormScreen } from "../Screens/FormScreen/types";
+import { AFocusEditor } from "./AFocusEditor";
 
 export function buildDataView(
   id: string,
@@ -71,7 +72,8 @@ export function buildDataView(
     aStartView: () => aStartView,
     aStopView: () => aStopView,
     aSubmitForm: () => aSubmitForm,
-    aSwitchView: () => aSwitchView
+    aSwitchView: () => aSwitchView,
+    aFocusEditor: () => aFocusEditor
   });
 
   const editing = new Editing({});
@@ -93,6 +95,7 @@ export function buildDataView(
   const aStopView = new AStopView(mediator);
   const aSubmitForm = new ASubmitForm(mediator);
   const aSwitchView = new ASwitchView(mediator);
+  const aFocusEditor = new AFocusEditor(mediator);
 
   return mediator;
 }

@@ -17,8 +17,7 @@ import { IASelProp } from "../../../../DataView/types/IASelProp";
 import { onNoCellClick } from "../../../../DataView/TableView/TableViewActions";
 import * as FormViewActions from "../../../../DataView/FormView/FormViewActions";
 import { IFormViewMediator } from "../../../../DataView/FormView/FormViewMediator";
-
-
+import { IAFocusEditor } from "../../../../DataView/types/IAFocusEditor";
 
 export class FormViewPresenter implements IFormView {
   constructor(
@@ -34,6 +33,7 @@ export class FormViewPresenter implements IFormView {
       aSelNextProp: ML<IASelNextProp>;
       aSelPrevProp: ML<IASelPrevProp>;
       aSelProp: ML<IASelProp>;
+      aFocusEditor: IAFocusEditor;
       isLoading: () => boolean;
     }
   ) {}
@@ -62,7 +62,7 @@ export class FormViewPresenter implements IFormView {
     let isError = false;
     if (record && property) {
       // value = this.dataTable.getValue(record, property);
-      value = this.form.getValue(prop.id)
+      value = this.form.getValue(prop.id);
       if (property.lookupResolver) {
         isError = property.lookupResolver.isError(value);
         isLoading = property.lookupResolver.isLoading(value);
@@ -80,7 +80,8 @@ export class FormViewPresenter implements IFormView {
             onKeyDown: this.handleKeyDown,
             onClick: (event: any) => this.handleClick(event, property.id),
             isLoading,
-            isFocused: this.propCursor.selId === prop.id,
+            isFocused:
+              this.editing.isEditing && this.propCursor.selId === prop.id,
             isInvalid: false,
             isReadOnly: property.isReadOnly
           };
@@ -93,7 +94,8 @@ export class FormViewPresenter implements IFormView {
             },
             onKeyDown: this.handleKeyDown,
             onClick: (event: any) => this.handleClick(event, property.id),
-            isFocused: this.propCursor.selId === prop.id,
+            isFocused:
+              this.editing.isEditing && this.propCursor.selId === prop.id,
             isLoading,
             isInvalid: false,
             isReadOnly: property.isReadOnly
@@ -108,7 +110,7 @@ export class FormViewPresenter implements IFormView {
       },
       onKeyDown: this.handleKeyDown,
       onClick: (event: any) => this.handleClick(event, property.id),
-      isFocused: this.propCursor.selId === prop.id,
+      isFocused: this.editing.isEditing && this.propCursor.selId === prop.id,
       isLoading,
       isInvalid: false,
       isReadOnly: property.isReadOnly
@@ -116,22 +118,22 @@ export class FormViewPresenter implements IFormView {
   }
 
   @action.bound handleKeyDown(event: any) {
-    console.log("Form view tex editor key down", event.key)
-    switch(event.key) {
+    console.log("Form view tex editor key down", event.key);
+    switch (event.key) {
       case "Tab":
-        if(event.shiftKey) {
+        if (event.shiftKey) {
           this.aSelPrevProp.do();
         } else {
           this.aSelNextProp.do();
         }
         event.stopPropagation();
         event.preventDefault();
-      break;
+        break;
     }
   }
 
   @action.bound handleClick(event: any, propId: string) {
-    this.aSelProp.do(propId)
+    this.aSelProp.do(propId);
   }
 
   @action.bound onNoFieldClick() {
@@ -180,5 +182,13 @@ export class FormViewPresenter implements IFormView {
 
   get aSelProp() {
     return unpack(this.P.aSelProp);
+  }
+
+  get aFocusEditor() {
+    return this.P.aFocusEditor;
+  }
+
+  get editing() {
+    return unpack(this.P.mediator.editing);
   }
 }

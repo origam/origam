@@ -24,6 +24,7 @@ interface IField {
   isReadOnly: boolean;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
+  refocuser?: (cb: () => void) => () => void;
 }
 
 export type IFormField = ICellTypeDU & IField;

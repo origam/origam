@@ -21,6 +21,8 @@ export const LOAD_INCREMENT = `${NS}/LOAD_INCREMENT`;
 export const SAVE_DIRTY_DATA = `${NS}/SAVE_DIRTY_DATA`;
 export const CREATE_NEW_RECORD = `${NS}/CREATE_NEW_RECORD`;
 
+export const FOCUS_EDITOR = `${NS}/FOCUS_EDITOR`;
+
 /*
 export const selectCellById = action(
   `[${NS}] SelectCell`,
@@ -70,6 +72,7 @@ export const loadFresh = () => ({ NS, type: LOAD_FRESH });
 export const loadIncrement = () => ({ NS, type: LOAD_INCREMENT });
 export const saveDirtyData = () => ({ NS, type: SAVE_DIRTY_DATA });
 export const createNewRecord = () => ({ NS, type: CREATE_NEW_RECORD });
+export const focusEditor = () => ({NS, type: FOCUS_EDITOR});
 
 export interface ISwitchViewArg {
   viewType: IViewType;

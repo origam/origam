@@ -66,7 +66,7 @@ export class FormViewToolbar {
     isEnabled: true,
     isVisible: true,
     onClick: action(() => {
-      this.mediator.dispatch(FormViewActions.selectPrevRow());
+      this.mediator.dispatch(FormViewActions.onPrevRowClick());
     })
   };
   btnNext: IToolbarButtonState = {
@@ -74,7 +74,7 @@ export class FormViewToolbar {
     isEnabled: true,
     isVisible: true,
     onClick: action(() => {
-      this.mediator.dispatch(FormViewActions.selectNextRow());
+      this.mediator.dispatch(FormViewActions.onNextRowClick());
     })
   };
   btnLast: IToolbarButtonState = {

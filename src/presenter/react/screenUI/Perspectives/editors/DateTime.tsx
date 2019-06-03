@@ -10,6 +10,7 @@ export class DateTimeEditor extends React.Component<{
   isReadOnly: boolean;
   isInvalid: boolean;
   isFocused: boolean;
+  refocuser?: (cb: () => void) => () => void;
 }> {
   render() {
     return (

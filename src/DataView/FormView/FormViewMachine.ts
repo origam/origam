@@ -10,7 +10,6 @@ import { IRecCursor } from "../types/IRecCursor";
 import * as FormViewActions from "./FormViewActions";
 import { IFormViewMachine } from "./types";
 
-
 export class FormViewMachine implements IFormViewMachine {
   constructor(
     public P: {
@@ -79,7 +78,7 @@ export class FormViewMachine implements IFormViewMachine {
               states: {
                 /* TODO: Make this parallel so that user interface events 
                 have deadPeriod, but others do not. */
-                deadPeriod: { on: { 0: "receivingEvents" } },
+                deadPeriod: { after: { 1: "receivingEvents" } },
                 receivingEvents: {
                   on: {
                     [FormViewActions.ON_NO_FIELD_CLICK]: {
@@ -177,10 +176,12 @@ export class FormViewMachine implements IFormViewMachine {
     fn();
     if (isEditing) {
       this.dispatch(DataViewActions.startEditing());
+      this.dispatch(DataViewActions.focusEditor());
     }
   }
 
   @action.bound onNextRowClick() {
+    // debugger;
     this.withRefreshedEditing(() =>
       this.dispatch(FormViewActions.selectNextRow())
     );

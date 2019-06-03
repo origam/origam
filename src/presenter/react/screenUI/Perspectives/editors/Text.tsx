@@ -1,5 +1,6 @@
 import * as React from "react";
 import { observer } from "mobx-react";
+import { action } from "mobx";
 
 @observer
 export class TextEditor extends React.Component<{
@@ -7,35 +8,45 @@ export class TextEditor extends React.Component<{
   isReadOnly: boolean;
   isInvalid: boolean;
   isFocused: boolean;
+  refocuser?: (cb: () => void) => () => void;
   onChange?(event: any, value: string): void;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
 }> {
- 
+
+  disposers: any[] = [];
+
   componentDidMount() {
-    if(this.props.isFocused) {
-      this.makeFocused();
+    this.props.refocuser && this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
+    this.makeFocusedIfNeeded();
+  }
+
+  componentWillUnmount() {
+    this.disposers.forEach(d => d());
+  }
+
+  componentDidUpdate(prevProps: { isFocused: boolean }) {
+    if (!prevProps.isFocused && this.props.isFocused) {
+      this.makeFocusedIfNeeded();
     }
   }
 
-  componentDidUpdate(prevProps: {isFocused: boolean}) {
-    if(!prevProps.isFocused && this.props.isFocused) {
-      this.makeFocused();
+  @action.bound
+  makeFocusedIfNeeded() {
+    if (this.props.isFocused) {
+      console.log('--- MAKE FOCUSED ---')
+      this.elmInput && this.elmInput.focus();
+      setTimeout(() => {
+        this.elmInput && this.elmInput.select();
+      }, 10);
     }
-  }
-
-  makeFocused() {
-    this.elmInput && this.elmInput.focus();
-    setTimeout(() => {
-      this.elmInput && this.elmInput.select();
-    }, 10);
   }
 
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {
     this.elmInput = elm;
   }
-  
+
   render() {
     return (
       <div className="editor-container">

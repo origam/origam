@@ -15,6 +15,9 @@ import { ASelNextProp } from "../ASelNextProp";
 import { ASelPrevProp } from "../ASelPrevProp";
 import { ASelProp } from "../ASelProp";
 import { ASelCell } from "../ASelCell";
+import { ASelNextRec } from "../ASelNextRec";
+import { ASelPrevRec } from "../ASelPrevRec";
+import { ASelRec } from "../ASelRec";
 
 export function buildFormView(
   initPropIds: string[] | undefined,
@@ -32,7 +35,10 @@ export function buildFormView(
     aDeactivateView: () => aDeactivateView,
     aSelNextProp: () => aSelNextProp,
     aSelPrevProp: () => aSelPrevProp,
+    aSelNextRec: () => aSelNextRec,
+    aSelPrevRec: () => aSelPrevRec,
     aSelProp: () => aSelProp,
+    aSelRec: () => aSelRec,
     aSelCell: () => aSelCell,
     uiStructure
   });
@@ -45,7 +51,10 @@ export function buildFormView(
   const aDeactivateView = new ADeactivateView(mediator);
   const aSelNextProp = new ASelNextProp(mediator);
   const aSelPrevProp = new ASelPrevProp(mediator);
+  const aSelNextRec = new ASelNextRec(mediator);
+  const aSelPrevRec = new ASelPrevRec(mediator);
   const aSelProp = new ASelProp(mediator);
+  const aSelRec = new ASelRec(mediator);
   const aSelCell = new ASelCell(mediator);
   return mediator;
 }

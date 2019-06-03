@@ -32,6 +32,7 @@ import { IRecCursor } from "./types/IRecCursor";
 import { IRecords } from "./types/IRecords";
 import { IViewType } from "./types/IViewType";
 import { start } from "xstate/lib/actions";
+import { IAFocusEditor } from "./types/IAFocusEditor";
 
 /* import { SELECT_FIRST_CELL } from "./FormView/FormViewActions";
 import {
@@ -83,6 +84,7 @@ export interface IDataViewMediator02 extends IDispatcher {
   aSubmitForm: IASubmitForm;
   aReloadChildren: IAReloadChildren;
   aDeleteRow: IADeleteRow;
+  aFocusEditor: IAFocusEditor;
 }
 
 export class DataViewMediator02 implements IDataViewMediator02 {
@@ -116,6 +118,7 @@ export class DataViewMediator02 implements IDataViewMediator02 {
       aSubmitForm: () => IASubmitForm;
       aReloadChildren: () => IAReloadChildren;
       aDeleteRow: () => IADeleteRow;
+      aFocusEditor: () => IAFocusEditor;
     }
   ) {}
 
@@ -169,6 +172,9 @@ export class DataViewMediator02 implements IDataViewMediator02 {
         break;
       case DataViewActions.SWITCH_VIEW:
         this.aSwitchView.do(event.viewType);
+        break;
+      case DataViewActions.FOCUS_EDITOR:
+        this.P.aFocusEditor().do();
         break;
     }
     this.machine.send(event);
@@ -318,5 +324,9 @@ export class DataViewMediator02 implements IDataViewMediator02 {
 
   get aDeleteRow(): IADeleteRow {
     return this.P.aDeleteRow();
+  }
+
+  get aFocusEditor(): IAFocusEditor {
+    return this.P.aFocusEditor();
   }
 }

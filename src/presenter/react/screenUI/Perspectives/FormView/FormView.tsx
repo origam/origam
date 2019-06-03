@@ -51,8 +51,14 @@ export class FormRoot extends React.Component<{ formViewPresenter?: IFormView }>
   }
 }
 
+@inject(({ formViewPresenter }) => {
+  return { listenForRefocus: formViewPresenter.aFocusEditor.listenForRefocus }
+})
 @observer
-export class Editor extends React.Component<{ field: IFormField }> {
+export class Editor extends React.Component<{
+  field: IFormField;
+  listenForRefocus?: (cb: () => void) => () => void;
+}> {
   getEditor(field: IFormField) {
     switch (field.type) {
       case "TextCell":
@@ -62,6 +68,7 @@ export class Editor extends React.Component<{ field: IFormField }> {
             isReadOnly={field.isReadOnly}
             isInvalid={field.isInvalid}
             isFocused={field.isFocused}
+            refocuser={this.props.listenForRefocus!}
             onChange={field.onChange}
             onKeyDown={field.onKeyDown}
             onClick={field.onClick}
@@ -219,7 +226,8 @@ export class FormView extends React.Component<{ controller: IFormViewMediator }>
       aSelPrevProp: () => this.props.controller.aSelPrevProp,
       aSelNextProp: () => this.props.controller.aSelNextProp,
       aSelProp: () => this.props.controller.aSelProp,
-      isLoading: () => this.props.controller.dataView.machine.isLoading
+      isLoading: () => this.props.controller.dataView.machine.isLoading,
+      aFocusEditor: this.props.controller.aFocusEditor
     });
     const toolbar = this.props.controller.dataView.isHeadless
       ? undefined

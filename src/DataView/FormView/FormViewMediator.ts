@@ -24,7 +24,10 @@ import { action, computed } from "mobx";
 import { START_DATA_VIEWS, STOP_DATA_VIEWS } from "../DataViewActions";
 import * as FormViewActions from "./FormViewActions";
 import { ISelection } from "../Selection";
-
+import { IASelPrevRec } from "../types/IASelPrevRec";
+import { IASelNextRec } from "../types/IASelNextRec";
+import { IASelRec } from "../types/IASelRec";
+import { IAFocusEditor } from "../types/IAFocusEditor";
 
 export interface IParentMediator {
   properties: IProperties;
@@ -59,15 +62,16 @@ export interface IFormViewMediator extends IDispatcher {
   aSelPrevProp: IASelPrevProp;
   aSelNextProp: IASelNextProp;
   aSelProp: IASelProp;
+  aSelRec: IASelRec;
   aSelCell: IASelCell;
   aActivateView: IAActivateView;
   aDeactivateView: IADeactivateView;
   aStartEditing: IAStartEditing;
   aFinishEditing: IAFinishEditing;
+  aFocusEditor: IAFocusEditor;
 }
 
 export class FormViewMediator implements IFormViewMediator {
-  
   type: IViewType.Form = IViewType.Form;
 
   constructor(
@@ -81,6 +85,9 @@ export class FormViewMediator implements IFormViewMediator {
       machine: () => IFormViewMachine;
       aSelNextProp: () => IASelNextProp;
       aSelPrevProp: () => IASelPrevProp;
+      aSelNextRec: () => IASelNextRec;
+      aSelPrevRec: () => IASelPrevRec;
+      aSelRec: () => IASelRec;
       aSelProp: () => IASelProp;
       aSelCell: () => IASelCell;
       aActivateView: () => IAActivateView;
@@ -129,6 +136,14 @@ export class FormViewMediator implements IFormViewMediator {
       }
       case FormViewActions.SELECT_FIRST_CELL: {
         this.aSelCell.doSelFirst();
+        break;
+      }
+      case FormViewActions.SELECT_NEXT_ROW: {
+        this.aSelNextRec.do();
+        break;
+      }
+      case FormViewActions.SELECT_PREV_ROW: {
+        this.aSelPrevRec.do();
         break;
       }
     }
@@ -207,8 +222,20 @@ export class FormViewMediator implements IFormViewMediator {
     return this.P.aSelNextProp();
   }
 
+  get aSelPrevRec(): IASelPrevRec {
+    return this.P.aSelPrevRec();
+  }
+
+  get aSelNextRec(): IASelNextRec {
+    return this.P.aSelNextRec();
+  }
+
   get aSelProp(): IASelProp {
     return this.P.aSelProp();
+  }
+
+  get aSelRec(): IASelRec {
+    return this.P.aSelRec();
   }
 
   get aSelCell(): IASelCell {
@@ -217,6 +244,10 @@ export class FormViewMediator implements IFormViewMediator {
 
   get aActivateView(): IAActivateView {
     return this.P.aActivateView();
+  }
+
+  get aFocusEditor(): IAFocusEditor {
+    return this.P.parentMediator.aFocusEditor;
   }
 
   get aDeactivateView(): IADeactivateView {
