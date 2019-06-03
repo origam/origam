@@ -136,7 +136,8 @@ export class FormViewPresenter implements IFormView {
   }
 
   @action.bound handleClick(event: any, propId: string) {
-    this.aSelProp.do(propId);
+    // this.aSelProp.do(propId);
+    this.P.mediator.dispatch(FormViewActions.onFieldClick(propId));
   }
 
   @action.bound onNoFieldClick() {

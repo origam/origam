@@ -9,6 +9,8 @@ import { IPropCursor } from "../types/IPropCursor";
 import { IRecCursor } from "../types/IRecCursor";
 import * as FormViewActions from "./FormViewActions";
 import { IFormViewMachine } from "./types";
+import { IProperty } from "../types/IProperty";
+import { ISelection } from "../Selection";
 
 export class FormViewMachine implements IFormViewMachine {
   constructor(
@@ -17,6 +19,7 @@ export class FormViewMachine implements IFormViewMachine {
       recCursor: IRecCursor;
       propCursor: IPropCursor;
       editing: IEditing;
+      selection: ISelection;
       dispatch(action: any): void;
       listen(cb: (action: any) => void): void;
     }
@@ -89,6 +92,10 @@ export class FormViewMachine implements IFormViewMachine {
                       actions: "onOutsideFormClick",
                       target: "deadPeriod"
                     },
+                    [FormViewActions.ON_FIELD_CLICK]: {
+                      actions: "onFieldClick",
+                      target: "deadPeriod"
+                    },
                     [FormViewActions.ON_PREV_ROW_CLICK]: {
                       actions: "onPrevRowClick",
                       target: "deadPeriod"
@@ -123,6 +130,7 @@ export class FormViewMachine implements IFormViewMachine {
 
         onNoFieldClick: (ctx, event) => this.onNoFieldClick(),
         onOutsideFormClick: (ctx, event) => this.onOutsideFormClick(),
+        onFieldClick: (ctx, event) => this.onFieldClick(event.propId),
         onNextRowClick: () => this.onNextRowClick(),
         onPrevRowClick: () => this.onPrevRowClick()
       },
@@ -165,6 +173,38 @@ export class FormViewMachine implements IFormViewMachine {
   onOutsideFormClick() {
     if (this.P.editing.isEditing) {
       this.dispatch(DataViewActions.finishEditing());
+    }
+  }
+
+  @action.bound
+  onFieldClick(propId: string) {
+    const finishEditing = () =>
+      this.P.dispatch(DataViewActions.finishEditing());
+    const startEditing = () => this.dispatch(DataViewActions.startEditing());
+    const selectCellByPropId = (propId: string) =>
+      this.dispatch(
+        FormViewActions.selectFieldByPropId({
+          propId
+        })
+      );
+
+    const getValueFromSelectedCell = () =>
+      this.dataTable.getValueById(
+        this.P.selection.selRowId!,
+        this.P.selection.selColId!
+      );
+    const isCheckBox = (prop: IProperty) =>
+      prop ? prop.column === "CheckBox" : false;
+    const cellAlreadySelected = (propId: string) =>
+      this.P.selection.selColId === propId;
+
+    if (!this.P.editing.isEditing) {
+      selectCellByPropId(propId);
+      startEditing();
+    } else if (!cellAlreadySelected(propId)) {
+      finishEditing();
+      selectCellByPropId(propId);
+      startEditing();
     }
   }
 

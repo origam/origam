@@ -146,6 +146,10 @@ export class FormViewMediator implements IFormViewMediator {
         this.aSelPrevRec.do();
         break;
       }
+      case FormViewActions.SELECT_FIELD_BY_PROP_ID: {
+        this.aSelProp.do(event.propId);
+        break;
+      }
     }
     for (let l of this.listeners.values()) {
       l(event);
