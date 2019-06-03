@@ -70,17 +70,37 @@ export class TableViewMachine implements ITableViewMachine {
                 "": [
                   { cond: "notHasData", target: "waitForData" },
                   { cond: "shallSleep", target: "sleeping" }
-                ],
-                [TableViewActions.ON_CELL_CLICK]: {
-                  actions: "onCellClick"
-                },
-                [TableViewActions.ON_NO_CELL_CLICK]: {
-                  actions: "onNoCellClick"
-                },
-                [TableViewActions.ON_OUTSIDE_TABLE_CLICK]: {
-                  actions: "onOutsideTableClick"
-                },
-                
+                ]
+              },
+              initial: "receivingEvents",
+              states: {
+                /* TODO: Make this parallel so that user interface events 
+                have deadPeriod, but others do not. */
+                deadPeriod: { after: { 1: "receivingEvents" } },
+                receivingEvents: {
+                  on: {
+                    [TableViewActions.ON_CELL_CLICK]: {
+                      actions: "onCellClick",
+                      target: "deadPeriod"
+                    },
+                    [TableViewActions.ON_NO_CELL_CLICK]: {
+                      actions: "onNoCellClick",
+                      target: "deadPeriod"
+                    },
+                    [TableViewActions.ON_OUTSIDE_TABLE_CLICK]: {
+                      actions: "onOutsideTableClick",
+                      target: "deadPeriod"
+                    },
+                    [TableViewActions.ON_PREV_ROW_CLICK]: {
+                      actions: "onPrevRowClick",
+                      target: "deadPeriod"
+                    },
+                    [TableViewActions.ON_NEXT_ROW_CLICK]: {
+                      actions: "onNextRowClick",
+                      target: "deadPeriod"
+                    }
+                  }
+                }
               }
             },
             sleeping: {
@@ -106,7 +126,9 @@ export class TableViewMachine implements ITableViewMachine {
         onCellClick: (ctx, event) =>
           this.onCellClick(event as TableViewActions.IOnCellClick),
         onNoCellClick: (ctx, event) => this.onNoCellClick(),
-        onOutsideTableClick: (ctx, event) => this.onOutsideTableClick()
+        onOutsideTableClick: (ctx, event) => this.onOutsideTableClick(),
+        onNextRowClick: (ctx, event) => this.onNextRowClick(),
+        onPrevRowClick: (ctx, event) => this.onPrevRowClick()
       },
       guards: {
         shallSleep: (ctx, event) => this.shallSleep,
@@ -204,6 +226,31 @@ export class TableViewMachine implements ITableViewMachine {
     if (this.P.editing.isEditing) {
       this.P.dispatch(DataViewActions.finishEditing());
     }
+  }
+
+  withRefreshedEditing(fn: () => void) {
+    const { isEditing } = this.P.editing;
+    if (isEditing) {
+      this.dispatch(DataViewActions.finishEditing());
+    }
+    fn();
+    if (isEditing) {
+      this.dispatch(DataViewActions.startEditing());
+      this.dispatch(DataViewActions.focusEditor());
+    }
+  }
+
+  @action.bound onNextRowClick() {
+    // debugger;
+    this.withRefreshedEditing(() =>
+      this.dispatch(TableViewActions.selectNextRow())
+    );
+  }
+
+  @action.bound onPrevRowClick() {
+    this.withRefreshedEditing(() =>
+      this.dispatch(TableViewActions.selectPrevRow())
+    );
   }
 
   @observable shallSleep = false;

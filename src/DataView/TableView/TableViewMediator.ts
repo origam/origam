@@ -33,7 +33,6 @@ import { ITableViewMachine } from "./types/ITableViewMachine";
 import { START_DATA_VIEWS, STOP_DATA_VIEWS } from "../DataViewActions";
 import { ISelection } from "../Selection";
 
-
 export interface ITableViewMediator extends IDispatcher {
   type: IViewType.Table;
   isActive: boolean;
@@ -86,12 +85,10 @@ export class TableViewMediator implements ITableViewMediator, ITableView {
 
   subscribeMediator() {
     this.listen(event => {
-      // TODO: Move this to a proper place? 
-
+      // TODO: Move this to a proper place?
       /*if (isType(event, DataViewActions.selectCellByIdx)) {
         this.aSelCell.doByIdx(event.payload.rowIdx, event.payload.columnIdx);
-      }*/ 
-      
+      }*/
       /*else if (isType(event, TableViewActions.selectNextColumn)) {
         this.aSelNextProp.do();
         this.makeSelectedCellVisible();
@@ -105,7 +102,8 @@ export class TableViewMediator implements ITableViewMediator, ITableView {
       } else if (isType(event, DataViewActions.selectPrevRow)) {
         this.aSelPrevRec.do();
         this.makeSelectedCellVisible();
-    } */ /*if (isType(event, TableViewActions.makeCellVisibleById)) {
+    } */
+      /*if (isType(event, TableViewActions.makeCellVisibleById)) {
         // TODO: Move this to its own method.
         const columnIdx = this.propReorder.getIndexById(event.payload.columnId);
         const rowIdx = this.dataView.dataTable.getRecordIndexById(
@@ -174,6 +172,15 @@ export class TableViewMediator implements ITableViewMediator, ITableView {
       }
       case TableViewActions.SELECT_CELL_BY_IDX: {
         this.aSelCell.doByIdx(event.rowIdx, event.columnIdx);
+        break;
+      }
+      case TableViewActions.SELECT_NEXT_ROW: {
+        this.aSelNextRec.do();
+        break;
+      }
+      case TableViewActions.SELECT_PREV_ROW: {
+        this.aSelPrevRec.do();
+        break;
       }
     }
     for (let l of this.listeners.values()) {
