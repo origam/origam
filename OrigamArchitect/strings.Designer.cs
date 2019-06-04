@@ -1717,6 +1717,15 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please select Template or fill git repository.
+        /// </summary>
+        internal static string TemplateNotSelect {
+            get {
+                return ResourceManager.GetString("TemplateNotSelect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &amp;Tools.
         /// </summary>
         internal static string Tools_Menu {

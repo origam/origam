@@ -1,4 +1,7 @@
-﻿namespace OrigamArchitect
+﻿using System;
+using AeroWizard;
+
+namespace OrigamArchitect
 {
     partial class NewProjectWizard
     {
@@ -82,6 +85,13 @@
             this.lstTasks = new System.Windows.Forms.ListView();
             this.colText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.pageTemplateType = new AeroWizard.WizardPage();
+            this.wbReadmeText = new System.Windows.Forms.WebBrowser();
+            this.listViewTemplate = new System.Windows.Forms.ListView();
+            this.Projects = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.label17 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textbGitUrl = new System.Windows.Forms.TextBox();
             this.pageLocalDeploymentSettings = new AeroWizard.WizardPage();
             this.labelPort = new System.Windows.Forms.Label();
             this.txtPort = new System.Windows.Forms.TextBox();
@@ -110,6 +120,7 @@
             this.pagePaths.SuspendLayout();
             this.pageGit.SuspendLayout();
             this.pageReview.SuspendLayout();
+            this.pageTemplateType.SuspendLayout();
             this.pageLocalDeploymentSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource1)).BeginInit();
@@ -125,6 +136,7 @@
             this.wizard1.Pages.Add(this.pageWelcome);
             this.wizard1.Pages.Add(this.pageDeploymentType);
             this.wizard1.Pages.Add(this.pageAzureDeploymentSettings);
+            this.wizard1.Pages.Add(this.pageTemplateType);
             this.wizard1.Pages.Add(this.pageLocalDeploymentSettings);
             this.wizard1.Pages.Add(this.pagePaths);
             this.wizard1.Pages.Add(this.pageGit);
@@ -147,7 +159,7 @@
             this.pageWelcome.Size = new System.Drawing.Size(574, 316);
             this.pageWelcome.TabIndex = 3;
             this.pageWelcome.Text = "Welcome To New Project Wizard";
-            this.pageWelcome.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageWelcome_Initialize);
+            this.pageWelcome.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.PageWelcome_Initialize);
             // 
             // label9
             // 
@@ -619,7 +631,7 @@
             this.pageReview.Size = new System.Drawing.Size(574, 316);
             this.pageReview.TabIndex = 1;
             this.pageReview.Text = "Progress";
-            this.pageReview.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageReview_Commit);
+            this.pageReview.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageReview_Commit);
             this.pageReview.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageReview_Initialize);
             // 
             // lstTasks
@@ -646,6 +658,65 @@
             // 
             this.colStatus.Text = "Status";
             this.colStatus.Width = 81;
+            // 
+            // pageTemplateType
+            // 
+            this.pageTemplateType.Controls.Add(this.wbReadmeText);
+            this.pageTemplateType.Controls.Add(this.listViewTemplate);
+            this.pageTemplateType.Controls.Add(this.label17);
+            this.pageTemplateType.Controls.Add(this.label3);
+            this.pageTemplateType.Controls.Add(this.textbGitUrl);
+            this.pageTemplateType.Name = "pageTemplateType";
+            this.pageTemplateType.NextPage = this.pageLocalDeploymentSettings;
+            this.pageTemplateType.Size = new System.Drawing.Size(574, 316);
+            this.pageTemplateType.TabIndex = 7;
+            this.pageTemplateType.Text = "Select Template";
+            this.pageTemplateType.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageTemplateType_Commit);
+            this.pageTemplateType.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.PageTemplateType_Initialize);
+            // 
+            // wbReadmeText
+            // 
+            this.wbReadmeText.Location = new System.Drawing.Point(188, 57);
+            this.wbReadmeText.MinimumSize = new System.Drawing.Size(20, 20);
+            this.wbReadmeText.Name = "wbReadmeText";
+            this.wbReadmeText.Size = new System.Drawing.Size(371, 235);
+            this.wbReadmeText.TabIndex = 6;
+            // 
+            // listViewTemplate
+            // 
+            this.listViewTemplate.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.Projects});
+            this.listViewTemplate.Location = new System.Drawing.Point(23, 57);
+            this.listViewTemplate.Name = "listViewTemplate";
+            this.listViewTemplate.Size = new System.Drawing.Size(142, 235);
+            this.listViewTemplate.TabIndex = 5;
+            this.listViewTemplate.UseCompatibleStateImageBehavior = false;
+            this.listViewTemplate.SelectedIndexChanged += new System.EventHandler(this.ListViewTemplate_SelectedIndexChanged);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(20, 22);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(56, 15);
+            this.label17.TabIndex = 3;
+            this.label17.Text = "Template";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(219, 17);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(43, 15);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Git Url:";
+            // 
+            // textbGitUrl
+            // 
+            this.textbGitUrl.Location = new System.Drawing.Point(268, 14);
+            this.textbGitUrl.Name = "textbGitUrl";
+            this.textbGitUrl.Size = new System.Drawing.Size(291, 23);
+            this.textbGitUrl.TabIndex = 1;
             // 
             // pageLocalDeploymentSettings
             // 
@@ -868,6 +939,8 @@
             this.pageGit.ResumeLayout(false);
             this.pageGit.PerformLayout();
             this.pageReview.ResumeLayout(false);
+            this.pageTemplateType.ResumeLayout(false);
+            this.pageTemplateType.PerformLayout();
             this.pageLocalDeploymentSettings.ResumeLayout(false);
             this.pageLocalDeploymentSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).EndInit();
@@ -951,5 +1024,12 @@
         private System.Windows.Forms.Label labelPrivileges;
         private System.Windows.Forms.Label labelPort;
         private System.Windows.Forms.TextBox txtPort;
+        private AeroWizard.WizardPage pageTemplateType;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox textbGitUrl;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.ListView listViewTemplate;
+        private System.Windows.Forms.ColumnHeader Projects;
+        private System.Windows.Forms.WebBrowser wbReadmeText;
     }
 }

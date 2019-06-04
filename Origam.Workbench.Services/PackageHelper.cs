@@ -73,5 +73,11 @@ namespace Origam.Workbench.Services
             IDeploymentService deployment = ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
             deployment.Deploy();
         }
+
+        public static void BuildPackage(Guid packageId)
+        {
+            SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+            schema.LoadSchema(packageId, false, false);
+        }
     }
 }

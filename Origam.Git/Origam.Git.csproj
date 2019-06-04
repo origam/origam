@@ -67,6 +67,7 @@
     <Compile Include="GitFileComparer.cs" />
     <Compile Include="GitManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XmlParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\EnterpriseLibrary\git2-6311e88.dll">

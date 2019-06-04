@@ -19,9 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Service;
+using Origam.Git;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.ProjectAutomation
@@ -37,7 +41,51 @@ namespace Origam.ProjectAutomation
         {
             sourcesFolder = project.SourcesFolder;
             CreateSourceFolder();
-            UnzipDefaultModel(project);
+            if (project.IsEmptyProject())
+            {
+                UnzipDefaultModel(project);
+            }
+            else
+            {
+                CloneGitRepository(project);
+            }
+        }
+
+        private void CloneGitRepository(Project project)
+        {
+            GitManager gitManager = new GitManager();
+            gitManager.CloneRepository(project.GitRepositoryLink, sourcesFolder);
+            project.NewPackageId = GetPackageId();
+        }
+
+        private string GetPackageId()
+        {
+            DirectoryInfo dir = new DirectoryInfo(sourcesFolder);
+            String modelId = "";
+            if (dir.Exists && dir.EnumerateFileSystemInfos().Any())
+            {
+                string[] exclude_dirs = new [] {"Root","Root Menu","Security","l10n", ".git" };
+                DirectoryInfo model = dir.EnumerateDirectories().Where(it => !exclude_dirs.Contains(it.Name)).First() ;
+                string xmlPath = Path.Combine(sourcesFolder, model.Name, ".origamPackage");
+                if (File.Exists(xmlPath))
+                {
+                    FileInfo fi = new FileInfo(xmlPath);
+                    using (XmlReader xmlReader = new XmlTextReader(fi.OpenRead()))
+                    {
+                        while (xmlReader.Read())
+                        {
+                            if (xmlReader.NodeType == XmlNodeType.EndElement) continue;
+                            Guid? retrievedId = XmlUtils.ReadId(xmlReader);
+                            if (retrievedId.HasValue)
+                            {
+                                modelId = retrievedId.ToString();
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            return modelId;
         }
 
         private void UnzipDefaultModel(Project project)
@@ -61,8 +109,33 @@ namespace Origam.ProjectAutomation
         {
             if (Directory.Exists(sourcesFolder))
             {
-                Directory.Delete(sourcesFolder, true);
+                DeleteDirectory(sourcesFolder);
             }
+        }
+        private void DeleteDirectory(string directoryPath)
+        {
+            if (!Directory.Exists(directoryPath))
+            {
+                return;
+            }
+
+            var files = Directory.GetFiles(directoryPath);
+            var directories = Directory.GetDirectories(directoryPath);
+
+            foreach (var file in files)
+            {
+                File.SetAttributes(file, FileAttributes.Normal);
+                File.Delete(file);
+            }
+
+            foreach (var dir in directories)
+            {
+                DeleteDirectory(dir);
+            }
+
+            File.SetAttributes(directoryPath, FileAttributes.Normal);
+
+            Directory.Delete(directoryPath, false);
         }
 
     }

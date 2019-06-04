@@ -51,6 +51,12 @@ namespace Origam.Git
         {
             InitValues();
         }
+
+        public void CloneRepository(string gitRepositoryLink,string modelFolder)
+        {
+            Repository.Clone(gitRepositoryLink, modelFolder);
+        }
+
         public static bool IsValid(string modelSourceControlLocation)
         {
             return Repository.Discover(modelSourceControlLocation) != null;

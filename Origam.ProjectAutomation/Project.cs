@@ -330,6 +330,13 @@ namespace Origam.ProjectAutomation
                 return BaseUrl + "/" + Url;
             }
         }
+
+        internal bool IsEmptyProject()
+        {
+            return string.IsNullOrEmpty(GitRepositoryLink);
+        }
+
+        public string GitRepositoryLink { get; set; }
         #endregion
     }
 }

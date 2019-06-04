@@ -729,4 +729,7 @@
   <data name="PortError" xml:space="preserve">
     <value>Port is not Number!</value>
   </data>
+  <data name="TemplateNotSelect" xml:space="preserve">
+    <value>Please select Template or fill git repository</value>
+  </data>
 </root>

@@ -33,6 +33,12 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using Origam.Git;
 using static Origam.DA.Common.Enums;
+using Origam;
+using System.Xml;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Net;
+using System.Threading;
 
 namespace OrigamArchitect
 {
@@ -53,6 +59,8 @@ namespace OrigamArchitect
         ProjectBuilder _builder = new ProjectBuilder();
         Project _project = new Project();
         NewProjectWizardSettings _settings = new NewProjectWizardSettings();
+        private XmlParser XmlParser = new XmlParser();
+        private List<object[]> repositories = new List<object[]>();
 
         public NewProjectWizard()
         {
@@ -106,7 +114,7 @@ namespace OrigamArchitect
             }
         }
 
-        private void pageReview_Commit(object sender, WizardPageConfirmEventArgs e)
+        private void PageReview_Commit(object sender, WizardPageConfirmEventArgs e)
         {
             _builder.CreateTasks(_project);
             InitTaskList();
@@ -321,7 +329,7 @@ namespace OrigamArchitect
             txtTemplateFolder.Text = Path.Combine(Application.StartupPath, @"Project Templates\Default");
         }
 
-        private void pageWelcome_Initialize(object sender, WizardPageInitEventArgs e)
+        private void PageWelcome_Initialize(object sender, WizardPageInitEventArgs e)
         {
             if (! IsAdmin())
             {
@@ -329,6 +337,10 @@ namespace OrigamArchitect
                 lblAdminWarning.Visible = true;
                 btnAdminElevate.Visible = true;
                 AddShieldToButton(btnAdminElevate);
+            }
+            else
+            {
+                InitTemplates();
             }
         }
 
@@ -386,7 +398,7 @@ namespace OrigamArchitect
             switch (Deployment)
             {
                 case DeploymentType.Local:
-                    pageDeploymentType.NextPage = pageLocalDeploymentSettings;
+                    pageDeploymentType.NextPage = pageTemplateType;
                     break;
                 case DeploymentType.Azure:
                     pageDeploymentType.NextPage = pageAzureDeploymentSettings;
@@ -470,6 +482,107 @@ namespace OrigamArchitect
                 IntegratedLabel.Visible = true;
             }
             SetPort();
+        }
+
+        private void InitTemplates()
+        {
+            Thread bgThread = new Thread(FillTemplate)
+            {
+                IsBackground = true
+            };
+            bgThread.Start();
+        }
+
+        private void PageTemplateType_Initialize(object sender, WizardPageInitEventArgs e)
+        {
+            WaitForLoaded();
+            ImageList imageList = new ImageList
+            {
+                ImageSize = new Size(64, 64)
+            };
+            imageList.Images.Add(Images.Git);
+            foreach (var repo in repositories)
+            {
+                Image img = (Image)repo[0];
+                imageList.Images.Add(img);
+            }
+            listViewTemplate.LargeImageList = imageList;
+
+            if (listViewTemplate.Items.Count == 0)
+            {
+                ListViewItem defaultviewItem = new ListViewItem { ImageIndex = 0, Text = "Empty Template" };
+                defaultviewItem.Tag = new string[] { null, "Empty Template." };
+                listViewTemplate.Items.Add(defaultviewItem);
+            }
+            int imgindex = 1;
+            foreach (var repo in repositories)
+            {
+                string nameOfRepository = (string)repo[1];
+                string linkTogit = (string)repo[2];
+                string readmeText = (string)repo[3];
+                ListViewItem viewItem = new ListViewItem { ImageIndex = imgindex, Text = nameOfRepository };
+                viewItem.Tag = new string[] { linkTogit, readmeText };
+                listViewTemplate.Items.Add(viewItem);
+                imgindex++;
+            }
+        }
+
+        private void WaitForLoaded()
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            for (int i = 0; i < 10; i++)
+            {
+                if (!XmlParser.IsLoaded)
+                {
+                    Thread.Sleep(1500);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void FillTemplate()
+        {
+            repositories = XmlParser.GetList();
+        }
+
+        private void PageTemplateType_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
+            if (string.IsNullOrEmpty(textbGitUrl.Text) && listViewTemplate.SelectedItems.Count==0)
+            {
+                AsMessageBox.ShowError(this, strings.TemplateNotSelect,"Template", null);
+                e.Cancel = true;
+                return;
+            }
+            if(!string.IsNullOrEmpty(textbGitUrl.Text))
+            {
+                _project.GitRepositoryLink = textbGitUrl.Text;
+            }
+            else
+            {
+                ListView.SelectedListViewItemCollection breakfast =
+                     listViewTemplate.SelectedItems;
+                foreach (ListViewItem item in breakfast)
+                {
+                    string[] tags = (string[])item.Tag;
+                    _project.GitRepositoryLink = tags[0];
+                }
+            }
+        }
+
+        private void ListViewTemplate_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            MarkdownSharp.Markdown md = new MarkdownSharp.Markdown();
+            ListView.SelectedListViewItemCollection breakfast =
+                     listViewTemplate.SelectedItems;
+            foreach (ListViewItem item in breakfast)
+            {
+                string[] tags = (string[])item.Tag;
+                wbReadmeText.DocumentText = md.Transform((string)tags[1]);
+            }
         }
     }
 }

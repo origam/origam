@@ -39,8 +39,15 @@ namespace Origam.ProjectAutomation
             SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService))
                 as SchemaService;
             schema.UnloadSchema();
-            PackageHelper.CreatePackage(project.Name, new Guid(project.NewPackageId), 
-                new Guid(project.BasePackageId));
+            if (project.IsEmptyProject())
+            {
+                PackageHelper.CreatePackage(project.Name, new Guid(project.NewPackageId),
+                    new Guid(project.BasePackageId));
+            }
+            else
+            {
+                PackageHelper.BuildPackage(new Guid(project.NewPackageId));
+            }
         }
 
         public override void Rollback()

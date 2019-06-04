@@ -519,4 +519,7 @@
   <data name="PortError" xml:space="preserve">
     <value>Port není číslo !</value>
   </data>
+  <data name="TemplateNotSelect" xml:space="preserve">
+    <value>Vyberte template nebo vložte link na git</value>
+  </data>
 </root>

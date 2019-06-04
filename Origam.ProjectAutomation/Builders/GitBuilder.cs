@@ -33,7 +33,7 @@ namespace Origam.ProjectAutomation.Builders
         public override string Name => "Initialize Git";
         public override void Execute(Project project)
         {
-            if (project.GitRepository)
+            if (project.GitRepository && !GitManager.IsValid(project.SourcesFolder))
             {
                 GitManager.CreateRepository(project.SourcesFolder);
                 GitManager gitmanager = new GitManager(project.SourcesFolder);
