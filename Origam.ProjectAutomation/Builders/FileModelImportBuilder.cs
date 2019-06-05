@@ -41,13 +41,17 @@ namespace Origam.ProjectAutomation
         {
             sourcesFolder = project.SourcesFolder;
             CreateSourceFolder();
-            if (project.IsEmptyProject())
+            switch(project.TypeTemplate)
             {
-                UnzipDefaultModel(project);
-            }
-            else
-            {
-                CloneGitRepository(project);
+                case TypeTemplate.Default:
+                    UnzipDefaultModel(project);
+                    break;
+                case TypeTemplate.Open:
+                case TypeTemplate.Template:
+                    CloneGitRepository(project);
+                    break;
+                default:
+                    throw new Exception("Bad TypeTemplate " + project.TypeTemplate.ToString());
             }
         }
 
@@ -109,34 +113,10 @@ namespace Origam.ProjectAutomation
         {
             if (Directory.Exists(sourcesFolder))
             {
-                DeleteDirectory(sourcesFolder);
+                GitManager.DeleteDirectory(sourcesFolder);
             }
         }
-        private void DeleteDirectory(string directoryPath)
-        {
-            if (!Directory.Exists(directoryPath))
-            {
-                return;
-            }
-
-            var files = Directory.GetFiles(directoryPath);
-            var directories = Directory.GetDirectories(directoryPath);
-
-            foreach (var file in files)
-            {
-                File.SetAttributes(file, FileAttributes.Normal);
-                File.Delete(file);
-            }
-
-            foreach (var dir in directories)
-            {
-                DeleteDirectory(dir);
-            }
-
-            File.SetAttributes(directoryPath, FileAttributes.Normal);
-
-            Directory.Delete(directoryPath, false);
-        }
+        
 
     }
 }

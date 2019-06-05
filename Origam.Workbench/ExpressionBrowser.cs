@@ -775,15 +775,18 @@ namespace Origam.Workbench
 
         private bool IsFileDirty(IPersistent item)
         {
-            GitManager gitManager = new GitManager(_sourcePath);
-            foreach (string file in item.Files)
+            if(GitManager.IsValid(_sourcePath))
             {
-                string path = Path.Combine(_sourcePath, file);
-                if (File.Exists(path))
+                GitManager gitManager = new GitManager(_sourcePath);
+                foreach (string file in item.Files)
                 {
-                    if(gitManager.HasChanges(path))
+                    string path = Path.Combine(_sourcePath, file);
+                    if (File.Exists(path))
                     {
-                        return true;
+                        if(gitManager.HasChanges(path))
+                        {
+                            return true;
+                        }
                     }
                 }
             }

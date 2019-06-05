@@ -56,6 +56,15 @@ namespace Origam.Git
         {
             Repository.Clone(gitRepositoryLink, modelFolder);
         }
+        public bool IsValidUrl(string url)
+        {
+            try
+            {
+                Repository.ListRemoteReferences(url);
+                return true;
+            }
+            catch { return false; }
+        }
 
         public static bool IsValid(string modelSourceControlLocation)
         {
@@ -66,6 +75,13 @@ namespace Origam.Git
         {
             return Repository.Discover(modelSourceControlLocation);
         }
+
+        public static void RemoveRepository(string sourcesFolder)
+        {
+            string path = Path.Combine(sourcesFolder,".git");
+            DeleteDirectory(path);
+        }
+
         private void InitValues()
         {
             pathOfgitConfig = Path.Combine(Environment.GetEnvironmentVariable("HOMEDRIVE") + 
@@ -144,6 +160,31 @@ namespace Origam.Git
                 }
             }
             return null;
+        }
+        public static void DeleteDirectory(string directoryPath)
+        {
+            if (!Directory.Exists(directoryPath))
+            {
+                return;
+            }
+
+            var files = Directory.GetFiles(directoryPath);
+            var directories = Directory.GetDirectories(directoryPath);
+
+            foreach (var file in files)
+            {
+                File.SetAttributes(file, FileAttributes.Normal);
+                File.Delete(file);
+            }
+
+            foreach (var dir in directories)
+            {
+                DeleteDirectory(dir);
+            }
+
+            File.SetAttributes(directoryPath, FileAttributes.Normal);
+
+            Directory.Delete(directoryPath, false);
         }
     }
 }

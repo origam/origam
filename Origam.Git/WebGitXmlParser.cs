@@ -2,27 +2,28 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace Origam.Git
 {
-    public class XmlParser
+    public class WebGitXmlParser
     {
         private readonly string baseUrl = "https://api.bitbucket.org/2.0/repositories/";
-        private static readonly List<object[]> RepositoryList = new List<object[]>() ;
-        private readonly string[] GitTemplateUrl = new string[] 
+        private static readonly List<object[]> RepositoryList = new List<object[]>();
+        private readonly string[] GitTemplateUrl = new string[]
         {   "cistic",
             "/?fields=values.name,values.links.clone,values.links.avatar",
         "/filehistory/master/README.md?fields=values.path,values.commit.date,values.links.self"};
         // "https://api.bitbucket.org/2.0/repositories/opensoftgitrepo/?fields=values.name,values.links.clone,values.links.avatar
-        public XmlParser()
+        public WebGitXmlParser()
         {
-        
+
         }
 
         public List<object[]> GetList()
         {
-            if (RepositoryList.Count==0)
+            if (RepositoryList.Count == 0)
             {
                 try
                 {
@@ -37,7 +38,7 @@ namespace Origam.Git
                         Image avatar = null;
                         using (var ms = new MemoryStream((byte[])GetData(imageNode.FirstChild.InnerText)))
                         {
-                            avatar= Image.FromStream(ms);
+                            avatar = Image.FromStream(ms);
                         }
                         string link = cloneNode.FirstChild.InnerText;
                         string urlReadme = BuildUrl(name);
@@ -49,7 +50,7 @@ namespace Origam.Git
                 }
                 catch (Exception)
                 {
-                    
+
                 }
                 IsLoaded = true;
             }
@@ -57,7 +58,7 @@ namespace Origam.Git
         }
 
         public Boolean IsLoaded { get; set; } = false;
-       
+
         private object GetData(string url)
         {
             return HttpTools.SendRequest(url, method: "get");

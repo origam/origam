@@ -331,12 +331,22 @@ namespace Origam.ProjectAutomation
             }
         }
 
-        internal bool IsEmptyProject()
-        {
-            return string.IsNullOrEmpty(GitRepositoryLink);
-        }
-
         public string GitRepositoryLink { get; set; }
+
+        public TypeTemplate TypeTemplate { get; set; }
+
+        public TypeDoTemplate TypeDoTemplate { get; set; }
         #endregion
+    }
+    public enum TypeDoTemplate
+    {
+        Copy,
+        Clone
+    }
+    public enum TypeTemplate
+    {
+        Default,
+        Open,
+        Template
     }
 }

@@ -39,6 +39,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Net;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace OrigamArchitect
 {
@@ -59,7 +60,7 @@ namespace OrigamArchitect
         ProjectBuilder _builder = new ProjectBuilder();
         Project _project = new Project();
         NewProjectWizardSettings _settings = new NewProjectWizardSettings();
-        private XmlParser XmlParser = new XmlParser();
+        private WebGitXmlParser XmlParser = new WebGitXmlParser();
         private List<object[]> repositories = new List<object[]>();
 
         public NewProjectWizard()
@@ -90,7 +91,7 @@ namespace OrigamArchitect
                     case 1:
                         return DeploymentType.Azure;
                     default:
-                        throw new ArgumentOutOfRangeException("DeploymentType", 
+                        throw new ArgumentOutOfRangeException("DeploymentType",
                             cboDeploymentType.SelectedIndex, strings.UnknownDeploymentType);
                 }
             }
@@ -208,17 +209,17 @@ namespace OrigamArchitect
                 return;
             }
 
-            _project.Name = txtName.Text.ToLower().Replace("\\s+", "_"); 
+            _project.Name = txtName.Text.ToLower().Replace("\\s+", "_");
             _project.DatabaseServerName = txtServerName.Text;
             _project.DatabaseUserName = txtDatabaseUserName.Text;
             _project.DatabasePassword = txtDatabasePassword.Text;
-            _project.DataDatabaseName = txtName.Text.ToLower().Replace("\\s+","_");
+            _project.DataDatabaseName = txtName.Text.ToLower().Replace("\\s+", "_");
             _project.ModelDatabaseName = txtName.Text.ToLower().Replace("\\s+", "_") + "_model";
             _project.DatabaseIntegratedAuthentication = chkIntegratedAuthentication.Checked;
             _project.WebRootName = cboWebRoot.Text;
             _project.Url = txtName.Text;
             _project.ArchitectUserName = System.Threading.Thread.CurrentPrincipal.Identity.Name;
-            
+
             _project.DatabaseType = DatabaseType;
             _project.Port = Port;
             _project.NewPackageId = Guid.NewGuid().ToString();
@@ -234,10 +235,10 @@ namespace OrigamArchitect
 
         private void pageLocalDeploymentSettings_Initialize(object sender, WizardPageInitEventArgs e)
         {
-            txtServerName.Text = string.IsNullOrEmpty(txtServerName.Text)?_settings.DatabaseServerName: txtServerName.Text;
+            txtServerName.Text = string.IsNullOrEmpty(txtServerName.Text) ? _settings.DatabaseServerName : txtServerName.Text;
             cboWebRoot.Items.Clear();
             cboWebRoot.Items.AddRange(_builder.WebSites());
-            if(cboWebRoot.Items.Count > 0)
+            if (cboWebRoot.Items.Count > 0)
             {
                 cboWebRoot.SelectedIndex = 0;
             }
@@ -254,14 +255,14 @@ namespace OrigamArchitect
 
         private void SetPort()
         {
-                if (DatabaseType == DatabaseType.MsSql)
-                {
-                    txtPort.Text = "0";
-                }
-                if (DatabaseType == DatabaseType.PgSql)
-                {
-                    txtPort.Text = "5432";
-                }
+            if (DatabaseType == DatabaseType.MsSql)
+            {
+                txtPort.Text = "0";
+            }
+            if (DatabaseType == DatabaseType.PgSql)
+            {
+                txtPort.Text = "5432";
+            }
         }
         private void pagePaths_Commit(object sender, WizardPageConfirmEventArgs e)
         {
@@ -313,7 +314,7 @@ namespace OrigamArchitect
 
         private void SelectFolder(TextBox targetControl)
         {
-            if(!string.IsNullOrEmpty(targetControl.Text))
+            if (!string.IsNullOrEmpty(targetControl.Text))
             {
                 folderBrowserDialog1.SelectedPath = targetControl.Text;
             }
@@ -331,7 +332,7 @@ namespace OrigamArchitect
 
         private void PageWelcome_Initialize(object sender, WizardPageInitEventArgs e)
         {
-            if (! IsAdmin())
+            if (!IsAdmin())
             {
                 pageWelcome.AllowNext = false;
                 lblAdminWarning.Visible = true;
@@ -362,7 +363,7 @@ namespace OrigamArchitect
             {
                 Process p = Process.Start(startInfo);
             }
-            catch 
+            catch
             {
                 return;
             }
@@ -456,13 +457,13 @@ namespace OrigamArchitect
 
         private void Gitrepo_CheckedChanged(object sender, EventArgs e)
         {
-                txtGitUser.Enabled = gitrepo.Checked;
-                txtGitEmail.Enabled = gitrepo.Checked;
+            txtGitUser.Enabled = gitrepo.Checked;
+            txtGitEmail.Enabled = gitrepo.Checked;
         }
 
         private void TxtDatabaseType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(DatabaseType == DatabaseType.PgSql)
+            if (DatabaseType == DatabaseType.PgSql)
             {
                 chkIntegratedAuthentication.Enabled = false;
                 chkIntegratedAuthentication.Checked = false;
@@ -500,7 +501,7 @@ namespace OrigamArchitect
             {
                 ImageSize = new Size(64, 64)
             };
-            imageList.Images.Add(Images.Git);
+            imageList.Images.Add(Images.New);
             foreach (var repo in repositories)
             {
                 Image img = (Image)repo[0];
@@ -511,17 +512,20 @@ namespace OrigamArchitect
             if (listViewTemplate.Items.Count == 0)
             {
                 ListViewItem defaultviewItem = new ListViewItem { ImageIndex = 0, Text = "Empty Template" };
-                defaultviewItem.Tag = new string[] { null, "Empty Template." };
+                defaultviewItem.Tag = new object[] { null, "Empty Template.", TypeTemplate.Default };
                 listViewTemplate.Items.Add(defaultviewItem);
+                ListViewItem CopyviewItem = new ListViewItem { ImageIndex = 0, Text = "Copy Template" };
+                CopyviewItem.Tag = new object[] { null, "My Template.", TypeTemplate.Open };
+                listViewTemplate.Items.Add(CopyviewItem);
             }
             int imgindex = 1;
             foreach (var repo in repositories)
             {
                 string nameOfRepository = (string)repo[1];
-                string linkTogit = (string)repo[2];
+                string linkToGit = (string)repo[2];
                 string readmeText = (string)repo[3];
                 ListViewItem viewItem = new ListViewItem { ImageIndex = imgindex, Text = nameOfRepository };
-                viewItem.Tag = new string[] { linkTogit, readmeText };
+                viewItem.Tag = new object[] { linkToGit, readmeText, TypeTemplate.Template };
                 listViewTemplate.Items.Add(viewItem);
                 imgindex++;
             }
@@ -551,37 +555,96 @@ namespace OrigamArchitect
 
         private void PageTemplateType_Commit(object sender, WizardPageConfirmEventArgs e)
         {
-            if (string.IsNullOrEmpty(textbGitUrl.Text) && listViewTemplate.SelectedItems.Count==0)
+            if (listViewTemplate.SelectedItems.Count == 0)
             {
-                AsMessageBox.ShowError(this, strings.TemplateNotSelect,"Template", null);
+                AsMessageBox.ShowError(this, strings.TemplateNotSelect, "Template", null);
                 e.Cancel = true;
                 return;
             }
-            if(!string.IsNullOrEmpty(textbGitUrl.Text))
+
+            ListView.SelectedListViewItemCollection selectedListView =
+                    listViewTemplate.SelectedItems;
+            foreach (ListViewItem item in selectedListView)
             {
-                _project.GitRepositoryLink = textbGitUrl.Text;
+                object[] tags = (object[])item.Tag;
+                _project.GitRepositoryLink = (string)tags[0];
+                _project.TypeTemplate = (TypeTemplate)tags[2];
             }
-            else
+            switch (_project.TypeTemplate)
             {
-                ListView.SelectedListViewItemCollection breakfast =
-                     listViewTemplate.SelectedItems;
-                foreach (ListViewItem item in breakfast)
-                {
-                    string[] tags = (string[])item.Tag;
-                    _project.GitRepositoryLink = tags[0];
-                }
+                case TypeTemplate.Open:
+                    pageTemplateType.NextPage = wizOpenRepository;
+                    break;
+                case TypeTemplate.Default:
+                case TypeTemplate.Template:
+                    pageTemplateType.NextPage = pageLocalDeploymentSettings;
+                    break;
             }
         }
 
         private void ListViewTemplate_SelectedIndexChanged(object sender, EventArgs e)
         {
             MarkdownSharp.Markdown md = new MarkdownSharp.Markdown();
-            ListView.SelectedListViewItemCollection breakfast =
+            ListView.SelectedListViewItemCollection selectedListView =
                      listViewTemplate.SelectedItems;
-            foreach (ListViewItem item in breakfast)
+            foreach (ListViewItem item in selectedListView)
             {
-                string[] tags = (string[])item.Tag;
+                object[] tags = (object[])item.Tag;
                 wbReadmeText.DocumentText = md.Transform((string)tags[1]);
+            }
+        }
+
+        private void WizOpenRepository_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
+            if (string.IsNullOrEmpty(tbRepositoryLink.Text))
+            {
+                AsMessageBox.ShowError(this, strings.EnterTemplateFolder_Message, "Template", null);
+                e.Cancel = true;
+                return;
+            }
+
+            if (!TestTemplate())
+            {
+                AsMessageBox.ShowError(this, "Cant i get data from Repository Link!", "Template", null);
+                e.Cancel = true;
+                return;
+            }
+            _project.GitRepositoryLink = CreateCredentialGitUrl(tbRepositoryLink.Text, tbRepUsername.Text, tbRepPassword.Text);
+            if (rdCopy.Checked) _project.TypeDoTemplate = TypeDoTemplate.Copy;
+            if (rdClone.Checked) _project.TypeDoTemplate = TypeDoTemplate.Clone;
+        }
+
+        public bool TestTemplate()
+        {
+            string gitPassw = tbRepPassword.Text;
+            string gitUsername = tbRepUsername.Text;
+            string url = CreateCredentialGitUrl(tbRepositoryLink.Text, gitUsername, gitPassw);
+            GitManager gitManager = new GitManager();
+            return gitManager.IsValidUrl(url);
+        }
+
+        private string CreateCredentialGitUrl(string url, string tbRepUsername, string tbRepPassword)
+        {
+            if (!string.IsNullOrEmpty(tbRepUsername) && !string.IsNullOrEmpty(tbRepPassword))
+            {
+                string credentials = string.Format("{0}:{1}", tbRepUsername, tbRepPassword);
+                if (url.Contains("@"))
+                {
+                    url = Regex.Replace(url, "://.*@", "://" + credentials + "@");
+                }
+                else
+                {
+                    url.Replace("://", "://" + credentials);
+                }
+            }
+            return url;
+        }
+
+        private void WizOpenRepository_Initialize(object sender, WizardPageConfirmEventArgs e)
+        {
+            if(!rdClone.Checked && !rdClone.Checked)
+            {
+                rdCopy.Checked = true;
             }
         }
     }

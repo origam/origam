@@ -39,14 +39,18 @@ namespace Origam.ProjectAutomation
             SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService))
                 as SchemaService;
             schema.UnloadSchema();
-            if (project.IsEmptyProject())
+            switch (project.TypeTemplate)
             {
-                PackageHelper.CreatePackage(project.Name, new Guid(project.NewPackageId),
+                case TypeTemplate.Default:
+                    PackageHelper.CreatePackage(project.Name, new Guid(project.NewPackageId),
                     new Guid(project.BasePackageId));
-            }
-            else
-            {
-                PackageHelper.BuildPackage(new Guid(project.NewPackageId));
+                    break;
+                case TypeTemplate.Open:
+                case TypeTemplate.Template:
+                    PackageHelper.BuildPackage(new Guid(project.NewPackageId));
+                    break;
+                default:
+                    throw new Exception("Bad TypeTemplate " + project.TypeTemplate.ToString());
             }
         }
 

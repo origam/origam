@@ -89,9 +89,13 @@ namespace OrigamArchitect
             this.wbReadmeText = new System.Windows.Forms.WebBrowser();
             this.listViewTemplate = new System.Windows.Forms.ListView();
             this.Projects = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.wizOpenRepository = new AeroWizard.WizardPage();
+            this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.textbGitUrl = new System.Windows.Forms.TextBox();
+            this.tbRepPassword = new System.Windows.Forms.TextBox();
+            this.tbRepUsername = new System.Windows.Forms.TextBox();
+            this.tbRepositoryLink = new System.Windows.Forms.TextBox();
             this.pageLocalDeploymentSettings = new AeroWizard.WizardPage();
             this.labelPort = new System.Windows.Forms.Label();
             this.txtPort = new System.Windows.Forms.TextBox();
@@ -111,6 +115,8 @@ namespace OrigamArchitect
             this.lblServerName = new System.Windows.Forms.Label();
             this.txtDatabaseUserName = new System.Windows.Forms.TextBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.rdClone = new System.Windows.Forms.RadioButton();
+            this.rdCopy = new System.Windows.Forms.RadioButton();
             this.projectBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.projectBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.wizard1)).BeginInit();
@@ -121,6 +127,7 @@ namespace OrigamArchitect
             this.pageGit.SuspendLayout();
             this.pageReview.SuspendLayout();
             this.pageTemplateType.SuspendLayout();
+            this.wizOpenRepository.SuspendLayout();
             this.pageLocalDeploymentSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource1)).BeginInit();
@@ -137,6 +144,7 @@ namespace OrigamArchitect
             this.wizard1.Pages.Add(this.pageDeploymentType);
             this.wizard1.Pages.Add(this.pageAzureDeploymentSettings);
             this.wizard1.Pages.Add(this.pageTemplateType);
+            this.wizard1.Pages.Add(this.wizOpenRepository);
             this.wizard1.Pages.Add(this.pageLocalDeploymentSettings);
             this.wizard1.Pages.Add(this.pagePaths);
             this.wizard1.Pages.Add(this.pageGit);
@@ -663,11 +671,7 @@ namespace OrigamArchitect
             // 
             this.pageTemplateType.Controls.Add(this.wbReadmeText);
             this.pageTemplateType.Controls.Add(this.listViewTemplate);
-            this.pageTemplateType.Controls.Add(this.label17);
-            this.pageTemplateType.Controls.Add(this.label3);
-            this.pageTemplateType.Controls.Add(this.textbGitUrl);
             this.pageTemplateType.Name = "pageTemplateType";
-            this.pageTemplateType.NextPage = this.pageLocalDeploymentSettings;
             this.pageTemplateType.Size = new System.Drawing.Size(574, 316);
             this.pageTemplateType.TabIndex = 7;
             this.pageTemplateType.Text = "Select Template";
@@ -676,47 +680,88 @@ namespace OrigamArchitect
             // 
             // wbReadmeText
             // 
-            this.wbReadmeText.Location = new System.Drawing.Point(188, 57);
+            this.wbReadmeText.Location = new System.Drawing.Point(151, 18);
             this.wbReadmeText.MinimumSize = new System.Drawing.Size(20, 20);
             this.wbReadmeText.Name = "wbReadmeText";
-            this.wbReadmeText.Size = new System.Drawing.Size(371, 235);
+            this.wbReadmeText.Size = new System.Drawing.Size(408, 274);
             this.wbReadmeText.TabIndex = 6;
             // 
             // listViewTemplate
             // 
             this.listViewTemplate.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.Projects});
-            this.listViewTemplate.Location = new System.Drawing.Point(23, 57);
+            this.listViewTemplate.Location = new System.Drawing.Point(3, 18);
             this.listViewTemplate.Name = "listViewTemplate";
-            this.listViewTemplate.Size = new System.Drawing.Size(142, 235);
+            this.listViewTemplate.Size = new System.Drawing.Size(142, 274);
             this.listViewTemplate.TabIndex = 5;
             this.listViewTemplate.UseCompatibleStateImageBehavior = false;
             this.listViewTemplate.SelectedIndexChanged += new System.EventHandler(this.ListViewTemplate_SelectedIndexChanged);
             // 
+            // wizOpenRepository
+            // 
+            this.wizOpenRepository.Controls.Add(this.rdCopy);
+            this.wizOpenRepository.Controls.Add(this.rdClone);
+            this.wizOpenRepository.Controls.Add(this.label18);
+            this.wizOpenRepository.Controls.Add(this.label17);
+            this.wizOpenRepository.Controls.Add(this.label3);
+            this.wizOpenRepository.Controls.Add(this.tbRepPassword);
+            this.wizOpenRepository.Controls.Add(this.tbRepUsername);
+            this.wizOpenRepository.Controls.Add(this.tbRepositoryLink);
+            this.wizOpenRepository.Name = "wizOpenRepository";
+            this.wizOpenRepository.Size = new System.Drawing.Size(574, 316);
+            this.wizOpenRepository.TabIndex = 9;
+            this.wizOpenRepository.Text = "Open Gitrepository";
+            this.wizOpenRepository.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.WizOpenRepository_Commit);
+            this.wizOpenRepository.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.WizOpenRepository_Initialize);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(33, 169);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(57, 15);
+            this.label18.TabIndex = 5;
+            this.label18.Text = "Password";
+            // 
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(20, 22);
+            this.label17.Location = new System.Drawing.Point(33, 140);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(56, 15);
-            this.label17.TabIndex = 3;
-            this.label17.Text = "Template";
+            this.label17.TabIndex = 4;
+            this.label17.Text = "Usename";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(219, 17);
+            this.label3.Location = new System.Drawing.Point(33, 63);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(43, 15);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Git Url:";
+            this.label3.Size = new System.Drawing.Size(88, 15);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Repository Link";
             // 
-            // textbGitUrl
+            // tbRepPassword
             // 
-            this.textbGitUrl.Location = new System.Drawing.Point(268, 14);
-            this.textbGitUrl.Name = "textbGitUrl";
-            this.textbGitUrl.Size = new System.Drawing.Size(291, 23);
-            this.textbGitUrl.TabIndex = 1;
+            this.tbRepPassword.Location = new System.Drawing.Point(146, 166);
+            this.tbRepPassword.Name = "tbRepPassword";
+            this.tbRepPassword.PasswordChar = '*';
+            this.tbRepPassword.Size = new System.Drawing.Size(191, 23);
+            this.tbRepPassword.TabIndex = 2;
+            // 
+            // tbRepUsername
+            // 
+            this.tbRepUsername.Location = new System.Drawing.Point(146, 137);
+            this.tbRepUsername.Name = "tbRepUsername";
+            this.tbRepUsername.Size = new System.Drawing.Size(191, 23);
+            this.tbRepUsername.TabIndex = 1;
+            // 
+            // tbRepositoryLink
+            // 
+            this.tbRepositoryLink.Location = new System.Drawing.Point(146, 60);
+            this.tbRepositoryLink.Name = "tbRepositoryLink";
+            this.tbRepositoryLink.Size = new System.Drawing.Size(380, 23);
+            this.tbRepositoryLink.TabIndex = 0;
             // 
             // pageLocalDeploymentSettings
             // 
@@ -906,6 +951,28 @@ namespace OrigamArchitect
             this.txtDatabaseUserName.Size = new System.Drawing.Size(121, 23);
             this.txtDatabaseUserName.TabIndex = 8;
             // 
+            // rdClone
+            // 
+            this.rdClone.AutoSize = true;
+            this.rdClone.Location = new System.Drawing.Point(205, 89);
+            this.rdClone.Name = "rdClone";
+            this.rdClone.Size = new System.Drawing.Size(56, 19);
+            this.rdClone.TabIndex = 6;
+            this.rdClone.TabStop = true;
+            this.rdClone.Text = "Clone";
+            this.rdClone.UseVisualStyleBackColor = true;
+            // 
+            // rdCopy
+            // 
+            this.rdCopy.AutoSize = true;
+            this.rdCopy.Location = new System.Drawing.Point(146, 89);
+            this.rdCopy.Name = "rdCopy";
+            this.rdCopy.Size = new System.Drawing.Size(53, 19);
+            this.rdCopy.TabIndex = 7;
+            this.rdCopy.TabStop = true;
+            this.rdCopy.Text = "Copy";
+            this.rdCopy.UseVisualStyleBackColor = true;
+            // 
             // projectBindingSource
             // 
             this.projectBindingSource.DataSource = typeof(Origam.ProjectAutomation.Project);
@@ -940,7 +1007,8 @@ namespace OrigamArchitect
             this.pageGit.PerformLayout();
             this.pageReview.ResumeLayout(false);
             this.pageTemplateType.ResumeLayout(false);
-            this.pageTemplateType.PerformLayout();
+            this.wizOpenRepository.ResumeLayout(false);
+            this.wizOpenRepository.PerformLayout();
             this.pageLocalDeploymentSettings.ResumeLayout(false);
             this.pageLocalDeploymentSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).EndInit();
@@ -1025,11 +1093,17 @@ namespace OrigamArchitect
         private System.Windows.Forms.Label labelPort;
         private System.Windows.Forms.TextBox txtPort;
         private AeroWizard.WizardPage pageTemplateType;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textbGitUrl;
-        private System.Windows.Forms.Label label17;
         private System.Windows.Forms.ListView listViewTemplate;
         private System.Windows.Forms.ColumnHeader Projects;
         private System.Windows.Forms.WebBrowser wbReadmeText;
+        private WizardPage wizOpenRepository;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox tbRepPassword;
+        private System.Windows.Forms.TextBox tbRepUsername;
+        private System.Windows.Forms.TextBox tbRepositoryLink;
+        private System.Windows.Forms.RadioButton rdCopy;
+        private System.Windows.Forms.RadioButton rdClone;
     }
 }

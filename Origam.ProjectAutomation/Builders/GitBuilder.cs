@@ -33,12 +33,37 @@ namespace Origam.ProjectAutomation.Builders
         public override string Name => "Initialize Git";
         public override void Execute(Project project)
         {
-            if (project.GitRepository && !GitManager.IsValid(project.SourcesFolder))
+            if (project.GitRepository)
             {
-                GitManager.CreateRepository(project.SourcesFolder);
-                GitManager gitmanager = new GitManager(project.SourcesFolder);
-                gitmanager.Init(project.Gitusername,project.Gitemail);
+                switch(project.TypeTemplate)
+                {
+                    case TypeTemplate.Default:
+                        CreateGitRepository(project);
+                        break;
+                    case TypeTemplate.Template:
+                        CreateCopyTemplate(project);
+                        break;
+                    case TypeTemplate.Open:
+                        if (project.TypeDoTemplate == TypeDoTemplate.Copy)
+                        {
+                           CreateCopyTemplate(project);
+                        }
+                        break;
+                }
             }
+        }
+
+        private void CreateCopyTemplate(Project project)
+        {
+            GitManager.RemoveRepository(project.SourcesFolder);
+            CreateGitRepository(project);
+        }
+
+        private void CreateGitRepository(Project project)
+        {
+            GitManager.CreateRepository(project.SourcesFolder);
+            GitManager gitmanager = new GitManager(project.SourcesFolder);
+            gitmanager.Init(project.Gitusername, project.Gitemail);
         }
 
         public override void Rollback()
