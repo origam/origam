@@ -5,6 +5,7 @@ import { IApi } from "../../Api/IApi";
 
 export interface IFormScreen extends IMainView{
   type: IScreenType.FormRef;
+  isSessioned: boolean;
   title: string;
   isLoading: boolean;
   isVisible: boolean;
@@ -28,7 +29,8 @@ export interface IFormScreenMachine {
 export interface IScreenContentFactory {
   create(xmlObj: any): {
     screenUI: any;
-    dataViews: any
+    dataViews: any;
+    isSessioned: boolean;
   }
 }
 

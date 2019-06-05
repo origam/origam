@@ -70,6 +70,7 @@ export class FormScreenMachine implements IFormScreenMachine {
                 const content = this.screenContentFactory.create(xmlObj);
                 this.formScreen.setDataViews(content.dataViews);
                 this.formScreen.setUIStructure(content.screenUI);
+                this.formScreen.isSessioned = content.isSessioned;
                 
                 this.formScreen.dispatch(startDataViews());
                 this.formScreen.dispatch(activateInitialViewTypes());

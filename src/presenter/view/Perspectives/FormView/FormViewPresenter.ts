@@ -19,6 +19,7 @@ import * as FormViewActions from "../../../../DataView/FormView/FormViewActions"
 import { IFormViewMediator } from "../../../../DataView/FormView/FormViewMediator";
 import { IAFocusEditor } from "../../../../DataView/types/IAFocusEditor";
 
+
 export class FormViewPresenter implements IFormView {
   constructor(
     public P: {
@@ -57,6 +58,7 @@ export class FormViewPresenter implements IFormView {
       ? this.dataTable.getRecordById(this.recCursor.selId)
       : undefined;
     const property = prop;
+    
     let value;
     let isLoading = false;
     let isError = false;

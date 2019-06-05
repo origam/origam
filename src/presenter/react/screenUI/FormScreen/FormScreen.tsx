@@ -87,6 +87,7 @@ export class FormScreen extends React.Component<{ formScreen: IFormScreen }> {
           title={this.props.formScreen.title}
           isLoading={this.props.formScreen.isLoading}
           isVisible={this.props.formScreen.isVisible}
+          isSessioned={this.props.formScreen.isSessioned}
         >
           {this.getScreen()}
         </DefaultScreen>

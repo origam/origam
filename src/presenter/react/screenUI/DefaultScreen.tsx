@@ -7,6 +7,7 @@ export class DefaultScreen extends React.Component<{
   title: string;
   isLoading: boolean;
   isVisible: boolean;
+  isSessioned: boolean;
 }> {
   @observable isFullScreen = false;
 
@@ -31,7 +32,7 @@ export class DefaultScreen extends React.Component<{
               <i className="fas fa-sync-alt fa-spin" />
             )}
           </div>
-          {this.props.title}
+          {this.props.title} {this.props.isSessioned && <i> (sessioned)</i>}
           <div className="pusher" />
           <button
             className={

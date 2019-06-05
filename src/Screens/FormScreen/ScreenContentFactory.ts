@@ -163,12 +163,14 @@ export class ScreenContentFactory implements IScreenContentFactory {
 
     const uiRoot = xmlFind.findUIRoot(win);
     const screenUI = extractScreenUI(uiRoot);
+    const isSessioned = xmlFind.isSessionedScreen(win);
     // -----------------------------------------------------------
     // console.log(dataViews)
     // console.timeEnd("xml-processing");
     return {
       screenUI,
-      dataViews
+      dataViews,
+      isSessioned
     };
   }
 
