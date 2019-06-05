@@ -499,7 +499,7 @@ namespace OrigamArchitect
             WaitForLoaded();
             ImageList imageList = new ImageList
             {
-                ImageSize = new Size(64, 64)
+                ImageSize = new Size(32, 32)
             };
             imageList.Images.Add(Images.New);
             foreach (var repo in repositories)
