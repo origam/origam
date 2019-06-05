@@ -90,6 +90,8 @@ namespace OrigamArchitect
             this.listViewTemplate = new System.Windows.Forms.ListView();
             this.Projects = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.wizOpenRepository = new AeroWizard.WizardPage();
+            this.rdCopy = new System.Windows.Forms.RadioButton();
+            this.rdClone = new System.Windows.Forms.RadioButton();
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -115,8 +117,6 @@ namespace OrigamArchitect
             this.lblServerName = new System.Windows.Forms.Label();
             this.txtDatabaseUserName = new System.Windows.Forms.TextBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.rdClone = new System.Windows.Forms.RadioButton();
-            this.rdCopy = new System.Windows.Forms.RadioButton();
             this.projectBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.projectBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.wizard1)).BeginInit();
@@ -710,9 +710,31 @@ namespace OrigamArchitect
             this.wizOpenRepository.Name = "wizOpenRepository";
             this.wizOpenRepository.Size = new System.Drawing.Size(574, 316);
             this.wizOpenRepository.TabIndex = 9;
-            this.wizOpenRepository.Text = "Open Gitrepository";
+            this.wizOpenRepository.Text = "Open Git Repository";
             this.wizOpenRepository.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.WizOpenRepository_Commit);
             this.wizOpenRepository.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.WizOpenRepository_Initialize);
+            // 
+            // rdCopy
+            // 
+            this.rdCopy.AutoSize = true;
+            this.rdCopy.Location = new System.Drawing.Point(146, 89);
+            this.rdCopy.Name = "rdCopy";
+            this.rdCopy.Size = new System.Drawing.Size(53, 19);
+            this.rdCopy.TabIndex = 7;
+            this.rdCopy.TabStop = true;
+            this.rdCopy.Text = "Copy";
+            this.rdCopy.UseVisualStyleBackColor = true;
+            // 
+            // rdClone
+            // 
+            this.rdClone.AutoSize = true;
+            this.rdClone.Location = new System.Drawing.Point(205, 89);
+            this.rdClone.Name = "rdClone";
+            this.rdClone.Size = new System.Drawing.Size(56, 19);
+            this.rdClone.TabIndex = 6;
+            this.rdClone.TabStop = true;
+            this.rdClone.Text = "Clone";
+            this.rdClone.UseVisualStyleBackColor = true;
             // 
             // label18
             // 
@@ -950,28 +972,6 @@ namespace OrigamArchitect
             this.txtDatabaseUserName.Name = "txtDatabaseUserName";
             this.txtDatabaseUserName.Size = new System.Drawing.Size(121, 23);
             this.txtDatabaseUserName.TabIndex = 8;
-            // 
-            // rdClone
-            // 
-            this.rdClone.AutoSize = true;
-            this.rdClone.Location = new System.Drawing.Point(205, 89);
-            this.rdClone.Name = "rdClone";
-            this.rdClone.Size = new System.Drawing.Size(56, 19);
-            this.rdClone.TabIndex = 6;
-            this.rdClone.TabStop = true;
-            this.rdClone.Text = "Clone";
-            this.rdClone.UseVisualStyleBackColor = true;
-            // 
-            // rdCopy
-            // 
-            this.rdCopy.AutoSize = true;
-            this.rdCopy.Location = new System.Drawing.Point(146, 89);
-            this.rdCopy.Name = "rdCopy";
-            this.rdCopy.Size = new System.Drawing.Size(53, 19);
-            this.rdCopy.TabIndex = 7;
-            this.rdCopy.TabStop = true;
-            this.rdCopy.Text = "Copy";
-            this.rdCopy.UseVisualStyleBackColor = true;
             // 
             // projectBindingSource
             // 
