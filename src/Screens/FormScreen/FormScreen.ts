@@ -1,5 +1,4 @@
-import axios from "axios";
-import xmlJs from "xml-js";
+
 import { ML } from "../../utils/types";
 import { unpack } from "../../utils/objects";
 import { IScreenType, IMainViews } from "../types";
@@ -25,6 +24,7 @@ function spc(n: number) {
 
 export class FormScreen implements IFormScreen {
   
+  sessionId: string = "";  
   @observable isSessioned: boolean = false;
 
   constructor(

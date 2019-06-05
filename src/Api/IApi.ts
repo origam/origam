@@ -41,4 +41,17 @@ export interface IApi {
     RowIdToDelete: string;
     MenuId: string;
   }): Promise<any>;
+
+  createSession(data: {
+    MenuId: string;
+    Parameters: { [key: string]: any };
+    InitializeStructure: boolean;
+  }): Promise<any>;
+
+  getSessionEntity(data: {
+    sessionFormIdentifier: string;
+    childEntity: string;
+    parentRecordId: string;
+    rootRecordId: string;
+  }): Promise<any>;
 }

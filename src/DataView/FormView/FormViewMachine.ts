@@ -12,6 +12,7 @@ import { IFormViewMachine } from "./types";
 import { IProperty } from "../types/IProperty";
 import { ISelection } from "../Selection";
 
+
 export class FormViewMachine implements IFormViewMachine {
   constructor(
     public P: {
@@ -244,7 +245,7 @@ export class FormViewMachine implements IFormViewMachine {
   }
 
   @computed get isActive() {
-    return this.state.matches("active");
+    return this.state && this.state.matches("active");
   }
 
   @action.bound dispatch(event: any) {

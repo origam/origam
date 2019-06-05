@@ -119,4 +119,44 @@ export class OrigamAPI implements IApi {
       headers: this.httpAuthHeader
     })).data;
   }
+
+  async createEntity() {
+    // TODO
+  }
+
+  async createSession(data: {
+    MenuId: string;
+    Parameters: { [key: string]: any };
+    InitializeStructure: boolean;
+  }) {
+    return (await axios.post(`${this.urlPrefix}/Sessions/New`, data, {
+      headers: this.httpAuthHeader
+    })).data;
+  }
+
+  async deleteSession() {}
+
+  async saveSession() {}
+
+  async reloadSession() {
+    // TODO
+  }
+
+  async deleteSessionEntity() {}
+
+  async createSessionEntity() {}
+
+  async updateSessionEntity() {}
+
+  async getSessionEntity(data: {
+    sessionFormIdentifier: string;
+    childEntity: string;
+    parentRecordId: string;
+    rootRecordId: string;
+  }) {
+    return (await axios.get(`${this.urlPrefix}/Sessions/EntityData`, {
+      params: data,
+      headers: this.httpAuthHeader
+    })).data;
+  }
 }

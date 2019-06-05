@@ -20,6 +20,8 @@ export class DataViewMachine implements IDataViewMachine {
       propertyIdsToLoad: ML<string[]>;
       dataTable: ML<IDataTable>;
       dataSource: ML<IDataSource>;
+      isSessionedScreen: boolean;
+      sessionId: string;
       selectedIdGetter: () => string | undefined;
 
       listen(cb: (action: any) => void): void;
@@ -98,24 +100,43 @@ export class DataViewMachine implements IDataViewMachine {
     {
       services: {
         loadFresh: (ctx, event) => (send, onEvent) => {
-          this.api
-            .getEntities({
-              MenuId: this.menuItemId,
-              DataStructureEntityId: this.dataStructureEntityId,
-              Ordering: [],
-              ColumnNames: this.propertyIdsToLoad,
-              Filter: this.filterString,
-              MasterRowId: this.masterId
-            })
-            .then(
-              action((entities: any) => {
-                // console.log("ENTITIES", entities);
-                this.dataTable.resetDirty();
-                this.dataTable.setRecords(entities);
-                send("DONE");
-                this.descendantsDispatch(DataViewActions.loadFresh());
-              })
+          if (this.P.isSessionedScreen) {
+            console.log(
+              "DataView machine will load data from session:",
+              this.P.sessionId
             );
+            this.api
+              .getSessionEntity({
+                sessionFormIdentifier: this.P.sessionId,
+                rootRecordId: "",
+                childEntity: "",
+                parentRecordId: ""
+              })
+              .then(
+                action(resp => {
+                  console.log("Received:", resp);
+                })
+              );
+          } else {
+            this.api
+              .getEntities({
+                MenuId: this.menuItemId,
+                DataStructureEntityId: this.dataStructureEntityId,
+                Ordering: [],
+                ColumnNames: this.propertyIdsToLoad,
+                Filter: this.filterString,
+                MasterRowId: this.masterId
+              })
+              .then(
+                action((entities: any) => {
+                  // console.log("ENTITIES", entities);
+                  this.dataTable.resetDirty();
+                  this.dataTable.setRecords(entities);
+                  send("DONE");
+                  this.descendantsDispatch(DataViewActions.loadFresh());
+                })
+              );
+          }
         },
         saveDirtyData: (ctx, event) => async (send, onEvent) => {
           console.log(

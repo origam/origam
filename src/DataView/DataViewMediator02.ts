@@ -66,6 +66,8 @@ export interface IDataViewMediator02 extends IDispatcher {
   id: string;
   api: IApi;
   menuItemId: string;
+  isSessionedScreen: boolean;
+  sessionId: string;
   dataStructureEntityId: string;
   isHeadless: boolean;
   label: string;
@@ -284,6 +286,14 @@ export class DataViewMediator02 implements IDataViewMediator02 {
 
   get specificDataViews(): (IFormViewMediator | ITableViewMediator)[] {
     return this.P.availViewItems();
+  }
+
+  get isSessionedScreen(): boolean {
+    return this.P.parentMediator.isSessioned;
+  }
+
+  get sessionId(): string {
+    return this.P.parentMediator.sessionId;
   }
 
   get aStartView(): IAStartView {

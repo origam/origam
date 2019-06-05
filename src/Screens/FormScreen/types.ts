@@ -6,6 +6,7 @@ import { IApi } from "../../Api/IApi";
 export interface IFormScreen extends IMainView{
   type: IScreenType.FormRef;
   isSessioned: boolean;
+  sessionId: string;
   title: string;
   isLoading: boolean;
   isVisible: boolean;

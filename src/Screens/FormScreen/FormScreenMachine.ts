@@ -12,8 +12,10 @@ import { start } from "xstate/lib/actions";
 import { ML } from "../../utils/types";
 import { unpack } from "../../utils/objects";
 import { IApi } from "../../Api/IApi";
-import { startDataViews, activateInitialViewTypes } from "../../DataView/DataViewActions";
-
+import {
+  startDataViews,
+  activateInitialViewTypes
+} from "../../DataView/DataViewActions";
 
 export class FormScreenMachine implements IFormScreenMachine {
   constructor(
@@ -35,22 +37,55 @@ export class FormScreenMachine implements IFormScreenMachine {
 
   definition = Machine(
     {
-      initial: "LOAD_SCREEN",
+      initial: "loadScreen",
       states: {
-        LOAD_SCREEN: {
+        loadScreen: {
           on: {
-            DONE: "SCREEN_LOADED",
-            FAILED: "LOADING_FAILED"
+            DONE: "screenLoaded",
+            FAILED: "loadingFailed"
           },
           invoke: { src: "loadScreen" }
         },
-        SCREEN_LOADED: {
-          invoke: { src: "runDataViews" }
+        screenLoaded: {
+          on: {
+            "": [
+              {
+                cond: "isSessioned",
+                target: "createSession"
+              },
+              {
+                cond: "isNotSessioned",
+                target: "startDataViews"
+              }
+            ]
+          }
         },
-        LOADING_FAILED: {}
+        loadingFailed: {},
+        createSession: {
+          invoke: { src: "createSession" },
+          on: {
+            DONE: "startDataViews"
+          }
+        },
+        startDataViews: {
+          onEntry: "startDataViews"
+        },
+        loadSessionData: {
+          invoke: { src: "loadSessionData" }
+        }
       }
     },
     {
+      guards: {
+        isSessioned: (ctx, event) => this.formScreen.isSessioned,
+        isNotSessioned: (stx, event) => !this.formScreen.isSessioned
+      },
+      actions: {
+        startDataViews: (ctx, event) => {
+          this.formScreen.dispatch(startDataViews());
+          this.formScreen.dispatch(activateInitialViewTypes());
+        }
+      },
       services: {
         loadScreen: (ctx, event) => (send, onEvent) => {
           /*axios
@@ -66,28 +101,39 @@ export class FormScreenMachine implements IFormScreenMachine {
             .then(
               action((xmlObj: any) => {
                 console.log("Loaded", xmlObj);
-                // debugger
                 const content = this.screenContentFactory.create(xmlObj);
                 this.formScreen.setDataViews(content.dataViews);
                 this.formScreen.setUIStructure(content.screenUI);
                 this.formScreen.isSessioned = content.isSessioned;
-                
-                this.formScreen.dispatch(startDataViews());
-                this.formScreen.dispatch(activateInitialViewTypes());
                 send("DONE");
               })
             )
             .catch(
               action(error => {
-                console.error(error)
+                console.error(error);
                 send("FAILED");
               })
             );
 
           return;
         },
-        runDataViews: (ctx, event) => (send, onEvent) => {
-          return;
+        createSession: (ctx, event) => (send, onEvent) => {
+          this.api
+            .createSession({
+              MenuId: this.menuItemId,
+              Parameters: {},
+              InitializeStructure: true
+            })
+            .then(
+              action((sessionId: string) => {
+                console.log("createSessionResponse:", sessionId);
+                this.formScreen.sessionId = sessionId;
+                send("DONE");
+              })
+            );
+        },
+        loadSessionData: (ctx, event) => (send, onEvent) => {
+          // this.api.
         }
       }
     }
