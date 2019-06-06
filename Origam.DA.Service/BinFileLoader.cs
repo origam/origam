@@ -106,8 +106,7 @@ namespace Origam.DA.Service
             IEnumerable<FileInfo> fileInfos = topDirectory
                 .GetAllFilesInSubDirectories()
                 .AsParallel()
-                .Where(OrigamFile.IsPersistenceFile)
-                .Where(file => file.Name != OrigamFile.ReferenceFileName);
+                .Where(OrigamFile.IsPersistenceFile);
 
             foreach (var file in fileInfos)
             {
