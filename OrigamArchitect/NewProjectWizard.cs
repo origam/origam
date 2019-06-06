@@ -499,21 +499,28 @@ namespace OrigamArchitect
         private void PageTemplateType_Initialize(object sender, WizardPageInitEventArgs e)
         {
             WaitForLoaded();
-            ImageList imageList = new ImageList
+            if (listViewTemplate.Items.Count == 0)
             {
-                ImageSize = new Size(32, 32)
-            };
-            int imgindex = 0;
-            foreach (WebGitData webGitData in repositories)
-            {
-                imageList.Images.Add(webGitData.avatar);
-                ListViewItem viewItem = new ListViewItem { ImageIndex = imgindex, Text = webGitData.RepositoryName };
-                webGitData.TypeTemplate = TypeTemplate.Template;
-                viewItem.Tag = webGitData;
-                listViewTemplate.Items.Add(viewItem);
-                imgindex++;
+                ImageList imageList = new ImageList
+                {
+                    ImageSize = new Size(32, 32)
+                };
+                int imgindex = 0;
+                foreach (WebGitData webGitData in repositories)
+                {
+                    imageList.Images.Add(webGitData.avatar);
+                    ListViewItem viewItem = new ListViewItem { ImageIndex = imgindex, Text = webGitData.RepositoryName };
+                    viewItem.Tag = webGitData;
+                    listViewTemplate.Items.Add(viewItem);
+                    imgindex++;
+                }
+                listViewTemplate.LargeImageList = imageList;
             }
-            listViewTemplate.LargeImageList = imageList;
+            if (this.listViewTemplate.Items.Count > 0)
+            {
+                listViewTemplate.HideSelection = false;
+                this.listViewTemplate.Items[0].EnsureVisible();
+            }
         }
 
         private void WaitForLoaded()

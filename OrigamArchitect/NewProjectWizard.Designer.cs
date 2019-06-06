@@ -86,9 +86,10 @@ namespace OrigamArchitect
             this.colText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pageTemplateType = new AeroWizard.WizardPage();
-            this.wbReadmeText = new System.Windows.Forms.WebBrowser();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.listViewTemplate = new System.Windows.Forms.ListView();
             this.Projects = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.wbReadmeText = new System.Windows.Forms.WebBrowser();
             this.wizOpenRepository = new AeroWizard.WizardPage();
             this.rdCopy = new System.Windows.Forms.RadioButton();
             this.rdClone = new System.Windows.Forms.RadioButton();
@@ -119,7 +120,6 @@ namespace OrigamArchitect
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.projectBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.projectBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this.wizard1)).BeginInit();
             this.pageWelcome.SuspendLayout();
             this.pageDeploymentType.SuspendLayout();
@@ -128,14 +128,14 @@ namespace OrigamArchitect
             this.pageGit.SuspendLayout();
             this.pageReview.SuspendLayout();
             this.pageTemplateType.SuspendLayout();
-            this.wizOpenRepository.SuspendLayout();
-            this.pageLocalDeploymentSettings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.wizOpenRepository.SuspendLayout();
+            this.pageLocalDeploymentSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
             // wizard1
@@ -682,33 +682,46 @@ namespace OrigamArchitect
             this.pageTemplateType.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageTemplateType_Commit);
             this.pageTemplateType.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.PageTemplateType_Initialize);
             // 
-            // wbReadmeText
+            // splitContainer1
             // 
-            this.wbReadmeText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.wbReadmeText.Location = new System.Drawing.Point(3, 3);
-            this.wbReadmeText.MinimumSize = new System.Drawing.Size(20, 20);
-            this.wbReadmeText.Name = "wbReadmeText";
-            this.wbReadmeText.Size = new System.Drawing.Size(631, 384);
-            this.wbReadmeText.TabIndex = 6;
+            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.listViewTemplate);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.wbReadmeText);
+            this.splitContainer1.Size = new System.Drawing.Size(731, 390);
+            this.splitContainer1.SplitterDistance = 90;
+            this.splitContainer1.TabIndex = 7;
             // 
             // listViewTemplate
             // 
-            this.listViewTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewTemplate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listViewTemplate.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.Projects});
+            this.listViewTemplate.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewTemplate.ForeColor = System.Drawing.Color.Black;
             this.listViewTemplate.FullRowSelect = true;
-            this.listViewTemplate.Location = new System.Drawing.Point(3, 0);
+            this.listViewTemplate.Location = new System.Drawing.Point(0, 0);
             this.listViewTemplate.Name = "listViewTemplate";
-            this.listViewTemplate.Size = new System.Drawing.Size(84, 387);
+            this.listViewTemplate.Size = new System.Drawing.Size(88, 388);
             this.listViewTemplate.TabIndex = 5;
             this.listViewTemplate.UseCompatibleStateImageBehavior = false;
             this.listViewTemplate.SelectedIndexChanged += new System.EventHandler(this.ListViewTemplate_SelectedIndexChanged);
+            // 
+            // wbReadmeText
+            // 
+            this.wbReadmeText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.wbReadmeText.Location = new System.Drawing.Point(0, 0);
+            this.wbReadmeText.MinimumSize = new System.Drawing.Size(20, 20);
+            this.wbReadmeText.Name = "wbReadmeText";
+            this.wbReadmeText.Size = new System.Drawing.Size(635, 388);
+            this.wbReadmeText.TabIndex = 6;
             // 
             // wizOpenRepository
             // 
@@ -994,23 +1007,6 @@ namespace OrigamArchitect
             // 
             this.projectBindingSource1.DataSource = typeof(Origam.ProjectAutomation.Project);
             // 
-            // splitContainer1
-            // 
-            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.listViewTemplate);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.wbReadmeText);
-            this.splitContainer1.Size = new System.Drawing.Size(731, 390);
-            this.splitContainer1.SplitterDistance = 90;
-            this.splitContainer1.TabIndex = 7;
-            // 
             // NewProjectWizard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1037,16 +1033,16 @@ namespace OrigamArchitect
             this.pageGit.PerformLayout();
             this.pageReview.ResumeLayout(false);
             this.pageTemplateType.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.wizOpenRepository.ResumeLayout(false);
             this.wizOpenRepository.PerformLayout();
             this.pageLocalDeploymentSettings.ResumeLayout(false);
             this.pageLocalDeploymentSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.projectBindingSource1)).EndInit();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
