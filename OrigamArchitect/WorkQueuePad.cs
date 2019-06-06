@@ -316,7 +316,7 @@ namespace OrigamArchitect
 						WorkQueueClass wqc = wqs.WQClass(wqClassName) as WorkQueueClass;
 						if(wqc != null && wqc.WorkQueueItemCountLookup != null)
 						{
-							int cnt = (int)ls.GetDisplayText(wqc.WorkQueueItemCountLookupId, id, false, false, null);
+							long cnt = (long)ls.GetDisplayText(wqc.WorkQueueItemCountLookupId, id, false, false, null);
 							lock(_data)
 							{
 								row["CntTotal"] = cnt;

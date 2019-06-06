@@ -39,11 +39,11 @@ namespace Origam.Workflow.FileService
         private object _result;
         private static readonly log4net.ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IXmlContainer ReadDelimitedFile(TextReader reader, XmlDocument optionsXml, string entity)
+        private IXmlContainer ReadDelimitedFile(TextReader reader, XmlContainer optionsXml, string entity)
         {
             DataSet data = CreateEmptyOutputData();
             DataTable dt = data.Tables[entity];
-            TextReaderOptions options = TextReaderOptions.Deserialize(optionsXml);
+            TextReaderOptions options = TextReaderOptions.Deserialize(optionsXml.Xml);
             DelimitedClassBuilder cb = new DelimitedClassBuilder(entity);
             cb.IgnoreFirstLines = options.IgnoreFirst;
             cb.IgnoreLastLines = options.IgnoreLast;
@@ -141,7 +141,7 @@ namespace Origam.Workflow.FileService
             DatasetTools.ApplyPrimaryKey(e.Row);
         }
 
-        private IXmlContainer ReadFile(string fileName, XmlDocument optionsXml, 
+        private IXmlContainer ReadFile(string fileName, XmlContainer optionsXml, 
             string entity, object file, string encodingName)
         {
             string stringFile = file as string;
@@ -236,7 +236,7 @@ namespace Origam.Workflow.FileService
 
                     _result =
                         this.ReadFile(this.Parameters["FileName"] as String,
-                        this.Parameters["Options"] as XmlDocument,
+                        this.Parameters["Options"] as XmlContainer,
                         this.Parameters["Entity"] as String,
                         this.Parameters["File"],
                         this.Parameters["Encoding"] as string);
