@@ -41,6 +41,7 @@ using System.Net;
 using System.Threading;
 using System.Text.RegularExpressions;
 using static Origam.NewProjectEnums;
+using Origam.Extensions;
 
 namespace OrigamArchitect
 {
@@ -536,9 +537,18 @@ namespace OrigamArchitect
         {
             repositories.Add(new WebGitData(Images.New, "Empty Template", null, "Empty Template.", TypeTemplate.Default));
             repositories.Add(new WebGitData(Images.New, "Copy Template", null, "My Template.", TypeTemplate.Open));
-            repositories.AddRange(XmlParser.GetList());
+            try
+            {
+                repositories.AddRange(XmlParser.GetList());
+            }
+            catch (Exception ex)
+            {
+                this.RunWithInvoke(() => AsMessageBox.ShowError(null, 
+                    "When tried Load Templates from External Link Received Error: \n" + ex.Message,
+                    "External Repository Error", ex));
+            }
+            XmlParser.IsLoaded = true;
         }
-
         private void PageTemplateType_Commit(object sender, WizardPageConfirmEventArgs e)
         {
             if (listViewTemplate.SelectedItems.Count == 0)

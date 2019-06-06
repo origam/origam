@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using static Origam.DA.Common.Enums;
+using static Origam.NewProjectEnums;
 
 namespace Origam.ProjectAutomation
 {
@@ -333,9 +334,9 @@ namespace Origam.ProjectAutomation
 
         public string GitRepositoryLink { get; set; }
 
-        public NewProjectEnums.TypeTemplate TypeTemplate { get; set; }
+        public TypeTemplate TypeTemplate { get; set; }
 
-        public NewProjectEnums.TypeDoTemplate TypeDoTemplate { get; set; }
+        public TypeDoTemplate TypeDoTemplate { get; set; }
         #endregion
     }
 }
