@@ -47,7 +47,7 @@ namespace Origam.Server
         {
         }
 
-        public WorkQueueInfo(string id, string name, int countTotal)
+        public WorkQueueInfo(string id, string name, long countTotal)
         {
             Id = id;
             Name = name;
@@ -70,9 +70,9 @@ namespace Origam.Server
             set { _name = value; }
         }
 
-        private int _countTotal;
+        private long _countTotal;
 
-        public int CountTotal
+        public long CountTotal
         {
             get { return _countTotal; }
             set { _countTotal = value; }

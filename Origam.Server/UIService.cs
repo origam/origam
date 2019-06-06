@@ -1731,12 +1731,12 @@ namespace Origam.Server
                     object workQueueId = row["Id"];
                     string wqClassName = (string)row["WorkQueueClass"];
 
-                    int cnt = 0;
+                    long cnt = 0;
 
                     if ((bool)row["IsMessageCountDisplayed"])
                     {
                         WorkQueueClass wqc = wqs.WQClass(wqClassName) as WorkQueueClass;
-                        cnt = (int)ls.GetDisplayText(wqc.WorkQueueItemCountLookupId, workQueueId, false, false, null);
+                        cnt = (long)ls.GetDisplayText(wqc.WorkQueueItemCountLookupId, workQueueId, false, false, null);
                     }
 
                     WorkQueueInfo wqi = new WorkQueueInfo(workQueueId.ToString(), (string)row["Name"], cnt);
