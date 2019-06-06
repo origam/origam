@@ -16,15 +16,17 @@ import { FormViewPresenter } from "../../../../view/Perspectives/FormView/FormVi
 import { FormViewToolbar } from "../../../../view/Perspectives/FormView/FormViewToolbar";
 import { IFormViewMediator } from "../../../../../DataView/FormView/FormViewMediator";
 import { action } from "mobx";
-
+import { DropdownEditor } from "../editors/Dropdown";
 
 @inject(({ formViewPresenter }) => {
   return {
     formViewPresenter
-  }
+  };
 })
 @observer
-export class FormRoot extends React.Component<{ formViewPresenter?: IFormView }> {
+export class FormRoot extends React.Component<{
+  formViewPresenter?: IFormView;
+}> {
   componentDidMount() {
     window.addEventListener("click", this.handleWindowClick);
   }
@@ -41,18 +43,23 @@ export class FormRoot extends React.Component<{ formViewPresenter?: IFormView }>
   }
 
   elmFormRoot: HTMLDivElement | null = null;
-  refFormRoot = (elm: HTMLDivElement | null) => this.elmFormRoot = elm;
+  refFormRoot = (elm: HTMLDivElement | null) => (this.elmFormRoot = elm);
 
   render() {
-    return <div ref={this.refFormRoot} className="form-root"
-      onClick={this.props.formViewPresenter!.onNoFieldClick}>
-      {this.props.children}
-    </div>;
+    return (
+      <div
+        ref={this.refFormRoot}
+        className="form-root"
+        onClick={this.props.formViewPresenter!.onNoFieldClick}
+      >
+        {this.props.children}
+      </div>
+    );
   }
 }
 
 @inject(({ formViewPresenter }) => {
-  return { listenForRefocus: formViewPresenter.aFocusEditor.listenForRefocus }
+  return { listenForRefocus: formViewPresenter.aFocusEditor.listenForRefocus };
 })
 @observer
 export class Editor extends React.Component<{
@@ -93,6 +100,25 @@ export class Editor extends React.Component<{
             onChange={field.onChange}
             onClick={field.onClick}
             onKeyDown={field.onKeyDown}
+          />
+        );
+      case "DropdownCell":
+        return (
+          <DropdownEditor
+            value={field.value}
+            textualValue={field.textualValue}
+            isReadOnly={field.isReadOnly}
+            isInvalid={field.isInvalid}
+            isFocused={field.isFocused}
+            onTextChange={field.onTextChange}
+            onItemSelect={field.onItemSelect}
+            DataStructureEntityId={field.DataStructureEntityId}
+            ColumnNames={field.ColumnNames}
+            Property={field.Property}
+            RowId={field.RowId}
+            LookupId={field.LookupId}
+            menuItemId={field.menuItemId}
+            api={field.api}
           />
         );
       default:
@@ -202,8 +228,8 @@ export class FormField extends React.Component<{
           {field ? (
             <Editor field={field} />
           ) : (
-              <div className="unknown-editor">{this.props.Id}</div>
-            )}
+            <div className="unknown-editor">{this.props.Id}</div>
+          )}
         </div>
       </>
     );
@@ -211,7 +237,9 @@ export class FormField extends React.Component<{
 }
 
 @observer
-export class FormView extends React.Component<{ controller: IFormViewMediator }> {
+export class FormView extends React.Component<{
+  controller: IFormViewMediator;
+}> {
   constructor(props: any) {
     super(props);
     this.formViewPresenter = new FormViewPresenter({
@@ -227,18 +255,20 @@ export class FormView extends React.Component<{ controller: IFormViewMediator }>
       aSelNextProp: () => this.props.controller.aSelNextProp,
       aSelProp: () => this.props.controller.aSelProp,
       isLoading: () => this.props.controller.dataView.machine.isLoading,
-      aFocusEditor: this.props.controller.aFocusEditor
+      aFocusEditor: this.props.controller.aFocusEditor,
+      api: () => this.props.controller.dataView.api,
+      dataViewMediator: () => this.props.controller.dataView
     });
     const toolbar = this.props.controller.dataView.isHeadless
       ? undefined
       : new FormViewToolbar({
-        aSwitchView: () => this.props.controller.dataView.aSwitchView,
-        mediator: () => this.props.controller,
-        label: this.props.controller.dataView.label,
-        isLoading: () => this.props.controller.dataView.machine.isLoading,
-        selection: this.props.controller.selection,
-        dataTable: this.props.controller.dataTable
-      });
+          aSwitchView: () => this.props.controller.dataView.aSwitchView,
+          mediator: () => this.props.controller,
+          label: this.props.controller.dataView.label,
+          isLoading: () => this.props.controller.dataView.machine.isLoading,
+          selection: this.props.controller.selection,
+          dataTable: this.props.controller.dataTable
+        });
   }
 
   formViewPresenter: FormViewPresenter;

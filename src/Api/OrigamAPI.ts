@@ -159,4 +159,21 @@ export class OrigamAPI implements IApi {
       headers: this.httpAuthHeader
     })).data;
   }
+
+  async getLookupListEx(data: {
+    DataStructureEntityId: string;
+    ColumnNames: string[];
+    Property: string;
+    Id: string;
+    LookupId: string;
+    ShowUniqueValues: boolean;
+    SearchText: string;
+    PageSize: number;
+    PageNumber: number;
+    MenuId: string;
+  }): Promise<any> {
+    return (await axios.post(`${this.urlPrefix}/Data/GetLookupListEx`, data, {
+      headers: this.httpAuthHeader
+    })).data;
+  }
 }

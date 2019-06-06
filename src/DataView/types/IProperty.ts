@@ -9,4 +9,5 @@ export interface IProperty {
   dataIndex: number;
   dataSourceIndex: number;
   lookupResolver: ILookupResolver | undefined;
+  lookupColumns: string[];
 }

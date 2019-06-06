@@ -10,6 +10,7 @@ export function buildProperty(
   dataIndex: number,
   dataSourceIndex: number,
   menuItemId: string,
+  lookupColumns: string[],
   api: IApi
 ) {
   let lookupResolver: ILookupResolver | undefined;
@@ -28,7 +29,8 @@ export function buildProperty(
     xmlObj.attributes.Column,
     dataIndex,
     dataSourceIndex,
-    lookupResolver
+    lookupResolver,
+    lookupColumns
   );
 }
 
@@ -41,7 +43,8 @@ export class Property implements IProperty {
     public  column: string,
     dataIndex: number,
     public dataSourceIndex: number,
-    public lookupResolver: ILookupResolver | undefined
+    public lookupResolver: ILookupResolver | undefined,
+    public lookupColumns: string[]
   ) {
     this.dataIndex = dataIndex;
   }

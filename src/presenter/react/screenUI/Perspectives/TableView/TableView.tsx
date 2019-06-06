@@ -12,6 +12,7 @@ import { TableViewCells } from "../../../../view/Perspectives/TableView/TableVie
 import { ITableView } from "../../../../view/Perspectives/TableView/types";
 import { TableViewField } from "../../../../view/Perspectives/TableView/TableViewField";
 import { ITableViewMediator } from "../../../../../DataView/TableView/TableViewMediator";
+import { dataTableLoaded } from "../../../../../DataView/DataViewActions";
 
 @observer
 export class TableView extends React.Component<{
@@ -54,7 +55,9 @@ export class TableView extends React.Component<{
       recCursor: () => this.props.controller.recCursor,
       propCursor: () => this.props.controller.propCursor,
       editing: () => this.props.controller.dataView.editing,
-      form: () => this.props.controller.dataView.form
+      form: () => this.props.controller.dataView.form,
+      dataViewMediator: () => this.props.controller.dataView,
+      api: () => this.props.controller.dataView.api
     });
     const tableViewScrollState = new TableViewScrollState(0, 0);
   }

@@ -1,4 +1,5 @@
 import { IViewType } from "../../../DataView/types/IViewType";
+import { IApi } from "../../../Api/IApi";
 
 export interface IToolbar {
   isLoading: boolean;
@@ -66,9 +67,18 @@ export type ICellTypeDU =
   export interface IDropdownCell {
     type: "DropdownCell";
     value: string;
-    text: string;
+    textualValue: string;
     isLoading: boolean;
+    DataStructureEntityId: string;
+    ColumnNames: string[];
+    Property: string;
+    RowId: string;
+    LookupId: string;
+    menuItemId: string;
+    api: IApi;
     // dropdownTable: IDropdownTable | undefined;
+    onTextChange(event: any, value: string): void;
+    onItemSelect(event: any, value: string): void;
   }
 
   export interface INumberCell {

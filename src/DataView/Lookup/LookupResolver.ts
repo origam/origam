@@ -97,6 +97,10 @@ export class LookupResolver implements ILookupResolver {
     return this.labelMap.get(key);
   }
 
+  get lookupId() {
+    return this.P.lookupId;
+  }
+
   get api() {
     return unpack(this.P.api);
   }

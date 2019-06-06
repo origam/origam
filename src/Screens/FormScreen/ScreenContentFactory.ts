@@ -15,7 +15,7 @@ import { buildTableView } from "../../DataView/TableView/buildTableView";
 import { IDataViewMediator02 } from "../../DataView/DataViewMediator02";
 
 export class ScreenContentFactory implements IScreenContentFactory {
-  constructor(public P: { formScreen: IFormScreen}) {}
+  constructor(public P: { formScreen: IFormScreen }) {}
 
   create(xmlObj: any) {
     // console.time("xml-processing");
@@ -42,11 +42,7 @@ export class ScreenContentFactory implements IScreenContentFactory {
     const dataViewByModelInstanceId = new Map<string, IDataViewMediator02>();
     const dataViews = grids.map(grid => {
       const gridProps = xmlFind.findProps(grid);
-      for (let gridProp of gridProps) {
-        const dropDownProps = xmlFind.findDropDownProps(gridProp);
-        if (dropDownProps.length > 0) {
-        }
-      }
+
       const gridFormRoot = xmlFind.findFormRoot(grid);
       const formUI = extractFormUI(gridFormRoot, gridProps);
       // --------------------------------------------------------
@@ -116,6 +112,7 @@ export class ScreenContentFactory implements IScreenContentFactory {
         const dataSourceIndex = dataSourceField
           ? dataSourceField.idx
           : undefined;
+        const dropDownProps = xmlFind.findDropDownProps(gp);
 
         if (dataSourceIndex === undefined) {
           throw new Error("DataSourceIndex is 0");
@@ -125,6 +122,7 @@ export class ScreenContentFactory implements IScreenContentFactory {
           idx,
           dataSourceIndex,
           unpack(this.P.formScreen.menuItemId),
+          dropDownProps.map(ddp => ddp.attributes.Id),
           unpack(this.P.formScreen.api)
         );
         return prop;
@@ -173,8 +171,6 @@ export class ScreenContentFactory implements IScreenContentFactory {
       isSessioned
     };
   }
-
-
 }
 
 function extractScreenUI(node: any) {

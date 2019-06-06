@@ -54,4 +54,18 @@ export interface IApi {
     parentRecordId: string;
     rootRecordId: string;
   }): Promise<any>;
+
+
+  getLookupListEx(data: {
+    DataStructureEntityId: string;
+    ColumnNames: string[];
+    Property: string;
+    Id: string;
+    MenuId: string;
+    LookupId: string;
+    ShowUniqueValues: boolean;
+    SearchText: string;
+    PageSize: number;
+    PageNumber: number;
+  }): Promise<any>;
 }

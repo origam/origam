@@ -8,6 +8,8 @@ import { IDataTable } from "../../../../DataView/types/IDataTable";
 import { IPropReorder } from "../../../../DataView/types/IPropReorder";
 import { IEditing } from "../../../../DataView/types/IEditing";
 import { IForm } from "../../../../DataView/types/IForm";
+import { IDataViewMediator02 } from "../../../../DataView/DataViewMediator02";
+import { IApi } from "../../../../Api/IApi";
 
 export class TableViewField implements IFormField {
   constructor(
@@ -18,6 +20,8 @@ export class TableViewField implements IFormField {
       propReorder: ML<IPropReorder>;
       editing: ML<IEditing>;
       form: ML<IForm>;
+      dataViewMediator: ML<IDataViewMediator02>;
+      api: ML<IApi>;
     }
   ) {}
 
@@ -28,6 +32,7 @@ export class TableViewField implements IFormField {
       const record = this.dataTable.getRecordByIdx(this.rowIndex);
       const property = this.propReorder.getByIndex(this.columnIndex);
       let value;
+      let textualValue;
       let isLoading = false;
       let isError = false;
       if (record && property) {
@@ -35,7 +40,7 @@ export class TableViewField implements IFormField {
         if (property.lookupResolver) {
           isError = property.lookupResolver.isError(value);
           isLoading = property.lookupResolver.isLoading(value);
-          value = property.lookupResolver.getValue(value);
+          textualValue = property.lookupResolver.getValue(value);
         }
         switch (property.column) {
           case "CheckBox":
@@ -61,6 +66,32 @@ export class TableViewField implements IFormField {
               isInvalid: false,
               isReadOnly: property.isReadOnly,
               isFocused: true
+            };
+          case "ComboBox":
+            return {
+              type: "DropdownCell",
+              value: value !== undefined && value !== null ? value : "",
+              textualValue:
+                textualValue !== undefined && textualValue !== null
+                  ? textualValue
+                  : "",
+              isLoading,
+              isInvalid: false,
+              isReadOnly: property.isReadOnly,
+              isFocused: true,
+
+              ColumnNames: property.lookupColumns,
+              DataStructureEntityId: this.dataViewMediator
+                .dataStructureEntityId,
+              LookupId: property.lookupResolver!.lookupId,
+              menuItemId: this.dataViewMediator.menuItemId,
+              Property: property.id,
+              RowId: this.dataTable.getRecordIdByIndex(this.selRecIdx!)!,
+              api: this.api,
+              onTextChange: (event: any, value: string) => {},
+              onItemSelect: (event: any, value: string) => {
+                this.form.setDirtyValue(property.id, value);
+              }
             };
         }
       }
@@ -124,5 +155,13 @@ export class TableViewField implements IFormField {
 
   get form() {
     return unpack(this.P.form);
+  }
+
+  get dataViewMediator() {
+    return unpack(this.P.dataViewMediator);
+  }
+
+  get api() {
+    return unpack(this.P.api);
   }
 }

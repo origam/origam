@@ -284,4 +284,5 @@ export class TableViewMediator implements ITableViewMediator, ITableView {
   get selection(): ISelection {
     return this.P.selection();
   }
+
 }

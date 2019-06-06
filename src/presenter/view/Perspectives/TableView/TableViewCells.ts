@@ -7,7 +7,8 @@ import { computed } from "mobx";
 import { IDataTable } from "../../../../DataView/types/IDataTable";
 import { IRecCursor } from "../../../../DataView/types/IRecCursor";
 import { IPropCursor } from "../../../../DataView/types/IPropCursor";
-
+import { makeCellVisibleById } from "../../../../DataView/TableView/TableViewActions";
+import { IApi } from "../../../../Api/IApi";
 
 export class TableViewCells implements ICells {
   constructor(
@@ -98,9 +99,7 @@ export class TableViewCells implements ICells {
           return {
             type: "BoolCell",
             value: value !== undefined && value !== null ? value : "",
-            onChange(event: any, value: boolean) {
-              console.log("change", event, value);
-            },
+            onChange(event: any, value: boolean) {},
             isLoading,
             isInvalid: false,
             isReadOnly: property.isReadOnly,
@@ -112,9 +111,7 @@ export class TableViewCells implements ICells {
           return {
             type: "TextCell",
             value: value !== undefined && value !== null ? value : "",
-            onChange(event: any, value: string) {
-              console.log("change", event, value);
-            },
+            onChange(event: any, value: string) {},
             isLoading,
             isInvalid: false,
             isReadOnly: property.isReadOnly,
@@ -122,14 +119,34 @@ export class TableViewCells implements ICells {
             isCellCursor:
               this.selRecIdx === rowIdx && this.selPropIdx === columnIdx
           };
+        case "ComboBox":
+          return {
+            type: "DropdownCell",
+            value: value !== undefined && value !== null ? value : "",
+            textualValue: "",
+            isLoading,
+            isInvalid: false,
+            isReadOnly: property.isReadOnly,
+            isRowCursor: this.selRecIdx === rowIdx,
+            isCellCursor:
+              this.selRecIdx === rowIdx && this.selPropIdx === columnIdx,
+
+            ColumnNames: [],
+            DataStructureEntityId: "",
+            LookupId: "",
+            Property: "",
+            RowId: "",
+            menuItemId: "",
+            api: null as unknown as any,
+            onTextChange(event: any, value: string) {},
+            onItemSelect(event: any, value: string) {}
+          };
       }
     }
     return {
       type: "TextCell",
       value: value !== undefined && value !== null ? value : "",
-      onChange(event: any, value: string) {
-        console.log("change", event, value);
-      },
+      onChange(event: any, value: string) {},
       isLoading,
       isInvalid: false,
       isReadOnly: true,
@@ -163,4 +180,5 @@ export class TableViewCells implements ICells {
   get propCursor() {
     return unpack(this.P.propCursor);
   }
+
 }

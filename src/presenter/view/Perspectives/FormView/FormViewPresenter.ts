@@ -18,6 +18,8 @@ import { onNoCellClick } from "../../../../DataView/TableView/TableViewActions";
 import * as FormViewActions from "../../../../DataView/FormView/FormViewActions";
 import { IFormViewMediator } from "../../../../DataView/FormView/FormViewMediator";
 import { IAFocusEditor } from "../../../../DataView/types/IAFocusEditor";
+import { IApi } from "../../../../Api/IApi";
+import { IDataViewMediator02 } from "../../../../DataView/DataViewMediator02";
 
 
 export class FormViewPresenter implements IFormView {
@@ -36,6 +38,8 @@ export class FormViewPresenter implements IFormView {
       aSelProp: ML<IASelProp>;
       aFocusEditor: IAFocusEditor;
       isLoading: () => boolean;
+      api: () => IApi;
+      dataViewMediator: () => IDataViewMediator02;
     }
   ) {}
 
@@ -60,6 +64,7 @@ export class FormViewPresenter implements IFormView {
     const property = prop;
     
     let value;
+    let textualValue;
     let isLoading = false;
     let isError = false;
     if (record && property) {
@@ -71,7 +76,7 @@ export class FormViewPresenter implements IFormView {
       if (property.lookupResolver) {
         isError = property.lookupResolver.isError(value);
         isLoading = property.lookupResolver.isLoading(value);
-        value = property.lookupResolver.getValue(value);
+        textualValue = property.lookupResolver.getValue(value);
       }
       // console.log("+++", this.propCursor.selId, prop.id);
       switch (property.column) {
@@ -105,6 +110,32 @@ export class FormViewPresenter implements IFormView {
             isInvalid: false,
             isReadOnly: property.isReadOnly
           };
+          case "ComboBox":
+            return {
+              type: "DropdownCell",
+              value: value !== undefined && value !== null ? value : "",
+              textualValue:
+                textualValue !== undefined && textualValue !== null
+                  ? textualValue
+                  : "",
+              isLoading,
+              isInvalid: false,
+              isReadOnly: property.isReadOnly,
+              isFocused: true,
+
+              ColumnNames: property.lookupColumns,
+              DataStructureEntityId: this.dataViewMediator
+                .dataStructureEntityId,
+              LookupId: property.lookupResolver!.lookupId,
+              menuItemId: this.dataViewMediator.menuItemId,
+              Property: property.id,
+              RowId: this.recCursor.selId!,
+              api: this.api,
+              onTextChange: (event: any, value: string) => {},
+              onItemSelect: (event: any, value: string) => {
+                this.form.setDirtyValue(property.id, value);
+              }
+            };          
       }
     }
     return {
@@ -196,5 +227,13 @@ export class FormViewPresenter implements IFormView {
 
   get editing() {
     return unpack(this.P.mediator.editing);
+  }
+
+  get dataViewMediator() {
+    return unpack(this.P.dataViewMediator);
+  }
+
+  get api() {
+    return unpack(this.P.api);
   }
 }
