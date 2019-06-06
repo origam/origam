@@ -40,6 +40,7 @@ using System.Drawing;
 using System.Net;
 using System.Threading;
 using System.Text.RegularExpressions;
+using static Origam.NewProjectEnums;
 
 namespace OrigamArchitect
 {
@@ -61,7 +62,7 @@ namespace OrigamArchitect
         Project _project = new Project();
         NewProjectWizardSettings _settings = new NewProjectWizardSettings();
         private WebGitXmlParser XmlParser = new WebGitXmlParser();
-        private List<object[]> repositories = new List<object[]>();
+        private List<WebGitData> repositories = new List<WebGitData>();
 
         public NewProjectWizard()
         {
@@ -501,34 +502,17 @@ namespace OrigamArchitect
             {
                 ImageSize = new Size(32, 32)
             };
-            imageList.Images.Add(Images.New);
-            foreach (var repo in repositories)
+            int imgindex = 0;
+            foreach (WebGitData webGitData in repositories)
             {
-                Image img = (Image)repo[0];
-                imageList.Images.Add(img);
-            }
-            listViewTemplate.LargeImageList = imageList;
-
-            if (listViewTemplate.Items.Count == 0)
-            {
-                ListViewItem defaultviewItem = new ListViewItem { ImageIndex = 0, Text = "Empty Template" };
-                defaultviewItem.Tag = new object[] { null, "Empty Template.", TypeTemplate.Default };
-                listViewTemplate.Items.Add(defaultviewItem);
-                ListViewItem CopyviewItem = new ListViewItem { ImageIndex = 0, Text = "Copy Template" };
-                CopyviewItem.Tag = new object[] { null, "My Template.", TypeTemplate.Open };
-                listViewTemplate.Items.Add(CopyviewItem);
-            }
-            int imgindex = 1;
-            foreach (var repo in repositories)
-            {
-                string nameOfRepository = (string)repo[1];
-                string linkToGit = (string)repo[2];
-                string readmeText = (string)repo[3];
-                ListViewItem viewItem = new ListViewItem { ImageIndex = imgindex, Text = nameOfRepository };
-                viewItem.Tag = new object[] { linkToGit, readmeText, TypeTemplate.Template };
+                imageList.Images.Add(webGitData.avatar);
+                ListViewItem viewItem = new ListViewItem { ImageIndex = imgindex, Text = webGitData.RepositoryName };
+                webGitData.TypeTemplate = TypeTemplate.Template;
+                viewItem.Tag = webGitData;
                 listViewTemplate.Items.Add(viewItem);
                 imgindex++;
             }
+            listViewTemplate.LargeImageList = imageList;
         }
 
         private void WaitForLoaded()
@@ -550,7 +534,9 @@ namespace OrigamArchitect
 
         private void FillTemplate()
         {
-            repositories = XmlParser.GetList();
+            repositories.Add(new WebGitData(Images.New, "Empty Template", null, "Empty Template.", TypeTemplate.Default));
+            repositories.Add(new WebGitData(Images.New, "Copy Template", null, "My Template.", TypeTemplate.Open));
+            repositories.AddRange(XmlParser.GetList());
         }
 
         private void PageTemplateType_Commit(object sender, WizardPageConfirmEventArgs e)
@@ -566,9 +552,9 @@ namespace OrigamArchitect
                     listViewTemplate.SelectedItems;
             foreach (ListViewItem item in selectedListView)
             {
-                object[] tags = (object[])item.Tag;
-                _project.GitRepositoryLink = (string)tags[0];
-                _project.TypeTemplate = (TypeTemplate)tags[2];
+                WebGitData webGit = (WebGitData)item.Tag;
+                _project.GitRepositoryLink = webGit.RepositoryLink;
+                _project.TypeTemplate = webGit.TypeTemplate;
             }
             switch (_project.TypeTemplate)
             {
@@ -589,8 +575,8 @@ namespace OrigamArchitect
                      listViewTemplate.SelectedItems;
             foreach (ListViewItem item in selectedListView)
             {
-                object[] tags = (object[])item.Tag;
-                wbReadmeText.DocumentText = md.Transform((string)tags[1]);
+                WebGitData webGit = (WebGitData)item.Tag;
+                wbReadmeText.DocumentText = md.Transform(webGit.Readme);
             }
         }
 

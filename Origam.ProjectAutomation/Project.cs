@@ -333,20 +333,9 @@ namespace Origam.ProjectAutomation
 
         public string GitRepositoryLink { get; set; }
 
-        public TypeTemplate TypeTemplate { get; set; }
+        public NewProjectEnums.TypeTemplate TypeTemplate { get; set; }
 
-        public TypeDoTemplate TypeDoTemplate { get; set; }
+        public NewProjectEnums.TypeDoTemplate TypeDoTemplate { get; set; }
         #endregion
-    }
-    public enum TypeDoTemplate
-    {
-        Copy,
-        Clone
-    }
-    public enum TypeTemplate
-    {
-        Default,
-        Open,
-        Template
     }
 }

@@ -27,6 +27,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using static Origam.DA.Common.Enums;
+using static Origam.NewProjectEnums;
 
 namespace Origam.ProjectAutomation
 {

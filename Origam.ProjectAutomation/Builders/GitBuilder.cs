@@ -20,11 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Git;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using static Origam.NewProjectEnums;
 
 namespace Origam.ProjectAutomation.Builders
 {

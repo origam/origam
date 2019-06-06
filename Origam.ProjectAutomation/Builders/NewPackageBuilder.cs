@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.Workbench.Services;
 using System;
+using static Origam.NewProjectEnums;
 
 namespace Origam.ProjectAutomation
 {
