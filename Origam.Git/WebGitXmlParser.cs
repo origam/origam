@@ -52,8 +52,8 @@ namespace Origam.Git
                 {
 
                 }
-                IsLoaded = true;
             }
+            IsLoaded = true;
             return RepositoryList;
         }
 
