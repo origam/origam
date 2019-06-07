@@ -86,7 +86,6 @@
     <Compile Include="AbstractDatabaseBuilder.cs" />
     <Compile Include="Builders\CopyServerFilesBuilder.cs" />
     <Compile Include="Builders\ConfigureWebServerBuilder.cs" />
-    <Compile Include="Builders\GitBuilder.cs" />
     <Compile Include="Builders\ModifyConfigurationFilesBuilder.cs" />
     <Compile Include="Builders\ApplyDatabasePermissionsBuilder.cs" />
     <Compile Include="Builders\NewPackageBuilder.cs" />
