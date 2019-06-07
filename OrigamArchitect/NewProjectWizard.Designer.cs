@@ -91,6 +91,7 @@ namespace OrigamArchitect
             this.Projects = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.wbReadmeText = new System.Windows.Forms.WebBrowser();
             this.wizOpenRepository = new AeroWizard.WizardPage();
+            this.rdNone = new System.Windows.Forms.RadioButton();
             this.rdCopy = new System.Windows.Forms.RadioButton();
             this.rdClone = new System.Windows.Forms.RadioButton();
             this.label18 = new System.Windows.Forms.Label();
@@ -730,6 +731,7 @@ namespace OrigamArchitect
             // 
             // wizOpenRepository
             // 
+            this.wizOpenRepository.Controls.Add(this.rdNone);
             this.wizOpenRepository.Controls.Add(this.rdCopy);
             this.wizOpenRepository.Controls.Add(this.rdClone);
             this.wizOpenRepository.Controls.Add(this.label18);
@@ -744,6 +746,17 @@ namespace OrigamArchitect
             this.wizOpenRepository.Text = "Open Git Repository";
             this.wizOpenRepository.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.WizOpenRepository_Commit);
             this.wizOpenRepository.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.WizOpenRepository_Initialize);
+            // 
+            // rdNone
+            // 
+            this.rdNone.AutoSize = true;
+            this.rdNone.Location = new System.Drawing.Point(235, 89);
+            this.rdNone.Name = "rdNone";
+            this.rdNone.Size = new System.Drawing.Size(54, 19);
+            this.rdNone.TabIndex = 8;
+            this.rdNone.TabStop = true;
+            this.rdNone.Text = "None";
+            this.rdNone.UseVisualStyleBackColor = true;
             // 
             // rdCopy
             // 
@@ -1141,5 +1154,6 @@ namespace OrigamArchitect
         private System.Windows.Forms.RadioButton rdCopy;
         private System.Windows.Forms.RadioButton rdClone;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.RadioButton rdNone;
     }
 }

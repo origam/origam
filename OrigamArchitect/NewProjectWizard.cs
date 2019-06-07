@@ -120,7 +120,6 @@ namespace OrigamArchitect
         private void PageReview_Commit(object sender, WizardPageConfirmEventArgs e)
         {
             pageReview.AllowNext = false;
-            _builder.CreateTasks(_project);
             InitTaskList();
             WorkbenchSingleton.Workbench.Disconnect();
             WorkbenchSingleton.Workbench.PopulateEmptyDatabaseOnLoad = false;
@@ -159,6 +158,7 @@ namespace OrigamArchitect
 
         private void pageReview_Initialize(object sender, WizardPageInitEventArgs e)
         {
+            _builder.CreateTasks(_project);
             InitTaskList();
         }
 
@@ -611,6 +611,12 @@ namespace OrigamArchitect
             _project.RepositoryPassword = tbRepPassword.Text;
             if (rdCopy.Checked) _project.TypeDoTemplate = TypeDoTemplate.Copy;
             if (rdClone.Checked) _project.TypeDoTemplate = TypeDoTemplate.Clone;
+            if (rdNone.Checked)
+            {
+                _project.TypeDoTemplate = TypeDoTemplate.None;
+                gitrepo.Checked = false;
+                gitrepo.Enabled = false;
+            }
         }
 
         public bool TestTemplate()
@@ -623,10 +629,11 @@ namespace OrigamArchitect
 
         private void WizOpenRepository_Initialize(object sender, WizardPageConfirmEventArgs e)
         {
-            if(!rdClone.Checked && !rdClone.Checked)
+            if(!rdClone.Checked && !rdClone.Checked &&!rdNone.Checked)
             {
                 rdCopy.Checked = true;
             }
+            gitrepo.Enabled = true;
         }
     }
 }

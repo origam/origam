@@ -9,7 +9,8 @@ namespace Origam
         public enum TypeDoTemplate
         {
             Copy,
-            Clone
+            Clone,
+            None
         }
         public enum TypeTemplate
         {

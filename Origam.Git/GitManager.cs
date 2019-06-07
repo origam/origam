@@ -187,7 +187,12 @@ namespace Origam.Git
 
             foreach (var file in files)
             {
-                File.SetAttributes(file, FileAttributes.Normal);
+                // delete/clear hidden attribute
+                File.SetAttributes(file, File.GetAttributes(file) & ~FileAttributes.Hidden);
+
+                // delete/clear archive and read only attributes
+                File.SetAttributes(file, File.GetAttributes(file)
+                    & ~(FileAttributes.Archive | FileAttributes.ReadOnly));
                 File.Delete(file);
             }
 

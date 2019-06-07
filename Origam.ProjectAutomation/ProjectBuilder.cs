@@ -20,8 +20,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.ProjectAutomation.Builders;
+using System;
 using System.Collections.Generic;
 using static Origam.DA.Common.Enums;
+using static Origam.NewProjectEnums;
 
 namespace Origam.ProjectAutomation
 {
@@ -74,6 +76,7 @@ namespace Origam.ProjectAutomation
 
         public void CreateTasks(Project _project)
         {
+            tasks.Clear();
             if (_project.DatabaseType == DatabaseType.MsSql)
             {
                 tasks.Add(settingsBuilder);
@@ -102,9 +105,40 @@ namespace Origam.ProjectAutomation
                 tasks.Add(configureWebServerBuilder);
                 tasks.Add(new NewPackageBuilder());
             }
-            if(_project.GitRepository)
+            AddGitTasks(_project);
+        }
+
+        private void AddGitTasks(Project _project)
+        {
+            switch (_project.TypeTemplate)
             {
-                tasks.Add(new GitBuilder());
+                case TypeTemplate.Default:
+                    CreateGit(_project);
+                    break;
+                case TypeTemplate.Template:
+                    tasks.Add(new DropGitRepository());
+                    CreateGit(_project);
+                    break;
+                case TypeTemplate.Open:
+                    if (_project.TypeDoTemplate == TypeDoTemplate.Clone &&
+                        _project.GitRepository)
+                    {
+                        break;
+                    }
+                    tasks.Add(new DropGitRepository());
+                    if (_project.TypeDoTemplate == TypeDoTemplate.Copy)
+                    {
+                        CreateGit(_project);
+                    }
+                    break;
+            }
+        }
+
+        private void CreateGit(Project _project)
+        {
+            if (_project.GitRepository)
+            {
+                tasks.Add(new CreateGitRepository());
             }
         }
 
