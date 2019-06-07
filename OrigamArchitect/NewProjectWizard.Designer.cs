@@ -696,7 +696,7 @@ namespace OrigamArchitect
             // 
             this.splitContainer1.Panel2.Controls.Add(this.wbReadmeText);
             this.splitContainer1.Size = new System.Drawing.Size(731, 390);
-            this.splitContainer1.SplitterDistance = 90;
+            this.splitContainer1.SplitterDistance = 297;
             this.splitContainer1.TabIndex = 7;
             // 
             // listViewTemplate
@@ -709,10 +709,15 @@ namespace OrigamArchitect
             this.listViewTemplate.FullRowSelect = true;
             this.listViewTemplate.Location = new System.Drawing.Point(0, 0);
             this.listViewTemplate.Name = "listViewTemplate";
-            this.listViewTemplate.Size = new System.Drawing.Size(88, 388);
+            this.listViewTemplate.Size = new System.Drawing.Size(295, 388);
             this.listViewTemplate.TabIndex = 5;
             this.listViewTemplate.UseCompatibleStateImageBehavior = false;
+            this.listViewTemplate.View = System.Windows.Forms.View.Tile;
             this.listViewTemplate.SelectedIndexChanged += new System.EventHandler(this.ListViewTemplate_SelectedIndexChanged);
+            // 
+            // Projects
+            // 
+            this.Projects.Width = 118;
             // 
             // wbReadmeText
             // 
@@ -720,7 +725,7 @@ namespace OrigamArchitect
             this.wbReadmeText.Location = new System.Drawing.Point(0, 0);
             this.wbReadmeText.MinimumSize = new System.Drawing.Size(20, 20);
             this.wbReadmeText.Name = "wbReadmeText";
-            this.wbReadmeText.Size = new System.Drawing.Size(635, 388);
+            this.wbReadmeText.Size = new System.Drawing.Size(428, 388);
             this.wbReadmeText.TabIndex = 6;
             // 
             // wizOpenRepository

@@ -606,7 +606,9 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
-            _project.GitRepositoryLink = CreateCredentialGitUrl(tbRepositoryLink.Text, tbRepUsername.Text, tbRepPassword.Text);
+            _project.GitRepositoryLink = tbRepositoryLink.Text;
+            _project.RepositoryUsername = tbRepUsername.Text;
+            _project.RepositoryPassword = tbRepPassword.Text;
             if (rdCopy.Checked) _project.TypeDoTemplate = TypeDoTemplate.Copy;
             if (rdClone.Checked) _project.TypeDoTemplate = TypeDoTemplate.Clone;
         }
@@ -615,26 +617,8 @@ namespace OrigamArchitect
         {
             string gitPassw = tbRepPassword.Text;
             string gitUsername = tbRepUsername.Text;
-            string url = CreateCredentialGitUrl(tbRepositoryLink.Text, gitUsername, gitPassw);
             GitManager gitManager = new GitManager();
-            return gitManager.IsValidUrl(url);
-        }
-
-        private string CreateCredentialGitUrl(string url, string tbRepUsername, string tbRepPassword)
-        {
-            if (!string.IsNullOrEmpty(tbRepUsername) && !string.IsNullOrEmpty(tbRepPassword))
-            {
-                string credentials = string.Format("{0}:{1}", tbRepUsername, tbRepPassword);
-                if (url.Contains("@"))
-                {
-                    url = Regex.Replace(url, "://.*@", "://" + credentials + "@");
-                }
-                else
-                {
-                    url = url.Replace("://", "://" + credentials + "@");
-                }
-            }
-            return url;
+            return gitManager.IsValidUrl(tbRepositoryLink.Text, gitUsername, gitPassw);
         }
 
         private void WizOpenRepository_Initialize(object sender, WizardPageConfirmEventArgs e)
