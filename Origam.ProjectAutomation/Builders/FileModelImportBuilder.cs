@@ -59,7 +59,8 @@ namespace Origam.ProjectAutomation
         private void CloneGitRepository(Project project)
         {
             GitManager gitManager = new GitManager();
-            gitManager.CloneRepository(project.GitRepositoryLink, sourcesFolder);
+            gitManager.CloneRepository(project.GitRepositoryLink, sourcesFolder,
+                project.RepositoryUsername,project.RepositoryPassword);
             project.NewPackageId = GetPackageId();
         }
 

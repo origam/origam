@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Xml;
+using static Origam.NewProjectEnums;
 
 namespace Origam.Git
 {
@@ -35,7 +36,7 @@ namespace Origam.Git
                     XmlDocument xmlReadme = (XmlDocument)GetData(urlReadme);
                     string readmeLink = xmlReadme.SelectSingleNode("(/ROOT/values)[1]/links/self").FirstChild.InnerText;
                     string readme = (string)GetData(readmeLink);
-                    WebGitData gitData = new WebGitData(avatar, name, link, readme);
+                    WebGitData gitData = new WebGitData(avatar, name, link, readme,TypeTemplate.Template);
                     RepositoryList.Add(gitData);
                 }
             return RepositoryList;

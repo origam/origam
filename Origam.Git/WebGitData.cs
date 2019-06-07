@@ -13,14 +13,6 @@ namespace Origam.Git
             this.Readme = readme;
             this.TypeTemplate = typeTemplate;
         }
-        public WebGitData(Image avatar, string name, string link, string readme)
-        {
-            this.avatar = avatar;
-            this.RepositoryName = name;
-            this.RepositoryLink = link;
-            this.Readme = readme;
-        }
-
         public Image avatar { get;  }
         public string RepositoryName { get; }
         public string RepositoryLink { get;  }

@@ -337,6 +337,8 @@ namespace Origam.ProjectAutomation
         public TypeTemplate TypeTemplate { get; set; }
 
         public TypeDoTemplate TypeDoTemplate { get; set; }
+        public string RepositoryUsername { get; set; }
+        public string RepositoryPassword { get; set; }
         #endregion
     }
 }

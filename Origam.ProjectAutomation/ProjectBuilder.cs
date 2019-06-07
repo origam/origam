@@ -87,7 +87,6 @@ namespace Origam.ProjectAutomation
                 tasks.Add(configureWebServerBuilder);
                 tasks.Add(new ApplyDatabasePermissionsBuilder());
                 tasks.Add(new NewPackageBuilder());
-                tasks.Add(new GitBuilder());
             }
             if (_project.DatabaseType == DatabaseType.PgSql)
             {
@@ -102,6 +101,9 @@ namespace Origam.ProjectAutomation
                 tasks.Add(new ModifyConfigurationFilesBuilder());
                 tasks.Add(configureWebServerBuilder);
                 tasks.Add(new NewPackageBuilder());
+            }
+            if(_project.GitRepository)
+            {
                 tasks.Add(new GitBuilder());
             }
         }

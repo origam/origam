@@ -52,15 +52,29 @@ namespace Origam.Git
             InitValues();
         }
 
-        public void CloneRepository(string gitRepositoryLink,string modelFolder)
+        public void CloneRepository(string gitRepositoryLink,string modelFolder, 
+            string repositoryUsername, string repositoryPassword)
         {
-            Repository.Clone(gitRepositoryLink, modelFolder);
+            CloneOptions co = new CloneOptions();
+            Credentials ca = new UsernamePasswordCredentials()
+            { Username = repositoryUsername, Password = repositoryPassword };
+            co.CredentialsProvider = (_url, _user, _cred) => ca;
+            Repository.Clone(gitRepositoryLink, modelFolder, co);
         }
-        public bool IsValidUrl(string url)
+        public bool IsValidUrl(string url, string gitUsername, string gitPassword)
         {
             try
             {
-                Repository.ListRemoteReferences(url);
+                var pushOptions = new PushOptions()
+                {
+                    CredentialsProvider = (_url, _user, _cred) => new UsernamePasswordCredentials
+                    {
+                        Username = gitUsername,
+                        Password = gitPassword
+                    }
+                };
+
+                Repository.ListRemoteReferences(url, pushOptions.CredentialsProvider);
                 return true;
             }
             catch { return false; }
