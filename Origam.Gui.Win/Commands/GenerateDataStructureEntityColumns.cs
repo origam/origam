@@ -49,8 +49,12 @@ namespace Origam.Gui.Win.Commands
 
             foreach(DataStructureColumn col in entity.Columns)
             {
-                col.IsDeleted = true;
-                col.Persist();
+                // delete only columns that will be added later again
+                if (col.Name == col.Field.Name)
+                {
+                    col.IsDeleted = true;
+                    col.Persist();
+                }
             }
 
             foreach(IDataEntityColumn column in entity.EntityDefinition.EntityColumns)
