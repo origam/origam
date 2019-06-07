@@ -34,6 +34,18 @@ namespace Origam.Security.Identity
         private readonly InternalPasswordHasherWithLegacySupport internalHasher =
             new InternalPasswordHasherWithLegacySupport();
 
+        public int IterationCount
+        {
+            get
+            {
+                return internalHasher.IterationCount;
+            }
+            set
+            {
+                internalHasher.IterationCount = value;
+            }
+        }
+
         public string HashPassword(string password)
         {
             return internalHasher.HashPassword(password);
