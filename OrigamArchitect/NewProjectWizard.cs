@@ -550,9 +550,9 @@ namespace OrigamArchitect
             }
             catch (Exception ex)
             {
-                this.RunWithInvoke(() => AsMessageBox.ShowError(null, 
-                    "When tried Load Templates from External Link Received Error: \n" + ex.Message,
-                    "External Repository Error", ex));
+                this.RunWithInvoke(() => MessageBox.Show(
+                    "Cant receive list of Repository: \n" + ex.Message,
+                    "Template Repository Error", MessageBoxButtons.OK, MessageBoxIcon.Error));
             }
             XmlParser.IsLoaded = true;
         }
@@ -603,7 +603,7 @@ namespace OrigamArchitect
 
             if (!TestTemplate())
             {
-                AsMessageBox.ShowError(this, "Cant i get data from Repository Link!", "Template", null);
+                AsMessageBox.ShowError(this, "Cant connect to Repository!", "Template", null);
                 e.Cancel = true;
                 return;
             }
