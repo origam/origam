@@ -119,6 +119,7 @@ namespace OrigamArchitect
 
         private void PageReview_Commit(object sender, WizardPageConfirmEventArgs e)
         {
+            pageReview.AllowNext = false;
             _builder.CreateTasks(_project);
             InitTaskList();
             WorkbenchSingleton.Workbench.Disconnect();
@@ -469,7 +470,6 @@ namespace OrigamArchitect
             {
                 chkIntegratedAuthentication.Enabled = false;
                 chkIntegratedAuthentication.Checked = false;
-                txtServerName.Width = txtDatabaseType.Width;
                 txtPort.Visible = true;
                 labelPort.Visible = true;
                 chkIntegratedAuthentication.Visible = false;
@@ -478,7 +478,6 @@ namespace OrigamArchitect
             else
             {
                 chkIntegratedAuthentication.Enabled = true;
-                txtServerName.Width = cboWebRoot.Width;
                 txtPort.Visible = false;
                 labelPort.Visible = false;
                 chkIntegratedAuthentication.Visible = true;

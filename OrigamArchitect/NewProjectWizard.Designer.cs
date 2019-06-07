@@ -840,7 +840,7 @@ namespace OrigamArchitect
             // labelPort
             // 
             this.labelPort.AutoSize = true;
-            this.labelPort.Location = new System.Drawing.Point(576, 134);
+            this.labelPort.Location = new System.Drawing.Point(420, 134);
             this.labelPort.Name = "labelPort";
             this.labelPort.Size = new System.Drawing.Size(29, 15);
             this.labelPort.TabIndex = 19;
@@ -849,7 +849,7 @@ namespace OrigamArchitect
             // 
             // txtPort
             // 
-            this.txtPort.Location = new System.Drawing.Point(620, 131);
+            this.txtPort.Location = new System.Drawing.Point(464, 131);
             this.txtPort.Name = "txtPort";
             this.txtPort.Size = new System.Drawing.Size(100, 23);
             this.txtPort.TabIndex = 18;
@@ -979,7 +979,7 @@ namespace OrigamArchitect
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtServerName.Location = new System.Drawing.Point(160, 131);
             this.txtServerName.Name = "txtServerName";
-            this.txtServerName.Size = new System.Drawing.Size(386, 23);
+            this.txtServerName.Size = new System.Drawing.Size(223, 23);
             this.txtServerName.TabIndex = 3;
             // 
             // lblServerName
