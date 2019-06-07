@@ -564,10 +564,7 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
-
-            ListView.SelectedListViewItemCollection selectedListView =
-                    listViewTemplate.SelectedItems;
-            foreach (ListViewItem item in selectedListView)
+            foreach (ListViewItem item in listViewTemplate.SelectedItems)
             {
                 WebGitData webGit = (WebGitData)item.Tag;
                 _project.GitRepositoryLink = webGit.RepositoryLink;
@@ -588,9 +585,7 @@ namespace OrigamArchitect
         private void ListViewTemplate_SelectedIndexChanged(object sender, EventArgs e)
         {
             MarkdownSharp.Markdown md = new MarkdownSharp.Markdown();
-            ListView.SelectedListViewItemCollection selectedListView =
-                     listViewTemplate.SelectedItems;
-            foreach (ListViewItem item in selectedListView)
+            foreach (ListViewItem item in listViewTemplate.SelectedItems)
             {
                 WebGitData webGit = (WebGitData)item.Tag;
                 wbReadmeText.DocumentText = md.Transform(webGit.Readme);
@@ -637,7 +632,7 @@ namespace OrigamArchitect
                 }
                 else
                 {
-                    url.Replace("://", "://" + credentials);
+                    url = url.Replace("://", "://" + credentials + "@");
                 }
             }
             return url;
