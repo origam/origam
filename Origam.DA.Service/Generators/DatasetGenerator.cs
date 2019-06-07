@@ -1468,6 +1468,19 @@ namespace Origam.DA.Service
 
 					break;
 
+                case "Round":
+                    expressionArg = item.GetChildByName("Expression").ChildItems[0];
+                    ISchemaItem precisionArg = item.GetChildByName("Precision").ChildItems[0];
+
+                    string expression = RenderExpression(expressionArg, entity);
+                    int precision = 0;
+                    if(! int.TryParse(RenderExpression(precisionArg, entity), out precision))
+                    {
+                        throw new Exception("Precision must be an integer.");
+                    }
+                    result = string.Format("CONVERT({0} * {1}, System.Int64) / {1}", expression, Math.Pow(10, precision));
+                    break;
+
 				default:
 					result = "dbo." + item.Name + "()";
 					break;

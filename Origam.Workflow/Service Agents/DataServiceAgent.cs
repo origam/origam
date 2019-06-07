@@ -673,7 +673,7 @@ namespace Origam.Workflow
 					}
 					else
 					{
-                        AbstractSqlCommandGenerator sqlGenerator =  (AbstractSqlCommandGenerator)_dataService;
+                        var sqlGenerator =  ((AbstractDataService)_dataService).DbDataAdapterFactory;
 						sqlGenerator.ResolveAllFilters = true;
 						foreach(DataStructureEntity entity in ds.Entities)
 						{
