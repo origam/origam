@@ -628,6 +628,15 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Expand All.
+        /// </summary>
+        internal static string ExpandAll {
+            get {
+                return ResourceManager.GetString("ExpandAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &amp;Export Model....
         /// </summary>
         internal static string ExportModel_MenuItem {

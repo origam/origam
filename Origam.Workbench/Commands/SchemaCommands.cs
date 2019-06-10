@@ -391,6 +391,40 @@ namespace Origam.Workbench.Commands
 
 	}
 
+
+    public class ExpandAllActiveSchemaItem : AbstractMenuCommand
+    {
+        WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+        public override bool IsEnabled
+        {
+            get
+            {
+                return _schema.ActiveNode is AbstractSchemaItem;
+            }
+            set
+            {
+                throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            }
+        }
+
+        public override void Run()
+        {
+            if(_schema.ActiveNode.HasChildNodes)
+            {
+                ExpressionBrowser schemaBrowser = _schema.SchemaBrowser.EbrSchemaBrowser;
+                schemaBrowser.ExpandAllChildNodes(_schema.ActiveNode);
+            }
+        }
+
+        public override void Dispose()
+        {
+            _schema = null;
+
+            base.Dispose();
+        }
+
+    }
+
     /// <summary>
     /// Edits a schema item in an editor. Schema item is passed as Owner.
     /// </summary>

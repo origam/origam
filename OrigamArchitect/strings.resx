@@ -732,4 +732,7 @@
   <data name="TemplateNotSelect" xml:space="preserve">
     <value>Please select Template or fill git repository</value>
   </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>Expand All</value>
+  </data>
 </root>

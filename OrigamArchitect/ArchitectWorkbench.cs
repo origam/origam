@@ -768,9 +768,12 @@ namespace OrigamArchitect
 			CreateMenuWithSubmenu(strings.ConvertTo_MenuItem, ImageRes.icon_convert_to, new SchemaItemConvertMenuBuilder(), _schemaMenu);
 			CreateMenuWithSubmenu(strings.MoveToPackage_MenuItem, ImageRes.icon_move_to_package, new ExtensionMenuBuilder(), _schemaMenu);
 				
-			_schemaMenu.SubItems.Add(CreateSeparator());	
-				
-			AsMenuCommand mnuEditSchemaItem = CreateMenuItem(strings.EditItem_MenuItem, 
+			_schemaMenu.SubItems.Add(CreateSeparator());
+
+            CreateMenuItem(strings.ExpandAll,
+                new ExpandAllActiveSchemaItem(), ImageRes.Arrow, Keys.None,
+                _schemaMenu);
+            AsMenuCommand mnuEditSchemaItem = CreateMenuItem(strings.EditItem_MenuItem, 
                 new EditActiveSchemaItem(), ImageRes.icon_edit_item, Keys.None, 
                 _schemaMenu);
 			AsMenuCommand mnuDelete = CreateMenuItem(strings.Delete_MenuItem, 

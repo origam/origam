@@ -412,9 +412,14 @@ namespace Origam.Workbench
             this.ResumeLayout(false);
 
 		}
-		#endregion
 
-		protected virtual void OnExpressionSelected(System.EventArgs e) 
+        internal void ExpandAllChildNodes(IBrowserNode browserNode)
+        {
+            LookUpNode(null, browserNode)?.ExpandAll(); 
+        }
+        #endregion
+
+        protected virtual void OnExpressionSelected(System.EventArgs e) 
 		{
 			//Invokes the delegates.
 			ExpressionSelected?.Invoke(this, e);

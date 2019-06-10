@@ -522,4 +522,7 @@
   <data name="TemplateNotSelect" xml:space="preserve">
     <value>Vyberte template nebo vložte link na git</value>
   </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>Rozbalit vše</value>
+  </data>
 </root>
