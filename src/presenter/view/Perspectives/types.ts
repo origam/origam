@@ -61,7 +61,7 @@ export type ICellTypeDU =
     type: "DateTimeCell";
     value: string;
     outputFormat: string;
-    inputFormat: string;
+    inputFormat: string | undefined;
     onChange(event: any, value: string): void;
   }
 

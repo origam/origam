@@ -9,6 +9,7 @@ import { IRecCursor } from "../../../../DataView/types/IRecCursor";
 import { IPropCursor } from "../../../../DataView/types/IPropCursor";
 import { makeCellVisibleById } from "../../../../DataView/TableView/TableViewActions";
 import { IApi } from "../../../../Api/IApi";
+import { inject } from "mobx-react";
 
 export class TableViewCells implements ICells {
   constructor(
@@ -74,7 +75,7 @@ export class TableViewCells implements ICells {
   }
 
   getColumnWidth(columnIdx: number): number {
-    return 100;
+    return 200;
   }
 
   getColumnRight(columnIdx: number): number {
@@ -119,6 +120,20 @@ export class TableViewCells implements ICells {
             isCellCursor:
               this.selRecIdx === rowIdx && this.selPropIdx === columnIdx
           };
+        case "Date":
+          return {
+            type: "DateTimeCell",
+            inputFormat: undefined,
+            outputFormat: property.formatterPattern,
+            value: value !== undefined && value !== null ? value : "",
+            onChange(event: any, value: string) {},
+            isLoading,
+            isInvalid: false,
+            isReadOnly: property.isReadOnly,
+            isRowCursor: this.selRecIdx === rowIdx,
+            isCellCursor:
+              this.selRecIdx === rowIdx && this.selPropIdx === columnIdx
+          };
         case "ComboBox":
           return {
             type: "DropdownCell",
@@ -137,7 +152,7 @@ export class TableViewCells implements ICells {
             Property: "",
             RowId: "",
             menuItemId: "",
-            api: null as unknown as any,
+            api: (null as unknown) as any,
             onTextChange(event: any, value: string) {},
             onItemSelect(event: any, value: string) {}
           };
@@ -180,5 +195,4 @@ export class TableViewCells implements ICells {
   get propCursor() {
     return unpack(this.P.propCursor);
   }
-
 }

@@ -146,7 +146,7 @@ class CalendarWidget extends React.Component<{
 @observer
 export class DateTimeEditor extends React.Component<{
   value: string;
-  inputFormat: string;
+  inputFormat: string | undefined;
   outputFormat: string;
   isReadOnly: boolean;
   isInvalid: boolean;

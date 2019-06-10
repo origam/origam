@@ -4,6 +4,7 @@ import { parseBoolean } from "../utils/xml";
 import { ILookupResolver } from "./Lookup/types/ILookupResolver";
 import { IApi } from "../Api/IApi";
 import { LookupResolver } from "./Lookup/LookupResolver";
+import { flf2mof } from "../utils/flashDateFormat";
 
 export function buildProperty(
   xmlObj: any,
@@ -27,6 +28,9 @@ export function buildProperty(
     parseBoolean(xmlObj.attributes.ReadOnly),
     xmlObj.attributes.Entity,
     xmlObj.attributes.Column,
+    xmlObj.attributes.FormatterPattern
+      ? flf2mof(xmlObj.attributes.FormatterPattern)
+      : "",
     dataIndex,
     dataSourceIndex,
     lookupResolver,
@@ -40,7 +44,8 @@ export class Property implements IProperty {
     public name: string,
     public isReadOnly: boolean,
     public entity: string,
-    public  column: string,
+    public column: string,
+    public formatterPattern: string,
     dataIndex: number,
     public dataSourceIndex: number,
     public lookupResolver: ILookupResolver | undefined,

@@ -5,6 +5,7 @@ export interface IProperty {
   name: string;
   column: string;
   entity: string;
+  formatterPattern: string;
   isReadOnly: boolean;
   dataIndex: number;
   dataSourceIndex: number;
