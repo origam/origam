@@ -21,7 +21,6 @@ import { IAFocusEditor } from "../../../../DataView/types/IAFocusEditor";
 import { IApi } from "../../../../Api/IApi";
 import { IDataViewMediator02 } from "../../../../DataView/DataViewMediator02";
 
-
 export class FormViewPresenter implements IFormView {
   constructor(
     public P: {
@@ -62,7 +61,7 @@ export class FormViewPresenter implements IFormView {
       ? this.dataTable.getRecordById(this.recCursor.selId)
       : undefined;
     const property = prop;
-    
+
     let value;
     let textualValue;
     let isLoading = false;
@@ -110,32 +109,48 @@ export class FormViewPresenter implements IFormView {
             isInvalid: false,
             isReadOnly: property.isReadOnly
           };
-          case "ComboBox":
-            return {
-              type: "DropdownCell",
-              value: value !== undefined && value !== null ? value : "",
-              textualValue:
-                textualValue !== undefined && textualValue !== null
-                  ? textualValue
-                  : "",
-              isLoading,
-              isInvalid: false,
-              isReadOnly: property.isReadOnly,
-              isFocused: true,
+        case "Date":
+          return {
+            type: "DateTimeCell",
+            outputFormat: "",
+            inputFormat: "",
+            value: value !== undefined && value !== null ? value : "",
+            onChange: (event: any, value: string) => {
+              this.form.setDirtyValue(property.id, value);
+            },
+            onKeyDown: this.handleKeyDown,
+            onClick: (event: any) => this.handleClick(event, property.id),
+            isFocused:
+              this.editing.isEditing && this.propCursor.selId === prop.id,
+            isLoading,
+            isInvalid: false,
+            isReadOnly: property.isReadOnly
+          };
+        case "ComboBox":
+          return {
+            type: "DropdownCell",
+            value: value !== undefined && value !== null ? value : "",
+            textualValue:
+              textualValue !== undefined && textualValue !== null
+                ? textualValue
+                : "",
+            isLoading,
+            isInvalid: false,
+            isReadOnly: property.isReadOnly,
+            isFocused: true,
 
-              ColumnNames: property.lookupColumns,
-              DataStructureEntityId: this.dataViewMediator
-                .dataStructureEntityId,
-              LookupId: property.lookupResolver!.lookupId,
-              menuItemId: this.dataViewMediator.menuItemId,
-              Property: property.id,
-              RowId: this.recCursor.selId!,
-              api: this.api,
-              onTextChange: (event: any, value: string) => {},
-              onItemSelect: (event: any, value: string) => {
-                this.form.setDirtyValue(property.id, value);
-              }
-            };          
+            ColumnNames: property.lookupColumns,
+            DataStructureEntityId: this.dataViewMediator.dataStructureEntityId,
+            LookupId: property.lookupResolver!.lookupId,
+            menuItemId: this.dataViewMediator.menuItemId,
+            Property: property.id,
+            RowId: this.recCursor.selId!,
+            api: this.api,
+            onTextChange: (event: any, value: string) => {},
+            onItemSelect: (event: any, value: string) => {
+              this.form.setDirtyValue(property.id, value);
+            }
+          };
       }
     }
     return {

@@ -62,6 +62,7 @@ export type ICellTypeDU =
     value: string;
     outputFormat: string;
     inputFormat: string;
+    onChange(event: any, value: string): void;
   }
 
   export interface IDropdownCell {

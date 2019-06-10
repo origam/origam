@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 // import App from "./presenter/react/App";
 import * as serviceWorker from "./serviceWorker";
 import "./presenter/react/styles/main.scss";
+import "react-tippy/dist/tippy.css";
 
 import { ApplicationScope } from "./factory/ApplicationScope";
 import { Application } from "./presenter/react/Application";
@@ -28,5 +29,3 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
-
-

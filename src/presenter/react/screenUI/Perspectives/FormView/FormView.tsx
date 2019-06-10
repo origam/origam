@@ -90,6 +90,7 @@ export class Editor extends React.Component<{
             isReadOnly={field.isReadOnly}
             isInvalid={field.isInvalid}
             isFocused={field.isFocused}
+            onChange={field.onChange}
           />
         );
       case "BoolCell":

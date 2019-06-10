@@ -67,6 +67,20 @@ export class TableViewField implements IFormField {
               isReadOnly: property.isReadOnly,
               isFocused: true
             };
+          case "Date":
+            return {
+              type: "DateTimeCell",
+              outputFormat: "",
+              inputFormat: "",
+              value: value !== undefined && value !== null ? value : "",
+              onChange: (event: any, value: string) => {
+                this.form.setDirtyValue(property.id, value);
+              },
+              isLoading,
+              isInvalid: false,
+              isReadOnly: property.isReadOnly,
+              isFocused: true
+            };
           case "ComboBox":
             return {
               type: "DropdownCell",
