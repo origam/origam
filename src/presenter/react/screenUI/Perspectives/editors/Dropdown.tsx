@@ -215,7 +215,13 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
 
   render() {
     return (
-      <div className="editor-container" ref={this.refContainer}>
+      <div
+        className="editor-container"
+        ref={this.refContainer}
+        style={{
+          zIndex: this.isDroppedDown ? 1000 : undefined
+        }}
+      >
         <input
           className="editor"
           type="text"

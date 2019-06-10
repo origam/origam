@@ -271,7 +271,13 @@ export class DateTimeEditor extends React.Component<{
 
   render() {
     return (
-      <div className="editor-container" ref={this.refContainer}>
+      <div
+        className="editor-container"
+        ref={this.refContainer}
+        style={{
+          zIndex: this.isDroppedDown ? 1000 : undefined
+        }}
+      >
         <Tooltip
           html={
             <div>
