@@ -112,8 +112,8 @@ export class FormViewPresenter implements IFormView {
         case "Date":
           return {
             type: "DateTimeCell",
-            outputFormat: "",
-            inputFormat: "",
+            outputFormat: property.formatterPattern,
+            inputFormat: undefined,
             value: value !== undefined && value !== null ? value : "",
             onChange: (event: any, value: string) => {
               this.form.setDirtyValue(property.id, value);

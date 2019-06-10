@@ -152,6 +152,7 @@ export class DateTimeEditor extends React.Component<{
   isInvalid: boolean;
   isFocused: boolean;
   onChange?: (event: any, isoDay: string) => void;
+  onClick?: (event: any) => void;
   refocuser?: (cb: () => void) => () => void;
 }> {
   @observable isDroppedDown = false;
@@ -228,13 +229,13 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @computed get formattedMomentValue() {
-    return this.momentValue.format("DD.MM.YYYY");
+    return this.momentValue.format(this.props.outputFormat);
   }
 
   @computed get textfieldValue() {
     return this.dirtyTextualValue !== undefined
       ? this.dirtyTextualValue
-      : this.momentValue.format("DD.MM.YYYY");
+      : this.formattedMomentValue;
   }
 
   @computed get isTooltipShown() {
@@ -247,8 +248,9 @@ export class DateTimeEditor extends React.Component<{
 
   @action.bound handleTextfieldChange(event: any) {
     this.dirtyTextualValue = event.target.value;
+    // TODO: Do not insist on spaces!?
     const dirtyMomentValue = [
-      moment(this.dirtyTextualValue, "DD.MM.YYYY", true),
+      moment(this.dirtyTextualValue, this.props.outputFormat, true),
       moment(this.dirtyTextualValue, "M")
     ].find(m => m.isValid());
     if (dirtyMomentValue) {
@@ -271,7 +273,12 @@ export class DateTimeEditor extends React.Component<{
     return (
       <div className="editor-container" ref={this.refContainer}>
         <Tooltip
-          title={this.formattedMomentValue}
+          html={
+            <div>
+              <div>{this.formattedMomentValue}</div>
+              <div>"{this.props.outputFormat}"</div>
+            </div>
+          }
           position="top"
           arrow={true}
           trigger="manual"
@@ -287,6 +294,7 @@ export class DateTimeEditor extends React.Component<{
             value={this.textfieldValue}
             readOnly={this.props.isReadOnly}
             onChange={this.handleTextfieldChange}
+            onClick={this.props.onClick}
           />
         </Tooltip>
         {this.props.isInvalid && (
