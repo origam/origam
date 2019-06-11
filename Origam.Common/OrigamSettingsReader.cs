@@ -27,20 +27,11 @@ using Origam.Extensions;
 
 namespace Origam
 {
-    public class OrigamSettingsReader
+    class OrigamSettingsReader
     {
-        private static string DefaultPathToOrigamSettings => 
+        private static string PathToOrigamSettings => 
             Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OrigamSettings.config");
-
-        private readonly string pathToOrigamSettings;
-
-        public OrigamSettingsReader(string pathToOrigamSettings = null)
-        {
-
-            this.pathToOrigamSettings = pathToOrigamSettings 
-                                        ?? DefaultPathToOrigamSettings;
-        }
-
+        
         public OrigamSettingsCollection GetAll()
         {
             XmlReader reader=null;
@@ -79,7 +70,7 @@ namespace Origam
         private XmlNode GetNodeByPath(string pathToNode)
         {
             XmlDocument document = new XmlDocument();
-            document.Load(pathToOrigamSettings);
+            document.Load(PathToOrigamSettings);
 
             var arrayOfOrigamSettingsNode = document.SelectSingleNode(
                 pathToNode);
@@ -124,7 +115,7 @@ namespace Origam
                 ser.Serialize(writer, configuration.ToList<OrigamSettings>().ToArray());
             }
             xmlSerializerNode.InnerXml = xmlDocument.InnerXml;
-            document.Save(pathToOrigamSettings);
+            document.Save(PathToOrigamSettings);
         }
     }
 }

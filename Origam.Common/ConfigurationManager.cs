@@ -44,7 +44,7 @@ namespace Origam
 			return new OrigamSettingsReader().GetAll();
 		}
 
-		public static void WriteConfiguration(string name, OrigamSettingsCollection configuration)
+		public static void WriteConfiguration(OrigamSettingsCollection configuration)
 		{
 			// do some sanity check
 			SortedList list = new SortedList();

@@ -212,7 +212,7 @@ namespace Origam.Workbench
 				settings.Add(setting);
 			}
 
-			ConfigurationManager.WriteConfiguration("OrigamSettings", settings);
+			ConfigurationManager.WriteConfiguration(settings);
 		}
 
 		private ListViewItem NewItem()

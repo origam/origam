@@ -85,7 +85,7 @@ namespace Origam.ProjectAutomation
 
         public static void SaveSettings(OrigamSettingsCollection settings)
         {
-            ConfigurationManager.WriteConfiguration("OrigamSettings", settings);
+            ConfigurationManager.WriteConfiguration(settings);
         }
     }
 }
