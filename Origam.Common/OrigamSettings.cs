@@ -23,6 +23,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Xml.Serialization;
 
 namespace Origam
 {
@@ -31,11 +32,11 @@ namespace Origam
 	/// </summary>
 	public class OrigamSettings : ICloneable
 	{
-        public string BaseFolder { get; set; }
+		[XmlIgnore]
+        public string BaseFolder { get; } = AppContext.BaseDirectory;
 
         public OrigamSettings()
         {
-            this.BaseFolder = System.AppContext.BaseDirectory;
         }
 
         public OrigamSettings(string baseFolder)

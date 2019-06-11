@@ -41,15 +41,7 @@ namespace Origam
 
 		public static OrigamSettingsCollection GetAllConfigurations()
 		{
-			var settingsCollection = 
-				new OrigamSettingsReader().GetAll();
-
-			if(settingsCollection.Count == 1)
-			{
-				settingsCollection[0].BaseFolder = AppDomain.CurrentDomain.BaseDirectory;
-				WriteConfiguration("OrigamSettings", settingsCollection);
-			}
-			return settingsCollection;
+			return new OrigamSettingsReader().GetAll();
 		}
 
 		public static void WriteConfiguration(string name, OrigamSettingsCollection configuration)
