@@ -48,6 +48,12 @@ namespace Origam
             }
         }
 
+        public static Image Resize(Image image, int width)
+        {
+            if (image.Width == width) return image;
+            return Resize(image, width, width, true);
+        }
+
         private static byte[] ResizeBytes(Image img, int width, int height
             , bool keepAspectRatio
             , System.Drawing.Imaging.ImageFormat outFormat)

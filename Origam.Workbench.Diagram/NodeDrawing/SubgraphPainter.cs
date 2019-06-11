@@ -50,8 +50,6 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                 (int)node.BoundingBox.Height);
 
             Graphics editorGraphics = (Graphics)graphicsObj;
-            NodeImages images = painter.GetImages(node);
-            var image = images.Primary;
 
             var labelWidth = painter.GetLabelWidth(node);
 
@@ -63,7 +61,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             Rectangle border = new Rectangle(borderCorner, borderSize);
 
             var labelPoint = new PointF(
-                (float)(centerX - labelWidth / 2 + painter.ImageLeftMargin + images.Primary.Width + painter.ImageRightMargin),
+                (float)(centerX - labelWidth / 2 + painter.ImageLeftMargin +  nodeData.PrimaryImage.Width + painter.ImageRightMargin),
                 (float)centerY - border.Height / 2.0f + painter.LabelTopMargin);
 
             var imagePoint = new PointF(
@@ -75,7 +73,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                 new Size(border.Width, painter.HeadingBackgroundHeight));
             
             var secondaryImagePoint = new PointF(
-                imagePoint.X - images.Secondary?.Width ?? 0 - imageGap, 
+                imagePoint.X - nodeData.SecondaryImage?.Width ?? 0 - imageGap, 
                 imagePoint.Y);
 
             var (emptyMessagePoint, emptyGraphMessage) = GetEmptyNodeMessage(node);
@@ -92,10 +90,10 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                             painter.BlackBrush, emptyMessagePoint, painter.DrawFormat);
                     }
                     graphics.DrawRectangle(painter.GetActiveBorderPen(node), border);
-                    graphics.DrawImage(image, imagePoint);
-                    if (images.Secondary != null)
+                    graphics.DrawImage(nodeData.PrimaryImage, imagePoint);
+                    if (nodeData.SecondaryImage != null)
                     {
-                        graphics.DrawImage(images.Secondary, secondaryImagePoint);
+                        graphics.DrawImage(nodeData.SecondaryImage, secondaryImagePoint);
                     }
                 },
                 yAxisCoordinate: (float)node.GeometryNode.Center.Y);

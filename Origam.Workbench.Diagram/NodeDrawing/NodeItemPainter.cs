@@ -27,7 +27,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         {
             INodeData nodeData = (INodeData) node.UserData;
             Graphics editorGraphics = (Graphics) graphicsObj;
-            var image = painter.GetImages(node).Primary;
+            var image =  nodeData.PrimaryImage;
             
             SizeF stringSize =
                 editorGraphics.MeasureString(node.LabelText, painter.Font);
@@ -38,16 +38,19 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                 (int) node.GeometryNode.Center.Y - borderSize.Height / 2);
             Rectangle border = new Rectangle(borderCorner, borderSize);
 
+            int labelOffsetDueToImageWidth = image == null 
+                ? 0 
+                : painter.NodeHeaderHeight;
             var labelPoint = new PointF(
                 (float) node.GeometryNode.Center.X - (float) border.Width / 2 +
-                painter.NodeHeaderHeight +  nodeData.LeftMargin,
+                labelOffsetDueToImageWidth +  nodeData.LeftMargin,
                 (float) node.GeometryNode.Center.Y -
                 (int) stringSize.Height / 2);
 
             var imageHorizontalBorder =
-                (painter.NodeHeaderHeight - image.Width) / 2;
+                (painter.NodeHeaderHeight - image?.Width ?? 0) / 2;
             var imageVerticalBorder =
-                (painter.NodeHeaderHeight - image.Height) / 2;
+                (painter.NodeHeaderHeight - image?.Height?? 0) / 2;
             var imagePoint = new PointF(
                 (float) (node.GeometryNode.Center.X - (float) border.Width / 2 +
                          imageHorizontalBorder) +  nodeData.LeftMargin,
@@ -59,7 +62,10 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                     graphics.DrawString(node.LabelText, painter.Font,
                         painter.GetTextBrush(nodeData.IsFromActivePackage),
                         labelPoint, painter.DrawFormat);
-                    graphics.DrawImage(image, imagePoint);
+                    if (image != null)
+                    {
+                        graphics.DrawImage(image, imagePoint);
+                    }
                     if (Equals(painter.NodeSelector.Selected, node))
                     {
                         graphics.DrawRectangle(painter.GetActiveBorderPen(node), border);

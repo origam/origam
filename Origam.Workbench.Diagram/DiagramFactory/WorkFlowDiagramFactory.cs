@@ -29,6 +29,8 @@ using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Layout.Layered;
 using MoreLinq.Extensions;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
+using Origam.Schema.MenuModel;
 using Origam.Workbench.Diagram.DiagramFactory;
 using Origam.Workbench.Diagram.Graphs;
 using Origam.Workbench.Diagram.NodeDrawing;
@@ -40,6 +42,7 @@ namespace Origam.Workbench.Diagram
 {
 	public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGraph>
 	{
+		private readonly WorkbenchSchemaService schemaService;
 		private List<string> expandedSubgraphNodeIds = new List<string>();
 		private WorkFlowGraph graph;
 		private readonly NodeFactory nodeFactory;
@@ -47,6 +50,7 @@ namespace Origam.Workbench.Diagram
 		public WorkFlowDiagramFactory(INodeSelector nodeSelector,
 			GViewer gViewer, WorkbenchSchemaService schemaService)
 		{
+			this.schemaService = schemaService;
 			nodeFactory = new NodeFactory(nodeSelector, gViewer, schemaService);
 		}
 
@@ -86,6 +90,7 @@ namespace Origam.Workbench.Diagram
             {
 	            AddNodeItems(step, subgraphNode);
             }
+			AddActionNodes(step, subgraphNode);
 
             subgraphNode.LayoutSettings = new SugiyamaLayoutSettings
             {
@@ -96,6 +101,28 @@ namespace Origam.Workbench.Diagram
             };
 
             return subgraphNode;
+		}
+
+		private void AddActionNodes(IWorkflowStep step, Subgraph subgraphNode)
+		{
+			if (!(step is UIFormTask formTask)) return;
+			
+			foreach (DataStructureEntity entity in formTask.Screen.DataStructure
+				.Entities)
+			{
+				var actions = entity.Entity.ChildItems
+					.ToGeneric()
+					.OfType<EntityMenuAction>()
+					.ToArray();
+				if (actions.Length == 0) continue;
+				var actionSubgraph = nodeFactory.AddActionSubgraph(subgraphNode, entity);
+				foreach (var action in actions)
+				{
+					nodeFactory.AddActionNode(actionSubgraph, action);
+				}
+			} 
+			
+			AddNodeItem(subgraphNode, new NodeItemLabel("", 5));
 		}
 
 		private void AddNodeItems(IWorkflowStep step, Subgraph subgraphNode)
@@ -115,9 +142,16 @@ namespace Origam.Workbench.Diagram
 				});
 		}
 
-		private void AddNodeItem(AbstractSchemaItem item, Subgraph subGraph, int leftMargin)
+		private void AddNodeItem(ISchemaItem item, Subgraph subGraph, int leftMargin)
 		{
-			Node node = nodeFactory.AddNodeItem(graph, item, leftMargin);
+			var nodeData = new NodeItemData(item, leftMargin, schemaService);
+			Node node = nodeFactory.AddNodeItem(graph, nodeData);
+			subGraph.AddNode(node);
+		}
+		
+		private void AddNodeItem(Subgraph subGraph, INodeData nodeData)
+		{
+			Node node = nodeFactory.AddNodeItem(graph, nodeData);
 			subGraph.AddNode(node);
 		}
 

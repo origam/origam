@@ -9,12 +9,14 @@ using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Gui.Win.Commands;
 using Origam.Schema;
+using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
 using Origam.UI;
 using Origam.Workbench.BaseComponents;
 using Origam.Workbench.Commands;
 using Origam.Workbench.Diagram.Extensions;
 using Origam.Workbench.Diagram.Graphs;
+using Origam.Workbench.Diagram.NodeDrawing;
 using Origam.Workbench.Services;
 
 namespace Origam.Workbench.Diagram.InternalEditor
@@ -523,6 +525,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			var schemaItemUnderMouse = RetrieveItem(dNodeUnderMouse.Node);
 			var contextMenu = new AsContextMenu(WorkbenchSingleton.Workbench);
 
+			if (schemaItemUnderMouse is EntityMenuAction) return contextMenu;
+			
 			var deleteMenuItem = new ToolStripMenuItem();
 			deleteMenuItem.Text = "Delete";
 			deleteMenuItem.Image = ImageRes.icon_delete;
