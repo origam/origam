@@ -27,6 +27,7 @@ namespace Origam.ProjectAutomation
     public class FileModelInitBuilder:AbstractBuilder
     {
         public override string Name => "Initialize model";
+        private SchemaService schema = null;
         public override void Execute(Project project)
         {
             OrigamEngine.OrigamEngine.InitializeRuntimeServices();
@@ -40,7 +41,7 @@ namespace Origam.ProjectAutomation
         }
         private void LoadBaseSchema(Project project)
         {
-            SchemaService schema =
+            schema =
                 ServiceManager.Services.GetService<SchemaService>();
             try
             {
@@ -67,7 +68,8 @@ namespace Origam.ProjectAutomation
         }
 
         public override void Rollback()
-        { 
+        {
+            schema.UnloadSchema();
             OrigamEngine.OrigamEngine.UnloadConnectedServices();
         }
     }
