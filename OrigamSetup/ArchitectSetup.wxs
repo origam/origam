@@ -287,6 +287,12 @@
                         <Component Id="SYSTEM.DRAWING.COMMON.DLL" DiskId="1" Guid="27543D00-30E5-44D7-958C-51D7EF1E923F">
                             <File Id="SYSTEM.DRAWING.COMMON.DLL" Name="System.Drawing.Common.dll" Source="source\System.Drawing.Common.dll" />
                         </Component>
+						<Component Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL" DiskId="1" Guid="C292EE1F-205C-4A5A-BAAE-1EBE2E1EFCB9">
+                            <File Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL" Name="System.Threading.Tasks.Extensions.dll" Source="source\System.Threading.Tasks.Extensions.dll" />
+                        </Component>
+						<Component Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL" DiskId="1" Guid="056DD22D-45F2-4C6A-9475-9AF8BCA8C6C6">
+                            <File Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL" Name="System.Runtime.CompilerServices.Unsafe.dll" Source="source\System.Runtime.CompilerServices.Unsafe.dll" />
+                        </Component>
 						<Directory Id="lib" Name="lib">
 							<Directory Id="win32" Name="win32">
 								<Directory Id="dir_x64" Name="x64">
@@ -1356,6 +1362,12 @@
                                         <Component Id="ORIGAM_UTILS.EXE" DiskId="1" Guid="CF8D2ED7-4B3A-485C-BBF4-A6CDA926754B">
                                             <File Id="ORIGAM_UTILS.EXE" Name="origam-utils.exe" Source="server_source\bin\origam-utils.exe" />
                                         </Component>
+										<Component Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" DiskId="1" Guid="E42358D4-5F5F-4A15-B58B-94CD19CE2DEB">
+											<File Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" Name="System.Threading.Tasks.Extensions.dll" Source="server_source\bin\System.Threading.Tasks.Extensions.dll" />
+										</Component>
+										<Component Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL_1" DiskId="1" Guid="44625F93-F704-437A-A325-1629D22F6B4C">
+											<File Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL_1" Name="System.Runtime.CompilerServices.Unsafe.dll" Source="server_source\bin\System.Runtime.CompilerServices.Unsafe.dll" />
+										</Component>
                                         <Directory Id="CS_CZ_1" Name="cs-CZ">
                                             <Component Id="ORIGAM.ORIGAMENGINE.RESOURCES.DLL_2" DiskId="1" Guid="4328F83B-3CE3-468A-977E-426009041911">
                                                 <File Id="ORIGAM.ORIGAMENGINE.RESOURCES.DLL_2" Name="Origam.OrigamEngine.resources.dll" Source="server_source\bin\cs-CZ\Origam.OrigamEngine.resources.dll" />
@@ -2117,6 +2129,10 @@
             <ComponentRef Id="SYSTEM.VALUETUPLE.DLL" />
             <ComponentRef Id="SYSTEM.VALUETUPLE.DLL_1" />
             <ComponentRef Id="ORIGAM_UTILS.EXE" />
+			<ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL" />
+			<ComponentRef Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL" />
+			<ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL_1" />
+			<ComponentRef Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" />
         </Feature>
         <UI>
             <Property Id="DefaultUIFont">DlgFont8</Property>
