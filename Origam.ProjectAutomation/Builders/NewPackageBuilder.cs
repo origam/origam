@@ -53,6 +53,7 @@ namespace Origam.ProjectAutomation
                 default:
                     throw new Exception("Bad TypeTemplate " + project.TypeTemplate.ToString());
             }
+            schema.UnloadSchema();
         }
 
         public override void Rollback()

@@ -233,6 +233,9 @@
                         <Component Id="ORIGAM.BI.SSRS.DLL_1" DiskId="1" Guid="05BB999F-98D9-4C02-A2E6-8A58AAC0CB37">
                             <File Id="ORIGAM.BI.SSRS.DLL_1" Name="Origam.BI.SSRS.dll" Source="source\Origam.BI.SSRS.dll" />
                         </Component>
+						<Component Id="MARKDOWNSHARP.DLL_1" DiskId="1" Guid="AE6C48BC-6B39-41BA-ABA1-C44566CA901C">
+                            <File Id="MARKDOWNSHARP.DLL_1" Name="MarkdownSharp.dll" Source="source\MarkdownSharp.dll" />
+                        </Component>
                         <!--<Component Id="ORIGAM.BI.SSRS.XMLSERIALIZERS.DLL_1" DiskId="1" Guid="76818191-9EF0-443B-BEA2-6C3FEF0B7986">
                             <File Id="ORIGAM.BI.SSRS.XMLSERIALIZERS.DLL_1" Name="Origam.BI.SSRS.XmlSerializers.dll" Source="source\Origam.BI.SSRS.XmlSerializers.dll" />
                         </Component>-->
@@ -1960,6 +1963,7 @@
             <ComponentRef Id="LDAPMEMBERSHIPPROVIDER.DLL" />
             <ComponentRef Id="LOG4NET.DLL_1" />
             <ComponentRef Id="MARKDOWNSHARP.DLL" />
+			<ComponentRef Id="MARKDOWNSHARP.DLL_1" />
             <ComponentRef Id="MICROSOFT.ASPNET.IDENTITY.CORE.DLL" />
             <ComponentRef Id="MICROSOFT.ASPNET.IDENTITY.OWIN.DLL" />
             <ComponentRef Id="MICROSOFT.OFFICE.INTEROP.EXCEL.DLL_1" />
