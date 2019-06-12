@@ -247,8 +247,7 @@ export class DataViewMachine implements IDataViewMachine {
           console.log(" *** Controlling value for children changed");
           if (
             this.isRoot &&
-            this.P.isSessionedScreen &&
-            oldControllingValueForChildren !== undefined
+            this.P.isSessionedScreen 
           ) {
             this.send("SESSION_MASTER_CHANGED");
           } else {
