@@ -15,6 +15,7 @@ export interface IDataViewMachine {
   controllingValueForChildren: string | undefined;
   controlledFieldId: string;
   controllingFieldId: string;
+  masterId: string | undefined;
   treeDispatch(message: any): void;
   descendantsDispatch(message: any): void;
   addChild(child: IDataViewMachine): void;

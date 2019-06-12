@@ -100,7 +100,7 @@ export class DataViewMachine implements IDataViewMachine {
     {
       services: {
         loadFresh: (ctx, event) => (send, onEvent) => {
-          if (this.P.isSessionedScreen) {
+          if (this.P.isSessionedScreen && !this.isRoot) {
             console.log(
               "DataView machine will load data from session:",
               this.P.sessionId
@@ -108,9 +108,9 @@ export class DataViewMachine implements IDataViewMachine {
             this.api
               .getSessionEntity({
                 sessionFormIdentifier: this.P.sessionId,
-                rootRecordId: "",
-                childEntity: "",
-                parentRecordId: ""
+                rootRecordId: this.rootMasterId!,
+                childEntity: this.dataStructureEntityId,
+                parentRecordId: this.controlledValueFromParent!
               })
               .then(
                 action(resp => {
@@ -308,6 +308,10 @@ export class DataViewMachine implements IDataViewMachine {
 
   get masterId() {
     return this.root.controllingValueForChildren;
+  }
+
+  get rootMasterId() {
+    return this.root && this.root.masterId;
   }
 
   get root(): IDataViewMachine {
