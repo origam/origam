@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2019 Advantage Solutions, s. r. o.
@@ -115,7 +116,7 @@ namespace Origam.Server
         {
             if (runsOnCore)
             {
-                LoadDataCore();
+                PrepareDataCore();
             }
             else
             {
@@ -123,16 +124,11 @@ namespace Origam.Server
             }
         }
 
-        private void LoadDataCore()
+        private void PrepareDataCore()
         {
-            if (Request.InitializeStructure)
-            {
-                var data = InitializeFullStructure();
-                SetDataSource(data);
-            }
-            else{
-                SetDelayedLoadingParameter(_menuItem.Method);
-            }
+            var data = InitializeFullStructure();
+            SetDataSource(data);
+            SetDelayedLoadingParameter(_menuItem.Method);
         }
 
         private void LoadDataFxServer()
@@ -445,7 +441,7 @@ namespace Origam.Server
                 DataRow row = GetSessionRow(entity, id);
 
                 // for new rows we don't even try to load the data from the database
-                if (row.RowState != DataRowState.Added)
+                if (row == null || row.RowState != DataRowState.Added)
                 {
                     if (!ignoreDirtyState && this.Data.HasChanges())
                     {

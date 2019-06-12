@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -54,7 +55,7 @@ namespace Origam.ServerCoreTests
             var actionResult = sut.New(new NewSessionData
             {
                 MenuId = new Guid("f38fdadb-4bba-4bb7-8184-c9109d5d40cd"),
-                InitializeStructure = true
+                Parameters = new Dictionary<string, string>()
             });
 
             Assert.IsInstanceOf<OkObjectResult>(actionResult); // OkObjectResult means code 200 will be returned

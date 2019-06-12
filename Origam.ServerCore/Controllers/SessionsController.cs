@@ -65,7 +65,6 @@ namespace Origam.ServerCore.Controllers
                 Guid newSessionId = Guid.NewGuid();
                 UIRequest uiRequest = new UIRequest
                 {
-                    InitializeStructure = sessionData.InitializeStructure,
                     FormSessionId = newSessionId.ToString(),
                     ObjectId = sessionData.MenuId.ToString(),
                     Parameters = sessionData.Parameters

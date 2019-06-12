@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2019 Advantage Solutions, s. r. o.
@@ -88,10 +89,7 @@ namespace Origam.Server
         public int DialogHeight { get; set; }
 
         public bool IsModalDialog { get; set; } = false;
-
-        public bool InitializeStructure { get; set; }
-
-
+        
         public QueryParameterCollection QueryParameters
         {
             get
