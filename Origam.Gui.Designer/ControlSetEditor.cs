@@ -25,6 +25,7 @@ using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing;
 using System.Data;
+using System.Linq;
 using System.Windows.Forms;
 using Origam.Services;
 using Origam.UI;
@@ -37,7 +38,9 @@ using Origam.Schema.GuiModel;
 using Origam.Gui.Win;
 using Origam.Schema.EntityModel;
 using System.Reflection;
+using MoreLinq;
 using Origam.Extensions;
+using Origam.Gui.Designer.Extensions;
 
 namespace Origam.Gui.Designer
 {
@@ -99,7 +102,6 @@ namespace Origam.Gui.Designer
 
 		public ControlSetEditor()
 		{
-		   
 			//
 			// Required for Windows Form Designer support
 			//
@@ -131,7 +133,6 @@ namespace Origam.Gui.Designer
 
 			//_filter = new KeystrokeMessageFilter(_host);
 			//Application.AddMessageFilter(_filter);
-
 			this.BackColor = OrigamColorScheme.FormBackgroundColor;
 		}
 
@@ -1201,6 +1202,9 @@ namespace Origam.Gui.Designer
 			InitDesignerServices();
 			ReflectChanges = true;
 			ControlProperties(_form, true);
+			
+			
+			
 		}
 
 		#region Overrides
@@ -1680,9 +1684,17 @@ namespace Origam.Gui.Designer
 			{
 				throw new ArgumentException("Unsupported Type to Edit(" + ModelContent.GetType().ToString() + ")","Content");
 			}
+
+			this.GetAllControls()
+				.OfType<ICanCangeOnPaint>()
+				.ForEach(variableControl =>
+			{
+				variableControl.ModificationStarts +=(o, args) => ReflectChanges = false;
+				variableControl.ModificationEnds += (o, args) =>  ReflectChanges = true;
+			});
 		}
 
-        private void InitNewItemEditor()
+		private void InitNewItemEditor()
         {
             _rootControl.ControlItem = _panelControlItemRef;
             if (_rootControl.ChildItems.Count == 0)

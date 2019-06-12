@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 /*
 
 	Windows Forms Collapsible Splitter Control for .Net
@@ -94,7 +95,7 @@ namespace Origam.Gui.Win
 	/// </summary>
 	[ToolboxBitmap(typeof(CollapsibleSplitter))]
 	[DesignerAttribute(typeof(CollapsibleSplitterDesigner))]
-	public class CollapsibleSplitter : System.Windows.Forms.Splitter
+	public class CollapsibleSplitter : System.Windows.Forms.Splitter, ICanCangeOnPaint
 	{
 		#region Private Properties
 
@@ -591,6 +592,7 @@ namespace Origam.Gui.Win
 		// OnPaint is now an override rather than an event in version 1.1
 		protected override void OnPaint(PaintEventArgs e)
 		{
+			ModificationStarts?.Invoke(this, EventArgs.Empty);
 			int width = (this.Enabled ? 8 : 1);
 
 			// create a Graphics object
@@ -848,6 +850,7 @@ namespace Origam.Gui.Win
 
 			// dispose the Graphics object
 			g.Dispose();
+			ModificationEnds?.Invoke(this, EventArgs.Empty);
 		}
 		#endregion	
 
@@ -941,6 +944,9 @@ namespace Origam.Gui.Win
 		#endregion
 
 		#endregion
+
+		public event EventHandler ModificationStarts;
+		public event EventHandler ModificationEnds;
 	}
 
 	/// <summary>
@@ -959,6 +965,12 @@ namespace Origam.Gui.Win
 			properties.Remove("BorderStyle");
 			properties.Remove("Size");
 		}
+	}
+
+	public interface ICanCangeOnPaint
+	{
+		event EventHandler ModificationStarts;
+		event EventHandler ModificationEnds;
 	}
 }
 
