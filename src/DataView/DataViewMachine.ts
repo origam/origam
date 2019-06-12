@@ -123,7 +123,7 @@ export class DataViewMachine implements IDataViewMachine {
               .getSessionEntity({
                 sessionFormIdentifier: this.P.sessionId,
                 rootRecordId: this.rootMasterId!,
-                childEntity: this.dataStructureEntityId,
+                childEntity: this.dataSource.id,
                 parentRecordId: this.controlledValueFromParent!
               })
               .then(
