@@ -142,6 +142,20 @@ export class OrigamAPI implements IApi {
     // TODO
   }
 
+  async sessionChangeMasterRecord(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    RowId: string;
+  }) {
+    return (await axios.post(
+      `${this.urlPrefix}/Sessions/ChangeMasterRecord`,
+      data,
+      {
+        headers: this.httpAuthHeader
+      }
+    )).data;
+  }
+
   async deleteSessionEntity() {}
 
   async createSessionEntity() {}

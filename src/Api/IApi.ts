@@ -48,13 +48,18 @@ export interface IApi {
     InitializeStructure: boolean;
   }): Promise<any>;
 
+  sessionChangeMasterRecord(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    RowId: string;
+  }): Promise<any>;
+
   getSessionEntity(data: {
     sessionFormIdentifier: string;
     childEntity: string;
     parentRecordId: string;
     rootRecordId: string;
   }): Promise<any>;
-
 
   getLookupListEx(data: {
     DataStructureEntityId: string;

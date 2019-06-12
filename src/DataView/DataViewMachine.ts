@@ -1,4 +1,11 @@
-import { action, computed, observable, reaction, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  reaction,
+  runInAction,
+  comparer
+} from "mobx";
 import { interpret, Machine, State } from "xstate";
 import { Interpreter } from "xstate/lib/interpreter";
 import { IApi } from "../Api/IApi";
@@ -61,6 +68,7 @@ export class DataViewMachine implements IDataViewMachine {
               target: "LOAD_FRESH",
               cond: "loadingAllowed"
             },
+            SESSION_MASTER_CHANGED: "SESSION_CHANGE_MASTER",
             [DataViewActions.LOAD_INCREMENT]: "LOAD_INCREMENT",
             [DataViewActions.REQUEST_SAVE_DATA]: "SAVE_DIRTY_DATA",
             [DataViewActions.REQUEST_CREATE_ROW]: "CREATE_NEW_RECORD"
@@ -75,6 +83,12 @@ export class DataViewMachine implements IDataViewMachine {
             DONE: "IDLE"
           },
           invoke: { src: "loadFresh" }
+        },
+        SESSION_CHANGE_MASTER: {
+          on: {
+            DONE: "LOAD_FRESH"
+          },
+          invoke: { src: "sessionChangeMaster" }
         },
         LOAD_INCREMENT: {
           on: {
@@ -115,6 +129,7 @@ export class DataViewMachine implements IDataViewMachine {
               .then(
                 action(resp => {
                   console.log("Received:", resp);
+                  send("DONE");
                 })
               );
           } else {
@@ -137,6 +152,21 @@ export class DataViewMachine implements IDataViewMachine {
                 })
               );
           }
+        },
+        sessionChangeMaster: (ctx, event) => (send, onEvent) => {
+          
+          this.api
+            .sessionChangeMasterRecord({
+              SessionFormIdentifier: this.P.sessionId,
+               Entity: this.dataSource.id,
+              // Entity: this.dataStructureEntityId!,
+              RowId: this.controllingValueForChildren
+            })
+            .then(
+              action(() => {
+                send("DONE");
+              })
+            );
         },
         saveDirtyData: (ctx, event) => async (send, onEvent) => {
           console.log(
@@ -209,12 +239,22 @@ export class DataViewMachine implements IDataViewMachine {
   }
 
   @action.bound start() {
+    let oldControllingValueForChildren = this.controllingValueForChildren;
     this.disposers.push(
       reaction(
-        () => this.controlledValueFromParent,
+        () => this.controllingValueForChildren,
         () => {
-          console.log(" *** Controlled value from parent changed");
-          this.treeDispatch(DataViewActions.loadFresh());
+          console.log(" *** Controlling value for children changed");
+          if (
+            this.isRoot &&
+            this.P.isSessionedScreen &&
+            oldControllingValueForChildren !== undefined
+          ) {
+            this.send("SESSION_MASTER_CHANGED");
+          } else {
+            this.descendantsDispatch(DataViewActions.loadFresh());
+          }
+          oldControllingValueForChildren = this.controllingValueForChildren;
         }
       ),
       reaction(

@@ -407,7 +407,12 @@
           <UIElement Id="TabPage0_3" ModelInstanceId="8573aa69-63da-40e5-bdd4-74beed40bc4c" xsi:type="UIElement" Type="Box" Name="Doklady" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
             <Configuration />
             <UIChildren>
-              <UIElement Id="AsPanel1_4" ModelInstanceId="b1a69647-fed9-4632-9922-62484238a269" Name="Smlouva/objednávka" xsi:type="Grid" Type="Grid" ModelId="d2aaaaf2-7f9b-471c-8676-4bd0cd9cd1b1" DefaultPanelView="0" IsHeadless="false" DisableActionButtons="false" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="Document" DataMember="Document" IsRootGrid="true" IsRootEntity="true" IsPreloaded="true" RequestDataAfterSelectionChange="true" ConfirmSelectionChange="true">
+              <UIElement Id="AsPanel1_4" ModelInstanceId="b1a69647-fed9-4632-9922-62484238a269" Name="Smlouva/objednávka" xsi:type="Grid" 
+              Type="Grid" ModelId="d2aaaaf2-7f9b-471c-8676-4bd0cd9cd1b1" DefaultPanelView="0" IsHeadless="false" 
+              DisableActionButtons="false" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" 
+              IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="Document" 
+              DataMember="Document" IsRootGrid="true" IsRootEntity="true" IsPreloaded="true" RequestDataAfterSelectionChange="true" 
+              ConfirmSelectionChange="true">
                 <Properties>
                   <Property Id="Id" Name="Id" Entity="String" Column="Text" />
                   <Property Id="refDocumentSubtypeId" ModelInstanceId="6fad614c-7c10-4224-9868-ede85c9a19d5" Name="Druh" ReadOnly="false" X="135" Y="27" Width="126" Height="19" CaptionLength="120" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="0c976d00-0bdb-407b-9659-6b43d93bd1bd" Identifier="Id" IdentifierIndex="1" EntityName="0c976d00_0bdb_407b_9659_6b43d93bd1bd" IsTree="false" AllowReturnToForm="false" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="false">
