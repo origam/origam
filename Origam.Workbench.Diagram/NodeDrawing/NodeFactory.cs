@@ -1,14 +1,10 @@
 using System.Drawing;
-using System.Linq;
-using System.Net.Mime;
 using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Layout.Layered;
 using Origam.Extensions;
-using Origam.Gui.UI;
 using Origam.Schema;
-using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
@@ -247,7 +243,8 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             }
         }
         public ISchemaItem SchemaItem { get; }
-        public string Text => SchemaItem.Name;
+        public string Text { get; }
+
         public bool IsFromActivePackage =>
             SchemaItem.SchemaExtension.Id == schemaService.ActiveSchemaExtensionId;
         public string Id => SchemaItem.Id.ToString();
@@ -257,6 +254,14 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         {
             this.schemaService = schemaService;
             SchemaItem = schemaItem;
+            Text = SchemaItem.Name;
+        }
+        
+        public NodeData(EntityUIAction action, WorkbenchSchemaService schemaService)
+        {
+            this.schemaService = schemaService;
+            SchemaItem = action;
+            Text = action.Caption;
         }
         
         private Image GetImage(string iconId)
