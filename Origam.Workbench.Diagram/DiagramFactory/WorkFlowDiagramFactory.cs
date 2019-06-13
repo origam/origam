@@ -20,18 +20,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using Origam.Schema.WorkflowModel;
-using Microsoft.Msagl.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Msagl.Core.Layout;
+using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Layout.Layered;
 using MoreLinq.Extensions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
-using Origam.Schema.MenuModel;
+using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Diagram.DiagramFactory;
 using Origam.Workbench.Diagram.Graphs;
 using Origam.Workbench.Diagram.NodeDrawing;
@@ -65,6 +64,11 @@ namespace Origam.Workbench.Diagram
 			this.expandedSubgraphNodeIds = expandedSubgraphNodeIds;
 			graph = new WorkFlowGraph();
 			nodeFactory.AddSubgraph(graph.RootSubgraph, graphParent);
+			graph.MainDrawingSubgraf.LayoutSettings = new SugiyamaLayoutSettings
+			{
+				PackingMethod = PackingMethod.Columns,
+				PackingAspectRatio = 1000
+			};
 			AddToSubgraph(graphParent, graph.MainDrawingSubgraf);
 
 			AddContextStores(graphParent, graph.TopSubgraph);
