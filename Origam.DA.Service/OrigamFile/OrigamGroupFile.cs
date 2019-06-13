@@ -43,11 +43,10 @@ namespace Origam.DA.Service
             : base(path, parentFolderIds, origamFileManager,origamPathFactory, fileEventQueue, fileHash)
         {
         }
-        
-        protected override void MakeNewReferenceFileIfNeeded(DirectoryInfo directory)
-        {
-        }
-        
+
+        protected override DirectoryInfo ReferenceFileDirectory =>
+            Path.Directory.Parent;
+
         public override void WriteInstance(IFilePersistent instance,
             ElementName elementName)
         {

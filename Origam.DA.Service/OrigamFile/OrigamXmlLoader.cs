@@ -284,6 +284,7 @@ namespace Origam.DA.Service
         public Folder Folder { get;}
         public FileInfo FileInfo => xmlFileData.FileInfo;
         public virtual Folder FolderToDetermineParentGroup => Folder;
+        public virtual Folder FolderToDetermineReferenceGroup => Folder;
         private readonly IOrigamFileFactory origamFileFactory;
         
         public ObjectFileData(ParentFolders parentFolders, XmlFileData xmlFileData,
@@ -359,6 +360,7 @@ namespace Origam.DA.Service
     {
         public Guid GroupId { get; }
         public override Folder FolderToDetermineParentGroup => Folder.Parent;
+        public override Folder FolderToDetermineReferenceGroup => Folder.Parent;
         public GroupFileData(IList<ElementName> parentFolders,XmlFileData xmlFileData,
             OrigamFileFactory origamFileFactory) :
             base(new ParentFolders(parentFolders), xmlFileData, origamFileFactory)
@@ -584,7 +586,8 @@ namespace Origam.DA.Service
 
         protected virtual ReferenceFileData FindReferenceFile(ObjectFileData data)
         {
-           referenceFileDict.TryGetValue(data.Folder, out var refFileData);
+           referenceFileDict.TryGetValue(
+               data.FolderToDetermineReferenceGroup, out var refFileData);
            return refFileData;
         }
     }

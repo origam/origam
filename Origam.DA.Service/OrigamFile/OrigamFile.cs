@@ -87,6 +87,10 @@ namespace Origam.DA.Service
                 origamXmlManager.Path = value;
             }
         }
+        
+        protected virtual DirectoryInfo ReferenceFileDirectory =>
+            Path.Directory;
+        
         public string FileHash { get; private set; }
         public IDictionary<Guid, PersistedObjectInfo> ContainedObjects =>
             origamXmlManager.ContainedObjects;
@@ -167,7 +171,7 @@ namespace Origam.DA.Service
                 return;
             }
             origamFileManager.WriteToDisc(this, DeferredSaveDocument);
-            MakeNewReferenceFileIfNeeded(Path.Directory);
+            MakeNewReferenceFileIfNeeded(ReferenceFileDirectory);
             origamXmlManager.InvalidateCache();
         }
 
@@ -181,7 +185,7 @@ namespace Origam.DA.Service
             return externalFileManger.GetExternalFile(externalFile);
         }
 
-        protected virtual void MakeNewReferenceFileIfNeeded(DirectoryInfo directory)
+        private void MakeNewReferenceFileIfNeeded(DirectoryInfo directory)
         {
             if (!IsInAGroup) return;
 
@@ -200,7 +204,7 @@ namespace Origam.DA.Service
         public void UpdateHash()
         {
             FileHash =  new FileInfo(Path.Absolute).GetFileBase64Hash();
-        } 
+        }
 
         private void WriteGroupReferenceFile
             (ParentFolders parentFolderIds, DirectoryInfo directory)
