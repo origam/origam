@@ -69,7 +69,14 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             subgraph.NodeBoundaryDelegate = painter.GetBoundary;
             subgraph.UserData = nodeData;
             subgraph.LabelText = nodeData.Text;
-            parentSbubgraph.AddSubgraph(subgraph);
+            if (parentSbubgraph is BlockSubGraph blockSubGraph)
+            {
+                blockSubGraph.MainDrawingSubgraf.AddSubgraph(subgraph);
+            }
+            else
+            {
+                parentSbubgraph.AddSubgraph(subgraph);
+            }
             return subgraph;
         }
         
