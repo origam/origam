@@ -9,6 +9,7 @@ using Origam.Extensions;
 using Origam.Gui.UI;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Diagram.Graphs;
@@ -111,8 +112,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         }
         
         
-        public void AddActionNode(Subgraph actionSubgraph,
-            EntityMenuAction action)
+        public void AddActionNode(Subgraph actionSubgraph, EntityUIAction action)
         {
             INodeData nodeData = new NodeData(action, schemaService);
             Subgraph subgraph = new Subgraph(nodeData.Id);

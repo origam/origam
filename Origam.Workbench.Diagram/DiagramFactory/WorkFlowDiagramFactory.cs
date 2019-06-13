@@ -30,6 +30,7 @@ using Microsoft.Msagl.Layout.Layered;
 using MoreLinq.Extensions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 using Origam.Workbench.Diagram.DiagramFactory;
 using Origam.Workbench.Diagram.Graphs;
@@ -110,10 +111,7 @@ namespace Origam.Workbench.Diagram
 			foreach (DataStructureEntity entity in formTask.Screen.DataStructure
 				.Entities)
 			{
-				var actions = entity.Entity.ChildItems
-					.ToGeneric()
-					.OfType<EntityMenuAction>()
-					.ToArray();
+				var actions = GetActions(entity);
 				if (actions.Length == 0) continue;
 				var actionSubgraph = nodeFactory.AddActionSubgraph(subgraphNode, entity);
 				foreach (var action in actions)
@@ -123,6 +121,31 @@ namespace Origam.Workbench.Diagram
 			} 
 			
 			AddNodeItem(subgraphNode, new NodeItemLabel("", 5));
+		}
+
+		private static EntityUIAction[] GetActions(DataStructureEntity entity)
+		{
+			var actions = entity.Entity.ChildItems
+				.ToGeneric()
+				.OfType<EntityUIAction>()
+				.ToArray();
+
+			var entityDropdownActions = actions
+				.OfType<EntityDropdownAction>()
+				.ToArray();
+
+			if (entityDropdownActions.Length > 0)
+			{
+				var actionsFromDropDowns = entityDropdownActions
+					.SelectMany(dropDown => dropDown.ChildItems.ToGeneric())
+					.Cast<EntityUIAction>();
+				actions = actions
+					.Except(entityDropdownActions)
+					.Concat(actionsFromDropDowns)
+					.ToArray();
+			}
+
+			return actions;
 		}
 
 		private void AddNodeItems(IWorkflowStep step, Subgraph subgraphNode)
