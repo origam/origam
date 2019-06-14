@@ -115,9 +115,10 @@ namespace Origam.Workbench.Diagram
 			foreach (DataStructureEntity entity in formTask.Screen.DataStructure
 				.Entities)
 			{
-				var actions = GetActions(entity);
+				var actions = GetActions(entity, formTask.ScreenId);
 				if (actions.Length == 0) continue;
-				var actionSubgraph = nodeFactory.AddActionSubgraph(subgraphNode, entity);
+				var actionSubgraph =
+					nodeFactory.AddActionSubgraph(subgraphNode, entity);
 				foreach (var action in actions)
 				{
 					nodeFactory.AddActionNode(actionSubgraph, action);
@@ -127,11 +128,13 @@ namespace Origam.Workbench.Diagram
 			AddNodeItem(subgraphNode, new NodeItemLabel("", 5));
 		}
 
-		private static EntityUIAction[] GetActions(DataStructureEntity entity)
+		private EntityUIAction[] GetActions(DataStructureEntity entity,
+			Guid screenId)
 		{
 			var actions = entity.Entity.ChildItems
 				.ToGeneric()
 				.OfType<EntityUIAction>()
+				.Where(action => ShouldBeShownOdScreen(action, screenId))
 				.ToArray();
 
 			var entityDropdownActions = actions
@@ -146,10 +149,16 @@ namespace Origam.Workbench.Diagram
 				actions = actions
 					.Except(entityDropdownActions)
 					.Concat(actionsFromDropDowns)
+					.Where(action => ShouldBeShownOdScreen(action, screenId))
 					.ToArray();
 			}
 
 			return actions;
+		}
+
+		private bool ShouldBeShownOdScreen(EntityUIAction action, Guid screenId)
+		{
+			return action.ScreenId == Guid.Empty || action.ScreenId == screenId;
 		}
 
 		private void AddNodeItems(IWorkflowStep step, Subgraph subgraphNode)
