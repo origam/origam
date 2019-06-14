@@ -19,8 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Workbench.BaseComponents;
 using System.Windows.Forms;
+using Origam.Workbench.BaseComponents;
 
 namespace Origam.Gui
 {
@@ -29,7 +29,6 @@ namespace Origam.Gui
         public BigArrowToolStripDropDownButton()
         {
             ShowDropDownArrow = false;
-            ImageScaling = ToolStripItemImageScaling.None;
             Image = ImageRes.Arrow;
         }
     }

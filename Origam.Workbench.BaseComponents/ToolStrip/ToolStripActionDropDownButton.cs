@@ -32,11 +32,8 @@ namespace Origam.Gui.UI
 {
     
     public sealed class ToolStripActionDropDownButton : ToolStripDropDownButton
-        
     {
-       
         private readonly int imageArrowGap = 10;
-        private readonly Size imageSize;
         
         public List<ToolStripActionMenuItem> ToolStripMenuItems 
             => DropDownItems.Cast<ToolStripActionMenuItem>().ToList();
@@ -46,7 +43,6 @@ namespace Origam.Gui.UI
         /// </summary>
         public ToolStripActionDropDownButton()
         {
-            imageSize = new Size(24, 24);
             ToolStripButtonTools.InitBigButton(this);
             Padding = new Padding(
                 left: 0,
@@ -57,7 +53,6 @@ namespace Origam.Gui.UI
 
         public ToolStripActionDropDownButton(EntityDropdownAction dropdownAction)
         {
-            imageSize = ToolStripButtonTools.IMAGE_SIZE;
             AddActionItems(dropdownAction);
             ToolStripButtonTools.InitBigButton(this);
             ToolStripButtonTools.InitActionButton(this, dropdownAction);
@@ -94,7 +89,7 @@ namespace Origam.Gui.UI
         protected override void OnPaint(PaintEventArgs e)
         {
             PaintButtonBackground(e);
-            ToolStripButtonTools.PaintImage(this,e, imageSize);
+            ToolStripButtonTools.PaintImage(this,e);
             this.PaintText(e);
             PaintDropDownArrow(e);
         }
@@ -130,7 +125,7 @@ namespace Origam.Gui.UI
         private Rectangle GetArrowRectangle()
         {
             var imageRectangle =
-                ToolStripButtonTools.GetImageRectangle(this,imageSize);
+                ToolStripButtonTools.GetImageRectangle(this);
             
             var yCoord = imageRectangle.Y + imageRectangle.Height/ 2;
             var xCoord = imageRectangle.X + imageRectangle.Width + imageArrowGap;

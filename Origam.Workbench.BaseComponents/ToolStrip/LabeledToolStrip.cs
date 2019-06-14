@@ -33,7 +33,6 @@ namespace Origam.Gui.UI
 
         public LabeledToolStrip(IToolStripContainer owner)
         {
-            ImageScalingSize = ToolStripButtonTools.IMAGE_SIZE;
             MinimumSize = new Size(0, ToolStripButtonTools.BUTTON_SIZE.Height);
             foreColorBrush = new SolidBrush(ForeColor);
             Renderer = new SideBorderOnlyStripRenderer();

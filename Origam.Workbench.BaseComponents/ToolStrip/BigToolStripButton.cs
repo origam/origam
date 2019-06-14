@@ -22,21 +22,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using Origam.Extensions;
 
 namespace Origam.Gui.UI
 {
     public class BigToolStripButton: ToolStripButton
     {
-        private readonly Size imageSize;
-
         public BigToolStripButton()
         {
-            imageSize = ToolStripButtonTools.IMAGE_SIZE;
             Font = new Font(Font.Name,8);
             ToolStripButtonTools.InitBigButton(this);
-            ImageScaling = ToolStripItemImageScaling.None;
         }
 
         public override string Text
@@ -63,7 +58,7 @@ namespace Origam.Gui.UI
         protected override void OnPaint(PaintEventArgs e)
         {
             PaintButtonBackground(e);
-            ToolStripButtonTools.PaintImage(this, e, imageSize);
+            ToolStripButtonTools.PaintImage(this, e);
             this.PaintText(e);
         }
         
