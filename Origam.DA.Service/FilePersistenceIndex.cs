@@ -21,14 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using CSharpFunctionalExtensions;
-using MoreLinq;
 using Origam.DA.ObjectPersistence;
-using Origam.DA.Service;
 using Origam.Extensions;
 
 namespace Origam.DA.Service
@@ -181,7 +178,7 @@ namespace Origam.DA.Service
         public DirectoryInfo FindPackageDirectory(Guid packageId)
         {
             return readWriteLock.RunReader(() => 
-                itemTracker.OrigamFiles
+                itemTracker.PackegeFiles
                     .First(orFile => orFile.ContainedObjects.Keys.Contains(packageId))
                     .Path.Directory
                 );  
