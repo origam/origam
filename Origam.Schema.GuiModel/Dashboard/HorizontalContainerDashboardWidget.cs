@@ -25,7 +25,7 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("Horizontal Container", 68)]
+	[SchemaItemDescription("Horizontal Container", "icon_horizontal-container.png")]
 	public class HorizontalContainerDashboardWidget : AbstractDashboardWidget
 	{
 		public HorizontalContainerDashboardWidget() : base() {Init();}
@@ -46,14 +46,6 @@ namespace Origam.Schema.GuiModel
 
 
 		#region Properties
-		public override string Icon
-		{
-			get
-			{
-				return "68";
-			}
-		}
-
 		[EntityColumn("ItemType")]
 		public override string ItemType
 		{

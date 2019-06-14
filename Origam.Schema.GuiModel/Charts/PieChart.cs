@@ -24,7 +24,7 @@ using System;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("Pie Chart", 75)]
+	[SchemaItemDescription("Pie Chart", "icon_pie-chart.png")]
     [HelpTopic("Pie+Charts")]
 	public class PieChart : AbstractChart
 	{
@@ -36,15 +36,5 @@ namespace Origam.Schema.GuiModel
 		{
 			this.ChildItemTypes.Add(typeof(PieSeries));
 		}
-
-		#region Properties
-		public override string Icon
-		{
-			get
-			{
-				return "75";
-			}
-		}
-		#endregion			
 	}
 }

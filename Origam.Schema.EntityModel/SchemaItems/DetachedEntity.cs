@@ -26,7 +26,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Maps physical table to an entity.
 	/// </summary>
-	[SchemaItemDescription("Virtual Entity", 53)]
+	[SchemaItemDescription("Virtual Entity", "icon_virtual-entity.png")]
     [HelpTopic("Entities")]
 	public class DetachedEntity : AbstractDataEntity
 	{
@@ -35,14 +35,6 @@ namespace Origam.Schema.EntityModel
 		public DetachedEntity(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
 		public DetachedEntity(Key primaryKey) : base(primaryKey)	{}
-
-		public override string Icon
-		{
-			get
-			{
-				return "53";
-			}
-		}
 
 //		public override bool CanConvertTo(Type type)
 //		{

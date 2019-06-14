@@ -24,7 +24,7 @@ using System;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("Cartesian Chart", 78)]
+	[SchemaItemDescription("Cartesian Chart", "icon_cartesian-chart.png")]
     [HelpTopic("Cartesian+Charts")]
 	public class CartesianChart : AbstractChart
 	{
@@ -39,15 +39,5 @@ namespace Origam.Schema.GuiModel
 			this.ChildItemTypes.Add(typeof(ColumnSeries));
 			this.ChildItemTypes.Add(typeof(LineSeries));
 		}
-
-		#region Properties
-		public override string Icon
-		{
-			get
-			{
-				return "78";
-			}
-		}
-		#endregion			
 	}
 }

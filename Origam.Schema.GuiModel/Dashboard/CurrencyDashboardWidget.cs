@@ -24,7 +24,7 @@ using System;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("Currency Widget", 75)]
+	[SchemaItemDescription("Currency Widget", "icon_currency-widget.png")]
 	public class CurrencyDashboardWidget : AbstractSimpleDashboardWidget
 	{
 		public CurrencyDashboardWidget() : base() {Init();}

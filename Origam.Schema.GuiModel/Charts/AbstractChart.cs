@@ -59,15 +59,7 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		public override string Icon
-		{
-			get
-			{
-				return "29";
-			}
-		}
-
-		[EntityColumn("ItemType")]
+        [EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

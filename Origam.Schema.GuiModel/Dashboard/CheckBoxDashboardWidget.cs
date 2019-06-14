@@ -24,7 +24,7 @@ using System;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("CheckBox Widget", 75)]
+	[SchemaItemDescription("CheckBox Widget", "icon_checkbox-widget.png")]
 	public class CheckBoxDashboardWidget : AbstractSimpleDashboardWidget
 	{
 		public CheckBoxDashboardWidget() : base() {Init();}
