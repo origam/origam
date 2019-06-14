@@ -13,11 +13,11 @@ namespace Origam.Workbench.Diagram.NodeDrawing
     {
         private readonly InternalPainter painter;
         private readonly int preferedTextWidth = 35;
-        private readonly int imageSize = 24;
+        private readonly int imageSize = 12;
         private readonly int textSideMargin = 3;
         private readonly int imageTopMargin = 10;
-        private readonly int imageTextGap = 3;
-        private readonly int textBottomMargin = 3;
+        private readonly int imageTextGap = 8;
+        private readonly int textBottomMargin = 5;
 
         public ActionNodePainter(InternalPainter internalPainter)
         {
@@ -62,7 +62,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         {
             INodeData nodeData = (INodeData) node.UserData;
             Graphics editorGraphics = (Graphics) graphicsObj;
-            var image = ImageResizer.Resize(nodeData.PrimaryImage, imageSize);
+            var image = nodeData.PrimaryImage;
 
             var borderSize = CalculateBorder(node);
             var borderCorner = new System.Drawing.Point(
