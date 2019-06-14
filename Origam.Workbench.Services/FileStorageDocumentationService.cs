@@ -20,13 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using CSharpFunctionalExtensions;
-using log4net.Layout;
 using MoreLinq;
 using Origam.DA.Service;
 using Origam.Extensions;
@@ -53,6 +51,9 @@ namespace Origam.Workbench.Services
                                            ?? throw new ArgumentNullException();
             this.fileEventQueue = fileEventQueue 
                                        ?? throw new ArgumentNullException();
+
+            fileEventQueue.ReloadNeeded +=
+                (sender, args) => loadedDocFiles.Clear();
         }
 
         public override string GetDocumentation(Guid schemaItemId,
