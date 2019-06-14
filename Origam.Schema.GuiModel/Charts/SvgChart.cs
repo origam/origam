@@ -27,7 +27,7 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("SVG Chart", 78)]
+	[SchemaItemDescription("SVG Chart", "icon_svg-chart.png")]
     [HelpTopic("SVG+Chart")]
 	public class SvgChart : AbstractChart
 	{
@@ -40,14 +40,6 @@ namespace Origam.Schema.GuiModel
 		}
 
 		#region Properties
-		public override string Icon
-		{
-			get
-			{
-				return "78";
-			}
-		}
-
 		private string _svgFileName = "";
 		[Category("SVG Chart")]
 		[EntityColumn("SS02"), StringNotEmptyModelElementRule()]

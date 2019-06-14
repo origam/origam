@@ -24,7 +24,7 @@ using System;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("Text Widget", 75)]
+	[SchemaItemDescription("Text Widget", "icon_text-widget.png")]
 	public class TextDashboardWidget : AbstractSimpleDashboardWidget
 	{
 		public TextDashboardWidget() : base() {Init();}

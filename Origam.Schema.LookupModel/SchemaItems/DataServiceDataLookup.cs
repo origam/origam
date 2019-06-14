@@ -26,7 +26,7 @@ namespace Origam.Schema.LookupModel
 	/// <summary>
 	/// Summary description for DataServiceDataLookup.
 	/// </summary>
-	[SchemaItemDescription("Data Service Lookup", "icon_data-service-lookup.png")]
+	[SchemaItemDescription("Data Service Lookup", "icon_lookup.png")]
     [HelpTopic("Lookups")]
 	public class DataServiceDataLookup : AbstractDataLookup
 	{

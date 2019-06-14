@@ -24,7 +24,7 @@ using System;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("Date Widget", 75)]
+	[SchemaItemDescription("Date Widget", "icon_date-widget.png")]
 	public class DateDashboardWidget : AbstractSimpleDashboardWidget
 	{
 		public DateDashboardWidget() : base() {Init();}

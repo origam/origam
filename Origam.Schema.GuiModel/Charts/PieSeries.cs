@@ -27,7 +27,7 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("Pie Series", "Data Series", 75)]
+	[SchemaItemDescription("Pie Series", "Data Series", "icon_pie-series.png")]
     [HelpTopic("Pie+Series")]
 	public class PieSeries : AbstractSeries
 	{
@@ -54,14 +54,6 @@ namespace Origam.Schema.GuiModel
 			set
 			{
 				_namefield = value;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "75";
 			}
 		}
 		#endregion			

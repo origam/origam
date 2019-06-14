@@ -27,7 +27,7 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("Column Series", "Data Series", 73)]
+	[SchemaItemDescription("Column Series", "Data Series", "icon_column-series.png")]
     [HelpTopic("Column+Series")]
 	public class ColumnSeries : AbstractCartesianSeries
 	{
@@ -54,14 +54,6 @@ namespace Origam.Schema.GuiModel
 			set
 			{
 				_type = value;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "73";
 			}
 		}
 

@@ -110,7 +110,7 @@ namespace Origam.Schema.DeploymentModel
 			{
 				if(IsCurrentVersion)
 				{
-					return "56";
+					return "icon_deployment-version-active.png";
 				}
 				else
 				{

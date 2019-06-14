@@ -27,7 +27,7 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("Vertical Axis", "Vertical Axes", 77)]
+	[SchemaItemDescription("Vertical Axis", "Vertical Axes", "icon_vertical-axis.png")]
     [HelpTopic("Vertical+Axis")]
 	[XmlModelRoot(ItemTypeConst)]
     public class CartesianChartVerticalAxis : AbstractSchemaItem
@@ -121,14 +121,6 @@ namespace Origam.Schema.GuiModel
 			set
 			{
 				_applyMax = value;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "77";
 			}
 		}
 

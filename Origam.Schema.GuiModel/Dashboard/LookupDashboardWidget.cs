@@ -27,7 +27,7 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("Lookup Widget", 75)]
+	[SchemaItemDescription("Lookup Widget", "icon_lookup-widget.png")]
 	public class LookupDashboardWidget : AbstractSimpleDashboardWidget
 	{
 		public LookupDashboardWidget() : base() {Init();}
@@ -54,14 +54,6 @@ namespace Origam.Schema.GuiModel
 		}
 
 		#region Properties
-		public override string Icon
-		{
-			get
-			{
-				return "75";
-			}
-		}
-
 		[EntityColumn("G05")]  
 		public Guid LookupId;
 

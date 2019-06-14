@@ -26,7 +26,7 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("Chart Widget", 75)]
+	[SchemaItemDescription("Chart Widget", "icon_chart-widget.png")]
 	public class ChartDashboardWidget : AbstractDataDashboardWidget
 	{
 		public ChartDashboardWidget() : base() {Init();}
@@ -45,14 +45,6 @@ namespace Origam.Schema.GuiModel
 		}
 
 		#region Properties
-		public override string Icon
-		{
-			get
-			{
-				return "75";
-			}
-		}
-
 		[EntityColumn("G10")]  
 		public Guid ChartId;
 
