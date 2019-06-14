@@ -17,6 +17,7 @@ using Origam.Workbench.Commands;
 using Origam.Workbench.Diagram.Extensions;
 using Origam.Workbench.Diagram.Graphs;
 using Origam.Workbench.Services;
+using MouseButtons = System.Windows.Forms.MouseButtons;
 
 namespace Origam.Workbench.Diagram.InternalEditor
 {
@@ -41,7 +42,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        IPersistenceProvider persistenceProvider, WorkFlowDiagramFactory factory, NodeSelector nodeSelector)
         {
 		    (gViewer as IViewer).MouseDown += OnMouseDown;
-		    gViewer.MouseClick += OnMouseClick;
 		    schemaService = ServiceManager.Services.GetService<WorkbenchSchemaService>();
 	        taskRunner = new DependencyTaskRunner(persistenceProvider);
 			gViewer.EdgeAdded += OnEdgeAdded;
@@ -132,12 +132,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		        };
 		        cmd.Run();
 	        }
-        }
-
-        private void OnMouseClick(object sender, MouseEventArgs args)
-        {
-	        TrySelectActiveNodeInModelView();
-	        TrySelectActiveEdgeInModelView();
         }
 
         private void TrySelectActiveEdgeInModelView()
@@ -354,50 +348,59 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		void OnMouseDown(object sender, MsaglMouseEventArgs e)
 		{
 			if (gViewer.InsertingEdge) return;
+			LeftMouseButtonDown(e);
+			TrySelectActiveNodeInModelView();
+			TrySelectActiveEdgeInModelView();
 	        if (e.RightButtonIsPressed && !e.Handled)
 	        {
 		        mouseRightButtonDownPoint  = new System.Drawing.Point(e.X, e.Y);
 		        ContextMenuStrip cm = BuildContextMenu();
                 cm.Show(parentForm,mouseRightButtonDownPoint);
-	        }else if (e.LeftButtonIsPressed)
-	        {
-		        if(gViewer.SelectedObject is Node node)
-		        {
-			        if (Equals(nodeSelector.Selected, node))
-			        {
-				        return;
-			        }
-			        if (nodeSelector.Selected?.Id == node.Id)
-			        {
-				        nodeSelector.Selected=node;
-				        return;
-			        }
-			        bool currentOrPreviousNodeIsContextStore =
-				        RetrieveItem(node) is ContextStore ||
-				        RetrieveItem(nodeSelector.Selected) is ContextStore;
-			        if (Graph.AreRelatives(nodeSelector.Selected, node) && 
-							 !(node is Subgraph) &&
-							 !currentOrPreviousNodeIsContextStore)
-			        {
-				        nodeSelector.Selected=node;
-				        gViewer.Invalidate();
-				        return;
-			        }
-			        if (currentOrPreviousNodeIsContextStore)
-			        {
-				        ReDrawAndKeepFocus(node);
-			        }
-			        else
-			        {
-				        nodeSelector.Selected=node;
-				        var origTransform = gViewer.Transform;
-				        ReDrawAndReselect();
-				        gViewer.Transform = origTransform;
-				        gViewer.Invalidate();
-			        }
-		        }
 	        }
 	    }
+
+		private void LeftMouseButtonDown(MsaglMouseEventArgs eventArgs)
+		{
+			gViewer.Hit(new MouseEventArgs(MouseButtons.None, 0, eventArgs.X,eventArgs.Y,0));
+			if (gViewer.SelectedObject is Node node)
+			{
+				if (Equals(nodeSelector.Selected, node))
+				{
+					return;
+				}
+
+				if (nodeSelector.Selected?.Id == node.Id)
+				{
+					nodeSelector.Selected = node;
+					return;
+				}
+
+				bool currentOrPreviousNodeIsContextStore =
+					RetrieveItem(node) is ContextStore ||
+					RetrieveItem(nodeSelector.Selected) is ContextStore;
+				if (Graph.AreRelatives(nodeSelector.Selected, node) &&
+				    !(node is Subgraph) &&
+				    !currentOrPreviousNodeIsContextStore)
+				{
+					nodeSelector.Selected = node;
+					gViewer.Invalidate();
+					return;
+				}
+
+				if (currentOrPreviousNodeIsContextStore)
+				{
+					ReDrawAndKeepFocus(node);
+				}
+				else
+				{
+					nodeSelector.Selected = node;
+					var origTransform = gViewer.Transform;
+					ReDrawAndReselect();
+					gViewer.Transform = origTransform;
+					gViewer.Invalidate();
+				}
+			}
+		}
 
 		private void ReDrawAndKeepFocus(Node node)
 		{
@@ -521,10 +524,14 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 		private ContextMenuStrip CreateContextMenuForNode(DNode dNodeUnderMouse)
 		{
-			var schemaItemUnderMouse = RetrieveItem(dNodeUnderMouse.Node);
 			var contextMenu = new AsContextMenu(WorkbenchSingleton.Workbench);
+			var schemaItemUnderMouse = RetrieveItem(dNodeUnderMouse.Node);
 
-			if (schemaItemUnderMouse is EntityUIAction) return contextMenu;
+			if (IsObjectSelectionInconsistent(schemaItemUnderMouse) ||
+			    schemaItemUnderMouse is EntityUIAction)
+			{
+				return contextMenu;
+			}
 			
 			var deleteMenuItem = new ToolStripMenuItem();
 			deleteMenuItem.Text = "Delete";
@@ -533,7 +540,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			deleteMenuItem.Enabled = 
 				IsDeleteMenuItemAvailable(dNodeUnderMouse, schemaItemUnderMouse);
 			contextMenu.AddSubItem(deleteMenuItem);
-
 
 			if (schemaItemUnderMouse is IContextStore)
 			{
@@ -564,7 +570,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			}
 			else
 			{
-				AsMenuCommand menuItem = new AsMenuCommand("New");
+				AsMenuCommand menuItem = new AsMenuCommand("New", schemaItemUnderMouse);
 				var builder = new SchemaItemEditorsMenuBuilder(true);
 				menuItem.PopulateMenu(builder);
 				menuItem.SubItems.AddRange(menuItem.DropDownItems);
@@ -577,11 +583,10 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			{
 				contextMenu.AddSubItem(newMenu);
 			}
-
-						
+			
 			ToolStripMenuItem actionsMenu = new ToolStripMenuItem("Actions"); 			
 			actionsMenu.Image = ImageRes.icon_actions;
-			AsMenuCommand dummyMenu = new AsMenuCommand();
+			AsMenuCommand dummyMenu = new AsMenuCommand("dummy", schemaItemUnderMouse);
 			var builder1 = new SchemaActionsMenuBuilder();
 			dummyMenu.PopulateMenu(builder1);
 			actionsMenu.DropDownItems.AddRange(dummyMenu.DropDownItems.ToArray<ToolStripItem>());
@@ -590,7 +595,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 				contextMenu.AddSubItem(actionsMenu);
 			}
 
-			if (Graph.IsWorkFlowItemSubGraph(dNodeUnderMouse?.Node)) 
+			if (Graph.IsWorkFlowItemSubGraph(dNodeUnderMouse.Node)) 
 			{
 				ToolStripMenuItem addAfterMenu = new ToolStripMenuItem("Add After");
 				addAfterMenu.Image = ImageRes.icon_new;
@@ -618,6 +623,17 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			}
 
 			return contextMenu;
+		}
+
+		private bool IsObjectSelectionInconsistent(
+			AbstractSchemaItem schemaItemUnderMouse)
+		{
+			bool objectSelectionIsInconsistent =
+				schemaItemUnderMouse != null &&
+				(schemaItemUnderMouse.Id != nodeSelector.SelectedNodeId ||
+				 schemaItemUnderMouse.Id !=
+				 Guid.Parse(schemaService.ActiveNode.NodeId));
+			return objectSelectionIsInconsistent;
 		}
 
 		private AbstractSchemaItem RetrieveItem(Node node)
@@ -685,7 +701,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
         {
 	        persistenceProvider.InstancePersisted -= OnInstancePersisted;
 	        (gViewer as IViewer).MouseDown -= OnMouseDown;
-	        gViewer.MouseClick -= OnMouseClick;
 	        gViewer.EdgeAdded -= OnEdgeAdded;
 	        gViewer.EdgeRemoved -= OnEdgeRemoved;
 	        edgeInsertionRule?.Dispose();
