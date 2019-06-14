@@ -6,7 +6,6 @@ using Microsoft.Msagl.Layout.Layered;
 using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
-using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Diagram.Graphs;
 using Origam.Workbench.Services;
@@ -181,16 +180,6 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         }
 
         public NodeItemLabel(string text, int leftMargin):this(text)
-        {
-            LeftMargin = leftMargin;
-        }
-    }
-
-    class ActionNodeData : NodeData
-    {
-        public ActionNodeData(EntityMenuAction action, int leftMargin, WorkbenchSchemaService schemaService
-        ) 
-            : base(action, schemaService)
         {
             LeftMargin = leftMargin;
         }
