@@ -61,9 +61,16 @@ namespace Origam.DA.Service
 
 	    public static string GetFirstNonCustomParameter(DataStructureMethod method)
 	    {
-	        return method.ParameterReferences.Keys
-	            .Cast<string>()
-	            .FirstOrDefault(parameterName => MatchParameter(parameterName) == null);
+            if (method == null)
+            {
+                return null;
+            }
+            else
+            {
+                return method.ParameterReferences.Keys
+                    .Cast<string>()
+                    .FirstOrDefault(parameterName => MatchParameter(parameterName) == null);
+            }
 	    }
 
 
