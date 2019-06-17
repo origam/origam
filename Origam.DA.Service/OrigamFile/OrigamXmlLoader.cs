@@ -25,9 +25,8 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using CSharpFunctionalExtensions;
-using Origam.DA.ObjectPersistence.Providers;
-using Origam.Extensions;
 using MoreLinq;
+using Origam.Extensions;
 
 namespace Origam.DA.Service
 {
@@ -328,6 +327,11 @@ namespace Origam.DA.Service
                         isFolder: isFolder,
                         origamFile: (OrigamFile)origamFile);
 
+                    if (origamFile.ContainedObjects.ContainsKey(objectInfo.Id))
+                    {
+                        throw new InvalidOperationException("Duplicate object with id: "+objectInfo.Id+" in: "+origamFile.Path.Relative);
+                    }
+                    
                     origamFile.ContainedObjects.Add(objectInfo.Id, objectInfo);
                 } 
                 else
