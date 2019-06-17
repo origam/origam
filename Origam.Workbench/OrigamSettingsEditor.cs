@@ -300,7 +300,7 @@ namespace Origam.Workbench
 			if(e.Button == btnAdd)
 			{
 				ListViewItem newItem = NewItem();
-				newItem.Tag = new OrigamSettings(System.Windows.Forms.Application.StartupPath, "New Configuration");
+				newItem.Tag = new OrigamSettings("New Configuration", System.Windows.Forms.Application.StartupPath);
 
 				lvwConfigurations.Items.Add(newItem);
 				RefreshList();
