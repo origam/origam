@@ -160,8 +160,6 @@ export class OrigamAPI implements IApi {
 
   async createSessionEntity() {}
 
-  async updateSessionEntity() {}
-
   async getSessionEntity(data: {
     sessionFormIdentifier: string;
     childEntity: string;
@@ -170,6 +168,18 @@ export class OrigamAPI implements IApi {
   }) {
     return (await axios.get(`${this.urlPrefix}/Sessions/EntityData`, {
       params: data,
+      headers: this.httpAuthHeader
+    })).data;
+  }
+
+  async updateSessionEntity(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    Id: string;
+    Property: string;
+    NewValue: any;
+  }): Promise<any> {
+    return (await axios.post(`${this.urlPrefix}/Sessions/UpdateRowData`, data, {
       headers: this.httpAuthHeader
     })).data;
   }

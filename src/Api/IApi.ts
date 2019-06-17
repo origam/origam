@@ -61,6 +61,16 @@ export interface IApi {
     rootRecordId: string;
   }): Promise<any>;
 
+  updateSessionEntity(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    Id: string;
+    Property: string;
+    NewValue: any;
+  }): Promise<any>;
+
+
+
   getLookupListEx(data: {
     DataStructureEntityId: string;
     ColumnNames: string[];

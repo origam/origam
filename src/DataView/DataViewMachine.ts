@@ -1,11 +1,4 @@
-import {
-  action,
-  computed,
-  observable,
-  reaction,
-  runInAction,
-  comparer
-} from "mobx";
+import { action, computed, observable, reaction, runInAction } from "mobx";
 import { interpret, Machine, State } from "xstate";
 import { Interpreter } from "xstate/lib/interpreter";
 import { IApi } from "../Api/IApi";
@@ -17,6 +10,7 @@ import { IDataTable } from "./types/IDataTable";
 import { IDataViewMachine } from "./types/IDataViewMachine";
 import { IRecord } from "./types/IRecord";
 import * as DataViewActions from "./DataViewActions";
+
 
 export class DataViewMachine implements IDataViewMachine {
   constructor(
@@ -86,7 +80,7 @@ export class DataViewMachine implements IDataViewMachine {
         },
         SESSION_CHANGE_MASTER: {
           on: {
-            DONE: "LOAD_FRESH"
+            DONE: { target: "IDLE", actions: "descendantsLoadFresh" }
           },
           invoke: { src: "sessionChangeMaster" }
         },
@@ -127,8 +121,10 @@ export class DataViewMachine implements IDataViewMachine {
                 parentRecordId: this.controlledValueFromParent!
               })
               .then(
-                action(resp => {
-                  console.log("Received:", resp);
+                action((entities: any) => {
+                  console.log("Received:", entities);
+                  this.dataTable.resetDirty();
+                  this.dataTable.setRecords(entities);
                   send("DONE");
                 })
               );
@@ -154,11 +150,10 @@ export class DataViewMachine implements IDataViewMachine {
           }
         },
         sessionChangeMaster: (ctx, event) => (send, onEvent) => {
-          
           this.api
             .sessionChangeMasterRecord({
               SessionFormIdentifier: this.P.sessionId,
-               Entity: this.dataSource.id,
+              Entity: this.dataSource.id,
               // Entity: this.dataStructureEntityId!,
               RowId: this.controllingValueForChildren
             })
@@ -169,60 +164,94 @@ export class DataViewMachine implements IDataViewMachine {
             );
         },
         saveDirtyData: (ctx, event) => async (send, onEvent) => {
-          console.log(
-            "Dirty changed:",
-            JSON.stringify(this.dataTable.dirtyValues)
-          );
-          console.log(
-            "Dirty deleted:",
-            JSON.stringify(this.dataTable.dirtyDeletedIds)
-          );
-          for (let RowId of this.dataTable.dirtyDeletedIds.keys()) {
-            console.log("Deleting", RowId);
-            const result = await this.api.deleteEntity({
-              MenuId: this.menuItemId,
-              DataStructureEntityId: this.dataStructureEntityId,
-              RowIdToDelete: RowId
-            });
-            console.log("...Deleted.");
-            runInAction(() => {
-              this.dataTable.removeDirtyDeleted(RowId);
-              this.dataTable.removeRow(RowId);
-            });
+          if (this.P.isSessionedScreen && !this.isRoot) {
+            this.saveDirtyDataSessioned();
+          } else {
+            this.saveDirtyDataNotSessioned();
           }
-          for (let [RowId, values] of this.dataTable.dirtyValues) {
-            console.log("Updating", RowId);
-            const result = await this.api.putEntity({
-              MenuId: this.menuItemId,
-              DataStructureEntityId: this.dataStructureEntityId,
-              RowId,
-              NewValues: values
-            });
-            console.log("...Updated.");
-            runInAction(() => {
-              const newRecord = Array(
-                this.dataTable.properties.count
-              ) as IRecord;
-              for (let prop of this.dataTable.properties.items) {
-                newRecord[prop.dataIndex] =
-                  result.wrappedObject[prop.dataSourceIndex];
-              }
-              this.dataTable.substRecord(RowId, newRecord);
-              this.dataTable.removeDirtyRow(RowId);
-            });
-          }
-          send("DONE");
         },
         createNewRecord: (ctx, event) => async (send, onEvent) => {
           console.log("Create new record.");
           send("DONE");
         }
       },
+      actions: {
+        descendantsLoadFresh: (ctx, event) =>
+          this.descendantsDispatch(DataViewActions.loadFresh())
+      },
       guards: {
         loadingAllowed: () => this.isLoadingAllowed
       }
     }
   );
+
+  async saveDirtyDataNotSessioned() {
+    console.log("Dirty changed:", JSON.stringify(this.dataTable.dirtyValues));
+    console.log(
+      "Dirty deleted:",
+      JSON.stringify(this.dataTable.dirtyDeletedIds)
+    );
+    for (let RowId of this.dataTable.dirtyDeletedIds.keys()) {
+      console.log("Deleting", RowId);
+      const result = await this.api.deleteEntity({
+        MenuId: this.menuItemId,
+        DataStructureEntityId: this.dataStructureEntityId,
+        RowIdToDelete: RowId
+      });
+      console.log("...Deleted.");
+      runInAction(() => {
+        this.dataTable.removeDirtyDeleted(RowId);
+        this.dataTable.removeRow(RowId);
+      });
+    }
+    for (let [RowId, values] of this.dataTable.dirtyValues) {
+      console.log("Updating", RowId);
+      const result = await this.api.putEntity({
+        MenuId: this.menuItemId,
+        DataStructureEntityId: this.dataStructureEntityId,
+        RowId,
+        NewValues: values
+      });
+      console.log("...Updated.");
+      runInAction(() => {
+        const newRecord = Array(this.dataTable.properties.count) as IRecord;
+        for (let prop of this.dataTable.properties.items) {
+          newRecord[prop.dataIndex] =
+            result.wrappedObject[prop.dataSourceIndex];
+        }
+        this.dataTable.substRecord(RowId, newRecord);
+        this.dataTable.removeDirtyRow(RowId);
+      });
+    }
+    this.send("DONE");
+  }
+
+  async saveDirtyDataSessioned() {
+    for (let [RowId, values] of this.dataTable.dirtyValues) {
+      console.log("Updating", RowId);
+      for (let [prop, val] of values.entries()) {
+        console.log(`    column ${prop}`);
+        const result = await this.api.updateSessionEntity({
+          SessionFormIdentifier: this.P.sessionId,
+          Entity: this.dataSource.id,
+          Id: RowId,
+          Property: prop,
+          NewValue: val
+        });
+        console.log("...Updated.");
+        runInAction(() => {
+          const newRecord = Array(this.dataTable.properties.count) as IRecord;
+          for (let prop of this.dataTable.properties.items) {
+            newRecord[prop.dataIndex] =
+              result.wrappedObject[prop.dataSourceIndex];
+          }
+          this.dataTable.substRecord(RowId, newRecord);
+          this.dataTable.removeDirtyRow(RowId);
+        });
+      }
+    }
+    this.send("DONE");
+  }
 
   interpreter: Interpreter<any, any, any>;
   @observable state: State<any, any>;
@@ -245,14 +274,12 @@ export class DataViewMachine implements IDataViewMachine {
         () => this.controllingValueForChildren,
         () => {
           console.log(" *** Controlling value for children changed");
-          if (
-            this.isRoot &&
-            this.P.isSessionedScreen 
-          ) {
+          if (this.isRoot && this.P.isSessionedScreen) {
             this.send("SESSION_MASTER_CHANGED");
           } else {
             this.descendantsDispatch(DataViewActions.loadFresh());
           }
+
           oldControllingValueForChildren = this.controllingValueForChildren;
         }
       ),
