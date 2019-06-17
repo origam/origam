@@ -21,18 +21,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Git;
 using Origam.Schema;
 using Origam.UI;
-using Origam.Workbench.Commands;
 using Origam.Workbench.Services;
 
 namespace Origam.Workbench
@@ -1484,8 +1481,11 @@ namespace Origam.Workbench
 			}
             if (tnode != null)
             {
-                tnode.EnsureVisible();
-                tvwExpressionBrowser.SelectedNode = tnode;
+	            tvwExpressionBrowser.SelectedNode = tnode;
+                if (!tnode.Parent.IsVisible)
+                {
+	                tnode.Parent.EnsureVisible();
+                }
             }
         }
 
