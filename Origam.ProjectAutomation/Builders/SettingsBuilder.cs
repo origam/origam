@@ -20,8 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 
-using Origam;
 using System.IO;
+
 namespace Origam.ProjectAutomation
 {
     public class SettingsBuilder : AbstractBuilder
@@ -49,7 +49,6 @@ namespace Origam.ProjectAutomation
         public override void Execute(Project project)
         {
             _settings = GetSettings();
-            _setting = new OrigamSettings(System.Windows.Forms.Application.StartupPath);
             _setting.Name = project.Name;
             _setting.TitleText = project.Name;
             _setting.DataConnectionString = project.BuilderDataConnectionString;

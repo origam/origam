@@ -37,16 +37,9 @@ namespace Origam
         public OrigamSettings()
         {
         }
-
-        public OrigamSettings(string baseFolder)
+		public OrigamSettings(string name)
 		{
-            this.BaseFolder = baseFolder;
-		}
-
-		public OrigamSettings(string name, string baseFolder)
-		{
-			this.Name = name;
-            this.BaseFolder = baseFolder;
+			Name = name;
 		}
 
 		public OrigamSettings(
