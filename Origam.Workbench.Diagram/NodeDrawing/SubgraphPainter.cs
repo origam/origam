@@ -1,9 +1,7 @@
 using System;
 using System.Drawing;
-using System.Linq;
 using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Core.Layout;
-using Microsoft.Msagl.Drawing;
 using Origam.Workbench.Diagram.Extensions;
 using Origam.Workbench.Diagram.Graphs;
 using Node = Microsoft.Msagl.Drawing.Node;
@@ -111,7 +109,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                 return new Tuple<PointF, string>(new PointF(), "");
             }
 
-            string emptyGraphMessage = "Right click here to add steps";
+            string emptyGraphMessage = Strings.SubgraphPainter_Right_click_to_add_steps;
             SizeF messageSize = painter.MeasureString(emptyGraphMessage);
             var emptyMessagePoint = new PointF(
                 (float)centerX -  messageSize.Width / 2,

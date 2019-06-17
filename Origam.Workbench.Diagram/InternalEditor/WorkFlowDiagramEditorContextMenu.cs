@@ -37,11 +37,11 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			if(edge.Edge.UserData == null) return new ContextMenuStrip();
 			
 			var deleteMenuItem = new ToolStripMenuItem();
-			deleteMenuItem.Text = "Delete";
+			deleteMenuItem.Text = Strings.WorkFlowDiagramEditor_ContextMenuEdge_Delete;
 			deleteMenuItem.Image = ImageRes.icon_delete;
 			deleteMenuItem.Click += (sender, args) => gViewer.RemoveEdge(edge, true);
 		        
-			ToolStripMenuItem addBetweenMenu = new ToolStripMenuItem("Add Between");
+			ToolStripMenuItem addBetweenMenu = new ToolStripMenuItem(Strings.WorkFlowDiagramEditor_ContextMenuEdge_Add_Between);
 			addBetweenMenu.Image = ImageRes.icon_new;
 			var builder = new SchemaItemEditorsMenuBuilder(true);
 			var submenuItems = builder.BuildSubmenu(UpToDateGraphParent);
@@ -172,7 +172,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		private ToolStripMenuItem MakeAddAfterItem(DNode dNodeUnderMouse,
 			AbstractSchemaItem schemaItemUnderMouse)
 		{
-			ToolStripMenuItem addAfterMenu = new ToolStripMenuItem("Add After");
+			ToolStripMenuItem addAfterMenu = new ToolStripMenuItem(Strings.WorkFlowDiagramEditor_ContextMenuNode_Add_After);
 			addAfterMenu.Image = ImageRes.icon_new;
 			var builder = new SchemaItemEditorsMenuBuilder(true);
 			var submenuItems = builder.BuildSubmenu(UpToDateGraphParent);
@@ -201,7 +201,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		private static ToolStripMenuItem MakeActionsItem(
 			AbstractSchemaItem schemaItemUnderMouse)
 		{
-			ToolStripMenuItem actionsMenu = new ToolStripMenuItem("Actions");
+			ToolStripMenuItem actionsMenu = new ToolStripMenuItem(Strings.WorkFlowDiagramEditor_ContextMenuNode_Actions);
 			actionsMenu.Image = ImageRes.icon_actions;
 			AsMenuCommand dummyMenu = new AsMenuCommand("dummy", schemaItemUnderMouse);
 			var builder1 = new SchemaActionsMenuBuilder();
@@ -214,7 +214,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		private ToolStripMenuItem MakeNewItem(DNode dNodeUnderMouse,
 			AbstractSchemaItem schemaItemUnderMouse)
 		{
-			ToolStripMenuItem newMenu = new ToolStripMenuItem("New");
+			ToolStripMenuItem newMenu = new ToolStripMenuItem(Strings.WorkFlowDiagramEditor_ContextMenuNode_New);
 			newMenu.Image = ImageRes.icon_new;
 			newMenu.Enabled = IsNewMenuAvailable(dNodeUnderMouse);
 
@@ -233,7 +233,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			}
 			else
 			{
-				AsMenuCommand menuItem = new AsMenuCommand("New", schemaItemUnderMouse);
+				AsMenuCommand menuItem = new AsMenuCommand(Strings.WorkFlowDiagramEditor_ContextMenuNode_New, schemaItemUnderMouse);
 				var builder = new SchemaItemEditorsMenuBuilder(true);
 				menuItem.PopulateMenu(builder);
 				menuItem.SubItems.AddRange(menuItem.DropDownItems);
@@ -250,7 +250,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			IContextStore contextStore)
 		{
 			var showDataFlowItem = new ToolStripMenuItem();
-			showDataFlowItem.Text = "Show data flow";
+			showDataFlowItem.Text = Strings.WorkFlowDiagramEditor_ContextMenuNode_Show_data_flow;
 			showDataFlowItem.Image = ImageRes.icon_execute;
 			showDataFlowItem.Click += (sender, args) =>
 			{
@@ -265,7 +265,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		private ToolStripMenuItem MakeHideDatFlowItem(IContextStore contextStore)
 		{
 			var hideDataFlowItem = new ToolStripMenuItem();
-			hideDataFlowItem.Text = "Hide data flow";
+			hideDataFlowItem.Text = Strings.WorkFlowDiagramEditor_ContextMenuNode_Hide_data_flow;
 			hideDataFlowItem.Image = ImageRes.icon_delete;
 			hideDataFlowItem.Click += (sender, args) => dependencyPainter.DeActivate();
 			hideDataFlowItem.Enabled = contextStore.Equals(dependencyPainter.CurrentContextStore);
@@ -276,7 +276,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			AbstractSchemaItem schemaItemUnderMouse)
 		{
 			var deleteMenuItem = new ToolStripMenuItem();
-			deleteMenuItem.Text = "Delete";
+			deleteMenuItem.Text = Strings.WorkFlowDiagramEditor_ContextMenuNode_Delete;
 			deleteMenuItem.Image = ImageRes.icon_delete;
 			deleteMenuItem.Click += DeleteNode_Click;
 			deleteMenuItem.Enabled =
@@ -294,7 +294,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			}
 			else
 			{
-				throw new Exception("Could not delete node because it is not selected in the tree.");
+				throw new Exception(Strings.WorkFlowDiagramEditor_Node_Not_Selected);
 			}
 		}
 

@@ -32,8 +32,6 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                 return nodePainter.GetBoundary(node);
             }
             
-            //subgraph.Nodes.Where(x=>x.)
-            
             var clusterBoundary =
                 ((Cluster) node.GeometryNode).RectangularBoundary;
 
