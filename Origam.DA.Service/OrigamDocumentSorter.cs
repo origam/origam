@@ -41,7 +41,7 @@ namespace Origam.DA.Service
         {
             node.ChildNodes
                 .Cast<XmlNode>()
-                .OrderBy(childNode => node.Name)
+                .OrderBy(childNode => childNode.Name)
                 .ForEach(childNode =>
                 {
                     var xmlns = string.IsNullOrEmpty(childNode.NamespaceURI)
