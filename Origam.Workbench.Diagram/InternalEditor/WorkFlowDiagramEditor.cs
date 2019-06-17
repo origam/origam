@@ -66,8 +66,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			persistenceProvider.InstancePersisted += OnInstancePersisted;
 			
 			dependencyPainter = new ContextStoreDependencyPainter(
-				nodeSelector,
-				persistenceProvider,
 				gViewer, 
 				graphParentItemGetter: () => (AbstractSchemaItem)UpToDateGraphParent);
 			

@@ -93,10 +93,13 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			var deleteMenuItem = MakeDeleteItem(dNodeUnderMouse, schemaItemUnderMouse);
 			contextMenu.AddSubItem(deleteMenuItem);
 
-			if (schemaItemUnderMouse is IContextStore)
+			if (schemaItemUnderMouse is IContextStore contextStore)
 			{
-				var hideDataFlowItem = MakeHideDatFlowItem();
+				ToolStripMenuItem hideDataFlowItem = MakeHideDatFlowItem(contextStore);
+				ToolStripMenuItem showDataFlowItem = 
+					MakeShowDatFlowItem(dNodeUnderMouse.Node, contextStore);
 				contextMenu.AddSubItem(hideDataFlowItem);
+				contextMenu.AddSubItem(showDataFlowItem);
 			}
 
 			var newMenu = MakeNewItem(dNodeUnderMouse, schemaItemUnderMouse);
@@ -114,7 +117,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 			if (Graph.IsWorkFlowItemSubGraph(dNodeUnderMouse.Node))
 			{
-				var addAfterMenu = MakeAddAfterItem(dNodeUnderMouse, schemaItemUnderMouse);
+				ToolStripMenuItem addAfterMenu =
+					MakeAddAfterItem(dNodeUnderMouse, schemaItemUnderMouse);
 				contextMenu.AddSubItem(addAfterMenu);
 			}
 
@@ -241,14 +245,30 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 			return newMenu;
 		}
+		
+		private ToolStripMenuItem MakeShowDatFlowItem(Node nodeUnderMouse,
+			IContextStore contextStore)
+		{
+			var showDataFlowItem = new ToolStripMenuItem();
+			showDataFlowItem.Text = "Show data flow";
+			showDataFlowItem.Image = ImageRes.icon_execute;
+			showDataFlowItem.Click += (sender, args) =>
+			{
+				dependencyPainter.Activate(contextStore);
+				ReDrawAndKeepFocus(nodeUnderMouse);
+			};
+			showDataFlowItem.Enabled =
+				!contextStore.Equals(dependencyPainter.CurrentContextStore);
+			return showDataFlowItem;
+		}
 
-		private ToolStripMenuItem MakeHideDatFlowItem()
+		private ToolStripMenuItem MakeHideDatFlowItem(IContextStore contextStore)
 		{
 			var hideDataFlowItem = new ToolStripMenuItem();
 			hideDataFlowItem.Text = "Hide data flow";
 			hideDataFlowItem.Image = ImageRes.icon_delete;
 			hideDataFlowItem.Click += (sender, args) => dependencyPainter.DeActivate();
-			hideDataFlowItem.Enabled = dependencyPainter.IsActive;
+			hideDataFlowItem.Enabled = contextStore.Equals(dependencyPainter.CurrentContextStore);
 			return hideDataFlowItem;
 		}
 
