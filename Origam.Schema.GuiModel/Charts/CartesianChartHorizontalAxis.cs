@@ -27,7 +27,7 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("Horizontal Axis", "Horizontal Axes", 76)]
+	[SchemaItemDescription("Horizontal Axis", "Horizontal Axes", "icon_horizontal-axis.png")]
     [HelpTopic("Horizontal+Axis")]
 	[XmlModelRoot(ItemTypeConst)]
     public class CartesianChartHorizontalAxis : AbstractSchemaItem
@@ -89,14 +89,6 @@ namespace Origam.Schema.GuiModel
 			set
 			{
 				_aggregationType = value;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "76";
 			}
 		}
 

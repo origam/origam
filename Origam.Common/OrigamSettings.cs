@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 
@@ -32,22 +31,15 @@ namespace Origam
 	/// </summary>
 	public class OrigamSettings : ICloneable
 	{
-		[XmlIgnore]
-        public string BaseFolder { get; } = AppContext.BaseDirectory;
+		[XmlIgnore] 
+		private string BaseFolder { get; } = AppContext.BaseDirectory;
 
         public OrigamSettings()
         {
         }
-
-        public OrigamSettings(string baseFolder)
+		public OrigamSettings(string name)
 		{
-            this.BaseFolder = baseFolder;
-		}
-
-		public OrigamSettings(string name, string baseFolder)
-		{
-			this.Name = name;
-            this.BaseFolder = baseFolder;
+			Name = name;
 		}
 
 		public OrigamSettings(

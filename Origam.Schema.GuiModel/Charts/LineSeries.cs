@@ -27,7 +27,7 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("Line Series", "Data Series", 74)]
+	[SchemaItemDescription("Line Series", "Data Series", "icon_line-series-2.png")]
     [HelpTopic("Line+Series")]
 	public class LineSeries : AbstractCartesianSeries
 	{

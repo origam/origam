@@ -23,19 +23,19 @@ using System.Drawing;
 using System.Windows.Forms;
 using Origam.Extensions;
 using Origam.Schema.GuiModel;
+using Origam.Workbench.BaseComponents;
 
 namespace Origam.Gui.UI
 {
     internal static class ToolStripButtonTools
     {
         private const int ImageTextGap = 0;
-        public static readonly Size IMAGE_SIZE = new Size(24,24); 
-        public static readonly Size BUTTON_SIZE = new Size(24,95); 
+        public static readonly Size BUTTON_SIZE = new Size(24,95);
+        private static readonly int defaultImageHeight = 24;
 
 
         public static void InitBigButton(ToolStripItem actionButton)
         {
-            actionButton.ImageScaling = ToolStripItemImageScaling.SizeToFit;
             actionButton.TextAlign = ContentAlignment.BottomCenter;
             actionButton.ImageAlign = ContentAlignment.MiddleCenter;
             actionButton.TextImageRelation = TextImageRelation.ImageAboveText;
@@ -83,13 +83,14 @@ namespace Origam.Gui.UI
             }
         }
         public static void PaintImage(ToolStripItem actionButton,
-            PaintEventArgs e, Size imageSize)
+            PaintEventArgs e)
         {
             if (actionButton.Owner == null)
                 return;
             
             var renderer = actionButton.Owner.Renderer;
-
+            actionButton.Image = GetImage(actionButton);
+            
             bool shouldPaintImage =
                 (actionButton.DisplayStyle & ToolStripItemDisplayStyle.Image) ==
                 ToolStripItemDisplayStyle.Image;
@@ -99,19 +100,24 @@ namespace Origam.Gui.UI
                     new ToolStripItemImageRenderEventArgs(
                         e.Graphics,
                         actionButton,
-                        GetImageRectangle(actionButton,imageSize))
+                        GetImageRectangle(actionButton))
                 );
             }
         }
 
-        public static Rectangle GetImageRectangle(ToolStripItem actionButton,
-            Size imageSize)
+        private static Image GetImage(ToolStripItem actionButton)
         {
-            var xCoord = (actionButton.Width - imageSize.Width) / 2;
-            var yCoord = actionButton.Margin.Top; 
+            return actionButton.Image ?? ImageRes.UnknownIcon;
+        }
+
+        public static Rectangle GetImageRectangle(ToolStripItem actionButton)
+        {
+            Image image = GetImage(actionButton);
+            var xCoord = (actionButton.Width - image.Size.Width) / 2;
+            var yCoord = actionButton.Margin.Top + (defaultImageHeight - image.Height) / 2; 
             return new Rectangle(
                 new Point(xCoord, yCoord),
-                imageSize);
+                image.Size);
         }
 
         private static Rectangle GetTextRectangle(this ToolStripItem actionButton)

@@ -25,9 +25,8 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using CSharpFunctionalExtensions;
-using Origam.DA.ObjectPersistence.Providers;
-using Origam.Extensions;
 using MoreLinq;
+using Origam.Extensions;
 
 namespace Origam.DA.Service
 {
@@ -284,6 +283,7 @@ namespace Origam.DA.Service
         public Folder Folder { get;}
         public FileInfo FileInfo => xmlFileData.FileInfo;
         public virtual Folder FolderToDetermineParentGroup => Folder;
+        public virtual Folder FolderToDetermineReferenceGroup => Folder;
         private readonly IOrigamFileFactory origamFileFactory;
         
         public ObjectFileData(ParentFolders parentFolders, XmlFileData xmlFileData,
@@ -327,6 +327,11 @@ namespace Origam.DA.Service
                         isFolder: isFolder,
                         origamFile: (OrigamFile)origamFile);
 
+                    if (origamFile.ContainedObjects.ContainsKey(objectInfo.Id))
+                    {
+                        throw new InvalidOperationException("Duplicate object with id: "+objectInfo.Id+" in: "+origamFile.Path.Relative);
+                    }
+                    
                     origamFile.ContainedObjects.Add(objectInfo.Id, objectInfo);
                 } 
                 else
@@ -359,6 +364,7 @@ namespace Origam.DA.Service
     {
         public Guid GroupId { get; }
         public override Folder FolderToDetermineParentGroup => Folder.Parent;
+        public override Folder FolderToDetermineReferenceGroup => Folder.Parent;
         public GroupFileData(IList<ElementName> parentFolders,XmlFileData xmlFileData,
             OrigamFileFactory origamFileFactory) :
             base(new ParentFolders(parentFolders), xmlFileData, origamFileFactory)
@@ -584,7 +590,8 @@ namespace Origam.DA.Service
 
         protected virtual ReferenceFileData FindReferenceFile(ObjectFileData data)
         {
-           referenceFileDict.TryGetValue(data.Folder, out var refFileData);
+           referenceFileDict.TryGetValue(
+               data.FolderToDetermineReferenceGroup, out var refFileData);
            return refFileData;
         }
     }

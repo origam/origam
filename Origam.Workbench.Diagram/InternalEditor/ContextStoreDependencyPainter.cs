@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
-using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Diagram.Extensions;
@@ -13,50 +12,36 @@ namespace Origam.Workbench.Diagram.InternalEditor
 {
     class ContextStoreDependencyPainter
     {
-        private readonly NodeSelector nodeSelector;
-        private readonly IPersistenceProvider persistenceProvider;
         private readonly Func<AbstractSchemaItem> graphParentItemGetter;
         private readonly GViewer gViewer;
         private readonly List<IArrowPainter> arrowPainters = new List<IArrowPainter>();
-        private IContextStore lastContextStore;
 
-        public ContextStoreDependencyPainter(NodeSelector nodeSelector,
-            IPersistenceProvider persistenceProvider,
-            GViewer gViewer, Func<AbstractSchemaItem> graphParentItemGetter)
+        public ContextStoreDependencyPainter(GViewer gViewer,
+            Func<AbstractSchemaItem> graphParentItemGetter)
         {
-            this.nodeSelector = nodeSelector;
-            this.persistenceProvider = persistenceProvider;
             this.gViewer = gViewer;
             this.graphParentItemGetter = graphParentItemGetter;
-
         }
-
-        public bool IsActive => lastContextStore != null;
-
+        public IContextStore CurrentContextStore { get; private set; }
+    
         public void DeActivate()
         {
-            lastContextStore = null;
+            CurrentContextStore = null;
             RemoveEdges();
+        }
+
+        public void Activate(IContextStore contextStore)
+        {
+            CurrentContextStore = contextStore;
         }
 
         public List<string> GetNodesToExpand()
         {
-            Guid? id = nodeSelector.SelectedNodeId;
             RemoveEdges();
 
-            var selectedItem = id == null 
-                ? null 
-                : persistenceProvider.RetrieveInstance(
-                    typeof(AbstractSchemaItem), new Key(id.Value)
-                ) as AbstractSchemaItem;
-
-            lastContextStore = selectedItem is IContextStore contextStore
-                ? contextStore
-                : lastContextStore;
-            
-            if (lastContextStore != null)
+            if (CurrentContextStore != null)
             {
-                PreparePainters(lastContextStore);
+                PreparePainters(CurrentContextStore);
                 return FindTasksToExpand();
             }
             return new List<string>();
@@ -64,9 +49,9 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
         public void Draw()
         {
-            if (lastContextStore != null)
+            if (CurrentContextStore != null)
             {
-                DrawEdges(lastContextStore.NodeId);
+                DrawEdges(CurrentContextStore.NodeId);
             }
         }
 

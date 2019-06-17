@@ -22,7 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-
+using Origam.OrigamEngine;
 using Origam.UI;
 
 namespace Origam.Workbench
@@ -278,9 +278,12 @@ namespace Origam.Workbench
 			// refresh list
 			foreach(ListViewItem item in lvwConfigurations.Items)
 			{
-				item.SubItems[0].Text = (item.Tag as OrigamSettings).Name;
-				item.SubItems[1].Text = (item.Tag as OrigamSettings).SchemaConnectionString;
-				item.SubItems[2].Text = (item.Tag as OrigamSettings).DataConnectionString;
+				OrigamSettings origamSettings = item.Tag as OrigamSettings;
+				item.SubItems[0].Text = origamSettings.Name;
+				item.SubItems[1].Text = origamSettings.ModelProvider.Contains(nameof(DatabasePersistenceBuilder)) 
+					? origamSettings.SchemaConnectionString 
+					: origamSettings.ModelSourceControlLocation;
+				item.SubItems[2].Text = origamSettings.DataConnectionString;
 			}
 		}
 
@@ -297,7 +300,7 @@ namespace Origam.Workbench
 			if(e.Button == btnAdd)
 			{
 				ListViewItem newItem = NewItem();
-				newItem.Tag = new OrigamSettings(System.Windows.Forms.Application.StartupPath, "New Configuration");
+				newItem.Tag = new OrigamSettings("New Configuration");
 
 				lvwConfigurations.Items.Add(newItem);
 				RefreshList();

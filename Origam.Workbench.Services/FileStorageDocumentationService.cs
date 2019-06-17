@@ -20,13 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using CSharpFunctionalExtensions;
-using log4net.Layout;
 using MoreLinq;
 using Origam.DA.Service;
 using Origam.Extensions;
@@ -40,8 +38,11 @@ namespace Origam.Workbench.Services
     {
         private readonly IFilePersistenceProvider filePersistenceProvider;
         private readonly FileEventQueue fileEventQueue;
+
         private readonly Dictionary<string, string> changedFileHashDictionary =
             new Dictionary<string, string>();
+        private readonly Dictionary<string, DocXmlDocument> loadedDocFiles =  
+            new Dictionary<string, DocXmlDocument>();
 
         public FileStorageDocumentationService(IFilePersistenceProvider persistenceService,
             FileEventQueue fileEventQueue)
@@ -50,6 +51,9 @@ namespace Origam.Workbench.Services
                                            ?? throw new ArgumentNullException();
             this.fileEventQueue = fileEventQueue 
                                        ?? throw new ArgumentNullException();
+
+            fileEventQueue.ReloadNeeded +=
+                (sender, args) => loadedDocFiles.Clear();
         }
 
         public override string GetDocumentation(Guid schemaItemId,
@@ -81,6 +85,7 @@ namespace Origam.Workbench.Services
                 DocXmlDocument docXmlDocument = GetDocumentFor(schemaItemId);
                 docXmlDocument.RemoveOutDatedNodes(new List<XmlNode>(), schemaItemId);
                 docXmlDocument.Save();
+                RemovedCachedDocumentFor(schemaItemId);
                 fileEventQueue.Continue();
                 return;
             }
@@ -89,6 +94,7 @@ namespace Origam.Workbench.Services
                 new DocumentationCompleteXmlDocument(documentationData);
             
             fileEventQueue.Pause();
+            var modifiedDocuments = new List<DocXmlDocument>();
             foreach (Guid documentedItemId in dataSetXmlDocument.GetAllDocumentedItemIds())
             {
                 if (!filePersistenceProvider.Has(documentedItemId)) continue;
@@ -97,9 +103,17 @@ namespace Origam.Workbench.Services
                     dataSetXmlDocument.GetNodesWith(documentedItemId);
                 docXmlDocument.RemoveOutDatedNodes(docNodes, schemaItemId);
                 docXmlDocument.AddOrReplace(docNodes);
+                modifiedDocuments.Add(docXmlDocument);
+            }
+
+            foreach (var docXmlDocument in modifiedDocuments)
+            {
                 docXmlDocument.Save();
                 UpdateFileHash(docXmlDocument.FilePath);
+                loadedDocFiles.RemoveByValueSelector(
+                    doc => doc == docXmlDocument);
             }
+
             fileEventQueue.Continue();
         }
 
@@ -126,7 +140,21 @@ namespace Origam.Workbench.Services
             string docFilePath = Path.Combine(
                 packageDirectory.FullName,
                 DocumentationXmlDocument.DocFilename);
-            return new DocXmlDocument(docFilePath);
+            if (!loadedDocFiles.ContainsKey(docFilePath))
+            {
+                loadedDocFiles.Add(docFilePath, new DocXmlDocument(docFilePath));
+            }
+            return loadedDocFiles[docFilePath];
+        }
+
+        private void RemovedCachedDocumentFor(Guid itemId)
+        {
+            DirectoryInfo packageDirectory =
+                filePersistenceProvider.GetParentPackageDirectory(itemId);
+            string docFilePath = Path.Combine(
+                packageDirectory.FullName,
+                DocumentationXmlDocument.DocFilename);
+            loadedDocFiles.Remove(docFilePath);
         }
 
         public override DocumentationComplete GetAllDocumentation()

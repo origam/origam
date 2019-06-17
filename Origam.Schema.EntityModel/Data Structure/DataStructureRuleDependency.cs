@@ -30,7 +30,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for DataStructureRuleDependency.
 	/// </summary>
-	[SchemaItemDescription("Dependency", "Dependencies", 16)]
+	[SchemaItemDescription("Dependency", "Dependencies", "icon_rule-dependency.png")]
     [HelpTopic("Rule+Set+Rule+Dependency")]
 	[XmlModelRoot(ItemTypeConst)]
 	[DefaultProperty("Entity")]
@@ -86,14 +86,6 @@ namespace Origam.Schema.EntityModel
 		#endregion
 
 		#region Overriden AbstractSchemaItem Members
-		public override string Icon
-		{
-			get
-			{
-				return "16";
-			}
-		}
-
 		[EntityColumn("ItemType")]
 		public override string ItemType
 		{

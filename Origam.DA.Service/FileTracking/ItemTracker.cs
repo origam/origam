@@ -25,8 +25,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using CSharpFunctionalExtensions;
-using Origam.Extensions;
 using MoreLinq;
+using Origam.Extensions;
 using ProtoBuf;
 
 namespace Origam.DA.Service
@@ -54,8 +54,10 @@ namespace Origam.DA.Service
 
         private readonly OrigamPathFactory pathFactory;
 
-        public IEnumerable<OrigamFile> OrigamFiles => fileHashIndex.Files.OfType<OrigamFile>();
-        public IEnumerable<ITrackeableFile> AllFiles => fileHashIndex.Files;
+        public IEnumerable<OrigamFile> OrigamFiles => fileHashIndex.OrigamFiles;
+        public IEnumerable<ITrackeableFile> AllFiles => fileHashIndex.AllFiles;
+
+        public IEnumerable<OrigamFile> PackegeFiles => fileHashIndex.PackageFiles;
         public bool IsEmpty => !OrigamFiles.Any();
 
         public ItemTracker(OrigamPathFactory pathFactory)
@@ -294,14 +296,24 @@ namespace Origam.DA.Service
         private readonly IDictionary<string, ITrackeableFile> pathDict =
             new Dictionary<string, ITrackeableFile>();
 
-        public ICollection<ITrackeableFile> Files => pathDict.Values;
+        private IDictionary<string, OrigamFile> packageFiles =
+            new Dictionary<string, OrigamFile>();
+
+        public ICollection<ITrackeableFile> AllFiles => pathDict.Values;
+        public IEnumerable<OrigamFile> OrigamFiles => AllFiles.OfType<OrigamFile>();
+        public IEnumerable<OrigamFile> PackageFiles => packageFiles.Values;
         public int Count => hashFileDict.Count;
        
-        public void AddOrReplace(ITrackeableFile newOrigamFile)
+        public void AddOrReplace(ITrackeableFile newTrackAble)
         {
-            if (newOrigamFile.FileHash == null) return;
-            pathDict[newOrigamFile.Path.Relative] = newOrigamFile;
-            hashFileDict[newOrigamFile.Path.Absolute.ToLower()] =  newOrigamFile.FileHash;
+            if (newTrackAble.FileHash == null) return;
+            pathDict[newTrackAble.Path.Relative] = newTrackAble;
+            hashFileDict[newTrackAble.Path.Absolute.ToLower()] =  newTrackAble.FileHash;
+            if (OrigamFile.IsPackageFile(newTrackAble.Path))
+            {
+                packageFiles[newTrackAble.Path.Relative] = (OrigamFile)newTrackAble;
+            }
+
             System.Diagnostics.Debug.Assert(pathDict.Count == hashFileDict.Count);
         }
 
@@ -321,7 +333,8 @@ namespace Origam.DA.Service
             foreach (KeyValuePair<string, ITrackeableFile> keyValuePair in removedPairs)
             {
                 ITrackeableFile origamFileToRemove = keyValuePair.Value;
-                hashFileDict.Remove(origamFileToRemove.Path.Absolute.ToLower());  
+                hashFileDict.Remove(origamFileToRemove.Path.Absolute.ToLower());
+                packageFiles.Remove(origamFileToRemove.Path.Relative);
             }
         }
 
@@ -329,6 +342,7 @@ namespace Origam.DA.Service
         {
             hashFileDict.Clear();
             pathDict.Clear();
+            packageFiles.Clear();
         }
 
         public void Remove(ITrackeableFile orFileToRemove)
@@ -337,6 +351,7 @@ namespace Origam.DA.Service
                 fullPath == orFileToRemove.Path.Absolute.ToLower());
             pathDict.RemoveByKeySelector(relativePath =>
                 relativePath == orFileToRemove.Path.Relative);
+            packageFiles.Remove(orFileToRemove.Path.Relative);
             System.Diagnostics.Debug.Assert(pathDict.Count == hashFileDict.Count);
         }
 

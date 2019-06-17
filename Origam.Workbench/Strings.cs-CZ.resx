@@ -298,7 +298,7 @@
 		<value>Name</value>
 	</data>
 	<data name="ModelConnectionTitle">
-		<value>Model Connection</value>
+		<value>Model Connection / Path</value>
 	</data>
 	<data name="DataConnectionTitle">
 		<value>Data Connection</value>

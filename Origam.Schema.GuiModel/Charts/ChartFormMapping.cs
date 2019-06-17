@@ -28,7 +28,7 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("Screen Mapping", "Screen Mappings", 13)]
+	[SchemaItemDescription("Screen Mapping", "Screen Mappings", "icon_screen-mapping.png")]
     [HelpTopic("Chart+Screen+Mapping")]
 	[XmlModelRoot(ItemTypeConst)]
     public class ChartFormMapping : AbstractSchemaItem
@@ -102,14 +102,6 @@ namespace Origam.Schema.GuiModel
 			set
 			{
 				this.EntityId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "13";
 			}
 		}
 
