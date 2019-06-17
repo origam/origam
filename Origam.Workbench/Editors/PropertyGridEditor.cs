@@ -72,6 +72,12 @@ namespace Origam.Workbench.Editors
 			this.propertyGrid1.HelpForeColor = OrigamColorScheme.MdiForeColor;
             this.propertyGrid1.SelectedItemWithFocusBackColor = OrigamColorScheme.TabActiveStartColor;
             WorkbenchSingleton.Workbench.ViewOpened += Workbench_ViewOpened;
+            this.Shown += new EventHandler(PropertyGridEditor_Shown);
+        }
+
+        private void PropertyGridEditor_Shown(object sender, EventArgs e)
+        {
+            propertyGrid1.SetSplitter();
         }
 
         /// <summary>
