@@ -27,6 +27,10 @@ using Origam.DA;
 using System;
 using Origam.Schema;
 using Origam.Workbench.Commands;
+using System.Reflection;
+using System.Windows.Forms;
+using Origam.Extensions;
+using System.Linq;
 
 namespace Origam.Workbench.PropertyGrid
 {
@@ -94,6 +98,22 @@ namespace Origam.Workbench.PropertyGrid
             {
                 Origam.UI.AsMessageBox.ShowError(null, ex.Message, "Error", ex);
             }
+        }
+
+        internal void SetSplitter()
+        {
+            var flags = BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.Public;
+            FieldInfo View = this.GetType().BaseType.GetField("gridView", flags);
+            Control controll = (Control)View.GetValue(this);
+            MethodInfo methodInfo = controll.GetType().GetMethod("MoveSplitterTo", flags);
+            GridItemCollection gridItemCollection = (GridItemCollection)controll.GetType().InvokeMember("GetAllGridEntries",
+                flags, null, controll, null);
+            int maxwidth = gridItemCollection
+                .OfType<GridItem>()
+                .OrderByDescending(gridItem=>gridItem.Label.Width(Font))
+                .First().Label.Width(Font)+50;
+            if (methodInfo != null)
+                methodInfo.Invoke(controll, new object[] { maxwidth });
         }
     }
 }
