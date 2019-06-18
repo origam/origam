@@ -223,16 +223,14 @@ namespace Origam.Workbench.Diagram
 			{
 				Node destinationShape = ht[step.PrimaryKey];
 				if (destinationShape == null)
-					throw new NullReferenceException(
-						ResourceUtils.GetString("ErrorDestinationShapeNotFound"));
+					throw new NullReferenceException(Strings.WorkFlowDiagramFactory_DestinationShape_not_found);
 				int i = 0;
 				foreach (WorkflowTaskDependency dependency in step.ChildItemsByType(
 					WorkflowTaskDependency.ItemTypeConst))
 				{
 					Node sourceShape = ht[dependency.Task.PrimaryKey];
 					if (sourceShape == null)
-						throw new NullReferenceException(
-							ResourceUtils.GetString("ErrorSourceShapeNotFound"));
+						throw new NullReferenceException(Strings.WorkFlowDiagramFactory_SourceShape_not_found);
 
 					Edge edge = graph.AddEdge(sourceShape.Id, destinationShape.Id);
 					edge.UserData = dependency;

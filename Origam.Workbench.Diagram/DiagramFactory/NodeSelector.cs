@@ -28,5 +28,7 @@ namespace Origam.Workbench.Diagram
                 selected = value;
             }
         }
+
+        public bool MarkedForExpansion { get; set; }
     }
 }

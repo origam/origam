@@ -24,20 +24,18 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Origam.Schema;
-using Origam.Workbench.Diagram;
-using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using Origam.DA.ObjectPersistence;
 using Origam.Gui.UI;
+using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.BaseComponents;
 using Origam.Workbench.Commands;
+using Origam.Workbench.Diagram;
 using Origam.Workbench.Diagram.DiagramFactory;
 using Origam.Workbench.Diagram.InternalEditor;
 using Origam.Workbench.Services;
 using DrawingNode = Microsoft.Msagl.Drawing.Node;
-using MouseButtons = System.Windows.Forms.MouseButtons;
 
 namespace Origam.Workbench.Editors
 {
@@ -206,7 +204,7 @@ namespace Origam.Workbench.Editors
 		private void GViewerOnDoubleClick(object sender, EventArgs e)
 		{
 			GViewer viewer = sender as GViewer;
-			if (viewer.SelectedObject is Node node)
+			if (viewer.SelectedObject is DrawingNode node)
 			{
 				if (!Guid.TryParse(node.Id, out Guid id)) return;
 				AbstractSchemaItem clickedItem = 
@@ -258,28 +256,28 @@ namespace Origam.Workbench.Editors
 		public List<ToolStrip> GetToolStrips(int maxWidth = -1)
 		{
 			LabeledToolStrip toolStrip = new LabeledToolStrip(this);
-			toolStrip.Text = "Diagram Editor";
+			toolStrip.Text = Diagram.Strings.DiagramEditor_ToolStrip_Title;
 			
 			BigToolStripButton zoomHomeButton = new BigToolStripButton();
-			zoomHomeButton.Text = "Zoom Home";
+			zoomHomeButton.Text = Diagram.Strings.DiagramEditor_ToolStrip_Zoom_Home;
 			zoomHomeButton.Image = ImageRes.UnknownIcon;
 			zoomHomeButton.Click += ZoomHome;
 			toolStrip.Items.Add(zoomHomeButton);
 
 			BigToolStripButton zoomInButton = new BigToolStripButton();
-			zoomInButton.Text = "Zoom +";
+			zoomInButton.Text = Diagram.Strings.DiagramEditor_ToolStrip_Zoom_PLUS;
 			zoomInButton.Image = ImageRes.UnknownIcon;
 			zoomInButton.Click += (sender, args) => gViewer.ZoomInPressed();
 			toolStrip.Items.Add(zoomInButton);
 			
 			BigToolStripButton zoomOutButton = new BigToolStripButton();
-			zoomOutButton.Text = "Zoom -";
+			zoomOutButton.Text = Diagram.Strings.DiagramEditor_ToolStrip_Zoom_MINUS;
 			zoomOutButton.Image = ImageRes.UnknownIcon;
 			zoomOutButton.Click += (sender, args) => gViewer.ZoomOutPressed();
 			toolStrip.Items.Add(zoomOutButton);
 			
 			BigToolStripButton edgeButton = new BigToolStripButton();
-			edgeButton.Text = "Dependency";
+			edgeButton.Text = Diagram.Strings.DiagramEditor_ToolStrip_Dependency;
 			edgeButton.Image = ImageRes.UnknownIcon;
 			edgeButton.Click += ToggleInsertEdge;
 			toolStrip.Items.Add(edgeButton);

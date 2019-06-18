@@ -90,9 +90,11 @@ namespace Origam.Workbench.Diagram.InternalEditor
         {
 	        var originalTransform = gViewer.Transform;
 
-	        List<string> nodesToExpand = nodeSelector.Selected == null
-		        ? new List<string>()
-		        : new List<string> {nodeSelector.Selected?.Id};
+	        bool expandSelected = nodeSelector.Selected != null &&
+	                              nodeSelector.MarkedForExpansion;
+	        List<string> nodesToExpand = expandSelected
+		        ? new List<string> {nodeSelector.Selected?.Id}
+		        : new List<string>();
 	        nodesToExpand.AddRange(dependencyPainter.GetNodesToExpand());
 	        gViewer.Graph = factory.Draw(UpToDateGraphParent, nodesToExpand);
 	        dependencyPainter.Draw();
@@ -338,7 +340,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		void OnMouseDown(object sender, MsaglMouseEventArgs e)
 		{
 			if (gViewer.InsertingEdge) return;
-			LeftMouseButtonDown(e);
+			HandleSelectAndRedraw(e);
 			TrySelectActiveNodeInModelView();
 			TrySelectActiveEdgeInModelView();
 	        if (e.RightButtonIsPressed && !e.Handled)
@@ -347,49 +349,46 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		        ContextMenuStrip cm = BuildContextMenu();
                 cm.Show(parentForm,mouseRightButtonDownPoint);
 	        }
-	    }
+		}
 
-		private void LeftMouseButtonDown(MsaglMouseEventArgs eventArgs)
+		private void HandleSelectAndRedraw(MsaglMouseEventArgs eventArgs)
 		{
 			gViewer.Hit(new MouseEventArgs(MouseButtons.None, 0, eventArgs.X,eventArgs.Y,0));
 			if (gViewer.SelectedObject is Node node)
 			{
 				if (Equals(nodeSelector.Selected, node))
 				{
+					if (nodeSelector.MarkedForExpansion == false && 
+					    eventArgs.LeftButtonIsPressed)
+					{
+						nodeSelector.MarkedForExpansion = true;
+						RedrawAndReFocus(node);
+					}
 					return;
 				}
+				
+				nodeSelector.MarkedForExpansion =
+					eventArgs.LeftButtonIsPressed;
 
-				if (nodeSelector.Selected?.Id == node.Id)
-				{
-					nodeSelector.Selected = node;
-					return;
-				}
-
-				bool currentOrPreviousNodeIsContextStore =
-					RetrieveItem(node) is ContextStore ||
-					RetrieveItem(nodeSelector.Selected) is ContextStore;
 				if (Graph.AreRelatives(nodeSelector.Selected, node) &&
-				    !(node is Subgraph) &&
-				    !currentOrPreviousNodeIsContextStore)
+				    !(node is Subgraph))
 				{
 					nodeSelector.Selected = node;
 					gViewer.Invalidate();
 					return;
 				}
-
-				if (currentOrPreviousNodeIsContextStore)
-				{
-					ReDrawAndKeepFocus(node);
-				}
-				else
-				{
-					nodeSelector.Selected = node;
-					var origTransform = gViewer.Transform;
-					ReDrawAndReselect();
-					gViewer.Transform = origTransform;
-					gViewer.Invalidate();
-				}
+				
+				RedrawAndReFocus(node);
 			}
+		}
+
+		private void RedrawAndReFocus(Node node)
+		{
+			nodeSelector.Selected = node;
+			var origTransform = gViewer.Transform;
+			ReDrawAndReselect();
+			gViewer.Transform = origTransform;
+			gViewer.Invalidate();
 		}
 
 		private void ReDrawAndKeepFocus(Node node)
