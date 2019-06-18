@@ -377,9 +377,6 @@
                             <Component Id="ORIGAM.WORKBENCH.BASECOMPONENTS.RESOURCES.DLL" DiskId="1" Guid="3BD33670-3395-43A1-84F0-22E57CA7DD97">
                                 <File Id="ORIGAM.WORKBENCH.BASECOMPONENTS.RESOURCES.DLL" Name="Origam.Workbench.BaseComponents.resources.dll" Source="source\cs-CZ\Origam.Workbench.BaseComponents.resources.dll" />
                             </Component>
-                            <Component Id="ORIGAM.WORKBENCH.DIAGRAM.RESOURCES.DLL" DiskId="1" Guid="E676D6AC-2D8D-4F1A-BE5C-8AA7D0F62ABA">
-                                <File Id="ORIGAM.WORKBENCH.DIAGRAM.RESOURCES.DLL" Name="Origam.Workbench.Diagram.resources.dll" Source="source\cs-CZ\Origam.Workbench.Diagram.resources.dll" />
-                            </Component>
                             <Component Id="ORIGAM.WORKBENCH.RESOURCES.DLL" DiskId="1" Guid="F8F51885-C4C7-4AE9-8DCF-6AC67EBA1AF9">
                                 <File Id="ORIGAM.WORKBENCH.RESOURCES.DLL" Name="Origam.Workbench.resources.dll" Source="source\cs-CZ\Origam.Workbench.resources.dll" />
                             </Component>
@@ -1438,9 +1435,6 @@
                                             <Component Id="ORIGAM.WORKBENCH.BASECOMPONENTS.RESOURCES.DLL_2" DiskId="1" Guid="CDCAA068-2F32-4CEE-83FC-E7AFC8196EEA">
                                                 <File Id="ORIGAM.WORKBENCH.BASECOMPONENTS.RESOURCES.DLL_2" Name="Origam.Workbench.BaseComponents.resources.dll" Source="server_source\bin\cs-CZ\Origam.Workbench.BaseComponents.resources.dll" />
                                             </Component>
-                                            <Component Id="ORIGAM.WORKBENCH.DIAGRAM.RESOURCES.DLL_1" DiskId="1" Guid="51021554-2FC5-4163-961D-42B1A6A77E27">
-                                                <File Id="ORIGAM.WORKBENCH.DIAGRAM.RESOURCES.DLL_1" Name="Origam.Workbench.Diagram.resources.dll" Source="server_source\bin\cs-CZ\Origam.Workbench.Diagram.resources.dll" />
-                                            </Component>
                                             <Component Id="ORIGAM.WORKBENCH.RESOURCES.DLL_2" DiskId="1" Guid="01924954-0F34-4B73-8C60-F7D17AC55563">
                                                 <File Id="ORIGAM.WORKBENCH.RESOURCES.DLL_2" Name="Origam.Workbench.resources.dll" Source="server_source\bin\cs-CZ\Origam.Workbench.resources.dll" />
                                             </Component>
@@ -1721,7 +1715,6 @@
             <ComponentRef Id="ORIGAM.SECURITY.RESOURCES.DLL" />
             <ComponentRef Id="ORIGAM.UI.RESOURCES.DLL" />
             <ComponentRef Id="ORIGAM.WORKBENCH.BASECOMPONENTS.RESOURCES.DLL" />
-            <ComponentRef Id="ORIGAM.WORKBENCH.DIAGRAM.RESOURCES.DLL" />
             <ComponentRef Id="ORIGAM.WORKBENCH.RESOURCES.DLL" />
             <ComponentRef Id="ORIGAM.WORKBENCH.SERVICES.RESOURCES.DLL" />
             <ComponentRef Id="ORIGAM.WORKFLOW.RESOURCES.DLL" />
@@ -2032,7 +2025,6 @@
             <ComponentRef Id="ORIGAM.SECURITY.RESOURCES.DLL_2" />
             <ComponentRef Id="ORIGAM.UI.RESOURCES.DLL_1" />
             <ComponentRef Id="ORIGAM.WORKBENCH.BASECOMPONENTS.RESOURCES.DLL_2" />
-            <ComponentRef Id="ORIGAM.WORKBENCH.DIAGRAM.RESOURCES.DLL_1" />
             <ComponentRef Id="ORIGAM.WORKBENCH.RESOURCES.DLL_2" />
             <ComponentRef Id="ORIGAM.WORKBENCH.SERVICES.RESOURCES.DLL_2" />
             <ComponentRef Id="ORIGAM.WORKFLOW.RESOURCES.DLL_2" />
