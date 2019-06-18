@@ -106,23 +106,18 @@ namespace Origam.Workflow
 			{
 				// call workflow and fill dataset with workflow result
 				DataStructureWorkflowMethod dataStructureWorkflowMethod = (DataStructureWorkflowMethod) method;
-
-				
-				if (data != null)
+                ContextStore returnContext = dataStructureWorkflowMethod.LoadWorkflow.GetReturnContext();
+                if (returnContext == null)
+                {
+                    // return contextstore not found
+                    throw new ArgumentException(String.Format("The input data was sent to method {0}"
+                        + "while there is no context store defined with `IsReturnValue' set for workflow {1},",
+                        method.Id, dataStructureWorkflowMethod.LoadWorkflowId));
+                }
+                if (data != null)
 					// current data was sent, we have to pass them into main (output) contextstore of our workflow
 				{
-					ContextStore returnContext = dataStructureWorkflowMethod.LoadWorkflow.GetReturnContext();
-					if (returnContext == null)
-					{
-						// return contextstore not found
-						throw new ArgumentException(String.Format("The input data was sent to method {0}"
-							+ "while there is no context store defined with `IsReturnValue' set for workflow {1},",
-							method.Id, dataStructureWorkflowMethod.LoadWorkflowId));
-					}
-					else
-					{
-						query.Parameters.Add(new QueryParameter(returnContext.Name, data));
-					}
+					query.Parameters.Add(new QueryParameter(returnContext.Name, data));
 				}
 				Object res = core.WorkflowService.ExecuteWorkflow(
 					dataStructureWorkflowMethod.LoadWorkflowId,
