@@ -17,9 +17,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using Microsoft.Msagl.Drawing;
+using Origam.Workbench.Diagram.Graphs;
 
 namespace Origam.Workbench.Diagram
 {
@@ -31,21 +33,37 @@ namespace Origam.Workbench.Diagram
     public class NodeSelector: INodeSelector
     {
         private Node selected;
-        public Guid? SelectedNodeId { get; private set; }
+        public Guid SelectedNodeId { get; private set; }
 
         public Node Selected
         {
             get => selected;
             set
             {
-                if(Guid.TryParse(value?.Id, out Guid id)){
-                    SelectedNodeId = id;
-                }
-                else
-                {
-                    SelectedNodeId = null;
-                }
+                SelectedNodeId = GetSelectedNodeId(value);
                 selected = value;
+            }
+        }
+
+        private Guid GetSelectedNodeId(Node node)
+        {
+            string strId;
+            if (node is InfrastructureSubgraph infrastructureSubgraph)
+            {
+                strId = infrastructureSubgraph.WorkflowItemId;
+            }
+            else
+            {
+                strId = node?.Id;
+            }
+            
+            if(Guid.TryParse(strId, out Guid id))
+            {
+                return id;
+            }
+            else
+            {
+                return Guid.Empty;
             }
         }
 
