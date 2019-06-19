@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -95,7 +96,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
         public void ReDrawAndReselect()
         {
 			ReDraw();
-			Node nodeToSelect = Graph.FindNodeOrSubgraph(nodeSelector.Selected?.Id);
+			Node nodeToSelect = Graph.FindNodeOrSubgraph(nodeSelector.SelectedNodeId.ToString());
 			if (nodeToSelect == null &&
 			    Guid.TryParse(nodeSelector.Selected?.Id, out var id) &&
 			    UpToDateGraphParent.Id == id)

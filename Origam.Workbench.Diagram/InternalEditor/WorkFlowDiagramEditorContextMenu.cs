@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Linq;
 using System.Windows.Forms;
@@ -33,6 +34,7 @@ using Origam.UI;
 using Origam.Workbench.BaseComponents;
 using Origam.Workbench.Commands;
 using Origam.Workbench.Diagram.Extensions;
+using Origam.Workbench.Diagram.Graphs;
 
 namespace Origam.Workbench.Diagram.InternalEditor
 {
@@ -183,10 +185,14 @@ namespace Origam.Workbench.Diagram.InternalEditor
 				return true;
 			}
 			if (dNodeUnderMouse == null) return false;
-			var schemaItem = RetrieveItem(dNodeUnderMouse.Node);
+			var schemaItem = dNodeUnderMouse.Node is InfrastructureSubgraph infrastructureGraph
+				? RetrieveItem(infrastructureGraph.WorkflowItemId) 
+				: RetrieveItem(dNodeUnderMouse.Node);
 			if (!(dNodeUnderMouse.Node is Subgraph) && 
 			    !(schemaItem is ServiceMethodCallParameter)) return false;
-			return Equals(dNodeUnderMouse.Node, nodeSelector.Selected);
+
+			Guid.TryParse(dNodeUnderMouse.Node.Id, out Guid nodeId);
+			return nodeId == nodeSelector.SelectedNodeId;
 		}
 
 		private ToolStripMenuItem MakeAddAfterItem(DNode dNodeUnderMouse,
