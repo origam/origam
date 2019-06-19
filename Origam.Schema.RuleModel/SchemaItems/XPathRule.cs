@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.ComponentModel;
+using System.Drawing.Design;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
@@ -57,7 +58,10 @@ namespace Origam.Schema.RuleModel
 		#region Properties
 		[EntityColumn("M01")] 
         [XmlAttribute("xPath")]
-		public string XPath { get; set; } = "";
+#if !NETSTANDARD
+        [Editor(typeof(MultiLineTextEditor), typeof(UITypeEditor))]
+#endif
+        public string XPath { get; set; } = "";
 
 		[EntityColumn("B01"), DefaultValue(false)] 
         [XmlAttribute("isPathRelative")]
