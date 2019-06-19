@@ -22,14 +22,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
-using Microsoft.Extensions.Logging;
+using Origam.Security.Identity;
 using Origam.Server;
 using Origam.ServerCommon;
 using Origam.ServerCore.Models;
@@ -44,9 +41,10 @@ namespace Origam.ServerCore.Controllers
     {
         private readonly SessionObjects sessionObjects;
 
-        public SessionsController(SessionObjects sessionObjects)
+        public SessionsController(SessionObjects sessionObjects, IServiceProvider serviceProvider)
         {
             this.sessionObjects = sessionObjects;
+            IdentityServiceAgent.ServiceProvider = serviceProvider;
         }
 
         [HttpPost("[action]")]

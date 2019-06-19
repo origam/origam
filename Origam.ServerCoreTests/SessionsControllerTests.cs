@@ -22,15 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
-using Origam.Extensions;
 using Origam.Server;
-using Origam.ServerCore;
 using Origam.ServerCore.Controllers;
 using Origam.ServerCore.Models;
 
@@ -43,10 +37,9 @@ namespace Origam.ServerCoreTests
         private Guid sessionId;
         private Guid rowId;
 
-
         public SessionsControllerTests()
         {
-            sut = new SessionsController(sessionObjects);
+            sut = new SessionsController(sessionObjects, null);
         }
 
         [Test, Order(301)]
