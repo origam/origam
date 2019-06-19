@@ -26,7 +26,6 @@ using System.Data;
 using System.Linq;
 using Origam.DA;
 using Origam.DA.Service;
-using static Origam.DA.Common.Enums;
 
 namespace Origam.Workbench.Services.CoreServices
 {
@@ -125,10 +124,14 @@ namespace Origam.Workbench.Services.CoreServices
 
 		public static DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId, string paramName1, object paramValue1)
 		{
+			if (paramName1 == null)
+			{
+				throw new ArgumentNullException(nameof(paramName1));
+			}
 			QueryParameterCollection p = new QueryParameterCollection();
 			p.Add(new QueryParameter(paramName1, paramValue1));
 
-            return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId, p);
+			return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId, p);
 		}
 
 		public static DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId, string paramName1, object paramValue1, string paramName2, object paramValue2)

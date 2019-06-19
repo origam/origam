@@ -20,22 +20,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Xml;
-using System.Data;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
+using System.Xml;
 using Origam.DA;
 using Origam.DA.Service;
-using Origam.Workbench.Services;
-using core = Origam.Workbench.Services.CoreServices;
-
+using Origam.Gui;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
+using Origam.Workbench.Services;
 using Origam.Workflow;
-using Origam.Gui;
+using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.OrigamEngine.ModelXmlBuilders
 {
@@ -811,7 +810,12 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				windowElement.SetAttribute("SuppressSave", "true");
 			}
 
-		    XmlOutput xmlOutput = new XmlOutput {Document = doc};
+			if (frmi?.ListDataStructure != null)
+			{
+				windowElement.SetAttribute("UseSession", "true");
+			}
+
+			XmlOutput xmlOutput = new XmlOutput {Document = doc};
 
 		    RenderUIElement(xmlOutput, uiRootElement, FormTools.GetItemFromControlSet(item),
 				dataset, dataSources, ref controlCounter, isPreloaded, item.Id, workflowId, 
