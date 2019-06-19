@@ -22,10 +22,19 @@ export class DataSource implements IDataSource {
   }
 
   reorderedIds(ids: string[]): string[] {
+    throw new Error("Implementation to be fixed.")
     const fields = ids
       .map(id => this.fieldById(id))
       .filter(field => field !== undefined) as IDataSourceField[];
     fields.sort((a, b) => a.idx - b.idx);
     return fields.map(field => field.id);
+  }
+
+  reorderedRow(ids: string[], record: any[]): any[] {
+    const fields = ids
+      .map(id => this.fieldById(id))
+      .filter(field => field !== undefined) as IDataSourceField[];
+    const newRecord: any[] = fields.map(field => record[field.idx]);
+    return newRecord;
   }
 }

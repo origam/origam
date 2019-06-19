@@ -77,6 +77,7 @@ export interface IDataSource {
   dataStructureEntityId: string;
   fieldById(name: string): IDataSourceField | undefined;
   reorderedIds(ids: string[]): string[];
+  reorderedRow(ids: string[], record: any[]): any[];
 }
 
 export interface IDataSourceField {

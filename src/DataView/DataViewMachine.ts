@@ -122,9 +122,14 @@ export class DataViewMachine implements IDataViewMachine {
               })
               .then(
                 action((entities: any) => {
-                  console.log("Received:", entities);
+                  const records = [];
+                  for (let row of entities) {
+                    records.push(
+                      this.dataSource.reorderedRow(this.propertyIdsToLoad, row)
+                    );
+                  }
                   this.dataTable.resetDirty();
-                  this.dataTable.setRecords(entities);
+                  this.dataTable.setRecords(records);
                   send("DONE");
                 })
               );

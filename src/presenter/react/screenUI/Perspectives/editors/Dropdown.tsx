@@ -93,9 +93,9 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     this.loadItemsDebounced();
   }
 
-  loadItemsDebounced = _.debounce(this.loadItemsImm, 300);
+  loadItemsDebounced = _.debounce(this.loadItemsImmediately, 300);
 
-  @action.bound loadItemsImm() {
+  @action.bound loadItemsImmediately() {
     this.willReload = false;
     this.isLoading = true;
     this.api
@@ -135,7 +135,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     if (!this.isDroppedDown) {
       this.isDroppedDown = true;
       window.addEventListener("click", this.handleWindowClick);
-      this.loadItemsImm();
+      this.loadItemsImmediately();
     }
   }
 
