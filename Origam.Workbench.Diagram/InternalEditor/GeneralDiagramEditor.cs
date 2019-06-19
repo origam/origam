@@ -17,22 +17,54 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
+using System;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
+using Origam.DA.ObjectPersistence;
 using Origam.Schema;
+using Origam.Workbench.Commands;
 using Origam.Workbench.Diagram.DiagramFactory;
+using DrawingNode = Microsoft.Msagl.Drawing.Node;
 
 namespace Origam.Workbench.Diagram.InternalEditor
 {
     public class GeneralDiagramEditor<T>: IDiagramEditor where T: ISchemaItem
     {
-        public GeneralDiagramEditor( GViewer gViewer, T schemaItem, IDiagramFactory<T,Graph> factory)
-        {           
+        private readonly IPersistenceProvider persistenceProvider;
+
+        public GeneralDiagramEditor(GViewer gViewer, T schemaItem,
+            IDiagramFactory<T, Graph> factory,
+            IPersistenceProvider persistenceProvider)
+        {
+            this.persistenceProvider = persistenceProvider;
             gViewer.Graph = factory.Draw(schemaItem);
             gViewer.EdgeInsertButtonVisible = false;
+            gViewer.DoubleClick += GViewerOnDoubleClick;
         }
 
+        private void GViewerOnDoubleClick(object sender, EventArgs e)
+        {
+            GViewer viewer = sender as GViewer;
+            if (viewer.SelectedObject is DrawingNode node)
+            {
+                if (!Guid.TryParse(node.Id, out Guid id)) return;
+                AbstractSchemaItem clickedItem = 
+                    (AbstractSchemaItem)persistenceProvider
+                        .RetrieveInstance(typeof(AbstractSchemaItem), new Key(id));
+                if(clickedItem != null)
+                {
+                    EditSchemaItem cmd = new EditSchemaItem
+                    {
+                        ShowDialog = true,
+                        Owner = clickedItem
+                    };
+                    cmd.Run();
+                }
+            }
+        }
+        
         public void Dispose()
         {
         }

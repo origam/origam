@@ -30,7 +30,6 @@ using Origam.Gui.UI;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.BaseComponents;
-using Origam.Workbench.Commands;
 using Origam.Workbench.Diagram;
 using Origam.Workbench.Diagram.DiagramFactory;
 using Origam.Workbench.Diagram.InternalEditor;
@@ -66,7 +65,6 @@ namespace Origam.Workbench.Editors
 			gViewer.FixedScale = 1;
 			gViewer.MouseWheel += GViewerMouseWheel;
 			gViewer.ZoomWhenMouseWheelScroll = false;
-			gViewer.DoubleClick += GViewerOnDoubleClick;
 			gViewer.MouseMove += OnMouseMove;
 			gViewer.MouseLeave += OnMouseLeave;
 		}
@@ -201,27 +199,7 @@ namespace Origam.Workbench.Editors
 				gViewer.Pan(0,delta);
 			}
 		}
-		private void GViewerOnDoubleClick(object sender, EventArgs e)
-		{
-			GViewer viewer = sender as GViewer;
-			if (viewer.SelectedObject is DrawingNode node)
-			{
-				if (!Guid.TryParse(node.Id, out Guid id)) return;
-				AbstractSchemaItem clickedItem = 
-					(AbstractSchemaItem)persistenceProvider
-						.RetrieveInstance(typeof(AbstractSchemaItem), new Key(id));
-				if(clickedItem != null)
-				{
-					EditSchemaItem cmd = new EditSchemaItem
-					{
-						ShowDialog = true,
-						Owner = clickedItem
-					};
-					cmd.Run();
-				}
-			}
-		}
-		
+
 		protected override void ViewSpecificLoad(object objectToLoad)
 		{
 			switch (objectToLoad)
@@ -241,14 +219,15 @@ namespace Origam.Workbench.Editors
 						gViewer: gViewer,
 						schemaItem: contextStore,
 						factory: new ContextStoreDiagramFactory(
-							persistenceProvider, nodeSelector, gViewer, schemaService)
-						);
+							persistenceProvider, nodeSelector, gViewer, schemaService),
+						persistenceProvider: persistenceProvider);
 					break;
 				case ISchemaItem schemaItem:
 					internalEditor = new GeneralDiagramEditor<ISchemaItem>(
 						gViewer: gViewer, 
 						schemaItem: schemaItem, 
-						factory: new GeneralDiagramFactory());
+						factory: new GeneralDiagramFactory(),
+					    persistenceProvider: persistenceProvider);
 					break;
 			}
 		}

@@ -32,6 +32,7 @@ using Origam.Workbench.Commands;
 using Origam.Workbench.Diagram.Extensions;
 using Origam.Workbench.Diagram.Graphs;
 using Origam.Workbench.Services;
+using DrawingNode = Microsoft.Msagl.Drawing.Node;
 using MouseButtons = System.Windows.Forms.MouseButtons;
 
 namespace Origam.Workbench.Diagram.InternalEditor
@@ -74,7 +75,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 					var targetsParent = gViewer.Graph.FindParentSubGraph(targetNode);
 					return Equals(sourcesParent, targetsParent);
 				});
-
+			gViewer.DoubleClick += GViewerOnDoubleClick;
 			gViewer.EdgeInsertButtonVisible = true;
 			
 			this.graphParentId = graphParentId;
@@ -128,6 +129,28 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        {
 		        gViewer.Transform = originalTransform;
 		        gViewer.Redraw();
+	        }
+        }
+        
+        private void GViewerOnDoubleClick(object sender, EventArgs e)
+        {
+	        GViewer viewer = sender as GViewer;
+	        if (viewer.SelectedObject is DrawingNode node)
+	        {
+		        string strId = node is IWorkflowSubgraph wfSubgraph
+			        ? wfSubgraph.WorkflowItemId
+			        : node.Id;
+		        if (!Guid.TryParse(strId, out Guid _)) return;
+		        AbstractSchemaItem clickedItem = RetrieveItem(strId);
+		        if(clickedItem != null)
+		        {
+			        EditSchemaItem cmd = new EditSchemaItem
+			        {
+				        ShowDialog = true,
+				        Owner = clickedItem
+			        };
+			        cmd.Run();
+		        }
 	        }
         }
         
