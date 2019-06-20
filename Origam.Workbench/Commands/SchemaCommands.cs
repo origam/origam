@@ -863,12 +863,19 @@ namespace Origam.Workbench.Commands
                         NewLineOnAttributes = true
                     };
                     XmlDocument xml = new XmlDocument();
-                    xml.Load(filePath);
                     XmlViewer viewer = new XmlViewer
                     {
-                        Content = xml.ToBeautifulString(xmlWriterSettings),
                         Text = file.Replace("\\", "/").Split('/').LastOrDefault()
-                };
+                    };
+                    try
+                    {
+                        xml.Load(filePath);
+                        viewer.Content = xml.ToBeautifulString(xmlWriterSettings);
+                    }
+                    catch
+                    {
+                        viewer.Content = new StreamReader(filePath).ReadToEnd();
+                    }
                     WorkbenchSingleton.Workbench.ShowView(viewer);
                 }
             }
