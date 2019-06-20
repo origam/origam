@@ -25,7 +25,7 @@ function spc(n: number) {
 export class FormScreen implements IFormScreen {
   
   sessionId: string = "";  
-  @observable isSessioned: boolean = true;
+  @observable isSessioned: boolean = false;
 
   constructor(
     public P: {

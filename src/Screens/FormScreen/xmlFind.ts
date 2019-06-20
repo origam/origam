@@ -70,11 +70,7 @@ export const findDataSourceFields = (node: any) =>
   findStopping(node, n => n.name === "Field");
 
 // TODO: IsRootGrid / IsRootEntity?
-export const isSessionedScreen = (node: any) =>
-  findStopping(
-    node,
-    n =>
-      (n.name === "UIRoot" || n.name === "UIElement") &&
-      n.attributes.IsRootEntity === "true" &&
-      n.attributes.IsPreloaded === "true"
-  ).length > 0;
+export const isSessionedScreen = (win: any) => {
+  return win.attributes.UseSession === "true"
+}
+
