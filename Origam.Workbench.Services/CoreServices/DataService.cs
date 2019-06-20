@@ -162,7 +162,7 @@ namespace Origam.Workbench.Services.CoreServices
 		{
 			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 			DataStructureQuery q = new DataStructureQuery(dataStructureId, methodId, defaultSetId, sortSetId);
-            q.ColumnName = columnName;
+			q.ColumnsInfo = new ColumnsInfo(columnName);
             q.Entity = entity;
 			if(parameters != null)
 			{
@@ -176,7 +176,7 @@ namespace Origam.Workbench.Services.CoreServices
 				dataServiceAgent.Parameters.Add("Data", currentData);
                 q.EnforceConstraints = currentData.EnforceConstraints;
 			}
-            if (!string.IsNullOrEmpty(q.ColumnName))
+            if (!q.ColumnsInfo.IsEmpty)
             {
                 q.EnforceConstraints = false;
             }

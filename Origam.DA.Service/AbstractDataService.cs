@@ -23,15 +23,13 @@ using System;
 using System.Collections;
 using System.Data;
 using System.Data.Common;
-using System.Security.Principal;
 using System.Globalization;
+using System.Security.Principal;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 using static Origam.DA.Common.Enums;
-using System.Text;
-using System.Collections.Generic;
 
 namespace Origam.DA.Service
 {
@@ -113,7 +111,7 @@ namespace Origam.DA.Service
             }
         }
 
-        public abstract DbDataAdapterFactory DbDataAdapterFactory{get;  internal set; }
+        public abstract IDbDataAdapterFactory DbDataAdapterFactory{get;  internal set; }
 		internal abstract IDbConnection GetConnection(string connectionString);
 		internal abstract IDbTransaction GetTransaction(string transactionId, IsolationLevel isolation);
         public abstract string BuildConnectionString(string serverName, int port, string databaseName, 
@@ -158,22 +156,22 @@ namespace Origam.DA.Service
             }
         }
 
-        internal DbDataAdapter GetSelectRowAdapter(DataStructureEntity entity, string columnName)
+        internal DbDataAdapter GetSelectRowAdapter(DataStructureEntity entity, ColumnsInfo columnsInfo)
         {
-            return GetSelectRowAdapterCached(entity, columnName);
+            return GetSelectRowAdapterCached(entity, columnsInfo);
         }
 
-		internal DbDataAdapter GetSelectRowAdapterNonCached(DataStructureEntity entity, string columnName)
+		internal DbDataAdapter GetSelectRowAdapterNonCached(DataStructureEntity entity, ColumnsInfo columnsInfo)
 		{
-			return DbDataAdapterFactory.CreateSelectRowDataAdapter(entity, columnName, true);
+			return DbDataAdapterFactory.CreateSelectRowDataAdapter(entity, columnsInfo, true);
 		}
 
-        private DbDataAdapter GetSelectRowAdapterCached(DataStructureEntity entity, string columnName)
+        private DbDataAdapter GetSelectRowAdapterCached(DataStructureEntity entity, ColumnsInfo columnsInfo)
         {
             string id = "selectRow_" + entity.PrimaryKey["Id"].ToString();
-            if (columnName != null)
+            if (columnsInfo != null && !columnsInfo.IsEmpty)
             {
-                id += "_" + columnName;
+                id += "_" + columnsInfo;
             }
             Hashtable adapterCache = GetCache();
             // Caching adapters
@@ -189,7 +187,7 @@ namespace Origam.DA.Service
                 else
                 {
                     // adapter is not in the cache, yet
-                    adapter = GetSelectRowAdapterNonCached(entity, columnName);
+                    adapter = GetSelectRowAdapterNonCached(entity, columnsInfo);
                     // so we add it there
                     if (!adapterCache.ContainsKey(id))
                     {
@@ -230,9 +228,9 @@ namespace Origam.DA.Service
 			{
 				id += "_paging";
 			}
-            if (adParameters.ColumnName != null)
+            if (!adParameters.ColumnsInfo.IsEmpty)
             {
-                id += "_" + adParameters.ColumnName;
+                id += "_" + adParameters.ColumnsInfo;
             }
 			Hashtable adapterCache = GetCache();
 			// Caching adapters
@@ -766,7 +764,7 @@ namespace Origam.DA.Service
             DataStructureQuery dataStructureQuery, IPrincipal userProfile, 
             DataSet ds, string transactionid, bool forceBulkInsert);
 
-		public abstract object GetScalarValue(DataStructureQuery query, string columnName, IPrincipal userProfile, string transactionId);
+		public abstract object GetScalarValue(DataStructureQuery query, ColumnsInfo columnsInfo, IPrincipal userProfile, string transactionId);
 
 		public abstract DataSet ExecuteProcedure(string name, string EntityOrder, DataStructureQuery query, string transactionid);
 

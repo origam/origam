@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using Origam.Schema.EntityModel;
@@ -31,7 +30,7 @@ namespace Origam.DA.Service
 	/// <summary>
 	/// Summary description for DbDataAdapterFactory.
 	/// </summary>
-	public interface DbDataAdapterFactory : ICloneable, IDisposable
+	public interface IDbDataAdapterFactory : ICloneable, IDisposable
 	{
 		bool UserDefinedParameters{get; set;}
 		bool ResolveAllFilters{get; set;}
@@ -41,9 +40,9 @@ namespace Origam.DA.Service
 		DbDataAdapter CreateDataAdapter(string procedureName, ArrayList entitiesOrdered, 
             IDbConnection connection, IDbTransaction transaction);
 		DbDataAdapter CreateSelectRowDataAdapter(DataStructureEntity entity, 
-            string colummnName, bool forceDatabaseCalculation);
+			ColumnsInfo columnsInfo, bool forceDatabaseCalculation);
 		IDbCommand ScalarValueCommand(DataStructure ds,  DataStructureFilterSet filter, 
-            DataStructureSortSet sortSet, string columnName, Hashtable parameters);
+            DataStructureSortSet sortSet, ColumnsInfo columnsInfo, Hashtable parameters);
 		IDbCommand UpdateFieldCommand(TableMappingItem entity,  FieldMappingItem field);
 		IDbCommand GetCommand(string cmdText, IDbConnection connection);
 		IDbCommand GetCommand(string cmdText, IDbConnection connection, IDbTransaction transaction);

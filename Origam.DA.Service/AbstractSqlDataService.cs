@@ -21,21 +21,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Security.Principal;
-using Origam.Services;
-using Origam.Schema;
-using Origam.Schema.EntityModel;
-using Origam.DA.ObjectPersistence;
-using Origam.Workbench.Services;
-
-using log4net;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
+using log4net;
+using Origam.DA.ObjectPersistence;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
+using Origam.Services;
+using Origam.Workbench.Services;
 
 namespace Origam.DA.Service
 {
@@ -83,12 +82,12 @@ namespace Origam.DA.Service
 					        SortSet = SortSet,
 					        Parameters = Query.Parameters.ToHashtable(),
 					        Paging = Query.Paging,
-					        ColumnName = Query.ColumnName,
+					        ColumnsInfo = Query.ColumnsInfo,
 					    };
                         adapter = DataService.GetAdapter(selectParameters, CurrentProfile);
 						break;
 					case QueryDataSourceType.DataStructureEntity:
-						adapter = DataService.GetSelectRowAdapter(Entity, Query.ColumnName);
+						adapter = DataService.GetSelectRowAdapter(Entity, Query.ColumnsInfo);
 						break;
 
 					default:
@@ -187,7 +186,7 @@ namespace Origam.DA.Service
 		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         // Special logger for concurrency exception detail logging
         private static readonly ILog concurrencyLog = LogManager.GetLogger(typeof(ConcurrencyExceptionLogger));
-		private DbDataAdapterFactory _adapterFactory;
+		private IDbDataAdapterFactory _adapterFactory;
 		private string _connectionString = "";
         private const int DATA_VISUALIZATION_MAX_LENGTH = 100;
         internal abstract string GetAllTablesSQL();
@@ -225,7 +224,7 @@ namespace Origam.DA.Service
 		}
 
 
-		public override DbDataAdapterFactory DbDataAdapterFactory
+		public override IDbDataAdapterFactory DbDataAdapterFactory
 		{
 			get
 			{
@@ -878,7 +877,7 @@ namespace Origam.DA.Service
 		}
 
 
-		public override object GetScalarValue(DataStructureQuery query, string columnName, IPrincipal principal, string transactionId)
+		public override object GetScalarValue(DataStructureQuery query, ColumnsInfo columnsInfo, IPrincipal principal, string transactionId)
 		{
 			IDbCommand command;
 			object result = null;
@@ -891,7 +890,7 @@ namespace Origam.DA.Service
 
 			DataStructure ds = this.GetDataStructure(query);
 
-			string cacheId = query.DataSourceId.ToString() + query.MethodId.ToString() + query.SortSetId.ToString() + columnName;
+			string cacheId = query.DataSourceId.ToString() + query.MethodId.ToString() + query.SortSetId.ToString() + columnsInfo;
 			Hashtable cache = GetScalarCommandCache();
 
 			if(cache.Contains(cacheId))
@@ -907,7 +906,7 @@ namespace Origam.DA.Service
 						ds,
 						this.GetFilterSet(query.MethodId),
 						this.GetSortSet(query.SortSetId),
-						columnName,
+						columnsInfo,
 						query.Parameters.ToHashtable()
 						);
 					cache[cacheId] = command;
@@ -942,7 +941,7 @@ namespace Origam.DA.Service
 				OrigamDataType dataType = OrigamDataType.Xml;
 				foreach(DataStructureColumn col in (ds.Entities[0] as DataStructureEntity).Columns)
 				{
-					if(col.Name == columnName)
+					if(col.Name == columnsInfo.ToString())
 					{
 						DataStructureColumn finalColumn = col.FinalColumn;
 
@@ -1584,7 +1583,7 @@ namespace Origam.DA.Service
                 SortSet = sortSet,
                 Parameters = query.Parameters.ToHashtable(),
                 Paging = query.Paging,
-                ColumnName = query.ColumnName,
+                ColumnsInfo = query.ColumnsInfo,
                 CustomFilters = query.CustomFilters,
                 CustomOrdering = query.CustomOrdering,
                 RowLimit = query.RowLimit,

@@ -21,10 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Security.Principal;
 using System.Data;
 using System.Globalization;
-
+using System.Security.Principal;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.DA
@@ -52,7 +51,7 @@ namespace Origam.DA
 		DataSet LoadDataSet(DataStructureQuery dataStructureQuery, IPrincipal userProfile, DataSet dataSet, string transactionId);
 
 		DataSet ExecuteProcedure(string name, string entityOrder, DataStructureQuery query, string transactionId);
-		object GetScalarValue(DataStructureQuery query, string columnName, IPrincipal userProfile, string transactionId);
+		object GetScalarValue(DataStructureQuery query, ColumnsInfo columnsInfo, IPrincipal userProfile, string transactionId);
 
 		string Xsd(Guid dataStructureId);
 		DataSet GetEmptyDataSet(Guid dataStructureId);

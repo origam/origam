@@ -76,7 +76,7 @@ namespace Origam.Gui.Win.Commands
                         entity: Owner as DataStructureEntity,
                         filter: null,
                         sortSet: null,
-                        scalarColumn: null,
+                        columnsInfo: null,
                         parameters: new Hashtable(),
                         selectParameterReferences: null,
                         forceDatabaseCalculation: false

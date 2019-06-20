@@ -20,23 +20,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.IO;
-using System.Xml;
-using System.Data;
 using System.Collections;
-
-using Origam.Workbench.Services;
-using core = Origam.Workbench.Services.CoreServices;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Security.Principal;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
-using Origam.Schema.LookupModel;
-using Origam.Schema.WorkflowModel;
 using Origam.Schema.GuiModel;
+using Origam.Schema.LookupModel;
 using Origam.Schema.MenuModel;
-using System.Security.Principal;
-using System.Collections.Generic;
+using Origam.Schema.WorkflowModel;
+using Origam.Workbench.Services;
+using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Workflow
 {
@@ -152,13 +150,13 @@ namespace Origam.Workflow
 			}
 		}
 
-		private object GetScalarValue(DataStructureQuery query, string columnName)
+		private object GetScalarValue(DataStructureQuery query, ColumnsInfo columnsInfo)
 		{
 			DataStructureMethod method;
 			method = this.PersistenceProvider.RetrieveInstance(typeof(DataStructureMethod), new ModelElementKey(query.MethodId)) as DataStructureMethod;
 			if (method == null || method is DataStructureFilterSet)
 			{
-				return _dataService.GetScalarValue(query, columnName, SecurityManager.CurrentPrincipal, this.TransactionId);
+				return _dataService.GetScalarValue(query, columnsInfo, SecurityManager.CurrentPrincipal, this.TransactionId);
 			}
 			else if (method is DataStructureWorkflowMethod)
 			{
@@ -538,7 +536,7 @@ namespace Origam.Workflow
 
 				case "GetScalarValueByQuery":
 					_result = this.GetScalarValue(this.Parameters["Query"] as DataStructureQuery,
-						(string)this.Parameters["ColumnName"]);
+						new ColumnsInfo((string)this.Parameters["ColumnName"]));
 					break;
 
 				case "StoreDataByQuery":

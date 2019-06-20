@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -272,6 +271,7 @@ namespace Origam.ServerCore.Controllers
             DataRow row = table.NewRow();
             return new RowData { Entity = entity, Row = row };
         }
+        
 
         private Result<DataStructureQuery, IActionResult> CreateEntitiesGetQuery(
             EntityGetData entityQueryData, EntityData entityData)
@@ -284,10 +284,15 @@ namespace Origam.ServerCore.Controllers
                     : entityQueryData.Filter,
                 CustomOrdering = entityQueryData.OrderingAsTuples,
                 RowLimit = entityQueryData.RowLimit,
-                ColumnNames = entityQueryData.ColumnNames,
+                ColumnsInfo = new ColumnsInfo(entityQueryData.ColumnNames
+                    .Select(colName => 
+                        new ColumnData(
+                            colName, 
+                            false))
+                    .ToList()),
                 ForceDatabaseCalculation = true,
             };
-
+            
             if (entityData.MenuItem.ListDataStructure != null)
             {
                 if (entityData.MenuItem.ListEntity.Name == entityData.Entity.Name)
@@ -352,7 +357,7 @@ namespace Origam.ServerCore.Controllers
             {
                 while (reader.Read())
                 {
-                    object[] values = new object[query.ColumnNames.Length];
+                    object[] values = new object[query.ColumnsInfo.Count];
                     reader.GetValues(values);
                     yield return values;
                 }

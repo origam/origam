@@ -22,12 +22,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Data;
-using System.Security.Principal;
 using System.Globalization;
-
-using Origam.DA.ObjectPersistence;
-
+using System.Security.Principal;
 using ICSharpCode.SharpZipLib.Zip;
+using Origam.DA.ObjectPersistence;
 
 namespace Origam.DA.Service
 {
@@ -128,7 +126,7 @@ namespace Origam.DA.Service
 			return dataset;
 		}
 
-		public object GetScalarValue(DataStructureQuery query, string columnName, IPrincipal userProfile, string transactionId)
+		public object GetScalarValue(DataStructureQuery query, ColumnsInfo columnsInfo, IPrincipal userProfile, string transactionId)
 		{
 			throw new NotImplementedException("Not implemented");
 		}

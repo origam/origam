@@ -107,7 +107,7 @@ private static int counter = 0;
 			query.Parameters.Add(new QueryParameter("Documentation_parSchemaItemId", schemaItemId));
 			query.Parameters.Add(new QueryParameter("Documentation_parCategory", docType.ToString()));
 
-			string result = (string)_dataService.GetScalarValue(query, "Data", SecurityManager.CurrentPrincipal, null) ?? "";
+			string result = (string)_dataService.GetScalarValue(query, new ColumnsInfo("Data"), SecurityManager.CurrentPrincipal, null) ?? "";
 
 			return persistenceProvider.LocalizationCache
 				.GetLocalizedString(schemaItemId, "Documentation " + docType, result);

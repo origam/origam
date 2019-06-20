@@ -103,16 +103,8 @@ namespace Origam.DA
 	    public bool SynchronizeAttachmentsOnDelete { get; set; } = true;
 
 	    public bool EnforceConstraints { get; set; } = true;
-
-	    public string ColumnName { get; set; }
-
-	    public string[] ColumnNames
-	    {
-	        get => ColumnName?.Split(';');
-	        set => ColumnName = value == null 
-	                ? null 	
-	                : string.Join(";", value);
-	    }
+	    
+	    public ColumnsInfo ColumnsInfo { get; set; } = ColumnsInfo.Empty;
 
 	    public string Entity { get; set; }
 	    public bool ForceDatabaseCalculation { get; set; }
