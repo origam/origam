@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -64,6 +65,7 @@ namespace Origam.Workbench
         private Hashtable _customImages = new Hashtable();
         private bool _fileChangesPending = false;
         private bool _supportsGit = false;
+        private List<Guid> gitPersistObjectsCache = new List<Guid>();
 
 		public ExpressionBrowser()
 		{
@@ -802,24 +804,38 @@ namespace Origam.Workbench
 
         private bool IsFileDirty(IPersistent item)
         {
-            if(GitManager.IsValid(_sourcePath))
+            CheckGitCache(item);
+            if (item.HasGitChange == null)
             {
-                GitManager gitManager = new GitManager(_sourcePath);
-                foreach (string file in item.Files)
+                if (GitManager.IsValid(_sourcePath))
                 {
-                    string path = Path.Combine(_sourcePath, file);
-                    if (File.Exists(path))
+                    GitManager gitManager = new GitManager(_sourcePath);
+                    foreach (string file in item.Files)
                     {
-                        if(gitManager.HasChanges(path))
+                        string path = Path.Combine(_sourcePath, file);
+                        if (File.Exists(path))
                         {
-                            return true;
+                            if (gitManager.HasChanges(path))
+                            {
+                                item.HasGitChange = true;
+                                return true;
+                            }
                         }
                     }
                 }
+                item.HasGitChange = false;
+                return false;
             }
-            return false;
+            return item.HasGitChange.GetValueOrDefault();
         }
-
+        private void CheckGitCache(IPersistent item)
+        {
+            if(!gitPersistObjectsCache.Contains(item.Id))
+            {
+                item.HasGitChange = null;
+            }
+            gitPersistObjectsCache.Add(item.Id);
+        }
         private void RecolorNodesByFile(TreeNode node, string file)
         {
             if (node.Tag is IPersistent persistent
@@ -930,7 +946,8 @@ namespace Origam.Workbench
 			tvwExpressionBrowser.BeginUpdate();
 			RecolorNodes(tvwExpressionBrowser.Nodes);
 			tvwExpressionBrowser.EndUpdate();
-		}
+            gitPersistObjectsCache.Clear();
+        }
 		
 		private void RecolorNodes(TreeNodeCollection nodes)
 		{

@@ -101,8 +101,8 @@ namespace Origam.DA.ObjectPersistence
 		        OnDeleted(EventArgs.Empty);
 		        PersistenceProvider.OnTransactionEnded(this);
             }
-
-			if(isNew) OnChanged(EventArgs.Empty);
+            HasGitChange = null;
+            if (isNew) OnChanged(EventArgs.Empty);
 		}
 
 		private bool _isPersisted = false;
@@ -168,11 +168,14 @@ namespace Origam.DA.ObjectPersistence
 
         [Browsable(false)]
         public List<string> Files => _persistenceProvider.Files(this);
-		#endregion
 
-		#region IDisposable Members
+        [Browsable(false)]
+        public bool? HasGitChange { get; set; } = null;
+        #endregion
 
-		public void Dispose()
+        #region IDisposable Members
+
+        public void Dispose()
 		{
 #if DEBUG
 			System.Diagnostics.Debug.WriteLine("Persistent object disposed");
