@@ -21,9 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
-using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.ObjectPersistence;
 using Origam.DA.ObjectPersistence.Attributes;
 
 namespace Origam.Schema.EntityModel
@@ -292,11 +293,11 @@ namespace Origam.Schema.EntityModel
 
 #if ORIGAM_CLIENT
 		private bool _columnsPopulated = false;
-		private ArrayList _columns = new ArrayList();
+		private List<DataStructureColumn> _columns = new List<DataStructureColumn>();
 #endif
 
 		[Browsable(false)]
-		public ArrayList Columns
+		public List<DataStructureColumn> Columns
 		{
 			get
 			{
@@ -331,9 +332,9 @@ namespace Origam.Schema.EntityModel
             return null;
         }
 
-		public ArrayList GetColumnsFromEntity()
+		public List<DataStructureColumn> GetColumnsFromEntity()
 		{
-			ArrayList columns = new ArrayList();
+			List<DataStructureColumn> columns = new List<DataStructureColumn>();
 			if(this.AllFields & this.EntityId != Guid.Empty) {
 				foreach(IDataEntityColumn column in this.EntityDefinition.EntityColumns)
 				{
@@ -365,10 +366,10 @@ namespace Origam.Schema.EntityModel
 			return false;
 		}
 
-		private ArrayList GetColumns()
+		private List<DataStructureColumn> GetColumns()
 		{
 			// columns from entity (AllFields=true)
-			ArrayList columns = GetColumnsFromEntity();
+			List<DataStructureColumn> columns = GetColumnsFromEntity();
 			
 			// add all extra columns specified
 			foreach(DataStructureColumn column in this.ChildItemsByType(DataStructureColumn.ItemTypeConst))
