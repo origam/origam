@@ -75,7 +75,7 @@ namespace Origam.Gui.Win.Commands
                             entity,
                             filterSet,
                             null,
-                            null,
+                            DA.ColumnsInfo.Empty,
                             new Hashtable(),
                             null,
                             false

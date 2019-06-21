@@ -229,7 +229,7 @@ namespace Origam.Server.Doc
                                         entity,
                                         filterSet,
                                         null,
-                                        null,
+                                        DA.ColumnsInfo.Empty,
                                         new Hashtable(),
                                         null,
                                         false

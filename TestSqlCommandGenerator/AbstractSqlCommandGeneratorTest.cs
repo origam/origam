@@ -179,7 +179,7 @@ namespace TestSqlCommandGenerator
 			string expected = "SELECT [table1].[Id] AS [Id], ISNULL([table1_l10n].[col1],[table1].[col1]) FROM [table1] AS [table1] LEFT JOIN [table1_l10n] AS [table1_l10n] ON [table1_l10n].[refTable1Id] = [table1].[Id]";
 	
 
-            string actual = target.SelectSql(ds, entity, null, null, null, null, null, false);
+            string actual = target.SelectSql(ds, entity, null, null, ColumnsInfo.Empty, null, null, false);
             Assert.AreEqual(expected, actual);
         }
 	}

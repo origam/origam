@@ -1615,7 +1615,7 @@ namespace Origam.DA.Service
             ArrayList group = new ArrayList();
             SortedList order = new SortedList();
             bool groupByNeeded = false;
-            if (concatScalarColumns && columnsInfo.Count > 1)
+            if (concatScalarColumns && columnsInfo != null && columnsInfo.Count > 1)
             {
                 List<ColumnRenderItem> columnRenderData = new List<ColumnRenderItem>();
                 foreach (string columnName in columnsInfo.ColumnNames)

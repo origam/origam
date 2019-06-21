@@ -76,7 +76,7 @@ namespace Origam.Gui.Win.Commands
                             entity,
                             null,
                             Owner as DataStructureSortSet,
-                            null,
+                            DA.ColumnsInfo.Empty,
                             new Hashtable(),
                             new Hashtable(),
                             displayPagingParameters

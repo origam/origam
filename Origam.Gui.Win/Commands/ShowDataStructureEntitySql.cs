@@ -76,7 +76,7 @@ namespace Origam.Gui.Win.Commands
                         entity: Owner as DataStructureEntity,
                         filter: null,
                         sortSet: null,
-                        columnsInfo: null,
+                        columnsInfo: DA.ColumnsInfo.Empty,
                         parameters: new Hashtable(),
                         selectParameterReferences: null,
                         forceDatabaseCalculation: false
@@ -90,7 +90,7 @@ namespace Origam.Gui.Win.Commands
                     generator.SelectRowSql(
                         Owner as DataStructureEntity,
                         new Hashtable(),
-                        null,
+                        DA.ColumnsInfo.Empty,
                         true
                     )
                 );
