@@ -20,20 +20,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
 using MoreLinq;
+using NUnit.Framework;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
-using NUnit.Framework;
-using Origam.DA.ObjectPersistence.Providers;
-using Origam.Extensions;
-using Origam.Schema.MenuModel;
 using Origam.TestCommon;
 using static Origam.DA.ObjectPersistence.ExternalFileExtension;
 
@@ -415,6 +410,7 @@ namespace Origam.DA.Service_net2Tests
         public bool IsFileRootElement => FileParentId == Guid.Empty;
 
         public List<string> Files => throw new NotImplementedException();
+        public bool? HasGitChange { get; set; }
 
         protected bool Equals(TestItem other) =>
             TestBool == other.TestBool &&
