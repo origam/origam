@@ -32,6 +32,8 @@ namespace Origam.DA.Service
     {
         public List<object> ProcessReaderOutput(object[] values, ColumnsInfo columnsInfo)
         {
+            if (columnsInfo == null)
+                throw new ArgumentNullException(nameof(columnsInfo));
             var updatedValues = new List<object>();
             for (int i = 0; i < columnsInfo.Count; i++)
             {

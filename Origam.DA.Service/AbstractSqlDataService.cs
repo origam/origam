@@ -943,7 +943,7 @@ namespace Origam.DA.Service
 				OrigamDataType dataType = OrigamDataType.Xml;
 				foreach(DataStructureColumn col in (ds.Entities[0] as DataStructureEntity).Columns)
 				{
-					if(col.Name == columnsInfo.ToString())
+					if(col.Name == columnsInfo?.ToString())
 					{
 						DataStructureColumn finalColumn = col.FinalColumn;
 

@@ -1635,12 +1635,13 @@ namespace Origam.DA.Service
                 return false;
             }
             i = 0;
-            foreach (DataStructureColumn column in GetSortedColumns(entity, columnsInfo.ColumnNames))
+            foreach (DataStructureColumn column in GetSortedColumns(entity, columnsInfo?.ColumnNames))
             {
                 var expression = RenderDataStructureColumn(ds, entity,
                         replaceParameterTexts, dynamicParameters,
                         sortSet, selectParameterReferences, isInRecursion,
-                        forceDatabaseCalculation, group, order, ref groupByNeeded, columnsInfo, column);
+                        forceDatabaseCalculation, group, order, ref groupByNeeded,
+                        columnsInfo ?? ColumnsInfo.Empty, column);
                 if (expression != null)
                 {
                     if (i > 0) sqlExpression.Append(",");
@@ -1689,7 +1690,7 @@ namespace Origam.DA.Service
         internal IEnumerable<DataStructureColumn> GetSortedColumns(DataStructureEntity entity,
             List<string> scalarColumnNames)
         {
-            if (scalarColumnNames.Count == 0)
+            if (scalarColumnNames == null || scalarColumnNames.Count == 0)
             {
                 return entity.Columns;
             }
