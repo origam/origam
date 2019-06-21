@@ -285,10 +285,15 @@ namespace Origam.ServerCore.Controllers
                 CustomOrdering = entityQueryData.OrderingAsTuples,
                 RowLimit = entityQueryData.RowLimit,
                 ColumnsInfo = new ColumnsInfo(entityQueryData.ColumnNames
-                    .Select(colName => 
-                        new ColumnData(
-                            colName, 
-                            entityData.Entity.Column(colName).Field is DetachedField))
+                    .Select(colName =>
+                    {
+                        var field = entityData.Entity.Column(colName).Field;
+                        return new ColumnData(
+                            name: colName,
+                            isVirtual: field is DetachedField,
+                            defaultValue: (field as DetachedField)?.DefaultValue?.Value,
+                            hasRelation: (field as DetachedField)?.ArrayRelation != null);
+                    })
                     .ToList(),
                     renderSqlForDetachedFields:true),
                 ForceDatabaseCalculation = true,

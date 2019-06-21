@@ -54,18 +54,22 @@ namespace Origam.DA
     
     public class ColumnData
     {
-        public ColumnData(string name, bool isVirtual)
+        public string Name { get;}
+        public bool IsVirtual { get;  }
+        public object DefaultValue { get; }
+        public bool HasRelation { get;}
+
+        public ColumnData(string name, bool isVirtual, object defaultValue, bool hasRelation)
         {
             Name = name;
             IsVirtual = isVirtual;
+            DefaultValue = defaultValue;
+            HasRelation = hasRelation;
         }
 
         public ColumnData(string name)
         {
             Name = name;
         }
-
-        public string Name { get;}
-        public bool IsVirtual { get;  }
     }
 }

@@ -1613,8 +1613,7 @@ namespace Origam.DA.Service
 		        {
 			        object[] values = new object[query.ColumnsInfo.Count];
 			        reader.GetValues(values);
-			        detachedFieldPacker.ProcessReaderOutput(ref values, query.ColumnsInfo);
-			        yield return values;
+			        yield return detachedFieldPacker.ProcessReaderOutput(values, query.ColumnsInfo);;
 		        }
 	        }
         }

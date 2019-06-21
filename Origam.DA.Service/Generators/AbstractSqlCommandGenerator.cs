@@ -1803,7 +1803,7 @@ namespace Origam.DA.Service
                     }
                 }
 
-                if (processColumn)
+                if (processColumn && !string.IsNullOrWhiteSpace(resultExpression))
                 {
                     result = string.Format("{0} AS {1}",
                         resultExpression,
@@ -3490,57 +3490,4 @@ namespace Origam.DA.Service
         public ISchemaItem SchemaItem { get; set; }
         public DataStructureEntity Entity { get; set; }
     }
-
-
-    public interface IDetachedFieldPacker
-    {
-        void ProcessReaderOutput(ref object[] values, ColumnsInfo columnsInfo);
-
-        string RenderSqlExpression(DataStructureEntity entity,
-            DetachedField detachedField);
-    }
-
-    class DetachedFieldPackerPostgre : IDetachedFieldPacker
-    {
-        public void ProcessReaderOutput(ref object[] values, ColumnsInfo columnsInfo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string RenderSqlExpression(DataStructureEntity entity,
-            DetachedField detachedField)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class DetachedFieldPackerMs : IDetachedFieldPacker
-    {
-        public void ProcessReaderOutput(ref object[] values, ColumnsInfo columnsInfo)
-        {
-            for (int i = 0; i < columnsInfo.Count; i++)
-            {
-                if (columnsInfo.Columns[i].IsVirtual)
-                {
-                    values[i] =  ((string) values[i]).Split((char)1);
-                }
-            }
-        }
-
-        public string RenderSqlExpression(DataStructureEntity entity,
-            DetachedField detachedField)
-        {
-            var relationPairItem = detachedField.ArrayRelation.ChildItems
-                                       .ToGeneric()
-                                       .OfType<EntityRelationColumnPairItem>()
-                                       .SingleOrDefault()
-                                   ?? throw new InvalidOperationException(
-                                       $"Relation {detachedField.ArrayRelation.Id} does not have exactly one {nameof(EntityRelationColumnPairItem)}");
-            return
-                $"(SELECT STRING_AGG(CAST([{detachedField.ArrayValueField.Name}] as varchar(max)), CHAR(1)) " +
-                $"FROM [{detachedField.ArrayRelation.Name}] " +
-                $"Where {relationPairItem.RelatedEntityField.Name} = [{entity.Name}].[{relationPairItem.BaseEntityField.Name}]) ";
-        }
-    }
-
 }
