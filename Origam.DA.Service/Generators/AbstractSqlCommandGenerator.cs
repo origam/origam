@@ -1614,7 +1614,7 @@ namespace Origam.DA.Service
             SortedList order = new SortedList();
             bool groupByNeeded = false;
             List<string> scalarColumnNames = new List<string>();
-            if (!columnsInfo.IsEmpty)
+            if (columnsInfo != null && !columnsInfo.IsEmpty)
             {
                 scalarColumnNames.AddRange(columnsInfo.ColumnNames);
             }
