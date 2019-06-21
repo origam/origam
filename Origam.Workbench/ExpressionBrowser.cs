@@ -65,7 +65,7 @@ namespace Origam.Workbench
         private Hashtable _customImages = new Hashtable();
         private bool _fileChangesPending = false;
         private bool _supportsGit = false;
-        private List<Guid> gitPersistObjectsCache = new List<Guid>();
+        
 
 		public ExpressionBrowser()
 		{
@@ -804,37 +804,29 @@ namespace Origam.Workbench
 
         private bool IsFileDirty(IPersistent item)
         {
-            CheckGitCache(item);
-            if (item.HasGitChange == null)
+            string ParentFile = item.Files.First();
+            if(GitManager.GetCache().TryGetValue(ParentFile, out bool status))
             {
-                if (GitManager.IsValid(_sourcePath))
+                return status;
+            }
+            if (GitManager.IsValid(_sourcePath))
+            {
+                GitManager gitManager = new GitManager(_sourcePath);
+                foreach (string file in item.Files)
                 {
-                    GitManager gitManager = new GitManager(_sourcePath);
-                    foreach (string file in item.Files)
+                    string path = Path.Combine(_sourcePath, file);
+                    if (File.Exists(path))
                     {
-                        string path = Path.Combine(_sourcePath, file);
-                        if (File.Exists(path))
+                        if (gitManager.HasChanges(path))
                         {
-                            if (gitManager.HasChanges(path))
-                            {
-                                item.HasGitChange = true;
-                                return true;
-                            }
+                            GitManager.GetCache()[ParentFile] = true;
+                            return true;
                         }
                     }
                 }
-                item.HasGitChange = false;
-                return false;
             }
-            return item.HasGitChange.GetValueOrDefault();
-        }
-        private void CheckGitCache(IPersistent item)
-        {
-            if(!gitPersistObjectsCache.Contains(item.Id))
-            {
-                item.HasGitChange = null;
-            }
-            gitPersistObjectsCache.Add(item.Id);
+            GitManager.GetCache()[ParentFile] =  false;
+            return false;
         }
         private void RecolorNodesByFile(TreeNode node, string file)
         {
@@ -946,7 +938,6 @@ namespace Origam.Workbench
 			tvwExpressionBrowser.BeginUpdate();
 			RecolorNodes(tvwExpressionBrowser.Nodes);
 			tvwExpressionBrowser.EndUpdate();
-            gitPersistObjectsCache.Clear();
         }
 		
 		private void RecolorNodes(TreeNodeCollection nodes)
@@ -1521,6 +1512,7 @@ namespace Origam.Workbench
             if (_fileChangesPending)
             {
                 _fileChangesPending = false;
+                GitManager.GetCache().Clear();
                 Redraw();
             }
         }
