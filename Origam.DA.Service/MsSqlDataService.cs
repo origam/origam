@@ -19,17 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.Schema;
-using Origam.Schema.EntityModel;
-using Origam.Workbench.Services;
 using System;
 using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 using System.Text.RegularExpressions;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
+using Origam.Workbench.Services;
 using static Origam.DA.Common.Enums;
-using static Origam.DA.Const;
 
 namespace Origam.DA.Service
 {
@@ -43,15 +42,18 @@ namespace Origam.DA.Service
         private static readonly log4net.ILog log = 
             log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        private static readonly IDetachedFieldPacker detachedFieldPacker = new DetachedFieldPackerMs();
         
         #region Constructors
-		public MsSqlDataService() : base()
+		public MsSqlDataService() : base(detachedFieldPacker)
 		{
 			Init();
 		}
 
 		public MsSqlDataService(string connection, int bulkInsertThreshold,
-            int updateBatchSize) : base(connection, bulkInsertThreshold, updateBatchSize)
+            int updateBatchSize) : base(connection, bulkInsertThreshold,
+            updateBatchSize, detachedFieldPacker)
 		{
 			Init();
 		}
@@ -59,7 +61,7 @@ namespace Origam.DA.Service
 
 		private void Init()
 		{
-			this.DbDataAdapterFactory = new MsSqlCommandGenerator();
+			this.DbDataAdapterFactory = new MsSqlCommandGenerator(detachedFieldPacker);
 		}
 
         public override DatabaseType PlatformName

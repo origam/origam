@@ -95,7 +95,7 @@ namespace Origam.ServerCore.Controllers
                 .OnSuccess(menuItem => GetEntityData(entityQueryData.DataStructureEntityId, menuItem))
                 .OnSuccess(CheckEntityBelongsToMenu)
                 .OnSuccess(entityData => CreateEntitiesGetQuery(entityQueryData, entityData))
-                .OnSuccess(ReadEntityData)
+                .OnSuccess(dataService.ExecuteDataReader)
                 .OnSuccess(ToActionResult)
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
@@ -288,8 +288,9 @@ namespace Origam.ServerCore.Controllers
                     .Select(colName => 
                         new ColumnData(
                             colName, 
-                            false))
-                    .ToList()),
+                            entityData.Entity.Column(colName).Field is DetachedField))
+                    .ToList(),
+                    renderSqlForDetachedFields:true),
                 ForceDatabaseCalculation = true,
             };
             
@@ -348,20 +349,6 @@ namespace Origam.ServerCore.Controllers
             }
             return Result.Ok<RowData, IActionResult>(
                 new RowData{Row =dataSetTable.Rows[0], Entity = entity});
-        }
-
-        private IEnumerable<object> ReadEntityData(DataStructureQuery query)
-        {
-            using (IDataReader reader = dataService.ExecuteDataReader(
-                query, SecurityManager.CurrentPrincipal, null))
-            {
-                while (reader.Read())
-                {
-                    object[] values = new object[query.ColumnsInfo.Count];
-                    reader.GetValues(values);
-                    yield return values;
-                }
-            }
         }
 
         private static void FillRow(RowData rowData, Dictionary<string, string> newValues)

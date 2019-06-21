@@ -5,41 +5,50 @@ namespace Origam.DA
 {
     public class ColumnsInfo
     {
-        private readonly List<ColumnData> columns = new List<ColumnData>();
         public static readonly ColumnsInfo Empty = new ColumnsInfo();
+        public bool RenderSqlForDetachedFields { get; }
 
         private ColumnsInfo()
         {
         }
-
-        public ColumnsInfo(string columnName)
+        
+        public ColumnsInfo(string columnName): this(columnName, false)
         {
+        }
+        
+        public ColumnsInfo(string columnName, bool renderSqlForDetachedFields)
+        {
+            RenderSqlForDetachedFields = renderSqlForDetachedFields;
             if (columnName == null)
             {
-                columns = new List<ColumnData>();
+                Columns = new List<ColumnData>();
                 return;
             }
 
-            columns = columnName
+            Columns = columnName
                 .Split(';')
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .Select(x => new ColumnData(x))
                 .ToList();
         }
 
-        public ColumnsInfo(List<ColumnData> columnNames)
+        public ColumnsInfo(List<ColumnData> columns, bool renderSqlForDetachedFields)
         {
-            columns = columnNames;
+            Columns = columns.ToList();
+            RenderSqlForDetachedFields = renderSqlForDetachedFields;
         }
+        
 
-        public int Count => columns.Count;
+        public List<ColumnData> Columns { get; } = new List<ColumnData>();
+
+        public int Count => Columns.Count;
         public bool IsEmpty => Count == 0;
-        public IEnumerable<string> ColumnNames => columns.Select(x => x.Name);
+        public List<string> ColumnNames => Columns.Select(x => x.Name).ToList();
 
 
         public override string ToString()
         {
-            return string.Join(";", columns.Select(column => column.Name));
+            return string.Join(";", ColumnNames);
         }
     }
     
