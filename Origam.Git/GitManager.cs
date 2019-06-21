@@ -33,10 +33,10 @@ namespace Origam.Git
         public Repository Repo { get; private set; }
         public string repositoryPath { get; private set; }
         public string CompareFile { get; private set; }
-        private string pathOfgitConfig ;
+        private string pathOfgitConfig;
         private string patname = @"name\s*=\s*(.*)";
         private string patemail = @"email\s*=\s*(.*)";
-
+        private static Dictionary<string,bool> gitPersistObjectsCache = new Dictionary<string, bool>();
         public GitManager(string path)
         {
             repositoryPath = Repository.Discover(path);
@@ -52,7 +52,7 @@ namespace Origam.Git
             InitValues();
         }
 
-        public void CloneRepository(string gitRepositoryLink,string modelFolder, 
+        public void CloneRepository(string gitRepositoryLink, string modelFolder,
             string repositoryUsername, string repositoryPassword)
         {
             CloneOptions co = new CloneOptions();
@@ -90,6 +90,17 @@ namespace Origam.Git
             return Repository.Discover(modelSourceControlLocation);
         }
 
+        public static void PersistPath(List<string> files)
+        {
+            foreach (string path in files)
+            {
+                gitPersistObjectsCache.Remove(path);
+            }
+        }
+        public static Dictionary<string,bool> GetCache()
+        {
+            return gitPersistObjectsCache;
+        }
         public static void RemoveRepository(string sourcesFolder)
         {
             string path = Path.Combine(sourcesFolder,".git");

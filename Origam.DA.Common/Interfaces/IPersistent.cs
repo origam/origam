@@ -97,6 +97,5 @@ namespace Origam.DA.ObjectPersistence
         {
             get;
         }
-        bool? HasGitChange { get; set; }
     }
 }
