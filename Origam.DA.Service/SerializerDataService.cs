@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Security.Principal;
@@ -213,6 +214,12 @@ namespace Origam.DA.Service
         { 
             throw new NotImplementedException();
         }
+
+        public IEnumerable<object> ExecuteDataReader(DataStructureQuery dataStructureQuery)
+        {
+	        throw new NotImplementedException();
+        }
+
         #endregion
 
         #region IDisposable Members

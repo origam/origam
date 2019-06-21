@@ -189,16 +189,18 @@ namespace Origam.DA.Service
 		private IDbDataAdapterFactory _adapterFactory;
 		private string _connectionString = "";
         private const int DATA_VISUALIZATION_MAX_LENGTH = 100;
+        private readonly IDetachedFieldPacker detachedFieldPacker;
         internal abstract string GetAllTablesSQL();
         
 
         #region Constructors
-        public AbstractSqlDataService() : base()
-		{
-		}
+        public AbstractSqlDataService(IDetachedFieldPacker detachedFieldPacker) : base()
+        {
+	        this.detachedFieldPacker = detachedFieldPacker;
+        }
 
 		public AbstractSqlDataService(string connection, int bulkInsertThreshold,
-            int updateBatchSize) : this()
+            int updateBatchSize, IDetachedFieldPacker detachedFieldPacker) : this(detachedFieldPacker)
 		{
 			_connectionString = connection;
             UpdateBatchSize = updateBatchSize;
@@ -1600,6 +1602,20 @@ namespace Origam.DA.Service
                 connection.Open();
             }
             return adapter.SelectCommand.ExecuteReader(commandBehavior);
+        }
+        
+        public override IEnumerable<object> ExecuteDataReader(DataStructureQuery query)
+        {
+	        using (IDataReader reader = ExecuteDataReader(
+		        query, SecurityManager.CurrentPrincipal, null))
+	        {
+		        while (reader.Read())
+		        {
+			        object[] values = new object[query.ColumnsInfo.Count];
+			        reader.GetValues(values);
+			        yield return detachedFieldPacker.ProcessReaderOutput(values, query.ColumnsInfo);;
+		        }
+	        }
         }
 
 	    private static DataStructureEntity GetEntity(DataStructureQuery query, DataStructure dataStructure)

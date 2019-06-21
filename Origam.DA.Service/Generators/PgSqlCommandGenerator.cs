@@ -19,14 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Npgsql;
-using NpgsqlTypes;
-using Origam.Schema;
-using Origam.Schema.EntityModel;
 using System;
 using System.Data;
 using System.Data.Common;
 using System.Text;
+using Npgsql;
+using NpgsqlTypes;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
 
 namespace Origam.DA.Service
 {
@@ -36,7 +36,8 @@ namespace Origam.DA.Service
     public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
 	{
 
-		public PgSqlCommandGenerator() : base()
+		public PgSqlCommandGenerator(IDetachedFieldPacker detachedFieldPacker) 
+			: base(detachedFieldPacker)
 		{
 		}
 
@@ -458,7 +459,7 @@ namespace Origam.DA.Service
 
         public override object Clone()
         {
-            PgSqlCommandGenerator gen = new PgSqlCommandGenerator();
+            PgSqlCommandGenerator gen = new PgSqlCommandGenerator(new DetachedFieldPackerPostgre());
             return gen;
         }
 

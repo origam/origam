@@ -95,7 +95,7 @@ namespace Origam.ServerCore.Controllers
                 .OnSuccess(menuItem => GetEntityData(entityQueryData.DataStructureEntityId, menuItem))
                 .OnSuccess(CheckEntityBelongsToMenu)
                 .OnSuccess(entityData => CreateEntitiesGetQuery(entityQueryData, entityData))
-                .OnSuccess(ReadEntityData)
+                .OnSuccess(dataService.ExecuteDataReader)
                 .OnSuccess(ToActionResult)
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
@@ -285,11 +285,17 @@ namespace Origam.ServerCore.Controllers
                 CustomOrdering = entityQueryData.OrderingAsTuples,
                 RowLimit = entityQueryData.RowLimit,
                 ColumnsInfo = new ColumnsInfo(entityQueryData.ColumnNames
-                    .Select(colName => 
-                        new ColumnData(
-                            colName, 
-                            false))
-                    .ToList()),
+                    .Select(colName =>
+                    {
+                        var field = entityData.Entity.Column(colName).Field;
+                        return new ColumnData(
+                            name: colName,
+                            isVirtual: field is DetachedField,
+                            defaultValue: (field as DetachedField)?.DefaultValue?.Value,
+                            hasRelation: (field as DetachedField)?.ArrayRelation != null);
+                    })
+                    .ToList(),
+                    renderSqlForDetachedFields:true),
                 ForceDatabaseCalculation = true,
             };
             
@@ -348,20 +354,6 @@ namespace Origam.ServerCore.Controllers
             }
             return Result.Ok<RowData, IActionResult>(
                 new RowData{Row =dataSetTable.Rows[0], Entity = entity});
-        }
-
-        private IEnumerable<object> ReadEntityData(DataStructureQuery query)
-        {
-            using (IDataReader reader = dataService.ExecuteDataReader(
-                query, SecurityManager.CurrentPrincipal, null))
-            {
-                while (reader.Read())
-                {
-                    object[] values = new object[query.ColumnsInfo.Count];
-                    reader.GetValues(values);
-                    yield return values;
-                }
-            }
         }
 
         private static void FillRow(RowData rowData, Dictionary<string, string> newValues)

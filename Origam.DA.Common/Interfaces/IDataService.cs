@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Security.Principal;
@@ -76,6 +77,8 @@ namespace Origam.DA
             DataStructureQuery dataStructureQuery, 
             IPrincipal userProfile, 
             string transactionId);
+
+        IEnumerable<object> ExecuteDataReader(DataStructureQuery dataStructureQuery);
 	}
 }
 

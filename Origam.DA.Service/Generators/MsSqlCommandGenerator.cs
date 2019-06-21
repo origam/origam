@@ -20,13 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 
-using Origam.Schema;
-using Origam.Schema.EntityModel;
 using System;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Text;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
 
 namespace Origam.DA.Service
 {
@@ -35,8 +35,10 @@ namespace Origam.DA.Service
     /// </summary>
     public class MsSqlCommandGenerator : AbstractSqlCommandGenerator
     {
-        public MsSqlCommandGenerator() : base()
+        public MsSqlCommandGenerator(IDetachedFieldPacker detachedFieldPacker):
+            base(detachedFieldPacker)
         {
+
         }
 
         public override IDbCommand GetCommand(string cmdText)
@@ -484,7 +486,7 @@ namespace Origam.DA.Service
         }
         public override object Clone()
         {
-            MsSqlCommandGenerator gen = new MsSqlCommandGenerator();
+            MsSqlCommandGenerator gen = new MsSqlCommandGenerator(new DetachedFieldPackerMs());
             return gen;
         }
 

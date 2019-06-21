@@ -19,19 +19,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.Service;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using Origam.Schema.EntityModel;
 using System.Collections;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Origam;
+using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.ObjectPersistence.Providers;
+using Origam.DA.Service;
 using Origam.Schema;
-using Origam.Workbench.Services;
-using Origam.DA;
+using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
-using Origam;
-
+using Origam.Workbench.Services;
 
 namespace TestSqlCommandGenerator
 {
@@ -143,7 +142,7 @@ namespace TestSqlCommandGenerator
 
 		internal virtual AbstractSqlCommandGenerator CreateAbstractSqlCommandGenerator()
 		{
-			return new MsSqlCommandGenerator();
+			return new MsSqlCommandGenerator(new DetachedFieldPackerMs());
 		}
 
 		/// <summary>

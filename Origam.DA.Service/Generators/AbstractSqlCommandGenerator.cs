@@ -36,6 +36,7 @@ namespace Origam.DA.Service
 {
     public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisposable
     {
+        private readonly IDetachedFieldPacker detachedFieldPacker;
         internal readonly ParameterReference PageNumberParameterReference = new ParameterReference();
         internal readonly ParameterReference PageSizeParameterReference = new ParameterReference();
         internal readonly FilterRenderer filterRenderer = new FilterRenderer();
@@ -71,10 +72,11 @@ namespace Origam.DA.Service
             Lon
         }
         
-        public AbstractSqlCommandGenerator()
+        public AbstractSqlCommandGenerator(IDetachedFieldPacker detachedFieldPacker)
         {
             PageNumberParameterReference.ParameterId = new Guid("3e5e12e4-a0dd-4d35-a00a-2fdb267536d1");
             PageSizeParameterReference.ParameterId = new Guid("c310d577-d4d9-42da-af92-a5202ba26e79");
+            this.detachedFieldPacker = detachedFieldPacker;
         }
 
         public abstract IDbDataParameter GetParameter();
@@ -1092,7 +1094,7 @@ namespace Origam.DA.Service
             string finalString = sqlExpression.ToString();
 
             // subqueries, etc. will have TOP 1, so it is sure that they select only 1 value
-            if (columnsInfo != null && restrictScalarToTop1)
+            if (columnsInfo != null && !columnsInfo.IsEmpty && restrictScalarToTop1)
             {
                 finalString = SelectClause(finalString, 1);
             }
@@ -1613,40 +1615,32 @@ namespace Origam.DA.Service
             ArrayList group = new ArrayList();
             SortedList order = new SortedList();
             bool groupByNeeded = false;
-            List<string> scalarColumnNames = new List<string>();
-            if (columnsInfo != null && !columnsInfo.IsEmpty)
+            if (concatScalarColumns && columnsInfo.Count > 1)
             {
-                scalarColumnNames.AddRange(columnsInfo.ColumnNames);
-            }
-            if (concatScalarColumns && scalarColumnNames.Count > 1)
-            {
-                List<KeyValuePair<ISchemaItem, DataStructureEntity>> scalarColumns =
-                    new List<KeyValuePair<ISchemaItem, DataStructureEntity>>();
-
-                foreach (string scalar in scalarColumnNames)
+                List<ColumnRenderItem> columnRenderData = new List<ColumnRenderItem>();
+                foreach (string columnName in columnsInfo.ColumnNames)
                 {
-                    foreach (DataStructureColumn column in entity.Columns)
-                    {
-                        if (column.Name == scalar)
+                    DataStructureColumn column = entity.Column(columnName);
+                    columnRenderData.Add(
+                        new ColumnRenderItem
                         {
-                            scalarColumns.Add(new KeyValuePair<ISchemaItem, DataStructureEntity>
-                                (column.Field, (column.Entity == null) ? entity : column.Entity));
-                            break;
-                        }
-                    }
+                            SchemaItem = column.Field,
+                            Entity = column.Entity ?? entity,
+                            RenderSqlForDetachedFields = columnsInfo.RenderSqlForDetachedFields
+                        });
                 }
                 sqlExpression.Append(" ");
-                sqlExpression.Append(RenderConcat(scalarColumns, RenderString(", "),
+                sqlExpression.Append(RenderConcat(columnRenderData, RenderString(", "),
                     replaceParameterTexts, dynamicParameters, selectParameterReferences));
                 return false;
             }
             i = 0;
-            foreach (DataStructureColumn column in GetSortedColumns(entity, scalarColumnNames))
+            foreach (DataStructureColumn column in GetSortedColumns(entity, columnsInfo.ColumnNames))
             {
                 var expression = RenderDataStructureColumn(ds, entity,
                         replaceParameterTexts, dynamicParameters,
                         sortSet, selectParameterReferences, isInRecursion,
-                        forceDatabaseCalculation, group, order, ref groupByNeeded, scalarColumnNames, column);
+                        forceDatabaseCalculation, group, order, ref groupByNeeded, columnsInfo, column);
                 if (expression != null)
                 {
                     if (i > 0) sqlExpression.Append(",");
@@ -1697,10 +1691,10 @@ namespace Origam.DA.Service
         {
             if (scalarColumnNames.Count == 0)
             {
-                return entity.Columns.Cast<DataStructureColumn>();
+                return entity.Columns;
             }
             return entity.Columns
-                .Cast<DataStructureColumn>()
+                .Where(x => scalarColumnNames.Contains(x.Name))
                 .OrderBy(x => scalarColumnNames.IndexOf(x.Name));
         }
 
@@ -1710,7 +1704,7 @@ namespace Origam.DA.Service
             Hashtable dynamicParameters, DataStructureSortSet sortSet, 
             Hashtable selectParameterReferences, bool isInRecursion,
             bool forceDatabaseCalculation, ArrayList group, SortedList order, 
-            ref bool groupByNeeded, List<string> scalarColumnNames, DataStructureColumn column)
+            ref bool groupByNeeded, ColumnsInfo columnsInfo, DataStructureColumn column)
         {
             string result = null;
             bool processColumn = false;
@@ -1726,17 +1720,17 @@ namespace Origam.DA.Service
             {
                 processColumn = false;
             }
-            else if (scalarColumnNames.Contains(column.Name) && 
+            else if (columnsInfo.ColumnNames.Contains(column.Name) && 
                      ShouldBeProcessed(forceDatabaseCalculation, column, functionCall))
             {
                 processColumn = true;
             }
-            else if (scalarColumnNames.Count == 0 &&
+            else if (columnsInfo.ColumnNames.Count == 0 &&
                      ShouldBeProcessed(forceDatabaseCalculation, column, functionCall))
             {
                 processColumn = true;
             }
-            else if (scalarColumnNames.Count == 0 && aggregatedColumn != null)
+            else if (columnsInfo.ColumnNames.Count == 0 && aggregatedColumn != null)
             {
                 bool found = false;
                 foreach (DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.ItemTypeConst))
@@ -1758,6 +1752,11 @@ namespace Origam.DA.Service
 
                 if (!found) processColumn = true;
             }
+            else if (columnsInfo.RenderSqlForDetachedFields &&
+                     column.Field is DetachedField)
+            {
+                processColumn = true;
+            }
 
             string resultExpression = "";
             string groupExpression = "";
@@ -1775,7 +1774,13 @@ namespace Origam.DA.Service
                 }
                 else
                 {
-                    resultExpression = RenderExpression(column.Field as AbstractSchemaItem, column.Entity == null ? entity : column.Entity, replaceParameterTexts, dynamicParameters, selectParameterReferences);
+                    resultExpression = RenderExpression(
+                        item: column.Field as AbstractSchemaItem,
+                        entity: column.Entity ?? entity,
+                        replaceParameterTexts: replaceParameterTexts,
+                        dynamicParameters: dynamicParameters,
+                        parameterReferences: selectParameterReferences,
+                        renderSqlForDetachedFields: columnsInfo.RenderSqlForDetachedFields);
                     groupExpression = resultExpression;
 
                     if (column.Aggregation != AggregationType.None)
@@ -1798,7 +1803,7 @@ namespace Origam.DA.Service
                     }
                 }
 
-                if (processColumn)
+                if (processColumn && !string.IsNullOrWhiteSpace(resultExpression))
                 {
                     result = string.Format("{0} AS {1}",
                         resultExpression,
@@ -2546,12 +2551,20 @@ namespace Origam.DA.Service
         #endregion
 
         #region Expression rendering
-        internal string RenderExpression(ISchemaItem item, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
+
+        private string RenderExpression(ISchemaItem item, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
         {
             return RenderExpression(item, entity, replaceParameterTexts, dynamicParameters, parameterReferences, false);
         }
+        
+        private string RenderExpression(ColumnRenderItem columnRenderItem, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
+        {
+            return RenderExpression(columnRenderItem.SchemaItem, columnRenderItem.Entity,
+                replaceParameterTexts, dynamicParameters, parameterReferences, columnRenderItem.RenderSqlForDetachedFields);
+        }
 
-        private string RenderExpression(ISchemaItem item, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences, bool isInRecursion)
+        private string RenderExpression(ISchemaItem item, DataStructureEntity entity,
+            Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences, bool renderSqlForDetachedFields)
         {
             if (item is TableMappingItem)
                 return RenderExpression(item as TableMappingItem);
@@ -2573,8 +2586,12 @@ namespace Origam.DA.Service
                 return RenderExpression(item as EntityFilterReference, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
             else if (item is EntityFilterLookupReference)
                 return RenderExpression(item as EntityFilterLookupReference, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
-            else if (item is DetachedField)
-                return "";
+            else if (item is DetachedField detachedField)
+            {
+                return renderSqlForDetachedFields 
+                    ? detachedFieldPacker.RenderSqlExpression(entity, detachedField) 
+                    : "";
+            }
             else if (item is AggregatedColumn)
                 return RenderExpression(item as AggregatedColumn, entity, replaceParameterTexts, dynamicParameters, parameterReferences);
             else
@@ -2680,6 +2697,7 @@ namespace Origam.DA.Service
                 return result.ToString();
             }
         }
+
         internal string RenderExpression(EntityFilterLookupReference lookupReference, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
         {
             DataServiceDataLookup lookup = lookupReference.Lookup as DataServiceDataLookup;
@@ -3346,20 +3364,24 @@ namespace Origam.DA.Service
         }
         internal string RenderConcat(ArrayList concatSchemaItems, DataStructureEntity entity, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
 		{
-			List<KeyValuePair<ISchemaItem, DataStructureEntity>> concatSchemaItemList =
-				new List<KeyValuePair<ISchemaItem, DataStructureEntity>>();
+			List<ColumnRenderItem> concatSchemaItemList = new List<ColumnRenderItem>();
 
 			foreach (object o in concatSchemaItems)
-			{
-				concatSchemaItemList.Add(new KeyValuePair<ISchemaItem, DataStructureEntity>(o as ISchemaItem, entity));
-			}
+            {
+                concatSchemaItemList.Add(new ColumnRenderItem
+                {
+                    SchemaItem = o as ISchemaItem,
+                    Entity = entity
+                });
+            }
             return RenderConcat(concatSchemaItemList, null, replaceParameterTexts, dynamicParameters, parameterReferences);
 		}
-        internal  string RenderConcat(List<KeyValuePair<ISchemaItem, DataStructureEntity>> concatSchemaItemList, string separator, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
+        internal  string RenderConcat(List<ColumnRenderItem> columnRenderItems, 
+            string separator, Hashtable replaceParameterTexts, Hashtable dynamicParameters, Hashtable parameterReferences)
         {
             int i = 0;
             StringBuilder concatBuilder = new StringBuilder();
-            foreach (KeyValuePair<ISchemaItem, DataStructureEntity> concatItem in concatSchemaItemList)
+            foreach (ColumnRenderItem columnRenderItem in columnRenderItems)
             {
                 if (i > 0)
                 {
@@ -3371,7 +3393,7 @@ namespace Origam.DA.Service
                     }
                 }
                 concatBuilder.Append(TextSql(
-                    RenderExpression(concatItem.Key, concatItem.Value, replaceParameterTexts, dynamicParameters, parameterReferences)));
+                    RenderExpression(columnRenderItem, replaceParameterTexts, dynamicParameters, parameterReferences)));
                 i++;
             }
 
@@ -3461,4 +3483,11 @@ namespace Origam.DA.Service
 
 		#endregion
 	}
+    
+    internal class ColumnRenderItem
+    {
+        public bool RenderSqlForDetachedFields { get; set; }
+        public ISchemaItem SchemaItem { get; set; }
+        public DataStructureEntity Entity { get; set; }
+    }
 }

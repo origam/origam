@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.Git;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -101,7 +102,8 @@ namespace Origam.DA.ObjectPersistence
 		        OnDeleted(EventArgs.Empty);
 		        PersistenceProvider.OnTransactionEnded(this);
             }
-            HasGitChange = null;
+            GitManager.PersistPath(Files);
+            //HasGitChange = null;
             if (isNew) OnChanged(EventArgs.Empty);
 		}
 
@@ -168,9 +170,6 @@ namespace Origam.DA.ObjectPersistence
 
         [Browsable(false)]
         public List<string> Files => _persistenceProvider.Files(this);
-
-        [Browsable(false)]
-        public bool? HasGitChange { get; set; } = null;
         #endregion
 
         #region IDisposable Members

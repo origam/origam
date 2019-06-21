@@ -123,23 +123,18 @@ namespace Origam.Schema.DeploymentModel
 		{
 			if(type == typeof(DeploymentVersion))
 			{
-			    List<SchemaExtension> packages = ServiceManager
-			        .Services
-			        .GetService<IPersistenceService>()
-			        .SchemaProvider
-			        .RetrieveList<SchemaExtension>(null)
-			        .Where(package => package.Id != schemaExtensionId)
-			        .ToList();
-                    
+                ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService))
+                as ISchemaService;
+                IList<SchemaExtension> packages = schema.ActiveExtension.IncludedPackages;
 
-				DeploymentVersion item = new DeploymentVersion(schemaExtensionId, packages);
-				item.RootProvider = this;
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewDeploymentVersion";
-
-				item.Group = group;
-				this.ChildItems.Add(item);
-
+                DeploymentVersion item = new DeploymentVersion(schemaExtensionId, packages.ToList())
+                {
+                    RootProvider = this,
+                    PersistenceProvider = this.PersistenceProvider,
+                    Name = "NewDeploymentVersion",
+                    Group = group
+                };
+                this.ChildItems.Add(item);
 				return item;
 			}
 			else
