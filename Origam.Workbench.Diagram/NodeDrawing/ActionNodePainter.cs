@@ -70,10 +70,20 @@ namespace Origam.Workbench.Diagram.NodeDrawing
 
         private Tuple<int,int> CalculateLabelPointOffsets(int[] lineWidths)
         {
-            int widthDifference = Math.Abs(lineWidths[0] - lineWidths[1]);
+            int width0 = 0;
+            int width1 = 0;
+            if (lineWidths.Length > 0)
+            {
+                width0 = lineWidths[0];
+            }
+            if (lineWidths.Length > 1)
+            {
+                width1 = lineWidths[1];
+            }
+            int widthDifference = Math.Abs(width0 - width1);
             int offset = widthDifference / 2;
 
-            return lineWidths[0] > lineWidths[1]
+            return width0 > width1
                 ? new Tuple<int, int>(0, offset) 
                 : new Tuple<int, int>(offset, 0);
         }
@@ -116,9 +126,12 @@ namespace Origam.Workbench.Diagram.NodeDrawing
                     graphics.DrawString(lines[0], painter.Font,
                         painter.GetTextBrush(nodeData.IsFromActivePackage),
                         line1LabelPoint, painter.DrawFormat);
-                    graphics.DrawString(lines[1], painter.Font,
-                        painter.GetTextBrush(nodeData.IsFromActivePackage),
-                        line2LabelPoint, painter.DrawFormat);
+                    if (lines.Length > 1)
+                    {
+                        graphics.DrawString(lines[1], painter.Font,
+                            painter.GetTextBrush(nodeData.IsFromActivePackage),
+                            line2LabelPoint, painter.DrawFormat);
+                    }
                     graphics.DrawImage(image, imagePoint);
                     if (Equals(painter.NodeSelector.Selected, node))
                     {
