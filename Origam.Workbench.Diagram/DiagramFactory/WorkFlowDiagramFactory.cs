@@ -197,6 +197,7 @@ namespace Origam.Workbench.Diagram
 			subgraph.LayoutSettings = new SugiyamaLayoutSettings
 			{
 				PackingMethod = PackingMethod.Columns,
+				AdditionalClusterTopMargin = 30,
 				PackingAspectRatio = 0.0001
 			};
 			AddContextStores(workFlowBlock, subgraph);
