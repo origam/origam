@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Drawing;
 using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Drawing;
@@ -106,7 +107,14 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             subgraph.NodeBoundaryDelegate = painter.GetBoundary;
             subgraph.UserData = nodeData;
             subgraph.LabelText = nodeData.Text;
-            parentSbubgraph.AddSubgraph(subgraph);
+            if (parentSbubgraph is BlockSubGraph parentBlockSubGraph)
+            {
+                parentBlockSubGraph.MainDrawingSubgraf.AddSubgraph(subgraph);
+            }
+            else
+            {
+                parentSbubgraph.AddSubgraph(subgraph);
+            }
             return subgraph;
         }
 
