@@ -40,7 +40,7 @@ namespace Origam.Server.Utils
                     {
                         filePersistProvider.FlushCache();
                         filePersistProvider.ReloadFiles(tryUpdate: false);
-                        filePersistProvider.PersistIndex(false);
+                        filePersistProvider.PersistIndex();
                     }
                     OrigamUserContext.ResetAll();
                 }

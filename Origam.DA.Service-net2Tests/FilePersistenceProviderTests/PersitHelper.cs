@@ -64,7 +64,7 @@ namespace Origam.DA.Service_net2Tests
 
             var filePresProvider =
                 (FilePersistenceProvider)persistenceService.SchemaProvider;
-            filePresProvider.PersistIndex(false);
+            filePresProvider.PersistIndex();
         }
 
         public IFilePersistent RetrieveSingle(Type type, Key primaryKey)

@@ -100,10 +100,14 @@ namespace Origam.DA.Service
                 ? FilePersistenceIndex.GetPackageRespectingVersion(index) 
                 : FilePersistenceIndex.GetPackageIgnoringVersion(index);
         }
-        
-        public void PersistIndex(bool unload)
+
+        public void PersistIndex()
         {
-            index.AddToPersist(trackerLoaderFactory,unload);
+            PersistIndex(false);
+        }
+        public void PersistIndex(bool unloadProject)
+        {
+            index.AddToPersist(trackerLoaderFactory,unloadProject);
         }
 
         public override void BeginTransaction()
