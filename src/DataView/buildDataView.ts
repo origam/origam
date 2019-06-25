@@ -35,6 +35,7 @@ import { AFocusEditor } from "./AFocusEditor";
 
 export function buildDataView(
   id: string,
+  modelInstanceId: string,
   label: string,
   isHeadless: boolean,
   dataStructureEntityId: string,
@@ -46,6 +47,7 @@ export function buildDataView(
 ) {
   const mediator: IDataViewMediator02 = new DataViewMediator02({
     id,
+    modelInstanceId,
     label,
     isHeadless,
     parentMediator,

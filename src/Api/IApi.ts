@@ -2,12 +2,19 @@ import { AxiosPromise } from "axios";
 
 export interface IApi {
   setAccessToken(token: string | undefined): void;
+
   resetAccessToken(): void;
+
   httpAuthHeader: { Authorization: string };
+
   login(credentials: { UserName: string; Password: string }): Promise<string>;
+
   logout(): Promise<void>;
+
   getMenu(): Promise<any>;
+
   getScreen(id: string): Promise<any>;
+
   getEntities(query: {
     MenuId: string;
     DataStructureEntityId: string;
@@ -17,6 +24,7 @@ export interface IApi {
     RowLimit?: number;
     MasterRowId?: string;
   }): Promise<any>;
+
   getLookupLabels(query: {
     LookupId: string;
     MenuId: string;
@@ -56,19 +64,33 @@ export interface IApi {
     RowId: string;
   }): Promise<any>;
 
-  getSessionEntity(data: {
+  sessionGetEntity(data: {
     sessionFormIdentifier: string;
     childEntity: string;
     parentRecordId: string;
     rootRecordId: string;
   }): Promise<any>;
 
-  updateSessionEntity(data: {
+  sessionUpdateEntity(data: {
     SessionFormIdentifier: string;
     Entity: string;
     Id: string;
     Property: string;
     NewValue: any;
+  }): Promise<any>;
+
+  sessionCreateEntity(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    Values: { [key: string]: any };
+    Parameters: { [key: string]: any };
+    RequestingGridId: string;
+  }): Promise<any>;
+
+  sessionDeleteEntity(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    RowId: string;
   }): Promise<any>;
 
   getLookupListEx(data: {

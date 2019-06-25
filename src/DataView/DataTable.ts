@@ -111,7 +111,7 @@ export class Records implements IRecords {
   @action.bound
   removeRow(rowId: string): void {
     const idx = this.getFullIndexById(rowId);
-    if (idx) {
+    if (idx !== undefined) {
       this.items.splice(idx, 1);
     }
   }

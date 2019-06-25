@@ -66,6 +66,7 @@ export interface IDataViewMediator02 extends IDispatcher {
   initialDataView: IViewType;
   initialActiveViewType: IViewType;
   id: string;
+  gridId: string;
   api: IApi;
   menuItemId: string;
   isSessionedScreen: boolean;
@@ -96,6 +97,7 @@ export class DataViewMediator02 implements IDataViewMediator02 {
     public P: {
       parentMediator: IFormScreen;
       id: string;
+      modelInstanceId: string;
       label: string;
       isHeadless: boolean;
       availViewItems: () => Array<IFormViewMediator | ITableViewMediator>;
@@ -180,6 +182,9 @@ export class DataViewMediator02 implements IDataViewMediator02 {
       case DataViewActions.FOCUS_EDITOR:
         this.P.aFocusEditor().do();
         break;
+      case DataViewActions.DELETE_SELECTED_ROW:
+        this.aDeleteRow.doSelected();
+        break;
     }
     this.machine.send(event);
     this.availViews.items.forEach(availView =>
@@ -200,6 +205,10 @@ export class DataViewMediator02 implements IDataViewMediator02 {
   @action.bound stop() {
     this.machine.stop();
     this.disposers.forEach(d => d());
+  }
+
+  get gridId(): string {
+    return this.P.modelInstanceId;
   }
 
   get editing(): IEditing {

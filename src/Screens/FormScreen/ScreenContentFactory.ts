@@ -56,6 +56,7 @@ export class ScreenContentFactory implements IScreenContentFactory {
 
       const dataViewMediator02: IDataViewMediator02 = buildDataView(
         grid.attributes.Id,
+        grid.attributes.ModelInstanceId,
         grid.attributes.Name,
         parseBoolean(grid.attributes.IsHeadless),
         dataStructureEntityId,

@@ -11,6 +11,7 @@ import { IDataViewMachine } from "./types/IDataViewMachine";
 import { IRecord } from "./types/IRecord";
 import * as DataViewActions from "./DataViewActions";
 import { IScreen } from "./types/IScreen";
+import { IDataViewMediator02 } from "./DataViewMediator02";
 
 export enum IResponseOperation {
   DeleteAllData = -2,
@@ -36,7 +37,7 @@ export class DataViewMachine implements IDataViewMachine {
       isSessionedScreen: boolean;
       sessionId: string;
       selectedIdGetter: () => string | undefined;
-
+      gridId: string;
       listen(cb: (action: any) => void): void;
       dispatch(action: any): void;
     }
@@ -77,7 +78,7 @@ export class DataViewMachine implements IDataViewMachine {
             SESSION_MASTER_CHANGED: "SESSION_CHANGE_MASTER",
             [DataViewActions.LOAD_INCREMENT]: "LOAD_INCREMENT",
             [DataViewActions.REQUEST_SAVE_DATA]: "SAVE_DIRTY_DATA",
-            [DataViewActions.REQUEST_CREATE_ROW]: "CREATE_NEW_RECORD"
+            [DataViewActions.CREATE_ROW]: "CREATE_NEW_RECORD",
           }
         },
         LOAD_FRESH: {
@@ -126,7 +127,7 @@ export class DataViewMachine implements IDataViewMachine {
               this.P.sessionId
             );
             this.api
-              .getSessionEntity({
+              .sessionGetEntity({
                 sessionFormIdentifier: this.P.sessionId,
                 rootRecordId: this.rootMasterId!,
                 childEntity: this.dataSource.id,
@@ -189,6 +190,20 @@ export class DataViewMachine implements IDataViewMachine {
         },
         createNewRecord: (ctx, event) => async (send, onEvent) => {
           console.log("Create new record.");
+          if (this.P.isSessionedScreen) {
+            this.api.sessionCreateEntity({
+              SessionFormIdentifier: this.P.sessionId,
+              Entity: this.dataSource.id,
+              Values: {},
+              Parameters: {},
+              RequestingGridId: this.P.gridId
+            })
+            .then(action((result: any) => {
+              console.log('Response:', result)
+            }))
+          } else {
+
+          }
           send("DONE");
         }
       },
@@ -244,11 +259,25 @@ export class DataViewMachine implements IDataViewMachine {
   }
 
   async saveDirtyDataSessioned() {
+    for (let RowId of this.dataTable.dirtyDeletedIds.keys()) {
+      console.log("Deleting", RowId);
+      const result = await this.api.sessionDeleteEntity({
+        SessionFormIdentifier: this.P.sessionId,
+        Entity: this.dataSource.id,
+        RowId
+      });
+      console.log("...Deleted.");
+      runInAction(() => {
+        this.dataTable.removeDirtyDeleted(RowId);
+        this.dataTable.removeRow(RowId);
+        this.P.screen.setDirty(true)
+      });
+    }
     for (let [RowId, values] of this.dataTable.dirtyValues) {
       console.log("Updating", RowId);
       for (let [prop, val] of values.entries()) {
         console.log(`    column ${prop}`);
-        const result = await this.api.updateSessionEntity({
+        const result = await this.api.sessionUpdateEntity({
           SessionFormIdentifier: this.P.sessionId,
           Entity: this.dataSource.id,
           Id: RowId,

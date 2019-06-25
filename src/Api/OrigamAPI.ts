@@ -158,11 +158,29 @@ export class OrigamAPI implements IApi {
     )).data;
   }
 
-  async deleteSessionEntity() {}
+  async sessionDeleteEntity(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    RowId: string;
+  }) {
+    return (await axios.post(`${this.urlPrefix}/Sessions/DeleteRow`, data, {
+      headers: this.httpAuthHeader
+    })).data;
+  }
 
-  async createSessionEntity() {}
+  async sessionCreateEntity(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    Values: { [key: string]: any };
+    Parameters: { [key: string]: any };
+    RequestingGridId: string;
+  }) {
+    return (await axios.post(`${this.urlPrefix}/Sessions/CreateRow`, data, {
+      headers: this.httpAuthHeader
+    })).data;
+  }
 
-  async getSessionEntity(data: {
+  async sessionGetEntity(data: {
     sessionFormIdentifier: string;
     childEntity: string;
     parentRecordId: string;
@@ -174,7 +192,7 @@ export class OrigamAPI implements IApi {
     })).data;
   }
 
-  async updateSessionEntity(data: {
+  async sessionUpdateEntity(data: {
     SessionFormIdentifier: string;
     Entity: string;
     Id: string;
