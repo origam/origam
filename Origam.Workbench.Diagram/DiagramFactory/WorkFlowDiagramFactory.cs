@@ -194,12 +194,6 @@ namespace Origam.Workbench.Diagram
 		private Subgraph AddWorkflowDiagram(IWorkflowBlock workFlowBlock, Subgraph parentSubgraph)
 		{
 			BlockSubGraph subgraph = nodeFactory.AddSubgraph(parentSubgraph, workFlowBlock);
-			subgraph.LayoutSettings = new SugiyamaLayoutSettings
-			{
-				PackingMethod = PackingMethod.Columns,
-				AdditionalClusterTopMargin = 30,
-				PackingAspectRatio = 0.0001
-			};
 			AddContextStores(workFlowBlock, subgraph);
 			return AddToSubgraph(workFlowBlock, subgraph);
 		}

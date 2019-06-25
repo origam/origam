@@ -52,18 +52,6 @@ namespace Origam.Workbench.Diagram.Graphs
             };
         }
 
-        private Subgraph GetTopSubgraphChild(string childId)
-        {
-            var child = Subgraphs.SingleOrDefault(x => x.Id == childId);
-            if (child == null)
-            {
-                child = new InfrastructureSubgraph(childId, this);
-                AddSubgraph(child);
-            }
-
-            return child;
-        }
-
         public InfrastructureSubgraph ContextStoreSubgraph
         {
             get
@@ -84,8 +72,26 @@ namespace Origam.Workbench.Diagram.Graphs
             AddSubgraph(child);
         }
 
-        public InfrastructureSubgraph MainDrawingSubgraf =>
-            (InfrastructureSubgraph)GetTopSubgraphChild(mainSubgraphId);
+        public InfrastructureSubgraph MainDrawingSubgraf
+        {
+            get
+            {
+                InfrastructureSubgraph child = Subgraphs
+                    .OfType<InfrastructureSubgraph>()
+                    .SingleOrDefault(x => x.Id == mainSubgraphId);
+                if (child == null)
+                {
+                    child = new InfrastructureSubgraph(mainSubgraphId, this);
+                    child.LayoutSettings = new SugiyamaLayoutSettings
+                        {
+                            PackingAspectRatio = 0.001,
+                        };
+                    AddSubgraph(child);
+                }
+
+                return child;
+            }
+        }
 
         public void AddContextStore(Node node)
         {
