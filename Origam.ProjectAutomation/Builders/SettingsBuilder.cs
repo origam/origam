@@ -49,6 +49,7 @@ namespace Origam.ProjectAutomation
         public override void Execute(Project project)
         {
             _settings = GetSettings();
+            _setting = new OrigamSettings();
             _setting.Name = project.Name;
             _setting.TitleText = project.Name;
             _setting.DataConnectionString = project.BuilderDataConnectionString;
