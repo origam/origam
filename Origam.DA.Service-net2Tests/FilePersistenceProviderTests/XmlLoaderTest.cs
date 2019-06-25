@@ -171,7 +171,7 @@ namespace Origam.DA.Service_net2Tests
                 new ObjectFileDataFactory(origamFileFactory, parentFolders);          
             var trackerLoaderFactory =
                 new TrackerLoaderFactory(topDir, objectFileDataFactory,
-                    origamFileFactory,XmlFileDataFactory, pathToIndexBin,true);
+                    origamFileFactory,XmlFileDataFactory, pathToIndexBin,true,index);
 
             var filePersistenceProvider =
                 new FilePersistenceProvider(
