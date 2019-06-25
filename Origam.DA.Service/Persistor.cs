@@ -145,7 +145,7 @@ namespace Origam.DA.Service
             }
 
             transactionStore.Clear();
-            index.Persist(trackerLoaderFactory);
+            index.AddToPersist(trackerLoaderFactory,false);
         }
 
         public void EndTransactionDontSave()

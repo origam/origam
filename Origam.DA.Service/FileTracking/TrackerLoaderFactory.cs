@@ -33,13 +33,14 @@ namespace Origam.DA.Service
         private OrigamXmlLoader xmlLoader;
         private IBinFileLoader binLoader;
         private readonly bool useBinFile;
+        private FilePersistenceIndex FilePersistenceIndex;
 
         public TrackerLoaderFactory(
             DirectoryInfo topDirectory,
             ObjectFileDataFactory objectFileDataFactory,
             OrigamFileFactory origamFileFactory,
             XmlFileDataFactory xmlFileDataFactory,
-            FileInfo pathToIndexFile, bool useBinFile)
+            FileInfo pathToIndexFile, bool useBinFile, FilePersistenceIndex filePersistence)
         {
             this.topDirectory = topDirectory;
             this.objectFileDataFactory = objectFileDataFactory;
@@ -47,6 +48,7 @@ namespace Origam.DA.Service
             this.pathToIndexFile = pathToIndexFile;
             this.xmlFileDataFactory = xmlFileDataFactory;
             this.useBinFile= useBinFile;
+            this.FilePersistenceIndex = filePersistence;
         }
 
         
@@ -68,7 +70,7 @@ namespace Origam.DA.Service
         private IBinFileLoader MakeBinLoader()
         {
             return useBinFile
-                ? (IBinFileLoader) new BinFileLoader(origamFileFactory, topDirectory, pathToIndexFile)
+                ? (IBinFileLoader) new BinFileLoader(origamFileFactory, topDirectory, pathToIndexFile, FilePersistenceIndex)
                 : new NullBinFileLoader();
         }
     }

@@ -81,7 +81,8 @@ namespace Origam.Workbench.Services
                                             origamFileFactory,
                                             xmlFileDataFactory,
                                             pathToIndexBin,
-                                            useBinFile);
+                                            useBinFile,
+                                            index);
             index.InitItemTracker(trackerLoaderFactory);
             
             schemaProvider = new FilePersistenceProvider(
@@ -222,7 +223,7 @@ namespace Origam.Workbench.Services
 
         public void UnloadService()
         {
-            schemaProvider.PersistIndex();
+            schemaProvider.PersistIndex(true);
             Dispose();
         }
 

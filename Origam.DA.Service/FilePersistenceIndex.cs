@@ -103,10 +103,22 @@ namespace Origam.DA.Service
             readWriteLock.RunWriter(() => itemTracker.AddOrReplace(origamFile));
         }
 
-        public void Persist(TrackerLoaderFactory trackerLoaderFactory)
+        public void AddToPersist(TrackerLoaderFactory trackerLoaderFactory, bool unloadProject)
         {
-            readWriteLock.RunWriter(() =>
-                trackerLoaderFactory.BinLoader.Persist(itemTracker));
+            if (unloadProject)
+            {
+                trackerLoaderFactory.BinLoader.StopTask();
+                PersistActualIndex(trackerLoaderFactory.BinLoader);
+            }
+            else
+            {
+                trackerLoaderFactory.BinLoader.MarkToSave(itemTracker);
+            }
+        }
+        internal void PersistActualIndex(IBinFileLoader binFileLoader)
+        {
+                readWriteLock.RunWriter(() =>
+                   binFileLoader.Persist(itemTracker));
         }
 
         internal PersistedObjectInfo GetById(Guid id)
