@@ -17,11 +17,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Linq;
 using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.Layout.Layered;
+using Node = Microsoft.Msagl.Drawing.Node;
 
 namespace Origam.Workbench.Diagram.Graphs
 {
@@ -31,7 +33,8 @@ namespace Origam.Workbench.Diagram.Graphs
         private readonly string mainSubgraphId;
 
         public bool IsEmpty =>
-            !ContextStoreSubgraph.Nodes.Any() &&
+            (ContextStoreSubgraph == null ||
+            !ContextStoreSubgraph.Nodes.Any()) &&
             !MainDrawingSubgraf.Nodes.Any() &&
             !MainDrawingSubgraf.Subgraphs.Any();
 
@@ -65,24 +68,32 @@ namespace Origam.Workbench.Diagram.Graphs
         {
             get
             {
-                InfrastructureSubgraph child = Subgraphs
+                return Subgraphs
                     .OfType<InfrastructureSubgraph>()
                     .SingleOrDefault(x => x.Id == contextStoreSubgraphId);
-                if (child == null)
-                {
-                    child = new InfrastructureSubgraph(contextStoreSubgraphId, this);
-                    child.LayoutSettings = new SugiyamaLayoutSettings
-                    {
-                        ClusterMargin = 20
-                    };
-                    AddSubgraph(child);
-                }
-
-                return child;
             }
+        }
+
+        private void InitContextStoreSubgraph()
+        {
+            InfrastructureSubgraph child = new InfrastructureSubgraph(contextStoreSubgraphId, this);
+            child.LayoutSettings = new SugiyamaLayoutSettings
+            {
+                ClusterMargin = 20
+            };
+            AddSubgraph(child);
         }
 
         public InfrastructureSubgraph MainDrawingSubgraf =>
             (InfrastructureSubgraph)GetTopSubgraphChild(mainSubgraphId);
+
+        public void AddContextStore(Node node)
+        {
+            if (ContextStoreSubgraph == null)
+            {
+                InitContextStoreSubgraph();
+            }
+            ContextStoreSubgraph.AddNode(node);
+        }
     }
 }

@@ -29,14 +29,14 @@ namespace Origam.Workbench.Diagram.Graphs
     public class WorkFlowGraph: Graph
     {
         public BlockSubGraph TopSubgraph => (BlockSubGraph)RootSubgraph.Subgraphs.FirstOrDefault();
-        public InfrastructureSubgraph ContextStoreSubgraph => TopSubgraph.ContextStoreSubgraph;
         public InfrastructureSubgraph MainDrawingSubgraf => TopSubgraph.MainDrawingSubgraf;
 
         public IEnumerable<InfrastructureSubgraph> AllContextStoreSubgraphs =>
             RootSubgraph
                 .GetAllSubgraphs()
                 .OfType<BlockSubGraph>()
-                .Select(x => x.ContextStoreSubgraph);
+                .Select(x => x.ContextStoreSubgraph)
+                .Where(x => x!=null);
         
         
         public bool IsWorkFlowItemSubGraph(Node node)

@@ -83,7 +83,7 @@ namespace Origam.Workbench.Diagram
 				if (childItem is ContextStore contextStore)
 				{
 					Node node = nodeFactory.AddNode(graph, contextStore);
-					blockSubGraph.ContextStoreSubgraph.AddNode(node);
+					blockSubGraph.AddContextStore(node);
 				}
 			}
 		}
