@@ -61,17 +61,8 @@ export class TopLevelLayout extends React.Component<{
               </div>
             </div>
           </div>
-          <div className="section actions-section">
-            <div className="action-item-big">
-              <i className="far fa-save icon" />
-              <br />
-              Save
-            </div>
-            <div className="action-item-big">
-              <i className="fas fa-redo icon" />
-              <br />
-              Reload
-            </div>
+          <div className="section actions-section" id="form-actions-container">
+
           </div>
           <div className="pusher" />
           <div className="section company-user-section">

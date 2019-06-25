@@ -136,7 +136,11 @@ export class OrigamAPI implements IApi {
 
   async deleteSession() {}
 
-  async saveSession() {}
+  async saveSession(data: { SessionId: string }) {
+    return (await axios.post(`${this.urlPrefix}/Sessions/Save`, data, {
+      headers: this.httpAuthHeader
+    })).data;
+  }
 
   async reloadSession() {
     // TODO
@@ -150,9 +154,7 @@ export class OrigamAPI implements IApi {
     return (await axios.post(
       `${this.urlPrefix}/Sessions/ChangeMasterRecord`,
       data,
-      {
-        headers: this.httpAuthHeader
-      }
+      { headers: this.httpAuthHeader }
     )).data;
   }
 
@@ -179,7 +181,7 @@ export class OrigamAPI implements IApi {
     Property: string;
     NewValue: any;
   }): Promise<any> {
-    return (await axios.post(`${this.urlPrefix}/Sessions/UpdateRowData`, data, {
+    return (await axios.post(`${this.urlPrefix}/Sessions/UpdateRow`, data, {
       headers: this.httpAuthHeader
     })).data;
   }

@@ -16,6 +16,7 @@ import {
   startDataViews,
   activateInitialViewTypes
 } from "../../DataView/DataViewActions";
+import * as FormScreenActions from "./FormScreenActions";
 
 export class FormScreenMachine implements IFormScreenMachine {
   constructor(
@@ -68,10 +69,24 @@ export class FormScreenMachine implements IFormScreenMachine {
           }
         },
         startDataViews: {
-          onEntry: "startDataViews"
+          onEntry: "startDataViews",
+          on: {
+            "": "idle"
+          }
         },
         loadSessionData: {
           invoke: { src: "loadSessionData" }
+        },
+        idle: {
+          on: {
+            [FormScreenActions.SAVE_SESSION]: "saveSession"
+          }
+        },
+        saveSession: {
+          invoke: { src: "saveSession" },
+          on: {
+            DONE: "idle"
+          }
         }
       }
     },
@@ -132,6 +147,15 @@ export class FormScreenMachine implements IFormScreenMachine {
         },
         loadSessionData: (ctx, event) => (send, onEvent) => {
           // this.api.
+        },
+        saveSession: (ctx, event) => (send, onEvent) => {
+          this.api.saveSession({ SessionId: this.formScreen.sessionId }).then(
+            action((result: any) => {
+              console.log("Session saved");
+              this.formScreen.setDirty(false);
+              send("DONE");
+            })
+          );
         }
       }
     }
@@ -151,6 +175,11 @@ export class FormScreenMachine implements IFormScreenMachine {
 
   @action.bound stop() {
     this.interpreter.stop();
+  }
+
+  @action.bound
+  send(event: any): void {
+    this.interpreter.send(event);
   }
 
   get menuItemId() {

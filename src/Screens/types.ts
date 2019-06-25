@@ -52,6 +52,7 @@ export interface IMainViews {
 }
 
 export interface IMainView extends IDispatcher  {
+  isDirty: boolean;
   menuItemId: string;
   order: number;
   label: string;

@@ -11,17 +11,14 @@ import {
 import { observer } from "mobx-react";
 import { action } from "mobx";
 import { FormScreen } from "../screenUI/FormScreen/FormScreen";
-import {
-  IFormScreen,
-  isFormScreen
-} from "../../../Screens/FormScreen/types";
-
+import { IFormScreen, isFormScreen } from "../../../Screens/FormScreen/types";
 
 @observer
 class MainViewHandle extends React.Component<{
   menuItemId: string;
   order: number;
   label: string;
+  isDirty: boolean;
   mainViews: IMainViewsModel;
   onClick?: (event: any, menuItemId: string, order: number) => void;
   onCloseClick?: (event: any, menuItemId: string, order: number) => void;
@@ -46,9 +43,10 @@ class MainViewHandle extends React.Component<{
       <div
         className={
           style.TabHandle +
+          (this.props.isDirty ? " dirty" : "") +
           (this.props.menuItemId === this.props.mainViews.activeViewId &&
           this.props.order === this.props.mainViews.activeViewOrder
-            ? ` ${style.active}`
+            ? " active"
             : "")
         }
         onClick={this.handleClick}
@@ -73,7 +71,7 @@ export class MainViews extends React.Component<{
   aOnCloseClick: IAOnCloseClick;
 }> {
   getScreen(ov: IMainView) {
-    console.log(ov)
+    console.log(ov);
     if (isFormScreen(ov)) {
       return (
         <FormScreen key={`${ov.menuItemId}@${ov.order}`} formScreen={ov} />
@@ -92,6 +90,7 @@ export class MainViews extends React.Component<{
               label={ov.label}
               menuItemId={ov.menuItemId}
               order={ov.order}
+              isDirty={ov.isDirty}
               mainViews={this.props.mainViews}
               onClick={this.props.aOnHandleClick.do}
               onCloseClick={this.props.aOnCloseClick.do}

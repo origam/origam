@@ -10,12 +10,24 @@ import { IDataTable } from "./types/IDataTable";
 import { IDataViewMachine } from "./types/IDataViewMachine";
 import { IRecord } from "./types/IRecord";
 import * as DataViewActions from "./DataViewActions";
+import { IScreen } from "./types/IScreen";
 
+export enum IResponseOperation {
+  DeleteAllData = -2,
+  Delete = -1,
+  Update = 0,
+  Create = 1,
+  FormSaved = 2,
+  FormNeedsRefresh = 3,
+  CurrentRecordNeedsUpdate = 4,
+  RefreshPortal = 5
+}
 
 export class DataViewMachine implements IDataViewMachine {
   constructor(
     public P: {
       api: ML<IApi>;
+      screen: IScreen;
       menuItemId: ML<string>;
       dataStructureEntityId: ML<string>;
       propertyIdsToLoad: ML<string[]>;
@@ -169,7 +181,7 @@ export class DataViewMachine implements IDataViewMachine {
             );
         },
         saveDirtyData: (ctx, event) => async (send, onEvent) => {
-          if (this.P.isSessionedScreen && !this.isRoot) {
+          if (this.P.isSessionedScreen) {
             this.saveDirtyDataSessioned();
           } else {
             this.saveDirtyDataNotSessioned();
@@ -245,13 +257,23 @@ export class DataViewMachine implements IDataViewMachine {
         });
         console.log("...Updated.");
         runInAction(() => {
-          const newRecord = Array(this.dataTable.properties.count) as IRecord;
-          for (let prop of this.dataTable.properties.items) {
-            newRecord[prop.dataIndex] =
-              result.wrappedObject[prop.dataSourceIndex];
+          for (let resultItem of result) {
+            switch (resultItem.operation) {
+              case IResponseOperation.Update:
+                {
+                  const newRecord = this.dataSource.reorderedRow(
+                    this.propertyIdsToLoad,
+                    resultItem.wrappedObject
+                  );
+                  this.dataTable.substRecord(RowId, newRecord);
+                  this.dataTable.removeDirtyRow(RowId);
+                  this.P.screen.setDirty(true)
+                }
+                break;
+              default:
+                throw new Error("Unknown operation:" + resultItem.operation);
+            }
           }
-          this.dataTable.substRecord(RowId, newRecord);
-          this.dataTable.removeDirtyRow(RowId);
         });
       }
     }

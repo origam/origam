@@ -30,6 +30,9 @@ export class DataSource implements IDataSource {
     return fields.map(field => field.id);
   }
 
+  /*
+    Fields ordered by data source indices are reordered according to given ids.
+  */
   reorderedRow(ids: string[], record: any[]): any[] {
     const fields = ids
       .map(id => this.fieldById(id))
@@ -37,4 +40,6 @@ export class DataSource implements IDataSource {
     const newRecord: any[] = fields.map(field => record[field.idx]);
     return newRecord;
   }
+
+
 }

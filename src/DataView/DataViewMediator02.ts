@@ -1,4 +1,4 @@
-import { action, reaction } from "mobx";
+import { action, reaction, toJS } from "mobx";
 import { IApi } from "../Api/IApi";
 import { IFormScreen } from "../Screens/FormScreen/types";
 import { IDataSource } from "../Screens/types";
@@ -50,6 +50,8 @@ export interface IParentMediator {
 }
 
 export interface IDataViewMediator02 extends IDispatcher {
+  parentMediator: IFormScreen;
+  screen: IFormScreen;
   editing: IEditing;
   dataTable: IDataTable;
   availViews: IAvailViews;
@@ -338,5 +340,13 @@ export class DataViewMediator02 implements IDataViewMediator02 {
 
   get aFocusEditor(): IAFocusEditor {
     return this.P.aFocusEditor();
+  }
+
+  get parentMediator(): IFormScreen {
+    return this.P.parentMediator;
+  }
+
+  get screen() {
+    return this.parentMediator;
   }
 }

@@ -23,9 +23,11 @@ function spc(n: number) {
 }
 
 export class FormScreen implements IFormScreen {
+
   
   sessionId: string = "";  
   @observable isSessioned: boolean = false;
+  @observable isDirty: boolean = false;
 
   constructor(
     public P: {
@@ -95,6 +97,7 @@ export class FormScreen implements IFormScreen {
         break;
       }
     }
+    this.machine.send(event);
     for (let l of this.listeners.values()) {
       console.log(l)
       l(event);
@@ -120,6 +123,11 @@ export class FormScreen implements IFormScreen {
   @action.bound setDataViews(views: IDataViewMediator02[]) {
     console.log("setDataViews", views);
     this.dataViews = views;
+  }
+
+  @action.bound
+  setDirty(state: boolean): void {
+    this.isDirty = state;
   }
 
   @action.bound

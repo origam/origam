@@ -26,6 +26,10 @@
   justify-content: center;
 }
 
+.TabHandle:global(.dirty) {
+  color: red !important;
+}
+
 .TabHandleCloseBtn {
   position: absolute;
   right: 2px;
@@ -44,7 +48,7 @@
   background-color: #8998c5;
 }
 
-.TabHandle.active {
+.TabHandle:global(.active) {
   margin-bottom: 0;
   background-color: #e5e5e5;
   color: black;

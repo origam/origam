@@ -10,6 +10,7 @@ import { VBox } from "../VBox";
 import { TabbedPanel } from "../TabbedPanel";
 import { Box } from "../Box";
 import { DataView } from "../DataView";
+import { FormToolbar } from "./FormToolbar";
 
 @observer
 export class FormScreen extends React.Component<{ formScreen: IFormScreen }> {
@@ -89,6 +90,9 @@ export class FormScreen extends React.Component<{ formScreen: IFormScreen }> {
           isVisible={this.props.formScreen.isVisible}
           isSessioned={this.props.formScreen.isSessioned}
         >
+          {this.props.formScreen.isVisible &&
+            this.props.formScreen.isSessioned &&
+            this.props.formScreen.isDirty && <FormToolbar />}
           {this.getScreen()}
         </DefaultScreen>
       </Provider>
