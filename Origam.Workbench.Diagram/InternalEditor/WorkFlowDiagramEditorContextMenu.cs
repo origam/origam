@@ -28,6 +28,7 @@ using MoreLinq.Extensions;
 using Origam.Extensions;
 using Origam.Gui.Win.Commands;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.WorkflowModel;
 using Origam.UI;
@@ -108,7 +109,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			var schemaItemUnderMouse = RetrieveItem(dNodeUnderMouse.Node);
 
 			if (IsObjectSelectionInconsistent(schemaItemUnderMouse) ||
-			    schemaItemUnderMouse is EntityUIAction)
+			    schemaItemUnderMouse is EntityUIAction ||
+			    schemaItemUnderMouse is DataStructureEntity)
 			{
 				return contextMenu;
 			}
