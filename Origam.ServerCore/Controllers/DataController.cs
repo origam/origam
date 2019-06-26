@@ -148,7 +148,7 @@ namespace Origam.ServerCore.Controllers
                         menuItem))
                 .OnSuccess(CheckEntityBelongsToMenu)
                 .OnSuccess(entityData => MakeEmptyRow(entityData.Entity))
-                .OnSuccess(rowData => FillRow(rowData))
+                .OnSuccess(rowData => PrepareNewRow(rowData))
                 .OnSuccess(rowData => SubmitChange(rowData, Operation.Create))
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
@@ -262,7 +262,7 @@ namespace Origam.ServerCore.Controllers
             return rowData;
         }
 
-        private static RowData FillRow(RowData rowData)
+        private static RowData PrepareNewRow(RowData rowData)
         {
             DatasetTools.ApplyPrimaryKey(rowData.Row);
             DatasetTools.UpdateOrigamSystemColumns(rowData.Row, true, SecurityManager.CurrentUserProfile().Id);
