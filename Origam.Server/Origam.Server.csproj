@@ -118,7 +118,7 @@
     <Compile Include="doc\DocEntity.cs" />
     <Compile Include="doc\DocTools.cs" />
     <Compile Include="EntityWorkflowActionScriptCallComparer.cs" />
-    <Compile Include="HttpTools.cs" />
+    <Compile Include="NetFxHttpTools.cs" />
     <Compile Include="JsonUIService.cs" />
     <Compile Include="logging\AndFilter.cs" />
     <Compile Include="doc\DocHandler.cs" />

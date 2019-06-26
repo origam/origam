@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2019 Advantage Solutions, s. r. o.
@@ -40,24 +41,22 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.IO;
 using System.Text;
 using System.Web;
-
-using core = Origam.Workbench.Services.CoreServices;
-using Origam;
-using Origam.DA;
-using Origam.Workbench.Services;
 using System.Web.SessionState;
-using System.IO;
-
 using log4net;
+using Origam.DA;
+using Origam.Server.Pages;
+using Origam.Workbench.Services;
+using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server
 {
     public class BlobDownloadHandler : IHttpHandler, IRequiresSessionState
     {
         private static readonly ILog perfLog = LogManager.GetLogger("Performance");
-
+        private readonly NetFxHttpTools httpTools = new NetFxHttpTools();
         #region IHttpHandler Members
 
         public bool IsReusable
@@ -156,7 +155,8 @@ namespace Origam.Server
                     // set proper content type
                     response.ContentType = HttpTools.GetMimeType(fileName);
                     response.Charset = Encoding.UTF8.WebName;
-                    string disposition = NetFxHttpTools.GetFileDisposition(context.Request, fileName);
+                    string disposition = httpTools.GetFileDisposition(
+                        new FxHttpRequestWrapper(context.Request), fileName);
 
                     if (!br.IsPreview) disposition = "attachment; " + disposition;
 

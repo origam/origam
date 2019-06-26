@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Data;
 using System.Drawing;
 using System.IO;
@@ -43,7 +42,13 @@ namespace Origam.ServerCommon.Pages
 {
     public class UserApiProcessor
     {
+        private readonly IHttpTools httpTools;
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        public UserApiProcessor(IHttpTools httpTools)
+        {
+            this.httpTools = httpTools;
+        }
 
         #region IHttpModule Members
 
@@ -174,7 +179,7 @@ namespace Origam.ServerCommon.Pages
             }
         }
 
-        private static IPageRequestHandler HandlePage(AbstractPage page)
+        private IPageRequestHandler HandlePage(AbstractPage page)
         {
             IPageRequestHandler handler;
 
@@ -188,7 +193,7 @@ namespace Origam.ServerCommon.Pages
             }
             else if (page is FileDownloadPage)
             {
-                handler = new FileDownloadPageRequestHandler();
+                handler = new FileDownloadPageRequestHandler(httpTools);
             }
             else if (page is ReportPage)
             {
@@ -759,6 +764,7 @@ namespace Origam.ServerCommon.Pages
         string ContentType {  set; }
         bool TrySkipIisCustomErrors {  set; }
         int StatusCode {  set; }
+        string Charset { get; set; }
         void WriteToOutput(Action<TextWriter> writeAction);
         void CacheSetMaxAge(TimeSpan timeSpan);
         void End();
@@ -768,6 +774,7 @@ namespace Origam.ServerCommon.Pages
         void BinaryWrite(byte[] bytes);
         void Redirect(string requestUrlReferrerAbsolutePath);
         void OutputStreamWrite(byte[] buffer, int offset, int count);
+        void AppendHeader(string contentDisposition, string disposition);
     }
 
     public class Parameters

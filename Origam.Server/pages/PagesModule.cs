@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
@@ -53,7 +53,7 @@ namespace Origam.Server.Pages
 
         public PagesModule()
         {
-            userApiProcessor = new UserApiProcessor();
+            userApiProcessor = new UserApiProcessor(new NetFxHttpTools());
         }
 
         public void Dispose()

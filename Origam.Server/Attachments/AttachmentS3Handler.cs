@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
@@ -41,18 +41,18 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Data;
 using System.Text;
+using System.Web;
 using Amazon.S3;
 using Amazon.S3.Model;
-using Origam.DA.Service;
-using Origam.Workbench.Services;
-using Origam.Schema.EntityModel;
-using Origam.Schema;
-using System.Data;
-using Origam;
-using core = Origam.Workbench.Services.CoreServices;
 using log4net;
-using System.Web;
+using Origam.DA.Service;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
+using Origam.Server.Pages;
+using Origam.Workbench.Services;
+using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server
 {
@@ -60,8 +60,9 @@ namespace Origam.Server
     {
         protected static readonly ILog perfLog = LogManager.GetLogger("Performance");
         protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
+        private readonly NetFxHttpTools httpTools = new NetFxHttpTools();
         private static AttachmentS3Handler instance = new AttachmentS3Handler();
+        
 
         public static AttachmentS3Handler Instance
         {
@@ -145,7 +146,7 @@ namespace Origam.Server
                 context.Response.Write("Checksum doesn't match.");
                 return;
             }
-            string disposition = NetFxHttpTools.GetFileDisposition(context.Request, fileName);
+            string disposition = httpTools.GetFileDisposition(new FxHttpRequestWrapper(context.Request), fileName);
             if (!request.IsPreview) disposition = "attachment; " + disposition;
             ResponseHeaderOverrides responseHeaderOverrides = new ResponseHeaderOverrides();
             responseHeaderOverrides.ContentDisposition = disposition;

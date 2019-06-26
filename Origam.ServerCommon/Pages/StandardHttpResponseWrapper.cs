@@ -73,6 +73,12 @@ namespace Origam.ServerCommon.Pages
             set => response.StatusCode = value;
         }
 
+        public string Charset
+        {
+            get => throw new NotImplementedException(); 
+            set => throw new NotImplementedException();
+        }
+
         public void WriteToOutput(Action<TextWriter> writeAction)
         {
             TextWriter textWriter = new StringWriter();
@@ -117,6 +123,11 @@ namespace Origam.ServerCommon.Pages
         public void OutputStreamWrite(byte[] buffer, int offset, int count)
         {
             response.Body.WriteAsync(buffer, offset, count).Wait();
+        }
+
+        public void AppendHeader(string contentDisposition, string disposition)
+        {
+            response.Headers[contentDisposition] = disposition;
         }
     }
 }
