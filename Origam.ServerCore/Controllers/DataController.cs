@@ -169,7 +169,7 @@ namespace Origam.ServerCore.Controllers
                     .OnSuccess(rowData =>
                     {
                         rowData.Row.Delete();
-                        return  SubmitChange(rowData, Operation.Delete);
+                        return  SubmitDelete(rowData);
                     })
                     .OnSuccess(ThrowAwayReturnData)
                     .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
@@ -411,6 +411,32 @@ namespace Origam.ServerCore.Controllers
                                 operation: operation, 
                                 RowStateProcessor: null));
         }
+
+        private IActionResult SubmitDelete(RowData rowData)
+        {
+            try
+            {
+                DataService.StoreData(
+                    dataStructureId: rowData.Entity.RootEntity.ParentItemId,
+                    data: rowData.Row.Table.DataSet,
+                    loadActualValuesAfterUpdate: false,
+                    transactionId: null);
+            }
+            catch (DBConcurrencyException ex)
+            {
+                if (string.IsNullOrEmpty(ex.Message) && ex.InnerException != null)
+                {
+                    return Conflict(ex.InnerException.Message);
+                }
+                return Conflict(ex.Message);
+            }
+
+            return Ok(SessionStore.GetDeleteInfo(
+                                requestingGrid: null,
+                                tableName: rowData.Row.Table.TableName,
+                                objectId: null));
+        }
+
 
         private IActionResult ToActionResult(object obj)
         {
