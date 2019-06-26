@@ -939,10 +939,10 @@ namespace Origam.Server
             ci.Entity = row.Table.TableName;
             ci.Operation = (operation == Operation.CurrentRecordNeedsUpdate ? Operation.Create : operation);        // 4 = copy = create
             ci.RequestingGrid = requestingGrid;
-            ci.ObjectId = row[row.Table.PrimaryKey[0]];
             // for create-update we return the updated state (read-only + colors)
             if (operation >= Operation.Update)
             {
+                ci.ObjectId = row[row.Table.PrimaryKey[0]];
                 string[] columns = GetColumnNames(row.Table);
                 ci.WrappedObject = GetRowData(row, columns);
                 if (RowStateProcessor != null)
