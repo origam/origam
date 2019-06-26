@@ -21,17 +21,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.IO;
-using System.Xml.Serialization;
-using System.Reflection;
 using System.Collections.Generic;
-using System.Data;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
+using System.Xml.Serialization;
 using CSharpFunctionalExtensions;
-using MoreLinq;
 using Origam.DA.ObjectPersistence;
-using Origam.DA.ObjectPersistence.Providers;
 using Origam.DA.Service.FileSystemModeCheckers;
 using Origam.DA.Service.FileSystemModelCheckers;
 using Origam.Extensions;
@@ -420,6 +417,11 @@ namespace Origam.DA.Service
             var item = (AbstractSchemaItem)RetrieveInstance(
                     type: null, 
                     primaryKey: new Key {{"Id", itemId}});
+            if (item == null)
+            {
+                throw new Exception("Item "+itemId+" not found in model");
+            }
+
             Guid packageId = item.SchemaExtensionId;
             index
                 .GetLoadedPackageDirectories()

@@ -201,7 +201,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			ToolStripMenuItem addAfterMenu = new ToolStripMenuItem(Strings.WorkFlowDiagramEditor_ContextMenuNode_Add_After);
 			addAfterMenu.Image = ImageRes.icon_new;
 			var builder = new SchemaItemEditorsMenuBuilder(true);
-			var submenuItems = builder.BuildSubmenu(UpToDateGraphParent);
+			var submenuItems = builder.BuildSubmenu(schemaItemUnderMouse.ParentItem);
 			foreach (AsMenuCommand submenuItem in submenuItems)
 			{
 				if (!(submenuItem.Command is AddNewSchemaItem addNewCommand) ||
