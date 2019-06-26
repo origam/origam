@@ -24,19 +24,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using MoreLinq;
 using Origam.Extensions;
 using ProtoBuf;
 
 namespace Origam.DA.Service
 {
-    internal interface IBinFileLoader
+    internal interface IBinFileLoader 
     {
         void LoadInto(ItemTracker itemTracker);
         void Persist(ItemTracker itemTracker);
+        void MarkToSave(ItemTracker itemTracker);
+        void StopTask();
     }
 
-    internal class BinFileLoader : IBinFileLoader
+    internal class BinFileLoader : IBinFileLoader 
     {
         private static readonly log4net.ILog log
             = log4net.LogManager.GetLogger(
@@ -45,15 +49,79 @@ namespace Origam.DA.Service
         private readonly DirectoryInfo topDirectory;
         private readonly FileInfo indexFile;
         private readonly object Lock = new object();
+        private readonly Queue<ItemTracker> fileSaveQueue
+            = new Queue<ItemTracker>();
+        private readonly FilePersistenceIndex filePersistenceIndex;
+        private readonly Task task;
+        private readonly CancellationTokenSource IndexTaskCancellationTokenSource = new CancellationTokenSource();
 
         public BinFileLoader(OrigamFileFactory origamFileFactory,
-            DirectoryInfo topDirectory, FileInfo indexFile)
+            DirectoryInfo topDirectory, FileInfo indexFile, FilePersistenceIndex filePersistenceIdx)
         {
             this.origamFileFactory = origamFileFactory;
             this.topDirectory = topDirectory;
             this.indexFile = indexFile;
+            this.filePersistenceIndex = filePersistenceIdx;
+            var cancellationToken = IndexTaskCancellationTokenSource.Token;
+            task = Task.Factory.StartNew(
+                () => SaveIndex(cancellationToken), cancellationToken);
+
+        }
+        private void SaveIndex(CancellationToken cancellationToken)
+        {
+            while (true)
+            {
+                if (fileSaveQueue.Count > 0)
+                {
+                    QueueOperation(Operation.clear, null);
+                    filePersistenceIndex.PersistActualIndex(this);
+                }
+                else
+                {
+                    if (!cancellationToken.IsCancellationRequested)
+                    {
+                        Thread.Sleep(2000);
+                    }
+                }
+                cancellationToken.ThrowIfCancellationRequested();
+            }
         }
 
+        private enum Operation
+        {
+            clear,
+            add
+        }
+        private void QueueOperation(Operation operation, ItemTracker itemTracker)
+        {
+            lock (fileSaveQueue)
+            {
+                switch (operation)
+                {
+                    case Operation.clear:
+                        fileSaveQueue.Clear();
+                        break;
+                    case Operation.add:
+                        fileSaveQueue.Enqueue(itemTracker);
+                        break;
+                }
+            }
+        }
+        public void Persist(ItemTracker itemTracker)
+        {
+            CheckDataConsistency(itemTracker);
+            itemTracker.CleanUp();
+            var serializationData = new TrackerSerializationData(
+                itemTracker.AllFiles, itemTracker.GetStats());
+            using (var file = indexFile.Create())
+            {
+                Serializer.Serialize(file, serializationData);
+            }
+        }
+        public void MarkToSave(ItemTracker itemTracker)
+        {
+            QueueOperation(Operation.add, itemTracker);
+        }
         public void LoadInto(ItemTracker itemTracker)
         {
             if (!indexFile.ExistsNow()) return;
@@ -153,19 +221,6 @@ namespace Origam.DA.Service
             throw new Exception(
                 "Error when loading index file, data is inconsistent.");
         }
-
-        public void Persist(ItemTracker itemTracker)
-        {
-            CheckDataConsistency(itemTracker);
-            itemTracker.CleanUp();
-            var serializationData = new TrackerSerializationData(
-                itemTracker.AllFiles, itemTracker.GetStats());
-            using (var file = indexFile.Create())
-            {
-                Serializer.Serialize(file, serializationData);
-            }
-        }
-
         private void CheckDataConsistency(ItemTracker originalTracker)
         {
             ItemTracker testTracker = new ItemTracker(null);
@@ -197,15 +252,32 @@ namespace Origam.DA.Service
             FileInfo txtFileInfo = indexFile.MakeNew("debug");
             File.WriteAllText(txtFileInfo.FullName, serializationData.ToString());
         }
+
+        public void StopTask()
+        {
+            IndexTaskCancellationTokenSource.Cancel();
+            while(task.Status==TaskStatus.Running)
+            {
+                Thread.Sleep(200);
+            }
+        }
     }
 
     class NullBinFileLoader : IBinFileLoader
     {
+        public void MarkToSave(ItemTracker itemTracker)
+        {
+        }
+
         public void LoadInto(ItemTracker itemTracker)
         {   
         }
 
         public void Persist(ItemTracker itemTracker)
+        {
+        }
+
+        public void StopTask()
         {
         }
     }

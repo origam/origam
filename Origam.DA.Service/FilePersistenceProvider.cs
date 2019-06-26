@@ -97,10 +97,14 @@ namespace Origam.DA.Service
                 ? FilePersistenceIndex.GetPackageRespectingVersion(index) 
                 : FilePersistenceIndex.GetPackageIgnoringVersion(index);
         }
-        
+
         public void PersistIndex()
         {
-            index.Persist(trackerLoaderFactory);
+            PersistIndex(false);
+        }
+        public void PersistIndex(bool unloadProject)
+        {
+            index.AddToPersist(trackerLoaderFactory,unloadProject);
         }
 
         public override void BeginTransaction()
@@ -118,7 +122,7 @@ namespace Origam.DA.Service
         {
             persistor.EndTransactionDontSave();
             ReloadFiles(tryUpdate: false);
-            PersistIndex();
+            PersistIndex(false);
         }
 
         public override bool IsInTransaction => persistor.IsInTransaction;
