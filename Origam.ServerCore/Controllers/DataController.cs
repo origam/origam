@@ -148,6 +148,7 @@ namespace Origam.ServerCore.Controllers
                         menuItem))
                 .OnSuccess(CheckEntityBelongsToMenu)
                 .OnSuccess(entityData => MakeEmptyRow(entityData.Entity))
+                .OnSuccess(rowData => FillRow(emptyRowData, rowData))
                 .OnSuccess(rowData => SubmitChange(rowData, Operation.Create))
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
@@ -254,11 +255,18 @@ namespace Origam.ServerCore.Controllers
 
         private static RowData FillRow(EntityInsertData entityData, RowData rowData)
         {
-            rowData.Row["Id"] = Guid.NewGuid();
-            rowData.Row["RecordCreated"] = DateTime.Now;
-            rowData.Row["RecordCreatedBy"] = SecurityManager.CurrentUserProfile().Id;
+            DatasetTools.ApplyPrimaryKey(rowData.Row);
+            DatasetTools.UpdateOrigamSystemColumns(rowData.Row, true, SecurityManager.CurrentUserProfile().Id);
             FillRow(rowData, entityData.NewValues);
             rowData.Row.Table.Rows.Add(rowData.Row);
+            return rowData;
+        }
+
+        private static RowData FillRow(NewEmptyRowData emptyRowData, RowData rowData)
+        {
+            DatasetTools.ApplyPrimaryKey(rowData.Row);
+            DatasetTools.UpdateOrigamSystemColumns(rowData.Row, true, SecurityManager.CurrentUserProfile().Id);
+            rowData.Row.Table.NewRow();
             return rowData;
         }
 
