@@ -75,7 +75,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
 					var targetsParent = gViewer.Graph.FindParentSubGraph(targetNode);
 					return Equals(sourcesParent, targetsParent);
 				});
-			gViewer.MouseDoubleClick += OnDoubleClick;
 			gViewer.DoubleClick += GViewerOnDoubleClick;
 			gViewer.EdgeInsertButtonVisible = true;
 			
@@ -136,33 +135,28 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private void GViewerOnDoubleClick(object sender, EventArgs e)
         {
 	        GViewer viewer = sender as GViewer;
+	        Guid schemaItemId = Guid.Empty;
 	        if (viewer.SelectedObject is DrawingNode node)
 	        {
-		        Guid schemaItemId = node is IWorkflowSubgraph wfSubgraph
+		        schemaItemId = node is IWorkflowSubgraph wfSubgraph
 			        ? wfSubgraph.WorkflowItemId
 			        : IdTranslator.NodeToSchema(node.Id);
 		        if (schemaItemId == Guid.Empty) return;
-		        AbstractSchemaItem clickedItem = RetrieveItem(schemaItemId);
-		        if(clickedItem != null)
-		        {
-			        EditSchemaItem cmd = new EditSchemaItem
-			        {
-				        ShowDialog = true,
-				        Owner = clickedItem
-			        };
-			        cmd.Run();
-		        }
 	        }
+	        else if (viewer.SelectedObject is Edge edge)
+	        {
+		        Guid? id = (edge.UserData as WorkflowTaskDependency)?.Id;
+		        if (id == null) return;
+		        schemaItemId = id.Value;
+	        }
+
+	        ShowEditor(schemaItemId);
         }
-        
-        private void OnDoubleClick(object sender, EventArgs e)
+
+        private void ShowEditor(Guid schemaItemId)
         {
-	        GViewer viewer = sender as GViewer;
-	        if (!(viewer.SelectedObject is Edge edge)) return;
-	        Guid? id = (edge.UserData as WorkflowTaskDependency)?.Id;
-	        if (id == null) return;
-	        AbstractSchemaItem clickedItem = RetrieveItem(id.Value);
-	        if(clickedItem != null)
+	        AbstractSchemaItem clickedItem = RetrieveItem(schemaItemId);
+	        if (clickedItem != null)
 	        {
 		        EditSchemaItem cmd = new EditSchemaItem
 		        {
