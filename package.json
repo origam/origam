@@ -52,5 +52,5 @@
     "@types/styled-components": "^4.1.12",
     "@types/uuid": "^3.4.4"
   },
-  "proxy": "https://localhost:44356"
+  "proxy": "http://192.168.0.67:8666"
 }

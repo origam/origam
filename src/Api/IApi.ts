@@ -31,6 +31,11 @@ export interface IApi {
     LabelIds: string[];
   }): Promise<{ [key: string]: string }>;
 
+  newEntity(data: {
+    DataStructureEntityId: string;
+    MenuId: string;
+  }): Promise<any>
+
   putEntity(data: {
     DataStructureEntityId: string;
     RowId: string;
