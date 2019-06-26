@@ -13,6 +13,7 @@ import * as DataViewActions from "./DataViewActions";
 import { IScreen } from "./types/IScreen";
 import { IDataViewMediator02 } from "./DataViewMediator02";
 
+
 export enum IResponseOperation {
   DeleteAllData = -2,
   Delete = -1,
@@ -195,14 +196,24 @@ export class DataViewMachine implements IDataViewMachine {
               SessionFormIdentifier: this.P.sessionId,
               Entity: this.dataSource.id,
               Values: {},
-              Parameters: {},
+              Parameters: {
+                // jmeno child sloupce : hodnota master ridici hodnoty
+                // !!! Muze byt vic vazeb (vic bindings mezi parent-child)
+                Id: this.controlledValueFromParent
+              },
               RequestingGridId: this.P.gridId
             })
             .then(action((result: any) => {
               console.log('Response:', result)
             }))
           } else {
-            // this.api.
+            this.api.newEntity({
+              DataStructureEntityId: this.dataStructureEntityId,
+              MenuId: this.menuItemId,
+            })
+            .then(action((response) => {
+              console.log('Created new entity:', response)
+            }))
           }
           send("DONE");
         }
