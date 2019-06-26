@@ -122,7 +122,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
                 .Where(item => !(item is IWorkflowTask))
                 .Select(item => item.FirstParentOfType<IWorkflowTask>()?.Id)
                 .Where(id => id != null)
-                .Select(id => id.ToString())
+                .Select(id => IdTranslator.SchemaToFirstNode(id.ToString()))
                 .ToList();
             return tasksToExpand;
         }
