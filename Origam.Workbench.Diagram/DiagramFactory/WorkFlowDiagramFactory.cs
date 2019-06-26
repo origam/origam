@@ -42,16 +42,19 @@ namespace Origam.Workbench.Diagram
 {
 	public class WorkFlowDiagramFactory : IDiagramFactory<IWorkflowBlock, WorkFlowGraph>
 	{
+		private readonly INodeSelector nodeSelector;
+		private readonly GViewer gViewer;
 		private readonly WorkbenchSchemaService schemaService;
 		private List<string> expandedSubgraphNodeIds = new List<string>();
 		private WorkFlowGraph graph;
-		private readonly NodeFactory nodeFactory;
+		private  NodeFactory nodeFactory;
 
 		public WorkFlowDiagramFactory(INodeSelector nodeSelector,
 			GViewer gViewer, WorkbenchSchemaService schemaService)
 		{
+			this.nodeSelector = nodeSelector;
+			this.gViewer = gViewer;
 			this.schemaService = schemaService;
-			nodeFactory = new NodeFactory(nodeSelector, gViewer, schemaService);
 		}
 
 		public WorkFlowGraph Draw(IWorkflowBlock graphParent)
@@ -63,6 +66,7 @@ namespace Origam.Workbench.Diagram
 		{
 			this.expandedSubgraphNodeIds = expandedSubgraphNodeIds;
 			graph = new WorkFlowGraph();
+			nodeFactory = new NodeFactory(nodeSelector, gViewer, schemaService, graph);
 			nodeFactory.AddSubgraph(graph.RootSubgraph, graphParent);
 			graph.MainDrawingSubgraf.LayoutSettings = new SugiyamaLayoutSettings
 			{
@@ -82,7 +86,7 @@ namespace Origam.Workbench.Diagram
 			{
 				if (childItem is ContextStore contextStore)
 				{
-					Node node = nodeFactory.AddNode(graph, contextStore);
+					Node node = nodeFactory.AddNode(contextStore);
 					blockSubGraph.AddContextStore(node);
 				}
 			}
@@ -181,13 +185,13 @@ namespace Origam.Workbench.Diagram
 		private void AddNodeItem(ISchemaItem item, Subgraph subGraph, int leftMargin)
 		{
 			var nodeData = new NodeItemData(item, leftMargin, schemaService);
-			Node node = nodeFactory.AddNodeItem(graph, nodeData);
+			Node node = nodeFactory.AddNodeItem(nodeData);
 			subGraph.AddNode(node);
 		}
 		
 		private void AddNodeItem(Subgraph subGraph, INodeData nodeData)
 		{
-			Node node = nodeFactory.AddNodeItem(graph, nodeData);
+			Node node = nodeFactory.AddNodeItem(nodeData);
 			subGraph.AddNode(node);
 		}
 
@@ -247,13 +251,13 @@ namespace Origam.Workbench.Diagram
 			{
 				if (!subgraph.InEdges.Any())
 				{
-					Node startBalloon = nodeFactory.AddStarBalloon(graph);
+					Node startBalloon = nodeFactory.AddStarBalloon();
 					graph.MainDrawingSubgraf.AddNode(startBalloon);
 					graph.AddEdge(startBalloon.Id, subgraph.Id);
 				}
 				if (!subgraph.OutEdges.Any())
 				{
-					Node endBalloon = nodeFactory.AddEndBalloon(graph);
+					Node endBalloon = nodeFactory.AddEndBalloon();
 					graph.MainDrawingSubgraf.AddNode(endBalloon);
 					graph.AddEdge(subgraph.Id, endBalloon.Id);
 				}

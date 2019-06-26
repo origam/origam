@@ -19,7 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Text.RegularExpressions;
 using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
@@ -38,19 +41,23 @@ namespace Origam.Workbench.Diagram.NodeDrawing
     {
         private readonly InternalPainter internalPainter;
         private readonly WorkbenchSchemaService schemaService;
+        private readonly Graph graph;
+        private readonly IdTranslator idTranslator;
         private static int balloonNumber = 0;
-
-        public NodeFactory(INodeSelector nodeSelector, GViewer gViewer, 
-            WorkbenchSchemaService schemaService)
+        
+        public NodeFactory(INodeSelector nodeSelector, GViewer gViewer,
+            WorkbenchSchemaService schemaService, Graph graph)
         {
             this.schemaService = schemaService;
+            this.graph = graph;
             internalPainter = new InternalPainter(nodeSelector, gViewer);
+            idTranslator = new IdTranslator();
         }
 
-        public Node AddNode(Graph graph, ISchemaItem schemaItem)
+        public Node AddNode(ISchemaItem schemaItem)
         {
             INodeData nodeData = new NodeData(schemaItem, schemaService);
-            Node node = graph.AddNode(nodeData.Id);
+            Node node = graph.AddNode(idTranslator.MakeNodeId(schemaItem.Id));
             node.Attr.Shape = Shape.DrawFromGeometry;
             var painter =  new NodePainter(internalPainter);
             node.DrawNodeDelegate = painter.Draw;
@@ -60,9 +67,9 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             return node;
         }
 
-        public Node AddNodeItem(Graph graph, INodeData nodeData)
+        public Node AddNodeItem(INodeData nodeData)
         {
-            Node node = graph.AddNode(nodeData.Id);
+            Node node = graph.AddNode(idTranslator.MakeNodeId(nodeData.Id));
             node.Attr.Shape = Shape.DrawFromGeometry;
             var painter =
                 new NodeItemPainter(internalPainter);
@@ -77,7 +84,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             ISchemaItem schemaItem)
         {
             INodeData nodeData = new NodeData(schemaItem, schemaService);
-            Subgraph subgraph = new Subgraph(nodeData.Id);
+            Subgraph subgraph = new Subgraph(idTranslator.MakeNodeId(schemaItem.Id));
             subgraph.Attr.Shape = Shape.DrawFromGeometry;
             var painter =
                 new SubgraphNodePainter(internalPainter);
@@ -100,7 +107,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             IWorkflowBlock schemaItem)
         {
             INodeData nodeData = new NodeData(schemaItem, schemaService);
-            BlockSubGraph subgraph = new BlockSubGraph(nodeData.Id);
+            BlockSubGraph subgraph = new BlockSubGraph(idTranslator.MakeNodeId(schemaItem.Id));
             subgraph.Attr.Shape = Shape.DrawFromGeometry;
             var painter = new SubgraphPainter(internalPainter);
             subgraph.DrawNodeDelegate = painter.Draw;
@@ -121,7 +128,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         public Subgraph AddActionSubgraph(Subgraph parentSbubgraph, ISchemaItem schemaItem)
         {
             INodeData nodeData = new NodeItemLabel(schemaItem.Name);
-            Subgraph subgraph = new Subgraph(nodeData.Id);
+            Subgraph subgraph = new Subgraph(idTranslator.MakeNodeId(schemaItem.Id));
             subgraph.Attr.Shape = Shape.DrawFromGeometry;
             var painter =
                 new ActionSubgraphPainter(internalPainter);
@@ -145,7 +152,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         public void AddActionNode(Subgraph actionSubgraph, EntityUIAction action)
         {
             INodeData nodeData = new NodeData(action, schemaService);
-            Subgraph subgraph = new Subgraph(nodeData.Id);
+            Subgraph subgraph = new Subgraph(idTranslator.MakeNodeId(nodeData.Id));
   
             subgraph.Attr.Shape = Shape.DrawFromGeometry;
             var painter =
@@ -156,12 +163,12 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             actionSubgraph.AddSubgraph(subgraph);
         }
         
-        public Node AddStarBalloon(Graph graph)
+        public Node AddStarBalloon()
         {
             return AddBalloon(graph, internalPainter.GreenBrush, "Start");
         }
         
-        public Node AddEndBalloon(Graph graph)
+        public Node AddEndBalloon()
         {
             return AddBalloon(graph, internalPainter.RedBrush, "End");
         }
@@ -175,6 +182,70 @@ namespace Origam.Workbench.Diagram.NodeDrawing
             node.NodeBoundaryDelegate = painter.GetBoundary;
             node.LabelText = label;
             return node;
+        }
+        
+      
+    }
+
+    class IdTranslator
+    {
+        private static Regex idRegex;
+        private readonly HashSet<string> createdNodeIds = new HashSet<string>();
+        
+        public string MakeNodeId(string strId)
+        {
+            if (Guid.TryParse(strId, out Guid id))
+            {
+                return MakeNodeId(id);
+            }
+
+            return strId;
+        }
+
+        public string MakeNodeId(Guid schemaItemId)
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                string nodeId = schemaItemId + "_Instance_" + i;
+                if (!createdNodeIds.Contains(nodeId))
+                {
+                    createdNodeIds.Add(nodeId);
+                    return nodeId;
+                }
+            }
+            throw new Exception("There are too many nodes referencing the same schema item in this diagram");
+        }
+        
+
+        public static Guid ToSchemaId(Node node)
+        {
+            return NodeToSchema(node.Id);
+        }
+        
+        public static Guid NodeToSchema(string nodeId)
+        {
+            if (nodeId == null)
+            {
+                return Guid.Empty;
+            }
+            idRegex = new Regex(@"(^[0-9A-Fa-f\-]{36})_Instance_\d+");
+            Match match = idRegex.Match(nodeId);
+            if (!match.Success)
+            {
+                return Guid.Empty;
+            }
+
+            return Guid.Parse(match.Groups[1].Value);
+        }
+
+        public static string SchemaToFirstNode(Guid schemaItemId)
+        {
+            return SchemaToFirstNode(schemaItemId.ToString());
+        }
+        
+        public static string SchemaToFirstNode(string schemaItemId)
+        {
+            return schemaItemId + "_Instance_" + 0;
         }
     }
 

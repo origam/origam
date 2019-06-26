@@ -31,6 +31,7 @@ using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Commands;
 using Origam.Workbench.Diagram.Extensions;
 using Origam.Workbench.Diagram.Graphs;
+using Origam.Workbench.Diagram.NodeDrawing;
 using Origam.Workbench.Services;
 using DrawingNode = Microsoft.Msagl.Drawing.Node;
 using MouseButtons = System.Windows.Forms.MouseButtons;
@@ -62,19 +63,19 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        taskRunner = new DependencyTaskRunner(persistenceProvider);
 			gViewer.EdgeAdded += OnEdgeAdded;
 			gViewer.EdgeRemoved += OnEdgeRemoved;
-			gViewer.MouseDoubleClick += OnDoubleClick;
 			edgeInsertionRule = new EdgeInsertionRule(
 				viewerToImposeOn: gViewer,
 				predicate: (sourceNode, targetNode) =>
 				{
-					if (!Graph.IsWorkFlowItemSubGraph(sourceNode)) return false;
-					if (!Graph.IsWorkFlowItemSubGraph(targetNode)) return false;
-					if (RetrieveItem(sourceNode.Id) is ContextStore ) return false;
-					if (RetrieveItem(targetNode.Id) is ContextStore ) return false;
+					if (IdTranslator.ToSchemaId(sourceNode) == Guid.Empty) return false;
+					if (IdTranslator.ToSchemaId(targetNode) == Guid.Empty) return false;
+					if (RetrieveItem(sourceNode) is ContextStore ) return false;
+					if (RetrieveItem(targetNode) is ContextStore ) return false;
 					var sourcesParent = gViewer.Graph.FindParentSubGraph(sourceNode);
 					var targetsParent = gViewer.Graph.FindParentSubGraph(targetNode);
 					return Equals(sourcesParent, targetsParent);
 				});
+			gViewer.MouseDoubleClick += OnDoubleClick;
 			gViewer.DoubleClick += GViewerOnDoubleClick;
 			gViewer.EdgeInsertButtonVisible = true;
 			
@@ -97,10 +98,10 @@ namespace Origam.Workbench.Diagram.InternalEditor
         public void ReDrawAndReselect()
         {
 			ReDraw();
-			Node nodeToSelect = Graph.FindNodeOrSubgraph(nodeSelector.SelectedNodeId.ToString());
+			Node nodeToSelect = Graph.FindNodeOrSubgraph(nodeSelector.Selected?.Id);
 			if (nodeToSelect == null &&
-			    Guid.TryParse(nodeSelector.Selected?.Id, out var id) &&
-			    UpToDateGraphParent.Id == id)
+			    nodeSelector.SelectedNodeId != Guid.Empty &&
+			    UpToDateGraphParent.Id == nodeSelector.SelectedNodeId)
 			{
 				nodeToSelect = Graph.MainDrawingSubgraf;
 			}
@@ -137,11 +138,11 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        GViewer viewer = sender as GViewer;
 	        if (viewer.SelectedObject is DrawingNode node)
 	        {
-		        string strId = node is IWorkflowSubgraph wfSubgraph
+		        Guid schemaItemId = node is IWorkflowSubgraph wfSubgraph
 			        ? wfSubgraph.WorkflowItemId
-			        : node.Id;
-		        if (!Guid.TryParse(strId, out Guid _)) return;
-		        AbstractSchemaItem clickedItem = RetrieveItem(strId);
+			        : IdTranslator.NodeToSchema(node.Id);
+		        if (schemaItemId == Guid.Empty) return;
+		        AbstractSchemaItem clickedItem = RetrieveItem(schemaItemId);
 		        if(clickedItem != null)
 		        {
 			        EditSchemaItem cmd = new EditSchemaItem
@@ -160,7 +161,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        if (!(viewer.SelectedObject is Edge edge)) return;
 	        Guid? id = (edge.UserData as WorkflowTaskDependency)?.Id;
 	        if (id == null) return;
-	        AbstractSchemaItem clickedItem = RetrieveItem(id.Value.ToString());
+	        AbstractSchemaItem clickedItem = RetrieveItem(id.Value);
 	        if(clickedItem != null)
 	        {
 		        EditSchemaItem cmd = new EditSchemaItem
@@ -204,17 +205,18 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
         private bool ConnectsSchemaItems(Edge edge)
         {
-	        return Guid.TryParse(edge.Source, out Guid sourceId) &&
-		           Guid.TryParse(edge.Target, out Guid targetId);
+	        return IdTranslator.NodeToSchema(edge.Source) != Guid.Empty &&
+	               IdTranslator.NodeToSchema(edge.Target) != Guid.Empty;
         }
 
         private void DeleteDependency(Edge edge)
         {
 	        AbstractSchemaItem dependentItem = RetrieveItem(edge.Target);
+			Guid sourceId = IdTranslator.NodeToSchema(edge.Source);
 	        var workflowTaskDependency = dependentItem.ChildItems
 		        .ToGeneric()
 		        .OfType<WorkflowTaskDependency>()
-		        .Single(x => x.WorkflowTaskId == Guid.Parse(edge.Source));
+		        .Single(x => x.WorkflowTaskId == sourceId);
 	        workflowTaskDependency.IsDeleted = true;
 	        workflowTaskDependency.Persist();
         }
@@ -232,9 +234,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
         private WorkflowTaskDependency AddDependency(string source, string target)
         {
-	        var independentItem = persistenceProvider.RetrieveInstance(
-		        typeof(IWorkflowStep),
-		        new Key(source)) as IWorkflowStep;
+	        var independentItem = RetrieveItem(source) as IWorkflowStep;
 	        AbstractSchemaItem dependentItem = RetrieveItem(target);
 	        var workflowTaskDependency = new WorkflowTaskDependency
 	        {
@@ -251,17 +251,16 @@ namespace Origam.Workbench.Diagram.InternalEditor
         {
 	        if (gViewer.SelectedObject is Node node)
 	        {
-		        string id = node is IWorkflowSubgraph workflowSubgraph
+		        Guid schemaItemId = node is IWorkflowSubgraph workflowSubgraph
 			        ? workflowSubgraph.WorkflowItemId
-			        : node.Id;
-		        bool idParsed = Guid.TryParse(id, out Guid nodeId);
-		        if (!idParsed) return false;
-		        var schemaItem = RetrieveItem(nodeId.ToString());
+			        : IdTranslator.ToSchemaId(node);
+		        if (schemaItemId == Guid.Empty) return false;
+		        var schemaItem = RetrieveItem(schemaItemId);
 		        if (schemaItem != null)
 		        {
 			        schemaService.SelectItem(schemaItem);
 			        Guid activeNodeId = Guid.Parse(schemaService.ActiveNode.NodeId);
-			        return nodeId == activeNodeId;
+			        return schemaItemId == activeNodeId;
 		        }
 	        }
 	        return false;
@@ -298,7 +297,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		
 		private void UpdateNodeOf(AbstractSchemaItem persistedSchemaItem)
 		{
-			Node node = gViewer.Graph.FindNodeOrSubgraph(persistedSchemaItem.Id.ToString());
+			Node node = gViewer.Graph.FindNodeOrSubgraph(IdTranslator.SchemaToFirstNode(persistedSchemaItem.Id));
 			if (node == null)
 			{
 				TrySelectParentStep(persistedSchemaItem);
@@ -319,7 +318,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 					persistedSchemaItem.FirstParentOfType<WorkflowTask>();
 				if (parentStep == null) return;
 				Node stepNode =
-					gViewer.Graph.FindNodeOrSubgraph(parentStep.Id.ToString());
+					gViewer.Graph.FindNodeOrSubgraph(IdTranslator.SchemaToFirstNode(parentStep.Id));
 				nodeSelector.Selected = stepNode;
 			}
 		}
@@ -336,11 +335,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			bool edgeWasRemovedOutsideDiagram = gViewer.Graph.RootSubgraph
 				.GetAllNodes()
 				.SelectMany(node => node.Edges.Select(edge => edge.Source))
-				.Select(source =>
-				{
-					Guid.TryParse(source, out Guid id);
-					return id;
-				})
+				.Select(IdTranslator.NodeToSchema)
 				.Where(id => id != Guid.Empty)
 				.Any(targetNodeId => targetNodeId == sourceId);
 
@@ -350,14 +345,14 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			}
 		}
 
-		private void RemoveNode(Guid nodeId)
+		private void RemoveNode(Guid schemaItemId)
 		{
-			bool deletedNodeWasSelected = nodeSelector.SelectedNodeId == nodeId;
+			bool deletedNodeWasSelected = nodeSelector.SelectedNodeId == schemaItemId;
 			if (deletedNodeWasSelected)
 			{
 				nodeSelector.Selected = null;
 			}
-			Node node = gViewer.Graph.FindNodeOrSubgraph(nodeId.ToString());
+			Node node = gViewer.Graph.FindNodeOrSubgraph(IdTranslator.SchemaToFirstNode(schemaItemId));
 			if (node == null)
 			{
 				return;
@@ -464,14 +459,21 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 		private AbstractSchemaItem RetrieveItem(Node node)
 		{
-			if (node == null) return null;
-			if (!Guid.TryParse(node.Id, out Guid _)) return null;
-			return RetrieveItem(node.Id);
+			return RetrieveItem(IdTranslator.ToSchemaId(node));
 		}
 
-		private AbstractSchemaItem RetrieveItem(string id)
+		private AbstractSchemaItem RetrieveItem(Guid id)
 		{
-			if (string.IsNullOrWhiteSpace(id)) return null;
+			return persistenceProvider
+					.RetrieveInstance(
+						typeof(AbstractSchemaItem),
+						new Key(id))
+				as AbstractSchemaItem;
+		}
+		
+		private AbstractSchemaItem RetrieveItem(string strId)
+		{
+			Guid id = IdTranslator.NodeToSchema(strId);
 			return persistenceProvider
 					.RetrieveInstance(
 						typeof(AbstractSchemaItem),

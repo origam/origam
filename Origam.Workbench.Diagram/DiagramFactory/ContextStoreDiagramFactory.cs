@@ -35,7 +35,10 @@ namespace Origam.Workbench.Diagram.DiagramFactory
 
         private Graph graph;
         private readonly IPersistenceProvider persistenceProvider;
-        private readonly NodeFactory nodeFactory;
+        private readonly INodeSelector nodeSelector;
+        private readonly GViewer gViewer;
+        private readonly WorkbenchSchemaService schemaService;
+        private NodeFactory nodeFactory;
 
         public ContextStoreDiagramFactory(
             IPersistenceProvider persistenceProvider,
@@ -43,14 +46,17 @@ namespace Origam.Workbench.Diagram.DiagramFactory
             WorkbenchSchemaService schemaService)
         {
             this.persistenceProvider = persistenceProvider;
-            nodeFactory = new NodeFactory(nodeSelector, gViewer, schemaService );
+            this.nodeSelector = nodeSelector;
+            this.gViewer = gViewer;
+            this.schemaService = schemaService;
         }
 
         public Graph Draw(IContextStore contextStore)
         {
             graph = new Graph();
+            nodeFactory = new NodeFactory(nodeSelector, gViewer, schemaService, graph );
             
-            Node storeNode = nodeFactory.AddNode(graph, contextStore);
+            Node storeNode = nodeFactory.AddNode(contextStore);
             List<IWorkflowStep> steps = persistenceProvider
                 .RetrieveList<IWorkflowStep>();
             
@@ -59,13 +65,13 @@ namespace Origam.Workbench.Diagram.DiagramFactory
                 if (step is WorkflowTask task &&
                     task.OutputContextStoreId == contextStore.Id)
                 {
-                    Node taskNode = nodeFactory.AddNode(graph, task);
+                    Node taskNode = nodeFactory.AddNode(task);
                     graph.AddEdge(storeNode.Id, taskNode.Id);
                 }
                 else if (step is UpdateContextTask updateTask &&
                           updateTask.XPathContextStore.Id == contextStore.Id)
                 {
-                    Node taskNode = nodeFactory.AddNode(graph, updateTask);
+                    Node taskNode = nodeFactory.AddNode(updateTask);
                     graph.AddEdge(taskNode.Id, storeNode.Id);
                 }
             }

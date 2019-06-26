@@ -17,7 +17,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
+using System;
 using Microsoft.Msagl.Drawing;
 
 namespace Origam.Workbench.Diagram.Graphs
@@ -32,6 +34,6 @@ namespace Origam.Workbench.Diagram.Graphs
             DrawNodeDelegate = (node, graphics) => true;
         }
 
-        public string WorkflowItemId => parent.WorkflowItemId;
+        public Guid WorkflowItemId => parent.WorkflowItemId;
     }
 }

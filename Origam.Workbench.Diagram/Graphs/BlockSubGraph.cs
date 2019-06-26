@@ -19,10 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Linq;
 using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.Layout.Layered;
+using Origam.Workbench.Diagram.NodeDrawing;
 using Node = Microsoft.Msagl.Drawing.Node;
 
 namespace Origam.Workbench.Diagram.Graphs
@@ -38,7 +40,7 @@ namespace Origam.Workbench.Diagram.Graphs
             !MainDrawingSubgraf.Nodes.Any() &&
             !MainDrawingSubgraf.Subgraphs.Any();
 
-        public string WorkflowItemId => Id;
+        public Guid WorkflowItemId => IdTranslator.ToSchemaId(this);
         public BlockSubGraph(string id) : base(id)
         {
             contextStoreSubgraphId = "contextStores_"+id;
