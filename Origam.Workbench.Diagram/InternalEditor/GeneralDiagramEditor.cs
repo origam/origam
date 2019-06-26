@@ -26,6 +26,7 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Workbench.Commands;
 using Origam.Workbench.Diagram.DiagramFactory;
+using Origam.Workbench.Diagram.NodeDrawing;
 using DrawingNode = Microsoft.Msagl.Drawing.Node;
 
 namespace Origam.Workbench.Diagram.InternalEditor
@@ -49,10 +50,11 @@ namespace Origam.Workbench.Diagram.InternalEditor
             GViewer viewer = sender as GViewer;
             if (viewer.SelectedObject is DrawingNode node)
             {
-                if (!Guid.TryParse(node.Id, out Guid id)) return;
+                Guid schemaId = IdTranslator.ToSchemaId(node);
+                if (schemaId == Guid.Empty) return;
                 AbstractSchemaItem clickedItem = 
                     (AbstractSchemaItem)persistenceProvider
-                        .RetrieveInstance(typeof(AbstractSchemaItem), new Key(id));
+                        .RetrieveInstance(typeof(AbstractSchemaItem), new Key(schemaId));
                 if(clickedItem != null)
                 {
                     EditSchemaItem cmd = new EditSchemaItem

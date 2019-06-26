@@ -33,7 +33,7 @@ namespace Origam.ServerCore
 
         public async Task Invoke(HttpContext context)
         {
-            UserApiProcessor userApiProcessor = new UserApiProcessor();
+            UserApiProcessor userApiProcessor = new UserApiProcessor(new CoreHttpTools());
             var contextWrapper = new StandardHttpContextWrapper(context);
             userApiProcessor.Process(contextWrapper);
         }

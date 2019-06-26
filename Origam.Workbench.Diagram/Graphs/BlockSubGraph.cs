@@ -17,11 +17,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
+using System;
 using System.Linq;
 using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.Layout.Layered;
+using Origam.Workbench.Diagram.NodeDrawing;
+using Node = Microsoft.Msagl.Drawing.Node;
 
 namespace Origam.Workbench.Diagram.Graphs
 {
@@ -31,11 +35,12 @@ namespace Origam.Workbench.Diagram.Graphs
         private readonly string mainSubgraphId;
 
         public bool IsEmpty =>
-            !ContextStoreSubgraph.Nodes.Any() &&
+            (ContextStoreSubgraph == null ||
+            !ContextStoreSubgraph.Nodes.Any()) &&
             !MainDrawingSubgraf.Nodes.Any() &&
             !MainDrawingSubgraf.Subgraphs.Any();
 
-        public string WorkflowItemId => Id;
+        public Guid WorkflowItemId => IdTranslator.ToSchemaId(this);
         public BlockSubGraph(string id) : base(id)
         {
             contextStoreSubgraphId = "contextStores_"+id;
@@ -49,32 +54,40 @@ namespace Origam.Workbench.Diagram.Graphs
             };
         }
 
-        private Subgraph GetTopSubgraphChild(string childId)
+        public InfrastructureSubgraph ContextStoreSubgraph
         {
-            var child = Subgraphs.SingleOrDefault(x => x.Id == childId);
-            if (child == null)
+            get
             {
-                child = new InfrastructureSubgraph(childId, this);
-                AddSubgraph(child);
+                return Subgraphs
+                    .OfType<InfrastructureSubgraph>()
+                    .SingleOrDefault(x => x.Id == contextStoreSubgraphId);
             }
-
-            return child;
         }
 
-        public InfrastructureSubgraph ContextStoreSubgraph
+        private void InitContextStoreSubgraph()
+        {
+            InfrastructureSubgraph child = new InfrastructureSubgraph(contextStoreSubgraphId, this);
+            child.LayoutSettings = new SugiyamaLayoutSettings
+            {
+                ClusterMargin = 20
+            };
+            AddSubgraph(child);
+        }
+
+        public InfrastructureSubgraph MainDrawingSubgraf
         {
             get
             {
                 InfrastructureSubgraph child = Subgraphs
                     .OfType<InfrastructureSubgraph>()
-                    .SingleOrDefault(x => x.Id == contextStoreSubgraphId);
+                    .SingleOrDefault(x => x.Id == mainSubgraphId);
                 if (child == null)
                 {
-                    child = new InfrastructureSubgraph(contextStoreSubgraphId, this);
+                    child = new InfrastructureSubgraph(mainSubgraphId, this);
                     child.LayoutSettings = new SugiyamaLayoutSettings
-                    {
-                        ClusterMargin = 20
-                    };
+                        {
+                            PackingAspectRatio = 0.001,
+                        };
                     AddSubgraph(child);
                 }
 
@@ -82,7 +95,13 @@ namespace Origam.Workbench.Diagram.Graphs
             }
         }
 
-        public InfrastructureSubgraph MainDrawingSubgraf =>
-            (InfrastructureSubgraph)GetTopSubgraphChild(mainSubgraphId);
+        public void AddContextStore(Node node)
+        {
+            if (ContextStoreSubgraph == null)
+            {
+                InitContextStoreSubgraph();
+            }
+            ContextStoreSubgraph.AddNode(node);
+        }
     }
 }

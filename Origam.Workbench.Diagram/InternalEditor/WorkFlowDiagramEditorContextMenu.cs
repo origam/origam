@@ -35,6 +35,7 @@ using Origam.Workbench.BaseComponents;
 using Origam.Workbench.Commands;
 using Origam.Workbench.Diagram.Extensions;
 using Origam.Workbench.Diagram.Graphs;
+using Origam.Workbench.Diagram.NodeDrawing;
 
 namespace Origam.Workbench.Diagram.InternalEditor
 {
@@ -191,7 +192,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			if (!(dNodeUnderMouse.Node is Subgraph) && 
 			    !(schemaItem is ServiceMethodCallParameter)) return false;
 
-			Guid.TryParse(dNodeUnderMouse.Node.Id, out Guid nodeId);
+			Guid nodeId = IdTranslator.ToSchemaId(dNodeUnderMouse.Node);
 			return nodeId == nodeSelector.SelectedNodeId;
 		}
 
@@ -201,7 +202,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			ToolStripMenuItem addAfterMenu = new ToolStripMenuItem(Strings.WorkFlowDiagramEditor_ContextMenuNode_Add_After);
 			addAfterMenu.Image = ImageRes.icon_new;
 			var builder = new SchemaItemEditorsMenuBuilder(true);
-			var submenuItems = builder.BuildSubmenu(UpToDateGraphParent);
+			var submenuItems = builder.BuildSubmenu(schemaItemUnderMouse.ParentItem);
 			foreach (AsMenuCommand submenuItem in submenuItems)
 			{
 				if (!(submenuItem.Command is AddNewSchemaItem addNewCommand) ||
@@ -327,7 +328,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		private void DeleteActiveNodeWithDependencies()
 		{
 			Node nodeToDelete =
-				Graph.FindNodeOrSubgraph(schemaService.ActiveNode.NodeId);
+				Graph.FindNodeOrSubgraph(IdTranslator.SchemaToFirstNode(schemaService.ActiveNode.NodeId));
 
 			var deleteNodeCommand = new DeleteActiveNode();
 			deleteNodeCommand.BeforeDelete += (o, args) =>
@@ -343,10 +344,10 @@ namespace Origam.Workbench.Diagram.InternalEditor
 				var targetIds = nodeToDelete.OutEdges.Select(edge => edge.Target);
 				foreach (string sourceId in sourceIds)
 				{
-					if (!Guid.TryParse(sourceId, out _)) continue;
+					if (IdTranslator.NodeToSchema(sourceId) == Guid.Empty) continue;
 					foreach (string targetId in targetIds)
 					{
-						if (!Guid.TryParse(targetId, out _)) continue;
+						if (IdTranslator.NodeToSchema(targetId) == Guid.Empty) continue;
 						AddDependency(sourceId, targetId);
 					}
 				}

@@ -41,21 +41,25 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Web;
-using System.Data;
 using System.Collections;
-
-using Origam.Schema.GuiModel;
+using System.Collections.Generic;
+using System.Data;
 using Origam.DA;
-using core = Origam.Workbench.Services.CoreServices;
-using Origam;
 using Origam.Rule;
+using Origam.Schema.GuiModel;
+using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCommon.Pages
 {
     class FileDownloadPageRequestHandler : AbstractPageRequestHandler
     {
+        private readonly IHttpTools httpTools;
+
+        public FileDownloadPageRequestHandler(IHttpTools httpTools)
+        {
+            this.httpTools = httpTools;
+        }
+
         public override void Execute(AbstractPage page, Dictionary<string, object> parameters, IRequestWrapper request, IResponseWrapper response)
         {
             FileDownloadPage fdPage = page as FileDownloadPage;
@@ -110,8 +114,9 @@ namespace Origam.ServerCommon.Pages
                 {
                     contentType = fdPage.MimeType;
                 }
-                //NetFxHttpTools.WriteFile(request, response, bytes, (string)table.Rows[0][fdPage.FileNameField], true, contentType);
-                throw new NotImplementedException();
+                httpTools.WriteFile(request, response, bytes, 
+                    (string)table.Rows[0][fdPage.FileNameField], 
+                    true, contentType);
             }
             else
             {

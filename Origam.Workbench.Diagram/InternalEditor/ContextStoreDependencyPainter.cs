@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,7 @@ using Microsoft.Msagl.GraphViewerGdi;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Diagram.Extensions;
+using Origam.Workbench.Diagram.NodeDrawing;
 using Origam.Workbench.Services;
 
 namespace Origam.Workbench.Diagram.InternalEditor
@@ -127,7 +129,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
         private void DrawEdges(string contextStoreId)
         {
-            Node contextStoreNode = gViewer.Graph.FindNodeOrSubgraph(contextStoreId);
+            Node contextStoreNode = gViewer.Graph.FindNodeOrSubgraph(IdTranslator.SchemaToFirstNode(contextStoreId));
             foreach (IArrowPainter painter in arrowPainters)
             {
                 painter.Draw(contextStoreNode);
@@ -213,7 +215,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
         public override void Draw(Node contextStoreNode)
         {
-            var sourceNode = gViewer.Graph.FindNodeOrSubgraph(SchemaItem.NodeId);
+            var sourceNode = gViewer.Graph.FindNodeOrSubgraph(IdTranslator.SchemaToFirstNode(SchemaItem.NodeId));
             if (sourceNode != null)
             {
                 Edge = gViewer.AddEdge(sourceNode, contextStoreNode, false);
@@ -230,7 +232,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
         }
         public override void Draw(Node contextStoreNode)
         {
-            var targetNode = gViewer.Graph.FindNodeOrSubgraph(SchemaItem.NodeId);
+            var targetNode = gViewer.Graph.FindNodeOrSubgraph(IdTranslator.SchemaToFirstNode(SchemaItem.NodeId));
             if (targetNode != null)
             {
                 Edge = gViewer.AddEdge(contextStoreNode, targetNode, false);
@@ -247,7 +249,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
         }
         public override void Draw(Node contextStoreNode)
         {
-            var sourceNode = gViewer.Graph.FindNodeOrSubgraph(SchemaItem.NodeId);
+            var sourceNode = gViewer.Graph.FindNodeOrSubgraph(IdTranslator.SchemaToFirstNode(SchemaItem.NodeId));
             if (sourceNode != null)
             {
                 Edge = gViewer.AddEdge(sourceNode, contextStoreNode, false);

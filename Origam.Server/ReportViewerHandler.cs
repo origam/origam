@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2019 Advantage Solutions, s. r. o.
@@ -41,16 +42,16 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.IO;
 using System.Web;
-using core = Origam.Workbench.Services.CoreServices;
-using Origam.Schema;
-using Origam.Schema.GuiModel;
-using Origam.Workbench.Services;
 using System.Web.SessionState;
 using log4net;
-using Origam;
 using Origam.BI;
-using System.IO;
+using Origam.Schema;
+using Origam.Schema.GuiModel;
+using Origam.Server.Pages;
+using Origam.Workbench.Services;
+using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server
 {
@@ -58,6 +59,8 @@ namespace Origam.Server
     {
         private static readonly ILog perfLog 
             = LogManager.GetLogger("Performance");
+        
+        private readonly NetFxHttpTools httpTools= new NetFxHttpTools();
 
         #region IHttpHandler Members
 
@@ -141,8 +144,8 @@ namespace Origam.Server
             context.Response.ContentType = mimeType;
             context.Response.AddHeader(
                 "content-disposition",
-                /*"attachment; " +*/ NetFxHttpTools.GetFileDisposition(
-                    context.Request, Path.GetFileName(filePath)));
+                /*"attachment; " +*/ httpTools.GetFileDisposition(
+                    new FxHttpRequestWrapper(context.Request), Path.GetFileName(filePath)));
             context.Response.WriteFile(filePath);
         }
 

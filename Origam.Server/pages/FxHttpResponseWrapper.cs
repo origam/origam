@@ -60,6 +60,12 @@ namespace Origam.Server.Pages
             set => response.StatusCode = value;
         }
 
+        public string Charset
+        {
+            set => response.Charset = value;
+            get => response.Charset;
+        }
+
         public void WriteToOutput(Action<TextWriter> writeAction)
         {
             writeAction(response.Output);
@@ -103,6 +109,11 @@ namespace Origam.Server.Pages
         public void OutputStreamWrite(byte[] buffer, int offset, int count)
         {
             response.OutputStream.Write(buffer, offset, count);
+        }
+
+        public void AppendHeader(string contentDisposition, string disposition)
+        {
+            response.AppendHeader(contentDisposition,disposition);
         }
     }
 }

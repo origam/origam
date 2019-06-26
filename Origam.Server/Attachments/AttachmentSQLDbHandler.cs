@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
@@ -41,18 +41,18 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Web;
-using core = Origam.Workbench.Services.CoreServices;
-using Origam;
-using Origam.Workbench.Services;
-using Origam.DA.Service;
-using Origam.Schema.EntityModel;
-using Origam.Schema;
 using System.Data;
-using log4net;
-using System.Text;
-using System.IO.Compression;
 using System.IO;
+using System.IO.Compression;
+using System.Text;
+using System.Web;
+using log4net;
+using Origam.DA.Service;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
+using Origam.Server.Pages;
+using Origam.Workbench.Services;
+using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server
 {
@@ -62,6 +62,8 @@ namespace Origam.Server
         protected static readonly log4net.ILog log = 
             log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        private static readonly NetFxHttpTools httpTools = new NetFxHttpTools();
 
         private static AttachmentSQLDbHandler instance = new AttachmentSQLDbHandler();
 
@@ -130,7 +132,7 @@ namespace Origam.Server
             context.Response.ContentType = HttpTools.GetMimeType(zipFileName);
             context.Response.Charset = Encoding.UTF8.WebName;
             string disposition = "attachment; " 
-                + NetFxHttpTools.GetFileDisposition(context.Request, zipFileName);
+                + httpTools.GetFileDisposition(new FxHttpRequestWrapper(context.Request), zipFileName);
             context.Response.AppendHeader("content-disposition", disposition);
             using (var outputStream = new PositionWrapperStream(context.Response.OutputStream))
             {
@@ -158,7 +160,10 @@ namespace Origam.Server
             byte[] file;
             string fileName;
             GetFile(request.Ids[0], out file, out fileName);
-            NetFxHttpTools.WriteFile(context.Request, context.Response, file,
+            httpTools.WriteFile(
+                new FxHttpRequestWrapper(context.Request), 
+                new FxHttpResponseWrapper(context.Response), 
+                file,
                 fileName, request.IsPreview);
         }
 

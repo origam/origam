@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Microsoft.Msagl.Drawing;
 using Origam.Workbench.Diagram.Graphs;
+using Origam.Workbench.Diagram.NodeDrawing;
 
 namespace Origam.Workbench.Diagram
 {
@@ -47,24 +48,11 @@ namespace Origam.Workbench.Diagram
 
         private Guid GetSelectedNodeId(Node node)
         {
-            string strId;
             if (node is InfrastructureSubgraph infrastructureSubgraph)
             {
-                strId = infrastructureSubgraph.WorkflowItemId;
+               return infrastructureSubgraph.WorkflowItemId;
             }
-            else
-            {
-                strId = node?.Id;
-            }
-            
-            if(Guid.TryParse(strId, out Guid id))
-            {
-                return id;
-            }
-            else
-            {
-                return Guid.Empty;
-            }
+            return IdTranslator.NodeToSchema(node?.Id);
         }
 
         public bool MarkedForExpansion { get; set; }
