@@ -31,7 +31,7 @@ namespace Origam.Schema.GuiModel
 	/// <summary>
 	/// Summary description for PanelControlSet.
 	/// </summary>
-	[SchemaItemDescription("Screen Section", "icon_21_screen-sections-2.png")]
+	[SchemaItemDescription("Screen Section", "icon_screen-section.png")]
 	[System.Drawing.ToolboxBitmap(typeof(PanelControlSet))]
     [HelpTopic("Screen+Sections")]
 	[XmlModelRoot(ItemTypeConst)]

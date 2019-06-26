@@ -33,7 +33,7 @@ namespace Origam.Schema.GuiModel
 	public enum ControlPropertyValueType {Integer=0, Boolean, String, Xml, UniqueIdentifier}
 
 
-	[SchemaItemDescription("Property", "Properties", 3)]
+	[SchemaItemDescription("Property", "Properties", "icon_property.png")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class ControlPropertyItem : AbstractSchemaItem 
 	{
@@ -95,14 +95,6 @@ namespace Origam.Schema.GuiModel
 		#endregion
 		
 		#region Overriden AbstractSchemaItem Members
-		public override string Icon
-		{
-			get
-			{
-				return "3";
-			}
-		}
-
 		[EntityColumn("ItemType")]
 		public override string ItemType
 		{

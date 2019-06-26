@@ -29,7 +29,7 @@ namespace Origam.Schema.GuiModel
 	/// <summary>
 	/// Summary description for CrystalReport.
 	/// </summary>
-	[SchemaItemDescription("Web Report", 79)]
+	[SchemaItemDescription("Web Report", "icon_web-report.png")]
     [HelpTopic("Web+Report")]
 	public class WebReport : AbstractReport
 	{	
@@ -45,14 +45,6 @@ namespace Origam.Schema.GuiModel
 		private bool _isUrlEscaped = false;
 		private WebPageOpenMethod _openMethod = WebPageOpenMethod.OrigamTab;
 		
-		public override string Icon
-		{
-			get
-			{
-				return "79";
-			}
-		}
-
 		[EntityColumn("LS01")]
         [XmlAttribute("url")]
 		public string Url

@@ -29,7 +29,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for DeaultValueParameter.
 	/// </summary>
-	[SchemaItemDescription("Default Value Parameter", "Parameters", 15)]
+	[SchemaItemDescription("Default Value Parameter", "Parameters", "icon_default-value-parameter.png")]
     [HelpTopic("Default+Value+Parameter")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class DefaultValueParameter : SchemaItemParameter

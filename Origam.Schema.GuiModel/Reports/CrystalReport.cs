@@ -27,7 +27,7 @@ namespace Origam.Schema.GuiModel
 	/// <summary>
 	/// Summary description for CrystalReport.
 	/// </summary>
-	[SchemaItemDescription("Crystal Report", 29)]
+	[SchemaItemDescription("Crystal Report", "icon_crystal-report.png")]
     [HelpTopic("Crystal+Report")]
 	public class CrystalReport : AbstractDataReport, IDataStructureReference
 	{	

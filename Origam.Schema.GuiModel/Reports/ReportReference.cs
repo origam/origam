@@ -29,7 +29,7 @@ namespace Origam.Schema.GuiModel
 	/// <summary>
 	/// Summary description for RuleReference.
 	/// </summary>
-	[SchemaItemDescription("Report Reference", 29)]
+	[SchemaItemDescription("Report Reference", "icon_report-reference.png")]
     [HelpTopic("Report+Reference")]
     [DefaultProperty("Report")]
 	[XmlModelRoot(ItemTypeConst)]
@@ -51,14 +51,6 @@ namespace Origam.Schema.GuiModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "29";
 			}
 		}
 

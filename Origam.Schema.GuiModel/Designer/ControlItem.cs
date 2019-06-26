@@ -33,7 +33,7 @@ namespace Origam.Schema.GuiModel
 	/// <summary>
 	/// Summary description for ControlItem.
 	/// </summary>
-	[SchemaItemDescription("Widget", 41)]
+	[SchemaItemDescription("Widget", "icon_widget.png")]
     [HelpTopic("Widgets")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
@@ -185,14 +185,6 @@ namespace Origam.Schema.GuiModel
                     return true;
 				else
 					return false;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "41";
 			}
 		}
 
