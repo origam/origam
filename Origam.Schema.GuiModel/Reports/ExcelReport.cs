@@ -27,7 +27,7 @@ namespace Origam.Schema.GuiModel
 	/// <summary>
 	/// Summary description for ExcelReport.
 	/// </summary>
-	[SchemaItemDescription("Excel Report", 29)]
+	[SchemaItemDescription("Excel Report", "icon_excel-report.png")]
 	public class ExcelReport : AbstractDataReport, IDataStructureReference
 	{
 		public ExcelReport() : base() { }

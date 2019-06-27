@@ -31,7 +31,7 @@ namespace Origam.Schema.EntityModel
     /// <summary>
     /// Summary description for DeaultValueParameter.
     /// </summary>
-    [SchemaItemDescription("Xslt Initial Value Parameter", "Parameters", 15)]
+    [SchemaItemDescription("Xslt Initial Value Parameter", "Parameters", "icon_xslt-initial-value-parameter.png")]
     [HelpTopic("Xslt+Initial+ValueParameter")]
     public class XsltInitialValueParameter : SchemaItemParameter
     {

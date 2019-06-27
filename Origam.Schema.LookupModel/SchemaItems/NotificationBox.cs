@@ -29,7 +29,7 @@ namespace Origam.Schema.LookupModel
 	/// <summary>
 	/// Summary description for DataQuery.
 	/// </summary>
-	[SchemaItemDescription("Notification Box", 18)]
+	[SchemaItemDescription("Notification Box", "icon_notification-box.png")]
     [HelpTopic("Notification+Boxes+And+Tooltips")]
 	[XmlModelRoot(ItemTypeConst)]
     public class NotificationBox : AbstractSchemaItem, ISchemaItemFactory
@@ -84,14 +84,6 @@ namespace Origam.Schema.LookupModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "18";
 			}
 		}
 

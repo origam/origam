@@ -35,7 +35,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for SystemFunctionCall.
 	/// </summary>
-	[SchemaItemDescription("System Function Call", "Parameters", 2)]
+	[SchemaItemDescription("System Function Call", "Parameters", "icon_system-function-call-ui.png")]
     [HelpTopic("System+Function+Call")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class SystemFunctionCall : AbstractSchemaItem
@@ -58,15 +58,6 @@ namespace Origam.Schema.WorkflowModel
 				return ItemTypeConst;
 			}
 		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "2";
-			}
-		}
-
 		#endregion
 
 		#region Properties

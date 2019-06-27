@@ -360,6 +360,33 @@ namespace Origam.Workbench
             this.imgList.Images.SetKeyName(218, "icon_text-widget.png");
             this.imgList.Images.SetKeyName(219, "icon_vertical-axis.png");
             this.imgList.Images.SetKeyName(220, "icon_vertical-container.png");
+            this.imgList.Images.SetKeyName(221, "icon_alternative.png");
+            this.imgList.Images.SetKeyName(222, "icon_crystal-report.png");
+            this.imgList.Images.SetKeyName(223, "icon_dashboard.png");
+            this.imgList.Images.SetKeyName(224, "icon_data-service-tooltip-ui.png");
+            this.imgList.Images.SetKeyName(225, "icon_default-value-parameter.png");
+            this.imgList.Images.SetKeyName(226, "icon_dynamic-menu.png");
+            this.imgList.Images.SetKeyName(227, "icon_excel-report.png");
+            this.imgList.Images.SetKeyName(228, "icon_file-system-report.png");
+            this.imgList.Images.SetKeyName(229, "icon_image.png");
+            this.imgList.Images.SetKeyName(230, "icon_notification-box.png");
+            this.imgList.Images.SetKeyName(231, "icon_printit-report.png");
+            this.imgList.Images.SetKeyName(232, "icon_property.png");
+            this.imgList.Images.SetKeyName(233, "icon_report-reference.png");
+            this.imgList.Images.SetKeyName(234, "icon_screen.png");
+            this.imgList.Images.SetKeyName(235, "icon_screen-reference.png");
+            this.imgList.Images.SetKeyName(236, "icon_screen-section.png");
+            this.imgList.Images.SetKeyName(237, "icon_sequential-workflow-reference.png");
+            this.imgList.Images.SetKeyName(238, "icon_shortcut.png");
+            this.imgList.Images.SetKeyName(239, "icon_sql-server-report.png");
+            this.imgList.Images.SetKeyName(240, "icon_style.png");
+            this.imgList.Images.SetKeyName(241, "icon_style-property.png");
+            this.imgList.Images.SetKeyName(242, "icon_submenu.png");
+            this.imgList.Images.SetKeyName(243, "icon_system-function-call-ui.png");
+            this.imgList.Images.SetKeyName(244, "icon_ui-data-constant.png");
+            this.imgList.Images.SetKeyName(245, "icon_web-report.png");
+            this.imgList.Images.SetKeyName(246, "icon_widget.png");
+            this.imgList.Images.SetKeyName(247, "icon_xslt-initial-value-parameter.png");
             // 
             // cboFilter
             // 
@@ -804,6 +831,10 @@ namespace Origam.Workbench
 
         private bool IsFileDirty(IPersistent item)
         {
+            if (item.Files.Count == 0)
+            {
+                return false;
+            }
             string ParentFile = item.Files.First();
             if(GitManager.GetCache().TryGetValue(ParentFile, out bool status))
             {

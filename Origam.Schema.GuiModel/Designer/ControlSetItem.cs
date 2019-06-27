@@ -29,7 +29,7 @@ namespace Origam.Schema.GuiModel
 	/// <summary>
 	/// Summary description for ControlSetItem.
 	/// </summary>
-   [SchemaItemDescription("Alternative", "Alternatives", 14)]
+   [SchemaItemDescription("Alternative", "Alternatives", "icon_alternative.png")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class ControlSetItem  : AbstractSchemaItem, ISchemaItemFactory 
 	{
@@ -157,14 +157,6 @@ namespace Origam.Schema.GuiModel
 		#endregion
 		
 		#region Overriden AbstractSchemaItem Members
-		public override string Icon
-		{
-			get
-			{
-				return "14";
-			}
-		}
-
 		[EntityColumn("ItemType")]
 		public override string ItemType
 		{

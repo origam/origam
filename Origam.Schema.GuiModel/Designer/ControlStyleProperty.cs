@@ -25,7 +25,7 @@ using System.Xml.Serialization;
 
 namespace Origam.Schema.GuiModel
 {
-    [SchemaItemDescription("Style Property", "Style Properties", 3)]
+    [SchemaItemDescription("Style Property", "Style Properties", "icon_style-property.png")]
     [HelpTopic("Styles")]
     [XmlModelRoot(ItemTypeConst)]
     public class ControlStyleProperty : AbstractSchemaItem
@@ -39,14 +39,6 @@ namespace Origam.Schema.GuiModel
         public ControlStyleProperty(Key primaryKey) : base(primaryKey) { }
 
         #region Overriden AbstractSchemaItem Members
-        public override string Icon
-        {
-            get
-            {
-                return "3";
-            }
-        }
-
         [EntityColumn("ItemType")]
         public override string ItemType
         {

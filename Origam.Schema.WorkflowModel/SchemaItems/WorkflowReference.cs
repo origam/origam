@@ -29,7 +29,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for RuleReference.
 	/// </summary>
-	[SchemaItemDescription("Sequential Workflow Reference", 19)]
+	[SchemaItemDescription("Sequential Workflow Reference", "icon_sequential-workflow-reference.png")]
     [HelpTopic("Sequential+Workflow+Reference")]
     [DefaultProperty("Workflow")]
 	[XmlModelRoot(ItemTypeConst)]
@@ -47,8 +47,6 @@ namespace Origam.Schema.WorkflowModel
 		
 		[EntityColumn("ItemType")]
 		public override string ItemType => ItemTypeConst;
-
-		public override string Icon => "19";
 
 		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
 		{

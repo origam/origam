@@ -30,7 +30,7 @@ namespace Origam.Schema.GuiModel
 	/// <summary>
 	/// Summary description for Graphics.
 	/// </summary>
-	[SchemaItemDescription("Style", 81)]
+	[SchemaItemDescription("Style", "icon_style.png")]
     [HelpTopic("Styles")]
 	[XmlModelRoot(ItemTypeConst)]
     public class UIStyle : AbstractSchemaItem
@@ -103,14 +103,6 @@ namespace Origam.Schema.GuiModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "81";
 			}
 		}
 		#endregion
