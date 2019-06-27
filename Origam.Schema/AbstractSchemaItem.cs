@@ -214,43 +214,8 @@ namespace Origam.Schema
 
 		public ArrayList GetUsage(bool ignoreErrors)
 		{
-			PersistenceProvider.RestrictToLoadedPackage(false);
-			ArrayList usages = PersistenceProvider
-				.RetrieveList<AbstractSchemaItem>(null)
-				.AsParallel()
-				.SelectMany(item => FindUsages(item, ignoreErrors))
-				.ToArrayList();
-			PersistenceProvider.RestrictToLoadedPackage(true);
-			return usages;
+            return PersistenceProvider.GetReference(ignoreErrors, this.PrimaryKey);
 		}
-
-	    private IEnumerable<object> FindUsages(AbstractSchemaItem item, bool ignoreErrors)
-	    {
-		    List<object> foundUsages = new List<object>();
-		    try
-		    {
-			    ArrayList dep = item.GetDependencies(ignoreErrors);
-			    foreach(AbstractSchemaItem depItem in dep)
-			    {
-				    if(depItem != null)
-				    {
-					    if(depItem.PrimaryKey.Equals(this.PrimaryKey))
-					    {
-						    foundUsages.Add(item);
-					    }
-				    }
-			    }
-		    }
-		    catch(Exception ex)
-		    {
-			    throw new Exception(ResourceUtils.GetString("ErrorWhenDependencies", 
-				    item.ItemType, item.Path, 
-				    Environment.NewLine + Environment.NewLine + ex.Message), ex);
-		    }
-		    return foundUsages;
-	    }
-    
-
 
 		public static void FinishConversion(AbstractSchemaItem source, AbstractSchemaItem converted)
 		{

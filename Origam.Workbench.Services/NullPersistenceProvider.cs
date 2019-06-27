@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
@@ -147,6 +148,11 @@ namespace Origam.Workbench.Services
         public List<string> Files(IPersistent persistentObject)
         {
             return new List<string>();
+        }
+
+        public ArrayList GetReference(bool ignoreErrors, Key key)
+        {
+            return new ArrayList();
         }
     }
 }

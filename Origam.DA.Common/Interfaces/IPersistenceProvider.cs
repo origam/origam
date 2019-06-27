@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Origam.DA.ObjectPersistence
@@ -92,5 +93,6 @@ namespace Origam.DA.ObjectPersistence
 		ILocalizationCache LocalizationCache { get; }
 
         List<string> Files(IPersistent item);
-	}
+        ArrayList GetReference(bool ignoreErrors, Key key);
+    }
 }
