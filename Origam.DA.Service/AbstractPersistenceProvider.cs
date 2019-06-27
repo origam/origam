@@ -164,10 +164,5 @@ namespace Origam.DA.ObjectPersistence
         public abstract object RetrieveInstance(Type type, Key primaryKey, bool useCache);
 
         public abstract object RetrieveInstance(Type type, Key primaryKey, bool useCache, bool throwNotFoundException);
-
-        public ArrayList GetReference(bool ignoreErrors, AbstractSchemaItem abstractSchemaItem)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
