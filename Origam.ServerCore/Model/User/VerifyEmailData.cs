@@ -20,13 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 using System.ComponentModel.DataAnnotations;
 
-namespace Origam.ServerCore.Models.Account
+namespace Origam.ServerCore.Model.User
 {
-    public class LoginData
+    public class VerifyEmailData
     {
         [Required]
-        public string UserName { get; set; }
+        public string Id { get; set; }
         [Required]
-        public string Password { get; set; }
+        public string Token { get; set; }
     }
 }

@@ -1,9 +1,9 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Origam.ServerCore.Models.Session
+namespace Origam.ServerCore.Model.Session
 {
-    public class DeleteRowData
+    public class ChangeMasterRecordData
     {
         [RequireNonDefault]
         public Guid SessionFormIdentifier { get; set; }

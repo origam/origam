@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,14 +36,14 @@ using Origam.Security.Identity;
 using Origam.ServerCore.Authorization;
 using Origam.ServerCore.Configuration;
 using Origam.ServerCore.Extensions;
-using Origam.ServerCore.Models.Account;
+using Origam.ServerCore.Model.User;
 
-namespace Origam.ServerCore.Controllers
+namespace Origam.ServerCore.Controller
 {
     [ApiController]
     [Authorize]
     [Route("internalApi/[controller]")]
-    public class AccountController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly CoreUserManager userManager;
         private readonly SignInManager<IOrigamUser> signInManager;
@@ -53,7 +52,7 @@ namespace Origam.ServerCore.Controllers
         private readonly IConfiguration configuration;
         private readonly IServiceProvider serviceProvider;
 
-        public AccountController(CoreUserManager userManager, SignInManager<IOrigamUser> signInManager,
+        public UserController(CoreUserManager userManager, SignInManager<IOrigamUser> signInManager,
             IConfiguration configuration, IServiceProvider serviceProvider,
             IMailService mailService, IOptions<AccountConfig> accountConfig)
         {
@@ -67,9 +66,9 @@ namespace Origam.ServerCore.Controllers
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> CreateInitialUser([FromBody] NewUserModel userModel)
+        public async Task<IActionResult> CreateInitialUser([FromBody] NewUserData userData)
         {
-            if (userModel.Password != userModel.RePassword)
+            if (userData.Password != userData.RePassword)
             {
                 return BadRequest("Passwords don't match");
             }
@@ -84,14 +83,14 @@ namespace Origam.ServerCore.Controllers
 
             var newUser = new User
             {
-                FirstName = userModel.FirstName,
-                Name = userModel.Name,
-                UserName = userModel.UserName,
-                Email = userModel.Email,
+                FirstName = userData.FirstName,
+                Name = userData.Name,
+                UserName = userData.UserName,
+                Email = userData.Email,
                 RoleId = SecurityManager.BUILTIN_SUPER_USER_ROLE
             };
 
-            var userCreationResult = await userManager.CreateAsync(newUser, userModel.Password);
+            var userCreationResult = await userManager.CreateAsync(newUser, userData.Password);
             if (!userCreationResult.Succeeded)
             {
                 return BadRequest(userCreationResult.Errors.ToErrorMessage());
@@ -103,9 +102,9 @@ namespace Origam.ServerCore.Controllers
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> CreateNewUser([FromBody] NewUserModel userModel)
+        public async Task<IActionResult> CreateNewUser([FromBody] NewUserData userData)
         {
-            if (userModel.Password != userModel.RePassword)
+            if (userData.Password != userData.RePassword)
             {
                 return BadRequest("Passwords don't match");
             }
@@ -116,14 +115,14 @@ namespace Origam.ServerCore.Controllers
             
             var newUser = new User 
             {
-                FirstName = userModel.FirstName,
-                Name = userModel.Name,
-                UserName = userModel.UserName,
-                Email = userModel.Email,
+                FirstName = userData.FirstName,
+                Name = userData.Name,
+                UserName = userData.UserName,
+                Email = userData.Email,
                 RoleId = accountConfig.NewUserRoleId
             };
 
-            var userCreationResult = await userManager.CreateAsync(newUser, userModel.Password);
+            var userCreationResult = await userManager.CreateAsync(newUser, userData.Password);
             if (!userCreationResult.Succeeded)
             {
                 return BadRequest(userCreationResult.Errors.ToErrorMessage());
@@ -176,7 +175,6 @@ namespace Origam.ServerCore.Controllers
                 return BadRequest("Confirm your email first");
             }
 
-            //var passwordSignInResult = await signInManager.PasswordSignInAsync(userName, password, false, false);
             var passwordSignInResult =
                 await signInManager.CheckPasswordSignInAsync(user, loginData.Password, false);
            
@@ -191,7 +189,7 @@ namespace Origam.ServerCore.Controllers
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> ForgotPassword([FromBody]ForgotPasswordData passwordData) 
+        public async Task<IActionResult> RequestPasswordReset([FromBody]RequestPasswordResetData passwordData) 
         {
             IdentityServiceAgent.ServiceProvider = serviceProvider;
             SetOrigamServerAsCurrentUser();

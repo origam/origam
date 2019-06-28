@@ -1,6 +1,6 @@
 using System;
 
-namespace Origam.ServerCore.Models
+namespace Origam.ServerCore.Model.Data
 {
     public class NewEmptyRowData
     {

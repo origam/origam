@@ -17,19 +17,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+using Microsoft.Extensions.Logging;
+using Origam.ServerCore.Controller;
 
-using System;
-using System.Collections.Generic;
-
-namespace Origam.ServerCore.Models
+namespace Origam.ServerCore.Extensions
 {
-    public class NewRowData
+    public static class LogExtensions
     {
-        public Guid SessionFormIdentifier { get; set; }
-        public string Entity { get; set; }
-        public IDictionary<string, object> Values { get; set; }
-        public IDictionary<string, object> Parameters { get; set; }
-        public Guid  RequestingGridId { get; set; }
+        public static void InfoFormat(this ILogger<AbstractController> log, string message, string arg)
+        {
+            log.LogInformation(message, new []{arg} );
+        }
     }
 }

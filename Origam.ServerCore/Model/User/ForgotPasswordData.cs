@@ -18,16 +18,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-using Microsoft.Extensions.Logging;
-using Origam.ServerCore.Controllers;
+using System.ComponentModel.DataAnnotations;
 
-namespace Origam.ServerCore.Extensions
+namespace Origam.ServerCore.Model.User
 {
-    public static class LogExtonsions
+    public class RequestPasswordResetData
     {
-        public static void InfoFormat(this ILogger<AbstractController> log, string message, string arg)
-        {
-            log.LogInformation(message, new []{arg} );
-        }
+        [Required]
+        public string Email { get; set; }
     }
 }
