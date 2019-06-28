@@ -35,7 +35,6 @@ using Origam.Schema.LookupModel;
 using Origam.Schema.MenuModel;
 using Origam.Server;
 using Origam.ServerCore.Extensions;
-using Origam.ServerCore.Model;
 using Origam.ServerCore.Model.Data;
 using Origam.Services;
 using Origam.Workbench.Services;
@@ -95,7 +94,7 @@ namespace Origam.ServerCore.Controller
                 .OnSuccess(Authorize)
                 .OnSuccess(menuItem => GetEntityData(getRowsData.DataStructureEntityId, menuItem))
                 .OnSuccess(CheckEntityBelongsToMenu)
-                .OnSuccess(entityData => CreateEntitiesGetQuery(getRowsData, entityData))
+                .OnSuccess(entityData => GetRowsGetQuery(getRowsData, entityData))
                 .OnSuccess(dataService.ExecuteDataReader)
                 .OnSuccess(ToActionResult)
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
@@ -282,7 +281,7 @@ namespace Origam.ServerCore.Controller
         }
         
 
-        private Result<DataStructureQuery, IActionResult> CreateEntitiesGetQuery(
+        private Result<DataStructureQuery, IActionResult> GetRowsGetQuery(
             GetRowsData entityQueryData, EntityData entityData)
         {
             DataStructureQuery query = new DataStructureQuery

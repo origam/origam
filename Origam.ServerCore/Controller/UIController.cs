@@ -47,7 +47,7 @@ namespace Origam.ServerCore.Controller
         }
 
         [HttpGet("[action]")]
-        public IActionResult GetScreen([FromQuery] [Required] Guid id)
+        public IActionResult GetUI([FromQuery] [Required] Guid id)
         {
             FormReferenceMenuItem menuItem = persistenceService.SchemaProvider.RetrieveInstance(
                 typeof(FormReferenceMenuItem), new ModelElementKey(id)) as FormReferenceMenuItem;
