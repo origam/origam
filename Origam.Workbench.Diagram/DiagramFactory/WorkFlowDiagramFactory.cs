@@ -138,7 +138,7 @@ namespace Origam.Workbench.Diagram
 			var actions = entity.Entity.ChildItems
 				.ToGeneric()
 				.OfType<EntityUIAction>()
-				.Where(action => ShouldBeShownOdScreen(action, screenId))
+				.Where(action => ShouldBeShownOnScreen(action, screenId))
 				.ToArray();
 
 			var entityDropdownActions = actions
@@ -153,14 +153,14 @@ namespace Origam.Workbench.Diagram
 				actions = actions
 					.Except(entityDropdownActions)
 					.Concat(actionsFromDropDowns)
-					.Where(action => ShouldBeShownOdScreen(action, screenId))
+					.Where(action => ShouldBeShownOnScreen(action, screenId))
 					.ToArray();
 			}
 
 			return actions;
 		}
 
-		private bool ShouldBeShownOdScreen(EntityUIAction action, Guid screenId)
+		private bool ShouldBeShownOnScreen(EntityUIAction action, Guid screenId)
 		{
 			return action.ScreenId == Guid.Empty || action.ScreenId == screenId;
 		}

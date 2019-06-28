@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
 using Microsoft.Msagl.Core.Geometry;
 using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Drawing;
@@ -38,10 +37,6 @@ namespace Origam.Workbench.Diagram.InternalEditor
         private Node updatedNode;
 
         private Point CurrentSourcePoint => updatedNode.GeometryNode.Center;
-
-        public bool NodeWasNotResized =>
-            Math.Abs(originalNode.BoundingBox.Size.Height - updatedNode.BoundingBox.Size.Height) < 0.01 &&
-            Math.Abs(originalNode.BoundingBox.Size.Width - updatedNode.BoundingBox.Size.Width) < 0.01;
 
         public bool NodeExists => !string.IsNullOrWhiteSpace(nodeId) && updatedNode != null;
         
