@@ -45,7 +45,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
             this.graphParentItemGetter = graphParentItemGetter;
         }
         public IContextStore CurrentContextStore { get; private set; }
-    
+        public bool DidDrawSomeEdges => arrowPainters.Count > 0;
+
         public void DeActivate()
         {
             CurrentContextStore = null;

@@ -122,7 +122,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			{
 				ToolStripMenuItem hideDataFlowItem = MakeHideDatFlowItem(contextStore);
 				ToolStripMenuItem showDataFlowItem = 
-					MakeShowDatFlowItem(dNodeUnderMouse.Node, contextStore);
+					MakeShowDataFlowItem(dNodeUnderMouse.Node, contextStore);
 				contextMenu.AddSubItem(hideDataFlowItem);
 				contextMenu.AddSubItem(showDataFlowItem);
 			}
@@ -275,7 +275,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			return newMenu;
 		}
 		
-		private ToolStripMenuItem MakeShowDatFlowItem(Node nodeUnderMouse,
+		private ToolStripMenuItem MakeShowDataFlowItem(Node nodeUnderMouse,
 			IContextStore contextStore)
 		{
 			var showDataFlowItem = new ToolStripMenuItem();
@@ -284,7 +284,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			showDataFlowItem.Click += (sender, args) =>
 			{
 				dependencyPainter.Activate(contextStore);
-				ReDrawAndKeepFocus(nodeUnderMouse);
+				nodeSelector.Selected = nodeUnderMouse;
+				ReDrawAndKeepFocus();
 			};
 			showDataFlowItem.Enabled =
 				!contextStore.Equals(dependencyPainter.CurrentContextStore);
