@@ -17,36 +17,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
-using System;
-using System.Collections.Generic;
+#endregion
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Origam.Extensions;
 
-namespace Origam.ServerCore.Models
+namespace Origam.ServerCore.Model.User
 {
-    public class EntityGetData
+    public class LoginData
     {
-        [RequireNonDefault]
-        public Guid MenuId { get; set; }
-        [RequireNonDefault]
-        public Guid DataStructureEntityId { get; set; }
-        public string Filter { get; set; }
-        public List<List<string>> Ordering { get; set; }
         [Required]
-        public int RowLimit { get; set; }
+        public string UserName { get; set; }
         [Required]
-        public string[] ColumnNames { get; set; }
-
-        public Guid MasterRowId { get; set; }
-
-        public List<Tuple<string, string>> OrderingAsTuples =>
-            Ordering
-                .Where(x=> x.Count > 0)
-                .Select(x => new Tuple<string, string>(x[0], x[1]))
-                .ToList();
+        public string Password { get; set; }
     }
 }

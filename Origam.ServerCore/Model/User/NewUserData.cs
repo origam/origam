@@ -17,21 +17,24 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 using System.ComponentModel.DataAnnotations;
 
-namespace Origam.ServerCore.Models.Account
+namespace Origam.ServerCore.Model.User
 {
-    public class ResetPasswordData
+    public class NewUserData
     {
-        [Required]
-        public string Id { get; set; }
-        [Required]
-        public string Token { get; set; }
         [Required]
         public string Password { get; set; }
         [Required]
         public string RePassword { get; set; }
-    }
+        [Required]
+        public string Email { get; set; }
+        [Required]
+        public string UserName { get; set; }
+        [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public string Name { get; set; }
+     }
 }
