@@ -69,7 +69,8 @@ namespace Origam.Workbench.Diagram.Graphs
             InfrastructureSubgraph child = new InfrastructureSubgraph(contextStoreSubgraphId, this);
             child.LayoutSettings = new SugiyamaLayoutSettings
             {
-                ClusterMargin = 20
+                ClusterMargin = 20,
+                PackingAspectRatio = 2.0 / 5.0
             };
             AddSubgraph(child);
         }
