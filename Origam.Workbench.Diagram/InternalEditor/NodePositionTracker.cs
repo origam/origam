@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using Microsoft.Msagl.Core.Geometry;
 using Microsoft.Msagl.Core.Geometry.Curves;
@@ -48,10 +49,10 @@ namespace Origam.Workbench.Diagram.InternalEditor
             new PlaneTransformation(
                 originalTransformation[0, 0],
                 originalTransformation[0, 1],
-                pointOnScreen.X - CurrentSourcePoint.X,
+                pointOnScreen.X - CurrentSourcePoint.X * originalTransformation[0, 0],
                 originalTransformation[1, 0],
                 originalTransformation[1, 1],
-                pointOnScreen.Y + CurrentSourcePoint.Y);
+                pointOnScreen.Y+ CurrentSourcePoint.Y * originalTransformation[0, 0]);
 
         public NodePositionTracker( GViewer gViewer, string nodeId)
         {
