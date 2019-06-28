@@ -28,6 +28,7 @@ using MoreLinq.Extensions;
 using Origam.Extensions;
 using Origam.Gui.Win.Commands;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.WorkflowModel;
 using Origam.UI;
@@ -108,7 +109,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			var schemaItemUnderMouse = RetrieveItem(dNodeUnderMouse.Node);
 
 			if (IsObjectSelectionInconsistent(schemaItemUnderMouse) ||
-			    schemaItemUnderMouse is EntityUIAction)
+			    schemaItemUnderMouse is EntityUIAction ||
+			    schemaItemUnderMouse is DataStructureEntity)
 			{
 				return contextMenu;
 			}
@@ -120,7 +122,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			{
 				ToolStripMenuItem hideDataFlowItem = MakeHideDatFlowItem(contextStore);
 				ToolStripMenuItem showDataFlowItem = 
-					MakeShowDatFlowItem(dNodeUnderMouse.Node, contextStore);
+					MakeShowDataFlowItem(dNodeUnderMouse.Node, contextStore);
 				contextMenu.AddSubItem(hideDataFlowItem);
 				contextMenu.AddSubItem(showDataFlowItem);
 			}
@@ -273,7 +275,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			return newMenu;
 		}
 		
-		private ToolStripMenuItem MakeShowDatFlowItem(Node nodeUnderMouse,
+		private ToolStripMenuItem MakeShowDataFlowItem(Node nodeUnderMouse,
 			IContextStore contextStore)
 		{
 			var showDataFlowItem = new ToolStripMenuItem();
@@ -282,7 +284,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			showDataFlowItem.Click += (sender, args) =>
 			{
 				dependencyPainter.Activate(contextStore);
-				ReDrawAndKeepFocus(nodeUnderMouse);
+				nodeSelector.Selected = nodeUnderMouse;
+				ReDrawAndKeepFocus();
 			};
 			showDataFlowItem.Enabled =
 				!contextStore.Equals(dependencyPainter.CurrentContextStore);
