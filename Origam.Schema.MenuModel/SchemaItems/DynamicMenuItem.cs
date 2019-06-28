@@ -29,7 +29,7 @@ namespace Origam.Schema.MenuModel
 	/// <summary>
 	/// Summary description for Submenu.
 	/// </summary>
-	[SchemaItemDescription("Dynamic Menu", 68)]
+	[SchemaItemDescription("Dynamic Menu", "icon_dynamic-menu.png")]
     [HelpTopic("Dynamic+Menu")]
 	public class DynamicMenu : AbstractMenuItem, ISchemaItemFactory
 	{
@@ -38,14 +38,6 @@ namespace Origam.Schema.MenuModel
 		public DynamicMenu(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
 		public DynamicMenu(Key primaryKey) : base(primaryKey)	{}
-
-		public override string Icon
-		{
-			get
-			{
-				return "68";
-			}
-		}
 
 		[Browsable(false)]
 		public override string Roles

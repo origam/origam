@@ -148,6 +148,7 @@ namespace Origam.ServerCore.Controllers
                         menuItem))
                 .OnSuccess(CheckEntityBelongsToMenu)
                 .OnSuccess(entityData => MakeEmptyRow(entityData.Entity))
+                .OnSuccess(rowData => PrepareNewRow(rowData))
                 .OnSuccess(rowData => SubmitChange(rowData, Operation.Create))
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
@@ -169,7 +170,7 @@ namespace Origam.ServerCore.Controllers
                     .OnSuccess(rowData =>
                     {
                         rowData.Row.Delete();
-                        return  SubmitChange(rowData, Operation.Delete);
+                        return  SubmitDelete(rowData);
                     })
                     .OnSuccess(ThrowAwayReturnData)
                     .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
@@ -254,11 +255,18 @@ namespace Origam.ServerCore.Controllers
 
         private static RowData FillRow(EntityInsertData entityData, RowData rowData)
         {
-            rowData.Row["Id"] = Guid.NewGuid();
-            rowData.Row["RecordCreated"] = DateTime.Now;
-            rowData.Row["RecordCreatedBy"] = SecurityManager.CurrentUserProfile().Id;
+            DatasetTools.ApplyPrimaryKey(rowData.Row);
+            DatasetTools.UpdateOrigamSystemColumns(rowData.Row, true, SecurityManager.CurrentUserProfile().Id);
             FillRow(rowData, entityData.NewValues);
             rowData.Row.Table.Rows.Add(rowData.Row);
+            return rowData;
+        }
+
+        private static RowData PrepareNewRow(RowData rowData)
+        {
+            DatasetTools.ApplyPrimaryKey(rowData.Row);
+            DatasetTools.UpdateOrigamSystemColumns(rowData.Row, true, SecurityManager.CurrentUserProfile().Id);
+            rowData.Row.Table.NewRow();
             return rowData;
         }
 
@@ -411,6 +419,32 @@ namespace Origam.ServerCore.Controllers
                                 operation: operation, 
                                 RowStateProcessor: null));
         }
+
+        private IActionResult SubmitDelete(RowData rowData)
+        {
+            try
+            {
+                DataService.StoreData(
+                    dataStructureId: rowData.Entity.RootEntity.ParentItemId,
+                    data: rowData.Row.Table.DataSet,
+                    loadActualValuesAfterUpdate: false,
+                    transactionId: null);
+            }
+            catch (DBConcurrencyException ex)
+            {
+                if (string.IsNullOrEmpty(ex.Message) && ex.InnerException != null)
+                {
+                    return Conflict(ex.InnerException.Message);
+                }
+                return Conflict(ex.Message);
+            }
+
+            return Ok(SessionStore.GetDeleteInfo(
+                                requestingGrid: null,
+                                tableName: rowData.Row.Table.TableName,
+                                objectId: null));
+        }
+
 
         private IActionResult ToActionResult(object obj)
         {

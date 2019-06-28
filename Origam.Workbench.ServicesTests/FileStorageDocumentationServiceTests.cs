@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -342,6 +343,11 @@ namespace Origam.Workbench.ServicesTests
         }
 
         public object RetrieveInstance(Type type, Key primaryKey)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ArrayList GetReference(bool ignoreErrors, Key key)
         {
             throw new NotImplementedException();
         }

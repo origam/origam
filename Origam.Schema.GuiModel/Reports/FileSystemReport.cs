@@ -26,7 +26,7 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("File System Report", 29)]
+	[SchemaItemDescription("File System Report", "icon_file-system-report.png")]
     [HelpTopic("File+System+Report")]
     public class FileSystemReport : AbstractReport
     {
@@ -37,14 +37,6 @@ namespace Origam.Schema.GuiModel
 		public FileSystemReport(Key primaryKey) : base(primaryKey) { }
 
         private string _reportPath;
-
-        public override string Icon
-        {
-            get
-            {
-                return "29";
-            }
-        }
 
 		[EntityColumn("LS01")]
         [Description("Absolute path to the report. It can contain placeholders inside curly brackets which denote parameters.")]

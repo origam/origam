@@ -20,9 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 
+using Origam.Extensions;
+using Origam.Schema;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Origam.DA.ObjectPersistence
 {
@@ -87,6 +90,43 @@ namespace Origam.DA.ObjectPersistence
         public abstract List<T> RetrieveListByPackage<T>(Guid packageId);
 
         public abstract T[] FullTextSearch<T>(string text);
+
+        public ArrayList GetReference(bool ignoreErrors, Key key)
+        {
+            RestrictToLoadedPackage(false);
+            ArrayList listOfReferences=RetrieveList<AbstractSchemaItem>(null)
+                .AsParallel()
+                .SelectMany(item => FindUsages(item, ignoreErrors, key))
+                .ToArrayList();
+            RestrictToLoadedPackage(true);
+            return listOfReferences;
+        }
+
+        private IEnumerable<object> FindUsages(AbstractSchemaItem item, bool ignoreErrors, Key key)
+        {
+            List<object> foundUsages = new List<object>();
+            try
+            {
+                ArrayList dep = item.GetDependencies(ignoreErrors);
+                foreach (AbstractSchemaItem depItem in dep)
+                {
+                    if (depItem != null)
+                    {
+                        if (depItem.PrimaryKey.Equals(key))
+                        {
+                            foundUsages.Add(item);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ResourceUtils.GetString("ErrorWhenDependencies",
+                    item.ItemType, item.Path,
+                    Environment.NewLine + Environment.NewLine + ex.Message), ex);
+            }
+            return foundUsages;
+        }
 
         public abstract List<T> RetrieveListByParent<T>(Key primaryKey,
             string parentTableName,

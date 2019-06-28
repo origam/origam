@@ -26,7 +26,7 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("SQL Server Report", 29)]
+	[SchemaItemDescription("SQL Server Report", "icon_sql-server-report.png")]
     [HelpTopic("SQL+Server+Report")]
     public class SSRSReport : AbstractReport
     {
@@ -37,14 +37,6 @@ namespace Origam.Schema.GuiModel
 		public SSRSReport(Key primaryKey) : base(primaryKey) { }
 
         private string _reportPath;
-
-        public override string Icon
-        {
-            get
-            {
-                return "29";
-            }
-        }
 
 		[EntityColumn("LS01")] 
         [Description("Path to the report. The Path starts with forward slash. The Path supports a curly-bracket parameter expansion, e.g '/my-report-{language}', where 'language' is a name of a report parameter.")]

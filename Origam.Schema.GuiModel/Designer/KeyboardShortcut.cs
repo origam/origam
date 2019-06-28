@@ -29,7 +29,7 @@ namespace Origam.Schema.GuiModel
 	/// <summary>
 	/// Summary description for Graphics.
 	/// </summary>
-	[SchemaItemDescription("Keyboard Shortcut", 81)]
+	[SchemaItemDescription("Keyboard Shortcut", "icon_shortcut.png")]
     [HelpTopic("Keyboard+Shortcuts")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class KeyboardShortcut : AbstractSchemaItem
@@ -50,14 +50,6 @@ namespace Origam.Schema.GuiModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "81";
 			}
 		}
 		#endregion

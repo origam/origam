@@ -26,7 +26,7 @@ namespace Origam.Schema.MenuModel
 	/// <summary>
 	/// Summary description for Submenu.
 	/// </summary>
-	[SchemaItemDescription("Dashboard", 68)]
+	[SchemaItemDescription("Dashboard", "icon_dashboard.png")]
 	public class DashboardMenuItem : AbstractMenuItem, ISchemaItemFactory
 	{
 		public DashboardMenuItem() : base() {}
@@ -34,13 +34,5 @@ namespace Origam.Schema.MenuModel
 		public DashboardMenuItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
 		public DashboardMenuItem(Key primaryKey) : base(primaryKey)	{}
-
-		public override string Icon
-		{
-			get
-			{
-				return "84";
-			}
-		}
 	}
 }

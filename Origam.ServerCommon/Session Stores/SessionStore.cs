@@ -939,10 +939,10 @@ namespace Origam.Server
             ci.Entity = row.Table.TableName;
             ci.Operation = (operation == Operation.CurrentRecordNeedsUpdate ? Operation.Create : operation);        // 4 = copy = create
             ci.RequestingGrid = requestingGrid;
+            ci.ObjectId = row[row.Table.PrimaryKey[0]];
             // for create-update we return the updated state (read-only + colors)
             if (operation >= Operation.Update)
             {
-                ci.ObjectId = row[row.Table.PrimaryKey[0]];
                 string[] columns = GetColumnNames(row.Table);
                 ci.WrappedObject = GetRowData(row, columns);
                 if (RowStateProcessor != null)
@@ -953,17 +953,25 @@ namespace Origam.Server
             return ci;
         }
 
-        internal ChangeInfo GetDeletedInfo(string requestingGrid, string tableName, object objectId)
+        public  ChangeInfo GetDeletedInfo(string requestingGrid, string tableName, object objectId)
         {
-            ChangeInfo ci = new ChangeInfo();
-            ci.Entity = tableName;
-            ci.Operation = Operation.Delete;
-            ci.RequestingGrid = requestingGrid;
-            ci.ObjectId = objectId;
-
+            return CreateDeletedChangeInfo(requestingGrid, tableName, objectId);
+        }
+        public static ChangeInfo GetDeleteInfo(string requestingGrid, string tableName, object objectId)
+        {
+            return CreateDeletedChangeInfo(requestingGrid,tableName,objectId);
+        }
+        private static ChangeInfo CreateDeletedChangeInfo(string requestingGrid, string tableName, object objectId)
+        {
+            ChangeInfo ci = new ChangeInfo
+            {
+                Entity = tableName,
+                Operation = Operation.Delete,
+                RequestingGrid = requestingGrid,
+                ObjectId = objectId
+            };
             return ci;
         }
-
         internal static string ConvertTextToUnixStyle(string text)
         {
             return text.Replace("\r\n", "\r");

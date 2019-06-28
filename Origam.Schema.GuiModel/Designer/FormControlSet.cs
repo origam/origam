@@ -29,7 +29,7 @@ namespace Origam.Schema.GuiModel
 	/// <summary>
 	/// Summary description for FormControlSet.
 	/// </summary>
-	[SchemaItemDescription("Screen", "icon_22_screens.png")]
+	[SchemaItemDescription("Screen", "icon_screen.png")]
     [HelpTopic("Screens")]
 	[XmlModelRoot(ItemTypeConst)]
     public class FormControlSet : AbstractControlSet

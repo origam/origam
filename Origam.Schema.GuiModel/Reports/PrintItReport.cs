@@ -27,7 +27,7 @@ namespace Origam.Schema.GuiModel
 	/// <summary>
 	/// Summary description for PrintItReport.
 	/// </summary>
-	[SchemaItemDescription("PrintIt Report", 29)]
+	[SchemaItemDescription("PrintIt Report", "icon_printit-report.png")]
 	public class PrintItReport : AbstractDataReport, IDataStructureReference
 	{
 		public PrintItReport() : base() { }
