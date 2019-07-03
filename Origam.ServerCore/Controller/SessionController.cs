@@ -65,12 +65,12 @@ namespace Origam.ServerCore.Controllers
                     ObjectId = sessionData.MenuId.ToString(),
                     Parameters = sessionData.Parameters
                 };
-                UIResult uiResult = sessionObjects.UiManager.InitUI(
+                UIResult uiResult = sessionObjects.UIManager.InitUI(
                     request: uiRequest,
                     registerSession: true,
                     addChildSession: false,
                     parentSession: null,
-                    basicUiService: sessionObjects.UiService);
+                    basicUiService: sessionObjects.UIService);
                 return Ok(newSessionId);
             });
         }
@@ -132,7 +132,7 @@ namespace Origam.ServerCore.Controllers
         }
         
         [HttpPost("[action]")]
-        public IActionResult SaveSession([FromBody]SaveSessionData saveData)
+        public IActionResult SaveData([FromBody]SaveDataData saveData)
         {
             return RunWithErrorHandler(() =>
             {
@@ -160,7 +160,7 @@ namespace Origam.ServerCore.Controllers
         }
 
         [HttpPost("[action]")]
-        public IActionResult UpdateRow([FromBody]UpdateRowData updateData )
+        public IActionResult UpdateRow([FromBody]UpdateRowData updateData)
         {
             return RunWithErrorHandler(() =>
             {
@@ -173,6 +173,24 @@ namespace Origam.ServerCore.Controllers
                 CallOrigamUserUpdate();
                 return Ok(output);
             });
+        }
+
+        [HttpPost("[actions]")]
+        public IActionResult CloseSession()
+        {
+            PortalSessionStore pss = 
+                sessionObjects.SessionManager.GetPortalSession();
+            if (pss == null)
+            {
+                return BadRequest("Portal session not found.");
+            }
+            SessionHelper sessionHelper = new SessionHelper(
+                sessionObjects.SessionManager);
+            while(pss.FormSessions.Count > 0)
+            {
+                sessionHelper.DeleteSession(pss.FormSessions[0].Id);
+            }
+            return Ok();
         }
 
 

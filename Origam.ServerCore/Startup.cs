@@ -20,21 +20,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Origam.Security.Common;
 using Origam.Security.Identity;
@@ -69,7 +64,7 @@ namespace Origam.ServerCore
             services.AddTransient<IUserStore<IOrigamUser>, UserStore>();
             services.AddSingleton<IPasswordHasher<IOrigamUser>, CorePasswordHasher>();
             services.AddScoped<SignInManager<IOrigamUser>>();
-            services.AddScoped<IUserClaimsPrincipalFactory<IOrigamUser>,UserClaimsPrincipalFactory<IOrigamUser>>();
+            services.AddScoped<IUserClaimsPrincipalFactory<IOrigamUser>, UserClaimsPrincipalFactory<IOrigamUser>>();
             services.AddScoped<CoreUserManager>();
             services.AddScoped<UserManager<IOrigamUser>>(x =>
                 x.GetRequiredService<CoreUserManager>());

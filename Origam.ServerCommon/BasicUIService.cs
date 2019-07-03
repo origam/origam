@@ -21,14 +21,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using Origam.Schema.GuiModel;
 using Origam.Server;
 
 namespace Origam.ServerCommon
 {
-    public class BasicUiService: IBasicUIService
+    public class BasicUIService: IBasicUIService
     {
         public string GetReportStandalone(string reportId, Hashtable parameters,
             DataReportExportFormatType dataReportExportFormatType)

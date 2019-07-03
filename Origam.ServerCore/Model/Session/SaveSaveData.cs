@@ -24,7 +24,7 @@ using System;
 
 namespace Origam.ServerCore.Model.Session
 {
-    public class SaveSessionData
+    public class SaveDataData
     {
         public Guid SessionId { get; set; }
     }
