@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 namespace Origam.ServerCore.Configuration
 {
-    public class AccountConfig
+    public class UserConfig
     {
         public string FromAddress { get; set; }
         public string NewUserRoleId { get; set; }

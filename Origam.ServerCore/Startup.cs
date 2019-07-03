@@ -73,7 +73,6 @@ namespace Origam.ServerCore
             services.AddScoped<CoreUserManager>();
             services.AddScoped<UserManager<IOrigamUser>>(x =>
                 x.GetRequiredService<CoreUserManager>());
-            
             services.AddIdentity<IOrigamUser, Role>()
                 .AddDefaultTokenProviders();
             services.AddAuthentication(options =>
@@ -92,7 +91,7 @@ namespace Origam.ServerCore
                     ClockSkew = TimeSpan.FromMinutes(5) // 5 minute tolerance for the expiration date
                 };
             });
-            services.Configure<AccountConfig>(options => Configuration.GetSection("AccountConfig").Bind(options));
+            services.Configure<UserConfig>(options => Configuration.GetSection("UserConfig").Bind(options));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,7 +100,6 @@ namespace Origam.ServerCore
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddLog4Net();
             loggerFactory.AddDebug();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -110,7 +108,6 @@ namespace Origam.ServerCore
             {
                 app.UseHsts();
             }
-
             app.MapWhen(
                 IsPublicUserApiRoute,
                 apiBranch => {
@@ -132,7 +129,6 @@ namespace Origam.ServerCore
             app.UseSpaStaticFiles();
             app.UseMvc();
             app.UseSpa(spa => {});
-            
             OrigamEngine.OrigamEngine.ConnectRuntime();
         }
 

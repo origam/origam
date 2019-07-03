@@ -53,13 +53,11 @@ namespace Origam.ServerCore.Controllers
             return RunWithErrorHandler(() =>
             {
                 UserProfile profile = SecurityTools.CurrentUserProfile();
-
                 if (!sessionObjects.SessionManager.HasPortalSession(profile.Id))
                 {
                     PortalSessionStore pss = new PortalSessionStore(profile.Id);
                     sessionObjects.SessionManager.AddPortalSession(profile.Id, pss);
                 }
-
                 Guid newSessionId = Guid.NewGuid();
                 UIRequest uiRequest = new UIRequest
                 {

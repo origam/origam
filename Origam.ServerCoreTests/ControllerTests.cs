@@ -29,8 +29,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Origam.ServerCore;
-using Origam.ServerCore.Controllers;
-using Origam.ServerCore.Models;
+using Origam.ServerCore.Controller;
+using Origam.ServerCore.Model.Data;
 
 namespace Origam.ServerCoreTests
 {
@@ -75,7 +75,7 @@ namespace Origam.ServerCoreTests
                 throw new Exception("columnValues must have the same length as columnNames");
             }
 
-            IActionResult entitiesActionResult = dataController.EntitiesGet(new EntityGetData
+            IActionResult entitiesActionResult = dataController.GetRows(new GetRowsData
             {
                 MenuId = menuId,
                 DataStructureEntityId = dataStructureId,

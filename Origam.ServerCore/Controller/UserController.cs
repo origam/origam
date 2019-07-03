@@ -48,18 +48,18 @@ namespace Origam.ServerCore.Controller
         private readonly CoreUserManager userManager;
         private readonly SignInManager<IOrigamUser> signInManager;
         private readonly IMailService mailService;
-        private readonly AccountConfig accountConfig;
+        private readonly UserConfig userConfig;
         private readonly IConfiguration configuration;
         private readonly IServiceProvider serviceProvider;
 
         public UserController(CoreUserManager userManager, SignInManager<IOrigamUser> signInManager,
             IConfiguration configuration, IServiceProvider serviceProvider,
-            IMailService mailService, IOptions<AccountConfig> accountConfig)
+            IMailService mailService, IOptions<UserConfig> userConfig)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.mailService = mailService;
-            this.accountConfig = accountConfig.Value;
+            this.userConfig = userConfig.Value;
             this.configuration = configuration;
             this.serviceProvider = serviceProvider;
         }
@@ -72,15 +72,12 @@ namespace Origam.ServerCore.Controller
             {
                 return BadRequest("Passwords don't match");
             }
-
             SetOrigamServerAsCurrentUser();
             IdentityServiceAgent.ServiceProvider = serviceProvider;
-
             if (!userManager.IsInitialSetupNeeded())
             {
                 return BadRequest("Initial user already exists");
             }
-
             var newUser = new User
             {
                 FirstName = userData.FirstName,
@@ -89,13 +86,11 @@ namespace Origam.ServerCore.Controller
                 Email = userData.Email,
                 RoleId = SecurityManager.BUILTIN_SUPER_USER_ROLE
             };
-
             var userCreationResult = await userManager.CreateAsync(newUser, userData.Password);
             if (!userCreationResult.Succeeded)
             {
                 return BadRequest(userCreationResult.Errors.ToErrorMessage());
             }
-
             userManager.SetInitialSetupComplete();
             return Ok();
         }
@@ -108,27 +103,22 @@ namespace Origam.ServerCore.Controller
             {
                 return BadRequest("Passwords don't match");
             }
-            
             SetOrigamServerAsCurrentUser();
-
             IdentityServiceAgent.ServiceProvider = serviceProvider;
-            
             var newUser = new User 
             {
                 FirstName = userData.FirstName,
                 Name = userData.Name,
                 UserName = userData.UserName,
                 Email = userData.Email,
-                RoleId = accountConfig.NewUserRoleId
+                RoleId = userConfig.NewUserRoleId
             };
-
             var userCreationResult = await userManager.CreateAsync(newUser, userData.Password);
             if (!userCreationResult.Succeeded)
             {
                 return BadRequest(userCreationResult.Errors.ToErrorMessage());
             }
             await SendMailWithVerificationToken(newUser);         
-            
             return Ok();
         }
 
@@ -149,7 +139,6 @@ namespace Origam.ServerCore.Controller
             var user = await userManager.FindByIdAsync(verifyEmailData.Id);
             if (user == null)
                 return BadRequest();
-            
             var emailConfirmationResult = await userManager.ConfirmEmailAsync(user, verifyEmailData.Token);
             if (!emailConfirmationResult.Succeeded)
             {
@@ -164,7 +153,6 @@ namespace Origam.ServerCore.Controller
         public async Task<IActionResult> Login([FromBody]LoginData loginData)
         {
             SetOrigamServerAsCurrentUser();
-            
             var user = await userManager.FindByNameAsync(loginData.UserName);
             if (user == null)
             {
@@ -174,16 +162,13 @@ namespace Origam.ServerCore.Controller
             {
                 return BadRequest("Confirm your email first");
             }
-
             var passwordSignInResult =
                 await signInManager.CheckPasswordSignInAsync(user, loginData.Password, false);
-           
             if (!passwordSignInResult.Succeeded)
             {                
                 await userManager.AccessFailedAsync(user);
                 return BadRequest("Invalid login");
             }
-
             return Ok(GenerateToken(loginData.UserName));
         }
 
@@ -195,8 +180,9 @@ namespace Origam.ServerCore.Controller
             SetOrigamServerAsCurrentUser();
             var user = await userManager.FindByEmailAsync(passwordData.Email);
             if (user == null)
+            {
                 return Content("User with that email was not found");
-
+            }
             var passwordResetToken = await userManager.GeneratePasswordResetTokenAsync(user);
             mailService.SendPasswordResetToken( user, passwordResetToken, 24 );           
             return Content("Check your email for a password reset link");
@@ -209,20 +195,19 @@ namespace Origam.ServerCore.Controller
             SetOrigamServerAsCurrentUser();
             var user = await userManager.FindByIdAsync(passwordData.Id);
             if (user == null)
+            {
                 throw new InvalidOperationException();
-
+            }
             if (passwordData.Password != passwordData.RePassword)
             {
                 return BadRequest("Passwords do not match");
             }
-
             var resetPasswordResult = 
                 await userManager.ResetPasswordAsync(user, passwordData.Token, passwordData.Password);
             if (!resetPasswordResult.Succeeded)
             {
                 return BadRequest(resetPasswordResult.Errors.ToErrorMessage());
             }
-
             return Content("Password updated");
         }
 
@@ -253,13 +238,11 @@ namespace Origam.ServerCore.Controller
                 new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
                 new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddDays(1)).ToUnixTimeSeconds().ToString()),
             };
-
             var token = new JwtSecurityToken(
                 new JwtHeader(new SigningCredentials(
                     new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["SecurityKey"])),
                     SecurityAlgorithms.HmacSha256)),
                 new JwtPayload(claims));
-
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }

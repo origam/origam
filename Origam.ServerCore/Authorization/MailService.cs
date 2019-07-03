@@ -31,18 +31,18 @@ namespace Origam.ServerCore.Authorization
     {
         private AccountMailSender mailSender;
 
-        public MailService(IOptions<AccountConfig> accountConfig, IConfiguration configuration)
+        public MailService(IOptions<UserConfig> userConfig, IConfiguration configuration)
         {
             string baseUrl = configuration[WebHostDefaults.ServerUrlsKey].Split(",")[0];
             mailSender = new AccountMailSender(
-                fromAddress: accountConfig.Value.FromAddress,
-                resetPwdSubject: accountConfig.Value.ResetPasswordMailSubject,
-                resetPwdBodyFilename: accountConfig.Value.ResetPasswordMailBodyFileName,
-                userUnlockNotificationSubject: accountConfig.Value.UserUnlockNotificationSubject,
-                userUnlockNotificationBodyFilename: accountConfig.Value.UserUnlockNotificationBodyFileName,
-                registerNewUserSubject: accountConfig.Value.UserRegistrationMailSubject,
-                registerNewUserFilename: accountConfig.Value.UserRegistrationMailBodyFileName,
-                mailQueueName: accountConfig.Value.MailQueueName,
+                fromAddress: userConfig.Value.FromAddress,
+                resetPwdSubject: userConfig.Value.ResetPasswordMailSubject,
+                resetPwdBodyFilename: userConfig.Value.ResetPasswordMailBodyFileName,
+                userUnlockNotificationSubject: userConfig.Value.UserUnlockNotificationSubject,
+                userUnlockNotificationBodyFilename: userConfig.Value.UserUnlockNotificationBodyFileName,
+                registerNewUserSubject: userConfig.Value.UserRegistrationMailSubject,
+                registerNewUserFilename: userConfig.Value.UserRegistrationMailBodyFileName,
+                mailQueueName: userConfig.Value.MailQueueName,
                 portalBaseUrl: baseUrl,
                 applicationBasePath: AppContext.BaseDirectory);
         }
