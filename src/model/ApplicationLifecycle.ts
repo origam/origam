@@ -15,11 +15,13 @@ const loginFailed = "loginFailed";
 const logout = "logout";
 const logoutSuccessful = "logoutSuccessful";
 const logoutFailed = "logoutFailed";
+const start = "start";
 
 const sLoginPage = "sLoginPage";
 const sPerformLogin = "sPerformLogin";
 const sWorkbenchPage = "sWorkbenchPage";
 const sPerformLogout = "sPerformLogout";
+const sWaitForStart = "sWaitForStart";
 
 const Login = "Login";
 const Workbench = "Workbench";
@@ -33,11 +35,18 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
 
   machine = Machine(
     {
-      initial: sLoginPage,
+      initial: sWaitForStart,
       states: {
-        [sLoginPage]: {
+        sWaitForStart: {
           on: {
-            [loginFormSubmit]: sPerformLogin
+            [start]: sLoginPage
+          }
+        },
+        [sLoginPage]: {
+          onEntry: "reuseAuthToken",
+          on: {
+            [loginFormSubmit]: sPerformLogin,
+            [loginSuccessful]: sWorkbenchPage
           }
         },
         [sPerformLogin]: {
@@ -67,6 +76,9 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
           flow(this.performLogin.bind(this))(event as any),
         performLogout: (ctx, event) => (send, onEvent) =>
           flow(this.performLogout.bind(this))(event as any)
+      },
+      actions: {
+        reuseAuthToken: (ctx, event) => this.reuseAuthToken()
       }
     }
   );
@@ -87,6 +99,7 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
   get shownPage(): IApplicationPage {
     switch (this.state.value) {
       case sWorkbenchPage:
+      case sPerformLogout:
         return IApplicationPage.Workbench;
       default:
         return IApplicationPage.Login;
@@ -114,17 +127,19 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
     this.interpreter.send(logout, args);
   }
 
+  @action.bound
+  run(): void {
+    this.interpreter.send(start);
+  }
+
   *performLogin(args: { userName: string; password: string }) {
     try {
       const api = getApi(this);
-      const application = getApplication(this);
       const token = yield api.login({
         UserName: args.userName,
         Password: args.password
       });
-      api.setAccessToken(token);
-
-      application.setWorkbench(createWorkbench());
+      this.anounceAuthToken(token);
       this.interpreter.send(loginSuccessful);
     } catch (e) {
       this.setLoginPageMessage("Login failed.");
@@ -135,10 +150,27 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
   *performLogout(args: any) {
     const api = getApi(this);
     const application = getApplication(this);
+    window.sessionStorage.removeItem("origamAuthToken");
     api.resetAccessToken();
     application.resetWorkbench();
     this.interpreter.send(logoutSuccessful);
     return null;
+  }
+
+  @action.bound reuseAuthToken() {
+    const token = window.sessionStorage.getItem("origamAuthToken");
+    if (token) {
+      this.anounceAuthToken(token);
+      this.interpreter.send(loginSuccessful);
+    }
+  }
+
+  @action.bound anounceAuthToken(token: string) {
+    const api = getApi(this);
+    const application = getApplication(this);
+    window.sessionStorage.setItem("origamAuthToken", token);
+    api.setAccessToken(token);
+    application.setWorkbench(createWorkbench());
   }
 
   @action.bound

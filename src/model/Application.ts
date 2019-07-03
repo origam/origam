@@ -4,8 +4,10 @@ import { ApplicationLifecycle } from "./ApplicationLifecycle";
 import { IApplicationLifecycle } from "./types/IApplicationLifecycle";
 import { OrigamAPI } from "./OrigamAPI";
 import { IApi } from "./types/IApi";
+import { action } from "mobx";
 
 export class Application implements IApplication {
+
 
   parent?: any;
 
@@ -27,4 +29,8 @@ export class Application implements IApplication {
     this.workbench = workbench;
   }
 
+  @action.bound
+  run(): void {
+    this.applicationLifecycle.run();
+  }
 }

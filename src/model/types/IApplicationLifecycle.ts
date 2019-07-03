@@ -6,18 +6,20 @@ export enum IApplicationPage {
 export interface IApplicationLifecycleData {}
 
 export interface IApplicationLifecycle extends IApplicationLifecycleData {
-  onLoginFormSubmit(args: {
-    event: any;
-    userName: string;
-    password: string;
-  }): void;
-  onSignOutClick(args: {event: any}): void;
-
   parent?: any;
   shownPage: IApplicationPage;
   isWorking: boolean;
 
   loginPageMessage?: string;
+
+  onLoginFormSubmit(args: {
+    event: any;
+    userName: string;
+    password: string;
+  }): void;
+  onSignOutClick(args: { event: any }): void;
+
+  run(): void;
 
   setLoginPageMessage(msg: string): void;
   resetLoginPageMessage(): void;

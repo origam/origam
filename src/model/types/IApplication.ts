@@ -14,5 +14,5 @@ export interface IApplication extends IApplicationData {
 
   resetWorkbench(): void;
   setWorkbench(workbench: IWorkbench): void;
-
+  run(): void;
 }

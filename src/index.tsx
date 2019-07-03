@@ -10,9 +10,10 @@ import { ApplicationLifecycle } from "./model/ApplicationLifecycle";
 import { Application } from "./model/Application";
 import { Provider } from "mobx-react";
 import { Main } from "./gui/Main";
-import { createApplication } from './model/factories/createApplication';
+import { createApplication } from "./model/factories/createApplication";
 
 const application = createApplication();
+application.run();
 
 ReactDOM.render(
   <Provider application={application}>
