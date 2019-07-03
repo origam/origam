@@ -1,7 +1,8 @@
-import { IMainMenu, IMainMenuData } from "./types/IMainMenu";
+import { IMainMenu, IMainMenuData, ILoadingMainMenu } from "./types/IMainMenu";
 
 export class MainMenu implements IMainMenu {
-  MainMenu: "MainMenu" = "MainMenu";
+  $type: "CMainMenu" = "CMainMenu";
+  isLoading: false = false;
   
   constructor(data: IMainMenuData) {
     Object.assign(this, data);
@@ -9,4 +10,9 @@ export class MainMenu implements IMainMenu {
 
   menuUI: any;
   parent?: any;
+}
+
+export class LoadingMainMenu implements ILoadingMainMenu {
+  $type: "CLoadingMainMenu" = "CLoadingMainMenu";
+  isLoading: true = true;
 }

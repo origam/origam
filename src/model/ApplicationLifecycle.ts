@@ -7,7 +7,7 @@ import {
 } from "./types/IApplicationLifecycle";
 import { getApi } from "./selectors/getApi";
 import { getApplication } from "./selectors/getApplication";
-import { createWorkbench } from "./factories/createWorkbench";
+import { createWorkbench } from './factories/createWorkbench';
 
 const loginFormSubmit = "loginFormSubmit";
 const loginSuccessful = "loginSuccessful";
@@ -144,6 +144,7 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
     } catch (e) {
       this.setLoginPageMessage("Login failed.");
       this.interpreter.send(loginFailed);
+      console.error(e)
     }
   }
 
@@ -170,7 +171,9 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
     const application = getApplication(this);
     window.sessionStorage.setItem("origamAuthToken", token);
     api.setAccessToken(token);
-    application.setWorkbench(createWorkbench());
+    const workbench = createWorkbench();
+    application.setWorkbench(workbench);
+    workbench.run();
   }
 
   @action.bound

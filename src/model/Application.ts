@@ -27,6 +27,7 @@ export class Application implements IApplication {
 
   setWorkbench(workbench: IWorkbench): void {
     this.workbench = workbench;
+    workbench.parent = this;
   }
 
   @action.bound

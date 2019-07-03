@@ -1,6 +1,6 @@
 import S from "./MainMenu.module.css";
 import React from "react";
-import { observer } from "mobx-react";
+import { observer, inject } from "mobx-react";
 import { observable, action } from "mobx";
 
 export enum IMenuItemIcon {
@@ -80,7 +80,7 @@ export class MainMenuSection extends React.Component<{
   level: number;
   isHidden: boolean;
 }> {
-  @observable isOpened = true;
+  @observable isOpened = false;
 
   @action.bound toggleOpened() {
     this.isOpened = !this.isOpened;
@@ -114,45 +114,54 @@ export class MainMenuSection extends React.Component<{
   }
 }
 
-export class MainMenu extends React.Component {
+export class MainMenuRecursiveItem extends React.Component<{
+  node: any;
+  level: number;
+}> {
+  render() {
+    switch (this.props.node.name) {
+      case "Submenu":
+        return (
+          <MainMenuSection
+            label={this.props.node.attributes.label}
+            isHidden={this.props.node.attributes.isHidden === "true"}
+            level={0}
+          >
+            {this.props.node.elements.map((child: any, idx: number) => (
+              <MainMenuRecursiveItem
+                key={idx}
+                node={child}
+                level={this.props.level + 1}
+              />
+            ))}
+          </MainMenuSection>
+        );
+      case "Command":
+        return (
+          <MainMenuItem
+            level={this.props.level}
+            icon={this.props.node.attributes.icon}
+            label={this.props.node.attributes.label}
+            active={false}
+            isHidden={this.props.node.attributes.isHidden === "true"}
+            status={IMenuItemStatus.None}
+          />
+        );
+      default:
+        return null;
+    }
+  }
+}
+
+@observer
+export class MainMenu extends React.Component<{ menuUI: any }> {
   render() {
     return (
       <div className={S.mainMenu}>
         <div className={S.mainMenuSectionItem}>
-          <MainMenuSection label="Folder 1" isHidden={false} level={0}>
-            <MainMenuItem
-              level={1}
-              icon={IMenuItemIcon.Form}
-              label="Form 1"
-              active={false}
-              isHidden={false}
-              status={IMenuItemStatus.None}
-            />
-            <MainMenuItem
-              level={1}
-              icon={IMenuItemIcon.Form}
-              label="Form 1"
-              active={true}
-              isHidden={false}
-              status={IMenuItemStatus.None}
-            />
-            <MainMenuItem
-              level={1}
-              icon={IMenuItemIcon.Workflow}
-              label="Form 1"
-              active={false}
-              isHidden={false}
-              status={IMenuItemStatus.None}
-            />
-            <MainMenuItem
-              level={1}
-              icon={IMenuItemIcon.Form}
-              label="Form 1"
-              active={false}
-              isHidden={false}
-              status={IMenuItemStatus.None}
-            />
-          </MainMenuSection>
+          {this.props.menuUI.elements.map((item: any, idx: number) => (
+            <MainMenuRecursiveItem key={idx} node={item} level={0} />
+          ))}
         </div>
       </div>
     );
