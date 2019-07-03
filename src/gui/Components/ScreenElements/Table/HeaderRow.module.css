@@ -1,0 +1,4 @@
+.headerRow {
+  display: flex;
+  flex-direction: row;
+}

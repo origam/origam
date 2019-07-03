@@ -1,0 +1,40 @@
+.columnTable {
+  width: 470px;
+  height: 400px;
+  margin-bottom: 20px;
+}
+
+.lockedColumns {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+}
+
+.lockedColumnsInput {
+  width: 38px;
+  margin-left: 10px;
+}
+
+.columnTableCell {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.columnTableCell:global(.header) {
+  font-weight: bold;
+  border-right: 1px solid #f6f6f6;
+}
+
+.columnTableCell:global(.odd) {
+  background-color: #f6f6f6;
+}
+
+.columnTableCell:global(.even) {
+  background-color: #fefefe;
+}

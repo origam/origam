@@ -1,0 +1,34 @@
+import { IDataView, IDataViewData } from "./types/IDataView";
+import { IPanelViewType } from "./types/IPanelViewType";
+import { IProperty } from "./types/IProperty";
+import { IDataSource } from "./types/IDataSource";
+
+export class DataView implements IDataView {
+  constructor(data: IDataViewData) {
+    Object.assign(this, data);
+    this.properties.forEach(o => (o.parent = this));
+  }
+
+  id = "";
+  modelInstanceId = "";
+  name = "";
+  modelId = "";
+  defaultPanelView = IPanelViewType.Table;
+  isHeadless = false;
+  disableActionButtons = false;
+  showAddButton = false;
+  showDeleteButton = false;
+  showSelectionCheckboxes = false;
+  isGridHeightDynamic = false;
+  selectionMember = "";
+  orderMember = "";
+  isDraggingEnabled = false;
+  entity = "";
+  dataMember = "";
+  isRootGrid = false;
+  isRootEntity = false;
+  isPreloaded = false;
+  requestDataAfterSelectionChange = false;
+  confirmSelectionChange = false;
+  properties: IProperty[] = [];
+}
