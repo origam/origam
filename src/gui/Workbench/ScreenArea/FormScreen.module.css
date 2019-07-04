@@ -9,6 +9,10 @@
   background-color: #e5e5e5;
 }
 
+.screen:global(.hidden) {
+  display: none;
+}
+
 .screenHeader {
   box-sizing: border-box;
   height: 48px;
@@ -75,3 +79,4 @@
 :global(.screenSplitterHandle):hover {
   background-color: #ccd5ee;
 }
+

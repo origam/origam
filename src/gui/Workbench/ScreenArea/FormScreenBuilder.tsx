@@ -117,6 +117,7 @@ class TabbedPanelHelper extends React.Component<{
   }
 }
 
+@observer
 export class TestTable extends React.Component {
   gDim = new GridDimensions();
   scrollState = new SimpleScrollState(0, 0);
@@ -147,6 +148,7 @@ export class FormScreenBuilder extends React.Component<{
   xmlWindowObject: any;
 }> {
   buildScreen() {
+    console.log('buildScreen')
     const self = this;
     function recursive(xso: any) {
       switch (xso.attributes.Type) {

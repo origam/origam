@@ -133,6 +133,7 @@ export class MainMenuRecursiveItem extends React.Component<{
                 key={idx}
                 node={child}
                 level={this.props.level + 1}
+                onItemClick={this.props.onItemClick}
               />
             ))}
           </MainMenuSection>

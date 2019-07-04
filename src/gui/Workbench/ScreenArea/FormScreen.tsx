@@ -1,7 +1,8 @@
 import S from "./FormScreen.module.css";
 import React from "react";
+import { observer } from "mobx-react";
 
-
+@observer
 export class FormScreen extends React.Component<{
   isLoading: boolean;
   isFullScreen: boolean;
@@ -11,7 +12,7 @@ export class FormScreen extends React.Component<{
 }> {
   render() {
     return (
-      <div className={S.screen}>
+      <div className={S.screen + (!this.props.isVisible ? " hidden" : "")}>
         <div className={S.screenHeader}>
           <div className={S.screenIcon}>
             {!this.props.isLoading ? (

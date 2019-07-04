@@ -11,6 +11,7 @@ import { createWorkbench } from "./factories/createWorkbench";
 import { getOpenedScreens } from "./selectors/getOpenedScreens";
 import { createOpenedScreen } from "./factories/createOpenedScreen";
 import { IOpenedScreen } from "./types/IOpenedScreen";
+import { createLoadingFormScreen } from "./factories/createLoadingFormScreen";
 
 const loginFormSubmit = "loginFormSubmit";
 const loginSuccessful = "loginSuccessful";
@@ -143,23 +144,30 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
             if (existingItem) {
               openedScreens.activateItem(id, existingItem.order);
             } else {
-              const newScreen = createOpenedScreen(id, 0, label);
+              const newFormScreen = createLoadingFormScreen();
+              const newScreen = createOpenedScreen(id, 0, label, newFormScreen);
               openedScreens.pushItem(newScreen);
               openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
+              newFormScreen.run();
             }
           } else {
             if (existingItem) {
+              const newFormScreen = createLoadingFormScreen();
               const newScreen = createOpenedScreen(
                 id,
                 existingItem.order + 1,
-                label
+                label,
+                newFormScreen
               );
               openedScreens.pushItem(newScreen);
               openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
+              newFormScreen.run();
             } else {
-              const newScreen = createOpenedScreen(id, 0, label);
+              const newFormScreen = createLoadingFormScreen();
+              const newScreen = createOpenedScreen(id, 0, label, newFormScreen);
               openedScreens.pushItem(newScreen);
               openedScreens.activateItem(id, 0);
+              newFormScreen.run();
             }
           }
           console.log(openedScreens.items);

@@ -1,5 +1,5 @@
 import { findStopping } from "./xmlUtils";
-import { Screen } from "../model/Screen";
+import { FormScreen } from "../model/FormScreen";
 import { DataSource } from "../model/DataSource";
 import { DataSourceField } from "../model/DataSourceField";
 import { DataView } from "../model/DataView";
@@ -11,6 +11,7 @@ import {
   ComponentBindingPair,
   ComponentBinding
 } from "../model/ComponentBinding";
+import { IFormScreenLifecycle } from "../model/types/IFormScreenLifecycle";
 
 export const findUIRoot = (node: any) =>
   findStopping(node, n => n.name === "UIRoot")[0];
@@ -21,7 +22,10 @@ export const findUIChildren = (node: any) =>
 export const findBoxes = (node: any) =>
   findStopping(node, n => n.attributes && n.attributes.Type === "Box");
 
-export function interpretScreenXml(screenDoc: any) {
+export function interpretScreenXml(
+  screenDoc: any,
+  formScreenLifecycle: IFormScreenLifecycle
+) {
   console.log(screenDoc);
 
   const dataSourcesXml = findStopping(
@@ -81,7 +85,7 @@ export function interpretScreenXml(screenDoc: any) {
     }
   }
 
-  const scr = new Screen({
+  const scr = new FormScreen({
     title: windowXml.attributes.Title,
     menuId: windowXml.attributes.MenuId,
     openingOrder: 0,
@@ -92,7 +96,8 @@ export function interpretScreenXml(screenDoc: any) {
       windowXml.attributes.AutoSaveOnListRecordChange === "true",
     requestSaveAfterUpdate:
       windowXml.attributes.RequestSaveAfterUpdate === "true",
-
+    screenUI: screenDoc,
+    formScreenLifecycle,
     dataSources: dataSourcesXml.elements.map((dataSource: any) => {
       return new DataSource({
         entity: dataSource.attributes.Entity,

@@ -24,6 +24,7 @@ import { ColumnsDialog } from "../../Components/Dialogs/ColumnsDialog";
 import { getOpenedScreens } from "../../../model/selectors/getOpenedScreens";
 import { IOpenedScreen } from "../../../model/types/IOpenedScreen";
 import { getApplicationLifecycle } from "../../../model/selectors/getApplicationLifecycle";
+import { ScreenBuilder } from "./ScreenBuilder";
 
 @observer
 class MainViewHandle extends React.Component<{
@@ -67,18 +68,6 @@ export class ScreenArea extends React.Component<{
   onScreenTabHandleClick?: (event: any, openedScreen: IOpenedScreen) => void;
   onScreenTabCloseClick?: (event: any, openedScreen: IOpenedScreen) => void;
 }> {
-  @observable.ref testingScreen: any = undefined;
-
-  async componentDidMount() {
-    const resp = await axios.get("/screen05.xml");
-    const screenDoc = xmlJs.xml2js(resp.data, {
-      addParent: true,
-      alwaysChildren: true
-    });
-    console.log(screenDoc);
-    this.testingScreen = screenDoc;
-  }
-
   render() {
     return (
       <div className={S.Root}>
@@ -121,45 +110,19 @@ export class ScreenArea extends React.Component<{
               </>
             )}
           </Observer>
-          {/*<MainViewHandle label={"Tab 1"} order={3} isActive={false} />
-          <MainViewHandle label={"Tab 2"} order={0} isActive={false} />
-        <MainViewHandle label={"Tab 3"} order={1} isActive={true} />*/}
         </div>
-
-        <FormScreen
-          isLoading={false}
-          isVisible={true}
-          isFullScreen={false}
-          title={"Testing screen"}
-          isSessioned={false}
-        >
-          {/*<VBox>
-            <VBox height={32}>area1</VBox>
-            <TabbedPanel
-              handles={[
-                <TabHandle isActive={false} label={"Tab A"} />,
-                <TabHandle isActive={true} label={"Tab B"} />,
-                <TabHandle isActive={false} label={"Tab C"} />
-              ]}
-            >
-              <TabBody isActive={true}>
-                <VSplit handleClassName={FSS.splitterHandle}>
-                  <VSplitPanel id="1">Panel1</VSplitPanel>
-                  <VSplitPanel id="2">
-                    <HSplit handleClassName={FSS.splitterHandle}>
-                      <HSplitPanel id="1">Panel21</HSplitPanel>
-                      <HSplitPanel id="2">Panel22</HSplitPanel>
-                    </HSplit>
-                  </VSplitPanel>
-                </VSplit>
-              </TabBody>
-            </TabbedPanel>
-            </VBox>*/}
-
-          {this.testingScreen && (
-            <FormScreenBuilder xmlWindowObject={this.testingScreen} />
+        <Observer>
+          {() => (
+            <>
+              {this.props.openedScreenItems!.map(item => (
+                <ScreenBuilder
+                  key={`${item.menuItemId}@${item.order}`}
+                  openedScreen={item}
+                />
+              ))}
+            </>
           )}
-        </FormScreen>
+        </Observer>
       </div>
     );
   }
