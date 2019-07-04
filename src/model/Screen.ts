@@ -1,10 +1,12 @@
-import { IScreen, IScreenData } from "./types/IScreen";
+
 import { IDataView } from "./types/IDataView";
 import { IDataSource } from "./types/IDataSource";
 import { IComponentBinding } from "./types/IComponentBinding";
+import { ILoadedFormScreen, ILoadedFormScreenData } from "./types/IFormScreen";
 
-export class Screen implements IScreen {
-  constructor(data: IScreenData) {
+
+export class Screen implements ILoadedFormScreen {
+  constructor(data: ILoadedFormScreenData) {
     Object.assign(this, data);
     this.dataViews.forEach(o => (o.parent = this));
     this.dataSources.forEach(o => (o.parent = this));

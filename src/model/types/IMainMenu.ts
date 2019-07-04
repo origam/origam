@@ -8,6 +8,7 @@ export interface IMainMenuData {
 export interface IMainMenu extends IMainMenuData {
   $type: typeof CMainMenu;
   isLoading: false;
+
   parent?: any
 }
 

@@ -2,7 +2,7 @@ import { IDataView } from "./IDataView";
 import { IDataSource } from "./IDataSource";
 import { IComponentBinding } from "./IComponentBinding";
 
-export interface IScreenData {
+export interface ILoadedFormScreenData {
   title: string;
   menuId: string;
   openingOrder: number;
@@ -18,6 +18,14 @@ export interface IScreenData {
   // dataSources: types.array(DataSource)
 }
 
-export interface IScreen extends IScreenData {
+export interface ILoadedFormScreen extends ILoadedFormScreenData {
   parent?: any;
 }
+
+export interface ILoadingFormScreenData {}
+
+export interface ILoadingFormScreen extends ILoadingFormScreenData {
+  parent?: any;
+}
+
+export type IFormScreen = ILoadingFormScreen | ILoadedFormScreen;

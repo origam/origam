@@ -20,7 +20,9 @@ import { IMainMenu, ILoadingMainMenu } from "../../model/types/IMainMenu";
     mainMenu: application.workbench.mainMenu,
     loggedUserName: getUserNameFromToken(getApi(application).accessToken),
     onSignOutClick: (event: any) =>
-      getApplicationLifecycle(application).onSignOutClick({ event })
+      getApplicationLifecycle(application).onSignOutClick({ event }),
+    onMainMenuItemClick: (event: any, item: any) =>
+      getApplicationLifecycle(application).onMainMenuItemClick({ event, item })
   };
 })
 @observer
@@ -29,6 +31,7 @@ export class WorkbenchPage extends React.Component<{
   mainMenu?: IMainMenu | ILoadingMainMenu | undefined;
   loggedUserName?: string;
   onSignOutClick?: () => void;
+  onMainMenuItemClick?: (event: any, item: any) => void;
 }> {
   mainSplitterModel = new SplitterModel([["1", 1], ["2", 5]]);
 
@@ -113,6 +116,7 @@ export class WorkbenchPage extends React.Component<{
                     this.props.mainMenu && !this.props.mainMenu.isLoading ? (
                       <MainMenu
                         menuUI={(this.props.mainMenu as IMainMenu).menuUI}
+                        onItemClick={this.props.onMainMenuItemClick}
                       />
                     ) : (
                       <></>

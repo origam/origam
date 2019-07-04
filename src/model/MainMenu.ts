@@ -1,6 +1,7 @@
 import { IMainMenu, IMainMenuData, ILoadingMainMenu } from "./types/IMainMenu";
 
 export class MainMenu implements IMainMenu {
+
   $type: "CMainMenu" = "CMainMenu";
   isLoading: false = false;
   
@@ -10,6 +11,10 @@ export class MainMenu implements IMainMenu {
 
   menuUI: any;
   parent?: any;
+
+  onItemClick(args: { event: any; item: any; }): void {
+    console.log("MainMenu item clicked:", args.item)
+  }
 }
 
 export class LoadingMainMenu implements ILoadingMainMenu {

@@ -2,7 +2,7 @@ import S from "./ScreenArea.module.css";
 import FSS from "./FormScreen.module.css";
 
 import React from "react";
-import { observer } from "mobx-react";
+import { observer, inject, Observer } from "mobx-react";
 import { action, observable } from "mobx";
 import {
   ModalWindowOverlay,
@@ -21,24 +21,30 @@ import { FormScreenBuilder } from "./FormScreenBuilder";
 import axios from "axios";
 import xmlJs from "xml-js";
 import { ColumnsDialog } from "../../Components/Dialogs/ColumnsDialog";
+import { getOpenedScreens } from "../../../model/selectors/getOpenedScreens";
+import { IOpenedScreen } from "../../../model/types/IOpenedScreen";
+import { getApplicationLifecycle } from "../../../model/selectors/getApplicationLifecycle";
 
 @observer
 class MainViewHandle extends React.Component<{
   order: number;
   label: string;
   isActive: boolean;
-  onClick?: (event: any, menuItemId: string, order: number) => void;
-  onCloseClick?: (event: any, menuItemId: string, order: number) => void;
+  onClick?: (event: any) => void;
+  onCloseClick?: (event: any) => void;
 }> {
   render() {
     return (
       <div
         className={S.TabHandle + (this.props.isActive ? ` ${S.active}` : "")}
-        onClick={undefined}
+        onClick={this.props.onClick}
       >
         {this.props.label}
         {this.props.order > 0 ? ` [${this.props.order}] ` : ""}
-        <button className={S.TabHandleCloseBtn} onClick={undefined}>
+        <button
+          className={S.TabHandleCloseBtn}
+          onClick={this.props.onCloseClick}
+        >
           <i className="fas fa-times" />
         </button>
       </div>
@@ -46,8 +52,21 @@ class MainViewHandle extends React.Component<{
   }
 }
 
+@inject(({ workbench }) => {
+  return {
+    openedScreenItems: getOpenedScreens(workbench).items,
+    onScreenTabHandleClick: getApplicationLifecycle(workbench)
+      .onScreenTabHandleClick,
+    onScreenTabCloseClick: getApplicationLifecycle(workbench)
+      .onScreenTabCloseClick
+  };
+})
 @observer
-export class ScreenArea extends React.Component {
+export class ScreenArea extends React.Component<{
+  openedScreenItems?: IOpenedScreen[];
+  onScreenTabHandleClick?: (event: any, openedScreen: IOpenedScreen) => void;
+  onScreenTabCloseClick?: (event: any, openedScreen: IOpenedScreen) => void;
+}> {
   @observable.ref testingScreen: any = undefined;
 
   async componentDidMount() {
@@ -82,9 +101,29 @@ export class ScreenArea extends React.Component {
           </ModalWindowOverlay>*/}
 
         <div className={S.TabHandles}>
-          <MainViewHandle label={"Tab 1"} order={3} isActive={false} />
+          <Observer>
+            {() => (
+              <>
+                {this.props.openedScreenItems!.map(item => (
+                  <MainViewHandle
+                    key={`${item.menuItemId}@${item.order}`}
+                    label={item.title}
+                    order={item.order}
+                    isActive={item.isActive}
+                    onClick={(event: any) =>
+                      this.props.onScreenTabHandleClick!(event, item)
+                    }
+                    onCloseClick={(event: any) =>
+                      this.props.onScreenTabCloseClick!(event, item)
+                    }
+                  />
+                ))}
+              </>
+            )}
+          </Observer>
+          {/*<MainViewHandle label={"Tab 1"} order={3} isActive={false} />
           <MainViewHandle label={"Tab 2"} order={0} isActive={false} />
-          <MainViewHandle label={"Tab 3"} order={1} isActive={true} />
+        <MainViewHandle label={"Tab 3"} order={1} isActive={true} />*/}
         </div>
 
         <FormScreen

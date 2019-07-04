@@ -117,6 +117,7 @@ export class MainMenuSection extends React.Component<{
 export class MainMenuRecursiveItem extends React.Component<{
   node: any;
   level: number;
+  onItemClick?: (event: any, item: any) => void;
 }> {
   render() {
     switch (this.props.node.name) {
@@ -145,6 +146,10 @@ export class MainMenuRecursiveItem extends React.Component<{
             active={false}
             isHidden={this.props.node.attributes.isHidden === "true"}
             status={IMenuItemStatus.None}
+            onClick={(event: any) =>
+              this.props.onItemClick &&
+              this.props.onItemClick(event, this.props.node)
+            }
           />
         );
       default:
@@ -154,13 +159,21 @@ export class MainMenuRecursiveItem extends React.Component<{
 }
 
 @observer
-export class MainMenu extends React.Component<{ menuUI: any }> {
+export class MainMenu extends React.Component<{
+  menuUI: any;
+  onItemClick?: (event: any, item: any) => void;
+}> {
   render() {
     return (
       <div className={S.mainMenu}>
         <div className={S.mainMenuSectionItem}>
           {this.props.menuUI.elements.map((item: any, idx: number) => (
-            <MainMenuRecursiveItem key={idx} node={item} level={0} />
+            <MainMenuRecursiveItem
+              key={idx}
+              node={item}
+              level={0}
+              onItemClick={this.props.onItemClick}
+            />
           ))}
         </div>
       </div>

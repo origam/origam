@@ -7,7 +7,10 @@ import {
 } from "./types/IApplicationLifecycle";
 import { getApi } from "./selectors/getApi";
 import { getApplication } from "./selectors/getApplication";
-import { createWorkbench } from './factories/createWorkbench';
+import { createWorkbench } from "./factories/createWorkbench";
+import { getOpenedScreens } from "./selectors/getOpenedScreens";
+import { createOpenedScreen } from "./factories/createOpenedScreen";
+import { IOpenedScreen } from "./types/IOpenedScreen";
 
 const loginFormSubmit = "loginFormSubmit";
 const loginSuccessful = "loginSuccessful";
@@ -128,6 +131,67 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
   }
 
   @action.bound
+  onMainMenuItemClick(args: { event: any; item: any }): void {
+    const { type, id, label } = args.item.attributes;
+    const { event } = args;
+    switch (type) {
+      case "FormReferenceMenuItem":
+        {
+          const openedScreens = getOpenedScreens(this);
+          const existingItem = openedScreens.findLastExistingItem(id);
+          if (!event.ctrlKey) {
+            if (existingItem) {
+              openedScreens.activateItem(id, existingItem.order);
+            } else {
+              const newScreen = createOpenedScreen(id, 0, label);
+              openedScreens.pushItem(newScreen);
+              openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
+            }
+          } else {
+            if (existingItem) {
+              const newScreen = createOpenedScreen(
+                id,
+                existingItem.order + 1,
+                label
+              );
+              openedScreens.pushItem(newScreen);
+              openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
+            } else {
+              const newScreen = createOpenedScreen(id, 0, label);
+              openedScreens.pushItem(newScreen);
+              openedScreens.activateItem(id, 0);
+            }
+          }
+          console.log(openedScreens.items);
+        }
+        break;
+      case "FormReferenceMenuItem_WithSelection":
+        break;
+    }
+  }
+
+  @action.bound
+  onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen) {
+    const openedScreens = getOpenedScreens(this);
+    openedScreens.activateItem(openedScreen.menuItemId, openedScreen.order);
+  }
+
+  @action.bound
+  onScreenTabCloseClick(event: any, openedScreen: IOpenedScreen): void {
+    event.stopPropagation();
+    console.log(openedScreen);
+    const openedScreens = getOpenedScreens(this);
+    const closestScreen = openedScreens.findClosestItem(
+      openedScreen.menuItemId,
+      openedScreen.order
+    );
+    if (closestScreen) {
+      openedScreens.activateItem(closestScreen.menuItemId, closestScreen.order);
+    }
+    openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
+  }
+
+  @action.bound
   run(): void {
     this.interpreter.send(start);
   }
@@ -144,7 +208,7 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
     } catch (e) {
       this.setLoginPageMessage("Login failed.");
       this.interpreter.send(loginFailed);
-      console.error(e)
+      console.error(e);
     }
   }
 

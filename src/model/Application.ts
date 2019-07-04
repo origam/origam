@@ -5,18 +5,18 @@ import { IApplicationLifecycle } from "./types/IApplicationLifecycle";
 import { OrigamAPI } from "./OrigamAPI";
 import { IApi } from "./types/IApi";
 import { action } from "mobx";
+import { IOpenedScreens } from "./types/IOpenedScreens";
 
 export class Application implements IApplication {
-
-
-  parent?: any;
 
   constructor(data: IApplicationData) {
     Object.assign(this, data);
     this.applicationLifecycle.parent = this;
+    this.openedScreens.parent = this;
   }
 
   applicationLifecycle: IApplicationLifecycle = null as any;
+  openedScreens:IOpenedScreens = null as any;
   api: IApi = null as any;
 
   workbench?: IWorkbench;
@@ -34,4 +34,6 @@ export class Application implements IApplication {
   run(): void {
     this.applicationLifecycle.run();
   }
+  
+  parent?: any;
 }
