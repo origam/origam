@@ -175,7 +175,7 @@ namespace Origam.ServerCore.Controllers
             });
         }
 
-        [HttpPost("[actions]")]
+        [HttpPost("[action]")]
         public IActionResult CloseSession()
         {
             PortalSessionStore pss = 
