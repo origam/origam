@@ -126,7 +126,7 @@ export class MainMenuRecursiveItem extends React.Component<{
           <MainMenuSection
             label={this.props.node.attributes.label}
             isHidden={this.props.node.attributes.isHidden === "true"}
-            level={0}
+            level={this.props.level}
           >
             {this.props.node.elements.map((child: any, idx: number) => (
               <MainMenuRecursiveItem
