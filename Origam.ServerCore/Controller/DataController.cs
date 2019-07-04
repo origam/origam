@@ -243,6 +243,7 @@ namespace Origam.ServerCore.Controller
         private static bool Filter(DataRow row, string[] columnNames, string likeParameter)
         {
             return columnNames
+                .Where(colName => colName != "Id")
                 .Select(colName => row[colName])
                 .Any(colValue => 
                     colValue.ToString().Contains(likeParameter,StringComparison.InvariantCultureIgnoreCase));
