@@ -233,17 +233,29 @@ namespace Origam.ServerCore.Controller
             }
             else
             {
+                string[] columnNamesWithoutPrimaryKey = FilterOutPrimaryKey(
+                    lookupData.ColumnNames, dataTable.PrimaryKey);
                 return dataTable.Rows
                     .Cast<DataRow>()
-                    .Where(row => Filter(row, lookupData.ColumnNames, lookupData.SearchText))
+                    .Where(row => Filter(row, columnNamesWithoutPrimaryKey, 
+                        lookupData.SearchText))
                     .Select(row => GetColumnValues(row, lookupData.ColumnNames));
             }
+        }
+
+        private static string[] FilterOutPrimaryKey(
+            string[] columnNames, DataColumn[] primaryKey)
+        {
+            return columnNames
+                .Where(
+                    columnName => !primaryKey.Any(
+                        dataColumn => dataColumn.ColumnName == columnName))
+                .ToArray();
         }
 
         private static bool Filter(DataRow row, string[] columnNames, string likeParameter)
         {
             return columnNames
-                .Where(colName => colName != "Id")
                 .Select(colName => row[colName])
                 .Any(colValue => 
                     colValue.ToString().Contains(likeParameter,StringComparison.InvariantCultureIgnoreCase));
