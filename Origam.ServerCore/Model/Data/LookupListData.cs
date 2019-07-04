@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Origam.ServerCore.Model.Data
@@ -36,7 +37,7 @@ namespace Origam.ServerCore.Model.Data
         public Guid Id { get; set; }
         [RequireNonDefault]
         public Guid LookupId { get; set; }
-        //public IDictionary<string, object> Parameters { get; set; }
+        public IDictionary<string, object> Parameters { get; set; }
         public bool ShowUniqueValues { get; set; }
         public string SearchText { get; set; }
         [Range(-1, 10_000)]

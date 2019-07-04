@@ -22,10 +22,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Origam.DA;
+using Origam.Gui;
+using Origam.Rule;
+using Origam.Schema.GuiModel;
 using Origam.Security.Identity;
 using Origam.Server;
 using Origam.ServerCommon;
@@ -193,6 +199,62 @@ namespace Origam.ServerCore.Controllers
             return Ok();
         }
 
+        [HttpPost("[action]")]
+        public IActionResult ExecuteActionQuery(
+            [FromBody]ExecuteActionQueryData executeActionQueryData)
+        {
+            EntityUIAction action = null;
+            try
+            {
+                action = UIActionTools.GetAction(
+                    executeActionQueryData.ActionId);
+            }
+            catch
+            {
+            }
+            if (action != null && action.ConfirmationRule != null)
+            {
+                SessionStore ss = sessionObjects.SessionManager.GetSession(
+                    new Guid(executeActionQueryData.SessionFormIdentifier));
+                DataRow[] rows = new DataRow[
+                    executeActionQueryData.SelectedItems.Count];
+                for (int i = 0; i < executeActionQueryData.SelectedItems.Count; 
+                    i++)
+                {
+                    rows[i] = ss.GetSessionRow(
+                        executeActionQueryData.Entity, 
+                        executeActionQueryData.SelectedItems[i]);
+                }
+                XmlDocument xml
+                    = DatasetTools.GetRowXml(rows, DataRowVersion.Default);
+                RuleExceptionDataCollection result
+                    = ss.RuleEngine.EvaluateEndRule(
+                    action.ConfirmationRule, xml);
+                return Ok(result ?? new RuleExceptionDataCollection());
+            }
+            return Ok(new RuleExceptionDataCollection());
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult ExecuteAction(
+            [FromBody]ExecuteActionData executeActionData)
+        {
+            var actionRunnerClient = new ServerEntityUIActionRunnerClient(
+                sessionObjects.SessionManager,
+                executeActionData.SessionFormIdentifier);
+            var actionRunner = new ServerCoreEntityUIActionRunner( 
+                actionRunnerClient: actionRunnerClient,
+                sessionManager: sessionObjects.SessionManager);
+            return Ok(actionRunner.ExecuteAction(
+                executeActionData.SessionFormIdentifier, 
+                executeActionData.RequestingGrid, 
+                executeActionData.Entity,  
+                executeActionData.ActionType,  
+                executeActionData.ActionId, 
+                executeActionData.ParameterMappings,
+                executeActionData.SelectedItems, 
+                executeActionData.InputParameters));
+        }
 
         private IActionResult RunWithErrorHandler(Func<IActionResult> func)
         {
