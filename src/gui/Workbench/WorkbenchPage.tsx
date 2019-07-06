@@ -8,17 +8,21 @@ import {
 import { MainMenu } from "./MainMenu/MainMenu";
 import { ScreenArea } from "./ScreenArea/ScreenArea";
 import { inject, observer, Provider, Observer } from "mobx-react";
-import { getUserNameFromToken } from "../../model/selectors/getUserNameFromToken";
-import { getApi } from "../../model/selectors/getApi";
 import { getApplicationLifecycle } from "../../model/selectors/getApplicationLifecycle";
 import { IWorkbench } from "../../model/types/IWorkbench";
-import { IMainMenu, ILoadingMainMenu } from "../../model/types/IMainMenu";
+import { getWorkbench } from "../../model/selectors/getWorkbench";
+import { getIsMainMenuLoading } from "../../model/selectors/MainMenu/getIsMainMenuLoading";
+import { getLoggedUserName } from "../../model/selectors/User/getLoggedUserName";
+import { getMainMenuUI } from "../../model/selectors/MainMenu/getMainMenuUI";
+import { getMainMenuExists } from "../../model/selectors/MainMenu/getMainMenuExists";
 
 @inject(({ application }) => {
   return {
-    workbench: application.workbench,
-    mainMenu: application.workbench.mainMenu,
-    loggedUserName: getUserNameFromToken(getApi(application).accessToken),
+    workbench: getWorkbench(application),
+    isMainMenuLoading: getIsMainMenuLoading(application),
+    mainMenuUI: getMainMenuUI(application),
+    mainMenuExists: getMainMenuExists(application),
+    loggedUserName: getLoggedUserName(application),
     onSignOutClick: (event: any) =>
       getApplicationLifecycle(application).onSignOutClick({ event }),
     onMainMenuItemClick: (event: any, item: any) =>
@@ -28,7 +32,10 @@ import { IMainMenu, ILoadingMainMenu } from "../../model/types/IMainMenu";
 @observer
 export class WorkbenchPage extends React.Component<{
   workbench?: IWorkbench;
-  mainMenu?: IMainMenu | ILoadingMainMenu | undefined;
+  //mainMenu?: IMainMenu | ILoadingMainMenu | undefined;
+  mainMenuUI?: any;
+  mainMenuExists?: boolean;
+  isMainMenuLoading?: boolean;
   loggedUserName?: string;
   onSignOutClick?: () => void;
   onMainMenuItemClick?: (event: any, item: any) => void;
@@ -113,9 +120,10 @@ export class WorkbenchPage extends React.Component<{
               <SplitterPanel id={"1"}>
                 <Observer>
                   {() =>
-                    this.props.mainMenu && !this.props.mainMenu.isLoading ? (
+                    this.props.mainMenuExists &&
+                    !this.props.isMainMenuLoading ? (
                       <MainMenu
-                        menuUI={(this.props.mainMenu as IMainMenu).menuUI}
+                        menuUI={this.props.mainMenuUI!}
                         onItemClick={this.props.onMainMenuItemClick}
                       />
                     ) : (

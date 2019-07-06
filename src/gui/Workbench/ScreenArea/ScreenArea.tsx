@@ -25,6 +25,7 @@ import { getOpenedScreens } from "../../../model/selectors/getOpenedScreens";
 import { IOpenedScreen } from "../../../model/types/IOpenedScreen";
 import { getApplicationLifecycle } from "../../../model/selectors/getApplicationLifecycle";
 import { ScreenBuilder } from "./ScreenBuilder";
+import { getOpenedScreenItems } from '../../../model/selectors/getOpenedScreenItems';
 
 @observer
 class MainViewHandle extends React.Component<{
@@ -55,7 +56,7 @@ class MainViewHandle extends React.Component<{
 
 @inject(({ workbench }) => {
   return {
-    openedScreenItems: getOpenedScreens(workbench).items,
+    openedScreenItems: getOpenedScreenItems(workbench),
     onScreenTabHandleClick: getApplicationLifecycle(workbench)
       .onScreenTabHandleClick,
     onScreenTabCloseClick: getApplicationLifecycle(workbench)

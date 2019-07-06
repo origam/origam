@@ -4,9 +4,10 @@ import { observer, inject } from "mobx-react";
 import { getApplicationLifecycle } from "../model/selectors/getApplicationLifecycle";
 import { IApplicationPage } from "../model/types/IApplicationLifecycle";
 import { WorkbenchPage } from "./Workbench/WorkbenchPage";
+import { getShownPage } from "../model/selectors/Application/getShownPage";
 
 @inject(({ application }) => ({
-  page: getApplicationLifecycle(application).shownPage
+  page: getShownPage(application)
 }))
 @observer
 export class Main extends React.Component<{ page?: IApplicationPage }> {
