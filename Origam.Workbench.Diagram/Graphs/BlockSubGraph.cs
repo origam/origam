@@ -70,7 +70,8 @@ namespace Origam.Workbench.Diagram.Graphs
             child.LayoutSettings = new SugiyamaLayoutSettings
             {
                 ClusterMargin = 20,
-                PackingAspectRatio = 2.0 / 5.0
+                PackingAspectRatio = 2.0 / 5.0,
+                SelfMarginsOverride = new Margins{Left = 0.1}
             };
             AddSubgraph(child);
         }
