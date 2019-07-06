@@ -1,5 +1,6 @@
 import React from "react";
 import S from "./DataView.module.css";
+import { Toolbar } from "./DataViewToolbar";
 
 export class DataView extends React.Component<{ height?: number }> {
   getDataViewStyle() {
@@ -20,6 +21,7 @@ export class DataView extends React.Component<{ height?: number }> {
   render() {
     return (
       <div className={S.dataView} style={this.getDataViewStyle()}>
+        <Toolbar />
         {this.props.children}
       </div>
     );
