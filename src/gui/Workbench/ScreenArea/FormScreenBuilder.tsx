@@ -17,12 +17,19 @@ import { FormView } from "./FormView/FormView";
 import { FormRoot } from "../../Components/ScreenElements/FormRoot";
 import { FormSection } from "../../Components/ScreenElements/FormSection";
 import { Table } from "../../Components/ScreenElements/Table/Table";
-import { IGridDimensions, IOrderByDirection } from "../../Components/ScreenElements/Table/types";
+import {
+  IGridDimensions,
+  IOrderByDirection
+} from "../../Components/ScreenElements/Table/types";
 import { SimpleScrollState } from "../../Components/ScreenElements/Table/SimpleScrollState";
 import bind from "bind-decorator";
-import { Header } from "../../Components/ScreenElements/Table/Header"
+import { Header } from "../../Components/ScreenElements/Table/Header";
 import { CellRenderer } from "../../Components/ScreenElements/Table/CellRenderer";
-import { findUIChildren, findBoxes, findUIRoot } from "../../../xmlInterpreters/screenXml";
+import {
+  findUIChildren,
+  findBoxes,
+  findUIRoot
+} from "../../../xmlInterpreters/screenXml";
 
 class GridDimensions implements IGridDimensions {
   rowCount = 100;
@@ -148,7 +155,7 @@ export class FormScreenBuilder extends React.Component<{
   xmlWindowObject: any;
 }> {
   buildScreen() {
-    console.log('buildScreen')
+    console.log("buildScreen");
     const self = this;
     function recursive(xso: any) {
       switch (xso.attributes.Type) {
@@ -200,6 +207,7 @@ export class FormScreenBuilder extends React.Component<{
                   ? parseInt(xso.attributes.Height, 10)
                   : undefined
               }
+              isHeadless={xso.attributes.IsHeadless === "true"}
             >
               {/*DataView: {xso.attributes.Id}*/}
               {/*}

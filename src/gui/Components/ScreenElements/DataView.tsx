@@ -1,8 +1,13 @@
 import React from "react";
 import S from "./DataView.module.css";
 import { Toolbar } from "./DataViewToolbar";
+import { observer } from "mobx-react";
 
-export class DataView extends React.Component<{ height?: number }> {
+@observer
+export class DataView extends React.Component<{
+  height?: number;
+  isHeadless: boolean;
+}> {
   getDataViewStyle() {
     if (this.props.height !== undefined) {
       return {
@@ -21,7 +26,7 @@ export class DataView extends React.Component<{ height?: number }> {
   render() {
     return (
       <div className={S.dataView} style={this.getDataViewStyle()}>
-        <Toolbar />
+        {!this.props.isHeadless && <Toolbar />}
         {this.props.children}
       </div>
     );
