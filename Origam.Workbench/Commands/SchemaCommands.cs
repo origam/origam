@@ -813,11 +813,14 @@ namespace Origam.Workbench.Commands
         public override void Run()
         {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-            string filePath = Path.Combine(settings.ModelSourceControlLocation.Replace("/","\\"),
-                _schema.ActiveSchemaItem.RootItem.RelativeFilePath);
-            if (File.Exists(filePath))
+            foreach (string file in _schema.ActiveSchemaItem.Files)
             {
-                Process.Start("explorer.exe", "/select," + filePath);
+                string filePath = Path.Combine(settings.ModelSourceControlLocation.Replace("/", "\\"),file);
+                if (File.Exists(filePath))
+                {
+                    Process.Start("explorer.exe", "/select," + filePath);
+                }
+                break;
             }
         }
 
