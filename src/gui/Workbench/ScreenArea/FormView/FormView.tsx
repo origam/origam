@@ -5,7 +5,7 @@ export class FormView extends React.Component<{}> {
   render() {
     return (
       <div className={S.formView}>
-        {/*<Toolbar controller={this.formViewPresenter.toolbar} />*/}
+        {/*<Toolbar ... />*/}
         {this.props.children}
       </div>
     );

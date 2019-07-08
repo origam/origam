@@ -2,6 +2,8 @@ import { IPanelViewType } from "./IPanelViewType";
 import { IProperty } from "./IProperty";
 import { IDataSource } from "./IDataSource";
 
+export const CDataView = "CDataView";
+
 export interface IDataViewData {
   id: string;
   modelInstanceId: string;
@@ -25,8 +27,11 @@ export interface IDataViewData {
   requestDataAfterSelectionChange: boolean;
   confirmSelectionChange: boolean;
   properties: IProperty[];
+  formViewUI: any;
 }
 
 export interface IDataView extends IDataViewData {
+  $type: typeof CDataView;
+
   parent?: any;
 }

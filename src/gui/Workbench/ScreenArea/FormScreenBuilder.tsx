@@ -1,6 +1,6 @@
 import React from "react";
 import { observable, computed, action } from "mobx";
-import { observer, Observer } from "mobx-react";
+import { observer, Observer, Provider } from "mobx-react";
 import { VBox } from "../../Components/ScreenElements/VBox";
 import { HSplit, HSplitPanel } from "../../Components/ScreenElements/HSplit";
 import { VSplitPanel, VSplit } from "../../Components/ScreenElements/VSplit";
@@ -25,6 +25,7 @@ import { SimpleScrollState } from "../../Components/ScreenElements/Table/SimpleS
 import bind from "bind-decorator";
 import { Header } from "../../Components/ScreenElements/Table/Header";
 import { CellRenderer } from "../../Components/ScreenElements/Table/CellRenderer";
+import { FormBuilder } from "./FormView/FormBuilder";
 import {
   findUIChildren,
   findBoxes,
@@ -155,7 +156,6 @@ export class FormScreenBuilder extends React.Component<{
   xmlWindowObject: any;
 }> {
   buildScreen() {
-    console.log("buildScreen");
     const self = this;
     function recursive(xso: any) {
       switch (xso.attributes.Type) {
@@ -202,6 +202,7 @@ export class FormScreenBuilder extends React.Component<{
         case "Grid":
           return (
             <DataView
+              id={xso.attributes.Id}
               height={
                 xso.attributes.Height
                   ? parseInt(xso.attributes.Height, 10)
@@ -210,33 +211,10 @@ export class FormScreenBuilder extends React.Component<{
               isHeadless={xso.attributes.IsHeadless === "true"}
             >
               {/*DataView: {xso.attributes.Id}*/}
-              {/*}
-              <FormView>
-                <FormRoot>
-                  <FormSection
-                    x={10}
-                    y={30}
-                    width={300}
-                    height={120}
-                    title="Testing section"
-                  >
-                    sdas
-                  </FormSection>
 
-                  <FormSection
-                    x={1000}
-                    y={30}
-                    width={300}
-                    height={120}
-                    title="Testing section"
-                  >
-                    sdas
-                  </FormSection>
-                  
-                </FormRoot>
-            </FormView>*/}
+              {/*<TestTable />*/}
 
-              <TestTable />
+              <FormBuilder />
             </DataView>
           );
         case "Tab":

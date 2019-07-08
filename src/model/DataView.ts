@@ -1,9 +1,10 @@
-import { IDataView, IDataViewData } from "./types/IDataView";
+import { IDataView, IDataViewData, CDataView } from "./types/IDataView";
 import { IPanelViewType } from "./types/IPanelViewType";
 import { IProperty } from "./types/IProperty";
-import { IDataSource } from "./types/IDataSource";
 
 export class DataView implements IDataView {
+  $type: typeof CDataView = CDataView;
+
   constructor(data: IDataViewData) {
     Object.assign(this, data);
     this.properties.forEach(o => (o.parent = this));
@@ -31,4 +32,5 @@ export class DataView implements IDataView {
   requestDataAfterSelectionChange = false;
   confirmSelectionChange = false;
   properties: IProperty[] = [];
+  formViewUI: any;
 }

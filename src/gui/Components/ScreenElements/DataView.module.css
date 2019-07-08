@@ -1,3 +1,4 @@
 .dataView {
-  
+  display: flex;
+  flex-direction: column;
 }

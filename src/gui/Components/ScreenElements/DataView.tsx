@@ -1,12 +1,22 @@
 import React from "react";
 import S from "./DataView.module.css";
 import { Toolbar } from "./DataViewToolbar";
-import { observer } from "mobx-react";
+import { observer, inject, Provider } from "mobx-react";
+import { getDataViewById } from "../../../model/selectors/DataView/getDataViewById";
+import { IDataView } from "../../../model/types/IDataView";
 
+@inject(({ formScreen }, { id }) => {
+  const dataView = getDataViewById(formScreen, id);
+  return {
+    dataView
+  };
+})
 @observer
 export class DataView extends React.Component<{
+  id: string;
   height?: number;
   isHeadless: boolean;
+  dataView?: IDataView;
 }> {
   getDataViewStyle() {
     if (this.props.height !== undefined) {
@@ -24,11 +34,14 @@ export class DataView extends React.Component<{
   }
 
   render() {
+    console.log(this.props.dataView);
     return (
-      <div className={S.dataView} style={this.getDataViewStyle()}>
-        {!this.props.isHeadless && <Toolbar />}
-        {this.props.children}
-      </div>
+      <Provider dataView={this.props.dataView}>
+        <div className={S.dataView} style={this.getDataViewStyle()}>
+          {!this.props.isHeadless && <Toolbar />}
+          {this.props.children}
+        </div>
+      </Provider>
     );
   }
 }

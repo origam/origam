@@ -1,0 +1,53 @@
+.dropdownSymbol {
+  position: absolute;
+  right: 1px;
+  padding: 2px;
+  z-index: 200;
+  background-color: white;
+}
+
+.dropdownSymbol:hover {
+  background-color: #8998c5;
+}
+
+.droppedPanelContainer {
+  z-index: 1000;
+  position: absolute;
+  top: 21px;
+  left: 0px;
+  width: 300px;
+  height: 200px;
+  border: 1px solid #b3b3b3;
+  background-color: white;
+  overflow: hidden;
+}
+
+.lookupListHeaderCell {
+  background-color: #e5e5e5 !important;
+  border-left: 1px solid #bbbbbb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.lookupListItemCell {
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.oddItem {
+  background-color: #efefef;
+}
+
+.evenItem {
+  background-color: #ffffff;
+}
+
+.highlightedPhrase {
+
+}

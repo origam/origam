@@ -26,6 +26,7 @@ export class OpenedScreen implements IOpenedScreen {
 
   setContent(screen: IFormScreen): void {
     this.content = screen;
+    screen.parent = this;
   }
 
   parent?: any;

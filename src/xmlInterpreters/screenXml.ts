@@ -22,6 +22,17 @@ export const findUIChildren = (node: any) =>
 export const findBoxes = (node: any) =>
   findStopping(node, n => n.attributes && n.attributes.Type === "Box");
 
+export const findChildren = (node: any) =>
+  findStopping(node, n => n.name === "Children")[0];
+
+export const findStrings = (node: any) =>
+  findStopping(node, n => n.name === "string").map(
+    n => findStopping(n, n2 => n2.type === "text")[0].text
+  );
+
+export const findFormRoot = (node: any) =>
+  findStopping(node, n => n.name === "FormRoot")[0];
+
 export function interpretScreenXml(
   screenDoc: any,
   formScreenLifecycle: IFormScreenLifecycle
@@ -141,6 +152,7 @@ export function interpretScreenXml(
           dataView.attributes.RequestDataAfterSelectionChange === "true",
         confirmSelectionChange:
           dataView.attributes.ConfirmSelectionChange === "true",
+        formViewUI: findFormRoot(dataView),
 
         properties: findStopping(dataView, n => n.name === "Property").map(
           property => {
