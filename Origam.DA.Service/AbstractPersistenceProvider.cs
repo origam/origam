@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 
+using Origam.DA.Service;
 using Origam.Extensions;
 using Origam.Schema;
 using System;
@@ -65,6 +66,7 @@ namespace Origam.DA.ObjectPersistence
             {
                 object sender = transactionEndEventQueue.Dequeue();
                 InstancePersisted?.Invoke(this, (IPersistent)sender);
+                ReferenceIndexManager.UpdateReferenceIndex((IPersistent)sender);
             }
         }
 
@@ -94,10 +96,33 @@ namespace Origam.DA.ObjectPersistence
         public ArrayList GetReference(bool ignoreErrors, Key key)
         {
             RestrictToLoadedPackage(false);
-            ArrayList listOfReferences=RetrieveList<AbstractSchemaItem>(null)
-                .AsParallel()
-                .SelectMany(item => FindUsages(item, ignoreErrors, key))
-                .ToArrayList();
+            ArrayList listOfReferences;
+            if (ReferenceIndexManager.UseIndex)
+            {
+                listOfReferences = new ArrayList();
+                Guid guid = Guid.Parse(key.ToString());
+                List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> list = 
+                    ReferenceIndexManager
+                    .GetReferenceIndex()
+                    .Where(x => x.Key == guid)
+                    .ToList();
+                    foreach (KeyValuePair<Guid, KeyValuePair<Guid, Type>> keyValue in list)
+                    {
+                        KeyValuePair<Guid, Type> kvalue = keyValue.Value;
+                        object refInstance = RetrieveInstance(kvalue.Value, new ModelElementKey(kvalue.Key));
+                        if (!listOfReferences.Contains(refInstance))
+                        {
+                            listOfReferences.Add(refInstance);
+                        }
+                    }
+            }
+            else
+            {
+                listOfReferences = RetrieveList<AbstractSchemaItem>(null)
+                    .AsParallel()
+                    .SelectMany(item => FindUsages(item, ignoreErrors, key))
+                    .ToArrayList();
+            }
             RestrictToLoadedPackage(true);
             return listOfReferences;
         }

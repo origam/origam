@@ -27,9 +27,9 @@ using System.Reflection;
 using System.Xml;
 using CSharpFunctionalExtensions;
 using MoreLinq.Extensions;
-//using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
+//using MoreLinq;
 
 namespace Origam.DA.Service
 {
@@ -153,8 +153,18 @@ namespace Origam.DA.Service
                     Guid? retrievedId = XmlUtils.ReadId(xmlReader);
                     if (!retrievedId.HasValue) continue;
                     parentIdTracker.SetParent(retrievedId.Value, xmlReader.Depth + 1);
+
+                    Guid parentId = parentIdTracker.Get(xmlReader.Depth);
+                    if (parentId == Guid.Empty)
+                    {
+                        string parentIdFromFile = xmlReader.GetAttribute(
+                            OrigamFile.ParentIdAttribute,
+                            OrigamFile.ModelPersistenceUri);
+                        Guid.TryParse(parentIdFromFile, out parentId);
+                    }
+
                     IFilePersistent loadedObj = instanceCreator.RetrieveInstance( 
-                        retrievedId.Value, provider, parentIdTracker.Get(xmlReader.Depth));
+                        retrievedId.Value, provider, parentId);
                     loadedObj.UseObjectCache=useCache;
                     yield return loadedObj;
 

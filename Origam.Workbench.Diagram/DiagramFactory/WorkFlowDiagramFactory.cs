@@ -71,7 +71,8 @@ namespace Origam.Workbench.Diagram
 			graph.MainDrawingSubgraf.LayoutSettings = new SugiyamaLayoutSettings
 			{
 				PackingMethod = PackingMethod.Columns,
-				PackingAspectRatio = 1000
+				PackingAspectRatio = 1000,
+				SelfMarginsOverride = new Margins{Right = 0.1}
 			};
 			AddToSubgraph(graphParent, graph.MainDrawingSubgraf);
 
