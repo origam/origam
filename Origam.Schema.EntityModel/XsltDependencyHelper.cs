@@ -21,8 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using Origam.Services;
-using Origam.Workbench.Services;
+using System.Collections.Generic;
+using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel
 {
@@ -35,9 +35,7 @@ namespace Origam.Schema.EntityModel
 		{
 			if(text == null) return;
 
-			ISchemaService sch = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-
+            IPersistenceProvider persistenceprovider = item.PersistenceProvider;
 			// references
 			int found = 0;
 
@@ -52,7 +50,8 @@ namespace Origam.Schema.EntityModel
 					string id = text.Substring(found + 8, 36);
                     try
                     {
-                        AbstractSchemaItem reference = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(new Guid(id))) as AbstractSchemaItem;
+                        AbstractSchemaItem reference = persistenceprovider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(new Guid(id))) as AbstractSchemaItem;
+
                         dependencies.Add(reference);
                     }
                     catch (System.FormatException)
@@ -82,24 +81,25 @@ namespace Origam.Schema.EntityModel
 					break;
 			}
 
-			DataConstantSchemaItemProvider constantProvider = sch.GetProvider(typeof(DataConstantSchemaItemProvider)) as DataConstantSchemaItemProvider;
+            List<DataConstant> listDataconstant = persistenceprovider.RetrieveListByType<DataConstant>(DataConstant.ItemTypeConst);
 
-			foreach(string c in constants)
+            foreach (string c in constants)
 			{
-				foreach(DataConstant child in constantProvider.LoadChildItems())
-				{
-					if(child.Name == c)
-					{
-						dependencies.Add(child);
-						break;
-					}
-				}
+                foreach (DataConstant child in listDataconstant)
+                {
+                    if (child.Name == c)
+                    {
+                        dependencies.Add(child);
+                        break;
+                    }
+                }
+                if (dependencies.Count == 0) throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorConstantNotFound", c, item.ItemType, item.Name));
+            }
 
-				if(dependencies.Count == 0) throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorConstantNotFound", c, item.ItemType, item.Name));
-			}
+            
 
-			// strings
-			found = 0;
+            // strings
+            found = 0;
 			ArrayList strings = new ArrayList();
 
 			for (int i = 0; i < text.Length; i++) 
@@ -115,17 +115,16 @@ namespace Origam.Schema.EntityModel
 					break;
 			}
 
-			StringSchemaItemProvider stringProvider = sch.GetProvider(typeof(StringSchemaItemProvider)) as StringSchemaItemProvider;
-
-			foreach(string s in strings)
+            List<StringItem> listStringItem = persistenceprovider.RetrieveListByType<StringItem>(StringItem.ItemTypeConst);
+            foreach (string s in strings)
 			{
-				foreach(StringItem child in stringProvider.LoadChildItems())
-				{
-					if(child.Name == s)
-					{
-						dependencies.Add(child);
-						break;
-					}
+                foreach (StringItem child in listStringItem)
+                {
+                    if (child.Name == s)
+                    {
+                        dependencies.Add(child);
+                        break;
+                    }
 				}
 
 				if(dependencies.Count == 0) throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorStringNotFound", s, item.ItemType, item.Name));
@@ -171,20 +170,14 @@ namespace Origam.Schema.EntityModel
 					break;
 			}
 
-			IDataLookupSchemaItemProvider lookupProvider = sch.GetProvider(typeof(IDataLookupSchemaItemProvider)) as IDataLookupSchemaItemProvider;
-
-			foreach(Guid l in lookups)
+            foreach (Guid l in lookups)
 			{
-				foreach(AbstractSchemaItem child in lookupProvider.LoadChildItems())
-				{
-					if(child.Id == l)
-					{
-						dependencies.Add(child);
-						break;
-					}
-				}
+                if (persistenceprovider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(l)) is AbstractSchemaItem lookup)
+                {
+                    dependencies.Add(lookup);
+                }
 
-				if(dependencies.Count == 0) throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorLookupNotFound", l, item.ItemType, item.Name));
+                if (dependencies.Count == 0) throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorLookupNotFound", l, item.ItemType, item.Name));
 			}
 		}
 	}

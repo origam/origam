@@ -40,10 +40,14 @@ namespace Origam.Rule
                     .SchemaProvider
                     .RetrieveList<IFilePersistent>()
                     .OfType<AbstractSchemaItem>()
+                    .AsParallel()
                     .Select(retrievedObj => {
                         retrievedObj.RootProvider = schemaProviders.FirstOrDefault(x => BelongsToProvider(x, retrievedObj));
+                        cancellationToken.ThrowIfCancellationRequested();
+                        ReferenceIndexManager.AddToBuildIndex(retrievedObj);
                         return retrievedObj;
                     })
+                    .AsParallel()
                     .Select(retrievedObj =>
                     {
                         cancellationToken.ThrowIfCancellationRequested();
@@ -59,6 +63,7 @@ namespace Origam.Rule
                     })
                     .Where(x => x != null)
                     .ToList();
+            ReferenceIndexManager.ActivateReferenceIndex();
             return errorFragments;
         }
 

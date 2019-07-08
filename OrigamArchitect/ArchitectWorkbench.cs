@@ -1264,6 +1264,7 @@ namespace OrigamArchitect
                 {
                     this.RunWithInvokeAsync(() => UpdateUIAfterReload(filePersistenceProvider, args));
                 }
+                this.RunWithInvoke(DoModelChecksAsync); 
             }
 		}
 
@@ -1715,7 +1716,7 @@ namespace OrigamArchitect
 				}
 
 				if (!_schema.Disconnect()) return false;
-
+                ClearReferenceIndex();
 				UnloadConnectedServices();
 				UnloadConnectedPads();
 				UnloadMainMenu();
@@ -1739,6 +1740,16 @@ namespace OrigamArchitect
 
 			return true;
 		}
+
+        private void ClearReferenceIndex()
+        {
+            IPersistenceService persistenceService =
+                 ServiceManager.Services.GetService<IPersistenceService>();
+            if (persistenceService != null)
+            {
+                ReferenceIndexManager.ClearReferenceIndex();
+            }
+        }
 
         private void UnloadConnectedPads()
         {
