@@ -347,7 +347,7 @@ namespace Origam.Server
                 actionRunnerClient: actionRunnerClient,
                 uiManager: uiManager,  
                 sessionManager: sessionManager,
-                basicUiService: this,
+                basicUIService: this,
                 reportManager: reportManager);
 
             return actionRunner.ExecuteAction( sessionFormIdentifier, 

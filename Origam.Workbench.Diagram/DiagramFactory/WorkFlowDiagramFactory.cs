@@ -71,7 +71,8 @@ namespace Origam.Workbench.Diagram
 			graph.MainDrawingSubgraf.LayoutSettings = new SugiyamaLayoutSettings
 			{
 				PackingMethod = PackingMethod.Columns,
-				PackingAspectRatio = 1000
+				PackingAspectRatio = 1000,
+				SelfMarginsOverride = new Margins{Right = 0.1}
 			};
 			AddToSubgraph(graphParent, graph.MainDrawingSubgraf);
 
@@ -138,7 +139,7 @@ namespace Origam.Workbench.Diagram
 			var actions = entity.Entity.ChildItems
 				.ToGeneric()
 				.OfType<EntityUIAction>()
-				.Where(action => ShouldBeShownOdScreen(action, screenId))
+				.Where(action => ShouldBeShownOnScreen(action, screenId))
 				.ToArray();
 
 			var entityDropdownActions = actions
@@ -153,14 +154,14 @@ namespace Origam.Workbench.Diagram
 				actions = actions
 					.Except(entityDropdownActions)
 					.Concat(actionsFromDropDowns)
-					.Where(action => ShouldBeShownOdScreen(action, screenId))
+					.Where(action => ShouldBeShownOnScreen(action, screenId))
 					.ToArray();
 			}
 
 			return actions;
 		}
 
-		private bool ShouldBeShownOdScreen(EntityUIAction action, Guid screenId)
+		private bool ShouldBeShownOnScreen(EntityUIAction action, Guid screenId)
 		{
 			return action.ScreenId == Guid.Empty || action.ScreenId == screenId;
 		}

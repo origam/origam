@@ -71,7 +71,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
         {
         }
 
-        public void ReDrawAndReselect()
+        public void ReDrawAndKeepFocus()
         {
             
         }

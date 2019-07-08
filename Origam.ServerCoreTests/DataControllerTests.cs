@@ -28,8 +28,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Origam.Extensions;
-using Origam.ServerCore.Controllers;
-using Origam.ServerCore.Models;
+using Origam.ServerCore.Controller;
+using Origam.ServerCore.Model.Data;
 
 namespace Origam.ServerCoreTests
 {
@@ -52,7 +52,7 @@ namespace Origam.ServerCoreTests
             Guid producerId = new Guid("B61F9A1F-3719-46D3-BE0A-2713C1E5F4CA");
 
             string[] columnNames = new[] {"Id", "Name", "NameAndAddress", "Email"};
-            IActionResult entitiesActionResult = sut.EntitiesGet(new EntityGetData
+            IActionResult entitiesActionResult = sut.GetRows(new GetRowsData
             {
                 MenuId = producerMenuId,
                 DataStructureEntityId = produceDataStructureEntityId,
@@ -89,7 +89,7 @@ namespace Origam.ServerCoreTests
         [Test, Order(102)]
         public void ShouldCreateNewProducer()
         {
-            var actionResult = sut.Entities(new EntityInsertData
+            var actionResult = sut.Row(new NewRowData
             {
                 MenuId = producerMenuId,
                 DataStructureEntityId = produceDataStructureEntityId,
@@ -122,7 +122,7 @@ namespace Origam.ServerCoreTests
         {
             Guid producerId = createdProducers[0];
 
-            var actionResult = sut.Entities(new EntityUpdateData
+            var actionResult = sut.Row(new UpdateRowData
             {
                 MenuId = producerMenuId,
                 DataStructureEntityId = produceDataStructureEntityId,
@@ -151,14 +151,14 @@ namespace Origam.ServerCoreTests
         public void ShouldDeleteProducer()
         {
             Guid producerId = createdProducers[0];
-            sut.Entities(new EntityDeleteData
+            sut.Row(new DeleteRowData
             {
                 MenuId = producerMenuId,
                 DataStructureEntityId = produceDataStructureEntityId,
                 RowIdToDelete = producerId
             });
 
-            IActionResult entitiesActionResult = sut.EntitiesGet(new EntityGetData
+            IActionResult entitiesActionResult = sut.GetRows(new GetRowsData
             {
                 MenuId = producerMenuId,
                 DataStructureEntityId = produceDataStructureEntityId,
@@ -179,7 +179,7 @@ namespace Origam.ServerCoreTests
         public void ShouldRetrieveProducersWithParameters()
         {
             string[] columnNames = {"Id", "Name", "NameAndAddress", "PlotMinimumSize" };
-            IActionResult entitiesActionResult = sut.EntitiesGet(new EntityGetData
+            IActionResult entitiesActionResult = sut.GetRows(new GetRowsData
             {
                 MenuId = producerMenuId,
                 DataStructureEntityId = produceDataStructureEntityId,

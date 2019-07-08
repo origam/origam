@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Data;
-using System.Xml;
 using Origam.Rule;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
@@ -39,16 +38,16 @@ namespace Origam.Server
     {
         private readonly UIManager uiManager;
         private readonly SessionManager sessionManager;
-        private readonly IBasicUIService basicUiService;
+        private readonly IBasicUIService basicUIService;
         private readonly IReportManager reportManager;
 
         public ServerEntityUIActionRunner(IEntityUIActionRunnerClient actionRunnerClient,
-            UIManager uiManager, SessionManager sessionManager, IBasicUIService basicUiService,
+            UIManager uiManager, SessionManager sessionManager, IBasicUIService basicUIService,
             IReportManager reportManager) : base(actionRunnerClient)
         {
             this.uiManager = uiManager;
             this.sessionManager = sessionManager;
-            this.basicUiService = basicUiService;
+            this.basicUIService = basicUIService;
             this.reportManager = reportManager;
         }
 
@@ -217,7 +216,7 @@ namespace Origam.Server
                 registerSession: false,
                 addChildSession: true, 
                 parentSession: sessionManager.GetSession(processData),
-                basicUiService: basicUiService);
+                basicUiService: basicUIService);
             resultList.Add(result);
         }
 

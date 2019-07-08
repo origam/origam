@@ -17,26 +17,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+using Microsoft.Extensions.Logging;
+using Origam.ServerCore.Controller;
 
-using System;
-using System.Collections;
-using Origam.Schema.GuiModel;
-using Origam.Server;
-
-namespace Origam.ServerCommon
+namespace Origam.ServerCore.Extensions
 {
-    public class BasicUIService: IBasicUIService
+    public static class LogExtensions
     {
-        public string GetReportStandalone(string reportId, Hashtable parameters,
-            DataReportExportFormatType dataReportExportFormatType)
+        public static void InfoFormat(this ILogger<AbstractController> log, string message, string arg)
         {
-            return "";
-        }
-
-        public UIResult InitUI(UIRequest request)
-        {
-            throw new NotImplementedException();
+            log.LogInformation(message, new []{arg} );
         }
     }
 }

@@ -31,8 +31,8 @@ namespace Origam.ServerCore
     public class SessionObjects
     {
         public SessionManager SessionManager { get; }
-        public UIManager UiManager { get; }
-        public BasicUiService UiService { get; }
+        public UIManager UIManager { get; }
+        public BasicUIService UIService { get; }
 
         public SessionObjects()
         {
@@ -42,8 +42,8 @@ namespace Origam.ServerCore
                 formSessions: new Dictionary<Guid, SessionStore>(),
                 analytics: analytics,
                 runsOnCore: true);
-            UiManager = new UIManager(50, SessionManager, analytics);
-            UiService = new BasicUiService();
+            UIManager = new UIManager(50, SessionManager, analytics);
+            UIService = new BasicUIService();
         }
     }
 }

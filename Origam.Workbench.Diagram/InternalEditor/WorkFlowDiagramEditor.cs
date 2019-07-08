@@ -91,27 +91,44 @@ namespace Origam.Workbench.Diagram.InternalEditor
 				gViewer, 
 				graphParentItemGetter: () => (AbstractSchemaItem)UpToDateGraphParent);
 			
-			ReDrawAndReselect();
+			ReDrawAndKeepFocus();
         }
         
-        public void ReDrawAndReselect()
+        public void ReDrawAndKeepFocus()
         {
+	        var selectedNodeTracker = new NodePositionTracker(gViewer, nodeSelector.Selected?.Id);
+	        Subgraph parentSubGraph = Graph.FindParentSubGraph(nodeSelector.Selected);
+	        var parentNodeTracker = new NodePositionTracker(gViewer,parentSubGraph?.Id);
+	        
 			ReDraw();
-			Node nodeToSelect = Graph.FindNodeOrSubgraph(nodeSelector.Selected?.Id);
-			if (nodeToSelect == null &&
-			    nodeSelector.SelectedNodeId != Guid.Empty &&
-			    UpToDateGraphParent.Id == nodeSelector.SelectedNodeId)
-			{
-				nodeToSelect = Graph.MainDrawingSubgraf;
-			}
+			ReSelectNode();
 
-			nodeSelector.Selected = nodeToSelect;
+			var nodeTracker = nodeSelector.Selected == null
+				? parentNodeTracker
+				: selectedNodeTracker;
+			nodeTracker.LoadUpdatedState();
+
+			gViewer.Transform = nodeTracker.NodeExists
+				? nodeTracker.UpdatedTransformation
+				: null;
+			gViewer.Invalidate();
+        }
+
+        private void ReSelectNode()
+        {
+	        Node nodeToSelect = Graph.FindNodeOrSubgraph(nodeSelector.Selected?.Id);
+	        if (nodeToSelect == null &&
+	            nodeSelector.SelectedNodeId != Guid.Empty &&
+	            UpToDateGraphParent.Id == nodeSelector.SelectedNodeId)
+	        {
+		        nodeToSelect = Graph.MainDrawingSubgraf;
+	        }
+
+	        nodeSelector.Selected = nodeToSelect;
         }
 
         private void ReDraw()
         {
-	        var originalTransform = gViewer.Transform;
-
 	        bool expandSelected = nodeSelector.Selected != null &&
 	                              nodeSelector.MarkedForExpansion;
 	        List<string> nodesToExpand = expandSelected
@@ -120,14 +137,8 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        nodesToExpand.AddRange(dependencyPainter.GetNodesToExpand());
 	        gViewer.Graph = factory.Draw(UpToDateGraphParent, nodesToExpand);
 	        dependencyPainter.Draw();
-
-	        if (originalTransform.IsIdentity)
+	        if (dependencyPainter.DidDrawSomeEdges) 
 	        {
-		        gViewer.Transform =  null;
-	        }
-	        else
-	        {
-		        gViewer.Transform = originalTransform;
 		        gViewer.Redraw();
 	        }
         }
@@ -295,12 +306,12 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			if (node == null)
 			{
 				TrySelectParentStep(persistedSchemaItem);
-				ReDrawAndReselect();
+				ReDrawAndKeepFocus();
 			}
 			else
 			{
 				node.LabelText = persistedSchemaItem.Name;
-				ReDraw();
+				ReDrawAndKeepFocus();
 			}
 		}
 
@@ -335,7 +346,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 
 			if (edgeWasRemovedOutsideDiagram)
 			{
-				ReDrawAndReselect();
+				ReDrawAndKeepFocus();
 			}
 		}
 
@@ -366,12 +377,13 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			bool deletedLastNode = !parentSubgraph.Nodes.Any();
 			if (deletedLastNode || deletedNodeItem)
 			{
-				ReDrawAndReselect();
+				ReDrawAndKeepFocus();
 			}
 		}
 
 		void OnMouseDown(object sender, MsaglMouseEventArgs e)
 		{
+			gViewer.SuspendLayout();
 			if (gViewer.InsertingEdge) return;
 			HandleSelectAndRedraw(e);
 			TrySelectActiveNodeInModelView();
@@ -382,6 +394,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		        ContextMenuStrip cm = BuildContextMenu();
                 cm.Show(parentForm,mouseRightButtonDownPoint);
 	        }
+	        gViewer.ResumeLayout();
 		}
 
 		private void HandleSelectAndRedraw(MsaglMouseEventArgs eventArgs)
@@ -395,7 +408,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 					    eventArgs.LeftButtonIsPressed)
 					{
 						nodeSelector.MarkedForExpansion = true;
-						RedrawAndReFocus(node);
+						RedrawAndSelect(node);
 					}
 					return;
 				}
@@ -411,44 +424,14 @@ namespace Origam.Workbench.Diagram.InternalEditor
 					return;
 				}
 				
-				RedrawAndReFocus(node);
+				RedrawAndSelect(node);
 			}
 		}
 
-		private void RedrawAndReFocus(Node node)
+		private void RedrawAndSelect(Node node)
 		{
 			nodeSelector.Selected = node;
-			var origTransform = gViewer.Transform;
-			ReDrawAndReselect();
-			gViewer.Transform = origTransform;
-			gViewer.Invalidate();
-		}
-
-		private void ReDrawAndKeepFocus(Node node)
-		{
-			var newNodeTracker = new NodePositionTracker(gViewer, node.Id);
-			var oldNodeTracker = new NodePositionTracker(gViewer, nodeSelector.Selected?.Id);
-			var originalTransform = gViewer.Transform;
-			nodeSelector.Selected = node;
-
-			ReDrawAndReselect();
-			newNodeTracker.LoadUpdatedState();
-			oldNodeTracker.LoadUpdatedState();
-			
-			if (oldNodeTracker.NodeExists && oldNodeTracker.NodeWasNotResized)
-			{
-				gViewer.Transform = oldNodeTracker.UpdatedTransformation;
-			}
-			else if (newNodeTracker.NodeExists && newNodeTracker.NodeWasNotResized)
-			{
-				gViewer.Transform = newNodeTracker.UpdatedTransformation;
-			}
-			else
-			{
-				gViewer.Transform = originalTransform;
-			}
-
-			gViewer.Invalidate();
+			ReDrawAndKeepFocus();
 		}
 
 		private AbstractSchemaItem RetrieveItem(Node node)

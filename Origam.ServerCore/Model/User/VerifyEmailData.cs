@@ -17,26 +17,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+using System.ComponentModel.DataAnnotations;
 
-using System;
-using System.Collections;
-using Origam.Schema.GuiModel;
-using Origam.Server;
-
-namespace Origam.ServerCommon
+namespace Origam.ServerCore.Model.User
 {
-    public class BasicUIService: IBasicUIService
+    public class VerifyEmailData
     {
-        public string GetReportStandalone(string reportId, Hashtable parameters,
-            DataReportExportFormatType dataReportExportFormatType)
-        {
-            return "";
-        }
-
-        public UIResult InitUI(UIRequest request)
-        {
-            throw new NotImplementedException();
-        }
+        [Required]
+        public string Id { get; set; }
+        [Required]
+        public string Token { get; set; }
     }
 }

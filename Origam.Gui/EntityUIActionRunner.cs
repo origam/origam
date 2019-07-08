@@ -55,11 +55,9 @@ namespace Origam.Gui
                 = actionRunnerClient.CreateExecuteActionProcessData(
                 sessionFormIdentifier, requestingGrid, actionType, entity, 
                 selectedItems, actionId, parameterMappings, inputParameters);
-
             actionRunnerClient.CheckActionConditions(processData);
             PerformAppropriateAction(processData);
             actionRunnerClient.SetModalDialogSize(resultList,processData);
-           
             return resultList;
         }
 
