@@ -1,6 +1,7 @@
 import * as React from "react";
 import { observer } from "mobx-react";
-import styles from "./DateTimeEditor.module.css";
+import S from "./DateTimeEditor.module.css";
+import CS from "./CommonStyle.module.css";
 import { action, observable, computed, runInAction } from "mobx";
 import moment from "moment";
 import { Tooltip } from "react-tippy";
@@ -23,7 +24,7 @@ class CalendarWidget extends React.Component<{
       day.add({ days: 1 }), i++
     ) {
       result.push(
-        <div className={styles.calendarWidgetDayHeaderCell}>
+        <div className={S.calendarWidgetDayHeaderCell}>
           {day.format("dd")[0]}
         </div>
       );
@@ -47,11 +48,11 @@ class CalendarWidget extends React.Component<{
       result.push(
         <div
           className={
-            styles.calendarWidgetCell +
+            S.calendarWidgetCell +
             (isNeighbourMonth
-              ? ` ${styles.calendarWidgetNeighbourMonthCell}`
+              ? ` ${S.calendarWidgetNeighbourMonthCell}`
               : "") +
-            (isSelectedDay ? ` ${styles.calendarWidgetSelectedDay}` : "")
+            (isSelectedDay ? ` ${S.calendarWidgetSelectedDay}` : "")
           }
           onClick={(event: any) => this.handleDayClick(event, dayCopy)}
         >
@@ -66,7 +67,7 @@ class CalendarWidget extends React.Component<{
     const result: any[] = [];
     for (let i = 0; i < 6; i++) {
       result.push(
-        <div className={styles.calendarWidgetRow}>{this.getDates(i)}</div>
+        <div className={S.calendarWidgetRow}>{this.getDates(i)}</div>
       );
     }
     return result;
@@ -98,36 +99,36 @@ class CalendarWidget extends React.Component<{
 
   render() {
     return (
-      <div className={styles.calendarWidgetContainer}>
-        <div className={styles.calendarWidgetDayTable}>
-          <div className={styles.calendarWidgetRow}>
-            <div className={styles.calendarWidgetHeader}>
-              <div className={styles.calendarWidgetMonthControls}>
+      <div className={S.calendarWidgetContainer}>
+        <div className={S.calendarWidgetDayTable}>
+          <div className={S.calendarWidgetRow}>
+            <div className={S.calendarWidgetHeader}>
+              <div className={S.calendarWidgetMonthControls}>
                 <button
-                  className={styles.calendarWidgetControlBtn}
+                  className={S.calendarWidgetControlBtn}
                   onClick={this.handleMonthDecClick}
                 >
                   <i className="fas fa-caret-left" />
                 </button>
                 <button
-                  className={styles.calendarWidgetControlBtn}
+                  className={S.calendarWidgetControlBtn}
                   onClick={this.handleMonthIncClick}
                 >
                   <i className="fas fa-caret-right" />
                 </button>
               </div>
-              <div className={styles.calendarWidgetTitle}>
+              <div className={S.calendarWidgetTitle}>
                 {this.displayedMonth.format("MMMM YYYY")}
               </div>
-              <div className={styles.calendarWidgetYearControls}>
+              <div className={S.calendarWidgetYearControls}>
                 <button
-                  className={styles.calendarWidgetControlBtn}
+                  className={S.calendarWidgetControlBtn}
                   onClick={this.handleYearDecClick}
                 >
                   <i className="fas fa-caret-down" />
                 </button>
                 <button
-                  className={styles.calendarWidgetControlBtn}
+                  className={S.calendarWidgetControlBtn}
                   onClick={this.handleYearIncClick}
                 >
                   <i className="fas fa-caret-up" />
@@ -135,7 +136,7 @@ class CalendarWidget extends React.Component<{
               </div>
             </div>
           </div>
-          <div className={styles.calendarWidgetRow}>{this.getDayHeaders()}</div>
+          <div className={S.calendarWidgetRow}>{this.getDayHeaders()}</div>
           {this.getDateRows()}
         </div>
       </div>
@@ -146,7 +147,6 @@ class CalendarWidget extends React.Component<{
 @observer
 export class DateTimeEditor extends React.Component<{
   value: string;
-  inputFormat: string | undefined;
   outputFormat: string;
   isReadOnly: boolean;
   isInvalid: boolean;
@@ -272,7 +272,7 @@ export class DateTimeEditor extends React.Component<{
   render() {
     return (
       <div
-        className="editor-container"
+        className={CS.editorContainer}
         ref={this.refContainer}
         style={{
           zIndex: this.isDroppedDown ? 1000 : undefined
@@ -291,7 +291,7 @@ export class DateTimeEditor extends React.Component<{
           open={this.isTooltipShown}
         >
           <input
-            className="editor"
+            className={CS.editor}
             type="text"
             /*value={moment(this.props.value, this.props.inputFormat).format(
             this.props.outputFormat
@@ -304,20 +304,20 @@ export class DateTimeEditor extends React.Component<{
           />
         </Tooltip>
         {this.props.isInvalid && (
-          <div className="notification">
+          <div className={CS.notification}>
             <i className="fas fa-exclamation-circle red" />
           </div>
         )}
         {!this.props.isReadOnly && (
           <div
-            className={styles.dropdownSymbol}
+            className={S.dropdownSymbol}
             onClick={this.handleDropperClick}
           >
             <i className="far fa-calendar-alt" />
           </div>
         )}
         {this.isDroppedDown && (
-          <div className={styles.droppedPanelContainer}>
+          <div className={S.droppedPanelContainer}>
             <CalendarWidget
               onDayClick={this.handleDayClick}
               initialDisplayDate={this.momentValue}

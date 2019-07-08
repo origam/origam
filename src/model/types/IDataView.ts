@@ -28,10 +28,14 @@ export interface IDataViewData {
   confirmSelectionChange: boolean;
   properties: IProperty[];
   formViewUI: any;
+  activePanelView: IPanelViewType;
 }
 
 export interface IDataView extends IDataViewData {
   $type: typeof CDataView;
+
+  onFormPanelViewButtonClick(event: any): void;
+  onTablePanelViewButtonClick(event: any): void;
 
   parent?: any;
 }

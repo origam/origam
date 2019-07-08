@@ -4,6 +4,9 @@ import { Toolbar } from "./DataViewToolbar";
 import { observer, inject, Provider } from "mobx-react";
 import { getDataViewById } from "../../../model/selectors/DataView/getDataViewById";
 import { IDataView } from "../../../model/types/IDataView";
+import { TestTable } from "../../Workbench/ScreenArea/FormScreenBuilder";
+import { FormBuilder } from "../../Workbench/ScreenArea/FormView/FormBuilder";
+import { IPanelViewType } from "../../../model/types/IPanelViewType";
 
 @inject(({ formScreen }, { id }) => {
   const dataView = getDataViewById(formScreen, id);
@@ -39,7 +42,30 @@ export class DataView extends React.Component<{
       <Provider dataView={this.props.dataView}>
         <div className={S.dataView} style={this.getDataViewStyle()}>
           {!this.props.isHeadless && <Toolbar />}
-          {this.props.children}
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display:
+                this.props.dataView!.activePanelView !== IPanelViewType.Table
+                  ? "none"
+                  : "flex"
+            }}
+          >
+            <TestTable />
+          </div>
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display:
+                this.props.dataView!.activePanelView !== IPanelViewType.Form
+                  ? "none"
+                  : "flex"
+            }}
+          >
+            <FormBuilder />
+          </div>
         </div>
       </Provider>
     );

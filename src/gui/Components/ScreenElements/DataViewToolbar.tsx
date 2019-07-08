@@ -1,9 +1,23 @@
 import React from "react";
-import { observer } from "mobx-react";
+import { observer, inject } from "mobx-react";
 import S from "./DataViewToolbar.module.css";
+import { IDataView } from "../../../model/types/IDataView";
+import { IPanelViewType } from "../../../model/types/IPanelViewType";
+import { getActivePanelView } from "../../../model/selectors/DataView/getActivePanelView";
 
+@inject(({ dataView }: { dataView: IDataView }) => {
+  return {
+    activePanelView: getActivePanelView(dataView),
+    onFormViewButtonClick: dataView.onFormPanelViewButtonClick,
+    onTableViewButtonClick: dataView.onTablePanelViewButtonClick
+  };
+})
 @observer
-export class Toolbar extends React.Component<{}> {
+export class Toolbar extends React.Component<{
+  activePanelView?: IPanelViewType;
+  onFormViewButtonClick?: (event: any) => void;
+  onTableViewButtonClick?: (event: any) => void;
+}> {
   render() {
     return (
       <div className={S.dataViewToolbar}>
@@ -104,17 +118,17 @@ export class Toolbar extends React.Component<{}> {
         <div className={S.section}>
           <ToolbarButton
             isVisible={true}
-            isActive={false}
+            isActive={this.props.activePanelView === IPanelViewType.Table}
             isEnabled={true}
-            onClick={undefined}
+            onClick={this.props.onTableViewButtonClick}
           >
             <i className="fa fa-table" aria-hidden="true" />
           </ToolbarButton>
           <ToolbarButton
             isVisible={true}
-            isActive={false}
+            isActive={this.props.activePanelView === IPanelViewType.Form}
             isEnabled={true}
-            onClick={undefined}
+            onClick={this.props.onFormViewButtonClick}
           >
             <i className="fas fa-list-alt" aria-hidden="true" />
           </ToolbarButton>
@@ -164,7 +178,11 @@ export class ToolbarButton extends React.Component<{
     const { isActive, isEnabled, isVisible, onClick } = this.props;
     return isVisible ? (
       <button
-        className={S.toolbarBtn + (isActive ? " active" : "") + (isEnabled ? "" : " disabled")}
+        className={
+          S.toolbarBtn +
+          (isActive ? " active" : "") +
+          (isEnabled ? "" : " disabled")
+        }
         onClick={onClick}
       >
         {this.props.children}

@@ -2,6 +2,7 @@ import * as React from "react";
 import { observer } from "mobx-react";
 import { action } from "mobx";
 import S from "./TextEditor.module.css";
+import CS from "./CommonStyle.module.css";
 
 @observer
 export class TextEditor extends React.Component<{
@@ -50,9 +51,9 @@ export class TextEditor extends React.Component<{
 
   render() {
     return (
-      <div className={S.editorContainer}>
+      <div className={CS.editorContainer}>
         <input
-          className={S.editor}
+          className={CS.editor}
           type="text"
           value={this.props.value}
           readOnly={this.props.isReadOnly}

@@ -1,6 +1,7 @@
 import { IDataView, IDataViewData, CDataView } from "./types/IDataView";
 import { IPanelViewType } from "./types/IPanelViewType";
 import { IProperty } from "./types/IProperty";
+import { observable, action } from "mobx";
 
 export class DataView implements IDataView {
   $type: typeof CDataView = CDataView;
@@ -33,4 +34,15 @@ export class DataView implements IDataView {
   confirmSelectionChange = false;
   properties: IProperty[] = [];
   formViewUI: any;
+  @observable activePanelView: IPanelViewType = IPanelViewType.Table;
+
+  @action.bound
+  onFormPanelViewButtonClick(event: any) {
+    this.activePanelView = IPanelViewType.Form;
+  }
+
+  @action.bound
+  onTablePanelViewButtonClick(event: any) {
+    this.activePanelView = IPanelViewType.Table;
+  }
 }

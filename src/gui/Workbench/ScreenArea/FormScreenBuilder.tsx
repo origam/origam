@@ -210,11 +210,7 @@ export class FormScreenBuilder extends React.Component<{
               }
               isHeadless={xso.attributes.IsHeadless === "true"}
             >
-              {/*DataView: {xso.attributes.Id}*/}
-
-              {/*<TestTable />*/}
-
-              <FormBuilder />
+              null
             </DataView>
           );
         case "Tab":

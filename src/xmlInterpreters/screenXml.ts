@@ -55,10 +55,10 @@ export function interpretScreenXml(
 
   function panelViewFromNumber(pvn: number) {
     switch (pvn) {
-      case 0:
+      case 1:
       default:
         return IPanelViewType.Table;
-      case 1:
+      case 0:
         return IPanelViewType.Form;
     }
   }
@@ -130,6 +130,9 @@ export function interpretScreenXml(
         name: dataView.attributes.Name,
         modelId: dataView.attributes.ModelId,
         defaultPanelView: panelViewFromNumber(
+          parseInt(dataView.attributes.DefaultPanelView)
+        ),
+        activePanelView: panelViewFromNumber(
           parseInt(dataView.attributes.DefaultPanelView)
         ),
         isHeadless: dataView.attributes.IsHeadless === "true",

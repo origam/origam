@@ -1,12 +1,12 @@
 import * as React from "react";
 import { observer, Observer } from "mobx-react";
 import { action, observable, computed, runInAction } from "mobx";
-import styles from "./DropdownEditor.module.css";
+import S from "./DropdownEditor.module.css";
+import CS from "./CommonStyle.module.css";
 
 import _ from "lodash";
 import { MultiGrid, AutoSizer } from "react-virtualized";
 import Highlighter from "react-highlight-words";
-
 
 type IApi = any;
 
@@ -99,6 +99,9 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   loadItemsDebounced = _.debounce(this.loadItemsImmediately, 300);
 
   @action.bound loadItemsImmediately() {
+    if (!this.api) {
+      return;
+    }
     this.willReload = false;
     this.isLoading = true;
     this.api
@@ -190,10 +193,10 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
             style={args.style}
             className={
               (args.rowIndex === 0
-                ? styles.lookupListHeaderCell
-                : styles.lookupListItemCell) +
+                ? S.lookupListHeaderCell
+                : S.lookupListItemCell) +
               " " +
-              (args.rowIndex % 2 === 0 ? styles.evenItem : styles.oddItem)
+              (args.rowIndex % 2 === 0 ? S.evenItem : S.oddItem)
             }
             onClick={handleClick}
           >
@@ -219,14 +222,14 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   render() {
     return (
       <div
-        className="editor-container"
+        className={CS.editorContainer}
         ref={this.refContainer}
         style={{
           zIndex: this.isDroppedDown ? 1000 : undefined
         }}
       >
         <input
-          className="editor"
+          className={CS.editor}
           type="text"
           value={this.value}
           readOnly={this.props.isReadOnly}
@@ -236,15 +239,12 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
           onClick={this.props.onClick}
         />
         {this.props.isInvalid && (
-          <div className="notification">
+          <div className={CS.notification}>
             <i className="fas fa-exclamation-circle red" />
           </div>
         )}
         {!this.props.isReadOnly && (
-          <div
-            className={styles.dropdownSymbol}
-            onClick={this.handleDropperClick}
-          >
+          <div className={S.dropdownSymbol} onClick={this.handleDropperClick}>
             {!(this.willReload || this.isLoading) && (
               <i className="fas fa-caret-down" />
             )}
@@ -256,7 +256,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
           </div>
         )}
         {this.isDroppedDown && (
-          <div className={styles.droppedPanelContainer}>
+          <div className={S.droppedPanelContainer}>
             <AutoSizer>
               {({ width, height }) => (
                 <Observer>

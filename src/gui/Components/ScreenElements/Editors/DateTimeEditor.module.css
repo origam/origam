@@ -106,3 +106,16 @@
   white-space: nowrap;
   overflow: hidden;
 }
+
+.dropdownSymbol {
+  position: absolute;
+  right: 1px;
+  margin-top: 0px;
+  padding: 1px;
+  z-index: 200;
+  background-color: white;
+}
+
+.dropdownSymbol:hover {
+  background-color: #8998c5;
+}

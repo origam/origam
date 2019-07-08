@@ -1,12 +1,13 @@
 import React from "react";
 
 import { FormSection } from "../../../Components/ScreenElements/FormSection";
-import { observer, inject } from "mobx-react";
+import { observer, inject, Provider } from "mobx-react";
 import { findStrings } from "../../../../xmlInterpreters/screenXml";
 import { getDataViewPropertyById } from "../../../../model/selectors/DataView/getDataViewPropertyById";
 import { IDataView } from "../../../../model/types/IDataView";
 import { FormField } from "./FormField";
 import { FormRoot } from "../../../Components/ScreenElements/FormRoot";
+import { FormViewEditor } from "./FormViewEditor";
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -48,19 +49,22 @@ export class FormBuilder extends React.Component<{
             propertyId
           );
           return property ? (
-            <FormField
-              Id={property.id}
-              Name={property.name}
-              CaptionLength={property.captionLength}
-              CaptionPosition={property.captionPosition}
-              Column={property.column}
-              Entity={property.entity}
-              Height={property.height}
-              Width={property.width}
-              X={property.x}
-              Y={property.y}
-            />
-            
+            <Provider property={property}>
+              <FormField
+                Id={property.id}
+                Name={property.name}
+                CaptionLength={property.captionLength}
+                CaptionPosition={property.captionPosition}
+                Column={property.column}
+                Entity={property.entity}
+                Height={property.height}
+                Width={property.width}
+                X={property.x}
+                Y={property.y}
+              >
+                <FormViewEditor />
+              </FormField>
+            </Provider>
           ) : null;
         });
       } else {
