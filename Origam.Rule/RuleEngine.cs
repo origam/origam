@@ -2978,7 +2978,7 @@ namespace Origam.Rule
 					DataRow row = queueEntry[0] as DataRow;
 					DataStructureRuleSet rs = queueEntry[1] as DataStructureRuleSet;
 					Hashtable changedColumns = queueEntry[2] as Hashtable;
-					IDataDocument data = queueEntry[3] as IDataDocument;
+					IDataDocument data = new DataDocumentCore(queueEntry[3] as XmlDocument);
 
 					row.BeginEdit();
 
