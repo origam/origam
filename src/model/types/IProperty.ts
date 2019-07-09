@@ -21,6 +21,7 @@ export interface IPropertyData {
   isPassword: boolean;
   isRichText: boolean;
   maxLength: number;
+  dataIndex: number;
 
   dropDownShowUniqueValues?:boolean;
   lookupId?: string;
@@ -35,5 +36,6 @@ export interface IPropertyData {
 }
 
 export interface IProperty extends IPropertyData {
+  lookupCache: Map<string, any>;
   parent?: any;
 }

@@ -19,6 +19,7 @@ export interface ILoadedFormScreenData {
   componentBindings: IComponentBinding[];
   screenUI: any;
   formScreenLifecycle: IFormScreenLifecycle;
+  isSessioned: boolean;
   // componentBindings: types.array(ComponentBinding),
   // dataSources: types.array(DataSource)
 }
@@ -26,6 +27,13 @@ export interface ILoadedFormScreenData {
 export interface ILoadedFormScreen extends ILoadedFormScreenData {
   $type: typeof CFormScreen;
   isLoading: false;
+  rootDataViews: IDataView[];
+
+  getBindingsByChildId(childId: string): IComponentBinding[];
+  getBindingsByParentId(parentId: string): IComponentBinding[];
+  getDataViewByModelInstanceId(modelInstanceId: string): IDataView | undefined;
+  getDataSourceByEntity(entity: string): IDataSource | undefined;
+
   parent?: any;
 }
 

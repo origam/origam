@@ -38,4 +38,6 @@ export class Property implements IProperty {
   allowReturnToForm?: boolean | undefined;
   isTree?: boolean | undefined;
   dropDownColumns: IDropDownColumn[] = [];
+  lookupCache: Map<string, any> = new Map();
+  dataIndex: number = 0;
 }

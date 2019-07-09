@@ -1,9 +1,31 @@
 import bind from "bind-decorator";
-import { IRenderCellArgs, IRenderedCell } from "./types";
+import {
+  IRenderCellArgs,
+  IRenderedCell
+} from "../../../Components/ScreenElements/Table/types";
 import { CPR } from "../../../../utils/canvas";
 import moment from "moment";
+import { IDataTable } from "../../../../model/types/IDataTable";
+import { IProperty } from "../../../../model/types/IProperty";
+import { computed } from "mobx";
+
+export interface ICellRendererData {
+  getCellValue: (columnIdx: number, rowIdx: number) => any;
+  getTableViewProperties: () => IProperty[];
+}
 
 export class CellRenderer {
+  constructor(data: ICellRendererData) {
+    Object.assign(this, data);
+  }
+
+  getCellValue: (rowIdx: number, columnIdx: number) => any = null as any;
+  getTableViewProperties: () => IProperty[] = null as any;
+
+  @computed get tableViewProperties() {
+    return this.getTableViewProperties();
+  }
+
   @bind
   renderCell({
     rowIndex,
@@ -75,14 +97,16 @@ export class CellRenderer {
   }
 
   getCell(rowIndex: number, columnIndex: number): IRenderedCell {
+    const value = this.getCellValue(rowIndex, columnIndex);
+    const property = this.tableViewProperties[columnIndex];
     return {
-      isCellCursor: rowIndex === 3 && columnIndex === 5,
+      isCellCursor: rowIndex === 3 && columnIndex === 2,
       isRowCursor: rowIndex === 3,
       isLoading: false,
       isInvalid: false,
       formatterPattern: "",
-      type: "Text",
-      value: `${rowIndex};${columnIndex}`
+      type: property.column,
+      value,
     };
   }
 }

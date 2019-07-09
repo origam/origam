@@ -1,16 +1,20 @@
 import { IFormScreenLifecycle } from "./types/IFormScreenLifecycle";
-import { createAtom, flow, action } from "mobx";
+import { createAtom, flow, action, when } from "mobx";
 import { interpret, Machine } from "xstate";
 import { getApi } from "./selectors/getApi";
 import { getMenuItemId } from "./selectors/getMenuItemId";
 import xmlJs from "xml-js";
 import { interpretScreenXml } from "../xmlInterpreters/screenXml";
 import { getOpenedScreen } from "./selectors/getOpenedScreen";
+import { getFormScreen } from "./selectors/FormScreen/getFormScreen";
+import { loadFreshData } from "./actions/DataView/loadFreshData";
+import { getDataViewList } from './selectors/FormScreen/getDataViewList';
 
 const loadScreenSuccess = "loadScreenSuccess";
 const loadScreenFailed = "loadScreenFailed";
 
 const sLoadScreen = "sLoadScreen";
+const sLoadDataViews = "sLoadDataViews";
 const sIdle = "sIdle";
 
 export class FormScreenLifecycle implements IFormScreenLifecycle {
@@ -19,18 +23,19 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
       initial: sLoadScreen,
       states: {
         [sLoadScreen]: {
-          invoke: { src: "loadScreen" },
-          on: {
-            [loadScreenSuccess]: sIdle
-          }
+          invoke: { src: "loadScreen", onDone: sLoadDataViews }
+        },
+        [sLoadDataViews]: {
+          invoke: { src: "loadDataViews", onDone: sIdle }
         },
         [sIdle]: {}
       }
     },
     {
       services: {
-        loadScreen: (ctx, event) => (send, onEvent) =>
-          flow(this.loadScreen.bind(this))()
+        loadScreen: (ctx, event) => flow(this.loadScreen.bind(this))() as any,
+        loadDataViews: (ctx, event) =>
+          flow(this.loadDataViews.bind(this))() as any
       },
       actions: {}
     }
@@ -54,7 +59,14 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
     const screenXmlObj = yield api.getScreen(menuItemId);
     const screen = interpretScreenXml(screenXmlObj, this);
     openedScreen.setContent(screen);
+    getDataViewList(screen).forEach(dv => dv.run())
     // console.log(screen);
+  }
+
+  *loadDataViews() {
+    const screen = getFormScreen(this);
+    screen.rootDataViews.forEach(s => loadFreshData(s));
+    yield when(() => screen.rootDataViews.every(dv => !dv.isWorking));
   }
 
   @action.bound

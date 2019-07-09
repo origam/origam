@@ -12,6 +12,8 @@ import {
   ComponentBinding
 } from "../model/ComponentBinding";
 import { IFormScreenLifecycle } from "../model/types/IFormScreenLifecycle";
+import { DataTable } from "../model/DataTable";
+import { DataViewLifecycle } from "../model/DataViewLifecycle";
 
 export const findUIRoot = (node: any) =>
   findStopping(node, n => n.name === "UIRoot")[0];
@@ -109,9 +111,11 @@ export function interpretScreenXml(
       windowXml.attributes.RequestSaveAfterUpdate === "true",
     screenUI: screenDoc,
     formScreenLifecycle,
+    isSessioned: windowXml.attributes.UseSession,
     dataSources: dataSourcesXml.elements.map((dataSource: any) => {
       return new DataSource({
         entity: dataSource.attributes.Entity,
+        dataStructureEntityId: dataSource.attributes.DataStructureEntityId,
         identifier: dataSource.attributes.Identifier,
         lookupCacheKey: dataSource.attributes.LookupCacheKey,
         fields: findStopping(dataSource, n => n.name === "Field").map(field => {
@@ -156,10 +160,12 @@ export function interpretScreenXml(
         confirmSelectionChange:
           dataView.attributes.ConfirmSelectionChange === "true",
         formViewUI: findFormRoot(dataView),
-
+        dataTable: new DataTable(),
+        lifecycle: new DataViewLifecycle(),
         properties: findStopping(dataView, n => n.name === "Property").map(
-          property => {
+          (property, idx) => {
             return new Property({
+              dataIndex: idx,
               id: property.attributes.Id,
               modelInstanceId: property.attributes.ModelInstanceId || "",
               name: property.attributes.Name,
@@ -213,5 +219,17 @@ export function interpretScreenXml(
     }),
     componentBindings
   });
+
+  const tdv1 = scr.dataViews.find(dv => dv.id === "AsPanel1_1");
+  if (tdv1) {
+    for (let ri = 0; ri < 1000; ri++) {
+      const row = [];
+      for (let ci = 0; ci < 4; ci++) {
+        row.push(Math.random() + "");
+      }
+      tdv1.dataTable.rows.push(row);
+    }
+  }
+
   return scr;
 }

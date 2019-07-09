@@ -1,6 +1,9 @@
 import { IPanelViewType } from "./IPanelViewType";
 import { IProperty } from "./IProperty";
 import { IDataSource } from "./IDataSource";
+import { IDataTable } from "./IDataTable";
+import { IComponentBinding } from "./IComponentBinding";
+import { IDataViewLifecycle } from "./IDataViewLifecycle";
 
 export const CDataView = "CDataView";
 
@@ -27,15 +30,26 @@ export interface IDataViewData {
   requestDataAfterSelectionChange: boolean;
   confirmSelectionChange: boolean;
   properties: IProperty[];
+  dataTable: IDataTable;
   formViewUI: any;
   activePanelView: IPanelViewType;
+  lifecycle: IDataViewLifecycle;
 }
 
 export interface IDataView extends IDataViewData {
   $type: typeof CDataView;
+  tableViewProperties: IProperty[];
+  isBindingRoot: boolean;
+  parentBindings: IComponentBinding[];
+  childBindings: IComponentBinding[];
+  isWorking: boolean;
+
+  dataSource: IDataSource;
 
   onFormPanelViewButtonClick(event: any): void;
   onTablePanelViewButtonClick(event: any): void;
+
+  run(): void;
 
   parent?: any;
 }

@@ -9,9 +9,9 @@ import {
 } from "./types/IFormScreen";
 import { IFormScreenLifecycle } from "./types/IFormScreenLifecycle";
 import { ILoadingFormScreenData } from "./types/IFormScreen";
+import { computed } from "mobx";
 
 export class FormScreen implements ILoadedFormScreen {
-  
   $type: typeof CFormScreen = CFormScreen;
 
   constructor(data: ILoadedFormScreenData) {
@@ -35,13 +35,33 @@ export class FormScreen implements ILoadedFormScreen {
   screenUI: any;
   isLoading: false = false;
   formScreenLifecycle: IFormScreenLifecycle = null as any;
+  isSessioned: boolean = false;
   dataViews: IDataView[] = [];
   dataSources: IDataSource[] = [];
   componentBindings: IComponentBinding[] = [];
+
+  @computed get rootDataViews(): IDataView[] {
+    return this.dataViews.filter(dv => dv.isBindingRoot);
+  }
+
+  getBindingsByChildId(childId: string) {
+    return this.componentBindings.filter(b => b.childId === childId);
+  }
+
+  getBindingsByParentId(parentId: string) {
+    return this.componentBindings.filter(b => b.parentId === parentId);
+  }
+
+  getDataViewByModelInstanceId(modelInstanceId: string): IDataView | undefined {
+    return this.dataViews.find(dv => dv.modelInstanceId === modelInstanceId);
+  }
+
+  getDataSourceByEntity(entity: string): IDataSource | undefined {
+    return this.dataSources.find(ds => ds.entity === entity);
+  }
 }
 
 export class LoadingFormScreen implements ILoadingFormScreen {
-
   $type: typeof CFormScreen = CFormScreen;
 
   constructor(data: ILoadingFormScreenData) {

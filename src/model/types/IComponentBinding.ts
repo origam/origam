@@ -1,3 +1,5 @@
+import { IDataView } from "./IDataView";
+
 export interface IComponentBindingData {
   parentId: string;
   parentEntity: string;
@@ -8,6 +10,8 @@ export interface IComponentBindingData {
 }
 
 export interface IComponentBinding extends IComponentBindingData {
+  parentDataView: IDataView;
+  childDataView: IDataView;
   parent?: any;
 }
 

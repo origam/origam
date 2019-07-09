@@ -2,6 +2,7 @@ import { IDataSource, IDataSourceData } from "./types/IDataSource";
 import { IDataSourceField } from "./types/IDataSourceField";
 
 export class DataSource implements IDataSource {
+  
   constructor(data: IDataSourceData) {
     Object.assign(this, data);
     this.fields.forEach(o => (o.parent = this));
@@ -10,6 +11,7 @@ export class DataSource implements IDataSource {
   parent?: any;
 
   entity: string = "";
+  dataStructureEntityId: string = "";
   identifier: string = "";
   lookupCacheKey: string = "";
   fields: IDataSourceField[] = [];

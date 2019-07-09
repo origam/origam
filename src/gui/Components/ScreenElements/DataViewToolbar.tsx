@@ -4,10 +4,12 @@ import S from "./DataViewToolbar.module.css";
 import { IDataView } from "../../../model/types/IDataView";
 import { IPanelViewType } from "../../../model/types/IPanelViewType";
 import { getActivePanelView } from "../../../model/selectors/DataView/getActivePanelView";
+import { getDataViewLabel } from "../../../model/selectors/DataView/getDataViewLabel";
 
 @inject(({ dataView }: { dataView: IDataView }) => {
   return {
     activePanelView: getActivePanelView(dataView),
+    label: getDataViewLabel(dataView),
     onFormViewButtonClick: dataView.onFormPanelViewButtonClick,
     onTableViewButtonClick: dataView.onTablePanelViewButtonClick
   };
@@ -15,6 +17,7 @@ import { getActivePanelView } from "../../../model/selectors/DataView/getActiveP
 @observer
 export class Toolbar extends React.Component<{
   activePanelView?: IPanelViewType;
+  label?: string;
   onFormViewButtonClick?: (event: any) => void;
   onTableViewButtonClick?: (event: any) => void;
 }> {
@@ -28,7 +31,7 @@ export class Toolbar extends React.Component<{
             </div>
           )}
           {false && <i className="fas fa-exclamation-circle red" />}
-          <div className={S.label}>{"Data view label"}</div>
+          <div className={S.label}>{this.props.label}</div>
           {false && <i className="fas fa-filter red" />}
         </div>
         <div className={S.section}>

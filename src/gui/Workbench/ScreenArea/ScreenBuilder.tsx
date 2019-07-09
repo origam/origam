@@ -12,7 +12,7 @@ export class ScreenBuilder extends React.Component<{
   render() {
     const { openedScreen } = this.props;
     const { content } = openedScreen;
-    console.log(content)
+    console.log(content);
     switch (content.$type) {
       case CFormScreen:
         return !content.isLoading ? (
@@ -22,7 +22,7 @@ export class ScreenBuilder extends React.Component<{
               isVisible={openedScreen.isActive}
               isFullScreen={false}
               title={openedScreen.title}
-              isSessioned={false}
+              isSessioned={content.isSessioned}
             >
               {!content.isLoading && (
                 <FormScreenBuilder xmlWindowObject={content.screenUI} />

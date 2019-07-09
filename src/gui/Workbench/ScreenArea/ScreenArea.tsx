@@ -1,31 +1,10 @@
-import S from "./ScreenArea.module.css";
-import FSS from "./FormScreen.module.css";
-
+import { inject, observer, Observer } from "mobx-react";
 import React from "react";
-import { observer, inject, Observer } from "mobx-react";
-import { action, observable } from "mobx";
-import {
-  ModalWindowOverlay,
-  ModalWindow
-} from "../../Components/Dialog/Dialog";
-import { FormScreen } from "./FormScreen";
-import { VBox } from "../../Components/ScreenElements/VBox";
-import {
-  TabbedPanel,
-  TabBody,
-  TabHandle
-} from "../../Components/ScreenElements/TabbedPanel";
-import { VSplit, VSplitPanel } from "../../Components/ScreenElements/VSplit";
-import { HSplit, HSplitPanel } from "../../Components/ScreenElements/HSplit";
-import { FormScreenBuilder } from "./FormScreenBuilder";
-import axios from "axios";
-import xmlJs from "xml-js";
-import { ColumnsDialog } from "../../Components/Dialogs/ColumnsDialog";
-import { getOpenedScreens } from "../../../model/selectors/getOpenedScreens";
-import { IOpenedScreen } from "../../../model/types/IOpenedScreen";
 import { getApplicationLifecycle } from "../../../model/selectors/getApplicationLifecycle";
+import { getOpenedScreenItems } from "../../../model/selectors/getOpenedScreenItems";
+import { IOpenedScreen } from "../../../model/types/IOpenedScreen";
+import S from "./ScreenArea.module.css";
 import { ScreenBuilder } from "./ScreenBuilder";
-import { getOpenedScreenItems } from '../../../model/selectors/getOpenedScreenItems';
 
 @observer
 class MainViewHandle extends React.Component<{

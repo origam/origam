@@ -5,7 +5,7 @@ import * as serviceWorker from "./serviceWorker";
 
 import { WorkbenchPage } from "./gui/Workbench/WorkbenchPage";
 import { LoginPage } from "./gui/Login/LoginPage";
-import { action } from "mobx";
+import { action, observable, runInAction} from "mobx";
 import { ApplicationLifecycle } from "./model/ApplicationLifecycle";
 import { Application } from "./model/Application";
 import { Provider } from "mobx-react";
@@ -26,4 +26,6 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
+
+
 

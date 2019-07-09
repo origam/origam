@@ -1,87 +1,15 @@
+import { action, computed, observable } from "mobx";
+import { observer, Observer } from "mobx-react";
 import React from "react";
-import { observable, computed, action } from "mobx";
-import { observer, Observer, Provider } from "mobx-react";
-import { VBox } from "../../Components/ScreenElements/VBox";
-import { HSplit, HSplitPanel } from "../../Components/ScreenElements/HSplit";
-import { VSplitPanel, VSplit } from "../../Components/ScreenElements/VSplit";
-import { Label } from "../../Components/ScreenElements/Label";
-import { DataView } from "../../Components/ScreenElements/DataView";
-
-import {
-  TabbedPanel,
-  TabHandle,
-  TabBody
-} from "../../Components/ScreenElements/TabbedPanel";
+import { findBoxes, findUIChildren, findUIRoot } from "../../../xmlInterpreters/screenXml";
 import { Box } from "../../Components/ScreenElements/Box";
-import { FormView } from "./FormView/FormView";
-import { FormRoot } from "../../Components/ScreenElements/FormRoot";
-import { FormSection } from "../../Components/ScreenElements/FormSection";
-import { Table } from "../../Components/ScreenElements/Table/Table";
-import {
-  IGridDimensions,
-  IOrderByDirection
-} from "../../Components/ScreenElements/Table/types";
-import { SimpleScrollState } from "../../Components/ScreenElements/Table/SimpleScrollState";
-import bind from "bind-decorator";
-import { Header } from "../../Components/ScreenElements/Table/Header";
-import { CellRenderer } from "../../Components/ScreenElements/Table/CellRenderer";
-import { FormBuilder } from "./FormView/FormBuilder";
-import {
-  findUIChildren,
-  findBoxes,
-  findUIRoot
-} from "../../../xmlInterpreters/screenXml";
+import { DataView } from "../../Components/ScreenElements/DataView";
+import { HSplit, HSplitPanel } from "../../Components/ScreenElements/HSplit";
+import { Label } from "../../Components/ScreenElements/Label";
+import { TabbedPanel, TabBody, TabHandle } from "../../Components/ScreenElements/TabbedPanel";
+import { VBox } from "../../Components/ScreenElements/VBox";
+import { VSplit, VSplitPanel } from "../../Components/ScreenElements/VSplit";
 
-class GridDimensions implements IGridDimensions {
-  rowCount = 100;
-  columnCount = 50;
-  get contentWidth() {
-    return this.getColumnRight(this.columnCount - 1);
-  }
-
-  get contentHeight() {
-    return this.getRowBottom(this.rowCount - 1);
-  }
-
-  getColumnLeft(columnIndex: number): number {
-    return columnIndex * 100;
-  }
-
-  getColumnWidth(columnIndex: number): number {
-    return 100;
-  }
-
-  getColumnRight(columnIndex: number): number {
-    return this.getColumnLeft(columnIndex) + this.getColumnWidth(columnIndex);
-  }
-
-  getRowTop(rowIndex: number): number {
-    return rowIndex * 20;
-  }
-
-  getRowHeight(rowIndex: number): number {
-    return 20;
-  }
-
-  getRowBottom(rowIndex: number): number {
-    return this.getRowTop(rowIndex) + this.getRowHeight(rowIndex);
-  }
-}
-
-class HeaderRenderer {
-  @bind
-  renderHeader(args: { columnIndex: number; columnWidth: number }) {
-    return (
-      <Header
-        key={args.columnIndex}
-        width={args.columnWidth}
-        label={`Col ${args.columnIndex}`}
-        orderingDirection={IOrderByDirection.NONE}
-        orderingOrder={0}
-      />
-    );
-  }
-}
 
 @observer
 class TabbedPanelHelper extends React.Component<{
@@ -125,31 +53,7 @@ class TabbedPanelHelper extends React.Component<{
   }
 }
 
-@observer
-export class TestTable extends React.Component {
-  gDim = new GridDimensions();
-  scrollState = new SimpleScrollState(0, 0);
-  headerRenderer = new HeaderRenderer();
-  cellRenderer = new CellRenderer();
 
-  render() {
-    const self = this;
-    return (
-      <Table
-        gridDimensions={self.gDim}
-        scrollState={self.scrollState}
-        editingRowIndex={undefined}
-        editingColumnIndex={undefined}
-        isEditorMounted={false}
-        fixedColumnCount={0}
-        isLoading={false}
-        renderHeader={self.headerRenderer.renderHeader}
-        renderCell={self.cellRenderer.renderCell}
-        renderEditor={() => null}
-      />
-    );
-  }
-}
 
 @observer
 export class FormScreenBuilder extends React.Component<{

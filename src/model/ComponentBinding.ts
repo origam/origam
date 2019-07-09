@@ -4,6 +4,10 @@ import {
   IComponentBindingPair,
   IComponentBindingPairData
 } from "./types/IComponentBinding";
+import { computed } from "mobx";
+import { IDataView } from "./types/IDataView";
+import { getFormScreen } from './selectors/FormScreen/getFormScreen';
+import { getDataView } from './selectors/DataView/getDataView';
 
 export class ComponentBindingPair implements IComponentBindingPair {
   constructor(data: IComponentBindingPairData) {
@@ -16,6 +20,7 @@ export class ComponentBindingPair implements IComponentBindingPair {
 }
 
 export class ComponentBinding implements IComponentBinding {
+
   constructor(data: IComponentBindingData) {
     Object.assign(this, data);
     this.bindingPairs.forEach(o => (o.parent = this));
@@ -28,4 +33,14 @@ export class ComponentBinding implements IComponentBinding {
   childEntity: string = "";
   childPropertyType: string = "";
   bindingPairs: IComponentBindingPair[] = [];
+
+  @computed get parentDataView(): IDataView {
+    const screen = getFormScreen(this);
+    return screen.getDataViewByModelInstanceId(this.parentId)!
+  }
+
+  @computed get childDataView(): IDataView {
+    const screen = getFormScreen(this);
+    return screen.getDataViewByModelInstanceId(this.childId)!
+  }
 }

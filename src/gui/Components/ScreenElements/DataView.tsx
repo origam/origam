@@ -4,9 +4,9 @@ import { Toolbar } from "./DataViewToolbar";
 import { observer, inject, Provider } from "mobx-react";
 import { getDataViewById } from "../../../model/selectors/DataView/getDataViewById";
 import { IDataView } from "../../../model/types/IDataView";
-import { TestTable } from "../../Workbench/ScreenArea/FormScreenBuilder";
 import { FormBuilder } from "../../Workbench/ScreenArea/FormView/FormBuilder";
 import { IPanelViewType } from "../../../model/types/IPanelViewType";
+import { TableView } from "../../Workbench/ScreenArea/TableView/TableView";
 
 @inject(({ formScreen }, { id }) => {
   const dataView = getDataViewById(formScreen, id);
@@ -52,7 +52,7 @@ export class DataView extends React.Component<{
                   : "flex"
             }}
           >
-            <TestTable />
+            <TableView />
           </div>
           <div
             style={{

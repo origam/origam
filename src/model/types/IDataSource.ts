@@ -5,6 +5,7 @@ export interface IDataSourceData {
   identifier: string;
   lookupCacheKey: string;
   fields: IDataSourceField[];
+  dataStructureEntityId: string;
 }
 
 export interface IDataSource extends IDataSourceData {
