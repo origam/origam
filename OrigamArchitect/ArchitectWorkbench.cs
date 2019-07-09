@@ -1264,7 +1264,7 @@ namespace OrigamArchitect
                 {
                     this.RunWithInvokeAsync(() => UpdateUIAfterReload(filePersistenceProvider, args));
                 }
-                this.RunWithInvoke(DoModelChecksAsync); 
+                //this.RunWithInvoke(DoModelChecksAsync); 
             }
 		}
 
