@@ -69,7 +69,7 @@ namespace Origam.DA.Service
         }
         private void SaveIndex(CancellationToken cancellationToken)
         {
-            while (true)
+            while (!cancellationToken.IsCancellationRequested)
             {
                 if (fileSaveQueue.Count > 0)
                 {
@@ -82,10 +82,6 @@ namespace Origam.DA.Service
                     {
                         Thread.Sleep(2000);
                     }
-                }
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    break;
                 }
             }
         }
