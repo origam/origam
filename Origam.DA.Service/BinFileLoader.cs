@@ -83,7 +83,10 @@ namespace Origam.DA.Service
                         Thread.Sleep(2000);
                     }
                 }
-                cancellationToken.ThrowIfCancellationRequested();
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    break;
+                }
             }
         }
 
