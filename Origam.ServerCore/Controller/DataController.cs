@@ -209,7 +209,7 @@ namespace Origam.ServerCore.Controller
 
             return AreColumnNamesValid(lookupData, dataTable)
                 ? Result.Ok<IEnumerable<object[]>, IActionResult>(GetRowData(lookupData, dataTable))
-                : Result.Fail<IEnumerable<object[]>, IActionResult>( BadRequest("Some of the supplied column names are not in the table."));
+                : Result.Fail<IEnumerable<object[]>, IActionResult>(BadRequest("Some of the supplied column names are not in the table."));
         }
 
         private static bool AreColumnNamesValid(LookupListData lookupData, DataTable dataTable)

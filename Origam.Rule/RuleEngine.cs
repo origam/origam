@@ -4846,7 +4846,40 @@ namespace Origam.Rule
 		}
 	}
 
-	class FormatLinkFunction : IXsltContextFunction 
+    class FormatNumberFunction : IXsltContextFunction
+    {
+		private XPathResultType[] _argTypes = null;
+		public RuleEngine Engine = null;
+
+		public FormatNumberFunction(XPathResultType[] argTypes)
+		{
+			_argTypes = argTypes;
+		}
+		public int Minargs    
+		{ 
+			get { return 2; }
+		}
+		public int Maxargs    
+		{ 
+			get { return 2; }
+		}
+		public XPathResultType ReturnType 
+		{ 
+			get { return XPathResultType.String; }
+		}
+		public XPathResultType[] ArgTypes
+		{ 
+			get { return _argTypes; }
+		}
+        public object Invoke(
+            XsltContext xsltContext, object[] args, XPathNavigator docContext)
+        {
+			return Engine.FormatNumber(XmlTools.XPathArgToString(
+				args[0]), XmlTools.XPathArgToString(args[1]));
+        }
+    }
+
+    class FormatLinkFunction : IXsltContextFunction 
 	{
 		private XPathResultType[] _argTypes = null;
 		public RuleEngine Engine = null;
@@ -5682,7 +5715,6 @@ namespace Origam.Rule
 			{
 				GetConstantFunction f = new GetConstantFunction(ArgTypes);
 				f.Engine = this.Engine;
-
 				return f;
 			}
             else if (name == "GetString")
@@ -5701,7 +5733,6 @@ namespace Origam.Rule
             {
                 NumberOperandFunction f = new NumberOperandFunction(ArgTypes);
                 f.Engine = this.Engine;
-
                 return f;
             }
             else if (name == "Plus")
@@ -5734,6 +5765,12 @@ namespace Origam.Rule
                 f.Engine = this.Engine;
                 return f;
             }
+			else if (name == "FormatNumber")
+			{
+				FormatNumberFunction f = new FormatNumberFunction(ArgTypes);
+                f.Engine = this.Engine;
+				return f;
+			}
             else if (name == "MinString")
             {
                 MinStringFunction f = new MinStringFunction(ArgTypes);
@@ -5745,7 +5782,6 @@ namespace Origam.Rule
             {
                 MaxStringFunction f = new MaxStringFunction(ArgTypes);
                 f.Engine = this.Engine;
-
                 return f;
             }
             else if (name == "LookupValue")
@@ -5759,14 +5795,12 @@ namespace Origam.Rule
             {
                 NormalRoundFunction f = new NormalRoundFunction(ArgTypes);
                 f.Engine = this.Engine;
-
                 return f;
             }
 			else if (name == "DecodeSignedOverpunch")
 			{
 				DecodeSignedOverpunchFunction f = new DecodeSignedOverpunchFunction(ArgTypes);
 				f.Engine = this.Engine;
-
 				return f;
 			}
 			else if (name == "ResizeImage")
@@ -5779,21 +5813,18 @@ namespace Origam.Rule
             {
                 OrigamRoundFunction f = new OrigamRoundFunction(ArgTypes);
                 f.Engine = this.Engine;
-
                 return f;
             }
             else if (name == "iif")
             {
                 IifFunction f = new IifFunction(ArgTypes);
                 f.Engine = this.Engine;
-
                 return f;
             }
             else if (name == "isnull")
             {
                 IsNullFunction f = new IsNullFunction(ArgTypes);
                 f.Engine = this.Engine;
-
                 return f;
             }
 			else if (name == "EncodeDataForUri")
@@ -5812,21 +5843,18 @@ namespace Origam.Rule
 			{
 				AddDaysFunction f = new AddDaysFunction(ArgTypes);
 				f.Engine = this.Engine;
-
 				return f;
 			}
 			else if (name == "AddMonths")
 			{
 				AddMonthsFunction f = new AddMonthsFunction(ArgTypes);
 				f.Engine = this.Engine;
-
 				return f;
 			}
 			else if (name == "AddHours")
 			{
 				AddHoursFunction f = new AddHoursFunction(ArgTypes);
 				f.Engine = this.Engine;
-
 				return f;
 			}
 			else if (name == "AddYears")
@@ -5839,14 +5867,12 @@ namespace Origam.Rule
 			{
 				DifferenceInDaysFunction f = new DifferenceInDaysFunction(ArgTypes);
 				f.Engine = this.Engine;
-
 				return f;
 			}
 			else if (name == "DifferenceInMinutes")
 			{
 				DifferenceInMinutesFunction f = new DifferenceInMinutesFunction(ArgTypes);
 				f.Engine = this.Engine;
-
 				return f;
 			}
 			else if (name == "DifferenceInSeconds")
