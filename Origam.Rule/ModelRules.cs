@@ -36,6 +36,7 @@ namespace Origam.Rule
             FilePersistenceService independentPersistenceService,
             CancellationToken cancellationToken)
         {
+           ReferenceIndexManager.ClearReferenceIndex();
            List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
                     .SchemaProvider
                     .RetrieveList<IFilePersistent>()

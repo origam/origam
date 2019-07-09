@@ -42,6 +42,7 @@ namespace Origam.DA.Service
         public static void ClearReferenceIndex()
         {
             referenceIndex.Clear();
+            UseIndex = false;
         }
         private static void Remove(IPersistent sender)
         {
