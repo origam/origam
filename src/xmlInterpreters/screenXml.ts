@@ -14,6 +14,8 @@ import {
 import { IFormScreenLifecycle } from "../model/types/IFormScreenLifecycle";
 import { DataTable } from "../model/DataTable";
 import { DataViewLifecycle } from "../model/DataViewLifecycle";
+import { TablePanelView } from "../model/TablePanelView/TablePanelView";
+import { FormPanelView } from "../model/FormPanelView/FormPanelView";
 
 export const findUIRoot = (node: any) =>
   findStopping(node, n => n.name === "UIRoot")[0];
@@ -128,6 +130,55 @@ export function interpretScreenXml(
     }),
 
     dataViews: dataViews.map(dataView => {
+      const properties = findStopping(dataView, n => n.name === "Property").map(
+        (property, idx) => {
+          return new Property({
+            dataIndex: idx,
+            id: property.attributes.Id,
+            modelInstanceId: property.attributes.ModelInstanceId || "",
+            name: property.attributes.Name,
+            readOnly: property.attributes.ReadOnly === "true",
+            x: parseInt(property.attributes.X, 10),
+            y: parseInt(property.attributes.Y, 10),
+            width: parseInt(property.attributes.Width, 10),
+            height: parseInt(property.attributes.Height, 10),
+            captionLength: parseInt(property.attributes.CaptionLength, 10),
+            captionPosition: property.attributes.CaptionPosition,
+            entity: property.attributes.Entity,
+            column: property.attributes.Column,
+            dock: property.attributes.Dock,
+            multiline: property.attributes.Multiline === "true",
+            isPassword: property.attributes.IsPassword === "true",
+            isRichText: property.attributes.IsRichText === "true",
+            maxLength: parseInt(property.attributes.MaxLength, 10),
+
+            dropDownShowUniqueValues:
+              property.attributes.DropDownShowUniqueValues === "true",
+            lookupId: property.attributes.LookupId,
+            identifier: property.attributes.Identifier,
+            identifierIndex: parseInt(property.attributes.IdentifierIndex, 10),
+            dropDownType: property.attributes.DropDownType,
+            cached: property.attributes.Cached === "true",
+            searchByFirstColumnOnly:
+              property.attributes.SearchByFirstColumnOnly === "true",
+            allowReturnToForm: property.attributes.AllowReturnToForm === "true",
+            isTree: property.attributes.IsTree === "true",
+
+            dropDownColumns: findStopping(
+              property,
+              n => n.name === "Property"
+            ).map(ddProperty => {
+              return new DropDownColumn({
+                id: ddProperty.attributes.Id,
+                name: ddProperty.attributes.Name,
+                column: ddProperty.attributes.Column,
+                entity: ddProperty.attributes.Entity,
+                index: parseInt(ddProperty.attributes.Index, 10)
+              });
+            })
+          });
+        }
+      );
       return new DataView({
         id: dataView.attributes.Id,
         modelInstanceId: dataView.attributes.ModelInstanceId,
@@ -160,61 +211,13 @@ export function interpretScreenXml(
         confirmSelectionChange:
           dataView.attributes.ConfirmSelectionChange === "true",
         formViewUI: findFormRoot(dataView),
-        dataTable: new DataTable(),
+        dataTable: new DataTable({}),
         lifecycle: new DataViewLifecycle(),
-        properties: findStopping(dataView, n => n.name === "Property").map(
-          (property, idx) => {
-            return new Property({
-              dataIndex: idx,
-              id: property.attributes.Id,
-              modelInstanceId: property.attributes.ModelInstanceId || "",
-              name: property.attributes.Name,
-              readOnly: property.attributes.ReadOnly === "true",
-              x: parseInt(property.attributes.X, 10),
-              y: parseInt(property.attributes.Y, 10),
-              width: parseInt(property.attributes.Width, 10),
-              height: parseInt(property.attributes.Height, 10),
-              captionLength: parseInt(property.attributes.CaptionLength, 10),
-              captionPosition: property.attributes.CaptionPosition,
-              entity: property.attributes.Entity,
-              column: property.attributes.Column,
-              dock: property.attributes.Dock,
-              multiline: property.attributes.Multiline === "true",
-              isPassword: property.attributes.IsPassword === "true",
-              isRichText: property.attributes.IsRichText === "true",
-              maxLength: parseInt(property.attributes.MaxLength, 10),
-
-              dropDownShowUniqueValues:
-                property.attributes.DropDownShowUniqueValues === "true",
-              lookupId: property.attributes.LookupId,
-              identifier: property.attributes.Identifier,
-              identifierIndex: parseInt(
-                property.attributes.IdentifierIndex,
-                10
-              ),
-              dropDownType: property.attributes.DropDownType,
-              cached: property.attributes.Cached === "true",
-              searchByFirstColumnOnly:
-                property.attributes.SearchByFirstColumnOnly === "true",
-              allowReturnToForm:
-                property.attributes.AllowReturnToForm === "true",
-              isTree: property.attributes.IsTree === "true",
-
-              dropDownColumns: findStopping(
-                property,
-                n => n.name === "Property"
-              ).map(ddProperty => {
-                return new DropDownColumn({
-                  id: ddProperty.attributes.Id,
-                  name: ddProperty.attributes.Name,
-                  column: ddProperty.attributes.Column,
-                  entity: ddProperty.attributes.Entity,
-                  index: parseInt(ddProperty.attributes.Index, 10)
-                });
-              })
-            });
-          }
-        )
+        tablePanelView: new TablePanelView({
+          tablePropertyIds: properties.slice(1).map(prop => prop.id)
+        }),
+        formPanelView: new FormPanelView(),
+        properties
       });
     }),
     componentBindings

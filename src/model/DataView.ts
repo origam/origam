@@ -6,9 +6,12 @@ import { IDataTable } from "./types/IDataTable";
 import { getFormScreen } from "./selectors/FormScreen/getFormScreen";
 import { IDataViewLifecycle } from "./types/IDataViewLifecycle";
 import { getDataSourceByEntity } from "./selectors/DataSources/getDataSourceByEntity";
+import { ITablePanelView } from "./TablePanelView/types/ITablePanelView";
+import { IFormPanelView } from "./FormPanelView/types/IFormPanelView";
 
-export class DataView implements IDataView {
-  parent?: any;
+export class DataView implements IDataView { 
+
+  
   $type: typeof CDataView = CDataView;
 
   constructor(data: IDataViewData) {
@@ -16,8 +19,9 @@ export class DataView implements IDataView {
     this.properties.forEach(o => (o.parent = this));
     this.dataTable.parent = this;
     this.lifecycle.parent = this;
+    this.tablePanelView.parent = this;
+    this.formPanelView.parent = this;
     // Identifier - usualy Id is always the first property.
-    this.tableViewProperties = this.properties.slice(1);
   }
 
   id = "";
@@ -46,7 +50,15 @@ export class DataView implements IDataView {
   dataTable: IDataTable = null as any;
   formViewUI: any;
   lifecycle: IDataViewLifecycle = null as any;
+  tablePanelView: ITablePanelView = null as any;
+  formPanelView: IFormPanelView = null as any;
+
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
+
+  @observable selectedRowId: string | undefined;
+
+
+  
 
   get isWorking() {
     return this.lifecycle.isWorking;
@@ -86,4 +98,6 @@ export class DataView implements IDataView {
   @action.bound run() {
     this.lifecycle.run();
   }
+
+  parent?: any;
 }

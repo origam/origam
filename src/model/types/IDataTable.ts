@@ -2,15 +2,16 @@ import { IProperty } from './IProperty';
 
 export const CDataTable = "CDataTable";
 
-export interface IDataTableData {
-
-}
+export interface IDataTableData {}
 
 export interface IDataTable extends IDataTableData {
   properties: IProperty[];
   rows: any[][];
 
-  setRecords(rows: any[][]): void;
+  getCellValue(row: any[], property: IProperty): any;
+  getRowByExistingIdx(idx: number): any[];
+  getPropertyById(id: string): IProperty | undefined;
 
+  setRecords(rows: any[][]): void;
   parent?: any;
 }

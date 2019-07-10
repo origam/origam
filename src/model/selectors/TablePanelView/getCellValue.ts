@@ -1,12 +1,10 @@
 import { getDataTable } from "../DataView/getDataTable";
 import { getTableViewProperties } from "./getTableViewProperties";
+import { getTablePanelView } from "./getTablePanelView";
 
 export function getCellValue(ctx: any) {
-  const dataTable = getDataTable(ctx);
-  const tableViewProperties = getTableViewProperties(ctx);
+  const tablePanelView = getTablePanelView(ctx);
   return function getCellValue(rowIndex: number, columnIndex: number) {
-    const prop = tableViewProperties[columnIndex];
-    const value = dataTable.rows[rowIndex][prop.dataIndex];
-    return value;
+    return tablePanelView.getCellValueByIdx(rowIndex, columnIndex)
   };
 }

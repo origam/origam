@@ -99,6 +99,7 @@ export class CellRenderer {
   getCell(rowIndex: number, columnIndex: number): IRenderedCell {
     const value = this.getCellValue(rowIndex, columnIndex);
     const property = this.tableViewProperties[columnIndex];
+    // const row = this.table
     return {
       isCellCursor: rowIndex === 3 && columnIndex === 2,
       isRowCursor: rowIndex === 3,

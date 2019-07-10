@@ -1,5 +1,6 @@
 import { getDataView } from "../DataView/getDataView";
+import { getTablePanelView } from './getTablePanelView';
 
 export function getTableViewProperties(ctx: any) {
-  return getDataView(ctx).tableViewProperties;
+  return getTablePanelView(ctx).tableProperties;
 }

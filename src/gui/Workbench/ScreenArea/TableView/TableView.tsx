@@ -79,6 +79,7 @@ class GridDimensions implements IGridDimensions {
   }
 
   @computed get columnCount() {
+    debugger
     return this.tableViewProperties.length;
   }
 
