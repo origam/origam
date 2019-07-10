@@ -347,7 +347,7 @@ namespace Origam.Workbench.ServicesTests
             throw new NotImplementedException();
         }
 
-        public ArrayList GetReference(bool ignoreErrors, Key key)
+        public ArrayList GetReference( Key key)
         {
             throw new NotImplementedException();
         }
