@@ -9,6 +9,7 @@ import { getMenuItemId } from "./selectors/getMenuItemId";
 import { getDataStructureEntityId } from "./selectors/DataView/getDataStructureEntityId";
 import { getColumnNamesToLoad } from "./selectors/DataView/getColumnNamesToLoad";
 import { getDataTable } from "./selectors/DataView/getDataTable";
+import { getDataView } from './selectors/DataView/getDataView';
 
 export const loadData = "loadData";
 export const dataLoaded = "dataLoaded";
@@ -68,6 +69,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     });
     const dataTable = getDataTable(this);
     dataTable.setRecords(loadedData);
+    getDataView(this).selectFirstRow();
     this.interpreter.send(dataLoaded);
   }
 

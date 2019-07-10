@@ -16,6 +16,7 @@ import { DataTable } from "../model/DataTable";
 import { DataViewLifecycle } from "../model/DataViewLifecycle";
 import { TablePanelView } from "../model/TablePanelView/TablePanelView";
 import { FormPanelView } from "../model/FormPanelView/FormPanelView";
+import { flf2mof } from "../utils/flashDateFormat";
 
 export const findUIRoot = (node: any) =>
   findStopping(node, n => n.name === "UIRoot")[0];
@@ -151,7 +152,9 @@ export function interpretScreenXml(
             isPassword: property.attributes.IsPassword === "true",
             isRichText: property.attributes.IsRichText === "true",
             maxLength: parseInt(property.attributes.MaxLength, 10),
-
+            formatterPattern: property.attributes.FormatterPattern
+              ? flf2mof(property.attributes.FormatterPattern)
+              : "",
             dropDownShowUniqueValues:
               property.attributes.DropDownShowUniqueValues === "true",
             lookupId: property.attributes.LookupId,

@@ -2,8 +2,10 @@ import { IPropertyData, IProperty } from "./types/IProperty";
 import { ICaptionPosition } from "./types/ICaptionPosition";
 import { IDropDownColumn } from "./types/IDropDownColumn";
 import { IPropertyColumn } from "./types/IPropertyColumn";
+import { observable } from "mobx";
 
 export class Property implements IProperty {
+  
   constructor(data: IPropertyData) {
     Object.assign(this, data);
     this.dropDownColumns.forEach(o => (o.parent = this));
@@ -38,6 +40,7 @@ export class Property implements IProperty {
   allowReturnToForm?: boolean | undefined;
   isTree?: boolean | undefined;
   dropDownColumns: IDropDownColumn[] = [];
-  lookupCache: Map<string, any> = new Map();
+  formatterPattern: string = "";
+  @observable lookupCache: Map<string, any> = new Map();
   dataIndex: number = 0;
 }

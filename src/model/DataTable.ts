@@ -4,6 +4,7 @@ import { IProperty } from "./types/IProperty";
 import { getDataView } from "./selectors/DataView/getDataView";
 
 export class DataTable implements IDataTable {
+
   parent?: any;
   constructor(data: IDataTableData) {
     Object.assign(this, data);
@@ -31,6 +32,10 @@ export class DataTable implements IDataTable {
 
   getPropertyById(id: string) {
     return this.properties.find(prop => prop.id === id);
+  }
+
+  getFirstRow(): any[] | undefined {
+    return this.rows[0];
   }
 
   @action.bound setRecords(rows: any[][]) {

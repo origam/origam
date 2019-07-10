@@ -9,7 +9,6 @@ import { getDataTable } from "../selectors/DataView/getDataTable";
 import { IProperty } from "../types/IProperty";
 
 export class TablePanelView implements ITablePanelView {
-
   $type: typeof CTablePanelView = "CTablePanelView";
 
   constructor(data: ITablePanelViewData) {
@@ -50,10 +49,18 @@ export class TablePanelView implements ITablePanelView {
     console.log("CellClicked:", rowIndex, columnIndex);
     const row = this.dataTable.getRowByExistingIdx(rowIndex);
     const property = this.tableProperties[columnIndex];
-    this.selectedColumnId = property.id;
-    getDataView(this).setSelectedRowId(row[0] as string);
+
+    this.selectCell(row[0] as string, property.id);
   }
-  
+
+  @action.bound selectCell(
+    rowId: string | undefined,
+    columnId: string | undefined
+  ) {
+    this.selectedColumnId = columnId;
+    getDataView(this).setSelectedRowId(rowId);
+  }
+
   @action.bound
   setSelectedColumnId(id: string | undefined): void {
     this.selectedColumnId = id;

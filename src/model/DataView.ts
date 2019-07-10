@@ -8,6 +8,7 @@ import { IDataViewLifecycle } from "./types/IDataViewLifecycle";
 import { getDataSourceByEntity } from "./selectors/DataSources/getDataSourceByEntity";
 import { ITablePanelView } from "./TablePanelView/types/ITablePanelView";
 import { IFormPanelView } from "./FormPanelView/types/IFormPanelView";
+import { getDataTable } from "./selectors/DataView/getDataTable";
 
 export class DataView implements IDataView {
   $type: typeof CDataView = CDataView;
@@ -90,8 +91,20 @@ export class DataView implements IDataView {
     this.activePanelView = IPanelViewType.Table;
   }
 
+  @action.bound selectFirstRow() {
+    const dataTable = getDataTable(this);
+    const firstRow = dataTable.getFirstRow();
+    if(firstRow) {
+      this.selectRow(firstRow[0])
+    }
+  }
+
+  @action.bound selectRow(id: string | undefined) {
+    this.setSelectedRowId(id);
+  }
+
   @action.bound
-  setSelectedRowId(id: string): void {
+  setSelectedRowId(id: string | undefined): void {
     this.selectedRowId = id;
   }
 

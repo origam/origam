@@ -22,6 +22,7 @@ export interface IPropertyData {
   isRichText: boolean;
   maxLength: number;
   dataIndex: number;
+  formatterPattern: string;
 
   dropDownShowUniqueValues?:boolean;
   lookupId?: string;

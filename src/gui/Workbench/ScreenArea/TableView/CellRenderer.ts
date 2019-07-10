@@ -63,24 +63,30 @@ export class CellRenderer implements ICellRenderer {
       ctx.fillStyle = "black";
       switch (cell.type) {
         case "CheckBox":
-          ctx.font = `${14 * CPR}px "Font Awesome 5 Free"`;
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillText(
-            cell.value ? "\uf14a" : "\uf0c8",
-            (columnWidth / 2) * CPR,
-            (rowHeight / 2) * CPR
-          );
+          if (cell.value !== null) {
+            ctx.font = `${14 * CPR}px "Font Awesome 5 Free"`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(
+              cell.value ? "\uf14a" : "\uf0c8",
+              (columnWidth / 2) * CPR,
+              (rowHeight / 2) * CPR
+            );
+          }
           break;
         case "Date":
-          ctx.fillText(
-            moment(cell.value).format(cell.formatterPattern),
-            15 * CPR,
-            15 * CPR
-          );
+          if (cell.value !== null) {
+            ctx.fillText(
+              moment(cell.value).format(cell.formatterPattern),
+              15 * CPR,
+              15 * CPR
+            );
+          }
           break;
         default:
-          ctx.fillText("" + cell.value!, 15 * CPR, 15 * CPR);
+          if (cell.value !== null) {
+            ctx.fillText("" + cell.value!, 15 * CPR, 15 * CPR);
+          }
       }
     }
 
@@ -123,7 +129,7 @@ export class CellRenderer implements ICellRenderer {
       isRowCursor: record[0] === selectedRowId,
       isLoading: false,
       isInvalid: false,
-      formatterPattern: "",
+      formatterPattern: property.formatterPattern,
       type: property.column,
       value
     };
