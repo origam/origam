@@ -16,5 +16,9 @@ export interface ITablePanelView extends ITablePanelViewData {
 
   getCellValueByIdx(rowIdx: number, columnIdx: number): any;
 
+  onCellClick(rowIndex: number, columnIndex: number): void;
+
+  setSelectedColumnId(id: string | undefined): void;
+
   parent?: any;
 }

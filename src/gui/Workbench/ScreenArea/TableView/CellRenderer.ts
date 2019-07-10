@@ -8,23 +8,26 @@ import moment from "moment";
 import { IDataTable } from "../../../../model/types/IDataTable";
 import { IProperty } from "../../../../model/types/IProperty";
 import { computed } from "mobx";
+import { ITablePanelView } from "../../../../model/TablePanelView/types/ITablePanelView";
+import { TablePanelView } from "../../../../model/TablePanelView/TablePanelView";
+import { getCellValue } from "../../../../model/selectors/TablePanelView/getCellValue";
+import { getTableViewPropertyByIdx } from "../../../../model/selectors/TablePanelView/getTableViewPropertyByIdx";
+import { getTableViewRecordByExistingIdx } from "../../../../model/selectors/TablePanelView/getTableViewRecordByExistingIdx";
+import { getSelectedColumnId } from "../../../../model/selectors/TablePanelView/getSelectedColumnId";
+import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/getSelectedRowId";
 
 export interface ICellRendererData {
-  getCellValue: (columnIdx: number, rowIdx: number) => any;
-  getTableViewProperties: () => IProperty[];
+  tablePanelView: ITablePanelView;
 }
 
-export class CellRenderer {
+export interface ICellRenderer extends ICellRendererData {}
+
+export class CellRenderer implements ICellRenderer {
   constructor(data: ICellRendererData) {
     Object.assign(this, data);
   }
 
-  getCellValue: (rowIdx: number, columnIdx: number) => any = null as any;
-  getTableViewProperties: () => IProperty[] = null as any;
-
-  @computed get tableViewProperties() {
-    return this.getTableViewProperties();
-  }
+  tablePanelView: ITablePanelView = null as any;
 
   @bind
   renderCell({
@@ -38,6 +41,7 @@ export class CellRenderer {
     const cell = this.getCell(rowIndex, columnIndex);
     onCellClick.subscribe((event: any) => {
       console.log(rowIndex, columnIndex);
+      this.tablePanelView.onCellClick(rowIndex, columnIndex);
     });
 
     /* BACKGROUND FILL */
@@ -96,18 +100,32 @@ export class CellRenderer {
     }
   }
 
+  @computed get getCellValue() {
+    return getCellValue(this.tablePanelView);
+  }
+
   getCell(rowIndex: number, columnIndex: number): IRenderedCell {
     const value = this.getCellValue(rowIndex, columnIndex);
-    const property = this.tableViewProperties[columnIndex];
-    // const row = this.table
+    const property = getTableViewPropertyByIdx(
+      this.tablePanelView,
+      columnIndex
+    );
+    const record = getTableViewRecordByExistingIdx(
+      this.tablePanelView,
+      rowIndex
+    );
+    const selectedColumnId = getSelectedColumnId(this.tablePanelView);
+    const selectedRowId = getSelectedRowId(this.tablePanelView);
+
     return {
-      isCellCursor: rowIndex === 3 && columnIndex === 2,
-      isRowCursor: rowIndex === 3,
+      isCellCursor:
+        property.id === selectedColumnId && record[0] === selectedRowId,
+      isRowCursor: record[0] === selectedRowId,
       isLoading: false,
       isInvalid: false,
       formatterPattern: "",
       type: property.column,
-      value,
+      value
     };
   }
 }

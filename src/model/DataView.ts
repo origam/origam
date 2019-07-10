@@ -9,9 +9,7 @@ import { getDataSourceByEntity } from "./selectors/DataSources/getDataSourceByEn
 import { ITablePanelView } from "./TablePanelView/types/ITablePanelView";
 import { IFormPanelView } from "./FormPanelView/types/IFormPanelView";
 
-export class DataView implements IDataView { 
-
-  
+export class DataView implements IDataView {
   $type: typeof CDataView = CDataView;
 
   constructor(data: IDataViewData) {
@@ -57,9 +55,6 @@ export class DataView implements IDataView {
 
   @observable selectedRowId: string | undefined;
 
-
-  
-
   get isWorking() {
     return this.lifecycle.isWorking;
   }
@@ -93,6 +88,11 @@ export class DataView implements IDataView {
   @action.bound
   onTablePanelViewButtonClick(event: any) {
     this.activePanelView = IPanelViewType.Table;
+  }
+
+  @action.bound
+  setSelectedRowId(id: string): void {
+    this.selectedRowId = id;
   }
 
   @action.bound run() {

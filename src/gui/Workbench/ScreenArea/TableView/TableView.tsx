@@ -17,6 +17,7 @@ import { getColumnHeaders } from "../../../../model/selectors/TablePanelView/get
 import { IColumnHeader } from "../../../../model/selectors/TablePanelView/types";
 import { getCellValue } from "../../../../model/selectors/TablePanelView/getCellValue";
 import { getRowCount } from "../../../../model/selectors/TablePanelView/getRowCount";
+import { getTablePanelView } from "../../../../model/selectors/TablePanelView/getTablePanelView";
 
 @inject(({ dataView }) => {
   return {
@@ -34,8 +35,7 @@ export class TableView extends React.Component<{ dataView?: IDataView }> {
   });
   scrollState = new SimpleScrollState(0, 0);
   cellRenderer = new CellRenderer({
-    getTableViewProperties: () => getTableViewProperties(this.props.dataView),
-    getCellValue: getCellValue(this.props.dataView)
+    tablePanelView: getTablePanelView(this.props.dataView)
   });
 
   render() {
@@ -79,7 +79,6 @@ class GridDimensions implements IGridDimensions {
   }
 
   @computed get columnCount() {
-    debugger
     return this.tableViewProperties.length;
   }
 

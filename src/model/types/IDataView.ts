@@ -55,6 +55,8 @@ export interface IDataView extends IDataViewData {
   onFormPanelViewButtonClick(event: any): void;
   onTablePanelViewButtonClick(event: any): void;
 
+  setSelectedRowId(id: string): void;
+  
   run(): void;
 
   parent?: any;

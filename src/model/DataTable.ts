@@ -4,17 +4,16 @@ import { IProperty } from "./types/IProperty";
 import { getDataView } from "./selectors/DataView/getDataView";
 
 export class DataTable implements IDataTable {
-
   parent?: any;
   constructor(data: IDataTableData) {
     Object.assign(this, data);
   }
-  
+
   @computed
   get properties(): IProperty[] {
     return getDataView(this).properties;
   }
-  @observable.shallow rows: any[][] = []
+  @observable.shallow rows: any[][] = [];
 
   getCellValue(row: any[], property: IProperty) {
     return row[property.dataIndex];
@@ -23,6 +22,11 @@ export class DataTable implements IDataTable {
   getRowByExistingIdx(idx: number): any[] {
     // TODO: Change to respect dirty deleted rows.
     return this.rows[idx];
+  }
+
+  getExistingRowIdxById(id: string) {
+    const idx = this.rows.findIndex(row => row[0] === id);
+    return idx > -1 ? idx : undefined;
   }
 
   getPropertyById(id: string) {

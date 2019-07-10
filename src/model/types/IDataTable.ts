@@ -1,4 +1,4 @@
-import { IProperty } from './IProperty';
+import { IProperty } from "./IProperty";
 
 export const CDataTable = "CDataTable";
 
@@ -10,6 +10,7 @@ export interface IDataTable extends IDataTableData {
 
   getCellValue(row: any[], property: IProperty): any;
   getRowByExistingIdx(idx: number): any[];
+  getExistingRowIdxById(id: string): number | undefined;
   getPropertyById(id: string): IProperty | undefined;
 
   setRecords(rows: any[][]): void;
