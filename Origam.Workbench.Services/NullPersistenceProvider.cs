@@ -150,7 +150,7 @@ namespace Origam.Workbench.Services
             return new List<string>();
         }
 
-        public ArrayList GetReference(bool ignoreErrors, Key key)
+        public ArrayList GetReference(Key key)
         {
             return new ArrayList();
         }

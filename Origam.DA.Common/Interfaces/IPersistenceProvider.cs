@@ -93,6 +93,6 @@ namespace Origam.DA.ObjectPersistence
 		ILocalizationCache LocalizationCache { get; }
 
         List<string> Files(IPersistent item);
-        ArrayList GetReference(bool ignoreErrors, Key key);
+        ArrayList GetReference(Key key);
     }
 }

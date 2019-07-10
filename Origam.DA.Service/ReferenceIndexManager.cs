@@ -30,7 +30,7 @@ namespace Origam.DA.Service
     public static class ReferenceIndexManager
     {
         private static readonly List<IPersistent> temporaryAction = new List<IPersistent>();
-
+        private static object obj = new object();
         public static bool UseIndex { get; private set; } = false;
         private static bool blockAddTemporaryAction = false;
         private static readonly List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex
@@ -116,8 +116,11 @@ namespace Origam.DA.Service
                 {
                     if (item1 != null)
                     {
-                        referenceIndex.Add
-                            (new KeyValuePair<Guid, KeyValuePair<Guid, Type>>(item1.Id, new KeyValuePair<Guid, Type>(item.Id, item.GetType())));
+                        lock (obj)
+                        {
+                            referenceIndex.Add
+                                (new KeyValuePair<Guid, KeyValuePair<Guid, Type>>(item1.Id, new KeyValuePair<Guid, Type>(item.Id, item.GetType())));
+                        }
                     }
                 }
         }

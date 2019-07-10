@@ -26,19 +26,17 @@ using Origam.DA.ObjectPersistence;
 using Origam.UI;
 using System.Xml.Serialization;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using Origam.DA;
-using Origam.Extensions;
 
 namespace Origam.Schema
 {
-	/// <summary>
-	/// This class makes a persistable base for any schema items. It has a special override for Key,
-	/// it uses a ModelElementKey, which has strongly typed accessors to the primary key of
-	/// any class that is contained under schema versions.
-	/// </summary>
-	[EntityName("SchemaItem", "TargetType")]
+    /// <summary>
+    /// This class makes a persistable base for any schema items. It has a special override for Key,
+    /// it uses a ModelElementKey, which has strongly typed accessors to the primary key of
+    /// any class that is contained under schema versions.
+    /// </summary>
+    [EntityName("SchemaItem", "TargetType")]
 	public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem, 
         IBrowserNode2, ISchemaItemFactory, ICloneable, IComparable, 
         ISchemaItemConvertible, INotifyPropertyChanged, IFilePersistent
@@ -212,10 +210,15 @@ namespace Origam.Schema
 			}
 		}
 
-		public ArrayList GetUsage(bool ignoreErrors)
+		public ArrayList GetUsage()
 		{
-            return PersistenceProvider.GetReference(ignoreErrors, this.PrimaryKey);
-		}
+            var referencelist = PersistenceProvider.GetReference(this.PrimaryKey);
+            if (referencelist==null)
+            {
+                throw new Exception(ResourceUtils.GetString("ErrorBuildReferenceIndex"));
+            }
+            return referencelist;
+        }
 
 		public static void FinishConversion(AbstractSchemaItem source, AbstractSchemaItem converted)
 		{
@@ -1413,7 +1416,7 @@ namespace Origam.Schema
 
 		public void Delete()
 		{
-			if(this.GetUsage(true).Count == 0)
+            if (GetUsage().Count == 0)
 			{
 				this.IsDeleted = true;
 				this.Persist();

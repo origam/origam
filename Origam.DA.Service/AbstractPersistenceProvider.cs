@@ -93,19 +93,21 @@ namespace Origam.DA.ObjectPersistence
 
         public abstract T[] FullTextSearch<T>(string text);
 
-        public ArrayList GetReference(bool ignoreErrors, Key key)
+        public ArrayList GetReference(Key key)
         {
-            RestrictToLoadedPackage(false);
-            ArrayList listOfReferences;
-            if (ReferenceIndexManager.UseIndex)
+            try
             {
-                listOfReferences = new ArrayList();
-                Guid guid = Guid.Parse(key.ToString());
-                List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> list = 
-                    ReferenceIndexManager
-                    .GetReferenceIndex()
-                    .Where(x => x.Key == guid)
-                    .ToList();
+                RestrictToLoadedPackage(false);
+                ArrayList listOfReferences = null;
+                if (ReferenceIndexManager.UseIndex)
+                {
+                    listOfReferences = new ArrayList();
+                    Guid guid = Guid.Parse(key.ToString());
+                    List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> list =
+                        ReferenceIndexManager
+                        .GetReferenceIndex()
+                        .Where(x => x.Key == guid)
+                        .ToList();
                     foreach (KeyValuePair<Guid, KeyValuePair<Guid, Type>> keyValue in list)
                     {
                         KeyValuePair<Guid, Type> kvalue = keyValue.Value;
@@ -115,16 +117,13 @@ namespace Origam.DA.ObjectPersistence
                             listOfReferences.Add(refInstance);
                         }
                     }
+                }
+                return listOfReferences;
             }
-            else
+            finally
             {
-                listOfReferences = RetrieveList<AbstractSchemaItem>(null)
-                    .AsParallel()
-                    .SelectMany(item => FindUsages(item, ignoreErrors, key))
-                    .ToArrayList();
+                RestrictToLoadedPackage(true);
             }
-            RestrictToLoadedPackage(true);
-            return listOfReferences;
         }
 
         private IEnumerable<object> FindUsages(AbstractSchemaItem item, bool ignoreErrors, Key key)

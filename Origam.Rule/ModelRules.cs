@@ -36,17 +36,22 @@ namespace Origam.Rule
             FilePersistenceService independentPersistenceService,
             CancellationToken cancellationToken)
         {
-           ReferenceIndexManager.ClearReferenceIndex();
+            IStatusBarService statusBar =
+            ServiceManager.Services.GetService<IStatusBarService>();
+            statusBar.SetStatusText("Building Index of References...");
+            ReferenceIndexManager.ClearReferenceIndex();
            List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
                     .SchemaProvider
                     .RetrieveList<IFilePersistent>()
                     .OfType<AbstractSchemaItem>()
+                    .AsParallel()
                     .Select(retrievedObj => {
                         retrievedObj.RootProvider = schemaProviders.FirstOrDefault(x => BelongsToProvider(x, retrievedObj));
                         cancellationToken.ThrowIfCancellationRequested();
                         ReferenceIndexManager.AddToBuildIndex(retrievedObj);
                         return retrievedObj;
                     })
+                    .AsParallel()
                     .Select(retrievedObj =>
                     {
                         cancellationToken.ThrowIfCancellationRequested();
@@ -63,6 +68,7 @@ namespace Origam.Rule
                     .Where(x => x != null)
                     .ToList();
             ReferenceIndexManager.ActivateReferenceIndex();
+            statusBar.SetStatusText("Index of References built.");
             return errorFragments;
         }
 

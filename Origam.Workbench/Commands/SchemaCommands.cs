@@ -774,8 +774,11 @@ namespace Origam.Workbench.Commands
 		public override void Run()
 		{
 			Pads.FindSchemaItemResultsPad pad = WorkbenchSingleton.Workbench.GetPad(typeof(Pads.FindSchemaItemResultsPad)) as Pads.FindSchemaItemResultsPad;
-
-			pad.DisplayResults((AbstractSchemaItem[])_schema.ActiveSchemaItem.GetUsage(false).ToArray(typeof(AbstractSchemaItem)));
+            var referenceList = _schema.ActiveSchemaItem.GetUsage();
+            if (referenceList != null)
+            {
+                pad.DisplayResults((AbstractSchemaItem[])referenceList.ToArray(typeof(AbstractSchemaItem)));
+            }
 
 			ViewFindSchemaItemResultsPad cmd = new ViewFindSchemaItemResultsPad();
 			cmd.Run();
