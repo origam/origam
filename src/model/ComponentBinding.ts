@@ -6,26 +6,25 @@ import {
 } from "./types/IComponentBinding";
 import { computed } from "mobx";
 import { IDataView } from "./types/IDataView";
-import { getFormScreen } from './selectors/FormScreen/getFormScreen';
-import { getDataView } from './selectors/DataView/getDataView';
+import { getFormScreen } from "./selectors/FormScreen/getFormScreen";
+import { getDataView } from "./selectors/DataView/getDataView";
+import { getDataTable } from "./selectors/DataView/getDataTable";
 
 export class ComponentBindingPair implements IComponentBindingPair {
   constructor(data: IComponentBindingPairData) {
     Object.assign(this, data);
   }
-  
+
   parent?: any;
   parentPropertyId: string = "";
   childPropertyId: string = "";
 }
 
 export class ComponentBinding implements IComponentBinding {
-
   constructor(data: IComponentBindingData) {
     Object.assign(this, data);
     this.bindingPairs.forEach(o => (o.parent = this));
   }
-  parent?: any;
 
   parentId: string = "";
   parentEntity: string = "";
@@ -36,11 +35,29 @@ export class ComponentBinding implements IComponentBinding {
 
   @computed get parentDataView(): IDataView {
     const screen = getFormScreen(this);
-    return screen.getDataViewByModelInstanceId(this.parentId)!
+    return screen.getDataViewByModelInstanceId(this.parentId)!;
   }
 
   @computed get childDataView(): IDataView {
     const screen = getFormScreen(this);
-    return screen.getDataViewByModelInstanceId(this.childId)!
+    return screen.getDataViewByModelInstanceId(this.childId)!;
   }
+
+  @computed get bindingController() {
+    const c: Array<[string, any]> = [];
+    const parentDataTable = getDataTable(this.parentDataView);
+    for (let pair of this.bindingPairs) {
+      const row = this.parentDataView.selectedRow;
+      const property = parentDataTable.getPropertyById(pair.parentPropertyId);
+      if (row && property) {
+        c.push([
+          pair.childPropertyId,
+          parentDataTable.getCellValue(row, property)
+        ]);
+      }
+    }
+    return c;
+  }
+
+  parent?: any;
 }

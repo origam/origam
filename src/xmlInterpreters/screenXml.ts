@@ -226,6 +226,7 @@ export function interpretScreenXml(
     componentBindings
   });
 
+  /*
   const tdv1 = scr.dataViews.find(dv => dv.id === "AsPanel1_1");
   if (tdv1) {
     for (let ri = 0; ri < 1000; ri++) {
@@ -235,7 +236,7 @@ export function interpretScreenXml(
       }
       tdv1.dataTable.rows.push(row);
     }
-  }
+  }*/
 
   return scr;
 }

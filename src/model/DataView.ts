@@ -55,14 +55,51 @@ export class DataView implements IDataView {
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
 
   @observable selectedRowId: string | undefined;
+  @computed get selectedRowIndex(): number | undefined {
+    return this.selectedRowId
+      ? this.dataTable.getExistingRowIdxById(this.selectedRowId)
+      : undefined;
+  }
+  @computed get selectedRow(): any[] | undefined {
+    return this.selectedRowIndex !== undefined
+      ? this.dataTable.getRowByExistingIdx(this.selectedRowIndex)
+      : undefined;
+  }
+  @computed get isValidRowSelection(): boolean {
+    return this.selectedRowIndex !== undefined;
+  }
 
   get isWorking() {
     return this.lifecycle.isWorking;
   }
 
+  @computed get isAnyBindingAncestorWorking() {
+    if (this.isBindingRoot) {
+      return false;
+    } else {
+      return (
+        this.bindingParent.isWorking ||
+        this.bindingParent.isAnyBindingAncestorWorking
+      );
+    }
+  }
+
   @computed
   get isBindingRoot() {
     return this.parentBindings.length === 0;
+  }
+
+  @computed get bindingParent() {
+    return this.parentBindings[0].parentDataView;
+  }
+
+  @computed get bindingRoot(): IDataView {
+    // TODO: If there ever is multiparent case, remove duplicates in the result
+    let root: IDataView = this;
+    while (!root.isBindingRoot) {
+      root = root.bindingParent!;
+    }
+    return root;
   }
 
   @computed
@@ -94,8 +131,8 @@ export class DataView implements IDataView {
   @action.bound selectFirstRow() {
     const dataTable = getDataTable(this);
     const firstRow = dataTable.getFirstRow();
-    if(firstRow) {
-      this.selectRow(firstRow[0])
+    if (firstRow) {
+      this.selectRow(firstRow[0]);
     }
   }
 

@@ -5,6 +5,7 @@ import { getDataView } from "./selectors/DataView/getDataView";
 
 export class DataTable implements IDataTable {
 
+
   parent?: any;
   constructor(data: IDataTableData) {
     Object.assign(this, data);
@@ -39,7 +40,12 @@ export class DataTable implements IDataTable {
   }
 
   @action.bound setRecords(rows: any[][]) {
-    this.rows.length = 0;
+    this.clear();
     this.rows.push(...rows);
+  }
+
+  @action.bound
+  clear(): void {
+    this.rows.length = 0;
   }
 }

@@ -33,9 +33,7 @@ export class TablePanelView implements ITablePanelView {
     return idx > -1 ? idx : undefined;
   }
   @computed get selectedRowIndex(): number | undefined {
-    return this.selectedRowId
-      ? this.dataTable.getExistingRowIdxById(this.selectedRowId)
-      : undefined;
+    return getDataView(this).selectedRowIndex;
   }
 
   getCellValueByIdx(rowIdx: number, columnIdx: number) {

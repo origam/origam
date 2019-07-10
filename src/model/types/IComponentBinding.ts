@@ -10,6 +10,7 @@ export interface IComponentBindingData {
 }
 
 export interface IComponentBinding extends IComponentBindingData {
+  bindingController: Array<[string, any]>;
   parentDataView: IDataView;
   childDataView: IDataView;
   parent?: any;

@@ -15,5 +15,6 @@ export interface IDataTable extends IDataTableData {
   getFirstRow(): any[] | undefined;
 
   setRecords(rows: any[][]): void;
+  clear(): void;
   parent?: any;
 }

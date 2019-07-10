@@ -5,7 +5,7 @@ import { IDataTable } from "./IDataTable";
 import { IComponentBinding } from "./IComponentBinding";
 import { IDataViewLifecycle } from "./IDataViewLifecycle";
 import { ITablePanelView } from "../TablePanelView/types/ITablePanelView";
-import { IFormPanelView } from '../FormPanelView/types/IFormPanelView';
+import { IFormPanelView } from "../FormPanelView/types/IFormPanelView";
 
 export const CDataView = "CDataView";
 
@@ -43,22 +43,24 @@ export interface IDataViewData {
 export interface IDataView extends IDataViewData {
   $type: typeof CDataView;
   isBindingRoot: boolean;
+  isAnyBindingAncestorWorking: boolean;
   parentBindings: IComponentBinding[];
   childBindings: IComponentBinding[];
+  bindingRoot: IDataView;
+  bindingParent: IDataView | undefined;
   isWorking: boolean;
-
+  isValidRowSelection: boolean;
   selectedRowId: string | undefined;
-
+  selectedRowIndex: number | undefined;
+  selectedRow: any[] | undefined;
   dataSource: IDataSource;
-  
 
   onFormPanelViewButtonClick(event: any): void;
   onTablePanelViewButtonClick(event: any): void;
-
   selectFirstRow(): void;
   selectRow(id: string | undefined): void;
   setSelectedRowId(id: string | undefined): void;
-  
+
   run(): void;
 
   parent?: any;
