@@ -4,6 +4,7 @@ import { IProperty } from "./types/IProperty";
 import { getDataView } from "./selectors/DataView/getDataView";
 import { IAdditionalRowData } from "./types/IAdditionalRecordData";
 import { AdditionalRowData } from "./AdditionalRowData";
+import { getDataTable } from "./selectors/DataView/getDataTable";
 
 export class DataTable implements IDataTable {
   constructor(data: IDataTableData) {
@@ -25,11 +26,11 @@ export class DataTable implements IDataTable {
   getCellValue(row: any[], property: IProperty) {
     if (this.additionalRowData.has(this.getRowId(row))) {
       const ard = this.additionalRowData.get(this.getRowId(row))!;
-      if(ard.dirtyFormValues.has(property.id)) {
-        return ard.dirtyFormValues.get(property.id)
+      if (ard.dirtyFormValues.has(property.id)) {
+        return ard.dirtyFormValues.get(property.id);
       }
-      if(ard.dirtyValues.has(property.id)) {
-        return ard.dirtyValues.get(property.id)
+      if (ard.dirtyValues.has(property.id)) {
+        return ard.dirtyValues.get(property.id);
       }
     }
     return row[property.dataIndex];
@@ -53,6 +54,47 @@ export class DataTable implements IDataTable {
     return this.rows[0];
   }
 
+  getAdditionalRowData(row: any[]) {
+    return this.additionalRowData.get(this.getRowId(row));
+  }
+
+  hasRowDirtyValues(row: any[]) {
+    const ard = this.getAdditionalRowData(row);
+    if (!ard) return;
+    return ard.dirtyValues.size > 0;
+  }
+
+  isRowDirtyNew(row: any[]) {
+    const ard = this.getAdditionalRowData(row);
+    return ard && ard.dirtyNew;
+  }
+
+  isRowDirtyDeleted(row: any[]) {
+    const ard = this.getAdditionalRowData(row);
+    return ard && ard.dirtyDeleted;
+  }
+
+  getDirtyValues(row: any[]): Map<string, any> {
+    const ard = this.getAdditionalRowData(row);
+    if (ard) {
+      return ard.dirtyValues;
+    } else {
+      return new Map();
+    }
+  }
+
+  getDirtyValueRows(): any[][] {
+    return this.rows.filter(row => this.hasRowDirtyValues(row));
+  }
+
+  getDirtyDeletedRows(): any[][] {
+    return this.rows.filter(row => this.isRowDirtyDeleted(row));
+  }
+
+  getDirtyNewRows(): any[][] {
+    return this.rows.filter(row => this.isRowDirtyNew(row));
+  }
+
   @action.bound
   setRecords(rows: any[][]) {
     this.clear();
@@ -68,15 +110,25 @@ export class DataTable implements IDataTable {
   }
 
   @action.bound
+  flushFormToTable(row: any[]): void {
+    const ard = this.getAdditionalRowData(row);
+    if (ard) {
+      for (let [propertyId, value] of ard.dirtyFormValues.entries()) {
+        ard.dirtyValues.set(propertyId, value);
+      }
+    }
+  }
+
+  @action.bound
   setDirtyDeleted(row: any[]): void {
     this.createAdditionalData(row);
-    this.additionalRowData.get(this.getRowId(row))!.dirtyDeleted = true;
+    this.getAdditionalRowData(row)!.dirtyDeleted = true;
   }
 
   @action.bound
   setDirtyNew(row: any[]): void {
     this.createAdditionalData(row);
-    this.additionalRowData.get(this.getRowId(row))!.dirtyNew = true;
+    this.getAdditionalRowData(row)!.dirtyNew = true;
   }
 
   @action.bound
@@ -91,6 +143,7 @@ export class DataTable implements IDataTable {
   @action.bound
   clear(): void {
     this.rows.length = 0;
+    this.additionalRowData.clear();
   }
 
   parent?: any;

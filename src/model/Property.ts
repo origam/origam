@@ -2,10 +2,11 @@ import { IPropertyData, IProperty } from "./types/IProperty";
 import { ICaptionPosition } from "./types/ICaptionPosition";
 import { IDropDownColumn } from "./types/IDropDownColumn";
 import { IPropertyColumn } from "./types/IPropertyColumn";
-import { observable } from "mobx";
+import { observable, computed } from "mobx";
+import { getDataSource } from "./selectors/DataSources/getDataSource";
+import { getDataSourceFieldIndexByName } from "./selectors/DataSources/getDataSourceFieldIndexByName";
 
 export class Property implements IProperty {
-  
   constructor(data: IPropertyData) {
     Object.assign(this, data);
     this.dropDownColumns.forEach(o => (o.parent = this));
@@ -43,4 +44,8 @@ export class Property implements IProperty {
   formatterPattern: string = "";
   @observable lookupCache: Map<string, any> = new Map();
   dataIndex: number = 0;
+
+  @computed get dataSourceIndex(): number {
+    return getDataSourceFieldIndexByName(this, this.id);
+  }
 }

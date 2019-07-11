@@ -11,6 +11,7 @@ import { IFormPanelView } from "./FormPanelView/types/IFormPanelView";
 import { getDataTable } from "./selectors/DataView/getDataTable";
 
 export class DataView implements IDataView {
+
   $type: typeof CDataView = CDataView;
 
   constructor(data: IDataViewData) {

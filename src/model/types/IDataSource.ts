@@ -10,4 +10,5 @@ export interface IDataSourceData {
 
 export interface IDataSource extends IDataSourceData {
   parent?: any;
+  getFieldByName(name: string): IDataSourceField | undefined;
 }

@@ -37,6 +37,7 @@ export interface IPropertyData {
 }
 
 export interface IProperty extends IPropertyData {
+  dataSourceIndex: number;
   lookupCache: Map<string, any>;
   parent?: any;
 }

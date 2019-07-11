@@ -15,11 +15,16 @@ import { getDataViewLifecycle } from "./selectors/DataView/getDataViewLifecycle"
 import { isValidRowSelection } from "./selectors/DataView/isValidRowSelection";
 import { getIsBindingRoot } from "./selectors/DataView/getIsBindingRoot";
 import { getMasterRowId } from "./selectors/DataView/getMasterRowId";
+import { IProperty } from './types/IProperty';
+import { map2obj } from "../utils/objects";
 
 export const loadData = "loadData";
+export const flushData = "flushData";
 export const dataLoaded = "dataLoaded";
+export const dataFlushed = "dataFlushed";
 
 export const sLoadData = "sLoadData";
+export const sFlushData = "sFlushData";
 export const sIdle = "sIdle";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
@@ -39,13 +44,21 @@ export class DataViewLifecycle implements IDataViewLifecycle {
           on: {
             [dataLoaded]: sIdle
           }
+        },
+        [sFlushData]: {
+          invoke: { src: "flushData" },
+          on: {
+            [dataFlushed]: sIdle
+          }
         }
       }
     },
     {
       services: {
         loadData: (ctx, event) => (send, onEvent) =>
-          flow(this.loadData.bind(this))()
+          flow(this.loadData.bind(this))(),
+        flushData: (ctx, {row, property}) => (send, onEvent) =>
+          flow(this.flushData.bind(this))({row, property})
       }
     }
   );
@@ -114,9 +127,71 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     this.interpreter.send(dataLoaded);
   }
 
+  *flushData({row, property}: {row: any[], property: IProperty}) {
+    const api = getApi(this);
+    const dataTable = getDataTable(this);
+    for (let row of dataTable.getDirtyValueRows()) {
+      const rowId = dataTable.getRowId(row);
+      const dirtyValues = dataTable.getDirtyValues(row);
+      console.log("Updating", rowId);
+      const result = yield api.putEntity({
+        MenuId:getMenuItemId(this),
+        DataStructureEntityId: getDataStructureEntityId(this);
+        RowId: rowId,
+        NewValues: map2obj(dirtyValues);
+      });
+      console.log("...Updated.");
+
+      const newRecord = Array(row.length) as any[];
+      for (let prop of dataTable.properties) {
+        newRecord[prop.dataIndex] =
+          result.wrappedObject[prop.dataSourceIndex];
+      }
+      this.dataTable.substRecord(RowId, newRecord);
+      this.dataTable.removeDirtyRow(RowId);
+    }
+    /*for (let RowId of this.dataTable.dirtyDeletedIds.keys()) {
+      console.log("Deleting", RowId);
+      const result = await this.api.deleteEntity({
+        MenuId: this.menuItemId,
+        DataStructureEntityId: this.dataStructureEntityId,
+        RowIdToDelete: RowId
+      });
+      console.log("...Deleted.");
+      runInAction(() => {
+        this.dataTable.removeDirtyDeleted(RowId);
+        this.dataTable.removeRow(RowId);
+      });
+    }
+    for (let [RowId, values] of this.dataTable.dirtyValues) {
+      console.log("Updating", RowId);
+      const result = await this.api.putEntity({
+        MenuId: this.menuItemId,
+        DataStructureEntityId: this.dataStructureEntityId,
+        RowId,
+        NewValues: values
+      });
+      console.log("...Updated.");
+      runInAction(() => {
+        const newRecord = Array(this.dataTable.properties.count) as IRecord;
+        for (let prop of this.dataTable.properties.items) {
+          newRecord[prop.dataIndex] =
+            result.wrappedObject[prop.dataSourceIndex];
+        }
+        this.dataTable.substRecord(RowId, newRecord);
+        this.dataTable.removeDirtyRow(RowId);
+      });
+    }
+  }
+
   @action.bound
   loadFresh(): void {
     this.interpreter.send(loadData);
+  }
+
+  @action.bound
+  requestFlushData(row: any[], property: IProperty): void {
+    this.interpreter.send(flushData, {row, property});
   }
 
   parentChangeReaction() {

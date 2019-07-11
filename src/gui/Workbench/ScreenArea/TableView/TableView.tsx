@@ -24,6 +24,8 @@ import { TableViewEditor } from "./TableViewEditor";
 import { ITablePanelView } from "../../../../model/TablePanelView/types/ITablePanelView";
 import { getSelectedRowIndex } from "../../../../model/selectors/TablePanelView/getSelectedRowIndex";
 import { getSelectedColumnIndex } from "../../../../model/selectors/TablePanelView/getSelectedColumnIndex";
+import { getIsEditing } from "../../../../model/selectors/TablePanelView/getIsEditing";
+import { TablePanelView } from "../../../../model/TablePanelView/TablePanelView";
 
 @inject(({ dataView }) => {
   return {
@@ -45,7 +47,7 @@ export class TableView extends React.Component<{
   });
   scrollState = new SimpleScrollState(0, 0);
   cellRenderer = new CellRenderer({
-    tablePanelView: getTablePanelView(this.props.dataView)
+    tablePanelView: this.props.tablePanelView!
   });
 
   render() {
@@ -57,12 +59,14 @@ export class TableView extends React.Component<{
           scrollState={self.scrollState}
           editingRowIndex={getSelectedRowIndex(this.props.tablePanelView)}
           editingColumnIndex={getSelectedColumnIndex(this.props.tablePanelView)}
-          isEditorMounted={true}
+          isEditorMounted={getIsEditing(this.props.tablePanelView)}
           fixedColumnCount={0}
           isLoading={false}
           renderHeader={self.headerRenderer.renderHeader}
           renderCell={self.cellRenderer.renderCell}
           renderEditor={() => <TableViewEditor />}
+          onNoCellClick={this.props.tablePanelView!.onNoCellClick}
+          onOutsideTableClick={this.props.tablePanelView!.onOutsideTableClick}
         />
       </Provider>
     );

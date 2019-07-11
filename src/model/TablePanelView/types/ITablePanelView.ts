@@ -12,12 +12,14 @@ export interface ITablePanelView extends ITablePanelViewData {
   selectedColumnIndex: number | undefined;
   selectedProperty: IProperty | undefined;
   selectedRowIndex: number | undefined;
-
+  isEditing: boolean;
   tableProperties: IProperty[];
 
   getCellValueByIdx(rowIdx: number, columnIdx: number): any;
 
   onCellClick(rowIndex: number, columnIndex: number): void;
+  onNoCellClick(): void;
+  onOutsideTableClick(): void;
 
   setSelectedColumnId(id: string | undefined): void;
 

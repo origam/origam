@@ -8,6 +8,8 @@ import { getDataView } from "../selectors/DataView/getDataView";
 import { getDataTable } from "../selectors/DataView/getDataTable";
 import { IProperty } from "../types/IProperty";
 import { getDataViewPropertyById } from "../selectors/DataView/getDataViewPropertyById";
+import { getSelectedRow } from "../selectors/DataView/getSelectedRow";
+import { getDataViewLifecycle } from "../selectors/DataView/getDataViewLifecycle";
 
 export class TablePanelView implements ITablePanelView {
   $type: typeof CTablePanelView = "CTablePanelView";
@@ -15,6 +17,8 @@ export class TablePanelView implements ITablePanelView {
   constructor(data: ITablePanelViewData) {
     Object.assign(this, data);
   }
+
+  @observable isEditing: boolean = false;
 
   @observable tablePropertyIds = [];
   @computed get tableProperties() {
@@ -50,11 +54,49 @@ export class TablePanelView implements ITablePanelView {
 
   @action.bound
   onCellClick(rowIndex: number, columnIndex: number): void {
-    console.log("CellClicked:", rowIndex, columnIndex);
+    // console.log("CellClicked:", rowIndex, columnIndex);
     const row = this.dataTable.getRowByExistingIdx(rowIndex);
     const property = this.tableProperties[columnIndex];
+    if (
+      this.dataTable.getRowId(row) === this.selectedRowId &&
+      property.id === this.selectedColumnId
+    ) {
+      this.setEditing(true);
+    } else {
+      const { isEditing } = this;
+      if (isEditing) {
+        this.editingWillFinish();
+        this.setEditing(false);
+      }
+      this.selectCell(row[0] as string, property.id);
+      if (isEditing) {
+        this.setEditing(true);
+      }
+    }
+  }
 
-    this.selectCell(row[0] as string, property.id);
+  @action.bound
+  onNoCellClick(): void {
+    if (this.isEditing) {
+      this.editingWillFinish();
+      this.setEditing(false);
+    }
+  }
+
+  @action.bound
+  onOutsideTableClick(): void {
+    if (this.isEditing) {
+      this.editingWillFinish();
+      this.setEditing(false);
+    }
+  }
+
+  @action.bound editingWillFinish() {
+    this.dataTable.flushFormToTable(getSelectedRow(this)!);
+    getDataViewLifecycle(this).requestFlushData(
+      getSelectedRow(this)!,
+      this.selectedProperty!
+    );
   }
 
   @action.bound selectCell(
@@ -68,6 +110,11 @@ export class TablePanelView implements ITablePanelView {
   @action.bound
   setSelectedColumnId(id: string | undefined): void {
     this.selectedColumnId = id;
+  }
+
+  @action.bound
+  setEditing(state: boolean): void {
+    this.isEditing = state;
   }
 
   @computed get dataTable() {
