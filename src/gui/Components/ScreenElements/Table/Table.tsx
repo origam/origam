@@ -303,8 +303,8 @@ export class Table extends React.Component<ITableProps> {
                           )}
                         </div>
                         {this.props.isEditorMounted &&
-                          this.props.editingRowIndex &&
-                          this.props.editingColumnIndex && (
+                          this.props.editingRowIndex !== undefined &&
+                          this.props.editingColumnIndex !== undefined && (
                             <PositionedField
                               fixedColumnsCount={this.fixedColumnCount}
                               rowIndex={this.props.editingRowIndex}

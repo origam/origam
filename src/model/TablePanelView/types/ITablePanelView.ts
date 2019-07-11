@@ -10,6 +10,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   $type: typeof CTablePanelView;
   selectedColumnId: string | undefined;
   selectedColumnIndex: number | undefined;
+  selectedProperty: IProperty | undefined;
   selectedRowIndex: number | undefined;
 
   tableProperties: IProperty[];

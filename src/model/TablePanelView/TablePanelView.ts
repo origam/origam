@@ -7,6 +7,7 @@ import {
 import { getDataView } from "../selectors/DataView/getDataView";
 import { getDataTable } from "../selectors/DataView/getDataTable";
 import { IProperty } from "../types/IProperty";
+import { getDataViewPropertyById } from "../selectors/DataView/getDataViewPropertyById";
 
 export class TablePanelView implements ITablePanelView {
   $type: typeof CTablePanelView = "CTablePanelView";
@@ -34,6 +35,11 @@ export class TablePanelView implements ITablePanelView {
   }
   @computed get selectedRowIndex(): number | undefined {
     return getDataView(this).selectedRowIndex;
+  }
+  @computed get selectedProperty(): IProperty | undefined {
+    return this.selectedColumnId
+      ? getDataViewPropertyById(this, this.selectedColumnId)
+      : undefined;
   }
 
   getCellValueByIdx(rowIdx: number, columnIdx: number) {

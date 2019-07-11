@@ -49,6 +49,7 @@ export interface IDataView extends IDataViewData {
   bindingRoot: IDataView;
   bindingParent: IDataView | undefined;
   isWorking: boolean;
+  isEditing: boolean;
   isValidRowSelection: boolean;
   selectedRowId: string | undefined;
   selectedRowIndex: number | undefined;
@@ -60,6 +61,7 @@ export interface IDataView extends IDataViewData {
   selectFirstRow(): void;
   selectRow(id: string | undefined): void;
   setSelectedRowId(id: string | undefined): void;
+  setEditing(state: boolean): void;
 
   run(): void;
 

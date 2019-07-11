@@ -53,6 +53,7 @@ export class DataView implements IDataView {
   formPanelView: IFormPanelView = null as any;
 
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
+  @observable isEditing: boolean = false;
 
   @observable selectedRowId: string | undefined;
   @computed get selectedRowIndex(): number | undefined {
@@ -143,6 +144,10 @@ export class DataView implements IDataView {
   @action.bound
   setSelectedRowId(id: string | undefined): void {
     this.selectedRowId = id;
+  }
+
+  setEditing(state: boolean): void {
+    this.isEditing = state;
   }
 
   @action.bound run() {

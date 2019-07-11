@@ -1,5 +1,5 @@
 import React from "react";
-import { observer, inject } from "mobx-react";
+import { observer, inject, Provider } from "mobx-react";
 import { SimpleScrollState } from "../../../Components/ScreenElements/Table/SimpleScrollState";
 import { CellRenderer } from "./CellRenderer";
 import { Table } from "../../../Components/ScreenElements/Table/Table";
@@ -18,14 +18,24 @@ import { IColumnHeader } from "../../../../model/selectors/TablePanelView/types"
 import { getCellValue } from "../../../../model/selectors/TablePanelView/getCellValue";
 import { getRowCount } from "../../../../model/selectors/TablePanelView/getRowCount";
 import { getTablePanelView } from "../../../../model/selectors/TablePanelView/getTablePanelView";
+import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateTimeEditor";
+import moment from "moment";
+import { TableViewEditor } from "./TableViewEditor";
+import { ITablePanelView } from "../../../../model/TablePanelView/types/ITablePanelView";
+import { getSelectedRowIndex } from "../../../../model/selectors/TablePanelView/getSelectedRowIndex";
+import { getSelectedColumnIndex } from "../../../../model/selectors/TablePanelView/getSelectedColumnIndex";
 
 @inject(({ dataView }) => {
   return {
-    dataView
+    dataView,
+    tablePanelView: dataView.tablePanelView
   };
 })
 @observer
-export class TableView extends React.Component<{ dataView?: IDataView }> {
+export class TableView extends React.Component<{
+  dataView?: IDataView;
+  tablePanelView?: ITablePanelView;
+}> {
   gDim = new GridDimensions({
     getTableViewProperties: () => getTableViewProperties(this.props.dataView),
     getRowCount: () => getRowCount(this.props.dataView)
@@ -41,18 +51,20 @@ export class TableView extends React.Component<{ dataView?: IDataView }> {
   render() {
     const self = this;
     return (
-      <Table
-        gridDimensions={self.gDim}
-        scrollState={self.scrollState}
-        editingRowIndex={undefined}
-        editingColumnIndex={undefined}
-        isEditorMounted={false}
-        fixedColumnCount={0}
-        isLoading={false}
-        renderHeader={self.headerRenderer.renderHeader}
-        renderCell={self.cellRenderer.renderCell}
-        renderEditor={() => null}
-      />
+      <Provider tablePanelView={this.props.tablePanelView}>
+        <Table
+          gridDimensions={self.gDim}
+          scrollState={self.scrollState}
+          editingRowIndex={getSelectedRowIndex(this.props.tablePanelView)}
+          editingColumnIndex={getSelectedColumnIndex(this.props.tablePanelView)}
+          isEditorMounted={true}
+          fixedColumnCount={0}
+          isLoading={false}
+          renderHeader={self.headerRenderer.renderHeader}
+          renderCell={self.cellRenderer.renderCell}
+          renderEditor={() => <TableViewEditor />}
+        />
+      </Provider>
     );
   }
 }
