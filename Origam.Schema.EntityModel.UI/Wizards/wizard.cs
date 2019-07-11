@@ -1,7 +1,8 @@
-﻿using Origam.Workbench;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using AeroWizard;
+using Origam.UI;
+using Origam.UI.Interfaces;
+using Origam.UI.WizardForm;
+using Origam.Workbench;
 using System.Windows.Forms;
 
 namespace Origam.Schema.EntityModel.Wizards
@@ -9,10 +10,16 @@ namespace Origam.Schema.EntityModel.Wizards
     public partial class Wizard : Form
     {
         SchemaBrowser _schemaBrowser;
-        Stack<PagesList> pages;
+        IWizardForm iwizard;
+
         public Wizard()
         {
             InitializeComponent();
+            InitData();
+        }
+
+        private void InitData()
+        {
             lbTitle.Text = "The Wizard will create this elements necesary for the function of a menu:";
             listView1.View = View.List;
             _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
@@ -20,54 +27,79 @@ namespace Origam.Schema.EntityModel.Wizards
             listView1.StateImageList = _schemaBrowser.EbrSchemaBrowser.imgList;
         }
 
-        private void BtClose_Click(object sender, EventArgs e)
+        public Wizard(IWizardForm objectForm)
         {
-            this.Close();
+            InitializeComponent();
+            InitData();
+            pageStart.Text = objectForm.Description;
+            iwizard = objectForm;
         }
 
-        public void Label(string title)
+        private void PageStart_Initialize(object sender, WizardPageInitEventArgs e)
         {
-            lbTitle.Text = title;
-        }
-
-        public void ShowObjcts(ArrayList list)
-        {
-            int ii = 0;
-            foreach (object[] item in list)
+            foreach (object[] item in iwizard.listItemType)
             {
-                ListViewItem newItem = new ListViewItem((string)item[0] );
+                ListViewItem newItem = new ListViewItem((string)item[0]);
                 newItem.ImageIndex = _schemaBrowser.ImageIndex((string)item[1]);
                 listView1.Items.Add(newItem);
-                ii++;
             }
+            GetNextPage(PagesList.startPage, pageStart);
         }
 
-        private void BtOk_Click(object sender, EventArgs e)
+        private void PageStart_Commit(object sender, WizardPageConfirmEventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
+            if(pageStart.IsFinishPage) DialogResult = DialogResult.OK;
         }
 
-        public void ListOfImages(ImageList imgList)
+        private void DataStructureNamePage_Initialize(object sender, WizardPageInitEventArgs e)
         {
-            listView1.View = View.SmallIcon;
-            listView1.LargeImageList = imgList;
-            listView1.SmallImageList = imgList;
-            listView1.StateImageList = imgList;
+            tbDataStructureName.Text = ((DataStructureForm)iwizard).NameOfEntity;
         }
 
-        public void SetDescription(string description)
+        private void DataStructureNamePage_Commit(object sender, WizardPageConfirmEventArgs e)
         {
-            this.pageStart.Text = description;
+            DataStructureForm structureform = (DataStructureForm)iwizard;
+            if (structureform.IsExistsName(tbDataStructureName.Text))
+            {
+                AsMessageBox.ShowError(this, "The Name already Exists!", "Name Exists", null);
+                e.Cancel = true;
+                return;
+            }
+            structureform.NameOfEntity = tbDataStructureName.Text;
         }
 
-        internal void ShowPages(Stack<PagesList> stackPages)
+        private WizardPage getWizardPage(PagesList nextPage)
         {
-            pages = stackPages;
+            switch (nextPage)
+            {
+                case PagesList.DatastructureNamePage:
+                    return DataStructureNamePage;
+            }
+            return null;
+        }
+
+        private void GetNextPage(PagesList actualPage, WizardPage wizardPage)
+        {
+            bool findPage = false;
+            foreach (PagesList pglist in iwizard.Pages)
+            {
+                if (findPage)
+                {
+                    wizardPage.NextPage = getWizardPage(pglist);
+                    return;
+                }
+                if (pglist == actualPage)
+                {
+                    findPage = true;
+                }
+            }
+            wizardPage.IsFinishPage = true;
         }
     }
     public enum PagesList
     {
         startPage,
+        DatastructureNamePage,
         finish
     }
 }

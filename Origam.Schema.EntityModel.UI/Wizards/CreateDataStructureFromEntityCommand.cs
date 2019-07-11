@@ -22,9 +22,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
+using Origam.Schema.EntityModel.UI.WizardForm;
+using Origam.Services;
 using Origam.UI;
 using Origam.Workbench;
+using Origam.Workbench.Services;
 
 namespace Origam.Schema.EntityModel.Wizards
 {
@@ -33,7 +37,8 @@ namespace Origam.Schema.EntityModel.Wizards
 	/// </summary>
 	public class CreateDataStructureFromEntityCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -45,22 +50,40 @@ namespace Origam.Schema.EntityModel.Wizards
 			}
 		}
 
-		public override void Run()
-		{
+        public override void Run()
+        {
+            DataStructureSchemaItemProvider dsprovider = schema.GetProvider(typeof(DataStructureSchemaItemProvider)) as DataStructureSchemaItemProvider;
+            ArrayList listds = dsprovider.ChildItemsRecursive;
+            var listdsName = listds.ToArray().Select(x => { return ((AbstractSchemaItem)x).Name; }).ToList();
+
             IDataEntity entity = Owner as IDataEntity;
+
             ArrayList list = new ArrayList();
             DataStructure dd = new DataStructure();
             list.Add(new object[] { dd.ItemType, dd.Icon });
-            Wizard wizardscreen = new Wizard();
-            wizardscreen.SetDescription("Create Data Structure Wizard");
-            wizardscreen.ShowObjcts(list);
-            Stack<PagesList> stackPage = new Stack<PagesList>();
+
+            Stack stackPage = new Stack();
+
+            if (listdsName.Any(name => name == entity.Name))
+            {
+                stackPage.Push(PagesList.DatastructureNamePage);
+            }
+
             stackPage.Push(PagesList.startPage);
-           
-            wizardscreen.ShowPages(stackPage);
+
+            DataStructureForm structureForm = new DataStructureForm
+            {
+                Description = "Create Data Structure Wizard",
+                listItemType = list,
+                Pages = stackPage,
+                ListDatastructure = listds.ToArray().Select(x => { return ((AbstractSchemaItem)x).Name; }).ToList(),
+                NameOfEntity = entity.Name
+            };
+
+            Wizard wizardscreen = new Wizard(structureForm);
             if (wizardscreen.ShowDialog() == DialogResult.OK)
             {
-                DataStructure ds = EntityHelper.CreateDataStructure(entity, entity.Name, true);
+                DataStructure ds = EntityHelper.CreateDataStructure(entity,structureForm.NameOfEntity, true);
                 GeneratedModelElements.Add(ds);
             }
 		}

@@ -28,6 +28,7 @@ using Origam.Schema.EntityModel.Wizards;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 using Origam.UI;
+using Origam.UI.WizardForm;
 using Origam.Workbench;
 
 namespace Origam.Gui.Win.Wizards
@@ -58,9 +59,13 @@ namespace Origam.Gui.Win.Wizards
             list.Add(new object[] { dd.ItemType, dd.Icon });
             list.Add(new object[] { pp.ItemType, pp.Icon });
             list.Add(new object[] { ff.ItemType, ff.Icon });
+
+            ScreenWizardForm wizardForm = new ScreenWizardForm();
+
+
             Wizard wizardscreen = new Wizard();
-            wizardscreen.SetDescription("Create Screen Section Wizard");
-            wizardscreen.ShowObjcts(list);
+           // wizardscreen.SetDescription("Create Screen Section Wizard");
+           // wizardscreen.ShowObjcts(list);
             if (wizardscreen.ShowDialog() == DialogResult.OK)
             {
                 CreateFormFromEntityWizard wiz = new CreateFormFromEntityWizard();
@@ -116,7 +121,6 @@ namespace Origam.Gui.Win.Wizards
 				FormReferenceMenuItem menu = MenuHelper.CreateMenuItem(wiz.Entity.Caption == null || wiz.Entity.Caption == ""
 					? wiz.Entity.Name : wiz.Entity.Caption, wiz.Role, form);
                 GeneratedModelElements.Add(dataStructure);
-                GeneratedModelElements.Add(dataStructure);
                 GeneratedModelElements.Add(panel);
                 GeneratedModelElements.Add(form);
                 GeneratedModelElements.Add(menu);
@@ -155,7 +159,7 @@ namespace Origam.Gui.Win.Wizards
             list.Add(new object[] { dd.ItemType, dd.Icon });
             list.Add(new object[] { ff.ItemType, ff.Icon });
             Wizard wiz = new Wizard();
-            wiz.ShowObjcts(list);
+            //wiz.ShowObjcts(list);
             if (wiz.ShowDialog() == DialogResult.OK)
             {
                 DataStructure dataStructure = EntityHelper.CreateDataStructure(panel.DataEntity, panel.DataEntity.Name, true);
