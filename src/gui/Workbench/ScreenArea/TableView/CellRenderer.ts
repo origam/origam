@@ -10,7 +10,7 @@ import { IProperty } from "../../../../model/types/IProperty";
 import { computed } from "mobx";
 import { ITablePanelView } from "../../../../model/TablePanelView/types/ITablePanelView";
 import { TablePanelView } from "../../../../model/TablePanelView/TablePanelView";
-import { getCellValue } from "../../../../model/selectors/TablePanelView/getCellValue";
+import { getCellValueByIdx } from "../../../../model/selectors/TablePanelView/getCellValue";
 import { getTableViewPropertyByIdx } from "../../../../model/selectors/TablePanelView/getTableViewPropertyByIdx";
 import { getTableViewRecordByExistingIdx } from "../../../../model/selectors/TablePanelView/getTableViewRecordByExistingIdx";
 import { getSelectedColumnId } from "../../../../model/selectors/TablePanelView/getSelectedColumnId";
@@ -107,7 +107,7 @@ export class CellRenderer implements ICellRenderer {
   }
 
   @computed get getCellValue() {
-    return getCellValue(this.tablePanelView);
+    return getCellValueByIdx(this.tablePanelView);
   }
 
   getCell(rowIndex: number, columnIndex: number): IRenderedCell {

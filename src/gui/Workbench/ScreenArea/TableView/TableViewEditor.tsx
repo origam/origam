@@ -10,15 +10,29 @@ import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateT
 import { DropdownEditor } from "../../../Components/ScreenElements/Editors/DropdownEditor";
 import { TextEditor } from "../../../Components/ScreenElements/Editors/TextEditor";
 import { getSelectedProperty } from "../../../../model/selectors/TablePanelView/getSelectedProperty";
+import { getDataView } from "../../../../model/selectors/DataView/getDataView";
+import { getSelectedRow } from "../../../../model/selectors/DataView/getSelectedRow";
+import {
+  getCellValueByIdx,
+  getCellValue
+} from "../../../../model/selectors/TablePanelView/getCellValue";
 
 @inject(({ tablePanelView }) => {
+  const row = getSelectedRow(tablePanelView)!;
+  const property = getSelectedProperty(tablePanelView)!;
+  const { onFieldChange } = getDataView(tablePanelView);
   return {
-    property: getSelectedProperty(tablePanelView)
+    property,
+    getCellValue: () => getCellValue(tablePanelView, row, property),
+    onChange: (event: any, value: any) =>
+      onFieldChange(event, row, property, value)
   };
 })
 @observer
 export class TableViewEditor extends React.Component<{
   property?: IProperty;
+  getCellValue?: () => any,
+  onChange?: (event: any, value: any) => void;
 }> {
   getEditor() {
     switch (this.props.property!.column) {
@@ -26,12 +40,12 @@ export class TableViewEditor extends React.Component<{
       case "Text":
         return (
           <TextEditor
-            value={""}
+            value={this.props.getCellValue!()}
             isReadOnly={false}
             isInvalid={false}
             isFocused={false}
             refocuser={undefined}
-            onChange={undefined}
+            onChange={this.props.onChange}
             onKeyDown={undefined}
             onClick={undefined}
           />
@@ -39,22 +53,22 @@ export class TableViewEditor extends React.Component<{
       case "Date":
         return (
           <DateTimeEditor
-            value={moment().toISOString()}
+            value={this.props.getCellValue!()}
             outputFormat={"DD.MM.YYYY HH:mm"}
             isReadOnly={false}
             isInvalid={false}
             isFocused={false}
             refocuser={undefined}
-            onChange={undefined}
+            onChange={this.props.onChange}
             onClick={undefined}
           />
         );
       case "CheckBox":
         return (
           <BoolEditor
-            value={true}
+            value={this.props.getCellValue!()}
             isReadOnly={false}
-            onChange={undefined}
+            onChange={this.props.onChange}
             onClick={undefined}
             onKeyDown={undefined}
           />
@@ -62,13 +76,13 @@ export class TableViewEditor extends React.Component<{
       case "ComboBox":
         return (
           <DropdownEditor
-            value={""}
+            value={this.props.getCellValue!()}
             textualValue={""}
             isReadOnly={false}
             isInvalid={false}
             isFocused={false}
             onTextChange={undefined}
-            onItemSelect={undefined}
+            onItemSelect={this.props.onChange}
             DataStructureEntityId={""}
             ColumnNames={[]}
             Property={""}

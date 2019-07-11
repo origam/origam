@@ -15,7 +15,7 @@ import { IDataView } from "../../../../model/types/IDataView";
 import { getTableViewProperties } from "../../../../model/selectors/TablePanelView/getTableViewProperties";
 import { getColumnHeaders } from "../../../../model/selectors/TablePanelView/getColumnHeaders";
 import { IColumnHeader } from "../../../../model/selectors/TablePanelView/types";
-import { getCellValue } from "../../../../model/selectors/TablePanelView/getCellValue";
+import { getCellValueByIdx } from "../../../../model/selectors/TablePanelView/getCellValue";
 import { getRowCount } from "../../../../model/selectors/TablePanelView/getRowCount";
 import { getTablePanelView } from "../../../../model/selectors/TablePanelView/getTablePanelView";
 import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateTimeEditor";

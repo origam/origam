@@ -129,6 +129,15 @@ export class DataView implements IDataView {
     this.activePanelView = IPanelViewType.Table;
   }
 
+  @action.bound onFieldChange(
+    event: any,
+    row: any[],
+    property: IProperty,
+    value: any
+  ) {
+    getDataTable(this).setFormDirtyValue(row, property.id, value);
+  }
+
   @action.bound selectFirstRow() {
     const dataTable = getDataTable(this);
     const firstRow = dataTable.getFirstRow();
