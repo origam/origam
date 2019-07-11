@@ -139,7 +139,7 @@ namespace Origam.ServerCoreTests
         [Test, Order(304)]
         public void ShouldSaveSession()
         {
-            var actionResult = sut.SaveSession(new SaveSessionData
+            var actionResult = sut.SaveData(new SaveDataData
             {
                 SessionId = sessionId
             });
