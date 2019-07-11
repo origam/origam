@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.136
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29025.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Workbench.Services", "Origam.Workbench.Services\Origam.Workbench.Services.csproj", "{ECA06542-5635-455E-B513-07F60222CA7D}"
 EndProject
@@ -209,7 +209,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Security.Common", "O
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Security.NetFx", "Origam.Security.NetFx\Origam.Security.NetFx.csproj", "{22066F4C-117C-4910-BC00-9C1A4BB14551}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.BI.FastReport", "Origam.BI.FastReport\Origam.BI.FastReport.csproj", "{183E889E-77AB-46B0-8D4F-30BB68671907}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.BI.FastReport", "Origam.BI.FastReport\Origam.BI.FastReport.csproj", "{183E889E-77AB-46B0-8D4F-30BB68671907}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

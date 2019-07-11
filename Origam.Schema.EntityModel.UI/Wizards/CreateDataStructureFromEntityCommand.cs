@@ -20,7 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Windows.Forms;
 using Origam.UI;
+using Origam.Workbench;
 
 namespace Origam.Schema.EntityModel.Wizards
 {
@@ -43,9 +47,22 @@ namespace Origam.Schema.EntityModel.Wizards
 
 		public override void Run()
 		{
-			IDataEntity entity = Owner as IDataEntity;
-			DataStructure ds = EntityHelper.CreateDataStructure(entity, entity.Name, true);
-            GeneratedModelElements.Add(ds);
+            IDataEntity entity = Owner as IDataEntity;
+            ArrayList list = new ArrayList();
+            DataStructure dd = new DataStructure();
+            list.Add(new object[] { dd.ItemType, dd.Icon });
+            Wizard wizardscreen = new Wizard();
+            wizardscreen.SetDescription("Create Data Structure Wizard");
+            wizardscreen.ShowObjcts(list);
+            Stack<PagesList> stackPage = new Stack<PagesList>();
+            stackPage.Push(PagesList.startPage);
+           
+            wizardscreen.ShowPages(stackPage);
+            if (wizardscreen.ShowDialog() == DialogResult.OK)
+            {
+                DataStructure ds = EntityHelper.CreateDataStructure(entity, entity.Name, true);
+                GeneratedModelElements.Add(ds);
+            }
 		}
 	}
 }
