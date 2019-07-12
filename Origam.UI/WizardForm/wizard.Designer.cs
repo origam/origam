@@ -1,7 +1,7 @@
 ﻿using System;
 using AeroWizard;
 
-namespace Origam.Schema.EntityModel.Wizards
+namespace Origam.UI.WizardForm
 {
     partial class Wizard
     {
@@ -33,21 +33,31 @@ namespace Origam.Schema.EntityModel.Wizards
         {
             this.listView1 = new System.Windows.Forms.ListView();
             this.aerowizard1 = new AeroWizard.WizardControl();
-            this.pageStart = new AeroWizard.WizardPage();
+            this.StartPage = new AeroWizard.WizardPage();
             this.lbTitle = new System.Windows.Forms.Label();
             this.DataStructureNamePage = new AeroWizard.WizardPage();
             this.label1 = new System.Windows.Forms.Label();
             this.lbName = new System.Windows.Forms.Label();
             this.tbDataStructureName = new System.Windows.Forms.TextBox();
-            this.ScreenForm = new AeroWizard.WizardPage();
+            this.ScreenFormPage = new AeroWizard.WizardPage();
             this.label2 = new System.Windows.Forms.Label();
             this.lstFields = new System.Windows.Forms.CheckedListBox();
             this.lblRole = new System.Windows.Forms.Label();
             this.txtRole = new System.Windows.Forms.TextBox();
+            this.LookupFormPage = new AeroWizard.WizardPage();
+            this.lblIdFilter = new System.Windows.Forms.Label();
+            this.cboIdFilter = new System.Windows.Forms.ComboBox();
+            this.lblListFilter = new System.Windows.Forms.Label();
+            this.cboListFilter = new System.Windows.Forms.ComboBox();
+            this.lblDisplayField = new System.Windows.Forms.Label();
+            this.cboDisplayField = new System.Windows.Forms.ComboBox();
+            this.lblName = new System.Windows.Forms.Label();
+            this.txtName = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.aerowizard1)).BeginInit();
-            this.pageStart.SuspendLayout();
+            this.StartPage.SuspendLayout();
             this.DataStructureNamePage.SuspendLayout();
-            this.ScreenForm.SuspendLayout();
+            this.ScreenFormPage.SuspendLayout();
+            this.LookupFormPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // listView1
@@ -67,23 +77,23 @@ namespace Origam.Schema.EntityModel.Wizards
             this.aerowizard1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.aerowizard1.Location = new System.Drawing.Point(0, 0);
             this.aerowizard1.Name = "aerowizard1";
-            this.aerowizard1.Pages.Add(this.pageStart);
+            this.aerowizard1.Pages.Add(this.StartPage);
             this.aerowizard1.Pages.Add(this.DataStructureNamePage);
-            this.aerowizard1.Pages.Add(this.ScreenForm);
+            this.aerowizard1.Pages.Add(this.ScreenFormPage);
+            this.aerowizard1.Pages.Add(this.LookupFormPage);
             this.aerowizard1.Size = new System.Drawing.Size(534, 400);
             this.aerowizard1.TabIndex = 0;
-            
             // 
-            // pageStart
+            // StartPage
             // 
-            this.pageStart.Controls.Add(this.lbTitle);
-            this.pageStart.Controls.Add(this.listView1);
-            this.pageStart.Name = "pageStart";
-            this.pageStart.Size = new System.Drawing.Size(487, 246);
-            this.pageStart.TabIndex = 0;
-            this.pageStart.Text = "Page Title";
-            this.pageStart.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageStart_Commit);
-            this.pageStart.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.PageStart_Initialize);
+            this.StartPage.Controls.Add(this.lbTitle);
+            this.StartPage.Controls.Add(this.listView1);
+            this.StartPage.Name = "StartPage";
+            this.StartPage.Size = new System.Drawing.Size(487, 246);
+            this.StartPage.TabIndex = 0;
+            this.StartPage.Text = "Page Title";
+            this.StartPage.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageStart_Commit);
+            this.StartPage.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.PageStart_Initialize);
             // 
             // lbTitle
             // 
@@ -100,7 +110,7 @@ namespace Origam.Schema.EntityModel.Wizards
             this.DataStructureNamePage.Controls.Add(this.lbName);
             this.DataStructureNamePage.Controls.Add(this.tbDataStructureName);
             this.DataStructureNamePage.Name = "DataStructureNamePage";
-            this.DataStructureNamePage.Size = new System.Drawing.Size(484, 174);
+            this.DataStructureNamePage.Size = new System.Drawing.Size(487, 246);
             this.DataStructureNamePage.TabIndex = 2;
             this.DataStructureNamePage.Text = "Please Write Name of Datastructure";
             this.DataStructureNamePage.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.DataStructureNamePage_Commit);
@@ -130,18 +140,18 @@ namespace Origam.Schema.EntityModel.Wizards
             this.tbDataStructureName.Size = new System.Drawing.Size(228, 23);
             this.tbDataStructureName.TabIndex = 0;
             // 
-            // ScreenForm
+            // ScreenFormPage
             // 
-            this.ScreenForm.Controls.Add(this.label2);
-            this.ScreenForm.Controls.Add(this.lstFields);
-            this.ScreenForm.Controls.Add(this.lblRole);
-            this.ScreenForm.Controls.Add(this.txtRole);
-            this.ScreenForm.Name = "ScreenForm";
-            this.ScreenForm.Size = new System.Drawing.Size(487, 246);
-            this.ScreenForm.TabIndex = 3;
-            this.ScreenForm.Text = "ScreenForm";
-            this.ScreenForm.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.ScreenFormPage_Commit);
-            this.ScreenForm.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.ScreenFormPage_Initialize);
+            this.ScreenFormPage.Controls.Add(this.label2);
+            this.ScreenFormPage.Controls.Add(this.lstFields);
+            this.ScreenFormPage.Controls.Add(this.lblRole);
+            this.ScreenFormPage.Controls.Add(this.txtRole);
+            this.ScreenFormPage.Name = "ScreenFormPage";
+            this.ScreenFormPage.Size = new System.Drawing.Size(487, 246);
+            this.ScreenFormPage.TabIndex = 3;
+            this.ScreenFormPage.Text = "Page Title";
+            this.ScreenFormPage.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.ScreenFormPage_Commit);
+            this.ScreenFormPage.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.ScreenFormPage_Initialize);
             // 
             // label2
             // 
@@ -178,6 +188,90 @@ namespace Origam.Schema.EntityModel.Wizards
             this.txtRole.TabIndex = 2;
             this.txtRole.Visible = false;
             // 
+            // LookupFormPage
+            // 
+            this.LookupFormPage.Controls.Add(this.lblIdFilter);
+            this.LookupFormPage.Controls.Add(this.cboIdFilter);
+            this.LookupFormPage.Controls.Add(this.lblListFilter);
+            this.LookupFormPage.Controls.Add(this.cboListFilter);
+            this.LookupFormPage.Controls.Add(this.lblDisplayField);
+            this.LookupFormPage.Controls.Add(this.cboDisplayField);
+            this.LookupFormPage.Controls.Add(this.lblName);
+            this.LookupFormPage.Controls.Add(this.txtName);
+            this.LookupFormPage.Name = "LookupFormPage";
+            this.LookupFormPage.Size = new System.Drawing.Size(487, 246);
+            this.LookupFormPage.TabIndex = 4;
+            this.LookupFormPage.Text = "Lookup Form";
+            this.LookupFormPage.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.LookupFormPage_Commit);
+            this.LookupFormPage.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.LookupFormPage_Initialize);
+            // 
+            // lblIdFilter
+            // 
+            this.lblIdFilter.Location = new System.Drawing.Point(41, 178);
+            this.lblIdFilter.Name = "lblIdFilter";
+            this.lblIdFilter.Size = new System.Drawing.Size(72, 16);
+            this.lblIdFilter.TabIndex = 15;
+            this.lblIdFilter.Text = "Id Filter:";
+            // 
+            // cboIdFilter
+            // 
+            this.cboIdFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboIdFilter.Location = new System.Drawing.Point(129, 178);
+            this.cboIdFilter.Name = "cboIdFilter";
+            this.cboIdFilter.Size = new System.Drawing.Size(272, 23);
+            this.cboIdFilter.Sorted = true;
+            this.cboIdFilter.TabIndex = 14;
+            // 
+            // lblListFilter
+            // 
+            this.lblListFilter.Location = new System.Drawing.Point(41, 128);
+            this.lblListFilter.Name = "lblListFilter";
+            this.lblListFilter.Size = new System.Drawing.Size(72, 16);
+            this.lblListFilter.TabIndex = 13;
+            this.lblListFilter.Text = "List Filter:";
+            // 
+            // cboListFilter
+            // 
+            this.cboListFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboListFilter.Location = new System.Drawing.Point(129, 128);
+            this.cboListFilter.Name = "cboListFilter";
+            this.cboListFilter.Size = new System.Drawing.Size(272, 23);
+            this.cboListFilter.Sorted = true;
+            this.cboListFilter.TabIndex = 12;
+            // 
+            // lblDisplayField
+            // 
+            this.lblDisplayField.Location = new System.Drawing.Point(41, 76);
+            this.lblDisplayField.Name = "lblDisplayField";
+            this.lblDisplayField.Size = new System.Drawing.Size(72, 16);
+            this.lblDisplayField.TabIndex = 11;
+            this.lblDisplayField.Text = "Display Field:";
+            // 
+            // cboDisplayField
+            // 
+            this.cboDisplayField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboDisplayField.Location = new System.Drawing.Point(129, 76);
+            this.cboDisplayField.Name = "cboDisplayField";
+            this.cboDisplayField.Size = new System.Drawing.Size(272, 23);
+            this.cboDisplayField.Sorted = true;
+            this.cboDisplayField.TabIndex = 10;
+            this.cboDisplayField.SelectedIndexChanged += new System.EventHandler(this.CboDisplayField_SelectedIndexChanged);
+            // 
+            // lblName
+            // 
+            this.lblName.Location = new System.Drawing.Point(41, 25);
+            this.lblName.Name = "lblName";
+            this.lblName.Size = new System.Drawing.Size(72, 16);
+            this.lblName.TabIndex = 9;
+            this.lblName.Text = "Name:";
+            // 
+            // txtName
+            // 
+            this.txtName.Location = new System.Drawing.Point(129, 25);
+            this.txtName.Name = "txtName";
+            this.txtName.Size = new System.Drawing.Size(272, 23);
+            this.txtName.TabIndex = 8;
+            // 
             // Wizard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -190,30 +284,40 @@ namespace Origam.Schema.EntityModel.Wizards
             this.Name = "Wizard";
             this.Text = "Create Menu Item Wizard";
             ((System.ComponentModel.ISupportInitialize)(this.aerowizard1)).EndInit();
-            this.pageStart.ResumeLayout(false);
-            this.pageStart.PerformLayout();
+            this.StartPage.ResumeLayout(false);
+            this.StartPage.PerformLayout();
             this.DataStructureNamePage.ResumeLayout(false);
             this.DataStructureNamePage.PerformLayout();
-            this.ScreenForm.ResumeLayout(false);
-            this.ScreenForm.PerformLayout();
+            this.ScreenFormPage.ResumeLayout(false);
+            this.ScreenFormPage.PerformLayout();
+            this.LookupFormPage.ResumeLayout(false);
+            this.LookupFormPage.PerformLayout();
             this.ResumeLayout(false);
 
         }
-
         #endregion
         private AeroWizard.WizardControl aerowizard1;
-        private AeroWizard.WizardPage pageStart;
+        private AeroWizard.WizardPage StartPage;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.Label lbTitle;
         private WizardPage DataStructureNamePage;
         private System.Windows.Forms.Label lbName;
         private System.Windows.Forms.TextBox tbDataStructureName;
         private System.Windows.Forms.Label label1;
-        private WizardPage ScreenForm;
+        private WizardPage ScreenFormPage;
         private System.Windows.Forms.TextBox txtRole;
         private System.Windows.Forms.Label lblRole;
         private System.Windows.Forms.CheckedListBox lstFields;
         private System.Windows.Forms.Label label2;
+        private WizardPage LookupFormPage;
+        private System.Windows.Forms.Label lblIdFilter;
+        internal System.Windows.Forms.ComboBox cboIdFilter;
+        private System.Windows.Forms.Label lblListFilter;
+        internal System.Windows.Forms.ComboBox cboListFilter;
+        private System.Windows.Forms.Label lblDisplayField;
+        internal System.Windows.Forms.ComboBox cboDisplayField;
+        private System.Windows.Forms.Label lblName;
+        internal System.Windows.Forms.TextBox txtName;
     }
 }
 

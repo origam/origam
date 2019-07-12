@@ -44,6 +44,7 @@ namespace Origam.Gui.Win.Wizards
 	public class CreateFormFromEntityCommand : AbstractMenuCommand
 	{
         ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
         public override bool IsEnabled
 		{
 			get
@@ -67,9 +68,10 @@ namespace Origam.Gui.Win.Wizards
             DataStructure dd = new DataStructure();
             PanelControlSet pp = new PanelControlSet();
             FormControlSet ff = new FormControlSet();
-            list.Add(new object[] { dd.ItemType, dd.Icon });
-            list.Add(new object[] { pp.ItemType, pp.Icon });
-            list.Add(new object[] { ff.ItemType, ff.Icon });
+            list.Add(new ListViewItem(dd.ItemType, _schemaBrowser.ImageIndex(dd.Icon)));
+            list.Add(new ListViewItem(pp.ItemType, _schemaBrowser.ImageIndex(pp.Icon)));
+            list.Add(new ListViewItem(ff.ItemType, _schemaBrowser.ImageIndex(ff.Icon)));
+            
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.ScreenForm);
             if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
@@ -81,13 +83,14 @@ namespace Origam.Gui.Win.Wizards
             ScreenWizardForm wizardForm = new ScreenWizardForm
             {
                 listItemType = list,
-                Description = "Create Screen Section Wizard",
+                Description = "Create Screen Wizard",
                 Pages = stackPage,
                 Entity = Owner as IDataEntity,
                 IsRoleVisible = false,
                 textColumnsOnly = false,
                 ListDatastructure = listdsName,
-                NameOfEntity = (Owner as IDataEntity).Name
+                NameOfEntity = (Owner as IDataEntity).Name,
+                imgList = _schemaBrowser.EbrSchemaBrowser.imgList,
             };
 
             Wizard wiz = new Wizard(wizardForm);
@@ -103,7 +106,7 @@ namespace Origam.Gui.Win.Wizards
 
                     DataStructure dataStructure = EntityHelper.CreateDataStructure(wizardForm.Entity, wizardForm.NameOfEntity, true);
                     GeneratedModelElements.Add(dataStructure);
-                    PanelControlSet panel = GuiHelper.CreatePanel(groupName, wizardForm.Entity, wizardForm.SelectedFieldNames);
+                    PanelControlSet panel = GuiHelper.CreatePanel(groupName, wizardForm.Entity, wizardForm.SelectedFieldNames, wizardForm.NameOfEntity);
                     GeneratedModelElements.Add(panel);
                     FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
                     GeneratedModelElements.Add(form);

@@ -1,46 +1,40 @@
 ﻿using AeroWizard;
+using Origam.Schema.EntityModel;
 using Origam.UI;
 using Origam.UI.Interfaces;
 using Origam.UI.WizardForm;
-using Origam.Workbench;
 using System;
 using System.Windows.Forms;
 
-namespace Origam.Schema.EntityModel.Wizards
+namespace Origam.UI.WizardForm
+
 {
     public partial class Wizard : Form
     {
-        SchemaBrowser _schemaBrowser;
         IWizardForm iwizard;
 
         public Wizard(IWizardForm objectForm)
         {
             InitializeComponent();
-            InitData();
-            pageStart.Text = "What will do.";
-            aerowizard1.Title = objectForm.Description;
             iwizard = objectForm;
+            StartPage.Text = "What will happen...";
+            aerowizard1.Title = objectForm.Description;
+            InitData();
         }
 
         private void InitData()
         {
             lbTitle.Text = "The Wizard will create this elements necesary for the function of a menu:";
             listView1.View = View.List;
-            _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-            listView1.SmallImageList = _schemaBrowser.EbrSchemaBrowser.imgList;
-            listView1.StateImageList = _schemaBrowser.EbrSchemaBrowser.imgList;
+            listView1.SmallImageList = iwizard.imgList;
+            listView1.StateImageList = iwizard.imgList;
         }
 
 
 #region Inicialize&Commit
         private void PageStart_Initialize(object sender, WizardPageInitEventArgs e)
         {
-            foreach (object[] item in iwizard.listItemType)
-            {
-                ListViewItem newItem = new ListViewItem((string)item[0]);
-                newItem.ImageIndex = _schemaBrowser.ImageIndex((string)item[1]);
-                listView1.Items.Add(newItem);
-            }
+            iwizard.ListView(listView1);
             GetNextPage(PagesList.startPage, sender);
         }
 
@@ -51,7 +45,6 @@ namespace Origam.Schema.EntityModel.Wizards
 
         private void DataStructureNamePage_Initialize(object sender, WizardPageInitEventArgs e)
         {
-
             tbDataStructureName.Text = iwizard.NameOfEntity;
             GetNextPage(PagesList.DatastructureNamePage, sender);
         }
@@ -81,9 +74,49 @@ namespace Origam.Schema.EntityModel.Wizards
         {
             IsFinish(sender, e);
         }
+
+        private void LookupFormPage_Initialize(object sender, WizardPageInitEventArgs e)
+        {
+            LookupForm form = (LookupForm)iwizard;
+            form.SetUpForm(cboIdFilter, cboListFilter,cboDisplayField, txtName);
+            GetNextPage(PagesList.DatastructureNamePage, sender);
+        }
+
+        private void LookupFormPage_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
+            LookupForm form = (LookupForm)iwizard;
+            form.LookupName = txtName.Text;
+            form.NameColumn = cboDisplayField.SelectedItem as IDataEntityColumn;
+            form.IdFilter = cboIdFilter.SelectedItem as EntityFilter;
+            form.ListFilter = cboListFilter.SelectedItem as EntityFilter;
+
+            if (form.LookupName == ""
+                | form.Entity == null
+                | form.NameColumn == null
+                | form.IdColumn == null
+                | form.IdFilter == null)
+            {
+                MessageBox.Show(ResourceUtils.GetString("EnterAllInfo"), ResourceUtils.GetString("LookupWiz"), MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                e.Cancel = true;
+                return;
+            }
+            IsFinish(sender, e);
+        }
+
         #endregion
 
         #region support
+
+        private void CboDisplayField_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LookupForm form = (LookupForm)iwizard;
+            var selectName = (cboDisplayField.SelectedItem as IDataEntityColumn).Name;
+            if (selectName != "Name")
+            {
+                this.txtName.Text = form.Entity.Name + "_" + selectName;
+            }
+        }
+
         private void IsFinish(object sender, WizardPageConfirmEventArgs e)
         {
             if (((WizardPage)sender).IsFinishPage && !e.Cancel)
@@ -116,17 +149,14 @@ namespace Origam.Schema.EntityModel.Wizards
                 case PagesList.DatastructureNamePage:
                     return DataStructureNamePage;
                 case PagesList.ScreenForm:
-                    return ScreenForm;
+                    return ScreenFormPage;
+                case PagesList.LookupForm:
+                    return LookupFormPage;
             }
             return null;
         }
-        #endregion
+
+        
     }
-    public enum PagesList
-    {
-        startPage,
-        DatastructureNamePage,
-        ScreenForm,
-        finish
-    }
+    #endregion
 }

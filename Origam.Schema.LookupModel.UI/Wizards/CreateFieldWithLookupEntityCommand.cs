@@ -25,11 +25,7 @@ using Origam.Schema.EntityModel;
 using Origam.UI;
 using Origam.Schema.DeploymentModel;
 using System.Text;
-using core = Origam.Workbench.Services.CoreServices;
 using System.Collections.Generic;
-using System.Collections;
-using static Origam.DA.Common.Enums;
-using Origam.DA.Common;
 using Origam.DA.Service;
 
 namespace Origam.Schema.LookupModel.Wizards

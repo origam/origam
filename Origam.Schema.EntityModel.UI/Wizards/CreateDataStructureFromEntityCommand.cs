@@ -27,6 +27,7 @@ using System.Windows.Forms;
 using Origam.Services;
 using Origam.UI;
 using Origam.UI.WizardForm;
+using Origam.Workbench;
 using Origam.Workbench.Services;
 
 namespace Origam.Schema.EntityModel.Wizards
@@ -37,6 +38,7 @@ namespace Origam.Schema.EntityModel.Wizards
     public class CreateDataStructureFromEntityCommand : AbstractMenuCommand
 	{
         ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
         public override bool IsEnabled
 		{
 			get
@@ -61,7 +63,7 @@ namespace Origam.Schema.EntityModel.Wizards
 
             ArrayList list = new ArrayList();
             DataStructure dd = new DataStructure();
-            list.Add(new object[] { dd.ItemType, dd.Icon });
+            list.Add(new ListViewItem(dd.ItemType, _schemaBrowser.ImageIndex(dd.Icon)));
 
             Stack stackPage = new Stack();
 
@@ -78,10 +80,12 @@ namespace Origam.Schema.EntityModel.Wizards
                 listItemType = list,
                 Pages = stackPage,
                 ListDatastructure = listdsName,
-                NameOfEntity = entity.Name
+                NameOfEntity = entity.Name,
+                imgList = _schemaBrowser.EbrSchemaBrowser.imgList
             };
 
             Wizard wizardscreen = new Wizard(structureForm);
+            
             if (wizardscreen.ShowDialog() == DialogResult.OK)
             {
                 DataStructure ds = EntityHelper.CreateDataStructure(entity,structureForm.NameOfEntity, true);

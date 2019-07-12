@@ -20,10 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.Windows.Forms;
 using Origam.Schema.EntityModel;
+using Origam.Schema.EntityModel.Wizards;
 using Origam.Schema.GuiModel;
 using Origam.UI;
+using Origam.UI.WizardForm;
+using Origam.Workbench;
 
 namespace Origam.Gui.Win.Wizards
 {
@@ -32,7 +36,8 @@ namespace Origam.Gui.Win.Wizards
 	/// </summary>
 	public class CreatePanelFromEntityCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -46,15 +51,36 @@ namespace Origam.Gui.Win.Wizards
 
 		public override void Run()
 		{
-			CreateFormFromEntityWizard wiz = new CreateFormFromEntityWizard();
+            ArrayList list = new ArrayList();
+            PanelControlSet pp = new PanelControlSet();
+            list.Add(new ListViewItem(pp.ItemType, _schemaBrowser.ImageIndex(pp.Icon)));
+            
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.ScreenForm);
+            stackPage.Push(PagesList.startPage);
 
-			wiz.Entity = Owner as IDataEntity;
+            ScreenWizardForm wizardForm = new ScreenWizardForm
+            {
+                listItemType = list,
+                Description = "Create Screen Section Wizard",
+                Pages = stackPage,
+                Entity = Owner as IDataEntity,
+                IsRoleVisible = false,
+                textColumnsOnly = false,
+                imgList = _schemaBrowser.EbrSchemaBrowser.imgList,
+            };
+
+            Wizard wiz = new Wizard(wizardForm);
+
+            //CreateFormFromEntityWizard wiz = new CreateFormFromEntityWizard();
+
+			//wiz.Entity = Owner as IDataEntity;
 			if(wiz.ShowDialog() == DialogResult.OK)
 			{
 				string groupName = null;
-				if(wiz.Entity.Group != null) groupName = wiz.Entity.Group.Name;
+				if(wizardForm.Entity.Group != null) groupName = wizardForm.Entity.Group.Name;
 
-				PanelControlSet panel = GuiHelper.CreatePanel(groupName, wiz.Entity, wiz.SelectedFieldNames);
+				PanelControlSet panel = GuiHelper.CreatePanel(groupName, wizardForm.Entity, wizardForm.SelectedFieldNames);
 
 				Origam.Workbench.Commands.EditSchemaItem edit = new Origam.Workbench.Commands.EditSchemaItem();
 				edit.Owner = panel;
