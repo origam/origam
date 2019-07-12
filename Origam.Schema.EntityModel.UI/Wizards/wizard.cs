@@ -3,6 +3,7 @@ using Origam.UI;
 using Origam.UI.Interfaces;
 using Origam.UI.WizardForm;
 using Origam.Workbench;
+using System;
 using System.Windows.Forms;
 
 namespace Origam.Schema.EntityModel.Wizards
@@ -12,10 +13,13 @@ namespace Origam.Schema.EntityModel.Wizards
         SchemaBrowser _schemaBrowser;
         IWizardForm iwizard;
 
-        public Wizard()
+        public Wizard(IWizardForm objectForm)
         {
             InitializeComponent();
             InitData();
+            pageStart.Text = "What will do.";
+            aerowizard1.Title = objectForm.Description;
+            iwizard = objectForm;
         }
 
         private void InitData()
@@ -27,14 +31,8 @@ namespace Origam.Schema.EntityModel.Wizards
             listView1.StateImageList = _schemaBrowser.EbrSchemaBrowser.imgList;
         }
 
-        public Wizard(IWizardForm objectForm)
-        {
-            InitializeComponent();
-            InitData();
-            pageStart.Text = objectForm.Description;
-            iwizard = objectForm;
-        }
 
+#region Inicialize&Commit
         private void PageStart_Initialize(object sender, WizardPageInitEventArgs e)
         {
             foreach (object[] item in iwizard.listItemType)
@@ -43,43 +41,59 @@ namespace Origam.Schema.EntityModel.Wizards
                 newItem.ImageIndex = _schemaBrowser.ImageIndex((string)item[1]);
                 listView1.Items.Add(newItem);
             }
-            GetNextPage(PagesList.startPage, pageStart);
+            GetNextPage(PagesList.startPage, sender);
         }
 
         private void PageStart_Commit(object sender, WizardPageConfirmEventArgs e)
         {
-            if(pageStart.IsFinishPage) DialogResult = DialogResult.OK;
+            IsFinish(sender,e);
         }
 
         private void DataStructureNamePage_Initialize(object sender, WizardPageInitEventArgs e)
         {
-            tbDataStructureName.Text = ((DataStructureForm)iwizard).NameOfEntity;
+
+            tbDataStructureName.Text = iwizard.NameOfEntity;
+            GetNextPage(PagesList.DatastructureNamePage, sender);
         }
 
         private void DataStructureNamePage_Commit(object sender, WizardPageConfirmEventArgs e)
         {
-            DataStructureForm structureform = (DataStructureForm)iwizard;
-            if (structureform.IsExistsName(tbDataStructureName.Text))
+            if (iwizard.IsExistsNameInDataStructure(tbDataStructureName.Text))
             {
                 AsMessageBox.ShowError(this, "The Name already Exists!", "Name Exists", null);
                 e.Cancel = true;
                 return;
             }
-            structureform.NameOfEntity = tbDataStructureName.Text;
+            iwizard.NameOfEntity = tbDataStructureName.Text;
+            IsFinish(sender,e);
         }
 
-        private WizardPage getWizardPage(PagesList nextPage)
+        private void ScreenFormPage_Initialize(object sender, WizardPageInitEventArgs e)
         {
-            switch (nextPage)
+            GetNextPage(PagesList.ScreenForm, sender);
+            ScreenWizardForm screenWizard = (ScreenWizardForm)iwizard;
+            screenWizard.SetUpForm(lstFields);
+            lblRole.Visible = screenWizard.IsRoleVisible;
+            txtRole.Visible = screenWizard.IsRoleVisible;
+        }
+
+        private void ScreenFormPage_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
+            IsFinish(sender, e);
+        }
+        #endregion
+
+        #region support
+        private void IsFinish(object sender, WizardPageConfirmEventArgs e)
+        {
+            if (((WizardPage)sender).IsFinishPage && !e.Cancel)
             {
-                case PagesList.DatastructureNamePage:
-                    return DataStructureNamePage;
+                DialogResult = DialogResult.OK;
             }
-            return null;
         }
-
-        private void GetNextPage(PagesList actualPage, WizardPage wizardPage)
+        private void GetNextPage(PagesList actualPage, object sender)
         {
+            WizardPage wizardPage = (WizardPage)sender;
             bool findPage = false;
             foreach (PagesList pglist in iwizard.Pages)
             {
@@ -95,11 +109,24 @@ namespace Origam.Schema.EntityModel.Wizards
             }
             wizardPage.IsFinishPage = true;
         }
+        private WizardPage getWizardPage(PagesList nextPage)
+        {
+            switch (nextPage)
+            {
+                case PagesList.DatastructureNamePage:
+                    return DataStructureNamePage;
+                case PagesList.ScreenForm:
+                    return ScreenForm;
+            }
+            return null;
+        }
+        #endregion
     }
     public enum PagesList
     {
         startPage,
         DatastructureNamePage,
+        ScreenForm,
         finish
     }
 }

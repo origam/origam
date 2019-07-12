@@ -36,12 +36,18 @@ namespace Origam.Schema.EntityModel.Wizards
             this.pageStart = new AeroWizard.WizardPage();
             this.lbTitle = new System.Windows.Forms.Label();
             this.DataStructureNamePage = new AeroWizard.WizardPage();
+            this.label1 = new System.Windows.Forms.Label();
             this.lbName = new System.Windows.Forms.Label();
             this.tbDataStructureName = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.ScreenForm = new AeroWizard.WizardPage();
+            this.label2 = new System.Windows.Forms.Label();
+            this.lstFields = new System.Windows.Forms.CheckedListBox();
+            this.lblRole = new System.Windows.Forms.Label();
+            this.txtRole = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.aerowizard1)).BeginInit();
             this.pageStart.SuspendLayout();
             this.DataStructureNamePage.SuspendLayout();
+            this.ScreenForm.SuspendLayout();
             this.SuspendLayout();
             // 
             // listView1
@@ -63,15 +69,17 @@ namespace Origam.Schema.EntityModel.Wizards
             this.aerowizard1.Name = "aerowizard1";
             this.aerowizard1.Pages.Add(this.pageStart);
             this.aerowizard1.Pages.Add(this.DataStructureNamePage);
-            this.aerowizard1.Size = new System.Drawing.Size(531, 328);
+            this.aerowizard1.Pages.Add(this.ScreenForm);
+            this.aerowizard1.Size = new System.Drawing.Size(534, 400);
             this.aerowizard1.TabIndex = 0;
+            
             // 
             // pageStart
             // 
             this.pageStart.Controls.Add(this.lbTitle);
             this.pageStart.Controls.Add(this.listView1);
             this.pageStart.Name = "pageStart";
-            this.pageStart.Size = new System.Drawing.Size(484, 174);
+            this.pageStart.Size = new System.Drawing.Size(487, 246);
             this.pageStart.TabIndex = 0;
             this.pageStart.Text = "Page Title";
             this.pageStart.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageStart_Commit);
@@ -98,6 +106,14 @@ namespace Origam.Schema.EntityModel.Wizards
             this.DataStructureNamePage.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.DataStructureNamePage_Commit);
             this.DataStructureNamePage.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.DataStructureNamePage_Initialize);
             // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(131, 75);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(228, 34);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Name of DataStructure already exists. Please Fill different Name.";
+            // 
             // lbName
             // 
             this.lbName.AutoSize = true;
@@ -114,20 +130,60 @@ namespace Origam.Schema.EntityModel.Wizards
             this.tbDataStructureName.Size = new System.Drawing.Size(228, 23);
             this.tbDataStructureName.TabIndex = 0;
             // 
-            // label1
+            // ScreenForm
             // 
-            this.label1.Location = new System.Drawing.Point(131, 75);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(228, 34);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Name of DataStructure already exists. Please Fill different Name.";
+            this.ScreenForm.Controls.Add(this.label2);
+            this.ScreenForm.Controls.Add(this.lstFields);
+            this.ScreenForm.Controls.Add(this.lblRole);
+            this.ScreenForm.Controls.Add(this.txtRole);
+            this.ScreenForm.Name = "ScreenForm";
+            this.ScreenForm.Size = new System.Drawing.Size(487, 246);
+            this.ScreenForm.TabIndex = 3;
+            this.ScreenForm.Text = "ScreenForm";
+            this.ScreenForm.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.ScreenFormPage_Commit);
+            this.ScreenForm.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.ScreenFormPage_Initialize);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(19, 17);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(302, 15);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "Select the fields that will be displayed on screen Section:";
+            // 
+            // lstFields
+            // 
+            this.lstFields.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lstFields.Location = new System.Drawing.Point(19, 52);
+            this.lstFields.Name = "lstFields";
+            this.lstFields.Size = new System.Drawing.Size(207, 162);
+            this.lstFields.Sorted = true;
+            this.lstFields.TabIndex = 12;
+            // 
+            // lblRole
+            // 
+            this.lblRole.Location = new System.Drawing.Point(285, 111);
+            this.lblRole.Name = "lblRole";
+            this.lblRole.Size = new System.Drawing.Size(40, 16);
+            this.lblRole.TabIndex = 11;
+            this.lblRole.Text = "Role:";
+            this.lblRole.Visible = false;
+            // 
+            // txtRole
+            // 
+            this.txtRole.Location = new System.Drawing.Point(288, 149);
+            this.txtRole.Name = "txtRole";
+            this.txtRole.Size = new System.Drawing.Size(160, 23);
+            this.txtRole.TabIndex = 2;
+            this.txtRole.Visible = false;
             // 
             // Wizard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(531, 328);
+            this.ClientSize = new System.Drawing.Size(534, 400);
             this.ControlBox = false;
             this.Controls.Add(this.aerowizard1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -138,6 +194,8 @@ namespace Origam.Schema.EntityModel.Wizards
             this.pageStart.PerformLayout();
             this.DataStructureNamePage.ResumeLayout(false);
             this.DataStructureNamePage.PerformLayout();
+            this.ScreenForm.ResumeLayout(false);
+            this.ScreenForm.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -151,6 +209,11 @@ namespace Origam.Schema.EntityModel.Wizards
         private System.Windows.Forms.Label lbName;
         private System.Windows.Forms.TextBox tbDataStructureName;
         private System.Windows.Forms.Label label1;
+        private WizardPage ScreenForm;
+        private System.Windows.Forms.TextBox txtRole;
+        private System.Windows.Forms.Label lblRole;
+        private System.Windows.Forms.CheckedListBox lstFields;
+        private System.Windows.Forms.Label label2;
     }
 }
 

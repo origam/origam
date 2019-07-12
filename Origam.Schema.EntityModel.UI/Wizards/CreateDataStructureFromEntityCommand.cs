@@ -24,18 +24,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Origam.Schema.EntityModel.UI.WizardForm;
 using Origam.Services;
 using Origam.UI;
-using Origam.Workbench;
+using Origam.UI.WizardForm;
 using Origam.Workbench.Services;
 
 namespace Origam.Schema.EntityModel.Wizards
 {
-	/// <summary>
-	/// Summary description for CreateDataStructureFromEntityCommand.
-	/// </summary>
-	public class CreateDataStructureFromEntityCommand : AbstractMenuCommand
+    /// <summary>
+    /// Summary description for CreateDataStructureFromEntityCommand.
+    /// </summary>
+    public class CreateDataStructureFromEntityCommand : AbstractMenuCommand
 	{
         ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
         public override bool IsEnabled
@@ -53,8 +52,10 @@ namespace Origam.Schema.EntityModel.Wizards
         public override void Run()
         {
             DataStructureSchemaItemProvider dsprovider = schema.GetProvider(typeof(DataStructureSchemaItemProvider)) as DataStructureSchemaItemProvider;
-            ArrayList listds = dsprovider.ChildItemsRecursive;
-            var listdsName = listds.ToArray().Select(x => { return ((AbstractSchemaItem)x).Name; }).ToList();
+            List<string> listdsName = dsprovider.ChildItemsRecursive
+                            .ToArray()
+                            .Select(x => { return ((AbstractSchemaItem)x).Name; })
+                            .ToList();
 
             IDataEntity entity = Owner as IDataEntity;
 
@@ -76,7 +77,7 @@ namespace Origam.Schema.EntityModel.Wizards
                 Description = "Create Data Structure Wizard",
                 listItemType = list,
                 Pages = stackPage,
-                ListDatastructure = listds.ToArray().Select(x => { return ((AbstractSchemaItem)x).Name; }).ToList(),
+                ListDatastructure = listdsName,
                 NameOfEntity = entity.Name
             };
 

@@ -21,15 +21,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
+using Origam.Schema;
 using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel;
 using Origam.Schema.EntityModel.Wizards;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
+using Origam.Services;
 using Origam.UI;
 using Origam.UI.WizardForm;
 using Origam.Workbench;
+using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win.Wizards
 {
@@ -38,7 +43,8 @@ namespace Origam.Gui.Win.Wizards
 	/// </summary>
 	public class CreateFormFromEntityCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -52,6 +58,11 @@ namespace Origam.Gui.Win.Wizards
 
 		public override void Run()
 		{
+            DataStructureSchemaItemProvider dsprovider = schema.GetProvider(typeof(DataStructureSchemaItemProvider)) as DataStructureSchemaItemProvider;
+            List<string> listdsName = dsprovider.ChildItemsRecursive
+                            .ToArray()
+                            .Select(x => { return ((AbstractSchemaItem)x).Name; })
+                            .ToList();
             ArrayList list = new ArrayList();
             DataStructure dd = new DataStructure();
             PanelControlSet pp = new PanelControlSet();
@@ -59,33 +70,44 @@ namespace Origam.Gui.Win.Wizards
             list.Add(new object[] { dd.ItemType, dd.Icon });
             list.Add(new object[] { pp.ItemType, pp.Icon });
             list.Add(new object[] { ff.ItemType, ff.Icon });
-
-            ScreenWizardForm wizardForm = new ScreenWizardForm();
-
-
-            Wizard wizardscreen = new Wizard();
-           // wizardscreen.SetDescription("Create Screen Section Wizard");
-           // wizardscreen.ShowObjcts(list);
-            if (wizardscreen.ShowDialog() == DialogResult.OK)
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.ScreenForm);
+            if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
             {
-                CreateFormFromEntityWizard wiz = new CreateFormFromEntityWizard();
+                stackPage.Push(PagesList.DatastructureNamePage);
+            }
+            stackPage.Push(PagesList.startPage);
 
-                wiz.Entity = Owner as IDataEntity;
-                wiz.IsRoleVisible = false;
+            ScreenWizardForm wizardForm = new ScreenWizardForm
+            {
+                listItemType = list,
+                Description = "Create Screen Section Wizard",
+                Pages = stackPage,
+                Entity = Owner as IDataEntity,
+                IsRoleVisible = false,
+                textColumnsOnly = false,
+                ListDatastructure = listdsName,
+                NameOfEntity = (Owner as IDataEntity).Name
+            };
+
+            Wizard wiz = new Wizard(wizardForm);
+           
+                //CreateFormFromEntityWizard wiz = new CreateFormFromEntityWizard();
+                //wiz.Entity = Owner as IDataEntity;
+                //wiz.IsRoleVisible = false;
 
                 if (wiz.ShowDialog() == DialogResult.OK)
                 {
                     string groupName = null;
-                    if (wiz.Entity.Group != null) groupName = wiz.Entity.Group.Name;
+                    if (wizardForm.Entity.Group != null) groupName = wizardForm.Entity.Group.Name;
 
-                    DataStructure dataStructure = EntityHelper.CreateDataStructure(wiz.Entity, wiz.Entity.Name, true);
+                    DataStructure dataStructure = EntityHelper.CreateDataStructure(wizardForm.Entity, wizardForm.NameOfEntity, true);
                     GeneratedModelElements.Add(dataStructure);
-                    PanelControlSet panel = GuiHelper.CreatePanel(groupName, wiz.Entity, wiz.SelectedFieldNames);
+                    PanelControlSet panel = GuiHelper.CreatePanel(groupName, wizardForm.Entity, wizardForm.SelectedFieldNames);
                     GeneratedModelElements.Add(panel);
                     FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
                     GeneratedModelElements.Add(form);
                 }
-            }
         }
 	}
 
@@ -152,24 +174,13 @@ namespace Origam.Gui.Win.Wizards
             PanelControlSet panel = Owner as PanelControlSet;
 			string groupName = null;
 			if(panel.Group != null) groupName = panel.Group.Name;
-
-            ArrayList list = new ArrayList();
-            DataStructure dd = new DataStructure();
-            FormControlSet ff = new FormControlSet();
-            list.Add(new object[] { dd.ItemType, dd.Icon });
-            list.Add(new object[] { ff.ItemType, ff.Icon });
-            Wizard wiz = new Wizard();
-            //wiz.ShowObjcts(list);
-            if (wiz.ShowDialog() == DialogResult.OK)
-            {
-                DataStructure dataStructure = EntityHelper.CreateDataStructure(panel.DataEntity, panel.DataEntity.Name, true);
-                GeneratedModelElements.Add(dataStructure);
-                FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
-                GeneratedModelElements.Add(form);
-                Origam.Workbench.Commands.EditSchemaItem edit = new Origam.Workbench.Commands.EditSchemaItem();
-                edit.Owner = form;
-                edit.Run();
-            }
+            DataStructure dataStructure = EntityHelper.CreateDataStructure(panel.DataEntity, panel.DataEntity.Name, true);
+            GeneratedModelElements.Add(dataStructure);
+            FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
+            GeneratedModelElements.Add(form);
+            Origam.Workbench.Commands.EditSchemaItem edit = new Origam.Workbench.Commands.EditSchemaItem();
+            edit.Owner = form;
+            edit.Run();
 		}
 	}
 
