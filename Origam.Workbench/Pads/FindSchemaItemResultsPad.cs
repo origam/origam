@@ -21,6 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Origam.Schema;
 using Origam.Workbench.Commands;
@@ -39,7 +42,9 @@ namespace Origam.Workbench.Pads
 		private int sortColumn;
 
 		private SchemaBrowser _schemaBrowser;
-		ArrayList _results = new ArrayList();
+        private ColumnHeader colPackageName;
+        private ColumnHeader colPackageReference;
+        ArrayList _results = new ArrayList();
 
 		public FindSchemaItemResultsPad()
 		{
@@ -98,6 +103,8 @@ namespace Origam.Workbench.Pads
             this.colRootType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colItemType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colFolderPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colPackageName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colPackageReference = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // lvwResults
@@ -107,7 +114,9 @@ namespace Origam.Workbench.Pads
             this.colItemPath,
             this.colRootType,
             this.colItemType,
-            this.colFolderPath});
+            this.colFolderPath,
+            this.colPackageName,
+            this.colPackageReference});
             this.lvwResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvwResults.FullRowSelect = true;
             this.lvwResults.Location = new System.Drawing.Point(0, 0);
@@ -124,12 +133,12 @@ namespace Origam.Workbench.Pads
             // colItemPath
             // 
             this.colItemPath.Text = "Found In";
-            this.colItemPath.Width = 375;
+            this.colItemPath.Width = 266;
             // 
             // colRootType
             // 
             this.colRootType.Text = "Root Type";
-            this.colRootType.Width = 131;
+            this.colRootType.Width = 165;
             // 
             // colItemType
             // 
@@ -139,7 +148,17 @@ namespace Origam.Workbench.Pads
             // colFolderPath
             // 
             this.colFolderPath.Text = "Folder";
-            this.colFolderPath.Width = 324;
+            this.colFolderPath.Width = 144;
+            // 
+            // colPackageName
+            // 
+            this.colPackageName.Text = "Package";
+            this.colPackageName.Width = 130;
+            // 
+            // colPackageReference
+            // 
+            this.colPackageReference.Text = "Package Reference";
+            this.colPackageReference.Width = 119;
             // 
             // FindSchemaItemResultsPad
             // 
@@ -175,13 +194,23 @@ namespace Origam.Workbench.Pads
 		public void DisplayResults(AbstractSchemaItem[] results)
 		{
 			ResetResults();
-			if(results.Length > 0)
-			{
+            if (results.Length > 0)
+            {
+                List<Guid> referencePackages = new List<Guid>();
+                TreeNode treenode = (WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser).EbrSchemaBrowser.GetFirstNode();
+                if (treenode != null)
+                {
+                    var itm = (SchemaExtension)treenode.Tag;
+                    referencePackages = itm.IncludedPackages.Select(x =>{ return x.Id; }).ToList();
+                    referencePackages.Add(itm.Id);
+                    //if (!((SchemaExtension)treenode.Tag).Id.Equals(SchemaExtensionIdItem))
+                }
+            
                 ListViewItem[] resultListItems = new ListViewItem[results.LongLength];
                 for (int i = 0; i < results.LongLength; i++)
                 {
                     var item = results[i];
-                    resultListItems[i] = GetResult(item);
+                    resultListItems[i] = GetResult(item, referencePackages);
                     _results.Add(item);
                 }
                 lvwResults.Items.AddRange(resultListItems);
@@ -199,7 +228,7 @@ namespace Origam.Workbench.Pads
 			}
 		}
 
-		private ListViewItem GetResult(AbstractSchemaItem item)
+		private ListViewItem GetResult(AbstractSchemaItem item, List<Guid> referencePackages)
 		{
 			if(item == null) return null;
 
@@ -214,7 +243,9 @@ namespace Origam.Workbench.Pads
 			if(name == null) name = item.ItemType;
 			if(rootName == null) rootName = item.RootItem.ItemType;
 
-			ListViewItem newItem = new ListViewItem(new string[] {item.Path, rootName, name, item.RootItem.Group == null ? "" : item.RootItem.Group.Path});
+			ListViewItem newItem = new ListViewItem(new string[] {item.Path, rootName, name,
+            item.RootItem.Group == null ? "" : item.RootItem.Group.Path,item.Package,
+                referencePackages.Contains(item.SchemaExtensionId)?"Yes":"No"});
 			newItem.Tag = item;
 			newItem.ImageIndex = _schemaBrowser.ImageIndex(item.RootItem.Icon);
 

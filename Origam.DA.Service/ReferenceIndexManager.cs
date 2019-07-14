@@ -48,7 +48,7 @@ namespace Origam.DA.Service
         private static void Remove(IPersistent sender)
         {
             List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> ListForDelete
-               = referenceIndex.Where(x => x.Value.Key == ((AbstractSchemaItem)sender).Id).ToList();
+               = referenceIndex.Where(x => x.Value.Key == sender.Id).ToList();
             foreach (var items in ListForDelete)
             {
                 referenceIndex.Remove(items);
