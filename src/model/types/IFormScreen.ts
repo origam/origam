@@ -3,8 +3,6 @@ import { IDataSource } from "./IDataSource";
 import { IComponentBinding } from "./IComponentBinding";
 import { IFormScreenLifecycle } from "./IFormScreenLifecycle";
 
-export const CFormScreen = "CFormScreen";
-
 export interface ILoadedFormScreenData {
   title: string;
   menuId: string;
@@ -25,7 +23,8 @@ export interface ILoadedFormScreenData {
 }
 
 export interface ILoadedFormScreen extends ILoadedFormScreenData {
-  $type: typeof CFormScreen;
+  $type_ILoadedFormScreen: 1;
+
   isLoading: false;
   rootDataViews: IDataView[];
 
@@ -42,7 +41,7 @@ export interface ILoadingFormScreenData {
 }
 
 export interface ILoadingFormScreen extends ILoadingFormScreenData {
-  $type: typeof CFormScreen;
+  $type_ILoadingFormScreen: 1;
 
   isLoading: true;
   parent?: any;
@@ -51,3 +50,8 @@ export interface ILoadingFormScreen extends ILoadingFormScreenData {
 }
 
 export type IFormScreen = ILoadingFormScreen | ILoadedFormScreen;
+
+export const isILoadingFormScreen = (o: any): o is ILoadingFormScreen =>
+  o.$type_ILoadingFormScreen;
+export const isILoadedFormScreen = (o: any): o is ILoadedFormScreen =>
+  o.$type_ILoadedFormScreen;

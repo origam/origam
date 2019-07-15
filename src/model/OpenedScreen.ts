@@ -1,18 +1,14 @@
-import {
-  IOpenedScreen,
-  IOpenedScreenData,
-  COpenedScreen
-} from "./types/IOpenedScreen";
+import { IOpenedScreen, IOpenedScreenData } from "./types/IOpenedScreen";
 import { observable } from "mobx";
 import { IFormScreen } from "./types/IFormScreen";
 
 export class OpenedScreen implements IOpenedScreen {
+  $type_IOpenedScreen: 1 = 1;
+
   constructor(data: IOpenedScreenData) {
     Object.assign(this, data);
     this.content.parent = this;
   }
-
-  $type: typeof COpenedScreen = COpenedScreen;
 
   @observable isActive = false;
   menuItemId: string = "";

@@ -9,6 +9,10 @@ export interface IDataSourceData {
 }
 
 export interface IDataSource extends IDataSourceData {
+  $type_IDataSource: 1;
+
   parent?: any;
   getFieldByName(name: string): IDataSourceField | undefined;
 }
+
+export const isIDataSource = (o: any): o is IDataSource => o.$type_IDataSource;

@@ -1,9 +1,10 @@
-export const CFormDataManager = "CFormDataManager";
-
-export interface IFormDataManagerData {
-
-}
+export interface IFormDataManagerData {}
 
 export interface IFormDataManager extends IFormDataManagerData {
-  $type: typeof CFormDataManager;
+  $type_IFormDataManager: 1;
+
+  parent?: any;
 }
+
+export const isIFormDataManager = (o: any): o is IFormDataManager =>
+  o.$type_IFormDataManager;

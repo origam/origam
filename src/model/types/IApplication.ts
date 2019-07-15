@@ -10,11 +10,16 @@ export interface IApplicationData {
 }
 
 export interface IApplication extends IApplicationData {
+  $type_IApplication: 1;
+
   workbench?: IWorkbench;
-  
+
   parent?: any;
 
   resetWorkbench(): void;
   setWorkbench(workbench: IWorkbench): void;
   run(): void;
 }
+
+export const isIApplication = (o: any): o is IApplication =>
+  o.$type_IApplication;

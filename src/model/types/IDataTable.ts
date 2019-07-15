@@ -1,11 +1,10 @@
 import { IProperty } from "./IProperty";
 import { IAdditionalRowData } from "./IAdditionalRecordData";
 
-export const CDataTable = "CDataTable";
-
 export interface IDataTableData {}
 
 export interface IDataTable extends IDataTableData {
+  $type_IDataTable: 1;
   properties: IProperty[];
   rows: any[][];
   additionalRowData: Map<string, IAdditionalRowData>;
@@ -30,3 +29,5 @@ export interface IDataTable extends IDataTableData {
   clear(): void;
   parent?: any;
 }
+
+export const isIDataTable = (o: any): o is IDataTable => o.$type.IDataTable;

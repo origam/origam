@@ -1,10 +1,9 @@
-import { IProperty } from './IProperty';
-export const CDataViewLifecycle = "CDataViewLifecycle";
+import { IProperty } from "./IProperty";
 
 export interface IDataViewLifecycleData {}
 
 export interface IDataViewLifecycle extends IDataViewLifecycleData {
-  $type: typeof CDataViewLifecycle;
+  $type_IDataViewLifecycle: 1;
 
   isWorking: boolean;
 
@@ -13,3 +12,6 @@ export interface IDataViewLifecycle extends IDataViewLifecycleData {
   run(): void;
   parent?: any;
 }
+
+export const isIDataViewLifecycle = (o: any): o is IDataViewLifecycle =>
+  o.$type_IDataViewLifecycle;

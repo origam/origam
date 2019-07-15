@@ -21,6 +21,8 @@ export class ComponentBindingPair implements IComponentBindingPair {
 }
 
 export class ComponentBinding implements IComponentBinding {
+  $type_IComponentBinding: 1 = 1;
+  
   constructor(data: IComponentBindingData) {
     Object.assign(this, data);
     this.bindingPairs.forEach(o => (o.parent = this));

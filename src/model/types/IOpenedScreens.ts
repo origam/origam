@@ -3,6 +3,8 @@ import { IOpenedScreen } from "./IOpenedScreen";
 export interface IOpenedScreensData {}
 
 export interface IOpenedScreens extends IOpenedScreensData {
+  $type_IOpenedScreens: 1;
+
   items: Array<IOpenedScreen>;
 
   pushItem(item: IOpenedScreen): void;
@@ -13,3 +15,6 @@ export interface IOpenedScreens extends IOpenedScreensData {
 
   parent?: any;
 }
+
+export const isIOpenedScreens = (o: any): o is IOpenedScreens =>
+  o.$type_IOpenedScreens;

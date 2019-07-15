@@ -1,9 +1,12 @@
-import { CFormScreen, IFormScreen, ILoadedFormScreen } from "../../types/IFormScreen";
+import {
+  ILoadedFormScreen,
+  isILoadedFormScreen
+} from "../../types/IFormScreen";
 
 export function getFormScreen(ctx: any): ILoadedFormScreen {
   let cn = ctx;
   while (true) {
-    if (cn.$type === CFormScreen) {
+    if (isILoadedFormScreen(cn)) {
       return cn;
     }
     cn = cn.parent;

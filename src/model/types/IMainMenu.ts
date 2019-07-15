@@ -1,19 +1,21 @@
-export const CMainMenu = "CMainMenu";
-export const CLoadingMainMenu = "CLoadingMainMenu";
-
 export interface IMainMenuData {
   menuUI: any;
 }
 
 export interface IMainMenu extends IMainMenuData {
-  $type: typeof CMainMenu;
+  $type_IMainMenu: 1;
   isLoading: false;
 
-  parent?: any
+  parent?: any;
 }
 
 export interface ILoadingMainMenu {
-  $type: typeof CLoadingMainMenu;
+  $type_ILoadingMainMenu: 1;
+
   isLoading: true;
   parent?: any;
 }
+
+export const isIMainMenu = (o: any): o is IMainMenu => o.$type_IMainMenu;
+export const isILoadingMainMenu = (o: any): o is IMainMenu =>
+  o.$type_ILoadingMainMenu;

@@ -4,9 +4,10 @@ import { IProperty } from "./types/IProperty";
 import { getDataView } from "./selectors/DataView/getDataView";
 import { IAdditionalRowData } from "./types/IAdditionalRecordData";
 import { AdditionalRowData } from "./AdditionalRowData";
-import { getDataTable } from "./selectors/DataView/getDataTable";
 
 export class DataTable implements IDataTable {
+  $type_IDataTable: 1 = 1;
+
   constructor(data: IDataTableData) {
     Object.assign(this, data);
   }

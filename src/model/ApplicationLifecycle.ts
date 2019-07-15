@@ -31,7 +31,7 @@ const Login = "Login";
 const Workbench = "Workbench";
 
 export class ApplicationLifecycle implements IApplicationLifecycle {
-  parent?: any;
+  $type_IApplicationLifecycle: 1 = 1;
 
   constructor() {}
 
@@ -257,4 +257,6 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
   resetLoginPageMessage(): void {
     this.loginPageMessage = undefined;
   }
+
+  parent?: any;
 }

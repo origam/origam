@@ -11,7 +11,6 @@ const sLoadMenu = "sLoadMenu";
 const sLoadMenuFailed = "sLoadMenuFailed";
 const sIdle = "sIdle";
 
-
 const loadMenuFailed = "loadMenuFailed";
 const loadMenuSuccessful = "loadMenuSuccessful";
 const onMainMenuItemClicked = "onMainMenuItemClicked";
@@ -20,6 +19,9 @@ const onMainMenuItemClicked = "onMainMenuItemClicked";
 const loadScreenFailed = "loadScreenFailed";*/
 
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
+  $type_IWorkbenchLifecycle: 1 = 1;
+  
+  parent?: any;
   machine = Machine(
     {
       initial: sLoadMenu,

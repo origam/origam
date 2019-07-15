@@ -1,6 +1,6 @@
-import { ITableDataManager, CTableDataManager } from './types/ITableDataManager';
+import { ITableDataManager } from "./types/ITableDataManager";
 
 export class TableDataManager implements ITableDataManager {
-  $type: typeof CTableDataManager = CTableDataManager;
-  
+  $type_ITableDataManager: 1 = 1;
+  parent?: any;
 }

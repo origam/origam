@@ -8,6 +8,7 @@ import { action } from "mobx";
 import { IOpenedScreens } from "./types/IOpenedScreens";
 
 export class Application implements IApplication {
+  $type_IApplication: 1 = 1;
 
   constructor(data: IApplicationData) {
     Object.assign(this, data);
@@ -16,7 +17,7 @@ export class Application implements IApplication {
   }
 
   applicationLifecycle: IApplicationLifecycle = null as any;
-  openedScreens:IOpenedScreens = null as any;
+  openedScreens: IOpenedScreens = null as any;
   api: IApi = null as any;
 
   workbench?: IWorkbench;
@@ -34,6 +35,6 @@ export class Application implements IApplication {
   run(): void {
     this.applicationLifecycle.run();
   }
-  
+
   parent?: any;
 }

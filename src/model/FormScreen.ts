@@ -4,7 +4,6 @@ import { IComponentBinding } from "./types/IComponentBinding";
 import {
   ILoadedFormScreenData,
   ILoadedFormScreen,
-  CFormScreen,
   ILoadingFormScreen
 } from "./types/IFormScreen";
 import { IFormScreenLifecycle } from "./types/IFormScreenLifecycle";
@@ -12,7 +11,7 @@ import { ILoadingFormScreenData } from "./types/IFormScreen";
 import { computed } from "mobx";
 
 export class FormScreen implements ILoadedFormScreen {
-  $type: typeof CFormScreen = CFormScreen;
+  $type_ILoadedFormScreen: 1 = 1;
 
   constructor(data: ILoadedFormScreenData) {
     Object.assign(this, data);
@@ -62,7 +61,7 @@ export class FormScreen implements ILoadedFormScreen {
 }
 
 export class LoadingFormScreen implements ILoadingFormScreen {
-  $type: typeof CFormScreen = CFormScreen;
+  $type_ILoadingFormScreen: 1 = 1;
 
   constructor(data: ILoadingFormScreenData) {
     Object.assign(this, data);

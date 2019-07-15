@@ -8,6 +8,8 @@ export enum IApplicationPage {
 export interface IApplicationLifecycleData {}
 
 export interface IApplicationLifecycle extends IApplicationLifecycleData {
+  $type_IApplicationLifecycle: 1;
+
   parent?: any;
   shownPage: IApplicationPage;
   isWorking: boolean;
@@ -21,20 +23,16 @@ export interface IApplicationLifecycle extends IApplicationLifecycleData {
   }): void;
   onSignOutClick(args: { event: any }): void;
 
-  onMainMenuItemClick(args: {event: any, item: any}): void;
+  onMainMenuItemClick(args: { event: any; item: any }): void;
 
-  onScreenTabHandleClick(
-    event: any,
-    openedScreen: IOpenedScreen
-  ): void;
-  onScreenTabCloseClick(
-    event: any,
-    openedScreen: IOpenedScreen
-  ): void;
-
+  onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): void;
+  onScreenTabCloseClick(event: any, openedScreen: IOpenedScreen): void;
 
   run(): void;
 
   setLoginPageMessage(msg: string): void;
   resetLoginPageMessage(): void;
 }
+
+export const isIApplicationLifecycle = (o: any): o is IApplicationLifecycle =>
+  o.$type_IApplicationLifecycle;

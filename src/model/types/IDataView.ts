@@ -7,8 +7,6 @@ import { IDataViewLifecycle } from "./IDataViewLifecycle";
 import { ITablePanelView } from "../TablePanelView/types/ITablePanelView";
 import { IFormPanelView } from "../FormPanelView/types/IFormPanelView";
 
-export const CDataView = "CDataView";
-
 export interface IDataViewData {
   id: string;
   modelInstanceId: string;
@@ -41,7 +39,8 @@ export interface IDataViewData {
 }
 
 export interface IDataView extends IDataViewData {
-  $type: typeof CDataView;
+  $type_IDataView: 1;
+
   isBindingRoot: boolean;
   isAnyBindingAncestorWorking: boolean;
   parentBindings: IComponentBinding[];
@@ -68,3 +67,5 @@ export interface IDataView extends IDataViewData {
 
   parent?: any;
 }
+
+export const isIDataView = (o: any): o is IDataView => o.$type_IDataView;

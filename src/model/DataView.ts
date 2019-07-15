@@ -1,4 +1,4 @@
-import { IDataView, IDataViewData, CDataView } from "./types/IDataView";
+import { IDataView, IDataViewData } from "./types/IDataView";
 import { IPanelViewType } from "./types/IPanelViewType";
 import { IProperty } from "./types/IProperty";
 import { observable, action, computed, runInAction } from "mobx";
@@ -11,8 +11,7 @@ import { IFormPanelView } from "./FormPanelView/types/IFormPanelView";
 import { getDataTable } from "./selectors/DataView/getDataTable";
 
 export class DataView implements IDataView {
-
-  $type: typeof CDataView = CDataView;
+  $type_IDataView: 1 = 1;
 
   constructor(data: IDataViewData) {
     Object.assign(this, data);

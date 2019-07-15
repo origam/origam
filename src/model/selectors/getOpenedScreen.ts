@@ -1,11 +1,7 @@
-import { IOpenedScreen, COpenedScreen } from "../types/IOpenedScreen";
+import { IOpenedScreen, isIOpenedScreen } from "../types/IOpenedScreen";
 
 export function getOpenedScreen(ctx: any): IOpenedScreen {
   let cn = ctx;
-  while (true) {
-    if (cn.$type === COpenedScreen) {
-      return cn;
-    }
-    cn = cn.parent;
-  }
+  while (!isIOpenedScreen(cn)) cn = cn.parent;
+  return cn;
 }

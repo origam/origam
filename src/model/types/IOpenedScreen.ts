@@ -1,8 +1,5 @@
 import { IFormScreen } from "./IFormScreen";
 
-export const COpenedScreen = "COpenedScreen";
-
-
 export interface IOpenedScreenData {
   menuItemId: string;
   order: number;
@@ -11,10 +8,14 @@ export interface IOpenedScreenData {
 }
 
 export interface IOpenedScreen extends IOpenedScreenData {
-  $type: typeof COpenedScreen;
+  $type_IOpenedScreen: 1;
+
   isActive: boolean;
 
   setActive(state: boolean): void;
   setContent(screen: IFormScreen): void;
   parent?: any;
 }
+
+export const isIOpenedScreen = (o: any): o is IOpenedScreen =>
+  o.$type_IOpenedScreen;

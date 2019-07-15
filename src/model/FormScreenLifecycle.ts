@@ -3,12 +3,11 @@ import { createAtom, flow, action, when } from "mobx";
 import { interpret, Machine } from "xstate";
 import { getApi } from "./selectors/getApi";
 import { getMenuItemId } from "./selectors/getMenuItemId";
-import xmlJs from "xml-js";
 import { interpretScreenXml } from "../xmlInterpreters/screenXml";
 import { getOpenedScreen } from "./selectors/getOpenedScreen";
 import { getFormScreen } from "./selectors/FormScreen/getFormScreen";
 import { loadFreshData } from "./actions/DataView/loadFreshData";
-import { getDataViewList } from './selectors/FormScreen/getDataViewList';
+import { getDataViewList } from "./selectors/FormScreen/getDataViewList";
 
 const loadScreenSuccess = "loadScreenSuccess";
 const loadScreenFailed = "loadScreenFailed";
@@ -18,6 +17,8 @@ const sLoadDataViews = "sLoadDataViews";
 const sIdle = "sIdle";
 
 export class FormScreenLifecycle implements IFormScreenLifecycle {
+  $type_IFormScreenLifecycle: 1 = 1;
+
   machine = Machine(
     {
       initial: sLoadScreen,
@@ -59,7 +60,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
     const screenXmlObj = yield api.getScreen(menuItemId);
     const screen = interpretScreenXml(screenXmlObj, this);
     openedScreen.setContent(screen);
-    getDataViewList(screen).forEach(dv => dv.run())
+    getDataViewList(screen).forEach(dv => dv.run());
     // console.log(screen);
   }
 

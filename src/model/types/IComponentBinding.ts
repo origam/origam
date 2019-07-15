@@ -10,6 +10,8 @@ export interface IComponentBindingData {
 }
 
 export interface IComponentBinding extends IComponentBindingData {
+  $type_IComponentBinding: 1;
+
   bindingController: Array<[string, any]>;
   parentDataView: IDataView;
   childDataView: IDataView;
@@ -24,3 +26,6 @@ export interface IComponentBindingPairData {
 export interface IComponentBindingPair extends IComponentBindingPairData {
   parent?: any;
 }
+
+export const isIComponentBinding = (o: any): o is IComponentBinding =>
+  o.$type_IComponentBinding;

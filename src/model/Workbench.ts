@@ -1,10 +1,10 @@
-import { IWorkbench, IWorkbenchData, CWorkbench } from "./types/IWorkbench";
+import { IWorkbench, IWorkbenchData } from "./types/IWorkbench";
 import { ILoadingMainMenu, IMainMenu } from "./types/IMainMenu";
 import { IWorkbenchLifecycle } from "./types/IWorkbenchLifecycle";
 import { action, observable } from "mobx";
 
 export class Workbench implements IWorkbench {
-  $type: "CWorkbench" = "CWorkbench";
+  $type_IWorkbench: 1 = 1;
 
   constructor(data: IWorkbenchData) {
     Object.assign(this, data);

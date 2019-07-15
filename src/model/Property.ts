@@ -3,10 +3,11 @@ import { ICaptionPosition } from "./types/ICaptionPosition";
 import { IDropDownColumn } from "./types/IDropDownColumn";
 import { IPropertyColumn } from "./types/IPropertyColumn";
 import { observable, computed } from "mobx";
-import { getDataSource } from "./selectors/DataSources/getDataSource";
 import { getDataSourceFieldIndexByName } from "./selectors/DataSources/getDataSourceFieldIndexByName";
 
 export class Property implements IProperty {
+  $type_IProperty: 1 = 1;
+
   constructor(data: IPropertyData) {
     Object.assign(this, data);
     this.dropDownColumns.forEach(o => (o.parent = this));

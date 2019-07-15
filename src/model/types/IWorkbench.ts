@@ -1,13 +1,12 @@
 import { ILoadingMainMenu, IMainMenu } from "./IMainMenu";
 import { IWorkbenchLifecycle } from "./IWorkbenchLifecycle";
-export const CWorkbench = "CWorkbench";
 
 export interface IWorkbenchData {
   workbenchLifecycle: IWorkbenchLifecycle;
 }
 
 export interface IWorkbench extends IWorkbenchData {
-  $type: typeof CWorkbench;
+  $type_IWorkbench: 1;
 
   mainMenu?: ILoadingMainMenu | IMainMenu;
 
@@ -16,3 +15,5 @@ export interface IWorkbench extends IWorkbenchData {
 
   parent?: any;
 }
+
+export const isIWorkbench = (o: any): o is IWorkbench => o.$type_IWorkbench;

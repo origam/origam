@@ -3,6 +3,8 @@ import { IOpenedScreen } from "./types/IOpenedScreen";
 import { action, observable } from "mobx";
 
 export class OpenedScreens implements IOpenedScreens {
+  $type_IOpenedScreens: 1 = 1;
+
   parent?: any;
   @observable items: Array<IOpenedScreen> = [];
 
@@ -46,9 +48,9 @@ export class OpenedScreens implements IOpenedScreens {
     }
     if (idx === 0) {
       idx = 1;
-    }  else {
+    } else {
       idx--;
     }
-    return this.items[idx]
+    return this.items[idx];
   }
 }

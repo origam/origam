@@ -1,5 +1,6 @@
-import { IFormDataManager, CFormDataManager } from "./types/IFormDataManager";
+import { IFormDataManager } from "./types/IFormDataManager";
 
 export class FormDataManager implements IFormDataManager {
-  $type: typeof CFormDataManager = CFormDataManager;
+  $type_IFormDataManager: 1 = 1;
+  parent?: any;
 }
