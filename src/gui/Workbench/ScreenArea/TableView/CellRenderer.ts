@@ -45,7 +45,10 @@ export class CellRenderer implements ICellRenderer {
     });
 
     /* BACKGROUND FILL */
-    if (cell.isCellCursor) {
+    if (cell.isColumnOrderChangeSource) {
+      ctx.fillStyle = "#eeeeff";
+      //} else if(cell.isColumnOrderChangeTarget){
+    } else if (cell.isCellCursor) {
       ctx.fillStyle = "#bbbbbb";
     } else if (cell.isRowCursor) {
       ctx.fillStyle = "#dddddd";
@@ -104,6 +107,13 @@ export class CellRenderer implements ICellRenderer {
       ctx.fillRect(0, 0, 3, rowHeight);*/
       ctx.restore();
     }
+    if (cell.isColumnOrderChangeTarget) {
+      ctx.save();
+      ctx.fillStyle = "blue";
+      ctx.beginPath();
+      ctx.fillRect(0, 0, 2, rowHeight);
+      ctx.restore();
+    }
   }
 
   @computed get getCellValue() {
@@ -127,6 +137,10 @@ export class CellRenderer implements ICellRenderer {
       isCellCursor:
         property.id === selectedColumnId && record[0] === selectedRowId,
       isRowCursor: record[0] === selectedRowId,
+      isColumnOrderChangeSource:
+        this.tablePanelView.columnOrderChangingSourceId === property.id,
+      isColumnOrderChangeTarget:
+        this.tablePanelView.columnOrderChangingTargetId === property.id,
       isLoading: false,
       isInvalid: false,
       formatterPattern: property.formatterPattern,

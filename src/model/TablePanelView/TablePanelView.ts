@@ -1,9 +1,5 @@
 import { observable, computed, action } from "mobx";
-import {
-  ITablePanelView,
-  CTablePanelView,
-  ITablePanelViewData
-} from "./types/ITablePanelView";
+import { ITablePanelView, ITablePanelViewData } from "./types/ITablePanelView";
 import { getDataView } from "../selectors/DataView/getDataView";
 import { getDataTable } from "../selectors/DataView/getDataTable";
 import { IProperty } from "../types/IProperty";
@@ -12,7 +8,7 @@ import { getSelectedRow } from "../selectors/DataView/getSelectedRow";
 import { getDataViewLifecycle } from "../selectors/DataView/getDataViewLifecycle";
 
 export class TablePanelView implements ITablePanelView {
-  $type: typeof CTablePanelView = "CTablePanelView";
+  $type_ITablePanelView: 1 = 1;
 
   constructor(data: ITablePanelViewData) {
     Object.assign(this, data);
@@ -20,7 +16,11 @@ export class TablePanelView implements ITablePanelView {
 
   @observable isEditing: boolean = false;
 
-  @observable tablePropertyIds = [];
+  @observable tablePropertyIds: string[] = [];
+
+  @observable columnOrderChangingTargetId: string | undefined;
+  @observable columnOrderChangingSourceId: string | undefined;
+
   @computed get tableProperties() {
     return this.tablePropertyIds.map(id =>
       getDataTable(this).getPropertyById(id)
@@ -115,6 +115,25 @@ export class TablePanelView implements ITablePanelView {
   @action.bound
   setEditing(state: boolean): void {
     this.isEditing = state;
+  }
+
+  @action.bound
+  swapColumns(id1: string, id2: string): void {
+    const idx1 = this.tablePropertyIds.findIndex(id => id === id1);
+    const idx2 = this.tablePropertyIds.findIndex(id => id === id2);
+    const tmp = this.tablePropertyIds[idx1];
+    this.tablePropertyIds[idx1] = this.tablePropertyIds[idx2];
+    this.tablePropertyIds[idx2] = tmp;
+  }
+
+  @action.bound
+  setColumnOrderChangeAttendants(
+    idSource: string | undefined,
+    idTarget: string | undefined
+  ): void {
+    console.log(idSource, idTarget)
+    this.columnOrderChangingTargetId = idTarget;
+    this.columnOrderChangingSourceId = idSource;
   }
 
   @computed get dataTable() {

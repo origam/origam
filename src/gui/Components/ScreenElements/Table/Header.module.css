@@ -10,6 +10,12 @@
   background-color: #e5e5e5;
   overflow: hidden;
   flex-shrink: 0;
+  cursor: pointer;
+}
+
+.header:global(.changing-order):hover {
+  background-color: #6b4c23;
+  color: white;
 }
 
 .label {

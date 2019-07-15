@@ -171,6 +171,8 @@ export interface IHeaderRowProps {
 export interface IRenderedCell {
   isCellCursor: boolean;
   isRowCursor: boolean;
+  isColumnOrderChangeSource: boolean;
+  isColumnOrderChangeTarget: boolean;
   isLoading: boolean;
   isInvalid: boolean;
   formatterPattern: string;

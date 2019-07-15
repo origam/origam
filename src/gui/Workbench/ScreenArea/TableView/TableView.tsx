@@ -44,7 +44,17 @@ export class TableView extends React.Component<{
   });
   headerRenderer = new HeaderRenderer({
     getColumnHeaders: () => getColumnHeaders(this.props.dataView),
-    onColumnWidthChange: (cid, nw) => this.gDim.setColumnWidth(cid, nw)
+    onColumnWidthChange: (cid, nw) => this.gDim.setColumnWidth(cid, nw),
+    onColumnOrderChange: (id1, id2) =>
+      this.props.tablePanelView!.swapColumns(id1, id2),
+    onColumnOrderAttendantsChange: (
+      idSource: string | undefined,
+      idTarget: string | undefined
+    ) =>
+      this.props.tablePanelView!.setColumnOrderChangeAttendants(
+        idSource,
+        idTarget
+      )
   });
   scrollState = new SimpleScrollState(0, 0);
   cellRenderer = new CellRenderer({
@@ -90,8 +100,16 @@ class GridDimensions implements IGridDimensions {
   getTableViewProperties: () => IProperty[] = null as any;
   getRowCount: () => number = null as any;
 
-  @computed get tableViewProperties() {
+  @computed get tableViewPropertiesOriginal() {
     return this.getTableViewProperties();
+  }
+
+  @computed get tableViewProperties() {
+    return (this.columnReordering.length > 0
+      ? this.columnReordering.map(id =>
+          this.tableViewPropertiesOriginal.find(prop => prop.id === id)
+        )
+      : this.tableViewPropertiesOriginal) as IProperty[];
   }
 
   @computed get rowCount() {
@@ -145,6 +163,11 @@ class GridDimensions implements IGridDimensions {
 interface IHeaderRendererData {
   getColumnHeaders: () => IColumnHeader[];
   onColumnWidthChange: (id: string, newWidth: number) => void;
+  onColumnOrderChange: (id: string, targetId: string) => void;
+  onColumnOrderAttendantsChange: (
+    idSource: string | undefined,
+    idTarget: string | undefined
+  ) => void;
 }
 
 class HeaderRenderer implements IHeaderRendererData {
@@ -154,9 +177,54 @@ class HeaderRenderer implements IHeaderRendererData {
 
   getColumnHeaders: () => IColumnHeader[] = null as any;
   onColumnWidthChange: (id: string, newWidth: number) => void = null as any;
+  onColumnOrderChange: (id: string, targetId: string) => void = null as any;
+  onColumnOrderAttendantsChange: (
+    idSource: string | undefined,
+    idTarget: string | undefined
+  ) => void = null as any;
+
+  columnOrderChangeSourceId: string | undefined;
+  columnOrderChangeTargetId: string | undefined;
 
   @computed get columnHeaders() {
     return this.getColumnHeaders();
+  }
+
+  @observable isColumnOrderChanging = false;
+
+  @action.bound handleStartColumnOrderChanging(id: string) {
+    this.isColumnOrderChanging = true;
+    this.columnOrderChangeSourceId = id;
+    this.onColumnOrderAttendantsChange(
+      this.columnOrderChangeSourceId,
+      this.columnOrderChangeTargetId
+    );
+  }
+
+  @action.bound handleStopColumnOrderChanging(id: string) {
+    this.isColumnOrderChanging = false;
+    this.columnOrderChangeSourceId = undefined;
+    this.columnOrderChangeTargetId = undefined;
+    this.onColumnOrderAttendantsChange(
+      this.columnOrderChangeSourceId,
+      this.columnOrderChangeTargetId
+    );
+  }
+
+  @action.bound handlePossibleColumnOrderChange(targetId: string | undefined) {
+    this.columnOrderChangeTargetId = targetId;
+    this.onColumnOrderAttendantsChange(
+      this.columnOrderChangeSourceId,
+      this.columnOrderChangeTargetId
+    );
+  }
+
+  @action.bound handleColumnOrderDrop(targetId: string) {
+    this.onColumnOrderChange(this.columnOrderChangeSourceId!, targetId);
+    this.onColumnOrderAttendantsChange(
+      this.columnOrderChangeSourceId,
+      this.columnOrderChangeTargetId
+    );
   }
 
   @bind
@@ -170,6 +238,11 @@ class HeaderRenderer implements IHeaderRendererData {
         orderingDirection={this.columnHeaders[args.columnIndex].ordering}
         orderingOrder={0}
         onColumnWidthChange={this.onColumnWidthChange}
+        isColumnOrderChanging={this.isColumnOrderChanging}
+        onColumnOrderDrop={this.handleColumnOrderDrop}
+        onStartColumnOrderChanging={this.handleStartColumnOrderChanging}
+        onStopColumnOrderChanging={this.handleStopColumnOrderChanging}
+        onPossibleColumnOrderChange={this.handlePossibleColumnOrderChange}
       />
     );
   }
