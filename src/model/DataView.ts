@@ -135,7 +135,9 @@ export class DataView implements IDataView {
     property: IProperty,
     value: any
   ) {
-    getDataTable(this).setFormDirtyValue(row, property.id, value);
+    if (!property.readOnly) {
+      getDataTable(this).setFormDirtyValue(row, property.id, value);
+    }
   }
 
   @action.bound selectFirstRow() {

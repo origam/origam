@@ -37,7 +37,6 @@ export class DataView extends React.Component<{
   }
 
   render() {
-    console.log(this.props.dataView);
     return (
       <Provider dataView={this.props.dataView}>
         <div className={S.dataView} style={this.getDataViewStyle()}>
@@ -66,6 +65,11 @@ export class DataView extends React.Component<{
           >
             <FormBuilder />
           </div>
+          {this.props.dataView!.isWorking && (
+            <div className={S.dataViewOverlay}>
+              <div className={S.dataViewLoadingLabel}>loading</div>
+            </div>
+          )}
         </div>
       </Provider>
     );

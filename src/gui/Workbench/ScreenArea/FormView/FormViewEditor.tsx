@@ -22,7 +22,7 @@ export class FormViewEditor extends React.Component<{
         return (
           <TextEditor
             value={""}
-            isReadOnly={false}
+            isReadOnly={this.props.property!.readOnly}
             isInvalid={false}
             isFocused={false}
             refocuser={undefined}
@@ -36,7 +36,7 @@ export class FormViewEditor extends React.Component<{
           <DateTimeEditor
             value={moment().toISOString()}
             outputFormat={"DD.MM.YYYY HH:mm"}
-            isReadOnly={false}
+            isReadOnly={this.props.property!.readOnly}
             isInvalid={false}
             isFocused={false}
             refocuser={undefined}
@@ -48,7 +48,7 @@ export class FormViewEditor extends React.Component<{
         return (
           <BoolEditor
             value={true}
-            isReadOnly={false}
+            isReadOnly={this.props.property!.readOnly}
             onChange={undefined}
             onClick={undefined}
             onKeyDown={undefined}
@@ -59,7 +59,7 @@ export class FormViewEditor extends React.Component<{
           <DropdownEditor
             value={""}
             textualValue={""}
-            isReadOnly={false}
+            isReadOnly={this.props.property!.readOnly}
             isInvalid={false}
             isFocused={false}
             onTextChange={undefined}
