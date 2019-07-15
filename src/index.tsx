@@ -1,16 +1,10 @@
+import { Provider } from "mobx-react";
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
-import * as serviceWorker from "./serviceWorker";
-
-import { WorkbenchPage } from "./gui/Workbench/WorkbenchPage";
-import { LoginPage } from "./gui/Login/LoginPage";
-import { action, observable, runInAction} from "mobx";
-import { ApplicationLifecycle } from "./model/ApplicationLifecycle";
-import { Application } from "./model/Application";
-import { Provider } from "mobx-react";
 import { Main } from "./gui/Main";
+import "./index.css";
 import { createApplication } from "./model/factories/createApplication";
+import * as serviceWorker from "./serviceWorker";
 
 const application = createApplication();
 application.run();

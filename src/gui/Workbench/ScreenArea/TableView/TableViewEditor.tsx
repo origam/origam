@@ -31,7 +31,7 @@ import {
 @observer
 export class TableViewEditor extends React.Component<{
   property?: IProperty;
-  getCellValue?: () => any,
+  getCellValue?: () => any;
   onChange?: (event: any, value: any) => void;
 }> {
   getEditor() {
@@ -41,7 +41,7 @@ export class TableViewEditor extends React.Component<{
         return (
           <TextEditor
             value={this.props.getCellValue!()}
-            isReadOnly={false}
+            isReadOnly={this.props.property!.readOnly}
             isInvalid={false}
             isFocused={false}
             refocuser={undefined}
@@ -55,7 +55,7 @@ export class TableViewEditor extends React.Component<{
           <DateTimeEditor
             value={this.props.getCellValue!()}
             outputFormat={"DD.MM.YYYY HH:mm"}
-            isReadOnly={false}
+            isReadOnly={this.props.property!.readOnly}
             isInvalid={false}
             isFocused={false}
             refocuser={undefined}
@@ -67,7 +67,7 @@ export class TableViewEditor extends React.Component<{
         return (
           <BoolEditor
             value={this.props.getCellValue!()}
-            isReadOnly={false}
+            isReadOnly={this.props.property!.readOnly}
             onChange={this.props.onChange}
             onClick={undefined}
             onKeyDown={undefined}
@@ -78,7 +78,7 @@ export class TableViewEditor extends React.Component<{
           <DropdownEditor
             value={this.props.getCellValue!()}
             textualValue={""}
-            isReadOnly={false}
+            isReadOnly={this.props.property!.readOnly}
             isInvalid={false}
             isFocused={false}
             onTextChange={undefined}
