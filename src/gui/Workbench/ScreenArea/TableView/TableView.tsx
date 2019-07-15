@@ -10,7 +10,7 @@ import {
 import bind from "bind-decorator";
 import { Header } from "../../../Components/ScreenElements/Table/Header";
 import { IProperty } from "../../../../model/types/IProperty";
-import { computed } from "mobx";
+import { computed, observable, action } from "mobx";
 import { IDataView } from "../../../../model/types/IDataView";
 import { getTableViewProperties } from "../../../../model/selectors/TablePanelView/getTableViewProperties";
 import { getColumnHeaders } from "../../../../model/selectors/TablePanelView/getColumnHeaders";
@@ -43,7 +43,8 @@ export class TableView extends React.Component<{
     getRowCount: () => getRowCount(this.props.dataView)
   });
   headerRenderer = new HeaderRenderer({
-    getColumnHeaders: () => getColumnHeaders(this.props.dataView)
+    getColumnHeaders: () => getColumnHeaders(this.props.dataView),
+    onColumnWidthChange: (cid, nw) => this.gDim.setColumnWidth(cid, nw)
   });
   scrollState = new SimpleScrollState(0, 0);
   cellRenderer = new CellRenderer({
@@ -83,6 +84,9 @@ class GridDimensions implements IGridDimensions {
     Object.assign(this, data);
   }
 
+  @observable columnWidths: Map<string, number> = new Map();
+  @observable columnReordering: string[] = [];
+
   getTableViewProperties: () => IProperty[] = null as any;
   getRowCount: () => number = null as any;
 
@@ -107,11 +111,14 @@ class GridDimensions implements IGridDimensions {
   }
 
   getColumnLeft(columnIndex: number): number {
-    return columnIndex * 100;
+    return columnIndex === 0 ? 0 : this.getColumnRight(columnIndex - 1);
   }
 
   getColumnWidth(columnIndex: number): number {
-    return 100;
+    const property = this.tableViewProperties[columnIndex];
+    return this.columnWidths.has(property.id)
+      ? this.columnWidths.get(property.id)!
+      : 100;
   }
 
   getColumnRight(columnIndex: number): number {
@@ -129,18 +136,24 @@ class GridDimensions implements IGridDimensions {
   getRowBottom(rowIndex: number): number {
     return this.getRowTop(rowIndex) + this.getRowHeight(rowIndex);
   }
+
+  @action.bound setColumnWidth(columnId: string, newWidth: number) {
+    this.columnWidths.set(columnId, Math.max(newWidth, 20));
+  }
 }
 
 interface IHeaderRendererData {
   getColumnHeaders: () => IColumnHeader[];
+  onColumnWidthChange: (id: string, newWidth: number) => void;
 }
 
-class HeaderRenderer {
+class HeaderRenderer implements IHeaderRendererData {
   constructor(data: IHeaderRendererData) {
     Object.assign(this, data);
   }
 
   getColumnHeaders: () => IColumnHeader[] = null as any;
+  onColumnWidthChange: (id: string, newWidth: number) => void = null as any;
 
   @computed get columnHeaders() {
     return this.getColumnHeaders();
@@ -151,10 +164,12 @@ class HeaderRenderer {
     return (
       <Header
         key={this.columnHeaders[args.columnIndex].id}
+        id={this.columnHeaders[args.columnIndex].id}
         width={args.columnWidth}
         label={this.columnHeaders[args.columnIndex].label}
         orderingDirection={this.columnHeaders[args.columnIndex].ordering}
         orderingOrder={0}
+        onColumnWidthChange={this.onColumnWidthChange}
       />
     );
   }

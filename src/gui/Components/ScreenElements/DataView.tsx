@@ -43,8 +43,9 @@ export class DataView extends React.Component<{
           {!this.props.isHeadless && <Toolbar />}
           <div
             style={{
-              width: "100%",
-              height: "100%",
+              // width: "100%",
+              // height: "100%",
+              flexGrow: 1,
               display:
                 this.props.dataView!.activePanelView !== IPanelViewType.Table
                   ? "none"
@@ -55,8 +56,9 @@ export class DataView extends React.Component<{
           </div>
           <div
             style={{
-              width: "100%",
-              height: "100%",
+              // width: "100%",
+              // height: "100%",
+              flexGrow: 1,
               display:
                 this.props.dataView!.activePanelView !== IPanelViewType.Form
                   ? "none"

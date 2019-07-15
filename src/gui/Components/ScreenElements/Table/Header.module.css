@@ -5,10 +5,11 @@
   justify-content: center;
   white-space: nowrap;
   box-sizing: border-box;
-  border-right: 1px solid #bbbbbb;
+  /*border-right: 1px solid #bbbbbb;*/
   position: relative;
   background-color: #e5e5e5;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .label {
@@ -24,4 +25,17 @@
   font-size: 11px;
   background-color: #e5e5e5;
   padding: 2px;
+}
+
+.columnWidthHandle {
+  width: 4px;
+  margin-right: 1px;
+  margin-left: 1px;
+  background-color: #bbbbbb;
+  cursor: w-resize;
+  flex-shrink: 0;
+}
+
+.columnWidthHandle:hover {
+  background-color: white;
 }
