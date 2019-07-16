@@ -1,4 +1,5 @@
 ﻿using AeroWizard;
+using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.UI;
 using Origam.UI.Interfaces;
@@ -182,6 +183,33 @@ namespace Origam.UI.WizardForm
             IsFinish(sender, e);
         }
 
+        private void RelationShipEntityPage_Initialize(object sender, WizardPageInitEventArgs e)
+        {
+            GetNextPage(PagesList.FieldEntity, sender);
+            CreateFieldWithRelationshipEntityWizardForm wizardForm = (CreateFieldWithRelationshipEntityWizardForm)iwizard;
+            wizardForm.SetUpForm(tableRelation,txtRelationName);
+        }
+
+        private void RelationShipEntityPage_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
+            CreateFieldWithRelationshipEntityWizardForm wizardForm = (CreateFieldWithRelationshipEntityWizardForm)iwizard;
+            wizardForm.LookupName = txtRelationName.Text;
+
+            if (wizardForm.LookupName == ""
+                || wizardForm.RelatedEntity == null
+                || wizardForm.BaseEntityFieldSelect == null
+                || wizardForm.RelatedEntityFieldSelect == null
+                || txtKeyName.Text == "")
+            {
+                MessageBox.Show(wizardForm.EnterAllInfo,
+                    wizardForm.LookupWiz, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                e.Cancel = true;
+                return;
+            }
+            IsFinish(sender, e);
+        }
+
+
         #endregion
 
         #region support
@@ -263,6 +291,8 @@ namespace Origam.UI.WizardForm
                     return FieldLookupEntity;
                 case PagesList.finish:
                     return finishPage;
+                case PagesList.FieldEntity:
+                    return RelationShipEntityPage;
             }
             return null;
         }
@@ -280,6 +310,35 @@ namespace Origam.UI.WizardForm
         private void ChkTwoColumn_CheckedChanged(object sender, EventArgs e)
         {
             UpdateScreen();
+        }
+
+        private void CheckParentChild_CheckedChanged(object sender, EventArgs e)
+        {
+            ((CreateFieldWithRelationshipEntityWizardForm)iwizard)
+                .ParentChildCheckbox = this.checkParentChild.Checked;
+        }
+
+        private void TableRelation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CreateFieldWithRelationshipEntityWizardForm relations = (CreateFieldWithRelationshipEntityWizardForm)iwizard;
+            relations.RelatedEntity = (AbstractSchemaItem)tableRelation.SelectedItem;
+            if (this.tableRelation.Name != "")
+            {
+                this.groupBoxKey.Enabled = true;
+                relations.SetUpFormKey(BaseEntityField, RelatedEntityField, txtKeyName);
+            }
+        }
+
+        private void BaseEntityField_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CreateFieldWithRelationshipEntityWizardForm relations = (CreateFieldWithRelationshipEntityWizardForm)iwizard;
+            relations.BaseEntityFieldSelect = (AbstractSchemaItem)BaseEntityField.SelectedItem;
+        }
+
+        private void RelatedEntityField_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CreateFieldWithRelationshipEntityWizardForm relations = (CreateFieldWithRelationshipEntityWizardForm)iwizard;
+            relations.RelatedEntityFieldSelect = (AbstractSchemaItem)RelatedEntityField.SelectedItem;
         }
     }
     #endregion

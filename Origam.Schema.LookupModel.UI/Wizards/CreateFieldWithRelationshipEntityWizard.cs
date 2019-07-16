@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using System.Collections.Generic;
 using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.LookupModel.Wizards

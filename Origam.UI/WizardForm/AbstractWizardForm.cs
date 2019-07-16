@@ -39,6 +39,7 @@ namespace Origam.UI.WizardForm
         ScreenForm,
         LookupForm,
         FieldLookup,
+        FieldEntity,
         finish
     }
 }

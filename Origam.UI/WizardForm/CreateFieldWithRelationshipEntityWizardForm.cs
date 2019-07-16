@@ -1,0 +1,125 @@
+﻿#region license
+/*
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+using System;
+using System.Windows.Forms;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
+
+namespace Origam.UI.WizardForm
+{
+    public class CreateFieldWithRelationshipEntityWizardForm : AbstractWizardForm
+    {
+        private IDataEntity _entity;
+        public IDataEntity Entity
+        {
+            get
+            {
+                return _entity;
+            }
+            set
+            {
+                _entity = value;
+            }
+        }
+        private AbstractSchemaItem _relatedEntity = null;
+        public AbstractSchemaItem RelatedEntity
+        {
+            get
+            {
+                return _relatedEntity;
+            }
+            set
+            {
+                _relatedEntity = value;
+            }
+        }
+
+        private AbstractSchemaItem _baseEntityField = null;
+        public AbstractSchemaItem BaseEntityFieldSelect
+        {
+            get
+            {
+                return _baseEntityField;
+            }
+            set
+            {
+                _baseEntityField = value;
+            }
+        }
+
+        private AbstractSchemaItem _relatedEntityField = null;
+        public AbstractSchemaItem RelatedEntityFieldSelect
+        {
+            get
+            {
+                return _relatedEntityField;
+            }
+            set
+            {
+                _relatedEntityField = value;
+            }
+        }
+
+        private Boolean _isparentChild = false;
+        public Boolean ParentChildCheckbox
+        {
+            get
+            {
+                return _isparentChild;
+            }
+            set
+            {
+                _isparentChild = value;
+            }
+        }
+
+        public string EnterAllInfo { get; set; }
+        public string LookupWiz { get; set; }
+        public string LookupName { get; internal set; }
+
+        internal void SetUpForm(ComboBox tableRelation, TextBox txtRelationName)
+        {
+            tableRelation.Items.Clear();
+
+            if (this.Entity == null) return;
+            txtRelationName.Text = "Transaction " + this.Entity.Name;
+            foreach (AbstractSchemaItem abstractSchemaIttem in this.Entity.RootProvider.ChildItems)
+            {
+                tableRelation.Items.Add(abstractSchemaIttem);
+            }
+        }
+        internal void SetUpFormKey(ComboBox BaseEntityField, ComboBox RelatedEntityField, TextBox txtKeyName)
+        {
+            BaseEntityField.Items.Clear();
+            RelatedEntityField.Items.Clear();
+            if (this.Entity == null) return;
+            txtKeyName.Text = RelatedEntity.NodeText + " TransactionKey";
+            foreach (AbstractSchemaItem filter in RelatedEntity.ChildItemsByType("DataEntityColumn"))
+            {
+                RelatedEntityField.Items.Add(filter);
+            }
+            foreach (IDataEntityColumn column in this.Entity.EntityColumns)
+            {
+                BaseEntityField.Items.Add(column);
+            }
+        }
+    }
+}

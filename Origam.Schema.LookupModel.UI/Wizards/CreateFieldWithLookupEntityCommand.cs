@@ -83,18 +83,6 @@ namespace Origam.Schema.LookupModel.Wizards
             createFieldWith.LookupWiz = ResourceUtils.GetString("LookupWiz");
             createFieldWith.DefaultValueNotSet = ResourceUtils.GetString("DefaultValueNotSet");
 
-            //CreateFieldWithLookupEntityWizard wizz = new CreateFieldWithLookupEntityWizard();
-
-            //if (baseField != null)
-            //{
-            //    wizz.ForceTwoColumns = true;
-            //    wizz.AllowNulls = baseField.AllowNulls;
-            //}
-            //wizz.NameFieldName = "Name";
-            //wizz.NameFieldCaption = ResourceUtils.GetString("LookupWizardNameFieldLabel");
-            //wizz.KeyFieldName = "Code";
-            //wizz.KeyFieldCaption = ResourceUtils.GetString("LookupWizardCodeFieldLabel");
-
             if (baseField != null)
             {
                 createFieldWith.ForceTwoColumns = true;
