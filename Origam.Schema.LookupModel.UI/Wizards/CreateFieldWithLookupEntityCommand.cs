@@ -27,6 +27,9 @@ using Origam.Schema.DeploymentModel;
 using System.Text;
 using System.Collections.Generic;
 using Origam.DA.Service;
+using Origam.UI.WizardForm;
+using System.Collections;
+using Origam.Workbench;
 
 namespace Origam.Schema.LookupModel.Wizards
 {
@@ -35,7 +38,9 @@ namespace Origam.Schema.LookupModel.Wizards
 	/// </summary>
 	public class CreateFieldWithLookupEntityCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        CreateFieldWithLookupEntityWizardForm createFieldWith;
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -51,125 +56,160 @@ namespace Origam.Schema.LookupModel.Wizards
 		public override void Run()
 		{
             FieldMappingItem baseField = Owner as FieldMappingItem;
-			CreateFieldWithLookupEntityWizard wiz = new CreateFieldWithLookupEntityWizard();
+
+            ArrayList list = new ArrayList();
+            TableMappingItem table1 = new TableMappingItem();
+            FieldMappingItem fieldMapping = new FieldMappingItem();
+            DataServiceDataLookup data = new DataServiceDataLookup();
+            list.Add(new ListViewItem(table1.ItemType, table1.Icon));
+            list.Add(new ListViewItem(fieldMapping.ItemType, fieldMapping.Icon));
+            list.Add(new ListViewItem(data.ItemType, data.Icon));
+
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.FieldLookup);
+            stackPage.Push(PagesList.startPage);
+
+            createFieldWith = new CreateFieldWithLookupEntityWizardForm
+            {
+                Description = "Create Field With Lookup Entity.",
+                ItemTypeList = list,
+                Pages = stackPage,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command =this
+            };
+
+            createFieldWith.EnterAllInfo = ResourceUtils.GetString("EnterAllInfo");
+            createFieldWith.LookupWiz = ResourceUtils.GetString("LookupWiz");
+            createFieldWith.DefaultValueNotSet = ResourceUtils.GetString("DefaultValueNotSet");
+
+            //CreateFieldWithLookupEntityWizard wizz = new CreateFieldWithLookupEntityWizard();
+
+            //if (baseField != null)
+            //{
+            //    wizz.ForceTwoColumns = true;
+            //    wizz.AllowNulls = baseField.AllowNulls;
+            //}
+            //wizz.NameFieldName = "Name";
+            //wizz.NameFieldCaption = ResourceUtils.GetString("LookupWizardNameFieldLabel");
+            //wizz.KeyFieldName = "Code";
+            //wizz.KeyFieldCaption = ResourceUtils.GetString("LookupWizardCodeFieldLabel");
+
             if (baseField != null)
             {
-                wiz.ForceTwoColumns = true;
-                wiz.AllowNulls = baseField.AllowNulls;
+                createFieldWith.ForceTwoColumns = true;
+                createFieldWith.AllowNulls = baseField.AllowNulls;
             }
-            wiz.NameFieldName = "Name";
-            wiz.NameFieldCaption = ResourceUtils.GetString("LookupWizardNameFieldLabel");
-            wiz.KeyFieldName = "Code";
-            wiz.KeyFieldCaption = ResourceUtils.GetString("LookupWizardCodeFieldLabel");
-            
-            if (wiz.ShowDialog() == DialogResult.OK)
+            createFieldWith.NameFieldName = "Name";
+            createFieldWith.NameFieldCaption = ResourceUtils.GetString("LookupWizardNameFieldLabel");
+            createFieldWith.KeyFieldName = "Code";
+            createFieldWith.KeyFieldCaption = ResourceUtils.GetString("LookupWizardCodeFieldLabel");
+
+            Wizard wiz = new Wizard(createFieldWith);
+            if (wiz.ShowDialog() != DialogResult.OK)
             {
-                string listDisplayMember = wiz.NameFieldName;
-                IDataEntity baseEntity = Owner as IDataEntity;
+                GeneratedModelElements.Clear();
+            }
+        }
+
+        public override void Execute()
+        {
+            FieldMappingItem baseField = Owner as FieldMappingItem;
+            string listDisplayMember = createFieldWith.NameFieldName;
+            IDataEntity baseEntity = Owner as IDataEntity;
+            if (baseField != null)
+            {
+                baseEntity = baseField.ParentItem as IDataEntity;
+            }
+            // 1. entity
+            TableMappingItem table = CreateLookupEntity(createFieldWith.LookupName, baseEntity,
+                baseField);
+            // 2. field "Name"
+            FieldMappingItem nameField = EntityHelper.CreateColumn(table,
+                createFieldWith.NameFieldName, false, OrigamDataType.String, 200,
+                createFieldWith.NameFieldCaption, null, null, true);
+            FieldMappingItem codeField = null;
+            // field "Code"
+            if (createFieldWith.TwoColumns)
+            {
+                OrigamDataType dataType = OrigamDataType.String;
+                int dataLength = 50;
+                DatabaseDataType databaseType = null;
                 if (baseField != null)
                 {
-                    baseEntity = baseField.ParentItem as IDataEntity;
+                    dataType = baseField.DataType;
+                    dataLength = baseField.DataLength;
+                    databaseType = baseField.MappedDataType;
                 }
-                // 1. entity
-                TableMappingItem table = CreateLookupEntity(wiz, baseEntity,
-                    baseField);
-                // 2. field "Name"
-                FieldMappingItem nameField = EntityHelper.CreateColumn(table,
-                    wiz.NameFieldName, false, OrigamDataType.String, 200,
-                    wiz.NameFieldCaption, null, null, true);
-                FieldMappingItem codeField = null;
-                // field "Code"
-                if (wiz.TwoColumns)
-                {
-                    OrigamDataType dataType = OrigamDataType.String;
-                    int dataLength = 50;
-                    DatabaseDataType databaseType = null;
-                    if (baseField != null)
-                    {
-                        dataType = baseField.DataType;
-                        dataLength = baseField.DataLength;
-                        databaseType = baseField.MappedDataType;
-                    }
-                    codeField = EntityHelper.CreateColumn(table,
-                        wiz.KeyFieldName, false, dataType, dataLength,
-                        databaseType, wiz.KeyFieldCaption, null, null, false);
-                    if (baseField != null)
-                    {
-                        codeField.IsPrimaryKey = true;
-                    }
-                    codeField.Persist();
-                    listDisplayMember = wiz.KeyFieldName + ";" + wiz.NameFieldName;
-                }
-                IDataEntityColumn idField = EntityHelper.DefaultPrimaryKey;
-                EntityFilter idFilter = EntityHelper.DefaultPrimaryKeyFilter;
+                codeField = EntityHelper.CreateColumn(table,
+                    createFieldWith.KeyFieldName, false, dataType, dataLength,
+                    databaseType, createFieldWith.KeyFieldCaption, null, null, false);
                 if (baseField != null)
                 {
-                    idField = codeField;
-                    idFilter = EntityHelper.CreateFilter(idField, "Equal", "GetBy", true);
+                    codeField.IsPrimaryKey = true;
                 }
-                // 3. lookup
-                DataServiceDataLookup lookup =
-                    LookupHelper.CreateDataServiceLookup(table.Name, table,
-                    idField, nameField, codeField, idFilter, null, listDisplayMember);
-                GeneratedModelElements.Add(lookup);
-                // 4. foreign key field
-                FieldMappingItem fk = null;
-                if (baseField == null)
+                codeField.Persist();
+                listDisplayMember = createFieldWith.KeyFieldName + ";" + createFieldWith.NameFieldName;
+            }
+            IDataEntityColumn idField = EntityHelper.DefaultPrimaryKey;
+            EntityFilter idFilter = EntityHelper.DefaultPrimaryKeyFilter;
+            if (baseField != null)
+            {
+                idField = codeField;
+                idFilter = EntityHelper.CreateFilter(idField, "Equal", "GetBy", true);
+            }
+            // 3. lookup
+            DataServiceDataLookup lookup =
+                LookupHelper.CreateDataServiceLookup(table.Name, table,
+                idField, nameField, codeField, idFilter, null, listDisplayMember);
+            GeneratedModelElements.Add(lookup);
+            // 4. foreign key field
+            FieldMappingItem fk = null;
+            if (baseField == null)
+            {
+                fk = EntityHelper.CreateForeignKey("ref"
+                    + table.Name + idField.Name, createFieldWith.LookupCaption,
+                    createFieldWith.AllowNulls, baseEntity, table, idField, lookup, true);
+                GeneratedModelElements.Add(fk);
+            }
+            else
+            {
+                fk = baseField;
+                fk.ForeignKeyEntity = table;
+                fk.ForeignKeyField = idField;
+                fk.DefaultLookup = lookup;
+            }
+            // create a unique index on the Name field
+            EntityHelper.CreateIndex(table, nameField, true, true);
+            // we do not create a unique index on the Code field
+            // if the code field is a primary key
+            if (createFieldWith.TwoColumns && baseField == null)
+            {
+                EntityHelper.CreateIndex(table, codeField, true, true);
+            }
+            // 5. new table script
+            ServiceCommandUpdateScriptActivity script1 = CreateTableScript(
+                table.Name, table.Id);
+            GeneratedModelElements.Add(script1);
+            // 6. initial values
+            if (createFieldWith.InitialValues.Count > 0)
+            {
+                DataConstant defaultConstant = null;
+                IDictionary<AbstractSqlDataService, StringBuilder> dict = InitDictionary();
+                foreach (var initialValue in createFieldWith.InitialValues)
                 {
-                    fk = EntityHelper.CreateForeignKey("ref"
-                        + table.Name + idField.Name, wiz.LookupCaption,
-                        wiz.AllowNulls, baseEntity, table, idField, lookup, true);
-                    GeneratedModelElements.Add(fk);
-                }
-                else
-                {
-                    fk = baseField;
-                    fk.ForeignKeyEntity = table;
-                    fk.ForeignKeyField = idField;
-                    fk.DefaultLookup = lookup;
-                }
-                // create a unique index on the Name field
-                EntityHelper.CreateIndex(table, nameField, true, true);
-                // we do not create a unique index on the Code field
-                // if the code field is a primary key
-                if (wiz.TwoColumns && baseField == null)
-                {
-                    EntityHelper.CreateIndex(table, codeField, true, true);
-                }
-                // 5. new table script
-                ServiceCommandUpdateScriptActivity script1 = CreateTableScript(
-                    table.Name, table.Id);
-                GeneratedModelElements.Add(script1);
-                // 6. initial values
-                if (wiz.InitialValues.Count > 0)
-                {
-                    DataConstant defaultConstant = null;
-                    IDictionary<AbstractSqlDataService, StringBuilder> dict = InitDictionary();
-                    foreach (var initialValue in wiz.InitialValues)
+                    string constantName = table.Name + "_" + initialValue.Name.Replace(" ", "_");
+                    string pkValue = Guid.NewGuid().ToString();
+                    if (createFieldWith.TwoColumns)
                     {
-                        string constantName = table.Name + "_" + initialValue.Name.Replace(" ", "_");
-                        string pkValue = Guid.NewGuid().ToString();
-                        if (wiz.TwoColumns)
+                        if (baseField == null)
                         {
-                            if (baseField == null)
+                            foreach (KeyValuePair<AbstractSqlDataService, StringBuilder> item in dict)
                             {
-                                foreach (KeyValuePair<AbstractSqlDataService, StringBuilder> item in dict)
-                                {
-                                    item.Value.AppendFormat(item.Key.CreateInsert(3),
-                                    table.Name, idField.Name, wiz.KeyFieldName,
-                                    wiz.NameFieldName, pkValue, initialValue.Code,
-                                    initialValue.Name);
-                                }
-                            }
-                            else
-                            {
-                                foreach (KeyValuePair<AbstractSqlDataService, StringBuilder> item in dict)
-                                {
-                                    item.Value.AppendFormat(item.Key.CreateInsert(2),
-                                    table.Name, wiz.KeyFieldName,
-                                    wiz.NameFieldName, initialValue.Code,
-                                    initialValue.Name);
-                                }
+                                item.Value.AppendFormat(item.Key.CreateInsert(3),
+                                table.Name, idField.Name, createFieldWith.KeyFieldName,
+                                createFieldWith.NameFieldName, pkValue, initialValue.Code,
+                                initialValue.Name);
                             }
                         }
                         else
@@ -177,36 +217,47 @@ namespace Origam.Schema.LookupModel.Wizards
                             foreach (KeyValuePair<AbstractSqlDataService, StringBuilder> item in dict)
                             {
                                 item.Value.AppendFormat(item.Key.CreateInsert(2),
-                                table.Name, idField.Name, nameField.Name, pkValue, initialValue.Name);
+                                table.Name, createFieldWith.KeyFieldName,
+                                createFieldWith.NameFieldName, initialValue.Code,
+                                initialValue.Name);
                             }
                         }
-                        DataConstant c = EntityHelper.CreateConstant(
-                            constantName, lookup, idField.DataType, pkValue,
-                            EntityHelper.GetDataConstantGroup(baseEntity.Group.Name), true);
-                        GeneratedModelElements.Add(c);
-                        if (initialValue.IsDefault)
+                    }
+                    else
+                    {
+                        foreach (KeyValuePair<AbstractSqlDataService, StringBuilder> item in dict)
                         {
-                            defaultConstant = c;
+                            item.Value.AppendFormat(item.Key.CreateInsert(2),
+                            table.Name, idField.Name, nameField.Name, pkValue, initialValue.Name);
                         }
                     }
-                    fk.DefaultValue = defaultConstant;
-                    fk.Persist();
-                    var script2 = CreateDatabaseScript(table.Name + "_values",dict);
-                    GeneratedModelElements.Add(script2);
+                    DataConstant c = EntityHelper.CreateConstant(
+                        constantName, lookup, idField.DataType, pkValue,
+                        EntityHelper.GetDataConstantGroup(baseEntity.Group.Name), true);
+                    GeneratedModelElements.Add(c);
+                    if (initialValue.IsDefault)
+                    {
+                        defaultConstant = c;
+                    }
                 }
-                // 7. new field script (after values because of a default value
-                FieldsScripts(fk,
-                              baseField,
-                              baseEntity);
+                fk.DefaultValue = defaultConstant;
+                fk.Persist();
+                var script2 = CreateDatabaseScript(table.Name + "_values", dict);
+                GeneratedModelElements.Add(script2);
             }
+            // 7. new field script (after values because of a default value
+            FieldsScripts(fk,
+                          baseField,
+                          baseEntity);
         }
+
         private TableMappingItem CreateLookupEntity(
-            CreateFieldWithLookupEntityWizard wiz, IDataEntity baseEntity,
+           string LookupName, IDataEntity baseEntity,
             IDataEntityColumn baseField)
         {
             bool createAncestor = baseField == null;
             TableMappingItem table = EntityHelper.CreateTable(
-                wiz.LookupName, baseEntity.Group, false, createAncestor);
+                LookupName, baseEntity.Group, false, createAncestor);
             table.Persist();
             GeneratedModelElements.Add(table);
             return table;

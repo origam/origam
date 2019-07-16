@@ -23,6 +23,7 @@ using MoreLinq;
 using Origam.DA.Service;
 using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel;
+using Origam.UI.Commands;
 using Origam.Workbench.Services.CoreServices;
 using System;
 using System.Collections.Generic;
@@ -35,8 +36,8 @@ namespace Origam.UI
 	/// <summary>
 	/// Summary description for AbstractMenuCommand.
 	/// </summary>
-	public abstract class AbstractMenuCommand : AbstractCommand, IMenuCommand
-	{
+	public abstract class AbstractMenuCommand : AbstractCommand, IMenuCommand , IRunCommand
+    {
 	    public virtual bool IsEnabled { get; set; } = true;
 
         #region Property
@@ -135,6 +136,10 @@ namespace Origam.UI
 		{
 		}
 
-		#endregion
-	}
+        public virtual void Execute()
+        {
+        }
+
+        #endregion
+    }
 }

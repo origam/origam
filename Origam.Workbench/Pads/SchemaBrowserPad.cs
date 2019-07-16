@@ -23,6 +23,7 @@ using System;
 using System.Windows.Forms;
 using Origam.Workbench.Services;
 using Origam.Schema;
+using Origam.UI;
 
 namespace Origam.Workbench
 {
@@ -131,12 +132,7 @@ namespace Origam.Workbench
 
         public int ImageIndex(string icon)
         {
-            int imageIndex;
-            if (!int.TryParse(icon, out imageIndex))
-            {
-                imageIndex = this.ImageList.Images.IndexOfKey(icon);
-            }
-            return imageIndex;
+             return this.ImageList.ImageIndex(icon);
         }
     }
 }

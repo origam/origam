@@ -45,6 +45,7 @@ namespace Origam.Gui.Win.Wizards
 	{
         ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
         SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        ScreenWizardForm wizardForm;
         public override bool IsEnabled
 		{
 			get
@@ -60,7 +61,7 @@ namespace Origam.Gui.Win.Wizards
 		public override void Run()
 		{
             DataStructureSchemaItemProvider dsprovider = schema.GetProvider(typeof(DataStructureSchemaItemProvider)) as DataStructureSchemaItemProvider;
-            List<string> listdsName = dsprovider.ChildItemsRecursive
+            List<string> listdsName = dsprovider.ChildItemsByType(DataStructure.ItemTypeConst)
                             .ToArray()
                             .Select(x => { return ((AbstractSchemaItem)x).Name; })
                             .ToList();
@@ -68,51 +69,53 @@ namespace Origam.Gui.Win.Wizards
             DataStructure dd = new DataStructure();
             PanelControlSet pp = new PanelControlSet();
             FormControlSet ff = new FormControlSet();
-            list.Add(new ListViewItem(dd.ItemType, _schemaBrowser.ImageIndex(dd.Icon)));
-            list.Add(new ListViewItem(pp.ItemType, _schemaBrowser.ImageIndex(pp.Icon)));
-            list.Add(new ListViewItem(ff.ItemType, _schemaBrowser.ImageIndex(ff.Icon)));
+            list.Add(new ListViewItem(dd.ItemType, dd.Icon));
+            list.Add(new ListViewItem(pp.ItemType, pp.Icon));
+            list.Add(new ListViewItem(ff.ItemType, ff.Icon));
             
             Stack stackPage = new Stack();
+            stackPage.Push(PagesList.finish);
             stackPage.Push(PagesList.ScreenForm);
             if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
             {
-                stackPage.Push(PagesList.DatastructureNamePage);
+                stackPage.Push(PagesList.StructureNamePage);
             }
             stackPage.Push(PagesList.startPage);
 
-            ScreenWizardForm wizardForm = new ScreenWizardForm
+            wizardForm = new ScreenWizardForm
             {
-                listItemType = list,
+                ItemTypeList = list,
                 Description = "Create Screen Wizard",
                 Pages = stackPage,
                 Entity = Owner as IDataEntity,
                 IsRoleVisible = false,
                 textColumnsOnly = false,
-                ListDatastructure = listdsName,
+                DatastructureList = listdsName,
                 NameOfEntity = (Owner as IDataEntity).Name,
-                imgList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this
             };
 
             Wizard wiz = new Wizard(wizardForm);
-           
-                //CreateFormFromEntityWizard wiz = new CreateFormFromEntityWizard();
-                //wiz.Entity = Owner as IDataEntity;
-                //wiz.IsRoleVisible = false;
-
-                if (wiz.ShowDialog() == DialogResult.OK)
-                {
-                    string groupName = null;
-                    if (wizardForm.Entity.Group != null) groupName = wizardForm.Entity.Group.Name;
-
-                    DataStructure dataStructure = EntityHelper.CreateDataStructure(wizardForm.Entity, wizardForm.NameOfEntity, true);
-                    GeneratedModelElements.Add(dataStructure);
-                    PanelControlSet panel = GuiHelper.CreatePanel(groupName, wizardForm.Entity, wizardForm.SelectedFieldNames, wizardForm.NameOfEntity);
-                    GeneratedModelElements.Add(panel);
-                    FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
-                    GeneratedModelElements.Add(form);
-                }
+            if (wiz.ShowDialog() != DialogResult.OK)
+            {
+                GeneratedModelElements.Clear();
+            }
         }
-	}
+
+        public override void Execute()
+        {
+            string groupName = null;
+            if (wizardForm.Entity.Group != null) groupName = wizardForm.Entity.Group.Name;
+
+            DataStructure dataStructure = EntityHelper.CreateDataStructure(wizardForm.Entity, wizardForm.NameOfEntity, true);
+            GeneratedModelElements.Add(dataStructure);
+            PanelControlSet panel = GuiHelper.CreatePanel(groupName, wizardForm.Entity, wizardForm.SelectedFieldNames, wizardForm.NameOfEntity);
+            GeneratedModelElements.Add(panel);
+            FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
+            GeneratedModelElements.Add(form);
+        }
+    }
 
 	public class CreateCompleteUICommand : AbstractMenuCommand
 	{

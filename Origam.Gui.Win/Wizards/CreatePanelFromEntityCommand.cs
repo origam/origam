@@ -21,13 +21,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
+using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.EntityModel.Wizards;
 using Origam.Schema.GuiModel;
+using Origam.Services;
 using Origam.UI;
 using Origam.UI.WizardForm;
 using Origam.Workbench;
+using Origam.Workbench.Commands;
+using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win.Wizards
 {
@@ -37,6 +43,10 @@ namespace Origam.Gui.Win.Wizards
 	public class CreatePanelFromEntityCommand : AbstractMenuCommand
 	{
         SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+        ScreenWizardForm wizardForm;
+        PanelControlSet panel;
+
         public override bool IsEnabled
 		{
 			get
@@ -51,41 +61,57 @@ namespace Origam.Gui.Win.Wizards
 
 		public override void Run()
 		{
+            PanelSchemaItemProvider dsprovider = schema.GetProvider(typeof(PanelSchemaItemProvider)) as PanelSchemaItemProvider;
+            List<string> listdsName = dsprovider.ChildItemsByType(PanelControlSet.ItemTypeConst)
+                            .ToArray()
+                            .Select(x => { return ((AbstractSchemaItem)x).Name; })
+                            .ToList();
+
             ArrayList list = new ArrayList();
             PanelControlSet pp = new PanelControlSet();
-            list.Add(new ListViewItem(pp.ItemType, _schemaBrowser.ImageIndex(pp.Icon)));
+            list.Add(new ListViewItem(pp.ItemType, pp.Icon));
             
             Stack stackPage = new Stack();
+            stackPage.Push(PagesList.finish);
             stackPage.Push(PagesList.ScreenForm);
+            if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
+            {
+                stackPage.Push(PagesList.StructureNamePage);
+            }
             stackPage.Push(PagesList.startPage);
 
-            ScreenWizardForm wizardForm = new ScreenWizardForm
+            wizardForm = new ScreenWizardForm
             {
-                listItemType = list,
+                ItemTypeList = list,
                 Description = "Create Screen Section Wizard",
                 Pages = stackPage,
+                DatastructureList = listdsName,
                 Entity = Owner as IDataEntity,
+                NameOfEntity = (Owner as IDataEntity).Name,
                 IsRoleVisible = false,
                 textColumnsOnly = false,
-                imgList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this
             };
 
             Wizard wiz = new Wizard(wizardForm);
+            if (wiz.ShowDialog() == DialogResult.OK)
+            {
+                EditSchemaItem edit = new EditSchemaItem
+                {
+                    Owner = panel
+                };
+                edit.Run();
+                _schemaBrowser.EbrSchemaBrowser.SelectItem(panel);
+            }
+        }
 
-            //CreateFormFromEntityWizard wiz = new CreateFormFromEntityWizard();
+        public override void Execute()
+        {
+            string groupName = null;
+            if (wizardForm.Entity.Group != null) groupName = wizardForm.Entity.Group.Name;
 
-			//wiz.Entity = Owner as IDataEntity;
-			if(wiz.ShowDialog() == DialogResult.OK)
-			{
-				string groupName = null;
-				if(wizardForm.Entity.Group != null) groupName = wizardForm.Entity.Group.Name;
-
-				PanelControlSet panel = GuiHelper.CreatePanel(groupName, wizardForm.Entity, wizardForm.SelectedFieldNames);
-
-				Origam.Workbench.Commands.EditSchemaItem edit = new Origam.Workbench.Commands.EditSchemaItem();
-				edit.Owner = panel;
-				edit.Run();
-			}
-		}
-	}
+            panel = GuiHelper.CreatePanel(groupName, wizardForm.Entity, wizardForm.SelectedFieldNames,wizardForm.NameOfEntity);
+        }
+    }
 }
