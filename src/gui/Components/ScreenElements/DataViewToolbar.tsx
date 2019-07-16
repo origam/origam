@@ -1,17 +1,20 @@
 import React from "react";
-import { observer, inject } from "mobx-react";
+import { observer, inject, Provider } from "mobx-react";
 import S from "./DataViewToolbar.module.css";
 import { IDataView } from "../../../model/types/IDataView";
 import { IPanelViewType } from "../../../model/types/IPanelViewType";
 import { getActivePanelView } from "../../../model/selectors/DataView/getActivePanelView";
 import { getDataViewLabel } from "../../../model/selectors/DataView/getDataViewLabel";
+import { action, observable } from "mobx";
+import { getTablePanelView } from "../../../model/selectors/TablePanelView/getTablePanelView";
 
 @inject(({ dataView }: { dataView: IDataView }) => {
   return {
     activePanelView: getActivePanelView(dataView),
     label: getDataViewLabel(dataView),
     onFormViewButtonClick: dataView.onFormPanelViewButtonClick,
-    onTableViewButtonClick: dataView.onTablePanelViewButtonClick
+    onTableViewButtonClick: dataView.onTablePanelViewButtonClick,
+    onColumnConfClick: getTablePanelView(dataView).onColumnConfClick
   };
 })
 @observer
@@ -20,6 +23,7 @@ export class Toolbar extends React.Component<{
   label?: string;
   onFormViewButtonClick?: (event: any) => void;
   onTableViewButtonClick?: (event: any) => void;
+  onColumnConfClick?: (event: any) => void;
 }> {
   render() {
     return (
@@ -155,15 +159,54 @@ export class Toolbar extends React.Component<{
           </ToolbarButton>
         </div>
         <div className={S.section}>
-          <ToolbarButton
-            isVisible={true}
-            isActive={false}
-            isEnabled={true}
-            onClick={undefined}
-          >
-            <i className="fas fa-cog" aria-hidden="true" />
-            <i className="fas fa-caret-down" aria-hidden="true" />
-          </ToolbarButton>
+          <div className={S.dropDownMenuRoot}>
+            <ToolbarDropDownMenu
+              trigger={onTriggerClick => (
+                <ToolbarButton
+                  isVisible={true}
+                  isActive={false}
+                  isEnabled={true}
+                  onClick={onTriggerClick}
+                >
+                  <i className="fas fa-cog" aria-hidden="true" />
+                  <i className="fas fa-caret-down" aria-hidden="true" />
+                </ToolbarButton>
+              )}
+            >
+              <ToolbarDropDownMenuItem isDisabled={true}>
+                <div className={S.dropDownItemIcon}>
+                  <i className="far fa-file-excel" />
+                </div>
+                Export to Excel
+              </ToolbarDropDownMenuItem>
+              {this.props.activePanelView === IPanelViewType.Table && (
+                <ToolbarDropDownMenuItem onClick={this.props.onColumnConfClick}>
+                  <div className={S.dropDownItemIcon}>
+                    <i className="fas fa-cog" aria-hidden="true" />
+                  </div>
+                  Column Configuration
+                </ToolbarDropDownMenuItem>
+              )}
+              <ToolbarDropDownMenuItem isDisabled={true}>
+                <div className={S.dropDownItemIcon}>
+                  <i className="fas fa-shield-alt" />
+                </div>
+                Show Audit
+              </ToolbarDropDownMenuItem>
+              <ToolbarDropDownMenuItem isDisabled={true}>
+                <div className={S.dropDownItemIcon}>
+                  <i className="fas fa-paperclip" />
+                </div>
+                Show Attachments
+              </ToolbarDropDownMenuItem>
+              <ToolbarDropDownMenuItem isDisabled={true}>
+                <div className={S.dropDownItemIcon}>
+                  <i className="fas fa-info-circle" />
+                </div>
+                Show RecordInformation
+              </ToolbarDropDownMenuItem>
+            </ToolbarDropDownMenu>
+          </div>
         </div>
       </div>
     );
@@ -191,5 +234,76 @@ export class ToolbarButton extends React.Component<{
         {this.props.children}
       </button>
     ) : null;
+  }
+}
+
+@observer
+export class ToolbarDropDownMenu extends React.Component<{
+  trigger?: (onTriggerClick: (event: any) => void) => React.ReactNode;
+}> {
+  @observable isDropped = false;
+
+  @action.bound handleTriggerClick(event: any) {
+    this.setDroppedDown(true);
+  }
+
+  @action.bound handleWindowMouseDown(event: any) {
+    if (!this.refMenu.current!.contains(event.target)) {
+      this.setDroppedDown(false);
+    }
+  }
+
+  @action.bound setDroppedDown(state: boolean) {
+    this.isDropped = state;
+    if (state) {
+      window.addEventListener("mousedown", this.handleWindowMouseDown, true);
+    } else {
+      window.removeEventListener("mousedown", this.handleWindowMouseDown, true);
+    }
+  }
+
+  refMenu = React.createRef<HTMLDivElement>();
+
+  render() {
+    return (
+      <Provider dropDownMenu={this}>
+        <>
+          {this.props.trigger && this.props.trigger(this.handleTriggerClick)}
+          {this.isDropped && (
+            <div ref={this.refMenu} className={S.dropDownMenu}>
+              {this.props.children}
+            </div>
+          )}
+        </>
+      </Provider>
+    );
+  }
+}
+
+@inject("dropDownMenu")
+@observer
+export class ToolbarDropDownMenuItem extends React.Component<{
+  isDisabled?: boolean;
+  onClick?: (event: any) => void;
+  dropDownMenu?: ToolbarDropDownMenu;
+}> {
+  @action.bound handleClick(event: any) {
+    if (!this.props.isDisabled) {
+      this.props.onClick && this.props.onClick(event);
+      this.props.dropDownMenu!.setDroppedDown(false);
+    }
+  }
+
+  render() {
+    return (
+      <div
+        onClick={this.handleClick}
+        className={
+          S.dropDownMenuItem + (this.props.isDisabled ? " disabled" : "")
+        }
+      >
+        {this.props.children}
+      </div>
+    );
   }
 }

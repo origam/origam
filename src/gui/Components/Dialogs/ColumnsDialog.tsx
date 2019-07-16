@@ -1,10 +1,21 @@
 import S from "./ColumnsDialog.module.css";
 import React from "react";
 import { ModalWindowOverlay, ModalWindow } from "../Dialog/Dialog";
-import { AutoSizer, Grid } from "react-virtualized";
+import { AutoSizer, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
+import { observable, action } from "mobx";
+import { observer, Observer } from "mobx-react";
 
-export class ColumnsDialog extends React.Component {
+@observer
+export class ColumnsDialog extends React.Component<{
+  onOkClick?: (event: any) => void;
+  onSaveAsClick?: (event: any) => void;
+  onCancelClick?: (event: any) => void;
+}> {
+  @observable columnWidths = [50, 100, 70, 90];
+
+  refGrid = React.createRef<MultiGrid>();
+
   render() {
     return (
       <ModalWindowOverlay>
@@ -12,9 +23,9 @@ export class ColumnsDialog extends React.Component {
           title="Columns"
           buttonsCenter={
             <>
-              <button>OK</button>
-              <button>Save As...</button>
-              <button>Cancel</button>
+              <button onClick={this.props.onOkClick}>OK</button>
+              <button onClick={this.props.onSaveAsClick}>Save As...</button>
+              <button onClick={this.props.onCancelClick}>Cancel</button>
             </>
           }
           buttonsLeft={null}
@@ -23,28 +34,23 @@ export class ColumnsDialog extends React.Component {
           <div className={S.columnTable}>
             <AutoSizer>
               {({ width, height }) => (
-                <Grid
-                  cellRenderer={this.renderCell}
-                  columnCount={4}
-                  rowCount={50}
-                  columnWidth={({ index }: { index: number }) => {
-                    switch (index) {
-                      case 0:
-                        return 30;
-                      case 1:
-                        return 300;
-                      case 2:
-                        return 45;
-                      case 3:
-                        return 75;
-                      default:
-                        return 100;
-                    }
-                  }}
-                  rowHeight={20}
-                  width={width}
-                  height={height}
-                />
+                <Observer>
+                  {() => (
+                    <MultiGrid
+                      ref={this.refGrid}
+                      fixedRowCount={1}
+                      cellRenderer={this.renderCell}
+                      columnCount={4}
+                      rowCount={50}
+                      columnWidth={({ index }: { index: number }) => {
+                        return this.columnWidths[index];
+                      }}
+                      rowHeight={20}
+                      width={width}
+                      height={height}
+                    />
+                  )}
+                </Observer>
               )}
             </AutoSizer>
           </div>
@@ -57,6 +63,21 @@ export class ColumnsDialog extends React.Component {
     );
   }
 
+  getCell(rowIndex: number, columnIndex: number) {
+    switch (columnIndex) {
+      case 0:
+        return <input type="checkbox" key={`${rowIndex}@${columnIndex}`} />;
+      case 1:
+        return `Column ${rowIndex}`;
+      case 2:
+        return <input type="checkbox" key={`${rowIndex}@${columnIndex}`} />;
+      case 4:
+        return "";
+      default:
+        return "";
+    }
+  }
+
   @bind renderCell(args: {
     columnIndex: number;
     rowIndex: number;
@@ -66,19 +87,98 @@ export class ColumnsDialog extends React.Component {
     if (args.rowIndex > 0) {
       const rowClassName = args.rowIndex % 2 === 0 ? "even" : "odd";
       return (
-        <div
-          style={args.style}
-          className={S.columnTableCell + " " + rowClassName}
-        >
-          {args.columnIndex};{args.rowIndex}
-        </div>
+        <Observer>
+          {() => (
+            <div
+              style={args.style}
+              className={S.columnTableCell + " " + rowClassName}
+            >
+              {this.getCell(args.rowIndex, args.columnIndex)}
+            </div>
+          )}
+        </Observer>
       );
     } else {
       return (
-        <div style={args.style} className={S.columnTableCell + " header"}>
-          Header {args.columnIndex}
-        </div>
+        <Observer>
+          {() => (
+            <TableHeader
+              columnIndex={args.columnIndex}
+              style={args.style}
+              columnWidth={this.columnWidths[args.columnIndex]}
+              onColumnWidthChange={this.handleColumnWidthChange}
+            />
+          )}
+        </Observer>
       );
     }
+  }
+
+  @action.bound handleColumnWidthChange(columnIndex: number, newWidth: number) {
+    if (newWidth >= 30) {
+      this.columnWidths[columnIndex] = newWidth;
+      this.refGrid.current!.recomputeGridSize();
+    }
+  }
+}
+
+@observer
+export class TableHeader extends React.Component<{
+  columnIndex: number;
+  columnWidth: number;
+  style: any;
+  onColumnResizeStart?: (columnIndex: number) => void;
+  onColumnWidthChange?: (columnIndex: number, newWidth: number) => void;
+  onColumnResizeEnd?: (columnIndex: number) => void;
+}> {
+  getHeader(columnIndex: number) {
+    switch (columnIndex) {
+      case 0:
+        return "Visible";
+      case 1:
+        return "Name";
+      case 2:
+        return "GroupBy";
+      case 3:
+        return "Aggregation";
+      default:
+        return "?";
+    }
+  }
+
+  width0 = 0;
+  mouseX0 = 0;
+
+  @action.bound handleColumnWidthHandleMouseDown(event: any) {
+    event.preventDefault();
+    this.width0 = this.props.columnWidth;
+    this.mouseX0 = event.screenX;
+    window.addEventListener("mousemove", this.handleWindowMouseMove);
+    window.addEventListener("mouseup", this.handleWindowMouseUp);
+  }
+
+  @action.bound handleWindowMouseMove(event: any) {
+    const vec = event.screenX - this.mouseX0;
+    const newWidth = this.width0 + vec;
+    console.log(this.props.columnIndex, newWidth);
+    this.props.onColumnWidthChange &&
+      this.props.onColumnWidthChange(this.props.columnIndex, newWidth);
+  }
+
+  @action.bound handleWindowMouseUp(event: any) {
+    window.removeEventListener("mousemove", this.handleWindowMouseMove);
+    window.removeEventListener("mouseup", this.handleWindowMouseUp);
+  }
+
+  render() {
+    return (
+      <div style={this.props.style} className={S.columnTableCell + " header"}>
+        {this.getHeader(this.props.columnIndex)}
+        <div
+          className={S.columnWidthHandle}
+          onMouseDown={this.handleColumnWidthHandleMouseDown}
+        />
+      </div>
+    );
   }
 }

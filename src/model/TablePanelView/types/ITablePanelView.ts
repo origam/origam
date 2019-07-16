@@ -11,6 +11,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   selectedProperty: IProperty | undefined;
   selectedRowIndex: number | undefined;
   isEditing: boolean;
+  isColumnConfigurationDialogVisible: boolean;
   tableProperties: IProperty[];
 
   getCellValueByIdx(rowIdx: number, columnIdx: number): any;
@@ -18,6 +19,8 @@ export interface ITablePanelView extends ITablePanelViewData {
   onCellClick(rowIndex: number, columnIndex: number): void;
   onNoCellClick(): void;
   onOutsideTableClick(): void;
+
+  onColumnConfClick(event: any): void;
 
   setSelectedColumnId(id: string | undefined): void;
   swapColumns(id1: string, id2: string): void;

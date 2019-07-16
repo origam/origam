@@ -63,3 +63,48 @@
 .toolbarBtn:global(.disabled):hover {
   background-color: inherit;
 }
+
+.dropDownMenuRoot {
+  position: relative;
+  display: inline;
+}
+
+.dropDownMenu {
+  background-color: white;
+  border: 1px solid black;
+
+  position: absolute;
+  z-index: 2000;
+  right: 0;
+  top: 20;
+}
+
+.dropDownMenuItem {
+  padding: 0px 10px 0px 5px;
+  color: black;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dropDownMenuItem:global(.disabled) {
+  color: lightgray;
+  cursor: default;
+}
+
+.dropDownMenuItem > i {
+  padding-right: 10px;
+}
+
+.dropDownMenuItem:not(:global(.disabled)):hover {
+  background-color: #8998c5;
+  color: white;
+}
+
+.dropDownItemIcon {
+  display: flex;
+  width: 20px;
+  align-items: center;
+  justify-content: center
+}

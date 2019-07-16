@@ -16,6 +16,7 @@
 }
 
 .columnTableCell {
+  position: relative;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -28,7 +29,7 @@
 
 .columnTableCell:global(.header) {
   font-weight: bold;
-  border-right: 1px solid #f6f6f6;
+  /*border-right: 1px solid #f6f6f6;*/
 }
 
 .columnTableCell:global(.odd) {
@@ -37,4 +38,17 @@
 
 .columnTableCell:global(.even) {
   background-color: #fefefe;
+}
+
+.columnWidthHandle {
+  position: absolute;
+  width: 3px;
+  height: 100%;
+  cursor: w-resize;
+  right: 0;
+  background-color: #f6f6f6;
+}
+
+.columnWidthHandle:hover {
+  background-color: #8998c5;
 }

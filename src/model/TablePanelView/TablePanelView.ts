@@ -8,11 +8,14 @@ import { getSelectedRow } from "../selectors/DataView/getSelectedRow";
 import { getDataViewLifecycle } from "../selectors/DataView/getDataViewLifecycle";
 
 export class TablePanelView implements ITablePanelView {
+
   $type_ITablePanelView: 1 = 1;
 
   constructor(data: ITablePanelViewData) {
     Object.assign(this, data);
   }
+
+  @observable isColumnConfigurationDialogVisible = false;
 
   @observable isEditing: boolean = false;
 
@@ -89,6 +92,11 @@ export class TablePanelView implements ITablePanelView {
       this.editingWillFinish();
       this.setEditing(false);
     }
+  }
+
+  @action.bound
+  onColumnConfClick(event: any): void {
+    this.isColumnConfigurationDialogVisible = true;
   }
 
   @action.bound editingWillFinish() {

@@ -26,6 +26,8 @@ import { getSelectedRowIndex } from "../../../../model/selectors/TablePanelView/
 import { getSelectedColumnIndex } from "../../../../model/selectors/TablePanelView/getSelectedColumnIndex";
 import { getIsEditing } from "../../../../model/selectors/TablePanelView/getIsEditing";
 import { TablePanelView } from "../../../../model/TablePanelView/TablePanelView";
+import { ColumnsDialog } from "../../../Components/Dialogs/ColumnsDialog";
+import { getIsColumnConfigurationDialogVisible } from "../../../../model/selectors/TablePanelView/getIsColumnConfigurationDialogVisible";
 
 @inject(({ dataView }) => {
   return {
@@ -61,24 +63,33 @@ export class TableView extends React.Component<{
     tablePanelView: this.props.tablePanelView!
   });
 
+  @computed get isColumnConfVisible() {
+    return getIsColumnConfigurationDialogVisible(this.props.tablePanelView);
+  }
+
   render() {
     const self = this;
     return (
       <Provider tablePanelView={this.props.tablePanelView}>
-        <Table
-          gridDimensions={self.gDim}
-          scrollState={self.scrollState}
-          editingRowIndex={getSelectedRowIndex(this.props.tablePanelView)}
-          editingColumnIndex={getSelectedColumnIndex(this.props.tablePanelView)}
-          isEditorMounted={getIsEditing(this.props.tablePanelView)}
-          fixedColumnCount={0}
-          isLoading={false}
-          renderHeader={self.headerRenderer.renderHeader}
-          renderCell={self.cellRenderer.renderCell}
-          renderEditor={() => <TableViewEditor />}
-          onNoCellClick={this.props.tablePanelView!.onNoCellClick}
-          onOutsideTableClick={this.props.tablePanelView!.onOutsideTableClick}
-        />
+        <>
+          {this.isColumnConfVisible && <ColumnsDialog />}
+          <Table
+            gridDimensions={self.gDim}
+            scrollState={self.scrollState}
+            editingRowIndex={getSelectedRowIndex(this.props.tablePanelView)}
+            editingColumnIndex={getSelectedColumnIndex(
+              this.props.tablePanelView
+            )}
+            isEditorMounted={getIsEditing(this.props.tablePanelView)}
+            fixedColumnCount={0}
+            isLoading={false}
+            renderHeader={self.headerRenderer.renderHeader}
+            renderCell={self.cellRenderer.renderCell}
+            renderEditor={() => <TableViewEditor />}
+            onNoCellClick={this.props.tablePanelView!.onNoCellClick}
+            onOutsideTableClick={this.props.tablePanelView!.onOutsideTableClick}
+          />
+        </>
       </Provider>
     );
   }
