@@ -26,19 +26,26 @@ import { getSelectedRowIndex } from "../../../../model/selectors/TablePanelView/
 import { getSelectedColumnIndex } from "../../../../model/selectors/TablePanelView/getSelectedColumnIndex";
 import { getIsEditing } from "../../../../model/selectors/TablePanelView/getIsEditing";
 import { TablePanelView } from "../../../../model/TablePanelView/TablePanelView";
-import { ColumnsDialog } from "../../../Components/Dialogs/ColumnsDialog";
+import {
+  ColumnsDialog,
+  ITableColumnsConf
+} from "../../../Components/Dialogs/ColumnsDialog";
 import { getIsColumnConfigurationDialogVisible } from "../../../../model/selectors/TablePanelView/getIsColumnConfigurationDialogVisible";
 
 @inject(({ dataView }) => {
   return {
     dataView,
-    tablePanelView: dataView.tablePanelView
+    tablePanelView: dataView.tablePanelView,
+    onColumnDialogCancel: dataView.tablePanelView.onColumnConfCancel,
+    onColumnDialogOk: dataView.tablePanelView.onColumnConfSubmit
   };
 })
 @observer
 export class TableView extends React.Component<{
   dataView?: IDataView;
   tablePanelView?: ITablePanelView;
+  onColumnDialogCancel?: (event: any) => void;
+  onColumnDialogOk?: (event: any, configuration: ITableColumnsConf) => void;
 }> {
   gDim = new GridDimensions({
     getTableViewProperties: () => getTableViewProperties(this.props.dataView),
@@ -72,7 +79,13 @@ export class TableView extends React.Component<{
     return (
       <Provider tablePanelView={this.props.tablePanelView}>
         <>
-          {this.isColumnConfVisible && <ColumnsDialog />}
+          {this.isColumnConfVisible && (
+            <ColumnsDialog
+              configuration={this.props.tablePanelView!.columnsConfiguration}
+              onCancelClick={this.props.onColumnDialogCancel}
+              onOkClick={this.props.onColumnDialogOk}
+            />
+          )}
           <Table
             gridDimensions={self.gDim}
             scrollState={self.scrollState}
@@ -106,7 +119,6 @@ class GridDimensions implements IGridDimensions {
   }
 
   @observable columnWidths: Map<string, number> = new Map();
-  @observable columnReordering: string[] = [];
 
   getTableViewProperties: () => IProperty[] = null as any;
   getRowCount: () => number = null as any;
@@ -116,11 +128,7 @@ class GridDimensions implements IGridDimensions {
   }
 
   @computed get tableViewProperties() {
-    return (this.columnReordering.length > 0
-      ? this.columnReordering.map(id =>
-          this.tableViewPropertiesOriginal.find(prop => prop.id === id)
-        )
-      : this.tableViewPropertiesOriginal) as IProperty[];
+    return this.tableViewPropertiesOriginal;
   }
 
   @computed get rowCount() {
@@ -140,7 +148,7 @@ class GridDimensions implements IGridDimensions {
   }
 
   getColumnLeft(columnIndex: number): number {
-    return columnIndex === 0 ? 0 : this.getColumnRight(columnIndex - 1);
+    return columnIndex <= 0 ? 0 : this.getColumnRight(columnIndex - 1);
   }
 
   getColumnWidth(columnIndex: number): number {
@@ -151,6 +159,7 @@ class GridDimensions implements IGridDimensions {
   }
 
   getColumnRight(columnIndex: number): number {
+    if (columnIndex < 0) return 0;
     return this.getColumnLeft(columnIndex) + this.getColumnWidth(columnIndex);
   }
 

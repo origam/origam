@@ -6,9 +6,9 @@ import { IProperty } from "../types/IProperty";
 import { getDataViewPropertyById } from "../selectors/DataView/getDataViewPropertyById";
 import { getSelectedRow } from "../selectors/DataView/getSelectedRow";
 import { getDataViewLifecycle } from "../selectors/DataView/getDataViewLifecycle";
+import { ITableColumnsConf } from "../../gui/Components/Dialogs/ColumnsDialog";
 
 export class TablePanelView implements ITablePanelView {
-
   $type_ITablePanelView: 1 = 1;
 
   constructor(data: ITablePanelViewData) {
@@ -18,16 +18,25 @@ export class TablePanelView implements ITablePanelView {
   @observable isColumnConfigurationDialogVisible = false;
 
   @observable isEditing: boolean = false;
-
+  @observable fixedColumnCount: number = 0;
   @observable tablePropertyIds: string[] = [];
+
+  @observable hiddenPropertyIds: Map<string, boolean> = new Map();
+  @observable groupingIndices: Map<string, number> = new Map();
 
   @observable columnOrderChangingTargetId: string | undefined;
   @observable columnOrderChangingSourceId: string | undefined;
 
-  @computed get tableProperties() {
+  @computed get allTableProperties() {
     return this.tablePropertyIds.map(id =>
       getDataTable(this).getPropertyById(id)
     ) as IProperty[];
+  }
+
+  @computed get tableProperties() {
+    return this.allTableProperties.filter(
+      prop => !this.hiddenPropertyIds.get(prop.id)
+    );
   }
   @observable selectedColumnId: string | undefined;
   @computed get selectedRowId(): string | undefined {
@@ -94,9 +103,42 @@ export class TablePanelView implements ITablePanelView {
     }
   }
 
+  @computed get columnsConfiguration() {
+    const conf: ITableColumnsConf = {
+      fixedColumnCount: this.fixedColumnCount,
+      columnConf: []
+    };
+    for (let prop of this.allTableProperties) {
+      conf.columnConf.push({
+        id: prop.id,
+        name: prop.name,
+        isVisible: !this.hiddenPropertyIds.get(prop.id),
+        groupingIndex: this.groupingIndices.get(prop.id) || 0,
+        aggregation: ""
+      });
+    }
+    return conf;
+  }
+
   @action.bound
   onColumnConfClick(event: any): void {
     this.isColumnConfigurationDialogVisible = true;
+  }
+
+  @action.bound onColumnConfCancel(event: any): void {
+    this.isColumnConfigurationDialogVisible = false;
+  }
+
+  @action.bound onColumnConfSubmit(
+    event: any,
+    configuration: ITableColumnsConf
+  ): void {
+    this.isColumnConfigurationDialogVisible = false;
+    this.fixedColumnCount = configuration.fixedColumnCount;
+    this.hiddenPropertyIds.clear();
+    for (let column of configuration.columnConf) {
+      this.hiddenPropertyIds.set(column.id, !column.isVisible);
+    }
   }
 
   @action.bound editingWillFinish() {
@@ -139,7 +181,7 @@ export class TablePanelView implements ITablePanelView {
     idSource: string | undefined,
     idTarget: string | undefined
   ): void {
-    console.log(idSource, idTarget)
+    console.log(idSource, idTarget);
     this.columnOrderChangingTargetId = idTarget;
     this.columnOrderChangingSourceId = idSource;
   }

@@ -1,4 +1,5 @@
 import { IProperty } from "../../types/IProperty";
+import { ITableColumnsConf } from "../../../gui/Components/Dialogs/ColumnsDialog";
 
 export interface ITablePanelViewData {
   tablePropertyIds: string[];
@@ -14,6 +15,8 @@ export interface ITablePanelView extends ITablePanelViewData {
   isColumnConfigurationDialogVisible: boolean;
   tableProperties: IProperty[];
 
+  columnsConfiguration: ITableColumnsConf;
+
   getCellValueByIdx(rowIdx: number, columnIdx: number): any;
 
   onCellClick(rowIndex: number, columnIndex: number): void;
@@ -21,6 +24,8 @@ export interface ITablePanelView extends ITablePanelViewData {
   onOutsideTableClick(): void;
 
   onColumnConfClick(event: any): void;
+  onColumnConfCancel(event: any): void;
+  onColumnConfSubmit(event: any, configuration: ITableColumnsConf): void;
 
   setSelectedColumnId(id: string | undefined): void;
   swapColumns(id1: string, id2: string): void;

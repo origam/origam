@@ -5,16 +5,44 @@ import { AutoSizer, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
 import { observable, action } from "mobx";
 import { observer, Observer } from "mobx-react";
+import produce from "immer";
+
+export interface ITableColumnsConf {
+  fixedColumnCount: number;
+  columnConf: ITableColumnConf[];
+}
+
+export interface ITableColumnConf {
+  id: string;
+  name: string;
+  isVisible: boolean;
+  groupingIndex: number;
+  aggregation: "";
+}
 
 @observer
 export class ColumnsDialog extends React.Component<{
-  onOkClick?: (event: any) => void;
+  configuration: ITableColumnsConf;
+  onOkClick?: (event: any, configuration: ITableColumnsConf) => void;
   onSaveAsClick?: (event: any) => void;
   onCancelClick?: (event: any) => void;
 }> {
-  @observable columnWidths = [50, 100, 70, 90];
+  constructor(props: any) {
+    super(props);
+    this.configuration = this.props.configuration;
+  }
+
+  @observable.ref configuration: ITableColumnsConf;
+
+  @observable columnWidths = [70, 160, 70, 90];
 
   refGrid = React.createRef<MultiGrid>();
+
+  @action.bound setVisible(rowIndex: number, state: boolean) {
+    this.configuration = produce(this.configuration, draft => {
+      draft.columnConf[rowIndex].isVisible = state;
+    });
+  }
 
   render() {
     return (
@@ -23,7 +51,14 @@ export class ColumnsDialog extends React.Component<{
           title="Columns"
           buttonsCenter={
             <>
-              <button onClick={this.props.onOkClick}>OK</button>
+              <button
+                onClick={(event: any) =>
+                  this.props.onOkClick &&
+                  this.props.onOkClick(event, this.configuration)
+                }
+              >
+                OK
+              </button>
               <button onClick={this.props.onSaveAsClick}>Save As...</button>
               <button onClick={this.props.onCancelClick}>Cancel</button>
             </>
@@ -41,7 +76,7 @@ export class ColumnsDialog extends React.Component<{
                       fixedRowCount={1}
                       cellRenderer={this.renderCell}
                       columnCount={4}
-                      rowCount={50}
+                      rowCount={1 + this.configuration.columnConf.length}
                       columnWidth={({ index }: { index: number }) => {
                         return this.columnWidths[index];
                       }}
@@ -56,7 +91,11 @@ export class ColumnsDialog extends React.Component<{
           </div>
           <div className={S.lockedColumns}>
             Locked columns count
-            <input className={S.lockedColumnsInput} type="text" />
+            <input
+              className={S.lockedColumnsInput}
+              type="text"
+              value={this.configuration.fixedColumnCount}
+            />
           </div>
         </ModalWindow>
       </ModalWindowOverlay>
@@ -64,13 +103,37 @@ export class ColumnsDialog extends React.Component<{
   }
 
   getCell(rowIndex: number, columnIndex: number) {
+    const {
+      isVisible,
+      name,
+      aggregation,
+      groupingIndex
+    } = this.configuration.columnConf[rowIndex];
     switch (columnIndex) {
       case 0:
-        return <input type="checkbox" key={`${rowIndex}@${columnIndex}`} />;
+        return (
+          <input
+            type="checkbox"
+            key={`${rowIndex}@${columnIndex}`}
+            onChange={(event: any) =>
+              this.setVisible(rowIndex, event.target.checked)
+            }
+            checked={isVisible}
+          />
+        );
       case 1:
-        return `Column ${rowIndex}`;
+        return name;
       case 2:
-        return <input type="checkbox" key={`${rowIndex}@${columnIndex}`} />;
+        return (
+          <span>
+            <input
+              type="checkbox"
+              key={`${rowIndex}@${columnIndex}`}
+              checked={groupingIndex > 0}
+            />{" "}
+            {groupingIndex > 0 ? groupingIndex : ""}
+          </span>
+        );
       case 4:
         return "";
       default:
@@ -93,7 +156,7 @@ export class ColumnsDialog extends React.Component<{
               style={args.style}
               className={S.columnTableCell + " " + rowClassName}
             >
-              {this.getCell(args.rowIndex, args.columnIndex)}
+              {this.getCell(args.rowIndex - 1, args.columnIndex)}
             </div>
           )}
         </Observer>
