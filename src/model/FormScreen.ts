@@ -11,6 +11,7 @@ import { ILoadingFormScreenData } from "./types/IFormScreen";
 import { computed } from "mobx";
 
 export class FormScreen implements ILoadedFormScreen {
+
   $type_ILoadedFormScreen: 1 = 1;
 
   constructor(data: ILoadedFormScreenData) {
@@ -53,6 +54,10 @@ export class FormScreen implements ILoadedFormScreen {
 
   getDataViewByModelInstanceId(modelInstanceId: string): IDataView | undefined {
     return this.dataViews.find(dv => dv.modelInstanceId === modelInstanceId);
+  }
+
+  getDataViewByEntity(entity: string): IDataView | undefined {
+    return this.dataViews.find(dv => dv.entity === entity);
   }
 
   getDataSourceByEntity(entity: string): IDataSource | undefined {

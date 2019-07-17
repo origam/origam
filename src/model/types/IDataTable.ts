@@ -29,6 +29,8 @@ export interface IDataTable extends IDataTableData {
   setDirtyDeleted(row: any[]): void;
   setDirtyNew(row: any[]): void;
   clear(): void;
+  clearRecordDirtyValues(id: string): void;
+  substituteRecord(row: any[]): void;
   parent?: any;
 }
 

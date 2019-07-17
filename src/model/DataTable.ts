@@ -69,7 +69,11 @@ export class DataTable implements IDataTable {
   }
 
   getAdditionalRowData(row: any[]) {
-    return this.additionalRowData.get(this.getRowId(row));
+    return this.getAdditionalRowDataById(this.getRowId(row));
+  }
+
+  getAdditionalRowDataById(id: string) {
+    return this.additionalRowData.get(id);
   }
 
   hasRowDirtyValues(row: any[]) {
@@ -151,6 +155,40 @@ export class DataTable implements IDataTable {
       const ard = new AdditionalRowData();
       ard.parent = this;
       this.additionalRowData.set(row[0], ard);
+    }
+  }
+
+  @action.bound
+  clearUnneededAdditionalRowData() {
+    for (let [k, v] of Array.from(this.additionalRowData.entries())) {
+      if (
+        !v.dirtyDeleted &&
+        !v.dirtyNew &&
+        v.dirtyFormValues.size === 0 &&
+        v.dirtyValues.size === 0
+      ) {
+        this.additionalRowData.delete(k);
+      }
+    }
+  }
+
+  @action.bound
+  clearRecordDirtyValues(id: string): void {
+    const ard = this.getAdditionalRowDataById(id);
+    if (ard) {
+      ard.dirtyFormValues.clear();
+      ard.dirtyValues.clear();
+      this.clearUnneededAdditionalRowData();
+    }
+  }
+
+  @action.bound
+  substituteRecord(row: any[]): void {
+    const idx = this.rows.findIndex(
+      r => this.getRowId(r) === this.getRowId(row)
+    );
+    if (idx > -1) {
+      this.rows.splice(idx, 1, row);
     }
   }
 

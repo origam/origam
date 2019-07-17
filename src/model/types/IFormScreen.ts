@@ -31,6 +31,7 @@ export interface ILoadedFormScreen extends ILoadedFormScreenData {
   getBindingsByChildId(childId: string): IComponentBinding[];
   getBindingsByParentId(parentId: string): IComponentBinding[];
   getDataViewByModelInstanceId(modelInstanceId: string): IDataView | undefined;
+  getDataViewByEntity(entity: string): IDataView | undefined;
   getDataSourceByEntity(entity: string): IDataSource | undefined;
 
   parent?: any;

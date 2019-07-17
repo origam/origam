@@ -19,6 +19,7 @@ import { getIsBindingRoot } from "./selectors/DataView/getIsBindingRoot";
 import { getMasterRowId } from "./selectors/DataView/getMasterRowId";
 import { IProperty } from "./types/IProperty";
 import { map2obj } from "../utils/objects";
+import { processCRUDResult } from "./actions/DataLoading/processCRUDResult";
 
 export const loadData = "loadData";
 export const flushData = "flushData";
@@ -148,7 +149,11 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         NewValues: map2obj(dirtyValues)
       });
       console.log("...Updated.");
-
+      
+      processCRUDResult(this, result);
+    }
+      
+      /*
       const newRecord = Array(row.length) as any[];
       for (let prop of dataTable.properties) {
         newRecord[prop.dataIndex] = result.wrappedObject[prop.dataSourceIndex];
