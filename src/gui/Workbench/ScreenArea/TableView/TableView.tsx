@@ -76,6 +76,10 @@ export class TableView extends React.Component<{
 
   render() {
     const self = this;
+    const editingRowIndex = getSelectedRowIndex(this.props.tablePanelView);
+    const editingColumnIndex = getSelectedColumnIndex(
+      this.props.tablePanelView
+    );
     return (
       <Provider tablePanelView={this.props.tablePanelView}>
         <>
@@ -89,16 +93,18 @@ export class TableView extends React.Component<{
           <Table
             gridDimensions={self.gDim}
             scrollState={self.scrollState}
-            editingRowIndex={getSelectedRowIndex(this.props.tablePanelView)}
-            editingColumnIndex={getSelectedColumnIndex(
-              this.props.tablePanelView
-            )}
+            editingRowIndex={editingRowIndex}
+            editingColumnIndex={editingColumnIndex}
             isEditorMounted={getIsEditing(this.props.tablePanelView)}
             fixedColumnCount={0}
             isLoading={false}
             renderHeader={self.headerRenderer.renderHeader}
             renderCell={self.cellRenderer.renderCell}
-            renderEditor={() => <TableViewEditor />}
+            renderEditor={() => (
+              <TableViewEditor
+                key={`${editingRowIndex}@${editingColumnIndex}`}
+              />
+            )}
             onNoCellClick={this.props.tablePanelView!.onNoCellClick}
             onOutsideTableClick={this.props.tablePanelView!.onOutsideTableClick}
           />

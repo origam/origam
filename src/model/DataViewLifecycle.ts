@@ -1,5 +1,13 @@
 import { Machine, interpret } from "xstate";
-import { createAtom, flow, computed, action, autorun, reaction } from "mobx";
+import {
+  createAtom,
+  flow,
+  computed,
+  action,
+  autorun,
+  reaction,
+  comparer
+} from "mobx";
 import { IDataViewLifecycle } from "./types/IDataViewLifecycle";
 import { getApi } from "./selectors/getApi";
 import { getMenuItemId } from "./selectors/getMenuItemId";
@@ -7,9 +15,6 @@ import { getDataStructureEntityId } from "./selectors/DataView/getDataStructureE
 import { getColumnNamesToLoad } from "./selectors/DataView/getColumnNamesToLoad";
 import { getDataTable } from "./selectors/DataView/getDataTable";
 import { getDataView } from "./selectors/DataView/getDataView";
-import { getComponentBindingChildren } from "./selectors/DataView/getComponentBindingChildren";
-import { getDataViewLifecycle } from "./selectors/DataView/getDataViewLifecycle";
-import { isValidRowSelection } from "./selectors/DataView/isValidRowSelection";
 import { getIsBindingRoot } from "./selectors/DataView/getIsBindingRoot";
 import { getMasterRowId } from "./selectors/DataView/getMasterRowId";
 import { IProperty } from "./types/IProperty";
@@ -26,14 +31,15 @@ export const sIdle = "sIdle";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
-  
+
   machine = Machine(
     {
       initial: sIdle,
       states: {
         [sIdle]: {
           on: {
-            [loadData]: sLoadData
+            [loadData]: sLoadData,
+            [flushData]: sFlushData
           }
         },
         [sLoadData]: {
@@ -77,6 +83,10 @@ export class DataViewLifecycle implements IDataViewLifecycle {
 
   @computed get bindingControllersForMe() {
     return getDataView(this).parentBindings.map(b => b.bindingController);
+  }
+
+  @computed get isParentBindingsValid() {
+      return getDataView(this).parentBindings.every(binding => binding.isBindingControllerValid)
   }
 
   @computed get dataFilter() {
@@ -178,6 +188,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         this.dataTable.removeDirtyRow(RowId);
       });
     }*/
+    this.interpreter.send(dataFlushed);
   }
 
   @action.bound
@@ -190,6 +201,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     this.interpreter.send(flushData, { row, property });
   }
 
+  lastAttemptedBindingControllersForMe: any;
   parentChangeReaction() {
     return reaction(
       () => [
@@ -203,10 +215,15 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         );
         if (
           this.masterRowId &&
+          !comparer.structural(
+            this.bindingControllersForMe,
+            this.lastAttemptedBindingControllersForMe
+          ) &&
           !getDataView(this).isAnyBindingAncestorWorking
         ) {
+          this.lastAttemptedBindingControllersForMe = this.bindingControllersForMe;
           this.loadFresh();
-        } else {
+        } else if(!this.masterRowId || !this.isParentBindingsValid)  {
           getDataTable(this).clear();
         }
       }

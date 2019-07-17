@@ -61,5 +61,9 @@ export class ComponentBinding implements IComponentBinding {
     return c;
   }
 
+  @computed get isBindingControllerValid() {
+    return this.bindingController.every(pair => pair[0] && pair[1])
+  }
+
   parent?: any;
 }

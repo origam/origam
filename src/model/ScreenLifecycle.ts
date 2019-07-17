@@ -14,7 +14,7 @@ export class ScreenLifecycle implements IScreenLifecycle {
     });
   stateAtom = createAtom("screenLifecycleState");
   interpreter = interpret(this.machine).onTransition((state, event) => {
-    console.log("Workbench lifecycle:", state, event);
+    console.log("Screen lifecycle:", state, event);
     this.stateAtom.reportChanged();
   });
 
