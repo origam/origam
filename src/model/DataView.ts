@@ -146,16 +146,20 @@ export class DataView implements IDataView {
     const dataTable = getDataTable(this);
     const firstRow = dataTable.getFirstRow();
     if (firstRow) {
-      this.selectRow(firstRow[0]);
+      this.selectRowById(firstRow[0]);
     }
   }
 
-  @action.bound selectRow(id: string | undefined) {
+  @action.bound selectRowById(id: string | undefined) {
     if(id !== this.selectedRowId) {
       //cannotChangeRowDialog(this);
       //return
       this.setSelectedRowId(id);
     }
+  }
+
+  @action.bound selectRow(row: any[]) {
+    this.selectRowById(this.dataTable.getRowId(row));
   }
 
   @action.bound

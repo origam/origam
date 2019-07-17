@@ -20,6 +20,9 @@ import { getMasterRowId } from "./selectors/DataView/getMasterRowId";
 import { IProperty } from "./types/IProperty";
 import { map2obj } from "../utils/objects";
 import { processCRUDResult } from "./actions/DataLoading/processCRUDResult";
+import { getSelectedRow } from "./selectors/DataView/getSelectedRow";
+import { getSelectedRowId } from "./selectors/TablePanelView/getSelectedRowId";
+import { when } from "mobx";
 
 export const loadData = "loadData";
 export const flushData = "flushData";
@@ -62,7 +65,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         loadData: (ctx, event) => (send, onEvent) =>
           flow(this.loadData.bind(this))(),
         flushData: (ctx, { row, property }) => (send, onEvent) =>
-          flow(this.flushData.bind(this))({ row, property })
+          flow(this.flushData.bind(this))()
       }
     }
   );
@@ -87,7 +90,9 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   }
 
   @computed get isParentBindingsValid() {
-      return getDataView(this).parentBindings.every(binding => binding.isBindingControllerValid)
+    return getDataView(this).parentBindings.every(
+      binding => binding.isBindingControllerValid
+    );
   }
 
   @computed get dataFilter() {
@@ -135,7 +140,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     this.interpreter.send(dataLoaded);
   }
 
-  *flushData({ row, property }: { row: any[]; property: IProperty }) {
+  *flushData() {
     const api = getApi(this);
     const dataTable = getDataTable(this);
     for (let row of dataTable.getDirtyValueRows()) {
@@ -149,11 +154,24 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         NewValues: map2obj(dirtyValues)
       });
       console.log("...Updated.");
-      
+
       processCRUDResult(this, result);
     }
-      
-      /*
+
+    for (let row of dataTable.getDirtyDeletedRows()) {
+      const RowId = dataTable.getRowId(row);
+      console.log("Deleting", RowId);
+      const result = yield api.deleteEntity({
+        MenuId: getMenuItemId(this),
+        DataStructureEntityId: getDataStructureEntityId(this),
+        RowIdToDelete: RowId
+      });
+      console.log("...Deleted.");
+      processCRUDResult(this, result);
+    }
+
+    
+    /*
       const newRecord = Array(row.length) as any[];
       for (let prop of dataTable.properties) {
         newRecord[prop.dataIndex] = result.wrappedObject[prop.dataSourceIndex];
@@ -202,8 +220,29 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   }
 
   @action.bound
-  requestFlushData(row: any[], property: IProperty): void {
-    this.interpreter.send(flushData, { row, property });
+  requestFlushData(): void {
+    this.interpreter.send(flushData);
+  }
+
+  @action.bound
+  onAddRowClicked() {}
+
+  @action.bound
+  onDeleteRowClicked() {
+    const self = this;
+    return flow(function*() {
+      const row = getSelectedRow(self);
+      if (row) {
+        const dataTable = getDataTable(self);
+        const nearestRow = dataTable.getNearestRow(row);
+        dataTable.setDirtyDeleted(row);
+        self.requestFlushData();
+        yield when(() => !self.isWorking);
+        if (nearestRow) {
+          getDataView(self).selectRow(nearestRow);
+        }
+      }
+    })();
   }
 
   lastAttemptedBindingControllersForMe: any;
@@ -228,7 +267,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         ) {
           this.lastAttemptedBindingControllersForMe = this.bindingControllersForMe;
           this.loadFresh();
-        } else if(!this.masterRowId || !this.isParentBindingsValid)  {
+        } else if (!this.masterRowId || !this.isParentBindingsValid) {
           getDataTable(this).clear();
         }
       }

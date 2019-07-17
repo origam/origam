@@ -125,7 +125,7 @@ export class TablePanelView implements ITablePanelView {
     columnId: string | undefined
   ) {
     this.selectedColumnId = columnId;
-    getDataView(this).selectRow(rowId);
+    getDataView(this).selectRowById(rowId);
   }
 
   @action.bound

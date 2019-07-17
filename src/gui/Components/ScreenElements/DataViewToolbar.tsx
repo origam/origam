@@ -14,7 +14,8 @@ import { getTablePanelView } from "../../../model/selectors/TablePanelView/getTa
     label: getDataViewLabel(dataView),
     onFormViewButtonClick: dataView.onFormPanelViewButtonClick,
     onTableViewButtonClick: dataView.onTablePanelViewButtonClick,
-    onColumnConfClick: getTablePanelView(dataView).columnConfigurationDialog.onColumnConfClick
+    onColumnConfClick: getTablePanelView(dataView).columnConfigurationDialog.onColumnConfClick,
+    onDeleteRowClick: dataView.lifecycle.onDeleteRowClicked
   };
 })
 @observer
@@ -24,6 +25,7 @@ export class Toolbar extends React.Component<{
   onFormViewButtonClick?: (event: any) => void;
   onTableViewButtonClick?: (event: any) => void;
   onColumnConfClick?: (event: any) => void;
+  onDeleteRowClick?: (event: any) => void;
 }> {
   render() {
     return (
@@ -69,7 +71,7 @@ export class Toolbar extends React.Component<{
             isVisible={true}
             isActive={false}
             isEnabled={true}
-            onClick={undefined}
+            onClick={this.props.onDeleteRowClick}
           >
             <i className="fas fa-minus-circle" aria-hidden="true" />
           </ToolbarButton>

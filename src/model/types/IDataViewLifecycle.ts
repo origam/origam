@@ -7,6 +7,7 @@ export interface IDataViewLifecycle extends IDataViewLifecycleData {
 
   isWorking: boolean;
 
+  onDeleteRowClicked(): void;
   loadFresh(): void;
   requestFlushData(row: any[], property: IProperty): void;
   run(): void;

@@ -12,7 +12,11 @@ export class DataTable implements IDataTable {
     Object.assign(this, data);
   }
 
-  @observable.shallow rows: any[][] = [];
+  @observable.shallow allRows: any[][] = [];
+
+  @computed get rows(): any[][] {
+    return this.allRows.filter(row => !this.isRowDirtyDeleted(row));
+  }
   @observable additionalRowData: Map<string, IAdditionalRowData> = new Map();
 
   @computed
@@ -68,6 +72,19 @@ export class DataTable implements IDataTable {
     return this.rows[0];
   }
 
+  getNearestRow(row: any[]): any[] | undefined {
+    const id = this.getRowId(row);
+    let idx = this.getExistingRowIdxById(id);
+    if (this.rows.length === 1) return;
+    if (idx !== undefined) {
+      if (idx === 0) {
+        return this.rows[1];
+      } else {
+        return this.rows[idx - 1];
+      }
+    } else return;
+  }
+
   getAdditionalRowData(row: any[]) {
     return this.getAdditionalRowDataById(this.getRowId(row));
   }
@@ -106,7 +123,7 @@ export class DataTable implements IDataTable {
   }
 
   getDirtyDeletedRows(): any[][] {
-    return this.rows.filter(row => this.isRowDirtyDeleted(row));
+    return this.allRows.filter(row => this.isRowDirtyDeleted(row));
   }
 
   getDirtyNewRows(): any[][] {
@@ -116,7 +133,7 @@ export class DataTable implements IDataTable {
   @action.bound
   setRecords(rows: any[][]) {
     this.clear();
-    this.rows.push(...rows);
+    this.allRows.push(...rows);
   }
 
   @action.bound
@@ -184,17 +201,17 @@ export class DataTable implements IDataTable {
 
   @action.bound
   substituteRecord(row: any[]): void {
-    const idx = this.rows.findIndex(
+    const idx = this.allRows.findIndex(
       r => this.getRowId(r) === this.getRowId(row)
     );
     if (idx > -1) {
-      this.rows.splice(idx, 1, row);
+      this.allRows.splice(idx, 1, row);
     }
   }
 
   @action.bound
   clear(): void {
-    this.rows.length = 0;
+    this.allRows.length = 0;
     this.additionalRowData.clear();
   }
 
