@@ -9,6 +9,8 @@ import { getDataSourceByEntity } from "./selectors/DataSources/getDataSourceByEn
 import { ITablePanelView } from "./TablePanelView/types/ITablePanelView";
 import { IFormPanelView } from "./FormPanelView/types/IFormPanelView";
 import { getDataTable } from "./selectors/DataView/getDataTable";
+import { getDialogStack } from "./selectors/DialogStack/getDialogStack";
+import { cannotChangeRowDialog } from '../gui/Components/Dialogs/CannotChangeRowDialog';
 
 export class DataView implements IDataView {
   $type_IDataView: 1 = 1;
@@ -149,7 +151,11 @@ export class DataView implements IDataView {
   }
 
   @action.bound selectRow(id: string | undefined) {
-    this.setSelectedRowId(id);
+    if(id !== this.selectedRowId) {
+      //cannotChangeRowDialog(this);
+      //return
+      this.setSelectedRowId(id);
+    }
   }
 
   @action.bound

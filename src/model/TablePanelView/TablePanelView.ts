@@ -7,7 +7,7 @@ import { getDataViewPropertyById } from "../selectors/DataView/getDataViewProper
 import { getSelectedRow } from "../selectors/DataView/getSelectedRow";
 import { getDataViewLifecycle } from "../selectors/DataView/getDataViewLifecycle";
 import { ITableColumnsConf } from "../../gui/Components/Dialogs/ColumnsDialog";
-import { getSelectedRowId } from '../selectors/TablePanelView/getSelectedRowId';
+import { getSelectedRowId } from "../selectors/TablePanelView/getSelectedRowId";
 import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
 
 export class TablePanelView implements ITablePanelView {
@@ -112,10 +112,6 @@ export class TablePanelView implements ITablePanelView {
     }
   }
 
-
-
-
-
   @action.bound editingWillFinish() {
     this.dataTable.flushFormToTable(getSelectedRow(this)!);
     getDataViewLifecycle(this).requestFlushData(
@@ -129,10 +125,7 @@ export class TablePanelView implements ITablePanelView {
     columnId: string | undefined
   ) {
     this.selectedColumnId = columnId;
-    if(rowId !== getSelectedRowId(this)) {
-      
-      getDataView(this).setSelectedRowId(rowId);
-    }
+    getDataView(this).selectRow(rowId);
   }
 
   @action.bound
