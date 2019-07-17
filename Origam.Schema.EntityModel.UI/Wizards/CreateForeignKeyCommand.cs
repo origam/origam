@@ -20,9 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.Windows.Forms;
 
 using Origam.UI;
+using Origam.UI.WizardForm;
+using Origam.Workbench;
 using Origam.Workbench.Commands;
 
 namespace Origam.Schema.EntityModel.Wizards
@@ -32,7 +35,10 @@ namespace Origam.Schema.EntityModel.Wizards
 	/// </summary>
 	public class CreateForeignKeyCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        ForeignKeyForm keyForm;
+        FieldMappingItem fk;
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -47,17 +53,41 @@ namespace Origam.Schema.EntityModel.Wizards
 		public override void Run()
 		{
 			IDataEntity entity = Owner as IDataEntity;
-			CreateForeignKeyWizard wiz = new CreateForeignKeyWizard();
-			wiz.MasterEntity = entity;
+            ArrayList list = new ArrayList();
+            FieldMappingItem fmItem = new FieldMappingItem();
+            list.Add(new ListViewItem(fmItem.ItemType, fmItem.Icon));
+
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.ForeignForm);
+            stackPage.Push(PagesList.startPage);
+
+            keyForm = new ForeignKeyForm
+            {
+                ItemTypeList = list,
+                Description = "Create Child Entity Wizard",
+                Pages = stackPage,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this,
+                SelectForeignEntity = ResourceUtils.GetString("SelectForeignEntity"),
+                ForeignKeyWiz = ResourceUtils.GetString("ForeignKeyWiz"),
+                SelectForeignField=ResourceUtils.GetString("SelectForeignField"),
+                EnterKeyName = ResourceUtils.GetString("EnterKeyName"),
+                MasterEntity = entity
+            };
+            Wizard wiz = new Wizard(keyForm);
 			if(wiz.ShowDialog() == DialogResult.OK)
 			{
-				FieldMappingItem fk = EntityHelper.CreateForeignKey(
-                    wiz.ForeignKeyName, wiz.Caption, wiz.AllowNulls, entity, 
-                    wiz.ForeignEntity, wiz.ForeignField, wiz.Lookup, false);
-				EditSchemaItem cmd = new EditSchemaItem();
-				cmd.Owner = fk;
-				cmd.Run();
-			}
+                EditSchemaItem cmd = new EditSchemaItem();
+                cmd.Owner = fk;
+                cmd.Run();
+            }
 		}
-	}
+        public override void Execute()
+        {
+            fk = EntityHelper.CreateForeignKey(
+                    keyForm.ForeignKeyName, keyForm.Caption, keyForm.AllowNulls, keyForm.MasterEntity,
+                    keyForm.ForeignEntity, keyForm.ForeignField, keyForm.Lookup, false);
+        }
+    }
 }

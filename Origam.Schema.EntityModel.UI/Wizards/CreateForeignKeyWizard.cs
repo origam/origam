@@ -96,9 +96,9 @@ namespace Origam.Schema.EntityModel.Wizards
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnCancel.Location = new System.Drawing.Point(768, 308);
+            this.btnCancel.Location = new System.Drawing.Point(880, 338);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(192, 44);
+            this.btnCancel.Size = new System.Drawing.Size(96, 24);
             this.btnCancel.TabIndex = 12;
             this.btnCancel.Text = "&Cancel";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -107,18 +107,18 @@ namespace Origam.Schema.EntityModel.Wizards
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnOK.Location = new System.Drawing.Point(552, 308);
+            this.btnOK.Location = new System.Drawing.Point(772, 338);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(192, 44);
+            this.btnOK.Size = new System.Drawing.Size(96, 24);
             this.btnOK.TabIndex = 11;
             this.btnOK.Text = "&OK";
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // lblEntity
             // 
-            this.lblEntity.Location = new System.Drawing.Point(26, 23);
+            this.lblEntity.Location = new System.Drawing.Point(13, 12);
             this.lblEntity.Name = "lblEntity";
-            this.lblEntity.Size = new System.Drawing.Size(192, 29);
+            this.lblEntity.Size = new System.Drawing.Size(96, 16);
             this.lblEntity.TabIndex = 0;
             this.lblEntity.Text = "Foreign Entity:";
             // 
@@ -127,18 +127,18 @@ namespace Origam.Schema.EntityModel.Wizards
             this.cboEntity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cboEntity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboEntity.Location = new System.Drawing.Point(250, 23);
+            this.cboEntity.Location = new System.Drawing.Point(125, 12);
             this.cboEntity.Name = "cboEntity";
-            this.cboEntity.Size = new System.Drawing.Size(710, 33);
+            this.cboEntity.Size = new System.Drawing.Size(851, 21);
             this.cboEntity.Sorted = true;
             this.cboEntity.TabIndex = 1;
             this.cboEntity.SelectedValueChanged += new System.EventHandler(this.cboEntity_SelectedValueChanged);
             // 
             // lblName
             // 
-            this.lblName.Location = new System.Drawing.Point(26, 200);
+            this.lblName.Location = new System.Drawing.Point(13, 108);
             this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(208, 30);
+            this.lblName.Size = new System.Drawing.Size(104, 17);
             this.lblName.TabIndex = 7;
             this.lblName.Text = "FK Field Name:";
             // 
@@ -146,16 +146,16 @@ namespace Origam.Schema.EntityModel.Wizards
             // 
             this.txtName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtName.Location = new System.Drawing.Point(250, 200);
+            this.txtName.Location = new System.Drawing.Point(125, 108);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(710, 31);
+            this.txtName.Size = new System.Drawing.Size(851, 20);
             this.txtName.TabIndex = 8;
             // 
             // lblField
             // 
-            this.lblField.Location = new System.Drawing.Point(26, 67);
+            this.lblField.Location = new System.Drawing.Point(13, 36);
             this.lblField.Name = "lblField";
-            this.lblField.Size = new System.Drawing.Size(192, 30);
+            this.lblField.Size = new System.Drawing.Size(96, 17);
             this.lblField.TabIndex = 2;
             this.lblField.Text = "Foreign Field:";
             // 
@@ -164,26 +164,26 @@ namespace Origam.Schema.EntityModel.Wizards
             this.cboField.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cboField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboField.Location = new System.Drawing.Point(250, 67);
+            this.cboField.Location = new System.Drawing.Point(125, 36);
             this.cboField.Name = "cboField";
-            this.cboField.Size = new System.Drawing.Size(710, 33);
+            this.cboField.Size = new System.Drawing.Size(851, 21);
             this.cboField.Sorted = true;
             this.cboField.TabIndex = 3;
             this.cboField.SelectedIndexChanged += new System.EventHandler(this.cboField_SelectedIndexChanged);
             // 
             // chkAllowNulls
             // 
-            this.chkAllowNulls.Location = new System.Drawing.Point(26, 156);
+            this.chkAllowNulls.Location = new System.Drawing.Point(13, 85);
             this.chkAllowNulls.Name = "chkAllowNulls";
-            this.chkAllowNulls.Size = new System.Drawing.Size(272, 29);
+            this.chkAllowNulls.Size = new System.Drawing.Size(136, 15);
             this.chkAllowNulls.TabIndex = 6;
             this.chkAllowNulls.Text = "Allow Nulls";
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(26, 111);
+            this.label1.Location = new System.Drawing.Point(13, 60);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(192, 30);
+            this.label1.Size = new System.Drawing.Size(96, 16);
             this.label1.TabIndex = 4;
             this.label1.Text = "Lookup:";
             // 
@@ -192,9 +192,9 @@ namespace Origam.Schema.EntityModel.Wizards
             this.cboLookup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cboLookup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboLookup.Location = new System.Drawing.Point(250, 111);
+            this.cboLookup.Location = new System.Drawing.Point(125, 60);
             this.cboLookup.Name = "cboLookup";
-            this.cboLookup.Size = new System.Drawing.Size(710, 33);
+            this.cboLookup.Size = new System.Drawing.Size(851, 21);
             this.cboLookup.Sorted = true;
             this.cboLookup.TabIndex = 5;
             // 
@@ -202,23 +202,23 @@ namespace Origam.Schema.EntityModel.Wizards
             // 
             this.txtCaption.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCaption.Location = new System.Drawing.Point(250, 244);
+            this.txtCaption.Location = new System.Drawing.Point(125, 132);
             this.txtCaption.Name = "txtCaption";
-            this.txtCaption.Size = new System.Drawing.Size(710, 31);
+            this.txtCaption.Size = new System.Drawing.Size(851, 20);
             this.txtCaption.TabIndex = 10;
             // 
             // lblCaption
             // 
-            this.lblCaption.Location = new System.Drawing.Point(26, 244);
+            this.lblCaption.Location = new System.Drawing.Point(13, 132);
             this.lblCaption.Name = "lblCaption";
-            this.lblCaption.Size = new System.Drawing.Size(208, 30);
+            this.lblCaption.Size = new System.Drawing.Size(104, 16);
             this.lblCaption.TabIndex = 9;
             this.lblCaption.Text = "Caption:";
             // 
             // CreateForeignKeyWizard
             // 
             this.AcceptButton = this.btnOK;
-            this.AutoScaleBaseSize = new System.Drawing.Size(10, 24);
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(992, 374);
             this.ControlBox = false;

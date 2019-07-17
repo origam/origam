@@ -99,6 +99,18 @@ namespace Origam.UI.WizardForm
             this.cboEntity1 = new System.Windows.Forms.ComboBox();
             this.label12 = new System.Windows.Forms.Label();
             this.txtchildEntityName = new System.Windows.Forms.TextBox();
+            this.foreignKeyPage = new AeroWizard.WizardPage();
+            this.label13 = new System.Windows.Forms.Label();
+            this.txtfkCaptionName = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.cboLookup = new System.Windows.Forms.ComboBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.lblField = new System.Windows.Forms.Label();
+            this.cboField = new System.Windows.Forms.ComboBox();
+            this.lblEntity = new System.Windows.Forms.Label();
+            this.cboEntity = new System.Windows.Forms.ComboBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.txtFkFieldName = new System.Windows.Forms.TextBox();
             this.colCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.aerowizard1)).BeginInit();
             this.StartPage.SuspendLayout();
@@ -112,6 +124,7 @@ namespace Origam.UI.WizardForm
             this.groupBoxKey.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.childEntityPage.SuspendLayout();
+            this.foreignKeyPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // listView1
@@ -139,6 +152,7 @@ namespace Origam.UI.WizardForm
             this.aerowizard1.Pages.Add(this.finishPage);
             this.aerowizard1.Pages.Add(this.RelationShipEntityPage);
             this.aerowizard1.Pages.Add(this.childEntityPage);
+            this.aerowizard1.Pages.Add(this.foreignKeyPage);
             this.aerowizard1.Size = new System.Drawing.Size(588, 497);
             this.aerowizard1.TabIndex = 0;
             // 
@@ -162,12 +176,12 @@ namespace Origam.UI.WizardForm
             this.lbTitle.TabIndex = 1;
             this.lbTitle.Text = "Description";
             // 
-            // DataStructureNamePage
+            // StructureNamePage
             // 
             this.StructureNamePage.Controls.Add(this.label1);
             this.StructureNamePage.Controls.Add(this.lbName);
             this.StructureNamePage.Controls.Add(this.tbDataStructureName);
-            this.StructureNamePage.Name = "DataStructureNamePage";
+            this.StructureNamePage.Name = "StructureNamePage";
             this.StructureNamePage.Size = new System.Drawing.Size(541, 343);
             this.StructureNamePage.TabIndex = 2;
             this.StructureNamePage.Text = "Please Write Name of Structure";
@@ -760,6 +774,127 @@ namespace Origam.UI.WizardForm
             this.txtchildEntityName.Size = new System.Drawing.Size(248, 23);
             this.txtchildEntityName.TabIndex = 13;
             // 
+            // foreignKeyPage
+            // 
+            this.foreignKeyPage.Controls.Add(this.label13);
+            this.foreignKeyPage.Controls.Add(this.txtfkCaptionName);
+            this.foreignKeyPage.Controls.Add(this.label14);
+            this.foreignKeyPage.Controls.Add(this.cboLookup);
+            this.foreignKeyPage.Controls.Add(this.checkBox1);
+            this.foreignKeyPage.Controls.Add(this.lblField);
+            this.foreignKeyPage.Controls.Add(this.cboField);
+            this.foreignKeyPage.Controls.Add(this.lblEntity);
+            this.foreignKeyPage.Controls.Add(this.cboEntity);
+            this.foreignKeyPage.Controls.Add(this.label15);
+            this.foreignKeyPage.Controls.Add(this.txtFkFieldName);
+            this.foreignKeyPage.Name = "foreignKeyPage";
+            this.foreignKeyPage.Size = new System.Drawing.Size(541, 343);
+            this.foreignKeyPage.TabIndex = 9;
+            this.foreignKeyPage.Text = "Create Foreign Key Wizard";
+            this.foreignKeyPage.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.ForeignKeyPage_Commit);
+            this.foreignKeyPage.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.ForeignKeyPage_Initialize);
+            // 
+            // label13
+            // 
+            this.label13.Location = new System.Drawing.Point(15, 186);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(93, 23);
+            this.label13.TabIndex = 20;
+            this.label13.Text = "Caption:";
+            // 
+            // txtfkCaptionName
+            // 
+            this.txtfkCaptionName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtfkCaptionName.Location = new System.Drawing.Point(127, 186);
+            this.txtfkCaptionName.Name = "txtfkCaptionName";
+            this.txtfkCaptionName.Size = new System.Drawing.Size(399, 23);
+            this.txtfkCaptionName.TabIndex = 21;
+            // 
+            // label14
+            // 
+            this.label14.Location = new System.Drawing.Point(15, 85);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(93, 22);
+            this.label14.TabIndex = 15;
+            this.label14.Text = "Lookup:";
+            // 
+            // cboLookup
+            // 
+            this.cboLookup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cboLookup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboLookup.Location = new System.Drawing.Point(127, 85);
+            this.cboLookup.Name = "cboLookup";
+            this.cboLookup.Size = new System.Drawing.Size(399, 23);
+            this.cboLookup.Sorted = true;
+            this.cboLookup.TabIndex = 16;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.Location = new System.Drawing.Point(15, 117);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(106, 28);
+            this.checkBox1.TabIndex = 17;
+            this.checkBox1.Text = "Allow Nulls";
+            // 
+            // lblField
+            // 
+            this.lblField.Location = new System.Drawing.Point(15, 61);
+            this.lblField.Name = "lblField";
+            this.lblField.Size = new System.Drawing.Size(93, 23);
+            this.lblField.TabIndex = 13;
+            this.lblField.Text = "Foreign Field:";
+            // 
+            // cboField
+            // 
+            this.cboField.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cboField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboField.Location = new System.Drawing.Point(127, 61);
+            this.cboField.Name = "cboField";
+            this.cboField.Size = new System.Drawing.Size(399, 23);
+            this.cboField.Sorted = true;
+            this.cboField.TabIndex = 14;
+            this.cboField.SelectedIndexChanged += new System.EventHandler(this.CboField_SelectedIndexChanged);
+            // 
+            // lblEntity
+            // 
+            this.lblEntity.Location = new System.Drawing.Point(15, 37);
+            this.lblEntity.Name = "lblEntity";
+            this.lblEntity.Size = new System.Drawing.Size(106, 23);
+            this.lblEntity.TabIndex = 11;
+            this.lblEntity.Text = "Foreign Entity:";
+            // 
+            // cboEntity
+            // 
+            this.cboEntity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cboEntity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboEntity.Location = new System.Drawing.Point(127, 37);
+            this.cboEntity.Name = "cboEntity";
+            this.cboEntity.Size = new System.Drawing.Size(399, 23);
+            this.cboEntity.Sorted = true;
+            this.cboEntity.TabIndex = 12;
+            this.cboEntity.SelectedIndexChanged += new System.EventHandler(this.CboEntity_SelectedIndexChanged);
+            // 
+            // label15
+            // 
+            this.label15.Location = new System.Drawing.Point(15, 157);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(93, 23);
+            this.label15.TabIndex = 18;
+            this.label15.Text = "FK Field Name:";
+            // 
+            // txtFkFieldName
+            // 
+            this.txtFkFieldName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtFkFieldName.Location = new System.Drawing.Point(127, 157);
+            this.txtFkFieldName.Name = "txtFkFieldName";
+            this.txtFkFieldName.Size = new System.Drawing.Size(399, 23);
+            this.txtFkFieldName.TabIndex = 19;
+            // 
             // colCode
             // 
             this.colCode.Name = "colCode";
@@ -797,10 +932,12 @@ namespace Origam.UI.WizardForm
             this.groupBox2.PerformLayout();
             this.childEntityPage.ResumeLayout(false);
             this.childEntityPage.PerformLayout();
+            this.foreignKeyPage.ResumeLayout(false);
+            this.foreignKeyPage.PerformLayout();
             this.ResumeLayout(false);
 
         }
-        #endregion
+#endregion
         private AeroWizard.WizardControl aerowizard1;
         private AeroWizard.WizardPage StartPage;
         private System.Windows.Forms.ListView listView1;
@@ -868,6 +1005,18 @@ namespace Origam.UI.WizardForm
         private ComboBox cboEntity1;
         private Label label12;
         private TextBox txtchildEntityName;
+        private WizardPage foreignKeyPage;
+        private Label label13;
+        private TextBox txtfkCaptionName;
+        private Label label14;
+        private ComboBox cboLookup;
+        private CheckBox checkBox1;
+        private Label lblField;
+        private ComboBox cboField;
+        private Label lblEntity;
+        private ComboBox cboEntity;
+        private Label label15;
+        private TextBox txtFkFieldName;
     }
 }
 

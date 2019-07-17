@@ -42,6 +42,7 @@ namespace Origam.UI.WizardForm
         FieldEntity,
         MenuPage,
         ChildEntity,
+        ForeignForm,
         finish
     }
 }

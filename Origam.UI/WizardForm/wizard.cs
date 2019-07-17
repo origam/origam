@@ -231,6 +231,43 @@ namespace Origam.UI.WizardForm
             }
             IsFinish(sender, e);
         }
+        private void ForeignKeyPage_Initialize(object sender, WizardPageInitEventArgs e)
+        {
+            GetNextPage(PagesList.ForeignForm, sender);
+            ForeignKeyForm foreignKey = (ForeignKeyForm)iwizard;
+            foreignKey.SetUpForm(txtFkFieldName, cboEntity, cboLookup, cboField, chkAllowNulls);
+        }
+
+        private void ForeignKeyPage_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
+            ForeignKeyForm foreignKey= (ForeignKeyForm)iwizard;
+            foreignKey.ForeignKeyName = txtFkFieldName.Text;
+            foreignKey.Caption = txtfkCaptionName.Text;
+            foreignKey.ForeignEntity = cboEntity.SelectedItem as IDataEntity;
+            foreignKey.ForeignField = cboField.SelectedItem as IDataEntityColumn;
+            foreignKey.Lookup = cboLookup.SelectedItem as IDataLookup;
+            foreignKey.AllowNulls = chkAllowNulls.Checked;
+
+            if (foreignKey.ForeignEntity == null)
+            {
+                MessageBox.Show(foreignKey.SelectForeignEntity, foreignKey.ForeignKeyWiz, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                e.Cancel = true;
+                return;
+            }
+            if (foreignKey.ForeignField == null)
+            {
+                MessageBox.Show(foreignKey.SelectForeignField, foreignKey.ForeignKeyWiz, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                e.Cancel = true;
+                return;
+            }
+            if (txtFkFieldName.Text == "")
+            {
+                MessageBox.Show(foreignKey.EnterKeyName, foreignKey.ForeignKeyWiz, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                e.Cancel = true;
+                return;
+            }
+            IsFinish(sender, e);
+        }
         #endregion
 
         #region support
@@ -326,6 +363,8 @@ namespace Origam.UI.WizardForm
                     return RelationShipEntityPage;
                 case PagesList.ChildEntity:
                     return childEntityPage;
+                case PagesList.ForeignForm:
+                    return foreignKeyPage;
                 default:
                     MessageBox.Show("Not Set WizardPage","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
                     break;
@@ -385,6 +424,42 @@ namespace Origam.UI.WizardForm
         private void CboEntity2_SelectedIndexChanged(object sender, EventArgs e)
         {
             RefreshName();
+        }
+
+        private void CboField_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ForeignKeyForm foreignKey = (ForeignKeyForm)iwizard;
+            foreignKey.ForeignEntity = cboEntity.SelectedItem as IDataEntity;
+            foreignKey.ForeignField = cboField.SelectedItem as IDataEntityColumn;
+
+            if (foreignKey.ForeignEntity != null && foreignKey.ForeignField != null)
+            {
+                txtFkFieldName.Text = "ref" + foreignKey.ForeignEntity.Name + foreignKey.ForeignField.Name;
+            }
+        }
+
+        private void CboEntity_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ForeignKeyForm foreignKey = (ForeignKeyForm)iwizard;
+            foreignKey.ForeignEntity = cboEntity.SelectedItem as IDataEntity;
+            cboField.Items.Clear();
+
+            try
+            {
+                cboField.BeginUpdate();
+
+                if (foreignKey.ForeignEntity != null)
+                {
+                    foreach (IDataEntityColumn column in foreignKey.ForeignEntity.EntityColumns)
+                    {
+                        cboField.Items.Add(column);
+                    }
+                }
+            }
+            finally
+            {
+                cboField.EndUpdate();
+            }
         }
     }
     #endregion
