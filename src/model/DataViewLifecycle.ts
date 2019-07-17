@@ -167,10 +167,11 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         RowIdToDelete: RowId
       });
       console.log("...Deleted.");
-      processCRUDResult(this, result);
+      // processCRUDResult(this, result);
+      dataTable.deleteRow(row);
     }
 
-    
+
     /*
       const newRecord = Array(row.length) as any[];
       for (let prop of dataTable.properties) {

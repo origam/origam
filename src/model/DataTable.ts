@@ -6,6 +6,7 @@ import { IAdditionalRowData } from "./types/IAdditionalRecordData";
 import { AdditionalRowData } from "./AdditionalRowData";
 
 export class DataTable implements IDataTable {
+
   $type_IDataTable: 1 = 1;
 
   constructor(data: IDataTableData) {
@@ -188,6 +189,24 @@ export class DataTable implements IDataTable {
       }
     }
   }
+
+  @action.bound
+  deleteAdditionalRowData(row: any[]) {
+    this.additionalRowData.delete(this.getRowId(row));
+  }
+
+  @action.bound
+  deleteRow(row: any[]): void {
+    this.deleteAdditionalRowData(row);
+    const idx = this.allRows.findIndex(
+      r => this.getRowId(r) === this.getRowId(row)
+    );
+    if (idx > -1) {
+      this.allRows.splice(idx, 1);
+    }
+  }
+
+
 
   @action.bound
   clearRecordDirtyValues(id: string): void {
