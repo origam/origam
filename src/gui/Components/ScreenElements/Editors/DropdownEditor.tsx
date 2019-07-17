@@ -49,7 +49,7 @@ export interface IDropdownEditorProps {
     api: getApi(property),
     textualValue: dataTable.resolveCellText(property, value),
     DataStructureEntityId: getDataStructureEntityId(property),
-    ColumnNames: ["Id", ...lookup.dropDownColumns.map(column => column.id)],
+    ColumnNames: lookup.dropDownColumns.map(column => column.id),
     Property: property.id,
     RowId: getSelectedRowId(property),
     LookupId: lookup.lookupId,
@@ -293,7 +293,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
                       rowCount={this.lookupItems.length + 1}
                       columnCount={this.props.ColumnNames!.length}
                       rowHeight={20}
-                      columnWidth={100}
+                      columnWidth={200}
                       cellRenderer={this.cellRenderer}
                     />
                   )}
