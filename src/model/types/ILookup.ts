@@ -1,11 +1,17 @@
 import { IDropDownColumn } from "./IDropDownColumn";
 
+export enum IDropDownType {
+  EagerlyLoadedGrid = "EagerlyLoadedGrid",
+  LazilyLoadedGrid = "LazilyLoadedGrid",
+  EagerlyLoadedTree = "EagerlyLoadedTree"
+}
+
 export interface ILookupData {
   lookupId: string;
   dropDownShowUniqueValues: boolean;
   identifier: string;
   identifierIndex: number;
-  dropDownType: string;
+  dropDownType: IDropDownType;
   cached: boolean;
   searchByFirstColumnOnly: boolean;
   dropDownColumns: IDropDownColumn[];

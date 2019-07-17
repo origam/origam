@@ -1,4 +1,4 @@
-import { inject, observer } from "mobx-react";
+import { inject, observer, Provider } from "mobx-react";
 import moment from "moment";
 import React from "react";
 import { getIsEditing } from "../../../../model/selectors/DataView/getIsEditing";
@@ -77,19 +77,19 @@ export class TableViewEditor extends React.Component<{
         return (
           <DropdownEditor
             value={this.props.getCellValue!()}
-            textualValue={""}
+            // textualValue={""}
             isReadOnly={this.props.property!.readOnly}
             isInvalid={false}
             isFocused={false}
             onTextChange={undefined}
             onItemSelect={this.props.onChange}
-            DataStructureEntityId={""}
-            ColumnNames={[]}
-            Property={""}
-            RowId={""}
-            LookupId={""}
-            menuItemId={""}
-            api={undefined}
+            // DataStructureEntityId={""}
+            // ColumnNames={[]}
+            // Property={""}
+            // RowId={""}
+            // LookupId={""}
+            // menuItemId={""}
+            // api={undefined}
           />
         );
       default:
@@ -98,6 +98,8 @@ export class TableViewEditor extends React.Component<{
   }
 
   render() {
-    return this.getEditor();
+    return (
+      <Provider property={this.props.property}>{this.getEditor()}</Provider>
+    );
   }
 }

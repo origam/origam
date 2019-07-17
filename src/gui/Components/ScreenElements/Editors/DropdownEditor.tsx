@@ -1,5 +1,5 @@
 import * as React from "react";
-import { observer, Observer } from "mobx-react";
+import { observer, Observer, inject } from "mobx-react";
 import { action, observable, computed, runInAction } from "mobx";
 import S from "./DropdownEditor.module.css";
 import CS from "./CommonStyle.module.css";
@@ -7,31 +7,56 @@ import CS from "./CommonStyle.module.css";
 import _ from "lodash";
 import { MultiGrid, AutoSizer } from "react-virtualized";
 import Highlighter from "react-highlight-words";
+import { IApi } from "../../../../model/types/IApi";
+import { getApi } from "../../../../model/selectors/getApi";
+import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
+import { getDataStructureEntityId } from "../../../../model/selectors/DataView/getDataStructureEntityId";
+import { ILookup } from "../../../../model/types/ILookup";
+import { IProperty } from '../../../../model/types/IProperty';
+import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/getSelectedRowId";
+import { getMenuItemId } from "../../../../model/selectors/getMenuItemId";
 
-type IApi = any;
+
 
 export interface IDropdownEditorProps {
   value: string;
-  textualValue: string;
+  textualValue?: string;
   isReadOnly: boolean;
   isInvalid: boolean;
   isFocused: boolean;
 
-  DataStructureEntityId: string;
-  ColumnNames: string[];
-  Property: string;
-  RowId: string;
-  LookupId: string;
-  menuItemId: string;
+  DataStructureEntityId?: string;
+  ColumnNames?: string[];
+  Property?: string;
+  RowId?: string;
+  LookupId?: string;
+  menuItemId?: string;
 
   refocuser?: (cb: () => void) => () => void;
   onTextChange?(event: any, value: string): void;
   onItemSelect?(event: any, value: string): void;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
-  api: IApi;
+  api?: IApi;
 }
 
+
+// TODO: Change connection for FormView - e.g. RowId may be found differently for different panel views.
+@inject(({property}: {property: IProperty}, {value}) => {
+  const dataTable = getDataTable(property);
+  const lookup = property.lookup!;
+  return {
+    api: getApi(property),
+    textualValue: dataTable.resolveCellText(property, value),
+    DataStructureEntityId: getDataStructureEntityId(property),
+    ColumnNames: ["Id", ...lookup.dropDownColumns.map(column => column.id)],
+    Property: property.id,
+    RowId: getSelectedRowId(property),
+    LookupId: lookup.lookupId,
+    menuItemId: getMenuItemId(property),
+
+  }
+})
 @observer
 export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   constructor(props: IDropdownEditorProps) {
@@ -56,7 +81,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     this.disposers.forEach(d => d());
   }
 
-  componentDidUpdate(prevProps: { isFocused: boolean; textualValue: string }) {
+  componentDidUpdate(prevProps: { isFocused: boolean; textualValue?: string }) {
     runInAction(() => {
       if (!prevProps.isFocused && this.props.isFocused) {
         this.makeFocusedIfNeeded();
@@ -106,12 +131,12 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     this.isLoading = true;
     this.api
       .getLookupListEx({
-        DataStructureEntityId: this.props.DataStructureEntityId, // Data view entity identifier
+        DataStructureEntityId: this.props.DataStructureEntityId!, // Data view entity identifier
         ColumnNames: ["Id", ...this.props.ColumnNames], // Columns to download
-        Property: this.props.Property, // Columnn Id
-        Id: this.props.RowId, // Id of the selected row
-        LookupId: this.props.LookupId, // Id of the lookup objet
-        MenuId: this.props.menuItemId,
+        Property: this.props.Property!, // Columnn Id
+        Id: this.props.RowId!, // Id of the selected row
+        LookupId: this.props.LookupId!, // Id of the lookup objet
+        MenuId: this.props.menuItemId!,
         ShowUniqueValues: false,
         SearchText:
           this.dirtyTextualValue !== undefined ? this.dirtyTextualValue : "",
@@ -201,7 +226,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
             onClick={handleClick}
           >
             {args.rowIndex === 0 ? (
-              this.props.ColumnNames[args.columnIndex]
+              this.props.ColumnNames![args.columnIndex]
             ) : (
               <Highlighter
                 textToHighlight={
@@ -266,7 +291,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
                       width={width}
                       height={height}
                       rowCount={this.lookupItems.length + 1}
-                      columnCount={this.props.ColumnNames.length}
+                      columnCount={this.props.ColumnNames!.length}
                       rowHeight={20}
                       columnWidth={100}
                       cellRenderer={this.cellRenderer}

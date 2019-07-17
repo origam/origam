@@ -1,4 +1,4 @@
-import { ILookup, ILookupData } from "./types/ILookup";
+import { ILookup, ILookupData, IDropDownType } from './types/ILookup';
 import { observable, IAtom, action, runInAction, createAtom } from "mobx";
 import _ from "lodash";
 import { IDropDownColumn } from "./types/IDropDownColumn";
@@ -21,7 +21,7 @@ export class Lookup implements ILookup {
   dropDownShowUniqueValues: boolean = false;
   identifier: string = "";
   identifierIndex: number = 0;
-  dropDownType: string = "";
+  dropDownType: IDropDownType = IDropDownType.EagerlyLoadedGrid;
   cached: boolean = false;
   searchByFirstColumnOnly: boolean = false;
   dropDownColumns: IDropDownColumn[] = [];

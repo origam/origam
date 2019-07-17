@@ -39,10 +39,14 @@ export class DataTable implements IDataTable {
 
   getCellText(row: any[], property: IProperty) {
     const value = this.getCellValue(row, property);
-    if(property.isLookup) {
+    return this.resolveCellText(property, value);
+  }
+
+  resolveCellText(property: IProperty, value: any): any {
+    if (property.isLookup) {
       return property.lookup!.getValue(value);
     } else {
-      return value
+      return value;
     }
   }
 
