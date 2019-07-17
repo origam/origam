@@ -119,7 +119,10 @@ namespace Origam.Gui.Win.Wizards
 
 	public class CreateCompleteUICommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        ScreenWizardForm wizardForm;
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -133,33 +136,78 @@ namespace Origam.Gui.Win.Wizards
 
 		public override void Run()
 		{
-			CreateFormFromEntityWizard wiz = new CreateFormFromEntityWizard();
-			wiz.IsRoleVisible = true;
-			wiz.Entity = Owner as IDataEntity;
-			wiz.Role = wiz.Entity.Name;
+            IDataEntity entity = Owner as IDataEntity;
+            DataStructureSchemaItemProvider dsprovider = schema.GetProvider(typeof(DataStructureSchemaItemProvider)) as DataStructureSchemaItemProvider;
+            List<string> listdsName = dsprovider.ChildItemsByType(DataStructure.ItemTypeConst)
+                            .ToArray()
+                            .Select(x => { return ((AbstractSchemaItem)x).Name; })
+                            .ToList();
 
-			if(wiz.ShowDialog() == DialogResult.OK)
-			{
-				string groupName = null;
-				if(wiz.Entity.Group != null) groupName = wiz.Entity.Group.Name;
+            ArrayList list = new ArrayList();
+            DataStructure ds = new DataStructure();
+            PanelControlSet panel1 = new PanelControlSet();
+            FormControlSet frmSet = new FormControlSet();
+            FormReferenceMenuItem form1 = new FormReferenceMenuItem();
+            ServiceCommandUpdateScriptActivity activity1 = new ServiceCommandUpdateScriptActivity();
 
-				DataStructure dataStructure = EntityHelper.CreateDataStructure(wiz.Entity, wiz.Entity.Name, true);
-				PanelControlSet panel = GuiHelper.CreatePanel(groupName, wiz.Entity, wiz.SelectedFieldNames);
-				FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
-				FormReferenceMenuItem menu = MenuHelper.CreateMenuItem(wiz.Entity.Caption == null || wiz.Entity.Caption == ""
-					? wiz.Entity.Name : wiz.Entity.Caption, wiz.Role, form);
-                GeneratedModelElements.Add(dataStructure);
-                GeneratedModelElements.Add(panel);
-                GeneratedModelElements.Add(form);
-                GeneratedModelElements.Add(menu);
-				if(wiz.Role != "*" && wiz.Role != "")
-				{
-					ServiceCommandUpdateScriptActivity activity = CreateRole(wiz.Role);
-                    GeneratedModelElements.Add(activity);
-				}
-			}
+            list.Add(new ListViewItem(ds.ItemType, ds.Icon));
+            list.Add(new ListViewItem(panel1.ItemType, panel1.Icon));
+            list.Add(new ListViewItem(frmSet.ItemType, frmSet.Icon));
+            list.Add(new ListViewItem(form1.ItemType, form1.Icon));
+            list.Add(new ListViewItem(activity1.ItemType, activity1.Icon));
+
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.ScreenForm);
+            if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
+            {
+                stackPage.Push(PagesList.StructureNamePage);
+            }
+            stackPage.Push(PagesList.startPage);
+
+            wizardForm = new ScreenWizardForm
+            {
+                ItemTypeList = list,
+                Description = "Create Complete UI Wizard",
+                Pages = stackPage,
+                Entity = Owner as IDataEntity,
+                IsRoleVisible = true,
+                textColumnsOnly = false,
+                DatastructureList = listdsName,
+                NameOfEntity = (Owner as IDataEntity).Name,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this,
+                Role = entity.Name
+            };
+
+            Wizard wiz = new Wizard(wizardForm);
+            if (wiz.ShowDialog() != DialogResult.OK)
+            {
+                GeneratedModelElements.Clear();
+            }
 		}
-	}
+
+        public override void Execute()
+        {
+            string groupName = null;
+            if (wizardForm.Entity.Group != null) groupName = wizardForm.Entity.Group.Name;
+
+            DataStructure dataStructure = EntityHelper.CreateDataStructure(wizardForm.Entity, wizardForm.NameOfEntity, true);
+            PanelControlSet panel = GuiHelper.CreatePanel(groupName, wizardForm.Entity, wizardForm.SelectedFieldNames,wizardForm.NameOfEntity);
+            FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
+            FormReferenceMenuItem menu = MenuHelper.CreateMenuItem(wizardForm.Entity.Caption == null || wizardForm.Entity.Caption == ""
+                ? wizardForm.NameOfEntity : wizardForm.Entity.Caption, wizardForm.Role, form);
+            GeneratedModelElements.Add(dataStructure);
+            GeneratedModelElements.Add(panel);
+            GeneratedModelElements.Add(form);
+            GeneratedModelElements.Add(menu);
+            if (wizardForm.Role != "*" && wizardForm.Role != "")
+            {
+                ServiceCommandUpdateScriptActivity activity = CreateRole(wizardForm.Role);
+                GeneratedModelElements.Add(activity);
+            }
+        }
+    }
 
 	public class CreateFormFromPanelCommand : AbstractMenuCommand
 	{

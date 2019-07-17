@@ -43,5 +43,7 @@ namespace Origam.UI.WizardForm
                 return result;
             }
         }
+
+        public string Role { get; set; }
     }
 }

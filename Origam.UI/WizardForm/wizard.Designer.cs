@@ -212,16 +212,16 @@ namespace Origam.UI.WizardForm
             // 
             // lstFields
             // 
-            this.lstFields.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lstFields.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lstFields.Location = new System.Drawing.Point(19, 52);
             this.lstFields.Name = "lstFields";
-            this.lstFields.Size = new System.Drawing.Size(207, 162);
+            this.lstFields.Size = new System.Drawing.Size(207, 236);
             this.lstFields.Sorted = true;
             this.lstFields.TabIndex = 12;
             // 
             // lblRole
             // 
-            this.lblRole.Location = new System.Drawing.Point(285, 111);
+            this.lblRole.Location = new System.Drawing.Point(262, 55);
             this.lblRole.Name = "lblRole";
             this.lblRole.Size = new System.Drawing.Size(40, 16);
             this.lblRole.TabIndex = 11;
@@ -230,9 +230,9 @@ namespace Origam.UI.WizardForm
             // 
             // txtRole
             // 
-            this.txtRole.Location = new System.Drawing.Point(288, 130);
+            this.txtRole.Location = new System.Drawing.Point(321, 52);
             this.txtRole.Name = "txtRole";
-            this.txtRole.Size = new System.Drawing.Size(160, 23);
+            this.txtRole.Size = new System.Drawing.Size(188, 23);
             this.txtRole.TabIndex = 2;
             this.txtRole.Visible = false;
             // 
@@ -440,6 +440,7 @@ namespace Origam.UI.WizardForm
             this.grdInitialValues.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.grdInitialValues.AutoGenerateColumns = false;
             this.grdInitialValues.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdInitialValues.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colName,
