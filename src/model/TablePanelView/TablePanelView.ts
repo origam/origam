@@ -8,15 +8,17 @@ import { getSelectedRow } from "../selectors/DataView/getSelectedRow";
 import { getDataViewLifecycle } from "../selectors/DataView/getDataViewLifecycle";
 import { ITableColumnsConf } from "../../gui/Components/Dialogs/ColumnsDialog";
 import { getSelectedRowId } from '../selectors/TablePanelView/getSelectedRowId';
+import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
 
   constructor(data: ITablePanelViewData) {
     Object.assign(this, data);
+    this.columnConfigurationDialog.parent = this;
   }
 
-  @observable isColumnConfigurationDialogVisible = false;
+  columnConfigurationDialog: IColumnConfigurationDialog = null as any;
 
   @observable isEditing: boolean = false;
   @observable fixedColumnCount: number = 0;
@@ -110,43 +112,9 @@ export class TablePanelView implements ITablePanelView {
     }
   }
 
-  @computed get columnsConfiguration() {
-    const conf: ITableColumnsConf = {
-      fixedColumnCount: this.fixedColumnCount,
-      columnConf: []
-    };
-    for (let prop of this.allTableProperties) {
-      conf.columnConf.push({
-        id: prop.id,
-        name: prop.name,
-        isVisible: !this.hiddenPropertyIds.get(prop.id),
-        groupingIndex: this.groupingIndices.get(prop.id) || 0,
-        aggregation: ""
-      });
-    }
-    return conf;
-  }
 
-  @action.bound
-  onColumnConfClick(event: any): void {
-    this.isColumnConfigurationDialogVisible = true;
-  }
 
-  @action.bound onColumnConfCancel(event: any): void {
-    this.isColumnConfigurationDialogVisible = false;
-  }
 
-  @action.bound onColumnConfSubmit(
-    event: any,
-    configuration: ITableColumnsConf
-  ): void {
-    this.isColumnConfigurationDialogVisible = false;
-    this.fixedColumnCount = configuration.fixedColumnCount;
-    this.hiddenPropertyIds.clear();
-    for (let column of configuration.columnConf) {
-      this.hiddenPropertyIds.set(column.id, !column.isVisible);
-    }
-  }
 
   @action.bound editingWillFinish() {
     this.dataTable.flushFormToTable(getSelectedRow(this)!);

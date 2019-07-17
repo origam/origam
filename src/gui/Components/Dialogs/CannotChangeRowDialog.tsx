@@ -8,6 +8,7 @@ export class CannotChangeRowDialog extends React.Component<{}> {
     return (
       <ModalWindow
         title="Cannot change row"
+        titleButtons={null}
         buttonsCenter={
           <>
             <button>OK</button>

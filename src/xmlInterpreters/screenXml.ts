@@ -18,6 +18,7 @@ import { TablePanelView } from "../model/TablePanelView/TablePanelView";
 import { FormPanelView } from "../model/FormPanelView/FormPanelView";
 import { flf2mof } from "../utils/flashDateFormat";
 import { Lookup } from "../model/Lookup";
+import { ColumnConfigurationDialog } from '../model/TablePanelView/ColumnConfigurationDialog';
 
 export const findUIRoot = (node: any) =>
   findStopping(node, n => n.name === "UIRoot")[0];
@@ -226,7 +227,8 @@ export function interpretScreenXml(
         dataTable: new DataTable({}),
         lifecycle: new DataViewLifecycle(),
         tablePanelView: new TablePanelView({
-          tablePropertyIds: properties.slice(1).map(prop => prop.id)
+          tablePropertyIds: properties.slice(1).map(prop => prop.id),
+          columnConfigurationDialog: new ColumnConfigurationDialog()
         }),
         formPanelView: new FormPanelView(),
         properties

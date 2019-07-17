@@ -27,6 +27,7 @@ export class ModalWindowNoOverlay extends React.Component {
 @observer
 export class ModalWindow extends React.Component<{
   title: React.ReactNode;
+  titleButtons: React.ReactNode;
   buttonsLeft: React.ReactNode;
   buttonsRight: React.ReactNode;
   buttonsCenter: React.ReactNode;
@@ -94,11 +95,7 @@ export class ModalWindow extends React.Component<{
                 >
                   <div className={S.label}>{this.props.title}</div>
                   <div className={S.pusher} />
-                  <div className={S.buttons}>
-                    <button className={S.btnClose}>
-                      <i className="fas fa-times icon" />
-                    </button>
-                  </div>
+                  <div className={S.buttons}>{this.props.titleButtons}</div>
                 </div>
                 <div className={S.body}>{this.props.children}</div>
                 <div className={S.footer}>
@@ -118,3 +115,9 @@ export class ModalWindow extends React.Component<{
     );
   }
 }
+
+export const CloseButton = (props: { onClick?: (event: any) => void }) => (
+  <button className={S.btnClose} onClick={props.onClick}>
+    <i className="fas fa-times icon" />
+  </button>
+);

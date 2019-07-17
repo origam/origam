@@ -14,7 +14,7 @@ import { getTablePanelView } from "../../../model/selectors/TablePanelView/getTa
     label: getDataViewLabel(dataView),
     onFormViewButtonClick: dataView.onFormPanelViewButtonClick,
     onTableViewButtonClick: dataView.onTablePanelViewButtonClick,
-    onColumnConfClick: getTablePanelView(dataView).onColumnConfClick
+    onColumnConfClick: getTablePanelView(dataView).columnConfigurationDialog.onColumnConfClick
   };
 })
 @observer

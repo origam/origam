@@ -1,6 +1,6 @@
 import S from "./ColumnsDialog.module.css";
 import React from "react";
-import { ModalWindowOverlay, ModalWindow } from "../Dialog/Dialog";
+import { ModalWindowOverlay, ModalWindow, CloseButton } from "../Dialog/Dialog";
 import { AutoSizer, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
 import { observable, action } from "mobx";
@@ -26,6 +26,7 @@ export class ColumnsDialog extends React.Component<{
   onOkClick?: (event: any, configuration: ITableColumnsConf) => void;
   onSaveAsClick?: (event: any) => void;
   onCancelClick?: (event: any) => void;
+  onCloseClick?: (event: any) => void;
 }> {
   constructor(props: any) {
     super(props);
@@ -48,6 +49,7 @@ export class ColumnsDialog extends React.Component<{
     return (
       <ModalWindow
         title="Columns"
+        titleButtons={<CloseButton onClick={this.props.onCloseClick} />}
         buttonsCenter={
           <>
             <button

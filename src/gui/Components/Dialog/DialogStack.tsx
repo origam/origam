@@ -27,9 +27,10 @@ export class DialogStack extends React.Component<{
         );
       } else {
         result.push(
-          <div className={S.modalWindowOverlay} key={i}>
-            {this.props.stackedDialogs[i].component}
-          </div>
+          <div className={S.modalWindowOverlay} key={i} />,
+          React.cloneElement(this.props.stackedDialogs[i].component, {
+            key: this.props.stackedDialogs[i].key
+          })
         );
       }
     }

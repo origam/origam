@@ -1,8 +1,10 @@
 import { IProperty } from "../../types/IProperty";
 import { ITableColumnsConf } from "../../../gui/Components/Dialogs/ColumnsDialog";
+import { IColumnConfigurationDialog } from "./IColumnConfigurationDialog";
 
 export interface ITablePanelViewData {
   tablePropertyIds: string[];
+  columnConfigurationDialog: IColumnConfigurationDialog;
 }
 
 export interface ITablePanelView extends ITablePanelViewData {
@@ -12,10 +14,13 @@ export interface ITablePanelView extends ITablePanelViewData {
   selectedProperty: IProperty | undefined;
   selectedRowIndex: number | undefined;
   isEditing: boolean;
-  isColumnConfigurationDialogVisible: boolean;
-  tableProperties: IProperty[];
+  fixedColumnCount: number;
 
-  columnsConfiguration: ITableColumnsConf;
+  tableProperties: IProperty[];
+  allTableProperties: IProperty[];
+
+  hiddenPropertyIds: Map<string, boolean>;
+  groupingIndices: Map<string, number>;
 
   getCellValueByIdx(rowIdx: number, columnIdx: number): any;
   getCellTextByIdx(rowIdx: number, columnIdx: number): any;
@@ -23,10 +28,6 @@ export interface ITablePanelView extends ITablePanelViewData {
   onCellClick(rowIndex: number, columnIndex: number): void;
   onNoCellClick(): void;
   onOutsideTableClick(): void;
-
-  onColumnConfClick(event: any): void;
-  onColumnConfCancel(event: any): void;
-  onColumnConfSubmit(event: any, configuration: ITableColumnsConf): void;
 
   setSelectedColumnId(id: string | undefined): void;
   swapColumns(id1: string, id2: string): void;

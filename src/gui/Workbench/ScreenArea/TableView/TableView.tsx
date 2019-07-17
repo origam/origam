@@ -30,7 +30,6 @@ import {
   ColumnsDialog,
   ITableColumnsConf
 } from "../../../Components/Dialogs/ColumnsDialog";
-import { getIsColumnConfigurationDialogVisible } from "../../../../model/selectors/TablePanelView/getIsColumnConfigurationDialogVisible";
 
 @inject(({ dataView }) => {
   return {
@@ -70,9 +69,7 @@ export class TableView extends React.Component<{
     tablePanelView: this.props.tablePanelView!
   });
 
-  @computed get isColumnConfVisible() {
-    return getIsColumnConfigurationDialogVisible(this.props.tablePanelView);
-  }
+
 
   render() {
     const self = this;
@@ -83,13 +80,6 @@ export class TableView extends React.Component<{
     return (
       <Provider tablePanelView={this.props.tablePanelView}>
         <>
-          {this.isColumnConfVisible && (
-            <ColumnsDialog
-              configuration={this.props.tablePanelView!.columnsConfiguration}
-              onCancelClick={this.props.onColumnDialogCancel}
-              onOkClick={this.props.onColumnDialogOk}
-            />
-          )}
           <Table
             gridDimensions={self.gDim}
             scrollState={self.scrollState}
