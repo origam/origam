@@ -5,6 +5,7 @@ import { Main } from "./gui/Main";
 import "./index.css";
 import { createApplication } from "./model/factories/createApplication";
 import * as serviceWorker from "./serviceWorker";
+import { CannotChangeRowDialog } from './gui/Components/Dialogs/CannotChangeRowDialog';
 
 const application = createApplication();
 application.run();

@@ -2,11 +2,13 @@ import { IWorkbench } from "./IWorkbench";
 import { IApi } from "./IApi";
 import { IApplicationLifecycle } from "./IApplicationLifecycle";
 import { IOpenedScreens } from "./IOpenedScreens";
+import { IDialogStack } from "./IDialogStack";
 
 export interface IApplicationData {
   api: IApi;
   applicationLifecycle: IApplicationLifecycle;
   openedScreens: IOpenedScreens;
+  dialogStack: IDialogStack;
 }
 
 export interface IApplication extends IApplicationData {

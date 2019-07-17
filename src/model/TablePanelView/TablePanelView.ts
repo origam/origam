@@ -7,6 +7,7 @@ import { getDataViewPropertyById } from "../selectors/DataView/getDataViewProper
 import { getSelectedRow } from "../selectors/DataView/getSelectedRow";
 import { getDataViewLifecycle } from "../selectors/DataView/getDataViewLifecycle";
 import { ITableColumnsConf } from "../../gui/Components/Dialogs/ColumnsDialog";
+import { getSelectedRowId } from '../selectors/TablePanelView/getSelectedRowId';
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -160,7 +161,10 @@ export class TablePanelView implements ITablePanelView {
     columnId: string | undefined
   ) {
     this.selectedColumnId = columnId;
-    getDataView(this).setSelectedRowId(rowId);
+    if(rowId !== getSelectedRowId(this)) {
+      
+      getDataView(this).setSelectedRowId(rowId);
+    }
   }
 
   @action.bound

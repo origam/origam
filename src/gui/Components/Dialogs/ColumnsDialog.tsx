@@ -46,59 +46,57 @@ export class ColumnsDialog extends React.Component<{
 
   render() {
     return (
-      <ModalWindowOverlay>
-        <ModalWindow
-          title="Columns"
-          buttonsCenter={
-            <>
-              <button
-                onClick={(event: any) =>
-                  this.props.onOkClick &&
-                  this.props.onOkClick(event, this.configuration)
-                }
-              >
-                OK
-              </button>
-              <button onClick={this.props.onSaveAsClick}>Save As...</button>
-              <button onClick={this.props.onCancelClick}>Cancel</button>
-            </>
-          }
-          buttonsLeft={null}
-          buttonsRight={null}
-        >
-          <div className={S.columnTable}>
-            <AutoSizer>
-              {({ width, height }) => (
-                <Observer>
-                  {() => (
-                    <MultiGrid
-                      ref={this.refGrid}
-                      fixedRowCount={1}
-                      cellRenderer={this.renderCell}
-                      columnCount={4}
-                      rowCount={1 + this.configuration.columnConf.length}
-                      columnWidth={({ index }: { index: number }) => {
-                        return this.columnWidths[index];
-                      }}
-                      rowHeight={20}
-                      width={width}
-                      height={height}
-                    />
-                  )}
-                </Observer>
-              )}
-            </AutoSizer>
-          </div>
-          <div className={S.lockedColumns}>
-            Locked columns count
-            <input
-              className={S.lockedColumnsInput}
-              type="text"
-              value={this.configuration.fixedColumnCount}
-            />
-          </div>
-        </ModalWindow>
-      </ModalWindowOverlay>
+      <ModalWindow
+        title="Columns"
+        buttonsCenter={
+          <>
+            <button
+              onClick={(event: any) =>
+                this.props.onOkClick &&
+                this.props.onOkClick(event, this.configuration)
+              }
+            >
+              OK
+            </button>
+            <button onClick={this.props.onSaveAsClick}>Save As...</button>
+            <button onClick={this.props.onCancelClick}>Cancel</button>
+          </>
+        }
+        buttonsLeft={null}
+        buttonsRight={null}
+      >
+        <div className={S.columnTable}>
+          <AutoSizer>
+            {({ width, height }) => (
+              <Observer>
+                {() => (
+                  <MultiGrid
+                    ref={this.refGrid}
+                    fixedRowCount={1}
+                    cellRenderer={this.renderCell}
+                    columnCount={4}
+                    rowCount={1 + this.configuration.columnConf.length}
+                    columnWidth={({ index }: { index: number }) => {
+                      return this.columnWidths[index];
+                    }}
+                    rowHeight={20}
+                    width={width}
+                    height={height}
+                  />
+                )}
+              </Observer>
+            )}
+          </AutoSizer>
+        </div>
+        <div className={S.lockedColumns}>
+          Locked columns count
+          <input
+            className={S.lockedColumnsInput}
+            type="text"
+            value={this.configuration.fixedColumnCount}
+          />
+        </div>
+      </ModalWindow>
     );
   }
 

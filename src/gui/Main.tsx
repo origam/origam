@@ -5,18 +5,31 @@ import { getApplicationLifecycle } from "../model/selectors/getApplicationLifecy
 import { IApplicationPage } from "../model/types/IApplicationLifecycle";
 import { WorkbenchPage } from "./Workbench/WorkbenchPage";
 import { getShownPage } from "../model/selectors/Application/getShownPage";
+import {
+  DialogStack,
+  ApplicationDialogStack
+} from "./Components/Dialog/DialogStack";
 
 @inject(({ application }) => ({
   page: getShownPage(application)
 }))
 @observer
 export class Main extends React.Component<{ page?: IApplicationPage }> {
-  render() {
+  getPage() {
     switch (this.props.page!) {
       case IApplicationPage.Login:
         return <LoginPage />;
       case IApplicationPage.Workbench:
         return <WorkbenchPage />;
     }
+  }
+
+  render() {
+    return (
+      <>
+        <ApplicationDialogStack />
+        {this.getPage()}
+      </>
+    );
   }
 }

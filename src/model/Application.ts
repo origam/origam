@@ -6,19 +6,23 @@ import { OrigamAPI } from "./OrigamAPI";
 import { IApi } from "./types/IApi";
 import { action } from "mobx";
 import { IOpenedScreens } from "./types/IOpenedScreens";
+import { IDialogStack } from "./types/IDialogStack";
 
 export class Application implements IApplication {
+  
   $type_IApplication: 1 = 1;
 
   constructor(data: IApplicationData) {
     Object.assign(this, data);
     this.applicationLifecycle.parent = this;
     this.openedScreens.parent = this;
+    this.dialogStack.parent = this;
   }
 
   applicationLifecycle: IApplicationLifecycle = null as any;
   openedScreens: IOpenedScreens = null as any;
   api: IApi = null as any;
+  dialogStack: IDialogStack = null as any;
 
   workbench?: IWorkbench;
 
