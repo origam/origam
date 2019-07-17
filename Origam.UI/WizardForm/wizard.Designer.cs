@@ -37,7 +37,7 @@ namespace Origam.UI.WizardForm
             this.aerowizard1 = new AeroWizard.WizardControl();
             this.StartPage = new AeroWizard.WizardPage();
             this.lbTitle = new System.Windows.Forms.Label();
-            this.DataStructureNamePage = new AeroWizard.WizardPage();
+            this.StructureNamePage = new AeroWizard.WizardPage();
             this.label1 = new System.Windows.Forms.Label();
             this.lbName = new System.Windows.Forms.Label();
             this.tbDataStructureName = new System.Windows.Forms.TextBox();
@@ -91,10 +91,18 @@ namespace Origam.UI.WizardForm
             this.label9 = new System.Windows.Forms.Label();
             this.txtRelationName = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
+            this.childEntityPage = new AeroWizard.WizardPage();
+            this.label11 = new System.Windows.Forms.Label();
+            this.lblEntity2 = new System.Windows.Forms.Label();
+            this.cboEntity2 = new System.Windows.Forms.ComboBox();
+            this.lblEntity1 = new System.Windows.Forms.Label();
+            this.cboEntity1 = new System.Windows.Forms.ComboBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.txtchildEntityName = new System.Windows.Forms.TextBox();
             this.colCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.aerowizard1)).BeginInit();
             this.StartPage.SuspendLayout();
-            this.DataStructureNamePage.SuspendLayout();
+            this.StructureNamePage.SuspendLayout();
             this.ScreenFormPage.SuspendLayout();
             this.LookupFormPage.SuspendLayout();
             this.FieldLookupEntity.SuspendLayout();
@@ -103,6 +111,7 @@ namespace Origam.UI.WizardForm
             this.RelationShipEntityPage.SuspendLayout();
             this.groupBoxKey.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.childEntityPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // listView1
@@ -123,12 +132,13 @@ namespace Origam.UI.WizardForm
             this.aerowizard1.Location = new System.Drawing.Point(0, 0);
             this.aerowizard1.Name = "aerowizard1";
             this.aerowizard1.Pages.Add(this.StartPage);
-            this.aerowizard1.Pages.Add(this.DataStructureNamePage);
+            this.aerowizard1.Pages.Add(this.StructureNamePage);
             this.aerowizard1.Pages.Add(this.ScreenFormPage);
             this.aerowizard1.Pages.Add(this.LookupFormPage);
             this.aerowizard1.Pages.Add(this.FieldLookupEntity);
             this.aerowizard1.Pages.Add(this.finishPage);
             this.aerowizard1.Pages.Add(this.RelationShipEntityPage);
+            this.aerowizard1.Pages.Add(this.childEntityPage);
             this.aerowizard1.Size = new System.Drawing.Size(588, 497);
             this.aerowizard1.TabIndex = 0;
             // 
@@ -154,15 +164,15 @@ namespace Origam.UI.WizardForm
             // 
             // DataStructureNamePage
             // 
-            this.DataStructureNamePage.Controls.Add(this.label1);
-            this.DataStructureNamePage.Controls.Add(this.lbName);
-            this.DataStructureNamePage.Controls.Add(this.tbDataStructureName);
-            this.DataStructureNamePage.Name = "DataStructureNamePage";
-            this.DataStructureNamePage.Size = new System.Drawing.Size(541, 343);
-            this.DataStructureNamePage.TabIndex = 2;
-            this.DataStructureNamePage.Text = "Please Write Name of Structure";
-            this.DataStructureNamePage.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.DataStructureNamePage_Commit);
-            this.DataStructureNamePage.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.DataStructureNamePage_Initialize);
+            this.StructureNamePage.Controls.Add(this.label1);
+            this.StructureNamePage.Controls.Add(this.lbName);
+            this.StructureNamePage.Controls.Add(this.tbDataStructureName);
+            this.StructureNamePage.Name = "DataStructureNamePage";
+            this.StructureNamePage.Size = new System.Drawing.Size(541, 343);
+            this.StructureNamePage.TabIndex = 2;
+            this.StructureNamePage.Text = "Please Write Name of Structure";
+            this.StructureNamePage.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.StructureNamePage_Commit);
+            this.StructureNamePage.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.StructureNamePage_Initialize);
             // 
             // label1
             // 
@@ -675,6 +685,81 @@ namespace Origam.UI.WizardForm
             this.label10.TabIndex = 24;
             this.label10.Text = "Relation \"Name\"";
             // 
+            // childEntityPage
+            // 
+            this.childEntityPage.Controls.Add(this.label11);
+            this.childEntityPage.Controls.Add(this.lblEntity2);
+            this.childEntityPage.Controls.Add(this.cboEntity2);
+            this.childEntityPage.Controls.Add(this.lblEntity1);
+            this.childEntityPage.Controls.Add(this.cboEntity1);
+            this.childEntityPage.Controls.Add(this.label12);
+            this.childEntityPage.Controls.Add(this.txtchildEntityName);
+            this.childEntityPage.Name = "childEntityPage";
+            this.childEntityPage.Size = new System.Drawing.Size(541, 343);
+            this.childEntityPage.TabIndex = 8;
+            this.childEntityPage.Text = "Create Child Entity";
+            this.childEntityPage.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.ChildEntityPage_Commit);
+            this.childEntityPage.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.ChildEntityPage_Initialize);
+            // 
+            // label11
+            // 
+            this.label11.Location = new System.Drawing.Point(52, 132);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(360, 16);
+            this.label11.TabIndex = 17;
+            this.label11.Text = "Optional Foreign entity. Foreign key will be created in the new entity.";
+            // 
+            // lblEntity2
+            // 
+            this.lblEntity2.Location = new System.Drawing.Point(52, 164);
+            this.lblEntity2.Name = "lblEntity2";
+            this.lblEntity2.Size = new System.Drawing.Size(96, 16);
+            this.lblEntity2.TabIndex = 16;
+            this.lblEntity2.Text = "Foreign Entity:";
+            // 
+            // cboEntity2
+            // 
+            this.cboEntity2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboEntity2.Location = new System.Drawing.Point(164, 164);
+            this.cboEntity2.Name = "cboEntity2";
+            this.cboEntity2.Size = new System.Drawing.Size(248, 23);
+            this.cboEntity2.Sorted = true;
+            this.cboEntity2.TabIndex = 11;
+            this.cboEntity2.SelectedIndexChanged += new System.EventHandler(this.CboEntity2_SelectedIndexChanged);
+            // 
+            // lblEntity1
+            // 
+            this.lblEntity1.Location = new System.Drawing.Point(52, 78);
+            this.lblEntity1.Name = "lblEntity1";
+            this.lblEntity1.Size = new System.Drawing.Size(96, 16);
+            this.lblEntity1.TabIndex = 15;
+            this.lblEntity1.Text = "Master Entity:";
+            // 
+            // cboEntity1
+            // 
+            this.cboEntity1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboEntity1.Location = new System.Drawing.Point(164, 78);
+            this.cboEntity1.Name = "cboEntity1";
+            this.cboEntity1.Size = new System.Drawing.Size(248, 23);
+            this.cboEntity1.Sorted = true;
+            this.cboEntity1.TabIndex = 14;
+            this.cboEntity1.SelectedIndexChanged += new System.EventHandler(this.CboEntity1_SelectedIndexChanged);
+            // 
+            // label12
+            // 
+            this.label12.Location = new System.Drawing.Point(52, 42);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(104, 16);
+            this.label12.TabIndex = 12;
+            this.label12.Text = "Child Entity Name:";
+            // 
+            // txtchildEntityName
+            // 
+            this.txtchildEntityName.Location = new System.Drawing.Point(164, 42);
+            this.txtchildEntityName.Name = "txtchildEntityName";
+            this.txtchildEntityName.Size = new System.Drawing.Size(248, 23);
+            this.txtchildEntityName.TabIndex = 13;
+            // 
             // colCode
             // 
             this.colCode.Name = "colCode";
@@ -693,8 +778,8 @@ namespace Origam.UI.WizardForm
             ((System.ComponentModel.ISupportInitialize)(this.aerowizard1)).EndInit();
             this.StartPage.ResumeLayout(false);
             this.StartPage.PerformLayout();
-            this.DataStructureNamePage.ResumeLayout(false);
-            this.DataStructureNamePage.PerformLayout();
+            this.StructureNamePage.ResumeLayout(false);
+            this.StructureNamePage.PerformLayout();
             this.ScreenFormPage.ResumeLayout(false);
             this.ScreenFormPage.PerformLayout();
             this.LookupFormPage.ResumeLayout(false);
@@ -710,16 +795,17 @@ namespace Origam.UI.WizardForm
             this.groupBoxKey.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.childEntityPage.ResumeLayout(false);
+            this.childEntityPage.PerformLayout();
             this.ResumeLayout(false);
 
         }
-
         #endregion
         private AeroWizard.WizardControl aerowizard1;
         private AeroWizard.WizardPage StartPage;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.Label lbTitle;
-        private WizardPage DataStructureNamePage;
+        private WizardPage StructureNamePage;
         private System.Windows.Forms.Label lbName;
         private System.Windows.Forms.TextBox tbDataStructureName;
         private System.Windows.Forms.Label label1;
@@ -774,6 +860,14 @@ namespace Origam.UI.WizardForm
         private Label label9;
         private TextBox txtRelationName;
         private Label label10;
+        private WizardPage childEntityPage;
+        private Label label11;
+        private Label lblEntity2;
+        private ComboBox cboEntity2;
+        private Label lblEntity1;
+        private ComboBox cboEntity1;
+        private Label label12;
+        private TextBox txtchildEntityName;
     }
 }
 

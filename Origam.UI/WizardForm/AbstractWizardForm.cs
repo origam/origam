@@ -41,6 +41,7 @@ namespace Origam.UI.WizardForm
         FieldLookup,
         FieldEntity,
         MenuPage,
+        ChildEntity,
         finish
     }
 }

@@ -5,6 +5,7 @@ using Origam.UI;
 using Origam.UI.Interfaces;
 using Origam.UI.WizardForm;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
@@ -22,7 +23,6 @@ namespace Origam.UI.WizardForm
             aerowizard1.Title = objectForm.Description;
             InitData();
         }
-
         private void InitData()
         {
             lbTitle.Text = "The Wizard will create this elements necesary for the function of a menu:";
@@ -44,13 +44,13 @@ namespace Origam.UI.WizardForm
             IsFinish(sender, e);
         }
 
-        private void DataStructureNamePage_Initialize(object sender, WizardPageInitEventArgs e)
+        private void StructureNamePage_Initialize(object sender, WizardPageInitEventArgs e)
         {
             tbDataStructureName.Text = iwizard.NameOfEntity;
             GetNextPage(PagesList.StructureNamePage, sender);
         }
 
-        private void DataStructureNamePage_Commit(object sender, WizardPageConfirmEventArgs e)
+        private void StructureNamePage_Commit(object sender, WizardPageConfirmEventArgs e)
         {
             if (iwizard.IsExistsNameInDataStructure(tbDataStructureName.Text))
             {
@@ -209,11 +209,41 @@ namespace Origam.UI.WizardForm
             }
             IsFinish(sender, e);
         }
-
-
+        private void ChildEntityPage_Initialize(object sender, WizardPageInitEventArgs e)
+        {
+            GetNextPage(PagesList.ChildEntity, sender);
+            ChildEntityForm EntityForm = (ChildEntityForm)iwizard;
+            EntityForm.EntityName = txtchildEntityName.Text;
+            EntityForm.SetUpForm(txtchildEntityName, cboEntity1, cboEntity2);
+        }
+        private void ChildEntityPage_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
+            ChildEntityForm EntityForm = (ChildEntityForm)iwizard;
+            EntityForm.Entity2 = cboEntity2.SelectedItem as IDataEntity;
+            EntityForm.EntityName = txtchildEntityName.Text;
+            if (txtchildEntityName.Text == ""
+                | EntityForm.Entity1 == null
+                )
+            {
+                MessageBox.Show(EntityForm.EnterAllInfo, EntityForm.ChildEntityWiz, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                e.Cancel = true;
+                return;
+            }
+            IsFinish(sender, e);
+        }
         #endregion
 
         #region support
+        private void RefreshName()
+        {
+            ChildEntityForm EntityForm = (ChildEntityForm)iwizard;
+            if (cboEntity1.SelectedItem != null & cboEntity2.SelectedItem != null)
+            {
+                EntityForm.Entity1 = cboEntity1.SelectedItem as IDataEntity;
+                EntityForm.Entity2 = cboEntity2.SelectedItem as IDataEntity;
+                txtchildEntityName.Text = EntityForm.Entity1.Name + EntityForm.Entity2.Name;
+            }
+        }
 
         private void UpdateScreen()
         {
@@ -283,7 +313,7 @@ namespace Origam.UI.WizardForm
             switch (nextPage)
             {
                 case PagesList.StructureNamePage:
-                    return DataStructureNamePage;
+                    return StructureNamePage;
                 case PagesList.ScreenForm:
                     return ScreenFormPage;
                 case PagesList.LookupForm:
@@ -294,6 +324,11 @@ namespace Origam.UI.WizardForm
                     return finishPage;
                 case PagesList.FieldEntity:
                     return RelationShipEntityPage;
+                case PagesList.ChildEntity:
+                    return childEntityPage;
+                default:
+                    MessageBox.Show("Not Set WizardPage","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    break;
             }
             return null;
         }
@@ -340,6 +375,16 @@ namespace Origam.UI.WizardForm
         {
             CreateFieldWithRelationshipEntityWizardForm relations = (CreateFieldWithRelationshipEntityWizardForm)iwizard;
             relations.RelatedEntityFieldSelect = (AbstractSchemaItem)RelatedEntityField.SelectedItem;
+        }
+
+        private void CboEntity1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RefreshName();
+        }
+
+        private void CboEntity2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RefreshName();
         }
     }
     #endregion
