@@ -37,6 +37,15 @@ export class DataTable implements IDataTable {
     return row[property.dataIndex];
   }
 
+  getCellText(row: any[], property: IProperty) {
+    const value = this.getCellValue(row, property);
+    if(property.isLookup) {
+      return property.lookup!.getValue(value);
+    } else {
+      return value
+    }
+  }
+
   getRowByExistingIdx(idx: number): any[] {
     // TODO: Change to respect dirty deleted rows.
     return this.rows[idx];

@@ -1,6 +1,7 @@
 import { ICaptionPosition } from "./ICaptionPosition";
 import { IPropertyColumn } from "./IPropertyColumn";
 import { IDropDownColumn } from "./IDropDownColumn";
+import { ILookup } from "./ILookup";
 
 export interface IPropertyData {
   id: string;
@@ -22,24 +23,20 @@ export interface IPropertyData {
   maxLength: number;
   dataIndex: number;
   formatterPattern: string;
-
-  dropDownShowUniqueValues?: boolean;
-  lookupId?: string;
-  identifier?: string;
-  identifierIndex?: number;
-  dropDownType?: string;
-  cached?: boolean;
-  searchByFirstColumnOnly?: boolean;
+  
   allowReturnToForm?: boolean;
   isTree?: boolean;
-  dropDownColumns: IDropDownColumn[];
+  
+  lookup?: ILookup;
+  
 }
 
 export interface IProperty extends IPropertyData {
   $type_IProperty: 1;
 
   dataSourceIndex: number;
-  lookupCache: Map<string, any>;
+  isLookup: boolean;
+  
   parent?: any;
 }
 

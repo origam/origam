@@ -11,6 +11,7 @@ export interface IDataTable extends IDataTableData {
 
   getRowId(row: any[]): string;
   getCellValue(row: any[], property: IProperty): any;
+  getCellText(row: any[], property: IProperty): any;
   getRowByExistingIdx(idx: number): any[];
   getExistingRowIdxById(id: string): number | undefined;
   getPropertyById(id: string): IProperty | undefined;

@@ -178,4 +178,5 @@ export interface IRenderedCell {
   formatterPattern: string;
   type: ICellType;
   value: any;
+  text: any;
 }

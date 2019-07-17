@@ -1,7 +1,7 @@
-import { IFormPanelView, CFormPanelView } from './types/IFormPanelView';
+import { IFormPanelView } from "./types/IFormPanelView";
 
 export class FormPanelView implements IFormPanelView {
-  $type: typeof CFormPanelView = CFormPanelView;
+  $type_IFormPanelView: 1 = 1;
 
   parent?: any;
 }

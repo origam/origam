@@ -17,6 +17,7 @@ import { DataViewLifecycle } from "../model/DataViewLifecycle";
 import { TablePanelView } from "../model/TablePanelView/TablePanelView";
 import { FormPanelView } from "../model/FormPanelView/FormPanelView";
 import { flf2mof } from "../utils/flashDateFormat";
+import { Lookup } from "../model/Lookup";
 
 export const findUIRoot = (node: any) =>
   findStopping(node, n => n.name === "UIRoot")[0];
@@ -155,30 +156,38 @@ export function interpretScreenXml(
             formatterPattern: property.attributes.FormatterPattern
               ? flf2mof(property.attributes.FormatterPattern)
               : "",
-            dropDownShowUniqueValues:
-              property.attributes.DropDownShowUniqueValues === "true",
-            lookupId: property.attributes.LookupId,
-            identifier: property.attributes.Identifier,
-            identifierIndex: parseInt(property.attributes.IdentifierIndex, 10),
-            dropDownType: property.attributes.DropDownType,
-            cached: property.attributes.Cached === "true",
-            searchByFirstColumnOnly:
-              property.attributes.SearchByFirstColumnOnly === "true",
-            allowReturnToForm: property.attributes.AllowReturnToForm === "true",
-            isTree: property.attributes.IsTree === "true",
 
-            dropDownColumns: findStopping(
-              property,
-              n => n.name === "Property"
-            ).map(ddProperty => {
-              return new DropDownColumn({
-                id: ddProperty.attributes.Id,
-                name: ddProperty.attributes.Name,
-                column: ddProperty.attributes.Column,
-                entity: ddProperty.attributes.Entity,
-                index: parseInt(ddProperty.attributes.Index, 10)
-              });
-            })
+            lookup: !property.attributes.LookupId
+              ? undefined
+              : new Lookup({
+                  dropDownShowUniqueValues:
+                    property.attributes.DropDownShowUniqueValues === "true",
+                  lookupId: property.attributes.LookupId,
+                  identifier: property.attributes.Identifier,
+                  identifierIndex: parseInt(
+                    property.attributes.IdentifierIndex,
+                    10
+                  ),
+                  dropDownType: property.attributes.DropDownType,
+                  cached: property.attributes.Cached === "true",
+                  searchByFirstColumnOnly:
+                    property.attributes.SearchByFirstColumnOnly === "true",
+                  dropDownColumns: findStopping(
+                    property,
+                    n => n.name === "Property"
+                  ).map(ddProperty => {
+                    return new DropDownColumn({
+                      id: ddProperty.attributes.Id,
+                      name: ddProperty.attributes.Name,
+                      column: ddProperty.attributes.Column,
+                      entity: ddProperty.attributes.Entity,
+                      index: parseInt(ddProperty.attributes.Index, 10)
+                    });
+                  })
+                }),
+
+            allowReturnToForm: property.attributes.AllowReturnToForm === "true",
+            isTree: property.attributes.IsTree === "true"
           });
         }
       );

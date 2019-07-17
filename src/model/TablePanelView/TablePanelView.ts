@@ -64,6 +64,12 @@ export class TablePanelView implements ITablePanelView {
     return this.dataTable.getCellValue(row, property);
   }
 
+  getCellTextByIdx(rowIdx: number, columnIdx: number) {
+    const property = this.tableProperties[columnIdx]!;
+    const row = this.dataTable.getRowByExistingIdx(rowIdx);
+    return this.dataTable.getCellText(row, property);
+  }
+
   @action.bound
   onCellClick(rowIndex: number, columnIndex: number): void {
     // console.log("CellClicked:", rowIndex, columnIndex);

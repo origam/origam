@@ -18,6 +18,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   columnsConfiguration: ITableColumnsConf;
 
   getCellValueByIdx(rowIdx: number, columnIdx: number): any;
+  getCellTextByIdx(rowIdx: number, columnIdx: number): any;
 
   onCellClick(rowIndex: number, columnIndex: number): void;
   onNoCellClick(): void;

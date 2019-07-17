@@ -15,6 +15,7 @@ import { getTableViewPropertyByIdx } from "../../../../model/selectors/TablePane
 import { getTableViewRecordByExistingIdx } from "../../../../model/selectors/TablePanelView/getTableViewRecordByExistingIdx";
 import { getSelectedColumnId } from "../../../../model/selectors/TablePanelView/getSelectedColumnId";
 import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/getSelectedRowId";
+import { getCellTextByIdx } from "../../../../model/selectors/TablePanelView/getCellText";
 
 export interface ICellRendererData {
   tablePanelView: ITablePanelView;
@@ -57,7 +58,7 @@ export class CellRenderer implements ICellRenderer {
     }
     ctx.fillRect(0, 0, columnWidth * CPR, rowHeight * CPR);
 
-    /* TEXTUAL CONTENT */
+    /* CONTENT */
     ctx.font = `${12 * CPR}px sans-serif`;
     if (cell.isLoading) {
       ctx.fillStyle = "#888888";
@@ -84,6 +85,11 @@ export class CellRenderer implements ICellRenderer {
               15 * CPR,
               15 * CPR
             );
+          }
+          break;
+        case "ComboBox":
+          if (cell.value !== null) {
+            ctx.fillText("" + cell.text!, 15 * CPR, 15 * CPR);
           }
           break;
         default:
@@ -120,8 +126,14 @@ export class CellRenderer implements ICellRenderer {
     return getCellValueByIdx(this.tablePanelView);
   }
 
+  @computed get getCellText() {
+    return getCellTextByIdx(this.tablePanelView);
+  }
+
   getCell(rowIndex: number, columnIndex: number): IRenderedCell {
     const value = this.getCellValue(rowIndex, columnIndex);
+    let text = value;
+    let isLoading = false;
     const property = getTableViewPropertyByIdx(
       this.tablePanelView,
       columnIndex
@@ -130,6 +142,10 @@ export class CellRenderer implements ICellRenderer {
       this.tablePanelView,
       rowIndex
     );
+    if(property.isLookup) {
+      text = this.getCellText(rowIndex, columnIndex);
+      isLoading = property.lookup!.isLoading(value);
+    }
     const selectedColumnId = getSelectedColumnId(this.tablePanelView);
     const selectedRowId = getSelectedRowId(this.tablePanelView);
 
@@ -141,11 +157,12 @@ export class CellRenderer implements ICellRenderer {
         this.tablePanelView.columnOrderChangingSourceId === property.id,
       isColumnOrderChangeTarget:
         this.tablePanelView.columnOrderChangingTargetId === property.id,
-      isLoading: false,
+      isLoading,
       isInvalid: false,
       formatterPattern: property.formatterPattern,
       type: property.column,
-      value
+      value,
+      text
     };
   }
 }
