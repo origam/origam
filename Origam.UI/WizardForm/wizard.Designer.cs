@@ -440,7 +440,6 @@ namespace Origam.UI.WizardForm
             this.grdInitialValues.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.grdInitialValues.AutoGenerateColumns = false;
             this.grdInitialValues.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdInitialValues.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colName,

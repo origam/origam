@@ -106,6 +106,7 @@ namespace Origam.UI.WizardForm
         private void FieldLookupEntityPage_Initialize(object sender, WizardPageInitEventArgs e)
         {
             CreateFieldWithLookupEntityWizardForm form = (CreateFieldWithLookupEntityWizardForm)iwizard;
+            grdInitialValues.AutoGenerateColumns = false;
             grdInitialValues.DataSource = form.InitialValues;
             txtNameFieldName.Text = form.NameFieldName;
             txtNameFieldCaption.Text = form.NameFieldCaption;
