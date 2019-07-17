@@ -81,10 +81,10 @@ namespace Origam.Schema.EntityModel.Wizards
                 ChildEntityWiz = ResourceUtils.GetString("ChildEntityWiz")
             };
             Wizard wiz = new Wizard(childEntityForm);
-            if (wiz.ShowDialog() == DialogResult.OK)
+            if (wiz.ShowDialog() != DialogResult.OK)
 			{
-				
-			}
+                GeneratedModelElements.Clear();
+            }
 		}
 
         public override void Execute()
