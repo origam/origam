@@ -20,10 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.Windows.Forms;
 using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
 using Origam.UI;
+using Origam.UI.WizardForm;
+using Origam.Workbench;
 
 namespace Origam.Gui.Win.Wizards
 {
@@ -32,7 +35,9 @@ namespace Origam.Gui.Win.Wizards
 	/// </summary>
 	public class CreateWorkQueueClassFromEntityCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        ScreenWizardForm wizardForm;
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -46,13 +51,39 @@ namespace Origam.Gui.Win.Wizards
 
 		public override void Run()
 		{
-			CreateFormFromEntityWizard wiz = new CreateFormFromEntityWizard();
-			wiz.Entity = Owner as IDataEntity;
-			if(wiz.ShowDialog() == DialogResult.OK)
+            ArrayList list = new ArrayList();
+            WorkQueueClass workQueue = new WorkQueueClass();
+            list.Add(new ListViewItem(workQueue.ItemType, workQueue.Icon));
+
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.ScreenForm);
+            stackPage.Push(PagesList.startPage);
+
+            wizardForm = new ScreenWizardForm
+            {
+                ItemTypeList = list,
+                Description = "Create Work Queue Class From Entity Wizard",
+                Pages = stackPage,
+                Entity = Owner as IDataEntity,
+                NameOfEntity = (Owner as IDataEntity).Name,
+                IsRoleVisible = false,
+                textColumnsOnly = false,
+                checkOnClick = true,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this
+            };
+            Wizard wiz = new Wizard(wizardForm);
+			if(wiz.ShowDialog() != DialogResult.OK)
 			{
-				WorkQueueClass result = WorkflowHelper.CreateWorkQueueClass(
-                    wiz.Entity, wiz.SelectedFields, GeneratedModelElements);
-			}
+                GeneratedModelElements.Clear();
+            }
 		}
-	}
+
+        public override void Execute()
+        {
+            WorkQueueClass result = WorkflowHelper.CreateWorkQueueClass(
+                    wizardForm.Entity, wizardForm.SelectedFields, GeneratedModelElements);
+        }
+    }
 }

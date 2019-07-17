@@ -10,6 +10,7 @@ namespace Origam.UI.WizardForm
         public bool IsRoleVisible { get; set; }
         public bool textColumnsOnly { get; set; }
         private CheckedListBox _lstFields;
+        public bool checkOnClick { get; set; } = false;
 
         public void SetUpForm(CheckedListBox lstField)
         {
@@ -44,6 +45,8 @@ namespace Origam.UI.WizardForm
             }
         }
 
+        public ICollection SelectedFields { get; set; }
+        
         public string Role { get; set; }
     }
 }
