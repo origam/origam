@@ -332,7 +332,9 @@ namespace Origam.Gui.Win.Wizards
 
 	public class CreateMenuFromSequentialWorkflowCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        MenuFromForm menuFrom;
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -347,19 +349,43 @@ namespace Origam.Gui.Win.Wizards
 		public override void Run()
 		{
 			Schema.WorkflowModel.Workflow wf = Owner as Schema.WorkflowModel.Workflow;
-			CreateMenuFromFormWizard wiz = new CreateMenuFromFormWizard();
-			wiz.Role = wf.Name;
-			if(wiz.ShowDialog() == DialogResult.OK)
+
+            ArrayList list = new ArrayList();
+            WorkflowReferenceMenuItem workflowReference = new WorkflowReferenceMenuItem();
+            list.Add(new ListViewItem(workflowReference.ItemType, workflowReference.Icon));
+
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.MenuPage);
+            stackPage.Push(PagesList.startPage);
+
+            menuFrom = new MenuFromForm
+            {
+                ItemTypeList = list,
+                Description = "Create Menu from Sequential Workflow Wizard",
+                Pages = stackPage,
+                Entity = wf,
+                Role = wf.Name,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this
+            };
+            Wizard wiz = new Wizard(menuFrom);
+            if (wiz.ShowDialog() != DialogResult.OK)
 			{
-				WorkflowReferenceMenuItem menu = MenuHelper.CreateMenuItem(wiz.Caption, wiz.Role, wf);
-                GeneratedModelElements.Add(menu);
-				bool createRole = wiz.Role != "*" && wiz.Role != "";
-				if(createRole)
-				{
-					ServiceCommandUpdateScriptActivity activity = CreateRole(wiz.Role);
-                    GeneratedModelElements.Add(activity);
-				}
-			}
+                GeneratedModelElements.Clear();
+            }
 		}
-	}
+        public override void Execute()
+        {
+            WorkflowReferenceMenuItem menu = MenuHelper
+                .CreateMenuItem(menuFrom.Caption, menuFrom.Role, menuFrom.Entity as Schema.WorkflowModel.Workflow);
+            GeneratedModelElements.Add(menu);
+            bool createRole = menuFrom.Role != "*" && menuFrom.Role != "";
+            if (createRole)
+            {
+                ServiceCommandUpdateScriptActivity activity = CreateRole(menuFrom.Role);
+                GeneratedModelElements.Add(activity);
+            }
+        }
+    }
 }
