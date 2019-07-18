@@ -9,7 +9,7 @@ import { MainMenu } from "./MainMenu/MainMenu";
 import { ScreenArea } from "./ScreenArea/ScreenArea";
 import { inject, observer, Provider, Observer } from "mobx-react";
 import { getApplicationLifecycle } from "../../model/selectors/getApplicationLifecycle";
-import { IWorkbench } from "../../model/types/IWorkbench";
+import { IWorkbench } from "../../model/entities/types/IWorkbench";
 import { getWorkbench } from "../../model/selectors/getWorkbench";
 import { getIsMainMenuLoading } from "../../model/selectors/MainMenu/getIsMainMenuLoading";
 import { getLoggedUserName } from "../../model/selectors/User/getLoggedUserName";

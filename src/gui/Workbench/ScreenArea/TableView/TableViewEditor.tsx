@@ -4,7 +4,7 @@ import React from "react";
 import { getIsEditing } from "../../../../model/selectors/DataView/getIsEditing";
 import { getSelectedColumnIndex } from "../../../../model/selectors/TablePanelView/getSelectedColumnIndex";
 import { getSelectedRowIndex } from "../../../../model/selectors/TablePanelView/getSelectedRowIndex";
-import { IProperty } from "../../../../model/types/IProperty";
+import { IProperty } from "../../../../model/entities/types/IProperty";
 import { BoolEditor } from "../../../Components/ScreenElements/Editors/BoolEditor";
 import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateTimeEditor";
 import { DropdownEditor } from "../../../Components/ScreenElements/Editors/DropdownEditor";

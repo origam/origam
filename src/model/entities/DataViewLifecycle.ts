@@ -9,21 +9,21 @@ import {
   comparer
 } from "mobx";
 import { IDataViewLifecycle } from "./types/IDataViewLifecycle";
-import { getApi } from "./selectors/getApi";
-import { getMenuItemId } from "./selectors/getMenuItemId";
-import { getDataStructureEntityId } from "./selectors/DataView/getDataStructureEntityId";
-import { getColumnNamesToLoad } from "./selectors/DataView/getColumnNamesToLoad";
-import { getDataTable } from "./selectors/DataView/getDataTable";
-import { getDataView } from "./selectors/DataView/getDataView";
-import { getIsBindingRoot } from "./selectors/DataView/getIsBindingRoot";
-import { getMasterRowId } from "./selectors/DataView/getMasterRowId";
+import { getApi } from "../selectors/getApi";
+import { getMenuItemId } from "../selectors/getMenuItemId";
+import { getDataStructureEntityId } from "../selectors/DataView/getDataStructureEntityId";
+import { getColumnNamesToLoad } from "../selectors/DataView/getColumnNamesToLoad";
+import { getDataTable } from "../selectors/DataView/getDataTable";
+import { getDataView } from "../selectors/DataView/getDataView";
+import { getIsBindingRoot } from "../selectors/DataView/getIsBindingRoot";
+import { getMasterRowId } from "../selectors/DataView/getMasterRowId";
 import { IProperty } from "./types/IProperty";
-import { map2obj } from "../utils/objects";
-import { processCRUDResult } from "./actions/DataLoading/processCRUDResult";
-import { getSelectedRow } from "./selectors/DataView/getSelectedRow";
-import { getSelectedRowId } from "./selectors/TablePanelView/getSelectedRowId";
+import { map2obj } from "../../utils/objects";
+import { processCRUDResult } from "../actions/DataLoading/processCRUDResult";
+import { getSelectedRow } from "../selectors/DataView/getSelectedRow";
+import { getSelectedRowId } from "../selectors/TablePanelView/getSelectedRowId";
 import { when } from "mobx";
-import { getRowCount } from "./selectors/TablePanelView/getRowCount";
+import { getRowCount } from "../selectors/TablePanelView/getRowCount";
 
 export const loadData = "loadData";
 export const flushData = "flushData";

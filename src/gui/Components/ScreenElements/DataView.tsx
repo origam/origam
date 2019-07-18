@@ -3,9 +3,9 @@ import S from "./DataView.module.css";
 import { Toolbar } from "./DataViewToolbar";
 import { observer, inject, Provider } from "mobx-react";
 import { getDataViewById } from "../../../model/selectors/DataView/getDataViewById";
-import { IDataView } from "../../../model/types/IDataView";
+import { IDataView } from "../../../model/entities/types/IDataView";
 import { FormBuilder } from "../../Workbench/ScreenArea/FormView/FormBuilder";
-import { IPanelViewType } from "../../../model/types/IPanelViewType";
+import { IPanelViewType } from "../../../model/entities/types/IPanelViewType";
 import { TableView } from "../../Workbench/ScreenArea/TableView/TableView";
 
 @inject(({ formScreen }, { id }) => {

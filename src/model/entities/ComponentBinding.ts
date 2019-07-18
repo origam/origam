@@ -6,9 +6,9 @@ import {
 } from "./types/IComponentBinding";
 import { computed } from "mobx";
 import { IDataView } from "./types/IDataView";
-import { getFormScreen } from "./selectors/FormScreen/getFormScreen";
-import { getDataView } from "./selectors/DataView/getDataView";
-import { getDataTable } from "./selectors/DataView/getDataTable";
+import { getFormScreen } from "../selectors/FormScreen/getFormScreen";
+import { getDataView } from "../selectors/DataView/getDataView";
+import { getDataTable } from "../selectors/DataView/getDataTable";
 
 export class ComponentBindingPair implements IComponentBindingPair {
   constructor(data: IComponentBindingPairData) {

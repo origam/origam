@@ -2,8 +2,8 @@ import { ILookup, ILookupData, IDropDownType } from './types/ILookup';
 import { observable, IAtom, action, runInAction, createAtom } from "mobx";
 import _ from "lodash";
 import { IDropDownColumn } from "./types/IDropDownColumn";
-import { getApi } from "./selectors/getApi";
-import { getMenuItemId } from './selectors/getMenuItemId';
+import { getApi } from "../selectors/getApi";
+import { getMenuItemId } from '../selectors/getMenuItemId';
 
 export enum IIdState {
   LOADING = "LOADING",

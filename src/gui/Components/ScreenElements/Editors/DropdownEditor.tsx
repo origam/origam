@@ -7,12 +7,12 @@ import CS from "./CommonStyle.module.css";
 import _ from "lodash";
 import { MultiGrid, AutoSizer } from "react-virtualized";
 import Highlighter from "react-highlight-words";
-import { IApi } from "../../../../model/types/IApi";
+import { IApi } from "../../../../model/entities/types/IApi";
 import { getApi } from "../../../../model/selectors/getApi";
 import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
 import { getDataStructureEntityId } from "../../../../model/selectors/DataView/getDataStructureEntityId";
-import { ILookup } from "../../../../model/types/ILookup";
-import { IProperty } from '../../../../model/types/IProperty';
+import { ILookup } from "../../../../model/entities/types/ILookup";
+import { IProperty } from '../../../../model/entities/types/IProperty';
 import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/getSelectedRowId";
 import { getMenuItemId } from "../../../../model/selectors/getMenuItemId";
 

@@ -1,4 +1,4 @@
-import { IApplication } from '../types/IApplication';
+import { IApplication } from '../entities/types/IApplication';
 import { useContext } from 'react';
 import { MobXProviderContext } from 'mobx-react';
 

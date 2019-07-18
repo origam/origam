@@ -2,10 +2,10 @@ import { Machine, interpret } from "xstate";
 import { IWorkbenchLifecycle } from "./types/IWorkbenchLifecycle";
 import { action, createAtom, flow } from "mobx";
 
-import { getApi } from "./selectors/getApi";
-import { getWorkbench } from "./selectors/getWorkbench";
+import { getApi } from "../selectors/getApi";
+import { getWorkbench } from "../selectors/getWorkbench";
 import { LoadingMainMenu, MainMenu } from "./MainMenu";
-import { findMenu } from "../xmlInterpreters/menuXml";
+import { findMenu } from "../../xmlInterpreters/menuXml";
 
 const sLoadMenu = "sLoadMenu";
 const sLoadMenuFailed = "sLoadMenuFailed";

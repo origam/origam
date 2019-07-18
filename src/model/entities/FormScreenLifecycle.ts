@@ -1,13 +1,13 @@
 import { IFormScreenLifecycle } from "./types/IFormScreenLifecycle";
 import { createAtom, flow, action, when } from "mobx";
 import { interpret, Machine } from "xstate";
-import { getApi } from "./selectors/getApi";
-import { getMenuItemId } from "./selectors/getMenuItemId";
-import { interpretScreenXml } from "../xmlInterpreters/screenXml";
-import { getOpenedScreen } from "./selectors/getOpenedScreen";
-import { getFormScreen } from "./selectors/FormScreen/getFormScreen";
-import { loadFreshData } from "./actions/DataView/loadFreshData";
-import { getDataViewList } from "./selectors/FormScreen/getDataViewList";
+import { getApi } from "../selectors/getApi";
+import { getMenuItemId } from "../selectors/getMenuItemId";
+import { interpretScreenXml } from "../../xmlInterpreters/screenXml";
+import { getOpenedScreen } from "../selectors/getOpenedScreen";
+import { getFormScreen } from "../selectors/FormScreen/getFormScreen";
+import { loadFreshData } from "../actions/DataView/loadFreshData";
+import { getDataViewList } from "../selectors/FormScreen/getDataViewList";
 
 const loadScreenSuccess = "loadScreenSuccess";
 const loadScreenFailed = "loadScreenFailed";

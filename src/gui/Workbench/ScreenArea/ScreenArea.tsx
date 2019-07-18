@@ -2,7 +2,7 @@ import { inject, observer, Observer } from "mobx-react";
 import React from "react";
 import { getApplicationLifecycle } from "../../../model/selectors/getApplicationLifecycle";
 import { getOpenedScreenItems } from "../../../model/selectors/getOpenedScreenItems";
-import { IOpenedScreen } from "../../../model/types/IOpenedScreen";
+import { IOpenedScreen } from "../../../model/entities/types/IOpenedScreen";
 import S from "./ScreenArea.module.css";
 import { ScreenBuilder } from "./ScreenBuilder";
 

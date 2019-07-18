@@ -1,6 +1,6 @@
 import React from "react";
 import { FilterSettingsBoolean } from "./HeaderControls/FilterSettingsBoolean";
-import { IProperty } from "../../../../../model/types/IProperty";
+import { IProperty } from "../../../../../model/entities/types/IProperty";
 import { FilterSettingsString } from "./HeaderControls/FilterSettingsString";
 import { FilterSettingsDate } from "./HeaderControls/FilterSettingsDate";
 

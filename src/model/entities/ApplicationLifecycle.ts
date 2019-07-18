@@ -5,13 +5,13 @@ import {
   IApplicationLifecycle,
   IApplicationPage
 } from "./types/IApplicationLifecycle";
-import { getApi } from "./selectors/getApi";
-import { getApplication } from "./selectors/getApplication";
-import { createWorkbench } from "./factories/createWorkbench";
-import { getOpenedScreens } from "./selectors/getOpenedScreens";
-import { createOpenedScreen } from "./factories/createOpenedScreen";
+import { getApi } from "../selectors/getApi";
+import { getApplication } from "../selectors/getApplication";
+import { createWorkbench } from "../factories/createWorkbench";
+import { getOpenedScreens } from "../selectors/getOpenedScreens";
+import { createOpenedScreen } from "../factories/createOpenedScreen";
 import { IOpenedScreen } from "./types/IOpenedScreen";
-import { createLoadingFormScreen } from "./factories/createLoadingFormScreen";
+import { createLoadingFormScreen } from "../factories/createLoadingFormScreen";
 
 const loginFormSubmit = "loginFormSubmit";
 const loginSuccessful = "loginSuccessful";

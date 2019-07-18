@@ -1,9 +1,9 @@
 import React from "react";
 import { observer, Provider } from "mobx-react";
-import { IOpenedScreen } from "../../../model/types/IOpenedScreen";
+import { IOpenedScreen } from "../../../model/entities/types/IOpenedScreen";
 import { FormScreenBuilder } from "./FormScreenBuilder";
 import { FormScreen } from "./FormScreen";
-import { isILoadedFormScreen } from "../../../model/types/IFormScreen";
+import { isILoadedFormScreen } from "../../../model/entities/types/IFormScreen";
 
 @observer
 export class ScreenBuilder extends React.Component<{

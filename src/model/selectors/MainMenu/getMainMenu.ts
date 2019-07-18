@@ -1,4 +1,4 @@
-import { IMainMenu, ILoadingMainMenu } from "../../types/IMainMenu";
+import { IMainMenu, ILoadingMainMenu } from "../../entities/types/IMainMenu";
 import { getWorkbench } from "../getWorkbench";
 
 export function getMainMenu(

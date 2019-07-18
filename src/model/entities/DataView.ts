@@ -3,14 +3,13 @@ import { IPanelViewType } from "./types/IPanelViewType";
 import { IProperty } from "./types/IProperty";
 import { observable, action, computed, runInAction } from "mobx";
 import { IDataTable } from "./types/IDataTable";
-import { getFormScreen } from "./selectors/FormScreen/getFormScreen";
+import { getFormScreen } from "../selectors/FormScreen/getFormScreen";
 import { IDataViewLifecycle } from "./types/IDataViewLifecycle";
-import { getDataSourceByEntity } from "./selectors/DataSources/getDataSourceByEntity";
-import { ITablePanelView } from "./TablePanelView/types/ITablePanelView";
-import { IFormPanelView } from "./FormPanelView/types/IFormPanelView";
-import { getDataTable } from "./selectors/DataView/getDataTable";
-import { getDialogStack } from "./selectors/DialogStack/getDialogStack";
-import { cannotChangeRowDialog } from '../gui/Components/Dialogs/CannotChangeRowDialog';
+import { getDataSourceByEntity } from "../selectors/DataSources/getDataSourceByEntity";
+import { ITablePanelView } from "../TablePanelView/types/ITablePanelView";
+import { IFormPanelView } from "../FormPanelView/types/IFormPanelView";
+import { getDataTable } from "../selectors/DataView/getDataTable";
+
 
 export class DataView implements IDataView {
   $type_IDataView: 1 = 1;

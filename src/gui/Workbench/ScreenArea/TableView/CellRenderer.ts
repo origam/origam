@@ -5,8 +5,8 @@ import {
 } from "../../../Components/ScreenElements/Table/types";
 import { CPR } from "../../../../utils/canvas";
 import moment from "moment";
-import { IDataTable } from "../../../../model/types/IDataTable";
-import { IProperty } from "../../../../model/types/IProperty";
+import { IDataTable } from "../../../../model/entities/types/IDataTable";
+import { IProperty } from "../../../../model/entities/types/IProperty";
 import { computed } from "mobx";
 import { ITablePanelView } from "../../../../model/TablePanelView/types/ITablePanelView";
 import { TablePanelView } from "../../../../model/TablePanelView/TablePanelView";

@@ -1,4 +1,4 @@
-import { IWorkbench } from "../types/IWorkbench";
+import { IWorkbench } from "../entities/types/IWorkbench";
 import { getApplication } from "./getApplication";
 
 export function getWorkbench(ctx: any): IWorkbench {

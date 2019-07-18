@@ -9,9 +9,9 @@ import {
 } from "../../../Components/ScreenElements/Table/types";
 import bind from "bind-decorator";
 import { Header } from "../../../Components/ScreenElements/Table/Header";
-import { IProperty } from "../../../../model/types/IProperty";
+import { IProperty } from "../../../../model/entities/types/IProperty";
 import { computed, observable, action } from "mobx";
-import { IDataView } from "../../../../model/types/IDataView";
+import { IDataView } from "../../../../model/entities/types/IDataView";
 import { getTableViewProperties } from "../../../../model/selectors/TablePanelView/getTableViewProperties";
 import { getColumnHeaders } from "../../../../model/selectors/TablePanelView/getColumnHeaders";
 import { IColumnHeader } from "../../../../model/selectors/TablePanelView/types";

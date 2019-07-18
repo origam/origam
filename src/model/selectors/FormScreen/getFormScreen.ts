@@ -1,7 +1,7 @@
 import {
   ILoadedFormScreen,
   isILoadedFormScreen
-} from "../../types/IFormScreen";
+} from "../../entities/types/IFormScreen";
 
 export function getFormScreen(ctx: any): ILoadedFormScreen {
   let cn = ctx;

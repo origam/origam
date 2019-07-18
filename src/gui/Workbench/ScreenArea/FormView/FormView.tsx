@@ -5,8 +5,10 @@ export class FormView extends React.Component<{}> {
   render() {
     return (
       <div className={S.formView}>
-        {/*<Toolbar ... />*/}
-        {this.props.children}
+        <form onSubmit={(event: any) => event.preventDefault()}>
+          {/*<Toolbar ... />*/}
+          {this.props.children}
+        </form>
       </div>
     );
   }

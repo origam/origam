@@ -1,25 +1,25 @@
 import { findStopping } from "./xmlUtils";
-import { FormScreen } from "../model/FormScreen";
-import { DataSource } from "../model/DataSource";
-import { DataSourceField } from "../model/DataSourceField";
-import { DataView } from "../model/DataView";
-import { IPanelViewType } from "../model/types/IPanelViewType";
-import { Property } from "../model/Property";
-import { DropDownColumn } from "../model/DropDownColumn";
-import { IComponentBinding } from "../model/types/IComponentBinding";
+import { FormScreen } from "../model/entities/FormScreen";
+import { DataSource } from "../model/entities/DataSource";
+import { DataSourceField } from "../model/entities/DataSourceField";
+import { DataView } from "../model/entities/DataView";
+import { IPanelViewType } from "../model/entities/types/IPanelViewType";
+import { Property } from "../model/entities/Property";
+import { DropDownColumn } from "../model/entities/DropDownColumn";
+import { IComponentBinding } from "../model/entities/types/IComponentBinding";
 import {
   ComponentBindingPair,
   ComponentBinding
-} from "../model/ComponentBinding";
-import { IFormScreenLifecycle } from "../model/types/IFormScreenLifecycle";
-import { DataTable } from "../model/DataTable";
-import { DataViewLifecycle } from "../model/DataViewLifecycle";
+} from "../model/entities/ComponentBinding";
+import { IFormScreenLifecycle } from "../model/entities/types/IFormScreenLifecycle";
+import { DataTable } from "../model/entities/DataTable";
+import { DataViewLifecycle } from "../model/entities/DataViewLifecycle";
 import { TablePanelView } from "../model/TablePanelView/TablePanelView";
 import { FormPanelView } from "../model/FormPanelView/FormPanelView";
 import { flf2mof } from "../utils/flashDateFormat";
-import { Lookup } from "../model/Lookup";
+import { Lookup } from "../model/entities/Lookup";
 import { ColumnConfigurationDialog } from '../model/TablePanelView/ColumnConfigurationDialog';
-import { FilterConfiguration } from '../model/FilterConfiguration';
+import { FilterConfiguration } from '../model/entities/FilterConfiguration';
 
 export const findUIRoot = (node: any) =>
   findStopping(node, n => n.name === "UIRoot")[0];

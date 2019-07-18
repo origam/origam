@@ -1,8 +1,8 @@
 import React from "react";
 import { observer, inject, Provider } from "mobx-react";
 import S from "./DataViewToolbar.module.css";
-import { IDataView } from "../../../model/types/IDataView";
-import { IPanelViewType } from "../../../model/types/IPanelViewType";
+import { IDataView } from "../../../model/entities/types/IDataView";
+import { IPanelViewType } from "../../../model/entities/types/IPanelViewType";
 import { getActivePanelView } from "../../../model/selectors/DataView/getActivePanelView";
 import { getDataViewLabel } from "../../../model/selectors/DataView/getDataViewLabel";
 import { action, observable } from "mobx";

@@ -1,7 +1,7 @@
 import { IDataTable, IDataTableData } from "./types/IDataTable";
 import { observable, action, computed } from "mobx";
 import { IProperty } from "./types/IProperty";
-import { getDataView } from "./selectors/DataView/getDataView";
+import { getDataView } from "../selectors/DataView/getDataView";
 import { IAdditionalRowData } from "./types/IAdditionalRecordData";
 import { AdditionalRowData } from "./AdditionalRowData";
 

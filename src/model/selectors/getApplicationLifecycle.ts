@@ -1,4 +1,4 @@
-import { IApplicationLifecycle } from "../types/IApplicationLifecycle";
+import { IApplicationLifecycle } from "../entities/types/IApplicationLifecycle";
 import { getApplication } from "./getApplication";
 
 export function getApplicationLifecycle(ctx: any): IApplicationLifecycle {

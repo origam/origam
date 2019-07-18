@@ -4,12 +4,12 @@ import { FormSection } from "../../../Components/ScreenElements/FormSection";
 import { observer, inject, Provider, Observer } from "mobx-react";
 import { findStrings } from "../../../../xmlInterpreters/screenXml";
 import { getDataViewPropertyById } from "../../../../model/selectors/DataView/getDataViewPropertyById";
-import { IDataView } from "../../../../model/types/IDataView";
+import { IDataView } from "../../../../model/entities/types/IDataView";
 import { FormField } from "./FormField";
 import { FormRoot } from "../../../Components/ScreenElements/FormRoot";
 import { FormViewEditor } from "./FormViewEditor";
 import { getSelectedRow } from "../../../../model/selectors/DataView/getSelectedRow";
-import { DataTable } from "../../../../model/DataTable";
+import { DataTable } from "../../../../model/entities/DataTable";
 import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
 
 @inject(({ dataView }) => {

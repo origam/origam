@@ -3,8 +3,9 @@ import { ICaptionPosition } from "./types/ICaptionPosition";
 import { IDropDownColumn } from "./types/IDropDownColumn";
 import { IPropertyColumn } from "./types/IPropertyColumn";
 import { observable, computed } from "mobx";
-import { getDataSourceFieldIndexByName } from "./selectors/DataSources/getDataSourceFieldIndexByName";
+
 import { ILookup } from "./types/ILookup";
+import { getDataSourceFieldIndexByName } from "../selectors/DataSources/getDataSourceFieldIndexByName";
 
 export class Property implements IProperty {
   $type_IProperty: 1 = 1;

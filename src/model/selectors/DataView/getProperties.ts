@@ -1,4 +1,4 @@
-import { IProperty } from "../../types/IProperty";
+import { IProperty } from "../../entities/types/IProperty";
 import { getDataView } from "./getDataView";
 
 export function getProperties(ctx: any): IProperty[] {
