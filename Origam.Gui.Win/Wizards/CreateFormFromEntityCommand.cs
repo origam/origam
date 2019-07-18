@@ -273,7 +273,9 @@ namespace Origam.Gui.Win.Wizards
 
 	public class CreateMenuFromDataConstantCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        MenuFromForm menuFrom;
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -288,20 +290,44 @@ namespace Origam.Gui.Win.Wizards
 		public override void Run()
 		{
 			DataConstant constant = Owner as DataConstant;
-			CreateMenuFromFormWizard wiz = new CreateMenuFromFormWizard();
-			wiz.Role = constant.Name;
-			if(wiz.ShowDialog() == DialogResult.OK)
+
+            ArrayList list = new ArrayList();
+            DataConstantReferenceMenuItem dataconstant = new DataConstantReferenceMenuItem();
+            list.Add(new ListViewItem(dataconstant.ItemType, dataconstant.Icon));
+
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.MenuPage);
+            stackPage.Push(PagesList.startPage);
+
+            menuFrom = new MenuFromForm
+            {
+                ItemTypeList = list,
+                Description = "Create Menu from Dataconstant Wizard",
+                Pages = stackPage,
+                Entity = constant,
+                Role = constant.Name,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this
+            };
+            Wizard wiz = new Wizard(menuFrom);
+			if(wiz.ShowDialog() != DialogResult.OK)
 			{
-				DataConstantReferenceMenuItem menu = MenuHelper.CreateMenuItem(wiz.Caption, wiz.Role, constant);
-                GeneratedModelElements.Add(menu);
-                bool createRole = wiz.Role != "*" && wiz.Role != "";
-				if(createRole)
-				{
-                    ServiceCommandUpdateScriptActivity activity = CreateRole(wiz.Role);
-                    GeneratedModelElements.Add(activity);
-				}
-			}
+                GeneratedModelElements.Clear();
+            }
 		}
+
+        public override void Execute()
+        {
+            DataConstantReferenceMenuItem menu = MenuHelper.CreateMenuItem(menuFrom.Caption, menuFrom.Role, menuFrom.Entity as DataConstant);
+            GeneratedModelElements.Add(menu);
+            bool createRole = menuFrom.Role != "*" && menuFrom.Role != "";
+            if (createRole)
+            {
+                ServiceCommandUpdateScriptActivity activity = CreateRole(menuFrom.Role);
+                GeneratedModelElements.Add(activity);
+            }
+        }
     }
 
 	public class CreateMenuFromSequentialWorkflowCommand : AbstractMenuCommand

@@ -271,6 +271,20 @@ namespace Origam.UI.WizardForm
             }
             IsFinish(sender, e);
         }
+        private void MenuFromPage_Initialize(object sender, WizardPageInitEventArgs e)
+        {
+            MenuFromForm menufrom = (MenuFromForm)iwizard;
+            txtMenuRole.Text = menufrom.Role;
+            GetNextPage(PagesList.MenuPage, sender);
+        }
+
+        private void MenuFromPage_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
+            MenuFromForm menufrom = (MenuFromForm)iwizard;
+            menufrom.Role = txtMenuRole.Text;
+            menufrom.Caption = txtMenuCaption.Text;
+            IsFinish(sender, e);
+        }
         #endregion
 
         #region support
@@ -368,6 +382,8 @@ namespace Origam.UI.WizardForm
                     return childEntityPage;
                 case PagesList.ForeignForm:
                     return foreignKeyPage;
+                case PagesList.MenuPage:
+                    return menuFromPage;
                 default:
                     MessageBox.Show("Not Set WizardPage","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
                     break;

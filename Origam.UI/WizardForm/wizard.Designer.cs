@@ -111,7 +111,12 @@ namespace Origam.UI.WizardForm
             this.cboEntity = new System.Windows.Forms.ComboBox();
             this.label15 = new System.Windows.Forms.Label();
             this.txtFkFieldName = new System.Windows.Forms.TextBox();
+            this.menuFromPage = new AeroWizard.WizardPage();
             this.colCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txtMenuCaption = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.txtMenuRole = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.aerowizard1)).BeginInit();
             this.StartPage.SuspendLayout();
             this.StructureNamePage.SuspendLayout();
@@ -125,6 +130,7 @@ namespace Origam.UI.WizardForm
             this.groupBox2.SuspendLayout();
             this.childEntityPage.SuspendLayout();
             this.foreignKeyPage.SuspendLayout();
+            this.menuFromPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // listView1
@@ -153,6 +159,7 @@ namespace Origam.UI.WizardForm
             this.aerowizard1.Pages.Add(this.RelationShipEntityPage);
             this.aerowizard1.Pages.Add(this.childEntityPage);
             this.aerowizard1.Pages.Add(this.foreignKeyPage);
+            this.aerowizard1.Pages.Add(this.menuFromPage);
             this.aerowizard1.Size = new System.Drawing.Size(588, 497);
             this.aerowizard1.TabIndex = 0;
             // 
@@ -895,9 +902,53 @@ namespace Origam.UI.WizardForm
             this.txtFkFieldName.Size = new System.Drawing.Size(399, 23);
             this.txtFkFieldName.TabIndex = 19;
             // 
+            // menuFromPage
+            // 
+            this.menuFromPage.Controls.Add(this.txtMenuCaption);
+            this.menuFromPage.Controls.Add(this.label16);
+            this.menuFromPage.Controls.Add(this.txtMenuRole);
+            this.menuFromPage.Controls.Add(this.label17);
+            this.menuFromPage.Name = "menuFromPage";
+            this.menuFromPage.Size = new System.Drawing.Size(541, 343);
+            this.menuFromPage.TabIndex = 10;
+            this.menuFromPage.Text = "Create Menu Form";
+            this.menuFromPage.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.MenuFromPage_Commit);
+            this.menuFromPage.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.MenuFromPage_Initialize);
+
+            // 
             // colCode
             // 
             this.colCode.Name = "colCode";
+            // 
+            // txtMenuCaption
+            // 
+            this.txtMenuCaption.Location = new System.Drawing.Point(150, 50);
+            this.txtMenuCaption.Name = "txtMenuCaption";
+            this.txtMenuCaption.Size = new System.Drawing.Size(277, 23);
+            this.txtMenuCaption.TabIndex = 13;
+            // 
+            // label16
+            // 
+            this.label16.Location = new System.Drawing.Point(69, 50);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(65, 23);
+            this.label16.TabIndex = 16;
+            this.label16.Text = "Caption:";
+            // 
+            // txtMenuRole
+            // 
+            this.txtMenuRole.Location = new System.Drawing.Point(150, 88);
+            this.txtMenuRole.Name = "txtMenuRole";
+            this.txtMenuRole.Size = new System.Drawing.Size(277, 23);
+            this.txtMenuRole.TabIndex = 14;
+            // 
+            // label17
+            // 
+            this.label17.Location = new System.Drawing.Point(69, 88);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(65, 16);
+            this.label17.TabIndex = 15;
+            this.label17.Text = "Role:";
             // 
             // Wizard
             // 
@@ -934,10 +985,12 @@ namespace Origam.UI.WizardForm
             this.childEntityPage.PerformLayout();
             this.foreignKeyPage.ResumeLayout(false);
             this.foreignKeyPage.PerformLayout();
+            this.menuFromPage.ResumeLayout(false);
+            this.menuFromPage.PerformLayout();
             this.ResumeLayout(false);
 
         }
-#endregion
+        #endregion
         private AeroWizard.WizardControl aerowizard1;
         private AeroWizard.WizardPage StartPage;
         private System.Windows.Forms.ListView listView1;
@@ -1017,6 +1070,11 @@ namespace Origam.UI.WizardForm
         private ComboBox cboEntity;
         private Label label15;
         private TextBox txtFkFieldName;
+        private WizardPage menuFromPage;
+        private TextBox txtMenuCaption;
+        private Label label16;
+        private TextBox txtMenuRole;
+        private Label label17;
     }
 }
 

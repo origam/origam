@@ -76,25 +76,20 @@ namespace Origam.Gui.Win.Wizards
                 ItemTypeList = list,
                 Description = "Create Language Translation Entity Wizard",
                 Pages = stackPage,
-                Entity = Owner as IDataEntity,
+                Entity = Owner as TableMappingItem,
                 IsRoleVisible = false,
                 textColumnsOnly = true,
                 ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
                 Command = this
             };
             Wizard wiz = new Wizard(wizardForm);
-   //         CreateFormFromEntityWizard wiz = new CreateFormFromEntityWizard(true);
-			//wiz.Entity = Owner as TableMappingItem;
 			if (wiz.ShowDialog() != DialogResult.OK)
             {
                 GeneratedModelElements.Clear();
             }
         }
-
         public override void Execute()
         {
-            TableMappingItem parentEntity = wizardForm.Entity as TableMappingItem;
-            ICollection selectedFields = wizardForm.SelectedFields;
             List<AbstractSchemaItem> generatedElements = new List<AbstractSchemaItem>();
             var table = EntityHelper.CreateLanguageTranslationChildEntity(
                 wizardForm.Entity as TableMappingItem, wizardForm.SelectedFields, generatedElements);
@@ -106,6 +101,5 @@ namespace Origam.Gui.Win.Wizards
                 table.Name, table.Id);
             GeneratedModelElements.Add(script);
         }
-
     }
 }
