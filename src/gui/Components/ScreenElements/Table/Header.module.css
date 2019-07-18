@@ -1,14 +1,14 @@
 .header {
   min-height: 20px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   white-space: nowrap;
   box-sizing: border-box;
   /*border-right: 1px solid #bbbbbb;*/
   position: relative;
   background-color: #e5e5e5;
-  overflow: hidden;
+  /*overflow: hidden;*/
   flex-shrink: 0;
   cursor: pointer;
 }
@@ -23,6 +23,9 @@
   margin-right: 3px;
   overflow: hidden;
   box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .order {
@@ -44,4 +47,12 @@
 
 .columnWidthHandle:hover {
   background-color: white;
+}
+
+.inHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  min-height: 20px;
+  width: 100%;
 }

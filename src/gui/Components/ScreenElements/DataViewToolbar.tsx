@@ -12,23 +12,29 @@ import { getTablePanelView } from "../../../model/selectors/TablePanelView/getTa
   return {
     activePanelView: getActivePanelView(dataView),
     label: getDataViewLabel(dataView),
+    isFilterSettingsVisible:
+      dataView.tablePanelView.filterConfiguration.isFilterControlsDisplayed,
     onFormViewButtonClick: dataView.onFormPanelViewButtonClick,
     onTableViewButtonClick: dataView.onTablePanelViewButtonClick,
     onColumnConfClick: getTablePanelView(dataView).columnConfigurationDialog
       .onColumnConfClick,
     onDeleteRowClick: dataView.lifecycle.onDeleteRowClicked,
-    onCreateRowClick: dataView.lifecycle.onAddRowClicked
+    onCreateRowClick: dataView.lifecycle.onAddRowClicked,
+    onToggleFilterClick:
+      dataView.tablePanelView.filterConfiguration.onFilterDisplayClick
   };
 })
 @observer
 export class Toolbar extends React.Component<{
   activePanelView?: IPanelViewType;
   label?: string;
+  isFilterSettingsVisible?: boolean;
   onFormViewButtonClick?: (event: any) => void;
   onTableViewButtonClick?: (event: any) => void;
   onColumnConfClick?: (event: any) => void;
   onDeleteRowClick?: (event: any) => void;
   onCreateRowClick?: (event: any) => void;
+  onToggleFilterClick?: (event: any) => void;
 }> {
   render() {
     return (
@@ -148,9 +154,9 @@ export class Toolbar extends React.Component<{
         <div className={S.section}>
           <ToolbarButton
             isVisible={true}
-            isActive={false}
+            isActive={!!this.props.isFilterSettingsVisible}
             isEnabled={true}
-            onClick={undefined}
+            onClick={this.props.onToggleFilterClick}
           >
             <i className="fas fa-filter" aria-hidden="true" />
           </ToolbarButton>
@@ -168,8 +174,10 @@ export class Toolbar extends React.Component<{
                 </ToolbarButton>
               )}
             >
-              <ToolbarDropDownMenuItem >
-                Show Filter
+              <ToolbarDropDownMenuItem onClick={this.props.onToggleFilterClick}>
+                {this.props.isFilterSettingsVisible
+                  ? "Cancel and Hide Filter"
+                  : "Show Filter"}
               </ToolbarDropDownMenuItem>
               <ToolbarDropDownMenuItem isDisabled={true}>
                 Remember The Current Filter
@@ -177,6 +185,7 @@ export class Toolbar extends React.Component<{
               <ToolbarDropDownMenuItem isDisabled={true}>
                 Cancel Default Filter
               </ToolbarDropDownMenuItem>
+              <div className={S.dropDownMenuDivider} />
               <ToolbarDropDownMenuItem isDisabled={true}>
                 Save Current Filter
               </ToolbarDropDownMenuItem>

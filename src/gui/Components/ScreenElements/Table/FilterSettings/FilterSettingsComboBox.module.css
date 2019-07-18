@@ -1,0 +1,48 @@
+.container {
+  width: 100%;
+  position: relative;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  background-color: #666666;
+  color: white;
+  height: 20px;
+  border: 1px solid black;
+  position: relative;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.dropdownSymbol {
+  position: absolute;
+  right: 0px;
+  padding-right: 5px;
+}
+
+.dropdown {
+  position: absolute;
+  right: 0px;
+  top: 21px;
+  z-index: 1000;
+  background-color: white;
+  border: 1px solid black;
+  color: black;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdownItem {
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.dropdownItem:hover {
+  color: white;
+  background-color: #8998c5;
+}

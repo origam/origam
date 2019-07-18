@@ -1,5 +1,5 @@
 import React from "react";
-import { observer, inject, Provider } from "mobx-react";
+import { observer, inject, Provider, Observer } from "mobx-react";
 import { SimpleScrollState } from "../../../Components/ScreenElements/Table/SimpleScrollState";
 import { CellRenderer } from "./CellRenderer";
 import { Table } from "../../../Components/ScreenElements/Table/Table";
@@ -15,21 +15,18 @@ import { IDataView } from "../../../../model/types/IDataView";
 import { getTableViewProperties } from "../../../../model/selectors/TablePanelView/getTableViewProperties";
 import { getColumnHeaders } from "../../../../model/selectors/TablePanelView/getColumnHeaders";
 import { IColumnHeader } from "../../../../model/selectors/TablePanelView/types";
-import { getCellValueByIdx } from "../../../../model/selectors/TablePanelView/getCellValue";
 import { getRowCount } from "../../../../model/selectors/TablePanelView/getRowCount";
-import { getTablePanelView } from "../../../../model/selectors/TablePanelView/getTablePanelView";
-import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateTimeEditor";
-import moment from "moment";
 import { TableViewEditor } from "./TableViewEditor";
 import { ITablePanelView } from "../../../../model/TablePanelView/types/ITablePanelView";
 import { getSelectedRowIndex } from "../../../../model/selectors/TablePanelView/getSelectedRowIndex";
 import { getSelectedColumnIndex } from "../../../../model/selectors/TablePanelView/getSelectedColumnIndex";
 import { getIsEditing } from "../../../../model/selectors/TablePanelView/getIsEditing";
-import { TablePanelView } from "../../../../model/TablePanelView/TablePanelView";
+
+import { ITableColumnsConf } from "../../../Components/Dialogs/ColumnsDialog";
 import {
-  ColumnsDialog,
-  ITableColumnsConf
-} from "../../../Components/Dialogs/ColumnsDialog";
+  FilterSettingsComboBox,
+  FilterSettingsComboBoxItem
+} from "../../../Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
 
 @inject(({ dataView }) => {
   return {
@@ -51,6 +48,7 @@ export class TableView extends React.Component<{
     getRowCount: () => getRowCount(this.props.dataView)
   });
   headerRenderer = new HeaderRenderer({
+    tablePanelView: this.props.tablePanelView!,
     getColumnHeaders: () => getColumnHeaders(this.props.dataView),
     onColumnWidthChange: (cid, nw) => this.gDim.setColumnWidth(cid, nw),
     onColumnOrderChange: (id1, id2) =>
@@ -68,8 +66,6 @@ export class TableView extends React.Component<{
   cellRenderer = new CellRenderer({
     tablePanelView: this.props.tablePanelView!
   });
-
-
 
   render() {
     const self = this;
@@ -178,6 +174,7 @@ class GridDimensions implements IGridDimensions {
 }
 
 interface IHeaderRendererData {
+  tablePanelView: ITablePanelView;
   getColumnHeaders: () => IColumnHeader[];
   onColumnWidthChange: (id: string, newWidth: number) => void;
   onColumnOrderChange: (id: string, targetId: string) => void;
@@ -199,6 +196,7 @@ class HeaderRenderer implements IHeaderRendererData {
     idSource: string | undefined,
     idTarget: string | undefined
   ) => void = null as any;
+  tablePanelView: ITablePanelView = null as any;
 
   columnOrderChangeSourceId: string | undefined;
   columnOrderChangeTargetId: string | undefined;
@@ -260,6 +258,40 @@ class HeaderRenderer implements IHeaderRendererData {
         onStartColumnOrderChanging={this.handleStartColumnOrderChanging}
         onStopColumnOrderChanging={this.handleStopColumnOrderChanging}
         onPossibleColumnOrderChange={this.handlePossibleColumnOrderChange}
+        additionalHeaderContent={
+          this.tablePanelView.filterConfiguration.isFilterControlsDisplayed
+            ? () => (
+                <FilterSettingsComboBox trigger={<>=</>}>
+                  <FilterSettingsComboBoxItem>=</FilterSettingsComboBoxItem>
+                  <FilterSettingsComboBoxItem>&ne;</FilterSettingsComboBoxItem>
+                  <FilterSettingsComboBoxItem>
+                    begins with
+                  </FilterSettingsComboBoxItem>
+                  <FilterSettingsComboBoxItem>
+                    not begins with
+                  </FilterSettingsComboBoxItem>
+                  <FilterSettingsComboBoxItem>
+                    ends with
+                  </FilterSettingsComboBoxItem>
+                  <FilterSettingsComboBoxItem>
+                    not ends with
+                  </FilterSettingsComboBoxItem>
+                  <FilterSettingsComboBoxItem>
+                    contains
+                  </FilterSettingsComboBoxItem>
+                  <FilterSettingsComboBoxItem>
+                    not contains
+                  </FilterSettingsComboBoxItem>
+                  <FilterSettingsComboBoxItem>
+                    is null
+                  </FilterSettingsComboBoxItem>
+                  <FilterSettingsComboBoxItem>
+                    is not null
+                  </FilterSettingsComboBoxItem>
+                </FilterSettingsComboBox>
+              )
+            : undefined
+        }
       />
     );
   }

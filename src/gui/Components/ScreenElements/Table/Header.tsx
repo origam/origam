@@ -12,6 +12,7 @@ export class Header extends React.Component<{
   orderingDirection: IOrderByDirection;
   orderingOrder: number;
   isColumnOrderChanging: boolean;
+  additionalHeaderContent?: () => React.ReactNode;
   onColumnWidthChange?: (id: string, newWidth: number) => void;
   onStartColumnOrderChanging?: (id: string) => void;
   onStopColumnOrderChanging?: (id: string) => void;
@@ -119,23 +120,32 @@ export class Header extends React.Component<{
             minWidth: this.props.width - 4,
             maxWidth: this.props.width - 4
           }}
-          onMouseDown={this.handleHeaderMouseDown}
           onMouseUp={this.handleMouseUp}
           onMouseEnter={this.handleMouseEnter}
           onMouseLeave={this.handleMouseLeave}
         >
-          <div className={S.label}>{this.props.label}</div>
-          {this.props.orderingDirection !== IOrderByDirection.NONE && (
-            <div className={S.order}>
-              {this.props.orderingOrder > 0 && (
-                <span>{this.props.orderingOrder}</span>
-              )}
-              {this.props.orderingDirection === IOrderByDirection.ASC && (
-                <i className="fas fa-caret-up" />
-              )}
-              {this.props.orderingDirection === IOrderByDirection.DESC && (
-                <i className="fas fa-caret-down" />
-              )}
+          <div
+            className={S.inHeaderRow}
+            onMouseDown={this.handleHeaderMouseDown}
+          >
+            <div className={S.label}>{this.props.label}</div>
+            {this.props.orderingDirection !== IOrderByDirection.NONE && (
+              <div className={S.order}>
+                {this.props.orderingOrder > 0 && (
+                  <span>{this.props.orderingOrder}</span>
+                )}
+                {this.props.orderingDirection === IOrderByDirection.ASC && (
+                  <i className="fas fa-caret-up" />
+                )}
+                {this.props.orderingDirection === IOrderByDirection.DESC && (
+                  <i className="fas fa-caret-down" />
+                )}
+              </div>
+            )}
+          </div>
+          {this.props.additionalHeaderContent && (
+            <div className={S.inHeaderRow}>
+              {this.props.additionalHeaderContent()}
             </div>
           )}
         </div>

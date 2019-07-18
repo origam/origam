@@ -13,16 +13,20 @@ import { getDataViewLifecycle } from "../selectors/DataView/getDataViewLifecycle
 import { ITableColumnsConf } from "../../gui/Components/Dialogs/ColumnsDialog";
 import { getSelectedRowId } from "../selectors/TablePanelView/getSelectedRowId";
 import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
+import { IFilterConfiguration } from "../types/IFilterConfiguration";
 
 export class TablePanelView implements ITablePanelView {
+  
   $type_ITablePanelView: 1 = 1;
 
   constructor(data: ITablePanelViewData) {
     Object.assign(this, data);
     this.columnConfigurationDialog.parent = this;
+    this.filterConfiguration.parent = this;
   }
 
   columnConfigurationDialog: IColumnConfigurationDialog = null as any;
+  filterConfiguration: IFilterConfiguration = null as any;
 
   @observable isEditing: boolean = false;
   @observable fixedColumnCount: number = 0;

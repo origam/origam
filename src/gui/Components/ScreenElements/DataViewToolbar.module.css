@@ -108,3 +108,8 @@
   align-items: center;
   justify-content: center
 }
+
+.dropDownMenuDivider {
+  height: 1px;
+  border: 1px solid lightgray;
+}

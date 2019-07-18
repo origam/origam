@@ -1,10 +1,12 @@
 import { IProperty } from "../../types/IProperty";
 import { ITableColumnsConf } from "../../../gui/Components/Dialogs/ColumnsDialog";
 import { IColumnConfigurationDialog } from "./IColumnConfigurationDialog";
+import { IFilterConfiguration } from "../../types/IFilterConfiguration";
 
 export interface ITablePanelViewData {
   tablePropertyIds: string[];
   columnConfigurationDialog: IColumnConfigurationDialog;
+  filterConfiguration: IFilterConfiguration;
 }
 
 export interface ITableCanvas {
@@ -48,6 +50,8 @@ export interface ITablePanelView extends ITablePanelViewData {
     idSource: string | undefined,
     idTarget: string | undefined
   ): void;
+
+  
 
   parent?: any;
 }
