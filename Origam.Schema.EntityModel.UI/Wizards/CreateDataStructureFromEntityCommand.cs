@@ -84,7 +84,7 @@ namespace Origam.Schema.EntityModel.Wizards
                 Description = "Create Data Structure Wizard",
                 ItemTypeList = list,
                 Pages = stackPage,
-                DatastructureList = listdsName,
+                StructureList = listdsName,
                 NameOfEntity = entity.Name,
                 ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
                 Command = this

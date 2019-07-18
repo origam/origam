@@ -10,7 +10,7 @@ namespace Origam.UI.Interfaces
         ArrayList ItemTypeList { get; set; }
         Stack Pages { get; set; }
         string Description { get; set; }
-        List<string> DatastructureList { get; set; }
+        List<string> StructureList { get; set; }
         string NameOfEntity { get; set; }
         ImageList ImageList { get; set; }
 

@@ -22,16 +22,25 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.Schema.GuiModel;
+using Origam.Services;
 using Origam.UI;
+using Origam.UI.WizardForm;
+using Origam.Workbench;
+using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win.Wizards
 {
 	class CreateLanguageTranslationEntityCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+        ScreenWizardForm wizardForm;
+        public override bool IsEnabled
 		{
 			get
 			{				
@@ -46,14 +55,49 @@ namespace Origam.Gui.Win.Wizards
 
 		public override void Run()
 		{
-			CreateFormFromEntityWizard wiz = new CreateFormFromEntityWizard(true);
-			wiz.Entity = Owner as TableMappingItem;
-			if (wiz.ShowDialog() != DialogResult.OK) return;
-			TableMappingItem parentEntity = wiz.Entity as TableMappingItem;
-			ICollection selectedFields = wiz.SelectedFields;
+
+            PanelSchemaItemProvider dsprovider = schema.GetProvider(typeof(PanelSchemaItemProvider)) as PanelSchemaItemProvider;
+            List<string> listdsName = dsprovider.ChildItemsByType(PanelControlSet.ItemTypeConst)
+                            .ToArray()
+                            .Select(x => { return ((AbstractSchemaItem)x).Name; })
+                            .ToList();
+
+            ArrayList list = new ArrayList();
+            TableMappingItem mappingItem = new TableMappingItem();
+            list.Add(new ListViewItem(mappingItem.ItemType, mappingItem.Icon));
+
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.ScreenForm);
+            stackPage.Push(PagesList.startPage);
+
+            wizardForm = new ScreenWizardForm
+            {
+                ItemTypeList = list,
+                Description = "Create Language Translation Entity Wizard",
+                Pages = stackPage,
+                Entity = Owner as IDataEntity,
+                IsRoleVisible = false,
+                textColumnsOnly = true,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this
+            };
+            Wizard wiz = new Wizard(wizardForm);
+   //         CreateFormFromEntityWizard wiz = new CreateFormFromEntityWizard(true);
+			//wiz.Entity = Owner as TableMappingItem;
+			if (wiz.ShowDialog() != DialogResult.OK)
+            {
+                GeneratedModelElements.Clear();
+            }
+        }
+
+        public override void Execute()
+        {
+            TableMappingItem parentEntity = wizardForm.Entity as TableMappingItem;
+            ICollection selectedFields = wizardForm.SelectedFields;
             List<AbstractSchemaItem> generatedElements = new List<AbstractSchemaItem>();
-			var table = EntityHelper.CreateLanguageTranslationChildEntity(
-                wiz.Entity as TableMappingItem, wiz.SelectedFields, generatedElements);
+            var table = EntityHelper.CreateLanguageTranslationChildEntity(
+                wizardForm.Entity as TableMappingItem, wizardForm.SelectedFields, generatedElements);
             foreach (var item in generatedElements)
             {
                 GeneratedModelElements.Add(item);
@@ -62,5 +106,6 @@ namespace Origam.Gui.Win.Wizards
                 table.Name, table.Id);
             GeneratedModelElements.Add(script);
         }
+
     }
 }

@@ -90,7 +90,7 @@ namespace Origam.Gui.Win.Wizards
                 Entity = Owner as IDataEntity,
                 IsRoleVisible = false,
                 textColumnsOnly = false,
-                DatastructureList = listdsName,
+                StructureList = listdsName,
                 NameOfEntity = (Owner as IDataEntity).Name,
                 ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
                 Command = this
@@ -173,7 +173,7 @@ namespace Origam.Gui.Win.Wizards
                 Entity = Owner as IDataEntity,
                 IsRoleVisible = true,
                 textColumnsOnly = false,
-                DatastructureList = listdsName,
+                StructureList = listdsName,
                 NameOfEntity = (Owner as IDataEntity).Name,
                 ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
                 Command = this,

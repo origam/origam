@@ -12,14 +12,14 @@ namespace Origam.UI.WizardForm
         public ArrayList ItemTypeList { get ; set ; }
         public  Stack Pages { get; set; }
         public  string Description { get ; set ; }
-        public  List<string> DatastructureList { get ; set ; }
+        public  List<string> StructureList { get ; set ; }
         public  string NameOfEntity { get ; set ; }
         public ImageList ImageList { get; set ; }
         public IRunCommand Command { get; set; }
 
         public bool IsExistsNameInDataStructure(string name)
         {
-            return DatastructureList.Contains(name);
+            return StructureList.Contains(name);
         }
 
         public void ListView(ListView listView)

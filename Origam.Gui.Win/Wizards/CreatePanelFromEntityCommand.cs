@@ -85,7 +85,7 @@ namespace Origam.Gui.Win.Wizards
                 ItemTypeList = list,
                 Description = "Create Screen Section Wizard",
                 Pages = stackPage,
-                DatastructureList = listdsName,
+                StructureList = listdsName,
                 Entity = Owner as IDataEntity,
                 NameOfEntity = (Owner as IDataEntity).Name,
                 IsRoleVisible = false,
