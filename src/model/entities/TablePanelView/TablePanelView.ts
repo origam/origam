@@ -4,16 +4,14 @@ import {
   ITablePanelViewData,
   ITableCanvas
 } from "./types/ITablePanelView";
-import { getDataView } from "../selectors/DataView/getDataView";
-import { getDataTable } from "../selectors/DataView/getDataTable";
-import { IProperty } from "../entities/types/IProperty";
-import { getDataViewPropertyById } from "../selectors/DataView/getDataViewPropertyById";
-import { getSelectedRow } from "../selectors/DataView/getSelectedRow";
-import { getDataViewLifecycle } from "../selectors/DataView/getDataViewLifecycle";
-import { ITableColumnsConf } from "../../gui/Components/Dialogs/ColumnsDialog";
-import { getSelectedRowId } from "../selectors/TablePanelView/getSelectedRowId";
+import { getDataView } from "../../selectors/DataView/getDataView";
+import { getDataTable } from "../../selectors/DataView/getDataTable";
+import { IProperty } from "../types/IProperty";
+import { getDataViewPropertyById } from "../../selectors/DataView/getDataViewPropertyById";
+import { getSelectedRow } from "../../selectors/DataView/getSelectedRow";
+import { getDataViewLifecycle } from "../../selectors/DataView/getDataViewLifecycle";
 import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
-import { IFilterConfiguration } from "../entities/types/IFilterConfiguration";
+import { IFilterConfiguration } from "../types/IFilterConfiguration";
 
 export class TablePanelView implements ITablePanelView {
   

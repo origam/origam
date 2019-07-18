@@ -6,8 +6,8 @@ import { IDataTable } from "./types/IDataTable";
 import { getFormScreen } from "../selectors/FormScreen/getFormScreen";
 import { IDataViewLifecycle } from "./types/IDataViewLifecycle";
 import { getDataSourceByEntity } from "../selectors/DataSources/getDataSourceByEntity";
-import { ITablePanelView } from "../TablePanelView/types/ITablePanelView";
-import { IFormPanelView } from "../FormPanelView/types/IFormPanelView";
+import { ITablePanelView } from "./TablePanelView/types/ITablePanelView";
+import { IFormPanelView } from "./FormPanelView/types/IFormPanelView";
 import { getDataTable } from "../selectors/DataView/getDataTable";
 
 

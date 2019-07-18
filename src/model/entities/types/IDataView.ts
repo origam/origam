@@ -4,8 +4,8 @@ import { IDataSource } from "./IDataSource";
 import { IDataTable } from "./IDataTable";
 import { IComponentBinding } from "./IComponentBinding";
 import { IDataViewLifecycle } from "./IDataViewLifecycle";
-import { ITablePanelView } from "../../TablePanelView/types/ITablePanelView";
-import { IFormPanelView } from "../../FormPanelView/types/IFormPanelView";
+import { ITablePanelView } from "../TablePanelView/types/ITablePanelView";
+import { IFormPanelView } from "../FormPanelView/types/IFormPanelView";
 
 export interface IDataViewData {
   id: string;

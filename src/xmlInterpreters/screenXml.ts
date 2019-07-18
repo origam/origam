@@ -14,11 +14,11 @@ import {
 import { IFormScreenLifecycle } from "../model/entities/types/IFormScreenLifecycle";
 import { DataTable } from "../model/entities/DataTable";
 import { DataViewLifecycle } from "../model/entities/DataViewLifecycle";
-import { TablePanelView } from "../model/TablePanelView/TablePanelView";
-import { FormPanelView } from "../model/FormPanelView/FormPanelView";
+import { TablePanelView } from "../model/entities/TablePanelView/TablePanelView";
+import { FormPanelView } from "../model/entities/FormPanelView/FormPanelView";
 import { flf2mof } from "../utils/flashDateFormat";
 import { Lookup } from "../model/entities/Lookup";
-import { ColumnConfigurationDialog } from '../model/TablePanelView/ColumnConfigurationDialog';
+import { ColumnConfigurationDialog } from '../model/entities/TablePanelView/ColumnConfigurationDialog';
 import { FilterConfiguration } from '../model/entities/FilterConfiguration';
 
 export const findUIRoot = (node: any) =>

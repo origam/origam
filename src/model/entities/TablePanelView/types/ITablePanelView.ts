@@ -1,7 +1,7 @@
-import { IProperty } from "../../entities/types/IProperty";
-import { ITableColumnsConf } from "../../../gui/Components/Dialogs/ColumnsDialog";
+import { IProperty } from "../../types/IProperty";
+import { ITableColumnsConf } from "../../../../gui/Components/Dialogs/ColumnsDialog";
 import { IColumnConfigurationDialog } from "./IColumnConfigurationDialog";
-import { IFilterConfiguration } from "../../entities/types/IFilterConfiguration";
+import { IFilterConfiguration } from "../../types/IFilterConfiguration";
 
 export interface ITablePanelViewData {
   tablePropertyIds: string[];

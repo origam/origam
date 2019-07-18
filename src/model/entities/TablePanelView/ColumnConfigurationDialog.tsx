@@ -3,9 +3,9 @@ import { action, computed } from "mobx";
 import {
   ITableColumnsConf,
   ColumnsDialog
-} from "../../gui/Components/Dialogs/ColumnsDialog";
-import { getTablePanelView } from "../selectors/TablePanelView/getTablePanelView";
-import { getDialogStack } from "../selectors/DialogStack/getDialogStack";
+} from "../../../gui/Components/Dialogs/ColumnsDialog";
+import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelView";
+import { getDialogStack } from "../../selectors/DialogStack/getDialogStack";
 import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
 
 export class ColumnConfigurationDialog implements IColumnConfigurationDialog {

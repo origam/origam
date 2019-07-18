@@ -17,7 +17,7 @@ import { getColumnHeaders } from "../../../../model/selectors/TablePanelView/get
 import { IColumnHeader } from "../../../../model/selectors/TablePanelView/types";
 import { getRowCount } from "../../../../model/selectors/TablePanelView/getRowCount";
 import { TableViewEditor } from "./TableViewEditor";
-import { ITablePanelView } from "../../../../model/TablePanelView/types/ITablePanelView";
+import { ITablePanelView } from "../../../../model/entities/TablePanelView/types/ITablePanelView";
 import { getSelectedRowIndex } from "../../../../model/selectors/TablePanelView/getSelectedRowIndex";
 import { getSelectedColumnIndex } from "../../../../model/selectors/TablePanelView/getSelectedColumnIndex";
 import { getIsEditing } from "../../../../model/selectors/TablePanelView/getIsEditing";
