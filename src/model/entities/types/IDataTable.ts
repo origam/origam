@@ -18,6 +18,8 @@ export interface IDataTable extends IDataTableData {
   getPropertyById(id: string): IProperty | undefined;
   getFirstRow(): any[] | undefined;
   getNearestRow(row: any[]): any[] | undefined;
+  getNextExistingRowId(id: string): string | undefined;
+  getPrevExistingRowId(id: string): string | undefined;
 
   getDirtyValues(row: any[]): Map<string, any>;
   getDirtyValueRows(): any[][];

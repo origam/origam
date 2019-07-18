@@ -9,7 +9,7 @@ import { getDataSourceByEntity } from "../selectors/DataSources/getDataSourceByE
 import { ITablePanelView } from "./TablePanelView/types/ITablePanelView";
 import { IFormPanelView } from "./FormPanelView/types/IFormPanelView";
 import { getDataTable } from "../selectors/DataView/getDataTable";
-
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 
 export class DataView implements IDataView {
   $type_IDataView: 1 = 1;
@@ -130,6 +130,28 @@ export class DataView implements IDataView {
     this.activePanelView = IPanelViewType.Table;
   }
 
+  @action.bound
+  onNextRowClick(event: any): void {
+    const selectedRowId = getSelectedRowId(this);
+    const newId = selectedRowId
+      ? getDataTable(this).getNextExistingRowId(selectedRowId)
+      : undefined;
+    if (newId) {
+      this.selectRowById(newId);
+    }
+  }
+
+  @action.bound
+  onPrevRowClick(event: any): void {
+    const selectedRowId = getSelectedRowId(this);
+    const newId = selectedRowId
+      ? getDataTable(this).getPrevExistingRowId(selectedRowId)
+      : undefined;
+    if (newId) {
+      this.selectRowById(newId);
+    }
+  }
+
   @action.bound onFieldChange(
     event: any,
     row: any[],
@@ -150,7 +172,7 @@ export class DataView implements IDataView {
   }
 
   @action.bound selectRowById(id: string | undefined) {
-    if(id !== this.selectedRowId) {
+    if (id !== this.selectedRowId) {
       //cannotChangeRowDialog(this);
       //return
       this.setSelectedRowId(id);

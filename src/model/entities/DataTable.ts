@@ -6,6 +6,7 @@ import { IAdditionalRowData } from "./types/IAdditionalRecordData";
 import { AdditionalRowData } from "./AdditionalRowData";
 
 export class DataTable implements IDataTable {
+
   $type_IDataTable: 1 = 1;
 
   constructor(data: IDataTableData) {
@@ -83,6 +84,26 @@ export class DataTable implements IDataTable {
         return this.rows[idx - 1];
       }
     } else return;
+  }
+
+  getNextExistingRowId(id: string): string | undefined {
+    const idx = this.rows.findIndex(
+      r => this.getRowId(r) === id
+    );
+    if (idx > -1) {
+      const newRow  = this.rows[idx + 1];
+      return newRow ? this.getRowId(newRow) : undefined
+    }
+  }
+
+  getPrevExistingRowId(id: string): string | undefined {
+    const idx = this.rows.findIndex(
+      r => this.getRowId(r) === id
+    );
+    if (idx > 0) {
+      const newRow  = this.rows[idx - 1];
+      return newRow ? this.getRowId(newRow) : undefined
+    }
   }
 
   getAdditionalRowData(row: any[]) {

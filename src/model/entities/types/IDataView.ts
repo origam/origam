@@ -57,6 +57,9 @@ export interface IDataView extends IDataViewData {
 
   onFormPanelViewButtonClick(event: any): void;
   onTablePanelViewButtonClick(event: any): void;
+  onNextRowClick(event: any): void;
+  onPrevRowClick(event: any): void;
+
   onFieldChange(event: any, row: any[], property: IProperty, value: any): void;
   selectFirstRow(): void;
   selectRowById(id: string | undefined): void;

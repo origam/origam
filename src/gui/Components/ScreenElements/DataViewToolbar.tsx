@@ -21,7 +21,9 @@ import { getTablePanelView } from "../../../model/selectors/TablePanelView/getTa
     onDeleteRowClick: dataView.lifecycle.onDeleteRowClicked,
     onCreateRowClick: dataView.lifecycle.onAddRowClicked,
     onToggleFilterClick:
-      dataView.tablePanelView.filterConfiguration.onFilterDisplayClick
+      dataView.tablePanelView.filterConfiguration.onFilterDisplayClick,
+    onPrevRowClick: dataView.onPrevRowClick,
+    onNextRowClick: dataView.onNextRowClick
   };
 })
 @observer
@@ -35,6 +37,8 @@ export class Toolbar extends React.Component<{
   onDeleteRowClick?: (event: any) => void;
   onCreateRowClick?: (event: any) => void;
   onToggleFilterClick?: (event: any) => void;
+  onPrevRowClick?: (event: any) => void;
+  onNextRowClick?: (event: any) => void;
 }> {
   render() {
     return (
@@ -107,7 +111,7 @@ export class Toolbar extends React.Component<{
             isVisible={true}
             isActive={false}
             isEnabled={true}
-            onClick={undefined}
+            onClick={this.props.onPrevRowClick}
           >
             <i className="fas fa-caret-left" aria-hidden="true" />
           </ToolbarButton>
@@ -115,7 +119,7 @@ export class Toolbar extends React.Component<{
             isVisible={true}
             isActive={false}
             isEnabled={true}
-            onClick={undefined}
+            onClick={this.props.onNextRowClick}
           >
             <i className="fas fa-caret-right" aria-hidden="true" />
           </ToolbarButton>
