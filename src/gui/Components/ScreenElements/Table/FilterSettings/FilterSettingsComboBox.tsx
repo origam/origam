@@ -23,7 +23,11 @@ export class FilterSettingsComboBox extends React.Component<{
   }
 
   @action.bound handleTriggerClick(event: any) {
-    this.setDroppedDown(true);
+    if (this.isDroppedDown) {
+      this.setDroppedDown(false);
+    } else {
+      this.setDroppedDown(true);
+    }
   }
 
   @action.bound handleWindowMouseDown(event: any) {

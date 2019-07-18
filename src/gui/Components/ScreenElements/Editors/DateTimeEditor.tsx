@@ -148,9 +148,9 @@ class CalendarWidget extends React.Component<{
 export class DateTimeEditor extends React.Component<{
   value: string;
   outputFormat: string;
-  isReadOnly: boolean;
-  isInvalid: boolean;
-  isFocused: boolean;
+  isReadOnly?: boolean;
+  isInvalid?: boolean;
+  isFocused?: boolean;
   onChange?: (event: any, isoDay: string) => void;
   onClick?: (event: any) => void;
   refocuser?: (cb: () => void) => () => void;
@@ -194,7 +194,7 @@ export class DateTimeEditor extends React.Component<{
     this.disposers.forEach(d => d());
   }
 
-  componentDidUpdate(prevProps: { isFocused: boolean }) {
+  componentDidUpdate(prevProps: { isFocused?: boolean }) {
     runInAction(() => {
       if (!prevProps.isFocused && this.props.isFocused) {
         this.makeFocusedIfNeeded();

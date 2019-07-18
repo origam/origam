@@ -27,6 +27,8 @@ import {
   FilterSettingsComboBox,
   FilterSettingsComboBoxItem
 } from "../../../Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
+import { FilterSettingsString } from "../../../Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsString";
+import { FilterSettings } from "../../../Components/ScreenElements/Table/FilterSettings/FilterSettings";
 
 @inject(({ dataView }) => {
   return {
@@ -50,6 +52,7 @@ export class TableView extends React.Component<{
   headerRenderer = new HeaderRenderer({
     tablePanelView: this.props.tablePanelView!,
     getColumnHeaders: () => getColumnHeaders(this.props.dataView),
+    getTableViewProperties: () => getTableViewProperties(this.props.dataView),
     onColumnWidthChange: (cid, nw) => this.gDim.setColumnWidth(cid, nw),
     onColumnOrderChange: (id1, id2) =>
       this.props.tablePanelView!.swapColumns(id1, id2),
@@ -174,6 +177,8 @@ class GridDimensions implements IGridDimensions {
 }
 
 interface IHeaderRendererData {
+  getTableViewProperties: () => IProperty[];
+
   tablePanelView: ITablePanelView;
   getColumnHeaders: () => IColumnHeader[];
   onColumnWidthChange: (id: string, newWidth: number) => void;
@@ -187,6 +192,16 @@ interface IHeaderRendererData {
 class HeaderRenderer implements IHeaderRendererData {
   constructor(data: IHeaderRendererData) {
     Object.assign(this, data);
+  }
+
+  getTableViewProperties: () => IProperty[] = null as any;
+
+  @computed get tableViewPropertiesOriginal() {
+    return this.getTableViewProperties();
+  }
+
+  @computed get tableViewProperties() {
+    return this.tableViewPropertiesOriginal;
   }
 
   getColumnHeaders: () => IColumnHeader[] = null as any;
@@ -244,6 +259,7 @@ class HeaderRenderer implements IHeaderRendererData {
 
   @bind
   renderHeader(args: { columnIndex: number; columnWidth: number }) {
+    const property = this.tableViewProperties[args.columnIndex];
     return (
       <Header
         key={this.columnHeaders[args.columnIndex].id}
@@ -260,36 +276,7 @@ class HeaderRenderer implements IHeaderRendererData {
         onPossibleColumnOrderChange={this.handlePossibleColumnOrderChange}
         additionalHeaderContent={
           this.tablePanelView.filterConfiguration.isFilterControlsDisplayed
-            ? () => (
-                <FilterSettingsComboBox trigger={<>=</>}>
-                  <FilterSettingsComboBoxItem>=</FilterSettingsComboBoxItem>
-                  <FilterSettingsComboBoxItem>&ne;</FilterSettingsComboBoxItem>
-                  <FilterSettingsComboBoxItem>
-                    begins with
-                  </FilterSettingsComboBoxItem>
-                  <FilterSettingsComboBoxItem>
-                    not begins with
-                  </FilterSettingsComboBoxItem>
-                  <FilterSettingsComboBoxItem>
-                    ends with
-                  </FilterSettingsComboBoxItem>
-                  <FilterSettingsComboBoxItem>
-                    not ends with
-                  </FilterSettingsComboBoxItem>
-                  <FilterSettingsComboBoxItem>
-                    contains
-                  </FilterSettingsComboBoxItem>
-                  <FilterSettingsComboBoxItem>
-                    not contains
-                  </FilterSettingsComboBoxItem>
-                  <FilterSettingsComboBoxItem>
-                    is null
-                  </FilterSettingsComboBoxItem>
-                  <FilterSettingsComboBoxItem>
-                    is not null
-                  </FilterSettingsComboBoxItem>
-                </FilterSettingsComboBox>
-              )
+            ? () => <FilterSettings propertyColumn={property.column}/>
             : undefined
         }
       />

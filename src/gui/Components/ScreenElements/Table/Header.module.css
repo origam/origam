@@ -24,8 +24,10 @@
   overflow: hidden;
   box-sizing: border-box;
   display: flex;
+  align-items: center;
   justify-content: center;
   width: 100%;
+  flex-grow: 1;
 }
 
 .order {
@@ -51,6 +53,7 @@
 
 .inHeaderRow {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: left;
   min-height: 20px;
