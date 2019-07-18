@@ -5,7 +5,6 @@ import { Main } from "./gui/Main";
 import "./index.css";
 import { createApplication } from "./model/factories/createApplication";
 import * as serviceWorker from "./serviceWorker";
-import { CannotChangeRowDialog } from './gui/Components/Dialogs/CannotChangeRowDialog';
 
 const application = createApplication();
 application.run();
@@ -21,4 +20,5 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
+
 

@@ -1,12 +1,10 @@
 import React from "react";
 import { action, computed } from "mobx";
-import {
-  ITableColumnsConf,
-  ColumnsDialog
-} from "../../../gui/Components/Dialogs/ColumnsDialog";
+
 import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelView";
 import { getDialogStack } from "../../selectors/DialogStack/getDialogStack";
 import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
+import { ITableColumnsConf, ColumnsDialog } from "gui/Components/Dialogs/ColumnsDialog";
 
 export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
   @computed get columnsConfiguration() {
