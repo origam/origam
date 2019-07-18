@@ -34,6 +34,21 @@ export function processCRUDResult(ctx: any, result: ICRUDResult) {
         }
         break;
       }
+      case IResponseOperation.Create: {
+        const dataView = getDataViewByEntity(ctx, resultItem.entity);
+        if (dataView) {
+          const tablePanelView = dataView.tablePanelView;
+          const dataSourceRow = result.wrappedObject;
+          const row = dataView.dataTable.getRowFromDataSourceRow(dataSourceRow);
+          console.log("New row:", dataSourceRow, row);
+          dataView.dataTable.insertRecord(
+            tablePanelView.firstVisibleRowIndex,
+            row
+          );
+          dataView.selectRow(row);
+        }
+        break;
+      }
       default:
         throw new Error("Unknown operation " + resultItem.operation);
     }

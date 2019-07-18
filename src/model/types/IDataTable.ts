@@ -34,6 +34,8 @@ export interface IDataTable extends IDataTableData {
   clear(): void;
   clearRecordDirtyValues(id: string): void;
   substituteRecord(row: any[]): void;
+  insertRecord(index: number, row: any[]): void;
+  getRowFromDataSourceRow(rowIn: any[]): any[];
   parent?: any;
 }
 

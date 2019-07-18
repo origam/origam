@@ -30,6 +30,7 @@ export interface ITableProps {
   onOutsideTableClick?(event: any): void;
   onNoCellClick?(event: any): void;
   onKeyDown?(event: any): void;
+  refCanvasMovingComponent?(elm: IGridCanvas | null): void;
 }
 
 export type IRenderCell = (args: IRenderCellArgs) => void;
@@ -86,6 +87,11 @@ export interface IScrollOffsetTarget {
   setScrollOffset(event: any, scrollTop: number, scrollLeft: number): void;
 }
 
+export interface IGridCanvas {
+  firstVisibleRowIndex: number;
+  lastVisibleRowIndex: number;
+}
+
 export interface IGridCanvasProps {
   // How big is the canvas (CSS units)
   width: number;
@@ -122,6 +128,7 @@ export interface IGridCanvasProps {
     lastVisibleRowIndex: number
   ): void;
   onNoCellClick?(event: any): void;
+  
 }
 
 export interface IPositionedFieldProps {

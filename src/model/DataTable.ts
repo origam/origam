@@ -6,7 +6,6 @@ import { IAdditionalRowData } from "./types/IAdditionalRecordData";
 import { AdditionalRowData } from "./AdditionalRowData";
 
 export class DataTable implements IDataTable {
-
   $type_IDataTable: 1 = 1;
 
   constructor(data: IDataTableData) {
@@ -131,6 +130,14 @@ export class DataTable implements IDataTable {
     return this.rows.filter(row => this.isRowDirtyNew(row));
   }
 
+  getRowFromDataSourceRow(rowIn: any[]): any[] {
+    const result: any[] = [];
+    for (let property of this.properties) {
+      result.push(rowIn[property.dataSourceIndex]);
+    }
+    return result;
+  }
+
   @action.bound
   setRecords(rows: any[][]) {
     this.clear();
@@ -206,8 +213,6 @@ export class DataTable implements IDataTable {
     }
   }
 
-
-
   @action.bound
   clearRecordDirtyValues(id: string): void {
     const ard = this.getAdditionalRowDataById(id);
@@ -225,6 +230,18 @@ export class DataTable implements IDataTable {
     );
     if (idx > -1) {
       this.allRows.splice(idx, 1, row);
+    }
+  }
+
+  @action.bound
+  insertRecord(index: number, row: any[]): void {
+    const idx = this.allRows.findIndex(
+      r => this.getRowId(r) === this.getRowId(row)
+    );
+    if (idx > -1) {
+      this.allRows.splice(idx, 0, row);
+    } else {
+      this.allRows.push(row);
     }
   }
 

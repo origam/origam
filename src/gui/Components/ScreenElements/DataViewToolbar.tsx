@@ -14,8 +14,10 @@ import { getTablePanelView } from "../../../model/selectors/TablePanelView/getTa
     label: getDataViewLabel(dataView),
     onFormViewButtonClick: dataView.onFormPanelViewButtonClick,
     onTableViewButtonClick: dataView.onTablePanelViewButtonClick,
-    onColumnConfClick: getTablePanelView(dataView).columnConfigurationDialog.onColumnConfClick,
-    onDeleteRowClick: dataView.lifecycle.onDeleteRowClicked
+    onColumnConfClick: getTablePanelView(dataView).columnConfigurationDialog
+      .onColumnConfClick,
+    onDeleteRowClick: dataView.lifecycle.onDeleteRowClicked,
+    onCreateRowClick: dataView.lifecycle.onAddRowClicked
   };
 })
 @observer
@@ -26,6 +28,7 @@ export class Toolbar extends React.Component<{
   onTableViewButtonClick?: (event: any) => void;
   onColumnConfClick?: (event: any) => void;
   onDeleteRowClick?: (event: any) => void;
+  onCreateRowClick?: (event: any) => void;
 }> {
   render() {
     return (
@@ -63,7 +66,7 @@ export class Toolbar extends React.Component<{
             isVisible={true}
             isActive={false}
             isEnabled={true}
-            onClick={undefined}
+            onClick={this.props.onCreateRowClick}
           >
             <i className="fas fa-plus-circle" aria-hidden="true" />
           </ToolbarButton>
@@ -151,14 +154,40 @@ export class Toolbar extends React.Component<{
           >
             <i className="fas fa-filter" aria-hidden="true" />
           </ToolbarButton>
-          <ToolbarButton
-            isVisible={true}
-            isActive={false}
-            isEnabled={true}
-            onClick={undefined}
-          >
-            <i className="fas fa-caret-down" aria-hidden="true" />
-          </ToolbarButton>
+
+          <div className={S.dropDownMenuRoot}>
+            <ToolbarDropDownMenu
+              trigger={onTriggerClick => (
+                <ToolbarButton
+                  isVisible={true}
+                  isActive={false}
+                  isEnabled={true}
+                  onClick={onTriggerClick}
+                >
+                  <i className="fas fa-caret-down" aria-hidden="true" />
+                </ToolbarButton>
+              )}
+            >
+              <ToolbarDropDownMenuItem >
+                Show Filter
+              </ToolbarDropDownMenuItem>
+              <ToolbarDropDownMenuItem isDisabled={true}>
+                Remember The Current Filter
+              </ToolbarDropDownMenuItem>
+              <ToolbarDropDownMenuItem isDisabled={true}>
+                Cancel Default Filter
+              </ToolbarDropDownMenuItem>
+              <ToolbarDropDownMenuItem isDisabled={true}>
+                Save Current Filter
+              </ToolbarDropDownMenuItem>
+              <ToolbarDropDownMenuItem isDisabled={true}>
+                Delete
+              </ToolbarDropDownMenuItem>
+              <ToolbarDropDownMenuItem isDisabled={true}>
+                Cancel Filter
+              </ToolbarDropDownMenuItem>
+            </ToolbarDropDownMenu>
+          </div>
         </div>
         <div className={S.section}>
           <div className={S.dropDownMenuRoot}>

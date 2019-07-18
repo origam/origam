@@ -23,15 +23,19 @@ import { processCRUDResult } from "./actions/DataLoading/processCRUDResult";
 import { getSelectedRow } from "./selectors/DataView/getSelectedRow";
 import { getSelectedRowId } from "./selectors/TablePanelView/getSelectedRowId";
 import { when } from "mobx";
+import { getRowCount } from "./selectors/TablePanelView/getRowCount";
 
 export const loadData = "loadData";
 export const flushData = "flushData";
+export const createRow = "createRow";
 export const dataLoaded = "dataLoaded";
 export const dataFlushed = "dataFlushed";
+export const rowCreated = "rowCreated";
 
 export const sLoadData = "sLoadData";
 export const sFlushData = "sFlushData";
 export const sIdle = "sIdle";
+export const sCreateRow = "sCreateRow";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
@@ -43,7 +47,8 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         [sIdle]: {
           on: {
             [loadData]: sLoadData,
-            [flushData]: sFlushData
+            [flushData]: sFlushData,
+            [createRow]: sCreateRow
           }
         },
         [sLoadData]: {
@@ -57,6 +62,12 @@ export class DataViewLifecycle implements IDataViewLifecycle {
           on: {
             [dataFlushed]: sIdle
           }
+        },
+        [sCreateRow]: {
+          invoke: { src: "createRow" },
+          on: {
+            [rowCreated]: sIdle
+          }
         }
       }
     },
@@ -65,7 +76,9 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         loadData: (ctx, event) => (send, onEvent) =>
           flow(this.loadData.bind(this))(),
         flushData: (ctx, { row, property }) => (send, onEvent) =>
-          flow(this.flushData.bind(this))()
+          flow(this.flushData.bind(this))(),
+        createRow: (ctx, event) => (send, onEvent) =>
+          flow(this.createRow.bind(this))()
       }
     }
   );
@@ -171,7 +184,6 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       dataTable.deleteRow(row);
     }
 
-
     /*
       const newRecord = Array(row.length) as any[];
       for (let prop of dataTable.properties) {
@@ -215,6 +227,17 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     this.interpreter.send(dataFlushed);
   }
 
+  *createRow() {
+    const api = getApi(this);
+    const result = yield api.newEntity({
+      DataStructureEntityId: getDataStructureEntityId(this),
+      MenuId: getMenuItemId(this)
+    });
+    console.log(result);
+    processCRUDResult(this, result);
+    this.interpreter.send(rowCreated)
+  }
+
   @action.bound
   loadFresh(): void {
     this.interpreter.send(loadData);
@@ -226,7 +249,18 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   }
 
   @action.bound
-  onAddRowClicked() {}
+  onAddRowClicked() {
+    const self = this;
+    return flow(function*() {
+      const dataTable = getDataTable(self);
+      const rowCount = getRowCount(self);
+      const row = getSelectedRow(self);
+      // TODO: Handle a case when row is not selected?
+      if (!row && rowCount !== 0) return;
+      self.interpreter.send(createRow);
+      return 0;
+    })();
+  }
 
   @action.bound
   onDeleteRowClicked() {
@@ -239,6 +273,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         dataTable.setDirtyDeleted(row);
         self.requestFlushData();
         yield when(() => !self.isWorking);
+        // TODO: Handle error case here (do not select different row):
         if (nearestRow) {
           getDataView(self).selectRow(nearestRow);
         }

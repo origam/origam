@@ -42,6 +42,8 @@ export class Table extends React.Component<ITableProps> {
 
   @action.bound refCanvasMoving(elm: Canvas | null) {
     this.elmCanvasMoving = elm;
+    this.props.refCanvasMovingComponent &&
+      this.props.refCanvasMovingComponent(elm);
   }
 
   @action.bound refScroller(elm: Scroller | null) {

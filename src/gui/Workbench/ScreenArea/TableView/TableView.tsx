@@ -97,6 +97,7 @@ export class TableView extends React.Component<{
             )}
             onNoCellClick={this.props.tablePanelView!.onNoCellClick}
             onOutsideTableClick={this.props.tablePanelView!.onOutsideTableClick}
+            refCanvasMovingComponent={this.props.tablePanelView!.setTableCanvas}
           />
         </>
       </Provider>

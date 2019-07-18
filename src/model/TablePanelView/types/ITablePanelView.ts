@@ -7,6 +7,11 @@ export interface ITablePanelViewData {
   columnConfigurationDialog: IColumnConfigurationDialog;
 }
 
+export interface ITableCanvas {
+  firstVisibleRowIndex: number;
+  lastVisibleRowIndex: number;
+}
+
 export interface ITablePanelView extends ITablePanelViewData {
   $type_ITablePanelView: 1;
   selectedColumnId: string | undefined;
@@ -15,6 +20,11 @@ export interface ITablePanelView extends ITablePanelViewData {
   selectedRowIndex: number | undefined;
   isEditing: boolean;
   fixedColumnCount: number;
+
+  tableCanvas: ITableCanvas | null;
+  setTableCanvas(tableCanvas: ITableCanvas | null): void;
+  firstVisibleRowIndex: number;
+  lastVisibleRowIndex: number;
 
   tableProperties: IProperty[];
   allTableProperties: IProperty[];

@@ -1,5 +1,9 @@
-import { observable, computed, action } from "mobx";
-import { ITablePanelView, ITablePanelViewData } from "./types/ITablePanelView";
+import { observable, computed, action, autorun } from "mobx";
+import {
+  ITablePanelView,
+  ITablePanelViewData,
+  ITableCanvas
+} from "./types/ITablePanelView";
 import { getDataView } from "../selectors/DataView/getDataView";
 import { getDataTable } from "../selectors/DataView/getDataTable";
 import { IProperty } from "../types/IProperty";
@@ -52,13 +56,30 @@ export class TablePanelView implements ITablePanelView {
     );
     return idx > -1 ? idx : undefined;
   }
+
   @computed get selectedRowIndex(): number | undefined {
     return getDataView(this).selectedRowIndex;
   }
+
   @computed get selectedProperty(): IProperty | undefined {
     return this.selectedColumnId
       ? getDataViewPropertyById(this, this.selectedColumnId)
       : undefined;
+  }
+
+  @observable.ref tableCanvas: ITableCanvas | null = null;
+
+  @action.bound
+  setTableCanvas(tableCanvas: ITableCanvas | null): void {
+    this.tableCanvas = tableCanvas;
+  }
+
+  get firstVisibleRowIndex(): number {
+    return this.tableCanvas ? this.tableCanvas.firstVisibleRowIndex : 0;
+  }
+
+  get lastVisibleRowIndex(): number {
+    return this.tableCanvas ? this.tableCanvas.lastVisibleRowIndex : 0;
   }
 
   getCellValueByIdx(rowIdx: number, columnIdx: number) {
