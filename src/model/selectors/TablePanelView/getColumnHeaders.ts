@@ -8,7 +8,7 @@ export function getColumnHeaders(ctx: any): IColumnHeader[] {
     return {
       label: prop.name,
       id: prop.id,
-      ordering: IOrderByDirection.ASC
+      ordering: IOrderByDirection.NONE
     }
   })
 }

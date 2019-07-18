@@ -13,6 +13,8 @@ import { DropdownEditor } from "../../../Components/ScreenElements/Editors/Dropd
 })
 @observer
 export class FormViewEditor extends React.Component<{
+  value?: any;
+  textualValue?: any;
   property?: IProperty;
 }> {
   getEditor() {
@@ -21,7 +23,7 @@ export class FormViewEditor extends React.Component<{
       case "Text":
         return (
           <TextEditor
-            value={""}
+            value={this.props.value}
             isReadOnly={this.props.property!.readOnly}
             isInvalid={false}
             isFocused={false}
@@ -34,7 +36,7 @@ export class FormViewEditor extends React.Component<{
       case "Date":
         return (
           <DateTimeEditor
-            value={moment().toISOString()}
+            value={this.props.value}
             outputFormat={"DD.MM.YYYY HH:mm"}
             isReadOnly={this.props.property!.readOnly}
             isInvalid={false}
@@ -47,7 +49,7 @@ export class FormViewEditor extends React.Component<{
       case "CheckBox":
         return (
           <BoolEditor
-            value={true}
+            value={this.props.value}
             isReadOnly={this.props.property!.readOnly}
             onChange={undefined}
             onClick={undefined}
@@ -57,8 +59,8 @@ export class FormViewEditor extends React.Component<{
       case "ComboBox":
         return (
           <DropdownEditor
-            value={""}
-            textualValue={""}
+            value={this.props.value}
+            textualValue={this.props.textualValue}
             isReadOnly={this.props.property!.readOnly}
             isInvalid={false}
             isFocused={false}

@@ -1,13 +1,16 @@
 import React from "react";
 
 import { FormSection } from "../../../Components/ScreenElements/FormSection";
-import { observer, inject, Provider } from "mobx-react";
+import { observer, inject, Provider, Observer } from "mobx-react";
 import { findStrings } from "../../../../xmlInterpreters/screenXml";
 import { getDataViewPropertyById } from "../../../../model/selectors/DataView/getDataViewPropertyById";
 import { IDataView } from "../../../../model/types/IDataView";
 import { FormField } from "./FormField";
 import { FormRoot } from "../../../Components/ScreenElements/FormRoot";
 import { FormViewEditor } from "./FormViewEditor";
+import { getSelectedRow } from "../../../../model/selectors/DataView/getSelectedRow";
+import { DataTable } from "../../../../model/DataTable";
+import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -19,6 +22,8 @@ export class FormBuilder extends React.Component<{
 }> {
   buildForm() {
     const self = this;
+    const row = getSelectedRow(this.props.dataView);
+    const dataTable = getDataTable(this.props.dataView);
     function recursive(xfo: any) {
       if (xfo.name === "FormRoot") {
         return (
@@ -44,28 +49,47 @@ export class FormBuilder extends React.Component<{
       } else if (xfo.name === "PropertyNames") {
         const propertyNames = findStrings(xfo);
         return propertyNames.map(propertyId => {
-          const property = getDataViewPropertyById(
-            self.props.dataView,
-            propertyId
+          return (
+            <Observer>
+              {() => {
+                const property = getDataViewPropertyById(
+                  self.props.dataView,
+                  propertyId
+                );
+                let value;
+                let textualValue = value;
+                if (row && property) {
+                  value = dataTable.getCellValue(row, property);
+                  if (property.isLookup) {
+                    textualValue = dataTable.getCellText(row, property);
+                  }
+                }
+                return property ? (
+                  <Provider property={property}>
+                    <FormField
+                      Id={property.id}
+                      Name={property.name}
+                      CaptionLength={property.captionLength}
+                      CaptionPosition={property.captionPosition}
+                      Column={property.column}
+                      Entity={property.entity}
+                      Height={property.height}
+                      Width={property.width}
+                      X={property.x}
+                      Y={property.y}
+                    >
+                      <FormViewEditor
+                        value={value}
+                        textualValue={textualValue}
+                      />
+                    </FormField>
+                  </Provider>
+                ) : (
+                  <></>
+                );
+              }}
+            </Observer>
           );
-          return property ? (
-            <Provider property={property}>
-              <FormField
-                Id={property.id}
-                Name={property.name}
-                CaptionLength={property.captionLength}
-                CaptionPosition={property.captionPosition}
-                Column={property.column}
-                Entity={property.entity}
-                Height={property.height}
-                Width={property.width}
-                X={property.x}
-                Y={property.y}
-              >
-                <FormViewEditor />
-              </FormField>
-            </Provider>
-          ) : null;
         });
       } else {
         return xfo.elements.map((child: any) => recursive(child));
