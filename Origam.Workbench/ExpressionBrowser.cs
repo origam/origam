@@ -1521,7 +1521,7 @@ namespace Origam.Workbench
             if (tnode != null)
             {
 	            tvwExpressionBrowser.SelectedNode = tnode;
-                if (!tnode.Parent.IsVisible)
+                if (tnode.Parent!=null && !tnode.Parent.IsVisible)
                 {
 	                tnode.Parent.EnsureVisible();
                 }
