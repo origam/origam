@@ -61,7 +61,7 @@ namespace Origam.Server
 
         public UIResult InitUI(UIRequest request, bool registerSession,
             bool addChildSession, SessionStore parentSession,
-            IBasicUIService basicUiService)
+            IBasicUIService basicUIService)
         {
             IAsyncResult asyncFormXmlResult = null;
             // Stack can't handle resending DataDocumentFx, 
@@ -76,7 +76,7 @@ namespace Origam.Server
                 }
             }
             bool isExclusive = false;
-            if (request.IsNewSession)
+            if(request.IsNewSession)
             {
                 PortalSessionStore pss = sessionManager.GetPortalSession();
                 OrigamSettings settings =  ConfigurationManager.GetActiveConfiguration();
@@ -87,7 +87,7 @@ namespace Origam.Server
                         throw new RuleException(Resources.ErrorTooManyTabsOpen);
                     }
                 }
-                if (!request.ObjectId.Contains("|"))
+                if(!request.ObjectId.Contains("|"))
                 {
                     if (request.Type != UIRequestType.Dashboard
                         && request.Type != UIRequestType.WorkQueue
@@ -102,10 +102,10 @@ namespace Origam.Server
                                     typeof(AbstractMenuItem),
                                     new ModelElementKey(objectId))
                                 as AbstractMenuItem;
-                        if (menu != null) // can be a workflow
+                        if(menu != null) // can be a workflow
                         {
                             isExclusive = menu.OpenExclusively;
-                            if (menu.OpenExclusively &&
+                            if(menu.OpenExclusively &&
                                 pss.FormSessions.Count > 0)
                             {
                                 throw new RuleException(string.Format(
@@ -116,20 +116,16 @@ namespace Origam.Server
                     }
                 }
             }
-
             UserProfile profile = SecurityTools.CurrentUserProfile();
-
-            if (request.Type == UIRequestType.Dashboard)
+            if(request.Type == UIRequestType.Dashboard)
             {
                 return InitDashboardView(request);
             }
-
             SessionStore ss;
-
-            if (request.FormSessionId == null || request.IsNewSession ||
+            if(request.FormSessionId == null || request.IsNewSession ||
                 registerSession == false)
             {
-                ss = sessionManager.CreateSessionStore(request, basicUiService);
+                ss = sessionManager.CreateSessionStore(request, basicUIService);
                 analytics.SetProperty("OrigamFormId", ss.FormId);
                 analytics.SetProperty("OrigamFormName", ss.Name);
                 analytics.Log("UI_OPENFORM");
@@ -142,26 +138,25 @@ namespace Origam.Server
                 }
                 ss.Init();
                 ss.IsExclusive = isExclusive;
-            } else
+            }
+            else
             {
                 // USE EXISTING SESSION
                 ss = sessionManager.GetSession(new Guid(request.FormSessionId));
-                if (ss.RefreshOnInitUI)
+                if(ss.RefreshOnInitUI)
                 {
                     ss.ExecuteAction(SessionStore.ACTION_REFRESH);
                 }
             }
-
             // finalize
             FormSessionStore fss = ss as FormSessionStore;
-            if (fss != null && fss.IsDelayedLoading &&
+            if(fss != null && fss.IsDelayedLoading &&
                 request.SupportsPagedData)
             {
                 ss.IsPagedLoading = true;
             }
-
             IList<string> columns = null;
-            if (ss.IsPagedLoading)
+            if(ss.IsPagedLoading)
             {
                 // for lazily-loaded data we provide all the preloaded columns
                 // (primary keys + all the initial sort columns)
@@ -172,20 +167,18 @@ namespace Origam.Server
                 ss.CurrentRecordId, ss.DataListEntity, ss), ss.Variables);
             result.Notifications = ss.Notifications;
             result.HasPartialData = ss.IsPagedLoading;
-            if (ss is WorkflowSessionStore)
+            if(ss is WorkflowSessionStore)
             {
                 result.WorkflowTaskId =
                     (ss as WorkflowSessionStore).TaskId.ToString();
             }
-
-            if (request.RequestCurrentRecordId)
+            if(request.RequestCurrentRecordId)
             {
                 result.CurrentRecordId = ss.CurrentRecordId == null
                     ? null
                     : ss.CurrentRecordId.ToString();
             }
-
-            if (IsFormXmlNotCachedOnClient(request, ss))
+            if(IsFormXmlNotCachedOnClient(request, ss))
             {
                 // wait for asynchronously loaded form xml
                 if (asyncFormXmlResult != null)
@@ -195,31 +188,30 @@ namespace Origam.Server
                 // FORM XML
                 SetFormXml(result, profile, ss);
             }
-
             result.Tooltip = ToolTipTools.NextTooltip(ss.HelpTooltipFormId);
             result.FormDefinitionId = ss.FormId.ToString();
             result.Title = ss.Title;
-
-            if (registerSession)
+            if(registerSession)
             {
                 sessionManager.RegisterSession(ss);
             }
-
-            if (addChildSession)
+            if(addChildSession)
             {
                 ss.ParentSession = parentSession;
                 parentSession.AddChildSession(ss);
                 parentSession.ActiveSession = ss;
             }
-
             var principal = Thread.CurrentPrincipal;
-            Task.Run(() =>
+            if(registerSession)
             {
-                Thread.CurrentPrincipal = principal;
-                SecurityTools.CreateUpdateOrigamOnlineUser(
-                    SecurityManager.CurrentPrincipal.Identity.Name,
-                    sessionManager.GetSessionStats());
-            });
+                Task.Run(() =>
+                {
+                    Thread.CurrentPrincipal = principal;
+                    SecurityTools.CreateUpdateOrigamOnlineUser(
+                        SecurityManager.CurrentPrincipal.Identity.Name,
+                        sessionManager.GetSessionStats());
+                });
+            }
             return result;
         }
 

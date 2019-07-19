@@ -76,7 +76,7 @@ namespace Origam.ServerCore.Controllers
                     registerSession: true,
                     addChildSession: false,
                     parentSession: null,
-                    basicUiService: sessionObjects.UIService);
+                    basicUIService: sessionObjects.UIService);
                 return Ok(newSessionId);
             });
         }

@@ -216,7 +216,7 @@ namespace Origam.Server
                 registerSession: false,
                 addChildSession: true, 
                 parentSession: sessionManager.GetSession(processData),
-                basicUiService: basicUIService);
+                basicUIService: basicUIService);
             resultList.Add(result);
         }
 

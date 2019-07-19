@@ -289,7 +289,7 @@ namespace Origam.Server
                 registerSession: true, 
                 addChildSession: false,
                 parentSession: null,
-                basicUiService: this);
+                basicUIService: this);
         }
 
         [JsonRpcMethod]
