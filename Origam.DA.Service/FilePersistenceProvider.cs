@@ -165,7 +165,7 @@ namespace Origam.DA.Service
                 type: type, 
                 primaryKey: primaryKey, 
                 useCache: useCache, 
-                throwNotFoundException: false);
+                throwNotFoundException: true);
 
         public override object RetrieveInstance(Type type, Key primaryKey, 
             bool useCache, bool throwNotFoundException) => 
@@ -174,6 +174,10 @@ namespace Origam.DA.Service
         private IFilePersistent RetrieveInstance(Key primaryKey, bool useCache, 
             bool throwNotFoundException)
         {
+            if (((Guid)primaryKey["Id"]) == Guid.Empty)
+            {
+                return null;
+            }
             PersistedObjectInfo persistedObjectInfo =
                 FindPersistedObjectInfo(primaryKey);
             if (persistedObjectInfo == null && throwNotFoundException)
