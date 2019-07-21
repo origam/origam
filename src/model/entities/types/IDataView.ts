@@ -6,6 +6,7 @@ import { IComponentBinding } from "./IComponentBinding";
 import { IDataViewLifecycle } from "./IDataViewLifecycle";
 import { ITablePanelView } from "../TablePanelView/types/ITablePanelView";
 import { IFormPanelView } from "../FormPanelView/types/IFormPanelView";
+import { IAction } from "./IAction";
 
 export interface IDataViewData {
   id: string;
@@ -30,6 +31,7 @@ export interface IDataViewData {
   requestDataAfterSelectionChange: boolean;
   confirmSelectionChange: boolean;
   properties: IProperty[];
+  actions: IAction[];
   dataTable: IDataTable;
   formViewUI: any;
   activePanelView: IPanelViewType;

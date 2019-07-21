@@ -10,13 +10,16 @@ import { ITablePanelView } from "./TablePanelView/types/ITablePanelView";
 import { IFormPanelView } from "./FormPanelView/types/IFormPanelView";
 import { getDataTable } from "../selectors/DataView/getDataTable";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { IAction } from "./types/IAction";
 
 export class DataView implements IDataView {
+  
   $type_IDataView: 1 = 1;
 
   constructor(data: IDataViewData) {
     Object.assign(this, data);
     this.properties.forEach(o => (o.parent = this));
+    this.actions.forEach(o => (o.parent = this));
     this.dataTable.parent = this;
     this.lifecycle.parent = this;
     this.tablePanelView.parent = this;
@@ -46,6 +49,8 @@ export class DataView implements IDataView {
   requestDataAfterSelectionChange = false;
   confirmSelectionChange = false;
   properties: IProperty[] = [];
+  actions: IAction[] = [];
+
   @observable tableViewProperties: IProperty[] = [];
   dataTable: IDataTable = null as any;
   formViewUI: any;

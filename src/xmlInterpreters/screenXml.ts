@@ -18,8 +18,10 @@ import { TablePanelView } from "../model/entities/TablePanelView/TablePanelView"
 import { FormPanelView } from "../model/entities/FormPanelView/FormPanelView";
 import { flf2mof } from "../utils/flashDateFormat";
 import { Lookup } from "../model/entities/Lookup";
-import { ColumnConfigurationDialog } from '../model/entities/TablePanelView/ColumnConfigurationDialog';
-import { FilterConfiguration } from '../model/entities/FilterConfiguration';
+import { ColumnConfigurationDialog } from "../model/entities/TablePanelView/ColumnConfigurationDialog";
+import { FilterConfiguration } from "../model/entities/FilterConfiguration";
+import { Action } from "../model/entities/Action";
+import { ActionParameter } from "../model/entities/ActionParameter";
 
 export const findUIRoot = (node: any) =>
   findStopping(node, n => n.name === "UIRoot")[0];
@@ -32,6 +34,12 @@ export const findBoxes = (node: any) =>
 
 export const findChildren = (node: any) =>
   findStopping(node, n => n.name === "Children")[0];
+
+export const findActions = (node: any) =>
+  findStopping(node, n => n.parent.name === "Actions" && n.name === "Action");
+
+export const findParameters = (node: any) =>
+  findStopping(node, n => n.name === "Parameter");
 
 export const findStrings = (node: any) =>
   findStopping(node, n => n.name === "string").map(
@@ -192,6 +200,26 @@ export function interpretScreenXml(
           });
         }
       );
+      const actions = findActions(dataView).map(
+        action =>
+          new Action({
+            id: action.attributes.Id,
+            caption: action.attributes.Caption,
+            groupId: action.attributes.GroupId,
+            type: action.attributes.Type,
+            iconUrl: action.attributes.IconUrl,
+            mode: action.attributes.Mode,
+            isDefault: action.attributes.IsDefault === "true",
+            placement: action.attributes.Placement,
+            parameters: findParameters(action).map(
+              parameter =>
+                new ActionParameter({
+                  name: parameter.attributes.Name,
+                  fieldName: parameter.attributes.FieldName
+                })
+            )
+          })
+      );
       return new DataView({
         id: dataView.attributes.Id,
         modelInstanceId: dataView.attributes.ModelInstanceId,
@@ -232,7 +260,8 @@ export function interpretScreenXml(
           filterConfiguration: new FilterConfiguration()
         }),
         formPanelView: new FormPanelView(),
-        properties
+        properties,
+        actions
       });
     }),
     componentBindings
