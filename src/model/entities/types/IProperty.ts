@@ -21,7 +21,6 @@ export interface IPropertyData {
   isPassword: boolean;
   isRichText: boolean;
   maxLength: number;
-  dataIndex: number;
   formatterPattern: string;
   
   allowReturnToForm?: boolean;
@@ -35,6 +34,7 @@ export interface IProperty extends IPropertyData {
   $type_IProperty: 1;
 
   dataSourceIndex: number;
+  dataIndex: number;
   isLookup: boolean;
   
   parent?: any;

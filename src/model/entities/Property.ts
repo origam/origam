@@ -6,6 +6,9 @@ import { observable, computed } from "mobx";
 
 import { ILookup } from "./types/ILookup";
 import { getDataSourceFieldIndexByName } from "../selectors/DataSources/getDataSourceFieldIndexByName";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
+import { IDataSource } from "./types/IDataSource";
+import { IDataSourceField } from "./types/IDataSourceField";
 
 export class Property implements IProperty {
   $type_IProperty: 1 = 1;
@@ -42,10 +45,17 @@ export class Property implements IProperty {
     return !!this.lookup;
   }
   
-  dataIndex: number = 0;
 
   @computed get dataSourceIndex(): number {
-    return getDataSourceFieldIndexByName(this, this.id);
+    return this.dataSourceField.index;
+  }
+
+  @computed get dataIndex() {
+    return this.dataSourceIndex;
+  }
+  
+  @computed get dataSourceField(): IDataSourceField {
+    return getDataSourceFieldByName(this, this.id)!;
   }
 
   parent: any;

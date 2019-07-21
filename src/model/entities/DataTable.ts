@@ -4,9 +4,9 @@ import { IProperty } from "./types/IProperty";
 import { getDataView } from "../selectors/DataView/getDataView";
 import { IAdditionalRowData } from "./types/IAdditionalRecordData";
 import { AdditionalRowData } from "./AdditionalRowData";
+import { getDataSource } from '../selectors/DataSources/getDataSource';
 
 export class DataTable implements IDataTable {
-
   $type_IDataTable: 1 = 1;
 
   constructor(data: IDataTableData) {
@@ -25,8 +25,16 @@ export class DataTable implements IDataTable {
     return getDataView(this).properties;
   }
 
+  @computed get dataSource() {
+    return getDataSource(this);
+  }
+
+  @computed get identifierProperty() {
+    return this.properties.find(prop => prop.id === this.dataSource.identifier);
+  }
+
   getRowId(row: any[]): string {
-    return row[0];
+    return row[this.identifierProperty!.dataIndex];
   }
 
   getCellValue(row: any[], property: IProperty) {
@@ -87,22 +95,18 @@ export class DataTable implements IDataTable {
   }
 
   getNextExistingRowId(id: string): string | undefined {
-    const idx = this.rows.findIndex(
-      r => this.getRowId(r) === id
-    );
+    const idx = this.rows.findIndex(r => this.getRowId(r) === id);
     if (idx > -1) {
-      const newRow  = this.rows[idx + 1];
-      return newRow ? this.getRowId(newRow) : undefined
+      const newRow = this.rows[idx + 1];
+      return newRow ? this.getRowId(newRow) : undefined;
     }
   }
 
   getPrevExistingRowId(id: string): string | undefined {
-    const idx = this.rows.findIndex(
-      r => this.getRowId(r) === id
-    );
+    const idx = this.rows.findIndex(r => this.getRowId(r) === id);
     if (idx > 0) {
-      const newRow  = this.rows[idx - 1];
-      return newRow ? this.getRowId(newRow) : undefined
+      const newRow = this.rows[idx - 1];
+      return newRow ? this.getRowId(newRow) : undefined;
     }
   }
 
@@ -197,10 +201,10 @@ export class DataTable implements IDataTable {
 
   @action.bound
   createAdditionalData(row: any[]) {
-    if (!this.additionalRowData.has(row[0])) {
+    if (!this.additionalRowData.has(this.getRowId(row))) {
       const ard = new AdditionalRowData();
       ard.parent = this;
-      this.additionalRowData.set(row[0], ard);
+      this.additionalRowData.set(this.getRowId(row), ard);
     }
   }
 

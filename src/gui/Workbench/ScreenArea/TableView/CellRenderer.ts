@@ -16,6 +16,7 @@ import { getTableViewRecordByExistingIdx } from "../../../../model/selectors/Tab
 import { getSelectedColumnId } from "../../../../model/selectors/TablePanelView/getSelectedColumnId";
 import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/getSelectedRowId";
 import { getCellTextByIdx } from "../../../../model/selectors/TablePanelView/getCellText";
+import { getDataTable } from '../../../../model/selectors/DataView/getDataTable';
 
 export interface ICellRendererData {
   tablePanelView: ITablePanelView;
@@ -131,6 +132,7 @@ export class CellRenderer implements ICellRenderer {
   }
 
   getCell(rowIndex: number, columnIndex: number): IRenderedCell {
+    const dataTable = getDataTable(this.tablePanelView);
     const value = this.getCellValue(rowIndex, columnIndex);
     let text = value;
     let isLoading = false;
@@ -148,11 +150,11 @@ export class CellRenderer implements ICellRenderer {
     }
     const selectedColumnId = getSelectedColumnId(this.tablePanelView);
     const selectedRowId = getSelectedRowId(this.tablePanelView);
-
+    const recordId = dataTable.getRowId(record);
     return {
       isCellCursor:
-        property.id === selectedColumnId && record[0] === selectedRowId,
-      isRowCursor: record[0] === selectedRowId,
+        property.id === selectedColumnId && recordId === selectedRowId,
+      isRowCursor: recordId === selectedRowId,
       isColumnOrderChangeSource:
         this.tablePanelView.columnOrderChangingSourceId === property.id,
       isColumnOrderChangeTarget:

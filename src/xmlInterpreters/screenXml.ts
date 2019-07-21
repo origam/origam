@@ -137,7 +137,6 @@ export function interpretScreenXml(
       const properties = findStopping(dataView, n => n.name === "Property").map(
         (property, idx) => {
           return new Property({
-            dataIndex: idx,
             id: property.attributes.Id,
             modelInstanceId: property.attributes.ModelInstanceId || "",
             name: property.attributes.Name,

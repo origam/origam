@@ -148,9 +148,11 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       MasterRowId: this.masterRowId
     });
     const dataTable = getDataTable(this);
+
     dataTable.setRecords(loadedData);
     getDataView(this).selectFirstRow();
     this.interpreter.send(dataLoaded);
+    console.log(dataTable);
   }
 
   *flushData() {
@@ -235,7 +237,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     });
     console.log(result);
     processCRUDResult(this, result);
-    this.interpreter.send(rowCreated)
+    this.interpreter.send(rowCreated);
   }
 
   @action.bound

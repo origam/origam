@@ -112,7 +112,7 @@ export class TablePanelView implements ITablePanelView {
         this.editingWillFinish();
         this.setEditing(false);
       }
-      this.selectCell(row[0] as string, property.id);
+      this.selectCell(this.dataTable.getRowId(row) as string, property.id);
       if (isEditing) {
         this.setEditing(true);
       }

@@ -167,7 +167,7 @@ export class DataView implements IDataView {
     const dataTable = getDataTable(this);
     const firstRow = dataTable.getFirstRow();
     if (firstRow) {
-      this.selectRowById(firstRow[0]);
+      this.selectRowById(dataTable.getRowId(firstRow));
     }
   }
 
