@@ -1606,14 +1606,23 @@ namespace Origam.DA.Service
         
         public override IEnumerable<object> ExecuteDataReader(DataStructureQuery query)
         {
-	        using (IDataReader reader = ExecuteDataReader(
+	        using(IDataReader reader = ExecuteDataReader(
 		        query, SecurityManager.CurrentPrincipal, null))
 	        {
-		        while (reader.Read())
+		        while(reader.Read())
 		        {
 			        object[] values = new object[query.ColumnsInfo.Count];
-			        reader.GetValues(values);
-			        yield return detachedFieldPacker.ProcessReaderOutput(values, query.ColumnsInfo);;
+                    for(int i = 0, index = 0; i < query.ColumnsInfo.Count; i++)
+                    {
+                        if(query.ColumnsInfo.Columns[i].IsVirtual)
+                        {
+                            continue;
+                        }
+                        values[i] = reader.GetValue(index);
+                        index++;
+                    }
+			        yield return detachedFieldPacker.ProcessReaderOutput(
+                        values, query.ColumnsInfo);
 		        }
 	        }
         }
