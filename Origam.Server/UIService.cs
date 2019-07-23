@@ -285,7 +285,6 @@ namespace Origam.Server
         {
             return uiManager.InitUI(
                 request: request,
-                registerSession: true, 
                 addChildSession: false,
                 parentSession: null,
                 basicUIService: this);

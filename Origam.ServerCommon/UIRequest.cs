@@ -48,48 +48,27 @@ namespace Origam.Server
 {
     public class UIRequest
     {
-        public UIRequest()
-        {
-        }
-
         public bool SupportsPagedData { get; set; } = false;
-
         public IDictionary Parameters { get; set; } = new Hashtable();
-
         public List<string> CachedFormIds { get; set; } = new List<string>();
-
         public string FormSessionId { get; set; }
-
         public bool IsNewSession { get; set; } = true;
-
         public string ParentSessionId { get; set; }
-
         public string SourceActionId { get; set; }
-
         public bool IsStandalone { get; set; } = false;
-
         public bool IsDataOnly { get; set; } = false;
-
         public string TypeString => Type.ToString();
-
         public UIRequestType Type { get; set; }
-
         public string Caption { get; set; }
-
         public string Icon { get; set; }
-
         public string ObjectId { get; set; }
-
         public bool IsSingleRecordEdit { get; set; }
-
         public bool RequestCurrentRecordId { get; set; }
-
         public int DialogWidth { get; set; }
-
         public int DialogHeight { get; set; }
-
         public bool IsModalDialog { get; set; } = false;
-        
+        public bool RegisterSession { get; set; } = true;
+        public bool DataRequested { get; set; } = true;
         public QueryParameterCollection QueryParameters
         {
             get

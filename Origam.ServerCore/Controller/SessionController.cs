@@ -69,11 +69,11 @@ namespace Origam.ServerCore.Controllers
                 {
                     FormSessionId = newSessionId.ToString(),
                     ObjectId = sessionData.MenuId.ToString(),
-                    Parameters = sessionData.Parameters
+                    Parameters = sessionData.Parameters,
+                    RegisterSession = true
                 };
                 UIResult uiResult = sessionObjects.UIManager.InitUI(
                     request: uiRequest,
-                    registerSession: true,
                     addChildSession: false,
                     parentSession: null,
                     basicUIService: sessionObjects.UIService);

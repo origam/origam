@@ -62,6 +62,8 @@ namespace Origam.Server
 {
     public abstract class SessionStore : IDisposable
     {
+        protected readonly bool dataRequested;
+
         internal static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IBasicUIService _service;
         private static Ascii85 _ascii85 = new Ascii85();
@@ -130,6 +132,7 @@ namespace Origam.Server
             _ruleHandler = new DatasetRuleHandler();
             _ruleEngine = new RuleEngine(null, null);
             this.CacheExpiration = DateTime.Now.AddMinutes(5);
+            dataRequested = request.DataRequested;
         }
 
         public string TransationId

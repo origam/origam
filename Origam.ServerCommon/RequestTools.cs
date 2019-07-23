@@ -131,7 +131,7 @@ namespace Origam.Server
                 IsDataOnly = false,
                 IsStandalone = false,
                 Parameters = parameters,
-                Caption = caption
+                Caption = caption,
             };
         }
 

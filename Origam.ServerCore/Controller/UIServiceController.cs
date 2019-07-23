@@ -53,7 +53,6 @@ namespace Origam.ServerCore.Controller
             {
                 return Ok(sessionObjects.UIManager.InitUI(
                     request: request,
-                    registerSession: true, 
                     addChildSession: false,
                     parentSession: null,
                     basicUIService: sessionObjects.UIService));

@@ -112,14 +112,14 @@ namespace Origam.Server
 
         private void LoadData()
         {
-            /*if (runsOnCore)
+            if(dataRequested)
+            {
+                LoadDataFxServer();
+            }
+            else
             {
                 PrepareDataCore();
             }
-            else
-            {*/
-                LoadDataFxServer();
-            //}
         }
 
         private void PrepareDataCore()

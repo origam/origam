@@ -59,9 +59,8 @@ namespace Origam.Server
             this.sessionManager = sessionManager;
         }
 
-        public UIResult InitUI(UIRequest request, bool registerSession,
-            bool addChildSession, SessionStore parentSession,
-            IBasicUIService basicUIService)
+        public UIResult InitUI(UIRequest request, bool addChildSession, 
+            SessionStore parentSession, IBasicUIService basicUIService)
         {
             IAsyncResult asyncFormXmlResult = null;
             // Stack can't handle resending DataDocumentFx, 
@@ -123,7 +122,7 @@ namespace Origam.Server
             }
             SessionStore ss;
             if(request.FormSessionId == null || request.IsNewSession ||
-                registerSession == false)
+                request.RegisterSession == false)
             {
                 ss = sessionManager.CreateSessionStore(request, basicUIService);
                 analytics.SetProperty("OrigamFormId", ss.FormId);
@@ -191,7 +190,7 @@ namespace Origam.Server
             result.Tooltip = ToolTipTools.NextTooltip(ss.HelpTooltipFormId);
             result.FormDefinitionId = ss.FormId.ToString();
             result.Title = ss.Title;
-            if(registerSession)
+            if(request.RegisterSession)
             {
                 sessionManager.RegisterSession(ss);
             }
@@ -202,7 +201,7 @@ namespace Origam.Server
                 parentSession.ActiveSession = ss;
             }
             var principal = Thread.CurrentPrincipal;
-            if(registerSession)
+            if(request.RegisterSession)
             {
                 Task.Run(() =>
                 {

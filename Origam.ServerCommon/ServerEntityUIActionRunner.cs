@@ -211,9 +211,9 @@ namespace Origam.Server
             UIRequest uir = RequestTools.GetActionRequest(processData.Parameters, 
                 processData.SelectedItems, processData.Action);
             uir.FormSessionId = processData.SessionFormIdentifier;
+            uir.RegisterSession = false;
             result.UIResult = uiManager.InitUI(
                 request: uir,
-                registerSession: false,
                 addChildSession: true, 
                 parentSession: sessionManager.GetSession(processData),
                 basicUIService: basicUIService);
