@@ -1,0 +1,118 @@
+<Window xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" Title="Zelena Zelvicka" MenuId="a3335347-0699-407b-ad2e-d66cee54b8c3" ShowInfoPanel="false" AutoRefreshInterval="0" CacheOnClient="true" autoSaveOnListRecordChange="false" RequestSaveAfterUpdate="false">
+  <DataSources>
+    <DataSource Entity="People" DataStructureEntityId="9831aa4a-9fb6-44a1-8a0a-f5839cf5aaa8" Identifier="Id" LookupCacheKey="People">
+      <Field Name="Name" Index="0" />
+      <Field Name="BirthDate" Index="1" />
+      <Field Name="LikesPlatypuses" Index="2" />
+      <Field Name="refCitiesId" Index="3" />
+      <Field Name="RecordCreatedBy" Index="4" />
+      <Field Name="RecordUpdatedBy" Index="5" />
+      <Field Name="Id" Index="6" />
+      <Field Name="RecordCreated" Index="7" />
+      <Field Name="RecordUpdated" Index="8" />
+      <Field Name="Selected" Index="9" />
+      <Field Name="__Errors" Index="10" />
+    </DataSource>
+    <DataSource Entity="Cities" DataStructureEntityId="4ef1466f-7c40-4862-ab18-c2320a7586c9" Identifier="Id" LookupCacheKey="Cities">
+      <Field Name="Name" Index="0" />
+      <Field Name="Inhabitants" Index="1" />
+      <Field Name="RecordCreatedBy" Index="2" />
+      <Field Name="RecordUpdatedBy" Index="3" />
+      <Field Name="Id" Index="4" />
+      <Field Name="RecordCreated" Index="5" />
+      <Field Name="RecordUpdated" Index="6" />
+      <Field Name="Selected" Index="7" />
+      <Field Name="__Errors" Index="8" />
+    </DataSource>
+    <DataSource Entity="Belongings" DataStructureEntityId="b88f04cc-e80f-4671-8ccd-096f3b2845e0" Identifier="Id" LookupCacheKey="Belongings">
+      <Field Name="Name" Index="0" />
+      <Field Name="Price" Index="1" />
+      <Field Name="refPeopleId" Index="2" />
+      <Field Name="RecordCreatedBy" Index="3" />
+      <Field Name="RecordUpdatedBy" Index="4" />
+      <Field Name="Id" Index="5" />
+      <Field Name="RecordCreated" Index="6" />
+      <Field Name="RecordUpdated" Index="7" />
+      <Field Name="Selected" Index="8" />
+      <Field Name="__Errors" Index="9" />
+    </DataSource>
+  </DataSources>
+  <ComponentBindings>
+    <Binding ParentId="b859f7aa-46a5-4117-ae14-d17ea58ca3a1" ParentProperty="Id" ParentEntity="Cities" ChildId="66aaf7b4-0ba6-41be-aa41-d03ca7c0d5df" ChildProperty="refCitiesId" ChildEntity="People" ChildPropertyType="Field" />
+    <Binding ParentId="66aaf7b4-0ba6-41be-aa41-d03ca7c0d5df" ParentProperty="Id" ParentEntity="People" ChildId="fea52abf-5bc4-41d3-a8f2-5535a5abb023" ChildProperty="refPeopleId" ChildEntity="Belongings" ChildPropertyType="Field" />
+  </ComponentBindings>
+  <UIRoot Id="SplitPanel1_0" ModelInstanceId="e16b11fd-6c86-4dc9-910a-6d5eb5311f8e" xsi:type="UIElement" Type="VSplit" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+    <Configuration />
+    <UIChildren>
+      <UIElement Id="AsPanel1_1" ModelInstanceId="b859f7aa-46a5-4117-ae14-d17ea58ca3a1" Name="Cities" xsi:type="Grid" Type="Grid" ModelId="278accdd-11e1-4904-8c32-fa79538d4ebe" DefaultPanelView="1" IsHeadless="false" DisableActionButtons="false" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="Cities" DataMember="Cities" IsRootGrid="true" IsRootEntity="true" IsPreloaded="true">
+        <Properties>
+          <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+          <Property Id="Name" ModelInstanceId="97ae965a-c316-4aa8-a922-07b877b202c8" Name="Name" ReadOnly="false" X="108" Y="36" Width="400" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="Text" Dock="None" Multiline="false" IsPassword="false" IsRichText="false" MaxLength="100" />
+          <Property Id="Inhabitants" ModelInstanceId="8d62b156-0fd1-474c-b24c-0cd88f8dd3a6" Name="Inhabitants" ReadOnly="false" X="108" Y="54" Width="400" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="Integer" Column="Number" CustomNumericFormat="" />
+        </Properties>
+        <Actions />
+        <FormRoot Type="Canvas">
+          <PropertyNames>
+            <string>Name</string>
+            <string>Inhabitants</string>
+          </PropertyNames>
+        </FormRoot>
+      </UIElement>
+      <UIElement Id="SplitPanel2_2" ModelInstanceId="ffacf0ad-52c1-49f1-8b68-6f124edbfda2" xsi:type="UIElement" Type="HSplit" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+        <Configuration />
+        <UIChildren>
+          <UIElement Id="AsPanel2_3" ModelInstanceId="66aaf7b4-0ba6-41be-aa41-d03ca7c0d5df" Name="People" xsi:type="Grid" Type="Grid" ModelId="552b41ac-d353-4ab5-b3a1-f7f115ae7bb0" DefaultPanelView="1" IsHeadless="false" DisableActionButtons="false" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="People" DataMember="Cities.People" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="b859f7aa-46a5-4117-ae14-d17ea58ca3a1" ParentEntityName="Cities">
+            <Properties>
+              <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+              <Property Id="Name" ModelInstanceId="8f8b1a5d-7839-41e6-8883-ed88fe7b1830" Name="Name" ReadOnly="false" X="108" Y="36" Width="400" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="Text" Dock="None" Multiline="false" IsPassword="false" IsRichText="false" MaxLength="100" />
+              <Property Id="BirthDate" ModelInstanceId="1c6e1460-d810-4de1-97bc-995556bbe0c1" Name="Birth Date" ReadOnly="false" X="108" Y="54" Width="400" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="Date" Column="Date" FormatterPattern="EEE DD. MM YYYY JJ:NN" />
+              <Property Id="LikesPlatypuses" ModelInstanceId="25a2138c-9773-4145-a3ce-895ed64687d0" Name="Likes Platypuses" ReadOnly="false" X="8" Y="72" Width="400" Height="19" CaptionLength="100" CaptionPosition="Right" Entity="Boolean" Column="CheckBox" />
+              <Property Id="refCitiesId" ModelInstanceId="acfc13fd-c322-4f99-98da-35005a930036" Name="Lives in" ReadOnly="false" X="108" Y="90" Width="400" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="31b2f7aa-8746-486e-8414-bcd266231312" Identifier="Id" IdentifierIndex="0" EntityName="31b2f7aa_8746_486e_8414_bcd266231312" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                <DropDownColumns>
+                  <Property Id="Name" Name="Name" Entity="String" Column="Text" Index="1" />
+                  <Property Id="Inhabitants" Name="Inhabitants" Entity="Integer" Column="Number" Index="2" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+            </Properties>
+            <Actions />
+            <FormRoot Type="Canvas">
+              <PropertyNames>
+                <string>Name</string>
+                <string>BirthDate</string>
+                <string>LikesPlatypuses</string>
+                <string>refCitiesId</string>
+              </PropertyNames>
+            </FormRoot>
+            <Configuration />
+            <FilterExpressions />
+          </UIElement>
+          <UIElement Id="AsPanel3_4" ModelInstanceId="fea52abf-5bc4-41d3-a8f2-5535a5abb023" Name="Belongings" xsi:type="Grid" Type="Grid" ModelId="c9d9c332-05e9-472c-96eb-703912cec326" DefaultPanelView="1" IsHeadless="false" DisableActionButtons="false" ShowAddButton="true" ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false" SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="Belongings" DataMember="Cities.People.Belongings" IsRootGrid="false" IsRootEntity="false" IsPreloaded="true" ParentId="66aaf7b4-0ba6-41be-aa41-d03ca7c0d5df" ParentEntityName="People">
+            <Properties>
+              <Property Id="Id" Name="Id" Entity="String" Column="Text" />
+              <Property Id="Name" ModelInstanceId="7492375c-011e-4376-ac58-39b0c9203b45" Name="Name" ReadOnly="false" X="108" Y="36" Width="400" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="Text" Dock="None" Multiline="false" IsPassword="false" IsRichText="false" MaxLength="100" />
+              <Property Id="Price" ModelInstanceId="a7fc6876-ef43-43be-920c-8e28b4253fee" Name="Price" ReadOnly="false" X="108" Y="54" Width="400" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="Currency" Column="Number" CustomNumericFormat="" />
+              <Property Id="refPeopleId" ModelInstanceId="30205306-60d7-4068-a38c-307112dfeaa6" Name="Owner" ReadOnly="false" X="108" Y="72" Width="400" Height="19" CaptionLength="100" CaptionPosition="Left" Entity="String" Column="ComboBox" DropDownShowUniqueValues="false" LookupId="e5efa843-31f6-481e-a950-4405efd5a75e" Identifier="Id" IdentifierIndex="0" EntityName="e5efa843_31f6_481e_a950_4405efd5a75e" IsTree="false" AllowReturnToForm="true" SearchByFirstColumnOnly="false" AutoSort="true" DropDownType="EagerlyLoadedGrid" Cached="true">
+                <DropDownColumns>
+                  <Property Id="Name" Name="Name" Entity="String" Column="Text" Index="1" />
+                </DropDownColumns>
+                <DropDownParameters />
+              </Property>
+            </Properties>
+            <Actions />
+            <FormRoot Type="Canvas">
+              <PropertyNames>
+                <string>Name</string>
+                <string>Price</string>
+                <string>refPeopleId</string>
+              </PropertyNames>
+            </FormRoot>
+            <Configuration />
+            <FilterExpressions />
+          </UIElement>
+        </UIChildren>
+      </UIElement>
+    </UIChildren>
+  </UIRoot>
+</Window>

@@ -1,0 +1,29 @@
+.formField {
+  position: absolute;
+  /* background-color: #ffffff;*/
+  overflow: visible;
+  /* padding: 3px;*/
+  display: flex;
+  /* align-items: center;
+   justify-content: center;*/
+}
+
+.formFieldName {
+  position: absolute;
+  /* border: 1px solid black; */
+  box-sizing: border-box;
+  height: 20px;
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+  /* padding: 3px; */
+  padding-top: 3px;
+}
+
+.unknownEditor {
+  width: 100%;
+  height: 100%;
+  border: 1px solid black;
+  background-color: #aaaaaa;
+  overflow: hidden;
+}
