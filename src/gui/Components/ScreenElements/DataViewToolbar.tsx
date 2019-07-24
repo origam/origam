@@ -7,6 +7,8 @@ import { getActivePanelView } from "../../../model/selectors/DataView/getActiveP
 import { getDataViewLabel } from "../../../model/selectors/DataView/getDataViewLabel";
 import { action, observable } from "mobx";
 import { getTablePanelView } from "../../../model/selectors/TablePanelView/getTablePanelView";
+import { IAction } from "../../../model/entities/types/IAction";
+import { getPanelViewActions } from "model/selectors/DataView/getPanelViewActions";
 
 @inject(({ dataView }: { dataView: IDataView }) => {
   return {
@@ -14,6 +16,7 @@ import { getTablePanelView } from "../../../model/selectors/TablePanelView/getTa
     label: getDataViewLabel(dataView),
     isFilterSettingsVisible:
       dataView.tablePanelView.filterConfiguration.isFilterControlsDisplayed,
+    actions: getPanelViewActions(dataView),
     onFormViewButtonClick: dataView.onFormPanelViewButtonClick,
     onTableViewButtonClick: dataView.onTablePanelViewButtonClick,
     onColumnConfClick: getTablePanelView(dataView).columnConfigurationDialog
@@ -31,6 +34,7 @@ export class Toolbar extends React.Component<{
   activePanelView?: IPanelViewType;
   label?: string;
   isFilterSettingsVisible?: boolean;
+  actions?: IAction[];
   onFormViewButtonClick?: (event: any) => void;
   onTableViewButtonClick?: (event: any) => void;
   onColumnConfClick?: (event: any) => void;
@@ -71,7 +75,7 @@ export class Toolbar extends React.Component<{
             <i className="fas fa-chevron-circle-down" aria-hidden="true" />
           </ToolbarButton>
         </div>
-        <div className="section">
+        <div className={S.section}>
           <ToolbarButton
             isVisible={true}
             isActive={false}
@@ -96,6 +100,11 @@ export class Toolbar extends React.Component<{
           >
             <i className="fas fa-copy" aria-hidden="true" />
           </ToolbarButton>
+        </div>
+        <div className={S.section}>
+          {this.props.actions!.map(action => (
+            <PanelViewAction disabled={true}>{action.caption}</PanelViewAction>
+          ))}
         </div>
         <div className={S.section + " " + S.pusher} />
         <div className={S.section}>
@@ -351,3 +360,9 @@ export class ToolbarDropDownMenuItem extends React.Component<{
     );
   }
 }
+
+const PanelViewAction: React.FC<{ disabled?: boolean }> = props => (
+  <div className={S.panelViewAction + (props.disabled ? " disabled" : "")}>
+    {props.children}
+  </div>
+);

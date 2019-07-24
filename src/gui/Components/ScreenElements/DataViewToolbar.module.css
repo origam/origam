@@ -106,10 +106,28 @@
   display: flex;
   width: 20px;
   align-items: center;
-  justify-content: center
+  justify-content: center;
 }
 
 .dropDownMenuDivider {
   height: 1px;
   border: 1px solid lightgray;
+}
+
+.panelViewAction {
+  color: white;
+  background-color: darkred;
+  height: 100%;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding: 0px 10px 0px 10px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.panelViewAction:global(.disabled) {
+  color: #707ea8;
+  background-color: rgba(139, 0, 0, 0.6);
+  cursor: not-allowed;
 }

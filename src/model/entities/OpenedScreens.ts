@@ -1,6 +1,8 @@
 import { IOpenedScreens } from "./types/IOpenedScreens";
 import { IOpenedScreen } from "./types/IOpenedScreen";
-import { action, observable } from "mobx";
+import { action, observable, computed } from "mobx";
+import { IAction } from "./types/IAction";
+import { isILoadedFormScreen } from "./types/IFormScreen";
 
 export class OpenedScreens implements IOpenedScreens {
   $type_IOpenedScreens: 1 = 1;
@@ -28,6 +30,20 @@ export class OpenedScreens implements IOpenedScreens {
       item => item.menuItemId === menuItemId && item.order === order
     );
     item && item.setActive(true);
+  }
+
+  @computed get activeItem(): IOpenedScreen | undefined {
+    return this.items.find(item => item.isActive);
+  }
+
+  @computed get activeScreenActions(): Array<{
+    section: string;
+    actions: IAction[];
+  }> {
+    const activeScreen = this.activeItem;
+    return activeScreen && isILoadedFormScreen(activeScreen.content)
+      ? activeScreen.content.toolbarActions
+      : [];
   }
 
   findLastExistingItem(menuItemId: string): IOpenedScreen | undefined {

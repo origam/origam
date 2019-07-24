@@ -9,9 +9,9 @@ import {
 import { IFormScreenLifecycle } from "./types/IFormScreenLifecycle";
 import { ILoadingFormScreenData } from "./types/IFormScreen";
 import { computed } from "mobx";
+import { IAction } from "./types/IAction";
 
 export class FormScreen implements ILoadedFormScreen {
-
   $type_ILoadedFormScreen: 1 = 1;
 
   constructor(data: ILoadedFormScreenData) {
@@ -62,6 +62,19 @@ export class FormScreen implements ILoadedFormScreen {
 
   getDataSourceByEntity(entity: string): IDataSource | undefined {
     return this.dataSources.find(ds => ds.entity === entity);
+  }
+
+  @computed get toolbarActions() {
+    const result: Array<{ section: string; actions: IAction[] }> = [];
+    for(let dv of this.dataViews) {
+      if(dv.toolbarActions.length > 0) {
+        result.push({
+          section: dv.name,
+          actions: dv.toolbarActions
+        })
+      }
+    }
+    return result
   }
 }
 

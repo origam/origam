@@ -1,4 +1,5 @@
 import { IOpenedScreen } from "./IOpenedScreen";
+import { IAction } from "./IAction";
 
 export interface IOpenedScreensData {}
 
@@ -6,6 +7,11 @@ export interface IOpenedScreens extends IOpenedScreensData {
   $type_IOpenedScreens: 1;
 
   items: Array<IOpenedScreen>;
+
+  activeScreenActions: Array<{
+    section: string;
+    actions: IAction[];
+  }>;
 
   pushItem(item: IOpenedScreen): void;
   deleteItem(menuItemId: string, order: number): void;

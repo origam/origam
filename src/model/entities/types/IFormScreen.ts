@@ -2,6 +2,7 @@ import { IDataView } from "./IDataView";
 import { IDataSource } from "./IDataSource";
 import { IComponentBinding } from "./IComponentBinding";
 import { IFormScreenLifecycle } from "./IFormScreenLifecycle";
+import { IAction } from "./IAction";
 
 export interface ILoadedFormScreenData {
   title: string;
@@ -33,6 +34,8 @@ export interface ILoadedFormScreen extends ILoadedFormScreenData {
   getDataViewByModelInstanceId(modelInstanceId: string): IDataView | undefined;
   getDataViewByEntity(entity: string): IDataView | undefined;
   getDataSourceByEntity(entity: string): IDataSource | undefined;
+
+  toolbarActions: Array<{ section: string; actions: IAction[] }>;
 
   parent?: any;
 }

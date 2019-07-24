@@ -15,6 +15,8 @@ import { getIsMainMenuLoading } from "../../model/selectors/MainMenu/getIsMainMe
 import { getLoggedUserName } from "../../model/selectors/User/getLoggedUserName";
 import { getMainMenuUI } from "../../model/selectors/MainMenu/getMainMenuUI";
 import { getMainMenuExists } from "../../model/selectors/MainMenu/getMainMenuExists";
+import { getActiveScreenActions } from "model/selectors/getActiveScreenActions";
+import { IAction } from "model/entities/types/IAction";
 
 @inject(({ application }) => {
   return {
@@ -23,6 +25,7 @@ import { getMainMenuExists } from "../../model/selectors/MainMenu/getMainMenuExi
     mainMenuUI: getMainMenuUI(application),
     mainMenuExists: getMainMenuExists(application),
     loggedUserName: getLoggedUserName(application),
+    toolbarActions: getActiveScreenActions(application),
     onSignOutClick: (event: any) =>
       getApplicationLifecycle(application).onSignOutClick({ event }),
     onMainMenuItemClick: (event: any, item: any) =>
@@ -31,6 +34,7 @@ import { getMainMenuExists } from "../../model/selectors/MainMenu/getMainMenuExi
 })
 @observer
 export class WorkbenchPage extends React.Component<{
+  toolbarActions?: Array<{ section: string; actions: IAction[] }>;
   workbench?: IWorkbench;
   //mainMenu?: IMainMenu | ILoadingMainMenu | undefined;
   mainMenuUI?: any;
@@ -49,7 +53,7 @@ export class WorkbenchPage extends React.Component<{
           <div className={S.headerBar}>
             <div className={S.logoSection}>
               <div className={S.logoBox}>
-                <img className={S.logoImg} src="img/asap.png" />
+                <img className={S.logoImg} src="img/advantageSolutions.png" />
               </div>
               <div className={S.searchBox}>
                 <input />
@@ -79,7 +83,7 @@ export class WorkbenchPage extends React.Component<{
                 </div>
               </div>
             </div>
-            <div className={S.actionsSection}>
+            <ToolbarSection bottomLine="Form">
               <div className={S.actionItem}>
                 <i className="far fa-save icon" />
                 <br />
@@ -90,14 +94,22 @@ export class WorkbenchPage extends React.Component<{
                 <br />
                 Reload
               </div>
-            </div>
+            </ToolbarSection>
+            {this.props.toolbarActions!.map(actionGroup => (
+              <ToolbarSection bottomLine={actionGroup.section}>
+                {actionGroup.actions.map(action => (
+                  <div className={S.actionItem}>
+                    <i className="fas fa-cog icon" />
+                    <br />
+                    {action.caption}
+                  </div>
+                ))}
+              </ToolbarSection>
+            ))}
             <div className={S.pusher} />
             <div className={S.companyUserSection}>
               <div className={S.companyLogo}>
-                <img
-                  className={S.companyLogoImg}
-                  src="img/advantageSolutions.png"
-                />
+                <img className={S.companyLogoImg} src="img/asap.png" />
               </div>
               <div className={S.loggedUser}>{this.props.loggedUserName}</div>
               <div className={S.loggedUserActions}>
@@ -142,3 +154,12 @@ export class WorkbenchPage extends React.Component<{
     );
   }
 }
+
+export const ToolbarSection: React.FC<{
+  bottomLine: React.ReactNode;
+}> = props => (
+  <div className={S.actionsSection}>
+    <div className={S.actionsSectionActions}>{props.children}</div>
+    <div className={S.actionsSectionBottomLine}>{props.bottomLine}</div>
+  </div>
+);
