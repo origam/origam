@@ -115,10 +115,20 @@
   align-items: center;
 }
 
-
-
-
 .actionsSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.actionsSectionActions {
+  composes: section;
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  padding: 10px 5px 0px 5px;
+}
+
+.actionsSectionBottomLine {
   composes: section;
   display: flex;
   flex-direction: row;
@@ -127,11 +137,16 @@
 .actionItem {
   cursor: pointer;
   text-align: center;
-  padding: 10px 15px 10px 15px;
+  padding: 10px 0px 10px 0px;
+  min-width: 50px;
+  max-width: 80px;
+  height: 100%;
+  margin-right: 10px;
+  font-size: 0.9em;
 }
 
 .actionItem :global(.icon) {
-  font-size: 40px;
+  font-size: 25px;
 }
 
 .actionItem:hover {

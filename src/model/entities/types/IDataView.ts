@@ -56,6 +56,9 @@ export interface IDataView extends IDataViewData {
   selectedRowIndex: number | undefined;
   selectedRow: any[] | undefined;
   dataSource: IDataSource;
+  
+  panelViewActions: IAction[];
+  toolbarActions: IAction[];
 
   onFormPanelViewButtonClick(event: any): void;
   onTablePanelViewButtonClick(event: any): void;
