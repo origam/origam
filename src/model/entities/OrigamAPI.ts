@@ -3,7 +3,6 @@ import axios from "axios";
 
 import _ from "lodash";
 import { IApi } from "./types/IApi";
-import { observable } from "mobx";
 
 export class OrigamAPI implements IApi {
   constructor() {
@@ -11,7 +10,7 @@ export class OrigamAPI implements IApi {
   }
 
   urlPrefix: string;
-  @observable accessToken = "";
+  accessToken = "";
 
   setAccessToken(token: string) {
     this.accessToken = token;
@@ -28,7 +27,7 @@ export class OrigamAPI implements IApi {
   }
 
   async login(credentials: { UserName: string; Password: string }) {
-    return (await axios.post(`${this.urlPrefix}/Account/Login`, credentials))
+    return (await axios.post(`${this.urlPrefix}/User/Login`, credentials))
       .data;
   }
 
@@ -38,7 +37,7 @@ export class OrigamAPI implements IApi {
 
   async getMenu() {
     return xmlJs.xml2js(
-      (await axios.get(`${this.urlPrefix}/MetaData/GetMenu`, {
+      (await axios.get(`${this.urlPrefix}/UI/GetMenu`, {
         headers: this.httpAuthHeader
       })).data,
       { addParent: true, alwaysChildren: true }
@@ -47,7 +46,7 @@ export class OrigamAPI implements IApi {
 
   async getScreen(id: string) {
     return xmlJs.xml2js(
-      (await axios.get(`${this.urlPrefix}/MetaData/GetScreeSection`, {
+      (await axios.get(`${this.urlPrefix}/UI/GetUI`, {
         params: { id },
         headers: this.httpAuthHeader
       })).data,
@@ -65,7 +64,7 @@ export class OrigamAPI implements IApi {
     MasterRowId?: string;
   }) {
     const response = await axios.post(
-      `${this.urlPrefix}/Data/EntitiesGet`,
+      `${this.urlPrefix}/Data/GetRows`,
       query,
       {
         headers: this.httpAuthHeader
@@ -100,7 +99,7 @@ export class OrigamAPI implements IApi {
     NewValues: { [key: string]: any };
     MenuId: string;
   }) {
-    return (await axios.put(`${this.urlPrefix}/Data/Entities`, data, {
+    return (await axios.put(`${this.urlPrefix}/Data/Row`, data, {
       headers: this.httpAuthHeader
     })).data;
   }
@@ -110,7 +109,7 @@ export class OrigamAPI implements IApi {
     NewValues: { [key: string]: any };
     MenuId: string;
   }) {
-    return (await axios.post(`${this.urlPrefix}/Data/Entities`, data, {
+    return (await axios.post(`${this.urlPrefix}/Data/Row`, data, {
       headers: this.httpAuthHeader
     })).data;
   }
@@ -121,7 +120,7 @@ export class OrigamAPI implements IApi {
     MenuId: string;
   }) {
     return (await axios.request({
-      url: `${this.urlPrefix}/Data/Entities`,
+      url: `${this.urlPrefix}/Data/Row`,
       method: "DELETE",
       data,
       headers: this.httpAuthHeader
@@ -137,7 +136,7 @@ export class OrigamAPI implements IApi {
     Parameters: { [key: string]: any };
     InitializeStructure: boolean;
   }) {
-    return (await axios.post(`${this.urlPrefix}/Sessions/New`, data, {
+    return (await axios.post(`${this.urlPrefix}/Session/CreateSession`, data, {
       headers: this.httpAuthHeader
     })).data;
   }
@@ -145,7 +144,7 @@ export class OrigamAPI implements IApi {
   async deleteSession() {}
 
   async saveSession(data: { SessionId: string }) {
-    return (await axios.post(`${this.urlPrefix}/Sessions/Save`, data, {
+    return (await axios.post(`${this.urlPrefix}/Session/SaveData`, data, {
       headers: this.httpAuthHeader
     })).data;
   }
@@ -160,7 +159,7 @@ export class OrigamAPI implements IApi {
     RowId: string;
   }) {
     return (await axios.post(
-      `${this.urlPrefix}/Sessions/ChangeMasterRecord`,
+      `${this.urlPrefix}/Session/ChangeMasterRecord`,
       data,
       { headers: this.httpAuthHeader }
     )).data;
@@ -171,7 +170,7 @@ export class OrigamAPI implements IApi {
     Entity: string;
     RowId: string;
   }) {
-    return (await axios.post(`${this.urlPrefix}/Sessions/DeleteRow`, data, {
+    return (await axios.post(`${this.urlPrefix}/Session/DeleteRow`, data, {
       headers: this.httpAuthHeader
     })).data;
   }
@@ -183,7 +182,7 @@ export class OrigamAPI implements IApi {
     Parameters: { [key: string]: any };
     RequestingGridId: string;
   }) {
-    return (await axios.post(`${this.urlPrefix}/Sessions/CreateRow`, data, {
+    return (await axios.post(`${this.urlPrefix}/Session/CreateRow`, data, {
       headers: this.httpAuthHeader
     })).data;
   }
@@ -194,7 +193,7 @@ export class OrigamAPI implements IApi {
     parentRecordId: string;
     rootRecordId: string;
   }) {
-    return (await axios.get(`${this.urlPrefix}/Sessions/EntityData`, {
+    return (await axios.get(`${this.urlPrefix}/Session/Rows`, {
       params: data,
       headers: this.httpAuthHeader
     })).data;
@@ -207,7 +206,7 @@ export class OrigamAPI implements IApi {
     Property: string;
     NewValue: any;
   }): Promise<any> {
-    return (await axios.post(`${this.urlPrefix}/Sessions/UpdateRow`, data, {
+    return (await axios.post(`${this.urlPrefix}/Session/UpdateRow`, data, {
       headers: this.httpAuthHeader
     })).data;
   }
