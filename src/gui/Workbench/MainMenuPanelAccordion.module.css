@@ -1,0 +1,37 @@
+.accordion {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.accordionHandle {
+  height: 20px;
+  background-color: #666666;
+  color: white;
+  margin-bottom: 1px;
+  display: flex;
+  align-items: center;
+  padding: 0px 0px 0px 10px;
+  cursor: pointer;
+}
+
+.accordionHandle:hover,
+.accordionHandle:global(.active) {
+  background-color: #8998c5;
+}
+
+.accordionHandle:global(.active) {
+  margin-bottom: 0px;
+  padding-bottom: 1px;
+}
+
+.accordionBody {
+  flex-grow: 1;
+  background-color: #e5e5e5;
+  color: black;
+  /* padding: 10px; */
+}
+
+.accordionBody:global(.hidden) {
+  display: none;
+}

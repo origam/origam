@@ -187,3 +187,7 @@
   flex-direction: row;
   overflow: hidden;
 }
+
+.accordionHandleIcon {
+  width: 20px;
+}

@@ -17,6 +17,11 @@ import { getMainMenuUI } from "../../model/selectors/MainMenu/getMainMenuUI";
 import { getMainMenuExists } from "../../model/selectors/MainMenu/getMainMenuExists";
 import { getActiveScreenActions } from "model/selectors/getActiveScreenActions";
 import { IAction } from "model/entities/types/IAction";
+import {
+  MainMenuPanelAccordion,
+  MainMenuPanelAccordionHandle,
+  MainMenuPanelAccordionBody
+} from "./MainMenuPanelAccordion";
 
 @inject(({ application }) => {
   return {
@@ -130,19 +135,66 @@ export class WorkbenchPage extends React.Component<{
               model={this.mainSplitterModel}
             >
               <SplitterPanel id={"1"}>
-                <Observer>
-                  {() =>
-                    this.props.mainMenuExists &&
-                    !this.props.isMainMenuLoading ? (
-                      <MainMenu
-                        menuUI={this.props.mainMenuUI!}
-                        onItemClick={this.props.onMainMenuItemClick}
-                      />
-                    ) : (
-                      <></>
-                    )
-                  }
-                </Observer>
+                <MainMenuPanelAccordion>
+                  <MainMenuPanelAccordionHandle id="workQueues">
+                    <div className={S.accordionHandleIcon}>
+                      <i className="far fa-envelope icon" />
+                    </div>
+                    Work Queues
+                  </MainMenuPanelAccordionHandle>
+                  <MainMenuPanelAccordionBody id="workQueues">
+                    <div className={S.accordionSection + " open"}>Work Queues</div>
+                  </MainMenuPanelAccordionBody>
+                  <MainMenuPanelAccordionHandle id="favorites">
+                    <div className={S.accordionHandleIcon}>
+                      <i className="fas fa-star" />
+                    </div>
+                    Favourites
+                  </MainMenuPanelAccordionHandle>
+                  <MainMenuPanelAccordionBody id="favorites">
+                    <div className={S.accordionSection + " open"}>Favourites</div>
+                  </MainMenuPanelAccordionBody>
+                  <MainMenuPanelAccordionHandle id="menu">
+                    <div className={S.accordionHandleIcon}>
+                      <i className="fas fa-home" />
+                    </div>
+                    Menu
+                  </MainMenuPanelAccordionHandle>
+                  <MainMenuPanelAccordionBody id="menu">
+                    <Observer>
+                      {() =>
+                        this.props.mainMenuExists &&
+                        !this.props.isMainMenuLoading ? (
+                          <MainMenu
+                            menuUI={this.props.mainMenuUI!}
+                            onItemClick={this.props.onMainMenuItemClick}
+                          />
+                        ) : (
+                          <></>
+                        )
+                      }
+                    </Observer>
+                  </MainMenuPanelAccordionBody>
+                  <MainMenuPanelAccordionHandle id="info">
+                    <div className={S.accordionHandleIcon}>
+                      <i className="fas fa-info-circle" />
+                    </div>
+                    Info
+                  </MainMenuPanelAccordionHandle>
+                  <MainMenuPanelAccordionBody id="info">
+                    <div className={S.accordionSection + " open"}>Info</div>
+                  </MainMenuPanelAccordionBody>
+                  <MainMenuPanelAccordionHandle id="search">
+                    <div className={S.accordionHandleIcon}>
+                      <i className="fas fa-search" />
+                    </div>
+                    Search
+                  </MainMenuPanelAccordionHandle>
+                  <MainMenuPanelAccordionBody id="search">
+                    <div className={S.accordionSection + " open"}>Search</div>
+                  </MainMenuPanelAccordionBody>
+                </MainMenuPanelAccordion>
+                {/**/}
               </SplitterPanel>
               <SplitterPanel id={"2"}>
                 <ScreenArea />
