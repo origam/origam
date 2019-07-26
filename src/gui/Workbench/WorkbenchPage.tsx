@@ -174,7 +174,7 @@ export class WorkbenchPage extends React.Component<{
                     </div>
                     Menu
                   </MainMenuPanelAccordionHandle>
-                  <MainMenuPanelAccordionBody id="menu">
+                  <MainMenuPanelAccordionBody id="menu" initialActive={true}>
                     <Observer>
                       {() =>
                         this.props.mainMenuExists &&

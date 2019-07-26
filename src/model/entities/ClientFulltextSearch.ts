@@ -102,6 +102,9 @@ export class ClientFulltextSearch implements IClientFulltextSearch {
     } as any);
     const documents: any[] = [];
     const recursive = (node: any) => {
+      if (node.attributes.isHidden === "true") {
+        return;
+      }
       switch (node.name) {
         case "Submenu":
         case "Command":
@@ -110,7 +113,6 @@ export class ClientFulltextSearch implements IClientFulltextSearch {
             label: node.attributes.label,
             node
           };
-          console.log("Adding:", doc);
           documents.push(node);
       }
       node.elements.forEach((element: any) => recursive(element));

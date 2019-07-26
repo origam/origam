@@ -6,13 +6,15 @@ import { ISearchResultItem } from "../../model/entities/types/IClientFulltextSea
 import { getClientFulltextSearch } from "../../model/selectors/getClientFulltextSearch";
 import { IMenuItemIcon } from "./MainMenu/MainMenu";
 import S from "./SearchResults.module.css";
+import { getApplicationLifecycle } from "model/selectors/getApplicationLifecycle";
 
 export const SearchResultItem: React.FC<{
   icon: React.ReactNode;
   label: React.ReactNode;
   description: React.ReactNode;
+  onClick?: (event: any) => void;
 }> = props => (
-  <div className={S.searchResultItem}>
+  <div className={S.searchResultItem} onClick={props.onClick}>
     <div className={S.searchResultItemIcon}>{props.icon}</div>
     <div className={S.searchResultItemText}>
       <div className={S.searchResultItemLabel}>{props.label}</div>
@@ -41,6 +43,8 @@ export const SearchResultsPanel: React.FC<{}> = observer(props => {
     .application as IApplication;
   const clientFulltextSearch = getClientFulltextSearch(application);
   const foundItems = clientFulltextSearch.foundItems;
+  const handleMainMenuItemClick = (event: any, item: any) =>
+    getApplicationLifecycle(application).onMainMenuItemClick({ event, item });
   return (
     <div className={S.searchResultsPanel}>
       {foundItems.map(searchResultSection => (
@@ -53,6 +57,7 @@ export const SearchResultsPanel: React.FC<{}> = observer(props => {
               icon={itemIcon(item)}
               label={item.label}
               description={item.description}
+              onClick={event => handleMainMenuItemClick(event, item.node)}
             />
           ))}
         </>
