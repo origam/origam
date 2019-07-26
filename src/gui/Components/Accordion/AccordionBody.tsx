@@ -1,4 +1,4 @@
-import React, { useContext, useLayoutEffect } from 'react';
+import React, { useContext, useLayoutEffect, useImperativeHandle } from 'react';
 import { observer, useLocalStore } from 'mobx-react-lite';
 import { AccordionContext } from './AccordionTypes';
 
@@ -7,6 +7,7 @@ export const AccordionBody: React.FC<{
   initialActive?: boolean;
   className: string;
 }> = observer(props => {
+
   const accordionContext = useContext(AccordionContext);
   // const visibilityContext = useContext(VisibilityContext);
   const fwdVisibilityContext = useLocalStore(() => ({

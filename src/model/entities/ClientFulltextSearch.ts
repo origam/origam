@@ -51,6 +51,7 @@ export class ClientFulltextSearch implements IClientFulltextSearch {
 
   @action.bound doSearchTermImm(term: string) {
     if (!this.index) return;
+    this.triggerOpenSearchSection();
     this.foundItems = [
       new SearchResultSection(
         "Menu",
@@ -118,5 +119,21 @@ export class ClientFulltextSearch implements IClientFulltextSearch {
       recursive(element);
     });
     this.index.add(documents);
+  }
+
+  openSearchSectionHandlers: Map<number, () => void> = new Map();
+  openSearchSectionHandlersId = 0;
+
+  @action.bound
+  subscribeOpenSearchSection(open: () => void): () => void {
+    const myId = this.openSearchSectionHandlersId++;
+    this.openSearchSectionHandlers.set(myId, open);
+    return () => this.openSearchSectionHandlers.delete(myId);
+  }
+
+  @action.bound triggerOpenSearchSection() {
+    for (let handler of this.openSearchSectionHandlers.values()) {
+      handler();
+    }
   }
 }

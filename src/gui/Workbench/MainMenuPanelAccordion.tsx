@@ -5,10 +5,11 @@ import { Accordion } from "gui/Components/Accordion/Accordion";
 import { AccordionHandle } from "../Components/Accordion/AccordionHandle";
 import { AccordionBody } from "gui/Components/Accordion/AccordionBody";
 
-
-export const MainMenuPanelAccordion: React.FC = props => (
-  <Accordion className={S.accordion} {...props} />
-);
+export const MainMenuPanelAccordion: React.FC<{
+  subscribeActivator?: (
+    setActiveSectionId: (id: string | undefined) => void
+  ) => () => void;
+}> = props => <Accordion className={S.accordion} {...props} />;
 export const MainMenuPanelAccordionHandle: React.FC<{ id: string }> = props => (
   <AccordionHandle className={S.accordionHandle} {...props} />
 );

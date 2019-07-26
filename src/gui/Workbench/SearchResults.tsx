@@ -1,7 +1,7 @@
 import { MobXProviderContext } from "mobx-react";
 import { observer } from "mobx-react-lite";
 import { IApplication } from "model/entities/types/IApplication";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { ISearchResultItem } from "../../model/entities/types/IClientFulltextSearch";
 import { getClientFulltextSearch } from "../../model/selectors/getClientFulltextSearch";
 import { IMenuItemIcon } from "./MainMenu/MainMenu";

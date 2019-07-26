@@ -39,7 +39,8 @@ import { SearchResultItem, SearchResultsPanel } from "./SearchResults";
       getApplicationLifecycle(application).onSignOutClick({ event }),
     onMainMenuItemClick: (event: any, item: any) =>
       getApplicationLifecycle(application).onMainMenuItemClick({ event, item }),
-    onSearchTermChange: clientFulltextSearch.onSearchFieldChange
+    onSearchTermChange: clientFulltextSearch.onSearchFieldChange,
+    subscribeOpenSearchSection: clientFulltextSearch.subscribeOpenSearchSection
   };
 })
 @observer
@@ -54,6 +55,7 @@ export class WorkbenchPage extends React.Component<{
   onSignOutClick?: () => void;
   onMainMenuItemClick?: (event: any, item: any) => void;
   onSearchTermChange?: (event: any) => void;
+  subscribeOpenSearchSection?(open: () => void): () => void;
 }> {
   mainSplitterModel = new SplitterModel([["1", 1], ["2", 5]]);
 
@@ -141,7 +143,13 @@ export class WorkbenchPage extends React.Component<{
               model={this.mainSplitterModel}
             >
               <SplitterPanel id={"1"}>
-                <MainMenuPanelAccordion>
+                <MainMenuPanelAccordion
+                  subscribeActivator={setActiveSectionId =>
+                    this.props.subscribeOpenSearchSection!(() =>
+                      setActiveSectionId("search")
+                    )
+                  }
+                >
                   <MainMenuPanelAccordionHandle id="workQueues">
                     <div className={S.accordionHandleIcon}>
                       <i className="far fa-envelope icon" />
