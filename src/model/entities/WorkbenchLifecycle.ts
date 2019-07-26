@@ -6,6 +6,7 @@ import { getApi } from "../selectors/getApi";
 import { getWorkbench } from "../selectors/getWorkbench";
 import { LoadingMainMenu, MainMenu } from "./MainMenu";
 import { findMenu } from "../../xmlInterpreters/menuXml";
+import { ClientFulltextSearch } from './ClientFulltextSearch';
 
 const sLoadMenu = "sLoadMenu";
 const sLoadMenuFailed = "sLoadMenuFailed";
@@ -70,6 +71,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       workbench.setMainMenu(new LoadingMainMenu());
       const menu = yield api.getMenu();
       workbench.setMainMenu(new MainMenu({ menuUI: findMenu(menu) }));
+      new ClientFulltextSearch().indexMainMenu(menu)
       this.interpreter.send(loadMenuSuccessful);
     } catch (e) {
       this.interpreter.send(loadMenuFailed);

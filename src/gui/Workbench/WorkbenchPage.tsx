@@ -22,8 +22,12 @@ import {
   MainMenuPanelAccordionHandle,
   MainMenuPanelAccordionBody
 } from "./MainMenuPanelAccordion";
+import { getClientFulltextSearch } from "model/selectors/getClientFulltextSearch";
+import { ISearchResultSection } from "../../model/entities/types/IClientFulltextSearch";
+import { SearchResultItem, SearchResultsPanel } from "./SearchResults";
 
 @inject(({ application }) => {
+  const clientFulltextSearch = getClientFulltextSearch(application);
   return {
     workbench: getWorkbench(application),
     isMainMenuLoading: getIsMainMenuLoading(application),
@@ -34,7 +38,8 @@ import {
     onSignOutClick: (event: any) =>
       getApplicationLifecycle(application).onSignOutClick({ event }),
     onMainMenuItemClick: (event: any, item: any) =>
-      getApplicationLifecycle(application).onMainMenuItemClick({ event, item })
+      getApplicationLifecycle(application).onMainMenuItemClick({ event, item }),
+    onSearchTermChange: clientFulltextSearch.onSearchFieldChange
   };
 })
 @observer
@@ -48,6 +53,7 @@ export class WorkbenchPage extends React.Component<{
   loggedUserName?: string;
   onSignOutClick?: () => void;
   onMainMenuItemClick?: (event: any, item: any) => void;
+  onSearchTermChange?: (event: any) => void;
 }> {
   mainSplitterModel = new SplitterModel([["1", 1], ["2", 5]]);
 
@@ -61,7 +67,7 @@ export class WorkbenchPage extends React.Component<{
                 <img className={S.logoImg} src="img/advantageSolutions.png" />
               </div>
               <div className={S.searchBox}>
-                <input />
+                <input onChange={this.props.onSearchTermChange} />
                 <div className={S.searchIcon}>
                   <i className="fa fa-search icon" />
                 </div>
@@ -143,7 +149,7 @@ export class WorkbenchPage extends React.Component<{
                     Work Queues
                   </MainMenuPanelAccordionHandle>
                   <MainMenuPanelAccordionBody id="workQueues">
-                    <div className={S.accordionSection + " open"}>Work Queues</div>
+                    Work Queues
                   </MainMenuPanelAccordionBody>
                   <MainMenuPanelAccordionHandle id="favorites">
                     <div className={S.accordionHandleIcon}>
@@ -152,7 +158,7 @@ export class WorkbenchPage extends React.Component<{
                     Favourites
                   </MainMenuPanelAccordionHandle>
                   <MainMenuPanelAccordionBody id="favorites">
-                    <div className={S.accordionSection + " open"}>Favourites</div>
+                    Favourites
                   </MainMenuPanelAccordionBody>
                   <MainMenuPanelAccordionHandle id="menu">
                     <div className={S.accordionHandleIcon}>
@@ -182,7 +188,7 @@ export class WorkbenchPage extends React.Component<{
                     Info
                   </MainMenuPanelAccordionHandle>
                   <MainMenuPanelAccordionBody id="info">
-                    <div className={S.accordionSection + " open"}>Info</div>
+                    Info
                   </MainMenuPanelAccordionBody>
                   <MainMenuPanelAccordionHandle id="search">
                     <div className={S.accordionHandleIcon}>
@@ -191,7 +197,7 @@ export class WorkbenchPage extends React.Component<{
                     Search
                   </MainMenuPanelAccordionHandle>
                   <MainMenuPanelAccordionBody id="search">
-                    <div className={S.accordionSection + " open"}>Search</div>
+                    <SearchResultsPanel />
                   </MainMenuPanelAccordionBody>
                 </MainMenuPanelAccordion>
                 {/**/}
