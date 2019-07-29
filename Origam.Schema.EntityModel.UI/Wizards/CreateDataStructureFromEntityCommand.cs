@@ -81,7 +81,9 @@ namespace Origam.Schema.EntityModel.Wizards
 
             structureForm = new StructureForm
             {
-                Description = "Create Data Structure Wizard",
+                Title = "Create Data Structure Wizard",
+                PageTitle = "",
+                Description = "This will create Field for looku and bla bla bla bla bla bla bla bla bla bla bla bla ",
                 ItemTypeList = list,
                 Pages = stackPage,
                 StructureList = listdsName,

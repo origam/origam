@@ -72,11 +72,13 @@ namespace Origam.Schema.LookupModel.Wizards
 
             createFieldWith = new CreateFieldWithLookupEntityWizardForm
             {
-                Description = "Create Field With Lookup Entity.",
+                Title = "Create Field With Lookup Entity.",
+                PageTitle = "",
+                Description = "This will create Field for looku and bla bla bla bla bla bla bla bla bla bla bla bla ",
                 ItemTypeList = list,
                 Pages = stackPage,
                 ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
-                Command =this
+                Command = this
             };
 
             createFieldWith.EnterAllInfo = ResourceUtils.GetString("EnterAllInfo");

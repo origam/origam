@@ -85,7 +85,9 @@ namespace Origam.Gui.Win.Wizards
             wizardForm = new ScreenWizardForm
             {
                 ItemTypeList = list,
-                Description = "Create Screen Wizard",
+                Title = "Create Screen Wizard",
+                PageTitle = "",
+                Description = "This will create Field for  epfrferf refj eerjferfirejfo wwuw sscs sccsdjcs cscjsc cpdcs cscslj scsdc dsdcsdhc spclooku and bla bla bla bla bla bla bla bla bla bla bla bla ",
                 Pages = stackPage,
                 Entity = Owner as IDataEntity,
                 IsRoleVisible = false,
@@ -168,7 +170,9 @@ namespace Origam.Gui.Win.Wizards
             wizardForm = new ScreenWizardForm
             {
                 ItemTypeList = list,
-                Description = "Create Complete UI Wizard",
+                Title = "Create Complete UI Wizard",
+                PageTitle = "",
+                Description = "This will create Field for looku and bla bla bla bla bla bla bla bla bla bla bla bla ",
                 Pages = stackPage,
                 Entity = Owner as IDataEntity,
                 IsRoleVisible = true,
@@ -303,7 +307,9 @@ namespace Origam.Gui.Win.Wizards
             menuFrom = new MenuFromForm
             {
                 ItemTypeList = list,
-                Description = "Create Menu from Dataconstant Wizard",
+                Title = "Create Menu from Dataconstant Wizard",
+                PageTitle = "",
+                Description = "This will create Field for looku and bla bla bla bla bla bla bla bla bla bla bla bla ",
                 Pages = stackPage,
                 Entity = constant,
                 Role = constant.Name,
@@ -362,7 +368,9 @@ namespace Origam.Gui.Win.Wizards
             menuFrom = new MenuFromForm
             {
                 ItemTypeList = list,
-                Description = "Create Menu from Sequential Workflow Wizard",
+                Title = "Create Menu from Sequential Workflow Wizard",
+                PageTitle = "",
+                Description = "This will create Field for looku and bla bla bla bla bla bla bla bla bla bla bla bla ",
                 Pages = stackPage,
                 Entity = wf,
                 Role = wf.Name,

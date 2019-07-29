@@ -63,7 +63,9 @@ namespace Origam.Gui.Win.Wizards
             wizardForm = new ScreenWizardForm
             {
                 ItemTypeList = list,
-                Description = "Create Work Queue Class From Entity Wizard",
+                Title = "Create Work Queue Class From Entity Wizard",
+                PageTitle = "",
+                Description = "This will create Field for looku and bla bla bla bla bla bla bla bla bla bla bla bla ",
                 Pages = stackPage,
                 Entity = Owner as IDataEntity,
                 NameOfEntity = (Owner as IDataEntity).Name,

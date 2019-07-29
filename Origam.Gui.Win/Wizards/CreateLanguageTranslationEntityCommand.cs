@@ -74,7 +74,9 @@ namespace Origam.Gui.Win.Wizards
             wizardForm = new ScreenWizardForm
             {
                 ItemTypeList = list,
-                Description = "Create Language Translation Entity Wizard",
+                Title = "Create Language Translation Entity Wizard",
+                PageTitle = "",
+                Description = "This will create Field for looku and bla bla bla bla bla bla bla bla bla bla bla bla ",
                 Pages = stackPage,
                 Entity = Owner as TableMappingItem,
                 IsRoleVisible = false,

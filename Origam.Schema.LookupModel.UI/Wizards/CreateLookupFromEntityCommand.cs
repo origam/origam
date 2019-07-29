@@ -62,7 +62,9 @@ namespace Origam.Schema.LookupModel.Wizards
 
             lookupForm = new LookupForm
             {
-                Description = "Create Lookup Wizard",
+                Title = "Create Lookup Wizard",
+                PageTitle = "",
+                Description = "This will create Field for looku and bla bla bla bla bla bla bla bla bla bla bla bla ",
                 Pages = stackPage,
                 Entity = Owner as IDataEntity,
                 ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,

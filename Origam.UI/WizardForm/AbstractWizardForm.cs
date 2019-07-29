@@ -1,6 +1,5 @@
 ﻿using Origam.UI.Commands;
 using Origam.UI.Interfaces;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -16,6 +15,8 @@ namespace Origam.UI.WizardForm
         public  string NameOfEntity { get ; set ; }
         public ImageList ImageList { get; set ; }
         public IRunCommand Command { get; set; }
+        public string Title { get; set; }
+        public string PageTitle { get; set; }
 
         public bool IsExistsNameInDataStructure(string name)
         {
@@ -24,11 +25,13 @@ namespace Origam.UI.WizardForm
 
         public void ListView(ListView listView)
         {
-            listView.Items.Clear();
-            foreach (ListViewItem item in ItemTypeList)
+            if (listView.Items.Count == 0)
             {
-                item.ImageIndex = ImageList.ImageIndex(item.ImageKey);
-                listView.Items.Add(item);
+                foreach (ListViewItem item in ItemTypeList)
+                {
+                    item.ImageIndex = ImageList.ImageIndex(item.ImageKey);
+                    listView.Items.Add(item);
+                }
             }
         }
     }

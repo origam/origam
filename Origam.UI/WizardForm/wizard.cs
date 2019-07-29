@@ -20,7 +20,7 @@ namespace Origam.UI.WizardForm
             InitializeComponent();
             iwizard = objectForm;
             StartPage.Text = "What will happen...";
-            aerowizard1.Title = objectForm.Description;
+            if(iwizard.Title!=null) aerowizard1.Title =  iwizard.Title;
             InitData();
         }
         private void InitData()
@@ -35,6 +35,8 @@ namespace Origam.UI.WizardForm
         #region Inicialize&Commit
         private void PageStart_Initialize(object sender, WizardPageInitEventArgs e)
         {
+            txtLabel.Text = iwizard.Description;
+            txtLabel.Size = TextRenderer.MeasureText(iwizard.Description, txtLabel.Font);
             iwizard.ListView(listView1);
             GetNextPage(PagesList.startPage, sender);
         }
@@ -46,11 +48,11 @@ namespace Origam.UI.WizardForm
 
         private void StructureNamePage_Initialize(object sender, WizardPageInitEventArgs e)
         {
+            SetPageTitle(sender);
             tbDataStructureName.Text = iwizard.NameOfEntity;
             GetNextPage(PagesList.StructureNamePage, sender);
         }
-
-        private void StructureNamePage_Commit(object sender, WizardPageConfirmEventArgs e)
+           private void StructureNamePage_Commit(object sender, WizardPageConfirmEventArgs e)
         {
             if (iwizard.IsExistsNameInDataStructure(tbDataStructureName.Text))
             {
@@ -64,6 +66,7 @@ namespace Origam.UI.WizardForm
 
         private void ScreenFormPage_Initialize(object sender, WizardPageInitEventArgs e)
         {
+            SetPageTitle(sender);
             GetNextPage(PagesList.ScreenForm, sender);
             ScreenWizardForm screenWizard = (ScreenWizardForm)iwizard;
             screenWizard.SetUpForm(lstFields);
@@ -81,6 +84,7 @@ namespace Origam.UI.WizardForm
 
         private void LookupFormPage_Initialize(object sender, WizardPageInitEventArgs e)
         {
+            SetPageTitle(sender);
             LookupForm form = (LookupForm)iwizard;
             form.SetUpForm(cboIdFilter, cboListFilter, cboDisplayField, txtName);
             GetNextPage(PagesList.StructureNamePage, sender);
@@ -108,6 +112,7 @@ namespace Origam.UI.WizardForm
         }
         private void FieldLookupEntityPage_Initialize(object sender, WizardPageInitEventArgs e)
         {
+            SetPageTitle(sender);
             CreateFieldWithLookupEntityWizardForm form = (CreateFieldWithLookupEntityWizardForm)iwizard;
             grdInitialValues.AutoGenerateColumns = false;
             grdInitialValues.DataSource = form.InitialValues;
@@ -163,6 +168,7 @@ namespace Origam.UI.WizardForm
         }
         private void FinishPage_Initialize(object sender, WizardPageInitEventArgs e)
         {
+            SetPageTitle(sender);
             GetNextPage(PagesList.finish, sender);
             try
             {
@@ -189,6 +195,7 @@ namespace Origam.UI.WizardForm
 
         private void RelationShipEntityPage_Initialize(object sender, WizardPageInitEventArgs e)
         {
+            SetPageTitle(sender);
             GetNextPage(PagesList.FieldEntity, sender);
             CreateFieldWithRelationshipEntityWizardForm wizardForm = (CreateFieldWithRelationshipEntityWizardForm)iwizard;
             wizardForm.SetUpForm(tableRelation,txtRelationName);
@@ -214,6 +221,7 @@ namespace Origam.UI.WizardForm
         }
         private void ChildEntityPage_Initialize(object sender, WizardPageInitEventArgs e)
         {
+            SetPageTitle(sender);
             GetNextPage(PagesList.ChildEntity, sender);
             ChildEntityForm EntityForm = (ChildEntityForm)iwizard;
             EntityForm.EntityName = txtchildEntityName.Text;
@@ -236,6 +244,7 @@ namespace Origam.UI.WizardForm
         }
         private void ForeignKeyPage_Initialize(object sender, WizardPageInitEventArgs e)
         {
+            SetPageTitle(sender);
             GetNextPage(PagesList.ForeignForm, sender);
             ForeignKeyForm foreignKey = (ForeignKeyForm)iwizard;
             foreignKey.SetUpForm(txtFkFieldName, cboEntity, cboLookup, cboField, chkAllowNulls);
@@ -273,6 +282,7 @@ namespace Origam.UI.WizardForm
         }
         private void MenuFromPage_Initialize(object sender, WizardPageInitEventArgs e)
         {
+            SetPageTitle(sender);
             MenuFromForm menufrom = (MenuFromForm)iwizard;
             txtMenuRole.Text = menufrom.Role;
             GetNextPage(PagesList.MenuPage, sender);
@@ -479,6 +489,11 @@ namespace Origam.UI.WizardForm
             {
                 cboField.EndUpdate();
             }
+        }
+        private void SetPageTitle(object sender)
+        {
+            if(iwizard.PageTitle!=null)
+                ((WizardPage)sender).Text = iwizard.PageTitle;
         }
     }
     #endregion

@@ -77,7 +77,9 @@ namespace Origam.Schema.LookupModel.Wizards
 
             wizardForm = new CreateFieldWithRelationshipEntityWizardForm
             {
-                Description = "Create Field With Relationship Entity.",
+                Title = "Create Field With Relationship Entity.",
+                PageTitle = "",
+                Description = "This will create Field for looku and bla bla bla bla bla bla bla bla bla bla bla bla ",
                 Entity = baseEntity,
                 ItemTypeList = list,
                 Pages = stackPage,

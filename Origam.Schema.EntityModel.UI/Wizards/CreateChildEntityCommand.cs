@@ -72,7 +72,9 @@ namespace Origam.Schema.EntityModel.Wizards
             childEntityForm = new ChildEntityForm()
             {
                 ItemTypeList = list,
-                Description = "Create Child Entity Wizard",
+                Title = "Create Child Entity Wizard",
+                PageTitle = "",
+                Description = "This will create Field for looku and bla bla bla bla bla bla bla bla bla bla bla bla ",
                 Pages = stackPage,
                 Entity1 = entity,
                 ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,

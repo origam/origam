@@ -83,7 +83,9 @@ namespace Origam.Gui.Win.Wizards
             wizardForm = new ScreenWizardForm
             {
                 ItemTypeList = list,
-                Description = "Create Screen Section Wizard",
+                Title = "Create Screen Section Wizard",
+                PageTitle = "",
+                Description = "This will create Field for looku and bla bla bla bla bla bla bla bla bla bla bla bla ",
                 Pages = stackPage,
                 StructureList = listdsName,
                 Entity = Owner as IDataEntity,

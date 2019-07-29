@@ -36,6 +36,7 @@ namespace Origam.UI.WizardForm
             this.listView1 = new System.Windows.Forms.ListView();
             this.aerowizard1 = new AeroWizard.WizardControl();
             this.StartPage = new AeroWizard.WizardPage();
+            this.txtLabel = new System.Windows.Forms.TextBox();
             this.lbTitle = new System.Windows.Forms.Label();
             this.StructureNamePage = new AeroWizard.WizardPage();
             this.label1 = new System.Windows.Forms.Label();
@@ -112,11 +113,11 @@ namespace Origam.UI.WizardForm
             this.label15 = new System.Windows.Forms.Label();
             this.txtFkFieldName = new System.Windows.Forms.TextBox();
             this.menuFromPage = new AeroWizard.WizardPage();
-            this.colCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtMenuCaption = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.txtMenuRole = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
+            this.colCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.aerowizard1)).BeginInit();
             this.StartPage.SuspendLayout();
             this.StructureNamePage.SuspendLayout();
@@ -136,9 +137,9 @@ namespace Origam.UI.WizardForm
             // listView1
             // 
             this.listView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.listView1.Location = new System.Drawing.Point(10, 33);
+            this.listView1.Location = new System.Drawing.Point(17, 72);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(455, 127);
+            this.listView1.Size = new System.Drawing.Size(504, 153);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.List;
@@ -162,9 +163,11 @@ namespace Origam.UI.WizardForm
             this.aerowizard1.Pages.Add(this.menuFromPage);
             this.aerowizard1.Size = new System.Drawing.Size(588, 497);
             this.aerowizard1.TabIndex = 0;
+            this.aerowizard1.Title = "wiztitle";
             // 
             // StartPage
             // 
+            this.StartPage.Controls.Add(this.txtLabel);
             this.StartPage.Controls.Add(this.lbTitle);
             this.StartPage.Controls.Add(this.listView1);
             this.StartPage.Name = "StartPage";
@@ -174,10 +177,22 @@ namespace Origam.UI.WizardForm
             this.StartPage.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageStart_Commit);
             this.StartPage.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.PageStart_Initialize);
             // 
+            // txtLabel
+            // 
+            this.txtLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtLabel.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtLabel.Location = new System.Drawing.Point(6, 13);
+            this.txtLabel.Multiline = true;
+            this.txtLabel.Name = "txtLabel";
+            this.txtLabel.ReadOnly = true;
+            this.txtLabel.Size = new System.Drawing.Size(165, 20);
+            this.txtLabel.TabIndex = 2;
+            // 
             // lbTitle
             // 
             this.lbTitle.AutoSize = true;
-            this.lbTitle.Location = new System.Drawing.Point(11, 8);
+            this.lbTitle.Location = new System.Drawing.Point(3, 46);
             this.lbTitle.Name = "lbTitle";
             this.lbTitle.Size = new System.Drawing.Size(67, 15);
             this.lbTitle.TabIndex = 1;
@@ -914,11 +929,6 @@ namespace Origam.UI.WizardForm
             this.menuFromPage.Text = "Create Menu Form";
             this.menuFromPage.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.MenuFromPage_Commit);
             this.menuFromPage.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.MenuFromPage_Initialize);
-
-            // 
-            // colCode
-            // 
-            this.colCode.Name = "colCode";
             // 
             // txtMenuCaption
             // 
@@ -949,6 +959,10 @@ namespace Origam.UI.WizardForm
             this.label17.Size = new System.Drawing.Size(65, 16);
             this.label17.TabIndex = 15;
             this.label17.Text = "Role:";
+            // 
+            // colCode
+            // 
+            this.colCode.Name = "colCode";
             // 
             // Wizard
             // 
@@ -1075,6 +1089,7 @@ namespace Origam.UI.WizardForm
         private Label label16;
         private TextBox txtMenuRole;
         private Label label17;
+        private TextBox txtLabel;
     }
 }
 
