@@ -27,12 +27,17 @@ export class OrigamAPI implements IApi {
   }
 
   async login(credentials: { UserName: string; Password: string }) {
-    return (await axios.post(`${this.urlPrefix}/User/Login`, credentials))
-      .data;
+    return (await axios.post(`${this.urlPrefix}/User/Login`, credentials)).data;
   }
 
   async logout() {
-    return;
+    return await axios.post(
+      `${this.urlPrefix}/User/Logout`,
+      {},
+      {
+        headers: this.httpAuthHeader
+      }
+    );
   }
 
   async getMenu() {
@@ -63,13 +68,9 @@ export class OrigamAPI implements IApi {
     RowLimit?: number;
     MasterRowId?: string;
   }) {
-    const response = await axios.post(
-      `${this.urlPrefix}/Data/GetRows`,
-      query,
-      {
-        headers: this.httpAuthHeader
-      }
-    );
+    const response = await axios.post(`${this.urlPrefix}/Data/GetRows`, query, {
+      headers: this.httpAuthHeader
+    });
     if (_.isString(response.data)) {
       return [];
     } else {
@@ -226,5 +227,16 @@ export class OrigamAPI implements IApi {
     return (await axios.post(`${this.urlPrefix}/Data/GetLookupListEx`, data, {
       headers: this.httpAuthHeader
     })).data;
+  }
+
+  async initPortal(): Promise<any> {
+    const { data } = await axios.get(`${this.urlPrefix}/UIService/InitPortal`, {
+      params: { locale: "en-us" },
+      headers: this.httpAuthHeader
+    });
+    return {
+      ...data,
+      menu: xmlJs.xml2js(data.menu, { addParent: true, alwaysChildren: true })
+    };
   }
 }

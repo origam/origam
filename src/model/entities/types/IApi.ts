@@ -11,7 +11,7 @@ export interface IApi {
 
   login(credentials: { UserName: string; Password: string }): Promise<string>;
 
-  logout(): Promise<void>;
+  logout(): Promise<any>;
 
   getMenu(): Promise<any>;
 
@@ -112,4 +112,6 @@ export interface IApi {
     PageSize: number;
     PageNumber: number;
   }): Promise<any>;
+
+  initPortal(): Promise<any>;
 }

@@ -16,6 +16,7 @@ import { createLoadingFormScreen } from "../factories/createLoadingFormScreen";
 const loginFormSubmit = "loginFormSubmit";
 const loginSuccessful = "loginSuccessful";
 const loginFailed = "loginFailed";
+
 const logout = "logout";
 const logoutSuccessful = "logoutSuccessful";
 const logoutFailed = "logoutFailed";
@@ -23,6 +24,7 @@ const start = "start";
 
 const sLoginPage = "sLoginPage";
 const sPerformLogin = "sPerformLogin";
+
 const sWorkbenchPage = "sWorkbenchPage";
 const sPerformLogout = "sPerformLogout";
 const sWaitForStart = "sWaitForStart";
@@ -132,74 +134,6 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
   }
 
   @action.bound
-  onMainMenuItemClick(args: { event: any; item: any }): void {
-    const { type, id, label } = args.item.attributes;
-    const { event } = args;
-    switch (type) {
-      case "FormReferenceMenuItem":
-        {
-          const openedScreens = getOpenedScreens(this);
-          const existingItem = openedScreens.findLastExistingItem(id);
-          if (!event.ctrlKey) {
-            if (existingItem) {
-              openedScreens.activateItem(id, existingItem.order);
-            } else {
-              const newFormScreen = createLoadingFormScreen();
-              const newScreen = createOpenedScreen(id, 0, label, newFormScreen);
-              openedScreens.pushItem(newScreen);
-              openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
-              newFormScreen.run();
-            }
-          } else {
-            if (existingItem) {
-              const newFormScreen = createLoadingFormScreen();
-              const newScreen = createOpenedScreen(
-                id,
-                existingItem.order + 1,
-                label,
-                newFormScreen
-              );
-              openedScreens.pushItem(newScreen);
-              openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
-              newFormScreen.run();
-            } else {
-              const newFormScreen = createLoadingFormScreen();
-              const newScreen = createOpenedScreen(id, 0, label, newFormScreen);
-              openedScreens.pushItem(newScreen);
-              openedScreens.activateItem(id, 0);
-              newFormScreen.run();
-            }
-          }
-          console.log(openedScreens.items);
-        }
-        break;
-      case "FormReferenceMenuItem_WithSelection":
-        break;
-    }
-  }
-
-  @action.bound
-  onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen) {
-    const openedScreens = getOpenedScreens(this);
-    openedScreens.activateItem(openedScreen.menuItemId, openedScreen.order);
-  }
-
-  @action.bound
-  onScreenTabCloseClick(event: any, openedScreen: IOpenedScreen): void {
-    event.stopPropagation();
-    console.log(openedScreen);
-    const openedScreens = getOpenedScreens(this);
-    const closestScreen = openedScreens.findClosestItem(
-      openedScreen.menuItemId,
-      openedScreen.order
-    );
-    if (closestScreen) {
-      openedScreens.activateItem(closestScreen.menuItemId, closestScreen.order);
-    }
-    openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
-  }
-
-  @action.bound
   run(): void {
     this.interpreter.send(start);
   }
@@ -224,8 +158,13 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
     const api = getApi(this);
     const application = getApplication(this);
     window.sessionStorage.removeItem("origamAuthToken");
-    api.resetAccessToken();
+
     application.resetWorkbench();
+    try {
+      yield api.logout();
+    } finally {
+      api.resetAccessToken();
+    }
     this.interpreter.send(logoutSuccessful);
     return null;
   }

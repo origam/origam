@@ -23,10 +23,11 @@ export interface IApplicationLifecycle extends IApplicationLifecycleData {
   }): void;
   onSignOutClick(args: { event: any }): void;
 
+  /*
   onMainMenuItemClick(args: { event: any; item: any }): void;
-
   onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): void;
   onScreenTabCloseClick(event: any, openedScreen: IOpenedScreen): void;
+  */
 
   run(): void;
 

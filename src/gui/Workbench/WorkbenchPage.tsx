@@ -25,6 +25,7 @@ import {
 import { getClientFulltextSearch } from "model/selectors/getClientFulltextSearch";
 import { ISearchResultSection } from "../../model/entities/types/IClientFulltextSearch";
 import { SearchResultItem, SearchResultsPanel } from "./SearchResults";
+import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 
 @inject(({ application }) => {
   const clientFulltextSearch = getClientFulltextSearch(application);
@@ -38,7 +39,7 @@ import { SearchResultItem, SearchResultsPanel } from "./SearchResults";
     onSignOutClick: (event: any) =>
       getApplicationLifecycle(application).onSignOutClick({ event }),
     onMainMenuItemClick: (event: any, item: any) =>
-      getApplicationLifecycle(application).onMainMenuItemClick({ event, item }),
+      getWorkbenchLifecycle(application).onMainMenuItemClick({ event, item }),
     onSearchTermChange: clientFulltextSearch.onSearchFieldChange,
     subscribeOpenSearchSection: clientFulltextSearch.subscribeOpenSearchSection
   };

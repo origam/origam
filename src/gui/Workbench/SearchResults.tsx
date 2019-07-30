@@ -7,6 +7,7 @@ import { getClientFulltextSearch } from "../../model/selectors/getClientFulltext
 import { IMenuItemIcon } from "./MainMenu/MainMenu";
 import S from "./SearchResults.module.css";
 import { getApplicationLifecycle } from "model/selectors/getApplicationLifecycle";
+import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 
 export const SearchResultItem: React.FC<{
   icon: React.ReactNode;
@@ -44,7 +45,7 @@ export const SearchResultsPanel: React.FC<{}> = observer(props => {
   const clientFulltextSearch = getClientFulltextSearch(application);
   const foundItems = clientFulltextSearch.foundItems;
   const handleMainMenuItemClick = (event: any, item: any) =>
-    getApplicationLifecycle(application).onMainMenuItemClick({ event, item });
+    getWorkbenchLifecycle(application).onMainMenuItemClick({ event, item });
   return (
     <div className={S.searchResultsPanel}>
       {foundItems.map(searchResultSection => (
