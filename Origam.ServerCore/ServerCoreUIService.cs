@@ -7,6 +7,7 @@ using Origam.Workbench.Services;
 using System;
 using System.Collections;
 using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 using core = Origam.Workbench.Services.CoreServices;
 
@@ -142,17 +143,13 @@ namespace Origam.ServerCore
             result.UserName = profile.FullName 
                 + " (" + sessionManager.PortalSessionCount + ")";
             result.Tooltip = ToolTipTools.NextTooltip();
-            Task.Run(() => SecurityTools.CreateUpdateOrigamOnlineUser(
-                SecurityManager.CurrentPrincipal.Identity.Name,
-                sessionManager.GetSessionStats()));
+            CreateUpdateOrigamOnlineUser();
             return result;
         }
         public void DestroyUI(Guid sessionFormIdentifier)
         {
             sessionHelper.DeleteSession(sessionFormIdentifier);
-            Task.Run(() => SecurityTools.CreateUpdateOrigamOnlineUser(
-                SecurityManager.CurrentPrincipal.Identity.Name,
-                sessionManager.GetSessionStats()));
+            CreateUpdateOrigamOnlineUser();
         }
 
         private static NotificationBox LogoNotificationBox()
@@ -188,6 +185,17 @@ namespace Origam.ServerCore
                 hasChanges = true;
             }
             return hasChanges;
+        }
+        private void CreateUpdateOrigamOnlineUser()
+        {
+            var principal = Thread.CurrentPrincipal;
+            Task.Run(() =>
+            {
+                Thread.CurrentPrincipal = principal;
+                SecurityTools.CreateUpdateOrigamOnlineUser(
+                    SecurityManager.CurrentPrincipal.Identity.Name,
+                    sessionManager.GetSessionStats());
+            });
         }
     }
 }

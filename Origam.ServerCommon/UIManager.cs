@@ -200,9 +200,9 @@ namespace Origam.Server
                 parentSession.AddChildSession(ss);
                 parentSession.ActiveSession = ss;
             }
-            var principal = Thread.CurrentPrincipal;
             if(request.RegisterSession)
             {
+                var principal = Thread.CurrentPrincipal;
                 Task.Run(() =>
                 {
                     Thread.CurrentPrincipal = principal;
