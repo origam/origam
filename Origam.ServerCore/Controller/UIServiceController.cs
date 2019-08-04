@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Origam.Security.Identity;
 using Origam.Server;
 using System;
@@ -13,13 +14,16 @@ namespace Origam.ServerCore.Controller
     public class UIServiceController : ControllerBase
     {
         private readonly SessionObjects sessionObjects;
+        private readonly IStringLocalizer<SharedResources> localizer;
 
         public UIServiceController(
             SessionObjects sessionObjects, 
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider,
+            IStringLocalizer<SharedResources> localizer)
         {
             this.sessionObjects = sessionObjects;
             IdentityServiceAgent.ServiceProvider = serviceProvider;
+            this.localizer = localizer;
         }
 
         [HttpGet("[action]")]
@@ -71,6 +75,21 @@ namespace Origam.ServerCore.Controller
             {
                 sessionObjects.UIService.DestroyUI(sessionFormIdentifier);
                 return Ok();
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult RefreshData(
+            [FromQuery][Required]Guid sessionFormIdentifier)
+        {
+            try
+            {
+                return Ok(sessionObjects.UIService.RefreshData(
+                    sessionFormIdentifier, localizer));
             }
             catch(Exception ex)
             {

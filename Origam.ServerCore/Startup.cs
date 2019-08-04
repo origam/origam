@@ -68,6 +68,7 @@ namespace Origam.ServerCore
             services.AddScoped<CoreUserManager>();
             services.AddScoped<UserManager<IOrigamUser>>(x =>
                 x.GetRequiredService<CoreUserManager>());
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddIdentity<IOrigamUser, Role>()
                 .AddDefaultTokenProviders();
             services.AddAuthentication(options =>

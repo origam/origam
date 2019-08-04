@@ -1,4 +1,5 @@
-﻿using Origam.OrigamEngine.ModelXmlBuilders;
+﻿using Microsoft.Extensions.Localization;
+using Origam.OrigamEngine.ModelXmlBuilders;
 using Origam.Schema.GuiModel;
 using Origam.Schema.LookupModel;
 using Origam.Server;
@@ -6,6 +7,7 @@ using Origam.ServerCommon;
 using Origam.Workbench.Services;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +17,8 @@ namespace Origam.ServerCore
 {
     public class ServerCoreUIService : IBasicUIService
     {
+        private const int INITIAL_PAGE_NUMBER_OF_RECORDS = 50;
+
         private readonly UIManager uiManager;
         private readonly SessionManager sessionManager;
         private readonly SessionHelper sessionHelper;
@@ -151,7 +155,32 @@ namespace Origam.ServerCore
             sessionHelper.DeleteSession(sessionFormIdentifier);
             CreateUpdateOrigamOnlineUser();
         }
+        public IDictionary<string, object> RefreshData(
+            Guid sessionFormIdentifier,
+            IStringLocalizer<SharedResources> localizer)
+        {
+            SessionStore sessionStore 
+                = sessionManager.GetSession(sessionFormIdentifier);
+            object result = sessionStore.ExecuteAction(
+                SessionStore.ACTION_REFRESH);
+            CreateUpdateOrigamOnlineUser();
+            if (result is DataSet)
+            {
+                IList<string> columns = null;
+                if (sessionStore.IsPagedLoading)
+                {
+                    // for lazily-loaded data we provide all the preloaded columns
+                    // (primary keys + all the initial sort columns)
+                    columns = sessionStore.DataListLoadedColumns;
+                }
+                return DataTools.DatasetToHashtable(result as DataSet, columns, 
+                    INITIAL_PAGE_NUMBER_OF_RECORDS, sessionStore.CurrentRecordId, 
+                    sessionStore.DataListEntity, sessionStore);
+            }
+            throw new Exception(localizer["ErrorRefreshReturnInvalid", 
+                sessionStore.GetType().Name, SessionStore.ACTION_REFRESH]);
 
+        }
         private static NotificationBox LogoNotificationBox()
         {
             SchemaService schema 
