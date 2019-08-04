@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Localization;
+using Origam.DA;
 using Origam.OrigamEngine.ModelXmlBuilders;
+using Origam.Rule;
 using Origam.Schema.GuiModel;
 using Origam.Schema.LookupModel;
 using Origam.Server;
@@ -180,6 +182,77 @@ namespace Origam.ServerCore
             throw new Exception(localizer["ErrorRefreshReturnInvalid", 
                 sessionStore.GetType().Name, SessionStore.ACTION_REFRESH]);
 
+        }
+        public RuleExceptionDataCollection SaveDataQuery(Guid sessionFormIdentifier)
+        {
+            SessionStore sessionStore = sessionManager.GetSession(
+                sessionFormIdentifier);
+            if((sessionStore.ConfirmationRule != null) 
+                && sessionStore.Data.HasChanges())
+            {
+                bool hasRows = false;
+                DataSet clone = DatasetTools.CloneDataSet(sessionStore.Data);
+                List<DataTable> rootTables = new List<DataTable>();
+                foreach(DataTable table in sessionStore.Data.Tables)
+                {
+                    if(table.ParentRelations.Count == 0)
+                    {
+                        rootTables.Add(table);
+                    }
+                }
+                foreach(DataTable rootTable in rootTables)
+                {
+                    foreach(DataRow row in rootTable.Rows)
+                    {
+                        if((row.RowState != DataRowState.Deleted) 
+                            && IsRowDirty(row))
+                        {
+                            DatasetTools.GetDataSlice(
+                                clone, new List<DataRow>{row});
+                            hasRows = true;
+                        }
+                    }
+                }
+                if(hasRows)
+                {
+                    IDataDocument xmlDoc = DataDocumentFactory.New(clone);
+                    return sessionStore.RuleEngine.EvaluateEndRule(
+                        sessionStore.ConfirmationRule, xmlDoc);
+                }
+                return new RuleExceptionDataCollection();
+            }
+            return new RuleExceptionDataCollection();
+        }
+
+        private bool IsRowDirty(DataRow row)
+        {
+            if (row.RowState != DataRowState.Unchanged)
+            {
+                return true;
+            }
+
+            foreach (DataRelation childRelation in row.Table.ChildRelations)
+            {
+                foreach (DataRow childRow in row.GetChildRows(childRelation))
+                {
+                    if (IsRowDirty(childRow))
+                    {
+                        return true;
+                    }
+                }
+				// look for deleted children. They aren't returned by
+				// previous ChetChildRows call. 
+				foreach (DataRow childRow in row.GetChildRows(childRelation,
+					DataRowVersion.Original))
+				{
+					if (childRow.RowState == DataRowState.Deleted)
+					{
+						return true;
+					}
+				}
+			}
+
+            return false;
         }
         private static NotificationBox LogoNotificationBox()
         {

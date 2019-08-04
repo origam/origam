@@ -96,5 +96,21 @@ namespace Origam.ServerCore.Controller
                 return StatusCode(500, ex);
             }
         }
+
+        [HttpGet("[action]")]
+        public IActionResult SaveDataQuery(
+            [FromQuery][Required]Guid sessionFormIdentifier)
+        {
+            try
+            {
+                return Ok(sessionObjects.UIService.SaveDataQuery(
+                    sessionFormIdentifier));
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
     }
 }
