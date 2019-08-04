@@ -112,5 +112,19 @@ namespace Origam.ServerCore.Controller
             }
         }
 
+        [HttpGet("[action]")]
+        public IActionResult SaveData(
+            [FromQuery][Required]Guid sessionFormIdentifier)
+        {
+            try
+            {
+                return Ok(sessionObjects.UIService.SaveData(
+                    sessionFormIdentifier));
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
     }
 }

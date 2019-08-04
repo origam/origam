@@ -223,35 +223,41 @@ namespace Origam.ServerCore
             }
             return new RuleExceptionDataCollection();
         }
-
+        public IList SaveData(Guid sessionFormIdentifier)
+        {
+            SessionStore sessionStore = sessionManager.GetSession(
+                sessionFormIdentifier);
+            IList output = (IList)sessionStore.ExecuteAction(
+                SessionStore.ACTION_SAVE);
+            CreateUpdateOrigamOnlineUser();
+            return output;
+        }
         private bool IsRowDirty(DataRow row)
         {
-            if (row.RowState != DataRowState.Unchanged)
+            if(row.RowState != DataRowState.Unchanged)
             {
                 return true;
             }
-
-            foreach (DataRelation childRelation in row.Table.ChildRelations)
+            foreach(DataRelation childRelation in row.Table.ChildRelations)
             {
-                foreach (DataRow childRow in row.GetChildRows(childRelation))
+                foreach(DataRow childRow in row.GetChildRows(childRelation))
                 {
-                    if (IsRowDirty(childRow))
+                    if(IsRowDirty(childRow))
                     {
                         return true;
                     }
                 }
 				// look for deleted children. They aren't returned by
 				// previous ChetChildRows call. 
-				foreach (DataRow childRow in row.GetChildRows(childRelation,
+				foreach(DataRow childRow in row.GetChildRows(childRelation,
 					DataRowVersion.Original))
 				{
-					if (childRow.RowState == DataRowState.Deleted)
+					if(childRow.RowState == DataRowState.Deleted)
 					{
 						return true;
 					}
 				}
 			}
-
             return false;
         }
         private static NotificationBox LogoNotificationBox()
