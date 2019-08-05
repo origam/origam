@@ -1,26 +1,17 @@
+import { Provider } from "mobx-react";
 import React from "react";
 import ReactDOM from "react-dom";
-// import App from "./presenter/react/App";
+import { Main } from "./gui/Main";
+import "./index.css";
+import { createApplication } from "./model/factories/createApplication";
 import * as serviceWorker from "./serviceWorker";
-import "./presenter/react/styles/main.scss";
-import "react-tippy/dist/tippy.css";
 
-import { ApplicationScope } from "./factory/ApplicationScope";
-import { Application } from "./presenter/react/Application";
-import { Provider } from "mobx-react";
-import { IApplicationScope } from "./factory/types/IApplicationScope";
-
-const applicationScope: IApplicationScope = new ApplicationScope();
-applicationScope.aStartTheMiracle.do();
+const application = createApplication();
+application.run();
 
 ReactDOM.render(
-  <Provider
-    applicationScope={applicationScope}
-    mainViewsScope={applicationScope.mainViewsScope}
-    loggedUserScope={applicationScope.loggedUserScope}
-    mainMenuScope={applicationScope.mainMenuScope}
-  >
-    <Application />
+  <Provider application={application}>
+    <Main />
   </Provider>,
   document.getElementById("root")
 );
@@ -29,3 +20,6 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
+
+
+
