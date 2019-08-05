@@ -2,20 +2,27 @@ export interface IMainMenuData {
   menuUI: any;
 }
 
-export interface IMainMenu extends IMainMenuData {
-  $type_IMainMenu: 1;
-  isLoading: false;
+export interface IMainMenuContent extends IMainMenuData {
+  $type_IMainMenuContent: 1;
 
   parent?: any;
 }
 
-export interface ILoadingMainMenu {
-  $type_ILoadingMainMenu: 1;
+export interface IMainMenuEnvelope {
+  $type_IMainMenuEnvelope: 1;
 
-  isLoading: true;
+  mainMenu?: IMainMenu;
+  isLoading: boolean;
+
+  setMainMenu(mainMenu: IMainMenuContent | undefined): void;
+  setLoading(state: boolean): void;
+
   parent?: any;
 }
 
-export const isIMainMenu = (o: any): o is IMainMenu => o.$type_IMainMenu;
-export const isILoadingMainMenu = (o: any): o is IMainMenu =>
-  o.$type_ILoadingMainMenu;
+export type IMainMenu = IMainMenuEnvelope & IMainMenuContent;
+
+export const isIMainMenuContent = (o: any): o is IMainMenuContent => o.$type_IMainMenuContent;
+export const isIMainMenuEnvelope = (o: any): o is IMainMenuEnvelope =>
+  o.$type_IMainMenuEnvelope;
+

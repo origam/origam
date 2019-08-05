@@ -26,20 +26,17 @@ import { getClientFulltextSearch } from "model/selectors/getClientFulltextSearch
 import { ISearchResultSection } from "../../model/entities/types/IClientFulltextSearch";
 import { SearchResultItem, SearchResultsPanel } from "./SearchResults";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
+import { MainMenuPanel } from "./MainMenu/MainMenuPanel";
 
 @inject(({ application }) => {
   const clientFulltextSearch = getClientFulltextSearch(application);
   return {
     workbench: getWorkbench(application),
     isMainMenuLoading: getIsMainMenuLoading(application),
-    mainMenuUI: getMainMenuUI(application),
-    mainMenuExists: getMainMenuExists(application),
     loggedUserName: getLoggedUserName(application),
     toolbarActions: getActiveScreenActions(application),
     onSignOutClick: (event: any) =>
       getApplicationLifecycle(application).onSignOutClick({ event }),
-    onMainMenuItemClick: (event: any, item: any) =>
-      getWorkbenchLifecycle(application).onMainMenuItemClick({ event, item }),
     onSearchTermChange: clientFulltextSearch.onSearchFieldChange,
     subscribeOpenSearchSection: clientFulltextSearch.subscribeOpenSearchSection
   };
@@ -176,19 +173,7 @@ export class WorkbenchPage extends React.Component<{
                     Menu
                   </MainMenuPanelAccordionHandle>
                   <MainMenuPanelAccordionBody id="menu" initialActive={true}>
-                    <Observer>
-                      {() =>
-                        this.props.mainMenuExists &&
-                        !this.props.isMainMenuLoading ? (
-                          <MainMenu
-                            menuUI={this.props.mainMenuUI!}
-                            onItemClick={this.props.onMainMenuItemClick}
-                          />
-                        ) : (
-                          <></>
-                        )
-                      }
-                    </Observer>
+                    <MainMenuPanel />
                   </MainMenuPanelAccordionBody>
                   <MainMenuPanelAccordionHandle id="info">
                     <div className={S.accordionHandleIcon}>

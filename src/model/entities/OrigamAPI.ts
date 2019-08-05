@@ -39,7 +39,7 @@ export class OrigamAPI implements IApi {
       }
     );
   }
-
+/*
   async getMenu() {
     return xmlJs.xml2js(
       (await axios.get(`${this.urlPrefix}/UI/GetMenu`, {
@@ -48,6 +48,7 @@ export class OrigamAPI implements IApi {
       { addParent: true, alwaysChildren: true }
     );
   }
+*/
 
   async getScreen(id: string) {
     return xmlJs.xml2js(
@@ -57,6 +58,19 @@ export class OrigamAPI implements IApi {
       })).data,
       { addParent: true, alwaysChildren: true }
     );
+  }
+
+  async initUI(data: {
+    Type: string;
+    FormSessionId: string | undefined;
+    IsNewSession: boolean;
+    RegisterSession: boolean;
+    DataRequested: boolean;
+    ObjectId: string;
+  }) {
+    return (await axios.post(`${this.urlPrefix}/UIService/InitUI`, data, {
+      headers: this.httpAuthHeader
+    })).data;
   }
 
   async getEntities(query: {

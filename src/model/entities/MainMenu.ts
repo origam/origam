@@ -1,24 +1,37 @@
-import { IMainMenu, IMainMenuData, ILoadingMainMenu } from "./types/IMainMenu";
+import { IMainMenuContent, IMainMenuData, IMainMenuEnvelope, IMainMenu } from "./types/IMainMenu";
+import { action, observable } from "mobx";
+import { proxyEnrich } from "utils/esproxy";
 
-export class MainMenu implements IMainMenu {
-  $type_IMainMenu: 1 = 1;
+export class MainMenuContent implements IMainMenuContent {
+  $type_IMainMenuContent: 1 = 1;
 
   constructor(data: IMainMenuData) {
     Object.assign(this, data);
   }
 
-  isLoading: false = false;
   menuUI: any;
   parent?: any;
-
-  onItemClick(args: { event: any; item: any }): void {
-    console.log("MainMenu item clicked:", args.item);
-  }
 }
 
-export class LoadingMainMenu implements ILoadingMainMenu {
-  $type_ILoadingMainMenu: 1 = 1;
+export class MainMenuEnvelope implements IMainMenuEnvelope {
+  $type_IMainMenuEnvelope: 1 = 1;
 
-  isLoading: true = true;
+  @observable mainMenu?: IMainMenu | undefined;
+  @observable isLoading: boolean = false;
+  
+  @action.bound
+  setMainMenu(mainMenu: IMainMenuContent | undefined): void {
+    if (mainMenu) {
+      mainMenu.parent = this;
+      this.mainMenu = proxyEnrich<IMainMenuEnvelope, IMainMenuContent>(mainMenu);
+    } else {
+      this.mainMenu = undefined;
+    }
+  }
+
+  @action.bound setLoading(state: boolean) {
+    this.isLoading = state;
+  }
+
   parent?: any;
 }

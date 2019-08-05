@@ -1,8 +1,7 @@
-import { IMainMenu, ILoadingMainMenu } from "../../entities/types/IMainMenu";
+import { IMainMenuContent, IMainMenu } from "../../entities/types/IMainMenu";
 import { getWorkbench } from "../getWorkbench";
+import { getMainMenuEnvelope } from "./getMainMenuEnvelope";
 
-export function getMainMenu(
-  ctx: any
-): IMainMenu | ILoadingMainMenu | undefined {
-  return getWorkbench(ctx)!.mainMenu;
+export function getMainMenu(ctx: any): IMainMenu | undefined {
+  return getMainMenuEnvelope(ctx).mainMenu;
 }

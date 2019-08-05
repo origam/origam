@@ -13,7 +13,7 @@ export interface IApi {
 
   logout(): Promise<any>;
 
-  getMenu(): Promise<any>;
+  // getMenu(): Promise<any>;
 
   getScreen(id: string): Promise<any>;
 
@@ -114,4 +114,12 @@ export interface IApi {
   }): Promise<any>;
 
   initPortal(): Promise<any>;
+  initUI(data: {
+    Type: string;
+    FormSessionId: string | undefined;
+    IsNewSession: boolean;
+    RegisterSession: boolean;
+    DataRequested: boolean;
+    ObjectId: string;
+  }): Promise<any>;
 }

@@ -1,7 +1,7 @@
 import { IWorkbench, IWorkbenchData } from "./types/IWorkbench";
-import { ILoadingMainMenu, IMainMenu } from "./types/IMainMenu";
+import { IMainMenuEnvelope } from "./types/IMainMenu";
 import { IWorkbenchLifecycle } from "./types/IWorkbenchLifecycle";
-import { action, observable } from "mobx";
+import { action } from "mobx";
 import { IClientFulltextSearch } from "./types/IClientFulltextSearch";
 
 export class Workbench implements IWorkbench {
@@ -15,7 +15,7 @@ export class Workbench implements IWorkbench {
 
   workbenchLifecycle: IWorkbenchLifecycle = null as any;
   clientFulltextSearch: IClientFulltextSearch = null as any;
-  @observable mainMenu?: ILoadingMainMenu | IMainMenu | undefined;
+  mainMenuEnvelope: IMainMenuEnvelope = null as any;
 
   @action.bound
   run(): void {
@@ -24,12 +24,12 @@ export class Workbench implements IWorkbench {
 
   parent?: any;
 
-  @action.bound setMainMenu(mainMenu: ILoadingMainMenu | IMainMenu) {
+  /*@action.bound setMainMenu(mainMenu: ILoadingMainMenu | IMainMenu) {
     this.mainMenu = mainMenu;
     if (!mainMenu.isLoading) {
       this.clientFulltextSearch.indexMainMenu((mainMenu as IMainMenu).menuUI);
     }
 
     mainMenu.parent = this;
-  }
+  }*/
 }
