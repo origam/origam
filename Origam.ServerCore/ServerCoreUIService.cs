@@ -280,6 +280,14 @@ namespace Origam.ServerCore
             CreateUpdateOrigamOnlineUser();
             return output;
         }
+        public IList DeleteObject(DeleteObjectData data)
+        {
+            SessionStore sessionStore 
+                = sessionManager.GetSession(data.SessionFormIdentifier);
+            IList output = sessionStore.DeleteObject(data.Entity, data.Id);
+            CreateUpdateOrigamOnlineUser();
+            return output;
+        }
         private bool IsRowDirty(DataRow row)
         {
             if(row.RowState != DataRowState.Unchanged)

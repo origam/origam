@@ -176,5 +176,19 @@ namespace Origam.ServerCore.Controller
                 return StatusCode(500, ex);
             }
         }
+
+        [HttpPost("[action]")]
+        public IActionResult DeleteObject(
+            [FromBody][Required]DeleteObjectData data)
+        {
+            try
+            {
+                return Ok(sessionObjects.UIService.DeleteObject(data));
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
     }
 }
