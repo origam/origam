@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Microsoft.Extensions.Localization;
 using Origam.DA;
+using Origam.Gui;
 using Origam.OrigamEngine.ModelXmlBuilders;
 using Origam.Rule;
 using Origam.Schema.GuiModel;
@@ -35,6 +36,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore
@@ -46,6 +48,7 @@ namespace Origam.ServerCore
         private readonly UIManager uiManager;
         private readonly SessionManager sessionManager;
         private readonly SessionHelper sessionHelper;
+        private readonly IReportManager reportManager;
 
         public ServerCoreUIService(
             UIManager uiManager, SessionManager sessionManager)
@@ -53,6 +56,7 @@ namespace Origam.ServerCore
             this.uiManager = uiManager;
             this.sessionManager = sessionManager;
             sessionHelper = new SessionHelper(sessionManager);
+            reportManager = new ServerCoreReportManager();
         }
 
         public string GetReportStandalone(
@@ -287,6 +291,58 @@ namespace Origam.ServerCore
             IList output = sessionStore.DeleteObject(data.Entity, data.Id);
             CreateUpdateOrigamOnlineUser();
             return output;
+        }
+        public RuleExceptionDataCollection ExecuteActionQuery(
+            ExecuteActionQueryData data)
+        {
+            EntityUIAction action = null;
+            try
+            {
+                //todo: actionId to guid
+                action = UIActionTools.GetAction(data.ActionId.ToString());
+            }
+            catch
+            {
+            }
+            if((action != null) && (action.ConfirmationRule != null))
+            {
+                SessionStore sessionStore 
+                    = sessionManager.GetSession(data.SessionFormIdentifier);
+                DataRow[] rows = new DataRow[data.SelectedItems.Count];
+                for(int i = 0; i < data.SelectedItems.Count; i++)
+                {
+                    rows[i] = sessionStore.GetSessionRow(
+                        data.Entity, data.SelectedItems[i]);
+                }
+                XmlDocument xml 
+                    = DatasetTools.GetRowXml(rows, DataRowVersion.Default);
+                RuleExceptionDataCollection result 
+                    = sessionStore.RuleEngine.EvaluateEndRule(
+                    action.ConfirmationRule, xml);
+                return result ?? new RuleExceptionDataCollection();
+            }
+            return new RuleExceptionDataCollection();
+        }
+        public IList ExecuteAction(ExecuteActionData data)
+        {
+            var actionRunnerClient 
+                = new ServerEntityUIActionRunnerClient(
+                    sessionManager, data.SessionFormIdentifier.ToString());
+            var actionRunner = new ServerEntityUIActionRunner( 
+                actionRunnerClient: actionRunnerClient,
+                uiManager: uiManager,  
+                sessionManager: sessionManager,
+                basicUIService: this,
+                reportManager: reportManager);
+            return actionRunner.ExecuteAction(
+                data.SessionFormIdentifier.ToString(), 
+                data.RequestingGrid.ToString(), 
+                data.Entity,
+                data.ActionType,
+                data.ActionId.ToString(), 
+                data.ParameterMappings,
+                data.SelectedItems, 
+                data.InputParameters);
         }
         private bool IsRowDirty(DataRow row)
         {

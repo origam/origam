@@ -60,135 +60,132 @@ namespace Origam.ServerCore.Controller
             // set locale to the cookie
             Response.Cookies.Append(
                 ORIGAMLocaleResolver.ORIGAM_CURRENT_LOCALE, locale);*/
-            try
+            return RunWithErrorHandler(() =>
             {
                 //TODO: findout how to get request size limit
                 return Ok(sessionObjects.UIService.InitPortal(4));
-            }
-            catch(Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
+            });
         }
 
         [HttpPost("[action]")]
         public IActionResult InitUI([FromBody]UIRequest request)
         {
             // registerSession is important for sessionless handling
-            try
+            return RunWithErrorHandler(() =>
             {
                 return Ok(sessionObjects.UIManager.InitUI(
                     request: request,
                     addChildSession: false,
                     parentSession: null,
                     basicUIService: sessionObjects.UIService));
-            }
-            catch(Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
+            });
         }
 
         [HttpGet("[action]")]
         public IActionResult DestroyUI(
             [FromQuery][Required]Guid sessionFormIdentifier)
         {
-            try
+            return RunWithErrorHandler(() =>
             {
                 sessionObjects.UIService.DestroyUI(sessionFormIdentifier);
                 return Ok();
-            }
-            catch(Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
+            });
         }
 
         [HttpGet("[action]")]
         public IActionResult RefreshData(
             [FromQuery][Required]Guid sessionFormIdentifier)
         {
-            try
+            return RunWithErrorHandler(() =>
             {
                 return Ok(sessionObjects.UIService.RefreshData(
                     sessionFormIdentifier, localizer));
-            }
-            catch(Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
+            });
         }
 
         [HttpGet("[action]")]
         public IActionResult SaveDataQuery(
             [FromQuery][Required]Guid sessionFormIdentifier)
         {
-            try
+            return RunWithErrorHandler(() =>
             {
                 return Ok(sessionObjects.UIService.SaveDataQuery(
                     sessionFormIdentifier));
-            }
-            catch(Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
+            });
         }
 
         [HttpGet("[action]")]
         public IActionResult SaveData(
             [FromQuery][Required]Guid sessionFormIdentifier)
         {
-            try
+            return RunWithErrorHandler(() =>
             {
                 return Ok(sessionObjects.UIService.SaveData(
                     sessionFormIdentifier));
-            }
-            catch(Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
+            });
         }
 
         [HttpPost("[action]")]
         public IActionResult CreateObject(
             [FromBody][Required]CreateObjectData data)
         {
-            try
+            return RunWithErrorHandler(() =>
             {
                 return Ok(sessionObjects.UIService.CreateObject(data));
-            }
-            catch(Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
+            });
         }
 
         [HttpPost("[action]")]
         public IActionResult UpdateObject(
             [FromBody][Required]UpdateObjectData data)
         {
-            try
+            return RunWithErrorHandler(() =>
             {
                 return Ok(sessionObjects.UIService.UpdateObject(data));
-            }
-            catch(Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
+            });
         }
 
         [HttpPost("[action]")]
         public IActionResult DeleteObject(
             [FromBody][Required]DeleteObjectData data)
         {
+            return RunWithErrorHandler(() =>
+            {
+                //todo: handle deleting non existing objects
+                return Ok(sessionObjects.UIService.DeleteObject(data));
+            });
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult ExecuteActionQuery(
+            [FromBody][Required]ExecuteActionQueryData data)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                return Ok(sessionObjects.UIService.ExecuteActionQuery(data));
+            });
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult ExecuteAction(
+            [FromBody][Required]ExecuteActionData data)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                return Ok(sessionObjects.UIService.ExecuteAction(data));
+            });
+        }
+        private IActionResult RunWithErrorHandler(Func<IActionResult> func)
+        {
             try
             {
-                return Ok(sessionObjects.UIService.DeleteObject(data));
+                return func();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, ex);
             }
         }
+
     }
 }

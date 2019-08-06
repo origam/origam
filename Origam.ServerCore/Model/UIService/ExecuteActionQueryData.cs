@@ -19,10 +19,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.ServerCore.Model.Session
+using System;
+using System.Collections;
+
+namespace Origam.ServerCore.Model.UIService
 {
-    public class ExecuteActionData : ExecuteActionQueryData
+    public class ExecuteActionQueryData
     {
-        public string RequestingGrid { get; set; }
+        public Guid SessionFormIdentifier { get; set; }
+        public string Entity { get; set; }
+        public string ActionType { get; set; }
+        public Guid ActionId { get; set; }
+        public Hashtable ParameterMappings { get; set; }
+        public IList SelectedItems { get; set; }
+        public Hashtable InputParameters { get; set; }
     }
 }
