@@ -31,9 +31,12 @@
   background-color: #e5e5e5;
   color: black;
   overflow: hidden;
+  transition: height 0.1s;
+  height: 100%;
   /* padding: 10px; */
 }
 
 .accordionBody:global(.hidden) {
-  display: none;
+  height: 0px;
+  flex-grow: 0;
 }

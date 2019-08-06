@@ -14,6 +14,7 @@ import { createOpenedScreen } from "model/factories/createOpenedScreen";
 import { IMainMenuItemType } from "../types/IMainMenu";
 import { DialogInfo } from "../OpenedScreen";
 import { onInitPortalDone } from "./constants";
+import { getClientFulltextSearch } from "model/selectors/getClientFulltextSearch";
 
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
@@ -55,7 +56,14 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         openedScreens.activateItem(id, existingItem.order);
       } else {
         const newFormScreen = createLoadingFormScreen();
-        const newScreen = createOpenedScreen(id, type, 0, label, newFormScreen, dialogInfo);
+        const newScreen = createOpenedScreen(
+          id,
+          type,
+          0,
+          label,
+          newFormScreen,
+          dialogInfo
+        );
         openedScreens.pushItem(newScreen);
         openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
         newFormScreen.run();
@@ -68,14 +76,22 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           type,
           existingItem.order + 1,
           label,
-          newFormScreen, dialogInfo
+          newFormScreen,
+          dialogInfo
         );
         openedScreens.pushItem(newScreen);
         openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
         newFormScreen.run();
       } else {
         const newFormScreen = createLoadingFormScreen();
-        const newScreen = createOpenedScreen(id, type, 0, label, newFormScreen, dialogInfo);
+        const newScreen = createOpenedScreen(
+          id,
+          type,
+          0,
+          label,
+          newFormScreen,
+          dialogInfo
+        );
         openedScreens.pushItem(newScreen);
         openedScreens.activateItem(id, 0);
         newFormScreen.run();
@@ -108,9 +124,9 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const api = getApi(this);
     const portalInfo = yield api.initPortal();
     console.log(portalInfo);
-    getMainMenuEnvelope(this).setMainMenu(
-      new MainMenuContent({ menuUI: findMenu(portalInfo.menu) })
-    );
+    const menuUI = findMenu(portalInfo.menu);
+    getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
+    getClientFulltextSearch(this).indexMainMenu(menuUI);
     this.interpreter.send(onInitPortalDone);
   }
 
