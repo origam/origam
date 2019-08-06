@@ -150,11 +150,26 @@ namespace Origam.ServerCore.Controller
         }
 
         [HttpPost("[action]")]
-        public IActionResult CreateObject([FromBody]CreateObjectData data)
+        public IActionResult CreateObject(
+            [FromBody][Required]CreateObjectData data)
         {
             try
             {
                 return Ok(sessionObjects.UIService.CreateObject(data));
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult UpdateObject(
+            [FromBody][Required]UpdateObjectData data)
+        {
+            try
+            {
+                return Ok(sessionObjects.UIService.UpdateObject(data));
             }
             catch(Exception ex)
             {

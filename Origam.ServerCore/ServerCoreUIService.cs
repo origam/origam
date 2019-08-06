@@ -271,6 +271,15 @@ namespace Origam.ServerCore
             CreateUpdateOrigamOnlineUser();
             return output;
         }
+        public IList UpdateObject(UpdateObjectData data)
+        {
+            SessionStore sessionStore 
+                = sessionManager.GetSession(data.SessionFormIdentifier);
+            IList output = sessionStore.UpdateObjectEx(
+                data.Entity, data.Id, data.Values);
+            CreateUpdateOrigamOnlineUser();
+            return output;
+        }
         private bool IsRowDirty(DataRow row)
         {
             if(row.RowState != DataRowState.Unchanged)
