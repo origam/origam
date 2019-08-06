@@ -7,6 +7,8 @@ export interface IOpenedScreens extends IOpenedScreensData {
   $type_IOpenedScreens: 1;
 
   items: Array<IOpenedScreen>;
+  screenItems: Array<IOpenedScreen>;
+  dialogItems: Array<IOpenedScreen>;
 
   activeScreenActions: Array<{
     section: string;

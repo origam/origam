@@ -1,11 +1,16 @@
-import { inject, observer, Observer } from "mobx-react";
-import React from "react";
-import { getApplicationLifecycle } from "../../../model/selectors/getApplicationLifecycle";
-import { getOpenedScreenItems } from "../../../model/selectors/getOpenedScreenItems";
+import { CloseButton, ModalWindow } from "gui/Components/Dialog/Dialog";
+import { inject, MobXProviderContext, observer, Observer } from "mobx-react";
+import { IApplication } from "model/entities/types/IApplication";
+import { getDialogStack } from "model/selectors/getDialogStack";
+import { getOpenedDialogItems } from "model/selectors/getOpenedDialogItems";
+import React, { useContext, useEffect } from "react";
 import { IOpenedScreen } from "../../../model/entities/types/IOpenedScreen";
+import { getOpenedScreenItems } from "../../../model/selectors/getOpenedScreenItems";
+import { getWorkbenchLifecycle } from "../../../model/selectors/getWorkbenchLifecycle";
 import S from "./ScreenArea.module.css";
-import { ScreenBuilder } from "./ScreenBuilder";
-import { getWorkbenchLifecycle } from '../../../model/selectors/getWorkbenchLifecycle';
+import { ScreenBuilder, DialogScreenBuilder } from "./ScreenBuilder";
+import { getApplication } from "model/selectors/getApplication";
+import { isILoadedFormScreen } from "model/entities/types/IFormScreen";
 
 @observer
 class MainViewHandle extends React.Component<{
@@ -37,6 +42,7 @@ class MainViewHandle extends React.Component<{
 @inject(({ workbench }) => {
   return {
     openedScreenItems: getOpenedScreenItems(workbench),
+    openedDialogItems: getOpenedDialogItems(workbench),
     onScreenTabHandleClick: getWorkbenchLifecycle(workbench)
       .onScreenTabHandleClick,
     onScreenTabCloseClick: getWorkbenchLifecycle(workbench)
@@ -46,6 +52,7 @@ class MainViewHandle extends React.Component<{
 @observer
 export class ScreenArea extends React.Component<{
   openedScreenItems?: IOpenedScreen[];
+  openedDialogItems?: IOpenedScreen[];
   onScreenTabHandleClick?: (event: any, openedScreen: IOpenedScreen) => void;
   onScreenTabCloseClick?: (event: any, openedScreen: IOpenedScreen) => void;
 }> {
@@ -104,7 +111,78 @@ export class ScreenArea extends React.Component<{
             </>
           )}
         </Observer>
+        <Observer>
+          {() => (
+            <>
+              {this.props.openedDialogItems!.map(item => (
+                <DialogScreen
+                  openedScreen={item}
+                  key={`${item.menuItemId}@${item.order}`}
+                />
+              ))}
+            </>
+          )}
+        </Observer>
       </div>
     );
   }
 }
+
+export const DialogScreen: React.FC<{
+  openedScreen: IOpenedScreen;
+}> = observer(props => {
+  const closeDialog = () => {};
+
+  const key = `ScreenDialog@${props.openedScreen.menuItemId}@${
+    props.openedScreen.order
+  }`;
+  const workbenchLifecycle = getWorkbenchLifecycle(props.openedScreen);
+  useEffect(() => {
+    getDialogStack(workbenchLifecycle).pushDialog(
+      key,
+      <ModalWindow
+        title={props.openedScreen.title}
+        titleButtons={
+          <CloseButton
+            onClick={event =>
+              workbenchLifecycle.onScreenTabCloseClick(
+                event,
+                props.openedScreen
+              )
+            }
+          />
+        }
+        buttonsCenter={null}
+        buttonsLeft={null}
+        buttonsRight={null}
+      >
+        <Observer>
+          {() => (
+            <div
+              style={{
+                width: props.openedScreen.dialogInfo!.width,
+                height: props.openedScreen.dialogInfo!.height
+              }}
+            >
+              {isILoadedFormScreen(props.openedScreen.content) ? (
+                <DialogScreenBuilder openedScreen={props.openedScreen} />
+              ) : (
+                <DialogLoadingContent />
+              )}
+            </div>
+          )}
+        </Observer>
+      </ModalWindow>
+    );
+    return () => getDialogStack(workbenchLifecycle).closeDialog(key);
+  }, []);
+  return null;
+});
+
+export const DialogLoadingContent: React.FC = props => {
+  return (
+    <div className={S.dialogLoadingContent}>
+      <i className="fas fa-cog fa-spin fa-2x" />
+    </div>
+  );
+};

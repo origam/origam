@@ -1,0 +1,276 @@
+import { Machine, interpret } from "xstate";
+import { IWorkbenchLifecycle } from "./types/IWorkbenchLifecycle";
+import { action, createAtom, flow } from "mobx";
+
+import { getApi } from "../selectors/getApi";
+import { getWorkbench } from "../selectors/getWorkbench";
+
+import { getOpenedScreens } from "model/selectors/getOpenedScreens";
+import { createLoadingFormScreen } from "model/factories/createLoadingFormScreen";
+import { createOpenedScreen } from "model/factories/createOpenedScreen";
+import { IOpenedScreen } from "./types/IOpenedScreen";
+
+// const sLoadMenu = "sLoadMenu";
+const sInitPortalFailed = "sInitPortalFailed";
+const sIdle = "sIdle";
+const sPerformInitPortal = "sPerformInitPortal";
+const sPerformInitUI = "sPerformInitUI";
+const sSelectionDialog = "sSelectionDialog";
+const sTakeDialogChoice = "sTakeDialogChoice";
+
+const loadMenuFailed = "loadMenuFailed";
+const loadMenuSuccessful = "loadMenuSuccessful";
+const onMainMenuItemClicked = "onMainMenuItemClicked";
+const onDialogCancelClick = "onDialogCancelClick";
+
+const initPortalSuccessful = "initPortalSuccessful";
+const initPortalFailed = "initPortalFailed";
+
+const performInitUISuccessful = "performInitUISuccessful";
+
+const initUI = "initUI";
+const startMenuItem = "startMenuItem";
+
+/*const loadScreenSuccessful = "loadScreenSuccessful";
+const loadScreenFailed = "loadScreenFailed";*/
+
+export class WorkbenchLifecycle implements IWorkbenchLifecycle {
+  $type_IWorkbenchLifecycle: 1 = 1;
+
+  parent?: any;
+  screenInProcessing?: IOpenedScreen;
+
+  machine = Machine(
+    {
+      id: 'root',
+      initial: sPerformInitPortal,
+      states: {
+        [sPerformInitPortal]: {
+          invoke: { src: "initPortal" },
+          on: {
+            [initPortalSuccessful]: sIdle,
+            [initPortalFailed]: sInitPortalFailed
+          }
+        },
+        [sInitPortalFailed]: {
+          on: {
+            ok: { actions: "logout", target: "sEnd" }
+          }
+        },
+        [sIdle]: {
+          on: {
+            [startMenuItem]: [
+              {
+                cond: "isFormScreen",
+                target: sPerformInitUI,
+                actions: "openFormScreen"
+              },
+              {
+                target: sSelectionDialog,
+                cond: "isFormScreenWithSelection"
+              }
+            ]
+          }
+        },
+        [sPerformInitUI]: {
+          invoke: { src: "initUI" },
+          on: {
+            [performInitUISuccessful]: {
+              target: sIdle
+            }
+          }
+        },
+        [sSelectionDialog]: {
+          type: "parallel",
+          states: {
+            sDialogLane: {
+              initial: "sSelectionDialog",
+              states: {
+                sSelectionDialog: {}
+              }
+            },
+            sInitUILane: {
+              initial: sPerformInitUI,
+              states: {
+                [sPerformInitUI]: {
+                  on: {
+                    [performInitUISuccessful]: sTakeDialogChoice
+                  }
+                },
+                [sTakeDialogChoice]: {
+                  on: {
+                    [onDialogCancelClick]: `#root.${sIdle}`
+                  }
+                }
+              }
+            }
+          }
+        },
+        sEnd: {
+          type: "final"
+        }
+      }
+    },
+    {
+      services: {
+        initPortal: (ctx, event) => (send, onEvent) =>
+          flow(this.initPortal.bind(this))(),
+        initUI: (ctx, event) => (send, onEvent) =>
+          flow(this.initUI.bind(this))(event as any)
+      },
+      actions: {
+        openFormScreen: (ctx, event) => this.openFormScreen(event as any)
+      },
+      guards: {
+        isFormScreen: (ctx, event) => true,
+        isFormScreenWithSelection: (ctx, event) => false
+      }
+    }
+  );
+
+  stateAtom = createAtom("workbenchLifecycleState");
+  interpreter = interpret(this.machine).onTransition((state, event) => {
+    console.log("Workbench lifecycle:", state, event);
+    this.stateAtom.reportChanged();
+  });
+
+  get state() {
+    this.stateAtom.reportObserved();
+    return this.interpreter.state;
+  }
+
+  /**loadMenu() {
+    try {
+      const api = getApi(this);
+      const workbench = getWorkbench(this);
+      workbench.setMainMenu(new LoadingMainMenu());
+      const menu = yield api.getMenu();
+      workbench.setMainMenu(new MainMenu({ menuUI: findMenu(menu) }));
+      new ClientFulltextSearch().indexMainMenu(menu)
+      this.interpreter.send(loadMenuSuccessful);
+    } catch (e) {
+      this.interpreter.send(loadMenuFailed);
+      console.error(e);
+    }
+  }*/
+
+  *initPortal() {
+    const api = getApi(this);
+    const workbench = getWorkbench(this);
+    // workbench.setMainMenu(new LoadingMainMenu());
+    const portalInfo = yield api.initPortal();
+    console.log(portalInfo);
+    // workbench.setMainMenu(new MainMenu({ menuUI: findMenu(portalInfo.menu) }));
+    this.interpreter.send(initPortalSuccessful);
+  }
+
+  @action.bound
+  onMainMenuItemClick(args: { event: any; item: any }): void {
+    const { type, id, label } = args.item.attributes;
+    const { event } = args;
+    this.interpreter.send(startMenuItem, {
+      menuItemType: type,
+      menuItemId: id,
+      menuItemLabel: label,
+      forceOpenNew: event.ctrlKey
+    });
+    return;
+    /*
+    switch (type) {
+      case "FormReferenceMenuItem":
+        {
+
+          console.log(openedScreens.items);
+        }
+        break;
+      case "FormReferenceMenuItem_WithSelection":
+        break;
+    }*/
+  }
+
+  @action.bound
+  onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen) {
+    const openedScreens = getOpenedScreens(this);
+    openedScreens.activateItem(openedScreen.menuItemId, openedScreen.order);
+  }
+
+  @action.bound
+  onScreenTabCloseClick(event: any, openedScreen: IOpenedScreen): void {
+    event.stopPropagation();
+    console.log(openedScreen);
+    const openedScreens = getOpenedScreens(this);
+    const closestScreen = openedScreens.findClosestItem(
+      openedScreen.menuItemId,
+      openedScreen.order
+    );
+    if (closestScreen) {
+      openedScreens.activateItem(closestScreen.menuItemId, closestScreen.order);
+    }
+    openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
+  }
+
+  @action.bound
+  openFormScreen(args: {
+    forceOpenNew: boolean;
+    menuItemId: string;
+    menuItemLabel: string;
+  }) {
+    const id = args.menuItemId;
+    const label = args.menuItemLabel;
+    const openedScreens = getOpenedScreens(this);
+    const existingItem = openedScreens.findLastExistingItem(id);
+    if (!args.forceOpenNew) {
+      if (existingItem) {
+        openedScreens.activateItem(id, existingItem.order);
+      } else {
+        const newFormScreen = createLoadingFormScreen();
+        const newScreen = createOpenedScreen(id, 0, label, newFormScreen);
+        openedScreens.pushItem(newScreen);
+        openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
+        this.screenInProcessing = newScreen;
+        newFormScreen.run();
+      }
+    } else {
+      if (existingItem) {
+        const newFormScreen = createLoadingFormScreen();
+        const newScreen = createOpenedScreen(
+          id,
+          existingItem.order + 1,
+          label,
+          newFormScreen
+        );
+        openedScreens.pushItem(newScreen);
+        openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
+        this.screenInProcessing = newScreen;
+        newFormScreen.run();
+      } else {
+        const newFormScreen = createLoadingFormScreen();
+        const newScreen = createOpenedScreen(id, 0, label, newFormScreen);
+        openedScreens.pushItem(newScreen);
+        openedScreens.activateItem(id, 0);
+        this.screenInProcessing = newScreen;
+        newFormScreen.run();
+      }
+    }
+  }
+
+  *initUI(args: { menuItemType: string; menuItemId: string }) {
+    const api = getApi(this);
+    const uiInfo = yield api.initUI({
+      Type: args.menuItemType,
+      ObjectId: args.menuItemId,
+      FormSessionId: undefined,
+      IsNewSession: true,
+      RegisterSession: true,
+      DataRequested: false
+    });
+    console.log(uiInfo);
+    this.interpreter.send(performInitUISuccessful);
+    return null;
+  }
+
+  @action.bound
+  run(): void {
+    this.interpreter.start();
+  }
+}

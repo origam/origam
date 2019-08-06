@@ -10,6 +10,14 @@ export class OpenedScreens implements IOpenedScreens {
   parent?: any;
   @observable items: Array<IOpenedScreen> = [];
 
+  @computed get screenItems(): IOpenedScreen[] {
+    return this.items.filter(item => item.dialogInfo === undefined);
+  }
+
+  @computed get dialogItems(): IOpenedScreen[] {
+    return this.items.filter(item => item.dialogInfo !== undefined);
+  }
+
   @action.bound
   pushItem(item: IOpenedScreen): void {
     this.items.push(item);

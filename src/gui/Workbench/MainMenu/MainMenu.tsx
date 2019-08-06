@@ -10,11 +10,7 @@ export enum IMenuItemIcon {
   Parameter = "menu_parameter.png"
 }
 
-export enum ICommandType {
-  FormRef = "FormReferenceMenuItem",
-  FormRefWithSelection = "FormReferenceMenuItem_WithSelection",
-  WorkflowRef = "WorkflowReferenceMenuItem"
-}
+
 
 export enum IMenuItemStatus {
   Opened,

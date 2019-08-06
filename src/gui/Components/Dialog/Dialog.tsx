@@ -31,6 +31,8 @@ export class ModalWindow extends React.Component<{
   buttonsLeft: React.ReactNode;
   buttonsRight: React.ReactNode;
   buttonsCenter: React.ReactNode;
+  width?: number;
+  height?: number;
 }> {
   @observable top: number = 0;
   @observable left: number = 0;
@@ -87,7 +89,12 @@ export class ModalWindow extends React.Component<{
               <div
                 ref={measureRef}
                 className={S.modalWindow}
-                style={{ top: this.top, left: this.left }}
+                style={{
+                  top: this.top,
+                  left: this.left,
+                  minWidth: this.props.width,
+                  minHeight: this.props.height
+                }}
               >
                 <div
                   className={S.title}

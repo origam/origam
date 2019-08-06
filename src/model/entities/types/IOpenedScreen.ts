@@ -1,7 +1,15 @@
 import { IFormScreen } from "./IFormScreen";
+import { IMainMenuItemType } from './IMainMenu';
+
+export interface IDialogInfo {
+  width: number;
+  height: number;
+}
 
 export interface IOpenedScreenData {
   menuItemId: string;
+  menuItemType: IMainMenuItemType;
+  dialogInfo?: IDialogInfo;
   order: number;
   title: string;
   content: IFormScreen;

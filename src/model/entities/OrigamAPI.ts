@@ -39,7 +39,7 @@ export class OrigamAPI implements IApi {
       }
     );
   }
-/*
+  /*
   async getMenu() {
     return xmlJs.xml2js(
       (await axios.get(`${this.urlPrefix}/UI/GetMenu`, {
@@ -68,9 +68,20 @@ export class OrigamAPI implements IApi {
     DataRequested: boolean;
     ObjectId: string;
   }) {
-    return (await axios.post(`${this.urlPrefix}/UIService/InitUI`, data, {
-      headers: this.httpAuthHeader
-    })).data;
+    const result = (await axios.post(
+      `${this.urlPrefix}/UIService/InitUI`,
+      data,
+      {
+        headers: this.httpAuthHeader
+      }
+    )).data;
+    return {
+      ...result,
+      formDefinition: xmlJs.xml2js(result.formDefinition, {
+        addParent: true,
+        alwaysChildren: true
+      })
+    };
   }
 
   async getEntities(query: {

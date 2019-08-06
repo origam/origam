@@ -34,3 +34,25 @@ export class ScreenBuilder extends React.Component<{
     }
   }
 }
+
+@observer
+export class DialogScreenBuilder extends React.Component<{
+  openedScreen: IOpenedScreen;
+}> {
+  render() {
+    const { openedScreen } = this.props;
+    const { content } = openedScreen;
+    console.log(content);
+    if (isILoadedFormScreen(content)) {
+      return (
+        <Provider formScreen={content}>
+          {!content.isLoading && (
+            <FormScreenBuilder xmlWindowObject={content.screenUI} />
+          )}
+        </Provider>
+      );
+    } else {
+      return null;
+    }
+  }
+}

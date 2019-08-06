@@ -1,5 +1,5 @@
 
-import { FormScreenLifecycle } from '../entities/FormScreenLifecycle';
+import { FormScreenLifecycle } from '../entities/FormScreenLifecycle/FormScreenLifecycle';
 import { LoadingFormScreen } from '../entities/FormScreen';
 
 export function createLoadingFormScreen() {
