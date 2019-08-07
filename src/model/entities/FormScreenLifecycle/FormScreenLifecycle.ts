@@ -1,4 +1,4 @@
-import { action, createAtom, flow, when } from "mobx";
+import { action, createAtom, flow, when, _getGlobalState } from "mobx";
 import { interpret, Machine } from "xstate";
 import { loadFreshData } from "../../actions/DataView/loadFreshData";
 import { getFormScreen } from "../../selectors/FormScreen/getFormScreen";
@@ -12,6 +12,7 @@ import { interpretScreenXml } from "xmlInterpreters/screenXml";
 import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
 import { IOpenedScreen } from "../types/IOpenedScreen";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
+import { getDataViewByEntity } from "model/selectors/DataView/getDataViewByEntity";
 
 export class FormScreenLifecycle implements IFormScreenLifecycle {
   $type_IFormScreenLifecycle: 1 = 1;
@@ -46,11 +47,10 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
       FormSessionId: undefined,
       IsNewSession: true,
       RegisterSession: true,
-      DataRequested: false
+      DataRequested: true
     });
     console.log(initUIResult);
     this.interpreter.send({ type: onInitUIDone, initUIResult });
-    return null;
   }
 
   @action.bound
@@ -59,7 +59,16 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
     const screenXmlObj = args.initUIResult.formDefinition;
     const screen = interpretScreenXml(screenXmlObj, this);
     openedScreen.setContent(screen);
-    getDataViewList(screen).forEach(dv => dv.run());
+    for (let [entityKey, entityValue] of Object.entries(
+      args.initUIResult.data
+    )) {
+      console.log(entityKey, entityValue);
+      const dataView = getDataViewByEntity(screen, entityKey);
+      if (dataView) {
+        dataView.dataTable.setRecords((entityValue as any).data);
+      }
+    }
+    console.log("*-*-*-*");
   }
 
   *loadDataViews() {
