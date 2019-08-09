@@ -142,6 +142,10 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                         el.GetAttribute("type") + "_WithSelection");
                     SetSelectionDialogSize(el, formRef.SelectionDialogPanel);
                 }
+                if (formRef.ListDataStructure != null)
+                {
+                    el.SetAttribute("dontRequestData", "true");
+                }
                 parentNode.AppendChild(el);
             }
             else if (item is DataConstantReferenceMenuItem)
