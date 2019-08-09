@@ -292,6 +292,24 @@ namespace Origam.ServerCore
             CreateUpdateOrigamOnlineUser();
             return output;
         }
+        public ArrayList GetRowData(MasterRecordData data)
+        {
+            SessionStore sessionStore = null;
+            try
+            {
+                sessionStore 
+                    = sessionManager.GetSession(data.SessionFormIdentifier);
+            }
+            catch
+            {
+            }
+            if(sessionStore == null)
+            {
+                return new ArrayList();
+            }
+            return sessionStore.GetRowData(
+                data.Entity, data.RowId, false);
+        }
         public RuleExceptionDataCollection ExecuteActionQuery(
             ExecuteActionQueryData data)
         {

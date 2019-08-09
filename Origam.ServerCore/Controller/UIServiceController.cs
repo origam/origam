@@ -126,6 +126,15 @@ namespace Origam.ServerCore.Controller
         }
 
         [HttpPost("[action]")]
+        public IActionResult MasterRecord([FromBody]MasterRecordData data)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                return Ok(sessionObjects.UIService.GetRowData(data));
+            });
+        }
+
+        [HttpPost("[action]")]
         public IActionResult CreateObject(
             [FromBody][Required]CreateObjectData data)
         {
