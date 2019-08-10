@@ -14,3 +14,9 @@ body,
 * {
   box-sizing: border-box;
 }
+
+#dropdown-portal {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}

@@ -3,3 +3,24 @@
   padding-left: 10px;
   padding-right: 10px;
 }
+
+.tagEditorDropdown {
+  display: flex;
+  flex-direction: column;
+  min-width: 100px;
+  background-color: white;
+  border: 1px solid #cccccc;
+}
+
+.tagEditorDropdownItem {
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  padding: 0px 10px 0px 10px;
+}
+
+.tagEditorDropdownItem:hover {
+  cursor: pointer;
+  background-color: #8998c5;
+  color: white;
+}

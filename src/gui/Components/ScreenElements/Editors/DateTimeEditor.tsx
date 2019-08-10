@@ -49,9 +49,7 @@ class CalendarWidget extends React.Component<{
         <div
           className={
             S.calendarWidgetCell +
-            (isNeighbourMonth
-              ? ` ${S.calendarWidgetNeighbourMonthCell}`
-              : "") +
+            (isNeighbourMonth ? ` ${S.calendarWidgetNeighbourMonthCell}` : "") +
             (isSelectedDay ? ` ${S.calendarWidgetSelectedDay}` : "")
           }
           onClick={(event: any) => this.handleDayClick(event, dayCopy)}
@@ -225,7 +223,7 @@ export class DateTimeEditor extends React.Component<{
   @observable dirtyTextualValue: string | undefined;
 
   @computed get momentValue() {
-    return moment(this.props.value);
+    return moment(this.props.value !== "" ? this.props.value : undefined);
   }
 
   @computed get formattedMomentValue() {
@@ -309,10 +307,7 @@ export class DateTimeEditor extends React.Component<{
           </div>
         )}
         {!this.props.isReadOnly && (
-          <div
-            className={S.dropdownSymbol}
-            onClick={this.handleDropperClick}
-          >
+          <div className={S.dropdownSymbol} onClick={this.handleDropperClick}>
             <i className="far fa-calendar-alt" />
           </div>
         )}
