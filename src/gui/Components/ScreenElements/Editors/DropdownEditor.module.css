@@ -13,9 +13,9 @@
 
 .droppedPanelContainer {
   z-index: 1000;
-  position: absolute;
+  /* position: absolute; 
   top: 21px;
-  left: 0px;
+  left: 0px;*/
   width: 300px;
   height: 200px;
   border: 1px solid #b3b3b3;
@@ -50,5 +50,4 @@
 }
 
 .highlightedPhrase {
-
 }

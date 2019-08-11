@@ -12,11 +12,10 @@ import { getApi } from "../../../../model/selectors/getApi";
 import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
 import { getDataStructureEntityId } from "../../../../model/selectors/DataView/getDataStructureEntityId";
 import { ILookup } from "../../../../model/entities/types/ILookup";
-import { IProperty } from '../../../../model/entities/types/IProperty';
+import { IProperty } from "../../../../model/entities/types/IProperty";
 import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/getSelectedRowId";
 import { getMenuItemId } from "../../../../model/selectors/getMenuItemId";
-
-
+import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 
 export interface IDropdownEditorProps {
   value: string;
@@ -40,9 +39,8 @@ export interface IDropdownEditorProps {
   api?: IApi;
 }
 
-
 // TODO: Change connection for FormView - e.g. RowId may be found differently for different panel views.
-@inject(({property}: {property: IProperty}, {value}) => {
+@inject(({ property }: { property: IProperty }, { value }) => {
   const dataTable = getDataTable(property);
   const lookup = property.lookup!;
   return {
@@ -53,9 +51,8 @@ export interface IDropdownEditorProps {
     Property: property.id,
     RowId: getSelectedRowId(property),
     LookupId: lookup.lookupId,
-    menuItemId: getMenuItemId(property),
-
-  }
+    menuItemId: getMenuItemId(property)
+  };
 })
 @observer
 export class DropdownEditor extends React.Component<IDropdownEditorProps> {
@@ -112,7 +109,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   @action.bound
   handleTextChange(event: any) {
     this.dirtyTextualValue = event.target.value;
-    this.makeDroppedDown();
+    // this.makeDroppedDown();
     this.loadItems();
   }
 
@@ -157,35 +154,10 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
       );
   }
 
-  @action.bound handleDropperClick(event: any) {
-    event.stopPropagation();
-    this.makeDroppedDown();
+  @action.bound handleDroppedDown() {
+    this.loadItems();
   }
 
-  @action.bound makeDroppedDown() {
-    if (!this.isDroppedDown) {
-      this.isDroppedDown = true;
-      window.addEventListener("click", this.handleWindowClick);
-      this.loadItemsImmediately();
-    }
-  }
-
-  @action.bound makeDroppedUp() {
-    if (this.isDroppedDown) {
-      this.isDroppedDown = false;
-      this.dirtyTextualValue = undefined;
-      window.removeEventListener("click", this.handleWindowClick);
-    }
-  }
-
-  @action.bound handleWindowClick(event: any) {
-    if (this.elmContainer && !this.elmContainer.contains(event.target)) {
-      this.makeDroppedUp();
-    }
-  }
-
-  refContainer = (elm: HTMLDivElement | null) => (this.elmContainer = elm);
-  elmContainer: HTMLDivElement | null = null;
 
   @computed get value() {
     return this.dirtyTextualValue !== undefined
@@ -246,42 +218,52 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
 
   render() {
     return (
-      <div
-        className={CS.editorContainer}
-        ref={this.refContainer}
-        style={{
-          zIndex: this.isDroppedDown ? 1000 : undefined
-        }}
-      >
-        <input
-          className={CS.editor}
-          type="text"
-          value={this.value}
-          readOnly={this.props.isReadOnly}
-          ref={this.refInput}
-          onChange={this.handleTextChange}
-          onKeyDown={this.props.onKeyDown}
-          onClick={this.props.onClick}
-        />
-        {this.props.isInvalid && (
-          <div className={CS.notification}>
-            <i className="fas fa-exclamation-circle red" />
+      <Dropdowner
+      onDroppedDown={this.handleDroppedDown}
+        trigger={({refTrigger, setDropped}) => (
+          <div
+            className={CS.editorContainer}
+            ref={refTrigger}
+            style={{
+              zIndex: this.isDroppedDown ? 1000 : undefined
+            }}
+          >
+            <input
+              className={CS.editor}
+              type="text"
+              value={this.value}
+              readOnly={this.props.isReadOnly}
+              ref={this.refInput}
+              onChange={this.handleTextChange}
+              onKeyDown={this.props.onKeyDown}
+              onClick={this.props.onClick}
+            />
+            {this.props.isInvalid && (
+              <div className={CS.notification}>
+                <i className="fas fa-exclamation-circle red" />
+              </div>
+            )}
+            {!this.props.isReadOnly && (
+              <div
+                className={S.dropdownSymbol}
+                onClick={() => setDropped(true)}
+              >
+                {!(this.willReload || this.isLoading) && (
+                  <i className="fas fa-caret-down" />
+                )}
+                {(this.willReload || this.isLoading) && (
+                  <i
+                    className={
+                      "fas fa-sync" + (this.isLoading ? " fa-spin" : "")
+                    }
+                  />
+                )}
+              </div>
+            )}
           </div>
         )}
-        {!this.props.isReadOnly && (
-          <div className={S.dropdownSymbol} onClick={this.handleDropperClick}>
-            {!(this.willReload || this.isLoading) && (
-              <i className="fas fa-caret-down" />
-            )}
-            {(this.willReload || this.isLoading) && (
-              <i
-                className={"fas fa-sync" + (this.isLoading ? " fa-spin" : "")}
-              />
-            )}
-          </div>
-        )}
-        {this.isDroppedDown && (
-          <div className={S.droppedPanelContainer}>
+        content={({}) => (
+          <div className={S.droppedPanelContainer} >
             <AutoSizer>
               {({ width, height }) => (
                 <Observer>
@@ -302,7 +284,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
             </AutoSizer>
           </div>
         )}
-      </div>
+      />
     );
   }
 

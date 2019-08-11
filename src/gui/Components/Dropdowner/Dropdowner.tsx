@@ -70,6 +70,8 @@ class DroppedBox extends React.Component<{
       style.left = tBounds.left + tBounds.width - dBounds.width || 0;
     }
 
+    console.log(tBounds, dBounds, style);
+
     return ReactDOM.createPortal(
       <div ref={this.refDropdown} style={style} className={S.droppedBox}>
         {this.props.children}
@@ -87,6 +89,7 @@ export class Dropdowner extends React.Component<{
     setDropped: (state: boolean) => void;
   }) => React.ReactNode;
   content: (args: { setDropped: (state: boolean) => void }) => React.ReactNode;
+  onDroppedDown?: () => void;
 }> {
   refMeasTrigger = (elm: any) => (this.elmMeasTrigger = elm);
   elmMeasTrigger: any | null = null;
@@ -118,10 +121,12 @@ export class Dropdowner extends React.Component<{
   componentDidUpdate() {
     if (this.isDropped) {
       this.elmMeasDropdown && this.elmMeasDropdown.measure();
+      this.props.onDroppedDown && this.props.onDroppedDown();
     }
   }
 
   render() {
+    (() => this.isDropped)();
     return (
       <Measure bounds={true} ref={this.refMeasTrigger}>
         {({
