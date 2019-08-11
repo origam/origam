@@ -104,6 +104,7 @@ export class Dropdowner extends React.Component<{
     this.isDropped = state;
     if (state) {
       this.reMeasure();
+      this.props.onDroppedDown && this.props.onDroppedDown();
     } else {
     }
   }
@@ -121,7 +122,6 @@ export class Dropdowner extends React.Component<{
   componentDidUpdate() {
     if (this.isDropped) {
       this.elmMeasDropdown && this.elmMeasDropdown.measure();
-      this.props.onDroppedDown && this.props.onDroppedDown();
     }
   }
 

@@ -106,10 +106,13 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     this.elmInput = elm;
   };
 
+  elmDropdowner: Dropdowner | null = null;
+  refDropdowner = (elm: Dropdowner | null) => (this.elmDropdowner = elm);
+
   @action.bound
   handleTextChange(event: any) {
     this.dirtyTextualValue = event.target.value;
-    // this.makeDroppedDown();
+    this.elmDropdowner && this.elmDropdowner.setDropped(true);
     this.loadItems();
   }
 
@@ -157,7 +160,6 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   @action.bound handleDroppedDown() {
     this.loadItems();
   }
-
 
   @computed get value() {
     return this.dirtyTextualValue !== undefined
@@ -219,8 +221,9 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   render() {
     return (
       <Dropdowner
-      onDroppedDown={this.handleDroppedDown}
-        trigger={({refTrigger, setDropped}) => (
+        ref={this.refDropdowner}
+        onDroppedDown={this.handleDroppedDown}
+        trigger={({ refTrigger, setDropped }) => (
           <div
             className={CS.editorContainer}
             ref={refTrigger}
@@ -263,7 +266,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
           </div>
         )}
         content={({}) => (
-          <div className={S.droppedPanelContainer} >
+          <div className={S.droppedPanelContainer}>
             <AutoSizer>
               {({ width, height }) => (
                 <Observer>
