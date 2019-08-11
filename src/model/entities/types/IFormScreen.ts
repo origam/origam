@@ -36,6 +36,7 @@ export interface ILoadedFormScreen extends ILoadedFormScreenData {
   getDataSourceByEntity(entity: string): IDataSource | undefined;
 
   toolbarActions: Array<{ section: string; actions: IAction[] }>;
+  dialogActions: IAction[];
 
   parent?: any;
 }

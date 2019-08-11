@@ -112,7 +112,7 @@ export class ModalWindow extends React.Component<{
                   ) : (
                     <div className={S.pusher} />
                   )}
-                  {this.props.buttonsLeft}
+                  {this.props.buttonsRight}
                 </div>
               </div>
             )}

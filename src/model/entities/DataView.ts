@@ -10,7 +10,7 @@ import { ITablePanelView } from "./TablePanelView/types/ITablePanelView";
 import { IFormPanelView } from "./FormPanelView/types/IFormPanelView";
 import { getDataTable } from "../selectors/DataView/getDataTable";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { IAction, IActionPlacement } from "./types/IAction";
+import { IAction, IActionPlacement, IActionType } from "./types/IAction";
 import { Toolbar } from "../../gui/Components/ScreenElements/DataViewToolbar";
 
 export class DataView implements IDataView {
@@ -84,8 +84,16 @@ export class DataView implements IDataView {
 
   @computed get toolbarActions() {
     return this.actions.filter(
-      action => action.placement === IActionPlacement.Toolbar
+      action =>
+        action.placement === IActionPlacement.Toolbar &&
+        action.type !== IActionType.SelectionDialogAction
     );
+  }
+
+  @computed get dialogActions() {
+    return this.actions.filter(
+      action => action.type === IActionType.SelectionDialogAction
+    )
   }
 
   get isWorking() {

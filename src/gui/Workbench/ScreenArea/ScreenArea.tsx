@@ -11,6 +11,7 @@ import S from "./ScreenArea.module.css";
 import { ScreenBuilder, DialogScreenBuilder } from "./ScreenBuilder";
 import { getApplication } from "model/selectors/getApplication";
 import { isILoadedFormScreen } from "model/entities/types/IFormScreen";
+import { getOpenedScreens } from "../../../model/selectors/getOpenedScreens";
 
 @observer
 class MainViewHandle extends React.Component<{
@@ -137,6 +138,7 @@ export const DialogScreen: React.FC<{
     props.openedScreen.order
   }`;
   const workbenchLifecycle = getWorkbenchLifecycle(props.openedScreen);
+
   useEffect(() => {
     getDialogStack(workbenchLifecycle).pushDialog(
       key,
@@ -154,7 +156,19 @@ export const DialogScreen: React.FC<{
         }
         buttonsCenter={null}
         buttonsLeft={null}
-        buttonsRight={null}
+        buttonsRight={
+          <Observer>
+            {() =>
+              isILoadedFormScreen(props.openedScreen.content) ? (
+                <>
+                  {props.openedScreen.content.dialogActions.map(action => (
+                    <button key={action.id}>{action.caption}</button>
+                  ))}
+                </>
+              ) : <></>
+            }
+          </Observer>
+        }
       >
         <Observer>
           {() => (

@@ -66,15 +66,23 @@ export class FormScreen implements ILoadedFormScreen {
 
   @computed get toolbarActions() {
     const result: Array<{ section: string; actions: IAction[] }> = [];
-    for(let dv of this.dataViews) {
-      if(dv.toolbarActions.length > 0) {
+    for (let dv of this.dataViews) {
+      if (dv.toolbarActions.length > 0) {
         result.push({
           section: dv.name,
           actions: dv.toolbarActions
-        })
+        });
       }
     }
-    return result
+    return result;
+  }
+
+  @computed get dialogActions() {
+    const result: IAction[] = [];
+    for (let dv of this.dataViews) {
+      result.push(...dv.dialogActions);
+    }
+    return result;
   }
 }
 
