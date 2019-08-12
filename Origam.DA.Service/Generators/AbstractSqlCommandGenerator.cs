@@ -1731,7 +1731,8 @@ namespace Origam.DA.Service
             {
                 processColumn = true;
             }
-            else if (columnsInfo.ColumnNames.Count == 0 && aggregatedColumn != null)
+            else if (((columnsInfo.ColumnNames.Count == 0) || columnsInfo.ColumnNames.Contains(column.Name))
+                && aggregatedColumn != null)
             {
                 bool found = false;
                 foreach (DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.ItemTypeConst))
