@@ -264,41 +264,41 @@ namespace Origam.ServerCore
             CreateUpdateOrigamOnlineUser();
             return output;
         }
-        public IList CreateObject(CreateObjectData data)
+        public IList CreateObject(CreateObjectInput input)
         {
             SessionStore sessionStore 
-                = sessionManager.GetSession(data.SessionFormIdentifier);
+                = sessionManager.GetSession(input.SessionFormIdentifier);
             // todo: propagate requesting grid as guid?
             IList output = sessionStore.CreateObject(
-                data.Entity, data.Values, data.Parameters, 
-                data.RequestingGridId.ToString());
+                input.Entity, input.Values, input.Parameters, 
+                input.RequestingGridId.ToString());
             CreateUpdateOrigamOnlineUser();
             return output;
         }
-        public IList UpdateObject(UpdateObjectData data)
+        public IList UpdateObject(UpdateObjectInput input)
         {
             SessionStore sessionStore 
-                = sessionManager.GetSession(data.SessionFormIdentifier);
+                = sessionManager.GetSession(input.SessionFormIdentifier);
             IList output = sessionStore.UpdateObjectEx(
-                data.Entity, data.Id, data.Values);
+                input.Entity, input.Id, input.Values);
             CreateUpdateOrigamOnlineUser();
             return output;
         }
-        public IList DeleteObject(DeleteObjectData data)
+        public IList DeleteObject(DeleteObjectInput input)
         {
             SessionStore sessionStore 
-                = sessionManager.GetSession(data.SessionFormIdentifier);
-            IList output = sessionStore.DeleteObject(data.Entity, data.Id);
+                = sessionManager.GetSession(input.SessionFormIdentifier);
+            IList output = sessionStore.DeleteObject(input.Entity, input.Id);
             CreateUpdateOrigamOnlineUser();
             return output;
         }
-        public ArrayList GetRowData(MasterRecordData data)
+        public ArrayList GetRowData(MasterRecordInput input)
         {
             SessionStore sessionStore = null;
             try
             {
                 sessionStore 
-                    = sessionManager.GetSession(data.SessionFormIdentifier);
+                    = sessionManager.GetSession(input.SessionFormIdentifier);
             }
             catch
             {
@@ -308,16 +308,36 @@ namespace Origam.ServerCore
                 return new ArrayList();
             }
             return sessionStore.GetRowData(
-                data.Entity, data.RowId, false);
+                input.Entity, input.RowId, false);
+        }
+        public ArrayList GetData(GetDataInput input)
+        {
+            SessionStore sessionStore = null;
+            try
+            {
+                sessionStore 
+                    = sessionManager.GetSession(input.SessionFormIdentifier);
+            }
+            catch
+            {
+            }
+            if (sessionStore == null)
+            {
+                return new ArrayList();
+            }
+            return sessionStore.GetData(
+                input.ChildEntity, 
+                input.ParentRecordId, 
+                input.RootRecordId);
         }
         public RuleExceptionDataCollection ExecuteActionQuery(
-            ExecuteActionQueryData data)
+            ExecuteActionQueryInput input)
         {
             EntityUIAction action = null;
             try
             {
                 //todo: actionId to guid
-                action = UIActionTools.GetAction(data.ActionId.ToString());
+                action = UIActionTools.GetAction(input.ActionId.ToString());
             }
             catch
             {
@@ -325,12 +345,12 @@ namespace Origam.ServerCore
             if((action != null) && (action.ConfirmationRule != null))
             {
                 SessionStore sessionStore 
-                    = sessionManager.GetSession(data.SessionFormIdentifier);
-                DataRow[] rows = new DataRow[data.SelectedItems.Count];
-                for(int i = 0; i < data.SelectedItems.Count; i++)
+                    = sessionManager.GetSession(input.SessionFormIdentifier);
+                DataRow[] rows = new DataRow[input.SelectedItems.Count];
+                for(int i = 0; i < input.SelectedItems.Count; i++)
                 {
                     rows[i] = sessionStore.GetSessionRow(
-                        data.Entity, data.SelectedItems[i]);
+                        input.Entity, input.SelectedItems[i]);
                 }
                 XmlDocument xml 
                     = DatasetTools.GetRowXml(rows, DataRowVersion.Default);
@@ -341,11 +361,11 @@ namespace Origam.ServerCore
             }
             return new RuleExceptionDataCollection();
         }
-        public IList ExecuteAction(ExecuteActionData data)
+        public IList ExecuteAction(ExecuteActionInput input)
         {
             var actionRunnerClient 
                 = new ServerEntityUIActionRunnerClient(
-                    sessionManager, data.SessionFormIdentifier.ToString());
+                    sessionManager, input.SessionFormIdentifier.ToString());
             var actionRunner = new ServerEntityUIActionRunner( 
                 actionRunnerClient: actionRunnerClient,
                 uiManager: uiManager,  
@@ -353,14 +373,14 @@ namespace Origam.ServerCore
                 basicUIService: this,
                 reportManager: reportManager);
             return actionRunner.ExecuteAction(
-                data.SessionFormIdentifier.ToString(), 
-                data.RequestingGrid.ToString(), 
-                data.Entity,
-                data.ActionType,
-                data.ActionId.ToString(), 
-                data.ParameterMappings,
-                data.SelectedItems, 
-                data.InputParameters);
+                input.SessionFormIdentifier.ToString(), 
+                input.RequestingGrid.ToString(), 
+                input.Entity,
+                input.ActionType,
+                input.ActionId.ToString(), 
+                input.ParameterMappings,
+                input.SelectedItems, 
+                input.InputParameters);
         }
         private bool IsRowDirty(DataRow row)
         {

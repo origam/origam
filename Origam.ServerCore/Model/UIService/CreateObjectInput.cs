@@ -24,7 +24,7 @@ using System.Collections.Generic;
 
 namespace Origam.ServerCore.Model.UIService
 {
-    public class CreateObjectData
+    public class CreateObjectInput
     {
         public Guid SessionFormIdentifier { get; set; }
         public string Entity { get; set; }

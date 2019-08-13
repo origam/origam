@@ -18,19 +18,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Origam.ServerCore.Model.UIService
 {
-    public class MasterRecordData
+    public class GetDataInput
     {
-        [RequireNonDefault]
         public Guid SessionFormIdentifier { get; set; }
-        [Required]
-        public string Entity { get; set; }
-        [Required]
-        public object RowId { get; set; }
+        public string ChildEntity { get; set; }
+        public object ParentRecordId { get; set; }
+        public object RootRecordId { get; set; }
     }
 }

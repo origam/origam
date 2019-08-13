@@ -126,62 +126,71 @@ namespace Origam.ServerCore.Controller
         }
 
         [HttpPost("[action]")]
-        public IActionResult MasterRecord([FromBody]MasterRecordData data)
+        public IActionResult MasterRecord([FromBody]MasterRecordInput input)
         {
             return RunWithErrorHandler(() =>
             {
-                return Ok(sessionObjects.UIService.GetRowData(data));
+                return Ok(sessionObjects.UIService.GetRowData(input));
+            });
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult GetData([FromBody]GetDataInput input)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                return Ok(sessionObjects.UIService.GetData(input));
             });
         }
 
         [HttpPost("[action]")]
         public IActionResult CreateObject(
-            [FromBody][Required]CreateObjectData data)
+            [FromBody][Required]CreateObjectInput input)
         {
             return RunWithErrorHandler(() =>
             {
-                return Ok(sessionObjects.UIService.CreateObject(data));
+                return Ok(sessionObjects.UIService.CreateObject(input));
             });
         }
 
         [HttpPost("[action]")]
         public IActionResult UpdateObject(
-            [FromBody][Required]UpdateObjectData data)
+            [FromBody][Required]UpdateObjectInput input)
         {
             return RunWithErrorHandler(() =>
             {
-                return Ok(sessionObjects.UIService.UpdateObject(data));
+                return Ok(sessionObjects.UIService.UpdateObject(input));
             });
         }
 
         [HttpPost("[action]")]
         public IActionResult DeleteObject(
-            [FromBody][Required]DeleteObjectData data)
+            [FromBody][Required]DeleteObjectInput input)
         {
             return RunWithErrorHandler(() =>
             {
                 //todo: handle deleting non existing objects
-                return Ok(sessionObjects.UIService.DeleteObject(data));
+                return Ok(sessionObjects.UIService.DeleteObject(input));
             });
         }
 
         [HttpPost("[action]")]
         public IActionResult ExecuteActionQuery(
-            [FromBody][Required]ExecuteActionQueryData data)
+            [FromBody][Required]ExecuteActionQueryInput input)
         {
             return RunWithErrorHandler(() =>
             {
-                return Ok(sessionObjects.UIService.ExecuteActionQuery(data));
+                return Ok(sessionObjects.UIService.ExecuteActionQuery(input));
             });
         }
 
         [HttpPost("[action]")]
         public IActionResult ExecuteAction(
-            [FromBody][Required]ExecuteActionData data)
+            [FromBody][Required]ExecuteActionInput input)
         {
             return RunWithErrorHandler(() =>
             {
-                return Ok(sessionObjects.UIService.ExecuteAction(data));
+                return Ok(sessionObjects.UIService.ExecuteAction(input));
             });
         }
         private IActionResult RunWithErrorHandler(Func<IActionResult> func)
