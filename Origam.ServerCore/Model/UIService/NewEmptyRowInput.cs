@@ -1,8 +1,8 @@
 using System;
 
-namespace Origam.ServerCore.Model.Data
+namespace Origam.ServerCore.Model.UIService
 {
-    public class NewEmptyRowData
+    public class NewEmptyRowInput
     {
         [RequireNonDefault]
         public Guid DataStructureEntityId { get; set; }

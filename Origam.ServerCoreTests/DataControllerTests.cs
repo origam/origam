@@ -29,7 +29,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Origam.Extensions;
 using Origam.ServerCore.Controller;
-using Origam.ServerCore.Model.Data;
+using Origam.ServerCore.Model.UIService;
 
 namespace Origam.ServerCoreTests
 {

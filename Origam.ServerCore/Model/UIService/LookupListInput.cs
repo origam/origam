@@ -20,16 +20,30 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Origam.ServerCore.Model.Data
+namespace Origam.ServerCore.Model.UIService
 {
-    public class LookupLabelsData
+    public class LookupListInput 
     {
         [RequireNonDefault]
-        public Guid LookupId { get; set; }
+        public Guid DataStructureEntityId { get; set; }
         [Required]
-        public Guid[] LabelIds { get; set; }
+        public string[] ColumnNames { get; set; }
+        [Required]
+        public string Property { get; set; }
+        [RequireNonDefault]
+        public Guid Id { get; set; }
+        [RequireNonDefault]
+        public Guid LookupId { get; set; }
+        public IDictionary<string, object> Parameters { get; set; }
+        public bool ShowUniqueValues { get; set; }
+        public string SearchText { get; set; }
+        [Range(-1, 10_000)]
+        public int PageSize { get; set; } = -1;
+        [Range(1, 10_000)]
+        public int PageNumber { get; set; } = -1;
         [RequireNonDefault]
         public Guid MenuId { get; set; }
     }

@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Folder Include="logs\" />
+    <Folder Include="Model\Data\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

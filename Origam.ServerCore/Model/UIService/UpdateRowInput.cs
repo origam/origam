@@ -20,15 +20,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-namespace Origam.ServerCore.Model.Data
+namespace Origam.ServerCore.Model.UIService
+
 {
-    public class DeleteRowData
+    public class UpdateRowInput
     {
         [RequireNonDefault]
         public Guid DataStructureEntityId { get; set; }
         [RequireNonDefault]
-        public Guid RowIdToDelete { get; set; }
+        public Guid RowId { get; set; }
+        [Required]
+        public Dictionary<string,string> NewValues { get; set; }
+        public IEnumerable<string> ColumnNames => NewValues.Keys;
         [RequireNonDefault]
         public Guid MenuId { get; set; }
     }

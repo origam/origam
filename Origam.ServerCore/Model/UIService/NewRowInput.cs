@@ -23,9 +23,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Origam.ServerCore.Model.Data
+namespace Origam.ServerCore.Model.UIService
 {
-    public class NewRowData
+    public class NewRowInput
     {
         [RequireNonDefault]
         public Guid DataStructureEntityId { get; set; }
