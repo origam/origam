@@ -9,6 +9,7 @@ export function createOpenedScreen(
   order: number,
   title: string,
   content: IFormScreen,
+  dontRequestData: boolean,
   dialogInfo?: IDialogInfo,
 ): IOpenedScreen {
   return new OpenedScreen({
@@ -17,6 +18,7 @@ export function createOpenedScreen(
     order,
     title,
     content,
-    dialogInfo
+    dialogInfo,
+    dontRequestData
   });
 }

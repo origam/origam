@@ -8,7 +8,6 @@ export class FormScreen extends React.Component<{
   isFullScreen: boolean;
   isVisible: boolean;
   title: string;
-  isSessioned: boolean;
 }> {
   render() {
     return (
@@ -21,7 +20,7 @@ export class FormScreen extends React.Component<{
               <i className="fas fa-sync-alt fa-spin" />
             )}
           </div>
-          {this.props.title} {this.props.isSessioned && <i> (sessioned)</i>}
+          {this.props.title}
           <div className={S.pusher} />
           <button
             className={

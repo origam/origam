@@ -1,34 +1,26 @@
-import React from "react";
-import { observer, inject, Provider, Observer } from "mobx-react";
-import { SimpleScrollState } from "../../../Components/ScreenElements/Table/SimpleScrollState";
-import { CellRenderer } from "./CellRenderer";
-import { Table } from "../../../Components/ScreenElements/Table/Table";
-import {
-  IGridDimensions,
-  IOrderByDirection
-} from "../../../Components/ScreenElements/Table/types";
 import bind from "bind-decorator";
-import { Header } from "../../../Components/ScreenElements/Table/Header";
-import { IProperty } from "../../../../model/entities/types/IProperty";
-import { computed, observable, action } from "mobx";
-import { IDataView } from "../../../../model/entities/types/IDataView";
-import { getTableViewProperties } from "../../../../model/selectors/TablePanelView/getTableViewProperties";
-import { getColumnHeaders } from "../../../../model/selectors/TablePanelView/getColumnHeaders";
-import { IColumnHeader } from "../../../../model/selectors/TablePanelView/types";
-import { getRowCount } from "../../../../model/selectors/TablePanelView/getRowCount";
-import { TableViewEditor } from "./TableViewEditor";
+import { action, computed, observable } from "mobx";
+import { inject, observer, Provider } from "mobx-react";
+import React from "react";
 import { ITablePanelView } from "../../../../model/entities/TablePanelView/types/ITablePanelView";
-import { getSelectedRowIndex } from "../../../../model/selectors/TablePanelView/getSelectedRowIndex";
-import { getSelectedColumnIndex } from "../../../../model/selectors/TablePanelView/getSelectedColumnIndex";
+import { IDataView } from "../../../../model/entities/types/IDataView";
+import { IProperty } from "../../../../model/entities/types/IProperty";
+import { getColumnHeaders } from "../../../../model/selectors/TablePanelView/getColumnHeaders";
 import { getIsEditing } from "../../../../model/selectors/TablePanelView/getIsEditing";
-
+import { getRowCount } from "../../../../model/selectors/TablePanelView/getRowCount";
+import { getSelectedColumnIndex } from "../../../../model/selectors/TablePanelView/getSelectedColumnIndex";
+import { getSelectedRowIndex } from "../../../../model/selectors/TablePanelView/getSelectedRowIndex";
+import { getTableViewProperties } from "../../../../model/selectors/TablePanelView/getTableViewProperties";
+import { IColumnHeader } from "../../../../model/selectors/TablePanelView/types";
 import { ITableColumnsConf } from "../../../Components/Dialogs/ColumnsDialog";
-import {
-  FilterSettingsComboBox,
-  FilterSettingsComboBoxItem
-} from "../../../Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
-import { FilterSettingsString } from "../../../Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsString";
 import { FilterSettings } from "../../../Components/ScreenElements/Table/FilterSettings/FilterSettings";
+import { Header } from "../../../Components/ScreenElements/Table/Header";
+import { SimpleScrollState } from "../../../Components/ScreenElements/Table/SimpleScrollState";
+import { Table } from "../../../Components/ScreenElements/Table/Table";
+import { IGridDimensions } from "../../../Components/ScreenElements/Table/types";
+import { CellRenderer } from "./CellRenderer";
+import { TableViewEditor } from "./TableViewEditor";
+
 
 @inject(({ dataView }) => {
   return {

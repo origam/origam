@@ -12,6 +12,8 @@ export class DialogInfo implements IDialogInfo {
 }
 
 export class OpenedScreen implements IOpenedScreen {
+  
+  dialogInfo?: IDialogInfo | undefined;
   $type_IOpenedScreen: 1 = 1;
 
   constructor(data: IOpenedScreenData) {
@@ -20,6 +22,7 @@ export class OpenedScreen implements IOpenedScreen {
   }
 
   @observable isActive = false;
+  dontRequestData: boolean = false;
   menuItemId: string = "";
   menuItemType: IMainMenuItemType = null as any;
   order: number = 0;

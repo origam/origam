@@ -26,6 +26,7 @@ export class MainMenuItem extends React.Component<{
   active: boolean;
   level: number;
   isHidden: boolean;
+  dontRequestData: boolean;
   onClick?: (event: any) => void;
 }> {
   render() {
@@ -36,6 +37,7 @@ export class MainMenuItem extends React.Component<{
       active,
       onClick,
       isHidden,
+      dontRequestData,
       level
     } = this.props;
     return (
@@ -54,7 +56,7 @@ export class MainMenuItem extends React.Component<{
         {icon === IMenuItemIcon.Parameter && (
           <i className="fas fa-asterisk icon" />
         )}
-        {label}
+        {label}{dontRequestData && <>&nbsp;<i>(DRD)</i></>}
         {status !== IMenuItemStatus.None && (
           <div className="status">
             {status === IMenuItemStatus.Closed && (
@@ -94,6 +96,7 @@ export class MainMenuSection extends React.Component<{
           }
           active={false}
           isHidden={this.props.isHidden}
+          dontRequestData={false}
           onClick={this.toggleOpened}
         />
         <div
@@ -142,6 +145,7 @@ export class MainMenuRecursiveItem extends React.Component<{
             label={this.props.node.attributes.label}
             active={false}
             isHidden={this.props.node.attributes.isHidden === "true"}
+            dontRequestData={this.props.node.attributes.dontRequestData === "true"}
             status={IMenuItemStatus.None}
             onClick={(event: any) =>
               this.props.onItemClick &&

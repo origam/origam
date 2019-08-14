@@ -18,16 +18,19 @@ export interface ILoadedFormScreenData {
   componentBindings: IComponentBinding[];
   screenUI: any;
   formScreenLifecycle: IFormScreenLifecycle;
-  isSessioned: boolean;
-  // componentBindings: types.array(ComponentBinding),
-  // dataSources: types.array(DataSource)
+  
 }
 
 export interface ILoadedFormScreen extends ILoadedFormScreenData {
   $type_ILoadedFormScreen: 1;
 
+  isDirty: boolean;
+  
+  sessionId: string;
+
   isLoading: false;
   rootDataViews: IDataView[];
+  dontRequestData: boolean;
 
   getBindingsByChildId(childId: string): IComponentBinding[];
   getBindingsByParentId(parentId: string): IComponentBinding[];

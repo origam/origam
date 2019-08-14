@@ -10,8 +10,10 @@ import { IFormScreenLifecycle } from "./types/IFormScreenLifecycle";
 import { ILoadingFormScreenData } from "./types/IFormScreen";
 import { computed } from "mobx";
 import { IAction } from "./types/IAction";
+import { getDontRequestData } from "model/selectors/getDontRequestData";
 
 export class FormScreen implements ILoadedFormScreen {
+
   $type_ILoadedFormScreen: 1 = 1;
 
   constructor(data: ILoadedFormScreenData) {
@@ -22,7 +24,11 @@ export class FormScreen implements ILoadedFormScreen {
     this.componentBindings.forEach(o => (o.parent = this));
   }
 
-  parent: any;
+  parent?: any;
+
+  isDirty: boolean = false;
+  
+  sessionId: string = "";
 
   title: string = "";
   menuId: string = "";
@@ -35,10 +41,14 @@ export class FormScreen implements ILoadedFormScreen {
   screenUI: any;
   isLoading: false = false;
   formScreenLifecycle: IFormScreenLifecycle = null as any;
-  isSessioned: boolean = false;
+
   dataViews: IDataView[] = [];
   dataSources: IDataSource[] = [];
   componentBindings: IComponentBinding[] = [];
+
+  @computed get dontRequestData() {
+    return getDontRequestData(this);
+  }
 
   @computed get rootDataViews(): IDataView[] {
     return this.dataViews.filter(dv => dv.isBindingRoot);

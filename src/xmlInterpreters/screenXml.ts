@@ -51,7 +51,7 @@ export const findFormRoot = (node: any) =>
 
 export function interpretScreenXml(
   screenDoc: any,
-  formScreenLifecycle: IFormScreenLifecycle
+  formScreenLifecycle: IFormScreenLifecycle,
 ) {
   console.log(screenDoc);
 
@@ -125,7 +125,7 @@ export function interpretScreenXml(
       windowXml.attributes.RequestSaveAfterUpdate === "true",
     screenUI: screenDoc,
     formScreenLifecycle,
-    isSessioned: windowXml.attributes.UseSession,
+    // isSessioned: windowXml.attributes.UseSession,
     dataSources: dataSourcesXml.elements.map((dataSource: any) => {
       return new DataSource({
         entity: dataSource.attributes.Entity,

@@ -22,7 +22,6 @@ export class ScreenBuilder extends React.Component<{
             isVisible={openedScreen.isActive}
             isFullScreen={false}
             title={openedScreen.title}
-            isSessioned={content.isSessioned}
           >
             {!content.isLoading && (
               <FormScreenBuilder xmlWindowObject={content.screenUI} />

@@ -11,7 +11,7 @@ import { IFormPanelView } from "./FormPanelView/types/IFormPanelView";
 import { getDataTable } from "../selectors/DataView/getDataTable";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { IAction, IActionPlacement, IActionType } from "./types/IAction";
-import { Toolbar } from "../../gui/Components/ScreenElements/DataViewToolbar";
+
 
 export class DataView implements IDataView {
   $type_IDataView: 1 = 1;

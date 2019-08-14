@@ -39,7 +39,14 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
   @action.bound
   onMainMenuItemClick(args: { event: any; item: any }): void {
-    const { type, id, label, dialogWidth, dialogHeight } = args.item.attributes;
+    const {
+      type,
+      id,
+      label,
+      dialogWidth,
+      dialogHeight,
+      dontRequestData
+    } = args.item.attributes;
     const { event } = args;
 
     const openedScreens = getOpenedScreens(this);
@@ -62,6 +69,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           0,
           label,
           newFormScreen,
+          dontRequestData === "true",
           dialogInfo
         );
         openedScreens.pushItem(newScreen);
@@ -77,6 +85,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           existingItem.order + 1,
           label,
           newFormScreen,
+          dontRequestData === "true",
           dialogInfo
         );
         openedScreens.pushItem(newScreen);
@@ -90,6 +99,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           0,
           label,
           newFormScreen,
+          dontRequestData === "true",
           dialogInfo
         );
         openedScreens.pushItem(newScreen);

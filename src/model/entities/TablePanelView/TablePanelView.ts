@@ -1,17 +1,13 @@
-import { observable, computed, action, autorun } from "mobx";
-import {
-  ITablePanelView,
-  ITablePanelViewData,
-  ITableCanvas
-} from "./types/ITablePanelView";
-import { getDataView } from "../../selectors/DataView/getDataView";
+import { action, computed, observable } from "mobx";
 import { getDataTable } from "../../selectors/DataView/getDataTable";
-import { IProperty } from "../types/IProperty";
+import { getDataView } from "../../selectors/DataView/getDataView";
+import { getDataViewLifecycle } from "../../selectors/DataView/getDataViewLifecycle";
 import { getDataViewPropertyById } from "../../selectors/DataView/getDataViewPropertyById";
 import { getSelectedRow } from "../../selectors/DataView/getSelectedRow";
-import { getDataViewLifecycle } from "../../selectors/DataView/getDataViewLifecycle";
-import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
 import { IFilterConfiguration } from "../types/IFilterConfiguration";
+import { IProperty } from "../types/IProperty";
+import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
+import { ITableCanvas, ITablePanelView, ITablePanelViewData } from "./types/ITablePanelView";
 
 export class TablePanelView implements ITablePanelView {
   
