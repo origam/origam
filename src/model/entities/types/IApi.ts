@@ -2,7 +2,7 @@ import { AxiosPromise } from "axios";
 
 export interface IApi {
   accessToken: string;
-  
+
   setAccessToken(token: string | undefined): void;
 
   resetAccessToken(): void;
@@ -36,7 +36,7 @@ export interface IApi {
   newEntity(data: {
     DataStructureEntityId: string;
     MenuId: string;
-  }): Promise<any>
+  }): Promise<any>;
 
   putEntity(data: {
     DataStructureEntityId: string;
@@ -127,6 +127,20 @@ export interface IApi {
     SessionFormIdentifier: string;
     Entity: string;
     Id: string;
-    Values: {[key: string]: any}
+    Values: { [key: string]: any };
+  }): Promise<any>;
+
+  createObject(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    Values: { [key: string]: any };
+    Parameters: { [key: string]: any };
+    RequestingGridId: string;
+  }): Promise<any>;
+
+  deleteObject(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    Id: string;
   }): Promise<any>;
 }

@@ -1,4 +1,19 @@
-import { sInitUI, onInitUIDone, sFormScreenRunning, onFlushData, sFlushData, onFlushDataDone } from './constants';
+import {
+  onCreateRow,
+  onDeleteRow,
+  sDeleteRow,
+  onDeleteRowDone
+} from "./constants";
+import {
+  sInitUI,
+  onInitUIDone,
+  sFormScreenRunning,
+  onFlushData,
+  sFlushData,
+  onFlushDataDone,
+  sCreateRow,
+  onCreateRowDone
+} from "./constants";
 
 export const FormScreenDef = {
   initial: sInitUI,
@@ -16,13 +31,35 @@ export const FormScreenDef = {
       on: {
         [onFlushData]: {
           target: sFlushData
+        },
+        [onCreateRow]: {
+          target: sCreateRow
+        },
+        [onDeleteRow]: {
+          target: sDeleteRow
         }
       }
     },
     [sFlushData]: {
-      invoke: {src: "flushData"},
+      invoke: { src: "flushData" },
       on: {
         [onFlushDataDone]: {
+          target: sFormScreenRunning
+        }
+      }
+    },
+    [sCreateRow]: {
+      invoke: { src: "createRow" },
+      on: {
+        [onCreateRowDone]: {
+          target: sFormScreenRunning
+        }
+      }
+    },
+    [sDeleteRow]: {
+      invoke: { src: "deleteRow" },
+      on: {
+        [onDeleteRowDone]: {
           target: sFormScreenRunning
         }
       }

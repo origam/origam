@@ -4,7 +4,7 @@ import { IProperty } from "./types/IProperty";
 import { getDataView } from "../selectors/DataView/getDataView";
 import { IAdditionalRowData } from "./types/IAdditionalRecordData";
 import { AdditionalRowData } from "./AdditionalRowData";
-import { getDataSource } from '../selectors/DataSources/getDataSource';
+import { getDataSource } from "../selectors/DataSources/getDataSource";
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
@@ -66,6 +66,10 @@ export class DataTable implements IDataTable {
   getRowByExistingIdx(idx: number): any[] {
     // TODO: Change to respect dirty deleted rows.
     return this.rows[idx];
+  }
+
+  getRowById(id: string): any[] | undefined {
+    return this.allRows.find(row => this.getRowId(row) === id);
   }
 
   getExistingRowIdxById(id: string) {
@@ -153,14 +157,6 @@ export class DataTable implements IDataTable {
 
   getDirtyNewRows(): any[][] {
     return this.rows.filter(row => this.isRowDirtyNew(row));
-  }
-
-  getRowFromDataSourceRow(rowIn: any[]): any[] {
-    const result: any[] = [];
-    for (let property of this.properties) {
-      result.push(rowIn[property.dataSourceIndex]);
-    }
-    return result;
   }
 
   @action.bound

@@ -14,6 +14,7 @@ export interface IDataTable extends IDataTableData {
   getCellText(row: any[], property: IProperty): any;
   resolveCellText(property: IProperty, value: any): any
   getRowByExistingIdx(idx: number): any[];
+  getRowById(id: string): any[] | undefined 
   getExistingRowIdxById(id: string): number | undefined;
   getPropertyById(id: string): IProperty | undefined;
   getFirstRow(): any[] | undefined;
@@ -37,7 +38,6 @@ export interface IDataTable extends IDataTableData {
   clearRecordDirtyValues(id: string): void;
   substituteRecord(row: any[]): void;
   insertRecord(index: number, row: any[]): void;
-  getRowFromDataSourceRow(rowIn: any[]): any[];
   parent?: any;
 }
 

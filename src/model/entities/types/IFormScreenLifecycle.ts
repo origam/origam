@@ -4,6 +4,8 @@ export interface IFormScreenLifecycle extends IFormScreenLifecycleData {
   $type_IFormScreenLifecycle: 1;
 
   onFlushData(): void;
+  onCreateRow(entity: string, gridId: string): void;
+  onDeleteRow(entity: string, rowId: string): void;
 
   run(): void;
   parent?: any;

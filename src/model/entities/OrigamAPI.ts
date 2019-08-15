@@ -225,7 +225,6 @@ export class OrigamAPI implements IApi {
     })).data;
   }
 
-
   // TODO: Remove this method.
   async sessionUpdateEntity(data: {
     SessionFormIdentifier: string;
@@ -274,6 +273,28 @@ export class OrigamAPI implements IApi {
     Values: { [key: string]: any };
   }): Promise<any> {
     return (await axios.post(`${this.urlPrefix}/UIService/UpdateObject`, data, {
+      headers: this.httpAuthHeader
+    })).data;
+  }
+
+  async createObject(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    Values: { [key: string]: any };
+    Parameters: { [key: string]: any };
+    RequestingGridId: string;
+  }): Promise<any> {
+    return (await axios.post(`${this.urlPrefix}/UIService/CreateObject`, data, {
+      headers: this.httpAuthHeader
+    })).data;
+  }
+
+  async deleteObject(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    Id: string;
+  }): Promise<any> {
+    return (await axios.post(`${this.urlPrefix}/UIService/DeleteObject`, data, {
       headers: this.httpAuthHeader
     })).data;
   }

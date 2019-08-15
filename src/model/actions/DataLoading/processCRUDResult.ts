@@ -42,13 +42,22 @@ export function processCRUDResult(ctx: any, result: ICRUDResult) {
         if (dataView) {
           const tablePanelView = dataView.tablePanelView;
           const dataSourceRow = result.wrappedObject;
-          const row = dataView.dataTable.getRowFromDataSourceRow(dataSourceRow);
-          console.log("New row:", dataSourceRow, row);
+          console.log("New row:", dataSourceRow);
           dataView.dataTable.insertRecord(
             tablePanelView.firstVisibleRowIndex,
-            row
+            dataSourceRow
           );
-          dataView.selectRow(row);
+          dataView.selectRow(dataSourceRow);
+        }
+        break;
+      }
+      case IResponseOperation.Delete: {
+        const dataView = getDataViewByEntity(ctx, resultItem.entity);
+        if (dataView) {
+          const row = dataView.dataTable.getRowById(resultItem.objectId);
+          if (row) {
+            dataView.dataTable.deleteRow(row);
+          }
         }
         break;
       }

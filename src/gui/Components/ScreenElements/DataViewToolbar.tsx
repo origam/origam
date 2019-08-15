@@ -9,6 +9,9 @@ import { action, observable } from "mobx";
 import { getTablePanelView } from "../../../model/selectors/TablePanelView/getTablePanelView";
 import { IAction } from "../../../model/entities/types/IAction";
 import { getPanelViewActions } from "model/selectors/DataView/getPanelViewActions";
+import { onAddRowClick } from "model/actions/DataView/onAddRowClick";
+import { onDeleteRowClick } from '../../../model/actions/DataView/onDeleteRowClick';
+
 
 @inject(({ dataView }: { dataView: IDataView }) => {
   return {
@@ -21,8 +24,8 @@ import { getPanelViewActions } from "model/selectors/DataView/getPanelViewAction
     onTableViewButtonClick: dataView.onTablePanelViewButtonClick,
     onColumnConfClick: getTablePanelView(dataView).columnConfigurationDialog
       .onColumnConfClick,
-    onDeleteRowClick: dataView.lifecycle.onDeleteRowClicked,
-    onCreateRowClick: dataView.lifecycle.onAddRowClicked,
+    onDeleteRowClick: onDeleteRowClick(dataView),
+    onCreateRowClick: onAddRowClick(dataView),
     onToggleFilterClick:
       dataView.tablePanelView.filterConfiguration.onFilterDisplayClick,
     onPrevRowClick: dataView.onPrevRowClick,

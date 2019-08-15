@@ -1,21 +1,27 @@
-import { action, createAtom, flow, when, _getGlobalState } from "mobx";
+import { action, createAtom, flow, when } from "mobx";
+import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
+import { getDataViewByEntity } from "model/selectors/DataView/getDataViewByEntity";
+import { getMenuItemType } from "model/selectors/getMenuItemType";
+import { map2obj } from "utils/objects";
+import { interpretScreenXml } from "xmlInterpreters/screenXml";
 import { interpret, Machine } from "xstate";
 import { loadFreshData } from "../../actions/DataView/loadFreshData";
 import { getFormScreen } from "../../selectors/FormScreen/getFormScreen";
 import { getApi } from "../../selectors/getApi";
-import { IFormScreenLifecycle } from "../types/IFormScreenLifecycle";
-import { FormScreenDef } from "./FormScreenDef";
 import { getMenuItemId } from "../../selectors/getMenuItemId";
-import { onInitUIDone, onFlushData, onFlushDataDone } from "./constants";
-import { getMenuItemType } from "model/selectors/getMenuItemType";
-import { interpretScreenXml } from "xmlInterpreters/screenXml";
-import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
-import { IOpenedScreen } from "../types/IOpenedScreen";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
-import { getDataViewByEntity } from "model/selectors/DataView/getDataViewByEntity";
 import { getSessionId } from "../../selectors/getSessionId";
-import { map2obj } from "utils/objects";
-import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
+import { IFormScreenLifecycle } from "../types/IFormScreenLifecycle";
+import {
+  onCreateRow,
+  onCreateRowDone,
+  onDeleteRow,
+  onFlushData,
+  onFlushDataDone,
+  onInitUIDone,
+  onDeleteRowDone
+} from "./constants";
+import { FormScreenDef } from "./FormScreenDef";
 
 export class FormScreenLifecycle implements IFormScreenLifecycle {
   $type_IFormScreenLifecycle: 1 = 1;
@@ -24,7 +30,11 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
     services: {
       initUI: (ctx, event) => (send, onEvent) => flow(this.initUI.bind(this))(),
       flushData: (ctx, event) => (send, onEvent) =>
-        flow(this.flushData.bind(this))()
+        flow(this.flushData.bind(this))(),
+      createRow: (ctx, event) => (send, onEvent) =>
+        flow(this.createRow.bind(this))(event.entity, event.gridId),
+      deleteRow: (ctx, event) => (send, onEvent) =>
+        flow(this.deleteRow.bind(this))(event.entity, event.rowId)
     },
     actions: {
       applyInitUIResult: (ctx, event) => this.applyInitUIResult(event as any)
@@ -75,6 +85,32 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
     this.interpreter.send(onFlushDataDone);
   }
 
+  *createRow(entity: string, gridId: string) {
+    const api = getApi(this);
+    const createObjectResult = yield api.createObject({
+      SessionFormIdentifier: getSessionId(this),
+      Entity: entity,
+      RequestingGridId: gridId,
+      Values: {},
+      Parameters: {}
+    });
+    console.log(createObjectResult);
+    processCRUDResult(this, createObjectResult);
+    this.interpreter.send(onCreateRowDone);
+  }
+
+  *deleteRow(entity: string, rowId: string) {
+    const api = getApi(this);
+    const deleteObjectResult = yield api.deleteObject({
+      SessionFormIdentifier: getSessionId(this),
+      Entity: entity,
+      Id: rowId
+    });
+    console.log(deleteObjectResult);
+    processCRUDResult(this, deleteObjectResult);
+    this.interpreter.send(onDeleteRowDone);
+  }
+
   @action.bound
   applyInitUIResult(args: { initUIResult: any }) {
     const openedScreen = getOpenedScreen(this);
@@ -99,6 +135,16 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
   @action.bound
   onFlushData(): void {
     this.interpreter.send(onFlushData);
+  }
+
+  @action.bound
+  onCreateRow(entity: string, gridId: string): void {
+    this.interpreter.send({ type: onCreateRow, entity, gridId });
+  }
+
+  @action.bound
+  onDeleteRow(entity: string, rowId: string): void {
+    this.interpreter.send({ type: onDeleteRow, entity, rowId });
   }
 
   *loadDataViews() {
