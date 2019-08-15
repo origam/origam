@@ -9,6 +9,7 @@ export interface IOpenedScreens extends IOpenedScreensData {
   items: Array<IOpenedScreen>;
   screenItems: Array<IOpenedScreen>;
   dialogItems: Array<IOpenedScreen>;
+  activeItem: IOpenedScreen | undefined;
 
   activeScreenActions: Array<{
     section: string;

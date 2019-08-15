@@ -1,6 +1,8 @@
 import { getDataViewByEntity } from "../../selectors/DataView/getDataViewByEntity";
 import { runInAction } from "mobx";
 import _ from "lodash";
+import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
+
 export enum IResponseOperation {
   DeleteAllData = -2,
   Delete = -1,
@@ -35,6 +37,7 @@ export function processCRUDResult(ctx: any, result: ICRUDResult) {
           dataView.dataTable.substituteRecord(resultItem.wrappedObject);
           dataView.dataTable.clearRecordDirtyValues(resultItem.objectId);
         }
+        getFormScreen(ctx).setDirty(true);
         break;
       }
       case IResponseOperation.Create: {
@@ -49,6 +52,7 @@ export function processCRUDResult(ctx: any, result: ICRUDResult) {
           );
           dataView.selectRow(dataSourceRow);
         }
+        getFormScreen(ctx).setDirty(true);
         break;
       }
       case IResponseOperation.Delete: {
@@ -59,6 +63,7 @@ export function processCRUDResult(ctx: any, result: ICRUDResult) {
             dataView.dataTable.deleteRow(row);
           }
         }
+        getFormScreen(ctx).setDirty(true);
         break;
       }
       default:

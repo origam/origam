@@ -1,5 +1,5 @@
 import S from "./WorkbenchPage.module.css";
-import React from "react";
+import React, { useContext } from "react";
 import {
   SplitterPanel,
   Splitter,
@@ -7,7 +7,13 @@ import {
 } from "../Components/Splitter/Splitter";
 import { MainMenu } from "./MainMenu/MainMenu";
 import { ScreenArea } from "./ScreenArea/ScreenArea";
-import { inject, observer, Provider, Observer } from "mobx-react";
+import {
+  inject,
+  observer,
+  Provider,
+  Observer,
+  MobXProviderContext
+} from "mobx-react";
 import { getApplicationLifecycle } from "../../model/selectors/getApplicationLifecycle";
 import { IWorkbench } from "../../model/entities/types/IWorkbench";
 import { getWorkbench } from "../../model/selectors/getWorkbench";
@@ -27,6 +33,10 @@ import { ISearchResultSection } from "../../model/entities/types/IClientFulltext
 import { SearchResultItem, SearchResultsPanel } from "./SearchResults";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 import { MainMenuPanel } from "./MainMenu/MainMenuPanel";
+import { IApplication } from "model/entities/types/IApplication";
+import { getActivePanelView } from "model/selectors/DataView/getActivePanelView";
+import { getActiveScreen } from "../../model/selectors/getActiveScreen";
+import { isILoadedFormScreen } from "../../model/entities/types/IFormScreen";
 
 @inject(({ application }) => {
   const clientFulltextSearch = getClientFulltextSearch(application);
@@ -94,18 +104,7 @@ export class WorkbenchPage extends React.Component<{
                 </div>
               </div>
             </div>
-            <ToolbarSection bottomLine="Form">
-              <div className={S.actionItem}>
-                <i className="far fa-save icon" />
-                <br />
-                Save
-              </div>
-              <div className={S.actionItem}>
-                <i className="fas fa-redo icon" />
-                <br />
-                Reload
-              </div>
-            </ToolbarSection>
+            <FormButtonsSection />
             {this.props.toolbarActions!.map(actionGroup => (
               <ToolbarSection bottomLine={actionGroup.section}>
                 {actionGroup.actions.map(action => (
@@ -215,3 +214,29 @@ export const ToolbarSection: React.FC<{
     <div className={S.actionsSectionBottomLine}>{props.bottomLine}</div>
   </div>
 );
+
+export const FormButtonsSection: React.FC<{}> = observer(props => {
+  const application = useContext(MobXProviderContext)
+    .application as IApplication;
+  const activePanelView = getActiveScreen(application);
+  const isDirty =
+    activePanelView &&
+    isILoadedFormScreen(activePanelView.content) &&
+    activePanelView.content.isDirty;
+  return (
+    <ToolbarSection bottomLine="Form">
+      {isDirty && (
+        <div className={S.actionItem}>
+          <i className="far fa-save icon" />
+          <br />
+          Save
+        </div>
+      )}
+      <div className={S.actionItem}>
+        <i className="fas fa-redo icon" />
+        <br />
+        Reload
+      </div>
+    </ToolbarSection>
+  );
+});

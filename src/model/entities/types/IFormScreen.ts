@@ -25,8 +25,6 @@ export interface ILoadedFormScreen extends ILoadedFormScreenData {
   $type_ILoadedFormScreen: 1;
 
   isDirty: boolean;
-  
-  
 
   isLoading: false;
   rootDataViews: IDataView[];
@@ -40,6 +38,8 @@ export interface ILoadedFormScreen extends ILoadedFormScreenData {
 
   toolbarActions: Array<{ section: string; actions: IAction[] }>;
   dialogActions: IAction[];
+
+  setDirty(state: boolean): void;
 
   parent?: any;
 }

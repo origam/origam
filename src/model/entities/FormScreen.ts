@@ -8,11 +8,12 @@ import {
 } from "./types/IFormScreen";
 import { IFormScreenLifecycle } from "./types/IFormScreenLifecycle";
 import { ILoadingFormScreenData } from "./types/IFormScreen";
-import { computed } from "mobx";
+import { computed, action, observable } from "mobx";
 import { IAction } from "./types/IAction";
 import { getDontRequestData } from "model/selectors/getDontRequestData";
 
 export class FormScreen implements ILoadedFormScreen {
+
 
   $type_ILoadedFormScreen: 1 = 1;
 
@@ -26,7 +27,7 @@ export class FormScreen implements ILoadedFormScreen {
 
   parent?: any;
 
-  isDirty: boolean = false;
+  @observable isDirty: boolean = false;
   
   sessionId: string = "";
 
@@ -93,6 +94,11 @@ export class FormScreen implements ILoadedFormScreen {
       result.push(...dv.dialogActions);
     }
     return result;
+  }
+
+  @action.bound
+  setDirty(state: boolean): void {
+    this.isDirty = state;
   }
 }
 

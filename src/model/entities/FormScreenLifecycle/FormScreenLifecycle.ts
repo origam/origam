@@ -54,6 +54,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
 
   *initUI() {
     const api = getApi(this);
+    const openedScreen = getOpenedScreen(this);
     const menuItemId = getMenuItemId(this);
     const menuItemType = getMenuItemType(this);
     const initUIResult = yield api.initUI({
@@ -62,7 +63,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
       FormSessionId: undefined,
       IsNewSession: true,
       RegisterSession: true,
-      DataRequested: true
+      DataRequested: !openedScreen.dontRequestData
     });
     console.log(initUIResult);
     this.interpreter.send({ type: onInitUIDone, initUIResult });
