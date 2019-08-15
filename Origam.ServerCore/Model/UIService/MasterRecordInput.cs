@@ -26,7 +26,7 @@ namespace Origam.ServerCore.Model.UIService
 {
     public class MasterRecordInput
     {
-        [RequireNonDefault]
+        [RequiredNonDefault]
         public Guid SessionFormIdentifier { get; set; }
         [Required]
         public string Entity { get; set; }

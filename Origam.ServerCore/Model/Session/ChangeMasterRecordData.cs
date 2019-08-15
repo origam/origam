@@ -5,7 +5,7 @@ namespace Origam.ServerCore.Model.Session
 {
     public class ChangeMasterRecordData
     {
-        [RequireNonDefault]
+        [RequiredNonDefault]
         public Guid SessionFormIdentifier { get; set; }
         [Required]
         public string Entity { get; set; }

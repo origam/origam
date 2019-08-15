@@ -30,9 +30,9 @@ namespace Origam.ServerCore.Model.UIService
 {
     public class GetRowsInput
     {
-        [RequireNonDefault]
+        [RequiredNonDefault]
         public Guid MenuId { get; set; }
-        [RequireNonDefault]
+        [RequiredNonDefault]
         public Guid DataStructureEntityId { get; set; }
         public string Filter { get; set; }
         public List<List<string>> Ordering { get; set; }

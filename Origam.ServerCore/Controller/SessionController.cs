@@ -124,7 +124,7 @@ namespace Origam.ServerCore.Controllers
         }
 
         [HttpGet("[action]")]
-        public IActionResult Rows([FromQuery][RequireNonDefault] Guid sessionFormIdentifier, 
+        public IActionResult Rows([FromQuery][RequiredNonDefault] Guid sessionFormIdentifier, 
             [FromQuery][Required] string childEntity, [FromQuery][Required] string parentRecordId,
             [FromQuery][Required] string rootRecordId)
         {

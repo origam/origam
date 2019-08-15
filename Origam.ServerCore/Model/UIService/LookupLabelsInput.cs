@@ -26,11 +26,11 @@ namespace Origam.ServerCore.Model.UIService
 {
     public class LookupLabelsInput
     {
-        [RequireNonDefault]
+        [RequiredNonDefault]
         public Guid LookupId { get; set; }
         [Required]
         public Guid[] LabelIds { get; set; }
-        [RequireNonDefault]
+        [RequiredNonDefault]
         public Guid MenuId { get; set; }
     }
 }

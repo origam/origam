@@ -56,11 +56,6 @@ namespace Origam.ServerCore.Controller
             public FormReferenceMenuItem MenuItem { get; set; }
             public DataStructureEntity Entity { get; set; }
         }
-        class RowData
-        {
-            public DataRow Row { get; set; }
-            public DataStructureEntity Entity { get; set; }
-        }
         private readonly SessionObjects sessionObjects;
         private readonly IStringLocalizer<SharedResources> localizer;
         private readonly IDataLookupService lookupService;
@@ -259,19 +254,32 @@ namespace Origam.ServerCore.Controller
         }
 
         [HttpPost("[action]")]
-        public IActionResult GetLookupListEx([FromBody]LookupListInput input)
+        public IActionResult GetLookupList([FromBody]LookupListInput input)
         {
-            return FindItem<FormReferenceMenuItem>(input.MenuId)
-                .OnSuccess(Authorize)
-                .OnSuccess(menuItem => CheckLookupIsAllowedInMenu(
-                    menuItem, input.LookupId))
-                .OnSuccess(menuItem => GetEntityData(
-                    input.DataStructureEntityId, menuItem))
-                .OnSuccess(CheckEntityBelongsToMenu)
-                .OnSuccess(entityData => GetRow(entityData.Entity, input.DataStructureEntityId, input.Id))
-                .OnSuccess(rowData => GetLookupRows(input, rowData))
-                .OnSuccess(ToActionResult)
-                .OnBoth<IActionResult,IActionResult>(UnwrapReturnValue);
+            //todo: implement GetFilterLookupList
+            if(input.SessionFormIdentifier == Guid.Empty)
+            {
+                return FindItem<FormReferenceMenuItem>(input.MenuId)
+                    .OnSuccess(Authorize)
+                    .OnSuccess(menuItem => CheckLookupIsAllowedInMenu(
+                        menuItem, input.LookupId))
+                    .OnSuccess(menuItem => GetEntityData(
+                        input.DataStructureEntityId, menuItem))
+                    .OnSuccess(CheckEntityBelongsToMenu)
+                    .OnSuccess(entityData => GetRow(
+                        entityData.Entity, input.DataStructureEntityId, input.Id))
+                    .OnSuccess(rowData => GetLookupRows(input, rowData))
+                    .OnSuccess(ToActionResult)
+                    .OnBoth<IActionResult,IActionResult>(UnwrapReturnValue);
+            }
+            else
+            {
+                return sessionObjects.UIService.GetRow(
+                        input.SessionFormIdentifier, input.Entity, input.Id)
+                    .OnSuccess(rowData => GetLookupRows(input, rowData))
+                    .OnSuccess(ToActionResult)
+                    .OnBoth<IActionResult,IActionResult>(UnwrapReturnValue);
+            }
         }
 
         [HttpPost("[action]")]

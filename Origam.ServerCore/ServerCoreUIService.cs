@@ -19,6 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Origam.DA;
 using Origam.Gui;
@@ -381,6 +383,30 @@ namespace Origam.ServerCore
                 input.ParameterMappings,
                 input.SelectedItems, 
                 input.InputParameters);
+        }
+        public Result<RowData, IActionResult> GetRow(
+            Guid sessionFormIdentifier, string entity, Guid rowId)
+        {
+            SessionStore sessionStore = null;
+            try
+            {
+                sessionStore 
+                    = sessionManager.GetSession(sessionFormIdentifier);
+            }
+            catch
+            {
+            }
+            if(sessionStore == null)
+            {
+                return Result.Ok<RowData, IActionResult>(
+                    new RowData{Row = null, Entity = null});
+            }
+            else
+            {
+                DataRow row = sessionStore.GetSessionRow(entity, rowId);
+                return Result.Ok<RowData, IActionResult>(
+                    new RowData{Row = row, Entity = null});
+            }
         }
         private bool IsRowDirty(DataRow row)
         {

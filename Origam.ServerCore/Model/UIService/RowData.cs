@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
@@ -19,17 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
+using Origam.Schema.EntityModel;
+using System.Data;
 
 namespace Origam.ServerCore.Model.UIService
 {
-    public class DeleteRowInput
+    public class RowData
     {
-        [RequiredNonDefault]
-        public Guid DataStructureEntityId { get; set; }
-        [RequiredNonDefault]
-        public Guid RowIdToDelete { get; set; }
-        [RequiredNonDefault]
-        public Guid MenuId { get; set; }
+        public DataRow Row { get; set; }
+        public DataStructureEntity Entity { get; set; }
     }
 }

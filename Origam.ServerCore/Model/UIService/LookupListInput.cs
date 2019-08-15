@@ -27,15 +27,16 @@ namespace Origam.ServerCore.Model.UIService
 {
     public class LookupListInput 
     {
-        [RequireNonDefault]
+        public Guid SessionFormIdentifier { get; set; } = Guid.Empty;
+        [RequiredNonDefault]
         public Guid DataStructureEntityId { get; set; }
+        public string Entity { get; set; }
         [Required]
         public string[] ColumnNames { get; set; }
         [Required]
         public string Property { get; set; }
-        [RequireNonDefault]
-        public Guid Id { get; set; }
-        [RequireNonDefault]
+        public Guid Id { get; set; } = Guid.Empty;
+        [RequiredNonDefault]
         public Guid LookupId { get; set; }
         public IDictionary<string, object> Parameters { get; set; }
         public bool ShowUniqueValues { get; set; }
@@ -44,7 +45,7 @@ namespace Origam.ServerCore.Model.UIService
         public int PageSize { get; set; } = -1;
         [Range(1, 10_000)]
         public int PageNumber { get; set; } = -1;
-        [RequireNonDefault]
+        [RequiredNonDefault]
         public Guid MenuId { get; set; }
     }
 }

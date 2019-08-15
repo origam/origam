@@ -26,7 +26,7 @@ namespace Origam.ServerCore.Model.Session
 {
     public class CreateSessionData
     {
-        [RequireNonDefault]
+        [RequiredNonDefault]
         public Guid MenuId { get; set; }
         public Dictionary<string, string> Parameters { get; set; }
     }

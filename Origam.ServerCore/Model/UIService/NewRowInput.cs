@@ -27,11 +27,11 @@ namespace Origam.ServerCore.Model.UIService
 {
     public class NewRowInput
     {
-        [RequireNonDefault]
+        [RequiredNonDefault]
         public Guid DataStructureEntityId { get; set; }
         [Required]
         public Dictionary<string, string> NewValues { get; set; }
-        [RequireNonDefault]
+        [RequiredNonDefault]
         public Guid MenuId { get; set; }
     }
 }

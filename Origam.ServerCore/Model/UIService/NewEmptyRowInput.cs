@@ -4,9 +4,9 @@ namespace Origam.ServerCore.Model.UIService
 {
     public class NewEmptyRowInput
     {
-        [RequireNonDefault]
+        [RequiredNonDefault]
         public Guid DataStructureEntityId { get; set; }
-        [RequireNonDefault]
+        [RequiredNonDefault]
         public Guid MenuId { get; set; }
     }
 }
