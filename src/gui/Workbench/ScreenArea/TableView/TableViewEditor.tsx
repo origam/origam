@@ -8,7 +8,7 @@ import { IProperty } from "../../../../model/entities/types/IProperty";
 import { BoolEditor } from "../../../Components/ScreenElements/Editors/BoolEditor";
 import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateTimeEditor";
 import { DropdownEditor } from "../../../Components/ScreenElements/Editors/DropdownEditor";
-import { TextEditor } from "../../../Components/ScreenElements/Editors/TextEditor";
+
 import { getSelectedProperty } from "../../../../model/selectors/TablePanelView/getSelectedProperty";
 import { getDataView } from "../../../../model/selectors/DataView/getDataView";
 import { getSelectedRow } from "../../../../model/selectors/DataView/getSelectedRow";
@@ -16,6 +16,8 @@ import {
   getCellValueByIdx,
   getCellValue
 } from "../../../../model/selectors/TablePanelView/getCellValue";
+import { TextEditor } from "gui/Components/ScreenElements/Editors/TextEditor";
+import { onFieldBlur } from "../../../../model/actions/DataView/TableView/onFieldBlur";
 
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -25,7 +27,8 @@ import {
     property,
     getCellValue: () => getCellValue(tablePanelView, row, property),
     onChange: (event: any, value: any) =>
-      onFieldChange(event, row, property, value)
+      onFieldChange(event, row, property, value),
+    onEditorBlur: (event: any) => onFieldBlur(tablePanelView)(event)
   };
 })
 @observer
@@ -33,6 +36,7 @@ export class TableViewEditor extends React.Component<{
   property?: IProperty;
   getCellValue?: () => any;
   onChange?: (event: any, value: any) => void;
+  onEditorBlur?: (event: any) => void;
 }> {
   getEditor() {
     switch (this.props.property!.column) {
@@ -48,6 +52,7 @@ export class TableViewEditor extends React.Component<{
             onChange={this.props.onChange}
             onKeyDown={undefined}
             onClick={undefined}
+            onEditorBlur={this.props.onEditorBlur}
           />
         );
       case "Date":

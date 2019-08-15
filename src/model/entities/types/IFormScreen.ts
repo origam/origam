@@ -18,7 +18,7 @@ export interface ILoadedFormScreenData {
   componentBindings: IComponentBinding[];
   screenUI: any;
   formScreenLifecycle: IFormScreenLifecycle;
-  
+  sessionId: string;
 }
 
 export interface ILoadedFormScreen extends ILoadedFormScreenData {
@@ -26,7 +26,7 @@ export interface ILoadedFormScreen extends ILoadedFormScreenData {
 
   isDirty: boolean;
   
-  sessionId: string;
+  
 
   isLoading: false;
   rootDataViews: IDataView[];

@@ -52,6 +52,7 @@ export const findFormRoot = (node: any) =>
 export function interpretScreenXml(
   screenDoc: any,
   formScreenLifecycle: IFormScreenLifecycle,
+  sessionId: string
 ) {
   console.log(screenDoc);
 
@@ -115,6 +116,7 @@ export function interpretScreenXml(
   const scr = new FormScreen({
     title: windowXml.attributes.Title,
     menuId: windowXml.attributes.MenuId,
+    sessionId,
     openingOrder: 0,
     showInfoPanel: windowXml.attributes.ShowInfoPanel === "true",
     autoRefreshInterval: parseInt(windowXml.attributes.AutoRefreshInterval, 10),

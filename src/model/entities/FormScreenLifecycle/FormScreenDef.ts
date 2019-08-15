@@ -1,4 +1,4 @@
-import { sInitUI, onInitUIDone, sFormScreenRunning } from "./constants";
+import { sInitUI, onInitUIDone, sFormScreenRunning, onFlushData, sFlushData, onFlushDataDone } from './constants';
 
 export const FormScreenDef = {
   initial: sInitUI,
@@ -12,6 +12,20 @@ export const FormScreenDef = {
         }
       }
     },
-    [sFormScreenRunning]: {}
+    [sFormScreenRunning]: {
+      on: {
+        [onFlushData]: {
+          target: sFlushData
+        }
+      }
+    },
+    [sFlushData]: {
+      invoke: {src: "flushData"},
+      on: {
+        [onFlushDataDone]: {
+          target: sFormScreenRunning
+        }
+      }
+    }
   }
 };

@@ -122,4 +122,11 @@ export interface IApi {
     DataRequested: boolean;
     ObjectId: string;
   }): Promise<any>;
+
+  updateObject(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    Id: string;
+    Values: {[key: string]: any}
+  }): Promise<any>;
 }

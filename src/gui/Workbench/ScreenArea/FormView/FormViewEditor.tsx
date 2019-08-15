@@ -2,11 +2,12 @@ import React from "react";
 import { observer, inject } from "mobx-react";
 import { IProperty } from "../../../../model/entities/types/IProperty";
 import { IPropertyColumn } from "../../../../model/entities/types/IPropertyColumn";
-import { TextEditor } from "../../../Components/ScreenElements/Editors/TextEditor";
+
 import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateTimeEditor";
 import moment from "moment";
 import { BoolEditor } from "../../../Components/ScreenElements/Editors/BoolEditor";
 import { DropdownEditor } from "../../../Components/ScreenElements/Editors/DropdownEditor";
+import { TextEditor } from "gui/Components/ScreenElements/Editors/TextEditor";
 
 @inject(({ property }) => {
   return { property };

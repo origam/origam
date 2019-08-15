@@ -225,6 +225,8 @@ export class OrigamAPI implements IApi {
     })).data;
   }
 
+
+  // TODO: Remove this method.
   async sessionUpdateEntity(data: {
     SessionFormIdentifier: string;
     Entity: string;
@@ -263,5 +265,16 @@ export class OrigamAPI implements IApi {
       ...data,
       menu: xmlJs.xml2js(data.menu, { addParent: true, alwaysChildren: true })
     };
+  }
+
+  async updateObject(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    Id: string;
+    Values: { [key: string]: any };
+  }): Promise<any> {
+    return (await axios.post(`${this.urlPrefix}/UIService/UpdateObject`, data, {
+      headers: this.httpAuthHeader
+    })).data;
   }
 }

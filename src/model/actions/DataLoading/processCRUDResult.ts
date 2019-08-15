@@ -1,5 +1,6 @@
 import { getDataViewByEntity } from "../../selectors/DataView/getDataViewByEntity";
 import { runInAction } from "mobx";
+import _ from "lodash";
 export enum IResponseOperation {
   DeleteAllData = -2,
   Delete = -1,
@@ -22,8 +23,10 @@ export interface ICRUDResult {
 
 export function processCRUDResult(ctx: any, result: ICRUDResult) {
   runInAction(() => {
-    // for (let resultItem of result) {
-    // TODO: Can it be an array?
+    if (_.isArray(result)) {
+      result.forEach(resultItem => processCRUDResult(ctx, resultItem));
+      return;
+    }
     const resultItem = result;
     switch (resultItem.operation) {
       case IResponseOperation.Update: {

@@ -155,6 +155,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     console.log(dataTable);
   }
 
+ // TODO: Remove
   *flushData() {
     const api = getApi(this);
     const dataTable = getDataTable(this);
@@ -245,6 +246,8 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     this.interpreter.send(loadData);
   }
 
+
+  // TODO: Remove
   @action.bound
   requestFlushData(): void {
     this.interpreter.send(flushData);

@@ -105,7 +105,6 @@ export class TablePanelView implements ITablePanelView {
     } else {
       const { isEditing } = this;
       if (isEditing) {
-        this.editingWillFinish();
         this.setEditing(false);
       }
       this.selectCell(this.dataTable.getRowId(row) as string, property.id);
@@ -118,7 +117,6 @@ export class TablePanelView implements ITablePanelView {
   @action.bound
   onNoCellClick(): void {
     if (this.isEditing) {
-      this.editingWillFinish();
       this.setEditing(false);
     }
   }
@@ -126,17 +124,8 @@ export class TablePanelView implements ITablePanelView {
   @action.bound
   onOutsideTableClick(): void {
     if (this.isEditing) {
-      this.editingWillFinish();
       this.setEditing(false);
     }
-  }
-
-  @action.bound editingWillFinish() {
-    this.dataTable.flushFormToTable(getSelectedRow(this)!);
-    getDataViewLifecycle(this).requestFlushData(
-      getSelectedRow(this)!,
-      this.selectedProperty!
-    );
   }
 
   @action.bound selectCell(
