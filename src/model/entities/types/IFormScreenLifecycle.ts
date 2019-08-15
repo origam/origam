@@ -7,6 +7,9 @@ export interface IFormScreenLifecycle extends IFormScreenLifecycleData {
   onCreateRow(entity: string, gridId: string): void;
   onDeleteRow(entity: string, rowId: string): void;
 
+  onSaveSession(): void;
+  onRefreshSession(): void;
+
   run(): void;
   parent?: any;
 }

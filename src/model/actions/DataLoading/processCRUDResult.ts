@@ -24,6 +24,7 @@ export interface ICRUDResult {
 }
 
 export function processCRUDResult(ctx: any, result: ICRUDResult) {
+  console.log('pcr', result)
   runInAction(() => {
     if (_.isArray(result)) {
       result.forEach(resultItem => processCRUDResult(ctx, resultItem));
@@ -64,6 +65,10 @@ export function processCRUDResult(ctx: any, result: ICRUDResult) {
           }
         }
         getFormScreen(ctx).setDirty(true);
+        break;
+      }
+      case IResponseOperation.FormSaved: {
+        getFormScreen(ctx).setDirty(false);
         break;
       }
       default:

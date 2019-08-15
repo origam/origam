@@ -19,9 +19,12 @@ import {
   onFlushData,
   onFlushDataDone,
   onInitUIDone,
-  onDeleteRowDone
+  onDeleteRowDone,
+  onSaveSession,
+  onRefreshSessionDone
 } from "./constants";
 import { FormScreenDef } from "./FormScreenDef";
+import { onRefreshSession, onSaveSessionDone } from "./constants";
 
 export class FormScreenLifecycle implements IFormScreenLifecycle {
   $type_IFormScreenLifecycle: 1 = 1;
@@ -34,7 +37,11 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
       createRow: (ctx, event) => (send, onEvent) =>
         flow(this.createRow.bind(this))(event.entity, event.gridId),
       deleteRow: (ctx, event) => (send, onEvent) =>
-        flow(this.deleteRow.bind(this))(event.entity, event.rowId)
+        flow(this.deleteRow.bind(this))(event.entity, event.rowId),
+      saveSession: (ctx, event) => (send, onEvent) =>
+        flow(this.saveSession.bind(this))(),
+      refreshSession: (ctx, event) => (send, onEvent) =>
+        flow(this.refreshSession.bind(this))()
     },
     actions: {
       applyInitUIResult: (ctx, event) => this.applyInitUIResult(event as any)
@@ -112,6 +119,21 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
     this.interpreter.send(onDeleteRowDone);
   }
 
+  *saveSession() {
+    const api = getApi(this);
+    yield api.saveSessionQuery(getSessionId(this));
+    const result = yield api.saveSession(getSessionId(this));
+    processCRUDResult(this, result);
+    this.interpreter.send(onSaveSessionDone);
+  }
+
+  *refreshSession() {
+    const api = getApi(this);
+    const result = yield api.refreshSession(getSessionId(this));
+    processCRUDResult(this, result);
+    this.interpreter.send(onRefreshSessionDone);
+  }
+
   @action.bound
   applyInitUIResult(args: { initUIResult: any }) {
     const openedScreen = getOpenedScreen(this);
@@ -146,6 +168,16 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
   @action.bound
   onDeleteRow(entity: string, rowId: string): void {
     this.interpreter.send({ type: onDeleteRow, entity, rowId });
+  }
+
+  @action.bound
+  onSaveSession(): void {
+    this.interpreter.send({ type: onSaveSession });
+  }
+
+  @action.bound
+  onRefreshSession(): void {
+    this.interpreter.send({ type: onRefreshSession });
   }
 
   *loadDataViews() {

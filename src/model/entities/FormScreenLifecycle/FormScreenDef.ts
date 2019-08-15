@@ -1,4 +1,12 @@
 import {
+  onSaveSession,
+  sSaveSession,
+  sRefreshSession,
+  onRefreshSession,
+  onSaveSessionDone,
+  onRefreshSessionDone
+} from "./constants";
+import {
   onCreateRow,
   onDeleteRow,
   sDeleteRow,
@@ -37,6 +45,12 @@ export const FormScreenDef = {
         },
         [onDeleteRow]: {
           target: sDeleteRow
+        },
+        [onSaveSession]: {
+          target: sSaveSession
+        },
+        [onRefreshSession]: {
+          target: sRefreshSession
         }
       }
     },
@@ -62,6 +76,18 @@ export const FormScreenDef = {
         [onDeleteRowDone]: {
           target: sFormScreenRunning
         }
+      }
+    },
+    [sSaveSession]: {
+      invoke: { src: "saveSession" },
+      on: {
+        [onSaveSessionDone]: sFormScreenRunning
+      }
+    },
+    [sRefreshSession]: {
+      invoke: { src: "refreshSession" },
+      on: {
+        [onRefreshSessionDone]: sFormScreenRunning
       }
     }
   }

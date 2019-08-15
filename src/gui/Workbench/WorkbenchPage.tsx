@@ -37,6 +37,8 @@ import { IApplication } from "model/entities/types/IApplication";
 import { getActivePanelView } from "model/selectors/DataView/getActivePanelView";
 import { getActiveScreen } from "../../model/selectors/getActiveScreen";
 import { isILoadedFormScreen } from "../../model/entities/types/IFormScreen";
+import { onSaveSessionClick } from "../../model/actions/onSaveSessionClick";
+import { onRefreshSessionClick } from "model/actions/onRefreshSessionClick";
 
 @inject(({ application }) => {
   const clientFulltextSearch = getClientFulltextSearch(application);
@@ -218,25 +220,26 @@ export const ToolbarSection: React.FC<{
 export const FormButtonsSection: React.FC<{}> = observer(props => {
   const application = useContext(MobXProviderContext)
     .application as IApplication;
-  const activePanelView = getActiveScreen(application);
-  const isDirty =
-    activePanelView &&
-    isILoadedFormScreen(activePanelView.content) &&
-    activePanelView.content.isDirty;
-  return (
+  const activeScreen = getActiveScreen(application);
+  const formScreen =
+    activeScreen && isILoadedFormScreen(activeScreen.content)
+      ? activeScreen.content
+      : undefined;
+  const isDirty = formScreen && formScreen.isDirty;
+  return formScreen ? (
     <ToolbarSection bottomLine="Form">
       {isDirty && (
-        <div className={S.actionItem}>
+        <div className={S.actionItem} onClick={onSaveSessionClick(formScreen)}>
           <i className="far fa-save icon" />
           <br />
           Save
         </div>
       )}
-      <div className={S.actionItem}>
+      <div className={S.actionItem} onClick={onRefreshSessionClick(formScreen)}>
         <i className="fas fa-redo icon" />
         <br />
         Reload
       </div>
     </ToolbarSection>
-  );
+  ) : null;
 });

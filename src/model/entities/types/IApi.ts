@@ -63,7 +63,9 @@ export interface IApi {
     InitializeStructure: boolean;
   }): Promise<any>;
 
-  saveSession(data: { SessionId: string }): Promise<any>;
+  saveSession(sessionFormIdentifier: string): Promise<any>;
+  saveSessionQuery(sessionFormIdentifier: string): Promise<any>;
+  refreshSession(sessionFormIdentifier: string): Promise<any>;
 
   sessionChangeMasterRecord(data: {
     SessionFormIdentifier: string;

@@ -169,14 +169,25 @@ export class OrigamAPI implements IApi {
 
   async deleteSession() {}
 
-  async saveSession(data: { SessionId: string }) {
-    return (await axios.post(`${this.urlPrefix}/Session/SaveData`, data, {
+  async saveSession(sessionFormIdentifier: string) {
+    return (await axios.get(`${this.urlPrefix}/UIService/SaveData`, {
+      params: { sessionFormIdentifier },
       headers: this.httpAuthHeader
     })).data;
   }
 
-  async reloadSession() {
-    // TODO
+  async saveSessionQuery(sessionFormIdentifier: string) {
+    return (await axios.get(`${this.urlPrefix}/UIService/SaveDataQuery`, {
+      params: { sessionFormIdentifier },
+      headers: this.httpAuthHeader
+    })).data;
+  }
+
+  async refreshSession(sessionFormIdentifier: string) {
+    return (await axios.get(`${this.urlPrefix}/UIService/RefreshData`, {
+      params: { sessionFormIdentifier },
+      headers: this.httpAuthHeader
+    })).data;
   }
 
   async sessionChangeMasterRecord(data: {

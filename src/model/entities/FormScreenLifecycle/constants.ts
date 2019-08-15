@@ -1,19 +1,27 @@
-
-export const onFlushData = "onFlushData";
+export const sFlushData = "sFlushData";
 export const onFlushDataDone = "onFlushDataDone";
 
+export const sInitUI = "sInitUI";
 export const onInitUIDone = "onInitUIDone";
 
-export const onCreateRow = "onCreateRow";
+export const sCreateRow = "sCreateRow";
 export const onCreateRowDone = "onCreateRowDone";
 
-export const onDeleteRow = "onDeleteRow";
+export const sDeleteRow = "sDeleteRow";
 export const onDeleteRowDone = "onDeleteRowDone";
 
-export const sInitUI = "sInitUI";
 export const sFormScreenRunning = "sFormScreenRunning";
+export const onCreateRow = "onCreateRow";
+export const onDeleteRow = "onDeleteRow";
+export const onFlushData = "onFlushData";
+export const onSaveSession = "onSaveSession";
+export const onRefreshSession = "onRefreshSession";
 
-export const sFlushData = "sFlushData";
+export const sSaveSession = "sSaveSession";
+export const onSaveSessionDone = "onSaveSessionDone";
 
-export const sCreateRow = "sCreateRow";
-export const sDeleteRow = "sDeleteRow";
+export const sRefreshSession = "sRefreshSession";
+export const onRefreshSessionDone = "onRefreshSessionDone";
+
+export const sDestroySession = "sDestroySession";
+export const onDestroySessionDone = "onDestroySessionDone";
