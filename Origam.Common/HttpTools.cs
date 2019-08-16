@@ -337,7 +337,8 @@ namespace Origam
 			bool ignoreHTTPSErrors)
 		{
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 |
-			                                       SecurityProtocolType.Tls11;
+			                                       SecurityProtocolType.Tls11 |
+                                                   SecurityProtocolType.Tls;
 			
 			WebRequest request = WebRequest.Create(url);
             HttpWebRequest httpWebRequest = request as HttpWebRequest;
