@@ -1,0 +1,55 @@
+.searchResultsPanel {
+  padding: 10px;
+}
+
+.searchResultsSectionLabel {
+  font-weight: bold;
+  min-height: 20px;
+}
+
+.searchResultItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 5px;
+}
+
+.searchResultItem:hover {
+  background-color: #8998c5;
+  color: white;
+  cursor: pointer;
+}
+
+.searchResultItemIcon {
+  width: 40px;
+  min-height: 40px;
+  margin-right:10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.searchResultItemIcon :global(.icon) {
+  font-size: 25px;
+}
+
+.searchResultItemText {
+  display: flex;
+  flex-direction: column;
+  min-height: 35px;
+}
+
+.searchResultItemLabel {
+  font-weight: bold;
+  flex-grow: 1;
+  align-items: center;
+  display: flex;
+}
+
+.searchResultItemDescription {
+  font-style: italic;
+  flex-grow: 1;
+  align-items: center;
+  display: flex;
+}

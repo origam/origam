@@ -1,0 +1,133 @@
+.dataViewToolbar {
+  height: 20px;
+  background-color: #8998c5;
+  color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  white-space: nowrap;
+}
+
+.dataViewToolbar :global(.red) {
+  color: #ff0000;
+  text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff,
+    1px 1px 0 #fff;
+}
+
+.section {
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  flex-direction: row;
+}
+
+.loading {
+  font-size: 14px;
+  padding-right: 10px;
+  color: white;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+.label {
+  display: flex;
+  font-weight: bold;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.pusher {
+  flex-grow: 1;
+}
+
+.toolbarBtn {
+  height: 100%;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+}
+
+.toolbarBtn:global(.active) {
+  background-color: #435ba3;
+}
+
+.toolbarBtn:global(:hover:not(.disabled)) {
+  background-color: #435ba3;
+}
+
+.toolbarBtn:global(.disabled) {
+  color: #d6d6d6;
+}
+
+.toolbarBtn:global(.disabled):hover {
+  background-color: inherit;
+}
+
+.dropDownMenuRoot {
+  position: relative;
+  display: inline;
+}
+
+.dropDownMenu {
+  background-color: white;
+  border: 1px solid black;
+
+  position: absolute;
+  z-index: 2000;
+  right: 0;
+  top: 20;
+}
+
+.dropDownMenuItem {
+  padding: 0px 10px 0px 5px;
+  color: black;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dropDownMenuItem:global(.disabled) {
+  color: lightgray;
+  cursor: default;
+}
+
+.dropDownMenuItem > i {
+  padding-right: 10px;
+}
+
+.dropDownMenuItem:not(:global(.disabled)):hover {
+  background-color: #8998c5;
+  color: white;
+}
+
+.dropDownItemIcon {
+  display: flex;
+  width: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropDownMenuDivider {
+  height: 1px;
+  border: 1px solid lightgray;
+}
+
+.panelViewAction {
+  color: white;
+  background-color: darkred;
+  height: 100%;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding: 0px 10px 0px 10px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.panelViewAction:global(.disabled) {
+  color: #707ea8;
+  background-color: rgba(139, 0, 0, 0.6);
+  cursor: not-allowed;
+}
