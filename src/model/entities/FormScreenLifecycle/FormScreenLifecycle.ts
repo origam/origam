@@ -130,7 +130,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
   *refreshSession() {
     const api = getApi(this);
     const result = yield api.refreshSession(getSessionId(this));
-    processCRUDResult(this, result);
+    // processCRUDResult(this, result);
     this.interpreter.send(onRefreshSessionDone);
   }
 

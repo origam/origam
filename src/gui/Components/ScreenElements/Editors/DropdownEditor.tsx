@@ -37,6 +37,8 @@ export interface IDropdownEditorProps {
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
   api?: IApi;
+
+  onEditorBlur?(event: any): void;
 }
 
 // TODO: Change connection for FormView - e.g. RowId may be found differently for different panel views.
