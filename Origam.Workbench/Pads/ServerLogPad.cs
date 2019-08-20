@@ -135,7 +135,8 @@ namespace Origam.Workbench.Pads
                     return;
                 }
                 ServicePointManager.SecurityProtocol =
-                    SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
+                    SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11
+                    | SecurityProtocolType.Tls;
 
                 HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(
                     url);
@@ -220,7 +221,8 @@ namespace Origam.Workbench.Pads
         private static int GetFileSize(string url)
         {
             ServicePointManager.SecurityProtocol =
-                SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
+                SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11
+                | SecurityProtocolType.Tls;
                                                    
             int size;
             HttpWebRequest headRequest = (HttpWebRequest)HttpWebRequest.Create(
