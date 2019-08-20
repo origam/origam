@@ -38,7 +38,7 @@ namespace Origam.ServerCoreTests
     {
         protected readonly SessionObjects sessionObjects;
         protected readonly ControllerContext context;
-        private readonly DataController dataController;
+        private readonly UIServiceController uiServiceController;
 
         protected ControllerTests()
         {
@@ -63,8 +63,12 @@ namespace Origam.ServerCoreTests
             };
             Thread.CurrentPrincipal = principal;
 
-            dataController = new DataController(new NullLogger<AbstractController>());
-            dataController.ControllerContext = context;
+            uiServiceController = new UIServiceController(
+                sessionObjects,
+                null,
+                null,
+                new NullLogger<AbstractController>());
+            uiServiceController.ControllerContext = context;
         }
 
         protected void AssertObjectIsPersisted(Guid menuId, Guid dataStructureId, Guid id,
@@ -75,7 +79,7 @@ namespace Origam.ServerCoreTests
                 throw new Exception("columnValues must have the same length as columnNames");
             }
 
-            IActionResult entitiesActionResult = dataController.GetRows(new GetRowsData
+            IActionResult entitiesActionResult = uiServiceController.GetRows(new GetRowsInput
             {
                 MenuId = menuId,
                 DataStructureEntityId = dataStructureId,
