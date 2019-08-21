@@ -83,6 +83,8 @@ class DroppedBox extends React.Component<{
 
 @observer
 export class Dropdowner extends React.Component<{
+  className?: string;
+  style?: any;
   trigger: (args: {
     refTrigger: any;
     measure: () => void;
@@ -90,6 +92,7 @@ export class Dropdowner extends React.Component<{
   }) => React.ReactNode;
   content: (args: { setDropped: (state: boolean) => void }) => React.ReactNode;
   onDroppedDown?: () => void;
+  onContainerMouseDown?(event: any): void;
 }> {
   refMeasTrigger = (elm: any) => (this.elmMeasTrigger = elm);
   elmMeasTrigger: any | null = null;
@@ -142,7 +145,14 @@ export class Dropdowner extends React.Component<{
             }) => (
               <Observer>
                 {() => (
-                  <>
+                  <div
+                    className={
+                      S.dropdownerContainer +
+                      (this.props.className ? ` ${this.props.className}` : "")
+                    }
+                    style={this.props.style}
+                    onMouseDown={this.props.onContainerMouseDown}
+                  >
                     {this.props.trigger({
                       refTrigger: mRefTrigger,
                       measure: this.reMeasure,
@@ -160,7 +170,7 @@ export class Dropdowner extends React.Component<{
                         {this.props.content({ setDropped: this.setDropped })}
                       </DroppedBox>
                     )}
-                  </>
+                  </div>
                 )}
               </Observer>
             )}

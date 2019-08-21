@@ -8,15 +8,20 @@ import moment from "moment";
 import { BoolEditor } from "../../../Components/ScreenElements/Editors/BoolEditor";
 import { DropdownEditor } from "../../../Components/ScreenElements/Editors/DropdownEditor";
 import { TextEditor } from "gui/Components/ScreenElements/Editors/TextEditor";
+import { onFieldBlur } from "model/actions/DataView/TableView/onFieldBlur";
 
-@inject(({ property }) => {
-  return { property };
+@inject(({ property, formPanelView }) => {
+  return {
+    property,
+    onEditorBlur: (event: any) => onFieldBlur(formPanelView)(event)
+  };
 })
 @observer
 export class FormViewEditor extends React.Component<{
   value?: any;
   textualValue?: any;
   property?: IProperty;
+  onEditorBlur?: (event: any) => void;
 }> {
   getEditor() {
     switch (this.props.property!.column) {
@@ -32,6 +37,7 @@ export class FormViewEditor extends React.Component<{
             onChange={undefined}
             onKeyDown={undefined}
             onClick={undefined}
+            onEditorBlur={this.props.onEditorBlur}
           />
         );
       case "Date":
@@ -74,6 +80,7 @@ export class FormViewEditor extends React.Component<{
             LookupId={""}
             menuItemId={""}
             api={undefined}
+            onEditorBlur={this.props.onEditorBlur}
           />
         );
       default:

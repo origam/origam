@@ -88,6 +88,7 @@ export class TableViewEditor extends React.Component<{
             isFocused={false}
             onTextChange={undefined}
             onItemSelect={this.props.onChange}
+            onEditorBlur={this.props.onEditorBlur}
             // DataStructureEntityId={""}
             // ColumnNames={[]}
             // Property={""}

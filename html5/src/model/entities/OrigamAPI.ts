@@ -249,7 +249,7 @@ export class OrigamAPI implements IApi {
     })).data;
   }
 
-  async getLookupListEx(data: {
+  async getLookupList(data: {
     DataStructureEntityId: string;
     ColumnNames: string[];
     Property: string;
@@ -261,7 +261,7 @@ export class OrigamAPI implements IApi {
     PageNumber: number;
     MenuId: string;
   }): Promise<any> {
-    return (await axios.post(`${this.urlPrefix}/Data/GetLookupListEx`, data, {
+    return (await axios.post(`${this.urlPrefix}/UIService/GetLookupList`, data, {
       headers: this.httpAuthHeader
     })).data;
   }

@@ -6,3 +6,8 @@
   flex-direction: column;
   background-color: #e5e5e5;
 }
+
+.formViewForm {
+  height: 100%;
+  display: flex;
+}

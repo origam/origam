@@ -1,12 +1,31 @@
+import S from "./FormRoot.module.css";
 import React from "react";
-import S from './FormRoot.module.css'
+import { observer } from "mobx-react";
+import { action } from "mobx";
 
-export class FormRoot extends React.Component {
+@observer
+export class FormRoot extends React.Component<{}> {
+  componentDidMount() {
+    window.addEventListener("click", this.handleWindowClick);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("click", this.handleWindowClick);
+  }
+
+  @action.bound handleWindowClick(event: any) {
+    if (this.elmFormRoot && !this.elmFormRoot.contains(event.target)) {
+    }
+  }
+
+  elmFormRoot: HTMLDivElement | null = null;
+  refFormRoot = (elm: HTMLDivElement | null) => (this.elmFormRoot = elm);
+
   render() {
     return (
-      <div className={S.formRoot}>
+      <div ref={this.refFormRoot} className={S.formRoot} onClick={undefined}>
         {this.props.children}
       </div>
-    )
+    );
   }
 }

@@ -151,7 +151,9 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
       const dataView = getDataViewByEntity(screen, entityKey);
       if (dataView) {
         dataView.dataTable.setRecords((entityValue as any).data);
+        dataView.selectFirstRow();
       }
+      
     }
   }
 

@@ -102,7 +102,7 @@ export interface IApi {
     RowId: string;
   }): Promise<any>;
 
-  getLookupListEx(data: {
+  getLookupList(data: {
     DataStructureEntityId: string;
     ColumnNames: string[];
     Property: string;
