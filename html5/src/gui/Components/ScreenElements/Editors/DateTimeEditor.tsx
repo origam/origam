@@ -5,6 +5,7 @@ import CS from "./CommonStyle.module.css";
 import { action, observable, computed, runInAction } from "mobx";
 import moment from "moment";
 import { Tooltip } from "react-tippy";
+import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 
 @observer
 class CalendarWidget extends React.Component<{
@@ -151,6 +152,7 @@ export class DateTimeEditor extends React.Component<{
   isFocused?: boolean;
   onChange?: (event: any, isoDay: string) => void;
   onClick?: (event: any) => void;
+  onEditorBlur?: (event: any) => void;
   refocuser?: (cb: () => void) => () => void;
 }> {
   @observable isDroppedDown = false;
@@ -215,6 +217,15 @@ export class DateTimeEditor extends React.Component<{
     }
   }
 
+  @action.bound handleInputBlur(event: any) {
+    this.props.onEditorBlur && this.props.onEditorBlur(event);
+  }
+
+  @action.bound handleContainerMouseDown(event: any) {
+    event.preventDefault();
+    this.elmInput && this.elmInput.focus();
+  }
+
   refContainer = (elm: HTMLDivElement | null) => (this.elmContainer = elm);
   elmContainer: HTMLDivElement | null = null;
   refInput = (elm: HTMLInputElement | null) => (this.elmInput = elm);
@@ -269,49 +280,59 @@ export class DateTimeEditor extends React.Component<{
 
   render() {
     return (
-      <div
-        className={CS.editorContainer}
-        ref={this.refContainer}
-        style={{
-          zIndex: this.isDroppedDown ? 1000 : undefined
-        }}
-      >
-        <Tooltip
-          html={
-            <div>
-              <div>{this.formattedMomentValue}</div>
-              <div>"{this.props.outputFormat}"</div>
-            </div>
-          }
-          position="top"
-          arrow={true}
-          trigger="manual"
-          open={this.isTooltipShown}
-        >
-          <input
-            className={CS.editor}
-            type="text"
-            /*value={moment(this.props.value, this.props.inputFormat).format(
+      <Dropdowner
+        onContainerMouseDown={this.handleContainerMouseDown}
+        trigger={({ refTrigger, setDropped }) => (
+          <div
+            className={CS.editorContainer}
+            ref={this.refContainer}
+            style={{
+              zIndex: this.isDroppedDown ? 1000 : undefined
+            }}
+          >
+            <Tooltip
+              html={
+                <div>
+                  <div>{this.formattedMomentValue}</div>
+                  <div>"{this.props.outputFormat}"</div>
+                </div>
+              }
+              position="top"
+              arrow={true}
+              trigger="manual"
+              open={this.isTooltipShown}
+            >
+              <input
+                className={CS.editor}
+                type="text"
+                onBlur={this.handleInputBlur}
+                /*value={moment(this.props.value, this.props.inputFormat).format(
             this.props.outputFormat
           )}*/
-            ref={this.refInput}
-            value={this.textfieldValue}
-            readOnly={this.props.isReadOnly}
-            onChange={this.handleTextfieldChange}
-            onClick={this.props.onClick}
-          />
-        </Tooltip>
-        {this.props.isInvalid && (
-          <div className={CS.notification}>
-            <i className="fas fa-exclamation-circle red" />
+                ref={this.refInput}
+                value={this.textfieldValue}
+                readOnly={this.props.isReadOnly}
+                onChange={this.handleTextfieldChange}
+                onClick={this.props.onClick}
+              />
+            </Tooltip>
+            {this.props.isInvalid && (
+              <div className={CS.notification}>
+                <i className="fas fa-exclamation-circle red" />
+              </div>
+            )}
+            {!this.props.isReadOnly && (
+              <div
+                className={S.dropdownSymbol}
+                onMouseDown={() => setDropped(true)}
+                ref={refTrigger}
+              >
+                <i className="far fa-calendar-alt" />
+              </div>
+            )}
           </div>
         )}
-        {!this.props.isReadOnly && (
-          <div className={S.dropdownSymbol} onClick={this.handleDropperClick}>
-            <i className="far fa-calendar-alt" />
-          </div>
-        )}
-        {this.isDroppedDown && (
+        content={({}) => (
           <div className={S.droppedPanelContainer}>
             <CalendarWidget
               onDayClick={this.handleDayClick}
@@ -320,7 +341,7 @@ export class DateTimeEditor extends React.Component<{
             />
           </div>
         )}
-      </div>
+      />
     );
   }
 }

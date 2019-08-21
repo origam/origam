@@ -66,6 +66,7 @@ export class TableViewEditor extends React.Component<{
             refocuser={undefined}
             onChange={this.props.onChange}
             onClick={undefined}
+            onEditorBlur={this.props.onEditorBlur}
           />
         );
       case "CheckBox":

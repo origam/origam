@@ -108,9 +108,13 @@ export class OrigamAPI implements IApi {
     MenuId: string;
     LabelIds: string[];
   }) {
-    return (await axios.post(`${this.urlPrefix}/Data/GetLookupLabels`, query, {
-      headers: this.httpAuthHeader
-    })).data;
+    return (await axios.post(
+      `${this.urlPrefix}/UIService/GetLookupLabels`,
+      query,
+      {
+        headers: this.httpAuthHeader
+      }
+    )).data;
   }
 
   async newEntity(data: { DataStructureEntityId: string; MenuId: string }) {
@@ -261,9 +265,13 @@ export class OrigamAPI implements IApi {
     PageNumber: number;
     MenuId: string;
   }): Promise<any> {
-    return (await axios.post(`${this.urlPrefix}/UIService/GetLookupList`, data, {
-      headers: this.httpAuthHeader
-    })).data;
+    return (await axios.post(
+      `${this.urlPrefix}/UIService/GetLookupList`,
+      data,
+      {
+        headers: this.httpAuthHeader
+      }
+    )).data;
   }
 
   async initPortal(): Promise<any> {
