@@ -1,4 +1,4 @@
-import { action, createAtom, flow, when } from "mobx";
+import { action, createAtom, flow, when, runInAction, computed } from "mobx";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 import { getDataViewByEntity } from "model/selectors/DataView/getDataViewByEntity";
 import { getMenuItemType } from "model/selectors/getMenuItemType";
@@ -24,7 +24,11 @@ import {
   onRefreshSessionDone
 } from "./constants";
 import { FormScreenDef } from "./FormScreenDef";
-import { onRefreshSession, onSaveSessionDone } from "./constants";
+import {
+  onRefreshSession,
+  onSaveSessionDone,
+  sFormScreenRunning
+} from "./constants";
 
 export class FormScreenLifecycle implements IFormScreenLifecycle {
   $type_IFormScreenLifecycle: 1 = 1;
@@ -57,6 +61,10 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
   get state() {
     this.stateAtom.reportObserved();
     return this.interpreter.state;
+  }
+
+  @computed get isWorking() {
+    return !this.state.matches(sFormScreenRunning);
   }
 
   *initUI() {
@@ -153,13 +161,17 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
         dataView.dataTable.setRecords((entityValue as any).data);
         dataView.selectFirstRow();
       }
-      
     }
   }
 
+  onFlushDataWaiting: any;
   @action.bound
-  onFlushData(): void {
-    this.interpreter.send(onFlushData);
+  async onFlushData(): Promise<any> {
+    this.onFlushDataWaiting && this.onFlushDataWaiting.cancel();
+    this.isWorking &&
+      (await (this.onFlushDataWaiting = when(() => !this.isWorking)));
+      // TODO: Exec only when not in error?
+    runInAction(() => this.interpreter.send(onFlushData));
   }
 
   @action.bound

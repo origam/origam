@@ -16,6 +16,8 @@ import { IProperty } from "../../../../model/entities/types/IProperty";
 import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/getSelectedRowId";
 import { getMenuItemId } from "../../../../model/selectors/getMenuItemId";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
+import { getEntity } from "../../../../model/selectors/DataView/getEntity";
+import { getSessionId } from "model/selectors/getSessionId";
 
 export interface IDropdownEditorProps {
   value: string;
@@ -24,6 +26,8 @@ export interface IDropdownEditorProps {
   isInvalid: boolean;
   isFocused: boolean;
 
+  Entity?: string;
+  SessionFormIdentifier?: string;
   DataStructureEntityId?: string;
   ColumnNames?: string[];
   Property?: string;
@@ -53,7 +57,9 @@ export interface IDropdownEditorProps {
     Property: property.id,
     RowId: getSelectedRowId(property),
     LookupId: lookup.lookupId,
-    menuItemId: getMenuItemId(property)
+    menuItemId: getMenuItemId(property),
+    Entity: getEntity(property),
+    SessionFormIdentifier: getSessionId(property)
   };
 })
 @observer
@@ -133,7 +139,9 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     this.isLoading = true;
     this.api
       .getLookupList({
-        DataStructureEntityId: this.props.DataStructureEntityId || "", // Data view entity identifier
+        Entity: this.props.Entity,
+        SessionFormIdentifier: this.props.SessionFormIdentifier,
+        DataStructureEntityId: this.props.DataStructureEntityId, // Data view entity identifier
         ColumnNames: ["Id", ...this.props.ColumnNames], // Columns to download
         Property: this.props.Property!, // Columnn Id
         Id: this.props.RowId!, // Id of the selected row

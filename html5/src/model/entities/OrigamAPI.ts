@@ -254,7 +254,9 @@ export class OrigamAPI implements IApi {
   }
 
   async getLookupList(data: {
-    DataStructureEntityId: string;
+    DataStructureEntityId?: string;
+    FormSessionIdentifier?: string;
+    Entity?: string;
     ColumnNames: string[];
     Property: string;
     Id: string;

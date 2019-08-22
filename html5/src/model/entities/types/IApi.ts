@@ -103,7 +103,9 @@ export interface IApi {
   }): Promise<any>;
 
   getLookupList(data: {
-    DataStructureEntityId: string;
+    SessionFormIdentifier?: string;
+    Entity?: string;
+    DataStructureEntityId?: string;
     ColumnNames: string[];
     Property: string;
     Id: string;
