@@ -408,6 +408,52 @@ namespace Origam.ServerCore
                     new RowData{Row = row, Entity = null});
             }
         }
+        public UIResult WorkflowNext(WorkflowNextInput workflowNextInput)
+        {
+            WorkflowSessionStore workflowSessionStore 
+                = sessionManager.GetSession(
+                    workflowNextInput.SessionFormIdentifier) 
+                as WorkflowSessionStore;
+            return (UIResult)workflowSessionStore.ExecuteAction(
+                SessionStore.ACTION_NEXT, workflowNextInput.CachedFormIds);
+        }
+        public RuleExceptionDataCollection WorkflowNextQuery(
+            Guid sessionFormIdentifier)
+        {
+            SessionStore sessionStore = sessionManager.GetSession(
+                sessionFormIdentifier);
+            return (RuleExceptionDataCollection)sessionStore.ExecuteAction(
+                SessionStore.ACTION_QUERYNEXT);
+        }
+        public UIResult WorkflowAbort(
+            Guid sessionFormIdentifier)
+        {
+            SessionStore sessionStore = sessionManager.GetSession(
+                sessionFormIdentifier);
+            return (UIResult)sessionStore.ExecuteAction(
+                SessionStore.ACTION_ABORT); 
+        }
+        public UIResult WorkflowRepeat(
+            Guid sessionFormIdentifier,
+            IStringLocalizer<SharedResources> localizer)
+        {
+            if(!(sessionManager.GetSession(sessionFormIdentifier) 
+                is WorkflowSessionStore workflowSessionStore))
+            {
+                throw new Exception(localizer["ErrorWorkflowSessionInvalid"]);
+            }
+            UIRequest request = new UIRequest
+                {
+                    FormSessionId = null,
+                    IsStandalone = workflowSessionStore.Request.IsStandalone,
+                    ObjectId = workflowSessionStore.Request.ObjectId,
+                    Type = workflowSessionStore.Request.Type,
+                    Icon = workflowSessionStore.Request.Icon,
+                    Caption = workflowSessionStore.Request.Caption
+                };
+            DestroyUI(sessionFormIdentifier);
+            return InitUI(request);
+        }
         private bool IsRowDirty(DataRow row)
         {
             if(row.RowState != DataRowState.Unchanged)
