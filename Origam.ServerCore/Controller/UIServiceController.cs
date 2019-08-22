@@ -364,6 +364,49 @@ namespace Origam.ServerCore.Controller
                     .OnSuccess(ThrowAwayReturnData)
                     .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
+
+        [HttpGet("[action]")]
+        public IActionResult WorkflowNextQuery(
+            [FromQuery][Required]Guid sessionFormIdentifier)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                return Ok(sessionObjects.UIService.WorkflowNextQuery(
+                    sessionFormIdentifier));
+            });
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult WorkflowNext(
+            [FromBody][Required]WorkflowNextInput input)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                return Ok(sessionObjects.UIService.WorkflowNext(input));
+            });
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult WorkflowAbort(
+            [FromQuery][Required]Guid sessionFormIdentifier)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                return Ok(sessionObjects.UIService.WorkflowAbort(
+                    sessionFormIdentifier));
+            });
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult WorkflowRepeat(
+            [FromQuery][Required]Guid sessionFormIdentifier)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                return Ok(sessionObjects.UIService.WorkflowRepeat(
+                    sessionFormIdentifier, localizer));
+            });
+        }
         private IActionResult RunWithErrorHandler(Func<IActionResult> func)
         {
             try

@@ -120,4 +120,7 @@
   <data name="ErrorRefreshReturnInvalid" xml:space="preserve">
     <value>Invalid data returned by {0} for action {1}.</value>
   </data>
+  <data name="ErrorWorkflowSessionInvalid" xml:space="preserve">
+    <value>Workflow session invalid.</value>
+  </data>
 </root>

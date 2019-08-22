@@ -28,7 +28,6 @@ namespace Origam.ServerCore.Model.UIService
     public class LookupListInput 
     {
         public Guid SessionFormIdentifier { get; set; } = Guid.Empty;
-        [RequiredNonDefault]
         public Guid DataStructureEntityId { get; set; }
         public string Entity { get; set; }
         [Required]
