@@ -151,7 +151,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
   *refreshSession() {
     const api = getApi(this);
     const result = yield api.refreshSession(getSessionId(this));
-    // processCRUDResult(this, result);
+    this.applyData(result);
     this.interpreter.send(onRefreshSessionDone);
   }
 
@@ -200,12 +200,15 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
       args.initUIResult.sessionId
     );
     openedScreen.setContent(screen);
-    for (let [entityKey, entityValue] of Object.entries(
-      args.initUIResult.data
-    )) {
+    this.applyData(args.initUIResult.data);
+  }
+
+  @action.bound applyData(data: any) {
+    for (let [entityKey, entityValue] of Object.entries(data)) {
       console.log(entityKey, entityValue);
-      const dataView = getDataViewByEntity(screen, entityKey);
+      const dataView = getDataViewByEntity(this, entityKey);
       if (dataView) {
+        dataView.dataTable.clear();
         dataView.dataTable.setRecords((entityValue as any).data);
         dataView.selectFirstRow();
       }
