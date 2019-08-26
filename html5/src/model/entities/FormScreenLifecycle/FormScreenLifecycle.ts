@@ -24,11 +24,15 @@ import {
   onRefreshSessionDone
 } from "./constants";
 import { FormScreenDef } from "./FormScreenDef";
+import { IAction } from "model/entities/types/IAction";
+import { onExecuteAction, onExecuteActionDone } from "./constants";
 import {
   onRefreshSession,
   onSaveSessionDone,
   sFormScreenRunning
 } from "./constants";
+import { processActionResult } from "model/actions/Actions/processActionResult";
+import { getScreenParameters } from "../../selectors/FormScreen/getScreenParameters";
 
 export class FormScreenLifecycle implements IFormScreenLifecycle {
   $type_IFormScreenLifecycle: 1 = 1;
@@ -45,7 +49,14 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
       saveSession: (ctx, event) => (send, onEvent) =>
         flow(this.saveSession.bind(this))(),
       refreshSession: (ctx, event) => (send, onEvent) =>
-        flow(this.refreshSession.bind(this))()
+        flow(this.refreshSession.bind(this))(),
+      executeAction: (ctx, event) => (send, onEvent) =>
+        flow(this.executeAction.bind(this))(
+          event.gridId,
+          event.entity,
+          event.action,
+          event.selectedItems
+        )
     },
     actions: {
       applyInitUIResult: (ctx, event) => this.applyInitUIResult(event as any)
@@ -72,13 +83,15 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
     const openedScreen = getOpenedScreen(this);
     const menuItemId = getMenuItemId(this);
     const menuItemType = getMenuItemType(this);
+    const parameters = getScreenParameters(this);
     const initUIResult = yield api.initUI({
       Type: menuItemType,
       ObjectId: menuItemId,
       FormSessionId: undefined,
       IsNewSession: true,
       RegisterSession: true,
-      DataRequested: !openedScreen.dontRequestData
+      DataRequested: !openedScreen.dontRequestData,
+      Parameters: parameters
     });
     console.log(initUIResult);
     this.interpreter.send({ type: onInitUIDone, initUIResult });
@@ -142,6 +155,41 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
     this.interpreter.send(onRefreshSessionDone);
   }
 
+  *executeAction(
+    gridId: string,
+    entity: string,
+    action: IAction,
+    selectedItems: string[]
+  ) {
+    const api = getApi(this);
+    const queryResult = yield api.executeActionQuery({
+      SessionFormIdentifier: getSessionId(this),
+      Entity: entity,
+      ActionType: action.type,
+      ActionId: action.id,
+      ParameterMappings: {},
+      SelectedItems: selectedItems,
+      InputParameters: {}
+    });
+    console.log("EAQ", queryResult);
+
+    const result = yield api.executeAction({
+      SessionFormIdentifier: getSessionId(this),
+      Entity: entity,
+      ActionType: action.type,
+      ActionId: action.id,
+      ParameterMappings: {},
+      SelectedItems: selectedItems,
+      InputParameters: {},
+      RequestingGrid: gridId
+    });
+    console.log("EA", result);
+
+    processActionResult(action)(result);
+
+    this.interpreter.send(onExecuteActionDone);
+  }
+
   @action.bound
   applyInitUIResult(args: { initUIResult: any }) {
     const openedScreen = getOpenedScreen(this);
@@ -170,7 +218,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
     this.onFlushDataWaiting && this.onFlushDataWaiting.cancel();
     this.isWorking &&
       (await (this.onFlushDataWaiting = when(() => !this.isWorking)));
-      // TODO: Exec only when not in error?
+    // TODO: Exec only when not in error?
     runInAction(() => this.interpreter.send(onFlushData));
   }
 
@@ -192,6 +240,23 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
   @action.bound
   onRefreshSession(): void {
     this.interpreter.send({ type: onRefreshSession });
+  }
+
+  @action.bound
+  async onExecuteAction(
+    gridId: string,
+    entity: string,
+    action: IAction,
+    selectedItems: string[]
+  ): Promise<any> {
+    this.interpreter.send({
+      type: onExecuteAction,
+      gridId,
+      entity,
+      action,
+      selectedItems
+    });
+    await when(() => !this.isWorking);
   }
 
   *loadDataViews() {

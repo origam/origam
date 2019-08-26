@@ -16,6 +16,7 @@ export const onDeleteRow = "onDeleteRow";
 export const onFlushData = "onFlushData";
 export const onSaveSession = "onSaveSession";
 export const onRefreshSession = "onRefreshSession";
+export const onExecuteAction = "onExecuteAction";
 
 export const sSaveSession = "sSaveSession";
 export const onSaveSessionDone = "onSaveSessionDone";
@@ -25,3 +26,6 @@ export const onRefreshSessionDone = "onRefreshSessionDone";
 
 export const sDestroySession = "sDestroySession";
 export const onDestroySessionDone = "onDestroySessionDone";
+
+export const sExecuteAction = "sExecuteAction";
+export const onExecuteActionDone = "onExecuteActionDone";

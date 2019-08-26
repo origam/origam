@@ -1,5 +1,5 @@
 import { IFormScreen } from "./IFormScreen";
-import { IMainMenuItemType } from './IMainMenu';
+import { IMainMenuItemType } from "./IMainMenu";
 
 export interface IDialogInfo {
   width: number;
@@ -14,6 +14,7 @@ export interface IOpenedScreenData {
   order: number;
   title: string;
   content: IFormScreen;
+  parameters: { [key: string]: any };
 }
 
 export interface IOpenedScreen extends IOpenedScreenData {

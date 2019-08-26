@@ -15,6 +15,8 @@ import { IMainMenuItemType } from "../types/IMainMenu";
 import { DialogInfo } from "../OpenedScreen";
 import { onInitPortalDone } from "./constants";
 import { getClientFulltextSearch } from "model/selectors/getClientFulltextSearch";
+import { getDontRequestData } from "../../selectors/getDontRequestData";
+import { closeForm } from "model/actions/closeForm";
 
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
@@ -50,7 +52,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const { event } = args;
 
     const openedScreens = getOpenedScreens(this);
-    const existingItem = openedScreens.findLastExistingItem(id);
+
     let dialogInfo: IDialogInfo | undefined;
     if (type === IMainMenuItemType.FormRefWithSelection) {
       dialogInfo = new DialogInfo(
@@ -59,53 +61,28 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       );
     }
     if (!event.ctrlKey) {
+      const existingItem = openedScreens.findLastExistingItem(id);
       if (existingItem) {
         openedScreens.activateItem(id, existingItem.order);
       } else {
-        const newFormScreen = createLoadingFormScreen();
-        const newScreen = createOpenedScreen(
+        this.openNewForm(
           id,
           type,
-          0,
           label,
-          newFormScreen,
           dontRequestData === "true",
-          dialogInfo
+          dialogInfo,
+          {}
         );
-        openedScreens.pushItem(newScreen);
-        openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
-        newFormScreen.run();
       }
     } else {
-      if (existingItem) {
-        const newFormScreen = createLoadingFormScreen();
-        const newScreen = createOpenedScreen(
-          id,
-          type,
-          existingItem.order + 1,
-          label,
-          newFormScreen,
-          dontRequestData === "true",
-          dialogInfo
-        );
-        openedScreens.pushItem(newScreen);
-        openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
-        newFormScreen.run();
-      } else {
-        const newFormScreen = createLoadingFormScreen();
-        const newScreen = createOpenedScreen(
-          id,
-          type,
-          0,
-          label,
-          newFormScreen,
-          dontRequestData === "true",
-          dialogInfo
-        );
-        openedScreens.pushItem(newScreen);
-        openedScreens.activateItem(id, 0);
-        newFormScreen.run();
-      }
+      this.openNewForm(
+        id,
+        type,
+        label,
+        dontRequestData === "true",
+        dialogInfo,
+        {}
+      );
     }
   }
 
@@ -119,6 +96,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   onScreenTabCloseClick(event: any, openedScreen: IOpenedScreen): void {
     event.stopPropagation();
     console.log(openedScreen);
+    this.closeForm(openedScreen);
+  }
+
+  @action.bound closeForm(openedScreen: IOpenedScreen) {
     const openedScreens = getOpenedScreens(this);
     const closestScreen = openedScreens.findClosestItem(
       openedScreen.menuItemId,
@@ -128,6 +109,32 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       openedScreens.activateItem(closestScreen.menuItemId, closestScreen.order);
     }
     openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
+  }
+
+  @action.bound openNewForm(
+    id: string,
+    type: IMainMenuItemType,
+    label: string,
+    dontRequestData: boolean,
+    dialogInfo: IDialogInfo | undefined,
+    parameters: { [key: string]: any }
+  ) {
+    const openedScreens = getOpenedScreens(this);
+    const existingItem = openedScreens.findLastExistingItem(id);
+    const newFormScreen = createLoadingFormScreen();
+    const newScreen = createOpenedScreen(
+      id,
+      type,
+      existingItem ? existingItem.order + 1 : 0,
+      label,
+      newFormScreen,
+      dontRequestData,
+      dialogInfo,
+      parameters
+    );
+    openedScreens.pushItem(newScreen);
+    openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
+    newFormScreen.run();
   }
 
   *initPortal() {

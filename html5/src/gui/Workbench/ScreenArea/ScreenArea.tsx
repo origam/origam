@@ -138,9 +138,6 @@ export const DialogScreen: React.FC<{
     props.openedScreen.order
   }`;
   const workbenchLifecycle = getWorkbenchLifecycle(props.openedScreen);
-  const onActionBtnClick = onSelectionDialogActionButtonClick(
-    props.openedScreen
-  );
   useEffect(() => {
     getDialogStack(workbenchLifecycle).pushDialog(
       key,
@@ -166,7 +163,12 @@ export const DialogScreen: React.FC<{
                   {props.openedScreen.content.dialogActions.map(action => (
                     <button
                       key={action.id}
-                      onClick={(event: any) => onActionBtnClick(event, action)}
+                      onClick={(event: any) =>
+                        onSelectionDialogActionButtonClick(action)(
+                          event,
+                          action
+                        )
+                      }
                     >
                       {action.caption}
                     </button>

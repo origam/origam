@@ -125,6 +125,7 @@ export interface IApi {
     RegisterSession: boolean;
     DataRequested: boolean;
     ObjectId: string;
+    Parameters: {[key: string]: any} | undefined;
   }): Promise<any>;
 
   updateObject(data: {
@@ -146,5 +147,26 @@ export interface IApi {
     SessionFormIdentifier: string;
     Entity: string;
     Id: string;
+  }): Promise<any>;
+
+  executeActionQuery(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    ActionType: string;
+    ActionId: string;
+    ParameterMappings: { [key: string]: any };
+    SelectedItems: string[];
+    InputParameters: { [key: string]: any };
+  }): Promise<any>;
+
+  executeAction(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    ActionType: string;
+    ActionId: string;
+    ParameterMappings: { [key: string]: any };
+    SelectedItems: string[];
+    InputParameters: { [key: string]: any };
+    RequestingGrid: string;
   }): Promise<any>;
 }
