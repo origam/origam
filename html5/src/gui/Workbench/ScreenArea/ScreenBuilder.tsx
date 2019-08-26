@@ -21,7 +21,11 @@ export class ScreenBuilder extends React.Component<{
             isLoading={false}
             isVisible={openedScreen.isActive}
             isFullScreen={false}
-            title={openedScreen.title}
+            title={
+              isILoadedFormScreen(openedScreen.content)
+                ? openedScreen.content.title
+                : openedScreen.title
+            }
           >
             {!content.isLoading && (
               <FormScreenBuilder xmlWindowObject={content.screenUI} />

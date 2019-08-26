@@ -87,7 +87,7 @@ export class ScreenArea extends React.Component<{
                 {this.props.openedScreenItems!.map(item => (
                   <MainViewHandle
                     key={`${item.menuItemId}@${item.order}`}
-                    label={item.title}
+                    label={isILoadedFormScreen(item.content) ? item.content.title : item.title}
                     order={item.order}
                     isActive={item.isActive}
                     onClick={(event: any) =>
