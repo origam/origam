@@ -1,4 +1,9 @@
 import {
+  sExecuteAction,
+  onExecuteActionDone,
+  onExecuteAction
+} from "./constants";
+import {
   onSaveSession,
   sSaveSession,
   sRefreshSession,
@@ -51,6 +56,9 @@ export const FormScreenDef = {
         },
         [onRefreshSession]: {
           target: sRefreshSession
+        },
+        [onExecuteAction]: {
+          target: sExecuteAction
         }
       }
     },
@@ -88,6 +96,12 @@ export const FormScreenDef = {
       invoke: { src: "refreshSession" },
       on: {
         [onRefreshSessionDone]: sFormScreenRunning
+      }
+    },
+    [sExecuteAction]: {
+      invoke: { src: "executeAction" },
+      on: {
+        [onExecuteActionDone]: sFormScreenRunning
       }
     }
   }

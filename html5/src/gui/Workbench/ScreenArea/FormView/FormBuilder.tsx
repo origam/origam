@@ -6,7 +6,7 @@ import { findStrings } from "../../../../xmlInterpreters/screenXml";
 import { getDataViewPropertyById } from "../../../../model/selectors/DataView/getDataViewPropertyById";
 import { IDataView } from "../../../../model/entities/types/IDataView";
 import { FormField } from "./FormField";
-import { FormRoot } from "../../../Components/ScreenElements/FormRoot";
+import { FormRoot } from "./FormRoot";
 import { FormViewEditor } from "./FormViewEditor";
 import { getSelectedRow } from "../../../../model/selectors/DataView/getSelectedRow";
 import { DataTable } from "../../../../model/entities/DataTable";

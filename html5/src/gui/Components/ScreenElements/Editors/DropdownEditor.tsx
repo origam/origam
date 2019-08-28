@@ -16,6 +16,8 @@ import { IProperty } from "../../../../model/entities/types/IProperty";
 import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/getSelectedRowId";
 import { getMenuItemId } from "../../../../model/selectors/getMenuItemId";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
+import { getEntity } from "../../../../model/selectors/DataView/getEntity";
+import { getSessionId } from "model/selectors/getSessionId";
 
 export interface IDropdownEditorProps {
   value: string;
@@ -24,6 +26,8 @@ export interface IDropdownEditorProps {
   isInvalid: boolean;
   isFocused: boolean;
 
+  Entity?: string;
+  SessionFormIdentifier?: string;
   DataStructureEntityId?: string;
   ColumnNames?: string[];
   Property?: string;
@@ -53,7 +57,9 @@ export interface IDropdownEditorProps {
     Property: property.id,
     RowId: getSelectedRowId(property),
     LookupId: lookup.lookupId,
-    menuItemId: getMenuItemId(property)
+    menuItemId: getMenuItemId(property),
+    Entity: getEntity(property),
+    SessionFormIdentifier: getSessionId(property)
   };
 })
 @observer
@@ -132,8 +138,10 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     this.willReload = false;
     this.isLoading = true;
     this.api
-      .getLookupListEx({
-        DataStructureEntityId: this.props.DataStructureEntityId!, // Data view entity identifier
+      .getLookupList({
+        Entity: this.props.Entity,
+        SessionFormIdentifier: this.props.SessionFormIdentifier,
+        DataStructureEntityId: this.props.DataStructureEntityId, // Data view entity identifier
         ColumnNames: ["Id", ...this.props.ColumnNames], // Columns to download
         Property: this.props.Property!, // Columnn Id
         Id: this.props.RowId!, // Id of the selected row
@@ -167,6 +175,15 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     return this.dirtyTextualValue !== undefined
       ? this.dirtyTextualValue
       : this.props.textualValue;
+  }
+
+  @action.bound handleContainerMouseDown(event: any) {
+    event.preventDefault();
+    this.elmInput && this.elmInput.focus();
+  }
+
+  @action.bound handleInputBlur(event: any) {
+    this.props.onEditorBlur && this.props.onEditorBlur(event);
   }
 
   cellRenderer = (args: {
@@ -223,8 +240,10 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   render() {
     return (
       <Dropdowner
+        className={S.dropdownerContainer}
         ref={this.refDropdowner}
         onDroppedDown={this.handleDroppedDown}
+        onContainerMouseDown={this.handleContainerMouseDown}
         trigger={({ refTrigger, setDropped }) => (
           <div
             className={CS.editorContainer}
@@ -242,6 +261,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
               onChange={this.handleTextChange}
               onKeyDown={this.props.onKeyDown}
               onClick={this.props.onClick}
+              onBlur={this.handleInputBlur}
             />
             {this.props.isInvalid && (
               <div className={CS.notification}>

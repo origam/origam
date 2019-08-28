@@ -1,22 +1,31 @@
-import React from "react";
-import { observer, inject } from "mobx-react";
-import { IProperty } from "../../../../model/entities/types/IProperty";
-import { IPropertyColumn } from "../../../../model/entities/types/IPropertyColumn";
-
-import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateTimeEditor";
-import moment from "moment";
-import { BoolEditor } from "../../../Components/ScreenElements/Editors/BoolEditor";
-import { DropdownEditor } from "../../../Components/ScreenElements/Editors/DropdownEditor";
 import { TextEditor } from "gui/Components/ScreenElements/Editors/TextEditor";
+import { inject, observer } from "mobx-react";
+import { onFieldBlur } from "model/actions/DataView/TableView/onFieldBlur";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import React from "react";
+import { IProperty } from "../../../../model/entities/types/IProperty";
+import { BoolEditor } from "../../../Components/ScreenElements/Editors/BoolEditor";
+import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateTimeEditor";
+import { DropdownEditor } from "../../../Components/ScreenElements/Editors/DropdownEditor";
 
-@inject(({ property }) => {
-  return { property };
+@inject(({ property, formPanelView }) => {
+  const row = getSelectedRow(formPanelView)!;
+  const { onFieldChange } = getDataView(formPanelView);
+  return {
+    property,
+    onEditorBlur: (event: any) => onFieldBlur(formPanelView)(event),
+    onChange: (event: any, value: any) =>
+      onFieldChange(event, row, property, value)
+  };
 })
 @observer
 export class FormViewEditor extends React.Component<{
   value?: any;
   textualValue?: any;
   property?: IProperty;
+  onChange?: (event: any, value: any) => void;
+  onEditorBlur?: (event: any) => void;
 }> {
   getEditor() {
     switch (this.props.property!.column) {
@@ -29,9 +38,10 @@ export class FormViewEditor extends React.Component<{
             isInvalid={false}
             isFocused={false}
             refocuser={undefined}
-            onChange={undefined}
+            onChange={this.props.onChange}
             onKeyDown={undefined}
             onClick={undefined}
+            onEditorBlur={this.props.onEditorBlur}
           />
         );
       case "Date":
@@ -43,8 +53,9 @@ export class FormViewEditor extends React.Component<{
             isInvalid={false}
             isFocused={false}
             refocuser={undefined}
-            onChange={undefined}
+            onChange={this.props.onChange}
             onClick={undefined}
+            onEditorBlur={this.props.onEditorBlur}
           />
         );
       case "CheckBox":
@@ -52,7 +63,7 @@ export class FormViewEditor extends React.Component<{
           <BoolEditor
             value={this.props.value}
             isReadOnly={this.props.property!.readOnly}
-            onChange={undefined}
+            onChange={this.props.onChange}
             onClick={undefined}
             onKeyDown={undefined}
           />
@@ -66,7 +77,7 @@ export class FormViewEditor extends React.Component<{
             isInvalid={false}
             isFocused={false}
             onTextChange={undefined}
-            onItemSelect={undefined}
+            onItemSelect={this.props.onChange}
             DataStructureEntityId={""}
             ColumnNames={[]}
             Property={""}
@@ -74,6 +85,7 @@ export class FormViewEditor extends React.Component<{
             LookupId={""}
             menuItemId={""}
             api={undefined}
+            onEditorBlur={this.props.onEditorBlur}
           />
         );
       default:

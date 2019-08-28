@@ -1,3 +1,4 @@
+import { IAction } from "model/entities/types/IAction";
 export interface IFormScreenLifecycleData {}
 
 export interface IFormScreenLifecycle extends IFormScreenLifecycleData {
@@ -9,6 +10,13 @@ export interface IFormScreenLifecycle extends IFormScreenLifecycleData {
 
   onSaveSession(): void;
   onRefreshSession(): void;
+
+  onExecuteAction(
+    gridId: string,
+    entity: string,
+    action: IAction,
+    selectedItems: string[]
+  ): Promise<any>;
 
   run(): void;
   parent?: any;

@@ -12,6 +12,8 @@ import { ScreenBuilder, DialogScreenBuilder } from "./ScreenBuilder";
 import { getApplication } from "model/selectors/getApplication";
 import { isILoadedFormScreen } from "model/entities/types/IFormScreen";
 import { getOpenedScreens } from "../../../model/selectors/getOpenedScreens";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { onSelectionDialogActionButtonClick } from "model/actions/SelectionDialog/onSelectionDialogActionButtonClick";
 
 @observer
 class MainViewHandle extends React.Component<{
@@ -132,13 +134,10 @@ export class ScreenArea extends React.Component<{
 export const DialogScreen: React.FC<{
   openedScreen: IOpenedScreen;
 }> = observer(props => {
-  const closeDialog = () => {};
-
   const key = `ScreenDialog@${props.openedScreen.menuItemId}@${
     props.openedScreen.order
   }`;
   const workbenchLifecycle = getWorkbenchLifecycle(props.openedScreen);
-
   useEffect(() => {
     getDialogStack(workbenchLifecycle).pushDialog(
       key,
@@ -162,10 +161,22 @@ export const DialogScreen: React.FC<{
               isILoadedFormScreen(props.openedScreen.content) ? (
                 <>
                   {props.openedScreen.content.dialogActions.map(action => (
-                    <button key={action.id}>{action.caption}</button>
+                    <button
+                      key={action.id}
+                      onClick={(event: any) =>
+                        onSelectionDialogActionButtonClick(action)(
+                          event,
+                          action
+                        )
+                      }
+                    >
+                      {action.caption}
+                    </button>
                   ))}
                 </>
-              ) : <></>
+              ) : (
+                <></>
+              )
             }
           </Observer>
         }

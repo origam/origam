@@ -10,7 +10,8 @@ export function createOpenedScreen(
   title: string,
   content: IFormScreen,
   dontRequestData: boolean,
-  dialogInfo?: IDialogInfo,
+  dialogInfo: IDialogInfo | undefined,
+  parameters: { [key: string]: any }
 ): IOpenedScreen {
   return new OpenedScreen({
     menuItemId,
@@ -19,6 +20,7 @@ export function createOpenedScreen(
     title,
     content,
     dialogInfo,
-    dontRequestData
+    dontRequestData,
+    parameters
   });
 }

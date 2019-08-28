@@ -67,6 +67,7 @@ export class OrigamAPI implements IApi {
     RegisterSession: boolean;
     DataRequested: boolean;
     ObjectId: string;
+    Parameters: {[key: string]: any};
   }) {
     const result = (await axios.post(
       `${this.urlPrefix}/UIService/InitUI`,
@@ -108,9 +109,13 @@ export class OrigamAPI implements IApi {
     MenuId: string;
     LabelIds: string[];
   }) {
-    return (await axios.post(`${this.urlPrefix}/Data/GetLookupLabels`, query, {
-      headers: this.httpAuthHeader
-    })).data;
+    return (await axios.post(
+      `${this.urlPrefix}/UIService/GetLookupLabels`,
+      query,
+      {
+        headers: this.httpAuthHeader
+      }
+    )).data;
   }
 
   async newEntity(data: { DataStructureEntityId: string; MenuId: string }) {
@@ -249,8 +254,10 @@ export class OrigamAPI implements IApi {
     })).data;
   }
 
-  async getLookupListEx(data: {
-    DataStructureEntityId: string;
+  async getLookupList(data: {
+    DataStructureEntityId?: string;
+    FormSessionIdentifier?: string;
+    Entity?: string;
     ColumnNames: string[];
     Property: string;
     Id: string;
@@ -261,9 +268,13 @@ export class OrigamAPI implements IApi {
     PageNumber: number;
     MenuId: string;
   }): Promise<any> {
-    return (await axios.post(`${this.urlPrefix}/Data/GetLookupListEx`, data, {
-      headers: this.httpAuthHeader
-    })).data;
+    return (await axios.post(
+      `${this.urlPrefix}/UIService/GetLookupList`,
+      data,
+      {
+        headers: this.httpAuthHeader
+      }
+    )).data;
   }
 
   async initPortal(): Promise<any> {
@@ -308,5 +319,42 @@ export class OrigamAPI implements IApi {
     return (await axios.post(`${this.urlPrefix}/UIService/DeleteObject`, data, {
       headers: this.httpAuthHeader
     })).data;
+  }
+
+  async executeActionQuery(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    ActionType: string;
+    ActionId: string;
+    ParameterMappings: { [key: string]: any };
+    SelectedItems: string[];
+    InputParameters: { [key: string]: any };
+  }): Promise<any> {
+    return (await axios.post(
+      `${this.urlPrefix}/UIService/ExecuteActionQuery`,
+      data,
+      {
+        headers: this.httpAuthHeader
+      }
+    )).data;
+  }
+
+  async executeAction(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    ActionType: string;
+    ActionId: string;
+    ParameterMappings: { [key: string]: any };
+    SelectedItems: string[];
+    InputParameters: { [key: string]: any };
+    RequestingGrid: string;
+  }): Promise<any> {
+    return (await axios.post(
+      `${this.urlPrefix}/UIService/ExecuteAction`,
+      data,
+      {
+        headers: this.httpAuthHeader
+      }
+    )).data;
   }
 }

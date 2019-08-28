@@ -4,7 +4,10 @@ import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 export function onFieldBlur(ctx: any) {
   return function onFieldBlur(event: any) {
     console.log("ofd");
-    getDataTable(ctx).flushFormToTable(getSelectedRow(ctx)!);
-    getFormScreenLifecycle(ctx).onFlushData();
+    const row = getSelectedRow(ctx);
+    if (row) {
+      getDataTable(ctx).flushFormToTable(row);
+      getFormScreenLifecycle(ctx).onFlushData();
+    }
   };
 }

@@ -29,7 +29,7 @@ namespace Origam.ServerCore.Model.UIService
         public Guid SessionFormIdentifier { get; set; }
         public string Entity { get; set; }
         public string ActionType { get; set; }
-        public Guid ActionId { get; set; }
+        public string ActionId { get; set; }
         public Hashtable ParameterMappings { get; set; }
         public IList SelectedItems { get; set; }
         public Hashtable InputParameters { get; set; }

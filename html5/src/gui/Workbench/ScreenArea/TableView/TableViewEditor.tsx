@@ -66,6 +66,7 @@ export class TableViewEditor extends React.Component<{
             refocuser={undefined}
             onChange={this.props.onChange}
             onClick={undefined}
+            onEditorBlur={this.props.onEditorBlur}
           />
         );
       case "CheckBox":
@@ -88,6 +89,7 @@ export class TableViewEditor extends React.Component<{
             isFocused={false}
             onTextChange={undefined}
             onItemSelect={this.props.onChange}
+            onEditorBlur={this.props.onEditorBlur}
             // DataStructureEntityId={""}
             // ColumnNames={[]}
             // Property={""}

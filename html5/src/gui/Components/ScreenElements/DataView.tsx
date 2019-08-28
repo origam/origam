@@ -7,6 +7,7 @@ import { IDataView } from "../../../model/entities/types/IDataView";
 import { FormBuilder } from "../../Workbench/ScreenArea/FormView/FormBuilder";
 import { IPanelViewType } from "../../../model/entities/types/IPanelViewType";
 import { TableView } from "../../Workbench/ScreenArea/TableView/TableView";
+import { FormView } from "gui/Workbench/ScreenArea/FormView/FormView";
 
 @inject(({ formScreen }, { id }) => {
   const dataView = getDataViewById(formScreen, id);
@@ -65,7 +66,9 @@ export class DataView extends React.Component<{
                   : "flex"
             }}
           >
-            <FormBuilder />
+            <FormView>
+              <FormBuilder />
+            </FormView>
           </div>
           {this.props.dataView!.isWorking && (
             <div className={S.dataViewOverlay}>
