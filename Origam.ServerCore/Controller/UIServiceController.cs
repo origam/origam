@@ -226,16 +226,23 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() =>
             {
-                //todo: what about workflows?
-                var menuResult = FindItem<FormReferenceMenuItem>(
-                    input.MenuId)
-                    .OnSuccess(Authorize)
-                    .OnSuccess(menuItem 
-                        => CheckLookupIsAllowedInMenu(
-                            menuItem, input.LookupId));
-                if(menuResult.IsFailure)
+                // todo: unify approach
+                if(input.MenuId == Guid.Empty)
                 {
-                    return menuResult.Error;
+                    SecurityTools.CurrentUserProfile();
+                }
+                else
+                {
+                    var menuResult = FindItem<FormReferenceMenuItem>(
+                        input.MenuId)
+                        .OnSuccess(Authorize)
+                        .OnSuccess(menuItem 
+                            => CheckLookupIsAllowedInMenu(
+                                menuItem, input.LookupId));
+                    if(menuResult.IsFailure)
+                    {
+                        return menuResult.Error;
+                    }
                 }
                 Dictionary<Guid, string> labelDictionary 
                     = input.LabelIds.ToDictionary(
