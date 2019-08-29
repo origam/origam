@@ -14,6 +14,7 @@ export function onSelectionDialogActionButtonClick(ctx: any) {
     event: any,
     action: IAction
   ) {
+    // TODO: Block "re-submission" for all ui actions
     if (isRunning) return;
     try {
       isRunning = true;

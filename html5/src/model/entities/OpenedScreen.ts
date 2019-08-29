@@ -3,7 +3,7 @@ import {
   IOpenedScreenData,
   IDialogInfo
 } from "./types/IOpenedScreen";
-import { observable, action } from "mobx";
+import { observable, action, computed } from "mobx";
 import { IFormScreen } from "./types/IFormScreen";
 import { IMainMenuItemType } from "./types/IMainMenu";
 
@@ -28,6 +28,10 @@ export class OpenedScreen implements IOpenedScreen {
   title: string = "";
   @observable content: IFormScreen = null as any;
   parameters: { [key: string]: any } = {};
+
+  @computed get isDialog() {
+    return this.dialogInfo !== undefined;
+  }
 
   @action.bound
   setActive(state: boolean): void {

@@ -21,6 +21,7 @@ export interface IOpenedScreen extends IOpenedScreenData {
   $type_IOpenedScreen: 1;
 
   isActive: boolean;
+  isDialog: boolean;
 
   setActive(state: boolean): void;
   setContent(screen: IFormScreen): void;

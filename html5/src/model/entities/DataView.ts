@@ -11,6 +11,7 @@ import { IFormPanelView } from "./FormPanelView/types/IFormPanelView";
 import { getDataTable } from "../selectors/DataView/getDataTable";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { IAction, IActionPlacement, IActionType } from "./types/IAction";
+import { getIsDialog } from "../selectors/getIsDialog";
 
 export class DataView implements IDataView {
   $type_IDataView: 1 = 1;
@@ -85,13 +86,15 @@ export class DataView implements IDataView {
     return this.actions.filter(
       action =>
         action.placement === IActionPlacement.Toolbar &&
-        action.type !== IActionType.SelectionDialogAction
+        action.type !== IActionType.SelectionDialogAction &&
+        !getIsDialog(this)
     );
   }
 
   @computed get dialogActions() {
     return this.actions.filter(
-      action => action.type === IActionType.SelectionDialogAction
+      action =>
+        action.type === IActionType.SelectionDialogAction || getIsDialog(this)
     );
   }
 
@@ -154,7 +157,6 @@ export class DataView implements IDataView {
     this.activePanelView = IPanelViewType.Table;
   }
 
-
   @action.bound selectNextRow() {
     const selectedRowId = getSelectedRowId(this);
     const newId = selectedRowId
@@ -174,7 +176,6 @@ export class DataView implements IDataView {
       this.selectRowById(newId);
     }
   }
-
 
   @action.bound onFieldChange(
     event: any,

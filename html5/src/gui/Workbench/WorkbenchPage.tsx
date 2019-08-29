@@ -39,6 +39,7 @@ import { getActiveScreen } from "../../model/selectors/getActiveScreen";
 import { isILoadedFormScreen } from "../../model/entities/types/IFormScreen";
 import { onSaveSessionClick } from "../../model/actions/onSaveSessionClick";
 import { onRefreshSessionClick } from "model/actions/onRefreshSessionClick";
+import { onActionClick } from "../../model/actions/Actions/onActionClick";
 
 @inject(({ application }) => {
   const clientFulltextSearch = getClientFulltextSearch(application);
@@ -46,7 +47,6 @@ import { onRefreshSessionClick } from "model/actions/onRefreshSessionClick";
     workbench: getWorkbench(application),
     isMainMenuLoading: getIsMainMenuLoading(application),
     loggedUserName: getLoggedUserName(application),
-    toolbarActions: getActiveScreenActions(application),
     onSignOutClick: (event: any) =>
       getApplicationLifecycle(application).onSignOutClick({ event }),
     onSearchTermChange: clientFulltextSearch.onSearchFieldChange,
@@ -55,7 +55,6 @@ import { onRefreshSessionClick } from "model/actions/onRefreshSessionClick";
 })
 @observer
 export class WorkbenchPage extends React.Component<{
-  toolbarActions?: Array<{ section: string; actions: IAction[] }>;
   workbench?: IWorkbench;
   //mainMenu?: IMainMenu | ILoadingMainMenu | undefined;
   mainMenuUI?: any;
@@ -107,17 +106,7 @@ export class WorkbenchPage extends React.Component<{
               </div>
             </div>
             <FormButtonsSection />
-            {this.props.toolbarActions!.map(actionGroup => (
-              <ToolbarSection bottomLine={actionGroup.section}>
-                {actionGroup.actions.map(action => (
-                  <div className={S.actionItem}>
-                    <i className="fas fa-cog icon" />
-                    <br />
-                    {action.caption}
-                  </div>
-                ))}
-              </ToolbarSection>
-            ))}
+            <ActionsSection />
             <div className={S.pusher} />
             <div className={S.companyUserSection}>
               <div className={S.companyLogo}>
@@ -242,4 +231,28 @@ export const FormButtonsSection: React.FC<{}> = observer(props => {
       </div>
     </ToolbarSection>
   ) : null;
+});
+
+export const ActionsSection: React.FC<{}> = observer(props => {
+  const application = useContext(MobXProviderContext)
+    .application as IApplication;
+  const toolbarActions = getActiveScreenActions(application);
+  return (
+    <>
+      {toolbarActions.map(actionGroup => (
+        <ToolbarSection bottomLine={actionGroup.section}>
+          {actionGroup.actions.map(action => (
+            <div
+              className={S.actionItem}
+              onClick={event => onActionClick(action)(event, action)}
+            >
+              <i className="fas fa-cog icon" />
+              <br />
+              {action.caption}
+            </div>
+          ))}
+        </ToolbarSection>
+      ))}
+    </>
+  );
 });

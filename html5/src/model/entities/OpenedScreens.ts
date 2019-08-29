@@ -11,11 +11,11 @@ export class OpenedScreens implements IOpenedScreens {
   @observable items: Array<IOpenedScreen> = [];
 
   @computed get screenItems(): IOpenedScreen[] {
-    return this.items.filter(item => item.dialogInfo === undefined);
+    return this.items.filter(item => !item.isDialog);
   }
 
   @computed get dialogItems(): IOpenedScreen[] {
-    return this.items.filter(item => item.dialogInfo !== undefined);
+    return this.items.filter(item => item.isDialog);
   }
 
   @action.bound
