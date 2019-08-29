@@ -1,7 +1,6 @@
-import { IProperty } from "../../types/IProperty";
-import { ITableColumnsConf } from "../../../../gui/Components/Dialogs/ColumnsDialog";
-import { IColumnConfigurationDialog } from "./IColumnConfigurationDialog";
 import { IFilterConfiguration } from "../../types/IFilterConfiguration";
+import { IProperty } from "../../types/IProperty";
+import { IColumnConfigurationDialog } from "./IColumnConfigurationDialog";
 
 export interface ITablePanelViewData {
   tablePropertyIds: string[];
@@ -41,6 +40,9 @@ export interface ITablePanelView extends ITablePanelViewData {
   onNoCellClick(): void;
   onOutsideTableClick(): void;
 
+  selectNextColumn(): void;
+  selectPrevColumn(): void;
+
   setSelectedColumnId(id: string | undefined): void;
   swapColumns(id1: string, id2: string): void;
 
@@ -50,8 +52,6 @@ export interface ITablePanelView extends ITablePanelViewData {
     idSource: string | undefined,
     idTarget: string | undefined
   ): void;
-
-  
 
   parent?: any;
 }

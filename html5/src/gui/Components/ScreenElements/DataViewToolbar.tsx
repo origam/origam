@@ -10,10 +10,12 @@ import { getTablePanelView } from "../../../model/selectors/TablePanelView/getTa
 import { IAction } from "../../../model/entities/types/IAction";
 import { getPanelViewActions } from "model/selectors/DataView/getPanelViewActions";
 import { onAddRowClick } from "model/actions/DataView/onAddRowClick";
-import { onDeleteRowClick } from '../../../model/actions/DataView/onDeleteRowClick';
-
+import { onDeleteRowClick } from "../../../model/actions/DataView/onDeleteRowClick";
+import { onNextRowClick } from "model/actions/DataView/onNextRowClick";
+import { onPrevRowClick } from "model/actions/DataView/onPrevRowClick";
 
 @inject(({ dataView }: { dataView: IDataView }) => {
+  const ctx = dataView;
   return {
     activePanelView: getActivePanelView(dataView),
     label: getDataViewLabel(dataView),
@@ -28,8 +30,8 @@ import { onDeleteRowClick } from '../../../model/actions/DataView/onDeleteRowCli
     onCreateRowClick: onAddRowClick(dataView),
     onToggleFilterClick:
       dataView.tablePanelView.filterConfiguration.onFilterDisplayClick,
-    onPrevRowClick: dataView.onPrevRowClick,
-    onNextRowClick: dataView.onNextRowClick
+    onPrevRowClick: onPrevRowClick(ctx),
+    onNextRowClick: onNextRowClick(ctx)
   };
 })
 @observer

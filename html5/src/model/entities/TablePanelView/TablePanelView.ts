@@ -7,10 +7,15 @@ import { getSelectedRow } from "../../selectors/DataView/getSelectedRow";
 import { IFilterConfiguration } from "../types/IFilterConfiguration";
 import { IProperty } from "../types/IProperty";
 import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
-import { ITableCanvas, ITablePanelView, ITablePanelViewData } from "./types/ITablePanelView";
+import {
+  ITableCanvas,
+  ITablePanelView,
+  ITablePanelViewData
+} from "./types/ITablePanelView";
+import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
+import { getSelectedColumnId } from "model/selectors/TablePanelView/getSelectedColumnId";
 
 export class TablePanelView implements ITablePanelView {
-  
   $type_ITablePanelView: 1 = 1;
 
   constructor(data: ITablePanelViewData) {
@@ -134,6 +139,32 @@ export class TablePanelView implements ITablePanelView {
   ) {
     this.selectedColumnId = columnId;
     getDataView(this).selectRowById(rowId);
+  }
+
+  @action.bound
+  selectNextColumn(): void {
+    const properties = getTableViewProperties(this);
+    const selPropId = getSelectedColumnId(this);
+    if (selPropId) {
+      const idx = properties.findIndex(prop => prop.id === selPropId);
+      if (idx < properties.length - 1) {
+        const newProp = properties[idx + 1];
+        this.setSelectedColumnId(newProp.id);
+      }
+    }
+  }
+
+  @action.bound
+  selectPrevColumn(): void {
+    const properties = getTableViewProperties(this);
+    const selPropId = getSelectedColumnId(this);
+    if (selPropId) {
+      const idx = properties.findIndex(prop => prop.id === selPropId);
+      if (idx > 0) {
+        const newProp = properties[idx - 1];
+        this.setSelectedColumnId(newProp.id);
+      }
+    }
   }
 
   @action.bound

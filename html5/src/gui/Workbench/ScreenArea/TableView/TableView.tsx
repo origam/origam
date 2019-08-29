@@ -20,6 +20,7 @@ import { Table } from "../../../Components/ScreenElements/Table/Table";
 import { IGridDimensions } from "../../../Components/ScreenElements/Table/types";
 import { CellRenderer } from "./CellRenderer";
 import { TableViewEditor } from "./TableViewEditor";
+import { onTableKeyDown } from "model/actions/DataView/TableView/onTableKeyDown";
 
 
 @inject(({ dataView }) => {
@@ -27,7 +28,9 @@ import { TableViewEditor } from "./TableViewEditor";
     dataView,
     tablePanelView: dataView.tablePanelView,
     onColumnDialogCancel: dataView.tablePanelView.onColumnConfCancel,
-    onColumnDialogOk: dataView.tablePanelView.onColumnConfSubmit
+    onColumnDialogOk: dataView.tablePanelView.onColumnConfSubmit,
+
+    onTableKeyDown: onTableKeyDown(dataView)
   };
 })
 @observer
@@ -36,6 +39,7 @@ export class TableView extends React.Component<{
   tablePanelView?: ITablePanelView;
   onColumnDialogCancel?: (event: any) => void;
   onColumnDialogOk?: (event: any, configuration: ITableColumnsConf) => void;
+  onTableKeyDown?:(event: any) => void;
 }> {
   gDim = new GridDimensions({
     getTableViewProperties: () => getTableViewProperties(this.props.dataView),
@@ -89,6 +93,7 @@ export class TableView extends React.Component<{
             onNoCellClick={this.props.tablePanelView!.onNoCellClick}
             onOutsideTableClick={this.props.tablePanelView!.onOutsideTableClick}
             refCanvasMovingComponent={this.props.tablePanelView!.setTableCanvas}
+            onKeyDown={this.props.onTableKeyDown}
           />
         </>
       </Provider>

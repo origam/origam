@@ -12,7 +12,6 @@ import { getDataTable } from "../selectors/DataView/getDataTable";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { IAction, IActionPlacement, IActionType } from "./types/IAction";
 
-
 export class DataView implements IDataView {
   $type_IDataView: 1 = 1;
 
@@ -93,7 +92,7 @@ export class DataView implements IDataView {
   @computed get dialogActions() {
     return this.actions.filter(
       action => action.type === IActionType.SelectionDialogAction
-    )
+    );
   }
 
   get isWorking() {
@@ -155,8 +154,8 @@ export class DataView implements IDataView {
     this.activePanelView = IPanelViewType.Table;
   }
 
-  @action.bound
-  onNextRowClick(event: any): void {
+
+  @action.bound selectNextRow() {
     const selectedRowId = getSelectedRowId(this);
     const newId = selectedRowId
       ? getDataTable(this).getNextExistingRowId(selectedRowId)
@@ -166,8 +165,7 @@ export class DataView implements IDataView {
     }
   }
 
-  @action.bound
-  onPrevRowClick(event: any): void {
+  @action.bound selectPrevRow() {
     const selectedRowId = getSelectedRowId(this);
     const newId = selectedRowId
       ? getDataTable(this).getPrevExistingRowId(selectedRowId)
@@ -177,13 +175,14 @@ export class DataView implements IDataView {
     }
   }
 
+
   @action.bound onFieldChange(
     event: any,
     row: any[],
     property: IProperty,
     value: any
   ) {
-    console.log('ofc')
+    console.log("ofc");
     if (!property.readOnly) {
       getDataTable(this).setFormDirtyValue(row, property.id, value);
     }
