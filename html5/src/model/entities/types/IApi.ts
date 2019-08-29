@@ -29,7 +29,7 @@ export interface IApi {
 
   getLookupLabels(query: {
     LookupId: string;
-    MenuId: string;
+    MenuId: string | undefined;
     LabelIds: string[];
   }): Promise<{ [key: string]: string }>;
 

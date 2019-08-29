@@ -69,7 +69,7 @@ export class Lookup implements ILookup {
       api
         .getLookupLabels({
           LookupId: this.lookupId,
-          MenuId: getMenuItemId(this),
+          MenuId: undefined, // getMenuItemId(this),
           LabelIds: Array.from(idsToLoad)
         })
         .then(

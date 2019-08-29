@@ -106,7 +106,7 @@ export class OrigamAPI implements IApi {
 
   async getLookupLabels(query: {
     LookupId: string;
-    MenuId: string;
+    MenuId: string | undefined;
     LabelIds: string[];
   }) {
     return (await axios.post(
