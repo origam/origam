@@ -46,7 +46,8 @@ namespace Origam.ServerCore
     public class ServerCoreUIService : IBasicUIService
     {
         private const int INITIAL_PAGE_NUMBER_OF_RECORDS = 50;
-
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly UIManager uiManager;
         private readonly SessionManager sessionManager;
         private readonly SessionHelper sessionHelper;
@@ -165,7 +166,19 @@ namespace Origam.ServerCore
                 }
                 foreach(Guid id in sessionsToDestroy)
                 {
-                    DestroyUI(id);
+                    try
+                    {
+                        DestroyUI(id);
+                    }
+                    catch(Exception ex)
+                    {
+                        if(log.IsFatalEnabled)
+                        {
+                            log.Error(
+                                "Failed to destroy session " + id.ToString()
+                                + ".", ex);
+                        }
+                    }
                 }
                 if(clearAll)
                 {
