@@ -30,7 +30,6 @@ namespace Origam.ServerCore.Model.UIService
         public Guid LookupId { get; set; }
         [Required]
         public Guid[] LabelIds { get; set; }
-        [RequiredNonDefault]
-        public Guid MenuId { get; set; }
+        public Guid MenuId { get; set; } = Guid.Empty;
     }
 }
