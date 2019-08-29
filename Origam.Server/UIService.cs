@@ -80,7 +80,8 @@ namespace Origam.Server
     public class UIService: IBasicUIService
     {
         #region Private Members
-
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly SessionManager sessionManager;
         private const int INITIAL_PAGE_NUMBER_OF_RECORDS = 50;
         private readonly UIManager uiManager;
@@ -210,7 +211,19 @@ namespace Origam.Server
 
                 foreach (Guid id in sessionsToDestroy)
                 {
-                    DestroyUI(id);
+                    try
+                    {
+                        DestroyUI(id);
+                    }
+                    catch(Exception ex)
+                    {
+                        if(log.IsFatalEnabled)
+                        {
+                            log.Error(
+                                "Failed to destroy session " + id.ToString()
+                                + ".", ex);
+                        }
+                    }
                 }
                 if (clearAll)
                 {
