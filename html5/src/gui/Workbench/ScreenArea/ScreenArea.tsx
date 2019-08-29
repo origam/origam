@@ -146,63 +146,71 @@ export const DialogScreen: React.FC<{
   useEffect(() => {
     getDialogStack(workbenchLifecycle).pushDialog(
       key,
-      <ModalWindow
-        title={props.openedScreen.title}
-        titleButtons={
-          <CloseButton
-            onClick={event =>
-              workbenchLifecycle.onScreenTabCloseClick(
-                event,
-                props.openedScreen
-              )
+      <Observer>
+        {() => (
+          <ModalWindow
+            title={
+              isILoadedFormScreen(props.openedScreen.content)
+                ? props.openedScreen.content.title
+                : props.openedScreen.title
             }
-          />
-        }
-        buttonsCenter={null}
-        buttonsLeft={null}
-        buttonsRight={
-          <Observer>
-            {() =>
-              isILoadedFormScreen(props.openedScreen.content) ? (
-                <>
-                  {props.openedScreen.content.dialogActions.map(action => (
-                    <button
-                      key={action.id}
-                      onClick={(event: any) =>
-                        onSelectionDialogActionButtonClick(action)(
-                          event,
-                          action
-                        )
-                      }
-                    >
-                      {action.caption}
-                    </button>
-                  ))}
-                </>
-              ) : (
-                <></>
-              )
+            titleButtons={
+              <CloseButton
+                onClick={event =>
+                  workbenchLifecycle.onScreenTabCloseClick(
+                    event,
+                    props.openedScreen
+                  )
+                }
+              />
             }
-          </Observer>
-        }
-      >
-        <Observer>
-          {() => (
-            <div
-              style={{
-                width: props.openedScreen.dialogInfo!.width,
-                height: props.openedScreen.dialogInfo!.height
-              }}
-            >
-              {isILoadedFormScreen(props.openedScreen.content) ? (
-                <DialogScreenBuilder openedScreen={props.openedScreen} />
-              ) : (
-                <DialogLoadingContent />
+            buttonsCenter={null}
+            buttonsLeft={null}
+            buttonsRight={
+              <Observer>
+                {() =>
+                  isILoadedFormScreen(props.openedScreen.content) ? (
+                    <>
+                      {props.openedScreen.content.dialogActions.map(action => (
+                        <button
+                          key={action.id}
+                          onClick={(event: any) =>
+                            onSelectionDialogActionButtonClick(action)(
+                              event,
+                              action
+                            )
+                          }
+                        >
+                          {action.caption}
+                        </button>
+                      ))}
+                    </>
+                  ) : (
+                    <></>
+                  )
+                }
+              </Observer>
+            }
+          >
+            <Observer>
+              {() => (
+                <div
+                  style={{
+                    width: props.openedScreen.dialogInfo!.width,
+                    height: props.openedScreen.dialogInfo!.height
+                  }}
+                >
+                  {isILoadedFormScreen(props.openedScreen.content) ? (
+                    <DialogScreenBuilder openedScreen={props.openedScreen} />
+                  ) : (
+                    <DialogLoadingContent />
+                  )}
+                </div>
               )}
-            </div>
-          )}
-        </Observer>
-      </ModalWindow>
+            </Observer>
+          </ModalWindow>
+        )}
+      </Observer>
     );
     return () => getDialogStack(workbenchLifecycle).closeDialog(key);
   }, []);
