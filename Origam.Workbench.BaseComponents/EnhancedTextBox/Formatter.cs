@@ -76,10 +76,6 @@ namespace Origam.Gui.UI
         
         public void OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyData == Keys.Delete)
-            {
-                Text = "";
-            }
         }
 
         protected void NotifyInputError(string message)
