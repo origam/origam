@@ -13,8 +13,6 @@ import { IAction } from "./types/IAction";
 import { getDontRequestData } from "model/selectors/getDontRequestData";
 
 export class FormScreen implements ILoadedFormScreen {
-
-
   $type_ILoadedFormScreen: 1 = 1;
 
   constructor(data: ILoadedFormScreenData) {
@@ -28,7 +26,7 @@ export class FormScreen implements ILoadedFormScreen {
   parent?: any;
 
   @observable isDirty: boolean = false;
-  
+
   sessionId: string = "";
 
   title: string = "";
@@ -99,6 +97,37 @@ export class FormScreen implements ILoadedFormScreen {
   @action.bound
   setDirty(state: boolean): void {
     this.isDirty = state;
+  }
+
+  printMasterDetailTree() {
+    const strrep = (cnt: number, str: string) => {
+      let result = "";
+      for (let i = 0; i < cnt; i++) result = result + str;
+      return result;
+    };
+
+    const recursive = (dataView: IDataView, level: number) => {
+      console.log(
+        `${strrep(level, "  ")}${dataView.name} (${dataView.entity} - ${
+          dataView.modelId
+        })`
+      );
+      for (let chb of dataView.childBindings) {
+        recursive(chb.childDataView, level + 1);
+      }
+    };
+    console.log('');
+    console.log("View bindings");
+    console.log("=============");
+    const roots = Array.from(this.dataViews.values()).filter(
+      dv => dv.isBindingRoot
+    );
+    for (let dv of roots) {
+      recursive(dv, 0);
+    }
+    console.log("=============");
+    console.log("End of View bindings");  
+    console.log('');
   }
 }
 

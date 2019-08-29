@@ -213,6 +213,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
       args.initUIResult.sessionId
     );
     openedScreen.setContent(screen);
+    screen.printMasterDetailTree();
     this.applyData(args.initUIResult.data);
   }
 

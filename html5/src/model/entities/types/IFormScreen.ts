@@ -41,6 +41,8 @@ export interface ILoadedFormScreen extends ILoadedFormScreenData {
 
   setDirty(state: boolean): void;
 
+  printMasterDetailTree(): void;
+
   parent?: any;
 }
 
