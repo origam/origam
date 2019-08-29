@@ -98,6 +98,7 @@ namespace Origam.Server
             {
                 if (ss != null && ss.IsModalDialog)
                 {
+                    ss.IsModalDialogCommited = false;
                     throw;
                 }
             }
