@@ -18,6 +18,8 @@ export interface IFormScreenLifecycle extends IFormScreenLifecycleData {
     selectedItems: string[]
   ): Promise<any>;
 
+  onRequestScreenClose(): void;
+
   run(): void;
   parent?: any;
 }

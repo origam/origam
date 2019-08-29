@@ -14,6 +14,7 @@ import { isILoadedFormScreen } from "model/entities/types/IFormScreen";
 import { getOpenedScreens } from "../../../model/selectors/getOpenedScreens";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { onSelectionDialogActionButtonClick } from "model/actions/SelectionDialog/onSelectionDialogActionButtonClick";
+import { onFormTabCloseClick } from "model/actions/onFormTabCloseClick";
 
 @observer
 class MainViewHandle extends React.Component<{
@@ -48,8 +49,8 @@ class MainViewHandle extends React.Component<{
     openedDialogItems: getOpenedDialogItems(workbench),
     onScreenTabHandleClick: getWorkbenchLifecycle(workbench)
       .onScreenTabHandleClick,
-    onScreenTabCloseClick: getWorkbenchLifecycle(workbench)
-      .onScreenTabCloseClick
+    onScreenTabCloseClick: (event: any, item: IOpenedScreen) =>
+      onFormTabCloseClick(item)(event)
   };
 })
 @observer
@@ -87,7 +88,11 @@ export class ScreenArea extends React.Component<{
                 {this.props.openedScreenItems!.map(item => (
                   <MainViewHandle
                     key={`${item.menuItemId}@${item.order}`}
-                    label={isILoadedFormScreen(item.content) ? item.content.title : item.title}
+                    label={
+                      isILoadedFormScreen(item.content)
+                        ? item.content.title
+                        : item.title
+                    }
                     order={item.order}
                     isActive={item.isActive}
                     onClick={(event: any) =>

@@ -13,7 +13,6 @@ export class ScreenBuilder extends React.Component<{
   render() {
     const { openedScreen } = this.props;
     const { content } = openedScreen;
-    console.log(content);
     if (isILoadedFormScreen(content)) {
       return (
         <Provider formScreen={content}>

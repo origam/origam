@@ -2,6 +2,8 @@ import { observable, action } from "mobx";
 import { IDialogStack } from "./types/IDialogStack";
 import { IDialogDimensions } from "../../gui/Components/Dialog/types";
 
+let nextId = 0;
+
 export class DialogStack implements IDialogStack {
   @observable.shallow stackedDialogs: Array<{
     key: string;
@@ -14,7 +16,12 @@ export class DialogStack implements IDialogStack {
     component: React.ReactElement,
     dimensions?: IDialogDimensions
   ) {
-    this.stackedDialogs.push({ key, component, dimensions });
+    const useKey = key ? key : `DEFAULT_DIALOG_KEY_${nextId++}`;
+    this.stackedDialogs.push({ key: useKey, component, dimensions });
+    return () => {
+      debugger
+      this.closeDialog(useKey)
+    };
   }
 
   @action.bound closeDialog(key: string) {

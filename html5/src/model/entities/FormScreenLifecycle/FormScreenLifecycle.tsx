@@ -1,12 +1,19 @@
-import { action, createAtom, flow, when, runInAction, computed } from "mobx";
+import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
+import { action, computed, createAtom, flow, runInAction, when } from "mobx";
+import { processActionResult } from "model/actions/Actions/processActionResult";
+import { closeForm } from "model/actions/closeForm";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
+import { IAction } from "model/entities/types/IAction";
 import { getDataViewByEntity } from "model/selectors/DataView/getDataViewByEntity";
+import { getDialogStack } from "model/selectors/getDialogStack";
 import { getMenuItemType } from "model/selectors/getMenuItemType";
+import React from "react";
 import { map2obj } from "utils/objects";
 import { interpretScreenXml } from "xmlInterpreters/screenXml";
 import { interpret, Machine } from "xstate";
 import { loadFreshData } from "../../actions/DataView/loadFreshData";
 import { getFormScreen } from "../../selectors/FormScreen/getFormScreen";
+import { getScreenParameters } from "../../selectors/FormScreen/getScreenParameters";
 import { getApi } from "../../selectors/getApi";
 import { getMenuItemId } from "../../selectors/getMenuItemId";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
@@ -16,23 +23,23 @@ import {
   onCreateRow,
   onCreateRowDone,
   onDeleteRow,
+  onDeleteRowDone,
+  onExecuteAction,
+  onExecuteActionDone,
   onFlushData,
   onFlushDataDone,
   onInitUIDone,
-  onDeleteRowDone,
-  onSaveSession,
-  onRefreshSessionDone
-} from "./constants";
-import { FormScreenDef } from "./FormScreenDef";
-import { IAction } from "model/entities/types/IAction";
-import { onExecuteAction, onExecuteActionDone } from "./constants";
-import {
+  onPerformCancel,
+  onPerformNoSave,
+  onPerformSave,
   onRefreshSession,
+  onRefreshSessionDone,
+  onRequestScreenClose,
+  onSaveSession,
   onSaveSessionDone,
   sFormScreenRunning
 } from "./constants";
-import { processActionResult } from "model/actions/Actions/processActionResult";
-import { getScreenParameters } from "../../selectors/FormScreen/getScreenParameters";
+import { FormScreenDef } from "./FormScreenDef";
 
 export class FormScreenLifecycle implements IFormScreenLifecycle {
   $type_IFormScreenLifecycle: 1 = 1;
@@ -56,10 +63,16 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
           event.entity,
           event.action,
           event.selectedItems
-        )
+        ),
+      questionSaveData: (ctx, event) => (send, onEvent) =>
+        this.questionSaveData()
     },
     actions: {
-      applyInitUIResult: (ctx, event) => this.applyInitUIResult(event as any)
+      applyInitUIResult: (ctx, event) => this.applyInitUIResult(event as any),
+      closeForm: (ctx, event) => this.closeForm()
+    },
+    guards: {
+      isDirtySession: (ctx, event) => this.isDirtySession
     }
   });
 
@@ -246,6 +259,16 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
   }
 
   @action.bound
+  onRequestScreenClose(): void {
+    this.interpreter.send(onRequestScreenClose);
+  }
+
+  @action.bound
+  closeForm() {
+    closeForm(this)();
+  }
+
+  @action.bound
   async onExecuteAction(
     gridId: string,
     entity: string,
@@ -268,9 +291,25 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
     yield when(() => screen.rootDataViews.every(dv => !dv.isWorking));
   }
 
+  @action.bound questionSaveData() {
+    return getDialogStack(this).pushDialog(
+      "",
+      <QuestionSaveData
+        screenTitle={"SCREEN_TITLE"}
+        onSaveClick={() => this.interpreter.send(onPerformSave)}
+        onDontSaveClick={() => this.interpreter.send(onPerformNoSave)}
+        onCancelClick={() => this.interpreter.send(onPerformCancel)}
+      />
+    );
+  }
+
   @action.bound
   run(): void {
     this.interpreter.start();
+  }
+
+  @computed get isDirtySession() {
+    return getFormScreen(this).isDirty;
   }
 
   parent?: any;

@@ -1,7 +1,14 @@
 import {
+  sQuestionSaveData,
+  onPerformSave,
+  onPerformNoSave,
+  onPerformCancel
+} from "./constants";
+import {
   sExecuteAction,
   onExecuteActionDone,
-  onExecuteAction
+  onExecuteAction,
+  onRequestScreenClose
 } from "./constants";
 import {
   onSaveSession,
@@ -59,7 +66,16 @@ export const FormScreenDef = {
         },
         [onExecuteAction]: {
           target: sExecuteAction
-        }
+        },
+        [onRequestScreenClose]: [
+          {
+            target: sQuestionSaveData,
+            cond: "isDirtySession"
+          },
+          {
+            actions: "closeForm"
+          }
+        ]
       }
     },
     [sFlushData]: {
@@ -102,6 +118,62 @@ export const FormScreenDef = {
       invoke: { src: "executeAction" },
       on: {
         [onExecuteActionDone]: sFormScreenRunning
+      }
+    },
+    [sQuestionSaveData]: {
+      invoke: { src: "questionSaveData" },
+      on: {
+        [onPerformSave]: {
+          target: sSaveSession
+        },
+        [onPerformNoSave]: {
+          actions: "closeForm",
+          target: sFormScreenRunning
+        },
+        [onPerformCancel]: {
+          target: sFormScreenRunning
+        }
+      }
+    },
+  }
+};
+
+const sRequestCloseForm = {
+  initial: "sDecideDialogDisplay",
+  states: {
+    sDecideDialogDisplay: {
+      "": [
+        {
+          target: sQuestionSaveData,
+          cond: "isDirtySession"
+        },
+        {
+          actions: "closeForm"
+        }
+      ]
+    },
+    [sQuestionSaveData]: {
+      invoke: { src: "questionSaveData" },
+      on: {
+        [onPerformSave]: {
+          target: sSaveSession
+        },
+        [onPerformNoSave]: {
+          actions: "closeForm",
+          target: sFormScreenRunning
+        },
+        [onPerformCancel]: {
+          target: sFormScreenRunning
+        }
+      }
+    },
+    [sSaveSession]: {
+      invoke: { src: "saveSession" },
+      on: {
+        [onSaveSessionDone]: {
+          actions: "closeForm",
+          target: sFormScreenRunning
+        }
       }
     }
   }

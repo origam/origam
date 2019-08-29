@@ -17,6 +17,7 @@ export const onFlushData = "onFlushData";
 export const onSaveSession = "onSaveSession";
 export const onRefreshSession = "onRefreshSession";
 export const onExecuteAction = "onExecuteAction";
+export const onRequestScreenClose = "onRequestScreenClose";
 
 export const sSaveSession = "sSaveSession";
 export const onSaveSessionDone = "onSaveSessionDone";
@@ -29,3 +30,8 @@ export const onDestroySessionDone = "onDestroySessionDone";
 
 export const sExecuteAction = "sExecuteAction";
 export const onExecuteActionDone = "onExecuteActionDone";
+
+export const sQuestionSaveData = "sQuestionSaveData";
+export const onPerformSave = "onPerformSave";
+export const onPerformNoSave = "onPerformNoSave";
+export const onPerformCancel = "onPerformCancel";
