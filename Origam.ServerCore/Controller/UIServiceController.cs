@@ -169,6 +169,14 @@ namespace Origam.ServerCore.Controller
                 return Ok(sessionObjects.UIService.GetData(input));
             });
         }
+        [HttpPost("[action]")]
+        public IActionResult RowStates([FromBody]RowStatesInput input)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                return Ok(sessionObjects.UIService.RowStates(input));
+            });
+        }
 
         [HttpPost("[action]")]
         public IActionResult CreateObject(

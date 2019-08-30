@@ -345,14 +345,30 @@ namespace Origam.ServerCore
                 input.ParentRecordId, 
                 input.RootRecordId);
         }
+        public IList RowStates(RowStatesInput input)
+        {
+            SessionStore sessionStore;
+            try
+			{
+				sessionStore = sessionManager.GetSession(input.SessionFormIdentifier);
+			}
+			catch(SessionExpiredException)
+			{ 
+				return new ArrayList();
+			}
+            if (sessionStore != null)
+            {
+                return sessionStore.RowStates(input.Entity, input.Ids);
+            }
+            return new ArrayList();
+        }
         public RuleExceptionDataCollection ExecuteActionQuery(
             ExecuteActionQueryInput input)
         {
             EntityUIAction action = null;
             try
             {
-                //todo: actionId to guid
-                action = UIActionTools.GetAction(input.ActionId.ToString());
+                action = UIActionTools.GetAction(input.ActionId);
             }
             catch
             {
@@ -392,7 +408,7 @@ namespace Origam.ServerCore
                 input.RequestingGrid.ToString(), 
                 input.Entity,
                 input.ActionType,
-                input.ActionId.ToString(), 
+                input.ActionId, 
                 input.ParameterMappings,
                 input.SelectedItems, 
                 input.InputParameters);
