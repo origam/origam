@@ -397,7 +397,7 @@ namespace Origam.ServerCore
             var actionRunnerClient 
                 = new ServerEntityUIActionRunnerClient(
                     sessionManager, input.SessionFormIdentifier.ToString());
-            var actionRunner = new ServerEntityUIActionRunner( 
+            var actionRunner = new ServerCoreEntityUIActionRunner( 
                 actionRunnerClient: actionRunnerClient,
                 uiManager: uiManager,  
                 sessionManager: sessionManager,

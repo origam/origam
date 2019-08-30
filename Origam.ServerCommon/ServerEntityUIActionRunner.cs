@@ -36,10 +36,10 @@ namespace Origam.Server
 {
     public class ServerEntityUIActionRunner: EntityUIActionRunner
     {
-        private readonly UIManager uiManager;
-        private readonly SessionManager sessionManager;
-        private readonly IBasicUIService basicUIService;
-        private readonly IReportManager reportManager;
+        protected readonly UIManager uiManager;
+        protected readonly SessionManager sessionManager;
+        protected readonly IBasicUIService basicUIService;
+        protected readonly IReportManager reportManager;
 
         public ServerEntityUIActionRunner(IEntityUIActionRunnerClient actionRunnerClient,
             UIManager uiManager, SessionManager sessionManager, IBasicUIService basicUIService,
@@ -261,7 +261,7 @@ namespace Origam.Server
             }
         }
 
-        private void ExecuteSelectionDialogAction(ExecuteActionProcessData processData)
+        protected virtual void ExecuteSelectionDialogAction(ExecuteActionProcessData processData)
         {
             if (processData.Action == null || 
                 processData.Action.Mode != PanelActionMode.Always)
