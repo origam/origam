@@ -26,6 +26,7 @@ export interface IDataTable extends IDataTableData {
   getDirtyValueRows(): any[][];
   getDirtyDeletedRows(): any[][];
   getDirtyNewRows(): any[][];
+  getAllValuesOfProp(property: IProperty): any[];
 
   setSortingFn(fn: ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number)
   | undefined): void;

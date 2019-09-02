@@ -68,6 +68,10 @@ export class DataTable implements IDataTable {
     return row[property.dataIndex];
   }
 
+  getAllValuesOfProp(property: IProperty): any[] {
+    return this.allRows.map(row => this.getCellValue(row, property));
+  }
+
   getCellText(row: any[], property: IProperty) {
     const value = this.getCellValue(row, property);
     return this.resolveCellText(property, value);

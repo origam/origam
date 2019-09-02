@@ -1,4 +1,4 @@
-import { action, comparer, computed, observable } from "mobx";
+import { action, comparer, computed, observable, flow } from "mobx";
 import { IDataTable } from "./types/IDataTable";
 import {
   IOrderByColumnSetting,
@@ -8,6 +8,7 @@ import {
 import _ from "lodash";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 
 interface IDataOrdering {
   column: string;
@@ -84,12 +85,26 @@ export class OrderingConfiguration implements IOrderingConfiguration {
     }
   }
 
-  @action.bound maybeApplyOrdering() {
-    const dataView = getDataView(this);
-    if (dataView.isReorderedOnClient) {
-      getDataTable(dataView).setSortingFn(this.orderingFunction);
-    }
-  }
+  maybeApplyOrdering = flow(
+    function*(this: OrderingConfiguration) {
+      const dataView = getDataView(this);
+      const dataTable = getDataTable(dataView);
+      if (dataView.isReorderedOnClient) {
+        const comboProps = this.ordering
+          .map(term => getDataViewPropertyById(this, term.column)!)
+          .filter(prop => prop.column === "ComboBox");
+
+        yield Promise.all(
+          comboProps.map(prop =>
+            prop.lookup!.resolveList(
+              new Set(dataTable.getAllValuesOfProp(prop))
+            )
+          )
+        );
+        dataTable.setSortingFn(this.orderingFunction);
+      }
+    }.bind(this)
+  );
 
   @computed
   get orderingFunction(): (
@@ -104,6 +119,7 @@ export class OrderingConfiguration implements IOrderingConfiguration {
         switch (prop.column) {
           case "Text":
           case "Date":
+          case "ComboBox":
             const txt1 = dataTable.getCellText(row1, prop);
             const txt2 = dataTable.getCellText(row2, prop);
             if (txt1 === null) {

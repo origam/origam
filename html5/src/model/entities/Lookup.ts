@@ -1,9 +1,9 @@
-import { ILookup, ILookupData, IDropDownType } from './types/ILookup';
-import { observable, IAtom, action, runInAction, createAtom } from "mobx";
+import { ILookup, ILookupData, IDropDownType } from "./types/ILookup";
+import { observable, IAtom, action, runInAction, createAtom, flow } from "mobx";
 import _ from "lodash";
 import { IDropDownColumn } from "./types/IDropDownColumn";
 import { getApi } from "../selectors/getApi";
-import { getMenuItemId } from '../selectors/getMenuItemId';
+import { getMenuItemId } from "../selectors/getMenuItemId";
 
 export enum IIdState {
   LOADING = "LOADING",
@@ -44,7 +44,7 @@ export class Lookup implements ILookup {
   }
 
   isSomethingLoading: boolean = false;
-  
+
   @action.bound
   triggerloadImm() {
     if (this.isSomethingLoading) {
@@ -65,7 +65,7 @@ export class Lookup implements ILookup {
       }
       this.isSomethingLoading = true;
       const api = getApi(this);
-      
+
       api
         .getLookupLabels({
           LookupId: this.lookupId,
@@ -97,8 +97,47 @@ export class Lookup implements ILookup {
     }
   }
 
-
   triggerLoad = _.debounce(this.triggerloadImm, 100);
+
+  resolveList = flow(
+    function*(this: Lookup, idsToLoad: Set<string>) {
+      try {
+        this.isSomethingLoading = true;
+        for (let key of idsToLoad.keys()) {
+          if (key && !this.idStates.has(key) && !this.resolvedValues.has(key)) {
+            this.idStates.set(key, IIdState.LOADING);
+          } else {
+            idsToLoad.delete(key);
+          }
+        }
+        const api = getApi(this);
+        if (idsToLoad.size === 0) {
+          return;
+        }
+        const labels = yield api.getLookupLabels({
+          LookupId: this.lookupId,
+          MenuId: undefined, // getMenuItemId(this),
+          LabelIds: Array.from(idsToLoad)
+        });
+
+        this.isSomethingLoading = false;
+        for (let [key, value] of Object.entries(labels)) {
+          this.idStates.delete(key);
+          this.resolvedValues.set(key, value);
+          idsToLoad.delete(key);
+        }
+        for (let key of idsToLoad) {
+          this.idStates.set(key, IIdState.ERROR);
+        }
+      } catch (error) {
+        this.isSomethingLoading = false;
+        for (let key of idsToLoad) {
+          this.idStates.set(key, IIdState.ERROR);
+        }
+        console.error(error);
+      }
+    }.bind(this)
+  );
 
   getValue(key: string): any {
     if (!this.visibleIds.has(key)) {
