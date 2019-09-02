@@ -129,7 +129,6 @@ export class Header extends React.Component<{
   }
 
   render() {
-    console.log("Rendering header", this.props.label);
     return (
       <>
         <div

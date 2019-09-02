@@ -27,6 +27,11 @@ export interface IDataTable extends IDataTableData {
   getDirtyDeletedRows(): any[][];
   getDirtyNewRows(): any[][];
 
+  setSortingFn(fn: ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number)
+  | undefined): void;
+  setFilteringFn(fn: ((dataTable: IDataTable) => (row: any[]) => boolean)
+  | undefined): void;
+
   setRecords(rows: any[][]): void;
   setFormDirtyValue(row: any[], propertyId: string, value: any): void;
   flushFormToTable(row: any[]): void;

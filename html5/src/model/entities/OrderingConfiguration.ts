@@ -1,12 +1,17 @@
+import { action, comparer, computed, observable } from "mobx";
+import { IDataTable } from "./types/IDataTable";
 import {
-  IOrderingConfiguration,
+  IOrderByColumnSetting,
   IOrderByDirection,
-  IOrderByColumnSetting
+  IOrderingConfiguration
 } from "./types/IOrderingConfiguration";
-import { action, observable } from "mobx";
+import _ from "lodash";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
 
-class DataOrdering {
-  constructor(public column: string, public direction: IOrderByDirection) {}
+interface IDataOrdering {
+  column: string;
+  direction: IOrderByDirection;
 }
 
 function cycleOrdering(direction: IOrderByDirection) {
@@ -22,7 +27,7 @@ function cycleOrdering(direction: IOrderByDirection) {
 }
 
 export class OrderingConfiguration implements IOrderingConfiguration {
-  @observable ordering: DataOrdering[] = [];
+  @observable ordering: IDataOrdering[] = [];
 
   getOrdering(column: string): IOrderByColumnSetting {
     const ordIndex = this.ordering.findIndex(item => item.column === column);
@@ -41,26 +46,70 @@ export class OrderingConfiguration implements IOrderingConfiguration {
 
   @action.bound
   setOrdering(column: string): void {
+    const orderingClone = _.cloneDeep(this.ordering);
     const curOrd = this.ordering.find(item => item.column === column);
     this.ordering.length = 0;
     if (!curOrd) {
-      this.ordering.push(new DataOrdering(column, IOrderByDirection.ASC));
+      this.ordering.push({ column, direction: IOrderByDirection.ASC });
     } else {
-      this.ordering.push(
-        new DataOrdering(column, cycleOrdering(curOrd.direction))
+      this.ordering.push({
+        column,
+        direction: cycleOrdering(curOrd.direction)
+      });
+      this.ordering = this.ordering.filter(
+        item => item.direction !== IOrderByDirection.NONE
       );
+    }
+
+    if (!_.isEqual(orderingClone, this.ordering)) {
+      this.maybeApplyOrdering();
     }
   }
 
   @action.bound
   addOrdering(column: string): void {
+    const orderingClone = _.cloneDeep(this.ordering);
     const curOrd = this.ordering.find(item => item.column === column);
     if (!curOrd) {
-      this.ordering.push(new DataOrdering(column, IOrderByDirection.ASC));
+      this.ordering.push({ column, direction: IOrderByDirection.ASC });
     } else {
-      this.ordering.push(
-        new DataOrdering(column, cycleOrdering(curOrd.direction))
-      );
+      curOrd.direction = cycleOrdering(curOrd.direction);
+      /*this.ordering = this.ordering.filter(
+        item => item.direction !== IOrderByDirection.NONE
+      );*/
     }
+
+    if (!_.isEqual(orderingClone, this.ordering)) {
+      this.maybeApplyOrdering();
+    }
+  }
+
+  @action.bound maybeApplyOrdering() {
+    const dataView = getDataView(this);
+    if (dataView.isReorderedOnClient) {
+      getDataTable(dataView).setSortingFn(this.orderingFunction);
+    }
+  }
+
+  @computed
+  get orderingFunction(): (
+    dataTable: IDataTable
+  ) => (row1: any[], row2: any[]) => number {
+    return (dataTable: IDataTable) => (row1: any[], row2: any) => {
+      let mul = 10 * this.ordering.length;
+      let res = 0;
+      for (let term of this.ordering) {
+        const prop = dataTable.getPropertyById(term.column);
+        res =
+          res +
+          mul *
+            (term.direction === IOrderByDirection.DESC ? -1 : 1) *
+            dataTable
+              .getCellText(row1, prop!)
+              .localeCompare(dataTable.getCellText(row2, prop!));
+        mul = mul / 10;
+      }
+      return res;
+    };
   }
 }

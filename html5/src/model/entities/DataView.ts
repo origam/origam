@@ -14,6 +14,7 @@ import { IAction, IActionPlacement, IActionType } from "./types/IAction";
 import { getIsDialog } from "../selectors/getIsDialog";
 
 export class DataView implements IDataView {
+  
   $type_IDataView: 1 = 1;
 
   constructor(data: IDataViewData) {
@@ -26,6 +27,8 @@ export class DataView implements IDataView {
     this.formPanelView.parent = this;
     // Identifier - usualy Id is always the first property.
   }
+
+  isReorderedOnClient: boolean = true;
 
   id = "";
   modelInstanceId = "";

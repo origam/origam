@@ -194,7 +194,6 @@ export class TablePanelView implements ITablePanelView {
     idSource: string | undefined,
     idTarget: string | undefined
   ): void {
-    console.log(idSource, idTarget);
     this.columnOrderChangingTargetId = idTarget;
     this.columnOrderChangingSourceId = idSource;
   }

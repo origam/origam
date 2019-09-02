@@ -14,20 +14,25 @@ export class DataTable implements IDataTable {
   }
 
   @observable.shallow allRows: any[][] = [];
-  @observable.ref filterFn: ((row: any[]) => boolean) | undefined;
-  @observable.ref sortingFn: ((row1: any[], row2: any[]) => number) | undefined;
+  @observable.ref filteringFn:
+    | ((dataTable: IDataTable) => (row: any[]) => boolean)
+    | undefined;
+  @observable.ref sortingFn:
+    | ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number)
+    | undefined;
 
   @computed get rows(): any[][] {
     let rows = this.allRows;
-    if (this.filterFn) {
+    if (this.filteringFn) {
+      const filt = this.filteringFn!(this);
       rows = this.allRows.filter(
-        row => !this.isRowDirtyDeleted(row) && this.filterFn!(row)
+        row => !this.isRowDirtyDeleted(row) && filt(row)
       );
     } else {
       rows = this.allRows.filter(row => !this.isRowDirtyDeleted(row));
     }
     if (this.sortingFn) {
-      rows.sort(this.sortingFn);
+      rows.sort(this.sortingFn(this));
     }
     return rows;
   }
@@ -283,6 +288,22 @@ export class DataTable implements IDataTable {
   clear(): void {
     this.allRows.length = 0;
     this.additionalRowData.clear();
+  }
+
+  @action.bound
+  setSortingFn(
+    fn:
+      | ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number)
+      | undefined
+  ): void {
+    this.sortingFn = fn;
+  }
+
+  @action.bound
+  setFilteringFn(
+    fn: ((dataTable: IDataTable) => (row: any[]) => boolean) | undefined
+  ): void {
+    this.filteringFn = fn;
   }
 
   parent?: any;

@@ -57,6 +57,8 @@ export interface IDataView extends IDataViewData {
   selectedRow: any[] | undefined;
   dataSource: IDataSource;
 
+  isReorderedOnClient: boolean;
+
   panelViewActions: IAction[];
   toolbarActions: IAction[];
   dialogActions: IAction[];
