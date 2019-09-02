@@ -14,6 +14,7 @@ import {
 } from "./types/ITablePanelView";
 import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
 import { getSelectedColumnId } from "model/selectors/TablePanelView/getSelectedColumnId";
+import { IOrderingConfiguration } from "../types/IOrderingConfiguration";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -22,10 +23,12 @@ export class TablePanelView implements ITablePanelView {
     Object.assign(this, data);
     this.columnConfigurationDialog.parent = this;
     this.filterConfiguration.parent = this;
+    this.orderingConfiguration.parent = this;
   }
 
   columnConfigurationDialog: IColumnConfigurationDialog = null as any;
   filterConfiguration: IFilterConfiguration = null as any;
+  orderingConfiguration: IOrderingConfiguration = null as any;
 
   @observable isEditing: boolean = false;
   @observable fixedColumnCount: number = 0;

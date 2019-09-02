@@ -8,4 +8,5 @@ export interface IColumnHeader {
   id: string;
   label: string;
   ordering: IOrderByDirection;
+  order: number;
 }

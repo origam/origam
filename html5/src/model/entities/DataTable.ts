@@ -14,9 +14,22 @@ export class DataTable implements IDataTable {
   }
 
   @observable.shallow allRows: any[][] = [];
+  @observable.ref filterFn: ((row: any[]) => boolean) | undefined;
+  @observable.ref sortingFn: ((row1: any[], row2: any[]) => number) | undefined;
 
   @computed get rows(): any[][] {
-    return this.allRows.filter(row => !this.isRowDirtyDeleted(row));
+    let rows = this.allRows;
+    if (this.filterFn) {
+      rows = this.allRows.filter(
+        row => !this.isRowDirtyDeleted(row) && this.filterFn!(row)
+      );
+    } else {
+      rows = this.allRows.filter(row => !this.isRowDirtyDeleted(row));
+    }
+    if (this.sortingFn) {
+      rows.sort(this.sortingFn);
+    }
+    return rows;
   }
   @observable additionalRowData: Map<string, IAdditionalRowData> = new Map();
 

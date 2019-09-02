@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import S from "./Header.module.css";
 import { IOrderByDirection } from "./types";
 import { action } from "mobx";
+import _ from "lodash";
 
 @observer
 export class Header extends React.Component<{
@@ -18,15 +19,18 @@ export class Header extends React.Component<{
   onStopColumnOrderChanging?: (id: string) => void;
   onColumnOrderDrop?: (id: string) => void;
   onPossibleColumnOrderChange?: (targetId: string | undefined) => void;
+  onClick?: (event: any, id: string) => void;
 }> {
   width0: number = 0;
   mouseX0: number = 0;
+  mouseY0: number = 0;
   isMouseIn: boolean = false;
 
   @action.bound handleHeaderWidthHandleMouseDown(event: any) {
     event.preventDefault();
     this.width0 = this.props.width;
     this.mouseX0 = event.screenX;
+    this.mouseY0 = event.screenY;
     window.addEventListener(
       "mousemove",
       this.handleWindowMouseMoveForColumnWidthChange
@@ -57,6 +61,8 @@ export class Header extends React.Component<{
 
   @action.bound handleHeaderMouseDown(event: any) {
     event.preventDefault();
+    this.mouseX0 = event.screenX;
+    this.mouseY0 = event.screenY;
     this.props.onStartColumnOrderChanging &&
       this.props.onStartColumnOrderChanging(this.props.id);
     window.addEventListener(
@@ -101,7 +107,22 @@ export class Header extends React.Component<{
   }
 
   @action.bound handleMouseUp(event: any) {
+    console.log(
+      this.props.isColumnOrderChanging,
+      this.isMouseIn,
+      event.screenX,
+      this.mouseX0,
+      event.screenY,
+      this.mouseY0
+    );
     if (this.props.isColumnOrderChanging && this.isMouseIn) {
+      if (
+        (event.screenX - this.mouseX0) ** 2 +
+          (event.screenY - this.mouseY0) ** 2 <
+        25 // Cursor coord change is no more than 25 px
+      ) {
+        this.props.onClick && this.props.onClick(event, this.props.id);
+      }
       this.props.onColumnOrderDrop &&
         this.props.onColumnOrderDrop(this.props.id);
     }

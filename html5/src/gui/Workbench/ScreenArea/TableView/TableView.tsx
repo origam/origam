@@ -1,7 +1,9 @@
 import bind from "bind-decorator";
 import { action, computed, observable } from "mobx";
 import { inject, observer, Provider } from "mobx-react";
+import { onTableKeyDown } from "model/actions/DataView/TableView/onTableKeyDown";
 import React from "react";
+import { onColumnHeaderClick } from "../../../../model/actions/DataView/TableView/onColumnHeaderClick";
 import { ITablePanelView } from "../../../../model/entities/TablePanelView/types/ITablePanelView";
 import { IDataView } from "../../../../model/entities/types/IDataView";
 import { IProperty } from "../../../../model/entities/types/IProperty";
@@ -20,8 +22,7 @@ import { Table } from "../../../Components/ScreenElements/Table/Table";
 import { IGridDimensions } from "../../../Components/ScreenElements/Table/types";
 import { CellRenderer } from "./CellRenderer";
 import { TableViewEditor } from "./TableViewEditor";
-import { onTableKeyDown } from "model/actions/DataView/TableView/onTableKeyDown";
-
+import { getPropertyOrdering } from "../../../../model/selectors/DataView/getPropertyOrdering";
 
 @inject(({ dataView }) => {
   return {
@@ -39,7 +40,7 @@ export class TableView extends React.Component<{
   tablePanelView?: ITablePanelView;
   onColumnDialogCancel?: (event: any) => void;
   onColumnDialogOk?: (event: any, configuration: ITableColumnsConf) => void;
-  onTableKeyDown?:(event: any) => void;
+  onTableKeyDown?: (event: any) => void;
 }> {
   gDim = new GridDimensions({
     getTableViewProperties: () => getTableViewProperties(this.props.dataView),
@@ -257,23 +258,25 @@ class HeaderRenderer implements IHeaderRendererData {
   @bind
   renderHeader(args: { columnIndex: number; columnWidth: number }) {
     const property = this.tableViewProperties[args.columnIndex];
+    const header = this.columnHeaders[args.columnIndex];
     return (
       <Header
-        key={this.columnHeaders[args.columnIndex].id}
-        id={this.columnHeaders[args.columnIndex].id}
+        key={header.id}
+        id={header.id}
         width={args.columnWidth}
-        label={this.columnHeaders[args.columnIndex].label}
-        orderingDirection={this.columnHeaders[args.columnIndex].ordering}
-        orderingOrder={0}
+        label={header.label}
+        orderingDirection={header.ordering}
+        orderingOrder={header.order}
         onColumnWidthChange={this.onColumnWidthChange}
         isColumnOrderChanging={this.isColumnOrderChanging}
         onColumnOrderDrop={this.handleColumnOrderDrop}
         onStartColumnOrderChanging={this.handleStartColumnOrderChanging}
         onStopColumnOrderChanging={this.handleStopColumnOrderChanging}
         onPossibleColumnOrderChange={this.handlePossibleColumnOrderChange}
+        onClick={onColumnHeaderClick(this.tablePanelView)}
         additionalHeaderContent={
           this.tablePanelView.filterConfiguration.isFilterControlsDisplayed
-            ? () => <FilterSettings propertyColumn={property.column}/>
+            ? () => <FilterSettings propertyColumn={property.column} />
             : undefined
         }
       />

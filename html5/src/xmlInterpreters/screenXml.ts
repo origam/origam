@@ -22,6 +22,7 @@ import { ColumnConfigurationDialog } from "../model/entities/TablePanelView/Colu
 import { FilterConfiguration } from "../model/entities/FilterConfiguration";
 import { Action } from "../model/entities/Action";
 import { ActionParameter } from "../model/entities/ActionParameter";
+import { OrderingConfiguration } from '../model/entities/OrderingConfiguration';
 
 export const findUIRoot = (node: any) =>
   findStopping(node, n => n.name === "UIRoot")[0];
@@ -259,7 +260,8 @@ export function interpretScreenXml(
         tablePanelView: new TablePanelView({
           tablePropertyIds: properties.slice(1).map(prop => prop.id),
           columnConfigurationDialog: new ColumnConfigurationDialog(),
-          filterConfiguration: new FilterConfiguration()
+          filterConfiguration: new FilterConfiguration(),
+          orderingConfiguration: new OrderingConfiguration()
         }),
         formPanelView: new FormPanelView(),
         properties,

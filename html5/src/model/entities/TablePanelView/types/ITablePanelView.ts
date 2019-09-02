@@ -1,11 +1,13 @@
 import { IFilterConfiguration } from "../../types/IFilterConfiguration";
 import { IProperty } from "../../types/IProperty";
 import { IColumnConfigurationDialog } from "./IColumnConfigurationDialog";
+import { IOrderingConfiguration } from "model/entities/types/IOrderingConfiguration";
 
 export interface ITablePanelViewData {
   tablePropertyIds: string[];
   columnConfigurationDialog: IColumnConfigurationDialog;
   filterConfiguration: IFilterConfiguration;
+  orderingConfiguration: IOrderingConfiguration;
 }
 
 export interface ITableCanvas {
