@@ -99,14 +99,52 @@ export class OrderingConfiguration implements IOrderingConfiguration {
       let mul = 10 * this.ordering.length;
       let res = 0;
       for (let term of this.ordering) {
-        const prop = dataTable.getPropertyById(term.column);
+        const prop = dataTable.getPropertyById(term.column)!;
+        let cmpSign = 0;
+        switch (prop.column) {
+          case "Text":
+          case "Date":
+            const txt1 = dataTable.getCellText(row1, prop);
+            const txt2 = dataTable.getCellText(row2, prop);
+            if (txt1 === null) {
+              cmpSign = 1;
+            } else if (txt2 === null) {
+              cmpSign = -1;
+            } else {
+              cmpSign = txt1.localeCompare(txt2);
+            }
+            break;
+          case "CheckBox": {
+            const val1 = dataTable.getCellValue(row1, prop);
+            const val2 = dataTable.getCellValue(row2, prop);
+            if (val1 === null) {
+              cmpSign = 1;
+            } else if (val2 === null) {
+              cmpSign = -1;
+            } else {
+              cmpSign = `${val1}`.localeCompare(`${val2}`);
+            }
+            break;
+          }
+          case "Number": {
+            const val1 = dataTable.getCellValue(row1, prop);
+            const val2 = dataTable.getCellValue(row2, prop);
+            if (val1 === null) {
+              cmpSign = 1;
+            } else if (val2 === null) {
+              cmpSign = -1;
+            } else {
+              cmpSign =
+                dataTable.getCellValue(row1, prop) -
+                dataTable.getCellValue(row2, prop);
+            }
+            break;
+          }
+        }
+
         res =
           res +
-          mul *
-            (term.direction === IOrderByDirection.DESC ? -1 : 1) *
-            dataTable
-              .getCellText(row1, prop!)
-              .localeCompare(dataTable.getCellText(row2, prop!));
+          mul * (term.direction === IOrderByDirection.DESC ? -1 : 1) * cmpSign;
         mul = mul / 10;
       }
       return res;
