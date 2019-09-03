@@ -59,7 +59,7 @@ namespace Origam.ServerCore
             this.uiManager = uiManager;
             this.sessionManager = sessionManager;
             sessionHelper = new SessionHelper(sessionManager);
-            reportManager = new ServerCoreReportManager();
+            reportManager = new ServerCoreReportManager(sessionManager);
         }
 
         public string GetReportStandalone(

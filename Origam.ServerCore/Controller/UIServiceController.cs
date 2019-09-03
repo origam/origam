@@ -75,8 +75,8 @@ namespace Origam.ServerCore.Controller
             dataService = DataService.GetDataService();
         }
 
-        [HttpGet("[action]")]
-        public IActionResult InitPortal([FromQuery][Required]string locale)
+        [HttpGet("[action]/{locale}")]
+        public IActionResult InitPortal(string locale)
         {
             Analytics.Instance.Log("UI_INIT");
             //TODO: find out how to setup locale cookies and incorporate
@@ -108,9 +108,8 @@ namespace Origam.ServerCore.Controller
             });
         }
 
-        [HttpGet("[action]")]
-        public IActionResult DestroyUI(
-            [FromQuery][Required]Guid sessionFormIdentifier)
+        [HttpGet("[action]/{sessionFormIdentifier:guid}")]
+        public IActionResult DestroyUI(Guid sessionFormIdentifier)
         {
             return RunWithErrorHandler(() =>
             {
@@ -119,9 +118,8 @@ namespace Origam.ServerCore.Controller
             });
         }
 
-        [HttpGet("[action]")]
-        public IActionResult RefreshData(
-            [FromQuery][Required]Guid sessionFormIdentifier)
+        [HttpGet("[action]/{sessionFormIdentifier:guid}")]
+        public IActionResult RefreshData(Guid sessionFormIdentifier)
         {
             return RunWithErrorHandler(() =>
             {
@@ -130,9 +128,8 @@ namespace Origam.ServerCore.Controller
             });
         }
 
-        [HttpGet("[action]")]
-        public IActionResult SaveDataQuery(
-            [FromQuery][Required]Guid sessionFormIdentifier)
+        [HttpGet("[action]/{sessionFormIdentifier:guid}")]
+        public IActionResult SaveDataQuery(Guid sessionFormIdentifier)
         {
             return RunWithErrorHandler(() =>
             {
@@ -141,9 +138,8 @@ namespace Origam.ServerCore.Controller
             });
         }
 
-        [HttpGet("[action]")]
-        public IActionResult SaveData(
-            [FromQuery][Required]Guid sessionFormIdentifier)
+        [HttpGet("[action]/{sessionFormIdentifier:guid}")]
+        public IActionResult SaveData(Guid sessionFormIdentifier)
         {
             return RunWithErrorHandler(() =>
             {
