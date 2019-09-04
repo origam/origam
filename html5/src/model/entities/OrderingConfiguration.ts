@@ -101,6 +101,7 @@ export class OrderingConfiguration implements IOrderingConfiguration {
             )
           )
         );
+
         dataTable.setSortingFn(this.orderingFunction);
       }
     }.bind(this)
@@ -122,7 +123,11 @@ export class OrderingConfiguration implements IOrderingConfiguration {
           case "ComboBox":
             const txt1 = dataTable.getCellText(row1, prop);
             const txt2 = dataTable.getCellText(row2, prop);
-            if (txt1 === null) {
+            if (txt1 === undefined) {
+              cmpSign = 1;
+            } else if (txt2 === undefined) {
+              cmpSign = -1;
+            } else if (txt1 === null) {
               cmpSign = 1;
             } else if (txt2 === null) {
               cmpSign = -1;

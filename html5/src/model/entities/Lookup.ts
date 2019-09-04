@@ -1,5 +1,5 @@
 import { ILookup, ILookupData, IDropDownType } from "./types/ILookup";
-import { observable, IAtom, action, runInAction, createAtom, flow } from "mobx";
+import { observable, IAtom, action, runInAction, createAtom, flow, when } from 'mobx';
 import _ from "lodash";
 import { IDropDownColumn } from "./types/IDropDownColumn";
 import { getApi } from "../selectors/getApi";
@@ -45,62 +45,62 @@ export class Lookup implements ILookup {
 
   isSomethingLoading: boolean = false;
 
-  @action.bound
-  triggerloadImm() {
-    if (this.isSomethingLoading) {
-      return;
-    }
-    while (true) {
-      const idsToLoad: Set<string> = new Set();
-      runInAction(() => {
-        for (let key of this.visibleIds.keys()) {
-          if (key && !this.idStates.has(key) && !this.resolvedValues.has(key)) {
-            idsToLoad.add(key);
-            this.idStates.set(key, IIdState.LOADING);
-          }
-        }
-      });
-      if (idsToLoad.size === 0) {
-        break;
+  triggerloadImm = flow(
+    function*(this: Lookup) {
+      if(this.isSomethingLoading) {
+        return
       }
-      this.isSomethingLoading = true;
-      const api = getApi(this);
+      while (true) {
+        const idsToLoad: Set<string> = new Set();
+        try {
+          for (let key of this.visibleIds.keys()) {
+            if (
+              key &&
+              !this.idStates.has(key) &&
+              !this.resolvedValues.has(key)
+            ) {
+              idsToLoad.add(key);
+              this.idStates.set(key, IIdState.LOADING);
+            }
+          }
 
-      api
-        .getLookupLabels({
-          LookupId: this.lookupId,
-          MenuId: undefined, // getMenuItemId(this),
-          LabelIds: Array.from(idsToLoad)
-        })
-        .then(
-          action((labels: { [key: string]: string }) => {
-            this.isSomethingLoading = false;
-            for (let [key, value] of Object.entries(labels)) {
-              this.idStates.delete(key);
-              this.resolvedValues.set(key, value);
-              idsToLoad.delete(key);
-            }
-            for (let key of idsToLoad) {
-              this.idStates.set(key, IIdState.ERROR);
-            }
-          })
-        )
-        .catch(
-          action(error => {
-            this.isSomethingLoading = false;
-            for (let key of idsToLoad) {
-              this.idStates.set(key, IIdState.ERROR);
-            }
-            console.error(error);
-          })
-        );
-    }
-  }
+          if (idsToLoad.size === 0) {
+            break;
+          }
+          this.isSomethingLoading = true;
+          const api = getApi(this);
+
+          const labels: { [key: string]: string } = yield api.getLookupLabels({
+            LookupId: this.lookupId,
+            MenuId: undefined, // getMenuItemId(this),
+            LabelIds: Array.from(idsToLoad)
+          });
+
+          this.isSomethingLoading = false;
+          for (let [key, value] of Object.entries(labels)) {
+            this.idStates.delete(key);
+            this.resolvedValues.set(key, value);
+            idsToLoad.delete(key);
+          }
+          for (let key of idsToLoad) {
+            this.idStates.set(key, IIdState.ERROR);
+          }
+        } catch (error) {
+          this.isSomethingLoading = false;
+          for (let key of idsToLoad) {
+            this.idStates.set(key, IIdState.ERROR);
+          }
+          console.error(error);
+        }
+      }
+    }.bind(this)
+  );
 
   triggerLoad = _.debounce(this.triggerloadImm, 100);
 
   resolveList = flow(
     function*(this: Lookup, idsToLoad: Set<string>) {
+      yield when(() => !this.isSomethingLoading)
       try {
         this.isSomethingLoading = true;
         for (let key of idsToLoad.keys()) {
@@ -119,15 +119,11 @@ export class Lookup implements ILookup {
           MenuId: undefined, // getMenuItemId(this),
           LabelIds: Array.from(idsToLoad)
         });
-
         this.isSomethingLoading = false;
         for (let [key, value] of Object.entries(labels)) {
           this.idStates.delete(key);
           this.resolvedValues.set(key, value);
           idsToLoad.delete(key);
-        }
-        for (let key of idsToLoad) {
-          this.idStates.set(key, IIdState.ERROR);
         }
       } catch (error) {
         this.isSomethingLoading = false;
@@ -136,6 +132,7 @@ export class Lookup implements ILookup {
         }
         console.error(error);
       }
+      
     }.bind(this)
   );
 

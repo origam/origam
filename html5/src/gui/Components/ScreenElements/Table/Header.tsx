@@ -122,9 +122,10 @@ export class Header extends React.Component<{
         25 // Cursor coord change is no more than 25 px
       ) {
         this.props.onClick && this.props.onClick(event, this.props.id);
+      } else {
+        this.props.onColumnOrderDrop &&
+          this.props.onColumnOrderDrop(this.props.id);
       }
-      this.props.onColumnOrderDrop &&
-        this.props.onColumnOrderDrop(this.props.id);
     }
   }
 
