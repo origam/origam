@@ -306,6 +306,21 @@ namespace Origam.Server
         {
             reportRequests.Add(key, request);
         }
+        public ReportRequest GetReportRequest(Guid key)
+        {
+            if(!reportRequests.ContainsKey(key))
+            {
+                return null;
+            } 
+            else
+            {
+                return reportRequests[key];
+            }
+        }
+        public void RemoveReportRequest(Guid key)
+        {
+            reportRequests.Remove(key);
+        }
     }
 
     public struct SessionStats
