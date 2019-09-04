@@ -52,7 +52,7 @@ namespace Origam.ServerCore
                 parameterMappings, new List<DataRow>{row});
             sessionManager.AddReportRequest(
                 key, new ReportRequest(reportId, resultParams));
-            return key.ToString();
+            return ReportRequestKeyToUrl(key);
         }
 
         public string GetReportFromMenu(string menuId)
@@ -69,7 +69,7 @@ namespace Origam.ServerCore
                 reportReferenceMenuItem.ReportId.ToString(), 
                 new Hashtable(),
                 reportReferenceMenuItem.ExportFormatType));
-            return key.ToString();
+            return ReportRequestKeyToUrl(key);
         }
 
         public string GetReportStandalone(
@@ -81,7 +81,12 @@ namespace Origam.ServerCore
                 key, 
                 new ReportRequest(reportId, parameters, 
                 dataReportExportFormatType));
-            return key.ToString();
+            return ReportRequestKeyToUrl(key);
+        }
+
+        private static string ReportRequestKeyToUrl(Guid key)
+        {
+            return "internalApi/Report/" + key;
         }
     }
 }
