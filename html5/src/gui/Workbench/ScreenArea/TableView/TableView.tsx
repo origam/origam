@@ -260,26 +260,28 @@ class HeaderRenderer implements IHeaderRendererData {
     const property = this.tableViewProperties[args.columnIndex];
     const header = this.columnHeaders[args.columnIndex];
     return (
-      <Header
-        key={header.id}
-        id={header.id}
-        width={args.columnWidth}
-        label={header.label}
-        orderingDirection={header.ordering}
-        orderingOrder={header.order}
-        onColumnWidthChange={this.onColumnWidthChange}
-        isColumnOrderChanging={this.isColumnOrderChanging}
-        onColumnOrderDrop={this.handleColumnOrderDrop}
-        onStartColumnOrderChanging={this.handleStartColumnOrderChanging}
-        onStopColumnOrderChanging={this.handleStopColumnOrderChanging}
-        onPossibleColumnOrderChange={this.handlePossibleColumnOrderChange}
-        onClick={onColumnHeaderClick(this.tablePanelView)}
-        additionalHeaderContent={
-          this.tablePanelView.filterConfiguration.isFilterControlsDisplayed
-            ? () => <FilterSettings propertyColumn={property.column} />
-            : undefined
-        }
-      />
+      <Provider property={property}>
+        <Header
+          key={header.id}
+          id={header.id}
+          width={args.columnWidth}
+          label={header.label}
+          orderingDirection={header.ordering}
+          orderingOrder={header.order}
+          onColumnWidthChange={this.onColumnWidthChange}
+          isColumnOrderChanging={this.isColumnOrderChanging}
+          onColumnOrderDrop={this.handleColumnOrderDrop}
+          onStartColumnOrderChanging={this.handleStartColumnOrderChanging}
+          onStopColumnOrderChanging={this.handleStopColumnOrderChanging}
+          onPossibleColumnOrderChange={this.handlePossibleColumnOrderChange}
+          onClick={onColumnHeaderClick(this.tablePanelView)}
+          additionalHeaderContent={
+            this.tablePanelView.filterConfiguration.isFilterControlsDisplayed
+              ? () => <FilterSettings />
+              : undefined
+          }
+        />
+      </Provider>
     );
   }
 }

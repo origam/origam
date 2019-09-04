@@ -6,22 +6,30 @@ import { FilterSettingsDate } from "./HeaderControls/FilterSettingsDate";
 import { observer } from "mobx-react-lite";
 import { FilterSettingsNumber } from "./HeaderControls/FilterSettingsNumber";
 import { FilterSettingsLookup } from "./HeaderControls/FilterSettingsLookup";
+import { toJS } from "mobx";
+import { useContext } from "react";
+import { MobXProviderContext } from "mobx-react";
+import { onApplyFilterSetting } from "../../../../../model/actions/DataView/TableView/onApplyFilterSetting";
 
-export const FilterSettings: React.FC<{ propertyColumn: string }> = observer(
-  props => {
-    switch (props.propertyColumn) {
-      case "Text":
-        return <FilterSettingsString />;
-      case "CheckBox":
-        return <FilterSettingsBoolean />;
-      case "Date":
-        return <FilterSettingsDate />;
-      case "Number":
-        return <FilterSettingsNumber />;
-      case "ComboBox":
-        return <FilterSettingsLookup />;
-      default:
-        return <>{props.propertyColumn}</>;
-    }
+export const FilterSettings: React.FC = observer(props => {
+  const property = useContext(MobXProviderContext).property as IProperty;
+  const handleApplyFilterSetting = onApplyFilterSetting(property);
+  switch (property.column) {
+    case "Text":
+      return (
+        <FilterSettingsString
+          onTriggerApplySetting={handleApplyFilterSetting}
+        />
+      );
+    case "CheckBox":
+      return <FilterSettingsBoolean />;
+    case "Date":
+      return <FilterSettingsDate />;
+    case "Number":
+      return <FilterSettingsNumber />;
+    case "ComboBox":
+      return <FilterSettingsLookup />;
+    default:
+      return <>{property.column}</>;
   }
-);
+});

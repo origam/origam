@@ -29,19 +29,24 @@ interface IOp0 {
   human: React.ReactNode;
 }
 
-type ISetting = IOp1 | IOp0;
+export type ISetting = (IOp1 | IOp0) & { dataType: "string" };
 
 const OPERATORS: ISetting[] = [
-  { human: <>=</>, type: "eq", val1: "" },
-  { human: <>&ne;</>, type: "neq", val1: "" },
-  { human: <>begins with</>, type: "starts", val1: "" },
-  { human: <>not begins with</>, type: "nstarts", val1: "" },
-  { human: <>ends with</>, type: "ends", val1: "" },
-  { human: <>not ends with</>, type: "nends", val1: "" },
-  { human: <>contain</>, type: "contains", val1: "" },
-  { human: <>not contain</>, type: "ncontains", val1: "" },
-  { human: <>is null</>, type: "null" },
-  { human: <>is not null</>, type: "nnull" }
+  { dataType: "string", human: <>=</>, type: "eq", val1: "" },
+  { dataType: "string", human: <>&ne;</>, type: "neq", val1: "" },
+  { dataType: "string", human: <>begins with</>, type: "starts", val1: "" },
+  {
+    dataType: "string",
+    human: <>not begins with</>,
+    type: "nstarts",
+    val1: ""
+  },
+  { dataType: "string", human: <>ends with</>, type: "ends", val1: "" },
+  { dataType: "string", human: <>not ends with</>, type: "nends", val1: "" },
+  { dataType: "string", human: <>contain</>, type: "contains", val1: "" },
+  { dataType: "string", human: <>not contain</>, type: "ncontains", val1: "" },
+  { dataType: "string", human: <>is null</>, type: "null" },
+  { dataType: "string", human: <>is not null</>, type: "nnull" }
 ];
 
 const OpCombo: React.FC<{
@@ -64,7 +69,8 @@ const OpCombo: React.FC<{
 
 const OpEditors: React.FC<{
   setting: ISetting;
-  onChange: (newSetting: ISetting) => void;
+  onChange?: (newSetting: ISetting) => void;
+  onBlur?: (event: any) => void;
 }> = props => {
   const { setting } = props;
   switch (setting.type) {
@@ -81,8 +87,10 @@ const OpEditors: React.FC<{
           className={CS.input}
           value={setting.val1}
           onChange={(event: any) =>
+            props.onChange &&
             props.onChange({ ...setting, val1: event.target.value })
           }
+          onBlur={props.onBlur}
         />
       );
     case "null":
@@ -93,19 +101,65 @@ const OpEditors: React.FC<{
 };
 
 @observer
-export class FilterSettingsString extends React.Component {
-  @observable selectedOperator: ISetting = OPERATORS[0];
+export class FilterSettingsString extends React.Component<{
+  onTriggerApplySetting?: (setting: ISetting) => void;
+}> {
+  @observable setting: ISetting = OPERATORS[0];
+
+  @action.bound
+  handleBlur() {
+    switch (this.setting.type) {
+      case "eq":
+      case "neq":
+      case "starts":
+      case "nstarts":
+      case "ends":
+      case "nends":
+      case "contains":
+      case "ncontains":
+        if (this.setting.val1) {
+          this.props.onTriggerApplySetting &&
+            this.props.onTriggerApplySetting(this.setting);
+        }
+        break;
+      default:
+        this.props.onTriggerApplySetting &&
+          this.props.onTriggerApplySetting(this.setting);
+    }
+  }
+
+  @action.bound
+  handleChange(newSetting: ISetting) {
+    this.setting = newSetting;
+    switch (this.setting.type) {
+      case "eq":
+      case "neq":
+      case "starts":
+      case "nstarts":
+      case "ends":
+      case "nends":
+      case "contains":
+      case "ncontains":
+        if (this.setting.val1) {
+          this.props.onTriggerApplySetting &&
+            this.props.onTriggerApplySetting(this.setting);
+        }
+      default:
+        this.props.onTriggerApplySetting &&
+          this.props.onTriggerApplySetting(this.setting);
+    }
+  }
+
+  @action.bound maybeApplySetting() {}
 
   render() {
     return (
       <>
-        <OpCombo
-          setting={this.selectedOperator}
-          onChange={(newSetting) => this.selectedOperator = newSetting}
-        />
-        <OpEditors 
-          setting={this.selectedOperator}
-          onChange={(newSetting) => this.selectedOperator = newSetting}
+        <OpCombo setting={this.setting} onChange={this.handleChange} />
+        <OpEditors
+          setting={this.setting}
+          onChange={this.handleChange}
+          onBlur={this.handleBlur}
         />
 
         {/*<input className={CS.input} />*/}

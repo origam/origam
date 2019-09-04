@@ -1,33 +1,21 @@
-export interface ILTOp {
-  type: "LT";
+import { ISetting as IFilterSettingString } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsString";
+
+// TODO: Extract types so that model layer does not depend on view layer?
+
+type ISetting = IFilterSettingString;
+
+export interface IFilterTerm {
   propertyId: string;
-  val1: any;
+  setting: ISetting;
 }
 
-export interface IGTOp {
-  type: "GT";
-  propertyId: string;
-  val1: any;
-}
-
-export interface IIsNull {
-  type: "IsNull";
-  propertyId: string;
-}
-
-export type IFilterTerm = ILTOp | IGTOp | IIsNull;
-
-
-
-export interface IFilterConfigurationData {
-
-}
+export interface IFilterConfigurationData {}
 
 export interface IFilterConfiguration extends IFilterConfigurationData {
   $type_IFilterConfigurationData: 1;
-  
+
   isFilterControlsDisplayed: boolean;
-  filterSetting: IFilterTerm[];
+  filtering: IFilterTerm[];
   getSettingByPropertyId(propertyId: string): IFilterTerm | undefined;
   setFilter(term: IFilterTerm): void;
   clearFilters(): void;

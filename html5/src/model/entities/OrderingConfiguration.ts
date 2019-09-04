@@ -107,7 +107,6 @@ export class OrderingConfiguration implements IOrderingConfiguration {
     }.bind(this)
   );
 
-  @computed
   get orderingFunction(): (
     dataTable: IDataTable
   ) => (row1: any[], row2: any[]) => number {
