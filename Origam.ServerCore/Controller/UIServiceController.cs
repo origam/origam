@@ -355,9 +355,8 @@ namespace Origam.ServerCore.Controller
                     .OnSuccess(ThrowAwayReturnData)
                     .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
-        [HttpGet("[action]")]
-        public IActionResult WorkflowNextQuery(
-            [FromQuery][Required]Guid sessionFormIdentifier)
+        [HttpGet("[action]/{sessionFormIdentifier}")]
+        public IActionResult WorkflowNextQuery(Guid sessionFormIdentifier)
         {
             return RunWithErrorHandler(() =>
             {
@@ -374,9 +373,8 @@ namespace Origam.ServerCore.Controller
                 return Ok(sessionObjects.UIService.WorkflowNext(input));
             });
         }
-        [HttpGet("[action]")]
-        public IActionResult WorkflowAbort(
-            [FromQuery][Required]Guid sessionFormIdentifier)
+        [HttpGet("[action]/{sessionFormIdentifier}")]
+        public IActionResult WorkflowAbort(Guid sessionFormIdentifier)
         {
             return RunWithErrorHandler(() =>
             {
@@ -384,9 +382,8 @@ namespace Origam.ServerCore.Controller
                     sessionFormIdentifier));
             });
         }
-        [HttpGet("[action]")]
-        public IActionResult WorkflowRepeat(
-            [FromQuery][Required]Guid sessionFormIdentifier)
+        [HttpGet("[action]/{sessionFormIdentifier}")]
+        public IActionResult WorkflowRepeat(Guid sessionFormIdentifier)
         {
             return RunWithErrorHandler(() =>
             {
