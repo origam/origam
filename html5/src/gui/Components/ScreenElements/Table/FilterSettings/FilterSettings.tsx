@@ -24,7 +24,9 @@ export const FilterSettings: React.FC = observer(props => {
     case "CheckBox":
       return <FilterSettingsBoolean />;
     case "Date":
-      return <FilterSettingsDate />;
+      return (
+        <FilterSettingsDate onTriggerApplySetting={handleApplyFilterSetting} />
+      );
     case "Number":
       return <FilterSettingsNumber />;
     case "ComboBox":

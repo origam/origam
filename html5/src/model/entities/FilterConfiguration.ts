@@ -1,12 +1,13 @@
+import _ from "lodash";
+import { action, comparer, flow, observable, reaction, toJS } from "mobx";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
+import { getDataTable } from "../selectors/DataView/getDataTable";
+import { IDataTable } from "./types/IDataTable";
 import {
   IFilterConfiguration,
   IFilterTerm
 } from "./types/IFilterConfiguration";
-import { observable, action, computed, reaction, toJS, comparer } from "mobx";
-import { IDataTable } from "./types/IDataTable";
-import { start } from "xstate/lib/actions";
-import { getDataTable } from "../selectors/DataView/getDataTable";
-import _ from "lodash";
 
 export class FilterConfiguration implements IFilterConfiguration {
   constructor() {
@@ -44,25 +45,97 @@ export class FilterConfiguration implements IFilterConfiguration {
     this.isFilterControlsDisplayed = !this.isFilterControlsDisplayed;
   }
 
-  get filteringFunction(): (
-    dataTable: IDataTable
-  ) => (row: any[]) => boolean {
+  get filteringFunction(): (dataTable: IDataTable) => (row: any[]) => boolean {
     return (dataTable: IDataTable) => (row: any[]) => {
       for (let term of this.filtering) {
         const prop = dataTable.getPropertyById(term.propertyId)!;
         switch (prop.column) {
-          case "Text":
-          case "Date":
-          case "ComboBox": {
+          case "Text": {
             const txt1 = dataTable.getCellText(row, prop);
             if (txt1 === undefined) return true;
             if (term.setting.dataType === "string") {
+              const t1 = txt1.toLocaleLowerCase();
+
               switch (term.setting.type) {
-                case "contains":
-                  return txt1.includes(term.setting.val1);
+                case "contains": {
+                  const t2 = term.setting.val1.toLocaleLowerCase();
+                  return t1.includes(t2);
+                }
+                case "ends": {
+                  const t2 = term.setting.val1.toLocaleLowerCase();
+                  return t1.endsWith(t2);
+                }
+                case "eq": {
+                  const t2 = term.setting.val1.toLocaleLowerCase();
+                  return t1 === t2;
+                }
+                case "ncontains": {
+                  const t2 = term.setting.val1.toLocaleLowerCase();
+                  return !t1.includes(t2);
+                }
+                case "nends": {
+                  const t2 = term.setting.val1.toLocaleLowerCase();
+                  return !t1.endsWith(t2);
+                }
+                case "neq": {
+                  const t2 = term.setting.val1.toLocaleLowerCase();
+                  return t1 !== t2;
+                }
+                case "nnull": {
+                  return t1 !== null;
+                }
+                case "nstarts": {
+                  const t2 = term.setting.val1.toLocaleLowerCase();
+                  return !t1.startsWith(t2);
+                }
+                case "null": {
+                  return t1 === null;
+                }
+                case "starts": {
+                  const t2 = term.setting.val1.toLocaleLowerCase();
+                  return t1.startsWith(t2);
+                }
               }
             }
             break;
+          }
+          case "Number":
+          case "Date": {
+            const txt1 = dataTable.getCellValue(row, prop);
+            if (txt1 === undefined) return true;
+            const t1 = txt1;
+            if (term.setting.dataType === "date") {
+              switch (term.setting.type) {
+                case "between": {
+                  const t0 = term.setting.val1;
+                  const t2 = term.setting.val2;
+                  return t0 < t1 && t1 < t2;
+                }
+                case "eq":
+                  return t1 === term.setting.val1;
+                case "gt":
+                  return t1 < term.setting.val1;
+                case "gte":
+                  return t1 <= term.setting.val1;
+                case "lt":
+                  return t1 > term.setting.val1;
+                case "lte":
+                  return t1 >= term.setting.val1;
+                case "nbetween": {
+                  const t0 = term.setting.val1;
+                  const t2 = term.setting.val2;
+                  return !(t0 < t1 && t1 < t2);
+                }
+                case "neq":
+                  return t1 !== term.setting.val1;
+                case "nnull":
+                  return t1 !== null;
+                case "null":
+                  return t1 === null;
+              }
+            }
+          }
+          case "ComboBox": {
           }
           case "CheckBox": {
             const val1 = dataTable.getCellValue(row, prop);
@@ -72,11 +145,6 @@ export class FilterConfiguration implements IFilterConfiguration {
             switch (term.setting.type) {
             }
             }*/
-            break;
-          }
-          case "Number": {
-            const val1 = dataTable.getCellValue(row, prop);
-            dataTable.getCellValue(row, prop);
             break;
           }
         }
@@ -103,17 +171,33 @@ export class FilterConfiguration implements IFilterConfiguration {
     );
   }
 
-  applyNewFiltering = _.throttle(this.applyNewFilteringImm, 200)
-
-  @action.bound applyNewFilteringImm() {
+  @action.bound applyNewFilteringImm = flow(function*(
+    this: FilterConfiguration
+  ) {
     console.log("New filtering:", toJS(this.filtering));
-    const dataTable = getDataTable(this);
-    if (this.filtering.length > 0) {
-      dataTable.setFilteringFn(this.filteringFunction);
-    } else {
-      dataTable.setFilteringFn(undefined);
+    const dataView = getDataView(this);
+    const dataTable = getDataTable(dataView);
+    if (dataView.isReorderedOnClient) {
+      if (this.filtering.length > 0) {
+        const comboProps = this.filtering
+          .map(term => getDataViewPropertyById(this, term.propertyId)!)
+          .filter(prop => prop.column === "ComboBox");
+
+        yield Promise.all(
+          comboProps.map(prop =>
+            prop.lookup!.resolveList(
+              new Set(dataTable.getAllValuesOfProp(prop))
+            )
+          )
+        );
+        dataTable.setFilteringFn(this.filteringFunction);
+      } else {
+        dataTable.setFilteringFn(undefined);
+      }
     }
-  }
+  });
+
+  applyNewFiltering = _.throttle(this.applyNewFilteringImm, 200);
 
   @action.bound stop() {
     this.disposers.forEach(dis => dis());

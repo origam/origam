@@ -150,7 +150,6 @@ export class FilterSettingsString extends React.Component<{
     }
   }
 
-  @action.bound maybeApplySetting() {}
 
   render() {
     return (

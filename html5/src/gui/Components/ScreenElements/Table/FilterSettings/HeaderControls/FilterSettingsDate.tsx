@@ -8,6 +8,7 @@ import CS from "./FilterSettingsCommon.module.css";
 import { observable, computed, action } from "mobx";
 import { observer, PropTypes } from "mobx-react";
 import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
+import { onFieldBlur } from '../../../../../../model/actions/DataView/TableView/onFieldBlur';
 
 export interface IStringFilterOp {}
 
@@ -30,19 +31,31 @@ interface IOp0 {
   human: React.ReactNode;
 }
 
-type ISetting = IOp2 | IOp1 | IOp0;
+export type ISetting = (IOp2 | IOp1 | IOp0) & { dataType: "date" };
 
 const OPERATORS: ISetting[] = [
-  { human: <>=</>, type: "eq", val1: "" },
-  { human: <>&ne;</>, type: "neq", val1: "" },
-  { human: <>&le;</>, type: "lt", val1: "" },
-  { human: <>&ge;</>, type: "gt", val1: "" },
-  { human: <>&#60;</>, type: "lte", val1: "" },
-  { human: <>&#62;</>, type: "gte", val1: "" },
-  { human: <>between</>, type: "between", val1: "", val2: "" },
-  { human: <>not between</>, type: "nbetween", val1: "", val2: "" },
-  { human: <>is null</>, type: "null" },
-  { human: <>is not null</>, type: "nnull" }
+  { dataType: "date", human: <>=</>, type: "eq", val1: "" },
+  { dataType: "date", human: <>&ne;</>, type: "neq", val1: "" },
+  { dataType: "date", human: <>&le;</>, type: "lt", val1: "" },
+  { dataType: "date", human: <>&ge;</>, type: "gt", val1: "" },
+  { dataType: "date", human: <>&#60;</>, type: "lte", val1: "" },
+  { dataType: "date", human: <>&#62;</>, type: "gte", val1: "" },
+  {
+    dataType: "date",
+    human: <>between</>,
+    type: "between",
+    val1: "",
+    val2: ""
+  },
+  {
+    dataType: "date",
+    human: <>not between</>,
+    type: "nbetween",
+    val1: "",
+    val2: ""
+  },
+  { dataType: "date", human: <>is null</>, type: "null" },
+  { dataType: "date", human: <>is not null</>, type: "nnull" }
 ];
 
 const OpCombo: React.FC<{
@@ -65,7 +78,8 @@ const OpCombo: React.FC<{
 
 const OpEditors: React.FC<{
   setting: ISetting;
-  onChange: (newSetting: ISetting) => void;
+  onChange?: (newSetting: ISetting) => void;
+  onBlur?:(event: any) => void;
 }> = props => {
   const { setting } = props;
   switch (setting.type) {
@@ -80,8 +94,9 @@ const OpEditors: React.FC<{
           value={setting.val1}
           outputFormat="D.M.YYYY"
           onChange={(event, isoDay) =>
-            props.onChange({ ...setting, val1: isoDay })
+            props.onChange && props.onChange({ ...setting, val1: isoDay })
           }
+          onEditorBlur={props.onBlur}
         />
       );
 
@@ -93,15 +108,17 @@ const OpEditors: React.FC<{
             value={setting.val1}
             outputFormat="D.M.YYYY"
             onChange={(event, isoDay) =>
-              props.onChange({ ...setting, val1: isoDay })
+              props.onChange && props.onChange({ ...setting, val1: isoDay })
             }
+            onEditorBlur={props.onBlur}
           />
           <DateTimeEditor
             value={setting.val2}
             outputFormat="D.M.YYYY"
             onChange={(event, isoDay) =>
-              props.onChange({ ...setting, val2: isoDay })
+              props.onChange && props.onChange({ ...setting, val2: isoDay })
             }
+            onEditorBlur={props.onBlur}
           />
         </>
       );
@@ -113,21 +130,78 @@ const OpEditors: React.FC<{
 };
 
 @observer
-export class FilterSettingsDate extends React.Component {
+export class FilterSettingsDate extends React.Component<{
+  onTriggerApplySetting?: (setting: ISetting) => void;
+}> {
   @observable val1: string = "";
 
-  @observable selectedOperator: ISetting = OPERATORS[0];
+  @observable setting: ISetting = OPERATORS[0];
+
+  @action.bound
+  handleBlur() {
+    switch (this.setting.type) {
+      case "eq":
+      case "neq":
+      case "lt":
+      case "gt":
+      case "lte":
+      case "gte":
+        if (this.setting.val1) {
+          this.props.onTriggerApplySetting &&
+            this.props.onTriggerApplySetting(this.setting);
+        }
+        break;
+      case "between":
+      case "nbetween":
+        if (this.setting.val1 && this.setting.val2) {
+          this.props.onTriggerApplySetting &&
+            this.props.onTriggerApplySetting(this.setting);
+        }
+      default:
+        this.props.onTriggerApplySetting &&
+          this.props.onTriggerApplySetting(this.setting);
+    }
+  }
+
+  @action.bound
+  handleChange(newSetting: ISetting) {
+    this.setting = newSetting;
+    switch (this.setting.type) {
+      case "eq":
+      case "neq":
+      case "lt":
+      case "gt":
+      case "lte":
+      case "gte":
+        if (this.setting.val1) {
+          this.props.onTriggerApplySetting &&
+            this.props.onTriggerApplySetting(this.setting);
+        }
+        break;
+      case "between":
+      case "nbetween":
+        if (this.setting.val1 && this.setting.val2) {
+          this.props.onTriggerApplySetting &&
+            this.props.onTriggerApplySetting(this.setting);
+        }
+        break;
+      default:
+        this.props.onTriggerApplySetting &&
+          this.props.onTriggerApplySetting(this.setting);
+    }
+  }
 
   render() {
     return (
       <>
         <OpCombo
-          setting={this.selectedOperator}
-          onChange={newSetting => (this.selectedOperator = newSetting)}
+          setting={this.setting}
+          onChange={this.handleChange}
         />
         <OpEditors
-          setting={this.selectedOperator}
-          onChange={newSetting => (this.selectedOperator = newSetting)}
+          setting={this.setting}
+          onChange={this.handleChange}
+          onBlur={this.handleBlur}
         />
 
         {/*<input className={CS.input} />*/}
