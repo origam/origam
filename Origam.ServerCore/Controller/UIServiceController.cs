@@ -74,7 +74,6 @@ namespace Origam.ServerCore.Controller
                 = ServiceManager.Services.GetService<IDataLookupService>();
             dataService = DataService.GetDataService();
         }
-
         [HttpGet("[action]/{locale}")]
         public IActionResult InitPortal(string locale)
         {
@@ -93,7 +92,6 @@ namespace Origam.ServerCore.Controller
                 return Ok(sessionObjects.UIService.InitPortal(4));
             });
         }
-
         [HttpPost("[action]")]
         public IActionResult InitUI([FromBody]UIRequest request)
         {
@@ -107,7 +105,6 @@ namespace Origam.ServerCore.Controller
                     basicUIService: sessionObjects.UIService));
             });
         }
-
         [HttpGet("[action]/{sessionFormIdentifier:guid}")]
         public IActionResult DestroyUI(Guid sessionFormIdentifier)
         {
@@ -117,7 +114,6 @@ namespace Origam.ServerCore.Controller
                 return Ok();
             });
         }
-
         [HttpGet("[action]/{sessionFormIdentifier:guid}")]
         public IActionResult RefreshData(Guid sessionFormIdentifier)
         {
@@ -127,7 +123,6 @@ namespace Origam.ServerCore.Controller
                     sessionFormIdentifier, localizer));
             });
         }
-
         [HttpGet("[action]/{sessionFormIdentifier:guid}")]
         public IActionResult SaveDataQuery(Guid sessionFormIdentifier)
         {
@@ -137,7 +132,6 @@ namespace Origam.ServerCore.Controller
                     sessionFormIdentifier));
             });
         }
-
         [HttpGet("[action]/{sessionFormIdentifier:guid}")]
         public IActionResult SaveData(Guid sessionFormIdentifier)
         {
@@ -147,7 +141,6 @@ namespace Origam.ServerCore.Controller
                     sessionFormIdentifier));
             });
         }
-
         [HttpPost("[action]")]
         public IActionResult MasterRecord([FromBody]MasterRecordInput input)
         {
@@ -156,7 +149,6 @@ namespace Origam.ServerCore.Controller
                 return Ok(sessionObjects.UIService.GetRowData(input));
             });
         }
-
         [HttpPost("[action]")]
         public IActionResult GetData([FromBody]GetDataInput input)
         {
@@ -173,7 +165,6 @@ namespace Origam.ServerCore.Controller
                 return Ok(sessionObjects.UIService.RowStates(input));
             });
         }
-
         [HttpPost("[action]")]
         public IActionResult CreateObject(
             [FromBody][Required]CreateObjectInput input)
@@ -183,7 +174,6 @@ namespace Origam.ServerCore.Controller
                 return Ok(sessionObjects.UIService.CreateObject(input));
             });
         }
-
         [HttpPost("[action]")]
         public IActionResult UpdateObject(
             [FromBody][Required]UpdateObjectInput input)
@@ -193,7 +183,6 @@ namespace Origam.ServerCore.Controller
                 return Ok(sessionObjects.UIService.UpdateObject(input));
             });
         }
-
         [HttpPost("[action]")]
         public IActionResult DeleteObject(
             [FromBody][Required]DeleteObjectInput input)
@@ -204,7 +193,6 @@ namespace Origam.ServerCore.Controller
                 return Ok(sessionObjects.UIService.DeleteObject(input));
             });
         }
-
         [HttpPost("[action]")]
         public IActionResult ExecuteActionQuery(
             [FromBody][Required]ExecuteActionQueryInput input)
@@ -214,7 +202,6 @@ namespace Origam.ServerCore.Controller
                 return Ok(sessionObjects.UIService.ExecuteActionQuery(input));
             });
         }
-
         [HttpPost("[action]")]
         public IActionResult ExecuteAction(
             [FromBody][Required]ExecuteActionInput input)
@@ -224,7 +211,6 @@ namespace Origam.ServerCore.Controller
                 return Ok(sessionObjects.UIService.ExecuteAction(input));
             });
         }
-
         [HttpPost("[action]")]
         public IActionResult GetLookupLabels([FromBody]LookupLabelsInput input)
         {
@@ -263,7 +249,6 @@ namespace Origam.ServerCore.Controller
                 return Ok(labelDictionary);
             });
         }
-
         [HttpPost("[action]")]
         public IActionResult GetLookupList([FromBody]LookupListInput input)
         {
@@ -292,7 +277,6 @@ namespace Origam.ServerCore.Controller
                     .OnBoth<IActionResult,IActionResult>(UnwrapReturnValue);
             }
         }
-
         [HttpPost("[action]")]
         public IActionResult GetRows([FromBody]GetRowsInput input)
         {
@@ -306,7 +290,6 @@ namespace Origam.ServerCore.Controller
                 .OnSuccess(ToActionResult)
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
-
         [HttpPut("[action]")]
         public IActionResult Row([FromBody]UpdateRowInput input)
         {
@@ -324,7 +307,6 @@ namespace Origam.ServerCore.Controller
                 .OnSuccess(rowData => SubmitChange(rowData, Operation.Update))
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
-
         [HttpPost("[action]")]
         public IActionResult Row([FromBody]NewRowInput input)
         {
@@ -338,7 +320,6 @@ namespace Origam.ServerCore.Controller
                 .OnSuccess(rowData => SubmitChange(rowData, Operation.Create))
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
-
         [HttpPost("[action]")]
         public IActionResult NewEmptyRow([FromBody]NewEmptyRowInput input)
         {
@@ -353,7 +334,6 @@ namespace Origam.ServerCore.Controller
                 .OnSuccess(rowData => SubmitChange(rowData, Operation.Create))
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
-
         [HttpDelete("[action]")]
         public IActionResult Row([FromBody]DeleteRowInput input)
         {
@@ -375,7 +355,6 @@ namespace Origam.ServerCore.Controller
                     .OnSuccess(ThrowAwayReturnData)
                     .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
-
         [HttpGet("[action]")]
         public IActionResult WorkflowNextQuery(
             [FromQuery][Required]Guid sessionFormIdentifier)
@@ -386,7 +365,6 @@ namespace Origam.ServerCore.Controller
                     sessionFormIdentifier));
             });
         }
-
         [HttpPost("[action]")]
         public IActionResult WorkflowNext(
             [FromBody][Required]WorkflowNextInput input)
@@ -396,7 +374,6 @@ namespace Origam.ServerCore.Controller
                 return Ok(sessionObjects.UIService.WorkflowNext(input));
             });
         }
-
         [HttpGet("[action]")]
         public IActionResult WorkflowAbort(
             [FromQuery][Required]Guid sessionFormIdentifier)
@@ -407,7 +384,6 @@ namespace Origam.ServerCore.Controller
                     sessionFormIdentifier));
             });
         }
-
         [HttpGet("[action]")]
         public IActionResult WorkflowRepeat(
             [FromQuery][Required]Guid sessionFormIdentifier)
@@ -416,6 +392,15 @@ namespace Origam.ServerCore.Controller
             {
                 return Ok(sessionObjects.UIService.WorkflowRepeat(
                     sessionFormIdentifier, localizer));
+            });
+        }
+        [HttpPost("[action]")]
+        public IActionResult AttachmentCount(
+            [FromBody][Required]AttachmentCountInput input)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                return Ok(sessionObjects.UIService.AttachmentCount(input));
             });
         }
         private IActionResult RunWithErrorHandler(Func<IActionResult> func)

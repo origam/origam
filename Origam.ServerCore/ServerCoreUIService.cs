@@ -483,6 +483,54 @@ namespace Origam.ServerCore
             DestroyUI(sessionFormIdentifier);
             return InitUI(request);
         }
+        public int AttachmentCount(AttachmentCountInput input)
+        {
+            SecurityTools.CurrentUserProfile();
+            SessionStore sessionStore = null;
+            try
+            {
+                sessionStore = sessionManager.GetSession(
+                    input.SessionFormIdentifier);
+            }
+            catch
+            {
+            }
+            if(sessionStore == null)
+            {
+                return 0;
+            }
+            int result = 0;
+            List<object> idList = new List<object>();
+            // We catch any problems with reading record ids 
+            // (they could have been unloaded by another request
+            // and we don't want to hear messages about this).
+            try
+            {
+                ChildrenRecordsIds(idList, sessionStore.GetSessionRow(
+                    input.Entity, input.Id));
+            }
+            catch
+            {
+                return 0;
+            }
+            if(idList.Count > 500)
+            {
+                return -1;
+            }
+            foreach(object recordId in idList)
+            {
+                IDataLookupService lookupService 
+                    = ServiceManager.Services.GetService<IDataLookupService>();
+                int oneRecordCount = (int)lookupService.GetDisplayText(
+                    lookupId: new Guid("fbf2cadd-e529-401d-80ce-d68de0a89f13"), 
+                    lookupValue: recordId, 
+                    useCache: false, 
+                    returnMessageIfNull: false, 
+                    transactionId: null);
+                result += oneRecordCount;
+            }
+            return result;
+        }
         private bool IsRowDirty(DataRow row)
         {
             if(row.RowState != DataRowState.Unchanged)
@@ -555,6 +603,21 @@ namespace Origam.ServerCore
                     SecurityManager.CurrentPrincipal.Identity.Name,
                     sessionManager.GetSessionStats());
             });
+        }
+        private void ChildrenRecordsIds(List<object> list, DataRow row)
+        {
+            if((row.Table.PrimaryKey.Length == 1) 
+            && (row.Table.PrimaryKey[0].DataType == typeof(Guid)))
+            {
+                list.Add(row[row.Table.PrimaryKey[0]]);
+                foreach(DataRelation childRelation in row.Table.ChildRelations)
+                {
+                    foreach(DataRow childRow in row.GetChildRows(childRelation))
+                    {
+                        ChildrenRecordsIds(list, childRow);
+                    }
+                }
+            }
         }
     }
 }
