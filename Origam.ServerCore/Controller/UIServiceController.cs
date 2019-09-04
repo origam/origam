@@ -400,6 +400,15 @@ namespace Origam.ServerCore.Controller
                 return Ok(sessionObjects.UIService.AttachmentCount(input));
             });
         }
+        [HttpPost("[action]")]
+        public IActionResult AttachmentList(
+            [FromBody][Required]AttachmentListInput input)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                return Ok(sessionObjects.UIService.AttachmentList(input));
+            });
+        }
         private IActionResult RunWithErrorHandler(Func<IActionResult> func)
         {
             try

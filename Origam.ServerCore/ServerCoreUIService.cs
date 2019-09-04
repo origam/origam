@@ -36,6 +36,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -528,6 +529,61 @@ namespace Origam.ServerCore
                     returnMessageIfNull: false, 
                     transactionId: null);
                 result += oneRecordCount;
+            }
+            return result;
+        }
+        public IList<Attachment> AttachmentList(AttachmentListInput input)
+        {
+            SecurityTools.CurrentUserProfile();
+            SessionStore sessionStore = sessionManager.GetSession(
+                input.SessionFormIdentifier);
+            List<Attachment> result = new List<Attachment>();
+            List<object> idList = new List<object>();
+            ChildrenRecordsIds(idList, sessionStore.GetSessionRow(
+                input.Entity, input.Id));
+            foreach(object recordId in idList)
+            {
+                DataSet oneRecordList = core.DataService.LoadData(
+                    dataStructureId: new Guid("44a25061-750f-4b42-a6de-09f3363f8621"), 
+                    methodId: new Guid("0fda540f-e5de-4ab6-93d2-76b0abe6fd77"), 
+                    defaultSetId: Guid.Empty, 
+                    sortSetId: Guid.Empty, 
+                    transactionId: null, 
+                    paramName1: "Attachment_parRefParentRecordId", 
+                    paramValue1: recordId);
+                foreach(DataRow row in oneRecordList.Tables[0].Rows)
+                {
+                    string user = "";
+                    if(!row.IsNull("RecordCreatedBy"))
+                    {
+                        try
+                        {
+                            IOrigamProfileProvider profileProvider 
+                                = SecurityManager.GetProfileProvider();
+                            UserProfile profile = profileProvider.GetProfile(
+                                (Guid)row["RecordCreatedBy"]) as UserProfile;
+                            user = profile.FullName;
+                        }
+                        catch (Exception ex)
+                        {
+                            user = ex.Message;
+                        }
+                    }
+                    Attachment att = new Attachment
+                    {
+                        Id = row["Id"].ToString(),
+                        CreatorName = user,
+                        DateCreated = (DateTime)row["RecordCreated"],
+                        FileName = (string)row["FileName"]
+                    };
+                    if(!row.IsNull("Note"))
+                    {
+                        att.Description = (string)row["Note"];
+                    }
+                    string extension = Path.GetExtension(att.FileName).ToLower();
+                    att.Icon = "extensions/" + extension + ".png";
+                    result.Add(att);
+                }
             }
             return result;
         }
