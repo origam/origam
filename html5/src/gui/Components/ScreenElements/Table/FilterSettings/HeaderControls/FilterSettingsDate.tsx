@@ -1,14 +1,12 @@
-import React, { useImperativeHandle } from "react";
+import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
+import { action, observable } from "mobx";
+import { observer } from "mobx-react";
+import moment from "moment";
+import React from "react";
 import {
   FilterSettingsComboBox,
   FilterSettingsComboBoxItem
 } from "../FilterSettingsComboBox";
-
-import CS from "./FilterSettingsCommon.module.css";
-import { observable, computed, action } from "mobx";
-import { observer, PropTypes } from "mobx-react";
-import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
-import { onFieldBlur } from "../../../../../../model/actions/DataView/TableView/onFieldBlur";
 
 export interface IStringFilterOp {}
 
@@ -139,7 +137,11 @@ const OpEditors: React.FC<{
 export class FilterSettingsDate extends React.Component<{
   onTriggerApplySetting?: (setting: ISetting) => void;
 }> {
-  @observable val1: string = "";
+  constructor(props: any) {
+    super(props);
+    (this.setting as any).val1 = moment().toISOString();
+    (this.setting as any).val2 = moment().toISOString();
+  }
 
   @observable setting: ISetting = OPERATORS[0];
 

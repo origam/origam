@@ -43,6 +43,9 @@ export class FilterConfiguration implements IFilterConfiguration {
   @action.bound
   onFilterDisplayClick(event: any): void {
     this.isFilterControlsDisplayed = !this.isFilterControlsDisplayed;
+    if (this.isFilterControlsDisplayed) {
+      // TODO: Wait for data loaded?
+    }
   }
 
   get filteringFunction(): (dataTable: IDataTable) => (row: any[]) => boolean {
@@ -99,11 +102,10 @@ export class FilterConfiguration implements IFilterConfiguration {
             }
             break;
           }
-          case "Number":
           case "Date": {
-            const txt1 = dataTable.getCellValue(row, prop);
+            const txt1 = dataTable.getCellValue(row, prop)
             if (txt1 === undefined) return true;
-            const t1 = txt1;
+            const t1 = txt1
             if (term.setting.dataType === "date") {
               switch (term.setting.type) {
                 case "between": {
@@ -128,6 +130,41 @@ export class FilterConfiguration implements IFilterConfiguration {
                 }
                 case "neq":
                   return t1 !== term.setting.val1;
+                case "nnull":
+                  return t1 !== null;
+                case "null":
+                  return t1 === null;
+              }
+            }
+          }
+          case "Number": {
+            const txt1 = dataTable.getCellValue(row, prop)
+            if (txt1 === undefined) return true;
+            const t1 = prop.column === "Number" ? parseFloat(txt1) : txt1;
+            if (term.setting.dataType === "number") {
+              switch (term.setting.type) {
+                case "between": {
+                  const t0 = parseFloat(term.setting.val1);
+                  const t2 = parseFloat(term.setting.val2);
+                  return t0 < t1 && t1 < t2;
+                }
+                case "eq":
+                  return t1 === parseFloat(term.setting.val1);
+                case "gt":
+                  return t1 > parseFloat(term.setting.val1);
+                case "gte":
+                  return t1 >= parseFloat(term.setting.val1);
+                case "lt":
+                  return t1 < parseFloat(term.setting.val1);
+                case "lte":
+                  return t1 <= parseFloat(term.setting.val1);
+                case "nbetween": {
+                  const t0 = parseFloat(term.setting.val1);
+                  const t2 = parseFloat(term.setting.val2);
+                  return !(t0 < t1 && t1 < t2);
+                }
+                case "neq":
+                  return t1 !== parseFloat(term.setting.val1);
                 case "nnull":
                   return t1 !== null;
                 case "null":

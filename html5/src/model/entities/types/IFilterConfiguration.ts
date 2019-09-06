@@ -1,9 +1,13 @@
 import { ISetting as IFilterSettingString } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsString";
 import { ISetting as IFilterSettingDate } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsDate";
+import { ISetting as IFilterSettingNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsNumber";
 
 // TODO: Extract types so that model layer does not depend on view layer?
 
-type ISetting = IFilterSettingString | IFilterSettingDate;
+type ISetting =
+  | IFilterSettingString
+  | IFilterSettingDate
+  | IFilterSettingNumber;
 
 export interface IFilterTerm {
   propertyId: string;
