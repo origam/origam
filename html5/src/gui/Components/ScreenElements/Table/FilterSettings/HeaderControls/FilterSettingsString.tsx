@@ -58,7 +58,13 @@ const OpCombo: React.FC<{
       {OPERATORS.map(op => (
         <FilterSettingsComboBoxItem
           key={op.type}
-          onClick={() => props.onChange(op)}
+          onClick={() =>
+            props.onChange({
+              ...props.setting,
+              type: op.type,
+              human: op.human
+            } as any)
+          }
         >
           {op.human}
         </FilterSettingsComboBoxItem>
@@ -149,7 +155,6 @@ export class FilterSettingsString extends React.Component<{
           this.props.onTriggerApplySetting(this.setting);
     }
   }
-
 
   render() {
     return (

@@ -114,13 +114,13 @@ export class FilterConfiguration implements IFilterConfiguration {
                 case "eq":
                   return t1 === term.setting.val1;
                 case "gt":
-                  return t1 < term.setting.val1;
-                case "gte":
-                  return t1 <= term.setting.val1;
-                case "lt":
                   return t1 > term.setting.val1;
-                case "lte":
+                case "gte":
                   return t1 >= term.setting.val1;
+                case "lt":
+                  return t1 < term.setting.val1;
+                case "lte":
+                  return t1 <= term.setting.val1;
                 case "nbetween": {
                   const t0 = term.setting.val1;
                   const t2 = term.setting.val2;

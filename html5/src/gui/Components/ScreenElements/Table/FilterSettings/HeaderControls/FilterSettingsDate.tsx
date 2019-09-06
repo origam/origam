@@ -8,7 +8,7 @@ import CS from "./FilterSettingsCommon.module.css";
 import { observable, computed, action } from "mobx";
 import { observer, PropTypes } from "mobx-react";
 import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
-import { onFieldBlur } from '../../../../../../model/actions/DataView/TableView/onFieldBlur';
+import { onFieldBlur } from "../../../../../../model/actions/DataView/TableView/onFieldBlur";
 
 export interface IStringFilterOp {}
 
@@ -36,10 +36,10 @@ export type ISetting = (IOp2 | IOp1 | IOp0) & { dataType: "date" };
 const OPERATORS: ISetting[] = [
   { dataType: "date", human: <>=</>, type: "eq", val1: "" },
   { dataType: "date", human: <>&ne;</>, type: "neq", val1: "" },
-  { dataType: "date", human: <>&le;</>, type: "lt", val1: "" },
-  { dataType: "date", human: <>&ge;</>, type: "gt", val1: "" },
-  { dataType: "date", human: <>&#60;</>, type: "lte", val1: "" },
-  { dataType: "date", human: <>&#62;</>, type: "gte", val1: "" },
+  { dataType: "date", human: <>&le;</>, type: "lte", val1: "" },
+  { dataType: "date", human: <>&ge;</>, type: "gte", val1: "" },
+  { dataType: "date", human: <>&#60;</>, type: "lt", val1: "" },
+  { dataType: "date", human: <>&#62;</>, type: "gt", val1: "" },
   {
     dataType: "date",
     human: <>between</>,
@@ -67,7 +67,13 @@ const OpCombo: React.FC<{
       {OPERATORS.map(op => (
         <FilterSettingsComboBoxItem
           key={op.type}
-          onClick={() => props.onChange(op)}
+          onClick={() =>
+            props.onChange({
+              ...props.setting,
+              type: op.type,
+              human: op.human
+            } as any)
+          }
         >
           {op.human}
         </FilterSettingsComboBoxItem>
@@ -79,7 +85,7 @@ const OpCombo: React.FC<{
 const OpEditors: React.FC<{
   setting: ISetting;
   onChange?: (newSetting: ISetting) => void;
-  onBlur?:(event: any) => void;
+  onBlur?: (event: any) => void;
 }> = props => {
   const { setting } = props;
   switch (setting.type) {
@@ -194,10 +200,7 @@ export class FilterSettingsDate extends React.Component<{
   render() {
     return (
       <>
-        <OpCombo
-          setting={this.setting}
-          onChange={this.handleChange}
-        />
+        <OpCombo setting={this.setting} onChange={this.handleChange} />
         <OpEditors
           setting={this.setting}
           onChange={this.handleChange}
