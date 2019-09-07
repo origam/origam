@@ -1,5 +1,6 @@
 import { IProperty } from "./IProperty";
 import { IAdditionalRowData } from "./IAdditionalRecordData";
+import { IDataSourceField } from "./IDataSourceField";
 
 export interface IDataTableData {}
 
@@ -11,6 +12,7 @@ export interface IDataTable extends IDataTableData {
 
   getRowId(row: any[]): string;
   getCellValue(row: any[], property: IProperty): any;
+  getCellValueByDataSourceField(row: any[], dsField: IDataSourceField): any;
   getCellText(row: any[], property: IProperty): any;
   resolveCellText(property: IProperty, value: any): any
   getRowByExistingIdx(idx: number): any[];
@@ -30,8 +32,8 @@ export interface IDataTable extends IDataTableData {
 
   setSortingFn(fn: ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number)
   | undefined): void;
-  setFilteringFn(fn: ((dataTable: IDataTable) => (row: any[]) => boolean)
-  | undefined): void;
+  /*setFilteringFn(fn: ((dataTable: IDataTable) => (row: any[]) => boolean)
+  | undefined): void;*/
 
   setRecords(rows: any[][]): void;
   setFormDirtyValue(row: any[], propertyId: string, value: any): void;

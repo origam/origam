@@ -1,5 +1,13 @@
 import _ from "lodash";
-import { action, comparer, flow, observable, reaction, toJS } from "mobx";
+import {
+  action,
+  comparer,
+  flow,
+  observable,
+  reaction,
+  toJS,
+  computed
+} from "mobx";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import { getDataTable } from "../selectors/DataView/getDataTable";
@@ -50,7 +58,7 @@ export class FilterConfiguration implements IFilterConfiguration {
 
   get filteringFunction(): (dataTable: IDataTable) => (row: any[]) => boolean {
     return (dataTable: IDataTable) => (row: any[]) => {
-      for (let term of this.filtering) {
+      const termFn = (term: IFilterTerm) => {
         const prop = dataTable.getPropertyById(term.propertyId)!;
         switch (prop.column) {
           case "Text": {
@@ -103,9 +111,9 @@ export class FilterConfiguration implements IFilterConfiguration {
             break;
           }
           case "Date": {
-            const txt1 = dataTable.getCellValue(row, prop)
+            const txt1 = dataTable.getCellValue(row, prop);
             if (txt1 === undefined) return true;
-            const t1 = txt1
+            const t1 = txt1;
             if (term.setting.dataType === "date") {
               switch (term.setting.type) {
                 case "between": {
@@ -138,7 +146,7 @@ export class FilterConfiguration implements IFilterConfiguration {
             }
           }
           case "Number": {
-            const txt1 = dataTable.getCellValue(row, prop)
+            const txt1 = dataTable.getCellValue(row, prop);
             if (txt1 === undefined) return true;
             const t1 = prop.column === "Number" ? parseFloat(txt1) : txt1;
             if (term.setting.dataType === "number") {
@@ -185,9 +193,59 @@ export class FilterConfiguration implements IFilterConfiguration {
             break;
           }
         }
+      };
+
+      if (!this.isPresentInDetail(row)) {
+        return false;
+      }
+
+      for (let term of this.filtering) {
+        if (!termFn(term)) {
+          return false;
+        }
       }
       return true;
     };
+  }
+
+  isPresentInDetail(row: any[]): boolean {
+    if (this.dataView.isBindingRoot) return true;
+    for (let binding of this.dataView.parentBindings) {
+      const selectedRow = binding.parentDataView.selectedRow;
+      if (!selectedRow) {
+        return false;
+      }
+      for (let bindingPair of binding.bindingPairs) {
+        const parentDsField = binding.parentDataView.dataSource.getFieldByName(
+          bindingPair.parentPropertyId
+        );
+        if (!parentDsField) {
+          return false;
+        }
+        const parentValue = binding.parentDataView.dataTable.getCellValueByDataSourceField(
+          selectedRow,
+          parentDsField
+        );
+        const childDsField = binding.childDataView.dataSource.getFieldByName(
+          bindingPair.childPropertyId
+        );
+        if (!childDsField) {
+          return false;
+        }
+        const childValue = binding.childDataView.dataTable.getCellValueByDataSourceField(
+          row,
+          childDsField
+        );
+        if (parentValue !== childValue) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  @computed get dataView() {
+    return getDataView(this);
   }
 
   disposers: any[] = [];
@@ -227,9 +285,9 @@ export class FilterConfiguration implements IFilterConfiguration {
             )
           )
         );
-        dataTable.setFilteringFn(this.filteringFunction);
+        //dataTable.setFilteringFn(this.filteringFunction);
       } else {
-        dataTable.setFilteringFn(undefined);
+        //dataTable.setFilteringFn(undefined);
       }
     }
   });

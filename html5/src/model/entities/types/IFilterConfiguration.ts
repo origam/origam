@@ -1,6 +1,7 @@
 import { ISetting as IFilterSettingString } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsString";
 import { ISetting as IFilterSettingDate } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsDate";
 import { ISetting as IFilterSettingNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsNumber";
+import { IDataTable } from "./IDataTable";
 
 // TODO: Extract types so that model layer does not depend on view layer?
 
@@ -21,6 +22,7 @@ export interface IFilterConfiguration extends IFilterConfigurationData {
 
   isFilterControlsDisplayed: boolean;
   filtering: IFilterTerm[];
+  filteringFunction: (dataTable: IDataTable) => (row: any[]) => boolean;
   getSettingByPropertyId(propertyId: string): IFilterTerm | undefined;
   setFilter(term: IFilterTerm): void;
   clearFilters(): void;

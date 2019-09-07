@@ -5,6 +5,8 @@ import { getDataView } from "../selectors/DataView/getDataView";
 import { IAdditionalRowData } from "./types/IAdditionalRecordData";
 import { AdditionalRowData } from "./AdditionalRowData";
 import { getDataSource } from "../selectors/DataSources/getDataSource";
+import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
+import { IDataSourceField } from './types/IDataSourceField';
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
@@ -14,9 +16,14 @@ export class DataTable implements IDataTable {
   }
 
   @observable.shallow allRows: any[][] = [];
-  @observable.ref filteringFn:
+
+  @computed get filteringFn():
     | ((dataTable: IDataTable) => (row: any[]) => boolean)
-    | undefined;
+    | undefined {
+    return getFilterConfiguration(this).filteringFunction;
+  }
+
+
   @observable.ref sortingFn:
     | ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number)
     | undefined;
@@ -66,6 +73,10 @@ export class DataTable implements IDataTable {
       }
     }
     return row[property.dataIndex];
+  }
+
+  getCellValueByDataSourceField(row: any[], dsField: IDataSourceField) {
+    return row[dsField.index];
   }
 
   getAllValuesOfProp(property: IProperty): any[] {
@@ -303,12 +314,12 @@ export class DataTable implements IDataTable {
     this.sortingFn = fn;
   }
 
-  @action.bound
+  /* @action.bound
   setFilteringFn(
     fn: ((dataTable: IDataTable) => (row: any[]) => boolean) | undefined
   ): void {
     this.filteringFn = fn;
-  }
+  }*/
 
   parent?: any;
 }
