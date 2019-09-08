@@ -1,16 +1,15 @@
+import { inject, observer, Observer, Provider } from "mobx-react";
 import React from "react";
-
-import { FormSection } from "../../../Components/ScreenElements/FormSection";
-import { observer, inject, Provider, Observer } from "mobx-react";
-import { findStrings } from "../../../../xmlInterpreters/screenXml";
-import { getDataViewPropertyById } from "../../../../model/selectors/DataView/getDataViewPropertyById";
 import { IDataView } from "../../../../model/entities/types/IDataView";
+import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
+import { getDataViewPropertyById } from "../../../../model/selectors/DataView/getDataViewPropertyById";
+import { getSelectedRow } from "../../../../model/selectors/DataView/getSelectedRow";
+import { findStrings } from "../../../../xmlInterpreters/screenXml";
+import { FormSection } from "../../../Components/ScreenElements/FormSection";
 import { FormField } from "./FormField";
 import { FormRoot } from "./FormRoot";
 import { FormViewEditor } from "./FormViewEditor";
-import { getSelectedRow } from "../../../../model/selectors/DataView/getSelectedRow";
-import { DataTable } from "../../../../model/entities/DataTable";
-import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
+
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -24,6 +23,7 @@ export class FormBuilder extends React.Component<{
     const self = this;
     const row = getSelectedRow(this.props.dataView);
     const dataTable = getDataTable(this.props.dataView);
+
     function recursive(xfo: any) {
       if (xfo.name === "FormRoot") {
         return (
@@ -64,6 +64,7 @@ export class FormBuilder extends React.Component<{
                     textualValue = dataTable.getCellText(row, property);
                   }
                 }
+
                 return property ? (
                   <Provider property={property}>
                     <FormField

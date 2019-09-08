@@ -262,7 +262,16 @@ export class FilterConfiguration implements IFilterConfiguration {
           this.applyNewFiltering();
         },
         { equals: comparer.structural }
-      )
+      ),
+      reaction(() => {
+        return [this.dataView.selectedRow, this.dataView.dataTable.rows.length]
+      }, () => {
+        console.log(this.dataView!.modelInstanceId)
+        if(!this.dataView.selectedRow && this.dataView.dataTable.rows.length > 0) {
+          this.dataView.selectFirstRow();
+          console.log('sfr', this.dataView.modelInstanceId, this.dataView.selectedRow)
+        }
+      })
     );
   }
 

@@ -4,7 +4,7 @@ import { processActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 import { IAction } from "model/entities/types/IAction";
-import { getDataViewByEntity } from "model/selectors/DataView/getDataViewByEntity";
+import { getDataViewsByEntity } from "model/selectors/DataView/getDataViewsByEntity";
 import { getDialogStack } from "model/selectors/getDialogStack";
 import { getMenuItemType } from "model/selectors/getMenuItemType";
 import React from "react";
@@ -220,8 +220,8 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
   @action.bound applyData(data: any) {
     for (let [entityKey, entityValue] of Object.entries(data)) {
       console.log(entityKey, entityValue);
-      const dataView = getDataViewByEntity(this, entityKey);
-      if (dataView) {
+      const dataViews = getDataViewsByEntity(this, entityKey);
+      for(let dataView of dataViews) {
         dataView.dataTable.clear();
         dataView.dataTable.setRecords((entityValue as any).data);
         dataView.selectFirstRow();

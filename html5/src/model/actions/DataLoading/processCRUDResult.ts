@@ -1,4 +1,4 @@
-import { getDataViewByEntity } from "../../selectors/DataView/getDataViewByEntity";
+import { getDataViewsByEntity } from "../../selectors/DataView/getDataViewsByEntity";
 import { runInAction } from "mobx";
 import _ from "lodash";
 import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
@@ -24,7 +24,7 @@ export interface ICRUDResult {
 }
 
 export function processCRUDResult(ctx: any, result: ICRUDResult) {
-  console.log('pcr', result)
+  console.log("pcr", result);
   runInAction(() => {
     if (_.isArray(result)) {
       result.forEach(resultItem => processCRUDResult(ctx, resultItem));
@@ -33,8 +33,8 @@ export function processCRUDResult(ctx: any, result: ICRUDResult) {
     const resultItem = result;
     switch (resultItem.operation) {
       case IResponseOperation.Update: {
-        const dataView = getDataViewByEntity(ctx, resultItem.entity);
-        if (dataView) {
+        const dataViews = getDataViewsByEntity(ctx, resultItem.entity);
+        for (let dataView of dataViews) {
           dataView.dataTable.substituteRecord(resultItem.wrappedObject);
           dataView.dataTable.clearRecordDirtyValues(resultItem.objectId);
         }
@@ -42,8 +42,8 @@ export function processCRUDResult(ctx: any, result: ICRUDResult) {
         break;
       }
       case IResponseOperation.Create: {
-        const dataView = getDataViewByEntity(ctx, resultItem.entity);
-        if (dataView) {
+        const dataViews = getDataViewsByEntity(ctx, resultItem.entity);
+        for (let dataView of dataViews) {
           const tablePanelView = dataView.tablePanelView;
           const dataSourceRow = result.wrappedObject;
           console.log("New row:", dataSourceRow);
@@ -57,8 +57,8 @@ export function processCRUDResult(ctx: any, result: ICRUDResult) {
         break;
       }
       case IResponseOperation.Delete: {
-        const dataView = getDataViewByEntity(ctx, resultItem.entity);
-        if (dataView) {
+        const dataViews = getDataViewsByEntity(ctx, resultItem.entity);
+        for (let dataView of dataViews) {
           const row = dataView.dataTable.getRowById(resultItem.objectId);
           if (row) {
             dataView.dataTable.deleteRow(row);

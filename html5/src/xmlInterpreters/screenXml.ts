@@ -23,6 +23,7 @@ import { FilterConfiguration } from "../model/entities/FilterConfiguration";
 import { Action } from "../model/entities/Action";
 import { ActionParameter } from "../model/entities/ActionParameter";
 import { OrderingConfiguration } from '../model/entities/OrderingConfiguration';
+import { Table } from '../gui/Components/ScreenElements/Table/Table';
 
 export const findUIRoot = (node: any) =>
   findStopping(node, n => n.name === "UIRoot")[0];
