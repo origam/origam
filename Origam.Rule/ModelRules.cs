@@ -38,7 +38,7 @@ namespace Origam.Rule
         {
             IStatusBarService statusBar =
             ServiceManager.Services.GetService<IStatusBarService>();
-            statusBar.SetStatusText("Building Index of References...");
+            statusBar.SetStatusText("Indexing references...");
             ReferenceIndexManager.ClearReferenceIndex();
            List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
                     .SchemaProvider
@@ -68,7 +68,7 @@ namespace Origam.Rule
                     .Where(x => x != null)
                     .ToList();
             ReferenceIndexManager.ActivateReferenceIndex();
-            statusBar.SetStatusText("Index of References built.");
+            statusBar.SetStatusText("");
             return errorFragments;
         }
 
