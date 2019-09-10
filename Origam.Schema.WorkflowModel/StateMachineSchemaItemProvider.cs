@@ -109,7 +109,7 @@ namespace Origam.Schema.WorkflowModel
 			get
 			{
 				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_32_state-workflows.png";
+				return "state-workflows-2.png";
 			}
 		}
 

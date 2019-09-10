@@ -29,7 +29,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("File Download Page", 79)]
+	[SchemaItemDescription("File Download Page", "data-page.png")]
     [HelpTopic("File+Download+Page")]
 	public class FileDownloadPage : AbstractPage, IDataStructureReference
 	{
@@ -68,14 +68,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 		#region Properties
-		public override string Icon
-		{
-			get
-			{
-				return "79";
-			}
-		}
-
 		[EntityColumn("G05")]  
 		public Guid DataStructureId;
 

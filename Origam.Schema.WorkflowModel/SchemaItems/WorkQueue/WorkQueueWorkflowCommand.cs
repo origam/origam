@@ -31,7 +31,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for WorkQueueWorkflowCommand.
 	/// </summary>
-	[SchemaItemDescription("Workflow Command", "Commands", 19)]
+	[SchemaItemDescription("Workflow Command", "Commands", "workflow-command.png")]
 	public class WorkQueueWorkflowCommand : EntityUIAction
 	{
 		public new const string ItemTypeConst = "WorkQueueCommand";
@@ -64,14 +64,6 @@ namespace Origam.Schema.WorkflowModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "19";
 			}
 		}
 

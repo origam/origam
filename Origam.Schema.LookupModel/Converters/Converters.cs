@@ -53,7 +53,7 @@ namespace Origam.Schema.LookupModel
 			ArrayList methodArray = new ArrayList(methods.Count);
 			foreach(DataStructureMethod method in methods)
 			{
-				if (method is DataStructureFilterSet) methodArray.Add(method);
+				methodArray.Add(method);
 			}
 
 			methodArray.Add(null);

@@ -29,7 +29,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for ServiceMethod.
 	/// </summary>
-	[SchemaItemDescription("Method", "Methods", 18)]
+	[SchemaItemDescription("Method", "Methods", "method-1.png")]
     [HelpTopic("Service+Method")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class ServiceMethod : AbstractSchemaItem, IServiceMethod, ISchemaItemFactory
@@ -70,15 +70,7 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		public override string Icon
-		{
-			get
-			{
-				return "18";
-			}
-		}
-
-		public override bool UseFolders
+        public override bool UseFolders
 		{
 			get
 			{

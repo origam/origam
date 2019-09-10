@@ -60,15 +60,6 @@ namespace Origam.Schema.WorkflowModel
 				return ItemTypeConst;
 			}
 		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "21";
-			}
-		}
-
 		#endregion
 	}
 }

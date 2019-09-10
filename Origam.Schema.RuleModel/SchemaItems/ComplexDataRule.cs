@@ -24,7 +24,7 @@ using System;
 
 namespace Origam.Schema.RuleModel
 {
-    [SchemaItemDescription("Complex Data Rule", "icon_27_rules.png")]
+    [SchemaItemDescription("Complex Data Rule", "complex-data-rule.png")]
     [HelpTopic("Complex+Data+Rule")]
     public class ComplexDataRule : XslRule, IDataRule
     {

@@ -23,7 +23,7 @@ using System;
 
 namespace Origam.Schema.RuleModel
 {
-    [SchemaItemDescription("Validation Rule Lookup XPath", "icon_27_rules.png")]
+    [SchemaItemDescription("Validation Rule Lookup XPath", "validation-rule-lookup-xpath.png")]
     [HelpTopic("Validation+Rule+Lookup+XPath")]
     public class EndRuleLookupXPath : XPathRule, IEndRule
     {

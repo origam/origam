@@ -30,7 +30,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.Schema.WorkflowModel
 {
-	[SchemaItemDescription("Workflow Page", 19)]
+	[SchemaItemDescription("Workflow Page", "workflow-page.png")]
     [HelpTopic("Workflow+Page")]
 	public class WorkflowPage : AbstractPage
 	{
@@ -74,8 +74,6 @@ namespace Origam.Schema.WorkflowModel
 
 
 		#region Properties
-		public override string Icon => "19";
-
 		[EntityColumn("G05")]  
 		public Guid WorkflowId;
 

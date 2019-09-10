@@ -37,7 +37,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for ContextStoreLink.
 	/// </summary>
-	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", 17)]
+	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", "parameter-blm.png")]
     [HelpTopic("Data+Event+Parameter+Mapping")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class StateMachineEventParameterMapping : AbstractSchemaItem
@@ -54,8 +54,6 @@ namespace Origam.Schema.WorkflowModel
 		
 		[EntityColumn("ItemType")]
 		public override string ItemType => ItemTypeConst;
-
-		public override string Icon => "17";
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{

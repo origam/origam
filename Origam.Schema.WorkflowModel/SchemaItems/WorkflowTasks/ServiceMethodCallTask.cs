@@ -29,7 +29,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for ServiceCallTask.
 	/// </summary>
-	[SchemaItemDescription("(Task) Service Method Call", "Tasks", 20)]
+	[SchemaItemDescription("(Task) Service Method Call", "Tasks", "task-service-method-call.png")]
     [HelpTopic("Service+Method+Call+Task")]
 	public class ServiceMethodCallTask : WorkflowTask, ISchemaItemFactory
 	{

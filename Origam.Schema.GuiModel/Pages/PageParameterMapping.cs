@@ -28,7 +28,7 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", 29)]
+	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", "file-mapping.png")]
     [HelpTopic("Parameter+Mapping")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class PageParameterMapping : AbstractSchemaItem
@@ -86,8 +86,6 @@ namespace Origam.Schema.GuiModel
 				this.SeparatorDataConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		public override string Icon => "29";
 
 		[EntityColumn("ItemType")]
 		public override string ItemType => ItemTypeConst;

@@ -31,7 +31,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for ForeachWorkflowBlock.
 	/// </summary>
-	[SchemaItemDescription("(Block) Loop", "Tasks", 21)]
+	[SchemaItemDescription("(Block) Loop", "Tasks", "block-loop-1.png")]
     [HelpTopic("Loop+Block")]
 	public class LoopWorkflowBlock : AbstractWorkflowBlock
 	{

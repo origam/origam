@@ -35,7 +35,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for TransactionWorkflowBlock.
 	/// </summary>
-	[SchemaItemDescription("(Block) Transaction", "Tasks", 21)]
+	[SchemaItemDescription("(Block) Transaction", "Tasks", "block-transaction.png")]
     [HelpTopic("Transaction+Block")]
 	public class TransactionWorkflowBlock : AbstractWorkflowBlock, IWorkflowTransaction
 	{

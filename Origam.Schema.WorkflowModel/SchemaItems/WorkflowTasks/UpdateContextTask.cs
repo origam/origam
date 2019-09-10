@@ -30,7 +30,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for UpdateContextTask.
 	/// </summary>
-	[SchemaItemDescription("(Task) Update context by Xpath", "Tasks", 20)]
+	[SchemaItemDescription("(Task) Update context by Xpath", "Tasks", "task-update-context-by-xpath.png")]
     [HelpTopic("Update+Context+Task")]
 	public class UpdateContextTask : AbstractWorkflowStep, ISchemaItemFactory
 	{
@@ -48,8 +48,6 @@ namespace Origam.Schema.WorkflowModel
 		
 		[EntityColumn("ItemType")]
 		public override string ItemType => ItemTypeConst;
-
-		public override string Icon => "20";
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
