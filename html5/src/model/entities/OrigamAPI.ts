@@ -67,7 +67,7 @@ export class OrigamAPI implements IApi {
     RegisterSession: boolean;
     DataRequested: boolean;
     ObjectId: string;
-    Parameters: {[key: string]: any};
+    Parameters: { [key: string]: any };
   }) {
     const result = (await axios.post(
       `${this.urlPrefix}/UIService/InitUI`,
@@ -356,5 +356,30 @@ export class OrigamAPI implements IApi {
         headers: this.httpAuthHeader
       }
     )).data;
+  }
+
+  async getRows(data: {
+    MenuId: string;
+    DataStructureEntityId: string;
+    Filter: string;
+    Ordering: string[][];
+    RowLimit: number;
+    ColumnNames: string[];
+    MasterRowId: string | undefined;
+  }): Promise<any> {
+    return (await axios.post(`${this.urlPrefix}/UIService/GetRows`, data, {
+      headers: this.httpAuthHeader
+    })).data;
+  }
+
+  async getData(data: {
+    SessionFormIdentifier: string;
+    ChildEntity: string;
+    ParentRecordId: string;
+    RootRecordId: string;
+  }): Promise<any> {
+    return (await axios.post(`${this.urlPrefix}/UIService/GetData`, data, {
+      headers: this.httpAuthHeader
+    })).data;
   }
 }

@@ -35,3 +35,7 @@ export const sQuestionSaveData = "sQuestionSaveData";
 export const onPerformSave = "onPerformSave";
 export const onPerformNoSave = "onPerformNoSave";
 export const onPerformCancel = "onPerformCancel";
+
+
+export const sLoadData = "sLoadData";
+export const onLoadDataDone = "onLoadDataDone";

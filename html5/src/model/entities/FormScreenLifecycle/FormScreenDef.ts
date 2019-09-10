@@ -1,3 +1,4 @@
+import { onLoadDataDone, sLoadData } from './constants';
 import {
   sQuestionSaveData,
   onPerformSave,
@@ -41,9 +42,21 @@ export const FormScreenDef = {
     [sInitUI]: {
       invoke: { src: "initUI" },
       on: {
-        onInitUIDone: {
+        onInitUIDone: [{
+          cond: 'isReadData',
           target: sFormScreenRunning,
           actions: "applyInitUIResult"
+        },{
+          target: sLoadData,
+          actions: "applyInitUIResult"
+        }]
+      }
+    },
+    [sLoadData]: {
+      invoke: {src: 'loadData'},
+      on: {
+        onLoadDataDone: {
+          target: sFormScreenRunning
         }
       }
     },

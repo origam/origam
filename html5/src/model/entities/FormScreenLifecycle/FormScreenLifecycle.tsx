@@ -40,6 +40,8 @@ import {
   sFormScreenRunning
 } from "./constants";
 import { FormScreenDef } from "./FormScreenDef";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { getDataSourceFields } from "model/selectors/DataSources/getDataSourceFields";
 
 export class FormScreenLifecycle implements IFormScreenLifecycle {
   $type_IFormScreenLifecycle: 1 = 1;
@@ -47,6 +49,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
   machine = Machine(FormScreenDef, {
     services: {
       initUI: (ctx, event) => (send, onEvent) => flow(this.initUI.bind(this))(),
+      loadData: (ctx, event) => (send, onEvent) => flow(this.loadData.bind(this))(),
       flushData: (ctx, event) => (send, onEvent) =>
         flow(this.flushData.bind(this))(),
       createRow: (ctx, event) => (send, onEvent) =>
@@ -72,7 +75,8 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
       closeForm: (ctx, event) => this.closeForm()
     },
     guards: {
-      isDirtySession: (ctx, event) => this.isDirtySession
+      isDirtySession: (ctx, event) => this.isDirtySession,
+      isReadData: (ctx, event) => this.isReadData
     }
   });
 
@@ -108,6 +112,24 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
     });
     console.log(initUIResult);
     this.interpreter.send({ type: onInitUIDone, initUIResult });
+  }
+
+  *loadData() {
+    const api = getApi(this);
+    const formScreen = getFormScreen(this);
+    for(let rootDataView of formScreen.rootDataViews) {
+      const loadedData = yield api.getRows({
+        MenuId: getMenuItemId(rootDataView),
+        DataStructureEntityId: getDataStructureEntityId(rootDataView),
+        Filter: "",
+        Ordering: [],
+        RowLimit: 10000,
+        ColumnNames: getDataSourceFields(rootDataView).map(dsField => dsField.name),
+        MasterRowId: ""
+      })
+      console.log(loadedData)
+    }
+
   }
 
   *flushData() {
@@ -205,6 +227,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
 
   @action.bound
   applyInitUIResult(args: { initUIResult: any }) {
+    debugger
     const openedScreen = getOpenedScreen(this);
     const screenXmlObj = args.initUIResult.formDefinition;
     const screen = interpretScreenXml(
@@ -311,6 +334,11 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
 
   @computed get isDirtySession() {
     return getFormScreen(this).isDirty;
+  }
+
+  get isReadData() {
+    debugger
+    return !getFormScreen(this).dontRequestData;
   }
 
   parent?: any;

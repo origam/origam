@@ -125,7 +125,7 @@ export interface IApi {
     RegisterSession: boolean;
     DataRequested: boolean;
     ObjectId: string;
-    Parameters: {[key: string]: any} | undefined;
+    Parameters: { [key: string]: any } | undefined;
   }): Promise<any>;
 
   updateObject(data: {
@@ -168,5 +168,22 @@ export interface IApi {
     SelectedItems: string[];
     InputParameters: { [key: string]: any };
     RequestingGrid: string;
+  }): Promise<any>;
+
+  getRows(data: {
+    MenuId: string;
+    DataStructureEntityId: string;
+    Filter: string;
+    Ordering: string[][];
+    RowLimit: number;
+    ColumnNames: string[];
+    MasterRowId: string | undefined;
+  }): Promise<any>;
+
+  getData(data: {
+    SessionFormIdentifier: string;
+    ChildEntity: string;
+    ParentRecordId: string;
+    RootRecordId: string;
   }): Promise<any>;
 }
