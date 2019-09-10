@@ -37,6 +37,7 @@ namespace Origam.ServerCore
             SessionManager = new SessionManager(
                 portalSessions: new Dictionary<Guid, PortalSessionStore>(),
                 formSessions: new Dictionary<Guid, SessionStore>(),
+                reportRequests: new Dictionary<Guid, ReportRequest>(),
                 analytics: analytics);
             UIManager = new UIManager(50, SessionManager, analytics);
             UIService = new ServerCoreUIService(UIManager, SessionManager);

@@ -120,7 +120,13 @@
   <data name="ErrorRefreshReturnInvalid" xml:space="preserve">
     <value>Invalid data returned by {0} for action {1}.</value>
   </data>
+  <data name="ErrorReportNotAvailable" xml:space="preserve">
+    <value>Report no longer available.</value>
+  </data>
   <data name="ErrorWorkflowSessionInvalid" xml:space="preserve">
     <value>Workflow session invalid.</value>
+  </data>
+  <data name="FilePathPartParameterNull" xml:space="preserve">
+    <value>File path part is to be replaced by a parameter value but the value provided is NULL. Cannot construct file path.</value>
   </data>
 </root>

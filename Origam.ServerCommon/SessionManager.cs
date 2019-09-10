@@ -37,14 +37,17 @@ namespace Origam.Server
     {
         private readonly Dictionary<Guid, PortalSessionStore> portalSessions;
         private readonly Dictionary<Guid, SessionStore> formSessions;
+        private readonly Dictionary<Guid, ReportRequest> reportRequests;
         private readonly Analytics analytics;
 
         public SessionManager(Dictionary<Guid, PortalSessionStore> portalSessions,
-            Dictionary<Guid, SessionStore> formSessions, Analytics analytics)
+            Dictionary<Guid, SessionStore> formSessions, Analytics analytics,
+            Dictionary<Guid, ReportRequest> reportRequests)
         {
             this.analytics = analytics;
             this.portalSessions = portalSessions;
             this.formSessions = formSessions;
+            this.reportRequests = reportRequests;
         }
         
         public int PortalSessionCount => portalSessions.Count;
@@ -66,7 +69,6 @@ namespace Origam.Server
         {
             portalSessions.Add(id, portalSessionStore);
         }
-
 
         public PortalSessionStore GetPortalSession(Guid id)
         {
@@ -300,6 +302,25 @@ namespace Origam.Server
             return ss;
         }
         
+        public void AddReportRequest(Guid key, ReportRequest request)
+        {
+            reportRequests.Add(key, request);
+        }
+        public ReportRequest GetReportRequest(Guid key)
+        {
+            if(!reportRequests.ContainsKey(key))
+            {
+                return null;
+            } 
+            else
+            {
+                return reportRequests[key];
+            }
+        }
+        public void RemoveReportRequest(Guid key)
+        {
+            reportRequests.Remove(key);
+        }
     }
 
     public struct SessionStats

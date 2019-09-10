@@ -1,5 +1,6 @@
 using Origam.ServerCommon;
 using Origam.ServerCommon.Pages;
+using System.Net;
 
 namespace Origam.ServerCore
 {
@@ -19,7 +20,18 @@ namespace Origam.ServerCore
 
         public string GetFileDisposition(IRequestWrapper request, string fileName)
         {
-            throw new System.NotImplementedException();
+            bool isFirefox 
+                = (request.UserAgent != null) 
+                && (request.UserAgent.IndexOf("Firefox") >= 0);
+            string dispositionLeft = "filename=";
+            if(isFirefox)
+            {
+                dispositionLeft = "filename*=utf-8''";
+            }
+            // no commas allowed in the file name
+            fileName = fileName.Replace(",", "");
+            string disposition = dispositionLeft + WebUtility.UrlEncode(fileName);
+            return disposition;
         }
     }
 }

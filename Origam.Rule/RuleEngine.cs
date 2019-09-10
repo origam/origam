@@ -2022,14 +2022,22 @@ namespace Origam.Rule
 			return result;
 		}
 
-		public static string NodeToString(XPathNodeIterator node)
+        public static string NodeToString(XPathNodeIterator node)
+        {
+            return NodeToString(node, true);
+        }
+
+        public static string NodeToString(XPathNodeIterator node, bool indent)
 		{
 			node.MoveNext();
 			StringBuilder sb = new StringBuilder();
 			StringWriter sw = new StringWriter(sb);
 			AsXmlTextWriter xtw = new AsXmlTextWriter(sw);
-            xtw.Formatting = System.Xml.Formatting.Indented;
-			xtw.WriteNode(node.Current);
+            if (indent)
+            {
+                xtw.Formatting = System.Xml.Formatting.Indented;
+            }
+            xtw.WriteNode(node.Current);
 			return sb.ToString();
 		}
 

@@ -25,6 +25,7 @@ using System.Xml;
 using System.Net.Mail;
 using System.Xml.XPath;
 using System.Net.Mime;
+using System.Net;
 
 namespace Origam.Mail
 {
@@ -185,7 +186,7 @@ namespace Origam.Mail
                             HtmlToText(mailrow.MessageBody), null, MediaTypeNames.Text.Plain);
                     m.AlternateViews.Add(plainTextView);
                     AlternateView htmlView = AlternateView.CreateAlternateViewFromString(
-                        mailrow.MessageBody, null, MediaTypeNames.Text.Html);
+                        WebUtility.HtmlDecode(mailrow.MessageBody), null, MediaTypeNames.Text.Html);
                     m.AlternateViews.Add(htmlView);                    
                 }
                 else

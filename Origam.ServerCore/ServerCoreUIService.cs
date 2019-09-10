@@ -36,6 +36,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -59,7 +60,7 @@ namespace Origam.ServerCore
             this.uiManager = uiManager;
             this.sessionManager = sessionManager;
             sessionHelper = new SessionHelper(sessionManager);
-            reportManager = new ServerCoreReportManager();
+            reportManager = new ServerCoreReportManager(sessionManager);
         }
 
         public string GetReportStandalone(
@@ -483,6 +484,109 @@ namespace Origam.ServerCore
             DestroyUI(sessionFormIdentifier);
             return InitUI(request);
         }
+        public int AttachmentCount(AttachmentCountInput input)
+        {
+            SecurityTools.CurrentUserProfile();
+            SessionStore sessionStore = null;
+            try
+            {
+                sessionStore = sessionManager.GetSession(
+                    input.SessionFormIdentifier);
+            }
+            catch
+            {
+            }
+            if(sessionStore == null)
+            {
+                return 0;
+            }
+            int result = 0;
+            List<object> idList = new List<object>();
+            // We catch any problems with reading record ids 
+            // (they could have been unloaded by another request
+            // and we don't want to hear messages about this).
+            try
+            {
+                ChildrenRecordsIds(idList, sessionStore.GetSessionRow(
+                    input.Entity, input.Id));
+            }
+            catch
+            {
+                return 0;
+            }
+            if(idList.Count > 500)
+            {
+                return -1;
+            }
+            foreach(object recordId in idList)
+            {
+                IDataLookupService lookupService 
+                    = ServiceManager.Services.GetService<IDataLookupService>();
+                int oneRecordCount = (int)lookupService.GetDisplayText(
+                    lookupId: new Guid("fbf2cadd-e529-401d-80ce-d68de0a89f13"), 
+                    lookupValue: recordId, 
+                    useCache: false, 
+                    returnMessageIfNull: false, 
+                    transactionId: null);
+                result += oneRecordCount;
+            }
+            return result;
+        }
+        public IList<Attachment> AttachmentList(AttachmentListInput input)
+        {
+            SecurityTools.CurrentUserProfile();
+            SessionStore sessionStore = sessionManager.GetSession(
+                input.SessionFormIdentifier);
+            List<Attachment> result = new List<Attachment>();
+            List<object> idList = new List<object>();
+            ChildrenRecordsIds(idList, sessionStore.GetSessionRow(
+                input.Entity, input.Id));
+            foreach(object recordId in idList)
+            {
+                DataSet oneRecordList = core.DataService.LoadData(
+                    dataStructureId: new Guid("44a25061-750f-4b42-a6de-09f3363f8621"), 
+                    methodId: new Guid("0fda540f-e5de-4ab6-93d2-76b0abe6fd77"), 
+                    defaultSetId: Guid.Empty, 
+                    sortSetId: Guid.Empty, 
+                    transactionId: null, 
+                    paramName1: "Attachment_parRefParentRecordId", 
+                    paramValue1: recordId);
+                foreach(DataRow row in oneRecordList.Tables[0].Rows)
+                {
+                    string user = "";
+                    if(!row.IsNull("RecordCreatedBy"))
+                    {
+                        try
+                        {
+                            IOrigamProfileProvider profileProvider 
+                                = SecurityManager.GetProfileProvider();
+                            UserProfile profile = profileProvider.GetProfile(
+                                (Guid)row["RecordCreatedBy"]) as UserProfile;
+                            user = profile.FullName;
+                        }
+                        catch (Exception ex)
+                        {
+                            user = ex.Message;
+                        }
+                    }
+                    Attachment att = new Attachment
+                    {
+                        Id = row["Id"].ToString(),
+                        CreatorName = user,
+                        DateCreated = (DateTime)row["RecordCreated"],
+                        FileName = (string)row["FileName"]
+                    };
+                    if(!row.IsNull("Note"))
+                    {
+                        att.Description = (string)row["Note"];
+                    }
+                    string extension = Path.GetExtension(att.FileName).ToLower();
+                    att.Icon = "extensions/" + extension + ".png";
+                    result.Add(att);
+                }
+            }
+            return result;
+        }
         private bool IsRowDirty(DataRow row)
         {
             if(row.RowState != DataRowState.Unchanged)
@@ -555,6 +659,21 @@ namespace Origam.ServerCore
                     SecurityManager.CurrentPrincipal.Identity.Name,
                     sessionManager.GetSessionStats());
             });
+        }
+        private void ChildrenRecordsIds(List<object> list, DataRow row)
+        {
+            if((row.Table.PrimaryKey.Length == 1) 
+            && (row.Table.PrimaryKey[0].DataType == typeof(Guid)))
+            {
+                list.Add(row[row.Table.PrimaryKey[0]]);
+                foreach(DataRelation childRelation in row.Table.ChildRelations)
+                {
+                    foreach(DataRow childRow in row.GetChildRows(childRelation))
+                    {
+                        ChildrenRecordsIds(list, childRow);
+                    }
+                }
+            }
         }
     }
 }

@@ -92,6 +92,7 @@ namespace Origam.Server
             sessionManager = new SessionManager(
                 portalSessions: portalSessions,
                 formSessions: formSessions,
+                reportRequests: null,
                 analytics: Analytics.Instance);
             uiManager = new UIManager(INITIAL_PAGE_NUMBER_OF_RECORDS,sessionManager, Analytics.Instance);
             reportManager = new ReportManager(sessionManager);
