@@ -195,18 +195,6 @@ export class OrigamAPI implements IApi {
     })).data;
   }
 
-  async sessionChangeMasterRecord(data: {
-    SessionFormIdentifier: string;
-    Entity: string;
-    RowId: string;
-  }) {
-    return (await axios.post(
-      `${this.urlPrefix}/Session/ChangeMasterRecord`,
-      data,
-      { headers: this.httpAuthHeader }
-    )).data;
-  }
-
   async sessionDeleteEntity(data: {
     SessionFormIdentifier: string;
     Entity: string;
@@ -254,6 +242,16 @@ export class OrigamAPI implements IApi {
     })).data;
   }
 
+  async setMasterRecord(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    RowId: string;
+  }): Promise<any> {
+    return (await axios.post(`${this.urlPrefix}/UIService/MasterRecord`, data, {
+      headers: this.httpAuthHeader
+    })).data;
+  }
+
   async getLookupList(data: {
     DataStructureEntityId?: string;
     FormSessionIdentifier?: string;
@@ -278,9 +276,12 @@ export class OrigamAPI implements IApi {
   }
 
   async initPortal(): Promise<any> {
-    const { data } = await axios.get(`${this.urlPrefix}/UIService/InitPortal/en-us`, {
-      headers: this.httpAuthHeader
-    });
+    const { data } = await axios.get(
+      `${this.urlPrefix}/UIService/InitPortal/en-us`,
+      {
+        headers: this.httpAuthHeader
+      }
+    );
     return {
       ...data,
       menu: xmlJs.xml2js(data.menu, { addParent: true, alwaysChildren: true })

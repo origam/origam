@@ -67,11 +67,6 @@ export interface IApi {
   saveSessionQuery(sessionFormIdentifier: string): Promise<any>;
   refreshSession(sessionFormIdentifier: string): Promise<any>;
 
-  sessionChangeMasterRecord(data: {
-    SessionFormIdentifier: string;
-    Entity: string;
-    RowId: string;
-  }): Promise<any>;
 
   sessionGetEntity(data: {
     sessionFormIdentifier: string;
@@ -126,6 +121,12 @@ export interface IApi {
     DataRequested: boolean;
     ObjectId: string;
     Parameters: { [key: string]: any } | undefined;
+  }): Promise<any>;
+
+  setMasterRecord(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    RowId: string;
   }): Promise<any>;
 
   updateObject(data: {

@@ -44,6 +44,7 @@ export interface IDataView extends IDataViewData {
   $type_IDataView: 1;
 
   isBindingRoot: boolean;
+  isBindingParent: boolean;
   isAnyBindingAncestorWorking: boolean;
   parentBindings: IComponentBinding[];
   childBindings: IComponentBinding[];
@@ -76,7 +77,7 @@ export interface IDataView extends IDataViewData {
   setSelectedRowId(id: string | undefined): void;
   setEditing(state: boolean): void;
 
-  run(): void;
+  start(): void;
 
   parent?: any;
 }

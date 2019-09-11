@@ -5,13 +5,18 @@ export interface IDataViewLifecycleData {}
 export interface IDataViewLifecycle extends IDataViewLifecycleData {
   $type_IDataViewLifecycle: 1;
 
-  isWorking: boolean;
+  // isWorking: boolean;
 
-  onDeleteRowClicked(): void;
-  onAddRowClicked(): void;
-  loadFresh(): void;
-  requestFlushData(row: any[], property: IProperty): void;
-  run(): void;
+  // onDeleteRowClicked(): void;
+  // onAddRowClicked(): void;
+  // loadFresh(): void;
+  // requestFlushData(row: any[], property: IProperty): void;
+
+  navigateAsChild(): void;
+  cancelNavigation(): void;
+  cancelSubtreeNavigation(): void;
+
+  start(): void;
   parent?: any;
 }
 

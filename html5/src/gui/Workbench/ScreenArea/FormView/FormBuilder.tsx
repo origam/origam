@@ -10,6 +10,7 @@ import { FormField } from "./FormField";
 import { FormRoot } from "./FormRoot";
 import { FormViewEditor } from "./FormViewEditor";
 
+let keyGen = 1;
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -27,7 +28,7 @@ export class FormBuilder extends React.Component<{
     function recursive(xfo: any) {
       if (xfo.name === "FormRoot") {
         return (
-          <FormRoot>
+          <FormRoot key={keyGen++}>
             {xfo.elements.map((child: any) => recursive(child))}
           </FormRoot>
         );
@@ -37,6 +38,7 @@ export class FormBuilder extends React.Component<{
       ) {
         return (
           <FormSection
+            key={keyGen++}
             width={parseInt(xfo.attributes.Width, 10)}
             height={parseInt(xfo.attributes.Height, 10)}
             x={parseInt(xfo.attributes.X, 10)}
@@ -50,7 +52,7 @@ export class FormBuilder extends React.Component<{
         const propertyNames = findStrings(xfo);
         return propertyNames.map(propertyId => {
           return (
-            <Observer>
+            <Observer key={keyGen++}>
               {() => {
                 const property = getDataViewPropertyById(
                   self.props.dataView,

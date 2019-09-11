@@ -102,7 +102,7 @@ export class DataView implements IDataView {
   }
 
   get isWorking() {
-    return this.lifecycle.isWorking;
+    return false
   }
 
   @computed get isAnyBindingAncestorWorking() {
@@ -119,6 +119,11 @@ export class DataView implements IDataView {
   @computed
   get isBindingRoot() {
     return this.parentBindings.length === 0;
+  }
+
+  @computed
+  get isBindingParent() {
+    return this.childBindings.length > 0;
   }
 
   @computed get bindingParent() {
@@ -221,8 +226,8 @@ export class DataView implements IDataView {
     this.isEditing = state;
   }
 
-  @action.bound run() {
-    this.lifecycle.run();
+  @action.bound start() {
+    this.lifecycle.start();
   }
 
   parent?: any;

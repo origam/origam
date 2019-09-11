@@ -13,7 +13,7 @@ import {
 } from "../model/entities/ComponentBinding";
 import { IFormScreenLifecycle } from "../model/entities/types/IFormScreenLifecycle";
 import { DataTable } from "../model/entities/DataTable";
-import { DataViewLifecycle } from "../model/entities/DataViewLifecycle";
+import { DataViewLifecycle } from "../model/entities/DataViewLifecycle/DataViewLifecycle";
 import { TablePanelView } from "../model/entities/TablePanelView/TablePanelView";
 import { FormPanelView } from "../model/entities/FormPanelView/FormPanelView";
 import { flf2mof } from "../utils/flashDateFormat";

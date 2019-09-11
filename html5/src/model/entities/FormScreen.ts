@@ -1,16 +1,16 @@
-import { IDataView } from "./types/IDataView";
-import { IDataSource } from "./types/IDataSource";
+import { action, computed, observable } from "mobx";
+import { getDontRequestData } from "model/selectors/getDontRequestData";
+import { IAction } from "./types/IAction";
 import { IComponentBinding } from "./types/IComponentBinding";
+import { IDataSource } from "./types/IDataSource";
+import { IDataView } from "./types/IDataView";
 import {
-  ILoadedFormScreenData,
   ILoadedFormScreen,
-  ILoadingFormScreen
+  ILoadedFormScreenData,
+  ILoadingFormScreen,
+  ILoadingFormScreenData
 } from "./types/IFormScreen";
 import { IFormScreenLifecycle } from "./types/IFormScreenLifecycle";
-import { ILoadingFormScreenData } from "./types/IFormScreen";
-import { computed, action, observable } from "mobx";
-import { IAction } from "./types/IAction";
-import { getDontRequestData } from "model/selectors/getDontRequestData";
 
 export class FormScreen implements ILoadedFormScreen {
   $type_ILoadedFormScreen: 1 = 1;
@@ -65,7 +65,7 @@ export class FormScreen implements ILoadedFormScreen {
     return this.dataViews.find(dv => dv.modelInstanceId === modelInstanceId);
   }
 
-  getDataViewsByEntity(entity: string): IDataView[]  {
+  getDataViewsByEntity(entity: string): IDataView[] {
     return this.dataViews.filter(dv => dv.entity === entity);
   }
 
@@ -116,7 +116,7 @@ export class FormScreen implements ILoadedFormScreen {
         recursive(chb.childDataView, level + 1);
       }
     };
-    console.log('');
+    console.log("");
     console.log("View bindings");
     console.log("=============");
     const roots = Array.from(this.dataViews.values()).filter(
@@ -126,8 +126,8 @@ export class FormScreen implements ILoadedFormScreen {
       recursive(dv, 0);
     }
     console.log("=============");
-    console.log("End of View bindings");  
-    console.log('');
+    console.log("End of View bindings");
+    console.log("");
   }
 }
 
