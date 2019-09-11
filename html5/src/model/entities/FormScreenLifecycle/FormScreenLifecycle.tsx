@@ -46,6 +46,8 @@ import { getColumnNamesToLoad } from "model/selectors/DataView/getColumnNamesToL
 import { getBindingChildren } from "model/selectors/DataView/getBindingChildren";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
+import { getBindingParametersFromParent } from "model/selectors/DataView/getBindingParametersFromParent";
+import { getDataViewByGridId } from "model/selectors/DataView/getDataViewByGridId";
 
 export class FormScreenLifecycle implements IFormScreenLifecycle {
   $type_IFormScreenLifecycle: 1 = 1;
@@ -158,12 +160,13 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
 
   *createRow(entity: string, gridId: string) {
     const api = getApi(this);
+    const targetDataView = getDataViewByGridId(this, gridId)!;
     const createObjectResult = yield api.createObject({
       SessionFormIdentifier: getSessionId(this),
       Entity: entity,
       RequestingGridId: gridId,
       Values: {},
-      Parameters: {}
+      Parameters: { ...getBindingParametersFromParent(targetDataView) }
     });
     console.log(createObjectResult);
     processCRUDResult(this, createObjectResult);

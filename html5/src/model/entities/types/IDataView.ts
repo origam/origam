@@ -57,6 +57,7 @@ export interface IDataView extends IDataViewData {
   selectedRowIndex: number | undefined;
   selectedRow: any[] | undefined;
   dataSource: IDataSource;
+  bindingParametersFromParent: {[key: string]: string};
 
   isReorderedOnClient: boolean;
 
