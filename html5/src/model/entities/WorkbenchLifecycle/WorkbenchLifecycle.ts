@@ -134,7 +134,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     );
     openedScreens.pushItem(newScreen);
     openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
-    newFormScreen.run();
+    newFormScreen.start();
   }
 
   *initPortal() {

@@ -20,7 +20,7 @@ export interface IFormScreenLifecycle extends IFormScreenLifecycleData {
 
   onRequestScreenClose(): void;
 
-  run(): void;
+  start(): void;
   parent?: any;
 }
 

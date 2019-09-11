@@ -144,7 +144,8 @@ export class LoadingFormScreen implements ILoadingFormScreen {
 
   parent?: any;
 
-  run(): void {
-    this.formScreenLifecycle.run();
+  @action.bound
+  start(): void {
+    this.formScreenLifecycle.start();
   }
 }

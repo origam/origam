@@ -36,11 +36,16 @@ import {
   onRequestScreenClose,
   onSaveSession,
   onSaveSessionDone,
-  sFormScreenRunning
+  sFormScreenRunning,
+  onLoadDataDone
 } from "./constants";
 import { FormScreenDef } from "./FormScreenDef";
 import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
 import { getDataSourceFields } from "model/selectors/DataSources/getDataSourceFields";
+import { getColumnNamesToLoad } from "model/selectors/DataView/getColumnNamesToLoad";
+import { getBindingChildren } from "model/selectors/DataView/getBindingChildren";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
 
 export class FormScreenLifecycle implements IFormScreenLifecycle {
   $type_IFormScreenLifecycle: 1 = 1;
@@ -48,7 +53,8 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
   machine = Machine(FormScreenDef, {
     services: {
       initUI: (ctx, event) => (send, onEvent) => flow(this.initUI.bind(this))(),
-      loadData: (ctx, event) => (send, onEvent) => flow(this.loadData.bind(this))(),
+      loadData: (ctx, event) => (send, onEvent) =>
+        flow(this.loadData.bind(this))(),
       flushData: (ctx, event) => (send, onEvent) =>
         flow(this.flushData.bind(this))(),
       createRow: (ctx, event) => (send, onEvent) =>
@@ -116,19 +122,21 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
   *loadData() {
     const api = getApi(this);
     const formScreen = getFormScreen(this);
-    for(let rootDataView of formScreen.rootDataViews) {
+    for (let rootDataView of formScreen.rootDataViews) {
       const loadedData = yield api.getRows({
         MenuId: getMenuItemId(rootDataView),
         DataStructureEntityId: getDataStructureEntityId(rootDataView),
         Filter: "",
         Ordering: [],
         RowLimit: 10000,
-        ColumnNames: getDataSourceFields(rootDataView).map(dsField => dsField.name),
-        MasterRowId: ""
-      })
-      console.log(loadedData)
+        ColumnNames: getColumnNamesToLoad(rootDataView),
+        MasterRowId: undefined
+      });
+      rootDataView.dataTable.clear();
+      rootDataView.dataTable.setRecords(loadedData);
+      rootDataView.selectFirstRow();
     }
-
+    this.interpreter.send(onLoadDataDone);
   }
 
   *flushData() {
@@ -236,13 +244,14 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
     openedScreen.setContent(screen);
     screen.printMasterDetailTree();
     this.applyData(args.initUIResult.data);
+    getDataViewList(this).forEach(dv => dv.start());
   }
 
   @action.bound applyData(data: any) {
     for (let [entityKey, entityValue] of Object.entries(data)) {
       console.log(entityKey, entityValue);
       const dataViews = getDataViewsByEntity(this, entityKey);
-      for(let dataView of dataViews) {
+      for (let dataView of dataViews) {
         dataView.dataTable.clear();
         dataView.dataTable.setRecords((entityValue as any).data);
         dataView.selectFirstRow();
@@ -307,7 +316,6 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
     await when(() => !this.isWorking);
   }
 
-
   @action.bound questionSaveData() {
     return getDialogStack(this).pushDialog(
       "",
@@ -321,7 +329,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
   }
 
   @action.bound
-  run(): void {
+  start(): void {
     this.interpreter.start();
   }
 

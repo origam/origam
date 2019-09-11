@@ -56,7 +56,7 @@ export interface ILoadingFormScreen extends ILoadingFormScreenData {
   isLoading: true;
   parent?: any;
 
-  run(): void;
+  start(): void;
 }
 
 export type IFormScreen = ILoadingFormScreen | ILoadedFormScreen;
