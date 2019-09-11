@@ -175,24 +175,30 @@ export class OrigamAPI implements IApi {
   async deleteSession() {}
 
   async saveSession(sessionFormIdentifier: string) {
-    return (await axios.get(`${this.urlPrefix}/UIService/SaveData`, {
-      params: { sessionFormIdentifier },
-      headers: this.httpAuthHeader
-    })).data;
+    return (await axios.get(
+      `${this.urlPrefix}/UIService/SaveData/${sessionFormIdentifier}`,
+      {
+        headers: this.httpAuthHeader
+      }
+    )).data;
   }
 
   async saveSessionQuery(sessionFormIdentifier: string) {
-    return (await axios.get(`${this.urlPrefix}/UIService/SaveDataQuery`, {
-      params: { sessionFormIdentifier },
-      headers: this.httpAuthHeader
-    })).data;
+    return (await axios.get(
+      `${this.urlPrefix}/UIService/SaveDataQuery/${sessionFormIdentifier}`,
+      {
+        headers: this.httpAuthHeader
+      }
+    )).data;
   }
 
   async refreshSession(sessionFormIdentifier: string) {
-    return (await axios.get(`${this.urlPrefix}/UIService/RefreshData`, {
-      params: { sessionFormIdentifier },
-      headers: this.httpAuthHeader
-    })).data;
+    return (await axios.get(
+      `${this.urlPrefix}/UIService/RefreshData/${sessionFormIdentifier}`,
+      {
+        headers: this.httpAuthHeader
+      }
+    )).data;
   }
 
   async sessionChangeMasterRecord(data: {
@@ -278,9 +284,12 @@ export class OrigamAPI implements IApi {
   }
 
   async initPortal(): Promise<any> {
-    const { data } = await axios.get(`${this.urlPrefix}/UIService/InitPortal/en-us`, {
-      headers: this.httpAuthHeader
-    });
+    const { data } = await axios.get(
+      `${this.urlPrefix}/UIService/InitPortal/en-us`,
+      {
+        headers: this.httpAuthHeader
+      }
+    );
     return {
       ...data,
       menu: xmlJs.xml2js(data.menu, { addParent: true, alwaysChildren: true })
