@@ -260,7 +260,7 @@ class HeaderRenderer implements IHeaderRendererData {
     const property = this.tableViewProperties[args.columnIndex];
     const header = this.columnHeaders[args.columnIndex];
     return (
-      <Provider property={property} key={property.id}>
+      <Provider property={property}>
         <Header
           key={header.id}
           id={header.id}

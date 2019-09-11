@@ -1,20 +1,18 @@
-import { IProperty } from "./IProperty";
+import { IProperty } from "../../types/IProperty";
 
 export interface IDataViewLifecycleData {}
 
 export interface IDataViewLifecycle extends IDataViewLifecycleData {
   $type_IDataViewLifecycle: 1;
 
-  // isWorking: boolean;
+  /*isWorking: boolean;
 
-  // onDeleteRowClicked(): void;
-  // onAddRowClicked(): void;
-  // loadFresh(): void;
-  // requestFlushData(row: any[], property: IProperty): void;
+  onDeleteRowClicked(): void;
+  onAddRowClicked(): void;
+  loadFresh(): void;
+  requestFlushData(row: any[], property: IProperty): void;*/
 
   navigateAsChild(): void;
-  cancelNavigation(): void;
-  cancelSubtreeNavigation(): void;
 
   start(): void;
   parent?: any;

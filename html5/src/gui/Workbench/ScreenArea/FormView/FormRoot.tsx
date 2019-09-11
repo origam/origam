@@ -5,6 +5,18 @@ import { action } from "mobx";
 
 @observer
 export class FormRoot extends React.Component<{}> {
+  componentDidMount() {
+    window.addEventListener("click", this.handleWindowClick);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("click", this.handleWindowClick);
+  }
+
+  @action.bound handleWindowClick(event: any) {
+    if (this.elmFormRoot && !this.elmFormRoot.contains(event.target)) {
+    }
+  }
 
   elmFormRoot: HTMLDivElement | null = null;
   refFormRoot = (elm: HTMLDivElement | null) => (this.elmFormRoot = elm);

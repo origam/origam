@@ -3,7 +3,7 @@ import { IProperty } from "./IProperty";
 import { IDataSource } from "./IDataSource";
 import { IDataTable } from "./IDataTable";
 import { IComponentBinding } from "./IComponentBinding";
-import { IDataViewLifecycle } from "./IDataViewLifecycle";
+import { IDataViewLifecycle } from "../DataViewLifecycle/types/IDataViewLifecycle";
 import { ITablePanelView } from "../TablePanelView/types/ITablePanelView";
 import { IFormPanelView } from "../FormPanelView/types/IFormPanelView";
 import { IAction } from "./IAction";

@@ -36,15 +36,11 @@ import {
   onRequestScreenClose,
   onSaveSession,
   onSaveSessionDone,
-  sFormScreenRunning,
-  onLoadDataDone
+  sFormScreenRunning
 } from "./constants";
 import { FormScreenDef } from "./FormScreenDef";
 import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
 import { getDataSourceFields } from "model/selectors/DataSources/getDataSourceFields";
-import { getDontRequestData } from "model/selectors/getDontRequestData";
-import { getColumnNamesToLoad } from "model/selectors/DataView/getColumnNamesToLoad";
-import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
 
 export class FormScreenLifecycle implements IFormScreenLifecycle {
   $type_IFormScreenLifecycle: 1 = 1;
@@ -52,8 +48,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
   machine = Machine(FormScreenDef, {
     services: {
       initUI: (ctx, event) => (send, onEvent) => flow(this.initUI.bind(this))(),
-      loadData: (ctx, event) => (send, onEvent) =>
-        flow(this.loadData.bind(this))(),
+      loadData: (ctx, event) => (send, onEvent) => flow(this.loadData.bind(this))(),
       flushData: (ctx, event) => (send, onEvent) =>
         flow(this.flushData.bind(this))(),
       createRow: (ctx, event) => (send, onEvent) =>
@@ -121,30 +116,19 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
   *loadData() {
     const api = getApi(this);
     const formScreen = getFormScreen(this);
-    for (let rootDataView of formScreen.rootDataViews) {
+    for(let rootDataView of formScreen.rootDataViews) {
       const loadedData = yield api.getRows({
         MenuId: getMenuItemId(rootDataView),
         DataStructureEntityId: getDataStructureEntityId(rootDataView),
         Filter: "",
         Ordering: [],
         RowLimit: 10000,
-        ColumnNames: getColumnNamesToLoad(rootDataView),
-        MasterRowId: undefined
-      });
-      rootDataView.dataTable.clear();
-      rootDataView.dataTable.setRecords(loadedData);
-      rootDataView.selectFirstRow();
-
-      /*for (let chb of rootDataView.childBindings) {
-        yield api.getData({
-          SessionFormIdentifier: getSessionId(this),
-          ChildEntity: "",
-          ParentRecordId: "",
-          RootRecordId: ""
-        });
-      }*/
+        ColumnNames: getDataSourceFields(rootDataView).map(dsField => dsField.name),
+        MasterRowId: ""
+      })
+      console.log(loadedData)
     }
-    this.interpreter.send(onLoadDataDone);
+
   }
 
   *flushData() {
@@ -242,7 +226,6 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
 
   @action.bound
   applyInitUIResult(args: { initUIResult: any }) {
-    console.log('Apply init ui result.')
     const openedScreen = getOpenedScreen(this);
     const screenXmlObj = args.initUIResult.formDefinition;
     const screen = interpretScreenXml(
@@ -250,18 +233,16 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
       this,
       args.initUIResult.sessionId
     );
-    
     openedScreen.setContent(screen);
     screen.printMasterDetailTree();
     this.applyData(args.initUIResult.data);
-    getDataViewList(this).forEach(dv => dv.start());
   }
 
   @action.bound applyData(data: any) {
     for (let [entityKey, entityValue] of Object.entries(data)) {
       console.log(entityKey, entityValue);
       const dataViews = getDataViewsByEntity(this, entityKey);
-      for (let dataView of dataViews) {
+      for(let dataView of dataViews) {
         dataView.dataTable.clear();
         dataView.dataTable.setRecords((entityValue as any).data);
         dataView.selectFirstRow();
@@ -327,7 +308,6 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
   }
 
 
-
   @action.bound questionSaveData() {
     return getDialogStack(this).pushDialog(
       "",
@@ -350,7 +330,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
   }
 
   get isReadData() {
-    return !getDontRequestData(this);
+    return !getOpenedScreen(this).dontRequestData;
   }
 
   parent?: any;

@@ -13,7 +13,7 @@ import {
 } from "../model/entities/ComponentBinding";
 import { IFormScreenLifecycle } from "../model/entities/types/IFormScreenLifecycle";
 import { DataTable } from "../model/entities/DataTable";
-import { DataViewLifecycle } from "../model/entities/DataViewLifecycle/DataViewLifecycle";
+
 import { TablePanelView } from "../model/entities/TablePanelView/TablePanelView";
 import { FormPanelView } from "../model/entities/FormPanelView/FormPanelView";
 import { flf2mof } from "../utils/flashDateFormat";
@@ -24,6 +24,7 @@ import { Action } from "../model/entities/Action";
 import { ActionParameter } from "../model/entities/ActionParameter";
 import { OrderingConfiguration } from '../model/entities/OrderingConfiguration';
 import { Table } from '../gui/Components/ScreenElements/Table/Table';
+import { DataViewLifecycle } from "model/entities/DataViewLifecycle/DataViewLifecycle";
 
 export const findUIRoot = (node: any) =>
   findStopping(node, n => n.name === "UIRoot")[0];
@@ -272,17 +273,6 @@ export function interpretScreenXml(
     componentBindings
   });
 
-  /*
-  const tdv1 = scr.dataViews.find(dv => dv.id === "AsPanel1_1");
-  if (tdv1) {
-    for (let ri = 0; ri < 1000; ri++) {
-      const row = [];
-      for (let ci = 0; ci < 4; ci++) {
-        row.push(Math.random() + "");
-      }
-      tdv1.dataTable.rows.push(row);
-    }
-  }*/
 
   return scr;
 }

@@ -108,9 +108,7 @@ export class Toolbar extends React.Component<{
         </div>
         <div className={S.section}>
           {this.props.actions!.map(action => (
-            <PanelViewAction key={action.id} disabled={true}>
-              {action.caption}
-            </PanelViewAction>
+            <PanelViewAction disabled={true}>{action.caption}</PanelViewAction>
           ))}
         </div>
         <div className={S.section + " " + S.pusher} />

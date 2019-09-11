@@ -4,7 +4,7 @@ import { IProperty } from "./types/IProperty";
 import { observable, action, computed, runInAction } from "mobx";
 import { IDataTable } from "./types/IDataTable";
 import { getFormScreen } from "../selectors/FormScreen/getFormScreen";
-import { IDataViewLifecycle } from "./types/IDataViewLifecycle";
+import { IDataViewLifecycle } from "./DataViewLifecycle/types/IDataViewLifecycle";
 import { getDataSourceByEntity } from "../selectors/DataSources/getDataSourceByEntity";
 import { ITablePanelView } from "./TablePanelView/types/ITablePanelView";
 import { IFormPanelView } from "./FormPanelView/types/IFormPanelView";
@@ -14,6 +14,7 @@ import { IAction, IActionPlacement, IActionType } from "./types/IAction";
 import { getIsDialog } from "../selectors/getIsDialog";
 
 export class DataView implements IDataView {
+
   
   $type_IDataView: 1 = 1;
 
@@ -102,7 +103,8 @@ export class DataView implements IDataView {
   }
 
   get isWorking() {
-    return false
+    // TODO
+    return false;
   }
 
   @computed get isAnyBindingAncestorWorking() {
@@ -121,8 +123,7 @@ export class DataView implements IDataView {
     return this.parentBindings.length === 0;
   }
 
-  @computed
-  get isBindingParent() {
+  @computed get isBindingParent() {
     return this.childBindings.length > 0;
   }
 

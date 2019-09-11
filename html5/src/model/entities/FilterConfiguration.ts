@@ -266,10 +266,10 @@ export class FilterConfiguration implements IFilterConfiguration {
       reaction(() => {
         return [this.dataView.selectedRow, this.dataView.dataTable.rows.length]
       }, () => {
-        // console.log(this.dataView!.modelInstanceId)
+        console.log(this.dataView!.modelInstanceId)
         if(!this.dataView.selectedRow && this.dataView.dataTable.rows.length > 0) {
           this.dataView.selectFirstRow();
-          // console.log('sfr', this.dataView.modelInstanceId, this.dataView.selectedRow)
+          console.log('sfr', this.dataView.modelInstanceId, this.dataView.selectedRow)
         }
       })
     );
@@ -278,7 +278,7 @@ export class FilterConfiguration implements IFilterConfiguration {
   @action.bound applyNewFilteringImm = flow(function*(
     this: FilterConfiguration
   ) {
-    // console.log("New filtering:", toJS(this.filtering));
+    console.log("New filtering:", toJS(this.filtering));
     const dataView = getDataView(this);
     const dataTable = getDataTable(dataView);
     if (dataView.isReorderedOnClient) {

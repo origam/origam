@@ -67,6 +67,11 @@ export interface IApi {
   saveSessionQuery(sessionFormIdentifier: string): Promise<any>;
   refreshSession(sessionFormIdentifier: string): Promise<any>;
 
+  sessionChangeMasterRecord(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    RowId: string;
+  }): Promise<any>;
 
   sessionGetEntity(data: {
     sessionFormIdentifier: string;
