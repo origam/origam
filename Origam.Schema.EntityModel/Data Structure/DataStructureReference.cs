@@ -29,7 +29,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for EntityColumnReference.
 	/// </summary>
-	[SchemaItemDescription("Data Structure Reference", 9)]
+	[SchemaItemDescription("Data Structure Reference", "data-structure-reference.png")]
     [HelpTopic("Data+Structure+Reference")]
 	[XmlModelRoot(ItemTypeConst)]
     [DefaultProperty("DataStructure")]
@@ -51,14 +51,6 @@ namespace Origam.Schema.EntityModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "9";
 			}
 		}
 

@@ -27,7 +27,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for ScheduleGroup.
 	/// </summary>
-	[SchemaItemDescription("Schedule Group", 66)]
+	[SchemaItemDescription("Schedule Group", "schedule-group.png")]
 	public class ScheduleGroup : AbstractScheduleTime
 	{
 		public ScheduleGroup() : base() {}
@@ -55,14 +55,6 @@ namespace Origam.Schema.WorkflowModel
 			}
 
 			return q;
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "66";
-			}
 		}
 		#endregion
 

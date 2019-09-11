@@ -29,7 +29,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Parameter that can be used to parametrize any kind of schema item.
 	/// </summary>
-	[SchemaItemDescription("Parameter", "Parameters", 15)]
+	[SchemaItemDescription("Parameter", "Parameters", "parameter-blm.png")]
     [HelpTopic("Service+Method+Parameter")]
     public class ServiceMethodParameter : SchemaItemParameter
 	{

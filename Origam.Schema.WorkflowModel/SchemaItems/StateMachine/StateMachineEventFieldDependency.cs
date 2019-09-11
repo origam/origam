@@ -30,7 +30,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for ContextStoreLink.
 	/// </summary>
-	[SchemaItemDescription("Field Dependency", "Field Dependencies", 17)]
+	[SchemaItemDescription("Field Dependency", "Field Dependencies", "field-dependency.png")]
     [HelpTopic("Data+Event+Field+Dependency")]
     [DefaultProperty("Field")]
 	[XmlModelRoot(ItemTypeConst)]
@@ -52,14 +52,6 @@ namespace Origam.Schema.WorkflowModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "17";
 			}
 		}
 

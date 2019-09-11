@@ -40,14 +40,6 @@ namespace Origam.Schema.WorkflowModel
 		public WorkflowTask(Key primaryKey) : base(primaryKey)	{}
 
 		#region Overriden AbstractSchemaItem Members
-		public override string Icon
-		{
-			get
-			{
-				return "20";
-			}
-		}
-
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
 			dependencies.Add(this.OutputContextStore);

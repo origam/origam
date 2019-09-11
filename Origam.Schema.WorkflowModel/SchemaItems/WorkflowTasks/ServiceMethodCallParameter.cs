@@ -35,7 +35,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for ServiceMethodCallParameter.
 	/// </summary>
-	[SchemaItemDescription("Parameter", "Parameters", 15)]
+	[SchemaItemDescription("Parameter", "Parameters", "parameter-mapping-blm.png")]
     [HelpTopic("Service+Method+Call+Parameter")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class ServiceMethodCallParameter : AbstractSchemaItem, ISchemaItemFactory
@@ -56,14 +56,6 @@ namespace Origam.Schema.WorkflowModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "15";
 			}
 		}
 

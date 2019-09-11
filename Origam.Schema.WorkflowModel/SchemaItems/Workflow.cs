@@ -32,7 +32,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for Workflow.
 	/// </summary>
-	[SchemaItemDescription("Sequential Workflow", "icon_30_sequential-workflows.png")]
+	[SchemaItemDescription("Sequential Workflow", "sequential-workflow.png")]
     [HelpTopic("Sequential+Workflows")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class Workflow : AbstractSchemaItem, IWorkflow

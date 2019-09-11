@@ -43,7 +43,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for SetWorkflowPropertyTask.
 	/// </summary>
-	[SchemaItemDescription("(Task) Set Workflow Property", "Tasks", 20)]
+	[SchemaItemDescription("(Task) Set Workflow Property", "Tasks", "task-set-workflow-property.png")]
     [HelpTopic("Set+Workflow+Property+Task")]
 	public class SetWorkflowPropertyTask : AbstractWorkflowStep, ISchemaItemFactory
 	{
@@ -61,14 +61,6 @@ namespace Origam.Schema.WorkflowModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "20";
 			}
 		}
 

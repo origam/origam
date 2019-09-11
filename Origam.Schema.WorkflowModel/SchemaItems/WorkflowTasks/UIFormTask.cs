@@ -40,7 +40,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for UIFormTask.
 	/// </summary>
-	[SchemaItemDescription("(Task) User Interface", "Tasks", 13)]
+	[SchemaItemDescription("(Task) User Interface", "Tasks", "task-user-interface.png")]
     [HelpTopic("User+Interface+Task")]
 	public class UIFormTask : WorkflowTask, ISchemaItemFactory
 	{
@@ -80,14 +80,6 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
 		#region Properties
-		public override string Icon
-		{
-			get
-			{
-				return "13";
-			}
-		}
-
 		[EntityColumn("G10")]  
 		public Guid ScreenId;
 

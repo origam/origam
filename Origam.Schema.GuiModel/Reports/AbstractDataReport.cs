@@ -43,14 +43,6 @@ namespace Origam.Schema.GuiModel
 
         private string _reportFileName;
 
-        public override string Icon
-        {
-            get
-            {
-                return "29";
-            }
-        }
-
         [EntityColumn("G01")]
         public Guid DataStructureId;
 

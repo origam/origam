@@ -29,7 +29,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for WorkflowCallTask.
 	/// </summary>
-	[SchemaItemDescription("(Task) Wait", "Tasks", 16)]
+	[SchemaItemDescription("(Task) Wait", "Tasks", "task-wait-2.png")]
     [HelpTopic("Wait+Task")]
 	public class WaitTask : AbstractWorkflowStep
 	{

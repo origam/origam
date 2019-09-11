@@ -31,7 +31,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for AbstractService.
 	/// </summary>
-	[SchemaItemDescription("Work Queue Class", "icon_34_work-queue-classes.png")]
+	[SchemaItemDescription("Work Queue Class", "work-queue-class.png")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	{

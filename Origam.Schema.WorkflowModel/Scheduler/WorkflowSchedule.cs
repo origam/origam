@@ -31,7 +31,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for WorkflowSchedule.
 	/// </summary>
-	[SchemaItemDescription("Workflow Schedule", "icon_29_schedules.png")]
+	[SchemaItemDescription("Workflow Schedule", "workflow-schedule.png")]
 	[XmlModelRoot(ItemTypeConst)]
     public class WorkflowSchedule : AbstractSchemaItem
 	{
