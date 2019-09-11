@@ -31,7 +31,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for SimpleScheduleTime.
 	/// </summary>
-	[SchemaItemDescription("Simple Schedule", 38)]
+	[SchemaItemDescription("Simple Schedule", "simple-schedule-1.png")]
 	public class SimpleScheduleTime : AbstractScheduleTime
 	{
 		public SimpleScheduleTime() : base() {}
@@ -41,14 +41,6 @@ namespace Origam.Schema.WorkflowModel
 		public SimpleScheduleTime(Key primaryKey) : base(primaryKey)	{}
 
 		#region Override AbstractScheduleTime Members
-		public override string Icon
-		{
-			get
-			{
-				return "38";
-			}
-		}
-
 		public override bool CanConvertTo(Type type)
 		{
 			return (type == typeof(ScheduleGroup));

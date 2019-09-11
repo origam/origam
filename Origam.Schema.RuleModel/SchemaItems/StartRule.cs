@@ -25,7 +25,7 @@ using System.Xml.Serialization;
 
 namespace Origam.Schema.RuleModel
 {
-    [SchemaItemDescription("Condition Rule", "icon_27_rules.png")]
+    [SchemaItemDescription("Condition Rule", "condition-rule.png")]
     [HelpTopic("Condition+Rule")]
     public class StartRule : XPathRule, IStartRule
     {

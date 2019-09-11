@@ -30,7 +30,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for ContextStore.
 	/// </summary>
-	[SchemaItemDescription("Input Mapping", "Input Mappings", 17)]
+	[SchemaItemDescription("Input Mapping", "Input Mappings", "input-mapping.png")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class WorkQueueClassEntityMapping : AbstractSchemaItem, IComparable
 	{
@@ -44,8 +44,6 @@ namespace Origam.Schema.WorkflowModel
 		
 		[EntityColumn("ItemType")]
 		public override string ItemType => ItemTypeConst;
-
-		public override string Icon => "17";
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{

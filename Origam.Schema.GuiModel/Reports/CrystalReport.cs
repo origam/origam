@@ -36,7 +36,5 @@ namespace Origam.Schema.GuiModel
 		public CrystalReport(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
 		public CrystalReport(Key primaryKey) : base(primaryKey)	{}
-
-
 	}
 }

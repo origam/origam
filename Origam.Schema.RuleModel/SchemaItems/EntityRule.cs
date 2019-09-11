@@ -25,7 +25,7 @@ using System.Xml.Serialization;
 
 namespace Origam.Schema.RuleModel
 {
-    [SchemaItemDescription("Entity Rule", "icon_27_rules.png")]
+    [SchemaItemDescription("Entity Rule", "entity-rule.png")]
     [HelpTopic("Entity+Rule")]
     public class EntityRule : XPathRule, IEntityRule
     {

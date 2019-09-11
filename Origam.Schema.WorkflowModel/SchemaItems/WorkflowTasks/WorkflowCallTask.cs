@@ -29,7 +29,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for WorkflowCallTask.
 	/// </summary>
-	[SchemaItemDescription("(Task) Workflow Call", "Tasks", 20)]
+	[SchemaItemDescription("(Task) Workflow Call", "Tasks", "task-workflow-call.png")]
     [HelpTopic("Workflow+Call+Task")]
 	public class WorkflowCallTask : WorkflowTask, ISchemaItemFactory
 	{

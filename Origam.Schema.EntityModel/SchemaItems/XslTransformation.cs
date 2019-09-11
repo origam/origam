@@ -32,7 +32,7 @@ namespace Origam.Schema.EntityModel
         XslCompiledTransform
     }
 
-	[SchemaItemDescription("XSL Transformation (XSLT)", "icon_33_transformations.png")]
+	[SchemaItemDescription("XSL Transformation (XSLT)", "xsl-transformation.png")]
     [HelpTopic("Transformations")]
 	public class XslTransformation : AbstractTransformation
 	{

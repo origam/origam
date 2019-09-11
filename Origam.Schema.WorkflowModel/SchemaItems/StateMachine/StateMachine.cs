@@ -36,7 +36,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for WorkflowStateMachine.
 	/// </summary>
-	[SchemaItemDescription("State Workflow", "icon_32_state-workflows.png")]
+	[SchemaItemDescription("State Workflow", "state-workflow-2.png")]
     [HelpTopic("State+Workflows")]
     [DefaultProperty("Entity")]
 	[XmlModelRoot(ItemTypeConst)]

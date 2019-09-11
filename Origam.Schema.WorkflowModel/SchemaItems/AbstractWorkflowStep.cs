@@ -59,8 +59,6 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		[Browsable(false)] 
-		public override abstract string Icon	{get;}
-
 		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
 		{
 			// can move inside the same workflow and we can move it under any block

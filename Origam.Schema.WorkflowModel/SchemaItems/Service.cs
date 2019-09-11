@@ -29,7 +29,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for AbstractService.
 	/// </summary>
-	[SchemaItemDescription("Service", 16)]
+	[SchemaItemDescription("Service", "service.png")]
     [HelpTopic("Services")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class Service : AbstractSchemaItem, IService, ISchemaItemFactory
@@ -52,15 +52,6 @@ namespace Origam.Schema.WorkflowModel
 				return ItemTypeConst;
 			}
 		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "16";
-			}
-		}
-
 		#endregion
 
 		#region Properties

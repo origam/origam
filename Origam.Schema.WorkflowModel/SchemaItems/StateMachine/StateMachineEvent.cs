@@ -43,7 +43,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for StateMachineState.
 	/// </summary>
-	[SchemaItemDescription("Event", "Events", 65)]
+	[SchemaItemDescription("Event", "Events", "event-4.png")]
     [HelpTopic("Data+Events")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class StateMachineEvent : AbstractSchemaItem
@@ -66,8 +66,6 @@ namespace Origam.Schema.WorkflowModel
 		
 		[EntityColumn("ItemType")]
 		public override string ItemType => ItemTypeConst;
-
-		public override string Icon => "65";
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
