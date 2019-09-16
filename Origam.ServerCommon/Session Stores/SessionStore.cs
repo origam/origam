@@ -867,29 +867,60 @@ namespace Origam.Server
                     }
                 }
 
-                foreach (DataRelation childRelation in row.Table.ChildRelations)
+                Boolean tableAggregation = HasAggregation(row);
+                foreach(DataRelation childRelation in row.Table.ChildRelations)
                 {
-                    foreach (DataRow childRow in row.GetChildRows(childRelation))
+                    foreach(DataRow childRow in row.GetChildRows(childRelation))
                     {
-                        // check recursion
-                        foreach (DataRelation parentRelation in row.Table.ParentRelations)
+                        if(RowIsChangedOrHasChangedChild(childRow) || tableAggregation)
                         {
-                            foreach (DataRow parentRow in row.GetParentRows(parentRelation))
+                            // check recursion
+                            foreach(DataRelation parentRelation in row.Table.ParentRelations)
                             {
-                                if (parentRow.Equals(childRow))
+                                foreach(DataRow parentRow in row.GetParentRows(parentRelation))
                                 {
-                                    // Recursion found - this row has been checked already.
-                                    return;
+                                    if(parentRow.Equals(childRow))
+                                    {
+                                        // Recursion found - this row has been checked already.
+                                        return;
+                                    }
                                 }
                             }
+                            GetChangesRecursive(changes, requestingGrid, childRow, operation, changedRow, allDetails, ignoreKeys, includeRowStates);
                         }
-
-                        GetChangesRecursive(changes, requestingGrid, childRow, operation, changedRow, allDetails, ignoreKeys, includeRowStates);
-
                     }
                 }
             }
         }
+
+        private bool RowIsChangedOrHasChangedChild(DataRow row)
+        {
+            if(row.RowState != DataRowState.Unchanged)
+            {
+                return true;
+            }
+            foreach(DataRelation childRelation in row.Table.ChildRelations)
+            {
+                foreach(DataRow childRow in row.GetChildRows(childRelation))
+                {
+                    if(RowIsChangedOrHasChangedChild(childRow))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool HasAggregation(DataRow row)
+        {
+            if(row.Table.ExtendedProperties.ContainsKey(Const.HasAggregation))
+            {
+                return (Boolean)row.Table.ExtendedProperties[Const.HasAggregation];
+            }
+            return false;
+        }
+
 
         private static bool IsChildRow(DataRow row, DataRow changedRow)
         {
