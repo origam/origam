@@ -280,15 +280,19 @@ namespace Origam.ServerCore.Controller
         [HttpPost("[action]")]
         public IActionResult GetRows([FromBody]GetRowsInput input)
         {
-            return FindItem<FormReferenceMenuItem>(input.MenuId)
-                .OnSuccess(Authorize)
-                .OnSuccess(menuItem => GetEntityData(
-                    input.DataStructureEntityId, menuItem))
-                .OnSuccess(CheckEntityBelongsToMenu)
-                .OnSuccess(entityData => GetRowsGetQuery(input, entityData))
-                .OnSuccess(dataService.ExecuteDataReader)
-                .OnSuccess(ToActionResult)
-                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+            // TODO: FunctionCall and LookupFields are not processed
+            return RunWithErrorHandler(() =>
+            {
+                return FindItem<FormReferenceMenuItem>(input.MenuId)
+                    .OnSuccess(Authorize)
+                    .OnSuccess(menuItem => GetEntityData(
+                        input.DataStructureEntityId, menuItem))
+                    .OnSuccess(CheckEntityBelongsToMenu)
+                    .OnSuccess(entityData => GetRowsGetQuery(input, entityData))
+                    .OnSuccess(dataService.ExecuteDataReader)
+                    .OnSuccess(ToActionResult)
+                    .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+            });
         }
         [HttpPut("[action]")]
         public IActionResult Row([FromBody]UpdateRowInput input)
@@ -577,7 +581,7 @@ namespace Origam.ServerCore.Controller
             {
                 Entity = entityData.Entity.Name,
                 CustomFilters = string.IsNullOrWhiteSpace(input.Filter)
-                    ? null 
+                    ? null
                     : input.Filter,
                 CustomOrdering = input.OrderingAsTuples,
                 RowLimit = input.RowLimit,
@@ -587,7 +591,9 @@ namespace Origam.ServerCore.Controller
                         var field = entityData.Entity.Column(colName).Field;
                         return new ColumnData(
                             name: colName,
-                            isVirtual: field is DetachedField,
+                            isVirtual: (field is DetachedField)
+                                || (field is FunctionCall)
+                                || (field is LookupField),
                             defaultValue: (field as DetachedField)
                                 ?.DefaultValue?.Value,
                             hasRelation: (field as DetachedField)

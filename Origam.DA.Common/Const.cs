@@ -47,6 +47,7 @@ namespace Origam.DA
 		public static string FieldId = "FieldId";
 		public static string DescribingField = "DescribingField";
 		public static string IsWriteOnlyAttribute = "IsWriteOnly";
+        public static string HasAggregation = "HasAggregation";
         public Const(){}
 		
 	}
