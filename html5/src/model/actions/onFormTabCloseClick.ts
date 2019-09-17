@@ -4,6 +4,7 @@ import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 
 export function onFormTabCloseClick(ctx: any) {
   return function onFormTabCloseClick(event: any) {
+    event.stopPropagation();
     // TODO: Wait for other async operation to finish?
     const openedScreen = getOpenedScreen(ctx);
     if(!openedScreen.content.isLoading) {

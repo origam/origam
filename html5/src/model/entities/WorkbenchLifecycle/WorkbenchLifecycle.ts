@@ -51,7 +51,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const { event } = args;
 
     const openedScreens = getOpenedScreens(this);
-    
 
     let dialogInfo: IDialogInfo | undefined;
     if (type === IMainMenuItemType.FormRefWithSelection) {
@@ -100,24 +99,34 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
   @action.bound closeForm(openedScreen: IOpenedScreen) {
     // TODO: Refactor to get rid of code duplication
-    if(openedScreen.dialogInfo) {
+    if (openedScreen.dialogInfo) {
       const openedScreens = getOpenedDialogScreens(openedScreen);
-      const closestScreen = openedScreens.findClosestItem(
-        openedScreen.menuItemId,
-        openedScreen.order
-      );
-      if (closestScreen) {
-        openedScreens.activateItem(closestScreen.menuItemId, closestScreen.order);
+      if (openedScreen.isActive) {
+        const closestScreen = openedScreens.findClosestItem(
+          openedScreen.menuItemId,
+          openedScreen.order
+        );
+        if (closestScreen) {
+          openedScreens.activateItem(
+            closestScreen.menuItemId,
+            closestScreen.order
+          );
+        }
       }
       openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
     } else {
       const openedScreens = getOpenedScreens(openedScreen);
-      const closestScreen = openedScreens.findClosestItem(
-        openedScreen.menuItemId,
-        openedScreen.order
-      );
-      if (closestScreen) {
-        openedScreens.activateItem(closestScreen.menuItemId, closestScreen.order);
+      if (openedScreen.isActive) {
+        const closestScreen = openedScreens.findClosestItem(
+          openedScreen.menuItemId,
+          openedScreen.order
+        );
+        if (closestScreen) {
+          openedScreens.activateItem(
+            closestScreen.menuItemId,
+            closestScreen.order
+          );
+        }
       }
       openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
     }
@@ -145,7 +154,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       dialogInfo,
       parameters
     );
-    if(newScreen.dialogInfo) {
+    if (newScreen.dialogInfo) {
       openedDialogScreens.pushItem(newScreen);
       openedDialogScreens.activateItem(newScreen.menuItemId, newScreen.order);
     } else {
