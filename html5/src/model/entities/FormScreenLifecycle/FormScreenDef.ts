@@ -1,59 +1,54 @@
-import { onLoadDataDone, sLoadData } from './constants';
-import {
-  sQuestionSaveData,
-  onPerformSave,
-  onPerformNoSave,
-  onPerformCancel
-} from "./constants";
-import {
-  sExecuteAction,
-  onExecuteActionDone,
-  onExecuteAction,
-  onRequestScreenClose
-} from "./constants";
-import {
-  onSaveSession,
-  sSaveSession,
-  sRefreshSession,
-  onRefreshSession,
-  onSaveSessionDone,
-  onRefreshSessionDone
-} from "./constants";
 import {
   onCreateRow,
+  onCreateRowDone,
   onDeleteRow,
-  sDeleteRow,
-  onDeleteRowDone
-} from "./constants";
-import {
-  sInitUI,
-  onInitUIDone,
-  sFormScreenRunning,
+  onDeleteRowDone,
+  onExecuteAction,
+  onExecuteActionDone,
   onFlushData,
-  sFlushData,
   onFlushDataDone,
+  onPerformCancel,
+  onPerformNoSave,
+  onPerformSave,
+  onRefreshSessionDone,
+  onRequestScreenClose,
+  onRequestScreenReload,
+  onSaveSession,
+  onSaveSessionDone,
   sCreateRow,
-  onCreateRowDone
+  sDeleteRow,
+  sExecuteAction,
+  sFlushData,
+  sFormScreenRunning,
+  sInitUI,
+  sLoadData,
+  sQuestionSaveDataBeforeClosing,
+  sQuestionSaveDataBeforeRefresh,
+  sRefreshSession,
+  sSaveSession
 } from "./constants";
 
-export const FormScreenDef = {
+export const FormScreenDef = () => ({
   initial: sInitUI,
   states: {
     [sInitUI]: {
       invoke: { src: "initUI" },
       on: {
-        onInitUIDone: [{
-          cond: 'isReadData',
-          target: sFormScreenRunning,
-          actions: "applyInitUIResult"
-        },{
-          target: sLoadData,
-          actions: "applyInitUIResult"
-        }]
+        onInitUIDone: [
+          {
+            cond: "isReadData",
+            target: sFormScreenRunning,
+            actions: "applyInitUIResult"
+          },
+          {
+            target: sLoadData,
+            actions: "applyInitUIResult"
+          }
+        ]
       }
     },
     [sLoadData]: {
-      invoke: {src: 'loadData'},
+      invoke: { src: "loadData" },
       on: {
         onLoadDataDone: {
           target: sFormScreenRunning
@@ -74,21 +69,11 @@ export const FormScreenDef = {
         [onSaveSession]: {
           target: sSaveSession
         },
-        [onRefreshSession]: {
-          target: sRefreshSession
-        },
         [onExecuteAction]: {
           target: sExecuteAction
         },
-        [onRequestScreenClose]: [
-          {
-            target: sQuestionSaveData,
-            cond: "isDirtySession"
-          },
-          {
-            actions: "closeForm"
-          }
-        ]
+        [onRequestScreenClose]: sQuestionSaveDataBeforeClosing,
+        [onRequestScreenReload]: sQuestionSaveDataBeforeRefresh
       }
     },
     [sFlushData]: {
@@ -133,39 +118,24 @@ export const FormScreenDef = {
         [onExecuteActionDone]: sFormScreenRunning
       }
     },
-    [sQuestionSaveData]: {
-      invoke: { src: "questionSaveData" },
-      on: {
-        [onPerformSave]: {
-          target: sSaveSession
-        },
-        [onPerformNoSave]: {
-          actions: "closeForm",
-          target: sFormScreenRunning
-        },
-        [onPerformCancel]: {
-          target: sFormScreenRunning
-        }
-      }
-    },
+    [sQuestionSaveDataBeforeClosing]: RequestCloseFormDef(),
+    [sQuestionSaveDataBeforeRefresh]: RequestReloadFormDef()
   }
-};
+});
 
-const sRequestCloseForm = {
-  initial: "sDecideDialogDisplay",
+const RequestCloseFormDef = () => ({
+  initial: "sInit",
   states: {
-    sDecideDialogDisplay: {
-      "": [
-        {
-          target: sQuestionSaveData,
-          cond: "isDirtySession"
-        },
-        {
-          actions: "closeForm"
-        }
-      ]
+    sInit: {
+      on: {
+        "": [
+          { cond: "isDirtySession", target: "sQuestion" },
+          { target: "sSaveSession" }
+        ]
+      }
     },
-    [sQuestionSaveData]: {
+
+    sQuestion: {
       invoke: { src: "questionSaveData" },
       on: {
         [onPerformSave]: {
@@ -173,21 +143,65 @@ const sRequestCloseForm = {
         },
         [onPerformNoSave]: {
           actions: "closeForm",
-          target: sFormScreenRunning
+          target: `#(machine).${sFormScreenRunning}`
         },
         [onPerformCancel]: {
-          target: sFormScreenRunning
+          target: `#(machine).${sFormScreenRunning}`
         }
       }
     },
+
     [sSaveSession]: {
       invoke: { src: "saveSession" },
       on: {
         [onSaveSessionDone]: {
           actions: "closeForm",
-          target: sFormScreenRunning
+          target: `#(machine).${sFormScreenRunning}`
         }
       }
     }
   }
-};
+});
+
+const RequestReloadFormDef = () => ({
+  initial: "sInit",
+  states: {
+    sInit: {
+      on: {
+        "": [
+          { cond: "isDirtySession", target: "sQuestion" },
+          { target: "sRefreshSession" }
+        ]
+      }
+    },
+
+    sQuestion: {
+      invoke: { src: "questionSaveData" },
+      on: {
+        [onPerformSave]: {
+          target: sSaveSession
+        },
+        [onPerformNoSave]: {
+          target: sRefreshSession
+        },
+        [onPerformCancel]: {
+          target: `#(machine).${sFormScreenRunning}`
+        }
+      }
+    },
+
+    [sSaveSession]: {
+      invoke: { src: "saveSession" },
+      on: {
+        [onSaveSessionDone]: sRefreshSession
+      }
+    },
+
+    [sRefreshSession]: {
+      invoke: { src: "refreshSession" },
+      on: {
+        [onRefreshSessionDone]: `#(machine).${sFormScreenRunning}`
+      }
+    }
+  }
+});

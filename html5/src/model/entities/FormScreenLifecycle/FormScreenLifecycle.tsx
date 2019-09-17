@@ -4,7 +4,12 @@ import { processActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 import { IAction } from "model/entities/types/IAction";
+import { getBindingParametersFromParent } from "model/selectors/DataView/getBindingParametersFromParent";
+import { getColumnNamesToLoad } from "model/selectors/DataView/getColumnNamesToLoad";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { getDataViewByGridId } from "model/selectors/DataView/getDataViewByGridId";
 import { getDataViewsByEntity } from "model/selectors/DataView/getDataViewsByEntity";
+import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
 import { getDialogStack } from "model/selectors/getDialogStack";
 import { getMenuItemType } from "model/selectors/getMenuItemType";
 import React from "react";
@@ -18,41 +23,13 @@ import { getMenuItemId } from "../../selectors/getMenuItemId";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { getSessionId } from "../../selectors/getSessionId";
 import { IFormScreenLifecycle } from "../types/IFormScreenLifecycle";
-import {
-  onCreateRow,
-  onCreateRowDone,
-  onDeleteRow,
-  onDeleteRowDone,
-  onExecuteAction,
-  onExecuteActionDone,
-  onFlushData,
-  onFlushDataDone,
-  onInitUIDone,
-  onPerformCancel,
-  onPerformNoSave,
-  onPerformSave,
-  onRefreshSession,
-  onRefreshSessionDone,
-  onRequestScreenClose,
-  onSaveSession,
-  onSaveSessionDone,
-  sFormScreenRunning,
-  onLoadDataDone
-} from "./constants";
+import { onCreateRow, onCreateRowDone, onDeleteRow, onDeleteRowDone, onExecuteAction, onExecuteActionDone, onFlushData, onFlushDataDone, onInitUIDone, onLoadDataDone, onPerformCancel, onPerformNoSave, onPerformSave, onRefreshSession, onRefreshSessionDone, onRequestScreenClose, onSaveSession, onSaveSessionDone, sFormScreenRunning, onRequestScreenReload } from "./constants";
 import { FormScreenDef } from "./FormScreenDef";
-import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
-import { getDataSourceFields } from "model/selectors/DataSources/getDataSourceFields";
-import { getColumnNamesToLoad } from "model/selectors/DataView/getColumnNamesToLoad";
-import { getBindingChildren } from "model/selectors/DataView/getBindingChildren";
-import { getDataView } from "model/selectors/DataView/getDataView";
-import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
-import { getBindingParametersFromParent } from "model/selectors/DataView/getBindingParametersFromParent";
-import { getDataViewByGridId } from "model/selectors/DataView/getDataViewByGridId";
 
 export class FormScreenLifecycle implements IFormScreenLifecycle {
   $type_IFormScreenLifecycle: 1 = 1;
 
-  machine = Machine(FormScreenDef, {
+  machine = Machine(FormScreenDef(), {
     services: {
       initUI: (ctx, event) => (send, onEvent) => flow(this.initUI.bind(this))(),
       loadData: (ctx, event) => (send, onEvent) =>
@@ -197,6 +174,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
     const api = getApi(this);
     const result = yield api.refreshSession(getSessionId(this));
     this.applyData(result);
+    getFormScreen(this).setDirty(false);
     this.interpreter.send(onRefreshSessionDone);
   }
 
@@ -289,7 +267,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
 
   @action.bound
   onRefreshSession(): void {
-    this.interpreter.send({ type: onRefreshSession });
+    this.interpreter.send({ type: onRequestScreenReload });
   }
 
   @action.bound
