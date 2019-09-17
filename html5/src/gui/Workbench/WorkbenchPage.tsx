@@ -36,7 +36,6 @@ import { MainMenuPanel } from "./MainMenu/MainMenuPanel";
 import { IApplication } from "model/entities/types/IApplication";
 import { getActivePanelView } from "model/selectors/DataView/getActivePanelView";
 import { getActiveScreen } from "../../model/selectors/getActiveScreen";
-import { isILoadedFormScreen } from "../../model/entities/types/IFormScreen";
 import { onSaveSessionClick } from "../../model/actions/onSaveSessionClick";
 import { onRefreshSessionClick } from "model/actions/onRefreshSessionClick";
 import { onActionClick } from "../../model/actions/Actions/onActionClick";
@@ -211,8 +210,8 @@ export const FormButtonsSection: React.FC<{}> = observer(props => {
     .application as IApplication;
   const activeScreen = getActiveScreen(application);
   const formScreen =
-    activeScreen && isILoadedFormScreen(activeScreen.content)
-      ? activeScreen.content
+    activeScreen && !activeScreen.content.isLoading
+      ? activeScreen.content.formScreen
       : undefined;
   const isDirty = formScreen && formScreen.isDirty;
   return formScreen ? (

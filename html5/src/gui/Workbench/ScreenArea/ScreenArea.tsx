@@ -1,20 +1,15 @@
 import { CloseButton, ModalWindow } from "gui/Components/Dialog/Dialog";
-import { inject, MobXProviderContext, observer, Observer } from "mobx-react";
-import { IApplication } from "model/entities/types/IApplication";
+import { inject, observer, Observer } from "mobx-react";
+import { onFormTabCloseClick } from "model/actions/onFormTabCloseClick";
+import { onSelectionDialogActionButtonClick } from "model/actions/SelectionDialog/onSelectionDialogActionButtonClick";
 import { getDialogStack } from "model/selectors/getDialogStack";
 import { getOpenedDialogItems } from "model/selectors/getOpenedDialogItems";
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { IOpenedScreen } from "../../../model/entities/types/IOpenedScreen";
 import { getOpenedScreenItems } from "../../../model/selectors/getOpenedScreenItems";
 import { getWorkbenchLifecycle } from "../../../model/selectors/getWorkbenchLifecycle";
 import S from "./ScreenArea.module.css";
-import { ScreenBuilder, DialogScreenBuilder } from "./ScreenBuilder";
-import { getApplication } from "model/selectors/getApplication";
-import { isILoadedFormScreen } from "model/entities/types/IFormScreen";
-import { getOpenedScreens } from "../../../model/selectors/getOpenedScreens";
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
-import { onSelectionDialogActionButtonClick } from "model/actions/SelectionDialog/onSelectionDialogActionButtonClick";
-import { onFormTabCloseClick } from "model/actions/onFormTabCloseClick";
+import { DialogScreenBuilder, ScreenBuilder } from "./ScreenBuilder";
 
 @observer
 class MainViewHandle extends React.Component<{
@@ -89,8 +84,8 @@ export class ScreenArea extends React.Component<{
                   <MainViewHandle
                     key={`${item.menuItemId}@${item.order}`}
                     label={
-                      isILoadedFormScreen(item.content)
-                        ? item.content.title
+                      !item.content.isLoading
+                        ? item.content.formScreen!.title
                         : item.title
                     }
                     order={item.order}
@@ -150,8 +145,8 @@ export const DialogScreen: React.FC<{
         {() => (
           <ModalWindow
             title={
-              isILoadedFormScreen(props.openedScreen.content)
-                ? props.openedScreen.content.title
+              !props.openedScreen.content.isLoading
+                ? props.openedScreen.content.formScreen!.title
                 : props.openedScreen.title
             }
             titleButtons={
@@ -169,9 +164,9 @@ export const DialogScreen: React.FC<{
             buttonsRight={
               <Observer>
                 {() =>
-                  isILoadedFormScreen(props.openedScreen.content) ? (
+                  !props.openedScreen.content.isLoading ? (
                     <>
-                      {props.openedScreen.content.dialogActions.map(action => (
+                      {props.openedScreen.content.formScreen!.dialogActions.map(action => (
                         <button
                           key={action.id}
                           onClick={(event: any) =>
@@ -200,7 +195,7 @@ export const DialogScreen: React.FC<{
                     height: props.openedScreen.dialogInfo!.height
                   }}
                 >
-                  {isILoadedFormScreen(props.openedScreen.content) ? (
+                  {!props.openedScreen.content.isLoading ? (
                     <DialogScreenBuilder openedScreen={props.openedScreen} />
                   ) : (
                     <DialogLoadingContent />

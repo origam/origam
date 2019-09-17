@@ -1,21 +1,16 @@
 import { IDataView } from "./types/IDataView";
 import { IDataSource } from "./types/IDataSource";
 import { IComponentBinding } from "./types/IComponentBinding";
-import {
-  ILoadedFormScreenData,
-  ILoadedFormScreen,
-  ILoadingFormScreen
-} from "./types/IFormScreen";
 import { IFormScreenLifecycle } from "./types/IFormScreenLifecycle";
-import { ILoadingFormScreenData } from "./types/IFormScreen";
 import { computed, action, observable } from "mobx";
 import { IAction } from "./types/IAction";
 import { getDontRequestData } from "model/selectors/getDontRequestData";
+import { IFormScreen, IFormScreenData, IFormScreenEnvelope, IFormScreenEnvelopeData } from "./types/IFormScreen";
 
-export class FormScreen implements ILoadedFormScreen {
-  $type_ILoadedFormScreen: 1 = 1;
+export class FormScreen implements IFormScreen {
+  $type_IFormScreen: 1 = 1;
 
-  constructor(data: ILoadedFormScreenData) {
+  constructor(data: IFormScreenData) {
     Object.assign(this, data);
     this.formScreenLifecycle.parent = this;
     this.dataViews.forEach(o => (o.parent = this));
@@ -28,7 +23,6 @@ export class FormScreen implements ILoadedFormScreen {
   @observable isDirty: boolean = false;
 
   sessionId: string = "";
-
   title: string = "";
   menuId: string = "";
   openingOrder: number = 0;
@@ -131,21 +125,32 @@ export class FormScreen implements ILoadedFormScreen {
   }
 }
 
-export class LoadingFormScreen implements ILoadingFormScreen {
-  $type_ILoadingFormScreen: 1 = 1;
-
-  constructor(data: ILoadingFormScreenData) {
+export class FormScreenEnvelope implements IFormScreenEnvelope {
+  $type_IFormScreenEnvelope: 1 = 1;
+  
+  constructor(data: IFormScreenEnvelopeData) {
     Object.assign(this, data);
     this.formScreenLifecycle.parent = this;
   }
 
-  isLoading: true = true;
+  @observable formScreen?: IFormScreen | undefined;
   formScreenLifecycle: IFormScreenLifecycle = null as any;
+  @computed get isLoading() {
+    return !this.formScreen;
+  }
 
-  parent?: any;
+  @action.bound
+  setFormScreen(formScreen?: IFormScreen | undefined): void {
+    if(formScreen) {
+      formScreen.parent = this;
+    }
+    this.formScreen = formScreen;
+  }
 
   @action.bound
   start(): void {
     this.formScreenLifecycle.start();
   }
+
+  parent?: any;
 }
