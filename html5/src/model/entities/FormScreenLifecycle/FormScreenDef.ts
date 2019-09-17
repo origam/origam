@@ -130,7 +130,7 @@ const RequestCloseFormDef = () => ({
       on: {
         "": [
           { cond: "isDirtySession", target: "sQuestion" },
-          { target: "sSaveSession" }
+          { target: "sCloseForm" }
         ]
       }
     },
@@ -142,8 +142,7 @@ const RequestCloseFormDef = () => ({
           target: sSaveSession
         },
         [onPerformNoSave]: {
-          actions: "closeForm",
-          target: `#(machine).${sFormScreenRunning}`
+          target: "sCloseForm"
         },
         [onPerformCancel]: {
           target: `#(machine).${sFormScreenRunning}`
@@ -155,6 +154,14 @@ const RequestCloseFormDef = () => ({
       invoke: { src: "saveSession" },
       on: {
         [onSaveSessionDone]: {
+          target: "sCloseForm"
+        }
+      }
+    },
+
+    sCloseForm: {
+      on: {
+        "": {
           actions: "closeForm",
           target: `#(machine).${sFormScreenRunning}`
         }
