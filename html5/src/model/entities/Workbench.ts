@@ -14,12 +14,14 @@ export class Workbench implements IWorkbench {
     this.workbenchLifecycle.parent = this;
     this.clientFulltextSearch.parent = this;
     this.openedScreens.parent = this;
+    this.openedDialogScreens.parent = this;
   }
 
   workbenchLifecycle: IWorkbenchLifecycle = null as any;
   clientFulltextSearch: IClientFulltextSearch = null as any;
   mainMenuEnvelope: IMainMenuEnvelope = null as any;
   openedScreens: IOpenedScreens = null as any;
+  openedDialogScreens: IOpenedScreens = null as any;
 
   @action.bound
   run(): void {

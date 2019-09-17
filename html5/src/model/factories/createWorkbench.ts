@@ -11,5 +11,6 @@ export function createWorkbench() {
     workbenchLifecycle: new WorkbenchLifecycle(),
     clientFulltextSearch: new ClientFulltextSearch(),
     openedScreens: new OpenedScreens(),
+    openedDialogScreens: new OpenedScreens()
   });
 }

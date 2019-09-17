@@ -15,6 +15,7 @@ import { onInitPortalDone } from "./constants";
 import { IEvent } from "./types";
 import { WorkbenchLifecycleGraph } from "./WorkbenchLifecycleGraph";
 import { createFormScreenEnvelope } from "model/factories/createFormScreenEnvelope";
+import { getOpenedDialogScreens } from "model/selectors/getOpenedDialogScreens";
 
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
@@ -50,6 +51,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const { event } = args;
 
     const openedScreens = getOpenedScreens(this);
+    
 
     let dialogInfo: IDialogInfo | undefined;
     if (type === IMainMenuItemType.FormRefWithSelection) {
@@ -97,15 +99,28 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   }
 
   @action.bound closeForm(openedScreen: IOpenedScreen) {
-    const openedScreens = getOpenedScreens(this);
-    const closestScreen = openedScreens.findClosestItem(
-      openedScreen.menuItemId,
-      openedScreen.order
-    );
-    if (closestScreen) {
-      openedScreens.activateItem(closestScreen.menuItemId, closestScreen.order);
+    // TODO: Refactor to get rid of code duplication
+    if(openedScreen.dialogInfo) {
+      const openedScreens = getOpenedDialogScreens(openedScreen);
+      const closestScreen = openedScreens.findClosestItem(
+        openedScreen.menuItemId,
+        openedScreen.order
+      );
+      if (closestScreen) {
+        openedScreens.activateItem(closestScreen.menuItemId, closestScreen.order);
+      }
+      openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
+    } else {
+      const openedScreens = getOpenedScreens(openedScreen);
+      const closestScreen = openedScreens.findClosestItem(
+        openedScreen.menuItemId,
+        openedScreen.order
+      );
+      if (closestScreen) {
+        openedScreens.activateItem(closestScreen.menuItemId, closestScreen.order);
+      }
+      openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
     }
-    openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
   }
 
   @action.bound openNewForm(
@@ -117,6 +132,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     parameters: { [key: string]: any }
   ) {
     const openedScreens = getOpenedScreens(this);
+    const openedDialogScreens = getOpenedDialogScreens(this);
     const existingItem = openedScreens.findLastExistingItem(id);
     const newFormScreen = createFormScreenEnvelope();
     const newScreen = createOpenedScreen(
@@ -129,8 +145,13 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       dialogInfo,
       parameters
     );
-    openedScreens.pushItem(newScreen);
-    openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
+    if(newScreen.dialogInfo) {
+      openedDialogScreens.pushItem(newScreen);
+      openedDialogScreens.activateItem(newScreen.menuItemId, newScreen.order);
+    } else {
+      openedScreens.pushItem(newScreen);
+      openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
+    }
     newFormScreen.start();
   }
 

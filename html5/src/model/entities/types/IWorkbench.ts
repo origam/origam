@@ -8,6 +8,7 @@ export interface IWorkbenchData {
   workbenchLifecycle: IWorkbenchLifecycle;
   clientFulltextSearch: IClientFulltextSearch;
   openedScreens: IOpenedScreens;
+  openedDialogScreens: IOpenedScreens;
 }
 
 export interface IWorkbench extends IWorkbenchData {

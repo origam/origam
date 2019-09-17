@@ -1,5 +1,5 @@
-import { getOpenedScreens } from "./getOpenedScreens";
+import { getOpenedDialogScreens } from "./getOpenedDialogScreens";
 
 export function getOpenedDialogItems(ctx: any) {
-  return getOpenedScreens(ctx).dialogItems;
+  return getOpenedDialogScreens(ctx).items;
 }
