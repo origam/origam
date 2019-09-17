@@ -10,7 +10,6 @@ export function createApplication(): IApplication {
   return new Application({
     api: new OrigamAPI(),
     applicationLifecycle: new ApplicationLifecycle(),
-    openedScreens: new OpenedScreens(),
     dialogStack: new DialogStack()
   });
 }
