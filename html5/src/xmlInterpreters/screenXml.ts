@@ -22,8 +22,8 @@ import { ColumnConfigurationDialog } from "../model/entities/TablePanelView/Colu
 import { FilterConfiguration } from "../model/entities/FilterConfiguration";
 import { Action } from "../model/entities/Action";
 import { ActionParameter } from "../model/entities/ActionParameter";
-import { OrderingConfiguration } from '../model/entities/OrderingConfiguration';
-import { Table } from '../gui/Components/ScreenElements/Table/Table';
+import { OrderingConfiguration } from "../model/entities/OrderingConfiguration";
+import { Table } from "../gui/Components/ScreenElements/Table/Table";
 import { DataViewLifecycle } from "model/entities/DataViewLifecycle/DataViewLifecycle";
 
 export const findUIRoot = (node: any) =>
@@ -57,8 +57,6 @@ export function interpretScreenXml(
   formScreenLifecycle: IFormScreenLifecycle,
   sessionId: string
 ) {
-  console.log(screenDoc);
-
   const dataSourcesXml = findStopping(
     screenDoc,
     n => n.name === "DataSources"
@@ -197,6 +195,15 @@ export function interpretScreenXml(
                       entity: ddProperty.attributes.Entity,
                       index: parseInt(ddProperty.attributes.Index, 10)
                     });
+                  }),
+                  dropDownParameters: findStopping(
+                    property,
+                    n => n.name === "ComboBoxParameterMapping"
+                  ).map(ddParam => {
+                    return {
+                      parameterName: ddParam.attributes.ParameterName,
+                      fieldName: ddParam.attributes.FieldName
+                    };
                   })
                 }),
 
@@ -272,7 +279,5 @@ export function interpretScreenXml(
     }),
     componentBindings
   });
-
-
   return scr;
 }

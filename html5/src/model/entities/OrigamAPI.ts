@@ -268,6 +268,7 @@ export class OrigamAPI implements IApi {
     Property: string;
     Id: string;
     LookupId: string;
+    Parameters?: {[key: string]: any};
     ShowUniqueValues: boolean;
     SearchText: string;
     PageSize: number;

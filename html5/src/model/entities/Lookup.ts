@@ -1,9 +1,28 @@
-import { ILookup, ILookupData, IDropDownType } from "./types/ILookup";
-import { observable, IAtom, action, runInAction, createAtom, flow, when } from 'mobx';
+import {
+  ILookup,
+  ILookupData,
+  IDropDownType,
+  IDropDownParameter
+} from "./types/ILookup";
+import {
+  observable,
+  IAtom,
+  action,
+  runInAction,
+  createAtom,
+  flow,
+  when,
+  computed
+} from "mobx";
 import _ from "lodash";
 import { IDropDownColumn } from "./types/IDropDownColumn";
 import { getApi } from "../selectors/getApi";
 import { getMenuItemId } from "../selectors/getMenuItemId";
+import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 
 export enum IIdState {
   LOADING = "LOADING",
@@ -14,6 +33,7 @@ export class Lookup implements ILookup {
   constructor(data: ILookupData) {
     Object.assign(this, data);
     this.dropDownColumns.forEach(o => (o.parent = this));
+    console.log(this.dropDownParameters);
   }
   $type_ILookup: 1 = 1;
 
@@ -25,6 +45,7 @@ export class Lookup implements ILookup {
   cached: boolean = false;
   searchByFirstColumnOnly: boolean = false;
   dropDownColumns: IDropDownColumn[] = [];
+  dropDownParameters: IDropDownParameter[] = [];
 
   parent?: any;
 
@@ -47,8 +68,8 @@ export class Lookup implements ILookup {
 
   triggerloadImm = flow(
     function*(this: Lookup) {
-      if(this.isSomethingLoading) {
-        return
+      if (this.isSomethingLoading) {
+        return;
       }
       while (true) {
         const idsToLoad: Set<string> = new Set();
@@ -70,11 +91,11 @@ export class Lookup implements ILookup {
           this.isSomethingLoading = true;
           const api = getApi(this);
 
-          const labels: { [key: string]: string } = yield api.getLookupLabels({
+          const labels = yield api.getLookupLabels({
             LookupId: this.lookupId,
             MenuId: undefined, // getMenuItemId(this),
             LabelIds: Array.from(idsToLoad)
-          });
+          }) as { [key: string]: any };
 
           this.isSomethingLoading = false;
           for (let [key, value] of Object.entries(labels)) {
@@ -100,7 +121,7 @@ export class Lookup implements ILookup {
 
   resolveList = flow(
     function*(this: Lookup, idsToLoad: Set<string>) {
-      yield when(() => !this.isSomethingLoading)
+      yield when(() => !this.isSomethingLoading);
       try {
         this.isSomethingLoading = true;
         for (let key of idsToLoad.keys()) {
@@ -132,7 +153,6 @@ export class Lookup implements ILookup {
         }
         console.error(error);
       }
-      
     }.bind(this)
   );
 
@@ -152,5 +172,14 @@ export class Lookup implements ILookup {
     }
     this.visibleIds.get(key)!.atom.reportObserved();
     return this.resolvedValues.get(key);
+  }
+
+  @computed
+  get parameters() {
+    const parameters: { [key: string]: any } = {};
+    for (let param of this.dropDownParameters) {
+      parameters[param.parameterName] = param.fieldName;
+    }
+    return parameters;
   }
 }

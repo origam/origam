@@ -111,6 +111,7 @@ export interface IApi {
     Id: string;
     MenuId: string;
     LookupId: string;
+    Parameters?: {[key: string]: any};
     ShowUniqueValues: boolean;
     SearchText: string;
     PageSize: number;
