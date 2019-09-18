@@ -37,5 +37,9 @@ export interface IActionData {
 export interface IAction extends IActionData {
   $type_IAction: 1;
 
+  isEnabled: boolean;
+
   parent?: any;
 }
+
+export const isIAction = (o: any): o is IAction => o.$type_IAction;

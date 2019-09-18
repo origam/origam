@@ -184,13 +184,17 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
     action: IAction,
     selectedItems: string[]
   ) {
+    const parameters: {[key: string]: any} = {};
+    for(let parameter of action.parameters) {
+      parameters[parameter.name] = parameter.fieldName;
+    }
     const api = getApi(this);
     const queryResult = yield api.executeActionQuery({
       SessionFormIdentifier: getSessionId(this),
       Entity: entity,
       ActionType: action.type,
       ActionId: action.id,
-      ParameterMappings: {},
+      ParameterMappings: parameters,
       SelectedItems: selectedItems,
       InputParameters: {}
     });
@@ -201,7 +205,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
       Entity: entity,
       ActionType: action.type,
       ActionId: action.id,
-      ParameterMappings: {},
+      ParameterMappings: parameters,
       SelectedItems: selectedItems,
       InputParameters: {},
       RequestingGrid: gridId

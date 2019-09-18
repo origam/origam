@@ -13,6 +13,8 @@ import { onAddRowClick } from "model/actions/DataView/onAddRowClick";
 import { onDeleteRowClick } from "../../../model/actions/DataView/onDeleteRowClick";
 import { onNextRowClick } from "model/actions/DataView/onNextRowClick";
 import { onPrevRowClick } from "model/actions/DataView/onPrevRowClick";
+import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
+import { onActionClick } from "model/actions/Actions/onActionClick";
 
 @inject(({ dataView }: { dataView: IDataView }) => {
   const ctx = dataView;
@@ -108,7 +110,12 @@ export class Toolbar extends React.Component<{
         </div>
         <div className={S.section}>
           {this.props.actions!.map(action => (
-            <PanelViewAction disabled={true}>{action.caption}</PanelViewAction>
+            <PanelViewAction
+              disabled={!getIsEnabledAction(action)}
+              onClick={event => onActionClick(action)(event, action)}
+            >
+              {action.caption}
+            </PanelViewAction>
           ))}
         </div>
         <div className={S.section + " " + S.pusher} />
@@ -366,8 +373,14 @@ export class ToolbarDropDownMenuItem extends React.Component<{
   }
 }
 
-const PanelViewAction: React.FC<{ disabled?: boolean }> = props => (
-  <div className={S.panelViewAction + (props.disabled ? " disabled" : "")}>
+const PanelViewAction: React.FC<{
+  disabled?: boolean;
+  onClick?: (event: any) => void;
+}> = props => (
+  <div
+    onClick={props.onClick}
+    className={S.panelViewAction + (props.disabled ? " disabled" : "")}
+  >
     {props.children}
   </div>
 );
