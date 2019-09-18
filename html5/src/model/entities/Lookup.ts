@@ -1,28 +1,8 @@
-import {
-  ILookup,
-  ILookupData,
-  IDropDownType,
-  IDropDownParameter
-} from "./types/ILookup";
-import {
-  observable,
-  IAtom,
-  action,
-  runInAction,
-  createAtom,
-  flow,
-  when,
-  computed
-} from "mobx";
 import _ from "lodash";
-import { IDropDownColumn } from "./types/IDropDownColumn";
+import { computed, createAtom, flow, IAtom, observable, when } from "mobx";
 import { getApi } from "../selectors/getApi";
-import { getMenuItemId } from "../selectors/getMenuItemId";
-import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
-import { getDataTable } from "model/selectors/DataView/getDataTable";
-import { getDataView } from "model/selectors/DataView/getDataView";
-import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
+import { IDropDownColumn } from "./types/IDropDownColumn";
+import { IDropDownParameter, IDropDownType, ILookup, ILookupData } from "./types/ILookup";
 
 export enum IIdState {
   LOADING = "LOADING",
