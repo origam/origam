@@ -39,7 +39,7 @@ namespace Origam.DA.Service
             {
                 if (columnsInfo.Columns[i].IsVirtual)
                 {
-                    if (columnsInfo.Columns[i].HasRelation)
+                    if (columnsInfo.Columns[i].HasRelation && values[i] != null)
                     {
                         updatedValues.Add(((string) values[i]).Split((char) 1));
                         continue;
