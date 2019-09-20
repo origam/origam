@@ -89,11 +89,15 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		                independentItem: (IWorkflowStep) sourceItem,
 		                dependentItem: newItem,
 		                triggerItemId: newItem.Id);
-	                
-	                taskRunner.RemoveDependencyTask(
-		               dependency: (WorkflowTaskDependency)edge.Edge.UserData, 
-		               triggerItemId: newItem.Id);
-             	};
+
+	                var existingDependency = (WorkflowTaskDependency)edge.Edge.UserData;
+	                if (existingDependency.Package == newItem.Package)
+	                {
+		                taskRunner.RemoveDependencyTask(
+			                dependency: existingDependency,
+			                triggerItemId: newItem.Id);
+	                }
+                };
             }
 			addBetweenMenu.DropDownItems.AddRange(submenuItems);
 		
