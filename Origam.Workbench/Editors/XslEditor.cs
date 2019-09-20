@@ -20,30 +20,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Xml;
-using System.Xml.XPath;
-using System.Data;
-using System.Windows.Forms;
-using System.Text;
-using Origam.Services;
-using Origam.UI;
-using Origam.Workbench;
-using Origam.Workbench.Editors;
-using Origam.Workbench.Services;
-using Origam.Schema.EntityModel;
-using Origam.Schema.RuleModel;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using System.Xml;
+using System.Xml.XPath;
+using MoreLinq;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.Extensions;
+using Origam.Gui.UI;
 using Origam.Rule;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
+using Origam.Schema.RuleModel;
+using Origam.Services;
+using Origam.UI;
 using Origam.Workbench.BaseComponents;
-using Origam.Gui.UI;
-using MoreLinq;
+using Origam.Workbench.Services;
 
 namespace Origam.Workbench.Editors
 {
@@ -96,11 +94,8 @@ namespace Origam.Workbench.Editors
 
 		private LabeledToolStrip toolStrip;
 		private readonly ParameterListUpdater parameterListUpdater;
-		
-		public event EventHandler ToolStripsLoaded;
-		public event EventHandler AllToolStripsRemoved;
-		
-		public List<ToolStrip> GetToolStrips(int maxWidth) => new List<ToolStrip>{toolStrip}; 
+
+		public override List<ToolStrip> GetToolStrips(int maxWidth) => new List<ToolStrip>{toolStrip}; 
 		
 		public XslEditor()
 		{
