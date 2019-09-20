@@ -219,12 +219,13 @@ namespace Origam.Workbench.Commands
 		{
 			get
 			{
-				return true; //_schema.CanEditItem(_schema.ActiveNode);
+				AbstractSchemaItem schemaItem = (AbstractSchemaItem) _schema.ActiveNode;
+				if (schemaItem.SchemaExtension == Owner) return false;
+				if (schemaItem.ParentItem == null) return true;
+				return !schemaItem.SchemaExtension.IncludedPackages.Contains(Owner) ||
+				       schemaItem.ParentItem.SchemaExtension == Owner;
 			}
-			set
-			{
-				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-			}
+			set => throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 		}
 
 		public override void Run()
@@ -244,10 +245,8 @@ namespace Origam.Workbench.Commands
 			
 				activeItem.Persist();
 			}
-			else if(_schema.ActiveNode is ISchemaItem)
+			else if(_schema.ActiveNode is AbstractSchemaItem activeItem)
 			{
-				AbstractSchemaItem activeItem = _schema.ActiveNode as AbstractSchemaItem;
-
 				activeItem.SetExtensionRecursive(this.Owner as SchemaExtension);
 
 				persistenceProvider.BeginTransaction();
