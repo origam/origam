@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -232,27 +233,72 @@ namespace Origam.Workbench.Commands
 		{
 			IPersistenceProvider persistenceProvider = ServiceManager.Services
 				.GetService<IPersistenceService>().SchemaProvider;
-			if(!(this.Owner is SchemaExtension))
+			if(!(Owner is SchemaExtension targetPackage))
 			{
 				throw new ArgumentOutOfRangeException("Owner", this.Owner, ResourceUtils.GetString("ErrorNotSchemaExtension"));
 			}
+
 
 			if(_schema.ActiveNode is SchemaItemGroup)
 			{
 				SchemaItemGroup activeItem = _schema.ActiveNode as SchemaItemGroup;
 
-				activeItem.SchemaExtension = this.Owner as SchemaExtension;
+				activeItem.SchemaExtension = targetPackage;
 			
 				activeItem.Persist();
 			}
 			else if(_schema.ActiveNode is AbstractSchemaItem activeItem)
 			{
-				activeItem.SetExtensionRecursive(this.Owner as SchemaExtension);
+				CheckCanBeMovedOrThrow(activeItem, targetPackage);
+
+				activeItem.SetExtensionRecursive(targetPackage);
 
 				persistenceProvider.BeginTransaction();
 				activeItem.Persist();
 				persistenceProvider.EndTransaction();
 			}
+		}
+
+		private static void CheckCanBeMovedOrThrow(AbstractSchemaItem activeItem,
+			SchemaExtension targetPackage)
+		{
+			List<ISchemaItem> dependenciesInPackagesNotReferencedByTargetPackage
+				= activeItem.GetDependencies(true)
+					.Cast<object>()
+					.OfType<ISchemaItem>()
+					.Where(item =>
+						!targetPackage.IncludedPackages.Contains(item.SchemaExtension)
+						&& item.SchemaExtension != targetPackage)
+					.ToList();
+			if (dependenciesInPackagesNotReferencedByTargetPackage.Count != 0)
+			{
+				throw new Exception(string.Format(
+					Strings.ErrorDependenciesInPackagesNotReferencedByTargetPackage,
+					targetPackage.Name,
+					FormatToIdList(dependenciesInPackagesNotReferencedByTargetPackage)));
+			}
+
+			List<ISchemaItem> usagesInPackagesWhichDontDependOnTargetPackage
+				= activeItem.GetUsage()
+					.Cast<object>()
+					.OfType<ISchemaItem>()
+					.Where(item =>
+						!item.SchemaExtension.IncludedPackages.Contains(targetPackage)
+						&& item.SchemaExtension != targetPackage)
+					.ToList();
+
+			if (usagesInPackagesWhichDontDependOnTargetPackage.Count != 0)
+			{
+				throw new Exception(String.Format(
+					Strings.ErrorUsagesInPackagesWhichDontDependOnTargetPackage,
+					targetPackage.Name, 
+					FormatToIdList(usagesInPackagesWhichDontDependOnTargetPackage)));
+			}
+		}
+
+		private static string FormatToIdList(List<ISchemaItem> schemaItems)
+		{
+			return "["+ string.Join("\n", schemaItems.Select(x => x.Id)) +"]";
 		}
 
 		public override void Dispose()
