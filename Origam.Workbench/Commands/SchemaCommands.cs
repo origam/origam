@@ -20,30 +20,25 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
-using System.Windows.Forms;
-using System.Reflection;
-
-using WeifenLuo.WinFormsUI.Docking;
-
-using Origam.UI;
-using Origam.Workbench.Services;
-using Origam.Schema;
-using Origam.DA.ObjectPersistence;
-using Origam.Extensions;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using Origam.Workbench.Editors;
-using System.Text;
-using Origam.DA.Service;
-using System.Xml;
-using Origam.Schema.GuiModel;
-using LibGit2Sharp;
-using System.Collections.Generic;
-using Origam.Git;
-using Origam.Windows.Editor.GIT;
+using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using System.Xml;
+using LibGit2Sharp;
+using Origam.DA.ObjectPersistence;
+using Origam.DA.Service;
+using Origam.Extensions;
+using Origam.Git;
+using Origam.Schema;
+using Origam.Schema.GuiModel;
+using Origam.UI;
+using Origam.Windows.Editor.GIT;
+using Origam.Workbench.Editors;
+using Origam.Workbench.Services;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace Origam.Workbench.Commands
 {
@@ -234,6 +229,8 @@ namespace Origam.Workbench.Commands
 
 		public override void Run()
 		{
+			IPersistenceProvider persistenceProvider = ServiceManager.Services
+				.GetService<IPersistenceService>().SchemaProvider;
 			if(!(this.Owner is SchemaExtension))
 			{
 				throw new ArgumentOutOfRangeException("Owner", this.Owner, ResourceUtils.GetString("ErrorNotSchemaExtension"));
@@ -253,7 +250,9 @@ namespace Origam.Workbench.Commands
 
 				activeItem.SetExtensionRecursive(this.Owner as SchemaExtension);
 
+				persistenceProvider.BeginTransaction();
 				activeItem.Persist();
+				persistenceProvider.EndTransaction();
 			}
 		}
 
