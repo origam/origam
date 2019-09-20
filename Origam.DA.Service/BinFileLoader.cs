@@ -154,10 +154,15 @@ namespace Origam.DA.Service
                         ", tracker stats:\n" +
                         itemTracker.GetStats());
                 }
-                CheckItemTrackerDataIsConsistentOrThrow(itemTracker, serializationData);
-                if (!HashesAreUpToDate(itemTracker))
+                OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+                if (settings.CheckFileHashesAfterModelLoad)
                 {
-                    itemTracker.Clear();
+                    CheckItemTrackerDataIsConsistentOrThrow(itemTracker,
+                        serializationData);
+                    if (!HashesAreUpToDate(itemTracker))
+                    {
+                        itemTracker.Clear();
+                    }
                 }
             }
         }

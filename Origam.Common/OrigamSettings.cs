@@ -266,6 +266,9 @@ namespace Origam
 
         public Platform [] DeployPlatforms { get; set; }
 
+        [Category("Model Connection")]
+        public bool CheckFileHashesAfterModelLoad { get; set; } = true;
+
         public string ReportsFolder()
 		{
 			return System.IO.Path.Combine(BaseFolder, this.ReportDefinitionsPath);
