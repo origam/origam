@@ -168,13 +168,13 @@ namespace Origam.Workflow.WorkQueue
 				}
 				throw workflowEngine.Exception;
 			}
-			XmlDocument resultData = workflowEngine.ReturnValue as XmlDocument;
+			XmlContainer resultData = workflowEngine.ReturnValue as XmlContainer;
 			_resultState = (string)workflowEngine.RuleEngine.GetContext(new ModelElementKey(new Guid("f405cef2-2fad-4d58-a71c-10df3831e966")));
 			_attachmentSource = (IDataDocument)workflowEngine.RuleEngine.GetContext((new ModelElementKey(new Guid("b0caa6ec-8a54-4524-8387-8504e34d206c"))));
 			if(log.IsDebugEnabled)
 			{
 				log.Debug("Workflow loader result:");
-				log.Debug(resultData.OuterXml);
+				log.Debug(resultData.Xml.OuterXml);
 			}
 			if(resultData == null)
 			{
@@ -182,9 +182,9 @@ namespace Origam.Workflow.WorkQueue
 				{
 					log.Debug("Workflow loader result was null.");
 				}
-				throw new Exception("Result of work queue loader must be an XML Document.");
+				throw new Exception("Result of work queue loader must be an XMLContainer.");
 			}
-			else if(resultData.DocumentElement == null)
+			else if(resultData.Xml.DocumentElement == null)
 			{
 				if(log.IsDebugEnabled)
 				{
@@ -195,7 +195,7 @@ namespace Origam.Workflow.WorkQueue
 			string xpath = "/";
 			if(_wqc.Entity == null)
 			{
-				XmlNode firstChild = resultData.FirstChild;
+				XmlNode firstChild = resultData.Xml.FirstChild;
 				XmlNode secondChild = firstChild.FirstChild;
 				xpath += firstChild.Name;
 				if(secondChild != null)
@@ -207,7 +207,7 @@ namespace Origam.Workflow.WorkQueue
 			{
 				xpath = "/ROOT/" + _wqc.Entity.Name;
 			}
-			XPathNavigator nav = resultData.CreateNavigator();
+			XPathNavigator nav = resultData.Xml.CreateNavigator();
 			_resultIterator = nav.Select(xpath);
 			return true;
 		}
