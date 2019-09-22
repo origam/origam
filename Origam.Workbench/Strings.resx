@@ -77,6 +77,14 @@
 	</data>
 	<data name="ErrorNotSchemaExtension">
 		<value>Owner must be of type SchemaExtension</value>
+	</data>	
+	<data name="ErrorDependenciesInPackagesNotReferencedByTargetPackage">
+		<value>Cannot move the item to "{0}" because it has dependencies in packages not referenced by the target package:
+			{1}</value>
+	</data>
+	<data name="ErrorUsagesInPackagesWhichDontDependOnTargetPackage">
+		<value>"Cannot move the item to "{0}" because items that depend on it would not be able to reach it:
+			{1}"</value>
 	</data>
 	<data name="ErrorEditObject">
 		<value>Cannot edit this object</value>
