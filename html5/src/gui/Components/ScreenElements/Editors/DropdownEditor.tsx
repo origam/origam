@@ -197,7 +197,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     key: string;
     style: any;
   }) => {
-    const handleClick = (event: any) => {
+    const handleClick = action((event: any) => {
       // this.dirtyTextualValue = this.lookupItems[args.rowIndex - 1][1];
       if (args.rowIndex > 0) {
         this.dirtyTextualValue = undefined;
@@ -207,8 +207,9 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
             this.lookupItems[args.rowIndex - 1][0]
           );
         this.makeFocusedIfNeeded();
+        this.elmDropdowner && this.elmDropdowner.setDropped(false);
       }
-    };
+    });
     return (
       <Observer>
         {() => (
