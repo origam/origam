@@ -110,7 +110,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 			if (triggerItemId != persistedItem.Id) return false;			
 			var workflowTaskDependency = new WorkflowTaskDependency
 			{
-				SchemaExtensionId = dependentItem.SchemaExtensionId,
+				SchemaExtensionId = persistedItem.SchemaExtensionId,
 				PersistenceProvider = persistenceProvider,
 				ParentItem = dependentItem,
 				Task = independentItem

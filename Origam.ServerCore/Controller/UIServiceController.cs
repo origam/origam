@@ -281,7 +281,6 @@ namespace Origam.ServerCore.Controller
         [HttpPost("[action]")]
         public IActionResult GetRows([FromBody]GetRowsInput input)
         {
-            // TODO: FunctionCall and LookupFields are not processed
             return RunWithErrorHandler(() =>
             {
                 return FindItem<FormReferenceMenuItem>(input.MenuId)
@@ -290,8 +289,7 @@ namespace Origam.ServerCore.Controller
                         input.DataStructureEntityId, menuItem))
                     .OnSuccess(CheckEntityBelongsToMenu)
                     .OnSuccess(entityData => GetRowsGetQuery(input, entityData))
-                    .OnSuccess(dataService.ExecuteDataReader)
-                    .OnSuccess(ToActionResult)
+                    .OnSuccess(ExecuteDataReader)
                     .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
             });
         }
@@ -444,6 +442,14 @@ namespace Origam.ServerCore.Controller
                 User, menuItem.Roles)
                 ? Result.Ok<FormReferenceMenuItem, IActionResult>(menuItem)
                 : Result.Fail<FormReferenceMenuItem, IActionResult>(Forbid());
+        }
+        private Result<IActionResult, IActionResult> ExecuteDataReader(
+            DataStructureQuery dataStructureQuery)
+        {
+            //todo: research lazy evaluation error handling
+            IEnumerable<object> result = dataService.ExecuteDataReader(dataStructureQuery).ToList();
+            return Result.Ok<IActionResult, IActionResult>(
+                Ok(result));
         }
         private Result<FormReferenceMenuItem, IActionResult> CheckLookupIsAllowedInMenu(
             FormReferenceMenuItem menuItem, Guid lookupId)
@@ -605,9 +611,7 @@ namespace Origam.ServerCore.Controller
                         var field = entityData.Entity.Column(colName).Field;
                         return new ColumnData(
                             name: colName,
-                            isVirtual: (field is DetachedField)
-                                || (field is FunctionCall)
-                                || (field is LookupField),
+                            isVirtual: (field is DetachedField),
                             defaultValue: (field as DetachedField)
                                 ?.DefaultValue?.Value,
                             hasRelation: (field as DetachedField)

@@ -1687,12 +1687,22 @@ namespace Origam.DA.Service
         }
 
 
-        internal IEnumerable<DataStructureColumn> GetSortedColumns(DataStructureEntity entity,
+        internal IEnumerable<DataStructureColumn> GetSortedColumns(
+            DataStructureEntity entity,
             List<string> scalarColumnNames)
         {
-            if (scalarColumnNames == null || scalarColumnNames.Count == 0)
+            if((scalarColumnNames == null) || (scalarColumnNames.Count == 0))
             {
                 return entity.Columns;
+            }
+            List<string> missingColumns = scalarColumnNames.Where(
+                x => !entity.Columns.Exists(y => y.Name == x)).ToList();
+            if(missingColumns.Count > 0)
+            {
+                throw new Exception(
+                    $@"Data structure entity {entity.Name}[{
+                        entity.Id}] is missing {
+                        string.Join(", ", missingColumns)} column(s).");
             }
             return entity.Columns
                 .Where(x => scalarColumnNames.Contains(x.Name))

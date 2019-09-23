@@ -340,6 +340,16 @@ namespace Origam.Workbench {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot move the item to &quot;{0}&quot; because it has dependencies in packages not referenced by the target package:
+        ///			{1}.
+        /// </summary>
+        internal static string ErrorDependenciesInPackagesNotReferencedByTargetPackage {
+            get {
+                return ResourceManager.GetString("ErrorDependenciesInPackagesNotReferencedByTargetPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot edit configurations. Property pad cannot be displayed..
         /// </summary>
         internal static string ErrorEditConfigurations {
@@ -453,6 +463,16 @@ namespace Origam.Workbench {
         internal static string ErrorTitle {
             get {
                 return ResourceManager.GetString("ErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;Cannot move the item to &quot;{0}&quot; because items that depend on it would not be able to reach it:
+        ///			{1}&quot;.
+        /// </summary>
+        internal static string ErrorUsagesInPackagesWhichDontDependOnTargetPackage {
+            get {
+                return ResourceManager.GetString("ErrorUsagesInPackagesWhichDontDependOnTargetPackage", resourceCulture);
             }
         }
         
