@@ -63,6 +63,7 @@ export class CellRenderer implements ICellRenderer {
     ctx.fillRect(0, 0, columnWidth * CPR, rowHeight * CPR);
 
     // TODO: background color ?
+    // TODO: Read only for bool fields in grid
 
     /* CONTENT */
     ctx.font = `${12 * CPR}px sans-serif`;

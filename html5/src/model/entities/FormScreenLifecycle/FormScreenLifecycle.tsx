@@ -129,7 +129,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
           Values: map2obj(dataView.dataTable.getDirtyValues(row))
         });
         console.log(updateObjectResult);
-        processCRUDResult(this, updateObjectResult);
+        processCRUDResult(dataView, updateObjectResult);
       }
     }
     this.interpreter.send(onFlushDataDone);
@@ -146,7 +146,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
       Parameters: { ...getBindingParametersFromParent(targetDataView) }
     });
     console.log(createObjectResult);
-    processCRUDResult(this, createObjectResult);
+    processCRUDResult(targetDataView, createObjectResult);
     this.interpreter.send(onCreateRowDone);
   }
 

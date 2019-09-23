@@ -2,6 +2,7 @@ import { getDataViewsByEntity } from "../../selectors/DataView/getDataViewsByEnt
 import { runInAction } from "mobx";
 import _ from "lodash";
 import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
+import { putRowStateValue } from "../RowStates/putRowStateValue";
 
 export enum IResponseOperation {
   DeleteAllData = -2,
@@ -24,13 +25,15 @@ export interface ICRUDResult {
 }
 
 export function processCRUDResult(ctx: any, result: ICRUDResult) {
-  console.log("pcr", result);
   runInAction(() => {
     if (_.isArray(result)) {
       result.forEach(resultItem => processCRUDResult(ctx, resultItem));
       return;
     }
     const resultItem = result;
+    if(resultItem.state) {
+      putRowStateValue(ctx)(resultItem.state);
+    }
     switch (resultItem.operation) {
       case IResponseOperation.Update: {
         const dataViews = getDataViewsByEntity(ctx, resultItem.entity);

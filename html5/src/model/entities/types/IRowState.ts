@@ -6,6 +6,7 @@ export interface IRowState extends IRowStateData {
   $type_IRowState: 1;
 
   getValue(key: string): IRowStateItem | undefined;
+  putValue(state: any): void;
 
   parent?: any;
 }

@@ -59,29 +59,7 @@ export class RowState implements IRowState {
           });
           this.isSomethingLoading = false;
           for (let state of states) {
-            this.resolvedValues.set(
-              state.id,
-              new RowStateItem(
-                state.id,
-                state.allowCreate,
-                state.allowDelete,
-                flashColor2htmlColor(state.foregroundColor),
-                flashColor2htmlColor(state.backgroundColor),
-                new Map(
-                  state.columns.map((column: any) => [
-                    column.name,
-                    new RowStateColumnItem(
-                      column.name,
-                      flashColor2htmlColor(state.foregroundColor),
-                      flashColor2htmlColor(state.backgroundColor),
-                      state.allowRead,
-                      state.allowUpdate
-                    )
-                  ])
-                ),
-                new Set(state.disabledActions)
-              )
-            );
+            this.putValue(state);
             this.idStates.delete(state.id);
             idsToLoad.delete(state.id);
           }
@@ -117,6 +95,34 @@ export class RowState implements IRowState {
     this.observedIds.get(key)!.atom.reportObserved();
     return this.resolvedValues.get(key);
   }
+
+  @action.bound
+  putValue(state: any) {
+    this.resolvedValues.set(
+      state.id,
+      new RowStateItem(
+        state.id,
+        state.allowCreate,
+        state.allowDelete,
+        flashColor2htmlColor(state.foregroundColor),
+        flashColor2htmlColor(state.backgroundColor),
+        new Map(
+          state.columns.map((column: any) => {
+            const rs = new RowStateColumnItem(
+              column.name,
+              flashColor2htmlColor(column.foregroundColor),
+              flashColor2htmlColor(column.backgroundColor),
+              column.allowRead,
+              column.allowUpdate
+            );
+            return [column.name, rs];
+          })
+        ),
+        new Set(state.disabledActions)
+      )
+    );
+  }
+
   parent?: any;
 }
 
