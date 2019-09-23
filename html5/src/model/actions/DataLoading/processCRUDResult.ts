@@ -32,6 +32,8 @@ export function processCRUDResult(ctx: any, result: ICRUDResult) {
     }
     const resultItem = result;
     if(resultItem.state) {
+      // TODO: Context for all CRUD ops?
+      // TODO: Actions are pre data view vs state is related to entity?
       putRowStateValue(ctx)(resultItem.state);
     }
     switch (resultItem.operation) {
