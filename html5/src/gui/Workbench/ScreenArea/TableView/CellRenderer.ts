@@ -16,8 +16,10 @@ import { getTableViewRecordByExistingIdx } from "../../../../model/selectors/Tab
 import { getSelectedColumnId } from "../../../../model/selectors/TablePanelView/getSelectedColumnId";
 import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/getSelectedRowId";
 import { getCellTextByIdx } from "../../../../model/selectors/TablePanelView/getCellText";
-import { getDataTable } from '../../../../model/selectors/DataView/getDataTable';
+import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
 import { getRowStates } from "model/selectors/RowState/getRowStates";
+import { getRowStateBackgroundColor } from "model/selectors/RowState/getRowStateBackgroundColor";
+import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 
 export interface ICellRendererData {
   tablePanelView: ITablePanelView;
@@ -60,13 +62,15 @@ export class CellRenderer implements ICellRenderer {
     }
     ctx.fillRect(0, 0, columnWidth * CPR, rowHeight * CPR);
 
+    // TODO: background color ?
+
     /* CONTENT */
     ctx.font = `${12 * CPR}px sans-serif`;
     if (cell.isLoading) {
       ctx.fillStyle = "#888888";
       ctx.fillText("Loading...", 15 * CPR, 15 * CPR);
     } else {
-      ctx.fillStyle = "black";
+      ctx.fillStyle = cell.foregroundColor || "black";
       switch (cell.type) {
         case "CheckBox":
           if (cell.value !== null) {
@@ -145,15 +149,14 @@ export class CellRenderer implements ICellRenderer {
       this.tablePanelView,
       rowIndex
     );
-    if(property.isLookup) {
+    if (property.isLookup) {
       text = this.getCellText(rowIndex, columnIndex);
       isLoading = property.lookup!.isLoading(value);
     }
     const selectedColumnId = getSelectedColumnId(this.tablePanelView);
     const selectedRowId = getSelectedRowId(this.tablePanelView);
     const recordId = dataTable.getRowId(record);
-    const rowState = getRowStates(this.tablePanelView);
-    rowState.getValue(recordId);
+
     return {
       isCellCursor:
         property.id === selectedColumnId && recordId === selectedRowId,
@@ -167,7 +170,17 @@ export class CellRenderer implements ICellRenderer {
       formatterPattern: property.formatterPattern,
       type: property.column,
       value,
-      text
+      text,
+      backgroundColor: getRowStateBackgroundColor(
+        this.tablePanelView,
+        recordId,
+        property.id
+      ),
+      foregroundColor: getRowStateForegroundColor(
+        this.tablePanelView,
+        recordId,
+        property.id
+      )
     };
   }
 }
