@@ -1,9 +1,15 @@
-import { IRowStateData, IRowState, IRowStateItem } from "./types/IRowState";
+import {
+  IRowStateData,
+  IRowState,
+  IRowStateItem,
+  IRowStateColumnItem
+} from "./types/IRowState";
 import { observable, action, createAtom, flow } from "mobx";
 import _ from "lodash";
 import { getApi } from "model/selectors/getApi";
 import { getSessionId } from "model/selectors/getSessionId";
 import { getEntity } from "model/selectors/DataView/getEntity";
+import { flashColor2htmlColor } from "utils/flashColorFormat";
 
 export enum IIdState {
   LOADING = "LOADING",
@@ -51,14 +57,35 @@ export class RowState implements IRowState {
             Entity: getEntity(this),
             Ids: Array.from(idsToLoad)
           });
-          console.log(states)
           this.isSomethingLoading = false;
-          /*for (let [key, value] of Object.entries(labels)) {
-            this.idStates.delete(key);
-            this.resolvedValues.set(key, value);
-            idsToLoad.delete(key);
-          }*/
-
+          for (let state of states) {
+            this.resolvedValues.set(
+              state.id,
+              new RowStateItem(
+                state.id,
+                state.allowCreate,
+                state.allowDelete,
+                flashColor2htmlColor(state.foregroundColor),
+                flashColor2htmlColor(state.backgroundColor),
+                new Map(
+                  state.columns.map((column: any) => [
+                    column.name,
+                    new RowStateColumnItem(
+                      column.name,
+                      flashColor2htmlColor(state.foregroundColor),
+                      flashColor2htmlColor(state.backgroundColor),
+                      state.allowRead,
+                      state.allowUpdate
+                    )
+                  ])
+                ),
+                new Set(state.disabledActions)
+              )
+            );
+            this.idStates.delete(state.id);
+            idsToLoad.delete(state.id);
+          }
+          console.log(this.resolvedValues);
         } catch (error) {
           this.isSomethingLoading = false;
           for (let key of idsToLoad) {
@@ -78,7 +105,7 @@ export class RowState implements IRowState {
         atom: createAtom(
           `RowState atom [${key}]`,
           () => {
-            console.log('trigger load')
+            // console.log('trigger load')
             this.triggerLoad();
           },
           () => {
@@ -91,4 +118,26 @@ export class RowState implements IRowState {
     return this.resolvedValues.get(key);
   }
   parent?: any;
+}
+
+export class RowStateItem implements IRowStateItem {
+  constructor(
+    public id: string,
+    public allowCreate: boolean,
+    public allowDelete: boolean,
+    public foregroundColor: string,
+    public backgroundColor: string,
+    public columns: Map<string, IRowStateColumnItem>,
+    public disabledActions: Set<string>
+  ) {}
+}
+
+export class RowStateColumnItem implements IRowStateColumnItem {
+  constructor(
+    public name: string,
+    public foregroundColor: string,
+    public backgroundColor: string,
+    public allowRead: boolean,
+    public allowUpdate: boolean
+  ) {}
 }
