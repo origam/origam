@@ -83,9 +83,6 @@ export class Lookup implements ILookup {
             this.resolvedValues.set(key, value);
             idsToLoad.delete(key);
           }
-          for (let key of idsToLoad) {
-            this.idStates.set(key, IIdState.ERROR);
-          }
         } catch (error) {
           this.isSomethingLoading = false;
           for (let key of idsToLoad) {

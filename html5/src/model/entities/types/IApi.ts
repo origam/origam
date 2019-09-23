@@ -193,4 +193,10 @@ export interface IApi {
     ParentRecordId: string;
     RootRecordId: string;
   }): Promise<any>;
+
+  getRowStates(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    Ids: string[];
+  }): Promise<any>;
 }

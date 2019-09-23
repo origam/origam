@@ -25,6 +25,7 @@ import { ActionParameter } from "../model/entities/ActionParameter";
 import { OrderingConfiguration } from "../model/entities/OrderingConfiguration";
 import { Table } from "../gui/Components/ScreenElements/Table/Table";
 import { DataViewLifecycle } from "model/entities/DataViewLifecycle/DataViewLifecycle";
+import { RowState } from "model/entities/RowState";
 
 export const findUIRoot = (node: any) =>
   findStopping(node, n => n.name === "UIRoot")[0];
@@ -273,6 +274,7 @@ export function interpretScreenXml(
           orderingConfiguration: new OrderingConfiguration()
         }),
         formPanelView: new FormPanelView(),
+        rowState: new RowState({}),
         properties,
         actions
       });

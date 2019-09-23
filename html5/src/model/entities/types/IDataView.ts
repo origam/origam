@@ -7,6 +7,7 @@ import { IDataViewLifecycle } from "../DataViewLifecycle/types/IDataViewLifecycl
 import { ITablePanelView } from "../TablePanelView/types/ITablePanelView";
 import { IFormPanelView } from "../FormPanelView/types/IFormPanelView";
 import { IAction } from "./IAction";
+import { IRowState } from "./IRowState";
 
 export interface IDataViewData {
   id: string;
@@ -38,6 +39,7 @@ export interface IDataViewData {
   tablePanelView: ITablePanelView;
   formPanelView: IFormPanelView;
   lifecycle: IDataViewLifecycle;
+  rowState: IRowState;
 }
 
 export interface IDataView extends IDataViewData {
