@@ -108,6 +108,9 @@ export class RowState implements IRowState {
         flashColor2htmlColor(state.backgroundColor),
         new Map(
           state.columns.map((column: any) => {
+            if(!column.allowRead) {
+              debugger
+            }
             const rs = new RowStateColumnItem(
               column.name,
               flashColor2htmlColor(column.foregroundColor),
