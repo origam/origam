@@ -125,8 +125,8 @@ export class RowStateItem implements IRowStateItem {
     public id: string,
     public allowCreate: boolean,
     public allowDelete: boolean,
-    public foregroundColor: string,
-    public backgroundColor: string,
+    public foregroundColor: string | undefined,
+    public backgroundColor: string | undefined,
     public columns: Map<string, IRowStateColumnItem>,
     public disabledActions: Set<string>
   ) {}
@@ -135,8 +135,8 @@ export class RowStateItem implements IRowStateItem {
 export class RowStateColumnItem implements IRowStateColumnItem {
   constructor(
     public name: string,
-    public foregroundColor: string,
-    public backgroundColor: string,
+    public foregroundColor: string | undefined,
+    public backgroundColor: string | undefined,
     public allowRead: boolean,
     public allowUpdate: boolean
   ) {}

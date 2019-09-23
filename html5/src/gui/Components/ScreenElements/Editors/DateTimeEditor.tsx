@@ -150,6 +150,8 @@ export class DateTimeEditor extends React.Component<{
   isReadOnly?: boolean;
   isInvalid?: boolean;
   isFocused?: boolean;
+  foregroundColor?: string;
+  backgroundColor?: string;
   onChange?: (event: any, isoDay: string) => void;
   onClick?: (event: any) => void;
   onEditorBlur?: (event: any) => void;
@@ -303,6 +305,10 @@ export class DateTimeEditor extends React.Component<{
               open={this.isTooltipShown}
             >
               <input
+                style={{
+                  color: this.props.foregroundColor,
+                  backgroundColor: this.props.backgroundColor
+                }}
                 className={CS.editor}
                 type="text"
                 onBlur={this.handleInputBlur}

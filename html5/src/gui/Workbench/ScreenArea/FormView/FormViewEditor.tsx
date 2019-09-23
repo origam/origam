@@ -8,6 +8,9 @@ import { IProperty } from "../../../../model/entities/types/IProperty";
 import { BoolEditor } from "../../../Components/ScreenElements/Editors/BoolEditor";
 import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateTimeEditor";
 import { DropdownEditor } from "../../../Components/ScreenElements/Editors/DropdownEditor";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
+import { getRowStateBackgroundColor } from "model/selectors/RowState/getRowStateBackgroundColor";
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
@@ -28,6 +31,17 @@ export class FormViewEditor extends React.Component<{
   onEditorBlur?: (event: any) => void;
 }> {
   getEditor() {
+    const rowId = getSelectedRowId(this.props.property);
+    const foregroundColor = getRowStateForegroundColor(
+      this.props.property,
+      rowId || "",
+      this.props.property!.column
+    );
+    const backgroundColor = getRowStateBackgroundColor(
+      this.props.property,
+      rowId || "",
+      this.props.property!.column
+    );
     switch (this.props.property!.column) {
       case "Number":
       case "Text":
@@ -37,6 +51,8 @@ export class FormViewEditor extends React.Component<{
             isReadOnly={this.props.property!.readOnly}
             isInvalid={false}
             isFocused={false}
+            backgroundColor={backgroundColor}
+            foregroundColor={foregroundColor}
             refocuser={undefined}
             onChange={this.props.onChange}
             onKeyDown={undefined}
@@ -52,6 +68,8 @@ export class FormViewEditor extends React.Component<{
             isReadOnly={this.props.property!.readOnly}
             isInvalid={false}
             isFocused={false}
+            backgroundColor={backgroundColor}
+            foregroundColor={foregroundColor}
             refocuser={undefined}
             onChange={this.props.onChange}
             onClick={undefined}
@@ -76,6 +94,8 @@ export class FormViewEditor extends React.Component<{
             isReadOnly={this.props.property!.readOnly}
             isInvalid={false}
             isFocused={false}
+            backgroundColor={backgroundColor}
+            foregroundColor={foregroundColor}
             onTextChange={undefined}
             onItemSelect={this.props.onChange}
             DataStructureEntityId={""}

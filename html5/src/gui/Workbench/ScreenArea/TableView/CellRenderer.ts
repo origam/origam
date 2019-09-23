@@ -17,7 +17,7 @@ import { getSelectedColumnId } from "../../../../model/selectors/TablePanelView/
 import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/getSelectedRowId";
 import { getCellTextByIdx } from "../../../../model/selectors/TablePanelView/getCellText";
 import { getDataTable } from '../../../../model/selectors/DataView/getDataTable';
-import { getRowState } from "model/selectors/DataView/getRowStates";
+import { getRowStates } from "model/selectors/RowState/getRowStates";
 
 export interface ICellRendererData {
   tablePanelView: ITablePanelView;
@@ -152,7 +152,7 @@ export class CellRenderer implements ICellRenderer {
     const selectedColumnId = getSelectedColumnId(this.tablePanelView);
     const selectedRowId = getSelectedRowId(this.tablePanelView);
     const recordId = dataTable.getRowId(record);
-    const rowState = getRowState(this.tablePanelView);
+    const rowState = getRowStates(this.tablePanelView);
     rowState.getValue(recordId);
     return {
       isCellCursor:

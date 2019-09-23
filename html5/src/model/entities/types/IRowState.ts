@@ -14,19 +14,18 @@ export interface IRowStateItem {
   id: string;
   allowCreate: boolean;
   allowDelete: boolean;
-  foregroundColor: string;
-  backgroundColor: string;
+  foregroundColor: string | undefined;
+  backgroundColor: string | undefined;
   columns: Map<string, IRowStateColumnItem>;
   disabledActions: Set<string>;
 }
 
 export interface IRowStateColumnItem {
   name: string;
-  foregroundColor: string;
-  backgroundColor: string;
+  foregroundColor: string | undefined;
+  backgroundColor: string | undefined;
   allowRead: boolean;
   allowUpdate: boolean;
 }
-
 
 export interface IIdState {}

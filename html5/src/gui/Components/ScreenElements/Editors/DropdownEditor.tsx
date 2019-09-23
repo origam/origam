@@ -25,6 +25,8 @@ export interface IDropdownEditorProps {
   isReadOnly: boolean;
   isInvalid: boolean;
   isFocused: boolean;
+  foregroundColor?: string;
+  backgroundColor?: string;
 
   Entity?: string;
   SessionFormIdentifier?: string;
@@ -33,7 +35,7 @@ export interface IDropdownEditorProps {
   Property?: string;
   RowId?: string;
   LookupId?: string;
-  Parameters?: {[key: string]: any};
+  Parameters?: { [key: string]: any };
   menuItemId?: string;
 
   refocuser?: (cb: () => void) => () => void;
@@ -256,6 +258,10 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
             }}
           >
             <input
+              style={{
+                color: this.props.foregroundColor,
+                backgroundColor: this.props.backgroundColor
+              }}
               className={CS.editor}
               type="text"
               value={this.value}

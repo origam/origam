@@ -9,7 +9,7 @@ import { FormSection } from "../../../Components/ScreenElements/FormSection";
 import { FormField } from "./FormField";
 import { FormRoot } from "./FormRoot";
 import { FormViewEditor } from "./FormViewEditor";
-import { getRowState } from "model/selectors/DataView/getRowStates";
+import { getRowStates } from "model/selectors/RowState/getRowStates";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 
 @inject(({ dataView }) => {
@@ -27,7 +27,7 @@ export class FormBuilder extends React.Component<{
     const dataTable = getDataTable(this.props.dataView);
 
     if (row && rowId) {
-      const rowState = getRowState(this.props.dataView);
+      const rowState = getRowStates(this.props.dataView);
       rowState.getValue(rowId);
     }
 
