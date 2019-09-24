@@ -31,7 +31,6 @@ export class DataView implements IDataView {
     this.lifecycle.parent = this;
     this.tablePanelView.parent = this;
     this.formPanelView.parent = this;
-    this.rowState.parent = this;
   }
 
   isReorderedOnClient: boolean = true;
@@ -66,7 +65,6 @@ export class DataView implements IDataView {
   lifecycle: IDataViewLifecycle = null as any;
   tablePanelView: ITablePanelView = null as any;
   formPanelView: IFormPanelView = null as any;
-  rowState: IRowState = null as any;
 
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
   @observable isEditing: boolean = false;

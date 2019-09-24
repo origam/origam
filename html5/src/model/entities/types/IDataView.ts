@@ -39,7 +39,6 @@ export interface IDataViewData {
   tablePanelView: ITablePanelView;
   formPanelView: IFormPanelView;
   lifecycle: IDataViewLifecycle;
-  rowState: IRowState;
 }
 
 export interface IDataView extends IDataViewData {

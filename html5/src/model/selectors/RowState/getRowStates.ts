@@ -1,5 +1,5 @@
-import { getDataView } from "../DataView/getDataView";
+import { getDataSource } from "../DataSources/getDataSource";
 
 export function getRowStates(ctx: any) {
-  return getDataView(ctx).rowState;
+  return getDataSource(ctx).rowState;
 }
