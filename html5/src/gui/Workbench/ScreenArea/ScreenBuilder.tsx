@@ -3,7 +3,6 @@ import { observer, Provider } from "mobx-react";
 import { IOpenedScreen } from "../../../model/entities/types/IOpenedScreen";
 import { FormScreenBuilder } from "./FormScreenBuilder";
 import { FormScreen } from "./FormScreen";
-import { isILoadedFormScreen } from "../../../model/entities/types/IFormScreen";
 import { IAction } from "../../../model/entities/types/IAction";
 
 @observer
@@ -13,7 +12,7 @@ export class ScreenBuilder extends React.Component<{
   render() {
     const { openedScreen } = this.props;
     const { content } = openedScreen;
-    if (isILoadedFormScreen(content)) {
+    if (!content.isLoading) {
       return (
         <Provider formScreen={content}>
           <FormScreen
@@ -21,13 +20,15 @@ export class ScreenBuilder extends React.Component<{
             isVisible={openedScreen.isActive}
             isFullScreen={false}
             title={
-              isILoadedFormScreen(openedScreen.content)
-                ? openedScreen.content.title
+              !content.isLoading
+                ? openedScreen.content.formScreen!.title
                 : openedScreen.title
             }
           >
             {!content.isLoading && (
-              <FormScreenBuilder xmlWindowObject={content.screenUI} />
+              <FormScreenBuilder
+                xmlWindowObject={content.formScreen!.screenUI}
+              />
             )}
           </FormScreen>
         </Provider>
@@ -51,13 +52,14 @@ export class DialogScreenBuilder extends React.Component<{
   render() {
     const { openedScreen } = this.props;
     const { content } = openedScreen;
-    console.log(content);
-    if (isILoadedFormScreen(content)) {
+    if (!content.isLoading) {
       return (
         <Provider formScreen={content}>
           {!content.isLoading && (
             <>
-              <FormScreenBuilder xmlWindowObject={content.screenUI} />
+              <FormScreenBuilder
+                xmlWindowObject={content.formScreen!.screenUI}
+              />
             </>
           )}
         </Provider>

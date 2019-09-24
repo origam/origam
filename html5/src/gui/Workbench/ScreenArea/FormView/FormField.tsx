@@ -1,6 +1,8 @@
 import S from "./FormField.module.css";
 import React from "react";
 import { inject, observer } from "mobx-react";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
 
 export enum ICaptionPosition {
   Left = "Left",
@@ -9,7 +11,13 @@ export enum ICaptionPosition {
   None = "None"
 }
 
-
+@inject(({ property }) => {
+  const rowId = getSelectedRowId(property);
+  const isHidden = !getRowStateAllowRead(property, rowId || "", property.id);
+  return {
+    isHidden
+  };
+})
 @observer
 export class FormField extends React.Component<{
   Id: string;
@@ -22,9 +30,11 @@ export class FormField extends React.Component<{
   Width: number;
   Y: number;
   X: number;
+  isHidden?: boolean;
 }> {
   fieldNameStyle() {
     // TODO: !!! Proper typing of props (numbers instead of strings etc...)
+
     switch (this.props.CaptionPosition) {
       case ICaptionPosition.Left:
         return {
@@ -55,10 +65,15 @@ export class FormField extends React.Component<{
   }
 
   render() {
+    const isHidden = this.props.isHidden;
+    const display = isHidden ? "none" : undefined;
     return (
       <>
         {this.props.CaptionPosition !== ICaptionPosition.None && (
-          <div className={S.formFieldName} style={this.fieldNameStyle()}>
+          <div
+            className={S.formFieldName}
+            style={{ ...this.fieldNameStyle(), display }}
+          >
             {this.props.Name}
           </div>
         )}
@@ -68,7 +83,8 @@ export class FormField extends React.Component<{
             top: this.props.Y,
             left: this.props.X,
             width: this.props.Width,
-            height: this.props.Height
+            height: this.props.Height,
+            display
           }}
           onClick={(event: any) => event.stopPropagation()}
         >

@@ -1,22 +1,21 @@
 import { action, createAtom, flow } from "mobx";
-import { interpret, Machine } from "xstate";
-import { IOpenedScreen, IDialogInfo } from "../types/IOpenedScreen";
-import { IWorkbenchLifecycle } from "../types/IWorkbenchLifecycle";
-import { IEvent } from "./types";
-import { WorkbenchLifecycleGraph } from "./WorkbenchLifecycleGraph";
-import { getOpenedScreens } from "model/selectors/getOpenedScreens";
+import { createOpenedScreen } from "model/factories/createOpenedScreen";
 import { getApi } from "model/selectors/getApi";
+import { getClientFulltextSearch } from "model/selectors/getClientFulltextSearch";
+import { getOpenedScreens } from "model/selectors/getOpenedScreens";
 import { getMainMenuEnvelope } from "model/selectors/MainMenu/getMainMenuEnvelope";
 import { findMenu } from "xmlInterpreters/menuXml";
+import { interpret, Machine } from "xstate";
 import { MainMenuContent } from "../MainMenu";
-import { createLoadingFormScreen } from "model/factories/createLoadingFormScreen";
-import { createOpenedScreen } from "model/factories/createOpenedScreen";
-import { IMainMenuItemType } from "../types/IMainMenu";
 import { DialogInfo } from "../OpenedScreen";
+import { IMainMenuItemType } from "../types/IMainMenu";
+import { IDialogInfo, IOpenedScreen } from "../types/IOpenedScreen";
+import { IWorkbenchLifecycle } from "../types/IWorkbenchLifecycle";
 import { onInitPortalDone } from "./constants";
-import { getClientFulltextSearch } from "model/selectors/getClientFulltextSearch";
-import { getDontRequestData } from "../../selectors/getDontRequestData";
-import { closeForm } from "model/actions/closeForm";
+import { IEvent } from "./types";
+import { WorkbenchLifecycleGraph } from "./WorkbenchLifecycleGraph";
+import { createFormScreenEnvelope } from "model/factories/createFormScreenEnvelope";
+import { getOpenedDialogScreens } from "model/selectors/getOpenedDialogScreens";
 
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
@@ -95,20 +94,42 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   @action.bound
   onScreenTabCloseClick(event: any, openedScreen: IOpenedScreen): void {
     event.stopPropagation();
-    console.log(openedScreen);
     this.closeForm(openedScreen);
   }
 
   @action.bound closeForm(openedScreen: IOpenedScreen) {
-    const openedScreens = getOpenedScreens(this);
-    const closestScreen = openedScreens.findClosestItem(
-      openedScreen.menuItemId,
-      openedScreen.order
-    );
-    if (closestScreen) {
-      openedScreens.activateItem(closestScreen.menuItemId, closestScreen.order);
+    // TODO: Refactor to get rid of code duplication
+    if (openedScreen.dialogInfo) {
+      const openedScreens = getOpenedDialogScreens(openedScreen);
+      if (openedScreen.isActive) {
+        const closestScreen = openedScreens.findClosestItem(
+          openedScreen.menuItemId,
+          openedScreen.order
+        );
+        if (closestScreen) {
+          openedScreens.activateItem(
+            closestScreen.menuItemId,
+            closestScreen.order
+          );
+        }
+      }
+      openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
+    } else {
+      const openedScreens = getOpenedScreens(openedScreen);
+      if (openedScreen.isActive) {
+        const closestScreen = openedScreens.findClosestItem(
+          openedScreen.menuItemId,
+          openedScreen.order
+        );
+        if (closestScreen) {
+          openedScreens.activateItem(
+            closestScreen.menuItemId,
+            closestScreen.order
+          );
+        }
+      }
+      openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
     }
-    openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
   }
 
   @action.bound openNewForm(
@@ -120,8 +141,9 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     parameters: { [key: string]: any }
   ) {
     const openedScreens = getOpenedScreens(this);
+    const openedDialogScreens = getOpenedDialogScreens(this);
     const existingItem = openedScreens.findLastExistingItem(id);
-    const newFormScreen = createLoadingFormScreen();
+    const newFormScreen = createFormScreenEnvelope();
     const newScreen = createOpenedScreen(
       id,
       type,
@@ -132,8 +154,13 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       dialogInfo,
       parameters
     );
-    openedScreens.pushItem(newScreen);
-    openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
+    if (newScreen.dialogInfo) {
+      openedDialogScreens.pushItem(newScreen);
+      openedDialogScreens.activateItem(newScreen.menuItemId, newScreen.order);
+    } else {
+      openedScreens.pushItem(newScreen);
+      openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
+    }
     newFormScreen.start();
   }
 

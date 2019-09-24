@@ -15,12 +15,10 @@ export class Application implements IApplication {
   constructor(data: IApplicationData) {
     Object.assign(this, data);
     this.applicationLifecycle.parent = this;
-    this.openedScreens.parent = this;
     this.dialogStack.parent = this;
   }
 
   applicationLifecycle: IApplicationLifecycle = null as any;
-  openedScreens: IOpenedScreens = null as any;
   api: IApi = null as any;
   dialogStack: IDialogStack = null as any;
 

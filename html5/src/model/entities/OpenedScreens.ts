@@ -2,21 +2,12 @@ import { IOpenedScreens } from "./types/IOpenedScreens";
 import { IOpenedScreen } from "./types/IOpenedScreen";
 import { action, observable, computed } from "mobx";
 import { IAction } from "./types/IAction";
-import { isILoadedFormScreen } from "./types/IFormScreen";
 
 export class OpenedScreens implements IOpenedScreens {
   $type_IOpenedScreens: 1 = 1;
 
   parent?: any;
   @observable items: Array<IOpenedScreen> = [];
-
-  @computed get screenItems(): IOpenedScreen[] {
-    return this.items.filter(item => !item.isDialog);
-  }
-
-  @computed get dialogItems(): IOpenedScreen[] {
-    return this.items.filter(item => item.isDialog);
-  }
 
   @action.bound
   pushItem(item: IOpenedScreen): void {
@@ -49,8 +40,8 @@ export class OpenedScreens implements IOpenedScreens {
     actions: IAction[];
   }> {
     const activeScreen = this.activeItem;
-    return activeScreen && isILoadedFormScreen(activeScreen.content)
-      ? activeScreen.content.toolbarActions
+    return activeScreen && !activeScreen.content.isLoading
+      ? activeScreen.content.formScreen!.toolbarActions
       : [];
   }
 

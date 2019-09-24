@@ -111,6 +111,7 @@ export interface IApi {
     Id: string;
     MenuId: string;
     LookupId: string;
+    Parameters?: {[key: string]: any};
     ShowUniqueValues: boolean;
     SearchText: string;
     PageSize: number;
@@ -191,5 +192,11 @@ export interface IApi {
     ChildEntity: string;
     ParentRecordId: string;
     RootRecordId: string;
+  }): Promise<any>;
+
+  getRowStates(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    Ids: string[];
   }): Promise<any>;
 }

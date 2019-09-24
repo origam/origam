@@ -1,20 +1,25 @@
+import { action, computed, observable } from "mobx";
+import { getParentRow } from "model/selectors/DataView/getParentRow";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getDataSourceByEntity } from "../selectors/DataSources/getDataSourceByEntity";
+import { getDataTable } from "../selectors/DataView/getDataTable";
+import { getFormScreen } from "../selectors/FormScreen/getFormScreen";
+import { getIsDialog } from "../selectors/getIsDialog";
+import { IDataViewLifecycle } from "./DataViewLifecycle/types/IDataViewLifecycle";
+import { IFormPanelView } from "./FormPanelView/types/IFormPanelView";
+import { ITablePanelView } from "./TablePanelView/types/ITablePanelView";
+import { IAction, IActionPlacement, IActionType } from "./types/IAction";
+import { IDataTable } from "./types/IDataTable";
 import { IDataView, IDataViewData } from "./types/IDataView";
 import { IPanelViewType } from "./types/IPanelViewType";
 import { IProperty } from "./types/IProperty";
-import { observable, action, computed, runInAction } from "mobx";
-import { IDataTable } from "./types/IDataTable";
-import { getFormScreen } from "../selectors/FormScreen/getFormScreen";
-import { IDataViewLifecycle } from "./DataViewLifecycle/types/IDataViewLifecycle";
-import { getDataSourceByEntity } from "../selectors/DataSources/getDataSourceByEntity";
-import { ITablePanelView } from "./TablePanelView/types/ITablePanelView";
-import { IFormPanelView } from "./FormPanelView/types/IFormPanelView";
-import { getDataTable } from "../selectors/DataView/getDataTable";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { IAction, IActionPlacement, IActionType } from "./types/IAction";
-import { getIsDialog } from "../selectors/getIsDialog";
+import { getBindingToParent } from "model/selectors/DataView/getBindingToParent";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
+import { getEntity } from "model/selectors/DataView/getEntity";
+import { getBindingParent } from "model/selectors/DataView/getBindingParent";
+import { IRowState } from "./types/IRowState";
 
 export class DataView implements IDataView {
-
   
   $type_IDataView: 1 = 1;
 
@@ -26,7 +31,7 @@ export class DataView implements IDataView {
     this.lifecycle.parent = this;
     this.tablePanelView.parent = this;
     this.formPanelView.parent = this;
-    // Identifier - usualy Id is always the first property.
+    this.rowState.parent = this;
   }
 
   isReorderedOnClient: boolean = true;
@@ -61,6 +66,7 @@ export class DataView implements IDataView {
   lifecycle: IDataViewLifecycle = null as any;
   tablePanelView: ITablePanelView = null as any;
   formPanelView: IFormPanelView = null as any;
+  rowState: IRowState = null as any;
 
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
   @observable isEditing: boolean = false;
@@ -154,6 +160,35 @@ export class DataView implements IDataView {
 
   @computed get dataSource() {
     return getDataSourceByEntity(this, this.entity)!;
+  }
+
+  @computed get bindingParametersFromParent() {
+    // debugger
+    const parentRow = getParentRow(this);
+    if (parentRow) {
+      const parent = getBindingParent(this);
+      const parentEntity = getEntity(parent);
+      const parentDataTable = getDataTable(parent);
+
+      const bindingToParent = getBindingToParent(this)!;
+      const result: { [key: string]: string } = {};
+      for (let bp of bindingToParent.bindingPairs) {
+        const parentDataSourceField = getDataSourceFieldByName(
+          parent,
+          bp.parentPropertyId
+        )!;
+        result[
+          bp.childPropertyId
+        ] = parentDataTable.getCellValueByDataSourceField(
+          parentRow,
+          parentDataSourceField
+        );
+      }
+      console.log(result)
+      return result
+    } else {
+      return {};
+    }
   }
 
   @action.bound

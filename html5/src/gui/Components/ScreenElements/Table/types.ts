@@ -186,4 +186,6 @@ export interface IRenderedCell {
   type: ICellType;
   value: any;
   text: any;
+  foregroundColor?: string;
+  backgroundColor?: string;
 }

@@ -9,6 +9,9 @@ import { IActionMode } from "../../entities/types/IAction";
 
 export function onActionClick(ctx: any) {
   return flow(function*(event: any, action: IAction) {
+    if (!action.isEnabled) {
+      return;
+    }
     const lifecycle = getFormScreenLifecycle(ctx);
     const gridId = getGridId(ctx);
     const entity = getEntity(ctx);

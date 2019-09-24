@@ -1612,13 +1612,13 @@ namespace Origam.DA.Service
 		        while(reader.Read())
 		        {
 			        object[] values = new object[query.ColumnsInfo.Count];
-                    for(int i = 0, index = 0; i < query.ColumnsInfo.Count; i++)
+                    for (int i = 0, index = 0; i < query.ColumnsInfo.Count; i++)
                     {
-                        if(query.ColumnsInfo.Columns[i].IsVirtual)
+                        if (query.ColumnsInfo.Columns[i].IsVirtual)
                         {
                             continue;
                         }
-                        values[i] = reader.GetValue(index);
+                        values[i] = reader.GetValue(reader.GetOrdinal(query.ColumnsInfo.Columns[i].Name));
                         index++;
                     }
 			        yield return detachedFieldPacker.ProcessReaderOutput(

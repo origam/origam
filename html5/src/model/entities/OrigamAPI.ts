@@ -268,6 +268,7 @@ export class OrigamAPI implements IApi {
     Property: string;
     Id: string;
     LookupId: string;
+    Parameters?: { [key: string]: any };
     ShowUniqueValues: boolean;
     SearchText: string;
     PageSize: number;
@@ -397,6 +398,16 @@ export class OrigamAPI implements IApi {
     RootRecordId: string;
   }): Promise<any> {
     return (await axios.post(`${this.urlPrefix}/UIService/GetData`, data, {
+      headers: this.httpAuthHeader
+    })).data;
+  }
+
+  async getRowStates(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    Ids: string[];
+  }): Promise<any> {
+    return (await axios.post(`${this.urlPrefix}/UIService/RowStates`, data, {
       headers: this.httpAuthHeader
     })).data;
   }

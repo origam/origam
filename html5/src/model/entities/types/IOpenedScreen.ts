@@ -1,4 +1,4 @@
-import { IFormScreen } from "./IFormScreen";
+import { IFormScreen, IFormScreenEnvelope } from "./IFormScreen";
 import { IMainMenuItemType } from "./IMainMenu";
 
 export interface IDialogInfo {
@@ -13,7 +13,7 @@ export interface IOpenedScreenData {
   dialogInfo?: IDialogInfo;
   order: number;
   title: string;
-  content: IFormScreen;
+  content: IFormScreenEnvelope;
   parameters: { [key: string]: any };
 }
 
@@ -24,7 +24,7 @@ export interface IOpenedScreen extends IOpenedScreenData {
   isDialog: boolean;
 
   setActive(state: boolean): void;
-  setContent(screen: IFormScreen): void;
+  setContent(screen: IFormScreenEnvelope): void;
   parent?: any;
 }
 
