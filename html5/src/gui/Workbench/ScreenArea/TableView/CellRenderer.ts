@@ -20,6 +20,7 @@ import { getDataTable } from "../../../../model/selectors/DataView/getDataTable"
 import { getRowStates } from "model/selectors/RowState/getRowStates";
 import { getRowStateBackgroundColor } from "model/selectors/RowState/getRowStateBackgroundColor";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 
 export interface ICellRendererData {
   tablePanelView: ITablePanelView;
@@ -158,6 +159,40 @@ export class CellRenderer implements ICellRenderer {
     const selectedRowId = getSelectedRowId(this.tablePanelView);
     const recordId = dataTable.getRowId(record);
 
+
+    let isInvalid = false;
+    let invalidMessage: string | undefined = undefined;
+    if (record) {
+      const dataView = getDataTable(property);
+      const dsFieldErrors = getDataSourceFieldByName(
+        property,
+        "__Errors"
+      );
+      const errors = dsFieldErrors
+        ? dataView.getCellValueByDataSourceField(record, dsFieldErrors)
+        : null;
+
+      const errMap: Map<number, string> | undefined = errors
+        ? new Map(
+            Object.entries<string>(errors.fieldErrors).map(
+              ([dsIndexStr, errMsg]: [string, string]) => [
+                parseInt(dsIndexStr, 10),
+                errMsg
+              ]
+            )
+          )
+        : undefined;
+
+      const errMsg =
+        dsFieldErrors && errMap
+          ? errMap.get(property.dataSourceIndex)
+          : undefined;
+      if (errMsg) {
+        isInvalid = true;
+        invalidMessage = errMsg;
+      }
+    }
+
     return {
       isCellCursor:
         property.id === selectedColumnId && recordId === selectedRowId,
@@ -167,7 +202,7 @@ export class CellRenderer implements ICellRenderer {
       isColumnOrderChangeTarget:
         this.tablePanelView.columnOrderChangingTargetId === property.id,
       isLoading,
-      isInvalid: false,
+      isInvalid,
       formatterPattern: property.formatterPattern,
       type: property.column,
       value,
