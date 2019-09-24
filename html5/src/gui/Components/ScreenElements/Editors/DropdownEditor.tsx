@@ -25,6 +25,8 @@ export interface IDropdownEditorProps {
   isReadOnly: boolean;
   isInvalid: boolean;
   isFocused: boolean;
+  foregroundColor?: string;
+  backgroundColor?: string;
 
   Entity?: string;
   SessionFormIdentifier?: string;
@@ -33,6 +35,7 @@ export interface IDropdownEditorProps {
   Property?: string;
   RowId?: string;
   LookupId?: string;
+  Parameters?: { [key: string]: any };
   menuItemId?: string;
 
   refocuser?: (cb: () => void) => () => void;
@@ -55,6 +58,7 @@ export interface IDropdownEditorProps {
     DataStructureEntityId: getDataStructureEntityId(property),
     ColumnNames: lookup.dropDownColumns.map(column => column.id),
     Property: property.id,
+    Parameters: lookup.parameters,
     RowId: getSelectedRowId(property),
     LookupId: lookup.lookupId,
     menuItemId: getMenuItemId(property),
@@ -145,7 +149,8 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
         ColumnNames: ["Id", ...this.props.ColumnNames], // Columns to download
         Property: this.props.Property!, // Columnn Id
         Id: this.props.RowId!, // Id of the selected row
-        LookupId: this.props.LookupId!, // Id of the lookup objet
+        LookupId: this.props.LookupId!, // Id of the lookup object
+        Parameters: this.props.Parameters!,
         MenuId: this.props.menuItemId!,
         ShowUniqueValues: false,
         SearchText:
@@ -192,7 +197,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     key: string;
     style: any;
   }) => {
-    const handleClick = (event: any) => {
+    const handleClick = action((event: any) => {
       // this.dirtyTextualValue = this.lookupItems[args.rowIndex - 1][1];
       if (args.rowIndex > 0) {
         this.dirtyTextualValue = undefined;
@@ -202,8 +207,9 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
             this.lookupItems[args.rowIndex - 1][0]
           );
         this.makeFocusedIfNeeded();
+        this.elmDropdowner && this.elmDropdowner.setDropped(false);
       }
-    };
+    });
     return (
       <Observer>
         {() => (
@@ -253,6 +259,10 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
             }}
           >
             <input
+              style={{
+                color: this.props.foregroundColor,
+                backgroundColor: this.props.backgroundColor
+              }}
               className={CS.editor}
               type="text"
               value={this.value}

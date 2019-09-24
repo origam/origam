@@ -36,10 +36,10 @@ import { MainMenuPanel } from "./MainMenu/MainMenuPanel";
 import { IApplication } from "model/entities/types/IApplication";
 import { getActivePanelView } from "model/selectors/DataView/getActivePanelView";
 import { getActiveScreen } from "../../model/selectors/getActiveScreen";
-import { isILoadedFormScreen } from "../../model/entities/types/IFormScreen";
 import { onSaveSessionClick } from "../../model/actions/onSaveSessionClick";
 import { onRefreshSessionClick } from "model/actions/onRefreshSessionClick";
 import { onActionClick } from "../../model/actions/Actions/onActionClick";
+import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 
 @inject(({ application }) => {
   const clientFulltextSearch = getClientFulltextSearch(application);
@@ -211,8 +211,8 @@ export const FormButtonsSection: React.FC<{}> = observer(props => {
     .application as IApplication;
   const activeScreen = getActiveScreen(application);
   const formScreen =
-    activeScreen && isILoadedFormScreen(activeScreen.content)
-      ? activeScreen.content
+    activeScreen && !activeScreen.content.isLoading
+      ? activeScreen.content.formScreen
       : undefined;
   const isDirty = formScreen && formScreen.isDirty;
   return formScreen ? (
@@ -243,12 +243,13 @@ export const ActionsSection: React.FC<{}> = observer(props => {
         <ToolbarSection bottomLine={actionGroup.section}>
           {actionGroup.actions.map(action => (
             <div
-              className={S.actionItem}
+              className={S.actionItem + (!getIsEnabledAction(action) ? " hidden" : "")}
               onClick={event => onActionClick(action)(event, action)}
             >
               <i className="fas fa-cog icon" />
               <br />
-              {action.caption}
+              {action.caption}<br />
+              {action.id}
             </div>
           ))}
         </ToolbarSection>

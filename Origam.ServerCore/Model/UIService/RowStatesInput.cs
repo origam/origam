@@ -25,7 +25,6 @@ namespace Origam.ServerCore.Model.UIService
 {
     public class RowStatesInput
     {
-        [RequiredNonDefault]
         public Guid SessionFormIdentifier { get; set; }
         public string Entity { get; set; }
         public object[] Ids { get; set; }

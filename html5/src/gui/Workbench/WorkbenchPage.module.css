@@ -149,6 +149,10 @@
   font-size: 25px;
 }
 
+.actionItem:global(.hidden) {
+  display: none;
+}
+
 .actionItem:hover {
   background-color: #8998c5;
 }

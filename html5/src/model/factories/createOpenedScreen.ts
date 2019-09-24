@@ -1,6 +1,6 @@
 import { IOpenedScreen, IDialogInfo } from "../entities/types/IOpenedScreen";
 import { OpenedScreen } from "../entities/OpenedScreen";
-import { IFormScreen } from "../entities/types/IFormScreen";
+import { IFormScreen, IFormScreenEnvelope } from "../entities/types/IFormScreen";
 import { IMainMenuItemType } from "../entities/types/IMainMenu";
 
 export function createOpenedScreen(
@@ -8,7 +8,7 @@ export function createOpenedScreen(
   menuItemType: IMainMenuItemType,
   order: number,
   title: string,
-  content: IFormScreen,
+  content: IFormScreenEnvelope,
   dontRequestData: boolean,
   dialogInfo: IDialogInfo | undefined,
   parameters: { [key: string]: any }

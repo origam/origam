@@ -9,7 +9,8 @@ import { FormSection } from "../../../Components/ScreenElements/FormSection";
 import { FormField } from "./FormField";
 import { FormRoot } from "./FormRoot";
 import { FormViewEditor } from "./FormViewEditor";
-
+import { getRowStates } from "model/selectors/RowState/getRowStates";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -22,7 +23,13 @@ export class FormBuilder extends React.Component<{
   buildForm() {
     const self = this;
     const row = getSelectedRow(this.props.dataView);
+    const rowId = getSelectedRowId(this.props.dataView);
     const dataTable = getDataTable(this.props.dataView);
+
+    if (row && rowId) {
+      const rowState = getRowStates(this.props.dataView);
+      rowState.getValue(rowId);
+    }
 
     function recursive(xfo: any) {
       if (xfo.name === "FormRoot") {

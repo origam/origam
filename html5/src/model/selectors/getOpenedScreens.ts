@@ -1,6 +1,6 @@
 import { IOpenedScreens } from '../entities/types/IOpenedScreens';
-import { getApplication } from './getApplication';
+import { getWorkbench } from './getWorkbench';
 
 export function getOpenedScreens(ctx: any): IOpenedScreens {
-  return getApplication(ctx).openedScreens;
+  return getWorkbench(ctx).openedScreens;
 }

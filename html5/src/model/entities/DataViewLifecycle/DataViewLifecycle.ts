@@ -120,7 +120,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   start(): void {
     this.interpreter.start();
     console.log("Data view started:", getDataViewLabel(this));
-    if (getDontRequestData(this) && getIsBindingParent(this)) {
+    if (getDontRequestData(this)) {
       console.log(" - starting parent row reaction");
       this.disposers.push(this.startSelectedRowReaction());
     }

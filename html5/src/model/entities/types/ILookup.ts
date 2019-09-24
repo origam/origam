@@ -7,6 +7,11 @@ export enum IDropDownType {
   EagerlyLoadedTree = "EagerlyLoadedTree"
 }
 
+export interface IDropDownParameter {
+  parameterName: string;
+  fieldName: string;
+}
+
 export interface ILookupData {
   lookupId: string;
   dropDownShowUniqueValues: boolean;
@@ -16,6 +21,7 @@ export interface ILookupData {
   cached: boolean;
   searchByFirstColumnOnly: boolean;
   dropDownColumns: IDropDownColumn[];
+  dropDownParameters: IDropDownParameter[];
 }
 
 export interface ILookup extends ILookupData {
@@ -24,6 +30,8 @@ export interface ILookup extends ILookupData {
   getValue(key: string): any;
   isLoading(key: string): boolean;
   resolveList(ids: Set<string>): CancellablePromise<any>;
+
+  parameters: { [key: string]: any };
   parent?: any;
 }
 

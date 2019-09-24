@@ -38,6 +38,7 @@ using Origam.Services;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
@@ -542,6 +543,7 @@ namespace Origam.ServerCore.Controller
             internalRequest.SearchText = "%" + input.SearchText + "%";
             internalRequest.PageSize = input.PageSize;
             internalRequest.PageNumber = input.PageNumber;
+            internalRequest.ParameterMappings = DictionaryToHashtable(input.Parameters);
             DataTable dataTable = lookupService.GetList(internalRequest);
             return AreColumnNamesValid(input, dataTable)
                 ? Result.Ok<IEnumerable<object[]>, IActionResult>(
@@ -549,6 +551,18 @@ namespace Origam.ServerCore.Controller
                 : Result.Fail<IEnumerable<object[]>, IActionResult>(
                     BadRequest("Some of the supplied column names are not in the table."));
         }
+
+        private static Hashtable DictionaryToHashtable(IDictionary<string, object> source)
+        {
+            Hashtable result = new Hashtable(source.Count);
+            foreach (KeyValuePair<string, object> kvp in source)
+            {
+                result.Add(kvp.Key, kvp.Value);
+            }
+
+            return result;
+        }
+
         private static bool AreColumnNamesValid(
             LookupListInput input, DataTable dataTable)
         {

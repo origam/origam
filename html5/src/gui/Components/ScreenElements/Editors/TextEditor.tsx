@@ -10,6 +10,8 @@ export class TextEditor extends React.Component<{
   isReadOnly: boolean;
   isInvalid: boolean;
   isFocused: boolean;
+  backgroundColor?: string;
+  foregroundColor?: string;
   refocuser?: (cb: () => void) => () => void;
   onChange?(event: any, value: string): void;
   onKeyDown?(event: any): void;
@@ -54,6 +56,10 @@ export class TextEditor extends React.Component<{
     return (
       <div className={CS.editorContainer}>
         <input
+          style={{
+            color: this.props.foregroundColor,
+            backgroundColor: this.props.backgroundColor
+          }}
           className={CS.editor}
           type="text"
           value={this.props.value}

@@ -19,7 +19,6 @@ export class DialogStack implements IDialogStack {
     const useKey = key ? key : `DEFAULT_DIALOG_KEY_${nextId++}`;
     this.stackedDialogs.push({ key: useKey, component, dimensions });
     return () => {
-      debugger
       this.closeDialog(useKey)
     };
   }

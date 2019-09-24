@@ -18,6 +18,10 @@ import {
 } from "../../../../model/selectors/TablePanelView/getCellValue";
 import { TextEditor } from "gui/Components/ScreenElements/Editors/TextEditor";
 import { onFieldBlur } from "../../../../model/actions/DataView/TableView/onFieldBlur";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
+import { getRowStateBackgroundColor } from "model/selectors/RowState/getRowStateBackgroundColor";
+import { getRowStateAllowUpdate } from "model/selectors/RowState/getRowStateAllowUpdate";
 
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -39,15 +43,36 @@ export class TableViewEditor extends React.Component<{
   onEditorBlur?: (event: any) => void;
 }> {
   getEditor() {
+    const rowId = getSelectedRowId(this.props.property);
+    const foregroundColor = getRowStateForegroundColor(
+      this.props.property,
+      rowId || "",
+      this.props.property!.id
+    );
+    const backgroundColor = getRowStateBackgroundColor(
+      this.props.property,
+      rowId || "",
+      this.props.property!.id
+    );
+    const readOnly =
+      this.props.property!.readOnly ||
+      !getRowStateAllowUpdate(
+        this.props.property,
+        rowId || "",
+        this.props.property!.id
+      );
+
     switch (this.props.property!.column) {
       case "Number":
       case "Text":
         return (
           <TextEditor
             value={this.props.getCellValue!()}
-            isReadOnly={this.props.property!.readOnly}
+            isReadOnly={readOnly}
             isInvalid={false}
             isFocused={false}
+            backgroundColor={backgroundColor}
+            foregroundColor={foregroundColor}
             refocuser={undefined}
             onChange={this.props.onChange}
             onKeyDown={undefined}
@@ -60,9 +85,11 @@ export class TableViewEditor extends React.Component<{
           <DateTimeEditor
             value={this.props.getCellValue!()}
             outputFormat={"DD.MM.YYYY HH:mm"}
-            isReadOnly={this.props.property!.readOnly}
+            isReadOnly={readOnly}
             isInvalid={false}
             isFocused={false}
+            backgroundColor={backgroundColor}
+            foregroundColor={foregroundColor}
             refocuser={undefined}
             onChange={this.props.onChange}
             onClick={undefined}
@@ -73,7 +100,7 @@ export class TableViewEditor extends React.Component<{
         return (
           <BoolEditor
             value={this.props.getCellValue!()}
-            isReadOnly={this.props.property!.readOnly}
+            isReadOnly={readOnly}
             onChange={this.props.onChange}
             onClick={undefined}
             onKeyDown={undefined}
@@ -84,9 +111,11 @@ export class TableViewEditor extends React.Component<{
           <DropdownEditor
             value={this.props.getCellValue!()}
             // textualValue={""}
-            isReadOnly={this.props.property!.readOnly}
+            isReadOnly={readOnly}
             isInvalid={false}
             isFocused={false}
+            backgroundColor={backgroundColor}
+            foregroundColor={foregroundColor}
             onTextChange={undefined}
             onItemSelect={this.props.onChange}
             onEditorBlur={this.props.onEditorBlur}

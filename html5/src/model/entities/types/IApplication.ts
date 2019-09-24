@@ -7,7 +7,6 @@ import { IDialogStack } from "./IDialogStack";
 export interface IApplicationData {
   api: IApi;
   applicationLifecycle: IApplicationLifecycle;
-  openedScreens: IOpenedScreens;
   dialogStack: IDialogStack;
 }
 
