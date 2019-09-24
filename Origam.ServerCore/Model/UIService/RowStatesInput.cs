@@ -27,9 +27,7 @@ namespace Origam.ServerCore.Model.UIService
     {
         [RequiredNonDefault]
         public Guid SessionFormIdentifier { get; set; }
-        [RequiredNonDefault]
         public string Entity { get; set; }
-        [RequiredNonDefault]
         public object[] Ids { get; set; }
     }
 }
