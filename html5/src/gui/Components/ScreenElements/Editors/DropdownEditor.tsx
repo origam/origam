@@ -3,6 +3,7 @@ import { observer, Observer, inject } from "mobx-react";
 import { action, observable, computed, runInAction } from "mobx";
 import S from "./DropdownEditor.module.css";
 import CS from "./CommonStyle.module.css";
+import { Tooltip } from "react-tippy";
 
 import _ from "lodash";
 import { MultiGrid, AutoSizer } from "react-virtualized";
@@ -24,6 +25,7 @@ export interface IDropdownEditorProps {
   textualValue?: string;
   isReadOnly: boolean;
   isInvalid: boolean;
+  invalidMessage?: string;
   isFocused: boolean;
   foregroundColor?: string;
   backgroundColor?: string;
@@ -275,7 +277,9 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
             />
             {this.props.isInvalid && (
               <div className={CS.notification}>
-                <i className="fas fa-exclamation-circle red" />
+                <Tooltip html={this.props.invalidMessage} arrow={true}>
+                  <i className="fas fa-exclamation-circle red" />
+                </Tooltip>
               </div>
             )}
             {!this.props.isReadOnly && (

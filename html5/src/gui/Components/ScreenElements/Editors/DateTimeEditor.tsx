@@ -149,6 +149,7 @@ export class DateTimeEditor extends React.Component<{
   outputFormat: string;
   isReadOnly?: boolean;
   isInvalid?: boolean;
+  invalidMessage?: string;
   isFocused?: boolean;
   foregroundColor?: string;
   backgroundColor?: string;
@@ -324,7 +325,9 @@ export class DateTimeEditor extends React.Component<{
             </Tooltip>
             {this.props.isInvalid && (
               <div className={CS.notification}>
-                <i className="fas fa-exclamation-circle red" />
+                <Tooltip html={this.props.invalidMessage} arrow={true}>
+                  <i className="fas fa-exclamation-circle red" />
+                </Tooltip>
               </div>
             )}
             {!this.props.isReadOnly && (

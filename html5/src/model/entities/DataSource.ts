@@ -3,7 +3,7 @@ import { IDataSourceField } from "./types/IDataSourceField";
 
 export class DataSource implements IDataSource {
   $type_IDataSource: 1 = 1;
-  
+
   constructor(data: IDataSourceData) {
     Object.assign(this, data);
     this.fields.forEach(o => (o.parent = this));
@@ -19,5 +19,9 @@ export class DataSource implements IDataSource {
 
   getFieldByName(name: string): IDataSourceField | undefined {
     return this.fields.find(field => field.name === name);
+  }
+
+  getFieldByIndex(index: number): IDataSourceField | undefined {
+    return this.fields.find(field => field.index === index);
   }
 }
