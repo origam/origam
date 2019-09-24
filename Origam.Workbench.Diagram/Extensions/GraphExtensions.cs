@@ -17,10 +17,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Msagl.Drawing;
+using Origam.Workbench.Diagram.Graphs;
 
 namespace Origam.Workbench.Diagram.Extensions
 {
@@ -44,11 +46,18 @@ namespace Origam.Workbench.Diagram.Extensions
 	    public static Subgraph FindParentSubGraph(this Graph graph, Node node)
 	    {
 		    if (node == null) return null;
-		    
+
+		    IEnumerable<Subgraph> blockInnerSubgraphs = graph
+			    .SubgraphMap
+			    .Select(x => x.Value)
+			    .OfType<BlockSubGraph>()
+			    .SelectMany(x => x.Subgraphs);
+
 		    return graph
 			    .SubgraphMap
 			    .Select(x => x.Value)
 			    .Concat(new []{graph.RootSubgraph})
+			    .Concat(blockInnerSubgraphs)
 			    .FirstOrDefault(subgraph => subgraph.Subgraphs.Contains(node) ||
 			                                subgraph.Nodes.Any(x => x.Id == node.Id));
 
@@ -57,6 +66,7 @@ namespace Origam.Workbench.Diagram.Extensions
 	    public static Node FindNodeOrSubgraph(this Graph graph, string id)
 	    {
 		    if (string.IsNullOrWhiteSpace(id)) return null;
+		    if (graph.RootSubgraph.Id == id) return graph.RootSubgraph;
 		    Node node = graph.FindNode(id);
 		    if (node != null) return node;
 		    return graph.SubgraphMap.ContainsKey(id) 
