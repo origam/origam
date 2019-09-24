@@ -39,6 +39,7 @@ import { getActiveScreen } from "../../model/selectors/getActiveScreen";
 import { onSaveSessionClick } from "../../model/actions/onSaveSessionClick";
 import { onRefreshSessionClick } from "model/actions/onRefreshSessionClick";
 import { onActionClick } from "../../model/actions/Actions/onActionClick";
+import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 
 @inject(({ application }) => {
   const clientFulltextSearch = getClientFulltextSearch(application);
@@ -242,12 +243,13 @@ export const ActionsSection: React.FC<{}> = observer(props => {
         <ToolbarSection bottomLine={actionGroup.section}>
           {actionGroup.actions.map(action => (
             <div
-              className={S.actionItem}
+              className={S.actionItem + (!getIsEnabledAction(action) ? " hidden" : "")}
               onClick={event => onActionClick(action)(event, action)}
             >
               <i className="fas fa-cog icon" />
               <br />
-              {action.caption}
+              {action.caption}<br />
+              {action.id}
             </div>
           ))}
         </ToolbarSection>
