@@ -16,15 +16,15 @@ import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 import { getDataSourceFieldByIndex } from "model/selectors/DataSources/getDataSourceFieldByIndex";
+import { onFieldChange } from "model/actions/DataView/TableView/onFieldChange";
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
-  const { onFieldChange } = getDataView(formPanelView);
   return {
     property,
     onEditorBlur: (event: any) => onFieldBlur(formPanelView)(event),
     onChange: (event: any, value: any) =>
-      onFieldChange(event, row, property, value)
+      onFieldChange(formPanelView)(event, row, property, value)
   };
 })
 @observer
