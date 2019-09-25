@@ -7,7 +7,7 @@ import { Tooltip } from "react-tippy";
 
 @observer
 export class TextEditor extends React.Component<{
-  value: string;
+  value: string | null;
   isReadOnly: boolean;
   isInvalid: boolean;
   invalidMessage?: string;
@@ -64,7 +64,7 @@ export class TextEditor extends React.Component<{
           }}
           className={CS.editor}
           type="text"
-          value={this.props.value}
+          value={this.props.value || ""}
           readOnly={this.props.isReadOnly}
           ref={this.refInput}
           onChange={(event: any) =>

@@ -21,7 +21,7 @@ import { getEntity } from "../../../../model/selectors/DataView/getEntity";
 import { getSessionId } from "model/selectors/getSessionId";
 
 export interface IDropdownEditorProps {
-  value: string;
+  value: string | null;
   textualValue?: string;
   isReadOnly: boolean;
   isInvalid: boolean;
@@ -92,7 +92,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     this.disposers.forEach(d => d());
   }
 
-  componentDidUpdate(prevProps: { isFocused: boolean; textualValue?: string }) {
+  componentDidUpdate(prevProps: { isFocused: boolean; textualValue?: string, value: string | null }) {
     runInAction(() => {
       if (!prevProps.isFocused && this.props.isFocused) {
         this.makeFocusedIfNeeded();
@@ -100,6 +100,10 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
       if (prevProps.textualValue !== this.props.textualValue) {
         this.dirtyTextualValue = undefined;
         this.makeFocusedIfNeeded();
+      }
+      if(prevProps.value !== null && this.props.value === null) {
+        this.dirtyTextualValue = "";
+        this.lookupItems = [];
       }
     });
   }
@@ -141,6 +145,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     if (!this.api) {
       return;
     }
+    this.lookupItems = [];
     this.willReload = false;
     this.isLoading = true;
     this.api
@@ -175,6 +180,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   }
 
   @action.bound handleDroppedDown() {
+    this.lookupItems = [];
     this.loadItems();
   }
 
