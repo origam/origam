@@ -93,7 +93,7 @@ class CalendarWidget extends React.Component<{
   }
 
   @action.bound handleDayClick(event: any, day: moment.Moment) {
-    console.log('Day clicked: ', day.format("DD.MM.YYYY"))
+    console.log("Day clicked: ", day.format("DD.MM.YYYY"));
     this.props.onDayClick && this.props.onDayClick(event, day);
   }
 
@@ -155,13 +155,14 @@ export class DateTimeEditor extends React.Component<{
   foregroundColor?: string;
   backgroundColor?: string;
   onChange?: (event: any, isoDay: string) => void;
+  onChangeByCalendar?: (event: any, isoDay: string) => void;
   onClick?: (event: any) => void;
   onEditorBlur?: (event: any) => void;
   refocuser?: (cb: () => void) => () => void;
 }> {
   @observable isDroppedDown = false;
 
-  refDropdowner = (elm: Dropdowner | null) => this.elmDropdowner = elm;
+  refDropdowner = (elm: Dropdowner | null) => (this.elmDropdowner = elm);
   elmDropdowner: Dropdowner | null = null;
 
   @action.bound handleDropperClick(event: any) {
@@ -229,12 +230,15 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @action.bound handleInputBlur(event: any) {
+    this.dirtyTextualValue = undefined;
     this.props.onEditorBlur && this.props.onEditorBlur(event);
   }
 
   @action.bound handleContainerMouseDown(event: any) {
-    event.preventDefault();
-    this.elmInput && this.elmInput.focus();
+    // event.preventDefault();
+    setTimeout(() => {
+      this.elmInput && this.elmInput.focus();
+    }, 30);
   }
 
   refContainer = (elm: HTMLDivElement | null) => (this.elmContainer = elm);
@@ -251,7 +255,9 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @computed get formattedMomentValue() {
-    return this.momentValue ? this.momentValue.format(this.props.outputFormat) : "";
+    return this.momentValue
+      ? this.momentValue.format(this.props.outputFormat)
+      : "";
   }
 
   @computed get textfieldValue() {
@@ -271,8 +277,11 @@ export class DateTimeEditor extends React.Component<{
   @action.bound handleTextfieldChange(event: any) {
     this.dirtyTextualValue = event.target.value;
     // TODO: Do not insist on spaces!?
+    const simpleFormat = this.props.outputFormat
+      .replace(/MM/g, "M")
+      .replace(/DD/g, "D");
     const dirtyMomentValue = [
-      moment(this.dirtyTextualValue, this.props.outputFormat, true),
+      moment(this.dirtyTextualValue, simpleFormat, true),
       moment(this.dirtyTextualValue, "M")
     ].find(m => m.isValid());
     if (dirtyMomentValue) {
@@ -282,20 +291,23 @@ export class DateTimeEditor extends React.Component<{
       this.dirtyTextualValue &&
       /^[A-Za-z]+$/.test(this.dirtyTextualValue)
     ) {
-      this.props.onChange && this.props.onChange(event, moment().toISOString(true));
+      this.props.onChange &&
+        this.props.onChange(event, moment().toISOString(true));
     }
   }
 
   @action.bound handleDayClick(event: any, day: moment.Moment) {
     this.elmDropdowner && this.elmDropdowner.setDropped(false);
     this.dirtyTextualValue = undefined;
+    this.props.onChangeByCalendar &&
+      this.props.onChangeByCalendar(event, day.toISOString(true));
     this.props.onChange && this.props.onChange(event, day.toISOString(true));
   }
 
   render() {
     return (
       <Dropdowner
-      ref={this.refDropdowner}
+        ref={this.refDropdowner}
         onContainerMouseDown={this.handleContainerMouseDown}
         trigger={({ refTrigger, setDropped }) => (
           <div
