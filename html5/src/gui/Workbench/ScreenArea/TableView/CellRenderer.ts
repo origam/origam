@@ -18,9 +18,10 @@ import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/get
 import { getCellTextByIdx } from "../../../../model/selectors/TablePanelView/getCellText";
 import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
 import { getRowStates } from "model/selectors/RowState/getRowStates";
-import { getRowStateBackgroundColor } from "model/selectors/RowState/getRowStateBackgroundColor";
+import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
+import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 
 export interface ICellRendererData {
   tablePanelView: ITablePanelView;
@@ -210,11 +211,11 @@ export class CellRenderer implements ICellRenderer {
       type: property.column,
       value,
       text,
-      backgroundColor: getRowStateBackgroundColor(
+      backgroundColor: getRowStateColumnBgColor(
         this.tablePanelView,
         recordId,
         property.id
-      ),
+      ) || getRowStateRowBgColor(this.tablePanelView, recordId),
       foregroundColor: getRowStateForegroundColor(
         this.tablePanelView,
         recordId,

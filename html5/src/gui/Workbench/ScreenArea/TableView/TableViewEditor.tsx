@@ -20,7 +20,7 @@ import { TextEditor } from "gui/Components/ScreenElements/Editors/TextEditor";
 import { onFieldBlur } from "../../../../model/actions/DataView/TableView/onFieldBlur";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
-import { getRowStateBackgroundColor } from "model/selectors/RowState/getRowStateBackgroundColor";
+import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
 import { getRowStateAllowUpdate } from "model/selectors/RowState/getRowStateAllowUpdate";
 
 @inject(({ tablePanelView }) => {
@@ -49,7 +49,7 @@ export class TableViewEditor extends React.Component<{
       rowId || "",
       this.props.property!.id
     );
-    const backgroundColor = getRowStateBackgroundColor(
+    const backgroundColor = getRowStateColumnBgColor(
       this.props.property,
       rowId || "",
       this.props.property!.id

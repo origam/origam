@@ -10,7 +10,7 @@ import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateT
 import { DropdownEditor } from "../../../Components/ScreenElements/Editors/DropdownEditor";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
-import { getRowStateBackgroundColor } from "model/selectors/RowState/getRowStateBackgroundColor";
+import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
 import { getRowStateAllowUpdate } from "model/selectors/RowState/getRowStateAllowUpdate";
 import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
@@ -43,7 +43,7 @@ export class FormViewEditor extends React.Component<{
       rowId || "",
       this.props.property!.id
     );
-    const backgroundColor = getRowStateBackgroundColor(
+    const backgroundColor = getRowStateColumnBgColor(
       this.props.property,
       rowId || "",
       this.props.property!.id
