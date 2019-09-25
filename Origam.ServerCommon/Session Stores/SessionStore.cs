@@ -436,7 +436,7 @@ namespace Origam.Server
 
         public static DataRow LoadRow(
             IDataService dataService,
-            DataStructureEntity entity, Guid dataStructureEntityId, Guid rowId)
+            DataStructureEntity entity, Guid dataStructureEntityId, object rowId)
         {
             DataStructureQuery query = new DataStructureQuery
             {
@@ -1282,7 +1282,7 @@ namespace Origam.Server
                 else
                 {
                     var row = LoadRow(dataService, dataStructureEntity,
-                        dataStructureEntityId, new Guid((string)id));
+                        dataStructureEntityId, id);
                     if (row == null)
                     {
                         result.Add(new RowSecurityState
