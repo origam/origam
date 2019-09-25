@@ -50,6 +50,9 @@ export class CellRenderer implements ICellRenderer {
       this.tablePanelView.onCellClick(rowIndex, columnIndex);
     });
 
+    /* BACKGROUND FILL - to make a line under the row */
+    ctx.fillStyle = "#e5e5e5";
+    ctx.fillRect(0, 0, columnWidth * CPR, rowHeight * CPR);
     /* BACKGROUND FILL */
     if (cell.isColumnOrderChangeSource) {
       ctx.fillStyle = "#eeeeff";
@@ -59,9 +62,13 @@ export class CellRenderer implements ICellRenderer {
     } else if (cell.isRowCursor) {
       ctx.fillStyle = "#dddddd";
     } else {
-      ctx.fillStyle = rowIndex % 2 === 0 ? "#ffffff" : "#efefef";
+      if (cell.backgroundColor) {
+        ctx.fillStyle = cell.backgroundColor;
+      } else {
+        ctx.fillStyle = rowIndex % 2 === 0 ? "#ffffff" : "#efefef";
+      }
     }
-    ctx.fillRect(0, 0, columnWidth * CPR, rowHeight * CPR);
+    ctx.fillRect(0, 0, columnWidth * CPR, (rowHeight - 1) * CPR);
 
     // TODO: background color ?
     // TODO: Read only for bool fields in grid
@@ -159,15 +166,11 @@ export class CellRenderer implements ICellRenderer {
     const selectedRowId = getSelectedRowId(this.tablePanelView);
     const recordId = dataTable.getRowId(record);
 
-
     let isInvalid = false;
     let invalidMessage: string | undefined = undefined;
     if (record) {
       const dataView = getDataTable(property);
-      const dsFieldErrors = getDataSourceFieldByName(
-        property,
-        "__Errors"
-      );
+      const dsFieldErrors = getDataSourceFieldByName(property, "__Errors");
       const errors = dsFieldErrors
         ? dataView.getCellValueByDataSourceField(record, dsFieldErrors)
         : null;
