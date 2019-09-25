@@ -418,6 +418,14 @@ namespace Origam.ServerCore.Controller
             {
                 return func();
             }
+            catch(ArgumentOutOfRangeException ex)
+            {
+                return NotFound(ex.ActualValue);
+            }
+            catch (SessionExpiredException ex)
+            {
+                return NotFound(ex);
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, ex);
@@ -477,26 +485,15 @@ namespace Origam.ServerCore.Controller
         private Result<RowData, IActionResult> GetRow(
             DataStructureEntity entity, Guid dataStructureEntityId, Guid rowId)
         {
-            DataStructureQuery query = new DataStructureQuery
-            {
-                DataSourceType = QueryDataSourceType.DataStructureEntity,
-                DataSourceId = dataStructureEntityId,
-                Entity = entity.Name,
-                EnforceConstraints = false
-            };
-            query.Parameters.Add(new QueryParameter("Id", rowId));
-            DataSet dataSet = dataService.GetEmptyDataSet(
-                entity.RootEntity.ParentItemId, CultureInfo.InvariantCulture);
-            dataService.LoadDataSet(query, SecurityManager.CurrentPrincipal,
-                dataSet, null);
-            DataTable dataSetTable = dataSet.Tables[entity.Name];
-            if(dataSetTable.Rows.Count == 0)
+            DataRow row = SessionStore.LoadRow(dataService, entity, 
+                dataStructureEntityId, rowId);
+            if(row == null)
             {
                 return Result.Fail<RowData, IActionResult>(
                     NotFound("Requested data row was not found."));
             }
             return Result.Ok<RowData, IActionResult>(
-                new RowData{Row =dataSetTable.Rows[0], Entity = entity});
+                new RowData{Row = row, Entity = entity});
         }
         private IEnumerable<object[]> GetRowData(
             LookupListInput input, DataTable dataTable)
