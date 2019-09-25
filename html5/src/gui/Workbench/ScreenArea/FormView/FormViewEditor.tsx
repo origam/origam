@@ -111,7 +111,7 @@ export class FormViewEditor extends React.Component<{
         return (
           <DateTimeEditor
             value={this.props.value}
-            outputFormat={"DD.MM.YYYY HH:mm"}
+            outputFormat={this.props.property!.formatterPattern}
             isReadOnly={readOnly}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}

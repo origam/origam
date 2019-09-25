@@ -84,7 +84,7 @@ export class TableViewEditor extends React.Component<{
         return (
           <DateTimeEditor
             value={this.props.getCellValue!()}
-            outputFormat={"DD.MM.YYYY HH:mm"}
+            outputFormat={this.props.property!.formatterPattern}
             isReadOnly={readOnly}
             isInvalid={false}
             isFocused={false}
