@@ -203,6 +203,7 @@ namespace Origam.ServerCore.Controller
                 return Ok(sessionObjects.UIService.ExecuteActionQuery(input));
             });
         }
+        
         [HttpPost("[action]")]
         public IActionResult ExecuteAction(
             [FromBody][Required]ExecuteActionInput input)
@@ -212,44 +213,83 @@ namespace Origam.ServerCore.Controller
                 return Ok(sessionObjects.UIService.ExecuteAction(input));
             });
         }
+        
         [HttpPost("[action]")]
         public IActionResult GetLookupLabels([FromBody]LookupLabelsInput input)
         {
             return RunWithErrorHandler(() =>
             {
                 // todo: unify approach
-                if(input.MenuId == Guid.Empty)
+                var checkResult = CheckLookup(input);
+                if (checkResult != null)
                 {
-                    SecurityTools.CurrentUserProfile();
+                    return checkResult;
                 }
-                else
-                {
-                    var menuResult = FindItem<FormReferenceMenuItem>(
-                        input.MenuId)
-                        .OnSuccess(Authorize)
-                        .OnSuccess(menuItem 
-                            => CheckLookupIsAllowedInMenu(
-                                menuItem, input.LookupId));
-                    if(menuResult.IsFailure)
-                    {
-                        return menuResult.Error;
-                    }
-                }
-                Dictionary<Guid, string> labelDictionary 
-                    = input.LabelIds.ToDictionary(
-                        id => id,
-                        id =>
-                        {
-                            object lookupResult 
-                                = lookupService.GetDisplayText(
-                                    input.LookupId, id, false, true, null);
-                            return lookupResult is decimal
-                                ? ((decimal) lookupResult).ToString("0.#")
-                                : lookupResult.ToString();
-                        });
+                var labelDictionary = GetLookupLabelsInternal(input);
                 return Ok(labelDictionary);
             });
         }
+
+        private IActionResult CheckLookup(LookupLabelsInput input)
+        {
+            if (input.MenuId == Guid.Empty)
+            {
+                SecurityTools.CurrentUserProfile();
+            }
+            else
+            {
+                var menuResult = FindItem<FormReferenceMenuItem>(
+                    input.MenuId)
+                    .OnSuccess(Authorize)
+                    .OnSuccess(menuItem
+                        => CheckLookupIsAllowedInMenu(
+                            menuItem, input.LookupId));
+                if (menuResult.IsFailure)
+                {
+                    return menuResult.Error;
+                }
+            }
+            return null;
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult GetLookupLabelsEx([FromBody]LookupLabelsInput[] inputs)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                Dictionary<Guid, Dictionary<Guid, string>> result
+                    = new Dictionary<Guid, Dictionary<Guid, string>>();
+                foreach (var input in inputs)
+                {
+                    var checkResult = CheckLookup(input);
+                    if (checkResult != null)
+                    {
+                        return checkResult;
+                    }
+                    var labelDictionary = GetLookupLabelsInternal(input);
+                    result.Add(input.LookupId, labelDictionary);
+                }
+                return Ok(result);
+            });
+        }
+
+        private Dictionary<Guid, string> GetLookupLabelsInternal(LookupLabelsInput input)
+        {
+            Dictionary<Guid, string> labelDictionary
+                = input.LabelIds.ToDictionary(
+                    id => id,
+                    id =>
+                    {
+                        object lookupResult
+                            = lookupService.GetDisplayText(
+                                input.LookupId, id, false, true, null);
+                        return lookupResult is decimal
+                            ? ((decimal)lookupResult).ToString("0.#")
+                            : lookupResult.ToString();
+                    });
+            return labelDictionary;
+        }
+
         [HttpPost("[action]")]
         public IActionResult GetLookupList([FromBody]LookupListInput input)
         {
