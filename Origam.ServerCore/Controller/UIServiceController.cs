@@ -418,6 +418,14 @@ namespace Origam.ServerCore.Controller
             {
                 return func();
             }
+            catch(ArgumentOutOfRangeException ex)
+            {
+                return NotFound(ex.ActualValue);
+            }
+            catch (SessionExpiredException ex)
+            {
+                return NotFound(ex);
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, ex);

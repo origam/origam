@@ -1283,7 +1283,18 @@ namespace Origam.Server
                 {
                     var row = LoadRow(dataService, dataStructureEntity,
                         dataStructureEntityId, new Guid((string)id));
-                    result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
+                    if (row == null)
+                    {
+                        result.Add(new RowSecurityState
+                        {
+                            Id = id,
+                            NotFound = true
+                        });
+                    }
+                    else
+                    {
+                        result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
+                    }
                 }
             }
             return result;

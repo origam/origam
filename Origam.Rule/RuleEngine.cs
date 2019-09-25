@@ -3656,26 +3656,27 @@ namespace Origam.Rule
 			if(row.Table.ExtendedProperties.Contains("EntityId"))
 			{
 				Guid entityId = (Guid)row.Table.ExtendedProperties["EntityId"];
-
 				XmlContainer originalData = DatasetTools.GetRowXml(row,
                     DataRowVersion.Original);
 				XmlContainer actualData = DatasetTools.GetRowXml(row, 
                     row.HasVersion(DataRowVersion.Proposed) 
                     ? DataRowVersion.Proposed : DataRowVersion.Default);
-
 				EntityFormatting formatting = Formatting(actualData, 
                     entityId, Guid.Empty, null);
 				bool isNew = row.RowState == DataRowState.Added 
                     || row.RowState == DataRowState.Detached;
-				bool allowDelete = RowLevelSecurityState(originalData, 
-                    actualData, null, CredentialType.Delete, entityId, 
-                    Guid.Empty, isNew);
-				bool allowCreate = RowLevelSecurityState(originalData, 
-                    actualData, null, CredentialType.Create, entityId, 
-                    Guid.Empty, isNew);
-				RowSecurityState result = new RowSecurityState(
-                    DatasetTools.PrimaryKey(row)[0], formatting.BackColor.ToArgb(),
-                    formatting.ForeColor.ToArgb(), allowDelete, allowCreate);
+				RowSecurityState result = new RowSecurityState
+                {
+                    Id = DatasetTools.PrimaryKey(row)[0],
+                    BackgroundColor = formatting.BackColor.ToArgb(),
+                    ForegroundColor = formatting.ForeColor.ToArgb(),
+                    AllowDelete = RowLevelSecurityState(originalData,
+                        actualData, null, CredentialType.Delete, entityId,
+                    Guid.Empty, isNew),
+                    AllowCreate = RowLevelSecurityState(originalData,
+                        actualData, null, CredentialType.Create, entityId,
+                        Guid.Empty, isNew)
+                };
 
 				// columns
 				foreach(DataColumn col in row.Table.Columns)
