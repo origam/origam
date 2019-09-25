@@ -161,6 +161,9 @@ export class DateTimeEditor extends React.Component<{
 }> {
   @observable isDroppedDown = false;
 
+  refDropdowner = (elm: Dropdowner | null) => this.elmDropdowner = elm;
+  elmDropdowner: Dropdowner | null = null;
+
   @action.bound handleDropperClick(event: any) {
     event.stopPropagation();
     this.makeDroppedDown();
@@ -284,6 +287,7 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @action.bound handleDayClick(event: any, day: moment.Moment) {
+    this.elmDropdowner && this.elmDropdowner.setDropped(false);
     this.dirtyTextualValue = undefined;
     this.props.onChange && this.props.onChange(event, day.toISOString(true));
   }
@@ -291,6 +295,7 @@ export class DateTimeEditor extends React.Component<{
   render() {
     return (
       <Dropdowner
+      ref={this.refDropdowner}
         onContainerMouseDown={this.handleContainerMouseDown}
         trigger={({ refTrigger, setDropped }) => (
           <div
