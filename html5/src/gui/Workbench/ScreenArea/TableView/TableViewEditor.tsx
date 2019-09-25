@@ -22,16 +22,16 @@ import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowI
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
 import { getRowStateAllowUpdate } from "model/selectors/RowState/getRowStateAllowUpdate";
+import { onFieldChange } from "model/actions/DataView/TableView/onFieldChange";
 
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;
   const property = getSelectedProperty(tablePanelView)!;
-  const { onFieldChange } = getDataView(tablePanelView);
   return {
     property,
     getCellValue: () => getCellValue(tablePanelView, row, property),
     onChange: (event: any, value: any) =>
-      onFieldChange(event, row, property, value),
+      onFieldChange(tablePanelView)(event, row, property, value),
     onEditorBlur: (event: any) => onFieldBlur(tablePanelView)(event)
   };
 })
