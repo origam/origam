@@ -93,6 +93,7 @@ class CalendarWidget extends React.Component<{
   }
 
   @action.bound handleDayClick(event: any, day: moment.Moment) {
+    console.log('Day clicked: ', day.format("DD.MM.YYYY"))
     this.props.onDayClick && this.props.onDayClick(event, day);
   }
 
@@ -145,7 +146,7 @@ class CalendarWidget extends React.Component<{
 
 @observer
 export class DateTimeEditor extends React.Component<{
-  value: string;
+  value: string | null;
   outputFormat: string;
   isReadOnly?: boolean;
   isInvalid?: boolean;
@@ -197,7 +198,7 @@ export class DateTimeEditor extends React.Component<{
     this.disposers.forEach(d => d());
   }
 
-  componentDidUpdate(prevProps: { isFocused?: boolean }) {
+  componentDidUpdate(prevProps: { isFocused?: boolean; value: string | null }) {
     runInAction(() => {
       if (!prevProps.isFocused && this.props.isFocused) {
         this.makeFocusedIfNeeded();
@@ -206,6 +207,10 @@ export class DateTimeEditor extends React.Component<{
         this.dirtyTextualValue = undefined;
         this.makeFocusedIfNeeded();
       }*/
+
+      if (prevProps.value !== null && this.props.value === null) {
+        this.dirtyTextualValue = "";
+      }
     });
   }
 
@@ -237,11 +242,13 @@ export class DateTimeEditor extends React.Component<{
   @observable dirtyTextualValue: string | undefined;
 
   @computed get momentValue() {
-    return moment(this.props.value !== "" ? this.props.value : undefined);
+    return this.props.value !== "" && this.props.value !== null
+      ? moment(this.props.value)
+      : null;
   }
 
   @computed get formattedMomentValue() {
-    return this.momentValue.format(this.props.outputFormat);
+    return this.momentValue ? this.momentValue.format(this.props.outputFormat) : "";
   }
 
   @computed get textfieldValue() {
@@ -267,18 +274,18 @@ export class DateTimeEditor extends React.Component<{
     ].find(m => m.isValid());
     if (dirtyMomentValue) {
       this.props.onChange &&
-        this.props.onChange(event, dirtyMomentValue.toISOString());
+        this.props.onChange(event, dirtyMomentValue.toISOString(true));
     } else if (
       this.dirtyTextualValue &&
       /^[A-Za-z]+$/.test(this.dirtyTextualValue)
     ) {
-      this.props.onChange && this.props.onChange(event, moment().toISOString());
+      this.props.onChange && this.props.onChange(event, moment().toISOString(true));
     }
   }
 
   @action.bound handleDayClick(event: any, day: moment.Moment) {
     this.dirtyTextualValue = undefined;
-    this.props.onChange && this.props.onChange(event, day.toISOString());
+    this.props.onChange && this.props.onChange(event, day.toISOString(true));
   }
 
   render() {
@@ -345,8 +352,8 @@ export class DateTimeEditor extends React.Component<{
           <div className={S.droppedPanelContainer}>
             <CalendarWidget
               onDayClick={this.handleDayClick}
-              initialDisplayDate={this.momentValue}
-              selectedDay={this.momentValue}
+              initialDisplayDate={this.momentValue || moment()}
+              selectedDay={this.momentValue || moment()}
             />
           </div>
         )}
