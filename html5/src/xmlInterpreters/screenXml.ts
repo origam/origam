@@ -132,6 +132,7 @@ export function interpretScreenXml(
     // isSessioned: windowXml.attributes.UseSession,
     dataSources: dataSourcesXml.elements.map((dataSource: any) => {
       return new DataSource({
+        rowState: new RowState({}),
         entity: dataSource.attributes.Entity,
         dataStructureEntityId: dataSource.attributes.DataStructureEntityId,
         identifier: dataSource.attributes.Identifier,
@@ -213,6 +214,8 @@ export function interpretScreenXml(
           });
         }
       );
+      
+
       const actions = findActions(dataView).map(
         action =>
           new Action({
@@ -274,7 +277,7 @@ export function interpretScreenXml(
           orderingConfiguration: new OrderingConfiguration()
         }),
         formPanelView: new FormPanelView(),
-        rowState: new RowState({}),
+
         properties,
         actions
       });

@@ -3,12 +3,14 @@ import { observer } from "mobx-react";
 import { action } from "mobx";
 import S from "./TextEditor.module.css";
 import CS from "./CommonStyle.module.css";
+import { Tooltip } from "react-tippy";
 
 @observer
 export class TextEditor extends React.Component<{
-  value: string;
+  value: string | null;
   isReadOnly: boolean;
   isInvalid: boolean;
+  invalidMessage?: string;
   isFocused: boolean;
   backgroundColor?: string;
   foregroundColor?: string;
@@ -62,7 +64,7 @@ export class TextEditor extends React.Component<{
           }}
           className={CS.editor}
           type="text"
-          value={this.props.value}
+          value={this.props.value || ""}
           readOnly={this.props.isReadOnly}
           ref={this.refInput}
           onChange={(event: any) =>
@@ -74,8 +76,10 @@ export class TextEditor extends React.Component<{
           onBlur={this.props.onEditorBlur}
         />
         {this.props.isInvalid && (
-          <div className={S.notification}>
-            <i className="fas fa-exclamation-circle red" />
+          <div className={CS.notification}>
+            <Tooltip html={this.props.invalidMessage} arrow={true}>
+              <i className="fas fa-exclamation-circle red" />
+            </Tooltip>
           </div>
         )}
       </div>

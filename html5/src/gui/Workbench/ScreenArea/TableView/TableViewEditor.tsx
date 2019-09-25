@@ -20,18 +20,18 @@ import { TextEditor } from "gui/Components/ScreenElements/Editors/TextEditor";
 import { onFieldBlur } from "../../../../model/actions/DataView/TableView/onFieldBlur";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
-import { getRowStateBackgroundColor } from "model/selectors/RowState/getRowStateBackgroundColor";
+import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
 import { getRowStateAllowUpdate } from "model/selectors/RowState/getRowStateAllowUpdate";
+import { onFieldChange } from "model/actions/DataView/TableView/onFieldChange";
 
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;
   const property = getSelectedProperty(tablePanelView)!;
-  const { onFieldChange } = getDataView(tablePanelView);
   return {
     property,
     getCellValue: () => getCellValue(tablePanelView, row, property),
     onChange: (event: any, value: any) =>
-      onFieldChange(event, row, property, value),
+      onFieldChange(tablePanelView)(event, row, property, value),
     onEditorBlur: (event: any) => onFieldBlur(tablePanelView)(event)
   };
 })
@@ -49,7 +49,7 @@ export class TableViewEditor extends React.Component<{
       rowId || "",
       this.props.property!.id
     );
-    const backgroundColor = getRowStateBackgroundColor(
+    const backgroundColor = getRowStateColumnBgColor(
       this.props.property,
       rowId || "",
       this.props.property!.id
@@ -84,7 +84,7 @@ export class TableViewEditor extends React.Component<{
         return (
           <DateTimeEditor
             value={this.props.getCellValue!()}
-            outputFormat={"DD.MM.YYYY HH:mm"}
+            outputFormat={this.props.property!.formatterPattern}
             isReadOnly={readOnly}
             isInvalid={false}
             isFocused={false}

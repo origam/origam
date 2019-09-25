@@ -3,6 +3,7 @@ import { observer, Observer, inject } from "mobx-react";
 import { action, observable, computed, runInAction } from "mobx";
 import S from "./DropdownEditor.module.css";
 import CS from "./CommonStyle.module.css";
+import { Tooltip } from "react-tippy";
 
 import _ from "lodash";
 import { MultiGrid, AutoSizer } from "react-virtualized";
@@ -20,10 +21,11 @@ import { getEntity } from "../../../../model/selectors/DataView/getEntity";
 import { getSessionId } from "model/selectors/getSessionId";
 
 export interface IDropdownEditorProps {
-  value: string;
+  value: string | null;
   textualValue?: string;
   isReadOnly: boolean;
   isInvalid: boolean;
+  invalidMessage?: string;
   isFocused: boolean;
   foregroundColor?: string;
   backgroundColor?: string;
@@ -90,7 +92,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     this.disposers.forEach(d => d());
   }
 
-  componentDidUpdate(prevProps: { isFocused: boolean; textualValue?: string }) {
+  componentDidUpdate(prevProps: { isFocused: boolean; textualValue?: string, value: string | null }) {
     runInAction(() => {
       if (!prevProps.isFocused && this.props.isFocused) {
         this.makeFocusedIfNeeded();
@@ -98,6 +100,10 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
       if (prevProps.textualValue !== this.props.textualValue) {
         this.dirtyTextualValue = undefined;
         this.makeFocusedIfNeeded();
+      }
+      if(prevProps.value !== null && this.props.value === null) {
+        this.dirtyTextualValue = "";
+        this.lookupItems = [];
       }
     });
   }
@@ -139,6 +145,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     if (!this.api) {
       return;
     }
+    this.lookupItems = [];
     this.willReload = false;
     this.isLoading = true;
     this.api
@@ -173,6 +180,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   }
 
   @action.bound handleDroppedDown() {
+    this.lookupItems = [];
     this.loadItems();
   }
 
@@ -275,7 +283,9 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
             />
             {this.props.isInvalid && (
               <div className={CS.notification}>
-                <i className="fas fa-exclamation-circle red" />
+                <Tooltip html={this.props.invalidMessage} arrow={true}>
+                  <i className="fas fa-exclamation-circle red" />
+                </Tooltip>
               </div>
             )}
             {!this.props.isReadOnly && (

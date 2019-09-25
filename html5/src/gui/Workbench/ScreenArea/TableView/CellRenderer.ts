@@ -18,8 +18,10 @@ import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/get
 import { getCellTextByIdx } from "../../../../model/selectors/TablePanelView/getCellText";
 import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
 import { getRowStates } from "model/selectors/RowState/getRowStates";
-import { getRowStateBackgroundColor } from "model/selectors/RowState/getRowStateBackgroundColor";
+import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
+import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 
 export interface ICellRendererData {
   tablePanelView: ITablePanelView;
@@ -49,6 +51,9 @@ export class CellRenderer implements ICellRenderer {
       this.tablePanelView.onCellClick(rowIndex, columnIndex);
     });
 
+    /* BACKGROUND FILL - to make a line under the row */
+    ctx.fillStyle = "#e5e5e5";
+    ctx.fillRect(0, 0, columnWidth * CPR, rowHeight * CPR);
     /* BACKGROUND FILL */
     if (cell.isColumnOrderChangeSource) {
       ctx.fillStyle = "#eeeeff";
@@ -58,9 +63,13 @@ export class CellRenderer implements ICellRenderer {
     } else if (cell.isRowCursor) {
       ctx.fillStyle = "#dddddd";
     } else {
-      ctx.fillStyle = rowIndex % 2 === 0 ? "#ffffff" : "#efefef";
+      if (cell.backgroundColor) {
+        ctx.fillStyle = cell.backgroundColor;
+      } else {
+        ctx.fillStyle = rowIndex % 2 === 0 ? "#ffffff" : "#efefef";
+      }
     }
-    ctx.fillRect(0, 0, columnWidth * CPR, rowHeight * CPR);
+    ctx.fillRect(0, 0, columnWidth * CPR, (rowHeight - 1) * CPR);
 
     // TODO: background color ?
     // TODO: Read only for bool fields in grid
@@ -158,6 +167,36 @@ export class CellRenderer implements ICellRenderer {
     const selectedRowId = getSelectedRowId(this.tablePanelView);
     const recordId = dataTable.getRowId(record);
 
+    let isInvalid = false;
+    let invalidMessage: string | undefined = undefined;
+    if (record) {
+      const dataView = getDataTable(property);
+      const dsFieldErrors = getDataSourceFieldByName(property, "__Errors");
+      const errors = dsFieldErrors
+        ? dataView.getCellValueByDataSourceField(record, dsFieldErrors)
+        : null;
+
+      const errMap: Map<number, string> | undefined = errors
+        ? new Map(
+            Object.entries<string>(errors.fieldErrors).map(
+              ([dsIndexStr, errMsg]: [string, string]) => [
+                parseInt(dsIndexStr, 10),
+                errMsg
+              ]
+            )
+          )
+        : undefined;
+
+      const errMsg =
+        dsFieldErrors && errMap
+          ? errMap.get(property.dataSourceIndex)
+          : undefined;
+      if (errMsg) {
+        isInvalid = true;
+        invalidMessage = errMsg;
+      }
+    }
+
     return {
       isCellCursor:
         property.id === selectedColumnId && recordId === selectedRowId,
@@ -167,16 +206,16 @@ export class CellRenderer implements ICellRenderer {
       isColumnOrderChangeTarget:
         this.tablePanelView.columnOrderChangingTargetId === property.id,
       isLoading,
-      isInvalid: false,
+      isInvalid,
       formatterPattern: property.formatterPattern,
       type: property.column,
       value,
       text,
-      backgroundColor: getRowStateBackgroundColor(
+      backgroundColor: getRowStateColumnBgColor(
         this.tablePanelView,
         recordId,
         property.id
-      ),
+      ) || getRowStateRowBgColor(this.tablePanelView, recordId),
       foregroundColor: getRowStateForegroundColor(
         this.tablePanelView,
         recordId,

@@ -43,6 +43,7 @@
   display: flex;
 }
 
+
 .notification {
   height: 100%;
   position: absolute;
@@ -53,7 +54,7 @@
   z-index: 100;
 }
 
-.notification:global(.red) {
+.notification :global(.red) {
   color: #ff0000;
   text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff,
     1px 1px 0 #fff;
