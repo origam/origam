@@ -25,13 +25,13 @@ export function ErrorStateDef() {
 
 export const errDialogSvc = (ctx: any) => ({
   errDialog: action((mCtx: any, event: any) => (send: any, onEvent: any) => {
-    const responseData = _.get(event, "error.response.data");
-    const errorMessage = responseData ? responseData.message : "Error";
-    if (responseData) {
-      console.log("Show dialog:", responseData.message);
-    } else {
-      console.log("Show dialog - general:", event.error);
-    }
+    const responseMessage =
+      _.get(event, "error.response.data.message") ||
+      _.get(event, "error.response.data.Message");
+    const exceptionMessage = _.get(event, "message");
+    const errorMessage =
+      responseMessage || exceptionMessage || "" + event.error;
+
     return getDialogStack(ctx).pushDialog(
       "error_dialog",
       <ErrorDialogComponent

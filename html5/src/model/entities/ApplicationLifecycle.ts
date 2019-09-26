@@ -9,7 +9,6 @@ import { getApi } from "../selectors/getApi";
 import { getApplication } from "../selectors/getApplication";
 import { createWorkbench } from "../factories/createWorkbench";
 
-
 const loginFormSubmit = "loginFormSubmit";
 const loginSuccessful = "loginSuccessful";
 const loginFailed = "loginFailed";
@@ -144,26 +143,31 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
       });
       this.anounceAuthToken(token);
       this.interpreter.send(loginSuccessful);
-    } catch (e) {
+    } catch (error) {
+      console.error(error);
       this.setLoginPageMessage("Login failed.");
       this.interpreter.send(loginFailed);
-      console.error(e);
     }
   }
 
   *performLogout(args: any) {
-    const api = getApi(this);
-    const application = getApplication(this);
-    window.sessionStorage.removeItem("origamAuthToken");
-
-    application.resetWorkbench();
     try {
-      yield api.logout();
-    } finally {
-      api.resetAccessToken();
+      const api = getApi(this);
+      const application = getApplication(this);
+      window.sessionStorage.removeItem("origamAuthToken");
+
+      application.resetWorkbench();
+      try {
+        yield api.logout();
+      } finally {
+        api.resetAccessToken();
+      }
+      this.interpreter.send(logoutSuccessful);
+      return null;
+    } catch (error) {
+      console.error(error)
+      this.interpreter.send({ type: logoutFailed, error });
     }
-    this.interpreter.send(logoutSuccessful);
-    return null;
   }
 
   @action.bound reuseAuthToken() {
