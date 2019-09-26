@@ -1,12 +1,14 @@
 import { IActionResultType } from "../SelectionDialog/types";
 import { getWorkbenchLifecycle } from "../../selectors/getWorkbenchLifecycle";
 import { DialogInfo } from "model/entities/OpenedScreen";
+import { closeForm } from "../closeForm";
+
 export function processActionResult(ctx: any) {
   return function processActionResult(actionResultList: any) {
     console.log("actionresult:", actionResultList);
     for (let actionResult of actionResultList)
       switch (actionResult.type) {
-        case IActionResultType.OpenForm:
+        case IActionResultType.OpenForm: {
           const { request } = actionResult;
           const {
             objectId,
@@ -31,6 +33,12 @@ export function processActionResult(ctx: any) {
             dialogInfo,
             parameters
           );
+          break;
+        }
+        case IActionResultType.DestroyForm: {
+          closeForm(ctx)();
+          break;
+        }
       }
   };
 }

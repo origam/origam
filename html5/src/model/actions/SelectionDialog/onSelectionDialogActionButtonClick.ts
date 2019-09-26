@@ -28,7 +28,7 @@ export function onSelectionDialogActionButtonClick(ctx: any) {
       if (rowId) {
         const selectedItems: string[] = [rowId];
         yield lifecycle.onExecuteAction(gridId, entity, action, selectedItems);
-        closeForm(ctx)();
+        // closeForm(ctx)();
       }
     } finally {
       isRunning = false;

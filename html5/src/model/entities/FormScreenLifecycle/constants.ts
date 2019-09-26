@@ -31,6 +31,7 @@ export const onDestroySessionDone = "onDestroySessionDone";
 
 export const sExecuteAction = "sExecuteAction";
 export const onExecuteActionDone = "onExecuteActionDone";
+export const onExecuteActionFailed = "onExecuteActionFailed";
 
 export const sQuestionSaveDataBeforeClosing = "sQuestionSaveDataBeforeClosing";
 export const sQuestionSaveDataBeforeRefresh = "sQuestionSaveDataBeforeRefresh";

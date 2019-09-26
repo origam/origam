@@ -25,8 +25,10 @@ import {
   sQuestionSaveDataBeforeClosing,
   sQuestionSaveDataBeforeRefresh,
   sRefreshSession,
-  sSaveSession
+  sSaveSession,
+  onExecuteActionFailed
 } from "./constants";
+import { ErrorStateDef } from "../ErrorDialog";
 
 export const FormScreenDef = () => ({
   initial: sInitUI,
@@ -115,11 +117,17 @@ export const FormScreenDef = () => ({
     [sExecuteAction]: {
       invoke: { src: "executeAction" },
       on: {
-        [onExecuteActionDone]: sFormScreenRunning
+        [onExecuteActionDone]: sFormScreenRunning,
+        [onExecuteActionFailed]: 'sError'
       }
     },
     [sQuestionSaveDataBeforeClosing]: RequestCloseFormDef(),
-    [sQuestionSaveDataBeforeRefresh]: RequestReloadFormDef()
+    [sQuestionSaveDataBeforeRefresh]: RequestReloadFormDef(),
+
+    sError: {
+      ...ErrorStateDef(),
+      onDone: sFormScreenRunning
+    }
   }
 });
 
@@ -212,3 +220,5 @@ const RequestReloadFormDef = () => ({
     }
   }
 });
+
+

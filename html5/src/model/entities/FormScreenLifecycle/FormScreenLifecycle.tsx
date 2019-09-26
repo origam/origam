@@ -23,8 +23,31 @@ import { getMenuItemId } from "../../selectors/getMenuItemId";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { getSessionId } from "../../selectors/getSessionId";
 import { IFormScreenLifecycle } from "../types/IFormScreenLifecycle";
-import { onCreateRow, onCreateRowDone, onDeleteRow, onDeleteRowDone, onExecuteAction, onExecuteActionDone, onFlushData, onFlushDataDone, onInitUIDone, onLoadDataDone, onPerformCancel, onPerformNoSave, onPerformSave, onRefreshSession, onRefreshSessionDone, onRequestScreenClose, onSaveSession, onSaveSessionDone, sFormScreenRunning, onRequestScreenReload } from "./constants";
+import {
+  onCreateRow,
+  onCreateRowDone,
+  onDeleteRow,
+  onDeleteRowDone,
+  onExecuteAction,
+  onExecuteActionDone,
+  onFlushData,
+  onFlushDataDone,
+  onInitUIDone,
+  onLoadDataDone,
+  onPerformCancel,
+  onPerformNoSave,
+  onPerformSave,
+  onRefreshSession,
+  onRefreshSessionDone,
+  onRequestScreenClose,
+  onSaveSession,
+  onSaveSessionDone,
+  sFormScreenRunning,
+  onRequestScreenReload,
+  onExecuteActionFailed
+} from "./constants";
 import { FormScreenDef } from "./FormScreenDef";
+import { errDialogSvc } from "../ErrorDialog";
 
 export class FormScreenLifecycle implements IFormScreenLifecycle {
   $type_IFormScreenLifecycle: 1 = 1;
@@ -52,7 +75,8 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
           event.selectedItems
         ),
       questionSaveData: (ctx, event) => (send, onEvent) =>
-        this.questionSaveData()
+        this.questionSaveData(),
+      ...errDialogSvc(this)
     },
     actions: {
       applyInitUIResult: (ctx, event) => this.applyInitUIResult(event as any),
@@ -63,6 +87,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
       isReadData: (ctx, event) => this.isReadData
     }
   });
+
 
   stateAtom = createAtom("formScreenLifecycleState");
   interpreter = interpret(this.machine).onTransition((state, event) => {
@@ -184,37 +209,41 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
     action: IAction,
     selectedItems: string[]
   ) {
-    const parameters: {[key: string]: any} = {};
-    for(let parameter of action.parameters) {
-      parameters[parameter.name] = parameter.fieldName;
+    try {
+      const parameters: { [key: string]: any } = {};
+      for (let parameter of action.parameters) {
+        parameters[parameter.name] = parameter.fieldName;
+      }
+      const api = getApi(this);
+      const queryResult = yield api.executeActionQuery({
+        SessionFormIdentifier: getSessionId(this),
+        Entity: entity,
+        ActionType: action.type,
+        ActionId: action.id,
+        ParameterMappings: parameters,
+        SelectedItems: selectedItems,
+        InputParameters: {}
+      });
+      console.log("EAQ", queryResult);
+
+      const result = yield api.executeAction({
+        SessionFormIdentifier: getSessionId(this),
+        Entity: entity,
+        ActionType: action.type,
+        ActionId: action.id,
+        ParameterMappings: parameters,
+        SelectedItems: selectedItems,
+        InputParameters: {},
+        RequestingGrid: gridId
+      });
+      console.log("EA", result);
+
+      processActionResult(action)(result);
+
+      this.interpreter.send(onExecuteActionDone);
+    } catch (error) {
+      this.interpreter.send({type: onExecuteActionFailed, error});
     }
-    const api = getApi(this);
-    const queryResult = yield api.executeActionQuery({
-      SessionFormIdentifier: getSessionId(this),
-      Entity: entity,
-      ActionType: action.type,
-      ActionId: action.id,
-      ParameterMappings: parameters,
-      SelectedItems: selectedItems,
-      InputParameters: {}
-    });
-    console.log("EAQ", queryResult);
-
-    const result = yield api.executeAction({
-      SessionFormIdentifier: getSessionId(this),
-      Entity: entity,
-      ActionType: action.type,
-      ActionId: action.id,
-      ParameterMappings: parameters,
-      SelectedItems: selectedItems,
-      InputParameters: {},
-      RequestingGrid: gridId
-    });
-    console.log("EA", result);
-
-    processActionResult(action)(result);
-
-    this.interpreter.send(onExecuteActionDone);
   }
 
   @action.bound
