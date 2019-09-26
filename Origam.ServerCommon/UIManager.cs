@@ -27,7 +27,8 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using Origam;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Origam.Extensions;
 using Origam.Gui;
 using Origam.OrigamEngine.ModelXmlBuilders;
@@ -68,10 +69,17 @@ namespace Origam.Server
             // and then converted back to DataDocumentFx
             foreach(object key in request.Parameters.Keys.ToList<object>())
             {
-                if (request.Parameters[key] is XmlDocument)
+                object value = request.Parameters[key];
+                if (value is XmlDocument xmlDoc)
                 {
                     request.Parameters[key] = new XmlContainer(
-                        request.Parameters[key] as XmlDocument);
+                        xmlDoc);
+                }
+                if (value is JObject jobj)
+                {
+                    request.Parameters[key] = new XmlContainer(
+                        JsonConvert.DeserializeXmlNode(jobj.ToString())
+                        );
                 }
             }
             bool isExclusive = false;
