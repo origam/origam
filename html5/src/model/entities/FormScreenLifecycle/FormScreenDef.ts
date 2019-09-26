@@ -26,7 +26,15 @@ import {
   sQuestionSaveDataBeforeRefresh,
   sRefreshSession,
   sSaveSession,
-  onExecuteActionFailed
+  onExecuteActionFailed,
+  onRefreshSessionFailed,
+  onSaveSessionFailed,
+  onDeleteRowFailed,
+  onCreateRowFailed,
+  onFlushDataFailed,
+  onLoadDataFailed,
+  onLoadDataDone,
+  onInitUIFailed
 } from "./constants";
 import { ErrorStateDef } from "../ErrorDialog";
 
@@ -46,15 +54,17 @@ export const FormScreenDef = () => ({
             target: sLoadData,
             actions: "applyInitUIResult"
           }
-        ]
+        ],
+        [onInitUIFailed]: "sError"
       }
     },
     [sLoadData]: {
       invoke: { src: "loadData" },
       on: {
-        onLoadDataDone: {
+        [onLoadDataDone]: {
           target: sFormScreenRunning
-        }
+        },
+        [onLoadDataFailed]: "sError"
       }
     },
     [sFormScreenRunning]: {
@@ -83,7 +93,8 @@ export const FormScreenDef = () => ({
       on: {
         [onFlushDataDone]: {
           target: sFormScreenRunning
-        }
+        },
+        [onFlushDataFailed]: "sError"
       }
     },
     [sCreateRow]: {
@@ -91,7 +102,8 @@ export const FormScreenDef = () => ({
       on: {
         [onCreateRowDone]: {
           target: sFormScreenRunning
-        }
+        },
+        [onCreateRowFailed]: "sError"
       }
     },
     [sDeleteRow]: {
@@ -99,19 +111,22 @@ export const FormScreenDef = () => ({
       on: {
         [onDeleteRowDone]: {
           target: sFormScreenRunning
-        }
+        },
+        [onDeleteRowFailed]: "sError"
       }
     },
     [sSaveSession]: {
       invoke: { src: "saveSession" },
       on: {
-        [onSaveSessionDone]: sFormScreenRunning
+        [onSaveSessionDone]: sFormScreenRunning,
+        [onSaveSessionFailed]: "sError"
       }
     },
     [sRefreshSession]: {
       invoke: { src: "refreshSession" },
       on: {
-        [onRefreshSessionDone]: sFormScreenRunning
+        [onRefreshSessionDone]: sFormScreenRunning,
+        [onRefreshSessionFailed]: "sError"
       }
     },
     [sExecuteAction]: {

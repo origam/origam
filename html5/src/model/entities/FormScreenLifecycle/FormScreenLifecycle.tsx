@@ -44,7 +44,14 @@ import {
   onSaveSessionDone,
   sFormScreenRunning,
   onRequestScreenReload,
-  onExecuteActionFailed
+  onExecuteActionFailed,
+  onInitUIFailed,
+  onLoadDataFailed,
+  onFlushDataFailed,
+  onCreateRowFailed,
+  onDeleteRowFailed,
+  onRefreshSessionFailed,
+  onSaveSessionFailed
 } from "./constants";
 import { FormScreenDef } from "./FormScreenDef";
 import { errDialogSvc } from "../ErrorDialog";
@@ -88,7 +95,6 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
     }
   });
 
-
   stateAtom = createAtom("formScreenLifecycleState");
   interpreter = interpret(this.machine).onTransition((state, event) => {
     console.log("FormScreen lifecycle:", state, event);
@@ -105,102 +111,137 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
   }
 
   *initUI() {
-    const api = getApi(this);
-    const openedScreen = getOpenedScreen(this);
-    const menuItemId = getMenuItemId(this);
-    const menuItemType = getMenuItemType(this);
-    const parameters = getScreenParameters(this);
-    const initUIResult = yield api.initUI({
-      Type: menuItemType,
-      ObjectId: menuItemId,
-      FormSessionId: undefined,
-      IsNewSession: true,
-      RegisterSession: true,
-      DataRequested: !openedScreen.dontRequestData,
-      Parameters: parameters
-    });
-    console.log(initUIResult);
-    this.interpreter.send({ type: onInitUIDone, initUIResult });
+    try {
+      const api = getApi(this);
+      const openedScreen = getOpenedScreen(this);
+      const menuItemId = getMenuItemId(this);
+      const menuItemType = getMenuItemType(this);
+      const parameters = getScreenParameters(this);
+      const initUIResult = yield api.initUI({
+        Type: menuItemType,
+        ObjectId: menuItemId,
+        FormSessionId: undefined,
+        IsNewSession: true,
+        RegisterSession: true,
+        DataRequested: !openedScreen.dontRequestData,
+        Parameters: parameters
+      });
+      console.log(initUIResult);
+      this.interpreter.send({ type: onInitUIDone, initUIResult });
+    } catch (error) {
+      console.error(error);
+      this.interpreter.send({ type: onInitUIFailed, error });
+    }
   }
 
   *loadData() {
-    const api = getApi(this);
-    const formScreen = getFormScreen(this);
-    for (let rootDataView of formScreen.rootDataViews) {
-      const loadedData = yield api.getRows({
-        MenuId: getMenuItemId(rootDataView),
-        DataStructureEntityId: getDataStructureEntityId(rootDataView),
-        Filter: "",
-        Ordering: [],
-        RowLimit: 10000,
-        ColumnNames: getColumnNamesToLoad(rootDataView),
-        MasterRowId: undefined
-      });
-      rootDataView.dataTable.clear();
-      rootDataView.dataTable.setRecords(loadedData);
-      rootDataView.selectFirstRow();
+    try {
+      const api = getApi(this);
+      const formScreen = getFormScreen(this);
+      for (let rootDataView of formScreen.rootDataViews) {
+        const loadedData = yield api.getRows({
+          MenuId: getMenuItemId(rootDataView),
+          DataStructureEntityId: getDataStructureEntityId(rootDataView),
+          Filter: "",
+          Ordering: [],
+          RowLimit: 10000,
+          ColumnNames: getColumnNamesToLoad(rootDataView),
+          MasterRowId: undefined
+        });
+        rootDataView.dataTable.clear();
+        rootDataView.dataTable.setRecords(loadedData);
+        rootDataView.selectFirstRow();
+      }
+      this.interpreter.send(onLoadDataDone);
+    } catch (error) {
+      console.error(error);
+      this.interpreter.send({ type: onLoadDataFailed, error });
     }
-    this.interpreter.send(onLoadDataDone);
   }
 
   *flushData() {
-    const api = getApi(this);
-    for (let dataView of getFormScreen(this).dataViews) {
-      for (let row of dataView.dataTable.getDirtyValueRows()) {
-        const updateObjectResult = yield api.updateObject({
-          SessionFormIdentifier: getSessionId(this),
-          Entity: dataView.entity,
-          Id: dataView.dataTable.getRowId(row),
-          Values: map2obj(dataView.dataTable.getDirtyValues(row))
-        });
-        console.log(updateObjectResult);
-        processCRUDResult(dataView, updateObjectResult);
+    try {
+      const api = getApi(this);
+      for (let dataView of getFormScreen(this).dataViews) {
+        for (let row of dataView.dataTable.getDirtyValueRows()) {
+          const updateObjectResult = yield api.updateObject({
+            SessionFormIdentifier: getSessionId(this),
+            Entity: dataView.entity,
+            Id: dataView.dataTable.getRowId(row),
+            Values: map2obj(dataView.dataTable.getDirtyValues(row))
+          });
+          console.log(updateObjectResult);
+          processCRUDResult(dataView, updateObjectResult);
+        }
       }
+      this.interpreter.send(onFlushDataDone);
+    } catch (error) {
+      console.error(error);
+      this.interpreter.send({ type: onFlushDataFailed, error });
     }
-    this.interpreter.send(onFlushDataDone);
   }
 
   *createRow(entity: string, gridId: string) {
-    const api = getApi(this);
-    const targetDataView = getDataViewByGridId(this, gridId)!;
-    const createObjectResult = yield api.createObject({
-      SessionFormIdentifier: getSessionId(this),
-      Entity: entity,
-      RequestingGridId: gridId,
-      Values: {},
-      Parameters: { ...getBindingParametersFromParent(targetDataView) }
-    });
-    console.log(createObjectResult);
-    processCRUDResult(targetDataView, createObjectResult);
-    this.interpreter.send(onCreateRowDone);
+    try {
+      const api = getApi(this);
+      const targetDataView = getDataViewByGridId(this, gridId)!;
+      const createObjectResult = yield api.createObject({
+        SessionFormIdentifier: getSessionId(this),
+        Entity: entity,
+        RequestingGridId: gridId,
+        Values: {},
+        Parameters: { ...getBindingParametersFromParent(targetDataView) }
+      });
+      console.log(createObjectResult);
+      processCRUDResult(targetDataView, createObjectResult);
+      this.interpreter.send(onCreateRowDone);
+    } catch (error) {
+      console.error(error);
+      this.interpreter.send({ type: onCreateRowFailed, error });
+    }
   }
 
   *deleteRow(entity: string, rowId: string) {
-    const api = getApi(this);
-    const deleteObjectResult = yield api.deleteObject({
-      SessionFormIdentifier: getSessionId(this),
-      Entity: entity,
-      Id: rowId
-    });
-    console.log(deleteObjectResult);
-    processCRUDResult(this, deleteObjectResult);
-    this.interpreter.send(onDeleteRowDone);
+    try {
+      const api = getApi(this);
+      const deleteObjectResult = yield api.deleteObject({
+        SessionFormIdentifier: getSessionId(this),
+        Entity: entity,
+        Id: rowId
+      });
+      console.log(deleteObjectResult);
+      processCRUDResult(this, deleteObjectResult);
+      this.interpreter.send(onDeleteRowDone);
+    } catch (error) {
+      console.error(error);
+      this.interpreter.send({ type: onDeleteRowFailed, error });
+    }
   }
 
   *saveSession() {
-    const api = getApi(this);
-    yield api.saveSessionQuery(getSessionId(this));
-    const result = yield api.saveSession(getSessionId(this));
-    processCRUDResult(this, result);
-    this.interpreter.send(onSaveSessionDone);
+    try {
+      const api = getApi(this);
+      yield api.saveSessionQuery(getSessionId(this));
+      const result = yield api.saveSession(getSessionId(this));
+      processCRUDResult(this, result);
+      this.interpreter.send(onSaveSessionDone);
+    } catch (error) {
+      console.error(error);
+      this.interpreter.send({ type: onSaveSessionFailed, error });
+    }
   }
 
   *refreshSession() {
-    const api = getApi(this);
-    const result = yield api.refreshSession(getSessionId(this));
-    this.applyData(result);
-    getFormScreen(this).setDirty(false);
-    this.interpreter.send(onRefreshSessionDone);
+    try {
+      const api = getApi(this);
+      const result = yield api.refreshSession(getSessionId(this));
+      this.applyData(result);
+      getFormScreen(this).setDirty(false);
+      this.interpreter.send(onRefreshSessionDone);
+    } catch (error) {
+      console.error(error);
+      this.interpreter.send({ type: onRefreshSessionFailed, error });
+    }
   }
 
   *executeAction(
@@ -242,7 +283,8 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
 
       this.interpreter.send(onExecuteActionDone);
     } catch (error) {
-      this.interpreter.send({type: onExecuteActionFailed, error});
+      console.error(error);
+      this.interpreter.send({ type: onExecuteActionFailed, error });
     }
   }
 
