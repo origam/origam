@@ -9,10 +9,10 @@ export function onFieldKeyDown(ctx: any) {
     switch (event.key) {
       case "Tab": {
         if (event.shiftKey) {
-          selectPrevColumn(ctx)();
+          selectPrevColumn(ctx)(true);
           event.preventDefault();
         } else {
-          selectNextColumn(ctx)();
+          selectNextColumn(ctx)(true);
           event.preventDefault();
         }
         flushCurrentRowData(ctx)();

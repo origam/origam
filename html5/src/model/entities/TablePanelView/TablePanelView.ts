@@ -146,7 +146,7 @@ export class TablePanelView implements ITablePanelView {
   }
 
   @action.bound
-  selectNextColumn(): void {
+  selectNextColumn(nextRowWhenEnd?: boolean): void {
     const properties = getTableViewProperties(this);
     const selPropId = getSelectedColumnId(this);
     if (selPropId) {
@@ -154,7 +154,7 @@ export class TablePanelView implements ITablePanelView {
       if (idx < properties.length - 1) {
         const newProp = properties[idx + 1];
         this.setSelectedColumnId(newProp.id);
-      } else if (properties.length > 1) {
+      } else if (nextRowWhenEnd && properties.length > 1) {
         const rowId = getSelectedRowId(this);
         getDataView(this).selectNextRow();
         if (rowId !== getSelectedRowId(this)) {
@@ -165,7 +165,7 @@ export class TablePanelView implements ITablePanelView {
   }
 
   @action.bound
-  selectPrevColumn(): void {
+  selectPrevColumn(prevRowWhenStart?: boolean): void {
     const properties = getTableViewProperties(this);
     const selPropId = getSelectedColumnId(this);
     if (selPropId) {
@@ -173,7 +173,7 @@ export class TablePanelView implements ITablePanelView {
       if (idx > 0) {
         const newProp = properties[idx - 1];
         this.setSelectedColumnId(newProp.id);
-      } else if (properties.length > 1) {
+      } else if (prevRowWhenStart && properties.length > 1) {
         const rowId = getSelectedRowId(this);
         getDataView(this).selectPrevRow();
         if (rowId !== getSelectedRowId(this)) {
