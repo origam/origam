@@ -24,6 +24,7 @@ import {
 } from "./DataViewLifecycleDef";
 import { IDataViewLifecycle } from "./types/IDataViewLifecycle";
 import { errDialogSvc } from "../ErrorDialog";
+import _ from "lodash";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
@@ -111,10 +112,12 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       }
     );
   }
-
-  @action.bound changeMasterRow() {
+  
+  @action.bound changeMasterRowImm() {
     this.interpreter.send(onChangeMasterRow);
   }
+
+  changeMasterRow = _.debounce(this.changeMasterRowImm, 100);
 
   @action.bound navigateChildren() {
     for (let bch of getBindingChildren(this)) {
