@@ -41,6 +41,10 @@
   cursor: pointer;
 }
 
+.lookupListItemCell:global(.selected) {
+  background-color: #cccccc;
+}
+
 .oddItem {
   background-color: #efefef;
 }
