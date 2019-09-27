@@ -15,6 +15,7 @@ import {
 import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
 import { getSelectedColumnId } from "model/selectors/TablePanelView/getSelectedColumnId";
 import { IOrderingConfiguration } from "../types/IOrderingConfiguration";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -153,6 +154,12 @@ export class TablePanelView implements ITablePanelView {
       if (idx < properties.length - 1) {
         const newProp = properties[idx + 1];
         this.setSelectedColumnId(newProp.id);
+      } else if (properties.length > 1) {
+        const rowId = getSelectedRowId(this);
+        getDataView(this).selectNextRow();
+        if (rowId !== getSelectedRowId(this)) {
+          this.selectFirstColumn();
+        }
       }
     }
   }
@@ -166,8 +173,26 @@ export class TablePanelView implements ITablePanelView {
       if (idx > 0) {
         const newProp = properties[idx - 1];
         this.setSelectedColumnId(newProp.id);
+      } else if (properties.length > 1) {
+        const rowId = getSelectedRowId(this);
+        getDataView(this).selectPrevRow();
+        if (rowId !== getSelectedRowId(this)) {
+          this.selectLastColumn();
+        }
       }
     }
+  }
+
+  @action.bound selectFirstColumn(): void {
+    const properties = getTableViewProperties(this);
+    const newProp = properties[0];
+    this.setSelectedColumnId(newProp.id);
+  }
+
+  @action.bound selectLastColumn(): void {
+    const properties = getTableViewProperties(this);
+    const newProp = properties[properties.length - 1];
+    this.setSelectedColumnId(newProp.id);
   }
 
   @action.bound

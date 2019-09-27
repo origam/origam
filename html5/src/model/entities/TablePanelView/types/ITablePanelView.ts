@@ -42,8 +42,8 @@ export interface ITablePanelView extends ITablePanelViewData {
   onNoCellClick(): void;
   onOutsideTableClick(): void;
 
-  selectNextColumn(): void;
-  selectPrevColumn(): void;
+  selectNextColumn(nextRowWhenEnd?: boolean): void;
+  selectPrevColumn(prevRowWhenStart?: boolean): void;
 
   setSelectedColumnId(id: string | undefined): void;
   swapColumns(id1: string, id2: string): void;
