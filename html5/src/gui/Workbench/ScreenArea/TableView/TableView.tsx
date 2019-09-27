@@ -47,9 +47,16 @@ export class TableView extends React.Component<{
   refTable = (elmTable: Table | null) => {
     this.elmTable = elmTable;
     if (elmTable) {
-      this.refTableDisposer = this.props.tablePanelView!.subOnFocusTable(
+      const d1 = this.props.tablePanelView!.subOnFocusTable(
         elmTable.focusTable
       );
+      const d2 = this.props.tablePanelView!.subOnScrollToCellShortest(
+        elmTable.scrollToCellShortest
+      );
+      this.refTableDisposer = () => {
+        d1();
+        d2();
+      };
     } else {
       this.refTableDisposer && this.refTableDisposer();
     }

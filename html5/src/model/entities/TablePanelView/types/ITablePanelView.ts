@@ -56,10 +56,14 @@ export interface ITablePanelView extends ITablePanelViewData {
     idTarget: string | undefined
   ): void;
 
-  subOnScrollToCurrentCell(fn: () => void): () => void;
+  subOnScrollToCellShortest(
+    fn: (rowIdx: number, columnIdx: number) => void
+  ): () => void;
   subOnFocusTable(fn: () => void): () => void;
 
+  scrollToCurrentCell(): void;
   triggerOnFocusTable(): void;
+  triggerOnScrollToCellShortest(rowIdx: number, columnIdx: number): void;
 
   parent?: any;
 }

@@ -16,6 +16,8 @@ import { getTableViewProperties } from "model/selectors/TablePanelView/getTableV
 import { getSelectedColumnId } from "model/selectors/TablePanelView/getSelectedColumnId";
 import { IOrderingConfiguration } from "../types/IOrderingConfiguration";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getSelectedRowIndex } from "model/selectors/TablePanelView/getSelectedRowIndex";
+import { getSelectedColumnIndex } from "model/selectors/TablePanelView/getSelectedColumnIndex";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -121,6 +123,7 @@ export class TablePanelView implements ITablePanelView {
         this.setEditing(true);
       }
     }
+    this.scrollToCurrentCell();
   }
 
   @action.bound
@@ -224,15 +227,32 @@ export class TablePanelView implements ITablePanelView {
   }
 
   subId = 0;
-  onScrollToCurrentCellHandlers: Map<number, () => void> = new Map();
-  subOnScrollToCurrentCell(fn: () => void): () => void {
+  onScrollToCurrentCellHandlers: Map<
+    number,
+    (rowIdx: number, columnIdx: number) => void
+  > = new Map();
+  subOnScrollToCellShortest(
+    fn: (rowIdx: number, columnIdx: number) => void
+  ): () => void {
     const myId = this.subId++;
     this.onScrollToCurrentCellHandlers.set(myId, fn);
     return () => this.onScrollToCurrentCellHandlers.delete(myId);
   }
 
-  @action.bound triggerOnScrollToCurrentCell() {
-    for (let h of this.onScrollToCurrentCellHandlers.values()) h();
+  @action.bound scrollToCurrentCell() {
+    const rowIdx = getSelectedRowIndex(this);
+    const columnIdx = getSelectedColumnIndex(this);
+    if (rowIdx !== undefined && columnIdx !== undefined) {
+      this.triggerOnScrollToCellShortest(rowIdx, columnIdx);
+    }
+  }
+
+  @action.bound triggerOnScrollToCellShortest(
+    rowIdx: number,
+    columnIdx: number
+  ) {
+    for (let h of this.onScrollToCurrentCellHandlers.values())
+      h(rowIdx, columnIdx);
   }
 
   onFocusTableHandlers: Map<number, () => void> = new Map();

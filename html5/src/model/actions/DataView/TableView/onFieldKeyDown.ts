@@ -18,6 +18,7 @@ export function onFieldKeyDown(ctx: any) {
             selectNextColumn(ctx)(true);
             event.preventDefault();
           }
+          getTablePanelView(ctx).scrollToCurrentCell();
           flushCurrentRowData(ctx)();
           break;
         }
@@ -29,6 +30,7 @@ export function onFieldKeyDown(ctx: any) {
             selectNextRow(ctx)();
             event.preventDefault();
           }
+          getTablePanelView(ctx).scrollToCurrentCell();
           flushCurrentRowData(ctx)();
           break;
         }
