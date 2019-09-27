@@ -119,6 +119,13 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     }
   }
 
+  @action.bound
+  handleFocus(event: any) {
+    setTimeout(() => {
+      this.elmInput && this.elmInput.select();
+    }, 10);
+  }
+
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {
     this.elmInput = elm;
@@ -280,6 +287,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
               onKeyDown={this.props.onKeyDown}
               onClick={this.props.onClick}
               onBlur={this.handleInputBlur}
+              onFocus={this.handleFocus}
             />
             {this.props.isInvalid && (
               <div className={CS.notification}>

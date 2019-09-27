@@ -23,6 +23,7 @@ import { getRowStateForegroundColor } from "model/selectors/RowState/getRowState
 import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
 import { getRowStateAllowUpdate } from "model/selectors/RowState/getRowStateAllowUpdate";
 import { onFieldChange } from "model/actions/DataView/TableView/onFieldChange";
+import { onFieldKeyDown } from "model/actions/DataView/TableView/onFieldKeyDown";
 
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -32,7 +33,8 @@ import { onFieldChange } from "model/actions/DataView/TableView/onFieldChange";
     getCellValue: () => getCellValue(tablePanelView, row, property),
     onChange: (event: any, value: any) =>
       onFieldChange(tablePanelView)(event, row, property, value),
-    onEditorBlur: (event: any) => onFieldBlur(tablePanelView)(event)
+    onEditorBlur: (event: any) => onFieldBlur(tablePanelView)(event),
+    onEditorKeyDown: (event: any) => onFieldKeyDown(tablePanelView)(event)
   };
 })
 @observer
@@ -41,6 +43,7 @@ export class TableViewEditor extends React.Component<{
   getCellValue?: () => any;
   onChange?: (event: any, value: any) => void;
   onEditorBlur?: (event: any) => void;
+  onEditorKeyDown?: (event: any) => void;
 }> {
   getEditor() {
     const rowId = getSelectedRowId(this.props.property);
@@ -70,12 +73,12 @@ export class TableViewEditor extends React.Component<{
             value={this.props.getCellValue!()}
             isReadOnly={readOnly}
             isInvalid={false}
-            isFocused={false}
+            isFocused={true}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             refocuser={undefined}
             onChange={this.props.onChange}
-            onKeyDown={undefined}
+            onKeyDown={this.props.onEditorKeyDown}
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
           />
@@ -87,13 +90,14 @@ export class TableViewEditor extends React.Component<{
             outputFormat={this.props.property!.formatterPattern}
             isReadOnly={readOnly}
             isInvalid={false}
-            isFocused={false}
+            isFocused={true}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             refocuser={undefined}
             onChange={this.props.onChange}
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
+            onKeyDown={this.props.onEditorKeyDown}
           />
         );
       case "CheckBox":
@@ -103,7 +107,7 @@ export class TableViewEditor extends React.Component<{
             isReadOnly={readOnly}
             onChange={this.props.onChange}
             onClick={undefined}
-            onKeyDown={undefined}
+            onKeyDown={this.props.onEditorKeyDown}
           />
         );
       case "ComboBox":
@@ -113,12 +117,13 @@ export class TableViewEditor extends React.Component<{
             // textualValue={""}
             isReadOnly={readOnly}
             isInvalid={false}
-            isFocused={false}
+            isFocused={true}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             onTextChange={undefined}
             onItemSelect={this.props.onChange}
             onEditorBlur={this.props.onEditorBlur}
+            onKeyDown={this.props.onEditorKeyDown}
             // DataStructureEntityId={""}
             // ColumnNames={[]}
             // Property={""}

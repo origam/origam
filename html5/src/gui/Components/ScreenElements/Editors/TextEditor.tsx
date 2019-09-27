@@ -49,6 +49,13 @@ export class TextEditor extends React.Component<{
     }
   }
 
+  @action.bound
+  handleFocus(event: any) {
+    setTimeout(() => {
+      this.elmInput && this.elmInput.select();
+    }, 10);
+  }
+
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {
     this.elmInput = elm;
@@ -74,6 +81,7 @@ export class TextEditor extends React.Component<{
           onKeyDown={this.props.onKeyDown}
           onClick={this.props.onClick}
           onBlur={this.props.onEditorBlur}
+          onFocus={this.handleFocus}
         />
         {this.props.isInvalid && (
           <div className={CS.notification}>
