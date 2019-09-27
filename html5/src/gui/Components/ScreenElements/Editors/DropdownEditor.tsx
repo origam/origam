@@ -331,7 +331,9 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     } else {
       switch (event.key) {
         case "ArrowDown":
-          this.elmDropdowner && this.elmDropdowner.setDropped(true);
+          if(event.altKey) {
+            this.elmDropdowner && this.elmDropdowner.setDropped(true);
+          }
           break;
       }
     }

@@ -32,6 +32,23 @@ export function onTableKeyDown(ctx: any) {
         event.preventDefault();
         getTablePanelView(ctx).scrollToCurrentCell();
         break;
+      case "Tab":
+        if (event.shiftKey) {
+          selectPrevColumn(ctx)(true);
+        } else {
+          selectNextColumn(ctx)(true);
+        }
+        event.preventDefault();
+        getTablePanelView(ctx).scrollToCurrentCell();
+        break;
+      case "Enter":
+        if (event.shiftKey) {
+          selectPrevRow(ctx)();
+        } else {
+          selectNextRow(ctx)();
+        }
+        getTablePanelView(ctx).scrollToCurrentCell();
+        break;
     }
   };
 }
