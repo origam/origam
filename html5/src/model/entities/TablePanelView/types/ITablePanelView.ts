@@ -42,6 +42,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   onNoCellClick(): void;
   onOutsideTableClick(): void;
 
+  setEditing(state: boolean): void;
   selectNextColumn(nextRowWhenEnd?: boolean): void;
   selectPrevColumn(prevRowWhenStart?: boolean): void;
 
