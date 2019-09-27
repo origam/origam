@@ -223,6 +223,29 @@ export class TablePanelView implements ITablePanelView {
     this.columnOrderChangingSourceId = idSource;
   }
 
+  subId = 0;
+  onScrollToCurrentCellHandlers: Map<number, () => void> = new Map();
+  subOnScrollToCurrentCell(fn: () => void): () => void {
+    const myId = this.subId++;
+    this.onScrollToCurrentCellHandlers.set(myId, fn);
+    return () => this.onScrollToCurrentCellHandlers.delete(myId);
+  }
+
+  @action.bound triggerOnScrollToCurrentCell() {
+    for (let h of this.onScrollToCurrentCellHandlers.values()) h();
+  }
+
+  onFocusTableHandlers: Map<number, () => void> = new Map();
+  subOnFocusTable(fn: () => void): () => void {
+    const myId = this.subId++;
+    this.onFocusTableHandlers.set(myId, fn);
+    return () => this.onFocusTableHandlers.delete(myId);
+  }
+
+  @action.bound triggerOnFocusTable() {
+    for (let h of this.onFocusTableHandlers.values()) h();
+  }
+
   @computed get dataTable() {
     return getDataTable(this);
   }

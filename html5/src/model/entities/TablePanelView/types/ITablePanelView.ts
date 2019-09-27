@@ -56,5 +56,10 @@ export interface ITablePanelView extends ITablePanelViewData {
     idTarget: string | undefined
   ): void;
 
+  subOnScrollToCurrentCell(fn: () => void): () => void;
+  subOnFocusTable(fn: () => void): () => void;
+
+  triggerOnFocusTable(): void;
+
   parent?: any;
 }

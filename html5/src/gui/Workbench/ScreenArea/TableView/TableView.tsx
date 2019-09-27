@@ -23,6 +23,7 @@ import { IGridDimensions } from "../../../Components/ScreenElements/Table/types"
 import { CellRenderer } from "./CellRenderer";
 import { TableViewEditor } from "./TableViewEditor";
 import { getPropertyOrdering } from "../../../../model/selectors/DataView/getPropertyOrdering";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 
 @inject(({ dataView }) => {
   return {
@@ -42,6 +43,19 @@ export class TableView extends React.Component<{
   onColumnDialogOk?: (event: any, configuration: ITableColumnsConf) => void;
   onTableKeyDown?: (event: any) => void;
 }> {
+  refTableDisposer: any;
+  refTable = (elmTable: Table | null) => {
+    this.elmTable = elmTable;
+    if (elmTable) {
+      this.refTableDisposer = this.props.tablePanelView!.subOnFocusTable(
+        elmTable.focusTable
+      );
+    } else {
+      this.refTableDisposer && this.refTableDisposer();
+    }
+  };
+  elmTable: Table | null = null;
+
   gDim = new GridDimensions({
     getTableViewProperties: () => getTableViewProperties(this.props.dataView),
     getRowCount: () => getRowCount(this.props.dataView)
@@ -95,6 +109,7 @@ export class TableView extends React.Component<{
             onOutsideTableClick={this.props.tablePanelView!.onOutsideTableClick}
             refCanvasMovingComponent={this.props.tablePanelView!.setTableCanvas}
             onKeyDown={this.props.onTableKeyDown}
+            ref={this.refTable}
           />
         </>
       </Provider>
