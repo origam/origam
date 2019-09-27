@@ -217,13 +217,11 @@ export const FormButtonsSection: React.FC<{}> = observer(props => {
   const isDirty = formScreen && formScreen.isDirty;
   return formScreen ? (
     <ToolbarSection bottomLine="Form">
-      {isDirty && (
-        <div className={S.actionItem} onClick={onSaveSessionClick(formScreen)}>
-          <i className="far fa-save icon" />
-          <br />
-          Save
-        </div>
-      )}
+      <div className={S.actionItem} onClick={onSaveSessionClick(formScreen)}>
+        <i className="far fa-save icon" />
+        <br />
+        Save
+      </div>
       <div className={S.actionItem} onClick={onRefreshSessionClick(formScreen)}>
         <i className="fas fa-redo icon" />
         <br />
@@ -243,12 +241,15 @@ export const ActionsSection: React.FC<{}> = observer(props => {
         <ToolbarSection bottomLine={actionGroup.section}>
           {actionGroup.actions.map(action => (
             <div
-              className={S.actionItem + (!getIsEnabledAction(action) ? " hidden" : "")}
+              className={
+                S.actionItem + (!getIsEnabledAction(action) ? " hidden" : "")
+              }
               onClick={event => onActionClick(action)(event, action)}
             >
               <i className="fas fa-cog icon" />
               <br />
-              {action.caption}<br />
+              {action.caption}
+              <br />
               {action.id}
             </div>
           ))}
