@@ -92,7 +92,11 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     this.disposers.forEach(d => d());
   }
 
-  componentDidUpdate(prevProps: { isFocused: boolean; textualValue?: string, value: string | null }) {
+  componentDidUpdate(prevProps: {
+    isFocused: boolean;
+    textualValue?: string;
+    value: string | null;
+  }) {
     runInAction(() => {
       if (!prevProps.isFocused && this.props.isFocused) {
         this.makeFocusedIfNeeded();
@@ -101,7 +105,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
         this.dirtyTextualValue = undefined;
         this.makeFocusedIfNeeded();
       }
-      if(prevProps.value !== null && this.props.value === null) {
+      if (prevProps.value !== null && this.props.value === null) {
         this.dirtyTextualValue = "";
         this.lookupItems = [];
       }
@@ -119,6 +123,13 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     }
   }
 
+  @action.bound
+  handleFocus(event: any) {
+    setTimeout(() => {
+      this.elmInput && this.elmInput.select();
+    }, 10);
+  }
+
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {
     this.elmInput = elm;
@@ -126,6 +137,10 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
 
   elmDropdowner: Dropdowner | null = null;
   refDropdowner = (elm: Dropdowner | null) => (this.elmDropdowner = elm);
+
+  get isDropped() {
+    return this.elmDropdowner && this.elmDropdowner.isDropped;
+  }
 
   @action.bound
   handleTextChange(event: any) {
@@ -196,6 +211,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   }
 
   @action.bound handleInputBlur(event: any) {
+    this.elmDropdowner && this.elmDropdowner.setDropped(false);
     this.props.onEditorBlur && this.props.onEditorBlur(event);
   }
 
@@ -228,7 +244,11 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
                 ? S.lookupListHeaderCell
                 : S.lookupListItemCell) +
               " " +
-              (args.rowIndex % 2 === 0 ? S.evenItem : S.oddItem)
+              (args.rowIndex % 2 === 0 ? S.evenItem : S.oddItem) +
+              (args.rowIndex > 0 &&
+              this.lookupItems[args.rowIndex - 1][0] === this.selectedItemId
+                ? " selected"
+                : "")
             }
             onClick={handleClick}
           >
@@ -250,6 +270,75 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
       </Observer>
     );
   };
+
+  @observable selectedItemId: string | undefined;
+
+  findNextId() {
+    const idx = this.lookupItems.findIndex(
+      item => item[0] === this.selectedItemId
+    );
+    const newIndex =
+      idx > -1 ? Math.min(idx + 1, this.lookupItems.length - 1) : undefined;
+    const newId =
+      newIndex !== undefined ? this.lookupItems[newIndex][0] : undefined;
+    return newId;
+  }
+
+  findPrevId() {
+    const idx = this.lookupItems.findIndex(
+      item => item[0] === this.selectedItemId
+    );
+    const newIndex = idx > -1 ? Math.max(idx - 1, 0) : undefined;
+    const newId =
+      newIndex !== undefined ? this.lookupItems[newIndex][0] : undefined;
+    return newId;
+  }
+
+  findFirstId() {
+    const newId =
+      this.lookupItems.length > 0 ? this.lookupItems[0][0] : undefined;
+    return newId;
+  }
+
+  @action.bound handleKeyDown(event: any) {
+    if (this.isDropped) {
+      switch (event.key) {
+        case "ArrowUp":
+          if (!this.selectedItemId) {
+            this.selectedItemId = this.findFirstId();
+          } else {
+            this.selectedItemId = this.findPrevId();
+          }
+          break;
+        case "ArrowDown":
+          if (!this.selectedItemId) {
+            this.selectedItemId = this.findFirstId();
+          } else {
+            this.selectedItemId = this.findNextId();
+          }
+          break;
+        case "Enter":
+        case "Tab":
+          if (this.selectedItemId) {
+            this.dirtyTextualValue = undefined;
+            this.props.onItemSelect &&
+              this.props.onItemSelect(event, this.selectedItemId);
+            this.makeFocusedIfNeeded();
+            this.elmDropdowner && this.elmDropdowner.setDropped(false);
+            break;
+          }
+      }
+    } else {
+      switch (event.key) {
+        case "ArrowDown":
+          if(event.altKey) {
+            this.elmDropdowner && this.elmDropdowner.setDropped(true);
+          }
+          break;
+      }
+    }
+    this.props.onKeyDown && this.props.onKeyDown(event);
+  }
 
   render() {
     return (
@@ -277,9 +366,10 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
               readOnly={this.props.isReadOnly}
               ref={this.refInput}
               onChange={this.handleTextChange}
-              onKeyDown={this.props.onKeyDown}
+              onKeyDown={this.handleKeyDown}
               onClick={this.props.onClick}
               onBlur={this.handleInputBlur}
+              onFocus={this.handleFocus}
             />
             {this.props.isInvalid && (
               <div className={CS.notification}>

@@ -70,6 +70,10 @@ export class Table extends React.Component<ITableProps> {
     this.disposers.forEach(d => d());
   }
 
+  @action.bound focusTable() {
+    this.elmScroller && this.elmScroller.focus();
+  }
+
   @action.bound scrollToCellShortest(rowIdx: number, columnIdx: number) {
     // TODO: Refactor to take real scrollbar sizes
     const { gridDimensions } = this.props;

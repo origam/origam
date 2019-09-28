@@ -115,16 +115,19 @@ export class ScreenArea extends React.Component<{
           )}
         </Observer>
         <Observer>
-          {() => (
-            <>
-              {this.props.openedDialogItems!.map(item => (
-                <DialogScreen
-                  openedScreen={item}
-                  key={`${item.menuItemId}@${item.order}`}
-                />
-              ))}
-            </>
-          )}
+          {() => {
+            console.log(this.props.openedDialogItems);
+            return (
+              <>
+                {this.props.openedDialogItems!.map(item => (
+                  <DialogScreen
+                    openedScreen={item}
+                    key={`${item.menuItemId}@${item.order}`}
+                  />
+                ))}
+              </>
+            );
+          }}
         </Observer>
       </div>
     );
@@ -134,9 +137,7 @@ export class ScreenArea extends React.Component<{
 export const DialogScreen: React.FC<{
   openedScreen: IOpenedScreen;
 }> = observer(props => {
-  const key = `ScreenDialog@${props.openedScreen.menuItemId}@${
-    props.openedScreen.order
-  }`;
+  const key = `ScreenDialog@${props.openedScreen.menuItemId}@${props.openedScreen.order}`;
   const workbenchLifecycle = getWorkbenchLifecycle(props.openedScreen);
   useEffect(() => {
     getDialogStack(workbenchLifecycle).pushDialog(
@@ -166,19 +167,21 @@ export const DialogScreen: React.FC<{
                 {() =>
                   !props.openedScreen.content.isLoading ? (
                     <>
-                      {props.openedScreen.content.formScreen!.dialogActions.map(action => (
-                        <button
-                          key={action.id}
-                          onClick={(event: any) =>
-                            onSelectionDialogActionButtonClick(action)(
-                              event,
-                              action
-                            )
-                          }
-                        >
-                          {action.caption}
-                        </button>
-                      ))}
+                      {props.openedScreen.content.formScreen!.dialogActions.map(
+                        action => (
+                          <button
+                            key={action.id}
+                            onClick={(event: any) => {
+                              onSelectionDialogActionButtonClick(action)(
+                                event,
+                                action
+                              );
+                            }}
+                          >
+                            {action.caption}
+                          </button>
+                        )
+                      )}
                     </>
                   ) : (
                     <></>

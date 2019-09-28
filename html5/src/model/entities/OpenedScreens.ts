@@ -29,6 +29,7 @@ export class OpenedScreens implements IOpenedScreens {
       item => item.menuItemId === menuItemId && item.order === order
     );
     item && item.setActive(true);
+
   }
 
   @computed get activeItem(): IOpenedScreen | undefined {

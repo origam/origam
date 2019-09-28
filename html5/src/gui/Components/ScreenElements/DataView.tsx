@@ -55,21 +55,23 @@ export class DataView extends React.Component<{
           >
             <TableView />
           </div>
-          <div
-            style={{
-              // width: "100%",
-              // height: "100%",
-              flexGrow: 1,
-              display:
-                this.props.dataView!.activePanelView !== IPanelViewType.Form
-                  ? "none"
-                  : "flex"
-            }}
-          >
-            <FormView>
-              <FormBuilder />
-            </FormView>
-          </div>
+          {this.props.dataView!.activePanelView === IPanelViewType.Form && (
+            <div
+              style={{
+                // width: "100%",
+                // height: "100%",
+                flexGrow: 1,
+                display:
+                  this.props.dataView!.activePanelView !== IPanelViewType.Form
+                    ? "none"
+                    : "flex"
+              }}
+            >
+              <FormView>
+                <FormBuilder />
+              </FormView>
+            </div>
+          )}
           {this.props.dataView!.isWorking && (
             <div className={S.dataViewOverlay}>
               <div className={S.dataViewLoadingLabel}>loading</div>

@@ -157,6 +157,7 @@ export class DateTimeEditor extends React.Component<{
   onChange?: (event: any, isoDay: string) => void;
   onChangeByCalendar?: (event: any, isoDay: string) => void;
   onClick?: (event: any) => void;
+  onKeyDown?: (event: any) => void;
   onEditorBlur?: (event: any) => void;
   refocuser?: (cb: () => void) => () => void;
 }> {
@@ -304,6 +305,13 @@ export class DateTimeEditor extends React.Component<{
     this.props.onChange && this.props.onChange(event, day.toISOString(true));
   }
 
+  @action.bound
+  handleFocus(event: any) {
+    setTimeout(() => {
+      this.elmInput && this.elmInput.select();
+    }, 10);
+  }
+
   render() {
     return (
       <Dropdowner
@@ -337,6 +345,7 @@ export class DateTimeEditor extends React.Component<{
                 className={CS.editor}
                 type="text"
                 onBlur={this.handleInputBlur}
+                onFocus={this.handleFocus}
                 /*value={moment(this.props.value, this.props.inputFormat).format(
             this.props.outputFormat
           )}*/
@@ -345,6 +354,7 @@ export class DateTimeEditor extends React.Component<{
                 readOnly={this.props.isReadOnly}
                 onChange={this.handleTextfieldChange}
                 onClick={this.props.onClick}
+                onKeyDown={this.props.onKeyDown}
               />
             </Tooltip>
             {this.props.isInvalid && (
