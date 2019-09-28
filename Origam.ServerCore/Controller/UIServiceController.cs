@@ -525,15 +525,15 @@ namespace Origam.ServerCore.Controller
         private Result<RowData, IActionResult> GetRow(
             DataStructureEntity entity, Guid dataStructureEntityId, Guid rowId)
         {
-            DataRow row = SessionStore.LoadRow(dataService, entity, 
-                dataStructureEntityId, rowId);
-            if(row == null)
+            var rows = SessionStore.LoadRows(dataService, entity, 
+                dataStructureEntityId, new List<Guid> { rowId });
+            if(rows.Count == 0)
             {
                 return Result.Fail<RowData, IActionResult>(
                     NotFound("Requested data row was not found."));
             }
             return Result.Ok<RowData, IActionResult>(
-                new RowData{Row = row, Entity = entity});
+                new RowData{Row = rows[0], Entity = entity});
         }
         private IEnumerable<object[]> GetRowData(
             LookupListInput input, DataTable dataTable)
