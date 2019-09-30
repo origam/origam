@@ -376,7 +376,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
     return getDialogStack(this).pushDialog(
       "",
       <QuestionSaveData
-        screenTitle={"SCREEN_TITLE"}
+        screenTitle={getOpenedScreen(this).title}
         onSaveClick={() => this.interpreter.send(onPerformSave)}
         onDontSaveClick={() => this.interpreter.send(onPerformNoSave)}
         onCancelClick={() => this.interpreter.send(onPerformCancel)}
