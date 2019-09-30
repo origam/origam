@@ -220,12 +220,12 @@ export const FormButtonsSection: React.FC<{}> = observer(props => {
       <div className={S.actionItem} onClick={onSaveSessionClick(formScreen)}>
         <i className="far fa-save icon" />
         <br />
-        Save
+        <div className={S.actionItemCaption}>Save</div>
       </div>
       <div className={S.actionItem} onClick={onRefreshSessionClick(formScreen)}>
         <i className="fas fa-redo icon" />
         <br />
-        Reload
+        <div className={S.actionItemCaption}>Reload</div>
       </div>
     </ToolbarSection>
   ) : null;
@@ -239,20 +239,21 @@ export const ActionsSection: React.FC<{}> = observer(props => {
     <>
       {toolbarActions.map(actionGroup => (
         <ToolbarSection bottomLine={actionGroup.section}>
-          {actionGroup.actions.length > 0 && actionGroup.actions.map(action => (
-            <div
-              className={
-                S.actionItem + (!getIsEnabledAction(action) ? " hidden" : "")
-              }
-              onClick={event => onActionClick(action)(event, action)}
-            >
-              <i className="fas fa-cog icon" />
-              <br />
-              {action.caption}
-              {/*<br />
+          {actionGroup.actions.length > 0 &&
+            actionGroup.actions.map(action => (
+              <div
+                className={
+                  S.actionItem + (!getIsEnabledAction(action) ? " hidden" : "")
+                }
+                onClick={event => onActionClick(action)(event, action)}
+              >
+                <i className="fas fa-cog icon" />
+                <br />
+                <div className={S.actionItemCaption}>{action.caption}</div>
+                {/*<br />
               {action.id}*/}
-            </div>
-          ))}
+              </div>
+            ))}
         </ToolbarSection>
       ))}
     </>

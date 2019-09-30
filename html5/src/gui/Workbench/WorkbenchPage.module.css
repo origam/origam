@@ -157,6 +157,10 @@
   background-color: #8998c5;
 }
 
+.actionItemCaption {
+  margin-top: 10px;
+}
+
 .pusher {
   flex-grow: 1;
 }
