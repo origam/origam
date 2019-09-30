@@ -18,6 +18,7 @@ import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSou
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getBindingParent } from "model/selectors/DataView/getBindingParent";
 import { IRowState } from "./types/IRowState";
+import { ILookupLoader } from "./types/ILookupLoader";
 
 export class DataView implements IDataView {
   
@@ -31,6 +32,7 @@ export class DataView implements IDataView {
     this.lifecycle.parent = this;
     this.tablePanelView.parent = this;
     this.formPanelView.parent = this;
+    this.lookupLoader.parent = this;
   }
 
   isReorderedOnClient: boolean = true;
@@ -65,6 +67,7 @@ export class DataView implements IDataView {
   lifecycle: IDataViewLifecycle = null as any;
   tablePanelView: ITablePanelView = null as any;
   formPanelView: IFormPanelView = null as any;
+  lookupLoader: ILookupLoader = null as any;
 
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
   @observable isEditing: boolean = false;
