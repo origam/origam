@@ -58,6 +58,7 @@ export interface IDataView extends IDataViewData {
   isValidRowSelection: boolean;
   selectedRowId: string | undefined;
   selectedRowIndex: number | undefined;
+  visibleRowCount: number;
   selectedRow: any[] | undefined;
   dataSource: IDataSource;
   bindingParametersFromParent: {[key: string]: string};
