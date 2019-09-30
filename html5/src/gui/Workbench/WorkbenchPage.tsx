@@ -1,45 +1,24 @@
-import S from "./WorkbenchPage.module.css";
+import { inject, MobXProviderContext, observer, Provider } from "mobx-react";
+import { onRefreshSessionClick } from "model/actions/onRefreshSessionClick";
+import { IApplication } from "model/entities/types/IApplication";
+import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
+import { getActiveScreenActions } from "model/selectors/getActiveScreenActions";
+import { getClientFulltextSearch } from "model/selectors/getClientFulltextSearch";
 import React, { useContext } from "react";
-import {
-  SplitterPanel,
-  Splitter,
-  SplitterModel
-} from "../Components/Splitter/Splitter";
-import { MainMenu } from "./MainMenu/MainMenu";
-import { ScreenArea } from "./ScreenArea/ScreenArea";
-import {
-  inject,
-  observer,
-  Provider,
-  Observer,
-  MobXProviderContext
-} from "mobx-react";
-import { getApplicationLifecycle } from "../../model/selectors/getApplicationLifecycle";
+import { onActionClick } from "../../model/actions/Actions/onActionClick";
+import { onSaveSessionClick } from "../../model/actions/onSaveSessionClick";
 import { IWorkbench } from "../../model/entities/types/IWorkbench";
+import { getActiveScreen } from "../../model/selectors/getActiveScreen";
+import { getApplicationLifecycle } from "../../model/selectors/getApplicationLifecycle";
 import { getWorkbench } from "../../model/selectors/getWorkbench";
 import { getIsMainMenuLoading } from "../../model/selectors/MainMenu/getIsMainMenuLoading";
 import { getLoggedUserName } from "../../model/selectors/User/getLoggedUserName";
-import { getMainMenuUI } from "../../model/selectors/MainMenu/getMainMenuUI";
-import { getMainMenuExists } from "../../model/selectors/MainMenu/getMainMenuExists";
-import { getActiveScreenActions } from "model/selectors/getActiveScreenActions";
-import { IAction } from "model/entities/types/IAction";
-import {
-  MainMenuPanelAccordion,
-  MainMenuPanelAccordionHandle,
-  MainMenuPanelAccordionBody
-} from "./MainMenuPanelAccordion";
-import { getClientFulltextSearch } from "model/selectors/getClientFulltextSearch";
-import { ISearchResultSection } from "../../model/entities/types/IClientFulltextSearch";
-import { SearchResultItem, SearchResultsPanel } from "./SearchResults";
-import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
+import { Splitter, SplitterModel, SplitterPanel } from "../Components/Splitter/Splitter";
 import { MainMenuPanel } from "./MainMenu/MainMenuPanel";
-import { IApplication } from "model/entities/types/IApplication";
-import { getActivePanelView } from "model/selectors/DataView/getActivePanelView";
-import { getActiveScreen } from "../../model/selectors/getActiveScreen";
-import { onSaveSessionClick } from "../../model/actions/onSaveSessionClick";
-import { onRefreshSessionClick } from "model/actions/onRefreshSessionClick";
-import { onActionClick } from "../../model/actions/Actions/onActionClick";
-import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
+import { MainMenuPanelAccordion, MainMenuPanelAccordionBody, MainMenuPanelAccordionHandle } from "./MainMenuPanelAccordion";
+import { ScreenArea } from "./ScreenArea/ScreenArea";
+import { SearchResultsPanel } from "./SearchResults";
+import S from "./WorkbenchPage.module.css";
 
 @inject(({ application }) => {
   const clientFulltextSearch = getClientFulltextSearch(application);

@@ -1,19 +1,16 @@
+import { action, computed, observable } from "mobx";
+import { observer, Observer } from "mobx-react";
 import * as React from "react";
 import ReactDOM from "react-dom";
+import Measure, { BoundingRect } from "react-measure";
 import Canvas from "./Canvas";
-
-import Measure, { BoundingRect, ContentRect } from "react-measure";
-import { PositionedField } from "./PositionedField";
-import Scroller from "./Scroller";
-import { observer, Observer } from "mobx-react";
-import { observable, action, computed } from "mobx";
-import Scrollee from "./Scrollee";
 import { HeaderRow } from "./HeaderRow";
-import moment from "moment";
-import { PubSub } from "../../../../utils/events";
-import { CPR } from "../../../../utils/canvas";
-import { ITableProps } from "./types";
+import { PositionedField } from "./PositionedField";
+import Scrollee from "./Scrollee";
+import Scroller from "./Scroller";
 import S from "./Table.module.css";
+import { ITableProps } from "./types";
+
 
 @observer
 export class Table extends React.Component<ITableProps> {
@@ -244,7 +241,7 @@ export class Table extends React.Component<ITableProps> {
                                 isHorizontalScroll={false}
                                 width={this.fixedColumnsWidth}
                                 contentWidth={this.fixedColumnsWidth}
-                                height={contentRect.bounds!.height - 10}
+                                height={contentRect.bounds!.height - 20}
                                 contentHeight={
                                   this.props.gridDimensions.contentHeight
                                 }
@@ -260,7 +257,7 @@ export class Table extends React.Component<ITableProps> {
                                 isHorizontalScroll={true}
                                 width={
                                   contentRect.bounds!.width -
-                                  10 -
+                                  20 -
                                   this.fixedColumnsWidth
                                 }
                                 contentWidth={
@@ -269,7 +266,7 @@ export class Table extends React.Component<ITableProps> {
                                 contentHeight={
                                   this.props.gridDimensions.contentHeight
                                 }
-                                height={contentRect.bounds!.height - 10}
+                                height={contentRect.bounds!.height - 20}
                                 scrollOffsetSource={this.props.scrollState}
                                 gridDimensions={this.props.gridDimensions}
                                 renderCell={this.props.renderCell}
@@ -283,14 +280,14 @@ export class Table extends React.Component<ITableProps> {
                               columnStartIndex={0}
                               leftOffset={0}
                               isHorizontalScroll={true}
-                              width={contentRect.bounds!.width - 10}
+                              width={contentRect.bounds!.width - 20}
                               contentWidth={
                                 this.props.gridDimensions.contentWidth
                               }
                               contentHeight={
                                 this.props.gridDimensions.contentHeight
                               }
-                              height={contentRect.bounds!.height - 10}
+                              height={contentRect.bounds!.height - 20}
                               scrollOffsetSource={this.props.scrollState}
                               gridDimensions={this.props.gridDimensions}
                               renderCell={this.props.renderCell}

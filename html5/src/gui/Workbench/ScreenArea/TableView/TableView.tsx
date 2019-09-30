@@ -67,6 +67,7 @@ export class TableView extends React.Component<{
     getTableViewProperties: () => getTableViewProperties(this.props.dataView),
     getRowCount: () => getRowCount(this.props.dataView)
   });
+
   headerRenderer = new HeaderRenderer({
     tablePanelView: this.props.tablePanelView!,
     getColumnHeaders: () => getColumnHeaders(this.props.dataView),
@@ -282,7 +283,7 @@ class HeaderRenderer implements IHeaderRendererData {
     const property = this.tableViewProperties[args.columnIndex];
     const header = this.columnHeaders[args.columnIndex];
     return (
-      <Provider property={property}>
+      <Provider key={property.id} property={property}>
         <Header
           key={header.id}
           id={header.id}
