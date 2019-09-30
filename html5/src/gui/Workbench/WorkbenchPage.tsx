@@ -239,7 +239,7 @@ export const ActionsSection: React.FC<{}> = observer(props => {
     <>
       {toolbarActions.map(actionGroup => (
         <ToolbarSection bottomLine={actionGroup.section}>
-          {actionGroup.actions.map(action => (
+          {actionGroup.actions.length > 0 && actionGroup.actions.map(action => (
             <div
               className={
                 S.actionItem + (!getIsEnabledAction(action) ? " hidden" : "")
@@ -249,8 +249,8 @@ export const ActionsSection: React.FC<{}> = observer(props => {
               <i className="fas fa-cog icon" />
               <br />
               {action.caption}
-              <br />
-              {action.id}
+              {/*<br />
+              {action.id}*/}
             </div>
           ))}
         </ToolbarSection>
