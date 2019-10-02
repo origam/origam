@@ -434,9 +434,9 @@ namespace Origam.Server
             }
         }
 
-        public static DataRow LoadRow(
+        public static DataRowCollection LoadRows(
             IDataService dataService,
-            DataStructureEntity entity, Guid dataStructureEntityId, Guid rowId)
+            DataStructureEntity entity, Guid dataStructureEntityId, IList rowIds)
         {
             DataStructureQuery query = new DataStructureQuery
             {
@@ -445,17 +445,13 @@ namespace Origam.Server
                 Entity = entity.Name,
                 EnforceConstraints = false
             };
-            query.Parameters.Add(new QueryParameter("Id", rowId));
+            query.Parameters.Add(new QueryParameter("Id", rowIds));
             DataSet dataSet = dataService.GetEmptyDataSet(
                 entity.RootEntity.ParentItemId, CultureInfo.InvariantCulture);
             dataService.LoadDataSet(query, SecurityManager.CurrentPrincipal,
                 dataSet, null);
             DataTable dataSetTable = dataSet.Tables[entity.Name];
-            if (dataSetTable.Rows.Count == 0)
-            {
-                return null;
-            }
-            return dataSetTable.Rows[0];
+            return dataSetTable.Rows;
         }
 
         public abstract bool HasChanges();
@@ -1229,60 +1225,66 @@ namespace Origam.Server
         {
             ArrayList result = new ArrayList();
             object profileId = SecurityTools.CurrentUserProfile().Id;
-            IDataService dataService = null;
-            Guid dataStructureEntityId = Guid.Empty;
-            DataStructureEntity dataStructureEntity = null;
-            if (! dataRequested)
+            if (dataRequested)
             {
-                dataService = core.DataService.GetDataService();
-                dataStructureEntityId = (Guid)Data.Tables[entity].ExtendedProperties["Id"];
-                dataStructureEntity = Workbench.Services.ServiceManager.Services
-                    .GetService<Workbench.Services.IPersistenceService>()
-                    .SchemaProvider
-                    .RetrieveInstance(typeof(DataStructureEntity), new Key(dataStructureEntityId))
-                    as DataStructureEntity;
-            }
-            foreach (object id in ids)
-            {
-                if (dataRequested)
+                foreach (object id in ids)
                 {
-                    if (id != null)
+                    if (dataRequested)
                     {
-                        DataRow row;
-                        try
+                        if (id != null)
                         {
-                            row = GetSessionRow(entity, id);
-                        }
-                        catch
-                        {
-                            // in case the id is not contained in the datasource anymore (e.g. form unloaded or new data piece loaded)
-                            return new ArrayList();
-                        }
-                        lock (_lock)    // no update should be done in the meantime when rules are not handled
-                        {
-                            if (IsLazyLoadedRow(row))
-                            {
-                                // load lazily loaded rows in case they have not been loaded
-                                // before calling for row-states
-                                LazyLoadListRowData(id, row);
-                            }
-                            // we have to unregister dataset event handling, because row level security state will try to add a new row/delete it to check parent/child state
-                            this.UnregisterEvents();
+                            DataRow row;
                             try
                             {
-                                result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
+                                row = GetSessionRow(entity, id);
                             }
-                            finally
+                            catch
                             {
-                                this.RegisterEvents();
+                                // in case the id is not contained in the datasource anymore (e.g. form unloaded or new data piece loaded)
+                                return new ArrayList();
+                            }
+                            lock (_lock)    // no update should be done in the meantime when rules are not handled
+                            {
+                                if (IsLazyLoadedRow(row))
+                                {
+                                    // load lazily loaded rows in case they have not been loaded
+                                    // before calling for row-states
+                                    LazyLoadListRowData(id, row);
+                                }
+                                // we have to unregister dataset event handling, because row level security state will try to add a new row/delete it to check parent/child state
+                                this.UnregisterEvents();
+                                try
+                                {
+                                    result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
+                                }
+                                finally
+                                {
+                                    this.RegisterEvents();
+                                }
                             }
                         }
                     }
                 }
-                else
+            }
+            else
+            {
+                var dataService = core.DataService.GetDataService();
+                var dataStructureEntityId = (Guid)Data.Tables[entity].ExtendedProperties["Id"];
+                var dataStructureEntity = Workbench.Services.ServiceManager.Services
+                    .GetService<Workbench.Services.IPersistenceService>()
+                    .SchemaProvider
+                    .RetrieveInstance(typeof(DataStructureEntity), new Key(dataStructureEntityId))
+                    as DataStructureEntity;
+                var loadedRows = LoadRows(dataService, dataStructureEntity,
+                    dataStructureEntityId, ids);
+                //TODO: implement NotFound
+                //result.Add(new RowSecurityState
+                //{
+                //    Id = id,
+                //    NotFound = true
+                //});
+                foreach (DataRow row in loadedRows)
                 {
-                    var row = LoadRow(dataService, dataStructureEntity,
-                        dataStructureEntityId, new Guid((string)id));
                     result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
                 }
             }

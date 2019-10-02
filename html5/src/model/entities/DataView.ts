@@ -18,9 +18,9 @@ import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSou
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getBindingParent } from "model/selectors/DataView/getBindingParent";
 import { IRowState } from "./types/IRowState";
+import { ILookupLoader } from "./types/ILookupLoader";
 
 export class DataView implements IDataView {
-  
   $type_IDataView: 1 = 1;
 
   constructor(data: IDataViewData) {
@@ -31,7 +31,7 @@ export class DataView implements IDataView {
     this.lifecycle.parent = this;
     this.tablePanelView.parent = this;
     this.formPanelView.parent = this;
-    this.rowState.parent = this;
+    this.lookupLoader.parent = this;
   }
 
   isReorderedOnClient: boolean = true;
@@ -66,22 +66,29 @@ export class DataView implements IDataView {
   lifecycle: IDataViewLifecycle = null as any;
   tablePanelView: ITablePanelView = null as any;
   formPanelView: IFormPanelView = null as any;
-  rowState: IRowState = null as any;
+  lookupLoader: ILookupLoader = null as any;
 
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
   @observable isEditing: boolean = false;
 
   @observable selectedRowId: string | undefined;
+
   @computed get selectedRowIndex(): number | undefined {
     return this.selectedRowId
       ? this.dataTable.getExistingRowIdxById(this.selectedRowId)
       : undefined;
   }
+
+  @computed get visibleRowCount() {
+    return this.dataTable.visibleRowCount;
+  }
+
   @computed get selectedRow(): any[] | undefined {
     return this.selectedRowIndex !== undefined
       ? this.dataTable.getRowByExistingIdx(this.selectedRowIndex)
       : undefined;
   }
+
   @computed get isValidRowSelection(): boolean {
     return this.selectedRowIndex !== undefined;
   }
@@ -184,8 +191,8 @@ export class DataView implements IDataView {
           parentDataSourceField
         );
       }
-      console.log(result)
-      return result
+      console.log(result);
+      return result;
     } else {
       return {};
     }

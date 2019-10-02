@@ -15,6 +15,11 @@ import {
 import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
 import { getSelectedColumnId } from "model/selectors/TablePanelView/getSelectedColumnId";
 import { IOrderingConfiguration } from "../types/IOrderingConfiguration";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getSelectedRowIndex } from "model/selectors/TablePanelView/getSelectedRowIndex";
+import { getSelectedColumnIndex } from "model/selectors/TablePanelView/getSelectedColumnIndex";
+import { onFieldChange } from "model/actions/DataView/TableView/onFieldChange";
+import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -105,21 +110,32 @@ export class TablePanelView implements ITablePanelView {
     // console.log("CellClicked:", rowIndex, columnIndex);
     const row = this.dataTable.getRowByExistingIdx(rowIndex);
     const property = this.tableProperties[columnIndex];
-    if (
-      this.dataTable.getRowId(row) === this.selectedRowId &&
-      property.id === this.selectedColumnId
-    ) {
-      this.setEditing(true);
-    } else {
-      const { isEditing } = this;
-      if (isEditing) {
-        this.setEditing(false);
-      }
-      this.selectCell(this.dataTable.getRowId(row) as string, property.id);
-      if (isEditing) {
+    if (property.column !== "CheckBox") {
+      if (
+        this.dataTable.getRowId(row) === this.selectedRowId &&
+        property.id === this.selectedColumnId
+      ) {
         this.setEditing(true);
+      } else {
+        const { isEditing } = this;
+        if (isEditing) {
+          this.setEditing(false);
+        }
+        this.selectCell(this.dataTable.getRowId(row) as string, property.id);
+        if (isEditing) {
+          this.setEditing(true);
+        }
       }
+    } else {
+      this.selectCell(this.dataTable.getRowId(row) as string, property.id);
+      onFieldChange(this)(
+        undefined,
+        row,
+        property,
+        !getCellValue(this, row, property)
+      );
     }
+    this.scrollToCurrentCell();
   }
 
   @action.bound
@@ -145,7 +161,7 @@ export class TablePanelView implements ITablePanelView {
   }
 
   @action.bound
-  selectNextColumn(): void {
+  selectNextColumn(nextRowWhenEnd?: boolean): void {
     const properties = getTableViewProperties(this);
     const selPropId = getSelectedColumnId(this);
     if (selPropId) {
@@ -153,12 +169,18 @@ export class TablePanelView implements ITablePanelView {
       if (idx < properties.length - 1) {
         const newProp = properties[idx + 1];
         this.setSelectedColumnId(newProp.id);
+      } else if (nextRowWhenEnd && properties.length > 1) {
+        const rowId = getSelectedRowId(this);
+        getDataView(this).selectNextRow();
+        if (rowId !== getSelectedRowId(this)) {
+          this.selectFirstColumn();
+        }
       }
     }
   }
 
   @action.bound
-  selectPrevColumn(): void {
+  selectPrevColumn(prevRowWhenStart?: boolean): void {
     const properties = getTableViewProperties(this);
     const selPropId = getSelectedColumnId(this);
     if (selPropId) {
@@ -166,8 +188,26 @@ export class TablePanelView implements ITablePanelView {
       if (idx > 0) {
         const newProp = properties[idx - 1];
         this.setSelectedColumnId(newProp.id);
+      } else if (prevRowWhenStart && properties.length > 1) {
+        const rowId = getSelectedRowId(this);
+        getDataView(this).selectPrevRow();
+        if (rowId !== getSelectedRowId(this)) {
+          this.selectLastColumn();
+        }
       }
     }
+  }
+
+  @action.bound selectFirstColumn(): void {
+    const properties = getTableViewProperties(this);
+    const newProp = properties[0];
+    this.setSelectedColumnId(newProp.id);
+  }
+
+  @action.bound selectLastColumn(): void {
+    const properties = getTableViewProperties(this);
+    const newProp = properties[properties.length - 1];
+    this.setSelectedColumnId(newProp.id);
   }
 
   @action.bound
@@ -196,6 +236,46 @@ export class TablePanelView implements ITablePanelView {
   ): void {
     this.columnOrderChangingTargetId = idTarget;
     this.columnOrderChangingSourceId = idSource;
+  }
+
+  subId = 0;
+  onScrollToCurrentCellHandlers: Map<
+    number,
+    (rowIdx: number, columnIdx: number) => void
+  > = new Map();
+  subOnScrollToCellShortest(
+    fn: (rowIdx: number, columnIdx: number) => void
+  ): () => void {
+    const myId = this.subId++;
+    this.onScrollToCurrentCellHandlers.set(myId, fn);
+    return () => this.onScrollToCurrentCellHandlers.delete(myId);
+  }
+
+  @action.bound scrollToCurrentCell() {
+    const rowIdx = getSelectedRowIndex(this);
+    const columnIdx = getSelectedColumnIndex(this);
+    if (rowIdx !== undefined && columnIdx !== undefined) {
+      this.triggerOnScrollToCellShortest(rowIdx, columnIdx);
+    }
+  }
+
+  @action.bound triggerOnScrollToCellShortest(
+    rowIdx: number,
+    columnIdx: number
+  ) {
+    for (let h of this.onScrollToCurrentCellHandlers.values())
+      h(rowIdx, columnIdx);
+  }
+
+  onFocusTableHandlers: Map<number, () => void> = new Map();
+  subOnFocusTable(fn: () => void): () => void {
+    const myId = this.subId++;
+    this.onFocusTableHandlers.set(myId, fn);
+    return () => this.onFocusTableHandlers.delete(myId);
+  }
+
+  @action.bound triggerOnFocusTable() {
+    for (let h of this.onFocusTableHandlers.values()) h();
   }
 
   @computed get dataTable() {

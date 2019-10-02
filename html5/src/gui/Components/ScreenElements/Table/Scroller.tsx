@@ -104,7 +104,7 @@ export default class Scroller extends React.Component<IScrollerProps> {
           (1 ? " vert-scrollbar" : "") +
           (!this.props.isVisible ? " hidden" : "")
         }
-        tabIndex={-1}
+        tabIndex={1}
         style={{ width: this.props.width, height: this.props.height }}
         onScroll={this.handleScroll}
         onClick={this.handleClick}

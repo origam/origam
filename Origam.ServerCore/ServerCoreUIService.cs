@@ -348,20 +348,8 @@ namespace Origam.ServerCore
         }
         public IList RowStates(RowStatesInput input)
         {
-            SessionStore sessionStore;
-            try
-			{
-				sessionStore = sessionManager.GetSession(input.SessionFormIdentifier);
-			}
-			catch(SessionExpiredException)
-			{ 
-				return new ArrayList();
-			}
-            if (sessionStore != null)
-            {
-                return sessionStore.RowStates(input.Entity, input.Ids);
-            }
-            return new ArrayList();
+		    var sessionStore = sessionManager.GetSession(input.SessionFormIdentifier);
+            return sessionStore.RowStates(input.Entity, input.Ids);
         }
         public RuleExceptionDataCollection ExecuteActionQuery(
             ExecuteActionQueryInput input)

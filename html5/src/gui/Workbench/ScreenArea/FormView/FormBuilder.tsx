@@ -11,6 +11,7 @@ import { FormRoot } from "./FormRoot";
 import { FormViewEditor } from "./FormViewEditor";
 import { getRowStates } from "model/selectors/RowState/getRowStates";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -25,16 +26,15 @@ export class FormBuilder extends React.Component<{
     const row = getSelectedRow(this.props.dataView);
     const rowId = getSelectedRowId(this.props.dataView);
     const dataTable = getDataTable(this.props.dataView);
-
+    let backgroundColor: string | undefined;
     if (row && rowId) {
-      const rowState = getRowStates(this.props.dataView);
-      rowState.getValue(rowId);
+      backgroundColor = getRowStateRowBgColor(self.props.dataView, rowId);
     }
 
     function recursive(xfo: any) {
       if (xfo.name === "FormRoot") {
         return (
-          <FormRoot>
+          <FormRoot style={{ backgroundColor }}>
             {xfo.elements.map((child: any) => recursive(child))}
           </FormRoot>
         );

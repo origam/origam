@@ -1,26 +1,30 @@
-import { action, flow, reaction, createAtom } from "mobx";
+import { action, createAtom, flow, reaction } from "mobx";
+import { navigateAsChild } from "model/actions/DataView/navigateAsChild";
+import { getBindingChildren } from "model/selectors/DataView/getBindingChildren";
+import { getDataView } from "model/selectors/DataView/getDataView";
 import { getDataViewLabel } from "model/selectors/DataView/getDataViewLabel";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getIsBindingParent } from "model/selectors/DataView/getIsBindingParent";
+import { getIsBindingRoot } from "model/selectors/DataView/getIsBindingRoot";
+import { getMasterRowId } from "model/selectors/DataView/getMasterRowId";
+import { getParentRowId } from "model/selectors/DataView/getParentRowId";
+import { getDontRequestData } from "model/selectors/getDontRequestData";
 import { getSessionId } from "model/selectors/getSessionId";
-import { Machine, interpret } from "xstate";
+import { interpret, Machine } from "xstate";
 import { getApi } from "../../selectors/getApi";
 import { getSelectedRowId } from "../../selectors/TablePanelView/getSelectedRowId";
-import { IDataViewLifecycle } from "./types/IDataViewLifecycle";
 import {
   DataViewLifecycleDef,
   onChangeMasterRow,
   onChangeMasterRowDone,
+  onChangeMasterRowFailed,
+  onLoadGetData,
   onLoadGetDataDone,
-  onLoadGetData
+  onLoadGetDataFailed
 } from "./DataViewLifecycleDef";
-import { getIsBindingRoot } from "model/selectors/DataView/getIsBindingRoot";
-import { getBindingChildren } from "model/selectors/DataView/getBindingChildren";
-import { navigateAsChild } from "model/actions/DataView/navigateAsChild";
-import { getParentRowId } from "model/selectors/DataView/getParentRowId";
-import { getMasterRowId } from "model/selectors/DataView/getMasterRowId";
-import { getDataView } from "model/selectors/DataView/getDataView";
-import { getDontRequestData } from "model/selectors/getDontRequestData";
+import { IDataViewLifecycle } from "./types/IDataViewLifecycle";
+import { errDialogSvc } from "../ErrorDialog";
+import _ from "lodash";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
@@ -30,7 +34,8 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       changeMasterRow: (ctx, event) => (send, onEvent) =>
         flow(this.flChangeMasterRow.bind(this))(),
       loadGetData: (ctx, event) => (send, onEvent) =>
-        flow(this.flLoadGetData.bind(this))()
+        flow(this.flLoadGetData.bind(this))(),
+      ...errDialogSvc(this)
     },
     actions: {
       navigateChildren: (ctx, event) => this.navigateChildren()
@@ -49,29 +54,39 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   }
 
   *flChangeMasterRow() {
-    const api = getApi(this);
-    yield api.setMasterRecord({
-      SessionFormIdentifier: getSessionId(this),
-      Entity: getEntity(this),
-      RowId: getSelectedRowId(this)!
-    });
-    this.interpreter.send(onChangeMasterRowDone);
+    try {
+      const api = getApi(this);
+      yield api.setMasterRecord({
+        SessionFormIdentifier: getSessionId(this),
+        Entity: getEntity(this),
+        RowId: getSelectedRowId(this)!
+      });
+      this.interpreter.send(onChangeMasterRowDone);
+    } catch (error) {
+      console.error(error);
+      this.interpreter.send({ type: onChangeMasterRowFailed, error });
+    }
   }
 
   *flLoadGetData() {
-    const api = getApi(this);
-    const data = yield api.getData({
-      SessionFormIdentifier: getSessionId(this),
-      ChildEntity: getEntity(this),
-      ParentRecordId: getParentRowId(this)!,
-      RootRecordId: getMasterRowId(this)!
-    });
-    console.log(data);
-    const dataView = getDataView(this);
-    dataView.dataTable.clear();
-    dataView.dataTable.setRecords(data);
-    dataView.selectFirstRow();
-    this.interpreter.send(onLoadGetDataDone);
+    try {
+      const api = getApi(this);
+      const data = yield api.getData({
+        SessionFormIdentifier: getSessionId(this),
+        ChildEntity: getEntity(this),
+        ParentRecordId: getParentRowId(this)!,
+        RootRecordId: getMasterRowId(this)!
+      });
+      console.log(data);
+      const dataView = getDataView(this);
+      dataView.dataTable.clear();
+      dataView.dataTable.setRecords(data);
+      dataView.selectFirstRow();
+      this.interpreter.send(onLoadGetDataDone);
+    } catch (error) {
+      console.error(error);
+      this.interpreter.send({ type: onLoadGetDataFailed, error });
+    }
   }
 
   disposers: any[] = [];
@@ -97,10 +112,12 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       }
     );
   }
-
-  @action.bound changeMasterRow() {
+  
+  @action.bound changeMasterRowImm() {
     this.interpreter.send(onChangeMasterRow);
   }
+
+  changeMasterRow = _.debounce(this.changeMasterRowImm, 100);
 
   @action.bound navigateChildren() {
     for (let bch of getBindingChildren(this)) {

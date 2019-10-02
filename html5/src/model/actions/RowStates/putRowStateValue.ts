@@ -1,7 +1,9 @@
 import { getRowStates } from "model/selectors/RowState/getRowStates";
+import { getRowStatesByEntity } from "model/selectors/RowState/getRowStatesByEntity";
 
 export function putRowStateValue(ctx: any) {
-  return function putRowStateValue(state: any) {
-    getRowStates(ctx).putValue(state);
+  return function putRowStateValue(entity: string, state: any) {
+    const rowStates = getRowStatesByEntity(ctx, entity);
+    rowStates && rowStates.putValue(state);
   };
 }

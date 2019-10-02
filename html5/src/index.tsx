@@ -5,6 +5,7 @@ import { Main } from "./gui/Main";
 import "./index.css";
 import { createApplication } from "./model/factories/createApplication";
 import * as serviceWorker from "./serviceWorker";
+import 'react-tippy/dist/tippy.css'
 
 const application = createApplication();
 application.run();
@@ -21,6 +22,7 @@ ReactDOM.render(
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
   
+
 
 
 

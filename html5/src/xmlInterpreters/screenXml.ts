@@ -26,6 +26,7 @@ import { OrderingConfiguration } from "../model/entities/OrderingConfiguration";
 import { Table } from "../gui/Components/ScreenElements/Table/Table";
 import { DataViewLifecycle } from "model/entities/DataViewLifecycle/DataViewLifecycle";
 import { RowState } from "model/entities/RowState";
+import { LookupLoader } from "model/entities/LookupLoader";
 
 export const findUIRoot = (node: any) =>
   findStopping(node, n => n.name === "UIRoot")[0];
@@ -132,6 +133,7 @@ export function interpretScreenXml(
     // isSessioned: windowXml.attributes.UseSession,
     dataSources: dataSourcesXml.elements.map((dataSource: any) => {
       return new DataSource({
+        rowState: new RowState({}),
         entity: dataSource.attributes.Entity,
         dataStructureEntityId: dataSource.attributes.DataStructureEntityId,
         identifier: dataSource.attributes.Identifier,
@@ -213,6 +215,8 @@ export function interpretScreenXml(
           });
         }
       );
+      
+
       const actions = findActions(dataView).map(
         action =>
           new Action({
@@ -274,7 +278,7 @@ export function interpretScreenXml(
           orderingConfiguration: new OrderingConfiguration()
         }),
         formPanelView: new FormPanelView(),
-        rowState: new RowState({}),
+        lookupLoader: new LookupLoader(),
         properties,
         actions
       });

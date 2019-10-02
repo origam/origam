@@ -93,6 +93,7 @@ class CalendarWidget extends React.Component<{
   }
 
   @action.bound handleDayClick(event: any, day: moment.Moment) {
+    console.log("Day clicked: ", day.format("DD.MM.YYYY"));
     this.props.onDayClick && this.props.onDayClick(event, day);
   }
 
@@ -145,19 +146,25 @@ class CalendarWidget extends React.Component<{
 
 @observer
 export class DateTimeEditor extends React.Component<{
-  value: string;
+  value: string | null;
   outputFormat: string;
   isReadOnly?: boolean;
   isInvalid?: boolean;
+  invalidMessage?: string;
   isFocused?: boolean;
   foregroundColor?: string;
   backgroundColor?: string;
   onChange?: (event: any, isoDay: string) => void;
+  onChangeByCalendar?: (event: any, isoDay: string) => void;
   onClick?: (event: any) => void;
+  onKeyDown?: (event: any) => void;
   onEditorBlur?: (event: any) => void;
   refocuser?: (cb: () => void) => () => void;
 }> {
   @observable isDroppedDown = false;
+
+  refDropdowner = (elm: Dropdowner | null) => (this.elmDropdowner = elm);
+  elmDropdowner: Dropdowner | null = null;
 
   @action.bound handleDropperClick(event: any) {
     event.stopPropagation();
@@ -196,7 +203,7 @@ export class DateTimeEditor extends React.Component<{
     this.disposers.forEach(d => d());
   }
 
-  componentDidUpdate(prevProps: { isFocused?: boolean }) {
+  componentDidUpdate(prevProps: { isFocused?: boolean; value: string | null }) {
     runInAction(() => {
       if (!prevProps.isFocused && this.props.isFocused) {
         this.makeFocusedIfNeeded();
@@ -205,6 +212,10 @@ export class DateTimeEditor extends React.Component<{
         this.dirtyTextualValue = undefined;
         this.makeFocusedIfNeeded();
       }*/
+
+      if (prevProps.value !== null && this.props.value === null) {
+        this.dirtyTextualValue = "";
+      }
     });
   }
 
@@ -220,12 +231,15 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @action.bound handleInputBlur(event: any) {
+    this.dirtyTextualValue = undefined;
     this.props.onEditorBlur && this.props.onEditorBlur(event);
   }
 
   @action.bound handleContainerMouseDown(event: any) {
-    event.preventDefault();
-    this.elmInput && this.elmInput.focus();
+    // event.preventDefault();
+    setTimeout(() => {
+      this.elmInput && this.elmInput.focus();
+    }, 30);
   }
 
   refContainer = (elm: HTMLDivElement | null) => (this.elmContainer = elm);
@@ -236,11 +250,15 @@ export class DateTimeEditor extends React.Component<{
   @observable dirtyTextualValue: string | undefined;
 
   @computed get momentValue() {
-    return moment(this.props.value !== "" ? this.props.value : undefined);
+    return this.props.value !== "" && this.props.value !== null
+      ? moment(this.props.value)
+      : null;
   }
 
   @computed get formattedMomentValue() {
-    return this.momentValue.format(this.props.outputFormat);
+    return this.momentValue
+      ? this.momentValue.format(this.props.outputFormat)
+      : "";
   }
 
   @computed get textfieldValue() {
@@ -260,29 +278,44 @@ export class DateTimeEditor extends React.Component<{
   @action.bound handleTextfieldChange(event: any) {
     this.dirtyTextualValue = event.target.value;
     // TODO: Do not insist on spaces!?
+    const simpleFormat = this.props.outputFormat
+      .replace(/MM/g, "M")
+      .replace(/DD/g, "D");
     const dirtyMomentValue = [
-      moment(this.dirtyTextualValue, this.props.outputFormat, true),
+      moment(this.dirtyTextualValue, simpleFormat, true),
       moment(this.dirtyTextualValue, "M")
     ].find(m => m.isValid());
     if (dirtyMomentValue) {
       this.props.onChange &&
-        this.props.onChange(event, dirtyMomentValue.toISOString());
+        this.props.onChange(event, dirtyMomentValue.toISOString(true));
     } else if (
       this.dirtyTextualValue &&
       /^[A-Za-z]+$/.test(this.dirtyTextualValue)
     ) {
-      this.props.onChange && this.props.onChange(event, moment().toISOString());
+      this.props.onChange &&
+        this.props.onChange(event, moment().toISOString(true));
     }
   }
 
   @action.bound handleDayClick(event: any, day: moment.Moment) {
+    this.elmDropdowner && this.elmDropdowner.setDropped(false);
     this.dirtyTextualValue = undefined;
-    this.props.onChange && this.props.onChange(event, day.toISOString());
+    this.props.onChangeByCalendar &&
+      this.props.onChangeByCalendar(event, day.toISOString(true));
+    this.props.onChange && this.props.onChange(event, day.toISOString(true));
+  }
+
+  @action.bound
+  handleFocus(event: any) {
+    setTimeout(() => {
+      this.elmInput && this.elmInput.select();
+    }, 10);
   }
 
   render() {
     return (
       <Dropdowner
+        ref={this.refDropdowner}
         onContainerMouseDown={this.handleContainerMouseDown}
         trigger={({ refTrigger, setDropped }) => (
           <div
@@ -312,6 +345,7 @@ export class DateTimeEditor extends React.Component<{
                 className={CS.editor}
                 type="text"
                 onBlur={this.handleInputBlur}
+                onFocus={this.handleFocus}
                 /*value={moment(this.props.value, this.props.inputFormat).format(
             this.props.outputFormat
           )}*/
@@ -320,11 +354,14 @@ export class DateTimeEditor extends React.Component<{
                 readOnly={this.props.isReadOnly}
                 onChange={this.handleTextfieldChange}
                 onClick={this.props.onClick}
+                onKeyDown={this.props.onKeyDown}
               />
             </Tooltip>
             {this.props.isInvalid && (
               <div className={CS.notification}>
-                <i className="fas fa-exclamation-circle red" />
+                <Tooltip html={this.props.invalidMessage} arrow={true}>
+                  <i className="fas fa-exclamation-circle red" />
+                </Tooltip>
               </div>
             )}
             {!this.props.isReadOnly && (
@@ -342,8 +379,8 @@ export class DateTimeEditor extends React.Component<{
           <div className={S.droppedPanelContainer}>
             <CalendarWidget
               onDayClick={this.handleDayClick}
-              initialDisplayDate={this.momentValue}
-              selectedDay={this.momentValue}
+              initialDisplayDate={this.momentValue || moment()}
+              selectedDay={this.momentValue || moment()}
             />
           </div>
         )}

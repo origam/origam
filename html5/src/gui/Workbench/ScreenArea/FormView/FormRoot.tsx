@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import { action } from "mobx";
 
 @observer
-export class FormRoot extends React.Component<{}> {
+export class FormRoot extends React.Component<{style?:any}> {
   componentDidMount() {
     window.addEventListener("click", this.handleWindowClick);
   }
@@ -23,7 +23,7 @@ export class FormRoot extends React.Component<{}> {
 
   render() {
     return (
-      <div ref={this.refFormRoot} className={S.formRoot} onClick={undefined}>
+      <div ref={this.refFormRoot} className={S.formRoot} onClick={undefined} style={this.props.style}>
         {this.props.children}
       </div>
     );
