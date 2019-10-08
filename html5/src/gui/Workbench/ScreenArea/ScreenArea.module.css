@@ -28,6 +28,7 @@
 
 .TabHandleCloseBtn {
   position: absolute;
+  top: 0px;
   right: 2px;
   background: transparent;
   padding: 2px;

@@ -81,6 +81,9 @@ namespace Origam.DA.Service
             persistor = new Persistor(
                 this,index,origamFileFactory,origamFileManager, trackerLoaderFactory);
             fileEventQueue.Start();
+            
+            InstancePersisted += (sender, persistent) =>
+                ReferenceIndexManager.UpdateReferenceIndex(persistent);
         }
 
         #region UNUSED

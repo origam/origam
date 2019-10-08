@@ -459,9 +459,12 @@ namespace Origam.DA.Service
         {
             foreach (DataStructureColumn column in entity.Columns)
             {
-                if (column.Field is FieldMappingItem && column.Field.IsPrimaryKey && column.UseLookupValue == false && column.UseCopiedValue == false)
+                if (column.Field is FieldMappingItem 
+                    && column.Field.IsPrimaryKey 
+                    && column.UseLookupValue == false
+                    && column.UseCopiedValue == false)
                 {
-                    command.Parameters.Add(CreateNewValueParameter(column));
+                    command.Parameters.Add(CreateSelectRowParameter(column));
                 }
             }
         }
@@ -488,6 +491,18 @@ namespace Origam.DA.Service
                 column.Name,
                 dbField.DataType,
                 dbField.MappedDataType,
+                dbField.DataLength,
+                true);
+        }
+        private IDataParameter CreateSelectRowParameter(
+            DataStructureColumn column)
+        {
+            FieldMappingItem dbField = GetDatabaseField(column);
+            return BuildParameter(
+                NewValueParameterName(column, true),
+                column.Name,
+                OrigamDataType.Array,
+                null,
                 dbField.DataLength,
                 true);
         }
@@ -1367,11 +1382,11 @@ namespace Origam.DA.Service
             {
                 if (i > 0) sqlExpression.Append(" AND");
                 PrettyIndent(sqlExpression);
-                sqlExpression.AppendFormat("{0}.{1} = {2}",
-                    NameLeftBracket + entity.Name + NameRightBracket,
-                    RenderExpression(column.Field, null, null, null, null),
-                    NewValueParameterName(column, false)
-                    );
+                sqlExpression.Append(ArraySql(
+                    NameLeftBracket + entity.Name + NameRightBracket
+                    + "." + 
+                    RenderExpression(column.Field, null, null, null, null), 
+                    NewValueParameterName(column, false)));
                 i++;
             }
 

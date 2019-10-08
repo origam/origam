@@ -38,6 +38,7 @@ export class DataView extends React.Component<{
   }
 
   render() {
+    // TODO: Move styling to stylesheet
     return (
       <Provider dataView={this.props.dataView}>
         <div className={S.dataView} style={this.getDataViewStyle()}>
@@ -47,6 +48,7 @@ export class DataView extends React.Component<{
               // width: "100%",
               // height: "100%",
               flexGrow: 1,
+              flexDirection: "column",
               display:
                 this.props.dataView!.activePanelView !== IPanelViewType.Table
                   ? "none"
@@ -55,21 +57,24 @@ export class DataView extends React.Component<{
           >
             <TableView />
           </div>
-          <div
-            style={{
-              // width: "100%",
-              // height: "100%",
-              flexGrow: 1,
-              display:
-                this.props.dataView!.activePanelView !== IPanelViewType.Form
-                  ? "none"
-                  : "flex"
-            }}
-          >
-            <FormView>
-              <FormBuilder />
-            </FormView>
-          </div>
+          {this.props.dataView!.activePanelView === IPanelViewType.Form && (
+            <div
+              style={{
+                // width: "100%",
+                // height: "100%",
+                flexGrow: 1,
+                flexDirection: "column",
+                display:
+                  this.props.dataView!.activePanelView !== IPanelViewType.Form
+                    ? "none"
+                    : "flex"
+              }}
+            >
+              <FormView>
+                <FormBuilder />
+              </FormView>
+            </div>
+          )}
           {this.props.dataView!.isWorking && (
             <div className={S.dataViewOverlay}>
               <div className={S.dataViewLoadingLabel}>loading</div>

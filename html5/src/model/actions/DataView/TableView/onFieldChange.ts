@@ -10,10 +10,11 @@ export function onFieldChange(ctx: any) {
     property: IProperty,
     value: any
   ) {
-    console.log("ofc");
+    console.log("ofc", property.column);
     getDataView(ctx).onFieldChange(event, row, property, value);
     if (
       property.column === "ComboBox" ||
+      property.column === "CheckBox" ||
       (property.column === "Date" && event.type === "click")
     ) {
       // Flush data to session when combo value changed.

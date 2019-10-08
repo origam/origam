@@ -8,6 +8,7 @@ import { ITablePanelView } from "../TablePanelView/types/ITablePanelView";
 import { IFormPanelView } from "../FormPanelView/types/IFormPanelView";
 import { IAction } from "./IAction";
 import { IRowState } from "./IRowState";
+import { ILookupLoader } from "./ILookupLoader";
 
 export interface IDataViewData {
   id: string;
@@ -39,6 +40,7 @@ export interface IDataViewData {
   tablePanelView: ITablePanelView;
   formPanelView: IFormPanelView;
   lifecycle: IDataViewLifecycle;
+  lookupLoader: ILookupLoader;
 }
 
 export interface IDataView extends IDataViewData {
@@ -56,6 +58,7 @@ export interface IDataView extends IDataViewData {
   isValidRowSelection: boolean;
   selectedRowId: string | undefined;
   selectedRowIndex: number | undefined;
+  visibleRowCount: number;
   selectedRow: any[] | undefined;
   dataSource: IDataSource;
   bindingParametersFromParent: {[key: string]: string};

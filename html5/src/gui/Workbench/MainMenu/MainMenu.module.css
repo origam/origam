@@ -35,6 +35,7 @@
 .mainMenuItem :global(.status) {
   height: 100%;
   position: absolute;
+  top: 0px;
   right: 3px;
   display: flex;
   align-items: center;

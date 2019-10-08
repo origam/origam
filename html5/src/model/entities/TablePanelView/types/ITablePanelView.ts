@@ -42,8 +42,9 @@ export interface ITablePanelView extends ITablePanelViewData {
   onNoCellClick(): void;
   onOutsideTableClick(): void;
 
-  selectNextColumn(): void;
-  selectPrevColumn(): void;
+  setEditing(state: boolean): void;
+  selectNextColumn(nextRowWhenEnd?: boolean): void;
+  selectPrevColumn(prevRowWhenStart?: boolean): void;
 
   setSelectedColumnId(id: string | undefined): void;
   swapColumns(id1: string, id2: string): void;
@@ -54,6 +55,15 @@ export interface ITablePanelView extends ITablePanelViewData {
     idSource: string | undefined,
     idTarget: string | undefined
   ): void;
+
+  subOnScrollToCellShortest(
+    fn: (rowIdx: number, columnIdx: number) => void
+  ): () => void;
+  subOnFocusTable(fn: () => void): () => void;
+
+  scrollToCurrentCell(): void;
+  triggerOnFocusTable(): void;
+  triggerOnScrollToCellShortest(rowIdx: number, columnIdx: number): void;
 
   parent?: any;
 }

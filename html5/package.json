@@ -54,5 +54,11 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://localhost:44356"
+  "proxy": "https://localhost:44356",
+  "devDependencies": {
+    "express": "^4.17.1",
+    "express-winston": "^3.3.0",
+    "http-proxy-middleware": "^0.20.0",
+    "winston": "^3.2.1"
+  }
 }

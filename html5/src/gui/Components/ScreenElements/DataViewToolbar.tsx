@@ -15,10 +15,13 @@ import { onNextRowClick } from "model/actions/DataView/onNextRowClick";
 import { onPrevRowClick } from "model/actions/DataView/onPrevRowClick";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 import { onActionClick } from "model/actions/Actions/onActionClick";
+import { getDataView } from "model/selectors/DataView/getDataView";
 
 @inject(({ dataView }: { dataView: IDataView }) => {
   const ctx = dataView;
   return {
+    selectedRowIndex: dataView.selectedRowIndex,
+    visibleRowCount: dataView.visibleRowCount,
     activePanelView: getActivePanelView(dataView),
     label: getDataViewLabel(dataView),
     isFilterSettingsVisible:
@@ -40,6 +43,8 @@ import { onActionClick } from "model/actions/Actions/onActionClick";
 export class Toolbar extends React.Component<{
   activePanelView?: IPanelViewType;
   label?: string;
+  selectedRowIndex?: number;
+  visibleRowCount?: number;
   isFilterSettingsVisible?: boolean;
   actions?: IAction[];
   onFormViewButtonClick?: (event: any) => void;
@@ -155,7 +160,10 @@ export class Toolbar extends React.Component<{
         </div>
         <div className={S.section}>
           <span>
-            {0} / {0}
+            {this.props.selectedRowIndex !== undefined
+              ? this.props.selectedRowIndex + 1
+              : " - "}
+            &nbsp;/&nbsp;{this.props.visibleRowCount}
           </span>
         </div>
         <div className={S.section}>

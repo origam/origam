@@ -313,6 +313,8 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
       <canvas
         className={S.canvas}
         {...this.canvasProps}
+        /*width={0}
+        height={0}*/
         ref={this.handleRefCanvas}
       />
     );
