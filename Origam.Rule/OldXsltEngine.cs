@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.ObjectPersistence;
 using System;
+using System.Collections;
 using System.Xml;
 using System.Xml.Xsl;
 using System.IO;
@@ -31,7 +32,7 @@ namespace Origam.Rule
 {
     class OldXsltEngine : MicrosoftXsltEngine
     {
-        #region Constructors
+#region Constructors
         public OldXsltEngine() : base ()
 		{
 		}
@@ -39,7 +40,7 @@ namespace Origam.Rule
         public OldXsltEngine(IPersistenceProvider persistence=null) : base (persistence)
 		{
 		}
-		#endregion
+#endregion
 
         internal override object GetTransform(IXmlContainer xslt)
         {
@@ -89,6 +90,25 @@ namespace Origam.Rule
             XslTransform xslt = engine as XslTransform;
             xslt.Transform(input, xslArg, output);
         }
+#region Transformation Cache
+        private static Hashtable _transformationCache = new Hashtable();
+        protected override bool IsTransformationCached(Guid transformationId)
+        {
+            return _transformationCache.ContainsKey(transformationId);
+        }
+
+        protected override object GetCachedTransformation(Guid tranformationId)
+        {
+            return _transformationCache[tranformationId];
+        }
+
+        protected override void PutTransformationToCache(
+            Guid transformationId, object transformation)
+        {
+            _transformationCache[transformationId] = transformation;
+        }
+#endregion
+
     }
 }
 
