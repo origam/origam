@@ -144,7 +144,7 @@ export class FormScreenLifecycle implements IFormScreenLifecycle {
           DataStructureEntityId: getDataStructureEntityId(rootDataView),
           Filter: "",
           Ordering: [],
-          RowLimit: 10000,
+          RowLimit: 999999,
           ColumnNames: getColumnNamesToLoad(rootDataView),
           MasterRowId: undefined
         });
