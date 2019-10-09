@@ -1268,24 +1268,56 @@ namespace Origam.Server
             }
             else
             {
-                var dataService = core.DataService.GetDataService();
-                var dataStructureEntityId = (Guid)Data.Tables[entity].ExtendedProperties["Id"];
-                var dataStructureEntity = Workbench.Services.ServiceManager.Services
-                    .GetService<Workbench.Services.IPersistenceService>()
-                    .SchemaProvider
-                    .RetrieveInstance(typeof(DataStructureEntity), new Key(dataStructureEntityId))
-                    as DataStructureEntity;
-                var loadedRows = LoadRows(dataService, dataStructureEntity,
-                    dataStructureEntityId, ids);
-                //TODO: implement NotFound
-                //result.Add(new RowSecurityState
-                //{
-                //    Id = id,
-                //    NotFound = true
-                //});
-                foreach (DataRow row in loadedRows)
+                List<object> notFoundIds = new List<Object>();
+                // try to get from session first anyway (e.g. for the newly created records)                
+                foreach (object id in ids)
                 {
-                    result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
+                    if (id != null)
+                    {
+                        DataRow row;
+                        try
+                        {
+                            row = GetSessionRow(entity, id);
+                            if (row != null)
+                            {
+                                result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
+                                continue;
+                            }
+                            else
+                            {
+                                notFoundIds.Add(id);
+                            }
+                        }
+                        catch
+                        {
+                            // not found in the session, save it for later
+                            notFoundIds.Add(id);
+                        }
+                    }
+                }
+
+                // try to get the rest from the database
+                if (notFoundIds.Count > 0)
+                {
+                    var dataService = core.DataService.GetDataService();
+                    var dataStructureEntityId = (Guid)Data.Tables[entity].ExtendedProperties["Id"];
+                    var dataStructureEntity = Workbench.Services.ServiceManager.Services
+                        .GetService<Workbench.Services.IPersistenceService>()
+                        .SchemaProvider
+                        .RetrieveInstance(typeof(DataStructureEntity), new Key(dataStructureEntityId))
+                        as DataStructureEntity;
+                    var loadedRows = LoadRows(dataService, dataStructureEntity,
+                        dataStructureEntityId, notFoundIds);
+                    //TODO: implement NotFound
+                    //result.Add(new RowSecurityState
+                    //{
+                    //    Id = id,
+                    //    NotFound = true
+                    //});
+                    foreach (DataRow row in loadedRows)
+                    {
+                        result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
+                    }
                 }
             }
             return result;
