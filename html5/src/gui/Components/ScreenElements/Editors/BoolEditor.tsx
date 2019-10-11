@@ -1,6 +1,7 @@
 import * as React from "react";
 import { observer } from "mobx-react";
 import style from './BoolEditor.module.css';
+import { action } from "mobx";
 
 
 @observer
@@ -11,6 +12,7 @@ export class BoolEditor extends React.Component<{
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
 }> {
+  
   render() {
     return (
       <div className={`editor-container ${style.checkbox}`}>
@@ -25,6 +27,7 @@ export class BoolEditor extends React.Component<{
           }}
           onKeyDown={this.props.onKeyDown}
           onClick={this.props.onClick}
+          onBlur={() => 'bool blur'}
         />
       </div>
     );

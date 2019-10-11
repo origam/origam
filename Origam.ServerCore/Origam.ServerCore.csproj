@@ -7,6 +7,10 @@
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <Folder Include="logs\" />
     <Folder Include="Model\Data\" />

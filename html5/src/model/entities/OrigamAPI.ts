@@ -118,6 +118,22 @@ export class OrigamAPI implements IApi {
     )).data;
   }
 
+  async getLookupLabelsEx(
+    query: {
+      LookupId: string;
+      MenuId: string | undefined;
+      LabelIds: string[];
+    }[]
+  ) {
+    return (await axios.post(
+      `${this.urlPrefix}/UIService/GetLookupLabelsEx`,
+      query,
+      {
+        headers: this.httpAuthHeader
+      }
+    )).data;
+  }
+
   async newEntity(data: { DataStructureEntityId: string; MenuId: string }) {
     return (await axios.post(`${this.urlPrefix}/Data/NewEmptyRow`, data, {
       headers: this.httpAuthHeader

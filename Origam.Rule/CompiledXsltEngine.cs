@@ -24,6 +24,8 @@ using System.Xml;
 using System.Xml.Xsl;
 using System.IO;
 using System.Xml.XPath;
+using System.Collections;
+using System;
 
 namespace Origam.Rule
 {
@@ -75,5 +77,24 @@ namespace Origam.Rule
             XslCompiledTransform xslt = engine as XslCompiledTransform;
             xslt.Transform(input, xslArg, output);
         }
+        #region Transformation Cache
+        private static Hashtable _transformationCache = new Hashtable();
+        protected override bool IsTransformationCached(Guid transformationId)
+        {
+            return _transformationCache.ContainsKey(transformationId);
+        }
+
+        protected override object GetCachedTransformation(Guid tranformationId)
+        {
+            return _transformationCache[tranformationId];
+        }
+
+        protected override void PutTransformationToCache(
+            Guid transformationId, object transformation)
+        {
+            _transformationCache[transformationId] = transformation;
+        }
+        #endregion
+
     }
 }

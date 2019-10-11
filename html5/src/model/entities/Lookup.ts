@@ -3,6 +3,7 @@ import { computed, createAtom, flow, IAtom, observable, when } from "mobx";
 import { getApi } from "../selectors/getApi";
 import { IDropDownColumn } from "./types/IDropDownColumn";
 import { IDropDownParameter, IDropDownType, ILookup, ILookupData } from "./types/ILookup";
+import { getLookupLoader } from "model/selectors/DataView/getLookupLoader";
 
 export enum IIdState {
   LOADING = "LOADING",
@@ -69,7 +70,7 @@ export class Lookup implements ILookup {
             break;
           }
           this.isSomethingLoading = true;
-          const api = getApi(this);
+          const api = getLookupLoader(this);
 
           const labels = yield api.getLookupLabels({
             LookupId: this.lookupId,

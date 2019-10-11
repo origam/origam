@@ -18,6 +18,8 @@ import { IOrderingConfiguration } from "../types/IOrderingConfiguration";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getSelectedRowIndex } from "model/selectors/TablePanelView/getSelectedRowIndex";
 import { getSelectedColumnIndex } from "model/selectors/TablePanelView/getSelectedColumnIndex";
+import { onFieldChange } from "model/actions/DataView/TableView/onFieldChange";
+import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -108,20 +110,30 @@ export class TablePanelView implements ITablePanelView {
     // console.log("CellClicked:", rowIndex, columnIndex);
     const row = this.dataTable.getRowByExistingIdx(rowIndex);
     const property = this.tableProperties[columnIndex];
-    if (
-      this.dataTable.getRowId(row) === this.selectedRowId &&
-      property.id === this.selectedColumnId
-    ) {
-      this.setEditing(true);
-    } else {
-      const { isEditing } = this;
-      if (isEditing) {
-        this.setEditing(false);
-      }
-      this.selectCell(this.dataTable.getRowId(row) as string, property.id);
-      if (isEditing) {
+    if (property.column !== "CheckBox") {
+      if (
+        this.dataTable.getRowId(row) === this.selectedRowId &&
+        property.id === this.selectedColumnId
+      ) {
         this.setEditing(true);
+      } else {
+        const { isEditing } = this;
+        if (isEditing) {
+          this.setEditing(false);
+        }
+        this.selectCell(this.dataTable.getRowId(row) as string, property.id);
+        if (isEditing) {
+          this.setEditing(true);
+        }
       }
+    } else {
+      this.selectCell(this.dataTable.getRowId(row) as string, property.id);
+      onFieldChange(this)(
+        undefined,
+        row,
+        property,
+        !getCellValue(this, row, property)
+      );
     }
     this.scrollToCurrentCell();
   }

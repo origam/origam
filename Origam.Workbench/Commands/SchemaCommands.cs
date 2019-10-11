@@ -686,21 +686,16 @@ namespace Origam.Workbench.Commands
 				}
                 IPersistenceProvider persistenceProvider = ServiceManager.Services
                     .GetService<IPersistenceService>().SchemaProvider;
-                persistenceProvider.BeginTransaction();
-				// then delete from the model
+
+                // then delete from the model
+				BeforeDelete?.Invoke(this, EventArgs.Empty);
                 try
                 {
-                    if (BeforeDelete != null)
-                    {
-                        BeforeDelete(this, EventArgs.Empty);
-                    }
+					persistenceProvider.BeginTransaction();
                     _schema.ActiveNode.Delete();
-                    if (AfterDelete != null)
-                    {
-                        AfterDelete(this, EventArgs.Empty);
-                    }
+                    AfterDelete?.Invoke(this, EventArgs.Empty);
                 }
-                catch(Exception ex)
+                catch
                 {
                     // it might fail because of references
                     persistenceProvider.EndTransactionDontSave();

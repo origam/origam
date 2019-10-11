@@ -33,6 +33,14 @@ export interface IApi {
     LabelIds: string[];
   }): Promise<{ [key: string]: string }>;
 
+  getLookupLabelsEx(
+    query: {
+      LookupId: string;
+      MenuId: string | undefined;
+      LabelIds: string[];
+    }[]
+  ): Promise<{ [key: string]: { [key: string]: string } }>;
+
   newEntity(data: {
     DataStructureEntityId: string;
     MenuId: string;
@@ -111,7 +119,7 @@ export interface IApi {
     Id: string;
     MenuId: string;
     LookupId: string;
-    Parameters?: {[key: string]: any};
+    Parameters?: { [key: string]: any };
     ShowUniqueValues: boolean;
     SearchText: string;
     PageSize: number;

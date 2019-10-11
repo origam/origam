@@ -43,7 +43,6 @@ namespace Origam.Rule
 		private ITracingService _tracingService = ServiceManager.Services.GetService(typeof(ITracingService)) as ITracingService;
 
 #if ORIGAM_CLIENT
-		private static Hashtable _transformationCache = new Hashtable();
 		private readonly object _lock = new object();
 #endif
 
@@ -144,9 +143,9 @@ namespace Origam.Rule
 			object xsltEngine;
 
 #if ORIGAM_CLIENT
-			if(_transformationCache.Contains(transformationId))
+			if(IsTransformationCached(transformationId))
 			{
-				xsltEngine = _transformationCache[transformationId];
+				xsltEngine = GetCachedTransformation(transformationId);
 			}
 			else
 			{
@@ -172,7 +171,7 @@ namespace Origam.Rule
 #if ORIGAM_CLIENT
 				lock(_lock)
 				{
-					_transformationCache[transformationId] = xsltEngine;
+					PutTransformationToCache(transformationId, xsltEngine);
 				}
 			}
 #endif
@@ -183,9 +182,9 @@ namespace Origam.Rule
         {
 			object xsltEngine;
 #if ORIGAM_CLIENT
-			if(_transformationCache.Contains(transformationId))
+			if(IsTransformationCached(transformationId))
 			{
-				xsltEngine = _transformationCache[transformationId];
+				xsltEngine = GetCachedTransformation(transformationId);
 			}
 			else
 			{
@@ -213,7 +212,7 @@ namespace Origam.Rule
 #if ORIGAM_CLIENT
 				lock(_lock)
 				{
-					_transformationCache[transformationId] = xsltEngine;
+					PutTransformationToCache(transformationId, xsltEngine);
 				}
 			}
 #endif
@@ -268,6 +267,23 @@ namespace Origam.Rule
 
 			return gen.CreateDataSet(ds);
 		}
+        #endregion
+
+        #region Transformation Cache
+        protected virtual bool IsTransformationCached(Guid transformationId)
+        {
+            return false;
+        }
+
+        protected virtual object GetCachedTransformation(Guid tranformationId)
+        {
+            return null;
+        }
+
+        protected virtual void PutTransformationToCache(
+            Guid transformationId, object transformation)
+        {
+        }
         #endregion
     }
 }

@@ -9,6 +9,7 @@ export interface IDataTable extends IDataTableData {
   properties: IProperty[];
   rows: any[][];
   additionalRowData: Map<string, IAdditionalRowData>;
+  visibleRowCount: number;
 
   getRowId(row: any[]): string;
   getCellValue(row: any[], property: IProperty): any;
