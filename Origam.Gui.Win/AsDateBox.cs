@@ -73,7 +73,7 @@ namespace Origam.Gui.Win
 
 		#region Public properties
 
-		private bool _enabled;
+		private bool _enabled = true;
 
 		public new bool Enabled
 		{
@@ -299,7 +299,11 @@ namespace Origam.Gui.Win
 
 		private void EditControl_KeyUp(object sender, KeyEventArgs e)
 		{
-					if (e.KeyCode == Keys.Delete)
+            if (! this.Enabled)
+            {
+                return;
+            }
+            if (e.KeyCode == Keys.Delete)
 			{
 				this.DateValue = null;
 			}
