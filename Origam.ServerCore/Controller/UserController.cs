@@ -72,7 +72,6 @@ namespace Origam.ServerCore.Controller
             {
                 return BadRequest("Passwords don't match");
             }
-            SetOrigamServerAsCurrentUser();
             IdentityServiceAgent.ServiceProvider = serviceProvider;
             if (!userManager.IsInitialSetupNeeded())
             {
@@ -103,7 +102,6 @@ namespace Origam.ServerCore.Controller
             {
                 return BadRequest("Passwords don't match");
             }
-            SetOrigamServerAsCurrentUser();
             IdentityServiceAgent.ServiceProvider = serviceProvider;
             var newUser = new User 
             {
@@ -135,7 +133,6 @@ namespace Origam.ServerCore.Controller
         [HttpPost("[action]")]
         public async Task<IActionResult> VerifyEmail( [FromBody]VerifyEmailData verifyEmailData)
         {
-            SetOrigamServerAsCurrentUser();
             var user = await userManager.FindByIdAsync(verifyEmailData.Id);
             if (user == null)
                 return BadRequest();
@@ -152,7 +149,6 @@ namespace Origam.ServerCore.Controller
         [HttpPost("[action]")]
         public async Task<IActionResult> Login([FromBody]LoginData loginData)
         {
-            SetOrigamServerAsCurrentUser();
             var user = await userManager.FindByNameAsync(loginData.UserName);
             if (user == null)
             {
@@ -177,7 +173,6 @@ namespace Origam.ServerCore.Controller
         public async Task<IActionResult> RequestPasswordReset([FromBody]RequestPasswordResetData passwordData) 
         {
             IdentityServiceAgent.ServiceProvider = serviceProvider;
-            SetOrigamServerAsCurrentUser();
             var user = await userManager.FindByEmailAsync(passwordData.Email);
             if (user == null)
             {
@@ -192,7 +187,6 @@ namespace Origam.ServerCore.Controller
         [HttpPost("[action]")]
         public async Task<IActionResult> ResetPassword([FromBody]ResetPasswordData passwordData)
         {           
-            SetOrigamServerAsCurrentUser();
             var user = await userManager.FindByIdAsync(passwordData.Id);
             if (user == null)
             {
@@ -217,19 +211,7 @@ namespace Origam.ServerCore.Controller
             await signInManager.SignOutAsync();
             return Ok();
         }  
-        
-        private static void SetOrigamServerAsCurrentUser()
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, "origam_server"),
-                new Claim(ClaimTypes.NameIdentifier, "1"),
-                new Claim("name", "origam_server"),
-            };
-            var identity = new ClaimsIdentity(claims, "TestAuthType");
-            Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
-        }
-        
+                
         private string GenerateToken(string username)
         {
             var claims = new []

@@ -21,6 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Threading;
 using System.Security.Principal;
+using System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Origam
 {
@@ -32,6 +34,13 @@ namespace Origam
 
 		private static IOrigamProfileProvider _profileProvider = null;
 		private static IOrigamAuthorizationProvider _authorizationProvider = null;
+
+        private static IServiceProvider _DIServiceProvider = null;  
+        
+        public static void SetDIServiceProvider(IServiceProvider diServiceProvider)
+        {
+            _DIServiceProvider = diServiceProvider;
+        }
 
         public static IOrigamAuthorizationProvider GetAuthorizationProvider()
 		{
@@ -94,14 +103,19 @@ namespace Origam
         {
             get
             {
-                if (Thread.CurrentPrincipal == null)
+                // if there is a IPrincipal service in the DI, use it first.
+                IPrincipal res = _DIServiceProvider?.GetService<IPrincipal>();
+                if (res != null)
+                {
+                    return res;
+                }                    
+                // fallback to the old approach
+                res = Thread.CurrentPrincipal;
+                if (res == null)
                 {
                     throw new UserNotLoggedInException();
                 }
-                else
-                {
-                    return Thread.CurrentPrincipal;
-                }
+                return res;
             }
         }
 
