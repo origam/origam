@@ -37,6 +37,8 @@ using Origam.Schema.RuleModel;
 using Origam.ServerCommon;
 using core = Origam.Workbench.Services.CoreServices;
 using System.Globalization;
+using System.Linq;
+using MoreLinq;
 
 namespace Origam.Server
 {
@@ -1265,65 +1267,69 @@ namespace Origam.Server
                         }
                     }
                 }
-            }
-            else
-            {
-                List<object> notFoundIds = new List<Object>();
-                // try to get from session first anyway (e.g. for the newly created records)                
-                foreach (object id in ids)
-                {
-                    if (id != null)
-                    {
-                        DataRow row;
-                        try
-                        {
-                            row = GetSessionRow(entity, id);
-                            if (row != null)
-                            {
-                                result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
-                                continue;
-                            }
-                            else
-                            {
-                                notFoundIds.Add(id);
-                            }
-                        }
-                        catch
-                        {
-                            // not found in the session, save it for later
-                            notFoundIds.Add(id);
-                        }
-                    }
-                }
+                return result;
+            }            
 
-                // try to get the rest from the database
-                if (notFoundIds.Count > 0)
+            // data not requested (data less session)
+            return RowStatesForDataLessSessions(entity, ids, profileId);            
+        }
+
+        private ArrayList RowStatesForDataLessSessions(string entity, object[] ids, object profileId)
+        {
+            ArrayList result = new ArrayList();
+            Dictionary<string, Object> notFoundIds = new Dictionary<string, Object>();
+            // try to get from session first anyway (e.g. for the newly created records)                
+            foreach (object id in ids)
+            {
+                if (id != null)
                 {
-                    var dataService = core.DataService.GetDataService();
-                    var dataStructureEntityId = (Guid)Data.Tables[entity].ExtendedProperties["Id"];
-                    var dataStructureEntity = Workbench.Services.ServiceManager.Services
-                        .GetService<Workbench.Services.IPersistenceService>()
-                        .SchemaProvider
-                        .RetrieveInstance(typeof(DataStructureEntity), new Key(dataStructureEntityId))
-                        as DataStructureEntity;
-                    var loadedRows = LoadRows(dataService, dataStructureEntity,
-                        dataStructureEntityId, notFoundIds);
-                    //TODO: implement NotFound
-                    //result.Add(new RowSecurityState
-                    //{
-                    //    Id = id,
-                    //    NotFound = true
-                    //});
-                    foreach (DataRow row in loadedRows)
+                    DataRow row;
+                    try
                     {
-                        result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
+                        row = GetSessionRow(entity, id);
+                        if (row != null)
+                        {
+                            result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
+                            continue;
+                        }
+                        else
+                        {
+                            notFoundIds.Add(id.ToString(), id);
+                        }
+                    }
+                    catch
+                    {
+                        // not found in the session, save it for later
+                        notFoundIds.Add(id.ToString(), id);
                     }
                 }
+            }
+
+            // try to get the rest from the database
+            if (notFoundIds.Count > 0)
+            {
+                var dataService = core.DataService.GetDataService();
+                var dataStructureEntityId = (Guid)Data.Tables[entity].ExtendedProperties["Id"];
+                var dataStructureEntity = Workbench.Services.ServiceManager.Services
+                    .GetService<Workbench.Services.IPersistenceService>()
+                    .SchemaProvider
+                    .RetrieveInstance(typeof(DataStructureEntity), new Key(dataStructureEntityId))
+                    as DataStructureEntity;
+                var loadedRows = LoadRows(dataService, dataStructureEntity,
+                    dataStructureEntityId, notFoundIds.Values.ToArray());
+                foreach (DataRow row in loadedRows)
+                {
+                    result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
+                    notFoundIds.Remove(row["Id"].ToString());
+                }
+                // mark records not found as not found and put them into output as well
+                notFoundIds.Values.ForEach(id => result.Add(new RowSecurityState
+                { Id = id, NotFound = true }));
             }
             return result;
         }
 
-		public bool IsLazyLoadedRow(DataRow row)
+        public bool IsLazyLoadedRow(DataRow row)
 		{
 			return DataList != null && row.Table.DataSet == DataList;
 		}
