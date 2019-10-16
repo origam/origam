@@ -19,7 +19,7 @@
         <Property Id="PREREQUISITES_OK" Hidden="yes" />
         <Property Id="ErrorDialog" Value="ErrorDlg" />
         <Property Id="InfoIcon" Value="info" />
-        <SetProperty Id="PREREQUISITES_OK" Value="1" After="AppSearch">NETFRAMEWORK45 >= "#394254"</SetProperty>
+        <SetProperty Id="PREREQUISITES_OK" Value="1" After="AppSearch">NETFRAMEWORK45 &gt;= "#394254"</SetProperty>
         <Directory Id="TARGETDIR" Name="SourceDir">
             <Directory Id="ProgramFilesFolder" Name="PFiles">
                 <Directory Id="origam" Name="ORIGAM">
@@ -68,7 +68,7 @@
                         <Component Id="ORIGAM.DLL" DiskId="1" Guid="6F00D49D-CA16-4B38-88F5-7161BD3E9A6B">
                             <File Id="ORIGAM.DLL" Name="Origam.dll" Source="source\Origam.dll" />
                         </Component>
-						<Component Id="ORIGAM.NETFX.DLL" DiskId="1" Guid="c504b8c8-1c00-4bfb-ab08-64045c49c9ca">
+                        <Component Id="ORIGAM.NETFX.DLL" DiskId="1" Guid="c504b8c8-1c00-4bfb-ab08-64045c49c9ca">
                             <File Id="ORIGAM.NETFX.DLL" Name="Origam.NetFX.dll" Source="source\Origam.NetFx.dll" />
                         </Component>
                         <Component Id="ORIGAM.GIT.DLL" DiskId="1" Guid="26B8CFFA-97D2-4540-8C32-00103DF22A0F">
@@ -233,7 +233,7 @@
                         <Component Id="ORIGAM.BI.SSRS.DLL_1" DiskId="1" Guid="05BB999F-98D9-4C02-A2E6-8A58AAC0CB37">
                             <File Id="ORIGAM.BI.SSRS.DLL_1" Name="Origam.BI.SSRS.dll" Source="source\Origam.BI.SSRS.dll" />
                         </Component>
-						<Component Id="MARKDOWNSHARP.DLL_1" DiskId="1" Guid="AE6C48BC-6B39-41BA-ABA1-C44566CA901C">
+                        <Component Id="MARKDOWNSHARP.DLL_1" DiskId="1" Guid="AE6C48BC-6B39-41BA-ABA1-C44566CA901C">
                             <File Id="MARKDOWNSHARP.DLL_1" Name="MarkdownSharp.dll" Source="source\MarkdownSharp.dll" />
                         </Component>
                         <!--<Component Id="ORIGAM.BI.SSRS.XMLSERIALIZERS.DLL_1" DiskId="1" Guid="76818191-9EF0-443B-BEA2-6C3FEF0B7986">
@@ -263,16 +263,16 @@
                             </File>
                         </Component>
                         <Component Id="MORELINQ.DLL" DiskId="1" Guid="f78b944c-d1b0-4375-bfea-738f269c03b4">
-                          <File Id="MORELINQ" Name="MORELINQ.DLL" Source="source\MORELINQ.DLL" />
+                            <File Id="MORELINQ" Name="MORELINQ.DLL" Source="source\MORELINQ.DLL" />
                         </Component>
                         <Component Id="LIBGIT2SHARP.DLL" DiskId="1" Guid="d40f49c8-f2c9-4a21-92ee-2ae903cdc9e8">
-                          <File Id="LIBGIT2SHARP" Name="LIBGIT2SHARP.DLL" Source="source\LIBGIT2SHARP.DLL" />
+                            <File Id="LIBGIT2SHARP" Name="LIBGIT2SHARP.DLL" Source="source\LIBGIT2SHARP.DLL" />
                         </Component>
                         <Component Id="GIT2_6311E88.DLL" DiskId="1" Guid="4243d3ae-23f2-4c4e-b69e-873c8cc307f6">
-                          <File Id="GIT2_6311E88" Name="GIT2-6311E88.DLL" Source="source\GIT2-6311E88.DLL" />
+                            <File Id="GIT2_6311E88" Name="GIT2-6311E88.DLL" Source="source\GIT2-6311E88.DLL" />
                         </Component>
                         <Component Id="SYSTEM.VALUETUPLE.DLL" DiskId="1" Guid="f7011fc9-6960-4778-9e03-56627b323adb">
-                          <File Id="SYSTEM.VALUETUPLE" Name="SYSTEM.VALUETUPLE.DLL" Source="source\SYSTEM.VALUETUPLE.DLL" />
+                            <File Id="SYSTEM.VALUETUPLE" Name="SYSTEM.VALUETUPLE.DLL" Source="source\SYSTEM.VALUETUPLE.DLL" />
                         </Component>
                         <Component Id="EDIFACT2XML.DLL" Guid="6018bc7d-9913-4782-847a-94bef17c21b4" DiskId="1">
                             <File Id="EDIFACT2XML" Name="EDIFACT2XML.dll" Source="source\EDIFACT2XML.dll">
@@ -287,26 +287,29 @@
                         <Component Id="SYSTEM.DRAWING.COMMON.DLL" DiskId="1" Guid="27543D00-30E5-44D7-958C-51D7EF1E923F">
                             <File Id="SYSTEM.DRAWING.COMMON.DLL" Name="System.Drawing.Common.dll" Source="source\System.Drawing.Common.dll" />
                         </Component>
-						<Component Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL" DiskId="1" Guid="C292EE1F-205C-4A5A-BAAE-1EBE2E1EFCB9">
+                        <Component Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL" DiskId="1" Guid="C292EE1F-205C-4A5A-BAAE-1EBE2E1EFCB9">
                             <File Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL" Name="System.Threading.Tasks.Extensions.dll" Source="source\System.Threading.Tasks.Extensions.dll" />
                         </Component>
-						<Component Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL" DiskId="1" Guid="056DD22D-45F2-4C6A-9475-9AF8BCA8C6C6">
+                        <Component Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL" DiskId="1" Guid="056DD22D-45F2-4C6A-9475-9AF8BCA8C6C6">
                             <File Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL" Name="System.Runtime.CompilerServices.Unsafe.dll" Source="source\System.Runtime.CompilerServices.Unsafe.dll" />
                         </Component>
-						<Directory Id="lib" Name="lib">
-							<Directory Id="win32" Name="win32">
-								<Directory Id="dir_x64" Name="x64">
-									<Component Id="GIT2_572E4D8.DLL_X64" DiskId="1" Guid="952BFB96-FF27-4DBF-A56D-BAACD0A06CA9">
-										<File Id="GIT2_572E4D8.DLL_X64" Name="git2-572e4d8.dll" Source="source\lib\win32\x64\git2-572e4d8.dll" />
-									</Component>
-								</Directory>
-								<Directory Id="dir_x86" Name="x86">
-									<Component Id="GIT2_572E4D8.DLL_X86" DiskId="1" Guid="D138CE85-CBB7-4894-BAFF-FE7F6F768463">
-										<File Id="GIT2_572E4D8.DLL_X86" Name="git2-572e4d8.dll" Source="source\lib\win32\x86\git2-572e4d8.dll" />
-									</Component>
-								</Directory>
-							</Directory>
-						</Directory>
+                        <Component Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL" Guid="275D7fEf-22C1-40EC-b4E7-115D96B8EFC0" DiskId="1">
+                            <File Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL_1" Name="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Source="server_source\bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+                        </Component>
+                        <Directory Id="lib" Name="lib">
+                            <Directory Id="win32" Name="win32">
+                                <Directory Id="dir_x64" Name="x64">
+                                    <Component Id="GIT2_572E4D8.DLL_X64" DiskId="1" Guid="952BFB96-FF27-4DBF-A56D-BAACD0A06CA9">
+                                        <File Id="GIT2_572E4D8.DLL_X64" Name="git2-572e4d8.dll" Source="source\lib\win32\x64\git2-572e4d8.dll" />
+                                    </Component>
+                                </Directory>
+                                <Directory Id="dir_x86" Name="x86">
+                                    <Component Id="GIT2_572E4D8.DLL_X86" DiskId="1" Guid="D138CE85-CBB7-4894-BAFF-FE7F6F768463">
+                                        <File Id="GIT2_572E4D8.DLL_X86" Name="git2-572e4d8.dll" Source="source\lib\win32\x86\git2-572e4d8.dll" />
+                                    </Component>
+                                </Directory>
+                            </Directory>
+                        </Directory>
                         <Directory Id="CS_CZ" Name="cs-CZ">
                             <Component Id="ORIGAM.ORIGAMENGINE.RESOURCES.DLL" DiskId="1" Guid="B727A2A9-D4CD-4AE1-BFE9-1410FCC80E17">
                                 <File Id="ORIGAM.ORIGAMENGINE.RESOURCES.DLL" Name="Origam.OrigamEngine.resources.dll" Source="source\cs-CZ\Origam.OrigamEngine.resources.dll" />
@@ -525,6 +528,9 @@
                                     </Component>
                                     <Component Id="NoAccess.cshtml" Guid="874fcc12-d7bf-4dd6-ae4b-475285434f8f" DiskId="1">
                                         <File Id="NOACCESS.CSHTML" Name="NoAccess.cshtml" Source="server_source\NoAccess.cshtml" />
+                                    </Component>
+                                    <Component Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL_1" Guid="ADE8011C-832F-41AB-B039-1F7948399FAA" DiskId="1">
+                                        <File Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL" Name="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Source="server_source\bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
                                     </Component>
                                     <Directory Id="APP_CODE" Name="App_Code">
                                         <Component Id="STARTUP.CS" DiskId="1" Guid="A9371C27-62FD-495E-AE45-BCA242FB1BDA">
@@ -1052,7 +1058,7 @@
                                         <Component Id="ORIGAM.DLL_1" DiskId="1" Guid="7F86E0E3-0C35-4BD2-A535-6DED0E7110CA">
                                             <File Id="ORIGAM.DLL_1" Name="Origam.dll" Source="server_source\bin\Origam.dll" />
                                         </Component>
-										<Component Id="ORIGAM.NETFX.DLL_1" DiskId="1" Guid="3d6afd42-6200-427e-b977-5797bf644667">
+                                        <Component Id="ORIGAM.NETFX.DLL_1" DiskId="1" Guid="3d6afd42-6200-427e-b977-5797bf644667">
                                             <File Id="ORIGAM.NETFX.DLL_1" Name="Origam.NetFX.dll" Source="server_source\bin\Origam.NetFX.dll" />
                                         </Component>
                                         <Component Id="ORIGAM.GUI.DESIGNER.DLL_1" DiskId="1" Guid="1F4298EC-D51C-4631-9361-DBB789161B86">
@@ -1240,7 +1246,7 @@
                                         </Component>
                                         <Component Id="OFFICE.DLL_1" DiskId="1" Guid="54EC1EC1-33C6-4B49-9082-1ADEF758040D">
                                             <File Id="OFFICE.DLL_1" Name="office.dll" Source="server_source\bin\office.dll" />
-                                        </Component>                                       
+                                        </Component>
                                         <Component Id="OPENSMTP.DLL_1" DiskId="1" Guid="6D1F8526-EFB0-4369-B100-FFAAAECA4DBC">
                                             <File Id="OPENSMTP.DLL_1" Name="OpenSmtp.dll" Source="server_source\bin\OpenSmtp.dll" />
                                         </Component>
@@ -1338,7 +1344,7 @@
                                             <File Id="ORIGAM.LICENSING.DLL_1" Name="Origam.Licensing.dll" Source="source\Origam.Licensing.dll" />
                                         </Component>
                                         <Component Id="ORIGAM.GUI.DLL_1" Guid="6033bb6d-548a-48f4-8f44-50b193d651a9" DiskId="1">
-                                            <File Id="ORIGAM.GUI_1" Name="Origam.Gui.dll" Source="server_source\bin\Origam.Gui.dll"/>
+                                            <File Id="ORIGAM.GUI_1" Name="Origam.Gui.dll" Source="server_source\bin\Origam.Gui.dll" />
                                         </Component>
                                         <Component Id="EDIFACT2XML.DLL_1" Guid="12252abf-5429-414b-81e0-43a49bf68564" DiskId="1">
                                             <File Id="EDIFACT2XML_1" Name="EDIFACT2XML.dll" Source="server_source\bin\EDIFACT2XML.dll">
@@ -1350,7 +1356,7 @@
                                         <Component Id="CSHARPFUNCTIONALEXTENSIONS.DLL_1" DiskId="1" Guid="3A97FCE6-B5A4-4FD4-991A-B3B9B13D0313">
                                             <File Id="CSHARPFUNCTIONALEXTENSIONS" Name="CSHARPFUNCTIONALEXTENSIONS.DLL" Source="server_source\bin\CSHARPFUNCTIONALEXTENSIONS.DLL" />
                                         </Component>
-                                             <Component Id="PROTOBUFNET.DLL_1" DiskId="1" Guid="c9bae7be-661c-458b-b9a2-d841688bb014">
+                                        <Component Id="PROTOBUFNET.DLL_1" DiskId="1" Guid="c9bae7be-661c-458b-b9a2-d841688bb014">
                                             <File Id="PROTOBUFNET" Name="protobuf-net.dll" Source="server_source\bin\protobuf-net.dll" />
                                         </Component>
                                         <Component Id="SYSTEM.VALUETUPLE.DLL_1" DiskId="1" Guid="37e139d4-a320-42ba-aa9e-d92b9faba4f1">
@@ -1359,12 +1365,12 @@
                                         <Component Id="ORIGAM_UTILS.EXE" DiskId="1" Guid="CF8D2ED7-4B3A-485C-BBF4-A6CDA926754B">
                                             <File Id="ORIGAM_UTILS.EXE" Name="origam-utils.exe" Source="server_source\bin\origam-utils.exe" />
                                         </Component>
-										<Component Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" DiskId="1" Guid="E42358D4-5F5F-4A15-B58B-94CD19CE2DEB">
-											<File Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" Name="System.Threading.Tasks.Extensions.dll" Source="server_source\bin\System.Threading.Tasks.Extensions.dll" />
-										</Component>
-										<Component Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL_1" DiskId="1" Guid="44625F93-F704-437A-A325-1629D22F6B4C">
-											<File Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL_1" Name="System.Runtime.CompilerServices.Unsafe.dll" Source="server_source\bin\System.Runtime.CompilerServices.Unsafe.dll" />
-										</Component>
+                                        <Component Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" DiskId="1" Guid="E42358D4-5F5F-4A15-B58B-94CD19CE2DEB">
+                                            <File Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" Name="System.Threading.Tasks.Extensions.dll" Source="server_source\bin\System.Threading.Tasks.Extensions.dll" />
+                                        </Component>
+                                        <Component Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL_1" DiskId="1" Guid="44625F93-F704-437A-A325-1629D22F6B4C">
+                                            <File Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL_1" Name="System.Runtime.CompilerServices.Unsafe.dll" Source="server_source\bin\System.Runtime.CompilerServices.Unsafe.dll" />
+                                        </Component>
                                         <Directory Id="CS_CZ_1" Name="cs-CZ">
                                             <Component Id="ORIGAM.ORIGAMENGINE.RESOURCES.DLL_2" DiskId="1" Guid="4328F83B-3CE3-468A-977E-426009041911">
                                                 <File Id="ORIGAM.ORIGAMENGINE.RESOURCES.DLL_2" Name="Origam.OrigamEngine.resources.dll" Source="server_source\bin\cs-CZ\Origam.OrigamEngine.resources.dll" />
@@ -1631,10 +1637,10 @@
             <ComponentRef Id="ORIGAM.DA.DLL" />
             <ComponentRef Id="ORIGAM.DA.SERVICE.DLL" />
             <ComponentRef Id="ORIGAM.DLL" />
-			<ComponentRef Id="ORIGAM.NETFX.DLL" />
+            <ComponentRef Id="ORIGAM.NETFX.DLL" />
             <ComponentRef Id="ORIGAM.GIT.DLL" />
-			<ComponentRef Id="GIT2_572E4D8.DLL_X86" />
-			<ComponentRef Id="GIT2_572E4D8.DLL_X64" />
+            <ComponentRef Id="GIT2_572E4D8.DLL_X86" />
+            <ComponentRef Id="GIT2_572E4D8.DLL_X64" />
             <ComponentRef Id="ORIGAM.GUI.DESIGNER.DLL" />
             <ComponentRef Id="ORIGAM.GUI.WIN.DLL" />
             <ComponentRef Id="ORIGAM.MAIL.DLL" />
@@ -1739,7 +1745,7 @@
             <ComponentRef Id="ORIGAM.WORKBENCH.RESOURCES.DLL_1" />
             <ComponentRef Id="ORIGAM.WORKBENCH.SERVICES.RESOURCES.DLL_1" />
             <ComponentRef Id="ORIGAM.WORKFLOW.RESOURCES.DLL_1" />
-            <ComponentRef Id="DEFAULTMODEL.ZIP" />  
+            <ComponentRef Id="DEFAULTMODEL.ZIP" />
             <ComponentRef Id="CONFIRMEMAIL.CSHTML" />
             <ComponentRef Id="LOGIN.CSHTML" />
             <ComponentRef Id="LOGIN2.CSHTML" />
@@ -1926,7 +1932,7 @@
             <ComponentRef Id="ORIGAM.DA.DLL_1" />
             <ComponentRef Id="ORIGAM.DA.SERVICE.DLL_1" />
             <ComponentRef Id="ORIGAM.DLL_1" />
-			<ComponentRef Id="ORIGAM.NETFX.DLL_1" />
+            <ComponentRef Id="ORIGAM.NETFX.DLL_1" />
             <ComponentRef Id="ORIGAM.GUI.DESIGNER.DLL_1" />
             <ComponentRef Id="ORIGAM.GUI.WIN.DLL_1" />
             <ComponentRef Id="ORIGAM.MAIL.DLL_1" />
@@ -1968,7 +1974,7 @@
             <ComponentRef Id="LDAPMEMBERSHIPPROVIDER.DLL" />
             <ComponentRef Id="LOG4NET.DLL_1" />
             <ComponentRef Id="MARKDOWNSHARP.DLL" />
-			<ComponentRef Id="MARKDOWNSHARP.DLL_1" />
+            <ComponentRef Id="MARKDOWNSHARP.DLL_1" />
             <ComponentRef Id="MICROSOFT.ASPNET.IDENTITY.CORE.DLL" />
             <ComponentRef Id="MICROSOFT.ASPNET.IDENTITY.OWIN.DLL" />
             <ComponentRef Id="MICROSOFT.OFFICE.INTEROP.EXCEL.DLL_1" />
@@ -2114,17 +2120,19 @@
             <ComponentRef Id="ORIGAM.LICENSING.DLL" />
             <ComponentRef Id="ORIGAM.LICENSING.DLL_1" />
             <ComponentRef Id="NoAccess.cshtml" />
-            <ComponentRef Id="MORELINQ.DLL" />  
+            <ComponentRef Id="MORELINQ.DLL" />
             <ComponentRef Id="MORELINQ.DLL_1" />
             <ComponentRef Id="LIBGIT2SHARP.DLL" />
             <ComponentRef Id="GIT2_6311E88.DLL" />
             <ComponentRef Id="SYSTEM.VALUETUPLE.DLL" />
             <ComponentRef Id="SYSTEM.VALUETUPLE.DLL_1" />
             <ComponentRef Id="ORIGAM_UTILS.EXE" />
-			<ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL" />
-			<ComponentRef Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL" />
-			<ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL_1" />
-			<ComponentRef Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" />
+            <ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL" />
+            <ComponentRef Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL" />
+            <ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL_1" />
+            <ComponentRef Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" />
+            <ComponentRef Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL" />
+            <ComponentRef Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL_1" />
         </Feature>
         <UI>
             <Property Id="DefaultUIFont">DlgFont8</Property>
