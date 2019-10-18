@@ -39,7 +39,7 @@ namespace Origam.Git
         public List<WebGitData> GetList()
         {
                 string url = BuildUrl(null);
-                XmlDocument templatesJson = (XmlDocument)GetData(url);
+                XmlDocument templatesJson = ((XmlContainer)GetData(url)).Xml;
                 XmlNodeList nodeList = templatesJson.SelectNodes("/ROOT/values");
                 foreach (XmlNode node in nodeList)
                 {
@@ -53,7 +53,7 @@ namespace Origam.Git
                     }
                     string link = cloneNode.FirstChild.InnerText;
                     string urlReadme = BuildUrl(name);
-                    XmlDocument xmlReadme = (XmlDocument)GetData(urlReadme);
+                    XmlDocument xmlReadme = ((XmlContainer)GetData(urlReadme)).Xml;
                     string readmeLink = xmlReadme.SelectSingleNode("(/ROOT/values)[1]/links/self").FirstChild.InnerText;
                     string readme = (string)GetData(readmeLink);
                     WebGitData gitData = new WebGitData(avatar, name, link, readme,TypeTemplate.Template);
