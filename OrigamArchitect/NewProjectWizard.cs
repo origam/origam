@@ -546,16 +546,17 @@ namespace OrigamArchitect
         {
             repositories.Add(new WebGitData(Images.New, "Empty Template", null, "Empty Template.", TypeTemplate.Default));
             repositories.Add(new WebGitData(Images.New, "Copy Template", null, "My Template.", TypeTemplate.Open));
-            try
-            {
-                repositories.AddRange(XmlParser.GetList());
-            }
-            catch (Exception ex)
-            {
-                this.RunWithInvoke(() => MessageBox.Show(
-                    "Cant receive list of Repository: \n" + ex.Message,
-                    "Template Repository Error", MessageBoxButtons.OK, MessageBoxIcon.Error));
-            }
+            //Disable add project from web. After project will be prepared, then can setup list of projects and enable it.
+            //try
+            //{
+            //    repositories.AddRange(XmlParser.GetList());
+            //}
+            //catch (Exception ex)
+            //{
+            //    this.RunWithInvoke(() => MessageBox.Show(
+            //        "Cant receive list of Repository: \n" + ex.Message,
+            //        "Template Repository Error", MessageBoxButtons.OK, MessageBoxIcon.Error));
+            //}
             XmlParser.IsLoaded = true;
         }
         private void PageTemplateType_Commit(object sender, WizardPageConfirmEventArgs e)
