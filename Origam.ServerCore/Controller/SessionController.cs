@@ -69,14 +69,14 @@ namespace Origam.ServerCore.Controllers
                 {
                     FormSessionId = newSessionId.ToString(),
                     ObjectId = sessionData.MenuId.ToString(),
-                    Parameters = sessionData.Parameters
+                    Parameters = sessionData.Parameters,
+                    RegisterSession = true
                 };
                 UIResult uiResult = sessionObjects.UIManager.InitUI(
                     request: uiRequest,
-                    registerSession: true,
                     addChildSession: false,
                     parentSession: null,
-                    basicUiService: sessionObjects.UIService);
+                    basicUIService: sessionObjects.UIService);
                 return Ok(newSessionId);
             });
         }
@@ -124,7 +124,7 @@ namespace Origam.ServerCore.Controllers
         }
 
         [HttpGet("[action]")]
-        public IActionResult Rows([FromQuery][RequireNonDefault] Guid sessionFormIdentifier, 
+        public IActionResult Rows([FromQuery][RequiredNonDefault] Guid sessionFormIdentifier, 
             [FromQuery][Required] string childEntity, [FromQuery][Required] string parentRecordId,
             [FromQuery][Required] string rootRecordId)
         {
@@ -198,64 +198,6 @@ namespace Origam.ServerCore.Controllers
             }
             return Ok();
         }
-
-        [HttpPost("[action]")]
-        public IActionResult ExecuteActionQuery(
-            [FromBody]ExecuteActionQueryData executeActionQueryData)
-        {
-            EntityUIAction action = null;
-            try
-            {
-                action = UIActionTools.GetAction(
-                    executeActionQueryData.ActionId);
-            }
-            catch
-            {
-            }
-            if (action != null && action.ConfirmationRule != null)
-            {
-                SessionStore ss = sessionObjects.SessionManager.GetSession(
-                    new Guid(executeActionQueryData.SessionFormIdentifier));
-                DataRow[] rows = new DataRow[
-                    executeActionQueryData.SelectedItems.Count];
-                for (int i = 0; i < executeActionQueryData.SelectedItems.Count; 
-                    i++)
-                {
-                    rows[i] = ss.GetSessionRow(
-                        executeActionQueryData.Entity, 
-                        executeActionQueryData.SelectedItems[i]);
-                }
-                XmlDocument xml
-                    = DatasetTools.GetRowXml(rows, DataRowVersion.Default);
-                RuleExceptionDataCollection result
-                    = ss.RuleEngine.EvaluateEndRule(
-                    action.ConfirmationRule, xml);
-                return Ok(result ?? new RuleExceptionDataCollection());
-            }
-            return Ok(new RuleExceptionDataCollection());
-        }
-
-        [HttpPost("[action]")]
-        public IActionResult ExecuteAction(
-            [FromBody]ExecuteActionData executeActionData)
-        {
-            var actionRunnerClient = new ServerEntityUIActionRunnerClient(
-                sessionObjects.SessionManager,
-                executeActionData.SessionFormIdentifier);
-            var actionRunner = new ServerCoreEntityUIActionRunner( 
-                actionRunnerClient: actionRunnerClient,
-                sessionManager: sessionObjects.SessionManager);
-            return Ok(actionRunner.ExecuteAction(
-                executeActionData.SessionFormIdentifier, 
-                executeActionData.RequestingGrid, 
-                executeActionData.Entity,  
-                executeActionData.ActionType,  
-                executeActionData.ActionId, 
-                executeActionData.ParameterMappings,
-                executeActionData.SelectedItems, 
-                executeActionData.InputParameters));
-        }
-
         private IActionResult RunWithErrorHandler(Func<IActionResult> func)
         {
             try

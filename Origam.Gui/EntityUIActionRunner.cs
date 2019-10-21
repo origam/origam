@@ -213,7 +213,7 @@ namespace Origam.Gui
             scriptCalls.Sort(new EntityWorkflowActionScriptCallComparer());
             foreach(EntityWorkflowActionScriptCall scriptCall in scriptCalls)
             {
-                if(IsScriptAllowed(scriptCall, processData.Rows[0]))
+                if(IsScriptAllowed(scriptCall, processData))
                 {
                     ActionResult result = MakeActionResult(
                         ActionResultType.Script);
@@ -233,7 +233,8 @@ namespace Origam.Gui
         }
 
         private bool IsScriptAllowed(
-            EntityWorkflowActionScriptCall scriptCall, DataRow dataRow)
+            EntityWorkflowActionScriptCall scriptCall, 
+            ExecuteActionProcessData processData)
         {
             // check features
             IParameterService param = ServiceManager.Services.GetService(
@@ -251,11 +252,12 @@ namespace Origam.Gui
                 return false;
             }
             // check business rule
-            if(scriptCall.Rule != null)
+            if((scriptCall.Rule != null) 
+            && (processData.Action.Mode != PanelActionMode.Always))
             {
                 RuleEngine ruleEngine = new RuleEngine(new Hashtable(), null);
                 XmlContainer rowXml = DatasetTools.GetRowXml(
-                    dataRow, DataRowVersion.Current);
+                    processData.Rows[0], DataRowVersion.Current);
                 object result = ruleEngine.EvaluateRule(
                     scriptCall.Rule, rowXml, null);
                 if(result is bool)

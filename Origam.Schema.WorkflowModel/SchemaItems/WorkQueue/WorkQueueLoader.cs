@@ -29,7 +29,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for WorkqueueLoader.
 	/// </summary>
-	[SchemaItemDescription("Loader", "Loaders", 19)]
+	[SchemaItemDescription("Loader", "Loaders", "loader-3.png")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class WorkqueueLoader : AbstractSchemaItem
 	{
@@ -53,14 +53,6 @@ namespace Origam.Schema.WorkflowModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "19";
 			}
 		}
 

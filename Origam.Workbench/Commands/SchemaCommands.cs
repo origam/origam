@@ -20,30 +20,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
-using System.Windows.Forms;
-using System.Reflection;
-
-using WeifenLuo.WinFormsUI.Docking;
-
-using Origam.UI;
-using Origam.Workbench.Services;
-using Origam.Schema;
-using Origam.DA.ObjectPersistence;
-using Origam.Extensions;
-using System.IO;
-using System.Diagnostics;
-using System.Linq;
-using Origam.Workbench.Editors;
-using System.Text;
-using Origam.DA.Service;
-using System.Xml;
-using Origam.Schema.GuiModel;
-using LibGit2Sharp;
 using System.Collections.Generic;
-using Origam.Git;
-using Origam.Windows.Editor.GIT;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using System.Xml;
+using LibGit2Sharp;
+using Origam.DA.ObjectPersistence;
+using Origam.DA.Service;
+using Origam.Extensions;
+using Origam.Git;
+using Origam.Schema;
+using Origam.Schema.GuiModel;
+using Origam.UI;
+using Origam.Windows.Editor.GIT;
+using Origam.Workbench.Editors;
+using Origam.Workbench.Services;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace Origam.Workbench.Commands
 {
@@ -224,37 +220,85 @@ namespace Origam.Workbench.Commands
 		{
 			get
 			{
-				return true; //_schema.CanEditItem(_schema.ActiveNode);
+				AbstractSchemaItem schemaItem = (AbstractSchemaItem) _schema.ActiveNode;
+				if (schemaItem.SchemaExtension == Owner) return false;
+				if (schemaItem.ParentItem == null) return true;
+				return !schemaItem.SchemaExtension.IncludedPackages.Contains(Owner) ||
+				       schemaItem.ParentItem.SchemaExtension == Owner;
 			}
-			set
-			{
-				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
-			}
+			set => throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 		}
 
 		public override void Run()
 		{
-			if(!(this.Owner is SchemaExtension))
+			IPersistenceProvider persistenceProvider = ServiceManager.Services
+				.GetService<IPersistenceService>().SchemaProvider;
+			if(!(Owner is SchemaExtension targetPackage))
 			{
 				throw new ArgumentOutOfRangeException("Owner", this.Owner, ResourceUtils.GetString("ErrorNotSchemaExtension"));
 			}
+
 
 			if(_schema.ActiveNode is SchemaItemGroup)
 			{
 				SchemaItemGroup activeItem = _schema.ActiveNode as SchemaItemGroup;
 
-				activeItem.SchemaExtension = this.Owner as SchemaExtension;
+				activeItem.SchemaExtension = targetPackage;
 			
 				activeItem.Persist();
 			}
-			else if(_schema.ActiveNode is ISchemaItem)
+			else if(_schema.ActiveNode is AbstractSchemaItem activeItem)
 			{
-				AbstractSchemaItem activeItem = _schema.ActiveNode as AbstractSchemaItem;
+				CheckCanBeMovedOrThrow(activeItem, targetPackage);
 
-				activeItem.SetExtensionRecursive(this.Owner as SchemaExtension);
+				activeItem.SetExtensionRecursive(targetPackage);
 
+				persistenceProvider.BeginTransaction();
 				activeItem.Persist();
+				persistenceProvider.EndTransaction();
 			}
+		}
+
+		private static void CheckCanBeMovedOrThrow(AbstractSchemaItem activeItem,
+			SchemaExtension targetPackage)
+		{
+			List<ISchemaItem> dependenciesInPackagesNotReferencedByTargetPackage
+				= activeItem.GetDependencies(true)
+					.Cast<object>()
+					.OfType<ISchemaItem>()
+					.Where(item =>
+						!targetPackage.IncludedPackages.Contains(item.SchemaExtension)
+						&& item.SchemaExtension != targetPackage)
+					.ToList();
+			if (dependenciesInPackagesNotReferencedByTargetPackage.Count != 0)
+			{
+				throw new Exception(string.Format(
+					Strings.ErrorDependenciesInPackagesNotReferencedByTargetPackage,
+					targetPackage.Name,
+					FormatToIdList(dependenciesInPackagesNotReferencedByTargetPackage)));
+			}
+
+			List<ISchemaItem> usagesInPackagesWhichDontDependOnTargetPackage
+				= activeItem.GetUsage()
+					.Cast<object>()
+					.OfType<ISchemaItem>()
+					.Where(item =>
+						!item.SchemaExtension.IncludedPackages.Contains(targetPackage)
+						&& item.SchemaExtension != targetPackage)
+					.ToList();
+
+			if (usagesInPackagesWhichDontDependOnTargetPackage.Count != 0)
+			{
+				throw new Exception(String.Format(
+					Strings.ErrorUsagesInPackagesWhichDontDependOnTargetPackage,
+					targetPackage.Name, 
+					FormatToIdList(usagesInPackagesWhichDontDependOnTargetPackage)));
+			}
+		}
+
+		private static string FormatToIdList(List<ISchemaItem> schemaItems)
+		{
+			return "["+ string.Join("\n", schemaItems.Select(x => x.Id)) +"]";
 		}
 
 		public override void Dispose()
@@ -642,21 +686,16 @@ namespace Origam.Workbench.Commands
 				}
                 IPersistenceProvider persistenceProvider = ServiceManager.Services
                     .GetService<IPersistenceService>().SchemaProvider;
-                persistenceProvider.BeginTransaction();
-				// then delete from the model
+
+                // then delete from the model
+				BeforeDelete?.Invoke(this, EventArgs.Empty);
                 try
                 {
-                    if (BeforeDelete != null)
-                    {
-                        BeforeDelete(this, EventArgs.Empty);
-                    }
+					persistenceProvider.BeginTransaction();
                     _schema.ActiveNode.Delete();
-                    if (AfterDelete != null)
-                    {
-                        AfterDelete(this, EventArgs.Empty);
-                    }
+                    AfterDelete?.Invoke(this, EventArgs.Empty);
                 }
-                catch(Exception ex)
+                catch
                 {
                     // it might fail because of references
                     persistenceProvider.EndTransactionDontSave();

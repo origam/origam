@@ -727,6 +727,10 @@
                             <Component Id="FILEHELPERS.DLL" DiskId="1" Guid="FC9DC289-6BFE-4328-961A-4A075745BA51">
                                 <File Id="FILEHELPERS.DLL" Name="FileHelpers.dll" Source="server_source\bin\FileHelpers.dll" />
                             </Component>
+                            <Component Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL" Guid="50310C8E-37C6-40A8-8892-C0D3B5A2D69B" DiskId="1">
+                                <File Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL" Name="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Source="server_source\bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll">
+                                </File>
+                            </Component>
                             <Directory Id="CS_CZ" Name="cs-CZ">
                                 <Component Id="ORIGAMHOSTING.RESOURCES.DLL" DiskId="1" Guid="BDD3D025-9FC8-43BA-B461-5FBF223BC2B4">
                                     <File Id="ORIGAMHOSTING.RESOURCES.DLL" Name="ORIGAMHosting.resources.dll" Source="server_source\bin\cs-CZ\ORIGAMHosting.resources.dll" />
@@ -1556,6 +1560,7 @@
             <ComponentRef Id="ORIGAM.SERVER.RESOURCES.DLL" />
             <ComponentRef Id="AJAXLOGIN.ASHX.CDCAB7D2.COMPILED" />
             <ComponentRef Id="AJAXSIGNOUT.ASHX.CDCAB7D2.COMPILED" />
+            <ComponentRef Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL" />
         </Feature>
         <Feature Id="NewWebSite" Level="2">
             <ComponentRef Id="OrigamWebSite" />

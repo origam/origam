@@ -38,14 +38,13 @@ namespace Origam
             this.dataSet = dataSet;
         }
 
-        public DataDocumentCore(XmlDocument xmlDocument)
+        public DataDocumentCore(XmlDocument xmlDocument) : this()
         {
             WriteToDataSet(xmlDocument);
         }
 
         private void WriteToDataSet(XmlDocument xmlDocument)
         {
-            dataSet = new DataSet();
             using (XmlReader xmlReader = new XmlNodeReader(xmlDocument))
             {
                 dataSet.ReadXml(xmlReader);
@@ -86,7 +85,7 @@ namespace Origam
         {
             XmlDocument newDocument = Xml;
             XmlNode newNode = newDocument.ImportNode(node, true);
-            newDocument.AppendChild(newNode);
+            newDocument.DocumentElement.AppendChild(newNode);
             WriteToDataSet(newDocument);
         }
 

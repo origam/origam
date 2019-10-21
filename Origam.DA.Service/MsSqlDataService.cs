@@ -74,7 +74,7 @@ namespace Origam.DA.Service
         internal override IDbConnection GetConnection(string connectionString)
 		{
             SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder(connectionString);
-            sb.ApplicationName = "ORIGAM [" + System.Threading.Thread.CurrentPrincipal.Identity.Name + "]";
+            sb.ApplicationName = "ORIGAM [" + SecurityManager.CurrentPrincipal.Identity.Name + "]";
             SqlConnection result = new SqlConnection(sb.ToString());
             return result;
 		}

@@ -71,8 +71,7 @@ namespace Origam.ServerCommon.Pages
         {
             XsltDataPage xsltPage = page as XsltDataPage;
             IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-            IXsltEngine transformer = AsTransform.GetXsltEngine(
-                persistence.SchemaProvider, xsltPage.TransformationId);
+            IXsltEngine transformer = null;
             RuleEngine ruleEngine = new RuleEngine(null, null);
             Hashtable transformParams = new Hashtable();
             QueryParameterCollection qparams = new QueryParameterCollection();
@@ -150,6 +149,8 @@ namespace Origam.ServerCommon.Pages
             }
             else
             {
+                AsTransform.GetXsltEngine(
+                    persistence.SchemaProvider, xsltPage.TransformationId);
                 result = transformer.Transform(xmlData,
 					xsltPage.TransformationId,
 					new Guid("5b4f2532-a0e1-4ffc-9486-3f35d766af71"),
@@ -207,7 +208,9 @@ namespace Origam.ServerCommon.Pages
             if (Analytics.Instance.IsAnalyticsEnabled && xsltPage.LogTransformation != null)
             {
                 Type type = this.GetType();
-                IXmlContainer log = transformer.Transform(xmlData, xsltPage.LogTransformationId, transformParams, ruleEngine, null, false);
+                IXsltEngine logTransformer = AsTransform.GetXsltEngine(
+                    persistence.SchemaProvider, xsltPage.LogTransformationId);
+                IXmlContainer log = logTransformer.Transform(xmlData, xsltPage.LogTransformationId, transformParams, ruleEngine, null, false);
 
                 XPathNavigator nav = log.Xml.CreateNavigator();
                 XPathNodeIterator iter = nav.Select("/ROOT/LogContext");

@@ -376,13 +376,20 @@ namespace Origam.Server
         public void ProcessModalDialogCloseType(ExecuteActionProcessData processData,
             EntityWorkflowAction entityWorkflowAction)
         {
-            if (entityWorkflowAction.CloseType == ModalDialogCloseType.None)
-                return;
-            
-            if(entityWorkflowAction.CloseType 
-               == ModalDialogCloseType.CloseAndCommit)
+            switch(entityWorkflowAction.CloseType)
             {
-                sessionManager.GetSession(processData).IsModalDialogCommited = true;
+                case ModalDialogCloseType.CloseAndCommit:
+                    {
+                        sessionManager.GetSession(processData)
+                                .IsModalDialogCommited = true;
+                        break;
+                    }
+                case ModalDialogCloseType.CloseAndCancel:
+                    {
+                        sessionManager.GetSession(processData)
+                                .IsModalDialogCommited = false;
+                        break;
+                    }
             }
         }
     }

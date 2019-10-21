@@ -20,13 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 
-using Origam.DA.Service;
-using Origam.Extensions;
-using Origam.Schema;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Origam.DA.Service;
+using Origam.Schema;
 
 namespace Origam.DA.ObjectPersistence
 {
@@ -66,7 +65,6 @@ namespace Origam.DA.ObjectPersistence
             {
                 object sender = transactionEndEventQueue.Dequeue();
                 InstancePersisted?.Invoke(this, (IPersistent)sender);
-                ReferenceIndexManager.UpdateReferenceIndex((IPersistent)sender);
             }
         }
 

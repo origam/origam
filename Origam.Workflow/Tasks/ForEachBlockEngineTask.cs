@@ -121,7 +121,7 @@ namespace Origam.Workflow.Tasks
 					{
 						XmlDocument document = XmlTools.GetXmlSlice(_iter); // ((IHasXmlNode)iter.Current).GetNode();
 						IDataDocument dataDocument = context as IDataDocument;
-						XmlDocument xmlDocument = context as XmlDocument;
+						IXmlContainer xmlDocument = context as IXmlContainer;
 						if(dataDocument != null)
 						{
 							// we clone the dataset (no data, just the structure)
@@ -133,7 +133,7 @@ namespace Origam.Workflow.Tasks
 						}
 						else if(xmlDocument != null)
 						{
-							_call.ParentContexts.Add(key, document);
+							_call.ParentContexts.Add(key, new XmlContainer(document));
 						}
 					}
 					else

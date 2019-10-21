@@ -1,0 +1,201 @@
+.app {
+  width: 100%;
+  height: 100%;
+  background-color: #4c4c4c;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.headerBar {
+  height: 100px;
+  flex-basis: 100px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+}
+
+.section {
+  border-right: 1px solid #666666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoSection {
+  composes: section;
+  display: flex;
+  flex-direction: column;
+}
+
+.logoBox {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoImg {
+  width: 150px;
+}
+
+.searchBox {
+  position: relative;
+}
+
+.searchBox input {
+  background-color: #666666;
+  border: none;
+  height: 24px;
+  color: white;
+  padding-left: 3px;
+}
+
+.searchIcon {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  height: 100%;
+  padding: 0px 5px 0px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.viewSetupSection {
+  composes: section;
+  display: flex;
+  flex-direction: column;
+}
+
+.actionItemBig {
+  cursor: pointer;
+  height: 21px;
+  display: flex;
+  align-items: center;
+  padding: 0px 20px 0px 20px;
+}
+
+.actionItemBig > :global(.icon) {
+  padding-right: 10px;
+  font-size: 13px;
+}
+
+.actionItemSmall {
+  padding: 3px;
+}
+
+.actionItemSmall > :global(.icon) {
+  padding: 5px;
+}
+
+.actionItemSmall:hover, .actionItemBig:hover {
+  background-color: #8998c5;
+}
+
+.actionItemSmall :global(.density-1) {
+  transform: scale(1, 1);
+}
+
+.actionItemSmall :global(.density-2) {
+  transform: scale(1, 1.2);
+}
+
+.actionItemSmall :global(.density-3) {
+  transform: scale(1, 1.4);
+}
+
+
+.horizontalItems {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.actionsSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.actionsSectionActions {
+  composes: section;
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  padding: 10px 5px 0px 5px;
+}
+
+.actionsSectionBottomLine {
+  composes: section;
+  display: flex;
+  flex-direction: row;
+}
+
+.actionItem {
+  cursor: pointer;
+  text-align: center;
+  padding: 10px 0px 10px 0px;
+  min-width: 50px;
+  max-width: 80px;
+  height: 100%;
+  margin-right: 10px;
+  font-size: 0.9em;
+}
+
+.actionItem :global(.icon) {
+  font-size: 25px;
+}
+
+.actionItem:global(.hidden) {
+  display: none;
+}
+
+.actionItem:hover {
+  background-color: #8998c5;
+}
+
+.actionItemCaption {
+  margin-top: 10px;
+}
+
+.pusher {
+  flex-grow: 1;
+}
+
+.companyUserSection {
+  composes: section;
+  margin-right: 10px;
+  border: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.companyLogoImg {
+  width: 100px;
+}
+
+.btnSignOut {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+
+}
+
+.btnSignOut:hover {
+  background-color: #8998c5;
+}
+
+.bodyBar {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.accordionHandleIcon {
+  width: 20px;
+}

@@ -31,7 +31,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for StateMachineState.
 	/// </summary>
-	[SchemaItemDescription("Transition", "Operations", 18)]
+	[SchemaItemDescription("Transition", "Operations", "transition-2.png")]
     [HelpTopic("State+Transition")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class StateMachineOperation : AbstractSchemaItem
@@ -52,14 +52,6 @@ namespace Origam.Schema.WorkflowModel
 			get
 			{
 				return ItemTypeConst;
-			}
-		}
-
-		public override string Icon
-		{
-			get
-			{
-				return "18";
 			}
 		}
 

@@ -1,0 +1,46 @@
+
+BY FUNCTION
+===========
+Application
+ - getShownPage
+
+User
+ - getLoggedUserName
+ - getIsWorking
+ - login
+ - logout
+
+MainMenu
+ - getMenuUI
+ - getActiveItemId
+ - openOrActivateItem
+ - forceOpenItem
+
+OpenedScreens
+ - getOpenedScreenItems
+ - closeScreen
+ - activateScreen
+
+
+
+
+
+
+BY CONTROL
+==========
+LoginPage
+  - getIsWorking
+  - formInfoText
+  - onLoginFormSubmit
+Workbench
+  MainToolbar
+   - loggedUserName
+   - onSignOutClick
+  MainMenu
+   - getMenuUI
+   - onMainMenuItemClick
+  ScreenArea
+   - getOpenedScreenItems
+   - onScreenHandleClick
+   - onScreenCLoseClick
+   

@@ -25,9 +25,9 @@ using System.ComponentModel.DataAnnotations;
 namespace Origam.ServerCore.Model
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
-    public class RequireNonDefaultAttribute : ValidationAttribute
+    public class RequiredNonDefaultAttribute : ValidationAttribute
     {
-        public RequireNonDefaultAttribute()
+        public RequiredNonDefaultAttribute()
             : base("The {0} field requires a non-default value.")
         {
         }

@@ -1069,19 +1069,27 @@ namespace Origam.Workflow
 						null,
 						null);
 				}
+                var inputDataDoc = inputContext as IDataDocument;
+                var inputXmlDoc = inputContext as IXmlContainer;
+                var resultDataDoc = resultContext as IDataDocument;
+                var resultXmlDoc = resultContext as IXmlContainer;
 
-				if(inputContext == null || inputContext == DBNull.Value)
+
+                if (inputContext == null || inputContext == DBNull.Value)
 				{
 					return;
 				}
-				else if(inputContext is IDataDocument && resultContext is IDataDocument)
+				else if(inputDataDoc != null 
+                    && resultDataDoc != null)
 				{
-					DataSet input = (inputContext as IDataDocument).DataSet;
-					DataSet output = (resultContext as IDataDocument).DataSet;
+					DataSet input = inputDataDoc.DataSet;
+					DataSet output = resultDataDoc.DataSet;
 
-					if(method == ServiceOutputMethod.AppendMergeExisting || method == ServiceOutputMethod.FullMerge)
+					if(method == ServiceOutputMethod.AppendMergeExisting 
+                        || method == ServiceOutputMethod.FullMerge)
 					{
-						changed = this.RuleEngine.Merge(output, input, method == ServiceOutputMethod.FullMerge, false, false, true);
+						changed = this.RuleEngine.Merge(output, input, 
+                            method == ServiceOutputMethod.FullMerge, false, false, true);
 					}
 					else if(method == ServiceOutputMethod.DeleteMatches)
 					{
@@ -1094,9 +1102,7 @@ namespace Origam.Workflow
 								foreach(DataRow ir in it.Rows)
 								{
 									object[] irPK = DatasetTools.PrimaryKey(ir);
-									
 									DataRow toDelete = ot.Rows.Find(irPK);
-
 									if(toDelete != null)
 									{
 										toDelete.Delete();
@@ -1111,65 +1117,54 @@ namespace Origam.Workflow
 						throw new ArgumentOutOfRangeException("method", method, "Unsupported merge method.");
 					}
 				}
-				else if(inputContext is IXmlContainer)
+				else if(inputXmlDoc != null)
 				{
 					IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 					ContextStore cs = persistence.SchemaProvider.RetrieveInstance(typeof(ContextStore), resultContextKey) as ContextStore;
-
 					if(cs.DataType == OrigamDataType.String)
 					{
-						this.RuleEngine.SetContext(resultContextKey, (inputContext as IXmlContainer).Xml.InnerText);
+						RuleEngine.SetContext(resultContextKey, inputXmlDoc.Xml.InnerText);
 					}
 					else
 					{
-						if(! (resultContext is IXmlContainer)) throw new Exception("Cannot merge data into a context, which is not XML type. Context: " 
-						                                                         + contextName
-						                                                         + ", type: " + (resultContext == null ? "NULL" : resultContext.GetType().ToString()));
-
+						if(resultXmlDoc == null)
+                            throw new Exception("Cannot merge data into a context, which is not XML type. Context: " 
+						        + contextName
+						        + ", type: " + (resultContext == null ? "NULL" : resultContext.GetType().ToString()));
 						changed = true;
-
-						if((inputContext as IXmlContainer).Xml.DocumentElement != null)
+						if(inputXmlDoc.Xml.DocumentElement != null)
 						{
 							// copy document element, if it does not exist already
-							if(((IXmlContainer)resultContext).Xml.DocumentElement == null)
+							if(resultXmlDoc.Xml.DocumentElement == null)
 							{
-								if (resultContext is IDataDocument)
+								if (resultDataDoc != null)
 								{
-
-									IDataDocument resultXmDatalDocument = resultContext as IDataDocument;
 									bool previousEnforceConstraints = false;
-									if (resultXmDatalDocument != null)
+									previousEnforceConstraints = resultDataDoc.DataSet.EnforceConstraints;
+                                    resultDataDoc.DataSet.EnforceConstraints = false;
+                                    resultDataDoc.AppendChild(inputXmlDoc.Xml.DocumentElement, true);
+									try {
+                                        resultDataDoc.DataSet.EnforceConstraints = previousEnforceConstraints;
+									} 
+									catch (Exception ex)
 									{
-										previousEnforceConstraints = resultXmDatalDocument.DataSet.EnforceConstraints;
-										resultXmDatalDocument.DataSet.EnforceConstraints = false;
-									}
-									resultXmDatalDocument.AppendChild(((IXmlContainer)inputContext).Xml.DocumentElement, true);
-
-                                    if (resultXmDatalDocument != null)
-									{
-										try {
-											resultXmDatalDocument.DataSet.EnforceConstraints = previousEnforceConstraints;
-										} 
-										catch (Exception ex)
-										{
-											throw new Exception(DebugClass.ListRowErrors(resultXmDatalDocument.DataSet), ex);
-										}
+										throw new Exception(DebugClass.ListRowErrors(resultDataDoc.DataSet), ex);
 									}
 								}
 								else
 								{
-									XmlNode newDoc = ((IXmlContainer)resultContext).Xml.ImportNode(((IXmlContainer)inputContext).Xml.DocumentElement, true);
-									(resultContext as IXmlContainer).Xml.AppendChild(newDoc);
+									XmlNode newDoc = resultXmlDoc.Xml.ImportNode(inputXmlDoc.Xml.DocumentElement, true);
+									resultXmlDoc.Xml.AppendChild(newDoc);
 								}
 							}
 							else
 							{
 								// otherwise copy each sub node
-								foreach(XmlNode node in (inputContext as IDataDocument).Xml.DocumentElement.ChildNodes)
+								foreach(XmlNode node in inputXmlDoc.Xml.DocumentElement.ChildNodes)
 								{
 									if(!(node is XmlDeclaration))
 									{
-										((IDataDocument)resultContext).DocumentElementAppendChild(node);
+										resultDataDoc.DocumentElementAppendChild(node);
 									}
 								}
 							}

@@ -622,7 +622,11 @@ namespace Origam.DA.Service
 				{
 					dataset.Tables[entity.Name].Columns[column.Name].Expression = RenderExpression(column.Field, entity);
 				}
-			}
+                if(!dataset.Tables[entity.Name].ExtendedProperties.ContainsKey(Const.HasAggregation))
+                {
+                    dataset.Tables[entity.Name].ExtendedProperties.Add(Const.HasAggregation, true);
+                }
+            }
 
 			if(includeCalculatedColumns)
 			{

@@ -1,0 +1,81 @@
+.mainMenu {
+  flex: 1 1 auto;
+  display: block;
+  height: 100%;
+  overflow: auto;
+  background-color: #e5e5e5;
+  color: black;
+  user-select: none;
+  /*border-right: 10px solid $skeleton-bgcolor;*/
+}
+
+.mainMenuSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.mainMenuSection:global(.collapsed),
+.mainMenuSection:global(.hidden) {
+  display: none;
+}
+
+.mainMenuItem {
+  padding-left: 10px;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.mainMenuItem :global(.status) {
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  right: 3px;
+  display: flex;
+  align-items: center;
+}
+
+.mainMenuItem:global(.hidden) {
+  display: none;
+}
+
+.mainMenuItem:global(.active) {
+  background-color: #8998c5;
+  color: white;
+}
+
+.mainMenuItem:hover {
+  background-color: #8998c5;
+  color: black;
+}
+
+.mainMenuItem :global(.icon) {
+  font-size: 15px;
+  margin: 0px 5px 0px 0px;
+}
+
+.mainMenuItem:global(.level1) {
+  padding-left: 27px;
+}
+
+.mainMenuItem:global(.level2) {
+  padding-left: 44px;
+}
+
+.mainMenuItem:global(.level3) {
+  padding-left: 61px;
+}
+
+.mainMenuItem:global(.level4) {
+  padding-left: 88px;
+}
+
+.mainMenuItem:global(.level5) {
+  padding-left: 105px;
+}

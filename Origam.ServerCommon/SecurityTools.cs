@@ -23,11 +23,14 @@ using System;
 using System.Data;
 using Origam;
 using core = Origam.Workbench.Services.CoreServices;
+using System.Threading;
 
 namespace Origam.Server
 {
     public static class SecurityTools
     {
+        internal static readonly log4net.ILog log =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public static UserProfile CurrentUserProfile()
         {
             try
@@ -36,6 +39,8 @@ namespace Origam.Server
             }
             catch (Exception ex)
             {
+                log.DebugFormat("Couldn't get user profile for current thread {0}",
+                    Thread.CurrentThread.ManagedThreadId);
                 throw new LoginFailedException(ex.Message, ex);
             }
         }

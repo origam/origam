@@ -27,7 +27,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for WorkflowCallTask.
 	/// </summary>
-	[SchemaItemDescription("(Task) Check Rule", "Tasks", 16)]
+	[SchemaItemDescription("(Task) Check Rule", "Tasks", "task-check-rule-4.png")]
     [HelpTopic("Check+Rule+Task")]
 	public class CheckRuleStep : AbstractWorkflowStep
 	{
@@ -36,7 +36,5 @@ namespace Origam.Schema.WorkflowModel
 		public CheckRuleStep(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
 		public CheckRuleStep(Key primaryKey) : base(primaryKey)	{}
-
-		public override string Icon => "16";
 	}
 }

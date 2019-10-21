@@ -29,7 +29,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for WorkflowTaskDependency.
 	/// </summary>
-	[SchemaItemDescription("Dependency", "Dependencies", 3)]
+	[SchemaItemDescription("Dependency", "Dependencies", "dependency-blm.png")]
     [HelpTopic("Workflow+Task+Dependency")]
     [DefaultProperty("Task")]
 	[XmlModelRoot(ItemTypeConst)]
@@ -47,8 +47,6 @@ namespace Origam.Schema.WorkflowModel
 		
 		[EntityColumn("ItemType")]
 		public override string ItemType => ItemTypeConst;
-
-		public override string Icon => "3";
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{

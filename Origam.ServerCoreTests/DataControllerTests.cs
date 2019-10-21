@@ -29,21 +29,25 @@ using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Origam.Extensions;
 using Origam.ServerCore.Controller;
-using Origam.ServerCore.Model.Data;
+using Origam.ServerCore.Model.UIService;
 
 namespace Origam.ServerCoreTests
 {
     class DataControllerTests : ControllerTests
     {
-        private readonly DataController sut;
+        private readonly UIServiceController uiServiceController;
         private Guid producerMenuId = new Guid("f38fdadb-4bba-4bb7-8184-c9109d5d40cd");
         private Guid produceDataStructureEntityId = new Guid("93053357-745b-4a8c-91d2-d60389d0f22e");
         private List<Guid> createdProducers = new List<Guid>();
 
         public DataControllerTests()
         {
-            sut = new DataController(NullLogger<AbstractController>.Instance);
-            sut.ControllerContext = context;
+            uiServiceController = new UIServiceController(
+                sessionObjects,
+                null,
+                null,
+                NullLogger<AbstractController>.Instance);
+            uiServiceController.ControllerContext = context;
         }
 
         [Test, Order(101)]
@@ -52,7 +56,7 @@ namespace Origam.ServerCoreTests
             Guid producerId = new Guid("B61F9A1F-3719-46D3-BE0A-2713C1E5F4CA");
 
             string[] columnNames = new[] {"Id", "Name", "NameAndAddress", "Email"};
-            IActionResult entitiesActionResult = sut.GetRows(new GetRowsData
+            IActionResult entitiesActionResult = uiServiceController.GetRows(new GetRowsInput
             {
                 MenuId = producerMenuId,
                 DataStructureEntityId = produceDataStructureEntityId,
@@ -89,7 +93,7 @@ namespace Origam.ServerCoreTests
         [Test, Order(102)]
         public void ShouldCreateNewProducer()
         {
-            var actionResult = sut.Row(new NewRowData
+            var actionResult = uiServiceController.Row(new NewRowInput
             {
                 MenuId = producerMenuId,
                 DataStructureEntityId = produceDataStructureEntityId,
@@ -122,7 +126,7 @@ namespace Origam.ServerCoreTests
         {
             Guid producerId = createdProducers[0];
 
-            var actionResult = sut.Row(new UpdateRowData
+            var actionResult = uiServiceController.Row(new UpdateRowInput
             {
                 MenuId = producerMenuId,
                 DataStructureEntityId = produceDataStructureEntityId,
@@ -151,14 +155,14 @@ namespace Origam.ServerCoreTests
         public void ShouldDeleteProducer()
         {
             Guid producerId = createdProducers[0];
-            sut.Row(new DeleteRowData
+            uiServiceController.Row(new DeleteRowInput
             {
                 MenuId = producerMenuId,
                 DataStructureEntityId = produceDataStructureEntityId,
                 RowIdToDelete = producerId
             });
 
-            IActionResult entitiesActionResult = sut.GetRows(new GetRowsData
+            IActionResult entitiesActionResult = uiServiceController.GetRows(new GetRowsInput
             {
                 MenuId = producerMenuId,
                 DataStructureEntityId = produceDataStructureEntityId,
@@ -179,7 +183,7 @@ namespace Origam.ServerCoreTests
         public void ShouldRetrieveProducersWithParameters()
         {
             string[] columnNames = {"Id", "Name", "NameAndAddress", "PlotMinimumSize" };
-            IActionResult entitiesActionResult = sut.GetRows(new GetRowsData
+            IActionResult entitiesActionResult = uiServiceController.GetRows(new GetRowsInput
             {
                 MenuId = producerMenuId,
                 DataStructureEntityId = produceDataStructureEntityId,
@@ -211,7 +215,7 @@ namespace Origam.ServerCoreTests
         [Test, Order(106)]
         public void ShouldGetLookupLabels()
         {
-            var actionResult = sut.GetLookupLabels(new LookupLabelsData
+            var actionResult = uiServiceController.GetLookupLabels(new LookupLabelsInput
             {
                 MenuId = new Guid("6d181c9f-c89c-4b0a-bfc2-1a59f2a025ce"),
                 LabelIds = new []
@@ -236,7 +240,7 @@ namespace Origam.ServerCoreTests
         [Test, Order(107)]
         public void ShouldGetLookupList()
         {
-            var actionResult = sut.GetLookupListEx( new LookupListData
+            var actionResult = uiServiceController.GetLookupList( new LookupListInput
             {
                 MenuId = new Guid("4c15ccbf-33ee-4746-b059-04f4a49c5a1a"),
                 Id = new Guid("05692FC4-1206-48FC-80B5-75DD2C7084BE"),

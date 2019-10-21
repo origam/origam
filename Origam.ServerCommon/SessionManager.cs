@@ -37,16 +37,17 @@ namespace Origam.Server
     {
         private readonly Dictionary<Guid, PortalSessionStore> portalSessions;
         private readonly Dictionary<Guid, SessionStore> formSessions;
+        private readonly Dictionary<Guid, ReportRequest> reportRequests;
         private readonly Analytics analytics;
-        private readonly bool runsOnCore;
 
         public SessionManager(Dictionary<Guid, PortalSessionStore> portalSessions,
-            Dictionary<Guid, SessionStore> formSessions, Analytics analytics, bool runsOnCore)
+            Dictionary<Guid, SessionStore> formSessions, Analytics analytics,
+            Dictionary<Guid, ReportRequest> reportRequests)
         {
-            this.runsOnCore = runsOnCore;
             this.analytics = analytics;
             this.portalSessions = portalSessions;
             this.formSessions = formSessions;
+            this.reportRequests = reportRequests;
         }
         
         public int PortalSessionCount => portalSessions.Count;
@@ -68,7 +69,6 @@ namespace Origam.Server
         {
             portalSessions.Add(id, portalSessionStore);
         }
-
 
         public PortalSessionStore GetPortalSession(Guid id)
         {
@@ -207,7 +207,7 @@ namespace Origam.Server
         {
             return formSessions.ContainsKey(id);
         }
-        public SessionStore CreateSessionStore(UIRequest request, IBasicUIService basicUiService)
+        public SessionStore CreateSessionStore(UIRequest request, IBasicUIService basicUIService)
         {
             if (request.FormSessionId != null && SessionExists(new Guid(request.FormSessionId)))
             {
@@ -228,7 +228,7 @@ namespace Origam.Server
                 IDynamicSessionStoreProvider dynamicProvider =
                     Reflector.InvokeObject(classPath[0], classPath[1]) 
                     as IDynamicSessionStoreProvider;
-                ss = dynamicProvider.GetSessionStore(basicUiService, request);
+                ss = dynamicProvider.GetSessionStore(basicUIService, request);
             }
             else
             {
@@ -238,7 +238,7 @@ namespace Origam.Server
                         menuItem = ps.SchemaProvider.RetrieveInstance(typeof(AbstractMenuItem), new ModelElementKey(new Guid(request.ObjectId))) as AbstractMenuItem;
                         FormReferenceMenuItem formMenuItem = menuItem as FormReferenceMenuItem;
 
-                        ss = new SelectionDialogSessionStore(basicUiService, request, formMenuItem.SelectionDialogPanel.DataSourceId,
+                        ss = new SelectionDialogSessionStore(basicUIService, request, formMenuItem.SelectionDialogPanel.DataSourceId,
                             formMenuItem.SelectionPanelBeforeTransformationId, formMenuItem.SelectionPanelAfterTransformationId,
                             formMenuItem.SelectionPanelId, menuItem.Name, formMenuItem.SelectionDialogEndRule, analytics);
                         break;
@@ -247,7 +247,7 @@ namespace Origam.Server
                         menuItem = ps.SchemaProvider.RetrieveInstance(typeof(AbstractMenuItem), new ModelElementKey(new Guid(request.ObjectId))) as AbstractMenuItem;
                         DataConstantReferenceMenuItem parMenuItem = menuItem as DataConstantReferenceMenuItem;
                         // PARAM
-                        ss = new ParameterSessionStore(basicUiService, request, parMenuItem.Constant, parMenuItem.FinalLookup,
+                        ss = new ParameterSessionStore(basicUIService, request, parMenuItem.Constant, parMenuItem.FinalLookup,
                             parMenuItem.DisplayName, parMenuItem.Name, parMenuItem.RefreshPortalAfterSave, analytics);
                         break;
 
@@ -255,7 +255,7 @@ namespace Origam.Server
                         menuItem = ps.SchemaProvider.RetrieveInstance(typeof(AbstractMenuItem), new ModelElementKey(new Guid(request.ObjectId))) as AbstractMenuItem;
                         formMenuItem = menuItem as FormReferenceMenuItem;
                         // FORM
-                        ss = new FormSessionStore(basicUiService, request, menuItem.Name, analytics, runsOnCore);
+                        ss = new FormSessionStore(basicUIService, request, menuItem.Name, analytics);
                         break;
 
                     case UIRequestType.WorkflowReferenceMenuItem:
@@ -278,7 +278,7 @@ namespace Origam.Server
                                 }
                             }
                         }
-                        ss = new WorkflowSessionStore(basicUiService, request, (Guid)wf.PrimaryKey["Id"], item.Name, analytics);
+                        ss = new WorkflowSessionStore(basicUIService, request, (Guid)wf.PrimaryKey["Id"], item.Name, analytics);
                         break;
 
                     case UIRequestType.ReportReferenceMenuItem:
@@ -287,14 +287,14 @@ namespace Origam.Server
                     case UIRequestType.ReportReferenceMenuItem_WithSelection:
                         menuItem = ps.SchemaProvider.RetrieveInstance(typeof(AbstractMenuItem), new ModelElementKey(new Guid(request.ObjectId))) as AbstractMenuItem;
                         ReportReferenceMenuItem reportMenuItem = menuItem as ReportReferenceMenuItem;
-                        ss = new SelectionDialogSessionStore(basicUiService, request, reportMenuItem.SelectionDialogPanel.DataSourceId,
+                        ss = new SelectionDialogSessionStore(basicUIService, request, reportMenuItem.SelectionDialogPanel.DataSourceId,
                             reportMenuItem.SelectionPanelBeforeTransformationId, reportMenuItem.SelectionPanelAfterTransformationId,
                             reportMenuItem.SelectionPanelId, menuItem.Name, reportMenuItem.SelectionDialogEndRule, analytics);
                         break;
 
                     case UIRequestType.WorkQueue:
                         // WORK QUEUE OK
-                        ss = new WorkQueueSessionStore(basicUiService, request, Resources.WorkQueueTitle + " " + request.Caption, analytics);
+                        ss = new WorkQueueSessionStore(basicUIService, request, Resources.WorkQueueTitle + " " + request.Caption, analytics);
                         break;
                 }
             }
@@ -302,6 +302,25 @@ namespace Origam.Server
             return ss;
         }
         
+        public void AddReportRequest(Guid key, ReportRequest request)
+        {
+            reportRequests.Add(key, request);
+        }
+        public ReportRequest GetReportRequest(Guid key)
+        {
+            if(!reportRequests.ContainsKey(key))
+            {
+                return null;
+            } 
+            else
+            {
+                return reportRequests[key];
+            }
+        }
+        public void RemoveReportRequest(Guid key)
+        {
+            reportRequests.Remove(key);
+        }
     }
 
     public struct SessionStats

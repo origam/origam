@@ -21,10 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Origam.Server;
-using Origam.ServerCommon;
 
 namespace Origam.ServerCore
 {
@@ -32,7 +29,7 @@ namespace Origam.ServerCore
     {
         public SessionManager SessionManager { get; }
         public UIManager UIManager { get; }
-        public BasicUIService UIService { get; }
+        public ServerCoreUIService UIService { get; }
 
         public SessionObjects()
         {
@@ -40,10 +37,10 @@ namespace Origam.ServerCore
             SessionManager = new SessionManager(
                 portalSessions: new Dictionary<Guid, PortalSessionStore>(),
                 formSessions: new Dictionary<Guid, SessionStore>(),
-                analytics: analytics,
-                runsOnCore: true);
+                reportRequests: new Dictionary<Guid, ReportRequest>(),
+                analytics: analytics);
             UIManager = new UIManager(50, SessionManager, analytics);
-            UIService = new BasicUIService();
+            UIService = new ServerCoreUIService(UIManager, SessionManager);
         }
     }
 }

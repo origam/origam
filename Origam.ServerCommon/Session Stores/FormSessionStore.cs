@@ -64,7 +64,6 @@ namespace Origam.Server
         private FormReferenceMenuItem _menuItem;
         private object _getRowDataLock = new object();
         private XmlDocument _preparedFormXml = null;
-        private readonly bool runsOnCore; 
 
         public FormReferenceMenuItem MenuItem => _menuItem;
 
@@ -76,10 +75,9 @@ namespace Origam.Server
             SetMenuProperties();
         }
 
-        public FormSessionStore(IBasicUIService service, UIRequest request, string name, Analytics analytics,bool runsOnCore)
+        public FormSessionStore(IBasicUIService service, UIRequest request, string name, Analytics analytics)
             : base(service, request, name, analytics)
         {
-            this.runsOnCore = runsOnCore;
             IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
             FormReferenceMenuItem fr = (FormReferenceMenuItem)ps.SchemaProvider.RetrieveInstance(typeof(FormReferenceMenuItem), new ModelElementKey(new Guid(this.Request.ObjectId)));
             _menuItem = fr;
@@ -114,13 +112,13 @@ namespace Origam.Server
 
         private void LoadData()
         {
-            if (runsOnCore)
+            if(dataRequested)
             {
-                PrepareDataCore();
+                LoadDataFxServer();
             }
             else
             {
-                LoadDataFxServer();
+                PrepareDataCore();
             }
         }
 

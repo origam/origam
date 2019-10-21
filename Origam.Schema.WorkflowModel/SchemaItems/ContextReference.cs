@@ -31,7 +31,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for ContextReference.
 	/// </summary>
-	[SchemaItemDescription("Context Store Reference", "Parameters", 17)]
+	[SchemaItemDescription("Context Store Reference", "Parameters", "context-store-reference.png")]
     [HelpTopic("Context+Store+Reference")]
     [DefaultProperty("ContextStore")]
 	[XmlModelRoot(ItemTypeConst)]
@@ -49,8 +49,6 @@ namespace Origam.Schema.WorkflowModel
 		
 		[EntityColumn("ItemType")]
 		public override string ItemType => ItemTypeConst;
-
-		public override string Icon => "17";
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{

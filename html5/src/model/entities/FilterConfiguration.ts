@@ -1,0 +1,379 @@
+import _ from "lodash";
+import {
+  action,
+  comparer,
+  flow,
+  observable,
+  reaction,
+  toJS,
+  computed
+} from "mobx";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
+import { getDataTable } from "../selectors/DataView/getDataTable";
+import { IDataTable } from "./types/IDataTable";
+import {
+  IFilterConfiguration,
+  IFilterTerm
+} from "./types/IFilterConfiguration";
+
+export class FilterConfiguration implements IFilterConfiguration {
+  constructor() {
+    this.start();
+  }
+
+  $type_IFilterConfigurationData: 1 = 1;
+
+  @observable filtering: IFilterTerm[] = [];
+
+  getSettingByPropertyId(propertyId: string): IFilterTerm | undefined {
+    return this.filtering.find(item => item.propertyId === propertyId);
+  }
+
+  @action.bound
+  setFilter(term: IFilterTerm): void {
+    const oldIdx = this.filtering.findIndex(
+      item => item.propertyId === term.propertyId
+    );
+    if (oldIdx > -1) {
+      this.filtering.splice(oldIdx, 1);
+    }
+    this.filtering.push(term);
+  }
+
+  @action.bound
+  clearFilters(): void {
+    this.filtering.length = 0;
+  }
+
+  @observable isFilterControlsDisplayed: boolean = false;
+
+  @action.bound
+  onFilterDisplayClick(event: any): void {
+    this.isFilterControlsDisplayed = !this.isFilterControlsDisplayed;
+    if (this.isFilterControlsDisplayed) {
+      // TODO: Wait for data loaded?
+    } else {
+      this.clearFilters();
+    }
+  }
+
+  get filteringFunction(): (dataTable: IDataTable) => (row: any[]) => boolean {
+    return (dataTable: IDataTable) => (row: any[]) => {
+      const termFn = (term: IFilterTerm) => {
+        const prop = dataTable.getPropertyById(term.propertyId)!;
+        switch (prop.column) {
+          case "Text": {
+            const txt1 = dataTable.getCellText(row, prop);
+            if (txt1 === undefined) return true;
+
+            if (term.setting.dataType === "string") {
+              switch (term.setting.type) {
+                case "contains": {
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+                  const t2 = term.setting.val1.toLocaleLowerCase();
+                  return txt1.toLocaleLowerCase().includes(t2);
+                }
+                case "ends": {
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+                  const t2 = term.setting.val1.toLocaleLowerCase();
+                  return txt1.toLocaleLowerCase().endsWith(t2);
+                }
+                case "eq": {
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+                  const t2 = term.setting.val1.toLocaleLowerCase();
+                  return txt1.toLocaleLowerCase() === t2;
+                }
+                case "ncontains": {
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+                  const t2 = term.setting.val1.toLocaleLowerCase();
+                  return !txt1.toLocaleLowerCase().includes(t2);
+                }
+                case "nends": {
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+                  const t2 = term.setting.val1.toLocaleLowerCase();
+                  return !txt1.toLocaleLowerCase().endsWith(t2);
+                }
+                case "neq": {
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+                  const t2 = term.setting.val1.toLocaleLowerCase();
+                  return txt1.toLocaleLowerCase() !== t2;
+                }
+                case "nnull": {
+                  return txt1 !== null;
+                }
+                case "nstarts": {
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+                  const t2 = term.setting.val1.toLocaleLowerCase();
+                  return !txt1.toLocaleLowerCase().startsWith(t2);
+                }
+                case "null": {
+                  return txt1 === null;
+                }
+                case "starts": {
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+                  const t2 = term.setting.val1.toLocaleLowerCase();
+                  return txt1.toLocaleLowerCase().startsWith(t2);
+                }
+              }
+            }
+            break;
+          }
+          case "Date": {
+            const txt1 = dataTable.getCellValue(row, prop);
+            if (txt1 === undefined) return true;
+
+            const t1 = txt1;
+            if (term.setting.dataType === "date") {
+              switch (term.setting.type) {
+                case "between": {
+                  if (term.setting.val1 === "" || term.setting.val1 === "")
+                    return true;
+                  if (txt1 === null) return false;
+                  const t0 = term.setting.val1;
+                  const t2 = term.setting.val2;
+                  return t0 < t1 && t1 < t2;
+                }
+                case "eq":
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+                  return t1 === term.setting.val1;
+                case "gt":
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+                  return t1 > term.setting.val1;
+                case "gte":
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+                  return t1 >= term.setting.val1;
+                case "lt":
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+                  return t1 < term.setting.val1;
+                case "lte":
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+                  return t1 <= term.setting.val1;
+                case "nbetween": {
+                  if (term.setting.val1 === "" || term.setting.val1 === "")
+                    return true;
+                  if (txt1 === null) return false;
+                  const t0 = term.setting.val1;
+                  const t2 = term.setting.val2;
+                  return !(t0 < t1 && t1 < t2);
+                }
+                case "neq":
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+                  return t1 !== term.setting.val1;
+                case "nnull":
+                  return t1 !== null;
+                case "null":
+                  return t1 === null;
+              }
+            }
+          }
+          case "Number": {
+            const txt1 = dataTable.getCellValue(row, prop);
+            if (txt1 === undefined) return true;
+            const t1 = prop.column === "Number" ? parseFloat(txt1) : txt1;
+            if (term.setting.dataType === "number") {
+              switch (term.setting.type) {
+                case "between": {
+                  if (term.setting.val1 === "" || term.setting.val1 === "")
+                    return true;
+                  if (txt1 === null) return false;
+                  const t0 = parseFloat(term.setting.val1);
+                  const t2 = parseFloat(term.setting.val2);
+                  return t0 < t1 && t1 < t2;
+                }
+                case "eq":
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+                  return t1 === parseFloat(term.setting.val1);
+                case "gt":
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+                  return t1 > parseFloat(term.setting.val1);
+                case "gte":
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+                  return t1 >= parseFloat(term.setting.val1);
+                case "lt":
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+                  return t1 < parseFloat(term.setting.val1);
+                case "lte":
+                  if (term.setting.val1 === "") return true;
+                  if (txt1 === null) return false;
+
+                  return t1 <= parseFloat(term.setting.val1);
+                case "nbetween": {
+                  if (term.setting.val1 === "" || term.setting.val1 === "")
+                    return true;
+                  if (txt1 === null) return false;
+                  const t0 = parseFloat(term.setting.val1);
+                  const t2 = parseFloat(term.setting.val2);
+                  return !(t0 < t1 && t1 < t2);
+                }
+                case "neq":
+                  if (txt1 === null) return false;
+                  if (term.setting.val1 === "") return true;
+                  return t1 !== parseFloat(term.setting.val1);
+                case "nnull":
+                  return t1 !== null;
+                case "null":
+                  return t1 === null;
+              }
+            }
+          }
+          case "ComboBox": {
+          }
+          case "CheckBox": {
+            const val1 = dataTable.getCellValue(row, prop);
+            if (val1 === undefined) return true;
+            return true;
+            /*if(term.setting.dataType === "boolean") {
+            switch (term.setting.type) {
+            }
+            }*/
+            break;
+          }
+        }
+      };
+
+      if (!this.isPresentInDetail(row)) {
+        return false;
+      }
+
+      for (let term of this.filtering) {
+        if (!termFn(term)) {
+          return false;
+        }
+      }
+      return true;
+    };
+  }
+
+  isPresentInDetail(row: any[]): boolean {
+    if (this.dataView.isBindingRoot) return true;
+    for (let binding of this.dataView.parentBindings) {
+      const selectedRow = binding.parentDataView.selectedRow;
+      if (!selectedRow) {
+        return false;
+      }
+      for (let bindingPair of binding.bindingPairs) {
+        const parentDsField = binding.parentDataView.dataSource.getFieldByName(
+          bindingPair.parentPropertyId
+        );
+        if (!parentDsField) {
+          return false;
+        }
+        const parentValue = binding.parentDataView.dataTable.getCellValueByDataSourceField(
+          selectedRow,
+          parentDsField
+        );
+        const childDsField = binding.childDataView.dataSource.getFieldByName(
+          bindingPair.childPropertyId
+        );
+        if (!childDsField) {
+          return false;
+        }
+        const childValue = binding.childDataView.dataTable.getCellValueByDataSourceField(
+          row,
+          childDsField
+        );
+        if (parentValue !== childValue) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  @computed get dataView() {
+    return getDataView(this);
+  }
+
+  disposers: any[] = [];
+
+  @action.bound start() {
+    this.disposers.push(
+      reaction(
+        () => {
+          const data = toJS(this.filtering);
+          data.forEach(item => delete item.setting.human);
+          return data;
+        },
+        () => {
+          this.applyNewFiltering();
+        },
+        { equals: comparer.structural }
+      ),
+      reaction(
+        () => {
+          return [
+            this.dataView.selectedRow,
+            this.dataView.dataTable.rows.length
+          ];
+        },
+        () => {
+          console.log(this.dataView!.modelInstanceId);
+          if (
+            !this.dataView.selectedRow &&
+            this.dataView.dataTable.rows.length > 0
+          ) {
+            this.dataView.selectFirstRow();
+            console.log(
+              "sfr",
+              this.dataView.modelInstanceId,
+              this.dataView.selectedRow
+            );
+          }
+        }
+      )
+    );
+  }
+
+  @action.bound applyNewFilteringImm = flow(function*(
+    this: FilterConfiguration
+  ) {
+    console.log("New filtering:", toJS(this.filtering));
+    const dataView = getDataView(this);
+    const dataTable = getDataTable(dataView);
+    if (dataView.isReorderedOnClient) {
+      if (this.filtering.length > 0) {
+        const comboProps = this.filtering
+          .map(term => getDataViewPropertyById(this, term.propertyId)!)
+          .filter(prop => prop.column === "ComboBox");
+
+        yield Promise.all(
+          comboProps.map(prop =>
+            prop.lookup!.resolveList(
+              new Set(dataTable.getAllValuesOfProp(prop))
+            )
+          )
+        );
+        //dataTable.setFilteringFn(this.filteringFunction);
+      } else {
+        //dataTable.setFilteringFn(undefined);
+      }
+    }
+  });
+
+  applyNewFiltering = _.throttle(this.applyNewFilteringImm, 200);
+
+  @action.bound stop() {
+    this.disposers.forEach(dis => dis());
+  }
+
+  parent?: any;
+}

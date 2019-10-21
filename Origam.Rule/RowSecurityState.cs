@@ -28,110 +28,22 @@ namespace Origam.Rule
 	/// </summary>
 	public class RowSecurityState
 	{
-		object _id;
-		int _backgroundColor;
-		int _foregroundColor;
-		bool _allowDelete;
-		bool _allowCreate;
-		ArrayList _relations = new ArrayList();
-		ArrayList _columns = new ArrayList();
-		ArrayList _disabledActions = new ArrayList();
+        public object Id { get; set; }
 
-		public RowSecurityState(object id, int backgroundColor, int foregroundColor, bool allowDelete, bool allowCreate)
-		{
-			_id = id;
-			_backgroundColor = backgroundColor;
-			_foregroundColor = foregroundColor;
-			_allowDelete = allowDelete;
-			_allowCreate = allowCreate;
-		}
+        public int BackgroundColor { get; set; }
 
-		public object Id 
-		{
-			get
-			{
-				return _id;
-			}
-			set
-			{
-				_id = value;
-			}
-		}
+        public int ForegroundColor { get; set; }
 
-		public int BackgroundColor
-		{
-			get
-			{
-				return _backgroundColor;
-			}
-			set
-			{
-				_backgroundColor = value;
-			}
-		}
+        public bool AllowDelete { get; set; }
 
-		public int ForegroundColor
-		{
-			get
-			{
-				return _foregroundColor;
-			}
-			set
-			{
-				_foregroundColor = value;
-			}
-		}
+        public bool AllowCreate { get; set; }
 
-		public bool AllowDelete
-		{
-			get
-			{
-				return _allowDelete;
-			}
-			set
-			{
-				_allowDelete = value;
-			}
-		}
+        public ArrayList Columns { get; } = new ArrayList();
 
-		public bool AllowCreate
-		{
-			get
-			{
-				return _allowCreate;
-			}
-			set
-			{
-				_allowCreate = value;
-			}
-		}
+        public ArrayList Relations { get; } = new ArrayList();
 
-		public ArrayList Columns
-		{
-			get
-			{
-				return _columns;
-			}
-		}
+        public ArrayList DisabledActions { get; set; } = new ArrayList();
 
-		public ArrayList Relations
-		{
-			get
-			{
-				return _relations;
-			}
-		}
-
-		public ArrayList DisabledActions
-		{
-			get
-			{
-				return _disabledActions;
-			}
-            set
-            {
-                _disabledActions = value;
-            }
-		}
-	}
+        public bool NotFound { get; set; }
+    }
 }

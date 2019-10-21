@@ -22,55 +22,30 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.Gui;
 using Origam.Schema.GuiModel;
 using Origam.Server;
+using Origam.ServerCommon;
 using System;
 
 namespace Origam.ServerCore
 {
-    public class ServerCoreEntityUIActionRunner : EntityUIActionRunner
+    public class ServerCoreEntityUIActionRunner : ServerEntityUIActionRunner
     {
-        private readonly SessionManager sessionManager;
         public ServerCoreEntityUIActionRunner(
-            IEntityUIActionRunnerClient actionRunnerClient,
-            SessionManager sessionManager) 
-            : base(actionRunnerClient)
+            IEntityUIActionRunnerClient actionRunnerClient, 
+            UIManager uiManager, 
+            SessionManager sessionManager, 
+            IBasicUIService basicUIService, 
+            IReportManager reportManager) 
+            : base(
+                  actionRunnerClient, 
+                  uiManager, sessionManager, 
+                  basicUIService, 
+                  reportManager)
         {
-            this.sessionManager = sessionManager;
         }
-
-        protected override void ExecuteOpenFormAction(
-            ExecuteActionProcessData processData)
+        override protected void ExecuteSelectionDialogAction(ExecuteActionProcessData processData)
         {
-            throw new NotImplementedException();
+            base.ExecuteSelectionDialogAction(processData);
+            resultList.Add(new PanelActionResult(ActionResultType.DestroyForm));
         }
-
-        protected override void SetTransactionId(
-            ExecuteActionProcessData processData, string transactionId)
-        {
-            sessionManager.GetSession(processData).TransationId = transactionId;
-        }
-
-        protected override void PerformAppropriateAction(
-            ExecuteActionProcessData processData)
-        {
-            switch (processData.Type)
-            {
-                case PanelActionType.QueueAction:
-                    throw new NotImplementedException();
-                case PanelActionType.Report:
-                    throw new NotImplementedException();
-                case PanelActionType.Workflow:
-                    ExecuteWorkflowAction(processData);
-                    break;
-                case PanelActionType.ChangeUI:
-                    throw new NotImplementedException();
-                case PanelActionType.OpenForm:
-                    throw new NotImplementedException();
-                case PanelActionType.SelectionDialogAction:
-                    throw new NotImplementedException();
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
     }
 }

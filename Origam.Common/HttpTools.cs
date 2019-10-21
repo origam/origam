@@ -295,13 +295,12 @@ namespace Origam
 							{
 								xd = JsonConvert.DeserializeXmlNode("{\"ARRAY\":" + body + "}", "ROOT");
 							}
-							
-							// remove any empty elements because empty guids and dates would
-							// result in errors and empty strings should always be converted
-							// to nulls anyway
-							//RemoveEmptyNodes(ref xd);
-							return xd;
 
+                            // remove any empty elements because empty guids and dates would
+                            // result in errors and empty strings should always be converted
+                            // to nulls anyway
+                            //RemoveEmptyNodes(ref xd);
+                            return new XmlContainer(xd);
 						}
 						else
 						{
@@ -337,7 +336,8 @@ namespace Origam
 			bool ignoreHTTPSErrors)
 		{
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 |
-			                                       SecurityProtocolType.Tls11;
+			                                       SecurityProtocolType.Tls11 |
+                                                   SecurityProtocolType.Tls;
 			
 			WebRequest request = WebRequest.Create(url);
             HttpWebRequest httpWebRequest = request as HttpWebRequest;

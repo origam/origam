@@ -29,7 +29,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for RedirectWorkflowPageAction.
 	/// </summary>
-	[SchemaItemDescription("Redirect", "Actions", 18)]
+	[SchemaItemDescription("Redirect", "Actions", "redirect.png")]
     [HelpTopic("Redirect+Action")]
 	public class RedirectWorkflowPageAction : AbstractWorkflowPageAction
 	{
@@ -38,14 +38,6 @@ namespace Origam.Schema.WorkflowModel
 		public RedirectWorkflowPageAction(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
 		public RedirectWorkflowPageAction(Key primaryKey) : base(primaryKey)	{}
-
-		public override string Icon
-		{
-			get
-			{
-				return "18";
-			}
-		}
 
 		#region Properties
 		private string _xpath;

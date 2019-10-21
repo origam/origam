@@ -37,7 +37,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for ContextStoreLink.
 	/// </summary>
-	[SchemaItemDescription("Context Mapping", "Context Mappings", 17)]
+	[SchemaItemDescription("Context Mapping", "Context Mappings", "context-mapping.png")]
     [HelpTopic("Workflow+Call+Context+Mapping")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class ContextStoreLink : AbstractSchemaItem
@@ -54,8 +54,6 @@ namespace Origam.Schema.WorkflowModel
 		
 		[EntityColumn("ItemType")]
 		public override string ItemType => ItemTypeConst;
-
-		public override string Icon => "17";
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{

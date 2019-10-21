@@ -529,6 +529,12 @@ namespace Origam.DA.Service
 										break;
 
 									default:
+                                        if (dbParam.DbType == DbType.Object
+                                            && !(param.Value is ICollection))
+                                        {
+                                            // support passing single value to an array parameter
+                                            param.Value = new ArrayList { param.Value };
+                                        }
                                         ICollection ar = param.Value as ICollection;
 										if(ar != null)
 										{

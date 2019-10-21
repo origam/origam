@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -68,6 +69,7 @@ namespace Origam.ServerCore
             services.AddScoped<CoreUserManager>();
             services.AddScoped<UserManager<IOrigamUser>>(x =>
                 x.GetRequiredService<CoreUserManager>());
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddIdentity<IOrigamUser, Role>()
                 .AddDefaultTokenProviders();
             services.AddAuthentication(options =>
@@ -86,7 +88,11 @@ namespace Origam.ServerCore
                     ClockSkew = TimeSpan.FromMinutes(5) // 5 minute tolerance for the expiration date
                 };
             });
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IPrincipal>(
+                provider => provider.GetService<IHttpContextAccessor>().HttpContext?.User);
             services.Configure<UserConfig>(options => Configuration.GetSection("UserConfig").Bind(options));
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -109,21 +115,35 @@ namespace Origam.ServerCore
                     apiBranch.UseResponseBuffering();
                     apiBranch.UseMiddleware<UserApiMiddleWare>();
                 });
-            app.MapWhen(
-                IsRestrictedUserApiRoute,
-                apiBranch => {
+
+            app.MapWhen(IsRestrictedUserApiRoute,
+                apiBranch =>
+                {
                     apiBranch.UseAuthentication();
-                    apiBranch.UseMiddleware<SetCurrentPrincipalMiddleWare>();
+                    apiBranch.Use(async (context, next) =>
+                    {
+                    // Authentication middleware doesn't short-circuit the request itself
+                    // we must do that here.
+                    if (!context.User.Identity.IsAuthenticated)
+                        {
+                            context.Response.StatusCode = 401;
+                            return;
+                        }
+                        await next.Invoke();
+                    });
                     apiBranch.UseResponseBuffering();
                     apiBranch.UseMiddleware<UserApiMiddleWare>();
                 });
             app.UseAuthentication();
             app.UseHttpsRedirection();
-            app.UseMiddleware<SetCurrentPrincipalMiddleWare>();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseMvc();
             app.UseSpa(spa => {});
+            // add DI to origam, in order to be able to resolve IPrincipal from
+            // https://davidpine.net/blog/principal-architecture-changes/
+            // https://docs.microsoft.com/cs-cz/aspnet/core/migration/claimsprincipal-current?view=aspnetcore-3.0
+            SecurityManager.SetDIServiceProvider(app.ApplicationServices);
             OrigamEngine.OrigamEngine.ConnectRuntime();
         }
 

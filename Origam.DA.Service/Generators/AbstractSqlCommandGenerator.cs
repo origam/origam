@@ -459,9 +459,12 @@ namespace Origam.DA.Service
         {
             foreach (DataStructureColumn column in entity.Columns)
             {
-                if (column.Field is FieldMappingItem && column.Field.IsPrimaryKey && column.UseLookupValue == false && column.UseCopiedValue == false)
+                if (column.Field is FieldMappingItem 
+                    && column.Field.IsPrimaryKey 
+                    && column.UseLookupValue == false
+                    && column.UseCopiedValue == false)
                 {
-                    command.Parameters.Add(CreateNewValueParameter(column));
+                    command.Parameters.Add(CreateSelectRowParameter(column));
                 }
             }
         }
@@ -488,6 +491,18 @@ namespace Origam.DA.Service
                 column.Name,
                 dbField.DataType,
                 dbField.MappedDataType,
+                dbField.DataLength,
+                true);
+        }
+        private IDataParameter CreateSelectRowParameter(
+            DataStructureColumn column)
+        {
+            FieldMappingItem dbField = GetDatabaseField(column);
+            return BuildParameter(
+                NewValueParameterName(column, true),
+                column.Name,
+                OrigamDataType.Array,
+                null,
                 dbField.DataLength,
                 true);
         }
@@ -1367,11 +1382,11 @@ namespace Origam.DA.Service
             {
                 if (i > 0) sqlExpression.Append(" AND");
                 PrettyIndent(sqlExpression);
-                sqlExpression.AppendFormat("{0}.{1} = {2}",
-                    NameLeftBracket + entity.Name + NameRightBracket,
-                    RenderExpression(column.Field, null, null, null, null),
-                    NewValueParameterName(column, false)
-                    );
+                sqlExpression.Append(ArraySql(
+                    NameLeftBracket + entity.Name + NameRightBracket
+                    + "." + 
+                    RenderExpression(column.Field, null, null, null, null), 
+                    NewValueParameterName(column, false)));
                 i++;
             }
 
@@ -1687,12 +1702,22 @@ namespace Origam.DA.Service
         }
 
 
-        internal IEnumerable<DataStructureColumn> GetSortedColumns(DataStructureEntity entity,
+        internal IEnumerable<DataStructureColumn> GetSortedColumns(
+            DataStructureEntity entity,
             List<string> scalarColumnNames)
         {
-            if (scalarColumnNames == null || scalarColumnNames.Count == 0)
+            if((scalarColumnNames == null) || (scalarColumnNames.Count == 0))
             {
                 return entity.Columns;
+            }
+            List<string> missingColumns = scalarColumnNames.Where(
+                x => !entity.Columns.Exists(y => y.Name == x)).ToList();
+            if(missingColumns.Count > 0)
+            {
+                throw new Exception(
+                    $@"Data structure entity {entity.Name}[{
+                        entity.Id}] is missing {
+                        string.Join(", ", missingColumns)} column(s).");
             }
             return entity.Columns
                 .Where(x => scalarColumnNames.Contains(x.Name))
@@ -1731,7 +1756,8 @@ namespace Origam.DA.Service
             {
                 processColumn = true;
             }
-            else if (columnsInfo.ColumnNames.Count == 0 && aggregatedColumn != null)
+            else if (((columnsInfo.ColumnNames.Count == 0) || columnsInfo.ColumnNames.Contains(column.Name))
+                && aggregatedColumn != null)
             {
                 bool found = false;
                 foreach (DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.ItemTypeConst))

@@ -28,7 +28,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for EntitySecurityRule.
 	/// </summary>
-	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", 3)]
+	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", "parameter-blm.png")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class WorkQueueWorkflowCommandParameterMapping : AbstractSchemaItem, IComparable
 	{
@@ -44,8 +44,6 @@ namespace Origam.Schema.WorkflowModel
 		
 		[EntityColumn("ItemType")]
 		public override string ItemType => ItemTypeConst;
-
-		public override string Icon => "3";
 		#endregion
 
 		#region Properties

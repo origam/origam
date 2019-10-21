@@ -30,7 +30,7 @@ using System.Collections.Generic;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("Data Page", 79)]
+	[SchemaItemDescription("Data Page", "data-page.png")]
     [HelpTopic("Data+Page")]
 	public class XsltDataPage : AbstractPage, IDataStructureReference
 	{
@@ -76,8 +76,6 @@ namespace Origam.Schema.GuiModel
 		}
 
 		#region Properties
-		public override string Icon => "79";
-
 		[EntityColumn("G05")]  
 		public Guid DataStructureId;
 

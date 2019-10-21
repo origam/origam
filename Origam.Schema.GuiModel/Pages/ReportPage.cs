@@ -28,7 +28,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.Schema.GuiModel
 {
-	[SchemaItemDescription("Report Page", 79)]
+	[SchemaItemDescription("Report Page", "report-page.png")]
     [HelpTopic("Report+Page")]
 	public class ReportPage : AbstractPage
 	{
@@ -66,14 +66,6 @@ namespace Origam.Schema.GuiModel
 		}		
 
 		#region Properties
-		public override string Icon
-		{
-			get
-			{
-				return "79";
-			}
-		}
-
 		[EntityColumn("G05")]
 		public Guid ReportId;
 

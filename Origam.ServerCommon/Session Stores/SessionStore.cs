@@ -2,27 +2,6 @@
 /*
 Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
-This file is part of ORIGAM (http://www.origam.org).
-
-ORIGAM is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-ORIGAM is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
-*/
-#endregion
-
-#region license
-/*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
-
 This file is part of ORIGAM.
 
 ORIGAM is free software: you can redistribute it and/or modify
@@ -57,11 +36,16 @@ using Origam.Schema;
 using Origam.Schema.RuleModel;
 using Origam.ServerCommon;
 using core = Origam.Workbench.Services.CoreServices;
+using System.Globalization;
+using System.Linq;
+using MoreLinq;
 
 namespace Origam.Server
 {
     public abstract class SessionStore : IDisposable
     {
+        protected readonly bool dataRequested;
+
         internal static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IBasicUIService _service;
         private static Ascii85 _ascii85 = new Ascii85();
@@ -130,6 +114,7 @@ namespace Origam.Server
             _ruleHandler = new DatasetRuleHandler();
             _ruleEngine = new RuleEngine(null, null);
             this.CacheExpiration = DateTime.Now.AddMinutes(5);
+            dataRequested = request.DataRequested;
         }
 
         public string TransationId
@@ -449,6 +434,26 @@ namespace Origam.Server
                         }
                 RemoveNullConstraints(this.DataList);
             }
+        }
+
+        public static DataRowCollection LoadRows(
+            IDataService dataService,
+            DataStructureEntity entity, Guid dataStructureEntityId, IList rowIds)
+        {
+            DataStructureQuery query = new DataStructureQuery
+            {
+                DataSourceType = QueryDataSourceType.DataStructureEntity,
+                DataSourceId = dataStructureEntityId,
+                Entity = entity.Name,
+                EnforceConstraints = false
+            };
+            query.Parameters.Add(new QueryParameter("Id", rowIds));
+            DataSet dataSet = dataService.GetEmptyDataSet(
+                entity.RootEntity.ParentItemId, CultureInfo.InvariantCulture);
+            dataService.LoadDataSet(query, SecurityManager.CurrentPrincipal,
+                dataSet, null);
+            DataTable dataSetTable = dataSet.Tables[entity.Name];
+            return dataSetTable.Rows;
         }
 
         public abstract bool HasChanges();
@@ -885,29 +890,60 @@ namespace Origam.Server
                     }
                 }
 
-                foreach (DataRelation childRelation in row.Table.ChildRelations)
+                Boolean tableAggregation = HasAggregation(row);
+                foreach(DataRelation childRelation in row.Table.ChildRelations)
                 {
-                    foreach (DataRow childRow in row.GetChildRows(childRelation))
+                    foreach(DataRow childRow in row.GetChildRows(childRelation))
                     {
-                        // check recursion
-                        foreach (DataRelation parentRelation in row.Table.ParentRelations)
+                        if(RowIsChangedOrHasChangedChild(childRow) || tableAggregation)
                         {
-                            foreach (DataRow parentRow in row.GetParentRows(parentRelation))
+                            // check recursion
+                            foreach(DataRelation parentRelation in row.Table.ParentRelations)
                             {
-                                if (parentRow.Equals(childRow))
+                                foreach(DataRow parentRow in row.GetParentRows(parentRelation))
                                 {
-                                    // Recursion found - this row has been checked already.
-                                    return;
+                                    if(parentRow.Equals(childRow))
+                                    {
+                                        // Recursion found - this row has been checked already.
+                                        return;
+                                    }
                                 }
                             }
+                            GetChangesRecursive(changes, requestingGrid, childRow, operation, changedRow, allDetails, ignoreKeys, includeRowStates);
                         }
-
-                        GetChangesRecursive(changes, requestingGrid, childRow, operation, changedRow, allDetails, ignoreKeys, includeRowStates);
-
                     }
                 }
             }
         }
+
+        private bool RowIsChangedOrHasChangedChild(DataRow row)
+        {
+            if(row.RowState != DataRowState.Unchanged)
+            {
+                return true;
+            }
+            foreach(DataRelation childRelation in row.Table.ChildRelations)
+            {
+                foreach(DataRow childRow in row.GetChildRows(childRelation))
+                {
+                    if(RowIsChangedOrHasChangedChild(childRow))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool HasAggregation(DataRow row)
+        {
+            if(row.Table.ExtendedProperties.ContainsKey(Const.HasAggregation))
+            {
+                return (Boolean)row.Table.ExtendedProperties[Const.HasAggregation];
+            }
+            return false;
+        }
+
 
         private static bool IsChildRow(DataRow row, DataRow changedRow)
         {
@@ -1190,46 +1226,110 @@ namespace Origam.Server
         public ArrayList RowStates(string entity, object[] ids)
         {
             ArrayList result = new ArrayList();
+            object profileId = SecurityTools.CurrentUserProfile().Id;
+            if (dataRequested)
+            {
+                foreach (object id in ids)
+                {
+                    if (dataRequested)
+                    {
+                        if (id != null)
+                        {
+                            DataRow row;
+                            try
+                            {
+                                row = GetSessionRow(entity, id);
+                            }
+                            catch
+                            {
+                                // in case the id is not contained in the datasource anymore (e.g. form unloaded or new data piece loaded)
+                                return new ArrayList();
+                            }
+                            lock (_lock)    // no update should be done in the meantime when rules are not handled
+                            {
+                                if (IsLazyLoadedRow(row))
+                                {
+                                    // load lazily loaded rows in case they have not been loaded
+                                    // before calling for row-states
+                                    LazyLoadListRowData(id, row);
+                                }
+                                // we have to unregister dataset event handling, because row level security state will try to add a new row/delete it to check parent/child state
+                                this.UnregisterEvents();
+                                try
+                                {
+                                    result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
+                                }
+                                finally
+                                {
+                                    this.RegisterEvents();
+                                }
+                            }
+                        }
+                    }
+                }
+                return result;
+            }            
+
+            // data not requested (data less session)
+            return RowStatesForDataLessSessions(entity, ids, profileId);            
+        }
+
+        private ArrayList RowStatesForDataLessSessions(string entity, object[] ids, object profileId)
+        {
+            ArrayList result = new ArrayList();
+            Dictionary<string, Object> notFoundIds = new Dictionary<string, Object>();
+            // try to get from session first anyway (e.g. for the newly created records)                
             foreach (object id in ids)
             {
                 if (id != null)
                 {
-                    object profileId = SecurityTools.CurrentUserProfile().Id;
                     DataRow row;
                     try
                     {
                         row = GetSessionRow(entity, id);
+                        if (row != null)
+                        {
+                            result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
+                            continue;
+                        }
+                        else
+                        {
+                            notFoundIds.Add(id.ToString(), id);
+                        }
                     }
                     catch
                     {
-                        // in case the id is not contained in the datasource anymore (e.g. form unloaded or new data piece loaded)
-                        return new ArrayList();
-                    }
-                    lock (_lock)    // no update should be done in the meantime when rules are not handled
-                    {
-                        if (IsLazyLoadedRow(row))
-                        {
-                            // load lazily loaded rows in case they have not been loaded
-                            // before calling for row-states
-                            LazyLoadListRowData(id, row);
-                        }
-                        // we have to unregister dataset event handling, because row level security state will try to add a new row/delete it to check parent/child state
-                        this.UnregisterEvents();
-                        try
-                        {
-                            result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
-                        }
-                        finally
-                        {
-                            this.RegisterEvents();
-                        }
+                        // not found in the session, save it for later
+                        notFoundIds.Add(id.ToString(), id);
                     }
                 }
+            }
+
+            // try to get the rest from the database
+            if (notFoundIds.Count > 0)
+            {
+                var dataService = core.DataService.GetDataService();
+                var dataStructureEntityId = (Guid)Data.Tables[entity].ExtendedProperties["Id"];
+                var dataStructureEntity = Workbench.Services.ServiceManager.Services
+                    .GetService<Workbench.Services.IPersistenceService>()
+                    .SchemaProvider
+                    .RetrieveInstance(typeof(DataStructureEntity), new Key(dataStructureEntityId))
+                    as DataStructureEntity;
+                var loadedRows = LoadRows(dataService, dataStructureEntity,
+                    dataStructureEntityId, notFoundIds.Values.ToArray());
+                foreach (DataRow row in loadedRows)
+                {
+                    result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
+                    notFoundIds.Remove(row["Id"].ToString());
+                }
+                // mark records not found as not found and put them into output as well
+                notFoundIds.Values.ForEach(id => result.Add(new RowSecurityState
+                { Id = id, NotFound = true }));
             }
             return result;
         }
 
-		public bool IsLazyLoadedRow(DataRow row)
+        public bool IsLazyLoadedRow(DataRow row)
 		{
 			return DataList != null && row.Table.DataSet == DataList;
 		}

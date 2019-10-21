@@ -24,7 +24,7 @@ using System.Xml.Serialization;
 
 namespace Origam.Schema.RuleModel
 {
-    [SchemaItemDescription("Validation Rule", "icon_27_rules.png")]
+    [SchemaItemDescription("Validation Rule", "validation-rule.png")]
     [HelpTopic("Validation+Rule")]
     public class EndRule : XslRule, IEndRule
     {

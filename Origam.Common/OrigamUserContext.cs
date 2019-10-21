@@ -90,17 +90,12 @@ namespace Origam
         }
 
         private static string UserKey()
-        {
-            //return SecurityManager.CurrentPrincipal.Identity.Name;
-            //TODO: refactor SecurityManager and uncomment the first line (above)
-            if (System.Threading.Thread.CurrentPrincipal == null)
+        {            
+            if (!SecurityManager.CurrentPrincipal.Identity.IsAuthenticated)
             {
-                throw new UserNotLoggedInException();
-            }
-            else
-            {
-                return System.Threading.Thread.CurrentPrincipal.Identity.Name;
-            }
+                return "guest";
+            }            
+            return SecurityManager.CurrentPrincipal.Identity.Name;
         }
 	}
 }

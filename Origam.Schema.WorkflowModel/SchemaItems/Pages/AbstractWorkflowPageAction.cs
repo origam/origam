@@ -127,14 +127,6 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		public override string Icon
-		{
-			get
-			{
-				return "18";
-			}
-		}
-
 		public override bool UseFolders
 		{
 			get

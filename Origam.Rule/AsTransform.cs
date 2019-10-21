@@ -26,25 +26,8 @@ using Origam.Schema;
 
 namespace Origam.Rule
 {
-	/// <summary>
-	/// Summary description for AsXslTransform.
-	/// </summary>
 	public class AsTransform
 	{
-//        public static IXsltEngine GetXsltEngine(XsltEngineType xsltEngineType)
-//        {
-//            switch(xsltEngineType)
-//            {
-//                case XsltEngineType.XslTransform:
-//                   
-//                    return new OldXsltEngine();
-//                case XsltEngineType.XslCompiledTransform:
-//                    return new CompiledXsltEngine();
-//                default:
-//                    throw new Exception("Unknown XsltEngine type.");
-//            }
-//        }
-
         public static IXsltEngine GetXsltEngine(
             XsltEngineType xsltEngineType, IPersistenceProvider persistence=null)
         {
@@ -52,7 +35,10 @@ namespace Origam.Rule
             {
                 case XsltEngineType.XslTransform:
 #if NETSTANDARD
-                    throw new Exception(xsltEngineType+" is not supported in netstandard implementation of "+ typeof(AsTransform).Name);
+                    throw new Exception(
+                        xsltEngineType 
+                        + " is not supported in netstandard implementation of " 
+                        + typeof(AsTransform).Name);
 #else
                     return new OldXsltEngine(persistence);
 #endif 
@@ -69,7 +55,7 @@ namespace Origam.Rule
                 typeof(AbstractSchemaItem), 
                 new ModelElementKey(transformationId))
                 as AbstractSchemaItem;
-            if (transformation is XslTransformation)
+            if(transformation is XslTransformation)
             {
                 return GetXsltEngine(
                     (transformation as XslTransformation).XsltEngineType,

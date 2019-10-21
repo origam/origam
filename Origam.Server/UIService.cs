@@ -19,27 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-#region license
-/*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
-
-This file is part of ORIGAM.
-
-ORIGAM is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-ORIGAM is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
-*/
-#endregion
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -80,7 +59,8 @@ namespace Origam.Server
     public class UIService: IBasicUIService
     {
         #region Private Members
-
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly SessionManager sessionManager;
         private const int INITIAL_PAGE_NUMBER_OF_RECORDS = 50;
         private readonly UIManager uiManager;
@@ -112,8 +92,8 @@ namespace Origam.Server
             sessionManager = new SessionManager(
                 portalSessions: portalSessions,
                 formSessions: formSessions,
-                analytics: Analytics.Instance,
-                runsOnCore: false);
+                reportRequests: null,
+                analytics: Analytics.Instance);
             uiManager = new UIManager(INITIAL_PAGE_NUMBER_OF_RECORDS,sessionManager, Analytics.Instance);
             reportManager = new ReportManager(sessionManager);
             sessionHelper = new SessionHelper(sessionManager);
@@ -211,7 +191,19 @@ namespace Origam.Server
 
                 foreach (Guid id in sessionsToDestroy)
                 {
-                    DestroyUI(id);
+                    try
+                    {
+                        DestroyUI(id);
+                    }
+                    catch(Exception ex)
+                    {
+                        if(log.IsFatalEnabled)
+                        {
+                            log.Error(
+                                "Failed to destroy session " + id.ToString()
+                                + ".", ex);
+                        }
+                    }
                 }
                 if (clearAll)
                 {
@@ -286,10 +278,9 @@ namespace Origam.Server
         {
             return uiManager.InitUI(
                 request: request,
-                registerSession: true, 
                 addChildSession: false,
                 parentSession: null,
-                basicUiService: this);
+                basicUIService: this);
         }
 
         [JsonRpcMethod]

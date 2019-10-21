@@ -40,7 +40,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for StateMachineState.
 	/// </summary>
-	[SchemaItemDescription("State", "States", 64)]
+	[SchemaItemDescription("State", "States", "state.png")]
     [HelpTopic("State")]
 	[XmlModelRoot(ItemTypeConst)]
 	public class StateMachineState : AbstractSchemaItem
@@ -71,15 +71,15 @@ namespace Origam.Schema.WorkflowModel
 				switch(this.Type)
 				{
 					case StateMachineStateType.Initial:
-						return "62";
+						return "state-initial.png";
 					case StateMachineStateType.Running:
-						return "64";
+						return "state-running.png";
 					case StateMachineStateType.Final:
-						return "63";
+						return "state-final.png";
 					case StateMachineStateType.Group:
-						return "61";
+						return "state-group.png";
 					default:
-						return "64";
+						return "state.png";
 				}
 			}
 		}
