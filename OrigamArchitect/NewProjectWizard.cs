@@ -42,6 +42,7 @@ using System.Threading;
 using System.Text.RegularExpressions;
 using static Origam.NewProjectEnums;
 using Origam.Extensions;
+using Origam.DA.Service;
 
 namespace OrigamArchitect
 {
@@ -126,8 +127,10 @@ namespace OrigamArchitect
             Application.DoEvents();
             try
             {
+                ReferenceIndexManager.BlockTemporaryIndex=true;
                 _builder.Create(_project);
                 WorkbenchSingleton.Workbench.Disconnect();
+                ReferenceIndexManager.BlockTemporaryIndex = false;
                 WorkbenchSingleton.Workbench.Connect(_project.Name);
                 WorkbenchSchemaService schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
                    as WorkbenchSchemaService;
