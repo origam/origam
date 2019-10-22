@@ -32,8 +32,6 @@ namespace Origam.DA.Service
         private static readonly List<IPersistent> temporaryAction = new List<IPersistent>();
         private static object obj = new object();
         public static bool UseIndex { get; private set; } = false;
-        public static bool BlockTemporaryIndex { get; set; } = false;
-
         private static bool blockAddTemporaryAction = false;
         private static readonly List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex
             = new List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>>();
@@ -68,14 +66,11 @@ namespace Origam.DA.Service
         }
         internal static void UpdateReferenceIndex(IPersistent sender)
         {
-            //if (!BlockTemporaryIndex)
-            //{
-                DoTemporaryAction(sender);
-                if (blockAddTemporaryAction)
-                {
-                    UpdateIndex(sender);
-                }
-           // }
+            DoTemporaryAction(sender);
+            if (blockAddTemporaryAction)
+            {
+                UpdateIndex(sender);
+            }
         }
         private static void UpdateIndex(IPersistent sender)
         {
