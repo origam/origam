@@ -39,7 +39,7 @@ namespace Origam.Rule
             IStatusBarService statusBar =
             ServiceManager.Services.GetService<IStatusBarService>();
             statusBar.SetStatusText("Indexing references...");
-            ReferenceIndexManager.ClearReferenceIndex();
+            ReferenceIndexManager.ClearReferenceIndex(false);
            List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
                     .SchemaProvider
                     .RetrieveList<IFilePersistent>()

@@ -127,10 +127,8 @@ namespace OrigamArchitect
             Application.DoEvents();
             try
             {
-                ReferenceIndexManager.BlockTemporaryIndex=true;
                 _builder.Create(_project);
                 WorkbenchSingleton.Workbench.Disconnect();
-                ReferenceIndexManager.BlockTemporaryIndex = false;
                 WorkbenchSingleton.Workbench.Connect(_project.Name);
                 WorkbenchSchemaService schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
                    as WorkbenchSchemaService;

@@ -41,10 +41,14 @@ namespace Origam.DA.Service
         {
             return referenceIndex;
         }
-        public static void ClearReferenceIndex()
+        public static void ClearReferenceIndex(bool fullClear)
         {
             UseIndex = false;
             blockAddTemporaryAction = false;
+            if (fullClear) 
+            { 
+                temporaryAction.Clear();
+            }
             referenceIndex.Clear();
         }
         private static void Remove(IPersistent sender)
@@ -64,14 +68,14 @@ namespace Origam.DA.Service
         }
         internal static void UpdateReferenceIndex(IPersistent sender)
         {
-            if (!BlockTemporaryIndex)
-            {
+            //if (!BlockTemporaryIndex)
+            //{
                 DoTemporaryAction(sender);
                 if (blockAddTemporaryAction)
                 {
                     UpdateIndex(sender);
                 }
-            }
+           // }
         }
         private static void UpdateIndex(IPersistent sender)
         {
