@@ -291,7 +291,7 @@ namespace Origam.UI.WizardForm
         private void MenuFromPage_Commit(object sender, WizardPageConfirmEventArgs e)
         {
             MenuFromForm menufrom = (MenuFromForm)iwizard;
-            menufrom.Role = txtMenuRole.Text;
+            menufrom.Role = string.IsNullOrEmpty(txtMenuRole.Text)?"*": txtMenuRole.Text;
             menufrom.Caption = txtMenuCaption.Text;
             IsFinish(sender, e);
         }

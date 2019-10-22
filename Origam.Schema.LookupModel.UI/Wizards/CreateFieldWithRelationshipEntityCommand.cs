@@ -79,7 +79,7 @@ namespace Origam.Schema.LookupModel.Wizards
             {
                 Title = "Create Field With Relationship Entity.",
                 PageTitle = "",
-                Description = "This will create Field for looku and bla bla bla bla bla bla bla bla bla bla bla bla ",
+                Description = "Create Some Description.",
                 Entity = baseEntity,
                 ItemTypeList = list,
                 Pages = stackPage,

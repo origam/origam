@@ -87,7 +87,7 @@ namespace Origam.Gui.Win.Wizards
                 ItemTypeList = list,
                 Title = "Create Screen Wizard",
                 PageTitle = "",
-                Description = "This will create Field for  epfrferf refj eerjferfirejfo wwuw sscs sccsdjcs cscjsc cpdcs cscslj scsdc dsdcsdhc spclooku and bla bla bla bla bla bla bla bla bla bla bla bla ",
+                Description = "Create Some Description.",
                 Pages = stackPage,
                 Entity = Owner as IDataEntity,
                 IsRoleVisible = false,
@@ -172,7 +172,7 @@ namespace Origam.Gui.Win.Wizards
                 ItemTypeList = list,
                 Title = "Create Complete UI Wizard",
                 PageTitle = "",
-                Description = "This will create Field for looku and bla bla bla bla bla bla bla bla bla bla bla bla ",
+                Description = "Create Some Description.",
                 Pages = stackPage,
                 Entity = Owner as IDataEntity,
                 IsRoleVisible = true,
@@ -244,7 +244,9 @@ namespace Origam.Gui.Win.Wizards
 
 	public class CreateMenuFromFormCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        MenuFromForm menuFrom;
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -258,22 +260,49 @@ namespace Origam.Gui.Win.Wizards
 
 		public override void Run()
 		{
-			FormControlSet form = Owner as FormControlSet;
-			CreateMenuFromFormWizard wiz = new CreateMenuFromFormWizard();
-			wiz.Role = form.Name;
-			if(wiz.ShowDialog() == DialogResult.OK)
-			{
-				FormReferenceMenuItem menu = MenuHelper.CreateMenuItem(wiz.Caption, wiz.Role, form);
-                GeneratedModelElements.Add(menu);
-				bool createRole = wiz.Role != "*" && wiz.Role != "";
-				if(createRole)
-				{
-					ServiceCommandUpdateScriptActivity activity = CreateRole(wiz.Role);
-                    GeneratedModelElements.Add(activity);
-                }
-			}
+            FormControlSet form = Owner as FormControlSet;
+
+            ArrayList list = new ArrayList();
+            FormControlSet controlSet = new FormControlSet();
+            list.Add(new ListViewItem(controlSet.ItemType, controlSet.Icon));
+
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.MenuPage);
+            stackPage.Push(PagesList.startPage);
+
+            menuFrom = new MenuFromForm
+            {
+                ItemTypeList = list,
+                Title = "Create Menu from Form Command Wizard",
+                PageTitle = "",
+                Description = "Create Some Description.",
+                Pages = stackPage,
+                Entity = form,
+                Role = form.Name,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this
+            };
+            Wizard wiz = new Wizard(menuFrom);
+            if (wiz.ShowDialog() != DialogResult.OK)
+            {
+                GeneratedModelElements.Clear();
+            }
 		}
-	}
+
+        public override void Execute()
+        {
+            FormReferenceMenuItem menu = MenuHelper.CreateMenuItem(menuFrom.Entity.Name == null || menuFrom.Entity.Name == ""
+                    ? menuFrom.NameOfEntity : menuFrom.Entity.Name, menuFrom.Role, (FormControlSet)menuFrom.Entity);
+            GeneratedModelElements.Add(menu);
+            bool createRole = menuFrom.Role != "*" && menuFrom.Role != "";
+            if (createRole)
+            {
+                ServiceCommandUpdateScriptActivity activity = CreateRole(menuFrom.Role);
+                GeneratedModelElements.Add(activity);
+            }
+        }
+}
 
 	public class CreateMenuFromDataConstantCommand : AbstractMenuCommand
 	{
@@ -309,7 +338,7 @@ namespace Origam.Gui.Win.Wizards
                 ItemTypeList = list,
                 Title = "Create Menu from Dataconstant Wizard",
                 PageTitle = "",
-                Description = "This will create Field for looku and bla bla bla bla bla bla bla bla bla bla bla bla ",
+                Description = "Create Some Description.",
                 Pages = stackPage,
                 Entity = constant,
                 Role = constant.Name,
@@ -370,7 +399,7 @@ namespace Origam.Gui.Win.Wizards
                 ItemTypeList = list,
                 Title = "Create Menu from Sequential Workflow Wizard",
                 PageTitle = "",
-                Description = "This will create Field for looku and bla bla bla bla bla bla bla bla bla bla bla bla ",
+                Description = "Create Some Description.",
                 Pages = stackPage,
                 Entity = wf,
                 Role = wf.Name,

@@ -74,7 +74,7 @@ namespace Origam.Schema.LookupModel.Wizards
             {
                 Title = "Create Field With Lookup Entity.",
                 PageTitle = "",
-                Description = "This will create Field for looku and bla bla bla bla bla bla bla bla bla bla bla bla ",
+                Description = "Create Some Description.",
                 ItemTypeList = list,
                 Pages = stackPage,
                 ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,

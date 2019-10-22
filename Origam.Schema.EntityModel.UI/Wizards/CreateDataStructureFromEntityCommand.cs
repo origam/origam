@@ -83,7 +83,7 @@ namespace Origam.Schema.EntityModel.Wizards
             {
                 Title = "Create Data Structure Wizard",
                 PageTitle = "",
-                Description = "This will create Field for looku and bla bla bla bla bla bla bla bla bla bla bla bla ",
+                Description = "Create Some Description.",
                 ItemTypeList = list,
                 Pages = stackPage,
                 StructureList = listdsName,

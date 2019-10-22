@@ -76,7 +76,7 @@ namespace Origam.Gui.Win.Wizards
                 ItemTypeList = list,
                 Title = "Create Language Translation Entity Wizard",
                 PageTitle = "",
-                Description = "This will create Field for looku and bla bla bla bla bla bla bla bla bla bla bla bla ",
+                Description = "Create Some Description.",
                 Pages = stackPage,
                 Entity = Owner as TableMappingItem,
                 IsRoleVisible = false,
