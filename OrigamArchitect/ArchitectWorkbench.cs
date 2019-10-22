@@ -20,61 +20,52 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.CodeDom;
-using System.IO;
-using System.Drawing;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Reflection;
-using System.Windows.Forms;
-using System.Net;
+using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Collections.Generic;
-
-using Origam.OrigamEngine;
-using Origam;
-using Origam.Schema;
-using Origam.Schema.MenuModel;
-using Origam.Workbench.Editors;
-using Origam.Workbench.Services;
-using Origam.Schema.EntityModel;
-using Origam.UI;
-using Origam.DA;
-using Origam.DA.Service;
-using Origam.Workbench.Pads;
-using Origam.Workbench;
-using Origam.Workbench.Commands;
-using Origam.Workflow;
-using Origam.Workflow.Gui.Win;
-using Origam.Rule;
-using Origam.Licensing;
-using Origam.Licensing.Validation;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-using WeifenLuo.WinFormsUI.Docking;
-
-using NPOI.HSSF.UserModel;
-using NPOI.HPSF;
-using NPOI.SS.UserModel;
-using System.Collections.Generic;
+using System.Net;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using CSharpFunctionalExtensions;
 using JR.Utils.GUI.Forms;
-using Origam.DA.ObjectPersistence;
-using OrigamArchitect.Commands;
-using Origam.Extensions;
-using Origam.Gui.Win;
 using MoreLinq;
-using Origam.Workbench.BaseComponents;
-using Origam.Gui.UI;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using Origam;
+using Origam.DA;
+using Origam.DA.ObjectPersistence;
+using Origam.DA.Service;
 using Origam.Excel;
-using Origam.DA.ObjectPersistence.Providers;
+using Origam.Extensions;
+using Origam.Gui.UI;
+using Origam.Gui.Win;
 using Origam.Gui.Win.Commands;
+using Origam.Licensing;
+using Origam.OrigamEngine;
+using Origam.Rule;
+using Origam.Schema;
 using Origam.Schema.DeploymentModel;
+using Origam.Schema.EntityModel;
+using Origam.Schema.MenuModel;
+using Origam.UI;
+using Origam.Workbench;
+using Origam.Workbench.BaseComponents;
+using Origam.Workbench.Commands;
+using Origam.Workbench.Editors;
+using Origam.Workbench.Pads;
+using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
+using Origam.Workflow;
+using Origam.Workflow.Gui.Win;
+using OrigamArchitect.Commands;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace OrigamArchitect
 {
@@ -248,8 +239,9 @@ namespace OrigamArchitect
 		    loadedForms.Keys.ForEach(RemoveToolStrips);
             if (ActiveDocument is IToolStripContainer toolStripContainer)
 			{
-				toolStripContainer.AllToolStripsRemoved += 
-					OnAllToolStripsRemovedFromALoadedForm;
+				toolStripContainer.AllToolStripsRemoved -= OnAllToolStripsRemovedFromALoadedForm;
+				toolStripContainer.AllToolStripsRemoved += OnAllToolStripsRemovedFromALoadedForm;
+			    toolStripContainer.ToolStripsNeedUpdate -= OnToolStripsNeedUpdate;
 			    toolStripContainer.ToolStripsNeedUpdate += OnToolStripsNeedUpdate;
 			    int widthOfDisplayedToolStrips = toolStripPanel.Controls
 			        .Cast<Control>()
