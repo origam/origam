@@ -431,9 +431,9 @@ namespace Origam.Server
             {
                 _dataListFilterSetId = filterSet.Id;
             }
-            else
+            else if (method != null)
             {
-                throw new ArgumentOutOfRangeException("mkethod", "List method must be a filter set.");
+                throw new ArgumentOutOfRangeException("method", "List method must be a filter set.");
             }
 
             if (this.DataList != null)
