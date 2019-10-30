@@ -137,7 +137,8 @@ namespace Origam.Server
                 data = LoadSingleRecord();
                 if (_menuItem.ListEntity != null)
                 {
-                    SetDataList(null, _menuItem.ListEntity.Name, _menuItem.ListDataStructure);
+                    SetDataList(null, _menuItem.ListEntity.Name, 
+                        _menuItem.ListDataStructure, _menuItem.ListMethod);
                 }
                 SetDelayedLoadingParameter(_menuItem.RecordEditMethod);
             }
@@ -155,7 +156,7 @@ namespace Origam.Server
                 // we only read the list and leave the full structure empty (it will be loaded later)
                 SetDataList(
                     LoadListData(listData, _menuItem.ListEntity.Name, _menuItem.ListSortSet), 
-                    _menuItem.ListEntity.Name, _menuItem.ListDataStructure);
+                    _menuItem.ListEntity.Name, _menuItem.ListDataStructure, _menuItem.ListMethod);
                 this.IsDelayedLoading = true;
                 if (_menuItem.Method == null) throw new ArgumentNullException("FormReferenceMenuItem.FilterSet", "For delayed data loading you have to specify FilterSet for the main data.");
                 SetDelayedLoadingParameter(_menuItem.Method);

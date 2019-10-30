@@ -304,7 +304,8 @@ namespace Origam.ServerCore.Controller
                         input.DataStructureEntityId, menuItem))
                     .OnSuccess(CheckEntityBelongsToMenu)
                     .OnSuccess(entityData => GetRow(
-                        entityData.Entity, input.DataStructureEntityId, input.Id))
+                        entityData.Entity, input.DataStructureEntityId,
+                        Guid.Empty, input.Id))
                     .OnSuccess(rowData => GetLookupRows(input, rowData))
                     .OnSuccess(ToActionResult)
                     .OnBoth<IActionResult,IActionResult>(UnwrapReturnValue);
@@ -345,6 +346,7 @@ namespace Origam.ServerCore.Controller
                     GetRow(
                         entityData.Entity, 
                         input.DataStructureEntityId,
+                        Guid.Empty,
                         input.RowId))
                 .OnSuccess(rowData => FillRow(rowData, input.NewValues))
                 .OnSuccess(rowData => SubmitChange(rowData, Operation.Update))
@@ -389,6 +391,7 @@ namespace Origam.ServerCore.Controller
                     .OnSuccess(entityData => GetRow(
                         entityData.Entity,
                         input.DataStructureEntityId,
+                        Guid.Empty,
                         input.RowIdToDelete))
                     .OnSuccess(rowData =>
                     {
@@ -523,10 +526,11 @@ namespace Origam.ServerCore.Controller
                     BadRequest("The requested Entity does not belong to the menu."));
         }
         private Result<RowData, IActionResult> GetRow(
-            DataStructureEntity entity, Guid dataStructureEntityId, Guid rowId)
+            DataStructureEntity entity, Guid dataStructureEntityId,
+            Guid methodId, Guid rowId)
         {
             var rows = SessionStore.LoadRows(dataService, entity, 
-                dataStructureEntityId, new List<Guid> { rowId });
+                dataStructureEntityId, methodId, new List<Guid> { rowId });
             if(rows.Count == 0)
             {
                 return Result.Fail<RowData, IActionResult>(

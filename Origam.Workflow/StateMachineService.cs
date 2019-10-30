@@ -392,41 +392,6 @@ namespace Origam.Workflow
             return false;
         }
 
-        private DataRow GetFreshRow(DataRow row, string transactionId)
-        {
-            DataTable table = row.Table;
-            Guid dataStructureEntityId = (Guid)table.ExtendedProperties["Id"];
-
-            QueryParameterCollection pms = new QueryParameterCollection();
-            foreach (DataColumn col in table.PrimaryKey)
-            {
-                pms.Add(new QueryParameter(col.ColumnName, row[col]));
-            }
-
-            // create dataset of this particular data table for loading new data
-            DataSet newData = new DataSet(table.DataSet.DataSetName);
-            newData.Tables.Add(new OrigamDataTable(table.TableName));
-            foreach (DataColumn col in table.Columns)
-            {
-                DataColumn newCol = new DataColumn(col.ColumnName, col.DataType, "", col.ColumnMapping);
-                newCol.MaxLength = col.MaxLength;
-                newCol.AllowDBNull = col.AllowDBNull;
-                newCol.DefaultValue = col.DefaultValue;
-                newData.Tables[0].Columns.Add(newCol);
-            }
-
-            DataService.LoadRow(dataStructureEntityId, pms, newData, transactionId);
-
-            if (newData.Tables[0].Rows.Count > 0)
-            {
-                return newData.Tables[0].Rows[0];
-            }
-            else
-            {
-                return null;
-            }
-        }
-
         private void ThrowStateTransitionInvalidException(StateMachine sm, object currentStateValue, object newStateValue, string transactionId)
         {
             string newStateName = StateValueName(sm, newStateValue, transactionId);

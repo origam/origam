@@ -196,7 +196,8 @@ namespace Origam.DA.Service
             return adapter;
         }
 
-        public DbDataAdapter CreateSelectRowDataAdapter(DataStructureEntity entity,
+        public DbDataAdapter CreateSelectRowDataAdapter(
+            DataStructureEntity entity, DataStructureFilterSet filterSet,
             ColumnsInfo columnsInfo, bool forceDatabaseCalculation)
         {
             if (!(entity.EntityDefinition is TableMappingItem))
@@ -205,7 +206,8 @@ namespace Origam.DA.Service
             }
 
             DbDataAdapter adapter = GetAdapter();
-            BuildSelectRowCommand(adapter, entity, columnsInfo, forceDatabaseCalculation);
+            BuildSelectRowCommand(adapter, entity, filterSet, columnsInfo,
+                forceDatabaseCalculation);
             adapter.TableMappings.Clear();
             adapter.TableMappings.Add(CreateMapping(entity));
 
@@ -290,14 +292,15 @@ namespace Origam.DA.Service
             return dtm;
         }
 
-        public void BuildSelectRowCommand(IDbDataAdapter adapter, DataStructureEntity entity,
+        public void BuildSelectRowCommand(IDbDataAdapter adapter,
+            DataStructureEntity entity, DataStructureFilterSet filterSet,
             ColumnsInfo columnsInfo, bool forceDatabaseCalculation)
         {
             Hashtable selectParameterReferences = new Hashtable();
 
             adapter.SelectCommand = GetCommand(
-                SelectRowSql(entity, selectParameterReferences, columnsInfo,
-                forceDatabaseCalculation));
+                SelectRowSql(entity, filterSet, selectParameterReferences,
+                columnsInfo, forceDatabaseCalculation));
 
             BuildPrimaryKeySelectParameters(adapter.SelectCommand, entity);
             BuildSelectParameters(adapter.SelectCommand, selectParameterReferences);
@@ -1340,7 +1343,8 @@ namespace Origam.DA.Service
 
         internal abstract string SequenceSql(string entityName, string primaryKeyName);
 
-        public string SelectRowSql(DataStructureEntity entity, Hashtable selectParameterReferences,
+        public string SelectRowSql(DataStructureEntity entity,
+            DataStructureFilterSet filterSet, Hashtable selectParameterReferences,
             ColumnsInfo columnsInfo, bool forceDatabaseCalculation)
         {
             StringBuilder sqlExpression = new StringBuilder();
@@ -1371,7 +1375,8 @@ namespace Origam.DA.Service
             {
                 if (relation.RelationType == RelationType.LeftJoin || relation.RelationType == RelationType.InnerJoin)
                 {
-                    RenderSelectRelation(sqlExpression, relation, relation, null, null, true, true, 0, false, null, selectParameterReferences);
+                    RenderSelectRelation(sqlExpression, relation, relation, filterSet,
+                        null, true, true, 0, false, null, selectParameterReferences);
                 }
             }
             PrettyLine(sqlExpression);
