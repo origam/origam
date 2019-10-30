@@ -105,6 +105,8 @@ namespace Origam.ServerCommon.Pages
 
             IXmlContainer xmlData;
             DataSet data = null;
+            bool isProcessed = false;
+            bool xpath = xsltPage.ResultXPath != null && xsltPage.ResultXPath != String.Empty;
 
             if (xsltPage.DataStructure == null)
             {
@@ -114,14 +116,24 @@ namespace Origam.ServerCommon.Pages
             else
             {
                 data = core.DataService.LoadData(xsltPage.DataStructureId, xsltPage.DataStructureMethodId, Guid.Empty, xsltPage.DataStructureSortSetId, null, qparams);
+                if (xsltPage.Transformation == null && !xpath && page.MimeType == MIME_JSON 
+                    && request.HttpMethod != "DELETE" && request.HttpMethod != "PUT")
+                {
+                    // pure dataset > json serialization
+                    response.WriteToOutput(textWriter => JsonUtils.SerializeToJson(textWriter, data, false));
+                    xmlData = null;
+                    isProcessed = true;
+                }
+                else
+                {
+                    xmlData = DataDocumentFactory.New(data);
+                }
 
                 if (request.HttpMethod == "DELETE")
                 {
                     HandleDELETE(xsltPage, data, transformParams, ruleEngine);
                     return;
                 }
-
-                xmlData = DataDocumentFactory.New(data);
 
                 if (request.HttpMethod == "PUT")
                 {
@@ -131,82 +143,80 @@ namespace Origam.ServerCommon.Pages
                 
             }
 
-            bool xpath = xsltPage.ResultXPath != null && xsltPage.ResultXPath != String.Empty;
-
             IXmlContainer result = null;
-            bool isProcessed = false;
 
-            if (xsltPage.Transformation == null && !xpath && page.MimeType == MIME_JSON)
+            if (!isProcessed)
             {
-                // pure dataset > json serialization
-                response.WriteToOutput(textWriter => JsonUtils.SerializeToJson(textWriter, data, false));
-                isProcessed = true;
-            }
-            else if (xsltPage.Transformation == null)
-            {
-                // no transformation
-                result = xmlData;
-            }
-            else
-            {
-                AsTransform.GetXsltEngine(
-                    persistence.SchemaProvider, xsltPage.TransformationId);
-                result = transformer.Transform(xmlData,
-					xsltPage.TransformationId,
-					new Guid("5b4f2532-a0e1-4ffc-9486-3f35d766af71"),
-					transformParams, preprocessorParams, ruleEngine,
-					xsltPage.TransformationOutputStructure, false);
-
-                IDataDocument resultDataDocument = result as IDataDocument;
-				// pure dataset > json serialization
-				if (resultDataDocument != null && !xpath && page.MimeType == MIME_JSON)
-				{
-				    response.WriteToOutput(textWriter =>
-				        JsonUtils.SerializeToJson(textWriter, resultDataDocument.DataSet, false));
-					isProcessed = true;
-				}
-			}
-
-            if (xpath)
-            {
-                // subset of the returned xml - json | html not supported
-                // it is mainly used for extracting pure text out of the result xml
-                // so json | html serialization would have to be produced by the
-                // xslt or stored directly in the resulting data
-                XPathNavigator nav = result.Xml.CreateNavigator();
-                nav.Select(xsltPage.ResultXPath);
-
-                if (page.MimeType == MIME_OCTET_STREAM)
+                if (xsltPage.Transformation == null)
                 {
-                    byte[] bytes = UTF8Encoding.UTF8.GetBytes(nav.Value);
-                    response.AddHeader("Content-Length", bytes.LongLength.ToString());
-                    response.BinaryWrite(bytes);
+                    // no transformation
+                    result = xmlData;
                 }
                 else
                 {
-                    response.AddHeader("Content-Length", nav.Value.Length.ToString());
-                    response.Write(nav.Value);
-                }
-            }
-            else if(! isProcessed)
-            {
-                if (page.MimeType == MIME_JSON)
-                {
-                    response.WriteToOutput(textWriter =>
-                        JsonUtils.SerializeToJson(textWriter, result, xsltPage.OmitJsonRootElement));
-                }
-                else
-                {
-                    if (page.MimeType == MIME_HTML)
+                    AsTransform.GetXsltEngine(
+                        persistence.SchemaProvider, xsltPage.TransformationId);
+                    result = transformer.Transform(xmlData,
+                        xsltPage.TransformationId,
+                        new Guid("5b4f2532-a0e1-4ffc-9486-3f35d766af71"),
+                        transformParams, preprocessorParams, ruleEngine,
+                        xsltPage.TransformationOutputStructure, false);
+
+                    IDataDocument resultDataDocument = result as IDataDocument;
+                    // pure dataset > json serialization
+                    if (resultDataDocument != null && !xpath && page.MimeType == MIME_JSON)
                     {
-                        response.Write("<!DOCTYPE html>");
+                        response.WriteToOutput(textWriter =>
+                            JsonUtils.SerializeToJson(textWriter, resultDataDocument.DataSet, false));
+                        isProcessed = true;
                     }
-                    response.WriteToOutput(textWriter => result.Xml.Save(textWriter));
+                }
+
+                if (xpath)
+                {
+                    // subset of the returned xml - json | html not supported
+                    // it is mainly used for extracting pure text out of the result xml
+                    // so json | html serialization would have to be produced by the
+                    // xslt or stored directly in the resulting data
+                    XPathNavigator nav = result.Xml.CreateNavigator();
+                    nav.Select(xsltPage.ResultXPath);
+
+                    if (page.MimeType == MIME_OCTET_STREAM)
+                    {
+                        byte[] bytes = UTF8Encoding.UTF8.GetBytes(nav.Value);
+                        response.AddHeader("Content-Length", bytes.LongLength.ToString());
+                        response.BinaryWrite(bytes);
+                    }
+                    else
+                    {
+                        response.AddHeader("Content-Length", nav.Value.Length.ToString());
+                        response.Write(nav.Value);
+                    }
+                }
+                else
+                {
+                    if (page.MimeType == MIME_JSON)
+                    {
+                        response.WriteToOutput(textWriter =>
+                            JsonUtils.SerializeToJson(textWriter, result, xsltPage.OmitJsonRootElement));
+                    }
+                    else
+                    {
+                        if (page.MimeType == MIME_HTML)
+                        {
+                            response.Write("<!DOCTYPE html>");
+                        }
+                        response.WriteToOutput(textWriter => result.Xml.Save(textWriter));
+                    }
                 }
             }
 
             if (Analytics.Instance.IsAnalyticsEnabled && xsltPage.LogTransformation != null)
             {
+                if (xmlData == null)
+                {
+                    xmlData = DataDocumentFactory.New(data);
+                }
                 Type type = this.GetType();
                 IXsltEngine logTransformer = AsTransform.GetXsltEngine(
                     persistence.SchemaProvider, xsltPage.LogTransformationId);
