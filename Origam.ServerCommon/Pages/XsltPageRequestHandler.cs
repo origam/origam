@@ -154,7 +154,7 @@ namespace Origam.ServerCommon.Pages
                 }
                 else
                 {
-                    AsTransform.GetXsltEngine(
+                    transformer = AsTransform.GetXsltEngine(
                         persistence.SchemaProvider, xsltPage.TransformationId);
                     result = transformer.Transform(xmlData,
                         xsltPage.TransformationId,
