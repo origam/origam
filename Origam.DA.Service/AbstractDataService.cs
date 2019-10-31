@@ -175,6 +175,10 @@ namespace Origam.DA.Service
             ColumnsInfo columnsInfo)
         {
             string id = "selectRow_" + entity.PrimaryKey["Id"].ToString();
+            if (filterSet != null)
+            {
+                id += "_" + filterSet.Id.ToString();
+            }
             if (columnsInfo != null && !columnsInfo.IsEmpty)
             {
                 id += "_" + columnsInfo;
