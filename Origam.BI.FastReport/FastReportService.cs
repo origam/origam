@@ -42,7 +42,26 @@ namespace Origam.BI.FastReport
             {
                 using (var reportDoc = new Report())
                 {
-                    reportDoc.Load(report.ReportFileName);
+                    if (File.Exists(report.ReportFileName))
+                    {
+                        reportDoc.Load(report.ReportFileName);
+                    }
+                    else
+                    {
+                        OrigamSettings settings 
+                            = ConfigurationManager.GetActiveConfiguration();
+                        string path = Path.Combine(
+                            settings.ReportsFolder(), report.ReportFileName);
+                        if (File.Exists(path))
+                        {
+                            reportDoc.Load(report.ReportFileName);
+                        }
+                        else
+                        {
+                            throw new Exception(
+                                $"Unable to locate report file {report.ReportFileName}");
+                        }
+                    } 
                     reportDoc.RegisterData(dataset);
                     reportDoc.Prepare();
                     if (format != "PDF")

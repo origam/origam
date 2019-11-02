@@ -123,7 +123,7 @@ namespace Origam.BI.CrystalReports
             }
 			try
 			{
-				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
+				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
 				path = System.IO.Path.Combine(settings.ReportsFolder(), fileName);
 				result.Load(path, CrystalDecisions.Shared.OpenReportMethod.OpenReportByTempCopy);
 			}
