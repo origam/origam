@@ -19,8 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using System;
+using System.ComponentModel;
 using System.Xml.Serialization;
 
 namespace Origam.Schema.RuleModel
@@ -32,5 +34,10 @@ namespace Origam.Schema.RuleModel
 		public EntityRule() : base() {}
 		public EntityRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
         public EntityRule(Key primaryKey) : base(primaryKey) { }
+
+		[EntityColumn("B01"), DefaultValue(false)] 
+        [XmlAttribute("isPathRelative")]
+        [Browsable(false)]
+		public override bool IsPathRelative { get; set; } = false;
     }
 }
