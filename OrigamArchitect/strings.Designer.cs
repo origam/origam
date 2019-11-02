@@ -394,6 +394,15 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to  [disconnected].
+        /// </summary>
+        internal static string Disconnected {
+            get {
+                return ResourceManager.GetString("Disconnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Auto Hide.
         /// </summary>
         internal static string DockPaneCaption_ToolTipAutoHide {
@@ -1087,7 +1096,7 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  - Model Version: {0}.
+        ///   Looks up a localized string similar to  - Model Version: {0}{1}.
         /// </summary>
         internal static string ModelVersion_Title {
             get {

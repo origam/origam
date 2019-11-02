@@ -661,7 +661,7 @@
     <value>Connecting to the model repository...</value>
   </data>
   <data name="ModelVersion_Title" xml:space="preserve">
-    <value> - Model Version: {0}</value>
+    <value> - Model Version: {0}{1}</value>
   </data>
   <data name="NewerVersion_Title" xml:space="preserve">
     <value>Newer version detected</value>
@@ -734,5 +734,8 @@
   </data>
   <data name="ExpandAll" xml:space="preserve">
     <value>Expand All</value>
+  </data>
+  <data name="Disconnected" xml:space="preserve">
+    <value> [disconnected]</value>
   </data>
 </root>

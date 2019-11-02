@@ -69,53 +69,35 @@ namespace Origam.OrigamEngine
             {
                 service.AddProvider(schemaItemProvider);
             }
-
-//			service.AddProvider(new StringSchemaItemProvider());
-//			service.AddProvider(new FeatureSchemaItemProvider());
-//			service.AddProvider(new EntityModelSchemaItemProvider());
-//			service.AddProvider(new DataConstantSchemaItemProvider());
-//            service.AddProvider(new DatabaseDataTypeSchemaItemProvider());
-//            service.AddProvider(new UserControlSchemaItemProvider()); 
-//			service.AddProvider(new PanelSchemaItemProvider()); 
-//			service.AddProvider(new FormSchemaItemProvider()); 
-//			service.AddProvider(new DataStructureSchemaItemProvider()); 
-//			service.AddProvider(new FunctionSchemaItemProvider());
-//			service.AddProvider(new ServiceSchemaItemProvider());
-//			service.AddProvider(new WorkflowSchemaItemProvider());
-//			service.AddProvider(new TransformationSchemaItemProvider());
-//			service.AddProvider(new ReportSchemaItemProvider());
-//			service.AddProvider(new RuleSchemaItemProvider());
-//			service.AddProvider(new MenuSchemaItemProvider());
-////			service.AddProvider(new TestScenarioSchemaItemProvider());
-////			service.AddProvider(new TestChecklistRuleSchemaItemProvider());
-//			service.AddProvider(new WorkflowScheduleSchemaItemProvider());
-//			service.AddProvider(new ScheduleTimeSchemaItemProvider());
-//			service.AddProvider(new DataLookupSchemaItemProvider());
-//			service.AddProvider(new DeploymentSchemaItemProvider());
-//			service.AddProvider(new GraphicsSchemaItemProvider());
-//			service.AddProvider(new StateMachineSchemaItemProvider());
-//			service.AddProvider(new WorkQueueClassSchemaItemProvider());
-//			service.AddProvider(new ChartSchemaItemProvider());
-//			service.AddProvider(new PagesSchemaItemProvider());
-//			service.AddProvider(new DashboardWidgetsSchemaItemProvider());
-//			service.AddProvider(new StylesSchemaItemProvider());
-//			service.AddProvider(new NotificationBoxSchemaItemProvider());
-//			service.AddProvider(new TreeStructureSchemaItemProvider());
-//			service.AddProvider(new KeyboardShortcutsSchemaItemProvider());
-//            service.AddProvider(new SearchSchemaItemProvider());
-
-            AbstractSchemaItem.ExtensionChildItemTypes.Add(new Type[] {typeof(AbstractDataEntity), typeof(EntityMenuAction)});
-			AbstractSchemaItem.ExtensionChildItemTypes.Add(new Type[] {typeof(AbstractDataEntity), typeof(EntityReportAction)});
-			AbstractSchemaItem.ExtensionChildItemTypes.Add(new Type[] {typeof(AbstractDataEntity), typeof(EntityWorkflowAction)});
-			AbstractSchemaItem.ExtensionChildItemTypes.Add(new Type[] {typeof(AbstractDataEntity), typeof(EntityDropdownAction)});
-
-			AbstractSchemaItem.ExtensionChildItemTypes.Add(new Type[] {typeof(AbstractDataStructure), typeof(DataStructureWorkflowMethod)});
-
-			AbstractSchemaItem.ExtensionChildItemTypes.Add(new Type[] {typeof(EntityDropdownAction), typeof(EntityMenuAction)});
-			AbstractSchemaItem.ExtensionChildItemTypes.Add(new Type[] {typeof(EntityDropdownAction), typeof(EntityReportAction)});
-			AbstractSchemaItem.ExtensionChildItemTypes.Add(new Type[] {typeof(EntityDropdownAction), typeof(EntityWorkflowAction)});
-
-			AbstractSchemaItemProvider.ExtensionChildItemTypes.Add(new Type[] {typeof(PagesSchemaItemProvider), typeof(WorkflowPage)});
+            AbstractSchemaItem.ExtensionChildItemTypes.Add(
+                new Type[] {
+                    typeof(AbstractDataEntity), typeof(EntityMenuAction)});
+			AbstractSchemaItem.ExtensionChildItemTypes.Add(
+                new Type[] {
+                    typeof(AbstractDataEntity), typeof(EntityReportAction)});
+			AbstractSchemaItem.ExtensionChildItemTypes.Add(
+                new Type[] {
+                    typeof(AbstractDataEntity), typeof(EntityWorkflowAction)});
+			AbstractSchemaItem.ExtensionChildItemTypes.Add(
+                new Type[] {
+                    typeof(AbstractDataEntity), typeof(EntityDropdownAction)});
+			AbstractSchemaItem.ExtensionChildItemTypes.Add(
+                new Type[] {
+                    typeof(AbstractDataStructure),
+                    typeof(DataStructureWorkflowMethod)});
+			AbstractSchemaItem.ExtensionChildItemTypes.Add(
+                new Type[] {
+                    typeof(EntityDropdownAction), typeof(EntityMenuAction)});
+			AbstractSchemaItem.ExtensionChildItemTypes.Add(
+                new Type[] {
+                    typeof(EntityDropdownAction), typeof(EntityReportAction)});
+			AbstractSchemaItem.ExtensionChildItemTypes.Add(
+                new Type[] {
+                    typeof(EntityDropdownAction),
+                    typeof(EntityWorkflowAction)});
+			AbstractSchemaItemProvider.ExtensionChildItemTypes.Add(
+                new Type[] {
+                    typeof(PagesSchemaItemProvider), typeof(WorkflowPage)});
 		}
 
 		public static void InitializeRuntimeServices()
@@ -162,7 +144,7 @@ namespace Origam.OrigamEngine
 			log.Info("Loading model finished successfully. Version loaded: " + schema.ActiveExtension.Version);
 			InitializeSchemaItemProviders(schema);
 			// upgrade database
-			if(settings.ExecuteUpgradeScriptsOnStart)
+			if (settings.ExecuteUpgradeScriptsOnStart)
 			{
 				log.Info("Checking database version.");
                 IDeploymentService deployment 

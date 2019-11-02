@@ -23,6 +23,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -468,6 +469,8 @@ namespace OrigamArchitect
 		internal bool AdministratorMode { get; set; } = false;
 
 		public bool PopulateEmptyDatabaseOnLoad { get; set; } = true;
+
+        public bool ApplicationDataDisconnectedMode { get; set; } = false;
         
         public void UpdateToolbar()
 		{
@@ -2149,8 +2152,8 @@ namespace OrigamArchitect
 		private void _schema_SchemaLoaded(object sender, EventArgs e)
 		{
 			OrigamEngine.InitializeSchemaItemProviders(_schema);
-            IDeploymentService deployment =
-                ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
+            IDeploymentService deployment 
+                = ServiceManager.Services.GetService<IDeploymentService>();
 
 #if ORIGAM_CLIENT
 			deployment.CanUpdate(_schema.ActiveExtension);
@@ -2181,10 +2184,17 @@ namespace OrigamArchitect
 				}
 			}
 #else
+            ApplicationDataDisconnectedMode 
+                = !TestConnectionToApplicationDataDatabase();
+            if (ApplicationDataDisconnectedMode)
+            {
+                UpdateTitle();
+                return;
+            }
             bool isEmpty = deployment.IsEmptyDatabase();
             // data database is empty and we are not supposed to ask for running init scripts
             // that means the new project wizard is running and will take care
-            if (isEmpty && ! PopulateEmptyDatabaseOnLoad)
+            if (isEmpty && !PopulateEmptyDatabaseOnLoad)
             {
                 return;
             }
@@ -2280,7 +2290,10 @@ namespace OrigamArchitect
             Title += _schema.ActiveExtension.Name;
 #endif
 			Title += string.Format(
-                strings.ModelVersion_Title , _schema?.ActiveExtension?.VersionString);
+                strings.ModelVersion_Title, 
+                _schema?.ActiveExtension?.VersionString,
+                (ApplicationDataDisconnectedMode 
+                    ? strings.Disconnected : ""));
         }
 
 		private void AttachmentDocument_ParentIdChanged(object sender, Guid mainEntityId, Guid mainRecordId, Hashtable childReferences)
@@ -2709,6 +2722,25 @@ namespace OrigamArchitect
 				e.Cancel = true;
 			}
 		}
-    }
 
+        private static bool TestConnectionToApplicationDataDatabase()
+        {
+			OrigamSettings settings 
+                = ConfigurationManager.GetActiveConfiguration() 
+                as OrigamSettings;
+            using(SqlConnection connection 
+                = new SqlConnection(settings.DataConnectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    return true;
+                }
+                catch(SqlException)
+                {
+                    return false;
+                }
+            }
+        }
+    }
 }

@@ -37,11 +37,20 @@ namespace Origam.UI
 			get;
 			set;
 		}
-		
-		/// <summary>
-		/// A collection in which all active workspace windows are saved.
-		/// </summary>
-		ViewContentCollection ViewContentCollection 
+
+        /// <summary>
+        /// If false it's possible to connect to data database.
+        /// </summary>
+        bool ApplicationDataDisconnectedMode
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// A collection in which all active workspace windows are saved.
+        /// </summary>
+        ViewContentCollection ViewContentCollection 
 		{
 			get;
 		}

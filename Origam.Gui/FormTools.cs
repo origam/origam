@@ -32,6 +32,7 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
+using Origam.Workbench;
 using Origam.Workbench.Services;
 
 namespace Origam.Gui
@@ -69,6 +70,15 @@ namespace Origam.Gui
 
         public static bool IsValid(string features, string roles)
         {
+            // if we're running architect in desconnected mode, we consider
+            // everything valid
+            // there's even question, wheter this validation is necessary 
+            // when designing in architect
+            if ((WorkbenchSingleton.Workbench != null) 
+            && WorkbenchSingleton.Workbench.ApplicationDataDisconnectedMode)
+            {
+                return true;
+            }
             IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
             if (!parameterService.IsFeatureOn(features)) return false;
             if (roles != null && roles != String.Empty)
