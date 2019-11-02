@@ -59,7 +59,8 @@ namespace Origam.BI.FastReport
                         else
                         {
                             throw new Exception(
-                                $"Unable to locate report file {report.ReportFileName}");
+                                ResourceUtils.GetString("PathNotFound", 
+                                report.ReportFileName));
                         }
                     } 
                     reportDoc.RegisterData(dataset);
