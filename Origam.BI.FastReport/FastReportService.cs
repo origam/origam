@@ -54,13 +54,12 @@ namespace Origam.BI.FastReport
                             settings.ReportsFolder(), report.ReportFileName);
                         if (File.Exists(path))
                         {
-                            reportDoc.Load(report.ReportFileName);
+                            reportDoc.Load(path);
                         }
                         else
                         {
                             throw new Exception(
-                                ResourceUtils.GetString("PathNotFound", 
-                                report.ReportFileName));
+                                ResourceUtils.GetString("PathNotFound", path));
                         }
                     } 
                     reportDoc.RegisterData(dataset);
