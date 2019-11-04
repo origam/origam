@@ -1,8 +1,0 @@
-.formRoot {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  flex-grow: 1;
-  overflow: auto;
-  background-color: #e5e5e5;
-}
