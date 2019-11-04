@@ -213,7 +213,11 @@ namespace Origam.DA.Service
 
                 if (itemTracker.IsEmpty)
                 {
-                    trackerLoaderFactory.XmlLoader.LoadInto(itemTracker, false);
+                    Maybe<XmlLoadError> error = trackerLoaderFactory.XmlLoader.LoadInto(itemTracker, false);
+                    if(error.HasValue)
+                    {
+                        throw new Exception(error.Value.Message);
+                    }
                     itemTrackerWasJustLoadedFromBin = false;
                 }
                 else
