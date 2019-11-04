@@ -1,0 +1,17 @@
+.container {
+  flex-grow: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.label {
+  padding: 20px;
+  border: 1px solid white;
+  background-color: #8998c5;
+  text-transform: uppercase;
+  color: white;
+}

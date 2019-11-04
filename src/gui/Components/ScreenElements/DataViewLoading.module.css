@@ -1,0 +1,22 @@
+.container {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  flex-grow: 1;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.589);
+  z-index: 9999;
+}
+
+.label {
+  padding: 20px;
+  border: 1px solid white;
+  background-color: #8998c5;
+  text-transform: uppercase;
+  color: white;
+}

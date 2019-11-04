@@ -1,0 +1,10 @@
+.scroller {
+  overflow: scroll;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.scroller:global(.hidden) {
+  display: none;
+}

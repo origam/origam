@@ -1,0 +1,93 @@
+.container {
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 2px;
+  align-content: flex-start;
+  border: 1px solid #cccccc;
+}
+
+.item {
+  display: flex;
+  flex-direction: row;
+  margin: 1px;
+  position: relative;
+  cursor: pointer;
+
+  background-color: #8998c5;
+  color: white;
+}
+
+.itemContent {
+  padding: 2px;
+}
+
+.addBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 15px;
+  height: 15px;
+  margin: 1px;
+  border-radius: 7px;
+  background-color: #8998c5;
+  color: white;
+}
+
+.addBtn:hover {
+  background-color: black;
+}
+
+.removeBtn {
+  background-color: transparent;
+  padding: 2px;
+}
+
+.removeBtn:hover {
+  background-color: #272c3b;
+  height: 100%;
+}
+
+.textboxContainer {
+  position: relative;
+}
+
+.dropdownControlContainer {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
+
+.optionGridContainer {
+
+  padding: 5px;
+  background-color: white;
+  border: 1px solid #dddddd;
+  -webkit-box-shadow: 0px 2px 6px 1px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 2px 6px 1px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 2px 6px 1px rgba(0, 0, 0, 0.75);
+}
+
+.optionGridCell {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.optionGridCell:global(.a) {
+  background-color: white;
+}
+
+.optionGridCell:global(.b) {
+  background-color: rgb(221, 221, 221);
+}
+
+.textboxAndDropdownTrigger {
+  display: inline-flex;
+  flex-direction: row;
+}
+
+.textbox {
+  
+}

@@ -1,0 +1,39 @@
+.tagInputContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: flex-start;
+}
+
+.tagInputAdd {
+}
+
+.tagInputAdd:hover {
+  cursor: pointer;
+}
+
+.tagInputItem {
+  background-color: #8998c5;
+  color: white;
+  display: inline-block;
+  padding: 3px;
+  margin: 1px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.tagInputItemDelete {
+  height: 16px;
+  width: 16px;
+  color: lightgrey;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tagInputItemDelete:hover {
+  cursor: pointer;
+  background-color: #666666;
+}
