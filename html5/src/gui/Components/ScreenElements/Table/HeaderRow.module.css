@@ -1,7 +1,0 @@
-.headerRow {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  position: relative;
-  left: 3px;
-}
