@@ -2725,21 +2725,15 @@ namespace OrigamArchitect
 
         private static bool TestConnectionToApplicationDataDatabase()
         {
-			OrigamSettings settings 
-                = ConfigurationManager.GetActiveConfiguration() 
-                as OrigamSettings;
-            using(SqlConnection connection 
-                = new SqlConnection(settings.DataConnectionString))
+            AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+            try
             {
-                try
-                {
-                    connection.Open();
-                    return true;
-                }
-                catch(SqlException)
-                {
-                    return false;
-                }
+                abstractSqlDataService.ExecuteUpdate("SELECT 1",null);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
     }
