@@ -181,9 +181,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.DA.CommonTests", "Origam.DA.CommonTests\Origam.DA.CommonTests.csproj", "{406B981D-6711-419C-B2C0-4D8416F283BD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.ServerCore", "Origam.ServerCore\Origam.ServerCore.csproj", "{B516F7C2-7C05-42F8-840A-406EFBF0CA53}"
-	ProjectSection(ProjectDependencies) = postProject
-		{183E889E-77AB-46B0-8D4F-30BB68671907} = {183E889E-77AB-46B0-8D4F-30BB68671907}
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{A31519ED-616D-4FC0-8E2B-70984B8F760A}"
 EndProject
