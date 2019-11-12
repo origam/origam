@@ -204,9 +204,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "origam-utils", "origam-utils\origam-utils.csproj", "{3896810A-D91A-48AB-B6D8-DB2306F0B62D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.ServerCommon", "Origam.ServerCommon\Origam.ServerCommon.csproj", "{988C44A3-3F3F-4F61-812D-719B3D8D449B}"
-	ProjectSection(ProjectDependencies) = postProject
-		{183E889E-77AB-46B0-8D4F-30BB68671907} = {183E889E-77AB-46B0-8D4F-30BB68671907}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Schema.DeploymentModel.UI", "Origam.Schema.DeploymentModel.UI\Origam.Schema.DeploymentModel.UI.csproj", "{681A9BF2-3189-44AD-A628-0A9EE25DDE6E}"
 EndProject
