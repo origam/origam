@@ -19,7 +19,7 @@ namespace Origam.Workbench {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Strings {
@@ -941,6 +941,15 @@ namespace Origam.Workbench {
         internal static string XmlFilesFilter {
             get {
                 return ResourceManager.GetString("XmlFilesFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No namespace xmlns:AS=&quot;http://schema.advantages.cz/AsapFunctions&quot; in xsl:stylesheet..
+        /// </summary>
+        internal static string Xslt_AsapFunction {
+            get {
+                return ResourceManager.GetString("Xslt_AsapFunction", resourceCulture);
             }
         }
     }
