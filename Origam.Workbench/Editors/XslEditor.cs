@@ -1274,10 +1274,9 @@ namespace Origam.Workbench.Editors
 
 		private ParameterData NodeToParamData(XmlNode parameterNode)
 		{
+            string name = parameterNode.Attributes["name"].Value;
             try
             {
-                string name = parameterNode.Attributes["name"].Value;
-
                 string asPrefix = aliasToNameSpaceDict[XmlTools.AsNameSpace];
                 string typeAttribute = $"{asPrefix}:DataType";
                 string type = parameterNode.Attributes[typeAttribute]?.Value;
@@ -1285,7 +1284,7 @@ namespace Origam.Workbench.Editors
                 return new ParameterData(name, type);
             }catch (KeyNotFoundException)
             {
-               throw new Exception(Strings.Xslt_AsapFunction);
+                return new ParameterData(name, null);
             }
 		}
 	}

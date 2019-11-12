@@ -943,14 +943,5 @@ namespace Origam.Workbench {
                 return ResourceManager.GetString("XmlFilesFilter", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No namespace xmlns:AS=&quot;http://schema.advantages.cz/AsapFunctions&quot; in xsl:stylesheet..
-        /// </summary>
-        internal static string Xslt_AsapFunction {
-            get {
-                return ResourceManager.GetString("Xslt_AsapFunction", resourceCulture);
-            }
-        }
     }
 }

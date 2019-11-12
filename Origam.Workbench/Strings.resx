@@ -413,7 +413,4 @@
   <data name="MappingNameNotFound" xml:space="preserve">
     <value>error</value>
   </data>
-  <data name="Xslt_AsapFunction" xml:space="preserve">
-    <value>No namespace xmlns:AS="http://schema.advantages.cz/AsapFunctions" in xsl:stylesheet.</value>
-  </data>
 </root>
