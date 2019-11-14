@@ -294,7 +294,7 @@
                             <File Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL" Name="System.Runtime.CompilerServices.Unsafe.dll" Source="source\System.Runtime.CompilerServices.Unsafe.dll" />
                         </Component>
                         <Component Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL" Guid="275D7fEf-22C1-40EC-b4E7-115D96B8EFC0" DiskId="1">
-                            <File Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL_1" Name="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Source="server_source\bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+                            <File Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL" Name="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Source="source\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
                         </Component>
                         <Directory Id="lib" Name="lib">
                             <Directory Id="win32" Name="win32">
@@ -530,7 +530,7 @@
                                         <File Id="NOACCESS.CSHTML" Name="NoAccess.cshtml" Source="server_source\NoAccess.cshtml" />
                                     </Component>
                                     <Component Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL_1" Guid="ADE8011C-832F-41AB-B039-1F7948399FAA" DiskId="1">
-                                        <File Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL" Name="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Source="server_source\bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+                                        <File Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL_1" Name="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Source="server_source\bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
                                     </Component>
                                     <Directory Id="APP_CODE" Name="App_Code">
                                         <Component Id="STARTUP.CS" DiskId="1" Guid="A9371C27-62FD-495E-AE45-BCA242FB1BDA">
