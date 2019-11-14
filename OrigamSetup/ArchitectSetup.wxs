@@ -529,9 +529,6 @@
                                     <Component Id="NoAccess.cshtml" Guid="874fcc12-d7bf-4dd6-ae4b-475285434f8f" DiskId="1">
                                         <File Id="NOACCESS.CSHTML" Name="NoAccess.cshtml" Source="server_source\NoAccess.cshtml" />
                                     </Component>
-                                    <Component Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL_1" Guid="ADE8011C-832F-41AB-B039-1F7948399FAA" DiskId="1">
-                                        <File Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL_1" Name="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Source="server_source\bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
-                                    </Component>
                                     <Directory Id="APP_CODE" Name="App_Code">
                                         <Component Id="STARTUP.CS" DiskId="1" Guid="A9371C27-62FD-495E-AE45-BCA242FB1BDA">
                                             <File Id="STARTUP.CS" Name="Startup.cs" Source="config\App_Code\Startup.cs" />
@@ -1370,6 +1367,9 @@
                                         </Component>
                                         <Component Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL_1" DiskId="1" Guid="44625F93-F704-437A-A325-1629D22F6B4C">
                                             <File Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL_1" Name="System.Runtime.CompilerServices.Unsafe.dll" Source="server_source\bin\System.Runtime.CompilerServices.Unsafe.dll" />
+                                        </Component>
+										<Component Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL_1" Guid="ADE8011C-832F-41AB-B039-1F7948399FAA" DiskId="1">
+                                            <File Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL_1" Name="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Source="server_source\bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
                                         </Component>
                                         <Directory Id="CS_CZ_1" Name="cs-CZ">
                                             <Component Id="ORIGAM.ORIGAMENGINE.RESOURCES.DLL_2" DiskId="1" Guid="4328F83B-3CE3-468A-977E-426009041911">
