@@ -52,3 +52,4 @@ EXEC sp_rename 'AsapTraceWorkflow','OrigamTraceWorkflow';
 EXEC sp_rename 'AsapTraceWorkflowStep','OrigamTraceWorkflowStep';
 EXEC sp_rename 'AsapValidationRule','OrigamValidationRule';
 EXEC sp_rename 'AsapWorkflowMenuItemConfig','OrigamWorkflowMenuItemConfig';
+EXEC sp_rename 'AsapListValue','OrigamListValue';

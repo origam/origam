@@ -1,4 +1,0 @@
-﻿DROP TYPE [dbo].[AsapListValue]
-CREATE TYPE [dbo].[OrigamListValue] AS TABLE(
-	[ListValue] [nvarchar](max) NOT NULL
-)
