@@ -431,6 +431,10 @@ namespace Origam.Server
             {
                 _dataListFilterSetId = filterSet.Id;
             }
+            else if (method is Schema.WorkflowModel.DataStructureWorkflowMethod workflowMethod)
+            {
+                _dataListFilterSetId = workflowMethod.Id;
+            }
             else if (method != null)
             {
                 throw new ArgumentOutOfRangeException("method", "List method must be a filter set.");
@@ -1214,27 +1218,30 @@ namespace Origam.Server
         {
             lock (_lock)
             {
-                if (!(bool)row[SessionStore.LIST_LOADED_COLUMN_NAME])
+                if (row.Table.Columns.Contains(SessionStore.LIST_LOADED_COLUMN_NAME))
                 {
-                    // the row has not been loaded from the database yet, we load the
-                    // whole row even though only some of the columns are needed because
-                    // e.g. color or row-level security rules must be evaluated on all the
-                    // columns
-                    QueryParameterCollection pms = new QueryParameterCollection();
-                    foreach (DataColumn col in row.Table.PrimaryKey)
+                    if (!(bool)row[SessionStore.LIST_LOADED_COLUMN_NAME])
                     {
-                        pms.Add(new QueryParameter(col.ColumnName, rowId));
+                        // the row has not been loaded from the database yet, we load the
+                        // whole row even though only some of the columns are needed because
+                        // e.g. color or row-level security rules must be evaluated on all the
+                        // columns
+                        QueryParameterCollection pms = new QueryParameterCollection();
+                        foreach (DataColumn col in row.Table.PrimaryKey)
+                        {
+                            pms.Add(new QueryParameter(col.ColumnName, rowId));
+                        }
+                        DataSet loadedRow = DatasetTools.CloneDataSet(row.Table.DataSet);
+                        core.DataService.LoadRow(DataListDataStructureEntityId, DataListFilterSetId, pms, loadedRow, null);
+                        if (loadedRow.Tables[row.Table.TableName].Rows.Count == 0)
+                        {
+                            throw new ArgumentOutOfRangeException(string.Format(
+                                "Row {0} not found in {1}.", rowId, row.Table.TableName));
+                        }
+                        SessionStore.MergeRow(loadedRow.Tables[row.Table.TableName].Rows[0], row);
+                        row[SessionStore.LIST_LOADED_COLUMN_NAME] = true;
+                        row.AcceptChanges();
                     }
-                    DataSet loadedRow = DatasetTools.CloneDataSet(row.Table.DataSet);
-                    core.DataService.LoadRow(DataListDataStructureEntityId, DataListFilterSetId, pms, loadedRow, null);
-                    if (loadedRow.Tables[row.Table.TableName].Rows.Count == 0)
-                    {
-                        throw new ArgumentOutOfRangeException(string.Format(
-                            "Row {0} not found in {1}.", rowId, row.Table.TableName));
-                    }
-                    SessionStore.MergeRow(loadedRow.Tables[row.Table.TableName].Rows[0], row);
-                    row[SessionStore.LIST_LOADED_COLUMN_NAME] = true;
-                    row.AcceptChanges();
                 }
             }
         }
