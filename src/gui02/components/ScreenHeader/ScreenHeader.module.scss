@@ -1,0 +1,82 @@
+.root {
+  height: 50px;
+  background: #ffffff;
+  padding: 0 1em 0 2em;
+  display: flex;
+  align-items: center;
+  position: relative;
+  h1 {
+    margin: 0;
+    margin-right: 0.7em;
+    display: block;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+    font-size: 1.5em;
+    line-height: 1.3em;
+    font-weight: 700;
+    padding: 0;
+  }
+
+  .progressIndicator {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+
+    $indefiniteMarkerWidth: 200%;
+
+    @keyframes slideright {
+      from {
+        margin-left: -$indefiniteMarkerWidth;
+      }
+      to {
+        margin-left: 100%;
+      }
+    }
+
+    .indefinite {
+      margin-left: -$indefiniteMarkerWidth;
+      animation-name: slideright;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+      width: $indefiniteMarkerWidth;
+      height: 100%;
+      /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ffffff+0,73b1e7+34,0a77d5+50,73b1e7+66,73b1e7+66,ffffff+100 */
+      background: #ffffff; /* Old browsers */
+      background: -moz-linear-gradient(
+        left,
+        #ffffff 0%,
+        #73b1e7 34%,
+        #0a77d5 50%,
+        #73b1e7 66%,
+        #73b1e7 66%,
+        #ffffff 100%
+      ); /* FF3.6-15 */
+      background: -webkit-linear-gradient(
+        left,
+        #ffffff 0%,
+        #73b1e7 34%,
+        #0a77d5 50%,
+        #73b1e7 66%,
+        #73b1e7 66%,
+        #ffffff 100%
+      ); /* Chrome10-25,Safari5.1-6 */
+      background: linear-gradient(
+        to right,
+        #ffffff 0%,
+        #73b1e7 34%,
+        #0a77d5 50%,
+        #73b1e7 66%,
+        #73b1e7 66%,
+        #ffffff 100%
+      ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */
+    }
+  }
+}

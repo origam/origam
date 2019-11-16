@@ -1,0 +1,55 @@
+@import "src/styles/common_styles.scss";
+
+.anchor {
+  height: 30px;
+  padding: 0 1.6667em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  cursor: pointer;
+  text-decoration: none;
+  font-style: normal;
+
+  color: $textColorNoHover;
+
+  background-color: #f7f6fa;
+
+  @include hoverItemAnimation;
+
+  &:global(.isActive) {
+    background-color: #ffffff;
+    color: #4c84ff;
+    font-weight: 700;
+
+    svg:global(.icon) {
+      stroke: #4c84ff;
+      stroke-width: 2;
+    }
+  }
+
+  &:global(.isHidden) {
+    display: none;
+  }
+
+  &:not(:global(.isActive)):hover {
+    color: $textColorHover;
+    svg:global(.icon) {
+      stroke: #0d0d0d;
+      stroke-width: 1.5;
+    }
+  }
+
+  svg:global(.icon) {
+    @include hoverItemAnimation;
+  }
+}
+
+.icon {
+  width: 1.6667em;
+  height: 1.6667em;
+  margin: 0 1em 0 0;
+  flex-shrink: 0;
+}

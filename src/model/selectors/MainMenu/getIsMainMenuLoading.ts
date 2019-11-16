@@ -1,6 +1,6 @@
 import { getMainMenu } from "./getMainMenu";
+import { getMainMenuEnvelope } from "./getMainMenuEnvelope";
 
 export function getIsMainMenuLoading(ctx: any) {
-  const mainMenu = getMainMenu(ctx);
-  return mainMenu ? mainMenu.isLoading : false;
+  return getMainMenuEnvelope(ctx).isLoading;
 }

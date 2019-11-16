@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+  <title>geo-coordinates</title>
+  <polyline points="11.8 13.8 16.9 13.8 20 20 0 20 3.1 13.8 8.2 13.8" fill="none"/>
+  <path d="M15.4,5.4c0,3-5.4,11.5-5.4,11.5S4.6,8.4,4.6,5.4a5.4,5.4,0,0,1,10.8,0Z" fill="none"/>
+  <circle cx="10" cy="5.4" r="1.5" fill="none"/>
+</svg>

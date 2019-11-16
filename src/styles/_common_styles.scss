@@ -1,0 +1,6 @@
+@mixin hoverItemAnimation {
+   transition: all 300ms linear;
+}
+
+$textColorNoHover: #3e3d45;
+$textColorHover: #0d0d0d;

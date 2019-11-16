@@ -1,0 +1,25 @@
+.root {
+  position: absolute;
+  top: 5px;
+  left: 20px;
+
+  background: #fe5461;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  font-size: 0.9em;
+  font-weight: 700;
+  height: 1.6em;
+  line-height: 1.5em;
+  padding: 0 0.25em;
+  text-align: center;
+  min-width: 1.6em;
+  -webkit-border-radius: 2em;
+  -moz-border-radius: 2em;
+  -ms-border-radius: 2em;
+  -o-border-radius: 2em;
+  border-radius: 2em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}

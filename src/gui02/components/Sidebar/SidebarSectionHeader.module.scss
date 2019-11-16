@@ -1,0 +1,40 @@
+@import "src/styles/common_styles.scss";
+
+.root {
+  height: 50px;
+  color: #77767e;
+  cursor: pointer;
+  text-decoration: none;
+  font-style: normal;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 1.6667em;
+  position: relative;
+  @include hoverItemAnimation;
+  &:global(.isActive) {
+    color: #4c84ff;
+    font-weight: 700;
+    svg:global(.icon) {
+      stroke: #4c84ff;
+      stroke-width: 2;
+    }
+  }
+  &:not(:global(.isActive)):hover {
+    color: #0d0d0d;
+    svg:global(.icon) {
+      stroke: #0d0d0d;
+      stroke-width: 1.5;
+    }
+  }
+  svg:global(.icon) {
+    @include hoverItemAnimation;
+    stroke: #77767e;
+  }
+}
+
+.icon {
+  width: 1.6667em;
+  height: 1.6667em;
+  margin: 0 1em 0 0;
+}

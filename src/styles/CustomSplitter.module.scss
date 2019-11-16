@@ -1,0 +1,13 @@
+@import "src/gui02/components/Splitter/Splitter.module.scss";
+
+.divider {
+  background-color: white;
+  &:global(.isDragging) {
+    position: relative;
+    background-color: black;
+    opacity: 0.2;
+  }
+  &:not(:global(.isDragging)):hover {
+    background-color: black;
+  }
+}

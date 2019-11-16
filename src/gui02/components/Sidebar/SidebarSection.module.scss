@@ -1,0 +1,12 @@
+.root {
+  background-color: #ffffff;
+  border-left: 2px solid transparent;
+  flex-shrink: 0;
+  &:global(.isActive) {
+    border-left: 2px solid #4c84ff;
+    background-color: #F7F6FA;
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: auto;
+  }
+}

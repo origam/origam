@@ -1,0 +1,40 @@
+@import "src/styles/common_styles.scss";
+
+.root {
+  display: flex;
+  flex-direction: row;
+  color: #77767e;
+  padding: 1.2em 0.9em;
+  position: relative;
+  cursor: pointer;
+
+  &:hover {
+    .icon {
+      svg {
+        stroke: #0d0d0d;
+        stroke-width: 1.5;
+      }
+    }
+    .label {
+      color: #0d0d0d;
+    }
+  }
+}
+
+.icon {
+  margin: 0 0.5em 0 0;
+  width: 1.6667em;
+  height: 1.6667em;
+  overflow: inherit;
+  svg {
+    overflow: inherit;
+    stroke: #77767e;
+    stroke-width: 1;
+    @include hoverItemAnimation;
+  }
+}
+
+.label {
+  @include hoverItemAnimation;
+
+}

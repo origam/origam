@@ -6,13 +6,15 @@ import "./index.css";
 import { createApplication } from "./model/factories/createApplication";
 import * as serviceWorker from "./serviceWorker";
 import 'react-tippy/dist/tippy.css'
+import { CMain } from "gui02/connections/CMain";
 
 const application = createApplication();
 application.run();
 
 ReactDOM.render(
   <Provider application={application}>
-    <Main />
+    {/*<Main />*/}
+    <CMain />
   </Provider>,
   document.getElementById("root")
 );
@@ -22,5 +24,4 @@ ReactDOM.render(
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
   
-
 

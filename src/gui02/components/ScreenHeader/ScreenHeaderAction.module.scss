@@ -1,0 +1,38 @@
+@import "src/styles/common_styles.scss";
+
+.root {
+  color: #77767e;
+  padding: 1.2em 0.9em;
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+  &:hover {
+    svg {
+      stroke: #0d0d0d;
+      stroke-width: 1.5;
+    }
+  }
+  &:global(.isGreenOnHover):not(:global(.isActive)):hover svg {
+    stroke: #69d07f;
+  }
+  &:global(.isOrangeOnHover):not(:global(.isActive)):hover svg {
+    stroke: #fe8933;
+  }
+  &:global(.isActive) svg {
+    stroke: #4C84FF;
+    stroke-width: 2;
+  }
+  svg {
+    height: 1.6667em;
+    overflow: inherit;
+    stroke: #77767e;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1;
+    width: 1.6667em;
+    @include hoverItemAnimation;
+  }
+}
