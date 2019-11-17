@@ -1,16 +1,12 @@
-import React from "react";
-import { MobXProviderContext } from "mobx-react";
-import { ScreenHeader } from "gui02/components/ScreenHeader/ScreenHeader";
-import { ScreenheaderDivider } from "gui02/components/ScreenHeader/ScreenHeaderDivider";
-import { ScreenHeaderAction } from "gui02/components/ScreenHeader/ScreenHeaderAction";
 import { Icon } from "gui02/components/Icon/Icon";
+import { ScreenHeader } from "gui02/components/ScreenHeader/ScreenHeader";
+import { ScreenHeaderAction } from "gui02/components/ScreenHeader/ScreenHeaderAction";
 import { ScreenHeaderPusher } from "gui02/components/ScreenHeader/ScreenHeaderPusher";
-import { ScreenHeaderRowNo } from "gui02/components/ScreenHeader/ScreenHeaderRowNo";
-import { observer } from "mobx-react";
-import { getOpenedScreenItems } from "model/selectors/getOpenedScreenItems";
-import { IWorkbench } from "model/entities/types/IWorkbench";
-import { IFormScreenEnvelope } from "model/entities/types/IFormScreen";
+import { MobXProviderContext, observer } from "mobx-react";
 import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
+import { IWorkbench } from "model/entities/types/IWorkbench";
+import { getOpenedScreenItems } from "model/selectors/getOpenedScreenItems";
+import React from "react";
 
 @observer
 export class CScreenHeader extends React.Component {
@@ -33,12 +29,12 @@ export class CScreenHeader extends React.Component {
       return null;
     }
     const { content } = activeScreen;
-    if (content.isLoading) {
+    /*if (content.isLoading) {
       return null;
-    }
+    }*/
 
     return (
-      <ScreenHeader>
+      <ScreenHeader isLoading={content.isLoading}>
         <h1>{this.getLabel(activeScreen)}</h1>
         {/*<ScreenheaderDivider />
           <ScreenHeaderAction className="isGreenOnHover">

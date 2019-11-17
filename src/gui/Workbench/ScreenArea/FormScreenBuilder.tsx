@@ -1,15 +1,24 @@
 import { action, computed, observable } from "mobx";
 import { observer, Observer } from "mobx-react";
 import React from "react";
-import { findBoxes, findUIChildren, findUIRoot } from "../../../xmlInterpreters/screenXml";
+import SSplitter from "styles/CustomSplitter.module.scss";
+import {
+  findBoxes,
+  findUIChildren,
+  findUIRoot
+} from "../../../xmlInterpreters/screenXml";
 import { Box } from "../../Components/ScreenElements/Box";
 import { DataView } from "../../Components/ScreenElements/DataView";
 import { HSplit, HSplitPanel } from "../../Components/ScreenElements/HSplit";
 import { Label } from "../../Components/ScreenElements/Label";
-import { TabbedPanel, TabBody, TabHandle } from "../../Components/ScreenElements/TabbedPanel";
+import {
+  TabbedPanel,
+  TabBody,
+  TabHandle
+} from "../../Components/ScreenElements/TabbedPanel";
 import { VBox } from "../../Components/ScreenElements/VBox";
 import { VSplit, VSplitPanel } from "../../Components/ScreenElements/VSplit";
-
+import { Splitter } from "gui02/components/Splitter/Splitter";
 
 @observer
 class TabbedPanelHelper extends React.Component<{
@@ -53,8 +62,6 @@ class TabbedPanelHelper extends React.Component<{
   }
 }
 
-
-
 @observer
 export class FormScreenBuilder extends React.Component<{
   xmlWindowObject: any;
@@ -65,23 +72,27 @@ export class FormScreenBuilder extends React.Component<{
       switch (xso.attributes.Type) {
         case "HSplit":
           return (
-            <HSplit handleClassName="screenSplitterHandle">
-              {findUIChildren(xso).map((child, idx) => (
-                <HSplitPanel id={idx} key={idx}>
-                  {recursive(child)}
-                </HSplitPanel>
-              ))}
-            </HSplit>
+            <Splitter
+              STYLE={SSplitter}
+              type="isHoriz"
+              panels={findUIChildren(xso).map((child, idx) => [
+                idx,
+                1,
+                recursive(child)
+              ])}
+            />
           );
         case "VSplit":
           return (
-            <VSplit handleClassName="screenSplitterHandle">
-              {findUIChildren(xso).map((child, idx) => (
-                <VSplitPanel id={idx} key={idx}>
-                  {recursive(child)}
-                </VSplitPanel>
-              ))}
-            </VSplit>
+            <Splitter
+              STYLE={SSplitter}
+              type="isVert"
+              panels={findUIChildren(xso).map((child, idx) => [
+                idx,
+                1,
+                recursive(child)
+              ])}
+            />
           );
         case "Label":
           console.log(xso);

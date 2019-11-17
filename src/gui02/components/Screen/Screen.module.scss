@@ -1,0 +1,7 @@
+.root {
+  height: 100%;
+  overflow: hidden;
+  &:global(.isHidden) {
+    display: none;
+  }
+}
