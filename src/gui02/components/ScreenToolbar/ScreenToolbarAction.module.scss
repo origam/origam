@@ -19,6 +19,14 @@
       color: #0d0d0d;
     }
   }
+
+  &:global(.isLabelless) {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    .icon {
+      margin: 0;
+    }
+  }
 }
 
 .icon {
@@ -36,5 +44,4 @@
 
 .label {
   @include hoverItemAnimation;
-
 }

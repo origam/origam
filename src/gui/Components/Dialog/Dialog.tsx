@@ -5,6 +5,7 @@ import * as ReactDOM from "react-dom";
 import { observer, Observer } from "mobx-react";
 import { observable, action } from "mobx";
 import Measure, { BoundingRect } from "react-measure";
+import { Icon } from "gui02/components/Icon/Icon";
 
 export class ModalWindowOverlay extends React.Component {
   render() {
@@ -125,6 +126,8 @@ export class ModalWindow extends React.Component<{
 
 export const CloseButton = (props: { onClick?: (event: any) => void }) => (
   <button className={S.btnClose} onClick={props.onClick}>
-    <i className="fas fa-times icon" />
+    <div className={S.btnIconContainer}>
+      <Icon src="./icons/close.svg" />
+    </div>
   </button>
 );
