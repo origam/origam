@@ -1,0 +1,9 @@
+@import "src/styles/common_styles.scss";
+
+.root {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+
+  @include popowerShadow;
+}

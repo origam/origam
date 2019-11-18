@@ -1,0 +1,7 @@
+.root {
+  flex-grow: 1;
+  display: none;
+  &:global(.isActive) {
+    display: block;
+  }
+}

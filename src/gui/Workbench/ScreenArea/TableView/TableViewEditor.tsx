@@ -1,30 +1,22 @@
+import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
+import { TextEditor } from "gui/Components/ScreenElements/Editors/TextEditor";
 import { inject, observer, Provider } from "mobx-react";
-import moment from "moment";
+import { onFieldChange } from "model/actions/DataView/TableView/onFieldChange";
+import { onFieldKeyDown } from "model/actions/DataView/TableView/onFieldKeyDown";
+import { getRowStateAllowUpdate } from "model/selectors/RowState/getRowStateAllowUpdate";
+import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
+import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
-import { getIsEditing } from "../../../../model/selectors/DataView/getIsEditing";
-import { getSelectedColumnIndex } from "../../../../model/selectors/TablePanelView/getSelectedColumnIndex";
-import { getSelectedRowIndex } from "../../../../model/selectors/TablePanelView/getSelectedRowIndex";
+import { onFieldBlur } from "../../../../model/actions/DataView/TableView/onFieldBlur";
 import { IProperty } from "../../../../model/entities/types/IProperty";
+import { getSelectedRow } from "../../../../model/selectors/DataView/getSelectedRow";
+import { getCellValue } from "../../../../model/selectors/TablePanelView/getCellValue";
+import { getSelectedProperty } from "../../../../model/selectors/TablePanelView/getSelectedProperty";
 import { BoolEditor } from "../../../Components/ScreenElements/Editors/BoolEditor";
 import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateTimeEditor";
 import { DropdownEditor } from "../../../Components/ScreenElements/Editors/DropdownEditor";
 
-import { getSelectedProperty } from "../../../../model/selectors/TablePanelView/getSelectedProperty";
-import { getDataView } from "../../../../model/selectors/DataView/getDataView";
-import { getSelectedRow } from "../../../../model/selectors/DataView/getSelectedRow";
-import {
-  getCellValueByIdx,
-  getCellValue
-} from "../../../../model/selectors/TablePanelView/getCellValue";
-import { TextEditor } from "gui/Components/ScreenElements/Editors/TextEditor";
-import { onFieldBlur } from "../../../../model/actions/DataView/TableView/onFieldBlur";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
-import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
-import { getRowStateAllowUpdate } from "model/selectors/RowState/getRowStateAllowUpdate";
-import { onFieldChange } from "model/actions/DataView/TableView/onFieldChange";
-import { onFieldKeyDown } from "model/actions/DataView/TableView/onFieldKeyDown";
-import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
 
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;

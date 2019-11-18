@@ -1,9 +1,9 @@
 import React from "react";
-import S from "./ScreenTabbedViewHandle.module.scss";
+import S from "./TabbedViewHandle.module.scss";
 import cx from "classnames";
 import { Icon } from "../Icon/Icon";
 
-export class ScreenTabbedViewHandle extends React.Component<{
+export class TabbedViewHandle extends React.Component<{
   isActive?: boolean;
   hasCloseBtn?: boolean;
   onClick?(event: any): void;

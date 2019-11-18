@@ -5,6 +5,9 @@ import { getShownPage } from "model/selectors/Application/getShownPage";
 import React from "react";
 import { CLoginPage } from "./pages/CLoginPage";
 import { CWorkbenchPage } from "./pages/CWorkbenchPage";
+import { ApplicationDialogStack } from "gui/Components/Dialog/DialogStack";
+import { getDialogStack } from "model/selectors/getDialogStack";
+import cx from "classnames";
 
 @observer
 export class CMain extends React.Component {
@@ -16,6 +19,7 @@ export class CMain extends React.Component {
 
   getPage() {
     const page = getShownPage(this.application);
+
     switch (page) {
       case IApplicationPage.Login:
         return <CLoginPage />;
@@ -25,11 +29,16 @@ export class CMain extends React.Component {
   }
 
   render() {
+    const dialogStack = getDialogStack(this.application);
     return (
-      <>
-        {/*<ApplicationDialogStack />*/}
+      <div
+        className={cx("toplevelContainer", {
+          isBlurred: dialogStack.isAnyDialogShown
+        })}
+      >
+        <ApplicationDialogStack />
         {this.getPage()}
-      </>
+      </div>
     );
   }
 }

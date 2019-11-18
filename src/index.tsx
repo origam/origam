@@ -2,7 +2,7 @@ import { Provider } from "mobx-react";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Main } from "./gui/Main";
-import "./index.css";
+import "./index.scss";
 import { createApplication } from "./model/factories/createApplication";
 import * as serviceWorker from "./serviceWorker";
 import 'react-tippy/dist/tippy.css'

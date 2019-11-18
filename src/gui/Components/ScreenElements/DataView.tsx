@@ -1,14 +1,14 @@
-import React from "react";
-import S from "./DataView.module.css";
-import { Toolbar } from "./DataViewToolbar";
-import { observer, inject, Provider } from "mobx-react";
-import { getDataViewById } from "../../../model/selectors/DataView/getDataViewById";
-import { IDataView } from "../../../model/entities/types/IDataView";
-import { FormBuilder } from "../../Workbench/ScreenArea/FormView/FormBuilder";
-import { IPanelViewType } from "../../../model/entities/types/IPanelViewType";
-import { TableView } from "../../Workbench/ScreenArea/TableView/TableView";
 import { FormView } from "gui/Workbench/ScreenArea/FormView/FormView";
+import { CDataViewHeader } from "gui02/connections/CDataViewHeader";
+import { inject, observer, Provider } from "mobx-react";
 import { getIsDataViewOrFormScreenWorking } from "model/selectors/DataView/getIsDataViewOrFormScreenWorking";
+import React from "react";
+import { IDataView } from "../../../model/entities/types/IDataView";
+import { IPanelViewType } from "../../../model/entities/types/IPanelViewType";
+import { getDataViewById } from "../../../model/selectors/DataView/getDataViewById";
+import { FormBuilder } from "../../Workbench/ScreenArea/FormView/FormBuilder";
+import { TableView } from "../../Workbench/ScreenArea/TableView/TableView";
+import S from "./DataView.module.css";
 import { DataViewLoading } from "./DataViewLoading";
 
 @inject(({ formScreen }, { id }) => {
@@ -45,7 +45,12 @@ export class DataView extends React.Component<{
     return (
       <Provider dataView={this.props.dataView}>
         <div className={S.dataView} style={this.getDataViewStyle()}>
-          {!this.props.isHeadless && <Toolbar />}
+          {!this.props.isHeadless && (
+            <>
+              {/*<Toolbar />*/}
+              <CDataViewHeader />
+            </>
+          )}
           <div
             style={{
               // width: "100%",

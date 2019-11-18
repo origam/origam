@@ -1,0 +1,38 @@
+@import "src/styles/common_styles.scss";
+
+.root {
+  height: 22px;
+  padding: 0 0.75em;
+  background: #e9e8f0;
+  border-color: #b0afb7;
+  color: #3e3d45;
+  border-style: solid;
+  border-width: 1px;
+  box-sizing: border-box;
+  white-space: nowrap;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  cursor: pointer;
+  font-size: 0.9em;
+  @include hoverItemAnimation;
+
+
+  &:first-of-type {
+    border-radius: 3em 0em 0em 3em;
+    border-right: none;
+    margin-right: 0;
+  }
+
+  &:last-of-type {
+    border-radius: 0em 3em 3em 0em;
+    border-left: none;
+    margin-left: 0;
+  }
+
+
+  &:hover {
+    background: #B0AFB7;
+    color: #0D0D0D;
+  }
+}

@@ -1,0 +1,59 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+  color: #0d0d0d;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  font-style: normal;
+  line-height: 1.5em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* filter: blur(1px); */
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  overflow: none;
+  height: 100%;
+}
+
+#root {
+  overflow: none;
+  display: flex;
+  flex-direction: column;
+  /*padding: 40px;*/
+  height: 100%;
+}
+
+.toplevelContainer {
+  margin: 0;
+  padding: 0;
+  overflow: none;
+  height: 100%;
+  &.isBlurred {
+    filter: blur(2px);
+    -webkit-filter: blur(2px);
+    -moz-filter: blur(2px);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --font-size: 20px;
+}
+
+#dropdown-portal {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}

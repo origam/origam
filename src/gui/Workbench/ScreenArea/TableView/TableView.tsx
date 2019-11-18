@@ -11,7 +11,6 @@ import { getColumnHeaders } from "../../../../model/selectors/TablePanelView/get
 import { getIsEditing } from "../../../../model/selectors/TablePanelView/getIsEditing";
 import { getRowCount } from "../../../../model/selectors/TablePanelView/getRowCount";
 import { getSelectedColumnIndex } from "../../../../model/selectors/TablePanelView/getSelectedColumnIndex";
-import { getSelectedRowIndex } from "../../../../model/selectors/TablePanelView/getSelectedRowIndex";
 import { getTableViewProperties } from "../../../../model/selectors/TablePanelView/getTableViewProperties";
 import { IColumnHeader } from "../../../../model/selectors/TablePanelView/types";
 import { ITableColumnsConf } from "../../../Components/Dialogs/ColumnsDialog";
@@ -24,6 +23,7 @@ import { CellRenderer } from "./CellRenderer";
 import { TableViewEditor } from "./TableViewEditor";
 import { getPropertyOrdering } from "../../../../model/selectors/DataView/getPropertyOrdering";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
 
 @inject(({ dataView }) => {
   return {

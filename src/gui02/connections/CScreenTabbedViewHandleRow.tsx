@@ -1,8 +1,8 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { MobXProviderContext } from "mobx-react";
-import { ScreenTabbedViewHandle } from "gui02/components/ScreenTabbedView/ScreenTabbedViewHandle";
-import { ScreenTabbedViewHandleRow } from "gui02/components/ScreenTabbedView/ScreenTabbedViewHandleRow";
+import { TabbedViewHandle } from "gui02/components/TabbedView/TabbedViewHandle";
+import { TabbedViewHandleRow } from "gui02/components/TabbedView/TabbedViewHandleRow";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getOpenedScreenItems } from "model/selectors/getOpenedScreenItems";
 import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
@@ -29,9 +29,9 @@ export class CScreenTabbedViewHandleRow extends React.Component {
     const openedScreenItems = getOpenedScreenItems(this.workbench);
 
     return (
-      <ScreenTabbedViewHandleRow>
+      <TabbedViewHandleRow>
         {openedScreenItems.map(item => (
-          <ScreenTabbedViewHandle
+          <TabbedViewHandle
             key={`${item.menuItemId}@${item.order}`}
             isActive={item.isActive}
             hasCloseBtn={true}
@@ -39,9 +39,9 @@ export class CScreenTabbedViewHandleRow extends React.Component {
             onCloseClick={(event: any) => onScreenTabCloseClick(item)(event)}
           >
             {this.getLabel(item)}
-          </ScreenTabbedViewHandle>
+          </TabbedViewHandle>
         ))}
-      </ScreenTabbedViewHandleRow>
+      </TabbedViewHandleRow>
     );
   }
 }

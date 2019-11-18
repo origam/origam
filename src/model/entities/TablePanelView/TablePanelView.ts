@@ -16,10 +16,10 @@ import { getTableViewProperties } from "model/selectors/TablePanelView/getTableV
 import { getSelectedColumnId } from "model/selectors/TablePanelView/getSelectedColumnId";
 import { IOrderingConfiguration } from "../types/IOrderingConfiguration";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { getSelectedRowIndex } from "model/selectors/TablePanelView/getSelectedRowIndex";
 import { getSelectedColumnIndex } from "model/selectors/TablePanelView/getSelectedColumnIndex";
 import { onFieldChange } from "model/actions/DataView/TableView/onFieldChange";
 import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
+import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;

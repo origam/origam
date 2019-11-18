@@ -1,0 +1,12 @@
+.root {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 (0.9em/2);
+
+  &:global(.isHidden) {
+    position: absolute;
+    top: 110%;;
+    left: 0;
+  }
+}

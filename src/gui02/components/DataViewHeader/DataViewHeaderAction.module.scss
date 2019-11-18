@@ -1,0 +1,52 @@
+@import "src/styles/common_styles.scss";
+
+.root {
+  height: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-left: (0.9em/2);
+  padding-right: (0.9em/2);
+  cursor: pointer;
+
+  &:hover {
+    svg {
+      stroke-width: 1.5;
+    }
+  }
+
+  &:global(.isActive) {
+    svg {
+      stroke: #4c84ff !important;
+      stroke-width: 2 !important;
+    }
+  }
+
+  &:global(.isGreenHover):hover {
+    color: #69d07f;
+    svg {
+      stroke: #69d07f !important;
+    }
+  }
+
+  &:global(.isRedHover):hover {
+    color: #fe5461;
+    svg {
+      stroke: #fe5461 !important;
+    }
+  }
+
+  &:global(.isOrangeHover):hover {
+    color: #fe8933;
+    svg {
+      stroke: #fe8933 !important;
+    }
+  }
+
+  svg {
+    height: (1.6667em/1.5);
+    width: (1.6667em/1.5);
+    @include hoverItemAnimation;
+  }
+}

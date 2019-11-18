@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import ReactDOM from "react-dom";
-import S from "./Dialog.module.css";
+import S from "./Dialog.module.scss";
 import { observer, MobXProviderContext } from "mobx-react";
 import { getApplication } from "../../../model/selectors/getApplication";
 import { getDialogStack } from "../../../model/selectors/DialogStack/getDialogStack";

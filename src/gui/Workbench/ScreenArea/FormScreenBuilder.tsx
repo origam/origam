@@ -19,6 +19,7 @@ import {
 import { VBox } from "../../Components/ScreenElements/VBox";
 import { VSplit, VSplitPanel } from "../../Components/ScreenElements/VSplit";
 import { Splitter } from "gui02/components/Splitter/Splitter";
+import { CScreenSectionTabbedView } from "gui02/connections/CScreenSectionTabbedView";
 
 @observer
 class TabbedPanelHelper extends React.Component<{
@@ -128,9 +129,11 @@ export class FormScreenBuilder extends React.Component<{
           );
         case "Tab":
           return (
-            <TabbedPanelHelper boxes={findBoxes(xso)} nextNode={recursive} />
+            <CScreenSectionTabbedView
+              boxes={findBoxes(xso)}
+              nextNode={recursive}
+            />
           );
-
         case "Box":
           return (
             <Box>{findUIChildren(xso).map(child => recursive(child))}</Box>

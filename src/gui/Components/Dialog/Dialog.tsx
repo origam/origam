@@ -1,4 +1,4 @@
-import S from "./Dialog.module.css";
+import S from "./Dialog.module.scss";
 import React from "react";
 
 import * as ReactDOM from "react-dom";

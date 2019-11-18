@@ -7,5 +7,6 @@ export interface IDialogStack {
   }>;
   pushDialog(key: string, component: React.ReactNode, dialogDimensions? : IDialogDimensions): () =>void;
   closeDialog(key: string): void;
+  isAnyDialogShown: boolean;
   parent?: any;
 }
