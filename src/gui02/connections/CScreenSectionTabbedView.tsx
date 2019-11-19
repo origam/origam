@@ -6,6 +6,7 @@ import { TabbedViewHandle } from "gui02/components/TabbedView/TabbedViewHandle";
 import { observable, action } from "mobx";
 import { TabbedView } from "gui02/components/TabbedView/TabbedView";
 import { findUIChildren } from "xmlInterpreters/screenXml";
+import { TabbedViewPanelsContainer } from "gui02/components/TabbedView/TabbedViewPanelsContainer";
 
 @observer
 export class CScreenSectionTabbedView extends React.Component<{
@@ -38,18 +39,20 @@ export class CScreenSectionTabbedView extends React.Component<{
             </Observer>
           ))}
         </TabbedViewHandleRow>
-        {boxes.map(box => (
-          <Observer>
-            {() => (
-              <TabbedViewPanel
-                key={box.attributes.Id}
-                isActive={this.activePanelId === box.attributes.Id}
-              >
-                {findUIChildren(box).map(child => this.props.nextNode(child))}
-              </TabbedViewPanel>
-            )}
-          </Observer>
-        ))}
+        <TabbedViewPanelsContainer>
+          {boxes.map(box => (
+            <Observer>
+              {() => (
+                <TabbedViewPanel
+                  key={box.attributes.Id}
+                  isActive={this.activePanelId === box.attributes.Id}
+                >
+                  {findUIChildren(box).map(child => this.props.nextNode(child))}
+                </TabbedViewPanel>
+              )}
+            </Observer>
+          ))}
+        </TabbedViewPanelsContainer>
       </TabbedView>
     );
   }

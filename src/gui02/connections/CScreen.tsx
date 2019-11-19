@@ -3,6 +3,7 @@ import { observer, Provider } from "mobx-react";
 import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
 import React from "react";
 import { Screen } from "../components/Screen/Screen";
+import { ScreenContainer } from "gui02/components/Screen/ScreenContainer";
 
 @observer
 export class CScreen extends React.Component<{

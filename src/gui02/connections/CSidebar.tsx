@@ -52,7 +52,6 @@ export const CSidebar: React.FC = props => (
         icon={<Icon src="./icons/info.svg" />}
         label={"Info"}
       />
-      <SidebarSectionDivider />
     </SidebarSection>
     <SidebarSection isActive={false}>
       <SidebarSectionDivider />
