@@ -10,6 +10,7 @@ import { CScreenToolbar } from "../CScreenToolbar";
 import { CSidebar } from "../CSidebar";
 import { CScreenHeader } from "../CScreenHeader";
 import { CScreenContent } from "../CScreenContent";
+import { CDialogContent } from "../CDialogContent";
 
 @observer
 export class CWorkbenchPage extends React.Component {
@@ -31,6 +32,7 @@ export class CWorkbenchPage extends React.Component {
                 <CScreenTabbedViewHandleRow />
                 <CScreenHeader />
                 <CScreenContent />
+                <CDialogContent />
                 {/*<ScreenTabbedViewHandleRow>
                 <ScreenTabbedViewHandle isActive={false} hasCloseBtn={true}>
                   Cubehór

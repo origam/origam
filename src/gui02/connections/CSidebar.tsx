@@ -32,8 +32,8 @@ export const CSidebar: React.FC = props => (
       <SidebarSectionDivider />
       <SidebarSectionHeader
         isActive={false}
-        icon={<Icon src="./icons/settings.svg" />}
-        label={"Menu"}
+        icon={<Icon src="./icons/favorites.svg" />}
+        label={"Favorites"}
       />
     </SidebarSection>
     <SidebarSection isActive={true}>
@@ -48,9 +48,18 @@ export const CSidebar: React.FC = props => (
     <SidebarSection isActive={false}>
       <SidebarSectionDivider />
       <SidebarSectionHeader
-        isActive={true}
-        icon={<Icon src="./icons/help.svg" />}
-        label={"Menu"}
+        isActive={false}
+        icon={<Icon src="./icons/info.svg" />}
+        label={"Info"}
+      />
+      <SidebarSectionDivider />
+    </SidebarSection>
+    <SidebarSection isActive={false}>
+      <SidebarSectionDivider />
+      <SidebarSectionHeader
+        isActive={false}
+        icon={<Icon src="./icons/search.svg" />}
+        label={"Search"}
       />
       <SidebarSectionDivider />
     </SidebarSection>
