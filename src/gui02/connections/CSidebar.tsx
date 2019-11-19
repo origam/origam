@@ -12,7 +12,7 @@ export const CSidebar: React.FC = props => (
   <Sidebar>
     <LogoSection>
       <div style={{ width: 150 }}>
-        <img src="./img/asap.png" />
+        <img src="./img/logo-left.png" />
       </div>
     </LogoSection>
     <SidebarSection isActive={false}>
