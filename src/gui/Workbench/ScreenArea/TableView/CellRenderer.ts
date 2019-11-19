@@ -1,27 +1,20 @@
 import bind from "bind-decorator";
-import {
-  IRenderCellArgs,
-  IRenderedCell
-} from "../../../Components/ScreenElements/Table/types";
-import { CPR } from "../../../../utils/canvas";
-import moment from "moment";
-import { IDataTable } from "../../../../model/entities/types/IDataTable";
-import { IProperty } from "../../../../model/entities/types/IProperty";
 import { computed } from "mobx";
-import { ITablePanelView } from "../../../../model/entities/TablePanelView/types/ITablePanelView";
-import { TablePanelView } from "../../../../model/entities/TablePanelView/TablePanelView";
-import { getCellValueByIdx } from "../../../../model/selectors/TablePanelView/getCellValue";
-import { getTableViewPropertyByIdx } from "../../../../model/selectors/TablePanelView/getTableViewPropertyByIdx";
-import { getTableViewRecordByExistingIdx } from "../../../../model/selectors/TablePanelView/getTableViewRecordByExistingIdx";
-import { getSelectedColumnId } from "../../../../model/selectors/TablePanelView/getSelectedColumnId";
-import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/getSelectedRowId";
-import { getCellTextByIdx } from "../../../../model/selectors/TablePanelView/getCellText";
-import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
-import { getRowStates } from "model/selectors/RowState/getRowStates";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
-import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
+import moment from "moment";
+import { ITablePanelView } from "../../../../model/entities/TablePanelView/types/ITablePanelView";
+import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
+import { getCellTextByIdx } from "../../../../model/selectors/TablePanelView/getCellText";
+import { getCellValueByIdx } from "../../../../model/selectors/TablePanelView/getCellValue";
+import { getSelectedColumnId } from "../../../../model/selectors/TablePanelView/getSelectedColumnId";
+import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/getSelectedRowId";
+import { getTableViewPropertyByIdx } from "../../../../model/selectors/TablePanelView/getTableViewPropertyByIdx";
+import { getTableViewRecordByExistingIdx } from "../../../../model/selectors/TablePanelView/getTableViewRecordByExistingIdx";
+import { CPR } from "../../../../utils/canvas";
+import { IRenderCellArgs, IRenderedCell } from "../../../Components/ScreenElements/Table/types";
 
 export interface ICellRendererData {
   tablePanelView: ITablePanelView;
@@ -74,7 +67,7 @@ export class CellRenderer implements ICellRenderer {
     // TODO: Read only for bool fields in grid
 
     /* CONTENT */
-    ctx.font = `${12 * CPR}px sans-serif`;
+    ctx.font = `${12 * CPR}px "IBM Plex Sans", sans-serif`;
     if (cell.isLoading) {
       ctx.fillStyle = "#888888";
       ctx.fillText("Loading...", 15 * CPR, 15 * CPR);
