@@ -1,4 +1,4 @@
-import S from "./FormRoot.module.css";
+import S from "./FormRoot.module.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { action } from "mobx";

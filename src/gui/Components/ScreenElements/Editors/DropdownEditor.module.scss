@@ -1,15 +1,5 @@
-.dropdownSymbol {
-  position: absolute;
-  right: 1px;
-  margin-top: 0px;
-  padding: 1px;
-  z-index: 200;
-  background-color: white;
-}
 
-.dropdownSymbol:hover {
-  background-color: #8998c5;
-}
+@import "./EditorsCommon.scss";
 
 .droppedPanelContainer {
   z-index: 1000;
@@ -58,4 +48,21 @@
 
 .dropdownerContainer {
   width: 100%;
+}
+
+
+.dropdownSymbol {
+  @include dropdownSymbol;
+}
+
+.input {
+  @include input;
+}
+
+.notification {
+  @include notification;
+}
+
+.editorContainer {
+  @include editorContainer;
 }

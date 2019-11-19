@@ -1,0 +1,9 @@
+@import "./EditorsCommon.scss";
+
+.editorContainer {
+  @include editorContainer;
+  width: 20px;
+  height: 20px;
+}
+
+

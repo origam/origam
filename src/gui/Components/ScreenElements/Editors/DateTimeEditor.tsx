@@ -1,7 +1,7 @@
 import * as React from "react";
 import { observer } from "mobx-react";
-import S from "./DateTimeEditor.module.css";
-import CS from "./CommonStyle.module.css";
+import S from "./DateTimeEditor.module.scss";
+// import CS from "./CommonStyle.module.css";
 import { action, observable, computed, runInAction } from "mobx";
 import moment from "moment";
 import { Tooltip } from "react-tippy";
@@ -319,7 +319,7 @@ export class DateTimeEditor extends React.Component<{
         onContainerMouseDown={this.handleContainerMouseDown}
         trigger={({ refTrigger, setDropped }) => (
           <div
-            className={CS.editorContainer}
+            className={S.editorContainer}
             ref={this.refContainer}
             style={{
               zIndex: this.isDroppedDown ? 1000 : undefined
@@ -342,7 +342,7 @@ export class DateTimeEditor extends React.Component<{
                   color: this.props.foregroundColor,
                   backgroundColor: this.props.backgroundColor
                 }}
-                className={CS.editor}
+                className={S.input}
                 type="text"
                 onBlur={this.handleInputBlur}
                 onFocus={this.handleFocus}
@@ -358,7 +358,7 @@ export class DateTimeEditor extends React.Component<{
               />
             </Tooltip>
             {this.props.isInvalid && (
-              <div className={CS.notification}>
+              <div className={S.notification}>
                 <Tooltip html={this.props.invalidMessage} arrow={true}>
                   <i className="fas fa-exclamation-circle red" />
                 </Tooltip>

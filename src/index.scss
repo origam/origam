@@ -1,4 +1,4 @@
-body {
+html, body {
   margin: 0;
   padding: 0;
   background-color: #ffffff;
@@ -13,6 +13,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   /* filter: blur(1px); */
+}
+
+input {
+  font-family: "IBM Plex Sans", sans-serif;
 }
 
 html,
@@ -46,6 +50,10 @@ body,
 
 * {
   box-sizing: border-box;
+}
+
+*:focus {
+  outline: none;
 }
 
 :root {

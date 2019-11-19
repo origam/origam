@@ -1,7 +1,7 @@
 import * as React from "react";
 import { observer } from "mobx-react";
 import { action } from "mobx";
-import S from "./TextEditor.module.css";
+import S from "./TextEditor.module.scss";
 import CS from "./CommonStyle.module.css";
 import { Tooltip } from "react-tippy";
 
@@ -63,13 +63,13 @@ export class TextEditor extends React.Component<{
 
   render() {
     return (
-      <div className={CS.editorContainer}>
+      <div className={S.editorContainer}>
         <input
           style={{
             color: this.props.foregroundColor,
             backgroundColor: this.props.backgroundColor
           }}
-          className={CS.editor}
+          className={S.input}
           type="text"
           value={this.props.value || ""}
           readOnly={this.props.isReadOnly}
@@ -84,7 +84,7 @@ export class TextEditor extends React.Component<{
           onFocus={this.handleFocus}
         />
         {this.props.isInvalid && (
-          <div className={CS.notification}>
+          <div className={S.notification}>
             <Tooltip html={this.props.invalidMessage} arrow={true}>
               <i className="fas fa-exclamation-circle red" />
             </Tooltip>

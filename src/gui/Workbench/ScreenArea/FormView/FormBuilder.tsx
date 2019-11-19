@@ -5,13 +5,15 @@ import { getDataTable } from "../../../../model/selectors/DataView/getDataTable"
 import { getDataViewPropertyById } from "../../../../model/selectors/DataView/getDataViewPropertyById";
 import { getSelectedRow } from "../../../../model/selectors/DataView/getSelectedRow";
 import { findStrings } from "../../../../xmlInterpreters/screenXml";
-import { FormSection } from "../../../Components/ScreenElements/FormSection";
-import { FormField } from "./FormField";
+
+
 import { FormRoot } from "./FormRoot";
 import { FormViewEditor } from "./FormViewEditor";
 import { getRowStates } from "model/selectors/RowState/getRowStates";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
+import { FormField } from "gui02/components/Form/FormField";
+import { FormSection } from "gui02/components/Form/FormSection";
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -46,8 +48,8 @@ export class FormBuilder extends React.Component<{
           <FormSection
             width={parseInt(xfo.attributes.Width, 10)}
             height={parseInt(xfo.attributes.Height, 10)}
-            x={parseInt(xfo.attributes.X, 10)}
-            y={parseInt(xfo.attributes.Y, 10)}
+            left={parseInt(xfo.attributes.X, 10)}
+            top={parseInt(xfo.attributes.Y, 10)}
             title={xfo.attributes.Title}
           >
             {xfo.elements.map((child: any) => recursive(child))}
@@ -75,22 +77,24 @@ export class FormBuilder extends React.Component<{
                 return property ? (
                   <Provider property={property}>
                     <FormField
-                      Id={property.id}
-                      Name={property.name}
-                      CaptionLength={property.captionLength}
-                      CaptionPosition={property.captionPosition}
-                      Column={property.column}
-                      Entity={property.entity}
-                      Height={property.height}
-                      Width={property.width}
-                      X={property.x}
-                      Y={property.y}
-                    >
-                      <FormViewEditor
-                        value={value}
-                        textualValue={textualValue}
-                      />
-                    </FormField>
+                      // Id={property.id}
+                      caption={property.name}
+                      captionLength={property.captionLength}
+                      captionPosition={property.captionPosition}
+                      // Column={property.column}
+                      // Entity={property.entity}
+                      height={property.height}
+                      width={property.width}
+                      left={property.x}
+                      top={property.y}
+                      isCheckbox={property.column === "CheckBox"}
+                      editor={
+                        <FormViewEditor
+                          value={value}
+                          textualValue={textualValue}
+                        />
+                      }
+                    />
                   </Provider>
                 ) : (
                   <></>

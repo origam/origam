@@ -1,8 +1,7 @@
 import * as React from "react";
 import { observer, Observer, inject } from "mobx-react";
 import { action, observable, computed, runInAction } from "mobx";
-import S from "./DropdownEditor.module.css";
-import CS from "./CommonStyle.module.css";
+import S from "./DropdownEditor.module.scss";
 import { Tooltip } from "react-tippy";
 
 import _ from "lodash";
@@ -349,7 +348,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
         onContainerMouseDown={this.handleContainerMouseDown}
         trigger={({ refTrigger, setDropped }) => (
           <div
-            className={CS.editorContainer}
+            className={S.editorContainer}
             ref={refTrigger}
             style={{
               zIndex: this.isDroppedDown ? 1000 : undefined
@@ -360,7 +359,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
                 color: this.props.foregroundColor,
                 backgroundColor: this.props.backgroundColor
               }}
-              className={CS.editor}
+              className={S.input}
               type="text"
               value={this.value}
               readOnly={this.props.isReadOnly}
@@ -372,7 +371,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
               onFocus={this.handleFocus}
             />
             {this.props.isInvalid && (
-              <div className={CS.notification}>
+              <div className={S.notification}>
                 <Tooltip html={this.props.invalidMessage} arrow={true}>
                   <i className="fas fa-exclamation-circle red" />
                 </Tooltip>

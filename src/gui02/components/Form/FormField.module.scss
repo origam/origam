@@ -1,0 +1,20 @@
+.root {
+  position: absolute;
+}
+
+.caption {
+  position: absolute;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+  top: 0;
+  left: 0;
+  display: block;
+}
+
+.editor {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
