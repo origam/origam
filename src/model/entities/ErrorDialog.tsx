@@ -58,6 +58,7 @@ export const errDialogPromise = (ctx: any) => (error: any) =>
         onOkClick={action(() => {
           console.log('close dialog...')
           closeDialog();
+          resolve();
         })}
       />
     );
