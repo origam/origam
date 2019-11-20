@@ -3,8 +3,9 @@ import { getWorkbenchLifecycle } from "../../selectors/getWorkbenchLifecycle";
 import { DialogInfo } from "model/entities/OpenedScreen";
 import { closeForm } from "../closeForm";
 
+// TODO: yield* for openNewForm
 export function processActionResult(ctx: any) {
-  return function processActionResult(actionResultList: any) {
+  return function* processActionResult(actionResultList: any) {
     console.log("actionresult:", actionResultList);
     for (let actionResult of actionResultList)
       switch (actionResult.type) {

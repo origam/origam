@@ -11,7 +11,7 @@ import {
   ComponentBindingPair,
   ComponentBinding
 } from "../model/entities/ComponentBinding";
-import { IFormScreenLifecycle } from "../model/entities/types/IFormScreenLifecycle";
+import { IFormScreenLifecycle, IFormScreenLifecycle02 } from "../model/entities/types/IFormScreenLifecycle";
 import { DataTable } from "../model/entities/DataTable";
 
 import { TablePanelView } from "../model/entities/TablePanelView/TablePanelView";
@@ -56,7 +56,7 @@ export const findFormRoot = (node: any) =>
 
 export function interpretScreenXml(
   screenDoc: any,
-  formScreenLifecycle: IFormScreenLifecycle,
+  formScreenLifecycle: IFormScreenLifecycle02,
   sessionId: string
 ) {
   const dataSourcesXml = findStopping(

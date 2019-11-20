@@ -1,6 +1,6 @@
 import { CloseButton, ModalWindow } from "gui/Components/Dialog/Dialog";
 import { inject, observer, Observer } from "mobx-react";
-import { onFormTabCloseClick } from "model/actions/onFormTabCloseClick";
+
 import { onSelectionDialogActionButtonClick } from "model/actions/SelectionDialog/onSelectionDialogActionButtonClick";
 import { getDialogStack } from "model/selectors/getDialogStack";
 import { getOpenedDialogItems } from "model/selectors/getOpenedDialogItems";
@@ -45,7 +45,7 @@ class MainViewHandle extends React.Component<{
     onScreenTabHandleClick: getWorkbenchLifecycle(workbench)
       .onScreenTabHandleClick,
     onScreenTabCloseClick: (event: any, item: IOpenedScreen) =>
-      onFormTabCloseClick(item)(event)
+      /*onFormTabCloseClick(item)(event)*/ 0
   };
 })
 @observer

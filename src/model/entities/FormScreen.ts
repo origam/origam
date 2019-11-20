@@ -1,7 +1,7 @@
 import { IDataView } from "./types/IDataView";
 import { IDataSource } from "./types/IDataSource";
 import { IComponentBinding } from "./types/IComponentBinding";
-import { IFormScreenLifecycle } from "./types/IFormScreenLifecycle";
+import { IFormScreenLifecycle, IFormScreenLifecycle02 } from "./types/IFormScreenLifecycle";
 import { computed, action, observable } from "mobx";
 import { IAction } from "./types/IAction";
 import { getDontRequestData } from "model/selectors/getDontRequestData";
@@ -33,7 +33,7 @@ export class FormScreen implements IFormScreen {
   requestSaveAfterUpdate: boolean = false;
   screenUI: any;
   isLoading: false = false;
-  formScreenLifecycle: IFormScreenLifecycle = null as any;
+  formScreenLifecycle: IFormScreenLifecycle02 = null as any;
 
   dataViews: IDataView[] = [];
   dataSources: IDataSource[] = [];
@@ -134,7 +134,7 @@ export class FormScreenEnvelope implements IFormScreenEnvelope {
   }
 
   @observable formScreen?: IFormScreen | undefined;
-  formScreenLifecycle: IFormScreenLifecycle = null as any;
+  formScreenLifecycle: IFormScreenLifecycle02 = null as any;
   @computed get isLoading() {
     return !this.formScreen;
   }
@@ -147,9 +147,8 @@ export class FormScreenEnvelope implements IFormScreenEnvelope {
     this.formScreen = formScreen;
   }
 
-  @action.bound
-  start(): void {
-    this.formScreenLifecycle.start();
+  *start(): Generator {
+    yield* this.formScreenLifecycle.start();
   }
 
   parent?: any;

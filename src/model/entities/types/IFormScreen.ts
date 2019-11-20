@@ -1,7 +1,7 @@
 import { IDataView } from "./IDataView";
 import { IDataSource } from "./IDataSource";
 import { IComponentBinding } from "./IComponentBinding";
-import { IFormScreenLifecycle } from "./IFormScreenLifecycle";
+import { IFormScreenLifecycle, IFormScreenLifecycle02 } from "./IFormScreenLifecycle";
 import { IAction } from "./IAction";
 
 /*
@@ -69,7 +69,7 @@ export const isILoadedFormScreen = (o: any): o is ILoadedFormScreen =>
 
 
 export interface IFormScreenEnvelopeData {
-  formScreenLifecycle: IFormScreenLifecycle;
+  formScreenLifecycle: IFormScreenLifecycle02;
 }
 
 export interface IFormScreenEnvelope extends IFormScreenEnvelopeData {
@@ -79,7 +79,7 @@ export interface IFormScreenEnvelope extends IFormScreenEnvelopeData {
   formScreen?: IFormScreen;
 
   setFormScreen(formScreen?: IFormScreen): void;
-  start(): void;
+  start(): Generator;
 
   parent?: any;
 }
@@ -97,7 +97,7 @@ export interface IFormScreenData {
   dataSources: IDataSource[];
   componentBindings: IComponentBinding[];
   screenUI: any;
-  formScreenLifecycle: IFormScreenLifecycle;
+  formScreenLifecycle: IFormScreenLifecycle02;
   sessionId: string;
 }
 

@@ -26,5 +26,30 @@ export interface IFormScreenLifecycle extends IFormScreenLifecycleData {
   parent?: any;
 }
 
+export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
+  $type_IFormScreenLifecycle: 1;
+
+  isWorking: boolean;
+
+  onFlushData(): Generator;
+  onCreateRow(entity: string, gridId: string): Generator;
+  onDeleteRow(entity: string, rowId: string): Generator;
+
+  onSaveSession(): Generator;
+  onRequestScreenReload(): Generator;
+
+  onExecuteAction(
+    gridId: string,
+    entity: string,
+    action: IAction,
+    selectedItems: string[]
+  ): Generator;
+
+  onRequestScreenClose(): Generator;
+
+  start(): Generator;
+  parent?: any;
+}
+
 export const isIFormScreenLifecycle = (o: any): o is IFormScreenLifecycle =>
   o.$type_IFormScreenLifecycle;

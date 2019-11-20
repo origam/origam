@@ -38,8 +38,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     return this.interpreter.state;
   }
 
-  @action.bound
-  onMainMenuItemClick(args: { event: any; item: any }): void {
+
+  *onMainMenuItemClick(args: { event: any; item: any }): Generator {
     const {
       type,
       id,
@@ -64,7 +64,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       if (existingItem) {
         openedScreens.activateItem(id, existingItem.order);
       } else {
-        this.openNewForm(
+        yield* this.openNewForm(
           id,
           type,
           label,
@@ -74,7 +74,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         );
       }
     } else {
-      this.openNewForm(
+      yield* this.openNewForm(
         id,
         type,
         label,
@@ -85,19 +85,17 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
   }
 
-  @action.bound
-  onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): void {
+  *onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): Generator {
     const openedScreens = getOpenedScreens(this);
     openedScreens.activateItem(openedScreen.menuItemId, openedScreen.order);
   }
 
-  @action.bound
-  onScreenTabCloseClick(event: any, openedScreen: IOpenedScreen): void {
+  *onScreenTabCloseClick(event: any, openedScreen: IOpenedScreen): Generator {
     event.stopPropagation();
     this.closeForm(openedScreen);
   }
 
-  @action.bound closeForm(openedScreen: IOpenedScreen) {
+  *closeForm(openedScreen: IOpenedScreen): Generator {
     // TODO: Refactor to get rid of code duplication
     if (openedScreen.dialogInfo) {
       const openedScreens = getOpenedDialogScreens(openedScreen);
@@ -132,7 +130,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
   }
 
-  @action.bound openNewForm(
+  *openNewForm(
     id: string,
     type: IMainMenuItemType,
     label: string,
@@ -161,7 +159,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       openedScreens.pushItem(newScreen);
       openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
     }
-    newFormScreen.start();
+    yield* newFormScreen.start();
   }
 
   *initPortal() {

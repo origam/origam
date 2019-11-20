@@ -8,6 +8,6 @@ export function onScreenTabHandleClick(ctx: any) {
     event: any,
   ) {
     const screen = getOpenedScreen(ctx);
-    yield getWorkbenchLifecycle(ctx).onScreenTabHandleClick(event, screen);
+    yield* getWorkbenchLifecycle(ctx).onScreenTabHandleClick(event, screen);
   });
 }
