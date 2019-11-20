@@ -14,7 +14,10 @@ import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/get
 import { getTableViewPropertyByIdx } from "../../../../model/selectors/TablePanelView/getTableViewPropertyByIdx";
 import { getTableViewRecordByExistingIdx } from "../../../../model/selectors/TablePanelView/getTableViewRecordByExistingIdx";
 import { CPR } from "../../../../utils/canvas";
-import { IRenderCellArgs, IRenderedCell } from "../../../Components/ScreenElements/Table/types";
+import {
+  IRenderCellArgs,
+  IRenderedCell
+} from "../../../Components/ScreenElements/Table/types";
 
 export interface ICellRendererData {
   tablePanelView: ITablePanelView;
@@ -153,8 +156,8 @@ export class CellRenderer implements ICellRenderer {
       rowIndex
     );
     if (property.isLookup) {
-      if(property.column === "TagInput") {
-        text = this.getCellText(rowIndex, columnIndex).join(", ")
+      if (property.column === "TagInput") {
+        text = (this.getCellText(rowIndex, columnIndex) || []).join(", ");
       } else {
         text = this.getCellText(rowIndex, columnIndex);
       }
@@ -175,12 +178,12 @@ export class CellRenderer implements ICellRenderer {
 
       const errMap: Map<number, string> | undefined = errors
         ? new Map(
-            Object.entries<string>(errors.fieldErrors).map(
-              ([dsIndexStr, errMsg]: [string, string]) => [
-                parseInt(dsIndexStr, 10),
-                errMsg
-              ]
-            )
+            Object.entries<string>(
+              errors.fieldErrors
+            ).map(([dsIndexStr, errMsg]: [string, string]) => [
+              parseInt(dsIndexStr, 10),
+              errMsg
+            ])
           )
         : undefined;
 
@@ -208,11 +211,9 @@ export class CellRenderer implements ICellRenderer {
       type: property.column,
       value,
       text,
-      backgroundColor: getRowStateColumnBgColor(
-        this.tablePanelView,
-        recordId,
-        property.id
-      ) || getRowStateRowBgColor(this.tablePanelView, recordId),
+      backgroundColor:
+        getRowStateColumnBgColor(this.tablePanelView, recordId, property.id) ||
+        getRowStateRowBgColor(this.tablePanelView, recordId),
       foregroundColor: getRowStateForegroundColor(
         this.tablePanelView,
         recordId,
