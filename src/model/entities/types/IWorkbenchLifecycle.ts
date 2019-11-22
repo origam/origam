@@ -18,9 +18,10 @@ export interface IWorkbenchLifecycle {
   ): Generator;
   closeForm(openedScreen: IOpenedScreen): Generator;
 
-  run(): void;
+  run(): Generator;
   parent?: any;
 }
+
 
 export const isIWorkbenchLifecycle = (o: any): o is IWorkbenchLifecycle =>
   o.$type_IWorkbenchLifecycle;

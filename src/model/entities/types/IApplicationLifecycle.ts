@@ -20,8 +20,8 @@ export interface IApplicationLifecycle extends IApplicationLifecycleData {
     event: any;
     userName: string;
     password: string;
-  }): void;
-  onSignOutClick(args: { event: any }): void;
+  }): Generator;
+  onSignOutClick(args: { event: any }): Generator;
 
   /*
   onMainMenuItemClick(args: { event: any; item: any }): void;
@@ -29,7 +29,7 @@ export interface IApplicationLifecycle extends IApplicationLifecycleData {
   onScreenTabCloseClick(event: any, openedScreen: IOpenedScreen): void;
   */
 
-  run(): void;
+  run(): Generator;
 
   setLoginPageMessage(msg: string): void;
   resetLoginPageMessage(): void;

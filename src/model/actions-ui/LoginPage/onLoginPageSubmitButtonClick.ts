@@ -7,6 +7,6 @@ export function onLoginPageSubmitButtonClick(ctx: any) {
     userName: string;
     password: string;
   }) {
-    yield getApplicationLifecycle(ctx).onLoginFormSubmit(args);
+    yield* getApplicationLifecycle(ctx).onLoginFormSubmit(args);
   });
 }

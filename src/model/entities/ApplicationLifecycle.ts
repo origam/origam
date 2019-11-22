@@ -1,32 +1,8 @@
-import { action, flow, observable, createAtom } from "mobx";
-import { Machine, interpret, Interpreter, State } from "xstate";
-
-import {
-  IApplicationLifecycle,
-  IApplicationPage
-} from "./types/IApplicationLifecycle";
+import { action, computed, observable } from "mobx";
+import { createWorkbench } from "../factories/createWorkbench";
 import { getApi } from "../selectors/getApi";
 import { getApplication } from "../selectors/getApplication";
-import { createWorkbench } from "../factories/createWorkbench";
-
-const loginFormSubmit = "loginFormSubmit";
-const loginSuccessful = "loginSuccessful";
-const loginFailed = "loginFailed";
-
-const logout = "logout";
-const logoutSuccessful = "logoutSuccessful";
-const logoutFailed = "logoutFailed";
-const start = "start";
-
-const sLoginPage = "sLoginPage";
-const sPerformLogin = "sPerformLogin";
-
-const sWorkbenchPage = "sWorkbenchPage";
-const sPerformLogout = "sPerformLogout";
-const sWaitForStart = "sWaitForStart";
-
-const Login = "Login";
-const Workbench = "Workbench";
+import { IApplicationLifecycle, IApplicationPage } from "./types/IApplicationLifecycle";
 
 export class ApplicationLifecycle implements IApplicationLifecycle {
   $type_IApplicationLifecycle: 1 = 1;
@@ -35,103 +11,34 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
 
   @observable loginPageMessage?: string | undefined;
 
-  machine = Machine(
-    {
-      initial: sWaitForStart,
-      states: {
-        sWaitForStart: {
-          on: {
-            [start]: sLoginPage
-          }
-        },
-        [sLoginPage]: {
-          onEntry: "reuseAuthToken",
-          on: {
-            [loginFormSubmit]: sPerformLogin,
-            [loginSuccessful]: sWorkbenchPage
-          }
-        },
-        [sPerformLogin]: {
-          invoke: { src: "performLogin" },
-          on: {
-            [loginSuccessful]: sWorkbenchPage,
-            [loginFailed]: sLoginPage
-          }
-        },
-        [sWorkbenchPage]: {
-          on: {
-            [logout]: sPerformLogout
-          }
-        },
-        [sPerformLogout]: {
-          invoke: { src: "performLogout" },
-          on: {
-            [logoutSuccessful]: sLoginPage,
-            [logoutFailed]: sLoginPage
-          }
-        }
-      }
-    },
-    {
-      services: {
-        performLogin: (ctx, event) => (send, onEvent) =>
-          flow(this.performLogin.bind(this))(event as any),
-        performLogout: (ctx, event) => (send, onEvent) =>
-          flow(this.performLogout.bind(this))(event as any)
-      },
-      actions: {
-        reuseAuthToken: (ctx, event) => this.reuseAuthToken()
-      }
-    }
-  );
 
-  stateAtom = createAtom("applicationLifecycleState");
-  interpreter = interpret(this.machine)
-    .onTransition((state, event) => {
-      console.log("Application lifecycle:", state, event);
-      this.stateAtom.reportChanged();
-    })
-    .start();
+  @observable displayedPage = IApplicationPage.Login;
 
-  get state() {
-    this.stateAtom.reportObserved();
-    return this.interpreter.state;
+  @observable inFlow = 0;
+  @computed get isWorking() {
+    return this.inFlow > 0;
   }
 
   get shownPage(): IApplicationPage {
-    switch (this.state.value) {
-      case sWorkbenchPage:
-      case sPerformLogout:
-        return IApplicationPage.Workbench;
-      default:
-        return IApplicationPage.Login;
+    return this.displayedPage;
+  }
+
+  *onLoginFormSubmit(args: { event: any; userName: string; password: string }) {
+    try {
+      this.inFlow++;
+      args.event.preventDefault();
+      yield* this.performLogin(args);
+    } finally {
+      this.inFlow--;
     }
   }
 
-  get isWorking() {
-    switch (this.state.value) {
-      case sPerformLogin:
-      case sPerformLogout:
-        return true;
-      default:
-        return false;
-    }
+  *onSignOutClick(args: { event: any }) {
+    yield* this.performLogout(args);
   }
 
-  @action.bound
-  onLoginFormSubmit(args: { event: any; userName: string; password: string }) {
-    args.event.preventDefault();
-    this.interpreter.send(loginFormSubmit, args);
-  }
-
-  @action.bound
-  onSignOutClick(args: { event: any }): void {
-    this.interpreter.send(logout, args);
-  }
-
-  @action.bound
-  run(): void {
-    this.interpreter.send(start);
+  *run() {
+    yield* this.reuseAuthToken();
   }
 
   *performLogin(args: { userName: string; password: string }) {
@@ -141,12 +48,10 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
         UserName: args.userName,
         Password: args.password
       });
-      this.anounceAuthToken(token);
-      this.interpreter.send(loginSuccessful);
+      yield* this.anounceAuthToken(token);
     } catch (error) {
       console.error(error);
       this.setLoginPageMessage("Login failed.");
-      this.interpreter.send(loginFailed);
     }
   }
 
@@ -162,30 +67,32 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
       } finally {
         api.resetAccessToken();
       }
-      this.interpreter.send(logoutSuccessful);
+
       return null;
     } catch (error) {
-      console.error(error)
-      this.interpreter.send({ type: logoutFailed, error });
+      // TODO: Handle error
+      console.error(error);
+    } finally {
+      this.displayedPage = IApplicationPage.Login;
     }
   }
 
-  @action.bound reuseAuthToken() {
+  *reuseAuthToken() {
     const token = window.sessionStorage.getItem("origamAuthToken");
     if (token) {
-      this.anounceAuthToken(token);
-      this.interpreter.send(loginSuccessful);
+      yield* this.anounceAuthToken(token);
     }
   }
 
-  @action.bound anounceAuthToken(token: string) {
+  *anounceAuthToken(token: string) {
     const api = getApi(this);
     const application = getApplication(this);
     window.sessionStorage.setItem("origamAuthToken", token);
     api.setAccessToken(token);
     const workbench = createWorkbench();
     application.setWorkbench(workbench);
-    workbench.run();
+    this.displayedPage = IApplicationPage.Workbench;
+    yield* workbench.run();
   }
 
   @action.bound

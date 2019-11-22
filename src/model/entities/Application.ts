@@ -33,9 +33,8 @@ export class Application implements IApplication {
     workbench.parent = this;
   }
 
-  @action.bound
-  run(): void {
-    this.applicationLifecycle.run();
+  *run() {
+    yield* this.applicationLifecycle.run();
   }
 
   parent?: any;

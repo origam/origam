@@ -20,24 +20,6 @@ import { getOpenedDialogScreens } from "model/selectors/getOpenedDialogScreens";
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
 
-  machine = Machine<any, any, IEvent>(WorkbenchLifecycleGraph, {
-    services: {
-      initPortal: (ctx, event) => (send, onEvent) =>
-        flow(this.initPortal.bind(this))()
-    }
-  });
-
-  stateAtom = createAtom("workbenchLifecycleState");
-  interpreter = interpret(this.machine).onTransition((state, event) => {
-    console.log("Workbench lifecycle:", state, event);
-    this.stateAtom.reportChanged();
-  });
-
-  get state() {
-    this.stateAtom.reportObserved();
-    return this.interpreter.state;
-  }
-
 
   *onMainMenuItemClick(args: { event: any; item: any }): Generator {
     const {
@@ -169,12 +151,43 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const menuUI = findMenu(portalInfo.menu);
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
     getClientFulltextSearch(this).indexMainMenu(menuUI);
-    this.interpreter.send(onInitPortalDone);
   }
 
-  @action.bound
-  run(): void {
-    this.interpreter.start();
+  *run(): Generator {
+    yield* this.initPortal();
   }
+
   parent?: any;
+}
+
+
+export class WorkbenchLifecycle02 implements IWorkbenchLifecycle {
+  $type_IWorkbenchLifecycle: 1 = 1;  
+  
+  onMainMenuItemClick(args: { event: any; item: any; }): Generator<unknown, any, unknown> {
+    throw new Error("Method not implemented.");
+  }
+
+  onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): Generator<unknown, any, unknown> {
+    throw new Error("Method not implemented.");
+  }
+
+  onScreenTabCloseClick(event: any, openedScreen: IOpenedScreen): Generator<unknown, any, unknown> {
+    throw new Error("Method not implemented.");
+  }
+
+  openNewForm(id: string, type: IMainMenuItemType, label: string, dontRequestData: boolean, dialogInfo: IDialogInfo | undefined, parameters: { [key: string]: any; }): Generator<unknown, any, unknown> {
+    throw new Error("Method not implemented.");
+  }
+
+  closeForm(openedScreen: IOpenedScreen): Generator<unknown, any, unknown> {
+    throw new Error("Method not implemented.");
+  }
+
+  *run(): Generator {
+    throw new Error("Method not implemented.");
+  }
+
+  parent?: any;
+
 }

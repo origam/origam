@@ -19,7 +19,7 @@ export interface IApplication extends IApplicationData {
 
   resetWorkbench(): void;
   setWorkbench(workbench: IWorkbench): void;
-  run(): void;
+  run(): Generator;
 }
 
 export const isIApplication = (o: any): o is IApplication =>

@@ -23,9 +23,8 @@ export class Workbench implements IWorkbench {
   openedScreens: IOpenedScreens = null as any;
   openedDialogScreens: IOpenedScreens = null as any;
 
-  @action.bound
-  run(): void {
-    this.workbenchLifecycle.run();
+  *run(): Generator {
+    yield* this.workbenchLifecycle.run();
   }
 
   parent?: any;
