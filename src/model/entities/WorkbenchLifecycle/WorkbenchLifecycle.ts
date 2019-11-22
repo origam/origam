@@ -67,10 +67,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     openedScreens.activateItem(openedScreen.menuItemId, openedScreen.order);
   }
 
-  *onScreenTabCloseClick(event: any, openedScreen: IOpenedScreen): Generator {
-    event.stopPropagation();
-    this.closeForm(openedScreen);
-  }
 
   *closeForm(openedScreen: IOpenedScreen): Generator {
     // TODO: Refactor to get rid of code duplication
@@ -155,34 +151,3 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   parent?: any;
 }
 
-
-export class WorkbenchLifecycle02 implements IWorkbenchLifecycle {
-  $type_IWorkbenchLifecycle: 1 = 1;  
-  
-  onMainMenuItemClick(args: { event: any; item: any; }): Generator<unknown, any, unknown> {
-    throw new Error("Method not implemented.");
-  }
-
-  onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): Generator<unknown, any, unknown> {
-    throw new Error("Method not implemented.");
-  }
-
-  onScreenTabCloseClick(event: any, openedScreen: IOpenedScreen): Generator<unknown, any, unknown> {
-    throw new Error("Method not implemented.");
-  }
-
-  openNewForm(id: string, type: IMainMenuItemType, label: string, dontRequestData: boolean, dialogInfo: IDialogInfo | undefined, parameters: { [key: string]: any; }): Generator<unknown, any, unknown> {
-    throw new Error("Method not implemented.");
-  }
-
-  closeForm(openedScreen: IOpenedScreen): Generator<unknown, any, unknown> {
-    throw new Error("Method not implemented.");
-  }
-
-  *run(): Generator {
-    throw new Error("Method not implemented.");
-  }
-
-  parent?: any;
-
-}

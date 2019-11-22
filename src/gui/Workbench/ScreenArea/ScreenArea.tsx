@@ -10,6 +10,7 @@ import { getOpenedScreenItems } from "../../../model/selectors/getOpenedScreenIt
 import { getWorkbenchLifecycle } from "../../../model/selectors/getWorkbenchLifecycle";
 import S from "./ScreenArea.module.css";
 import { DialogScreenBuilder, ScreenBuilder } from "./ScreenBuilder";
+import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
 
 @observer
 class MainViewHandle extends React.Component<{
@@ -38,102 +39,6 @@ class MainViewHandle extends React.Component<{
   }
 }
 
-@inject(({ workbench }) => {
-  return {
-    openedScreenItems: getOpenedScreenItems(workbench),
-    openedDialogItems: getOpenedDialogItems(workbench),
-    onScreenTabHandleClick: getWorkbenchLifecycle(workbench)
-      .onScreenTabHandleClick,
-    onScreenTabCloseClick: (event: any, item: IOpenedScreen) =>
-      /*onFormTabCloseClick(item)(event)*/ 0
-  };
-})
-@observer
-export class ScreenArea extends React.Component<{
-  openedScreenItems?: IOpenedScreen[];
-  openedDialogItems?: IOpenedScreen[];
-  onScreenTabHandleClick?: (event: any, openedScreen: IOpenedScreen) => void;
-  onScreenTabCloseClick?: (event: any, openedScreen: IOpenedScreen) => void;
-}> {
-  render() {
-    return (
-      <div className={S.Root}>
-        {/*<ColumnsDialog />*/}
-        {/*<ModalWindowOverlay>
-          <ModalWindow
-            title="Columns"
-            buttonsCenter={
-              <>
-                <button>OK</button>
-                <button>Save As...</button>
-                <button>Cancel</button>
-              </>
-            }
-            buttonsLeft={null}
-            buttonsRight={null}
-          >
-            <div className
-          </ModalWindow>
-          </ModalWindowOverlay>*/}
-
-        <div className={S.TabHandles}>
-          <Observer>
-            {() => (
-              <>
-                {this.props.openedScreenItems!.map(item => (
-                  <MainViewHandle
-                    key={`${item.menuItemId}@${item.order}`}
-                    label={
-                      !item.content.isLoading
-                        ? item.content.formScreen!.title
-                        : item.title
-                    }
-                    order={item.order}
-                    isActive={item.isActive}
-                    onClick={(event: any) =>
-                      this.props.onScreenTabHandleClick!(event, item)
-                    }
-                    onCloseClick={(event: any) =>
-                      this.props.onScreenTabCloseClick!(event, item)
-                    }
-                  />
-                ))}
-              </>
-            )}
-          </Observer>
-        </div>
-        <Observer>
-          {() => (
-            <>
-              {this.props.openedScreenItems!.map(item => (
-                <ScreenBuilder
-                  key={`${item.menuItemId}@${item.order}`}
-                  openedScreen={item}
-                />
-              ))}
-            </>
-          )}
-        </Observer>
-        <Observer>
-          {() => {
-            console.log(this.props.openedDialogItems);
-            return (
-              <>
-                {this.props.openedDialogItems!.map(item => (
-                  <DialogScreen
-                    openedScreen={item}
-                    key={`${item.menuItemId}@${item.order}`}
-                  />
-                ))}
-              </>
-            );
-          }}
-        </Observer>
-      </div>
-    );
-  }
-}
-
 export const DialogScreen: React.FC<{
   openedScreen: IOpenedScreen;
 }> = observer(props => {
@@ -153,10 +58,7 @@ export const DialogScreen: React.FC<{
             titleButtons={
               <CloseButton
                 onClick={event =>
-                  workbenchLifecycle.onScreenTabCloseClick(
-                    event,
-                    props.openedScreen
-                  )
+                  onScreenTabCloseClick(props.openedScreen)(event)
                 }
               />
             }

@@ -52,10 +52,12 @@ export class OrigamAPI implements IApi {
 
   async getScreen(id: string) {
     return xmlJs.xml2js(
-      (await axios.get(`${this.urlPrefix}/UI/GetUI`, {
-        params: { id },
-        headers: this.httpAuthHeader
-      })).data,
+      (
+        await axios.get(`${this.urlPrefix}/UI/GetUI`, {
+          params: { id },
+          headers: this.httpAuthHeader
+        })
+      ).data,
       { addParent: true, alwaysChildren: true }
     );
   }
@@ -69,13 +71,11 @@ export class OrigamAPI implements IApi {
     ObjectId: string;
     Parameters: { [key: string]: any };
   }) {
-    const result = (await axios.post(
-      `${this.urlPrefix}/UIService/InitUI`,
-      data,
-      {
+    const result = (
+      await axios.post(`${this.urlPrefix}/UIService/InitUI`, data, {
         headers: this.httpAuthHeader
-      }
-    )).data;
+      })
+    ).data;
     return {
       ...result,
       formDefinition: xmlJs.xml2js(result.formDefinition, {
@@ -83,6 +83,17 @@ export class OrigamAPI implements IApi {
         alwaysChildren: true
       })
     };
+  }
+
+  async destroyUI(data: { FormSessionId: string }) {
+    return (
+      await axios.get(
+        `${this.urlPrefix}/UIService/DestroyUI/${data.FormSessionId}`,
+        {
+          headers: this.httpAuthHeader
+        }
+      )
+    ).data;
   }
 
   async getEntities(query: {
@@ -109,13 +120,11 @@ export class OrigamAPI implements IApi {
     MenuId: string | undefined;
     LabelIds: string[];
   }) {
-    return (await axios.post(
-      `${this.urlPrefix}/UIService/GetLookupLabels`,
-      query,
-      {
+    return (
+      await axios.post(`${this.urlPrefix}/UIService/GetLookupLabels`, query, {
         headers: this.httpAuthHeader
-      }
-    )).data;
+      })
+    ).data;
   }
 
   async getLookupLabelsEx(
@@ -125,19 +134,19 @@ export class OrigamAPI implements IApi {
       LabelIds: string[];
     }[]
   ) {
-    return (await axios.post(
-      `${this.urlPrefix}/UIService/GetLookupLabelsEx`,
-      query,
-      {
+    return (
+      await axios.post(`${this.urlPrefix}/UIService/GetLookupLabelsEx`, query, {
         headers: this.httpAuthHeader
-      }
-    )).data;
+      })
+    ).data;
   }
 
   async newEntity(data: { DataStructureEntityId: string; MenuId: string }) {
-    return (await axios.post(`${this.urlPrefix}/Data/NewEmptyRow`, data, {
-      headers: this.httpAuthHeader
-    })).data;
+    return (
+      await axios.post(`${this.urlPrefix}/Data/NewEmptyRow`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data;
   }
 
   async putEntity(data: {
@@ -146,9 +155,11 @@ export class OrigamAPI implements IApi {
     NewValues: { [key: string]: any };
     MenuId: string;
   }) {
-    return (await axios.put(`${this.urlPrefix}/Data/Row`, data, {
-      headers: this.httpAuthHeader
-    })).data;
+    return (
+      await axios.put(`${this.urlPrefix}/Data/Row`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data;
   }
 
   async postEntity(data: {
@@ -156,9 +167,11 @@ export class OrigamAPI implements IApi {
     NewValues: { [key: string]: any };
     MenuId: string;
   }) {
-    return (await axios.post(`${this.urlPrefix}/Data/Row`, data, {
-      headers: this.httpAuthHeader
-    })).data;
+    return (
+      await axios.post(`${this.urlPrefix}/Data/Row`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data;
   }
 
   async deleteEntity(data: {
@@ -166,12 +179,14 @@ export class OrigamAPI implements IApi {
     RowIdToDelete: string;
     MenuId: string;
   }) {
-    return (await axios.request({
-      url: `${this.urlPrefix}/Data/Row`,
-      method: "DELETE",
-      data,
-      headers: this.httpAuthHeader
-    })).data;
+    return (
+      await axios.request({
+        url: `${this.urlPrefix}/Data/Row`,
+        method: "DELETE",
+        data,
+        headers: this.httpAuthHeader
+      })
+    ).data;
   }
 
   async createEntity() {
@@ -183,38 +198,46 @@ export class OrigamAPI implements IApi {
     Parameters: { [key: string]: any };
     InitializeStructure: boolean;
   }) {
-    return (await axios.post(`${this.urlPrefix}/Session/CreateSession`, data, {
-      headers: this.httpAuthHeader
-    })).data;
+    return (
+      await axios.post(`${this.urlPrefix}/Session/CreateSession`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data;
   }
 
   async deleteSession() {}
 
   async saveSession(sessionFormIdentifier: string) {
-    return (await axios.get(
-      `${this.urlPrefix}/UIService/SaveData/${sessionFormIdentifier}`,
-      {
-        headers: this.httpAuthHeader
-      }
-    )).data;
+    return (
+      await axios.get(
+        `${this.urlPrefix}/UIService/SaveData/${sessionFormIdentifier}`,
+        {
+          headers: this.httpAuthHeader
+        }
+      )
+    ).data;
   }
 
   async saveSessionQuery(sessionFormIdentifier: string) {
-    return (await axios.get(
-      `${this.urlPrefix}/UIService/SaveDataQuery/${sessionFormIdentifier}`,
-      {
-        headers: this.httpAuthHeader
-      }
-    )).data;
+    return (
+      await axios.get(
+        `${this.urlPrefix}/UIService/SaveDataQuery/${sessionFormIdentifier}`,
+        {
+          headers: this.httpAuthHeader
+        }
+      )
+    ).data;
   }
 
   async refreshSession(sessionFormIdentifier: string) {
-    return (await axios.get(
-      `${this.urlPrefix}/UIService/RefreshData/${sessionFormIdentifier}`,
-      {
-        headers: this.httpAuthHeader
-      }
-    )).data;
+    return (
+      await axios.get(
+        `${this.urlPrefix}/UIService/RefreshData/${sessionFormIdentifier}`,
+        {
+          headers: this.httpAuthHeader
+        }
+      )
+    ).data;
   }
 
   async sessionChangeMasterRecord(data: {
@@ -222,11 +245,11 @@ export class OrigamAPI implements IApi {
     Entity: string;
     RowId: string;
   }) {
-    return (await axios.post(
-      `${this.urlPrefix}/Session/ChangeMasterRecord`,
-      data,
-      { headers: this.httpAuthHeader }
-    )).data;
+    return (
+      await axios.post(`${this.urlPrefix}/Session/ChangeMasterRecord`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data;
   }
 
   async sessionDeleteEntity(data: {
@@ -234,9 +257,11 @@ export class OrigamAPI implements IApi {
     Entity: string;
     RowId: string;
   }) {
-    return (await axios.post(`${this.urlPrefix}/Session/DeleteRow`, data, {
-      headers: this.httpAuthHeader
-    })).data;
+    return (
+      await axios.post(`${this.urlPrefix}/Session/DeleteRow`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data;
   }
 
   async sessionCreateEntity(data: {
@@ -246,9 +271,11 @@ export class OrigamAPI implements IApi {
     Parameters: { [key: string]: any };
     RequestingGridId: string;
   }) {
-    return (await axios.post(`${this.urlPrefix}/Session/CreateRow`, data, {
-      headers: this.httpAuthHeader
-    })).data;
+    return (
+      await axios.post(`${this.urlPrefix}/Session/CreateRow`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data;
   }
 
   async sessionGetEntity(data: {
@@ -257,10 +284,12 @@ export class OrigamAPI implements IApi {
     parentRecordId: string;
     rootRecordId: string;
   }) {
-    return (await axios.get(`${this.urlPrefix}/Session/Rows`, {
-      params: data,
-      headers: this.httpAuthHeader
-    })).data;
+    return (
+      await axios.get(`${this.urlPrefix}/Session/Rows`, {
+        params: data,
+        headers: this.httpAuthHeader
+      })
+    ).data;
   }
 
   // TODO: Remove this method.
@@ -271,9 +300,11 @@ export class OrigamAPI implements IApi {
     Property: string;
     NewValue: any;
   }): Promise<any> {
-    return (await axios.post(`${this.urlPrefix}/Session/UpdateRow`, data, {
-      headers: this.httpAuthHeader
-    })).data;
+    return (
+      await axios.post(`${this.urlPrefix}/Session/UpdateRow`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data;
   }
 
   async getLookupList(data: {
@@ -291,13 +322,11 @@ export class OrigamAPI implements IApi {
     PageNumber: number;
     MenuId: string;
   }): Promise<any> {
-    return (await axios.post(
-      `${this.urlPrefix}/UIService/GetLookupList`,
-      data,
-      {
+    return (
+      await axios.post(`${this.urlPrefix}/UIService/GetLookupList`, data, {
         headers: this.httpAuthHeader
-      }
-    )).data;
+      })
+    ).data;
   }
 
   async initPortal(): Promise<any> {
@@ -329,9 +358,11 @@ export class OrigamAPI implements IApi {
     Id: string;
     Values: { [key: string]: any };
   }): Promise<any> {
-    return (await axios.post(`${this.urlPrefix}/UIService/UpdateObject`, data, {
-      headers: this.httpAuthHeader
-    })).data;
+    return (
+      await axios.post(`${this.urlPrefix}/UIService/UpdateObject`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data;
   }
 
   async createObject(data: {
@@ -341,9 +372,11 @@ export class OrigamAPI implements IApi {
     Parameters: { [key: string]: any };
     RequestingGridId: string;
   }): Promise<any> {
-    return (await axios.post(`${this.urlPrefix}/UIService/CreateObject`, data, {
-      headers: this.httpAuthHeader
-    })).data;
+    return (
+      await axios.post(`${this.urlPrefix}/UIService/CreateObject`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data;
   }
 
   async deleteObject(data: {
@@ -351,9 +384,11 @@ export class OrigamAPI implements IApi {
     Entity: string;
     Id: string;
   }): Promise<any> {
-    return (await axios.post(`${this.urlPrefix}/UIService/DeleteObject`, data, {
-      headers: this.httpAuthHeader
-    })).data;
+    return (
+      await axios.post(`${this.urlPrefix}/UIService/DeleteObject`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data;
   }
 
   async executeActionQuery(data: {
@@ -365,13 +400,11 @@ export class OrigamAPI implements IApi {
     SelectedItems: string[];
     InputParameters: { [key: string]: any };
   }): Promise<any> {
-    return (await axios.post(
-      `${this.urlPrefix}/UIService/ExecuteActionQuery`,
-      data,
-      {
+    return (
+      await axios.post(`${this.urlPrefix}/UIService/ExecuteActionQuery`, data, {
         headers: this.httpAuthHeader
-      }
-    )).data;
+      })
+    ).data;
   }
 
   async executeAction(data: {
@@ -384,13 +417,11 @@ export class OrigamAPI implements IApi {
     InputParameters: { [key: string]: any };
     RequestingGrid: string;
   }): Promise<any> {
-    return (await axios.post(
-      `${this.urlPrefix}/UIService/ExecuteAction`,
-      data,
-      {
+    return (
+      await axios.post(`${this.urlPrefix}/UIService/ExecuteAction`, data, {
         headers: this.httpAuthHeader
-      }
-    )).data;
+      })
+    ).data;
   }
 
   async getRows(data: {
@@ -402,9 +433,11 @@ export class OrigamAPI implements IApi {
     ColumnNames: string[];
     MasterRowId: string | undefined;
   }): Promise<any> {
-    return (await axios.post(`${this.urlPrefix}/UIService/GetRows`, data, {
-      headers: this.httpAuthHeader
-    })).data;
+    return (
+      await axios.post(`${this.urlPrefix}/UIService/GetRows`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data;
   }
 
   async getData(data: {
@@ -413,9 +446,11 @@ export class OrigamAPI implements IApi {
     ParentRecordId: string;
     RootRecordId: string;
   }): Promise<any> {
-    return (await axios.post(`${this.urlPrefix}/UIService/GetData`, data, {
-      headers: this.httpAuthHeader
-    })).data;
+    return (
+      await axios.post(`${this.urlPrefix}/UIService/GetData`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data;
   }
 
   async getRowStates(data: {
@@ -423,8 +458,10 @@ export class OrigamAPI implements IApi {
     Entity: string;
     Ids: string[];
   }): Promise<any> {
-    return (await axios.post(`${this.urlPrefix}/UIService/RowStates`, data, {
-      headers: this.httpAuthHeader
-    })).data;
+    return (
+      await axios.post(`${this.urlPrefix}/UIService/RowStates`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data;
   }
 }

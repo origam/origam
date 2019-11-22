@@ -136,6 +136,7 @@ export interface IApi {
     ObjectId: string;
     Parameters: { [key: string]: any } | undefined;
   }): Promise<any>;
+  destroyUI(data: { FormSessionId: string }): Promise<any>;
 
   setMasterRecord(data: {
     SessionFormIdentifier: string;

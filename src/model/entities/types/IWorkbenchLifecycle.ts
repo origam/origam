@@ -6,7 +6,6 @@ export interface IWorkbenchLifecycle {
 
   onMainMenuItemClick(args: { event: any; item: any }): Generator;
   onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): Generator;
-  onScreenTabCloseClick(event: any, openedScreen: IOpenedScreen): Generator;
 
   openNewForm(
     id: string,

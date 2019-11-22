@@ -1,13 +1,12 @@
+import { CMain } from "gui02/connections/CMain";
+import { flow } from "mobx";
 import { Provider } from "mobx-react";
 import React from "react";
 import ReactDOM from "react-dom";
-import { Main } from "./gui/Main";
+import 'react-tippy/dist/tippy.css';
 import "./index.scss";
 import { createApplication } from "./model/factories/createApplication";
 import * as serviceWorker from "./serviceWorker";
-import 'react-tippy/dist/tippy.css'
-import { CMain } from "gui02/connections/CMain";
-import { flow } from "mobx";
 
 const application = createApplication();
 flow(application.run.bind(application))();

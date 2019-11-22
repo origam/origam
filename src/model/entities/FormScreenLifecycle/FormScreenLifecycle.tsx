@@ -126,6 +126,15 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
+  *destroyUI() {
+    try {
+      const api = getApi(this);
+      yield api.destroyUI({ FormSessionId: getSessionId(this) });
+    } catch (error) {
+      // TODO: Handle error
+    }
+  }
+
   *applyInitUIResult(args: { initUIResult: any }) {
     const openedScreen = getOpenedScreen(this);
     const screenXmlObj = args.initUIResult.formDefinition;
@@ -292,6 +301,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *closeForm() {
+    yield* this.destroyUI();
     yield* closeForm(this)();
   }
 
