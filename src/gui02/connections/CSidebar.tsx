@@ -7,60 +7,113 @@ import { SidebarSectionDivider } from "gui02/components/Sidebar/SidebarSectionDi
 import { SidebarSectionHeader } from "gui02/components/Sidebar/SidebarSectionHeader";
 import React from "react";
 import { CMainMenu } from "./CMainMenu";
+import { observable } from "mobx";
+import { SidebarSectionBody } from "gui02/components/Sidebar/SidebarSectionBody";
+import { observer } from "mobx-react";
 
-export const CSidebar: React.FC = props => (
-  <Sidebar>
-    <LogoSection>
-      <div style={{ width: 150 }}>
-        <img src="./img/logo-left.png" />
-      </div>
-    </LogoSection>
-    <SidebarSection isActive={false}>
-      <SidebarSectionDivider />
-      <SidebarSectionHeader
-        isActive={false}
-        icon={
-          <>
-            <Icon src="./icons/work-queue.svg" />
-            <SidebarAlertCounter>50</SidebarAlertCounter>
-          </>
-        }
-        label={<>Work Queues</>}
-      />
-    </SidebarSection>
-    <SidebarSection isActive={false}>
-      <SidebarSectionDivider />
-      <SidebarSectionHeader
-        isActive={false}
-        icon={<Icon src="./icons/favorites.svg" />}
-        label={"Favorites"}
-      />
-    </SidebarSection>
-    <SidebarSection isActive={true}>
-      <SidebarSectionDivider />
-      <SidebarSectionHeader
-        isActive={true}
-        icon={<Icon src="./icons/menu.svg" />}
-        label={"Menu"}
-      />
-      <CMainMenu />
-    </SidebarSection>
-    <SidebarSection isActive={false}>
-      <SidebarSectionDivider />
-      <SidebarSectionHeader
-        isActive={false}
-        icon={<Icon src="./icons/info.svg" />}
-        label={"Info"}
-      />
-    </SidebarSection>
-    <SidebarSection isActive={false}>
-      <SidebarSectionDivider />
-      <SidebarSectionHeader
-        isActive={false}
-        icon={<Icon src="./icons/search.svg" />}
-        label={"Search"}
-      />
-      <SidebarSectionDivider />
-    </SidebarSection>
-  </Sidebar>
-);
+enum ISidebarSection {
+  WorkQueues,
+  Favorites,
+  Menu,
+  Info,
+  Search
+}
+
+@observer
+export class CSidebar extends React.Component {
+  @observable activeSection = ISidebarSection.WorkQueues;
+
+  render() {
+    return (
+      <Sidebar>
+        <LogoSection>
+          <div style={{ width: 150 }}>
+            <img src="./img/logo-left.png" />
+          </div>
+        </LogoSection>
+        <SidebarSection
+          isActive={this.activeSection === ISidebarSection.WorkQueues}
+        >
+          <SidebarSectionDivider />
+          <SidebarSectionHeader
+            isActive={this.activeSection === ISidebarSection.WorkQueues}
+            icon={
+              <>
+                <Icon src="./icons/work-queue.svg" />
+                <SidebarAlertCounter>50</SidebarAlertCounter>
+              </>
+            }
+            label={<>Work Queues</>}
+            onClick={() => (this.activeSection = ISidebarSection.WorkQueues)}
+          />
+          <SidebarSectionBody
+            isActive={this.activeSection === ISidebarSection.WorkQueues}
+          >
+            &nbsp;
+          </SidebarSectionBody>
+        </SidebarSection>
+        <SidebarSection
+          isActive={this.activeSection === ISidebarSection.Favorites}
+        >
+          <SidebarSectionDivider />
+          <SidebarSectionHeader
+            isActive={this.activeSection === ISidebarSection.Favorites}
+            icon={<Icon src="./icons/favorites.svg" />}
+            label={"Favorites"}
+            onClick={() => (this.activeSection = ISidebarSection.Favorites)}
+          />
+          <SidebarSectionBody
+            isActive={this.activeSection === ISidebarSection.Favorites}
+          >
+            &nbsp;
+          </SidebarSectionBody>
+        </SidebarSection>
+        <SidebarSection isActive={this.activeSection === ISidebarSection.Menu}>
+          <SidebarSectionDivider />
+          <SidebarSectionHeader
+            isActive={this.activeSection === ISidebarSection.Menu}
+            icon={<Icon src="./icons/menu.svg" />}
+            label={"Menu"}
+            onClick={() => (this.activeSection = ISidebarSection.Menu)}
+          />
+          <SidebarSectionBody
+            isActive={this.activeSection === ISidebarSection.Menu}
+          >
+            <CMainMenu />
+          </SidebarSectionBody>
+        </SidebarSection>
+        <SidebarSection isActive={this.activeSection === ISidebarSection.Info}>
+          <SidebarSectionDivider />
+          <SidebarSectionHeader
+            isActive={this.activeSection === ISidebarSection.Info}
+            icon={<Icon src="./icons/info.svg" />}
+            label={"Info"}
+            onClick={() => (this.activeSection = ISidebarSection.Info)}
+          />
+          <SidebarSectionBody
+            isActive={this.activeSection === ISidebarSection.Info}
+          >
+            &nbsp;
+          </SidebarSectionBody>
+        </SidebarSection>
+        <SidebarSection
+          isActive={this.activeSection === ISidebarSection.Search}
+        >
+          <SidebarSectionDivider />
+          <SidebarSectionHeader
+            isActive={this.activeSection === ISidebarSection.Search}
+            icon={<Icon src="./icons/search.svg" />}
+            label={"Search"}
+            onClick={() => (this.activeSection = ISidebarSection.Search)}
+          />
+          <SidebarSectionBody
+            isActive={this.activeSection === ISidebarSection.Search}
+          >
+            &nbsp;
+          </SidebarSectionBody>
+          <SidebarSectionDivider />
+        </SidebarSection>
+      </Sidebar>
+    );
+  }
+}

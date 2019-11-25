@@ -1,12 +1,19 @@
 .root {
+  user-select: none;
   background-color: #ffffff;
   border-left: 2px solid transparent;
   flex-shrink: 0;
+  flex-grow: 0;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  transition: 100ms;
   &:global(.isActive) {
     border-left: 2px solid #4c84ff;
     background-color: #F7F6FA;
     flex-grow: 1;
     flex-shrink: 1;
-    overflow: auto;
+    overflow: hidden;
+    height: 100%;
   }
 }
