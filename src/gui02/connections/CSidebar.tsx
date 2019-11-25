@@ -21,7 +21,7 @@ enum ISidebarSection {
 
 @observer
 export class CSidebar extends React.Component {
-  @observable activeSection = ISidebarSection.WorkQueues;
+  @observable activeSection = ISidebarSection.Menu;
 
   render() {
     return (

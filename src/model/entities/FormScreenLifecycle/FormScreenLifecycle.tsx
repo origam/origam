@@ -1,5 +1,5 @@
 import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
-import { action, computed } from "mobx";
+import { action, computed, observable } from "mobx";
 import { processActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
@@ -22,6 +22,7 @@ import { getMenuItemId } from "../../selectors/getMenuItemId";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { getSessionId } from "../../selectors/getSessionId";
 import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
+import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -33,8 +34,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   $type_IFormScreenLifecycle: 1 = 1;
 
   @computed get isWorking() {
-    return false;
+    return this.inFlow > 0;
   }
+  @observable inFlow = 0;
 
   *onFlushData(): Generator<unknown, any, unknown> {
     yield* this.flushData();
@@ -68,6 +70,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *onRequestScreenClose(): Generator<unknown, any, unknown> {
+    if (!getIsFormScreenDirty(this)) {
+      yield* this.closeForm();
+      return;
+    }
     switch (yield this.questionSaveData()) {
       case IQuestionSaveDataAnswer.Cancel:
         return;
@@ -82,6 +88,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *onRequestScreenReload(): Generator<unknown, any, unknown> {
+    if (!getIsFormScreenDirty(this)) {
+      yield* this.refreshSession();
+      return;
+    }
     switch (yield this.questionSaveData()) {
       case IQuestionSaveDataAnswer.Cancel:
         return;

@@ -18,11 +18,11 @@ export function onActionClick(ctx: any) {
     const rowId = getSelectedRowId(ctx);
     switch (action.mode) {
       case IActionMode.Always:
-        yield lifecycle.onExecuteAction(gridId, entity, action, []);
+        yield* lifecycle.onExecuteAction(gridId, entity, action, []);
         break;
       case IActionMode.ActiveRecord:
         if (rowId) {
-          yield lifecycle.onExecuteAction(gridId, entity, action, [rowId]);
+          yield* lifecycle.onExecuteAction(gridId, entity, action, [rowId]);
         }
         break;
       case IActionMode.MultipleCheckboxes:
