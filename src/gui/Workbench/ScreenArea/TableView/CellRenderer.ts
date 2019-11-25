@@ -46,6 +46,8 @@ export class CellRenderer implements ICellRenderer {
       this.tablePanelView.onCellClick(rowIndex, columnIndex);
     });
 
+    const cellPaddingLeft = columnIndex === 0 ? 25 : 15;
+
     /* BACKGROUND FILL - to make a line under the row */
     ctx.fillStyle = "#e5e5e5";
     ctx.fillRect(0, 0, columnWidth * CPR, rowHeight * CPR);
@@ -61,10 +63,10 @@ export class CellRenderer implements ICellRenderer {
       if (cell.backgroundColor) {
         ctx.fillStyle = cell.backgroundColor;
       } else {
-        ctx.fillStyle = rowIndex % 2 === 0 ? "#ffffff" : "#efefef";
+        ctx.fillStyle = rowIndex % 2 === 0 ? "#ffffff" : "#f7f6fa";
       }
     }
-    ctx.fillRect(0, 0, columnWidth * CPR, (rowHeight - 1) * CPR);
+    ctx.fillRect(0, 0, columnWidth * CPR, (rowHeight - 0) * CPR);
 
     // TODO: background color ?
     // TODO: Read only for bool fields in grid
@@ -73,7 +75,7 @@ export class CellRenderer implements ICellRenderer {
     ctx.font = `${12 * CPR}px "IBM Plex Sans", sans-serif`;
     if (cell.isLoading) {
       ctx.fillStyle = "#888888";
-      ctx.fillText("Loading...", 15 * CPR, 15 * CPR);
+      ctx.fillText("Loading...", cellPaddingLeft * CPR, 15 * CPR);
     } else {
       ctx.fillStyle = cell.foregroundColor || "black";
       switch (cell.type) {
@@ -93,7 +95,7 @@ export class CellRenderer implements ICellRenderer {
           if (cell.value !== null) {
             ctx.fillText(
               moment(cell.value).format(cell.formatterPattern),
-              15 * CPR,
+              cellPaddingLeft * CPR,
               15 * CPR
             );
           }
@@ -101,12 +103,12 @@ export class CellRenderer implements ICellRenderer {
         case "ComboBox":
         case "TagInput":
           if (cell.value !== null) {
-            ctx.fillText("" + cell.text!, 15 * CPR, 15 * CPR);
+            ctx.fillText("" + cell.text!, cellPaddingLeft * CPR, 15 * CPR);
           }
           break;
         default:
           if (cell.value !== null) {
-            ctx.fillText("" + cell.value!, 15 * CPR, 15 * CPR);
+            ctx.fillText("" + cell.value!, cellPaddingLeft * CPR, 15 * CPR);
           }
       }
     }

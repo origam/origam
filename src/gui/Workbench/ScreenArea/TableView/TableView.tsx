@@ -181,11 +181,11 @@ class GridDimensions implements IGridDimensions {
   }
 
   getRowTop(rowIndex: number): number {
-    return rowIndex * 20;
+    return rowIndex * 24;
   }
 
   getRowHeight(rowIndex: number): number {
-    return 20;
+    return 24;
   }
 
   getRowBottom(rowIndex: number): number {
