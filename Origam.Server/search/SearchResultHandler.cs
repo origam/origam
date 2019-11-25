@@ -50,6 +50,7 @@ using System;
 using System.Data;
 using System.Reflection;
 using System.Linq;
+using System.Security.Principal;
 
 namespace Origam.Server.Search
 {
@@ -79,10 +80,20 @@ namespace Origam.Server.Search
                 {
                     return;
                 }
-                GetSearchSchemaItemProvider().ChildItems.
-                    OfType<SearchDataSource>().ToList().ForEach(
-                    dataSource => AttachResultsToResponse(
-                        context, dataSource, searchRequest));
+                IOrigamAuthorizationProvider authorizationProvider 
+                    = SecurityManager.GetAuthorizationProvider();
+                IPrincipal principal = SecurityManager.CurrentPrincipal;
+                GetSearchSchemaItemProvider().ChildItems
+                    .OfType<SearchDataSource>()
+                    .Where(
+                        dataSource 
+                        => authorizationProvider.Authorize(
+                            principal, dataSource.Roles))
+                    .ToList()
+                    .ForEach(
+                        dataSource 
+                        => AttachResultsToResponse(
+                            context, dataSource, searchRequest));
                 context.Response.Write((char)10);
             }
             catch (Exception ex)
