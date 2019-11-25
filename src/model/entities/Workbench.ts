@@ -1,12 +1,11 @@
 import { IWorkbench, IWorkbenchData } from "./types/IWorkbench";
 import { IMainMenuEnvelope } from "./types/IMainMenu";
 import { IWorkbenchLifecycle } from "./types/IWorkbenchLifecycle";
-import { action } from "mobx";
+import { action, observable } from "mobx";
 import { IClientFulltextSearch } from "./types/IClientFulltextSearch";
 import { IOpenedScreens } from "./types/IOpenedScreens";
 
 export class Workbench implements IWorkbench {
-  
   $type_IWorkbench: 1 = 1;
 
   constructor(data: IWorkbenchData) {
@@ -22,6 +21,12 @@ export class Workbench implements IWorkbench {
   mainMenuEnvelope: IMainMenuEnvelope = null as any;
   openedScreens: IOpenedScreens = null as any;
   openedDialogScreens: IOpenedScreens = null as any;
+
+  @observable isFullScreen: boolean = false;
+
+  @action.bound setFullscreen(state: boolean) {
+    this.isFullScreen = state;
+  }
 
   *run(): Generator {
     yield* this.workbenchLifecycle.run();

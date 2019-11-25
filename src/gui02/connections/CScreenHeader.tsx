@@ -9,6 +9,8 @@ import { getOpenedScreenItems } from "model/selectors/getOpenedScreenItems";
 import React from "react";
 import { getIsFormScreenWorking } from "model/selectors/FormScreen/getIsFormScreenWorking";
 import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
+import { onFullscreenClick } from "model/actions-ui/ScreenHeader/onFullscreenClick";
+import { getIsCurrentScreenFull } from "model/selectors/Workbench/getIsCurrentScreenFull";
 
 @observer
 export class CScreenHeader extends React.Component {
@@ -34,11 +36,13 @@ export class CScreenHeader extends React.Component {
     /*if (content.isLoading) {
       return null;
     }*/
+    const isFullscreen = getIsCurrentScreenFull(activeScreen);
 
     return (
       <ScreenHeader
         isLoading={
-          content.isLoading || getIsScreenOrAnyDataViewWorking(content.formScreen!)
+          content.isLoading ||
+          getIsScreenOrAnyDataViewWorking(content.formScreen!)
         }
       >
         <h1>{this.getLabel(activeScreen)}</h1>
@@ -76,7 +80,10 @@ export class CScreenHeader extends React.Component {
           <Icon src="./icons/search-filter.svg" />
         </ScreenHeaderAction>
         <ScreenheaderDivider />*/}
-        <ScreenHeaderAction>
+        <ScreenHeaderAction
+          onClick={onFullscreenClick(activeScreen)}
+          isActive={isFullscreen}
+        >
           <Icon src="./icons/fullscreen.svg" />
         </ScreenHeaderAction>
         {/*<ScreenHeaderAction>

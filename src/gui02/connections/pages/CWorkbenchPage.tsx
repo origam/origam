@@ -11,6 +11,9 @@ import { CSidebar } from "../CSidebar";
 import { CScreenHeader } from "../CScreenHeader";
 import { CScreenContent } from "../CScreenContent";
 import { CDialogContent } from "../CDialogContent";
+import { observable } from "mobx";
+import { getIsCurrentScreenFull } from "model/selectors/Workbench/getIsCurrentScreenFull";
+import { Fullscreen } from "gui02/components/Fullscreen/Fullscreen";
 
 @observer
 export class CWorkbenchPage extends React.Component {
@@ -21,6 +24,7 @@ export class CWorkbenchPage extends React.Component {
   }
 
   render() {
+    const isFullscreen = getIsCurrentScreenFull(this.workbench);
     return (
       <Provider workbench={this.workbench}>
         <WorkbenchPage
@@ -30,8 +34,10 @@ export class CWorkbenchPage extends React.Component {
               <CScreenToolbar />
               <ScreenTabsArea>
                 <CScreenTabbedViewHandleRow />
-                <CScreenHeader />
-                <CScreenContent />
+                <Fullscreen isFullscreen={isFullscreen}>
+                  <CScreenHeader />
+                  <CScreenContent />
+                </Fullscreen>
                 <CDialogContent />
                 {/*<ScreenTabbedViewHandleRow>
                 <ScreenTabbedViewHandle isActive={false} hasCloseBtn={true}>

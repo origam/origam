@@ -13,9 +13,11 @@ export interface IWorkbenchData {
 
 export interface IWorkbench extends IWorkbenchData {
   $type_IWorkbench: 1;
+  isFullScreen: boolean;
 
   mainMenuEnvelope: IMainMenuEnvelope;  
-  run(): void;
+  run(): Generator;
+  setFullscreen(state: boolean): void;
 
   parent?: any;
 }
