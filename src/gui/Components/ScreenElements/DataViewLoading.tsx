@@ -5,7 +5,7 @@ export class DataViewLoading extends React.Component {
   render() {
     return (
       <div className={S.container}>
-        <div className={S.label}>Loading</div>
+        {/*<div className={S.label}>Loading</div>*/}
       </div>
     );
   }

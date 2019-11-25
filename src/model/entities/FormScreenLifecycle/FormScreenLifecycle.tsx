@@ -114,6 +114,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *initUI() {
     try {
+      this.inFlow++;
       const api = getApi(this);
       const openedScreen = getOpenedScreen(this);
       const menuItemId = getMenuItemId(this);
@@ -133,15 +134,21 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } catch (error) {
       console.error(error);
       // TODO: Error handling !
+    } finally {
+      this.inFlow--;
     }
   }
 
   *destroyUI() {
     try {
+      this.inFlow++;
       const api = getApi(this);
       yield api.destroyUI({ FormSessionId: getSessionId(this) });
     } catch (error) {
       // TODO: Handle error
+      console.error(error);
+    } finally {
+      this.inFlow--;
     }
   }
 
@@ -161,6 +168,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *loadData() {
     try {
+      this.inFlow++;
       const api = getApi(this);
       const formScreen = getFormScreen(this);
       for (let rootDataView of formScreen.rootDataViews) {
@@ -180,11 +188,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } catch (error) {
       console.error(error);
       // TODO: Error handling
+    } finally {
+      this.inFlow--;
     }
   }
 
   *flushData() {
     try {
+      this.inFlow++;
       const api = getApi(this);
       for (let dataView of getFormScreen(this).dataViews) {
         for (let row of dataView.dataTable.getDirtyValueRows()) {
@@ -201,11 +212,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } catch (error) {
       console.error(error);
       // TODO: Error handling
+    } finally {
+      this.inFlow--;
     }
   }
 
   *createRow(entity: string, gridId: string) {
     try {
+      this.inFlow++;
       const api = getApi(this);
       const targetDataView = getDataViewByGridId(this, gridId)!;
       const createObjectResult = yield api.createObject({
@@ -220,11 +234,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } catch (error) {
       console.error(error);
       // TODO: Error handling
+    } finally {
+      this.inFlow--;
     }
   }
 
   *deleteRow(entity: string, rowId: string) {
     try {
+      this.inFlow++;
       const api = getApi(this);
       const deleteObjectResult = yield api.deleteObject({
         SessionFormIdentifier: getSessionId(this),
@@ -236,11 +253,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } catch (error) {
       console.error(error);
       // TODO: Error handling
+    } finally {
+      this.inFlow--;
     }
   }
 
   *saveSession() {
     try {
+      this.inFlow++;
       const api = getApi(this);
       yield api.saveSessionQuery(getSessionId(this));
       const result = yield api.saveSession(getSessionId(this));
@@ -248,12 +268,15 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } catch (error) {
       console.error(error);
       // TODO: Error handling
+    } finally {
+      this.inFlow--;
     }
   }
 
   *refreshSession() {
     // TODO: Refresh lookups and rowstates !!!
     try {
+      this.inFlow++;
       if (this.isReadData) {
         const api = getApi(this);
         const result = yield api.refreshSession(getSessionId(this));
@@ -265,6 +288,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } catch (error) {
       console.error(error);
       // TODO: Error handling
+    } finally {
+      this.inFlow--;
     }
   }
 
@@ -275,6 +300,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     selectedItems: string[]
   ) {
     try {
+      this.inFlow++;
       const parameters: { [key: string]: any } = {};
       for (let parameter of action.parameters) {
         parameters[parameter.name] = parameter.fieldName;
@@ -307,12 +333,19 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } catch (error) {
       console.error(error);
       // TODO: Error handling
+    } finally {
+      this.inFlow--;
     }
   }
 
   *closeForm() {
-    yield* this.destroyUI();
-    yield* closeForm(this)();
+    try {
+      this.inFlow++;
+      yield* this.destroyUI();
+      yield* closeForm(this)();
+    } finally {
+      this.inFlow--;
+    }
   }
 
   questionSaveData() {

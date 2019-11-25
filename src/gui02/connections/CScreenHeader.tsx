@@ -7,6 +7,8 @@ import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getOpenedScreenItems } from "model/selectors/getOpenedScreenItems";
 import React from "react";
+import { getIsFormScreenWorking } from "model/selectors/FormScreen/getIsFormScreenWorking";
+import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
 
 @observer
 export class CScreenHeader extends React.Component {
@@ -34,7 +36,11 @@ export class CScreenHeader extends React.Component {
     }*/
 
     return (
-      <ScreenHeader isLoading={content.isLoading}>
+      <ScreenHeader
+        isLoading={
+          content.isLoading || getIsScreenOrAnyDataViewWorking(content.formScreen!)
+        }
+      >
         <h1>{this.getLabel(activeScreen)}</h1>
         {/*<ScreenheaderDivider />
           <ScreenHeaderAction className="isGreenOnHover">
