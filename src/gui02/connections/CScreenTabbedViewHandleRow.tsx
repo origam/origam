@@ -8,6 +8,7 @@ import { getOpenedScreenItems } from "model/selectors/getOpenedScreenItems";
 import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
 import { onScreenTabHandleClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabHandleClick";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
+import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 
 @observer
 export class CScreenTabbedViewHandleRow extends React.Component {
@@ -35,6 +36,7 @@ export class CScreenTabbedViewHandleRow extends React.Component {
             key={`${item.menuItemId}@${item.order}`}
             isActive={item.isActive}
             hasCloseBtn={true}
+            isDirty={getIsFormScreenDirty(item)}
             onClick={(event: any) => onScreenTabHandleClick(item)(event)}
             onCloseClick={(event: any) => onScreenTabCloseClick(item)(event)}
           >

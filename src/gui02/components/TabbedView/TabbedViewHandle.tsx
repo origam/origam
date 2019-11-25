@@ -6,12 +6,13 @@ import { Icon } from "../Icon/Icon";
 export class TabbedViewHandle extends React.Component<{
   isActive?: boolean;
   hasCloseBtn?: boolean;
+  isDirty?: boolean;
   onClick?(event: any): void;
   onCloseClick?(event: any): void;
 }> {
   render() {
     return (
-      <div className={cx(S.root, { isActive: this.props.isActive })}>
+      <div className={cx(S.root, { isActive: this.props.isActive, isDirty: this.props.isDirty })}>
         <div className={S.label} onClick={this.props.onClick}>
           {this.props.children}
         </div>

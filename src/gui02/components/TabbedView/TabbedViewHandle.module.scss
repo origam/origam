@@ -19,6 +19,12 @@
     }
   }
 
+  &:global(.isDirty) {
+    .label {
+      color: #fe5461;
+    }
+  }
+
   &:not(:global(.isActive)):hover {
     color: #0d0d0d;
     cursor: pointer;

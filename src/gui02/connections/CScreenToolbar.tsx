@@ -44,7 +44,12 @@ export class CScreenToolbar extends React.Component<{}> {
             <ScreenToolbarActionGroup>
               <ScreenToolbarAction
                 onClick={onSaveSessionClick(formScreen)}
-                icon={<Icon src="./icons/save.svg" />}
+                icon={
+                  <Icon
+                    src="./icons/save.svg"
+                    className={isDirty ? "isRed isHoverGreen" : ""}
+                  />
+                }
               />
               <ScreenToolbarAction
                 onClick={onRefreshSessionClick(formScreen)}

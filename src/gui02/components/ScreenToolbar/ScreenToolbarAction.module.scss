@@ -13,6 +13,9 @@
       svg {
         stroke: #0d0d0d;
         stroke-width: 1.5;
+        &:global(.isHoverGreen) {
+          stroke: #69D07F;
+        }
       }
     }
     .label {
@@ -38,6 +41,9 @@
     overflow: inherit;
     stroke: #77767e;
     stroke-width: 1;
+    &:global(.isRed) {
+      stroke: #fe5461;
+    }
     @include hoverItemAnimation;
   }
 }
