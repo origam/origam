@@ -247,7 +247,7 @@ namespace Origam
 					headers, authenticationType, userName, password, timeout, null, false))
 				{
 					HttpWebResponse httpResponse = response as HttpWebResponse;
-					string encodingString = httpResponse.ContentEncoding.ToLower();
+					string encodingString = string.IsNullOrEmpty(httpResponse.ContentEncoding)?"":httpResponse.ContentEncoding.ToLower();
 					using (Stream responseStream =
 						encodingString.Contains("gzip") ?
 							new GZipStream(response.GetResponseStream(), CompressionMode.Decompress)
