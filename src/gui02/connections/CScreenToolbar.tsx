@@ -9,12 +9,12 @@ import { action } from "mobx";
 import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
 import { ScreenToolbarActionGroup } from "gui02/components/ScreenToolbar/ScreenToolbarActionGroup";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
-import { onSaveSessionClick } from "model/actions/onSaveSessionClick";
-import { onRefreshSessionClick } from "model/actions/onRefreshSessionClick";
+import { onSaveSessionClick } from "model/actions-ui/ScreenToolbar/onSaveSessionClick";
+import { onRefreshSessionClick } from "model/actions-ui/ScreenToolbar/onRefreshSessionClick";
 import { observer } from "mobx-react";
 import { getActiveScreenActions } from "model/selectors/getActiveScreenActions";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
-import { onActionClick } from "model/actions/Actions/onActionClick";
+import { onActionClick } from "model/actions-ui/Actions/onActionClick";
 
 @observer
 export class CScreenToolbar extends React.Component<{}> {

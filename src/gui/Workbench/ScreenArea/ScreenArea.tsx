@@ -1,7 +1,7 @@
 import { CloseButton, ModalWindow } from "gui/Components/Dialog/Dialog";
 import { inject, observer, Observer } from "mobx-react";
 
-import { onSelectionDialogActionButtonClick } from "model/actions/SelectionDialog/onSelectionDialogActionButtonClick";
+import { onSelectionDialogActionButtonClick } from "model/actions-ui/SelectionDialog/onSelectionDialogActionButtonClick";
 import { getDialogStack } from "model/selectors/getDialogStack";
 import { getOpenedDialogItems } from "model/selectors/getOpenedDialogItems";
 import React, { useEffect } from "react";

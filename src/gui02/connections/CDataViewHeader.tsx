@@ -21,7 +21,7 @@ import { getVisibleRowCount } from "model/selectors/DataView/getVisibleRowCount"
 import { getIsFilterControlsDisplayed } from "model/selectors/TablePanelView/getIsFilterControlsDisplayed";
 import React from "react";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
-import { onActionClick } from "model/actions/Actions/onActionClick";
+import { onActionClick } from "model/actions-ui/Actions/onActionClick";
 import { DataViewHeaderPusher } from "gui02/components/DataViewHeader/DataViewHeaderPusher";
 import { IPanelViewType } from "model/entities/types/IPanelViewType";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";

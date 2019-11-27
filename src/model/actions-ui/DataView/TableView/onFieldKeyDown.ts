@@ -1,8 +1,8 @@
-import { selectNextColumn } from "./selectNextColumn";
-import { selectPrevColumn } from "./selectPrevColumn";
-import { selectPrevRow } from "../selectPrevRow";
-import { selectNextRow } from "../selectNextRow";
-import { flushCurrentRowData } from "./flushCurrentRowData";
+import { selectNextColumn } from "../../../actions/DataView/TableView/selectNextColumn";
+import { selectPrevColumn } from "../../../actions/DataView/TableView/selectPrevColumn";
+import { selectPrevRow } from "../../../actions/DataView/selectPrevRow";
+import { selectNextRow } from "../../../actions/DataView/selectNextRow";
+import { flushCurrentRowData } from "../../../actions/DataView/TableView/flushCurrentRowData";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { runInAction } from "mobx";
 

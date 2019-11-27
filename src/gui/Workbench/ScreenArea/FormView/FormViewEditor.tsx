@@ -1,6 +1,6 @@
 import { TextEditor } from "gui/Components/ScreenElements/Editors/TextEditor";
 import { inject, observer } from "mobx-react";
-import { onFieldBlur } from "model/actions/DataView/TableView/onFieldBlur";
+import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import React from "react";
@@ -16,7 +16,7 @@ import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 import { getDataSourceFieldByIndex } from "model/selectors/DataSources/getDataSourceFieldByIndex";
-import { onFieldChange } from "model/actions/DataView/TableView/onFieldChange";
+import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
 import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
 
 @inject(({ property, formPanelView }) => {

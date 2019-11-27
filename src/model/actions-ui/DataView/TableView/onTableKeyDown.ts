@@ -1,7 +1,7 @@
-import { selectPrevRow } from "../selectPrevRow";
-import { selectNextRow } from "../selectNextRow";
-import { selectPrevColumn } from "./selectPrevColumn";
-import { selectNextColumn } from "./selectNextColumn";
+import { selectPrevRow } from "../../../actions/DataView/selectPrevRow";
+import { selectNextRow } from "../../../actions/DataView/selectNextRow";
+import { selectPrevColumn } from "../../../actions/DataView/TableView/selectPrevColumn";
+import { selectNextColumn } from "../../../actions/DataView/TableView/selectNextColumn";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { flow } from "mobx";
 

@@ -17,7 +17,7 @@ import { getSelectedColumnId } from "model/selectors/TablePanelView/getSelectedC
 import { IOrderingConfiguration } from "../types/IOrderingConfiguration";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getSelectedColumnIndex } from "model/selectors/TablePanelView/getSelectedColumnIndex";
-import { onFieldChange } from "model/actions/DataView/TableView/onFieldChange";
+import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
 import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
 import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
 

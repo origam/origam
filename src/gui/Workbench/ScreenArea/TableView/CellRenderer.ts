@@ -18,7 +18,7 @@ import {
   IRenderCellArgs,
   IRenderedCell
 } from "../../../Components/ScreenElements/Table/types";
-import { onTableCellClick } from "model/actions/DataView/TableView/onTableCellClick";
+import { onTableCellClick } from "model/actions-ui/DataView/TableView/onTableCellClick";
 
 export interface ICellRendererData {
   tablePanelView: ITablePanelView;

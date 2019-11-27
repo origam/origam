@@ -9,7 +9,7 @@ import { FilterSettingsLookup } from "./HeaderControls/FilterSettingsLookup";
 import { toJS } from "mobx";
 import { useContext } from "react";
 import { MobXProviderContext } from "mobx-react";
-import { onApplyFilterSetting } from "../../../../../model/actions/DataView/TableView/onApplyFilterSetting";
+import { onApplyFilterSetting } from "../../../../../model/actions-ui/DataView/TableView/onApplyFilterSetting";
 import { getFilterSettingByProperty } from "model/selectors/DataView/getFilterSettingByProperty";
 
 export const FilterSettings: React.FC = observer(props => {

@@ -4,7 +4,7 @@ import { getEntity } from "model/selectors/DataView/getEntity";
 import { getGridId } from "model/selectors/DataView/getGridId";
 import { getSelectedRowId } from "../../selectors/TablePanelView/getSelectedRowId";
 import { flow } from "mobx";
-import { closeForm } from '../closeForm';
+import { closeForm } from '../../actions/closeForm';
 
 
 let isRunning = false;

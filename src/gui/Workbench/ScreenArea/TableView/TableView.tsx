@@ -1,9 +1,9 @@
 import bind from "bind-decorator";
 import { action, computed, observable } from "mobx";
 import { inject, observer, Provider } from "mobx-react";
-import { onTableKeyDown } from "model/actions/DataView/TableView/onTableKeyDown";
+import { onTableKeyDown } from "model/actions-ui/DataView/TableView/onTableKeyDown";
 import React from "react";
-import { onColumnHeaderClick } from "../../../../model/actions/DataView/TableView/onColumnHeaderClick";
+import { onColumnHeaderClick } from "../../../../model/actions-ui/DataView/TableView/onColumnHeaderClick";
 import { ITablePanelView } from "../../../../model/entities/TablePanelView/types/ITablePanelView";
 import { IDataView } from "../../../../model/entities/types/IDataView";
 import { IProperty } from "../../../../model/entities/types/IProperty";
@@ -24,8 +24,8 @@ import { TableViewEditor } from "./TableViewEditor";
 import { getPropertyOrdering } from "../../../../model/selectors/DataView/getPropertyOrdering";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
-import { onNoCellClick } from "model/actions/DataView/TableView/onNoCellClick";
-import { onOutsideTableClick } from "model/actions/DataView/TableView/onOutsideTableClick";
+import { onNoCellClick } from "model/actions-ui/DataView/TableView/onNoCellClick";
+import { onOutsideTableClick } from "model/actions-ui/DataView/TableView/onOutsideTableClick";
 
 @inject(({ dataView }) => {
   return {

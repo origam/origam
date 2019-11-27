@@ -1,4 +1,4 @@
-import { flushCurrentRowData } from "./flushCurrentRowData";
+import { flushCurrentRowData } from "../../../actions/DataView/TableView/flushCurrentRowData";
 import { flow } from "mobx";
 
 export function onFieldBlur(ctx: any) {
