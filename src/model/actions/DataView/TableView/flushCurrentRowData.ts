@@ -4,7 +4,6 @@ import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreen
 
 export function flushCurrentRowData(ctx: any) {
   return function* flushCurrentRowData() {
-    console.log("ofd");
     const row = getSelectedRow(ctx);
     if (row) {
       getDataTable(ctx).flushFormToTable(row);

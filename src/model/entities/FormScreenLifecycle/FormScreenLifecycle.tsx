@@ -239,7 +239,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         Values: {},
         Parameters: { ...getBindingParametersFromParent(targetDataView) }
       });
-      console.log(createObjectResult);
       yield* processCRUDResult(targetDataView, createObjectResult);
     } catch (error) {
       console.error(error);

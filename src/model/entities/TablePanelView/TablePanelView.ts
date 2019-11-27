@@ -111,9 +111,11 @@ export class TablePanelView implements ITablePanelView {
     const property = this.tableProperties[columnIndex];
     if (property.column !== "CheckBox") {
       if (
-        this.dataTable.getRowId(row) === this.selectedRowId &&
-        property.id === this.selectedColumnId
+        this.dataTable.getRowId(row) ===
+        this.selectedRowId /*&&
+        property.id === this.selectedColumnId*/
       ) {
+        this.selectCell(this.dataTable.getRowId(row) as string, property.id);
         this.setEditing(true);
       } else {
         const { isEditing } = this;
