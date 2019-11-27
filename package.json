@@ -116,6 +116,7 @@
     "http-proxy-middleware": "^0.20.0",
     "node-dev": "^4.0.0",
     "node-sass": "^4.13.0",
+    "selenium-webdriver": "^4.0.0-alpha.5",
     "winston": "^3.2.1"
   },
   "jest": {
