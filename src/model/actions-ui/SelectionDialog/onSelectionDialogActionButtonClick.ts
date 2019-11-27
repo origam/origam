@@ -1,10 +1,9 @@
+import { flow } from "mobx";
 import { IAction } from "model/entities/types/IAction";
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getGridId } from "model/selectors/DataView/getGridId";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { getSelectedRowId } from "../../selectors/TablePanelView/getSelectedRowId";
-import { flow } from "mobx";
-import { closeForm } from '../../actions/closeForm';
 
 
 let isRunning = false;
@@ -27,7 +26,7 @@ export function onSelectionDialogActionButtonClick(ctx: any) {
       const rowId = getSelectedRowId(ctx);
       if (rowId) {
         const selectedItems: string[] = [rowId];
-        yield lifecycle.onExecuteAction(gridId, entity, action, selectedItems);
+        yield* lifecycle.onExecuteAction(gridId, entity, action, selectedItems);
         // closeForm(ctx)();
       }
     } finally {

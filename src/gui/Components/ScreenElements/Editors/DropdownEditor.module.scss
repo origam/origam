@@ -1,5 +1,6 @@
 
 @import "./EditorsCommon.scss";
+@import "src/styles/common_styles.scss";
 
 .droppedPanelContainer {
   z-index: 1000;
@@ -8,9 +9,10 @@
   left: 0px;*/
   width: 300px;
   height: 200px;
-  border: 1px solid #b3b3b3;
   background-color: white;
   overflow: hidden;
+
+  @include popoverShadow;
 }
 
 .lookupListHeaderCell {

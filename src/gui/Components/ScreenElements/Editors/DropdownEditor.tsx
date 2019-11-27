@@ -330,7 +330,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     } else {
       switch (event.key) {
         case "ArrowDown":
-          if(event.altKey) {
+          if (event.altKey) {
             this.elmDropdowner && this.elmDropdowner.setDropped(true);
           }
           break;
@@ -397,7 +397,13 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
           </div>
         )}
         content={({}) => (
-          <div className={S.droppedPanelContainer}>
+          <div
+            className={S.droppedPanelContainer}
+            style={{
+              width: Math.min(200, 200 * this.props.ColumnNames!.length),
+              height: Math.min(300, 20 * (this.lookupItems.length + 1))
+            }}
+          >
             <AutoSizer>
               {({ width, height }) => (
                 <Observer>
