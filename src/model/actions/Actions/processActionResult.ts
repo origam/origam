@@ -26,7 +26,7 @@ export function processActionResult(ctx: any) {
           const dialogInfo = isModalDialog
             ? new DialogInfo(dialogWidth, dialogHeight)
             : undefined;
-          workbenchLifecycle.openNewForm(
+          yield* workbenchLifecycle.openNewForm(
             objectId,
             typeString,
             "",

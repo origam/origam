@@ -45,12 +45,8 @@ export class DataView extends React.Component<{
     return (
       <Provider dataView={this.props.dataView}>
         <div className={S.dataView} style={this.getDataViewStyle()}>
-          {!this.props.isHeadless && (
-            <>
-              {/*<Toolbar />*/}
-              <CDataViewHeader />
-            </>
-          )}
+          <CDataViewHeader isVisible={!this.props.isHeadless} />
+
           <div
             style={{
               // width: "100%",

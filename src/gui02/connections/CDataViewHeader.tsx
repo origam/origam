@@ -29,7 +29,7 @@ import { Dropdown } from "gui02/components/Dropdown/Dropdown";
 import { DropdownItem } from "gui02/components/Dropdown/DropdownItem";
 
 @observer
-export class CDataViewHeader extends React.Component {
+export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
   static contextType = MobXProviderContext;
 
   get dataView() {
@@ -54,114 +54,125 @@ export class CDataViewHeader extends React.Component {
     const onNextRowClickEvt = onNextRowClick(dataView);
 
     return (
-      <DataViewHeader>
-        <span>
-          <h2>{label}</h2>
-        </span>
+      <DataViewHeader isVisible={this.props.isVisible}>
+        {this.props.isVisible && (
+          <>
+            <span>
+              <h2>{label}</h2>
+            </span>
 
-        <DataViewHeaderGroup>
-          <DataViewHeaderAction
-            className="isGreenHover"
-            onClick={onCreateRowClickEvt}
-          >
-            <Icon src="./icons/add.svg" />
-          </DataViewHeaderAction>
-          <DataViewHeaderAction
-            className="isRedHover"
-            onClick={onDeleteRowClickEvt}
-          >
-            <Icon src="./icons/minus.svg" />
-          </DataViewHeaderAction>
-          <DataViewHeaderAction className="isOrangeHover" onClick={undefined}>
-            <Icon src="./icons/duplicate.svg" />
-          </DataViewHeaderAction>
-        </DataViewHeaderGroup>
-        <DataViewHeaderButtonGroup>
-          {actions
-            .filter(action => getIsEnabledAction(action))
-            .map(action => (
-              <DataViewHeaderButton
-                onClick={event => onActionClick(action)(event, action)}
-              >
-                {action.caption}
-              </DataViewHeaderButton>
-            ))}
-        </DataViewHeaderButtonGroup>
-        <DataViewHeaderPusher />
-        <DataViewHeaderGroup>
-          <DataViewHeaderAction onClick={undefined}>
-            <Icon src="./icons/list-arrow-first.svg" />
-          </DataViewHeaderAction>
-          <DataViewHeaderAction onClick={onPrevRowClickEvt}>
-            <Icon src="./icons/list-arrow-previous.svg" />
-          </DataViewHeaderAction>
-          <DataViewHeaderAction onClick={onNextRowClickEvt}>
-            <Icon src="./icons/list-arrow-next.svg" />
-          </DataViewHeaderAction>
-          <DataViewHeaderAction onClick={undefined}>
-            <Icon src="./icons/list-arrow-last.svg" />
-          </DataViewHeaderAction>
-        </DataViewHeaderGroup>
-        <DataViewHeaderGroup>
-          {" "}
-          <span>
-            {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
-            &nbsp;/&nbsp;{visibleRowCount}
-          </span>
-        </DataViewHeaderGroup>
-        <DataViewHeaderGroup>
-          <DataViewHeaderAction
-            onClick={onTableViewButtonClickEvt}
-            isActive={activePanelView === IPanelViewType.Table}
-          >
-            <Icon src="./icons/table-view.svg" />
-          </DataViewHeaderAction>
-          <DataViewHeaderAction
-            onClick={onFormViewButtonClickEvt}
-            isActive={activePanelView === IPanelViewType.Form}
-          >
-            <Icon src="./icons/detail-view.svg" />
-          </DataViewHeaderAction>
-        </DataViewHeaderGroup>
-        <DataViewHeaderGroup>
-          <DataViewHeaderAction
-            onClick={onFilterButtonClickEvt}
-            isActive={isFilterSettingsVisible}
-          >
-            <Icon src="./icons/search-filter.svg" />
-          </DataViewHeaderAction>
-        </DataViewHeaderGroup>
-        <DataViewHeaderGroup>
-          <Dropdowner
-            trigger={({ refTrigger, setDropped }) => (
+            <DataViewHeaderGroup>
               <DataViewHeaderAction
-                refDom={refTrigger}
-                onClick={() => setDropped(true)}
-                isActive={false}
+                className="isGreenHover"
+                onClick={onCreateRowClickEvt}
               >
-                <Icon src="./icons/settings.svg" />
+                <Icon src="./icons/add.svg" />
               </DataViewHeaderAction>
-            )}
-            content={({ setDropped }) => (
-              <Dropdown>
-                <DropdownItem isDisabled={true}>Export to Excel</DropdownItem>
-                <DropdownItem
-                  onClick={(event: any) => {
-                    setDropped(false);
-                    onColumnConfigurationClickEvt(event);
-                  }}
-                >
-                  Column configuration
-                </DropdownItem>
-                <DropdownItem isDisabled={true}>Show audit</DropdownItem>
-                <DropdownItem isDisabled={true}>Show attachments</DropdownItem>
-                <DropdownItem isDisabled={true}>
-                  Show record information
-                </DropdownItem>
-              </Dropdown>
-            )}
-          />
-        </DataViewHeaderGroup>
+              <DataViewHeaderAction
+                className="isRedHover"
+                onClick={onDeleteRowClickEvt}
+              >
+                <Icon src="./icons/minus.svg" />
+              </DataViewHeaderAction>
+              <DataViewHeaderAction
+                className="isOrangeHover"
+                onClick={undefined}
+              >
+                <Icon src="./icons/duplicate.svg" />
+              </DataViewHeaderAction>
+            </DataViewHeaderGroup>
+            <DataViewHeaderButtonGroup>
+              {actions
+                .filter(action => getIsEnabledAction(action))
+                .map(action => (
+                  <DataViewHeaderButton
+                    onClick={event => onActionClick(action)(event, action)}
+                  >
+                    {action.caption}
+                  </DataViewHeaderButton>
+                ))}
+            </DataViewHeaderButtonGroup>
+            <DataViewHeaderPusher />
+            <DataViewHeaderGroup>
+              <DataViewHeaderAction onClick={undefined}>
+                <Icon src="./icons/list-arrow-first.svg" />
+              </DataViewHeaderAction>
+              <DataViewHeaderAction onClick={onPrevRowClickEvt}>
+                <Icon src="./icons/list-arrow-previous.svg" />
+              </DataViewHeaderAction>
+              <DataViewHeaderAction onClick={onNextRowClickEvt}>
+                <Icon src="./icons/list-arrow-next.svg" />
+              </DataViewHeaderAction>
+              <DataViewHeaderAction onClick={undefined}>
+                <Icon src="./icons/list-arrow-last.svg" />
+              </DataViewHeaderAction>
+            </DataViewHeaderGroup>
+            <DataViewHeaderGroup>
+              {" "}
+              <span>
+                {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
+                &nbsp;/&nbsp;{visibleRowCount}
+              </span>
+            </DataViewHeaderGroup>
+            <DataViewHeaderGroup>
+              <DataViewHeaderAction
+                onClick={onTableViewButtonClickEvt}
+                isActive={activePanelView === IPanelViewType.Table}
+              >
+                <Icon src="./icons/table-view.svg" />
+              </DataViewHeaderAction>
+              <DataViewHeaderAction
+                onClick={onFormViewButtonClickEvt}
+                isActive={activePanelView === IPanelViewType.Form}
+              >
+                <Icon src="./icons/detail-view.svg" />
+              </DataViewHeaderAction>
+            </DataViewHeaderGroup>
+            <DataViewHeaderGroup>
+              <DataViewHeaderAction
+                onClick={onFilterButtonClickEvt}
+                isActive={isFilterSettingsVisible}
+              >
+                <Icon src="./icons/search-filter.svg" />
+              </DataViewHeaderAction>
+            </DataViewHeaderGroup>
+            <DataViewHeaderGroup>
+              <Dropdowner
+                trigger={({ refTrigger, setDropped }) => (
+                  <DataViewHeaderAction
+                    refDom={refTrigger}
+                    onClick={() => setDropped(true)}
+                    isActive={false}
+                  >
+                    <Icon src="./icons/settings.svg" />
+                  </DataViewHeaderAction>
+                )}
+                content={({ setDropped }) => (
+                  <Dropdown>
+                    <DropdownItem isDisabled={true}>
+                      Export to Excel
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={(event: any) => {
+                        setDropped(false);
+                        onColumnConfigurationClickEvt(event);
+                      }}
+                    >
+                      Column configuration
+                    </DropdownItem>
+                    <DropdownItem isDisabled={true}>Show audit</DropdownItem>
+                    <DropdownItem isDisabled={true}>
+                      Show attachments
+                    </DropdownItem>
+                    <DropdownItem isDisabled={true}>
+                      Show record information
+                    </DropdownItem>
+                  </Dropdown>
+                )}
+              />
+            </DataViewHeaderGroup>
+          </>
+        )}
       </DataViewHeader>
     );
   }

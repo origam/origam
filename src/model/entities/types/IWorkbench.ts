@@ -15,6 +15,7 @@ export interface IWorkbench extends IWorkbenchData {
   $type_IWorkbench: 1;
   isFullScreen: boolean;
 
+  // loggedUserName: any
   mainMenuEnvelope: IMainMenuEnvelope;  
   run(): Generator;
   setFullscreen(state: boolean): void;
