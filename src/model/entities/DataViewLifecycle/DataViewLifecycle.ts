@@ -14,7 +14,7 @@ import { getApi } from "../../selectors/getApi";
 import { getSelectedRowId } from "../../selectors/TablePanelView/getSelectedRowId";
 import { errDialogPromise } from "../ErrorDialog";
 import { IDataViewLifecycle } from "./types/IDataViewLifecycle";
-
+import _ from "lodash";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
@@ -25,8 +25,6 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   }
   disposers: any[] = [];
 
-
-
   @action.bound
   start(): void {
     if (getDontRequestData(this)) {
@@ -34,43 +32,37 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     }
   }
 
-  @action.bound startSelectedRowReaction() {
-    return reaction(
-      () => {
-        return getSelectedRowId(this);
-      },
-      flow(
-        function*(this: DataViewLifecycle) {
-          try {
-            this.inFlow++;
-            console.log(
-              getDataViewLabel(this),
-              "detected control id change",
-              getSelectedRowId(this)
-            );
-            yield* this.onSelectedRowIdChanged();
-          } finally {
-            this.inFlow--;
-          }
-        }.bind(this)
-      )
-    );
-  }
+  
 
-  *onSelectedRowIdChanged() {
-    try {
-      this.inFlow++;
-      if (getSelectedRowId(this)) {
-        if (getIsBindingRoot(this)) {
-          yield* this.changeMasterRow();
-          yield* this.navigateChildren();
-        } else if (getIsBindingParent(this)) {
-          yield* this.navigateChildren();
+  onSelectedRowIdChangeImm = flow(
+    function*(this: DataViewLifecycle) {
+      try {
+        this.inFlow++;
+        console.log(
+          getDataViewLabel(this),
+          "detected control id change",
+          getSelectedRowId(this)
+        );
+        if (getSelectedRowId(this)) {
+          if (getIsBindingRoot(this)) {
+            yield* this.changeMasterRow();
+            yield* this.navigateChildren();
+          } else if (getIsBindingParent(this)) {
+            yield* this.navigateChildren();
+          }
         }
+      } finally {
+        this.inFlow--;
       }
-    } finally {
-      this.inFlow--;
-    }
+    }.bind(this)
+  );
+
+  onSelectedRowIdChange = _.debounce(this.onSelectedRowIdChangeImm, 100);
+
+  @action.bound startSelectedRowReaction() {
+    return reaction(() => {
+      return getSelectedRowId(this);
+    }, this.onSelectedRowIdChange);
   }
 
   *navigateAsChild() {

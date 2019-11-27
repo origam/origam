@@ -24,6 +24,8 @@ import { TableViewEditor } from "./TableViewEditor";
 import { getPropertyOrdering } from "../../../../model/selectors/DataView/getPropertyOrdering";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
+import { onNoCellClick } from "model/actions/DataView/TableView/onNoCellClick";
+import { onOutsideTableClick } from "model/actions/DataView/TableView/onOutsideTableClick";
 
 @inject(({ dataView }) => {
   return {
@@ -113,8 +115,8 @@ export class TableView extends React.Component<{
                 key={`${editingRowIndex}@${editingColumnIndex}`}
               />
             )}
-            onNoCellClick={this.props.tablePanelView!.onNoCellClick}
-            onOutsideTableClick={this.props.tablePanelView!.onOutsideTableClick}
+            onNoCellClick={onNoCellClick(this.props.tablePanelView)}
+            onOutsideTableClick={onOutsideTableClick(this.props.tablePanelView)}
             refCanvasMovingComponent={this.props.tablePanelView!.setTableCanvas}
             onKeyDown={this.props.onTableKeyDown}
             ref={this.refTable}

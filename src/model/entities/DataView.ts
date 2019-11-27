@@ -234,7 +234,6 @@ export class DataView implements IDataView {
     property: IProperty,
     value: any
   ) {
-    console.log("ofc");
     if (!property.readOnly) {
       getDataTable(this).setFormDirtyValue(row, property.id, value);
     }

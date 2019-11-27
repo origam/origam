@@ -18,6 +18,7 @@ import {
   IRenderCellArgs,
   IRenderedCell
 } from "../../../Components/ScreenElements/Table/types";
+import { onTableCellClick } from "model/actions/DataView/TableView/onTableCellClick";
 
 export interface ICellRendererData {
   tablePanelView: ITablePanelView;
@@ -43,7 +44,7 @@ export class CellRenderer implements ICellRenderer {
   }: IRenderCellArgs) {
     const cell = this.getCell(rowIndex, columnIndex);
     onCellClick.subscribe((event: any) => {
-      this.tablePanelView.onCellClick(rowIndex, columnIndex);
+      onTableCellClick(this.tablePanelView)(event, rowIndex, columnIndex);
     });
 
     const cellPaddingLeft = columnIndex === 0 ? 25 : 15;

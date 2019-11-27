@@ -152,6 +152,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       // TODO: Handle error
       console.error(error);
       yield errDialogPromise(this)(error);
+      throw error;
     } finally {
       this.inFlow--;
     }
@@ -193,6 +194,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } catch (error) {
       console.error(error);
       yield errDialogPromise(this)(error);
+      throw error;
       // TODO: Error handling
     } finally {
       this.inFlow--;
@@ -218,6 +220,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } catch (error) {
       console.error(error);
       yield errDialogPromise(this)(error);
+      throw error;
       // TODO: Error handling
     } finally {
       this.inFlow--;
@@ -241,6 +244,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } catch (error) {
       console.error(error);
       yield errDialogPromise(this)(error);
+      throw error;
       // TODO: Error handling
     } finally {
       this.inFlow--;
@@ -261,6 +265,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } catch (error) {
       console.error(error);
       yield errDialogPromise(this)(error);
+      throw error;
       // TODO: Error handling
     } finally {
       this.inFlow--;
@@ -277,6 +282,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } catch (error) {
       console.error(error);
       yield errDialogPromise(this)(error);
+      throw error;
       // TODO: Error handling
     } finally {
       this.inFlow--;
@@ -298,6 +304,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } catch (error) {
       console.error(error);
       yield errDialogPromise(this)(error);
+      throw error;
       // TODO: Error handling
     } finally {
       this.inFlow--;
@@ -344,6 +351,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } catch (error) {
       console.error(error);
       yield errDialogPromise(this)(error);
+      throw error;
       // TODO: Error handling
     } finally {
       this.inFlow--;

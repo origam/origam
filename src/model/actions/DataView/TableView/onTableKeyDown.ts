@@ -3,17 +3,18 @@ import { selectNextRow } from "../selectNextRow";
 import { selectPrevColumn } from "./selectPrevColumn";
 import { selectNextColumn } from "./selectNextColumn";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { flow } from "mobx";
 
 export function onTableKeyDown(ctx: any) {
-  return function onTableKeyDown(event: any) {
+  return flow(function* onTableKeyDown(event: any) {
     switch (event.key) {
       case "ArrowUp":
-        selectPrevRow(ctx)();
+        yield* selectPrevRow(ctx)();
         event.preventDefault();
         getTablePanelView(ctx).scrollToCurrentCell();
         break;
       case "ArrowDown":
-        selectNextRow(ctx)();
+        yield* selectNextRow(ctx)();
         event.preventDefault();
         getTablePanelView(ctx).scrollToCurrentCell();
         break;
@@ -43,12 +44,12 @@ export function onTableKeyDown(ctx: any) {
         break;
       case "Enter":
         if (event.shiftKey) {
-          selectPrevRow(ctx)();
+          yield* selectPrevRow(ctx)();
         } else {
-          selectNextRow(ctx)();
+          yield* selectNextRow(ctx)();
         }
         getTablePanelView(ctx).scrollToCurrentCell();
         break;
     }
-  };
+  });
 }

@@ -105,8 +105,7 @@ export class TablePanelView implements ITablePanelView {
     return this.dataTable.getCellText(row, property);
   }
 
-  @action.bound
-  onCellClick(rowIndex: number, columnIndex: number): void {
+  *onCellClick(event: any, rowIndex: number, columnIndex: number) {
     // console.log("CellClicked:", rowIndex, columnIndex);
     const row = this.dataTable.getRowByExistingIdx(rowIndex);
     const property = this.tableProperties[columnIndex];
@@ -128,7 +127,8 @@ export class TablePanelView implements ITablePanelView {
       }
     } else {
       this.selectCell(this.dataTable.getRowId(row) as string, property.id);
-      onFieldChange(this)(
+      // TODO: Properly rewrite to yield*
+      yield onFieldChange(this)(
         undefined,
         row,
         property,
@@ -138,15 +138,13 @@ export class TablePanelView implements ITablePanelView {
     this.scrollToCurrentCell();
   }
 
-  @action.bound
-  onNoCellClick(): void {
+  *onNoCellClick() {
     if (this.isEditing) {
       this.setEditing(false);
     }
   }
 
-  @action.bound
-  onOutsideTableClick(): void {
+  *onOutsideTableClick() {
     if (this.isEditing) {
       this.setEditing(false);
     }
