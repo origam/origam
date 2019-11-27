@@ -23,6 +23,7 @@ import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { getSessionId } from "../../selectors/getSessionId";
 import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
+import { errDialogPromise } from "../ErrorDialog";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -133,6 +134,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* this.applyInitUIResult({ initUIResult });
     } catch (error) {
       console.error(error);
+      yield errDialogPromise(this)(error);
+      yield* closeForm(this)();
+      throw error;
       // TODO: Error handling !
     } finally {
       this.inFlow--;
@@ -147,6 +151,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } catch (error) {
       // TODO: Handle error
       console.error(error);
+      yield errDialogPromise(this)(error);
     } finally {
       this.inFlow--;
     }
@@ -187,6 +192,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
     } catch (error) {
       console.error(error);
+      yield errDialogPromise(this)(error);
       // TODO: Error handling
     } finally {
       this.inFlow--;
@@ -211,6 +217,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
     } catch (error) {
       console.error(error);
+      yield errDialogPromise(this)(error);
       // TODO: Error handling
     } finally {
       this.inFlow--;
@@ -233,6 +240,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* processCRUDResult(targetDataView, createObjectResult);
     } catch (error) {
       console.error(error);
+      yield errDialogPromise(this)(error);
       // TODO: Error handling
     } finally {
       this.inFlow--;
@@ -252,6 +260,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* processCRUDResult(this, deleteObjectResult);
     } catch (error) {
       console.error(error);
+      yield errDialogPromise(this)(error);
       // TODO: Error handling
     } finally {
       this.inFlow--;
@@ -267,6 +276,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* processCRUDResult(this, result);
     } catch (error) {
       console.error(error);
+      yield errDialogPromise(this)(error);
       // TODO: Error handling
     } finally {
       this.inFlow--;
@@ -287,6 +297,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
     } catch (error) {
       console.error(error);
+      yield errDialogPromise(this)(error);
       // TODO: Error handling
     } finally {
       this.inFlow--;
@@ -332,6 +343,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* processActionResult(action)(result);
     } catch (error) {
       console.error(error);
+      yield errDialogPromise(this)(error);
       // TODO: Error handling
     } finally {
       this.inFlow--;
