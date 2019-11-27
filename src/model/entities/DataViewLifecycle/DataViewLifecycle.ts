@@ -15,6 +15,7 @@ import { getSelectedRowId } from "../../selectors/TablePanelView/getSelectedRowI
 import { errDialogPromise } from "../ErrorDialog";
 import { IDataViewLifecycle } from "./types/IDataViewLifecycle";
 import _ from "lodash";
+import Axios from "axios";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
@@ -31,8 +32,6 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       this.disposers.push(this.startSelectedRowReaction());
     }
   }
-
-  
 
   onSelectedRowIdChangeImm = flow(
     function*(this: DataViewLifecycle) {
@@ -69,16 +68,26 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     yield* this.loadGetData();
   }
 
+  changeMasterRowCanceller: any;
+
   *changeMasterRow() {
     try {
       this.inFlow++;
       const api = getApi(this);
-      yield api.setMasterRecord({
-        SessionFormIdentifier: getSessionId(this),
-        Entity: getEntity(this),
-        RowId: getSelectedRowId(this)!
-      });
+      this.changeMasterRowCanceller && this.changeMasterRowCanceller();
+      this.changeMasterRowCanceller = api.createCanceller();
+      yield api.setMasterRecord(
+        {
+          SessionFormIdentifier: getSessionId(this),
+          Entity: getEntity(this),
+          RowId: getSelectedRowId(this)!
+        },
+        this.changeMasterRowCanceller
+      );
     } catch (error) {
+      if (Axios.isCancel(error)) {
+        return;
+      }
       console.error(error);
       yield errDialogPromise(this)(error);
     } finally {

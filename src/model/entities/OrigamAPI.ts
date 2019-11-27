@@ -5,6 +5,7 @@ import _ from "lodash";
 import { IApi } from "./types/IApi";
 
 export class OrigamAPI implements IApi {
+
   constructor() {
     this.urlPrefix = "/internalApi";
   }
@@ -24,6 +25,20 @@ export class OrigamAPI implements IApi {
     return {
       Authorization: `Bearer ${this.accessToken}`
     };
+  }
+
+  createCanceller(): () => void {
+    const tokenSource = axios.CancelToken.source();
+    const token = tokenSource.token;
+    const canceller = () => {
+      tokenSource.cancel();
+    }
+    canceller.token = token;
+    return canceller as any;
+  }
+
+  _getCancelToken(canceller: any) {
+    return canceller.any;
   }
 
   async login(credentials: { UserName: string; Password: string }) {
@@ -346,9 +361,10 @@ export class OrigamAPI implements IApi {
     SessionFormIdentifier: string;
     Entity: string;
     RowId: string;
-  }) {
+  }, canceller?: any) {
     return await axios.post(`${this.urlPrefix}/UIService/MasterRecord`, data, {
-      headers: this.httpAuthHeader
+      headers: this.httpAuthHeader,
+      cancelToken: canceller && canceller.token
     });
   }
 

@@ -9,6 +9,8 @@ export interface IApi {
 
   httpAuthHeader: { Authorization: string };
 
+  createCanceller(): () => void;
+
   login(credentials: { UserName: string; Password: string }): Promise<string>;
 
   logout(): Promise<any>;
@@ -138,11 +140,14 @@ export interface IApi {
   }): Promise<any>;
   destroyUI(data: { FormSessionId: string }): Promise<any>;
 
-  setMasterRecord(data: {
-    SessionFormIdentifier: string;
-    Entity: string;
-    RowId: string;
-  }): Promise<any>;
+  setMasterRecord(
+    data: {
+      SessionFormIdentifier: string;
+      Entity: string;
+      RowId: string;
+    },
+    canceller?: any
+  ): Promise<any>;
 
   updateObject(data: {
     SessionFormIdentifier: string;
