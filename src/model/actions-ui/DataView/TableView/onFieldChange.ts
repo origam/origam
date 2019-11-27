@@ -6,7 +6,11 @@ import { IProperty } from "model/entities/types/IProperty";
 import { flow } from "mobx";
 
 export function onFieldChange(ctx: any) {
-  return flow(function* onFieldChange(
+  return flow(onFieldChangeG(ctx));
+}
+
+export function onFieldChangeG(ctx: any) {
+  return function* onFieldChange(
     event: any,
     row: any[],
     property: IProperty,
@@ -22,5 +26,5 @@ export function onFieldChange(ctx: any) {
       getDataTable(ctx).flushFormToTable(row);
       yield* getFormScreenLifecycle(ctx).onFlushData();
     }
-  });
+  };
 }

@@ -1,25 +1,19 @@
 import { action, computed, observable } from "mobx";
+import { onFieldChangeG } from "model/actions-ui/DataView/TableView/onFieldChange";
+import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
+import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
+import { getSelectedColumnId } from "model/selectors/TablePanelView/getSelectedColumnId";
+import { getSelectedColumnIndex } from "model/selectors/TablePanelView/getSelectedColumnIndex";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
 import { getDataTable } from "../../selectors/DataView/getDataTable";
 import { getDataView } from "../../selectors/DataView/getDataView";
-import { getDataViewLifecycle } from "../../selectors/DataView/getDataViewLifecycle";
 import { getDataViewPropertyById } from "../../selectors/DataView/getDataViewPropertyById";
-import { getSelectedRow } from "../../selectors/DataView/getSelectedRow";
 import { IFilterConfiguration } from "../types/IFilterConfiguration";
+import { IOrderingConfiguration } from "../types/IOrderingConfiguration";
 import { IProperty } from "../types/IProperty";
 import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
-import {
-  ITableCanvas,
-  ITablePanelView,
-  ITablePanelViewData
-} from "./types/ITablePanelView";
-import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
-import { getSelectedColumnId } from "model/selectors/TablePanelView/getSelectedColumnId";
-import { IOrderingConfiguration } from "../types/IOrderingConfiguration";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { getSelectedColumnIndex } from "model/selectors/TablePanelView/getSelectedColumnIndex";
-import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
-import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
-import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
+import { ITableCanvas, ITablePanelView, ITablePanelViewData } from "./types/ITablePanelView";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -129,8 +123,7 @@ export class TablePanelView implements ITablePanelView {
       }
     } else {
       this.selectCell(this.dataTable.getRowId(row) as string, property.id);
-      // TODO: Properly rewrite to yield*
-      yield onFieldChange(this)(
+      yield* onFieldChangeG(this)(
         undefined,
         row,
         property,
