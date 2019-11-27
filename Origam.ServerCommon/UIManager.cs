@@ -210,7 +210,7 @@ namespace Origam.Server
             }
             if(request.RegisterSession)
             {
-                var principal = Thread.CurrentPrincipal;
+                var principal = SecurityManager.CurrentPrincipal;
                 Task.Run(() =>
                 {
                     Thread.CurrentPrincipal = principal;

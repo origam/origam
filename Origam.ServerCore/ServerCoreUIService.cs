@@ -639,7 +639,7 @@ namespace Origam.ServerCore
         }
         private void CreateUpdateOrigamOnlineUser()
         {
-            var principal = Thread.CurrentPrincipal;
+            var principal = SecurityManager.CurrentPrincipal;
             Task.Run(() =>
             {
                 Thread.CurrentPrincipal = principal;
