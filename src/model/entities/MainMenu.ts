@@ -9,6 +9,18 @@ export class MainMenuContent implements IMainMenuContent {
     Object.assign(this, data);
   }
 
+  getItemById(id: string) {
+    function recursive(node: any) {
+      if(node.attributes.id === id) {
+        return node;
+      }
+      for(let ch of node.children) {
+        recursive(ch);
+      }
+    }
+    return recursive(this.menuUI);
+  }
+
   menuUI: any;
   parent?: any;
 }

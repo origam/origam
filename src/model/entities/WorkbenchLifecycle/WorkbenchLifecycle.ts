@@ -110,7 +110,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     parameters: { [key: string]: any },
     formSessionId?: string,
     isSessionRebirth?: boolean,
-    registerSession?: true, //boolean
+    registerSession?: true //boolean
   ) {
     const openedScreens = getOpenedScreens(this);
     const openedDialogScreens = getOpenedDialogScreens(this);
@@ -153,16 +153,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const api = getApi(this);
     const portalInfo = yield api.initPortal();
 
+    /*
     for (let session of portalInfo.sessions) {
-      /*const resSession = yield api.initUI({
-        Type: session.type,
-        FormSessionId: session.formSessionId,
-        IsNewSession: false,
-        RegisterSession: true,
-        DataRequested: true,
-        ObjectId: session.objectId,
-        Parameters: undefined
-      });*/
       yield* this.openNewForm(
         session.objectId,
         session.type,
@@ -174,7 +166,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         true,
         true
       );
-    }
+    }*/
     console.log(portalInfo);
     const menuUI = findMenu(portalInfo.menu);
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
