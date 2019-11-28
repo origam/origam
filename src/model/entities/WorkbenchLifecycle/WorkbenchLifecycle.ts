@@ -15,7 +15,6 @@ import { IWorkbenchLifecycle } from "../types/IWorkbenchLifecycle";
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
 
-
   *onMainMenuItemClick(args: { event: any; item: any }): Generator {
     const {
       type,
@@ -66,7 +65,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const openedScreens = getOpenedScreens(this);
     openedScreens.activateItem(openedScreen.menuItemId, openedScreen.order);
   }
-
 
   *closeForm(openedScreen: IOpenedScreen): Generator {
     // TODO: Refactor to get rid of code duplication
@@ -138,6 +136,27 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   *initPortal() {
     const api = getApi(this);
     const portalInfo = yield api.initPortal();
+    /*
+    for (let session of portalInfo.sessions) {
+      const resSession = yield api.initUI({
+        Type: session.type,
+        FormSessionId: session.formSessionId,
+        IsNewSession: false,
+        RegisterSession: true,
+        DataRequested: true,
+        ObjectId: session.objectId,
+        Parameters: undefined
+      });
+      yield* this.openNewForm(
+        resSession.objectId,
+        resSession.type,
+        "", // TODO: Find in menu
+        false, // TODO: Find in menu
+        undefined, // TODO: Find in... menu?
+        {}
+      );
+      console.log(" *** Refreshed session: ", resSession);
+    }*/
     console.log(portalInfo);
     const menuUI = findMenu(portalInfo.menu);
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
@@ -150,4 +169,3 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
   parent?: any;
 }
-

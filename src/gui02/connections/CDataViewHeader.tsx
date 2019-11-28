@@ -27,6 +27,9 @@ import { IPanelViewType } from "model/entities/types/IPanelViewType";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { Dropdown } from "gui02/components/Dropdown/Dropdown";
 import { DropdownItem } from "gui02/components/Dropdown/DropdownItem";
+import { getIsAddButtonVisible } from "model/selectors/DataView/getIsAddButtonVisible";
+import { getIsDelButtonVisible } from "model/selectors/DataView/getIsDelButtonVisible";
+import { getIsCopyButtonVisible } from "model/selectors/DataView/getIsCopyButtonVisible";
 
 @observer
 export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
@@ -53,6 +56,10 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
     const onPrevRowClickEvt = onPrevRowClick(dataView);
     const onNextRowClickEvt = onNextRowClick(dataView);
 
+    const isAddButton = getIsAddButtonVisible(dataView);
+    const isDelButton = getIsDelButtonVisible(dataView);
+    const isCopyButton = getIsCopyButtonVisible(dataView);
+
     return (
       <DataViewHeader isVisible={this.props.isVisible}>
         {this.props.isVisible && (
@@ -62,24 +69,32 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
             </span>
 
             <DataViewHeaderGroup>
-              <DataViewHeaderAction
-                className="isGreenHover"
-                onClick={onCreateRowClickEvt}
-              >
-                <Icon src="./icons/add.svg" />
-              </DataViewHeaderAction>
-              <DataViewHeaderAction
-                className="isRedHover"
-                onClick={onDeleteRowClickEvt}
-              >
-                <Icon src="./icons/minus.svg" />
-              </DataViewHeaderAction>
-              <DataViewHeaderAction
-                className="isOrangeHover"
-                onClick={undefined}
-              >
-                <Icon src="./icons/duplicate.svg" />
-              </DataViewHeaderAction>
+              {isAddButton && (
+                <DataViewHeaderAction
+                  className="isGreenHover"
+                  onClick={onCreateRowClickEvt}
+                >
+                  <Icon src="./icons/add.svg" />
+                </DataViewHeaderAction>
+              )}
+              
+              {isDelButton && (
+                <DataViewHeaderAction
+                  className="isRedHover"
+                  onClick={onDeleteRowClickEvt}
+                >
+                  <Icon src="./icons/minus.svg" />
+                </DataViewHeaderAction>
+              )}
+
+              {isCopyButton && (
+                <DataViewHeaderAction
+                  className="isOrangeHover"
+                  onClick={undefined}
+                >
+                  <Icon src="./icons/duplicate.svg" />
+                </DataViewHeaderAction>
+              )}
             </DataViewHeaderGroup>
             <DataViewHeaderButtonGroup>
               {actions
