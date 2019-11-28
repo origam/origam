@@ -1,13 +1,13 @@
-import * as React from "react";
-import { observer } from "mobx-react";
 import { action } from "mobx";
-import S from "./TextEditor.module.scss";
-import CS from "./CommonStyle.module.css";
+import { observer } from "mobx-react";
+import * as React from "react";
 import { Tooltip } from "react-tippy";
+import S from "./TextEditor.module.scss";
 
 @observer
 export class TextEditor extends React.Component<{
   value: string | null;
+  isMultiline?: boolean;
   isReadOnly: boolean;
   isInvalid: boolean;
   invalidMessage?: string;
@@ -64,25 +64,46 @@ export class TextEditor extends React.Component<{
   render() {
     return (
       <div className={S.editorContainer}>
-        <input
-          style={{
-            color: this.props.foregroundColor,
-            backgroundColor: this.props.backgroundColor
-          }}
-          className={S.input}
-          type="text"
-          value={this.props.value || ""}
-          readOnly={this.props.isReadOnly}
-          ref={this.refInput}
-          onChange={(event: any) =>
-            this.props.onChange &&
-            this.props.onChange(event, event.target.value)
-          }
-          onKeyDown={this.props.onKeyDown}
-          onClick={this.props.onClick}
-          onBlur={this.props.onEditorBlur}
-          onFocus={this.handleFocus}
-        />
+        {!this.props.isMultiline ? (
+          <input
+            style={{
+              color: this.props.foregroundColor,
+              backgroundColor: this.props.backgroundColor
+            }}
+            className={S.input}
+            type="text"
+            value={this.props.value || ""}
+            readOnly={this.props.isReadOnly}
+            ref={this.refInput}
+            onChange={(event: any) =>
+              this.props.onChange &&
+              this.props.onChange(event, event.target.value)
+            }
+            onKeyDown={this.props.onKeyDown}
+            onClick={this.props.onClick}
+            onBlur={this.props.onEditorBlur}
+            onFocus={this.handleFocus}
+          />
+        ) : (
+          <textarea
+            style={{
+              color: this.props.foregroundColor,
+              backgroundColor: this.props.backgroundColor
+            }}
+            className={S.input}
+            value={this.props.value || ""}
+            readOnly={this.props.isReadOnly}
+            ref={this.refInput}
+            onChange={(event: any) =>
+              this.props.onChange &&
+              this.props.onChange(event, event.target.value)
+            }
+            onKeyDown={this.props.onKeyDown}
+            onClick={this.props.onClick}
+            onBlur={this.props.onEditorBlur}
+            onFocus={this.handleFocus}
+          />
+        )}
         {this.props.isInvalid && (
           <div className={S.notification}>
             <Tooltip html={this.props.invalidMessage} arrow={true}>

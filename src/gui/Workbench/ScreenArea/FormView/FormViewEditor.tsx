@@ -97,6 +97,7 @@ export class FormViewEditor extends React.Component<{
             value={this.props.value}
             isReadOnly={readOnly}
             isInvalid={isInvalid}
+            isMultiline={this.props.property!.multiline}
             invalidMessage={invalidMessage}
             isFocused={false}
             backgroundColor={backgroundColor}

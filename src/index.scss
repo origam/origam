@@ -15,10 +15,14 @@ html, body {
   /* filter: blur(1px); */
 }
 
-input {
+input, textarea {
   font-family: "IBM Plex Sans", sans-serif;
   font-weight: normal;
   font-size: 12px;
+}
+
+textarea {
+  resize: none;
 }
 
 html,

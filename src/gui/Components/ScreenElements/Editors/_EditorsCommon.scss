@@ -3,7 +3,7 @@
 @mixin input {
   width: 100%;
   height: 100%;
-  background: #e9e8f0;
+  background: #f9f9fc;
   border: 1px solid #b0afb7;
   box-sizing: border-box;
   color: #0d0d0d;
@@ -22,7 +22,7 @@
   }
 
   &:read-only {
-    background: #ffffff;
+    background: #e6e5eb;
     border-color: #b0afb7;
     color: #77767e;
     cursor: not-allowed;
@@ -52,17 +52,18 @@
 
 @mixin dropdownSymbol {
   position: absolute;
-  right: 1px;
+  right: 3px;
   top: 0;
   margin-top: 0px;
   padding: 1px;
   z-index: 200;
   background-color: transparent;
   cursor: pointer;
-  color: #b0afb7;
+  color: #818181;
   @include hoverItemAnimation;
 
   &:hover {
     color: black;
+    transform: scale(1.2, 1.2);
   }
 }
