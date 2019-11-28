@@ -63,7 +63,7 @@ namespace Origam.Workflow
                     _result = HttpTools.SendRequest(
 						(string)this.Parameters["Url"], 
 						this.Parameters["Method"] as string,
-						this.Parameters["Content"] as string,
+                        GetContent(this.Parameters["Content"]) as string,
 						this.Parameters["ContentType"] as string,
 						this.Parameters["Headers"] as Hashtable,
 						timeout);
@@ -72,7 +72,14 @@ namespace Origam.Workflow
 					throw new ArgumentOutOfRangeException("MethodName", this.MethodName, ResourceUtils.GetString("InvalidMethodName"));
 			}
 		}
-
-		#endregion
-	}
+        private string GetContent(object obj)
+        {
+            if (obj is XmlContainer xmlContainer)
+            {
+                return xmlContainer.Xml.OuterXml;
+            }
+            return XmlTools.ConvertToString(obj);
+        }
+        #endregion
+    }
 }

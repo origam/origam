@@ -213,7 +213,7 @@ namespace Origam.ServerCore.Controllers
 
         private void CallOrigamUserUpdate()
         {
-            var principal = Thread.CurrentPrincipal;
+            var principal = SecurityManager.CurrentPrincipal;
             Task.Run(() =>
             {
                 Thread.CurrentPrincipal = principal;

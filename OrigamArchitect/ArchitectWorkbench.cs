@@ -2240,7 +2240,7 @@ namespace OrigamArchitect
             // otherwise it would fail generating SQL statements
             if (isEmpty)
             {
-                string userName = System.Threading.Thread.CurrentPrincipal.Identity.Name;
+                string userName = SecurityManager.CurrentPrincipal.Identity.Name;
                 if (MessageBox.Show(string.Format(strings.AddUserToUserList_Question,
                     userName),
                     strings.DatabaseEmptyTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Question,
