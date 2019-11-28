@@ -106,8 +106,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  *start(): Generator {
-    yield* this.initUI();
+  *start(initUIResult: any): Generator {
+    // yield* this.initUI();
+    yield* this.applyInitUIResult({ initUIResult });
     if (!this.isReadData) {
       yield* this.loadData();
     }

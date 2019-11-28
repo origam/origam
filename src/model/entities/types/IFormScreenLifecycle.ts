@@ -47,7 +47,7 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
 
   onRequestScreenClose(): Generator;
 
-  start(): Generator;
+  start(initUIResult: any): Generator;
   parent?: any;
 }
 

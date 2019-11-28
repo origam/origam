@@ -147,8 +147,8 @@ export class FormScreenEnvelope implements IFormScreenEnvelope {
     this.formScreen = formScreen;
   }
 
-  *start(): Generator {
-    yield* this.formScreenLifecycle.start();
+  *start(initUIResult: any): Generator {
+    yield* this.formScreenLifecycle.start(initUIResult);
   }
 
   parent?: any;

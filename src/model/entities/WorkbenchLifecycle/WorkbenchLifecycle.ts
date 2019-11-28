@@ -107,7 +107,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     label: string,
     dontRequestData: boolean,
     dialogInfo: IDialogInfo | undefined,
-    parameters: { [key: string]: any }
+    parameters: { [key: string]: any },
+    formSessionId?: string,
+    isSessionRebirth?: boolean,
+    registerSession?: true, //boolean
   ) {
     const openedScreens = getOpenedScreens(this);
     const openedDialogScreens = getOpenedDialogScreens(this);
@@ -130,15 +133,28 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       openedScreens.pushItem(newScreen);
       openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
     }
-    yield* newFormScreen.start();
+    const api = getApi(this);
+
+    const initUIResult = yield api.initUI({
+      Type: type,
+      ObjectId: id,
+      FormSessionId: formSessionId,
+      IsNewSession: !isSessionRebirth,
+      RegisterSession: true, //!!registerSession,
+      DataRequested: !dontRequestData,
+      Parameters: parameters
+    });
+    console.log(initUIResult);
+
+    yield* newFormScreen.start(initUIResult);
   }
 
   *initPortal() {
     const api = getApi(this);
     const portalInfo = yield api.initPortal();
-    /*
+
     for (let session of portalInfo.sessions) {
-      const resSession = yield api.initUI({
+      /*const resSession = yield api.initUI({
         Type: session.type,
         FormSessionId: session.formSessionId,
         IsNewSession: false,
@@ -146,22 +162,26 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         DataRequested: true,
         ObjectId: session.objectId,
         Parameters: undefined
-      });
+      });*/
       yield* this.openNewForm(
-        resSession.objectId,
-        resSession.type,
+        session.objectId,
+        session.type,
         "", // TODO: Find in menu
         false, // TODO: Find in menu
         undefined, // TODO: Find in... menu?
-        {}
+        {},
+        session.formSessionId,
+        true,
+        true
       );
-      console.log(" *** Refreshed session: ", resSession);
-    }*/
+    }
     console.log(portalInfo);
     const menuUI = findMenu(portalInfo.menu);
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
     getClientFulltextSearch(this).indexMainMenu(menuUI);
   }
+
+  *initUI() {}
 
   *run(): Generator {
     yield* this.initPortal();
