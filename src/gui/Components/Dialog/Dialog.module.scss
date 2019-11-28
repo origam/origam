@@ -31,10 +31,10 @@
 .title {
   display: flex;
   flex-direction: row;
+  position: relative;
   background-color: #e7e7e7;
   height: 40px;
   padding: 0px;
-  padding-left: 10px;
   font-weight: 700;
   font-size: 1.5em;
   color: black;
@@ -42,11 +42,30 @@
   cursor: default;
 }
 
+
+
+.progressIndicator {
+  @include progressIndicator;
+  background-color: white;
+  width: 100%;
+}
+
 .label {
+  height: 100%;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.labelText {
+  padding-left: 10px;
+  height: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
 }
+
 
 .buttons button {
   background: transparent;

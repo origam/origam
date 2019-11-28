@@ -11,6 +11,8 @@ import { getWorkbenchLifecycle } from "../../../model/selectors/getWorkbenchLife
 import S from "./ScreenArea.module.css";
 import { DialogScreenBuilder, ScreenBuilder } from "./ScreenBuilder";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
+import { getIsDataViewOrFormScreenWorking } from "model/selectors/DataView/getIsDataViewOrFormScreenWorking";
+import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
 
 @observer
 class MainViewHandle extends React.Component<{
@@ -54,6 +56,12 @@ export const DialogScreen: React.FC<{
               !props.openedScreen.content.isLoading
                 ? props.openedScreen.content.formScreen!.title
                 : props.openedScreen.title
+            }
+            titleIsWorking={
+              props.openedScreen.content.isLoading ||
+              getIsScreenOrAnyDataViewWorking(
+                props.openedScreen.content.formScreen!
+              )
             }
             titleButtons={
               <CloseButton
@@ -103,7 +111,7 @@ export const DialogScreen: React.FC<{
                   {!props.openedScreen.content.isLoading ? (
                     <DialogScreenBuilder openedScreen={props.openedScreen} />
                   ) : (
-                    <DialogLoadingContent />
+                    null /*<DialogLoadingContent />*/
                   )}
                 </div>
               )}

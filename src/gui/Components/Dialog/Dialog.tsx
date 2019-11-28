@@ -29,6 +29,7 @@ export class ModalWindowNoOverlay extends React.Component {
 export class ModalWindow extends React.Component<{
   title: React.ReactNode;
   titleButtons: React.ReactNode;
+  titleIsWorking?: boolean;
   buttonsLeft: React.ReactNode;
   buttonsRight: React.ReactNode;
   buttonsCenter: React.ReactNode;
@@ -101,8 +102,15 @@ export class ModalWindow extends React.Component<{
                   className={S.title}
                   onMouseDown={this.handleTitleMouseDown}
                 >
-                  <div className={S.label}>{this.props.title}</div>
-                  <div className={S.pusher} />
+                  <div className={S.label}>
+                    <div className={S.labelText}>{this.props.title}</div>
+                    {this.props.titleIsWorking && (
+                      <div className={S.progressIndicator}>
+                        <div className={S.indefinite} />
+                      </div>
+                    )}
+                  </div>
+
                   <div className={S.buttons}>{this.props.titleButtons}</div>
                 </div>
                 <div className={S.body}>{this.props.children}</div>
