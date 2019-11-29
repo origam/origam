@@ -421,7 +421,7 @@ namespace Origam
 		public static string ReadResponseTextRespectionContentEncoding(HttpWebResponse httpResponse)
 		{
 			//HttpWebResponse httpResponse = response as HttpWebResponse;
-			string encodingString = httpResponse.ContentEncoding.ToLower();
+			string encodingString = httpResponse.ContentEncoding==null?"": httpResponse.ContentEncoding.ToLower();
 			using (Stream responseStream =
 				encodingString.Contains("gzip") ?
 					new GZipStream(httpResponse.GetResponseStream(), CompressionMode.Decompress)
