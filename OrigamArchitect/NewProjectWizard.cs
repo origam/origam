@@ -222,7 +222,7 @@ namespace OrigamArchitect
             _project.DatabaseIntegratedAuthentication = chkIntegratedAuthentication.Checked;
             _project.WebRootName = cboWebRoot.Text;
             _project.Url = txtName.Text;
-            _project.ArchitectUserName = System.Threading.Thread.CurrentPrincipal.Identity.Name;
+            _project.ArchitectUserName = SecurityManager.CurrentPrincipal.Identity.Name;
 
             _project.DatabaseType = DatabaseType;
             _project.Port = Port;
