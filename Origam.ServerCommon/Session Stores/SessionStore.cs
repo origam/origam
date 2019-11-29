@@ -61,7 +61,6 @@ namespace Origam.Server
         private RuleEngine _ruleEngine;
         private DatasetRuleHandler _ruleHandler;
         private DataSet _data;
-        private DataSet _Newdata;
         private DataSet _dataList;
         private string _dataListEntity;
         private Guid _dataListDataStructureEntityId;
@@ -489,10 +488,10 @@ namespace Origam.Server
                 // set the new data
                 if (dataSource is DataSet)
                 {
-                    _Newdata = dataSource as DataSet;
+                    _data = dataSource as DataSet;
 
                     bool selfJoinExists = false;
-                    foreach (DataRelation r in _Newdata.Relations)
+                    foreach (DataRelation r in _data.Relations)
                     {
                         if (r.ParentTable.Equals(r.ChildTable))
                         {
@@ -504,18 +503,18 @@ namespace Origam.Server
                     // no XML for self joins (incompatible with XmlDataDocument)
                     if (!selfJoinExists)
                     {
-                        XmlData = DataDocumentFactory.New(_Newdata);
+                        XmlData = DataDocumentFactory.New(_data);
                     }
                 }
                 else if (dataSource is IDataDocument)
                 {
                     XmlData = dataSource as IDataDocument;
-                    _Newdata = XmlData.DataSet;
+                    _data = XmlData.DataSet;
                 }
                 else if (dataSource == null)
                 {
                     XmlData = null;
-                    _Newdata = null;
+                    _data = null;
                 }
                 else
                 {
@@ -524,25 +523,19 @@ namespace Origam.Server
             }
             finally
             {
-                if (_data == null)
-                {
-                    _data = new DataSet();
-                }
-                _data.Reset();
-                _data.Merge(_Newdata);
                 // wire the new data's events
                 RegisterEvents();
             }
 
             if (this.Data != null)
             {
-                this.Data.AcceptChanges();
                 RemoveNullConstraints(this.Data);
                 DatasetGenerator.ApplyDynamicDefaults(this.Data, this.Request.Parameters);
 
                 InitEntityDependencies();
             }
         }
+
         private void InitEntityDependencies()
         {
             _entityHasRuleDependencies.Clear();
