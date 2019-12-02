@@ -516,6 +516,7 @@ namespace Origam.Server
                 {
                     XmlData = null;
                     _Newdata = null;
+                    _data = null;
                 }
                 else
                 {
@@ -529,7 +530,11 @@ namespace Origam.Server
                     _data = new DataSet();
                 }
                 _data.Reset();
-                _data.Merge(_Newdata);
+
+                if(_Newdata!=null)
+                {
+                    _data.Merge(_Newdata);
+                }
                 // wire the new data's events
                 RegisterEvents();
             }
