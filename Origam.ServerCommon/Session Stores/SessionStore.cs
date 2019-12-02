@@ -525,14 +525,13 @@ namespace Origam.Server
             }
             finally
             {
-                if (_data == null)
+                if (_data == null && _Newdata != null)
                 {
                     _data = new DataSet();
                 }
-                _data.Reset();
-
                 if(_Newdata!=null)
                 {
+                    _data.Reset();
                     _data.Merge(_Newdata);
                 }
                 // wire the new data's events
