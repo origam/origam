@@ -11,6 +11,7 @@ import { DialogInfo } from "../OpenedScreen";
 import { IMainMenuItemType } from "../types/IMainMenu";
 import { IDialogInfo, IOpenedScreen } from "../types/IOpenedScreen";
 import { IWorkbenchLifecycle } from "../types/IWorkbenchLifecycle";
+import { handleError } from "model/actions/handleError";
 
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
@@ -126,29 +127,34 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       dialogInfo,
       parameters
     );
-    if (newScreen.dialogInfo) {
-      openedDialogScreens.pushItem(newScreen);
-      openedDialogScreens.activateItem(newScreen.menuItemId, newScreen.order);
-    } else {
-      openedScreens.pushItem(newScreen);
-      openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
+    try {
+      if (newScreen.dialogInfo) {
+        openedDialogScreens.pushItem(newScreen);
+        openedDialogScreens.activateItem(newScreen.menuItemId, newScreen.order);
+      } else {
+        openedScreens.pushItem(newScreen);
+        openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
+      }
+      const api = getApi(this);
+
+      // TODO: Error handling here!
+      const initUIResult = yield api.initUI({
+        Type: type,
+        ObjectId: id,
+        FormSessionId: formSessionId,
+        IsNewSession: !isSessionRebirth,
+        RegisterSession: true, //!!registerSession,
+        DataRequested: !dontRequestData,
+        Parameters: parameters
+      });
+      console.log(initUIResult);
+
+      yield* newFormScreen.start(initUIResult);
+    } catch (e) {
+      yield* handleError(this)(e);
+      yield* this.closeForm(newScreen);
+      throw e;
     }
-    const api = getApi(this);
-
-
-    // TODO: Error handling here!
-    const initUIResult = yield api.initUI({
-      Type: type,
-      ObjectId: id,
-      FormSessionId: formSessionId,
-      IsNewSession: !isSessionRebirth,
-      RegisterSession: true, //!!registerSession,
-      DataRequested: !dontRequestData,
-      Parameters: parameters
-    });
-    console.log(initUIResult);
-
-    yield* newFormScreen.start(initUIResult);
   }
 
   *initPortal() {
@@ -174,7 +180,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
     getClientFulltextSearch(this).indexMainMenu(menuUI);
   }
-
 
   *run(): Generator {
     yield* this.initPortal();

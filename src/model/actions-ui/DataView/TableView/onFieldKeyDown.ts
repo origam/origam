@@ -4,11 +4,12 @@ import { selectPrevRow } from "../../../actions/DataView/selectPrevRow";
 import { selectNextRow } from "../../../actions/DataView/selectNextRow";
 import { flushCurrentRowData } from "../../../actions/DataView/TableView/flushCurrentRowData";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
-import { runInAction } from "mobx";
+import { runInAction, flow } from "mobx";
+import { handleError } from "model/actions/handleError";
 
 export function onFieldKeyDown(ctx: any) {
-  return function onFieldKeyDown(event: any) {
-    runInAction(() => {
+  return flow(function* onFieldKeyDown(event: any) {
+    try {
       switch (event.key) {
         case "Tab": {
           if (event.shiftKey) {
@@ -19,7 +20,7 @@ export function onFieldKeyDown(ctx: any) {
             event.preventDefault();
           }
           getTablePanelView(ctx).scrollToCurrentCell();
-          flushCurrentRowData(ctx)();
+          yield* flushCurrentRowData(ctx)();
           break;
         }
         case "Enter": {
@@ -31,7 +32,7 @@ export function onFieldKeyDown(ctx: any) {
             event.preventDefault();
           }
           getTablePanelView(ctx).scrollToCurrentCell();
-          flushCurrentRowData(ctx)();
+          yield* flushCurrentRowData(ctx)();
           break;
         }
         case "Escape": {
@@ -40,6 +41,9 @@ export function onFieldKeyDown(ctx: any) {
           break;
         }
       }
-    });
-  };
+    } catch (e) {
+      yield* handleError(ctx)(e);
+      throw e;
+    }
+  });
 }

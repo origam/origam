@@ -1,5 +1,6 @@
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { flow } from "mobx";
+import { handleError } from "model/actions/handleError";
 
 export function onTableCellClick(ctx: any) {
   return flow(function* onTableCellClick(
@@ -7,6 +8,11 @@ export function onTableCellClick(ctx: any) {
     rowIndex: number,
     columnIndex: number
   ) {
-    yield* getTablePanelView(ctx).onCellClick(event, rowIndex, columnIndex);
+    try {
+      yield* getTablePanelView(ctx).onCellClick(event, rowIndex, columnIndex);
+    } catch (e) {
+      yield* handleError(ctx)(e);
+      throw e;
+    }
   });
 }

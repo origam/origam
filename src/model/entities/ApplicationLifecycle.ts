@@ -51,6 +51,7 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
       yield* this.anounceAuthToken(token);
     } catch (error) {
       console.error(error);
+      // TODO: Distinguish between connection error and bad credentials etxc.
       this.setLoginPageMessage("Login failed.");
     }
   }

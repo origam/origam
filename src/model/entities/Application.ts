@@ -7,9 +7,9 @@ import { IApi } from "./types/IApi";
 import { action } from "mobx";
 import { IOpenedScreens } from "./types/IOpenedScreens";
 import { IDialogStack } from "./types/IDialogStack";
+import { handleError } from "model/actions/handleError";
 
 export class Application implements IApplication {
-  
   $type_IApplication: 1 = 1;
 
   constructor(data: IApplicationData) {
@@ -34,7 +34,12 @@ export class Application implements IApplication {
   }
 
   *run() {
-    yield* this.applicationLifecycle.run();
+    try {
+      yield* this.applicationLifecycle.run();
+    } catch (e) {
+      yield* handleError(this)(e);
+      throw e;
+    }
   }
 
   parent?: any;
