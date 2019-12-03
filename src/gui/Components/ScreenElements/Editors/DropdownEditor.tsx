@@ -3,6 +3,7 @@ import { observer, Observer, inject } from "mobx-react";
 import { action, observable, computed, runInAction } from "mobx";
 import S from "./DropdownEditor.module.scss";
 import { Tooltip } from "react-tippy";
+import cx from "classnames";
 
 import _ from "lodash";
 import { MultiGrid, AutoSizer } from "react-virtualized";
@@ -82,9 +83,12 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   @observable isLoading = false;
 
   componentDidMount() {
-    this.props.refocuser &&
-      this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
-    this.makeFocusedIfNeeded();
+    runInAction(() => {
+      this.props.refocuser &&
+        this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
+      this.makeFocusedIfNeeded();
+      this.selectedItemId = this.props.value || undefined;
+    });
   }
 
   componentWillUnmount() {
@@ -107,6 +111,9 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
       if (prevProps.value !== null && this.props.value === null) {
         this.dirtyTextualValue = "";
         this.lookupItems = [];
+      }
+      if (prevProps.value !== this.props.value) {
+        this.selectedItemId = this.props.value || undefined;
       }
     });
   }
@@ -238,17 +245,21 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
         {() => (
           <div
             style={args.style}
-            className={
-              (args.rowIndex === 0
+            className={cx(
+              args.rowIndex === 0
                 ? S.lookupListHeaderCell
-                : S.lookupListItemCell) +
-              " " +
-              (args.rowIndex % 2 === 0 ? S.evenItem : S.oddItem) +
-              (args.rowIndex > 0 &&
-              this.lookupItems[args.rowIndex - 1][0] === this.selectedItemId
-                ? " selected"
-                : "")
-            }
+                : S.lookupListItemCell,
+              args.rowIndex % 2 === 0 ? S.evenItem : S.oddItem,
+              {
+                selected:
+                  args.rowIndex > 0 &&
+                  this.lookupItems[args.rowIndex - 1][0] ===
+                    this.selectedItemId,
+                choosen:
+                  args.rowIndex > 0 &&
+                  this.lookupItems[args.rowIndex - 1][0] === this.props.value
+              }
+            )}
             onClick={handleClick}
           >
             {args.rowIndex === 0 ? (

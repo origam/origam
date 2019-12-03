@@ -1,4 +1,3 @@
-
 @import "./EditorsCommon.scss";
 @import "src/styles/common_styles.scss";
 
@@ -16,12 +15,14 @@
 }
 
 .lookupListHeaderCell {
-  background-color: #e5e5e5 !important;
+  background-color: #f7f6fa !important;
   border-left: 1px solid #bbbbbb;
   display: flex;
   align-items: center;
   justify-content: center;
   white-space: nowrap;
+  font-weight: 700;
+
 }
 
 .lookupListItemCell {
@@ -31,10 +32,15 @@
   overflow: hidden;
   white-space: nowrap;
   cursor: pointer;
-}
-
-.lookupListItemCell:global(.selected) {
-  background-color: #cccccc;
+  &:global(.selected) {
+    background-color: #cccccc;
+  }
+  &:global(.choosen) {
+    font-weight: 700;
+  }
+  &:not(.selected):hover {
+    background-color: #dddddd;
+  }
 }
 
 .oddItem {
@@ -52,7 +58,6 @@
   width: 100%;
   height: 100%;
 }
-
 
 .dropdownSymbol {
   @include dropdownSymbol;
