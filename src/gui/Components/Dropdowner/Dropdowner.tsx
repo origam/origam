@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import Measure from "react-measure";
 import { ContentRect } from "react-measure";
-import S from "./Dropdowner.module.css";
+import S from "./Dropdowner.module.scss";
 import { observable, action } from "mobx";
 import { observer, Observer } from "mobx-react";
 
@@ -104,8 +104,9 @@ export class Dropdowner extends React.Component<{
 
   @action.bound
   setDropped(state: boolean) {
-    this.isDropped = state;
+    
     if (state) {
+      this.isDropped = state;
       this.reMeasure();
       this.props.onDroppedDown && this.props.onDroppedDown();
     } else {
