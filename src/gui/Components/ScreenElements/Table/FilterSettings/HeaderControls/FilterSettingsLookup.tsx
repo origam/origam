@@ -6,19 +6,27 @@ import {
 
 import CS from "./FilterSettingsCommon.module.css";
 import STagInput from "gui/Components/TagInputComp/TagInput.module.css";
-import { observable, computed, action, flow } from "mobx";
+import { observable, computed, action, flow, runInAction } from "mobx";
 import { observer, PropTypes } from "mobx-react";
 
 import { useObservable } from "mobx-react-lite";
 import { Dropdowner } from "../../../../Dropdowner/Dropdowner";
-import {
+/*import {
   TagInput,
   TagInputAddBtn,
   TagInputItem,
   TagInputRemoveBtn,
   TagInputTextbox
-} from "gui/Components/TagInputComp/TagInput";
+} from "gui/Components/TagInputComp/TagInput";*/
 import { Grid, GridCellProps } from "react-virtualized";
+import {
+  TagInput,
+  TagInputItem,
+  TagInputDeleteBtn,
+  TagInputPlus,
+  TagInputEdit,
+  TagInputEditFake
+} from "gui02/components/TagInput/TagInput";
 
 export interface IStringFilterOp {}
 
@@ -117,6 +125,7 @@ export class OptionGrid extends React.Component<{
   };
 }
 
+/*
 @observer
 class TagEditor extends React.Component<{
   items: ITagEditorItem[];
@@ -189,25 +198,204 @@ const StatefulTagEditor: React.FC<{}> = observer(props => {
       }
     />
   );
-});
+});*/
 
-const OpEditors: React.FC<{
+@observer
+export class TagInputStateful extends React.Component<{
+  selectedItems: Array<{ value: any; content: any }>;
+  onChange?(selectedItems: Array<{ value: any; content: any }>): void;
+}> {
+  @observable cursorAfterIndex = this.props.selectedItems.length - 1;
+
+  componentDidUpdate() {
+    runInAction(() => {
+      this.cursorAfterIndex = Math.min(
+        this.cursorAfterIndex,
+        this.props.selectedItems.length - 1
+      );
+      if (this.cursorAfterIndex < this.props.selectedItems.length - 1) {
+        setTimeout(() => this.elmFakeInput && this.elmFakeInput.focus());
+      } else {
+        setTimeout(() => this.elmInput && this.elmInput.focus());
+      }
+    });
+  }
+
+  @action.bound handleFakeEditKeyDown(event: any) {
+    event.stopPropagation();
+    switch (event.key) {
+      case "ArrowLeft":
+        if (this.cursorAfterIndex > -1) {
+          this.cursorAfterIndex--;
+          setTimeout(() => this.elmFakeInput && this.elmFakeInput.focus());
+        }
+
+        break;
+      case "ArrowRight":
+        if (this.cursorAfterIndex < this.props.selectedItems.length - 1) {
+          this.cursorAfterIndex++;
+        }
+        if (this.cursorAfterIndex < this.props.selectedItems.length - 1) {
+          setTimeout(() => this.elmFakeInput && this.elmFakeInput.focus());
+        } else {
+          setTimeout(() => this.elmInput && this.elmInput.focus());
+        }
+        break;
+      case "Delete":
+        if (this.cursorAfterIndex < this.props.selectedItems.length - 1) {
+          if (this.props.onChange) {
+            const newItems = [...this.props.selectedItems];
+            newItems.splice(this.cursorAfterIndex + 1, 1);
+            this.props.onChange(newItems);
+          }
+        }
+        break;
+      case "Backspace":
+        if (this.cursorAfterIndex > -1) {
+          if (this.props.onChange) {
+            const newItems = [...this.props.selectedItems];
+            newItems.splice(this.cursorAfterIndex, 1);
+            this.cursorAfterIndex--;
+            this.props.onChange(newItems);
+          }
+        }
+        break;
+    }
+  }
+
+  @action.bound handleEditKeyDown(event: any) {
+    switch (event.key) {
+      case "ArrowLeft":
+        if (this.elmInput) {
+          if (
+            this.elmInput.selectionStart === 0 &&
+            this.elmInput.selectionEnd === 0
+          ) {
+            this.cursorAfterIndex--;
+            setTimeout(() => this.elmFakeInput && this.elmFakeInput.focus());
+          }
+        }
+        break;
+      case "Backspace":
+        if (
+          this.cursorAfterIndex > -1 &&
+          this.elmInput &&
+          this.elmInput.selectionStart === 0 &&
+          this.elmInput.selectionEnd === 0
+        ) {
+          if (this.props.onChange) {
+            const newItems = [...this.props.selectedItems];
+            newItems.splice(this.cursorAfterIndex, 1);
+            this.cursorAfterIndex--;
+            this.props.onChange(newItems);
+          }
+        }
+        break;
+    }
+  }
+
+  @action.bound handleEditFocus(event: any) {
+    this.cursorAfterIndex = this.props.selectedItems.length - 1;
+    setTimeout(() => this.elmInput && this.elmInput.focus());
+  }
+
+  elmInput: HTMLInputElement | null = null;
+  refInput = (elm: any) => (this.elmInput = elm);
+
+  elmFakeInput: HTMLInputElement | null = null;
+  refFakeInput = (elm: any) => (this.elmFakeInput = elm);
+
+  render() {
+    return (
+      <TagInput>
+        {this.cursorAfterIndex === -1 && (
+          <TagInputEditFake
+            domRef={this.refFakeInput}
+            onKeyDown={this.handleFakeEditKeyDown}
+          />
+        )}
+        {this.props.selectedItems.map((item, idx) => {
+          return (
+            <React.Fragment key={item.value}>
+              <TagInputItem key={item.value}>
+                {item.content}
+                <TagInputDeleteBtn />
+              </TagInputItem>
+              {this.cursorAfterIndex === idx &&
+                idx < this.props.selectedItems.length - 1 && (
+                  <TagInputEditFake
+                    domRef={this.refFakeInput}
+                    onKeyDown={this.handleFakeEditKeyDown}
+                  />
+                )}
+            </React.Fragment>
+          );
+        })}
+        <TagInputPlus />
+        <TagInputEdit
+          domRef={this.refInput}
+          onKeyDown={this.handleEditKeyDown}
+          onFocus={this.handleEditFocus}
+        />
+
+        {/*
+        <TagInputItem>
+          Item1
+          <TagInputDeleteBtn />
+        </TagInputItem>
+
+        <TagInputItem>
+          Item2
+          <TagInputDeleteBtn />
+        </TagInputItem>
+        <TagInputItem>
+          Item3
+          <TagInputDeleteBtn />
+        </TagInputItem>
+        <TagInputPlus />
+<TagInputEdit />*/}
+      </TagInput>
+    );
+  }
+}
+
+@observer
+class OpEditors extends React.Component<{
   setting: ISetting;
   onChange: (newSetting: ISetting) => void;
-}> = props => {
-  const { setting } = props;
-  switch (setting.type) {
-    case "eq":
-    case "neq":
-    case "contains":
-    case "ncontains":
-      return <StatefulTagEditor />;
-    case "null":
-    case "nnull":
-    default:
-      return null;
+}> {
+  @observable selectedItems = [
+    { value: 1, content: "Item1" },
+    { value: 2, content: "Item2" },
+    { value: 3, content: "Item3" }
+  ];
+
+  @action.bound handleSelectedItemsChange(
+    items: Array<{ value: any; content: any }>
+  ) {
+    this.selectedItems = items;
   }
-};
+
+  render() {
+    const { setting } = this.props;
+    switch (setting.type) {
+      case "eq":
+      case "neq":
+      case "contains":
+      case "ncontains":
+        return (
+          <TagInputStateful
+            selectedItems={this.selectedItems}
+            onChange={this.handleSelectedItemsChange}
+          />
+        );
+      case "null":
+      case "nnull":
+      default:
+        return null;
+    }
+  }
+}
 
 @observer
 export class FilterSettingsLookup extends React.Component {

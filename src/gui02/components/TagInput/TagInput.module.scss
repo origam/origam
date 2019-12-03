@@ -1,0 +1,65 @@
+@import "src/styles/common_styles.scss";
+
+.root {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow-x: hidden;
+}
+
+.item {
+  background-color: #4c84ff;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 2px;
+  margin-bottom: 1px;
+  padding-left: 1em;
+  padding-right: 1.8em;
+  position: relative;
+  font-weight: normal;
+  cursor: default;
+
+  .closeBtn {
+    cursor: pointer;
+    font-weight: normal;
+    position: absolute;
+    top: 0px;
+    right: 0.5em;
+    height: 100%;
+    width: 10px;
+    padding: 2px;
+    border: none;
+    background-color: #4c84ff;
+    color: white;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @include hoverItemAnimation;
+    &:hover {
+      color: #fe8a54;
+    }
+  }
+}
+
+.plus {
+  color: #3e3d45;
+  @include hoverItemAnimation;
+  &:hover {
+    color: #69d07f
+  }
+}
+
+.input {
+  width: 100%;
+}
+
+.fakeInput {
+  border: none;
+  width: 3px;
+  padding: 1px;
+  background: transparent;
+}

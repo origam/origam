@@ -22,28 +22,28 @@ export const FilterSettings: React.FC = observer(props => {
     case "Text":
       return (
         <FilterSettingsString
-          onTriggerApplySetting={handleApplyFilterSetting}
+          //onTriggerApplySetting={handleApplyFilterSetting}
           setting={setting as any}
         />
       );
     case "CheckBox":
       return (
         <FilterSettingsBoolean
-          onTriggerApplySetting={handleApplyFilterSetting}
+          //onTriggerApplySetting={handleApplyFilterSetting}
           setting={setting as any}
         />
       );
     case "Date":
       return (
         <FilterSettingsDate
-          onTriggerApplySetting={handleApplyFilterSetting}
+          //onTriggerApplySetting={handleApplyFilterSetting}
           setting={setting as any}
         />
       );
     case "Number":
       return (
         <FilterSettingsNumber
-          onTriggerApplySetting={handleApplyFilterSetting}
+          //onTriggerApplySetting={handleApplyFilterSetting}
           setting={setting as any}
         />
       );
