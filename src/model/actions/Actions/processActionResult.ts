@@ -37,7 +37,7 @@ export function processActionResult(ctx: any) {
           break;
         }
         case IActionResultType.DestroyForm: {
-          closeForm(ctx)();
+          yield* closeForm(ctx)();
           break;
         }
       }
