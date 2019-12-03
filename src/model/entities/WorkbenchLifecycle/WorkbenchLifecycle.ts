@@ -135,6 +135,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
     const api = getApi(this);
 
+
+    // TODO: Error handling here!
     const initUIResult = yield api.initUI({
       Type: type,
       ObjectId: id,
@@ -173,7 +175,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     getClientFulltextSearch(this).indexMainMenu(menuUI);
   }
 
-  *initUI() {}
 
   *run(): Generator {
     yield* this.initPortal();
