@@ -15,8 +15,10 @@ export const TagInputPlus: React.FC = props => (
   </div>
 );
 
-export const TagInputDeleteBtn: React.FC = props => (
-  <div className={S.closeBtn}>
+export const TagInputDeleteBtn: React.FC<{
+  onClick?(event: any): void;
+}> = props => (
+  <div className={S.closeBtn} onClick={props.onClick}>
     <i className="fas fa-times" />
   </div>
 );

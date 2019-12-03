@@ -213,6 +213,8 @@ export class TagInputStateful extends React.Component<{
         this.cursorAfterIndex,
         this.props.selectedItems.length - 1
       );
+      // TODO: detect that the component updated due to its own event 
+      // (otherwise there might be mess caused by a focus avalanche)
       if (this.cursorAfterIndex < this.props.selectedItems.length - 1) {
         setTimeout(() => this.elmFakeInput && this.elmFakeInput.focus());
       } else {
@@ -294,6 +296,15 @@ export class TagInputStateful extends React.Component<{
     }
   }
 
+  @action.bound handleDeleteBtnClick(event: any, value: any) {
+    const idx = this.props.selectedItems.findIndex(
+      item => item.value === value
+    );
+    const newItems = [...this.props.selectedItems];
+    newItems.splice(idx, 1);
+    this.props.onChange && this.props.onChange(newItems);
+  }
+
   @action.bound handleEditFocus(event: any) {
     this.cursorAfterIndex = this.props.selectedItems.length - 1;
     setTimeout(() => this.elmInput && this.elmInput.focus());
@@ -319,7 +330,11 @@ export class TagInputStateful extends React.Component<{
             <React.Fragment key={item.value}>
               <TagInputItem key={item.value}>
                 {item.content}
-                <TagInputDeleteBtn />
+                <TagInputDeleteBtn
+                  onClick={event =>
+                    this.handleDeleteBtnClick(event, item.value)
+                  }
+                />
               </TagInputItem>
               {this.cursorAfterIndex === idx &&
                 idx < this.props.selectedItems.length - 1 && (
