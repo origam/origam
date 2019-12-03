@@ -16,6 +16,7 @@ import { errDialogPromise } from "../ErrorDialog";
 import { IDataViewLifecycle } from "./types/IDataViewLifecycle";
 import _ from "lodash";
 import Axios from "axios";
+import { handleError } from "model/actions/handleError";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
@@ -50,6 +51,10 @@ export class DataViewLifecycle implements IDataViewLifecycle {
             yield* this.navigateChildren();
           }
         }
+      } catch (e) {
+        // TODO: Move this method to action handler file?
+        yield* handleError(this)(e);
+        throw e;
       } finally {
         this.inFlow--;
       }
@@ -88,8 +93,9 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       if (Axios.isCancel(error)) {
         return;
       }
-      console.error(error);
-      yield errDialogPromise(this)(error);
+      /*console.error(error);
+      yield errDialogPromise(this)(error);*/
+      throw error;
     } finally {
       this.inFlow--;
     }
@@ -110,9 +116,6 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       dataView.dataTable.clear();
       dataView.dataTable.setRecords(data);
       dataView.selectFirstRow();
-    } catch (error) {
-      console.error(error);
-      yield errDialogPromise(this)(error);
     } finally {
       this.inFlow--;
     }

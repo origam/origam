@@ -2,7 +2,10 @@ import { action, computed, observable } from "mobx";
 import { createWorkbench } from "../factories/createWorkbench";
 import { getApi } from "../selectors/getApi";
 import { getApplication } from "../selectors/getApplication";
-import { IApplicationLifecycle, IApplicationPage } from "./types/IApplicationLifecycle";
+import {
+  IApplicationLifecycle,
+  IApplicationPage
+} from "./types/IApplicationLifecycle";
 
 export class ApplicationLifecycle implements IApplicationLifecycle {
   $type_IApplicationLifecycle: 1 = 1;
@@ -10,7 +13,6 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
   constructor() {}
 
   @observable loginPageMessage?: string | undefined;
-
 
   @observable displayedPage = IApplicationPage.Login;
 
@@ -51,8 +53,9 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
       yield* this.anounceAuthToken(token);
     } catch (error) {
       console.error(error);
-      // TODO: Distinguish between connection error and bad credentials etxc.
+      // TODO: Distinguish between connection error and bad credentials etc.
       this.setLoginPageMessage("Login failed.");
+      throw error;
     }
   }
 
@@ -70,9 +73,6 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
       }
 
       return null;
-    } catch (error) {
-      // TODO: Handle error
-      console.error(error);
     } finally {
       this.displayedPage = IApplicationPage.Login;
     }

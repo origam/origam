@@ -24,6 +24,7 @@ import { getSessionId } from "../../selectors/getSessionId";
 import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { errDialogPromise } from "../ErrorDialog";
+import { handleError } from "model/actions/handleError";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -113,7 +114,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* this.loadData();
     }
   }
-
+  /*
   *initUI() {
     try {
       this.inFlow++;
@@ -134,26 +135,20 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       console.log(initUIResult);
       yield* this.applyInitUIResult({ initUIResult });
     } catch (error) {
-      console.error(error);
-      yield errDialogPromise(this)(error);
+      yield* handleError(this)(error);
       yield* closeForm(this)();
       throw error;
       // TODO: Error handling !
     } finally {
       this.inFlow--;
     }
-  }
+  }*/
 
   *destroyUI() {
     try {
       this.inFlow++;
       const api = getApi(this);
       yield api.destroyUI({ FormSessionId: getSessionId(this) });
-    } catch (error) {
-      // TODO: Handle error
-      console.error(error);
-      yield errDialogPromise(this)(error);
-      throw error;
     } finally {
       this.inFlow--;
     }
@@ -192,11 +187,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         rootDataView.dataTable.setRecords(loadedData);
         rootDataView.selectFirstRow();
       }
-    } catch (error) {
-      console.error(error);
-      yield errDialogPromise(this)(error);
-      throw error;
-      // TODO: Error handling
     } finally {
       this.inFlow--;
     }
@@ -218,11 +208,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           yield* processCRUDResult(dataView, updateObjectResult);
         }
       }
-    } catch (error) {
-      console.error(error);
-      yield errDialogPromise(this)(error);
-      throw error;
-      // TODO: Error handling
     } finally {
       this.inFlow--;
     }
@@ -241,11 +226,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         Parameters: { ...getBindingParametersFromParent(targetDataView) }
       });
       yield* processCRUDResult(targetDataView, createObjectResult);
-    } catch (error) {
-      console.error(error);
-      yield errDialogPromise(this)(error);
-      throw error;
-      // TODO: Error handling
     } finally {
       this.inFlow--;
     }
@@ -262,11 +242,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       });
       console.log(deleteObjectResult);
       yield* processCRUDResult(this, deleteObjectResult);
-    } catch (error) {
-      console.error(error);
-      yield errDialogPromise(this)(error);
-      throw error;
-      // TODO: Error handling
     } finally {
       this.inFlow--;
     }
@@ -279,11 +254,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield api.saveSessionQuery(getSessionId(this));
       const result = yield api.saveSession(getSessionId(this));
       yield* processCRUDResult(this, result);
-    } catch (error) {
-      console.error(error);
-      yield errDialogPromise(this)(error);
-      throw error;
-      // TODO: Error handling
     } finally {
       this.inFlow--;
     }
@@ -301,11 +271,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       } else {
         yield* this.loadData();
       }
-    } catch (error) {
-      console.error(error);
-      yield errDialogPromise(this)(error);
-      throw error;
-      // TODO: Error handling
     } finally {
       this.inFlow--;
     }
@@ -348,11 +313,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       console.log("EA", result);
 
       yield* processActionResult(action)(result);
-    } catch (error) {
-      console.error(error);
-      yield errDialogPromise(this)(error);
-      throw error;
-      // TODO: Error handling
     } finally {
       this.inFlow--;
     }

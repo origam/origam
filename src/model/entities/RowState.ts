@@ -70,6 +70,7 @@ export class RowState implements IRowState {
             this.idStates.set(key, IIdState.ERROR);
           }
           console.error(error);
+          // TODO: Better error handling.
           errDialogPromise(this)(error);
         }
       }

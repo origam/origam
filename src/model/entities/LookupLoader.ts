@@ -75,6 +75,7 @@ export class LookupLoader implements ILookupLoader {
       }
     } catch (error) {
       console.error(error);
+      // TODO: Better error handling.
       errDialogPromise(this)(error);
     } finally {
       this.isLoading = false;
