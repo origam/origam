@@ -38,6 +38,8 @@
   flex-grow: 1;
   flex-shrink: 1;
   overflow: none;
+  display: flex;
+  flex-direction: column;
   &:global(.isHoriz) {
     height: 100%;
   }

@@ -33,8 +33,9 @@ export class DataView extends React.Component<{
     } else {
       return {
         flexGrow: 1,
-        width: "100%",
-        height: "100%"
+        flexShrink: 0
+        // width: "100%",
+        // height: "100%"
       };
     }
   }

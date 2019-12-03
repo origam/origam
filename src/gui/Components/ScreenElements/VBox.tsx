@@ -1,5 +1,5 @@
 import React from "react";
-import S from './VBox.module.css';
+import S from './VBox.module.scss';
 
 export class VBox extends React.Component<{
   height?: number

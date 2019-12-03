@@ -105,14 +105,14 @@ export const DialogScreen: React.FC<{
                 <div
                   style={{
                     width: props.openedScreen.dialogInfo!.width,
-                    height: props.openedScreen.dialogInfo!.height
+                    height: props.openedScreen.dialogInfo!.height,
+                    display: "flex",
+                    flexDirection: "column"
                   }}
                 >
                   {!props.openedScreen.content.isLoading ? (
                     <DialogScreenBuilder openedScreen={props.openedScreen} />
-                  ) : (
-                    null /*<DialogLoadingContent />*/
-                  )}
+                  ) : null /*<DialogLoadingContent />*/}
                 </div>
               )}
             </Observer>
