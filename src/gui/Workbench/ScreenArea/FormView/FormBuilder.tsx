@@ -6,7 +6,6 @@ import { getDataViewPropertyById } from "../../../../model/selectors/DataView/ge
 import { getSelectedRow } from "../../../../model/selectors/DataView/getSelectedRow";
 import { findStrings } from "../../../../xmlInterpreters/screenXml";
 
-
 import { FormRoot } from "./FormRoot";
 import { FormViewEditor } from "./FormViewEditor";
 import { getRowStates } from "model/selectors/RowState/getRowStates";
@@ -14,6 +13,7 @@ import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowI
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 import { FormField } from "gui02/components/Form/FormField";
 import { FormSection } from "gui02/components/Form/FormSection";
+import { FormLabel } from "gui02/components/Form/FormLabel";
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -54,6 +54,19 @@ export class FormBuilder extends React.Component<{
           >
             {xfo.elements.map((child: any) => recursive(child))}
           </FormSection>
+        );
+      } else if (
+        xfo.name === "FormElement" &&
+        xfo.attributes.Type === "Label"
+      ) {
+        return (
+          <FormLabel
+            title={xfo.attributes.Title}
+            left={+xfo.attributes.X}
+            top={+xfo.attributes.Y}
+            width={+xfo.attributes.Width}
+            height={+xfo.attributes.Height}
+          />
         );
       } else if (xfo.name === "PropertyNames") {
         const propertyNames = findStrings(xfo);
