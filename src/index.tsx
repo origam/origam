@@ -7,6 +7,11 @@ import 'react-tippy/dist/tippy.css';
 import "./index.scss";
 import { createApplication } from "./model/factories/createApplication";
 import * as serviceWorker from "./serviceWorker";
+import axios from 'axios'; 
+
+if(process.env.REACT_APP_SELENIUM_KICK) {
+  axios.post('http://127.0.0.1:3500/app-reload');
+}
 
 const application = createApplication();
 flow(application.run.bind(application))();

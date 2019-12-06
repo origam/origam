@@ -102,7 +102,8 @@ export class Lookup implements ILookup {
   triggerLoad = _.debounce(this.triggerloadImm, 100);
 
   resolveList = flow(
-    function*(this: Lookup, idsToLoad: Set<string>) {
+    function*(this: Lookup, idsToLoadArg: Set<string>) {
+      const idsToLoad = new Set(idsToLoadArg);
       yield when(() => !this.isSomethingLoading);
       try {
         this.isSomethingLoading = true;
@@ -122,18 +123,18 @@ export class Lookup implements ILookup {
           MenuId: undefined, // getMenuItemId(this),
           LabelIds: Array.from(idsToLoad)
         });
-        this.isSomethingLoading = false;
         for (let [key, value] of Object.entries(labels)) {
           this.idStates.delete(key);
           this.resolvedValues.set(key, value);
           idsToLoad.delete(key);
         }
       } catch (error) {
-        this.isSomethingLoading = false;
         for (let key of idsToLoad) {
           this.idStates.set(key, IIdState.ERROR);
         }
         console.error(error);
+      } finally {
+        this.isSomethingLoading = false;
       }
     }.bind(this)
   );

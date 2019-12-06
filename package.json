@@ -29,6 +29,8 @@
     "camelcase": "^5.2.0",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
     "classnames": "^2.2.6",
+    "concurrently": "^5.0.0",
+    "cors": "^2.8.5",
     "css-loader": "2.1.1",
     "dotenv": "6.2.0",
     "dotenv-expand": "4.2.0",
@@ -90,6 +92,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
+    "start-selenium": "set BROWSER=node none.js && set REACT_APP_SELENIUM_KICK=1 && concurrently --kill-others \"node-dev --respawn --no-deps --dedupe ./tests/fixture-server01\" \"node scripts/start.js\"",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "start-server": "node-dev --respawn --no-deps --dedupe ./src-server/index-server.js"

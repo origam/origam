@@ -47,6 +47,8 @@
 
 .plus {
   color: #3e3d45;
+  display: inline;
+  cursor: pointer;
   @include hoverItemAnimation;
   &:hover {
     color: #69d07f

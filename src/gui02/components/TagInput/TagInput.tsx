@@ -9,8 +9,11 @@ export const TagInputItem: React.FC = props => (
   <div className={S.item}>{props.children}</div>
 );
 
-export const TagInputPlus: React.FC = props => (
-  <div className={S.plus}>
+export const TagInputPlus: React.FC<{
+  domRef?: any;
+  onClick?(event: any): void;
+}> = props => (
+  <div className={S.plus} ref={props.domRef} onClick={props.onClick}>
     <i className="fas fa-plus" />
   </div>
 );
@@ -28,6 +31,7 @@ export const TagInputEdit: React.FC<{
   domRef?: any;
   onKeyDown?(event: any): void;
   onFocus?(event: any): void;
+  onChange?(event: any): void;
 }> = props => (
   <input
     ref={props.domRef}
@@ -35,6 +39,7 @@ export const TagInputEdit: React.FC<{
     value={props.value}
     onKeyDown={props.onKeyDown}
     onFocus={props.onFocus}
+    onChange={props.onChange}
   />
 );
 

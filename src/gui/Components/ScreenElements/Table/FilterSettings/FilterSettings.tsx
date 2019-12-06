@@ -6,14 +6,16 @@ import { FilterSettingsDate } from "./HeaderControls/FilterSettingsDate";
 import { observer } from "mobx-react-lite";
 import { FilterSettingsNumber } from "./HeaderControls/FilterSettingsNumber";
 import { FilterSettingsLookup } from "./HeaderControls/FilterSettingsLookup";
-import { toJS } from "mobx";
+import { toJS, flow } from "mobx";
 import { useContext } from "react";
 import { MobXProviderContext } from "mobx-react";
 import { onApplyFilterSetting } from "../../../../../model/actions-ui/DataView/TableView/onApplyFilterSetting";
 import { getFilterSettingByProperty } from "model/selectors/DataView/getFilterSettingByProperty";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
 
 export const FilterSettings: React.FC = observer(props => {
   const property = useContext(MobXProviderContext).property as IProperty;
+  const dataTable = getDataTable(property);
   const setting = getFilterSettingByProperty(property, property.id);
   const handleApplyFilterSetting = onApplyFilterSetting(property);
   console.log(setting);
@@ -48,7 +50,19 @@ export const FilterSettings: React.FC = observer(props => {
         />
       );
     case "ComboBox":
-      return <FilterSettingsLookup />;
+      return (
+        <FilterSettingsLookup
+          getOptions={flow(function*(searchTerm: string) {
+            const allIds = new Set(dataTable.getAllValuesOfProp(property));
+            yield property.lookup!.resolveList(allIds);
+            console.log(dataTable.getAllValuesOfProp(property), allIds);
+            return Array.from(allIds.values()).map(item => ({
+              content: property.lookup!.getValue(item),
+              value: item
+            }));
+          })}
+        />
+      );
     default:
       return <>{property.column}</>;
   }

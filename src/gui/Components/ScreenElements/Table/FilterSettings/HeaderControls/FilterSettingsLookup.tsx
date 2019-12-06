@@ -3,21 +3,13 @@ import {
   FilterSettingsComboBox,
   FilterSettingsComboBoxItem
 } from "../FilterSettingsComboBox";
+import S from "./FilterSettingsLookup.module.scss";
 
-import CS from "./FilterSettingsCommon.module.css";
-import STagInput from "gui/Components/TagInputComp/TagInput.module.css";
 import { observable, computed, action, flow, runInAction } from "mobx";
 import { observer, PropTypes } from "mobx-react";
 
-import { useObservable } from "mobx-react-lite";
 import { Dropdowner } from "../../../../Dropdowner/Dropdowner";
-/*import {
-  TagInput,
-  TagInputAddBtn,
-  TagInputItem,
-  TagInputRemoveBtn,
-  TagInputTextbox
-} from "gui/Components/TagInputComp/TagInput";*/
+
 import { Grid, GridCellProps } from "react-virtualized";
 import {
   TagInput,
@@ -27,6 +19,11 @@ import {
   TagInputEdit,
   TagInputEditFake
 } from "gui02/components/TagInput/TagInput";
+import { CancellablePromise } from "mobx/lib/api/flow";
+import { delay } from "utils/async";
+import _ from "lodash";
+import { IProperty } from "model/entities/types/IProperty";
+import { IDataTable } from "model/entities/types/IDataTable";
 
 export interface IStringFilterOp {}
 
@@ -77,7 +74,7 @@ export interface ITagEditorItem {
 
 @observer
 export class OptionGrid extends React.Component<{
-  items: Array<{ text: string; value: string }>;
+  items: Array<{ content: string; value: string }>;
   onCellClick?(event: any, rowIndex: number, columnIndex: number): void;
 }> {
   render() {
@@ -111,101 +108,36 @@ export class OptionGrid extends React.Component<{
       <div
         style={style}
         key={key}
-        className={
-          STagInput.optionGridCell + (rowIndex % 2 === 0 ? " a" : " b")
-        }
+        className={S.optionGridCell + (rowIndex % 2 === 0 ? " a" : " b")}
         onClick={(event: any) =>
           this.props.onCellClick &&
           this.props.onCellClick(event, rowIndex, columnIndex)
         }
       >
-        {this.props.items[rowIndex].text}
+        {this.props.items[rowIndex].content}
       </div>
     );
   };
 }
 
-/*
-@observer
-class TagEditor extends React.Component<{
-  items: ITagEditorItem[];
-  availableItems: ITagEditorItem[];
-  onAdd?: (item: ITagEditorItem) => void;
-  onDeleteClick?: (event: any, item: ITagEditorItem) => void;
-}> {
-  refDropdowner = (elm: Dropdowner | null) => (this.elmDropdowner = elm);
-  elmDropdowner: Dropdowner | null = null;
-
-  @action.bound
-  setDropped(state: boolean) {
-    this.elmDropdowner && this.elmDropdowner.setDropped(state);
-  }
-
-  handleAddBtnClick = flow(
-    function*(this: TagEditor) {
-      this.setDropped(true);
-      yield 0;
-    }.bind(this)
-  );
-
-  render() {
-    return (
-      <TagInput>
-        {this.props.items.map(item => (
-          <TagInputItem key={item.value}>
-            <TagInputRemoveBtn onClick={undefined} />
-            {item.text}
-          </TagInputItem>
-        ))}
-
-        <div className={"asdf " + STagInput.textboxAndDropdownTrigger}>
-          <Dropdowner
-            ref={this.refDropdowner}
-            trigger={({ refTrigger, setDropped }) => (
-              <TagInputAddBtn
-                domRef={refTrigger}
-                onClick={this.handleAddBtnClick}
-              />
-            )}
-            content={({ setDropped }) => (
-              <div className={STagInput.optionGridContainer}>
-                <OptionGrid
-                  onCellClick={undefined}
-                  items={[{ text: "dfsd", value: "fdasdf" }]}
-                />
-              </div>
-            )}
-          />
-          <TagInputTextbox value={undefined} onChange={undefined} />
-        </div>
-      </TagInput>
-    );
-  }
-}
-
-const StatefulTagEditor: React.FC<{}> = observer(props => {
-  const items = useObservable<ITagEditorItem[]>([]);
-  return (
-    <TagEditor
-      items={items}
-      availableItems={[
-        { text: "Apple", value: "1" },
-        { text: "Banana", value: "2" }
-      ]}
-      onAdd={item => items.push(item)}
-      onDeleteClick={(event, item) =>
-        items.splice(items.findIndex(ii => ii === item), 1)
-      }
-    />
-  );
-});*/
-
 @observer
 export class TagInputStateful extends React.Component<{
   selectedItems: Array<{ value: any; content: any }>;
   onChange?(selectedItems: Array<{ value: any; content: any }>): void;
+  getOptions(
+    searchTerm: string
+  ): CancellablePromise<Array<{ value: any; content: any }>>;
 }> {
   @observable cursorAfterIndex = this.props.selectedItems.length - 1;
+  @observable searchTerm = "";
+  @observable availOptions: Array<{ content: any; value: any }> = [];
+
+  @computed get offeredOptions() {
+    const selectedIds = new Set(
+      this.props.selectedItems.map(item => item.value)
+    );
+    return this.availOptions.filter(option => !selectedIds.has(option.value));
+  }
 
   componentDidUpdate() {
     runInAction(() => {
@@ -213,7 +145,7 @@ export class TagInputStateful extends React.Component<{
         this.cursorAfterIndex,
         this.props.selectedItems.length - 1
       );
-      // TODO: detect that the component updated due to its own event 
+      // TODO: detect that the component updated due to its own event
       // (otherwise there might be mess caused by a focus avalanche)
       if (this.cursorAfterIndex < this.props.selectedItems.length - 1) {
         setTimeout(() => this.elmFakeInput && this.elmFakeInput.focus());
@@ -316,6 +248,46 @@ export class TagInputStateful extends React.Component<{
   elmFakeInput: HTMLInputElement | null = null;
   refFakeInput = (elm: any) => (this.elmFakeInput = elm);
 
+  elmDropdowner: Dropdowner | null = null;
+  refDropdowner = (elm: any) => (this.elmDropdowner = elm);
+
+  handlePlusClick = flow(
+    function*(this: TagInputStateful, event: any) {
+      yield* this.getOptions();
+    }.bind(this)
+  );
+
+  @action.bound handleSearchTermChange(event: any) {
+    this.searchTerm = event.target.value;
+    this.handleSearchTermChangeDeb(event);
+  }
+
+  handleSearchTermChangeImm = flow(function*(
+    this: TagInputStateful,
+    event: any
+  ) {
+    yield* this.getOptions();
+  });
+
+  handleSearchTermChangeDeb = _.debounce(this.handleSearchTermChangeImm, 100);
+
+  *getOptions() {
+    const options = yield this.props.getOptions(this.searchTerm);
+    this.availOptions = options;
+    this.elmDropdowner && this.elmDropdowner.setDropped(true);
+  }
+
+  @action.bound handleOptionCellClick(
+    event: AnalyserNode,
+    rowIndex: number,
+    columnIndex: number
+  ) {
+    const newSelectedItems = [...this.props.selectedItems];
+    newSelectedItems.push(this.offeredOptions[rowIndex]);
+    this.elmDropdowner && this.elmDropdowner.setDropped(true);
+    this.props.onChange && this.props.onChange(newSelectedItems);
+  }
+
   render() {
     return (
       <TagInput>
@@ -346,29 +318,28 @@ export class TagInputStateful extends React.Component<{
             </React.Fragment>
           );
         })}
-        <TagInputPlus />
+        <Dropdowner
+          ref={this.refDropdowner}
+          trigger={({ refTrigger, setDropped }) => (
+            <TagInputPlus domRef={refTrigger} onClick={this.handlePlusClick} />
+          )}
+          content={({ setDropped }) => (
+            <div className={S.droppedPanel}>
+              <OptionGrid
+                items={this.offeredOptions}
+                onCellClick={this.handleOptionCellClick}
+              />
+            </div>
+          )}
+        />
+
         <TagInputEdit
           domRef={this.refInput}
           onKeyDown={this.handleEditKeyDown}
           onFocus={this.handleEditFocus}
+          onChange={this.handleSearchTermChange}
+          value={this.searchTerm}
         />
-
-        {/*
-        <TagInputItem>
-          Item1
-          <TagInputDeleteBtn />
-        </TagInputItem>
-
-        <TagInputItem>
-          Item2
-          <TagInputDeleteBtn />
-        </TagInputItem>
-        <TagInputItem>
-          Item3
-          <TagInputDeleteBtn />
-        </TagInputItem>
-        <TagInputPlus />
-<TagInputEdit />*/}
       </TagInput>
     );
   }
@@ -378,6 +349,9 @@ export class TagInputStateful extends React.Component<{
 class OpEditors extends React.Component<{
   setting: ISetting;
   onChange: (newSetting: ISetting) => void;
+  getOptions: (
+    searchTerm: string
+  ) => CancellablePromise<Array<{ value: any; content: any }>>;
 }> {
   @observable selectedItems = [
     { value: 1, content: "Item1" },
@@ -402,6 +376,7 @@ class OpEditors extends React.Component<{
           <TagInputStateful
             selectedItems={this.selectedItems}
             onChange={this.handleSelectedItemsChange}
+            getOptions={this.props.getOptions}
           />
         );
       case "null":
@@ -413,7 +388,11 @@ class OpEditors extends React.Component<{
 }
 
 @observer
-export class FilterSettingsLookup extends React.Component {
+export class FilterSettingsLookup extends React.Component<{
+  getOptions: (
+    searchTerm: string
+  ) => CancellablePromise<Array<{ value: any; content: any }>>;
+}> {
   @observable selectedOperator: ISetting = OPERATORS[0];
 
   render() {
@@ -426,6 +405,7 @@ export class FilterSettingsLookup extends React.Component {
         <OpEditors
           setting={this.selectedOperator}
           onChange={newSetting => (this.selectedOperator = newSetting)}
+          getOptions={this.props.getOptions}
         />
 
         {/*<input className={CS.input} />*/}

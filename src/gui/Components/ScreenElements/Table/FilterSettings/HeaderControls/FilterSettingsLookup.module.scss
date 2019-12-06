@@ -1,0 +1,27 @@
+@import "src/styles/common_styles.scss";
+
+.droppedPanel {
+  @include popoverShadow;
+}
+
+.optionGridCell {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+  white-space: nowrap;
+  @include hoverItemAnimation;
+
+  &:hover {
+    background-color: #e0e0e0 !important;
+    font-weight: 400;
+  }
+}
+
+.optionGridCell:global(.a) {
+  background-color: white;
+}
+
+.optionGridCell:global(.b) {
+  background-color: #F7F6FA;
+}

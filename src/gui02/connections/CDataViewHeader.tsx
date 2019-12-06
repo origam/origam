@@ -147,6 +147,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
               <DataViewHeaderAction
                 onClick={onFilterButtonClickEvt}
                 isActive={isFilterSettingsVisible}
+                className={"test-filter-button"}
               >
                 <Icon src="./icons/search-filter.svg" />
               </DataViewHeaderAction>
