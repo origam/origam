@@ -61,7 +61,6 @@ namespace Origam.Server
         private RuleEngine _ruleEngine;
         private DatasetRuleHandler _ruleHandler;
         private DataSet _data;
-        private DataSet _Newdata;
         private DataSet _dataList;
         private string _dataListEntity;
         private Guid _dataListDataStructureEntityId;
@@ -432,6 +431,10 @@ namespace Origam.Server
             {
                 _dataListFilterSetId = filterSet.Id;
             }
+            else if (method is Schema.WorkflowModel.DataStructureWorkflowMethod workflowMethod)
+            {
+                _dataListFilterSetId = workflowMethod.Id;
+            }
             else if (method != null)
             {
                 throw new ArgumentOutOfRangeException("method", "List method must be a filter set.");
@@ -485,10 +488,10 @@ namespace Origam.Server
                 // set the new data
                 if (dataSource is DataSet)
                 {
-                    _Newdata = dataSource as DataSet;
+                    _data = dataSource as DataSet;
 
                     bool selfJoinExists = false;
-                    foreach (DataRelation r in _Newdata.Relations)
+                    foreach (DataRelation r in _data.Relations)
                     {
                         if (r.ParentTable.Equals(r.ChildTable))
                         {
@@ -500,18 +503,17 @@ namespace Origam.Server
                     // no XML for self joins (incompatible with XmlDataDocument)
                     if (!selfJoinExists)
                     {
-                        XmlData = DataDocumentFactory.New(_Newdata);
+                        XmlData = DataDocumentFactory.New(_data);
                     }
                 }
                 else if (dataSource is IDataDocument)
                 {
                     XmlData = dataSource as IDataDocument;
-                    _Newdata = XmlData.DataSet;
+                    _data = XmlData.DataSet;
                 }
                 else if (dataSource == null)
                 {
                     XmlData = null;
-                    _Newdata = null;
                     _data = null;
                 }
                 else
@@ -521,22 +523,12 @@ namespace Origam.Server
             }
             finally
             {
-                if (_data == null && _Newdata != null)
-                {
-                    _data = new DataSet();
-                }
-                if(_Newdata!=null)
-                {
-                    _data.Reset();
-                    _data.Merge(_Newdata);
-                }
                 // wire the new data's events
                 RegisterEvents();
             }
 
             if (this.Data != null)
             {
-                this.Data.AcceptChanges();
                 RemoveNullConstraints(this.Data);
                 DatasetGenerator.ApplyDynamicDefaults(this.Data, this.Request.Parameters);
 
@@ -1225,27 +1217,30 @@ namespace Origam.Server
         {
             lock (_lock)
             {
-                if (!(bool)row[SessionStore.LIST_LOADED_COLUMN_NAME])
+                if (row.Table.Columns.Contains(SessionStore.LIST_LOADED_COLUMN_NAME))
                 {
-                    // the row has not been loaded from the database yet, we load the
-                    // whole row even though only some of the columns are needed because
-                    // e.g. color or row-level security rules must be evaluated on all the
-                    // columns
-                    QueryParameterCollection pms = new QueryParameterCollection();
-                    foreach (DataColumn col in row.Table.PrimaryKey)
+                    if (!(bool)row[SessionStore.LIST_LOADED_COLUMN_NAME])
                     {
-                        pms.Add(new QueryParameter(col.ColumnName, rowId));
+                        // the row has not been loaded from the database yet, we load the
+                        // whole row even though only some of the columns are needed because
+                        // e.g. color or row-level security rules must be evaluated on all the
+                        // columns
+                        QueryParameterCollection pms = new QueryParameterCollection();
+                        foreach (DataColumn col in row.Table.PrimaryKey)
+                        {
+                            pms.Add(new QueryParameter(col.ColumnName, rowId));
+                        }
+                        DataSet loadedRow = DatasetTools.CloneDataSet(row.Table.DataSet);
+                        core.DataService.LoadRow(DataListDataStructureEntityId, DataListFilterSetId, pms, loadedRow, null);
+                        if (loadedRow.Tables[row.Table.TableName].Rows.Count == 0)
+                        {
+                            throw new ArgumentOutOfRangeException(string.Format(
+                                "Row {0} not found in {1}.", rowId, row.Table.TableName));
+                        }
+                        SessionStore.MergeRow(loadedRow.Tables[row.Table.TableName].Rows[0], row);
+                        row[SessionStore.LIST_LOADED_COLUMN_NAME] = true;
+                        row.AcceptChanges();
                     }
-                    DataSet loadedRow = DatasetTools.CloneDataSet(row.Table.DataSet);
-                    core.DataService.LoadRow(DataListDataStructureEntityId, DataListFilterSetId, pms, loadedRow, null);
-                    if (loadedRow.Tables[row.Table.TableName].Rows.Count == 0)
-                    {
-                        throw new ArgumentOutOfRangeException(string.Format(
-                            "Row {0} not found in {1}.", rowId, row.Table.TableName));
-                    }
-                    SessionStore.MergeRow(loadedRow.Tables[row.Table.TableName].Rows[0], row);
-                    row[SessionStore.LIST_LOADED_COLUMN_NAME] = true;
-                    row.AcceptChanges();
                 }
             }
         }
