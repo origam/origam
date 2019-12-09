@@ -1,64 +1,52 @@
-import React, { useImperativeHandle } from "react";
+import {
+  TagInput,
+  TagInputDeleteBtn,
+  TagInputEdit,
+  TagInputEditFake,
+  TagInputItem,
+  TagInputPlus
+} from "gui02/components/TagInput/TagInput";
+import _ from "lodash";
+import { action, computed, flow, observable, runInAction, toJS } from "mobx";
+import { observer } from "mobx-react";
+import { CancellablePromise } from "mobx/lib/api/flow";
+import React from "react";
+import { Grid, GridCellProps } from "react-virtualized";
+import Highlighter from "react-highlight-words";
+import { Dropdowner } from "../../../../Dropdowner/Dropdowner";
 import {
   FilterSettingsComboBox,
   FilterSettingsComboBoxItem
 } from "../FilterSettingsComboBox";
 import S from "./FilterSettingsLookup.module.scss";
+import produce from "immer";
 
-import { observable, computed, action, flow, runInAction } from "mobx";
-import { observer, PropTypes } from "mobx-react";
-
-import { Dropdowner } from "../../../../Dropdowner/Dropdowner";
-
-import { Grid, GridCellProps } from "react-virtualized";
-import {
-  TagInput,
-  TagInputItem,
-  TagInputDeleteBtn,
-  TagInputPlus,
-  TagInputEdit,
-  TagInputEditFake
-} from "gui02/components/TagInput/TagInput";
-import { CancellablePromise } from "mobx/lib/api/flow";
-import { delay } from "utils/async";
-import _ from "lodash";
-import { IProperty } from "model/entities/types/IProperty";
-import { IDataTable } from "model/entities/types/IDataTable";
-
-export interface IStringFilterOp {}
-
-interface IOp1 {
-  type: "eq" | "neq" | "contains" | "ncontains";
-  human: React.ReactNode;
-  val1: string;
-}
-
-interface IOp0 {
-  type: "null" | "nnull";
-  human: React.ReactNode;
-}
-
-type ISetting = IOp1 | IOp0;
-
-const OPERATORS: ISetting[] = [
-  { human: <>=</>, type: "eq", val1: "" },
-  { human: <>&ne;</>, type: "neq", val1: "" },
-  { human: <>contain</>, type: "contains", val1: "" },
-  { human: <>not contain</>, type: "ncontains", val1: "" },
+const OPERATORS: any[] = [
+  { human: <>=</>, type: "eq" },
+  { human: <>&ne;</>, type: "neq" },
+  { human: <>contain</>, type: "contains" },
+  { human: <>not contain</>, type: "ncontains" },
   { human: <>is null</>, type: "null" },
   { human: <>is not null</>, type: "nnull" }
 ];
 
 const OpCombo: React.FC<{
-  setting: ISetting;
-  onChange: (newSetting: ISetting) => void;
+  setting: any;
+  onChange: (newSetting: any) => void;
 }> = props => {
   return (
     <FilterSettingsComboBox trigger={<>{props.setting.human}</>}>
       {OPERATORS.map(op => (
         <FilterSettingsComboBoxItem
           key={op.type}
-          onClick={() => props.onChange(op)}
+          onClick={() => {
+            props.onChange(
+              produce(props.setting, (draft: any) => {
+                draft.type = op.type;
+                draft.human = op.human;
+              })
+            );
+          }}
         >
           {op.human}
         </FilterSettingsComboBoxItem>
@@ -75,6 +63,7 @@ export interface ITagEditorItem {
 @observer
 export class OptionGrid extends React.Component<{
   items: Array<{ content: string; value: string }>;
+  searchPhrase?: string;
   onCellClick?(event: any, rowIndex: number, columnIndex: number): void;
 }> {
   render() {
@@ -114,7 +103,14 @@ export class OptionGrid extends React.Component<{
           this.props.onCellClick(event, rowIndex, columnIndex)
         }
       >
-        {this.props.items[rowIndex].content}
+        <Highlighter
+          textToHighlight={this.props.items[rowIndex].content}
+          searchWords={
+            [this.props.searchPhrase].filter(item => item) as string[]
+          }
+          autoEscape={true}
+        />
+        {}
       </div>
     );
   };
@@ -130,7 +126,7 @@ export class TagInputStateful extends React.Component<{
 }> {
   @observable cursorAfterIndex = this.props.selectedItems.length - 1;
   @observable searchTerm = "";
-  @observable availOptions: Array<{ content: any; value: any }> = [];
+  @observable.shallow availOptions: Array<{ content: any; value: any }> = [];
 
   @computed get offeredOptions() {
     const selectedIds = new Set(
@@ -147,11 +143,11 @@ export class TagInputStateful extends React.Component<{
       );
       // TODO: detect that the component updated due to its own event
       // (otherwise there might be mess caused by a focus avalanche)
-      if (this.cursorAfterIndex < this.props.selectedItems.length - 1) {
+      /*if (this.cursorAfterIndex < this.props.selectedItems.length - 1) {
         setTimeout(() => this.elmFakeInput && this.elmFakeInput.focus());
       } else {
         setTimeout(() => this.elmInput && this.elmInput.focus());
-      }
+      }*/
     });
   }
 
@@ -284,7 +280,8 @@ export class TagInputStateful extends React.Component<{
   ) {
     const newSelectedItems = [...this.props.selectedItems];
     newSelectedItems.push(this.offeredOptions[rowIndex]);
-    this.elmDropdowner && this.elmDropdowner.setDropped(true);
+    console.log(newSelectedItems);
+    this.elmDropdowner && this.elmDropdowner.setDropped(false);
     this.props.onChange && this.props.onChange(newSelectedItems);
   }
 
@@ -321,24 +318,33 @@ export class TagInputStateful extends React.Component<{
         <Dropdowner
           ref={this.refDropdowner}
           trigger={({ refTrigger, setDropped }) => (
-            <TagInputPlus domRef={refTrigger} onClick={this.handlePlusClick} />
+            <>
+              <TagInputPlus
+                domRef={refTrigger}
+                onClick={this.handlePlusClick}
+              />
+              <TagInputEdit
+                domRef={this.refInput}
+                onKeyDown={this.handleEditKeyDown}
+                onFocus={this.handleEditFocus}
+                onChange={this.handleSearchTermChange}
+                value={this.searchTerm}
+              />
+            </>
           )}
           content={({ setDropped }) => (
             <div className={S.droppedPanel}>
-              <OptionGrid
-                items={this.offeredOptions}
-                onCellClick={this.handleOptionCellClick}
-              />
+              {this.offeredOptions.length > 0 ? (
+                <OptionGrid
+                  items={this.offeredOptions}
+                  onCellClick={this.handleOptionCellClick}
+                  searchPhrase={this.searchTerm}
+                />
+              ) : (
+                <div className={S.noItemsFound}>No items found</div>
+              )}
             </div>
           )}
-        />
-
-        <TagInputEdit
-          domRef={this.refInput}
-          onKeyDown={this.handleEditKeyDown}
-          onFocus={this.handleEditFocus}
-          onChange={this.handleSearchTermChange}
-          value={this.searchTerm}
         />
       </TagInput>
     );
@@ -347,22 +353,25 @@ export class TagInputStateful extends React.Component<{
 
 @observer
 class OpEditors extends React.Component<{
-  setting: ISetting;
-  onChange: (newSetting: ISetting) => void;
+  setting: any;
+  onChange: (newSetting: any) => void;
   getOptions: (
     searchTerm: string
   ) => CancellablePromise<Array<{ value: any; content: any }>>;
 }> {
-  @observable selectedItems = [
-    { value: 1, content: "Item1" },
-    { value: 2, content: "Item2" },
-    { value: 3, content: "Item3" }
-  ];
+  @observable selectedItems: Array<{ value: any; content: any }> = [];
 
   @action.bound handleSelectedItemsChange(
     items: Array<{ value: any; content: any }>
   ) {
+    console.log(items);
     this.selectedItems = items;
+    console.log(this.props.setting);
+    this.props.onChange(
+      produce(this.props.setting, (draft: any) => {
+        draft.val1 = toJS(items, { recurseEverything: true });
+      })
+    );
   }
 
   render() {
@@ -370,8 +379,6 @@ class OpEditors extends React.Component<{
     switch (setting.type) {
       case "eq":
       case "neq":
-      case "contains":
-      case "ncontains":
         return (
           <TagInputStateful
             selectedItems={this.selectedItems}
@@ -379,6 +386,8 @@ class OpEditors extends React.Component<{
             getOptions={this.props.getOptions}
           />
         );
+      case "contains":
+      case "ncontains":
       case "null":
       case "nnull":
       default:
@@ -392,19 +401,25 @@ export class FilterSettingsLookup extends React.Component<{
   getOptions: (
     searchTerm: string
   ) => CancellablePromise<Array<{ value: any; content: any }>>;
+  setting: any;
+  onTriggerApplySetting?(setting: any): void;
 }> {
-  @observable selectedOperator: ISetting = OPERATORS[0];
+  @observable.ref setting: any = OPERATORS[0];
+
+  @action.bound handleChange(newSetting: any) {
+    this.setting = newSetting;
+    console.log(toJS(newSetting));
+    this.props.onTriggerApplySetting &&
+      this.props.onTriggerApplySetting(this.setting);
+  }
 
   render() {
     return (
       <>
-        <OpCombo
-          setting={this.selectedOperator}
-          onChange={newSetting => (this.selectedOperator = newSetting)}
-        />
+        <OpCombo setting={this.setting} onChange={this.handleChange} />
         <OpEditors
-          setting={this.selectedOperator}
-          onChange={newSetting => (this.selectedOperator = newSetting)}
+          setting={this.setting}
+          onChange={this.handleChange}
           getOptions={this.props.getOptions}
         />
 

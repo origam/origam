@@ -24,42 +24,48 @@ export const FilterSettings: React.FC = observer(props => {
     case "Text":
       return (
         <FilterSettingsString
-          //onTriggerApplySetting={handleApplyFilterSetting}
+          onTriggerApplySetting={handleApplyFilterSetting}
           setting={setting as any}
         />
       );
     case "CheckBox":
       return (
         <FilterSettingsBoolean
-          //onTriggerApplySetting={handleApplyFilterSetting}
+          onTriggerApplySetting={handleApplyFilterSetting}
           setting={setting as any}
         />
       );
     case "Date":
       return (
         <FilterSettingsDate
-          //onTriggerApplySetting={handleApplyFilterSetting}
+          onTriggerApplySetting={handleApplyFilterSetting}
           setting={setting as any}
         />
       );
     case "Number":
       return (
         <FilterSettingsNumber
-          //onTriggerApplySetting={handleApplyFilterSetting}
+          onTriggerApplySetting={handleApplyFilterSetting}
           setting={setting as any}
         />
       );
     case "ComboBox":
       return (
         <FilterSettingsLookup
+          setting={setting as any}
+          onTriggerApplySetting={handleApplyFilterSetting}
           getOptions={flow(function*(searchTerm: string) {
             const allIds = new Set(dataTable.getAllValuesOfProp(property));
             yield property.lookup!.resolveList(allIds);
             console.log(dataTable.getAllValuesOfProp(property), allIds);
-            return Array.from(allIds.values()).map(item => ({
-              content: property.lookup!.getValue(item),
-              value: item
-            }));
+            return Array.from(allIds.values())
+              .map(item => ({
+                content: property.lookup!.getValue(item),
+                value: item
+              }))
+              .filter(item =>
+                item.content.toLowerCase().includes(searchTerm.toLowerCase())
+              );
           })}
         />
       );

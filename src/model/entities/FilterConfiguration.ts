@@ -60,7 +60,7 @@ export class FilterConfiguration implements IFilterConfiguration {
 
   get filteringFunction(): (dataTable: IDataTable) => (row: any[]) => boolean {
     return (dataTable: IDataTable) => (row: any[]) => {
-      const termFn = (term: IFilterTerm) => {
+      const termFn = (term: any) => {
         const prop = dataTable.getPropertyById(term.propertyId)!;
         switch (prop.column) {
           case "Text": {
@@ -238,11 +238,35 @@ export class FilterConfiguration implements IFilterConfiguration {
           case "ComboBox": {
             switch (term.setting.type) {
               case "eq":
+                {
+                  const txt1 = dataTable.getCellValue(row, prop);
+                  const val1 = term.setting.val1 || [];
+                  if (val1.length === 0) return true;
+                  if (txt1 === null) return false;
+                  if (val1.findIndex((item: any) => item.value === txt1) > -1) {
+                    return true;
+                  }
+
+                  return false;
+                }
+                break;
               case "neq":
+                {
+                  const txt1 = dataTable.getCellValue(row, prop);
+                  const val1 = term.setting.val1 || [];
+                  if (val1.length === 0) return true;
+                  if (txt1 === null) return false;
+                  if (val1.findIndex((item: any) => item.value === txt1) > -1) {
+                    return false;
+                  }
+
+                  return true;
+                }
+                break;
               case "null":
               case "nnull":
               case "contains":
-                break
+                break;
             }
           }
           case "CheckBox": {

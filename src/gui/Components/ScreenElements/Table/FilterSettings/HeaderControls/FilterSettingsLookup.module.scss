@@ -25,3 +25,11 @@
 .optionGridCell:global(.b) {
   background-color: #F7F6FA;
 }
+
+.noItemsFound {
+  font-style: italic;
+  background-color: white;
+  color: grey;
+  white-space: nowrap;
+  padding: 5px;
+}
