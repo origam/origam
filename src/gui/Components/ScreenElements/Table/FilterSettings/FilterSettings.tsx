@@ -63,8 +63,12 @@ export const FilterSettings: React.FC = observer(props => {
                 content: property.lookup!.getValue(item),
                 value: item
               }))
-              .filter(item =>
-                item.content.toLowerCase().includes(searchTerm.toLowerCase())
+              .filter(
+                item =>
+                  item.content &&
+                  item.content
+                    .toLowerCase()
+                    .includes((searchTerm || "").toLowerCase())
               );
           })}
         />

@@ -35,7 +35,13 @@ const OpCombo: React.FC<{
   onChange: (newSetting: any) => void;
 }> = props => {
   return (
-    <FilterSettingsComboBox trigger={<>{props.setting.human}</>}>
+    <FilterSettingsComboBox
+      trigger={
+        <>
+          {(OPERATORS.find(op => op.type === props.setting.type) || {}).human}
+        </>
+      }
+    >
       {OPERATORS.map(op => (
         <FilterSettingsComboBoxItem
           key={op.type}
@@ -43,7 +49,6 @@ const OpCombo: React.FC<{
             props.onChange(
               produce(props.setting, (draft: any) => {
                 draft.type = op.type;
-                draft.human = op.human;
               })
             );
           }}
