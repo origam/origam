@@ -57,7 +57,6 @@ export const FilterSettings: React.FC = observer(props => {
           getOptions={flow(function*(searchTerm: string) {
             const allIds = new Set(dataTable.getAllValuesOfProp(property));
             yield property.lookup!.resolveList(allIds);
-            console.log(dataTable.getAllValuesOfProp(property), allIds);
             return Array.from(allIds.values())
               .map(item => ({
                 content: property.lookup!.getValue(item),
@@ -67,8 +66,8 @@ export const FilterSettings: React.FC = observer(props => {
                 item =>
                   item.content &&
                   item.content
-                    .toLowerCase()
-                    .includes((searchTerm || "").toLowerCase())
+                    .toLocaleLowerCase()
+                    .includes((searchTerm || "").toLocaleLowerCase())
               );
           })}
         />

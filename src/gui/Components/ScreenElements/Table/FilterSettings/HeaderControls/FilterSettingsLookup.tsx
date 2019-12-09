@@ -285,7 +285,6 @@ export class TagInputStateful extends React.Component<{
   ) {
     const newSelectedItems = [...this.props.selectedItems];
     newSelectedItems.push(this.offeredOptions[rowIndex]);
-    console.log(newSelectedItems);
     this.elmDropdowner && this.elmDropdowner.setDropped(false);
     this.props.onChange && this.props.onChange(newSelectedItems);
   }
@@ -365,16 +364,23 @@ class OpEditors extends React.Component<{
   ) => CancellablePromise<Array<{ value: any; content: any }>>;
 }> {
   @observable selectedItems: Array<{ value: any; content: any }> = [];
+  @observable searchTerm: string = "";
 
   @action.bound handleSelectedItemsChange(
     items: Array<{ value: any; content: any }>
   ) {
-    console.log(items);
     this.selectedItems = items;
-    console.log(this.props.setting);
     this.props.onChange(
       produce(this.props.setting, (draft: any) => {
         draft.val1 = toJS(items, { recurseEverything: true });
+      })
+    );
+  }
+
+  @action.bound handleTermChange(event: any) {
+    this.props.onChange(
+      produce(this.props.setting, (draft: any) => {
+        draft.val2 = event.target.value;
       })
     );
   }
@@ -393,7 +399,7 @@ class OpEditors extends React.Component<{
         );
       case "contains":
       case "ncontains":
-        return <input />
+        return <input onChange={this.handleTermChange} />;
       case "null":
       case "nnull":
       default:
@@ -414,7 +420,6 @@ export class FilterSettingsLookup extends React.Component<{
 
   @action.bound handleChange(newSetting: any) {
     this.setting = newSetting;
-    console.log(toJS(newSetting));
     this.props.onTriggerApplySetting &&
       this.props.onTriggerApplySetting(this.setting);
   }

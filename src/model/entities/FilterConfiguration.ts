@@ -276,6 +276,26 @@ export class FilterConfiguration implements IFilterConfiguration {
                 }
                 break;
               case "contains":
+                {
+                  const txt1 = dataTable.getCellText(row, prop);
+                  const val2 = term.setting.val2 || "";
+                  if (val2 === "") return true;
+                  if (txt1 === null) return false;
+                  return txt1
+                    .toLocaleLowerCase()
+                    .includes(val2.toLocaleLowerCase());
+                }
+                break;
+              case "ncontains":
+                {
+                  const txt1 = dataTable.getCellText(row, prop);
+                  const val2 = term.setting.val2 || "";
+                  if (val2 === "") return true;
+                  if (txt1 === null) return false;
+                  return !txt1
+                    .toLocaleLowerCase()
+                    .includes(val2.toLocaleLowerCase());
+                }
                 break;
             }
           }
