@@ -64,7 +64,7 @@ export class FilterConfiguration implements IFilterConfiguration {
         const prop = dataTable.getPropertyById(term.propertyId)!;
         switch (prop.column) {
           case "Text": {
-            const txt1 = dataTable.getCellText(row, prop);
+            const txt1 = dataTable.getCellValue(row, prop);
             if (txt1 === undefined) return true;
 
             if (term.setting.dataType === "string") {
@@ -264,7 +264,17 @@ export class FilterConfiguration implements IFilterConfiguration {
                 }
                 break;
               case "null":
+                {
+                  const txt1 = dataTable.getCellValue(row, prop);
+                  return txt1 === null;
+                }
+                break;
               case "nnull":
+                {
+                  const txt1 = dataTable.getCellValue(row, prop);
+                  return txt1 !== null;
+                }
+                break;
               case "contains":
                 break;
             }

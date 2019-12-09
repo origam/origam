@@ -393,6 +393,7 @@ class OpEditors extends React.Component<{
         );
       case "contains":
       case "ncontains":
+        return <input />
       case "null":
       case "nnull":
       default:
