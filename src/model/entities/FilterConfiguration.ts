@@ -12,10 +12,8 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import { getDataTable } from "../selectors/DataView/getDataTable";
 import { IDataTable } from "./types/IDataTable";
-import {
-  IFilterConfiguration,
-  IFilterTerm
-} from "./types/IFilterConfiguration";
+import { IFilterConfiguration } from "./types/IFilterConfiguration";
+import produce from "immer";
 
 export class FilterConfiguration implements IFilterConfiguration {
   constructor() {
@@ -24,26 +22,29 @@ export class FilterConfiguration implements IFilterConfiguration {
 
   $type_IFilterConfigurationData: 1 = 1;
 
-  @observable filtering: IFilterTerm[] = [];
+  @observable.ref filtering: any[] = [];
 
-  getSettingByPropertyId(propertyId: string): IFilterTerm | undefined {
+  getSettingByPropertyId(propertyId: string): any {
     return this.filtering.find(item => item.propertyId === propertyId);
   }
 
   @action.bound
-  setFilter(term: IFilterTerm): void {
-    const oldIdx = this.filtering.findIndex(
-      item => item.propertyId === term.propertyId
-    );
-    if (oldIdx > -1) {
-      this.filtering.splice(oldIdx, 1);
-    }
-    this.filtering.push(term);
+  setFilter(term: any): void {
+    this.filtering = produce(this.filtering, (draft: any) => {
+      const oldIdx = draft.findIndex(
+        (item: any) => item.propertyId === term.propertyId
+      );
+      if (oldIdx > -1) {
+        draft.splice(oldIdx, 1);
+      }
+      draft.push(term);
+    })
+
   }
 
   @action.bound
   clearFilters(): void {
-    this.filtering.length = 0;
+    this.filtering = [];
   }
 
   @observable isFilterControlsDisplayed: boolean = false;
@@ -67,62 +68,60 @@ export class FilterConfiguration implements IFilterConfiguration {
             const txt1 = dataTable.getCellValue(row, prop);
             if (txt1 === undefined) return true;
 
-            if (term.setting.dataType === "string") {
-              switch (term.setting.type) {
-                case "contains": {
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
-                  const t2 = term.setting.val1.toLocaleLowerCase();
-                  return txt1.toLocaleLowerCase().includes(t2);
-                }
-                case "ends": {
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
-                  const t2 = term.setting.val1.toLocaleLowerCase();
-                  return txt1.toLocaleLowerCase().endsWith(t2);
-                }
-                case "eq": {
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
-                  const t2 = term.setting.val1.toLocaleLowerCase();
-                  return txt1.toLocaleLowerCase() === t2;
-                }
-                case "ncontains": {
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
-                  const t2 = term.setting.val1.toLocaleLowerCase();
-                  return !txt1.toLocaleLowerCase().includes(t2);
-                }
-                case "nends": {
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
-                  const t2 = term.setting.val1.toLocaleLowerCase();
-                  return !txt1.toLocaleLowerCase().endsWith(t2);
-                }
-                case "neq": {
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
-                  const t2 = term.setting.val1.toLocaleLowerCase();
-                  return txt1.toLocaleLowerCase() !== t2;
-                }
-                case "nnull": {
-                  return txt1 !== null;
-                }
-                case "nstarts": {
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
-                  const t2 = term.setting.val1.toLocaleLowerCase();
-                  return !txt1.toLocaleLowerCase().startsWith(t2);
-                }
-                case "null": {
-                  return txt1 === null;
-                }
-                case "starts": {
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
-                  const t2 = term.setting.val1.toLocaleLowerCase();
-                  return txt1.toLocaleLowerCase().startsWith(t2);
-                }
+            switch (term.setting.type) {
+              case "contains": {
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+                const t2 = term.setting.val1.toLocaleLowerCase();
+                return txt1.toLocaleLowerCase().includes(t2);
+              }
+              case "ends": {
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+                const t2 = term.setting.val1.toLocaleLowerCase();
+                return txt1.toLocaleLowerCase().endsWith(t2);
+              }
+              case "eq": {
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+                const t2 = term.setting.val1.toLocaleLowerCase();
+                return txt1.toLocaleLowerCase() === t2;
+              }
+              case "ncontains": {
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+                const t2 = term.setting.val1.toLocaleLowerCase();
+                return !txt1.toLocaleLowerCase().includes(t2);
+              }
+              case "nends": {
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+                const t2 = term.setting.val1.toLocaleLowerCase();
+                return !txt1.toLocaleLowerCase().endsWith(t2);
+              }
+              case "neq": {
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+                const t2 = term.setting.val1.toLocaleLowerCase();
+                return txt1.toLocaleLowerCase() !== t2;
+              }
+              case "nnull": {
+                return txt1 !== null;
+              }
+              case "nstarts": {
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+                const t2 = term.setting.val1.toLocaleLowerCase();
+                return !txt1.toLocaleLowerCase().startsWith(t2);
+              }
+              case "null": {
+                return txt1 === null;
+              }
+              case "starts": {
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+                const t2 = term.setting.val1.toLocaleLowerCase();
+                return txt1.toLocaleLowerCase().startsWith(t2);
               }
             }
             break;
@@ -132,107 +131,105 @@ export class FilterConfiguration implements IFilterConfiguration {
             if (txt1 === undefined) return true;
 
             const t1 = txt1;
-            if (term.setting.dataType === "date") {
-              switch (term.setting.type) {
-                case "between": {
-                  if (term.setting.val1 === "" || term.setting.val1 === "")
-                    return true;
-                  if (txt1 === null) return false;
-                  const t0 = term.setting.val1;
-                  const t2 = term.setting.val2;
-                  return t0 < t1 && t1 < t2;
-                }
-                case "eq":
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
-                  return t1 === term.setting.val1;
-                case "gt":
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
-                  return t1 > term.setting.val1;
-                case "gte":
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
-                  return t1 >= term.setting.val1;
-                case "lt":
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
-                  return t1 < term.setting.val1;
-                case "lte":
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
-                  return t1 <= term.setting.val1;
-                case "nbetween": {
-                  if (term.setting.val1 === "" || term.setting.val1 === "")
-                    return true;
-                  if (txt1 === null) return false;
-                  const t0 = term.setting.val1;
-                  const t2 = term.setting.val2;
-                  return !(t0 < t1 && t1 < t2);
-                }
-                case "neq":
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
-                  return t1 !== term.setting.val1;
-                case "nnull":
-                  return t1 !== null;
-                case "null":
-                  return t1 === null;
+
+            switch (term.setting.type) {
+              case "between": {
+                if (term.setting.val1 === "" || term.setting.val1 === "")
+                  return true;
+                if (txt1 === null) return false;
+                const t0 = term.setting.val1;
+                const t2 = term.setting.val2;
+                return t0 < t1 && t1 < t2;
               }
+              case "eq":
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+                return t1 === term.setting.val1;
+              case "gt":
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+                return t1 > term.setting.val1;
+              case "gte":
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+                return t1 >= term.setting.val1;
+              case "lt":
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+                return t1 < term.setting.val1;
+              case "lte":
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+                return t1 <= term.setting.val1;
+              case "nbetween": {
+                if (term.setting.val1 === "" || term.setting.val1 === "")
+                  return true;
+                if (txt1 === null) return false;
+                const t0 = term.setting.val1;
+                const t2 = term.setting.val2;
+                return !(t0 < t1 && t1 < t2);
+              }
+              case "neq":
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+                return t1 !== term.setting.val1;
+              case "nnull":
+                return t1 !== null;
+              case "null":
+                return t1 === null;
             }
           }
           case "Number": {
             const txt1 = dataTable.getCellValue(row, prop);
             if (txt1 === undefined) return true;
             const t1 = prop.column === "Number" ? parseFloat(txt1) : txt1;
-            if (term.setting.dataType === "number") {
-              switch (term.setting.type) {
-                case "between": {
-                  if (term.setting.val1 === "" || term.setting.val1 === "")
-                    return true;
-                  if (txt1 === null) return false;
-                  const t0 = parseFloat(term.setting.val1);
-                  const t2 = parseFloat(term.setting.val2);
-                  return t0 < t1 && t1 < t2;
-                }
-                case "eq":
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
-                  return t1 === parseFloat(term.setting.val1);
-                case "gt":
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
-                  return t1 > parseFloat(term.setting.val1);
-                case "gte":
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
-                  return t1 >= parseFloat(term.setting.val1);
-                case "lt":
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
-                  return t1 < parseFloat(term.setting.val1);
-                case "lte":
-                  if (term.setting.val1 === "") return true;
-                  if (txt1 === null) return false;
 
-                  return t1 <= parseFloat(term.setting.val1);
-                case "nbetween": {
-                  if (term.setting.val1 === "" || term.setting.val1 === "")
-                    return true;
-                  if (txt1 === null) return false;
-                  const t0 = parseFloat(term.setting.val1);
-                  const t2 = parseFloat(term.setting.val2);
-                  return !(t0 < t1 && t1 < t2);
-                }
-                case "neq":
-                  if (txt1 === null) return false;
-                  if (term.setting.val1 === "") return true;
-                  return t1 !== parseFloat(term.setting.val1);
-                case "nnull":
-                  return t1 !== null;
-                case "null":
-                  return t1 === null;
+            switch (term.setting.type) {
+              case "between": {
+                if (term.setting.val1 === "" || term.setting.val1 === "")
+                  return true;
+                if (txt1 === null) return false;
+                const t0 = parseFloat(term.setting.val1);
+                const t2 = parseFloat(term.setting.val2);
+                return t0 < t1 && t1 < t2;
               }
+              case "eq":
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+                return t1 === parseFloat(term.setting.val1);
+              case "gt":
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+                return t1 > parseFloat(term.setting.val1);
+              case "gte":
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+                return t1 >= parseFloat(term.setting.val1);
+              case "lt":
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+                return t1 < parseFloat(term.setting.val1);
+              case "lte":
+                if (term.setting.val1 === "") return true;
+                if (txt1 === null) return false;
+
+                return t1 <= parseFloat(term.setting.val1);
+              case "nbetween": {
+                if (term.setting.val1 === "" || term.setting.val1 === "")
+                  return true;
+                if (txt1 === null) return false;
+                const t0 = parseFloat(term.setting.val1);
+                const t2 = parseFloat(term.setting.val2);
+                return !(t0 < t1 && t1 < t2);
+              }
+              case "neq":
+                if (txt1 === null) return false;
+                if (term.setting.val1 === "") return true;
+                return t1 !== parseFloat(term.setting.val1);
+              case "nnull":
+                return t1 !== null;
+              case "null":
+                return t1 === null;
             }
           }
           case "ComboBox": {

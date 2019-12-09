@@ -1,21 +1,9 @@
-import { ISetting as IFilterSettingString } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsString";
-import { ISetting as IFilterSettingDate } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsDate";
-import { ISetting as IFilterSettingNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsNumber";
-import { ISetting as IFilterSettingBoolean } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsBoolean";
+
 import { IDataTable } from "./IDataTable";
 
 // TODO: Extract types so that model layer does not depend on view layer?
 
-type ISetting =
-  | IFilterSettingString
-  | IFilterSettingDate
-  | IFilterSettingNumber
-  | IFilterSettingBoolean;
 
-export interface IFilterTerm {
-  propertyId: string;
-  setting: ISetting;
-}
 
 export interface IFilterConfigurationData {}
 
@@ -23,10 +11,10 @@ export interface IFilterConfiguration extends IFilterConfigurationData {
   $type_IFilterConfigurationData: 1;
 
   isFilterControlsDisplayed: boolean;
-  filtering: IFilterTerm[];
+  filtering: any[];
   filteringFunction: (dataTable: IDataTable) => (row: any[]) => boolean;
-  getSettingByPropertyId(propertyId: string): IFilterTerm | undefined;
-  setFilter(term: IFilterTerm): void;
+  getSettingByPropertyId(propertyId: string): any;
+  setFilter(term: any): void;
   clearFilters(): void;
 
   onFilterDisplayClick(event: any): void;

@@ -7,63 +7,44 @@ import {
 import CS from "./FilterSettingsCommon.module.css";
 import { observable, computed, action } from "mobx";
 import { observer, PropTypes } from "mobx-react";
+import produce from "immer";
 
 export interface IStringFilterOp {}
 
-interface IOp1 {
-  type:
-    | "eq"
-    | "neq"
-    | "starts"
-    | "nstarts"
-    | "ends"
-    | "nends"
-    | "contains"
-    | "ncontains";
-  human: React.ReactNode;
-  val1: string;
-}
-
-interface IOp0 {
-  type: "null" | "nnull";
-  human: React.ReactNode;
-}
-
-export type ISetting = (IOp1 | IOp0) & { dataType: "string" };
-
-const OPERATORS: ISetting[] = [
-  { dataType: "string", human: <>=</>, type: "eq", val1: "" },
-  { dataType: "string", human: <>&ne;</>, type: "neq", val1: "" },
-  { dataType: "string", human: <>begins with</>, type: "starts", val1: "" },
-  {
-    dataType: "string",
-    human: <>not begins with</>,
-    type: "nstarts",
-    val1: ""
-  },
-  { dataType: "string", human: <>ends with</>, type: "ends", val1: "" },
-  { dataType: "string", human: <>not ends with</>, type: "nends", val1: "" },
-  { dataType: "string", human: <>contain</>, type: "contains", val1: "" },
-  { dataType: "string", human: <>not contain</>, type: "ncontains", val1: "" },
-  { dataType: "string", human: <>is null</>, type: "null" },
-  { dataType: "string", human: <>is not null</>, type: "nnull" }
+const OPERATORS: any[] = [
+  { human: <>=</>, type: "eq" },
+  { human: <>&ne;</>, type: "neq" },
+  { human: <>begins with</>, type: "starts" },
+  { human: <>not begins with</>, type: "nstarts" },
+  { human: <>ends with</>, type: "ends" },
+  { human: <>not ends with</>, type: "nends" },
+  { human: <>contain</>, type: "contains" },
+  { human: <>not contain</>, type: "ncontains" },
+  { human: <>is null</>, type: "null" },
+  { human: <>is not null</>, type: "nnull" }
 ];
 
 const OpCombo: React.FC<{
-  setting: ISetting;
-  onChange: (newSetting: ISetting) => void;
+  setting: any;
+  onChange: (newSetting: any) => void;
 }> = props => {
   return (
-    <FilterSettingsComboBox trigger={<>{props.setting.human}</>}>
+    <FilterSettingsComboBox
+      trigger={
+        <>
+          {(OPERATORS.find(op => op.type === props.setting.type) || {}).human}
+        </>
+      }
+    >
       {OPERATORS.map(op => (
         <FilterSettingsComboBoxItem
           key={op.type}
           onClick={() =>
-            props.onChange({
-              ...props.setting,
-              type: op.type,
-              human: op.human
-            } as any)
+            props.onChange(
+              produce(props.setting, (draft: any) => {
+                draft.type = op.type;
+              })
+            )
           }
         >
           {op.human}
@@ -74,8 +55,8 @@ const OpCombo: React.FC<{
 };
 
 const OpEditors: React.FC<{
-  setting: ISetting;
-  onChange?: (newSetting: ISetting) => void;
+  setting: any;
+  onChange?: (newSetting: any) => void;
   onBlur?: (event: any) => void;
 }> = props => {
   const { setting } = props;
@@ -94,7 +75,11 @@ const OpEditors: React.FC<{
           value={setting.val1}
           onChange={(event: any) =>
             props.onChange &&
-            props.onChange({ ...setting, val1: event.target.value })
+            props.onChange(
+              produce(setting, (draft: any) => {
+                draft.val1 = event.target.value;
+              })
+            )
           }
           onBlur={props.onBlur}
         />
@@ -108,10 +93,10 @@ const OpEditors: React.FC<{
 
 @observer
 export class FilterSettingsString extends React.Component<{
-  setting?: ISetting;
-  onTriggerApplySetting?: (setting: ISetting) => void;
+  setting?: any;
+  onTriggerApplySetting?: (setting: any) => void;
 }> {
-  @observable setting: ISetting = OPERATORS[0];
+  @observable setting: any = OPERATORS[0];
 
   componentDidMount() {
     this.takeSettingFromProps();
@@ -150,7 +135,7 @@ export class FilterSettingsString extends React.Component<{
   }
 
   @action.bound
-  handleChange(newSetting: ISetting) {
+  handleChange(newSetting: any) {
     this.setting = newSetting;
     switch (this.setting.type) {
       case "eq":

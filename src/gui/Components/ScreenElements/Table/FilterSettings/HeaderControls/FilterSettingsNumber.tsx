@@ -7,70 +7,45 @@ import {
 import CS from "./FilterSettingsCommon.module.css";
 import { observable, computed, action } from "mobx";
 import { observer, PropTypes } from "mobx-react";
+import produce from "immer";
 
-export interface IStringFilterOp {}
-
-interface IOp1 {
-  type: "eq" | "neq" | "lt" | "gt" | "lte" | "gte";
-
-  human: React.ReactNode;
-  val1: string;
-}
-
-interface IOp2 {
-  type: "between" | "nbetween";
-  human: React.ReactNode;
-  val1: string;
-  val2: string;
-}
-
-interface IOp0 {
-  type: "null" | "nnull";
-  human: React.ReactNode;
-}
-
-export type ISetting = (IOp2 | IOp1 | IOp0) & { dataType: "number" };
-
-const OPERATORS: ISetting[] = [
-  { dataType: "number", human: <>=</>, type: "eq", val1: "0" },
-  { dataType: "number", human: <>&ne;</>, type: "neq", val1: "0" },
-  { dataType: "number", human: <>&le;</>, type: "lte", val1: "0" },
-  { dataType: "number", human: <>&ge;</>, type: "gte", val1: "0" },
-  { dataType: "number", human: <>&#60;</>, type: "lt", val1: "0" },
-  { dataType: "number", human: <>&#62;</>, type: "gt", val1: "0" },
-  {
-    dataType: "number",
-    human: <>between</>,
-    type: "between",
-    val1: "0",
-    val2: "0"
-  },
-  {
-    dataType: "number",
-    human: <>not between</>,
-    type: "nbetween",
-    val1: "0",
-    val2: "0"
-  },
-  { dataType: "number", human: <>is null</>, type: "null" },
-  { dataType: "number", human: <>is not null</>, type: "nnull" }
+const OPERATORS: any[] = [
+  { human: <>=</>, type: "eq" },
+  { human: <>&ne;</>, type: "neq" },
+  { human: <>&le;</>, type: "lte" },
+  { human: <>&ge;</>, type: "gte" },
+  { human: <>&#60;</>, type: "lt" },
+  { human: <>&#62;</>, type: "gt" },
+  { human: <>between</>, type: "between" },
+  { human: <>not between</>, type: "nbetween" },
+  { human: <>is null</>, type: "null" },
+  { human: <>is not null</>, type: "nnull" }
 ];
 
 const OpCombo: React.FC<{
-  setting: ISetting;
-  onChange: (newSetting: ISetting) => void;
+  setting: any;
+  onChange: (newSetting: any) => void;
 }> = props => {
   return (
-    <FilterSettingsComboBox trigger={<>{props.setting.human}</>}>
+    <FilterSettingsComboBox
+      trigger={
+        <>
+          {
+            (OPERATORS.find(item => item.typ === props.setting.type) || {})
+              .human
+          }
+        </>
+      }
+    >
       {OPERATORS.map(op => (
         <FilterSettingsComboBoxItem
           key={op.type}
           onClick={() =>
-            props.onChange({
-              ...props.setting,
-              type: op.type,
-              human: op.human
-            } as any)
+            props.onChange(
+              produce(props.setting, (draft: any) => {
+                draft.type = op.type;
+              })
+            )
           }
         >
           {op.human}
@@ -81,8 +56,8 @@ const OpCombo: React.FC<{
 };
 
 const OpEditors: React.FC<{
-  setting: ISetting;
-  onChange: (newSetting: ISetting) => void;
+  setting: any;
+  onChange: (newSetting: any) => void;
   onBlur?: (event: any) => void;
 }> = props => {
   const { setting } = props;
@@ -99,7 +74,11 @@ const OpEditors: React.FC<{
           className={CS.input}
           value={setting.val1}
           onChange={(event: any) =>
-            props.onChange({ ...setting, val1: event.target.value })
+            props.onChange(
+              produce(setting, (draft: any) => {
+                draft.val1 = event.target.value;
+              })
+            )
           }
           onBlur={props.onBlur}
         />
@@ -114,7 +93,11 @@ const OpEditors: React.FC<{
             className={CS.input}
             value={setting.val1}
             onChange={(event: any) =>
-              props.onChange({ ...setting, val1: event.target.value })
+              props.onChange(
+                produce(setting, (draft: any) => {
+                  draft.val1 = event.target.value;
+                })
+              )
             }
             onBlur={props.onBlur}
           />
@@ -123,7 +106,11 @@ const OpEditors: React.FC<{
             className={CS.input}
             value={setting.val2}
             onChange={(event: any) =>
-              props.onChange({ ...setting, val2: event.target.value })
+              props.onChange(
+                produce(setting, (draft: any) => {
+                  draft.val2 = event.target.value;
+                })
+              )
             }
             onBlur={props.onBlur}
           />
@@ -138,10 +125,10 @@ const OpEditors: React.FC<{
 
 @observer
 export class FilterSettingsNumber extends React.Component<{
-  onTriggerApplySetting?: (setting: ISetting) => void;
-  setting?: ISetting;
+  onTriggerApplySetting?: (setting: any) => void;
+  setting?: any;
 }> {
-  @observable setting: ISetting = OPERATORS[0];
+  @observable.ref setting: any = OPERATORS[0];
 
   componentDidMount() {
     this.takeSettingFromProps();
@@ -156,7 +143,6 @@ export class FilterSettingsNumber extends React.Component<{
       this.setting = this.props.setting;
     }
   }
-
 
   @action.bound
   handleBlur() {
@@ -185,7 +171,7 @@ export class FilterSettingsNumber extends React.Component<{
   }
 
   @action.bound
-  handleChange(newSetting: ISetting) {
+  handleChange(newSetting: any) {
     this.setting = newSetting;
     switch (this.setting.type) {
       case "eq":
