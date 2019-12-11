@@ -40,6 +40,8 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Origam.Schema.WorkflowModel;
+using Origam.Security.Common;
 using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore
@@ -229,7 +231,6 @@ namespace Origam.ServerCore
             }
             throw new Exception(localizer["ErrorRefreshReturnInvalid", 
                 sessionStore.GetType().Name, SessionStore.ACTION_REFRESH]);
-
         }
         public RuleExceptionDataCollection SaveDataQuery(Guid sessionFormIdentifier)
         {
@@ -574,6 +575,53 @@ namespace Origam.ServerCore
                 }
             }
             return result;
+        }
+        public IList<WorkQueueInfo> WorkQueueList(
+            IStringLocalizer<SharedResources> localizer)
+        {
+            try
+            {
+                IList<WorkQueueInfo> result = new List<WorkQueueInfo>();
+                // if the user is not logged on,
+                // we will gracefully finish by returning an empty list
+                try
+                {
+                    SecurityTools.CurrentUserProfile();
+                }
+                catch
+                {
+                    return result;
+                }
+                IWorkQueueService workQueueService 
+                    = ServiceManager.Services.GetService<IWorkQueueService>();
+                IDataLookupService lookupService 
+                    = ServiceManager.Services.GetService<IDataLookupService>();
+                DataSet data = workQueueService.UserQueueList();
+                DataTable queueList = data.Tables["WorkQueue"];
+                foreach (DataRow row in queueList.Rows)
+                {
+                    object workQueueId = row["Id"];
+                    string workQueueClassName = (string)row["WorkQueueClass"];
+                    long cnt = 0;
+                    if ((bool)row["IsMessageCountDisplayed"])
+                    {
+                        WorkQueueClass workQueueClass 
+                            = workQueueService.WQClass(workQueueClassName) 
+                                as WorkQueueClass;
+                        cnt = (long)lookupService.GetDisplayText(
+                            workQueueClass.WorkQueueItemCountLookupId, 
+                            workQueueId, false, false, null);
+                    }
+                    WorkQueueInfo workQueueInfo = new WorkQueueInfo(
+                        workQueueId.ToString(), (string)row["Name"], cnt);
+                    result.Add(workQueueInfo);
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(localizer["ErrorLoadingWorkQueueList"], ex);
+            }
         }
         private bool IsRowDirty(DataRow row)
         {

@@ -43,7 +43,9 @@ namespace Origam.ServerCommon.Pages
     public class UserApiProcessor
     {
         private readonly IHttpTools httpTools;
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog log 
+            = log4net.LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public UserApiProcessor(IHttpTools httpTools)
         {
@@ -54,110 +56,113 @@ namespace Origam.ServerCommon.Pages
 
         public void Dispose()
         {
-
         }
 
         public void Process(IHttpContextWrapper context)
         {
-            if (context.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/assets/")) return;
-
-            string mimeType = context.Request.ContentType?.Split(";".ToCharArray())[0];
-            if (mimeType == "application/x-amf") return;
-
+            if (context.Request.AppRelativeCurrentExecutionFilePath.StartsWith(
+                "~/assets/"))
+            {
+                return;
+            }
+            string mimeType = context.Request.ContentType?.Split(
+                ";".ToCharArray())[0];
+            if (mimeType == "application/x-amf")
+            {
+                return;
+            }
             string resultContentType = "text";
-
             if (Analytics.Instance.IsAnalyticsEnabled)
             {
-                Analytics.Instance.SetProperty("ContentType", mimeType);
-                Analytics.Instance.SetProperty("HttpMethod", context.Request.HttpMethod);
-                Analytics.Instance.SetProperty("RawUrl", context.Request.RawUrl);
-                Analytics.Instance.SetProperty("Url", context.Request.Url);
-                Analytics.Instance.SetProperty("UrlReferrer", context.Request.UrlReferrer);
-                Analytics.Instance.SetProperty("UserAgent", context.Request.UserAgent);
-                Analytics.Instance.SetProperty("BrowserName", context.Request.Browser);
-                Analytics.Instance.SetProperty("BrowserVersion", context.Request.BrowserVersion);
-                Analytics.Instance.SetProperty("UserHostAddress", context.Request.UserHostAddress);
-                Analytics.Instance.SetProperty("UserHostName", context.Request.UserHostName);
-                Analytics.Instance.SetProperty("UserLanguages", context.Request.UserLanguages);
-                foreach (string key in context.Request.Params.Keys)
-                {
-                    Analytics.Instance.SetProperty("Parameter_" + key, context.Request.Params[key]);
-                }
+                RequestAnalytics(context, mimeType);
             }
-
             try
             {
-                Dictionary<string, string> urlParameters;
-                AbstractPage page = ResolvePage(context, out urlParameters);
-
-                if (page != null)
+                var (code, page) = ResolvePage(context, out var urlParameters);
+                if (code == 404)
                 {
-                    if (Analytics.Instance.IsAnalyticsEnabled)
-                    {
-                        Analytics.Instance.SetProperty("OrigamPageId", page.Id);
-                        Analytics.Instance.SetProperty("OrigamPageName", page.Name);
-                        foreach (KeyValuePair<string, string> pair in urlParameters)
-                        {
-                            Analytics.Instance.SetProperty("Parameter_" + pair.Key, pair.Value);
-                        }
-
-                        Analytics.Instance.Log("PAGE_ACCESS");
-                    }
-
-                    if (page.MimeType != "?")
-                    {
-                        if (page.MimeType == "text/calendar")
-                        {
-                            context.Response.BufferOutput = false;
-                        }
-                        context.Response.ContentType = page.MimeType;
-                        // set result content type for exception handling
-                        // so the exception is formatted as expected, e.g. in json
-                        resultContentType = page.MimeType;
-                    }
-                    if (page.CacheMaxAge == null)
-                    {
-                        context.Response.CacheSetMaxAge(new TimeSpan(0));
-                    }
-                    else
-                    {
-                        IParameterService parameterService = ServiceManager.Services.GetService(
-                            typeof(IParameterService)) as IParameterService;
-                        double maxAge = Convert.ToDouble(parameterService.GetParameterValue(
-                            page.CacheMaxAgeDataConstantId));
-                        context.Response.CacheSetMaxAge(TimeSpan.FromSeconds(maxAge));
-                    }
-                    Dictionary<string, object> mappedParameters = MapParameters(
-                        context, urlParameters, page, mimeType);
-                    IPageRequestHandler handler = HandlePage(page);
-                    handler.Execute(page, mappedParameters, context.Request, context.Response);
-                    //context.Response.Flush();
-                    context.Response.End();
+                    // nothing found, let others handle it
+                    return;
                 }
+                if (code != 200)
+                {
+                    context.Response.StatusCode = code;
+                    context.Response.ContentType = resultContentType;
+                    context.Response.Clear();
+                    if (code == 500)
+                    {
+                        context.Response.Write("Multiple routes.");
+                    }
+                    context.Response.End();
+                    return;
+                }
+                if (Analytics.Instance.IsAnalyticsEnabled)
+                {
+                    PageAnalytics(page, urlParameters);
+                }
+                if (page.MimeType != "?")
+                {
+                    if (page.MimeType == "text/calendar")
+                    {
+                        context.Response.BufferOutput = false;
+                    }
+                    context.Response.ContentType 
+                        = page.MimeType;
+                    // set result content type for exception handling
+                    // so the exception is formatted as expected, e.g. in json
+                    resultContentType = page.MimeType;
+                }
+                if (page.CacheMaxAge == null)
+                {
+                    context.Response.CacheSetMaxAge(new TimeSpan(0));
+                }
+                else
+                {
+                    IParameterService parameterService 
+                        = ServiceManager.Services
+                            .GetService<IParameterService>();
+                    double maxAge = Convert.ToDouble(
+                        parameterService.GetParameterValue(
+                            page.CacheMaxAgeDataConstantId));
+                    context.Response.CacheSetMaxAge(
+                        TimeSpan.FromSeconds(maxAge));
+                }
+                Dictionary<string, object> mappedParameters = MapParameters(
+                    context, urlParameters, page, mimeType);
+                IPageRequestHandler handler = HandlePage(page);
+                handler.Execute(
+                    page, mappedParameters, context.Request, 
+                    context.Response);
+                context.Response.End();
             }
             catch (ThreadAbortException)
             {
             }
             catch (Exception ex)
             {
-                if (log.IsErrorEnabled) log.Error(
-                    string.Format("Error occured ({0}) for request: {1}: {2}",
-                        ex.GetType().ToString(),
-                        context.Request.AbsoluteUri,
-                        ex.Message)
-                    , ex);
-                if (log.IsDebugEnabled) log.DebugFormat("Result Content Type: {0}", resultContentType);
-
+                if (log.IsErrorEnabled) 
+                {
+                    log.Error(
+                        $@"Error occured ({ex.GetType()}) for request: 
+                        {context.Request.AbsoluteUri}: {ex.Message}"
+                        , ex);
+                }
+                if (log.IsDebugEnabled)
+                {
+                    log.DebugFormat("Result Content Type: {0}",
+                        resultContentType);
+                }
                 string message;
                 if (resultContentType == "application/json")
                 {
                     context.Response.TrySkipIisCustomErrors = true;
-
-                    if (ex is RuleException)
+                    if (ex is RuleException ruleEx)
                     {
-                        message = String.Format("{{\"Message\" : {0}, \"RuleResult\" : {1}}}",
-                            JsonConvert.SerializeObject(ex.Message),
-                            JsonConvert.SerializeObject(((RuleException)ex).RuleResult));
+                        message =
+                            $@"{{""Message"" : 
+                            {JsonConvert.SerializeObject(ruleEx.Message)}, 
+                            ""RuleResult"" : 
+                            {JsonConvert.SerializeObject(ruleEx.RuleResult)}}}";
                     }
                     else
                     {
@@ -168,40 +173,79 @@ namespace Origam.ServerCommon.Pages
                 {
                     message = ex.Message + ex.StackTrace;
                 }
-
                 context.Response.StatusCode = 400;
                 context.Response.ContentType = resultContentType;
                 context.Response.Clear();
-                // context.Response.StatusDescription = ex.Message;
                 context.Response.Write(message);
-                //context.Response.Flush();
                 context.Response.End();
+            }
+        }
+
+        private static void PageAnalytics(
+            AbstractPage page, Dictionary<string, string> urlParameters)
+        {
+            Analytics.Instance.SetProperty("OrigamPageId", page.Id);
+            Analytics.Instance.SetProperty("OrigamPageName", page.Name);
+            foreach (KeyValuePair<string, string> pair in urlParameters)
+            {
+                Analytics.Instance.SetProperty(
+                    "Parameter_" + pair.Key, pair.Value);
+            }
+            Analytics.Instance.Log("PAGE_ACCESS");
+        }
+        
+        private static void RequestAnalytics(
+            IHttpContextWrapper context, string mimeType)
+        {
+            Analytics.Instance.SetProperty(
+                "ContentType", mimeType);
+            Analytics.Instance.SetProperty(
+                "HttpMethod", context.Request.HttpMethod);
+            Analytics.Instance.SetProperty(
+                "RawUrl", context.Request.RawUrl);
+            Analytics.Instance.SetProperty(
+                "Url", context.Request.Url);
+            Analytics.Instance.SetProperty(
+                "UrlReferrer", context.Request.UrlReferrer);
+            Analytics.Instance.SetProperty(
+                "UserAgent", context.Request.UserAgent);
+            Analytics.Instance.SetProperty(
+                "BrowserName", context.Request.Browser);
+            Analytics.Instance.SetProperty(
+                "BrowserVersion", context.Request.BrowserVersion);
+            Analytics.Instance.SetProperty(
+                "UserHostAddress", context.Request.UserHostAddress);
+            Analytics.Instance.SetProperty(
+                "UserHostName", context.Request.UserHostName);
+            Analytics.Instance.SetProperty(
+                "UserLanguages", context.Request.UserLanguages);
+            foreach (var key in context.Request.Params.Keys)
+            {
+                Analytics.Instance.SetProperty(
+                    "Parameter_" + key, context.Request.Params[key]);
             }
         }
 
         private IPageRequestHandler HandlePage(AbstractPage page)
         {
             IPageRequestHandler handler;
-
-            if (page is XsltDataPage)
+            switch (page)
             {
-                handler = new XsltPageRequestHandler();
-            }
-            else if (page is WorkflowPage)
-            {
-                handler = new WorkflowPageRequestHandler();
-            }
-            else if (page is FileDownloadPage)
-            {
-                handler = new FileDownloadPageRequestHandler(httpTools);
-            }
-            else if (page is ReportPage)
-            {
-                handler = new ReportPageRequestHandler();
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException("page", page, Resources.ErrorUnknownPageType);
+                case XsltDataPage _:
+                    handler = new XsltPageRequestHandler();
+                    break;
+                case WorkflowPage _:
+                    handler = new WorkflowPageRequestHandler();
+                    break;
+                case FileDownloadPage _:
+                    handler = new FileDownloadPageRequestHandler(httpTools);
+                    break;
+                case ReportPage _:
+                    handler = new ReportPageRequestHandler();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(
+                        nameof(page), page, Resources.ErrorUnknownPageType);
             }
             return handler;
         }
@@ -603,102 +647,115 @@ namespace Origam.ServerCommon.Pages
             return fileBytes;
         }
 
-        private static AbstractPage ResolvePage(IHttpContextWrapper context, out Dictionary<string, string> urlParameters)
+        private static (int, AbstractPage) ResolvePage(
+            IHttpContextWrapper context, 
+            out Dictionary<string, string> urlParameters)
         {
             urlParameters = new Dictionary<string, string>();
-
             string path = context.Request.AppRelativeCurrentExecutionFilePath;
             if (log.IsDebugEnabled)
             {
                 log.DebugFormat("Resolving page {0}.", path);
             }
-
-            IOrigamAuthorizationProvider auth = SecurityManager.GetAuthorizationProvider();
-            SchemaService ss = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-            PagesSchemaItemProvider pages = ss.GetProvider(typeof(PagesSchemaItemProvider)) as PagesSchemaItemProvider;
-            string[] requestPath = path.Split(new string[] { "/" }, StringSplitOptions.None);
-
+            IOrigamAuthorizationProvider auth 
+                = SecurityManager.GetAuthorizationProvider();
+            SchemaService schemaService 
+                = ServiceManager.Services.GetService<SchemaService>();
+            PagesSchemaItemProvider pages 
+                = schemaService.GetProvider<PagesSchemaItemProvider>();
+            string[] requestPath = path.Split(
+                new string[] { "/" }, StringSplitOptions.None);
+            List<AbstractPage> validPagesByVerbAndPath =
+                new List<AbstractPage>();
             foreach (AbstractPage page in pages.ChildItems)
             {
                 urlParameters.Clear();
-
-                if (IsPageValidByVerb(page, context))
+                if (!IsPageValidByVerb(page, context))
                 {
-                    bool invalidRequest = false;
-
-                    string[] pagePath = page.Url.Split(new string[] { "/" }, StringSplitOptions.None);
-
-                    if (requestPath.Length - 1 == pagePath.Length)
+                    continue;
+                }
+                bool invalidRequest = false;
+                string[] pagePath = page.Url.Split(
+                    new string[] { "/" }, StringSplitOptions.None);
+                if ((requestPath.Length - 1) != pagePath.Length)
+                {
+                    continue;
+                }
+                for (int i = 0; i < pagePath.Length; i++)
+                {
+                    string pathPart = pagePath[i];
+                    // parameter
+                    if (pathPart.StartsWith("{"))
                     {
-                        for (int i = 0; i < pagePath.Length; i++)
+                        if (requestPath.Length <= i + 1)
                         {
-                            string pathPart = pagePath[i];
-
-                            // parameter
-                            if (pathPart.StartsWith("{"))
-                            {
-                                if (requestPath.Length > i + 1)
-                                {
-                                    string paramValue = requestPath[i + 1];
-                                    if (paramValue.EndsWith(".aspx") && i == requestPath.Length - 2)
-                                    {
-                                        // remove .aspx from the end of the string
-                                        paramValue = paramValue.Substring(0, paramValue.Length - 5);
-                                    }
-
-                                    string paramName;
-
-                                    if (pathPart.EndsWith(".aspx"))
-                                    {
-                                        paramName = pathPart.Substring(1, pathPart.Length - 7);
-                                    }
-                                    else
-                                    {
-                                        paramName = pathPart.Substring(1, pathPart.Length - 2);
-                                    }
-
-                                    //if (paramName == "action")
-                                    //{
-                                    //    invalidRequest = true;
-                                    //    break;
-                                    //}
-
-                                    urlParameters.Add(paramName, paramValue);
-                                }
-                            }
-                            // path
-                            else
-                            {
-                                string paramValue = requestPath[i + 1];
-                                if (paramValue.EndsWith(".aspx") && i == requestPath.Length - 2)
-                                {
-                                    // remove .aspx from the end of the string
-                                    paramValue = paramValue.Substring(0, paramValue.Length - 5);
-                                }
-
-                                if (pathPart != paramValue)
-                                {
-                                    // this is not the right page, let's try another
-                                    invalidRequest = true;
-                                    break;
-                                }
-                            }
+                            continue;
                         }
-
-                        if (!invalidRequest)
+                        string paramValue = requestPath[i + 1];
+                        if (paramValue.EndsWith(".aspx") 
+                            && (i == (requestPath.Length - 2)))
                         {
-                            if (IsPageValidBySecurity(auth, page))
-                            {
-                                return page;
-                            }
+                            // remove .aspx from the end of the string
+                            paramValue = paramValue.Substring(
+                                0, paramValue.Length - 5);
+                        }
+                        string paramName;
+                        if (pathPart.EndsWith(".aspx"))
+                        {
+                            paramName = pathPart.Substring(
+                                1, pathPart.Length - 7);
+                        }
+                        else
+                        {
+                            paramName = pathPart.Substring(
+                                1, pathPart.Length - 2);
+                        }
+                        urlParameters.Add(paramName, paramValue);
+                    }
+                    // path
+                    else
+                    {
+                        string paramValue = requestPath[i + 1];
+                        if (paramValue.EndsWith(".aspx") 
+                            && (i == (requestPath.Length - 2)))
+                        {
+                            // remove .aspx from the end of the string
+                            paramValue = paramValue.Substring(
+                                0, paramValue.Length - 5);
+                        }
+                        if (pathPart != paramValue)
+                        {
+                            // this is not the right page, let's try another
+                            invalidRequest = true;
+                            break;
                         }
                     }
                 }
+                if (!invalidRequest)
+                {
+                    validPagesByVerbAndPath.Add(page);
+                }
             }
-            return null;
+            switch (validPagesByVerbAndPath.Count)
+            {
+                case 0:
+                {
+                    return (404, null);
+                }
+                case 1:
+                {
+                    return ValidatePageSecurity(
+                        auth, validPagesByVerbAndPath[0]);
+                }
+                default:
+                {
+                    return (500, null);
+                }
+            }
         }
 
-        private static bool IsPageValidByVerb(AbstractPage page, IHttpContextWrapper context)
+        private static bool IsPageValidByVerb(
+            AbstractPage page, IHttpContextWrapper context)
         {
             switch (context.Request.HttpMethod)
             {
@@ -713,9 +770,18 @@ namespace Origam.ServerCommon.Pages
             }
         }
 
-        internal static bool IsPageValidBySecurity(IOrigamAuthorizationProvider auth, AbstractPage page)
+        private static (int, AbstractPage) ValidatePageSecurity(
+            IOrigamAuthorizationProvider auth, AbstractPage page)
         {
-            return auth.Authorize(SecurityManager.CurrentPrincipal, page.Roles);
+            try
+            {
+                return auth.Authorize(SecurityManager.CurrentPrincipal, 
+                    page.Roles) ? (200, page) : (403, null);
+            }
+            catch (UserNotLoggedInException)
+            {
+                return (401, null);
+            }
         }
         #endregion
     }

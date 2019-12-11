@@ -61,8 +61,11 @@ namespace Origam.BI.FastReport
                             throw new Exception(
                                 ResourceUtils.GetString("PathNotFound", path));
                         }
-                    } 
-                    reportDoc.RegisterData(dataset);
+                    }
+                    foreach (DataTable table in dataset.Tables)
+                    {
+                        reportDoc.RegisterData(table, table.TableName);
+                    }
                     reportDoc.Prepare();
                     if (format != "PDF")
                     {

@@ -231,6 +231,15 @@ namespace Origam.ServerCore.Controller
                 return Ok(labelDictionary);
             });
         }
+        
+        [HttpGet("[action]")]
+        public IActionResult WorkQueueList()
+        {
+            return RunWithErrorHandler(() =>
+            {
+                return Ok(sessionObjects.UIService.WorkQueueList(localizer));
+            });
+        }
 
         private IActionResult CheckLookup(LookupLabelsInput input)
         {

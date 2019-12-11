@@ -535,6 +535,7 @@ namespace Origam.Server
                 InitEntityDependencies();
             }
         }
+
         private void InitEntityDependencies()
         {
             _entityHasRuleDependencies.Clear();
