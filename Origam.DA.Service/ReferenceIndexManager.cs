@@ -60,9 +60,12 @@ namespace Origam.DA.Service
         }
         private static void Add(IPersistent sender)
         {
-            List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> newReferenceIndex = new List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>>();
-            Addreference((AbstractSchemaItem) sender, newReferenceIndex);
-            referenceIndex.AddRange(newReferenceIndex);
+            if (sender is AbstractSchemaItem)
+            {
+                List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> newReferenceIndex = new List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>>();
+                Addreference((AbstractSchemaItem)sender, newReferenceIndex);
+                referenceIndex.AddRange(newReferenceIndex);
+            }
         }
         internal static void UpdateReferenceIndex(IPersistent sender)
         {
