@@ -5,6 +5,7 @@ export interface IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1;
 
   onMainMenuItemClick(args: { event: any; item: any }): Generator;
+  onWorkQueueListItemClick(event: any, item: any): Generator;
   onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): Generator;
 
   openNewForm(

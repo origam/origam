@@ -2,6 +2,7 @@ import {  IMainMenu, IMainMenuEnvelope } from "./IMainMenu";
 import { IWorkbenchLifecycle } from "./IWorkbenchLifecycle";
 import { IClientFulltextSearch } from "./IClientFulltextSearch";
 import { IOpenedScreens } from "./IOpenedScreens";
+import { IWorkQueues } from "./IWorkQueues";
 
 export interface IWorkbenchData {
   mainMenuEnvelope: IMainMenuEnvelope;
@@ -9,6 +10,7 @@ export interface IWorkbenchData {
   clientFulltextSearch: IClientFulltextSearch;
   openedScreens: IOpenedScreens;
   openedDialogScreens: IOpenedScreens;
+  workQueues: IWorkQueues;
 }
 
 export interface IWorkbench extends IWorkbenchData {

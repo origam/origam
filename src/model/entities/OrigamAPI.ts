@@ -5,7 +5,6 @@ import _ from "lodash";
 import { IApi } from "./types/IApi";
 
 export class OrigamAPI implements IApi {
-
   constructor() {
     this.urlPrefix = "/internalApi";
   }
@@ -32,7 +31,7 @@ export class OrigamAPI implements IApi {
     const token = tokenSource.token;
     const canceller = () => {
       tokenSource.cancel();
-    }
+    };
     canceller.token = token;
     return canceller as any;
   }
@@ -357,11 +356,14 @@ export class OrigamAPI implements IApi {
     };
   }
 
-  async setMasterRecord(data: {
-    SessionFormIdentifier: string;
-    Entity: string;
-    RowId: string;
-  }, canceller?: any) {
+  async setMasterRecord(
+    data: {
+      SessionFormIdentifier: string;
+      Entity: string;
+      RowId: string;
+    },
+    canceller?: any
+  ) {
     return await axios.post(`${this.urlPrefix}/UIService/MasterRecord`, data, {
       headers: this.httpAuthHeader,
       cancelToken: canceller && canceller.token
@@ -476,6 +478,14 @@ export class OrigamAPI implements IApi {
   }): Promise<any> {
     return (
       await axios.post(`${this.urlPrefix}/UIService/RowStates`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data;
+  }
+
+  async getWorkQueueList(): Promise<any> {
+    return (
+      await axios.get(`${this.urlPrefix}/UIService/WorkQueueList`, {
         headers: this.httpAuthHeader
       })
     ).data;

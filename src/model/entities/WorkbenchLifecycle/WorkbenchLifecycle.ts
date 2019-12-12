@@ -12,6 +12,7 @@ import { IMainMenuItemType } from "../types/IMainMenu";
 import { IDialogInfo, IOpenedScreen } from "../types/IOpenedScreen";
 import { IWorkbenchLifecycle } from "../types/IWorkbenchLifecycle";
 import { handleError } from "model/actions/handleError";
+import { getWorkQueues } from "model/selectors/WorkQueues/getWorkQueues";
 
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
@@ -59,6 +60,26 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         dialogInfo,
         {}
       );
+    }
+  }
+
+  *onWorkQueueListItemClick(event: any, item: any) {
+    const openedScreens = getOpenedScreens(this);
+
+    const id = item.id;
+    const type = IMainMenuItemType.WorkQueue;
+    const label = item.name;
+
+    let dialogInfo: IDialogInfo | undefined;
+    if (!event.ctrlKey) {
+      const existingItem = openedScreens.findLastExistingItem(id);
+      if (existingItem) {
+        openedScreens.activateItem(id, existingItem.order);
+      } else {
+        yield* this.openNewForm(id, type, label, false, dialogInfo, {});
+      }
+    } else {
+      yield* this.openNewForm(id, type, label, false, dialogInfo, {});
     }
   }
 
@@ -179,6 +200,11 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const menuUI = findMenu(portalInfo.menu);
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
     getClientFulltextSearch(this).indexMainMenu(menuUI);
+    const workQueues = getWorkQueues(this);
+    yield* workQueues.setRefreshInterval(
+      portalInfo.workQueueListRefreshInterval
+    );
+    yield* workQueues.startTimer();
   }
 
   *run(): Generator {

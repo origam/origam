@@ -4,8 +4,10 @@ import { IWorkbenchLifecycle } from "./types/IWorkbenchLifecycle";
 import { action, observable } from "mobx";
 import { IClientFulltextSearch } from "./types/IClientFulltextSearch";
 import { IOpenedScreens } from "./types/IOpenedScreens";
+import { IWorkQueues } from "./types/IWorkQueues";
 
 export class Workbench implements IWorkbench {
+  
   $type_IWorkbench: 1 = 1;
 
   constructor(data: IWorkbenchData) {
@@ -14,6 +16,7 @@ export class Workbench implements IWorkbench {
     this.clientFulltextSearch.parent = this;
     this.openedScreens.parent = this;
     this.openedDialogScreens.parent = this;
+    this.workQueues.parent = this;
   }
 
   workbenchLifecycle: IWorkbenchLifecycle = null as any;
@@ -21,6 +24,7 @@ export class Workbench implements IWorkbench {
   mainMenuEnvelope: IMainMenuEnvelope = null as any;
   openedScreens: IOpenedScreens = null as any;
   openedDialogScreens: IOpenedScreens = null as any;
+  workQueues: IWorkQueues = null as any;
 
   @observable isFullScreen: boolean = false;
 

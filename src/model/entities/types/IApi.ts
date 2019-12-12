@@ -213,4 +213,6 @@ export interface IApi {
     Entity: string;
     Ids: string[];
   }): Promise<any>;
+
+  getWorkQueueList(): Promise<any>;
 }

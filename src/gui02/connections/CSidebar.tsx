@@ -9,7 +9,10 @@ import React from "react";
 import { CMainMenu } from "./CMainMenu";
 import { observable } from "mobx";
 import { SidebarSectionBody } from "gui02/components/Sidebar/SidebarSectionBody";
-import { observer } from "mobx-react";
+import { observer, MobXProviderContext } from "mobx-react";
+import { getWorkQueuesTotalItemsCount } from "model/selectors/WorkQueues/getWorkQueuesTotalItemCount";
+import { IWorkbench } from "model/entities/types/IWorkbench";
+import { CWorkQueues } from "./CWorkQueues";
 
 enum ISidebarSection {
   WorkQueues,
@@ -21,9 +24,16 @@ enum ISidebarSection {
 
 @observer
 export class CSidebar extends React.Component {
+  static contextType = MobXProviderContext;
+
+  get workbench(): IWorkbench {
+    return this.context.application;
+  }
+
   @observable activeSection = ISidebarSection.Menu;
 
   render() {
+    const workQueuesItemsCount = getWorkQueuesTotalItemsCount(this.workbench);
     return (
       <Sidebar>
         <LogoSection>
@@ -40,7 +50,11 @@ export class CSidebar extends React.Component {
             icon={
               <>
                 <Icon src="./icons/work-queue.svg" />
-                <SidebarAlertCounter>50</SidebarAlertCounter>
+                {workQueuesItemsCount > 0 && (
+                  <SidebarAlertCounter>
+                    {workQueuesItemsCount}
+                  </SidebarAlertCounter>
+                )}
               </>
             }
             label={<>Work Queues</>}
@@ -49,7 +63,7 @@ export class CSidebar extends React.Component {
           <SidebarSectionBody
             isActive={this.activeSection === ISidebarSection.WorkQueues}
           >
-            &nbsp;
+            <CWorkQueues />
           </SidebarSectionBody>
         </SidebarSection>
         <SidebarSection

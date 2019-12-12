@@ -1,7 +1,8 @@
 export enum IMainMenuItemType {
   FormRef = "FormReferenceMenuItem",
   FormRefWithSelection = "FormReferenceMenuItem_WithSelection",
-  WorkflowRef = "WorkflowReferenceMenuItem"
+  WorkflowRef = "WorkflowReferenceMenuItem",
+  WorkQueue = "WOrkQueue"
 }
 
 export interface IMainMenuData {
