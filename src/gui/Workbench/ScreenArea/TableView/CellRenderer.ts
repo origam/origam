@@ -19,6 +19,7 @@ import {
   IRenderedCell
 } from "../../../Components/ScreenElements/Table/types";
 import { onTableCellClick } from "model/actions-ui/DataView/TableView/onTableCellClick";
+import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 
 export interface ICellRendererData {
   tablePanelView: ITablePanelView;
@@ -137,6 +138,10 @@ export class CellRenderer implements ICellRenderer {
     }
   }
 
+  @computed get isSelectionCheckboxes() {
+    return getIsSelectionCheckboxesShown(this.tablePanelView);
+  }
+
   @computed get getCellValue() {
     return getCellValueByIdx(this.tablePanelView);
   }
@@ -147,6 +152,38 @@ export class CellRenderer implements ICellRenderer {
 
   getCell(rowIndex: number, columnIndex: number): IRenderedCell {
     const dataTable = getDataTable(this.tablePanelView);
+    const record = getTableViewRecordByExistingIdx(
+      this.tablePanelView,
+      rowIndex
+    );
+    const recordId = dataTable.getRowId(record);
+    const selectedRowId = getSelectedRowId(this.tablePanelView);
+    if (this.isSelectionCheckboxes) {
+      if (columnIndex === 0) {
+        return {
+          isCellCursor: false,
+          isRowCursor: recordId === selectedRowId,
+          isColumnOrderChangeSource: false,
+          isColumnOrderChangeTarget: false,
+          isLoading: false,
+          isInvalid: false,
+          formatterPattern: "",
+          type: "CheckBox",
+          value: false,
+          text: "",
+          backgroundColor:
+            getRowStateColumnBgColor(this.tablePanelView, recordId, "") ||
+            getRowStateRowBgColor(this.tablePanelView, recordId),
+          foregroundColor: getRowStateForegroundColor(
+            this.tablePanelView,
+            recordId,
+            ""
+          )
+        };
+      }
+      columnIndex--;
+    }
+
     const value = this.getCellValue(rowIndex, columnIndex);
     let text = value;
     let isLoading = false;
@@ -154,10 +191,7 @@ export class CellRenderer implements ICellRenderer {
       this.tablePanelView,
       columnIndex
     );
-    const record = getTableViewRecordByExistingIdx(
-      this.tablePanelView,
-      rowIndex
-    );
+
     if (property.isLookup) {
       if (property.column === "TagInput") {
         text = (this.getCellText(rowIndex, columnIndex) || []).join(", ");
@@ -167,8 +201,6 @@ export class CellRenderer implements ICellRenderer {
       isLoading = property.lookup!.isLoading(value);
     }
     const selectedColumnId = getSelectedColumnId(this.tablePanelView);
-    const selectedRowId = getSelectedRowId(this.tablePanelView);
-    const recordId = dataTable.getRowId(record);
 
     let isInvalid = false;
     let invalidMessage: string | undefined = undefined;

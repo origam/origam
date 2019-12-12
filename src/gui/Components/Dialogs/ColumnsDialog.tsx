@@ -5,7 +5,7 @@ import { AutoSizer, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
 import { observable, action } from "mobx";
 import { observer, Observer } from "mobx-react";
-import produce from "immer";
+import produce, { finishDraft } from "immer";
 
 export interface ITableColumnsConf {
   fixedColumnCount: number;
@@ -43,6 +43,13 @@ export class ColumnsDialog extends React.Component<{
     this.configuration = produce(this.configuration, draft => {
       draft.columnConf[rowIndex].isVisible = state;
     });
+  }
+
+  @action.bound handleFixedColumnsCountChange(event: any) {
+    this.configuration = produce(this.configuration, draft => {
+      draft.fixedColumnCount = event.target.value;
+    });
+    console.log(this.configuration);
   }
 
   render() {
@@ -94,8 +101,9 @@ export class ColumnsDialog extends React.Component<{
           Locked columns count
           <input
             className={S.lockedColumnsInput}
-            type="text"
+            type="number"
             value={this.configuration.fixedColumnCount}
+            onChange={this.handleFixedColumnsCountChange}
           />
         </div>
       </ModalWindow>

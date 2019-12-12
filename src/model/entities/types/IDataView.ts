@@ -41,6 +41,7 @@ export interface IDataViewData {
   formPanelView: IFormPanelView;
   lifecycle: IDataViewLifecycle;
   lookupLoader: ILookupLoader;
+  
 }
 
 export interface IDataView extends IDataViewData {
@@ -64,7 +65,7 @@ export interface IDataView extends IDataViewData {
   bindingParametersFromParent: {[key: string]: string};
 
   isReorderedOnClient: boolean;
-
+  selectedRowIds: Set<string>;
   panelViewActions: IAction[];
   toolbarActions: IAction[];
   dialogActions: IAction[];

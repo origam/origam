@@ -26,6 +26,8 @@ import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelV
 import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
 import { onNoCellClick } from "model/actions-ui/DataView/TableView/onNoCellClick";
 import { onOutsideTableClick } from "model/actions-ui/DataView/TableView/onOutsideTableClick";
+import { getFixedColumnsCount } from "model/selectors/TablePanelView/getFixedColumnsCount";
+import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 
 @inject(({ dataView }) => {
   return {
@@ -67,11 +69,15 @@ export class TableView extends React.Component<{
 
   gDim = new GridDimensions({
     getTableViewProperties: () => getTableViewProperties(this.props.dataView),
-    getRowCount: () => getRowCount(this.props.dataView)
+    getRowCount: () => getRowCount(this.props.dataView),
+    getIsSelectionCheckboxes: () =>
+      getIsSelectionCheckboxesShown(this.props.tablePanelView)
   });
 
   headerRenderer = new HeaderRenderer({
     tablePanelView: this.props.tablePanelView!,
+    getIsSelectionCheckboxes: () =>
+      getIsSelectionCheckboxesShown(this.props.tablePanelView),
     getColumnHeaders: () => getColumnHeaders(this.props.dataView),
     getTableViewProperties: () => getTableViewProperties(this.props.dataView),
     onColumnWidthChange: (cid, nw) => this.gDim.setColumnWidth(cid, nw),
@@ -93,10 +99,15 @@ export class TableView extends React.Component<{
 
   render() {
     const self = this;
-    const editingRowIndex = getSelectedRowIndex(this.props.tablePanelView);
-    const editingColumnIndex = getSelectedColumnIndex(
+    const isSelectionCheckboxes = getIsSelectionCheckboxesShown(
       this.props.tablePanelView
     );
+    const editingRowIndex = getSelectedRowIndex(this.props.tablePanelView);
+    let editingColumnIndex = getSelectedColumnIndex(this.props.tablePanelView);
+    editingColumnIndex =
+      editingColumnIndex &&
+      editingColumnIndex + (isSelectionCheckboxes ? 1 : 0);
+
     return (
       <Provider tablePanelView={this.props.tablePanelView}>
         <>
@@ -106,7 +117,10 @@ export class TableView extends React.Component<{
             editingRowIndex={editingRowIndex}
             editingColumnIndex={editingColumnIndex}
             isEditorMounted={getIsEditing(this.props.tablePanelView)}
-            fixedColumnCount={0}
+            fixedColumnCount={
+              getFixedColumnsCount(this.props.tablePanelView) +
+              (isSelectionCheckboxes ? 1 : 0)
+            }
             isLoading={false}
             renderHeader={self.headerRenderer.renderHeader}
             renderCell={self.cellRenderer.renderCell}
@@ -130,6 +144,7 @@ export class TableView extends React.Component<{
 interface IGridDimensionsData {
   getTableViewProperties: () => IProperty[];
   getRowCount: () => number;
+  getIsSelectionCheckboxes: () => boolean;
 }
 
 class GridDimensions implements IGridDimensions {
@@ -141,6 +156,11 @@ class GridDimensions implements IGridDimensions {
 
   getTableViewProperties: () => IProperty[] = null as any;
   getRowCount: () => number = null as any;
+  getIsSelectionCheckboxes: () => boolean = null as any;
+
+  @computed get isSelectionCheckboxes() {
+    return this.getIsSelectionCheckboxes();
+  }
 
   @computed get tableViewPropertiesOriginal() {
     return this.getTableViewProperties();
@@ -155,7 +175,9 @@ class GridDimensions implements IGridDimensions {
   }
 
   @computed get columnCount() {
-    return this.tableViewProperties.length;
+    return (
+      this.tableViewProperties.length + (this.isSelectionCheckboxes ? 1 : 0)
+    );
   }
 
   get contentWidth() {
@@ -171,7 +193,14 @@ class GridDimensions implements IGridDimensions {
   }
 
   getColumnWidth(columnIndex: number): number {
-    const property = this.tableViewProperties[columnIndex];
+    let colIdx = columnIndex;
+    if (this.isSelectionCheckboxes) {
+      if (colIdx === 0) {
+        return 30;
+      }
+      colIdx--;
+    }
+    const property = this.tableViewProperties[colIdx];
     return this.columnWidths.has(property.id)
       ? this.columnWidths.get(property.id)!
       : 100;
@@ -204,6 +233,7 @@ interface IHeaderRendererData {
 
   tablePanelView: ITablePanelView;
   getColumnHeaders: () => IColumnHeader[];
+  getIsSelectionCheckboxes: () => boolean;
   onColumnWidthChange: (id: string, newWidth: number) => void;
   onColumnOrderChange: (id: string, targetId: string) => void;
   onColumnOrderAttendantsChange: (
@@ -218,6 +248,7 @@ class HeaderRenderer implements IHeaderRendererData {
   }
 
   getTableViewProperties: () => IProperty[] = null as any;
+  getIsSelectionCheckboxes: () => boolean = null as any;
 
   @computed get tableViewPropertiesOriginal() {
     return this.getTableViewProperties();
@@ -241,6 +272,10 @@ class HeaderRenderer implements IHeaderRendererData {
 
   @computed get columnHeaders() {
     return this.getColumnHeaders();
+  }
+
+  @computed get isSelectionCheckboxes() {
+    return this.getIsSelectionCheckboxes();
   }
 
   @observable isColumnOrderChanging = false;
@@ -282,8 +317,19 @@ class HeaderRenderer implements IHeaderRendererData {
 
   @bind
   renderHeader(args: { columnIndex: number; columnWidth: number }) {
-    const property = this.tableViewProperties[args.columnIndex];
-    const header = this.columnHeaders[args.columnIndex];
+    let property;
+    let header;
+    if (this.isSelectionCheckboxes) {
+      if (args.columnIndex === 0) {
+        return null;
+      } else {
+        property = this.tableViewProperties[args.columnIndex - 1];
+        header = this.columnHeaders[args.columnIndex - 1];
+      }
+    } else {
+      property = this.tableViewProperties[args.columnIndex];
+      header = this.columnHeaders[args.columnIndex];
+    }
     return (
       <Provider key={property.id} property={property}>
         <Header

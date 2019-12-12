@@ -25,6 +25,8 @@ export class DataView implements IDataView {
 
   constructor(data: IDataViewData) {
     Object.assign(this, data);
+    //this.showSelectionCheckboxes = true;
+    this.showSelectionCheckboxes = false;
     this.properties.forEach(o => (o.parent = this));
     this.actions.forEach(o => (o.parent = this));
     this.dataTable.parent = this;
@@ -67,6 +69,8 @@ export class DataView implements IDataView {
   tablePanelView: ITablePanelView = null as any;
   formPanelView: IFormPanelView = null as any;
   lookupLoader: ILookupLoader = null as any;
+
+  @observable selectedRowIds: Set<string> = new Set();
 
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
   @observable isEditing: boolean = false;
