@@ -215,7 +215,8 @@ namespace Origam.ServerCore.Controller
         }
         
         [HttpPost("[action]")]
-        public IActionResult GetLookupLabels([FromBody]LookupLabelsInput input)
+        public IActionResult GetLookupLabels(
+            [FromBody][Required]LookupLabelsInput input)
         {
             return RunWithErrorHandler(() =>
             {
@@ -233,12 +234,32 @@ namespace Origam.ServerCore.Controller
         [HttpGet("[action]")]
         public IActionResult WorkQueueList()
         {
+            return RunWithErrorHandler(() => 
+                Ok(sessionObjects.UIService.WorkQueueList(localizer)));
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult SaveObjectConfig(
+            [FromBody][Required]SaveObjectConfigInput input)
+        {
             return RunWithErrorHandler(() =>
             {
-                return Ok(sessionObjects.UIService.WorkQueueList(localizer));
+                sessionObjects.UIService.SaveObjectConfig(input);
+                return Ok();
             });
         }
 
+        [HttpPost("[action]")]
+        public IActionResult SaveSplitPanelConfig(
+            [FromBody][Required]SaveSplitPanelConfigInput input)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                sessionObjects.UIService.SaveSplitPanelConfig(input);
+                return Ok();
+            });
+        }
+        
         private IActionResult CheckLookup(LookupLabelsInput input)
         {
             if (input.MenuId == Guid.Empty)
