@@ -1,7 +1,10 @@
 import { IDataView } from "./IDataView";
 import { IDataSource } from "./IDataSource";
 import { IComponentBinding } from "./IComponentBinding";
-import { IFormScreenLifecycle, IFormScreenLifecycle02 } from "./IFormScreenLifecycle";
+import {
+  IFormScreenLifecycle,
+  IFormScreenLifecycle02
+} from "./IFormScreenLifecycle";
 import { IAction } from "./IAction";
 
 /*
@@ -67,7 +70,6 @@ export const isILoadingFormScreen = (o: any): o is ILoadingFormScreen =>
 export const isILoadedFormScreen = (o: any): o is ILoadedFormScreen =>
   o.$type_ILoadedFormScreen; */
 
-
 export interface IFormScreenEnvelopeData {
   formScreenLifecycle: IFormScreenLifecycle02;
 }
@@ -97,6 +99,7 @@ export interface IFormScreenData {
   dataSources: IDataSource[];
   componentBindings: IComponentBinding[];
   screenUI: any;
+  panelConfigurations: Map<string, { position: number | undefined }>;
   formScreenLifecycle: IFormScreenLifecycle02;
   sessionId: string;
 }
@@ -112,6 +115,8 @@ export interface IFormScreen extends IFormScreenData {
   toolbarActions: Array<{ section: string; actions: IAction[] }>;
   dialogActions: IAction[];
 
+  getPanelPosition(id: string): number | undefined;
+
   getBindingsByChildId(childId: string): IComponentBinding[];
   getBindingsByParentId(parentId: string): IComponentBinding[];
   getDataViewByModelInstanceId(modelInstanceId: string): IDataView | undefined;
@@ -124,8 +129,7 @@ export interface IFormScreen extends IFormScreenData {
   parent?: any;
 }
 
-export const isIFormScreenEnvelope = (o: any): o is IFormScreenEnvelope=>
+export const isIFormScreenEnvelope = (o: any): o is IFormScreenEnvelope =>
   o.$type_IFormScreenEnvelope;
 
-export const isIFormScreen = (o: any): o is IFormScreen =>
-  o.$type_IFormScreen;
+export const isIFormScreen = (o: any): o is IFormScreen => o.$type_IFormScreen;

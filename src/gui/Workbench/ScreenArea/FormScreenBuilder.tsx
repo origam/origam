@@ -1,5 +1,5 @@
 import { action, computed, observable } from "mobx";
-import { observer, Observer } from "mobx-react";
+import { observer, Observer, MobXProviderContext } from "mobx-react";
 import React from "react";
 import SSplitter from "styles/CustomSplitter.module.scss";
 import {
@@ -20,6 +20,8 @@ import { VBox } from "../../Components/ScreenElements/VBox";
 import { VSplit, VSplitPanel } from "../../Components/ScreenElements/VSplit";
 import { Splitter } from "gui02/components/Splitter/Splitter";
 import { CScreenSectionTabbedView } from "gui02/connections/CScreenSectionTabbedView";
+import { IFormScreen } from "model/entities/types/IFormScreen";
+import { onSplitterPositionChangeFinished } from "model/actions-ui/Splitter/onSplitterPositionChange";
 
 @observer
 class TabbedPanelHelper extends React.Component<{
@@ -67,34 +69,90 @@ class TabbedPanelHelper extends React.Component<{
 export class FormScreenBuilder extends React.Component<{
   xmlWindowObject: any;
 }> {
+  static contextType = MobXProviderContext;
+
+  get formScreen(): IFormScreen {
+    return this.context.formScreen.formScreen;
+  }
+
   buildScreen() {
     const self = this;
     function recursive(xso: any) {
       switch (xso.attributes.Type) {
-        case "HSplit":
+        case "HSplit": {
+          const panels = findUIChildren(xso).map((child, idx) => [
+            idx,
+            1,
+            recursive(child)
+          ]);
           return (
             <Splitter
               STYLE={SSplitter}
               type="isHoriz"
-              panels={findUIChildren(xso).map((child, idx) => [
-                idx,
-                1,
-                recursive(child)
-              ])}
+              id={xso.attributes.ModelInstanceId}
+              sizeOverrideFirstPanel={self.formScreen.getPanelPosition(
+                xso.attributes.ModelInstanceId
+              )}
+              onSizeChangeFinished={(
+                panelId1: any,
+                panelId2: any,
+                panelSize1: number,
+                panelSize2: number
+              ) => {
+                if (panelId1 === panels[0][0]) {
+                  onSplitterPositionChangeFinished(self.formScreen)(
+                    xso.attributes.ModelInstanceId,
+                    panelSize1
+                  );
+                }
+                if (panelId2 === panels[0][0]) {
+                  onSplitterPositionChangeFinished(self.formScreen)(
+                    xso.attributes.ModelInstanceId,
+                    panelSize2
+                  );
+                }
+              }}
+              panels={panels as any[]}
             />
           );
-        case "VSplit":
+        }
+        case "VSplit": {
+          const panels = findUIChildren(xso).map((child, idx) => [
+            idx,
+            1,
+            recursive(child)
+          ]);
           return (
             <Splitter
               STYLE={SSplitter}
               type="isVert"
-              panels={findUIChildren(xso).map((child, idx) => [
-                idx,
-                1,
-                recursive(child)
-              ])}
+              id={xso.attributes.ModelInstanceId}
+              sizeOverrideFirstPanel={self.formScreen.getPanelPosition(
+                xso.attributes.ModelInstanceId
+              )}
+              onSizeChangeFinished={(
+                panelId1: any,
+                panelId2: any,
+                panelSize1: number,
+                panelSize2: number
+              ) => {
+                if (panelId1 === panels[0][0]) {
+                  onSplitterPositionChangeFinished(self.formScreen)(
+                    xso.attributes.ModelInstanceId,
+                    panelSize1
+                  );
+                }
+                if (panelId2 === panels[0][0]) {
+                  onSplitterPositionChangeFinished(self.formScreen)(
+                    xso.attributes.ModelInstanceId,
+                    panelSize2
+                  );
+                }
+              }}
+              panels={panels as any[]}
             />
           );
+        }
         case "Label":
           console.log(xso);
           return (

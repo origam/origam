@@ -160,6 +160,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     const screen = interpretScreenXml(
       screenXmlObj,
       this,
+      args.initUIResult.panelConfigurations,
       args.initUIResult.sessionId
     );
     openedScreen.content.setFormScreen(screen);

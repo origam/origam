@@ -224,4 +224,9 @@ export interface IApi {
       isHidden: boolean;
     }>;
   }): Promise<any>;
+
+  saveSplitPanelConfiguration(data: {
+    InstanceId: string;
+    Position: number;
+  }): Promise<any>;
 }

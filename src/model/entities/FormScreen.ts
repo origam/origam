@@ -1,11 +1,19 @@
 import { IDataView } from "./types/IDataView";
 import { IDataSource } from "./types/IDataSource";
 import { IComponentBinding } from "./types/IComponentBinding";
-import { IFormScreenLifecycle, IFormScreenLifecycle02 } from "./types/IFormScreenLifecycle";
+import {
+  IFormScreenLifecycle,
+  IFormScreenLifecycle02
+} from "./types/IFormScreenLifecycle";
 import { computed, action, observable } from "mobx";
 import { IAction } from "./types/IAction";
 import { getDontRequestData } from "model/selectors/getDontRequestData";
-import { IFormScreen, IFormScreenData, IFormScreenEnvelope, IFormScreenEnvelopeData } from "./types/IFormScreen";
+import {
+  IFormScreen,
+  IFormScreenData,
+  IFormScreenEnvelope,
+  IFormScreenEnvelopeData
+} from "./types/IFormScreen";
 
 export class FormScreen implements IFormScreen {
   $type_IFormScreen: 1 = 1;
@@ -32,13 +40,17 @@ export class FormScreen implements IFormScreen {
   autoSaveOnListRecordChange: boolean = false;
   requestSaveAfterUpdate: boolean = false;
   screenUI: any;
+  panelConfigurations: Map<
+    string,
+    { position: number | undefined }
+  > = new Map();
   isLoading: false = false;
   formScreenLifecycle: IFormScreenLifecycle02 = null as any;
 
   dataViews: IDataView[] = [];
   dataSources: IDataSource[] = [];
   componentBindings: IComponentBinding[] = [];
-  
+
   @computed get dontRequestData() {
     return getDontRequestData(this);
   }
@@ -59,7 +71,7 @@ export class FormScreen implements IFormScreen {
     return this.dataViews.find(dv => dv.modelInstanceId === modelInstanceId);
   }
 
-  getDataViewsByEntity(entity: string): IDataView[]  {
+  getDataViewsByEntity(entity: string): IDataView[] {
     return this.dataViews.filter(dv => dv.entity === entity);
   }
 
@@ -88,6 +100,11 @@ export class FormScreen implements IFormScreen {
     return result;
   }
 
+  getPanelPosition(id: string): number | undefined {
+    const conf = this.panelConfigurations.get(id);
+    return conf ? conf.position : undefined;
+  }
+
   @action.bound
   setDirty(state: boolean): void {
     this.isDirty = state;
@@ -110,7 +127,7 @@ export class FormScreen implements IFormScreen {
         recursive(chb.childDataView, level + 1);
       }
     };
-    console.log('');
+    console.log("");
     console.log("View bindings");
     console.log("=============");
     const roots = Array.from(this.dataViews.values()).filter(
@@ -120,14 +137,14 @@ export class FormScreen implements IFormScreen {
       recursive(dv, 0);
     }
     console.log("=============");
-    console.log("End of View bindings");  
-    console.log('');
+    console.log("End of View bindings");
+    console.log("");
   }
 }
 
 export class FormScreenEnvelope implements IFormScreenEnvelope {
   $type_IFormScreenEnvelope: 1 = 1;
-  
+
   constructor(data: IFormScreenEnvelopeData) {
     Object.assign(this, data);
     this.formScreenLifecycle.parent = this;
@@ -141,7 +158,7 @@ export class FormScreenEnvelope implements IFormScreenEnvelope {
 
   @action.bound
   setFormScreen(formScreen?: IFormScreen | undefined): void {
-    if(formScreen) {
+    if (formScreen) {
       formScreen.parent = this;
     }
     this.formScreen = formScreen;

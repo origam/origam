@@ -84,7 +84,15 @@ class SplitterDivider extends React.Component<{
 @observer
 export class Splitter extends React.Component<{
   type: "isHoriz" | "isVert";
+  sizeOverrideFirstPanel?: number;
+  id?: string;
   panels: Array<[any, number, React.ReactNode]>;
+  onSizeChangeFinished?(
+    panelId1: any,
+    panelId2: any,
+    panelSize1: number,
+    panelSize2: number
+  ): void;
   STYLE?: any;
 }> {
   @observable containerWidth = 0;
@@ -118,10 +126,8 @@ export class Splitter extends React.Component<{
     }
   }
 
-  anounceContainerSize = _.debounce(this.anounceContainerSizeImm, 10);
-
   @action.bound
-  anounceContainerSizeImm(width: number, height: number) {
+  anounceContainerSize(width: number, height: number) {
     if (width > 0 && height > 0) {
       this.containerWidth = width;
       this.containerHeight = height;
@@ -130,7 +136,9 @@ export class Splitter extends React.Component<{
     }
   }
 
-  @action.bound initSizes() {
+  @action.bound initSizesImm() {
+    // TODO: Fix nested splitter initSize (first panel overriden by initial size by resising its container)
+
     //console.log(Array.from(this.dividerSizeMap.entries()));
     const containerSize =
       this.props.type === "isVert" ? this.containerHeight : this.containerWidth;
@@ -138,19 +146,40 @@ export class Splitter extends React.Component<{
       (a, b) => a + b,
       0
     );
-    //console.log("Divider size sum", dividerSizeSum);
-    const sizeToDivide = containerSize - dividerSizeSum; // TODO: Include handle sizes?
+    if (this.props.sizeOverrideFirstPanel === undefined) {
+      //console.log("Divider size sum", dividerSizeSum);
+      const sizeToDivide = containerSize - dividerSizeSum; // TODO: Include handle sizes?
 
-    const initSizeSum = Array.from(this.sizeMap.values()).reduce(
-      (a, b) => a + b,
-      0
-    );
-    const sizeRatio = sizeToDivide / initSizeSum;
-    for (let [key, value] of this.sizeMap.entries()) {
-      this.sizeMap.set(key, value * sizeRatio);
-      //console.log("Set", key, value * sizeRatio);
+      const initSizeSum = Array.from(this.sizeMap.values()).reduce(
+        (a, b) => a + b,
+        0
+      );
+      const sizeRatio = sizeToDivide / initSizeSum;
+      for (let [key, value] of this.sizeMap.entries()) {
+        this.sizeMap.set(key, value * sizeRatio);
+        //console.log("Set", key, value * sizeRatio);
+      }
+    } else if (this.props.panels.length > 0) {
+      const firstPanelSize = Math.max(this.props.sizeOverrideFirstPanel, 20);
+      const sizeToDivide = containerSize - dividerSizeSum - firstPanelSize;
+      const initSizeSum = this.props.panels
+        .slice(1)
+        .reduce((acc, panel) => acc + (this.sizeMap.get(panel[0]) || 0), 0);
+      const sizeRatio = sizeToDivide / initSizeSum;
+
+      for (let [key, value] of this.sizeMap.entries()) {
+        if (key === this.props.panels[0][0]) continue;
+        this.sizeMap.set(key, value * sizeRatio);
+        console.log("Set", key, value * sizeRatio);
+      }
+      this.sizeMap.set(this.props.panels[0][0], firstPanelSize);
+      for (let [key, value] of this.sizeMap.entries()) {
+        console.log("Size", key, "=", value);
+      }
     }
   }
+
+  initSizes = _.debounce(this.initSizesImm, 10);
 
   @action.bound handleDividerMouseDown(event: any, handleId: any) {
     this.draggingDividerId = handleId;
@@ -203,6 +232,9 @@ export class Splitter extends React.Component<{
     const [size1, size2] = this.newSizes;
     this.sizeMap.set(id1, size1);
     this.sizeMap.set(id2, size2);
+    if (this.props.onSizeChangeFinished) {
+      this.props.onSizeChangeFinished(id1, id2, size1, size2);
+    }
   }
 
   @action.bound handleDividerResize(contentRect: ContentRect, dividerId: any) {
@@ -224,7 +256,7 @@ export class Splitter extends React.Component<{
       const panel = this.props.panels[i];
       content.push(
         <SplitterPanel
-          className={(this.props.STYLE||S).panel}
+          className={(this.props.STYLE || S).panel}
           type={this.props.type}
           size={this.sizeMap.get(panel[0])!}
           key={`S${panel[0]}`}
@@ -244,7 +276,7 @@ export class Splitter extends React.Component<{
               <Observer>
                 {() => (
                   <SplitterDivider
-                    className={(this.props.STYLE||S).divider}
+                    className={(this.props.STYLE || S).divider}
                     domRef={measureRef}
                     key={`D${panel[0]}`}
                     isDragging={
@@ -270,10 +302,7 @@ export class Splitter extends React.Component<{
             {() => (
               <div
                 ref={measureRef}
-                className={cx(
-                  (this.props.STYLE||S).root,
-                  this.props.type
-                )}
+                className={cx((this.props.STYLE || S).root, this.props.type)}
               >
                 {this.isInitialized && content}
               </div>

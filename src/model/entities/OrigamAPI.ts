@@ -523,4 +523,19 @@ export class OrigamAPI implements IApi {
       )
     ).data;
   }
+
+  async saveSplitPanelConfiguration(data: {
+    InstanceId: string;
+    Position: number;
+  }): Promise<any> {
+    return (
+      await axios.post(
+        `${this.urlPrefix}/UIService/SaveSplitPanelConfig`,
+        data,
+        {
+          headers: this.httpAuthHeader
+        }
+      )
+    ).data;
+  }
 }

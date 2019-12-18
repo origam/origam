@@ -60,8 +60,17 @@ export const findFormRoot = (node: any) =>
 export function interpretScreenXml(
   screenDoc: any,
   formScreenLifecycle: IFormScreenLifecycle02,
+  panelConfigurationsRaw: any,
   sessionId: string
 ) {
+  const panelConfigurations = new Map<string, { position: number | undefined }>(
+    panelConfigurationsRaw.map((pcr: any) => [
+      pcr.panel.instanceId,
+      {
+        position: pcr.position
+      }
+    ])
+  );
   const dataSourcesXml = findStopping(
     screenDoc,
     n => n.name === "DataSources"
@@ -132,6 +141,7 @@ export function interpretScreenXml(
     requestSaveAfterUpdate:
       windowXml.attributes.RequestSaveAfterUpdate === "true",
     screenUI: screenDoc,
+    panelConfigurations,
     formScreenLifecycle,
     // isSessioned: windowXml.attributes.UseSession,
     dataSources: dataSourcesXml.elements.map((dataSource: any) => {
