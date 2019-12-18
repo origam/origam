@@ -28,6 +28,8 @@ import { onNoCellClick } from "model/actions-ui/DataView/TableView/onNoCellClick
 import { onOutsideTableClick } from "model/actions-ui/DataView/TableView/onOutsideTableClick";
 import { getFixedColumnsCount } from "model/selectors/TablePanelView/getFixedColumnsCount";
 import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
+import { onColumnWidthChanged } from "model/actions-ui/DataView/TableView/onColumnWidthChanged";
+import { onColumnWidthChangeFinished } from "model/actions-ui/DataView/TableView/onColumnWidthChangeFinished";
 
 @inject(({ dataView }) => {
   return {
@@ -80,7 +82,8 @@ export class TableView extends React.Component<{
       getIsSelectionCheckboxesShown(this.props.tablePanelView),
     getColumnHeaders: () => getColumnHeaders(this.props.dataView),
     getTableViewProperties: () => getTableViewProperties(this.props.dataView),
-    onColumnWidthChange: (cid, nw) => this.gDim.setColumnWidth(cid, nw),
+    onColumnWidthChange: (cid, nw) =>
+      onColumnWidthChanged(this.props.tablePanelView)(cid, nw),
     onColumnOrderChange: (id1, id2) =>
       this.props.tablePanelView!.swapColumns(id1, id2),
     onColumnOrderAttendantsChange: (
@@ -152,7 +155,11 @@ class GridDimensions implements IGridDimensions {
     Object.assign(this, data);
   }
 
-  @observable columnWidths: Map<string, number> = new Map();
+  @computed get columnWidths(): Map<string, number> {
+    return new Map(
+      this.tableViewProperties.map(prop => [prop.id, prop.columnWidth])
+    );
+  }
 
   getTableViewProperties: () => IProperty[] = null as any;
   getRowCount: () => number = null as any;
@@ -340,6 +347,9 @@ class HeaderRenderer implements IHeaderRendererData {
           orderingDirection={header.ordering}
           orderingOrder={header.order}
           onColumnWidthChange={this.onColumnWidthChange}
+          onColumnWidthChangeFinished={onColumnWidthChangeFinished(
+            this.tablePanelView
+          )}
           isColumnOrderChanging={this.isColumnOrderChanging}
           onColumnOrderDrop={this.handleColumnOrderDrop}
           onStartColumnOrderChanging={this.handleStartColumnOrderChanging}

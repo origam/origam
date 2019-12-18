@@ -215,4 +215,12 @@ export interface IApi {
   }): Promise<any>;
 
   getWorkQueueList(): Promise<any>;
+
+  saveObjectConfiguration(data: {
+    instanceId: string;
+    columnSettings: Array<{
+      propertyId: string;
+      width: number;
+    }>;
+  }): Promise<any>;
 }

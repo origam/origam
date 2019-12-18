@@ -15,6 +15,7 @@ export class Header extends React.Component<{
   isColumnOrderChanging: boolean;
   additionalHeaderContent?: () => React.ReactNode;
   onColumnWidthChange?: (id: string, newWidth: number) => void;
+  onColumnWidthChangeFinished?: (id: string, newWidth: number) => void;
   onStartColumnOrderChanging?: (id: string) => void;
   onStopColumnOrderChanging?: (id: string) => void;
   onColumnOrderDrop?: (id: string) => void;
@@ -25,10 +26,12 @@ export class Header extends React.Component<{
   mouseX0: number = 0;
   mouseY0: number = 0;
   isMouseIn: boolean = false;
+  width1: number = 0;
 
   @action.bound handleHeaderWidthHandleMouseDown(event: any) {
     event.preventDefault();
     this.width0 = this.props.width;
+    this.width1 = this.props.width;
     this.mouseX0 = event.screenX;
     this.mouseY0 = event.screenY;
     window.addEventListener(
@@ -43,9 +46,9 @@ export class Header extends React.Component<{
 
   @action.bound handleWindowMouseMoveForColumnWidthChange(event: any) {
     const shVecX = event.screenX - this.mouseX0;
-    const width1 = this.width0 + shVecX;
+    this.width1 = this.width0 + shVecX;
     this.props.onColumnWidthChange &&
-      this.props.onColumnWidthChange(this.props.id, width1);
+      this.props.onColumnWidthChange(this.props.id, this.width1);
   }
 
   @action.bound handleWindowMouseUpForColumnWidthChange(event: any) {
@@ -57,6 +60,8 @@ export class Header extends React.Component<{
       "mouseup",
       this.handleWindowMouseUpForColumnWidthChange
     );
+    this.props.onColumnWidthChangeFinished &&
+      this.props.onColumnWidthChangeFinished(this.props.id, this.width1);
   }
 
   @action.bound handleHeaderMouseDown(event: any) {

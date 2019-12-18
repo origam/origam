@@ -2,7 +2,7 @@ import { IPropertyData, IProperty } from "./types/IProperty";
 import { ICaptionPosition } from "./types/ICaptionPosition";
 import { IDropDownColumn } from "./types/IDropDownColumn";
 import { IPropertyColumn } from "./types/IPropertyColumn";
-import { observable, computed } from "mobx";
+import { observable, computed, action } from "mobx";
 
 import { ILookup } from "./types/ILookup";
 import { getDataSourceFieldIndexByName } from "../selectors/DataSources/getDataSourceFieldIndexByName";
@@ -15,7 +15,7 @@ export class Property implements IProperty {
 
   constructor(data: IPropertyData) {
     Object.assign(this, data);
-    if(this.lookup) {
+    if (this.lookup) {
       this.lookup.parent = this;
     }
   }
@@ -40,11 +40,15 @@ export class Property implements IProperty {
   allowReturnToForm?: boolean | undefined;
   isTree?: boolean | undefined;
   formatterPattern: string = "";
+  @observable columnWidth: number = 100;
   lookup?: ILookup;
   get isLookup() {
     return !!this.lookup;
   }
-  
+
+  @action.bound setColumnWidth(width: number) {
+    this.columnWidth = width;
+  }
 
   @computed get dataSourceIndex(): number {
     return this.dataSourceField.index;
@@ -53,7 +57,7 @@ export class Property implements IProperty {
   @computed get dataIndex() {
     return this.dataSourceIndex;
   }
-  
+
   @computed get dataSourceField(): IDataSourceField {
     return getDataSourceFieldByName(this, this.id)!;
   }

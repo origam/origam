@@ -490,4 +490,31 @@ export class OrigamAPI implements IApi {
       })
     ).data;
   }
+
+  async saveObjectConfiguration(data: {
+    instanceId: string;
+    columnSettings: Array<{
+      propertyId: string;
+      width: number;
+    }>;
+  }): Promise<any> {
+    return (
+      await axios.post(
+        `${this.urlPrefix}/UIService/SaveObjectConfig`,
+        {
+          ObjectinstanceId: data.instanceId,
+          Section: "columnWidths",
+          SettingsData: data.columnSettings
+            .map(
+              setting =>
+                `<column property="${setting.propertyId}" isHidden="false" width="${setting.width}" aggregationType="0" />`
+            )
+            .join("\n")
+        },
+        {
+          headers: this.httpAuthHeader
+        }
+      )
+    ).data;
+  }
 }

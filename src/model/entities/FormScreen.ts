@@ -38,7 +38,7 @@ export class FormScreen implements IFormScreen {
   dataViews: IDataView[] = [];
   dataSources: IDataSource[] = [];
   componentBindings: IComponentBinding[] = [];
-
+  
   @computed get dontRequestData() {
     return getDontRequestData(this);
   }

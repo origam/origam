@@ -11,7 +11,10 @@ import {
   ComponentBindingPair,
   ComponentBinding
 } from "../model/entities/ComponentBinding";
-import { IFormScreenLifecycle, IFormScreenLifecycle02 } from "../model/entities/types/IFormScreenLifecycle";
+import {
+  IFormScreenLifecycle,
+  IFormScreenLifecycle02
+} from "../model/entities/types/IFormScreenLifecycle";
 import { DataTable } from "../model/entities/DataTable";
 
 import { TablePanelView } from "../model/entities/TablePanelView/TablePanelView";
@@ -148,6 +151,11 @@ export function interpretScreenXml(
     }),
 
     dataViews: dataViews.map(dataView => {
+      const configuration = findStopping(
+        dataView,
+        n => n.name === "Configuration"
+      );
+
       const properties = findStopping(dataView, n => n.name === "Property").map(
         (property, idx) => {
           return new Property({
@@ -215,7 +223,6 @@ export function interpretScreenXml(
           });
         }
       );
-      
 
       const actions = findActions(dataView).map(
         action =>
@@ -237,7 +244,7 @@ export function interpretScreenXml(
             )
           })
       );
-      return new DataView({
+      const dataViewInstance = new DataView({
         id: dataView.attributes.Id,
         modelInstanceId: dataView.attributes.ModelInstanceId,
         name: dataView.attributes.Name,
@@ -282,6 +289,26 @@ export function interpretScreenXml(
         properties,
         actions
       });
+
+      
+      configuration.forEach(conf => {
+        const columns = findStopping(conf, n => n.name === "column");
+        for (let column of columns) {
+          if (column.attributes.property) {
+            const prop = properties.find(prop => prop.id === column.attributes.property);
+            prop && prop.setColumnWidth(+column.attributes.width);
+            if (column.attributes.isHidden === "true") {
+              dataViewInstance.tablePanelView.hiddenPropertyIds.set(
+                column.attributes.property,
+                true
+              );
+            }
+          } else if (column.attributes.groupingField) {
+            // TODO
+          }
+        }
+      });
+      return dataViewInstance;
     }),
     componentBindings
   });
