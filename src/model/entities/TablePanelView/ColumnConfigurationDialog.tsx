@@ -4,7 +4,11 @@ import { action, computed } from "mobx";
 import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelView";
 import { getDialogStack } from "../../selectors/DialogStack/getDialogStack";
 import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
-import { ITableColumnsConf, ColumnsDialog } from "gui/Components/Dialogs/ColumnsDialog";
+import {
+  ITableColumnsConf,
+  ColumnsDialog
+} from "gui/Components/Dialogs/ColumnsDialog";
+import { onColumnConfigurationSubmit } from "model/actions-ui/ColumnConfigurationDialog.tsx/onColumnConfigurationSubmit";
 
 export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
   @computed get columnsConfiguration() {
@@ -36,7 +40,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
         configuration={this.columnsConfiguration}
         onCancelClick={this.onColumnConfCancel}
         onCloseClick={this.onColumnConfCancel}
-        onOkClick={this.onColumnConfSubmit}
+        onOkClick={onColumnConfigurationSubmit(this.tablePanelView)}
       />
     );
   }

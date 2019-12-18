@@ -221,6 +221,7 @@ export interface IApi {
     columnSettings: Array<{
       propertyId: string;
       width: number;
+      isHidden: boolean;
     }>;
   }): Promise<any>;
 }

@@ -4,6 +4,7 @@ import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveC
 
 export function onColumnWidthChangeFinished(ctx: any) {
   return flow(function* onColumnWidthChangeFinished(id: string, width: number) {
+    // TODO: Error handling
     const prop = getDataViewPropertyById(ctx, id);
     if(prop) {
       yield* saveColumnConfigurations(ctx)();

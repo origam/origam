@@ -290,15 +290,16 @@ export function interpretScreenXml(
         actions
       });
 
-      
       configuration.forEach(conf => {
         const columns = findStopping(conf, n => n.name === "column");
         for (let column of columns) {
           if (column.attributes.property) {
-            const prop = properties.find(prop => prop.id === column.attributes.property);
+            const prop = properties.find(
+              prop => prop.id === column.attributes.property
+            );
             prop && prop.setColumnWidth(+column.attributes.width);
             if (column.attributes.isHidden === "true") {
-              dataViewInstance.tablePanelView.hiddenPropertyIds.set(
+              dataViewInstance.tablePanelView.setPropertyHidden(
                 column.attributes.property,
                 true
               );

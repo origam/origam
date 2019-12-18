@@ -495,6 +495,7 @@ export class OrigamAPI implements IApi {
     instanceId: string;
     columnSettings: Array<{
       propertyId: string;
+      isHidden: boolean;
       width: number;
     }>;
   }): Promise<any> {
@@ -507,9 +508,14 @@ export class OrigamAPI implements IApi {
           SettingsData: data.columnSettings
             .map(
               setting =>
-                `<column property="${setting.propertyId}" isHidden="false" width="${setting.width}" aggregationType="0" />`
+                `<column 
+                  property="${setting.propertyId}" 
+                  isHidden="${setting.isHidden ? "true" : "false"}" 
+                  width="${setting.width}" 
+                  aggregationType="0" 
+                />`
             )
-            .join("\n")
+            .join("")
         },
         {
           headers: this.httpAuthHeader

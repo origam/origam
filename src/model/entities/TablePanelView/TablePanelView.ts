@@ -13,7 +13,11 @@ import { IFilterConfiguration } from "../types/IFilterConfiguration";
 import { IOrderingConfiguration } from "../types/IOrderingConfiguration";
 import { IProperty } from "../types/IProperty";
 import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
-import { ITableCanvas, ITablePanelView, ITablePanelViewData } from "./types/ITablePanelView";
+import {
+  ITableCanvas,
+  ITablePanelView,
+  ITablePanelViewData
+} from "./types/ITablePanelView";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -265,6 +269,15 @@ export class TablePanelView implements ITablePanelView {
     const myId = this.subId++;
     this.onFocusTableHandlers.set(myId, fn);
     return () => this.onFocusTableHandlers.delete(myId);
+  }
+
+  @action.bound
+  setPropertyHidden(propertyId: string, state: boolean): void {
+    if (state) {
+      this.hiddenPropertyIds.set(propertyId, true);
+    } else {
+      this.hiddenPropertyIds.delete(propertyId);
+    }
   }
 
   @action.bound triggerOnFocusTable() {
