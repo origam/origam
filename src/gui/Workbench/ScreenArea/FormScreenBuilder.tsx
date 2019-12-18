@@ -21,7 +21,7 @@ import { VSplit, VSplitPanel } from "../../Components/ScreenElements/VSplit";
 import { Splitter } from "gui02/components/Splitter/Splitter";
 import { CScreenSectionTabbedView } from "gui02/connections/CScreenSectionTabbedView";
 import { IFormScreen } from "model/entities/types/IFormScreen";
-import { onSplitterPositionChangeFinished } from "model/actions-ui/Splitter/onSplitterPositionChange";
+import { onSplitterPositionChangeFinished } from "model/actions-ui/Splitter/onSplitterPositionChangeFinished";
 
 @observer
 class TabbedPanelHelper extends React.Component<{
