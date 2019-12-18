@@ -30,6 +30,7 @@ import { getFixedColumnsCount } from "model/selectors/TablePanelView/getFixedCol
 import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 import { onColumnWidthChanged } from "model/actions-ui/DataView/TableView/onColumnWidthChanged";
 import { onColumnWidthChangeFinished } from "model/actions-ui/DataView/TableView/onColumnWidthChangeFinished";
+import { onColumnOrderChangeFinished } from "model/actions-ui/DataView/TableView/onColumnOrderChangeFinished";
 
 @inject(({ dataView }) => {
   return {
@@ -85,7 +86,7 @@ export class TableView extends React.Component<{
     onColumnWidthChange: (cid, nw) =>
       onColumnWidthChanged(this.props.tablePanelView)(cid, nw),
     onColumnOrderChange: (id1, id2) =>
-      this.props.tablePanelView!.swapColumns(id1, id2),
+      onColumnOrderChangeFinished(this.props.tablePanelView)(id1, id2),
     onColumnOrderAttendantsChange: (
       idSource: string | undefined,
       idTarget: string | undefined

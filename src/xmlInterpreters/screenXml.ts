@@ -292,12 +292,15 @@ export function interpretScreenXml(
 
       configuration.forEach(conf => {
         const columns = findStopping(conf, n => n.name === "column");
-        for (let column of columns) {
+        columns.forEach((column, columnIndex) => {
           if (column.attributes.property) {
+            // COLUMN WIDTH
             const prop = properties.find(
               prop => prop.id === column.attributes.property
             );
             prop && prop.setColumnWidth(+column.attributes.width);
+
+            // COLUMN HIDING
             if (column.attributes.isHidden === "true") {
               dataViewInstance.tablePanelView.setPropertyHidden(
                 column.attributes.property,
@@ -307,8 +310,23 @@ export function interpretScreenXml(
           } else if (column.attributes.groupingField) {
             // TODO
           }
-        }
+        });
+        dataViewInstance.tablePanelView.tablePropertyIds = dataViewInstance.tablePanelView.tablePropertyIds
+          .slice()
+          .sort((a, b) => {
+            const colIdxA = columns.findIndex(
+              column => column.attributes.property === a
+            );
+            if (colIdxA === -1) return 0;
+            const colIdxB = columns.findIndex(
+              column => column.attributes.property === b
+            );
+            if (colIdxB === -1) return 0;
+            return colIdxA - colIdxB;
+          });
       });
+      // COLUMN ORDER
+
       return dataViewInstance;
     }),
     componentBindings

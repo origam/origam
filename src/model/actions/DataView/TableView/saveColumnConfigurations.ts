@@ -8,7 +8,7 @@ export function saveColumnConfigurations(ctx: any) {
     const tablePanelView = getTablePanelView(ctx);
     yield getApi(ctx).saveObjectConfiguration({
       instanceId: dataView.modelInstanceId,
-      columnSettings: dataView.properties.map(property => ({
+      columnSettings: tablePanelView.allTableProperties.map(property => ({
         propertyId: property.id,
         width: property.columnWidth,
         isHidden: !!tablePanelView.hiddenPropertyIds.get(property.id)
