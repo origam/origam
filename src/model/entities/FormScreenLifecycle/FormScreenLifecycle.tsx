@@ -355,7 +355,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *applyData(data: any): Generator {
-    for (let [entityKey, entityValue] of Object.entries(data)) {
+    for (let [entityKey, entityValue] of Object.entries(data || {})) {
       console.log(entityKey, entityValue);
       const dataViews = getDataViewsByEntity(this, entityKey);
       for (let dataView of dataViews) {
