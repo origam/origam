@@ -79,6 +79,15 @@ export class DataTable implements IDataTable {
   }
 
   getCellValueByDataSourceField(row: any[], dsField: IDataSourceField) {
+    if (this.additionalRowData.has(this.getRowId(row))) {
+      const ard = this.additionalRowData.get(this.getRowId(row))!;
+      if (ard.dirtyFormValues.has(dsField.name)) {
+        return ard.dirtyFormValues.get(dsField.name);
+      }
+      if (ard.dirtyValues.has(dsField.name)) {
+        return ard.dirtyValues.get(dsField.name);
+      }
+    }
     return row[dsField.index];
   }
 
@@ -223,6 +232,14 @@ export class DataTable implements IDataTable {
       for (let [propertyId, value] of ard.dirtyFormValues.entries()) {
         ard.dirtyValues.set(propertyId, value);
       }
+    }
+  }
+
+  @action.bound setDirtyValue(row: any[], columnId: string, value: any) {
+    this.createAdditionalData(row);
+    const ard = this.getAdditionalRowData(row);
+    if (ard) {
+      ard.dirtyValues.set(columnId, value);
     }
   }
 

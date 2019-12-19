@@ -26,7 +26,7 @@ export class DataView implements IDataView {
   constructor(data: IDataViewData) {
     Object.assign(this, data);
     //this.showSelectionCheckboxes = true;
-    this.showSelectionCheckboxes = false;
+    //this.showSelectionCheckboxes = false;
     this.properties.forEach(o => (o.parent = this));
     this.actions.forEach(o => (o.parent = this));
     this.dataTable.parent = this;
@@ -47,7 +47,7 @@ export class DataView implements IDataView {
   disableActionButtons = false;
   showAddButton = false;
   showDeleteButton = false;
-  showSelectionCheckboxes = false;
+  showSelectionCheckboxesSetting = false;
   isGridHeightDynamic = false;
   selectionMember = "";
   orderMember = "";
@@ -76,6 +76,10 @@ export class DataView implements IDataView {
   @observable isEditing: boolean = false;
 
   @observable selectedRowId: string | undefined;
+
+  @computed get showSelectionCheckboxes() {
+    return !!this.selectionMember || this.showSelectionCheckboxesSetting;
+  }
 
   @computed get selectedRowIndex(): number | undefined {
     return this.selectedRowId
@@ -121,7 +125,7 @@ export class DataView implements IDataView {
 
   get isWorking() {
     // TODO
-    return this.lifecycle.isWorking
+    return this.lifecycle.isWorking;
   }
 
   @computed get isAnyBindingAncestorWorking() {

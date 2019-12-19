@@ -20,6 +20,7 @@ import {
 } from "../../../Components/ScreenElements/Table/types";
 import { onTableCellClick } from "model/actions-ui/DataView/TableView/onTableCellClick";
 import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
+import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
 
 export interface ICellRendererData {
   tablePanelView: ITablePanelView;
@@ -45,7 +46,11 @@ export class CellRenderer implements ICellRenderer {
   }: IRenderCellArgs) {
     const cell = this.getCell(rowIndex, columnIndex);
     onCellClick.subscribe((event: any) => {
-      onTableCellClick(this.tablePanelView)(event, rowIndex, columnIndex);
+      onTableCellClick(this.tablePanelView)(
+        event,
+        rowIndex,
+        this.isSelectionCheckboxes ? columnIndex - 1 : columnIndex
+      );
     });
 
     const cellPaddingLeft = columnIndex === 0 ? 25 : 15;
@@ -160,6 +165,17 @@ export class CellRenderer implements ICellRenderer {
     const selectedRowId = getSelectedRowId(this.tablePanelView);
     if (this.isSelectionCheckboxes) {
       if (columnIndex === 0) {
+        const selectionMember = getSelectionMember(this.tablePanelView);
+        let value = false;
+        if (selectionMember) {
+          const dsField = getDataSourceFieldByName(
+            this.tablePanelView,
+            selectionMember
+          );
+          if(dsField) {
+            value = dataTable.getCellValueByDataSourceField(record, dsField);
+          }
+        }
         return {
           isCellCursor: false,
           isRowCursor: recordId === selectedRowId,
@@ -169,7 +185,7 @@ export class CellRenderer implements ICellRenderer {
           isInvalid: false,
           formatterPattern: "",
           type: "CheckBox",
-          value: false,
+          value,
           text: "",
           backgroundColor:
             getRowStateColumnBgColor(this.tablePanelView, recordId, "") ||

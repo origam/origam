@@ -20,7 +20,8 @@ export interface IDataViewData {
   disableActionButtons: boolean;
   showAddButton: boolean;
   showDeleteButton: boolean;
-  showSelectionCheckboxes: boolean;
+  showSelectionCheckboxesSetting: boolean;
+  
   isGridHeightDynamic: boolean;
   selectionMember: string;
   orderMember: string;
@@ -63,7 +64,7 @@ export interface IDataView extends IDataViewData {
   selectedRow: any[] | undefined;
   dataSource: IDataSource;
   bindingParametersFromParent: {[key: string]: string};
-
+  showSelectionCheckboxes: boolean;
   isReorderedOnClient: boolean;
   selectedRowIds: Set<string>;
   panelViewActions: IAction[];

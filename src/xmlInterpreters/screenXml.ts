@@ -270,7 +270,7 @@ export function interpretScreenXml(
           dataView.attributes.DisableActionButtons === "true",
         showAddButton: dataView.attributes.ShowAddButton === "true",
         showDeleteButton: dataView.attributes.ShowDeleteButton === "true",
-        showSelectionCheckboxes:
+        showSelectionCheckboxesSetting:
           dataView.attributes.ShowSelectionCheckboxes === "true",
         isGridHeightDynamic: dataView.attributes.IsGridHeightDynamic === "true",
         selectionMember: dataView.attributes.SelectionMember,
