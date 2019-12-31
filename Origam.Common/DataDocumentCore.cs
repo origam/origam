@@ -19,8 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Data;
 using System.Xml;
+using System.Linq;
+using Origam.Extensions;
 
 namespace Origam
 {
@@ -45,9 +48,9 @@ namespace Origam
 
         private void WriteToDataSet(XmlDocument xmlDocument)
         {
-            using (XmlReader xmlReader = new XmlNodeReader(xmlDocument))
+            using (XmlReader xmlReader = new XmlNodeReader(xmlDocument.RemoveAllEmptyAttributesAndNodes()))
             {
-                dataSet.ReadXml(xmlReader);
+                Load(xmlReader);
             }
         }
 

@@ -26,6 +26,7 @@ using System.IO;
 using System.Xml.XPath;
 using System.Collections;
 using System;
+using Origam.Extensions;
 
 namespace Origam.Rule
 {
@@ -63,7 +64,17 @@ namespace Origam.Rule
             XslCompiledTransform xslt = engine as XslCompiledTransform;
             Mvp.Xml.Common.Xsl.XslReader xslReader = new Mvp.Xml.Common.Xsl.XslReader(xslt);
             xslReader.StartTransform(new Mvp.Xml.Common.Xsl.XmlInput(sourceXpathDoc), xslArg);
-            resultDoc.Load(xslReader);
+            XmlDocument doc = new XmlDocument();
+            doc.Load(xslReader);
+            if (!string.IsNullOrEmpty(doc.OuterXml))
+            {
+                doc.RemoveAllEmptyAttributesAndNodes();
+                resultDoc.Load(XmlReader.Create(new StringReader(doc.OuterXml)));
+            }
+            else
+            {
+                resultDoc.Load(xslReader);
+            }
         }
 
         public override void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, XmlTextWriter xwr)

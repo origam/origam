@@ -27,6 +27,7 @@ using System.Text;
 using System.Xml;
 using Origam.DA;
 using Origam.DA.Service;
+using Origam.Extensions;
 using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
@@ -187,7 +188,7 @@ namespace Origam.Gui
                 IXmlContainer transformationResult = transformer.Result as IXmlContainer;
                 if (transformationResult != null)
                 {
-                    dataDoc.Load(new XmlNodeReader(transformationResult.Xml));
+                    dataDoc.Load(new XmlNodeReader(transformationResult.Xml.RemoveAllEmptyAttributesAndNodes()));
                 }
                 sdData.Merge(dataDoc.DataSet);
             }
@@ -283,7 +284,7 @@ namespace Origam.Gui
                     DataSet resultData = gen.CreateDataSet(entity);
                     resultData.EnforceConstraints = false;
                     IDataDocument resultDoc = DataDocumentFactory.New(resultData);
-                    resultDoc.Load(new XmlNodeReader(transformationResult));
+                    resultDoc.Load(new XmlNodeReader(transformationResult.RemoveAllEmptyAttributesAndNodes()));
                     DatasetTools.MergeDataSet(
                         dataDoc.DataSet, resultDoc.DataSet, null,
                         new MergeParams(profileId));
