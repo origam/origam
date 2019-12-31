@@ -649,9 +649,11 @@ namespace Origam.ServerCommon.Pages
 
         private static (int, AbstractPage) ResolvePage(
             IHttpContextWrapper context, 
-            out Dictionary<string, string> urlParameters)
+            out Dictionary<string, string> outUrlParameters)
         {
-            urlParameters = new Dictionary<string, string>();
+            outUrlParameters = new Dictionary<string, string>();
+            var currentUrlParams = new Dictionary<string, string>();
+            
             string path = context.Request.AppRelativeCurrentExecutionFilePath;
             if (log.IsDebugEnabled)
             {
@@ -669,7 +671,7 @@ namespace Origam.ServerCommon.Pages
                 new List<AbstractPage>();
             foreach (AbstractPage page in pages.ChildItems)
             {
-                urlParameters.Clear();
+                currentUrlParams.Clear();
                 if (!IsPageValidByVerb(page, context))
                 {
                     continue;
@@ -710,7 +712,7 @@ namespace Origam.ServerCommon.Pages
                             paramName = pathPart.Substring(
                                 1, pathPart.Length - 2);
                         }
-                        urlParameters.Add(paramName, paramValue);
+                        currentUrlParams.Add(paramName, paramValue);
                     }
                     // path
                     else
@@ -734,6 +736,8 @@ namespace Origam.ServerCommon.Pages
                 if (!invalidRequest)
                 {
                     validPagesByVerbAndPath.Add(page);
+                    outUrlParameters = new Dictionary<string, string>(currentUrlParams);
+
                 }
             }
             switch (validPagesByVerbAndPath.Count)
