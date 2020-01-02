@@ -198,7 +198,7 @@ namespace Origam.ServerCommon.Pages
                     if (page.MimeType == MIME_JSON)
                     {
                         response.WriteToOutput(textWriter =>
-                            JsonUtils.SerializeToJson(textWriter, result, xsltPage.OmitJsonRootElement));
+                            JsonUtils.SerializeToJson(textWriter, result.Xml, xsltPage.OmitJsonRootElement));
                     }
                     else
                     {
