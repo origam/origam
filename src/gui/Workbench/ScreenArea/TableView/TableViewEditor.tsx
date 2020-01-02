@@ -67,6 +67,7 @@ export class TableViewEditor extends React.Component<{
             isReadOnly={readOnly}
             isInvalid={false}
             isFocused={true}
+            isPassword={this.props.property!.isPassword}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             refocuser={undefined}

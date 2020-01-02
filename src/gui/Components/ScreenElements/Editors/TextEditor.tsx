@@ -9,6 +9,7 @@ export class TextEditor extends React.Component<{
   value: string | null;
   isMultiline?: boolean;
   isReadOnly: boolean;
+  isPassword?: boolean;
   isInvalid: boolean;
   invalidMessage?: string;
   isFocused: boolean;
@@ -71,7 +72,7 @@ export class TextEditor extends React.Component<{
               backgroundColor: this.props.backgroundColor
             }}
             className={S.input}
-            type="text"
+            type={this.props.isPassword ? "password" : "text"}
             value={this.props.value || ""}
             readOnly={this.props.isReadOnly}
             ref={this.refInput}
