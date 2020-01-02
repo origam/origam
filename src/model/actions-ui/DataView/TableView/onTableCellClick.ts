@@ -14,6 +14,7 @@ export function onTableCellClick(ctx: any) {
     columnIndex: number
   ) {
     try {
+      console.log('click', rowIndex, columnIndex)
       if (getIsSelectionCheckboxesShown(ctx) && columnIndex === -1) {
         const dataTable = getDataTable(ctx);
         const selectionMember = getSelectionMember(ctx);

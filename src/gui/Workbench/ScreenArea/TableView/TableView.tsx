@@ -17,7 +17,7 @@ import { ITableColumnsConf } from "../../../Components/Dialogs/ColumnsDialog";
 import { FilterSettings } from "../../../Components/ScreenElements/Table/FilterSettings/FilterSettings";
 import { Header } from "../../../Components/ScreenElements/Table/Header";
 import { SimpleScrollState } from "../../../Components/ScreenElements/Table/SimpleScrollState";
-import { Table } from "../../../Components/ScreenElements/Table/Table";
+import { Table, RawTable } from "../../../Components/ScreenElements/Table/Table";
 import { IGridDimensions } from "../../../Components/ScreenElements/Table/types";
 import { CellRenderer } from "./CellRenderer";
 import { TableViewEditor } from "./TableViewEditor";
@@ -51,7 +51,7 @@ export class TableView extends React.Component<{
   onTableKeyDown?: (event: any) => void;
 }> {
   refTableDisposer: any;
-  refTable = (elmTable: Table | null) => {
+  refTable = (elmTable: RawTable | null) => {
     this.elmTable = elmTable;
     if (elmTable) {
       const d1 = this.props.tablePanelView!.subOnFocusTable(
@@ -68,7 +68,7 @@ export class TableView extends React.Component<{
       this.refTableDisposer && this.refTableDisposer();
     }
   };
-  elmTable: Table | null = null;
+  elmTable: RawTable | null = null;
 
   gDim = new GridDimensions({
     getTableViewProperties: () => getTableViewProperties(this.props.dataView),
@@ -137,7 +137,7 @@ export class TableView extends React.Component<{
             onOutsideTableClick={onOutsideTableClick(this.props.tablePanelView)}
             refCanvasMovingComponent={this.props.tablePanelView!.setTableCanvas}
             onKeyDown={this.props.onTableKeyDown}
-            ref={this.refTable}
+            refTable={this.refTable}
           />
         </>
       </Provider>

@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, comparer, autorun } from "mobx";
 import { observer, Observer } from "mobx-react";
 import * as React from "react";
 import ReactDOM from "react-dom";
@@ -10,11 +10,26 @@ import Scrollee from "./Scrollee";
 import Scroller from "./Scroller";
 import S from "./Table.module.css";
 import { ITableProps } from "./types";
+import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
 
+export const Table: React.FC<ITableProps & {
+  refTable(elm: RawTable | null): void;
+}> = props => {
+  const ctxPanelVisibility = React.useContext(CtxPanelVisibility);
+  return (
+    <RawTable
+      {...props}
+      isVisible={ctxPanelVisibility.isVisible}
+      ref={props.refTable}
+    />
+  );
+};
 
 @observer
-export class Table extends React.Component<ITableProps> {
-  @observable contentBounds: BoundingRect = {
+export class RawTable extends React.Component<
+  ITableProps & { isVisible: boolean }
+> {
+  @observable _contentBounds: BoundingRect = {
     top: 0,
     left: 0,
     bottom: 0,
@@ -22,9 +37,19 @@ export class Table extends React.Component<ITableProps> {
     width: 0,
     height: 0
   };
+  @computed({ equals: comparer.structural }) get contentBounds() {
+    return this._contentBounds;
+  }
+
+  set contentBounds(value: BoundingRect) {
+    this._contentBounds = value;
+  }
+
   @observable.ref elmCanvasFixed: Canvas | null = null;
   @observable.ref elmCanvasMoving: Canvas | null = null;
   @observable.ref elmScroller: Scroller | null = null;
+
+  elmMeasure: Measure | null = null;
 
   @action.bound handleWindowClick(event: any) {
     const domNode = ReactDOM.findDOMNode(this.elmScroller);
@@ -41,6 +66,10 @@ export class Table extends React.Component<ITableProps> {
     this.elmCanvasMoving = elm;
     this.props.refCanvasMovingComponent &&
       this.props.refCanvasMovingComponent(elm);
+  }
+
+  @action.bound refMeasure(elm: Measure | null) {
+    this.elmMeasure = elm;
   }
 
   @action.bound refScroller(elm: Scroller | null) {
@@ -61,10 +90,24 @@ export class Table extends React.Component<ITableProps> {
           this.scrollToCellShortest(rowIdx, colIdx);
         })
       );
+
+  }
+
+  componentDidUpdate(prevProps: ITableProps & { isVisible: boolean }) {
+    if (this.props.isVisible !== prevProps.isVisible) {
+      this.remeasureCellArea();
+    }
   }
 
   componentWillUnmount() {
     this.disposers.forEach(d => d());
+  }
+
+
+  @action.bound remeasureCellArea() {
+    if (this.elmMeasure && (this.elmMeasure as any).measure) {
+      (this.elmMeasure as any).measure();
+    }
   }
 
   @action.bound focusTable() {
@@ -167,12 +210,15 @@ export class Table extends React.Component<ITableProps> {
             </div>
           </div>
         )}
-        <Measure bounds={true} onResize={this.handleResize}>
+        <Measure
+          ref={this.refMeasure}
+          bounds={true}
+          onResize={this.handleResize}
+        >
           {({ measureRef, contentRect }) => (
             <Observer>
               {() => (
                 <>
-                  {" "}
                   {this.props.renderHeader &&
                     (contentRect.bounds!.width ? (
                       <div className={S.headers}>

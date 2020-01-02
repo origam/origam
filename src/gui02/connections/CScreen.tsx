@@ -4,6 +4,7 @@ import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
 import React from "react";
 import { Screen } from "../components/Screen/Screen";
 import { ScreenContainer } from "gui02/components/Screen/ScreenContainer";
+import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
 
 @observer
 export class CScreen extends React.Component<{
@@ -17,9 +18,13 @@ export class CScreen extends React.Component<{
         <>
           {!formScreen.isLoading && (
             <Screen isHidden={!openedScreen.isActive}>
-              <FormScreenBuilder
-                xmlWindowObject={formScreen.formScreen!.screenUI}
-              />
+              <CtxPanelVisibility.Provider
+                value={{ isVisible: openedScreen.isActive }}
+              >
+                <FormScreenBuilder
+                  xmlWindowObject={formScreen.formScreen!.screenUI}
+                />
+              </CtxPanelVisibility.Provider>
             </Screen>
           )}
         </>
