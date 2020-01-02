@@ -73,6 +73,7 @@ export class TextEditor extends React.Component<{
             }}
             className={S.input}
             type={this.props.isPassword ? "password" : "text"}
+            autoComplete={this.props.isPassword ? "new-password" : undefined}
             value={this.props.value || ""}
             readOnly={this.props.isReadOnly}
             ref={this.refInput}
