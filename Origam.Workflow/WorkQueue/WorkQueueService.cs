@@ -1209,7 +1209,7 @@ namespace Origam.Workflow.WorkQueue
                 switch (pm.Value)
                 {
                     case WorkQueueCommandParameterMappingType.QueueEntries:
-                        val = DataDocumentFactory.New(selectedRows.DataSet);
+                        val = GetDataDocumentFactory(selectedRows.DataSet);
                         break;
                     case WorkQueueCommandParameterMappingType.Parameter1:
                         val = param1;
@@ -1223,6 +1223,16 @@ namespace Origam.Workflow.WorkQueue
                 parameters.Add(new QueryParameter(pm.Name, val));
             }
             core.WorkflowService.ExecuteWorkflow(cmd.WorkflowId, parameters, transactionId);
+        }
+
+        private object GetDataDocumentFactory(DataSet dataSet)
+        {
+            var val = dataSet.ExtendedProperties["IDataDocument"] ?? DataDocumentFactory.New(dataSet);
+            if (dataSet.ExtendedProperties["IDataDocument"] == null)
+            {
+                dataSet.ExtendedProperties.Add("IDataDocument", val);
+            }
+            return val;
         }
 
         private void HandleRemove(string queueClass, DataTable selectedRows, string transactionId)
