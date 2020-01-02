@@ -223,6 +223,7 @@ export interface IApi {
       width: number;
       isHidden: boolean;
     }>;
+    defaultView: string;
   }): Promise<any>;
 
   saveSplitPanelConfiguration(data: {

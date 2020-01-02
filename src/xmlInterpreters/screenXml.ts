@@ -334,7 +334,12 @@ export function interpretScreenXml(
             if (colIdxB === -1) return 0;
             return colIdxA - colIdxB;
           });
+        const defaultView = findStopping(conf, n => n.name === "view");
+        defaultView.forEach(element => {
+          dataViewInstance.activePanelView= element.attributes.id;
+        });
       });
+
       // COLUMN ORDER
 
       return dataViewInstance;

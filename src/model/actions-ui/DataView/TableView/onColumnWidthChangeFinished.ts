@@ -8,6 +8,8 @@ export function onColumnWidthChangeFinished(ctx: any) {
     const prop = getDataViewPropertyById(ctx, id);
     if(prop) {
       yield* saveColumnConfigurations(ctx)();
+
+      // TODO: Error handling
     }
   });
 }

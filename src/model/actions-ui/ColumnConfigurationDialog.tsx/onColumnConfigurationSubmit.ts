@@ -12,5 +12,7 @@ export function onColumnConfigurationSubmit(ctx: any) {
     const columnConfigurationDialog = getColumnConfigurationDialog(ctx);
     columnConfigurationDialog.onColumnConfSubmit(event, configuration);
     yield* saveColumnConfigurations(ctx)();
+
+    // TODO: Error handling
   });
 }

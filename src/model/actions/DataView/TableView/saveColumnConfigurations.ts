@@ -1,6 +1,7 @@
 import { getApi } from "model/selectors/getApi";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { getActivePanelView } from "model/selectors/DataView/getActivePanelView";
 
 export function saveColumnConfigurations(ctx: any) {
   return function* saveColumnConfigurations() {
@@ -12,7 +13,8 @@ export function saveColumnConfigurations(ctx: any) {
         propertyId: property.id,
         width: property.columnWidth,
         isHidden: !!tablePanelView.hiddenPropertyIds.get(property.id)
-      }))
+      })),
+      defaultView: getActivePanelView(ctx)
     });
     yield;
   };

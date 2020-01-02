@@ -498,30 +498,40 @@ export class OrigamAPI implements IApi {
       isHidden: boolean;
       width: number;
     }>;
+    defaultView: string;
   }): Promise<any> {
-    return (
-      await axios.post(
-        `${this.urlPrefix}/UIService/SaveObjectConfig`,
-        {
-          ObjectinstanceId: data.instanceId,
-          Section: "columnWidths",
-          SettingsData: data.columnSettings
-            .map(
-              setting =>
-                `<column 
+    await axios.post(
+      `${this.urlPrefix}/UIService/SaveObjectConfig`,
+      {
+        ObjectinstanceId: data.instanceId,
+        Section: "columnWidths",
+        SettingsData: data.columnSettings
+          .map(
+            setting =>
+              `<column 
                   property="${setting.propertyId}" 
                   isHidden="${setting.isHidden ? "true" : "false"}" 
                   width="${setting.width}" 
                   aggregationType="0" 
                 />`
-            )
-            .join("")
-        },
-        {
-          headers: this.httpAuthHeader
-        }
-      )
-    ).data;
+          )
+          .join("")
+      },
+      {
+        headers: this.httpAuthHeader
+      }
+    );
+    await axios.post(
+      `${this.urlPrefix}/UIService/SaveObjectConfig`,
+      {
+        ObjectinstanceId: data.instanceId,
+        Section: "defaultView",
+        SettingsData: `<view id="${data.defaultView}" />`
+      },
+      {
+        headers: this.httpAuthHeader
+      }
+    );
   }
 
   async saveSplitPanelConfiguration(data: {

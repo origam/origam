@@ -8,5 +8,7 @@ export function onColumnOrderChangeFinished(ctx: any) {
     const tablePanelView = getTablePanelView(ctx);
     tablePanelView.swapColumns(id1, id2);
     yield* saveColumnConfigurations(ctx)();
+
+    // TODO: Error handling
   });
 }

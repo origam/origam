@@ -1,4 +1,5 @@
 export enum IPanelViewType {
-  Form = "Form",
-  Table = "Table"
+  Form = "0",
+  Table = "1"
 }
+
