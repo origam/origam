@@ -592,27 +592,27 @@ namespace Origam.ServerCore
                 {
                     return result;
                 }
-                IWorkQueueService workQueueService 
+                var workQueueService 
                     = ServiceManager.Services.GetService<IWorkQueueService>();
-                IDataLookupService lookupService 
+                var lookupService 
                     = ServiceManager.Services.GetService<IDataLookupService>();
                 DataSet data = workQueueService.UserQueueList();
                 DataTable queueList = data.Tables["WorkQueue"];
                 foreach (DataRow row in queueList.Rows)
                 {
                     object workQueueId = row["Id"];
-                    string workQueueClassName = (string)row["WorkQueueClass"];
+                    var workQueueClassName = (string)row["WorkQueueClass"];
                     long cnt = 0;
                     if ((bool)row["IsMessageCountDisplayed"])
                     {
-                        WorkQueueClass workQueueClass 
+                        var workQueueClass 
                             = workQueueService.WQClass(workQueueClassName) 
                                 as WorkQueueClass;
                         cnt = (long)lookupService.GetDisplayText(
                             workQueueClass.WorkQueueItemCountLookupId, 
                             workQueueId, false, false, null);
                     }
-                    WorkQueueInfo workQueueInfo = new WorkQueueInfo(
+                    var workQueueInfo = new WorkQueueInfo(
                         workQueueId.ToString(), (string)row["Name"], cnt);
                     result.Add(workQueueInfo);
                 }
@@ -622,6 +622,69 @@ namespace Origam.ServerCore
             {
                 throw new Exception(localizer["ErrorLoadingWorkQueueList"], ex);
             }
+        }
+        public void SaveObjectConfig(SaveObjectConfigInput input)
+        {
+            Guid profileId = SecurityTools.CurrentUserProfile().Id;
+            Guid workflowId;
+            WorkflowSessionStore workflowSessionStore = null;
+            if (input.SessionFormIdentifier != Guid.Empty)
+            {
+                workflowSessionStore = sessionManager.GetSession(
+                    input.SessionFormIdentifier) as WorkflowSessionStore;
+            }
+            if (workflowSessionStore == null)
+            {
+                workflowId = Guid.Empty;
+            }
+            else
+            {
+                workflowId = workflowSessionStore.WorkflowId;
+            }
+            DataSet userConfig = OrigamPanelConfigDA.LoadConfigData(
+                input.ObjectInstanceId, workflowId, profileId);
+            if (userConfig.Tables["OrigamFormPanelConfig"].Rows.Count == 0)
+            {
+                OrigamPanelConfigDA.CreatePanelConfigRow(
+                    userConfig.Tables["OrigamFormPanelConfig"], 
+                    input.ObjectInstanceId, workflowId, profileId, 
+                    OrigamPanelViewMode.Grid);
+            }
+            XmlDocument currentSettings = new XmlDocument();
+            XmlDocumentFragment newSettings 
+                = currentSettings.CreateDocumentFragment();
+            XmlElement newSettingsNode = currentSettings.CreateElement(
+                input.Section);
+            newSettingsNode.InnerXml = input.SettingsData;
+            newSettings.AppendChild(newSettingsNode);
+            XmlNode configNode;
+            DataRow settingsRow 
+                = userConfig.Tables["OrigamFormPanelConfig"].Rows[0];
+            if (settingsRow.IsNull("SettingsData"))
+            {
+                configNode = currentSettings.CreateElement("Configuration");
+                currentSettings.AppendChild(configNode);
+            }
+            else
+            {
+                currentSettings.LoadXml((string)settingsRow["SettingsData"]);
+                configNode = currentSettings.FirstChild;
+            }
+            foreach(XmlNode node in configNode.SelectNodes(input.Section))
+            {
+                node.ParentNode.RemoveChild(node);
+            }
+            configNode.AppendChild(newSettings);
+            settingsRow["SettingsData"] = currentSettings.OuterXml;
+            OrigamPanelConfigDA.SaveUserConfig(
+                userConfig, input.ObjectInstanceId, workflowId, profileId);
+        }
+        public void SaveSplitPanelConfig(SaveSplitPanelConfigInput input)
+        {
+            SecurityTools.CurrentUserProfile();
+            OrigamPanelColumnConfigDA.PersistColumnConfig(
+                input.InstanceId, "splitPanel", 0, 
+                input.Position, false);
         }
         private bool IsRowDirty(DataRow row)
         {
