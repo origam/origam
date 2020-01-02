@@ -2,6 +2,7 @@ import { IActionResultType } from "../SelectionDialog/types";
 import { getWorkbenchLifecycle } from "../../selectors/getWorkbenchLifecycle";
 import { DialogInfo } from "model/entities/OpenedScreen";
 import { closeForm } from "../closeForm";
+import { getActionCaption } from "model/selectors/Actions/getActionCaption";
 
 // TODO: yield* for openNewForm
 export function processActionResult(ctx: any) {
@@ -29,7 +30,7 @@ export function processActionResult(ctx: any) {
           yield* workbenchLifecycle.openNewForm(
             objectId,
             typeString,
-            "",
+            getActionCaption(ctx),
             !dataRequested,
             dialogInfo,
             parameters

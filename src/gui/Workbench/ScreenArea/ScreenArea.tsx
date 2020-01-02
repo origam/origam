@@ -50,9 +50,9 @@ export const DialogScreen: React.FC<{
         {() => (
           <ModalWindow
             title={
-              !props.openedScreen.content.isLoading
+              /*!props.openedScreen.content.isLoading
                 ? props.openedScreen.content.formScreen!.title
-                : props.openedScreen.title
+                : */ props.openedScreen.title
             }
             titleIsWorking={
               props.openedScreen.content.isLoading ||

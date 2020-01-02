@@ -19,9 +19,9 @@ export class CScreenTabbedViewHandleRow extends React.Component {
   }
 
   getLabel(item: IOpenedScreen) {
-    const text = !item.content.isLoading
+    const text = /*!item.content.isLoading
       ? item.content.formScreen!.title
-      : item.title;
+      :*/ item.title;
     const order = item.order > 0 ? `[${item.order}]` : "";
     return [text, order].join(" ");
   }

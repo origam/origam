@@ -21,9 +21,9 @@ export class CScreenHeader extends React.Component {
   }
 
   getLabel(openedScreen: IOpenedScreen) {
-    return !openedScreen.content.isLoading
+    return (/*!openedScreen.content.isLoading
       ? openedScreen.content.formScreen!.title
-      : openedScreen.title;
+      :*/ openedScreen.title);
   }
 
   render() {
