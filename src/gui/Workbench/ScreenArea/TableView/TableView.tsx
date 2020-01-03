@@ -17,7 +17,10 @@ import { ITableColumnsConf } from "../../../Components/Dialogs/ColumnsDialog";
 import { FilterSettings } from "../../../Components/ScreenElements/Table/FilterSettings/FilterSettings";
 import { Header } from "../../../Components/ScreenElements/Table/Header";
 import { SimpleScrollState } from "../../../Components/ScreenElements/Table/SimpleScrollState";
-import { Table, RawTable } from "../../../Components/ScreenElements/Table/Table";
+import {
+  Table,
+  RawTable
+} from "../../../Components/ScreenElements/Table/Table";
 import { IGridDimensions } from "../../../Components/ScreenElements/Table/types";
 import { CellRenderer } from "./CellRenderer";
 import { TableViewEditor } from "./TableViewEditor";
@@ -208,7 +211,9 @@ class GridDimensions implements IGridDimensions {
       }
       colIdx--;
     }
+
     const property = this.tableViewProperties[colIdx];
+    if (!property) debugger;
     return this.columnWidths.has(property.id)
       ? this.columnWidths.get(property.id)!
       : 100;

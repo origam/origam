@@ -47,7 +47,7 @@ export class ColumnsDialog extends React.Component<{
 
   @action.bound handleFixedColumnsCountChange(event: any) {
     this.configuration = produce(this.configuration, draft => {
-      draft.fixedColumnCount = event.target.value;
+      draft.fixedColumnCount = parseInt(event.target.value, 10);
     });
     console.log(this.configuration);
   }
@@ -102,7 +102,8 @@ export class ColumnsDialog extends React.Component<{
           <input
             className={S.lockedColumnsInput}
             type="number"
-            value={this.configuration.fixedColumnCount}
+            min={0}
+            value={"" + this.configuration.fixedColumnCount}
             onChange={this.handleFixedColumnsCountChange}
           />
         </div>
