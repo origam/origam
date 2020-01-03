@@ -29,14 +29,14 @@ namespace Origam.ServerCommon
                 }
                 else
                 {
-                    if (parameterlessPages.ContainsKey(page.Path))
+                    if (parameterlessPages.ContainsKey(page.Url))
                     {
                         throw new OrigamException(
                             string.Format(
                                 "Can't initialize API Url resolver. Duplicate API route '{0}'",
                                 page.Path));
                     }
-                    parameterlessPages.Add(page.Path, page);
+                    parameterlessPages.Add(page.Url, page);
                 }
             }
             if (log.IsDebugEnabled)
