@@ -115,7 +115,11 @@ export class CellRenderer implements ICellRenderer {
           break;
         default:
           if (cell.value !== null) {
-            ctx.fillText("" + cell.value!, cellPaddingLeft * CPR, 15 * CPR);
+            if(!cell.isPassword) {
+              ctx.fillText("" + cell.value!, cellPaddingLeft * CPR, 15 * CPR);
+            } else {
+              ctx.fillText("*******", cellPaddingLeft * CPR, 15 * CPR);
+            }
           }
       }
     }
@@ -258,6 +262,7 @@ export class CellRenderer implements ICellRenderer {
         this.tablePanelView.columnOrderChangingTargetId === property.id,
       isLoading,
       isInvalid,
+      isPassword: property.isPassword,
       formatterPattern: property.formatterPattern,
       type: property.column,
       value,
