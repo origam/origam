@@ -33,7 +33,7 @@ export const errDialogSvc = (ctx: any) => ({
       responseMessage || exceptionMessage || "" + event.error;
 
     return getDialogStack(ctx).pushDialog(
-      "error_dialog",
+      "",
       <ErrorDialogComponent
         errorMessage={errorMessage}
         onOkClick={action(() => {
