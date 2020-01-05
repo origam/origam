@@ -22,6 +22,7 @@ import { Splitter } from "gui02/components/Splitter/Splitter";
 import { CScreenSectionTabbedView } from "gui02/connections/CScreenSectionTabbedView";
 import { IFormScreen } from "model/entities/types/IFormScreen";
 import { onSplitterPositionChangeFinished } from "model/actions-ui/Splitter/onSplitterPositionChangeFinished";
+import { EmbeddedWebpage } from "gui02/components/EmbeddedWebpage/EmbeddedWebpage";
 
 @observer
 class TabbedPanelHelper extends React.Component<{
@@ -174,17 +175,33 @@ export class FormScreenBuilder extends React.Component<{
             </VBox>
           );
         case "Grid":
-          return (
-            <DataView
-              id={xso.attributes.Id}
-              height={
-                xso.attributes.Height
-                  ? parseInt(xso.attributes.Height, 10)
-                  : undefined
-              }
-              isHeadless={xso.attributes.IsHeadless === "true"}
-            />
-          );
+          if (
+            xso.attributes.ModelInstanceId !==
+            "957390e8-fa5e-46ad-92d0-118a5d5f4b3d-FALSE"
+          ) {
+            return (
+              <DataView
+                id={xso.attributes.Id}
+                height={
+                  xso.attributes.Height
+                    ? parseInt(xso.attributes.Height, 10)
+                    : undefined
+                }
+                isHeadless={xso.attributes.IsHeadless === "true"}
+              />
+            );
+          } else {
+            return (
+              <EmbeddedWebpage
+                id={xso.attributes.ModelInstanceId}
+                height={
+                  xso.attributes.Height
+                    ? parseInt(xso.attributes.Height, 10)
+                    : undefined
+                }
+              />
+            );
+          }
         case "Tab":
           return (
             <CScreenSectionTabbedView
