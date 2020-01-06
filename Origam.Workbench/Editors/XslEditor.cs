@@ -1274,13 +1274,18 @@ namespace Origam.Workbench.Editors
 
 		private ParameterData NodeToParamData(XmlNode parameterNode)
 		{
-			string name = parameterNode.Attributes["name"].Value;
-			
-			string asPrefix = aliasToNameSpaceDict[XmlTools.AsNameSpace];
-			string typeAttribute = $"{asPrefix}:DataType";
-			string type = parameterNode.Attributes[typeAttribute]?.Value;
+            string name = parameterNode.Attributes["name"].Value;
+            try
+            {
+                string asPrefix = aliasToNameSpaceDict[XmlTools.AsNameSpace];
+                string typeAttribute = $"{asPrefix}:DataType";
+                string type = parameterNode.Attributes[typeAttribute]?.Value;
 
-			return new ParameterData(name, type);
+                return new ParameterData(name, type);
+            }catch (KeyNotFoundException)
+            {
+                return new ParameterData(name, null);
+            }
 		}
 	}
 

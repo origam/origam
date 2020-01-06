@@ -87,7 +87,7 @@ namespace Origam.DA.Service
                         adapter = DataService.GetAdapter(selectParameters, CurrentProfile);
 						break;
 					case QueryDataSourceType.DataStructureEntity:
-						adapter = DataService.GetSelectRowAdapter(Entity, Query.ColumnsInfo);
+						adapter = DataService.GetSelectRowAdapter(Entity, Filter, Query.ColumnsInfo);
 						break;
 
 					default:
@@ -341,7 +341,8 @@ namespace Origam.DA.Service
 
 				case QueryDataSourceType.DataStructureEntity:
 					entities = new ArrayList();
-					entities.Add(this.GetDataStructureEntity(query));
+                    filter = this.GetFilterSet(query.MethodId);
+                    entities.Add(this.GetDataStructureEntity(query));
 
 					if(dataset == null)
 					{
@@ -698,7 +699,7 @@ namespace Origam.DA.Service
                         rowName = row[describingField.Name].ToString();
                     }
                 }
-                LoadActualRow(storedData, entityId, row, userProfile, transactionId);
+                LoadActualRow(storedData, entityId, Guid.Empty, row, userProfile, transactionId);
                 DataTable storedTable = storedData.Tables[currentEntityName];
                 if (storedTable.Rows.Count == 0)
                 {
@@ -2313,7 +2314,8 @@ namespace Origam.DA.Service
 							if(entity.EntityDefinition.GetType() == typeof(TableMappingItem))
 							{
 								newData.Clear();
-								LoadActualRow(newData, entityId, rowArray[i], userProfile, transactionId);								
+								LoadActualRow(newData, entityId, query.MethodId,
+                                    rowArray[i], userProfile, transactionId);								
 								if(newData.Tables[0].Rows.Count == 0)
 								{
 									throw new Exception(ResourceUtils.GetString("NoDataRowAfterUpdate"));
@@ -2404,9 +2406,12 @@ namespace Origam.DA.Service
 			return newData;
 		}
 
-		private void LoadActualRow(DataSet newData, Guid entityId, DataRow row, IPrincipal userProfile, string transactionId)
+		private void LoadActualRow(DataSet newData, Guid entityId, 
+            Guid filterSetId, DataRow row, IPrincipal userProfile,
+            string transactionId)
 		{
-			DataStructureQuery newDataQuery = new DataStructureQuery(entityId);
+			DataStructureQuery newDataQuery = 
+                new DataStructureQuery(entityId, filterSetId);
 			newDataQuery.DataSourceType = QueryDataSourceType.DataStructureEntity;
 			foreach(DataColumn col in row.Table.PrimaryKey)
 			{

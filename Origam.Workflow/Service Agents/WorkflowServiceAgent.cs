@@ -68,6 +68,7 @@ namespace Origam.Workflow
 			engine.CallingWorkflow = this.WorkflowEngine as WorkflowEngine;
 		    engine.Name = string.IsNullOrEmpty(wf.Name) ?
 		        "WorkFlow" : wf.Name;
+			engine.Trace = this.Trace;
 
             // input parameters
             foreach (DictionaryEntry entry in parameters)

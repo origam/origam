@@ -186,10 +186,14 @@ namespace Origam.Workbench.Services.CoreServices
 			return ds;
 		}
 
-		public static DataSet LoadRow(Guid dataStructureEntityId, QueryParameterCollection parameters, DataSet currentData, string transactionId)
+		public static DataSet LoadRow(Guid dataStructureEntityId, 
+            Guid filterSetId, QueryParameterCollection parameters, 
+            DataSet currentData, string transactionId)
 		{
-			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
-			DataStructureQuery q = new DataStructureQuery(dataStructureEntityId);
+			IServiceAgent dataServiceAgent = (ServiceManager.Services
+                .GetService(typeof(IBusinessServicesService)) as IBusinessServicesService)
+                .GetAgent("DataService", null, null);
+			DataStructureQuery q = new DataStructureQuery(dataStructureEntityId, filterSetId);
 			q.DataSourceType = QueryDataSourceType.DataStructureEntity;
 			if(parameters != null)
 			{

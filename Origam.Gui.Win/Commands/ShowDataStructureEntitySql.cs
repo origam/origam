@@ -89,6 +89,7 @@ namespace Origam.Gui.Win.Commands
                 builder.AppendLine(
                     generator.SelectRowSql(
                         Owner as DataStructureEntity,
+                        null,
                         new Hashtable(),
                         DA.ColumnsInfo.Empty,
                         true

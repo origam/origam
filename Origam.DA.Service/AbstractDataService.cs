@@ -157,19 +157,28 @@ namespace Origam.DA.Service
             }
         }
 
-        internal DbDataAdapter GetSelectRowAdapter(DataStructureEntity entity, ColumnsInfo columnsInfo)
+        internal DbDataAdapter GetSelectRowAdapter(DataStructureEntity entity, 
+            DataStructureFilterSet filterSet, ColumnsInfo columnsInfo)
         {
-            return GetSelectRowAdapterCached(entity, columnsInfo);
+            return GetSelectRowAdapterCached(entity, filterSet, columnsInfo);
         }
 
-		internal DbDataAdapter GetSelectRowAdapterNonCached(DataStructureEntity entity, ColumnsInfo columnsInfo)
+		internal DbDataAdapter GetSelectRowAdapterNonCached(DataStructureEntity entity, 
+            DataStructureFilterSet filterSet, ColumnsInfo columnsInfo)
 		{
-			return DbDataAdapterFactory.CreateSelectRowDataAdapter(entity, columnsInfo, true);
+			return DbDataAdapterFactory.CreateSelectRowDataAdapter(
+                entity, filterSet, columnsInfo, true);
 		}
 
-        private DbDataAdapter GetSelectRowAdapterCached(DataStructureEntity entity, ColumnsInfo columnsInfo)
+        private DbDataAdapter GetSelectRowAdapterCached(
+            DataStructureEntity entity, DataStructureFilterSet filterSet,
+            ColumnsInfo columnsInfo)
         {
             string id = "selectRow_" + entity.PrimaryKey["Id"].ToString();
+            if (filterSet != null)
+            {
+                id += "_" + filterSet.Id.ToString();
+            }
             if (columnsInfo != null && !columnsInfo.IsEmpty)
             {
                 id += "_" + columnsInfo;
@@ -188,7 +197,8 @@ namespace Origam.DA.Service
                 else
                 {
                     // adapter is not in the cache, yet
-                    adapter = GetSelectRowAdapterNonCached(entity, columnsInfo);
+                    adapter = GetSelectRowAdapterNonCached(
+                        entity, filterSet, columnsInfo);
                     // so we add it there
                     if (!adapterCache.ContainsKey(id))
                     {

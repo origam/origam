@@ -56,7 +56,7 @@ namespace Origam
             get
             {
                 XmlDocument xmlDocument = new XmlDocument();
-                if (dataSet.Tables.Count != 0)
+                if (dataSet.Tables.Count != 0 && dataSet.Tables[0].Rows.Count > 0)
                 {
                     xmlDocument.LoadXml(dataSet.GetXml());
                 }

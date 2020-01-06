@@ -32,8 +32,6 @@ namespace Origam.DA.Service
         private static readonly List<IPersistent> temporaryAction = new List<IPersistent>();
         private static object obj = new object();
         public static bool UseIndex { get; private set; } = false;
-        public static bool BlockTemporaryIndex { get; set; } = false;
-
         private static bool blockAddTemporaryAction = false;
         private static readonly List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex
             = new List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>>();
@@ -41,10 +39,14 @@ namespace Origam.DA.Service
         {
             return referenceIndex;
         }
-        public static void ClearReferenceIndex()
+        public static void ClearReferenceIndex(bool fullClear)
         {
             UseIndex = false;
             blockAddTemporaryAction = false;
+            if (fullClear) 
+            { 
+                temporaryAction.Clear();
+            }
             referenceIndex.Clear();
         }
         private static void Remove(IPersistent sender)
@@ -58,19 +60,19 @@ namespace Origam.DA.Service
         }
         private static void Add(IPersistent sender)
         {
-            List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> newReferenceIndex = new List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>>();
-            Addreference((AbstractSchemaItem) sender, newReferenceIndex);
-            referenceIndex.AddRange(newReferenceIndex);
+            if (sender is AbstractSchemaItem)
+            {
+                List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> newReferenceIndex = new List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>>();
+                Addreference((AbstractSchemaItem)sender, newReferenceIndex);
+                referenceIndex.AddRange(newReferenceIndex);
+            }
         }
         internal static void UpdateReferenceIndex(IPersistent sender)
         {
-            if (!BlockTemporaryIndex)
+            DoTemporaryAction(sender);
+            if (blockAddTemporaryAction)
             {
-                DoTemporaryAction(sender);
-                if (blockAddTemporaryAction)
-                {
-                    UpdateIndex(sender);
-                }
+                UpdateIndex(sender);
             }
         }
         private static void UpdateIndex(IPersistent sender)

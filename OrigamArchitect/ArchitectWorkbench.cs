@@ -20,61 +20,53 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.CodeDom;
-using System.IO;
-using System.Drawing;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Reflection;
-using System.Windows.Forms;
-using System.Net;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Collections.Generic;
-
-using Origam.OrigamEngine;
-using Origam;
-using Origam.Schema;
-using Origam.Schema.MenuModel;
-using Origam.Workbench.Editors;
-using Origam.Workbench.Services;
-using Origam.Schema.EntityModel;
-using Origam.UI;
-using Origam.DA;
-using Origam.DA.Service;
-using Origam.Workbench.Pads;
-using Origam.Workbench;
-using Origam.Workbench.Commands;
-using Origam.Workflow;
-using Origam.Workflow.Gui.Win;
-using Origam.Rule;
-using Origam.Licensing;
-using Origam.Licensing.Validation;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-using WeifenLuo.WinFormsUI.Docking;
-
-using NPOI.HSSF.UserModel;
-using NPOI.HPSF;
-using NPOI.SS.UserModel;
-using System.Collections.Generic;
+using System.Net;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using CSharpFunctionalExtensions;
 using JR.Utils.GUI.Forms;
-using Origam.DA.ObjectPersistence;
-using OrigamArchitect.Commands;
-using Origam.Extensions;
-using Origam.Gui.Win;
 using MoreLinq;
-using Origam.Workbench.BaseComponents;
-using Origam.Gui.UI;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using Origam;
+using Origam.DA;
+using Origam.DA.ObjectPersistence;
+using Origam.DA.Service;
 using Origam.Excel;
-using Origam.DA.ObjectPersistence.Providers;
+using Origam.Extensions;
+using Origam.Gui.UI;
+using Origam.Gui.Win;
 using Origam.Gui.Win.Commands;
+using Origam.Licensing;
+using Origam.OrigamEngine;
+using Origam.Rule;
+using Origam.Schema;
 using Origam.Schema.DeploymentModel;
+using Origam.Schema.EntityModel;
+using Origam.Schema.MenuModel;
+using Origam.UI;
+using Origam.Workbench;
+using Origam.Workbench.BaseComponents;
+using Origam.Workbench.Commands;
+using Origam.Workbench.Editors;
+using Origam.Workbench.Pads;
+using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
+using Origam.Workflow;
+using Origam.Workflow.Gui.Win;
+using OrigamArchitect.Commands;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace OrigamArchitect
 {
@@ -248,8 +240,9 @@ namespace OrigamArchitect
 		    loadedForms.Keys.ForEach(RemoveToolStrips);
             if (ActiveDocument is IToolStripContainer toolStripContainer)
 			{
-				toolStripContainer.AllToolStripsRemoved += 
-					OnAllToolStripsRemovedFromALoadedForm;
+				toolStripContainer.AllToolStripsRemoved -= OnAllToolStripsRemovedFromALoadedForm;
+				toolStripContainer.AllToolStripsRemoved += OnAllToolStripsRemovedFromALoadedForm;
+			    toolStripContainer.ToolStripsNeedUpdate -= OnToolStripsNeedUpdate;
 			    toolStripContainer.ToolStripsNeedUpdate += OnToolStripsNeedUpdate;
 			    int widthOfDisplayedToolStrips = toolStripPanel.Controls
 			        .Cast<Control>()
@@ -476,6 +469,8 @@ namespace OrigamArchitect
 		internal bool AdministratorMode { get; set; } = false;
 
 		public bool PopulateEmptyDatabaseOnLoad { get; set; } = true;
+
+        public bool ApplicationDataDisconnectedMode { get; set; } = false;
         
         public void UpdateToolbar()
 		{
@@ -1747,7 +1742,7 @@ namespace OrigamArchitect
                  ServiceManager.Services.GetService<IPersistenceService>();
             if (persistenceService != null)
             {
-                ReferenceIndexManager.ClearReferenceIndex();
+                ReferenceIndexManager.ClearReferenceIndex(true);
             }
         }
 
@@ -2157,8 +2152,8 @@ namespace OrigamArchitect
 		private void _schema_SchemaLoaded(object sender, EventArgs e)
 		{
 			OrigamEngine.InitializeSchemaItemProviders(_schema);
-            IDeploymentService deployment =
-                ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
+            IDeploymentService deployment 
+                = ServiceManager.Services.GetService<IDeploymentService>();
 
 #if ORIGAM_CLIENT
 			deployment.CanUpdate(_schema.ActiveExtension);
@@ -2189,10 +2184,17 @@ namespace OrigamArchitect
 				}
 			}
 #else
+            ApplicationDataDisconnectedMode 
+                = !TestConnectionToApplicationDataDatabase();
+            if (ApplicationDataDisconnectedMode)
+            {
+                UpdateTitle();
+                return;
+            }
             bool isEmpty = deployment.IsEmptyDatabase();
             // data database is empty and we are not supposed to ask for running init scripts
             // that means the new project wizard is running and will take care
-            if (isEmpty && ! PopulateEmptyDatabaseOnLoad)
+            if (isEmpty && !PopulateEmptyDatabaseOnLoad)
             {
                 return;
             }
@@ -2238,7 +2240,7 @@ namespace OrigamArchitect
             // otherwise it would fail generating SQL statements
             if (isEmpty)
             {
-                string userName = System.Threading.Thread.CurrentPrincipal.Identity.Name;
+                string userName = SecurityManager.CurrentPrincipal.Identity.Name;
                 if (MessageBox.Show(string.Format(strings.AddUserToUserList_Question,
                     userName),
                     strings.DatabaseEmptyTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Question,
@@ -2288,7 +2290,10 @@ namespace OrigamArchitect
             Title += _schema.ActiveExtension.Name;
 #endif
 			Title += string.Format(
-                strings.ModelVersion_Title , _schema?.ActiveExtension?.VersionString);
+                strings.ModelVersion_Title, 
+                _schema?.ActiveExtension?.VersionString,
+                (ApplicationDataDisconnectedMode 
+                    ? strings.Disconnected : ""));
         }
 
 		private void AttachmentDocument_ParentIdChanged(object sender, Guid mainEntityId, Guid mainRecordId, Hashtable childReferences)
@@ -2717,6 +2722,19 @@ namespace OrigamArchitect
 				e.Cancel = true;
 			}
 		}
-    }
 
+        private static bool TestConnectionToApplicationDataDatabase()
+        {
+            AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+            try
+            {
+                abstractSqlDataService.ExecuteUpdate("SELECT 1",null);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+    }
 }

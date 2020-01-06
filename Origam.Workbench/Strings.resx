@@ -1,337 +1,415 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-		<xsd:element name="root" msdata:IsDataSet="true">
-			<xsd:complexType>
-				<xsd:choice maxOccurs="unbounded">
-					<xsd:element name="data">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" />
-							<xsd:attribute name="type" type="xsd:string" />
-							<xsd:attribute name="mimetype" type="xsd:string" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="resheader">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" />
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:choice>
-			</xsd:complexType>
-		</xsd:element>
-	</xsd:schema>
-	<resheader name="ResMimeType">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="Version">
-		<value>1.0.0.0</value>
-	</resheader>
-	<resheader name="Reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="Writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<data name="Attachments.DeleteQuestionText">
-		<value>Do you really want to delete the attachment?</value>
-	</data>
-	<data name="Attachments.DeleteQuestionTitle">
-		<value>Delete Attachment</value>
-	</data>
-	<data name="ErrorISchemaItemOnly">
-		<value>Only ISchemaItem objects are supported.</value>
-	</data>
-	<data name="DoYouWantSave">
-		<value>Do you want to save {0}?</value>
-	</data>
-	<data name="SaveTitle">
-		<value>Save</value>
-	</data>
-	<data name="XmlFilesFilter">
-		<value>xml files (*.xml)|*.xml|All files (*.*)|*.*</value>
-	</data>
-	<data name="SaveMetadataTitle">
-		<value>Save metadata to a file</value>
-	</data>
-	<data name="LoadSchemaTitle">
-		<value>Select Schema File to Load</value>
-	</data>
-	<data name="ErrorUserCanceled">
-		<value>Operation cancelled by user.</value>
-	</data>
-	<data name="ErrorSetProperty">
-		<value>Cannot set this property</value>
-	</data>
-	<data name="ErrorWhenRefreshForm">
-		<value>Error occured while refreshing form data '{0}'</value>
-	</data>
-	<data name="ErrorTitle">
-		<value>Error</value>
-	</data>
-	<data name="ErrorNotSchemaExtension">
-		<value>Owner must be of type SchemaExtension</value>
-	</data>	
-	<data name="ErrorDependenciesInPackagesNotReferencedByTargetPackage">
-		<value>Cannot move the item to "{0}" because it has dependencies in packages not referenced by the target package:
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Attachments.DeleteQuestionText" xml:space="preserve">
+    <value>Do you really want to delete the attachment?</value>
+  </data>
+  <data name="Attachments.DeleteQuestionTitle" xml:space="preserve">
+    <value>Delete Attachment</value>
+  </data>
+  <data name="ErrorISchemaItemOnly" xml:space="preserve">
+    <value>Only ISchemaItem objects are supported.</value>
+  </data>
+  <data name="DoYouWantSave" xml:space="preserve">
+    <value>Do you want to save {0}?</value>
+  </data>
+  <data name="SaveTitle" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="XmlFilesFilter" xml:space="preserve">
+    <value>xml files (*.xml)|*.xml|All files (*.*)|*.*</value>
+  </data>
+  <data name="SaveMetadataTitle" xml:space="preserve">
+    <value>Save metadata to a file</value>
+  </data>
+  <data name="LoadSchemaTitle" xml:space="preserve">
+    <value>Select Schema File to Load</value>
+  </data>
+  <data name="ErrorUserCanceled" xml:space="preserve">
+    <value>Operation cancelled by user.</value>
+  </data>
+  <data name="ErrorSetProperty" xml:space="preserve">
+    <value>Cannot set this property</value>
+  </data>
+  <data name="ErrorWhenRefreshForm" xml:space="preserve">
+    <value>Error occured while refreshing form data '{0}'</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ErrorNotSchemaExtension" xml:space="preserve">
+    <value>Owner must be of type SchemaExtension</value>
+  </data>
+  <data name="ErrorDependenciesInPackagesNotReferencedByTargetPackage" xml:space="preserve">
+    <value>Cannot move the item to "{0}" because it has dependencies in packages not referenced by the target package:
 			{1}</value>
-	</data>
-	<data name="ErrorUsagesInPackagesWhichDontDependOnTargetPackage">
-		<value>"Cannot move the item to "{0}" because items that depend on it would not be able to reach it:
+  </data>
+  <data name="ErrorUsagesInPackagesWhichDontDependOnTargetPackage" xml:space="preserve">
+    <value>"Cannot move the item to "{0}" because items that depend on it would not be able to reach it:
 			{1}"</value>
-	</data>
-	<data name="ErrorEditObject">
-		<value>Cannot edit this object</value>
-	</data>
-	<data name="ErrorLoadEditorFailed">
-		<value>Could not load editor</value>
-	</data>
-	<data name="ErrorDeleteItemNotActiveExtension">
-		<value>Cannot delete schema item which does not belong to the active extension.</value>
-	</data>
-	<data name="DoYouWishDelete">
-		<value>Do you really want to delete '{0}'?</value>
-	</data>
-	<data name="DeleteTitle">
-		<value>Delete</value>
-	</data>
-	<data name="NameLabel">
-		<value>Name:</value>
-	</data>
-	<data name="ButtonAddReference">
-		<value>Add Reference</value>
-	</data>
-	<data name="ButtonRemoveReference">
-		<value>Remove Reference</value>
-	</data>
-	<data name="CopyrightLabel">
-		<value>Copyright:</value>
-	</data>
-	<data name="VersionLabel">
-		<value>Version:</value>
-	</data>
-	<data name="InformationLabel">
-		<value>Information</value>
-	</data>
-	<data name="DescriptionLabel">
-		<value>Description:</value>
-	</data>
-	<data name="PackageReferencesLabel">
-		<value>Package References</value>
-	</data>
-	<data name="VisibleReferedItemsLabel">
-		<value>Visible Referenced Elements</value>
-	</data>
-	<data name="ReferencesLabel">
-		<value>References</value>
-	</data>
-	<data name="VersionInfoLabel">
-		<value>Set version using the Deployment model elements.</value>
-	</data>
-	<data name="ErrorEditPackagesOnly">
-		<value>PackageEditor can only edit packages.</value>
-	</data>
-	<data name="ErrorRemovePackageReference">
-		<value>Cannot remove the package reference. Elements from this package are used in the current package.</value>
-	</data>
-	<data name="ErrorAddReference">
-		<value>Cannot add reference to this package. It would create a circular dependency.</value>
-	</data>
-	<data name="ErrorElementReadOnly">
-		<value>Model element is opened for viewing only. Cannot change property.</value>
-	</data>
-	<data name="FileNameTitle">
-		<value>File name</value>
-	</data>
-	<data name="Empty">
-		<value>(empty)</value>
-	</data>
-	<data name="DateTitle">
-		<value>Date</value>
-	</data>
-	<data name="NoteTitle">
-		<value>Remark</value>
-	</data>
-	<data name="TooltipLoad">
-		<value>Appends the attachment to the current record</value>
-	</data>
-	<data name="TooltipSave">
-		<value>Saves the attachment to a file</value>
-	</data>
-	<data name="TooltipShow">
-		<value>Displays the attachment in an associated viewer</value>
-	</data>
-	<data name="TooltipRefresh">
-		<value>Saves changes to the database</value>
-	</data>
-	<data name="TooltipDelete">
-		<value>Removes the attachment</value>
-	</data>
-	<data name="AttachmentsTitle">
-		<value>Attachments</value>
-	</data>
-	<data name="NoAttachments">
-		<value>There are no attachments</value>
-	</data>
-	<data name="ErrorExecuteFile">
-		<value>Cannot execute the file {0}</value>
-	</data>
-	<data name="New">
-		<value>New</value>
-	</data>
-	<data name="Deleted">
-		<value>Deleted</value>
-	</data>
-	<data name="Change">
-		<value>Change</value>
-	</data>
-	<data name="Deduplication">
-		<value>Deduplication</value>
-	</data>
-	<data name="TypeTitle">
-		<value>Type</value>
-	</data>
-	<data name="FieldTitle">
-		<value>Field</value>
-	</data>
-	<data name="OldValueTitle">
-		<value>Original Value</value>
-	</data>
-	<data name="NewValueTitle">
-		<value>New Value</value>
-	</data>
-	<data name="UserTitle">
-		<value>User</value>
-	</data>
-	<data name="AuditTitle">
-		<value>Audit</value>
-	</data>
-	<data name="CategoryTitle">
-		<value>Category</value>
-	</data>
-	<data name="TextTitle">
-		<value>Text</value>
-	</data>
-	<data name="DocumentationTitle">
-		<value>Documentation</value>
-	</data>
-	<data name="ButtonAdd">
-		<value>Add</value>
-	</data>
-	<data name="ButtonRemove">
-		<value>Remove</value>
-	</data>
-	<data name="PackageTitle">
-		<value>Package</value>
-	</data>
-	<data name="VersionTitle">
-		<value>Version</value>
-	</data>
-	<data name="PackagesTitle">
-		<value>Packages</value>
-	</data>
-	<data name="PackageBrowserTitle">
-		<value>Package Browser</value>
-	</data>
-	<data name="ErrorWhenLoadPackage">
-		<value>Error while loading package '{0}'</value>
-	</data>
-	<data name="FoundInTitle">
-		<value>Found In</value>
-	</data>
-	<data name="RootTypeTitle">
-		<value>Root Type</value>
-	</data>
-	<data name="FolderTitle">
-		<value>Folder</value>
-	</data>
-	<data name="FindResultsTitle">
-		<value>Find Results</value>
-	</data>
-	<data name="TimeTitle">
-		<value>Time</value>
-	</data>
-	<data name="DescriptionTitle">
-		<value>Description</value>
-	</data>
-	<data name="RollBackPointTitle">
-		<value>Rollback Point</value>
-	</data>
-	<data name="ButtonUndo">
-		<value>Rollback</value>
-	</data>
-	<data name="TransactionsTitle">
-		<value>Transaction</value>
-	</data>
-	<data name="GlobalTransactionsHistory">
-		<value>Global Transaction History</value>
-	</data>
-	<data name="ErrorRollBackTransactionWorkflow">
-		<value>Cannot partly rollback the transaction while a wizard is running.</value>
-	</data>
-	<data name="PartialRollBackTitle">
-		<value>Partly Rollback</value>
-	</data>
-	<data name="DoYouWishCancelGlobalTransaction0">
-		<value>By cancelling a global transaction you CANCEL all the changes up to the selected time point.</value>
-	</data>
-	<data name="DoYouWishCancelGlobalTransaction1">
-		<value>Do you really want to CANCEL all the changes?</value>
-	</data>
-	<data name="PartialGlobalRollBackTitle">
-		<value>Partly global transaction rollback</value>
-	</data>
-	<data name="PropertiesTitle">
-		<value>Properties</value>
-	</data>
-	<data name="ModelBrowserTitle">
-		<value>Model Browser</value>
-	</data>
-	<data name="ErrorOpenModelPackage">
-		<value>Cannot open requested model package.</value>
-	</data>
-	<data name="ImportingModel">
-		<value>Importing model...</value>
-	</data>
-	<data name="ErrorEditConfigurations">
-		<value>Cannot edit configurations. Property pad cannot be displayed.</value>
-	</data>
-	<data name="NameTitle">
-		<value>Name</value>
-	</data>
-	<data name="ModelConnectionTitle">
-		<value>Model Connection / Path</value>
-	</data>
-	<data name="DataConnectionTitle">
-		<value>Data Connection</value>
-	</data>
-	<data name="ButtonDelete">
-		<value>Delete</value>
-	</data>
-	<data name="ButtonClone">
-		<value>Clone</value>
-	</data>
-	<data name="CopyOf">
-		<value>Copy of {0}</value>
-	</data>
-	<data name="ErrorArchitectCommand">
-		<value>ORIGAM Architect Command Error</value>
-	</data>
-	<data name="ErrorWhenReadChildNodes">
-		<value>Error occured while reading child nodes of node '{0}'.{1}</value>
-	</data>
-	<data name="ErrorWhenAddRoot">
-		<value>Error occured while adding root node '{0}'.{1}</value>
-	</data>
-	<data name="OutputTitle">
-		<value>Output</value>
-	</data>
+  </data>
+  <data name="ErrorEditObject" xml:space="preserve">
+    <value>Cannot edit this object</value>
+  </data>
+  <data name="ErrorLoadEditorFailed" xml:space="preserve">
+    <value>Could not load editor</value>
+  </data>
+  <data name="ErrorDeleteItemNotActiveExtension" xml:space="preserve">
+    <value>Cannot delete schema item which does not belong to the active extension.</value>
+  </data>
+  <data name="DoYouWishDelete" xml:space="preserve">
+    <value>Do you really want to delete '{0}'?</value>
+  </data>
+  <data name="DeleteTitle" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="NameLabel" xml:space="preserve">
+    <value>Name:</value>
+  </data>
+  <data name="ButtonAddReference" xml:space="preserve">
+    <value>Add Reference</value>
+  </data>
+  <data name="ButtonRemoveReference" xml:space="preserve">
+    <value>Remove Reference</value>
+  </data>
+  <data name="CopyrightLabel" xml:space="preserve">
+    <value>Copyright:</value>
+  </data>
+  <data name="VersionLabel" xml:space="preserve">
+    <value>Version:</value>
+  </data>
+  <data name="InformationLabel" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="DescriptionLabel" xml:space="preserve">
+    <value>Description:</value>
+  </data>
+  <data name="PackageReferencesLabel" xml:space="preserve">
+    <value>Package References</value>
+  </data>
+  <data name="VisibleReferedItemsLabel" xml:space="preserve">
+    <value>Visible Referenced Elements</value>
+  </data>
+  <data name="ReferencesLabel" xml:space="preserve">
+    <value>References</value>
+  </data>
+  <data name="VersionInfoLabel" xml:space="preserve">
+    <value>Set version using the Deployment model elements.</value>
+  </data>
+  <data name="ErrorEditPackagesOnly" xml:space="preserve">
+    <value>PackageEditor can only edit packages.</value>
+  </data>
+  <data name="ErrorRemovePackageReference" xml:space="preserve">
+    <value>Cannot remove the package reference. Elements from this package are used in the current package.</value>
+  </data>
+  <data name="ErrorAddReference" xml:space="preserve">
+    <value>Cannot add reference to this package. It would create a circular dependency.</value>
+  </data>
+  <data name="ErrorElementReadOnly" xml:space="preserve">
+    <value>Model element is opened for viewing only. Cannot change property.</value>
+  </data>
+  <data name="FileNameTitle" xml:space="preserve">
+    <value>File name</value>
+  </data>
+  <data name="Empty" xml:space="preserve">
+    <value>(empty)</value>
+  </data>
+  <data name="DateTitle" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="NoteTitle" xml:space="preserve">
+    <value>Remark</value>
+  </data>
+  <data name="TooltipLoad" xml:space="preserve">
+    <value>Appends the attachment to the current record</value>
+  </data>
+  <data name="TooltipSave" xml:space="preserve">
+    <value>Saves the attachment to a file</value>
+  </data>
+  <data name="TooltipShow" xml:space="preserve">
+    <value>Displays the attachment in an associated viewer</value>
+  </data>
+  <data name="TooltipRefresh" xml:space="preserve">
+    <value>Saves changes to the database</value>
+  </data>
+  <data name="TooltipDelete" xml:space="preserve">
+    <value>Removes the attachment</value>
+  </data>
+  <data name="AttachmentsTitle" xml:space="preserve">
+    <value>Attachments</value>
+  </data>
+  <data name="NoAttachments" xml:space="preserve">
+    <value>There are no attachments</value>
+  </data>
+  <data name="ErrorExecuteFile" xml:space="preserve">
+    <value>Cannot execute the file {0}</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>Deleted</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="Deduplication" xml:space="preserve">
+    <value>Deduplication</value>
+  </data>
+  <data name="TypeTitle" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="FieldTitle" xml:space="preserve">
+    <value>Field</value>
+  </data>
+  <data name="OldValueTitle" xml:space="preserve">
+    <value>Original Value</value>
+  </data>
+  <data name="NewValueTitle" xml:space="preserve">
+    <value>New Value</value>
+  </data>
+  <data name="UserTitle" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="AuditTitle" xml:space="preserve">
+    <value>Audit</value>
+  </data>
+  <data name="CategoryTitle" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="TextTitle" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="DocumentationTitle" xml:space="preserve">
+    <value>Documentation</value>
+  </data>
+  <data name="ButtonAdd" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="ButtonRemove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="PackageTitle" xml:space="preserve">
+    <value>Package</value>
+  </data>
+  <data name="VersionTitle" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="PackagesTitle" xml:space="preserve">
+    <value>Packages</value>
+  </data>
+  <data name="PackageBrowserTitle" xml:space="preserve">
+    <value>Package Browser</value>
+  </data>
+  <data name="ErrorWhenLoadPackage" xml:space="preserve">
+    <value>Error while loading package '{0}'</value>
+  </data>
+  <data name="FoundInTitle" xml:space="preserve">
+    <value>Found In</value>
+  </data>
+  <data name="RootTypeTitle" xml:space="preserve">
+    <value>Root Type</value>
+  </data>
+  <data name="FolderTitle" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="FindResultsTitle" xml:space="preserve">
+    <value>Find Results</value>
+  </data>
+  <data name="TimeTitle" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="DescriptionTitle" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="RollBackPointTitle" xml:space="preserve">
+    <value>Rollback Point</value>
+  </data>
+  <data name="ButtonUndo" xml:space="preserve">
+    <value>Rollback</value>
+  </data>
+  <data name="TransactionsTitle" xml:space="preserve">
+    <value>Transaction</value>
+  </data>
+  <data name="GlobalTransactionsHistory" xml:space="preserve">
+    <value>Global Transaction History</value>
+  </data>
+  <data name="ErrorRollBackTransactionWorkflow" xml:space="preserve">
+    <value>Cannot partly rollback the transaction while a wizard is running.</value>
+  </data>
+  <data name="PartialRollBackTitle" xml:space="preserve">
+    <value>Partly Rollback</value>
+  </data>
+  <data name="DoYouWishCancelGlobalTransaction0" xml:space="preserve">
+    <value>By cancelling a global transaction you CANCEL all the changes up to the selected time point.</value>
+  </data>
+  <data name="DoYouWishCancelGlobalTransaction1" xml:space="preserve">
+    <value>Do you really want to CANCEL all the changes?</value>
+  </data>
+  <data name="PartialGlobalRollBackTitle" xml:space="preserve">
+    <value>Partly global transaction rollback</value>
+  </data>
+  <data name="PropertiesTitle" xml:space="preserve">
+    <value>Properties</value>
+  </data>
+  <data name="ModelBrowserTitle" xml:space="preserve">
+    <value>Model Browser</value>
+  </data>
+  <data name="ErrorOpenModelPackage" xml:space="preserve">
+    <value>Cannot open requested model package.</value>
+  </data>
+  <data name="ImportingModel" xml:space="preserve">
+    <value>Importing model...</value>
+  </data>
+  <data name="ErrorEditConfigurations" xml:space="preserve">
+    <value>Cannot edit configurations. Property pad cannot be displayed.</value>
+  </data>
+  <data name="NameTitle" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ModelConnectionTitle" xml:space="preserve">
+    <value>Model Connection / Path</value>
+  </data>
+  <data name="DataConnectionTitle" xml:space="preserve">
+    <value>Data Connection</value>
+  </data>
+  <data name="ButtonDelete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="ButtonClone" xml:space="preserve">
+    <value>Clone</value>
+  </data>
+  <data name="CopyOf" xml:space="preserve">
+    <value>Copy of {0}</value>
+  </data>
+  <data name="ErrorArchitectCommand" xml:space="preserve">
+    <value>ORIGAM Architect Command Error</value>
+  </data>
+  <data name="ErrorWhenReadChildNodes" xml:space="preserve">
+    <value>Error occured while reading child nodes of node '{0}'.{1}</value>
+  </data>
+  <data name="ErrorWhenAddRoot" xml:space="preserve">
+    <value>Error occured while adding root node '{0}'.{1}</value>
+  </data>
+  <data name="OutputTitle" xml:space="preserve">
+    <value>Output</value>
+  </data>
   <data name="MappingNameNotFound" xml:space="preserve">
     <value>error</value>
   </data>

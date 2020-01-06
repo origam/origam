@@ -22,6 +22,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
+using log4net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,8 @@ namespace Origam.ServerCore.Authorization
     {
         private readonly CoreUserManager coreUserManager;
         private readonly IMailService mailService;
+        protected static readonly ILog log
+            = LogManager.GetLogger(typeof(CoreManagerAdapter));
 
         public CoreManagerAdapter(CoreUserManager coreUserManager,
             IMailService mailService)
@@ -48,7 +51,15 @@ namespace Origam.ServerCore.Authorization
         {
            return await coreUserManager.FindByNameAsync(name);
         }
-
+        private async Task<IOrigamUser> FindByIdAsync(string userId)
+        {
+            var user =  await coreUserManager.FindByIdAsync(userId);
+            if(log.IsDebugEnabled)
+            {
+                log.DebugFormat("User not found...");
+            }
+            return user;
+        }
         public Task<bool> ChangePasswordQuestionAndAnswerAsync(string userName, string password,
             string question, string answer)
         {
@@ -57,39 +68,44 @@ namespace Origam.ServerCore.Authorization
 
         public async Task<bool> IsLockedOutAsync(string userId)
         {
-            var user = await coreUserManager.FindByIdAsync(userId);
+            var user = await FindByIdAsync(userId);
+            if (user == null) { return false; }
             return await coreUserManager.IsLockedOutAsync(user);
         }
 
         public async Task<bool> GetTwoFactorEnabledAsync(string userId)
         {
-            var user = await coreUserManager.FindByIdAsync(userId);
+            var user = await FindByIdAsync(userId);
+            if (user == null) { return false; }
             return await coreUserManager.GetTwoFactorEnabledAsync(user);
         }
 
         public async Task<bool> SetTwoFactorEnabledAsync(string userId, bool enabled)
         {
-           var user = await coreUserManager.FindByIdAsync(userId);
-           return (await coreUserManager.SetTwoFactorEnabledAsync(user, enabled))
+           var user = await FindByIdAsync(userId);
+            if (user == null) { return false; }
+            return (await coreUserManager.SetTwoFactorEnabledAsync(user, enabled))
                .Succeeded;
         }
 
         public async Task<bool> IsEmailConfirmedAsync(string userId)
         {
-            var user = await coreUserManager.FindByIdAsync(userId);
+            var user = await FindByIdAsync(userId);
+            if (user == null) { return false; }
             return await coreUserManager.IsEmailConfirmedAsync(user);
         }
 
         public async Task<bool> UnlockUserAsync(string userName)
         {
-            var user = await coreUserManager.FindByIdAsync(userName);
+            var user = await FindByIdAsync(userName);
+            if (user == null) { return false; }
             return (await coreUserManager.SetLockoutEndDateAsync( user,DateTimeOffset.MinValue))
                 .Succeeded;
         }
 
         public async Task<InternalIdentityResult> ConfirmEmailAsync(string userId)
         {
-            var user = await coreUserManager.FindByIdAsync(userId);
+            var user = await FindByIdAsync(userId);
             string token = await coreUserManager.GenerateEmailConfirmationTokenAsync(user);
             IdentityResult coreIdentityResult =
                 await coreUserManager.ConfirmEmailAsync(user, token);
@@ -98,7 +114,7 @@ namespace Origam.ServerCore.Authorization
 
         public async Task<InternalIdentityResult> ConfirmEmailAsync(string userId, string token)
         {
-            var user = await coreUserManager.FindByIdAsync(userId);
+            var user = await FindByIdAsync(userId);
             IdentityResult coreIdentityResult = 
                 await coreUserManager.ConfirmEmailAsync(user, token);
             return ToInternalIdentityResult(coreIdentityResult);
@@ -107,7 +123,7 @@ namespace Origam.ServerCore.Authorization
         public async Task<InternalIdentityResult> ChangePasswordAsync(string userId, string currentPassword,
             string newPassword)
         {
-            var user = await coreUserManager.FindByIdAsync(userId);
+            var user = await FindByIdAsync(userId);
             IdentityResult coreIdentityResult = 
                 await coreUserManager.ChangePasswordAsync(user, currentPassword, newPassword);
             return ToInternalIdentityResult(coreIdentityResult);
@@ -116,7 +132,7 @@ namespace Origam.ServerCore.Authorization
         public async Task<InternalIdentityResult> ResetPasswordFromUsernameAsync(string userName, string token,
             string newPassword)
         {
-            var user = await coreUserManager.FindByIdAsync(userName);
+            var user = await FindByIdAsync(userName);
             IdentityResult coreIdentityResult = await coreUserManager.ResetPasswordAsync(user, token, newPassword);
             return ToInternalIdentityResult(coreIdentityResult);
         }
@@ -136,7 +152,7 @@ namespace Origam.ServerCore.Authorization
 
         public async void SendNewUserToken(string userName)
         {
-            IOrigamUser user = await coreUserManager.FindByIdAsync(userName);
+            IOrigamUser user = await FindByIdAsync(userName);
             string token =
                 await coreUserManager.GenerateEmailConfirmationTokenAsync(user);
             mailService.SendNewUserToken(user,token);
@@ -151,7 +167,7 @@ namespace Origam.ServerCore.Authorization
 
         public async Task<string> GenerateEmailConfirmationTokenAsync(string userId)
         {
-            var user = await coreUserManager.FindByIdAsync(userId);
+            var user = await FindByIdAsync(userId);
             return await coreUserManager.GenerateEmailConfirmationTokenAsync(user);
         }
 

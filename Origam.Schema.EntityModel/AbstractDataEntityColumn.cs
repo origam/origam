@@ -58,7 +58,6 @@ namespace Origam.Schema.EntityModel
 			ChildItemTypes.InsertRange(0, new Type[] {
 									  typeof(EntityFieldSecurityRule),
 									  typeof(EntityFieldDependency),
-									  typeof(EntityConditionalFormatting),
 									  typeof(EntityFieldDynamicLabel)
 								  });
 		}

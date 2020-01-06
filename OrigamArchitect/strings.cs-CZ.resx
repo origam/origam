@@ -525,4 +525,7 @@
   <data name="ExpandAll" xml:space="preserve">
     <value>Rozbalit vše</value>
   </data>
+  <data name="Disconnected" xml:space="preserve">
+    <value> [odpojeno]</value>
+  </data>
 </root>

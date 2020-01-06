@@ -64,6 +64,7 @@ namespace Origam.Server
         private DataSet _dataList;
         private string _dataListEntity;
         private Guid _dataListDataStructureEntityId;
+        private Guid _dataListFilterSetId;
         private IList<string> _dataListLoadedColumns = new List<string>();
         private DateTime _cacheExpiration;
         private UIRequest _request;
@@ -218,6 +219,11 @@ namespace Origam.Server
         public Guid DataListDataStructureEntityId
         {
             get { return _dataListDataStructureEntityId; }
+        }
+
+        public Guid DataListFilterSetId
+        {
+            get { return _dataListFilterSetId; }
         }
 
         public IList<string> DataListLoadedColumns
@@ -417,9 +423,22 @@ namespace Origam.Server
             }
         }
 
-        public void SetDataList(DataSet list, string entity, DataStructure listDataStructure)
+        public void SetDataList(DataSet list, string entity, 
+            DataStructure listDataStructure, DataStructureMethod method)
         {
             _dataList = list;
+            if (method is DataStructureFilterSet filterSet)
+            {
+                _dataListFilterSetId = filterSet.Id;
+            }
+            else if (method is Schema.WorkflowModel.DataStructureWorkflowMethod workflowMethod)
+            {
+                _dataListFilterSetId = workflowMethod.Id;
+            }
+            else if (method != null)
+            {
+                throw new ArgumentOutOfRangeException("method", "List method must be a filter set.");
+            }
 
             if (this.DataList != null)
             {
@@ -437,15 +456,16 @@ namespace Origam.Server
         }
 
         public static DataRowCollection LoadRows(
-            IDataService dataService,
-            DataStructureEntity entity, Guid dataStructureEntityId, IList rowIds)
+            IDataService dataService, DataStructureEntity entity,
+            Guid dataStructureEntityId, Guid methodId, IList rowIds)
         {
             DataStructureQuery query = new DataStructureQuery
             {
                 DataSourceType = QueryDataSourceType.DataStructureEntity,
                 DataSourceId = dataStructureEntityId,
                 Entity = entity.Name,
-                EnforceConstraints = false
+                EnforceConstraints = false,
+                MethodId = methodId
             };
             query.Parameters.Add(new QueryParameter("Id", rowIds));
             DataSet dataSet = dataService.GetEmptyDataSet(
@@ -1198,27 +1218,30 @@ namespace Origam.Server
         {
             lock (_lock)
             {
-                if (!(bool)row[SessionStore.LIST_LOADED_COLUMN_NAME])
+                if (row.Table.Columns.Contains(SessionStore.LIST_LOADED_COLUMN_NAME))
                 {
-                    // the row has not been loaded from the database yet, we load the
-                    // whole row even though only some of the columns are needed because
-                    // e.g. color or row-level security rules must be evaluated on all the
-                    // columns
-                    QueryParameterCollection pms = new QueryParameterCollection();
-                    foreach (DataColumn col in row.Table.PrimaryKey)
+                    if (!(bool)row[SessionStore.LIST_LOADED_COLUMN_NAME])
                     {
-                        pms.Add(new QueryParameter(col.ColumnName, rowId));
+                        // the row has not been loaded from the database yet, we load the
+                        // whole row even though only some of the columns are needed because
+                        // e.g. color or row-level security rules must be evaluated on all the
+                        // columns
+                        QueryParameterCollection pms = new QueryParameterCollection();
+                        foreach (DataColumn col in row.Table.PrimaryKey)
+                        {
+                            pms.Add(new QueryParameter(col.ColumnName, rowId));
+                        }
+                        DataSet loadedRow = DatasetTools.CloneDataSet(row.Table.DataSet);
+                        core.DataService.LoadRow(DataListDataStructureEntityId, DataListFilterSetId, pms, loadedRow, null);
+                        if (loadedRow.Tables[row.Table.TableName].Rows.Count == 0)
+                        {
+                            throw new ArgumentOutOfRangeException(string.Format(
+                                "Row {0} not found in {1}.", rowId, row.Table.TableName));
+                        }
+                        SessionStore.MergeRow(loadedRow.Tables[row.Table.TableName].Rows[0], row);
+                        row[SessionStore.LIST_LOADED_COLUMN_NAME] = true;
+                        row.AcceptChanges();
                     }
-                    DataSet loadedRow = DatasetTools.CloneDataSet(row.Table.DataSet);
-                    core.DataService.LoadRow(DataListDataStructureEntityId, pms, loadedRow, null);
-                    if (loadedRow.Tables[row.Table.TableName].Rows.Count == 0)
-                    {
-                        throw new ArgumentOutOfRangeException(string.Format(
-                            "Row {0} not found in {1}.", rowId, row.Table.TableName));
-                    }
-                    SessionStore.MergeRow(loadedRow.Tables[row.Table.TableName].Rows[0], row);
-                    row[SessionStore.LIST_LOADED_COLUMN_NAME] = true;
-                    row.AcceptChanges();
                 }
             }
         }
@@ -1316,7 +1339,7 @@ namespace Origam.Server
                     .RetrieveInstance(typeof(DataStructureEntity), new Key(dataStructureEntityId))
                     as DataStructureEntity;
                 var loadedRows = LoadRows(dataService, dataStructureEntity,
-                    dataStructureEntityId, notFoundIds.Values.ToArray());
+                    dataStructureEntityId, DataListFilterSetId, notFoundIds.Values.ToArray());
                 foreach (DataRow row in loadedRows)
                 {
                     result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));

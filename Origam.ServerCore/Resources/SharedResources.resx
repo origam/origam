@@ -129,4 +129,7 @@
   <data name="FilePathPartParameterNull" xml:space="preserve">
     <value>File path part is to be replaced by a parameter value but the value provided is NULL. Cannot construct file path.</value>
   </data>
+  <data name="ErrorLoadingWorkQueueList" xml:space="preserve">
+    <value>Could not load work queue list.</value>
+  </data>
 </root>

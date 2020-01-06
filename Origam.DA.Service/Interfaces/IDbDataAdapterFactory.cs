@@ -40,7 +40,8 @@ namespace Origam.DA.Service
 		DbDataAdapter CreateDataAdapter(string procedureName, ArrayList entitiesOrdered, 
             IDbConnection connection, IDbTransaction transaction);
 		DbDataAdapter CreateSelectRowDataAdapter(DataStructureEntity entity, 
-			ColumnsInfo columnsInfo, bool forceDatabaseCalculation);
+			DataStructureFilterSet filterSet, ColumnsInfo columnsInfo,
+            bool forceDatabaseCalculation);
 		IDbCommand ScalarValueCommand(DataStructure ds,  DataStructureFilterSet filter, 
             DataStructureSortSet sortSet, ColumnsInfo columnsInfo, Hashtable parameters);
 		IDbCommand UpdateFieldCommand(TableMappingItem entity,  FieldMappingItem field);
