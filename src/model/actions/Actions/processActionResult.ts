@@ -3,15 +3,50 @@ import { getWorkbenchLifecycle } from "../../selectors/getWorkbenchLifecycle";
 import { DialogInfo } from "model/entities/OpenedScreen";
 import { closeForm } from "../closeForm";
 import { getActionCaption } from "model/selectors/Actions/getActionCaption";
+import { IMainMenuItemType } from "model/entities/types/IMainMenu";
+import { IDialogInfo } from "model/entities/types/IOpenedScreen";
 
-// TODO: yield* for openNewForm
-export function processActionResult(ctx: any) {
-  return function* processActionResult(actionResultList: any) {
-    console.log("actionresult:", actionResultList);
-    for (let actionResult of actionResultList)
-      switch (actionResult.type) {
+export interface IOpenNewForm {
+  (
+    id: string,
+    type: IMainMenuItemType,
+    label: string,
+    dontRequestData: boolean,
+    dialogInfo: IDialogInfo | undefined,
+    parameters: { [key: string]: any },
+    formSessionId?: string,
+    isSessionRebirth?: boolean,
+    registerSession?: true
+  ): Generator; //boolean
+}
+
+export interface IGetActionCaption {
+  (): string;
+}
+
+export interface ICloseForm {
+  (): Generator;
+}
+
+export function new_ProcessActionResult($: any) {
+  const workbenchLifecycle = getWorkbenchLifecycle($);
+  return processActionResult2({
+    openNewForm: workbenchLifecycle.openNewForm,
+    closeForm: closeForm($),
+    getActionCaption: () => getActionCaption($)
+  });
+}
+
+export function processActionResult2(dep: {
+  openNewForm: IOpenNewForm;
+  closeForm: ICloseForm;
+  getActionCaption: IGetActionCaption;
+}) {
+  return function* processActionResult2(actionResultList: any[]) {
+    for (let actionResultItem of actionResultList) {
+      switch (actionResultItem.type) {
         case IActionResultType.OpenForm: {
-          const { request } = actionResult;
+          const { request } = actionResultItem;
           const {
             objectId,
             typeString,
@@ -21,16 +56,13 @@ export function processActionResult(ctx: any) {
             dialogWidth,
             dialogHeight
           } = request;
-          const workbenchLifecycle = getWorkbenchLifecycle(ctx);
-          // TODO: Check parameter correctness.
-          // TODO: Caption / Label priority...?
           const dialogInfo = isModalDialog
             ? new DialogInfo(dialogWidth, dialogHeight)
             : undefined;
-          yield* workbenchLifecycle.openNewForm(
+          yield* dep.openNewForm(
             objectId,
             typeString,
-            getActionCaption(ctx),
+            dep.getActionCaption(),
             !dataRequested,
             dialogInfo,
             parameters
@@ -38,9 +70,10 @@ export function processActionResult(ctx: any) {
           break;
         }
         case IActionResultType.DestroyForm: {
-          yield* closeForm(ctx)();
+          yield* dep.closeForm();
           break;
         }
       }
+    }
   };
 }

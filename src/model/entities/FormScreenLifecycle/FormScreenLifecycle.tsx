@@ -1,6 +1,6 @@
 import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
 import { action, computed, observable } from "mobx";
-import { processActionResult } from "model/actions/Actions/processActionResult";
+import { new_ProcessActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 import { IAction } from "model/entities/types/IAction";
@@ -10,21 +10,17 @@ import { getDataStructureEntityId } from "model/selectors/DataView/getDataStruct
 import { getDataViewByGridId } from "model/selectors/DataView/getDataViewByGridId";
 import { getDataViewsByEntity } from "model/selectors/DataView/getDataViewsByEntity";
 import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
+import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { getDialogStack } from "model/selectors/getDialogStack";
-import { getMenuItemType } from "model/selectors/getMenuItemType";
 import React from "react";
 import { map2obj } from "utils/objects";
 import { interpretScreenXml } from "xmlInterpreters/screenXml";
 import { getFormScreen } from "../../selectors/FormScreen/getFormScreen";
-import { getScreenParameters } from "../../selectors/FormScreen/getScreenParameters";
 import { getApi } from "../../selectors/getApi";
 import { getMenuItemId } from "../../selectors/getMenuItemId";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { getSessionId } from "../../selectors/getSessionId";
 import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
-import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
-import { errDialogPromise } from "../ErrorDialog";
-import { handleError } from "model/actions/handleError";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -313,7 +309,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       });
       console.log("EA", result);
 
-      yield* processActionResult(action)(result);
+      yield* new_ProcessActionResult(action)(result);
     } finally {
       this.inFlow--;
     }

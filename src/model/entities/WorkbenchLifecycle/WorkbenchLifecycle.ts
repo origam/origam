@@ -13,6 +13,7 @@ import { IDialogInfo, IOpenedScreen } from "../types/IOpenedScreen";
 import { IWorkbenchLifecycle } from "../types/IWorkbenchLifecycle";
 import { handleError } from "model/actions/handleError";
 import { getWorkQueues } from "model/selectors/WorkQueues/getWorkQueues";
+import bind from "bind-decorator";
 
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
@@ -123,6 +124,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
   }
 
+  @bind
   *openNewForm(
     id: string,
     type: IMainMenuItemType,
