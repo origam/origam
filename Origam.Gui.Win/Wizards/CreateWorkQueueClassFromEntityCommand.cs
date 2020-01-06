@@ -56,9 +56,9 @@ namespace Origam.Gui.Win.Wizards
             list.Add(new ListViewItem(workQueue.ItemType, workQueue.Icon));
 
             Stack stackPage = new Stack();
-            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.Finish);
             stackPage.Push(PagesList.ScreenForm);
-            stackPage.Push(PagesList.startPage);
+            stackPage.Push(PagesList.StartPage);
 
             wizardForm = new ScreenWizardForm
             {

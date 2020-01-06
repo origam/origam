@@ -21,9 +21,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using MoreLinq;
 using Origam.DA.Service;
+using Origam.Schema;
 using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel;
+using Origam.Services;
 using Origam.UI.Commands;
+using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 using System;
 using System.Collections.Generic;
@@ -118,6 +121,16 @@ namespace Origam.UI
             });
             
         }
+        public static List<string> GetListDatastructure(string itemTypeConst)
+        {
+            ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+            DataStructureSchemaItemProvider dsprovider = schema.GetProvider(typeof(DataStructureSchemaItemProvider)) as DataStructureSchemaItemProvider;
+            return dsprovider.ChildItemsByType(itemTypeConst)
+                           .ToArray()
+                           .Select(x => { return ((AbstractSchemaItem)x).Name; })
+                           .ToList();
+        }
+
         public ServiceCommandUpdateScriptActivity CreateRole(string role)
         {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();

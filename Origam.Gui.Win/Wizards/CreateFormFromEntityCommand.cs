@@ -27,7 +27,6 @@ using System.Windows.Forms;
 using Origam.Schema;
 using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel;
-using Origam.Schema.EntityModel.Wizards;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 using Origam.Services;
@@ -38,12 +37,11 @@ using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win.Wizards
 {
-	/// <summary>
-	/// Summary description for CreateFormFromEntityCommand.
-	/// </summary>
-	public class CreateFormFromEntityCommand : AbstractMenuCommand
+    /// <summary>
+    /// Summary description for CreateFormFromEntityCommand.
+    /// </summary>
+    public class CreateFormFromEntityCommand : AbstractMenuCommand
 	{
-        ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
         SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
         ScreenWizardForm wizardForm;
         public override bool IsEnabled
@@ -60,11 +58,7 @@ namespace Origam.Gui.Win.Wizards
 
 		public override void Run()
 		{
-            DataStructureSchemaItemProvider dsprovider = schema.GetProvider(typeof(DataStructureSchemaItemProvider)) as DataStructureSchemaItemProvider;
-            List<string> listdsName = dsprovider.ChildItemsByType(DataStructure.ItemTypeConst)
-                            .ToArray()
-                            .Select(x => { return ((AbstractSchemaItem)x).Name; })
-                            .ToList();
+            List<string> listdsName = GetListDatastructure(DataStructure.ItemTypeConst);
             ArrayList list = new ArrayList();
             DataStructure dd = new DataStructure();
             PanelControlSet pp = new PanelControlSet();
@@ -74,13 +68,13 @@ namespace Origam.Gui.Win.Wizards
             list.Add(new ListViewItem(ff.ItemType, ff.Icon));
             
             Stack stackPage = new Stack();
-            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.Finish);
             stackPage.Push(PagesList.ScreenForm);
             if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
             {
                 stackPage.Push(PagesList.StructureNamePage);
             }
-            stackPage.Push(PagesList.startPage);
+            stackPage.Push(PagesList.StartPage);
 
             wizardForm = new ScreenWizardForm
             {
@@ -121,7 +115,6 @@ namespace Origam.Gui.Win.Wizards
 
 	public class CreateCompleteUICommand : AbstractMenuCommand
 	{
-        ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
         SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
         ScreenWizardForm wizardForm;
         public override bool IsEnabled
@@ -139,11 +132,7 @@ namespace Origam.Gui.Win.Wizards
 		public override void Run()
 		{
             IDataEntity entity = Owner as IDataEntity;
-            DataStructureSchemaItemProvider dsprovider = schema.GetProvider(typeof(DataStructureSchemaItemProvider)) as DataStructureSchemaItemProvider;
-            List<string> listdsName = dsprovider.ChildItemsByType(DataStructure.ItemTypeConst)
-                            .ToArray()
-                            .Select(x => { return ((AbstractSchemaItem)x).Name; })
-                            .ToList();
+            List<string> listdsName = GetListDatastructure(DataStructure.ItemTypeConst);
 
             ArrayList list = new ArrayList();
             DataStructure ds = new DataStructure();
@@ -159,13 +148,13 @@ namespace Origam.Gui.Win.Wizards
             list.Add(new ListViewItem(activity1.ItemType, activity1.Icon));
 
             Stack stackPage = new Stack();
-            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.Finish);
             stackPage.Push(PagesList.ScreenForm);
             if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
             {
                 stackPage.Push(PagesList.StructureNamePage);
             }
-            stackPage.Push(PagesList.startPage);
+            stackPage.Push(PagesList.StartPage);
 
             wizardForm = new ScreenWizardForm
             {
@@ -215,6 +204,8 @@ namespace Origam.Gui.Win.Wizards
 
 	public class CreateFormFromPanelCommand : AbstractMenuCommand
 	{
+        PanelWizardForm panelWizard;
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
         public override bool IsEnabled
 		{
 			get
@@ -230,19 +221,55 @@ namespace Origam.Gui.Win.Wizards
 		public override void Run()
 		{
             PanelControlSet panel = Owner as PanelControlSet;
-			string groupName = null;
-			if(panel.Group != null) groupName = panel.Group.Name;
-            DataStructure dataStructure = EntityHelper.CreateDataStructure(panel.DataEntity, panel.DataEntity.Name, true);
+           
+            List<string> listdsName = GetListDatastructure(PanelControlSet.ItemTypeConst); 
+            ArrayList list = new ArrayList();
+            list.Add(new ListViewItem(panel.ItemType, panel.Icon));
+
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.Finish);
+            if (listdsName.Any(name => name == panel.Name))
+            {
+                stackPage.Push(PagesList.StructureNamePage);
+            }
+            stackPage.Push(PagesList.StartPage);
+            panelWizard = new PanelWizardForm
+            {
+                ItemTypeList = list,
+                Title = "Create Screen Command Wizard",
+                PageTitle = "",
+                Description = "Create Some Description.",
+                StructureList= listdsName,
+                NameOfEntity = panel.Name,
+                Pages = stackPage,
+                Entity = panel,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this
+            };
+            Wizard wiz = new Wizard(panelWizard);
+            if (wiz.ShowDialog() != DialogResult.OK)
+            {
+                GeneratedModelElements.Clear();
+            }
+
+        }
+
+        public override void Execute()
+        {
+            PanelControlSet panel = ((PanelControlSet)panelWizard.Entity);
+            string groupName = null;
+            if (panelWizard.Entity.Group != null) groupName = panelWizard.Entity.Group.Name;
+            DataStructure dataStructure = EntityHelper.CreateDataStructure(panel.DataEntity, panelWizard.NameOfEntity, true);
             GeneratedModelElements.Add(dataStructure);
             FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
             GeneratedModelElements.Add(form);
             Origam.Workbench.Commands.EditSchemaItem edit = new Origam.Workbench.Commands.EditSchemaItem();
             edit.Owner = form;
             edit.Run();
-		}
-	}
+        }
+    }
 
-	public class CreateMenuFromFormCommand : AbstractMenuCommand
+        public class CreateMenuFromFormCommand : AbstractMenuCommand
 	{
         MenuFromForm menuFrom;
         SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
@@ -263,13 +290,12 @@ namespace Origam.Gui.Win.Wizards
             FormControlSet form = Owner as FormControlSet;
 
             ArrayList list = new ArrayList();
-            FormControlSet controlSet = new FormControlSet();
-            list.Add(new ListViewItem(controlSet.ItemType, controlSet.Icon));
+            list.Add(new ListViewItem(form.ItemType, form.Icon));
 
             Stack stackPage = new Stack();
-            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.Finish);
             stackPage.Push(PagesList.MenuPage);
-            stackPage.Push(PagesList.startPage);
+            stackPage.Push(PagesList.StartPage);
 
             menuFrom = new MenuFromForm
             {
@@ -329,9 +355,9 @@ namespace Origam.Gui.Win.Wizards
             list.Add(new ListViewItem(dataconstant.ItemType, dataconstant.Icon));
 
             Stack stackPage = new Stack();
-            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.Finish);
             stackPage.Push(PagesList.MenuPage);
-            stackPage.Push(PagesList.startPage);
+            stackPage.Push(PagesList.StartPage);
 
             menuFrom = new MenuFromForm
             {
@@ -390,9 +416,9 @@ namespace Origam.Gui.Win.Wizards
             list.Add(new ListViewItem(workflowReference.ItemType, workflowReference.Icon));
 
             Stack stackPage = new Stack();
-            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.Finish);
             stackPage.Push(PagesList.MenuPage);
-            stackPage.Push(PagesList.startPage);
+            stackPage.Push(PagesList.StartPage);
 
             menuFrom = new MenuFromForm
             {

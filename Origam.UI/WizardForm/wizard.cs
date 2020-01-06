@@ -38,7 +38,7 @@ namespace Origam.UI.WizardForm
             txtLabel.Text = iwizard.Description;
             txtLabel.Size = TextRenderer.MeasureText(iwizard.Description, txtLabel.Font);
             iwizard.ListView(listView1);
-            GetNextPage(PagesList.startPage, sender);
+            GetNextPage(PagesList.StartPage, sender);
         }
 
         private void PageStart_Commit(object sender, WizardPageConfirmEventArgs e)
@@ -169,7 +169,7 @@ namespace Origam.UI.WizardForm
         private void FinishPage_Initialize(object sender, WizardPageInitEventArgs e)
         {
             SetPageTitle(sender);
-            GetNextPage(PagesList.finish, sender);
+            GetNextPage(PagesList.Finish, sender);
             try
             {
                 iwizard.Command.Execute();
@@ -384,7 +384,7 @@ namespace Origam.UI.WizardForm
                     return LookupFormPage;
                 case PagesList.FieldLookup:
                     return FieldLookupEntity;
-                case PagesList.finish:
+                case PagesList.Finish:
                     return finishPage;
                 case PagesList.FieldEntity:
                     return RelationShipEntityPage;

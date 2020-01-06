@@ -70,9 +70,9 @@ namespace Origam.Schema.LookupModel.Wizards
             
 
             Stack stackPage = new Stack();
-            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.Finish);
             stackPage.Push(PagesList.FieldEntity);
-            stackPage.Push(PagesList.startPage);
+            stackPage.Push(PagesList.StartPage);
 
 
             wizardForm = new CreateFieldWithRelationshipEntityWizardForm

@@ -55,21 +55,14 @@ namespace Origam.Gui.Win.Wizards
 
 		public override void Run()
 		{
-
-            PanelSchemaItemProvider dsprovider = schema.GetProvider(typeof(PanelSchemaItemProvider)) as PanelSchemaItemProvider;
-            List<string> listdsName = dsprovider.ChildItemsByType(PanelControlSet.ItemTypeConst)
-                            .ToArray()
-                            .Select(x => { return ((AbstractSchemaItem)x).Name; })
-                            .ToList();
-
             ArrayList list = new ArrayList();
             TableMappingItem mappingItem = new TableMappingItem();
             list.Add(new ListViewItem(mappingItem.ItemType, mappingItem.Icon));
 
             Stack stackPage = new Stack();
-            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.Finish);
             stackPage.Push(PagesList.ScreenForm);
-            stackPage.Push(PagesList.startPage);
+            stackPage.Push(PagesList.StartPage);
 
             wizardForm = new ScreenWizardForm
             {

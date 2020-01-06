@@ -38,7 +38,6 @@ namespace Origam.Schema.EntityModel.Wizards
     /// </summary>
     public class CreateDataStructureFromEntityCommand : AbstractMenuCommand
 	{
-        ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
         SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
         StructureForm structureForm;
        
@@ -57,11 +56,7 @@ namespace Origam.Schema.EntityModel.Wizards
 
         public override void Run()
         {
-            DataStructureSchemaItemProvider dsprovider = schema.GetProvider(typeof(DataStructureSchemaItemProvider)) as DataStructureSchemaItemProvider;
-            List<string> listdsName = dsprovider.ChildItemsByType(DataStructure.ItemTypeConst)
-                            .ToArray()
-                            .Select(x => { return ((AbstractSchemaItem)x).Name; })
-                            .ToList();
+            List<string> listdsName = GetListDatastructure(DataStructure.ItemTypeConst);
 
             IDataEntity entity = Owner as IDataEntity;
 
@@ -71,13 +66,13 @@ namespace Origam.Schema.EntityModel.Wizards
 
             Stack stackPage = new Stack();
 
-            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.Finish);
             if (listdsName.Any(name => name == entity.Name))
             {
                 stackPage.Push(PagesList.StructureNamePage);
             }
 
-            stackPage.Push(PagesList.startPage);
+            stackPage.Push(PagesList.StartPage);
 
             structureForm = new StructureForm
             {

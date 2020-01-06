@@ -33,7 +33,6 @@ using Origam.UI;
 using Origam.UI.WizardForm;
 using Origam.Workbench;
 using Origam.Workbench.Commands;
-using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win.Wizards
 {
@@ -43,7 +42,6 @@ namespace Origam.Gui.Win.Wizards
 	public class CreatePanelFromEntityCommand : AbstractMenuCommand
 	{
         SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
         ScreenWizardForm wizardForm;
         PanelControlSet panel;
 
@@ -61,24 +59,20 @@ namespace Origam.Gui.Win.Wizards
 
 		public override void Run()
 		{
-            PanelSchemaItemProvider dsprovider = schema.GetProvider(typeof(PanelSchemaItemProvider)) as PanelSchemaItemProvider;
-            List<string> listdsName = dsprovider.ChildItemsByType(PanelControlSet.ItemTypeConst)
-                            .ToArray()
-                            .Select(x => { return ((AbstractSchemaItem)x).Name; })
-                            .ToList();
+            List<string> listdsName = GetListDatastructure(PanelControlSet.ItemTypeConst);
 
             ArrayList list = new ArrayList();
             PanelControlSet pp = new PanelControlSet();
             list.Add(new ListViewItem(pp.ItemType, pp.Icon));
             
             Stack stackPage = new Stack();
-            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.Finish);
             stackPage.Push(PagesList.ScreenForm);
             if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
             {
                 stackPage.Push(PagesList.StructureNamePage);
             }
-            stackPage.Push(PagesList.startPage);
+            stackPage.Push(PagesList.StartPage);
 
             wizardForm = new ScreenWizardForm
             {

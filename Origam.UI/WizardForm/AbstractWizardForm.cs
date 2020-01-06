@@ -37,7 +37,7 @@ namespace Origam.UI.WizardForm
     }
     public enum PagesList
     {
-        startPage,
+        StartPage,
         StructureNamePage,
         ScreenForm,
         LookupForm,
@@ -46,6 +46,6 @@ namespace Origam.UI.WizardForm
         MenuPage,
         ChildEntity,
         ForeignForm,
-        finish
+        Finish
     }
 }

@@ -66,9 +66,9 @@ namespace Origam.Schema.LookupModel.Wizards
             list.Add(new ListViewItem(data.ItemType, data.Icon));
 
             Stack stackPage = new Stack();
-            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.Finish);
             stackPage.Push(PagesList.FieldLookup);
-            stackPage.Push(PagesList.startPage);
+            stackPage.Push(PagesList.StartPage);
 
             createFieldWith = new CreateFieldWithLookupEntityWizardForm
             {

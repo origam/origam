@@ -65,9 +65,9 @@ namespace Origam.Schema.EntityModel.Wizards
            
 
             Stack stackPage = new Stack();
-            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.Finish);
             stackPage.Push(PagesList.ChildEntity);
-            stackPage.Push(PagesList.startPage);
+            stackPage.Push(PagesList.StartPage);
 
             childEntityForm = new ChildEntityForm()
             {

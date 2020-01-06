@@ -56,9 +56,9 @@ namespace Origam.Schema.LookupModel.Wizards
             list.Add(new ListViewItem(dd.ItemType, dd.Icon));
 
             Stack stackPage = new Stack();
-            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.Finish);
             stackPage.Push(PagesList.LookupForm);
-            stackPage.Push(PagesList.startPage);
+            stackPage.Push(PagesList.StartPage);
 
             lookupForm = new LookupForm
             {

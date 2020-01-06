@@ -58,9 +58,9 @@ namespace Origam.Schema.EntityModel.Wizards
             list.Add(new ListViewItem(fmItem.ItemType, fmItem.Icon));
 
             Stack stackPage = new Stack();
-            stackPage.Push(PagesList.finish);
+            stackPage.Push(PagesList.Finish);
             stackPage.Push(PagesList.ForeignForm);
-            stackPage.Push(PagesList.startPage);
+            stackPage.Push(PagesList.StartPage);
 
             keyForm = new ForeignKeyForm
             {
