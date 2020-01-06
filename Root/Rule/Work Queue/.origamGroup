@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <group
-    rootItemType="Rule"
-    name="Work Queue"
     x:id="91be357d-fe6b-43c7-8c11-afbc10e8c5bd"
     x:isFolder="true"
+    name="Work Queue"
+    rootItemType="Rule"
     x:type="Origam.Schema.SchemaItemGroup" />
 </x:file>

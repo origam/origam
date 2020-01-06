@@ -1,61 +1,61 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="false"
-    name="LookupOrigamFeatureList_IsFeatureOn"
     abstract="false"
     x:id="97a76cd4-8376-4f04-b3e1-c76c36ab57a8"
+    localized="false"
+    name="LookupOrigamFeatureList_IsFeatureOn"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="false"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="OrigamFeatureList"
       abstract="false"
+      allFields="false"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/__system/OrigamFeatureList.origam#OrigamFeatureList/5e024ca3-37f9-41b9-8548-b03ed57e2baf"
       x:id="86a7eb71-7cb9-45b8-b5e3-1a0f5df717ab"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamFeatureList"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
       <DataStructureColumn
-        useLookupValue="false"
-        useCopiedValue="false"
-        writeOnly="false"
-        aggregation="None"
-        xmlMappingType="Default"
-        upsertType="Replace"
-        name="IsFeatureOn"
         abstract="false"
+        aggregation="None"
         field="Root/DataEntity/__system/OrigamFeatureList.origam#OrigamFeatureList/IsFeatureOn/585c8876-543d-4125-bafb-e28b0124dee5"
         x:id="c1cfe05a-476c-417e-9d26-88e384b04ea8"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-      <DataStructureColumn
-        useLookupValue="false"
-        useCopiedValue="false"
-        writeOnly="false"
-        aggregation="None"
-        xmlMappingType="Default"
+        name="IsFeatureOn"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
         upsertType="Replace"
-        name="Id"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
         abstract="false"
+        aggregation="None"
         field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
         x:id="a71cde70-2b79-420b-aaf3-c8d20e6ea620"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+        name="Id"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
     </DataStructureEntity>
     <DataStructureFilterSet
-      dynamic="false"
-      name="GetId"
       abstract="false"
+      dynamic="false"
       x:id="88c58151-e4f2-4d15-ad7c-dc02a981800d"
+      name="GetId"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        passWhenParameterMatch="false"
-        name="OrigamFeatureList_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/Lookups/LookupOrigamFeatureList_IsFeatureOn.origam#LookupOrigamFeatureList_IsFeatureOn/OrigamFeatureList/86a7eb71-7cb9-45b8-b5e3-1a0f5df717ab"
         filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
         x:id="18502739-b03b-4d41-8835-e007a5bf6ec9"
+        name="OrigamFeatureList_GetId"
+        passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
   </DataStructure>

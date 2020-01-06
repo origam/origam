@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataConstant
-    dataType="Date"
-    value="2000-01-01T00:00:00"
-    userDefinable="false"
-    name="_minDate"
     abstract="false"
+    dataType="Date"
     x:id="66f34839-6a92-4284-a25c-5d7c38de0d4b"
-    x:type="Origam.Schema.EntityModel.DataConstant" />
+    name="_minDate"
+    x:type="Origam.Schema.EntityModel.DataConstant"
+    userDefinable="false"
+    value="2000-01-01T00:00:00" />
 </x:file>

@@ -1,34 +1,34 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
-    mappedObjectName="OrigamTooltipHelpDestroyEvent"
+    abstract="false"
+    audit="None"
     databaseObjectType="Table"
     generateDeploymentScript="true"
-    readOnly="false"
-    audit="None"
-    name="OrigamTooltipHelpDestroyEvent"
-    abstract="false"
     x:id="0234b606-81bd-4c89-803c-4f4d05f4c360"
+    mappedObjectName="OrigamTooltipHelpDestroyEvent"
+    name="OrigamTooltipHelpDestroyEvent"
+    readOnly="false"
     x:type="Origam.Schema.EntityModel.TableMappingItem">
     <ancestor
       ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
       x:id="a683f635-94be-46aa-9055-54bd968cb228"
       x:type="Origam.Schema.SchemaItemAncestor" />
     <DataEntityColumn
-      mappedColumnName="Name"
-      excludeFromAuditing="false"
-      dataType="String"
-      dataLength="200"
+      abstract="false"
       allowNulls="false"
+      autoIncrement="false"
+      dataLength="200"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="a00dbd76-a329-4811-9887-ef7a55646d11"
       isPrimaryKey="false"
       label="Name"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
+      mappedColumnName="Name"
       name="Name"
-      abstract="false"
-      x:id="a00dbd76-a329-4811-9887-ef7a55646d11"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
   </DataEntity>
 </x:file>

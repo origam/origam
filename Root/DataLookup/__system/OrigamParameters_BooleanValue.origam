@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="BooleanValue"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="BooleanValue"
-    name="OrigamParameters_BooleanValue"
     abstract="false"
-    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamParameters.origam#LookupOrigamParameters/bd424149-b499-49d2-9ae3-36a155ea3145"
-    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamParameters.origam#LookupOrigamParameters/bd424149-b499-49d2-9ae3-36a155ea3145"
-    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamParameters.origam#LookupOrigamParameters/GetId/000b8686-a08d-4f53-8d66-7dd4f1297492"
+    alwaysAllowReturnToForm="false"
     x:id="f04ad389-c4c9-4af5-b69f-ef9dbe88378f"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamParameters.origam#LookupOrigamParameters/bd424149-b499-49d2-9ae3-36a155ea3145"
+    listDisplayMember="BooleanValue"
+    listValueMember="Id"
+    name="OrigamParameters_BooleanValue"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamParameters.origam#LookupOrigamParameters/bd424149-b499-49d2-9ae3-36a155ea3145"
+    valueDisplayMember="BooleanValue"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamParameters.origam#LookupOrigamParameters/GetId/000b8686-a08d-4f53-8d66-7dd4f1297492"
+    valueValueMember="Id" />
 </x:file>

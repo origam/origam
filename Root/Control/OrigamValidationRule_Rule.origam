@@ -1,16 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Control
-    toolboxVisibility="FormDesigner"
-    typeName="Origam.Schema.GuiModel.PanelControlSet"
-    namespace="Origam.Schema.GuiModel"
-    isComplex="true"
-    requestSaveAfterChangeAllowed="false"
-    name="OrigamValidationRule_Rule"
     abstract="false"
-    screenSection="Root/PanelControlSet/__system/OrigamValidationRule_Rule.origam#OrigamValidationRule_Rule/b56c1317-0e63-458e-bf34-f6cdd34ebb0b"
     x:id="fff5fa00-c277-4b9e-b09d-f521f314fba8"
-    x:type="Origam.Schema.GuiModel.ControlItem">
+    isComplex="true"
+    name="OrigamValidationRule_Rule"
+    namespace="Origam.Schema.GuiModel"
+    requestSaveAfterChangeAllowed="false"
+    screenSection="Root/PanelControlSet/__system/OrigamValidationRule_Rule.origam#OrigamValidationRule_Rule/b56c1317-0e63-458e-bf34-f6cdd34ebb0b"
+    toolboxVisibility="FormDesigner"
+    x:type="Origam.Schema.GuiModel.ControlItem"
+    typeName="Origam.Schema.GuiModel.PanelControlSet">
     <ancestor
       ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
       x:id="a43eec3b-a399-4f4e-86b6-1a287cba05f1"

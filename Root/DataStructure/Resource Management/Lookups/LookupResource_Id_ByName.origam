@@ -1,49 +1,49 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="false"
-    name="LookupResource_Id_ByName"
     abstract="false"
     x:id="466c0c69-4490-4388-96f6-315e99fab1db"
+    localized="false"
+    name="LookupResource_Id_ByName"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="false"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="Resource"
       abstract="false"
+      allFields="false"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/Resource Management/Resource.origam#Resource/b8d208f2-c703-4e8a-9602-c70327f56173"
       x:id="9bade132-a80e-4008-b193-a4281dae5011"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="Resource"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
       <DataStructureColumn
-        useLookupValue="false"
-        useCopiedValue="false"
-        writeOnly="false"
-        aggregation="None"
-        xmlMappingType="Default"
-        upsertType="Replace"
-        name="Id"
         abstract="false"
+        aggregation="None"
         field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
         x:id="75fd9d20-6242-48d3-988a-3ad84104a694"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+        name="Id"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
     </DataStructureEntity>
     <DataStructureFilterSet
-      dynamic="false"
-      name="GetByName"
       abstract="false"
+      dynamic="false"
       x:id="77e0ddc6-37c3-46dc-bd48-cbf9961b43e9"
+      name="GetByName"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        passWhenParameterMatch="false"
-        name="Resource_GetByName"
         abstract="false"
         entity="Root/DataStructure/Resource Management/Lookups/LookupResource_Id_ByName.origam#LookupResource_Id_ByName/Resource/9bade132-a80e-4008-b193-a4281dae5011"
         filter="Root/DataEntity/Resource Management/Resource.origam#Resource/GetByName/4d1ed85c-ed9d-45b3-9256-b1c3cb26e348"
         x:id="88f5a6ea-1de1-42b2-afb7-1424a649ba6f"
+        name="Resource_GetByName"
+        passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
   </DataStructure>

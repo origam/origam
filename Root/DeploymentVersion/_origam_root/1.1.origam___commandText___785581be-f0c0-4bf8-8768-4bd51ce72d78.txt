@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE [ResourceAccessLevelResource] ADD CONSTRAINT FK_ResourceAccessLevelResource_refResourceAccessLevelId_ResourceAccessLevel
+	FOREIGN KEY (
+		[refResourceAccessLevelId]
+	)
+
+	REFERENCES [ResourceAccessLevel] (
+		[Id]
+	)
+ALTER TABLE [ResourceAccessLevelResource] ADD CONSTRAINT FK_ResourceAccessLevelResource_refResourceId_Resource
+	FOREIGN KEY (
+		[refResourceId]
+	)
+
+	REFERENCES [Resource] (
+		[Id]
+	)

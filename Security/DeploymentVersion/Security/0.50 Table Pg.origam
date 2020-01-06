@@ -10,63 +10,63 @@
       abstract="false"
       activityOrder="10"
       commandText="-***-ExternalFile:0.50 Table Pg.origam___commandText___6f0245b2-9fbe-4af4-bd9c-39ec50776a6d.txt"
-      platform="PgSql"
       x:id="6f0245b2-9fbe-4af4-bd9c-39ec50776a6d"
       name="00010_Database_Entity_OrigamRole"
+      platform="PgSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
       abstract="false"
       activityOrder="20"
       commandText="-***-ExternalFile:0.50 Table Pg.origam___commandText___8b7c1c55-1d28-42fe-b64b-699ed1c38f70.txt"
-      platform="PgSql"
       x:id="8b7c1c55-1d28-42fe-b64b-699ed1c38f70"
       name="00020_Database_Entity_OrigamUser"
+      platform="PgSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
       abstract="false"
       activityOrder="30"
       commandText="-***-ExternalFile:0.50 Table Pg.origam___commandText___4b14cc2c-54db-406e-b901-34bf1bf7ad18.txt"
-      platform="PgSql"
       x:id="4b14cc2c-54db-406e-b901-34bf1bf7ad18"
       name="00030_Database_Entity_BusinessPartnerOrigamRole"
+      platform="PgSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
       abstract="false"
       activityOrder="40"
       commandText="-***-ExternalFile:0.50 Table Pg.origam___commandText___a2ebdbd1-4c9b-4115-ba84-54ffed1e9cac.txt"
-      platform="PgSql"
       x:id="a2ebdbd1-4c9b-4115-ba84-54ffed1e9cac"
       name="00040_Database_Entity_OrigamApplicationRole"
+      platform="PgSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
       abstract="false"
       activityOrder="50"
       commandText="-***-ExternalFile:0.50 Table Pg.origam___commandText___3ba7f2a3-72df-4570-8fc8-9544c47c07d2.txt"
-      platform="PgSql"
       x:id="3ba7f2a3-72df-4570-8fc8-9544c47c07d2"
       name="00050_Database_Entity_OrigamRoleOrigamApplicationRole"
+      platform="PgSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
       abstract="false"
       activityOrder="60"
       commandText="-***-ExternalFile:0.50 Table Pg.origam___commandText___2e2b273b-1081-4af4-8c65-15f1f89aab6d.txt"
-      platform="PgSql"
       x:id="2e2b273b-1081-4af4-8c65-15f1f89aab6d"
       name="00060_Database_Entity_BusinessPartnerOrigamRole"
+      platform="PgSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
       abstract="false"
       activityOrder="70"
       commandText="-***-ExternalFile:0.50 Table Pg.origam___commandText___19b53df8-c6bc-48ba-b42c-7133edbbfc47.txt"
-      platform="PgSql"
       x:id="19b53df8-c6bc-48ba-b42c-7133edbbfc47"
       name="00070_Database_Entity_OrigamRoleOrigamApplicationRole"
+      platform="PgSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>

@@ -1,15 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
-    mappedObjectName="WorkQueueCommandType_l10n"
+    abstract="false"
+    audit="None"
     databaseObjectType="Table"
     generateDeploymentScript="true"
-    readOnly="false"
-    audit="None"
-    label="Work Queue Command Type Localization"
-    name="WorkQueueCommandType_l10n"
-    abstract="false"
     x:id="e8bb1811-8fd2-4031-a204-f7081ed8e2d3"
+    label="Work Queue Command Type Localization"
+    mappedObjectName="WorkQueueCommandType_l10n"
+    name="WorkQueueCommandType_l10n"
+    readOnly="false"
     x:type="Origam.Schema.EntityModel.TableMappingItem">
     <ancestor
       ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
@@ -20,59 +20,59 @@
       x:id="c6664c65-a3e8-4b50-b5af-b37ca2864ef4"
       x:type="Origam.Schema.SchemaItemAncestor" />
     <DataEntityColumn
-      mappedColumnName="Name"
-      excludeFromAuditing="false"
-      dataType="String"
-      dataLength="200"
+      abstract="false"
       allowNulls="false"
+      autoIncrement="false"
+      dataLength="200"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="33134b67-a36d-44ec-a4c7-425ea23e11e6"
       isPrimaryKey="false"
       label="Název"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
+      mappedColumnName="Name"
       name="Name"
-      abstract="false"
-      x:id="33134b67-a36d-44ec-a4c7-425ea23e11e6"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
-    <DataEntityColumn
-      mappedColumnName="refWorkQueueCommandTypeId"
-      excludeFromAuditing="false"
-      dataType="UniqueIdentifier"
-      allowNulls="false"
-      isPrimaryKey="false"
-      label="Work Queue Command Type"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
       onCopyAction="Copy"
-      name="refWorkQueueCommandTypeId"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
       abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
       foreignKeyEntity="Root/DataEntity/Work Queue/WorkQueueCommandType.origam#WorkQueueCommandType/8ffa25bb-ffda-4af5-9631-cac18d33c0dc"
       foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
       x:id="cb084a1e-6d73-4aec-bc9c-e35e3190943a"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+      isPrimaryKey="false"
+      label="Work Queue Command Type"
+      mappedColumnName="refWorkQueueCommandTypeId"
+      name="refWorkQueueCommandTypeId"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
     <DataEntityIndex
-      unique="true"
-      generateDeploymentScript="false"
-      name="ix_unq_WorkQueueCommandType"
       abstract="false"
+      generateDeploymentScript="false"
       x:id="ff026618-031e-4e89-b048-4f99429518af"
-      x:type="Origam.Schema.EntityModel.DataEntityIndex">
+      name="ix_unq_WorkQueueCommandType"
+      x:type="Origam.Schema.EntityModel.DataEntityIndex"
+      unique="true">
       <DataEntityIndexField
-        sortOrder="Ascending"
-        name="0_refWorkQueueCommandTypeId"
         abstract="false"
         field="Root/DataEntity/Work Queue/WorkQueueCommandType_l10n.origam#WorkQueueCommandType_l10n/refWorkQueueCommandTypeId/cb084a1e-6d73-4aec-bc9c-e35e3190943a"
         x:id="763f2189-a6cf-4ac5-b21b-8da5ea05df27"
+        name="0_refWorkQueueCommandTypeId"
+        sortOrder="Ascending"
         x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
       <DataEntityIndexField
-        sortOrder="Ascending"
-        ordinalPosition="1"
-        name="1_refLanguageId"
         abstract="false"
         field="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/refLanguageId/13a2f9f8-c3e8-49fb-86e0-0515a72a10f2"
         x:id="2f5ec8d8-a620-4fa4-b79a-ee9f29b3cb7d"
+        name="1_refLanguageId"
+        ordinalPosition="1"
+        sortOrder="Ascending"
         x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
     </DataEntityIndex>
   </DataEntity>

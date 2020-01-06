@@ -1,75 +1,75 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="false"
-    name="LookupResourceType"
     abstract="false"
     x:id="9e088da6-a77e-442e-92a0-5e5d901b1467"
+    localized="false"
+    name="LookupResourceType"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="false"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="ResourceType"
       abstract="false"
+      allFields="false"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/Resource Management/ResourceType.origam#ResourceType/d9890948-0b9e-40d2-ac6b-b6c55db986a9"
       x:id="26c72700-d111-40b1-b1d9-cf969e18d772"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="ResourceType"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
       <DataStructureColumn
-        useLookupValue="false"
-        useCopiedValue="false"
-        writeOnly="false"
-        aggregation="None"
-        xmlMappingType="Default"
-        upsertType="Replace"
-        name="Id"
         abstract="false"
+        aggregation="None"
         field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
         x:id="4c3d5a08-2264-4b22-9085-164b809984cd"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-      <DataStructureColumn
-        useLookupValue="false"
-        useCopiedValue="false"
-        writeOnly="false"
-        aggregation="None"
-        xmlMappingType="Default"
+        name="Id"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
         upsertType="Replace"
-        name="Text"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
         abstract="false"
+        aggregation="None"
         field="Root/DataEntity/Resource Management/ResourceType.origam#ResourceType/Name/e70431e9-236f-4d42-90da-7a4d94547f85"
         x:id="e388c99d-9c1a-49ee-99a5-cf47961bb0bd"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+        name="Text"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
     </DataStructureEntity>
     <DataStructureFilterSet
-      dynamic="false"
-      name="GetId"
       abstract="false"
+      dynamic="false"
       x:id="1ff9c563-5279-4890-978d-e93eb686f316"
+      name="GetId"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        passWhenParameterMatch="false"
-        name="ResourceType_GetId"
         abstract="false"
         entity="Root/DataStructure/Resource Management/Lookups/LookupResourceType.origam#LookupResourceType/ResourceType/26c72700-d111-40b1-b1d9-cf969e18d772"
         filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
         x:id="a3dc6653-0c46-4c29-bc88-6428f3be6b3b"
+        name="ResourceType_GetId"
+        passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
     <DataStructureSortSet
-      name="Default"
       abstract="false"
       x:id="e8ae7a50-ee59-4ad6-ad46-41092738f0f5"
+      name="Default"
       x:type="Origam.Schema.EntityModel.DataStructureSortSet">
       <DataStructureSortSetItem
-        fieldName="Text"
-        sortDirection="Ascending"
-        name="ResourceType_Text"
         abstract="false"
         entity="Root/DataStructure/Resource Management/Lookups/LookupResourceType.origam#LookupResourceType/ResourceType/26c72700-d111-40b1-b1d9-cf969e18d772"
+        fieldName="Text"
         x:id="994b1650-8631-4a56-b200-6a809dc34c27"
+        name="ResourceType_Text"
+        sortDirection="Ascending"
         x:type="Origam.Schema.EntityModel.DataStructureSortSetItem" />
     </DataStructureSortSet>
   </DataStructure>

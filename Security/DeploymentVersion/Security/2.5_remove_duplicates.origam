@@ -12,6 +12,7 @@
       commandText="-***-ExternalFile:2.5_remove_duplicates.origam___commandText___0af004ac-0c7b-4187-8057-673447f88915.txt"
       x:id="0af004ac-0c7b-4187-8057-673447f88915"
       name="00010_Index_BusinessPartnerOrigamRole.ix_Unique"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
@@ -20,6 +21,7 @@
       commandText="-***-ExternalFile:2.5_remove_duplicates.origam___commandText___ffb780b4-5fef-4ab0-a3a3-9517b26667ba.txt"
       x:id="ffb780b4-5fef-4ab0-a3a3-9517b26667ba"
       name="00005_Remove_duplicates"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
@@ -28,6 +30,7 @@
       commandText="-***-ExternalFile:2.5_remove_duplicates.origam___commandText___ab0dfc48-26cc-4bb9-85d1-f4483b4dfc27.txt"
       x:id="ab0dfc48-26cc-4bb9-85d1-f4483b4dfc27"
       name="00020_Index_OrigamRoleOrigamApplicationRole.ix_Unique"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
@@ -36,6 +39,7 @@
       commandText="-***-ExternalFile:2.5_remove_duplicates.origam___commandText___5e6e9974-c808-4172-b1b9-fe5a7ecd7c98.txt"
       x:id="5e6e9974-c808-4172-b1b9-fe5a7ecd7c98"
       name="00030_Index_OrigamRole.ix_Unique"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>

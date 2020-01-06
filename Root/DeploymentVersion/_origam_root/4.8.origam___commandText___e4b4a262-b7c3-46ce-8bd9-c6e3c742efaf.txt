@@ -1,4 +1,4 @@
-CREATE TABLE [AsapMapLayer] (
+﻿CREATE TABLE [AsapMapLayer] (
 	[Name] NVARCHAR(200) NOT NULL,
 	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
 	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,

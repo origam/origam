@@ -1,22 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="ReferenceCode;FirstNameAndName"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="FirstNameAndName"
-    name="LookupBusinessPartnerContactPerson"
     abstract="false"
+    alwaysAllowReturnToForm="false"
+    x:id="f2c2c707-477d-46fa-9e0e-8f508acb9621"
+    isFilteredServerside="false"
+    isTree="false"
     listDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/f905e3d5-6255-46c3-96e9-4eab51df333a"
-    valueDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/f905e3d5-6255-46c3-96e9-4eab51df333a"
+    listDisplayMember="ReferenceCode;FirstNameAndName"
     listMethod="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/GetByParent/1b738651-1caf-4e3d-af63-76f6c0fc6b8f"
+    listValueMember="Id"
+    name="LookupBusinessPartnerContactPerson"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/f905e3d5-6255-46c3-96e9-4eab51df333a"
+    valueDisplayMember="FirstNameAndName"
     valueMethod="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/GetId/d8e44ef4-b151-46c9-bf2a-d4515f37821d"
     valueSortSet="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/Default/959c425e-2b24-4974-b916-8cef2c0d6d71"
-    x:id="f2c2c707-477d-46fa-9e0e-8f508acb9621"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    valueValueMember="Id" />
 </x:file>

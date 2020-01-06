@@ -1,22 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="false"
-    name="OrigamSyncRun"
     abstract="false"
     x:id="f1c7e899-6ed2-4ae6-ba5c-811b99db5bf9"
+    localized="false"
+    name="OrigamSyncRun"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="true"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="OrigamSyncRun"
       abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/Synchronization/OrigamSyncRun.origam#OrigamSyncRun/bfc2edfb-ada8-4b4f-bd9f-722fea74fc54"
       x:id="9f800e2a-64e3-40d5-920c-dc5077119a73"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamSyncRun"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
   </DataStructure>
 </x:file>

@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <group
-    rootItemType="DataStructure"
-    name="Partner Management"
     x:id="7e4b7c07-c1a7-48aa-ad48-f52cfa6b35e1"
     x:isFolder="true"
+    name="Partner Management"
+    rootItemType="DataStructure"
     x:type="Origam.Schema.SchemaItemGroup" />
 </x:file>

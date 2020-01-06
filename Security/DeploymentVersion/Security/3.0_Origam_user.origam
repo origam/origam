@@ -12,6 +12,7 @@
       commandText="-***-ExternalFile:3.0_Origam_user.origam___commandText___fcffad2c-2224-4bf2-81f5-0db92256d7ca.txt"
       x:id="fcffad2c-2224-4bf2-81f5-0db92256d7ca"
       name="00010_Database_Entity_OrigamUser"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
@@ -20,6 +21,7 @@
       commandText="-***-ExternalFile:3.0_Origam_user.origam___commandText___4250a620-6702-4909-acbb-49bcd1d292a8.txt"
       x:id="4250a620-6702-4909-acbb-49bcd1d292a8"
       name="00020_Database_Entity_OrigamUser"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>

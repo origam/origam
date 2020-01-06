@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <group
-    rootItemType="FormControlSet"
-    name="Root Menu"
     x:id="b487a882-12d1-4511-ab90-a6e5305acf39"
     x:isFolder="true"
+    name="Root Menu"
+    rootItemType="FormControlSet"
     x:type="Origam.Schema.SchemaItemGroup" />
 </x:file>

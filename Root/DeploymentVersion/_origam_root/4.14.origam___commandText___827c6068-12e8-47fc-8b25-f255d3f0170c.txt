@@ -1,4 +1,4 @@
---
+﻿--
 -- refresh data in language master data
 --
 IF NOT EXISTS (select * from Language WHERE TagIETF = 'en-US')

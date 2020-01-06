@@ -10,36 +10,36 @@
       abstract="false"
       activityOrder="30"
       commandText="-***-ExternalFile:0.20 ViewPG.origam___commandText___e00a0985-9436-4dd2-8c57-165cb6ee4029.txt"
-      platform="PgSql"
       x:id="e00a0985-9436-4dd2-8c57-165cb6ee4029"
       name="00030_Recreate_View_BusinessPartnerLookup"
+      platform="PgSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
       abstract="false"
       activityOrder="1230"
       commandText="-***-ExternalFile:0.20 ViewPG.origam___commandText___e6bed12d-5ade-4237-8337-4214f32e8274.txt"
-      platform="PgSql"
       x:id="e6bed12d-5ade-4237-8337-4214f32e8274"
       name="01230_VIEW_ResourceAccessList"
+      platform="PgSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
       abstract="false"
       activityOrder="1220"
       commandText="-***-ExternalFile:0.20 ViewPG.origam___commandText___786b8d21-fea7-471c-9c7a-527e9ea369fb.txt"
-      platform="PgSql"
       x:id="786b8d21-fea7-471c-9c7a-527e9ea369fb"
       name="01220_view_ResourceList"
+      platform="PgSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
       abstract="false"
       activityOrder="1210"
       commandText="-***-ExternalFile:0.20 ViewPG.origam___commandText___a6e78837-a208-43a0-8490-e7ff57bd52ed.txt"
-      platform="PgSql"
       x:id="a6e78837-a208-43a0-8490-e7ff57bd52ed"
       name="01210_View_OrganizationMappingList"
+      platform="PgSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>

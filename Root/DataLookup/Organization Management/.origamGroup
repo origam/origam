@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <group
-    rootItemType="DataLookup"
-    name="Organization Management"
     x:id="1e220f24-fefe-47ae-8043-0179066a9d49"
     x:isFolder="true"
+    name="Organization Management"
+    rootItemType="DataLookup"
     x:type="Origam.Schema.SchemaItemGroup" />
 </x:file>

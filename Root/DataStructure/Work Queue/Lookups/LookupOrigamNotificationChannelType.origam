@@ -1,73 +1,73 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="true"
-    name="LookupOrigamNotificationChannelType"
     abstract="false"
     x:id="2ed970ee-d0bf-4c0f-befc-95ffd0736f7b"
+    localized="true"
+    name="LookupOrigamNotificationChannelType"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="false"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="OrigamNotificationChannelType"
       abstract="false"
+      allFields="false"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/__system/OrigamNotificationChannelType.origam#OrigamNotificationChannelType/52d613af-8a2b-4ffd-ba08-944fe1f9dd69"
       x:id="d89e346c-b0a1-4f7c-bc1b-0b1db274107f"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamNotificationChannelType"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
       <DataStructureColumn
-        useLookupValue="false"
-        useCopiedValue="false"
-        writeOnly="false"
-        aggregation="None"
-        xmlMappingType="Default"
-        upsertType="Replace"
-        name="Name"
         abstract="false"
+        aggregation="None"
         field="Root/DataEntity/__system/OrigamNotificationChannelType.origam#OrigamNotificationChannelType/Name/2c654405-07c1-40e6-8b7f-6f1b8f6a8455"
         x:id="060c4a17-77a8-4b86-bcf7-98a253044e1a"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-      <DataStructureColumn
-        useLookupValue="false"
-        useCopiedValue="false"
-        writeOnly="false"
-        aggregation="None"
-        xmlMappingType="Default"
+        name="Name"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
         upsertType="Replace"
-        name="Id"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
         abstract="false"
+        aggregation="None"
         field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
         x:id="c5a3bb9c-f857-4ddb-ab15-a01799c990ef"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+        name="Id"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
       <DataStructureEntity
-        allFields="false"
-        ignoreImplicitFilters="false"
-        ignoreCondition="None"
-        concurrencyHandling="Standard"
-        relationType="LeftJoin"
-        useUpsert="false"
-        name="OrigamNotificationChannelType_l10n"
         abstract="false"
+        allFields="false"
+        concurrencyHandling="Standard"
         entity="Root/DataEntity/__system/OrigamNotificationChannelType.origam#OrigamNotificationChannelType/OrigamNotificationChannelType_l10n/ae073a5f-7902-4ed4-a14a-fc9b1d88c583"
         x:id="fb3134fd-71f5-47aa-bb62-bb9144308abd"
-        x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+        ignoreCondition="None"
+        ignoreImplicitFilters="false"
+        name="OrigamNotificationChannelType_l10n"
+        relationType="LeftJoin"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity"
+        useUpsert="false" />
     </DataStructureEntity>
     <DataStructureFilterSet
-      dynamic="false"
-      name="GetId"
       abstract="false"
+      dynamic="false"
       x:id="537c102d-f423-4788-b8f1-93af279c654e"
+      name="GetId"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        passWhenParameterMatch="false"
-        name="OrigamNotificationChannelType_GetId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/Lookups/LookupOrigamNotificationChannelType.origam#LookupOrigamNotificationChannelType/OrigamNotificationChannelType/d89e346c-b0a1-4f7c-bc1b-0b1db274107f"
         filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
         x:id="d4ab5536-cc52-4bfe-b38e-a12780787ed3"
+        name="OrigamNotificationChannelType_GetId"
+        passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
   </DataStructure>

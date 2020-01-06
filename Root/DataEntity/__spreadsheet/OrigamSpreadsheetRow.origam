@@ -1,63 +1,63 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
-    readOnly="false"
-    audit="None"
-    name="OrigamSpreadsheetRow"
     abstract="false"
+    audit="None"
     x:id="42013bb5-6ad9-456e-bf21-269a8d30867a"
+    name="OrigamSpreadsheetRow"
+    readOnly="false"
     x:type="Origam.Schema.EntityModel.DetachedEntity">
     <DataEntityColumn
-      dataType="Boolean"
+      abstract="false"
       allowNulls="true"
-      isPrimaryKey="false"
-      excludeFromAllFields="false"
       autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
-      name="PageBreak"
-      abstract="false"
+      dataType="Boolean"
+      excludeFromAllFields="false"
       x:id="f0ecf1a6-9af9-4a5e-8f21-41f743b1eb1d"
-      x:type="Origam.Schema.EntityModel.DetachedField" />
-    <DataEntityColumn
-      dataType="Integer"
-      allowNulls="false"
       isPrimaryKey="false"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Hidden"
+      name="PageBreak"
       onCopyAction="Copy"
-      name="SheetIndex"
-      abstract="false"
-      x:id="1d2f937b-61c8-479e-8e6a-86ac68a93e6e"
-      x:type="Origam.Schema.EntityModel.DetachedField" />
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
     <DataEntityColumn
-      dataType="Integer"
+      abstract="false"
       allowNulls="false"
-      isPrimaryKey="true"
-      excludeFromAllFields="false"
       autoIncrement="false"
-      xmlMappingType="Attribute"
+      dataType="Integer"
+      excludeFromAllFields="false"
+      x:id="1d2f937b-61c8-479e-8e6a-86ac68a93e6e"
+      isPrimaryKey="false"
+      name="SheetIndex"
       onCopyAction="Copy"
-      name="Index"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Hidden" />
+    <DataEntityColumn
       abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Integer"
+      excludeFromAllFields="false"
       x:id="232feef8-d188-478b-803a-959aa260f69b"
-      x:type="Origam.Schema.EntityModel.DetachedField" />
+      isPrimaryKey="true"
+      name="Index"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
     <EntityRelation
-      parentChild="true"
-      selfJoin="false"
-      or="false"
-      name="Cell"
       abstract="false"
-      relatedEntity="Root/DataEntity/__spreadsheet/OrigamSpreadsheetCell.origam#OrigamSpreadsheetCell/c6559c7f-0381-4448-9e16-e137aa27b0c0"
       x:id="a929969c-8875-48c6-9ef5-718c3e456bf8"
+      name="Cell"
+      or="false"
+      parentChild="true"
+      relatedEntity="Root/DataEntity/__spreadsheet/OrigamSpreadsheetCell.origam#OrigamSpreadsheetCell/c6559c7f-0381-4448-9e16-e137aa27b0c0"
+      selfJoin="false"
       x:type="Origam.Schema.EntityModel.EntityRelationItem">
       <EntityRelationColumnPair
-        name="OrigamSpreadsheetCellKey1"
         abstract="false"
         baseEntityField="Root/DataEntity/__spreadsheet/OrigamSpreadsheetRow.origam#OrigamSpreadsheetRow/Index/232feef8-d188-478b-803a-959aa260f69b"
-        relatedEntityField="Root/DataEntity/__spreadsheet/OrigamSpreadsheetCell.origam#OrigamSpreadsheetCell/RowIndex/4cec0c06-55bc-4414-8f4b-a4876e01b3ac"
         x:id="ef94be2e-1c68-436e-b08b-c69dd3359c8e"
+        name="OrigamSpreadsheetCellKey1"
+        relatedEntityField="Root/DataEntity/__spreadsheet/OrigamSpreadsheetCell.origam#OrigamSpreadsheetCell/RowIndex/4cec0c06-55bc-4414-8f4b-a4876e01b3ac"
         x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
     </EntityRelation>
   </DataEntity>

@@ -1,4 +1,4 @@
--- delete not implemented notification events
+﻿-- delete not implemented notification events
 DELETE FROM WorkQueueNotificationEvent_l10n where refWorkQueueNotificationEventId
 in ('96340243-E360-4409-9EE6-26192748EAD0',
 	'DC3B0836-B94F-4502-BB20-2C3AA3206F63',

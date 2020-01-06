@@ -1,201 +1,201 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Workflow
-    transactionBehavior="InheritExisting"
-    traceLevel="None"
-    name="SendNotification"
     abstract="false"
     x:id="0fea481a-24ab-4e98-8793-617ab5bb7272"
+    name="SendNotification"
+    traceLevel="None"
+    transactionBehavior="InheritExisting"
     x:type="Origam.Schema.WorkflowModel.Workflow">
     <ContextStore
-      dataType="String"
-      isReturnValue="false"
-      disableConstraints="false"
-      name="subject"
       abstract="false"
+      dataType="String"
+      disableConstraints="false"
       x:id="e17fbe0b-b31e-46e9-99fa-8e966891538a"
+      isReturnValue="false"
+      name="subject"
       x:type="Origam.Schema.WorkflowModel.ContextStore" />
     <ContextStore
-      dataType="String"
-      isReturnValue="false"
-      disableConstraints="false"
-      name="recipients"
       abstract="false"
+      dataType="String"
+      disableConstraints="false"
       x:id="925704eb-eacc-49b7-b4f7-9d65a9c9c06c"
+      isReturnValue="false"
+      name="recipients"
       x:type="Origam.Schema.WorkflowModel.ContextStore" />
     <ContextStore
-      dataType="UniqueIdentifier"
-      isReturnValue="false"
-      disableConstraints="false"
-      name="attachmentRecordId"
       abstract="false"
+      dataType="UniqueIdentifier"
+      disableConstraints="false"
       x:id="1fc5d6ac-8e65-4c61-b5b9-d34ba16aca98"
+      isReturnValue="false"
+      name="attachmentRecordId"
       x:type="Origam.Schema.WorkflowModel.ContextStore" />
     <ContextStore
-      dataType="String"
-      isReturnValue="false"
-      disableConstraints="false"
-      name="sender"
       abstract="false"
+      dataType="String"
+      disableConstraints="false"
       x:id="8cc1b4dc-9b5b-45ce-a5ee-dbf166a64979"
+      isReturnValue="false"
+      name="sender"
       x:type="Origam.Schema.WorkflowModel.ContextStore" />
     <ContextStore
+      abstract="false"
       dataType="String"
-      isReturnValue="false"
       disableConstraints="false"
-      name="body"
-      abstract="false"
       x:id="9050aead-97e0-43b9-a538-f2088c4e4a8c"
+      isReturnValue="false"
+      name="body"
       x:type="Origam.Schema.WorkflowModel.ContextStore" />
     <ContextStore
-      dataType="UniqueIdentifier"
-      isReturnValue="false"
-      disableConstraints="false"
-      name="notificationChannelTypeId"
       abstract="false"
+      dataType="UniqueIdentifier"
+      disableConstraints="false"
       x:id="8a40dacf-1afd-40f0-baee-fb8018b27139"
+      isReturnValue="false"
+      name="notificationChannelTypeId"
       x:type="Origam.Schema.WorkflowModel.ContextStore" />
     <WorkflowTask
-      transactionType="None"
-      traceLevel="InheritFromParent"
-      roles="*"
-      name="Email"
       abstract="false"
+      x:id="b15e030b-ae0e-4eb8-b976-83d406830131"
+      name="Email"
+      roles="*"
       startConditionRule="Root/Rule/_common/SR_NotificationChannelType_Email.origam#SR_NotificationChannelType_Email/0f9d3c7b-7ca7-48b8-9a76-348a2ded5ff1"
       startConditionRuleContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/notificationChannelTypeId/8a40dacf-1afd-40f0-baee-fb8018b27139"
-      x:id="b15e030b-ae0e-4eb8-b976-83d406830131"
+      traceLevel="InheritFromParent"
+      transactionType="None"
       x:type="Origam.Schema.WorkflowModel.TransactionWorkflowBlock">
       <WorkflowTask
-        outputMethod="Ignore"
-        traceLevel="InheritFromParent"
-        roles="*"
-        name="SendMail"
         abstract="false"
-        workflow="Root/Workflow/SendEmail.origam#SendEmail/6e6d4e02-812a-4c95-afd1-eb2428802e2b"
-        outputContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/body/9050aead-97e0-43b9-a538-f2088c4e4a8c"
         x:id="37cc99c1-3d09-464b-9722-cbbc82fb983b"
-        x:type="Origam.Schema.WorkflowModel.WorkflowCallTask">
+        name="SendMail"
+        outputContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/body/9050aead-97e0-43b9-a538-f2088c4e4a8c"
+        outputMethod="Ignore"
+        roles="*"
+        traceLevel="InheritFromParent"
+        x:type="Origam.Schema.WorkflowModel.WorkflowCallTask"
+        workflow="Root/Workflow/SendEmail.origam#SendEmail/6e6d4e02-812a-4c95-afd1-eb2428802e2b">
         <ContextStoreLink
-          direction="Input"
-          xPath="/"
-          name="senderEmail"
           abstract="false"
           callerContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/sender/8cc1b4dc-9b5b-45ce-a5ee-dbf166a64979"
-          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/senderEmail/2aa7eb45-5c0c-4282-bcec-886666e61a0a"
-          x:id="228bddca-4cb7-4d1c-b313-2a54f97d3d4f"
-          x:type="Origam.Schema.WorkflowModel.ContextStoreLink" />
-        <ContextStoreLink
           direction="Input"
-          xPath="/"
-          name="recipientEmail"
+          x:id="228bddca-4cb7-4d1c-b313-2a54f97d3d4f"
+          name="senderEmail"
+          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/senderEmail/2aa7eb45-5c0c-4282-bcec-886666e61a0a"
+          x:type="Origam.Schema.WorkflowModel.ContextStoreLink"
+          xPath="/" />
+        <ContextStoreLink
           abstract="false"
           callerContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/recipients/925704eb-eacc-49b7-b4f7-9d65a9c9c06c"
-          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/recipientEmail/2f33a900-e0d3-45e6-8f8b-1b86747e6500"
-          x:id="ffc9f950-071f-4a35-98c9-5ce7291becf1"
-          x:type="Origam.Schema.WorkflowModel.ContextStoreLink" />
-        <ContextStoreLink
           direction="Input"
-          xPath="/"
-          name="attachmentRecordId"
+          x:id="ffc9f950-071f-4a35-98c9-5ce7291becf1"
+          name="recipientEmail"
+          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/recipientEmail/2f33a900-e0d3-45e6-8f8b-1b86747e6500"
+          x:type="Origam.Schema.WorkflowModel.ContextStoreLink"
+          xPath="/" />
+        <ContextStoreLink
           abstract="false"
           callerContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/attachmentRecordId/1fc5d6ac-8e65-4c61-b5b9-d34ba16aca98"
-          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/attachmentRecordId/e90181d2-df88-4cc6-a8c1-2e9e88f2b488"
-          x:id="aa90bef5-50c7-4350-9dfe-8df3897ee5ba"
-          x:type="Origam.Schema.WorkflowModel.ContextStoreLink" />
-        <ContextStoreLink
           direction="Input"
-          xPath="/"
-          name="body"
+          x:id="aa90bef5-50c7-4350-9dfe-8df3897ee5ba"
+          name="attachmentRecordId"
+          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/attachmentRecordId/e90181d2-df88-4cc6-a8c1-2e9e88f2b488"
+          x:type="Origam.Schema.WorkflowModel.ContextStoreLink"
+          xPath="/" />
+        <ContextStoreLink
           abstract="false"
           callerContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/body/9050aead-97e0-43b9-a538-f2088c4e4a8c"
-          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/body/1870bf85-8623-45c3-8833-636c2dbbcce5"
-          x:id="40eceedc-630a-4c90-a2d0-dc42a04236a6"
-          x:type="Origam.Schema.WorkflowModel.ContextStoreLink" />
-        <ContextStoreLink
           direction="Input"
-          xPath="/"
-          name="subject"
+          x:id="40eceedc-630a-4c90-a2d0-dc42a04236a6"
+          name="body"
+          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/body/1870bf85-8623-45c3-8833-636c2dbbcce5"
+          x:type="Origam.Schema.WorkflowModel.ContextStoreLink"
+          xPath="/" />
+        <ContextStoreLink
           abstract="false"
           callerContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/subject/e17fbe0b-b31e-46e9-99fa-8e966891538a"
-          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/subject/51b19b48-2b22-467a-b9d8-35474c974b5a"
+          direction="Input"
           x:id="91f47d1b-b5de-404a-a667-fb5b142de579"
-          x:type="Origam.Schema.WorkflowModel.ContextStoreLink" />
+          name="subject"
+          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/subject/51b19b48-2b22-467a-b9d8-35474c974b5a"
+          x:type="Origam.Schema.WorkflowModel.ContextStoreLink"
+          xPath="/" />
       </WorkflowTask>
     </WorkflowTask>
     <WorkflowTask
-      transactionType="None"
-      traceLevel="InheritFromParent"
-      roles="*"
-      name="Email (queued)"
       abstract="false"
+      x:id="0e2fe624-09f8-4b29-9559-b0475a4e98cc"
+      name="Email (queued)"
+      roles="*"
       startConditionRule="Root/Rule/_common/SR_NotificationChannelType_EmailQueued.origam#SR_NotificationChannelType_EmailQueued/fcc896b2-d960-43ba-a531-efc3f4f5a48a"
       startConditionRuleContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/notificationChannelTypeId/8a40dacf-1afd-40f0-baee-fb8018b27139"
-      x:id="0e2fe624-09f8-4b29-9559-b0475a4e98cc"
+      traceLevel="InheritFromParent"
+      transactionType="None"
       x:type="Origam.Schema.WorkflowModel.TransactionWorkflowBlock">
       <WorkflowTask
-        outputMethod="Ignore"
-        traceLevel="InheritFromParent"
-        roles="*"
-        name="SendMail"
         abstract="false"
-        workflow="Root/Workflow/SendEmail.origam#SendEmail/6e6d4e02-812a-4c95-afd1-eb2428802e2b"
-        outputContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/body/9050aead-97e0-43b9-a538-f2088c4e4a8c"
         x:id="cf316512-5928-4214-b273-0893dd6b24a0"
-        x:type="Origam.Schema.WorkflowModel.WorkflowCallTask">
+        name="SendMail"
+        outputContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/body/9050aead-97e0-43b9-a538-f2088c4e4a8c"
+        outputMethod="Ignore"
+        roles="*"
+        traceLevel="InheritFromParent"
+        x:type="Origam.Schema.WorkflowModel.WorkflowCallTask"
+        workflow="Root/Workflow/SendEmail.origam#SendEmail/6e6d4e02-812a-4c95-afd1-eb2428802e2b">
         <ContextStoreLink
-          direction="Input"
-          xPath="/"
-          name="senderEmail"
           abstract="false"
           callerContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/sender/8cc1b4dc-9b5b-45ce-a5ee-dbf166a64979"
-          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/senderEmail/2aa7eb45-5c0c-4282-bcec-886666e61a0a"
-          x:id="f2939f7c-eae6-4a8a-b574-367edd7e3fce"
-          x:type="Origam.Schema.WorkflowModel.ContextStoreLink" />
-        <ContextStoreLink
           direction="Input"
-          xPath="/"
-          name="attachmentRecordId"
+          x:id="f2939f7c-eae6-4a8a-b574-367edd7e3fce"
+          name="senderEmail"
+          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/senderEmail/2aa7eb45-5c0c-4282-bcec-886666e61a0a"
+          x:type="Origam.Schema.WorkflowModel.ContextStoreLink"
+          xPath="/" />
+        <ContextStoreLink
           abstract="false"
           callerContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/attachmentRecordId/1fc5d6ac-8e65-4c61-b5b9-d34ba16aca98"
-          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/attachmentRecordId/e90181d2-df88-4cc6-a8c1-2e9e88f2b488"
-          x:id="8701ce06-99e3-445f-b877-38e27dee37bb"
-          x:type="Origam.Schema.WorkflowModel.ContextStoreLink" />
-        <ContextStoreLink
           direction="Input"
-          xPath="/"
-          name="recipientEmail"
+          x:id="8701ce06-99e3-445f-b877-38e27dee37bb"
+          name="attachmentRecordId"
+          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/attachmentRecordId/e90181d2-df88-4cc6-a8c1-2e9e88f2b488"
+          x:type="Origam.Schema.WorkflowModel.ContextStoreLink"
+          xPath="/" />
+        <ContextStoreLink
           abstract="false"
           callerContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/recipients/925704eb-eacc-49b7-b4f7-9d65a9c9c06c"
-          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/recipientEmail/2f33a900-e0d3-45e6-8f8b-1b86747e6500"
-          x:id="b3365f32-048c-4bac-9a72-3b7d03334576"
-          x:type="Origam.Schema.WorkflowModel.ContextStoreLink" />
-        <ContextStoreLink
           direction="Input"
-          xPath="/"
-          name="body"
+          x:id="b3365f32-048c-4bac-9a72-3b7d03334576"
+          name="recipientEmail"
+          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/recipientEmail/2f33a900-e0d3-45e6-8f8b-1b86747e6500"
+          x:type="Origam.Schema.WorkflowModel.ContextStoreLink"
+          xPath="/" />
+        <ContextStoreLink
           abstract="false"
           callerContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/body/9050aead-97e0-43b9-a538-f2088c4e4a8c"
-          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/body/1870bf85-8623-45c3-8833-636c2dbbcce5"
-          x:id="510fe24f-70db-463a-93de-a744e1db5e1c"
-          x:type="Origam.Schema.WorkflowModel.ContextStoreLink" />
-        <ContextStoreLink
           direction="Input"
-          xPath="/"
-          name="subject"
+          x:id="510fe24f-70db-463a-93de-a744e1db5e1c"
+          name="body"
+          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/body/1870bf85-8623-45c3-8833-636c2dbbcce5"
+          x:type="Origam.Schema.WorkflowModel.ContextStoreLink"
+          xPath="/" />
+        <ContextStoreLink
           abstract="false"
           callerContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/subject/e17fbe0b-b31e-46e9-99fa-8e966891538a"
-          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/subject/51b19b48-2b22-467a-b9d8-35474c974b5a"
-          x:id="386a70a0-3af2-4cec-a5a0-b71a99529533"
-          x:type="Origam.Schema.WorkflowModel.ContextStoreLink" />
-        <ContextStoreLink
           direction="Input"
-          xPath="AS:GetConstant('DefaultMailWorkQueueName')"
-          name="MailWorkQueueName"
+          x:id="386a70a0-3af2-4cec-a5a0-b71a99529533"
+          name="subject"
+          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/subject/51b19b48-2b22-467a-b9d8-35474c974b5a"
+          x:type="Origam.Schema.WorkflowModel.ContextStoreLink"
+          xPath="/" />
+        <ContextStoreLink
           abstract="false"
           callerContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/notificationChannelTypeId/8a40dacf-1afd-40f0-baee-fb8018b27139"
-          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/MailWorkQueueName/48abb054-bb38-4eb3-9f07-cbfa21e2abb2"
+          direction="Input"
           x:id="bf449e0e-3ae0-4b8d-a788-d320f17ca3e4"
-          x:type="Origam.Schema.WorkflowModel.ContextStoreLink" />
+          name="MailWorkQueueName"
+          targetContextStore="Root/Workflow/SendEmail.origam#SendEmail/MailWorkQueueName/48abb054-bb38-4eb3-9f07-cbfa21e2abb2"
+          x:type="Origam.Schema.WorkflowModel.ContextStoreLink"
+          xPath="AS:GetConstant('DefaultMailWorkQueueName')" />
       </WorkflowTask>
     </WorkflowTask>
   </Workflow>

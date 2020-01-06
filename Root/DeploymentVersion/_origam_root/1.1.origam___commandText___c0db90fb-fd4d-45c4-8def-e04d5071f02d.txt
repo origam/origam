@@ -1,0 +1,41 @@
+﻿
+ALTER TABLE [AsapSyncConfig] ADD CONSTRAINT FK_AsapSyncConfig_refCounterReferenceCode_Counter
+	FOREIGN KEY (
+		[refCounterReferenceCode]
+	)
+
+	REFERENCES [Counter] (
+		[ReferenceCode]
+	)
+ALTER TABLE [AsapSyncConfig] ADD CONSTRAINT FK_AsapSyncConfig_refSourceAsapSyncProviderConfigId_AsapSyncProviderConfig
+	FOREIGN KEY (
+		[refSourceAsapSyncProviderConfigId]
+	)
+
+	REFERENCES [AsapSyncProviderConfig] (
+		[Id]
+	)
+ALTER TABLE [AsapSyncConfig] ADD CONSTRAINT FK_AsapSyncConfig_refTargetAsapSyncProviderConfigId_AsapSyncProviderConfig
+	FOREIGN KEY (
+		[refTargetAsapSyncProviderConfigId]
+	)
+
+	REFERENCES [AsapSyncProviderConfig] (
+		[Id]
+	)
+ALTER TABLE [AsapSyncConfig] ADD CONSTRAINT FK_AsapSyncConfig_refSourceAsapSyncConnectionId_AsapSyncConnection
+	FOREIGN KEY (
+		[refSourceAsapSyncConnectionId]
+	)
+
+	REFERENCES [AsapSyncConnection] (
+		[Id]
+	)
+ALTER TABLE [AsapSyncConfig] ADD CONSTRAINT FK_AsapSyncConfig_refTargetAsapSyncConnectionId_AsapSyncConnection
+	FOREIGN KEY (
+		[refTargetAsapSyncConnectionId]
+	)
+
+	REFERENCES [AsapSyncConnection] (
+		[Id]
+	)

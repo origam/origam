@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE [DimensionEntityRelation] ADD CONSTRAINT FK_DimensionEntityRelation_refSourceDimensionEntityId_DimensionEntity
+	FOREIGN KEY (
+		[refSourceDimensionEntityId]
+	)
+
+	REFERENCES [DimensionEntity] (
+		[Id]
+	)
+ALTER TABLE [DimensionEntityRelation] ADD CONSTRAINT FK_DimensionEntityRelation_refTargetDimensionEntityId_DimensionEntity
+	FOREIGN KEY (
+		[refTargetDimensionEntityId]
+	)
+
+	REFERENCES [DimensionEntity] (
+		[Id]
+	)

@@ -1,4 +1,4 @@
-CREATE TABLE [AsapMap] (
+﻿CREATE TABLE [AsapMap] (
 	[ReferenceCode] NVARCHAR(40) NOT NULL,
 	[Description] NVARCHAR(200) NOT NULL,
 	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,

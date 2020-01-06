@@ -1,1 +1,1 @@
-UPDATE [WorkQueue] SET [Roles] = '*' WHERE [Roles] is NULL
+﻿UPDATE [WorkQueue] SET [Roles] = '*' WHERE [Roles] is NULL

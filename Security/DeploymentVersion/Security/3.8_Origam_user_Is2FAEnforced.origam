@@ -12,6 +12,7 @@
       commandText="-***-ExternalFile:3.8_Origam_user_Is2FAEnforced.origam___commandText___b992b751-30ec-4a7c-8cb4-4df58285304e.txt"
       x:id="b992b751-30ec-4a7c-8cb4-4df58285304e"
       name="00010_Database_Field_OrigamUser.Is2FAEnforced"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>

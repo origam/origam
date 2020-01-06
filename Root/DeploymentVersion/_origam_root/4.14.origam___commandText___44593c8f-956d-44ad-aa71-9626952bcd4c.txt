@@ -1,4 +1,4 @@
-
+﻿
 ALTER TABLE [WorkQueueCommandType_l10n] ADD CONSTRAINT FK_WorkQueueCommandType_l10n_refWorkQueueCommandTypeId_WorkQueueCommandType
 	FOREIGN KEY (
 		[refWorkQueueCommandTypeId]

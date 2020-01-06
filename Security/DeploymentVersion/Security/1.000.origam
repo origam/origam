@@ -12,6 +12,7 @@
       commandText="-***-ExternalFile:1.000.origam___commandText___3f386fbb-1eee-43a5-8b47-0562c8c700b9.txt"
       x:id="3f386fbb-1eee-43a5-8b47-0562c8c700b9"
       name="00010_Database_Object_Mapping_OrigamRole"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
@@ -20,6 +21,7 @@
       commandText="-***-ExternalFile:1.000.origam___commandText___56d85257-5b44-4369-9d2b-4aa8c26a2f30.txt"
       x:id="56d85257-5b44-4369-9d2b-4aa8c26a2f30"
       name="00040_Feature_NET_MEMBERSHIP_EXCLUSIVE_USE_TurnedOnForInitialDbScript"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
@@ -28,6 +30,7 @@
       commandText="-***-ExternalFile:1.000.origam___commandText___4b030ba5-70e5-4e7d-93c9-e4f9c3b64cba.txt"
       x:id="4b030ba5-70e5-4e7d-93c9-e4f9c3b64cba"
       name="00020_Database_Object_Mapping_BusinessPartnerOrigamRole"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
@@ -36,6 +39,7 @@
       commandText="-***-ExternalFile:1.000.origam___commandText___d7b06a2f-acda-41d9-aa74-e66b0bd83c40.txt"
       x:id="d7b06a2f-acda-41d9-aa74-e66b0bd83c40"
       name="00030_Database_Object_Mapping_BusinessPartnerOrigamRole"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>

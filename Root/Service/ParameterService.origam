@@ -1,61 +1,61 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Service
-    classPath="Origam.Workflow.ParameterServiceAgent,Origam.Workflow"
-    name="ParameterService"
     abstract="false"
+    classPath="Origam.Workflow.ParameterServiceAgent,Origam.Workflow"
     x:id="0bba010f-e1c3-4bda-9e2b-675574f27de5"
+    name="ParameterService"
     x:type="Origam.Schema.WorkflowModel.Service">
     <ServiceMethod
-      returnValueDataType="Boolean"
-      name="SetCustomParameterValue"
       abstract="false"
       x:id="d0548352-3b98-45e7-b36f-8186c6cc1f6c"
+      name="SetCustomParameterValue"
+      returnValueDataType="Boolean"
       x:type="Origam.Schema.WorkflowModel.ServiceMethod">
       <Parameter
-        callElements="3"
+        abstract="false"
         allowContextReference="true"
         allowDataConstantReference="true"
         allowDataStructureReference="false"
+        allowNulls="true"
         allowReportReference="false"
         allowSystemFunctionCall="false"
         allowTransformationReference="false"
         allowWorkflowReference="false"
+        callElements="3"
         dataType="UniqueIdentifier"
-        allowNulls="true"
-        name="ProfileId"
-        abstract="false"
         x:id="36522170-010d-4e50-849f-449cb055dffb"
+        name="ProfileId"
         x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
       <Parameter
-        callElements="3"
+        abstract="false"
         allowContextReference="true"
         allowDataConstantReference="true"
         allowDataStructureReference="false"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        dataType="String"
         allowNulls="false"
-        name="ParameterName"
-        abstract="false"
-        x:id="0f4c8bfd-dbc7-4391-8f68-6b78fe789006"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-      <Parameter
-        callElements="3"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
         allowReportReference="false"
         allowSystemFunctionCall="false"
         allowTransformationReference="false"
         allowWorkflowReference="false"
-        dataType="Object"
-        allowNulls="true"
-        name="Value"
+        callElements="3"
+        dataType="String"
+        x:id="0f4c8bfd-dbc7-4391-8f68-6b78fe789006"
+        name="ParameterName"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+      <Parameter
         abstract="false"
+        allowContextReference="true"
+        allowDataConstantReference="true"
+        allowDataStructureReference="false"
+        allowNulls="true"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        callElements="3"
+        dataType="Object"
         x:id="3fc3df07-c13f-43e2-a8a9-c6640760006a"
+        name="Value"
         x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
     </ServiceMethod>
   </Service>

@@ -1,12 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataConstant
-    dataType="UniqueIdentifier"
-    value="9f343bdd-6984-4d24-8959-e06dd50ee1ac"
-    userDefinable="false"
-    name="DimensionType_Purchase"
     abstract="false"
-    lookup="Root/DataLookup/Dimensions/DimensionType.origam#DimensionType/ba96eab8-f4ea-41bf-a798-1f3b1eeeaf72"
+    dataType="UniqueIdentifier"
     x:id="0e5d23dd-2d96-4166-b926-47e64da41cb9"
-    x:type="Origam.Schema.EntityModel.DataConstant" />
+    lookup="Root/DataLookup/Dimensions/DimensionType.origam#DimensionType/ba96eab8-f4ea-41bf-a798-1f3b1eeeaf72"
+    name="DimensionType_Purchase"
+    x:type="Origam.Schema.EntityModel.DataConstant"
+    userDefinable="false"
+    value="9f343bdd-6984-4d24-8959-e06dd50ee1ac" />
 </x:file>

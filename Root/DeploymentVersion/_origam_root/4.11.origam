@@ -1,34 +1,37 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DeploymentVersion
-    version="4.11"
-    name="4.11"
     abstract="false"
     x:id="adfbc623-7d5a-4e54-973c-308cbdebd31d"
-    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    name="4.11"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="4.11">
     <DeploymentUpdateScriptActivity
-      activityOrder="20"
-      name="00020_OrigamMapLayerType_Values_add_OSM"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="20"
       commandText="-***-ExternalFile:4.11.origam___commandText___e9467d7e-9112-4129-9e44-3a1a7abb8a4d.txt"
       x:id="e9467d7e-9112-4129-9e44-3a1a7abb8a4d"
+      name="00020_OrigamMapLayerType_Values_add_OSM"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
-      activityOrder="10"
-      name="00010_map_not_nullable_fields"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="10"
       commandText="-***-ExternalFile:4.11.origam___commandText___2bb84f1c-9991-483c-9551-4a5e0db526a8.txt"
       x:id="2bb84f1c-9991-483c-9551-4a5e0db526a8"
+      name="00010_map_not_nullable_fields"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
-      activityOrder="30"
-      name="00030_unused_tables_cleanup"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="30"
       commandText="-***-ExternalFile:4.11.origam___commandText___ab038402-1bc0-4278-a0e3-fe994efd87ce.txt"
       x:id="ab038402-1bc0-4278-a0e3-fe994efd87ce"
+      name="00030_unused_tables_cleanup"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>
 </x:file>

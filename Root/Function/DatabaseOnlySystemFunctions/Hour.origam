@@ -1,16 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Function
-    dataType="Date"
-    type="Database"
-    name="Hour"
     abstract="false"
+    dataType="Date"
     x:id="613479c2-bc64-41a2-9d51-66b0953ee56c"
+    name="Hour"
+    type="Database"
     x:type="Origam.Schema.EntityModel.Function">
     <FunctionParameter
-      name="Expression"
       abstract="false"
       x:id="de6fdbb0-0ed6-4f2d-bd2d-58ac23f7e14c"
+      name="Expression"
       x:type="Origam.Schema.EntityModel.FunctionParameter" />
   </Function>
 </x:file>

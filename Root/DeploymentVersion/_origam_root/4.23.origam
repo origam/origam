@@ -1,26 +1,28 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DeploymentVersion
-    version="4.23"
-    name="4.23"
     abstract="false"
     x:id="ea7e1409-8bf4-4291-986c-286e03a658d4"
-    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    name="4.23"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="4.23">
     <DeploymentUpdateScriptActivity
-      activityOrder="20"
-      name="00020_DataEntityConstraint_FK_BusinessPartner_refLanguageId_Language"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="20"
       commandText="-***-ExternalFile:4.23.origam___commandText___c77c34aa-2892-4c2d-ac51-8df14d61094c.txt"
       x:id="c77c34aa-2892-4c2d-ac51-8df14d61094c"
+      name="00020_DataEntityConstraint_FK_BusinessPartner_refLanguageId_Language"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
-      activityOrder="10"
-      name="00010_Database_Field_BusinessPartner.refLanguageId"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="10"
       commandText="-***-ExternalFile:4.23.origam___commandText___4c5f8781-3325-4bfe-90a3-f5efe3a53b2f.txt"
       x:id="4c5f8781-3325-4bfe-90a3-f5efe3a53b2f"
+      name="00010_Database_Field_BusinessPartner.refLanguageId"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>
 </x:file>

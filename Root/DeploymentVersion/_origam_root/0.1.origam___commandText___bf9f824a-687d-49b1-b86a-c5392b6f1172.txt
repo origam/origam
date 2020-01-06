@@ -1,9 +1,0 @@
-
-ALTER TABLE [AsapCharacterTranslationDetail] ADD CONSTRAINT FK_AsapCharacterTranslationDetail_refAsapCharacterTranslationId_AsapCharacterTranslation
-	FOREIGN KEY (
-		[refAsapCharacterTranslationId]
-	)
-
-	REFERENCES [AsapCharacterTranslation] (
-		[Id]
-	)

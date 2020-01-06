@@ -12,6 +12,7 @@
       commandText="-***-ExternalFile:1.1.origam___commandText___7e35fff3-4448-4d73-880f-74f7250b22fc.txt"
       x:id="7e35fff3-4448-4d73-880f-74f7250b22fc"
       name="00010_RoleName_255"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>

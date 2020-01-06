@@ -1,22 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="false"
-    name="OrigamRounding"
     abstract="false"
     x:id="c27c3ab9-b511-418a-9c65-a384a9b96bb3"
+    localized="false"
+    name="OrigamRounding"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="true"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="OrigamRounding"
       abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/__system/OrigamRounding.origam#OrigamRounding/21d86e1c-5a23-434b-9fe2-e187fd100624"
       x:id="624dbf1f-2301-4c6c-b376-79e7d2d188b3"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamRounding"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
   </DataStructure>
 </x:file>

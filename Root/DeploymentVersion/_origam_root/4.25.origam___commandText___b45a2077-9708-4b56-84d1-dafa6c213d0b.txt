@@ -1,4 +1,4 @@
-CREATE TABLE [OrigamOnlineUser] (
+﻿CREATE TABLE [OrigamOnlineUser] (
 	[UserName] NVARCHAR(255) NOT NULL,
 	[LastOperationTimestamp] DATETIME NOT NULL,
 	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,

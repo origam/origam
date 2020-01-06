@@ -1,73 +1,73 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="true"
-    name="LookupOrigamStateMachineEventType"
     abstract="false"
     x:id="7d366ad1-beac-47e0-9028-e947f9e43a20"
+    localized="true"
+    name="LookupOrigamStateMachineEventType"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="false"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="OrigamStateMachineEventType"
       abstract="false"
+      allFields="false"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/__system/OrigamStateMachineEventType.origam#OrigamStateMachineEventType/0bcc1f88-dce5-4e37-94bc-9c9092e0c974"
       x:id="12bf6fef-1e72-4392-8e17-f7b034692906"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamStateMachineEventType"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
       <DataStructureColumn
-        useLookupValue="false"
-        useCopiedValue="false"
-        writeOnly="false"
-        aggregation="None"
-        xmlMappingType="Default"
-        upsertType="Replace"
-        name="Name"
         abstract="false"
+        aggregation="None"
         field="Root/DataEntity/__system/OrigamStateMachineEventType.origam#OrigamStateMachineEventType/Name/bb7c1aed-f39b-4c53-9f9b-7f4892b6ab81"
         x:id="b342abcd-8bc9-4a46-8c5d-1269eea04867"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-      <DataStructureColumn
-        useLookupValue="false"
-        useCopiedValue="false"
-        writeOnly="false"
-        aggregation="None"
-        xmlMappingType="Default"
+        name="Name"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
         upsertType="Replace"
-        name="Id"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
         abstract="false"
+        aggregation="None"
         field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
         x:id="5e80aa33-f491-497e-b5ee-f51f43e80cc4"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+        name="Id"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
       <DataStructureEntity
-        allFields="false"
-        ignoreImplicitFilters="false"
-        ignoreCondition="None"
-        concurrencyHandling="Standard"
-        relationType="LeftJoin"
-        useUpsert="false"
-        name="OrigamStateMachineEventType_l10n"
         abstract="false"
+        allFields="false"
+        concurrencyHandling="Standard"
         entity="Root/DataEntity/__system/OrigamStateMachineEventType.origam#OrigamStateMachineEventType/OrigamStateMachineEventType_l10n/149cff12-62e3-45b9-a9c6-709b9e351210"
         x:id="47a0146b-b6c0-47d0-a962-88ec4da96301"
-        x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+        ignoreCondition="None"
+        ignoreImplicitFilters="false"
+        name="OrigamStateMachineEventType_l10n"
+        relationType="LeftJoin"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity"
+        useUpsert="false" />
     </DataStructureEntity>
     <DataStructureFilterSet
-      dynamic="false"
-      name="GetId"
       abstract="false"
+      dynamic="false"
       x:id="392c5eef-86e3-441b-ab7d-5244e10cf0ea"
+      name="GetId"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        passWhenParameterMatch="false"
-        name="OrigamStateMachineEventType_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/Lookups/LookupOrigamStateMachineEventType.origam#LookupOrigamStateMachineEventType/OrigamStateMachineEventType/12bf6fef-1e72-4392-8e17-f7b034692906"
         filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
         x:id="8e99507c-a478-41c6-9221-825e797934bc"
+        name="OrigamStateMachineEventType_GetId"
+        passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
   </DataStructure>

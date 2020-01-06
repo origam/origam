@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="refOrigamRoundingTypeId"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="refOrigamRoundingTypeId"
-    name="OrigamRounding_refOrigamRoundingTypeId"
     abstract="false"
-    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamRounding_refOrigamRoundingTypeId.origam#LookupOrigamRounding_refOrigamRoundingTypeId/42011861-8b29-4ba8-9d5e-79830961fbef"
-    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamRounding_refOrigamRoundingTypeId.origam#LookupOrigamRounding_refOrigamRoundingTypeId/42011861-8b29-4ba8-9d5e-79830961fbef"
-    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamRounding_refOrigamRoundingTypeId.origam#LookupOrigamRounding_refOrigamRoundingTypeId/GetId/e13f8859-2661-43c7-854f-edadb604af50"
+    alwaysAllowReturnToForm="false"
     x:id="994608ad-9634-439b-975a-484067f5b5a6"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamRounding_refOrigamRoundingTypeId.origam#LookupOrigamRounding_refOrigamRoundingTypeId/42011861-8b29-4ba8-9d5e-79830961fbef"
+    listDisplayMember="refOrigamRoundingTypeId"
+    listValueMember="Id"
+    name="OrigamRounding_refOrigamRoundingTypeId"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamRounding_refOrigamRoundingTypeId.origam#LookupOrigamRounding_refOrigamRoundingTypeId/42011861-8b29-4ba8-9d5e-79830961fbef"
+    valueDisplayMember="refOrigamRoundingTypeId"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamRounding_refOrigamRoundingTypeId.origam#LookupOrigamRounding_refOrigamRoundingTypeId/GetId/e13f8859-2661-43c7-854f-edadb604af50"
+    valueValueMember="Id" />
 </x:file>

@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Transformation
-    engineType="XslTransform"
-    name="RequestOrigamOnlineUserSessionClearance"
     abstract="false"
-    text="-***-ExternalFile:RequestOrigamOnlineUserSessionClearance.origam___text___264f944d-e007-4499-8282-543794e61414.xslt"
+    engineType="XslTransform"
     x:id="264f944d-e007-4499-8282-543794e61414"
+    name="RequestOrigamOnlineUserSessionClearance"
+    text="-***-ExternalFile:RequestOrigamOnlineUserSessionClearance.origam___text___264f944d-e007-4499-8282-543794e61414.xslt"
     x:type="Origam.Schema.EntityModel.XslTransformation" />
 </x:file>

@@ -1,34 +1,37 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DeploymentVersion
-    version="4.25"
-    name="4.25"
     abstract="false"
     x:id="74a75e3e-9598-4622-9283-f2c538607dc9"
-    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    name="4.25"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="4.25">
     <DeploymentUpdateScriptActivity
-      activityOrder="30"
-      name="00030_Database_Field_OrigamOnlineUser.RunningWorkflows"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="30"
       commandText="-***-ExternalFile:4.25.origam___commandText___dd0de677-436d-4784-88b8-4404da9941c3.txt"
       x:id="dd0de677-436d-4784-88b8-4404da9941c3"
+      name="00030_Database_Field_OrigamOnlineUser.RunningWorkflows"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
-      activityOrder="20"
-      name="00020_Database_Field_OrigamOnlineUser.DirtyScreens"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="20"
       commandText="-***-ExternalFile:4.25.origam___commandText___7df0a842-ffac-4eca-8fff-c3660bfc9b3c.txt"
       x:id="7df0a842-ffac-4eca-8fff-c3660bfc9b3c"
+      name="00020_Database_Field_OrigamOnlineUser.DirtyScreens"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
-      activityOrder="10"
-      name="00010_Database_Entity_OrigamOnlineUser"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="10"
       commandText="-***-ExternalFile:4.25.origam___commandText___b45a2077-9708-4b56-84d1-dafa6c213d0b.txt"
       x:id="b45a2077-9708-4b56-84d1-dafa6c213d0b"
+      name="00010_Database_Entity_OrigamOnlineUser"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>
 </x:file>

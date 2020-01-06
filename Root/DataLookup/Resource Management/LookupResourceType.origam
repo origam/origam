@@ -1,21 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="Text"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="Text"
-    name="LookupResourceType"
     abstract="false"
+    alwaysAllowReturnToForm="false"
+    x:id="84ea8eb8-5bbd-49c7-bf1e-a9e89186cbc0"
+    isFilteredServerside="false"
+    isTree="false"
     listDataStructure="Root/DataStructure/Resource Management/Lookups/LookupResourceType.origam#LookupResourceType/9e088da6-a77e-442e-92a0-5e5d901b1467"
+    listDisplayMember="Text"
+    listValueMember="Id"
+    name="LookupResourceType"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
     valueDataStructure="Root/DataStructure/Resource Management/Lookups/LookupResourceType.origam#LookupResourceType/9e088da6-a77e-442e-92a0-5e5d901b1467"
+    valueDisplayMember="Text"
     valueMethod="Root/DataStructure/Resource Management/Lookups/LookupResourceType.origam#LookupResourceType/GetId/1ff9c563-5279-4890-978d-e93eb686f316"
     valueSortSet="Root/DataStructure/Resource Management/Lookups/LookupResourceType.origam#LookupResourceType/Default/e8ae7a50-ee59-4ad6-ad46-41092738f0f5"
-    x:id="84ea8eb8-5bbd-49c7-bf1e-a9e89186cbc0"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    valueValueMember="Id" />
 </x:file>

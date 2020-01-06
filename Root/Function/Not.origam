@@ -1,16 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Function
-    dataType="Boolean"
-    type="Standard"
-    name="Not"
     abstract="false"
+    dataType="Boolean"
     x:id="c0850737-cacc-4a18-8cde-ee126c880150"
+    name="Not"
+    type="Standard"
     x:type="Origam.Schema.EntityModel.Function">
     <FunctionParameter
-      name="Argument"
       abstract="false"
       x:id="b58e6a77-975b-455a-934c-42c287196c28"
+      name="Argument"
       x:type="Origam.Schema.EntityModel.FunctionParameter" />
   </Function>
 </x:file>

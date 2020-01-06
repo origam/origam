@@ -1,2 +1,2 @@
-INSERT INTO [dbo].[WorkQueueExternalSourceType] ([Id], [Name])
+﻿INSERT INTO [dbo].[WorkQueueExternalSourceType] ([Id], [Name])
 VALUES ('58c4ef05-537b-489e-bdf1-bbc3ed109e55', 'WebSphere MQ')

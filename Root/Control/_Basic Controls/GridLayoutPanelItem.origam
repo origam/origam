@@ -1,86 +1,86 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Control
-    toolboxVisibility="Nowhere"
-    typeName="Origam.Gui.Win.GridLayoutPanelItem"
-    namespace="Origam.Gui.Win"
-    isComplex="false"
-    requestSaveAfterChangeAllowed="false"
-    name="GridLayoutPanelItem"
     abstract="false"
     x:id="b08ddbe7-cabc-4e21-a8b0-822e224c4374"
-    x:type="Origam.Schema.GuiModel.ControlItem">
+    isComplex="false"
+    name="GridLayoutPanelItem"
+    namespace="Origam.Gui.Win"
+    requestSaveAfterChangeAllowed="false"
+    toolboxVisibility="Nowhere"
+    x:type="Origam.Schema.GuiModel.ControlItem"
+    typeName="Origam.Gui.Win.GridLayoutPanelItem">
     <ControlPropertyItem
-      propertyType="Integer"
+      abstract="false"
       bindOnly="false"
+      x:id="af6cbf1f-3cab-4595-b9cd-0108a49f5be3"
       localizable="false"
       name="TopCell"
-      abstract="false"
-      x:id="af6cbf1f-3cab-4595-b9cd-0108a49f5be3"
+      propertyType="Integer"
       x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
     <ControlPropertyItem
-      propertyType="Integer"
+      abstract="false"
       bindOnly="false"
+      x:id="7bf56421-998b-468e-8dd2-23a1b663a698"
       localizable="false"
       name="Top"
-      abstract="false"
-      x:id="7bf56421-998b-468e-8dd2-23a1b663a698"
+      propertyType="Integer"
       x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
     <ControlPropertyItem
-      propertyType="Integer"
+      abstract="false"
       bindOnly="false"
+      x:id="40567c08-1027-4c26-9b38-2b7370d74143"
       localizable="false"
       name="Left"
-      abstract="false"
-      x:id="40567c08-1027-4c26-9b38-2b7370d74143"
+      propertyType="Integer"
       x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
     <ControlPropertyItem
-      propertyType="Integer"
+      abstract="false"
       bindOnly="false"
+      x:id="a2c6ffe3-7b04-45f4-a089-53a47799dee7"
       localizable="false"
       name="LeftCell"
-      abstract="false"
-      x:id="a2c6ffe3-7b04-45f4-a089-53a47799dee7"
+      propertyType="Integer"
       x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
     <ControlPropertyItem
-      propertyType="Integer"
+      abstract="false"
       bindOnly="false"
+      x:id="b14e5460-6a9c-46e5-b92c-70c9c9e26b6c"
       localizable="false"
       name="HeightCells"
-      abstract="false"
-      x:id="b14e5460-6a9c-46e5-b92c-70c9c9e26b6c"
+      propertyType="Integer"
       x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
     <ControlPropertyItem
-      propertyType="Integer"
+      abstract="false"
       bindOnly="false"
+      x:id="2fdf2411-ed26-4451-ac0e-717a53f80e99"
       localizable="false"
       name="WidthCells"
-      abstract="false"
-      x:id="2fdf2411-ed26-4451-ac0e-717a53f80e99"
+      propertyType="Integer"
       x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
     <ControlPropertyItem
-      propertyType="Integer"
+      abstract="false"
       bindOnly="false"
+      x:id="1811c89d-dc91-4375-a420-af1a16c3e9b3"
       localizable="false"
       name="Width"
-      abstract="false"
-      x:id="1811c89d-dc91-4375-a420-af1a16c3e9b3"
+      propertyType="Integer"
       x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
     <ControlPropertyItem
-      propertyType="Integer"
+      abstract="false"
       bindOnly="false"
+      x:id="88ccff09-6b2d-4b19-aa52-f9269d2ff5ea"
       localizable="false"
       name="Height"
-      abstract="false"
-      x:id="88ccff09-6b2d-4b19-aa52-f9269d2ff5ea"
+      propertyType="Integer"
       x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
     <ControlPropertyItem
-      propertyType="String"
+      abstract="false"
       bindOnly="false"
+      x:id="b5a99aaa-2152-4a48-bed6-ff25e4bd1b35"
       localizable="true"
       name="Text"
-      abstract="false"
-      x:id="b5a99aaa-2152-4a48-bed6-ff25e4bd1b35"
+      propertyType="String"
       x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
   </Control>
 </x:file>

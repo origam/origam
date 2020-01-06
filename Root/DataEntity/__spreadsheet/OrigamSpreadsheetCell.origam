@@ -1,60 +1,60 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
-    readOnly="false"
-    audit="None"
-    name="OrigamSpreadsheetCell"
     abstract="false"
+    audit="None"
     x:id="c6559c7f-0381-4448-9e16-e137aa27b0c0"
+    name="OrigamSpreadsheetCell"
+    readOnly="false"
     x:type="Origam.Schema.EntityModel.DetachedEntity">
     <DataEntityColumn
-      dataType="Memo"
+      abstract="false"
       allowNulls="true"
-      isPrimaryKey="false"
-      excludeFromAllFields="false"
       autoIncrement="false"
-      xmlMappingType="Element"
-      onCopyAction="Copy"
-      name="Value"
-      abstract="false"
+      dataType="Memo"
+      excludeFromAllFields="false"
       x:id="1ae9bf1f-c00d-4cfd-8991-7b6b3bcce20c"
-      x:type="Origam.Schema.EntityModel.DetachedField" />
-    <DataEntityColumn
-      dataType="Integer"
-      allowNulls="false"
       isPrimaryKey="false"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
+      name="Value"
       onCopyAction="Copy"
-      name="Type"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Element" />
+    <DataEntityColumn
       abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Integer"
       defaultValue="Root/DataConstant/__spreadsheet/OrigamSpreadsheetDataType_String.origam#OrigamSpreadsheetDataType_String/fbcd50bf-14f0-4ab8-9ed8-c34b977410a1"
+      excludeFromAllFields="false"
       x:id="76ae1371-dcd7-4ed7-b529-8c780f314640"
-      x:type="Origam.Schema.EntityModel.DetachedField" />
-    <DataEntityColumn
-      dataType="Integer"
-      allowNulls="false"
       isPrimaryKey="false"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Hidden"
+      name="Type"
       onCopyAction="Copy"
-      name="RowIndex"
-      abstract="false"
-      x:id="4cec0c06-55bc-4414-8f4b-a4876e01b3ac"
-      x:type="Origam.Schema.EntityModel.DetachedField" />
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
     <DataEntityColumn
-      dataType="Integer"
-      allowNulls="false"
-      isPrimaryKey="true"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
-      name="Index"
       abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Integer"
+      excludeFromAllFields="false"
+      x:id="4cec0c06-55bc-4414-8f4b-a4876e01b3ac"
+      isPrimaryKey="false"
+      name="RowIndex"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Hidden" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Integer"
+      excludeFromAllFields="false"
       x:id="a74cdf31-126e-4df9-95ad-b65e61bc121c"
-      x:type="Origam.Schema.EntityModel.DetachedField" />
+      isPrimaryKey="true"
+      name="Index"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
   </DataEntity>
 </x:file>

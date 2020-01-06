@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataConstant
-    dataType="String"
-    value="PDF"
-    userDefinable="false"
-    name="ReportFormat_PDF"
     abstract="false"
+    dataType="String"
     x:id="96291154-fe31-4f73-8386-a3464cb2f9bc"
-    x:type="Origam.Schema.EntityModel.DataConstant" />
+    name="ReportFormat_PDF"
+    x:type="Origam.Schema.EntityModel.DataConstant"
+    userDefinable="false"
+    value="PDF" />
 </x:file>

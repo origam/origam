@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="refSource4DimensionEntityId"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="refSource4DimensionEntityId"
-    name="DimensionTransformationMatrix_Source4"
     abstract="false"
-    listDataStructure="Root/DataStructure/Dimensions/Lookups/LookupDimensionTransformationMatrix_Sources.origam#LookupDimensionTransformationMatrix_Sources/d8f1d03b-6db3-481e-873b-830bc0ac26cb"
-    valueDataStructure="Root/DataStructure/Dimensions/Lookups/LookupDimensionTransformationMatrix_Sources.origam#LookupDimensionTransformationMatrix_Sources/d8f1d03b-6db3-481e-873b-830bc0ac26cb"
-    valueMethod="Root/DataStructure/Dimensions/Lookups/LookupDimensionTransformationMatrix_Sources.origam#LookupDimensionTransformationMatrix_Sources/GetByTargetDimensionEntityId/149ad88e-74e7-475a-8cae-b58302f3b87f"
+    alwaysAllowReturnToForm="false"
     x:id="2d28a5af-257c-4c3d-aa41-324be9caccc2"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/Dimensions/Lookups/LookupDimensionTransformationMatrix_Sources.origam#LookupDimensionTransformationMatrix_Sources/d8f1d03b-6db3-481e-873b-830bc0ac26cb"
+    listDisplayMember="refSource4DimensionEntityId"
+    listValueMember="Id"
+    name="DimensionTransformationMatrix_Source4"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/Dimensions/Lookups/LookupDimensionTransformationMatrix_Sources.origam#LookupDimensionTransformationMatrix_Sources/d8f1d03b-6db3-481e-873b-830bc0ac26cb"
+    valueDisplayMember="refSource4DimensionEntityId"
+    valueMethod="Root/DataStructure/Dimensions/Lookups/LookupDimensionTransformationMatrix_Sources.origam#LookupDimensionTransformationMatrix_Sources/GetByTargetDimensionEntityId/149ad88e-74e7-475a-8cae-b58302f3b87f"
+    valueValueMember="Id" />
 </x:file>

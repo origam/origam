@@ -1,0 +1,25 @@
+﻿
+ALTER TABLE [WorkQueue] ADD CONSTRAINT FK_WorkQueue_refRemovalAsapStateMachineEventTypeId_AsapStateMachineEventType
+	FOREIGN KEY (
+		[refRemovalAsapStateMachineEventTypeId]
+	)
+
+	REFERENCES [AsapStateMachineEventType] (
+		[Id]
+	)
+ALTER TABLE [WorkQueue] ADD CONSTRAINT FK_WorkQueue_refCreationAsapStateMachineEventTypeId_AsapStateMachineEventType
+	FOREIGN KEY (
+		[refCreationAsapStateMachineEventTypeId]
+	)
+
+	REFERENCES [AsapStateMachineEventType] (
+		[Id]
+	)
+ALTER TABLE [WorkQueue] ADD CONSTRAINT FK_WorkQueue_refWorkQueueExternalSourceTypeId_WorkQueueExternalSourceType
+	FOREIGN KEY (
+		[refWorkQueueExternalSourceTypeId]
+	)
+
+	REFERENCES [WorkQueueExternalSourceType] (
+		[Id]
+	)

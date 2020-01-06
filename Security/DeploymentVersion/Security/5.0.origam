@@ -13,6 +13,7 @@
       commandText="-***-ExternalFile:5.0.origam___commandText___ad4d61c8-d78c-4e98-b2aa-2d5ef67db1ae.txt"
       x:id="ad4d61c8-d78c-4e98-b2aa-2d5ef67db1ae"
       name="00020_RenameColumns"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
@@ -21,6 +22,7 @@
       commandText="-***-ExternalFile:5.0.origam___commandText___d5ef99ec-a528-4c68-afb9-918bcf5141be.txt"
       x:id="d5ef99ec-a528-4c68-afb9-918bcf5141be"
       name="00025_DropRenamingProcedure"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
@@ -29,6 +31,7 @@
       commandText="-***-ExternalFile:5.0.origam___commandText___27e7644e-46e0-4acf-b685-a5abfbaf12e6.txt"
       x:id="27e7644e-46e0-4acf-b685-a5abfbaf12e6"
       name="00010_RenameTables"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
@@ -37,6 +40,7 @@
       commandText="-***-ExternalFile:5.0.origam___commandText___bc1033c4-048d-414b-9531-e596f9b7596d.txt"
       x:id="bc1033c4-048d-414b-9531-e596f9b7596d"
       name="00015_CreateRenamingProcedure"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>

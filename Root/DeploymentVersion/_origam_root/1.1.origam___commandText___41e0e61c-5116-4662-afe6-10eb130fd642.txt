@@ -1,0 +1,22 @@
+﻿CREATE TABLE [AsapPanelFilterDetail] (
+	[StringValue] NVARCHAR(300) NULL,
+	[StringValue2] NVARCHAR(300) NULL,
+	[BoolValue2] BIT NULL,
+	[Operator] INT NULL,
+	[refAsapPanelFilterId] UNIQUEIDENTIFIER NOT NULL,
+	[ColumnName] NVARCHAR(300) NOT NULL,
+	[CurrencyValue2] MONEY NULL,
+	[GuidValue] UNIQUEIDENTIFIER NULL,
+	[CurrencyValue] MONEY NULL,
+	[BoolValue] BIT NULL,
+	[GuidValue2] UNIQUEIDENTIFIER NULL,
+	[DateValue] DATETIME NULL,
+	[DateValue2] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL,
+	[RecordCreatedServer] DATETIME NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordUpdatedServer] DATETIME NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL)
+CREATE INDEX [ix_refAsapPanelFilterId] ON [AsapPanelFilterDetail] ([refAsapPanelFilterId] ASC)

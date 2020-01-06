@@ -1,8 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Feature
-    name="BETA"
     abstract="false"
     x:id="b4e5a311-94f6-49e4-8966-96c078447f1a"
+    name="BETA"
     x:type="Origam.Schema.Feature" />
 </x:file>

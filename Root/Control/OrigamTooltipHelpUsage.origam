@@ -1,16 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Control
-    toolboxVisibility="FormDesigner"
-    typeName="Origam.Schema.GuiModel.PanelControlSet"
-    namespace="Origam.Schema.GuiModel"
-    isComplex="true"
-    requestSaveAfterChangeAllowed="false"
-    name="OrigamTooltipHelpUsage"
     abstract="false"
-    screenSection="Root/PanelControlSet/__system/OrigamTooltipHelpUsage.origam#OrigamTooltipHelpUsage/9d9ca4f4-0118-4dc6-ae33-4ab0be27928c"
     x:id="1551571a-49f3-44c9-8b12-c6fbb15f9c3f"
-    x:type="Origam.Schema.GuiModel.ControlItem">
+    isComplex="true"
+    name="OrigamTooltipHelpUsage"
+    namespace="Origam.Schema.GuiModel"
+    requestSaveAfterChangeAllowed="false"
+    screenSection="Root/PanelControlSet/__system/OrigamTooltipHelpUsage.origam#OrigamTooltipHelpUsage/9d9ca4f4-0118-4dc6-ae33-4ab0be27928c"
+    toolboxVisibility="FormDesigner"
+    x:type="Origam.Schema.GuiModel.ControlItem"
+    typeName="Origam.Schema.GuiModel.PanelControlSet">
     <ancestor
       ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
       x:id="9be05dd9-ea18-4399-a37e-2e33ea95040a"

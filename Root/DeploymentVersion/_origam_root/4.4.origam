@@ -1,18 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DeploymentVersion
-    version="4.4"
-    name="4.4"
     abstract="false"
     x:id="be376b63-c317-4f25-8f8b-db42d1646a8a"
-    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    name="4.4"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="4.4">
     <DeploymentUpdateScriptActivity
-      activityOrder="10"
-      name="00010_OrigamStyleColor_values"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="10"
       commandText="-***-ExternalFile:4.4.origam___commandText___16947a96-a71a-4303-a6f1-480de7389cbf.txt"
       x:id="16947a96-a71a-4303-a6f1-480de7389cbf"
+      name="00010_OrigamStyleColor_values"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>
 </x:file>

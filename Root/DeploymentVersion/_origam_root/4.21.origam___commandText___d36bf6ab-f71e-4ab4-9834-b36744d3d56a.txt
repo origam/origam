@@ -1,4 +1,4 @@
-DECLARE pk_cursor CURSOR
+﻿DECLARE pk_cursor CURSOR
    FOR
 	SELECT OBJECT_NAME(parent_object_id), name
 	FROM sys.key_constraints WHERE type = 'PK'

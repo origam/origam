@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <group
-    rootItemType="DataConstant"
-    name="DimensionType"
     x:id="8c58d3aa-fd9c-4db5-8122-106789c54dad"
     x:isFolder="true"
+    name="DimensionType"
+    rootItemType="DataConstant"
     x:type="Origam.Schema.SchemaItemGroup" />
 </x:file>

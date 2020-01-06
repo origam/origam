@@ -1,22 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="false"
-    name="DimensionTransformationMatrix"
     abstract="false"
     x:id="d6e8b2e4-3ef8-42e8-83b9-18258e611bf2"
+    localized="false"
+    name="DimensionTransformationMatrix"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="true"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="DimensionTransformationMatrix"
       abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/Dimensions/DimensionTransformationMatrix.origam#DimensionTransformationMatrix/9bca7b53-71a2-418b-b616-d2e0bd884fba"
       x:id="60358244-ab2a-4f1e-965c-2e09beb41609"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="DimensionTransformationMatrix"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
   </DataStructure>
 </x:file>

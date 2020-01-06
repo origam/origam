@@ -1,18 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DeploymentVersion
-    version="1.2.0"
-    name="1.2.0"
     abstract="false"
     x:id="460c7774-78b9-4e72-9779-c5294c8d64d0"
-    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    name="1.2.0"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="1.2.0">
     <DeploymentUpdateScriptActivity
-      activityOrder="10"
-      name="00010_AssignExistingRoles_to_BuiltInSuperUser"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="10"
       commandText="-***-ExternalFile:1.2.0.origam___commandText___83c01f3e-4757-4389-b24b-2ba5e96c2f35.txt"
       x:id="83c01f3e-4757-4389-b24b-2ba5e96c2f35"
+      name="00010_AssignExistingRoles_to_BuiltInSuperUser"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>
 </x:file>

@@ -1,61 +1,61 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="false"
-    name="LookupOrigamTooltipHelpSubcontext_IdString"
     abstract="false"
     x:id="15f2aaa6-6a04-4504-9b50-ff632da1d91e"
+    localized="false"
+    name="LookupOrigamTooltipHelpSubcontext_IdString"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="false"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="OrigamTooltipHelpSubcontext"
       abstract="false"
+      allFields="false"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/__system/OrigamTooltipHelpSubcontext.origam#OrigamTooltipHelpSubcontext/8aff5d19-94bc-4e89-a73a-9c17da31b373"
       x:id="7cc19a7e-3b35-479b-94f1-7c6b0a59c3b3"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamTooltipHelpSubcontext"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
       <DataStructureColumn
-        useLookupValue="false"
-        useCopiedValue="false"
-        writeOnly="false"
-        aggregation="None"
-        xmlMappingType="Default"
-        upsertType="Replace"
-        name="IdString"
         abstract="false"
+        aggregation="None"
         field="Root/DataEntity/__system/OrigamTooltipHelpSubcontext.origam#OrigamTooltipHelpSubcontext/IdString/28074fbf-9700-45a1-8a76-67669dd00654"
         x:id="27a91987-7d17-46ab-94f9-6b180c107473"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-      <DataStructureColumn
-        useLookupValue="false"
-        useCopiedValue="false"
-        writeOnly="false"
-        aggregation="None"
-        xmlMappingType="Default"
+        name="IdString"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
         upsertType="Replace"
-        name="Id"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
         abstract="false"
+        aggregation="None"
         field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
         x:id="732be6f7-9490-4faa-a527-d8599f18db79"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+        name="Id"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
     </DataStructureEntity>
     <DataStructureFilterSet
-      dynamic="false"
-      name="GetId"
       abstract="false"
+      dynamic="false"
       x:id="8d365f93-0764-4400-9550-44d44de932ab"
+      name="GetId"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        passWhenParameterMatch="false"
-        name="OrigamTooltipHelpSubcontext_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpSubcontext_IdString.origam#LookupOrigamTooltipHelpSubcontext_IdString/OrigamTooltipHelpSubcontext/7cc19a7e-3b35-479b-94f1-7c6b0a59c3b3"
         filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
         x:id="77098eac-f8f5-440f-b5b8-2ca6ae518c8b"
+        name="OrigamTooltipHelpSubcontext_GetId"
+        passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
   </DataStructure>

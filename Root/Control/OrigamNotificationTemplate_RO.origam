@@ -1,16 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Control
-    toolboxVisibility="FormDesigner"
-    typeName="Origam.Schema.GuiModel.PanelControlSet"
-    namespace="Origam.Schema.GuiModel"
-    isComplex="true"
-    requestSaveAfterChangeAllowed="false"
-    name="OrigamNotificationTemplate_RO"
     abstract="false"
-    screenSection="Root/PanelControlSet/__system/OrigamNotificationTemplate_RO.origam#OrigamNotificationTemplate_RO/314b26c8-b8de-47a5-9343-879c1314e701"
     x:id="15dd82b5-ea4d-4c22-a8f8-692933b21412"
-    x:type="Origam.Schema.GuiModel.ControlItem">
+    isComplex="true"
+    name="OrigamNotificationTemplate_RO"
+    namespace="Origam.Schema.GuiModel"
+    requestSaveAfterChangeAllowed="false"
+    screenSection="Root/PanelControlSet/__system/OrigamNotificationTemplate_RO.origam#OrigamNotificationTemplate_RO/314b26c8-b8de-47a5-9343-879c1314e701"
+    toolboxVisibility="FormDesigner"
+    x:type="Origam.Schema.GuiModel.ControlItem"
+    typeName="Origam.Schema.GuiModel.PanelControlSet">
     <ancestor
       ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
       x:id="1098821b-2078-4305-9f8c-5a3fc36302ed"

@@ -1,4 +1,4 @@
-CREATE TABLE [AsapMapAsapMapLayer] (
+﻿CREATE TABLE [AsapMapAsapMapLayer] (
 	[DefaultEnabled] BIT NOT NULL,
 	[refAsapMapId] UNIQUEIDENTIFIER NOT NULL,
 	[refAsapMapLayerId] UNIQUEIDENTIFIER NOT NULL,

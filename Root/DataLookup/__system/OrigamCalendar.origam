@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="Name"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="Name"
-    name="OrigamCalendar"
     abstract="false"
-    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCalendar.origam#LookupOrigamCalendar/999a6b9d-107d-4d9b-b1ca-46fed64fbd63"
-    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCalendar.origam#LookupOrigamCalendar/999a6b9d-107d-4d9b-b1ca-46fed64fbd63"
-    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamCalendar.origam#LookupOrigamCalendar/GetId/b9344173-7dd3-4051-8679-574722a891ea"
+    alwaysAllowReturnToForm="false"
     x:id="dfeedb3b-b7a8-46dd-a22d-ca5c302f13e6"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCalendar.origam#LookupOrigamCalendar/999a6b9d-107d-4d9b-b1ca-46fed64fbd63"
+    listDisplayMember="Name"
+    listValueMember="Id"
+    name="OrigamCalendar"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCalendar.origam#LookupOrigamCalendar/999a6b9d-107d-4d9b-b1ca-46fed64fbd63"
+    valueDisplayMember="Name"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamCalendar.origam#LookupOrigamCalendar/GetId/b9344173-7dd3-4051-8679-574722a891ea"
+    valueValueMember="Id" />
 </x:file>

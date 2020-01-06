@@ -1,4 +1,4 @@
-INSERT INTO AsapStyleColor (Id, Name, Description, Color) VALUES ('6a2cdf6c-b357-4a7c-8e6b-e18adcc597fd', 'portal-background-color-2011', 'Portal: Background', '5000268')
+﻿INSERT INTO AsapStyleColor (Id, Name, Description, Color) VALUES ('6a2cdf6c-b357-4a7c-8e6b-e18adcc597fd', 'portal-background-color-2011', 'Portal: Background', '5000268')
 INSERT INTO AsapStyleColor (Id, Name, Description, Color) VALUES ('f52cca95-9d05-463c-9d69-37e4e1cd9a70', 'portal-font-color-2011', 'Portal: Font', '16777215')
 INSERT INTO AsapStyleColor (Id, Name, Description, Color) VALUES ('e2bfb0a6-3e3b-4bdc-9920-42f93da98b27', 'button-mouse-over-background-color-2011', 'Button: Mouse over background', '9017541')
 INSERT INTO AsapStyleColor (Id, Name, Description, Color) VALUES ('864e018c-3003-46ee-8e34-c8e3b171a440', 'grid-selection-background-color-2011', 'Grid: Selection background', '13421772')

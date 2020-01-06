@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Graphics
-    name="FolderExplore.png"
     abstract="false"
     graphicsDataByte="-***-ExternalFile:FolderExplore.png.origam___graphicsDataByte___ed606cbf-9083-4687-80dd-27a1fbaf0845.png"
     x:id="ed606cbf-9083-4687-80dd-27a1fbaf0845"
+    name="FolderExplore.png"
     x:type="Origam.Schema.GuiModel.Graphics" />
 </x:file>

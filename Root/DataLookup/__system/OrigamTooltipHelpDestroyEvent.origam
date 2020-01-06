@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="Name"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="Name"
-    name="OrigamTooltipHelpDestroyEvent"
     abstract="false"
-    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpDestroyEvent.origam#LookupOrigamTooltipHelpDestroyEvent/194a6db2-f8c6-45c2-b40d-4f76adbcdf05"
-    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpDestroyEvent.origam#LookupOrigamTooltipHelpDestroyEvent/194a6db2-f8c6-45c2-b40d-4f76adbcdf05"
-    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpDestroyEvent.origam#LookupOrigamTooltipHelpDestroyEvent/GetId/7ec14287-940b-4f35-bfc5-c1d099b1c27c"
+    alwaysAllowReturnToForm="false"
     x:id="c8dffab8-f56a-4f9d-9757-9ba387db9a9e"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpDestroyEvent.origam#LookupOrigamTooltipHelpDestroyEvent/194a6db2-f8c6-45c2-b40d-4f76adbcdf05"
+    listDisplayMember="Name"
+    listValueMember="Id"
+    name="OrigamTooltipHelpDestroyEvent"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpDestroyEvent.origam#LookupOrigamTooltipHelpDestroyEvent/194a6db2-f8c6-45c2-b40d-4f76adbcdf05"
+    valueDisplayMember="Name"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpDestroyEvent.origam#LookupOrigamTooltipHelpDestroyEvent/GetId/7ec14287-940b-4f35-bfc5-c1d099b1c27c"
+    valueValueMember="Id" />
 </x:file>

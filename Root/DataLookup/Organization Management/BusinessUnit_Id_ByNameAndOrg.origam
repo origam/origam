@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="Id"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="Id"
-    name="BusinessUnit_Id_ByNameAndOrg"
     abstract="false"
-    listDataStructure="Root/DataStructure/Organization Management/LookupBusinessUnit_Id_ByNameAndOrg.origam#LookupBusinessUnit_Id_ByNameAndOrg/6bb1b2ce-64f9-4151-85b7-0ece4da510cd"
-    valueDataStructure="Root/DataStructure/Organization Management/LookupBusinessUnit_Id_ByNameAndOrg.origam#LookupBusinessUnit_Id_ByNameAndOrg/6bb1b2ce-64f9-4151-85b7-0ece4da510cd"
-    valueMethod="Root/DataStructure/Organization Management/LookupBusinessUnit_Id_ByNameAndOrg.origam#LookupBusinessUnit_Id_ByNameAndOrg/GetByName/a3f0bccc-f4f8-4366-8c27-30a03b23ed76"
+    alwaysAllowReturnToForm="false"
     x:id="67c27fc1-b626-4613-8aa6-1863b9be7a4b"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/Organization Management/LookupBusinessUnit_Id_ByNameAndOrg.origam#LookupBusinessUnit_Id_ByNameAndOrg/6bb1b2ce-64f9-4151-85b7-0ece4da510cd"
+    listDisplayMember="Id"
+    listValueMember="Id"
+    name="BusinessUnit_Id_ByNameAndOrg"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/Organization Management/LookupBusinessUnit_Id_ByNameAndOrg.origam#LookupBusinessUnit_Id_ByNameAndOrg/6bb1b2ce-64f9-4151-85b7-0ece4da510cd"
+    valueDisplayMember="Id"
+    valueMethod="Root/DataStructure/Organization Management/LookupBusinessUnit_Id_ByNameAndOrg.origam#LookupBusinessUnit_Id_ByNameAndOrg/GetByName/a3f0bccc-f4f8-4366-8c27-30a03b23ed76"
+    valueValueMember="Id" />
 </x:file>

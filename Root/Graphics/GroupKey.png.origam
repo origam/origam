@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Graphics
-    name="GroupKey.png"
     abstract="false"
     graphicsDataByte="-***-ExternalFile:GroupKey.png.origam___graphicsDataByte___b432bf83-64da-45b0-8a6a-d683ab619194.png"
     x:id="b432bf83-64da-45b0-8a6a-d683ab619194"
+    name="GroupKey.png"
     x:type="Origam.Schema.GuiModel.Graphics" />
 </x:file>

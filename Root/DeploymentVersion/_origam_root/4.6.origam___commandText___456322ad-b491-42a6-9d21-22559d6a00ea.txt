@@ -1,4 +1,4 @@
-CREATE TABLE [AsapValidationRule] (
+﻿CREATE TABLE [AsapValidationRule] (
 	[Name] NVARCHAR(200) NOT NULL,
 	[Rule] NTEXT NOT NULL,
 	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,

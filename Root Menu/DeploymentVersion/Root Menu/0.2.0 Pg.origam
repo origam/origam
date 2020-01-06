@@ -10,45 +10,45 @@
       abstract="false"
       activityOrder="10"
       commandText="-***-ExternalFile:0.2.0 Pg.origam___commandText___3ad1c76f-01d8-4270-a680-fe15686ed94f.txt"
-      platform="PgSql"
       x:id="3ad1c76f-01d8-4270-a680-fe15686ed94f"
       name="00010_AddRole_FRM_UserProfile"
+      platform="PgSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
       abstract="false"
       activityOrder="20"
       commandText="-***-ExternalFile:0.2.0 Pg.origam___commandText___1070f092-096e-4abf-97bc-798c1728b046.txt"
-      platform="PgSql"
       x:id="1070f092-096e-4abf-97bc-798c1728b046"
       name="00020_AssignExistingRoles_to_BuiltInSuperUser"
+      platform="PgSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
       abstract="false"
       activityOrder="30"
       commandText="-***-ExternalFile:0.2.0 Pg.origam___commandText___e2ec342f-6b1a-42de-afd8-fd39785db6f7.txt"
-      platform="PgSql"
       x:id="e2ec342f-6b1a-42de-afd8-fd39785db6f7"
       name="00030_AddRole_FRM_NotificationTemplate"
+      platform="PgSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
       abstract="false"
       activityOrder="40"
       commandText="-***-ExternalFile:0.2.0 Pg.origam___commandText___03e64201-e71b-43dd-9192-1ff705ec06cb.txt"
-      platform="PgSql"
       x:id="03e64201-e71b-43dd-9192-1ff705ec06cb"
       name="00040_AddRole_FRM_OrigamOnlineUser"
+      platform="PgSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
       abstract="false"
       activityOrder="50"
       commandText="-***-ExternalFile:0.2.0 Pg.origam___commandText___80ce0444-c24c-4f7a-8312-06e3da11f355.txt"
-      platform="PgSql"
       x:id="80ce0444-c24c-4f7a-8312-06e3da11f355"
       name="00050_AddRole_FRM_UserPermissionsOverview"
+      platform="PgSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>

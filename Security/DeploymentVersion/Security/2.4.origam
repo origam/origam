@@ -12,6 +12,7 @@
       commandText="-***-ExternalFile:2.4.origam___commandText___23cc089f-fdf9-4b9c-bb93-7edde6ecf0b8.txt"
       x:id="23cc089f-fdf9-4b9c-bb93-7edde6ecf0b8"
       name="00020_Role"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
@@ -20,6 +21,7 @@
       commandText="-***-ExternalFile:2.4.origam___commandText___23ea3dd0-6184-441b-9864-92418ba3fe1c.txt"
       x:id="23ea3dd0-6184-441b-9864-92418ba3fe1c"
       name="00010_Nullable"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>

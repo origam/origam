@@ -12,6 +12,7 @@
       commandText="-***-ExternalFile:2.7_identity_user_management.origam___commandText___5288389f-12f6-45dd-bfb9-77e2b56b47e0.txt"
       x:id="5288389f-12f6-45dd-bfb9-77e2b56b47e0"
       name="00010_RenameFeature_NET_MEMBERSHIP_EXCLUSIVE_USE_TO_IDENTITY_USER_MANAGEMENT"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>

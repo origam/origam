@@ -1,49 +1,49 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="true"
-    name="OrigamNotificationTemplate"
     abstract="false"
     x:id="92c3c8b4-68a3-482b-8a90-f7142c4b17ec"
+    localized="true"
+    name="OrigamNotificationTemplate"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="true"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="OrigamNotificationTemplate"
       abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/__system/OrigamNotificationTemplate.origam#OrigamNotificationTemplate/0760e633-9e95-4f62-9443-360eaa624854"
       x:id="e6f6f1cc-ba25-445c-a262-5aa5f9ebdee7"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamNotificationTemplate"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
       <DataStructureEntity
-        allFields="false"
-        ignoreImplicitFilters="false"
-        ignoreCondition="None"
-        concurrencyHandling="Standard"
-        relationType="LeftJoin"
-        useUpsert="false"
-        name="OrigamNotificationTemplate_l10n"
         abstract="false"
+        allFields="false"
+        concurrencyHandling="Standard"
         entity="Root/DataEntity/__system/OrigamNotificationTemplate.origam#OrigamNotificationTemplate/OrigamNotificationTemplate_l10n/554b0bc6-d226-4424-8716-2211bc7aed92"
         x:id="641a1b91-ff38-4a55-80ac-a506b304fe20"
-        x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+        ignoreCondition="None"
+        ignoreImplicitFilters="false"
+        name="OrigamNotificationTemplate_l10n"
+        relationType="LeftJoin"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity"
+        useUpsert="false" />
     </DataStructureEntity>
     <DataStructureFilterSet
-      dynamic="false"
-      name="GetId"
       abstract="false"
+      dynamic="false"
       x:id="3724bd2a-9466-4129-bdfa-ca8dc8621a72"
+      name="GetId"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        passWhenParameterMatch="false"
-        name="OrigamNotificationTemplate_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamNotificationTemplate.origam#OrigamNotificationTemplate/OrigamNotificationTemplate/e6f6f1cc-ba25-445c-a262-5aa5f9ebdee7"
         filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
         x:id="5d708e20-af32-4ef8-8421-fd9b24518208"
+        name="OrigamNotificationTemplate_GetId"
+        passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
   </DataStructure>

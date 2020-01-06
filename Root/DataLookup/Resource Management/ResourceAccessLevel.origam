@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="Name"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="Name"
-    name="ResourceAccessLevel"
     abstract="false"
-    listDataStructure="Root/DataStructure/Resource Management/Lookups/LookupResourceAccessLevel.origam#LookupResourceAccessLevel/ec219662-ccef-4394-a7d2-391368acae9c"
-    valueDataStructure="Root/DataStructure/Resource Management/Lookups/LookupResourceAccessLevel.origam#LookupResourceAccessLevel/ec219662-ccef-4394-a7d2-391368acae9c"
-    valueMethod="Root/DataStructure/Resource Management/Lookups/LookupResourceAccessLevel.origam#LookupResourceAccessLevel/GetId/347aae82-7d95-4797-90a7-3f376451ec7b"
+    alwaysAllowReturnToForm="false"
     x:id="785ab7b4-decb-48c5-a0ed-ab2e40b71ac5"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/Resource Management/Lookups/LookupResourceAccessLevel.origam#LookupResourceAccessLevel/ec219662-ccef-4394-a7d2-391368acae9c"
+    listDisplayMember="Name"
+    listValueMember="Id"
+    name="ResourceAccessLevel"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/Resource Management/Lookups/LookupResourceAccessLevel.origam#LookupResourceAccessLevel/ec219662-ccef-4394-a7d2-391368acae9c"
+    valueDisplayMember="Name"
+    valueMethod="Root/DataStructure/Resource Management/Lookups/LookupResourceAccessLevel.origam#LookupResourceAccessLevel/GetId/347aae82-7d95-4797-90a7-3f376451ec7b"
+    valueValueMember="Id" />
 </x:file>

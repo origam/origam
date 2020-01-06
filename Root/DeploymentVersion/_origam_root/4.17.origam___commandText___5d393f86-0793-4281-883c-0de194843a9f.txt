@@ -1,4 +1,4 @@
-INSERT INTO WorkQueueCommandType (Id, Name, RecordCreated) 
+﻿INSERT INTO WorkQueueCommandType (Id, Name, RecordCreated) 
 VALUES ('98aaf208-dd29-48b0-9a37-7549918dd86d', 'Archive To Queue', getdate())
 INSERT INTO WorkQueueCommandType (Id, Name, RecordCreated) 
 VALUES ('e620695d-6054-4b0a-af2b-1d3a5349b274', 'Execute Queue Loader', getdate())

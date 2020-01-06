@@ -1,4 +1,4 @@
-
+﻿
 ALTER TABLE [AsapStateMachineEventType_l10n] ADD CONSTRAINT FK_AsapStateMachineEventType_l10n_refLanguageId_Language
 	FOREIGN KEY (
 		[refLanguageId]

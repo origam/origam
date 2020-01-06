@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE [BusinessUnit] ADD CONSTRAINT FK_BusinessUnit_refOrganizationId_Organization
+	FOREIGN KEY (
+		[refOrganizationId]
+	)
+
+	REFERENCES [Organization] (
+		[Id]
+	)

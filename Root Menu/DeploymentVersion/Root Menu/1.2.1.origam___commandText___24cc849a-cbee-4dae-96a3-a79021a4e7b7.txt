@@ -1,4 +1,4 @@
-INSERT INTO AsapApplicationRole (Id, Name, Description, IsSystemRole , RecordCreated)
+﻿INSERT INTO AsapApplicationRole (Id, Name, Description, IsSystemRole , RecordCreated)
 VALUES ('43a2129a-f377-4854-9d4f-7fdfccea4cbb', 'FRM_NotificationTemplate', 'Menu > Settings > General > Notification Templates', 1, getdate())
 -- add to the built-in SuperUser role
 INSERT INTO AsapRoleAsapApplicationRole (Id, refAsapRoleId, refAsapApplicationRoleId, RecordCreated, IsFormReadOnly)

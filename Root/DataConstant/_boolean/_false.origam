@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataConstant
-    dataType="Boolean"
-    value="false"
-    userDefinable="false"
-    name="_false"
     abstract="false"
+    dataType="Boolean"
     x:id="9e301a8b-b356-42fa-ae57-3be3a28650d7"
-    x:type="Origam.Schema.EntityModel.DataConstant" />
+    name="_false"
+    x:type="Origam.Schema.EntityModel.DataConstant"
+    userDefinable="false"
+    value="false" />
 </x:file>

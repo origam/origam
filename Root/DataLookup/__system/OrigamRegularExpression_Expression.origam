@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="Expression"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="Expression"
-    name="OrigamRegularExpression_Expression"
     abstract="false"
-    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamRegularExpression_Expression.origam#LookupOrigamRegularExpression_Expression/7a1f617b-644d-468e-87a4-03b20343cacb"
-    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamRegularExpression_Expression.origam#LookupOrigamRegularExpression_Expression/7a1f617b-644d-468e-87a4-03b20343cacb"
-    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamRegularExpression_Expression.origam#LookupOrigamRegularExpression_Expression/GetId/e624887f-25aa-4702-be02-0b4d9c13b4e9"
+    alwaysAllowReturnToForm="false"
     x:id="2c00faae-d522-4b04-b42c-de97b5c12dfb"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamRegularExpression_Expression.origam#LookupOrigamRegularExpression_Expression/7a1f617b-644d-468e-87a4-03b20343cacb"
+    listDisplayMember="Expression"
+    listValueMember="Id"
+    name="OrigamRegularExpression_Expression"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamRegularExpression_Expression.origam#LookupOrigamRegularExpression_Expression/7a1f617b-644d-468e-87a4-03b20343cacb"
+    valueDisplayMember="Expression"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamRegularExpression_Expression.origam#LookupOrigamRegularExpression_Expression/GetId/e624887f-25aa-4702-be02-0b4d9c13b4e9"
+    valueValueMember="Id" />
 </x:file>

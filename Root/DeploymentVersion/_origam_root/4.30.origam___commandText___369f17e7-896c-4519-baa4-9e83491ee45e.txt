@@ -1,2 +1,2 @@
-INSERT INTO [dbo].[WorkQueueExternalSourceType] ([Id], [Name])
+﻿INSERT INTO [dbo].[WorkQueueExternalSourceType] ([Id], [Name])
 VALUES ('5c43e42b-d9e4-4a2e-9d3c-d12193acc390', 'Indexed File')

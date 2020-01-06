@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="Rule"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="Rule"
-    name="OrigamValidationRule_Rule"
     abstract="false"
-    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamValidationRule_Rule.origam#LookupOrigamValidationRule_Rule/ad2545cb-945a-49fd-af7f-103bcc670977"
-    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamValidationRule_Rule.origam#LookupOrigamValidationRule_Rule/ad2545cb-945a-49fd-af7f-103bcc670977"
-    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamValidationRule_Rule.origam#LookupOrigamValidationRule_Rule/GetId/0b246bc7-fcb3-46a3-ba9f-d5275f1a9f12"
+    alwaysAllowReturnToForm="false"
     x:id="7908622a-9c06-49ea-a008-1a48fc38aea1"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamValidationRule_Rule.origam#LookupOrigamValidationRule_Rule/ad2545cb-945a-49fd-af7f-103bcc670977"
+    listDisplayMember="Rule"
+    listValueMember="Id"
+    name="OrigamValidationRule_Rule"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamValidationRule_Rule.origam#LookupOrigamValidationRule_Rule/ad2545cb-945a-49fd-af7f-103bcc670977"
+    valueDisplayMember="Rule"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamValidationRule_Rule.origam#LookupOrigamValidationRule_Rule/GetId/0b246bc7-fcb3-46a3-ba9f-d5275f1a9f12"
+    valueValueMember="Id" />
 </x:file>

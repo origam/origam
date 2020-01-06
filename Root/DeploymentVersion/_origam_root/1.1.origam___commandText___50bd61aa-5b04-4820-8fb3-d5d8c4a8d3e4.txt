@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE [AsapTooltipHelpUsage] ADD CONSTRAINT FK_AsapTooltipHelpUsage_refBusinessPartnerId_BusinessPartner
+	FOREIGN KEY (
+		[refBusinessPartnerId]
+	)
+
+	REFERENCES [BusinessPartner] (
+		[Id]
+	)
+ALTER TABLE [AsapTooltipHelpUsage] ADD CONSTRAINT FK_AsapTooltipHelpUsage_refAsapTooltipHelpId_AsapTooltipHelp
+	FOREIGN KEY (
+		[refAsapTooltipHelpId]
+	)
+
+	REFERENCES [AsapTooltipHelp] (
+		[Id]
+	)

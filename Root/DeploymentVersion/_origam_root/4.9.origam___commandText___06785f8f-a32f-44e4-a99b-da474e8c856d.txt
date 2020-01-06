@@ -1,2 +1,2 @@
-ALTER TABLE AsapMapLayer DROP COLUMN DefaultEnabled
+﻿ALTER TABLE AsapMapLayer DROP COLUMN DefaultEnabled
 DROP INDEX ix_Unique on AsapMapLayer

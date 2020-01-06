@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="IntValue"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="IntValue"
-    name="OrigamParameters_IntValue"
     abstract="false"
-    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamParameters.origam#LookupOrigamParameters/bd424149-b499-49d2-9ae3-36a155ea3145"
-    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamParameters.origam#LookupOrigamParameters/bd424149-b499-49d2-9ae3-36a155ea3145"
-    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamParameters.origam#LookupOrigamParameters/GetId/000b8686-a08d-4f53-8d66-7dd4f1297492"
+    alwaysAllowReturnToForm="false"
     x:id="852438ec-2c48-4ea7-b9b3-c554555bc93b"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamParameters.origam#LookupOrigamParameters/bd424149-b499-49d2-9ae3-36a155ea3145"
+    listDisplayMember="IntValue"
+    listValueMember="Id"
+    name="OrigamParameters_IntValue"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamParameters.origam#LookupOrigamParameters/bd424149-b499-49d2-9ae3-36a155ea3145"
+    valueDisplayMember="IntValue"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamParameters.origam#LookupOrigamParameters/GetId/000b8686-a08d-4f53-8d66-7dd4f1297492"
+    valueValueMember="Id" />
 </x:file>

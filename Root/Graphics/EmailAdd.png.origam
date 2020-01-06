@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Graphics
-    name="EmailAdd.png"
     abstract="false"
     graphicsDataByte="-***-ExternalFile:EmailAdd.png.origam___graphicsDataByte___227a8681-47b2-43b7-b9a5-1280026965a6.png"
     x:id="227a8681-47b2-43b7-b9a5-1280026965a6"
+    name="EmailAdd.png"
     x:type="Origam.Schema.GuiModel.Graphics" />
 </x:file>

@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Function
-    dataType="Boolean"
-    type="Standard"
-    name="Equal"
     abstract="false"
+    dataType="Boolean"
     x:id="6882ebdc-54d4-4847-830d-defd9c9540a4"
+    name="Equal"
+    type="Standard"
     x:type="Origam.Schema.EntityModel.Function">
     <FunctionParameter
-      ordinalPosition="1"
-      name="Right"
       abstract="false"
       x:id="b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+      name="Right"
+      ordinalPosition="1"
       x:type="Origam.Schema.EntityModel.FunctionParameter" />
     <FunctionParameter
-      name="Left"
       abstract="false"
       x:id="eb0c430b-1247-4f2f-9e37-ecb931a98498"
+      name="Left"
       x:type="Origam.Schema.EntityModel.FunctionParameter" />
   </Function>
 </x:file>

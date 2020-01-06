@@ -1,21 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="Name"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="Name"
-    name="Dimension1_Purchase"
     abstract="false"
-    listDataStructure="Root/DataStructure/Dimensions/Lookups/LookupDimension1.origam#LookupDimension1/b146569c-e609-431b-9254-afbea016bcb7"
-    valueDataStructure="Root/DataStructure/Dimensions/Lookups/LookupDimension1.origam#LookupDimension1/b146569c-e609-431b-9254-afbea016bcb7"
-    listMethod="Root/DataStructure/Dimensions/Lookups/LookupDimension1.origam#LookupDimension1/GetPurchase/e4c011b0-df09-483d-953e-342885b33a55"
-    valueMethod="Root/DataStructure/Dimensions/Lookups/LookupDimension1.origam#LookupDimension1/GetId/0f64b9e6-3009-414e-8976-b6c127f9d7d3"
+    alwaysAllowReturnToForm="false"
     x:id="6dccc076-892b-4ce4-b038-99ba9ea117d0"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/Dimensions/Lookups/LookupDimension1.origam#LookupDimension1/b146569c-e609-431b-9254-afbea016bcb7"
+    listDisplayMember="Name"
+    listMethod="Root/DataStructure/Dimensions/Lookups/LookupDimension1.origam#LookupDimension1/GetPurchase/e4c011b0-df09-483d-953e-342885b33a55"
+    listValueMember="Id"
+    name="Dimension1_Purchase"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/Dimensions/Lookups/LookupDimension1.origam#LookupDimension1/b146569c-e609-431b-9254-afbea016bcb7"
+    valueDisplayMember="Name"
+    valueMethod="Root/DataStructure/Dimensions/Lookups/LookupDimension1.origam#LookupDimension1/GetId/0f64b9e6-3009-414e-8976-b6c127f9d7d3"
+    valueValueMember="Id" />
 </x:file>

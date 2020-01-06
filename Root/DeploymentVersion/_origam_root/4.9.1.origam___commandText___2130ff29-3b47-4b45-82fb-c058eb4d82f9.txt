@@ -1,1 +1,1 @@
-CREATE UNIQUE INDEX [ix_SortOrder] ON [AsapMapAsapMapLayer] ([refAsapMapId] ASC, [SortOrder] ASC)
+﻿CREATE UNIQUE INDEX [ix_SortOrder] ON [AsapMapAsapMapLayer] ([refAsapMapId] ASC, [SortOrder] ASC)

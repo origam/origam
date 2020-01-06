@@ -1,12 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataConstant
-    dataType="UniqueIdentifier"
-    value="26478b8c-b533-49ad-91f9-b3f0bba8ffc8"
-    userDefinable="false"
-    name="OrigamExceptionSeverity_High"
     abstract="false"
-    lookup="Root/DataLookup/__system/OrigamExceptionSeverity.origam#OrigamExceptionSeverity/c7d6f5af-5758-4baf-a864-624d087991c0"
+    dataType="UniqueIdentifier"
     x:id="adb36999-57ec-44e8-bf73-d785fe2a7e33"
-    x:type="Origam.Schema.EntityModel.DataConstant" />
+    lookup="Root/DataLookup/__system/OrigamExceptionSeverity.origam#OrigamExceptionSeverity/c7d6f5af-5758-4baf-a864-624d087991c0"
+    name="OrigamExceptionSeverity_High"
+    x:type="Origam.Schema.EntityModel.DataConstant"
+    userDefinable="false"
+    value="26478b8c-b533-49ad-91f9-b3f0bba8ffc8" />
 </x:file>

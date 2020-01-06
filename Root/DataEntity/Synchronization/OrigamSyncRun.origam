@@ -1,247 +1,247 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
-    mappedObjectName="OrigamSyncRun"
+    abstract="false"
+    audit="None"
     databaseObjectType="Table"
     generateDeploymentScript="true"
-    readOnly="false"
-    audit="None"
-    label="Historie synchronizací"
-    name="OrigamSyncRun"
-    abstract="false"
     x:id="bfc2edfb-ada8-4b4f-bd9f-722fea74fc54"
+    label="Historie synchronizací"
+    mappedObjectName="OrigamSyncRun"
+    name="OrigamSyncRun"
+    readOnly="false"
     x:type="Origam.Schema.EntityModel.TableMappingItem">
     <ancestor
       ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
       x:id="e86f509d-e3df-46bb-8b0a-b2f5ebf43ffd"
       x:type="Origam.Schema.SchemaItemAncestor" />
     <DataEntityColumn
-      mappedColumnName="refOrigamSyncConfigId"
-      excludeFromAuditing="false"
-      dataType="UniqueIdentifier"
-      allowNulls="false"
-      isPrimaryKey="false"
-      label="Konfigurace"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
-      name="refOrigamSyncConfigId"
       abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
       defaultLookup="Root/DataLookup/Synchronization/OrigamSyncConfig.origam#OrigamSyncConfig/41e84d5c-ff81-44c7-b533-6407e48407b2"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
       foreignKeyEntity="Root/DataEntity/Synchronization/OrigamSyncConfig.origam#OrigamSyncConfig/2c82b3bf-7113-46a9-a4d5-32ab2c968e71"
       foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
       x:id="ed566d7a-565a-4215-863b-04b16e695762"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+      isPrimaryKey="false"
+      label="Konfigurace"
+      mappedColumnName="refOrigamSyncConfigId"
+      name="refOrigamSyncConfigId"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
     <DataEntityColumn
-      mappedColumnName="ReferenceCode"
-      excludeFromAuditing="false"
-      dataType="String"
-      dataLength="40"
+      abstract="false"
       allowNulls="false"
+      autoIncrement="false"
+      dataLength="40"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="ea40325d-37c9-4cfc-b2b7-222b7942fbf2"
       isPrimaryKey="false"
       label="Číslo"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
+      mappedColumnName="ReferenceCode"
       name="ReferenceCode"
-      abstract="false"
-      x:id="ea40325d-37c9-4cfc-b2b7-222b7942fbf2"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
     <DataEntityColumn
-      mappedColumnName="TimeEnd"
-      excludeFromAuditing="false"
-      dataType="Date"
+      abstract="false"
       allowNulls="true"
+      autoIncrement="false"
+      dataType="Date"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="293b3a37-f200-4f8e-9772-642700a01b0b"
       isPrimaryKey="false"
       label="Konec"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
+      mappedColumnName="TimeEnd"
       name="TimeEnd"
-      abstract="false"
-      x:id="293b3a37-f200-4f8e-9772-642700a01b0b"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
-    <DataEntityColumn
-      aggregationType="Count"
-      dataType="Integer"
-      allowNulls="true"
-      isPrimaryKey="false"
-      label="Úspěšných záznamů"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
       onCopyAction="Copy"
-      name="CountSuccess"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
       abstract="false"
-      relation="Root/DataEntity/Synchronization/OrigamSyncRun.origam#OrigamSyncRun/OrigamSyncRunLog_Success/f52e3b30-18f8-4def-bdbe-33957cf8d64c"
+      aggregationType="Count"
+      allowNulls="true"
+      autoIncrement="false"
+      dataType="Integer"
+      excludeFromAllFields="false"
       field="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/IsSuccess/aa5b13a3-926b-4582-a6fc-d2798bfb6724"
       x:id="809be64b-0778-4bfa-9576-8df58ebccad1"
-      x:type="Origam.Schema.EntityModel.AggregatedColumn" />
-    <DataEntityColumn
-      aggregationType="Count"
-      dataType="Integer"
-      allowNulls="true"
       isPrimaryKey="false"
-      label="Neúspěšných záznamů"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
+      label="Úspěšných záznamů"
+      name="CountSuccess"
       onCopyAction="Copy"
-      name="CountFailures"
+      relation="Root/DataEntity/Synchronization/OrigamSyncRun.origam#OrigamSyncRun/OrigamSyncRunLog_Success/f52e3b30-18f8-4def-bdbe-33957cf8d64c"
+      x:type="Origam.Schema.EntityModel.AggregatedColumn"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
       abstract="false"
-      relation="Root/DataEntity/Synchronization/OrigamSyncRun.origam#OrigamSyncRun/OrigamSyncRunLog_Failures/cc0bc605-c2a6-47bb-8c2f-7f04083ec48f"
+      aggregationType="Count"
+      allowNulls="true"
+      autoIncrement="false"
+      dataType="Integer"
+      excludeFromAllFields="false"
       field="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/IsSuccess/aa5b13a3-926b-4582-a6fc-d2798bfb6724"
       x:id="4e5ef294-fa28-43ea-9c69-92ac7d7cb557"
-      x:type="Origam.Schema.EntityModel.AggregatedColumn" />
+      isPrimaryKey="false"
+      label="Neúspěšných záznamů"
+      name="CountFailures"
+      onCopyAction="Copy"
+      relation="Root/DataEntity/Synchronization/OrigamSyncRun.origam#OrigamSyncRun/OrigamSyncRunLog_Failures/cc0bc605-c2a6-47bb-8c2f-7f04083ec48f"
+      x:type="Origam.Schema.EntityModel.AggregatedColumn"
+      xmlMappingType="Attribute" />
     <DataEntityColumn
-      mappedColumnName="TimeStart"
-      excludeFromAuditing="false"
-      dataType="Date"
+      abstract="false"
       allowNulls="false"
+      autoIncrement="false"
+      dataType="Date"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="3a15d9fd-e214-4440-bb3e-f92aa215c981"
       isPrimaryKey="false"
       label="Začátek"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
+      mappedColumnName="TimeStart"
       name="TimeStart"
-      abstract="false"
-      x:id="3a15d9fd-e214-4440-bb3e-f92aa215c981"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
     <DataEntityIndex
-      unique="false"
-      generateDeploymentScript="false"
-      name="ix_refOrigamSyncConfigId"
       abstract="false"
+      generateDeploymentScript="false"
       x:id="743be78a-78ae-4619-90a8-f370ae5b35ca"
-      x:type="Origam.Schema.EntityModel.DataEntityIndex">
+      name="ix_refOrigamSyncConfigId"
+      x:type="Origam.Schema.EntityModel.DataEntityIndex"
+      unique="false">
       <DataEntityIndexField
-        sortOrder="Ascending"
-        name="0_refOrigamSyncConfigId"
         abstract="false"
         field="Root/DataEntity/Synchronization/OrigamSyncRun.origam#OrigamSyncRun/refOrigamSyncConfigId/ed566d7a-565a-4215-863b-04b16e695762"
         x:id="7cb0c585-f08c-4326-8f2d-01f9b0cd5592"
+        name="0_refOrigamSyncConfigId"
+        sortOrder="Ascending"
         x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
     </DataEntityIndex>
     <EntityFilter
-      name="GetByOrigamSyncConfigId"
       abstract="false"
       x:id="6727d668-9cdc-48e3-8126-12eae21ec5aa"
+      name="GetByOrigamSyncConfigId"
       x:type="Origam.Schema.EntityModel.EntityFilter">
       <DataEntityColumn
-        forceDatabaseCalculation="false"
-        dataType="Boolean"
-        allowNulls="true"
-        isPrimaryKey="false"
-        excludeFromAllFields="false"
-        autoIncrement="false"
-        xmlMappingType="Element"
-        onCopyAction="Copy"
-        name="="
         abstract="false"
+        allowNulls="true"
+        autoIncrement="false"
+        dataType="Boolean"
+        excludeFromAllFields="false"
+        forceDatabaseCalculation="false"
         function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
         x:id="e13d9c25-b705-4528-8725-35dfb18d081c"
-        x:type="Origam.Schema.EntityModel.FunctionCall">
+        isPrimaryKey="false"
+        name="="
+        onCopyAction="Copy"
+        x:type="Origam.Schema.EntityModel.FunctionCall"
+        xmlMappingType="Element">
         <FunctionCallParameter
-          name="Left"
           abstract="false"
-          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
           x:id="31cbb3e6-5e7b-4d78-863a-042804816bbc"
+          name="Left"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
           x:type="Origam.Schema.EntityModel.FunctionCallParameter">
           <EntityColumnReference
-            name="refOrigamSyncConfigId"
             abstract="false"
             field="Root/DataEntity/Synchronization/OrigamSyncRun.origam#OrigamSyncRun/refOrigamSyncConfigId/ed566d7a-565a-4215-863b-04b16e695762"
             x:id="89a8e288-2502-4e12-b52a-60bcd0137321"
+            name="refOrigamSyncConfigId"
             x:type="Origam.Schema.EntityModel.EntityColumnReference" />
         </FunctionCallParameter>
         <FunctionCallParameter
-          name="Right"
           abstract="false"
-          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
           x:id="8bf22d1e-ff39-48dd-9606-8b37a7d0e370"
+          name="Right"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
           x:type="Origam.Schema.EntityModel.FunctionCallParameter">
           <ParameterReference
-            name="parOrigamSyncConfigId"
             abstract="false"
-            parameter="Root/DataEntity/Synchronization/OrigamSyncRun.origam#OrigamSyncRun/parOrigamSyncConfigId/bac0b5a0-8397-4cca-aa04-de9344e9cab1"
             x:id="c2cf3aa0-1d74-467d-b114-f3bb167a2fa8"
+            name="parOrigamSyncConfigId"
+            parameter="Root/DataEntity/Synchronization/OrigamSyncRun.origam#OrigamSyncRun/parOrigamSyncConfigId/bac0b5a0-8397-4cca-aa04-de9344e9cab1"
             x:type="Origam.Schema.ParameterReference" />
         </FunctionCallParameter>
       </DataEntityColumn>
     </EntityFilter>
     <EntityRelation
-      parentChild="true"
-      selfJoin="false"
-      or="false"
-      name="OrigamSyncRunLog_Success"
       abstract="false"
-      relatedEntity="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/6f097c8f-ff61-430d-a73d-6113f9420726"
       x:id="f52e3b30-18f8-4def-bdbe-33957cf8d64c"
+      name="OrigamSyncRunLog_Success"
+      or="false"
+      parentChild="true"
+      relatedEntity="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/6f097c8f-ff61-430d-a73d-6113f9420726"
+      selfJoin="false"
       x:type="Origam.Schema.EntityModel.EntityRelationItem">
       <EntityRelationColumnPair
-        name="OrigamSyncRunLog_SuccessKey1"
         abstract="false"
         baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-        relatedEntityField="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/refOrigamSyncRunId/6e354e73-1542-42c2-81a1-a2b291edcfbf"
         x:id="fd60c5e2-ff24-4292-8370-d502cd162d0e"
+        name="OrigamSyncRunLog_SuccessKey1"
+        relatedEntityField="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/refOrigamSyncRunId/6e354e73-1542-42c2-81a1-a2b291edcfbf"
         x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
       <EntityRelationFilter
-        name="GetSuccess"
         abstract="false"
         filter="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/GetSuccess/e45d8b83-1c6b-41f2-9ba5-2042da6904ba"
         x:id="60ffed47-dfcf-41a2-8b3c-be76611dab14"
+        name="GetSuccess"
         x:type="Origam.Schema.EntityModel.EntityRelationFilter" />
     </EntityRelation>
     <EntityRelation
-      parentChild="true"
-      selfJoin="false"
-      or="false"
-      name="OrigamSyncRunLog"
       abstract="false"
-      relatedEntity="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/6f097c8f-ff61-430d-a73d-6113f9420726"
       x:id="2c34a7ae-694f-4b10-9259-6fda672eb70d"
+      name="OrigamSyncRunLog"
+      or="false"
+      parentChild="true"
+      relatedEntity="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/6f097c8f-ff61-430d-a73d-6113f9420726"
+      selfJoin="false"
       x:type="Origam.Schema.EntityModel.EntityRelationItem">
       <EntityRelationColumnPair
-        name="OrigamSyncRunLogKey1"
         abstract="false"
         baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-        relatedEntityField="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/refOrigamSyncRunId/6e354e73-1542-42c2-81a1-a2b291edcfbf"
         x:id="e738063c-ad22-4f47-af14-ef55ad733207"
+        name="OrigamSyncRunLogKey1"
+        relatedEntityField="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/refOrigamSyncRunId/6e354e73-1542-42c2-81a1-a2b291edcfbf"
         x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
     </EntityRelation>
     <EntityRelation
-      parentChild="true"
-      selfJoin="false"
-      or="false"
-      name="OrigamSyncRunLog_Failures"
       abstract="false"
-      relatedEntity="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/6f097c8f-ff61-430d-a73d-6113f9420726"
       x:id="cc0bc605-c2a6-47bb-8c2f-7f04083ec48f"
+      name="OrigamSyncRunLog_Failures"
+      or="false"
+      parentChild="true"
+      relatedEntity="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/6f097c8f-ff61-430d-a73d-6113f9420726"
+      selfJoin="false"
       x:type="Origam.Schema.EntityModel.EntityRelationItem">
       <EntityRelationColumnPair
-        name="OrigamSyncRunLog_FailuresKey1"
         abstract="false"
         baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-        relatedEntityField="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/refOrigamSyncRunId/6e354e73-1542-42c2-81a1-a2b291edcfbf"
         x:id="4495b32e-b5cd-481e-a4ab-fcf170118153"
+        name="OrigamSyncRunLog_FailuresKey1"
+        relatedEntityField="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/refOrigamSyncRunId/6e354e73-1542-42c2-81a1-a2b291edcfbf"
         x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
       <EntityRelationFilter
-        name="GetFailures"
         abstract="false"
         filter="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/GetFailures/f245ddfa-e518-4c67-b4da-21c4a239140f"
         x:id="cee94997-9b6f-40da-a2e0-c8cc02ac2262"
+        name="GetFailures"
         x:type="Origam.Schema.EntityModel.EntityRelationFilter" />
     </EntityRelation>
     <Parameter
-      dataType="UniqueIdentifier"
-      allowNulls="false"
-      name="parOrigamSyncConfigId"
       abstract="false"
+      allowNulls="false"
+      dataType="UniqueIdentifier"
       x:id="bac0b5a0-8397-4cca-aa04-de9344e9cab1"
+      name="parOrigamSyncConfigId"
       x:type="Origam.Schema.SchemaItemParameter" />
   </DataEntity>
 </x:file>

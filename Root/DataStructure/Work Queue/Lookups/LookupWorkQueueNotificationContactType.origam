@@ -1,73 +1,73 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="true"
-    name="LookupWorkQueueNotificationContactType"
     abstract="false"
     x:id="79daad07-e247-49be-a352-be67aea98234"
+    localized="true"
+    name="LookupWorkQueueNotificationContactType"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="false"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="WorkQueueNotificationContactType"
       abstract="false"
+      allFields="false"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/Work Queue/WorkQueueNotificationContactType.origam#WorkQueueNotificationContactType/3468390e-e00b-4402-bd86-e22a4d6c3a3a"
       x:id="7c2ff0ae-7773-4080-a133-709846c0ae51"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="WorkQueueNotificationContactType"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
       <DataStructureColumn
-        useLookupValue="false"
-        useCopiedValue="false"
-        writeOnly="false"
-        aggregation="None"
-        xmlMappingType="Default"
-        upsertType="Replace"
-        name="Name"
         abstract="false"
+        aggregation="None"
         field="Root/DataEntity/Work Queue/WorkQueueNotificationContactType.origam#WorkQueueNotificationContactType/Name/6c9ce2db-8161-48ba-b1e9-ae7ef5cbf0a7"
         x:id="1ae92c73-7f2a-4b3c-a02b-4bfc957644df"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-      <DataStructureColumn
-        useLookupValue="false"
-        useCopiedValue="false"
-        writeOnly="false"
-        aggregation="None"
-        xmlMappingType="Default"
+        name="Name"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
         upsertType="Replace"
-        name="Id"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
         abstract="false"
+        aggregation="None"
         field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
         x:id="b355538b-4bff-4eaf-80dc-7deb4ecff78f"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+        name="Id"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
       <DataStructureEntity
-        allFields="false"
-        ignoreImplicitFilters="false"
-        ignoreCondition="None"
-        concurrencyHandling="Standard"
-        relationType="LeftJoin"
-        useUpsert="false"
-        name="WorkQueueNotificationContactType_l10n"
         abstract="false"
+        allFields="false"
+        concurrencyHandling="Standard"
         entity="Root/DataEntity/Work Queue/WorkQueueNotificationContactType.origam#WorkQueueNotificationContactType/WorkQueueNotificationContactType_l10n/303bb4a2-b982-471e-9600-0c80f3c5eb4b"
         x:id="92642c59-61bd-4ce3-87dc-482d6f8fc304"
-        x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+        ignoreCondition="None"
+        ignoreImplicitFilters="false"
+        name="WorkQueueNotificationContactType_l10n"
+        relationType="LeftJoin"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity"
+        useUpsert="false" />
     </DataStructureEntity>
     <DataStructureFilterSet
-      dynamic="false"
-      name="GetId"
       abstract="false"
+      dynamic="false"
       x:id="c1eb2341-c331-4eee-ac5a-d9521cea0657"
+      name="GetId"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        passWhenParameterMatch="false"
-        name="WorkQueueNotificationContactType_GetId"
         abstract="false"
         entity="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueNotificationContactType.origam#LookupWorkQueueNotificationContactType/WorkQueueNotificationContactType/7c2ff0ae-7773-4080-a133-709846c0ae51"
         filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
         x:id="e3170cab-af48-42d2-8daf-59b30a6be9d4"
+        name="WorkQueueNotificationContactType_GetId"
+        passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
   </DataStructure>

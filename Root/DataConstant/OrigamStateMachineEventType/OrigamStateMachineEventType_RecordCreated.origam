@@ -1,12 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataConstant
-    dataType="UniqueIdentifier"
-    value="8b2464f5-3278-433c-b68e-74c339c19ddb"
-    userDefinable="false"
-    name="OrigamStateMachineEventType_RecordCreated"
     abstract="false"
-    lookup="Root/DataLookup/__system/OrigamStateMachineEventType.origam#OrigamStateMachineEventType/05f6579e-3498-4f0d-b8be-6f0e9f344939"
+    dataType="UniqueIdentifier"
     x:id="f39a1fb3-d4ad-45f8-87bb-a5047aedc38c"
-    x:type="Origam.Schema.EntityModel.DataConstant" />
+    lookup="Root/DataLookup/__system/OrigamStateMachineEventType.origam#OrigamStateMachineEventType/05f6579e-3498-4f0d-b8be-6f0e9f344939"
+    name="OrigamStateMachineEventType_RecordCreated"
+    x:type="Origam.Schema.EntityModel.DataConstant"
+    userDefinable="false"
+    value="8b2464f5-3278-433c-b68e-74c339c19ddb" />
 </x:file>

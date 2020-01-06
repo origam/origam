@@ -1,48 +1,48 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="false"
-    name="OrigamMap"
     abstract="false"
     x:id="4f8dc9c0-7079-4128-b6e9-8a071dc46533"
+    localized="false"
+    name="OrigamMap"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="true"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="OrigamMap"
       abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/__system/OrigamMap.origam#OrigamMap/033c386d-5906-4535-ad71-8e51d3488207"
       x:id="b9ca57f5-2f54-4994-9301-91a4bced9e3a"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamMap"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
       <DataStructureEntity
-        allFields="true"
-        ignoreImplicitFilters="false"
-        ignoreCondition="None"
-        concurrencyHandling="Standard"
-        relationType="Normal"
-        useUpsert="false"
-        name="OrigamMapOrigamMapLayer"
         abstract="false"
+        allFields="true"
+        concurrencyHandling="Standard"
         entity="Root/DataEntity/__system/OrigamMap.origam#OrigamMap/OrigamMapOrigamMapLayer/5ed03d67-c5ab-44da-9f60-5e3220e2f342"
         x:id="a7899e0c-5ddf-4338-a88a-d7c17edf00d0"
-        x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+        ignoreCondition="None"
+        ignoreImplicitFilters="false"
+        name="OrigamMapOrigamMapLayer"
+        relationType="Normal"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity"
+        useUpsert="false" />
     </DataStructureEntity>
     <DataStructureSortSet
-      name="Sort"
       abstract="false"
       x:id="181d2ba3-b3e2-491a-9b87-9e1d0cf47cfc"
+      name="Sort"
       x:type="Origam.Schema.EntityModel.DataStructureSortSet">
       <DataStructureSortSetItem
-        fieldName="SortOrder"
-        sortDirection="Ascending"
-        name="OrigamMapOrigamMapLayer_0_SortOrder"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamMap.origam#OrigamMap/OrigamMap/OrigamMapOrigamMapLayer/a7899e0c-5ddf-4338-a88a-d7c17edf00d0"
+        fieldName="SortOrder"
         x:id="0fec5dbe-9667-4f4e-8dcf-ab95f42ae432"
+        name="OrigamMapOrigamMapLayer_0_SortOrder"
+        sortDirection="Ascending"
         x:type="Origam.Schema.EntityModel.DataStructureSortSetItem" />
     </DataStructureSortSet>
   </DataStructure>

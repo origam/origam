@@ -1,79 +1,79 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
-    mappedObjectName="OrigamSyncConnectionParameter"
+    abstract="false"
+    audit="All"
     databaseObjectType="Table"
     generateDeploymentScript="true"
-    readOnly="false"
-    audit="All"
-    label="Parametr připojení synchronizace"
-    name="OrigamSyncConnectionParameter"
-    abstract="false"
     x:id="23369d2a-2953-43b1-a833-fde183b4a32b"
+    label="Parametr připojení synchronizace"
+    mappedObjectName="OrigamSyncConnectionParameter"
+    name="OrigamSyncConnectionParameter"
+    readOnly="false"
     x:type="Origam.Schema.EntityModel.TableMappingItem">
     <ancestor
       ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
       x:id="7c1d41a7-13c3-400a-bab2-25c2b3829852"
       x:type="Origam.Schema.SchemaItemAncestor" />
     <DataEntityColumn
-      mappedColumnName="Key"
-      excludeFromAuditing="false"
-      dataType="String"
-      dataLength="100"
+      abstract="false"
       allowNulls="false"
+      autoIncrement="false"
+      dataLength="100"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="aa1c44be-2ac2-4d74-bb9d-044a6eb17de5"
       isPrimaryKey="false"
       label="Klíč"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
+      mappedColumnName="Key"
       name="Key"
-      abstract="false"
-      x:id="aa1c44be-2ac2-4d74-bb9d-044a6eb17de5"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
     <DataEntityColumn
-      mappedColumnName="Value"
-      excludeFromAuditing="false"
-      dataType="String"
-      dataLength="200"
+      abstract="false"
       allowNulls="true"
+      autoIncrement="false"
+      dataLength="200"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="e892c7de-5089-4bce-b8a3-94f784ec9679"
       isPrimaryKey="false"
       label="Hodnota"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
+      mappedColumnName="Value"
       name="Value"
-      abstract="false"
-      x:id="e892c7de-5089-4bce-b8a3-94f784ec9679"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
-    <DataEntityColumn
-      mappedColumnName="refOrigamSyncConnectionId"
-      excludeFromAuditing="false"
-      dataType="UniqueIdentifier"
-      allowNulls="false"
-      isPrimaryKey="false"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
       onCopyAction="Copy"
-      name="refOrigamSyncConnectionId"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
       abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
       x:id="66513696-0651-4269-b022-c0fc7961795e"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+      isPrimaryKey="false"
+      mappedColumnName="refOrigamSyncConnectionId"
+      name="refOrigamSyncConnectionId"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
     <DataEntityIndex
-      unique="false"
-      generateDeploymentScript="false"
-      name="ix_OrigamSyncConnection"
       abstract="false"
+      generateDeploymentScript="false"
       x:id="f5513db2-0eba-49b6-b24f-e8877a35fd01"
-      x:type="Origam.Schema.EntityModel.DataEntityIndex">
+      name="ix_OrigamSyncConnection"
+      x:type="Origam.Schema.EntityModel.DataEntityIndex"
+      unique="false">
       <DataEntityIndexField
-        sortOrder="Ascending"
-        name="0_refOrigamSyncConnectionId"
         abstract="false"
         field="Root/DataEntity/Synchronization/OrigamSyncConnectionParameter.origam#OrigamSyncConnectionParameter/refOrigamSyncConnectionId/66513696-0651-4269-b022-c0fc7961795e"
         x:id="4034deb9-3031-4e98-9586-584a4084f9ad"
+        name="0_refOrigamSyncConnectionId"
+        sortOrder="Ascending"
         x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
     </DataEntityIndex>
   </DataEntity>

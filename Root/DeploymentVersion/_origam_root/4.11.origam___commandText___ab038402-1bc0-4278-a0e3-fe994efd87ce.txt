@@ -1,4 +1,4 @@
-DROP TABLE Task
+﻿DROP TABLE Task
 DROP TABLE TaskState
 DROP TABLE TaskResult
 DROP TABLE TaskType

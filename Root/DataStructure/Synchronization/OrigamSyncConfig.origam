@@ -1,36 +1,36 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="false"
-    name="OrigamSyncConfig"
     abstract="false"
     x:id="17c275ef-be8b-42a8-95db-3ff840b7f94a"
+    localized="false"
+    name="OrigamSyncConfig"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="true"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="OrigamSyncConfig"
       abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/Synchronization/OrigamSyncConfig.origam#OrigamSyncConfig/2c82b3bf-7113-46a9-a4d5-32ab2c968e71"
       x:id="f4a1fdae-1c0b-4d23-8680-8b27a29b1598"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamSyncConfig"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
     <DataStructureFilterSet
-      dynamic="false"
-      name="GetId"
       abstract="false"
+      dynamic="false"
       x:id="2b17d24e-5f2d-410f-82f1-f67c09a53e8f"
+      name="GetId"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        passWhenParameterMatch="false"
-        name="OrigamSyncConfig_GetId"
         abstract="false"
         entity="Root/DataStructure/Synchronization/OrigamSyncConfig.origam#OrigamSyncConfig/OrigamSyncConfig/f4a1fdae-1c0b-4d23-8680-8b27a29b1598"
         filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
         x:id="3102b068-a9f2-4410-90ca-c5b57d15135c"
+        name="OrigamSyncConfig_GetId"
+        passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
   </DataStructure>

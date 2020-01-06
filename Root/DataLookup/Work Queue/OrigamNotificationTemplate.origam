@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="Name"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="Name"
-    name="OrigamNotificationTemplate"
     abstract="false"
-    listDataStructure="Root/DataStructure/Work Queue/Lookups/LookupOrigamNotificationTemplate.origam#LookupOrigamNotificationTemplate/2e19f50f-a397-4ff6-b482-f3f5c95e5235"
-    valueDataStructure="Root/DataStructure/Work Queue/Lookups/LookupOrigamNotificationTemplate.origam#LookupOrigamNotificationTemplate/2e19f50f-a397-4ff6-b482-f3f5c95e5235"
-    valueMethod="Root/DataStructure/Work Queue/Lookups/LookupOrigamNotificationTemplate.origam#LookupOrigamNotificationTemplate/GetId/7bd5e3e2-f765-4579-a0e1-4ac3b397e5a7"
+    alwaysAllowReturnToForm="false"
     x:id="9376375c-6dc6-4d02-8a46-112cf7f61dc8"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/Work Queue/Lookups/LookupOrigamNotificationTemplate.origam#LookupOrigamNotificationTemplate/2e19f50f-a397-4ff6-b482-f3f5c95e5235"
+    listDisplayMember="Name"
+    listValueMember="Id"
+    name="OrigamNotificationTemplate"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/Work Queue/Lookups/LookupOrigamNotificationTemplate.origam#LookupOrigamNotificationTemplate/2e19f50f-a397-4ff6-b482-f3f5c95e5235"
+    valueDisplayMember="Name"
+    valueMethod="Root/DataStructure/Work Queue/Lookups/LookupOrigamNotificationTemplate.origam#LookupOrigamNotificationTemplate/GetId/7bd5e3e2-f765-4579-a0e1-4ac3b397e5a7"
+    valueValueMember="Id" />
 </x:file>

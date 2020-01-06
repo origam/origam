@@ -1,0 +1,10 @@
+﻿CREATE TABLE [Counter] (
+	[ReferenceCode] NVARCHAR(40) NOT NULL,
+	[Description] NVARCHAR(300) NULL,
+	[ManageValidityByDate] BIT NOT NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL)
+CREATE UNIQUE INDEX [ix_ReferenceCode] ON [Counter] ([ReferenceCode] ASC)

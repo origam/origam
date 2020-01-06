@@ -1,16 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Control
-    toolboxVisibility="FormDesigner"
-    typeName="Origam.Schema.GuiModel.PanelControlSet"
-    namespace="Origam.Schema.GuiModel"
-    isComplex="true"
-    requestSaveAfterChangeAllowed="false"
-    name="OrigamMapLayerParameter"
     abstract="false"
-    screenSection="Root/PanelControlSet/__system/OrigamMapLayerParameter.origam#OrigamMapLayerParameter/3381b933-41b4-445b-9085-0d43e6dc2d49"
     x:id="f0be6d69-fd76-46a2-8955-e91b350ba87d"
-    x:type="Origam.Schema.GuiModel.ControlItem">
+    isComplex="true"
+    name="OrigamMapLayerParameter"
+    namespace="Origam.Schema.GuiModel"
+    requestSaveAfterChangeAllowed="false"
+    screenSection="Root/PanelControlSet/__system/OrigamMapLayerParameter.origam#OrigamMapLayerParameter/3381b933-41b4-445b-9085-0d43e6dc2d49"
+    toolboxVisibility="FormDesigner"
+    x:type="Origam.Schema.GuiModel.ControlItem"
+    typeName="Origam.Schema.GuiModel.PanelControlSet">
     <ancestor
       ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
       x:id="748b7478-e21e-47e8-9c45-4c5e94def13a"

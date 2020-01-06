@@ -1,16 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Control
-    toolboxVisibility="FormDesigner"
-    typeName="Origam.Schema.GuiModel.PanelControlSet"
-    namespace="Origam.Schema.GuiModel"
-    isComplex="true"
-    requestSaveAfterChangeAllowed="false"
-    name="WorkQueueNotification_Header"
     abstract="false"
-    screenSection="Root/PanelControlSet/Work Queue/WorkQueueNotification_Header.origam#WorkQueueNotification_Header/1e436bae-adc5-4dab-bc3b-52a451738a80"
     x:id="884d3c3c-0445-4bb1-b1a1-daf94dc01921"
-    x:type="Origam.Schema.GuiModel.ControlItem">
+    isComplex="true"
+    name="WorkQueueNotification_Header"
+    namespace="Origam.Schema.GuiModel"
+    requestSaveAfterChangeAllowed="false"
+    screenSection="Root/PanelControlSet/Work Queue/WorkQueueNotification_Header.origam#WorkQueueNotification_Header/1e436bae-adc5-4dab-bc3b-52a451738a80"
+    toolboxVisibility="FormDesigner"
+    x:type="Origam.Schema.GuiModel.ControlItem"
+    typeName="Origam.Schema.GuiModel.PanelControlSet">
     <ancestor
       ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
       x:id="751925fa-769f-4a61-b222-93f475900a26"

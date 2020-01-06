@@ -1,1 +1,1 @@
-ALTER TABLE WorkQueueCommand DROP COLUMN IsAutoDeleted
+﻿ALTER TABLE WorkQueueCommand DROP COLUMN IsAutoDeleted

@@ -1,42 +1,46 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DeploymentVersion
-    version="4.19"
-    name="4.19"
     abstract="false"
     x:id="4c6b1c4d-bd40-41a0-9a07-12a924d041ed"
-    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    name="4.19"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="4.19">
     <DeploymentUpdateScriptActivity
-      activityOrder="20"
-      name="00020_Database_Field_WorkQueueCommand.Roles"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="20"
       commandText="-***-ExternalFile:4.19.origam___commandText___421ba8ba-e023-4bd4-bbc6-16b5302c9a60.txt"
       x:id="421ba8ba-e023-4bd4-bbc6-16b5302c9a60"
+      name="00020_Database_Field_WorkQueueCommand.Roles"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
-      activityOrder="10"
-      name="00010_Database_Field_WorkQueue.ApiAccessRoles"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="10"
       commandText="-***-ExternalFile:4.19.origam___commandText___b7d8199e-aeb2-4283-ab9b-5275a6e7f018.txt"
       x:id="b7d8199e-aeb2-4283-ab9b-5275a6e7f018"
+      name="00010_Database_Field_WorkQueue.ApiAccessRoles"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
-      activityOrder="30"
-      name="00030_WorkQueueCommand.Roles_SetDefault"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="30"
       commandText="-***-ExternalFile:4.19.origam___commandText___fa411831-30ae-4a32-9ee5-8ce579705dea.txt"
       x:id="fa411831-30ae-4a32-9ee5-8ce579705dea"
+      name="00030_WorkQueueCommand.Roles_SetDefault"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
-      activityOrder="40"
-      name="00040_WorkQueue.Roles_SetDefault"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="40"
       commandText="-***-ExternalFile:4.19.origam___commandText___6cbb1d70-0f2d-49d1-9e23-a392d4b62d08.txt"
       x:id="6cbb1d70-0f2d-49d1-9e23-a392d4b62d08"
+      name="00040_WorkQueue.Roles_SetDefault"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>
 </x:file>

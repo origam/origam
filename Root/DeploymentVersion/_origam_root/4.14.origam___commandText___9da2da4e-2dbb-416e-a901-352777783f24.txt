@@ -1,4 +1,4 @@
-
+﻿
 ALTER TABLE [WorkQueueExternalSourceType_l10n] ADD CONSTRAINT FK_WorkQueueExternalSourceType_l10n_refWorkQueueExternalSourceTypeId_WorkQueueExternalSourceType
 	FOREIGN KEY (
 		[refWorkQueueExternalSourceTypeId]

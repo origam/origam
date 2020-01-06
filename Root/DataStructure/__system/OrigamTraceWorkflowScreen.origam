@@ -1,264 +1,264 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="false"
-    name="OrigamTraceWorkflowScreen"
     abstract="false"
     x:id="43b7bdd6-9f59-42d9-9a3b-0188dd9b1917"
+    localized="false"
+    name="OrigamTraceWorkflowScreen"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="true"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="OrigamTraceWorkflow"
       abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/__system/OrigamTraceWorkflow.origam#OrigamTraceWorkflow/2d969eff-c922-46cd-8a6b-7b6dc27e735a"
       x:id="9f131c55-9424-44a9-bc8a-f63968692ac5"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamTraceWorkflow"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
       <DataStructureEntity
-        allFields="false"
-        ignoreImplicitFilters="false"
-        ignoreCondition="None"
-        concurrencyHandling="Standard"
-        relationType="Normal"
-        useUpsert="false"
-        name="OrigamTraceWorkflowStep"
         abstract="false"
+        allFields="false"
+        concurrencyHandling="Standard"
         entity="Root/DataEntity/__system/OrigamTraceWorkflow.origam#OrigamTraceWorkflow/OrigamDebugWorkflowStep/affcb263-3154-4d98-86ea-83f37a97c8aa"
         x:id="8a6b75d9-7603-4d67-9817-4cbd27025787"
-        x:type="Origam.Schema.EntityModel.DataStructureEntity">
+        ignoreCondition="None"
+        ignoreImplicitFilters="false"
+        name="OrigamTraceWorkflowStep"
+        relationType="Normal"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity"
+        useUpsert="false">
         <DataStructureColumn
-          useLookupValue="false"
-          useCopiedValue="false"
-          writeOnly="false"
-          aggregation="None"
-          xmlMappingType="Default"
-          upsertType="Replace"
-          name="Data2"
           abstract="false"
+          aggregation="None"
           field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/Data2/cfc492f4-d538-480f-acc1-c4508356e184"
           x:id="2ece1c69-f8ef-4075-b515-0a077e1741e7"
-          x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-        <DataStructureColumn
-          useLookupValue="false"
-          useCopiedValue="false"
-          writeOnly="false"
-          aggregation="None"
-          xmlMappingType="Default"
+          name="Data2"
+          x:type="Origam.Schema.EntityModel.DataStructureColumn"
           upsertType="Replace"
-          name="RecordUpdated"
+          useCopiedValue="false"
+          useLookupValue="false"
+          writeOnly="false"
+          xmlMappingType="Default" />
+        <DataStructureColumn
           abstract="false"
+          aggregation="None"
           field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordUpdated/bfd1ea1b-ffbf-47f6-8f9b-08dab6553a18"
           x:id="5a7e1399-856a-44fe-bbee-1d3030dade09"
-          x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-        <DataStructureColumn
-          useLookupValue="false"
-          useCopiedValue="false"
-          writeOnly="false"
-          aggregation="None"
-          xmlMappingType="Default"
+          name="RecordUpdated"
+          x:type="Origam.Schema.EntityModel.DataStructureColumn"
           upsertType="Replace"
-          name="Subcategory"
+          useCopiedValue="false"
+          useLookupValue="false"
+          writeOnly="false"
+          xmlMappingType="Default" />
+        <DataStructureColumn
           abstract="false"
+          aggregation="None"
           field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/Subcategory/d5237654-5350-454c-87df-18d7c2b7a9e1"
           x:id="843e7f9a-e209-4720-a379-1e723b95665f"
-          x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-        <DataStructureColumn
-          useLookupValue="false"
-          useCopiedValue="false"
-          writeOnly="false"
-          aggregation="None"
-          xmlMappingType="Default"
+          name="Subcategory"
+          x:type="Origam.Schema.EntityModel.DataStructureColumn"
           upsertType="Replace"
-          name="Remark"
+          useCopiedValue="false"
+          useLookupValue="false"
+          writeOnly="false"
+          xmlMappingType="Default" />
+        <DataStructureColumn
           abstract="false"
+          aggregation="None"
           field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/Remark/4a5d2800-6faf-492b-ab47-1a84263116af"
           x:id="dabf9a58-9f83-40c2-a2a5-2038cf2919ec"
-          x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-        <DataStructureColumn
-          useLookupValue="false"
-          useCopiedValue="false"
-          writeOnly="false"
-          aggregation="None"
-          xmlMappingType="Default"
+          name="Remark"
+          x:type="Origam.Schema.EntityModel.DataStructureColumn"
           upsertType="Replace"
-          name="WorkflowStepPath"
+          useCopiedValue="false"
+          useLookupValue="false"
+          writeOnly="false"
+          xmlMappingType="Default" />
+        <DataStructureColumn
           abstract="false"
+          aggregation="None"
           field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/WorkflowStepPath/58d86c9b-19d4-471a-8250-48c6ebe9337a"
           x:id="8a551c5a-e63d-4fa3-a657-3af4bc431150"
-          x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-        <DataStructureColumn
-          useLookupValue="false"
-          useCopiedValue="false"
-          writeOnly="false"
-          aggregation="None"
-          xmlMappingType="Default"
+          name="WorkflowStepPath"
+          x:type="Origam.Schema.EntityModel.DataStructureColumn"
           upsertType="Replace"
-          name="RecordCreated"
+          useCopiedValue="false"
+          useLookupValue="false"
+          writeOnly="false"
+          xmlMappingType="Default" />
+        <DataStructureColumn
           abstract="false"
+          aggregation="None"
           field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordCreated/2340af1e-d939-47ae-930b-e24b0cb3a756"
           x:id="7f1ea591-783c-4037-8413-405aa4025be4"
-          x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-        <DataStructureColumn
-          useLookupValue="false"
-          useCopiedValue="false"
-          writeOnly="false"
-          aggregation="None"
-          xmlMappingType="Default"
+          name="RecordCreated"
+          x:type="Origam.Schema.EntityModel.DataStructureColumn"
           upsertType="Replace"
-          name="RecordCreatedBy"
+          useCopiedValue="false"
+          useLookupValue="false"
+          writeOnly="false"
+          xmlMappingType="Default" />
+        <DataStructureColumn
           abstract="false"
+          aggregation="None"
           field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordCreatedBy/253ce61e-509c-4d08-864f-c0e03d3eed4b"
           x:id="258dbcf4-bb2e-49ec-8581-542af0657fbd"
-          x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-        <DataStructureColumn
-          useLookupValue="false"
-          useCopiedValue="false"
-          writeOnly="false"
-          aggregation="None"
-          xmlMappingType="Default"
+          name="RecordCreatedBy"
+          x:type="Origam.Schema.EntityModel.DataStructureColumn"
           upsertType="Replace"
-          name="Data1"
+          useCopiedValue="false"
+          useLookupValue="false"
+          writeOnly="false"
+          xmlMappingType="Default" />
+        <DataStructureColumn
           abstract="false"
+          aggregation="None"
           field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/Data1/f34e3d08-9394-46d9-9cef-bad0ec898430"
           x:id="e05aadc6-c2e8-4ab7-bd0e-652137b99334"
-          x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-        <DataStructureColumn
-          useLookupValue="false"
-          useCopiedValue="false"
-          writeOnly="false"
-          aggregation="None"
-          xmlMappingType="Default"
+          name="Data1"
+          x:type="Origam.Schema.EntityModel.DataStructureColumn"
           upsertType="Replace"
-          name="Message"
+          useCopiedValue="false"
+          useLookupValue="false"
+          writeOnly="false"
+          xmlMappingType="Default" />
+        <DataStructureColumn
           abstract="false"
+          aggregation="None"
           field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/Message/9993d341-b247-4a93-8e30-f5e4d61ea08b"
           x:id="1f3e643a-05fa-46db-aeb0-72023f6b58cc"
-          x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-        <DataStructureColumn
-          useLookupValue="false"
-          useCopiedValue="false"
-          writeOnly="false"
-          aggregation="None"
-          xmlMappingType="Default"
+          name="Message"
+          x:type="Origam.Schema.EntityModel.DataStructureColumn"
           upsertType="Replace"
-          name="RecordCreatedServer"
+          useCopiedValue="false"
+          useLookupValue="false"
+          writeOnly="false"
+          xmlMappingType="Default" />
+        <DataStructureColumn
           abstract="false"
+          aggregation="None"
           field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordCreatedServer/da9c4ff5-2e67-4744-935a-60a39b886828"
           x:id="b898d44a-bdda-42b0-bd0b-8b147d29bd62"
-          x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-        <DataStructureColumn
-          useLookupValue="false"
-          useCopiedValue="false"
-          writeOnly="false"
-          aggregation="None"
-          xmlMappingType="Default"
+          name="RecordCreatedServer"
+          x:type="Origam.Schema.EntityModel.DataStructureColumn"
           upsertType="Replace"
-          name="refOrigamTraceWorkflowId"
+          useCopiedValue="false"
+          useLookupValue="false"
+          writeOnly="false"
+          xmlMappingType="Default" />
+        <DataStructureColumn
           abstract="false"
+          aggregation="None"
           field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/refOrigamTraceWorkflowId/29cd8e49-24a4-4132-969b-dfd2b5cc8a00"
           x:id="c6146cb9-bb76-40ab-b0a1-8fd80f17e56a"
-          x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-        <DataStructureColumn
-          useLookupValue="false"
-          useCopiedValue="false"
-          writeOnly="false"
-          aggregation="None"
-          xmlMappingType="Default"
+          name="refOrigamTraceWorkflowId"
+          x:type="Origam.Schema.EntityModel.DataStructureColumn"
           upsertType="Replace"
-          name="RecordUpdatedServer"
+          useCopiedValue="false"
+          useLookupValue="false"
+          writeOnly="false"
+          xmlMappingType="Default" />
+        <DataStructureColumn
           abstract="false"
+          aggregation="None"
           field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordUpdatedServer/9424c659-0c83-4aa9-b2a4-aeec9d9e8d40"
           x:id="ed335344-19ae-45cf-b616-963708813613"
-          x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-        <DataStructureColumn
-          useLookupValue="false"
-          useCopiedValue="false"
-          writeOnly="false"
-          aggregation="None"
-          xmlMappingType="Default"
+          name="RecordUpdatedServer"
+          x:type="Origam.Schema.EntityModel.DataStructureColumn"
           upsertType="Replace"
-          name="WorkflowStepId"
+          useCopiedValue="false"
+          useLookupValue="false"
+          writeOnly="false"
+          xmlMappingType="Default" />
+        <DataStructureColumn
           abstract="false"
+          aggregation="None"
           field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/WorkflowStepId/82bf411d-c14d-466b-970c-2178b2484234"
           x:id="4e8c06bb-b2b2-4707-8e5f-986891c384af"
-          x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-        <DataStructureColumn
-          useLookupValue="false"
-          useCopiedValue="false"
-          writeOnly="false"
-          aggregation="None"
-          xmlMappingType="Default"
+          name="WorkflowStepId"
+          x:type="Origam.Schema.EntityModel.DataStructureColumn"
           upsertType="Replace"
-          name="RecordUpdatedBy"
+          useCopiedValue="false"
+          useLookupValue="false"
+          writeOnly="false"
+          xmlMappingType="Default" />
+        <DataStructureColumn
           abstract="false"
+          aggregation="None"
           field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordUpdatedBy/efb83735-bedb-4eee-b9eb-f111dd46980e"
           x:id="a1ccd801-8db9-41a0-9457-a63674fc15e5"
-          x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-        <DataStructureColumn
-          useLookupValue="false"
-          useCopiedValue="false"
-          writeOnly="false"
-          aggregation="None"
-          xmlMappingType="Default"
+          name="RecordUpdatedBy"
+          x:type="Origam.Schema.EntityModel.DataStructureColumn"
           upsertType="Replace"
-          name="Category"
+          useCopiedValue="false"
+          useLookupValue="false"
+          writeOnly="false"
+          xmlMappingType="Default" />
+        <DataStructureColumn
           abstract="false"
+          aggregation="None"
           field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/Category/f4199170-3d7b-4819-bcdc-051694c68dc1"
           x:id="dbfcdc54-8ab5-487c-93ee-df9fe276ca7d"
-          x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-        <DataStructureColumn
-          useLookupValue="false"
-          useCopiedValue="false"
-          writeOnly="false"
-          aggregation="None"
-          xmlMappingType="Default"
+          name="Category"
+          x:type="Origam.Schema.EntityModel.DataStructureColumn"
           upsertType="Replace"
-          name="Id"
+          useCopiedValue="false"
+          useLookupValue="false"
+          writeOnly="false"
+          xmlMappingType="Default" />
+        <DataStructureColumn
           abstract="false"
+          aggregation="None"
           field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
           x:id="d7478788-301b-4da1-b4a0-fd92e82bde8b"
-          x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+          name="Id"
+          x:type="Origam.Schema.EntityModel.DataStructureColumn"
+          upsertType="Replace"
+          useCopiedValue="false"
+          useLookupValue="false"
+          writeOnly="false"
+          xmlMappingType="Default" />
       </DataStructureEntity>
     </DataStructureEntity>
     <DataStructureFilterSet
-      dynamic="false"
-      name="GetId"
       abstract="false"
+      dynamic="false"
       x:id="77cdbb0c-430e-4552-a0c2-f494cfb0c782"
+      name="GetId"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        passWhenParameterMatch="false"
-        name="OrigamTraceWorkflow_GetId"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamTraceWorkflowScreen.origam#OrigamTraceWorkflowScreen/OrigamTraceWorkflow/9f131c55-9424-44a9-bc8a-f63968692ac5"
         filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
         x:id="6618cd93-aee0-42f7-a66d-bf3a004f53dd"
+        name="OrigamTraceWorkflow_GetId"
+        passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
     <DataStructureSortSet
-      name="Default"
       abstract="false"
       x:id="f68c419b-6130-4665-bee1-d81f2769c5ad"
+      name="Default"
       x:type="Origam.Schema.EntityModel.DataStructureSortSet">
       <DataStructureSortSetItem
-        fieldName="RecordCreated"
-        sortDirection="Descending"
-        name="OrigamTraceWorkflow_0_RecordCreated"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamTraceWorkflowScreen.origam#OrigamTraceWorkflowScreen/OrigamTraceWorkflow/9f131c55-9424-44a9-bc8a-f63968692ac5"
+        fieldName="RecordCreated"
         x:id="a1641518-c8b8-4b88-9188-01b2abe7be94"
+        name="OrigamTraceWorkflow_0_RecordCreated"
+        sortDirection="Descending"
         x:type="Origam.Schema.EntityModel.DataStructureSortSetItem" />
       <DataStructureSortSetItem
-        fieldName="RecordCreated"
-        sortDirection="Ascending"
-        name="OrigamTraceWorkflowStep_RecordCreated"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamTraceWorkflowScreen.origam#OrigamTraceWorkflowScreen/OrigamTraceWorkflow/OrigamTraceWorkflowStep/8a6b75d9-7603-4d67-9817-4cbd27025787"
+        fieldName="RecordCreated"
         x:id="3561b43a-c007-4f4c-b7c2-3d8572861912"
+        name="OrigamTraceWorkflowStep_RecordCreated"
+        sortDirection="Ascending"
         x:type="Origam.Schema.EntityModel.DataStructureSortSetItem" />
     </DataStructureSortSet>
   </DataStructure>

@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <group
-    rootItemType="FormControlSet"
-    name="Dimensions"
     x:id="452dec48-d33c-401c-8453-0d0ffdf6a4ea"
     x:isFolder="true"
+    name="Dimensions"
+    rootItemType="FormControlSet"
     x:type="Origam.Schema.SchemaItemGroup" />
 </x:file>

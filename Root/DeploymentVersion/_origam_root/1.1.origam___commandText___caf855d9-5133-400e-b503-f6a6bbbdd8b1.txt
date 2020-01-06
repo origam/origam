@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE [AsapRounding] ADD CONSTRAINT FK_AsapRounding_refAsapRoundingTypeId_AsapRoundingType
+	FOREIGN KEY (
+		[refAsapRoundingTypeId]
+	)
+
+	REFERENCES [AsapRoundingType] (
+		[Id]
+	)

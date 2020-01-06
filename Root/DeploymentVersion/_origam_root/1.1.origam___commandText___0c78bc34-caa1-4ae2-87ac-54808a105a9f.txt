@@ -1,0 +1,15 @@
+﻿CREATE TABLE [AsapFormPanelConfig] (
+	[ProfileId] UNIQUEIDENTIFIER NOT NULL,
+	[FormPanelId] UNIQUEIDENTIFIER NOT NULL,
+	[WorkflowId] UNIQUEIDENTIFIER NULL,
+	[refAsapPanelFilterId] UNIQUEIDENTIFIER NULL,
+	[SettingsData] NTEXT NULL,
+	[DefaultView] INT NOT NULL,
+	[RecordUpdated] DATETIME NULL,
+	[RecordCreatedServer] DATETIME NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordUpdatedServer] DATETIME NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL)
+CREATE INDEX [ix_Main] ON [AsapFormPanelConfig] ([FormPanelId] ASC, [ProfileId] ASC)

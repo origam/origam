@@ -1,0 +1,11 @@
+﻿CREATE TABLE [AsapSyncRun] (
+	[refAsapSyncConfigId] UNIQUEIDENTIFIER NOT NULL,
+	[ReferenceCode] NVARCHAR(40) NOT NULL,
+	[TimeEnd] DATETIME NULL,
+	[TimeStart] DATETIME NOT NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL)
+CREATE INDEX [ix_refAsapSyncConfigId] ON [AsapSyncRun] ([refAsapSyncConfigId] ASC)

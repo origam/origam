@@ -1,4 +1,0 @@
-CREATE TABLE Task ( Id uniqueidentifier null)
-CREATE TABLE TaskState ( Id uniqueidentifier null)
-CREATE TABLE TaskResult ( Id uniqueidentifier null)
-CREATE TABLE TaskType ( Id uniqueidentifier null)

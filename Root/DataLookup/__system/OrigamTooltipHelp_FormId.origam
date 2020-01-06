@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="FormId"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="FormId"
-    name="OrigamTooltipHelp_FormId"
     abstract="false"
-    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelp_FormId.origam#LookupOrigamTooltipHelp_FormId/511b977d-90fa-44a1-9ab0-e5ed39efc063"
-    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelp_FormId.origam#LookupOrigamTooltipHelp_FormId/511b977d-90fa-44a1-9ab0-e5ed39efc063"
-    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelp_FormId.origam#LookupOrigamTooltipHelp_FormId/GetId/489dee6c-1489-4da9-95c0-a8719cd93875"
+    alwaysAllowReturnToForm="false"
     x:id="4883e3ff-3dee-4401-961c-70f3fe353998"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelp_FormId.origam#LookupOrigamTooltipHelp_FormId/511b977d-90fa-44a1-9ab0-e5ed39efc063"
+    listDisplayMember="FormId"
+    listValueMember="Id"
+    name="OrigamTooltipHelp_FormId"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelp_FormId.origam#LookupOrigamTooltipHelp_FormId/511b977d-90fa-44a1-9ab0-e5ed39efc063"
+    valueDisplayMember="FormId"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelp_FormId.origam#LookupOrigamTooltipHelp_FormId/GetId/489dee6c-1489-4da9-95c0-a8719cd93875"
+    valueValueMember="Id" />
 </x:file>

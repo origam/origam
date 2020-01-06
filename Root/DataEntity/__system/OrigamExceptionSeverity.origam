@@ -1,35 +1,35 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
-    mappedObjectName="OrigamExceptionSeverity"
+    abstract="false"
+    audit="None"
     databaseObjectType="Table"
     generateDeploymentScript="true"
-    readOnly="false"
-    audit="None"
-    label="Error Severity Level"
-    name="OrigamExceptionSeverity"
-    abstract="false"
     x:id="b162de30-e655-4f8f-bad3-4417823c6777"
+    label="Error Severity Level"
+    mappedObjectName="OrigamExceptionSeverity"
+    name="OrigamExceptionSeverity"
+    readOnly="false"
     x:type="Origam.Schema.EntityModel.TableMappingItem">
     <ancestor
       ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
       x:id="ef2f43c9-9dca-462b-88c7-8f363b22feca"
       x:type="Origam.Schema.SchemaItemAncestor" />
     <DataEntityColumn
-      mappedColumnName="Name"
-      excludeFromAuditing="false"
-      dataType="String"
-      dataLength="50"
+      abstract="false"
       allowNulls="false"
+      autoIncrement="false"
+      dataLength="50"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="0e6913f3-cdb4-49e9-8b2f-03ae9fd9b0aa"
       isPrimaryKey="false"
       label="Name"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
+      mappedColumnName="Name"
       name="Name"
-      abstract="false"
-      x:id="0e6913f3-cdb4-49e9-8b2f-03ae9fd9b0aa"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
   </DataEntity>
 </x:file>

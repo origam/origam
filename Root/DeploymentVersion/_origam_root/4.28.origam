@@ -1,18 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DeploymentVersion
-    version="4.28"
-    name="4.28"
     abstract="false"
     x:id="ff9b5b23-7c72-4aad-b0dc-37171c6ac9af"
-    x:type="Origam.Schema.DeploymentModel.DeploymentVersion">
+    name="4.28"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="4.28">
     <DeploymentUpdateScriptActivity
-      activityOrder="10"
-      name="00010_WorkQueueExternalSourceType_WebSphere MQ"
       abstract="false"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      activityOrder="10"
       commandText="-***-ExternalFile:4.28.origam___commandText___75f3c5c0-931d-495f-880a-d489647cf527.txt"
       x:id="75f3c5c0-931d-495f-880a-d489647cf527"
+      name="00010_WorkQueueExternalSourceType_WebSphere MQ"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>
 </x:file>

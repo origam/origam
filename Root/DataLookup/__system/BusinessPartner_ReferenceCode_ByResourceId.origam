@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="ReferenceCode"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="ReferenceCode"
-    name="BusinessPartner_ReferenceCode_ByResourceId"
     abstract="false"
-    listDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ReferenceCode_ByResourceId.origam#LookupBusinessPartner_ReferenceCode_ByResourceId/23b71cb4-948b-4021-9567-4eecd1c0ab27"
-    valueDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ReferenceCode_ByResourceId.origam#LookupBusinessPartner_ReferenceCode_ByResourceId/23b71cb4-948b-4021-9567-4eecd1c0ab27"
-    valueMethod="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ReferenceCode_ByResourceId.origam#LookupBusinessPartner_ReferenceCode_ByResourceId/GetByResourceId/e355568a-bac9-47f7-a244-d943eeebcec2"
+    alwaysAllowReturnToForm="false"
     x:id="4a4e9630-0900-42df-b9e3-a740bc80033a"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ReferenceCode_ByResourceId.origam#LookupBusinessPartner_ReferenceCode_ByResourceId/23b71cb4-948b-4021-9567-4eecd1c0ab27"
+    listDisplayMember="ReferenceCode"
+    listValueMember="Id"
+    name="BusinessPartner_ReferenceCode_ByResourceId"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ReferenceCode_ByResourceId.origam#LookupBusinessPartner_ReferenceCode_ByResourceId/23b71cb4-948b-4021-9567-4eecd1c0ab27"
+    valueDisplayMember="ReferenceCode"
+    valueMethod="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ReferenceCode_ByResourceId.origam#LookupBusinessPartner_ReferenceCode_ByResourceId/GetByResourceId/e355568a-bac9-47f7-a244-d943eeebcec2"
+    valueValueMember="Id" />
 </x:file>

@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Function
-    dataType="Float"
-    type="Standard"
-    name="Add"
     abstract="false"
+    dataType="Float"
     x:id="14165b73-afc8-43de-b2a5-9101814a0ca3"
+    name="Add"
+    type="Standard"
     x:type="Origam.Schema.EntityModel.Function">
     <FunctionParameter
-      ordinalPosition="1"
-      name="Right"
       abstract="false"
       x:id="21ca32c5-c1fa-42da-8d8c-05614974cdce"
+      name="Right"
+      ordinalPosition="1"
       x:type="Origam.Schema.EntityModel.FunctionParameter" />
     <FunctionParameter
-      name="Left"
       abstract="false"
       x:id="8455d463-54bc-45bd-9b5d-590a1cf04550"
+      name="Left"
       x:type="Origam.Schema.EntityModel.FunctionParameter" />
   </Function>
 </x:file>

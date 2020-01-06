@@ -1,0 +1,9 @@
+﻿CREATE TABLE [AsapFavoritesUserConfig] (
+	[ConfigXml] NTEXT NULL,
+	[refBusinessPartnerId] UNIQUEIDENTIFIER NOT NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL)
+CREATE UNIQUE INDEX [ix_refBusinessPartnerId] ON [AsapFavoritesUserConfig] ([refBusinessPartnerId] ASC)

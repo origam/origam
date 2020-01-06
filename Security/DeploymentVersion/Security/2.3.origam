@@ -12,6 +12,7 @@
       commandText="-***-ExternalFile:2.3.origam___commandText___4b9fa2f7-1356-4dcc-bcad-1cb4e0ac315b.txt"
       x:id="4b9fa2f7-1356-4dcc-bcad-1cb4e0ac315b"
       name="00010_Database_Column_Mapping_OrigamApplicationRole.Description"
+      platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>

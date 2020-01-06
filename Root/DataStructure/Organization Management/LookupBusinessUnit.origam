@@ -1,76 +1,76 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="false"
-    name="LookupBusinessUnit"
     abstract="false"
     x:id="78a0ff6e-c13d-4a8b-9c43-7ba246715acd"
+    localized="false"
+    name="LookupBusinessUnit"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="false"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="BusinessUnit"
       abstract="false"
+      allFields="false"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/Organization Management/BusinessUnit.origam#BusinessUnit/5008fdde-0119-4bd3-8ee1-4d04e4382d0d"
       x:id="b278b4da-3b67-4999-a5c7-1064dc97e089"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="BusinessUnit"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
       <DataStructureColumn
-        useLookupValue="false"
-        useCopiedValue="false"
-        writeOnly="false"
-        aggregation="None"
-        xmlMappingType="Default"
-        upsertType="Replace"
-        name="Name"
         abstract="false"
+        aggregation="None"
         field="Root/DataEntity/Organization Management/IBusinessUnit.origam#IBusinessUnit/Name/a7d2a263-2d0c-4c6a-95ca-3c08455ea7b1"
         x:id="6d60741e-67cf-402c-ab75-34674322189a"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
-      <DataStructureColumn
-        useLookupValue="false"
-        useCopiedValue="false"
-        writeOnly="false"
-        aggregation="None"
-        xmlMappingType="Default"
+        name="Name"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
         upsertType="Replace"
-        name="Id"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
         abstract="false"
+        aggregation="None"
         field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
         x:id="14bd02d8-9754-445c-b8b3-951158e066a3"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn" />
+        name="Id"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
     </DataStructureEntity>
     <DataStructureFilterSet
-      dynamic="false"
-      name="GetId"
       abstract="false"
+      dynamic="false"
       x:id="d08ecab7-4ba8-44ce-9005-02e0e44d4182"
+      name="GetId"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        passWhenParameterMatch="false"
-        name="BusinessUnit_GetId"
         abstract="false"
         entity="Root/DataStructure/Organization Management/LookupBusinessUnit.origam#LookupBusinessUnit/BusinessUnit/b278b4da-3b67-4999-a5c7-1064dc97e089"
         filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
         x:id="63268906-8e22-4a88-9027-a247de3594f3"
+        name="BusinessUnit_GetId"
+        passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
     <DataStructureFilterSet
-      dynamic="false"
-      name="GetByOrganization"
       abstract="false"
+      dynamic="false"
       x:id="f150cadf-9ede-4f50-b948-0502893786da"
+      name="GetByOrganization"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        passWhenParameterMatch="false"
-        name="BusinessUnit_GetByOrganizationId"
         abstract="false"
         entity="Root/DataStructure/Organization Management/LookupBusinessUnit.origam#LookupBusinessUnit/BusinessUnit/b278b4da-3b67-4999-a5c7-1064dc97e089"
         filter="Root/DataEntity/Organization Management/IBusinessUnit.origam#IBusinessUnit/GetByOrganizationId/670e7103-5012-413f-aaf5-05a2f9aadac6"
         x:id="c7ecc6bc-c628-4f62-86cd-5684e28851f6"
+        name="BusinessUnit_GetByOrganizationId"
+        passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
   </DataStructure>

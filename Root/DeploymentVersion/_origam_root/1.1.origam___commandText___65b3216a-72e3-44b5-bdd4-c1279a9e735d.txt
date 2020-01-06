@@ -1,0 +1,12 @@
+﻿CREATE TABLE [AsapSyncConfig] (
+	[refSourceAsapSyncConnectionId] UNIQUEIDENTIFIER NOT NULL,
+	[Name] NVARCHAR(200) NOT NULL,
+	[refSourceAsapSyncProviderConfigId] UNIQUEIDENTIFIER NOT NULL,
+	[refTargetAsapSyncConnectionId] UNIQUEIDENTIFIER NOT NULL,
+	[refTargetAsapSyncProviderConfigId] UNIQUEIDENTIFIER NOT NULL,
+	[refCounterReferenceCode] NVARCHAR(40) NOT NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL)

@@ -1,36 +1,36 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="false"
-    name="OrigamDataAuditLog"
     abstract="false"
     x:id="530eba45-40db-470d-8e53-8b98ace758ad"
+    localized="false"
+    name="OrigamDataAuditLog"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="true"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="AuditRecord"
       abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/1d8e4557-fa7c-4f1d-868d-9138ecf6bb97"
       x:id="e5eabac7-cf91-437c-b4d5-94f1d885fbde"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="AuditRecord"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
     <DataStructureFilterSet
-      dynamic="false"
-      name="GetByRecordId"
       abstract="false"
+      dynamic="false"
       x:id="e0602afa-e86d-4f03-bcb8-aee19f976961"
+      name="GetByRecordId"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        passWhenParameterMatch="false"
-        name="AuditRecord_GetByParentRecordId"
         abstract="false"
         entity="Root/DataStructure/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/AuditRecord/e5eabac7-cf91-437c-b4d5-94f1d885fbde"
         filter="Root/DataEntity/__Origam General Interfaces/IOrigamGeneralEntityAttachment.origam#IOrigamGeneralEntityAttachment/GetByParentRecordId/f61532be-17e8-4f4f-8bf7-43189c296c55"
         x:id="6ad90e6d-a452-42f6-816d-c8390c07d253"
+        name="AuditRecord_GetByParentRecordId"
+        passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
   </DataStructure>

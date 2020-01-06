@@ -1,98 +1,98 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
-    mappedObjectName="ResourceList"
+    abstract="false"
+    audit="None"
     databaseObjectType="View"
     generateDeploymentScript="true"
-    readOnly="false"
-    audit="None"
-    name="ResourceList"
-    abstract="false"
     x:id="f54b6a02-d405-4317-8c60-84baf0824024"
+    mappedObjectName="ResourceList"
+    name="ResourceList"
+    readOnly="false"
     x:type="Origam.Schema.EntityModel.TableMappingItem">
     <DataEntityColumn
-      mappedColumnName="refMemberResourceId"
-      excludeFromAuditing="false"
-      dataType="UniqueIdentifier"
+      abstract="false"
       allowNulls="false"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="5b30db10-ac2a-4d0f-b7b2-448388fef1b1"
       isPrimaryKey="false"
       label="Zdroj"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
+      mappedColumnName="refMemberResourceId"
       name="refMemberResourceId"
-      abstract="false"
-      x:id="5b30db10-ac2a-4d0f-b7b2-448388fef1b1"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
     <DataEntityColumn
-      mappedColumnName="refGroupResourceId"
-      excludeFromAuditing="false"
-      dataType="UniqueIdentifier"
+      abstract="false"
       allowNulls="false"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="2c5fa65e-e977-4968-9940-9360e8641c42"
       isPrimaryKey="false"
       label="Skupina"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
+      mappedColumnName="refGroupResourceId"
       name="refGroupResourceId"
-      abstract="false"
-      x:id="2c5fa65e-e977-4968-9940-9360e8641c42"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
     <EntityFilter
-      name="GetByResourceId_ActiveResource"
       abstract="false"
       x:id="74b13a30-a6fa-4fcc-8db4-66f80ac30763"
+      name="GetByResourceId_ActiveResource"
       x:type="Origam.Schema.EntityModel.EntityFilter">
       <DataEntityColumn
-        forceDatabaseCalculation="false"
-        dataType="Boolean"
-        allowNulls="true"
-        isPrimaryKey="false"
-        excludeFromAllFields="false"
-        autoIncrement="false"
-        xmlMappingType="Attribute"
-        onCopyAction="Copy"
-        name="="
         abstract="false"
+        allowNulls="true"
+        autoIncrement="false"
+        dataType="Boolean"
+        excludeFromAllFields="false"
+        forceDatabaseCalculation="false"
         function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
         x:id="09091d40-675b-41ef-85bc-954df7488c73"
-        x:type="Origam.Schema.EntityModel.FunctionCall">
+        isPrimaryKey="false"
+        name="="
+        onCopyAction="Copy"
+        x:type="Origam.Schema.EntityModel.FunctionCall"
+        xmlMappingType="Attribute">
         <FunctionCallParameter
-          name="Right"
           abstract="false"
-          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
           x:id="18c83d92-eacb-400f-baae-42229bff09de"
+          name="Right"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
           x:type="Origam.Schema.EntityModel.FunctionCallParameter">
           <ParameterReference
-            name="parCurrentUserResourceId"
             abstract="false"
-            parameter="Root/DataEntity/Resource Management/ResourceList.origam#ResourceList/parCurrentUserResourceId/5e9895fc-8f28-4a73-911d-ddd00133575d"
             x:id="c0a72574-0cb2-439b-8c97-5d79cf0fdb1f"
+            name="parCurrentUserResourceId"
+            parameter="Root/DataEntity/Resource Management/ResourceList.origam#ResourceList/parCurrentUserResourceId/5e9895fc-8f28-4a73-911d-ddd00133575d"
             x:type="Origam.Schema.ParameterReference" />
         </FunctionCallParameter>
         <FunctionCallParameter
-          name="Left"
           abstract="false"
-          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
           x:id="bfcb777c-4b93-4cc7-a4ec-a41b9ee282a0"
+          name="Left"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
           x:type="Origam.Schema.EntityModel.FunctionCallParameter">
           <EntityColumnReference
-            name="ResourceId"
             abstract="false"
             field="Root/DataEntity/Resource Management/ResourceList.origam#ResourceList/refMemberResourceId/5b30db10-ac2a-4d0f-b7b2-448388fef1b1"
             x:id="8bfce9fe-3af9-4fc5-95a2-489a8f24c979"
+            name="ResourceId"
             x:type="Origam.Schema.EntityModel.EntityColumnReference" />
         </FunctionCallParameter>
       </DataEntityColumn>
     </EntityFilter>
     <Parameter
-      dataType="UniqueIdentifier"
-      allowNulls="true"
-      name="parCurrentUserResourceId"
       abstract="true"
+      allowNulls="true"
+      dataType="UniqueIdentifier"
       x:id="5e9895fc-8f28-4a73-911d-ddd00133575d"
+      name="parCurrentUserResourceId"
       x:type="Origam.Schema.SchemaItemParameter" />
   </DataEntity>
 </x:file>

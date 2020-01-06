@@ -1,2 +1,2 @@
-ALTER TABLE [WorkQueue] ADD [IsMessageCountDisplayed] BIT NOT NULL CONSTRAINT [DF_WorkQueue_IsMessageCountDisplayed] DEFAULT 1
+﻿ALTER TABLE [WorkQueue] ADD [IsMessageCountDisplayed] BIT NOT NULL CONSTRAINT [DF_WorkQueue_IsMessageCountDisplayed] DEFAULT 1
 ALTER TABLE [WorkQueue] DROP CONSTRAINT [DF_WorkQueue_IsMessageCountDisplayed]

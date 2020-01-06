@@ -1,0 +1,18 @@
+﻿CREATE TABLE [AsapTraceWorkflowStep] (
+	[Category] NVARCHAR(255) NOT NULL,
+	[Subcategory] NVARCHAR(255) NOT NULL,
+	[Remark] NVARCHAR(500) NULL,
+	[WorkflowStepId] UNIQUEIDENTIFIER NOT NULL,
+	[WorkflowStepPath] NTEXT NOT NULL,
+	[Data1] NTEXT NULL,
+	[Data2] NTEXT NULL,
+	[refAsapTraceWorkflowId] UNIQUEIDENTIFIER NOT NULL,
+	[Message] NTEXT NULL,
+	[RecordUpdated] DATETIME NULL,
+	[RecordCreatedServer] DATETIME NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordUpdatedServer] DATETIME NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL)
+CREATE INDEX [ix_refAsapTraceWorkflowId] ON [AsapTraceWorkflowStep] ([refAsapTraceWorkflowId] ASC)

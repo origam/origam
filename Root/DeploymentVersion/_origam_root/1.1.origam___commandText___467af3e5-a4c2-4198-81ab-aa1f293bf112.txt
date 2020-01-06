@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE [ResourceGroupMember] ADD CONSTRAINT FK_ResourceGroupMember_refGroupResourceId_Resource
+	FOREIGN KEY (
+		[refGroupResourceId]
+	)
+
+	REFERENCES [Resource] (
+		[Id]
+	)
+ALTER TABLE [ResourceGroupMember] ADD CONSTRAINT FK_ResourceGroupMember_refMemberResourceId_Resource
+	FOREIGN KEY (
+		[refMemberResourceId]
+	)
+
+	REFERENCES [Resource] (
+		[Id]
+	)

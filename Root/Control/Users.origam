@@ -1,16 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Control
-    toolboxVisibility="FormDesigner"
-    typeName="Origam.Schema.GuiModel.PanelControlSet"
-    namespace="Origam.Schema.GuiModel"
-    isComplex="true"
-    requestSaveAfterChangeAllowed="false"
-    name="Users"
     abstract="false"
-    screenSection="Root/PanelControlSet/__system/Users.origam#Users/63805a22-ffc2-4d1b-9a1f-e53421a4dfd2"
     x:id="f84a7994-05eb-4b70-907e-e1e491e96473"
-    x:type="Origam.Schema.GuiModel.ControlItem">
+    isComplex="true"
+    name="Users"
+    namespace="Origam.Schema.GuiModel"
+    requestSaveAfterChangeAllowed="false"
+    screenSection="Root/PanelControlSet/__system/Users.origam#Users/63805a22-ffc2-4d1b-9a1f-e53421a4dfd2"
+    toolboxVisibility="FormDesigner"
+    x:type="Origam.Schema.GuiModel.ControlItem"
+    typeName="Origam.Schema.GuiModel.PanelControlSet">
     <ancestor
       ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
       x:id="3408690c-a024-45d1-8a6c-b5d3e67999ce"

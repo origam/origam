@@ -1,22 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Function
-    dataType="Float"
-    type="Database"
-    name="Distance"
     abstract="false"
+    dataType="Float"
     x:id="c19b8313-c18d-4308-9b53-d34a914f53e6"
+    name="Distance"
+    type="Database"
     x:type="Origam.Schema.EntityModel.Function">
     <FunctionParameter
-      name="Param1"
       abstract="false"
       x:id="642da5c8-6a8d-4038-87db-0949fc80c602"
+      name="Param1"
       x:type="Origam.Schema.EntityModel.FunctionParameter" />
     <FunctionParameter
-      ordinalPosition="1"
-      name="Param2"
       abstract="false"
       x:id="5651dd4b-d93e-4f56-b2bb-6df3740d6c40"
+      name="Param2"
+      ordinalPosition="1"
       x:type="Origam.Schema.EntityModel.FunctionParameter" />
   </Function>
 </x:file>

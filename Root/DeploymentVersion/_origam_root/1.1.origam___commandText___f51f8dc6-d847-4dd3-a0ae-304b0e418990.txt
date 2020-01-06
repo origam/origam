@@ -1,0 +1,4 @@
+﻿CREATE TABLE [AsapModelVersion] (
+	[Version] NVARCHAR(20) NULL,
+	[refSchemaExtensionId] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[DateUpdated] DATETIME NOT NULL)

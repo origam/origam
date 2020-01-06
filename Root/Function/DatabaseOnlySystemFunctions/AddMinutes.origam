@@ -1,22 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Function
-    dataType="Date"
-    type="Database"
-    name="AddMinutes"
     abstract="false"
+    dataType="Date"
     x:id="a27bd080-bed0-4e64-bdd3-16c80c345422"
+    name="AddMinutes"
+    type="Database"
     x:type="Origam.Schema.EntityModel.Function">
     <FunctionParameter
-      ordinalPosition="1"
-      name="Minutes"
       abstract="false"
       x:id="874231fe-eb51-49fb-bac8-401ffb45b643"
+      name="Minutes"
+      ordinalPosition="1"
       x:type="Origam.Schema.EntityModel.FunctionParameter" />
     <FunctionParameter
-      name="Date"
       abstract="false"
       x:id="1560cebb-724b-4109-96b7-93183e2dde44"
+      name="Date"
       x:type="Origam.Schema.EntityModel.FunctionParameter" />
   </Function>
 </x:file>

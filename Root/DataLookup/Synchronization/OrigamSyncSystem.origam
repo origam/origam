@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="Name"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="Name"
-    name="OrigamSyncSystem"
     abstract="false"
-    listDataStructure="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncSystem.origam#LookupOrigamSyncSystem/c7738e5f-e84f-4eb8-b89c-a15a26740a94"
-    valueDataStructure="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncSystem.origam#LookupOrigamSyncSystem/c7738e5f-e84f-4eb8-b89c-a15a26740a94"
-    valueMethod="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncSystem.origam#LookupOrigamSyncSystem/GetId/2c61c8d6-de2b-45e0-b26b-79697a939a1e"
+    alwaysAllowReturnToForm="false"
     x:id="118fbf71-83af-4ddc-b143-acb894abd8a6"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncSystem.origam#LookupOrigamSyncSystem/c7738e5f-e84f-4eb8-b89c-a15a26740a94"
+    listDisplayMember="Name"
+    listValueMember="Id"
+    name="OrigamSyncSystem"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncSystem.origam#LookupOrigamSyncSystem/c7738e5f-e84f-4eb8-b89c-a15a26740a94"
+    valueDisplayMember="Name"
+    valueMethod="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncSystem.origam#LookupOrigamSyncSystem/GetId/2c61c8d6-de2b-45e0-b26b-79697a939a1e"
+    valueValueMember="Id" />
 </x:file>

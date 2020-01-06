@@ -1,15 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
-    mappedObjectName="Dimension4"
+    abstract="false"
+    audit="All"
     databaseObjectType="Table"
     generateDeploymentScript="true"
-    readOnly="false"
-    audit="All"
-    label="Dimenze 4"
-    name="Dimension4"
-    abstract="false"
     x:id="5078f831-7962-477e-bf69-b3ff10c80f44"
+    label="Dimenze 4"
+    mappedObjectName="Dimension4"
+    name="Dimension4"
+    readOnly="false"
     x:type="Origam.Schema.EntityModel.TableMappingItem">
     <ancestor
       ancestor="Root/DataEntity/Dimensions/IDimension.origam#IDimension/8f904896-6095-49c3-b972-f5329b73b3da"

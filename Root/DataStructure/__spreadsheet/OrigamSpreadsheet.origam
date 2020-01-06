@@ -1,60 +1,60 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="false"
-    dataSetClass="Origam.Workflow.FileService.OrigamSpreadsheet, Origam.Workflow.FileService"
-    name="OrigamSpreadsheet"
     abstract="false"
+    dataSetClass="Origam.Workflow.FileService.OrigamSpreadsheet, Origam.Workflow.FileService"
     x:id="c131aa04-6310-455d-a7cd-4e19dd012241"
+    localized="false"
+    name="OrigamSpreadsheet"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="true"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="Workbook"
       abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/__spreadsheet/OrigamSpreadsheetWorkbook.origam#OrigamSpreadsheetWorkbook/851ca8d8-9133-4d91-8a03-0f2cfd402527"
       x:id="a8fd7ba5-98c7-44ad-8037-6247edf7bd44"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="Workbook"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
       <DataStructureEntity
-        allFields="true"
-        ignoreImplicitFilters="false"
-        ignoreCondition="None"
-        concurrencyHandling="Standard"
-        relationType="Normal"
-        useUpsert="false"
-        name="Sheet"
         abstract="false"
+        allFields="true"
+        concurrencyHandling="Standard"
         entity="Root/DataEntity/__spreadsheet/OrigamSpreadsheetWorkbook.origam#OrigamSpreadsheetWorkbook/Sheet/3d73eea8-1ffc-4321-b6b0-67c932ddfce8"
         x:id="a0c98567-c891-470c-860b-a8e425c75715"
-        x:type="Origam.Schema.EntityModel.DataStructureEntity">
+        ignoreCondition="None"
+        ignoreImplicitFilters="false"
+        name="Sheet"
+        relationType="Normal"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity"
+        useUpsert="false">
         <DataStructureEntity
-          allFields="true"
-          ignoreImplicitFilters="false"
-          ignoreCondition="None"
-          concurrencyHandling="Standard"
-          relationType="Normal"
-          useUpsert="false"
-          name="Row"
           abstract="false"
+          allFields="true"
+          concurrencyHandling="Standard"
           entity="Root/DataEntity/__spreadsheet/OrigamSpreadsheetSheet.origam#OrigamSpreadsheetSheet/Row/8a9aacae-0c47-444f-80d0-26bca98cbf15"
           x:id="19b737fd-7c7f-4239-8120-3b24cd4b6ca8"
-          x:type="Origam.Schema.EntityModel.DataStructureEntity">
+          ignoreCondition="None"
+          ignoreImplicitFilters="false"
+          name="Row"
+          relationType="Normal"
+          x:type="Origam.Schema.EntityModel.DataStructureEntity"
+          useUpsert="false">
           <DataStructureEntity
-            allFields="true"
-            ignoreImplicitFilters="false"
-            ignoreCondition="None"
-            concurrencyHandling="Standard"
-            relationType="Normal"
-            useUpsert="false"
-            name="Cell"
             abstract="false"
+            allFields="true"
+            concurrencyHandling="Standard"
             entity="Root/DataEntity/__spreadsheet/OrigamSpreadsheetRow.origam#OrigamSpreadsheetRow/Cell/a929969c-8875-48c6-9ef5-718c3e456bf8"
             x:id="b024f92e-d96b-4833-bba1-bbaf64ee4b86"
-            x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+            ignoreCondition="None"
+            ignoreImplicitFilters="false"
+            name="Cell"
+            relationType="Normal"
+            x:type="Origam.Schema.EntityModel.DataStructureEntity"
+            useUpsert="false" />
         </DataStructureEntity>
       </DataStructureEntity>
     </DataStructureEntity>

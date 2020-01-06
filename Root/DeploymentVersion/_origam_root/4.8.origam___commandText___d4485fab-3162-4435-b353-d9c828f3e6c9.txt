@@ -1,4 +1,4 @@
-CREATE TABLE [AsapMapLayerParameter] (
+﻿CREATE TABLE [AsapMapLayerParameter] (
 	[refAsapMapLayerId] UNIQUEIDENTIFIER NOT NULL,
 	[Value] NTEXT NOT NULL,
 	[Name] NVARCHAR(40) NOT NULL,

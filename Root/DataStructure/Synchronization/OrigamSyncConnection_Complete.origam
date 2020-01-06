@@ -1,49 +1,49 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataStructure
-    localized="false"
-    name="OrigamSyncConnection_Complete"
     abstract="false"
     x:id="c2b8c1eb-05cc-4866-9737-116fce0ff292"
+    localized="false"
+    name="OrigamSyncConnection_Complete"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
-      allFields="true"
-      ignoreImplicitFilters="false"
-      ignoreCondition="None"
-      concurrencyHandling="Standard"
-      relationType="Normal"
-      useUpsert="false"
-      name="OrigamSyncConnection"
       abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
       entity="Root/DataEntity/Synchronization/OrigamSyncConnection.origam#OrigamSyncConnection/994886a2-0850-4745-9e33-bec58cf6756e"
       x:id="1c1ff246-62dc-4f62-a4d6-13ee177c3c7e"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity">
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamSyncConnection"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
       <DataStructureEntity
-        allFields="true"
-        ignoreImplicitFilters="false"
-        ignoreCondition="None"
-        concurrencyHandling="Standard"
-        relationType="Normal"
-        useUpsert="false"
-        name="OrigamSyncConnectionParameter"
         abstract="false"
+        allFields="true"
+        concurrencyHandling="Standard"
         entity="Root/DataEntity/Synchronization/OrigamSyncConnection.origam#OrigamSyncConnection/OrigamSyncConnectionParameter/5597e156-a54f-4702-9c3c-a6dd3a470bf7"
         x:id="209c7829-acd8-4c24-9124-bcb925561727"
-        x:type="Origam.Schema.EntityModel.DataStructureEntity" />
+        ignoreCondition="None"
+        ignoreImplicitFilters="false"
+        name="OrigamSyncConnectionParameter"
+        relationType="Normal"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity"
+        useUpsert="false" />
     </DataStructureEntity>
     <DataStructureFilterSet
-      dynamic="false"
-      name="GetId"
       abstract="false"
+      dynamic="false"
       x:id="b2d15b8a-fbbd-417c-9e01-d0ed23e4f8b1"
+      name="GetId"
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
-        passWhenParameterMatch="false"
-        name="OrigamSyncConnection_GetId"
         abstract="false"
         entity="Root/DataStructure/Synchronization/OrigamSyncConnection_Complete.origam#OrigamSyncConnection_Complete/OrigamSyncConnection/1c1ff246-62dc-4f62-a4d6-13ee177c3c7e"
         filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
         x:id="4956f781-8b95-4575-adeb-ffe172ecd80d"
+        name="OrigamSyncConnection_GetId"
+        passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
   </DataStructure>

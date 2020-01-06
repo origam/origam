@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="IsSundayWorkingDay"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="IsSundayWorkingDay"
-    name="OrigamCalendar_IsSundayWorkingDay"
     abstract="false"
-    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCalendar_WorkingDays.origam#LookupOrigamCalendar_WorkingDays/8903b2c4-be5f-4741-9268-7fd461a86f5f"
-    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCalendar_WorkingDays.origam#LookupOrigamCalendar_WorkingDays/8903b2c4-be5f-4741-9268-7fd461a86f5f"
-    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamCalendar_WorkingDays.origam#LookupOrigamCalendar_WorkingDays/GetId/3df928ca-5eb8-4852-a1b3-9d18b02a15f6"
+    alwaysAllowReturnToForm="false"
     x:id="1290be23-49a7-4e95-bae5-c983047c8529"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCalendar_WorkingDays.origam#LookupOrigamCalendar_WorkingDays/8903b2c4-be5f-4741-9268-7fd461a86f5f"
+    listDisplayMember="IsSundayWorkingDay"
+    listValueMember="Id"
+    name="OrigamCalendar_IsSundayWorkingDay"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCalendar_WorkingDays.origam#LookupOrigamCalendar_WorkingDays/8903b2c4-be5f-4741-9268-7fd461a86f5f"
+    valueDisplayMember="IsSundayWorkingDay"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamCalendar_WorkingDays.origam#LookupOrigamCalendar_WorkingDays/GetId/3df928ca-5eb8-4852-a1b3-9d18b02a15f6"
+    valueValueMember="Id" />
 </x:file>

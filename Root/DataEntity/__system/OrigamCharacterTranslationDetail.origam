@@ -1,152 +1,152 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
-    mappedObjectName="OrigamCharacterTranslationDetail"
+    abstract="false"
+    audit="None"
     databaseObjectType="Table"
     generateDeploymentScript="true"
-    readOnly="false"
-    audit="None"
-    label="Character Translation Item"
-    name="OrigamCharacterTranslationDetail"
-    abstract="false"
     x:id="ee9fee5b-2a88-4877-a65c-522f7737f4e9"
+    label="Character Translation Item"
+    mappedObjectName="OrigamCharacterTranslationDetail"
+    name="OrigamCharacterTranslationDetail"
+    readOnly="false"
     x:type="Origam.Schema.EntityModel.TableMappingItem">
     <ancestor
       ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
       x:id="1b998d91-94e1-4611-a8e8-085037cd3ec9"
       x:type="Origam.Schema.SchemaItemAncestor" />
     <DataEntityColumn
-      mappedColumnName="Priority"
-      excludeFromAuditing="false"
-      dataType="Integer"
+      abstract="false"
       allowNulls="false"
+      autoIncrement="false"
+      dataType="Integer"
+      defaultValue="Root/DataConstant/_numbers/_Number_100.origam#_Number_100/fb80e964-1fb5-42f6-8b1c-9f22d27072be"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="50053589-e3cd-4bf0-a2b9-123f1a821bca"
       isPrimaryKey="false"
       label="Priority"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
+      mappedColumnName="Priority"
       name="Priority"
-      abstract="false"
-      defaultValue="Root/DataConstant/_numbers/_Number_100.origam#_Number_100/fb80e964-1fb5-42f6-8b1c-9f22d27072be"
-      x:id="50053589-e3cd-4bf0-a2b9-123f1a821bca"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
     <DataEntityColumn
-      mappedColumnName="Target"
-      excludeFromAuditing="false"
-      dataType="String"
-      dataLength="200"
+      abstract="false"
       allowNulls="false"
+      autoIncrement="false"
+      dataLength="200"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="bb4dc48b-7efb-4c08-94d7-29388dced38b"
       isPrimaryKey="false"
       label="Replacement"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
+      mappedColumnName="Target"
       name="Target"
-      abstract="false"
-      x:id="bb4dc48b-7efb-4c08-94d7-29388dced38b"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
-    <DataEntityColumn
-      mappedColumnName="refOrigamCharacterTranslationId"
-      excludeFromAuditing="false"
-      dataType="UniqueIdentifier"
-      allowNulls="false"
-      isPrimaryKey="false"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
       onCopyAction="Copy"
-      name="refOrigamCharacterTranslationId"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
       abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
       foreignKeyEntity="Root/DataEntity/__system/OrigamCharacterTranslation.origam#OrigamCharacterTranslation/697e0804-f234-4881-9e3d-6d593cb67cfe"
       foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
       x:id="91bc19ab-8e3c-4d18-bc7b-76e09be11832"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+      isPrimaryKey="false"
+      mappedColumnName="refOrigamCharacterTranslationId"
+      name="refOrigamCharacterTranslationId"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
     <DataEntityColumn
-      mappedColumnName="Source"
-      excludeFromAuditing="false"
-      dataType="String"
-      dataLength="200"
+      abstract="false"
       allowNulls="false"
+      autoIncrement="false"
+      dataLength="200"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="16772f33-3345-47ce-bc27-7b52a9f0c3d7"
       isPrimaryKey="false"
       label="Source"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
+      mappedColumnName="Source"
       name="Source"
-      abstract="false"
-      x:id="16772f33-3345-47ce-bc27-7b52a9f0c3d7"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
     <DataEntityIndex
-      unique="false"
-      generateDeploymentScript="false"
-      name="ix_OrigamCharacterTranslation"
       abstract="false"
+      generateDeploymentScript="false"
       x:id="4b32f23a-37d4-4529-875b-eb23490d3e51"
-      x:type="Origam.Schema.EntityModel.DataEntityIndex">
+      name="ix_OrigamCharacterTranslation"
+      x:type="Origam.Schema.EntityModel.DataEntityIndex"
+      unique="false">
       <DataEntityIndexField
-        sortOrder="Ascending"
-        name="0_refOrigamCharacterTranslationId"
         abstract="false"
         field="Root/DataEntity/__system/OrigamCharacterTranslationDetail.origam#OrigamCharacterTranslationDetail/refOrigamCharacterTranslationId/91bc19ab-8e3c-4d18-bc7b-76e09be11832"
         x:id="68ff5a79-cc7b-4813-b500-a37fb9ab2bcb"
+        name="0_refOrigamCharacterTranslationId"
+        sortOrder="Ascending"
         x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
     </DataEntityIndex>
     <EntityFilter
-      name="GetByOrigamCharacterTranslationId"
       abstract="false"
       x:id="abf95e1c-08f4-4d64-aec0-4181632290d5"
+      name="GetByOrigamCharacterTranslationId"
       x:type="Origam.Schema.EntityModel.EntityFilter">
       <DataEntityColumn
-        forceDatabaseCalculation="false"
-        dataType="Boolean"
-        allowNulls="true"
-        isPrimaryKey="false"
-        excludeFromAllFields="false"
-        autoIncrement="false"
-        xmlMappingType="Element"
-        onCopyAction="Copy"
-        name="="
         abstract="false"
+        allowNulls="true"
+        autoIncrement="false"
+        dataType="Boolean"
+        excludeFromAllFields="false"
+        forceDatabaseCalculation="false"
         function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
         x:id="6e93333c-7393-4ef9-8ced-4add1834c5f5"
-        x:type="Origam.Schema.EntityModel.FunctionCall">
+        isPrimaryKey="false"
+        name="="
+        onCopyAction="Copy"
+        x:type="Origam.Schema.EntityModel.FunctionCall"
+        xmlMappingType="Element">
         <FunctionCallParameter
-          name="Right"
           abstract="false"
-          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
           x:id="52ac1cd1-83cc-4cf4-ac1c-90f2845f0e72"
+          name="Right"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
           x:type="Origam.Schema.EntityModel.FunctionCallParameter">
           <ParameterReference
-            name="parOrigamCharacterTranslationId"
             abstract="false"
-            parameter="Root/DataEntity/__system/OrigamCharacterTranslationDetail.origam#OrigamCharacterTranslationDetail/parOrigamCharacterTranslationId/828fd55b-0bdc-4ac1-b908-a38908afd987"
             x:id="35b5b57c-f87b-454b-a64c-254efc36f923"
+            name="parOrigamCharacterTranslationId"
+            parameter="Root/DataEntity/__system/OrigamCharacterTranslationDetail.origam#OrigamCharacterTranslationDetail/parOrigamCharacterTranslationId/828fd55b-0bdc-4ac1-b908-a38908afd987"
             x:type="Origam.Schema.ParameterReference" />
         </FunctionCallParameter>
         <FunctionCallParameter
-          name="Left"
           abstract="false"
-          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
           x:id="0e735040-b70c-431e-b84e-ad29ecde574b"
+          name="Left"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
           x:type="Origam.Schema.EntityModel.FunctionCallParameter">
           <EntityColumnReference
-            name="refOrigamCharacterTranslationId"
             abstract="false"
             field="Root/DataEntity/__system/OrigamCharacterTranslationDetail.origam#OrigamCharacterTranslationDetail/refOrigamCharacterTranslationId/91bc19ab-8e3c-4d18-bc7b-76e09be11832"
             x:id="4bcece2d-b69e-4257-9f1e-0ff45931282e"
+            name="refOrigamCharacterTranslationId"
             x:type="Origam.Schema.EntityModel.EntityColumnReference" />
         </FunctionCallParameter>
       </DataEntityColumn>
     </EntityFilter>
     <Parameter
-      dataType="UniqueIdentifier"
-      allowNulls="false"
-      name="parOrigamCharacterTranslationId"
       abstract="false"
+      allowNulls="false"
+      dataType="UniqueIdentifier"
       x:id="828fd55b-0bdc-4ac1-b908-a38908afd987"
+      name="parOrigamCharacterTranslationId"
       x:type="Origam.Schema.SchemaItemParameter" />
   </DataEntity>
 </x:file>

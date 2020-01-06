@@ -1,33 +1,33 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <WorkQueueClass
-    name="MQMessage"
     abstract="false"
-    workQueueStructure="Root/DataStructure/Work Queue/WQ_MQMessage.origam#WQ_MQMessage/df65d708-2ea9-4d4e-a2c5-8f32e3b2e85e"
-    workQueueStructureUserListMethod="Root/DataStructure/Work Queue/WQ_MQMessage.origam#WQ_MQMessage/GetByQueueId/1bce28e3-af27-4838-bf58-25fa89222e70"
-    workQueueStructureSortSet="Root/DataStructure/Work Queue/WQ_MQMessage.origam#WQ_MQMessage/ByReceivedTime/5f5bdacb-4d37-479c-a44b-4b9c617147fa"
-    workQueueItemCountLookup="Root/DataLookup/Work Queue/WorkQueueCount_Total.origam#WorkQueueCount_Total/2a953c7d-0276-42c4-99b9-aa484808bbcb"
     x:id="0dba45e7-44f2-471e-b139-55637b39abbf"
-    x:type="Origam.Schema.WorkflowModel.WorkQueueClass">
+    name="MQMessage"
+    x:type="Origam.Schema.WorkflowModel.WorkQueueClass"
+    workQueueItemCountLookup="Root/DataLookup/Work Queue/WorkQueueCount_Total.origam#WorkQueueCount_Total/2a953c7d-0276-42c4-99b9-aa484808bbcb"
+    workQueueStructure="Root/DataStructure/Work Queue/WQ_MQMessage.origam#WQ_MQMessage/df65d708-2ea9-4d4e-a2c5-8f32e3b2e85e"
+    workQueueStructureSortSet="Root/DataStructure/Work Queue/WQ_MQMessage.origam#WQ_MQMessage/ByReceivedTime/5f5bdacb-4d37-479c-a44b-4b9c617147fa"
+    workQueueStructureUserListMethod="Root/DataStructure/Work Queue/WQ_MQMessage.origam#WQ_MQMessage/GetByQueueId/1bce28e3-af27-4838-bf58-25fa89222e70">
     <WorkQueueClassEntityMapping
-      xPath="/ROOT/Message/ReceivedTime"
-      sortOrder="1"
-      name="ReceivedTime"
       abstract="false"
       x:id="2e0f2b14-9c18-41e4-940b-1729c2a82d92"
-      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
+      name="ReceivedTime"
+      sortOrder="1"
+      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping"
+      xPath="/ROOT/Message/ReceivedTime" />
     <WorkQueueClassEntityMapping
-      xPath="/ROOT/Message/MessageSequenceNumber"
-      name="MessageSequenceNumber"
       abstract="false"
       x:id="c32a9f94-833b-47d7-be6c-a6bb22688353"
-      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
+      name="MessageSequenceNumber"
+      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping"
+      xPath="/ROOT/Message/MessageSequenceNumber" />
     <WorkQueueClassEntityMapping
-      xPath="/ROOT/Message/Message"
-      sortOrder="2"
-      name="Message"
       abstract="false"
       x:id="2e2ef577-6262-4eb4-b8ea-b8f2d604a241"
-      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping" />
+      name="Message"
+      sortOrder="2"
+      x:type="Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping"
+      xPath="/ROOT/Message/Message" />
   </WorkQueueClass>
 </x:file>

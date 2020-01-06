@@ -1,12 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataConstant
-    dataType="UniqueIdentifier"
-    value="e7b1761f-7126-4a20-9da3-80872de80227"
-    userDefinable="false"
-    name="WorkQueueCommandType_WorkQueueClassCommand"
     abstract="false"
-    lookup="Root/DataLookup/Work Queue/WorkQueueCommandType.origam#WorkQueueCommandType/122a4b55-9069-4f5a-a771-0e861af68791"
+    dataType="UniqueIdentifier"
     x:id="9a6f4d8b-f052-4796-9b30-55c083e07c87"
-    x:type="Origam.Schema.EntityModel.DataConstant" />
+    lookup="Root/DataLookup/Work Queue/WorkQueueCommandType.origam#WorkQueueCommandType/122a4b55-9069-4f5a-a771-0e861af68791"
+    name="WorkQueueCommandType_WorkQueueClassCommand"
+    x:type="Origam.Schema.EntityModel.DataConstant"
+    userDefinable="false"
+    value="e7b1761f-7126-4a20-9da3-80872de80227" />
 </x:file>

@@ -1,1 +1,1 @@
-UPDATE [WorkQueueCommand] SET [Roles] = '*'
+﻿UPDATE [WorkQueueCommand] SET [Roles] = '*'

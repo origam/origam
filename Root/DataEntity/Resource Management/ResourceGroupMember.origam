@@ -1,81 +1,81 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
-    mappedObjectName="ResourceGroupMember"
+    abstract="false"
+    audit="All"
     databaseObjectType="Table"
     generateDeploymentScript="true"
-    readOnly="false"
-    audit="All"
-    name="ResourceGroupMember"
-    abstract="false"
     x:id="f924f620-294c-4e57-96a1-e5ff2942f19e"
+    mappedObjectName="ResourceGroupMember"
+    name="ResourceGroupMember"
+    readOnly="false"
     x:type="Origam.Schema.EntityModel.TableMappingItem">
     <ancestor
       ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
       x:id="cdc26643-ff5c-48c3-9e22-cd787a0cb341"
       x:type="Origam.Schema.SchemaItemAncestor" />
     <DataEntityColumn
-      mappedColumnName="refGroupResourceId"
-      excludeFromAuditing="false"
-      dataType="UniqueIdentifier"
-      allowNulls="false"
-      isPrimaryKey="false"
-      label="Skupina"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
-      name="refGroupResourceId"
       abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
       foreignKeyEntity="Root/DataEntity/Resource Management/Resource.origam#Resource/b8d208f2-c703-4e8a-9602-c70327f56173"
       foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
       x:id="08f09597-bbc1-45a9-938d-51f287e1d2a4"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
-    <DataEntityColumn
-      mappedColumnName="refMemberResourceId"
-      excludeFromAuditing="false"
-      dataType="UniqueIdentifier"
-      allowNulls="false"
       isPrimaryKey="false"
-      label="Člen"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
+      label="Skupina"
+      mappedColumnName="refGroupResourceId"
+      name="refGroupResourceId"
       onCopyAction="Copy"
-      name="refMemberResourceId"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
       abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
       foreignKeyEntity="Root/DataEntity/Resource Management/Resource.origam#Resource/b8d208f2-c703-4e8a-9602-c70327f56173"
       foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
       x:id="fd94ca3d-5c4e-43dc-97e6-8d1f731f9abf"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+      isPrimaryKey="false"
+      label="Člen"
+      mappedColumnName="refMemberResourceId"
+      name="refMemberResourceId"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
     <DataEntityIndex
-      unique="false"
-      generateDeploymentScript="false"
-      name="ix_Resource"
       abstract="false"
+      generateDeploymentScript="false"
       x:id="977b7d00-fecb-4879-b7d6-427c25789dc4"
-      x:type="Origam.Schema.EntityModel.DataEntityIndex">
+      name="ix_Resource"
+      x:type="Origam.Schema.EntityModel.DataEntityIndex"
+      unique="false">
       <DataEntityIndexField
-        sortOrder="Ascending"
-        name="0_refResourceId"
         abstract="false"
         field="Root/DataEntity/Resource Management/ResourceGroupMember.origam#ResourceGroupMember/refMemberResourceId/fd94ca3d-5c4e-43dc-97e6-8d1f731f9abf"
         x:id="ab9eeb69-43f7-433b-a3bd-1eab3e43b899"
+        name="0_refResourceId"
+        sortOrder="Ascending"
         x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
     </DataEntityIndex>
     <DataEntityIndex
-      unique="false"
-      generateDeploymentScript="false"
-      name="ix_MemberResource"
       abstract="false"
+      generateDeploymentScript="false"
       x:id="713c62b3-bc66-4970-ba64-f02f4029c6d9"
-      x:type="Origam.Schema.EntityModel.DataEntityIndex">
+      name="ix_MemberResource"
+      x:type="Origam.Schema.EntityModel.DataEntityIndex"
+      unique="false">
       <DataEntityIndexField
-        sortOrder="Ascending"
-        name="0_refMemberResourceId"
         abstract="false"
         field="Root/DataEntity/Resource Management/ResourceGroupMember.origam#ResourceGroupMember/refMemberResourceId/fd94ca3d-5c4e-43dc-97e6-8d1f731f9abf"
         x:id="cdf69dd5-f8fd-4f7f-86f7-28bd6caf9b70"
+        name="0_refMemberResourceId"
+        sortOrder="Ascending"
         x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
     </DataEntityIndex>
   </DataEntity>

@@ -1,16 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Function
-    dataType="String"
-    type="Database"
-    name="Soundex"
     abstract="false"
+    dataType="String"
     x:id="af17d8f2-1126-4551-9324-1737107b7ebb"
+    name="Soundex"
+    type="Database"
     x:type="Origam.Schema.EntityModel.Function">
     <FunctionParameter
-      name="Text"
       abstract="false"
       x:id="9592a5dc-5c1d-46bc-b845-0c1482145423"
+      name="Text"
       x:type="Origam.Schema.EntityModel.FunctionParameter" />
   </Function>
 </x:file>

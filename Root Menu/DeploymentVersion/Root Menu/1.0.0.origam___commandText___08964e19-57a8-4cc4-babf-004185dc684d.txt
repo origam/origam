@@ -1,1 +1,1 @@
-INSERT INTO AsapApplicationRole (Id, Name, Description, IsSystemRole, RecordCreated) VALUES (newid(), 'FRM_MapLayer', 'Menu > Settings > Maps > Map Layers', 1, getdate())
+﻿INSERT INTO AsapApplicationRole (Id, Name, Description, IsSystemRole, RecordCreated) VALUES (newid(), 'FRM_MapLayer', 'Menu > Settings > Maps > Map Layers', 1, getdate())

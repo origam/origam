@@ -1,2 +1,2 @@
-DELETE FROM AsapMapAsapMapLayer
+﻿DELETE FROM AsapMapAsapMapLayer
 DELETE FROM AsapMap

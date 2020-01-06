@@ -1,9 +1,0 @@
-
-ALTER TABLE [Organization] ADD CONSTRAINT FK_Organization_refBusinessPartnerId_BusinessPartner
-	FOREIGN KEY (
-		[refBusinessPartnerId]
-	)
-
-	REFERENCES [BusinessPartner] (
-		[Id]
-	)

@@ -1,91 +1,91 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Workflow
-    transactionBehavior="InheritExisting"
-    traceLevel="None"
-    name="SendEmailFromQueue"
     abstract="false"
     x:id="b882bf76-fea8-4b38-82bd-f41e851527fe"
+    name="SendEmailFromQueue"
+    traceLevel="None"
+    transactionBehavior="InheritExisting"
     x:type="Origam.Schema.WorkflowModel.Workflow">
     <ContextStore
-      dataType="Xml"
-      isReturnValue="false"
-      disableConstraints="false"
-      name="WQ_Mail"
       abstract="false"
-      structure="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/a919bc9e-69b5-4d8b-ae56-dca81195239b"
+      dataType="Xml"
+      disableConstraints="false"
       x:id="0ca52fa8-5ce7-4790-9bf2-103d41036381"
+      isReturnValue="false"
+      name="WQ_Mail"
+      structure="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/a919bc9e-69b5-4d8b-ae56-dca81195239b"
       x:type="Origam.Schema.WorkflowModel.ContextStore" />
     <WorkflowTask
-      outputMethod="Ignore"
-      traceLevel="InheritFromParent"
-      roles="*"
-      name="Send"
       abstract="false"
-      serviceMethod="Root/Service/WorkflowService.origam#WorkflowService/ExecuteWorkflow/92bafb78-2b5c-479a-902b-8c65162a659d"
-      service="Root/Service/WorkflowService.origam#WorkflowService/a6838699-113c-4126-803c-39f05b33a7c3"
-      outputContextStore="Root/Workflow/Work Queues/SendEmailFromQueue.origam#SendEmailFromQueue/WQ_Mail/0ca52fa8-5ce7-4790-9bf2-103d41036381"
       x:id="c70170ac-95d0-49d3-9bd7-b1572a2139f9"
+      name="Send"
+      outputContextStore="Root/Workflow/Work Queues/SendEmailFromQueue.origam#SendEmailFromQueue/WQ_Mail/0ca52fa8-5ce7-4790-9bf2-103d41036381"
+      outputMethod="Ignore"
+      roles="*"
+      service="Root/Service/WorkflowService.origam#WorkflowService/a6838699-113c-4126-803c-39f05b33a7c3"
+      serviceMethod="Root/Service/WorkflowService.origam#WorkflowService/ExecuteWorkflow/92bafb78-2b5c-479a-902b-8c65162a659d"
+      traceLevel="InheritFromParent"
       x:type="Origam.Schema.WorkflowModel.ServiceMethodCallTask">
       <ServiceMethodCallParameter
-        name="Workflow"
         abstract="false"
-        serviceMethodParameter="Root/Service/WorkflowService.origam#WorkflowService/ExecuteWorkflow/Workflow/186c6a9c-8613-4251-8be8-48eded88f3c2"
         x:id="c17a276a-d9f8-49eb-b04b-5adba99432ef"
+        name="Workflow"
+        serviceMethodParameter="Root/Service/WorkflowService.origam#WorkflowService/ExecuteWorkflow/Workflow/186c6a9c-8613-4251-8be8-48eded88f3c2"
         x:type="Origam.Schema.WorkflowModel.ServiceMethodCallParameter">
         <WorkflowReference
-          name="SendEmail"
           abstract="false"
-          workflow="Root/Workflow/SendEmail.origam#SendEmail/6e6d4e02-812a-4c95-afd1-eb2428802e2b"
           x:id="67b40b7b-7827-41f6-bd34-242b9dc7a757"
-          x:type="Origam.Schema.WorkflowModel.WorkflowReference" />
+          name="SendEmail"
+          x:type="Origam.Schema.WorkflowModel.WorkflowReference"
+          workflow="Root/Workflow/SendEmail.origam#SendEmail/6e6d4e02-812a-4c95-afd1-eb2428802e2b" />
       </ServiceMethodCallParameter>
       <ServiceMethodCallParameter
-        name="Parameters"
         abstract="false"
-        serviceMethodParameter="Root/Service/WorkflowService.origam#WorkflowService/ExecuteWorkflow/Parameters/3aca11ea-3cb9-4e2f-96fa-ec7182605371"
         x:id="2fd02834-d69c-49a9-8a79-b526370e1840"
+        name="Parameters"
+        serviceMethodParameter="Root/Service/WorkflowService.origam#WorkflowService/ExecuteWorkflow/Parameters/3aca11ea-3cb9-4e2f-96fa-ec7182605371"
         x:type="Origam.Schema.WorkflowModel.ServiceMethodCallParameter">
         <WorkflowContextReference
-          xPath="/ROOT/WorkQueueEntry/@Subject"
-          castToDataType="String"
-          name="subject"
           abstract="false"
+          castToDataType="String"
           contextStore="Root/Workflow/Work Queues/SendEmailFromQueue.origam#SendEmailFromQueue/WQ_Mail/0ca52fa8-5ce7-4790-9bf2-103d41036381"
           x:id="97a7cc91-cc0f-4169-976d-04cdac3898b5"
-          x:type="Origam.Schema.WorkflowModel.ContextReference" />
+          name="subject"
+          x:type="Origam.Schema.WorkflowModel.ContextReference"
+          xPath="/ROOT/WorkQueueEntry/@Subject" />
         <WorkflowContextReference
-          xPath="/ROOT/WorkQueueEntry/@Sender"
-          castToDataType="String"
-          name="senderEmail"
           abstract="false"
+          castToDataType="String"
           contextStore="Root/Workflow/Work Queues/SendEmailFromQueue.origam#SendEmailFromQueue/WQ_Mail/0ca52fa8-5ce7-4790-9bf2-103d41036381"
           x:id="28a4741d-d235-4269-8810-2fe58b4e0724"
-          x:type="Origam.Schema.WorkflowModel.ContextReference" />
+          name="senderEmail"
+          x:type="Origam.Schema.WorkflowModel.ContextReference"
+          xPath="/ROOT/WorkQueueEntry/@Sender" />
         <WorkflowContextReference
-          xPath="/ROOT/WorkQueueEntry/@Id"
-          castToDataType="String"
-          name="attachmentRecordId"
           abstract="false"
+          castToDataType="String"
           contextStore="Root/Workflow/Work Queues/SendEmailFromQueue.origam#SendEmailFromQueue/WQ_Mail/0ca52fa8-5ce7-4790-9bf2-103d41036381"
           x:id="92bf2182-d43c-427b-8ba4-d5afea75d73a"
-          x:type="Origam.Schema.WorkflowModel.ContextReference" />
+          name="attachmentRecordId"
+          x:type="Origam.Schema.WorkflowModel.ContextReference"
+          xPath="/ROOT/WorkQueueEntry/@Id" />
         <WorkflowContextReference
-          xPath="/ROOT/WorkQueueEntry/Recipient"
-          castToDataType="String"
-          name="recipientEmail"
           abstract="false"
+          castToDataType="String"
           contextStore="Root/Workflow/Work Queues/SendEmailFromQueue.origam#SendEmailFromQueue/WQ_Mail/0ca52fa8-5ce7-4790-9bf2-103d41036381"
           x:id="aa440d47-3217-49f7-9d89-e5dfbfd18cd4"
-          x:type="Origam.Schema.WorkflowModel.ContextReference" />
+          name="recipientEmail"
+          x:type="Origam.Schema.WorkflowModel.ContextReference"
+          xPath="/ROOT/WorkQueueEntry/Recipient" />
         <WorkflowContextReference
-          xPath="/ROOT/WorkQueueEntry/MessageBody"
-          castToDataType="String"
-          name="body"
           abstract="false"
+          castToDataType="String"
           contextStore="Root/Workflow/Work Queues/SendEmailFromQueue.origam#SendEmailFromQueue/WQ_Mail/0ca52fa8-5ce7-4790-9bf2-103d41036381"
           x:id="3c4b6b0b-653b-4e52-b068-e8d01c91bd0f"
-          x:type="Origam.Schema.WorkflowModel.ContextReference" />
+          name="body"
+          x:type="Origam.Schema.WorkflowModel.ContextReference"
+          xPath="/ROOT/WorkQueueEntry/MessageBody" />
       </ServiceMethodCallParameter>
     </WorkflowTask>
   </Workflow>

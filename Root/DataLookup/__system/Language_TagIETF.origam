@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="TagIETF"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="TagIETF"
-    name="Language_TagIETF"
     abstract="false"
-    listDataStructure="Root/DataStructure/__system/Lookups/LookupLanguage_TagIETF.origam#LookupLanguage_TagIETF/47f9b1ab-adca-46e3-878e-f7fcac761bf2"
-    valueDataStructure="Root/DataStructure/__system/Lookups/LookupLanguage_TagIETF.origam#LookupLanguage_TagIETF/47f9b1ab-adca-46e3-878e-f7fcac761bf2"
-    valueMethod="Root/DataStructure/__system/Lookups/LookupLanguage_TagIETF.origam#LookupLanguage_TagIETF/GetId/6f62e598-635a-494a-95db-af07d2529a89"
+    alwaysAllowReturnToForm="false"
     x:id="7823d8af-4968-48c3-a772-287475d429e1"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupLanguage_TagIETF.origam#LookupLanguage_TagIETF/47f9b1ab-adca-46e3-878e-f7fcac761bf2"
+    listDisplayMember="TagIETF"
+    listValueMember="Id"
+    name="Language_TagIETF"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupLanguage_TagIETF.origam#LookupLanguage_TagIETF/47f9b1ab-adca-46e3-878e-f7fcac761bf2"
+    valueDisplayMember="TagIETF"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupLanguage_TagIETF.origam#LookupLanguage_TagIETF/GetId/6f62e598-635a-494a-95db-af07d2529a89"
+    valueValueMember="Id" />
 </x:file>

@@ -1,21 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="Name"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="Name"
-    name="OrigamSyncConfig_ByTargetProvider"
     abstract="false"
-    listDataStructure="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncConfig.origam#LookupOrigamSyncConfig/243d636c-e7f5-4df3-818f-9e33127e1d1b"
-    valueDataStructure="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncConfig.origam#LookupOrigamSyncConfig/243d636c-e7f5-4df3-818f-9e33127e1d1b"
-    listMethod="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncConfig.origam#LookupOrigamSyncConfig/GetByTargetProviderId/e9dc1b88-a75a-4f9f-8ae4-942b3174f58e"
-    valueMethod="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncConfig.origam#LookupOrigamSyncConfig/GetId/4991d766-1d47-4488-b331-31a9d0fe73c3"
+    alwaysAllowReturnToForm="false"
     x:id="1546ae34-de75-400a-80ce-b9ff559ef835"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncConfig.origam#LookupOrigamSyncConfig/243d636c-e7f5-4df3-818f-9e33127e1d1b"
+    listDisplayMember="Name"
+    listMethod="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncConfig.origam#LookupOrigamSyncConfig/GetByTargetProviderId/e9dc1b88-a75a-4f9f-8ae4-942b3174f58e"
+    listValueMember="Id"
+    name="OrigamSyncConfig_ByTargetProvider"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncConfig.origam#LookupOrigamSyncConfig/243d636c-e7f5-4df3-818f-9e33127e1d1b"
+    valueDisplayMember="Name"
+    valueMethod="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncConfig.origam#LookupOrigamSyncConfig/GetId/4991d766-1d47-4488-b331-31a9d0fe73c3"
+    valueValueMember="Id" />
 </x:file>

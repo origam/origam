@@ -1,0 +1,49 @@
+﻿
+ALTER TABLE [AsapTooltipHelp] ADD CONSTRAINT FK_AsapTooltipHelp_refAsapTooltipHelpContextComponentId_AsapTooltipHelpContextComponent
+	FOREIGN KEY (
+		[refAsapTooltipHelpContextComponentId]
+	)
+
+	REFERENCES [AsapTooltipHelpContextComponent] (
+		[Id]
+	)
+ALTER TABLE [AsapTooltipHelp] ADD CONSTRAINT FK_AsapTooltipHelp_refAsapTooltipHelpDestroyEventId_AsapTooltipHelpDestroyEvent
+	FOREIGN KEY (
+		[refAsapTooltipHelpDestroyEventId]
+	)
+
+	REFERENCES [AsapTooltipHelpDestroyEvent] (
+		[Id]
+	)
+ALTER TABLE [AsapTooltipHelp] ADD CONSTRAINT FK_AsapTooltipHelp_refAsapTooltipHelpContextId_AsapTooltipHelpContext
+	FOREIGN KEY (
+		[refAsapTooltipHelpContextId]
+	)
+
+	REFERENCES [AsapTooltipHelpContext] (
+		[Id]
+	)
+ALTER TABLE [AsapTooltipHelp] ADD CONSTRAINT FK_AsapTooltipHelp_refAsapTooltipHelpSubcontextId_AsapTooltipHelpSubcontext
+	FOREIGN KEY (
+		[refAsapTooltipHelpSubcontextId]
+	)
+
+	REFERENCES [AsapTooltipHelpSubcontext] (
+		[Id]
+	)
+ALTER TABLE [AsapTooltipHelp] ADD CONSTRAINT FK_AsapTooltipHelp_refAsapTooltipHelpPositionId_AsapTooltipHelpPosition
+	FOREIGN KEY (
+		[refAsapTooltipHelpPositionId]
+	)
+
+	REFERENCES [AsapTooltipHelpPosition] (
+		[Id]
+	)
+ALTER TABLE [AsapTooltipHelp] ADD CONSTRAINT FK_AsapTooltipHelp_refAsapTooltipHelpGroupId_AsapTooltipHelpGroup
+	FOREIGN KEY (
+		[refAsapTooltipHelpGroupId]
+	)
+
+	REFERENCES [AsapTooltipHelpGroup] (
+		[Id]
+	)

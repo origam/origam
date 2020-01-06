@@ -1,62 +1,62 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Workflow
-    transactionBehavior="InheritExisting"
-    traceLevel="None"
-    name="GetNotificationContacts"
     abstract="false"
     x:id="1e621daf-c70d-4cc1-9a52-73427c499006"
+    name="GetNotificationContacts"
+    traceLevel="None"
+    transactionBehavior="InheritExisting"
     x:type="Origam.Schema.WorkflowModel.Workflow">
     <ContextStore
-      dataType="UniqueIdentifier"
-      isReturnValue="false"
-      disableConstraints="false"
-      name="workQueueNotificationContactTypeId"
       abstract="false"
+      dataType="UniqueIdentifier"
+      disableConstraints="false"
       x:id="2191c911-a654-41f8-a7b0-00bce02c6fd5"
+      isReturnValue="false"
+      name="workQueueNotificationContactTypeId"
       x:type="Origam.Schema.WorkflowModel.ContextStore" />
     <ContextStore
-      dataType="Xml"
-      isReturnValue="false"
-      disableConstraints="false"
-      name="WorkQueueRow"
       abstract="false"
-      structure="Root/DataStructure/__system/_any.origam#_any/78a0f3a0-116f-48a7-8bdd-adf7c868ce85"
+      dataType="Xml"
+      disableConstraints="false"
       x:id="a08966b0-249a-4f8d-bdbd-2635a9b41e65"
-      x:type="Origam.Schema.WorkflowModel.ContextStore" />
-    <ContextStore
-      dataType="Xml"
-      isReturnValue="true"
-      disableConstraints="false"
-      name="OrigamNotificationContactData"
-      abstract="false"
-      structure="Root/DataStructure/__system/OrigamNotificationContactData.origam#OrigamNotificationContactData/9647f6ba-f214-4974-b90e-b5a67fcfe9e0"
-      x:id="66918999-a6d3-499f-9e4d-5928be8756ec"
-      x:type="Origam.Schema.WorkflowModel.ContextStore" />
-    <ContextStore
-      dataType="UniqueIdentifier"
       isReturnValue="false"
-      disableConstraints="false"
-      name="OrigamNotificationChannelTypeId"
-      abstract="false"
-      x:id="d42083a9-806a-4689-9443-9ab58b83f7fd"
-      x:type="Origam.Schema.WorkflowModel.ContextStore" />
-    <ContextStore
-      dataType="Xml"
-      isReturnValue="false"
-      disableConstraints="false"
-      name="context"
-      abstract="false"
+      name="WorkQueueRow"
       structure="Root/DataStructure/__system/_any.origam#_any/78a0f3a0-116f-48a7-8bdd-adf7c868ce85"
-      x:id="f2604561-0598-4700-b78d-a11b082e0cfd"
       x:type="Origam.Schema.WorkflowModel.ContextStore" />
     <ContextStore
-      dataType="String"
-      isReturnValue="false"
-      disableConstraints="false"
-      name="value"
       abstract="false"
+      dataType="Xml"
+      disableConstraints="false"
+      x:id="66918999-a6d3-499f-9e4d-5928be8756ec"
+      isReturnValue="true"
+      name="OrigamNotificationContactData"
+      structure="Root/DataStructure/__system/OrigamNotificationContactData.origam#OrigamNotificationContactData/9647f6ba-f214-4974-b90e-b5a67fcfe9e0"
+      x:type="Origam.Schema.WorkflowModel.ContextStore" />
+    <ContextStore
+      abstract="false"
+      dataType="UniqueIdentifier"
+      disableConstraints="false"
+      x:id="d42083a9-806a-4689-9443-9ab58b83f7fd"
+      isReturnValue="false"
+      name="OrigamNotificationChannelTypeId"
+      x:type="Origam.Schema.WorkflowModel.ContextStore" />
+    <ContextStore
+      abstract="false"
+      dataType="Xml"
+      disableConstraints="false"
+      x:id="f2604561-0598-4700-b78d-a11b082e0cfd"
+      isReturnValue="false"
+      name="context"
+      structure="Root/DataStructure/__system/_any.origam#_any/78a0f3a0-116f-48a7-8bdd-adf7c868ce85"
+      x:type="Origam.Schema.WorkflowModel.ContextStore" />
+    <ContextStore
+      abstract="false"
+      dataType="String"
+      disableConstraints="false"
       x:id="d9f9899b-9dd8-45da-bd4f-fb63faf7d695"
+      isReturnValue="false"
+      name="value"
       x:type="Origam.Schema.WorkflowModel.ContextStore" />
   </Workflow>
 </x:file>

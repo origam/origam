@@ -1,54 +1,54 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Control
-    toolboxVisibility="PanelDesigner"
-    typeName="Origam.Gui.Win.AsForm"
-    namespace="Origam.Gui.Win"
-    isComplex="false"
-    requestSaveAfterChangeAllowed="false"
-    name="AsForm"
     abstract="false"
     x:id="ff32a695-c533-4262-87d6-e4cd4451e2c9"
-    x:type="Origam.Schema.GuiModel.ControlItem">
+    isComplex="false"
+    name="AsForm"
+    namespace="Origam.Gui.Win"
+    requestSaveAfterChangeAllowed="false"
+    toolboxVisibility="PanelDesigner"
+    x:type="Origam.Schema.GuiModel.ControlItem"
+    typeName="Origam.Gui.Win.AsForm">
     <ControlPropertyItem
-      propertyType="Integer"
+      abstract="false"
       bindOnly="false"
+      x:id="fde5e452-b2a4-4f38-968a-29e20625b699"
       localizable="false"
       name="Left"
-      abstract="false"
-      x:id="fde5e452-b2a4-4f38-968a-29e20625b699"
+      propertyType="Integer"
       x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
     <ControlPropertyItem
-      propertyType="Xml"
+      abstract="false"
       bindOnly="false"
+      x:id="3cd32bca-fad9-49b4-8641-3ff4e77e567a"
       localizable="false"
       name="ExtraControlBindings"
-      abstract="false"
-      x:id="3cd32bca-fad9-49b4-8641-3ff4e77e567a"
+      propertyType="Xml"
       x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
     <ControlPropertyItem
-      propertyType="Integer"
+      abstract="false"
       bindOnly="false"
+      x:id="3ec90be1-7cc2-481d-aed3-85505560eb70"
       localizable="false"
       name="Height"
-      abstract="false"
-      x:id="3ec90be1-7cc2-481d-aed3-85505560eb70"
+      propertyType="Integer"
       x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
     <ControlPropertyItem
-      propertyType="Integer"
+      abstract="false"
       bindOnly="false"
+      x:id="2d33a742-193c-42b2-8a21-c8c6ccedfd6c"
       localizable="false"
       name="Top"
-      abstract="false"
-      x:id="2d33a742-193c-42b2-8a21-c8c6ccedfd6c"
+      propertyType="Integer"
       x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
     <ControlPropertyItem
-      propertyType="Integer"
+      abstract="false"
       bindOnly="false"
+      x:id="99f5687f-be11-49ec-a2eb-fba58d945b3e"
       localizable="false"
       name="Width"
-      abstract="false"
-      x:id="99f5687f-be11-49ec-a2eb-fba58d945b3e"
+      propertyType="Integer"
       x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
   </Control>
 </x:file>

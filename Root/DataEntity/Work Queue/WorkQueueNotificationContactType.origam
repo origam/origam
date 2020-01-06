@@ -1,74 +1,74 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataEntity
-    mappedObjectName="WorkQueueNotificationContactType"
+    abstract="false"
+    audit="None"
     databaseObjectType="Table"
     generateDeploymentScript="true"
-    readOnly="false"
-    audit="None"
-    name="WorkQueueNotificationContactType"
-    abstract="false"
-    localizationRelation="Root/DataEntity/Work Queue/WorkQueueNotificationContactType.origam#WorkQueueNotificationContactType/WorkQueueNotificationContactType_l10n/303bb4a2-b982-471e-9600-0c80f3c5eb4b"
     x:id="3468390e-e00b-4402-bd86-e22a4d6c3a3a"
+    localizationRelation="Root/DataEntity/Work Queue/WorkQueueNotificationContactType.origam#WorkQueueNotificationContactType/WorkQueueNotificationContactType_l10n/303bb4a2-b982-471e-9600-0c80f3c5eb4b"
+    mappedObjectName="WorkQueueNotificationContactType"
+    name="WorkQueueNotificationContactType"
+    readOnly="false"
     x:type="Origam.Schema.EntityModel.TableMappingItem">
     <ancestor
       ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
       x:id="a725d9da-8d26-4edf-955d-6e5a669749cc"
       x:type="Origam.Schema.SchemaItemAncestor" />
     <DataEntityColumn
-      mappedColumnName="Name"
-      excludeFromAuditing="false"
-      dataType="String"
-      dataLength="200"
+      abstract="false"
       allowNulls="false"
+      autoIncrement="false"
+      dataLength="200"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="6c9ce2db-8161-48ba-b1e9-ae7ef5cbf0a7"
       isPrimaryKey="false"
       label="Name"
-      excludeFromAllFields="false"
-      autoIncrement="false"
-      xmlMappingType="Attribute"
-      onCopyAction="Copy"
+      mappedColumnName="Name"
       name="Name"
-      abstract="false"
-      x:id="6c9ce2db-8161-48ba-b1e9-ae7ef5cbf0a7"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem" />
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
     <EntityRelation
-      parentChild="true"
-      selfJoin="false"
-      or="false"
-      name="WorkQueueNotificationContactType_l10n"
       abstract="false"
-      relatedEntity="Root/DataEntity/Work Queue/WorkQueueNotificationContactType_l10n.origam#WorkQueueNotificationContactType_l10n/434d10d2-9eed-45b8-9d77-4be0ff80c7fe"
       x:id="303bb4a2-b982-471e-9600-0c80f3c5eb4b"
+      name="WorkQueueNotificationContactType_l10n"
+      or="false"
+      parentChild="true"
+      relatedEntity="Root/DataEntity/Work Queue/WorkQueueNotificationContactType_l10n.origam#WorkQueueNotificationContactType_l10n/434d10d2-9eed-45b8-9d77-4be0ff80c7fe"
+      selfJoin="false"
       x:type="Origam.Schema.EntityModel.EntityRelationItem">
       <EntityRelationColumnPair
-        name="WorkQueueNotificationContactType_l10nKey1"
         abstract="false"
         baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-        relatedEntityField="Root/DataEntity/Work Queue/WorkQueueNotificationContactType_l10n.origam#WorkQueueNotificationContactType_l10n/refWorkQueueNotificationContactTypeId/7c543bdc-1742-4ea7-a4d6-bd558af1d4da"
         x:id="b10dd05e-ae1f-4149-bcb7-8959f9d11f36"
+        name="WorkQueueNotificationContactType_l10nKey1"
+        relatedEntityField="Root/DataEntity/Work Queue/WorkQueueNotificationContactType_l10n.origam#WorkQueueNotificationContactType_l10n/refWorkQueueNotificationContactTypeId/7c543bdc-1742-4ea7-a4d6-bd558af1d4da"
         x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
       <EntityRelationFilter
-        name="GetByLanguageId"
         abstract="false"
         filter="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/GetByLanguageId/afb5b84b-f4a3-4e3a-a382-c110624f71c9"
         x:id="7b668377-5234-440b-a047-595dafb2ec7b"
+        name="GetByLanguageId"
         x:type="Origam.Schema.EntityModel.EntityRelationFilter" />
     </EntityRelation>
     <EntityRelation
-      parentChild="true"
-      selfJoin="false"
-      or="false"
-      name="WorkQueueNotificationContactType_l10n_all"
       abstract="false"
-      relatedEntity="Root/DataEntity/Work Queue/WorkQueueNotificationContactType_l10n.origam#WorkQueueNotificationContactType_l10n/434d10d2-9eed-45b8-9d77-4be0ff80c7fe"
       x:id="c00b4304-1441-4f6e-a194-6b6033723354"
+      name="WorkQueueNotificationContactType_l10n_all"
+      or="false"
+      parentChild="true"
+      relatedEntity="Root/DataEntity/Work Queue/WorkQueueNotificationContactType_l10n.origam#WorkQueueNotificationContactType_l10n/434d10d2-9eed-45b8-9d77-4be0ff80c7fe"
+      selfJoin="false"
       x:type="Origam.Schema.EntityModel.EntityRelationItem">
       <EntityRelationColumnPair
-        name="WorkQueueNotificationContactType_l10n_allKey1"
         abstract="false"
         baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-        relatedEntityField="Root/DataEntity/Work Queue/WorkQueueNotificationContactType_l10n.origam#WorkQueueNotificationContactType_l10n/refWorkQueueNotificationContactTypeId/7c543bdc-1742-4ea7-a4d6-bd558af1d4da"
         x:id="be9c099f-21a7-41b3-b170-76e7e7b528a3"
+        name="WorkQueueNotificationContactType_l10n_allKey1"
+        relatedEntityField="Root/DataEntity/Work Queue/WorkQueueNotificationContactType_l10n.origam#WorkQueueNotificationContactType_l10n/refWorkQueueNotificationContactTypeId/7c543bdc-1742-4ea7-a4d6-bd558af1d4da"
         x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
     </EntityRelation>
   </DataEntity>

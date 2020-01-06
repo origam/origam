@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="Id"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="Id"
-    name="Resource_Id_ByBusinessPartner"
     abstract="false"
-    listDataStructure="Root/DataStructure/Resource Management/Lookups/LookupResource_Id_ByBusinessPartner.origam#LookupResource_Id_ByBusinessPartner/098180a1-5bac-44f4-8c2e-cc5924174055"
-    valueDataStructure="Root/DataStructure/Resource Management/Lookups/LookupResource_Id_ByBusinessPartner.origam#LookupResource_Id_ByBusinessPartner/098180a1-5bac-44f4-8c2e-cc5924174055"
-    valueMethod="Root/DataStructure/Resource Management/Lookups/LookupResource_Id_ByBusinessPartner.origam#LookupResource_Id_ByBusinessPartner/GetByBusinessPartnerId/600fef17-4a01-4698-bf28-e212cd081707"
+    alwaysAllowReturnToForm="false"
     x:id="48d10833-ff42-4451-925e-7f0d89d7fa75"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/Resource Management/Lookups/LookupResource_Id_ByBusinessPartner.origam#LookupResource_Id_ByBusinessPartner/098180a1-5bac-44f4-8c2e-cc5924174055"
+    listDisplayMember="Id"
+    listValueMember="Id"
+    name="Resource_Id_ByBusinessPartner"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/Resource Management/Lookups/LookupResource_Id_ByBusinessPartner.origam#LookupResource_Id_ByBusinessPartner/098180a1-5bac-44f4-8c2e-cc5924174055"
+    valueDisplayMember="Id"
+    valueMethod="Root/DataStructure/Resource Management/Lookups/LookupResource_Id_ByBusinessPartner.origam#LookupResource_Id_ByBusinessPartner/GetByBusinessPartnerId/600fef17-4a01-4698-bf28-e212cd081707"
+    valueValueMember="Id" />
 </x:file>

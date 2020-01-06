@@ -1,45 +1,45 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Service
-    name="WorkflowService"
     abstract="false"
     x:id="a6838699-113c-4126-803c-39f05b33a7c3"
+    name="WorkflowService"
     x:type="Origam.Schema.WorkflowModel.Service">
     <ServiceMethod
-      returnValueDataType="Xml"
-      name="ExecuteWorkflow"
       abstract="false"
       x:id="92bafb78-2b5c-479a-902b-8c65162a659d"
+      name="ExecuteWorkflow"
+      returnValueDataType="Xml"
       x:type="Origam.Schema.WorkflowModel.ServiceMethod">
       <Parameter
-        callElements="35"
+        abstract="false"
         allowContextReference="true"
         allowDataConstantReference="true"
         allowDataStructureReference="false"
+        allowNulls="false"
         allowReportReference="false"
         allowSystemFunctionCall="false"
         allowTransformationReference="false"
         allowWorkflowReference="true"
+        callElements="35"
         dataType="UniqueIdentifier"
-        allowNulls="false"
-        name="Workflow"
-        abstract="false"
         x:id="186c6a9c-8613-4251-8be8-48eded88f3c2"
+        name="Workflow"
         x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
       <Parameter
-        callElements="67"
+        abstract="false"
         allowContextReference="true"
         allowDataConstantReference="true"
         allowDataStructureReference="false"
+        allowNulls="true"
         allowReportReference="false"
         allowSystemFunctionCall="true"
         allowTransformationReference="false"
         allowWorkflowReference="false"
+        callElements="67"
         dataType="Array"
-        allowNulls="true"
-        name="Parameters"
-        abstract="false"
         x:id="3aca11ea-3cb9-4e2f-96fa-ec7182605371"
+        name="Parameters"
         x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
     </ServiceMethod>
   </Service>

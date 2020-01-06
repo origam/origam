@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="Name"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="Name"
-    name="OrigamCharacterTranslation"
     abstract="false"
-    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCharacterTranslation.origam#LookupOrigamCharacterTranslation/00dff251-8c32-4686-8609-0e1b42eab353"
-    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCharacterTranslation.origam#LookupOrigamCharacterTranslation/00dff251-8c32-4686-8609-0e1b42eab353"
-    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamCharacterTranslation.origam#LookupOrigamCharacterTranslation/GetId/222808eb-209a-444a-9d7c-0520aae7dfca"
+    alwaysAllowReturnToForm="false"
     x:id="b03e8420-09de-4403-a9b5-fa9bc1034e7b"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCharacterTranslation.origam#LookupOrigamCharacterTranslation/00dff251-8c32-4686-8609-0e1b42eab353"
+    listDisplayMember="Name"
+    listValueMember="Id"
+    name="OrigamCharacterTranslation"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCharacterTranslation.origam#LookupOrigamCharacterTranslation/00dff251-8c32-4686-8609-0e1b42eab353"
+    valueDisplayMember="Name"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamCharacterTranslation.origam#LookupOrigamCharacterTranslation/GetId/222808eb-209a-444a-9d7c-0520aae7dfca"
+    valueValueMember="Id" />
 </x:file>

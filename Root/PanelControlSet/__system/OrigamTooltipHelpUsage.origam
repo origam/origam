@@ -1,676 +1,676 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <PanelControlSet
-    name="OrigamTooltipHelpUsage"
     abstract="false"
     entity="Root/DataEntity/__system/OrigamTooltipHelpUsage.origam#OrigamTooltipHelpUsage/8246797f-bfc1-4417-82d4-10f9e5e942c2"
     x:id="9d9ca4f4-0118-4dc6-ae33-4ab0be27928c"
+    name="OrigamTooltipHelpUsage"
     x:type="Origam.Schema.GuiModel.PanelControlSet">
     <ControlSetItem
-      isAlternative="false"
-      requestSaveAfterChange="false"
-      name="OrigamTooltipHelpUsageRootControl"
       abstract="false"
-      widget="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
       x:id="92f0a397-daef-4710-9a59-73ad218e651a"
-      x:type="Origam.Schema.GuiModel.ControlSetItem">
+      isAlternative="false"
+      name="OrigamTooltipHelpUsageRootControl"
+      requestSaveAfterChange="false"
+      x:type="Origam.Schema.GuiModel.ControlSetItem"
+      widget="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d">
       <ControlSetItem
-        isAlternative="false"
-        requestSaveAfterChange="false"
-        name="AsDropDown1"
         abstract="false"
-        widget="Root/Control/_Basic Controls/AsCombo.origam#AsCombo/aebc5761-339d-4787-9289-704f7ed7ecbe"
         x:id="4d3f7015-22f1-4abd-8c60-52ea7bf30654"
-        x:type="Origam.Schema.GuiModel.ControlSetItem">
+        isAlternative="false"
+        name="AsDropDown1"
+        requestSaveAfterChange="false"
+        x:type="Origam.Schema.GuiModel.ControlSetItem"
+        widget="Root/Control/_Basic Controls/AsCombo.origam#AsCombo/aebc5761-339d-4787-9289-704f7ed7ecbe">
         <PropertyBindingInfo
-          value="refBusinessPartnerId"
-          designDataSetPath="OrigamTooltipHelpUsage.refBusinessPartnerId"
-          propertyId="e8a88c70-c3f8-4e39-b041-3b829967fd51"
-          name="LookupValue"
           abstract="false"
+          designDataSetPath="OrigamTooltipHelpUsage.refBusinessPartnerId"
           x:id="41ac0411-3764-4bea-9735-d6267252c4a8"
-          x:type="Origam.Schema.GuiModel.PropertyBindingInfo" />
+          name="LookupValue"
+          propertyId="e8a88c70-c3f8-4e39-b041-3b829967fd51"
+          x:type="Origam.Schema.GuiModel.PropertyBindingInfo"
+          value="refBusinessPartnerId" />
         <PropertyValueItem
-          value="19"
-          propertyId="2ba24e12-e9fd-4ac7-aaa2-b1dfecb751fc"
-          name="Height"
           abstract="false"
           x:id="3adcb1ac-f1a6-4489-9164-33ca3be6b641"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="Height"
+          propertyId="2ba24e12-e9fd-4ac7-aaa2-b1dfecb751fc"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="19" />
         <PropertyValueItem
-          value="0"
-          propertyId="d0bc8e8c-21c2-40c2-989b-b3f662ce2067"
-          name="CaptionPosition"
           abstract="false"
           x:id="8daa7fcb-a2dc-41fe-a548-42264032c121"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="CaptionPosition"
+          propertyId="d0bc8e8c-21c2-40c2-989b-b3f662ce2067"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="0" />
         <PropertyValueItem
-          value="0"
-          propertyId="ff85b9f1-e0c2-4ca9-a4ce-b65fc5401141"
-          name="GridColumnWidth"
           abstract="false"
           x:id="c61bcd7b-084c-4cf4-9f8a-4a53258fe655"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="GridColumnWidth"
+          propertyId="ff85b9f1-e0c2-4ca9-a4ce-b65fc5401141"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="0" />
         <PropertyValueItem
-          value="false"
-          propertyId="77c32072-8741-4f3a-bec8-3df9253b386e"
-          name="ShowUniqueValues"
           abstract="false"
           x:id="9ba6ac2d-6996-4221-a0ad-5121733d1b6f"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="ShowUniqueValues"
+          propertyId="77c32072-8741-4f3a-bec8-3df9253b386e"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="false" />
         <PropertyValueItem
-          value="false"
-          propertyId="1c8e3b95-7989-464a-9f2a-c1fd2e134222"
-          name="HideOnForm"
           abstract="false"
           x:id="ac9ad316-dd9a-4d76-bc3d-577515327036"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="HideOnForm"
+          propertyId="1c8e3b95-7989-464a-9f2a-c1fd2e134222"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="false" />
         <PropertyValueItem
-          propertyId="38431081-97d8-451d-a32e-e196e423d2a9"
-          name="Caption"
           abstract="false"
           x:id="2a30f7f7-bf06-455c-b7be-5a6f9494dfde"
+          name="Caption"
+          propertyId="38431081-97d8-451d-a32e-e196e423d2a9"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value="108"
-          propertyId="b8e55ffb-706a-42bb-a39d-97b7299d7c15"
-          name="Left"
           abstract="false"
           x:id="ebc29b47-900a-4031-8f0e-8894d7690329"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="Left"
+          propertyId="b8e55ffb-706a-42bb-a39d-97b7299d7c15"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="108" />
         <PropertyValueItem
-          value="true"
-          propertyId="cbdb1533-38e1-455e-98c8-229b65694747"
-          name="ReadOnly"
           abstract="false"
           x:id="75ee0595-92ae-46d2-b3a5-8e7a1da94d83"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="ReadOnly"
+          propertyId="cbdb1533-38e1-455e-98c8-229b65694747"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="true" />
         <PropertyValueItem
-          value="100"
-          propertyId="258cbfc3-3cdd-4bf5-89fa-c95418b81aea"
-          name="CaptionLength"
           abstract="false"
           x:id="a97d793f-c92a-4d21-a24b-984c83567311"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="CaptionLength"
+          propertyId="258cbfc3-3cdd-4bf5-89fa-c95418b81aea"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="100" />
         <PropertyValueItem
-          propertyId="8afeb337-2647-4eaf-8a53-bcd7d08c5809"
-          name="GridColumnCaption"
           abstract="false"
           x:id="5aea0970-784d-40c4-a26f-9b022807a8aa"
+          name="GridColumnCaption"
+          propertyId="8afeb337-2647-4eaf-8a53-bcd7d08c5809"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value="00000000-0000-0000-0000-000000000000"
-          propertyId="bbf66711-08cc-4c28-aada-72cfd4304b27"
-          name="StyleId"
           abstract="false"
           x:id="292e5c25-d683-4162-83c1-b272f5679dde"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="StyleId"
+          propertyId="bbf66711-08cc-4c28-aada-72cfd4304b27"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="00000000-0000-0000-0000-000000000000" />
         <PropertyValueItem
-          value="3"
-          propertyId="d4b8b61f-0d27-4303-ab31-44edaf8178ff"
-          name="TabIndex"
           abstract="false"
           x:id="6d1272bc-8b88-4414-9622-b7bbb71eb273"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="TabIndex"
+          propertyId="d4b8b61f-0d27-4303-ab31-44edaf8178ff"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="3" />
         <PropertyValueItem
-          propertyId="e8a88c70-c3f8-4e39-b041-3b829967fd51"
-          name="LookupValue"
           abstract="false"
           x:id="31ba0a36-16c0-48e2-9319-c5035f9f68e0"
+          name="LookupValue"
+          propertyId="e8a88c70-c3f8-4e39-b041-3b829967fd51"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value="08d82ef5-df38-48d6-a276-ee5b7f027bd6"
-          propertyId="61c678bc-15aa-4ffc-a696-5524ae54c93f"
-          name="LookupId"
           abstract="false"
           x:id="014f51ee-c01d-4fe9-86fa-dce601422a07"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="LookupId"
+          propertyId="61c678bc-15aa-4ffc-a696-5524ae54c93f"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="08d82ef5-df38-48d6-a276-ee5b7f027bd6" />
         <PropertyValueItem
-          value="387"
-          propertyId="f2c1af55-8df8-411e-a623-d683a5f85e4b"
-          name="Width"
           abstract="false"
           x:id="076ab5b5-d020-4e07-acc4-fa4b72d27c0a"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="Width"
+          propertyId="f2c1af55-8df8-411e-a623-d683a5f85e4b"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="387" />
         <PropertyValueItem
-          value="36"
-          propertyId="a538e6a9-8524-4504-ac2e-b9b997daa235"
-          name="Top"
           abstract="false"
           x:id="47123e0e-d499-4655-9656-ff25900f46ba"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="Top"
+          propertyId="a538e6a9-8524-4504-ac2e-b9b997daa235"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="36" />
       </ControlSetItem>
       <ControlSetItem
-        isAlternative="false"
-        requestSaveAfterChange="false"
-        name="AsDateBox1"
         abstract="false"
-        widget="Root/Control/_Basic Controls/AsDateBox.origam#AsDateBox/c527a9ef-cd7b-44c5-ae2f-00e547c53d78"
         x:id="0cfb261a-b704-4a0b-bfd6-8bc696c6edd7"
-        x:type="Origam.Schema.GuiModel.ControlSetItem">
+        isAlternative="false"
+        name="AsDateBox1"
+        requestSaveAfterChange="false"
+        x:type="Origam.Schema.GuiModel.ControlSetItem"
+        widget="Root/Control/_Basic Controls/AsDateBox.origam#AsDateBox/c527a9ef-cd7b-44c5-ae2f-00e547c53d78">
         <PropertyBindingInfo
-          value="RecordCreated"
-          designDataSetPath="OrigamTooltipHelpUsage.RecordCreated"
-          propertyId="84e84a32-9b0a-4e60-9bf4-c0c5bffdc80d"
-          name="DateValue"
           abstract="false"
+          designDataSetPath="OrigamTooltipHelpUsage.RecordCreated"
           x:id="83e50a40-df80-4fe6-81e5-5bc016a0d6e0"
-          x:type="Origam.Schema.GuiModel.PropertyBindingInfo" />
+          name="DateValue"
+          propertyId="84e84a32-9b0a-4e60-9bf4-c0c5bffdc80d"
+          x:type="Origam.Schema.GuiModel.PropertyBindingInfo"
+          value="RecordCreated" />
         <PropertyValueItem
-          value="176"
-          propertyId="c4c0f5bd-eb95-4671-bda8-4193fe779bd7"
-          name="Width"
           abstract="false"
           x:id="db242582-6bef-4e9c-a25e-0cf7e10005c0"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="Width"
+          propertyId="c4c0f5bd-eb95-4671-bda8-4193fe779bd7"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="176" />
         <PropertyValueItem
-          value="54"
-          propertyId="ec1ae2ca-eb8f-4844-a5c9-555e00cf4b43"
-          name="Top"
           abstract="false"
           x:id="52d81cd1-6f3b-43c3-af32-20873cf666c8"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="Top"
+          propertyId="ec1ae2ca-eb8f-4844-a5c9-555e00cf4b43"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="54" />
         <PropertyValueItem
-          value="20"
-          propertyId="8cf3e9f0-5c54-4b32-b102-93e6310654ec"
-          name="Height"
           abstract="false"
           x:id="4dcd2894-5dd6-46cb-9e8d-350d62568881"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="Height"
+          propertyId="8cf3e9f0-5c54-4b32-b102-93e6310654ec"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="20" />
         <PropertyValueItem
-          value="108"
-          propertyId="78691c7e-dd8b-4dd2-9854-8273e0f93390"
-          name="Left"
           abstract="false"
           x:id="3deacfab-bae8-4714-a0f3-5bdf00ee527a"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="Left"
+          propertyId="78691c7e-dd8b-4dd2-9854-8273e0f93390"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="108" />
         <PropertyValueItem
-          value="00000000-0000-0000-0000-000000000000"
-          propertyId="f2a3ae34-0a77-4a36-a384-4b46bfd1098b"
-          name="StyleId"
           abstract="false"
           x:id="8257a37e-446d-4992-a1c0-6d61caf1d186"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="StyleId"
+          propertyId="f2a3ae34-0a77-4a36-a384-4b46bfd1098b"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="00000000-0000-0000-0000-000000000000" />
         <PropertyValueItem
-          value="dd. MM. yyyy HH:mm"
-          propertyId="2b9a48c5-5eef-4376-954a-49dcb3d23910"
-          name="CustomFormat"
           abstract="false"
           x:id="9dc6f39f-83ac-4621-ad4a-9b25d66020d3"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="CustomFormat"
+          propertyId="2b9a48c5-5eef-4376-954a-49dcb3d23910"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="dd. MM. yyyy HH:mm" />
         <PropertyValueItem
-          value="0"
-          propertyId="1fb7f2e5-c911-4a2c-9277-7f335a8fdb6a"
-          name="GridColumnWidth"
           abstract="false"
           x:id="7e55f4af-363a-4750-8fa5-9ed13f97a812"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="GridColumnWidth"
+          propertyId="1fb7f2e5-c911-4a2c-9277-7f335a8fdb6a"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="0" />
         <PropertyValueItem
-          value="5"
-          propertyId="7df57fd4-61c3-4469-946b-35080ecad243"
-          name="TabIndex"
           abstract="false"
           x:id="06f3d4e8-5220-4eea-86f7-a38cf7a94b25"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="TabIndex"
+          propertyId="7df57fd4-61c3-4469-946b-35080ecad243"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="5" />
         <PropertyValueItem
-          propertyId="84e84a32-9b0a-4e60-9bf4-c0c5bffdc80d"
-          name="DateValue"
           abstract="false"
           x:id="09a41e2b-9e3a-4cea-8d44-adafd145a5ba"
+          name="DateValue"
+          propertyId="84e84a32-9b0a-4e60-9bf4-c0c5bffdc80d"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          propertyId="5b74b18e-19fe-4ef5-9dab-73ac10b0e702"
-          name="GridColumnCaption"
           abstract="false"
           x:id="602e962d-4aa9-4a1a-b32c-b50be8369d1f"
+          name="GridColumnCaption"
+          propertyId="5b74b18e-19fe-4ef5-9dab-73ac10b0e702"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
         <PropertyValueItem
-          value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;DateTimePickerFormat&gt;Custom&lt;/DateTimePickerFormat&gt;"
-          propertyId="13f625fb-60d8-409d-99a2-d9a4f3f2698d"
-          name="Format"
           abstract="false"
           x:id="e588af32-a2c4-484d-80f3-b5e90d4ec784"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="Format"
+          propertyId="13f625fb-60d8-409d-99a2-d9a4f3f2698d"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;DateTimePickerFormat&gt;Custom&lt;/DateTimePickerFormat&gt;" />
         <PropertyValueItem
-          value="true"
-          propertyId="236ebc42-33b8-4056-a2f5-33a02bcb2b01"
-          name="ReadOnly"
           abstract="false"
           x:id="d5ae7cb0-7ea6-4b48-ab05-c31f8e1ce841"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="ReadOnly"
+          propertyId="236ebc42-33b8-4056-a2f5-33a02bcb2b01"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="true" />
         <PropertyValueItem
-          value="false"
-          propertyId="011efcbf-b762-4b40-810e-88c093657da8"
-          name="HideOnForm"
           abstract="false"
           x:id="aa1a8bdf-7c4b-4205-80fa-c62d35518e31"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="HideOnForm"
+          propertyId="011efcbf-b762-4b40-810e-88c093657da8"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="false" />
         <PropertyValueItem
-          value="Datum"
-          propertyId="6ca7186a-12a9-45b4-840e-cceb9eeac07f"
-          name="Caption"
           abstract="false"
           x:id="fc701bfb-6628-4dea-b6c8-cc31cf454351"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="Caption"
+          propertyId="6ca7186a-12a9-45b4-840e-cceb9eeac07f"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="Datum" />
         <PropertyValueItem
-          value="100"
-          propertyId="86ce608e-66fd-4647-92c5-f2e02390e578"
-          name="CaptionLength"
           abstract="false"
           x:id="78d8151e-2edc-4a92-872c-df3b92087c62"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="CaptionLength"
+          propertyId="86ce608e-66fd-4647-92c5-f2e02390e578"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="100" />
         <PropertyValueItem
-          value="0"
-          propertyId="6f7371e1-b0a0-40c8-856c-1de5aa63f150"
-          name="CaptionPosition"
           abstract="false"
           x:id="1abef3e0-b849-467e-9e85-e2bd505161db"
-          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+          name="CaptionPosition"
+          propertyId="6f7371e1-b0a0-40c8-856c-1de5aa63f150"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="0" />
       </ControlSetItem>
       <PropertyValueItem
-        value="false"
-        propertyId="f142959e-1909-4769-acf8-e035a345642a"
-        name="IsDraggingEnabled"
         abstract="false"
         x:id="2685dbf5-4271-4e0a-b761-03b6ec52d2b0"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="IsDraggingEnabled"
+        propertyId="f142959e-1909-4769-acf8-e035a345642a"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="false" />
       <PropertyValueItem
-        propertyId="76f51292-1b14-43e3-b044-89d6c1234d5c"
-        name="MapIconMember"
         abstract="false"
         x:id="5b715738-d25a-4808-be0f-060958b46f95"
+        name="MapIconMember"
+        propertyId="76f51292-1b14-43e3-b044-89d6c1234d5c"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value="600"
-        propertyId="16c346fc-561e-404b-a76a-7198ab488710"
-        name="Width"
         abstract="false"
         x:id="5c1fe52f-21b4-4325-98b0-0a06369b6f97"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="Width"
+        propertyId="16c346fc-561e-404b-a76a-7198ab488710"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="600" />
       <PropertyValueItem
-        value="00000000-0000-0000-0000-000000000000"
-        propertyId="dc3ab7b2-3183-4ad4-bafe-886a2407c1bf"
-        name="IndependentDataSourceSortId"
         abstract="false"
         x:id="11805e9b-9aa1-4c15-ba17-0e4878fd9855"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="IndependentDataSourceSortId"
+        propertyId="dc3ab7b2-3183-4ad4-bafe-886a2407c1bf"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="00000000-0000-0000-0000-000000000000" />
       <PropertyValueItem
-        propertyId="0688ff2b-b946-463f-9e87-069fa03387c9"
-        name="MapTextRotationMember"
         abstract="false"
         x:id="fc83ef7c-51f7-4bf5-a251-0eb3b53c6136"
+        name="MapTextRotationMember"
+        propertyId="0688ff2b-b946-463f-9e87-069fa03387c9"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value="Help Usage"
-        propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2"
-        name="PanelTitle"
         abstract="false"
         x:id="1bf31ddb-79ab-4322-bcfa-12469124ceb9"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="PanelTitle"
+        propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="Help Usage" />
       <PropertyValueItem
-        propertyId="0646ac0a-46ff-419f-a7b4-3892877ba9dc"
-        name="CalendarDescriptionMember"
         abstract="false"
         x:id="80d593bd-5e96-44ef-a40b-152d58b72ebe"
+        name="CalendarDescriptionMember"
+        propertyId="0646ac0a-46ff-419f-a7b4-3892877ba9dc"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value="00000000-0000-0000-0000-000000000000"
-        propertyId="c9a65ec4-4a73-4351-b86a-deb76329b98f"
-        name="IconId"
         abstract="false"
         x:id="bc92c84f-1f94-46e0-bc87-20334a876119"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="IconId"
+        propertyId="c9a65ec4-4a73-4351-b86a-deb76329b98f"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="00000000-0000-0000-0000-000000000000" />
       <PropertyValueItem
-        propertyId="87bb70a8-a0a7-4c4e-9f18-5724d74b3b98"
-        name="CalendarDateDueMember"
         abstract="false"
         x:id="e3dd5c65-5bfd-4c0c-84cb-2247e4518336"
+        name="CalendarDateDueMember"
+        propertyId="87bb70a8-a0a7-4c4e-9f18-5724d74b3b98"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        propertyId="e5434a33-cb85-47d9-a56f-f81456706911"
-        name="PipelineStateMember"
         abstract="false"
         x:id="1c6d2a45-b007-4207-bbfa-23d8a9be57ce"
+        name="PipelineStateMember"
+        propertyId="e5434a33-cb85-47d9-a56f-f81456706911"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        propertyId="ff52e0c4-c2a8-4d47-ae9b-7cb5bcbb415a"
-        name="CalendarIsFinishedMember"
         abstract="false"
         x:id="d471fb7a-8ddf-47db-b4a6-24b3a4ff40ef"
+        name="CalendarIsFinishedMember"
+        propertyId="ff52e0c4-c2a8-4d47-ae9b-7cb5bcbb415a"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        propertyId="d3e6cd08-af2d-412f-927f-d4e972a0e380"
-        name="CalendarCustomSortMember"
         abstract="false"
         x:id="1aa027b0-5650-4524-b6bd-2e944f4ba65e"
+        name="CalendarCustomSortMember"
+        propertyId="d3e6cd08-af2d-412f-927f-d4e972a0e380"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value="false"
-        propertyId="9e6a6536-c207-4c72-9374-12b6a31d1395"
-        name="CalendarShowAllResources"
         abstract="false"
         x:id="4a7b5bbb-510f-4d48-b540-3167acf1c7c5"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="CalendarShowAllResources"
+        propertyId="9e6a6536-c207-4c72-9374-12b6a31d1395"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="false" />
       <PropertyValueItem
-        propertyId="b8048914-a6a8-4ec2-9063-ba40ea7643b0"
-        name="PipelineDateMember"
         abstract="false"
         x:id="6d2eaf06-75a3-4423-b03e-32d00f6b726b"
+        name="PipelineDateMember"
+        propertyId="b8048914-a6a8-4ec2-9063-ba40ea7643b0"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value="15"
-        propertyId="2ed67118-feb2-4529-bf0b-524d38ab408c"
-        name="Left"
         abstract="false"
         x:id="512c578a-c5a4-43f3-9335-38a3e8783ef2"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="Left"
+        propertyId="2ed67118-feb2-4529-bf0b-524d38ab408c"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="15" />
       <PropertyValueItem
-        value="00000000-0000-0000-0000-000000000000"
-        propertyId="cf2165e0-27f2-4155-a003-a861bbe396ef"
-        name="IndependentDataSourceMethodId"
         abstract="false"
         x:id="8c2475a0-10db-48a9-890a-3a3af973c21a"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="IndependentDataSourceMethodId"
+        propertyId="cf2165e0-27f2-4155-a003-a861bbe396ef"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="00000000-0000-0000-0000-000000000000" />
       <PropertyValueItem
-        value="0"
-        propertyId="35a06531-13c7-4cf4-bec9-1406ff912040"
-        name="DefaultCalendarView"
         abstract="false"
         x:id="447eaf46-079e-45d7-b9bd-3e73da4bb608"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="DefaultCalendarView"
+        propertyId="35a06531-13c7-4cf4-bec9-1406ff912040"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="0" />
       <PropertyValueItem
-        value="false"
-        propertyId="d7a13674-7f44-4463-a595-2fb3ab1dbb61"
-        name="IsGridHeightDynamic"
         abstract="false"
         x:id="4c0e4815-8b40-4c14-92fc-3f7b3700a958"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="IsGridHeightDynamic"
+        propertyId="d7a13674-7f44-4463-a595-2fb3ab1dbb61"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="false" />
       <PropertyValueItem
-        value="0"
-        propertyId="147afba9-d58f-4d82-9388-b1f7954efc96"
-        name="MaxDynamicGridHeight"
         abstract="false"
         x:id="3cb61a7f-9a78-4bba-8d16-42b3602ecde4"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="MaxDynamicGridHeight"
+        propertyId="147afba9-d58f-4d82-9388-b1f7954efc96"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="0" />
       <PropertyValueItem
-        value="00000000-0000-0000-0000-000000000000"
-        propertyId="5dc5a7d0-4ce9-496e-b528-c10e73368ee5"
-        name="StyleId"
         abstract="false"
         x:id="48294f5b-8091-4a98-9dd7-437b806c1140"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="StyleId"
+        propertyId="5dc5a7d0-4ce9-496e-b528-c10e73368ee5"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="00000000-0000-0000-0000-000000000000" />
       <PropertyValueItem
-        value="false"
-        propertyId="4584fc29-2af7-404e-83ec-3f4847afa367"
-        name="IsMapVisible"
         abstract="false"
         x:id="d04ba6d6-117b-4ce2-999b-52c0446a826c"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="IsMapVisible"
+        propertyId="4584fc29-2af7-404e-83ec-3f4847afa367"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="false" />
       <PropertyValueItem
-        value="false"
-        propertyId="ba13e820-a44c-43e4-8927-f5026ab11a3a"
-        name="IsVisualEditorSupported"
         abstract="false"
         x:id="be6fed65-0d95-4dd6-bbbe-541aafeb2c88"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="IsVisualEditorSupported"
+        propertyId="ba13e820-a44c-43e4-8927-f5026ab11a3a"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="false" />
       <PropertyValueItem
-        propertyId="63642a1c-b4ad-4984-b487-befbd0a4b216"
-        name="PipelinePriceMember"
         abstract="false"
         x:id="ce2e0d2b-b3b6-4714-9171-5afaa5b3a616"
+        name="PipelinePriceMember"
+        propertyId="63642a1c-b4ad-4984-b487-befbd0a4b216"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value="false"
-        propertyId="dfed9e9e-2ab8-4ea8-b9de-2b6a31d1b1af"
-        name="NewRecordInDetailView"
         abstract="false"
         x:id="a4a4b584-b503-4bb1-b8cf-5d1aad6acb00"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="NewRecordInDetailView"
+        propertyId="dfed9e9e-2ab8-4ea8-b9de-2b6a31d1b1af"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="false" />
       <PropertyValueItem
-        value="false"
-        propertyId="32a68d80-174e-46ba-b0ca-b86c6fb5abc0"
-        name="IsPipelineSupported"
         abstract="false"
         x:id="33e977e3-4adb-496e-911e-6123b22d6d76"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="IsPipelineSupported"
+        propertyId="32a68d80-174e-46ba-b0ca-b86c6fb5abc0"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="false" />
       <PropertyValueItem
-        propertyId="6cc64b12-082f-48cd-be8f-6780211718fe"
-        name="PipelineNameMember"
         abstract="false"
         x:id="88089428-3ccd-45ba-bb7c-618a173c9977"
+        name="PipelineNameMember"
+        propertyId="6cc64b12-082f-48cd-be8f-6780211718fe"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value="200"
-        propertyId="2e965f41-7fea-480b-a44a-095637d0af7d"
-        name="Height"
         abstract="false"
         x:id="700b74e2-2bc6-4beb-a821-663f60c049c1"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="Height"
+        propertyId="2e965f41-7fea-480b-a44a-095637d0af7d"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="200" />
       <PropertyValueItem
-        propertyId="9c6b43b4-df9a-455d-bbe3-70921e0790db"
-        name="MapColorMember"
         abstract="false"
         x:id="63ce5b54-75f3-439f-8654-740b54e8e4f0"
+        name="MapColorMember"
+        propertyId="9c6b43b4-df9a-455d-bbe3-70921e0790db"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value="00000000-0000-0000-0000-000000000000"
-        propertyId="e47201b5-5334-4748-8f04-1626ef9ee93c"
-        name="IndependentDataSourceId"
         abstract="false"
         x:id="99673b60-ef1f-48f3-a32a-7ce548a65659"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="IndependentDataSourceId"
+        propertyId="e47201b5-5334-4748-8f04-1626ef9ee93c"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="00000000-0000-0000-0000-000000000000" />
       <PropertyValueItem
-        value="false"
-        propertyId="af590ff2-4668-40e3-8195-e1a1f735d433"
-        name="ShowNewButton"
         abstract="false"
         x:id="9cb85b68-28a9-431c-b7e7-7f37bd3247be"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="ShowNewButton"
+        propertyId="af590ff2-4668-40e3-8195-e1a1f735d433"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="false" />
       <PropertyValueItem
-        propertyId="1ca1946f-3b37-4c49-8443-10c1503dc76c"
-        name="MapTextLocationMember"
         abstract="false"
         x:id="a9def5cc-0b91-489e-bc5e-834d6b4d5534"
+        name="MapTextLocationMember"
+        propertyId="1ca1946f-3b37-4c49-8443-10c1503dc76c"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        propertyId="8ae87ccd-e465-4fc9-be2c-fc7cadb3df0f"
-        name="CalendarResourceIdMember"
         abstract="false"
         x:id="80703e12-2ae4-4323-b8a0-879099565f85"
+        name="CalendarResourceIdMember"
+        propertyId="8ae87ccd-e465-4fc9-be2c-fc7cadb3df0f"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        propertyId="cc52b1dd-ac5c-41e9-b054-688e18c91a97"
-        name="DraggingLabelMember"
         abstract="false"
         x:id="b0c046fc-346e-4670-8e88-89b8b80d5809"
+        name="DraggingLabelMember"
+        propertyId="cc52b1dd-ac5c-41e9-b054-688e18c91a97"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        propertyId="76adc867-8e5c-4d20-869f-e47ecadedf47"
-        name="DefaultConfiguration"
         abstract="false"
         x:id="c61badb5-b78c-48a6-9f69-89ce055bda5c"
+        name="DefaultConfiguration"
+        propertyId="76adc867-8e5c-4d20-869f-e47ecadedf47"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value="false"
-        propertyId="4f2ad140-c94b-49eb-9e65-4a52e3cb3e4e"
-        name="IsCalendarVisible"
         abstract="false"
         x:id="34b7c559-94d0-4fbc-9621-923f530c1280"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="IsCalendarVisible"
+        propertyId="4f2ad140-c94b-49eb-9e65-4a52e3cb3e4e"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="false" />
       <PropertyValueItem
-        propertyId="032cc7ad-fcdf-4abc-b848-3be01947a5b8"
-        name="MapLayers"
         abstract="false"
         x:id="7376fd3b-a464-4317-8396-ada01d898878"
+        name="MapLayers"
+        propertyId="032cc7ad-fcdf-4abc-b848-3be01947a5b8"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        propertyId="5e622365-4906-444e-a802-443bee69c542"
-        name="OrderMember"
         abstract="false"
         x:id="a454a756-8d4d-4175-8e57-afd2e3563edf"
+        name="OrderMember"
+        propertyId="5e622365-4906-444e-a802-443bee69c542"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value="00000000-0000-0000-0000-000000000000"
-        propertyId="91c94efb-ef4a-4851-a427-4d10f6c0a923"
-        name="PipelineStateLookupId"
         abstract="false"
         x:id="378716c8-84ef-465c-b1be-b4eaf7b9cfb2"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="PipelineStateLookupId"
+        propertyId="91c94efb-ef4a-4851-a427-4d10f6c0a923"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="00000000-0000-0000-0000-000000000000" />
       <PropertyValueItem
-        value="true"
-        propertyId="c9e691f4-520e-46a8-b1a1-941ae833bf88"
-        name="ShowDeleteButton"
         abstract="false"
         x:id="c4d8e87b-8995-4027-ac72-b517f76c5b0b"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="ShowDeleteButton"
+        propertyId="c9e691f4-520e-46a8-b1a1-941ae833bf88"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="true" />
       <PropertyValueItem
-        propertyId="6441ece9-86a8-4394-a33a-4a4bdd4489e9"
-        name="CalendarNameMember"
         abstract="false"
         x:id="fbb1758d-d382-4bee-8cf2-b61785416945"
+        name="CalendarNameMember"
+        propertyId="6441ece9-86a8-4394-a33a-4a4bdd4489e9"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        propertyId="f3a804f3-61c9-4215-8c42-2b9edd0c4ba1"
-        name="SelectionMember"
         abstract="false"
         x:id="52e3440b-99f5-42d0-bc8b-bbc991c73e7a"
+        name="SelectionMember"
+        propertyId="f3a804f3-61c9-4215-8c42-2b9edd0c4ba1"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value="false"
-        propertyId="b1b2e6a0-f7f5-44f1-abea-0f3b34da6b76"
-        name="IsVisualEditorVisible"
         abstract="false"
         x:id="631adce0-d156-45a7-9ee2-bd595841bbda"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="IsVisualEditorVisible"
+        propertyId="b1b2e6a0-f7f5-44f1-abea-0f3b34da6b76"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="false" />
       <PropertyValueItem
-        propertyId="fa8c5b1c-42fa-4eeb-9c5f-a073625e5a22"
-        name="CalendarResourceNameLookupField"
         abstract="false"
         x:id="948c4981-8124-41d8-82ef-bdc2795fc62b"
+        name="CalendarResourceNameLookupField"
+        propertyId="fa8c5b1c-42fa-4eeb-9c5f-a073625e5a22"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        propertyId="02d9ba6b-e6ec-46f4-8073-6dc398c081e5"
-        name="MapTextColorMember"
         abstract="false"
         x:id="b239f3b2-392b-45c2-a31a-be25fd1e777a"
+        name="MapTextColorMember"
+        propertyId="02d9ba6b-e6ec-46f4-8073-6dc398c081e5"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value="false"
-        propertyId="298b927a-509d-4c65-930c-c871746fb7e2"
-        name="HideNavigationPanel"
         abstract="false"
         x:id="f69d27c1-355e-4cf8-b904-c4e17e3b8056"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="HideNavigationPanel"
+        propertyId="298b927a-509d-4c65-930c-c871746fb7e2"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="false" />
       <PropertyValueItem
-        propertyId="2e429e40-0776-4de8-b6d8-2a3b4e56548c"
-        name="MapLocationMember"
         abstract="false"
         x:id="1d60ce8b-7ebb-4a76-b367-c9393a28dcce"
+        name="MapLocationMember"
+        propertyId="2e429e40-0776-4de8-b6d8-2a3b4e56548c"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value="false"
-        propertyId="a3bfb334-aa7d-4507-ba2c-75017676892f"
-        name="IsCalendarSupported"
         abstract="false"
         x:id="9e50273b-f338-4bcb-a75a-cf592d46bbc9"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="IsCalendarSupported"
+        propertyId="a3bfb334-aa7d-4507-ba2c-75017676892f"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="false" />
       <PropertyValueItem
-        value="false"
-        propertyId="c7625dc7-56c7-4072-a107-390de90a13e5"
-        name="DisableActionButtons"
         abstract="false"
         x:id="84027958-83a5-4dbd-9e6f-cfb34d1b95ac"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="DisableActionButtons"
+        propertyId="c7625dc7-56c7-4072-a107-390de90a13e5"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="false" />
       <PropertyValueItem
-        value="0"
-        propertyId="3496cb84-734e-4100-b8fc-f54431d82770"
-        name="TabIndex"
         abstract="false"
         x:id="8f8c34fe-12d0-4ace-9ec3-d359e92bb40e"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="TabIndex"
+        propertyId="3496cb84-734e-4100-b8fc-f54431d82770"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="0" />
       <PropertyValueItem
-        propertyId="9724950e-a16b-4844-9038-15f0242a09c8"
-        name="MapCenter"
         abstract="false"
         x:id="91162118-323b-4519-92ff-da0d5f60a92e"
+        name="MapCenter"
+        propertyId="9724950e-a16b-4844-9038-15f0242a09c8"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        propertyId="cd590061-51dc-4cce-a423-d427357d5a03"
-        name="MapTextMember"
         abstract="false"
         x:id="d6403049-9da4-4796-90e3-da38ae484828"
+        name="MapTextMember"
+        propertyId="cd590061-51dc-4cce-a423-d427357d5a03"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value="false"
-        propertyId="d4ecde27-8521-4983-b99a-5e8821b881cb"
-        name="IsMapSupported"
         abstract="false"
         x:id="aa4161d6-7d92-4c6e-90b6-da5f01e64200"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="IsMapSupported"
+        propertyId="d4ecde27-8521-4983-b99a-5e8821b881cb"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="false" />
       <PropertyValueItem
-        value="true"
-        propertyId="84ee631d-39c1-4ecd-91f9-24e434507bc7"
-        name="GridVisible"
         abstract="false"
         x:id="495543bc-5854-4b9e-a1d5-dcd197ccce16"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="GridVisible"
+        propertyId="84ee631d-39c1-4ecd-91f9-24e434507bc7"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="true" />
       <PropertyValueItem
-        value="15"
-        propertyId="0ab85221-d0b8-4df7-bfcc-ac196db06439"
-        name="Top"
         abstract="false"
         x:id="fc3abacf-3579-4a1b-982b-dde6f345aedb"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="Top"
+        propertyId="0ab85221-d0b8-4df7-bfcc-ac196db06439"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="15" />
       <PropertyValueItem
-        propertyId="8c12e0ab-e4bd-4675-8f12-c5930a07be14"
-        name="DataMember"
         abstract="false"
         x:id="5a5bf340-1db5-42ef-acf9-de4747597ef2"
+        name="DataMember"
+        propertyId="8c12e0ab-e4bd-4675-8f12-c5930a07be14"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        propertyId="30e6c918-04b4-4628-90c9-1ba607c9d998"
-        name="CalendarDateFromMember"
         abstract="false"
         x:id="62ca65a3-2755-44ff-8066-df5eef36ec31"
+        name="CalendarDateFromMember"
+        propertyId="30e6c918-04b4-4628-90c9-1ba607c9d998"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        propertyId="049c3765-137e-4f7c-a9f5-bef4d9561e61"
-        name="MapAzimuthMember"
         abstract="false"
         x:id="3a9647e5-26a5-4c96-a31b-e7707586c89a"
+        name="MapAzimuthMember"
+        propertyId="049c3765-137e-4f7c-a9f5-bef4d9561e61"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value="false"
-        propertyId="c679d676-0489-44d8-a604-77b1c0dbdeb6"
-        name="IsPipelineVisible"
         abstract="false"
         x:id="ff7f93d5-55ad-44d7-93a6-eb9e126842c3"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="IsPipelineVisible"
+        propertyId="c679d676-0489-44d8-a604-77b1c0dbdeb6"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="false" />
       <PropertyValueItem
-        value="00000000-0000-0000-0000-000000000000"
-        propertyId="8842aa84-6723-411f-ab53-7bf69c00e05a"
-        name="CalendarRowHeightConstantId"
         abstract="false"
         x:id="6e8fee54-2214-41de-b68f-ec9fada5f699"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="CalendarRowHeightConstantId"
+        propertyId="8842aa84-6723-411f-ab53-7bf69c00e05a"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="00000000-0000-0000-0000-000000000000" />
       <PropertyValueItem
-        propertyId="f8a067fe-7753-4393-9ab9-70ca3c0c0b11"
-        name="CalendarDateToMember"
         abstract="false"
         x:id="9e2731b2-3ae0-4463-a082-efa73708b7fb"
+        name="CalendarDateToMember"
+        propertyId="f8a067fe-7753-4393-9ab9-70ca3c0c0b11"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       <PropertyValueItem
-        value="0"
-        propertyId="ac6384aa-a8b8-4344-8402-7a53e1f94c13"
-        name="MapResolution"
         abstract="false"
         x:id="c257b23b-62b1-4fa3-bf2a-f3122d8d2705"
-        x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        name="MapResolution"
+        propertyId="ac6384aa-a8b8-4344-8402-7a53e1f94c13"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="0" />
       <PropertyValueItem
-        propertyId="c3f96d4c-f4c3-42ca-af5b-e46b4e7536e6"
-        name="ImplicitFilter"
         abstract="false"
         x:id="cf5c82f5-01fb-45dc-a267-fe7bc8198114"
+        name="ImplicitFilter"
+        propertyId="c3f96d4c-f4c3-42ca-af5b-e46b4e7536e6"
         x:type="Origam.Schema.GuiModel.PropertyValueItem" />
     </ControlSetItem>
   </PanelControlSet>

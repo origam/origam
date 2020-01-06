@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <group
-    rootItemType="DataEntity"
-    name="Organization Management"
     x:id="3d0fa7de-9d00-4b49-becc-b226980e588b"
     x:isFolder="true"
+    name="Organization Management"
+    rootItemType="DataEntity"
     x:type="Origam.Schema.SchemaItemGroup" />
 </x:file>

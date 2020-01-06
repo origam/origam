@@ -1,1 +1,1 @@
-ALTER TABLE [BusinessPartner] ADD [UserEmail] NVARCHAR(255) NULL
+﻿ALTER TABLE [BusinessPartner] ADD [UserEmail] NVARCHAR(255) NULL

@@ -1,20 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DataLookup
-    listValueMember="Id"
-    listDisplayMember="ParentId"
-    isTree="false"
-    suppressEmptyColumns="false"
-    alwaysAllowReturnToForm="false"
-    isFilteredServerside="false"
-    searchByFirstColumnOnly="false"
-    valueValueMember="Id"
-    valueDisplayMember="ParentId"
-    name="BusinessPartner_ParentId"
     abstract="false"
-    listDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ParentId.origam#LookupBusinessPartner_ParentId/c342d6a7-9bb8-47b2-b76e-ea464daa30f9"
-    valueDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ParentId.origam#LookupBusinessPartner_ParentId/c342d6a7-9bb8-47b2-b76e-ea464daa30f9"
-    valueMethod="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ParentId.origam#LookupBusinessPartner_ParentId/GetId/f655c3fb-eeb1-43a9-912f-71efdb31f97a"
+    alwaysAllowReturnToForm="false"
     x:id="7c1b488c-0791-4042-9058-9d42457dac0c"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup" />
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ParentId.origam#LookupBusinessPartner_ParentId/c342d6a7-9bb8-47b2-b76e-ea464daa30f9"
+    listDisplayMember="ParentId"
+    listValueMember="Id"
+    name="BusinessPartner_ParentId"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ParentId.origam#LookupBusinessPartner_ParentId/c342d6a7-9bb8-47b2-b76e-ea464daa30f9"
+    valueDisplayMember="ParentId"
+    valueMethod="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ParentId.origam#LookupBusinessPartner_ParentId/GetId/f655c3fb-eeb1-43a9-912f-71efdb31f97a"
+    valueValueMember="Id" />
 </x:file>

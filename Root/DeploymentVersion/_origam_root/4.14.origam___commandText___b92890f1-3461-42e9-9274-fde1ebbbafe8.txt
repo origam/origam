@@ -1,4 +1,4 @@
-
+﻿
 ALTER TABLE [WorkQueueNotificationContactType_l10n] ADD CONSTRAINT FK_WorkQueueNotificationContactType_l10n_refLanguageId_Language
 	FOREIGN KEY (
 		[refLanguageId]
