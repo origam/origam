@@ -23,7 +23,7 @@ namespace Origam.ServerCommon
             parameterPages = new List<AbstractPage>();
             foreach (AbstractPage page in pages)
             {
-                if (page.Path.Contains("{"))
+                if (page.Url.Contains("{"))
                 {
                     parameterPages.Add(page);
                 }
@@ -34,7 +34,7 @@ namespace Origam.ServerCommon
                         throw new OrigamException(
                             string.Format(
                                 "Can't initialize API Url resolver. Duplicate API route '{0}'",
-                                page.Path));
+                                page.Url));
                     }
                     parameterlessPages.Add(page.Url, page);
                 }
