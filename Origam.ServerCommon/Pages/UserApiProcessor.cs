@@ -37,6 +37,7 @@ using Origam.Schema.GuiModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Server;
 using Origam.Workbench.Services;
+using System.Linq;
 
 namespace Origam.ServerCommon.Pages
 {
@@ -46,6 +47,12 @@ namespace Origam.ServerCommon.Pages
         private static readonly log4net.ILog log 
             = log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private Lazy<UrlApiPageCache> urlApiPageCache =
+            new Lazy<UrlApiPageCache>(() => new UrlApiPageCache(                    
+                 (ServiceManager.Services.GetService<SchemaService>())
+                    .GetProvider<PagesSchemaItemProvider>()
+                    .ChildItems.ToList()
+                ));
 
         public UserApiProcessor(IHttpTools httpTools)
         {
@@ -647,7 +654,7 @@ namespace Origam.ServerCommon.Pages
             return fileBytes;
         }
 
-        private static (int, AbstractPage) ResolvePage(
+        private (int, AbstractPage) ResolvePage(
             IHttpContextWrapper context, 
             out Dictionary<string, string> outUrlParameters)
         {
@@ -669,7 +676,23 @@ namespace Origam.ServerCommon.Pages
                 new string[] { "/" }, StringSplitOptions.None);
             List<AbstractPage> validPagesByVerbAndPath =
                 new List<AbstractPage>();
-            foreach (AbstractPage page in pages.ChildItems)
+
+            // try to find parameterless page first, remove the preceding ~/ from the path
+            AbstractPage parameterlessResultPage =
+                urlApiPageCache.Value.GetParameterlessPage(
+                    String.Join("/", requestPath.Skip(1)));
+            if (parameterlessResultPage != null)
+            {
+                if (IsPageValidByVerb(parameterlessResultPage, context))
+                {
+                    return ValidatePageSecurity(
+                        auth, parameterlessResultPage);
+                }
+            }
+
+            // try other parameterized endpoints with the old approach
+            foreach (AbstractPage page in
+                urlApiPageCache.Value.GetParameterPages())
             {
                 currentUrlParams.Clear();
                 if (!IsPageValidByVerb(page, context))
