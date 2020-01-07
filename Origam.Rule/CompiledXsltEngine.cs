@@ -64,6 +64,7 @@ namespace Origam.Rule
             XslCompiledTransform xslt = engine as XslCompiledTransform;
             Mvp.Xml.Common.Xsl.XslReader xslReader = new Mvp.Xml.Common.Xsl.XslReader(xslt);
             xslReader.StartTransform(new Mvp.Xml.Common.Xsl.XmlInput(sourceXpathDoc), xslArg);
+#if NETSTANDARD
             XmlDocument doc = new XmlDocument();
             doc.Load(xslReader);
             if (!string.IsNullOrEmpty(doc.OuterXml))
@@ -75,6 +76,9 @@ namespace Origam.Rule
             {
                 resultDoc.Load(xslReader);
             }
+#else
+            resultDoc.Load(xslReader);
+#endif
         }
 
         public override void Transform(object engine, XsltArgumentList xslArg, XPathDocument sourceXpathDoc, XmlTextWriter xwr)
@@ -88,7 +92,7 @@ namespace Origam.Rule
             XslCompiledTransform xslt = engine as XslCompiledTransform;
             xslt.Transform(input, xslArg, output);
         }
-        #region Transformation Cache
+#region Transformation Cache
         private static Hashtable _transformationCache = new Hashtable();
         protected override bool IsTransformationCached(Guid transformationId)
         {
@@ -105,7 +109,7 @@ namespace Origam.Rule
         {
             _transformationCache[transformationId] = transformation;
         }
-        #endregion
+#endregion
 
     }
 }

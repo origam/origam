@@ -77,6 +77,7 @@ namespace Origam.Extensions
 
         public static XmlDocument RemoveAllEmptyAttributesAndNodes(this XmlDocument doc)
         {
+#if NETSTANDARD
             foreach (XmlAttribute att in doc.SelectNodes("descendant::*/@*[not(normalize-space(.))]"))
             {
                 att.OwnerElement.RemoveAttributeNode(att);
@@ -86,6 +87,7 @@ namespace Origam.Extensions
                 var elements = XDocument.Parse(doc.OuterXml);
                 elements.Descendants().Where(e => e.IsEmpty || string.IsNullOrWhiteSpace(e.Value)).Remove();
             }
+#endif
             return doc;
         }
     }
