@@ -36,6 +36,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -732,20 +733,14 @@ namespace Origam.ServerCore
         }
         private static bool HasChanges(SessionStore sessionStore)
         {
-            bool hasChanges = false;
-            if((sessionStore is FormSessionStore) 
+            bool hasChanges 
+                = ((sessionStore is FormSessionStore) 
                 && (sessionStore.Data != null) 
-                && sessionStore.Data.HasChanges())
-            {
-                hasChanges = true;
-            }
-            if((sessionStore is WorkflowSessionStore workflowSessionStore)
-                && workflowSessionStore.AllowSave &&
-                (sessionStore.Data != null)
-                && sessionStore.Data.HasChanges())
-            {
-                hasChanges = true;
-            }
+                && sessionStore.Data.HasChanges()) 
+                || ((sessionStore is WorkflowSessionStore workflowSessionStore)
+                && workflowSessionStore.AllowSave 
+                && (sessionStore.Data != null) 
+                && sessionStore.Data.HasChanges());
             return hasChanges;
         }
         private void CreateUpdateOrigamOnlineUser()
@@ -773,6 +768,87 @@ namespace Origam.ServerCore
                     }
                 }
             }
+        } 
+        public XmlDocument DataRowToRecordTooltip(
+            DataRow row, 
+            CultureInfo cultureInfo,
+            IStringLocalizer<SharedResources> localizer)
+        {
+            var xmlDocument = new XmlDocument();
+            var tooltipElement = xmlDocument.CreateElement("tooltip");
+            tooltipElement.SetAttribute("title", row.Table.DisplayExpression);
+            xmlDocument.AppendChild(tooltipElement);
+            var y = 1;
+            if(row.Table.Columns.Contains("Id"))
+            {
+                CreateGenericRecordTooltipCell(
+                    xmlDocument, tooltipElement, y, "Id " + row["Id"]);
+                y++;
+            }
+            var profileProvider = SecurityManager.GetProfileProvider();
+            if(row.Table.Columns.Contains("RecordCreated") 
+                && !row.IsNull("RecordCreated"))
+            {
+                string profileName;
+                try
+                {
+                    profileName = ((UserProfile)profileProvider.GetProfile(
+                            (Guid)row["RecordCreatedBy"])).FullName;
+                }
+                catch
+                {
+                    profileName = row["RecordCreatedBy"].ToString();
+                }
+                CreateGenericRecordTooltipCell(
+                    xmlDocument, tooltipElement, y, 
+                    string.Format(
+                        localizer["DefaultTooltipRecordCreated"], profileName, 
+                        ((DateTime)row["RecordCreated"]).ToString(
+                            cultureInfo)));
+                y++;
+            }
+            if(!row.Table.Columns.Contains("RecordUpdated"))
+            {
+                return xmlDocument;
+            }
+            if(row.IsNull("RecordUpdated"))
+            {
+                CreateGenericRecordTooltipCell(
+                    xmlDocument, tooltipElement, y, 
+                    localizer["DefaultTooltipNoChange"]);
+            }
+            else
+            {
+                string profileName;
+                try
+                {
+                    profileName = ((UserProfile)profileProvider.GetProfile(
+                        (Guid)row["RecordUpdatedBy"])).FullName;
+                }
+                catch
+                {
+                    profileName = row["RecordUpdatedBy"].ToString();
+                }
+                CreateGenericRecordTooltipCell(
+                    xmlDocument, tooltipElement, y, 
+                    string.Format(localizer["DefaultTooltipRecordUpdated"], 
+                    profileName, ((DateTime)row["RecordUpdated"]).ToString(
+                        cultureInfo)));
+            }
+            return xmlDocument;
+        }
+        private void CreateGenericRecordTooltipCell(
+            XmlDocument xmlDocument, XmlElement parentElement, 
+            int y, string text)
+        {
+            XmlElement gridElement = xmlDocument.CreateElement("cell");
+            gridElement.SetAttribute("type", "text");
+            gridElement.SetAttribute("x", "0");
+            gridElement.SetAttribute("y", y.ToString());
+            gridElement.SetAttribute("height", "1");
+            gridElement.SetAttribute("width", "1");
+            gridElement.InnerText = text;
+            parentElement.AppendChild(gridElement);
         }
     }
 }
