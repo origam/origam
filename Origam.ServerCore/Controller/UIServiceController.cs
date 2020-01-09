@@ -855,10 +855,12 @@ namespace Origam.ServerCore.Controller
         }
         private IActionResult RowDataToRecordTooltip(RowData rowData)
         {
+            var requestCultureFeature = Request.HttpContext.Features
+                    .Get<IRequestCultureFeature>();
+            var cultureInfo = requestCultureFeature.RequestCulture.Culture;
             return Ok(sessionObjects.UIService.DataRowToRecordTooltip(
                 rowData.Row, 
-                HttpContext.Features.Get<IRequestCultureFeature>()
-                    .RequestCulture.Culture,
+                cultureInfo,
                 localizer));
         }
     }
