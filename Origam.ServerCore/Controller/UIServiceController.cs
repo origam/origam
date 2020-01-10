@@ -44,6 +44,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using Microsoft.AspNetCore.Localization;
 
 namespace Origam.ServerCore.Controller
 {
@@ -485,6 +486,24 @@ namespace Origam.ServerCore.Controller
                 return Ok(sessionObjects.UIService.AttachmentList(input));
             });
         }
+        [HttpPost("[action]")]
+        public IActionResult GetRecordTooltip(
+            [FromBody]GetRecordTooltipInput input)
+        {
+            return FindItem<FormReferenceMenuItem>(input.MenuId)
+                .OnSuccess(Authorize)
+                .OnSuccess(menuItem => GetEntityData(
+                    input.DataStructureEntityId, menuItem))
+                .OnSuccess(CheckEntityBelongsToMenu)
+                .OnSuccess(entityData => 
+                    GetRow(
+                        entityData.Entity, 
+                        input.DataStructureEntityId,
+                        Guid.Empty,
+                        input.RowId))
+                .OnSuccess(RowDataToRecordTooltip)
+                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+        }
         private IActionResult RunWithErrorHandler(Func<IActionResult> func)
         {
             try
@@ -600,8 +619,8 @@ namespace Origam.ServerCore.Controller
         {
             return columnNames
                 .Where(
-                    columnName => !primaryKey.Any(
-                        dataColumn => dataColumn.ColumnName == columnName))
+                    columnName => primaryKey.All(
+                        dataColumn => dataColumn.ColumnName != columnName))
                 .ToArray();
         }
         private static bool Filter(
@@ -833,6 +852,16 @@ namespace Origam.ServerCore.Controller
         private IActionResult ThrowAwayReturnData(IActionResult arg)
         {
             return Ok();
+        }
+        private IActionResult RowDataToRecordTooltip(RowData rowData)
+        {
+            var requestCultureFeature = Request.HttpContext.Features
+                    .Get<IRequestCultureFeature>();
+            var cultureInfo = requestCultureFeature.RequestCulture.Culture;
+            return Ok(sessionObjects.UIService.DataRowToRecordTooltip(
+                rowData.Row, 
+                cultureInfo,
+                localizer));
         }
     }
 }
