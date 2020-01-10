@@ -373,7 +373,7 @@ namespace Origam.ServerCore
                     rows[i] = sessionStore.GetSessionRow(
                         input.Entity, input.SelectedItems[i]);
                 }
-                XmlDocument xml 
+                IXmlContainer xml 
                     = DatasetTools.GetRowXml(rows, DataRowVersion.Default);
                 RuleExceptionDataCollection result 
                     = sessionStore.RuleEngine.EvaluateEndRule(

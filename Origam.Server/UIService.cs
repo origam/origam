@@ -310,7 +310,7 @@ namespace Origam.Server
                 {
                     rows[i] = ss.GetSessionRow(entity, selectedItems[i]);
                 }
-                XmlDocument xml 
+                IXmlContainer xml 
                     = DatasetTools.GetRowXml(rows, DataRowVersion.Default);
                 RuleExceptionDataCollection result 
                     = ss.RuleEngine.EvaluateEndRule(
