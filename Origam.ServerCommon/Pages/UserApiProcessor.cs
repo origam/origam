@@ -776,6 +776,9 @@ namespace Origam.ServerCommon.Pages
                 }
                 default:
                 {
+                    log.ErrorFormat("Multiple routes detected '{0}' for request '{1}'",
+                        validPagesByVerbAndPath.Select(x => x.Id.ToString() + ":" + x.Url ).Aggregate((res, i) => res + "," + i),
+                        path);
                     return (500, null);
                 }
             }
