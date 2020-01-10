@@ -455,7 +455,7 @@
           abstract="false"
           x:id="7fc51361-7ef5-4245-b11e-75b5f650a721"
           name="After_01_Attachment_structure_fromAttachmentDataAndName"
-          startEvent="Success"
+          startEvent="Finish"
           task="Root/Workflow/SendEmail.origam#SendEmail/02_SendByQueue/01_Attachment_structure_fromAttachmentDataAndName/dc26af21-82ca-455a-aec6-8799b7340516"
           x:type="Origam.Schema.WorkflowModel.WorkflowTaskDependency" />
       </WorkflowTask>
