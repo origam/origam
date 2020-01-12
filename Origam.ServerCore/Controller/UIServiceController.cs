@@ -45,6 +45,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Localization;
+using Origam.Workbench;
 
 namespace Origam.ServerCore.Controller
 {
@@ -467,6 +468,20 @@ namespace Origam.ServerCore.Controller
                 .OnSuccess(RowDataToRecordTooltip)
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
+        [HttpPost("[action]")]
+        public IActionResult GetAudit([FromBody]GetAuditInput input)
+        {
+            return FindItem<FormReferenceMenuItem>(input.MenuId)
+                .OnSuccess(Authorize)
+                .OnSuccess(menuItem => GetEntityData(
+                    input.DataStructureEntityId, menuItem))
+                .OnSuccess(CheckEntityBelongsToMenu)
+                .OnSuccess(entityData => 
+                    GetAuditLog(
+                        entityData, 
+                        input.RowId))
+                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+        }
         private IActionResult RunWithErrorHandler(Func<IActionResult> func)
         {
             try
@@ -825,6 +840,17 @@ namespace Origam.ServerCore.Controller
                 rowData.Row, 
                 cultureInfo,
                 localizer));
+        }
+        private IActionResult GetAuditLog(EntityData entityData, object id)
+        {
+            var auditLog = AuditLogDA.RetrieveLogTransformed(
+                entityData.Entity.EntityId, id);
+            if(log != null)
+            {
+                return Ok(DataTools.DatatableToHashtable(
+                    auditLog.Tables[0], false));
+            }
+            return Ok();
         }
     }
 }
