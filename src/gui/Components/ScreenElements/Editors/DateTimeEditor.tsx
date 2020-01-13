@@ -154,7 +154,7 @@ export class DateTimeEditor extends React.Component<{
   isFocused?: boolean;
   foregroundColor?: string;
   backgroundColor?: string;
-  onChange?: (event: any, isoDay: string) => void;
+  onChange?: (event: any, isoDay: string | undefined) => void;
   onChangeByCalendar?: (event: any, isoDay: string) => void;
   onClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
@@ -250,9 +250,7 @@ export class DateTimeEditor extends React.Component<{
   @observable dirtyTextualValue: string | undefined;
 
   @computed get momentValue() {
-    return this.props.value !== "" && this.props.value !== null
-      ? moment(this.props.value)
-      : null;
+    return !!this.props.value ? moment(this.props.value) : null;
   }
 
   @computed get formattedMomentValue() {
@@ -277,6 +275,10 @@ export class DateTimeEditor extends React.Component<{
 
   @action.bound handleTextfieldChange(event: any) {
     this.dirtyTextualValue = event.target.value;
+    if (this.dirtyTextualValue === "") {
+      this.props.onChange && this.props.onChange(event, undefined);
+      return;
+    }
     // TODO: Do not insist on spaces!?
     const simpleFormat = this.props.outputFormat
       .replace(/MM/g, "M")

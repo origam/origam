@@ -130,8 +130,8 @@ export class FilterSettingsDate extends React.Component<{
 }> {
   constructor(props: any) {
     super(props);
-    (this.setting as any).val1 = moment().toISOString();
-    (this.setting as any).val2 = moment().toISOString();
+    (this.setting as any).val1 = undefined; //moment().toISOString();
+    (this.setting as any).val2 = undefined; //moment().toISOString();
   }
 
   @observable.ref setting: any = OPERATORS[0];
