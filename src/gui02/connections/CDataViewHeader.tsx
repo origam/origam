@@ -21,7 +21,7 @@ import { getVisibleRowCount } from "model/selectors/DataView/getVisibleRowCount"
 import { getIsFilterControlsDisplayed } from "model/selectors/TablePanelView/getIsFilterControlsDisplayed";
 import React from "react";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
-import { onActionClick } from "model/actions-ui/Actions/onActionClick";
+
 import { DataViewHeaderPusher } from "gui02/components/DataViewHeader/DataViewHeaderPusher";
 import { IPanelViewType } from "model/entities/types/IPanelViewType";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
@@ -30,6 +30,8 @@ import { DropdownItem } from "gui02/components/Dropdown/DropdownItem";
 import { getIsAddButtonVisible } from "model/selectors/DataView/getIsAddButtonVisible";
 import { getIsDelButtonVisible } from "model/selectors/DataView/getIsDelButtonVisible";
 import { getIsCopyButtonVisible } from "model/selectors/DataView/getIsCopyButtonVisible";
+
+import uiActions from "model/actions-ui-tree";
 
 @observer
 export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
@@ -77,7 +79,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                   <Icon src="./icons/add.svg" />
                 </DataViewHeaderAction>
               )}
-              
+
               {isDelButton && (
                 <DataViewHeaderAction
                   className="isRedHover"
@@ -101,7 +103,9 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                 .filter(action => getIsEnabledAction(action))
                 .map(action => (
                   <DataViewHeaderButton
-                    onClick={event => onActionClick(action)(event, action)}
+                    onClick={event =>
+                      uiActions.actions.onActionClick(action)(event, action)
+                    }
                   >
                     {action.caption}
                   </DataViewHeaderButton>

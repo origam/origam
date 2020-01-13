@@ -29,7 +29,6 @@ export class OpenedScreens implements IOpenedScreens {
       item => item.menuItemId === menuItemId && item.order === order
     );
     item && item.setActive(true);
-
   }
 
   @computed get activeItem(): IOpenedScreen | undefined {
@@ -41,9 +40,11 @@ export class OpenedScreens implements IOpenedScreens {
     actions: IAction[];
   }> {
     const activeScreen = this.activeItem;
-    return activeScreen && !activeScreen.content.isLoading
-      ? activeScreen.content.formScreen!.toolbarActions
-      : [];
+    const result =
+      activeScreen && !activeScreen.content.isLoading
+        ? activeScreen.content.formScreen!.toolbarActions
+        : [];
+    return result;
   }
 
   findLastExistingItem(menuItemId: string): IOpenedScreen | undefined {

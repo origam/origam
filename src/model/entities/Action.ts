@@ -47,7 +47,7 @@ export class Action implements IAction {
       }
       case IActionMode.MultipleCheckboxes: {
         // TODO: Multiple checkboxes case
-        return false;
+        return true;
       }
     }
   }

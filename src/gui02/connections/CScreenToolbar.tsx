@@ -14,7 +14,8 @@ import { onRefreshSessionClick } from "model/actions-ui/ScreenToolbar/onRefreshS
 import { observer } from "mobx-react";
 import { getActiveScreenActions } from "model/selectors/getActiveScreenActions";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
-import { onActionClick } from "model/actions-ui/Actions/onActionClick";
+
+import uiActions from 'model/actions-ui-tree'
 
 @observer
 export class CScreenToolbar extends React.Component<{}> {
@@ -67,7 +68,7 @@ export class CScreenToolbar extends React.Component<{}> {
                       <ScreenToolbarAction
                         icon={<Icon src="./icons/settings.svg" />}
                         label={action.caption}
-                        onClick={event => onActionClick(action)(event, action)}
+                        onClick={event => uiActions.actions.onActionClick(action)(event, action)}
                       />
                     ))}
                 </ScreenToolbarActionGroup>
