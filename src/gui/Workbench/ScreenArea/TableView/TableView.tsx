@@ -111,9 +111,9 @@ export class TableView extends React.Component<{
     );
     const editingRowIndex = getSelectedRowIndex(this.props.tablePanelView);
     let editingColumnIndex = getSelectedColumnIndex(this.props.tablePanelView);
-    editingColumnIndex =
-      editingColumnIndex &&
-      editingColumnIndex + (isSelectionCheckboxes ? 1 : 0);
+    if (editingColumnIndex !== undefined && isSelectionCheckboxes) {
+      editingColumnIndex++;
+    }
 
     return (
       <Provider tablePanelView={this.props.tablePanelView}>
