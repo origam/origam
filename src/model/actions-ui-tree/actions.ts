@@ -6,6 +6,8 @@ import { getEntity } from "model/selectors/DataView/getEntity";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { handleError } from "model/actions/handleError";
 
+import selectors from "model/selectors-tree";
+
 export default {
   onActionClick(ctx: any) {
     return flow(function* onActionClick(event: any, action: IAction) {
@@ -27,13 +29,16 @@ export default {
             }
             break;
           case IActionMode.MultipleCheckboxes:
-            yield* lifecycle.onExecuteAction(gridId, entity, action, []);
+            const selectedRowIds = selectors.selectionCheckboxes.getSelectedRowIds(
+              ctx
+            );
+            yield* lifecycle.onExecuteAction(gridId, entity, action, selectedRowIds);
             break;
         }
       } catch (e) {
         yield* handleError(ctx)(e);
         throw e;
       }
-    })
+    });
   }
-}
+};

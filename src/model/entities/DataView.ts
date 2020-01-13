@@ -19,6 +19,7 @@ import { getEntity } from "model/selectors/DataView/getEntity";
 import { getBindingParent } from "model/selectors/DataView/getBindingParent";
 import { IRowState } from "./types/IRowState";
 import { ILookupLoader } from "./types/ILookupLoader";
+import bind from "bind-decorator";
 
 export class DataView implements IDataView {
   $type_IDataView: 1 = 1;
@@ -34,8 +35,6 @@ export class DataView implements IDataView {
     this.tablePanelView.parent = this;
     this.formPanelView.parent = this;
     this.lookupLoader.parent = this;
-
-
   }
 
   isReorderedOnClient: boolean = true;
@@ -72,7 +71,7 @@ export class DataView implements IDataView {
   formPanelView: IFormPanelView = null as any;
   lookupLoader: ILookupLoader = null as any;
 
-  @observable selectedRowIds: Set<string> = new Set();
+  @observable selectedRowIdsMap: Map<string, boolean> = new Map();
 
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
   @observable isEditing: boolean = false;
@@ -81,6 +80,34 @@ export class DataView implements IDataView {
 
   @computed get showSelectionCheckboxes() {
     return this.showSelectionCheckboxesSetting;
+  }
+
+  @bind hasSelectedRowId(id: string) {
+    return this.selectedRowIdsMap.has(id);
+  }
+
+  @computed get isAnyRowIdSelected(): boolean {
+    return this.selectedRowIdsMap.size > 0;
+  }
+
+  @computed get selectedRowIds() {
+    return Array.from(this.selectedRowIdsMap.keys());
+  }
+
+  @action.bound addSelectedRowId(id: string) {
+    this.selectedRowIdsMap.set(id, true);
+  }
+
+  @action.bound removeSelectedRowId(id: string) {
+    this.selectedRowIdsMap.delete(id);
+  }
+
+  @action.bound toggleSelectedRowId(id: string) {
+    if (this.hasSelectedRowId(id)) {
+      this.removeSelectedRowId(id);
+    } else {
+      this.addSelectedRowId(id);
+    }
   }
 
   @computed get selectedRowIndex(): number | undefined {

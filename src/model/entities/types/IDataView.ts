@@ -66,10 +66,20 @@ export interface IDataView extends IDataViewData {
   bindingParametersFromParent: {[key: string]: string};
   showSelectionCheckboxes: boolean;
   isReorderedOnClient: boolean;
-  selectedRowIds: Set<string>;
+  selectedRowIdsMap: Map<string, boolean>;
   panelViewActions: IAction[];
   toolbarActions: IAction[];
   dialogActions: IAction[];
+
+
+
+  hasSelectedRowId(id: string): boolean;
+  selectedRowIds: string[];
+  isAnyRowIdSelected: boolean;
+  addSelectedRowId(id: string): void;
+  removeSelectedRowId(id: string): void;
+  toggleSelectedRowId(id: string): void;
+
 
   onFormPanelViewButtonClick(event: any): void;
   onTablePanelViewButtonClick(event: any): void;

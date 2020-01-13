@@ -22,6 +22,8 @@ import { onTableCellClick } from "model/actions-ui/DataView/TableView/onTableCel
 import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
 
+import selectors from "model/selectors-tree";
+
 export interface ICellRendererData {
   tablePanelView: ITablePanelView;
 }
@@ -115,7 +117,7 @@ export class CellRenderer implements ICellRenderer {
           break;
         default:
           if (cell.value !== null) {
-            if(!cell.isPassword) {
+            if (!cell.isPassword) {
               ctx.fillText("" + cell.value!, cellPaddingLeft * CPR, 15 * CPR);
             } else {
               ctx.fillText("*******", cellPaddingLeft * CPR, 15 * CPR);
@@ -176,9 +178,14 @@ export class CellRenderer implements ICellRenderer {
             this.tablePanelView,
             selectionMember
           );
-          if(dsField) {
+          if (dsField) {
             value = dataTable.getCellValueByDataSourceField(record, dsField);
           }
+        } else {
+          value = selectors.selectionCheckboxes.getIsSelectedRowId(
+            this.tablePanelView,
+            recordId
+          );
         }
         return {
           isCellCursor: false,

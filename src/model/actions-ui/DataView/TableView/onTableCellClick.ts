@@ -6,6 +6,7 @@ import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSel
 import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import actions from "model/actions-tree";
 
 export function onTableCellClick(ctx: any) {
   return flow(function* onTableCellClick(
@@ -14,7 +15,7 @@ export function onTableCellClick(ctx: any) {
     columnIndex: number
   ) {
     try {
-      console.log('click', rowIndex, columnIndex)
+      console.log("click", rowIndex, columnIndex);
       if (getIsSelectionCheckboxesShown(ctx) && columnIndex === -1) {
         const dataTable = getDataTable(ctx);
         const selectionMember = getSelectionMember(ctx);
@@ -26,6 +27,10 @@ export function onTableCellClick(ctx: any) {
             dataTable.setDirtyValue(row, selectionMember, !value);
             yield* getFormScreenLifecycle(ctx).onFlushData();
           }
+        } else {
+          yield* actions.selectionCheckboxes.toggleSelectedId(ctx)(
+            dataTable.getRowId(row)
+          );
         }
         return;
       }

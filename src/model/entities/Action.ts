@@ -13,6 +13,8 @@ import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 import { getRowStateIsDisableAction } from "model/selectors/RowState/getRowStateIsDisabledAction";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 
+import selectors from "model/selectors-tree";
+
 export class Action implements IAction {
   $type_IAction: 1 = 1;
 
@@ -33,8 +35,10 @@ export class Action implements IAction {
 
   @computed get isEnabled() {
     const selRowId = getSelectedRowId(this);
-    const isDisableddOverride = selRowId ? getRowStateIsDisableAction(this, selRowId, this.id) : false;
-    if(isDisableddOverride) {
+    const isDisableddOverride = selRowId
+      ? getRowStateIsDisableAction(this, selRowId, this.id)
+      : false;
+    if (isDisableddOverride) {
       return false;
     }
     switch (this.mode) {
@@ -47,7 +51,7 @@ export class Action implements IAction {
       }
       case IActionMode.MultipleCheckboxes: {
         // TODO: Multiple checkboxes case
-        return true;
+        return selectors.selectionCheckboxes.getIsAnySelected(this);
       }
     }
   }
