@@ -79,7 +79,7 @@ export class DataView implements IDataView {
   @observable selectedRowId: string | undefined;
 
   @computed get showSelectionCheckboxes() {
-    return this.showSelectionCheckboxesSetting;
+    return this.showSelectionCheckboxesSetting || !!this.selectionMember;
   }
 
   @bind hasSelectedRowId(id: string) {
