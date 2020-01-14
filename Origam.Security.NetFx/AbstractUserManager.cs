@@ -97,6 +97,24 @@ namespace Origam.Security.Identity
             set { _Is2FAUsed = value; }
         }
 
+        protected bool _exposeLoginAttemptsInfo = false;
+        public bool ExposeLoginAttemptsInfo
+        {
+            get { return GetExposeLoginAttemptsInfo(); }
+            set { SetExposeLoginAttemptsInfo(value); }
+        }
+        // the getter can't be overriden
+        private bool GetExposeLoginAttemptsInfo()
+        {
+            return _exposeLoginAttemptsInfo;
+        }
+        // by default, user managers doesn't allow this functionality
+        // (unless they correctly implement GetAccessFailedCountAsync)
+        protected virtual void SetExposeLoginAttemptsInfo(bool value)
+        {
+            throw new NotSupportedException();
+        }
+
         private bool _IsPasswordRecoverySupported = false;
 
         public bool IsPasswordRecoverySupported
@@ -552,6 +570,33 @@ namespace Origam.Security.Identity
         protected virtual void CheckEmailUniqueness()
         {
             emailUniquenessChecked = true;
+        }
+
+
+        /// <summary>
+        /// Returns user's failed password attempt count
+        /// </summary>
+        /// <param name="username">user's username</param>
+        /// <returns>null when exposing is not switched on, or user not found</returns>
+        public int? GetFailedPasswordAttemptCount(string username)
+        {
+            int? attemptedCount = null;
+            if (ExposeLoginAttemptsInfo)
+            {
+                // resolve user id from username
+                Task<OrigamUser> findByNameTask = FindByNameAsync(username);
+                if (!findByNameTask.IsFaulted && findByNameTask.Result != null)
+                {
+                    Task<int> failedCountTask = GetAccessFailedCountAsync(findByNameTask.Result.Id);
+                    // get current count
+                    if (!failedCountTask.IsFaulted && failedCountTask.Result != -1)
+                    {
+                        attemptedCount = failedCountTask.Result;
+                    }
+                }
+            }
+
+            return attemptedCount;
         }
     }
 }
