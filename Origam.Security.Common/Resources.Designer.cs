@@ -19,7 +19,7 @@ namespace Origam.Security.Common {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -324,6 +324,15 @@ namespace Origam.Security.Common {
         public static string InvalidUsernameOrPassword {
             get {
                 return ResourceManager.GetString("InvalidUsernameOrPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username or password is wrong. You have {0} remaining login attempts. Use &quot;password forgotten&quot; before your account gets blocked..
+        /// </summary>
+        public static string InvalidUsernameOrPasswordWithAttemptInfo {
+            get {
+                return ResourceManager.GetString("InvalidUsernameOrPasswordWithAttemptInfo", resourceCulture);
             }
         }
         
