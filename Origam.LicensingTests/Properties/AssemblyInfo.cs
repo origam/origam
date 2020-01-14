@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -30,7 +30,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Advantage Solutions, s. r. o.")]
 [assembly: AssemblyProduct("ORIGAM")]
-[assembly: AssemblyCopyright("(c) 2005 - 2019 Advantage Solutions, s. r. o.")]
+[assembly: AssemblyCopyright("(c) 2005 - 2020 Advantage Solutions, s. r. o.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
