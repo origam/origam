@@ -56,6 +56,7 @@ export function interpretScreenXml(
   screenDoc: any,
   formScreenLifecycle: IFormScreenLifecycle02,
   panelConfigurationsRaw: any,
+  lookupMenuMappings: any,
   sessionId: string
 ) {
   const panelConfigurations = new Map<string, { position: number | undefined }>(
@@ -333,6 +334,19 @@ export function interpretScreenXml(
         defaultView.forEach(element => {
           dataViewInstance.activePanelView = element.attributes.id;
         });
+      });
+
+      lookupMenuMappings.forEach((mapping: any) => {
+        if (mapping.lookupId && mapping.menuId) {
+          properties.forEach(property => {
+            if (
+              property.lookup &&
+              property.lookup.lookupId === mapping.lookupId
+            ) {
+              property.linkToMenuId = mapping.menuId;
+            }
+          });
+        }
       });
 
       // COLUMN ORDER

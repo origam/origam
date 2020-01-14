@@ -42,8 +42,15 @@ export class Property implements IProperty {
   formatterPattern: string = "";
   @observable columnWidth: number = 100;
   lookup?: ILookup;
+
+  linkToMenuId?: string = undefined;
+
   get isLookup() {
     return !!this.lookup;
+  }
+
+  get isLink() {
+    return !!this.linkToMenuId;
   }
 
   @action.bound setColumnWidth(width: number) {

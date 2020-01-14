@@ -18,6 +18,9 @@ import {
   ITablePanelView,
   ITablePanelViewData
 } from "./types/ITablePanelView";
+import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
+
+import selectors from "model/selectors-tree";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -108,21 +111,32 @@ export class TablePanelView implements ITablePanelView {
     const row = this.dataTable.getRowByExistingIdx(rowIndex);
     const property = this.tableProperties[columnIndex];
     if (property.column !== "CheckBox") {
-      if (
-        this.dataTable.getRowId(row) ===
-        this.selectedRowId /*&&
-        property.id === this.selectedColumnId*/
-      ) {
-        this.selectCell(this.dataTable.getRowId(row) as string, property.id);
-        this.setEditing(true);
-      } else {
-        const { isEditing } = this;
-        if (isEditing) {
-          this.setEditing(false);
+      if (property.isLink && event.ctrlKey) {
+        const menuId = selectors.column.getLinkMenuId(property);
+        const menuItem = menuId && selectors.mainMenu.getItemById(this, menuId);
+        if (menuItem) {
+          yield onMainMenuItemClick(this)({
+            event: undefined,
+            item: menuItem
+          });
         }
-        this.selectCell(this.dataTable.getRowId(row) as string, property.id);
-        if (isEditing) {
+      } else {
+        if (
+          this.dataTable.getRowId(row) ===
+          this.selectedRowId /*&&
+        property.id === this.selectedColumnId*/
+        ) {
+          this.selectCell(this.dataTable.getRowId(row) as string, property.id);
           this.setEditing(true);
+        } else {
+          const { isEditing } = this;
+          if (isEditing) {
+            this.setEditing(false);
+          }
+          this.selectCell(this.dataTable.getRowId(row) as string, property.id);
+          if (isEditing) {
+            this.setEditing(true);
+          }
         }
       }
     } else {

@@ -155,11 +155,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *applyInitUIResult(args: { initUIResult: any }) {
     const openedScreen = getOpenedScreen(this);
-    const screenXmlObj = args.initUIResult.formDefinition;
+
     const screen = interpretScreenXml(
-      screenXmlObj,
+      args.initUIResult.formDefinition,
       this,
       args.initUIResult.panelConfigurations,
+      args.initUIResult.lookupMenuMappings,
       args.initUIResult.sessionId
     );
     openedScreen.content.setFormScreen(screen);

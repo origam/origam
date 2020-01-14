@@ -38,7 +38,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         parseInt(dialogHeight, 10)
       );
     }
-    if (!event.ctrlKey) {
+    if (event && !event.ctrlKey) {
       const existingItem = openedScreens.findLastExistingItem(id);
       if (existingItem) {
         openedScreens.activateItem(id, existingItem.order);

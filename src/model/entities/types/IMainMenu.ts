@@ -11,7 +11,7 @@ export interface IMainMenuData {
 
 export interface IMainMenuContent extends IMainMenuData {
   $type_IMainMenuContent: 1;
-
+  getItemById(id: string): any;
   parent?: any;
 }
 

@@ -111,8 +111,15 @@ export class CellRenderer implements ICellRenderer {
           break;
         case "ComboBox":
         case "TagInput":
+          if (cell.isLink) {
+            ctx.save();
+            ctx.fillStyle = "blue";
+          }
           if (cell.value !== null) {
             ctx.fillText("" + cell.text!, cellPaddingLeft * CPR, 15 * CPR);
+          }
+          if (cell.isLink) {
+            ctx.restore();
           }
           break;
         default:
@@ -194,6 +201,7 @@ export class CellRenderer implements ICellRenderer {
           isColumnOrderChangeTarget: false,
           isLoading: false,
           isInvalid: false,
+          isLink: false,
           formatterPattern: "",
           type: "CheckBox",
           value,
@@ -214,6 +222,8 @@ export class CellRenderer implements ICellRenderer {
     const value = this.getCellValue(rowIndex, columnIndex);
     let text = value;
     let isLoading = false;
+    let isLink = false;
+
     const property = getTableViewPropertyByIdx(
       this.tablePanelView,
       columnIndex
@@ -226,6 +236,7 @@ export class CellRenderer implements ICellRenderer {
         text = this.getCellText(rowIndex, columnIndex);
       }
       isLoading = property.lookup!.isLoading(value);
+      isLink = selectors.column.isLinkToForm(property);
     }
     const selectedColumnId = getSelectedColumnId(this.tablePanelView);
 
@@ -269,6 +280,7 @@ export class CellRenderer implements ICellRenderer {
         this.tablePanelView.columnOrderChangingTargetId === property.id,
       isLoading,
       isInvalid,
+      isLink,
       isPassword: property.isPassword,
       formatterPattern: property.formatterPattern,
       type: property.column,

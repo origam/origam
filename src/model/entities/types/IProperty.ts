@@ -43,6 +43,8 @@ export interface IProperty extends IPropertyData {
   dataIndex: number;
   isLookup: boolean;
   columnWidth: number;
+  linkToMenuId?: string;
+  isLink: boolean;
 
   setColumnWidth(width: number): void;
 

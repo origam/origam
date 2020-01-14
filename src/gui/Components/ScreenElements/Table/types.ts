@@ -183,6 +183,7 @@ export interface IRenderedCell {
   isLoading: boolean;
   isInvalid: boolean;
   isPassword?: boolean;
+  isLink: boolean;
   formatterPattern: string;
   type: ICellType;
   value: any;

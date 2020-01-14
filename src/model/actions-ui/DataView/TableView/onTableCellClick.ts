@@ -17,6 +17,7 @@ export function onTableCellClick(ctx: any) {
     try {
       console.log("click", rowIndex, columnIndex);
       if (getIsSelectionCheckboxesShown(ctx) && columnIndex === -1) {
+        // TODO: Move to tablepanelview
         const dataTable = getDataTable(ctx);
         const selectionMember = getSelectionMember(ctx);
         const row = dataTable.getRowByExistingIdx(rowIndex);
@@ -33,8 +34,10 @@ export function onTableCellClick(ctx: any) {
           );
         }
         return;
+      } else {
+        yield* getTablePanelView(ctx).onCellClick(event, rowIndex, columnIndex);
+        return
       }
-      yield* getTablePanelView(ctx).onCellClick(event, rowIndex, columnIndex);
     } catch (e) {
       yield* handleError(ctx)(e);
       throw e;
