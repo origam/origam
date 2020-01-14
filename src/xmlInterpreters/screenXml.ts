@@ -1,35 +1,30 @@
-import { findStopping } from "./xmlUtils";
-import { FormScreen } from "../model/entities/FormScreen";
-import { DataSource } from "../model/entities/DataSource";
-import { DataSourceField } from "../model/entities/DataSourceField";
-import { DataView } from "../model/entities/DataView";
-import { IPanelViewType } from "../model/entities/types/IPanelViewType";
-import { Property } from "../model/entities/Property";
-import { DropDownColumn } from "../model/entities/DropDownColumn";
-import { IComponentBinding } from "../model/entities/types/IComponentBinding";
-import {
-  ComponentBindingPair,
-  ComponentBinding
-} from "../model/entities/ComponentBinding";
-import {
-  IFormScreenLifecycle,
-  IFormScreenLifecycle02
-} from "../model/entities/types/IFormScreenLifecycle";
-import { DataTable } from "../model/entities/DataTable";
-
-import { TablePanelView } from "../model/entities/TablePanelView/TablePanelView";
-import { FormPanelView } from "../model/entities/FormPanelView/FormPanelView";
-import { flf2mof } from "../utils/flashDateFormat";
-import { Lookup } from "../model/entities/Lookup";
-import { ColumnConfigurationDialog } from "../model/entities/TablePanelView/ColumnConfigurationDialog";
-import { FilterConfiguration } from "../model/entities/FilterConfiguration";
+import { DataViewLifecycle } from "model/entities/DataViewLifecycle/DataViewLifecycle";
+import { LookupLoader } from "model/entities/LookupLoader";
+import { RowState } from "model/entities/RowState";
 import { Action } from "../model/entities/Action";
 import { ActionParameter } from "../model/entities/ActionParameter";
+import {
+  ComponentBinding,
+  ComponentBindingPair
+} from "../model/entities/ComponentBinding";
+import { DataSource } from "../model/entities/DataSource";
+import { DataSourceField } from "../model/entities/DataSourceField";
+import { DataTable } from "../model/entities/DataTable";
+import { DataView } from "../model/entities/DataView";
+import { DropDownColumn } from "../model/entities/DropDownColumn";
+import { FilterConfiguration } from "../model/entities/FilterConfiguration";
+import { FormPanelView } from "../model/entities/FormPanelView/FormPanelView";
+import { FormScreen } from "../model/entities/FormScreen";
+import { Lookup } from "../model/entities/Lookup";
 import { OrderingConfiguration } from "../model/entities/OrderingConfiguration";
-import { Table } from "../gui/Components/ScreenElements/Table/Table";
-import { DataViewLifecycle } from "model/entities/DataViewLifecycle/DataViewLifecycle";
-import { RowState } from "model/entities/RowState";
-import { LookupLoader } from "model/entities/LookupLoader";
+import { Property } from "../model/entities/Property";
+import { ColumnConfigurationDialog } from "../model/entities/TablePanelView/ColumnConfigurationDialog";
+import { TablePanelView } from "../model/entities/TablePanelView/TablePanelView";
+import { IComponentBinding } from "../model/entities/types/IComponentBinding";
+import { IFormScreenLifecycle02 } from "../model/entities/types/IFormScreenLifecycle";
+import { IPanelViewType } from "../model/entities/types/IPanelViewType";
+import { flf2mof } from "../utils/flashDateFormat";
+import { findStopping } from "./xmlUtils";
 
 export const findUIRoot = (node: any) =>
   findStopping(node, n => n.name === "UIRoot")[0];
@@ -336,7 +331,7 @@ export function interpretScreenXml(
           });
         const defaultView = findStopping(conf, n => n.name === "view");
         defaultView.forEach(element => {
-          dataViewInstance.activePanelView= element.attributes.id;
+          dataViewInstance.activePanelView = element.attributes.id;
         });
       });
 

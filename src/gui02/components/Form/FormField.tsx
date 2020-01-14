@@ -1,6 +1,7 @@
 import React from "react";
 import S from "./FormField.module.scss";
 import { render } from "react-dom";
+import { IDockType } from "model/entities/types/IProperty";
 
 export enum ICaptionPosition {
   Left = "Left",
@@ -13,6 +14,7 @@ export class FormField extends React.Component<{
   caption: React.ReactNode;
   captionPosition?: ICaptionPosition;
   captionLength: number;
+  dock?: IDockType;
   editor: React.ReactNode;
   left: number;
   top: number;
@@ -49,6 +51,14 @@ export class FormField extends React.Component<{
   }
 
   get formFieldStyle() {
+    if (this.props.dock === IDockType.Fill) {
+      return {
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%"
+      };
+    }
     return {
       left: this.props.left,
       top: this.props.top,

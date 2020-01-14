@@ -3,6 +3,11 @@ import { IPropertyColumn } from "./IPropertyColumn";
 import { IDropDownColumn } from "./IDropDownColumn";
 import { ILookup } from "./ILookup";
 
+export enum IDockType {
+  Dock = "Dock",
+  Fill = "Fill"
+}
+
 export interface IPropertyData {
   id: string;
   modelInstanceId: string;
@@ -16,7 +21,7 @@ export interface IPropertyData {
   captionPosition?: ICaptionPosition;
   entity: string;
   column: IPropertyColumn;
-  dock?: string;
+  dock?: IDockType;
   multiline: boolean;
   isPassword: boolean;
   isRichText: boolean;

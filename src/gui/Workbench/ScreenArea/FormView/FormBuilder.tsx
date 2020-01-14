@@ -94,6 +94,7 @@ export class FormBuilder extends React.Component<{
                       caption={property.name}
                       captionLength={property.captionLength}
                       captionPosition={property.captionPosition}
+                      dock={property.dock}
                       // Column={property.column}
                       // Entity={property.entity}
                       height={property.height}

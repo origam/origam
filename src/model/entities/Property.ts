@@ -1,4 +1,4 @@
-import { IPropertyData, IProperty } from "./types/IProperty";
+import { IPropertyData, IProperty, IDockType } from "./types/IProperty";
 import { ICaptionPosition } from "./types/ICaptionPosition";
 import { IDropDownColumn } from "./types/IDropDownColumn";
 import { IPropertyColumn } from "./types/IPropertyColumn";
@@ -32,7 +32,7 @@ export class Property implements IProperty {
   captionPosition?: ICaptionPosition;
   entity: string = "";
   column: IPropertyColumn = IPropertyColumn.Text;
-  dock?: string | undefined;
+  dock?: IDockType | undefined;
   multiline: boolean = false;
   isPassword: boolean = false;
   isRichText: boolean = false;
