@@ -21,6 +21,9 @@ import { getMenuItemId } from "../../selectors/getMenuItemId";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { getSessionId } from "../../selectors/getSessionId";
 import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
+import { getMenuItemType } from "model/selectors/getMenuItemType";
+import { IMainMenuItemType } from "../types/IMainMenu";
+import { refreshWorkQueues } from "model/actions/WorkQueues/refreshWorkQueues";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -203,6 +206,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           });
           console.log(updateObjectResult);
           yield* processCRUDResult(dataView, updateObjectResult);
+          if(getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
+            yield* refreshWorkQueues(this)();
+          }
         }
       }
     } finally {
@@ -223,6 +229,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         Parameters: { ...getBindingParametersFromParent(targetDataView) }
       });
       yield* processCRUDResult(targetDataView, createObjectResult);
+      if(getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
+        yield* refreshWorkQueues(this)();
+      }
     } finally {
       this.inFlow--;
     }
@@ -239,6 +248,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       });
       console.log(deleteObjectResult);
       yield* processCRUDResult(this, deleteObjectResult);
+      if(getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
+        yield* refreshWorkQueues(this)();
+      }
     } finally {
       this.inFlow--;
     }
@@ -251,6 +263,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield api.saveSessionQuery(getSessionId(this));
       const result = yield api.saveSession(getSessionId(this));
       yield* processCRUDResult(this, result);
+      if(getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
+        yield* refreshWorkQueues(this)();
+      }
     } finally {
       this.inFlow--;
     }
@@ -267,6 +282,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         getFormScreen(this).setDirty(false);
       } else {
         yield* this.loadData();
+      }
+      if(getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
+        yield* refreshWorkQueues(this)();
       }
     } finally {
       this.inFlow--;

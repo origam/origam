@@ -6,6 +6,8 @@ import { getActionCaption } from "model/selectors/Actions/getActionCaption";
 import { IMainMenuItemType } from "model/entities/types/IMainMenu";
 import { IDialogInfo } from "model/entities/types/IOpenedScreen";
 
+import actions from 'model/actions-tree'
+
 export interface IOpenNewForm {
   (
     id: string,
@@ -28,11 +30,16 @@ export interface ICloseForm {
   (): Generator;
 }
 
+export interface IRefreshForm {
+  (): Generator;
+}
+
 export function new_ProcessActionResult($: any) {
   const workbenchLifecycle = getWorkbenchLifecycle($);
   return processActionResult2({
     openNewForm: workbenchLifecycle.openNewForm,
     closeForm: closeForm($),
+    refreshForm: actions.formScreen.refresh($),
     getActionCaption: () => getActionCaption($)
   });
 }
@@ -40,6 +47,7 @@ export function new_ProcessActionResult($: any) {
 export function processActionResult2(dep: {
   openNewForm: IOpenNewForm;
   closeForm: ICloseForm;
+  refreshForm: IRefreshForm;
   getActionCaption: IGetActionCaption;
 }) {
   return function* processActionResult2(actionResultList: any[]) {
@@ -71,6 +79,10 @@ export function processActionResult2(dep: {
         }
         case IActionResultType.DestroyForm: {
           yield* dep.closeForm();
+          break;
+        }
+        case IActionResultType.RefreshData: {
+          yield* dep.refreshForm();
           break;
         }
       }

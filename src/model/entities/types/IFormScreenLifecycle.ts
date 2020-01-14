@@ -38,6 +38,8 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
   onSaveSession(): Generator;
   onRequestScreenReload(): Generator;
 
+  refreshSession(): Generator;
+
   onExecuteAction(
     gridId: string,
     entity: string,
