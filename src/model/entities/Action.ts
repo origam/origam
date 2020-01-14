@@ -1,19 +1,10 @@
-import {
-  IAction,
-  IActionData,
-  IActionType,
-  IActionPlacement,
-  IActionMode
-} from "./types/IAction";
-import { IActionParameter } from "./types/IActionParameter";
 import { computed } from "mobx";
-import { getDataView } from "model/selectors/DataView/getDataView";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 import { getRowStateIsDisableAction } from "model/selectors/RowState/getRowStateIsDisabledAction";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { IAction, IActionData, IActionMode, IActionPlacement, IActionType } from "./types/IAction";
+import { IActionParameter } from "./types/IActionParameter";
 
-import selectors from "model/selectors-tree";
 
 export class Action implements IAction {
   $type_IAction: 1 = 1;
@@ -51,7 +42,7 @@ export class Action implements IAction {
       }
       case IActionMode.MultipleCheckboxes: {
         // TODO: Multiple checkboxes case
-        return selectors.selectionCheckboxes.getIsAnySelected(this);
+        return true; // selectors.selectionCheckboxes.getIsAnySelected(this);
       }
     }
   }
