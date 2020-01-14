@@ -202,7 +202,7 @@ namespace Origam.Utils
 
         static int Main(string[] args)
         {
-            Console.WriteLine(string.Format(Strings.ShortGNU, System.Reflection.Assembly.GetEntryAssembly().GetName().Name));
+            Console.WriteLine(string.Format(Strings.ShortGnu, System.Reflection.Assembly.GetEntryAssembly().GetName().Name));
             string invokedVerb = "";
             object invokedVerbInstance = null;
             var options = new Options();
