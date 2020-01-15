@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -768,7 +768,7 @@ namespace Origam.DA
 			return row;
 		}
 
-		public static XmlDocument GetRowXml(DataRow[] rows, DataRowVersion version)
+		public static XmlContainer GetRowXml(DataRow[] rows, DataRowVersion version)
 		{
 			XmlDocument doc = new XmlDocument();
 			XmlElement rowsElement = doc.CreateElement("rows");
@@ -779,7 +779,7 @@ namespace Origam.DA
 				rowsElement.AppendChild(e);
 				GetRowXml(e, doc, row, version);
 			}
-			return doc;
+			return new XmlContainer(doc);
 		}
 
 		public static XmlContainer GetRowXml(DataRow row, DataRowVersion version)

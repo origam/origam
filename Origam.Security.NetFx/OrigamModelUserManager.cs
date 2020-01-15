@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -50,7 +50,13 @@ namespace Origam.Security.Identity
 
         public int MinimumPasswordLength { get; set; }
         public int NumberOfRequiredNonAlphanumericCharsInPassword { get; set; }
-        public int NumberOfInvalidPasswordAttempts { get; set; }
+        private int _numberOfInvalidPasswordAttempts;
+        public int NumberOfInvalidPasswordAttempts
+        {
+            get { return _numberOfInvalidPasswordAttempts; }
+            set { _numberOfInvalidPasswordAttempts = value;
+                MaxFailedAccessAttemptsBeforeLockout = value; }
+        }
         public bool UnlocksOnPasswordReset { get; set; }
 
         public OrigamModelUserManager(IUserStore<OrigamUser> store)
@@ -816,6 +822,38 @@ namespace Origam.Security.Identity
                 log.Info("UniqueEmail index is in place.");
             }
             emailUniquenessChecked = true;
+        }
+
+        override public Task<int> GetAccessFailedCountAsync(string userId)
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.DebugFormat("Getting count of failed access attempts about user {0}.", userId);
+            }
+            DataSet origamUserDataSet = GetOrigamUserDataSet(
+                GET_ORIGAM_USER_BY_BUSINESS_PARTNER_ID,
+                "OrigamUser_parBusinessPartnerId", userId);
+            if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
+            {
+                if (log.IsDebugEnabled)
+                {
+                    log.DebugFormat("User not found...");
+                }
+                Task.FromException<OrigamUser>(new Exception(Resources.BusinessPartnerNotFound));
+            }
+            int result = (int)origamUserDataSet.Tables[
+                "OrigamUser"].Rows[0]["FailedPasswordAttemptCount"];
+            if (log.IsDebugEnabled)
+            {
+                log.DebugFormat("User {0} has {1} failed access attempts.", userId, result);
+            }
+            return Task.FromResult(result);
+        }
+
+        // we support exposing Login attempts info to ajax login output
+        protected override void SetExposeLoginAttemptsInfo(bool value)
+        {
+            _exposeLoginAttemptsInfo = value;
         }
     }
 }

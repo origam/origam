@@ -1,6 +1,6 @@
 ﻿#region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -202,7 +202,7 @@ namespace Origam.Utils
 
         static int Main(string[] args)
         {
-            Console.WriteLine(string.Format(Strings.ShortGNU, System.Reflection.Assembly.GetEntryAssembly().GetName().Name));
+            Console.WriteLine(string.Format(Strings.ShortGnu, System.Reflection.Assembly.GetEntryAssembly().GetName().Name));
             string invokedVerb = "";
             object invokedVerbInstance = null;
             var options = new Options();

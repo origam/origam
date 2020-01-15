@@ -317,4 +317,7 @@ Ihr wy.by Team</value>
   <data name="No2FAProvider" xml:space="preserve">
     <value>2-Faktor-Authentifizierung ist erforderlich, jedoch steht der zweite Faktor-Provider nicht zur Verfügung. Bitte kontaktieren Sie den Systemadministrator.</value>
   </data>
+  <data name="InvalidUsernameOrPasswordWithAttemptInfo" xml:space="preserve">
+    <value>Benutzername oder Passwort ist inkorrekt. Sie haben {0} weitere Anmeldeversuche. Bitte benutzen Sie "Passwort vergessen" bevor ihr Zugang blockiert wird.</value>
+  </data>
 </root>

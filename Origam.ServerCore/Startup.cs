@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -55,6 +55,7 @@ namespace Origam.ServerCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().AddXmlSerializerFormatters();
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = startUpConfiguration.PathToClientApp ?? ".";
@@ -92,7 +93,6 @@ namespace Origam.ServerCore
             services.AddTransient<IPrincipal>(
                 provider => provider.GetService<IHttpContextAccessor>().HttpContext?.User);
             services.Configure<UserConfig>(options => Configuration.GetSection("UserConfig").Bind(options));
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -138,6 +138,7 @@ namespace Origam.ServerCore
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+            app.UseRequestLocalization();
             app.UseMvc();
             app.UseSpa(spa => {});
             // add DI to origam, in order to be able to resolve IPrincipal from
