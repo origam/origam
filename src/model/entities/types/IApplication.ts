@@ -2,11 +2,13 @@ import { IApi } from "./IApi";
 import { IApplicationLifecycle } from "./IApplicationLifecycle";
 import { IDialogStack } from "./IDialogStack";
 import { IWorkbench } from "./IWorkbench";
+import { IErrorDialogController } from "./IErrorDialog";
 
 export interface IApplicationData {
   api: IApi;
   applicationLifecycle: IApplicationLifecycle;
   dialogStack: IDialogStack;
+  errorDialogController: IErrorDialogController;
 }
 
 export interface IApplication extends IApplicationData {

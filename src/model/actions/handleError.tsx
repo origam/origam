@@ -1,13 +1,14 @@
-import { errDialogPromise } from "model/entities/ErrorDialog";
+import selectors from "model/selectors-tree";
 
 const HANDLED = Symbol("_$ErrorHandled");
 
 export function handleError(ctx: any) {
   return function* handleError(error: any) {
+    console.log('HANDLE ERROR', error)
     if (error[HANDLED]) {
       return;
     }
     error[HANDLED] = true;
-    yield errDialogPromise(ctx)(error);
+    yield* selectors.error.getDialogController(ctx).pushError(error);
   };
 }

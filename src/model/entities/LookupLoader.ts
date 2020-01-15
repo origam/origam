@@ -1,9 +1,8 @@
-import { observable, action, when } from "mobx";
 import _ from "lodash";
+import { action, observable, when, flow } from "mobx";
+import { handleError } from "model/actions/handleError";
 import { getApi } from "model/selectors/getApi";
 import { ILookupLoader } from "./types/ILookupLoader";
-import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
-import { errDialogPromise } from "./ErrorDialog";
 
 export class LookupLoader implements ILookupLoader {
   collectedQuery: {
@@ -76,7 +75,8 @@ export class LookupLoader implements ILookupLoader {
     } catch (error) {
       console.error(error);
       // TODO: Better error handling.
-      errDialogPromise(this)(error);
+      // TODO: Refactor to use generators
+      await flow(handleError(this))(error);
     } finally {
       this.isLoading = false;
     }

@@ -1,5 +1,8 @@
+import Axios from "axios";
+import _ from "lodash";
 import { action, computed, flow, observable, reaction } from "mobx";
 import { navigateAsChild } from "model/actions/DataView/navigateAsChild";
+import { handleError } from "model/actions/handleError";
 import { getBindingChildren } from "model/selectors/DataView/getBindingChildren";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getDataViewLabel } from "model/selectors/DataView/getDataViewLabel";
@@ -12,11 +15,7 @@ import { getDontRequestData } from "model/selectors/getDontRequestData";
 import { getSessionId } from "model/selectors/getSessionId";
 import { getApi } from "../../selectors/getApi";
 import { getSelectedRowId } from "../../selectors/TablePanelView/getSelectedRowId";
-import { errDialogPromise } from "../ErrorDialog";
 import { IDataViewLifecycle } from "./types/IDataViewLifecycle";
-import _ from "lodash";
-import Axios from "axios";
-import { handleError } from "model/actions/handleError";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;

@@ -1,23 +1,23 @@
-import { IApplication, IApplicationData } from "./types/IApplication";
-import { IWorkbench } from "./types/IWorkbench";
-import { ApplicationLifecycle } from "./ApplicationLifecycle";
-import { IApplicationLifecycle } from "./types/IApplicationLifecycle";
-import { OrigamAPI } from "./OrigamAPI";
-import { IApi } from "./types/IApi";
-import { action } from "mobx";
-import { IOpenedScreens } from "./types/IOpenedScreens";
-import { IDialogStack } from "./types/IDialogStack";
 import { handleError } from "model/actions/handleError";
+import { IApi } from "./types/IApi";
+import { IApplication, IApplicationData } from "./types/IApplication";
+import { IApplicationLifecycle } from "./types/IApplicationLifecycle";
+import { IDialogStack } from "./types/IDialogStack";
+import { IErrorDialogController } from "./types/IErrorDialog";
+import { IWorkbench } from "./types/IWorkbench";
 
 export class Application implements IApplication {
+  
   $type_IApplication: 1 = 1;
 
   constructor(data: IApplicationData) {
     Object.assign(this, data);
     this.applicationLifecycle.parent = this;
     this.dialogStack.parent = this;
+    this.errorDialogController.parent = this;
   }
 
+  errorDialogController: IErrorDialogController = null as any;
   applicationLifecycle: IApplicationLifecycle = null as any;
   api: IApi = null as any;
   dialogStack: IDialogStack = null as any;

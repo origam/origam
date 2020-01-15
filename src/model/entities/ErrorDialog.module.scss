@@ -1,0 +1,25 @@
+.dialogContent {
+  padding: 10px;
+  width: 50vh;
+}
+
+.errorMessageList {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  max-height: 40vh;
+}
+
+.errorMessageListItem {
+  flex-shrink: 0;
+  min-height: 20px;
+  border-top: 1px solid rgb(189, 189, 189);
+  &:first-of-type {
+    border-top: none;
+  }
+}
+
+.errorMessageDatetime {
+  color: grey;
+  margin-right: 15px;
+}

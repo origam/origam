@@ -1,16 +1,16 @@
-import {
-  IRowStateData,
-  IRowState,
-  IRowStateItem,
-  IRowStateColumnItem
-} from "./types/IRowState";
-import { observable, action, createAtom, flow } from "mobx";
 import _ from "lodash";
+import { action, createAtom, flow, observable } from "mobx";
+import { handleError } from "model/actions/handleError";
+import { getEntity } from "model/selectors/DataView/getEntity";
 import { getApi } from "model/selectors/getApi";
 import { getSessionId } from "model/selectors/getSessionId";
-import { getEntity } from "model/selectors/DataView/getEntity";
 import { flashColor2htmlColor } from "utils/flashColorFormat";
-import { errDialogPromise } from "./ErrorDialog";
+import {
+  IRowState,
+  IRowStateColumnItem,
+  IRowStateData,
+  IRowStateItem
+} from "./types/IRowState";
 
 export enum IIdState {
   LOADING = "LOADING",
@@ -71,7 +71,7 @@ export class RowState implements IRowState {
           }
           console.error(error);
           // TODO: Better error handling.
-          errDialogPromise(this)(error);
+          yield* handleError(this)(error);
         }
       }
     }.bind(this)

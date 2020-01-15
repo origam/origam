@@ -32,11 +32,12 @@ export class WorkQueues implements IWorkQueues {
     if (this.hRefreshTimer) {
       yield* this.stopTimer();
     }
-    yield onRefreshWorkQueues(this)();
+    onRefreshWorkQueues(this)();
     this.hRefreshTimer = setInterval(
       onRefreshWorkQueues(this),
       this.refreshInterval
     );
+    
   }
 
   *stopTimer() {
