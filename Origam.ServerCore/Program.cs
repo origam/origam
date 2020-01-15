@@ -45,6 +45,8 @@ namespace Origam.ServerCore
                 {
                     logging.AddLog4Net();
                     logging.SetMinimumLevel(LogLevel.Debug);
+                    logging.AddConsole();
+                    logging.AddDebug();
                 });
     }
 }

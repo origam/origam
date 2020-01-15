@@ -54,7 +54,7 @@ namespace Origam.ServerCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            // services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddMvc().AddXmlSerializerFormatters();
             services.AddSpaStaticFiles(configuration =>
             {
@@ -77,7 +77,8 @@ namespace Origam.ServerCore
             {
                 options.DefaultAuthenticateScheme = "Jwt";
                 options.DefaultChallengeScheme = "Jwt";
-            }).AddJwtBearer("Jwt", options =>
+            })
+            .AddJwtBearer("Jwt", options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -98,9 +99,8 @@ namespace Origam.ServerCore
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddLog4Net();
-            loggerFactory.AddDebug();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -125,11 +125,11 @@ namespace Origam.ServerCore
                     // Authentication middleware doesn't short-circuit the request itself
                     // we must do that here.
                     if (!context.User.Identity.IsAuthenticated)
-                        {
-                            context.Response.StatusCode = 401;
-                            return;
-                        }
-                        await next.Invoke();
+                    {
+                        context.Response.StatusCode = 401;
+                        return;
+                    }
+                    await next.Invoke();
                     });
                     apiBranch.UseResponseBuffering();
                     apiBranch.UseMiddleware<UserApiMiddleWare>();
