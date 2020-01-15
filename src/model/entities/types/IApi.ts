@@ -230,4 +230,10 @@ export interface IApi {
     InstanceId: string;
     Position: number;
   }): Promise<any>;
+
+
+  workflowAbort(data: {sessionFormIdentifier: string}): Promise<any>;
+  
+  workflowRepeat(data: {sessionFormIdentifier: string}): Promise<any>;
+
 }

@@ -1,5 +1,10 @@
+import { EmbeddedWebpage } from "gui02/components/EmbeddedWebpage/EmbeddedWebpage";
+import { Splitter } from "gui02/components/Splitter/Splitter";
+import { CScreenSectionTabbedView } from "gui02/connections/CScreenSectionTabbedView";
 import { action, computed, observable } from "mobx";
-import { observer, Observer, MobXProviderContext } from "mobx-react";
+import { MobXProviderContext, observer, Observer } from "mobx-react";
+import { onSplitterPositionChangeFinished } from "model/actions-ui/Splitter/onSplitterPositionChangeFinished";
+import { IFormScreen } from "model/entities/types/IFormScreen";
 import React from "react";
 import SSplitter from "styles/CustomSplitter.module.scss";
 import {
@@ -9,7 +14,6 @@ import {
 } from "../../../xmlInterpreters/screenXml";
 import { Box } from "../../Components/ScreenElements/Box";
 import { DataView } from "../../Components/ScreenElements/DataView";
-import { HSplit, HSplitPanel } from "../../Components/ScreenElements/HSplit";
 import { Label } from "../../Components/ScreenElements/Label";
 import {
   TabbedPanel,
@@ -17,12 +21,9 @@ import {
   TabHandle
 } from "../../Components/ScreenElements/TabbedPanel";
 import { VBox } from "../../Components/ScreenElements/VBox";
-import { VSplit, VSplitPanel } from "../../Components/ScreenElements/VSplit";
-import { Splitter } from "gui02/components/Splitter/Splitter";
-import { CScreenSectionTabbedView } from "gui02/connections/CScreenSectionTabbedView";
-import { IFormScreen } from "model/entities/types/IFormScreen";
-import { onSplitterPositionChangeFinished } from "model/actions-ui/Splitter/onSplitterPositionChangeFinished";
-import { EmbeddedWebpage } from "gui02/components/EmbeddedWebpage/EmbeddedWebpage";
+import { WorkflowFinishedPanel } from "gui02/components/WorkflowFinishedPanel/WorkflowFinishedPanel";
+
+import actions from 'model/actions-ui-tree'
 
 @observer
 class TabbedPanelHelper extends React.Component<{
@@ -80,6 +81,16 @@ export class FormScreenBuilder extends React.Component<{
     const self = this;
     function recursive(xso: any) {
       switch (xso.attributes.Type) {
+        case "WorkflowFinishedPanel": {
+          return <WorkflowFinishedPanel
+            isCloseButton={xso.attributes.showWorkflowCloseButton}
+            isRepeatButton={xso.attributes.showWorkflowRepeatButton}
+            message={xso.attributes.Message}
+            onCloseClick={actions.workflow.onCancelClick(self.formScreen)}
+            onRepeatClick={actions.workflow.onRepeatClick(self.formScreen)}
+          />
+          break;
+        }
         case "HSplit": {
           const panels = findUIChildren(xso).map((child, idx) => [
             idx,

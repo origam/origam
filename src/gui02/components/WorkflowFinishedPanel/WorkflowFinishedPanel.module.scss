@@ -1,0 +1,9 @@
+@import "src/styles/common_styles.scss";
+
+.root {
+  background: white;
+  padding: 20px;
+  button {
+    @include dialogButton();
+  }
+}

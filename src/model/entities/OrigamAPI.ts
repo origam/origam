@@ -548,4 +548,26 @@ export class OrigamAPI implements IApi {
       )
     ).data;
   }
+
+  async workflowAbort(data: { sessionFormIdentifier: string }): Promise<any> {
+    return (
+      await axios.get(
+        `${this.urlPrefix}/UIService/WorkflowAbort/${data.sessionFormIdentifier}`,
+        {
+          headers: this.httpAuthHeader
+        }
+      )
+    ).data;
+  }
+
+  async workflowRepeat(data: { sessionFormIdentifier: string }): Promise<any> {
+    return (
+      await axios.get(
+        `${this.urlPrefix}/UIService/WorkflowRepeat/${data.sessionFormIdentifier}`,
+        {
+          headers: this.httpAuthHeader
+        }
+      )
+    ).data;
+  }
 }

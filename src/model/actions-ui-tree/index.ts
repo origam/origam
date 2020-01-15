@@ -11,6 +11,7 @@ import selectionDialog from './selectionDialog';
 import splitter from './splitter';
 import tableView from './tableView';
 import workQueues from './workQueues';
+import workflow from './workflow';
 
 export default {
   actions,
@@ -25,5 +26,6 @@ export default {
   selectionDialog,
   splitter,
   tableView,
-  workQueues
+  workQueues,
+  workflow
 }
