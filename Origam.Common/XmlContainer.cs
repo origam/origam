@@ -47,7 +47,7 @@ namespace Origam
 
         public XmlDocument Xml { get; }
 
-        public void Load(XmlReader xmlReader)
+        public void Load(XmlReader xmlReader,bool doProcessing)
         {
             Xml.Load(xmlReader);
         }

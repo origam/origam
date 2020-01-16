@@ -24,6 +24,7 @@ using System.Data;
 using System.Xml;
 using System.Linq;
 using Origam.Extensions;
+using System.IO;
 
 namespace Origam
 {
@@ -50,7 +51,7 @@ namespace Origam
         {
             using (XmlReader xmlReader = new XmlNodeReader(xmlDocument.RemoveAllEmptyAttributesAndNodes()))
             {
-                Load(xmlReader);
+                Load(xmlReader,true);
             }
         }
 
@@ -92,9 +93,21 @@ namespace Origam
             WriteToDataSet(newDocument);
         }
 
-        public void Load(XmlReader xmlReader)
+        public void Load(XmlReader xmlReader, bool doProcessing)
         {
-            dataSet.ReadXml(xmlReader);
+            dataSet.ReadXml(doProcessing ? DoProcessing(xmlReader) : xmlReader);
+        }
+
+        private XmlReader DoProcessing(XmlReader xmlReader)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(xmlReader);
+            if (!string.IsNullOrEmpty(doc.OuterXml))
+            {
+                doc.RemoveAllEmptyAttributesAndNodes();
+               return XmlReader.Create(new StringReader(doc.OuterXml));
+            }
+            return xmlReader;
         }
 
         public void LoadXml(string xmlString)
