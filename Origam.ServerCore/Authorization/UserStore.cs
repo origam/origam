@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -237,9 +238,10 @@ namespace Origam.ServerCore
             return Task.FromResult(0);
         }
      
-        public Task<string> GetPasswordHashAsync(IOrigamUser user, CancellationToken cancellationToken)
+        public async Task<string> GetPasswordHashAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(user.PasswordHash);
+            // return Task.FromResult(user.PasswordHash);
+            return user.PasswordHash;
         }
      
         public Task<bool> HasPasswordAsync(IOrigamUser user, CancellationToken cancellationToken)

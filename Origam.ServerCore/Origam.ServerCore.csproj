@@ -12,11 +12,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="logs" />
     <Folder Include="logs\" />
     <Folder Include="Model\Data\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="IdentityServer4" Version="3.1.0" />
+    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Buffering" Version="0.2.2" />
