@@ -14,12 +14,18 @@ if (process.env.REACT_APP_SELENIUM_KICK) {
   axios.post("http://127.0.0.1:3500/app-reload");
 }
 
+(window as any).ORIGAM_CLIENT_REVISION_HASH =
+  process.env.REACT_APP_GIT_REVISION_HASH || "UNKNOWN";
+  (window as any).ORIGAM_CLIENT_REVISION_DATE =
+  process.env.REACT_APP_GIT_REVISION_DATE || "UNKNOWN";
+
 const application = createApplication();
 flow(application.run.bind(application))();
 
-
-
-ReactDOM.render(<Root application={application}/>, document.getElementById("root"));
+ReactDOM.render(
+  <Root application={application} />,
+  document.getElementById("root")
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
